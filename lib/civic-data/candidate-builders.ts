@@ -1,8 +1,12 @@
+import { DOTGOV_SCOPE, DOTGOV_PARSER_VERSION, dotGovSnapshotIssues, type DotGovSnapshot } from "./dotgov.ts";
 import { mergeStatePeople } from "../state-rollcalls/legislators.ts";
 import { createHash } from "node:crypto";
 import { isMorrisGeneralCandidatesDocument, isMorrisSchoolCandidatesDocument } from "./morris-filing-documents.ts";
 
 import type { FundingSnapshot } from "../funding/types.ts";
+import type { AcsNationalLoad, AcsLoadCounts } from "../sources/census-acs-population/national.ts";
+import { acsPayloadHash } from "../sources/census-acs-population/hash.ts";
+import { FIPS_TO_STATE } from "../ocd/fips.ts";
 import type { AcsFetch, AcsPopulationRow } from "../sources/census-acs-population/index.ts";
 import { BASE as CENSUS_ACS_BASE, VINTAGE_YEAR, normalize as normalizeAcs } from "../sources/census-acs-population/index.ts";
 import type { MembersExtraction } from "../../scripts/nh-gencourt-members.mts";
@@ -119,61 +123,46 @@ export interface PromotedAcsPopulation {
   readonly vintage: number;
   readonly zcta: readonly AcsPopulationRow[];
   readonly state: readonly AcsPopulationRow[];
+  readonly geographies?: readonly AcsPopulationRow[];
+  readonly counts?: readonly AcsLoadCounts[];
 }
 
-export function censusAcsCandidate(zctaFetch: AcsFetch, stateFetch: AcsFetch): RoutineCandidate {
-  const zcta = normalizeAcs(zctaFetch);
-  const state = normalizeAcs(stateFetch);
-  const readModel: PromotedAcsPopulation = { formatVersion: 1, vintage: VINTAGE_YEAR, zcta, state };
-  const normalizedPayload = { product: "ACSDT5Y2024", table: "B01003", zcta, state };
-  const rawZcta = zctaFetch.rawText ?? JSON.stringify(zctaFetch.rows);
-  const rawState = stateFetch.rawText ?? JSON.stringify(stateFetch.rows);
-  const rawHash = sha256(`${sha256(rawZcta)}\n${sha256(rawState)}`);
-  const retrievedAt = [zctaFetch.fetchedAt, stateFetch.fetchedAt].sort().at(-1)!;
-  const duplicates = (rows: readonly AcsPopulationRow[]) => rows.length - new Set(rows.map((row) => row.code)).size;
+export function censusAcsCandidate(zctaFetch: AcsFetch, stateFetch: AcsFetch, national?: AcsNationalLoad): RoutineCandidate {
+  const vintage = national?.release.vintage ?? zctaFetch.vintage ?? VINTAGE_YEAR;
+  const product = `ACSDT5Y${vintage}`;
+  const rows = national?.rows ?? [...normalizeAcs(zctaFetch), ...normalizeAcs(stateFetch)];
+  const zcta = national ? rows.filter(row => row.geography === "zcta") : normalizeAcs(zctaFetch);
+  const state = national ? rows.filter(row => row.geography === "state") : normalizeAcs(stateFetch);
+  const readModel: PromotedAcsPopulation = { formatVersion: 1, vintage, zcta, state,
+    ...(national ? { geographies: rows.filter(row => !["zcta", "state"].includes(row.geography!)), counts: national.counts } : {}) };
+  const normalizedPayload = { product, table: "B01003", ...readModel };
+  const captures = national?.captures ?? [zctaFetch, stateFetch];
+  const rawHash = sha256(captures.map(capture => sha256(capture.rawText ?? JSON.stringify(capture.rows))).join("\n"));
+  const retrievedAt = captures.map(capture => capture.fetchedAt).sort().at(-1)!;
   const violations: string[] = [];
-  if (duplicates(zcta) > 0 || duplicates(state) > 0) violations.push("Census geography identifiers are not unique within scope.");
-  if (zcta.some((row) => !/^\d{5}$/.test(row.code))) violations.push("A ZCTA row does not carry a five-digit geography identifier.");
-  if (state.some((row) => !/^\d{2}$/.test(row.code))) violations.push("A state row does not carry a two-digit FIPS identifier.");
-  const count = zcta.length + state.length;
+  const expectedStates = Object.entries(FIPS_TO_STATE).filter(([, value]) => value.prefix === "state" || ["DC", "PR"].includes(value.postal)).map(([fips]) => fips);
+  if (expectedStates.some(fips => !state.some(row => row.code === fips))) violations.push("The ACS state table is missing a state, DC or Puerto Rico.");
+  if (new Set(rows.map(row => `${row.geography ?? (row.code.length === 2 ? "state" : "zcta")}:${row.code}`)).size !== rows.length) violations.push("Census geography identifiers repeat within a scope.");
+  const count = rows.length;
   return {
     id: candidateId("census-data-api", "acs-population", rawHash, retrievedAt),
-    sourceId: "census-data-api",
-    recordClass: "CENSUS_REFERENCE",
-    scope: "acs-population",
+    sourceId: "census-data-api", recordClass: "CENSUS_REFERENCE", scope: "acs-population",
     sourceProjectionEvidence: sourceProjectionEvidence("census-data-api", "CENSUS_REFERENCE", "acs-population"),
-    retrieval: {
-      succeeded: true,
-      requestedUrl: CENSUS_ACS_BASE,
-      finalUrl: zctaFetch.finalUrl ?? CENSUS_ACS_BASE,
-      httpStatus: zctaFetch.status === 200 && stateFetch.status === 200 ? 200 : null,
-      retrievedAt,
-      rawHash,
-    },
-    normalization: {
-      succeeded: true,
-      parserVersion: "census-data-api/2",
-      schemaVersion: "ACSDT5Y2024:B01003_001E+B01003_001M",
-      normalizedHash: normalizedHash(readModel),
-      normalizedPayloadHash: normalizedHash(normalizedPayload),
-      inputRecords: count,
-      outputRecords: count,
-      droppedRecords: 0,
-      missingRequiredFields: [],
-    },
-    identities: [
-      ...zcta.map((row) => ({ subjectId: `zcta:${row.code}`, jurisdiction: "US", identifiers: { product: "ACSDT5Y2024", vintage: String(VINTAGE_YEAR), geography: row.code }, matchBasis: "OFFICIAL_ID" as const, ambiguous: false })),
-      ...state.map((row) => ({ subjectId: `state-fips:${row.code}`, jurisdiction: "US", identifiers: { product: "ACSDT5Y2024", vintage: String(VINTAGE_YEAR), geography: row.code }, matchBasis: "OFFICIAL_ID" as const, ambiguous: false })),
-    ],
-    temporal: { version: String(VINTAGE_YEAR), expectedVersion: String(VINTAGE_YEAR), sourceThrough: String(VINTAGE_YEAR), staleAtRetrieval: false },
-    semantics: { factKind: "ACS 5-year B01003 population estimate and 90% margin for the exact returned geography", violations },
-    horizon: { kind: "BOUNDED", query: "all ZCTAs plus all states/DC/Puerto Rico in ACSDT5Y2024", returnedRecords: count, declaredTotal: 33_824, paginationComplete: true, claimsComplete: true },
+    retrieval: { succeeded: true, requestedUrl: zctaFetch.url, finalUrl: zctaFetch.finalUrl ?? CENSUS_ACS_BASE,
+      httpStatus: captures.every(capture => capture.status === 200 || capture.status === 204) ? 200 : null, retrievedAt, rawHash },
+    normalization: { succeeded: true, parserVersion: "census-data-api/3", schemaVersion: `${product}:B01003_001E+B01003_001M`,
+      normalizedHash: acsPayloadHash(readModel), normalizedPayloadHash: acsPayloadHash(normalizedPayload),
+      inputRecords: count, outputRecords: count, droppedRecords: 0, missingRequiredFields: [] },
+    identities: rows.map(row => ({ subjectId: `${row.geography ?? (row.code.length === 2 ? "state-fips" : "zcta")}:${row.code}`,
+      jurisdiction: "US", identifiers: { product, vintage: String(vintage), geography: row.code }, matchBasis: "OFFICIAL_ID" as const, ambiguous: false })),
+    temporal: { version: String(vintage), expectedVersion: String(vintage), sourceThrough: String(vintage), staleAtRetrieval: false },
+    semantics: { factKind: "ACS five-year population estimate and 90% margin for the exact Census geography", violations },
+    horizon: { kind: "BOUNDED", query: `Complete wildcard ACS5 ${vintage} geography tables; all returned rows retained`, returnedRecords: count,
+      declaredTotal: count, paginationComplete: true, claimsComplete: true },
     absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
-    dependentChecks: [
-      { consumer: "lib/reference/acs-population.ts", passed: zcta.length === 33_772 && state.length === 52, detail: `${zcta.length} ZCTA + ${state.length} state rows.` },
-    ],
-    normalizedPayload,
-    readModel,
+    dependentChecks: [{ consumer: "lib/reference/acs-population.ts", passed: zcta.length >= 30_000 && state.length >= 50 && violations.length === 0,
+      detail: `${count} rows; ${national?.counts.reduce((sum, row) => sum + row.unjoined, 0) ?? "unmeasured"} unjoined rows retained.` }],
+    normalizedPayload, readModel,
   };
 }
 
@@ -1235,7 +1224,7 @@ export function fecFundingCandidate(input: {
     if (row.totals.coverageEndDate && !/^\d{4}-\d{2}-\d{2}$/.test(row.totals.coverageEndDate)) violations.push(`${row.fecCandidateId} has an invalid coverage_end_date.`);
   }
   const sourceThrough = snapshot.candidates.map((row) => row.totals.coverageEndDate ?? "").sort().at(-1) || String(snapshot.cycle);
-  const versionHash = input.sourceCheck ? sha256(`${rawHash}\n${normalizedHash(snapshot)}\nfec-funding/3`) : rawHash;
+  const versionHash = input.sourceCheck ? sha256(`${rawHash}\n${normalizedHash(snapshot)}\nfec-funding/4`) : rawHash;
   return {
     id: candidateId("fec-open-api", "federal-supported", versionHash, input.sourceCheck?.checkedAt ?? input.retrievedAt),
     sourceId: "fec-open-api",
@@ -1243,15 +1232,15 @@ export function fecFundingCandidate(input: {
     scope: "federal-supported",
     sourceProjectionEvidence: sourceProjectionEvidence("fec-open-api", "FEC_FUNDING", "federal-supported"),
     retrieval: { succeeded: hashes.length > 0, requestedUrl: "https://api.open.fec.gov/v1/", finalUrl: input.finalUrl, httpStatus: hashes.length > 0 ? 200 : null, retrievedAt: input.retrievedAt, rawHash: hashes.length > 0 ? rawHash : null, failureDetail: hashes.length > 0 ? undefined : "No FEC response bytes were acquired.", ...(input.sourceCheck ? { sourceCheck: input.sourceCheck } : {}) },
-    normalization: { succeeded: true, parserVersion: "fec-funding/3", schemaVersion: `FundingSnapshot:1:cycle-${snapshot.cycle}`, normalizedHash: normalizedHash(snapshot), normalizedPayloadHash: normalizedHash(snapshot), inputRecords: snapshot.candidates.length, outputRecords: snapshot.candidates.length, droppedRecords: 0, missingRequiredFields: missing },
+    normalization: { succeeded: true, parserVersion: "fec-funding/4", schemaVersion: `FundingSnapshot:1:cycle-${snapshot.cycle}`, normalizedHash: normalizedHash(snapshot), normalizedPayloadHash: normalizedHash(snapshot), inputRecords: snapshot.candidates.length, outputRecords: snapshot.candidates.length, droppedRecords: 0, missingRequiredFields: missing },
     identities: snapshot.candidates.map((row) => ({ subjectId: row.fecCandidateId, jurisdiction: "US", identifiers: { candidate_id: row.fecCandidateId, ...(row.principalCommitteeId ? { committee_id: row.principalCommitteeId } : {}) }, matchBasis: row.matchRoutes.every((route) => route === "bioguide-bridge" || route === "roster-person-reuse") ? "OFFICIAL_ID_CROSSWALK" as const : "EXACT_SCOPED_ID" as const, ambiguous: false, office: row.office, district: row.district ?? undefined })),
     temporal: { version: String(snapshot.cycle), expectedVersion: String(snapshot.cycle), sourceThrough, staleAtRetrieval: false },
     semantics: { factKind: "FEC-filed candidate/committee totals and itemized receipts", violations },
-    horizon: { kind: "OPEN_FACT_SET", query: "individually matched supported federal candidates; no claim that every filing/report class is held", returnedRecords: snapshot.candidates.length, declaredTotal: null, paginationComplete: false, claimsComplete: false },
+    horizon: { kind: "OPEN_FACT_SET", query: `FEC House and Senate registrations for election ${snapshot.cycle}; optional receipt classes remain standing work`, returnedRecords: snapshot.candidates.length, declaredTotal: null, paginationComplete: false, claimsComplete: false },
     absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
     dependentChecks: [
       { consumer: "lib/funding/snapshot.ts", passed: snapshot.candidates.length > 0 && new Set(snapshot.candidates.map((row) => row.fecCandidateId)).size === snapshot.candidates.length, detail: `${snapshot.candidates.length} unique FEC candidate projections.` },
-      { consumer: "lib/funding/display.ts + grounded Ask", passed: snapshot.candidates.every((row) => row.targetKeys.length > 0 && [row.totals.receipts, row.totals.disbursements, row.totals.cashOnHand].some(value => typeof value === "number" && Number.isFinite(value))), detail: "Every candidate has exact target bindings and at least one filed amount; unknown amounts remain null." },
+      { consumer: "lib/funding/display.ts + grounded Ask", passed: snapshot.candidates.every((row) => row.targetKeys.length > 0 && (Boolean(row.registration) || [row.totals.receipts, row.totals.disbursements, row.totals.cashOnHand].some(value => typeof value === "number" && Number.isFinite(value)))), detail: "Every candidate has exact target bindings and a source registration or filed amount; unknown amounts remain null." },
     ],
     normalizedPayload: snapshot,
     readModel: snapshot,
@@ -1501,38 +1490,32 @@ export function njMorrisFilingCandidate(input: {
   };
 }
 
-type DotGovCandidateSnapshot = {
-  readonly source: { readonly sha: string; readonly url: string; readonly readAt: string };
-  readonly counts: { readonly domains: number; readonly electionDomains: number };
-  readonly electionDomains: readonly { readonly domain: string; readonly type: string }[];
-};
-
 export function dotGovCandidate(input: {
-  readonly snapshot: DotGovCandidateSnapshot;
+  readonly snapshot: DotGovSnapshot;
   readonly rawText: string;
   readonly finalUrl: string;
   readonly retrievedAt: string;
 }): RoutineCandidate {
-  const rows = input.snapshot.electionDomains;
+  const rows = input.snapshot.domains;
   const duplicates = rows.length - new Set(rows.map((row) => row.domain)).size;
   const violations = [
     ...(duplicates ? [`${duplicates} duplicate domain identifiers.`] : []),
-    ...(rows.some((row) => !/\.gov$/i.test(row.domain) || !/election/i.test(row.type)) ? ["An election subset row is not a .gov domain carrying CISA's election type."] : []),
+    ...dotGovSnapshotIssues(input.snapshot),
   ];
   return {
-    id: candidateId("cisa-dotgov-registry", "US:current-full:election-domains", sha256(input.rawText), input.retrievedAt),
+    id: candidateId("cisa-dotgov-registry", DOTGOV_SCOPE, sha256(input.rawText), input.retrievedAt),
     sourceId: "cisa-dotgov-registry",
     recordClass: "DOTGOV_REFERENCE",
-    scope: "US:current-full:election-domains",
-    sourceProjectionEvidence: sourceProjectionEvidence("cisa-dotgov-registry", "DOTGOV_REFERENCE", "US:current-full:election-domains"),
+    scope: DOTGOV_SCOPE,
+    sourceProjectionEvidence: sourceProjectionEvidence("cisa-dotgov-registry", "DOTGOV_REFERENCE", DOTGOV_SCOPE),
     retrieval: { succeeded: input.rawText.length > 0, requestedUrl: "https://api.github.com/repos/cisagov/dotgov-data/commits?path=current-full.csv&per_page=1", finalUrl: input.finalUrl, httpStatus: input.rawText.length > 0 ? 200 : null, retrievedAt: input.retrievedAt, rawHash: input.rawText.length > 0 ? sha256(input.rawText) : null },
-    normalization: { succeeded: true, parserVersion: "cisa-dotgov/2", schemaVersion: `current-full.csv:${input.snapshot.source.sha}`, normalizedHash: normalizedHash(input.snapshot), normalizedPayloadHash: normalizedHash(input.snapshot), inputRecords: input.snapshot.counts.domains, outputRecords: rows.length, droppedRecords: input.snapshot.counts.domains - rows.length, missingRequiredFields: rows.some((row) => !row.domain || !row.type) ? ["domain/type"] : [] },
+    normalization: { succeeded: true, parserVersion: DOTGOV_PARSER_VERSION, schemaVersion: `current-full.csv:${input.snapshot.source.sha}`, normalizedHash: normalizedHash(input.snapshot), normalizedPayloadHash: normalizedHash(input.snapshot), inputRecords: input.snapshot.counts.domains, outputRecords: rows.length, droppedRecords: input.snapshot.counts.domains - rows.length, missingRequiredFields: rows.some((row) => !row.domain || !row.type) ? ["domain/type"] : [] },
     identities: rows.map((row) => ({ subjectId: row.domain, jurisdiction: "US", identifiers: { domain: row.domain, source_sha: input.snapshot.source.sha }, matchBasis: "OFFICIAL_ID" as const, ambiguous: false })),
     temporal: { version: input.snapshot.source.sha, expectedVersion: input.snapshot.source.sha, sourceThrough: input.retrievedAt, staleAtRetrieval: false },
-    semantics: { factKind: "CISA registered .gov domain operational reference; never a government denominator", violations },
-    horizon: { kind: "BOUNDED", query: "the election-typed subset of the SHA-pinned CISA current-full.csv; the full-file disposition is carried by normalization counts", returnedRecords: rows.length, declaredTotal: rows.length, paginationComplete: true, claimsComplete: true },
+    semantics: { factKind: "CISA registered .gov domain and registrant contact reference; never a government denominator", violations },
+    horizon: { kind: "BOUNDED", query: "every domain and registrant in the SHA-pinned CISA current-full.csv", returnedRecords: rows.length, declaredTotal: rows.length, paginationComplete: true, claimsComplete: true },
     absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
-    dependentChecks: [{ consumer: "registered dotgov discovery operation", passed: input.snapshot.counts.domains >= 15_000 && rows.length >= 500, detail: `${input.snapshot.counts.domains} total domains and ${rows.length} election-typed domains.` }],
+    dependentChecks: [{ consumer: "government domain Reader and registered dotgov discovery operation", passed: input.snapshot.counts.domains >= 15_000 && input.snapshot.counts.electionDomains >= 500, detail: `${input.snapshot.counts.domains} total domains and ${input.snapshot.counts.electionDomains} election-typed domains retained in the full registry.` }],
     normalizedPayload: input.snapshot,
     readModel: input.snapshot,
   };

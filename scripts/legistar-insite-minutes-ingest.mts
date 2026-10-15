@@ -1,42 +1,4 @@
-/**
- * Mesa City Council decisions, read off the council's own minutes, on the
- * standing routine clock.
- *
- * `mesa-legistar-minutes-outcomes` is a routine contract (ROUTINE_SOURCE_CONTRACTS
- * in lib/civic-data/contracts.ts). The standing runner invokes this internal
- * adapter as `--promote --slug mesa`, following the council's InSite sittings.
- * This scope has no manual promotion door.
- *
- * Why this route: Mesa's clerk enters no action in the Legistar Web API (0 of
- * 33 items on the 2026-09-14 sitting), so `scripts/legistar-outcomes-ingest.mts`
- * — Pima's route — gives Mesa nothing. The minutes are on the permitted portal
- * host, linked from the calendar grid (`View.ashx?M=M&ID=<portal id>&GUID=…`);
- * the API's own minutes file sits on legistar.granicus.com, which robots.txt
- * refuses us. The accessible HTML rendering is read first when a sitting
- * publishes one; Mesa published it on none of the 163 rows seen.
- *
- * One pass:
- *
- * 1. Read the calendar grid ("This Year", plus "Last Year" when the window
- *    reaches back into it, every page the pager names), robots-free host,
- *    paced at the vendor's `Crawl-delay: 2`.
- * 2. For each wired body's concluded sitting in the rolling window: no minutes
- *    link → recorded NOT_YET_PUBLISHED (the publisher's state, never "no
- *    decision"); a link we have not read, or whose label moved ("Results" →
- *    "Minutes") → read the document, parse its motions, and write the sitting
- *    as its own candidate; an unchanged link → nothing.
- * 3. Recompute which held minutes a later sitting's minutes record approving.
- *
- * Exit 0 only when the last candidate is the GOOD promoted pointer (a changed
- * sitting, or the validated no-change receipt); 2 when the calendar read
- * failed or any sitting was refused. Exactly one `RCD_RECEIPT` line.
- *
- * This command writes no tracked file and never invokes software CI or
- * release machinery.
- *
- * @freshness-reads-here — observation stamps are taken only after the
- * corresponding portal read has returned.
- */
+// @freshness-reads-here
 import { processRegisteredRoutineCandidate, type PromotionOutcome } from "../lib/civic-data/promotion.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
@@ -59,7 +21,7 @@ import { ensureMeetingDoors } from "../lib/doors/meeting-doors.ts";
 import {
   applyMinutesApprovals,
   concludedSittingRows,
-  failedDocumentCheck,
+  minutesDocumentCheck,
   failedMinutesReadFor,
   failedMinutesSitting,
   insiteMeetingId,
@@ -70,9 +32,10 @@ import {
   notYetPublishedSitting,
   readMinutesDocument,
   sittingAfterRead,
+  type MinutesDocumentIdentity,
 } from "../lib/outcomes/minutes-ingest.ts";
 import { readDoorOutcomeProjection } from "../lib/outcomes/store.ts";
-import type { OutcomeSnapshot, PersistedFailedMinutesRead, PersistedSittingOutcomes } from "../lib/outcomes/types.ts";
+import type { OutcomeSnapshot, PersistedSittingOutcomes } from "../lib/outcomes/types.ts";
 import { rollingOutcomeWindow, type OutcomeWindow } from "../lib/outcomes/window.ts";
 import { captureSourceAcquisitions, type SourceAcquisitionEvidence } from "../lib/sources/acquisition-trace.ts";
 import {
@@ -91,7 +54,6 @@ import { findTenant, type InSiteTenant } from "../lib/sources/legistar-insite/te
 
 /** Minutes follow a sitting by weeks (Mesa's council: about four); the window reaches back this far. */
 export const MINUTES_ROUTINE_WINDOW_DAYS = 120;
-const DEFAULT_MAX_DOCUMENTS = 25;
 /** The InSite adapter's own page budget per range (lib/sources/legistar-insite/index.ts MAX_GRID_PAGES). */
 const MAX_GRID_PAGES = 6;
 
@@ -101,8 +63,6 @@ export interface MinutesIngestArgs {
   readonly door: string | null;
   readonly from: string | null;
   readonly to: string | null;
-  /** Documents read per run; a floor on this run, never a completion condition. */
-  readonly maxDocuments: number;
   readonly dryRun: boolean;
   readonly force: boolean;
   readonly promote: boolean;
@@ -113,13 +73,11 @@ export function parseMinutesIngestArgs(argv: readonly string[]): MinutesIngestAr
     const at = argv.indexOf(flag);
     return at >= 0 && at + 1 < argv.length ? String(argv[at + 1]) : null;
   };
-  const max = read("--max-documents");
   return {
     slug: read("--slug") ?? MESA_OUTCOME_TENANT.slug,
     door: read("--door"),
     from: read("--from"),
     to: read("--to"),
-    maxDocuments: max === null ? DEFAULT_MAX_DOCUMENTS : Number(max),
     dryRun: argv.includes("--dry-run"),
     force: argv.includes("--force"),
     promote: argv.includes("--promote"),
@@ -320,14 +278,13 @@ export async function runInSiteMinutesOutcomeIngest(input: MinutesIngestInput): 
   let last: PromotionOutcome | null = null;
   /** Rows recorded "not yet published" this pass, folded into the next candidate written. */
   let pending: PersistedSittingOutcomes[] = [];
-  let budgetExhausted = false;
   const base = { tenant, calendarUrl };
 
   for (const row of sittings) {
     const meetingId = insiteMeetingId(tenant.slug, row.insiteId!);
     const link = minutesLinkFor(row, tenant.host);
     const heldSitting = held.get(meetingId);
-    let decision: { readonly walk: boolean; readonly reason: string; readonly check?: PersistedFailedMinutesRead } = args.force && link !== null
+    let decision: { readonly walk: boolean; readonly reason: string; readonly check?: MinutesDocumentIdentity } = args.force && link !== null
       ? ({ walk: true, reason: "FORCED" } as const)
       : minutesRefreshDecision(link, heldSitting, new Date(calendarAt));
 
@@ -345,33 +302,28 @@ export async function runInSiteMinutesOutcomeIngest(input: MinutesIngestInput): 
       }
       continue;
     }
-    /*
-     * A held failed extraction: ask the portal, without the bytes, whether the document changed.
-     * Unchanged or unanswered, the failure stays held and nothing is downloaded; changed, it is read at once.
-     */
-    if (!decision.walk && decision.reason === "FAILED_DOCUMENT_CHECK" && decision.check) {
+
+    if (!decision.walk && decision.check) {
+      const failedExtraction = decision.reason === "FAILED_DOCUMENT_CHECK";
       if (!writes) {
         log(`  would check ${meetingId} ${link.url} before reading it again — held failed extraction`);
         skippedUnchanged += 1;
         continue;
       }
       const head = await session.head(link.url, link.format === "PDF" ? "application/pdf" : "text/html,application/xhtml+xml");
-      const checked = failedDocumentCheck(decision.check, head);
+      const checked = minutesDocumentCheck(decision.check, head);
       log(`  ${meetingId} ${row.date} ${row.bodyName}: held failed extraction — ${checked.reason} (${checked.detail})`);
-      if (!checked.walk) {
-        heldFailedExtractions += 1;
+      if (!checked.walk && (failedExtraction || checked.reason === "DOCUMENT_UNCHANGED" &&
+          (decision.check.etag !== null || decision.check.lastModified !== null))) {
+        if (failedExtraction) heldFailedExtractions += 1;
         skippedUnchanged += 1;
         continue;
       }
-      decision = checked;
+      decision = { ...checked, walk: true };
     }
     if (!decision.walk) {
       skippedUnchanged += 1;
       continue;
-    }
-    if (documentsRead >= args.maxDocuments) {
-      budgetExhausted = true;
-      break;
     }
     if (!writes) {
       log(`  would read ${meetingId} ${link.url} — ${decision.reason}`);
@@ -401,7 +353,9 @@ export async function runInSiteMinutesOutcomeIngest(input: MinutesIngestInput): 
     } else {
       const document = await readMinutesDocument(link, read.value.bytes);
       const readOn = stampFromRead({ source: link.url, ok: true, bytes: document.byteCount, on: runStamp(new Date(observedAt)) });
-      const fresh = minutesSitting({ ...base, row, observedAt, document, readOn }).sitting;
+      const parsed = minutesSitting({ ...base, row, observedAt, document, readOn }).sitting;
+      const fresh = parsed.minutesDocument ? { ...parsed, minutesDocument: { ...parsed.minutesDocument,
+        ...read.value.response, readAt: observedAt } } : parsed;
       // A failure on the bytes is held with their identity; over verified minutes, beside them.
       persisted = sittingAfterRead(heldSitting, fresh, failedMinutesReadFor(fresh, document, read.value.response, observedAt));
     }
@@ -436,9 +390,6 @@ export async function runInSiteMinutesOutcomeIngest(input: MinutesIngestInput): 
     );
   }
 
-  if (budgetExhausted) {
-    log(`STOPPED AT THE PER-RUN BUDGET of ${args.maxDocuments} document(s); the remaining sittings stay due and no completion is inferred.`);
-  }
   if (!writes) {
     return { receiptLine: null, exitCode: 0, promotedSittings, refusedSittings, documentsRead, notYetPublished, skippedUnchanged, heldFailedExtractions };
   }
@@ -485,7 +436,6 @@ async function main(): Promise<void> {
   }
   if (!args.promote && !args.dryRun) throw new Error("MINUTES_OUTCOME_PROMOTION_REQUIRED: use --promote, or --dry-run for a read-only plan.");
   if (args.promote && args.dryRun) throw new Error("MINUTES_OUTCOME_MODE_AMBIGUOUS: --promote writes and --dry-run never does; pass exactly one.");
-  if (!Number.isInteger(args.maxDocuments) || args.maxDocuments < 1) throw new Error("--max-documents must be a positive integer");
   installNeonRequestDeadline();
   if (args.promote) prepareProductionCivicDataWrite();
   let outcomeTenant: OutcomeTenant = MESA_OUTCOME_TENANT;

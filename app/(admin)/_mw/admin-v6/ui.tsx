@@ -1,10 +1,17 @@
 "use client";
 
+/**
+ * Small building blocks every v6 screen uses. Each control that changes
+ * something is an `ActionButton`: it asks the one eligibility rule, shows the
+ * first reason it is off, and opens the preview dialog. Nothing here sends.
+ */
+import { hasTechnicalText, plainWords } from "@/lib/control-plane/admin-view/plain-words.ts";
 import { useEffect, useState, type ReactNode } from "react";
 
 import type { SectionId } from "./contract.ts";
 
 import { useV6 } from "./context.tsx";
+import { ACTIONS } from "./actions.ts";
 import { STAGE_NAMES, type ActionRef, type Sourced, type StageMark, type UiReceipt } from "./model.ts";
 import { STATUS_TONE } from "./receipts.ts";
 import s from "./v6.module.css";
@@ -19,7 +26,7 @@ export function Card(props: { readonly title?: ReactNode; readonly aside?: React
     <section id={props.id} aria-labelledby={props.title ? headId : props.labelledBy} className={cx(s.card, props.tone === "warn" && s.cardWarn, props.tone === "global" && s.cardGlobal)}>
       {(props.title || props.aside) && (
         <div className={s.cardHead}>
-          {props.title && <h2 id={headId} className={s.h2}>{props.title}</h2>}
+          {props.title && <h2 id={headId} className={s.h2}>{typeof props.title === "string" ? plainWords(props.title) : props.title}</h2>}
           {props.aside}
         </div>
       )}
@@ -52,6 +59,7 @@ export function Failed(props: { readonly what: string; readonly retry?: () => vo
 /** A control that changes something. Off controls stay focusable and say why. */
 export function ActionButton(props: { readonly action: ActionRef; readonly primary?: boolean; readonly label?: string }) {
   const v = useV6();
+  if (!ACTIONS.has(props.action.kind)) return null;
   const def = v.defOf(props.action);
   const why = v.whyNot(props.action);
   const global = def.preview({ target: props.action.target, targetName: "", scopeName: v.place.name, scopeIsCountry: v.place.kind === "Country", outreachAuthorized: v.access.outreachAuthorized }).level === "global";
@@ -71,12 +79,13 @@ export function ActionButton(props: { readonly action: ActionRef; readonly prima
 
 export function Actions(props: { readonly actions: readonly ActionRef[]; readonly primaryFirst?: boolean }) {
   const v = useV6();
-  if (!props.actions.length) return null;
-  const reasons = [...new Set(props.actions.map((a) => v.whyNot(a)).filter((x): x is string => !!x))];
+  const actions = props.actions.filter(action => ACTIONS.has(action.kind));
+  if (!actions.length) return null;
+  const reasons = [...new Set(actions.map((a) => v.whyNot(a)).filter((x): x is string => !!x))];
   return (
     <div className={s.stack} style={{ gap: 6 }}>
       <div className={s.inline}>
-        {props.actions.map((a, i) => <ActionButton key={`${a.kind}|${a.target}|${i}`} action={a} primary={props.primaryFirst && i === 0} />)}
+        {actions.map((a, i) => <ActionButton key={`${a.kind}|${a.target}|${i}`} action={a} primary={props.primaryFirst && i === 0} />)}
       </div>
       {reasons.map((r) => <p key={r} className={s.why}>{r}</p>)}
     </div>
@@ -89,7 +98,7 @@ export function Facts(props: { readonly rows: readonly (readonly [string, ReactN
       {props.rows.map(([k, val]) => (
         <div key={k} style={{ display: "contents" }}>
           <dt>{k}</dt>
-          <dd>{val}</dd>
+          <dd>{typeof val === "string" ? <>{plainWords(val)}{hasTechnicalText(val) && <Technical lines={[val]} />}</> : val}</dd>
         </div>
       ))}
     </dl>

@@ -1,7 +1,7 @@
 import { normalizedHash, sha256 } from "../civic-data/candidate-builders.ts";
 import { canonicalCivicDataJson } from "../civic-data/changes.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "../civic-data/types.ts";
-import type { BuiltDataset } from "./dataset.ts";
+import type { CensusDistrictEdge } from "./district-edge.ts";
 import {
   CENSUS_GEO_PARSER_VERSION,
   CENSUS_GEO_RECORD_CLASS,
@@ -11,12 +11,11 @@ import {
   CENSUS_GEO_SOURCE_ROUTE,
 } from "./publication.ts";
 
-export function censusGeographyCandidate(dataset: BuiltDataset): RoutineCandidate {
+export function censusGeographyCandidate(input: CensusDistrictEdge): RoutineCandidate {
+  const dataset = JSON.parse(JSON.stringify(input)) as CensusDistrictEdge;
   const edges = dataset.scopes.reduce((n, s) => n + s.zctaEdgeCount, 0);
   const groupings = dataset.scopes.reduce((n, s) => n + s.instanceCount, 0);
 
-  // rawHash is derived from the exact official source checksums the build read, so
-  // an identical acquisition yields an identical candidate id (idempotent).
   const checksums = dataset.scopes.flatMap((s) => s.versionMeta.provenance.sourceChecksums).sort();
   const rawHash = sha256(checksums.length > 0 ? checksums.join("\n") : normalizedHash(dataset));
   const retrievedAt = dataset.builtAt;
@@ -29,28 +28,24 @@ export function censusGeographyCandidate(dataset: BuiltDataset): RoutineCandidat
     if (s.zctaEdgeCount === 0) violations.push(`Scope ${s.version} has no ZCTA overlaps.`);
   }
 
-  // One identity per grouping: an official source district/area code with its plan.
-  const identities = dataset.scopes.flatMap((s) =>
-    s.groupings.map((g) => ({
-      subjectId: `${s.type}:${g.geoid}:${s.version}`,
-      jurisdiction: "US",
-      identifiers: { type: s.type, geoid: g.geoid, version: s.version, state_fips: g.stateFips },
-      matchBasis: "OFFICIAL_ID" as const,
-      ambiguous: false,
-    })),
-  );
+  const identities = Object.keys(dataset.states).sort().map(state => ({
+    subjectId: `census-state:${state}:${dataset.versionId}`,
+    jurisdiction: "US",
+    identifiers: { type: "state", geoid: state, version: dataset.versionId },
+    matchBasis: "OFFICIAL_ID" as const,
+    ambiguous: false,
+  }));
 
   const id = `cv-${sha256(`${CENSUS_GEO_SOURCE_ID}${CENSUS_GEO_SCOPE}${rawHash}${retrievedAt}`).slice(0, 32)}`;
 
   const readModelHash = sha256(canonicalCivicDataJson(dataset));
-  // A compact descriptor bound to the read model by its hash, never a second copy: the promotion response has a size cap.
   const normalizedPayload = {
     formatVersion: dataset.formatVersion,
     builtAt: dataset.builtAt,
     readModelHash,
-    zctaUniverseCount: dataset.zctaUniverse.length,
-    sourceFailures: dataset.sourceFailures ?? [],
-    sourceDiscrepancies: dataset.sourceDiscrepancies ?? [],
+    zctaUniverseCount: dataset.zctaCount,
+    sourceFailureCount: dataset.sourceFailureCount,
+    sourceDiscrepancyCount: dataset.sourceDiscrepancyCount,
     scopes: dataset.scopes.map((s) => ({
       type: s.type,
       version: s.version,
@@ -79,8 +74,6 @@ export function censusGeographyCandidate(dataset: BuiltDataset): RoutineCandidat
       succeeded: true,
       parserVersion: CENSUS_GEO_PARSER_VERSION,
       schemaVersion: CENSUS_GEO_SCHEMA_VERSION,
-      // Digest via the civic-data canonical JSON — the exact function the
-      // source-scoped verifier re-derives the read-model hash with.
       normalizedHash: readModelHash,
       normalizedPayloadHash: sha256(canonicalCivicDataJson(normalizedPayload)),
       inputRecords: groupings,
@@ -91,7 +84,7 @@ export function censusGeographyCandidate(dataset: BuiltDataset): RoutineCandidat
     identities,
     temporal: { version, expectedVersion: version, sourceThrough: "2020", staleAtRetrieval: false },
     semantics: {
-      factKind: "ZCTA-to-geography land-area overlaps and official representation boundaries for the exact built scopes (population weight not provided by the Census relationships)",
+      factKind: "ZCTA-to-geography overlaps and official representation boundary references for the exact built scopes (tabulated area shares where supplied; polygon-derived memberships carry unknown shares)",
       violations,
     },
     horizon: {
@@ -105,8 +98,8 @@ export function censusGeographyCandidate(dataset: BuiltDataset): RoutineCandidat
     absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
     dependentChecks: [
       {
-        consumer: "lib/census-geography/lookup.ts",
-        passed: edges > 0 && groupings > 0,
+        consumer: "lib/census-geography/district-edge.ts",
+        passed: edges > 0 && groupings > 0 && identities.length > 0,
         detail: `${groupings} groupings, ${edges} ZCTA edges across ${dataset.scopes.length} scope(s).`,
       },
     ],

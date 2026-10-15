@@ -1,16 +1,23 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { after, test } from "node:test";
 
-import { publishReaderEdgeArtifacts, type PublishAuthority } from "../lib/meetings/edge-serving.ts";
+import { ensureReaderAuthorityEdge, publishReaderEdgeArtifacts, type PublishAuthority } from "../lib/meetings/edge-serving.ts";
+import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import type { PromotedAuthorityFamily, PromotedFamilyArtifactValue } from "../lib/meetings/edge-artifacts.ts";
-import type { CensusDistrictEdge } from "../lib/census-geography/district-edge.ts";
+import type { BuiltDataset } from "../lib/census-geography/dataset.ts";
+import type { BallotSet } from "../lib/ballot/types.ts";
+import { ballotElectionKey, genericBallotProblems, type GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
 import { clearPromotedReadModelCache } from "../lib/civic-data/read-model.ts";
+import { assembleBallotPackage, type BallotStateFile } from "../scripts/assemble-ballot-package.mts";
+import { manualProjectionCandidate } from "../lib/civic-data/manual-projections.ts";
+import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
+import { readGenericBallotProjection } from "../lib/ballot/generic-projection.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
 import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
@@ -25,8 +32,8 @@ import { fundingReadState, readFundingSnapshot } from "../lib/funding/snapshot.t
 import { stateMoneyReadState } from "../lib/funding/state-snapshot.ts";
 import { readNhMembers } from "../lib/civic-data/state-members.ts";
 import { readOfficialStateLegislatorsProjection } from "../lib/state-rollcalls/legislators.ts";
-import { currentPollingPlaceLinks } from "../lib/ballot/polling-place-links.ts";
-import { currentRegistrationLinks } from "../lib/ballot/registration-links.ts";
+import { POLLING_PLACE_LINKS } from "../lib/ballot/polling-place-links.ts";
+import { REGISTRATION_LINKS } from "../lib/ballot/registration-links.ts";
 import { registryRuntimeReadState } from "../lib/registry/runtime-read-model.ts";
 import { federalDirectoryReadState } from "../lib/officials/federal-directory-read-model.ts";
 import { STATE_CAMPAIGN_FINANCE_SOURCES, type StateCampaignFinanceJurisdiction } from "../lib/funding/data-plane.ts";
@@ -47,8 +54,7 @@ import {
   provenEdgeEntry,
   servedValue,
 } from "./helpers/promoted-edge-entry.ts";
-
-/** The real /ballot page is rendered with no database: every Neon HTTP request is answered here with no rows and counted by record class. Async components are called from this test's context, as React calls them. */
+import { azBallot as committedAzBallot, azDistrictDataset, publishDistrictFixture } from "./helpers/ballot-district-fixtures.ts";
 
 for (const key of ["DATABASE_URL", "DATABASE_URL_UNPOOLED", "NEON_DATABASE_URL", "NETLIFY", "NETLIFY_BLOBS_CONTEXT", "NETLIFY_SITE_ID"]) delete process.env[key];
 
@@ -74,27 +80,19 @@ const stateMoneyFixtureEntries = (version: (state: string) => string) => (Object
 const funding = servedValue(await readFundingSnapshot({ store: seedStore, bypassCache: true }));
 const nhMembers = servedValue(await readNhMembers({ store: seedStore, bypassCache: true }));
 const nhLegislators = servedValue(await readOfficialStateLegislatorsProjection("US-NH", { store: seedStore, bypassCache: true }));
-// Explicit election-plan relationships exercise the qualified Census reader.
-// They are synthetic fixture evidence, independent of the retired ZIP sample.
-const districts: CensusDistrictEdge = {
-  formatVersion: 1, versionId: "edge-test:ballot:districts",
-  scopes: ([ ["congressional_district", "cd:120"], ["state_leg_upper", "sldu:2024"], ["state_leg_lower", "sldl:2024"] ] as const)
-    .map(([type, version]) => ({ type, version, plan: "Synthetic 2026 election applicability",
-      applicability: [{ purpose: "election", from: "2026-11-03", through: "2026-11-04" }], retrievalComplete: true,
-      sourceUrls: ["https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/"], observedAt: "2026-10-01T00:00:00.000Z" })),
-  containers: [
-    { ref: { type: "congressional_district", version: "cd:120", geoid: "0407", ocdId: null, stateFips: "04", stateAbbr: "AZ", memberStates: ["AZ"], label: "AZ Congressional District 7" }, plan: "Synthetic election plan" },
-    { ref: { type: "state_leg_upper", version: "sldu:2024", geoid: "04020", ocdId: null, stateFips: "04", stateAbbr: "AZ", memberStates: ["AZ"], label: "AZ State Senate District 20" }, plan: "Synthetic election plan" },
-    { ref: { type: "state_leg_lower", version: "sldl:2024", geoid: "04020", ocdId: null, stateFips: "04", stateAbbr: "AZ", memberStates: ["AZ"], label: "AZ State House District 20" }, plan: "Synthetic election plan" },
-    { ref: { type: "state_leg_upper", version: "sldu:2024", geoid: "33008", ocdId: null, stateFips: "33", stateAbbr: "NH", memberStates: ["NH"], label: "NH State Senate District 8" }, plan: "Synthetic election plan" },
-  ],
-  codes: { "85701": [[0, true, 1], [1, true, 1], [2, true, 1]], "03255": [[3, true, 1]] },
+const nhScope = azDistrictDataset.scopes.find(scope => scope.type === "state_leg_upper")!;
+const districtFixture = {
+  version: "edge-test:ballot:districts",
+  dataset: { ...azDistrictDataset, zctaUniverse: [...azDistrictDataset.zctaUniverse, "03255"], scopes: [...azDistrictDataset.scopes, {
+    ...nhScope, versionMeta: { ...nhScope.versionMeta, stateFips: "33", states: ["NH"], plan: "NH reader-edge fixture" }, instanceCount: 1, zctaEdgeCount: 1,
+    groupings: [{ geoid: "33008", ocdId: null, stateFips: "33", stateAbbr: "NH", memberStates: ["NH"], label: "NH State Senate District 8", overlaps: [{ zcta5: "03255", whole: true, fraction: 1 }] }],
+  }] } satisfies BuiltDataset,
 };
 const navigation = {
   kind: "ballot-navigation",
   records: [
-    ...currentRegistrationLinks().map((value) => ({ id: `registration:${value.state}`, kind: "REGISTRATION_LINK", value })),
-    ...currentPollingPlaceLinks().map((value) => ({ id: `polling-place:${value.state}`, kind: "POLLING_PLACE_LINK", value })),
+    ...REGISTRATION_LINKS.map((value) => ({ id: `registration:${value.state}`, kind: "REGISTRATION_LINK", value })),
+    ...POLLING_PLACE_LINKS.map((value) => ({ id: `polling-place:${value.state}`, kind: "POLLING_PLACE_LINK", value })),
   ],
 };
 
@@ -107,6 +105,7 @@ const EDGE = {
   profiles: "edge-test:ballot:profiles",
   corpus: "edge-test:ballot:corpus",
   funding: "edge-test:ballot:fec",
+  campaignFinance: "edge-test:ballot:campaign-finance",
   nhMembers: "edge-test:ballot:nh-members",
   stateMoney: (state: string) => `edge-test:ballot:money:${state}`,
 };
@@ -122,18 +121,24 @@ const PROMOTED_BALLOT_FAMILIES: Partial<Record<PromotedAuthorityFamily, { value:
   "ballot-navigation": promotedFamily([manual("ballot-navigation", navigation, "edge-test:ballot:navigation")], "edge-test:ballot:navigation"),
   "official-filings": promotedFamily([absentEdgeEntry("CURATED_READER_RECORD", requiredManualProductionContract("official-filings").scope)], "edge-test:filings:absent"),
   "nh-members": promotedFamily([provenEdgeEntry({ recordClass: nhRoster.recordClass, scope: nhRoster.scope, sourceId: nhRoster.sourceId, versionId: EDGE.nhMembers, value: nhMembers })], EDGE.nhMembers),
-  "federal-funding": promotedFamily([provenEdgeEntry({ recordClass: "FEC_FUNDING", scope: fec.scope, sourceId: fec.sourceId, versionId: EDGE.funding, value: funding })], EDGE.funding),
+  "federal-funding": promotedFamily([
+    provenEdgeEntry({ recordClass: "FEC_FUNDING", scope: fec.scope, sourceId: fec.sourceId, versionId: EDGE.funding, value: funding }),
+    manual("campaign-finance", { kind: "campaign-finance", records: [] }, EDGE.campaignFinance),
+  ], EDGE.funding),
   "state-money": promotedFamily(stateMoneyFixtureEntries(EDGE.stateMoney), "edge-test:ballot:money"),
 };
 
-async function publishEdge(withPromoted: boolean): Promise<string> {
+async function publishEdge(withPromoted: boolean, authorityOverrides: PublishAuthority = {}, fixture: { version: string; dataset: BuiltDataset } = districtFixture): Promise<string> {
   const dir = mkdtempSync(join(tmpdir(), "wtp-ballot-edge-"));
   after(() => rmSync(dir, { recursive: true, force: true }));
+  const artifactStore = new LocalFileArtifactStore(dir);
+  const districts = await publishDistrictFixture(artifactStore, fixture.version, fixture.dataset);
   const authority: PublishAuthority = {
     "registry-runtime": { value: registryTransferImport().projection.payload, versionId: REGISTRY_VERSION },
     "federal-directory": { value: federal, versionId: FEDERAL_VERSION },
     "census-districts": { value: districts, versionId: districts.versionId },
     ...(withPromoted ? PROMOTED_BALLOT_FAMILIES : {}),
+    ...authorityOverrides,
   };
   const published = await publishReaderEdgeArtifacts({
     formatVersion: 1,
@@ -142,7 +147,7 @@ async function publishEdge(withPromoted: boolean): Promise<string> {
     sources: [],
     meetings: [],
     agendaDocuments: [],
-  }, { sourceThrough: null, retrievedAt: null, promotedThrough: null }, { store: new LocalFileArtifactStore(dir), authority,
+  }, { sourceThrough: null, retrievedAt: null, promotedThrough: null }, { store: artifactStore, authority,
     registrations: {},
     stateLegislators: {
       "US-AZ": { versionId: "edge-test:ballot:az-people", value: {
@@ -156,10 +161,46 @@ async function publishEdge(withPromoted: boolean): Promise<string> {
   assert.equal(published.status, "PUBLISHED", JSON.stringify(published));
   return dir;
 }
-/** The edge with only the map's families. */
 const mapEdgeDir = await publishEdge(false);
-/** The whole ballot edge: the map's families and every proven pointer the page reads. */
 const ballotEdgeDir = await publishEdge(true);
+
+// Transformed Arizona fixtures isolate geography policy without asserting Texas ballot facts.
+function houstonPolicyBallot(): BallotSet {
+  const election = { ...committedAzBallot.election, id: "tx-plan-policy-2026-11-03", state: "TX" };
+  const kept = committedAzBallot.contests.filter(contest => contest.id.endsWith(":governor") || contest.id.endsWith(":us-house-7"));
+  const ids = new Map(kept.map(contest => [contest.id, `ballot-tx-plan-policy:${contest.id.endsWith(":governor") ? "governor" : "us-house-38"}`]));
+  return { election,
+    contests: kept.map(contest => ({ ...contest, id: ids.get(contest.id)!, electionId: election.id,
+      ocdId: contest.ocdId.replace("/state:az", "/state:tx").replace("/cd:7", "/cd:38"),
+      title: contest.title.replace("District 7", "District 38"),
+    })),
+    candidacies: committedAzBallot.candidacies.filter(candidate => ids.has(candidate.contestId)).map(candidate => ({ ...candidate,
+      id: `tx-plan-policy:${candidate.id}`, contestId: ids.get(candidate.contestId)!,
+    })),
+    measures: [], absences: [],
+  };
+}
+function houstonPolicyDistricts(withSuccessor: boolean): { version: string; dataset: BuiltDataset } {
+  const scope = azDistrictDataset.scopes.find(scope => scope.type === "congressional_district")!;
+  const source = scope.groupings[0];
+  const old = { ...source, stateAbbr: "TX", stateFips: "48", memberStates: ["TX"], geoid: "4807", ocdId: null,
+    label: "TX plan-transition fixture district 7", overlaps: [{ zcta5: "77002", whole: true, fraction: 1 }] };
+  const scopes = [...azDistrictDataset.scopes, { ...scope, versionMeta: { ...scope.versionMeta, states: ["TX"] }, groupings: [old], instanceCount: 1, zctaEdgeCount: 1 }];
+  if (withSuccessor) scopes.push({ ...scope, version: "cd:120", instanceCount: 1, zctaEdgeCount: 1,
+    versionMeta: { ...scope.versionMeta, key: "cd:120", plan: "120th Congress", states: ["TX"], retrievalComplete: true },
+    groupings: [{ ...old, geoid: "4838", label: "TX plan-transition fixture district 38" }],
+  });
+  return { version: `edge-test:houston-policy:${withSuccessor ? "cd120" : "cd119"}`,
+    dataset: { ...azDistrictDataset, zctaUniverse: [...azDistrictDataset.zctaUniverse, "77002"], scopes } };
+}
+const txPolicyBallot = houstonPolicyBallot();
+const txPolicyProjection: GenericBallotProjection = { kind: "ballot-contests", ballots: { [ballotElectionKey(txPolicyBallot)]: txPolicyBallot } };
+assert.deepEqual(genericBallotProblems(txPolicyProjection), [], "the Texas policy fixture passes the production ballot schema");
+const txPolicyFamily = promotedFamily([manual("ballot-contests", txPolicyProjection, "edge-test:houston-policy:ballot")], "edge-test:houston-policy:ballot");
+const houstonEdgeDirs = await Promise.all([false, true].map(async withSuccessor => {
+  const value = houstonPolicyDistricts(withSuccessor);
+  return publishEdge(true, { "ballot-contests": txPolicyFamily }, value);
+}));
 
 // Every database request this process makes, by record class, answered with no rows.
 type RenderPhase = "page" | "components";
@@ -184,7 +225,7 @@ globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
 }) as typeof fetch;
 
 /** One cold render: the page, then every async component it returned, called from outside the page. */
-async function renderBallot(zip: string): Promise<{ components: Map<string, number> }> {
+async function renderBallot(zip: string): Promise<{ components: Map<string, number>; text: string; contestIds: Set<string> }> {
   clearPromotedReadModelCache();
   databaseReads.length = 0;
   const { default: BallotPage } = await import("../app/ballot/page.tsx");
@@ -192,10 +233,13 @@ async function renderBallot(zip: string): Promise<{ components: Map<string, numb
   const tree = await BallotPage({ searchParams: Promise.resolve({ zip }) });
   phase = "components";
   const components = new Map<string, number>();
+  const text: string[] = [];
+  const contestIds = new Set<string>();
   // A card hands some sections down inside a plain object prop (the battlecard's
   // `money`, which is `CandidateFunding`), so plain objects are walked too, once each.
   const seen = new WeakSet<object>();
   const walk = async (node: unknown): Promise<void> => {
+    if (typeof node === "string") { text.push(node); return; }
     if (node === null || typeof node !== "object" || seen.has(node)) return;
     seen.add(node);
     if (Array.isArray(node)) { for (const child of node) await walk(child); return; }
@@ -204,6 +248,8 @@ async function renderBallot(zip: string): Promise<{ components: Map<string, numb
       if (Object.getPrototypeOf(node) === Object.prototype) for (const value of Object.values(node)) await walk(value);
       return;
     }
+    const contestId = element.props?.["data-contest-id"] ?? (element.props?.attrs as Record<string, unknown> | undefined)?.["data-contest-id"];
+    if (typeof contestId === "string") contestIds.add(contestId);
     if (typeof element.type === "function" && element.type.constructor.name === "AsyncFunction") {
       const name = element.type.name;
       components.set(name, (components.get(name) ?? 0) + 1);
@@ -213,15 +259,11 @@ async function renderBallot(zip: string): Promise<{ components: Map<string, numb
     for (const value of Object.values(element.props ?? {})) await walk(value);
   };
   await walk(tree);
-  return { components };
+  return { components, text: text.join(" "), contestIds };
 }
 
 const MAP_FAMILIES = ["REGISTRY_RUNTIME_BINDING", "FEDERAL_DIRECTORY", "STATE_LEGISLATOR"];
-/*
- * What a cold /ballot render reads from the database with only the map's families on the edge. The fake
- * database holds no pointer, so the page stops at its missing ballot: the two ballot pointers and the derived
- * campaign sites read beside them.
- */
+// A map-only edge leaves the ballot and campaign-site authorities to the empty database.
 const MOVED_FAMILIES = ["BALLOT_CANDIDACY", "BALLOT_CANDIDACY", "CURATED_READER_RECORD"];
 
 test("React renders the page's async components outside the page's context: they see its edge only when handed it", () => {
@@ -272,7 +314,14 @@ test("with only map families on the edge, a cold ballot reads exactly its missin
 
 test("a cold /ballot?zip=85701 with the whole ballot edge makes no database read at all, in the page or in any card", async () => {
   process.env.WTP_READER_EDGE_DIR = ballotEdgeDir;
-  const { components } = await renderBallot("85701");
+  const { components, text, contestIds } = await renderBallot("85701");
+  for (const id of ["state-senate-20", "state-house-20", "us-house-7"]) {
+    assert.ok([...contestIds].some(contestId => contestId.endsWith(`:${id}`)), `the page omitted ${id}`);
+  }
+  for (const title of ["State Senator, District 20", "State Representative, District 20", "U.S. Representative, District 7"]) {
+    assert.ok(text.includes(title), `the reader did not see ${title}`);
+  }
+  assert.doesNotMatch(text, /We're working on getting the (?:U\.S\. House|State Senate|State House) district|District contests may be missing/);
   assert.ok((components.get("BallotBattlecard") ?? 0) >= 10, `the render reached the cards: ${JSON.stringify([...components])}`);
   assert.ok((components.get("IncumbentName") ?? 0) >= 10, `the render reached the names: ${JSON.stringify([...components])}`);
   assert.ok((components.get("CandidateFunding") ?? 0) >= 1, `the render reached the funding cards: ${JSON.stringify([...components])}`);
@@ -291,6 +340,85 @@ test("a cold /ballot?zip=85701 with the whole ballot edge makes no database read
     assert.equal(state.kind, "PROMOTED", `${what} was not read as the promoted version`);
     assert.equal(state.metadata.versionId, version, `${what} was not served from the edge`);
   }
+});
+
+test("a cold /ballot?zip=85641 renders both LD17 and LD19 and U.S. House 6 from the published Census edge", async () => {
+  process.env.WTP_READER_EDGE_DIR = ballotEdgeDir;
+  const { text, contestIds } = await renderBallot("85641");
+  const expected = ["state-senate-17", "state-senate-19", "state-house-17", "state-house-19", "us-house-6"];
+  const rendered = [...contestIds].map(id => id.split(":").at(-1)!).filter(id => /^(?:state-senate|state-house|us-house)-/.test(id));
+  assert.deepEqual(rendered.sort(), expected.sort());
+  for (const title of ["State Senator, District 17", "State Senator, District 19", "State Representative, District 17", "State Representative, District 19", "U.S. Representative, District 6"]) {
+    assert.ok(text.includes(title), `the reader did not see ${title}`);
+  }
+  assert.doesNotMatch(text, /We're working on getting the (?:U\.S\. House|State Senate|State House) district|District contests may be missing/);
+  assert.deepEqual(databaseReads, [], "the rendered split-ZIP ballot read the database");
+});
+
+test("a Houston ballot with only cd:119 shows the exact U.S. House district note, then a held cd:120 supplies its House contest", async () => {
+  process.env.WTP_READER_EDGE_DIR = houstonEdgeDirs[0]!;
+  const old = await renderBallot("77002");
+  assert.deepEqual([...old.contestIds].sort(), ["ballot-tx-plan-policy:governor"]);
+  const note = "We're working on getting the U.S. House district for ZIP 77002. U.S. House contests aren't shown until we have it.";
+  assert.ok(old.text.includes(note), "the reader needs the exact office-specific district gap note");
+  assert.doesNotMatch(old.text, /We're working on getting the State (?:Senate|House) district/);
+  assert.deepEqual(databaseReads, [], "the missing House district does not cause a database read");
+
+  process.env.WTP_READER_EDGE_DIR = houstonEdgeDirs[1]!;
+  const successor = await renderBallot("77002");
+  assert.deepEqual([...successor.contestIds].sort(), ["ballot-tx-plan-policy:governor", "ballot-tx-plan-policy:us-house-38"]);
+  assert.ok(successor.text.includes("U.S. Representative, District 38"));
+  assert.ok(!successor.text.includes(note), "the district note clears when its election plan is held");
+  assert.deepEqual(databaseReads, [], "the complete House plan is served entirely from the edge");
+});
+
+test("BL-10: assembly through promotion and the reader edge shows complete contests and named gaps, including a held-only ballot", async () => {
+  const directory = mkdtempSync(join(tmpdir(), "ballot-contest-holds-"));
+  try {
+    for (const allHeld of [false, true]) {
+      const state = JSON.parse(readFileSync("tests/fixtures/ballot-national/tx.json", "utf8")) as BallotStateFile;
+      const ballot = Object.values(state.ballots)[0];
+      ballot.contests[0].candidateListComplete = false;
+      ballot.contests[1].candidateListComplete = !allHeld;
+      ballot.contests.push({ ...ballot.contests[0], id: "outside-district", title: "Fixture District 99", ocdId: "ocd-division/country:us/state:tx/cd:99" });
+      writeFileSync(join(directory, "tx.json"), JSON.stringify(state));
+      const store = new MemoryRoutineDataStore(), now = "2026-10-14T00:00:00.000Z";
+      const assembled = await assembleBallotPackage({ directory, store, now });
+      assert.deepEqual(assembled.skipped, []);
+      const outcome = await processRegisteredManualCandidate(store, "ballot-contests", manualProjectionCandidate(assembled.package), now);
+      assert.ok(outcome.promoted, outcome.candidate.failureDetail ?? JSON.stringify(outcome.candidate.receipt));
+      const read = await readGenericBallotProjection({ store, now, bypassCache: true });
+      assert.equal(read.kind, "PROMOTED");
+      if (read.kind !== "PROMOTED") throw new Error("The assembled ballot was not published.");
+      const versionId = read.metadata.versionId!;
+      const family = promotedFamily([manual("ballot-contests", read.value, versionId)], versionId);
+      const census = houstonPolicyDistricts(true);
+      process.env.WTP_READER_EDGE_DIR = await publishEdge(true, {
+        "ballot-contests": family,
+      }, census);
+      const edgeStore = new LocalFileArtifactStore(process.env.WTP_READER_EDGE_DIR);
+      const edge = await ensureReaderAuthorityEdge((await edgeStore.readManifest())!.manifest, edgeStore);
+      assert.equal(edge.promoted?.get("BALLOT_CANDIDACY:US:state-election-ballots")?.kind, "PROMOTED");
+      const edgeRead = await withReaderAuthorityEdge(edge, () => readGenericBallotProjection());
+      assert.equal(edgeRead.kind, "PROMOTED", JSON.stringify(edgeRead));
+      if (edgeRead.kind === "PROMOTED") assert.deepEqual(edgeRead.value, read.value);
+      const rendered = await renderBallot("77002");
+      assert.match(rendered.text, /Contests we don't hold yet/);
+      assert.match(rendered.text, /Governor.*The official candidate list hasn't been fully checked/);
+      assert.match(rendered.text, /We're working on getting complete candidate lists/);
+      assert.doesNotMatch(rendered.text, /Alice Adams|Fixture District 99|We do not have a ballot for this location yet/);
+      assert.equal(rendered.text.includes("Bob Baker"), !allHeld);
+      assert.deepEqual([...rendered.contestIds].sort(), ["fixture-tx-governor", "fixture-tx-senate"]);
+      const { POST } = await import("../app/api/ballot/scope/route.ts");
+      const response = await withReaderAuthorityEdge(edge, () => POST(new Request("https://example.org/api/ballot/scope", {
+        method: "POST", body: JSON.stringify({ lat: 29.7569, lng: -95.3656 }),
+      })));
+      assert.equal(response.status, 200);
+      const scope = await response.json();
+      assert.deepEqual(scope.contestIds.sort(), ["fixture-tx-governor", "fixture-tx-senate"]);
+      assert.deepEqual(databaseReads, [], "complete contests and holds are both served from the reader edge");
+    }
+  } finally { rmSync(directory, { recursive: true, force: true }); }
 });
 
 test("a cold /ballot?zip=03255 (Newbury, New Hampshire) with the whole ballot edge reads its ballot and the General Court roster from it, and nothing from the database", async () => {

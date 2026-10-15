@@ -2,6 +2,7 @@
  * Every state renders in four layers: what this is, what happened, does this need me, what happens next,
  * with the technical detail one disclosure away.
  */
+import { hasTechnicalText, plainWords } from "@/lib/control-plane/admin-view/plain-words.ts";
 import type { ReactNode } from "react";
 
 import { plainCode, plainMeaning, plainText } from "@/lib/control-plane/plain-words.ts";
@@ -23,17 +24,20 @@ export function StatusBlock(props: {
   readonly detailLabel?: string;
   readonly children?: ReactNode;
 }) {
+  const diagnostics = [props.what, props.happened, props.next].filter((value): value is string => typeof value === "string" && hasTechnicalText(value));
+  const face = (value: ReactNode) => typeof value === "string" ? plainWords(value) : value;
   return (
     <div className="status-block">
-      <p className="status-what">{props.what}</p>
-      <p className="status-happened">{props.happened}</p>
-      {props.next && <p className="status-next">{props.next}</p>}
+      <p className="status-what">{face(props.what)}</p>
+      <p className="status-happened">{face(props.happened)}</p>
+      {props.next && <p className="status-next">{face(props.next)}</p>}
       <NeedsYouLine needs={props.needsYou} />
       {props.children}
-      {props.detail && (
+      {(props.detail || diagnostics.length > 0) && (
         <details className="status-detail">
           <summary>{props.detailLabel ?? "Technical details"}</summary>
           {props.detail}
+          {diagnostics.map(value => <p key={value}>{value}</p>)}
         </details>
       )}
     </div>
@@ -62,7 +66,7 @@ export function Code({ raw, withMeaning }: { raw: string | null | undefined; wit
   const means = withMeaning ? plainMeaning(raw) : null;
   return (
     <>
-      <span className="plain-code" title={raw ?? undefined}>
+      <span className="plain-code">
         {words}
       </span>
       {means && <span className="plain-means"> {means}</span>}

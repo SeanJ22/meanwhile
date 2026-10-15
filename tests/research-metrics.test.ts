@@ -134,7 +134,7 @@ test("ordering: band 1 for a reader signal, band 2 for a universe provider, band
 
 test("funnel: SCOUTED counts distinct non-refused obligations; pipeline stages read 'none recorded' by default; candidate stages come from the store counts", () => {
   const f = graduationFunnel({
-    results: [result({ attemptId: "a" }), result({ attemptId: "b", obligationId: "obl-a" }), result({ attemptId: "c", refusal: [{ code: "SCOUT_NO_FINISH", detail: "x" }] })],
+    results: [result({ attemptId: "a" }), result({ attemptId: "b", obligationId: "obl-a" }), result({ attemptId: "c", refusal: [{ code: "SCOUT_TRANSPORT_FAILED", detail: "x" }] })],
     candidateCounts: { proposed: 0, validated: 7, admitted: 0, rejected: 0 },
     pipeline: [],
     pipelineSource: "none recorded (lib/control-plane/promotion is another lane's)",
@@ -142,13 +142,13 @@ test("funnel: SCOUTED counts distinct non-refused obligations; pipeline stages r
   });
   const by = Object.fromEntries(f.stages.map((s) => [s.stage, s]));
   assert.equal(by.SCOUTED.count, 1, "two results on one obligation and one refused result count once");
-  assert.equal(by.CONFIRMED.count, 0);
-  assert.match(by.CONFIRMED.source, /none recorded for CONFIRMED/);
+  assert.equal(by.VERIFIED.count, 0);
+  assert.match(by.VERIFIED.source, /none recorded for VERIFIED/);
   assert.equal(by.VALIDATED.count, 7);
   assert.equal(by.ADMITTED.count, 0);
   assert.equal(by.DETERMINISTIC_REPLAYS.count, 0);
-  const withPipeline = graduationFunnel({ results: [], candidateCounts: null, pipeline: [{ stage: "CONFIRMED", count: 2 }], pipelineSource: "promotion pipeline", deterministicReplays: 1 });
-  assert.equal(withPipeline.stages.find((s) => s.stage === "CONFIRMED")?.count, 2);
+  const withPipeline = graduationFunnel({ results: [], candidateCounts: null, pipeline: [{ stage: "VERIFIED", count: 2 }], pipelineSource: "promotion pipeline", deterministicReplays: 1 });
+  assert.equal(withPipeline.stages.find((s) => s.stage === "VERIFIED")?.count, 2);
 });
 
 test("share: this cycle against the trailing window, with the delta in points and null when nothing dispatched", () => {
@@ -246,7 +246,7 @@ test("cache hit rate by role reads the COST LEDGER: a row predating the cache fi
   ];
   const wrongBatch = { ...shares[0], batch: false };
   const malformedBatch = { ...shares[0], batch: "true" };
-  unknownRows.push({ ...splitRow, byModel: [wrongBatch, shares[1]] }, { ...splitRow, byModel: [malformedBatch, shares[1]] });
+  unknownRows.push({ ...splitRow, byModel: [wrongBatch, shares[1]] }, { ...splitRow, byModel: [malformedBatch as never, shares[1]] });
   unknownRows.push(JSON.parse(JSON.stringify({ ...tierOnly, tier: "unpriced-tier" })), JSON.parse(JSON.stringify({ ...tierOnly, model: 42 })));
   for (const row of unknownRows) assert.equal(cacheHitRateByRole({ costs: [row], results: [] })[0].savedUsd, null, "unknown or contradictory portions cannot be assigned a neighboring model's price");
   assert.equal(cacheHitRateByRole({ costs: [meteredCost("known", { read: 100, write: 0, uncached: 0 }), unknownRows[0]], results: [] })[0].savedUsd, null, "a partial known subtotal never reads as complete savings");
@@ -271,13 +271,10 @@ test("cost per useful outcome shares the whole measured spend across classes and
   const rows = costPerUsefulOutcome({
     results: [result({ attemptId: "a", usd: 2 }), result({ attemptId: "b", usd: 4, outcome: "EVIDENCE_FOUND" }), result({ attemptId: "c", usd: 3, outcome: "NO_PROGRESS" }), result({ attemptId: "d", usd: null, outcome: "BLOCKED" })],
     candidateCounts: { validated: 2, admitted: 0 },
-    confirmed: null,
   });
   const by = Object.fromEntries(rows.map((r) => [r.outcome, r]));
   assert.equal(by.ROUTE_CANDIDATE.usdPerOutcome, 9, "$9 measured over 1 ROUTE_CANDIDATE: the NO_PROGRESS Attempt's cost is not hidden");
   assert.equal(by.EVIDENCE_FOUND.usdPerOutcome, 9);
-  assert.equal(by.CONFIRMED.usdPerOutcome, null);
-  assert.match(by.CONFIRMED.denominator, /not recorded by any pipeline yet/);
   assert.equal(by.GRADUATED_ROUTE.count, 0);
   assert.equal(by.GRADUATED_ROUTE.usdPerOutcome, null);
   assert.match(by.ROUTE_CANDIDATE.denominator, /3 measured Attempt\(s\) \(1 unmeasured\)/);
@@ -291,7 +288,7 @@ test("the digest lines and rows print every number with its denominator, and an 
     funnel: graduationFunnel({ results: [], candidateCounts: null, pipeline: [], pipelineSource: "none recorded", deterministicReplays: 0 }),
     share: modelShareTrend({ thisCycle: { deterministic: 0, model: 0 }, windowCycles: [] }),
     cacheByRole: [],
-    costPerOutcome: costPerUsefulOutcome({ results: [], candidateCounts: null, confirmed: null }),
+    costPerOutcome: costPerUsefulOutcome({ results: [], candidateCounts: null }),
     cacheDefects: { defective: 0, instrumented: 0 },
   };
   const lines = researchDigestLines(metrics);

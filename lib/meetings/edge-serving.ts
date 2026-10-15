@@ -24,7 +24,7 @@ import type { OfficialStateLegislatorReadModel } from "../civic-data/candidate-b
 import type { ReaderAuthorityEdgeBundle } from "../registry/runtime-edge.ts";
 import type { RegistrationReadModel } from "../registration/candidate.ts";
 import type { OutcomeSnapshot } from "../outcomes/types.ts";
-import type { CensusDistrictEdge } from "../census-geography/district-edge.ts";
+import { createCensusDistrictReaderEdge, type CensusDistrictEdge, type CensusDistrictReaderEdge } from "../census-geography/district-edge.ts";
 import type { PromotedEdgeEntry } from "../civic-data/read-model.ts";
 import {
   resolveReaderArtifactStore,
@@ -228,6 +228,7 @@ export async function readReaderManifest(
 }
 
 export const READER_MAP_AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
+  "government-domains",
   "census-districts",
   "registry-runtime",
   "federal-directory",
@@ -416,12 +417,12 @@ export async function readerAuthorityEdge(
   }
   if (!refs || !store) return { ...registrations, ...stateLegislators };
   const bundle: {
-    censusDistricts?: { value: CensusDistrictEdge; versionId: string };
+    censusDistricts?: CensusDistrictReaderEdge;
     registryRuntime?: { value: RegistryRuntimeReadModel; versionId: string };
     federalDirectory?: { value: FederalDirectoryReadModel; versionId: string };
     campaignSites?: { value: CuratedReaderProjection; versionId: string };
     meetingOutcomes?: { value: OutcomeSnapshot; versionId: string };
-    commentAccess?: { value: CuratedReaderProjection; versionId: string };
+    commentAccess?: { value: import("../registry/comment-access.ts").CommentAccessProjection; versionId: string };
   } = {};
   const wanted = new Set(families);
   const fetchWanted = (family: AuthorityFamily) =>
@@ -439,8 +440,8 @@ export async function readerAuthorityEdge(
   if (federal !== null) bundle.federalDirectory = { value: federal as FederalDirectoryReadModel, versionId: refs["federal-directory"]!.version };
   if (campaign !== null) bundle.campaignSites = { value: campaign as CuratedReaderProjection, versionId: refs["campaign-sites"]!.version };
   if (outcomes !== null) bundle.meetingOutcomes = { value: outcomes as OutcomeSnapshot, versionId: refs["meeting-outcomes"]!.version };
-  if (commentAccess !== null) bundle.commentAccess = { value: commentAccess as CuratedReaderProjection, versionId: refs["comment-access"]!.version };
-  if (censusDistricts !== null) bundle.censusDistricts = { value: censusDistricts as CensusDistrictEdge, versionId: refs["census-districts"]!.version };
+  if (commentAccess !== null) bundle.commentAccess = { value: commentAccess as import("../registry/comment-access.ts").CommentAccessProjection, versionId: refs["comment-access"]!.version };
+  if (censusDistricts !== null) bundle.censusDistricts = createCensusDistrictReaderEdge(censusDistricts as CensusDistrictEdge, store, refs["census-districts"]!.version);
   const promoted = new Map<string, PromotedEdgeEntry>();
   const promotedFamilies = new Set<string>();
   const promotedValues = await promotedFetch;
@@ -672,7 +673,9 @@ const areaReads = new Map<string, MeetingsProjectionReadResult>();
 export async function readReaderEdgeMeetings(
   options: ReaderEdgeMeetingsOptions = {},
 ): Promise<MeetingsProjectionReadResult> {
-  const [read, settings] = await Promise.all([readReaderEdgeMeetingsHeld(options), options.settings ?? readReaderMeetingSettings()]);
+  const [read, settings] = await Promise.all([readReaderEdgeMeetingsHeld(options), options.settings ?? readReaderMeetingSettings(),
+    import("../doors/meeting-doors.ts").then(module => module.ensureMeetingDoors()),
+  ]);
   return applyServedWindow(read, options.window ?? "SHOWN", options.now, settings);
 }
 

@@ -1,5 +1,8 @@
-/** Postgres cuts the slice out of the promoted pointer row inside one READ ONLY transaction. No pointer row means not published yet, never an empty list. */
-import type { CbsaClass, GeographyRef, GeographyType } from "../../census-geography/contract.ts";
+import type { GeographyRef, GeographyType } from "../../census-geography/contract.ts";
+import { censusStateDataset, createCensusDistrictReaderEdge, readCensusDistrictState,
+  type CensusDistrictEdge, type CensusDistrictStateArtifact } from "../../census-geography/district-edge.ts";
+import { resolveReaderArtifactStore, type ReaderArtifactStore } from "../../meetings/edge-store.ts";
+import { FIPS_TO_STATE } from "../../ocd/fips.ts";
 import { CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } from "../../census-geography/publication.ts";
 import { REGISTRATION_RECORD_CLASS, REGISTRATION_TARGETS } from "../../registration/publication.ts";
 import { REGISTRY_RUNTIME_SCOPE } from "../../registry/runtime-data-plane.ts";
@@ -33,25 +36,6 @@ export interface ContainerSlice {
   readonly overlaps: readonly OverlapSlice[] | null;
 }
 
-const GEO_TYPES: readonly GeographyType[] = ["county", "congressional_district", "cbsa", "state_leg_upper", "state_leg_lower", "overlay_district", "aiannh"];
-
-/** A `scope` row per published scope, so a type the pointer does not carry is never read as "none there". */
-function groupingsQuery(withOverlaps: boolean, where: string): string {
-  const grouping =
-    "g->>'geoid', g->>'ocdId', g->>'label', g->>'stateFips', g->>'stateAbbr', g->>'cbsaClass', g->'memberStates'" +
-    (withOverlaps ? ", g->'overlaps'" : ", NULL::jsonb") + ", g - 'overlaps'";
-  return (
-    "WITH scopes AS MATERIALIZED (SELECT x AS scope FROM civic_data_promotions p" +
-    " CROSS JOIN LATERAL jsonb_array_elements(p.payload->'scopes') x WHERE p.record_class = $1 AND p.scope = $2)" +
-    " SELECT 'scope' AS row_kind, scope->>'type' AS type, scope->>'version' AS version, scope->'versionMeta'->>'plan' AS plan," +
-    " NULL::text AS geoid, NULL::text AS ocd_id, NULL::text AS label, NULL::text AS state_fips, NULL::text AS state_abbr," +
-    " NULL::text AS cbsa_class, NULL::jsonb AS member_states, NULL::jsonb AS overlaps, NULL::jsonb AS representation_geography, scope->'versionMeta' AS version_meta FROM scopes" +
-    " UNION ALL SELECT 'grouping', scope->>'type', scope->>'version', scope->'versionMeta'->>'plan', " +
-    grouping + ", scope->'versionMeta'" +
-    ` FROM scopes CROSS JOIN LATERAL jsonb_array_elements(scope->'groupings') g WHERE scope->>'type' = ANY($3::text[]) AND ${where}`
-  );
-}
-
 export interface ScopeSlice {
   readonly type: GeographyType;
   readonly version: string;
@@ -59,6 +43,7 @@ export interface ScopeSlice {
   readonly stateFips?: string;
   readonly chamber?: "upper" | "lower";
   readonly applicability?: readonly import("../../census-geography/selection.ts").GeographyApplicability[];
+  readonly states?: readonly string[];
   readonly retrievalComplete?: boolean;
   readonly sourceUrls?: readonly string[];
   readonly observedAt?: string;
@@ -73,97 +58,55 @@ function text(value: unknown): string | null {
   return typeof value === "string" ? value : null;
 }
 
-function isGeographyType(value: unknown): value is GeographyType {
-  return typeof value === "string" && (GEO_TYPES as readonly string[]).includes(value);
-}
-
-function overlapsOf(value: unknown): OverlapSlice[] {
-  if (!Array.isArray(value)) return [];
-  return value.flatMap((o) => {
-    const r = o as Record<string, unknown>;
-    if (typeof r.zcta5 !== "string") return [];
-    return [{ zcta5: r.zcta5, whole: r.whole === true, fraction: typeof r.fraction === "number" ? r.fraction : null }];
-  });
-}
-
-export function containerOfRow(row: Row, withOverlaps: boolean): ContainerSlice | null {
-  const type = row.type;
-  const geoid = text(row.geoid);
-  const version = text(row.version);
-  const label = text(row.label);
-  const stateAbbr = text(row.state_abbr);
-  if (!isGeographyType(type) || geoid === null || version === null || label === null || stateAbbr === null) return null;
-  const cbsaClass = text(row.cbsa_class) as CbsaClass | null;
-  const members = Array.isArray(row.member_states) ? (row.member_states as unknown[]).filter((s): s is string => typeof s === "string") : [];
-  const ref: GeographyRef = {
-    ...(row.representation_geography && typeof row.representation_geography === "object" ? row.representation_geography as Partial<GeographyRef> : {}),
-    type,
-    geoid,
-    version,
-    ocdId: text(row.ocd_id),
-    label,
-    stateFips: text(row.state_fips) ?? geoid.slice(0, 2),
-    stateAbbr,
-    ...(cbsaClass ? { cbsaClass } : {}),
-    memberStates: members,
-  };
-  return { ref, plan: text(row.plan) ?? "", overlaps: withOverlaps ? overlapsOf(row.overlaps) : null };
-}
-
-export function geographyOfRows(rows: readonly Row[], withOverlaps: boolean): GeographySlice {
-  const scopes: ScopeSlice[] = [];
-  const containers: ContainerSlice[] = [];
-  for (const row of rows) {
-    if (row.row_kind === "scope") {
-      const version = text(row.version);
-      const meta = row.version_meta as { stateFips?: string; chamber?: ScopeSlice["chamber"]; applicability?: ScopeSlice["applicability"]; retrievalComplete?: boolean; provenance?: { sourceUrls?: readonly string[]; computedAt?: string } } | undefined;
-      if (isGeographyType(row.type) && version !== null) scopes.push({ type: row.type, version, plan: text(row.plan) ?? "",
-        stateFips: meta?.stateFips, chamber: meta?.chamber,
-        ...(Array.isArray(meta?.applicability) ? { applicability: meta.applicability } : {}),
-        ...(typeof meta?.retrievalComplete === "boolean" ? { retrievalComplete: meta.retrievalComplete } : {}),
-        ...(meta?.provenance ? { sourceUrls: meta.provenance.sourceUrls, observedAt: meta.provenance.computedAt } : {}) });
-    } else {
-      const c = containerOfRow(row, withOverlaps);
-      if (c !== null) containers.push(c);
-    }
-  }
-  return { scopes, containers };
-}
-
-async function geography(
-  query: ReadOnlyQuery | null,
-  what: string,
-  statements: readonly Statement[],
-  withOverlaps: boolean,
-): Promise<{ readonly slice: Slice<GeographySlice>; readonly rest: readonly (readonly Row[])[] }> {
-  if (query === null) return { slice: { kind: "UNREAD", detail: `${what} was not read: this deployment names no reader store.` }, rest: [] };
+export async function readCensusGeographyIndex(query: ReadOnlyQuery | null): Promise<Slice<CensusDistrictEdge>> {
+  if (query === null) return { kind: "UNREAD", detail: "Census geography was not read: this deployment names no reader store." };
   try {
-    const [pointer, rows, ...rest] = await query([{ text: POINTER, params: [CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE] }, ...statements]);
-    const versionId = text(pointer?.[0]?.version_id);
-    if (versionId === null) return { slice: { kind: "NOT_PUBLISHED" }, rest };
-    return { slice: { kind: "HELD", versionId, value: geographyOfRows(rows ?? [], withOverlaps) }, rest };
+    const [rows] = await query([{ text: "SELECT current_version_id AS version_id, payload FROM civic_data_promotions WHERE record_class = $1 AND scope = $2 AND payload->>'formatVersion' = '2'",
+      params: [CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE] }]);
+    const row = rows?.[0];
+    if (typeof row?.version_id !== "string") return { kind: "NOT_PUBLISHED" };
+    const index = row.payload as CensusDistrictEdge | undefined;
+    if (!index || index.formatVersion !== 2 || typeof index.versionId !== "string" || !index.states || !index.zipPrefixes || !Array.isArray(index.scopes)) {
+      return { kind: "UNREAD", detail: "The promoted Census geography index is invalid." };
+    }
+    return { kind: "HELD", versionId: row.version_id, value: index };
   } catch (error) {
-    return { slice: { kind: "UNREAD", detail: `${what} could not be read (${error instanceof Error ? error.name : "error"}).` }, rest: [] };
+    return { kind: "UNREAD", detail: `Census geography could not be read (${error instanceof Error ? error.name : "error"}).` };
   }
+}
+
+function stateGeography(value: CensusDistrictStateArtifact, types: readonly GeographyType[], withOverlaps: boolean): GeographySlice {
+  const dataset = censusStateDataset(value);
+  return { scopes: value.scopes.filter(scope => types.includes(scope.type)), containers: dataset.scopes.flatMap(scope =>
+    types.includes(scope.type) ? scope.groupings.map(group => {
+      const { overlaps, ...identity } = group;
+      return { ref: { ...identity, type: scope.type, version: scope.version }, plan: scope.versionMeta.plan, overlaps: withOverlaps ? overlaps : null };
+    }) : []) };
 }
 
 export async function stateContainers(
-  stateAbbr: string,
-  types: readonly GeographyType[],
-  withOverlaps: boolean,
-  query: ReadOnlyQuery | null,
+  stateAbbr: string, types: readonly GeographyType[], withOverlaps: boolean, query: ReadOnlyQuery | null,
+  store: ReaderArtifactStore | null = resolveReaderArtifactStore(),
 ): Promise<Slice<GeographySlice>> {
-  const st = stateAbbr.toUpperCase();
-  const statement = {
-    text: groupingsQuery(withOverlaps, "(g->>'stateAbbr' = $4 OR g->'memberStates' @> jsonb_build_array($4::text))"),
-    params: [CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE, [...types], st],
-  };
-  return (await geography(query, `The Census geography for ${st}`, [statement], withOverlaps)).slice;
+  const index = await readCensusGeographyIndex(query);
+  if (index.kind !== "HELD") return index;
+  const state = stateAbbr.toUpperCase();
+  if (!Object.hasOwn(index.value.states, state)) return { kind: "NOT_PUBLISHED" };
+  if (!store) return { kind: "UNREAD", detail: "The Census geography artifact store is unavailable." };
+  const value = await readCensusDistrictState(index.value, state, store);
+  if (!value) return { kind: "UNREAD", detail: `The Census geography artifact for ${state} is unavailable.` };
+  return { kind: "HELD", versionId: index.versionId, value: stateGeography(value, types, withOverlaps) };
 }
 
-export async function oneContainer(type: GeographyType, geoid: string, query: ReadOnlyQuery | null): Promise<Slice<GeographySlice>> {
-  const statement = { text: groupingsQuery(true, "g->>'geoid' = $4"), params: [CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE, [type], geoid] };
-  return (await geography(query, `The Census geography for ${type.replace(/_/g, " ")} ${geoid}`, [statement], true)).slice;
+export async function oneContainer(
+  type: GeographyType, geoid: string, query: ReadOnlyQuery | null,
+  store: ReaderArtifactStore | null = resolveReaderArtifactStore(), stateAbbr?: string,
+): Promise<Slice<GeographySlice>> {
+  const state = stateAbbr ?? (type !== "cbsa" && type !== "aiannh" ? FIPS_TO_STATE[geoid.slice(0, 2)]?.postal : undefined);
+  if (!state) return { kind: "UNREAD", detail: "A state is required to read this Census geography." };
+  const slice = await stateContainers(state, [type], true, query, store);
+  if (slice.kind !== "HELD") return slice;
+  return { ...slice, value: { ...slice.value, containers: slice.value.containers.filter(row => row.ref.geoid === geoid) } };
 }
 
 export interface CodeSlice extends GeographySlice {
@@ -172,35 +115,17 @@ export interface CodeSlice extends GeographySlice {
 }
 
 export async function containersOfCode(
-  zcta5: string,
-  types: readonly GeographyType[],
-  query: ReadOnlyQuery | null,
+  zcta5: string, types: readonly GeographyType[], query: ReadOnlyQuery | null,
+  store: ReaderArtifactStore | null = resolveReaderArtifactStore(),
 ): Promise<Slice<CodeSlice>> {
-  const { slice, rest } = await geography(
-    query,
-    `The Census geography for ZCTA ${zcta5}`,
-    [
-      {
-        text: groupingsQuery(true, "g->'overlaps' @> jsonb_build_array(jsonb_build_object('zcta5', $4::text))"),
-        params: [CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE, [...types], zcta5],
-      },
-      {
-        text: "SELECT (p.payload->'zctaUniverse') @> jsonb_build_array($3::text) AS known, (SELECT jsonb_agg(DISTINCT s->'versionMeta'->>'zctaTabulation') FROM jsonb_array_elements(p.payload->'scopes') s) AS zcta_tabulations FROM civic_data_promotions p WHERE p.record_class = $1 AND p.scope = $2",
-        params: [CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE, zcta5],
-      },
-    ],
-    true,
-  );
+  const index = await readCensusGeographyIndex(query);
+  if (index.kind !== "HELD") return index;
+  if (!store) return { kind: "UNREAD", detail: "The Census geography artifact store is unavailable." };
+  const slice = await createCensusDistrictReaderEdge(index.value, store, index.versionId).loadZip(zcta5);
   if (slice.kind !== "HELD") return slice;
-  return {
-    ...slice,
-    value: {
-      scopes: slice.value.scopes,
-      containers: slice.value.containers.map((c) => ({ ...c, overlaps: (c.overlaps ?? []).filter((o) => o.zcta5 === zcta5) })),
-      known: rest[0]?.[0]?.known === true,
-      zctaTabulations: Array.isArray(rest[0]?.[0]?.zcta_tabulations) ? (rest[0][0].zcta_tabulations as unknown[]).filter((v): v is string => typeof v === "string") : [],
-    },
-  };
+  return { ...slice, value: { ...slice.value, scopes: slice.value.scopes.filter(scope => types.includes(scope.type)),
+    containers: slice.value.containers.filter(row => types.includes(row.ref.type)),
+    zctaTabulations: [...new Set(index.value.scopes.filter(scope => types.includes(scope.type)).map(scope => scope.versionMeta.zctaTabulation))] } };
 }
 
 export interface RegisteredGovernmentSlice {

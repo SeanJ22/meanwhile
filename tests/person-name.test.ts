@@ -9,7 +9,7 @@ import {
   isIncompletePersonName,
   nameTokens,
 } from "../lib/officials/person-name.ts";
-import { BODY_ROSTERS } from "../lib/registry/body-rosters.ts";
+import { BODY_ROSTERS } from "./fixtures/held-body-rosters.ts";
 import { STATEWIDE_EXECUTIVES } from "../lib/officials/statewide-executives.ts";
 
 test("THE CONTROL: a bare surname is incomplete", () => {
@@ -94,7 +94,6 @@ test("Vail's superintendent is held under a whole name", () => {
 test("the top-office slots render through the gap-aware helper", () => {
   // Guarded at the render as well as the data: a source can change between refreshes.
   for (const file of [
-    "components/map/popup/district-popup.tsx",
     "components/map/popup/entity-modal.tsx",
   ]) {
     const source = readFileSync(join(ROOT, file), "utf8");

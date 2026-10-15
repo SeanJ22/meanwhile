@@ -35,6 +35,7 @@ import type { BodyFamilyAttempts } from "./attempt-families.ts";
 import type { Meeting } from "../sources/types.ts";
 import { historyGapFor, type HistoryGap } from "../meetings/history-gaps.ts";
 import type { RegistrationGovernmentListing } from "../registration/listings.ts";
+import type { StateOfficeContact } from "../reference/state-offices.ts";
 
 /** A dated cited source hunt is evidence; a registry status alone is not.
  * New control-plane attempts are not present in this historic audit yet, so
@@ -96,11 +97,7 @@ export function stateLegislatorCoverageAuthority(
   };
 }
 
-/** Reader-facing distinction for the two empty-roster failure domains. */
-export {
-  stateLegislatorCoverageGapText,
-  WIRED_STATUSES,
-} from "./coverage-client.ts";
+export { WIRED_STATUSES } from "./coverage-client.ts";
 
 /**
  * A body covering the point. `divisionLabel` is the division's sourced name; the body's own name is
@@ -206,6 +203,8 @@ export interface CoverageSummary {
   governments?: RegistrationGovernmentListing[];
   governmentInventoryStates?: string[];
   governmentInventoryUnavailableStates?: string[];
+  /** National FEC directories selected for the states this place touches. */
+  stateOffices?: StateOfficeContact[];
   federalDirectoryUnavailable?: boolean;
   seats: Seat[];
   /**
@@ -350,7 +349,7 @@ export function summarizeCoverage(
         ? { text: body.meetingCadence, sourceUrl: body.meetingCadenceSource?.sourceUrl ?? body.provenance.sourceUrl ?? null }
         : null,
       ...(body.officeAddress || body.officePhone
-        ? { officeContact: { address: body.officeAddress ?? null, phone: body.officePhone ?? null, provenance: body.provenance } }
+        ? { officeContact: { address: body.officeAddress ?? null, phone: body.officePhone ?? null, provenance: body.fieldSources?.officeAddress ?? body.fieldSources?.officePhone ?? body.provenance } }
         : {}),
       lookedAt: held !== undefined || DOCUMENTED_SEARCHES.has(body.id),
       ...(historyGap ? { historyGap } : {}),

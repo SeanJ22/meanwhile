@@ -2,13 +2,14 @@
 import { parse } from "yaml";
 import { pathToFileURL } from "node:url";
 import { failedFederalDirectoryCandidate, federalDirectoryCandidate, FEDERAL_DIRECTORY_PARSER_VERSION, type FederalDirectoryAcquisition } from "../lib/officials/federal-directory-data-plane.ts";
-import { congressPortraits } from "../lib/officials/congress-portraits.ts";
 import { normalizeCongressDirectory } from "../lib/officials/congress-normalize.ts";
 import { readFederalDirectoryProjection } from "../lib/officials/federal-directory-read-model.ts";
 import { processRegisteredManualCandidate, type PromotionOutcome } from "../lib/civic-data/promotion.ts";
 import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { PostgresRoutineDataStore, type RoutineDataStore } from "../lib/civic-data/store.ts";
+import { rawCaptureVault } from "../lib/civic-data/raw-capture-remote.ts";
+import type { EvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import type { RoutineCandidate } from "../lib/civic-data/types.ts";
 import { acquireCongressSourceRevision } from "../lib/officials/congress-source-revision.ts";
 import { acquireKnownRelease } from "../lib/sources/known-release.ts";
@@ -16,12 +17,12 @@ import { acquireKnownRelease } from "../lib/sources/known-release.ts";
 const FILES = ["legislators-current", "legislators-social-media", "legislators-district-offices", "committees-current", "committee-membership-current"] as const;
 export async function refreshCongressDirectory(input: {
   store: RoutineDataStore;
+  vault: EvidenceStore;
   acquire?: typeof acquireKnownRelease;
   revision?: typeof acquireCongressSourceRevision;
-  portraits?: typeof congressPortraits;
   now?: () => string;
 }): Promise<void> {
-  const {store} = input, clock = input.now ?? (() => new Date().toISOString());
+  const {store,vault} = input, clock = input.now ?? (() => new Date().toISOString());
   const acquire = input.acquire ?? acquireKnownRelease;
   let finalReceipt: { candidate: RoutineCandidate; outcome: PromotionOutcome } | null = null;
   try {
@@ -45,7 +46,7 @@ export async function refreshCongressDirectory(input: {
         const held = await acquire({sourceId:"congress-directory-project",releaseId:`${sourceSha}/${name}`,url,parserVersion:FEDERAL_DIRECTORY_PARSER_VERSION,maxBytes:16*1024*1024,checkAfterMs:365*86400000,signal:AbortSignal.timeout(30000),headers:{accept:"text/plain"},validate:bytes=>{decode(bytes);}});
         const parsed = decode(held.bytes);
         raw[name] = parsed.value; dates[name] = held.retrievedAt;
-        acquisitions.push({requestedUrl:held.requestedUrl,finalUrl:held.finalUrl,httpStatus:held.httpStatus,body:parsed.text,retrievedAt:held.retrievedAt,vaultKey:held.vaultKey,sourceCheck});
+        acquisitions.push({requestedUrl:held.requestedUrl,finalUrl:held.finalUrl,httpStatus:held.httpStatus,body:parsed.text,retrievedAt:held.retrievedAt,sourceCheck});
       } catch (error) {
         if (name === "legislators-current") throw error;
         console.error(`${name}: optional facts retained from last good holding (${error instanceof Error ? error.message : String(error)})`);
@@ -53,25 +54,12 @@ export async function refreshCongressDirectory(input: {
       // The core becomes readable immediately; optional files each enrich that same pointer.
       if (!raw["legislators-current"]) continue;
       const projection = normalizeCongressDirectory(raw,sourceSha,dates["legislators-current"]!,prior,dates,now);
-      const candidate = federalDirectoryCandidate({acquisitions,retrievedAt:dates["legislators-current"]!,projection});
+      const candidate = await federalDirectoryCandidate({acquisitions,vault,retrievedAt:dates["legislators-current"]!,projection});
       const outcome = await processRegisteredManualCandidate(store,"congress-bulk-roster",candidate,clock());
       finalReceipt = {candidate,outcome};
       if (!outcome.promoted && !outcome.confirmed) throw Error(`Federal directory held as ${outcome.candidate.state}: ${outcome.candidate.failureDetail ?? "validation refused"}`);
     }
-    const latest=await readFederalDirectoryProjection({store,now,bypassCache:true});
-    if(latest.kind === "PROMOTED") {
-      const previousExcludedFacts = priorRead.kind === "PROMOTED" && priorRead.metadata.versionId
-        ? (await store.readCandidate(priorRead.metadata.versionId))?.candidate.excludedFacts : undefined;
-      const portraits=await (input.portraits ?? congressPortraits)(latest.value,clock(),AbortSignal.timeout(120000),{previousExcludedFacts});
-      if(portraits.excludedFacts.length || JSON.stringify(portraits.projection)!==JSON.stringify(latest.value)) {
-        const candidate=federalDirectoryCandidate({acquisitions,retrievedAt:dates["legislators-current"]!,projection:portraits.projection,excludedFacts:portraits.excludedFacts});
-        // The field-attempt receipt is new evidence even when the accepted person payload is unchanged.
-        const outcome=await processRegisteredManualCandidate(store,"congress-bulk-roster",candidate,clock(),undefined,{confirmUnchanged:portraits.excludedFacts.length === 0});
-        finalReceipt = {candidate,outcome};
-        console.log(`Congress portraits: ${portraits.attempted} known members attempted; ${portraits.excludedFacts.length} source or field gaps recorded.`);
-        if (!outcome.promoted && !outcome.confirmed) throw Error(`Federal portraits held as ${outcome.candidate.state}: ${outcome.candidate.failureDetail ?? "validation refused"}`);
-      }
-    }
+
   } catch (error) {
     if (!finalReceipt) {
       try {
@@ -89,7 +77,7 @@ export async function refreshCongressDirectory(input: {
 async function main() {
   if (!process.argv.includes("--promote")) throw Error("Run with --promote; tracked federal files are first-seed/test evidence only.");
   prepareProductionCivicDataWrite();
-  await refreshCongressDirectory({store:new PostgresRoutineDataStore()});
+  await refreshCongressDirectory({store:new PostgresRoutineDataStore(),vault:rawCaptureVault()});
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) void main().catch((error:unknown)=>{
   console.error(error instanceof Error ? error.message : String(error)); process.exitCode=1;

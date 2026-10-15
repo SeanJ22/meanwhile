@@ -1,39 +1,20 @@
-/**
- * Find a government's meeting route from its own site, without a model. The
- * pure half of the unpaid discovery executor: given a page the government
- * published, it names the meeting routes that page proves; given a route's
- * response, it says whether the route actually yields meetings.
- *
- * A candidate comes only from the government's own page (LINKED: an href to a
- * vendor host or feed; SERVED_BY: vendor markup on the government's own
- * domain; EMBEDDED: a vendor tenant named in the page's own script), a saved
- * method (RECIPE), a search result (SEARCH) or a route hint (HINT). No tenant
- * slug is derived from a name: some vendor paths answer 200 for any tenant.
- *
- * Verified by content, never by status: an iCal feed must hold a VEVENT, a
- * Legistar events call a JSON array of events, an AgendaCenter page an agenda
- * document link. A feed URL that answers with an HTML shell is NOT_CONFIRMED.
- * A vendor recognised but not yet readable is a LEAD, never a route. Pure.
- */
-
 import { calendarFeedUrl } from "../sources/legistar-insite/calendar.ts";
 import { verifyOfficialPageEvents } from "../sources/official-page-events/index.ts";
 import type { OfficialLinkingPage } from "../civic-data/source-authority.ts";
+import type { FieldManualEntry } from "../control-plane/field-manual.ts";
 import { detectTenancy } from "./platform-tenancy.ts";
 import { MEETING_HELD_HORIZON_DAYS, MEETING_HELD_LOOKBACK_DAYS } from "../meetings/constants.ts";
 import { parseDiligentMeetings } from "../sources/diligent/index.ts";
+import { granicusPublisherUrl, parseGranicusPublisher } from "../sources/granicus/index.ts";
+import { novusPortalUrl, parseNovusMeetings } from "../sources/novusagenda/index.ts";
+import { escribeCalendarUrl, parseEscribeMeetings } from "../sources/escribe/index.ts";
+import { boardDocsBase, parseBoardDocsMeetings } from "../sources/boarddocs/index.ts";
+import { parsePrimeGovMeetings } from "../sources/primegov/index.ts";
+import { parseOrganizationPage } from "../sources/boardbook/index.ts";
+import { parseSwagitMeetings } from "../sources/swagit/index.ts";
 import { meetingSourceCadenceHours } from "../control-plane/scheduler/obligation.ts";
+import { governmentTimeZone } from "../time/county-time-zones.ts";
 
-/**
- * How a candidate was evidenced. The first three come from the government's
- * own page; RECIPE is a saved method's path on the government's own origin,
- * proposed only when the page shows the method's precondition
- * (`lib/hunt/meetings-recipes.ts`); SEARCH is a search result on the
- * government's own domain or a known meeting-publisher host
- * (`lib/hunt/discovery-search.ts`); HINT is a committed route hint
- * (`lib/hunt/meetings-route-hints.ts`). All six are confirmed by content alike,
- * and a hint no content check covers is a lead.
- */
 export type CandidateBasis = "LINKED" | "SERVED_BY" | "EMBEDDED" | "RECIPE" | "SEARCH" | "HINT";
 
 /** The endpoint families this module can confirm by content. */
@@ -45,6 +26,12 @@ export const VERIFIABLE_VENDORS = [
   "civicclerk-api",
   "iqm2",
   "boardbook",
+  "boarddocs",
+  "granicus",
+  "novusagenda",
+  "swagit",
+  "escribe",
+  "primegov",
   "diligent",
   /* A body's own page that dates its public events, verified for that body (`verifyOfficialPage`). */
   "official-page-events",
@@ -53,14 +40,8 @@ export type VerifiableVendor = (typeof VERIFIABLE_VENDORS)[number];
 
 /** Vendors recognised by host or markup that no content check covers yet: always a LEAD. */
 export const LEAD_ONLY_VENDORS: readonly { readonly vendor: string; readonly host: RegExp }[] = [
-  { vendor: "novusagenda", host: /(^|\.)novusagenda\.com$/i },
-  { vendor: "escribe", host: /(^|\.)escribemeetings\.com$/i },
-  { vendor: "primegov", host: /(^|\.)primegov\.com$/i },
-  { vendor: "granicus", host: /(^|\.)granicus\.com$/i },
   { vendor: "municode-meetings", host: /(^|\.)municodemeetings\.com$/i },
-  { vendor: "boarddocs", host: /(^|\.)boarddocs\.com$/i },
   { vendor: "diligent", host: /(^|\.)(diligentoneplatform\.com|highbond\.com|civicweb\.net)$/i },
-  { vendor: "swagit", host: /(^|\.)swagit\.com$/i },
   /* Destiny Agenda (public.destinyhosted.com/agenda_publish.cfm?id=…). */
   { vendor: "destiny-agenda", host: /(^|\.)destinyhosted\.com$/i },
 ];
@@ -76,11 +57,6 @@ export interface EndpointCandidate {
   readonly verifiable: boolean;
 }
 
-/**
- * The origins to try for a recorded website, https first: the address as
- * recorded, then its www/apex twin (different origins for permission and
- * transport). Empty when the address is not a usable public http(s) host.
- */
 export function siteOrigins(ownWebAddress: string | null): readonly string[] {
   if (ownWebAddress === null) return [];
   const raw = ownWebAddress.trim();
@@ -114,7 +90,6 @@ export function pageLinks(html: string, pageUrl: string): readonly string[] {
     } catch {
       continue;
     }
-    if (out.size >= 2000) break;
   }
   return [...out];
 }
@@ -128,12 +103,7 @@ function isIcalLink(url: URL): boolean {
 
 const OWN_SITE_MEETINGS = /agenda|minutes|meetings?\b|public-?notices?|boards?-?and-?commissions/i;
 
-/**
- * The meeting routes this page proves, verifiable ones first, then leads. A
- * candidate is unique by URL. Own-site meeting pages are leads only: a page is
- * not a route until an adapter can read it.
- */
-export function meetingEndpointCandidates(html: string, pageUrl: string, now?: string): readonly EndpointCandidate[] {
+export function meetingEndpointCandidates(html: string, pageUrl: string, now?: string, entries?: readonly FieldManualEntry[]): readonly EndpointCandidate[] {
   const page = new URL(pageUrl);
   const origin = `${page.protocol}//${page.host}`;
   const found = new Map<string, EndpointCandidate>();
@@ -147,11 +117,22 @@ export function meetingEndpointCandidates(html: string, pageUrl: string, now?: s
     add({ vendor: "diligent", url: `${origin}/Services/MeetingsService.svc/meetings?from=${day(-MEETING_HELD_LOOKBACK_DAYS)}&to=${day(MEETING_HELD_HORIZON_DAYS)}`, basis: "SERVED_BY", evidence: "Diligent public portal links MeetingSchedule.aspx; existing MeetingsService adapter", verifiable: true });
   }
 
+  if (/\.granicus\.com$/i.test(page.hostname) && /^\/ViewPublisher\.php$/i.test(page.pathname)) {
+    try { add({ vendor: "granicus", url: granicusPublisherUrl(pageUrl), basis: "SERVED_BY", evidence: pageUrl, verifiable: true }); } catch { /* No valid publisher id. */ }
+  }
+  if (/(^|\.)novusagenda\.com$/i.test(page.hostname) && /(?:rptMeetings|radGridMeetings)/i.test(html)) {
+    add({ vendor: "novusagenda", url: novusPortalUrl(pageUrl), basis: "SERVED_BY", evidence: "NovusAgenda public meeting grid", verifiable: true });
+  }
+
   for (const href of pageLinks(html, pageUrl)) {
     const url = new URL(href);
     const host = url.hostname.toLowerCase();
     if (isIcalLink(url)) {
       add({ vendor: "ical", url: href, basis: "LINKED", evidence: href, verifiable: true });
+      continue;
+    }
+    if (/^pub-[a-z0-9-]+\.escribemeetings\.com$/i.test(host)) {
+      add({ vendor: "escribe", url: escribeCalendarUrl(href), basis: "LINKED", evidence: href, verifiable: true });
       continue;
     }
     const legistar = /^([a-z0-9-]+)\.legistar\.com$/.exec(host);
@@ -170,9 +151,41 @@ export function meetingEndpointCandidates(html: string, pageUrl: string, now?: s
       add({ vendor: "boardbook", url: `https://meetings.boardbook.org/Public/Organization/${boardbook[1]}`, basis: "LINKED", evidence: href, verifiable: true });
       continue;
     }
+    if (/(^|\.)boarddocs\.com$/i.test(host) && /\/Board\.nsf(?:\/|$)/i.test(url.pathname)) {
+      try {
+        add({ vendor: "boarddocs", url: `${boardDocsBase(href)}/Public`, basis: "LINKED", evidence: href, verifiable: true });
+      } catch { /* An unrelated vendor page is not a tenant. */ }
+      continue;
+    }
+    if (/\.granicus\.com$/i.test(host) && /^\/ViewPublisher(?:RSS)?\.php$/i.test(url.pathname)) {
+      try { add({ vendor: "granicus", url: granicusPublisherUrl(href), basis: "LINKED", evidence: href, verifiable: true }); } catch { /* An unrelated vendor page names no publisher. */ }
+      continue;
+    }
+    if (/(^|\.)novusagenda\.com$/i.test(host) && /\/agendapublic(?:\/|$)/i.test(url.pathname)) {
+      add({ vendor: "novusagenda", url: novusPortalUrl(href), basis: "LINKED", evidence: href, verifiable: true });
+      continue;
+    }
     const clerk = /^([a-z0-9-]+)\.portal\.civicclerk\.com$/.exec(host);
+    if (/^[a-z0-9-]+\.primegov\.com$/i.test(host)) {
+      const publicOrigin = `https://${host}`;
+      add({ vendor: "primegov", url: `${publicOrigin}/api/v2/PublicPortal/ListUpcomingMeetings`, basis: "LINKED", evidence: href, verifiable: true });
+      if (now) {
+        for (let year = Number(new Date(Date.parse(now) - MEETING_HELD_LOOKBACK_DAYS * 86_400_000).toISOString().slice(0, 4)); year <= Number(now.slice(0, 4)); year++) {
+          add({ vendor: "primegov", url: `${publicOrigin}/api/v2/PublicPortal/ListArchivedMeetings?year=${year}`, basis: "LINKED", evidence: href, verifiable: true });
+        }
+      }
+      continue;
+    }
     if (clerk) {
       add({ vendor: "civicclerk-api", url: `https://${clerk[1]}.api.civicclerk.com/v1/Events?$top=5`, basis: "LINKED", evidence: href, verifiable: true });
+      continue;
+    }
+    if (/(^|\.)swagit\.com$/i.test(host) && !/^\/(?:videos|events|play)\//i.test(url.pathname)) {
+      add({ vendor: "swagit", url: href, basis: "LINKED", evidence: href, verifiable: true });
+      continue;
+    }
+    if (`${url.protocol}//${url.host}` === origin && /^\/AgendaCenter(?:\/|$)/i.test(url.pathname)) {
+      add({ vendor: "civicplus-agendacenter", url: href, basis: "LINKED", evidence: href, verifiable: true });
       continue;
     }
     const lead = LEAD_ONLY_VENDORS.find((v) => v.host.test(host));
@@ -190,7 +203,7 @@ export function meetingEndpointCandidates(html: string, pageUrl: string, now?: s
   }
 
   /* SERVED_BY: CivicPlus hosts under the government's own name; its AgendaCenter route is CivicPlus-wide. */
-  if (detectTenancy(html, pageUrl).some((hit) => hit.platform === "civicplus" && hit.strength === "SERVED_BY")) {
+  if (detectTenancy(html, pageUrl, entries).some((hit) => hit.platform === "civicplus" && hit.strength === "SERVED_BY")) {
     add({ vendor: "civicplus-agendacenter", url: `${origin}/AgendaCenter`, basis: "SERVED_BY", evidence: "CivicPlus markup on the government's own domain", verifiable: true });
   }
 
@@ -201,7 +214,7 @@ export function meetingEndpointCandidates(html: string, pageUrl: string, now?: s
   }
 
   const all = [...found.values()];
-  const leadsOwnSite = all.filter((c) => c.vendor === "own-site-meetings-page").slice(0, 5);
+  const leadsOwnSite = all.filter((c) => c.vendor === "own-site-meetings-page");
   return [
     ...all.filter((c) => c.verifiable),
     ...all.filter((c) => !c.verifiable && c.vendor !== "own-site-meetings-page"),
@@ -211,13 +224,6 @@ export function meetingEndpointCandidates(html: string, pageUrl: string, now?: s
 
 /* ------------------------------------------------ CivicPlus calendar feeds */
 
-/**
- * Every CivicPlus (CivicEngage) site serves `/iCalendar.aspx`, listing one
- * iCal feed per calendar category
- * (`/common/modules/iCalendar/iCalendar.aspx?catID=<n>&feed=calendar`), each
- * under the category's own name. Read only on a site whose own markup shows
- * CivicPlus.
- */
 export const CIVICPLUS_CALENDAR_INDEX_PATH = "/iCalendar.aspx";
 
 /** One category feed a CivicPlus iCalendar index lists: the feed and the name the site gives it. */
@@ -230,11 +236,6 @@ export interface CivicPlusCategoryFeed {
 
 const CIVICPLUS_FEED = /\/iCalendar\.aspx$/i;
 
-/**
- * The category calendar feeds a CivicPlus iCalendar index lists, in page order, one per category id. Only a link on
- * the index's own host, to a `feed=calendar` feed with a `catID`, carrying a visible name, counts: the news and alert
- * feeds the same page lists are not calendars, and a feed with no name cannot be matched to a body.
- */
 export function civicPlusCategoryFeeds(html: string, pageUrl: string): readonly CivicPlusCategoryFeed[] {
   const host = new URL(pageUrl).hostname.toLowerCase();
   const out = new Map<string, CivicPlusCategoryFeed>();
@@ -260,43 +261,10 @@ export interface EndpointVerification {
 
 /* --------------------------------------------------- official-page events */
 
-/**
- * The version of the `lib/sources/official-page-events` parser a page is
- * verified with. Bump it whenever the parser's behaviour changes; anything
- * keyed on it (a saved method, a wiring row) then re-keys cleanly.
- */
 export const OFFICIAL_PAGE_EVENTS_VERSION = "official-page-events@3d7cbd75f850";
 
-/**
- * The zone a state's bodies meet in, for every state and territory wholly in
- * one zone. States a zone line crosses (AK, FL, ID, IN, KS, KY, MI, ND, NE,
- * OR, SD, TN, TX) and two whose towns keep a neighbour's time by local
- * practice (AL, NV) are absent, so their wall clocks are never guessed and a
- * page for one of their bodies is not confirmed.
- */
-export const STATE_TIME_ZONES: Readonly<Record<string, string>> = {
-  AZ: "America/Phoenix",
-  NH: "America/New_York",
-  NJ: "America/New_York",
-  NM: "America/Denver",
-  ...Object.fromEntries(["CT", "DC", "DE", "GA", "MA", "MD", "ME", "NC", "NY", "OH", "PA", "RI", "SC", "VA", "VT", "WV"].map((s) => [s, "America/New_York"])),
-  ...Object.fromEntries(["AR", "IA", "IL", "LA", "MN", "MO", "MS", "OK", "WI"].map((s) => [s, "America/Chicago"])),
-  ...Object.fromEntries(["CO", "MT", "UT", "WY"].map((s) => [s, "America/Denver"])),
-  CA: "America/Los_Angeles",
-  WA: "America/Los_Angeles",
-  HI: "Pacific/Honolulu",
-  PR: "America/Puerto_Rico",
-  VI: "America/St_Thomas",
-  GU: "Pacific/Guam",
-  MP: "Pacific/Saipan",
-  AS: "Pacific/Pago_Pago",
-};
-
 /** Words that name a government's class, not the government itself. */
-/*
- * "Unified" and "Union" stay: they tell a unified school district from the
- * city of the same name, and a shorter core would let a neighbor's events verify.
- */
+
 const CLASS_WORDS = /\b(city|town|village|township|borough|county|of|the|school|schools|public|district|districts|no\.?|number)\b/gi;
 const SMALL_WORDS = new Set(["of", "the", "and", "for", "at", "in"]);
 
@@ -308,13 +276,6 @@ function titleCase(words: string): string {
     .join(" ");
 }
 
-/**
- * The names a body's own events may carry, derived only from the body's
- * recorded name, never from the page:
- * - the name, title-cased, without a trailing district number;
- * - the name without its class words;
- * - its initials, when they make at least three letters.
- */
 export function identityNameTerms(name: string): readonly string[] {
   const plain = name.replace(/\s+/g, " ").trim().replace(/\s*(?:#|no\.?\s*)?\d+$/i, "").trim();
   if (plain === "") return [];
@@ -380,26 +341,17 @@ export interface OfficialPageIdentity {
   readonly bodyId: string;
   /** The body's recorded name; the name forms its events may carry derive from it (`identityNameTerms`). */
   readonly name: string;
-  /**
-   * The words the body's own homepage used to link this page ("Board of Education"), or null when the
-   * page was not reached by such a link. With at least two words, the label is a name events may carry:
-   * the government itself says whose page this is. A one-word label ("Council") is too general to name a body.
-   */
+
   readonly pageLabel: string | null;
   /** The host the walk attested as the body's own: the recorded site, or a host its own redirect named. */
   readonly officialHost: string;
   readonly linkingPage?: OfficialLinkingPage | null;
   readonly stateCode: string;
+  /** Census state+county FIPS for the government's meeting location; split counties require a stated clock. */
+  readonly countyFips?: string | null;
   readonly now: string;
 }
 
-/**
- * Is this page a route for the body's dated public events? The rules are the
- * adapter's own `verifyOfficialPageEvents`, so a page this confirms is a page
- * the standing runner would publish from: an event verifies only on the body's
- * official host, named for the body in its title, and dated in the body's
- * state's zone. A page for a body in an untabled state is never confirmed.
- */
 function verifyOfficialPage(
   response: { readonly body: string; readonly finalUrl: string },
   identity: OfficialPageIdentity | undefined,
@@ -407,12 +359,12 @@ function verifyOfficialPage(
   if (identity === undefined) {
     return { verdict: "NOT_CONFIRMED", count: null, detail: "an official page is verified only for a named body, and none was given" };
   }
-  const timeZone = STATE_TIME_ZONES[identity.stateCode.toUpperCase()];
-  if (timeZone === undefined) {
+  const timeZone = governmentTimeZone(identity.stateCode, identity.countyFips);
+  if (timeZone === null) {
     return {
       verdict: "NOT_CONFIRMED",
       count: null,
-      detail: `TIME_ZONE_UNKNOWN: ${identity.stateCode} is not a one-zone state this module tables, and a wall clock is never guessed`,
+      detail: `TIME_ZONE_UNKNOWN: no single county clock for ${identity.countyFips ?? identity.stateCode}; a wall clock is never guessed`,
     };
   }
   const [name, ...nameForms] = identityNameTerms(identity.name);
@@ -448,11 +400,6 @@ function jsonOf(body: string): unknown {
   }
 }
 
-/**
- * Does this response actually yield meetings? Only a 2xx can, and only by
- * content: a route that answers an HTML shell, an error page or someone else's
- * data is NOT_CONFIRMED, never a find.
- */
 export function verifyEndpointBody(
   candidate: Pick<EndpointCandidate, "vendor" | "url">,
   response: { readonly status: number | null; readonly body: string; readonly finalUrl: string },
@@ -504,15 +451,63 @@ export function verifyEndpointBody(
         : { verdict: "NOT_CONFIRMED", count: null, detail: "no IQM2 meeting rows" };
     }
     case "boardbook": {
-      const rows = new Set(body.match(/\/Public\/Meeting\/\d+/gi) ?? []).size;
+      const rows = parseOrganizationPage(body).rows.length;
       return rows > 0
         ? { verdict: "YIELDED", count: rows, detail: `${rows} BoardBook meeting link(s)` }
         : { verdict: "NOT_CONFIRMED", count: null, detail: "no BoardBook meeting links" };
+    }
+    case "granicus": {
+      try {
+        const rows = parseGranicusPublisher(body, candidate.url);
+        return { verdict: rows.length ? "YIELDED" : "EMPTY", count: rows.length, detail: `${rows.length} public Granicus meeting record(s)` };
+      } catch { return { verdict: "NOT_CONFIRMED", count: null, detail: "not a Granicus public meeting publisher" }; }
+    }
+    case "escribe": {
+      try {
+        const rows = parseEscribeMeetings(body);
+        return { verdict: rows.length ? "YIELDED" : "EMPTY", count: rows.length, detail: `${rows.length} public eScribe meeting record(s)` };
+      } catch {
+        return { verdict: "NOT_CONFIRMED", count: null, detail: "not a public eScribe calendar list" };
+      }
+    }
+    case "boarddocs": {
+      try {
+        const rows = parseBoardDocsMeetings(body);
+        return { verdict: rows.length ? "YIELDED" : "EMPTY", count: rows.length, detail: `${rows.length} public BoardDocs meeting record(s)` };
+      } catch {
+        return { verdict: "NOT_CONFIRMED", count: null, detail: "not a BoardDocs public committee meeting list" };
+      }
+    }
+    case "novusagenda": {
+      try {
+        const rows = parseNovusMeetings(body, response.finalUrl);
+        return { verdict: rows.length ? "YIELDED" : "EMPTY", count: rows.length, detail: `${rows.length} public NovusAgenda meeting record(s)` };
+      } catch {
+        return { verdict: "NOT_CONFIRMED", count: null, detail: "not a NovusAgenda public meeting list" };
+      }
+    }
+    case "swagit": {
+      try {
+        const rows = parseSwagitMeetings(body, response.finalUrl);
+        const dated = rows.filter(row => row.date !== null).length;
+        return { verdict: dated ? "YIELDED" : rows.length ? "NOT_CONFIRMED" : "EMPTY", count: dated,
+          detail: `${dated} dated Swagit meeting record(s)` };
+      } catch {
+        return { verdict: "NOT_CONFIRMED", count: null, detail: "not a Swagit public meeting list" };
+      }
     }
     case "diligent": {
       const rows = parseDiligentMeetings(body);
       return rows === null ? { verdict: "NOT_CONFIRMED", count: null, detail: "not a Diligent list with meeting identities and local dates" }
         : { verdict: rows.length ? "YIELDED" : "EMPTY", count: rows.length, detail: `${rows.length} public Diligent meeting record(s)` };
+    }
+    case "primegov": {
+      try {
+        const rows = parsePrimeGovMeetings(body);
+        return { verdict: rows.length ? "YIELDED" : "EMPTY", count: rows.length, detail: `${rows.length} public PrimeGov meeting record(s)` };
+      } catch {
+        return { verdict: "NOT_CONFIRMED", count: null, detail: "not a PrimeGov public meeting list" };
+      }
     }
     case "official-page-events":
       return verifyOfficialPage(response, identity);
@@ -550,10 +545,7 @@ export interface DiscoveryStep {
   /** The rung this request walked: 2, a plain identified fetch. Null when nothing was sent. */
   readonly rung: 2 | null;
   readonly note: string;
-  /**
-   * The access control that answered in place of the page (a bot challenge, at any status), when one did.
-   * Absent on a step that read the page.
-   */
+
   readonly accessControl?: string;
 }
 
@@ -565,11 +557,7 @@ export interface DiscoveryFind {
   readonly count: number | null;
   readonly detail: string;
   readonly artifactId: string | null;
-  /**
-   * The page whose link this route came from, with its vaulted artifact: what a derived wiring row's host
-   * attestation chains through. Null for a route no read page linked (a hint, a saved method's path, a
-   * search result itself). Absent on older walks.
-   */
+
   readonly via?: { readonly page: string; readonly artifactId: string | null } | null;
 }
 
@@ -602,6 +590,8 @@ export interface MeetingsDiscoveryAttempt {
   readonly found: readonly DiscoveryFind[];
   readonly leads: readonly Omit<DiscoveryFind, "count" | "artifactId">[];
   readonly steps: readonly DiscoveryStep[];
+  /** Platform and tenant observed on the saved homepage, on a slow refresh clock. */
+  readonly platformCensus?: import("../control-plane/discovery/platform-census.ts").PlatformCensusObservation;
   /** Saved methods this walk applied, and those it passed over and why (`lib/hunt/meetings-recipes.ts`). */
   readonly recipes: {
     readonly applied: readonly {
@@ -639,10 +629,7 @@ export interface MeetingsDiscoveryAttempt {
   readonly note: string;
   /** How the walk reached the site. Absent on older walks. */
   readonly site?: DiscoverySiteProvenance;
-  /**
-   * The committed route hints this walk tried first (`lib/hunt/meetings-route-hints.ts`). Absent when the
-   * government has none. A need whose hints no longer match `fingerprint` is due again at once.
-   */
+
   readonly routeHints?: {
     readonly fingerprint: string;
     /** The current official site the hint records, walked before the recorded address; null when it records none. */
@@ -655,31 +642,15 @@ export interface MeetingsDiscoveryAttempt {
   };
 }
 
-/**
- * The step permission that refuses a request: a recorded access-control wall, and nothing else. A robots.txt
- * verdict (DISALLOWED, CANNOT_TELL) is recorded on the step and never refuses a public page.
- */
 const REFUSED: ReadonlySet<StepPermission> = new Set(["RECORDED_WALL"]);
 
 /** Answers that are the host walling this client by an access control, as distinct from a failure to reach it. */
 const WALL_STATUSES: ReadonlySet<number> = new Set([401, 403, 429]);
 
-/**
- * Whether an unrequested step is a wall: a recorded access-control wall. The
- * walk's own request bound also leaves a step unrequested, and says nothing
- * about the host. A robots.txt verdict is never a wall.
- */
 function isWall(step: DiscoveryStep): boolean {
   return step.permission === "RECORDED_WALL";
 }
 
-/**
- * The outcome a walk earned, from the homepage steps (one per origin).
- * BLOCKED means every origin is walled by an access control: a recorded wall
- * refused the request, or it answered 401, 403 or 429. A robots.txt verdict
- * never makes a wall. A transport failure, server error or the walk's own
- * bound is COULD_NOT_READ.
- */
 export function decideOutcome(input: {
   readonly found: readonly unknown[];
   readonly leads: readonly unknown[];

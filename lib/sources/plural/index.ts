@@ -13,27 +13,16 @@ import { officeIdentity } from "../../officials/office-identity.ts";
 import { PLURAL_STATES } from "./targets.ts";
 export { PLURAL_STATES } from "./targets.ts";
 
-/**
- * Known officeholders from Open States (Plural Open) native people YAML and
- * its separately parsed legislative CSV export. CC-0 attribution stays on each
- * person, membership and contact field.
- */
-
 const SOURCE_NAME = "plural";
 
 const SOURCE_ORG = "Plural Open States (CC-0)";
 
-/** Acquisition is national; a missing local boundary never suppresses a roster. */
 export type PluralState = (typeof PLURAL_STATES)[number];
 
 export function bulkUrl(state: string): string {
   return `https://data.openstates.org/people/current/${state.toLowerCase()}.csv`;
 }
 
-/**
- * What a chamber's members are called, per state. Not derivable: some lower
- * chambers' members are Assemblymembers, not Representatives.
- */
 const CHAMBER_TITLE: Record<string, { upper: string; lower: string }> = {
   az: { upper: "State Senator", lower: "State Representative" },
   nh: { upper: "State Senator", lower: "State Representative" },
@@ -50,11 +39,9 @@ for (const state of PLURAL_STATES) {
 }
 
 export interface PluralPerson {
-  /** An `ocd-person/<uuid>` identifier. Stable across runs. */
   id: string;
   name: string;
   current_party: string;
-  /** `"19"` in most states; `"<County> 8"` where districts are designated by county. */
   current_district: string;
   current_chamber: "upper" | "lower" | string;
   roles?: readonly PluralRole[];
@@ -64,15 +51,10 @@ export interface PluralPerson {
   offices?: readonly { name: string; address: string; voice: string; email?: string; sourceUrl?: string }[];
   email: string;
   image: string;
-  /** The capitol office address, as Open States publishes it ("…, City, ST 12345"). */
   capitol_address: string;
-  /** The capitol office phone, as the legislature publishes it. */
   capitol_voice: string;
-  /** The district office address, where one is published. */
   district_address: string;
-  /** The district office phone, where one is published. */
   district_voice: string;
-  /** Semicolon-separated. */
   links: string;
   sources: string;
   state: string;
@@ -86,7 +68,6 @@ export interface PluralRole {
   readonly start_date?: string;
   readonly end_date?: string;
   readonly current?: boolean;
-  /** A valid native end date is before the observation date; never inferred from a missing role. */
   readonly ended?: boolean;
   readonly sourceUrl?: string;
 }
@@ -105,7 +86,6 @@ const NATIVE_ROLE_TITLES: Readonly<Record<string, string>> = {
   mayor: "Mayor", councilmember: "Councilmember", council_member: "Councilmember",
 };
 
-/** The source's own jurisdiction establishes scope; no pre-existing registry membership is required. */
 export function nativeRoleBinding(role: PluralRole, state: string): {
   officeTitle: string; officeKey: string; divisionId?: string; level: "STATE" | "LOCAL"; gap?: string;
 } | { issue: string } {
@@ -135,7 +115,6 @@ export function nativeRoleBinding(role: PluralRole, state: string): {
   } : {divisionId:`ocd-division/${path}`}), level: local ? "LOCAL" : "STATE" };
 }
 
-/** The native YAML record keeps fields absent from the reduced held CSV export. */
 export function yamlToPeople(text: string, state: string, sourceUrl: string, asOf: string, unresolved: (detail: string) => void = () => {}, includeInactive = false): PluralPerson[] {
   const value: unknown = parseYaml(text, { maxAliasCount: 0, uniqueKeys: true });
   if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error("PLURAL_YAML_RECORD_INVALID");
@@ -179,9 +158,6 @@ export function yamlToPeople(text: string, state: string, sourceUrl: string, asO
     if (binding.gap) unresolved(`${binding.gap}:person=${row.id}`);
     return true;
   });
-  // An upstream person slot occasionally contains a collective body. Require
-  // both explicit structured body naming and its own council contact page;
-  // a person's surname or an unrelated council link cannot reject a person.
   const councilName = typeof row.family_name === "string" && /^(?:City|Town|Borough|Village) Council$/i.test(row.family_name) &&
     typeof row.given_name === "string" && row.name === `${row.given_name} ${row.family_name}`;
   const collectiveSource = councilName && current.some(role => role.type === "mayor") &&
@@ -237,12 +213,6 @@ export interface RegistryDivisionLite {
   representation?: RepresentationLinks["representation"];
 }
 
-/**
- * Indexes the registry's legislative divisions by state, chamber and
- * designation. The registry ids are Census codes (`sldl:608`) and Plural uses
- * the statutory designation; the Census-sourced label bridges them. Matching
- * is exact within one state and chamber, and every miss is reported.
- */
 export function indexDivisions(
   divisions: RegistryDivisionLite[],
 ): Map<string, string> {
@@ -271,7 +241,6 @@ export function indexDivisions(
   return index;
 }
 
-/** Minimal CSV reader — quoted fields, embedded commas and newlines. */
 export function parseCsv(text: string): string[][] {
   const rows: string[][] = [];
   let row: string[] = [];
@@ -343,17 +312,10 @@ export function rowsToPeople(csv: string, state: string): PluralPerson[] {
     }));
 }
 
-/** The columns `rowsToPeople` reads to build a legislator; a header without them is not the roster. */
 export const PLURAL_REQUIRED_COLUMNS = ["id", "name", "current_chamber", "current_district"] as const;
 
-/** Refuse an empty response. */
 export const PLURAL_ROSTER_FLOOR = 1;
 
-/**
- * Is this 200 body actually a Plural roster, and the whole of it? Returns the
- * reason it is not, or null. An HTML error page passes the comma check and
- * parses to zero people, so the header and the floor are checked here.
- */
 export function pluralRosterIssue(csv: string): string | null {
   const rows = parseCsv(csv);
   const header = rows[0] ?? [];
@@ -375,11 +337,6 @@ export function pluralRosterIssue(csv: string): string | null {
   return null;
 }
 
-/**
- * Maps people onto officeholders and division links. Everything unattached
- * lands in `unmatched` with a reason that separates a missing boundary from an
- * identifier mismatch.
- */
 export function normalize(
   raw: PluralPerson[],
   divisionIndex: Map<string, string>,
@@ -422,7 +379,7 @@ export function normalize(
         }
         const links = representationSeatLinks(person.state, chamber, role.district ?? "", divisionIndex, divisionId);
         return [{role, title, chamber, level:"STATE" as const, divisionId: links.divisionIds.length === 1 ? links.divisionIds[0] : undefined, links,
-          officeId:`openstates-office:${person.state}:${role.type}:${role.district ?? ""}`,
+          officeId:`openstates-office:${person.state}:${officeIdentity(title)}:${role.district ?? ""}`,
           membershipId:`${personId}:${person.state}:${role.type}:${role.district ?? ""}:${role.start_date ?? ""}`}];
       }
       const binding = nativeRoleBinding(role,person.state);
@@ -522,6 +479,5 @@ export function normalize(
   return { scope, generatedAt: collectedAt, officeholders, divisions, unmatched,
     ...(endedMemberships.length ? {endedMemberships:[...new Map(endedMemberships.map(row=>[row.id,row])).values()]} : {}) };
 }
-
 
 export { SOURCE_ORG, SOURCE_NAME, CHAMBER_TITLE };

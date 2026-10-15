@@ -1,0 +1,32 @@
+{
+  "captureManifest": "vt-native-capture.json",
+  "rootReference": "data/reference/voting-source-doors.json",
+  "state": "VT",
+  "beforeRevision": "25ef70542f9bf5cffd93368ce29dcb11576e46cf",
+  "before": {
+    "doors": 6,
+    "evidence": 0,
+    "skips": 0,
+    "linkBlanks": 1,
+    "placeBlanks": 3,
+    "blanks": 4
+  },
+  "after": {
+    "doors": 4,
+    "evidence": 3,
+    "skips": 532,
+    "linkBlanks": 0,
+    "placeBlanks": 3,
+    "blanks": 3
+  },
+  "heldTargetCaptures": 7,
+  "uncapturedTargets": 532,
+  "reportedProductionPass": {
+    "doors": 2744,
+    "blanks": 1144,
+    "captureHeld": false
+  },
+  "candidateFixture": "vt-native-discovery-candidates.json",
+  "beforeUniqueUrls": 4,
+  "beforeCountsMethod": "Six seeded registry rows represent four normalized URLs; three mappings point at the same Bennington notice."
+}

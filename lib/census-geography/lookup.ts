@@ -1,13 +1,3 @@
-/**
- * The read model: implement the Admin-facing `CensusGeographyLookup` over a
- * built dataset. `createLookup` is pure (dataset in, lookup out) so it can be
- * unit-tested without the network or a database; `reader.ts` wires it to the
- * promoted production pointer or the non-prod bootstrap.
- *
- * Fails closed and never renders unknown as zero: a type/version we did not
- * publish is NOT_YET_PUBLISHED; a geography or ZCTA we do not carry is
- * NOT_IN_COVERAGE; an empty overlap set is only ever returned as OK.
- */
 import type {
   CensusGeographyLookup,
   DatasetManifest,
@@ -44,15 +34,12 @@ function toRef(scope: BuiltScope, g: BuiltGrouping): GeographyRef {
     ...(g.chamber ? { chamber: g.chamber } : {}),
     ...(g.representation ? { representation: g.representation } : {}),
     ...(g.geometry ? { geometry: g.geometry } : {}),
+    ...(g.geometryRef ? { geometryRef: g.geometryRef } : {}),
     ...(g.sourceUrls ? { sourceUrls: g.sourceUrls } : {}),
     ...(g.sourceOrg ? { sourceOrg: g.sourceOrg } : {}),
   };
 }
 
-/**
- * Build an in-memory lookup over `dataset`. `publishedVersion` is the pointer
- * id this dataset was served from (a promotion version id, or a bootstrap id).
- */
 export function createLookup(dataset: BuiltDataset, publishedVersion: string): CensusGeographyLookup {
   const scopes = new Map<string, BuiltScope>();
   const groupings = new Map<string, BuiltGrouping>();
@@ -233,5 +220,12 @@ export function notYetPublishedLookup(publishedVersion: string): CensusGeography
     zctaUniverse: [],
   };
   const base = createLookup(empty, publishedVersion);
-  return base;
+  return { ...base,
+    async groupingsForZcta(zcta5, version) {
+      return { ...await base.groupingsForZcta(zcta5, version), status: { kind: "NOT_YET_PUBLISHED", note: "No Census geography dataset was read." } };
+    },
+    async reconcilePostalZips(zips) {
+      return zips.map(zip => ({ zip, isZcta: false, outsideCoverageReason: "unknown" }));
+    },
+  };
 }

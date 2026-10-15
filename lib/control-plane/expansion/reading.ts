@@ -93,7 +93,7 @@ export interface ExpansionCycleReading {
   readonly at: string;
   /** Which Census lookup backed the resolution. Anything but "published" resolves nothing. */
   readonly lookup: {
-    readonly source: "published" | "bootstrap" | "unavailable" | "NOT_READ";
+    readonly source: "published" | "unavailable" | "NOT_READ";
     readonly versionId: string | null;
     readonly detail: string | null;
   };

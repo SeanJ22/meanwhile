@@ -9,6 +9,7 @@ import { readStateDistricts, zipDivisionIds } from "./v6-national-geography.ts";
 import { nationalScopeOf, v6NationalSection, type NationalDeps } from "./v6-national-read.ts";
 import { population } from "./v6-stuck-route.ts";
 import { readV6Sources } from "./v6-money-hunts-route.ts";
+import { readPopulationFacts, statePopulationId } from "../../reference/population-facts.ts";
 
 const NO_STORE = { "cache-control": "private, no-store, no-cache, must-revalidate" };
 
@@ -42,5 +43,8 @@ export async function v6NationalGet(request: NextRequest, options: { readonly de
   const out = await v6NationalSection({ scopeKey: query.scopeKey, scope: query.scope,
     sources: { hunts: { scopes: sources.scopes, malformedScopes: sources.malformedScopes, attribution: sources.attribution }, stuck }, deps });
   if ("kind" in out) return NextResponse.json({ code: out.code, says: out.says }, { status: out.status, headers: NO_STORE });
-  return NextResponse.json(out, { headers: NO_STORE });
+  const keys = out.data.map(row => row.kind === "State" ? statePopulationId(row.code) : row.kind === "ZIP" ? `zcta:${row.code}` : `congressional_district:${row.placeKey.split(".").at(-1)}`);
+  const acs = await readPopulationFacts(keys.filter((id): id is string => id !== null));
+  return NextResponse.json({ ...out, data: out.data.map((row, index) => ({ ...row,
+    population: acs.rows.find(fact => `${fact.geography}:${fact.code}` === keys[index]) ?? null })) }, { headers: NO_STORE });
 }

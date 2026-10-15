@@ -1,15 +1,21 @@
-import { createHash } from "node:crypto";
-
+import { createReadStream, closeSync, openSync, writeSync } from "node:fs";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { createInterface } from "node:readline";
 import { FIPS_TO_STATE } from "../ocd/fips.ts";
 import type { GeographyType, GeographyVersion } from "./contract.ts";
-import type { BuiltDataset, BuiltScope, GeographySourceFailure } from "./dataset.ts";
-import { ScopeAccumulator, parseTab20Header, resolveTab20Columns, type Tab20Spec } from "./build.ts";
-import { buildCbsaScope, parseCbsaDelineation } from "./cbsa.ts";
-import { acquireGrfScope, GRF_CD120 } from "./grf.ts";
+import type { BuiltDataset, BuiltGrouping, BuiltScope, GeographySourceFailure } from "./dataset.ts";
+import { WHOLE_THRESHOLD, ScopeAccumulator, parseTab20Header, resolveTab20Columns, type Tab20Spec } from "./build.ts";
+import { parseCbsaDelineation, type CbsaDelineation } from "./cbsa.ts";
+import { acquireGrfScopes, congressionalTarget, discoverGrfReleases, GRF_CD120, GRF_SLDU2026, GRF_SLDL2026, legislativeTarget, planApplicability, type GrfTarget, type GrfRelease } from "./grf.ts";
+import { CENSUS_ACQUISITION_PARSER, censusDirectoryFiles, censusSourceRelease, heldSourcesUnchanged, sourceValidator, type CensusSourceOptions } from "./source-release.ts";
+import { sourceAcquisitionFailure } from "../civic-data/source-acquisition-error.ts";
+import { acquireTigerScopes, discoverTigerDistrictFiles, type TigerDistrictFile } from "./tiger-acquire.ts";
+
+import type { CensusDistrictStateInput } from "./district-edge.ts";
 import { acquireAiannhScope, CENSUS_AIANNH } from "./aiannh.ts";
 import { acquireOverlayScopes } from "../overlay-geography/acquire.ts";
-import { censusGeographyUserAgent } from "./http.ts";
-import { establishedApplicability } from "./selection.ts";
 import { retainFailedSupplementalScopes } from "./supplemental-refresh.ts";
 
 const REL = "https://www2.census.gov/geo/docs/maps-data/data/rel2020";
@@ -53,12 +59,6 @@ export const CENSUS_GEO_SOURCES: Record<string, Source> = {
   },
 };
 
-/**
- * The OMB metropolitan/micropolitan delineation. Census publishes it ONLY as
- * xlsx and provides no direct ZCTA↔CBSA relationship; we derive ZCTA↔CBSA from
- * this (which counties → which CBSA, metro vs micro) joined to the ZCTA↔county
- * scope. 2023 is the current delineation vintage.
- */
 export const CBSA_DELINEATION = {
   version: "cbsa:2023",
   plan: "2023 OMB CBSA delineation",
@@ -66,119 +66,141 @@ export const CBSA_DELINEATION = {
   url: "https://www2.census.gov/programs-surveys/metro-micro/geographies/reference-files/2023/delineation-files/list1_2023.xlsx",
 } as const;
 
-export const DEFAULT_SCOPES: readonly string[] = ["cd119", "county", "cbsa", "sldu", "sldl", "aiannh", "overlays"];
+export const DEFAULT_SCOPES: readonly string[] = ["cd119", "county", "cbsa", "sldu", "sldl", "cd120", "sldu2026", "sldl2026", "aiannh", "overlays"];
+const GRF_SCOPES: Readonly<Record<string, GrfTarget>> = { cd120: GRF_CD120, sldu2026: GRF_SLDU2026, sldl2026: GRF_SLDL2026 };
 
-export interface AcquireOptions {
+export interface AcquireOptions extends CensusSourceOptions {
   readonly only?: readonly string[];
   readonly states?: ReadonlySet<string>;
-  /** Overridable for tests so the suite never touches the network. */
-  readonly fetchImpl?: typeof fetch;
-  readonly signal?: AbortSignal;
-  /** Undefined means the previous pointer could not be read; [] means no supplemental scopes were held. */
-  readonly previousSupplementalScopes?: readonly BuiltScope[];
+  readonly previousDataset?: BuiltDataset;
+  readonly discoverPlans?: boolean;
 }
 
-async function streamLines(
-  url: string,
-  onLine: (line: string) => void,
-  fetchImpl: typeof fetch,
-  signal?: AbortSignal,
-): Promise<{ bytes: number; sha256: string; lastModified: string | null }> {
-  const hash = createHash("sha256");
-  let bytes = 0;
-  const res = await fetchImpl(url, { headers: { "user-agent": censusGeographyUserAgent() }, signal });
-  if (!res.ok || !res.body) throw new Error(`HTTP ${res.status} fetching ${url}`);
-  const lastModified = res.headers.get("last-modified");
-  const reader = res.body.getReader();
-  const decoder = new TextDecoder("utf-8");
-  let buf = "";
-  for (;;) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    if (value) {
-      bytes += value.byteLength;
-      hash.update(value);
-      buf += decoder.decode(value, { stream: true });
-      let nl: number;
-      while ((nl = buf.indexOf("\n")) >= 0) {
-        onLine(buf.slice(0, nl).replace(/\r$/, ""));
-        buf = buf.slice(nl + 1);
-      }
-    }
-  }
-  buf += decoder.decode();
-  if (buf.length > 0) onLine(buf.replace(/\r$/, ""));
-  return { bytes, sha256: hash.digest("hex"), lastModified };
+export interface AcquireStatesOptions extends Omit<AcquireOptions, "previousDataset"> {
+  readonly previousScopes?: readonly Omit<BuiltScope, "groupings">[];
+  readonly previousStateDataset?: (state: string) => Promise<BuiltDataset | undefined>;
 }
 
-async function fetchBytes(
-  url: string,
-  fetchImpl: typeof fetch,
-  signal?: AbortSignal,
-): Promise<{ bytes: Buffer; sha256: string; lastModified: string | null }> {
-  const res = await fetchImpl(url, { headers: { "user-agent": censusGeographyUserAgent() }, signal });
-  if (!res.ok) throw new Error(`HTTP ${res.status} fetching ${url}`);
-  const bytes = Buffer.from(await res.arrayBuffer());
-  return { bytes, sha256: createHash("sha256").update(bytes).digest("hex"), lastModified: res.headers.get("last-modified") };
+interface PartitionedSource {
+  readonly source: Source;
+  readonly paths: ReadonlyMap<string, string>;
+  readonly allPath: string;
+  readonly versionMeta: GeographyVersion;
+}
+interface AcquisitionContext {
+  readonly sources: ReadonlyMap<string, Source>;
+  readonly tigerFiles: readonly TigerDistrictFile[];
+  readonly grfRelease?: GrfRelease;
+  readonly partition: (source: Source) => Promise<PartitionedSource>;
+  readonly unchanged: ReadonlySet<string>;
+  readonly cbsa?: { readonly read: (state: string) => Promise<CbsaDelineation>; readonly url: string; readonly sha256: string; readonly validator: ReturnType<typeof sourceValidator> };
 }
 
-async function buildScope(src: Source, fetchImpl: typeof fetch, signal?: AbortSignal): Promise<BuiltScope> {
+function sourceMetadata(src: Source, source: Parameters<typeof sourceValidator>[0]): GeographyVersion {
   const filename = src.url.split("/").pop() ?? src.url;
-  const state: { acc: ScopeAccumulator | null } = { acc: null };
-  const { sha256 } = await streamLines(src.url, (line) => {
-    if (state.acc === null) {
-      state.acc = new ScopeAccumulator(src, resolveTab20Columns(parseTab20Header(line), src.geoTag));
-      return;
-    }
-    if (line.trim() === "") return;
-    state.acc.add(line.split("|"));
-  }, fetchImpl, signal);
-  if (state.acc === null) throw new Error(`no header line read from ${src.url}`);
-  const versionMeta: GeographyVersion = {
-    key: src.version,
-    type: src.type as GeographyType,
-    plan: src.plan,
-    zctaTabulation: "2020",
-    effectiveFor: src.effectiveFor,
-    applicability: establishedApplicability(src.version),
-    retrievalComplete: true,
+  return {
+    key: src.version, type: src.type as GeographyType, plan: src.plan, zctaTabulation: "2020", effectiveFor: src.effectiveFor,
+    applicability: planApplicability(src.version), retrievalComplete: true,
     provenance: {
-      sourceUrls: [src.url],
-      sourceDataset: "CENSUS_TAB20_REL2020",
-      sourceFiles: [filename],
-      sourceChecksums: [sha256],
-      method:
-        `Census 2020-tabulation ZCTA↔${src.geoTag.replace(/_20$/, "")} relationship file (${filename}); ` +
+      sourceUrls: [src.url], sourceDataset: "CENSUS_TAB20_REL2020", sourceFiles: [filename], sourceChecksums: [source.sha256],
+      sourceValidators: [sourceValidator(source)], parserVersion: CENSUS_ACQUISITION_PARSER,
+      method: `Census 2020-tabulation ZCTA↔${src.geoTag.replace(/_20$/, "")} relationship file (${filename}); ` +
         `a ZCTA is an edge if it shares any land; area share = AREALAND_PART / AREALAND_ZCTA5_20 (no population weight).`,
       computedAt: new Date().toISOString(),
     },
   };
-  return state.acc.finish(versionMeta);
 }
 
-function filterScopeByStates(scope: BuiltScope, states: ReadonlySet<string>): BuiltScope {
-  const groupings = scope.groupings.filter((g) => states.has(g.stateFips));
-  return {
-    ...scope,
-    groupings,
-    instanceCount: groupings.length,
-    zctaEdgeCount: groupings.reduce((n, g) => n + g.overlaps.length, 0),
-  };
-}
-
-function filterCbsaByStates(scope: BuiltScope, states: ReadonlySet<string>): BuiltScope {
-  const postals = new Set<string>();
-  for (const f of states) {
-    const p = FIPS_TO_STATE[f]?.postal;
-    if (p) postals.add(p);
+function* byteLines(bytes: Uint8Array): Generator<string> {
+  const decoder = new TextDecoder();
+  let pending = "";
+  for (let offset = 0; offset < bytes.length; offset += 65536) {
+    pending += decoder.decode(bytes.subarray(offset, offset + 65536), { stream: true });
+    let newline: number;
+    while ((newline = pending.indexOf("\n")) >= 0) {
+      yield pending.slice(0, newline).replace(/\r$/, "");
+      pending = pending.slice(newline + 1);
+    }
   }
-  const groupings = scope.groupings.filter((g) => g.memberStates.some((p) => postals.has(p)));
-  return {
-    ...scope,
-    groupings,
-    instanceCount: groupings.length,
-    zctaEdgeCount: groupings.reduce((n, g) => n + g.overlaps.length, 0),
-  };
+  pending += decoder.decode();
+  if (pending) yield pending.replace(/\r$/, "");
+}
+
+function validateSource(bytes: Uint8Array, src: Source): void {
+  const lines = byteLines(bytes);
+  const header = parseTab20Header(lines.next().value ?? "");
+  resolveTab20Columns(header, src.geoTag);
+  let count = 0;
+  for (const line of lines) {
+    if (!line.trim()) continue;
+    if (line.split("|").length !== header.length) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", `tab20 malformed row in ${src.url}`);
+    count++;
+  }
+  if (!count) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", `tab20 returned no rows from ${src.url}`);
+}
+
+async function partitionSource(src: Source, directory: string, options: CensusSourceOptions): Promise<PartitionedSource> {
+  const source = await censusSourceRelease(src.url, options, bytes => validateSource(bytes, src));
+  const allPath = join(directory, `${src.version.replaceAll(":", "-")}-national.txt`);
+  await writeFile(allPath, source.bytes);
+  const lines = byteLines(source.bytes);
+  const rawHeader = lines.next().value ?? "";
+  const header = parseTab20Header(rawHeader), columns = resolveTab20Columns(header, src.geoTag);
+  const handles = new Map<string, number>(), paths = new Map<string, string>();
+  try {
+    for (const line of lines) {
+      if (!line.trim()) continue;
+      const fields = line.split("|"), geoid = fields[columns.geoGeoid]?.trim() ?? "";
+      if (!geoid) continue;
+      const state = geoid.slice(0, 2);
+      if (!FIPS_TO_STATE[state]) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", `tab20 geography has unknown state ${geoid}`);
+      let handle = handles.get(state);
+      if (handle === undefined) {
+        const path = join(directory, `${src.version.replaceAll(":", "-")}-${state}.txt`);
+        handle = openSync(path, "w"); handles.set(state, handle); paths.set(state, path);
+        writeSync(handle, `${rawHeader}\n`);
+      }
+      writeSync(handle, `${line}\n`);
+    }
+  } finally { for (const handle of handles.values()) closeSync(handle); }
+  return { source: src, paths, allPath, versionMeta: sourceMetadata(src, source) };
+}
+
+async function parsePartition(partition: PartitionedSource, state: string): Promise<BuiltScope> {
+  const path = partition.paths.get(state);
+  const meta = { ...partition.versionMeta, states: [FIPS_TO_STATE[state].postal] };
+  if (!path) return { type: partition.source.type, version: partition.source.version, versionMeta: meta,
+    fractionBasis: "area", groupings: [], instanceCount: 0, zctaEdgeCount: 0 };
+  const lines = createInterface({ input: createReadStream(path), crlfDelay: Infinity });
+  let acc: ScopeAccumulator | undefined;
+  for await (const line of lines) {
+    if (!acc) { acc = new ScopeAccumulator(partition.source, resolveTab20Columns(parseTab20Header(line), partition.source.geoTag)); continue; }
+    if (line.trim()) acc.add(line.split("|"));
+  }
+  if (!acc) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", `tab20 partition has no header: ${state}`);
+  return acc.finish(meta);
+}
+
+async function buildScope(src: Source, options: AcquireOptions, context: AcquisitionContext): Promise<BuiltScope> {
+  const held = options.previousDataset?.scopes.find(scope => scope.version === src.version && scope.type === src.type &&
+    scope.versionMeta.retrievalComplete !== false && scope.versionMeta.provenance.sourceDataset === "CENSUS_TAB20_REL2020" &&
+    scope.versionMeta.provenance.sourceUrls.includes(src.url));
+  if (held && context.unchanged.has(src.version)) return held;
+  return parsePartition(await context.partition(src), [...options.states!][0]);
+}
+
+/** Discover the exact ZCTA relationship publication for new TIGER district plans. */
+export async function discoverDistrictSources(options: CensusSourceOptions): Promise<readonly Source[]> {
+  const directory = `${REL}/cd-sld/`;
+  return (await censusDirectoryFiles(directory, options)).flatMap(url => {
+    const match = /^tab20_(cd|sldu|sldl)(\d+)20_zcta520_natl\.txt$/.exec(url.slice(directory.length));
+    if (!match) return [];
+    const [family, number] = [match[1], Number(match[2])];
+    if (number < (family === "cd" ? 119 : 2024)) return [];
+    const target = family === "cd" ? congressionalTarget(number) : legislativeTarget(family === "sldu" ? "SLDUST" : "SLDLST", number);
+    return [{ type: target.type, version: target.version, geoTag: `${family.toUpperCase()}${number}_20`,
+      labelSuffix: target.labelSuffix, plan: target.plan, effectiveFor: target.effectiveFor, url }];
+  });
 }
 
 function cbsaVersionMeta(countyScope: BuiltScope, xlsxUrl: string, xlsxSha: string): GeographyVersion {
@@ -205,89 +227,165 @@ function cbsaVersionMeta(countyScope: BuiltScope, xlsxUrl: string, xlsxSha: stri
   };
 }
 
-export async function acquireDataset(options: AcquireOptions = {}): Promise<BuiltDataset> {
-  const keys = options.only ?? DEFAULT_SCOPES;
-  const fetchImpl = options.fetchImpl ?? globalThis.fetch;
-  const wantCbsa = keys.includes("cbsa");
-
-  // Build every requested tab20 scope once, UNFILTERED (the state filter is
-  // applied at assembly, so a CBSA can still fold up a whole multi-state metro).
-  const builtByKey = new Map<string, BuiltScope>();
+async function acquisitionContext(options: AcquireStatesOptions, directory: string): Promise<AcquisitionContext> {
+  const keys = options.only ?? DEFAULT_SCOPES, discover = options.discoverPlans ?? options.only === undefined;
+  const sources = new Map<string, Source>();
   for (const key of keys) {
-    if (key === "cbsa" || key === "cd120" || key === "aiannh" || key === "overlays") continue;
-    const src = CENSUS_GEO_SOURCES[key];
-    if (!src) throw new Error(`unknown census-geography source "${key}"; known: ${Object.keys(CENSUS_GEO_SOURCES).join(", ")}, cbsa, cd120, aiannh`);
-    builtByKey.set(key, await buildScope(src, fetchImpl, options.signal));
+    if (key === "cbsa" || key === "aiannh" || key === "overlays" || key in GRF_SCOPES) continue;
+    const source = CENSUS_GEO_SOURCES[key];
+    if (!source) throw new Error(`unknown census-geography source "${key}"`);
+    sources.set(source.version, source);
   }
-
-  // CBSA is derived from the full national ZCTA↔county scope + the OMB
-  // delineation. Build county if it was not itself requested.
-  let cbsaScope: BuiltScope | undefined;
-  if (wantCbsa) {
-    let countyFull = builtByKey.get("county");
-    if (countyFull === undefined) {
-      countyFull = await buildScope(CENSUS_GEO_SOURCES.county, fetchImpl, options.signal);
+  if (keys.includes("cbsa")) sources.set(CENSUS_GEO_SOURCES.county.version, CENSUS_GEO_SOURCES.county);
+  const tigerFiles = discover ? await discoverTigerDistrictFiles(options, options.states) : [];
+  if (discover) for (const source of await discoverDistrictSources(options)) sources.set(source.version, source);
+  const unchanged = new Set<string>();
+  for (const src of sources.values()) {
+    const held = options.previousScopes?.find(scope => scope.version === src.version && scope.type === src.type && scope.versionMeta.retrievalComplete !== false &&
+      scope.versionMeta.provenance.sourceDataset === "CENSUS_TAB20_REL2020" && scope.versionMeta.provenance.sourceUrls.includes(src.url));
+    if (held && await heldSourcesUnchanged(held.versionMeta.provenance, [src.url], options)) unchanged.add(src.version);
+  }
+  const partitions = new Map<string, Promise<PartitionedSource>>();
+  const partition = (src: Source): Promise<PartitionedSource> => {
+    let found = partitions.get(src.version);
+    if (!found) { found = partitionSource(src, directory, options); partitions.set(src.version, found); }
+    return found;
+  };
+  let cbsa: AcquisitionContext["cbsa"];
+  if (keys.includes("cbsa")) {
+    let parsed: CbsaDelineation | undefined;
+    const source = await censusSourceRelease(CBSA_DELINEATION.url, options, bytes => { parsed = parseCbsaDelineation(Buffer.from(bytes)); });
+    const delineation = parsed ?? parseCbsaDelineation(Buffer.from(source.bytes));
+    for (const state of Object.keys(FIPS_TO_STATE)) {
+      const areas = [...delineation.cbsa].filter(([, info]) => info.stateFips.has(state));
+      await writeFile(join(directory, `cbsa-${state}.json`), JSON.stringify(areas.map(([code, info]) => [code, { ...info, stateFips: [...info.stateFips] }])));
     }
-    const { bytes, sha256 } = await fetchBytes(CBSA_DELINEATION.url, fetchImpl, options.signal);
-    const delineation = parseCbsaDelineation(bytes);
-    cbsaScope = buildCbsaScope(countyFull, delineation, cbsaVersionMeta(countyFull, CBSA_DELINEATION.url, sha256));
+    cbsa = { read: async state => {
+      const areas = JSON.parse(await readFile(join(directory, `cbsa-${state}.json`), "utf8")) as [string, { title: string; cbsaClass: "metropolitan" | "micropolitan"; counties: string[]; stateFips: string[] }][];
+      const cbsa = new Map(areas.map(([code, info]) => [code, { ...info, stateFips: new Set(info.stateFips) }]));
+      return { cbsa, cbsaByCounty: new Map(areas.flatMap(([code, info]) => info.counties.map(county => [county, code] as const))) };
+    }, url: CBSA_DELINEATION.url, sha256: source.sha256, validator: sourceValidator(source) };
+  }
+  const wantsGrf = keys.some(key => key in GRF_SCOPES) || discover;
+  const grfRelease = wantsGrf ? (await discoverGrfReleases(options))[0] : undefined;
+  return { sources, tigerFiles, partition, unchanged, cbsa, grfRelease };
+}
+
+async function stateCbsa(county: BuiltScope, state: string, context: AcquisitionContext): Promise<BuiltScope> {
+  const source = context.cbsa!;
+  const delineation = await source.read(state);
+  const cbsaCodes = new Set(delineation.cbsa.keys());
+  const zips = new Set(county.groupings.flatMap(group => group.overlaps.map(overlap => overlap.zcta5)));
+  const sums = new Map<string, Map<string, { part: number; total: number }>>();
+  const partition = await context.partition(CENSUS_GEO_SOURCES.county);
+  const lines = createInterface({ input: createReadStream(partition.allPath), crlfDelay: Infinity });
+  let columns: ReturnType<typeof resolveTab20Columns> | undefined;
+  for await (const line of lines) {
+    if (!columns) { columns = resolveTab20Columns(parseTab20Header(line), CENSUS_GEO_SOURCES.county.geoTag); continue; }
+    const fields = line.split("|"), zip = fields[columns.zctaGeoid]?.trim() ?? "", code = delineation.cbsaByCounty.get(fields[columns.geoGeoid]?.trim() ?? "");
+    if (!code || !cbsaCodes.has(code) || !zips.has(zip)) continue;
+    let overlaps = sums.get(code);
+    if (!overlaps) { overlaps = new Map(); sums.set(code, overlaps); }
+    const previous = overlaps.get(zip), total = Number(fields[columns.zctaAreaLand]), part = Number(fields[columns.areaLandPart]);
+    if (!Number.isFinite(part) || part < 0 || !Number.isFinite(total) || total < 0 || previous && previous.total !== total) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "CBSA county relationship has invalid land measures");
+    overlaps.set(zip, { part: (previous?.part ?? 0) + part, total });
+  }
+  const groupings: BuiltGrouping[] = [...cbsaCodes].sort().map(code => {
+    const info = delineation.cbsa.get(code)!, memberFips = [...info.stateFips].sort(), primary = memberFips[0];
+    return { geoid: code, ocdId: null, label: info.title, stateFips: primary, stateAbbr: FIPS_TO_STATE[primary].postal,
+      memberStates: memberFips.map(fips => FIPS_TO_STATE[fips].postal), cbsaClass: info.cbsaClass,
+      overlaps: [...sums.get(code) ?? []].sort(([a], [b]) => a.localeCompare(b)).map(([zcta5, { part, total }]) => {
+        const fraction = total > 0 ? Math.min(1, part / total) : null;
+        return { zcta5, fraction, whole: fraction !== null && fraction >= WHOLE_THRESHOLD };
+      }) };
+  });
+  const metadata = cbsaVersionMeta(county, source.url, source.sha256);
+  return { type: "cbsa", version: CBSA_DELINEATION.version, fractionBasis: "area", groupings,
+    instanceCount: groupings.length, zctaEdgeCount: groupings.reduce((sum, grouping) => sum + grouping.overlaps.length, 0),
+    versionMeta: { ...metadata, states: [FIPS_TO_STATE[state].postal], provenance: { ...metadata.provenance,
+      parserVersion: CENSUS_ACQUISITION_PARSER, sourceValidators: [source.validator, ...county.versionMeta.provenance.sourceValidators ?? []] } } };
+}
+
+async function acquireStateDataset(options: AcquireOptions, context: AcquisitionContext): Promise<BuiltDataset> {
+  const keys = options.only ?? DEFAULT_SCOPES, discover = options.discoverPlans ?? options.only === undefined;
+  const sources = context.sources;
+  const scopes = new Map<string, BuiltScope>();
+  if (discover) for (const scope of options.previousDataset?.scopes ?? []) scopes.set(scope.version, scope);
+  for (const source of sources.values()) scopes.set(source.version, await buildScope(source, options, context));
+
+  if (keys.includes("cbsa")) {
+    const county = scopes.get("county:2020") ?? await buildScope(CENSUS_GEO_SOURCES.county, options, context);
+    const held = options.previousDataset?.scopes.find(scope => scope.type === "cbsa" && scope.version === CBSA_DELINEATION.version &&
+      scope.versionMeta.provenance.sourceChecksums.includes(context.cbsa!.sha256));
+    scopes.set(CBSA_DELINEATION.version, held && context.unchanged.has("county:2020") ? held : await stateCbsa(county, [...options.states!][0], context));
   }
 
-  // cd:120 — the UPCOMING-ELECTION (120th Congress / 2026) congressional map,
-  // sourced from the Census grf/2026 block files. Opt-in (not in DEFAULT_SCOPES):
-  // the block download is large (~2.9 GB national), and the map is stable until
-  // the election, so it is intended to refresh at a lower cadence than the monthly
-  // tab20 refresh. State-filtered during acquisition to bound the download.
-  let cd120Scope: BuiltScope | undefined;
-  if (keys.includes("cd120")) {
-    cd120Scope = await acquireGrfScope(GRF_CD120, { fetchImpl, states: options.states, signal: options.signal });
+  const targets = keys.flatMap(key => GRF_SCOPES[key] ? [GRF_SCOPES[key]] : []);
+  if (targets.length > 0 || discover && context.grfRelease) {
+    const built = await acquireGrfScopes(discover ? [GRF_CD120, GRF_SLDU2026, GRF_SLDL2026] : targets, {
+      ...options, release: context.grfRelease, previousScopes: options.previousDataset?.scopes,
+    });
+    for (const scope of built) scopes.set(scope.version, scope);
+  }
+  const tigerFiles = context.tigerFiles.filter(file => options.states!.has(file.stateFips));
+  if (tigerFiles.length) {
+    let countyScope: Promise<BuiltScope> | undefined;
+    const tigerScopes = await acquireTigerScopes(tigerFiles, { ...options, heldScopes: [...scopes.values()],
+      stateZctas: async stateFips => {
+        countyScope ??= Promise.resolve(scopes.get("county:2020") ?? buildScope(CENSUS_GEO_SOURCES.county, options, context));
+        const county = await countyScope;
+        return new Set(county.groupings.filter(group => group.stateFips === stateFips).flatMap(group => group.overlaps.map(overlap => overlap.zcta5)));
+      },
+    });
+    for (const scope of tigerScopes) scopes.set(scope.version, scope);
   }
 
-  let aiannhScope: BuiltScope | undefined;
   const sourceFailures: GeographySourceFailure[] = [];
   if (keys.includes("aiannh")) {
     try {
-      const built = await acquireAiannhScope({ fetchImpl, states: options.states, signal: options.signal });
-      if (built && built.instanceCount > 0) aiannhScope = built;
+      const built = await acquireAiannhScope(options);
+      if (built && built.instanceCount > 0) scopes.set(built.version, built);
     } catch (error) {
-      if (options.previousSupplementalScopes === undefined || options.signal?.aborted) throw error;
-      sourceFailures.push({ type: "aiannh", sourceId: "census-aiannh", version: CENSUS_AIANNH.version,
-        sourceUrls: [CENSUS_AIANNH.url, CENSUS_AIANNH.zctaBlockUrl, CENSUS_AIANNH.blockAssignmentBase], reason: error instanceof Error ? error.message : String(error) });
+      if (options.signal?.aborted) throw error;
+      sourceFailures.push({type:"aiannh",sourceId:"census-aiannh",version:CENSUS_AIANNH.version,
+        sourceUrls:[CENSUS_AIANNH.url,CENSUS_AIANNH.zctaBlockUrl,CENSUS_AIANNH.blockAssignmentBase],reason:error instanceof Error ? error.message : String(error)});
     }
   }
-
-  const scopes: BuiltScope[] = [];
-  for (const key of keys) {
-    let scope = key === "cbsa" ? cbsaScope : key === "cd120" ? cd120Scope : key === "aiannh" ? aiannhScope : builtByKey.get(key);
-    if (scope === undefined) continue;
-    // cd:120 is already state-filtered during acquisition; tab20 scopes are built
-    // unfiltered and filtered here.
-    if (options.states && key !== "cd120" && key !== "aiannh") {
-      scope = key === "cbsa" ? filterCbsaByStates(scope, options.states) : filterScopeByStates(scope, options.states);
-    }
-    scopes.push(scope);
-  }
-  const overlays = keys.includes("overlays") ? await acquireOverlayScopes({ fetchImpl: options.fetchImpl, states: options.states, signal: options.signal }) : undefined;
-  if (overlays) scopes.push(...overlays.scopes);
-  if (overlays?.failures?.length) {
-    if (options.previousSupplementalScopes === undefined) throw new Error(overlays.failures.map(failure => failure.reason).join("; "));
-    sourceFailures.push(...overlays.failures);
-  }
-  const prior = options.previousSupplementalScopes?.map(scope => options.states ? filterScopeByStates(scope, options.states) : scope).filter(scope => scope.instanceCount > 0) ?? [];
-  const refreshedScopes = retainFailedSupplementalScopes(prior, scopes, sourceFailures);
-
+  const overlays = keys.includes("overlays") ? await acquireOverlayScopes(options) : undefined;
+  for (const scope of overlays?.scopes ?? []) scopes.set(scope.version, scope);
+  sourceFailures.push(...overlays?.failures ?? []);
+  const retained = retainFailedSupplementalScopes(options.previousDataset?.scopes ?? [], [...scopes.values()], sourceFailures);
+  const selected = retained;
   const zctaUniverse = new Set<string>();
-  for (const s of refreshedScopes) for (const g of s.groupings) for (const o of g.overlaps) zctaUniverse.add(o.zcta5);
-  const coverage = options.states
-    ? `priority batch: ${options.states.size} state(s) [${[...options.states].sort().join(",")}]; ${refreshedScopes.length} scope(s): ${refreshedScopes.map((s) => s.version).join(", ")}`
-    : `published Census scopes and reference-defined supplemental areas; ${refreshedScopes.length} scope(s): ${refreshedScopes.map((s) => s.version).join(", ")}`;
-  return {
-    formatVersion: 1,
-    builtAt: new Date().toISOString(),
-    coverage,
-    scopes: refreshedScopes,
-    ...(overlays ? { sourceDiscrepancies: overlays.reports } : {}),
-    ...(sourceFailures.length ? { sourceFailures } : {}),
-    zctaUniverse: [...zctaUniverse].sort(),
-  };
+  for (const scope of selected) if (scope.type !== "cbsa") for (const grouping of scope.groupings) for (const overlap of grouping.overlaps) zctaUniverse.add(overlap.zcta5);
+  const coverage = `state ${[...options.states!][0]}; ${selected.length} geography types: ${selected.map(scope => scope.version).join(", ")}`;
+  return { formatVersion: 1, builtAt: new Date().toISOString(), coverage, scopes: selected, ...(overlays ? {sourceDiscrepancies:overlays.reports} : {}), ...(sourceFailures.length ? {sourceFailures} : {}), zctaUniverse: [...zctaUniverse].sort() };
+}
+
+export async function acquireDataset(options: AcquireOptions = {}): Promise<BuiltDataset> {
+  if (options.states?.size !== 1) throw new Error("Census geography acquisition requires exactly one state");
+  const directory = await mkdtemp(join(tmpdir(), "census-geography-"));
+  try {
+    return await acquireStateDataset(options, await acquisitionContext({ ...options, previousScopes: options.previousDataset?.scopes }, directory));
+  } finally { await rm(directory, { recursive: true, force: true }); }
+}
+
+export async function* acquireStateDatasets(options: AcquireStatesOptions = {}): AsyncGenerator<CensusDistrictStateInput> {
+  const directory = await mkdtemp(join(tmpdir(), "census-geography-"));
+  try {
+    const context = await acquisitionContext(options, directory);
+    for (const stateFips of [...options.states ?? Object.keys(FIPS_TO_STATE)].sort()) {
+      options.signal?.throwIfAborted();
+      const state = FIPS_TO_STATE[stateFips]?.postal;
+      if (!state) throw new Error(`Unknown Census state ${stateFips}`);
+      const previousDataset = await options.previousStateDataset?.(state);
+      const stateOptions = { ...options, states: new Set([stateFips]), previousDataset };
+      const hasGrf = context.grfRelease?.files.some(url => new RegExp(`public_grfc_cur\\d{2}_${stateFips}\\.txt$`).test(url));
+      const only = options.only ?? DEFAULT_SCOPES;
+      const dataset = await acquireStateDataset({ ...stateOptions,
+        ...(!hasGrf && FIPS_TO_STATE[stateFips].prefix === "territory" ? { only: only.filter(key => !(key in GRF_SCOPES)) } : {}) },
+        !hasGrf && FIPS_TO_STATE[stateFips].prefix === "territory" ? { ...context, grfRelease: undefined } : context);
+      yield { state, dataset };
+    }
+  } finally { await rm(directory, { recursive: true, force: true }); }
 }

@@ -9,7 +9,7 @@ export function genericSourcesForDivisions(value: GenericBallotProjection, divis
   const today = new Date().toISOString().slice(0, 10);
   const ballots = Object.values(value.ballots).filter(ballot => {
     const hit = contestsForDivisions(ballot, divisions);
-    return hit.contests.length > 0 || hit.absences.length > 0;
+    return hit.contests.length > 0 || hit.absences.length > 0 || Boolean(hit.heldContests?.length);
   }).sort((a, b) => {
     // The nearest dated upcoming election first; retain unknown dates as
     // unknown, and concluded elections after upcoming ones.

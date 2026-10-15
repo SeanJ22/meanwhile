@@ -1,18 +1,5 @@
 import { haversineKm } from "./distance.ts";
-
-/**
- * The U.S. Census Bureau's address geocoder: a federal, free, keyless source.
- *
- * It geocodes addresses, not street names, so a street is located by
- * sampling a few house numbers on it and asking whether the matches agree. If
- * they sit within `MAX_SPREAD_KM` their midpoint is a real point on the
- * street; if they scatter, no single point is honest.
- *
- * 1. The point is never logged and never stored; it lives in view state only.
- * 2. Every miss returns `null`, and the caller keeps its existing behaviour.
- * 3. The reader's own house number is never sent; only its magnitude is used
- *    (see `sampleNumbersFor`).
- */
+import type { CensusGeographies } from "./census-geographies.ts";
 
 /** The Census Bureau's one-line address endpoint. No key, no account. */
 export const CENSUS_GEOCODER_URL =
@@ -20,11 +7,10 @@ export const CENSUS_GEOCODER_URL =
 
 /** The benchmark to resolve against — the Bureau's current address ranges. */
 export const CENSUS_BENCHMARK = "Public_AR_Current";
+export const CENSUS_GEOGRAPHIES_URL = "https://geocoding.geo.census.gov/geocoder/geographies/onelineaddress";
 
-/**
- * House numbers to probe, low and spread out: a number past the end of a
- * street does not match, and adjacent numbers would always agree.
- */
+export interface CensusPoint { lat: number; lng: number; geographies?: CensusGeographies; geographyVintages?: Readonly<Record<string, string>> }
+
 export const SAMPLE_HOUSE_NUMBERS = [1, 50, 200, 800] as const;
 
 /** How far apart the samples may sit and still describe one place, in km (about a mile). */
@@ -39,6 +25,8 @@ export interface StreetPoint {
   samples: number;
   /** The widest gap between samples, km. Always <= MAX_SPREAD_KM. */
   spreadKm: number;
+  geographies?: CensusGeographies;
+  geographyVintages?: Readonly<Record<string, string>>;
 }
 
 /** A leading house number, removed: a street is not a household. */
@@ -46,10 +34,6 @@ export function streetOnly(input: string): string {
   return input.trim().replace(/^\s*#?\d+[a-z]?\s+/i, "").trim();
 }
 
-/**
- * The leading house number a reader typed, or null. Read only for its
- * magnitude; never itself sent (see `sampleNumbersFor`).
- */
 export function houseNumberIn(input: string): number | null {
   const match = /^\s*#?(\d+)[a-z]?\s+\S/i.exec(input.trim());
   if (!match) return null;
@@ -57,23 +41,9 @@ export function houseNumberIn(input: string): number | null {
   return Number.isInteger(n) && n > 0 && n < 1_000_000 ? n : null;
 }
 
-/**
- * The house numbers this module will ask the Bureau about.
- *
- * Address ranges are per block face, and grid addressing (common in the
- * West) puts many streets far above a fixed low ladder, so only the magnitude
- * of the number the reader typed can name their block. The number is
- * coarsened down to its hundred block and the samples are that block's own
- * offsets; an offset that would equal the typed number is shifted, so the
- * reader's own number is never sent. With no number typed, the fixed ladder
- * is returned.
- */
 export function sampleNumbersFor(house: number | null): number[] {
   if (house === null) return [...SAMPLE_HOUSE_NUMBERS];
 
-  // Parity matters: the Bureau indexes each side of a street as its own
-  // range, so a block is often even-only or odd-only. Ignoring parity asks the
-  // empty side and concludes the street is not there.
   const parity = house % 2;
   const base = Math.floor(house / 100) * 100;
   const numbers: number[] = [];
@@ -100,30 +70,41 @@ export function censusGeocodeUrl(address: string): string {
   return `${CENSUS_GEOCODER_URL}?${params.toString()}`;
 }
 
+export function censusGeographiesUrl(address: string, vintage: string): string {
+  return `${CENSUS_GEOGRAPHIES_URL}?${new URLSearchParams({ address, benchmark: CENSUS_BENCHMARK, vintage, layers: "all", format: "json" })}`;
+}
+
 /** Our own stateless proxy. The browser's only route to the Bureau. */
 export const GEOCODE_PROXY_PATH = "/api/geocode";
 
-/**
- * One address to a point. In a browser it goes through our own
- * `/api/geocode` (the Census geocoder sends no CORS header), which writes
- * nothing; on the server it calls the Bureau directly. Nothing about the
- * address is retained.
- */
 async function geocodeOnce(
   address: string,
   impl: typeof fetch,
   signal: AbortSignal,
-): Promise<{ lat: number; lng: number } | null> {
+  vintage: string,
+): Promise<CensusPoint | null> {
   if (typeof window === "undefined") {
-    const response = await impl(censusGeocodeUrl(address), {
-      headers: { accept: "application/json" },
-      signal,
-    });
-    if (!response.ok) return null;
-    const payload = await response.json();
     const expectedZip = /,\s*(\d{5})$/.exec(address)?.[1];
-    if (expectedZip && parseCensusZip(payload) !== expectedZip) return null;
-    return parseCensusPoint(payload);
+    const vintages = vintage === "Current_Current" ? [vintage] : [vintage, "Current_Current"];
+    const points = await Promise.all(vintages.map(async sourceVintage => {
+      try {
+        const response = await impl(censusGeographiesUrl(address, sourceVintage), { headers: { accept: "application/json" }, signal });
+        if (!response.ok) return null;
+        const payload = await response.json();
+        if (expectedZip && parseCensusZip(payload) !== expectedZip) return null;
+        return parseCensusGeographies(payload);
+      } catch { return null; }
+    }));
+    const point = points[0] ?? points[1];
+    if (!point) return null;
+    const geographies: Record<string, readonly Readonly<Record<string, unknown>>[]> = {};
+    const geographyVintages: Record<string, string> = {};
+    for (let i = 0; i < vintages.length; i++) for (const [layer, rows] of Object.entries(points[i]?.geographies ?? {})) {
+      // Local boundaries stay current while legislative boundaries follow the selected term.
+      if (vintages[i] !== "Current_Current" && !/^\d+.*(?:Congressional|State Legislative) Districts/.test(layer)) continue;
+      geographies[layer] = rows; geographyVintages[layer] = vintages[i];
+    }
+    return { lat: point.lat, lng: point.lng, ...(Object.keys(geographies).length ? { geographies, geographyVintages } : {}) };
   }
 
   // POST, so a home address never rides in a URL that might be logged.
@@ -176,10 +157,14 @@ export function parseCensusPoint(
   return { lat, lng };
 }
 
-/**
- * The ZIP the Census actually matched (`addressMatches[0].addressComponents.zip`),
- * or null when absent or malformed.
- */
+export function parseCensusGeographies(payload: unknown): CensusPoint | null {
+  const point = parseCensusPoint(payload);
+  if (!point) return null;
+  const geographies = (payload as { result: { addressMatches: { geographies?: unknown }[] } }).result.addressMatches[0].geographies;
+  if (!geographies || typeof geographies !== "object" || Array.isArray(geographies)) return point;
+  return { ...point, geographies: Object.fromEntries(Object.entries(geographies).filter(([, rows]) => Array.isArray(rows))) };
+}
+
 export function parseCensusZip(payload: unknown): string | null {
   const matches = (
     payload as {
@@ -212,12 +197,6 @@ export function coherentMidpoint(
   };
 }
 
-/**
- * What a street lookup can honestly conclude: not found, a single point, or
- * a street that crosses jurisdictions (`CROSSES`), which a house number can
- * resolve. The house number is used for the geocode and never logged or
- * stored.
- */
 export type StreetLookup =
   | { kind: "POINT"; point: StreetPoint }
   | {
@@ -230,21 +209,20 @@ export type StreetLookup =
   | { kind: "NOT_FOUND" };
 
 export interface GeocodeOptions {
+  vintage?: string;
+  /** Postal entry supplies city/state instead of treating a mail-only ZIP as a residential boundary. */
+  omitZip?: boolean;
   fetchImpl?: typeof fetch;
   signal?: AbortSignal;
   /** The reader is waiting on this; a slow answer is a no answer. */
   timeoutMs?: number;
 }
 
-/**
- * The raw sampled points for a street within a zip, for callers that measure
- * ambiguity by the divisions each sample lands in.
- */
 export async function sampleStreetPoints(
   street: string,
   zip: string,
   options: GeocodeOptions = {},
-): Promise<{ lat: number; lng: number }[]> {
+): Promise<CensusPoint[]> {
   const cleaned = streetOnly(street);
   if (cleaned.length < 3 || !/^\d{5}$/.test(zip)) return [];
   return sampleStreet(
@@ -255,16 +233,12 @@ export async function sampleStreetPoints(
   );
 }
 
-/**
- * The numbers are a required parameter with no default, so every caller
- * states which ladder it means.
- */
 async function sampleStreet(
   cleaned: string,
   zip: string,
   options: GeocodeOptions,
   numbers: readonly number[],
-): Promise<{ lat: number; lng: number }[]> {
+): Promise<CensusPoint[]> {
   const impl = options.fetchImpl ?? fetch;
   const deadline = Date.now() + (options.timeoutMs ?? 8000);
   if (options.signal?.aborted || Date.now() >= deadline) return [];
@@ -279,9 +253,10 @@ async function sampleStreet(
     const points = await Promise.all(numbers.map(async (number) => {
       try {
         return await geocodeOnce(
-          `${number} ${cleaned}, ${zip}`,
+          `${number} ${cleaned}${options.omitZip ? "" : `, ${zip}`}`,
           impl,
           controller.signal,
+          options.vintage ?? "Current_Current",
         );
       } catch {
         return null;
@@ -333,10 +308,6 @@ function spreadOf(points: readonly { lat: number; lng: number }[]): number {
   return spreadKm;
 }
 
-/**
- * The same lookup, able to say which kind of no it is: the street we cannot
- * find, or the street that crosses district lines.
- */
 export async function lookupStreetInZip(
   street: string,
   zip: string,
@@ -371,10 +342,6 @@ export async function lookupStreetInZip(
   return { kind: "CROSSES", street: cleaned, spreadKm: spreadOf(points) };
 }
 
-/**
- * One exact address, on the device: the answer to the crossing question. The
- * house number is used here only; not returned, logged or stored.
- */
 export async function locateAddressInZip(
   houseNumber: string,
   street: string,
@@ -392,14 +359,17 @@ export async function locateAddressInZip(
   options.signal?.addEventListener("abort", onOuterAbort);
   try {
     const point = await geocodeOnce(
-      `${number} ${cleaned}, ${zip}`,
+      `${number} ${cleaned}${options.omitZip ? "" : `, ${zip}`}`,
       impl,
       controller.signal,
+      options.vintage ?? "Current_Current",
     );
     if (!point) return null;
     return {
       lat: point.lat,
       lng: point.lng,
+      ...(point.geographies ? { geographies: point.geographies } : {}),
+      ...(point.geographyVintages ? { geographyVintages: point.geographyVintages } : {}),
       // The street, never the full address.
       street: cleaned,
       samples: 1,
@@ -413,11 +383,6 @@ export async function locateAddressInZip(
   }
 }
 
-/**
- * Where does this address actually resolve? Asks the geocoder without the
- * ZIP constraint and reads back the ZIP it matched. Runs only after an in-ZIP
- * attempt has failed. Null on anything but a clean, different, five-digit answer.
- */
 export async function zipThisAddressResolvesTo(
   houseNumber: string,
   street: string,

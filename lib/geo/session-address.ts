@@ -1,34 +1,16 @@
-/**
- * An address, once given, is never asked for twice: the resolved outcome
- * persists for the session and answers every surface.
- *
- * - Nothing reaches the server or disk. Storage is `sessionStorage`, cleared
- *   when the tab closes.
- * - The street address and coordinates are never written; only the resolved
- *   outcome (contest and division ids) and a short label the reader typed.
- *   The house number is used for one request and discarded.
- */
-
 import {
   commitStorageWrite,
   publishToListeners,
   subscribeToStorage,
 } from "@/lib/state/subscribe-to-storage";
 import type { AddressBallotStatus } from "../ballot/holding.ts";
+import type { GeographySelection } from "../census-geography/selection.ts";
 
 /** The one key. Named so it is greppable and so nothing else claims it. */
 export const SESSION_ADDRESS_KEY = "wtp.session_address_scope";
 
-/**
- * Same-tab subscribers. `sessionStorage` fires `storage` only in other tabs,
- * so the two writers here publish to local listeners themselves.
- */
 const listeners = new Set<() => void>();
 
-/**
- * Subscribe to changes, for `useSyncExternalStore`: local listeners carry
- * same-tab writes and the `storage` event carries cross-tab ones.
- */
 export function subscribeToSessionAddress(onStoreChange: () => void): () => void {
   return subscribeToStorage(listeners, onStoreChange);
 }
@@ -39,6 +21,7 @@ function publish(): void {
 }
 
 export interface SessionAddressScope {
+  selection?: GeographySelection;
   /** The zip the address was resolved inside. */
   zip: string;
   /** Contest ids on the ballot at that point. The whole payload's value. */
@@ -49,10 +32,7 @@ export interface SessionAddressScope {
   streetLabel: string;
   /** The division ids the address confirmed, across every level that resolved. */
   divisionIds: string[];
-  /**
-   * Levels the street genuinely crosses, so a surface can keep hedging exactly
-   * those rows and nothing else. Partial ambiguity resolves partially.
-   */
+
   splitLevels: string[];
   excludedDivisionIds?: string[];
   /** When it was resolved, so a surface can say "you told us this" honestly. */
@@ -85,6 +65,7 @@ export function readSessionAddress(): SessionAddressScope | null {
     }
     return {
       zip: parsed.zip,
+      ...(parsed.selection ? { selection: parsed.selection } : {}),
       contestIds: parsed.contestIds.filter((id): id is string => typeof id === "string"),
       ballotStatus: parsed.ballotStatus === "HELD" || parsed.ballotStatus === "NOT_RECORDED" ? parsed.ballotStatus : "HOLDING_UNAVAILABLE",
       divisionIds: Array.isArray(parsed.divisionIds)
@@ -127,12 +108,10 @@ export function clearSessionAddress(): void {
   commitStorageWrite(() => store.removeItem(SESSION_ADDRESS_KEY), publish);
 }
 
-/**
- * Does the session hold an address that answers for this zip? An address in
- * one zip answers nothing about another.
- */
-export function sessionAddressFor(zip: string | null): SessionAddressScope | null {
+export function sessionAddressFor(zip: string | null, selection?: GeographySelection): SessionAddressScope | null {
   if (!zip) return null;
   const scope = readSessionAddress();
-  return scope && scope.zip === zip ? scope : null;
+  if (!scope || scope.zip !== zip || (scope.selection?.purpose ?? "representation") !== (selection?.purpose ?? "representation")) return null;
+  if (selection && (scope.selection?.asOf !== selection.asOf || scope.selection?.electionDate !== selection.electionDate)) return null;
+  return scope;
 }

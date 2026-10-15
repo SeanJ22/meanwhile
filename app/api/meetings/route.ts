@@ -26,15 +26,14 @@ import { stateOfOcdId } from "@/lib/meetings/edge-artifacts";
 import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
 import { CivicDataStoreUnavailableError } from "@/lib/civic-data/read-model";
 import { readComposedSourcePlaces } from "@/lib/meetings/prepared-snapshot";
-import { divisionIdsForZipArea } from "@/lib/ballot/zip-divisions";
+import { divisionIdsForZipArea, POINT_GEOMETRY_PLANS } from "@/lib/ballot/zip-divisions";
 import { needsPill, zipCertainty } from "@/lib/geo/zip-certainty";
 import { WIRED_STATUSES } from "@/lib/registry/coverage";
 import { coverageAt, divisionsAt, divisionsByOcdIds, prefetchReaderGeography, prepareCoverage } from "@/lib/registry/server";
 import type { Division } from "@/lib/registry/types";
 import { matching, numeric, numericInRange, refuse, rejectUnknown } from "@/lib/api/params";
 import { stageTimer } from "@/lib/api/server-timing";
-import { currentCommentAccess, type CommentAccess } from "@/lib/registry/comment-access";
-import { refreshCommentAccessFromPromoted } from "@/lib/civic-data/curated-reader-read-model";
+import { currentCommentAccess, readCommentAccessFacts, type CommentAccess } from "@/lib/registry/comment-access";
 import {
   currentEverydayRoutingProjection,
   readEverydayRoutingProjection,
@@ -153,9 +152,9 @@ export async function GET(request: Request) {
       commentAccessDataDetail = `Comment-access served from the reader edge manifest (sequence ${edgeManifest.sequence}).`;
     } else {
       if (process.env.NODE_ENV === "production") {
-        const version = await refreshCommentAccessFromPromoted();
+        const { versionId } = await readCommentAccessFacts();
         commentAccessDataState = "PROMOTED";
-        commentAccessDataDetail = `Canonical comment-access projection ${version} was read.`;
+        commentAccessDataDetail = `Comment rules read from live facts (${versionId}).`;
       }
       commentAccess = currentCommentAccess();
     }
@@ -229,6 +228,7 @@ export async function GET(request: Request) {
     const areaIds = await divisionIdsForZipArea(
       zipRead.value,
       resolvedDivisions.map((d) => d.ocdId),
+      undefined, POINT_GEOMETRY_PLANS,
     );
     const widened = await divisionsByOcdIds(areaIds, { zip: zipRead.value });
     widening();

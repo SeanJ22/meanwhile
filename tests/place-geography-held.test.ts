@@ -58,7 +58,7 @@ test("a place reuses all held serving districts and county before acquiring miss
 
 test("an unavailable promoted place has typed absence rather than a bootstrap or country payload", async () => {
   const state = await loadPublishedAreaLookupState(["85635"], async statements => {
-    assert.deepEqual(statements[0].params, ["CENSUS_GEOGRAPHY", "US:zcta-geography-overlaps", ["85635"]]);
+    assert.deepEqual(statements[0].params, ["CENSUS_GEOGRAPHY", "US:zcta-geography-overlaps"]);
     return [[]];
   });
   assert.equal(state.source, "unavailable");

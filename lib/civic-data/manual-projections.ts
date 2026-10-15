@@ -65,7 +65,6 @@ export const MANUAL_PROJECTION_CONTRACT_IDS = [
   "candidate-corpus",
   "officeholder-statements",
   "official-filings",
-  "comment-access",
   "ballot-navigation",
   "stances",
   "campaign-sites",
@@ -107,7 +106,7 @@ export interface CandidateProfilesProjection {
 }
 
 export interface CuratedReaderProjection {
-  readonly kind: "official-filings" | "comment-access" | "ballot-navigation" | "stances" | "campaign-sites" | "member-offices" | "venue-resolutions" | "everyday-routing" | "meeting-body-crosswalk" | "special-district-boundaries" | "public-records" | "government-budgets" | "campaign-finance";
+  readonly kind: "official-filings" | "ballot-navigation" | "stances" | "campaign-sites" | "member-offices" | "venue-resolutions" | "everyday-routing" | "meeting-body-crosswalk" | "special-district-boundaries" | "public-records" | "government-budgets" | "campaign-finance";
   /** Stable exact members. Each family has its own contract, pointer, and LKG. */
   readonly records: readonly (Readonly<Record<string, unknown>> & { readonly id: string })[];
   readonly formatVersion?: number;
@@ -136,6 +135,16 @@ export interface ManualProjectionPrior {
   readonly versionId: string;
   readonly payload: ManualProjectionPayload;
   readonly sourceReceipt: ManualSourceSetReceipt;
+}
+
+export function completeOfficialBallotContests(payload: GenericBallotProjection, receipt: ManualSourceSetReceipt) {
+  return Object.values(payload.ballots).flatMap(ballot => ballot.contests.filter(contest =>
+    contest.candidateListComplete === true && receipt.sources.some(source =>
+      ["ELECTION_AUTHORITY", "OFFICIAL_PUBLISHER"].includes(source.sourceClass) && source.reviewOutcome !== "BLOCKED" &&
+      source.httpStatus === 200 && /^[a-f0-9]{64}$/.test(source.rawHash) &&
+      [source.requestedUrl, source.finalUrl].includes(contest.provenance.sourceUrl ?? "") &&
+      source.retrievedAt === contest.provenance.collectedAt))
+    .map(contest => ({ ballot, contest })));
 }
 
 export interface ManualProjectionCandidateOptions {
@@ -175,9 +184,17 @@ function receiptCoverageProblems(payload: unknown, receipt: ManualSourceSetRecei
   const held = object(payload);
   const citations = held?.kind === "ballot-navigation"
     ? new Set(rows(held, "records").flatMap(row => manualRecordSourceUrls(row)))
-    : directPositiveSourceUrls(payload);
+    : held?.kind === "ballot-contests" ? ballotProvenanceUrls(payload) : directPositiveSourceUrls(payload);
   const missing = [...citations].filter((url) => !receipted.has(url)).sort();
   return missing.map((url) => `The projection cites ${url} without exact-byte evidence in the reviewed source set.`);
+}
+
+function ballotProvenanceUrls(value: unknown): Set<string> {
+  if (Array.isArray(value)) return new Set(value.flatMap(row => [...ballotProvenanceUrls(row)]));
+  const row = object(value);
+  if (!row) return new Set();
+  const url = string(object(row.provenance)?.sourceUrl);
+  return new Set([...(url ? [url] : []), ...Object.values(row).flatMap(item => [...ballotProvenanceUrls(item)])]);
 }
 
 /** An official page's linked lookup is a fact on that page, not another acquired source. */
@@ -209,7 +226,6 @@ const SOURCE_ISOLATED_MANUAL_CONTRACTS = new Set<ManualProjectionContractId>([
   "candidate-corpus",
   "officeholder-statements",
   "official-filings",
-  "comment-access",
   "ballot-navigation",
   "stances",
   "campaign-sites",
@@ -233,7 +249,7 @@ interface IsolatedManualProjection {
 }
 
 function curatedRecordIssue(
-  contractId: "official-filings" | "comment-access" | "ballot-navigation" | "stances" | "campaign-sites" | "member-offices" | "venue-resolutions" | "everyday-routing" | "meeting-body-crosswalk" | "special-district-boundaries" | "public-records" | "government-budgets" | "campaign-finance",
+  contractId: "official-filings" | "ballot-navigation" | "stances" | "campaign-sites" | "member-offices" | "venue-resolutions" | "everyday-routing" | "meeting-body-crosswalk" | "special-district-boundaries" | "public-records" | "government-budgets" | "campaign-finance",
   row: Record<string, unknown>,
 ): string | null {
   if (!string(row.id)) return `A ${contractId} row has no stable id.`;
@@ -263,14 +279,6 @@ function curatedRecordIssue(
         !/^https:\/\//.test(string(row.evidenceSourceUrl)) ||
         !Number.isFinite(Date.parse(string(row.reviewedAt)))
       ? `${string(row.id)} is not an explicit UNKNOWN/CONTACT_OWED source-hunt obligation.`
-      : null;
-  }
-  if (contractId === "comment-access") {
-    return !string(row.bodyId) ||
-        !/^https:\/\//.test(string(row.sourceUrl)) ||
-        !Number.isFinite(Date.parse(string(row.collectedAt))) ||
-        !["YES", "NO", "UNKNOWN"].includes(string(row.commentPeriod))
-      ? `${string(row.id)} lacks its exact body, source, collection time, or rule verdict.`
       : null;
   }
   if (contractId === "stances") return stanceRowIssue(row);
@@ -351,7 +359,7 @@ function sourceScopedMembers(
   if (contractId === "candidate-profiles") return profileMembers(payload);
   if (contractId === "candidate-corpus") return corpusMembers(payload);
   if (contractId === "officeholder-statements") return statementMembers(payload);
-  if (contractId === "official-filings" || contractId === "comment-access" || contractId === "ballot-navigation" ||
+  if (contractId === "official-filings" || contractId === "ballot-navigation" ||
       contractId === "stances" || contractId === "campaign-sites" || contractId === "member-offices" || contractId === "venue-resolutions" ||
       contractId === "everyday-routing" || contractId === "meeting-body-crosswalk" || contractId === "special-district-boundaries" || contractId === "public-records" || contractId === "government-budgets" || contractId === "campaign-finance") {
     return curatedMembers(payload);
@@ -432,7 +440,7 @@ function sourceScopedMemberIssue(
     }
     return null;
   }
-  if (contractId === "official-filings" || contractId === "comment-access" || contractId === "ballot-navigation" ||
+  if (contractId === "official-filings" || contractId === "ballot-navigation" ||
       contractId === "stances" || contractId === "campaign-sites" || contractId === "member-offices" || contractId === "venue-resolutions" ||
       contractId === "everyday-routing" || contractId === "meeting-body-crosswalk" || contractId === "special-district-boundaries" || contractId === "public-records" || contractId === "government-budgets" || contractId === "campaign-finance") {
     const row = object(member.record);
@@ -577,11 +585,6 @@ function sourceScopedProjection(
   };
 }
 
-/**
- * Read the exact current GOOD package used as the source-scoped merge base.
- * An unreachable/corrupt pointer is never treated as an empty set: without a
- * proven base, omission could erase LKG and the owner promotion must stop.
- */
 export async function readManualProjectionPrior(
   contractId: ManualProjectionContractId,
   store: CivicDataReadStore,
@@ -601,6 +604,7 @@ export async function readManualProjectionPrior(
   }
   const candidate = await store.readCandidate(read.projection.versionId);
   const sourceReceipt = candidate?.candidate.retrieval.manualSourceReceipt;
+  if (candidate && !sourceReceipt) return null;
   const issue = manualSourceReceiptStructureIssue(sourceReceipt);
   if (!candidate || !sourceReceipt || issue || sourceReceipt.sources.some((source) => source.reviewOutcome === "BLOCKED")) {
     throw new Error(`MANUAL_PROMOTION_BASE_PROOF_INVALID:${contractId}:${issue?.code ?? "SOURCE_RECEIPT_NOT_GOOD"}`);
@@ -630,12 +634,13 @@ function genericBallotProjection(payload: ManualProjectionPayload): BuiltProject
   const ballots = Object.values(value?.ballots ?? {});
   const records = ballots.flatMap(ballot => [
     ...ballot.contests.map(record => ({ key: `contest:${record.id}`, record })),
+    ...(ballot.heldContests ?? []).map(record => ({ key: `contest:${record.id}`, record })),
     ...ballot.candidacies.map(record => ({ key: `candidacy:${record.id}`, record })),
     ...ballot.measures.map(record => ({ key: `measure:${record.id}`, record })),
     ...(ballot.measureRecords ?? []).map(record => ({ key: `measure-record:${record.contestId}`, record })),
   ]);
   return { payload, records, identities: ballots.flatMap(ballot => [
-    ...ballot.contests.map(row => ({ subjectId: row.id, jurisdiction: `US-${ballot.election.state}`,
+    ...[...ballot.contests, ...ballot.heldContests ?? []].map(row => ({ subjectId: row.id, jurisdiction: `US-${ballot.election.state}`,
       identifiers: { contest_id: row.id }, matchBasis: "EXACT_SCOPED_ID" as const, ambiguous: false })),
     ...ballot.candidacies.map(row => ({ subjectId: row.id, jurisdiction: `US-${ballot.election.state}`,
       identifiers: { candidacy_id: row.id, contest_id: row.contestId }, matchBasis: "EXACT_SCOPED_ID" as const, ambiguous: false })),
@@ -877,7 +882,7 @@ function officeholderStatementProjection(
 }
 
 function curatedReaderProjection(
-  contractId: "official-filings" | "comment-access" | "ballot-navigation" | "stances" | "campaign-sites" | "member-offices" | "venue-resolutions" | "everyday-routing" | "meeting-body-crosswalk" | "special-district-boundaries" | "public-records" | "government-budgets" | "campaign-finance",
+  contractId: "official-filings" | "ballot-navigation" | "stances" | "campaign-sites" | "member-offices" | "venue-resolutions" | "everyday-routing" | "meeting-body-crosswalk" | "special-district-boundaries" | "public-records" | "government-budgets" | "campaign-finance",
   payload: ManualProjectionPayload,
   sourceReceipt: ManualSourceSetReceipt,
 ): BuiltProjection {
@@ -921,7 +926,7 @@ function curatedReaderProjection(
 
   const identities = records.map((row) => {
     const value = object(row.value);
-    const subjectId = (contractId === "official-filings" || contractId === "campaign-finance") ? string(row.id) : contractId === "comment-access" || contractId === "meeting-body-crosswalk" || contractId === "special-district-boundaries" || contractId === "public-records" || contractId === "government-budgets"
+    const subjectId = (contractId === "official-filings" || contractId === "campaign-finance") ? string(row.id) : contractId === "meeting-body-crosswalk" || contractId === "special-district-boundaries" || contractId === "public-records" || contractId === "government-budgets"
       ? string(row.bodyId)
       : contractId === "stances"
         ? string(row.personId)
@@ -951,9 +956,7 @@ function curatedReaderProjection(
     violations: [...duplicateProblems(ids, "Curated Reader record"), ...shapeProblems],
     schemaVersion: `curated-reader-records:${contractId}:2`,
     consumerChecks: [{
-      consumer: contractId === "official-filings" ? "/ballot official filing records" : contractId === "comment-access"
-        ? "meeting/map/Ask public-comment projection"
-        : contractId === "stances"
+      consumer: contractId === "official-filings" ? "/ballot official filing records" : contractId === "stances"
           ? "person card and Ask exact stance quotes"
         : contractId === "ballot-navigation"
           ? "ballot and where-to-vote official navigation"
@@ -1002,10 +1005,7 @@ export function manualProjectionCandidate(
     : null;
   const payload = isolated?.payload ?? input.payload;
   const promotionReceipt = isolated?.sourceReceipt ?? input.sourceReceipt;
-  // Ballot packages deliberately remain atomic: candidacies reference exact
-  // contests, and Arizona additionally cross-checks filings, certified lineup,
-  // identity registry, and reconciliation rows. Splitting those members would
-  // permit a cross-record proof assembled from incompatible source versions.
+  // Ballot candidacies and their contest evidence must remain in one source version.
   const built = input.contractId === "plain-english-translations"
     ? plainEnglishProjection(payload)
     : input.contractId === "ballot-contests"
@@ -1042,9 +1042,7 @@ export function manualProjectionCandidate(
   const civicRecords = civicRecordsFor(contract.recordClass, built.payload);
   const droppedRecords = isolated?.rejectedCurrentMembers ?? 0;
   return {
-    // Contract/record-class identity is part of the version id. Candidate
-    // profiles and publications deliberately share a source and scope, and
-    // must never collide merely because one review covered the same bytes.
+    // Profiles and publications share a source and scope; their contract keeps version ids distinct.
     id: `${contract.sourceId}:${sha256(`${contract.id}\n${contract.recordClass}\n${scope}\n${attemptHash}\n${normalizedHash}\n${reviewedAt}`).slice(0, 32)}`,
     sourceId: contract.sourceId,
     recordClass: contract.recordClass,

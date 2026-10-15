@@ -1,22 +1,8 @@
-/**
- * The discovery executor's search rung. A result is a pointer, followed only on the government's own domain or a
- * known meeting publisher, robots-first, and confirmed by content. Every request sent is charged at the published
- * price (a request lost in transport is unmeasured), the cycle and day caps refuse by name, and a route a search
- * found is saved as a method the next walk searches with first. Every test that writes runs on both stores.
- */
-
 import assert from "node:assert/strict";
 import test from "node:test";
 
 import type { CostEntry } from "../lib/control-plane/cost.ts";
-import {
-  DiscoveryTimeSpent,
-  runMeetingsDiscovery,
-  walkMeetingsDiscoveryNeed,
-  type DiscoveryOpen,
-  type DiscoveryRuntime,
-  type DiscoverySearch,
-} from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
+import { walkMeetingsDiscoveryNeed, type DiscoveryOpen, type DiscoveryRuntime, type DiscoverySearch } from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
 import {
   DISCOVERY_SEARCH_VENDOR,
   SEARCH_HOSTS,
@@ -24,14 +10,13 @@ import {
   makeDiscoverySearch,
   type SearchBudget,
 } from "../lib/control-plane/discovery/search-runtime.ts";
-import { SEARCH_REQUEST_LIFETIME_MS, type FetchLike } from "../lib/control-plane/scheduler/scout-search.ts";
+import { SEARCH_REQUEST_LIFETIME_MS, type FetchLike } from "../lib/hunt/search.ts";
 import { SEARCH_PRICES, hitStanding, plannedQueries, requestPrice } from "../lib/hunt/discovery-search.ts";
 import type { MeetingsDiscoveryNeed } from "../lib/hunt/meetings-discovery.ts";
 import { SEED_RECIPES, identityFor, knownRecipes } from "../lib/hunt/meetings-recipes.ts";
 import { eachStore } from "./control-plane-fixtures.ts";
 
 const NOW = "2026-09-24T04:00:00.000Z";
-const ICS = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nSUMMARY:Council\r\nDTSTART:20261001T010000Z\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n";
 
 function need(jurisdictionId: string, site: string, name: string, stateCode = "AZ"): MeetingsDiscoveryNeed {
   return { jurisdictionId, stateCode, name, govClass: "CITY_OR_TOWN", ownWebAddress: site, basis: "SOURCE_DISCOVERY_OWED", sources: ["MEETINGS:THIS_JURISDICTION:this-government-itself"] };
@@ -223,71 +208,6 @@ test("original hunt paid search ignores only discretionary request counts and re
   }
 });
 
-test("WALK: authorized search checks beyond connected feeds, follows source results, charges each request, and saves the method", async () => {
-  for (const [label, repos] of await eachStore("wtp-search-walk-")) {
-    const site = fakeOpen({
-      "https://benson.gov/robots.txt": { status: 404 },
-      "https://benson.gov/": { status: 200, body: "<html><a href='/parks'>Parks</a></html>" },
-      "https://benson.gov/government/meetings": { status: 200, body: "<a href='/calendar/council.ics'>Subscribe</a>" },
-      "https://benson.gov/calendar/council.ics": { status: 200, body: ICS },
-    });
-    const searches = fakeSearch({
-      "CITY OF BENSON meetings agendas minutes": ["https://www.bensonnews.com/council", "https://benson.gov/government/meetings"],
-    }, { failExa: true });
-    const costs: CostEntry[] = [];
-    const pass = await runMeetingsDiscovery(repos, {
-      needs: [need("az:city:city-of-benson", "benson.gov", "CITY OF BENSON")],
-      runtime: runtime(site.open, searches.search, costs),
-      cycleIndex: 0,
-      maxWalks: 5,
-    });
-    const walk = pass.walked[0];
-    assert.equal(walk.outcome, "FOUND", label);
-    assert.deepEqual(walk.found.map((f) => [f.basis, f.url]), [["SEARCH", "https://benson.gov/calendar/council.ics"]]);
-    assert.equal(site.seen.some((u) => u.includes("bensonnews")), false, `${label}: someone else's page is never opened`);
-    assert.deepEqual(searches.calls[0], { query: "CITY OF BENSON meetings agendas minutes", ownSiteDomain: "benson.gov" });
-
-    assert.deepEqual(
-      costs.map((c) => [c.role, c.source, c.cost.usd, c.jurisdiction, c.routeId]),
-      [
-        ["DISCOVERY_SEARCH", "api.search.brave.com", 0.005, "az:city:city-of-benson", "discovery-search:own-site-meetings"],
-        ["DISCOVERY_SEARCH", "api.exa.ai", null, "az:city:city-of-benson", "discovery-search:own-site-meetings"],
-      ],
-      `${label}: one row per request sent; the lost Exa request is UNMEASURED, never zero`,
-    );
-    assert.equal(walk.search[0].requests[0].priceSource, SEARCH_PRICES.brave.source);
-    assert.equal(walk.recipes.learned.length, 1);
-    const learned = knownRecipes((await repos.fieldManual.list()).map((row) => row.value)).find((r) => r.recipeId === walk.recipes.learned[0].recipeId)!;
-    assert.equal(learned.successes, 1, `${label}: the method is saved with its success`);
-    assert.deepEqual(learned.queryTemplates, ["{bodyName} meetings agendas minutes"]);
-
-    /* The next government's walk searches with the saved method first. */
-    const next = fakeOpen({ "https://avondale.gov/robots.txt": { status: 404 }, "https://avondale.gov/": { status: 200, body: "<html></html>" } });
-    const nextSearches = fakeSearch({});
-    const nextPass = await runMeetingsDiscovery(repos, {
-      needs: [need("az:city:city-of-avondale", "avondale.gov", "CITY OF AVONDALE")],
-      runtime: runtime(next.open, nextSearches.search, [], knownRecipes((await repos.fieldManual.list()).map((row) => row.value))),
-      cycleIndex: 0,
-      maxWalks: 5,
-    });
-    assert.equal(nextSearches.calls[0].query, "CITY OF AVONDALE meetings agendas minutes", `${label}: the saved template, identity substituted`);
-    assert.equal(nextPass.walked[0].search[0].recipeId, learned.recipeId, `${label}: the first query came from the saved method, not the default`);
-    const afterMiss = knownRecipes((await repos.fieldManual.list()).map((row) => row.value)).find((r) => r.recipeId === learned.recipeId)!;
-    assert.equal(afterMiss.failures, 1, `${label}: a saved method that found nothing here is recorded against it`);
-
-    /* A working feed is still compared with a current search when authorized. */
-    const found = fakeOpen({
-      "https://gilbert.gov/robots.txt": { status: 404 },
-      "https://gilbert.gov/": { status: 200, body: "<a href='/m.ics'>m</a>" },
-      "https://gilbert.gov/m.ics": { status: 200, body: ICS },
-    });
-    const idle = fakeSearch({});
-    const direct = await walkMeetingsDiscoveryNeed(need("az:town:gilbert", "gilbert.gov", "TOWN OF GILBERT"), runtime(found.open, idle.search, []));
-    assert.equal(direct.outcome, "FOUND");
-    assert.equal(idle.calls.length, 1, `${label}: a confirmed feed still gets a current-information search`);
-  }
-});
-
 test("REFUSED: a request the budget refused is recorded in the walk and never charged", async () => {
   const site = fakeOpen({ "https://x.gov/robots.txt": { status: 404 }, "https://x.gov/": { status: 200, body: "<html></html>" } });
   const costs: CostEntry[] = [];
@@ -295,59 +215,6 @@ test("REFUSED: a request the budget refused is recorded in the walk and never ch
   assert.equal(walk.search[0].requests[0].status, "BUDGET_REFUSED");
   assert.equal(walk.search[0].requests[0].usd, null);
   assert.deepEqual(costs.map((c) => c.source), ["api.exa.ai", "api.exa.ai"], "only requests actually sent are charged");
-});
-
-test("TIME: a query starts only with time left for the seam's worst case; a walk cut short while following a result concludes nothing, and what it paid for is reported", async () => {
-  /* Too little time for the seam's worst case: the query is not started, and nothing is charged. */
-  const quiet = fakeOpen({ "https://quiet.gov/robots.txt": { status: 404 }, "https://quiet.gov/": { status: 200, body: "<html></html>" } });
-  const unstarted = fakeSearch({});
-  const unchargedCosts: CostEntry[] = [];
-  await assert.rejects(
-    walkMeetingsDiscoveryNeed(need("az:town:quiet", "quiet.gov", "TOWN OF QUIET"), {
-      ...runtime(quiet.open, unstarted.search, unchargedCosts),
-      budget: { spent: () => false, remainingMs: () => 10_000 },
-    }),
-    (error: unknown) => error instanceof DiscoveryTimeSpent && error.search.length === 0,
-  );
-  assert.deepEqual(unstarted.calls, [], "a seam that states no worst case is given 20 seconds, and 10 are not enough");
-  assert.deepEqual(unchargedCosts, []);
-
-  for (const [label, repos] of await eachStore("wtp-search-time-")) {
-    /* The providers answer, and the time runs out while the result is followed. */
-    let left = 60_000;
-    const site = fakeOpen({
-      "https://slowtown.gov/robots.txt": { status: 404 },
-      "https://slowtown.gov/": { status: 200, body: "<html></html>" },
-      "https://slowtown.gov/meetings": { status: 200, body: "<a href='/m.ics'>m</a>" },
-    });
-    const answered = fakeSearch({ "TOWN OF SLOWTOWN meetings agendas minutes": ["https://slowtown.gov/meetings"] });
-    const spendingSearch: DiscoverySearch = Object.assign(
-      async (input: Parameters<DiscoverySearch>[0]) => {
-        const res = await answered.search(input);
-        left = 0;
-        return res;
-      },
-      { worstCaseMs: 5_000 },
-    );
-    const costs: CostEntry[] = [];
-    const pass = await runMeetingsDiscovery(repos, {
-      needs: [need("az:town:slowtown", "slowtown.gov", "TOWN OF SLOWTOWN")],
-      runtime: { ...runtime(site.open, spendingSearch, costs), budget: { spent: () => left <= 0, remainingMs: () => left } },
-      cycleIndex: 0,
-      maxWalks: 5,
-    });
-    assert.deepEqual(answered.calls.map((c) => c.query), ["TOWN OF SLOWTOWN meetings agendas minutes"], `${label}: 60 seconds cover a stated 5-second worst case`);
-    assert.deepEqual(pass.walked, [], `${label}: nothing is recorded as a reading`);
-    assert.equal(pass.cutShort.length, 1);
-    assert.deepEqual(
-      pass.cutShort[0].search.map((q) => [q.query, q.requests.map((r) => r.provider), q.followed]),
-      [["TOWN OF SLOWTOWN meetings agendas minutes", ["brave", "exa"], []]],
-      `${label}: the query it paid for is reported with the cut walk; the result it never requested is not "followed"`,
-    );
-    assert.deepEqual(costs.map((c) => c.source), ["api.search.brave.com", "api.exa.ai"], `${label}: both requests sent were charged`);
-    assert.equal(site.seen.includes("https://slowtown.gov/meetings"), false, `${label}: no request once the time was spent`);
-    assert.deepEqual(await repos.discoveryAttempts.readRecent("az:town:slowtown", 5), []);
-  }
 });
 
 test("SEAM WORST CASE: every provider at its timeout, plus the ledger's calls", () => {

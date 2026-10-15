@@ -1,0 +1,1309 @@
+{
+  "kind": "ballot-contests",
+  "ballots": {
+    "DC:dc-2026-11-03-general": {
+      "election": {
+        "id": "dc-2026-11-03-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "DC"
+      },
+      "contests": [
+        {
+          "candidateListComplete": true,
+          "id": "dc-2026-general-delegate-to-the-house-of-representatives",
+          "electionId": "dc-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/district:dc/cd:at-large",
+          "divisionVintage": "2022",
+          "title": "Delegate to the House of Representatives",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "dc-2026-general-mayor-of-the-district-of-columbia",
+          "electionId": "dc-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/district:dc",
+          "divisionVintage": "2022",
+          "title": "Mayor of the District of Columbia",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "dc-2026-general-chairman-of-the-council-of-the-district-of-columbia",
+          "electionId": "dc-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/district:dc",
+          "divisionVintage": "2022",
+          "title": "Chairman of the Council of the District of Columbia",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "dc-2026-general-at-large-member-of-the-council",
+          "electionId": "dc-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/district:dc",
+          "divisionVintage": "2022",
+          "title": "At-Large Member of the Council",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "dc-2026-general-ward-1-member-of-the-council",
+          "electionId": "dc-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/district:dc/ward:1",
+          "divisionVintage": "2022",
+          "title": "Ward 1 Member of the Council",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "dc-2026-general-ward-3-member-of-the-council",
+          "electionId": "dc-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/district:dc/ward:3",
+          "divisionVintage": "2022",
+          "title": "Ward 3 Member of the Council",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "dc-2026-general-ward-5-member-of-the-council",
+          "electionId": "dc-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/district:dc/ward:5",
+          "divisionVintage": "2022",
+          "title": "Ward 5 Member of the Council",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "dc-2026-general-ward-6-member-of-the-council",
+          "electionId": "dc-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/district:dc/ward:6",
+          "divisionVintage": "2022",
+          "title": "Ward 6 Member of the Council",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "dc-2026-general-attorney-general",
+          "electionId": "dc-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/district:dc",
+          "divisionVintage": "2022",
+          "title": "Attorney General",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "dc-2026-general-united-states-senator",
+          "electionId": "dc-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/district:dc",
+          "divisionVintage": "2022",
+          "title": "United States Senator",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "dc-2026-general-united-states-representative",
+          "electionId": "dc-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/district:dc",
+          "divisionVintage": "2022",
+          "title": "United States Representative",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "dc-2026-general-ward-1-member-of-the-state-board-of-education",
+          "electionId": "dc-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/district:dc/ward:1",
+          "divisionVintage": "2022",
+          "title": "Ward 1 Member of the State Board of Education",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "dc-2026-general-ward-3-member-of-the-state-board-of-education",
+          "electionId": "dc-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/district:dc/ward:3",
+          "divisionVintage": "2022",
+          "title": "Ward 3 Member of the State Board of Education",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "dc-2026-general-ward-5-member-of-the-state-board-of-education",
+          "electionId": "dc-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/district:dc/ward:5",
+          "divisionVintage": "2022",
+          "title": "Ward 5 Member of the State Board of Education",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "candidateListComplete": true,
+          "id": "dc-2026-general-ward-6-member-of-the-state-board-of-education",
+          "electionId": "dc-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/district:dc/ward:6",
+          "divisionVintage": "2022",
+          "title": "Ward 6 Member of the State Board of Education",
+          "type": "CANDIDACY",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-initiative-86",
+          "electionId": "dc-2026-11-03-general",
+          "ocdId": "ocd-division/country:us/district:dc",
+          "divisionVintage": "2022",
+          "title": "Prohibiting Force-Feeding of Birds Act of 2026.",
+          "type": "MEASURE",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "measureTextUrl": "https://www.dcboe.org/getmedia/05df694b-6e6a-44af-93d5-d7266bd6cd4c/Notice-of-Meeting-on-Bird-I86-formulations.pdf",
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/bf78fba0-50f2-40c4-ad32-0f78255d725a/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/Ward1C.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:02:25.795737Z",
+            "verifiedAt": "2026-10-14T05:02:25.795737Z",
+            "doorId": "fec-dc-chief"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "dc-2026-general-delegate-to-the-house-of-representatives:denise-rosado",
+          "contestId": "dc-2026-general-delegate-to-the-house-of-representatives",
+          "familyName": "Rosado",
+          "givenName": "Denise",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-delegate-to-the-house-of-representatives:robert-white",
+          "contestId": "dc-2026-general-delegate-to-the-house-of-representatives",
+          "familyName": "White",
+          "givenName": "Robert",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-delegate-to-the-house-of-representatives:kymone-freeman",
+          "contestId": "dc-2026-general-delegate-to-the-house-of-representatives",
+          "familyName": "Freeman",
+          "givenName": "Kymone",
+          "partyLabel": "Statehood Green",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-mayor-of-the-district-of-columbia:rhonda-hamilton",
+          "contestId": "dc-2026-general-mayor-of-the-district-of-columbia",
+          "familyName": "Hamilton",
+          "givenName": "Rhonda",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-mayor-of-the-district-of-columbia:janeese-lewis-george",
+          "contestId": "dc-2026-general-mayor-of-the-district-of-columbia",
+          "familyName": "George",
+          "givenName": "Janeese Lewis",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-mayor-of-the-district-of-columbia:robert-l-gross",
+          "contestId": "dc-2026-general-mayor-of-the-district-of-columbia",
+          "familyName": "Gross",
+          "givenName": "Robert L.",
+          "partyLabel": "Statehood Green",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-chairman-of-the-council-of-the-district-of-columbia:phil-mendelson",
+          "contestId": "dc-2026-general-chairman-of-the-council-of-the-district-of-columbia",
+          "familyName": "Mendelson",
+          "givenName": "Phil",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-chairman-of-the-council-of-the-district-of-columbia:abi-ananiah-prudent",
+          "contestId": "dc-2026-general-chairman-of-the-council-of-the-district-of-columbia",
+          "familyName": "Prudent",
+          "givenName": "Abi-Ananiah",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-at-large-member-of-the-council:oye-owolewa",
+          "contestId": "dc-2026-general-at-large-member-of-the-council",
+          "familyName": "Owolewa",
+          "givenName": "Oye",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-at-large-member-of-the-council:darryl-moch",
+          "contestId": "dc-2026-general-at-large-member-of-the-council",
+          "familyName": "Moch",
+          "givenName": "Darryl",
+          "partyLabel": "Statehood Green",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-at-large-member-of-the-council:darrell-green",
+          "contestId": "dc-2026-general-at-large-member-of-the-council",
+          "familyName": "Green",
+          "givenName": "Darrell",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-at-large-member-of-the-council:elissa-silverman",
+          "contestId": "dc-2026-general-at-large-member-of-the-council",
+          "familyName": "Silverman",
+          "givenName": "Elissa",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-ward-1-member-of-the-council:jett-james-jasper",
+          "contestId": "dc-2026-general-ward-1-member-of-the-council",
+          "familyName": "Jasper",
+          "givenName": "Jett James",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-ward-1-member-of-the-council:ryan-prince",
+          "contestId": "dc-2026-general-ward-1-member-of-the-council",
+          "familyName": "Prince",
+          "givenName": "Ryan",
+          "partyLabel": "Independent",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-ward-1-member-of-the-council:jude-crannitch",
+          "contestId": "dc-2026-general-ward-1-member-of-the-council",
+          "familyName": "Crannitch",
+          "givenName": "Jude",
+          "partyLabel": "Statehood Green",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-ward-1-member-of-the-council:aparna-raj",
+          "contestId": "dc-2026-general-ward-1-member-of-the-council",
+          "familyName": "Raj",
+          "givenName": "Aparna",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-ward-3-member-of-the-council:matthew-frumin",
+          "contestId": "dc-2026-general-ward-3-member-of-the-council",
+          "familyName": "Frumin",
+          "givenName": "Matthew",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-ward-5-member-of-the-council:zachary-parker",
+          "contestId": "dc-2026-general-ward-5-member-of-the-council",
+          "familyName": "Parker",
+          "givenName": "Zachary",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-ward-5-member-of-the-council:joyce-robinson-paul",
+          "contestId": "dc-2026-general-ward-5-member-of-the-council",
+          "familyName": "Robinson-Paul",
+          "givenName": "Joyce",
+          "partyLabel": "Statehood Green",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-ward-5-member-of-the-council:jeffrey-kihien-palza",
+          "contestId": "dc-2026-general-ward-5-member-of-the-council",
+          "familyName": "Kihien-Palza",
+          "givenName": "Jeffrey",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-ward-6-member-of-the-council:charles-allen",
+          "contestId": "dc-2026-general-ward-6-member-of-the-council",
+          "familyName": "Allen",
+          "givenName": "Charles",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-ward-6-member-of-the-council:jorge-rice",
+          "contestId": "dc-2026-general-ward-6-member-of-the-council",
+          "familyName": "Rice",
+          "givenName": "Jorge",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-attorney-general:manuel-rivera",
+          "contestId": "dc-2026-general-attorney-general",
+          "familyName": "Rivera",
+          "givenName": "Manuel",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-attorney-general:brian-l-schwalb",
+          "contestId": "dc-2026-general-attorney-general",
+          "familyName": "Schwalb",
+          "givenName": "Brian L.",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-united-states-senator:robert-simmons",
+          "contestId": "dc-2026-general-united-states-senator",
+          "familyName": "Simmons",
+          "givenName": "Robert",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-united-states-senator:paul-strauss",
+          "contestId": "dc-2026-general-united-states-senator",
+          "familyName": "Strauss",
+          "givenName": "Paul",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-united-states-representative:ciprian-ivanof",
+          "contestId": "dc-2026-general-united-states-representative",
+          "familyName": "Ivanof",
+          "givenName": "Ciprian",
+          "partyLabel": "Republican",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-united-states-representative:franklin-garcia",
+          "contestId": "dc-2026-general-united-states-representative",
+          "familyName": "Garcia",
+          "givenName": "Franklin",
+          "partyLabel": "Democrat",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-ward-1-member-of-the-state-board-of-education:ben-williams",
+          "contestId": "dc-2026-general-ward-1-member-of-the-state-board-of-education",
+          "familyName": "Williams",
+          "givenName": "Ben",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-ward-3-member-of-the-state-board-of-education:eric-goulet",
+          "contestId": "dc-2026-general-ward-3-member-of-the-state-board-of-education",
+          "familyName": "Goulet",
+          "givenName": "Eric",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-ward-3-member-of-the-state-board-of-education:aaron-wesolowski",
+          "contestId": "dc-2026-general-ward-3-member-of-the-state-board-of-education",
+          "familyName": "Wesolowski",
+          "givenName": "Aaron",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-ward-5-member-of-the-state-board-of-education:jon-alfuth",
+          "contestId": "dc-2026-general-ward-5-member-of-the-state-board-of-education",
+          "familyName": "Alfuth",
+          "givenName": "Jon",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-ward-5-member-of-the-state-board-of-education:lynn-jennings",
+          "contestId": "dc-2026-general-ward-5-member-of-the-state-board-of-education",
+          "familyName": "Jennings",
+          "givenName": "Lynn",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-ward-6-member-of-the-state-board-of-education:amber-a-williams",
+          "contestId": "dc-2026-general-ward-6-member-of-the-state-board-of-education",
+          "familyName": "Williams",
+          "givenName": "Amber A.",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-ward-6-member-of-the-state-board-of-education:david-parker",
+          "contestId": "dc-2026-general-ward-6-member-of-the-state-board-of-education",
+          "familyName": "Parker",
+          "givenName": "David",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-ward-6-member-of-the-state-board-of-education:joshua-wiley",
+          "contestId": "dc-2026-general-ward-6-member-of-the-state-board-of-education",
+          "familyName": "Wiley",
+          "givenName": "Joshua",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.030962Z",
+            "verifiedAt": "2026-10-14T05:01:44.030962Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-delegate-to-the-house-of-representatives:rebekkah-green",
+          "contestId": "dc-2026-general-delegate-to-the-house-of-representatives",
+          "familyName": "Green",
+          "givenName": "Rebekkah",
+          "partyLabel": "Independent",
+          "slogan": "Declared write-in",
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/baa7b20c-9cbd-45fe-9842-986da48d2123/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-Election-WRITE-IN-CANDIDATES-07222026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.805522Z",
+            "verifiedAt": "2026-10-14T05:01:44.805522Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-delegate-to-the-house-of-representatives:david-solana",
+          "contestId": "dc-2026-general-delegate-to-the-house-of-representatives",
+          "familyName": "Solana",
+          "givenName": "David",
+          "partyLabel": "Independent",
+          "slogan": "Declared write-in",
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/baa7b20c-9cbd-45fe-9842-986da48d2123/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-Election-WRITE-IN-CANDIDATES-07222026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.805522Z",
+            "verifiedAt": "2026-10-14T05:01:44.805522Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-mayor-of-the-district-of-columbia:charles-breedlove",
+          "contestId": "dc-2026-general-mayor-of-the-district-of-columbia",
+          "familyName": "Breedlove",
+          "givenName": "Charles",
+          "partyLabel": "Independent",
+          "slogan": "Declared write-in",
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/baa7b20c-9cbd-45fe-9842-986da48d2123/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-Election-WRITE-IN-CANDIDATES-07222026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.805522Z",
+            "verifiedAt": "2026-10-14T05:01:44.805522Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-mayor-of-the-district-of-columbia:patrick-christian",
+          "contestId": "dc-2026-general-mayor-of-the-district-of-columbia",
+          "familyName": "Christian",
+          "givenName": "Patrick",
+          "partyLabel": "Independent",
+          "slogan": "Declared write-in",
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/baa7b20c-9cbd-45fe-9842-986da48d2123/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-Election-WRITE-IN-CANDIDATES-07222026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.805522Z",
+            "verifiedAt": "2026-10-14T05:01:44.805522Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-mayor-of-the-district-of-columbia:myrtle-patricia-alexander",
+          "contestId": "dc-2026-general-mayor-of-the-district-of-columbia",
+          "familyName": "Alexander",
+          "givenName": "Myrtle Patricia",
+          "partyLabel": "Independent",
+          "slogan": "Declared write-in",
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/baa7b20c-9cbd-45fe-9842-986da48d2123/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-Election-WRITE-IN-CANDIDATES-07222026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.805522Z",
+            "verifiedAt": "2026-10-14T05:01:44.805522Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-mayor-of-the-district-of-columbia:george-jackson",
+          "contestId": "dc-2026-general-mayor-of-the-district-of-columbia",
+          "familyName": "Jackson",
+          "givenName": "George",
+          "partyLabel": "Independent",
+          "slogan": "Declared write-in",
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/baa7b20c-9cbd-45fe-9842-986da48d2123/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-Election-WRITE-IN-CANDIDATES-07222026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.805522Z",
+            "verifiedAt": "2026-10-14T05:01:44.805522Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-mayor-of-the-district-of-columbia:treasure-jacqueline-chapman",
+          "contestId": "dc-2026-general-mayor-of-the-district-of-columbia",
+          "familyName": "Chapman",
+          "givenName": "Treasure Jacqueline",
+          "partyLabel": "Independent",
+          "slogan": "Declared write-in",
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/baa7b20c-9cbd-45fe-9842-986da48d2123/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-Election-WRITE-IN-CANDIDATES-07222026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.805522Z",
+            "verifiedAt": "2026-10-14T05:01:44.805522Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-mayor-of-the-district-of-columbia:kenneth-dale-bristow",
+          "contestId": "dc-2026-general-mayor-of-the-district-of-columbia",
+          "familyName": "Bristow",
+          "givenName": "Kenneth Dale",
+          "partyLabel": "Independent",
+          "slogan": "Declared write-in",
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/baa7b20c-9cbd-45fe-9842-986da48d2123/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-Election-WRITE-IN-CANDIDATES-07222026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.805522Z",
+            "verifiedAt": "2026-10-14T05:01:44.805522Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-mayor-of-the-district-of-columbia:michael-arega",
+          "contestId": "dc-2026-general-mayor-of-the-district-of-columbia",
+          "familyName": "Arega",
+          "givenName": "Michael",
+          "partyLabel": "One Home Party",
+          "slogan": "Declared write-in",
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/baa7b20c-9cbd-45fe-9842-986da48d2123/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-Election-WRITE-IN-CANDIDATES-07222026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.805522Z",
+            "verifiedAt": "2026-10-14T05:01:44.805522Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-mayor-of-the-district-of-columbia:anthony-isaiah-brown",
+          "contestId": "dc-2026-general-mayor-of-the-district-of-columbia",
+          "familyName": "Brown",
+          "givenName": "Anthony Isaiah",
+          "partyLabel": "Independent",
+          "slogan": "Declared write-in",
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/baa7b20c-9cbd-45fe-9842-986da48d2123/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-Election-WRITE-IN-CANDIDATES-07222026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.805522Z",
+            "verifiedAt": "2026-10-14T05:01:44.805522Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-mayor-of-the-district-of-columbia:kathy-henderson",
+          "contestId": "dc-2026-general-mayor-of-the-district-of-columbia",
+          "familyName": "Henderson",
+          "givenName": "Kathy",
+          "partyLabel": "Democrat",
+          "slogan": "Declared write-in",
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/baa7b20c-9cbd-45fe-9842-986da48d2123/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-Election-WRITE-IN-CANDIDATES-07222026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.805522Z",
+            "verifiedAt": "2026-10-14T05:01:44.805522Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-mayor-of-the-district-of-columbia:marquis-cotton",
+          "contestId": "dc-2026-general-mayor-of-the-district-of-columbia",
+          "familyName": "Cotton",
+          "givenName": "Marquis",
+          "partyLabel": "Independent",
+          "slogan": "Declared write-in",
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/baa7b20c-9cbd-45fe-9842-986da48d2123/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-Election-WRITE-IN-CANDIDATES-07222026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.805522Z",
+            "verifiedAt": "2026-10-14T05:01:44.805522Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-chairman-of-the-council-of-the-district-of-columbia:john-cheeks",
+          "contestId": "dc-2026-general-chairman-of-the-council-of-the-district-of-columbia",
+          "familyName": "Cheeks",
+          "givenName": "John",
+          "partyLabel": "Independent",
+          "slogan": "Declared write-in",
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/baa7b20c-9cbd-45fe-9842-986da48d2123/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-Election-WRITE-IN-CANDIDATES-07222026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.805522Z",
+            "verifiedAt": "2026-10-14T05:01:44.805522Z",
+            "doorId": "fec-dc-chief"
+          }
+        },
+        {
+          "id": "dc-2026-general-at-large-member-of-the-council:joe-jackson",
+          "contestId": "dc-2026-general-at-large-member-of-the-council",
+          "familyName": "Jackson",
+          "givenName": "Joe",
+          "partyLabel": "Independent",
+          "slogan": "Declared write-in",
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/baa7b20c-9cbd-45fe-9842-986da48d2123/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-Election-WRITE-IN-CANDIDATES-07222026.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:01:44.805522Z",
+            "verifiedAt": "2026-10-14T05:01:44.805522Z",
+            "doorId": "fec-dc-chief"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "dc-2026-general-initiative-86:question",
+          "contestId": "dc-2026-general-initiative-86",
+          "officialNumber": "86",
+          "questionText": "Prohibiting Force-Feeding of Birds\nAct of 2026.\nIf enacted, this Initiative would:\n(a) Prohibit any person from\nforce-feeding a bird for the purpose\nof enlarging the bird\u2019s liver beyond\nnormal size;\n(b) Ban the sale or distribution of any\nproduct resulting from force-feeding\na bird, including foie gras;\n(c) Define force-feeding as inserting a\ntube into the bird\u2019s throat to deliver\nexcessive feed;\n(d) Provide for enforcement by the\nDepartment of Energy and\nEnvironment during routine food\nsafety inspections; and\n(e) Provide for civil penalties.",
+          "officialStatement": null,
+          "provenance": {
+            "sourceUrl": "https://www.dcboe.org/getContentAsset/bf78fba0-50f2-40c4-ad32-0f78255d725a/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/Ward1C.pdf?language=en",
+            "sourceOrg": "District of Columbia Board of Elections",
+            "collectedAt": "2026-10-14T05:02:25.795737Z",
+            "verifiedAt": "2026-10-14T05:02:25.795737Z",
+            "doorId": "fec-dc-chief"
+          }
+        }
+      ],
+      "absences": [],
+      "coverageNotes": [
+        "The Board's General Election Candidates in Ballot Order list supplies the complete printed candidate list. Its separate write-in list supplies registered write-in candidates for the same offices. Advisory Neighborhood Commission contests are outside this federal, District and ward-office package.",
+        "All five general-election ward sample-ballot groups (Wards 1, 3, 5, 6 and 2/4/7/8) print Initiative Measure No. 86 and no other District-wide measure. The question is extracted from those official sample ballots; the linked Board formulations document contains the legislative text."
+      ]
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedBy": "Codex",
+    "reviewedAt": "2026-10-14T05:05:12.477743Z",
+    "sources": [
+      {
+        "requestedUrl": "https://www.dcboe.org/",
+        "finalUrl": "https://www.dcboe.org/",
+        "httpStatus": 200,
+        "rawHash": "e21c24d4bd5b97378ec8fe78a4894b014ac892897b43b9a88a3dde7c16bf609d",
+        "retrievedAt": "2026-10-14T05:00:46.800786Z",
+        "publisher": "District of Columbia Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official Board root links the November 3, 2026 election and ballot-measure pages."
+      },
+      {
+        "requestedUrl": "https://www.dcboe.org/elections/2026-elections",
+        "finalUrl": "https://www.dcboe.org/elections/2026-elections",
+        "httpStatus": 200,
+        "rawHash": "1fb743a9ccb16b5b804c6c5b4bed73ae8d8d8c1523ad17e118482fc0e3d4397c",
+        "retrievedAt": "2026-10-14T05:01:05.268961Z",
+        "publisher": "District of Columbia Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official election page links the general-election candidate list, registered write-in list and all ward-group sample ballots."
+      },
+      {
+        "requestedUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+        "finalUrl": "https://www.dcboe.org/getContentAsset/1029b813-fb27-4055-9218-fbe40360aacb/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-CANDIDATES-07152026.pdf?language=en",
+        "httpStatus": 200,
+        "rawHash": "057fcc1f3c38a64fb2040339f644d524e6c1b28f459ec6ca97ac4c7168f9e6fe",
+        "retrievedAt": "2026-10-14T05:01:44.030962Z",
+        "publisher": "District of Columbia Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Converted every federal, District, Council ward and State Board of Education ward candidate row from the official general-election candidates in ballot order list. Names and party labels are preserved as printed; no incumbency or websites are stated."
+      },
+      {
+        "requestedUrl": "https://www.dcboe.org/getContentAsset/baa7b20c-9cbd-45fe-9842-986da48d2123/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-Election-WRITE-IN-CANDIDATES-07222026.pdf?language=en",
+        "finalUrl": "https://www.dcboe.org/getContentAsset/baa7b20c-9cbd-45fe-9842-986da48d2123/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/2026-General-Election-WRITE-IN-CANDIDATES-07222026.pdf?language=en",
+        "httpStatus": 200,
+        "rawHash": "46657c27bc5829f612ff1f3dabf9212c6e63f7d237d427673907cd1942be59ff",
+        "retrievedAt": "2026-10-14T05:01:44.805522Z",
+        "publisher": "District of Columbia Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Converted every registered write-in candidate for the federal, District and ward contests in this package; excluded local ANC contests."
+      },
+      {
+        "requestedUrl": "https://www.dcboe.org/ballot-measures/current-measures",
+        "finalUrl": "https://www.dcboe.org/ballot-measures/current-measures",
+        "httpStatus": 200,
+        "rawHash": "3e9262159566cd00581d5a4d476824c6203462b62ecce991d9c2285bd9e1bb82",
+        "retrievedAt": "2026-10-14T05:01:05.696441Z",
+        "publisher": "District of Columbia Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official Current Measures page supplies the Initiative 86 formulations document with legislative text."
+      },
+      {
+        "requestedUrl": "https://www.dcboe.org/getmedia/05df694b-6e6a-44af-93d5-d7266bd6cd4c/Notice-of-Meeting-on-Bird-I86-formulations.pdf",
+        "finalUrl": "https://www.dcboe.org/getmedia/05df694b-6e6a-44af-93d5-d7266bd6cd4c/Notice-of-Meeting-on-Bird-I86-formulations.pdf",
+        "httpStatus": 200,
+        "rawHash": "73a2aa1446f02eb6fbc33b413a051b560bb5fd0f3f8dda98488984149534e040",
+        "retrievedAt": "2026-10-14T05:02:57.675880Z",
+        "publisher": "District of Columbia Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official Initiative Measure No. 86 formulations document contains the full legislative text."
+      },
+      {
+        "requestedUrl": "https://www.dcboe.org/getContentAsset/bf78fba0-50f2-40c4-ad32-0f78255d725a/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/Ward1C.pdf?language=en",
+        "finalUrl": "https://www.dcboe.org/getContentAsset/bf78fba0-50f2-40c4-ad32-0f78255d725a/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/Ward1C.pdf?language=en",
+        "httpStatus": 200,
+        "rawHash": "1e58efb8ad56c4dcecbe160cf061b22b480f798702362c71f8c4e4fee3a4f955",
+        "retrievedAt": "2026-10-14T05:02:25.795737Z",
+        "publisher": "District of Columbia Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 general-election sample ballot; all ward groups show Initiative Measure No. 86 as the only District-wide measure."
+      },
+      {
+        "requestedUrl": "https://www.dcboe.org/getContentAsset/0f65365f-8004-406c-9274-29ac244504a5/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/Ward3C.pdf?language=en",
+        "finalUrl": "https://www.dcboe.org/getContentAsset/0f65365f-8004-406c-9274-29ac244504a5/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/Ward3C.pdf?language=en",
+        "httpStatus": 200,
+        "rawHash": "c1ce4961c1f37f0e8b22b6cdc134d124b0f7a8758e86853999b77e4dafb0b354",
+        "retrievedAt": "2026-10-14T05:02:26.621738Z",
+        "publisher": "District of Columbia Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 general-election sample ballot; all ward groups show Initiative Measure No. 86 as the only District-wide measure."
+      },
+      {
+        "requestedUrl": "https://www.dcboe.org/getContentAsset/4b5fd0b9-cc8a-4ff8-9c30-6ec5096f63c8/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/Ward5C.pdf?language=en",
+        "finalUrl": "https://www.dcboe.org/getContentAsset/4b5fd0b9-cc8a-4ff8-9c30-6ec5096f63c8/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/Ward5C.pdf?language=en",
+        "httpStatus": 200,
+        "rawHash": "e93d7dd30f2908bf20862158c5c4fb1afcde29731be7fd3ee4a6fccb1aead49d",
+        "retrievedAt": "2026-10-14T05:02:27.316520Z",
+        "publisher": "District of Columbia Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 general-election sample ballot; all ward groups show Initiative Measure No. 86 as the only District-wide measure."
+      },
+      {
+        "requestedUrl": "https://www.dcboe.org/getContentAsset/99b1bd27-e974-42b5-b3e2-7c22517264d3/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/Ward6C.pdf?language=en",
+        "finalUrl": "https://www.dcboe.org/getContentAsset/99b1bd27-e974-42b5-b3e2-7c22517264d3/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/Ward6C.pdf?language=en",
+        "httpStatus": 200,
+        "rawHash": "1c15bb2cd1efcff47654bf397dcd855e6d5d1107b0c2f22338671f6d61670960",
+        "retrievedAt": "2026-10-14T05:02:28.424345Z",
+        "publisher": "District of Columbia Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 general-election sample ballot; all ward groups show Initiative Measure No. 86 as the only District-wide measure."
+      },
+      {
+        "requestedUrl": "https://www.dcboe.org/getContentAsset/6190836f-7916-4ce3-a985-5c675ccc941e/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/Ward2478C.pdf?language=en",
+        "finalUrl": "https://www.dcboe.org/getContentAsset/6190836f-7916-4ce3-a985-5c675ccc941e/5ebbd046-860b-4ee1-81c8-43d0e3bc446e/Ward2478C.pdf?language=en",
+        "httpStatus": 200,
+        "rawHash": "a7a82248081869629fccbf1e3086cdbf9355f3ec1e739bce5ad894f447067f23",
+        "retrievedAt": "2026-10-14T05:02:29.199014Z",
+        "publisher": "District of Columbia Board of Elections",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "reviewedEvidence": "Official November 3, 2026 general-election sample ballot; all ward groups show Initiative Measure No. 86 as the only District-wide measure."
+      }
+    ]
+  }
+}

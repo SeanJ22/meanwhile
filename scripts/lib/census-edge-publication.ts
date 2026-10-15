@@ -1,29 +1,24 @@
-import { buildCensusDistrictEdge, censusDistrictEdgeVersion } from "../../lib/census-geography/district-edge.ts";
-import type { BuiltDataset } from "../../lib/census-geography/dataset.ts";
-import type { CivicDataReadResult } from "../../lib/civic-data/read-model.ts";
+import { censusDistrictEdgeVersion, type CensusDistrictEdge } from "../../lib/census-geography/district-edge.ts";
 import type { PublishAuthorityCarried, PublishAuthorityValue } from "../../lib/meetings/edge-serving.ts";
 
-/** Keep the immutable, previously proved copy when a refresh cannot establish
- * a replacement. A failed refresh is reported; it is never a new promotion. */
 export async function censusEdgePublication(input: {
   servedVersion: string | null;
   readVersion: () => Promise<string | null>;
-  readProjection: () => Promise<CivicDataReadResult<BuiltDataset>>;
+  readIndex: (versionId: string) => Promise<CensusDistrictEdge>;
   onFailure: (failure: unknown) => void;
 }): Promise<PublishAuthorityCarried | PublishAuthorityValue | undefined> {
-  const carried: PublishAuthorityCarried | undefined = input.servedVersion
+  const carried: PublishAuthorityCarried | undefined = input.servedVersion?.startsWith("census-districts/v4:")
     ? { versionId: input.servedVersion, carried: true } : undefined;
   try {
     const current = await input.readVersion();
-    if (current !== null && censusDistrictEdgeVersion(current) === input.servedVersion) return carried;
-    const result = await input.readProjection();
-    if (result.kind === "PROMOTED" && result.metadata.versionId) {
-      const value = buildCensusDistrictEdge(result.value, result.metadata.versionId);
-      return { value, versionId: value.versionId };
-    }
-    input.onFailure(new Error(`Census replacement not proved: ${result.kind}`));
+    if (current === null) throw new Error("Census replacement is not published");
+    const versionId = censusDistrictEdgeVersion(current);
+    if (versionId === input.servedVersion) return carried;
+    const value = await input.readIndex(current);
+    if (value.formatVersion !== 2 || !value.states || !value.zipPrefixes || Object.keys(value.states).length === 0) throw new Error("Census replacement contains no state artifacts");
+    return { value, versionId };
   } catch (error) {
     input.onFailure(error);
+    return carried;
   }
-  return carried;
 }

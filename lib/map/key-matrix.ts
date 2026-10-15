@@ -12,8 +12,8 @@
  *   - a runtime refusal, used by `scripts/provider-smoke.mts`, when the smoke
  *     is handed the production key.
  *
- * The restrictions themselves live in the MapTiler account
- * (`docs/maptiler-keys.md`); nothing here is evidence they are configured.
+ * The restrictions themselves live in the MapTiler account; nothing here is
+ * evidence they are configured.
  */
 
 import { PUBLIC_SITE_ORIGIN, STAGING_RENDER_ORIGIN } from "../ops/origins.ts";
@@ -72,13 +72,13 @@ export const STAGING_READER_ORIGIN = STAGING_RENDER_ORIGIN;
  */
 export const SMOKE_ORIGIN = "http://maptiler-smoke.localhost";
 
-/** The matrix. `docs/maptiler-keys.md` is generated from the same facts. */
+/** The matrix. */
 export const KEY_MATRIX: readonly KeyIdentity[] = [
   {
     name: "meanwhile-prod-browser",
     answers:
       "How much of the allowance did the public production Reader spend? After MAPQ-1 this is " +
-      "public-origin traffic plus any bounded probe named in docs/maptiler-keys.md, and nothing else.",
+      "public-origin traffic plus any bounded probe named in the source registry's MapTiler row, and nothing else.",
     allowedOrigins: PRODUCTION_READER_ORIGINS,
     envVar: "NEXT_PUBLIC_MAPTILER_KEY",
     contexts: ["production"],
@@ -147,7 +147,7 @@ export function refuseSharedKey(input: {
       ok: false,
       says:
         "WTP_MAPTILER_SMOKE_KEY is not set, so there is no key issued to the bounded smoke. " +
-        "This is NEEDS OWNER, not a failure of the smoke: see docs/maptiler-keys.md.",
+        "This is NEEDS OWNER, not a failure of the smoke: see the source registry's MapTiler row.",
     };
   }
   if (production !== "" && smoke === production) {

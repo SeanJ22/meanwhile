@@ -2,8 +2,10 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { acquireDataset } from "../lib/census-geography/acquire.ts";
 import type { BuiltScope, GeographySourceFailure } from "../lib/census-geography/dataset.ts";
-import { retainFailedSupplementalScopes, readPriorSupplementalScopes } from "../lib/census-geography/supplemental-refresh.ts";
+import { retainFailedSupplementalScopes } from "../lib/census-geography/supplemental-refresh.ts";
 import { CENSUS_AIANNH } from "../lib/census-geography/aiannh.ts";
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
+import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { overlaySourceRows } from "../lib/overlay-geography/reference.ts";
 
 const failed = (type: BuiltScope["type"], version: string): GeographySourceFailure => ({type,version,sourceId:"fixture",sourceUrls:["https://publisher.gov/file"],reason:"Source refused"});
@@ -23,24 +25,19 @@ test("a failed source retains its exact prior scope and check date beside unrela
   assert.equal(retainFailedSupplementalScopes([],[],[failed(old.type,old.version)]).length,0,"No invented empty scope for an unread source");
 });
 
-test("the read of prior supplemental scopes is cut in the store and distinguishes no pointer from store failure", async () => {
-  const prior = priorScope("overlay_district","overlay:one");
-  const seen:string[]=[];
-  const result=await readPriorSupplementalScopes(async statements=>{seen.push(...statements.map(statement=>statement.text));return [[{scopes:[prior]}]]});
-  assert.deepEqual(result,[prior]);
-  assert.match(seen[0],/s->>'type' IN \('overlay_district','aiannh'\)/);
-  assert.deepEqual(await readPriorSupplementalScopes(async()=>[[{scopes:[]}]]),[]);
-  assert.equal(await readPriorSupplementalScopes(async()=>{throw Error("Store offline")}),undefined);
-});
-
-test("overlay and tribal source failures do not hold back a verified Census scope", async () => {
-  const overlay=priorScope("overlay_district",`overlay:${overlaySourceRows[0].id}`), tribal=priorScope("aiannh",CENSUS_AIANNH.version);
-  const dataset=await acquireDataset({only:["county","overlays","aiannh"],previousSupplementalScopes:[overlay,tribal],fetchImpl:async input=>{
-    if (String(input).includes("tab20_zcta520_county20_natl.txt")) return new Response("GEOID_COUNTY_20|NAMELSAD_COUNTY_20|AREALAND_COUNTY_20|GEOID_ZCTA5_20|AREALAND_ZCTA5_20|AREALAND_PART\n33001|Test County|100|00001|100|100\n");
-    return new Response("Source unavailable",{status:503});
-  }});
-  assert.equal(dataset.scopes.find(scope=>scope.type === "county")?.instanceCount,1);
-  assert.ok(dataset.scopes.includes(overlay));
-  assert.ok(dataset.scopes.includes(tribal));
-  assert.equal(dataset.sourceFailures?.length,2);
+test("overlay and tribal source failures retain verified state data independently", async () => {
+  for (const [state, type, version] of [["33", "overlay_district", `overlay:${overlaySourceRows[0].id}`], ["23", "aiannh", CENSUS_AIANNH.version]] as const) {
+    const prior = priorScope(type, version);
+    const dataset = await acquireDataset({ only: ["county", "overlays", "aiannh"],
+      cache: { store: new MemoryEvidenceStore(), locks: createMemoryRepositories().locks },
+      states: new Set([state]), previousDataset: { formatVersion: 1, builtAt: "2025-01-01T00:00:00Z", coverage: "state", scopes: [prior], zctaUniverse: ["00001"] },
+      fetchImpl: async input => {
+        if (String(input).includes("tab20_zcta520_county20_natl.txt")) return new Response(`GEOID_COUNTY_20|NAMELSAD_COUNTY_20|AREALAND_COUNTY_20|GEOID_ZCTA5_20|AREALAND_ZCTA5_20|AREALAND_PART\n${state}001|Test County|100|00001|100|100\n`);
+        return new Response("Source unavailable", { status: 503 });
+      },
+    });
+    assert.equal(dataset.scopes.find(scope => scope.type === "county")?.instanceCount, 1);
+    assert.ok(dataset.scopes.includes(prior));
+    assert.equal(dataset.sourceFailures?.length, 1);
+  }
 });

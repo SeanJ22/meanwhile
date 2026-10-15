@@ -111,7 +111,7 @@ const AZ_ROUTES: readonly RouteDescriptor[] = [
         "never a fact about the record — REQUIRES_NEW_ADAPTER, and the obligation stays live.",
     },
     citation:
-      "docs/body-or-intermediary-audit.md — 'The FTP: YES, 2026-08-26. 8,828 committees.'",
+      "field manual — Arizona campaign-finance FTP: YES, 2026-08-26, 8,828 committees",
     awaitingAdapter:
       "an FTP client. Until one exists this route disposes REQUIRES_NEW_ADAPTER on a clock rather " +
       "than being forgotten, which is the difference between a named next move and an absence.",
@@ -211,7 +211,7 @@ const NH_ROUTES: readonly RouteDescriptor[] = [
         "detail behind endpoints nobody in this project has read, and no descriptor for them " +
         "exists to replay. REQUIRES_NEW_ADAPTER: our tooling, not their publication.",
     },
-    citation: "docs/frontier.md — Part F, 'Still open here'",
+    citation: "cfsapi.sos.nh.gov — only filer-level totals read; detail endpoints unread",
     awaitingAdapter:
       "one rung-7 observation of the CFS app calling its own detail endpoints, which is the same " +
       "move that turned the filer index from a procedure into a script.",
@@ -249,7 +249,7 @@ const NH_ROUTES: readonly RouteDescriptor[] = [
         "the rules keep the obligation LIVE rather than closing it. External " +
         "workflow execution is outside this architecture, so no agent sends this request.",
     },
-    citation: "docs/frontier.md — Part F: rung 13 unwalked, named as a start on 2026-08-19",
+    citation: "rung 13 unwalked, named as a start on 2026-08-19",
   },
 ];
 

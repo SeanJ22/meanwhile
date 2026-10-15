@@ -146,7 +146,7 @@ test("ADM-C6 acceptance 1: a permitted action succeeds and leaves a receipt that
   assert.equal(r.startedAt, NOW);
   assert.ok(r.completedAt !== null && r.completedAt > r.startedAt, "started and completed are two instants");
   assert.equal(r.readBackAt, "/admin", "where the result can be read back");
-  assert.ok((r.undo ?? "").length > 0, "and what would undo it");
+  assert.equal(r.undo, null, "adding a team repair invents no undo control");
 
   assert.equal(
     r.subject,
@@ -294,7 +294,6 @@ test("research.pause records one versioned paid-lane intent and idempotent recei
   assert.match(cycle, /const intents = readIntents\(intentLog\);/);
   assert.match(cycle, /const laneClosure = modelLaneClosure\(\{[\s\S]*?paused: intents\.paused,/);
   assert.match(cycle, /const modelLaneEnabled = laneClosure === null;/);
-  assert.match(cycle, /if \(!modelLaneEnabled\) return \{ admit: false, code: laneDisabledCode/);
   assert.match(cycle, /pendingResearchLaneAcknowledgment\(intentLog, laneClosure\)/);
   assert.match(cycle, /honorIntent\(pendingAcknowledgment\.intent, pendingAcknowledgment\.detail\)/);
 
@@ -435,7 +434,7 @@ test("ADM-C6 PLANT: a gateway that skipped the idempotency read would be caught 
 
   const blind: ControlPlaneRepositories = {
     ...repos,
-    adminReceipts: { ...repos.adminReceipts, read: async () => [] },
+    adminReceipts: { ...repos.adminReceipts, readWhere: async () => [] },
   };
   await submit(request, deps(blind, { now: tickingClock("2026-09-06T13:00:00.000Z") }));
   assert.equal(
@@ -452,7 +451,7 @@ test("ADM-C6: an unreadable receipt log stops the gateway rather than risking a 
     ...repos,
     adminReceipts: {
       ...repos.adminReceipts,
-      read: async () => {
+      readWhere: async () => {
         throw new Error("the store is not answering");
       },
     },
@@ -473,60 +472,6 @@ test("§9A.22: paid API fallback defaults OFF, and reads OFF from a store nothin
   assert.equal(defaultAdminConfig().apiFallback.enabled, false);
   assert.equal(defaultAdminConfig().apiFallback.decidedAt, null, "a default is not a decision");
   assert.equal(await repos.adminConfig.read(ADMIN_CONFIG_ID), null, "a fresh store holds no policy");
-});
-
-test("§9A.22: turning paid API fallback on needs an explicit confirmation, and is recorded durably", async () => {
-  const repos = createMemoryRepositories();
-
-  const unconfirmed = await submit(
-    ask({ type: "config.setApiFallback", subject: "paid API fallback", input: { enabled: "true" }, idempotencyKey: "fallback-key-01" }),
-    deps(repos),
-  );
-  assert.equal(unconfirmed.ok, false);
-  assert.equal(unconfirmed.receipt.refusal, "INVALID_INPUT");
-  assert.match(unconfirmed.receipt.says, /explicit confirmation/i);
-  assert.equal(await repos.adminConfig.read(ADMIN_CONFIG_ID), null, "an unconfirmed request still wrote the policy");
-
-  const on = await submit(
-    ask({
-      type: "config.setApiFallback",
-      subject: "paid API fallback",
-      input: { enabled: "true", confirmed: "true" },
-      idempotencyKey: "fallback-key-02",
-    }),
-    deps(repos),
-  );
-  assert.equal(on.ok, true, on.receipt.says);
-  const stored = await repos.adminConfig.read(ADMIN_CONFIG_ID);
-  assert.equal(stored?.value.apiFallback.enabled, true);
-  assert.equal(stored?.value.apiFallback.decidedBy, "adm_test-session");
-  assert.equal(
-    stored?.value.apiFallback.receiptId,
-    receiptIdFor("config.setApiFallback", "fallback-key-02"),
-    "the policy does not point at the receipt that changed it",
-  );
-  assert.match(on.receipt.says, /does not switch anything on by itself/i);
-
-  const off = await submit(
-    ask({ type: "config.setApiFallback", subject: "paid API fallback", input: { enabled: "false" }, idempotencyKey: "fallback-key-03" }),
-    deps(repos),
-  );
-  assert.equal(off.ok, true, off.receipt.says);
-  const after = await repos.adminConfig.read(ADMIN_CONFIG_ID);
-  assert.equal(after?.value.apiFallback.enabled, false);
-  assert.equal(after?.revision, 2, "the policy was replaced rather than updated in place");
-});
-
-test("§9A.22: a corrupt policy row reads as the default, which is OFF", async () => {
-  const repos = createMemoryRepositories();
-  await repos.adminConfig.put(ADMIN_CONFIG_ID, { nonsense: true } as unknown as AdminConfig, NOW);
-  const outcome = await submit(
-    ask({ type: "config.setApiFallback", subject: "paid API fallback", input: { enabled: "false" }, idempotencyKey: "fallback-key-04" }),
-    deps(repos),
-  );
-  assert.equal(outcome.ok, true, outcome.receipt.says);
-  const stored = await repos.adminConfig.read(ADMIN_CONFIG_ID);
-  assert.equal(stored?.value.apiFallback.enabled, false);
 });
 
 /* ==========================================================================

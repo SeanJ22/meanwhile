@@ -18,10 +18,19 @@ import {
 import { runBoundedWorkPool } from "../ops/bounded-work-pool.ts";
 import type { BoundedChildResult } from "./bounded-child-pass.ts";
 
-export function routinePreSpawnMemoryDeferral(run: BoundedChildResult, childStarted: boolean): string | null {
+/** A command never spawned because memory stayed full or the pass's time ran out: still owed, not failed. */
+export function routinePreSpawnDeferral(run: BoundedChildResult, childStarted: boolean): string | null {
   return !childStarted && run.termination === "SPAWN_FAILED" && run.status === null && run.signal === null &&
-    run.stdout === "" && run.stderr === "" && run.errorMessage?.startsWith("WORKER_MEMORY_DEADLINE:")
+    run.stdout === "" && run.stderr === "" && /^(?:WORKER_MEMORY_DEADLINE|PASS_TIME_BUDGET):/.test(run.errorMessage ?? "")
     ? run.errorMessage : null;
+}
+
+/** One national people child holds gigabytes, so every state and source of it runs one at a time in its own lane. */
+const ROUTINE_SERIAL_SCRIPTS: ReadonlySet<string> = new Set(["scripts/national-people-refresh.mts"]);
+/** A serial lane starts children only this long into a pass; the rest stay owed for the next pass. */
+export const ROUTINE_SERIAL_LANE_LAUNCH_MS = 30 * 60_000;
+export function routineSerialLane(command: readonly string[]): string | undefined {
+  return ROUTINE_SERIAL_SCRIPTS.has(command[0] ?? "") ? `serial:${command[0]}` : undefined;
 }
 
 export const ROUTINE_SUPERVISOR_STARTED_AT_ENV = "WTP_ROUTINE_SUPERVISOR_STARTED_AT";
@@ -48,6 +57,7 @@ export interface RoutineSourceTask {
   readonly command: readonly string[];
   readonly cadenceMs: number;
   readonly retryMs: number;
+  readonly childTimeoutMs?: number;
   readonly contract: Pick<RoutineSourceContract, "cadence" | "schedule" | "readerProjection">;
   readonly ownerInvocation?: {
     readonly publicationPending?: true;
@@ -107,6 +117,7 @@ export function routineTaskFromContract(contract: RoutineSourceContract): Routin
     command: contract.acquisitionAdapter.command,
     cadenceMs: contract.cadence.defaultEveryMs,
     retryMs: contract.retry.afterMs,
+    ...(contract.childTimeoutMs === undefined ? {} : { childTimeoutMs: contract.childTimeoutMs }),
     contract,
   };
 }
@@ -312,9 +323,11 @@ export function routineUnreceiptedSupervisorAttemptHistory(
     ) reasons.push("attempt or source-outcome counts are malformed");
 
     const failures = Array.isArray(outcome.failures) ? outcome.failures : null;
+    const crashedTasks = outcome.crashedTasks === undefined ? [] : Array.isArray(outcome.crashedTasks) ? outcome.crashedTasks : null;
     const taskReceipts = Array.isArray(outcome.taskReceipts) ? outcome.taskReceipts : null;
     const receiptEvidence = outcome.taskReceiptEvidence;
     if (failures === null) reasons.push("failures are not an array");
+    if (crashedTasks === null) reasons.push("crashed tasks are not an array");
     if (taskReceipts === null) reasons.push("task receipts are not an array");
     if (receiptEvidence !== "EXACT" && receiptEvidence !== "UNAVAILABLE_OUTER_SUPERVISOR") {
       reasons.push("task-receipt evidence mode is invalid");
@@ -333,6 +346,15 @@ export function routineUnreceiptedSupervisorAttemptHistory(
         }
         failureTaskIds.push(failure.taskId);
       }
+    }
+    // A crashed child left no receipt, so its task waits its retry clock exactly as an unreceipted failure does.
+    for (const crashValue of crashedTasks ?? []) {
+      const crash = historyObject(crashValue);
+      if (crash === null || !historyText(crash.taskId) || typeof crash.detail !== "string") {
+        reasons.push("a crashed task reference is malformed");
+        continue;
+      }
+      failureTaskIds.push(crash.taskId);
     }
 
     const exactReceiptTaskIds = new Set<string>();
@@ -389,7 +411,7 @@ export function routineUnreceiptedSupervisorAttemptHistory(
       if (exactSuccesses !== outcome.verifiedSourceSuccesses || exactFailures !== outcome.verifiedSourceFailures) {
         reasons.push("exact task receipts do not reconcile to source-outcome counts");
       }
-      if ((taskReceipts?.length ?? 0) > Number(outcome.attemptedTasks)) {
+      if ((taskReceipts?.length ?? 0) + (crashedTasks?.length ?? 0) > Number(outcome.attemptedTasks)) {
         reasons.push("exact task receipts exceed the attempted-task denominator");
       }
     }

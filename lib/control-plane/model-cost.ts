@@ -99,6 +99,13 @@ export function cacheReadMultiplierFor(model: string): number {
   return MODEL_CACHE_READ_MULTIPLIER[rowId(model)] ?? CACHE_RATE_MULTIPLIERS.cacheRead;
 }
 
+/** Price this exact request with no cache or batch discount, including its own prompt-size rate card. */
+export function listPriceUsdForUsage(model: string, usage: MeteredUsage): number | null {
+  if (usage.uncachedInputTokens === null || usage.cacheReadInputTokens === null || usage.cacheCreationInputTokens === null) return null;
+  return priceMeteredUsage(model, { ...usage, uncachedInputTokens: usage.uncachedInputTokens + usage.cacheReadInputTokens + usage.cacheCreationInputTokens,
+    cacheReadInputTokens: 0, cacheCreationInputTokens: 0, cacheCreation5mInputTokens: 0, cacheCreation1hInputTokens: 0, batch: false }).usd;
+}
+
 /**
  * `uncachedInputTokens` is the API's `input_tokens`. `cacheCreationInputTokens` is the aggregate of the
  * 5m and 1h writes; the split is carried beside it, and the aggregate is never priced on top of its split.

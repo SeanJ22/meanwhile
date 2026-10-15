@@ -1,9 +1,3 @@
-/**
- * Minimal shapefile reader: .shp geometry, .dbf attributes, .zip container.
- * Reads polygon (5), polygonZ (15) and null (0) shapes only; any other shape
- * type throws.
- */
-
 import { readZipEntries } from "../sources/archive.ts";
 
 export interface ZipEntry { readonly name: string; readonly data: Buffer }
@@ -42,33 +36,38 @@ export function readShp(buf: Buffer, retainRecord?: (recordIndex: number) => boo
     p = body + contentWords * 2;
 
     const type = buf.readInt32LE(body);
-    if (type !== POLYGON && type !== POLYGON_Z) {
-      if (type === NULL_SHAPE) { records.push({ recordNumber, rings: [], bbox: [0, 0, 0, 0] }); continue; }
-      throw new Error(
-        `shp: record ${recordNumber} is shape type ${type}; this reader handles ` +
-          "polygons (5) and polygonZ (15) only",
-      );
-    }
-    // Preserve ordinal pairing and complete framing without decoding polygon
-    // coordinates for records outside the caller's reference-data scope.
-    if (retainRecord && !retainRecord(recordNumber - 1)) { records.push({ recordNumber, rings: [], bbox: [0, 0, 0, 0] }); continue; }
+    if (type !== NULL_SHAPE && type !== POLYGON && type !== POLYGON_Z) throw new Error(`shp: unsupported shape type ${type}`);
+    records.push(retainRecord && !retainRecord(recordNumber - 1)
+      ? { recordNumber, rings: [], bbox: [0, 0, 0, 0] }
+      : parseShapeRecord(buf.subarray(body, p), recordNumber));
+  }
 
-    if (contentWords * 2 < 44) throw new Error("shp: truncated polygon");
+  if (p !== buf.length) throw new Error("shp: truncated record header");
+  return records;
+}
+
+export function parseShapeRecord(buf: Buffer, recordNumber: number): ShapeRecord {
+    if (buf.length < 4) throw new Error("shp: truncated shape type");
+    const type = buf.readInt32LE(0);
+    if (type === NULL_SHAPE) return { recordNumber, rings: [], bbox: [0, 0, 0, 0] };
+    if (type !== POLYGON && type !== POLYGON_Z) throw new Error(`shp: unsupported shape type ${type}`);
+
+    if (buf.length < 44) throw new Error("shp: truncated polygon");
     const bbox: [number, number, number, number] = [
-      buf.readDoubleLE(body + 4),
-      buf.readDoubleLE(body + 12),
-      buf.readDoubleLE(body + 20),
-      buf.readDoubleLE(body + 28),
+      buf.readDoubleLE(4),
+      buf.readDoubleLE(12),
+      buf.readDoubleLE(20),
+      buf.readDoubleLE(28),
     ];
-    const numParts = buf.readInt32LE(body + 36);
-    const numPoints = buf.readInt32LE(body + 40);
-    if (numParts <= 0 || numPoints < 4 || 44 + numParts * 4 + numPoints * 16 > contentWords * 2 || !bbox.every(Number.isFinite)) throw new Error("shp: invalid polygon sizes");
+    const numParts = buf.readInt32LE(36);
+    const numPoints = buf.readInt32LE(40);
+    if (numParts <= 0 || numPoints < 4 || 44 + numParts * 4 + numPoints * 16 > buf.length || !bbox.every(Number.isFinite)) throw new Error("shp: invalid polygon sizes");
 
     const partStarts: number[] = [];
-    for (let i = 0; i < numParts; i += 1) partStarts.push(buf.readInt32LE(body + 44 + i * 4));
+    for (let i = 0; i < numParts; i += 1) partStarts.push(buf.readInt32LE(44 + i * 4));
 
     if (partStarts[0] !== 0 || partStarts.some((n, i) => n < 0 || n >= numPoints || (i > 0 && n <= partStarts[i - 1]))) throw new Error("shp: invalid polygon parts");
-    const pointsAt = body + 44 + numParts * 4;
+    const pointsAt = 44 + numParts * 4;
     const rings: Ring[] = [];
     for (let i = 0; i < numParts; i += 1) {
       const from = partStarts[i]!;
@@ -80,11 +79,7 @@ export function readShp(buf: Buffer, retainRecord?: (recordIndex: number) => boo
       rings.push(ring);
     }
 
-    records.push({ recordNumber, rings, bbox });
-  }
-
-  if (p !== buf.length) throw new Error("shp: truncated record header");
-  return records;
+    return { recordNumber, rings, bbox };
 }
 
 /* .dbf */
@@ -110,7 +105,7 @@ export function readDbf(buf: Buffer, encoding: BufferEncoding = "latin1"): Recor
   return readDbfRecords(buf, encoding).filter((row): row is Record<string, string> => row !== null);
 }
 
-function readDbfRecords(buf: Buffer, encoding: BufferEncoding): (Record<string, string> | null)[] {
+export function readDbfRecords(buf: Buffer, encoding: BufferEncoding = "latin1"): (Record<string, string> | null)[] {
   if (buf.length < 33) throw new Error("dbf: truncated header");
   const headerLength = buf.readUInt16LE(8);
   const recordLength = buf.readUInt16LE(10);
@@ -147,10 +142,6 @@ export type Feature = {
   bbox: [number, number, number, number];
 };
 
-/**
- * Reads one Census boundary zip into features. .shp records pair with .dbf
- * rows by position, so a count mismatch throws rather than mislabeling.
- */
 export function readBoundaryZip(buf: Buffer, retainProperties?: (properties: Record<string, string>) => boolean): { features: Feature[]; counts: string } {
   const entries = readZip(buf);
   const shp = entries.find((e) => e.name.toLowerCase().endsWith(".shp"));

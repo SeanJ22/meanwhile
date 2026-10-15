@@ -2,6 +2,11 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
+import * as React from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import ts from "typescript";
+import { CardGapContribution } from "../components/ui/card-gap-context.tsx";
+import { GENERIC_BALLOT_SCOPE } from "../lib/ballot/generic-projection.ts";
 
 import { getCandidateTargetIds } from "../lib/ballot/candidate-targets.ts";
 import {
@@ -20,11 +25,13 @@ import {
 } from "../lib/ballot/auxiliary-preloads.ts";
 import { readNhBallotProjection } from "../lib/civic-data/manual-read-models.ts";
 import type { NhBallotProjection } from "../lib/civic-data/manual-projections.ts";
-import { installAbsent, installAzBallot, installManualValue, syntheticAzBallot } from "./helpers/promoted-fixtures.ts";
-import { GENERIC_BALLOT_SCOPE } from "../lib/ballot/generic-projection.ts";
+import { installAbsent, installAzBallot, installManualValue, installRegistryAuthority, promotedFixtureBundle, syntheticAzBallot } from "./helpers/promoted-fixtures.ts";
+import { manualEdgeEntry } from "./helpers/promoted-edge-entry.ts";
+import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
+import { POST as ballotScope } from "../app/api/ballot/scope/route.ts";
+import { resolveZip } from "../lib/geo/zcta.ts";
 
-// The AZ and NH ballots' promoted pointers, each a small synthetic ballot
-// holding one statewide governor contest with one candidacy.
+installAbsent("BALLOT_CANDIDACY", GENERIC_BALLOT_SCOPE);
 const azBallot = syntheticAzBallot([{
   id: "ballot-az-pima:governor",
   title: "Governor",
@@ -120,6 +127,22 @@ test("a planted NJ authority failure cannot take down AZ or NH Readers and stays
   }
 });
 
+test("ballot scope skips a failed national source and returns the requested state's independently held ballot", async () => {
+  await installRegistryAuthority();
+  const failed = manualEdgeEntry("ballot-contests", { kind: "malformed-ballot-fixture", ballots: {} }, "test:failed-national-ballot");
+  const edge = promotedFixtureBundle({ promoted: new Map([[`BALLOT_CANDIDACY:${GENERIC_BALLOT_SCOPE}`, failed]]) });
+  for (const [zip, expected] of [["85701", "ballot-az-pima:governor"], ["03255", "ballot-nh-merrimack:governor"]]) {
+    const location = resolveZip(zip);
+    assert.ok(location.ok);
+    const response = await withReaderAuthorityEdge(edge, () => ballotScope(new Request("https://fixture.test/api/ballot/scope", {
+      method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(location.centroid),
+    })));
+    assert.equal(response.status, 200, `${zip}'s state ballot survives the failed national source`);
+    assert.deepEqual(await response.json(), { ok: true, contestIds: [expected] });
+    assert.match(response.headers.get("cache-control") ?? "", /no-store/);
+  }
+});
+
 test("reaction intake opens only the authority named by its submitted target family", async () => {
   const calls: string[] = [];
   const readers = {
@@ -210,7 +233,7 @@ test("all production ballot entry points use state-scoped selection", () => {
   }
 
   const addressRoute = readFileSync(join(process.cwd(), "app/api/address/resolve/route.ts"), "utf8");
-  assert.match(addressRoute, /addressContestScopeFor\(confirmed\)/, "the address route must use only its confirmed division set");
+  assert.match(addressRoute, /addressContestScopeFor\(confirmed, undefined, selection\)/, "the address route must use only its confirmed divisions and selected election");
   const addressBallot = readFileSync(join(process.cwd(), "lib/ballot/address-scope.ts"), "utf8");
   assert.match(addressBallot, /readSources[^=]*= readerBallotSourcesForDivisions/, "the address ballot helper must retain the scoped authority reader");
   assert.match(addressBallot, /await readSources\(divisions\)/, "the address ballot helper must scope each authority read to the resolved divisions");
@@ -222,7 +245,8 @@ test("all production ballot entry points use state-scoped selection", () => {
     "supporting authorities were opened before the requested ballot authority was selected",
   );
   assert.match(page, /data-ballot-canonical-holding-gaps/);
-  assert.match(page, /data-ballot-authority-unavailable/);
+  assert.match(page, /<CardGapContribution id=\{`ballot-holding:\$\{family\}`\} label=\{HOLDING_LABEL\[family\]\}/,
+    "supporting authority failures contribute to the card footer");
   assert.match(page, /matched\.contests\.some\(nhLegislativeRosterAppliesTo\)/);
   assert.match(page, /auxiliaryPreloads\.set\("nh-members", settleNhSeatHolders\)/);
 
@@ -233,4 +257,31 @@ test("all production ballot entry points use state-scoped selection", () => {
 
   const demand = readFileSync(join(process.cwd(), "app/api/demand-signal/route.ts"), "utf8");
   assert.match(demand, /getCandidateTargetIds\(submission\.subjectId\)/);
+});
+
+test("supporting authority failures contribute reader labels without field placeholders", () => {
+  const page = ts.createSourceFile("ballot.tsx", readFileSync("app/ballot/page.tsx", "utf8"), ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+  const all: ts.Node[] = [];
+  const visit = (node: ts.Node) => { all.push(node); ts.forEachChild(node, visit); };
+  visit(page);
+  const labels = all.find(node => ts.isVariableDeclaration(node) && node.name.getText(page) === "HOLDING_LABEL");
+  const unavailable = all.find(node => ts.isFunctionDeclaration(node) && node.name?.text === "unavailableHolding");
+  assert.ok(labels && unavailable);
+  const executable = ts.transpileModule(`const ${labels.getText(page)}; ${unavailable.getText(page)}; return unavailableHolding;`, {
+    compilerOptions: { jsx: ts.JsxEmit.React, target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None },
+  }).outputText;
+  const render = new Function("React", "CardGapContribution", executable)(React, CardGapContribution);
+  for (const [family, label] of [
+    ["candidate-publication", "public positions"],
+    ["officeholder-directory", "officeholder information"],
+    ["candidate-profile", "candidate background"],
+    ["federal campaign-finance", "campaign money"],
+    ["state campaign-finance", "campaign money"],
+  ]) {
+    const gap = render(family);
+    assert.equal(gap.type, CardGapContribution);
+    assert.equal(gap.props.id, `ballot-holding:${family}`);
+    assert.equal(gap.props.label, label);
+    assert.equal(renderToStaticMarkup(gap), "", "only the card footer displays the missing information");
+  }
 });

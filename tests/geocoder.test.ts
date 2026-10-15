@@ -6,6 +6,7 @@ import test from "node:test";
 import {
   CENSUS_BENCHMARK,
   CENSUS_GEOCODER_URL,
+  CENSUS_GEOGRAPHIES_URL,
   MAX_SPREAD_KM,
   SAMPLE_HOUSE_NUMBERS,
   censusGeocodeUrl,
@@ -19,12 +20,6 @@ import {
   sampleStreetPoints,
   streetOnly,
 } from "../lib/geo/census-geocoder.ts";
-
-/**
- * The Census geocoder does not geocode street names, only addresses, so a street is placed from a few
- * sampled house numbers that must agree, or nothing. No reader house number is ever sent, and every
- * failure lands on `null`. The recorded payloads below are real Census responses.
- */
 
 test("D53: a house number the reader types anyway is stripped before sending", () => {
   assert.equal(streetOnly("808 Green Pond Road"), "Green Pond Road");
@@ -114,9 +109,6 @@ test("D53: samples that agree give a midpoint; samples that scatter give nothing
 
 function stubFetch(bodies: Record<string, unknown>): typeof fetch {
   return (async (input: string | URL) => {
-    // Decoded, and `+` back to a space: URLSearchParams writes spaces as `+`
-    // and decodeURIComponent leaves those alone, so matching on the raw
-    // string quietly hits nothing and every stub returns "no match".
     const url = decodeURIComponent(String(input)).replace(/\+/g, " ");
     const key = Object.keys(bodies).find((k) => url.includes(k));
     return new Response(JSON.stringify(key ? bodies[key] : REAL_EMPTY), {
@@ -130,6 +122,7 @@ function stubFetch(bodies: Record<string, unknown>): typeof fetch {
 function controlledSampleFetch() {
   const requests: {
     address: string;
+    vintage: string | null;
     signal: AbortSignal;
     aborted: boolean;
     respond: (body: unknown) => void;
@@ -140,6 +133,7 @@ function controlledSampleFetch() {
       assert.ok(signal);
       const request = {
         address: new URL(String(input)).searchParams.get("address") ?? "",
+        vintage: new URL(String(input)).searchParams.get("vintage"),
         signal,
         aborted: false,
         respond(body: unknown) {
@@ -195,6 +189,39 @@ test("cancelling a street lookup releases every in-flight probe and a pre-cancel
 
   assert.deepEqual(await sampleStreetPoints("Academy St", "07866", { fetchImpl, signal: parent.signal }), []);
   assert.equal(requests.length, 4, "a pre-cancelled lookup started source requests");
+});
+
+test("concurrent samples retain selected Census vintages, native geography and postal ZIP omission", async () => {
+  const { fetchImpl, requests } = controlledSampleFetch();
+  const parent = new AbortController();
+  const lookup = sampleStreetPoints("Academy St", "07866", {
+    fetchImpl, signal: parent.signal, omitZip: true, vintage: "ACS2025_Current",
+  });
+  try {
+    assert.equal(requests.length, 8, "both source vintages for all four samples start before a source reply");
+    assert.equal(new Set(requests.map(request => request.signal)).size, 1);
+    for (const number of SAMPLE_HOUSE_NUMBERS) {
+      const probes = requests.filter(request => request.address === `${number} Academy St`);
+      assert.deepEqual(probes.map(request => request.vintage), ["ACS2025_Current", "Current_Current"]);
+    }
+    const lower = [{ GEOID: "34001", NAME: "Controlled lower district" }];
+    const counties = [{ GEOID: "34027", NAME: "Controlled county" }];
+    for (const request of requests.toReversed()) request.respond({ result: { addressMatches: [{
+      ...REAL_MATCH.result.addressMatches[0], geographies: {
+        "2024 State Legislative Districts - Lower": lower, Counties: counties,
+      },
+    }] } });
+    const points = await lookup;
+    assert.equal(points.length, 4);
+    for (const point of points) {
+      assert.deepEqual(point.geographies?.["2024 State Legislative Districts - Lower"], lower);
+      assert.deepEqual(point.geographies?.Counties, counties);
+      assert.equal(point.geographyVintages?.Counties, "Current_Current");
+    }
+  } finally {
+    parent.abort();
+    await lookup;
+  }
 });
 
 test("the whole-lookup deadline cancels remaining probes without publishing an incomplete midpoint", async (context) => {
@@ -472,9 +499,6 @@ test("the house number never reaches the narrowing store or a log", () => {
     new URL("../components/address/address-prompt.tsx", import.meta.url),
     "utf8",
   );
-  // The number lives in component state and goes to the geocoder. It must
-  // not be written to the device store, logged, or sent to our own API —
-  // the same rule the resolved point ships under.
   for (const forbidden of [
     "setStreet(houseNumber",
     "writeSessionAddress({ houseNumber",
@@ -498,9 +522,6 @@ test("M80: the geocode route writes NOTHING — no log, no store, no echo", asyn
     "utf8",
   );
 
-  // The source scan. Every write primitive this codebase has, and the
-  // console: an address that reaches a log line is an address we kept,
-  // whatever the transparency page says.
   for (const banned of [
     "logEvent",
     "insert",
@@ -532,9 +553,6 @@ test("M80: the geocode route writes NOTHING — no log, no store, no echo", asyn
     "a per-reader response must never be publicly cacheable",
   );
 
-  // And the runtime proof: call it with a stubbed upstream and assert that
-  // nothing anywhere observed the address. A source scan alone would pass a
-  // route that wrote through an alias.
   const { POST } = await import("../app/api/geocode/route.ts");
   const observed: string[] = [];
   const realFetch = globalThis.fetch;
@@ -600,7 +618,7 @@ test("M80: a browser goes through the proxy; the server calls the Bureau direct"
   assert.ok(point);
   assert.equal(calls.length, 1);
   assert.ok(
-    calls[0].startsWith(CENSUS_GEOCODER_URL),
+    calls[0].startsWith(CENSUS_GEOGRAPHIES_URL),
     `server-side call went to ${calls[0]}`,
   );
 });
@@ -637,7 +655,6 @@ test("M80: the promise changed in the same commit, on both surfaces", () => {
     );
   }
 });
-
 
 test("Census geocoding preserves ambiguity, rejects another ZIP, and supports US territories", async () => {
   assert.equal(parseCensusPoint({ result: { addressMatches: [...REAL_MATCH.result.addressMatches, ...REAL_MATCH.result.addressMatches] } }), null);

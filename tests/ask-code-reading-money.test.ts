@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import test from "./helpers/playbooks.ts";
 import { installFederalVotes, installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 
 await installRegistryAuthority();
@@ -176,11 +176,12 @@ test("the other person named is the FULL name the reader typed, never another ca
 });
 
 test("a state's roll calls are read for a state legislator only, with NH using its exact member projection", async () => {
-  assert.equal(voteEvidenceReadsStateRollCalls("A Legislator", { officeholderId: "nj-legislature:12345" }), true);
+  assert.equal(voteEvidenceReadsStateRollCalls("A Legislator", { officeholderId: "nj-legislature:12345" }), false, "the exact member reader opens only its linked sources");
   assert.equal(voteEvidenceReadsStateRollCalls("A Legislator", { officeholderId: "nh-general-court:12345" }), false, "NH never reopens the retired jurisdiction pointer");
   assert.equal(voteEvidenceReadsStateRollCalls("Tayfun Selen", { withinStates: ["nj"] }), false, "no roster row: nothing to read");
   const calls: string[] = [];
-  const readers = { holder: async () => null, nh: async (member: string) => { calls.push(member); return null; }, az: async () => [] };
+  const readers = { holder: async () => null, nh: async (member: string) => { calls.push(member); return null; },
+    official: async () => null, plural: async () => [], legiscan: async () => [] };
   assert.equal((await readNativeMemberVotes("nh-general-court:12345", readers))?.status, "NOT_HELD");
   assert.equal(await readNativeMemberVotes("body:county-council", readers), null);
   assert.equal(await readNativeMemberVotes("ballot-nj-morris:county-candidate", readers), null);

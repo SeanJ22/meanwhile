@@ -3,6 +3,12 @@ import { districtIdentity } from "../ocd/fips.ts";
 import { legislativeIdentity } from "../ocd/divisions.ts";
 import { FIPS_TO_STATE } from "../ocd/fips.ts";
 
+/** A district family is scoped to its state; adjacent states never replace it. */
+export function districtFamilyKey(ocdId: string): string | null {
+  const match = /^ocd-division\/country:us\/(?:state|territory|district):([a-z]{2})\/(cd|sldu|sldl):[^/]+$/i.exec(ocdId);
+  return match ? `${match[1].toLowerCase()}/${match[2].toLowerCase()}` : null;
+}
+
 /** Census identifiers joined by the existing district identity rules. A place
  * name alone never establishes a government or a reader division. */
 export function censusWorkDivision(g: GeographyRef): string | null {

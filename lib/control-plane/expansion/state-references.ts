@@ -9,7 +9,7 @@ export interface StateReference {
   state: string;
   units: CensusUnitTerritory[];
   zips: Record<string, { total: number; edges: { layer: string; id: string; samples: number }[] }>;
-  facts: Record<string, { web: string; county: string }>;
+  facts: Record<string, { city?: string; web: string; county: string; countyFips?: string | null }>;
   censusSource: string;
   exactShares: Record<string, Record<string, number>>;
 }

@@ -1,0 +1,841 @@
+{
+  "data": [
+    {
+      "type": "documents",
+      "id": "FMCSA-2007-27383-0001",
+      "attributes": {
+        "agencyId": "FMCSA",
+        "objectId": "09000064802b2d00",
+        "frDocNum": null,
+        "documentType": "Notice",
+        "withdrawn": false,
+        "highlightedContent": "",
+        "commentEndDate": "2099-07-29T03:59:59Z",
+        "commentStartDate": "2007-03-08T15:56:31Z",
+        "lastModifiedDate": "2024-11-07T02:14:52Z",
+        "openForComment": true,
+        "withinCommentPeriod": true,
+        "postedDate": "2007-03-08T05:00:00Z",
+        "title": "In the Matter of Victory Transport, Inc. - Notice of Filing Respondent's Request for Binding Arbitration",
+        "docketId": "FMCSA-2007-27383",
+        "subtype": "Notice",
+        "allowLateComments": true
+      }
+    },
+    {
+      "type": "documents",
+      "id": "FMCSA-2008-0083-0001",
+      "attributes": {
+        "agencyId": "FMCSA",
+        "objectId": "09000064803fef96",
+        "frDocNum": null,
+        "documentType": "Notice",
+        "withdrawn": false,
+        "highlightedContent": "",
+        "commentEndDate": "2099-03-20T03:59:59Z",
+        "commentStartDate": "2008-03-19T04:00:00Z",
+        "lastModifiedDate": "2024-11-07T21:51:39Z",
+        "openForComment": true,
+        "withinCommentPeriod": true,
+        "postedDate": "2008-03-19T04:00:00Z",
+        "title": "In the Matter of Jesse Owen Lemay - Notice of Filing Respondent's Request for Binding Arbitration",
+        "docketId": "FMCSA-2008-0083",
+        "subtype": "Notice",
+        "allowLateComments": true
+      }
+    },
+    {
+      "type": "documents",
+      "id": "FDA-2015-N-3469-0001",
+      "attributes": {
+        "agencyId": "FDA",
+        "objectId": "0900006481cf17b1",
+        "frDocNum": "2015-27270",
+        "documentType": "Notice",
+        "withdrawn": false,
+        "highlightedContent": "",
+        "commentEndDate": "2050-02-22T04:59:59Z",
+        "commentStartDate": "2015-10-27T04:00:00Z",
+        "lastModifiedDate": "2026-08-11T09:00:50Z",
+        "openForComment": true,
+        "withinCommentPeriod": true,
+        "postedDate": "2015-10-27T04:00:00Z",
+        "title": "Bulk Drug Substances That Can Be Used To Compound Drug Products in\nAccordance With Section 503B of the Federal Food, Drug, and Cosmetic Act; Establishment of a Public Docket",
+        "docketId": "FDA-2015-N-3469",
+        "subtype": "Notice of Availability",
+        "allowLateComments": true
+      }
+    },
+    {
+      "type": "documents",
+      "id": "FDA-2015-N-3534-0001",
+      "attributes": {
+        "agencyId": "FDA",
+        "objectId": "0900006481cf1710",
+        "frDocNum": "2015-27271",
+        "documentType": "Notice",
+        "withdrawn": false,
+        "highlightedContent": "",
+        "commentEndDate": "2050-02-22T04:59:59Z",
+        "commentStartDate": "2015-10-27T04:00:00Z",
+        "lastModifiedDate": "2026-09-20T09:00:16Z",
+        "openForComment": true,
+        "withinCommentPeriod": true,
+        "postedDate": "2015-10-27T04:00:00Z",
+        "title": "Bulk Drug Substances That Can Be Used To Compound Drug Products in\nAccordance With Section 503A of the Federal Food, Drug, and Cosmetic Act; Establishment of a Public Docket",
+        "docketId": "FDA-2015-N-3534",
+        "subtype": "Notice of Availability",
+        "allowLateComments": true
+      }
+    },
+    {
+      "type": "documents",
+      "id": "EPA-HQ-OPP-2023-0288-0008",
+      "attributes": {
+        "agencyId": "EPA",
+        "objectId": "09000064867c4202",
+        "frDocNum": "2024-23471",
+        "documentType": "Notice",
+        "withdrawn": false,
+        "highlightedContent": "",
+        "commentEndDate": "2032-10-11T03:59:59Z",
+        "commentStartDate": "2024-10-10T04:00:00Z",
+        "lastModifiedDate": "2026-05-07T09:00:17Z",
+        "openForComment": true,
+        "withinCommentPeriod": true,
+        "postedDate": "2024-10-10T04:00:00Z",
+        "title": "Guidance: Pesticides; Evaluation of Products for Claims against Viruses",
+        "docketId": "EPA-HQ-OPP-2023-0288",
+        "subtype": null,
+        "allowLateComments": false
+      }
+    }
+  ],
+  "meta": {
+    "aggregations": {
+      "documentType": [
+        {
+          "docCount": 776,
+          "label": "Notice"
+        },
+        {
+          "docCount": 200,
+          "label": "Proposed Rule"
+        },
+        {
+          "docCount": 148,
+          "label": "Other"
+        },
+        {
+          "docCount": 36,
+          "label": "Rule"
+        }
+      ],
+      "subtype": [
+        {
+          "docCount": 156,
+          "label": "Request for Comments"
+        },
+        {
+          "docCount": 64,
+          "label": "Request for Comment"
+        },
+        {
+          "docCount": 34,
+          "label": "60 Day Proposed Information Collection"
+        },
+        {
+          "docCount": 27,
+          "label": "Notice of Proposed Rulemaking (NPRM)"
+        },
+        {
+          "docCount": 21,
+          "label": "Information Collection Request (ICR)"
+        },
+        {
+          "docCount": 16,
+          "label": "Determinations"
+        },
+        {
+          "docCount": 13,
+          "label": "Final Rule with Request for Comments"
+        },
+        {
+          "docCount": 11,
+          "label": "Notice of Availability"
+        },
+        {
+          "docCount": 9,
+          "label": "30 Day Proposed Information Collection"
+        },
+        {
+          "docCount": 9,
+          "label": "Notice of Filing"
+        },
+        {
+          "docCount": 7,
+          "label": "Notice of Intent"
+        },
+        {
+          "docCount": 5,
+          "label": "Availability of Document"
+        },
+        {
+          "docCount": 5,
+          "label": "Supplemental Notice of Proposed Rulemaking (SNPRM)"
+        },
+        {
+          "docCount": 4,
+          "label": "Requests for Information (RFI)"
+        },
+        {
+          "docCount": 3,
+          "label": "Advance Notice of Proposed Rulemaking (ANPRM)"
+        },
+        {
+          "docCount": 3,
+          "label": "General Notice"
+        },
+        {
+          "docCount": 3,
+          "label": "Interim Final Rule"
+        },
+        {
+          "docCount": 3,
+          "label": "Notice of Publication"
+        },
+        {
+          "docCount": 2,
+          "label": "Final Rule"
+        },
+        {
+          "docCount": 2,
+          "label": "Notice"
+        },
+        {
+          "docCount": 1,
+          "label": "Announcement"
+        },
+        {
+          "docCount": 1,
+          "label": "Consent Decree"
+        },
+        {
+          "docCount": 1,
+          "label": "Direct Final Rule"
+        },
+        {
+          "docCount": 1,
+          "label": "Extension of Comment Period"
+        },
+        {
+          "docCount": 1,
+          "label": "Guidance"
+        },
+        {
+          "docCount": 1,
+          "label": "Meeting"
+        },
+        {
+          "docCount": 1,
+          "label": "Nationally Recognized Testing Laboratory (NRTL)"
+        },
+        {
+          "docCount": 1,
+          "label": "Notice of Data Availability"
+        },
+        {
+          "docCount": 1,
+          "label": "Notice of Funding Availability (NOFA)"
+        },
+        {
+          "docCount": 1,
+          "label": "Public Meetings"
+        },
+        {
+          "docCount": 1,
+          "label": "Request for Submissions"
+        },
+        {
+          "docCount": 1,
+          "label": "Withdrawal"
+        }
+      ],
+      "withinCommentPeriod": [
+        {
+          "docCount": 1008,
+          "label": "true"
+        },
+        {
+          "docCount": 4,
+          "label": "false"
+        }
+      ],
+      "agencyId": [
+        {
+          "docCount": 98,
+          "value": "FAA"
+        },
+        {
+          "docCount": 78,
+          "value": "FDA"
+        },
+        {
+          "docCount": 55,
+          "value": "FMCSA"
+        },
+        {
+          "docCount": 54,
+          "value": "EPA"
+        },
+        {
+          "docCount": 46,
+          "value": "FCC"
+        },
+        {
+          "docCount": 42,
+          "value": "USCIS"
+        },
+        {
+          "docCount": 26,
+          "value": "CMS"
+        },
+        {
+          "docCount": 25,
+          "value": "IRS"
+        },
+        {
+          "docCount": 23,
+          "value": "FNA"
+        },
+        {
+          "docCount": 22,
+          "value": "HUD"
+        },
+        {
+          "docCount": 21,
+          "value": "NRC"
+        },
+        {
+          "docCount": 20,
+          "value": "NCUA"
+        },
+        {
+          "docCount": 20,
+          "value": "VA"
+        },
+        {
+          "docCount": 19,
+          "value": "DEA"
+        },
+        {
+          "docCount": 19,
+          "value": "DOD"
+        },
+        {
+          "docCount": 18,
+          "value": "MARAD"
+        },
+        {
+          "docCount": 15,
+          "value": "NHTSA"
+        },
+        {
+          "docCount": 14,
+          "value": "DOL"
+        },
+        {
+          "docCount": 14,
+          "value": "SEC"
+        },
+        {
+          "docCount": 12,
+          "value": "FAR"
+        },
+        {
+          "docCount": 12,
+          "value": "FRA"
+        },
+        {
+          "docCount": 11,
+          "value": "CDC"
+        },
+        {
+          "docCount": 11,
+          "value": "ED"
+        },
+        {
+          "docCount": 11,
+          "value": "FEMA"
+        },
+        {
+          "docCount": 11,
+          "value": "USCG"
+        },
+        {
+          "docCount": 10,
+          "value": "FERC"
+        },
+        {
+          "docCount": 10,
+          "value": "NOAA"
+        },
+        {
+          "docCount": 10,
+          "value": "USN"
+        },
+        {
+          "docCount": 9,
+          "value": "AMS"
+        },
+        {
+          "docCount": 9,
+          "value": "APHIS"
+        },
+        {
+          "docCount": 9,
+          "value": "DOS"
+        },
+        {
+          "docCount": 9,
+          "value": "FHWA"
+        },
+        {
+          "docCount": 8,
+          "value": "ITC"
+        },
+        {
+          "docCount": 8,
+          "value": "OPM"
+        },
+        {
+          "docCount": 8,
+          "value": "USBC"
+        },
+        {
+          "docCount": 7,
+          "value": "FDIC"
+        },
+        {
+          "docCount": 7,
+          "value": "FTC"
+        },
+        {
+          "docCount": 7,
+          "value": "USCBP"
+        },
+        {
+          "docCount": 6,
+          "value": "BSEE"
+        },
+        {
+          "docCount": 6,
+          "value": "DARS"
+        },
+        {
+          "docCount": 6,
+          "value": "FRS"
+        },
+        {
+          "docCount": 6,
+          "value": "FWS"
+        },
+        {
+          "docCount": 6,
+          "value": "NASA"
+        },
+        {
+          "docCount": 6,
+          "value": "NSF"
+        },
+        {
+          "docCount": 6,
+          "value": "PHMSA"
+        },
+        {
+          "docCount": 6,
+          "value": "STB"
+        },
+        {
+          "docCount": 5,
+          "value": "CFTC"
+        },
+        {
+          "docCount": 5,
+          "value": "CPSC"
+        },
+        {
+          "docCount": 5,
+          "value": "GSA"
+        },
+        {
+          "docCount": 5,
+          "value": "PTO"
+        },
+        {
+          "docCount": 5,
+          "value": "TTB"
+        },
+        {
+          "docCount": 5,
+          "value": "USC"
+        },
+        {
+          "docCount": 4,
+          "value": "ARTS"
+        },
+        {
+          "docCount": 4,
+          "value": "CPPBSD"
+        },
+        {
+          "docCount": 4,
+          "value": "DOE"
+        },
+        {
+          "docCount": 4,
+          "value": "FTA"
+        },
+        {
+          "docCount": 4,
+          "value": "ICEB"
+        },
+        {
+          "docCount": 4,
+          "value": "NMB"
+        },
+        {
+          "docCount": 4,
+          "value": "RBS"
+        },
+        {
+          "docCount": 3,
+          "value": "CDFI"
+        },
+        {
+          "docCount": 3,
+          "value": "CNCS"
+        },
+        {
+          "docCount": 3,
+          "value": "DOT"
+        },
+        {
+          "docCount": 3,
+          "value": "FSIS"
+        },
+        {
+          "docCount": 3,
+          "value": "OCC"
+        },
+        {
+          "docCount": 3,
+          "value": "OSHA"
+        },
+        {
+          "docCount": 3,
+          "value": "SSA"
+        },
+        {
+          "docCount": 3,
+          "value": "TREAS"
+        },
+        {
+          "docCount": 3,
+          "value": "TSA"
+        },
+        {
+          "docCount": 2,
+          "value": "ATF"
+        },
+        {
+          "docCount": 2,
+          "value": "BOEM"
+        },
+        {
+          "docCount": 2,
+          "value": "CISA"
+        },
+        {
+          "docCount": 2,
+          "value": "DHS"
+        },
+        {
+          "docCount": 2,
+          "value": "EAC"
+        },
+        {
+          "docCount": 2,
+          "value": "EIB"
+        },
+        {
+          "docCount": 2,
+          "value": "FAS"
+        },
+        {
+          "docCount": 2,
+          "value": "FHFA"
+        },
+        {
+          "docCount": 2,
+          "value": "FISCAL"
+        },
+        {
+          "docCount": 2,
+          "value": "FMC"
+        },
+        {
+          "docCount": 2,
+          "value": "ITA"
+        },
+        {
+          "docCount": 2,
+          "value": "MSHA"
+        },
+        {
+          "docCount": 2,
+          "value": "NARA"
+        },
+        {
+          "docCount": 2,
+          "value": "NASS"
+        },
+        {
+          "docCount": 2,
+          "value": "NIST"
+        },
+        {
+          "docCount": 2,
+          "value": "NPS"
+        },
+        {
+          "docCount": 2,
+          "value": "RHS"
+        },
+        {
+          "docCount": 2,
+          "value": "SBA"
+        },
+        {
+          "docCount": 2,
+          "value": "USDA"
+        },
+        {
+          "docCount": 2,
+          "value": "USTR"
+        },
+        {
+          "docCount": 2,
+          "value": "WCPO"
+        },
+        {
+          "docCount": 1,
+          "value": "ACF"
+        },
+        {
+          "docCount": 1,
+          "value": "ATSDR"
+        },
+        {
+          "docCount": 1,
+          "value": "BIA"
+        },
+        {
+          "docCount": 1,
+          "value": "BIS"
+        },
+        {
+          "docCount": 1,
+          "value": "BLM"
+        },
+        {
+          "docCount": 1,
+          "value": "CFPB"
+        },
+        {
+          "docCount": 1,
+          "value": "COLC"
+        },
+        {
+          "docCount": 1,
+          "value": "DEPO"
+        },
+        {
+          "docCount": 1,
+          "value": "DOJ"
+        },
+        {
+          "docCount": 1,
+          "value": "DRBC"
+        },
+        {
+          "docCount": 1,
+          "value": "EIA"
+        },
+        {
+          "docCount": 1,
+          "value": "ERS"
+        },
+        {
+          "docCount": 1,
+          "value": "FINCEN"
+        },
+        {
+          "docCount": 1,
+          "value": "FS"
+        },
+        {
+          "docCount": 1,
+          "value": "HHS"
+        },
+        {
+          "docCount": 1,
+          "value": "MCC"
+        },
+        {
+          "docCount": 1,
+          "value": "MSPB"
+        },
+        {
+          "docCount": 1,
+          "value": "OMB"
+        },
+        {
+          "docCount": 1,
+          "value": "ONRR"
+        },
+        {
+          "docCount": 1,
+          "value": "PBGC"
+        },
+        {
+          "docCount": 1,
+          "value": "PC"
+        },
+        {
+          "docCount": 1,
+          "value": "PRC"
+        },
+        {
+          "docCount": 1,
+          "value": "RITA"
+        },
+        {
+          "docCount": 1,
+          "value": "SRBC"
+        },
+        {
+          "docCount": 1,
+          "value": "USA"
+        },
+        {
+          "docCount": 1,
+          "value": "USAF"
+        },
+        {
+          "docCount": 1,
+          "value": "USGS"
+        },
+        {
+          "docCount": 1,
+          "value": "USPS"
+        },
+        {
+          "docCount": 1,
+          "value": "USSC"
+        }
+      ],
+      "commentEndDate": [
+        {
+          "label": "Next 3 Days",
+          "fromDate": "2026-10-12 00:00:00",
+          "toDate": "2026-10-14 23:59:58",
+          "docCount": 70
+        },
+        {
+          "label": "Next 7 Days",
+          "fromDate": "2026-10-12 00:00:00",
+          "toDate": "2026-10-18 23:59:58",
+          "docCount": 154
+        },
+        {
+          "label": "Next 15 Days",
+          "fromDate": "2026-10-12 00:00:00",
+          "toDate": "2026-10-26 23:59:58",
+          "docCount": 267
+        },
+        {
+          "label": "Next 30 Days",
+          "fromDate": "2026-10-12 00:00:00",
+          "toDate": "2026-11-10 23:59:58",
+          "docCount": 643
+        },
+        {
+          "label": "Next 90 Days",
+          "fromDate": "2026-10-12 00:00:00",
+          "toDate": "2027-01-09 23:59:58",
+          "docCount": 993
+        }
+      ],
+      "postedDate": [
+        {
+          "label": "Last 7 Days",
+          "fromDate": "2026-10-06 00:00:00",
+          "toDate": "2026-10-12 23:59:59",
+          "docCount": 99
+        },
+        {
+          "label": "Last 15 Days",
+          "fromDate": "2026-09-28 00:00:00",
+          "toDate": "2026-10-12 23:59:59",
+          "docCount": 332
+        },
+        {
+          "label": "Last 30 Days",
+          "fromDate": "2026-09-13 00:00:00",
+          "toDate": "2026-10-12 23:59:59",
+          "docCount": 639
+        },
+        {
+          "label": "Last 90 Days",
+          "fromDate": "2026-07-15 00:00:00",
+          "toDate": "2026-10-12 23:59:59",
+          "docCount": 990
+        }
+      ]
+    },
+    "filters": {
+      "commentEndDate": {
+        "fromDate": "2026-10-12",
+        "toDate": null
+      },
+      "postedDate": {
+        "fromDate": "1900-01-01",
+        "toDate": "2026-10-12"
+      },
+      "documentType": [
+        {
+          "label": "Notice",
+          "value": "Notice"
+        },
+        {
+          "label": "Proposed Rule",
+          "value": "Proposed Rule"
+        },
+        {
+          "label": "Rule",
+          "value": "Rule"
+        }
+      ]
+    },
+    "hasNextPage": true,
+    "hasPreviousPage": false,
+    "numberOfElements": 5,
+    "pageNumber": 1,
+    "pageSize": 5,
+    "totalElements": 1012,
+    "totalPages": 40,
+    "firstPage": true,
+    "lastPage": false
+  }
+}

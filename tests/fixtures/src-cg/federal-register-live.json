@@ -1,0 +1,285 @@
+{
+  "description": "Documents with a comment closing date on or after 10/12/2026",
+  "count": 1039,
+  "total_pages": 50,
+  "next_page_url": "https://www.federalregister.gov/api/v1/documents?conditions%5Bcomment_date%5D%5Bgte%5D=2026-10-12&fields%5B%5D=document_number&fields%5B%5D=title&fields%5B%5D=publication_date&fields%5B%5D=html_url&fields%5B%5D=abstract&fields%5B%5D=comments_close_on&fields%5B%5D=regulations_dot_gov_info&fields%5B%5D=docket_ids&format=json&page=2&per_page=1&search_after_cursor=WzE3OTE4NDk2MDAwMDAsIjIwMjYtMjA4MjgiXQ",
+  "results": [
+    {
+      "document_number": "2026-20892",
+      "title": "Notice of Availability of the Proposed Notice of Sale for the Cook Inlet Outer Continental Shelf Oil and Gas One Big Beautiful Bill Act Lease Sale 2",
+      "publication_date": "2026-10-13",
+      "html_url": "https://www.federalregister.gov/documents/2026/10/13/2026-20892/notice-of-availability-of-the-proposed-notice-of-sale-for-the-cook-inlet-outer-continental-shelf-oil",
+      "abstract": "The Bureau of Ocean Energy Management (BOEM) announces the availability of the Proposed Notice of Sale (NOS) for the Cook Inlet Outer Continental Shelf (OCS) Oil and Gas One Big Beautiful Bill Act (OBBBA) Lease Sale 2 (Lease Sale BBC2). BOEM is publishing this notice pursuant to its regulatory authority under 30 CFR part 556. Pursuant to Section 19 of the OCS Lands Act, the Secretary of the Interior provides the Governors of affected States and the executive of any affected local government with the opportunity to review and comment on the Proposed NOS. The Proposed NOS describes the proposed size, timing, and location of the sale, including lease stipulations, terms and conditions, minimum bids, royalty rates, and rental rates, which are required by Section 50102 of the OBBBA for this sale.",
+      "comments_close_on": "2026-12-14",
+      "regulations_dot_gov_info": {
+        "checked_regulationsdotgov_at": "2026-10-10T07:53:52Z"
+      },
+      "docket_ids": [
+        "Docket No. BOEM-2026-0925"
+      ]
+    },
+    {
+      "document_number": "2026-20888",
+      "title": "Regulation Crypto Asset Transactions and Regulation Crypto Asset Markets",
+      "publication_date": "2026-10-13",
+      "html_url": "https://www.federalregister.gov/documents/2026/10/13/2026-20888/regulation-crypto-asset-transactions-and-regulation-crypto-asset-markets",
+      "abstract": "The Commodity Futures Trading Commission (\"Commission\" or \"CFTC\") is issuing an advanced notice of proposed rulemaking regarding section 2(c)(2)(D) of the Commodity Exchange Act (\"CEA\" or \"Act\") to provide notice and seek public comment on its intent to develop and establish fit-for-purpose rules implementing section 2(c)(2)(D) of the Act with respect to transactions and markets in crypto assets.",
+      "comments_close_on": "2026-12-14",
+      "regulations_dot_gov_info": {
+        "checked_regulationsdotgov_at": "2026-10-10T07:47:30Z"
+      },
+      "docket_ids": []
+    },
+    {
+      "document_number": "2026-20885",
+      "title": "Airworthiness Directives; Airbus Helicopters",
+      "publication_date": "2026-10-13",
+      "html_url": "https://www.federalregister.gov/documents/2026/10/13/2026-20885/airworthiness-directives-airbus-helicopters",
+      "abstract": "The FAA proposes to adopt a new airworthiness directive (AD) for all Airbus Helicopters Model H160-B helicopters. This proposed AD was prompted by a report of the inability to operate the jettisoning function of a window due to a blocked jettisoning mechanism. This proposed AD would require removing the jettisonable windows, cleaning the ropes of the jettisonable windows, and performing an operational test of the windows jettison systems. The FAA is proposing this AD to address the unsafe condition on these products.",
+      "comments_close_on": "2026-11-27",
+      "regulations_dot_gov_info": {
+        "checked_regulationsdotgov_at": "2026-10-10T07:53:41Z"
+      },
+      "docket_ids": [
+        "Docket No. FAA-2026-11806",
+        "Project Identifier MCAI-2026-00589-R"
+      ]
+    },
+    {
+      "document_number": "2026-20884",
+      "title": "Advance Traveler Information for Rail",
+      "publication_date": "2026-10-13",
+      "html_url": "https://www.federalregister.gov/documents/2026/10/13/2026-20884/advance-traveler-information-for-rail",
+      "abstract": "U.S. Customs and Border Protection (CBP) is proposing to require rail carriers to transmit advance electronic traveler information to CBP for any individual (crew and passengers) who is arriving in or departing from the United States on board a train. The rail carrier also would be required to transmit an advance notice of arrival or departure, as applicable, for the train. This rule would enhance security while facilitating legitimate international travel on board trains.",
+      "comments_close_on": "2026-12-14",
+      "regulations_dot_gov_info": {
+        "checked_regulationsdotgov_at": "2026-10-10T07:48:03Z"
+      },
+      "docket_ids": [
+        "Docket No. USCBP-2026-0992"
+      ]
+    },
+    {
+      "document_number": "2026-20880",
+      "title": "Commission Information Collection Activities (FERC-725B); Comment Request; Extension",
+      "publication_date": "2026-10-13",
+      "html_url": "https://www.federalregister.gov/documents/2026/10/13/2026-20880/commission-information-collection-activities-ferc-725b-comment-request-extension",
+      "abstract": "In compliance with the requirements of the Paperwork Reduction Act of 1995, 44 U.S.C. 3506(c)(2)(A), the Federal Energy Regulatory Commission (Commission or FERC) is soliciting public comment on the currently approved information collection, FERC-725B (1902-0248), Mandatory Reliability Standards, Critical Infrastructure Protection (CIP)--Update to CIP-015. This update changes the CIP-015-1 standard to CIP-015-2 which reflects the changes implemented through Order RD26-6- 000 issued on August 10, 2026.",
+      "comments_close_on": "2026-12-14",
+      "regulations_dot_gov_info": {
+        "checked_regulationsdotgov_at": "2026-10-10T07:49:43Z"
+      },
+      "docket_ids": [
+        "Docket No. RD26-6-000"
+      ]
+    },
+    {
+      "document_number": "2026-20877",
+      "title": "Magnuson-Stevens Fishery Conservation and Management Act Provisions; Atlantic Coastal Fisheries Cooperative Management Act Provisions; General Provisions for Domestic Fisheries; Application for Exempted Fishing Permits",
+      "publication_date": "2026-10-13",
+      "html_url": "https://www.federalregister.gov/documents/2026/10/13/2026-20877/magnuson-stevens-fishery-conservation-and-management-act-provisions-atlantic-coastal-fisheries",
+      "abstract": "The Assistant Regional Administrator for Sustainable Fisheries, Greater Atlantic Region (GARFO), NMFS, has made a preliminary determination that an Exempted Fishing Permit (EFP) application contains all of the required information and warrants further consideration. The EFP would allow federally permitted fishing vessels to fish outside fishery regulations in support of exempted fishing activities proposed by the Massachusetts Division of Marine Fisheries (MA DMF). Regulations under the Magnuson-Stevens Fishery Conservation and Management Act require publication of this notification to provide interested parties the opportunity to comment on applications for proposed EFPs.",
+      "comments_close_on": "2026-10-28",
+      "regulations_dot_gov_info": {
+        "checked_regulationsdotgov_at": "2026-10-10T07:54:14Z"
+      },
+      "docket_ids": [
+        "RTID 0648-XG116"
+      ]
+    },
+    {
+      "document_number": "2026-20876",
+      "title": "Magnuson-Stevens Fishery Conservation and Management Act Provisions; Atlantic Coastal Fisheries Cooperative Management Act Provisions; General Provisions for Domestic Fisheries; Application for Exempted Fishing Permits",
+      "publication_date": "2026-10-13",
+      "html_url": "https://www.federalregister.gov/documents/2026/10/13/2026-20876/magnuson-stevens-fishery-conservation-and-management-act-provisions-atlantic-coastal-fisheries",
+      "abstract": "The Assistant Regional Administrator for Sustainable Fisheries, Greater Atlantic Region (GARFO), NMFS, has made a preliminary determination that an Exempted Fishing Permit (EFP) application contains all the required information and warrants further consideration. The EFP would allow federally permitted fishing vessels to fish outside fishery regulations in support of exempted fishing activities proposed by the NOAA Northeast Fisheries Science Center (NEFSC). Regulations under the Magnuson-Stevens Fishery Conservation and Management Act require publication of this notification to provide interested parties the opportunity to comment on applications for proposed EFPs.",
+      "comments_close_on": "2026-10-28",
+      "regulations_dot_gov_info": {
+        "checked_regulationsdotgov_at": "2026-10-10T07:54:41Z"
+      },
+      "docket_ids": [
+        "RTID 0648-XG118"
+      ]
+    },
+    {
+      "document_number": "2026-20875",
+      "title": "Agency Information Collection Activities: Proposed Collection Renewal; Comment Request",
+      "publication_date": "2026-10-13",
+      "html_url": "https://www.federalregister.gov/documents/2026/10/13/2026-20875/agency-information-collection-activities-proposed-collection-renewal-comment-request",
+      "abstract": "The FDIC, as part of its obligations under the Paperwork Reduction Act of 1995, invites the general public and other Federal agencies to take this opportunity to comment on the request to renew the existing information collections described below (OMB Control No. 3064-0112). The notices of proposed renewal for these information collections were previously published in the Federal Register on August 6, 2026, allowing for a 60-day comment period. No comments were received.",
+      "comments_close_on": "2026-11-12",
+      "regulations_dot_gov_info": {
+        "checked_regulationsdotgov_at": "2026-10-10T07:55:19Z"
+      },
+      "docket_ids": [
+        "OMB No. 3064-0112"
+      ]
+    },
+    {
+      "document_number": "2026-20874",
+      "title": "Magnuson-Stevens Act Provisions; General Provisions for Domestic Fisheries; Application for Exempted Fishing Permits",
+      "publication_date": "2026-10-13",
+      "html_url": "https://www.federalregister.gov/documents/2026/10/13/2026-20874/magnuson-stevens-act-provisions-general-provisions-for-domestic-fisheries-application-for-exempted",
+      "abstract": "The Assistant Regional Administrator for Sustainable Fisheries, Greater Atlantic Region (GARFO), NMFS, has made a preliminary determination that an Exempted Fishing Permit (EFP) application contains all of the required information and warrants further consideration. The EFP would allow federally permitted fishing vessels to fish outside fishery regulations in support of exempted fishing activities. Regulations under the Magnuson-Stevens Fishery Conservation and Management Act require publication of this notification to provide interested parties the opportunity to comment on applications for proposed EFPs.",
+      "comments_close_on": "2026-10-28",
+      "regulations_dot_gov_info": {
+        "checked_regulationsdotgov_at": "2026-10-10T07:46:56Z"
+      },
+      "docket_ids": [
+        "RTID 0648-XG111"
+      ]
+    },
+    {
+      "document_number": "2026-20867",
+      "title": "Agency Information Collection Activities: Submission to OMB for Review and Approval; Public Comment Request; Healthy Start Evaluation and Quality Improvement, OMB No. 0915-0338-Revision",
+      "publication_date": "2026-10-13",
+      "html_url": "https://www.federalregister.gov/documents/2026/10/13/2026-20867/agency-information-collection-activities-submission-to-omb-for-review-and-approval-public-comment",
+      "abstract": "In compliance with the Paperwork Reduction Act of 1995, HRSA submitted an Information Collection Request (ICR) to the Office of Management and Budget (OMB) for review and approval. Comments submitted during the first public review of this ICR will be provided to OMB. OMB will accept further comments from the public during the review and approval period. OMB may act on HRSA's ICR only after the 30-day comment period for this notice has closed.",
+      "comments_close_on": "2026-11-12",
+      "regulations_dot_gov_info": {
+        "checked_regulationsdotgov_at": "2026-10-10T07:51:09Z"
+      },
+      "docket_ids": []
+    },
+    {
+      "document_number": "2026-20866",
+      "title": "Collection of Information Under Review by Office of Management and Budget; OMB Control Number: 1625-0095",
+      "publication_date": "2026-10-13",
+      "html_url": "https://www.federalregister.gov/documents/2026/10/13/2026-20866/collection-of-information-under-review-by-office-of-management-and-budget-omb-control-number",
+      "abstract": "In compliance with the Paperwork Reduction Act of 1995 the U.S. Coast Guard is forwarding an Information Collection Request (ICR), abstracted below, to the Office of Management and Budget (OMB), Office of Information and Regulatory Affairs (OIRA), requesting an extension of its approval for the following collection of information: 1625-0095, Oil and Hazardous Material Pollution Prevention and Safety Records, Equivalents/Alternatives and Exemptions; without change. Our ICR describes the information we seek to collect from the public. Review and comments by OIRA ensure we only impose paperwork burdens commensurate with our performance of duties.",
+      "comments_close_on": "2026-11-12",
+      "regulations_dot_gov_info": {
+        "checked_regulationsdotgov_at": "2026-10-10T07:48:45Z"
+      },
+      "docket_ids": [
+        "Docket No. USCG-2025-0393"
+      ]
+    },
+    {
+      "document_number": "2026-20865",
+      "title": "Periodic Reporting",
+      "publication_date": "2026-10-13",
+      "html_url": "https://www.federalregister.gov/documents/2026/10/13/2026-20865/periodic-reporting",
+      "abstract": "The Commission is acknowledging a recent Postal Service filing requesting the Commission initiate a rulemaking proceeding to consider changes to analytical principles relating to periodic reports. This document informs the public of the filing, invites public comment, and takes other administrative steps.",
+      "comments_close_on": "2026-10-28",
+      "regulations_dot_gov_info": {
+        "checked_regulationsdotgov_at": "2026-10-10T07:50:11Z"
+      },
+      "docket_ids": [
+        "Docket No. RM2027-2",
+        "Order No. 9760"
+      ]
+    },
+    {
+      "document_number": "2026-20863",
+      "title": "Magnuson-Stevens Fishery Conservation and Management Act Provisions; Fisheries of the Northeastern United States; Framework Adjustment 7 to the Atlantic Spiny Dogfish Fishery Management Plan",
+      "publication_date": "2026-10-13",
+      "html_url": "https://www.federalregister.gov/documents/2026/10/13/2026-20863/magnuson-stevens-fishery-conservation-and-management-act-provisions-fisheries-of-the-northeastern",
+      "abstract": "NMFS proposes measures included in Framework Adjustment 7 to the Spiny Dogfish Fishery Management Plan (FMP), as recommended by the Mid-Atlantic and New England Fishery Management Councils. Framework 7 proposes fishing year 2026 and projected 2027 specifications, which would establish allowable harvest levels for the spiny dogfish fishery to prevent overfishing while enabling optimum yield based on the best scientific information available. Framework 7 also proposes changes to the Atlantic spiny dogfish accountability measures intended to provide the commercial fishery with greater flexibility by no longer requiring full payback of annual catch limit (ACL) overages when the Atlantic spiny dogfish stock is considered healthy.",
+      "comments_close_on": "2026-11-12",
+      "regulations_dot_gov_info": {
+        "checked_regulationsdotgov_at": "2026-10-10T07:51:04Z"
+      },
+      "docket_ids": [
+        "Docket No. 261007-0005"
+      ]
+    },
+    {
+      "document_number": "2026-20856",
+      "title": "Agency Information Collection Activities; Proposed eCollection eComments Requested; Extension of a Previously Approved Collection; Supplementary Homicide Report (SHR)",
+      "publication_date": "2026-10-13",
+      "html_url": "https://www.federalregister.gov/documents/2026/10/13/2026-20856/agency-information-collection-activities-proposed-ecollection-ecomments-requested-extension-of-a",
+      "abstract": "The FBI, Criminal Justice Information Services (CJIS) Division Department of Justice (DOJ), will be submitting the following information collection request to the Office of Management and Budget for review and approval in accordance with the Paperwork Reduction Act of 1995.",
+      "comments_close_on": "2026-12-14",
+      "regulations_dot_gov_info": {
+        "checked_regulationsdotgov_at": "2026-10-10T07:53:25Z"
+      },
+      "docket_ids": [
+        "OMB Number 1110-0002"
+      ]
+    },
+    {
+      "document_number": "2026-20840",
+      "title": "New Postal Products",
+      "publication_date": "2026-10-13",
+      "html_url": "https://www.federalregister.gov/documents/2026/10/13/2026-20840/new-postal-products",
+      "abstract": "The Commission is noticing a recent Postal Service filing for the Commission's consideration concerning a negotiated service agreement. This notice informs the public of the filing, invites public comment, and takes other administrative steps.",
+      "comments_close_on": "2026-10-16",
+      "regulations_dot_gov_info": {
+        "checked_regulationsdotgov_at": "2026-10-10T07:54:09Z"
+      },
+      "docket_ids": [
+        "Docket Nos. MC2027-5 and K2027-5",
+        "MC2027-6 and K2027-6"
+      ]
+    },
+    {
+      "document_number": "2026-20833",
+      "title": "Announcing Solicitation of Written Comments To Inform the Physical Activity Guidelines for Americans, 2nd Edition Supplement: 2027 Steps and Muscle-Strengthening Guidance",
+      "publication_date": "2026-10-13",
+      "html_url": "https://www.federalregister.gov/documents/2026/10/13/2026-20833/announcing-solicitation-of-written-comments-to-inform-the-physical-activity-guidelines-for-americans",
+      "abstract": "The Department of Health and Human Services (HHS) announces the solicitation of public comments to inform the development of the Physical Activity Guidelines for Americans, 2nd edition Supplement: 2027 Steps and Muscle-Strengthening Guidance (2027 Steps and Muscle- Strengthening Guidance).",
+      "comments_close_on": "2026-11-12",
+      "regulations_dot_gov_info": {
+        "checked_regulationsdotgov_at": "2026-10-10T07:47:36Z"
+      },
+      "docket_ids": []
+    },
+    {
+      "document_number": "2026-20832",
+      "title": "Agency Information Collection Activities; Comment Request Relating to Lien Agreement Notice of Election of and Agreement to Special Lien",
+      "publication_date": "2026-10-13",
+      "html_url": "https://www.federalregister.gov/documents/2026/10/13/2026-20832/agency-information-collection-activities-comment-request-relating-to-lien-agreement-notice-of",
+      "abstract": "In accordance with the Paperwork Reduction Act of 1995, the IRS is inviting comments on the information collection request outlined in this notice.",
+      "comments_close_on": "2026-12-14",
+      "regulations_dot_gov_info": {
+        "checked_regulationsdotgov_at": "2026-10-10T07:49:33Z"
+      },
+      "docket_ids": []
+    },
+    {
+      "document_number": "2026-20830",
+      "title": "Deep Seabed Mining: Notice of Receipt of Application for Deep Seabed Mining Exploration License and Announcement of Public Comment Period and Virtual Public Hearing",
+      "publication_date": "2026-10-13",
+      "html_url": "https://www.federalregister.gov/documents/2026/10/13/2026-20830/deep-seabed-mining-notice-of-receipt-of-application-for-deep-seabed-mining-exploration-license-and",
+      "abstract": "NOAA has received an application for a license to conduct seabed mining exploration activities that is fully compliant with the applicable information requirements of the Deep Seabed Hard Mineral Resources Act (DSHMRA or the Act) and the Act's implementing regulations. As part of the application review process, NOAA will hold one virtual public hearing on Eco Minerals, Inc.'s (Eco) application and will accept written comments on the application submitted electronically via the instructions below.",
+      "comments_close_on": "2026-12-14",
+      "regulations_dot_gov_info": {
+        "checked_regulationsdotgov_at": "2026-10-10T07:46:50Z"
+      },
+      "docket_ids": [
+        "Docket No: 260930-0006"
+      ]
+    },
+    {
+      "document_number": "2026-20829",
+      "title": "Agency Information Collection Activities; Submission to the Office of Management and Budget (OMB) for Review and Approval; Consolidated Consumers' Report",
+      "publication_date": "2026-10-13",
+      "html_url": "https://www.federalregister.gov/documents/2026/10/13/2026-20829/agency-information-collection-activities-submission-to-the-office-of-management-and-budget-omb-for",
+      "abstract": "In accordance with the Paperwork Reduction Act (PRA) of 1995 and its implementing regulations, the U.S. Geological Survey (USGS) proposes to renew an information collection without change.",
+      "comments_close_on": "2026-11-12",
+      "regulations_dot_gov_info": {
+        "checked_regulationsdotgov_at": "2026-10-10T07:48:30Z"
+      },
+      "docket_ids": [
+        "Docket No. USGS-2026-0364",
+        "OMB Control Number 1028-0070",
+        "GX26LR000F60100"
+      ]
+    },
+    {
+      "document_number": "2026-20828",
+      "title": "Notice of Availability: Anchorage Terminal Area Airspace and Procedures Study for Review and Comment Period, and Workshop Announcement for the Draft Environmental Assessment",
+      "publication_date": "2026-10-13",
+      "html_url": "https://www.federalregister.gov/documents/2026/10/13/2026-20828/notice-of-availability-anchorage-terminal-area-airspace-and-procedures-study-for-review-and-comment",
+      "abstract": "The FAA, in cooperation with the United States Air Force, is announcing the public review/comment period and public workshops for the ATAAPS DEA for the proposed Anchorage terminal airspace redesign. ATAAPS involves changes to the airspace, aircraft flight paths, and aircraft altitudes in the Anchorage basin and surrounding areas. The DEA evaluates the potential environmental impacts of the proposed airspace redesign (Proposed Action) and the No Action alternative. The FAA has not made a final decision on any airspace/procedure amendments related to the Proposed Action. A copy of the DEA, appendices, and the Workshop announcements will be posted to the FAA ATAAPS web page at: https://www.faa.gov/about/office_org/headquarters_offices/ara/ alaskan_region/ataaps. Early notification of the FAA's intent to prepare a DEA was published in the Federal Register on July 16, 2026 (91 FR 43723, FR Doc. 2026-14367). In accordance with the National Environmental Policy Act of 1969, 42 U.S.C. 4321 et seq., and in accordance with FAA Order 1050.1G, FAA National Environmental Policy Act Implementing Procedures, the FAA issues this notice that it has prepared a DEA for the ATAAPS project and has made it available for public review and comments. The ATAAPS Project would improve safety and efficiency of the National Airspace System (NAS) and homeland defense capabilities, by optimizing aircraft arrival and departure procedures that serve multiple airports--specifically in the Anchorage basin and surrounding areas--including: Ted Stevens Anchorage International Airport (ANC), Elmendorf Air Force Base Airport (EDF), Bryant Army Airfield Airport (FRN), Lake Hood Airport (LHD), and Merrill Field Airport (MRI). As a critical strategic gateway for homeland defense, Joint Base Elmendorf-Richardson (JBER) is currently restricted from operating at its intended capacity and fleet mix until the surrounding airspace is officially modified. The Instrument Landing System (ILS) for Runway 17 is integral to improving JBER operations, but cannot become operational under the current airspace design. (JBER runway designations are currently 16/34 and 06/24; Runway 16/34 will be updated due to Magnetic Variation changes to Runway 17/35 before completion of the Final Rule).",
+      "comments_close_on": "2026-11-09",
+      "regulations_dot_gov_info": {
+        "checked_regulationsdotgov_at": "2026-10-10T07:55:40Z"
+      },
+      "docket_ids": [
+        "Docket: FAA-2026-11850"
+      ]
+    }
+  ]
+}

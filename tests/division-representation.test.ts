@@ -6,9 +6,10 @@ import { coverageAt, seatHoldersForDivision } from "../lib/registry/server.ts";
 import { indexByDivision } from "../lib/officials/lookup.ts";
 import type { OfficeholderSet } from "../lib/officials/types.ts";
 import { installFederalDirectory, installRegistryRuntime, installStateLegislators } from "./helpers/promoted-fixtures.ts";
+import { recordedSpotFederalDirectory } from "./helpers/map-representation-fixtures.ts";
 
 await installRegistryRuntime();
-const federal = await installFederalDirectory();
+const federal = await installFederalDirectory(recordedSpotFederalDirectory());
 const arizonaLegislators = installStateLegislators("US-AZ");
 
 /**
@@ -134,6 +135,18 @@ test("the route answers by path, and distinct divisions get distinct answers", a
       "ocd-division/country:us/state:az/county:pima",
     ).length,
   );
+
+  for (const [state, names] of [
+    ["tx", ["John Cornyn", "Ted Cruz"]],
+    ["ia", ["Chuck Grassley", "Joni Ernst"]],
+  ] as const) {
+    const statewide = await ask(`ocd-division/country:us/state:${state}`);
+    assert.equal(statewide.status, 200);
+    assert.equal(statewide.body.ocdId, `ocd-division/country:us/state:${state}`);
+    assert.deepEqual(statewide.body.holders.filter((holder: { officeTitle: string }) => holder.officeTitle === "U.S. Senator")
+      .map((holder: { name: string }) => holder.name).sort(), [...names].sort());
+    assert.ok(statewide.body.holders.every((holder: { officeTitle: string }) => holder.officeTitle !== "U.S. Representative"));
+  }
 
   // Not an identifier: refused in the same shape, with the division's own facts as nulls, never a guess.
   const junk = await ask("not-a-division");

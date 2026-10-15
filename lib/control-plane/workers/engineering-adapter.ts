@@ -7,12 +7,11 @@ import { readRolePlaybook, workerSystemPrompt } from "../playbooks.ts";
 import { execFile } from 'node:child_process';
 import type { ScoutResult } from '../scheduler/scout-result.ts';
 import { STREAMLINE_INVENTORY_SOURCE } from './engineering-candidate.ts';
-import { installedAdapters,installedAdapterGuides } from '../scheduler/scout-adapters.ts';
-import {hasUntriedAdapter} from './detective.ts';
-import {readFieldManual,writeFieldManual,newFieldManualEntry,type FieldManualQuery,type FieldManualRead} from '../field-manual.ts';
+import { installedAdapters,installedAdapterGuides,installedAdapterVersion } from '../scheduler/scout-adapters.ts';
+import {readFieldManual,writeFieldManual,newFieldManualEntry,type FieldManualEntry,type FieldManualQuery,type FieldManualRead} from '../field-manual.ts';
 import { MODELS, MODEL_TIERS } from '../../models.ts';
 import { recordCost } from '../repository/coordinator.ts';
-import { meteredCostFields, priceMeteredUsage, readMeteredUsage } from '../model-cost.ts';
+import { listPriceUsdForUsage, meteredCostFields, priceMeteredUsage, readMeteredUsage } from '../model-cost.ts';
 import type { ModelTransport } from '../scheduler/scout-executor.ts';
 import type { ControlPlaneRepositories } from '../repository/types.ts';
 import type { WorkerEvidence } from './types.ts';
@@ -148,6 +147,32 @@ export function engineerJob(result:Pick<ScoutResult,"subjectId"|"recordClass">,p
   return {role:'ENGINEER',platform,recordClass:result.recordClass,subjectId:result.subjectId,...(place.startsWith('ocd-division/')?{ocdIds:[place]}:{})};
 }
 
+const ARCHIVE_HOST = /^(?:web\.archive\.org|(?:www\.)?archive\.(?:today|is|ph|vn|fo|li|md))$/i;
+
+/** True when an installed adapter the result named, or one the Engineer built for its attempt or source, was never run on it. */
+function hasUntriedAdapter(latest:ScoutResult,installed:readonly string[],knowledge:readonly FieldManualEntry[]) {
+  const description = [latest.narrative,...(latest.nextRungs ?? []),...(latest.candidates ?? []).map(c=>c.routeId)].join(' ').toLowerCase();
+  const sourceOrigin=(value:unknown)=>{
+    if(typeof value!=='string')return null;
+    try {const url=new URL(value);return ['https:','http:'].includes(url.protocol) && !ARCHIVE_HOST.test(url.hostname)?url.origin:null;}catch{return null;}
+  };
+  const origins=new Set([...(latest.candidates??[]).map(c=>c.url),...(latest.rungs??[]).filter(r=>r.tool!=='search').map(r=>r.target)].map(sourceOrigin).filter(Boolean));
+  const learned=new Set(knowledge.flatMap(entry=>{
+    const payload=entry.payload as {sourceAttemptId?:string;files?:unknown;sourceUrls?:unknown}|null;
+    if(!['ENGINEER_ADAPTER_PR','PLATFORM_ADAPTER'].includes(entry.kind) || !Array.isArray(payload?.files))return [];
+    const sameAttempt=Boolean(latest.attemptId && payload.sourceAttemptId===latest.attemptId);
+    const sameSourceClass=entry.recordClasses.includes(latest.recordClass?.toLowerCase()) && Array.isArray(payload.sourceUrls) &&
+      payload.sourceUrls.some(value=>{const origin=sourceOrigin(value);return origin!==null && origins.has(origin);});
+    if(!sameAttempt && !sameSourceClass)return [];
+    return payload.files.flatMap(path=>{
+      const name=typeof path==='string'?/^lib\/sources\/platform-adapters\/([a-z0-9-]+)\.(?:ts|mjs)$/.exec(path)?.[1]:undefined;
+      return name?[name]:[];
+    });
+  }));
+  return installed.some(name=>(learned.has(name) || description.includes(name) || (name==='uncapped-source-links' && /uncapped.link|raw.html extraction|verified webpages/.test(description)) || (name==='dated-sitemap' && /streamline|dated.sitemap/.test(description))) &&
+    !(latest.rungs??[]).some(r=>r.tool==='run_adapter' && r.observed.includes(name+'@'+installedAdapterVersion(name))));
+}
+
 /** Consume needs-an-adapter work from the existing Scout results, saving the published route in the bank. */
 export async function workAdapterQueue(input:{repos:ControlPlaneRepositories;results:readonly ScoutResult[];
   /** Caller supplies the ordinary Fleet/area budget guard, never a raw model transport. */
@@ -194,14 +219,15 @@ export async function workAdapterQueue(input:{repos:ControlPlaneRepositories;res
         // The same existing transport admits every request, including each escalation, against live budgets.
         let response:Awaited<ReturnType<ModelTransport>>|undefined,transportError:unknown;
         try {response=await transport({model,max_tokens:8000,
-          system:[{type:'text',text:workerSystemPrompt("ENGINEER", (await readRolePlaybook(input.repos, "ENGINEER")).text)+
-            (scope?'\nThis request repairs an existing adapter. Its supplied repair scope governs allowed paths; playbook instructions about new-adapter paths apply only to new adapters. The composite contract is read-only.':''),cache_control:{type:"ephemeral"}}],
-          messages,tools:[],tool_choice:{type:'auto'}});} catch(error) {
+          system:[{type:'text',text:workerSystemPrompt("ENGINEER", (await readRolePlaybook(input.repos, "ENGINEER")).text),cache_control:{type:"ephemeral",ttl:"1h"}}],
+          batchContext:{job:"BLANK"},
+          messages:scope?[...messages,{role:"user",content:"This request repairs an existing adapter. Its supplied repair scope governs allowed paths; playbook instructions about new-adapter paths apply only to new adapters. The composite contract is read-only."}]:messages,tools:[],tool_choice:{type:'auto'}});} catch(error) {
           if(error instanceof FleetPreSendRefusal || error instanceof SendBudgetRefusal)throw error;
           transportError=error;
         }
-        const usage=readMeteredUsage(response?.usage??{}),usd=priceMeteredUsage(model,usage,'5m').usd;
-        const metered=meteredCostFields(usage);
+        const usage=readMeteredUsage(response?.usage??{},response?.batch===true),usd=priceMeteredUsage(model,usage,'1h').usd;
+        const metered={...meteredCostFields(usage),listPriceUsd:listPriceUsdForUsage(model,usage),modelRequestCount:1,
+          batchRequestCount:response?response.batch===true?1:0:null,batchEligibleRequestCount:response?.batchEligible===undefined?null:response.batchEligible?1:0};
         const inputTokens=usage.uncachedInputTokens===null?null:usage.uncachedInputTokens+(usage.cacheReadInputTokens??0)+(usage.cacheCreationInputTokens??0);
         await recordCost(input.repos,{attemptId:`engineer:${result.attemptId}:${input.now}:${tier}`,workItemId:result.workItemId,
           obligationId:result.obligationId,routeTaskId:null,routeId:platform,source:'api.anthropic.com',jurisdiction:result.subjectId,

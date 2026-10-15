@@ -1,0 +1,382 @@
+{
+  "results" :
+    [
+      {
+        "resource" :
+          {
+            "name" : "Texas Counties Map",
+            "id" : "48ag-x9aa",
+            "resource_name" : null,
+            "parent_fxf" : [ "m3yf-ffwm" ],
+            "description" : "Map of counties in Texas.",
+            "attribution" : null,
+            "attribution_link" : null,
+            "contact_email" : null,
+            "type" : "map",
+            "updatedAt" : "2023-12-19T19:11:15.000Z",
+            "createdAt" : "2014-05-08T19:56:25.000Z",
+            "metadata_updated_at" : "2023-12-19T19:11:15.000Z",
+            "data_updated_at" : "2014-05-08T19:56:38.000Z",
+            "page_views" :
+              {
+                "page_views_last_week" : 1403,
+                "page_views_last_month" : 6652,
+                "page_views_total" : 432352,
+                "page_views_last_week_log" : 10.45532722030456,
+                "page_views_last_month_log" : 12.699789318382136,
+                "page_views_total_log" : 18.721850174307864
+              },
+            "columns_name" : [],
+            "columns_field_name" : [],
+            "columns_datatype" : [],
+            "columns_description" : [],
+            "columns_format" : [],
+            "download_count" : 625,
+            "provenance" : "official",
+            "lens_view_type" : "tabular",
+            "lens_display_type" : "visualization_canvas_map",
+            "locked" : false,
+            "backend" : "nbe",
+            "blob_mime_type" : null,
+            "hide_from_data_json" : false,
+            "publication_date" : "2014-05-08T19:56:38.000Z"
+          },
+        "classification" :
+          {
+            "categories" : [],
+            "tags" : [],
+            "domain_tags" : [ "map", "county", "texas" ],
+            "domain_metadata" :
+              [
+                {
+                  "key" : "Dataset-Category_Agency",
+                  "value" : "State of Texas"
+                },
+                {
+                  "key" : "Dataset-Category_Category-Tile",
+                  "value" : "Public Reports and Maps"
+                }
+              ]
+          },
+        "metadata" : { "domain" : "data.texas.gov" },
+        "permalink" : "https://data.texas.gov/d/48ag-x9aa",
+        "link" : "https://data.texas.gov/dataset/Texas-Counties-Map/48ag-x9aa",
+        "owner" :
+          {
+            "id" : "cp9p-f756",
+            "user_type" : "interactive",
+            "display_name" : "Texas Open Data Portal Administrator"
+          },
+        "creator" :
+          {
+            "id" : "cp9p-f756",
+            "user_type" : "interactive",
+            "display_name" : "Texas Open Data Portal Administrator"
+          }
+      },
+      {
+        "resource" :
+          {
+            "name" : "Winners List of Texas Lottery® Prizes",
+            "id" : "54pj-3dxy",
+            "resource_name" : "ITLCB-ODP-004",
+            "parent_fxf" : [],
+            "description" : "List of winner claims for Texas Lottery® prizes with player (excluding identity of those designated anonymous), prize, game and selling retailer information.\nGOV'T § 466.411: A prize winner, or owner of a legal entity that is a prize winner, of a lottery prize in an amount equal to $1 million or more may choose to remain anonymous.  If the prize is an annuity, then the prize winner may be anonymous for 30 days after the prize is claimed.",
+            "attribution" : "IT Lottery & Charitable Bingo, Texas Department of Licensing & Regulation",
+            "attribution_link" : "https://www.texaslottery.com/export/sites/lottery/Misc/copyright.html",
+            "contact_email" : null,
+            "type" : "dataset",
+            "updatedAt" : "2026-10-06T17:17:50.000Z",
+            "createdAt" : "2022-02-04T00:02:19.000Z",
+            "metadata_updated_at" : "2025-09-01T20:58:46.000Z",
+            "data_updated_at" : "2026-10-06T17:17:50.000Z",
+            "page_views" :
+              {
+                "page_views_last_week" : 482,
+                "page_views_last_month" : 2338,
+                "page_views_total" : 308440,
+                "page_views_last_week_log" : 8.915879378835772,
+                "page_views_last_month_log" : 11.191676146352428,
+                "page_views_total_log" : 18.234635024920518
+              },
+            "columns_name" :
+              [
+                "Draw Time of Day",
+                "Prize or Merchandise Indicator",
+                "Claim Center Location",
+                "Anonymous Indicator",
+                "Annuity Indicator",
+                "Player ID",
+                "Date Claim Paid",
+                "Amount Won",
+                "Claim Number",
+                "Claimant Country",
+                "Claimant County",
+                "Claimant State",
+                "Claimant City",
+                "First Name",
+                "US Citizen Flag",
+                "Claim Type",
+                "Date of Draw",
+                "Scratch Ticket or Draw Game",
+                "Row ID",
+                "Claimant Name and Player ID",
+                "Last Name",
+                "Retailer County",
+                "Retailer Zip Code",
+                "Retailer Zip Code +4",
+                "Retailer State",
+                "Retailer City",
+                "Retailer Address 2",
+                "Retailer Address 1",
+                "Retailer Number and Name",
+                "Retailer Name",
+                "Retailer Number",
+                "Scratch Ticket Cost",
+                "Scratch Ticket Game Number",
+                "Date Ticket Sold",
+                "Prize Level"
+              ],
+            "columns_field_name" :
+              [
+                "game_draw_time",
+                "prize_merchandise_code",
+                "office_name",
+                "anonymity_indicator",
+                "annuity_indicator",
+                "player_id",
+                "claim_paid_date",
+                "won_amount",
+                "claim_number",
+                "claimant_country",
+                "claimant_county",
+                "claimant_state",
+                "claimant_city",
+                "first_name",
+                "citizen_resident_indicator",
+                "recipient_type",
+                "draw_date",
+                "game_category",
+                "row_id",
+                "player_name_w_id",
+                "last_name",
+                "location_county_desc",
+                "location_zip",
+                "location_zip_plus_4",
+                "location_state",
+                "location_city",
+                "location_address2",
+                "location_address",
+                "retailer_number_name",
+                "location_name",
+                "retailer_number",
+                "instant_price_point",
+                "instant_game_number",
+                "ticket_sold_date",
+                "tier_code"
+              ],
+            "columns_datatype" :
+              [
+                "Text",
+                "Text",
+                "Text",
+                "Text",
+                "Text",
+                "Number",
+                "Calendar date",
+                "Number",
+                "Number",
+                "Text",
+                "Text",
+                "Text",
+                "Text",
+                "Text",
+                "Text",
+                "Text",
+                "Calendar date",
+                "Text",
+                "Text",
+                "Text",
+                "Text",
+                "Text",
+                "Text",
+                "Text",
+                "Text",
+                "Text",
+                "Text",
+                "Text",
+                "Text",
+                "Text",
+                "Number",
+                "Number",
+                "Number",
+                "Calendar date",
+                "Text"
+              ],
+            "columns_description" :
+              [
+                "The time of the day the draw occurred: Morning, Day, Evening or Night.",
+                "Indicator if claim is prize (money) or merchandise.",
+                "Name of lottery claim center office that processed the claim.",
+                "Indicator of player's request to remain anonymous.",
+                "Indicator if the claim is an annuity (YES) or cash value option (NO).",
+                "Number assigned by the payment processing system to the claimant, or claim number for anonymous claimant. ",
+                "The date the claim was paid.",
+                "Amount won for winning play if cash prize.  Prize value for 2nd Chance promotion if merchandise prize.",
+                "A number assigned by the Claims Process.  A claim may contain multiple claim lines.",
+                "The country where the claimant resides.",
+                "The county where the claimant resides.",
+                "The state where the claimant resides.",
+                "The city where the claimant resides.",
+                "The first name of the claimant.  If anonymity requested, anonymous will be displayed for individuals.",
+                "Indicator if claimant is US Citizen (YES/NO) or not provided.",
+                "Indicator if the claim was claimed as an individual or legal entity.",
+                "The date the draw game drawing occurred.",
+                "The lottery game category of the ticket.  Draw Game or Scratch Ticket.",
+                "Unique key.",
+                "The last name, first name and player id for individuals or the full entity name and player id if an entity.  If anonymity requested, anonymous will be displayed along with claim number for individuals.",
+                "The last name of individual claimant or the full entity name if an entity.  If anonymity requested, anonymous will be displayed for individuals.",
+                "The county of the retailer that sold the ticket.",
+                "The zip code of the retailer that sold the ticket.",
+                "The zip code+4 of the retailer that sold the ticket.",
+                "The state of the retailer that sold the ticket.",
+                "The city of the retailer that sold the ticket.",
+                "The address line 2 of the retailer that sold the ticket.",
+                "The address line 1 of the retailer that sold the ticket.",
+                "The retailer number/name that sold the ticket.",
+                "The retailer name that sold the ticket.",
+                "The retailer number that sold the ticket.",
+                "The cost per scratch ticket dollar amount.",
+                "The game number of the scratch ticket.",
+                "The date the draw game ticket was sold.",
+                "Describes the prize level of the winning play for Draw Games only."
+              ],
+            "columns_format" :
+              [
+                {},
+                {},
+                {},
+                { "displayStyle" : "yesno" },
+                { "displayStyle" : "yesno" },
+                { "noCommas" : "true", "align" : "right" },
+                { "view" : "date", "align" : "right" },
+                {
+                  "precisionStyle" : "currency",
+                  "precision" : "2",
+                  "align" : "right"
+                },
+                { "noCommas" : "true", "align" : "right" },
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                { "view" : "date", "align" : "right" },
+                {},
+                {},
+                {},
+                {},
+                {},
+                { "align" : "right" },
+                { "align" : "right" },
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                { "noCommas" : "true", "align" : "right" },
+                {
+                  "precisionStyle" : "currency",
+                  "precision" : "0",
+                  "align" : "right"
+                },
+                { "noCommas" : "true", "align" : "right" },
+                { "view" : "date", "align" : "right" },
+                {}
+              ],
+            "download_count" : 25995,
+            "provenance" : "official",
+            "lens_view_type" : "tabular",
+            "lens_display_type" : "table",
+            "locked" : false,
+            "backend" : "nbe",
+            "blob_mime_type" : null,
+            "hide_from_data_json" : false,
+            "publication_date" : "2022-04-06T07:20:34.000Z"
+          },
+        "classification" :
+          {
+            "categories" : [],
+            "tags" : [],
+            "domain_category" : "See Category Tile",
+            "domain_tags" :
+              [
+                "lotto texas",
+                "lottery & charitable bingo",
+                "lottery",
+                "gaming",
+                "fund for veterans assistance",
+                "mega millions",
+                "all or nothing",
+                "bingo",
+                "cash five",
+                "charitable bingo",
+                "daily 4",
+                "draw",
+                "education",
+                "employee",
+                "employees",
+                "veterans",
+                "texas veterans",
+                "texas two step",
+                "texas lottery commission",
+                "texas lottery",
+                "texas education",
+                "texas department of licensing & regulation",
+                "texas department of licensing and regulation",
+                "scratch ticket",
+                "powerball",
+                "pick 3",
+                "foundation school fund"
+              ],
+            "domain_metadata" :
+              [
+                {
+                  "key" : "Dataset-Category_Agency",
+                  "value" : "Texas Department of Licensing and Regulation"
+                },
+                {
+                  "key" : "Dataset-Category_Category-Tile",
+                  "value" : "Business and Economy"
+                },
+                {
+                  "key" : "Publishing-Information_Update-Frequency",
+                  "value" : "Weekly"
+                }
+              ]
+          },
+        "metadata" :
+          { "domain" : "data.texas.gov", "license" : "See Terms of Use" },
+        "permalink" : "https://data.texas.gov/d/54pj-3dxy",
+        "link" : "https://data.texas.gov/See-Category-Tile/Winners-List-of-Texas-Lottery-Prizes/54pj-3dxy",
+        "owner" :
+          {
+            "id" : "6w3n-95ae",
+            "user_type" : "interactive",
+            "display_name" : "ODP Publisher"
+          },
+        "creator" :
+          {
+            "id" : "6w3n-95ae",
+            "user_type" : "interactive",
+            "display_name" : "ODP Publisher"
+          }
+      }
+    ],
+  "resultSetSize" : 1485,
+  "timings" : { "serviceMillis" : 18, "searchMillis" : [ 3, 4 ] },
+  "warnings" : []
+}

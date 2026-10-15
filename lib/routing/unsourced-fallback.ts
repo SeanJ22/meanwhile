@@ -1,3 +1,4 @@
+import { askPlaybook } from "../ask/runtime-settings.ts";
 /**
  * The unsourced fallback: when no held record answers, Ask may answer from the Claude API (the tier
  * named in `lib/models.ts`, resolved from `lib/ask/model.ts`). It is kept structurally separate from a
@@ -73,7 +74,7 @@ export function shouldFallBack(input: {
 
 const MESSAGES_URL = "https://api.anthropic.com/v1/messages";
 /**
- * The model comes from `lib/ask/model.ts`'s role table, resolved per call so a `WTP_ASK_MODEL` override
+ * The model comes from `lib/ask/model.ts`'s role table, resolved per call so the published Admin choice
  * reaches this rung and the resolved value is what gets recorded.
  */
 const askModel = (): string => resolveAskRoleModel("UNSOURCED");
@@ -87,17 +88,7 @@ const askModel = (): string => resolveAskRoleModel("UNSOURCED");
  * an unsourced claim about a real government in front of a reader.
  */
 function fallbackPrompt(): string {
-  return [
-    "You are answering a question that a civic-information site could not answer from the public records it holds.",
-    "",
-    "Answer plainly, in ONE or TWO sentences at most, at a level a fifteen-year-old reads comfortably.",
-    "",
-    "HARD RULES:",
-    "- If you are not sure, say so in one sentence. Never invent a name, a date, a number, a phone number, an address or a quote.",
-    "- Never cite a source, a URL, or a document. The site states your source itself.",
-    "- Never say what the site holds, covers, or has looked for.",
-    "- No preamble, no sign-off, no offer to help further.",
-  ].join("\n");
+  return askPlaybook("ASK_FALLBACK");
 }
 
 export interface FallbackOptions {
@@ -140,7 +131,7 @@ export async function askUnsourced(
         max_tokens: Math.max(300, fields.minMaxTokens),
         ...(fields.thinking ? { thinking: fields.thinking } : {}),
         ...(fields.effort ? { output_config: { effort: fields.effort } } : {}),
-        system: fallbackPrompt(),
+        system: [{ type: "text", text: fallbackPrompt(), cache_control: { type: "ephemeral", ttl: "1h" } }],
         // The same scrub the refusal log and the classifier already run:
         // nothing shaped like a phone number, an email or a street address
         // leaves this origin.

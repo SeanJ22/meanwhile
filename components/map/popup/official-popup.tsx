@@ -1,25 +1,18 @@
 "use client";
 
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
-import { WorkingOnIt } from "@/components/demand/working-on-it";
+import { CardGapContribution, CardGapsContribution } from "@/components/ui/card-gap-context";
 
-import { personInitials } from "@/lib/officials/person-name";
-import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
 import { useEffect, useState } from "react";
 
 import { blurbForTitle } from "@/lib/officials/office-blurbs";
 import { tribalSeatForHolder, tribalSeatDescription, tribalSeatCardSources } from "@/lib/officials/tribal-seats";
 import type { SeatHolder } from "@/lib/officials/lookup";
-import { partyColorVar } from "@/lib/officials/party-color";
 import { readerPartyLabel } from "@/lib/text/reader-names";
-import { ageFrom, inSeatUntil } from "@/lib/officials/tenure";
-import type { Tier } from "@/lib/ocd/tiers";
 import type { RollCallVote, VotePosition } from "@/lib/votes/types";
 import type { ReactionViewContext } from "@/lib/reactions/client";
 import { ReactionControl } from "@/components/reactions/reaction-control";
 import { CardSection } from "@/components/officials/card-section";
-import { ContactPills } from "@/components/officials/contact-pills";
-import { PersonIdentity } from "@/components/officials/person-identity";
 import {
   KeyVotesSection,
   type KeyVoteRow,
@@ -31,26 +24,7 @@ import { explainVoteQuestion } from "@/lib/votes/vote-explainers";
 import type { BillSummary } from "@/lib/votes/bill-summaries";
 import { officialStateVotesRenderToReader } from "@/lib/state-rollcalls/reader-vote-visibility";
 
-import { PopupCard, PopupSectionLabel } from "./popup-card";
-
-/**
- * The officeholder surfaces: `OfficialPopup`, the compact glance card, and the
- * shared pieces the large card (`official-modal.tsx`) composes. The office
- * blurb describes the office, never the holder; a missing photo renders
- * initials.
- */
-
-interface OfficialPopupProps {
-  holder: SeatHolder;
-  /** The seat's label — "AZ-6", "State House District 19". */
-  seatLabel: string | null;
-  tier: Tier;
-  /** Opens the large tier. The compact card is the glance layer. */
-  onExpand?: () => void;
-  onClose?: () => void;
-}
-
-const initialsOf = personInitials;
+import { PopupSectionLabel } from "./popup-card";
 
 /**
  * Recorded positions as filled pills; the colour states the vote cast, never
@@ -76,8 +50,9 @@ export function VotePill({
   return <span className={`vote-pill vote-pill--${tone}`}>{children}</span>;
 }
 
-export type MemberRollCall = RollCallVote & {
-  position: VotePosition;
+export type MemberRollCall = Pick<RollCallVote, "id" | "date" | "title" | "titleSource" | "question" | "legisNum" | "result" | "billUrl" | "rollCallUrl" | "retrievedAt"> & {
+  position: string;
+  sourceOrg?: string;
   /** Per-party for/against, or null when it would not sum to the chamber's recorded tally. */
   partyBreakdown: { party: string; yes: number; no: number }[] | null;
   /** Canonical server projection; the client never imports tracked civic data. */
@@ -103,18 +78,18 @@ const VOTE_LIMIT = 20;
 export type VoteAttribution = {
   text: string;
   url: string;
-  licence: string;
-  licenceUrl: string;
+  licence?: string;
+  licenceUrl?: string;
 };
 
 /**
  * Whether this holder has a roll-call store we render. `congress:` is the
- * chambers' XML; `plural:` is the LegiScan test fixture; official state
+ * chambers' XML; `plural:` binds an Open States person; official state
  * legislators render through `/api/votes` where
  * `officialStateVotesRenderToReader` allows. Anything else renders nothing.
  */
-function hasVoteRecord(id: string): boolean {
-  return id.startsWith("congress:") || id.startsWith("plural:") || officialStateVotesRenderToReader(id);
+function hasVoteRecord(id: string, state?: string): boolean {
+  return id.startsWith("congress:") || officialStateVotesRenderToReader(id, state);
 }
 
 export function RecentVotes(props: {
@@ -151,17 +126,15 @@ function RecentVotesInner({
   const [historyAnchor, setHistoryAnchor] = useState<string | null>(null);
   const [historyLoadingMore, setHistoryLoadingMore] = useState(false);
   const [failed, setFailed] = useState(false);
-  // An official state record that is not live yet renders no section (set in
-  // the fetch's catch), distinct from `failed`.
-  const [absent, setAbsent] = useState(false);
   const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
-    if (!hasVoteRecord(holder.id)) return;
+    if (!hasVoteRecord(holder.id, holder.state)) return;
     const controller = new AbortController();
     void (async () => {
       try {
-        const response = await fetch(`/api/votes?member=${holder.id}`, {
+        const voteQuery = new URLSearchParams({ member: holder.id, ...(holder.state ? { state: holder.state } : {}) });
+        const response = await fetch(`/api/votes?${voteQuery}`, {
           signal: controller.signal,
         });
         if (!response.ok) throw new Error(String(response.status));
@@ -179,13 +152,11 @@ function RecentVotesInner({
         setPickedKeyVotes(payload.pickedKeyVotes ?? []);
       } catch {
         if (controller.signal.aborted) return;
-        // An official state record not live yet renders nothing, never "couldn't load".
-        if (officialStateVotesRenderToReader(holder.id)) setAbsent(true);
-        else setFailed(true);
+        setFailed(true);
       }
     })();
     return () => controller.abort();
-  }, [holder.id]);
+  }, [holder.id, holder.state]);
 
   const recentLoaded = votes !== null;
   useEffect(() => {
@@ -233,24 +204,37 @@ function RecentVotesInner({
     }
   };
 
-  // No vote store, or a state record not live yet: no "Recent votes" heading.
-  if (!hasVoteRecord(holder.id) || absent) return contentOnly ? <WorkingOnIt /> : null;
+  const hasRecent = Boolean(votes?.length);
+  const hasKeyVotes = Boolean(chamber && keyVotes.length > 0) || pickedKeyVotes.some(pick => pick.roll || pick.why);
+  const hasHistory = historicalVotes.length > 0;
+  const canLoadHistory = /^congress:[A-Z]\d{6}$/.test(holder.id) && recentLoaded;
+  const recordGap = <CardGapContribution id={`votes:${holder.id}`} label="voting record" subject={{ type: "CANDIDATE", id: holder.id }} />;
+
+  if (!hasRecent && !hasKeyVotes && !hasHistory) {
+    if (!hasVoteRecord(holder.id, holder.state) || failed) return recordGap;
+    if (!recentLoaded || (canLoadHistory && historyStatus === "LOADING")) {
+      return <p className="mw-loading-inline" role="status">Loading voting records…</p>;
+    }
+    return recordGap;
+  }
+  const gaps = <>
+    {!hasRecent && <CardGapContribution id={`recent-votes:${holder.id}`} label="recent votes" />}
+    {canLoadHistory && historyStatus === "UNAVAILABLE" && <CardGapContribution id={`earlier-votes:${holder.id}`} label="earlier voting records" />}
+  </>;
 
   const visibleVotes = votes?.slice(0, showAll ? undefined : VOTE_LIMIT) ?? null;
-  const history = /^congress:[A-Z]\d{6}$/.test(holder.id) && votes !== null ? <>
+  const history = hasHistory ? <>
     <p className="mb-1.5 t-caption leading-relaxed text-voice">
       Earlier recorded votes from verified prior source windows. These are separate from the current Recent list.
     </p>
-    {historicalVotes.length > 0 ? <RecentVoteRecords votes={historicalVotes} attribution={null} failed={false} reactionContext={null} /> :
-      historyStatus === "LOADING" ? <p className="t-caption text-muted">Checking earlier source windows…</p> : <WorkingOnIt />}
-    {historyStatus === "UNAVAILABLE" && historicalVotes.length > 0 && <WorkingOnIt />}
+    <RecentVoteRecords votes={historicalVotes} attribution={null} failed={false} reactionContext={null} />
     {historyStatus === "MORE" && historyCursor && <button type="button" onClick={() => void loadMoreHistory()}
       disabled={historyLoadingMore} className="mt-2 t-detail text-link underline decoration-dotted underline-offset-2">
       {historyLoadingMore ? "Checking more earlier records…" : "Load more earlier records"}
     </button>}
   </> : null;
-  const recent = <>
-    <RecentVoteRecords votes={visibleVotes} attribution={attribution} failed={failed} reactionContext={reactionContext} />
+  const recent = hasRecent ? <>
+    <RecentVoteRecords votes={visibleVotes} attribution={attribution} failed={false} reactionContext={reactionContext} />
     {(columns || contentOnly) && votes && votes.length > 0 && <>
       <p className="mt-2 t-caption text-muted" data-recent-vote-count={visibleVotes!.length}>
         Showing {visibleVotes!.length} of {votes.length} recorded votes.
@@ -261,14 +245,14 @@ function RecentVotesInner({
         {showAll ? `Show latest ${VOTE_LIMIT}` : `Show all ${votes.length} recorded votes`}
       </button>}
     </>}
-  </>;
+  </> : null;
 
   /* The compact glance card keeps the flat short list. */
   if (!columns && !contentOnly) {
     return (
       <>
-        <PopupSectionLabel>Recent votes</PopupSectionLabel>
-        {recent}
+        {gaps}
+        {recent && <><PopupSectionLabel>Recent votes</PopupSectionLabel>{recent}</>}
         {history && <details className="mt-2"><summary className="cursor-pointer t-detail text-link">Earlier recorded votes</summary>{history}</details>}
       </>
     );
@@ -283,9 +267,9 @@ function RecentVotesInner({
         recent={recent}
         recentMeta={votes ? `${showAll ? "all" : "last"} ${visibleVotes!.length}` : null}
         keyVotes={
-          chamber && (keyVotes.length > 0 || pickedKeyVotes.length > 0) ? (
+          hasKeyVotes ? (
             <>
-              {keyVotes.length > 0 && <KeyVotesSection chamber={chamber} rows={keyVotes} />}
+              {chamber && keyVotes.length > 0 && <KeyVotesSection chamber={chamber} rows={keyVotes} />}
               <PickedKeyVotesSection picks={pickedKeyVotes} />
             </>
           ) : null
@@ -298,7 +282,7 @@ function RecentVotesInner({
         historyMeta={historicalVotes.length > 0 ? String(historicalVotes.length) : null}
       />
   );
-  return contentOnly ? fullRecord : <CardSection title="Voting Record">{fullRecord}</CardSection>;
+  return <>{gaps}{contentOnly ? fullRecord : <CardSection title="Voting Record">{fullRecord}</CardSection>}</>;
 }
 
 /** The actual recent-vote records used by both full cards and their preview. */
@@ -310,17 +294,26 @@ export function RecentVoteRecords({ votes, attribution, failed, reactionContext 
 }) {
   return (
     <>
-      {failed ? <WorkingOnIt /> : votes === null ? (
+      {failed ? <CardGapContribution id="recent-votes" label="recent votes" /> : votes === null ? (
         <p className="mt-1.5 t-caption leading-relaxed text-muted">Loading…</p>
-      ) : votes.length === 0 ? <WorkingOnIt /> : (
+      ) : votes.length === 0 ? <CardGapContribution id="recent-votes" label="recent votes" /> : (
         <>
+          <CardGapsContribution id="vote-details" gaps={votes.flatMap(vote => [
+            ...(!vote.partyBreakdown ? [{ id: `vote-parties:${vote.id}`, label: "party vote totals", unit: "vote" }] : []),
+            ...(vote.billUrl && !vote.billSummary ? [{ id: `vote-summary:${vote.id}`, label: "bill summaries", unit: "vote" }] : []),
+          ])} />
           <CardSourcesContribution id="recent-votes" sources={[
-            ...(attribution ? [{ what: `Vote data attribution and ${attribution.licence} licence`, provenance: { sourceUrl: attribution.url, sourceOrg: attribution.text, collectedAt: "", verifiedAt: null } }, { what: "Vote data licence", provenance: { sourceUrl: attribution.licenceUrl, sourceOrg: attribution.text, collectedAt: "", verifiedAt: null } }] : []),
-            ...votes.map(vote => ({ what: `Roll call: ${vote.title}`, provenance: { sourceUrl: vote.rollCallUrl, sourceOrg: attribution?.text ?? "", collectedAt: "", verifiedAt: null } })),
-            ...votes.flatMap(vote => vote.billUrl ? [{ what: "Official bill summary; plain-language summary is ours", provenance: { sourceUrl: vote.billUrl, sourceOrg: "", collectedAt: "", verifiedAt: null } }] : []),
+            ...(attribution ? [{ what: "Vote data attribution", provenance: { sourceUrl: attribution.url, sourceOrg: attribution.text, collectedAt: "", verifiedAt: null } }] : []),
+            ...(attribution?.licenceUrl ? [{ what: `Vote data licence: ${attribution.licence}`, provenance: { sourceUrl: attribution.licenceUrl, sourceOrg: attribution.text, collectedAt: "", verifiedAt: null } }] : []),
+            ...votes.map(vote => ({ what: `Roll call: ${vote.title}`, provenance: { sourceUrl: vote.rollCallUrl, sourceOrg: vote.sourceOrg ?? attribution?.text ?? "", collectedAt: vote.retrievedAt ?? "", verifiedAt: null } })),
+            ...votes.flatMap(vote => vote.billUrl ? [{ what: "Bill information", provenance: { sourceUrl: vote.billUrl, sourceOrg: vote.sourceOrg ?? "", collectedAt: vote.retrievedAt ?? "", verifiedAt: null } }] : []),
           ]} />
           {votes.map((vote) => {
             const explainer = explainVoteQuestion(vote.question);
+            const position = POSITION_STYLE[vote.position.toUpperCase() as VotePosition] ?? {
+              label: vote.position ? `Recorded ${vote.position}` : "Publisher position unclassified",
+              tone: /^(?:YEA|AYE)$/i.test(vote.position) ? "yes" : /^NAY$/i.test(vote.position) ? "no" : "neutral",
+            };
             return (
               <div
                 key={vote.id}
@@ -331,8 +324,8 @@ export function RecentVoteRecords({ votes, attribution, failed, reactionContext 
                 <p className="t-detail leading-snug">{vote.title}</p>
 
                 <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 t-caption">
-                  <VotePill tone={POSITION_STYLE[vote.position].tone as "yes" | "no" | "neutral"}>
-                    {POSITION_STYLE[vote.position].label}
+                  <VotePill tone={position.tone as "yes" | "no" | "neutral"}>
+                    {position.label}
                   </VotePill>
                   <span className="text-muted">
                     {vote.question} · {vote.result}
@@ -350,9 +343,7 @@ export function RecentVoteRecords({ votes, attribution, failed, reactionContext 
                       </span>
                     ))}
                   </p>
-                ) : (
-                  <WorkingOnIt inline />
-                )}
+                ) : null}
                 {explainer && (
                   // What kind of vote this was and the mechanical meaning of a No on it; never evaluative.
                   <p className="mt-1 t-caption leading-relaxed text-paper-dim">
@@ -409,26 +400,28 @@ function VotingRecordViews({
   historyMeta: string | null;
 }) {
   const [view, setView] = useState<"recent" | "key" | "history">("recent");
+  const available = { recent, key: keyVotes, history };
+  const selected = available[view] ? view : recent ? "recent" : keyVotes ? "key" : "history";
 
   return (
     <div>
       <div className="vote-view-switch">
-        <button
+        {recent && <button
           type="button"
           className="vote-view-btn"
-          data-selected={view === "recent" || undefined}
-          aria-pressed={view === "recent"}
+          data-selected={selected === "recent" || undefined}
+          aria-pressed={selected === "recent"}
           onClick={() => setView("recent")}
         >
           Recent
           {recentMeta && <span className="vote-view-meta">{recentMeta}</span>}
-        </button>
+        </button>}
         {keyVotes && (
           <button
             type="button"
             className="vote-view-btn"
-            data-selected={view === "key" || undefined}
-            aria-pressed={view === "key"}
+            data-selected={selected === "key" || undefined}
+            aria-pressed={selected === "key"}
             onClick={() => setView("key")}
           >
             When it mattered
@@ -436,13 +429,13 @@ function VotingRecordViews({
           </button>
         )}
         {history && <button type="button" className="vote-view-btn"
-          data-selected={view === "history" || undefined} aria-pressed={view === "history"}
+          data-selected={selected === "history" || undefined} aria-pressed={selected === "history"}
           onClick={() => setView("history")}>
           Earlier records{historyMeta && <span className="vote-view-meta">{historyMeta}</span>}
         </button>}
       </div>
 
-      {view === "recent" ? (
+      {selected === "recent" ? (
         <div className="vote-view-body">
           <p className="mb-1.5 t-caption leading-relaxed text-voice">
             Every roll call they cast, newest first — including the procedural
@@ -450,7 +443,7 @@ function VotingRecordViews({
           </p>
           {recent}
         </div>
-      ) : view === "key" ? (
+      ) : selected === "key" ? (
         <div className="vote-view-body">{keyVotes}</div>
       ) : (
         <div className="vote-view-body">{history}</div>
@@ -470,7 +463,7 @@ export function BillPlainSummary({
   summary: BillSummary | null;
   pending: boolean;
 }) {
-  if (!summary) return <WorkingOnIt inline />;
+  if (!summary) return null;
   return (
     <details className="mt-1" open>
       <summary className="cursor-pointer t-caption text-paper-dim underline decoration-dotted hover:text-signal">
@@ -480,85 +473,6 @@ export function BillPlainSummary({
         {summary.summary}
       </p>
     </details>
-  );
-}
-
-export function OfficialIdentity({
-  holder,
-  seatLabel,
-  large = false,
-}: {
-  holder: SeatHolder;
-  seatLabel: string | null;
-  /** The expanded surface uses a bigger portrait. */
-  large?: boolean;
-}) {
-  return (
-    <div className="mt-2 flex items-start gap-3">
-      {holder.photoUrl ? (
-        // Served from our origin.
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={holder.photoUrl}
-          alt={`Portrait of ${holder.name}`}
-          width={large ? 104 : 64}
-          height={large ? 127 : 78}
-          className="rounded border border-[var(--panel-border)] object-cover"
-        />
-      ) : (
-        <div
-          aria-hidden="true"
-          className={`flex shrink-0 items-center justify-center rounded border border-[var(--panel-border)] bg-[var(--surface)] font-mono t-title text-muted ${
-            large ? "h-[127px] w-[104px]" : "h-[78px] w-16"
-          }`}
-        >
-          {initialsOf(holder.name)}
-        </div>
-      )}
-
-      <div className="min-w-0">
-        <p className="t-body leading-snug">
-          {readerOfficeTitle(holder.officeTitle)}
-          {/* A seat label identical to the title is not repeated. */}
-          {seatLabel && seatLabel !== holder.officeTitle
-            ? ` · ${seatLabel}`
-            : ""}
-        </p>
-        {holder.partyLabel && (
-          // Display only; the colour states the label, never a view.
-          <p
-            className="mt-0.5 t-detail"
-            style={{ color: partyColorVar(holder.partyLabel) }}
-          >
-            {readerPartyLabel(holder.partyLabel)}
-          </p>
-        )}
-        {/*
-          Term end and (large card only) age render only from sourced values;
-          age is computed at render (lib/officials/tenure.ts). No line when unsourced.
-        */}
-        {(() => {
-          const until = inSeatUntil(holder.termEnd);
-          const age = large ? ageFrom(holder.birthDate, new Date()) : null;
-          if (!until && age === null) return null;
-          return (
-            <p className="mt-0.5 flex flex-wrap gap-x-2 t-detail text-label">
-              {until && (
-                <span>
-                  In seat until{" "}
-                  <span className="font-mono text-paper">{until}</span>
-                </span>
-              )}
-              {age !== null && (
-                <span>
-                  Age <span className="font-mono text-paper">{age}</span>
-                </span>
-              )}
-            </p>
-          );
-        })()}
-      </div>
-    </div>
   );
 }
 
@@ -583,7 +497,7 @@ export function OfficeBlurb({
     holder.officeTitle,
     holder.officeJurisdictionOcdId,
   );
-  if (!blurb) return <WorkingOnIt />;
+  if (!blurb) return <CardGapContribution id={`office-role:${holder.id}`} label="office responsibilities" subject={{ type: "CANDIDATE", id: holder.id }} />;
   return (
     <>
       {!bare && <PopupSectionLabel>What this office does</PopupSectionLabel>}
@@ -606,32 +520,5 @@ export function OfficeBlurb({
         )}
       </p>
     </>
-  );
-}
-
-/**
- * The compact glance card: name with photo or initials, the party pill, and
- * primary contact pills in one column, with "More" opening the large card.
- */
-export function OfficialPopup({
-  holder,
-  seatLabel,
-  tier,
-  onExpand,
-  onClose,
-}: OfficialPopupProps) {
-  return (
-    <PopupCard
-      type={readerOfficeTitle(holder.officeTitle)}
-      tier={tier}
-      title={holder.name}
-      onExpand={onExpand}
-      expandLabel={hasVoteRecord(holder.id) ? `More about ${holder.name} — voting record` : `More about ${holder.name} — office and contact`}
-      onClose={onClose}
-      titleInBody
-    >
-      <PersonIdentity holder={holder} seatLabel={seatLabel} identityOnly />
-      <ContactPills holder={holder} compact layout="column" scope="primary" />
-    </PopupCard>
   );
 }

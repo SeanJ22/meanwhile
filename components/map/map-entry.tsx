@@ -1,11 +1,7 @@
 "use client";
 
-import { WorkingOnIt } from "@/components/demand/working-on-it";
-import { legislativeRepresentationLabel, tribalSeatDescription, tribalSeatReferencesFor, tribalSeatCardSources } from "@/lib/officials/tribal-seats";
-
-import { OfficeCard } from "./popup/office-card";
 import { useOfficePins } from "@/hooks/use-office-pins";
-import { groupOfficePins, type OfficeSite } from "@/lib/map/office-pins";
+import { groupOfficePins, officeOwners, type MapBounds, type OfficePin } from "@/lib/map/office-pins";
 import { useBodyOfficeLocations } from "@/hooks/use-body-office-locations";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { forgetCamera } from "@/lib/map/camera-memory";
@@ -16,10 +12,8 @@ import { CountBadge } from "@/components/map/count-badge";
 import { Legend } from "@/components/map/legend";
 import { Sidebar } from "@/components/shell/sidebar";
 import { useDistrictLayer } from "@/hooks/use-district-layer";
-import {
-  useDivisionRepresentation,
-  type DivisionRepresentation,
-} from "@/hooks/use-division-representation";
+import { useDivisionsRepresentation } from "@/hooks/use-division-representation";
+import { districtSubject, spotDivisionsFor } from "./district-subject";
 import { useNarrowing } from "@/hooks/use-narrowing";
 import { useStoredTheme } from "@/hooks/use-stored-theme";
 import { useStoredZip } from "@/hooks/use-stored-zip";
@@ -50,12 +44,14 @@ import { Logo } from "@/components/brand/logo";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useReaderLayout } from "@/hooks/use-reader-layout";
 import { ZipSwitcher } from "./zip-switcher";
+import { PostalZipNotice } from "./postal-zip-notice";
 import { useSidebarVisible } from "@/hooks/use-sidebar-visible";
 import { UiProvider, useUi, useUiDispatch } from "@/lib/state/provider";
 import type { MeetingSearchResult } from "@/lib/meetings/query";
 import type { SnapshotStatus } from "@/lib/meetings/freshness";
 import { logEvent } from "@/lib/log/client";
 import { groupByVenue, placelessSittingsOfVenueBodies, type Venue } from "@/lib/meetings/venues";
+import { meetingCardGaps } from "@/lib/meetings/card-gaps";
 import { readerMeetingCount } from "@/lib/meetings/reader-listing-count";
 import { lastReadByDivision, snapshotInView } from "@/lib/meetings/freshness";
 import type { MeetingListingIdentityReadback } from "@/lib/meetings/listing-identity";
@@ -65,15 +61,11 @@ import type { SeatHolder } from "@/lib/officials/lookup";
 import {
   districtCardSources,
   meetingCardSources,
+  personCardSources,
 } from "@/lib/officials/card-sources";
-import type { CoverageSummary, CoveredBody } from "@/lib/registry/coverage";
+import type { CoveredBody } from "@/lib/registry/coverage";
 import { bodyClassLong } from "@/lib/registry/body-class-labels";
-import { projectedBodyRoster, projectedRosterGapsForDivision } from "@/lib/registry/body-roster-client";
-import {
-  noteStateFor,
-  representationForDivision,
-  representationNoteFor,
-} from "@/lib/registry/representation";
+import { projectedBodyRoster } from "@/lib/registry/body-roster-client";
 import { TIER_LABEL, type Tier } from "@/lib/ocd/tiers";
 import { definitionsForBody } from "@/lib/officials/body-definitions";
 import { divisionTypeLabel, tierForMeeting } from "@/lib/state/derive";
@@ -98,12 +90,6 @@ import { MeetingPanel } from "./meeting-panel";
 import { DoorOverlay } from "./door-overlay";
 import type { ModalSubject } from "./popup/entity-modal";
 
-/*
- * Surfaces that render nothing on the server and are absent from first
- * paint, loaded behind async boundaries. `ssr: false` states a fact: each is
- * gated on click state or on `restored`, which only becomes true on the
- * client. The map is not here.
- */
 const OfficialModal = dynamic(
   () => import("./popup/official-modal").then((m) => m.OfficialModal),
   { ssr: false },
@@ -125,11 +111,6 @@ const TutorialOverlay = dynamic(
   { ssr: false },
 );
 
-/**
- * The entry screen. Asks /api/meetings and hands the answer to the shell.
- * Shared UI state lives in lib/state, so every surface reads the same view.
- */
-
 interface TaggedResult extends MeetingSearchResult {
   zip: string;
   /** Which view request produced this answer; stale answers are dropped. */
@@ -140,10 +121,6 @@ interface TaggedResult extends MeetingSearchResult {
   snapshot?: SnapshotStatus | null;
 }
 
-/**
- * What the map is looking at: a typed zip or a settled viewport. The fetch
- * serves whichever is newest.
- */
 interface ViewTarget {
   key: string;
   kind: "zip" | "settled";
@@ -151,11 +128,6 @@ interface ViewTarget {
   zip: string | null;
   lat: number;
   lng: number;
-  /**
-   * The radius to ask for. Absent means the ladder's first rung (a typed zip);
-   * a settled view carries what the reader can see, so zooming out returns a
-   * superset.
-   */
   radiusKm?: number;
 }
 
@@ -176,20 +148,11 @@ function MapEntryInner() {
   const ui = useUi();
   const dispatch = useUiDispatch();
 
-  /**
-   * Where can I vote?, Ask and Change Zip take the foreground: they dismiss the
-   * open venue or district card. Never runs on an area click, and nothing
-   * closes Ask.
-   */
   const takeForeground = useCallback(() => {
     dispatch({ type: "select/venue", key: null });
     dispatch({ type: "select/district", ocdId: null, districtType: null });
   }, [dispatch]);
 
-  /*
-   * The map's first-idle / motion-degrade signal. Drives visual chrome only;
-   * the meetings fetch answers to `view`, never to the camera.
-   */
   const [mapPresentationReady, setMapPresentationReady] = useState(false);
   const onMapPresentationReady = useCallback((ready: boolean) => {
     setMapPresentationReady(ready);
@@ -224,24 +187,16 @@ function MapEntryInner() {
   /** The one small popup on screen, if any. */
   const [pop, setPop] = useState<ReaderPop>(null);
 
-  /*
-   * Compact glance cards may coexist; the large tier is a stack. Declared
-   * before the handlers that clear them.
-   */
   const [popupMeeting, setPopupMeeting] = useState<Meeting | null>(null);
-  /*
-   * The large surface is a stack. Opened from outside any large surface,
-   * `openLarge` replaces it; from inside one, `pushLarge` appends and closing
-   * pops back. The depth cap guards cycles by dropping the oldest frame.
-   */
   type LargeSurface =
-    | { kind: "office"; site: OfficeSite }
     | { kind: "entity"; subject: ModalSubject }
     | {
         kind: "official";
         holder: SeatHolder;
         seatLabel: string | null;
         tier: "local" | "state" | "national";
+        /** The district office the card was opened from, shown near its top. */
+        office?: OfficePin;
       };
   const LARGE_STACK_LIMIT = 8;
   const [largeStack, setLargeStack] = useState<LargeSurface[]>([]);
@@ -380,6 +335,14 @@ function MapEntryInner() {
     [remember, dispatch, dismissSidebar, setLarge],
   );
 
+  const addressLocated = useCallback((zip: string, lat: number, lng: number) => {
+    search(zip, lat, lng);
+    setSettled({ forZip: zip, target: {
+      key: `street:${lat.toFixed(4)},${lng.toFixed(4)}`, kind: "settled", zip: null, lat, lng,
+    } });
+    setFocus({ lat, lng, zoom: 14, key: `address:${lat.toFixed(4)},${lng.toFixed(4)}` });
+  }, [search]);
+
   /* Declared before both readers below. */
   const focusState = useStateFocus();
 
@@ -408,11 +371,6 @@ function MapEntryInner() {
 
   const current = result && view && result.viewKey === view.key ? result : null;
 
-  /*
-   * `held` keeps the last answer on screen between a settle and its answer;
-   * the card carries `data-refreshing` meanwhile. Adjust-during-render, since
-   * a ref would be read during render.
-   */
   const [held, setHeld] = useState<{
     result: TaggedResult;
     /* The zip the held answer belongs to. */
@@ -429,10 +387,6 @@ function MapEntryInner() {
   });
   const refreshing = current === null && shown !== null;
 
-  /*
-   * The pins hold their last answer through a refresh, only while it belongs
-   * to the zip still shown; a new zip drops them.
-   */
   const pinned = carryPins({
     current,
     held,
@@ -453,16 +407,18 @@ function MapEntryInner() {
     [pinned, ui, view],
   );
 
-  const officePins = useOfficePins(pinned?.coverage ?? null);
-  const officeSites = useMemo(() => groupOfficePins(officePins), [officePins]);
   const officeLocations = useBodyOfficeLocations(pinned?.coverage?.bodies ?? EMPTY_COVERED_BODIES, pinned?.meetings ?? EMPTY_MEETINGS);
   const venues = useMemo<Venue[]>(() => groupByVenue(meetings, pinned?.listingIdentity, officeLocations), [meetings, pinned?.listingIdentity, officeLocations]);
 
-  /*
-   * The map gets every venue in the held result plus the visible keys, so a
-   * filter changes visibility and never rebuilds markers. `venues` above is
-   * the filtered list.
-   */
+  /* The reader's representatives' district offices: a pin each, or a line on the venue card in the same building. */
+  const [mapBounds, setMapBounds] = useState<MapBounds | null>(null);
+  const officePins = useOfficePins(pinned?.coverage ?? null, { bounds: mapBounds, venues });
+  const officeSites = useMemo(() => groupOfficePins(officePins.pins), [officePins.pins]);
+  const officeOwnerById = useMemo(
+    () => new Map(officeOwners(pinned?.coverage ?? null).map((owner) => [owner.holder.id, owner])),
+    [pinned?.coverage],
+  );
+
   const allVenues = useMemo<Venue[]>(
     () => (pinned ? groupByVenue(pinned.meetings, pinned.listingIdentity, officeLocations) : []),
     [pinned, officeLocations],
@@ -482,11 +438,6 @@ function MapEntryInner() {
     [selectedVenue, meetings],
   );
 
-  /*
-   * One surface open at a time: sidebar, who-governs card and large card each
-   * close the others. Every opener goes through here. Ask is not one of them
-   * and closes nothing.
-   */
   const openSurface = useCallback(
     (surface: "sidebar" | "wgh" | "large") => {
       // The sidebar stays put (dimmed under the scrim) while the card is open.
@@ -508,9 +459,7 @@ function MapEntryInner() {
   const openLarge = useCallback(
     (next: LargeSurface) => {
       captureEvent(
-        next.kind === "office"
-          ? { type: "CARD_OPEN", cardId: `BODY:${next.site.offices[0].ownerId}`, cardKind: "BODY" }
-          : next.kind === "official"
+        next.kind === "official"
           ? { type: "CARD_OPEN", cardId: `OFFICIAL:${next.holder.id}`, cardKind: "OFFICIAL" }
           : { type: "CARD_OPEN", cardId: `${next.subject.subjectKind}:${next.subject.subjectId}`, cardKind: next.subject.subjectKind },
       );
@@ -532,9 +481,10 @@ function MapEntryInner() {
       seatLabel: string | null,
       tier: "local" | "state" | "national",
       ocdId: string | null,
+      office?: OfficePin,
     ) => {
       // A person opens their full card in the one large card.
-      openLarge({ kind: "official", holder, seatLabel, tier });
+      openLarge({ kind: "official", holder, seatLabel, tier, ...(office ? { office } : {}) });
       // The holder id names the official opened, never the reader.
       logEvent("OFFICIAL_OPENED", ocdId ? [ocdId] : [], {
         officialId: holder.id,
@@ -542,6 +492,23 @@ function MapEntryInner() {
     },
     [openLarge],
   );
+
+  /** An office opens its owner's battlecard, with that office near the top. */
+  const openOffice = useCallback(
+    (office: OfficePin) => {
+      const owner = officeOwnerById.get(office.ownerId);
+      if (owner) openOfficial(owner.holder, owner.seatLabel, owner.tier, null, office);
+    },
+    [officeOwnerById, openOfficial],
+  );
+  /* Bounds arrive after every settled move; an unchanged view keeps its identity so nothing recomputes. */
+  const onMapBounds = useCallback((next: MapBounds) => {
+    setMapBounds((current) =>
+      current && current.west === next.west && current.south === next.south && current.east === next.east && current.north === next.north
+        ? current
+        : next,
+    );
+  }, []);
 
   // Opening the list overlay closes any large popup. Adjust-during-render.
   const [seenListOpen, setSeenListOpen] = useState(ui.listOverlayOpen);
@@ -564,11 +531,6 @@ function MapEntryInner() {
     }
   }
 
-  /*
-   * Interaction events carry the divisions touched and scalar detail only, and
-   * fire on state changes. `openMeetingCard` is filled in once `bodyForMeeting`
-   * exists below.
-   */
   const openMeetingCard = useRef<(meeting: Meeting) => void>(() => {});
   const openMeeting = useCallback((meeting: Meeting) => {
     // A meeting opens its full card inside the one card.
@@ -607,10 +569,6 @@ function MapEntryInner() {
     });
   }, [ui.tiers]);
 
-  /*
-   * The reader panned and stopped. Guards: no context yet, an open popup or
-   * selection, or a move too small to matter. The camera is never touched.
-   */
   const onViewportSettle = useCallback(
     (center: { lat: number; lng: number; viewportRadiusKm: number }) => {
       // The crossing detector runs on every settle, before the re-query guard.
@@ -668,20 +626,10 @@ function MapEntryInner() {
     const viewKind = current.viewKey.startsWith("zip:") ? "zip" : "settled";
     if (noticeShouldExpand(viewKind, current.zip, shownAreaKey.current)) {
       shownAreaKey.current = current.zip;
-      /*
-       * Arrival shows the rail with the card collapsed. `noticeShouldExpand`
-       * still runs so `shownAreaKey` records which area the card answered for;
-       * the district effect below relies on it.
-       */
       setNoticeCollapsed(true);
     }
   }, [current]);
 
-  /**
-   * One small card at a time: a change of venue or district selection clears
-   * the popups. Adjust-during-render on a composed key, so venue→district
-   * counts as a change; selecting nothing clears nothing.
-   */
   const selectionKey = `${ui.selectedVenueKey ?? ""}\u0000${ui.selectedDistrictOcdId ?? ""}`;
   const [prevSelectionKey, setPrevSelectionKey] = useState(selectionKey);
   if (selectionKey !== prevSelectionKey) {
@@ -691,10 +639,6 @@ function MapEntryInner() {
     }
   }
 
-  /*
-   * Filter changes collapse the who-governs card, caught here with
-   * adjust-during-render on `ui.filters` identity.
-   */
   const [seenFilters, setSeenFilters] = useState(ui.filters);
   const [seenTiers, setSeenTiers] = useState(ui.tiers);
   if (seenFilters !== ui.filters || seenTiers !== ui.tiers) {
@@ -709,19 +653,11 @@ function MapEntryInner() {
     [lastHits, ui.selectedDistrictOcdId],
   );
 
-  /**
-   * The selected division's officeholders, resolved by the division's own key.
-   * Both the popup and the battlecard read it.
-   */
-  const districtRepresentation = useDivisionRepresentation(
+  const districtRepresentations = useDivisionsRepresentation(
     current?.coverage ?? null,
-    districtPopup?.ocdId ?? null,
+    lastHits.flatMap(hit => [hit.ocdId, ...spotDivisionsFor(hit, lastHits).map(division => division.ocdId)]),
   );
 
-  /**
-   * The body that held this sitting, matched on the body it names, never on
-   * shared geography. Null when the named body is not in coverage.
-   */
   const bodyForMeeting = useCallback(
     (meeting: Meeting): CoveredBody | null => {
       const bodies = current?.coverage?.bodies;
@@ -749,11 +685,6 @@ function MapEntryInner() {
   }, [current, dispatch]);
 
   const data = useMemo<ShellData>(() => {
-    /*
-     * `current` is null between a settle and its reply; `shown` bridges that
-     * gap so surfaces dim instead of blanking. A completed answer, even an
-     * unavailable one, always wins.
-     */
     const answer = current ?? shown;
     return {
       allMeetings: answer?.meetings ?? [],
@@ -762,6 +693,7 @@ function MapEntryInner() {
       meetings,
       listingIdentity: pinned?.listingIdentity,
       venues,
+      officePins: officePins.pins.length,
       result: answer,
       location,
       drawnDistricts,
@@ -777,13 +709,8 @@ function MapEntryInner() {
       zipPartial: answer?.partialOcdIds ? new Set(answer.partialOcdIds) : null,
       basis: view?.key.startsWith("street:") ? "ADDRESS" : "ZIP",
     };
-  }, [current, shown, meetings, pinned?.listingIdentity, venues, location, drawnDistricts, failure, view]);
+  }, [current, shown, meetings, pinned?.listingIdentity, venues, officePins.pins.length, location, drawnDistricts, failure, view]);
 
-  /*
-   * Every autocomplete row opens something. A meeting row with no venue opens
-   * the large meeting card; a body row opens that body's battlecard (built by
-   * `bodySubject`) and flies where it can. Place rows fly.
-   */
   const onSearchPick = useCallback((item: SearchItem) => {
     if (item.venueKey) dispatch({ type: "select/venue", key: item.venueKey });
     if (item.lat !== null && item.lng !== null) {
@@ -802,11 +729,6 @@ function MapEntryInner() {
           });
         }
       } else if (item.kind === "body") {
-        /*
-         * `resolveBodyRow` (lib/search/body-row.ts) normalises two spellings of
-         * the same name and refuses anything less certain; on refusal the card
-         * is built from the row, which names the clicked body and its meetings.
-         */
         const resolved = resolveBodyRow(item, current?.coverage?.bodies ?? []);
         const body =
           resolved?.body ??
@@ -863,11 +785,6 @@ function MapEntryInner() {
     [openMeeting],
   );
 
-  /*
-   * Reset clears the controls and re-runs the current zip through `search`,
-   * the same path a typed zip takes. With no zip yet it opens the welcome
-   * prompt.
-   */
   const onReset = useCallback(() => {
     dispatch({ type: "reset" });
     setFocus(null);
@@ -902,18 +819,9 @@ function MapEntryInner() {
     [ui.selectedDistrictOcdId, ui.selectedDistrictType],
   );
 
-  /*
-   * The reader's narrowed divisions shade on the map, read for the zip the
-   * who-governs card speaks. Division type comes from the OCD id's segment.
-   */
   const noticeZip =
     result && /^\d{5}$/.test(result.zip) ? result.zip : (location?.zip ?? "");
   const narrowing = useNarrowing(noticeZip);
-  /*
-   * An OCD id says `school_district:` without unified/elementary/secondary.
-   * The Census gives each district exactly one, so all three sources are
-   * asked; the other two calls are no-ops.
-   */
   const narrowedDistricts = useMemo(
     () =>
       narrowing.divisions.flatMap((ocdId) =>
@@ -941,11 +849,6 @@ function MapEntryInner() {
     });
   }, [setShowDistricts, dispatch, ui.filters.districtTypes]);
 
-  /*
-   * A narrowed street becomes the query point: the camera flies and the point
-   * goes through the same `settled` override a panned viewport uses, so a new
-   * zip makes it stale. Nothing persists.
-   */
   const onStreetPoint = useCallback(
     (point: { lat: number; lng: number; street: string }) => {
       if (!location) return;
@@ -970,10 +873,6 @@ function MapEntryInner() {
     [location],
   );
 
-  /*
-   * A map click lands in a set of districts: one hit selects, several open the
-   * picker. Nothing is inferred from the stored zip.
-   */
   const onDistrictClick = useCallback(
     (hits: DistrictHit[], at: { x: number; y: number }) => {
       // Remember the whole set: the picker may select any of them.
@@ -1014,15 +913,6 @@ function MapEntryInner() {
   /** The basemap notice clears when the basemap draws again. */
   const onTilesRecovered = useCallback(() => setTilesFailed(false), []);
   const onDistrictError = useCallback(() => setDistrictsFailed(true), []);
-  /*
-   * The one-view model: small popups anchored to their control (ZIP, Where
-   * can I vote?, Ask; `pop` holds which) and one large card over a scrim, whose
-   * view is derived from the state existing openers write, in fixed priority.
-   * Opening either closes the other; the sidebar closes both. Going deeper
-   * records the left view and scroll on `backStack`; browser Back matches.
-   *
-   * Voting pins live here because the map draws them; the popup clears them on close.
-   */
   const [votingPins, setVotingPins] = useState<VotingSitePin[]>([]);
   /** The point the reader's address resolved to, for the ten-mile ring. */
   const [votingAddressPoint, setVotingAddressPoint] = useState<{ lat: number; lng: number } | null>(
@@ -1115,9 +1005,7 @@ function MapEntryInner() {
   const cardKey = cardView
     ? cardView.kind === "large"
       ? `large:${largeStack.length}:${
-          cardView.surface.kind === "office"
-            ? cardView.surface.site.id
-            : cardView.surface.kind === "entity"
+          cardView.surface.kind === "entity"
             ? cardView.surface.subject.subjectId
             : cardView.surface.holder.id
         }`
@@ -1125,7 +1013,7 @@ function MapEntryInner() {
         ? `venue:${cardView.venue.key}`
         : cardView.kind === "door"
           ? `door:${cardView.door}`
-          : cardView.kind
+          : `${cardView.kind}`
     : null;
   const cardLabel = cardView ? cardViewLabel(cardView) : "";
 
@@ -1252,11 +1140,6 @@ function MapEntryInner() {
     applySnapshot(snap);
   }, [backStack, applySnapshot, closeCard, cardKey]);
 
-  /*
-   * Browser Back steps back through the card, exactly like "← Back to …",
-   * and from the first view closes it. One history entry per level, pushed
-   * with the same URL so no route is re-rendered and no deep link changes.
-   */
   const backRef = useRef(backCard);
   const closeRef = useRef(closeCard);
   useEffect(() => {
@@ -1373,16 +1256,12 @@ function MapEntryInner() {
         districtPopup,
         current?.meetings ?? [],
         current?.coverage ?? null,
-        districtRepresentation,
+        districtRepresentations,
+        lastHits,
       ),
     });
-  }, [ui.selectedDistrictOcdId, districtPopup, openLarge, current, districtRepresentation]);
+  }, [ui.selectedDistrictOcdId, districtPopup, openLarge, current, districtRepresentations, lastHits]);
 
-  /**
-   * Fit a drawn district's whole boundary and park its card behind the
-   * selection pill (Districts list, and the sidebar's Jurisdiction select).
-   * Only districts the map is drawing can be fitted; others are left alone.
-   */
   const showDistrictOnMap = useCallback(
     (ocdId: string) => {
       const drawn = drawnDistricts.find((d) => d.ocdId === ocdId);
@@ -1503,12 +1382,13 @@ function MapEntryInner() {
             placeless={selectedVenuePlaceless}
             onOpenMeeting={openMeeting}
             onShowOnMap={parkCard}
+            offices={officePins.atVenue.get(cardView.venue.key)}
+            onOpenOffice={openOffice}
             onClose={closeCard}
           />
         );
       case "large": {
         const surface = cardView.surface;
-        if (surface.kind === "office") return <OfficeCard site={officeSites.find(site => site.id === surface.site.id) ?? surface.site} />;
         if (surface.kind === "entity") {
           const subject =
             surface.subject.divisionOcdId &&
@@ -1518,7 +1398,8 @@ function MapEntryInner() {
                   districtPopup,
                   current?.meetings ?? [],
                   current?.coverage ?? null,
-                  districtRepresentation,
+                  districtRepresentations,
+                  lastHits,
                 )
               : surface.subject;
           return (
@@ -1586,6 +1467,7 @@ function MapEntryInner() {
             holder={surface.holder}
             seatLabel={surface.seatLabel}
             tier={surface.tier}
+            office={surface.office}
             reactionContext={
               view
                 ? {
@@ -1607,17 +1489,13 @@ function MapEntryInner() {
 
   const cardTone =
     cardView?.kind === "large"
-      ? cardView.surface.kind === "office"
-        ? "var(--accent-local)"
-        : cardView.surface.kind === "entity"
+      ? cardView.surface.kind === "entity"
         ? `var(--accent-${cardView.surface.subject.tier})`
         : `var(--accent-${cardView.surface.tier})`
       : undefined;
   const cardKicker =
     cardView?.kind === "large"
-      ? cardView.surface.kind === "office"
-        ? "Office"
-        : cardView.surface.kind === "official"
+      ? cardView.surface.kind === "official"
         ? "Battlecard"
         : cardView.surface.subject.subjectKind === "MEETING"
           ? "Meeting"
@@ -1677,14 +1555,15 @@ function MapEntryInner() {
             allowAutoFrame={view?.kind !== "settled"}
             focusStateOcdId={focusState.activeOcdId}
             officeSites={officeSites}
-            selectedOfficeId={large?.kind === "office" ? large.site.id : null}
+            selectedOfficeId={large?.kind === "official" ? (large.office?.id ?? null) : null}
             onSelectOffice={id => {
-              const site = officeSites.find(value => value.id === id);
-              if (!site) return;
+              const office = officePins.pins.find(value => value.id === id);
+              if (!office) return;
               dispatch({ type: "select/venue", key: null });
               dispatch({ type: "select/district", ocdId: null, districtType: null });
-              openLarge({ kind: "office", site });
+              openOffice(office);
             }}
+            onBoundsChange={onMapBounds}
             votingSites={votingPins}
             votingAddressPoint={votingAddressPoint}
             onSelectVotingSite={setSelectedVotingSiteId}
@@ -1783,7 +1662,7 @@ function MapEntryInner() {
                 <span aria-hidden="true">☰</span>
               </button>
               <span className="mw-header-logo">
-                <Logo variant="wordmark" size={30} />
+                <Logo variant="wordmark" size={38} />
               </span>
               <span className="mw-header-spacer" />
               <ThemeToggle className="mw-header-theme" />
@@ -1823,6 +1702,7 @@ function MapEntryInner() {
                 embedded
                 current={clusterZip}
                 onPick={search}
+                onAddressLocated={addressLocated}
                 onClose={closePop}
               />
             )}
@@ -1866,13 +1746,20 @@ function MapEntryInner() {
         {cardView && !parked && (
           <ReaderCard
             viewKey={cardKey ?? "card"}
+            sources={cardView.kind === "venue"
+              ? [...cardView.venue.meetings, ...selectedVenuePlaceless].flatMap(meeting => meetingCardSources(meeting, []))
+              : cardView.kind === "large" && cardView.surface.kind === "entity" ? cardView.surface.subject.sources
+                : cardView.kind === "large" && cardView.surface.kind === "official" ? personCardSources(cardView.surface.holder) : []}
+            gaps={cardView.kind === "venue" ? [...cardView.venue.meetings, ...selectedVenuePlaceless].flatMap(meetingCardGaps)
+              : cardView.kind === "large" && cardView.surface.kind === "entity" ? cardView.surface.subject.meetings.flatMap(meetingCardGaps) : []}
+            subject={cardView.kind === "large" && cardView.surface.kind === "official" ? { type: "CANDIDATE", id: cardView.surface.holder.id }
+              : cardView.kind === "large" && cardView.surface.kind === "entity" && cardView.surface.subject.subjectKind === "BODY" ? { type: "BODY", id: cardView.surface.subject.subjectId } : undefined}
             kicker={cardKicker}
             kickerTone={cardTone}
+            enter={cardView.kind === "large" && cardView.surface.kind === "official" && cardView.surface.office ? "rise" : undefined}
             zip={clusterZip}
             recordId={cardView.kind === "large"
-              ? cardView.surface.kind === "office"
-                ? cardView.surface.site.id
-                : cardView.surface.kind === "entity"
+              ? cardView.surface.kind === "entity"
                 ? cardView.surface.subject.subjectId
                 : cardView.surface.holder.id
               : cardView.kind === "venue" ? cardView.venue.key : null}
@@ -1900,11 +1787,13 @@ function MapEntryInner() {
           <WelcomeOverlay
             open={!location || welcomeRequested}
             onResolved={search}
+            onAddressLocated={addressLocated}
             onDismiss={
               location ? () => setWelcomeRequested(false) : null
             }
           />
         )}
+        {location && <PostalZipNotice location={location} onLocated={addressLocated} hidden={welcomeRequested || pop !== null || cardView !== null} />}
         {restored && (
           <TutorialOverlay active={Boolean(location) && !welcomeRequested && mapPresentationReady} />
         )}
@@ -1917,7 +1806,7 @@ function MapEntryInner() {
 /** The card's name for a view; also the "← Back to …" label. */
 function cardViewLabel(
   view:
-    | { kind: "large"; surface: { kind: "office"; site: OfficeSite } | { kind: "entity"; subject: ModalSubject } | { kind: "official"; holder: SeatHolder } }
+    | { kind: "large"; surface: { kind: "entity"; subject: ModalSubject } | { kind: "official"; holder: SeatHolder } }
     | { kind: "venue"; venue: Venue }
     | { kind: "door"; door: "bodies" | "districts" | "officials" }
     | { kind: "list" }
@@ -1925,9 +1814,7 @@ function cardViewLabel(
 ): string {
   switch (view.kind) {
     case "large":
-      return view.surface.kind === "office"
-        ? view.surface.site.name
-        : view.surface.kind === "entity"
+      return view.surface.kind === "entity"
         ? view.surface.subject.title
         : view.surface.holder.name;
     case "venue":
@@ -1967,11 +1854,6 @@ function unwindCardHistory(depth: { current: number }): void {
   }
 }
 
-/**
- * The address with a Directions link built from coordinates we hold: a
- * convenience, never a citation. A named function because the server/client
- * boundary test reads an inline `value: (…) =>` as a function prop.
- */
 function locationWithDirections(location: NonNullable<Meeting["location"]>): React.ReactNode {
   const line = locationLine(location.name, location.address);
   const directions = venueLink(location);
@@ -2019,12 +1901,12 @@ function meetingSubject(
         : {
             // The online sentence only where the body published online access.
             label: "Where",
-            value: isPlaceUnrecorded(meeting) ? <WorkingOnIt inline subject={body ? { type: "BODY", id: body.bodyId } : null} /> : placelessWhereLine(meeting),
+            value: isPlaceUnrecorded(meeting) ? null : placelessWhereLine(meeting),
           },
       ...(() => {
         const access = onlineAccessFor(meeting);
-        return access
-          ? [{ label: "How to join", value: access.joinUrl ? <a href={access.joinUrl} target="_blank" rel="noreferrer">Join online</a> : <WorkingOnIt inline subject={body ? { type: "BODY", id: body.bodyId } : null} /> }]
+        return access?.joinUrl
+          ? [{ label: "How to join", value: <a href={access.joinUrl} target="_blank" rel="noreferrer">Join online</a> }]
           : [];
       })(),
       { label: "Status", value: STATUS_LABEL[meeting.status] },
@@ -2053,23 +1935,11 @@ function meetingSubject(
   };
 }
 
-/**
- * A governing body's large battlecard. The name is the body's own or the
- * division's Census label; the site is the sourced homepage or nothing.
- */
 function bodySubject(
   body: CoveredBody,
   allMeetings: Meeting[] = [],
 ): ModalSubject {
-  /*
-   * `membersOfBody` resolves an explicit composition or returns nobody; there
-   * is no division fallback (lib/registry/body-membership.ts).
-   */
   const roster = [...projectedBodyRoster(body).members];
-  /*
-   * This body's sittings by `bodyId`, not the division's. A meeting with no
-   * `bodyId` appears on no card.
-   */
   const meetings = allMeetings
     .filter((m) => m.bodyId !== undefined && m.bodyId === body.bodyId)
     .sort((a, b) => a.startsAt.localeCompare(b.startsAt));
@@ -2189,11 +2059,6 @@ function bodyContactRows(
   return rows;
 }
 
-/**
- * A place's card: the place, its type, and every body we hold in it, each
- * opening its own battlecard. It elects no body to stand for the place. No
- * bodies renders the stated absence.
- */
 function placeSubject(
   ocdId: string,
   label: string,
@@ -2205,10 +2070,6 @@ function placeSubject(
   const mine = bodies.filter((b) => b.ocdId === ocdId);
   const divisionType = mine[0]?.divisionType ?? typeFromOcdId(ocdId);
 
-  /*
-   * Never guessed: the row's tier, else a held body's tier in this place, else
-   * null (a named gap in the Tier row). The header accent still paints.
-   */
   const tier: Tier | null = rowTier ?? mine[0]?.tier ?? null;
 
   return {
@@ -2219,10 +2080,6 @@ function placeSubject(
     title: label,
     subtitle: divisionTypeLabel(divisionType),
     tier: tier ?? "local",
-    /*
-     * Null: a place and a district can share an OCD-ID, and carrying it would
-     * let the district re-derive turn this into a district card.
-     */
     divisionOcdId: null,
     facts: [],
     placeCard: {
@@ -2255,10 +2112,6 @@ function placeSubject(
   };
 }
 
-/**
- * The division kind an OCD-ID's last segment names, when no held body supplies
- * one. Unknown segments fall back to "District".
- */
 function typeFromOcdId(ocdId: string): string {
   return (ocdId.split("/").pop() ?? "").split(":")[0];
 }
@@ -2278,125 +2131,6 @@ function BODY_TYPE_LABEL(body: CoveredBody): string {
   return body.name === null && body.divisionType !== null
     ? DIVISION[body.divisionType]
     : CLASS(body.bodyClass);
-}
-
-function districtSubject(
-  district: DistrictHit,
-  allMeetings: Meeting[] = [],
-  coverage: CoverageSummary | null = null,
-  /** The division-keyed answer; omitted, the point-scoped resolver is used. */
-  resolved: DivisionRepresentation | null = null,
-): ModalSubject {
-  // A county card accepts its exact published ID and child jurisdictions
-  // whose OCD path names this county. A same-state match or a missing ID
-  // cannot establish county ownership.
-  const isCounty = /\/county:[^/]+$/.test(district.ocdId);
-  const meetings = allMeetings
-    .filter((m) =>
-      isCounty
-        ? tierForMeeting(m) === "local" && (m.ocdId === district.ocdId || m.ocdId?.startsWith(`${district.ocdId}/`))
-        : m.ocdId === district.ocdId,
-    )
-    .sort((a, b) => a.startsAt.localeCompare(b.startsAt));
-  // The same resolver the small popup and who-governs card read; `resolved`
-  // asks by the division's own key, since `coverage.seats` is point-scoped.
-  const roster =
-    resolved?.holders.length
-      ? resolved.holders
-      : representationForDivision(coverage, district.ocdId);
-  const districtRepresentationLabel = legislativeRepresentationLabel(typeFromOcdId(district.ocdId), district.representation);
-  const tribalReferences = district.representation === "tribal"
-    ? tribalSeatReferencesFor(district.state).filter(reference => reference.nation === district.nation) : [];
-  const boundarySources = district.sourceUrls?.map((sourceUrl, index) => ({
-    sourceUrl,
-    sourceOrg: index === 0 && district.sourceOrg ? district.sourceOrg : new URL(sourceUrl).hostname,
-    collectedAt: district.collectedAt ?? "",
-    verifiedAt: null,
-  }));
-  return {
-    // The division's own ocd-id.
-    subjectId: district.ocdId,
-    subjectKind: "BODY" as const,
-    title: district.label,
-    subtitle: `${district.typeLabel} · ${district.state}`,
-    tier: district.tier,
-    // Congressional, state-senate and state-house answer false.
-    divisionKind: district.type,
-    facts: [
-      // No OCD-ID row: internal identifiers never render to readers.
-      { label: "Type", value: district.typeLabel },
-      { label: "Tier", value: TIER_LABEL[district.tier] },
-      { label: "State", value: district.state, mono: true },
-      ...(districtRepresentationLabel ? [{label:"District",value:districtRepresentationLabel}] : []),
-      ...(district.representation === "tribal" && district.nation ? [{label:"Tribal seat",value:tribalSeatDescription(district.nation)}] : []),
-      /* Every distinct governing body's own site; none is elected to speak for the division. */
-      ...bodyHomepageFacts(coverage, district.ocdId),
-    ],
-    /* The office title comes from the division's type, so vacant seats still get the explainer. */
-    divisionOcdId: district.ocdId,
-    representedByOfficeTitle: officeTitleForDivision(district.ocdId),
-    representation: roster,
-    rosterGaps: resolved?.rosterGaps ?? projectedRosterGapsForDivision(coverage, district.ocdId),
-    representationNote: representationNoteFor(
-      district.tier,
-      resolved ? noteStateFor(resolved.status) : "gap",
-    ),
-    meetings,
-    /* Built from the same rows the card renders. */
-    sources: [...districtCardSources(roster, meetings, undefined, boundarySources),
-      ...tribalReferences.flatMap(tribalSeatCardSources)],
-  };
-}
-
-/**
- * The body's own website as an Overview row, shared by `bodySubject` and
- * `districtSubject`. No `homepageUrl`, no row.
- */
-function bodyHomepageFacts(
-  coverage: CoverageSummary | null,
-  ocdId: string,
-): { label: string; value: React.ReactNode }[] {
-  /* Deduped on the rendered host, since stored URLs differ by `www.`, slash or path. */
-  const seen = new Set<string>();
-  const rows: { label: string; value: React.ReactNode }[] = [];
-  for (const body of coverage?.bodies ?? []) {
-    if (body.ocdId !== ocdId || !body.homepageUrl) continue;
-    let host: string;
-    try {
-      host = new URL(body.homepageUrl).hostname.replace(/^www\./, "");
-    } catch {
-      // A malformed stored URL renders no row rather than a broken link.
-      continue;
-    }
-    if (seen.has(host)) continue;
-    seen.add(host);
-    rows.push({
-      label: "Official site",
-      value: (
-        <a
-          href={body.homepageUrl}
-          target="_blank"
-          rel="noreferrer"
-          className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
-        >
-          {host} →
-        </a>
-      ),
-    });
-  }
-  return rows;
-}
-
-/**
- * The office that represents a division, from its OCD-ID segment. Null for
- * segments with no representative (county, place): no explainer renders.
- */
-function officeTitleForDivision(ocdId: string): string | null {
-  if (/\/cd:[^/]+$/.test(ocdId)) return "U.S. Representative";
-  if (/\/sldu:[^/]+$/.test(ocdId)) return "State Senator";
-  if (/\/sldl:[^/]+$/.test(ocdId)) return "State Representative";
-  if (/\/school_district:[^/]+$/.test(ocdId)) return "School Board Member";
-  return null;
 }
 
 const STATUS_LABEL: Record<Meeting["status"], string> = {

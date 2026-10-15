@@ -15,16 +15,17 @@ import { projectRoutineDataObservability } from "../lib/civic-data/observability
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { ManualSourceClass, ManualSourceSetReceipt } from "../lib/civic-data/types.ts";
-import { COMMENT_ACCESS, currentCommentAccess } from "../lib/registry/comment-access.ts";
 import { curatedReaderSourceClass } from "./helpers/curated-reader-source-class.ts";
 import { stanceId } from "../lib/civic-data/stance-rows.ts";
 import { CROSSWALK_CITATION } from "../lib/civic-data/meeting-body-crosswalk.ts";
+import { REGISTRATION_TARGETS } from "../lib/registration/publication.ts";
+import { pollingPlaceLinkFor } from "../lib/ballot/polling-place-links.ts";
+import { registrationLinkFor } from "../lib/ballot/registration-links.ts";
 
 const T0 = "2026-09-08T12:00:00.000Z";
 const T1 = "2026-09-08T12:01:00.000Z";
 const URLS = {
   "official-filings": ["https://elections.example.gov/filing.json"],
-  "comment-access": ["https://public.example.gov/comment-policy"],
   "ballot-navigation": [
     "https://elections.example.gov/polling-place",
     "https://elections.example.gov/registration",
@@ -101,20 +102,6 @@ function payloadFor(
         reviewedBy: "a reviewing agent session",
         reviewedAt: at,
         authorization: CROSSWALK_CITATION,
-      }],
-    };
-  }
-  if (id === "comment-access") {
-    return {
-      kind: id,
-      records: [{
-        id: "comment-access:body:test",
-        bodyId: "body:test",
-        commentPeriod: "YES",
-        commentPeriodDetail: "The body publishes one comment period.",
-        sourceUrl: URLS[id][0],
-        collectedAt: at,
-        verifiedAt: at,
       }],
     };
   }
@@ -217,25 +204,29 @@ test("each mutable curated Reader family promotes and reads from its own canonic
   }
 });
 
-test("comment-access drops the control-plane transport id at the Reader boundary", async () => {
+test("every state's registration and polling links publish through the national navigation pointer", async () => {
   const store = new MemoryRoutineDataStore();
-  const candidate = manualProjectionCandidate(packageFor("comment-access"));
-  const outcome = await processRegisteredManualCandidate(store, "comment-access", candidate, T0);
-  assert.equal(outcome.candidate.state, "PROMOTED");
-  await readCuratedReaderProjection("comment-access", { store, bypassCache: true, now: T0 });
-
-  const records = currentCommentAccess();
-  assert.equal(records.length, 1);
-  assert.deepEqual(records[0], payloadFor("comment-access", T0).records[0] && {
-    bodyId: "body:test",
-    commentPeriod: "YES",
-    commentPeriodDetail: "The body publishes one comment period.",
-    sourceUrl: URLS["comment-access"][0],
-    collectedAt: T0,
-    verifiedAt: T0,
-  });
-  assert.equal("id" in (records[0] as unknown as Record<string, unknown>), false);
-  assert.ok(COMMENT_ACCESS.every((record) => !("id" in (record as unknown as Record<string, unknown>))));
+  const records = REGISTRATION_TARGETS.flatMap(({ state }) =>
+    payloadFor("ballot-navigation", T0).records.map(record => ({
+      ...record,
+      id: `${record.kind}:${state}`,
+      value: { ...(record.value as Record<string, unknown>), state },
+    }))
+  );
+  const candidate = manualProjectionCandidate({ ...packageFor("ballot-navigation"),
+    payload: { kind: "ballot-navigation", records } });
+  assert.equal(candidate.scope, "US:official-ballot-navigation");
+  const outcome = await processRegisteredManualCandidate(store, "ballot-navigation", candidate, T0);
+  assert.equal(outcome.candidate.state, "PROMOTED", outcome.candidate.failureDetail ?? undefined);
+  assert.equal(outcome.readerReadback?.status, "PASS");
+  assert.equal((await store.readPromotion("CURATED_READER_RECORD", "US:official-ballot-navigation"))?.versionId, candidate.id);
+  const read = await readCuratedReaderProjection("ballot-navigation", { store, now: T0, bypassCache: true });
+  assert.equal(read.kind, "PROMOTED");
+  assert.equal(read.metadata.scope, "US:official-ballot-navigation");
+  for (const { state } of REGISTRATION_TARGETS) {
+    assert.equal(pollingPlaceLinkFor(state)?.url, URLS["ballot-navigation"][0], state);
+    assert.equal(registrationLinkFor(state)?.url, URLS["ballot-navigation"][1], state);
+  }
 });
 
 test("a bad curated family is held against its own LKG and cannot affect another family", async () => {
@@ -309,7 +300,7 @@ test("store failure does not reopen any curated tracked first seed", async () =>
 test("Admin projects every curated authority including official filings without inventing a clock", () => {
   const ids = new Set<string>(CURATED_READER_CONTRACT_IDS);
   const contracts = MANUAL_PRODUCTION_SOURCE_CONTRACTS.filter((contract) => ids.has(contract.id));
-  assert.deepEqual(contracts.map(row => row.id).sort(), ["official-filings", "comment-access", "ballot-navigation", "stances", "campaign-sites", "member-offices", "venue-resolutions", "meeting-body-crosswalk"].sort());
+  assert.deepEqual(contracts.map(row => row.id).sort(), ["official-filings", "ballot-navigation", "stances", "campaign-sites", "member-offices", "venue-resolutions", "meeting-body-crosswalk"].sort());
   assert.ok(contracts.every((contract) => contract.execution === "EXPLICIT_OWNER_INVOCATION_ONLY"));
   assert.ok(contracts.every((contract) => !("cadence" in contract) && !("retry" in contract)));
   const view = projectRoutineDataObservability({ candidates: [], events: [], promotions: [] }, T0, contracts);
@@ -328,7 +319,7 @@ test("reference-publisher evidence is confined to venue coordinates", async () =
   );
   assert.equal(venueOutcome.candidate.state, "PROMOTED");
 
-  for (const id of ["comment-access", "ballot-navigation", "campaign-sites"] as const) {
+  for (const id of ["ballot-navigation", "campaign-sites"] as const) {
     const wrong = structuredClone(packageFor(id));
     (wrong.sourceReceipt.sources[0]! as { sourceClass: ManualSourceClass }).sourceClass = "REFERENCE_PUBLISHER";
     const outcome = await processRegisteredManualCandidate(

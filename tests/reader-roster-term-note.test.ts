@@ -7,19 +7,22 @@ import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 
 await installRegistryAuthority();
 
-import { BODY_ROSTERS, HELD_BODY_ROSTERS, ROSTER_READER_DISPOSITIONS, rosterHoldersForBody } from "../lib/registry/body-rosters.ts";
+import { rosterHoldersForBody } from "../lib/registry/body-rosters.ts";
+import { BODY_ROSTERS, HELD_BODY_ROSTERS, ROSTER_READER_DISPOSITIONS } from "./fixtures/held-body-rosters.ts";
 import { seatHolderById } from "../lib/registry/server.ts";
 import type { SeatHolder } from "../lib/officials/lookup.ts";
 
-/** Keep the canonical Node test runner; compile the actual TSX leaf in a child. */
+/** The actual term-note leaf inside its card, whose footer owns the source link. */
 function renderTermNotes(holders: readonly SeatHolder[]): string[] {
   const output = execFileSync(process.execPath, ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs", "--input-type=module", "-e", `
     import { readFileSync } from 'node:fs';
     import { createElement } from 'react';
     import { renderToStaticMarkup } from 'react-dom/server';
     import { OfficialTermNote } from './components/officials/official-term-note.tsx';
+    import { Card } from './components/ui/card.tsx';
+    import { personCardSources } from './lib/officials/card-sources.ts';
     const holders = JSON.parse(readFileSync(0, 'utf8'));
-    console.log(JSON.stringify(holders.map(holder => renderToStaticMarkup(createElement(OfficialTermNote, { holder })))));
+    console.log(JSON.stringify(holders.map(holder => renderToStaticMarkup(createElement(Card, {title:holder.name, sources:personCardSources(holder)}, createElement(OfficialTermNote, { holder }))))));
   `], { cwd: process.cwd(), input: JSON.stringify(holders), encoding: "utf8", timeout: 120_000, maxBuffer: 4_000_000 });
   const result: unknown = JSON.parse(output);
   assert.ok(Array.isArray(result) && result.every(value => typeof value === "string"));
@@ -40,12 +43,13 @@ test("every eligible roster term note survives canonical holder lookup and the s
     assert.equal(holder.termEnd, null, "A published note never becomes an inferred end date");
     assert.equal((await seatHolderById(holder.id))?.termNote, source.termNote);
     const markup = markupByHolder.get(holder.id)!;
-    if (!source.termNote) { assert.equal(markup, ""); continue; }
+    if (!source.termNote) { assert.doesNotMatch(markup, /data-official-term-note/); continue; }
     const escaped = renderToStaticMarkup(createElement("span", null, source.termNote)).slice(6, -7);
     assert.ok(markup.includes(escaped), holder.id);
     assert.ok(markup.includes(`data-official-term-note="${holder.id}"`));
     assert.ok(markup.includes(roster.sourceUrl.replaceAll("&", "&amp;")));
     assert.ok(markup.includes(renderToStaticMarkup(createElement("span", null, roster.sourceOrg)).slice(6, -7)));
+    assert.equal((markup.match(/data-card-sources=/g) ?? []).length, 1);
     rendered++;
   }
   assert.equal(rendered, eligible.length);
@@ -54,7 +58,7 @@ test("every eligible roster term note survives canonical holder lookup and the s
 
 test("shared term-note leaf never derives a note from a date or attaches an unresolved roster row", () => {
   const holder = BODY_ROSTERS.flatMap(roster => rosterHoldersForBody(roster.bodyId)).find(row => row.termNote)!;
-  assert.equal(renderTermNotes([{ ...holder, termNote: null, termEnd: "2027-01-01" }])[0], "");
+  assert.doesNotMatch(renderTermNotes([{ ...holder, termNote: null, termEnd: "2027-01-01" }])[0], /data-official-term-note|Roster term or appointment note/);
   const aliases = ROSTER_READER_DISPOSITIONS.filter(row => row.state === "EXACT_DUPLICATE");
   assert.ok(aliases.length > 0);
   for (const row of aliases) assert.ok(BODY_ROSTERS.every(roster => !roster.members.some(member => member.id === row.sourceId)));
@@ -70,8 +74,8 @@ test("roster-source link label never supplies a missing note, publisher or read 
   assert.ok(markup.includes(`href="${holder.sourceUrl!.replaceAll("&", "&amp;")}"`));
   assert.ok(markup.includes("data-card-sources"), "The observed URL remains inside Sources");
   assert.ok(!markup.includes(holder.provenance!.sourceOrg), "No organization is borrowed from another field or record");
-  assert.match(markup.slice(markup.indexOf("Last checked"), markup.indexOf("Verified")), /data-working-on-it=/, "No read date is invented from missing provenance");
-  assert.equal(withoutNote, "");
+  assert.doesNotMatch(markup, /Last checked|Verified|Published by|data-working-on-it/, "Missing metadata rows are omitted");
+  assert.doesNotMatch(withoutNote, /data-official-term-note|Roster term or appointment note/);
   assert.ok(withoutUrl.includes(escapedNote));
   assert.ok(!withoutUrl.includes("<a "));
   assert.ok(!withoutUrl.includes("Published roster"), "No source link label substitutes for an absent URL");

@@ -17,12 +17,9 @@ import type {
   CandidacyRemoval,
   Contest,
   Election,
+  HeldBallotContest,
   Measure,
 } from "../../ballot/types.ts";
-
-/**
- * The Morris County ballot source. `fetch()` reads the one promoted BALLOT_FILING projection.
- */
 
 const SOURCE_NAME = "ballot-nj-morris";
 const NJ_CONTRACT = requiredRoutineContract("nj-morris-filing");
@@ -193,15 +190,10 @@ export const ballotNjMorrisSource: BallotSource = {
   },
 };
 
-/**
- * The contests a point's voter sees: contests whose division contains the
- * point, plus state-level contests for the state those divisions sit in.
- * Pure join on OCD-IDs — never on names.
- */
 export function contestsForDivisions(
   set: BallotSet,
   divisionOcdIds: readonly string[],
-): { contests: Contest[]; absences: BallotAbsence[] } {
+): { contests: Contest[]; absences: BallotAbsence[]; heldContests?: HeldBallotContest[] } {
   const present = new Set(divisionOcdIds);
   for (const id of divisionOcdIds) {
     const m = id.match(/^(ocd-division\/country:us\/state:[a-z]{2})\//);
@@ -210,5 +202,6 @@ export function contestsForDivisions(
   return {
     contests: set.contests.filter((c) => present.has(c.ocdId)),
     absences: set.absences.filter((a) => present.has(a.ocdId)),
+    ...(set.heldContests !== undefined ? { heldContests: set.heldContests.filter(row => present.has(row.ocdId)) } : {}),
   };
 }

@@ -18,6 +18,7 @@ export function identityChipsFor(
   standing: SeatStanding = null,
 ): string[] {
   const chips: string[] = [];
+  if (holder.selectionMethod === "APPOINTED") chips.push("Appointed");
 
   if (holder.state) chips.push(holder.state);
 
@@ -26,7 +27,7 @@ export function identityChipsFor(
   else chips.push(TIER_LABEL[tier]);
 
   // The standing chip is gated on electedness, asked once in `lib/officials/elected-role.ts`.
-  if (standing && standingChipMayAttach(holder.officeTitle)) {
+  if (standing && holder.selectionMethod !== "APPOINTED" && holder.selectionMethod !== "UNKNOWN" && (holder.selectionMethod === "ELECTED_STATEWIDE" || standingChipMayAttach(holder.officeTitle))) {
     if (standing === "INCUMBENT") chips.push("Incumbent");
     if (standing === "CHALLENGER") chips.push("Challenger");
   }

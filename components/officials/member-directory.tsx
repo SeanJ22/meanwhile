@@ -2,7 +2,7 @@
 
 
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
-import { WorkingOnIt } from "@/components/demand/working-on-it";
+import { CardGapContribution } from "@/components/ui/card-gap-context";
 import { ExternalLink } from "lucide-react";
 
 import { useMemberDirectory, type MemberDirectory as DirectoryPayload } from "@/hooks/use-member-directory";
@@ -11,7 +11,6 @@ import {
   type CommitteeNode,
 } from "@/lib/officials/committee-tree";
 import {
-  BATTLECARD_SECTIONS,
   battlecardSectionTitle,
   type BattlecardSectionId,
 } from "@/lib/ballot/battlecard-sections";
@@ -21,10 +20,8 @@ import type { SeatHolder } from "@/lib/officials/lookup";
 
 import { CardSection } from "./card-section";
 
-/* Titles and empty lines come from the same table the ballot battlecard reads. */
+/* Titles come from the same table the ballot battlecard reads. */
 const sectionTitle = (id: BattlecardSectionId) => battlecardSectionTitle(id);
-const sectionEmptyLine = (id: BattlecardSectionId) =>
-  BATTLECARD_SECTIONS.find((s) => s.id === id)?.emptyLine ?? "";
 
 /**
  * Committees and offices near the reader. Directory facts carry no per-row
@@ -40,7 +37,7 @@ export function MemberDirectory({ holder }: { holder: SeatHolder }) {
 
 /**
  * The same two sections as content only, for the ballot battlecard's fixed
- * sections. Null outside the source scope; the slot renders its own empty line.
+ * sections. Missing records contribute to the card gap.
  */
 export function MemberCommitteesContent({ holder }: { holder: SeatHolder }) {
   return <DirectoryContent key={holder.id} holder={holder} only="committees" />;
@@ -75,20 +72,19 @@ export function DirectoryRecordsContent({ holderId, state, only, directory, fail
 
   // Committees are sourced for sitting federal members only; offices also for
   // state legislators. The predicate is lib/officials/member-directory-scope.ts.
-  if (!memberDirectoryReaches(holderId, only,state)) return null;
+  if (!memberDirectoryReaches(holderId, only,state)) return <CardGapContribution id={`${only}:${holderId}`} label={only === "committees" ? "committee assignments" : "district offices"} />;
   const details = directory?.officeDetails ?? null;
 
   if (only === "committees") {
     return (
       <>
+        {committees && committees.some(seat => !seat.jurisdiction) && <CardGapContribution id={`committee-descriptions:${holderId}`} label="committee responsibilities" count={committees.filter(seat => !seat.jurisdiction).length} unit="committee" />}
         {failed ? (
-          <p className="t-detail leading-relaxed text-muted">
-            Couldn&apos;t load the committee record just now.
-          </p>
+          <CardGapContribution id={`committees:${holderId}`} label="committee assignments" />
         ) : committees === null ? (
           <p className="t-detail leading-relaxed text-muted">Loading…</p>
         ) : committees.length === 0 ? (
-          <WorkingOnIt />
+          <CardGapContribution id={`committees:${holderId}`} label="committee assignments" />
         ) : (
           /* Subcommittees indent under their parent and drop its name (lib/officials/committee-tree.ts). */
           <ul>
@@ -118,13 +114,11 @@ export function DirectoryRecordsContent({ holderId, state, only, directory, fail
   return (
     <>
         {failed ? (
-          <p className="t-detail leading-relaxed text-muted">
-            Couldn&apos;t load the office list just now.
-          </p>
+          <CardGapContribution id={`offices:${holderId}`} label="district offices" />
         ) : offices === null ? (
           <p className="t-detail leading-relaxed text-muted">Loading…</p>
         ) : offices.length === 0 ? (
-          <WorkingOnIt />
+          <CardGapContribution id={`offices:${holderId}`} label="district offices" />
         ) : (
           <>
             <p className="mb-1.5 t-caption leading-relaxed text-voice">
@@ -203,61 +197,26 @@ export function DirectoryRecordsContent({ holderId, state, only, directory, fail
   );
 }
 
-/** How many rows a section has, for the header meta. Null while loading. */
-function useDirectoryCounts(holder: SeatHolder): {
-  committees: number | null;
-  offices: number | null;
-} {
-  const { directory } = useMemberDirectory(holder.id,holder.state);
-  return {
-    committees: directory?.committees?.length ?? null,
-    offices: directory?.districtOffices?.length ?? null,
-  };
-}
-
-/**
- * The sections render for everyone; out of scope, `DirectoryContent` returns
- * null and the section shows its empty line from `BATTLECARD_SECTIONS`.
- */
+/** Keep only sections with held records; gaps are collected by the card frame. */
 function MemberDirectoryInner({ holder }: { holder: SeatHolder }) {
-  const counts = useDirectoryCounts(holder);
-  const inScope = memberDirectoryReaches(holder.id);
-  const officesInScope = memberDirectoryReaches(holder.id, "offices",holder.state);
-  return (
-    <>
-      <CardSection
-        title={sectionTitle("committees")}
-        meta={inScope && counts.committees !== null ? String(counts.committees) : null}
-      >
-        {inScope ? (
-          <DirectoryContent holder={holder} only="committees" />
-        ) : (
-          <p className="t-detail leading-relaxed text-muted">
-            {sectionEmptyLine("committees")}
-          </p>
-        )}
-      </CardSection>
-
-      <CardSection
-        title={sectionTitle("offices")}
-        meta={officesInScope && counts.offices !== null ? String(counts.offices) : null}
-      >
-        {officesInScope ? (
-          <DirectoryContent holder={holder} only="offices" />
-        ) : (
-          <p className="t-detail leading-relaxed text-muted">
-            {sectionEmptyLine("offices")}
-          </p>
-        )}
-      </CardSection>
-    </>
-  );
+  const { directory, failed } = useMemberDirectory(holder.id, holder.state);
+  return <>
+    {(["committees", "offices"] as const).map(only => {
+      const records = only === "committees" ? directory?.committees : directory?.districtOffices;
+      if (!memberDirectoryReaches(holder.id, only, holder.state) || failed || records?.length === 0) {
+        return <CardGapContribution key={only} id={`${only}:${holder.id}`} label={only === "committees" ? "committee assignments" : "district offices"} subject={{ type: "CANDIDATE", id: holder.id }} />;
+      }
+      return <CardSection key={only} title={sectionTitle(only)} meta={records ? String(records.length) : null}>
+        <DirectoryRecordsContent holderId={holder.id} state={holder.state} only={only} directory={directory} failed={failed} />
+      </CardSection>;
+    })}
+  </>;
 }
 
 /**
  * One committee seat. The jurisdiction text comes from
  * `unitedstates/congress-legislators`, which carries none for subcommittees;
- * a row without it renders the named gap.
+ * a row without it omits that detail.
  */
 function CommitteeRow({ node, sub = false }: { node: CommitteeNode; sub?: boolean }) {
   const { seat, label } = node;
@@ -284,9 +243,7 @@ function CommitteeRow({ node, sub = false }: { node: CommitteeNode; sub?: boolea
           </p>
           {seat.jurisdictionSource && <CardSourcesContribution id={`jurisdiction:${seat.committeeId}`} sources={[{ what: `What ${label} handles`, provenance: { sourceUrl: seat.jurisdictionSource, sourceOrg: label, collectedAt: "", verifiedAt: null } }]} />}
         </details>
-      ) : (
-        <WorkingOnIt />
-      )}
+      ) : null}
     </>
   );
 }

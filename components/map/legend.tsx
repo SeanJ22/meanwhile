@@ -50,7 +50,7 @@ const LEVEL_TIER: Record<GovernmentLevel, "local" | "state" | "national"> = {
  * off is struck through with a faded dot, so the key and the map agree.
  */
 export function Legend({ inline = false }: { inline?: boolean } = {}) {
-  const { meetings } = useShellData();
+  const { meetings, officePins = 0 } = useShellData();
   const ui = useUi();
 
   const present = useMemo(() => {
@@ -83,7 +83,14 @@ export function Legend({ inline = false }: { inline?: boolean } = {}) {
           <span className="legend-dot" style={LEVEL_ACCENT[level]} />
           {LEVEL_LABEL[level]}
         </span>
-      ))}
+      )).flatMap((item, i) => (LEVEL_ORDER[i] === "local" ? [item, (
+        /* Neutral on purpose: the tier swatches already teach the ring colours. */
+        <span className="legend-item" key="office" data-muted={officePins === 0}
+          title={officePins === 0 ? "Nothing of this kind on the map right now" : undefined}>
+          <span className="legend-office" />
+          Office
+        </span>
+      )] : [item]))}
 
       <span className="legend-item" data-muted={!present.concluded}>
         <span

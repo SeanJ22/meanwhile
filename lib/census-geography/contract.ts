@@ -1,7 +1,3 @@
-/**
- * The Census-geography lookup shared with Admin. Invariants: a ZCTA is not a ZIP; the groupings are parallel,
- * never nested; unknown is never zero; membership is immutable per version key.
- */
 export type Zcta5 = string;
 
 export type UspsZip = string;
@@ -84,6 +80,7 @@ export interface RepresentationGeography {
   readonly chamber?: "upper" | "lower";
   readonly representation?: "overlay" | "tribal";
   readonly geometry?: GeographyGeometry;
+  readonly geometryRef?: import("./boundary-artifacts.ts").BoundaryArtifactRef;
   readonly sourceUrls?: readonly string[];
   readonly sourceOrg?: string;
 }
@@ -153,6 +150,15 @@ export interface Provenance {
   readonly sourceFiles: readonly string[];
   /** SHA-256 of each source file, index-aligned with `sourceFiles`. */
   readonly sourceChecksums: readonly string[];
+  /** Transport validators for the exact source files; used to reuse held overlaps after a fresh source check. */
+  readonly sourceValidators?: readonly {
+    readonly url: string;
+    readonly etag: string | null;
+    readonly lastModified: string | null;
+    readonly bytes: number | null;
+  }[];
+  /** Parser contract that produced these overlaps, checked before reusing them. */
+  readonly parserVersion?: string;
   /** The mapping method, stated plainly. */
   readonly method: string;
   /** When the relationship was computed (ISO 8601). */
@@ -160,6 +166,8 @@ export interface Provenance {
 }
 
 export interface GeographyVersion {
+  /** States whose complete source files are held for this plan; omitted for a national source. */
+  readonly states?: readonly string[];
   readonly key: GeographyVersionKey;
   readonly type: GeographyType;
   readonly plan: string;

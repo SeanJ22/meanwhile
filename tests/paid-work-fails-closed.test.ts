@@ -1,9 +1,3 @@
-/**
- * A pause, ceiling, budget or switch record that cannot be read keeps paid work closed, while plain-code work,
- * routine publication and free discovery carry on. The two long-running scripts' wiring is pinned as source text
- * with positive controls.
- */
-
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -100,45 +94,36 @@ function checkCycleFailsClosed(src: string): void {
   assert.match(closure[0], /unreadableControls,/);
   assert.match(src, /paused: intents\.runnerPause\.paused,\s*\/\*[^*]*\*\/\s*modelHold: laneDisabledReason,/, "FleetSafety does not hold model requests on the lane's answer");
 
-  assert.match(src, /admitScout: \(row\) => \{\s*if \(scoutFor\(row\)\.lane === "DETERMINISTIC"\) return \{ admit: true \};\s*if \(!modelLaneEnabled\)/,
-    "a held route reopened by a later source failure must pass the existing paid admission gates");
-
   /* 4 & 5. The row is read through the trusted reading, before the lane is decided. */
   assert.match(src, /const \{ config, holdPaidWork: configHold \} = adminConfigForPaidWork\(configRead\);/);
   assert.doesNotMatch(src, /isAdminConfig\(cfg\.value\)/, "the old reading that let a corrupt row fall back is back");
   assert.doesNotMatch(src, /built-in fallback \$\$\{[^}]*\} governs this cycle/, "an unreadable row still falls back to the built-in ceiling");
   assert.ok(src.indexOf("adminConfigForPaidWork(configRead)") < src.indexOf("const laneClosure = modelLaneClosure({"), "the row is read after the lane was decided");
 
-  /* 7. One switch, one budget: the Scout tool exists only under the switch and draws on the discovery walk's budget. */
+  /* 7. One switch, one budget: the hunters' search exists only under the switch and draws on the discovery walk's budget. */
   assert.match(src, /const searchBudget = !discoverySearchOn \? null : durableSearchBudget\(\{/);
   assert.equal(src.split("durableSearchBudget(").length - 1, 1, "a second paid-search budget was built");
-  assert.match(src, /const scoutSearch = searchBudget === null \? null : makeScoutSearch\(\{[\s\S]{0,200}?budget: searchBudget,/, "the Scout tool is built outside the switch or its budget");
-  assert.match(src, /const discoverySearch = searchBudget === null \? null : makeDiscoverySearch\(\{[\s\S]{0,200}?budget: searchBudget,/);
-  assert.ok(src.indexOf("const scoutSearch =") < src.indexOf("const scoutFor ="), "the Scout tool is referenced before it is built");
+  assert.match(src, /const scoutSearch = searchBudget === null \? null : makeHuntSearch\(\{[\s\S]{0,200}?budget: searchBudget,/, "the hunters' search is built outside the switch or its budget");
+  assert.ok(src.indexOf("const scoutSearch =") < src.indexOf("async function makeAutonomousFleet"), "the hunters' search is referenced before it is built");
 
   /* 8. The auditor admits against the ceiling in force. */
   assert.match(src, /autonomousStandingRuntime\(\{(?:(?!\}\);)[\s\S])*?auditCeilingUsd: effectiveCeilingUsd,\s*lifetimeHuntSubject:/,
     "the auditor is not given the ceiling in force");
 }
 
-/** Free work runs exactly as before: nothing paid, and nothing unreadable, gates it. */
-function checkFreeWorkUntouched(src: string): void {
+/** Free work obeys the runner pause and remains independent of paid controls and explicit dispatches. */
+function checkFreeStandingWork(src: string, walk = source("scripts/platform-census-runner.mts")): void {
   assert.match(
     src,
     /\nif \(!dry && !canary && !intents\.runnerPause\.paused\) \{\s*try \{\s*const retained = await retainRecentRoutineMeetingEvidence\(/,
     "routine meeting intake is gated differently",
   );
-  const walk = src.slice(src.indexOf('let meetingsDiscoveryState = "not run: the meetings discovery pass has not started";'), src.indexOf("meetingsDiscovery = await runMeetingsDiscovery(repos, {"));
-  assert.ok(walk.length > 0, "the discovery walk anchors moved");
-  assert.match(
-    walk,
-    /if \(!MEETINGS_DISCOVERY_ENABLED\) \{[\s\S]*?\} else if \(dry \|\| canary\) \{[\s\S]*?\} else if \(discoveryToWalk\.length === 0\) \{[\s\S]*?\} else \{/,
-    "the free discovery walk is gated differently",
-  );
-  for (const paidFact of ["modelLaneEnabled", "laneClosure", "laneDisabledReason", "unreadableControls", "configHold", "intentLogUnreadable", "ownerIntentsUnreadableByRunner"]) {
-    assert.ok(!walk.includes(paidFact), `the free discovery walk now depends on ${paidFact}`);
-  }
-  assert.match(src, /const MEETINGS_DISCOVERY_ENABLED = process\.env\.WTP_MEETINGS_DISCOVERY !== "off";/);
+  assert.match(walk, /intents.runnerPause.paused/);
+  assert.match(walk, /REGISTRATION_TARGETS.map/);
+  assert.match(walk, /refreshDotgovCensusLeads\(repos, runtime, state\)/);
+  assert.match(walk, /readPlatformCensusNeeds\(state, null,/);
+  assert.match(walk, /runCensusState/);
+  assert.doesNotMatch(walk, /modelLaneEnabled|laneClosure|scoutFor/);
   assert.match(src, /const dispatchWorkWrites = !dry && !canary && ONLY === null && IDS === null && !intents\.runnerPause\.paused;/);
   assert.match(src, /const dispatchScopes = expansionPlan\?\.scopes \?\? \[\];/);
   assert.match(src, /for \(const \{ intent \} of dispatchDetails\)[\s\S]*?for \(const t of carriedDispatchTargets/);
@@ -152,8 +137,8 @@ test("freshness-shadow.mts closes every paid path on an unreadable or ignored co
   checkCycleFailsClosed(source("scripts/freshness-shadow.mts"));
 });
 
-test("PRODUCTION TODAY: routine intake, the free discovery walk and dispatch-work writes are gated exactly as before", () => {
-  checkFreeWorkUntouched(source("scripts/freshness-shadow.mts"));
+test("PRODUCTION TODAY: routine intake and standing discovery run while paid controls are held, and obey the explicit runner pause", () => {
+  checkFreeStandingWork(source("scripts/freshness-shadow.mts"));
 });
 
 test("POSITIVE CONTROL: a cycle that drops any fail-closed wire, or gates free work on paid facts, fails its checker", () => {
@@ -163,9 +148,8 @@ test("POSITIVE CONTROL: a cycle that drops any fail-closed wire, or gates free w
     ["  unreadableControls,\n});", "});", "a lane blind to unreadable controls"],
     ["  intentLogUnreadable = error instanceof Error ? error.message : String(error);\n", "", "an unreadable log that is not captured"],
     ["modelHold: laneDisabledReason,", "", "a FleetSafety that reserves under a closed lane"],
-    ["const scoutSearch = searchBudget === null ? null : makeScoutSearch({", "const scoutSearch = makeScoutSearch({", "a Scout search outside the switch"],
+    ["const scoutSearch = searchBudget === null ? null : makeHuntSearch({", "const scoutSearch = makeHuntSearch({", "a hunters' search outside the switch"],
     ["auditCeilingUsd: effectiveCeilingUsd,", "", "an auditor on the static default"],
-    ['if (scoutFor(row).lane === "DETERMINISTIC") return { admit: true };', 'if (heldScoutFor(row) !== null) return { admit: true };', "a paid investigation admitted from invalidated held discovery"],
   ];
   for (const [from, to, what] of mutations) {
     const mutated = src.replace(from, to);
@@ -174,10 +158,12 @@ test("POSITIVE CONTROL: a cycle that drops any fail-closed wire, or gates free w
   }
   const intakeOnLane = src.replace("if (!dry && !canary && !intents.runnerPause.paused) {\n  try {\n    const retained", "if (!dry && !canary && !intents.runnerPause.paused && modelLaneEnabled) {\n  try {\n    const retained");
   assert.notEqual(intakeOnLane, src);
-  assert.ok(fails(() => checkFreeWorkUntouched(intakeOnLane)), "routine intake gated on the paid lane passed");
-  const walkOnUnreadable = src.replace("} else if (discoveryToWalk.length === 0) {", "} else if (unreadableControls.length > 0 || discoveryToWalk.length === 0) {");
-  assert.notEqual(walkOnUnreadable, src);
-  assert.ok(fails(() => checkFreeWorkUntouched(walkOnUnreadable)), "a free walk stopped by an unreadable control passed");
+  assert.ok(fails(() => checkFreeStandingWork(intakeOnLane)), "routine intake gated on the paid lane passed");
+  const census = source("scripts/platform-census-runner.mts");
+  const censusOnPaidLane = census.replace("if (stopped) break;", "if (stopped || !modelLaneEnabled) break;");
+  assert.notEqual(censusOnPaidLane, census);
+  assert.ok(fails(() => checkFreeStandingWork(src, censusOnPaidLane)), "standing census gated on the paid lane passed");
+
 });
 
 /* ------------------------------------------------ pilot-runner.mts, as text */

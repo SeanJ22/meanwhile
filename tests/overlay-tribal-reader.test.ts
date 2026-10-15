@@ -11,6 +11,8 @@ import { panelSeatsFor, STATE_SEAT_TYPES } from "../lib/state/panel-seats.ts";
 import { seatHolderForMembership, type SeatHolder } from "../lib/officials/lookup.ts";
 import type { CoverageSummary } from "../lib/registry/coverage.ts";
 import { normalize, yamlToPeople } from "../lib/sources/plural/index.ts";
+import { districtSubject, spotDivisionsFor } from "../components/map/district-subject.tsx";
+import type { DistrictHit } from "../lib/map/districts.ts";
 
 function holderFor(reference = TRIBAL_SEAT_REFERENCES[0]): SeatHolder {
   return {id:"test:tribal-holder",name:"Sourced Representative",officeTitle:"State Representative",state:reference.state,chamber:reference.chamber,
@@ -103,6 +105,26 @@ test("one address retains its base and overlay district, with independent labels
   assert.ok(panel.yours.every(row => row.standing === "CONFIRMED"));
   assert.deepEqual(panel.yours.map(row => legislativeRepresentationLabel(row.divisionType,row.representation)),["Base district","Overlay district"]);
   assert.deepEqual(panel.excluded,[]);
+});
+
+test("a clicked spot retains base, overlay and tribal seats after the district card extraction", () => {
+  const reference = TRIBAL_SEAT_REFERENCES[0];
+  const prefix = `ocd-division/country:us/state:${reference.state.toLowerCase()}`;
+  const base: DistrictHit = { type: "state-house", tier: "state", typeLabel: "State House", state: reference.state,
+    ocdId: `${prefix}/sldl:1`, label: "Base seat" };
+  const overlay: DistrictHit = { ...base, ocdId: `${prefix}/sldl:overlay`, label: "Overlay seat", representation: "overlay" };
+  const tribal: DistrictHit = { ...base, ocdId: `${prefix}/aiannh:${reference.aiannhAreaIds[0].slice(0, 4)}`,
+    label: reference.nation, representation: "tribal", nation: reference.nation, sourceUrls: [reference.officialRosterUrl] };
+  const hits = [base, overlay, tribal];
+  const spot = spotDivisionsFor(base, hits);
+  assert.deepEqual(spot.slice(0, 3).map(row => row.representationLabel), ["Base district", "Overlay district", "Tribal representative"]);
+  assert.equal(spot[2].description, tribalSeatDescription(reference.nation));
+  for (const selected of hits) {
+    const card = districtSubject(selected, [], null, {}, hits);
+    assert.deepEqual(card.spotRepresentation?.map(row => row.ocdId), [...hits.map(hit => hit.ocdId), prefix]);
+    assert.ok(card.sources.some(source => source.provenance.sourceUrl === reference.officialRosterUrl));
+    assert.doesNotMatch(card.representationNote, /vacant/i);
+  }
 });
 
 test("a confirmed base district does not discard an overlay whose point hit is still unknown", () => {

@@ -1,19 +1,33 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
-import test from "node:test";
+import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import test, { after } from "node:test";
 import { indexDivisions, normalize, yamlToPeople, type PluralPerson } from "../lib/sources/plural/index.ts";
 import { statePeopleDivisions } from "../lib/sources/plural/acquisition.ts";
 import { censusWorkDivision } from "../lib/census-geography/division-id.ts";
 import { indexByDivision } from "../lib/officials/lookup.ts";
 import { representationDivisionsAt } from "../lib/geo/representation-geography.ts";
-import { geographyOfRows, type Row } from "../lib/control-plane/admin-view/promoted-slices.ts";
+import { stateContainers, type ReadOnlyQuery } from "../lib/control-plane/admin-view/promoted-slices.ts";
+import { buildCensusDistrictEdge } from "../lib/census-geography/district-edge.ts";
+import { hydrateBoundaryGeometries } from "../lib/census-geography/boundary-artifacts.ts";
+import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import type { BuiltScope } from "../lib/census-geography/dataset.ts";
 import { realOverlayScope, realTribalScope, SOURCE_FIXTURE_NOW } from "./helpers/representation-source-fixtures.ts";
 
-function rows(scope: BuiltScope): Row[] {
-  return [{row_kind:"scope",type:scope.type,version:scope.version,plan:scope.versionMeta.plan,version_meta:scope.versionMeta},
-    ...scope.groupings.map(group=>({row_kind:"container",type:scope.type,version:scope.version,plan:scope.versionMeta.plan,
-      geoid:group.geoid,label:group.label,state_abbr:group.stateAbbr,state_fips:group.stateFips,ocd_id:group.ocdId,representation_geography:group,member_states:group.memberStates}))];
+const artifactDirectory = mkdtempSync(join(tmpdir(), "overlay-seat-linking-"));
+const artifactStore = new LocalFileArtifactStore(artifactDirectory);
+const previousDirectory = process.env.WTP_READER_EDGE_DIR;
+process.env.WTP_READER_EDGE_DIR = artifactDirectory;
+after(() => {
+  rmSync(artifactDirectory, { recursive: true, force: true });
+  if (previousDirectory === undefined) delete process.env.WTP_READER_EDGE_DIR;
+  else process.env.WTP_READER_EDGE_DIR = previousDirectory;
+});
+async function sourceQuery(scope: BuiltScope, version: string): Promise<ReadOnlyQuery> {
+  const index = await buildCensusDistrictEdge({ formatVersion: 1, builtAt: SOURCE_FIXTURE_NOW, coverage: "official overlay and tribal source fixture",
+    scopes: [scope], zctaUniverse: [...new Set(scope.groupings.flatMap(group => group.overlaps.map(overlap => overlap.zcta5)))] }, version, artifactStore);
+  return async () => [[{ version_id: version, payload: index }]];
 }
 
 function sourcePerson(row: Record<string,string>): PluralPerson {
@@ -28,7 +42,8 @@ const nativeSources = new Map([
 
 test("Rockingham 31 links through its reference code to the agreeing real overlay, and CH16 keeps its exact source disagreement",async()=>{
   const scope = await realOverlayScope();
-  const held = await statePeopleDivisions("NH",SOURCE_FIXTURE_NOW,async()=>[[{version_id:"actual-source-overlay"}],rows(scope)]);
+  const query = await sourceQuery(scope, "actual-source-overlay");
+  const held = await statePeopleDivisions("NH",SOURCE_FIXTURE_NOW,query);
   assert.equal(held.kind,"HELD");
   if(held.kind!=="HELD")return;
   const index = indexDivisions(held.value);
@@ -49,14 +64,18 @@ test("Rockingham 31 links through its reference code to the agreeing real overla
 
 test("the real Houlton trust-land point returns its full seat, Passamaquoddy links every referenced area, and Portland returns none",async()=>{
   const scope = realTribalScope();
-  const held = await statePeopleDivisions("ME",SOURCE_FIXTURE_NOW,async()=>[[{version_id:"actual-source-aiannh"}],rows(scope)]);
+  const query = await sourceQuery(scope, "actual-source-aiannh");
+  const held = await statePeopleDivisions("ME",SOURCE_FIXTURE_NOW,query);
   assert.equal(held.kind,"HELD");
   if(held.kind!=="HELD")return;
   const people = ["aaron-dana","brian-reynolds"].flatMap(file=>yamlToPeople(readFileSync(new URL(`./fixtures/geography/openstates-tribal/${file}.yml`,import.meta.url),"utf8"),"me",nativeSources.get(file)!,SOURCE_FIXTURE_NOW));
   const roster = normalize(people,indexDivisions(held.value),SOURCE_FIXTURE_NOW,"US-ME");
   assert.deepEqual(roster.unmatched,[]);
   const holders = indexByDivision([roster]);
-  const slice = geographyOfRows(rows(scope),false);
+  const state = await stateContainers("ME", ["aiannh"], false, query, artifactStore);
+  assert.equal(state.kind, "HELD");
+  if (state.kind !== "HELD") throw new Error("The source-backed state artifact was not readable");
+  const slice = await hydrateBoundaryGeometries(state.value, "accurate", artifactStore);
   const seats = (point:[number,number])=>representationDivisionsAt(point,slice).flatMap(hit=>holders.get(hit.ocdId)??[]);
   assert.deepEqual(seats([-67.8072179,46.1888323]).map(holder=>[holder.name,holder.nation]),[["Brian Reynolds","Houlton Band of Maliseet Indians"]]);
   assert.deepEqual(seats([-70.2568,43.6591]),[]);

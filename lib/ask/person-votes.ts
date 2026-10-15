@@ -2,6 +2,8 @@ import { normalizeName } from "../routing/exact-name.ts";
 import type { EvidenceRecord } from "./evidence.ts";
 import type { LocalVoteRecord } from "../outcomes/local-votes.ts";
 import { formatDateLong } from "../text/format-date.ts";
+import { officeIdentity } from "../officials/office-identity.ts";
+import { readerOfficialsQuestion, type ReaderOfficialsAsk, type HeldOfficial } from "./reader-officials.ts";
 
 export interface PersonVotesQuestion {
   slot: string;
@@ -20,17 +22,43 @@ const FORMS: readonly RegExp[] = [
 const PRONOUNS = /\b(?:he|she|they|them|his|her|their|it|its|my|our|your|i|me|we|you)\b/;
 
 export function personVotesQuestionShape(question: string): PersonVotesQuestion | null {
+  return voteQuestionShape(question, false);
+}
+
+function voteQuestionShape(question: string, officePronouns: boolean): PersonVotesQuestion | null {
   const normalized = normalizeName(question);
   if (!normalized || normalized.length > 140) return null;
   for (const form of FORMS) {
     const match = form.exec(normalized);
     const slot = match?.[1]?.trim();
-    if (!slot || PRONOUNS.test(slot)) continue;
+    if (!slot || !officePronouns && PRONOUNS.test(slot)) continue;
     const topic = match?.[2]?.trim().replace(/^(?:the|a|an) /, "") ?? null;
     if (topic !== null && (topic.split(" ").length > 6 || /\b(?:and|or|but)\b/.test(topic))) return null;
     return { slot, topic: topic && topic.length > 0 ? topic : null };
   }
   return null;
+}
+
+interface ReaderPersonVotesQuestion {
+  office: ReaderOfficialsAsk;
+  topic: string | null;
+}
+
+/** A reader's own legislative office is resolved from their divisions, never a name guess. */
+export function readerPersonVotesQuestion(question: string): ReaderPersonVotesQuestion | null {
+  const shape = voteQuestionShape(question, true);
+  if (!shape || !/^(?:my|our) /.test(shape.slot)) return null;
+  const office = readerOfficialsQuestion(`Who is ${shape.slot}?`);
+  const legislative = new Set(["us_senator", "us_representative", "state_senator", "state_lower_house"]);
+  return office && office.keys.every(key => legislative.has(key)) ? { office, topic: shape.topic } : null;
+}
+
+export function readerPersonVoteOfficials(
+  ask: ReaderPersonVotesQuestion,
+  held: readonly HeldOfficial[],
+): HeldOfficial[] {
+  return [...new Map(held.filter(row => ask.office.keys.includes(officeIdentity(row.seat.officeTitle.replace(/\s*\([^)]*\)\s*$/, "")) ?? ""))
+    .map(row => [row.seat.id, row])).values()];
 }
 
 const FILLER: ReadonlySet<string> = new Set([

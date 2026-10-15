@@ -1,6 +1,11 @@
+import { composePopulationAnswer, populationQuestion, populationEvidenceIds, readPopulationEvidence } from "@/lib/ask/population";
+import { withPublishedAskSettings, askPlaybookVersion } from "@/lib/ask/runtime-settings.ts";
 import { governmentFinanceEvidence, governmentFinanceQuestion, composeGovernmentFinanceAnswer } from "@/lib/ask/government-finance";
-import { governmentListingEntity, governmentListingEvidence, readerGovernmentListings } from "@/lib/ask/government-listings";
+import { isBillQuestion,legiscanBillEvidence } from "@/lib/ask/legiscan-bills";
+import { openDataQuestion, openDataEvidenceFor } from "@/lib/ask/open-data";
+import { governmentListingEntity, governmentListingEvidenceRecords, readerGovernmentListings } from "@/lib/ask/government-listings";
 import { prlStatementEvidence, readPrlForSubject } from "@/lib/sources/prl/person";
+import { federalAskEvidence } from "@/lib/sources/congress/reader";
 import { type MeetingsSnapshot } from "@/lib/meetings/snapshot";
 import { ensureReaderAuthorityEdge, readReaderEdgeMeetings, readReaderManifest } from "@/lib/meetings/edge-serving";
 import { enterReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "@/lib/registry/runtime-edge";
@@ -10,6 +15,7 @@ import type { Meeting } from "@/lib/sources/types";
 import type { AskSitting } from "@/lib/ask/answer";
 import { type AgendaDocumentLike } from "@/lib/routing/agenda-search";
 import { seatHolderById, settleCommentAccessRead, settleFederalDirectoryRead, settleRegistryAuthorityReads } from "@/lib/registry/server";
+import { readCommentAccessFacts } from "@/lib/registry/comment-access";
 import { officialIdsForCandidacy } from "@/lib/funding/campaign-money";
 import { canonicalOfficialAliases } from "@/lib/ask/official-identity";
 import {
@@ -42,10 +48,10 @@ import {
 import { snapshotEntities, titleCaseName } from "@/lib/ask/inventory";
 import { bodyIdentityIndex, canonicalBodyIdentity } from "@/lib/ask/body-identity";
 import { statementEvidenceFor } from "@/lib/ask/statements";
-import { stanceAnswerability } from "@/lib/ask/stance-answerability";
 import { fetchThroughKey, composeFinanceDetail } from "@/lib/ask/fetch-through-key";
 import { campaignMoneyEvidenceFor } from "@/lib/ask/campaign-money";
 import { candidateProfileEvidenceFor } from "@/lib/ask/candidate-profile";
+import { fecRaceMoneyQuestion, fecRaceMoneyAnswer, requestedFecSubjects } from "@/lib/ask/fec-national";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { partyConflictCardForFiling, reconciledCandidacyIdForCard, type PartyConflictFiling } from "@/lib/identity/az-2026";
 import { meetingOutcomeEvidenceFor, outcomeSittingsOnDate, meetingRecordQuestionClass, type HeldMeetingAction } from "@/lib/ask/meeting-outcomes";
@@ -56,8 +62,8 @@ import { formatDateLong } from "@/lib/text/format-date";
 import { unavailableInterpretation, type AskIntent, type AskInterpretation, type AskTemporal } from "@/lib/ask/intent";
 import { asksWhatAnOfficeDoes, officeInQuestion } from "@/lib/ask/office-question";
 import { interpretQuestion, interpretWithoutModel } from "@/lib/ask/interpret";
-import { bodyNameFromQuestion, groupMoneyShapeForBoundSubject, lexicalQuestionShape, lexicalReading, moneyShapeForBoundPerson, otherNamedPerson, personVotesShapeForBoundPerson, shapeForBoundBody, unheldNamedBodyQuestion } from "@/lib/ask/lexical-reading";
-import { composePersonVotes } from "@/lib/ask/person-votes";
+import { bodyNameFromQuestion, groupMoneyShapeForBoundSubject, lexicalQuestionShape, lexicalReading, moneyShapeForBoundPerson, otherNamedPerson, personVotesShapeForBoundPerson, shapeForBoundBody, unheldNamedBodyQuestion, type LexicalReading } from "@/lib/ask/lexical-reading";
+import { composePersonVotes, personVotesQuestionShape, readerPersonVotesQuestion, readerPersonVoteOfficials } from "@/lib/ask/person-votes";
 import { composeBodyRoster, composeReaderOfficials, placeNamesOf, readerOfficialsQuestion } from "@/lib/ask/reader-officials";
 import { areaMeetingsQuestion, composeAreaMeetings, type AreaSitting } from "@/lib/ask/area-meetings";
 import { composeBallotOnlyAnswer } from "@/lib/ask/ballot-only-answer";
@@ -98,9 +104,6 @@ import {
   settleCandidateProfilesRead,
 } from "@/lib/civic-data/manual-read-models";
 import { promotedVersionOrThrow } from "@/lib/civic-data/read-model";
-import {
-  refreshCommentAccessFromPromoted,
-} from "@/lib/civic-data/curated-reader-read-model";
 import { settleOfficeholderStatementsRead } from "@/lib/corpus/data-plane";
 import {
   absencesForDivisions,
@@ -195,7 +198,6 @@ import { statesOf, voteEvidenceForIncludingHistory, voteEvidenceReadsStateRollCa
 export const runtime = "nodejs";
 
 /** Logs the resolved model and effort once at startup, so an override is visible in the deployment log. Configuration only, never request content. */
-console.log(askModelStartupLine());
 
 const MAX_BODY_BYTES = 16384;
 const MAX_QUESTION_CHARS = 400;
@@ -390,6 +392,13 @@ function personEntities(seats: readonly SeatHolder[]): BindableEntity[] {
 }
 
 export async function POST(request: Request) {
+  return withPublishedAskSettings(() => {
+    console.log(askModelStartupLine());
+    return answerWithSettings(request);
+  });
+}
+
+async function answerWithSettings(request: Request) {
   const started = Date.now();
   const trace: AskTrace = emptyTrace();
 
@@ -467,7 +476,8 @@ export async function POST(request: Request) {
    * edge bundle when one exists, with the database as fallback. Each source owns its read state and failure
    * gap: a missing or invalid pointer fails that source closed without failing the request.
    */
-  const topicRoute = topicFocusedQuestion(question);
+  const readerVoteAsk = readerPersonVotesQuestion(question);
+  const topicRoute = readerVoteAsk || personVotesQuestionShape(question) ? null : topicFocusedQuestion(question);
   /* "Who is my state senator?": a lookup in the officeholders held for the reader's divisions (lib/ask/reader-officials.ts). It reads the registry and the federal directory and nothing else. */
   const officialsAsk = !topicRoute && ocdIds.length > 0 ? readerOfficialsQuestion(question, statesOf(ocdIds).map((state) => state.toLowerCase()), placeNamesOf(ocdIds)) : null;
   /* "What meetings are happening this week?": the sittings held for the reader's divisions (lib/ask/area-meetings.ts). It reads the registry and the calendar and nothing else. */
@@ -521,7 +531,7 @@ export async function POST(request: Request) {
     // Public-comment rules are an independent optional family. Initialize its
     // pointer, but do not let a store outage suppress meetings, ballots,
     // officials, or any other source's answer.
-    ? timed("commentAccess", () => refreshCommentAccessFromPromoted().catch(() => undefined))()
+    ? timed("commentAccess", () => readCommentAccessFacts().catch(() => undefined))()
     : null;
   let authorityEdge: ReaderAuthorityEdgeBundle | null = null;
   if (edgeManifest?.authorityArtifacts) {
@@ -530,6 +540,33 @@ export async function POST(request: Request) {
         : leanAsk ? READER_MAP_AUTHORITY_FAMILIES
         : deferUnrelatedEvidence ? AUTHORITY_FAMILIES.filter(family => !unrelatedFamilies.has(family)) : AUTHORITY_FAMILIES).catch(() => null))();
     if (authorityEdge) enterReaderAuthorityEdge(authorityEdge);
+  }
+  if (fecRaceMoneyQuestion(question)) {
+    await timed("funding", settleFundingRead)().catch(() => undefined);
+    let direct: ReturnType<typeof fecRaceMoneyAnswer> = null;
+    try { direct = fecRaceMoneyAnswer(question, typeof body.today === "string" ? body.today : new Date().toISOString().slice(0, 10)); } catch { /* The regular answer path records a failed holding. */ }
+    if (direct) {
+      const verdict = validateAnswer(direct.answer, direct.citedUrls, direct.pack);
+      if (verdict.kind === "PASSED") {
+        const interpretation = { ...unavailableInterpretation(), intent: direct.pack.intent, temporal: direct.pack.temporal };
+        trace.interpretation = { ran: false, why: "fec-registration-money", intent: direct.pack.intent, temporal: direct.pack.temporal, fellBackToDeterministic: true };
+        trace.resolution = { state: "NONE", basis: "FEC_REGISTRATION_SCOPE" };
+        trace.retrieval = { selection: "FEC_REGISTRATION_SCOPE", recordCount: direct.pack.records.length,
+          sourceCount: direct.citedUrls.length, gapCount: direct.pack.gaps.length, denominators: direct.pack.denominators };
+        trace.composition = { kind: "MONEY", shape: "FEC_MOST_RAISED", basis: "FEC_FILED_TOTALS", composed: true, passed: true };
+        trace.validation = { ran: true, passed: true, checked: verdict.checked };
+        trace.synthesis = { ran: false, why: "composed-from-fec-records" };
+        trace.sourcesLoaded = "ESSENTIAL"; trace.preloads = preloadMs; trace.answerMode = "STRUCTURED_GROUNDED"; trace.totalMs = Date.now() - started;
+        await captureDelivered({ request, question, interpretation, resolutionState: "NONE", mode: "STRUCTURED_GROUNDED",
+          subjectIds: [...new Set(direct.pack.records.flatMap(row => row.subjectId ? [row.subjectId] : []))], answer: direct.answer,
+          answerModel: null, validationPassed: true, records: direct.pack.records, gaps: direct.pack.gaps,
+          surface: body.surface === "MAP" || body.surface === "BALLOT" ? body.surface : "UNKNOWN",
+          approximateLocation: typeof body.approximateLocation === "string" ? body.approximateLocation : null,
+          ocdIds, residency: stampResidency(readLocationOrigin(body.locationOrigin)),
+          continuityKey: typeof body.continuityKey === "string" ? body.continuityKey : "" });
+        return Response.json(askAnswer({ mode: "STRUCTURED_GROUNDED", pack: direct.pack, answer: direct.answer, contacts: [], trace }));
+      }
+    }
   }
   // Confirm the hint from the published ballot before leaving any source
   // unread. Legacy authorities and unmatched titles continue through the full path.
@@ -763,6 +800,13 @@ export async function POST(request: Request) {
     ballotOfficialIds.set(candidate.id, officialIds);
     for (const officialId of officialIds) officialToBallot.set(officialId, candidate.id);
   }
+  let fecSubjects: ReturnType<typeof requestedFecSubjects> = [];
+  if (!deterministicTopicRoute && !areaTopicRoute && !namedBodyTopicRoute && !leanAsk) {
+    try { fecSubjects = requestedFecSubjects(question, preferredOfficialIds).map(row => {
+      const id = officialToBallot.get(row.entity.id) ?? officialAliases.get(row.entity.id) ?? row.entity.id;
+      return { entity: { ...row.entity, id }, record: { ...row.record, subjectId: id } };
+    }); } catch { /* The funding source read already records its failure. */ }
+  }
   /* A candidate held as a certified card and as a filing with a different party binds to the card; the answer carries both records and both parties, never one merged. */
   const partyConflictFilings = new Map<string, PartyConflictFiling>();
   /* A surface that focuses the filing record itself means that record: it keeps its own id. */
@@ -770,6 +814,7 @@ export async function POST(request: Request) {
   const inventory = [
     ...bodies,
     ...heldFilings.map(row => row.entity),
+    ...fecSubjects.map(row => row.entity),
     ...people.map((person) => ({ ...person, id: officialToBallot.get(person.id) ?? officialAliases.get(person.id) ?? person.id })),
     ...ballotInventory.entities.map((entity) => {
       const pair = entity.id.startsWith("ballot-az-") && !surfaceIds.has(entity.id) ? partyConflictCardForFiling(entity.id) : null;
@@ -778,6 +823,16 @@ export async function POST(request: Request) {
       return { ...entity, id: pair.cardKey };
     }),
   ];
+  let readerVoteChoices: BindableEntity[] = readerVoteAsk ? [...new Map(readerPersonVoteOfficials(readerVoteAsk, officeholders.held)
+    .flatMap(({ seat }) => {
+      const id = officialToBallot.get(seat.id) ?? officialAliases.get(seat.id) ?? seat.id;
+      const entity = inventory.find(row => row.id === id && row.nameClass === "person");
+      return entity ? [[entity.id, entity] as const] : [];
+    })).values()] : [];
+  const focusedVoteIds = new Set(readSubjectRefs(body.activeSubjects).filter(ref => ref.focused).flatMap(ref => ref.id ? [ref.id] : []));
+  const focusedVoteChoices = readerVoteChoices.filter(entity => focusedVoteIds.has(entity.id) ||
+    [...focusedVoteIds].some(id => (officialToBallot.get(id) ?? officialAliases.get(id) ?? id) === entity.id));
+  if (focusedVoteChoices.length === 1) readerVoteChoices = focusedVoteChoices;
   /* The office a held candidate is on the ballot for: a race the reader names ("for her state senate race") must be it. */
   const officeOf = (id: string) => ballotInventory.subjects.get(id)?.contestTitle ?? null;
 
@@ -827,6 +882,7 @@ export async function POST(request: Request) {
   /* The writing ladder: the fast writer first for every question; the frontier only when its answer fails a check. */
   const ladder = synthesisLadder();
   const ladderKey = ladderIdentity(ladder);
+  const writerCacheModel = `${ladderKey.model}:${askPlaybookVersion("ASK_WRITER")}`;
   const callerKey = askCallerKey(process.env, markerFromRequest(request).runClass);
   const lapAt = (name: string, at: number) => { stageMs[name] = at - stageMark; stageMark = at; };
   type PackPath = Extract<Awaited<ReturnType<typeof answerPath>>, { kind: "PACK" }>;
@@ -837,7 +893,7 @@ export async function POST(request: Request) {
     intent: path.pack.intent,
     temporal: path.pack.temporal,
     selection: path.selection,
-    writerInput: synthesisCacheKey({ ...path.pack, intent: "UNKNOWN" }, ladderKey.model, ladderKey.effort),
+    writerInput: synthesisCacheKey({ ...path.pack, intent: "UNKNOWN" }, writerCacheModel, ladderKey.effort),
   });
   /* Start the answer from the code's own reading while the model reads (`lib/ask/speculative-reading.ts`); the model's reading still decides. `WTP_ASK_SPECULATION=off` turns it off. */
   const speculationEnabled = Boolean(process.env.ANTHROPIC_API_KEY) && process.env.WTP_ASK_SPECULATION !== "off";
@@ -848,10 +904,9 @@ export async function POST(request: Request) {
     try {
       const path = await answerPath(structuredClone(reading.interpretation), emptyTrace());
       if (path.kind !== "PACK" || path.composed || !packHasEvidence(path.pack) ||
-        path.pack.subject?.kind === "MEASURE" && requestedMeasureVotes(question).length > 0 ||
-        stanceAnswerability(path.pack) === "UNVERIFIED_PERSONAL_STANCE") return { started: false, why: "code-reading-needs-no-writer", ...guess };
+        path.pack.subject?.kind === "MEASURE" && requestedMeasureVotes(question).length > 0) return { started: false, why: "code-reading-needs-no-writer", ...guess };
       const outcome = readingOutcome(path);
-      const cached = synthesisCache.get(synthesisCacheKey(path.pack, ladderKey.model, ladderKey.effort));
+      const cached = synthesisCache.get(synthesisCacheKey(path.pack, writerCacheModel, ladderKey.effort));
       const controller = new AbortController();
       let settled = Boolean(cached);
       const writing = cached ? Promise.resolve(cached) : synthesizeWithLadder(path.pack, {
@@ -883,7 +938,10 @@ export async function POST(request: Request) {
   const unheldBody = !topicRoute && !leanAsk && !ballotAsk ? unheldNamedBodyQuestion(question, namedBodies) : null;
   const modelFreeTopicRoute = deterministicTopicRoute || areaTopicRoute || namedBodyTopicRoute || leanAsk || Boolean(ballotAsk) || Boolean(unheldBody);
   /* A question in a canonical shape whose name binds one body identically in every binder is read in code (`lib/ask/lexical-reading.ts`); anything else goes to the model. */
-  const lexical = modelFreeTopicRoute ? null : lexicalReading({
+  const readerVoteReading: LexicalReading | null = readerVoteAsk && readerVoteChoices.length ? { shape: "PERSON_VOTES" as const,
+    interpretation: { ...unavailableInterpretation(), intent: "PERSON_RECORD" as const, temporal: { kind: "NONE" as const } },
+    subjectId: readerVoteChoices.length === 1 ? readerVoteChoices[0]!.id : "" } : null;
+  const lexical = modelFreeTopicRoute ? null : readerVoteReading ?? lexicalReading({
     question, inventory, namedBodies, confirmation: body.confirmation, activeSubjects, priorSubjects, officeOf,
     readerGoverning: scopedBodies.filter((entry) => entry.ocdId && (entry.bodyId === `${entry.ocdId}#governing` || entry.bodyId === `${entry.ocdId}#board`))
       .flatMap((entry) => inventory.filter((entity) => entity.id === entry.bodyId)),
@@ -913,7 +971,7 @@ export async function POST(request: Request) {
       trace.sourcesLoaded = "ALL";
     }
   }
-  const interpretationKey = modelFreeTopicRoute || lexical ? null : interpretationCacheKey(question, interpretContext, resolveAskRoleModel("READER"));
+  const interpretationKey = modelFreeTopicRoute || lexical ? null : interpretationCacheKey(question, interpretContext, `${resolveAskRoleModel("READER")}:${askPlaybookVersion("ASK_READER")}`);
   const cachedInterpretation = interpretationKey ? interpretationCache.get(interpretationKey) : null;
   // The model's reading is requested first; the code's reading runs while it is in flight.
   const modelReading = modelFreeTopicRoute || lexical || cachedInterpretation ? null : interpretQuestion(question, interpretContext, { allowCall });
@@ -1015,7 +1073,12 @@ export async function POST(request: Request) {
       initialResolution.binding.entity.level === "BODY" && initialResolution.basis.startsWith("MODEL_EXPANSION")) bodyDecision = { kind: "CLARIFY" };
     const resolved = applyNamedBodyDecision(bodyDecision, initialResolution, question);
     /* A kind of body was named ("the school board") and the reader's ZIP reaches several: ask which, naming them. */
-    const resolution: ReturnType<typeof resolveInterpretation> = lexical?.areaChoices
+    const resolution: ReturnType<typeof resolveInterpretation> = readerVoteReading && readerVoteAsk
+      ? { binding: readerVoteChoices.length === 1
+          ? { kind: "BOUND", entity: readerVoteChoices[0]!, matchedOn: readerVoteAsk.office.phrase }
+          : { kind: "AMBIGUOUS", mention: `your ${readerVoteAsk.office.phrase}`, candidates: readerVoteChoices },
+        basis: "READER_WORDS", boundOn: question }
+      : lexical?.areaChoices
       ? { binding: { kind: "AMBIGUOUS", mention: lexical.areaChoices.mention, candidates: [...lexical.areaChoices.bodies] }, basis: "WHOLE_QUESTION", boundOn: question }
       : resolved;
     trace.resolution = {
@@ -1172,17 +1235,29 @@ export async function POST(request: Request) {
       : null;
 
     const records: EvidenceRecord[] = [];
+    if (populationQuestion(question)) {
+      const division = bound?.ocdId ?? (subject?.kind === "BODY" ? canonicalBodyIdentity(subject.id)?.ocdId : null);
+      const ids = populationEvidenceIds(subject?.kind ?? null, division, ballotZip, ocdIds);
+      records.push(...await readPopulationEvidence(ids, subject?.kind === "BODY" ? subject.id : undefined));
+    }
     /* A person asked about for their campaign money and nothing they did in office: their votes, key votes, statements and
        recorded actions are not retrieved. */
     const financeAsked = financeQuestionAskedFor(question, subject?.kind ?? null);
     const moneyOnly = subject?.kind === "PERSON" && asksOnlyMoney(question, "PERSON");
     const heldFiling = subject ? heldFilings.find(row => row.entity.id === subject.id) : null;
     if (heldFiling) records.push(heldFiling.record);
+    if (subject) records.push(...fecSubjects.filter(row => row.entity.id === subject.id).map(row => row.record));
     /** The sittings this request resolved, for the structured half of the payload. */
     const resolvedSittings: AskSitting[] = [];
     /** A topic question's dated timeline for the bound body, when one was built. */
     let topicTimeline: ReturnType<typeof buildTopicTimeline> | null = null;
     const gaps: EvidenceGap[] = [...holdingLoadGaps];
+    if(openDataQuestion(question)) {
+      const divisionIds=subject?.kind==="BODY" ? [bound?.ocdId ?? subject.id.split("#")[0]].filter(id=>id?.startsWith("ocd-division/")) as string[] : ocdIds;
+      const data=await openDataEvidenceFor({divisionIds,zip:ballotZip,bodyId:subject?.kind==="BODY"?subject.id:null},subject?.id).catch(()=>({records:[],unavailable:["open-data"],notHeld:[]}));
+      records.push(...data.records);
+      if(data.unavailable.length || data.notHeld.length)gaps.push({whose:"OURS",statement:"We're working on getting this info from all open-data and environmental sources for this place."});
+    }
     /* The gaps attached to the chosen sitting(s), by why they were attached, for
        an answer composed from the sitting (`lib/ask/sitting-answer.ts`). Each is
        also in `gaps`; this only remembers which ones are about the sitting. */
@@ -1226,7 +1301,7 @@ export async function POST(request: Request) {
       Object.assign(denominators, profile.denominators);
     }
     const candidateSeats = ballotRecord?.kind === "PERSON"
-      ? (await Promise.allSettled((ballotOfficialIds.get(ballotRecord.id) ?? []).map(seatHolderById)))
+      ? (await Promise.allSettled((ballotOfficialIds.get(ballotRecord.id) ?? []).map(id=>seatHolderById(id))))
         .flatMap((result) => result.status === "fulfilled" && result.value ? [result.value] : [])
       : [];
     for (const seat of candidateSeats) canonicalSubjectKeys.add(seat.id);
@@ -1332,7 +1407,7 @@ export async function POST(request: Request) {
     } else if (subject?.kind === "BODY") {
       const listing = governmentListings.records.find(row => row.id === subject.id);
       if (listing) {
-        records.push(governmentListingEvidence(listing));
+        records.push(...governmentListingEvidenceRecords(listing));
         denominators.governmentInventoryRecords = 1;
       }
       const identity = canonicalBodyIdentity(subject.id);
@@ -1661,6 +1736,11 @@ export async function POST(request: Request) {
     }
 
     /* A comparison retrieves both people's money: the one other held person the question names (exact id, never a context default) is stamped as theirs. */
+    const federalMember = subject?.kind === "PERSON" ? [...canonicalSubjectKeys].find(id => /^congress:[A-Z]\d{6}$/.test(id)) ?? subject.id : null;
+    const federal = await federalAskEvidence(federalMember, question);
+    records.push(...federal.records.map(record => subject?.kind === "PERSON" ? { ...record, subjectId: subject.id } : record));
+    gaps.push(...federal.gaps);
+    Object.assign(denominators, federal.denominators);
     const comparedIds = new Set<string>();
     if (subject?.kind === "PERSON" && financeAsked) {
       const other = otherNamedPerson(question, inventory, subject.id);
@@ -1895,18 +1975,18 @@ export async function POST(request: Request) {
       denominators.financeDetailRowsReturned = financeDetail.records.length;
       denominators.financeDetailComplete = financeDetail.complete ? 1 : 0;
     }
+    if (isBillQuestion(question)) {
+      const person = subject?.kind === "PERSON" ? await seatHolderById(subject.id).catch(() => null) : null;
+      const billStates = person?.id.startsWith("congress:") ? ["US"] : person?.state ? [person.state] :
+        [...new Set([...statesOf(ocdIds), ...statesOf(subject ? [subject.id] : [])])];
+      const bills = await legiscanBillEvidence({question,subject,person,states:billStates});
+      records.push(...bills.records); gaps.push(...bills.gaps); Object.assign(denominators,bills.denominators);
+    }
     const relevant = gateRecordsToSubject(subject, records, comparedIds);
     denominators.recordsExcludedOffSubject = relevant.excluded.length;
     const packRecords = relevant.records;
 
     const ownWordsComposed = composeOwnWordsAnswer({ subject, question, records: packRecords });
-    if (!ownWordsComposed && stanceAnswerability({ subject, question }) === "UNVERIFIED_PERSONAL_STANCE") {
-      const pageMatches = packRecords.filter((record) => record.kind === "SOURCE_PASSAGE").length;
-      denominators.personalStanceVerified = 0;
-      denominators.linkedSourcePassages = pageMatches;
-      gaps.push({ whose: "OURS", statement: `We have not verified a statement by ${subject!.name} that establishes their personal stance.` +
-        (pageMatches > 0 ? " The linked page passages below show only what the pages say." : "") });
-    }
 
     /* One named gap is said once, even when two same-day sittings carry it. */
     const packGaps = gaps.filter((gap, index) =>
@@ -2048,7 +2128,9 @@ export async function POST(request: Request) {
     }
     /* How a named person voted (lib/ask/person-votes.ts): the roll calls we hold, in the chamber's own fields; the same validator decides. */
     const votesShape = !topicComposed && !sittingSettled.composed && !moneySettled.composed && subject?.kind === "PERSON"
-      ? personVotesShapeForBoundPerson(question, inventory, subject.id) : null;
+      ? readerVoteAsk && readerVoteChoices.length === 1 && readerVoteChoices[0]!.id === subject.id
+        ? { slot: readerVoteAsk.office.phrase, topic: readerVoteAsk.topic }
+        : personVotesShapeForBoundPerson(question, inventory, subject.id) : null;
     const votesSettled = settleSittingComposition(
       votesShape && subject ? composePersonVotes({ name: subject.name, topic: votesShape.topic, records: packRecords }) : null,
       (text, urls) => validateAnswer(text, urls, pack, bodies),
@@ -2101,8 +2183,10 @@ export async function POST(request: Request) {
       (text, urls) => validateAnswer(text, urls, pack, bodies));
     const governmentFinanceSettled = settleSittingComposition(composeGovernmentFinanceAnswer({ subject, question, records: packRecords }),
       (text, urls) => validateAnswer(text, urls, pack, bodies));
-    const composed = governmentFinanceSettled.composed ?? ownWordsSettled.composed ?? preferredBallot ?? measureSettled.composed ?? topicComposed ?? sittingSettled.composed ?? moneySettled.composed ?? groupSettled.composed ?? officialsSettled.composed ?? rosterSettled.composed ?? votesSettled.composed ?? calendarSettled.composed ?? ballotSettled.composed;
-    const composedWhy = governmentFinanceSettled.composed ? "composed-from-government-finance" : ownWordsSettled.composed ? "composed-from-own-words" : preferredBallot || measureSettled.composed ? "composed-from-ballot-records" : topicComposed ? "composed-from-structured-evidence"
+    const populationSettled = settleSittingComposition(composePopulationAnswer(question, packRecords),
+      (text, urls) => validateAnswer(text, urls, pack, bodies));
+    const composed = populationSettled.composed ?? governmentFinanceSettled.composed ?? ownWordsSettled.composed ?? preferredBallot ?? measureSettled.composed ?? topicComposed ?? sittingSettled.composed ?? moneySettled.composed ?? groupSettled.composed ?? officialsSettled.composed ?? rosterSettled.composed ?? votesSettled.composed ?? calendarSettled.composed ?? ballotSettled.composed;
+    const composedWhy = populationSettled.composed ? "composed-from-census-population" : governmentFinanceSettled.composed ? "composed-from-government-finance" : ownWordsSettled.composed ? "composed-from-own-words" : preferredBallot || measureSettled.composed ? "composed-from-ballot-records" : topicComposed ? "composed-from-structured-evidence"
       : sittingSettled.composed ? "composed-from-sitting-records"
         : moneySettled.composed ?? groupSettled.composed ? "composed-from-money-records"
           : officialsSettled.composed ? "composed-from-officeholder-records"
@@ -2149,11 +2233,10 @@ export async function POST(request: Request) {
   lapAt("resolutionAndRetrieval", path.retrievedAt);
   const { pack, packRecords, packGaps, subject, composed, topicTimeline, areaTimelines, shownContacts, resolvedSittings, agendaQuestion, capture, composedWhy } = path;
   /* The fast writer answers first; the frontier model writes only when that answer fails the same validator (`synthesizeWithLadder`). */
-  const synthesisKey = composed ? null : synthesisCacheKey(pack, ladderKey.model, ladderKey.effort);
+  const synthesisKey = composed ? null : synthesisCacheKey(pack, writerCacheModel, ladderKey.effort);
   const missingMeasureMeaning = subject?.kind === "MEASURE" && requestedMeasureVotes(question).length > 0 &&
     !composeMeasureMeaningAnswer({ subject, question, records: packRecords });
-  const cachedSynthesis = !missingMeasureMeaning && synthesisKey && stanceAnswerability(pack) !== "UNVERIFIED_PERSONAL_STANCE"
-    ? synthesisCache.get(synthesisKey) : null;
+  const cachedSynthesis = !missingMeasureMeaning && synthesisKey ? synthesisCache.get(synthesisKey) : null;
   const keepSpeculative = settleSpeculation(outcome?.kind !== "READ" ? "MODEL_READING_UNAVAILABLE"
     : composed ? "MODEL_READING_NEEDS_NO_WRITER" : readingOutcome(path));
   const written = composed || missingMeasureMeaning ? null : cachedSynthesis ?? (keepSpeculative && speculation?.started ? await speculation.writing : await synthesizeWithLadder(pack, {

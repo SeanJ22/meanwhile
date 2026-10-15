@@ -1,0 +1,8 @@
+zip,type,decommissioned,primary_city,acceptable_cities,unacceptable_cities,state,county,timezone,area_codes,world_region,country,latitude,longitude,irs_estimated_population
+00501,UNIQUE,0,Holtsville,,Internal Revenue Service,NY,Suffolk County,America/New_York,631,NA,US,40.81,-73.04,562
+05009,UNIQUE,0,White River Junction,White Riv Jct,Veterans Administration,VT,Windsor County,America/New_York,802,NA,US,43.65,-72.34,0
+10001,STANDARD,0,New York,,"Empire State, Gpo, Greeley Square, Macys Finance, Manhattan, New York City, NY, Ny City, Nyc",NY,New York County,America/New_York,"212, 332, 347, 646, 718, 917, 929",NA,US,40.75,-74,20850
+10008,PO BOX,0,New York,,"Manhattan, New York City, NY, Ny City, Nyc",NY,New York County,America/New_York,212,NA,US,40.71,-73.99,910
+10540,PO BOX,0,Lincolndale,,,NY,Westchester County,America/New_York,914,NA,US,41.33,-73.73,703
+11249,STANDARD,0,Brooklyn,,,NY,Kings County,America/New_York,"212, 332, 347, 646, 718, 917, 929",NA,US,40.7,-73.97,0
+73960,PO BOX,0,Texhoma,,,TX,Sherman County,America/Chicago,806,NA,US,36.49,-101.79,0

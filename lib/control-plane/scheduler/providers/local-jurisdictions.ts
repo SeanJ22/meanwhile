@@ -3,7 +3,8 @@
  * government that is a filing officer in its own right. Not registered: statewide-scope routes on a local row
  * (already scheduled once by their own provider), per-county routes on a district row (registered on the
  * county once), and governments with no filing-officer role (their records belong to a scheduled custodian).
- * Meetings routes are carried by what owns them: DISCOVERY_OWED goes to meetings discovery, a partition-owned
+ * Only sources the registry records ADAPTED with an address become rows; the rest are hunted in their government's
+ * packet. Meetings routes are carried by what owns them: DISCOVERY_OWED goes to meetings discovery, a partition-owned
  * route is inventory, and an unread wiring holds the route by name.
  */
 
@@ -17,7 +18,6 @@ import {
   type MeetingPartitionOwnership,
   type TrackedStatesSource,
 } from "../provider-inputs.ts";
-import { bodyDirectoryDiscoveryPlan, jurisdictionDiscoveryPlan, publicCommentDiscoveryPlan, type AutonomousWorkPlan } from "../../workers/autonomous-plan.ts";
 import type {
   ObligationProvider,
   ProvidedObligation,
@@ -84,53 +84,26 @@ function meetingsRouteIdFor(s: JurisdictionSource, k: number): string {
   return s.routeId ?? `meetings-adapted-${k}`;
 }
 
-function descriptorFor(j: Jurisdiction, s: JurisdictionSource, routeId: string): RouteDescriptor {
-  const label = `${j.name} — ${s.recordClass.replace(/_/g, " ").toLowerCase()} via ${s.authority}`;
-
-  if (s.state === "ADAPTED" && s.url && /^https?:\/\//i.test(s.url)) {
-    return {
-      routeId,
-      label,
-      executorClass: "DETERMINISTIC",
-      executorReason:
-        "the registry records this as ADAPTED with an explicit address, so opening it is a replay of a " +
-        "route this project has already walked rather than a derivation",
-      open: { kind: "HTTP_GET", url: s.url },
-      citation: s.citation,
-    };
-  }
-
-  /* Everything else is NOT_MACHINE_EXECUTABLE, carrying the registry's `owed` sentence verbatim. */
+/** A registry source the registry records as ADAPTED with an address: a replay of a route already walked. Anything else is hunted through its government's packet. */
+function descriptorFor(j: Jurisdiction, s: JurisdictionSource, routeId: string): RouteDescriptor | null {
+  if (s.state !== "ADAPTED" || !s.url || !/^https?:\/\//i.test(s.url)) return null;
   return {
     routeId,
-    label,
-    executorClass: "BOUNDED_MODEL_WORKER",
+    label: `${j.name} — ${s.recordClass.replace(/_/g, " ").toLowerCase()} via ${s.authority}`,
+    executorClass: "DETERMINISTIC",
     executorReason:
-      "the custodian and the routing rule are known and the ADDRESS is not. Finding an address is a " +
-        "scout's job, and a deterministic client pointed at a guessed page that answers HTTP 200 is the " +
-        "worst available outcome",
-    open: {
-      kind: "NOT_MACHINE_EXECUTABLE",
-      target: s.url ?? j.ownWebAddress ?? s.authority,
-      reason:
-        `${s.owed ?? "no next move is recorded for this source, which is itself the defect"} ` +
-        "REQUIRES_NEW_ADAPTER: this is a fact about our tooling and our reading, never about the record.",
-    },
+      "the registry records this as ADAPTED with an explicit address, so opening it is a replay of a " +
+      "route this project has already walked rather than a derivation",
+    open: { kind: "HTTP_GET", url: s.url },
     citation: s.citation,
-    awaitingAdapter: `an address for ${s.authority}`,
   };
 }
 
 /** The registry's own requirement definitions for one government, custodian-deduped, in the row's order. Meetings discovery belongs to `meetings-discovery.ts`. */
-const NO_LIVE_FAMILIES: ReadonlySet<string> = new Set();
-
 export function jurisdictionRequirements(
   reg: JurisdictionRegistry,
   j: Jurisdiction,
   meetingPartitions: MeetingPartitionOwnership = UNREAD_MEETING_PARTITIONS,
-  discoverMissingFamilies = false,
-  /** Record classes whose owed rows for this government are already live: no paid discovery Scout is queued for them. */
-  liveFamilies: ReadonlySet<string> = NO_LIVE_FAMILIES,
 ): readonly JurisdictionRequirement[] {
   const out: JurisdictionRequirement[] = [];
   let n = 0;
@@ -141,80 +114,26 @@ export function jurisdictionRequirements(
     if (s.recordClass !== "MEETINGS") {
       const routeId = routeIdFor(s, n);
       n += 1;
-      out.push({ obligationId: localJurisdictionObligationId(j.id, routeId), sourceKey: key, source: s, route: descriptorFor(j, s, routeId), carriage: "HERE" });
+      const route = descriptorFor(j, s, routeId);
+      if (route !== null) out.push({ obligationId: localJurisdictionObligationId(j.id, routeId), sourceKey: key, source: s, route, carriage: "HERE" });
       continue;
     }
     if (s.state === "DISCOVERY_OWED") continue;
     const routeId = meetingsRouteIdFor(s, k);
     k += 1;
+    const route = descriptorFor(j, s, routeId);
+    if (route === null) continue;
     const owner = meetingPartitions.ownerOf(j.id);
     out.push({
       obligationId: localJurisdictionObligationId(j.id, routeId),
       sourceKey: key,
       source: s,
-      route: descriptorFor(j, s, routeId),
+      route,
       carriage: owner === "NONE" ? "HERE" : owner === "PARTITION" ? "MEETING_PARTITION" : "HELD_UNREAD_WIRING",
       ...(owner === "UNKNOWN" ? { heldReason: meetingPartitions.reasonFor?.(j.id) ?? meetingPartitions.source } : {}),
     });
   }
-  if (discoverMissingFamilies) {
-    const directoryRoute = "coverage-discovery:body-directory";
-    const directorySource: JurisdictionSource = { recordClass: "OFFICEHOLDERS", authority: j.name,
-      authorityBasis: "The official directory and independent jurisdiction evidence define the body denominator; a roster cannot establish it.",
-      scope: "THIS_JURISDICTION", routeId: directoryRoute, url: j.ownWebAddress, state: "DISCOVERY_OWED",
-      owed: "Discover governing and subordinate bodies, verify their actual territorial applicability, and create the downstream work for each verified body.",
-      citation: `Registered government ${j.id}.` };
-    out.push({ obligationId: localJurisdictionObligationId(j.id, directoryRoute), sourceKey: directoryRoute,
-      source: directorySource, route: descriptorFor(j, directorySource, directoryRoute), carriage: "HERE" });
-    // A registered government with no source entry still owes discovery: questions, not invented sources. Shared custodians stay on their existing routes.
-    const represented = new Set(j.sourceIds.map(key => sourceOf(reg, j, key).recordClass));
-    const families = [
-      ["OFFICEHOLDERS", "Find the governing bodies, subordinate boards, current offices and members, their official pages, contacts and published statements. Establish exact authority and identity before extraction."],
-      ["BALLOT_AND_CANDIDATES", "Find the responsible election authorities and their current candidate filings, contests, measures and certified results. Follow candidate identities into verified profiles, campaign publications and positions. Determine applicability from evidence, not from an empty queue."],
-      ["CAMPAIGN_FINANCE", "Establish the legally responsible filing custodian and applicable committee, contribution and expenditure records. Reuse that custodian's shared work; do not assume this government operates a separate filing system."],
-      ["PUBLIC_SERVICES", "Find the actual responsible service offices and usable contact channels. Independently verify topic, service responsibility and service-area ZIP applicability; a mailing address or county boundary is not evidence that an office serves that ZIP. Reuse shared authorities and retain unresolved topic/area gaps."],
-      ["VOTER_ACCESS", "Find the responsible election authority's polling-place and registration lookup routes. Independently verify the state, route kind and destination; do not infer that a local route serves an entire state. Publish only verified statewide lookup routes through the statewide Reader; retain narrower applicability as unresolved work."],
-    ] as const;
-    for (const [recordClass, owed] of families) {
-      if (represented.has(recordClass) || liveFamilies.has(recordClass)) continue;
-      const routeId = `coverage-discovery:${recordClass.toLowerCase()}`;
-      const source: JurisdictionSource = { recordClass, authority: j.name,
-        authorityBasis: "The registered government's missing information family requires discovery; publisher, custodian and applicability have not yet been established.",
-        scope: "THIS_JURISDICTION", routeId, url: j.ownWebAddress, state: "DISCOVERY_OWED", owed,
-        citation: `Government ${j.id}, enumerated by ${j.enumeratedFrom}; no ${recordClass} source entry is held.` };
-      const route: RouteDescriptor = { ...descriptorFor(j, source, routeId),
-        executorReason: "The government is registered, but this information family's publisher, custodian and applicability remain unresolved. Discover and verify them using inherited methods.",
-        open: { kind: "NOT_MACHINE_EXECUTABLE", target: j.ownWebAddress ?? j.name, reason: owed },
-        awaitingAdapter: `verified source applicability and extraction for ${recordClass}` };
-      out.push({ obligationId: localJurisdictionObligationId(j.id, routeId), sourceKey: routeId,
-        source, route, carriage: "HERE" });
-    }
-    const bodyId = meetingPartitions.bodyIdFor ? meetingPartitions.bodyIdFor(j.id) : j.bodyId ?? null;
-    if (bodyId && !represented.has("PUBLIC_COMMENT")) {
-      const routeId = "coverage-discovery:public-comment";
-      const source: JurisdictionSource = { recordClass: "PUBLIC_COMMENT", authority: j.name,
-        authorityBasis: `Exact registered governing body ${bodyId}; its participation rules remain to be verified.`,
-        scope: "THIS_JURISDICTION", routeId, url: j.ownWebAddress, state: "DISCOVERY_OWED",
-        owed: "Find and independently verify the body's published public-comment rules, signup, written comments, attendance and speaking limits.",
-        citation: `Registered government ${j.id}, body ${bodyId}.` };
-      out.push({ obligationId: localJurisdictionObligationId(j.id, routeId), sourceKey: routeId, source,
-        route: descriptorFor(j, source, routeId), carriage: "HERE" });
-    }
-  }
   return out;
-}
-
-/** The exact registered body a government's reader door publishes to, or null when none is joined. */
-export function requirementBodyId(j: Jurisdiction, meetingPartitions: MeetingPartitionOwnership): string | null {
-  return meetingPartitions.bodyIdFor ? meetingPartitions.bodyIdFor(j.id) : j.bodyId ?? null;
-}
-
-/** The work plan one requirement's paid work carries, or null: always for discovery a Send materialized, and for a registry route on the paid model path. */
-export function requirementPlan(j: Jurisdiction, r: JurisdictionRequirement, bodyId: string | null, discoverMissingFamilies: boolean): AutonomousWorkPlan | null {
-  if (!discoverMissingFamilies && (r.carriage !== "HERE" || r.route.executorClass !== "BOUNDED_MODEL_WORKER")) return null;
-  if (r.route.routeId === "coverage-discovery:body-directory") return bodyDirectoryDiscoveryPlan(j, bodyId);
-  if (r.source.recordClass === "PUBLIC_COMMENT") return publicCommentDiscoveryPlan(j, bodyId);
-  return jurisdictionDiscoveryPlan(j, r.source, r.route.routeId, bodyId);
 }
 
 /** Which governments get an individually scheduled row in a tracked state: a state and a county always; any other only where a route carried here belongs to it alone. */
@@ -248,14 +167,11 @@ export function localJurisdictionsProvider(input: LocalJurisdictionsInput = {}):
     enumerate(_ctx: ProviderContext): ProviderYield {
       const failures: string[] = [];
       const routesBySubject = new Map<string, RouteDescriptor[]>();
-      const plansBySubject = new Map<string, Record<string, AutonomousWorkPlan>>();
-      const add = (j: Jurisdiction, r: JurisdictionRequirement, discoverMissingFamilies: boolean): void => {
+      const add = (j: Jurisdiction, r: JurisdictionRequirement): void => {
         const list = routesBySubject.get(j.id) ?? [];
         if (list.some((x) => x.routeId === r.route.routeId)) return;
         list.push(r.route);
         routesBySubject.set(j.id, list);
-        const plan = requirementPlan(j, r, requirementBodyId(j, meetingPartitions), discoverMissingFamilies);
-        if (plan !== null) plansBySubject.set(j.id, { ...plansBySubject.get(j.id), [r.route.routeId]: plan });
       };
       const registries = new Map<string, JurisdictionRegistry | null>();
       const registryFor = (stateCode: string): JurisdictionRegistry | null => {
@@ -291,7 +207,7 @@ export function localJurisdictionsProvider(input: LocalJurisdictionsInput = {}):
           for (const j of reg.jurisdictions) {
             const requirements = jurisdictionRequirements(reg, j, meetingPartitions);
             if (!isScheduledHere(j, requirements)) continue;
-            for (const r of requirements) if (r.carriage === "HERE") add(j, r, false);
+            for (const r of requirements) if (r.carriage === "HERE") add(j, r);
           }
         }
       }
@@ -315,8 +231,8 @@ export function localJurisdictionsProvider(input: LocalJurisdictionsInput = {}):
           }
           const j = rows.get(jurisdictionId);
           if (j === undefined) continue;
-          const r = jurisdictionRequirements(reg, j, meetingPartitions, true).find((x) => x.obligationId === id);
-          if (r !== undefined && r.carriage === "HERE") add(j, r, true);
+          const r = jurisdictionRequirements(reg, j, meetingPartitions).find((x) => x.obligationId === id);
+          if (r !== undefined && r.carriage === "HERE") add(j, r);
           if (r?.carriage === "HELD_UNREAD_WIRING") failures.push(r.heldReason ?? `${id}: meeting partition ownership unread; retain the owner's existing work`);
         }
       }
@@ -329,7 +245,6 @@ export function localJurisdictionsProvider(input: LocalJurisdictionsInput = {}):
         observedChangeRateHours: null,
         lastWorkedAt: null,
         routes: routesBySubject.get(subjectId) ?? [],
-        ...(plansBySubject.has(subjectId) ? { autonomousPlans: plansBySubject.get(subjectId)! } : {}),
       }));
 
       return {

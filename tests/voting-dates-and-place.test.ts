@@ -12,8 +12,6 @@ import {
 import { googleCalendarUrl, icsDataHref } from "../lib/calendar/event-links.ts";
 import { ELECTION_DATES } from "../lib/ballot/election-dates.ts";
 import { PLACEHOLDER_ADDRESS } from "../lib/ballot/placeholder-address.ts";
-import { pollingLookupFallbacks } from "../lib/ballot/polling-lookup-fallback.ts";
-import { POLLING_PLACE_LINKS } from "../lib/ballot/polling-place-links.ts";
 
 import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
 
@@ -151,7 +149,7 @@ test("15: the ballot's polling-place affordance opens the map's own panel", () =
   );
 });
 
-test("BAL-2: the state's tool is reached through the pill, not offered beside it", () => {
+test("VS-01: the voting pill answers in-page without an outbound polling lookup", () => {
   const where = read("components", "ballot", "where-to-vote.tsx");
   // Comments are stripped so a note quoting old copy is not read as the copy.
   const code = where.replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/[^\n]*/g, "");
@@ -167,28 +165,6 @@ test("BAL-2: the state's tool is reached through the pill, not offered beside it
     "this component renders an outbound anchor again",
   );
 
-  assert.match(
-    read("components", "map", "voting-sites-panel.tsx"),
-    /<PollingLookupFallback links=\{pollingLookupFallbacks\(/,
-    "the fallback left the contract — a jurisdiction we do not hold now reaches nothing",
-  );
-  assert.deepEqual(
-    pollingLookupFallbacks("failed"),
-    [],
-    "a failed canonical request must not reopen the tracked first seed",
-  );
-  assert.deepEqual(
-    pollingLookupFallbacks("answered", {
-      match: true,
-      point: null,
-      outsideCoverage: true,
-      jurisdictions: [],
-      pollingPlaceLinks: POLLING_PLACE_LINKS,
-    }),
-    [...POLLING_PLACE_LINKS],
-    "the API-returned canonical projection still supplies the held authority routes",
-  );
-  assert.deepEqual(pollingLookupFallbacks("idle"), []);
   assert.match(
     where,
     /<VotingSitesPanel/,

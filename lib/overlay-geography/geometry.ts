@@ -12,7 +12,7 @@ export function ringArea(ring: readonly (readonly number[])[]): number {
   return sum / 2;
 }
 
-function ringContains(point: readonly number[], ring: Ring): boolean {
+export function ringContains(point: readonly number[], ring: Ring): boolean {
   let inside = false;
   for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
     const [x, y] = ring[i], [xj, yj] = ring[j];

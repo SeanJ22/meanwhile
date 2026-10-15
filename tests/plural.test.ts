@@ -1,6 +1,10 @@
-import { createHash } from "node:crypto";
 import assert from "node:assert/strict";
-import { test } from "node:test";
+import { test, type TestContext } from "node:test";
+import { mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { buildCensusDistrictEdge } from "../lib/census-geography/district-edge.ts";
+import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import { neonConfig } from "@neondatabase/serverless";
 
 import {
@@ -17,7 +21,7 @@ import {
 } from "../lib/sources/plural/index.ts";
 import { coverageAt } from "../lib/registry/server.ts";
 import registry from "../lib/registry/registry.json" with { type: "json" };
-import { collectNationalPlaceSources, electionDirectorySelection } from "../lib/sources/plural/place.ts";
+import { collectNationalPlaceSources } from "../lib/sources/plural/place.ts";
 import { electionPageFields } from "../lib/hunt/election-page.ts";
 import { placeSourceReader, PlaceSourceDeferred } from "../lib/hunt/place-source-reader.ts";
 import { nationalPlaceJobs, placeSourceLaunchOrder } from "../lib/hunt/place-source-admission.ts";
@@ -43,6 +47,18 @@ import { installRegistryAuthority, installStateLegislators } from "./helpers/pro
 
 await installRegistryAuthority();
 for (const scope of ["US-AZ", "US-NH", "US-NJ"] as const) installStateLegislators(scope);
+
+async function censusArtifactFixture(dataset: BuiltDataset, t: TestContext) {
+  const directory = mkdtempSync(join(tmpdir(), "plural-census-artifacts-"));
+  const previous = process.env.WTP_READER_EDGE_DIR;
+  process.env.WTP_READER_EDGE_DIR = directory;
+  t.after(() => {
+    if (previous === undefined) delete process.env.WTP_READER_EDGE_DIR;
+    else process.env.WTP_READER_EDGE_DIR = previous;
+    rmSync(directory, { recursive: true, force: true });
+  });
+  return buildCensusDistrictEdge(dataset, "plural-fixture", new LocalFileArtifactStore(directory));
+}
 
 test("a 20-place Send offers independent jobs instead of one joined ZIP command", () => {
   const zips = Array.from({ length: 20 }, (_, index) => String(3000 + index).padStart(5, "0"));
@@ -213,13 +229,14 @@ test("the admitted worker rereads the saved Send and publishes once through its 
   t.after(() => { neonConfig.fetchFunction = originalFetch;
     if (originalUrl === undefined) delete process.env.DATABASE_URL; else process.env.DATABASE_URL = originalUrl; });
   process.env.DATABASE_URL = "postgresql://fixture:fixture@fixture.invalid/fixture";
+  const censusIndex = await censusArtifactFixture(dataset, t);
   let lookupReads = 0;
   neonConfig.fetchFunction = async (_endpoint: Parameters<typeof fetch>[0], init?: Parameters<typeof fetch>[1]) => {
     const body = JSON.parse(String(init?.body)) as { queries: { query: string; params: unknown[] }[] };
-    assert.ok(body.queries.every(statement => statement.query.includes("Selected places and in-state touching districts")), "only the existing area lookup is read");
+    assert.ok(body.queries.every(statement => statement.query.includes("SELECT current_version_id AS version_id, payload FROM civic_data_promotions")), "only the existing area lookup is read");
     lookupReads += body.queries.length;
     return Response.json({ results: body.queries.map(() => ({ command: "SELECT", rowCount: 1, rowAsArray: true,
-      fields: [{ name: "version_id", dataTypeID: 25 }, { name: "dataset", dataTypeID: 3802 }], rows: [["fixture:published", JSON.stringify(dataset)]] })) });
+      fields: [{ name: "version_id", dataTypeID: 25 }, { name: "payload", dataTypeID: 3802 }], rows: [["fixture:published", JSON.stringify(censusIndex)]] })) });
   };
   t.mock.method(globalThis, "fetch", async () => { assert.fail("the injected source worker calls no external provider"); });
   assert.deepEqual(await dueNationalPlaceZips(repos, ["03060", "03101"], now), ["03060"], "process admission reads the actual saved Send");
@@ -279,6 +296,16 @@ test("ranking one ZIP in a district reads its whole saved scope without admittin
     { geoid: "33011", ocdId: "ocd-division/country:us/state:nh/county:hillsborough", label: "Hillsborough County", zip: "03060" },
     { geoid: "33013", ocdId: "ocd-division/country:us/state:nh/county:merrimack", label: "Merrimack County", zip: "03101" },
   ];
+  const dataset: BuiltDataset = { formatVersion: 1, builtAt: now, coverage: "Fixture district", zctaUniverse: ["03060", "03101"],
+    scopes: [{ type: "congressional_district", version: "cd:119", fractionBasis: "area", instanceCount: 1, zctaEdgeCount: 2,
+      versionMeta: { key: "cd:119", type: "congressional_district", plan: "119th Congress", zctaTabulation: "2020", effectiveFor: "current", provenance },
+      groupings: [{ geoid: "3302", ocdId: "ocd-division/country:us/state:nh/cd:2", label: "NH District 2", stateFips: "33", stateAbbr: "NH", memberStates: ["NH"],
+        overlaps: ["03060", "03101"].map(zcta5 => ({ zcta5, whole: true, fraction: 1 })) }] },
+    { type: "county", version: "county:2020", fractionBasis: "area", instanceCount: counties.length, zctaEdgeCount: counties.length,
+      versionMeta: { key: "county:2020", type: "county", plan: "2020 county", zctaTabulation: "2020", effectiveFor: "current", provenance },
+      groupings: counties.map(({ zip, ...county }) => ({ ...county, stateFips: "33", stateAbbr: "NH", memberStates: ["NH"],
+        overlaps: [{ zcta5: zip, whole: true, fraction: 1 }] })) }] };
+  const censusIndex = await censusArtifactFixture(dataset, t);
   const originalUrl = process.env.DATABASE_URL, originalFetch = neonConfig.fetchFunction;
   t.after(() => { neonConfig.fetchFunction = originalFetch;
     if (originalUrl === undefined) delete process.env.DATABASE_URL; else process.env.DATABASE_URL = originalUrl; });
@@ -286,25 +313,16 @@ test("ranking one ZIP in a district reads its whole saved scope without admittin
   const originalNodeEnv = process.env.NODE_ENV;
   t.after(() => { if (originalNodeEnv === undefined) Reflect.deleteProperty(process.env, "NODE_ENV"); else Object.assign(process.env, { NODE_ENV: originalNodeEnv }); });
   Object.assign(process.env, { NODE_ENV: "production" });
-  const lookupSelections: string[][] = [], captureScopes: string[] = [];
+  let lookupReads = 0;
+  const captureScopes: string[] = [];
   neonConfig.fetchFunction = async (_endpoint: Parameters<typeof fetch>[0], init?: Parameters<typeof fetch>[1]) => {
     const body = JSON.parse(String(init?.body)) as { queries?: { query: string; params: unknown[] }[]; query?: string; params?: unknown[] };
     const statements = body.queries ?? [{ query: body.query ?? "", params: body.params ?? [] }];
     const results = statements.map(statement => {
-      if (statement.query.includes("Selected places and in-state touching districts")) {
-        const selected = ["03060", "03101"].filter(zip => String(statement.params[2]).includes(zip));
-        lookupSelections.push(selected);
-        const dataset: BuiltDataset = { formatVersion: 1, builtAt: now, coverage: "Fixture district", zctaUniverse: selected,
-          scopes: [{ type: "congressional_district", version: "cd:119", fractionBasis: "area", instanceCount: 1, zctaEdgeCount: 2,
-            versionMeta: { key: "cd:119", type: "congressional_district", plan: "119th Congress", zctaTabulation: "2020", effectiveFor: "current", provenance },
-            groupings: [{ geoid: "3302", ocdId: "ocd-division/country:us/state:nh/cd:2", label: "NH District 2", stateFips: "33", stateAbbr: "NH", memberStates: ["NH"],
-              overlaps: ["03060", "03101"].map(zcta5 => ({ zcta5, whole: true, fraction: 1 })) }] },
-          { type: "county", version: "county:2020", fractionBasis: "area", instanceCount: selected.length, zctaEdgeCount: selected.length,
-            versionMeta: { key: "county:2020", type: "county", plan: "2020 county", zctaTabulation: "2020", effectiveFor: "current", provenance },
-            groupings: counties.filter(county => selected.includes(county.zip)).map(({ zip, ...county }) => ({ ...county, stateFips: "33", stateAbbr: "NH", memberStates: ["NH"],
-              overlaps: [{ zcta5: zip, whole: true, fraction: 1 }] })) }] };
+      if (statement.query.includes("SELECT current_version_id AS version_id, payload FROM civic_data_promotions")) {
+        lookupReads++;
         return { command: "SELECT", rowCount: 1, rowAsArray: true,
-          fields: [{ name: "version_id", dataTypeID: 25 }, { name: "dataset", dataTypeID: 3802 }], rows: [["fixture:district", JSON.stringify(dataset)]] };
+          fields: [{ name: "version_id", dataTypeID: 25 }, { name: "payload", dataTypeID: 3802 }], rows: [["fixture:district", JSON.stringify(censusIndex)]] };
       }
       if (statement.params[0] === "REGISTRY_RUNTIME_BINDING") captureScopes.push(String(statement.params[2]));
       return { command: "SELECT", rowCount: 0, rowAsArray: true, fields: [], rows: [] };
@@ -313,7 +331,7 @@ test("ranking one ZIP in a district reads its whole saved scope without admittin
   };
   t.mock.method(globalThis, "fetch", async () => { assert.fail("scope ranking fetches no external source"); });
   const reading = await nationalPlaceWorkReading(repos, ["03060"], now);
-  assert.deepEqual(lookupSelections, [["03060"], ["03060", "03101"]], "the saved district's other ZIP is loaded before declared-work membership");
+  assert.equal(lookupReads, 2, "place and saved district reads each use the compact published index");
   assert.deepEqual(reading.ordered, ["03060"], "the scope's full denominator does not widen this pass's selected workers");
   assert.deepEqual([...reading.belowTarget], ["03060"]);
   assert.ok(captureScopes.some(ids => counties.every(county => ids.includes(county.ocdId))),
@@ -414,8 +432,7 @@ test("a national walk reuses another role's working source route after a directo
   const store = { ...emptyFieldManual(), entries };
   const opened: string[] = [];
   const pages: Record<string, string> = {
-    "https://www.usa.gov/state-governments": '<a id="mo" href="/states/missouri">Missouri</a>',
-    "https://www.usa.gov/states/missouri": '<h1>Missouri</h1><div class="field--name-field-website"><a href="https://state.example.gov/old">State</a></div>',
+    "https://www.sos.mo.gov/elections/": '<h1>Missouri</h1><div class="field--name-field-website"><a href="https://state.example.gov/old">State</a></div>',
     "https://state.example.gov/leaders": '<a href="/governor">Governor Jane Doe</a>',
   };
   const result = await collectNationalPlaceSources({ now, knowledge: { store, projection: projectFieldManual(store) },
@@ -496,28 +513,20 @@ test("national collector binds saved CSV to its real Attempt and reuses another 
     "a small publisher's bound does not stop another national source");
 });
 
-test("the national election directory follows its published form for any state", () => {
-  const page = { url: "https://www.eac.gov/voters/register-and-vote-in-your-state", collectedAt: "2026-09-30T00:00:00Z",
-    text: '<form action="/voters/state" method="get"><select name="state_id"><option value="12">Missouri</option><option value="13">Utah</option></select></form>' };
-  assert.equal(electionDirectorySelection(page, "Utah"), "https://www.eac.gov/voters/state?state_id=13");
-  assert.equal(electionDirectorySelection(page, "Unknown"), null);
-});
-
 test("official profile headings produce officeholders; news headlines do not", async () => {
   const stages: string[] = [];
   const pages: Record<string, string> = {
-    "https://www.usa.gov/state-governments": '<a id="mo" href="/states/missouri">Missouri</a>',
-    "https://www.usa.gov/states/missouri": '<h1>Missouri</h1><a href="https://ag.example.gov/">Office of the Attorney General</a>',
+    "https://www.sos.mo.gov/elections/": '<h1>Missouri</h1><a href="https://ag.example.gov/">Office of the Attorney General</a>',
     "https://ag.example.gov/": '<h1>TRUE TRANSPARENCY</h1><h1>POLICE TRAINING PROVIDED REGIONALLY</h1><h1>True Transparency</h1><a href="/about">Attorney General</a>',
     "https://ag.example.gov/about": '<h1>Attorney General Jane Doe</h1>',
   };
   const result = await collectNationalPlaceSources({ now: "2026-09-30T00:00:00Z",
     divisions: [{ id: "ocd-division/country:us/state:mo", label: "Missouri", divisionType: "state", geoid: "29", sourceUrl: "https://census.gov" }],
     onSources: async sources => { stages.push("ready"); assert.equal(sources.officials[0].name, "Jane Doe"); },
-    read: async url => { if (url.includes("eac.gov")) stages.push("elections"); if (!(url in pages)) throw Error("No page"); return { url, text: pages[url], collectedAt: "2026-09-30T00:00:00Z" }; } });
+    read: async url => { if (url === "https://www.sos.mo.gov/elections/" && !stages.includes("ready")) stages.push("state"); if (!(url in pages)) throw Error("No page"); return { url, text: pages[url], collectedAt: "2026-09-30T00:00:00Z" }; } });
   assert.deepEqual(result.officials.map(o => [o.name, o.officeTitle]), [["Jane Doe", "Attorney General"]]);
   assert.equal(result.officials[0].document.url, "https://ag.example.gov/about");
-  assert.deepEqual(stages, ["ready", "elections"], "a ready officeholder reaches the publisher before unrelated election collection");
+  assert.deepEqual(stages, ["state", "ready"], "the held national reference leads directly to the state page and its official profile");
 });
 
 test("election dates use explicit source year and official lookup links remain navigation", () => {
@@ -543,8 +552,6 @@ test("redirected election pages keep their saved source identity and resolve lin
   const [field] = electionPageFields(page, "ocd-division/country:us/state:mo");
   assert.equal(field.sourceUrl, page.url);
   assert.equal(field.value, "https://elections.example.gov/voters/current/polling");
-  const directory = { ...page, text: '<form method="get" action="states"><select name="state"><option value="MO">Missouri</option></select></form>' };
-  assert.equal(electionDirectorySelection(directory, "Missouri"), "https://elections.example.gov/voters/current/states?state=MO");
 });
 
 /**

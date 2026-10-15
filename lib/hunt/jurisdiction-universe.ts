@@ -88,6 +88,8 @@ export interface Jurisdiction {
   readonly govClass: JurisdictionClass;
   /** The county this sits inside, where the enumeration states one. */
   readonly countyName: string | null;
+  /** Census state+county FIPS for the government's published office. */
+  readonly countyFips?: string | null;
   /** The `enumerationSources` id that named this government; a key with no entry is a malformed registry. */
   readonly enumeratedFrom: string;
   /**

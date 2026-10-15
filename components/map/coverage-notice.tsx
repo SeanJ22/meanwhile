@@ -1,7 +1,8 @@
 "use client";
+import { PlaceOpenData } from "./open-data";
 
 import { useShellData } from "@/lib/state/data";
-import { WorkingOnIt } from "@/components/demand/working-on-it";
+import { CardGapContribution } from "@/components/ui/card-gap-context";
 import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
 import Link from "next/link";
 import { legislativeRepresentationLabel, tribalSeatDescription } from "@/lib/officials/tribal-seats";
@@ -13,12 +14,12 @@ import {
   CouldGovernNotice,
 } from "@/components/address/could-govern-notice";
 import { useRef, type ReactNode } from "react";
+import Image from "next/image";
 
 import { useDismissOnOutside } from "@/hooks/use-dismiss-on-outside";
 import { useNarrowing } from "@/hooks/use-narrowing";
 import { useResolvedLocation } from "@/hooks/use-resolved-location";
 import { formatMiles } from "@/lib/map/format";
-
 
 import type { StreetPoint } from "@/lib/geo/census-geocoder";
 import type { CoverageTier } from "@/lib/meetings/query";
@@ -27,7 +28,6 @@ import {
   type CoveredBody,
   type Seat,
 } from "@/lib/registry/coverage";
-import { stateLegislatorCoverageGapText } from "@/lib/registry/coverage-client";
 import { deriveWhoGoverns } from "@/lib/registry/who-governs";
 import {
   homeSubject,
@@ -41,9 +41,7 @@ import { projectedBodyRoster } from "@/lib/registry/body-roster-client";
 import {
   hasRepresentation,
   leadKind,
-  noteStateFor,
   noticeLabel,
-  representationNoteFor,
   shouldRenderNotice,
 } from "@/lib/registry/representation";
 import {
@@ -60,13 +58,7 @@ import { partyColorVar } from "@/lib/officials/party-color";
 import { bodyDisplayName, readerPartyLabel } from "@/lib/text/reader-names";
 import { groupBySeatLabel } from "@/lib/officials/seat-grouping";
 import { GovernmentListings } from "./government-listings";
-
-/**
- * Says which rung of the cascade produced what's on screen, and, when nothing
- * is on screen, who governs here anyway. Division labels come from Census
- * boundary files; the copy claims only that a division of each type exists
- * here and has a governing body.
- */
+import { StateOfficeContacts } from "../state-office-contacts";
 
 interface CoverageNoticeProps {
   tier: CoverageTier;
@@ -78,11 +70,6 @@ interface CoverageNoticeProps {
   coverage: CoverageSummary | null;
   /** Divisions whose calendar source failed at the last refresh: "couldn't reach", never "nothing scheduled". */
   failedSourceOcdIds?: string[];
-  /**
-   * Which of those bodies still have meetings on screen (carried forward). For
-   * them the note says the calendar could not be refreshed; for the rest, that
-   * meetings may be missing.
-   */
   ocdIdsWithMeetings?: string[];
   /** When the meetings snapshot was last refreshed (ISO instant); null states the fact without a date. */
   lastCheckedAt?: string | null;
@@ -111,11 +98,6 @@ interface CoverageNoticeProps {
   clusterElsewhere?: boolean;
 }
 
-/**
- * Opens the rep popup. The seat's division id rides along for the
- * OFFICIAL_OPENED log event (null where the holder has no single seat
- * division, e.g. senators).
- */
 export type OpenOfficial = (
   holder: SeatHolder,
   seatLabel: string | null,
@@ -138,10 +120,6 @@ const BODY_CLASS_NOUN = (bodyClass: CoveredBody["bodyClass"]): string =>
 /** Type labels are structural and render neutral; tier accents belong to section headers. */
 const TYPE_LABEL_CLASS = "text-label";
 
-/**
- * Says whose question the card answers: the ZIP typed, refined by the address
- * if one was given. The district popup's subject is whatever was tapped.
- */
 function SubjectLine({
   zip,
   standing,
@@ -164,11 +142,6 @@ function SubjectLine({
   );
 }
 
-/**
- * Marks a row at an overlapping level (`school_district`, `place`) where the
- * reader's address named a different division. The row is never removed:
- * overlapping levels can hold both.
- */
 function OverlapMark({ zip }: { zip: string }) {
   return (
     <span
@@ -185,59 +158,25 @@ function marksOverlap(standing: BodyStanding | undefined): boolean {
   return standing === "OVERLAP_NOT_RULED_OUT";
 }
 
-/**
- * One seat row for the state and federal sections. A missing label renders
- * the lookup's named gap (never an OCD-ID); missing people render
- * `representationNoteFor`'s wording.
- */
-function SeatRow({
-  seat,
-  zip,
-  onOpenOfficial,
-}: {
-  seat: PanelSeat;
-  zip: string;
-  onOpenOfficial?: OpenOfficial;
-}) {
-  const noteState = noteStateFor(seat.sourcing);
-  return (
-    <li
-      /* Walks read the standing off the row, not from a class. */
+/** A seat shows its held name and representatives; gaps join the card footer. */
+function SeatRow({ seat, zip, onOpenOfficial }: { seat: PanelSeat; zip: string; onOpenOfficial?: OpenOfficial }) {
+  return <>
+    {!seat.label && seat.sourcing !== "looking" && <CardGapContribution id={`seat-name:${seat.ocdId}`} label="district names" unit="district" />}
+    {seat.representatives.length === 0 && seat.sourcing !== "looking" && <CardGapContribution id={`seat-representatives:${seat.ocdId}`} label="representatives" unit="district" />}
+    {(seat.label || seat.representatives.length > 0) && <li
       data-seat-standing={seat.standing}
       data-seat-sourcing={seat.sourcing}
       data-seat-representation={seat.representation}
       className="t-detail leading-snug"
     >
-      <span className={TYPE_LABEL_CLASS}>
-        {seat.label ?? (
-          <span className="text-muted">
-            {seat.sourcing === "looking"
-              ? "Looking up your district…"
-              : "We couldn't name this district just now."}
-          </span>
-        )}
-      </span>
+      {seat.label && <span className={TYPE_LABEL_CLASS}>{seat.label}</span>}
       {legislativeRepresentationLabel(seat.divisionType, seat.representation) && (
         <span className="ml-1.5 t-caption text-muted">{legislativeRepresentationLabel(seat.divisionType, seat.representation)}</span>
       )}
       {marksOverlap(seat.standing) && <OverlapMark zip={zip} />}
-      <span className="block person-under-heading">
-        {seat.representatives.length > 0 ? (
-          <HolderList
-            holders={[...seat.representatives]}
-            seatLabel={seat.label ?? ""}
-            seatOcdId={seat.ocdId}
-            tier={seat.tier}
-            onOpenOfficial={onOpenOfficial}
-          />
-        ) : seat.sourcing === "unsourced" ? (
-          // Not "vacant": we simply have no record.
-          <span className="text-muted">no record yet</span>
-        ) : (
-          // Still asking, or the asking failed; neither is an absence.
-          <span className="text-muted">{representationNoteFor(seat.tier, noteState)}</span>
-        )}
-      </span>
+      {seat.representatives.length > 0 && <span className="block person-under-heading">
+        <HolderList holders={[...seat.representatives]} seatLabel={seat.label ?? ""} seatOcdId={seat.ocdId} tier={seat.tier} onOpenOfficial={onOpenOfficial} />
+      </span>}
       {seat.representation === "tribal" && seat.nation && (
         <p className="mt-1 t-caption leading-relaxed text-paper-dim">{tribalSeatDescription(seat.nation)}</p>
       )}
@@ -245,8 +184,8 @@ function SeatRow({
         <summary className="cursor-pointer">Sources</summary>
         <ul className="mt-1 space-y-1">{seat.sourceUrls.map(sourceUrl => <li key={sourceUrl}><a href={sourceUrl} target="_blank" rel="noreferrer" className="text-link underline decoration-dotted">{new URL(sourceUrl).hostname}</a></li>)}</ul>
       </details>}
-    </li>
-  );
+    </li>}
+  </>;
 }
 
 function seatPhrase(seats: Seat[]): string | null {
@@ -267,12 +206,9 @@ function Holder({
   onOpen?: () => void;
   showOfficeTitle?: boolean;
 }) {
-  /*
-   * Name (opens the small battlecard), party as plain text in its colour, and
-   * the source mark where required. External links live inside the card.
-   */
   return (
     <div className="person-row">
+      {holder.photoUrl && <Image src={holder.photoUrl} alt={holder.name} width={36} height={44} unoptimized className="mr-2 h-11 w-9 shrink-0 rounded object-cover" />}
       <span className="person-row-name">
         {onOpen ? (
           <button
@@ -286,6 +222,7 @@ function Holder({
           holder.name
         )}
         {showOfficeTitle && <span className="block t-caption text-muted">{readerOfficeTitle(holder.officeTitle)}</span>}
+        {holder.selectionMethod === "APPOINTED" && <span className="block t-caption text-muted">Appointed</span>}
       </span>
       <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
         {holder.partyLabel && (
@@ -336,10 +273,6 @@ function HolderList({
   );
 }
 
-/**
- * The coverage states, in the reader's words. A body known to exist with no
- * calendar held must not read "no meetings".
- */
 function CoverageBody({
   zip,
   coverage,
@@ -378,18 +311,9 @@ function CoverageBody({
     stateLegislatorAuthorities = [],
   } = coverage;
 
-  /*
-   * The card's subject: the address the reader gave (device-local, see
-   * `lib/state/resolved-location.ts`), else the zip. Every list below reasons
-   * from it.
-   */
   const resolvedLocation = useResolvedLocation(zip);
   const subject = homeSubject(resolvedLocation);
 
-  /*
-   * The reader's own confirmed districts carry ids only, so name and roster
-   * are fetched by division key and injected as rows.
-   */
   const stateConfirmed = useConfirmedDivisions(coverage, subject.location, STATE_SEAT_TYPES);
   const localConfirmed = useConfirmedDivisions(coverage, subject.location, LOCAL_SEAT_TYPES);
   const federalConfirmed = useConfirmedDivisions(
@@ -398,11 +322,6 @@ function CoverageBody({
     FEDERAL_SEAT_TYPES,
   );
 
-  /*
-   * Officials group Local, State, Federal, split by division type. Without an
-   * address `panelSeatsFor` returns the whole zip as one list; rows the
-   * address ruled out are returned separately and never rendered.
-   */
   const statePanel = panelSeatsFor(
     coverage,
     subject.location,
@@ -418,26 +337,14 @@ function CoverageBody({
   const stateSeats = statePanel.yours;
   const localSeats = panelSeatsFor(coverage, subject.location, LOCAL_SEAT_TYPES, localConfirmed).yours;
   const federalSeats = federalPanel.yours;
-  const stateLegislatorGaps = stateLegislatorAuthorities.flatMap((authority) => {
-    const text = stateLegislatorCoverageGapText(authority);
-    return text === null ? [] : [{ authority, text }];
-  });
+  const stateLegislatorGaps = stateLegislatorAuthorities.filter(authority => authority.kind === "NOT_RECORDED" || authority.kind === "STORE_UNREACHABLE");
 
   /* Device-local narrowing: bodies of the picked type narrow to the choice. */
   const narrowing = useNarrowing(zip);
   const selected = new Set(narrowing.divisions);
 
-  /*
-   * Drops only `ELSEWHERE_IN_ZIP`; overlapping levels are untouched. Every
-   * count on this card derives from this array.
-   */
   const bodiesHere = scopedToAddress(bodies, subject.location);
 
-  /*
-   * Every number below derives from one array, after narrowing, so prose N,
-   * disclosure N and rendered rows always agree. Governments and advisory
-   * boards are stated separately.
-   */
   const derived = deriveWhoGoverns(bodiesHere, selected);
   const shown = derived.rows;
   // "" when unknown, so the sentence stands without a date.
@@ -450,74 +357,30 @@ function CoverageBody({
   const others = derived.others;
   const othersWithSource = derived.othersWithSource;
 
-  const lead =
-    kind === "unmapped" ? (
-      <>
-        <WorkingOnIt inline about={zip} />
-      </>
-    ) : kind === "none-scheduled" ? (
-      <>
-        Nothing is scheduled for the{" "}
-        {counts.total === 1 ? "body" : `${counts.total} bodies`} covering {zip}.
-      </>
-    ) : kind === "meetings-missing-calendars" ? (
-      // Meetings are on screen, but not from every government's calendar.
-      g.withSource === 0 ? (
-        // Zero tracked is not a lead-with-what-we-have case; say it straight.
-        <>
-          {g.total === 1
-            ? "One body governs the area around "
-            : `${g.total} bodies govern the area around `}
-          {zip}.{" "}
-          <WorkingOnIt inline about={g.total === 1 ? "its calendar" : "their calendars"} />
-        </>
-      ) : (
-        <>
-          We track the {g.withSource === 1 ? "calendar" : "calendars"} of{" "}
-          {g.withSource} of the {g.total} bodies that govern the area around{" "}
-          {zip}.{" "}
-          <WorkingOnIt inline about={g.total - g.withSource === 1 ? "the other calendar" : `the other ${g.total - g.withSource} calendars`} />
-        </>
-      )
-    ) : kind === "all-wired" ? (
-      // The state the old notice had no words for: every government here is
-      // on our watch. Said plainly, because the list below is the reader's
-      // answer to "who governs me" and deserves an opening line.
-      <>
-        {g.total === 1 ? "One body governs" : `${g.total} bodies govern`} the
-        area around {zip}. We watch{" "}
-        {g.total === 1 ? "its calendar" : "all of their calendars"}.
-      </>
-    ) : (
-      <>
-        {g.total === 1 ? "One body governs" : `${g.total} bodies govern`} the
-        area around {zip}.{" "}
-        {g.withSource > 0 && <>We track {g.withSource} calendars. </>}
-        <WorkingOnIt inline about={g.total - g.withSource === 1 ? "the remaining calendar" : "the remaining calendars"} />
-      </>
-    );
+  const missingCalendars = Math.max(0, g.total - g.withSource) + Math.max(0, others - othersWithSource);
+  const hasFederalOfficials = seats.some((seat) => seat.tier === "national" && seat.representatives.length > 0) || senators.length > 0;
+  const hasStateOfficials = seats.some((seat) => seat.tier === "state" && seat.representatives.length > 0) || statewideExecutives.length > 0;
+  const heldCoverage = [
+    hasFederalOfficials ? "your federal representatives and senators" : null,
+    hasStateOfficials ? "state officials" : null,
+    g.total > 0 ? `${g.total} local ${g.total === 1 ? "body" : "bodies"}${g.withSource > 0 ? `, with ${g.withSource === 1 ? "one calendar" : `${g.withSource} calendars`}` : ""}` : null,
+  ].filter(Boolean);
 
-  // The advisory boards, committees and commissions, stated apart from the
-  // governments — real bodies a reader can follow, not extra governments.
-  const othersLine =
-    kind !== "unmapped" && others > 0 ? (
-      othersWithSource > 0 ? (
-        <>
-          We also track{" "}
-          {othersWithSource === others
-            ? `all ${others === 1 ? "" : others + " "}of the area's other board, committee and commission calendars`
-            : `${othersWithSource} more board and committee ${othersWithSource === 1 ? "calendar" : "calendars"} here`}
-          .
-          {othersWithSource < others &&
-            <WorkingOnIt inline about={`${others - othersWithSource} more calendars`} />}
-        </>
-      ) : (
-        <>
-          {others} more boards, committees and commissions serve the area. {" "}
-          <WorkingOnIt inline about="their calendars" />
-        </>
-      )
-    ) : null;
+  const lead = kind === "unmapped" ? null : kind === "none-scheduled" ? (
+    <>Nothing is scheduled for the {counts.total === 1 ? "body" : `${counts.total} bodies`} covering {zip}.</>
+  ) : g.total > 0 ? (
+    <>
+      {g.total === 1 ? "One body governs" : `${g.total} bodies govern`} the area around {zip}.
+      {g.withSource > 0 && <> We track {g.withSource === g.total ? (g.total === 1 ? "its calendar" : "all of their calendars") : `${g.withSource} of their calendars`}.</>}
+    </>
+  ) : null;
+
+  const othersLine = kind !== "unmapped" && others > 0 ? (
+    <>
+      {others} more boards, committees and commissions serve the area.
+      {othersWithSource > 0 && <> We track {othersWithSource === others ? "all of their calendars" : `${othersWithSource} of their calendars`}.</>}
+    </>
+  ) : null;
 
   return (
     <>
@@ -537,28 +400,20 @@ function CoverageBody({
         </p>
       )}
 
-      <p className="mt-1.5 t-body leading-relaxed text-voice">
-        {lead}
-      </p>
+      {lead && <p className="mt-1.5 t-body leading-relaxed text-voice">{lead}</p>}
+      {missingCalendars > 0 && <CardGapContribution id={`area-calendars:${zip}`} label="calendars" count={missingCalendars} unit="body" />}
+      {!hasFederalOfficials && <CardGapContribution id={`area-federal-officials:${zip}`} label="federal officials" />}
+      {!hasStateOfficials && <CardGapContribution id={`area-state-officials:${zip}`} label="state officials" />}
+      {g.total === 0 && <CardGapContribution id={`area-local-bodies:${zip}`} label="local bodies" />}
 
       {/* Counts come from the same arrays the sections below render. */}
-      <p className="mt-1 t-detail leading-relaxed text-voice" data-mw-covers>
+      {heldCoverage.length > 0 && <p className="mt-1 t-detail leading-relaxed text-voice" data-mw-covers>
         <strong className="font-semibold text-voice">What Meanwhile has for {zip}:</strong>{" "}
-        {[
-          seats.some((seat) => seat.tier === "national" && seat.representatives.length > 0) || senators.length > 0
-            ? "your federal representatives and senators"
-            : "federal officials not collected yet",
-          seats.some((seat) => seat.tier === "state" && seat.representatives.length > 0) || statewideExecutives.length > 0
-            ? "state officials"
-            : "state officials not collected yet",
-          g.total === 0
-            ? "local bodies not mapped yet"
-            : `${g.total} local ${g.total === 1 ? "body" : "bodies"}${g.withSource > 0 ? `, with ${g.withSource === 1 ? "one calendar" : `${g.withSource} calendars`}` : ", calendars not collected yet"}`,
-        ].join(" · ")}
-        .
-      </p>
+        {heldCoverage.join(" · ")}.
+      </p>}
 
       <SubjectLine zip={zip} standing={subject.location.certainty} />
+      <PlaceOpenData zip={zip} />
 
       {coverage.federalDirectoryUnavailable && <p className="mt-1 t-detail text-voice">We could not load the federal directory just now.</p>}
       <GovernmentListings records={coverage.governments ?? []} states={coverage.governmentInventoryStates ?? []} unavailableStates={coverage.governmentInventoryUnavailableStates} />
@@ -911,45 +766,11 @@ function CoverageBody({
         </>
       )}
 
-      {stateLegislatorGaps.map(({ authority, text }) => (
-        <p
-          key={`state-legislator-authority:${authority.scope}`}
-          data-state-legislator-authority={authority.kind}
-          data-state-legislator-scope={authority.scope}
-          className={`mt-2.5 t-caption leading-relaxed ${
-            authority.kind === "STORE_UNREACHABLE" ? "text-signal" : "text-voice"
-          }`}
-        >
-          {text}
-        </p>
+      {stateLegislatorGaps.map(authority => (
+        <CardGapContribution key={authority.scope} id={`area-state-authority:${authority.scope}`} label={`state legislators in ${authority.scope.replace(/^US-/, "")}`} />
       ))}
 
-      {(bodies.some(
-        (b) =>
-          b.name === null &&
-          b.coverageStatus !== "LIVE" &&
-          b.coverageStatus !== "MANUAL",
-      ) ||
-        seatCounts.named < seatCounts.total) && (
-        // Narrowed to what is still unsourced.
-        <p className="mt-2.5 t-caption leading-relaxed text-voice">
-          {counts.withoutSource > 0 && (
-            <>
-              We know these bodies exist because the district boundaries do. We
-              haven&apos;t collected their names or meeting schedules yet, and
-              finding them is open work. This list fills in as we do.
-            </>
-          )}
-          {counts.withoutSource > 0 && seatCounts.named < seatCounts.total && " "}
-          {seatCounts.named < seatCounts.total && (
-            <>
-              {seatCounts.named > 0 && stateLegislatorGaps.length === 0
-                ? "State legislators aren't sourced yet either."
-                : ""}
-            </>
-          )}
-        </p>
-      )}
+      {shown.filter(body => body.name === null).length > 0 && <CardGapContribution id={`area-body-names:${zip}`} label="names" count={shown.filter(body => body.name === null).length} unit="body" />}
 
       {/* The mover's page, one tap from who-governs. */}
       {/^\d{5}$/.test(zip) && (
@@ -1068,6 +889,7 @@ export function CoverageNotice({
 
       <div className="coverage-notice-body">
       <MeetingListingNotice groups={listingCount?.groups ?? []} />
+      <StateOfficeContacts offices={coverage?.stateOffices ?? []} />
       {tier === "widened" && (
         <p className="mt-1.5 t-body leading-relaxed text-paper-dim">
           Nearby results: {listingCount?.unresolved ? `${count} ${listingCount.unit}` : count === 1 ? "one meeting" : `${count} meetings`} within {wide} miles of {zip}.
@@ -1081,8 +903,9 @@ export function CoverageNotice({
           <ul className="mt-2 space-y-2">
             {result.readerScope.governments.map(body => <li key={body.bodyId} data-upcoming-body={body.bodyId}>
               <span className="t-body text-paper">{body.name}</span>
-              {body.upcoming > 0 ? <p className="t-detail text-muted">{body.upcoming} upcoming {body.upcoming === 1 ? "meeting" : "meetings"} held · {body.agendasLinked} {body.agendasLinked === 1 ? "agenda" : "agendas"} linked</p>
-                : <WorkingOnIt subject={{ type: "BODY", id: body.bodyId }} />}
+              {body.upcoming > 0 ? <p className="t-detail text-muted">{body.upcoming} upcoming {body.upcoming === 1 ? "meeting" : "meetings"} held{body.agendasLinked > 0 ? ` · ${body.agendasLinked} ${body.agendasLinked === 1 ? "agenda" : "agendas"} linked` : ""}</p>
+                : <CardGapContribution id={`area-upcoming:${body.bodyId}`} label="upcoming meetings" unit="body" subject={{ type: "BODY", id: body.bodyId }} />}
+              {body.upcoming > body.agendasLinked && <CardGapContribution id={`area-agendas:${body.bodyId}`} label="agendas" count={body.upcoming - body.agendasLinked} unit="meeting" kind="not-posted" subject={{ type: "BODY", id: body.bodyId }} />}
             </li>)}
           </ul>
         </section>

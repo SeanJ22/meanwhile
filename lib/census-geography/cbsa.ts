@@ -1,10 +1,6 @@
-import { FIPS_TO_STATE } from "../ocd/fips.ts";
-import { WHOLE_THRESHOLD } from "./build.ts";
-import type { CbsaClass, GeographyVersion } from "./contract.ts";
-import type { BuiltGrouping, BuiltOverlap, BuiltScope } from "./dataset.ts";
+import type { CbsaClass } from "./contract.ts";
 import { readXlsxFirstSheet } from "./xlsx.ts";
 
-/** A CBSA is a union of whole counties, so ZCTA↔CBSA is the exact fold of ZCTA↔county overlaps; metro and micro are never merged. */
 interface CbsaInfo {
   title: string;
   cbsaClass: CbsaClass;
@@ -18,12 +14,6 @@ export interface CbsaDelineation {
   readonly cbsa: Map<string, CbsaInfo>;
 }
 
-/**
- * Parse the OMB delineation (list1). The layout has title rows, then a header
- * row, then one data row per county, then footnotes. We resolve columns by
- * their header text (never by index) and restore FIPS leading zeros that Excel
- * may have dropped by storing the codes as numbers.
- */
 export function parseCbsaDelineation(xlsxBytes: Buffer): CbsaDelineation {
   const rows = readXlsxFirstSheet(xlsxBytes);
   const headerIdx = rows.findIndex((r) => r.some((c) => c.trim() === "CBSA Code"));
@@ -69,82 +59,4 @@ export function parseCbsaDelineation(xlsxBytes: Buffer): CbsaDelineation {
   }
   if (cbsa.size === 0) throw new Error("CBSA delineation: parsed zero CBSAs (extraction failed)");
   return { cbsaByCounty, cbsa };
-}
-
-interface ZctaAgg {
-  sum: number;
-  hasNumeric: boolean;
-}
-
-/**
- * Fold a built ZCTA↔county scope up to ZCTA↔CBSA using the delineation.
- * `countyScope` must be the UNFILTERED national county scope (a CBSA can span
- * counties in several states, so a state-filtered county scope would truncate
- * multi-state metros).
- */
-export function buildCbsaScope(
-  countyScope: BuiltScope,
-  delineation: CbsaDelineation,
-  versionMeta: GeographyVersion,
-): BuiltScope {
-  const agg = new Map<string, Map<string, ZctaAgg>>();
-  for (const county of countyScope.groupings) {
-    const code = delineation.cbsaByCounty.get(county.geoid);
-    if (code === undefined) continue; // county is in no CBSA (rural / non-core)
-    let zctas = agg.get(code);
-    if (zctas === undefined) {
-      zctas = new Map();
-      agg.set(code, zctas);
-    }
-    for (const o of county.overlaps) {
-      let z = zctas.get(o.zcta5);
-      if (z === undefined) {
-        z = { sum: 0, hasNumeric: false };
-        zctas.set(o.zcta5, z);
-      }
-      if (o.fraction !== null) {
-        z.sum += o.fraction;
-        z.hasNumeric = true;
-      }
-    }
-  }
-
-  const groupings: BuiltGrouping[] = [];
-  let edges = 0;
-  for (const [code, info] of delineation.cbsa) {
-    const zctas = agg.get(code);
-    const overlaps: BuiltOverlap[] = [];
-    if (zctas) {
-      for (const [zcta5, z] of zctas) {
-        const fraction = z.hasNumeric ? Math.min(1, z.sum) : null;
-        overlaps.push({ zcta5, whole: fraction !== null && fraction >= WHOLE_THRESHOLD, fraction });
-      }
-      overlaps.sort((a, b) => (a.zcta5 < b.zcta5 ? -1 : a.zcta5 > b.zcta5 ? 1 : 0));
-    }
-    edges += overlaps.length;
-    const memberFips = [...info.stateFips].sort();
-    const memberStates = memberFips.map((f) => FIPS_TO_STATE[f]?.postal ?? "??");
-    const primaryFips = memberFips[0] ?? code.slice(0, 2);
-    groupings.push({
-      geoid: code,
-      ocdId: null, // a CBSA is a statistical area, not an OCD division
-      label: info.title,
-      stateFips: primaryFips,
-      stateAbbr: FIPS_TO_STATE[primaryFips]?.postal ?? "??",
-      cbsaClass: info.cbsaClass,
-      memberStates,
-      overlaps,
-    });
-  }
-  groupings.sort((a, b) => (a.geoid < b.geoid ? -1 : a.geoid > b.geoid ? 1 : 0));
-
-  return {
-    type: "cbsa",
-    version: versionMeta.key,
-    versionMeta,
-    fractionBasis: "area",
-    groupings,
-    instanceCount: groupings.length,
-    zctaEdgeCount: edges,
-  };
 }

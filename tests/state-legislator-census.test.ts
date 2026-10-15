@@ -1,9 +1,15 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
-import test from "node:test";
+import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import test, { after } from "node:test";
 
 import { censusWorkDivision } from "../lib/census-geography/division-id.ts";
-import { containerOfRow, geographyOfRows, stateContainers, type ReadOnlyQuery, type Row } from "../lib/control-plane/admin-view/promoted-slices.ts";
+import { containersOfCode, stateContainers, type ReadOnlyQuery, type Row } from "../lib/control-plane/admin-view/promoted-slices.ts";
+import { buildCensusDistrictEdge } from "../lib/census-geography/district-edge.ts";
+import type { BuiltDataset, BuiltGrouping } from "../lib/census-geography/dataset.ts";
+import type { GeographyVersion } from "../lib/census-geography/contract.ts";
+import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import { withCensusDistricts } from "../lib/geo/zip-census-districts.ts";
 import { statePeopleDivisions } from "../lib/sources/plural/acquisition.ts";
 import { designationFromLabel, designationKey, indexDivisions, normalize, type PluralPerson, type RegistryDivisionLite } from "../lib/sources/plural/index.ts";
@@ -61,13 +67,32 @@ function person(source: SourcePerson): PluralPerson {
   };
 }
 
-/** The same SQL row shape that stateContainers projects from the held pointer. */
+const artifactDirectory = mkdtempSync(join(tmpdir(), "state-legislator-census-"));
+const artifactStore = new LocalFileArtifactStore(artifactDirectory);
+const previousDirectory = process.env.WTP_READER_EDGE_DIR;
+process.env.WTP_READER_EDGE_DIR = artifactDirectory;
+after(() => {
+  rmSync(artifactDirectory, { recursive: true, force: true });
+  if (previousDirectory === undefined) delete process.env.WTP_READER_EDGE_DIR;
+  else process.env.WTP_READER_EDGE_DIR = previousDirectory;
+});
+function grouping(sample: Sample): BuiltGrouping {
+  const row = sample.row;
+  return { geoid: row.geoid, label: row.label, stateAbbr: row.state_abbr, stateFips: String(row.state_fips),
+    ocdId: row.ocd_id, memberStates: row.member_states as string[], overlaps: [{ zcta5: "12345", whole: true, fraction: 1 },
+      ...(row.geoid === fixture.coverageZip.geoid && row.type === "state_leg_lower" ? [fixture.coverageZip.overlap] : [])] };
+}
+const dataset: BuiltDataset = { formatVersion: 1, builtAt: NOW, coverage: "held Census district encoding samples",
+  zctaUniverse: ["12345", fixture.coverageZip.zip], scopes: fixture.scopes.map(row => {
+    const groups = fixture.samples.filter(sample => sample.row.type === row.type).map(grouping);
+    return { type: row.type as "state_leg_upper" | "state_leg_lower", version: String(row.version), versionMeta: row.version_meta as GeographyVersion,
+      fractionBasis: "area", groupings: groups, instanceCount: groups.length, zctaEdgeCount: groups.reduce((sum, group) => sum + group.overlaps.length, 0) };
+  }) };
+const index = await buildCensusDistrictEdge(dataset, fixture.sources.census.versionId, artifactStore);
 const query: ReadOnlyQuery = async statements => {
-  assert.equal(statements.length, 2);
-  assert.match(statements[1]!.text, /g->>'stateAbbr' = \$4/);
-  const state = statements[1]!.params[3];
-  return [[{ version_id: fixture.sources.census.versionId }],
-    [...fixture.scopes, ...fixture.samples.filter(sample => sample.row.state_abbr === state).map(sample => sample.row)]];
+  assert.equal(statements.length, 1);
+  assert.doesNotMatch(statements[0].text, /jsonb_array_elements/);
+  return [[{ version_id: fixture.sources.census.versionId, payload: index }]];
 };
 
 async function divisionsForAllSamples(): Promise<RegistryDivisionLite[]> {
@@ -144,8 +169,7 @@ test("real district members link, while unpublished supplemental areas retain di
   assert.equal(roster.officeholders.length, sourcePeople.length);
   assert.equal(roster.divisions.length, sourcePeople.length - 2);
   for (const sample of fixture.samples.filter(sample => sample.match !== "unassigned")) {
-    const container = containerOfRow(sample.row, false)!;
-    const expected = censusWorkDivision(container.ref);
+    const expected = censusWorkDivision({ ...grouping(sample), type: sample.row.type, version: String(sample.row.version) });
     for (const member of sample.people) {
       const holder = roster.officeholders.find(holder => holder.personId === `plural:${member.id.slice("ocd-person/".length)}`)!;
       assert.deepEqual(roster.divisions.filter(link => link.officeholderId === holder.id).map(link => link.ocdId), [expected],
@@ -222,14 +246,9 @@ test("at-large DC and PR legislators render as root seats without executives or 
 test("coverage puts a real legislator under the ZIP-derived lower-chamber Census id", async () => {
   await installRegistryAuthority();
   const sample = fixture.samples.find(sample => sample.row.geoid === fixture.coverageZip.geoid && sample.row.type === "state_leg_lower")!;
-  const census = geographyOfRows([...fixture.scopes, sample.row], false);
   const zip = fixture.coverageZip.zip;
-  const entry = withCensusDistricts({ ids: [], partial: [], samples: 0 }, {
-    kind: "HELD", versionId: fixture.sources.census.versionId,
-    value: { ...census, known: true, containers: census.containers.map(container => ({
-      ...container, overlaps: [fixture.coverageZip.overlap],
-    })) },
-  }, zip, SELECTION);
+  const census = await containersOfCode(zip, ["state_leg_lower"], query, artifactStore);
+  const entry = withCensusDistricts({ ids: [], partial: [], samples: 0 }, census, zip, SELECTION);
   assert.deepEqual(entry.ids, ["ocd-division/country:us/state:md/sldl:28"]);
   const held = await statePeopleDivisions("MD", NOW, query);
   assert.equal(held.kind, "HELD");

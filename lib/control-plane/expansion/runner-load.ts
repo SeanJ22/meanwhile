@@ -164,10 +164,7 @@ export async function resolveScopes(
       scopes: decisions.map((decision) => ({
         kind: "UNRESOLVED" as const,
         decision,
-        why:
-          state.source === "bootstrap"
-            ? "only the bundled Arizona test fixture is available, which is not the published Census geography"
-            : "the Census geography is not published yet",
+        why: "the Census geography is not published yet",
         states: [decision.geography.stateAbbr],
       })),
       lookup: lookupReading,

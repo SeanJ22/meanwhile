@@ -47,10 +47,10 @@ test("each kind of thing appears once, under the right filter, with its own stop
   assert.equal(by("scheduled:sch-1").filter, "scheduled");
   assert.deepEqual(by("scheduled:sch-1").actions, [{ kind: "order-unschedule", target: "sch-1", label: "Cancel this scheduled order" }]);
   assert.deepEqual(by("send:i1").actions.map((a) => a.kind), ["cancel-send"]);
-  assert.equal(by("fix:f1").filter, "needs-me");
+  assert.equal(by("fix:f1").filter, "waiting");
   assert.equal(by("fix:f2").filter, "in-progress");
   assert.equal(by("fix:f1").progress?.of, 7);
-  assert.equal(queueCounts(rows)["needs-me"], 3);
+  assert.equal(queueCounts(rows)["needs-me"], 2);
 });
 
 test("a send listed with its saved order is one row, and an unmatched saved order stays", () => {

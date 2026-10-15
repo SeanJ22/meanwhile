@@ -1,8 +1,14 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { after } from "node:test";
+import { mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import type { MapLibreMap } from "maplibre-gl";
 import type { BuiltDataset, BuiltScope } from "../lib/census-geography/dataset.ts";
-import { buildCensusDistrictEdge, censusDistrictEdgeSlice } from "../lib/census-geography/district-edge.ts";
+import { buildCensusDistrictEdge, createCensusDistrictReaderEdge } from "../lib/census-geography/district-edge.ts";
+import { publishScopeBoundaries, hydrateBoundaryGeometries } from "../lib/census-geography/boundary-artifacts.ts";
+import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import { representationDivisionsAt, excludedRepresentationAtPoints, requestRepresentationGeographyReader, supplementPointDivisions } from "../lib/geo/representation-geography.ts";
 import { withCensusDistricts } from "../lib/geo/zip-census-districts.ts";
 import { resolveAddress } from "../lib/geo/address-resolution.ts";
@@ -14,6 +20,20 @@ const square = { type: "Polygon" as const, coordinates: [[[0,0],[2,0],[2,2],[0,2
 const baseId = "ocd-division/country:us/state:nh/sldl:ro1";
 const overlayId = "ocd-division/country:us/state:nh/sldl:ro31";
 const selection = { purpose: "representation" as const, asOf: "2026-10-12" };
+const directory = mkdtempSync(join(tmpdir(), "sl02-geography-paths-"));
+const store = new LocalFileArtifactStore(directory);
+const previousDirectory = process.env.WTP_READER_EDGE_DIR;
+process.env.WTP_READER_EDGE_DIR = directory;
+after(() => {
+  if (previousDirectory === undefined) delete process.env.WTP_READER_EDGE_DIR;
+  else process.env.WTP_READER_EDGE_DIR = previousDirectory;
+  rmSync(directory, { recursive: true, force: true });
+});
+
+async function publishedReader(dataset: BuiltDataset, version: string) {
+  const scopes = await Promise.all(dataset.scopes.map(scope => publishScopeBoundaries(scope, store)));
+  return createCensusDistrictReaderEdge(await buildCensusDistrictEdge({ ...dataset, scopes }, version, store), store);
+}
 
 function scope(type: BuiltScope["type"], version: string, geoid: string, label: string): BuiltScope {
   return { type, version, fractionBasis: "area", instanceCount: 1, zctaEdgeCount: 1,
@@ -24,25 +44,26 @@ function scope(type: BuiltScope["type"], version: string, geoid: string, label: 
       ...(type === "overlay_district" ? { representation: "overlay" as const } : {}), overlaps: [{ zcta5: "00001", whole: false, fraction: 0.25 }] }] };
 }
 
-test("a published ZIP retains its Census partition and independent overlay, with identical land-share semantics", () => {
+test("a published ZIP retains its Census partition and independent overlay, with identical land-share semantics", async () => {
   const dataset: BuiltDataset = { formatVersion: 1, builtAt: "2026-10-12T00:00:00Z", coverage: "Constructed topology test", zctaUniverse: ["00001"],
     scopes: [scope("state_leg_lower", "sldl:2024", "33RO1", "Rockingham 1"), scope("overlay_district", "overlay:test", "33RO31", "Rockingham 31")] };
-  const edge = buildCensusDistrictEdge(dataset, "fixture");
-  const slice = censusDistrictEdgeSlice(edge, edge.versionId, "00001");
+  const edge = await publishedReader(dataset, "fixture");
+  const slice = await edge.loadZip("00001");
   assert.equal(slice.kind, "HELD");
   const zip = withCensusDistricts({ ids: [], partial: [], samples: 0 }, slice, "00001", selection);
   assert.deepEqual(new Set(zip.ids), new Set([baseId, overlayId]));
   assert.deepEqual(new Set(zip.partial), new Set([baseId, overlayId]));
   if (slice.kind !== "HELD") return;
-  const hits = representationDivisionsAt([1,1], slice.value, selection);
+  const hydrated = await hydrateBoundaryGeometries(slice.value, "accurate", store, { points: [[1,1]] });
+  const hits = representationDivisionsAt([1,1], hydrated, selection);
   assert.deepEqual(new Set(hits.map(hit => hit.ocdId)), new Set([baseId, overlayId]));
   assert.equal(hits.find(hit => hit.ocdId === overlayId)?.representation, "overlay");
   assert.equal(hits.find(hit => hit.ocdId === overlayId)?.sourceUrls?.length, 2);
   const address = resolveAddress([hits]);
   assert.equal(address.status, "RESOLVED");
   assert.deepEqual(new Set(address.levels.find(level => level.level === "sldl")?.divisionIds), new Set([baseId, overlayId]));
-  assert.deepEqual(excludedRepresentationAtPoints([[3,3]], slice.value, selection), [overlayId]);
-  assert.deepEqual(excludedRepresentationAtPoints([[1,1],[3,3]], slice.value, selection), []);
+  assert.deepEqual(excludedRepresentationAtPoints([[3,3]], hydrated, selection), [overlayId]);
+  assert.deepEqual(excludedRepresentationAtPoints([[1,1],[3,3]], hydrated, selection), []);
 });
 
 test("one map click returns base and overlay House hits and preserves their distinct sources", () => {
@@ -59,15 +80,15 @@ test("one map click returns base and overlay House hits and preserves their dist
 test("concurrent street samples read their state's overlay version once, then a new request sees the next version", async () => {
   const dataset: BuiltDataset = { formatVersion: 1, builtAt: "2026-10-12T00:00:00Z", coverage: "Constructed topology test", zctaUniverse: ["00001"],
     scopes: [scope("overlay_district", "overlay:test", "33RO31", "Rockingham 31")] };
-  const edge = buildCensusDistrictEdge(dataset, "street-samples");
-  const zipSlice = censusDistrictEdgeSlice(edge, edge.versionId, "00001");
+  const edge = await publishedReader(dataset, "street-samples");
+  const zipSlice = await edge.loadZip("00001");
   assert.equal(zipSlice.kind, "HELD");
   if (zipSlice.kind !== "HELD") return;
   let release!: (slice: Slice<GeographySlice>) => void;
   const held = new Promise<Slice<GeographySlice>>(resolve => { release = resolve; });
   const reads: string[] = [];
   const read = async (state: string) => { reads.push(state); return held; };
-  const shared = requestRepresentationGeographyReader(read);
+  const shared = requestRepresentationGeographyReader(read, { points: [[1,0.5],[1,1],[1,1.5],[1,1.8]], selection });
   const base = {ocdId:baseId,divisionType:"sldl",label:"Rockingham 1",state:"NH"} as Division;
   const samples = Promise.all([0.5,1,1.5,1.8].map(lat => supplementPointDivisions(lat,1,[base],undefined,shared)));
   assert.deepEqual(reads,["NH"],"all in-flight samples must share one bounded read rather than serialize four database round trips");

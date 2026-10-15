@@ -1,4 +1,4 @@
-import { boxIndexEnabled, indexDetectiveFindings } from "../box.ts";
+import { indexDetectiveFindings } from "../box.ts";
 import { endAttempt, isExpired, release, type Attempt } from "../attempt.ts";
 import type { AuditFinding, ValidationRecord } from "../audit.ts";
 import type { RouteTask } from "../route-task.ts";
@@ -33,7 +33,7 @@ export async function completeWorkerTask(repos: ControlPlaneRepositories, result
   };
   await repos.workerResults.append(result.workItemId, result.id, committed, result.endedAt);
   await applyWorkerCompletion(repos, committed);
-  if (boxIndexEnabled() && committed.result.role === "DETECTIVE") {
+  if (committed.result.role === "DETECTIVE") {
     await indexDetectiveFindings(repos.boxFindings, { ...committed, result: committed.result },
       new Map((await repos.artifacts.readAll()).map(artifact => [artifact.artifactId, artifact])), committed.endedAt);
   }

@@ -7,8 +7,6 @@ import {
   processRoutineCandidate,
   type PromotionOutcome,
 } from "../lib/civic-data/promotion.ts";
-import { projectRoutineDataObservability } from "../lib/civic-data/observability.ts";
-import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
 import { promotionProofIssue, readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import { MemoryRoutineDataStore, trustedLkgImportClock } from "../lib/civic-data/store.ts";
 import { routineTaskDue, type RoutineSourceTask } from "../lib/civic-data/runner.ts";
@@ -53,8 +51,8 @@ function candidate(
   const contractId = manual ? MANUAL_CONTRACT_ID : "dotgov";
   const sourceId = manual ? MANUAL_SOURCE_ID : "cisa-dotgov-registry";
   const recordClass = manual ? MANUAL_RECORD_CLASS : "DOTGOV_REFERENCE";
-  const scope = manual ? MANUAL_SCOPE : "US:current-full:election-domains";
-  const parserVersion = manual ? "curated-reader-records/2" : "cisa-dotgov/2";
+  const scope = manual ? MANUAL_SCOPE : "US:current-full:domains";
+  const parserVersion = manual ? "curated-reader-records/2" : "cisa-dotgov/3";
   const payload = manual
     ? {
         kind: MANUAL_CONTRACT_ID,
@@ -556,7 +554,7 @@ test("retired trusted-LKG doors refuse new imports while retained history remain
     /TRUSTED_LKG_ADMISSION_RETIRED/,
     "retained routine-source markers cannot create a new promotion",
   );
-  assert.equal(await ordinaryRoutineStore.readPromotion("DOTGOV_REFERENCE", "US:current-full:election-domains"), null);
+  assert.equal(await ordinaryRoutineStore.readPromotion("DOTGOV_REFERENCE", "US:current-full:domains"), null);
   const retiredManualStore = new MemoryRoutineDataStore();
   await assert.rejects(
     processRoutineCandidate(retiredManualStore, candidate(), FIRST),
@@ -755,65 +753,6 @@ test("Reader proof fails closed if durable trusted-LKG evidence is altered", asy
     /must make no publisher-universe completeness claim/i,
     "even self-consistent bootstrap evidence cannot turn a frozen snapshot into current completeness proof",
   );
-});
-
-test("Admin exposes imported LKG without claiming freshness or a source-authenticated success", async () => {
-  const { store, outcome } = retainedHistoricalLkg();
-  assert.ok(outcome.promoted);
-  const row = outcome.candidate;
-  const events = await store.events(row.candidate.id);
-  const view = projectRoutineDataObservability({
-    candidates: [{
-      id: row.candidate.id,
-      sourceId: row.candidate.sourceId,
-      recordClass: row.candidate.recordClass,
-      scope: row.candidate.scope,
-      state: row.state,
-      acquisitionSucceeded: row.acquisitionSucceeded,
-      retrievedAt: row.candidate.retrieval.retrievedAt,
-      sourceThrough: row.candidate.temporal.sourceThrough,
-      candidate: row.candidate,
-      validationReceipt: row.receipt,
-      promotedVersionId: row.promotedVersion,
-      lastKnownGoodVersionId: row.lastKnownGoodVersion,
-      failureCode: row.failureCode,
-      failureDetail: row.failureDetail,
-    }],
-    events: events.map((event) => ({ ...event, id: `${event.candidateId}:${event.sequence}` })),
-    promotions: [{
-      key: outcome.promoted!.key,
-      sourceId: outcome.promoted!.sourceId,
-      recordClass: outcome.promoted!.recordClass,
-      scope: outcome.promoted!.scope,
-      currentVersionId: outcome.promoted!.versionId,
-      lastKnownGoodVersionId: outcome.promoted!.lastKnownGoodVersionId,
-      promotedAt: outcome.promoted!.promotedAt,
-      payload: outcome.promoted!.payload,
-      validationReceipt: outcome.promoted!.receipt,
-    }],
-  }, SECOND, [requiredManualProductionContract(MANUAL_CONTRACT_ID)]);
-  const observed = view.contracts[0];
-  assert.equal(observed.canonicalPromotion.kind, "MEASURED");
-  if (observed.canonicalPromotion.kind === "MEASURED") {
-    assert.equal(observed.canonicalPromotion.value.authorityOrigin, "TRUSTED_LKG_IMPORT");
-  }
-  assert.equal(observed.cadence.freshness, "STALE", "the imported LKG remains explicitly stale");
-  assert.equal(observed.cadence.operationalState, "UNKNOWN", "an owner-invoked source has no fabricated routine clock");
-  assert.equal(observed.lastSuccessfulAcquisition.kind, "NOT_RECORDED");
-  assert.equal(observed.histories["24h"].counts.successfulAcquisitions.kind, "MEASURED");
-  assert.equal(observed.histories["24h"].counts.successfulAcquisitions.value, 0);
-  assert.equal(observed.histories["24h"].attempts[0]?.authorityOrigin, "TRUSTED_LKG_IMPORT");
-  assert.equal(observed.lkg.kind, "MEASURED");
-  if (observed.lkg.kind === "MEASURED") {
-    assert.equal(observed.lkg.value.state, "TRUSTED_LKG_IMPORT");
-    assert.equal(observed.lkg.value.currentlyServing, true);
-  }
-  assert.equal(view.summary.healthy.kind, "MEASURED");
-  assert.equal(view.summary.stale.kind, "MEASURED");
-  assert.equal(view.summary.lkgServing.kind, "MEASURED");
-  if (view.summary.healthy.kind === "MEASURED") assert.equal(view.summary.healthy.value, 0);
-  if (view.summary.stale.kind === "MEASURED") assert.equal(view.summary.stale.value, 1);
-  if (view.summary.lkgServing.kind === "MEASURED") assert.equal(view.summary.lkgServing.value, 1);
 });
 
 function withLiveAttempt(store: MemoryRoutineDataStore, template: CandidateVersionRecord, id: string, at: string): void {

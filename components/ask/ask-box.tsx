@@ -765,6 +765,9 @@ export function AskBox({
             </div>
           )}
 
+          {[...new Map((grounded.records ?? []).flatMap(record => record.fecProfile ? [[record.fecProfile.candidateId, record.fecProfile] as const] : [])).values()].map(profile => (
+            <p key={profile.candidateId} className="mt-2 t-detail"><a href={`/candidates/${profile.candidateId}`} className="text-link underline underline-offset-2">{profile.name} · Profile and campaign money</a></p>
+          ))}
           <AskAnswerRecords records={grounded.records ?? []} initiallyOpen={!grounded.answer} agendaLead={grounded.agendaLead} prose={grounded.agendaLead ? grounded.answer : null} />
 
           {gapsNotInAnswer(grounded.answer, grounded.gaps ?? []).map((g) => (

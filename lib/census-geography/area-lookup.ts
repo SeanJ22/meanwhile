@@ -1,46 +1,68 @@
 import { readerQuery } from "../civic-data/promoted-reader-query.ts";
-import type { ReadOnlyQuery } from "../control-plane/admin-view/promoted-slices.ts";
-import type { BuiltDataset } from "./dataset.ts";
+import { readCensusGeographyIndex, type ReadOnlyQuery } from "../control-plane/admin-view/promoted-slices.ts";
+import { resolveReaderArtifactStore, type ReaderArtifactStore } from "../meetings/edge-store.ts";
+import type { BuiltDataset, BuiltScope } from "./dataset.ts";
+import { censusStateDataset, createCensusDistrictReaderEdge, readCensusDistrictState, type CensusDistrictEdge } from "./district-edge.ts";
 import { createLookup, notYetPublishedLookup } from "./lookup.ts";
-import { CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } from "./publication.ts";
 import type { PublishedLookupState } from "./reader.ts";
 
-/** The stored place and its touching districts, confined to its county states.
- * Filtering happens in the existing promoted store: no national payload is
- * transferred to, parsed by, or cached in a worker or its parent. */
-export async function loadPublishedAreaLookupState(zips: readonly string[], query: ReadOnlyQuery | null = readerQuery()): Promise<PublishedLookupState> {
+export function unavailableCensusLookup(versionId: string): PublishedLookupState {
+  return { lookup: notYetPublishedLookup(versionId), source: "unavailable", versionId };
+}
+
+export async function selectedStateDatasets(index: CensusDistrictEdge, states: readonly string[], store: ReaderArtifactStore): Promise<BuiltDataset[]> {
+  return Promise.all([...new Set(states)].map(async state => {
+    const artifact = await readCensusDistrictState(index, state, store);
+    if (!artifact) throw new Error("Selected Census state artifact is unavailable");
+    return censusStateDataset(artifact);
+  }));
+}
+
+export function mergeCensusDatasets(index: CensusDistrictEdge, datasets: readonly BuiltDataset[], select: (scope: BuiltScope, group: BuiltScope["groupings"][number]) => boolean,
+  universe?: readonly string[]): BuiltDataset {
+  const scopes = new Map<string, BuiltScope>();
+  for (const dataset of datasets) for (const scope of dataset.scopes) {
+    const key = `${scope.type}|${scope.version}`;
+    const prior = scopes.get(key);
+    const groups = new Map((prior?.groupings ?? []).map(group => [group.geoid, group]));
+    for (const group of scope.groupings) if (select(scope, group)) {
+      const previous = groups.get(group.geoid);
+      const overlaps = new Map((previous?.overlaps ?? []).map(overlap => [overlap.zcta5, overlap]));
+      for (const overlap of group.overlaps) overlaps.set(overlap.zcta5, overlap);
+      groups.set(group.geoid, { ...group, overlaps: [...overlaps.values()].sort((a, b) => a.zcta5.localeCompare(b.zcta5)) });
+    }
+    if (!groups.size) continue;
+    const groupings = [...groups.values()];
+    scopes.set(key, { ...scope, versionMeta: prior ? { ...scope.versionMeta,
+      states: [...new Set([...(prior.versionMeta.states ?? []), ...(scope.versionMeta.states ?? [])])],
+      provenance: { ...scope.versionMeta.provenance, sourceUrls: [...new Set([...prior.versionMeta.provenance.sourceUrls, ...scope.versionMeta.provenance.sourceUrls])] } } : scope.versionMeta,
+      groupings, instanceCount: groupings.length, zctaEdgeCount: groupings.reduce((sum, group) => sum + group.overlaps.length, 0) });
+  }
+  return { formatVersion: 1, builtAt: index.builtAt, coverage: "Selected Census geography", scopes: [...scopes.values()],
+    zctaUniverse: universe ?? [...new Set([...scopes.values()].flatMap(scope => scope.groupings.flatMap(group => group.overlaps.map(overlap => overlap.zcta5))))] };
+}
+
+export async function loadPublishedAreaLookupState(zips: readonly string[], query: ReadOnlyQuery | null = readerQuery(),
+  store: ReaderArtifactStore | null = resolveReaderArtifactStore()): Promise<PublishedLookupState> {
   if (!zips.length || zips.some(zip => !/^\d{5}$/.test(zip))) throw new Error("A five-digit ZIP is required");
-  if (!query) return { lookup: notYetPublishedLookup("STORE_UNAVAILABLE"), source: "unavailable", versionId: "STORE_UNAVAILABLE" };
-  const [rows] = await query([{ params: [CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE, [...new Set(zips)]], text: `
-    WITH source AS MATERIALIZED (
-      SELECT current_version_id, payload FROM civic_data_promotions WHERE record_class=$1 AND scope=$2
-    ), scopes AS MATERIALIZED (
-      SELECT s FROM source CROSS JOIN LATERAL jsonb_array_elements(payload->'scopes') s
-    ), counties AS MATERIALIZED (
-      SELECT g FROM scopes CROSS JOIN LATERAL jsonb_array_elements(s->'groupings') g
-      WHERE s->>'type'='county'
-    ), states AS (
-      SELECT DISTINCT g->>'stateAbbr' state FROM counties
-      WHERE EXISTS (SELECT 1 FROM jsonb_array_elements(g->'overlaps') o WHERE o->>'zcta5'=ANY($3::text[]))
-    ), codes AS MATERIALIZED (
-      SELECT DISTINCT o->>'zcta5' zip FROM counties CROSS JOIN LATERAL jsonb_array_elements(g->'overlaps') o
-      WHERE g->>'stateAbbr' IN (SELECT state FROM states)
-    ), pieces AS (
-      SELECT s - 'groupings' AS s, jsonb_agg(jsonb_set(g, '{overlaps}',
-        (SELECT COALESCE(jsonb_agg(o), '[]'::jsonb) FROM jsonb_array_elements(g->'overlaps') o
-          WHERE o->>'zcta5' IN (SELECT zip FROM codes)))) groups
-      FROM scopes CROSS JOIN LATERAL jsonb_array_elements(s->'groupings') g
-      WHERE g->>'stateAbbr' IN (SELECT state FROM states)
-        AND EXISTS (SELECT 1 FROM jsonb_array_elements(g->'overlaps') o WHERE o->>'zcta5'=ANY($3::text[]))
-      GROUP BY s - 'groupings'
-    ) SELECT current_version_id AS version_id,
-      jsonb_build_object('formatVersion', 1, 'builtAt', payload->>'builtAt', 'coverage', 'Selected places and in-state touching districts',
-        'scopes', (SELECT COALESCE(jsonb_agg(s || jsonb_build_object('groupings', groups,
-          'instanceCount', jsonb_array_length(groups), 'zctaEdgeCount',
-          (SELECT COALESCE(sum(jsonb_array_length(g->'overlaps')), 0) FROM jsonb_array_elements(groups) g))), '[]'::jsonb) FROM pieces),
-        'zctaUniverse', (SELECT COALESCE(jsonb_agg(zip), '[]'::jsonb) FROM codes WHERE zip=ANY($3::text[]))) AS dataset
-      FROM source` }]);
-  const row = rows?.[0];
-  if (typeof row?.version_id !== "string" || !row.dataset) return { lookup: notYetPublishedLookup("NOT_RECORDED"), source: "unavailable", versionId: "NOT_RECORDED" };
-  return { lookup: createLookup(row.dataset as unknown as BuiltDataset, row.version_id), source: "published", versionId: row.version_id };
+  const index = await readCensusGeographyIndex(query);
+  if (index.kind !== "HELD") return unavailableCensusLookup(index.kind);
+  if (!store) return unavailableCensusLookup("ARTIFACT_STORE_UNAVAILABLE");
+  try {
+    const edge = createCensusDistrictReaderEdge(index.value, store, index.versionId);
+    const codes = await Promise.all([...new Set(zips)].map(zip => edge.loadZip(zip)));
+    if (codes.some(code => code.kind !== "HELD")) return unavailableCensusLookup("UNREAD");
+    const states = [...new Set(codes.flatMap(code => code.kind === "HELD" ? code.value.containers
+      .filter(row => row.ref.type === "county").map(row => row.ref.stateAbbr) : []))];
+    const datasets = await selectedStateDatasets(index.value, states, store);
+    const dataset = mergeCensusDatasets(index.value, datasets, (_scope, group) => group.overlaps.some(overlap => zips.includes(overlap.zcta5)),
+      codes.flatMap((code, position) => code.kind === "HELD" && code.value.known ? [[...new Set(zips)][position]] : []));
+    const allowed = new Set(datasets.flatMap(dataset => dataset.scopes.filter(scope => scope.type === "county")
+      .flatMap(scope => scope.groupings.filter(group => states.includes(group.stateAbbr)).flatMap(group => group.overlaps.map(overlap => overlap.zcta5)))));
+    const bounded = { ...dataset, scopes: dataset.scopes.map(scope => {
+      const groupings = scope.groupings.map(group => ({ ...group, overlaps: group.overlaps.filter(overlap => allowed.has(overlap.zcta5)) }));
+      return { ...scope, groupings, zctaEdgeCount: groupings.reduce((sum, group) => sum + group.overlaps.length, 0) };
+    }) };
+    return { lookup: createLookup(bounded, index.versionId), source: "published", versionId: index.versionId };
+  } catch { return unavailableCensusLookup("UNREAD"); }
 }

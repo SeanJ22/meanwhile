@@ -21,14 +21,6 @@ import { checkYield, routeExecutor, type OpenOne, type VaultPut } from "../lib/c
 import { cycleVault } from "../lib/control-plane/scheduler/vault.ts";
 import { classifyAcquisition } from "../lib/control-plane/evidence/artifact.ts";
 import { contentHash } from "../lib/control-plane/ids.ts";
-import {
-  NORMALIZERS,
-  promotionLines,
-  readStagingManifest,
-  stageOne,
-  writeStagingManifest,
-  type StagedEntry,
-} from "../lib/control-plane/scheduler/promotion-tail.ts";
 import { scheduleObligation, isScheduled } from "../lib/control-plane/scheduler/obligation.ts";
 import { runCycle } from "../lib/control-plane/scheduler/shadow-loop.ts";
 import { recordFailure } from "../lib/control-plane/scheduler/debt.ts";
@@ -100,7 +92,7 @@ test("the standing research registry is not a parallel tracked-meetings authorit
   );
 
   const discovery = buildRegistry(
-    [meetingsDiscoveryProvider({ materialized: () => ({ ids: new Set(["freshness:meetings-discovery:az:county:county-of-pima#own-site-meetings"]) }) })],
+    [meetingsDiscoveryProvider({ registered: () => ({ registries: new Map(), refused: new Map() }), materialized: () => ({ ids: new Set(["freshness:meetings-discovery:az:county:county-of-pima#own-site-meetings"]) }) })],
     { root: ROOT, nowIso: NOW },
   );
   assert.equal(discovery.units.length, 1, "a materialized meetings-discovery need is scheduled");
@@ -615,184 +607,6 @@ test("a CORRECTED provider signal reaches a row that is already durable", async 
   assert.equal(final.value.lastWorkedAt, NOW);
   assert.equal(final.value.occurrenceCount, 3);
   assert.equal(final.value.nextDueAt, "2026-09-30T00:00:00.000Z");
-});
-
-const AZ_BODY = JSON.stringify({
-  draw: 1,
-  recordsTotal: 2,
-  recordsFiltered: 2,
-  data: [
-    { EntityID: 1, EntityLastName: "Accalia, Jayme <br>(102162)", Income: 1, Expense: 0, CashBalance: 1 },
-    { EntityID: 2, EntityLastName: "Someone Else <br>(2)", Income: 2, Expense: 1, CashBalance: 1 },
-  ],
-});
-
-function stageInput(root: string, body: string | null, disposition: string | null) {
-  return {
-    root,
-    obligationId: "freshness:campaign-finance:az-sos-cfs-2026#az-sos-seethemoney-datatables",
-    providerId: "campaign-finance",
-    recordClass: "campaign-finance",
-    subjectId: "az-sos-cfs-2026",
-    route: AZ_ROUTE,
-    disposition,
-    artifactIds: ["ar-abc"],
-    body,
-    nextDueAt: "2026-09-01T12:00:00.000Z",
-    detail: "detail",
-    stagedOn: "2026-08-31",
-  };
-}
-
-test("the tail runs to a STAGED FILE a later session can point at", () => {
-  const root = tmp();
-  const entry = stageOne(stageInput(root, AZ_BODY, "INGESTED"));
-
-  assert.equal(entry.state, "STAGED_PROMOTION_READY");
-  assert.equal(entry.rowCount, 2);
-  assert.equal(entry.declaredTotal, 2);
-  assert.equal(entry.complete, true);
-  assert.ok(entry.snapshotPath !== null);
-  assert.ok(existsSync(join(root, entry.snapshotPath)), "the staged state must be a real file");
-
-  const snapshot = JSON.parse(readFileSync(join(root, entry.snapshotPath), "utf8"));
-  assert.equal(snapshot.promotedToReaderTruth, false);
-  assert.equal(snapshot.rows.length, 2);
-  assert.equal(
-    snapshot.rows[0].entityLastNameRaw,
-    "Accalia, Jayme <br>(102162)",
-    "the publisher's own markup is carried VERBATIM; stripping it edits a government's record",
-  );
-  assert.ok(
-    snapshot.unresolved.some((u: string) => u.includes("NO PER-ENTITY CYCLE TOTAL")),
-    "the undetermined row semantics must travel with the data",
-  );
-});
-
-test("a PARTIAL index is labelled PARTIAL and never staged under the index's name", () => {
-  const root = tmp();
-  const partial = JSON.stringify({ recordsTotal: 370, data: [{ EntityID: 1 }] });
-  const entry = stageOne(stageInput(root, partial, "INGESTED"));
-
-  assert.equal(entry.complete, false);
-  assert.equal(entry.rowCount, 1);
-  assert.equal(entry.declaredTotal, 370);
-  assert.match(entry.readerSentence, /1 of the 370 row\(s\)/);
-  assert.match(entry.readerSentence, /not a claim that the index is whole/);
-  assert.ok(entry.unresolved.some((u) => u.startsWith("PARTIAL:")));
-});
-
-test("a WALL STAGES TOO, as a named gap with the obligation still live", () => {
-  const root = tmp();
-  const ftp: RouteDescriptor = {
-    ...AZ_ROUTE,
-    routeId: "az-sos-cfs-bulk-ftp",
-    label: "the bulk FTP drop",
-    open: {
-      kind: "NOT_MACHINE_EXECUTABLE",
-      target: "ftp://ftp.azsos.gov/cfsdata2/",
-      reason: "this process holds no FTP client",
-    },
-    awaitingAdapter: "an FTP client",
-  };
-  const entry = stageOne({
-    ...stageInput(root, null, "REQUIRES_NEW_ADAPTER"),
-    route: ftp,
-  });
-
-  assert.equal(entry.state, "STAGED_GAP");
-  assert.match(entry.readerSentence, /no FTP client/);
-  assert.equal(entry.nextDueAt, "2026-09-01T12:00:00.000Z");
-  assert.ok(
-    entry.unresolved.some((u) => u.includes("still owed")),
-    "the honest gap state names the wall AND says the obligation is still worked",
-  );
-});
-
-test("an acquired record with NO NORMALIZER stages a gap, never an empty snapshot", () => {
-  const root = tmp();
-  const unknown: RouteDescriptor = { ...AZ_ROUTE, routeId: "no-normalizer-exists", yieldContract: undefined };
-  const entry = stageOne({ ...stageInput(root, "<html></html>", "INGESTED"), route: unknown });
-
-  assert.equal(entry.state, "STAGED_GAP");
-  assert.ok(entry.unresolved.some((u) => u.includes("NORMALIZER MISSING")));
-  assert.equal(entry.snapshotPath, null, "nothing is written for a record nothing could read");
-});
-
-test("a zero-row normalization is a FAILED normalization, never an empty document", () => {
-  const root = tmp();
-  const empty = JSON.stringify({ recordsTotal: 370, data: [] });
-  const entry = stageOne(stageInput(root, empty, "INGESTED"));
-
-  assert.equal(entry.state, "STAGED_GAP");
-  assert.ok(entry.unresolved.some((u) => u.includes("NORMALIZATION FAILED")));
-  assert.ok(entry.unresolved.some((u) => u.includes("ZERO rows")));
-});
-
-test("THE PROMOTION BOUNDARY: the tail writes under staging and nowhere else", () => {
-  const root = tmp();
-  stageOne(stageInput(root, AZ_BODY, "INGESTED"));
-  writeStagingManifest(root, [stageOne(stageInput(root, AZ_BODY, "INGESTED"))], "2026-08-31");
-
-  for (const readerPath of ["data/funding", "data/ballot", "app", "public"]) {
-    assert.equal(
-      existsSync(join(root, readerPath)),
-      false,
-      `the tail must never write ${readerPath}. Promotion is a session's last mile, not a cycle's.`,
-    );
-  }
-});
-
-test("the manifest MERGES, so a cycle cannot erase what it did not touch", () => {
-  const root = tmp();
-  const first: StagedEntry = {
-    obligationId: "a",
-    providerId: "campaign-finance",
-    recordClass: "campaign-finance",
-    subjectId: "s",
-    routeId: "r",
-    state: "STAGED_GAP",
-    stagedOn: "2026-08-30",
-    nextDueAt: null,
-    disposition: null,
-    rowCount: 0,
-    declaredTotal: null,
-    complete: false,
-    snapshotPath: null,
-    readerSentence: "first",
-    unresolved: [],
-  };
-  writeStagingManifest(root, [first], "2026-08-30");
-  const result = writeStagingManifest(root, [{ ...first, obligationId: "b" }], "2026-08-31");
-
-  assert.equal(result.total, 2, "a manifest that shrank every cycle would report lost work");
-  const manifest = readStagingManifest(root);
-  assert.equal(manifest?.promotionEnabled, true, "research promotion is on");
-  assert.deepEqual(manifest?.entries.map((e) => e.obligationId), ["a", "b"]);
-});
-
-test("the digest counts BOTH staged states, always", () => {
-  const lines = promotionLines([]).join("\n");
-  assert.match(lines, /0 entry\(ies\) staged/);
-  assert.match(lines, /Verified facts publish through their reader doors/);
-});
-
-test("both registered normalizers exist for the routes that acquire", () => {
-  assert.ok(NORMALIZERS["az-sos-seethemoney-datatables"]);
-  assert.ok(NORMALIZERS["nh-cfs-filing-entity-details"]);
-});
-
-test("the NH normalizer reads the publisher's OWN declared total", () => {
-  const body = JSON.stringify({
-    data: { items: [{ filerEntityId: 1, filerName: "x" }], totalItems: 5738 },
-  });
-  const normalized = NORMALIZERS["nh-cfs-filing-entity-details"](body);
-  assert.equal(normalized.declaredTotal, 5738);
-  assert.equal(normalized.rows.length, 1);
-  assert.ok(
-    normalized.unresolved.some((u) => u.includes("FILER-LEVEL TOTALS ONLY")),
-    "filer totals are what the filer reported and are not an itemized record of their money",
-  );
 });
 
 test("a lane descriptor file REPLACES the built-in record for its subject", () => {

@@ -1,6 +1,9 @@
 import { createHash } from "node:crypto";
 import { sourceCheckIssue } from "./source-check.ts";
+import { completeOfficialBallotContests } from "./manual-projections.ts";
+import type { GenericBallotProjection } from "../ballot/generic-projection.ts";
 import { pluralRetirementCheckConsumer } from "../sources/plural/targets.ts";
+import { sameOffice } from "../officials/office-identity.ts";
 
 import { authorityFor, authorityForManualReceipt, sourceAuthority } from "./source-authority.ts";
 import { derivedAuthorityFor } from "./derived-door.ts";
@@ -27,6 +30,7 @@ import type {
   CandidateState,
   CandidateVersionRecord,
   AuditPullRemovalEvidence,
+  MovedToFactStoreRemovalEvidence,
   CensusPlaceholderBodyRemovalEvidence,
   DependentCheck,
   RoutineCandidate,
@@ -177,13 +181,13 @@ function statePeopleRetirementCheck(candidate: RoutineCandidate, prior: Candidat
     if (typeof url !== "string") return false;
     const path=/^https:\/\/raw\.githubusercontent\.com\/openstates\/people\/([a-f0-9]{40})\/(data\/[a-z]{2}\/(?:legislature|executive|municipal|municipalities)\/.+\.ya?ml)$/.exec(url);
     if (!path || candidate.scope.slice(3,5).toLowerCase() !== path[2].split("/")[1]) return false;
-    return rows(object(source.normalizedPayload)?.acquisitions).some(acquisition=>{
+    return rows(object(source.normalizedPayload)?.captures).some(acquisition=>{
       const origin=object(acquisition.extractedFrom);
       return origin?.member === path[2] && acquisition.requestedUrl === `https://codeload.github.com/openstates/people/zip/${path[1]}` &&
         origin.requestedUrl === acquisition.requestedUrl && origin.finalUrl === acquisition.finalUrl &&
         typeof origin.sha256 === "string" && SHA256.test(origin.sha256) && origin.sha256 === acquisition.rawHash &&
         typeof acquisition.httpStatus === "number" && acquisition.httpStatus >= 200 && acquisition.httpStatus < 300 &&
-        typeof acquisition.body === "string" && acquisition.body.length > 0;
+        Number(object(acquisition.capture)?.byteLength) > 0;
     });
   };
   const removed=candidate.changeSet?.removed ?? [];
@@ -194,7 +198,8 @@ function statePeopleRetirementCheck(candidate: RoutineCandidate, prior: Candidat
     for (const membership of memberships) {
       const matches=ended.filter(row=>row.id === membership.id), end=matches[0];
       if (matches.length !== 1 || end.current !== false || end.personId !== before.personId || end.personId !== membership.personId ||
-        end.officeId !== membership.officeId || end.jurisdiction !== membership.jurisdiction ||
+        !sameOffice(typeof end.officeTitle === "string" ? end.officeTitle : null,typeof membership.officeTitle === "string" ? membership.officeTitle : null) ||
+        (end.district ?? null) !== (membership.district ?? null) || end.jurisdiction !== membership.jurisdiction ||
         (end.termStart ?? null) !== (membership.termStart ?? null) || !nativeDate(end.termEnd) || end.termEnd >= day.slice(0,end.termEnd.length) ||
         end.termStart != null && (!nativeDate(end.termStart) || end.termStart.slice(0,Math.min(end.termStart.length,end.termEnd.length)) > end.termEnd.slice(0,Math.min(end.termStart.length,end.termEnd.length))) ||
         !captured(prior.candidate,membership.sourceUrl) || !captured(candidate,end.sourceUrl) ||
@@ -203,6 +208,32 @@ function statePeopleRetirementCheck(candidate: RoutineCandidate, prior: Candidat
   }
   return result("COMPLETENESS_HORIZON_VALIDITY","PASS","NATIVE_MEMBERSHIPS_EXPLICITLY_ENDED",
     `${removed.length} current person record(s) left only after every active native tenure ended; exact identities, original captures and historical memberships remain held.`);
+}
+
+function completeBallotRemovalCheck(candidate: RoutineCandidate, prior: CandidateVersionRecord | null): ValidationCheck | null {
+  if (candidate.recordClass !== "BALLOT_CANDIDACY" || candidate.sourceId !== "official-ballot-authorities" || !prior ||
+      !candidate.retrieval.manualSourceReceipt || prior.candidate.sourceId !== candidate.sourceId ||
+      prior.candidate.scope !== candidate.scope || (candidate.removalEvidence?.length ?? 0) > 0) return null;
+  const next = candidate.readModel as GenericBallotProjection;
+  const before = prior.candidate.readModel as GenericBallotProjection;
+  if (next.kind !== "ballot-contests" || before.kind !== "ballot-contests") return null;
+  const complete = completeOfficialBallotContests(next, candidate.retrieval.manualSourceReceipt);
+  const old = Object.values(before.ballots).flatMap(ballot => ballot.candidacies.map(candidacy => ({ ballot, candidacy })));
+  if (!(candidate.changeSet?.removed ?? []).every(delta => {
+    const held = old.find(row => delta.key === `candidacy:${row.candidacy.id}`);
+    if (!held) return false;
+    const oldContest = held.ballot.contests.find(contest => contest.id === held.candidacy.contestId);
+    const hold = next.ballots[`${held.ballot.election.state}:${held.ballot.election.id}`]?.heldContests?.find(row => row.id === oldContest?.id);
+    if (oldContest?.candidateListComplete !== true && hold && hold.ocdId === oldContest?.ocdId &&
+      hold.provenance.sourceUrl === oldContest.provenance.sourceUrl &&
+      Date.parse(hold.provenance.collectedAt) >= Date.parse(held.candidacy.provenance.collectedAt)) return true;
+    const matches = complete.filter(row => row.contest.id === held.candidacy.contestId &&
+      row.ballot.election.id === held.ballot.election.id && row.ballot.election.date === held.ballot.election.date &&
+      row.contest.ocdId === held.ballot.contests.find(contest => contest.id === held.candidacy.contestId)?.ocdId);
+    return matches.length === 1 && Date.parse(matches[0].contest.provenance.collectedAt) >= Date.parse(held.candidacy.provenance.collectedAt);
+  })) return null;
+  return result("COMPLETENESS_HORIZON_VALIDITY", "PASS", "COMPLETE_OFFICIAL_CONTEST_REMOVAL",
+    "Each removed candidacy belongs to a newer complete official list or an explicitly held incomplete contest; no hold claims absence.");
 }
 
 function incompleteHorizonRemovalCheck(candidate: RoutineCandidate, prior: CandidateVersionRecord | null, validatedAt: string, sourceChecks:readonly DependentCheck[]): ValidationCheck | null {
@@ -236,6 +267,9 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate, prior: Candi
 
   const financeResolution = stateFinanceGapResolution(candidate);
   if (financeResolution !== null) return financeResolution;
+
+  const ballotRemoval = completeBallotRemovalCheck(candidate, prior);
+  if (ballotRemoval !== null) return ballotRemoval;
 
   const auditPull = auditPullRemovalCheck(candidate, removed, evidence);
   if (auditPull !== null) return auditPull;
@@ -276,7 +310,7 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate, prior: Candi
   if (candidate.recordClass === "REGISTRY_RUNTIME_BINDING") return registryPlaceholderRemovalCheck(candidate, removed, evidenceByKey);
 
   // A meeting removal is proven only by a meeting's authority; the registry's placeholder code never proves one.
-  const validMeetingEvidence = new Map<string, Exclude<RoutineRemovalEvidence, CensusPlaceholderBodyRemovalEvidence | AuditPullRemovalEvidence>>();
+  const validMeetingEvidence = new Map<string, Exclude<RoutineRemovalEvidence, CensusPlaceholderBodyRemovalEvidence | AuditPullRemovalEvidence | MovedToFactStoreRemovalEvidence>>();
   const registeredWindow = meetingReaderServingWindowAt(candidate.retrieval.retrievedAt);
     // A `V1` row (the old shown window) is still accepted.
   const legacyWindow = meetingLegacyServingWindowAt(candidate.retrieval.retrievedAt);
@@ -292,8 +326,8 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate, prior: Candi
     if (row.code === "REMOVED_BY_AUDIT_PULL") {
       return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} is a meeting; an audit pull removes only curated Reader members.`);
     }
-    if (row.code === "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT") {
-      return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} is a meeting; a registry placeholder removal cannot prove it.`);
+    if (row.code === "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT" || row.code === "MOVED_TO_FACT_STORE") {
+      return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} is a meeting; a registry removal cannot prove it.`);
     }
     const before = object(delta.before);
     const meetingId = typeof before?.id === "string" ? before.id : null;
@@ -407,7 +441,7 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate, prior: Candi
 
   for (const delta of removed.filter(({ key }) => key.startsWith("agenda-document:"))) {
     const row = evidenceByKey.get(delta.key)!;
-    if (row.code === "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT" || row.code === "REMOVED_BY_AUDIT_PULL" || row.code === "OFFICIAL_ROSTER_NO_LONGER_LISTS") {
+    if (row.code === "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT" || row.code === "REMOVED_BY_AUDIT_PULL" || row.code === "OFFICIAL_ROSTER_NO_LONGER_LISTS" || row.code === "MOVED_TO_FACT_STORE") {
       return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} does not inherit authority from its exact removed meeting.`);
     }
     const before = object(delta.before);
@@ -453,30 +487,28 @@ function registryPlaceholderRemovalCheck(
     const division = object(value);
     if (division && typeof division.ocdId === "string") divisions.set(division.ocdId, division);
   }
-  const rosters = Array.isArray(object(candidate.readModel)?.bodyRosters) ? (object(candidate.readModel)!.bodyRosters as unknown[]).map(object) : [];
   for (const delta of removed) {
     const row = evidenceByKey.get(delta.key)!;
     const before = object(delta.before);
+    if (row.code === "MOVED_TO_FACT_STORE") {
+      const model = object(candidate.readModel);
+      if (!/^(body-roster|roster-disposition):/.test(delta.key) || [model?.bodyRosters, model?.rosterReaderDispositions].some(rows => Array.isArray(rows) && rows.length)) {
+        return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} is not a roster row, or this candidate still carries rosters.`);
+      }
+      continue;
+    }
     if (row.code === "OFFICIAL_ROSTER_NO_LONGER_LISTS") {
       if (row.replacementHolderId) {
         const executives = object(candidate.readModel)?.statewideExecutives;
         const replacement = Array.isArray(executives) ? executives.map(object).find(entry=>object(entry?.holder)?.id === row.replacementHolderId) : null;
         if (!replacement || replacement.stateOcdId !== row.bodyId || replacement.sourceUrl !== row.sourceUrl || object(replacement.holder)?.officeTitle !== row.officeTitle || row.holderId === row.replacementHolderId ||
-          !["statewide-executive","roster-disposition","official-candidacy","official-photo","roster-photo"].some(kind=>delta.key===`${kind}:${row.holderId}`) ||
+          !["statewide-executive","official-candidacy","official-photo","roster-photo"].some(kind=>delta.key===`${kind}:${row.holderId}`) ||
           delta.key===`statewide-executive:${row.holderId}` && (object(before?.holder)?.officeTitle !== row.officeTitle || before?.stateOcdId !== row.bodyId)) {
           return result("COMPLETENESS_HORIZON_VALIDITY","FAIL","REMOVAL_EVIDENCE_MISMATCH",`${delta.key} lacks an exact sourced successor for that executive office.`);
         }
         continue;
       }
-
-      // A departure: this candidate's complete official roster for the body, from that page, no longer lists the holder.
-      const roster = rosters.find(r => r?.bodyId === row.bodyId);
-      const listed = Array.isArray(roster?.members) && roster.members.some(member => object(member)?.id === row.holderId);
-      if (!roster || roster.sourceUrl !== row.sourceUrl || listed ||
-          !["roster-disposition", "official-candidacy", "official-photo", "roster-photo"].some(kind => delta.key === `${kind}:${row.holderId}`)) {
-        return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} is not proven gone from its body's complete official roster.`);
-      }
-      continue;
+      return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} names no sourced successor.`);
     }
     const division = row.code === "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT" ? divisions.get(row.divisionOcdId) : undefined;
     if (
@@ -797,7 +829,13 @@ export function validateRoutineCandidate(
   }
 
   const absencePolicy = registered?.absencePolicy;
-  if (!candidate.absence.claimsAbsence && candidate.normalization.outputRecords === 0) {
+  if (!candidate.absence.claimsAbsence && candidate.normalization.outputRecords === 0 &&
+      candidate.recordClass === "STATE_ROLL_CALL" && candidate.horizon.kind === "OPEN_FACT_SET" &&
+      candidate.retrieval.succeeded && candidate.normalization.succeeded &&
+      ((candidate.sourceId === "plural-openstates-votes" && candidate.normalization.parserVersion === "plural-votes/2") ||
+       (candidate.sourceId === "legiscan" && candidate.normalization.parserVersion === "legiscan-votes/1"))) {
+    checks.push(result("ABSENCE_VALIDITY", "PASS", "NO_NEW_VOTES", "The source was checked successfully and added no votes. No absence is inferred."));
+  } else if (!candidate.absence.claimsAbsence && candidate.normalization.outputRecords === 0) {
     checks.push(result("ABSENCE_VALIDITY", "CANNOT_TELL", "ZERO_IS_NOT_ABSENCE", "The query returned zero records but carries no competent bounded absence evidence."));
   } else if (!candidate.absence.claimsAbsence) {
     checks.push(result("ABSENCE_VALIDITY", "PASS", "NO_ABSENCE_CLAIM", "The projection makes no absence claim."));

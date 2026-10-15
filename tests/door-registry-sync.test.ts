@@ -2,9 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { createMemoryRepositories } from "@/lib/control-plane/repository/memory.ts";
-import type { ScoutResult } from "@/lib/control-plane/scheduler/scout-result.ts";
-import { recordFoundSources, recordPublishedPages } from "@/lib/doors/page-doors.ts";
-import { applyDerivedRow, applyManualEdit, editableFieldsOf, isDoorRecord, listDoors, type DoorRecord, type DoorRepository } from "@/lib/doors/registry.ts";
+import { applyDerivedRow, applyManualEdit, editableFieldsOf, listDoors, type DoorRecord, type DoorRepository } from "@/lib/doors/registry.ts";
 import { doorSyncLine, readDoorImport, seedAllDoors, syncHeldDoors } from "@/lib/doors/seed-all.ts";
 
 const AT = "2026-10-05T16:00:00.000Z";
@@ -25,19 +23,6 @@ function reordering(repo: DoorRepository): DoorRepository {
     list: async () => (await repo.list()).map((row) => ({ ...row, value: flip(row.value) as DoorRecord })),
   });
 }
-
-function scout(over: Partial<ScoutResult>): ScoutResult {
-  return {
-    formatVersion: 1, attemptId: "at-1", obligationId: "ob-1", routeTaskId: "rt-1", workItemId: "wi-1", subjectId: "s", routeId: null,
-    recordClass: "local-jurisdiction", providerId: null, reason: "", outcome: "ROUTE_CANDIDATE", stoppedBy: "MODEL", rungs: [], distinctEvidenceRungs: 0,
-    candidates: [], findings: [], nextRungs: [], unverified: [], narrative: "", worker: { provider: "anthropic", model: "m", modelReported: null },
-    usage: {} as ScoutResult["usage"], usd: 0, elapsedMs: 0, artifactIds: [], methodCandidateIds: [], refusal: null,
-    startedAt: AT, recordedAt: AT, ...over,
-  } as ScoutResult;
-}
-
-const candidate = (url: string, recordClass = "local-jurisdiction") =>
-  ({ routeId: "r", title: "t", url, procedure: "GET", relevance: "", permission: "ALLOWED", permissionReading: "", evidenceArtifactIds: [], observedOn: "2026-10-05", recordClass, deterministic: true, unverified: [] });
 
 test("every pass brings the held doors into an empty registry with no switch, and a second pass writes nothing", async () => {
   const repos = createMemoryRepositories();
@@ -73,38 +58,6 @@ test("key order alone never counts as a change", () => {
   const stored = applyDerivedRow(null, draft, AT, AT)!;
   const flipped = { ...stored, config: { jurisdiction: "A", icalUrl: "https://a.gov/c.ics" } };
   assert.equal(applyDerivedRow(flipped, editableFieldsOf(stored), LATER, LATER), null);
-});
-
-test("sources a Scout or detective found become doors as they are recorded; refused results add none", async () => {
-  const repos = createMemoryRepositories();
-  const found = await recordFoundSources(repos.doors, [
-    scout({ candidates: [candidate("https://www.cochise.az.gov/elections#x"), candidate("ftp://nope")] as ScoutResult["candidates"] }),
-    scout({ researchRole: "DETECTIVE", candidates: [candidate("https://clerk.example.gov/agendas", "meetings")] as ScoutResult["candidates"] }),
-    scout({ refusal: [{ code: "SCOUT_NO_TOOL_USED", detail: "y" }] as unknown as ScoutResult["refusal"], candidates: [candidate("https://refused.example.gov/")] as ScoutResult["candidates"] }),
-  ], AT);
-  assert.deepEqual(found, { created: 2, updated: 0, unchanged: 0, skipped: 1 });
-  const doors = (await listDoors(repos.doors)).doors;
-  assert.deepEqual(doors.map((door) => [door.kind, door.hosts[0], door.config.foundBy, door.lastSuccessAt]).sort(), [
-    ["page", "clerk.example.gov", "DETECTIVE", null],
-    ["page", "www.cochise.az.gov", "SCOUT", null],
-  ]);
-  const page = doors.find((door) => door.hosts[0] === "www.cochise.az.gov")!;
-  await recordPublishedPages(repos.doors, [{ url: "https://www.cochise.az.gov/elections", retrievedAt: LATER, recordClass: "local-jurisdiction", foundBy: "DETECTIVE" }], LATER);
-  const after = (await repos.doors.read(page.doorId))!.value;
-  assert.equal(after.config.foundBy, "SCOUT", "the finder stays the one who found it");
-  assert.equal(after.lastSuccessAt, LATER, "a fact from it going live marks it as working");
-});
-
-test("sources found before this pass are read from the scout log once, while the registry holds none", async () => {
-  const repos = createMemoryRepositories();
-  let reads = 0;
-  const log = { readAll: async () => { reads += 1; return [scout({ candidates: [candidate("https://a.example.gov/x"), candidate("https://a.example.gov/x")] as ScoutResult["candidates"] })]; } };
-  const first = await seedAllDoors({ repo: repos.doors, imported: { generatedAt: AT, rows: [] }, derived: [], scoutResults: log, now: AT });
-  assert.equal(first.found?.created, 1);
-  const second = await seedAllDoors({ repo: repos.doors, imported: { generatedAt: AT, rows: [] }, derived: [], scoutResults: log, now: LATER });
-  assert.equal(second.found, null);
-  assert.equal(reads, 1);
-  assert.ok((await repos.doors.list()).every((row) => isDoorRecord(row.value)));
 });
 
 test("the one-time door import adds every hand-wired door once, and keeps a door edited in the registry since", async () => {

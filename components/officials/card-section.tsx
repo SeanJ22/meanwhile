@@ -4,9 +4,16 @@
 // CardSectionGroup and read by CardSection, both client components; it never
 // crosses from a Server Component.
 
+import { CardGapContribution, CardGapsContribution } from "@/components/ui/card-gap-context";
+import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
+
 import {
+  Children,
+  Fragment,
+  isValidElement,
   createContext,
   useContext,
+  useCallback,
   useEffect,
   useId,
   useMemo,
@@ -44,9 +51,8 @@ export function CardSectionGroup({
 }
 
 /**
- * A collapsible section of a person's battlecard. Its header renders whether
- * or not anything is behind it, so every person of an office class gets the
- * same set of sections.
+ * A collapsible section of held facts. A section that resolves to only gap
+ * or source contributions stays mounted without an empty disclosure.
  */
 export function CardSection({
   title,
@@ -55,14 +61,14 @@ export function CardSection({
   defaultOpen = false,
   /** `"sub"` is a section inside another section's pane, indented and stepped down in scale. */
   level = "top",
-  keepMounted = false,
+  keepMounted = true,
   children,
 }: {
   title: string;
   meta?: string | null;
   defaultOpen?: boolean;
   level?: "top" | "sub";
-  /** Sources retain their observed rows while the disclosure is closed. */
+  /** Sections keep their facts, gaps and citations registered while closed. */
   keepMounted?: boolean;
   children: React.ReactNode;
 }) {
@@ -72,6 +78,17 @@ export function CardSection({
   const grouped = group !== null && !group.independent && level !== "sub";
 
   const [localOpen, setLocalOpen] = useState(defaultOpen);
+  const [empty, setEmpty] = useState(false);
+  // Async sections may resolve to contributions only. Keep them mounted to
+  // register their gap, while omitting a disclosure with no readable content.
+  const observeContent = useCallback((node: HTMLDivElement | null) => {
+    if (!node) return;
+    const check = () => setEmpty(!node.textContent?.trim() && !node.querySelector("img,svg,video,audio,canvas,input,button,a[href]"));
+    check();
+    const observer = new MutationObserver(check);
+    observer.observe(node, { childList: true, subtree: true, characterData: true });
+    return () => observer.disconnect();
+  }, []);
   const open = grouped ? group.openId === id : localOpen;
 
   // A grouped section that starts open claims the group's slot at mount; last one wins.
@@ -86,9 +103,12 @@ export function CardSection({
     else setLocalOpen((v) => !v);
   };
 
+  if (!hasSectionContent(children)) return <>{children}</>;
+
   return (
     <section
       className="card-section"
+      hidden={empty && title !== "Sources"}
       data-open={open || undefined}
       data-level={level === "sub" ? "sub" : undefined}
     >
@@ -115,10 +135,20 @@ export function CardSection({
         </svg>
       </button>
       {(open || keepMounted) && (
-        <div id={id} className="card-section-body" hidden={!open}>
+        <div ref={observeContent} id={id} className="card-section-body" hidden={!open}>
           {children}
         </div>
       )}
     </section>
   );
+}
+
+/** Contributions register at the frame even when a section has no visible facts. */
+function hasSectionContent(children: React.ReactNode): boolean {
+  return Children.toArray(children).some(child => {
+    if (!isValidElement<{ children?: React.ReactNode }>(child)) return typeof child === "number" || (typeof child === "string" && child.trim().length > 0);
+    if (child.type === CardGapContribution || child.type === CardGapsContribution || child.type === CardSourcesContribution) return false;
+    if (child.type === Fragment) return hasSectionContent(child.props.children);
+    return true;
+  });
 }

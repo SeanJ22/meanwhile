@@ -85,43 +85,23 @@ export interface CycleInput {
   readonly admitDispatch?: (
     row: ScheduledObligation,
   ) => { readonly admit: true } | { readonly admit: false; readonly code: string; readonly why: string };
+  /** The provider a deterministic row's request goes to and how many of its rows may run at once, read as each row is taken. */
+  readonly providerLimitOf?: (row: ScheduledObligation) => PoolLimit | null;
   /** A tightly scoped canary may skip the whole lease sweep; normal cycles never do. */
   readonly skipReclaim?: boolean;
   /** Obligation ids the owner dispatched, placed first in both lanes; a dispatch reorders and nothing else. */
   readonly placeFirst?: ReadonlySet<string>;
   readonly placeComparator?: () => Promise<(left: ScheduledObligation, right: ScheduledObligation) => number>;
-  /** Two lanes in one cycle: deterministic rows run the serial queue under `maxDispatches`; model rows run a bounded Scout pool, each admitted or deferred by name. Absent, one serial queue. */
+  /** Two lanes in one cycle: deterministic rows run the serial queue under `maxDispatches`; model rows are hunted in their government's packet and only counted here. Absent, one serial queue. */
   readonly research?: ResearchLanes;
 }
 
 export interface ResearchLanes {
   readonly decide: (row: ScheduledObligation) => ExecutorDecision;
-  /** A shut door goes to a detective; its plain re-read runs in the same cycle only when the detective is refused. */
-  readonly plainBesideDetective?: (row: ScheduledObligation) => ExecutorDecision | null;
-  /**
-   * Optional canonical order for the actual due model rows. `runCycle` sorts a
-   * copy of the rows it already owns, so a caller can reorder but cannot omit,
-   * duplicate, or manufacture work. Absent, the historical oldest-due order
-   * stands. The standing runtime supplies the reader-impact comparator that it
-   * also records for Admin.
-   */
-  readonly compareModelRows?: (left: ScheduledObligation, right: ScheduledObligation) => number;
-  /** May answer asynchronously: a budgeted Send's or area's hold is taken before the Scout starts. */
-  readonly admitScout: (
-    row: ScheduledObligation,
-  ) => ScoutAdmission | Promise<ScoutAdmission>;
-  readonly modelExecutor: DeclaredExecutor | ((row: ScheduledObligation) => DeclaredExecutor);
-  readonly workerCapacity: number;
-  readonly scoutLeaseTtlMs: number;
-  /** A Scout is not STARTED when it could not finish inside the dispatch budget. */
   readonly onDispatched?: (result: DispatchResult, lane: ExecutorKind) => void | Promise<void>;
-  /** A Scout admitted that then did not run releases whatever the admission held. */
-  readonly onAdmittedNotDispatched?: (row: ScheduledObligation, code: string) => void | Promise<void>;
-  /** The pre-warm: called once per cycle before the first admitted Scout, and awaited by every admitted Scout. Never called when none is admitted; a failure is recorded and the Attempts still run. */
-  readonly prewarm?: () => Promise<PrewarmOutcome>;
 }
 
-/** What the cycle's pre-warm request reported, for the run record and the digest. */
+/** What an older cycle's pre-warm request reported, as its run record holds it. */
 export type PrewarmOutcome =
   | {
       readonly status: "WARMED";
@@ -197,9 +177,6 @@ export interface RecoveredOccurrence extends SettledOccurrence {
   readonly discharged: boolean;
 }
 
-/** A bounded pool: at most `limit` items in flight, in input order. */
-export type ScoutAdmission = { readonly admit: true } | { readonly admit: false; readonly code: string; readonly why: string };
-
 /** Capture each hunt's rounds over the full queue. Filtering completed work or
  * refreshing place priority must not move a hunt's second item ahead of
  * another hunt's first. Items keep their original order within their hunt. */
@@ -215,11 +192,20 @@ export function huntRoundComparator<T>(items: readonly T[], huntFor: (item: T) =
   return (left, right) => (rounds.get(left) ?? Number.MAX_SAFE_INTEGER) - (rounds.get(right) ?? Number.MAX_SAFE_INTEGER);
 }
 
+/** A pool key and how many of its items may run at once. */
+interface PoolLimit { readonly key: string; readonly limit: number }
+
+/** A bounded pool: at most `limit` items in flight, in input order. */
 export async function runPool<T>(items: readonly T[], limit: number, fn: (item: T) => Promise<void>,
   comparator?: () => Promise<(left: T, right: T) => number>,
-  huntFor?: (item: T) => string | null | undefined): Promise<void> {
+  huntFor?: (item: T) => string | null | undefined,
+  /** Items sharing a key run at most `limit` at once; the limit is read each time an item is taken. */
+  limitOf?: (item: T) => PoolLimit | null): Promise<void> {
   const pending = [...items];
   const compareRound = huntFor ? huntRoundComparator(items, huntFor) : () => 0;
+  const running = new Map<string, number>();
+  const keys = new Map<T, string | undefined>();
+  let finished: () => void = () => {};
   let selection = Promise.resolve();
   let compare: (left: T, right: T) => number = () => 0;
   const take = (): Promise<T | undefined> => {
@@ -234,7 +220,21 @@ export async function runPool<T>(items: readonly T[], limit: number, fn: (item: 
         }
         pending.sort((left, right) => compareRound(left, right) || compare(left, right));
       }
-      item = pending.shift();
+      for (;;) {
+        const at = pending.findIndex(candidate => {
+          const limit = limitOf?.(candidate) ?? null;
+          return limit === null || (running.get(limit.key) ?? 0) < Math.max(1, limit.limit);
+        });
+        if (at >= 0) {
+          item = pending.splice(at, 1)[0];
+          const key = limitOf?.(item!)?.key;
+          if (key !== undefined) running.set(key, (running.get(key) ?? 0) + 1);
+          keys.set(item!, key);
+          return;
+        }
+        if (!pending.length) return;
+        await new Promise<void>(resolve => { finished = resolve; });
+      }
     });
     selection = next.catch(() => undefined);
     return next.then(() => item);
@@ -243,7 +243,10 @@ export async function runPool<T>(items: readonly T[], limit: number, fn: (item: 
     for (;;) {
       const item = await take();
       if (item === undefined) break;
-      await fn(item);
+      const key = keys.get(item);
+      keys.delete(item);
+      try { await fn(item); }
+      finally { if (key !== undefined) { running.set(key, running.get(key)! - 1); finished(); } }
     }
   });
   await Promise.all(workers);
@@ -436,7 +439,6 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
 
   const research = input.research;
   const decisions = new Map<string, ExecutorDecision>();
-  const resolvedDeterministic = new Map<string, DeclaredExecutor>();
   const deterministicRows: ScheduledObligation[] = [];
   const modelRows: ScheduledObligation[] = [];
   /* A row recovered before dispatch is withheld from both lanes, so it is recovered once and never walked. */
@@ -445,30 +447,17 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
     deterministicRows.push(...laneWork);
   } else {
     for (const row of laneWork) {
-      let decision = research.decide(row);
-      if (decision.kind === "BOUNDED_MODEL_WORKER") {
-        // Held discoveries declare their actual lane before any paid admission.
-        // Other factories still resolve at dispatch, inheriting same-cycle work.
-        const executor = typeof research.modelExecutor === "function" ? research.modelExecutor(row) : research.modelExecutor;
-        if (executor.lane === "DETERMINISTIC") {
-          resolvedDeterministic.set(row.obligation.id, executor);
-          decision = { ...decision, kind: "DETERMINISTIC", why: "The resolved executor reuses held work without a model request." };
-        }
-      }
+      const decision = research.decide(row);
       decisions.set(row.obligation.id, decision);
       (decision.kind === "BOUNDED_MODEL_WORKER" ? modelRows : deterministicRows).push(row);
     }
-    /* The Scout lane is ordered by reader impact over the actual due model set, before admission. Sorting cannot add, remove or duplicate a row. */
-    if (research.compareModelRows !== undefined) modelRows.sort(research.compareModelRows);
   }
   /* The plain-code lane serves the longest wait first (`waitingSince`), then the owner's placed-first rows go to the front. */
   const debtAtCycleStart = new Map(input.debts.map((d) => [d.obligationId, d] as const));
   const debtOf = (obligationId: string) => debtAtCycleStart.get(obligationId);
   const plainCodeQueue = placeFirstRows(plainCodeQueueOrder(deterministicRows, debtOf), input.placeFirst);
   const deferredBy: Record<string, number> = {};
-  let modelDispatched = 0;
   let modelDeferred = 0;
-  let modelRecovered = 0;
   let modelOldestWaiting: string | null = null;
   const deterministicDeferredBy: Record<string, number> = {};
   let deterministicDispatched = 0;
@@ -554,98 +543,21 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
       }
       deterministicDispatched += 1;
       const result = await dispatchRow(row, {
-        executor: resolvedDeterministic.get(row.obligation.id) ?? (typeof input.executor === "function" ? input.executor(row) : input.executor),
+        executor: typeof input.executor === "function" ? input.executor(row) : input.executor,
         leaseTtlMs: input.leaseTtlMs,
         ...(research !== undefined ? { decision: decisions.get(row.obligation.id) } : {}),
       });
       if (research?.onDispatched) await research.onDispatched(result, "DETERMINISTIC");
-    }, input.placeComparator, input.huntFor);
+    }, input.placeComparator, input.huntFor, input.providerLimitOf);
   };
 
-  /* The model lane: a bounded Scout pool, each row admitted or deferred by code; a Scout that could not finish inside the dispatch budget is not started. */
-  /** The cycle's one pre-warm, created by the first admitted Scout and awaited by every admitted Scout. */
-  let prewarmOnce: Promise<PrewarmOutcome> | null = null;
-  let prewarmOutcome: PrewarmOutcome | null = null;
-  const warmStaticPrefix = async (): Promise<void> => {
-    if (research?.prewarm === undefined) return;
-    if (prewarmOnce === null) {
-      prewarmOnce = research.prewarm().catch(
-        (error): PrewarmOutcome => ({ status: "FAILED", at: new Date(nowMs).toISOString(), detail: error instanceof Error ? error.message : String(error), durationMs: 0 }),
-      );
-    }
-    prewarmOutcome = await prewarmOnce;
-  };
+  /* Model rows are hunted in their government's packet by the hunters, never here. */
+  for (const row of modelRows) {
+    deferred.push({ obligationId: row.obligation.id, why: "HUNTED_IN_PACKET: its government's packet carries this blank to the hunters; work remains due until a fact is checked." });
+    holdModel(row, "HUNTED_IN_PACKET");
+  }
 
-  /** The plain re-read that keeps running beside (or instead of) a detective for a shut door. */
-  const plainBeside = async (row: ScheduledObligation): Promise<void> => {
-    const plain = research?.plainBesideDetective?.(row) ?? null;
-    if (plain === null || plain.kind === "BOUNDED_MODEL_WORKER") return;
-    if (input.openOccurrence === undefined && input.requireOpenOccurrence && input.routeTaskFor(row.obligation.id) === null) return;
-    const opened = await tryOpen(row);
-    if (opened !== true) return;
-    if (aggregateRefusal(row) !== null) return;
-    deterministicDispatched += 1;
-    const result = await dispatchRow(row, {
-      executor: typeof input.executor === "function" ? input.executor(row) : input.executor,
-      leaseTtlMs: input.leaseTtlMs,
-      decision: plain,
-    });
-    if (research?.onDispatched) await research.onDispatched(result, "DETERMINISTIC");
-  };
-
-  const modelLane = async (): Promise<void> => {
-    if (research === undefined) return;
-    await runPool(modelRows, research.workerCapacity, async (row) => {
-      if (input.openOccurrence === undefined && input.requireOpenOccurrence && input.routeTaskFor(row.obligation.id) === null) {
-        deferred.push({ obligationId: row.obligation.id, why: "NO_OPEN_OCCURRENCE: outside this cycle's reserved lane slots; work remains due." });
-        holdModel(row, "NO_OPEN_OCCURRENCE");
-        return;
-      }
-      const admit = await research.admitScout(row);
-      if (!admit.admit) {
-        deferred.push({
-          obligationId: row.obligation.id,
-          why: `${admit.code}: ${admit.why}. Deferred with its next-due, never dropped and never reported complete.`,
-        });
-        holdModel(row, admit.code);
-        await plainBeside(row);
-        return;
-      }
-      const opened = await tryOpen(row);
-      if (opened === false) {
-        deferred.push({ obligationId: row.obligation.id, why: "NO_OPEN_OCCURRENCE: the occurrence could not be opened in step with dispatch this cycle; work remains due." });
-        holdModel(row, "NO_OPEN_OCCURRENCE");
-        if (research.onAdmittedNotDispatched) await research.onAdmittedNotDispatched(row, "NO_OPEN_OCCURRENCE");
-        return;
-      }
-      /* No Scout runs for a recovered row, so it is not counted as dispatched. */
-      if (opened !== true) {
-        recover(row, opened.settled);
-        modelRecovered += 1;
-        if (research.onAdmittedNotDispatched) await research.onAdmittedNotDispatched(row, "RECOVERED");
-        return;
-      }
-      /* Counted under the aggregate admission's own code (a wall, a blackout), never a generic AGGREGATE. */
-      const refusedBy = aggregateRefusal(row);
-      if (refusedBy !== null) {
-        holdModel(row, refusedBy);
-        if (research.onAdmittedNotDispatched) await research.onAdmittedNotDispatched(row, refusedBy);
-        await plainBeside(row);
-        return;
-      }
-      /* Admitted: the static prefix is warmed once, before the first dispatch, and every dispatch waits for it. */
-      await warmStaticPrefix();
-      modelDispatched += 1;
-      const result = await dispatchRow(row, {
-        executor: typeof research.modelExecutor === "function" ? research.modelExecutor(row) : research.modelExecutor,
-        leaseTtlMs: research.scoutLeaseTtlMs,
-        decision: decisions.get(row.obligation.id),
-      });
-      if (research.onDispatched) await research.onDispatched(result, "BOUNDED_MODEL_WORKER");
-    }, input.placeComparator, input.huntFor);
-  };
-
-  await Promise.all([deterministicLane(), modelLane()]);
+  await deterministicLane();
 
   const lanes: LaneCounts | null =
     research === undefined
@@ -661,12 +573,11 @@ export async function runCycle(input: CycleInput): Promise<CycleResult> {
           },
           model: {
             due: modelRows.length,
-            dispatched: modelDispatched,
+            dispatched: 0,
             deferred: modelDeferred,
             deferredBy,
-            recovered: modelRecovered,
+            recovered: 0,
             oldestWaitingDueAt: modelOldestWaiting,
-            prewarm: prewarmOutcome,
           },
         };
 

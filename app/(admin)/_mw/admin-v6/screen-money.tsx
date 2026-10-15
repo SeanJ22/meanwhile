@@ -2,12 +2,15 @@
 
 import { useMemo, useState } from "react";
 
+import { periodDays } from "@/lib/control-plane/admin-view/periods.ts";
 import { dailyRows, moneySummary } from "@/lib/control-plane/admin-view/spend-period.ts";
+import type { ModelSpendView } from "@/lib/control-plane/admin-view/model-spend.ts";
+import type { HuntCostView } from "@/lib/hunt/cost-per-fact.ts";
 
 import { useV6 } from "./context.tsx";
 import { mst, usd, type Hunt } from "./model.ts";
 import { huntAt, huntsWithin } from "./places.ts";
-import { Card, cx } from "./ui.tsx";
+import { Card, cx, Facts, Technical } from "./ui.tsx";
 import s from "./v6.module.css";
 
 const DASH = "—";
@@ -17,6 +20,52 @@ const zipOf = (placeKey: string) => /\.zcta\.(\d{5})$/.exec(placeKey)?.[1] ?? DA
 const TOP = 10;
 const gigabytes = (bytes: number | null) => (bytes === null ? DASH : `${(bytes / 1e9).toFixed(2)} GB`);
 const dayWords = (day: string) => new Date(`${day}T12:00:00Z`).toLocaleDateString("en-US", { timeZone: "UTC", month: "short", day: "numeric" });
+const percent = (n: number | null) => n === null ? DASH : `${(n * 100).toFixed(1)}%`;
+const roleWords = (role: string) => ({ ADVERSARIAL_AUDITOR: "Auditor", PARSER: "Page reader", MEASURE_WRITER: "Translator", MEASURE_CHECKER: "Translation checker", ASK: "Ask" }[role]
+  ?? role.toLowerCase().replaceAll("_", " ").replace(/^./, char => char.toUpperCase()));
+
+/** What hunting cost for each fact it got published. */
+function HuntCostPanel({ view }: { view: HuntCostView | null }) {
+  if (view === null) return <Card title="Hunting"><p className={cx(s.p, s.small)}>The hunting costs could not be read just now.</p></Card>;
+  return <Card title="Hunting">
+    <Facts rows={[
+      ["Cost per published fact", view.usdPerPublishedFact === null
+        ? view.factsPublished === 0 ? "No hunted fact is published yet" : `Not known: ${view.unpricedRows} charge(s) have no price`
+        : usd(view.usdPerPublishedFact)],
+      [`Spent in ${view.days} days`, `${usd(view.usd)} (search ${usd(view.searchUsd)}) over ${view.jobs.toLocaleString("en-US")} hunt job(s)`],
+      ["Facts", `${view.factsReported.toLocaleString("en-US")} reported into the Box, ${view.factsPublished.toLocaleString("en-US")} published`],
+    ]} />
+  </Card>;
+}
+
+function ModelSpendPanel({ view, days }: { view: ModelSpendView | null; days: readonly string[] }) {
+  const [comparison, setComparison] = useState(false);
+  const [all, setAll] = useState(false);
+  const rows = view === null ? [] : comparison
+    ? [...view.before.map(row => ({ ...row, label: "Before" })), ...view.after.map(row => ({ ...row, label: "After" }))]
+    : view.days.filter(row => days.includes(row.day)).map(row => ({ ...row, label: dayWords(row.day) }));
+  const shown = all ? rows : rows.slice(0, TOP);
+  return <Card title="Model spend" aside={<button type="button" className={s.btn} aria-pressed={comparison}
+    onClick={() => { setComparison(!comparison); setAll(false); }}>{comparison ? "By day" : "Before and after"}</button>}>
+    <p className={cx(s.p, s.small)}>{comparison
+      ? view?.changedAt ? `24 hours before and after ${mst(view.changedAt)} · ${view.comparison === "complete" ? "Both windows complete" : `Collecting through ${mst(view.afterThrough!)}`}` : "Waiting for the first production charge with the new savings settings."
+      : "Daily totals in Eastern time. Cost per live fact uses new or updated reader records that day."}</p>
+    {view === null || rows.length === 0 ? <p className={cx(s.p, s.small)}>{DASH}</p> : <>
+      <div className={s.tableWrap}><table className={s.table}>
+        <thead><tr>{[comparison ? "Window" : "Day", "Role", "Dollars", "Calls", "Cache hits", "Cache writes", "1-hour cache tokens", "Cache writes / job", "Batch / eligible", "Saved vs list price", "Cost / live fact"].map(label => <th key={label} scope="col">{label}</th>)}</tr></thead>
+        <tbody>{shown.map((row, i) => <tr key={`${row.label}:${row.role}:${i}`}>
+          <th scope="row">{row.label}</th><td>{roleWords(row.role)}</td><td className={s.num}>{money(row.dollars)}</td>
+          <td className={s.num}>{row.calls?.toLocaleString() ?? DASH}</td><td className={s.num}>{percent(row.cacheHitShare)}</td>
+          <td className={s.num}>{percent(row.cacheWriteShare)}</td><td className={s.num}>{row.hourCacheTokens?.toLocaleString() ?? DASH}</td>
+          <td className={s.num}>{row.cacheWritesPerJob === null ? DASH : Math.round(row.cacheWritesPerJob).toLocaleString()}</td>
+          <td className={s.num} title={row.eligibleCalls === null || row.batchedCalls === null ? undefined : `${row.batchedCalls} of ${row.eligibleCalls} eligible calls`}>{percent(row.batchShare)}</td>
+          <td className={s.num}>{money(row.savedDollars)}</td><td className={s.num}>{row.costPerLiveFact === null ? DASH : `$${row.costPerLiveFact.toFixed(4)}`}</td>
+        </tr>)}</tbody>
+      </table></div>
+      {rows.length > TOP && <button type="button" className={s.btn} aria-expanded={all} onClick={() => setAll(!all)}>{all ? `Show the latest ${TOP}` : `Show all ${rows.length}`}</button>}
+    </>}
+  </Card>;
+}
 
 type SortKey = "zip" | "place" | "spent" | "held" | "limit" | "status";
 const COLUMNS: readonly { readonly key: SortKey; readonly label: string; readonly num: boolean }[] = [
@@ -66,6 +115,9 @@ export function MoneyScreen() {
   const shownDays = all ? days : days.slice(0, TOP);
   /** Hosting is billed by the month: the provider's own reading for the month in the picker, or a dash. */
   const hosting = /^20\d\d-\d\d$/.test(v.period) ? v.data.money.data?.account.find((a) => a.provider === "Netlify")?.amountUsd ?? null : null;
+  const bills = v.data.money.data?.byDay ?? null;
+  const billSpan = periodDays(v.period, new Date());
+  const billDays = bills === null ? [] : bills.days.filter((d) => billSpan === null || (d.day >= billSpan.from && d.day <= billSpan.to));
   const switcher = (
     <span className={s.inline}>
       {(["hunt", "day"] as const).map((k) => (
@@ -90,7 +142,7 @@ export function MoneyScreen() {
           <div className={s.row}><span className={s.eyebrow}>Hosting</span><span className={s.big}>{money(hosting)}</span></div>
           <div className={s.row}><span className={s.eyebrow}>Set aside</span><span className={s.big}>{money(sum.setAsideUsd)}</span></div>
           <div className={s.row}>
-            <span className={s.eyebrow}>Today against the daily limit</span>
+            <span className={s.eyebrow}>Today against the daily limit · Anthropic tokens only</span>
             <span className={s.big}>{money(sum.todayUsd)} <span className={s.dim}>of {money(sum.dailyLimitUsd)}</span></span>
           </div>
           <div className={s.row}><span className={s.eyebrow}>Left today</span><span className={s.big}>{money(sum.leftUsd)}</span></div>
@@ -106,6 +158,35 @@ export function MoneyScreen() {
           </p>
         )}
       </Card>
+
+      <Card title="Provider bills by day">
+        {bills === null ? <p className={cx(s.p, s.small)}>{DASH}</p> : (
+          <>
+            {billDays.length === 0 ? <p className={cx(s.p, s.small)}>{DASH}</p> : (
+              <div className={s.tableWrap}>
+                <table className={s.table}>
+                  <thead><tr><th scope="col">Day</th>{bills.providers.map((p) => <th key={p.provider} scope="col" className={s.num}>{p.provider}</th>)}</tr></thead>
+                  <tbody>
+                    {billDays.map((d) => (
+                      <tr key={d.day}>
+                        <th scope="row" style={{ textTransform: "none", fontSize: 13, color: "var(--text)" }}>{dayWords(d.day)}</th>
+                        {d.cells.map((c, i) => <td key={bills.providers[i].provider} className={s.num}>{c === null ? DASH : c.usd !== null ? usd(c.usd) : c.usage ?? DASH}</td>)}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+            {bills.providers.some((p) => p.note !== null) && (
+              <ul className={cx(s.p, s.small)}>{bills.providers.flatMap((p) => (p.note === null ? [] : [<li key={p.provider}>{p.note}</li>]))}</ul>
+            )}
+            <Technical lines={bills.technical} />
+          </>
+        )}
+      </Card>
+
+      <ModelSpendPanel view={spendData?.modelSpend ?? null} days={days.map(day => day.day)} />
+      <HuntCostPanel view={spendData?.huntCost ?? null} />
 
       <Card title={by === "hunt" ? "Hunts" : "Days"} aside={switcher}>
         {by === "day" ? (days.length === 0 ? <p className={cx(s.p, s.small)}>{DASH}</p> : (

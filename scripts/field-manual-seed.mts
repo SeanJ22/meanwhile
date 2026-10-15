@@ -3,8 +3,7 @@
  * Seeds and grows the field manual from the knowledge stores. Each store is
  * folded into the field manual (one row per entry) as typed entries whose
  * `payload` keeps the original record verbatim. It only ever grows: a re-run
- * refreshes entries in place and never removes one. The large Markdown
- * method-of-record docs are indexed as pointer entries; their text stays in git.
+ * refreshes entries in place and never removes one.
  *
  * Usage (writes the LOCAL file provider unless told otherwise):
  *   node --env-file=<main .env.local> --experimental-strip-types \
@@ -12,7 +11,7 @@
  *     [--target=control-plane|file|memory] [--dry]
  */
 
-import { readFileSync, statSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 import {
@@ -20,9 +19,7 @@ import {
   writeFieldManual,
   type FieldManualEntry,
   type FieldManualOutcome,
-  type FieldManualRole,
 } from "../lib/control-plane/field-manual.ts";
-import { defaultPlaybookEntries } from "../lib/control-plane/playbooks.ts";
 import { platformFingerprintEntries } from "../lib/control-plane/platform-fingerprints.ts";
 import { COVERAGE_AUDITS } from "../lib/registry/coverage-audit.ts";
 import { LEGISTAR_CLIENTS } from "../lib/sources/legistar/client-registry.ts";
@@ -146,44 +143,6 @@ async function fromMethodCandidates(repos: ControlPlaneRepositories): Promise<Fi
   return collect(src, entries);
 }
 
-/** Index the big Markdown method-of-record docs as pointers — full text stays in git, never lost. */
-function fromDocs(): FieldManualEntry[] {
-  const docs: { path: string; kind: string; role: FieldManualRole; states: string[]; title: string }[] = [
-    { path: "docs/zip-playbook.md", kind: "PLAYBOOK", role: "SHARED", states: [], title: "The ZIP discovery playbook (lettered A–M ladder, dated rungs and dead doors, definition-of-done)" },
-    { path: "docs/source-ladder.md", kind: "PLAYBOOK", role: "SHARED", states: [], title: "The source ladder — per-body evidence: every rung walked, every wall that fell" },
-    { path: "docs/sources.md", kind: "SOURCE_REGISTER", role: "SHARED", states: [], title: "The global source & credential register (wired/auth/licence)" },
-  ];
-  const entries: FieldManualEntry[] = [];
-  for (const doc of docs) {
-    let bytes = 0;
-    let excerpt = "";
-    try {
-      bytes = statSync(join(ROOT, doc.path)).size;
-      excerpt = readFileSync(join(ROOT, doc.path), "utf8").replace(/\s+/g, " ").slice(0, 400);
-    } catch {
-      continue;
-    }
-    entries.push({
-      id: fieldManualEntryId(doc.path, "doc"),
-      role: doc.role,
-      kind: doc.kind,
-      title: doc.title,
-      summary: `method-of-record; read ${doc.path} (${Math.round(bytes / 1024)} KB) — ${excerpt}`.slice(0, 300),
-      states: doc.states,
-      recordClasses: [],
-      platforms: [],
-      outcome: "REFERENCE",
-      url: doc.path,
-      portable: true,
-      source: doc.path,
-      observedAt: null,
-      tier: null,
-      payload: { path: doc.path, bytes, excerpt },
-    });
-  }
-  return collect("markdown-docs", entries);
-}
-
 /**
  * The vendor tenant registries: bodyId → tenant slug → exact API URL. Reads only
  * the scalar wiring, never the `venues` getter, which resolves against the
@@ -290,8 +249,6 @@ async function main(): Promise<void> {
     ...fromPlatforms(),
     ...fromCoverageAudits(),
     ...(target === "control-plane" ? await fromMethodCandidates(repos) : []),
-    ...fromDocs(),
-    ...defaultPlaybookEntries(["SCOUT", "DETECTIVE", "PARSER", "AUDITOR", "ENGINEER", "VALIDATOR"]),
     ...fromTenantRegistries(),
     ...fromTiers(),
   ];

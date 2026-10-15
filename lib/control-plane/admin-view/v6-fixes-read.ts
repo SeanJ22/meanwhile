@@ -1,4 +1,4 @@
-/** The queue records no completion, so "Fixed and checked" and "Came back" are empty and say so (`missingParts`). */
+import { plainWords } from "./plain-words.ts";
 import type { ClosedFix, FixShot, FixView, LookView, OpenFix, TestingFix } from "../../../app/(admin)/_mw/admin-v6/model.ts";
 import type { FixProofBar, MethodStanding } from "../../method/fix-status.ts";
 import { brokeSince } from "../fix-standing.ts";
@@ -14,7 +14,7 @@ export const FIXES_MISSING_HISTORY = "Fixed and checked, and Came back: only fix
 const FIRST_SENTENCE = /^[^.!?]*[.!?]?/;
 
 function titleOf(says: string): string {
-  const first = (FIRST_SENTENCE.exec(says.trim())?.[0] ?? says).trim();
+  const first = (FIRST_SENTENCE.exec(plainWords(says).trim())?.[0] ?? plainWords(says)).trim();
   return first.length > 120 ? `${first.slice(0, 117)}…` : first;
 }
 
@@ -23,14 +23,14 @@ function openFix(item: FixQueueItem): OpenFix {
   const placeInLine: Record<FixQueueItem["state"], string> = {
     QUEUED: `Queued ${formatEastern(item.queuedAt)}`,
     SENT: "Sent",
-    OPENED: row ? `Work row open (${row.id})` : "Work row open",
+    OPENED: "Work row open",
     REFUSED: item.refusedReason ? `Refused: ${item.refusedReason}` : "Refused",
   };
   return {
     id: item.subjectId,
     title: titleOf(item.says),
     tab: item.state === "QUEUED" || item.state === "REFUSED" ? "attention" : "fixing",
-    owner: "Engineering",
+    owner: "The team",
     problem: item.says,
     helps: item.where,
     placeInLine: placeInLine[item.state],
@@ -48,16 +48,16 @@ function listOpen(item: FixItem): OpenFix {
     id: item.id,
     title: titleOf(item.says),
     tab: item.state === "OPEN" ? "attention" : "fixing",
-    owner: "Engineering",
+    owner: "The team",
     problem: item.says,
     helps: item.where,
-    placeInLine: item.state === "OPEN" ? `Added ${formatEastern(item.addedAt)}` : `Started ${formatEastern(item.startedAt ?? item.addedAt)}`,
+    placeInLine: item.dispatch ? (item.dispatch.honoredAt ? "Agents sent" : "Waiting for the runner") : item.state === "OPEN" ? `Added ${formatEastern(item.addedAt)}` : `Started ${formatEastern(item.startedAt ?? item.addedAt)}`,
     resourcesNow: "—",
     taskStage: null,
     taskId: null,
     linkedStuck: [],
     origin: item.addedBy === "owner" ? "engineering" : "automatic",
-    technical: `Fix list item ${item.id}, state ${item.state}, added ${item.addedAt}.`,
+    technical: [`Fix list item ${item.id}, state ${item.state}, added ${item.addedAt}.`, ...(item.technical ?? []), ...(item.dispatch?.honoredDetail ? [item.dispatch.honoredDetail] : [])].join("\n"),
   };
 }
 

@@ -1,24 +1,3 @@
-/**
- * Any registered state's governments, as the jurisdiction registry a Send reads. A Send creates work
- * only from a jurisdiction registry (`lib/control-plane/expansion/dispatch-work.ts`). Reviewed registries
- * win wherever they exist; every other state, DC and territory is read here from its promoted
- * registration, so a Send in any registered state creates work with no code change:
- *
- * ```
- *   the governments   every government row of the committed reference the promoted version was
- *                     built from, under the reviewed registries' jurisdiction ids
- *                     (`<st>:<class>:<slug>`, `-<pid6>` on a collision)
- *   the body          the body that version minted for the government on its Census division;
- *                     none where registration pairs the government with no division
- *   what it owes      its meetings only. Where the Census records a web address, the own-site
- *                     MEETINGS source (`own-site-meetings`); where it records none, `find-own-site`
- * ```
- *
- * Only the promoted version is read. A state with no promoted registration, a failed read, or a version
- * built from another reference is refused by name and its governments are named as blocked.
- *
- * Server-only (node:fs); a request path never reads it.
- */
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -63,8 +42,10 @@ const CLASS_OF: Readonly<Record<string, JurisdictionClass>> = {
 export interface CensusGovernmentFacts {
   /** `web_address`, as recorded: self-reported, with minimal quality control (data/reference/*.md). Empty when blank. */
   readonly web: string;
+  readonly city?: string;
   /** `county_area_name`. */
   readonly county: string;
+  readonly countyFips?: string | null;
 }
 
 export interface CensusFacts {
@@ -73,11 +54,6 @@ export interface CensusFacts {
   readonly source: string;
 }
 
-/**
- * Read web addresses and counties from the named states' install-time projections.
- * Their source hashes must match the registration reference's source vintage.
- * Every caller supplies its states; there is no whole-country fallback.
- */
 export function readCensusGovernmentFacts(root: string, states: readonly string[]): CensusFacts {
   const index = JSON.parse(readFileSync(join(/* turbopackIgnore: true */ root, "data", "derived", "registration", "index.json"), "utf8")) as { readonly source?: string };
   const byPid = new Map<string, CensusGovernmentFacts>();
@@ -128,10 +104,6 @@ export interface RegistrationRegistryInput {
   readonly census: CensusFacts;
 }
 
-/**
- * One state's registration, as a jurisdiction registry. PURE. Throws by name when the promoted version was not
- * built from this committed reference, or names another state.
- */
 export function registrationJurisdictionRegistry(input: RegistrationRegistryInput): JurisdictionRegistry {
   const { reference: loaded, promoted, census } = input;
   const ref = loaded.reference;
@@ -191,6 +163,7 @@ export function registrationJurisdictionRegistry(input: RegistrationRegistryInpu
       name,
       govClass,
       countyName: facts?.county ? facts.county : null,
+      countyFips: listing?.countyFips ?? facts?.countyFips ?? null,
       enumeratedFrom,
       ownWebAddress: site,
       sourceIds: site === null ? [] : [OWN_SITE_MEETINGS_SOURCE],
@@ -249,12 +222,6 @@ export interface RegistrationJurisdictionsLoad {
   readonly refused: ReadonlyMap<string, string>;
 }
 
-/**
- * Read each named state's registration as a registry: the promoted version (the one readers use) through `read`.
- * Every other outcome — no promoted version yet, an outage, a version built from another reference — refuses the
- * state by name; the committed reference is never read in its place. The caller decides which states (never a
- * reviewed one: the reviewed registry wins).
- */
 export async function loadRegistrationJurisdictions(input: {
   readonly root: string;
   readonly states: Iterable<string>;
@@ -285,12 +252,6 @@ export async function loadRegistrationJurisdictions(input: {
   return { registries, refused };
 }
 
-/**
- * **THE RUNNER'S READ.** Every named state that has no reviewed registry and is not installed yet this process is
- * read from its registration and installed beside the reviewed bundle, with every refusal named
- * (`installRegistrationJurisdictionRegistries`), so the providers, the territory index and the Send all read the
- * same registry. Returns what this call read; a state already installed is not read again.
- */
 export async function preloadRegistrationJurisdictions(input: {
   readonly root: string;
   readonly states: Iterable<string>;

@@ -8,13 +8,6 @@ import { partyColorVar } from "@/lib/officials/party-color";
 import { readerPartyLabel } from "@/lib/text/reader-names";
 import { ageFrom, inSeatUntil } from "@/lib/officials/tenure";
 
-/**
- * The identity header: a circle, a name and a row of chips. The portrait ring
- * is neutral for everyone. Initials occupy the identical circle. Party fills
- * in its colour; every other chip is an outlined neutral of the same height.
- * No party filed renders nothing.
- */
-
 const initialsOf = personInitials;
 
 export function IdentityChip({
@@ -39,10 +32,6 @@ export function IdentityChip({
   );
 }
 
-/**
- * The circle, one geometry whatever is behind it. `object-position: top
- * center` keeps heads in frame.
- */
 export function IdentityPortrait({
   name,
   photoUrl,
@@ -73,18 +62,14 @@ export function PersonIdentity({
   large = false,
   /** Extra outlined chips the surface knows (state, chamber, incumbent or challenger). */
   chips = [],
-  /** The small popup's form: circle, name and party pill only; the rest is on the large card. */
-  identityOnly = false,
 }: {
   holder: SeatHolder;
   seatLabel: string | null;
   large?: boolean;
   chips?: string[];
-  identityOnly?: boolean;
 }) {
-  const until = identityOnly ? null : inSeatUntil(holder.termEnd);
+  const until = inSeatUntil(holder.termEnd);
   const age = large ? ageFrom(holder.birthDate, new Date()) : null;
-  const outlined = identityOnly ? [] : chips;
   const representation = holder.representation ?? (tribalSeatForHolder(holder) ? "tribal" : undefined);
 
   return (
@@ -106,19 +91,17 @@ export function PersonIdentity({
               {readerPartyLabel(holder.partyLabel)}
             </IdentityChip>
           )}
-          {outlined.map((chip) => (
+          {chips.map((chip) => (
             <IdentityChip key={chip}>{chip}</IdentityChip>
           ))}
         </div>
 
-        {!identityOnly && (
-          <p className="id-office">
+        <p className="id-office">
             {readerOfficeTitle(holder.officeTitle)}
             {/* A seat label identical to the title is not repeated. */}
             {seatLabel && seatLabel !== holder.officeTitle ? ` · ${seatLabel}` : ""}
             {representation && ` · ${legislativeRepresentationLabel("", representation)}`}
-          </p>
-        )}
+        </p>
 
         {/* Term end and (large card) age only from sourced values; age computed at render. */}
         {(until || age !== null) && (

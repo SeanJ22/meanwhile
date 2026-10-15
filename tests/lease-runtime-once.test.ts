@@ -55,18 +55,16 @@ test("Box startup replays durable Scout findings once without resetting a comple
     startedAt: h.now(), recordedAt: h.now(),
   };
   await h.repos.scoutResults.append(scout.obligationId, scout.attemptId, scout, scout.recordedAt);
-  const start = (enabled: boolean) => autonomousStandingRuntime({ root, repos: h.repos, now: h.now,
-    auditCeilingUsd: 1, environment: { NODE_ENV: "test", WTP_BOX_ENABLED: enabled ? "1" : "0" } });
-  await start(false);
-  assert.equal((await h.repos.boxFindings.list()).length, 0, "old runtime path stays available");
-  await start(true);
+  const start = () => autonomousStandingRuntime({ root, repos: h.repos, now: h.now,
+    auditCeilingUsd: 1, environment: { NODE_ENV: "test" } });
+  await start();
   const [row] = await h.repos.boxFindings.list();
   assert.equal(row.value.subjectId, "person:alice");
   assert.equal(row.value.origins[0].resultId, scout.attemptId);
   const end = new Date(Date.parse(h.now()) + 60_000).toISOString();
   const claim = (await takeBoxFinding(h.repos.boxFindings, row.id, "builder", h.now(), end))!;
   assert.equal(await finishBoxFinding(h.repos.boxFindings, row.id, claim.token, { state: "built", publicationId: "published" }, h.now()), true);
-  await start(true);
+  await start();
   assert.equal((await h.repos.boxFindings.list()).length, 1);
   assert.equal((await h.repos.boxFindings.mustRead(row.id)).value.publicationId, "published");
 });

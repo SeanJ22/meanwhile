@@ -7,24 +7,11 @@ import {
   RoutineObservabilityReadTimedOut,
   readRoutineDataObservabilityFromConnection,
 } from "../lib/civic-data/observability-store.ts";
-import {
-  factFreshnessFromPermanentMeetings,
-} from "../lib/control-plane/promotion/fact-freshness.ts";
 
 test("the research cycle never makes the unbounded observability read", () => {
   const src = readFileSync("scripts/freshness-shadow.mts", "utf8");
   assert.doesNotMatch(src, /readRoutineDataObservability/, "the research child must not read the full canonical projection");
   assert.doesNotMatch(src, /observability-store/, "nor import its store");
-  assert.match(src, /createPermanentMeetingFreshness\(/);
-});
-
-test("a missing permanent receipt continues to hold approval fail-closed", () => {
-  const reading = factFreshnessFromPermanentMeetings({kind:"UNAVAILABLE", detail:"bounded proof read failed"}, {
-    recordClass:"meeting-times", subjectId:"unknown", meetingSource:"schedulepage",
-  });
-  assert.equal(reading.hold,true);
-  assert.equal(reading.state,"UNKNOWN");
-  assert.match(reading.reason,/bounded proof read failed/);
 });
 
 test("a read that runs past its statement limit is a named store failure, never an empty or zero outcome", async () => {

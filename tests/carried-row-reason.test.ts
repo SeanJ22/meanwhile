@@ -133,12 +133,17 @@ function renderSurfaces(meetings: readonly Meeting[]): RenderedSurfaces {
     import { DataProvider } from './lib/state/data.tsx';
     import { UiProvider } from './lib/state/provider.tsx';
     import { MeetingPanel } from './components/map/meeting-panel.tsx';
+    import { ReaderCard } from './components/shell/reader-card.tsx';
+    import { meetingCardSources } from './lib/officials/card-sources.ts';
     import { groupByVenue } from './lib/meetings/venues.ts';
     const meetings = JSON.parse(process.env.CARRIED_ROW_REASON_CASES);
     const data = { allMeetings: meetings, meetings, venues: [], result: null, location: null, drawnDistricts: [],
       dropped: 0, searchFailed: false, atAddress: false, governing: null, zipPartial: null, basis: 'ZIP' };
     const render = (child) => renderToStaticMarkup(h(DataProvider, { value: data }, h(UiProvider, { initial: {} }, child)));
-    const panels = groupByVenue(meetings).map((venue) => render(h(MeetingPanel, { venue, onClose() {}, onOpenMeeting() {} })));
+    const panels = groupByVenue(meetings).map((venue) => render(h(ReaderCard, {
+      viewKey: venue.key, kicker: venue.name, backLabel: null, onBack() {}, onClose() {},
+      sources: venue.meetings.flatMap(meeting => meetingCardSources(meeting, [])),
+    }, h(MeetingPanel, { venue, onClose() {}, onOpenMeeting() {}, embedded: true }))));
     console.log(JSON.stringify({ panels }));
   `], {
     cwd: ROOT,
@@ -326,6 +331,7 @@ test("the venue card renders the decided clause for every reason, and never call
   const panelFor = (id: string) => {
     const markup = panels.find((candidate) => candidate.includes(`data-meeting-id="${id}"`));
     assert.ok(markup, `no venue card rendered ${id}`);
+    assert.equal((markup.match(/data-card-sources=/g) ?? []).length, 1);
     return markup;
   };
 

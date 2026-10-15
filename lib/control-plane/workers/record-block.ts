@@ -93,22 +93,3 @@ export function personRecordBlocks(text: string, name: string, contains?: (name:
   }
   return [...found.values()];
 }
-
-/** At most this many dropped fields are named in one detective brief. */
-const OUTSIDE_BLOCK_BRIEF_LIMIT = 20;
-
-/** A field found only outside its person's own row was dropped and never publishes; the next investigation is a detective with each dropped field in its brief. The kept record is not held. */
-export function outsideRecordBlockBriefs(findings: readonly { readonly code: string; readonly detail: string; readonly field?: string }[]): string[] {
-  const lines = new Set<string>();
-  for (const finding of findings) {
-    if (finding.code !== "FIELD_OUTSIDE_RECORD_BLOCK") continue;
-    let held: { name?: unknown; value?: unknown; quote?: unknown; sourceUrl?: unknown } = {};
-    try { held = JSON.parse(finding.detail) as typeof held; } catch { /* an unstructured detail still names the field */ }
-    const text = (value: unknown) => typeof value === "string" && value.trim() ? JSON.stringify(value.slice(0, 200)) : null;
-    const name = text(held.name), value = text(held.value), quote = text(held.quote), url = typeof held.sourceUrl === "string" ? held.sourceUrl : null;
-    lines.add(`Field ${finding.field ?? "unknown"}${name ? ` for ${name}` : ""} was dropped because ${value ? `the value ${value}` : "its value"} sits outside that person's own record` +
-      `${quote ? ` (quoted ${quote})` : ""}${url ? ` on ${url}` : ""}. Find this person's own value in their row, card or paragraph, or a newer source; never take it from another person's row.`);
-    if (lines.size >= OUTSIDE_BLOCK_BRIEF_LIMIT) break;
-  }
-  return [...lines];
-}

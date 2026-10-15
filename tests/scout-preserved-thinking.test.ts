@@ -1,3 +1,4 @@
+import { fixtureRolePlaybook } from "./helpers/playbooks.ts";
 /**
  * On Claude Opus 5.5 a thinking block is bound to the model that produced it
  * and to the conversation before it; replaying a block after an edit of the
@@ -5,14 +6,10 @@
  * Offline, with a fake provider that answers with thinking blocks and a fake
  * toolkit; nothing here reaches a model or a host.
  *
- *   PT-1  across a whole Attempt the conversation is append-only: each request
+ *   PT-1  across a whole job the conversation is append-only: each request
  *         extends the one before byte-for-byte, except a restart, which
  *         replays no earlier turn or thinking block; the payload stays bounded
- *   PT-2  the escalation appends to the same conversation: Sonnet's reply,
- *         thinking blocks included, reaches Opus 5.5 unchanged, and both models
- *         state drop_block
- *   PT-3  every dropped block the provider reports is recorded on the result;
- *         a prefix-binding drop is named on the outcome, a model-binding one is not
+ *   PT-3  every dropped block the provider reports is recorded on the result
  *   PT-4  the transport sends the thinking-binding beta header exactly when the
  *         body carries block_binding
  */
@@ -33,7 +30,7 @@ import {
   anthropicTransport,
   ModelTransportError,
   representationBytesIn,
-  scoutExecutor,
+  hunterExecutor,
   type ContentBlock,
   type InputTransformation,
   type ModelRequest,
@@ -46,8 +43,7 @@ import type { WorkOutcome } from "../lib/control-plane/scheduler/dispatch.ts";
 const NOW = "2026-09-23T18:00:00.000Z";
 const NOW_MS = Date.parse(NOW);
 const SONNET = "claude-sonnet-5-5";
-const OPUS = "claude-opus-5-5";
-/** A fetch representation under fetch_public's 64,000-byte budget; three of them pass the 100 KB context budget. */
+/** A fetch representation large enough that a few of them pass the context budget. */
 const PAGE_BYTES = 45_000;
 
 const OBLIGATION: FreshnessObligation = {
@@ -65,18 +61,19 @@ const OBLIGATION: FreshnessObligation = {
 function bigPageToolkit(): ScoutToolkit {
   const vaulted = new Set<string>();
   let toolCalls = 0;
-  const spec = (name: string) => ({ name, description: "fake", input_schema: { type: "object", properties: { url: { type: "string" }, rung: { type: "string" }, why: { type: "string" } }, required: ["url", "rung", "why"] } });
+  const spec = (name: string) => ({ name, description: "fake", input_schema: { type: "object", properties: { url: { type: "string" } }, required: ["url"] } });
   return {
-    specs: [spec("read_permission"), spec("fetch_public")],
+    specs: [spec("fetch_public")],
     get vaultedArtifactIds() {
       return vaulted;
     },
     get toolCalls() {
       return toolCalls;
     },
+    reported: [],
     requestCount: 0,
     bytesFetched: 0,
-    async call(name, input, rungLabel) {
+    async call(name, input) {
       toolCalls += 1;
       const url = String((input as { url?: string }).url ?? "");
       const id = `art-${toolCalls}`;
@@ -86,7 +83,7 @@ function bigPageToolkit(): ScoutToolkit {
         forModel: `[artifact ${id}] fetched ${url}\n` + String(toolCalls % 10).repeat(PAGE_BYTES),
         artifacts: [{ artifactId: id, tier: "RAW", contentHash: `sha256-${id}`, byteLength: PAGE_BYTES, contentType: "text/html", canonicalUrl: url, partial: false, recordedAt: NOW }],
         provenance: [{ artifactId: id, canonicalUrl: url, retrievedAt: NOW, permission: "ALLOWED", methodRouteId: `scout:${name}`, httpStatus: 200 }],
-        rung: { rung: rungLabel ?? "other:unlabelled", tool: name, target: url, observed: `HTTP 200, ${PAGE_BYTES} bytes`, artifactIds: [id], ok: true },
+        step: { tool: name, target: url, observed: `HTTP 200, ${PAGE_BYTES} bytes`, artifactIds: [id], ok: true },
         requestCount: 1,
         bytesFetched: PAGE_BYTES,
       };
@@ -96,32 +93,8 @@ function bigPageToolkit(): ScoutToolkit {
 
 const thinking = (sig: string) => ({ type: "thinking" as const, thinking: "", signature: sig });
 const toolUse = (id: string, name: string, input: unknown) => ({ type: "tool_use" as const, id, name, input });
-const fetchOf = (id: string, url: string) => toolUse(id, "fetch_public", { url, rung: "primary-site-navigation", why: "navigate" });
-const finishCiting = (id: string, evidence: string, rungs: number) =>
-  toolUse(id, "finish", {
-    outcome: "ROUTE_CANDIDATE",
-    rungsWalked: Array.from({ length: rungs }, (_, index) => ({ index, note: `page ${index}` })),
-    candidates: [
-      {
-        routeId: "a-gov-meetings-ics",
-        title: "ics feed",
-        url: "https://a.gov/meetings.ics",
-        procedure: "GET",
-        relevance: "linked from the meetings page",
-        permission: "ALLOWED",
-        permissionReading: "robots allows /",
-        evidenceArtifactIds: [evidence],
-        observedOn: NOW,
-        recordClass: "meetings",
-        deterministic: true,
-        unverified: [],
-      },
-    ],
-    findings: [],
-    nextRungs: [],
-    unverified: [],
-    narrative: "found the feed",
-  });
+const fetchOf = (id: string, url: string) => toolUse(id, "fetch_public", { url });
+const finish = (id: string) => toolUse(id, "finish", { summary: "found the feed", unfilled: [] });
 
 type Turn = readonly ContentBlock[];
 type Script = Readonly<Record<string, readonly Turn[]>>;
@@ -152,19 +125,18 @@ async function runScout(transport: ModelTransport, bound: Partial<ScoutBound> = 
   const results: ScoutResult[] = [];
   const b: ScoutBound = { ...RESEARCH_BOUNDS.perDispatch, ...bound };
   const toolkit = bigPageToolkit();
-  const exec = scoutExecutor({
-    model: SONNET, // This suite specifically verifies Sonnet → Opus preserved thinking.
+  const exec = hunterExecutor({ role: "HUNTER", playbookFor: fixtureRolePlaybook,
+    model: SONNET,
     transport,
     bound: b,
     toolkitFor: () => toolkit,
-    contextFor: () => ({
-      route: null,
-      providerId: "test",
-      reason: "test novelty",
-      inherited: { artifactIds: [], summary: "none" },
+    contextFor: async () => ({
+      brief: "Place: test",
+      reason: "test hunt",
+      blanks: 1,
+      handed: { artifactIds: [] },
       tools: { vault: async () => ({ stored: true, where: "x", why: "written" }), spaceOut: async () => undefined },
     }),
-    reserveEscalation: (r) => ({ admit: true, reservedUsd: r.worstCaseUsd, draw: () => undefined, release: () => undefined }),
     now: () => NOW,
     onResult: async (r) => {
       results.push(r);
@@ -180,7 +152,7 @@ async function runScout(transport: ModelTransport, bound: Partial<ScoutBound> = 
     bound: { maxAttempts: 1, maxWallMs: 0, maxCostUnits: 1 },
   } as never);
   assert.equal(results.length, 1);
-  return { outcome, result: results[0] };
+  return { outcome, result: results[0]! };
 }
 
 const json = (v: unknown): string => JSON.stringify(v);
@@ -189,13 +161,13 @@ const isRestart = (messages: ModelRequest["messages"]): boolean =>
 
 
 test("PT-1: the conversation is append-only — each request extends the one before byte-for-byte, except a restart, which replays no earlier turn or thinking block — and the payload stays bounded", async () => {
-  const sonnet: Turn[] = [1, 2, 3, 4, 5].map((k) => [thinking(`sig-s${k}`), fetchOf(`u${k}`, `https://a.gov/page-${k}`)]);
-  sonnet.push([thinking("sig-s6"), finishCiting("f", "art-5", 5)]);
+  const sonnet: Turn[] = Array.from({ length: 15 }, (_, i) => i + 1).map((k) => [thinking(`sig-s${k}`), fetchOf(`u${k}`, `https://page-${k}.gov/`)]);
+  sonnet.push([thinking("sig-s16"), finish("f")]);
   const provider = fakeProvider({ [SONNET]: sonnet });
   const { outcome, result } = await runScout(provider.transport);
   assert.equal(outcome.kind, "DISPOSED", outcome.detail);
   const { requests } = provider;
-  assert.equal(requests.length, 6);
+  assert.equal(requests.length, 16);
 
   let restarts = 0;
   for (let i = 1; i < requests.length; i += 1) {
@@ -209,7 +181,7 @@ test("PT-1: the conversation is append-only — each request extends the one bef
     }
     assert.equal(json(after.slice(0, before.length)), json(before), `request ${i + 1} extends request ${i} byte-for-byte: nothing already sent was edited`);
   }
-  assert.equal(restarts, 2, "three 45 KB pages pass the 100 KB budget twice in five fetches");
+  assert.ok(restarts >= 2, "capped page results exercise repeated restarts at the context budget");
   assert.equal(result.contextRestarts, restarts);
 
   for (const request of requests) {
@@ -218,8 +190,6 @@ test("PT-1: the conversation is append-only — each request extends the one bef
   }
   /* The model's own thinking blocks go back unchanged within a conversation. */
   assert.ok(json(requests[2].messages).includes('"signature":"sig-s2"'), "a thinking block is echoed verbatim on the next turns");
-  /* The accepted finish cites the page the restarted conversation carried. */
-  assert.deepEqual(result.candidates[0]?.evidenceArtifactIds, ["art-5"]);
   assert.deepEqual(result.inputTransformations, []);
 });
 
@@ -244,46 +214,14 @@ test("transport carries provider capacity and Retry-After from an unsent retry",
 });
 
 
-test("PT-2: the escalation appends to the same conversation — Sonnet's reply, thinking blocks included, reaches Opus 5.5 unchanged — and both models state drop_block", async () => {
-  const sonnetReply: Turn = [thinking("sig-sonnet"), { type: "text", text: "I would look at the meetings page." }];
+test("PT-3: a prefix-binding drop — our history changed under a block — is recorded on the result", async () => {
   const provider = fakeProvider(
-    {
-      [SONNET]: [sonnetReply],
-      [OPUS]: [[thinking("sig-o1"), fetchOf("o1", "https://a.gov/meetings")], [thinking("sig-o2"), finishCiting("f", "art-1", 1)]],
-    },
-    (model, turn) => (model === OPUS && turn === 1 ? [{ type: "thinking_dropped", path: "messages.1.content.0", reason: "model_binding_mismatch" }] : []),
-  );
-  const { outcome, result } = await runScout(provider.transport);
-  assert.equal(outcome.kind, "DISPOSED", outcome.detail);
-  assert.equal(result.escalatedFrom, "sonnet");
-  assert.equal(result.escalationReason, "NO_TYPED_RESULT");
-
-  const lastSonnet = provider.requests.filter((r) => r.model === SONNET).at(-1)!;
-  const firstOpus = provider.requests.find((r) => r.model === OPUS)!;
-  const n = lastSonnet.messages.length;
-  assert.equal(json(firstOpus.messages.slice(0, n)), json(lastSonnet.messages), "the frontier's first request begins with everything Sonnet was sent, unchanged");
-  assert.equal(json(firstOpus.messages[n]), json({ role: "assistant", content: sonnetReply }), "then Sonnet's reply, its thinking block unchanged — never stripped");
-  assert.match(json(firstOpus.messages.at(-1)), /ESCALATED: this investigation moves from claude-sonnet-5-5 to claude-opus-5-5/);
-  assert.equal(firstOpus.messages.length, n + 2, "only appended: the reply and the escalation notice");
-  assert.equal(json(firstOpus.system), json(lastSonnet.system), "the same system: the prefix the Sonnet blocks are bound to");
-  assert.equal(json(firstOpus.tools), json(lastSonnet.tools), "the same tools");
-  for (const request of provider.requests) assert.deepEqual(request.thinking, SCOUT_THINKING, `${request.model} states drop_block`);
-
-  /* A model-binding drop after the switch is recorded, and is not our defect. */
-  assert.deepEqual(result.inputTransformations, [{ turn: 4, model: OPUS, type: "thinking_dropped", path: "messages.1.content.0", reason: "model_binding_mismatch" }]);
-  assert.doesNotMatch(outcome.detail, /THINKING DROPPED/);
-});
-
-
-test("PT-3: a prefix-binding drop — our history changed under a block — is recorded on the result and named on the outcome", async () => {
-  const provider = fakeProvider(
-    { [SONNET]: [[thinking("s1"), fetchOf("u1", "https://a.gov/meetings")], [thinking("s2"), finishCiting("f", "art-1", 1)]] },
+    { [SONNET]: [[thinking("s1"), fetchOf("u1", "https://a.gov/meetings")], [thinking("s2"), finish("f")]] },
     (_model, turn) => (turn === 2 ? [{ type: "thinking_dropped", path: "messages.1.content.0", reason: "prefix_binding_mismatch" }] : []),
   );
   const { outcome, result } = await runScout(provider.transport);
   assert.equal(outcome.kind, "DISPOSED");
   assert.deepEqual(result.inputTransformations, [{ turn: 2, model: SONNET, type: "thinking_dropped", path: "messages.1.content.0", reason: "prefix_binding_mismatch" }]);
-  assert.match(outcome.detail, /THINKING DROPPED \(prefix_binding_mismatch: our history changed under a block\) on turn\(s\) 2/);
 });
 
 

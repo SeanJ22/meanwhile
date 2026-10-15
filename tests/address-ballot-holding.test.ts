@@ -46,6 +46,20 @@ test("a known ballot absence stays distinct from a missing holding", async () =>
   });
 });
 
+test("an address ballot set belongs only to its explicitly selected election", async () => {
+  const dated = { ...ballot, election: { id: "controlled-election", date: "2026-11-03", state: "NH", name: "Controlled election" } };
+  const read = async () => [source(async () => [dated], () => dated)];
+  assert.deepEqual(await addressContestScopeFor([division], read, {
+    purpose: "election", asOf: "2026-10-15", electionDate: "2026-11-03",
+  }), { contestIds: ["fixture:contest"], ballotStatus: "HELD" });
+  assert.deepEqual(await addressContestScopeFor([division], read, {
+    purpose: "election", asOf: "2026-10-15", electionDate: "2024-11-05",
+  }), { contestIds: [], ballotStatus: "NOT_RECORDED" });
+  assert.deepEqual(await addressContestScopeFor([division], read, {
+    purpose: "representation", asOf: "2026-10-15",
+  }), { contestIds: [], ballotStatus: "NOT_RECORDED" });
+});
+
 test("arbitrary source and normalization errors, and unrelated holding errors, remain failures", async () => {
   const parseError = new Error("Malformed ballot source");
   await assert.rejects(addressContestScopeFor([division], async () => [source(async () => [], () => { throw parseError; })]), error => error === parseError);

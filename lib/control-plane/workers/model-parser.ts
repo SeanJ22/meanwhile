@@ -1,4 +1,4 @@
-import { rolePlaybook, workerSystemPrompt } from "../playbooks.ts";
+import { readRolePlaybook, workerSystemPrompt } from "../playbooks.ts";
 /**
  * The parser's fallback when no parsing rule exists: a model pulls each field with its exact quote, and code keeps
  * only fields whose quote occurs character for character in the saved document and contains the value, on a
@@ -24,7 +24,7 @@ import { canonicalJson } from "../repository/types.ts";
 import { canonicalModelId } from "../../models.ts";
 import { assertStepMayEscalate, assertStepMayInvokeModel, MODEL_FOR_CLASS, type ModelClass } from "../scheduler/model-routing.ts";
 import { ceilingPermits, RESEARCH_BOUNDS, researchSpendInWindow } from "../scheduler/research-policy.ts";
-import type { ModelRequest, ModelResponse, ModelTransport } from "../scheduler/scout-executor.ts";
+import { modelRequestAccounting, type ModelRequest, type ModelResponse, type ModelTransport } from "../scheduler/scout-executor.ts";
 import { SendBudgetRefusal } from "../expansion/spend-holds.ts";
 import { confirmQuotedRecords, MODEL_PARSER_IMPLEMENTATION, type ProposedRecord, type Rejection } from "./quoted-proof.ts";
 import type {
@@ -64,7 +64,7 @@ const RECORD_EXTRACTION = {
       } },
     },
   },
-  cache_control: { type: "ephemeral" as const },
+  cache_control: { type: "ephemeral" as const, ttl: "1h" as const },
 };
 
 
@@ -256,10 +256,11 @@ export function modelParseReasoner(
     const started = performance.now();
     const contract = input.contract;
     if (contract.schemaVersion !== 2 || contract.extraction.format !== "UNSUPPORTED") throw new Error("PARSE_MODEL_LANE_NOT_APPLICABLE");
-    const spend = researchSpendInWindow(await readSpendWindowCosts(repos, now(), options.scopedReads === true), now());
+    const spend = researchSpendInWindow(await readSpendWindow(repos, now()), now());
     const admission = ceilingPermits(spend.windowUsd, ceilingUsd);
     if (!admission.permits) throw new Error(`DENIED_BY_POLICY:PARSE_ROLLING_COST_CEILING; ${admission.why}`);
     const host = (() => { try { return new URL(input.evidence.canonicalUrl).host.toLowerCase(); } catch { return input.evidence.canonicalUrl; } })();
+    const playbook = await readRolePlaybook(repos, "PARSER");
     const manual = await readFieldManual(repos, { role: "PARSER", state: contract.jurisdiction.state.toLowerCase(), recordClass: contract.recordClass });
     const route = routeParse(manual.store, { recordClass: contract.recordClass, host });
     const { windows, unreadFrom } = documentWindows(input.evidence.text);
@@ -287,7 +288,7 @@ export function modelParseReasoner(
         if (index === 0 && firstBody === "") firstBody = body;
         const request: ModelRequest = { model, max_tokens: PARSE_RESPONSE_MAX_TOKENS,
           output_config: { effort: step.effort },
-          system: [{ type: "text", text: workerSystemPrompt("PARSER", rolePlaybook(manual.store.entries, "PARSER").text), cache_control: { type: "ephemeral" } }], tools: [RECORD_EXTRACTION],
+          system: [{ type: "text", text: workerSystemPrompt("PARSER", playbook.text), cache_control: { type: "ephemeral", ttl: "1h" } }], tools: [RECORD_EXTRACTION],
           tool_choice: { type: "auto" }, messages: [{ role: "user", content: body }] };
         const response = await send(request).catch((error) => {
           if (error instanceof SendBudgetRefusal) throw new Error(`DENIED_BY_POLICY:${error.code}; ${error.why}`);
@@ -313,11 +314,11 @@ export function modelParseReasoner(
         const { response, window: w } = call.value;
         const usage = readMeteredUsage(response.usage, response.batch === true);
         metered.push(usage);
-        const price = priceMeteredUsage(response.model, usage, "5m").usd;
-        const { batch: _batch, ...fields } = meteredCostFields(usage);
+        const price = priceMeteredUsage(response.model, usage, "1h").usd;
+        const fields = meteredCostFields(usage);
         byModel.push({ model: response.model, tier: activeModelTierFor(response.model), requestCount: 1, usd: price,
           inputTokens: usage.uncachedInputTokens === null ? null : usage.uncachedInputTokens + (usage.cacheReadInputTokens ?? 0) + (usage.cacheCreationInputTokens ?? 0),
-          outputTokens: usage.outputTokens, ...fields });
+          outputTokens: usage.outputTokens, ...fields, ...modelRequestAccounting(response) });
         usd = usd === null || price === null ? null : usd + price;
         try { for (const p of proposalsFrom(toolInput(response, model))) proposals.push({ ...p, windowStart: w.start }); }
         catch (error) { validationError = error instanceof Error ? error.message : "PARSE_MODEL_RESPONSE_INVALID"; }
@@ -380,4 +381,4 @@ export function modelParseReasoner(
 }
 import type { CostModelShare } from "../cost.ts";
 import { activeModelTierFor } from "../../models.ts";
-import { readSpendWindowCosts } from "./scoped-history.ts";
+import { readSpendWindow } from "../spend-window.ts";

@@ -17,6 +17,9 @@ import {
 
 import { FundingBlock } from "@/components/funding/funding-block";
 import type { PrlReaderProfile } from "@/lib/sources/prl/snapshot";
+import type { OfficePin } from "@/lib/map/office-pins";
+import { venueLink } from "@/lib/registry/links";
+import { CheckedLink } from "@/components/ui/checked-link";
 import { PublicStatementsProfile } from "@/components/officials/public-statements-profile";
 import { OfficialActions } from "@/components/officials/official-actions";
 import { SpeakYourMind } from "@/components/speak/speak-your-mind";
@@ -26,10 +29,13 @@ import { ContactPills } from "@/components/officials/contact-pills";
 import { OfficialTermNote } from "@/components/officials/official-term-note";
 import { MemberCommitteesContent, MemberOfficesContent } from "@/components/officials/member-directory";
 import { useMemberDirectory } from "@/hooks/use-member-directory";
+import { FederalMemberRecords } from "@/components/officials/federal-records";
+import { FederalCommentRules } from "@/components/officials/federal-comment-rules";
 import { PersonIdentity } from "@/components/officials/person-identity";
 import { PositionsSection } from "@/components/officials/positions-section";
 
 import { OfficeBlurb, RecentVotes } from "./official-popup";
+import { LegislatorBills } from "@/components/officials/legislator-bills";
 
 /**
  * The officeholder's large card: identity, contact, the roll-call record with
@@ -45,6 +51,8 @@ interface OfficialModalProps {
   onClose: () => void;
   /** Rendered as the body of the reader's one large card, which owns the frame, Escape, Back and Close. */
   embedded?: boolean;
+  /** The district office the card was opened from: its address leads the contact block. */
+  office?: OfficePin;
 }
 
 export function OfficialModal({
@@ -54,6 +62,7 @@ export function OfficialModal({
   reactionContext,
   onClose,
   embedded = false,
+  office,
 }: OfficialModalProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   useCardVisibility(cardRef, `OFFICIAL:${holder.id}`, "OFFICIAL");
@@ -77,16 +86,9 @@ export function OfficialModal({
   const sources = personCardSources(
     holder,
     [
-      ...(holder.id.startsWith("congress:") && holder.provenance
-        ? [
-            {
-              what: "Their official accounts, committee seats and district offices",
-              provenance: holder.provenance,
-            },
-          ]
-        : officeSource
-          ? [{ what: "Their capitol and district offices", provenance: { sourceUrl: officeSource.sourceUrl, sourceOrg: officeSource.sourceOrg, collectedAt: officeSource.collectedAt, verifiedAt: null } }]
-          : []),
+      ...(officeSource
+        ? [{ what: "Their capitol and district offices", provenance: { sourceUrl: officeSource.sourceUrl, sourceOrg: officeSource.sourceOrg, collectedAt: officeSource.collectedAt, verifiedAt: null } }]
+        : []),
       ...(prlProfile ? [prlCardSource(prlProfile)] : []),
     ],
   );
@@ -116,7 +118,7 @@ export function OfficialModal({
         independent={embedded}
         sources={sources}
         identity={<PersonIdentity holder={holder} seatLabel={seatLabel} large chips={identityChipsFor(holder, tier, "INCUMBENT")} />}
-        contact={<><ContactPills holder={holder} /><OfficialTermNote holder={holder} /></>}
+        contact={<>{office && <DistrictOffice office={office} />}<ContactPills holder={holder} /><OfficialTermNote holder={holder} /></>}
         sections={{
           office: <OfficeBlurb holder={holder} bare />,
           positions: <PositionsSection subjectId={holder.id} subjectName={holder.name} contentOnly />,
@@ -126,11 +128,31 @@ export function OfficialModal({
           record: <RecentVotes holder={holder} reactionContext={reactionContext} columns contentOnly />,
         }}
         afterSections={<>
+          <FederalMemberRecords key={holder.id} memberId={holder.id} />
+          {!holder.id.startsWith("congress:") && <LegislatorBills key={holder.id} holder={holder} />}
+          {holder.id.startsWith("congress:") && <FederalCommentRules />}
           <PublicStatementsProfile subjectId={holder.id} onProfile={setPrlProfile} />
           <OfficialActions subjectId={holder.id} />
           <SpeakYourMind key={holder.id} context={reactionContext ?? undefined} subjectType="OFFICIAL" subjectId={holder.id} subject={holder.name} />
         </>}
       />
+    </div>
+  );
+}
+
+/** The office the reader picked on the map: where it is, as published, and how to get there. */
+function DistrictOffice({ office }: { office: OfficePin }) {
+  const directions = venueLink({ name: office.name, address: office.address, lat: office.lat, lng: office.lng });
+  return (
+    <div className="mw-district-office" data-office-id={office.id}>
+      <p className="mw-district-office__label">District office</p>
+      <p className="mw-district-office__address">{office.address}</p>
+      {office.hours && <p className="mw-district-office__hours">Hours: {office.hours}</p>}
+      {directions && (
+        <CheckedLink className="mw-directions" href={directions.url} target="_blank" rel="noreferrer" title={directions.hint}>
+          <span aria-hidden="true">➚</span> Directions
+        </CheckedLink>
+      )}
     </div>
   );
 }

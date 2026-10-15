@@ -7,7 +7,7 @@ import { readPipelineStatesWhere } from "./pipeline.ts";
 import { CANDIDATE_PUBLICATION_READ_ROUTE, campaignSiteReadRecorder } from "./campaign-site-reads.ts";
 import { candidatePublicationLinks, candidatePublicationCaptureUrls, candidatePublicationCaptureIssue,
   heldCandidatePublicationRead } from "./campaign-publication-links.ts";
-import { withinWallTime } from "./campaign-site-cycle.ts";
+import { readByIds, withinWallTime } from "./campaign-site-cycle.ts";
 import { CAMPAIGN_SITE_FIELD, type CampaignSiteApprovedRecord } from "./campaign-site-chain.ts";
 import { memoryInProcess, researchFetch, type ResearchGet, type ResearchRuntime } from "../../hunt/robots-first-fetch.ts";
 
@@ -37,15 +37,6 @@ async function inBatches<T, R>(items: readonly T[], stop: () => boolean, run: (i
     out.push(...await Promise.all(items.slice(at, at + CANDIDATE_PUBLICATION_READ_CONCURRENCY).map(run)));
   }
   return out;
-}
-
-async function readByIds<T>(repo: { readMany?(ids: readonly string[]): Promise<readonly { id: string; value: T }[]>;
-  read(id: string): Promise<{ id: string; value: T } | null> }, ids: readonly string[]): Promise<Map<string, T>> {
-  const unique = [...new Set(ids)];
-  if (unique.length === 0) return new Map();
-  const rows = repo.readMany ? await repo.readMany(unique)
-    : (await Promise.all(unique.map(id => repo.read(id)))).filter((row): row is { id: string; value: T } => row !== null);
-  return new Map(rows.map(row => [row.id, row.value]));
 }
 
 /** Only the original instruction's candidacies may acquire deeper pages; other approved sites get no new work from this pass. */

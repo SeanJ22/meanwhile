@@ -1,0 +1,22 @@
+{
+  "n": 41,
+  "branch": "release/41",
+  "river_sha": "be06573dcbd3a61b776ddab90e6f20519d3eefbf",
+  "tested_sha": "be06573dcbd3a61b776ddab90e6f20519d3eefbf",
+  "steps": [
+    "R1",
+    "R0"
+  ],
+  "lanes": [
+    "fact-store",
+    "hunter-v2",
+    "road"
+  ],
+  "integration_from": 216,
+  "integration_count": 219,
+  "pr": {
+    "number": 750,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/750"
+  },
+  "at": "2026-10-15T14:30:47Z"
+}

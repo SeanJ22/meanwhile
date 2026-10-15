@@ -284,3 +284,4 @@ One line per batch folded into river.
 - 2026-10-15T16:10:13Z · road · R0 · ready 220805e423a0 · river 493311674ed4 · pnpm gates pass on 493311674ed4
 - 2026-10-15T23:03:28Z · platform-municode · R3-MUNICODE · ready 25e501e90354 · river 3282584e25b8 · pnpm gates pass on 3282584e25b8
 - 2026-10-15T23:03:28Z · site-reads · NE-01 · ready 83e9473506b6 · river 3282584e25b8 · pnpm gates pass on 3282584e25b8
+- 2026-10-15T23:55:36Z · fact-store · R1 · ready 77bddad74d93 · river 965bf002ea7b · pnpm gates pass on 965bf002ea7b

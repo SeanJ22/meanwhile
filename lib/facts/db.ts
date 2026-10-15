@@ -54,6 +54,16 @@ export async function factsVersion(query: Query | null, scope: string): Promise<
   return `facts:${scope}:${row?.version ?? 0}`;
 }
 
+/** Where a named pass last read up to; null before its first pass. */
+export async function readPassCursor(query: Query, name: string): Promise<string | null> {
+  const [row] = await query("SELECT position FROM pass_cursor WHERE name = $1", [name]);
+  return row ? String(row.position) : null;
+}
+
+export async function writePassCursor(query: Query, name: string, position: string): Promise<void> {
+  await query("INSERT INTO pass_cursor (name, position) VALUES ($1, $2) ON CONFLICT (name) DO UPDATE SET position = EXCLUDED.position", [name, position]);
+}
+
 /** Every state's version, read in one indexed pass over the few watermark rows. */
 export async function stateFactVersions(query: Query): Promise<ReadonlyMap<string, string>> {
   const rows = await query("SELECT scope, version FROM fact_watermark WHERE scope ~ '^[A-Z]{2}$'");

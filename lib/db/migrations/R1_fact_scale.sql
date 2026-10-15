@@ -3,9 +3,9 @@ CREATE TABLE "fact_watermark" (
   "version" bigint NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "fact_cursor" (
+CREATE TABLE "pass_cursor" (
   "name" text PRIMARY KEY NOT NULL,
-  "fact_id" bigint NOT NULL
+  "position" text NOT NULL
 );
 --> statement-breakpoint
 CREATE INDEX "fact_live_member" ON "fact" ("field") WHERE "status" = 'live' AND "field" LIKE 'member:%';

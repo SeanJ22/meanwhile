@@ -10,6 +10,7 @@ import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publi
 import type { ProbeFetch } from "../doors/probe.ts";
 import { captureProvenance, fetchCapture } from "./capture.ts";
 import { boundedIndexOf, checkFact, linkQuote, normalizeText, type FieldKind } from "./check.ts";
+import { readPassCursor, writePassCursor } from "./db.ts";
 import { learnOfficialHost } from "./entities.ts";
 import { readCheckEntity } from "./entity-read.ts";
 import { CAMPAIGN_SITE_LEAD, CANDIDATE_PROFILE_LEAD, FINDING_SLOTS_VERSION, slotFor, type FindingSlot } from "./finding-slots.ts";
@@ -115,8 +116,8 @@ async function liveMembers(query: Query, bodyIds: readonly string[]): Promise<re
 
 /** Box seats whose words never showed the seat come down; one naming a ward another member holds is flagged for Sean. */
 async function reviewBoxSeats(query: Query): Promise<{ readonly pulled: number; readonly flagged: number }> {
-  const [cursor] = await query("SELECT (SELECT fact_id FROM fact_cursor WHERE name = 'box-seats') AS since, (SELECT max(id) FROM fact) AS newest");
-  const since = Number(cursor?.since ?? 0), newest = Number(cursor?.newest ?? 0);
+  const since = Number(await readPassCursor(query, "box-seats") ?? 0);
+  const newest = Number((await query("SELECT coalesce(max(id), 0) AS newest FROM fact"))[0]!.newest);
   // Only bodies whose members changed since the last pass; the pass starts where this one read up to.
   const bodies = (await query("SELECT DISTINCT entity_id FROM fact WHERE id > $1 AND id <= $2 AND field LIKE 'member:%'", [since, newest])).map(row => String(row.entity_id));
   const members = bodies.length ? await liveMembers(query, bodies) : [];
@@ -131,7 +132,7 @@ async function reviewBoxSeats(query: Query): Promise<{ readonly pulled: number; 
         WHERE NOT EXISTS (SELECT 1 FROM owner_flag WHERE fact_id = $1 AND resolved IS NULL) RETURNING id`, [member.factId])).length;
     }
   }
-  await query("INSERT INTO fact_cursor (name, fact_id) VALUES ('box-seats', $1) ON CONFLICT (name) DO UPDATE SET fact_id = EXCLUDED.fact_id", [newest]);
+  await writePassCursor(query, "box-seats", String(newest));
   return { pulled, flagged };
 }
 

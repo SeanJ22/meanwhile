@@ -3,7 +3,7 @@ import type { RoutineSourceTask } from "./runner.ts";
 import type { WorkerResultRecord } from "../control-plane/workers/types.ts";
 import type { DoorRecord } from "../doors/registry.ts";
 import { doorPartitionIds } from "../doors/mission-refresh.ts";
-import { owedFactItems, owedWorkerPublications, workerPublicationTasks, workerPublicationTasksFor, type HeldBallotInputs, type OwedWorkerPublication, type WorkerPublicationItem } from "./worker-publication-tasks.ts";
+import { owedFactItems, owedWorkerPublications, workerPublicationTasks, workerPublicationTasksFor, type HeldInputs, type OwedWorkerPublication, type WorkerPublicationItem } from "./worker-publication-tasks.ts";
 import { AGGREGATE_LIST_READ_PAGE } from "../control-plane/repository/pg-store.ts";
 import { WORKER_PUBLICATION_TASK_IDS } from "./worker-reader-contracts.ts";
 import type { ReaderEdgePublicationOutcome } from "./reader-edge-outcome.ts";
@@ -64,19 +64,33 @@ export function publishNowWorkerTasks(items: readonly WorkerPublicationItem[], r
   return workerPublicationTasks(items, results, now);
 }
 
-/** The publication outbox reads only its registered work and acknowledgement scalars, before transfer. */
+/* Work changed since the cursor: the item itself, its worker results, or a page saved for its body or place;
+   every held ballot route too when an input they all share moved. Each branch reads an index. */
+const CHANGED_SINCE = `WITH due(id) AS (
+    SELECT id FROM cp_work_items WHERE changed_at > $2::timestamptz
+    UNION SELECT log_key FROM cp_log_worker_results WHERE changed_at > $2::timestamptz
+    UNION SELECT p.id FROM cp_log_artifacts a JOIN cp_work_items s ON s.id = a.log_key
+      JOIN cp_work_items p ON p.value #>> '{autonomousPlan,publication,bodyId}' = s.value #>> '{autonomousPlan,publication,bodyId}' WHERE a.changed_at > $2::timestamptz
+    UNION SELECT p.id FROM cp_log_artifacts a JOIN cp_work_items s ON s.id = a.log_key
+      JOIN cp_work_items p ON p.value #>> '{subject}' = s.value #>> '{subject}' WHERE a.changed_at > $2::timestamptz
+    UNION SELECT id FROM cp_work_items WHERE $3::boolean AND value #>> '{autonomousPlan,publication,contractId}' = 'ballot-navigation')`;
+
+/** The publication outbox reads only its registered work and acknowledgement scalars: everything on a first pass, then only what changed since `since`. */
 export async function readWorkerPublicationItems(
   query: (sql: string, parameters: readonly unknown[]) => Promise<readonly Record<string, unknown>[]>,
   contractIds: readonly string[] = WORKER_PUBLICATION_TASK_IDS,
+  since: { readonly at: string; readonly sharedInputsMoved: boolean } | null = null,
 ): Promise<WorkerPublicationItem[]> {
   const registered = new Set(WORKER_PUBLICATION_TASK_IDS);
   if (contractIds.some(id => !registered.has(id))) throw new Error("PUBLICATION_CONTRACT_SELECTION_INVALID");
   if (contractIds.length === 0) return [];
   const items: WorkerPublicationItem[] = [];
   let afterId: string | null = null;
+  const window = since === null ? [] : [since.at, since.sharedInputsMoved];
   for (;;) {
-    const rows = await query(`SELECT id, value #>> '{subject}' AS subject,
+    const rows = await query(`${since === null ? "" : CHANGED_SINCE} SELECT id, value #>> '{subject}' AS subject,
       value #>> '{autonomousPlan,publication,contractId}' AS contract_id,
+      value #>> '{autonomousPlan,publication,bodyId}' AS body_id,
       value #>> '{autonomousPlan,contract,recordClass}' AS record_class,
       CASE WHEN jsonb_typeof(value->'publicationOutcome') = 'object' THEN jsonb_strip_nulls(jsonb_build_object(
         'workerResultId', value #> '{publicationOutcome,workerResultId}',
@@ -88,13 +102,14 @@ export async function readWorkerPublicationItems(
       )) ELSE NULL END AS publication_outcome
       FROM cp_work_items
       WHERE value #>> '{autonomousPlan,publication,contractId}' = ANY($1::text[])
-        ${afterId === null ? "" : "AND id > $2"}
-      ORDER BY id ASC LIMIT ${AGGREGATE_LIST_READ_PAGE}`, afterId === null ? [contractIds] : [contractIds, afterId]);
+        ${since === null ? "" : "AND id IN (SELECT id FROM due)"} ${afterId === null ? "" : `AND id > $${2 + window.length}`}
+      ORDER BY id ASC LIMIT ${AGGREGATE_LIST_READ_PAGE}`, [contractIds, ...window, ...(afterId === null ? [] : [afterId])]);
     for (const row of rows) {
       if (typeof row.id !== "string" || typeof row.contract_id !== "string" || !contractIds.includes(row.contract_id) ||
           typeof row.record_class !== "string" || !row.record_class.trim()) throw new Error("PUBLICATION_WORK_ITEM_METADATA_INVALID");
       items.push({ id: row.id, ...(typeof row.subject === "string" ? { subject: row.subject } : {}), autonomousPlan: {
-        publication: { contractId: row.contract_id as NonNullable<NonNullable<WorkerPublicationItem["autonomousPlan"]>["publication"]>["contractId"] },
+        publication: { contractId: row.contract_id as NonNullable<NonNullable<WorkerPublicationItem["autonomousPlan"]>["publication"]>["contractId"],
+          ...(typeof row.body_id === "string" ? { bodyId: row.body_id } : {}) },
         contract: { recordClass: row.record_class },
       }, ...(row.publication_outcome === null || row.publication_outcome === undefined ? {}
         : { publicationOutcome: row.publication_outcome as WorkerPublicationItem["publicationOutcome"] }) });
@@ -111,7 +126,7 @@ export async function readPublishNowWorkerTasks(
   items: readonly WorkerPublicationItem[],
   readCompleted: (workItemIds: readonly string[]) => Promise<readonly WorkerResultRecord[]>,
   now: string,
-  heldInputs: HeldBallotInputs | null = null,
+  heldInputs: HeldInputs | null = null,
 ): Promise<RoutineSourceTask[]> {
   const owed: OwedWorkerPublication[] = [];
   for (let at = 0; at < items.length; at += AGGREGATE_LIST_READ_PAGE) {
@@ -126,11 +141,12 @@ export async function readOwedFactItems(
   items: readonly WorkerPublicationItem[],
   readCompleted: (workItemIds: readonly string[]) => Promise<readonly WorkerResultRecord[]>,
   now: string,
+  heldInputs: HeldInputs | null = null,
 ): Promise<{ rosters: string[]; comments: string[] }> {
   const owed = { rosters: [] as string[], comments: [] as string[] };
   for (let at = 0; at < items.length; at += AGGREGATE_LIST_READ_PAGE) {
     const page = items.slice(at, at + AGGREGATE_LIST_READ_PAGE);
-    const found = owedFactItems(page, await readCompleted(page.map(item => item.id)), now);
+    const found = owedFactItems(page, await readCompleted(page.map(item => item.id)), now, heldInputs);
     owed.rosters.push(...found.rosters);
     owed.comments.push(...found.comments);
   }

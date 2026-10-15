@@ -4,17 +4,17 @@ lane: site-reads
 owner: site-reads
 writer: the site-reads lane
 check: at-scale
-ready: no step ids unknown
-river: be06573dcbd3a61b776ddab90e6f20519d3eefbf
-at: 2026-10-15T18:00:16Z
+ready: NE-01 83e9473506b6bea17e60e15794545fedb25ce46a
+river: 493311674ed4c1f3d15c14f70e19e7be9b9f58aa
+at: 2026-10-15T23:21:52Z
 state: returned
-fix_subject: fix:357f8de5
-fix: River · stream/site-reads — at-scale failed for site-reads: NE-01 (8782164dd) also fails gates: migration 0036_ne01 has no MIGRATION_PHASES entry in lib/db/migration-phases.ts (expand), and lib/api/reader-route.ts:21 selectionForReader is an unused export. AT SCALE numbers are missing from the READY
+fix_subject: fix:3b8fb67e
+fix: River · stream/site-reads — at-scale failed for site-reads: NE-01 (83e947350, already in release 43 / PR #752): under the new AT SCALE check its peak (405 MB reader worker) comes from the national ballot index (18,144 records), the full held authority families and the 1,171-meeting corpus loaded at
 
 ## Failure
 
 ```
-NE-01 (8782164dd) also fails gates: migration 0036_ne01 has no MIGRATION_PHASES entry in lib/db/migration-phases.ts (expand), and lib/api/reader-route.ts:21 selectionForReader is an unused export. AT SCALE numbers are missing from the READY commit message (rule in force from the next batch): peak memory per worker, database bytes read and written per run and per day, run time, how many copies fit on the runner at the 0.75 GiB margin, and the largest input tested (name anything not tested at full size). Run the change against national-size input and put the numbers in the READY commit message.
+NE-01 (83e947350, already in release 43 / PR #752): under the new AT SCALE check its peak (405 MB reader worker) comes from the national ballot index (18,144 records), the full held authority families and the 1,171-meeting corpus loaded at once, not from one place. Name the stage (the reader worker's load of the national index and held families) and slice it to the requested place. Not pulled from release 43 (tested, in CI); the follow-up READY should carry the sliced numbers.
 ```
 
 ## Repair

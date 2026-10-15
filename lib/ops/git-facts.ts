@@ -11,7 +11,7 @@ function fileSignature(paths: readonly string[]): string | null {
         const stat = statSync(path, { bigint: true });
         return `${stat.dev}:${stat.ino}:${stat.size}:${stat.mtimeNs}:${stat.ctimeNs}`;
       } catch (error) {
-        if ((error as NodeJS.ErrnoException).code === "ENOENT") return "missing";
+        if (["ENOENT", "ENOTDIR"].includes((error as NodeJS.ErrnoException).code ?? "")) return "missing";
         throw error;
       }
     }).join("|");
@@ -30,7 +30,7 @@ function headDependencies(cwd: string, gitDirectory: string): string[] {
     paths.push(ref);
     let contents: string;
     try { contents = readFileSync(ref, "utf8").trim(); }
-    catch (error) { if ((error as NodeJS.ErrnoException).code === "ENOENT") break; throw error; }
+    catch (error) { if (["ENOENT", "ENOTDIR"].includes((error as NodeJS.ErrnoException).code ?? "")) break; throw error; }
     if (!contents.startsWith("ref: ")) break;
     ref = resolve(commonDirectory, contents.slice(5));
   }

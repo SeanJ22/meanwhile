@@ -3,18 +3,18 @@
 lane: platform-legistar-members
 owner: platform-legistar-members
 writer: the platform-legistar-members lane
-check: fold-conflict
+check: at-scale
 ready: no step ids unknown
-river: 5bb464f06e345165d6302377d20418f29d392409
-at: 2026-10-14T00:54:46Z
+river: be06573dcbd3a61b776ddab90e6f20519d3eefbf
+at: 2026-10-15T18:00:07Z
 state: returned
-fix_subject: fix:233dcad8
-fix: River · stream/platform-legistar-members — fold-conflict failed for platform-legistar-members: platform-legistar-members READY 8f4ee1cbe conflicts with river 5bb464f06e34 by itself (acquisition-leftovers, census-lane and src-legiscan are now on river); merge river into stream/platform-legistar-members, resolve, and mark READY again.
+fix_subject: fix:53ba6e6d
+fix: River · stream/platform-legistar-members — at-scale failed for platform-legistar-members: R3-LEGISTAR-MEMBERS (811bcee4a) also still conflicts with river in lib/civic-data/derived-meeting-wiring.ts, scripts/promote-registry-runtime.mts, scripts/routine-civic-data-runner.mts, tests/door-kinds-data-rows.test.ts. AT SCALE numbers a
 
 ## Failure
 
 ```
-platform-legistar-members READY 8f4ee1cbe conflicts with river 5bb464f06e34 by itself (acquisition-leftovers, census-lane and src-legiscan are now on river); merge river into stream/platform-legistar-members, resolve, and mark READY again.
+R3-LEGISTAR-MEMBERS (811bcee4a) also still conflicts with river in lib/civic-data/derived-meeting-wiring.ts, scripts/promote-registry-runtime.mts, scripts/routine-civic-data-runner.mts, tests/door-kinds-data-rows.test.ts. AT SCALE numbers are missing from the READY commit message (rule in force from the next batch): peak memory per worker, database bytes read and written per run and per day, run time, how many copies fit on the runner at the 0.75 GiB margin, and the largest input tested (name anything not tested at full size). Run the change against national-size input and put the numbers in the READY commit message.
 ```
 
 ## Repair

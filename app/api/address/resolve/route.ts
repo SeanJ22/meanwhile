@@ -35,8 +35,8 @@ async function contestIdsFor(ocdIds: readonly string[], selection: GeographySele
     const candidate = source.normalize(await source.fetch());
     if (candidate.election.date !== selection.electionDate) continue;
     const hit = contestsForDivisions(candidate, [...ocdIds]);
-    if (hit.contests.length > 0 || hit.absences.length > 0) {
-      return hit.contests.map((c) => c.id);
+    if (hit.contests.length > 0 || hit.absences.length > 0 || hit.heldContests?.length) {
+      return [...hit.contests, ...hit.heldContests ?? []].map((c) => c.id);
     }
   }
   return [];

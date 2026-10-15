@@ -1,18 +1,47 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { readFile } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
 import test from "node:test";
 import { canonicalCivicDataJson } from "../lib/civic-data/changes.ts";
 import { completeOfficialBallotContests, manualProjectionCandidate } from "../lib/civic-data/manual-projections.ts";
 import { authorityForManualReceipt } from "../lib/civic-data/source-authority.ts";
-import type { BallotStateFile } from "../scripts/assemble-ballot-package.mts";
-import { genericBallotProblems } from "../lib/ballot/generic-projection.ts";
+import { assembleBallotPackage, type BallotStateFile } from "../scripts/assemble-ballot-package.mts";
+import { genericBallotProblems, type GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
+import type { BallotSet } from "../lib/ballot/types.ts";
+import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 
 const baseline = {
   az: "fdeeea2230f9563567c0d90a245bf07954ef705e3fa6862fc754828eda53478c",
   nh: "dfc18b457006fbd240d1ae5c5e0106e79c5d66d6fd3c5949dcd17a98823cf933",
   nj: "c4f97d39663313440b704082bec5e8cf17c6a51a23a0dd510cfc860f23541f7c",
 };
+
+test("national assembly retains every AZ, NH and NJ ballot field and receipt alongside all 51 state files", async () => {
+  const directory = "data/ballot/2026-general";
+  const files = (await readdir(directory)).filter(file => /^[a-z]{2}\.json$/.test(file)).sort();
+  assert.equal(files.length, 51);
+  const assembled = await assembleBallotPackage({ directory, store: new MemoryRoutineDataStore(), now: "2026-10-15T12:00:00.000Z" });
+  assert.deepEqual(assembled.skipped, []);
+  assert.deepEqual(assembled.merged, files);
+  const payload = assembled.package.payload as GenericBallotProjection;
+  assert.equal(Object.keys(payload.ballots).length, 51);
+  for (const state of ["az", "nh", "nj"]) {
+    const file = JSON.parse(await readFile(`${directory}/${state}.json`, "utf8")) as BallotStateFile;
+    for (const [key, expected] of Object.entries(file.ballots)) {
+      const actual = payload.ballots[key];
+      assert.ok(actual, `${state} is included in the national publication`);
+      for (const field of Object.keys(expected) as (keyof BallotSet)[]) {
+        assert.deepEqual(actual[field], expected[field], `${state} retains every ${field} value`);
+      }
+      assert.deepEqual(actual.heldContests ?? [], [], `${state} retains its verified candidates`);
+    }
+    for (const source of file.sourceReceipt.sources) {
+      const actual = assembled.package.sourceReceipt.sources.find(row => row.requestedUrl === source.requestedUrl &&
+        row.finalUrl === source.finalUrl && row.rawHash === source.rawHash);
+      assert.deepEqual(actual, source, `${state} retains the full receipt for ${source.requestedUrl}`);
+    }
+  }
+});
 
 for (const state of ["az", "nh", "nj"] as const) {
   test(`${state.toUpperCase()} retains every held ballot row and source through national publication`, async () => {

@@ -8,6 +8,7 @@ import { ballotElectionKey, readGenericBallotProjection, type GenericBallotProje
 import { genericSourcesForDivisions } from "../lib/ballot/reader-sources.ts";
 import { manualProjectionCandidate, type ManualProjectionPackage } from "../lib/civic-data/manual-projections.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
+import { contestsForDivisions } from "../lib/ballot/contests.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 
 const now = "2026-10-13T12:00:00.000Z";
@@ -159,4 +160,61 @@ test("supplemental contact changes publish without a changed contest list and st
     const stale = await assembleBallotPackage({ directory: scratch, store, now });
     assert.equal(payloadOf(stale.package).ballots[ballotElectionKey(ballot)].contacts?.[0].email, "new@example.test");
   } finally { await rm(scratch, { recursive: true, force: true }); }
+});
+
+test("a state with only empty contests publishes scoped gaps, then verified candidates clear them without losing other states", async () => {
+  const directory = await mkdtemp(resolve(tmpdir(), "ballot-holds-"));
+  try {
+    const state = await fixture(), ballot = ballotOf(state);
+    for (const contest of ballot.contests) contest.candidateListComplete = false;
+    ballot.contests[1].ocdId = "ocd-division/country:us/state:tx/cd:38";
+    ballot.candidacies = [];
+    await writeFile(resolve(directory, "tx.json"), JSON.stringify(state));
+    const store = new MemoryRoutineDataStore();
+    const held = await assembleBallotPackage({ directory, store, now });
+    assert.deepEqual(held.skipped, []);
+    const heldBallot = payloadOf(held.package).ballots[ballotElectionKey(ballot)];
+    assert.deepEqual(heldBallot.contests, []);
+    assert.deepEqual(heldBallot.candidacies, []);
+    assert.equal(heldBallot.heldContests?.length, 2);
+    assert.equal(contestsForDivisions(heldBallot, ["ocd-division/country:us/state:tx/cd:37"]).heldContests?.length, 1);
+    assert.equal(contestsForDivisions(heldBallot, ["ocd-division/country:us/state:tx/cd:38"]).heldContests?.length, 2);
+    await publish(store, held.package);
+    assert.equal(genericSourcesForDivisions(payloadOf(held.package), ["ocd-division/country:us/state:tx"]).length, 1);
+    const complete = changeSource(await fixture(), "TX", now, state.sourceReceipt.sources[0].publisher);
+    for (const contest of ballotOf(complete).contests) contest.candidateListComplete = false;
+    ballotOf(complete).contests[1].ocdId = ballot.contests[1].ocdId;
+    await writeFile(resolve(directory, "tx.json"), JSON.stringify(complete));
+    const resolved = await assembleBallotPackage({ directory, store, now });
+    assert.deepEqual(resolved.heldContests, []);
+    assert.equal(payloadOf(resolved.package).ballots[ballotElectionKey(ballot)].contests.length, 2);
+    await publish(store, resolved.package);
+    await writeFile(resolve(directory, "tx.json"), JSON.stringify(state));
+    const stale = await assembleBallotPackage({ directory, store, now });
+    assert.deepEqual(stale.package.payload, resolved.package.payload);
+    assert.deepEqual(stale.heldContests, []);
+  } finally { await rm(directory, { recursive: true, force: true }); }
+});
+
+test("a partial list stays visible and a later empty capture cannot remove its verified candidates", async () => {
+  const directory = await mkdtemp(resolve(tmpdir(), "ballot-holds-"));
+  try {
+    const state = await fixture();
+    ballotOf(state).contests[0].candidateListComplete = false;
+    const store = new MemoryRoutineDataStore();
+    await publish(store, packageFor(state));
+    await writeFile(resolve(directory, "tx.json"), JSON.stringify(state));
+    const result = await assembleBallotPackage({ directory, store, now });
+    assert.deepEqual(result.skipped, []);
+    assert.deepEqual(payloadOf(result.package).ballots[ballotElectionKey(ballotOf(state))].candidacies.map(row => row.familyName), ["Adams", "Baker"]);
+    assert.deepEqual(result.heldContests, []);
+    const empty = changeSource(structuredClone(state), "TX", now, state.sourceReceipt.sources[0].publisher);
+    ballotOf(empty).candidacies = ballotOf(empty).candidacies.filter(row => row.contestId !== "fixture-tx-governor");
+    await writeFile(resolve(directory, "tx.json"), JSON.stringify(empty));
+    const retained = await assembleBallotPackage({ directory, store, now });
+    assert.deepEqual(retained.skipped, []);
+    assert.deepEqual(payloadOf(retained.package).ballots[ballotElectionKey(ballotOf(state))].candidacies.map(row => row.familyName), ["Adams", "Baker"]);
+    assert.deepEqual(retained.heldContests, []);
+    await publish(store, retained.package);
+  } finally { await rm(directory, { recursive: true, force: true }); }
 });

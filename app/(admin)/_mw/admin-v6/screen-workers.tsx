@@ -252,6 +252,15 @@ function Publication() {
               {p.ballotPublication.skipped.length ? <ul className={s.stack}>
                 {p.ballotPublication.skipped.map(row => <li key={row.file} className={s.small}>Skipped {row.file.slice(0, 2).toUpperCase()}: {row.reason}</li>)}
               </ul> : <p className={s.small}>Skipped: none</p>}
+              {p.ballotPublication.heldContests?.length ? <ul className={s.stack}>
+                {[...new Set(p.ballotPublication.heldContests.map(row => row.state))].sort().map(state => <li key={state} className={s.small}>
+                  <details>
+                    <summary>Held contests in {state} ({p.ballotPublication!.heldContests!.filter(row => row.state === state).length})</summary>
+                    <ul className={s.stack}>{p.ballotPublication!.heldContests!.filter(row => row.state === state).map(row =>
+                      <li key={row.contestId}>{row.title}: {row.reason}</li>)}</ul>
+                  </details>
+                </li>)}
+              </ul> : <p className={s.small}>Held contests: none</p>}
             </> : <p className={s.small}>No ballot publication reported yet.</p>}
           </div>
           <ul className={s.stack} style={{ listStyle: "none", padding: 0, margin: 0 }}>

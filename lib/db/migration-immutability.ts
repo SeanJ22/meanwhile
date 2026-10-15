@@ -1,3 +1,15 @@
+/**
+ * An established migration is immutable; a correction is a new migration.
+ * "Applied" is decided by the journal's `when` timestamp, never the SQL, so a
+ * rewritten applied file still reports in sync everywhere. This git-only guard
+ * asks four questions against the merge base:
+ *   1. Was any NNNN_*.sql modified, deleted or renamed rather than added?
+ *   2. Was any established meta/NNNN_snapshot.json rewritten?
+ *   3. Is the journal append-only (same index, `when` and `tag`)?
+ *   4. Do the journal and the .sql files on disk correspond exactly?
+ * `changes === null` means unreadable, never a pass. Pure; no I/O.
+ */
+
 import type { JournalEntry } from "./schema-state.ts";
 
 
@@ -85,6 +97,7 @@ export function parsePorcelain(raw: string): ChangedEntry[] {
 }
 
 
+/** `lib/db/migrations/NNNN_tag.sql` — the executable half. */
 export const MIGRATION_SQL_PATH = /^lib\/db\/migrations\/((?:[0-9]{4}|[A-Z]{2,4}-[0-9]{1,3})_[A-Za-z0-9_]+)\.sql$/;
 /** `lib/db/migrations/meta/NNNN_snapshot.json` — what the next diff is generated against. */
 export const MIGRATION_SNAPSHOT_PATH = /^lib\/db\/migrations\/meta\/([0-9]{4})_snapshot\.json$/;
@@ -95,25 +108,31 @@ export const JOURNAL_PATH = "lib/db/migrations/meta/_journal.json";
  * A migration that reached main and was never applied anywhere, retracted by name. This is a reviewed list in code,
  * not a switch: it excuses exactly one `.sql` deletion and one journal entry (idx, tag AND `when` must all match) per row,
  * and nothing else — a modified or renamed file, or any other tag, is still refused. Each row states why it was never applied.
- * If a database ever reports applying one, `checksumViolations` refuses it as `retracted-migration-applied`.
+ * If a database ever reports applying one, `checksumViolations` refuses it as `retracted-migration-applied`. The
+ * applied row is the retracted migration only when its `when` AND the sha256 of the retracted file both match, because
+ * River numbers the next migration into a freed slot and may hand it the same `when`.
  */
 export interface RetractedMigration {
   readonly idx: number;
   readonly tag: string;
   readonly when: number;
+  /** sha256 of the retracted file's raw bytes, as `scripts/apply-migrations.mts` would have recorded it. */
+  readonly sha256: string;
   readonly retractedOn: string;
   readonly why: string;
 }
 
 export const RETRACTED_MIGRATIONS: readonly RetractedMigration[] = [
   {
-    idx: 35, tag: "0035_pb01_retire_playbooks", when: 1790889600001, retractedOn: "2026-10-13",
+    idx: 35, tag: "0035_pb01_retire_playbooks", when: 1790889600001,
+    sha256: "3c4435d5ea036b578fd8bafbdb8c6331c70a9f87ccdea373ebf71adc09cfd8ad", retractedOn: "2026-10-13",
     why: "Never applied (production reader journal ends at 0034 as of 2026-10-13). 0035 alters " +
       "cp_field_manual_entries, a control-plane table the reader database does not have, so the production build failed before applying it. " +
       "The retirement now runs through the control-plane repository (lib/control-plane/playbook-seed.ts).",
   },
   {
-    idx: 36, tag: "0036_pb01_role_playbooks", when: 1790889600002, retractedOn: "2026-10-13",
+    idx: 36, tag: "0036_pb01_role_playbooks", when: 1790889600002,
+    sha256: "32d72554c769aa3f6711b5071b53a7486ecfea86900b5b25dc37424fb7e63ea3", retractedOn: "2026-10-13",
     why: "Never applied (production reader journal ends at 0034 as of 2026-10-13). 0036 inserts into cp_field_manual_entries, which the reader " +
       "database does not have. The same rows are now seeded through the control-plane repository (lib/control-plane/playbook-seed.ts).",
   },
@@ -429,10 +448,7 @@ export function checksumViolations(
   const byWhen = new Map(appliedHashes.map((a) => [Number(a.when), a.hash]));
   const violations: ImmutabilityViolation[] = [];
   for (const retracted of RETRACTED_MIGRATIONS) {
-    const recorded = byWhen.get(Number(retracted.when));
-    if (recorded === undefined) continue;
-    const replacement = journal.find(entry => Number(entry.when) === Number(retracted.when) && entry.tag !== retracted.tag);
-    if (replacement && sha256Of(replacement.tag) === recorded) continue;
+    if (byWhen.get(Number(retracted.when)) !== retracted.sha256) continue;
     violations.push({
       rule: "retracted-migration-applied",
       path: `lib/db/migrations/${retracted.tag}.sql`,

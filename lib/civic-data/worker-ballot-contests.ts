@@ -138,11 +138,15 @@ export function mergeBallotContests(input: ManualProjectionPackage, prior: Manua
       !ballot.measures.some(row => row.contestId === contestId) && ballot.contests.some(row => row.id === contestId && row.measureTextUrl === sourceUrl);
     requirePublication(!before?.election.date || !ballot.election.date || before.election.date === ballot.election.date, "BALLOT_ELECTION_DATE_CONFLICT");
     if (!before) { ballots[key] = ballot; continue; }
+    const heldContests = (ballot.heldContests ?? []).filter(row => !before.contests.some(contest => contest.id === row.id));
     const candidacies = [...before.candidacies.filter(row => !ballot.candidacies.some(next => next.id === row.id) &&
       !ballot.contests.some(contest => contest.id === row.contestId && complete.has(contest.id) &&
         Date.parse(contest.provenance.collectedAt) >= Date.parse(before.contests.find(old => old.id === contest.id)?.provenance.collectedAt ?? ""))), ...ballot.candidacies];
     const currentCandidates = new Set(candidacies.map(row => row.id));
     ballots[key] = { ...before, ...ballot, election: { ...ballot.election, date: ballot.election.date || before.election.date },
+      ...(before.heldContests !== undefined || ballot.heldContests !== undefined ? {
+        heldContests: [...before.heldContests ?? []].filter(row => !ids.has(row.id) &&
+          !heldContests.some(next => next.id === row.id)).concat(heldContests) } : {}),
       contests: [...before.contests.filter(row => !ids.has(row.id)), ...ballot.contests], candidacies,
       measures: [...before.measures.filter(row => keepsMeasure(row.contestId, row.provenance.sourceUrl)), ...ballot.measures],
       absences: mergeHeldRows(before.absences, ballot.absences, row => `${row.ocdId}:${row.statement}`),

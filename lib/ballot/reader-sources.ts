@@ -9,11 +9,13 @@ export interface RegisteredBallotSource {
   readonly source: BallotSource;
 }
 
+const ballotDivisions = (ballot: BallotSet) => [...ballot.contests, ...ballot.absences, ...ballot.heldContests ?? []].map(row => row.ocdId);
+
 export function genericSourcesForDivisions(value: GenericBallotProjection, divisions: readonly string[]): RegisteredBallotSource[] {
   const today = new Date().toISOString().slice(0, 10);
   const ballots = Object.values(value.ballots).filter(ballot => {
     const hit = contestsForDivisions(ballot, divisions);
-    return hit.contests.length > 0 || hit.absences.length > 0;
+    return hit.contests.length > 0 || hit.absences.length > 0 || Boolean(hit.heldContests?.length);
   }).sort((a, b) => {
     // The nearest dated upcoming election first; retain unknown dates as
     // unknown, and concluded elections after upcoming ones.
@@ -57,8 +59,9 @@ export async function readerBallotSourceForTargetId(targetId: string, options: P
   for (const ballot of Object.values(read.value.ballots)) {
     if (ballot.generalLineup?.contests.some(row => row.nominees.some(nominee => `${row.contestId}|${nominee.name}` === targetId))
       || ballot.candidacies.some(row => row.id === targetId) || ballot.contests.some(row => row.id === targetId)
+      || ballot.heldContests?.some(row => row.id === targetId)
       || ballot.measureRecords?.some(row => row.parts.some(part => part.id === targetId))) {
-      return genericSourcesForDivisions({ kind: "ballot-contests", ballots: { [ballot.election.id]: ballot } }, ballot.contests.map(row => row.ocdId))[0] ?? null;
+      return genericSourcesForDivisions({ kind: "ballot-contests", ballots: { [ballot.election.id]: ballot } }, ballotDivisions(ballot))[0] ?? null;
     }
   }
   return null;
@@ -68,5 +71,5 @@ export async function readerBallotSources(options: PromotedCivicDataReadOptions 
   const read = await readGenericBallotProjection(options);
   if (read.kind === "STORE_UNREACHABLE") throw new Error(read.code);
   if (read.kind !== "PROMOTED") return [];
-  return genericSourcesForDivisions(read.value, Object.values(read.value.ballots).flatMap(ballot => ballot.contests.map(contest => contest.ocdId)));
+  return genericSourcesForDivisions(read.value, Object.values(read.value.ballots).flatMap(ballotDivisions));
 }

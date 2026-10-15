@@ -19,6 +19,18 @@ if (result.receipt) {
   console.log("RCD_RECEIPT=" + JSON.stringify(result.receipt));
   const read = await readGenericBallotProjection({ store, now, bypassCache: true });
   assert.equal(read.kind, "PROMOTED");
-  if (read.kind === "PROMOTED") assert.equal(genericSourcesForDivisions(read.value, ["ocd-division/country:us/state:tx"]).length, 1);
+  if (read.kind === "PROMOTED") {
+    assert.equal(genericSourcesForDivisions(read.value, ["ocd-division/country:us/state:tx"]).length, 1);
+    const texas = read.value.ballots["TX:fixture-2026-general"];
+    assert.deepEqual(texas.contests.map(row => [row.id, row.candidateListComplete]), [["fixture-tx-senate", false]]);
+    assert.deepEqual(texas.candidacies.map(row => [row.id, row.contestId, row.givenName, row.familyName]),
+      [["fixture-tx-bob", "fixture-tx-senate", "Bob", "Baker"]]);
+    assert.deepEqual(texas.heldContests?.map(row => row.id), ["fixture-tx-governor"]);
+    for (const ballot of Object.values(read.value.ballots)) {
+      const held = new Set(ballot.heldContests?.map(row => row.id));
+      assert.ok(ballot.contests.every(row => !held.has(row.id)));
+      assert.ok(ballot.candidacies.every(row => !held.has(row.contestId)));
+    }
+  }
 }
 process.exitCode = result.exitCode;

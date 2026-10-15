@@ -22,7 +22,11 @@ const ballotTask = AUTOMATIC_REFRESH_TASKS.find(task => task.id === "ballot-cont
 test("the runner's ballot child assembles outside the checkout, publishes under its exact manual authority, and reports skipped states", async () => {
   const directory = await mkdtemp(resolve(tmpdir(), "ballot-child-fixture-"));
   try {
-    await writeFile(resolve(directory, "tx.json"), await readFile("tests/fixtures/ballot-national/tx.json"));
+    const state = JSON.parse(await readFile("tests/fixtures/ballot-national/tx.json", "utf8"));
+    const ballot = state.ballots["TX:fixture-2026-general"];
+    for (const contest of ballot.contests) contest.candidateListComplete = false;
+    ballot.candidacies = ballot.candidacies.filter((row: { contestId: string }) => row.contestId !== "fixture-tx-governor");
+    await writeFile(resolve(directory, "tx.json"), JSON.stringify(state));
     await writeFile(resolve(directory, "ak.json"), "{");
     const source = await readFile("scripts/routine-civic-data-runner.mts", "utf8");
     const snippet = transpileModule(source.slice(source.indexOf("function sourceChildCommand("), source.indexOf("function recordSourceSettlementFailures")),
@@ -42,6 +46,8 @@ test("the runner's ballot child assembles outside the checkout, publishes under 
     assert.deepEqual(report.merged, ["tx.json"]);
     assert.equal(report.skipped[0].file, "ak.json");
     assert.ok(report.skipped[0].reason.length > 0);
+    assert.deepEqual(report.heldContests?.map(row => [row.state, row.contestId, row.title]), [["TX", "fixture-tx-governor", "Governor"]]);
+    assert.equal(report.heldContests![0].reason, "No candidates have been verified for this contest yet.");
     assert.equal(parseRoutineRunnerReceipt(run.stdout).ok, true);
     assert.equal(ballotPublicationDue(ballotTask.id, report.inputHash, report), false);
     await writeFile(resolve(directory, "ak.json"), "{}");
@@ -68,7 +74,8 @@ test("Admin's ballot control queues the normal runner task even before its next 
   assert.equal(routineDueRequestFor(ballotTask, { lastAttemptedAt: "2026-10-13T23:59:00.000Z" }, Date.parse(now), [request])?.id, request.id);
   assert.equal(routineDueRequestFor(ballotTask, { lastAttemptedAt: now }, Date.parse(now), [request]), null);
   const report = { kind: "BALLOT_PUBLICATION", inputHash: "a".repeat(64), at: now, status: "PUBLISHED", versionId: "fixture",
-    merged: ["tx.json"], skipped: [{ file: "ak.json", reason: "Official list is incomplete." }], reason: null } as const;
+    merged: ["tx.json"], skipped: [{ file: "ak.json", reason: "Source receipt is missing." }],
+    heldContests: [{ state: "TX", contestId: "fixture-tx-governor", title: "Governor", reason: "Official list is incomplete." }], reason: null } as const;
   await repos.ownerDigests.append("owner-digest", "fixture-ballot-report", { runtimeOutcome: { ballotPublication: report } } as never, now);
   assert.deepEqual(await readLatestBallotPublication(repos), report);
 });

@@ -6,6 +6,7 @@ import { type CandidateCardData } from "@/lib/ballot/candidate-cards";
 import type { CandidateLinks } from "@/lib/ballot/candidate-sites";
 
 import type { SeatHolder } from "@/lib/officials/lookup";
+import type { Provenance } from "@/lib/sources/types";
 
 export function CandidatePortraitSources({ card }: { card: CandidateCardData | null }) {
   if (!card?.photoUrl || !card.photoSource) return null;
@@ -22,6 +23,7 @@ export function CandidateCard({
   holder = null,
   links,
   filedSiteUrl,
+  filingProvenance,
   nameSlot,
   battlecardSlot,
   derivedBlurb,
@@ -44,12 +46,14 @@ export function CandidateCard({
   links: CandidateLinks | null;
 
   filedSiteUrl?: string | null;
+  filingProvenance?: Provenance;
 }) {
   const photoUrl = card?.photoUrl ?? holder?.photoUrl ?? null;
   const hasLinks = Boolean(links?.official || links?.campaign || filedSiteUrl);
   return (
 
     <VisibleCard className="candidate-row" cardId={`CANDIDATE:${name}`} cardKind="CANDIDATE">
+      {filingProvenance && <CardSourcesContribution id="candidate-filing" sources={[{ what: "Candidate name and party as filed", provenance: filingProvenance }]} />}
       <span className="candidate-avatar" aria-hidden={photoUrl ? undefined : true}>
         {photoUrl ? (
           // eslint-disable-next-line @next/next/no-img-element

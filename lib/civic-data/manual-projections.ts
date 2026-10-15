@@ -634,12 +634,13 @@ function genericBallotProjection(payload: ManualProjectionPayload): BuiltProject
   const ballots = Object.values(value?.ballots ?? {});
   const records = ballots.flatMap(ballot => [
     ...ballot.contests.map(record => ({ key: `contest:${record.id}`, record })),
+    ...(ballot.heldContests ?? []).map(record => ({ key: `contest:${record.id}`, record })),
     ...ballot.candidacies.map(record => ({ key: `candidacy:${record.id}`, record })),
     ...ballot.measures.map(record => ({ key: `measure:${record.id}`, record })),
     ...(ballot.measureRecords ?? []).map(record => ({ key: `measure-record:${record.contestId}`, record })),
   ]);
   return { payload, records, identities: ballots.flatMap(ballot => [
-    ...ballot.contests.map(row => ({ subjectId: row.id, jurisdiction: `US-${ballot.election.state}`,
+    ...[...ballot.contests, ...ballot.heldContests ?? []].map(row => ({ subjectId: row.id, jurisdiction: `US-${ballot.election.state}`,
       identifiers: { contest_id: row.id }, matchBasis: "EXACT_SCOPED_ID" as const, ambiguous: false })),
     ...ballot.candidacies.map(row => ({ subjectId: row.id, jurisdiction: `US-${ballot.election.state}`,
       identifiers: { candidacy_id: row.id, contest_id: row.contestId }, matchBasis: "EXACT_SCOPED_ID" as const, ambiguous: false })),

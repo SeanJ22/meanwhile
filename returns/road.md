@@ -1,5 +1,17 @@
 # Returned: road
 
+Cleanliness findings on R0 (374e58d57, folded as 3b2ec1266). Fix in your next READY:
+Exports nothing outside their own file imports (tests count only; unexport):
+   lib/civic-data/raw-capture-vault.ts:23 readRawCapture
+   lib/control-plane/workers/worker-slots.ts:102 measuredReservationBytes
+   lib/sources/congress/publication.ts:39 holdFederalCapture
+   lib/sources/plural/votes.ts:51 PluralVoteAcquisition
+   scripts/convert-embedded-captures.mts:34 convertEmbeddedCaptures
+Doc comments over two lines (cut to two lines max):
+   lib/ops/bounded-beat.ts (4 lines)
+   lib/ops/fatal-line.ts (4 lines)
+
+
 lane: road
 owner: road
 writer: the road lane

@@ -20,7 +20,7 @@ import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { partitionCivicPayload } from "../lib/civic-data/payload-parts.ts";
 import type { ReadOnlyQuery } from "../lib/control-plane/admin-view/promoted-slices.ts";
-import { translationPackage } from "../lib/translate/publication.ts";
+import { publishTranslation, translationPackage } from "../lib/translate/publication.ts";
 import { runHeldMeasureTranslations } from "../lib/translate/standing.ts";
 import { armHunterLane, hunterLaneArmingPath, laneArmingOf, LaneOwnSpend } from "../lib/control-plane/workers/hunter-lane-arming.ts";
 import { writeLaneArming } from "../lib/control-plane/workers/hunter-lane-arming-writer.ts";
@@ -322,6 +322,9 @@ test("translation publication retains every verified original receipt without re
   for (const reference of [source, pamphlet, question, legislation]) assert.ok(receipts.some(receipt =>
     receipt.finalUrl === reference.sourceUrl && receipt.rawHash === reference.sourceHash && receipt.publisher === reference.publisher));
   const checked = (await readTranslations([division], { store, now: at, bypassCache: true }))[0];
+  await assert.rejects(publishTranslation(new MemoryRoutineDataStore(), { record: checked,
+    captures: [admitted.captures[0], admitted.captures[0]], now: at }), /MANUAL_SOURCE_PROOF_DUPLICATED/,
+    "lineage receipts cannot hide duplicate source captures from the existing source guard");
   for (const originals of [[], admitted.captures[0].originalSourceReceipts!.map((receipt, index) =>
     index ? receipt : { ...receipt, rawHash: "0".repeat(64) })]) {
     assert.throws(() => translationPackage({ record: checked, captures: [{ ...admitted.captures[0], originalSourceReceipts: originals }], now: at }),

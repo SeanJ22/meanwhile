@@ -43,9 +43,9 @@ export function translationPackage(input: {
     }) || new Set(receipts.map(receipt => `${receipt.finalUrl}\n${receipt.rawHash}`)).size !== originals.size) {
       throw new Error("Translation originals lack their exact verified source receipts.");
     }
-    const sources = new Map(sourceReceipt.sources.map(receipt => [`${receipt.finalUrl}\n${receipt.rawHash}`, receipt]));
-    for (const receipt of receipts) sources.set(`${receipt.finalUrl}\n${receipt.rawHash}`, receipt);
-    sourceReceipt = { ...sourceReceipt, sources: [...sources.values()] };
+    const sources = new Set(sourceReceipt.sources.map(receipt => `${receipt.finalUrl}\n${receipt.rawHash}`));
+    sourceReceipt = { ...sourceReceipt, sources: [...sourceReceipt.sources,
+      ...receipts.filter(receipt => !sources.has(`${receipt.finalUrl}\n${receipt.rawHash}`))] };
   }
   // The review clock orders the place fact set independently of each sentence’s original check.
   return { contractId: "plain-english-translations", version: `translations-v2:${new Date(now).toISOString()}`,

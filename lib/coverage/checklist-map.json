@@ -98,7 +98,7 @@
   "deadlineItems": ["ELE-06", "ELE-08", "ELE-09", "ELE-20", "ELE-21", "ELE-22", "ELE-23", "ELE-24"],
   "calendarItems": ["MTG-01", "MTG-02", "MTG-03", "MTG-04", "MTG-13", "MTG-15", "MTG-16", "MTG-17", "MTG-20"],
   "appliesTo": {
-    "note": "A known record only owes its own facts. A matching rule lists the groups or IDs the record owes, less excludeIds. A capture kind with no rule owes every item in its subject kind's groups. Registry bodies owe GOV, PAR and REF, not ENG: ENG measures the app's reactions, privacy, feedback and alert delivery, so it is not an acquisition task per body. Local votes belong to the body's meeting actions, not Congress or state roll calls or federal PRL; a roster can include a mayor, so local officeholders keep EXE. A campaign committee has no public budget and a voting date has no polling location; those stay discovery work for the place, not the record.",
+    "note": "A known record only owes its own facts. A matching rule lists the groups or IDs the record owes, less excludeIds. A capture kind with no rule owes every item in its subject kind's groups. Registry bodies owe GOV, PAR and REF, not ENG: ENG measures the app's reactions, privacy, feedback and alert delivery, so it is not an acquisition task per body. Local votes belong to the body's meeting actions, not Congress or state roll calls or federal PRL; a roster can include a mayor, so local officeholders keep EXE. A campaign committee has no public budget and a voting date has no polling location; those stay discovery work for the place, not the record. A race owes its candidate list, never a candidate's own items; a measure owes no candidate item but owes its information page and committee sites where they exist.",
     "registry-body": {
       "groups": ["GOV", "PAR", "REF"]
     },
@@ -141,6 +141,14 @@
     },
     "election-navigation": {
       "ids": ["ELE-09", "ELE-20", "ELE-23", "ELE-24"]
+    },
+    "race": {
+      "groups": ["ELE"],
+      "excludeIds": ["ELE-11", "ELE-12", "ELE-25", "ELE-27", "ELE-28"]
+    },
+    "measure": {
+      "groups": ["ELE"],
+      "excludeIds": ["ELE-07", "ELE-13", "ELE-14", "ELE-16", "ELE-17"]
     },
     "candidate": {
       "groups": ["CAN"]
@@ -361,7 +369,7 @@
     "ELE-04": {"unit": "contest", "trigger": "always", "due": "per-election", "predicateKind": "fact", "scoreAs": "core", "countsAs": "row", "filledBy": ["families"]},
     "ELE-05": {"unit": "contest", "trigger": "always", "due": "per-election", "predicateKind": "fact", "scoreAs": "core", "countsAs": "row"},
     "ELE-06": {"unit": "deadline", "trigger": "when-due", "due": "per-election", "predicateKind": "fact", "scoreAs": "core", "countsAs": "row", "filledBy": ["families"]},
-    "ELE-07": {"unit": "contest", "trigger": "when-due", "due": "per-election", "predicateKind": "fact", "scoreAs": "core", "countsAs": "row"},
+    "ELE-07": {"unit": "contest", "trigger": "when-due", "due": "per-election", "predicateKind": "fact", "scoreAs": "core", "countsAs": "row", "filledBy": ["families"]},
     "ELE-08": {"unit": "deadline", "trigger": "when-due", "due": "per-election", "predicateKind": "fact", "scoreAs": "core", "countsAs": "row", "filledBy": ["families"]},
     "ELE-09": {"unit": "deadline", "trigger": "when-offered", "due": "per-election", "predicateKind": "fact", "scoreAs": "core", "countsAs": "summary", "filledBy": ["families"]},
     "ELE-10": {"unit": "contest", "trigger": "when-in-scope", "due": "per-election", "predicateKind": "fact", "scoreAs": "core", "countsAs": "row"},
@@ -531,6 +539,8 @@
     "ELE-24": {"unit": "deadline", "trigger": "when-offered", "due": "per-election", "predicateKind": "fact", "scoreAs": "core", "countsAs": "row"},
     "ELE-25": {"unit": "contest", "trigger": "when-present", "due": "per-election", "predicateKind": "fact", "scoreAs": "core", "countsAs": "row"},
     "ELE-26": {"unit": "contest", "trigger": "when-due", "due": "per-election", "predicateKind": "fact", "scoreAs": "core", "countsAs": "summary"},
+    "ELE-27": {"unit": "contest", "trigger": "when-published", "due": "per-election", "predicateKind": "source", "scoreAs": "core", "countsAs": "row"},
+    "ELE-28": {"unit": "contest", "trigger": "when-published", "due": "per-election", "predicateKind": "source", "scoreAs": "core", "countsAs": "row"},
     "CAM-13": {"unit": "funding", "trigger": "when-in-scope", "due": "per-filing-period", "predicateKind": "fact", "scoreAs": "core", "countsAs": "summary"},
     "CAM-14": {"unit": "funding", "trigger": "when-in-scope", "due": "per-filing-period", "predicateKind": "freshness", "scoreAs": "core", "countsAs": "summary"},
     "CAM-15": {"unit": "funding", "trigger": "when-in-scope", "due": "per-filing-period", "predicateKind": "fact", "scoreAs": "core", "countsAs": "summary"},

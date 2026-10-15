@@ -38,6 +38,8 @@ interface BoxPublicationReport {
   readonly waitingByClass: Readonly<Record<string, number>>;
   readonly failuresByReason: Readonly<Record<string, number>>;
   readonly byPlace: Readonly<Record<string, { published: number; refused: number; waiting: number }>>;
+  /** Box seats taken down for never showing the seat, and those flagged for naming a ward another member holds. */
+  readonly seats: { readonly pulled: number; readonly flagged: number };
 }
 
 const MEMBER_FIELD = { member_name: "name", member_office: "office", term_note: "termNote", term_start: "termStart", term_end: "termEnd", email: "email", phone: "phone", website: "websiteUrl" } as const;
@@ -83,9 +85,47 @@ async function targetOf(query: Query, subjectId: string): Promise<Target | null>
 const PACKET = "hunt:packet:";
 const placeOf = (row: BoxFinding) => row.origins.find(origin => origin.resultKey?.startsWith(PACKET))?.resultKey!.slice(PACKET.length) ?? row.subjectId;
 
-/** Live member names on a body, so an office or contact finding can join the person its quote names. */
-async function memberNames(query: Query, bodyId: string): Promise<readonly string[]> {
-  return (await query("SELECT value->>'name' AS name FROM fact WHERE entity_id = $1 AND status = 'live' AND field LIKE 'member:%'", [bodyId])).map(row => String(row.name));
+const STAFF_TITLE = /\b(manager|clerk|attorney|administrator|director|superintendent|engineer|planner|treasurer|secretary|coordinator|assistant|staff)\b/i;
+const COUNCIL_SEAT = /\b((vice|deputy)[- ]?)?mayor\b|\bcouncil[- ]?(m[ae]n|member|woman|person|or|lor|president)s?\b|\balder(m[ae]n|woman|person)\b|\bselect(m[ae]n|woman|board)\b|\b(trustee|supervisor|freeholder|legislator|commissioner)s?\b/i;
+const BOARD_SEAT = /\b(vice[- ]?)?(chair(person|man|woman)?|president)\b|\bboard members?\b|\bmember of the board\b/i;
+const WARD = /\b(?:ward|district)\s*(?:no\.?\s*)?(\d+)\b/i;
+
+/** The seat a person's own words show on this body, or null: a staff title never seats anyone, and a council seats only by its own titles. */
+function seatIn(words: string, bodyId: string): { readonly ward: string | null } | null {
+  const council = bodyId.endsWith("#governing"), board = bodyId.endsWith("#board");
+  if (STAFF_TITLE.test(words)) return null;
+  if (!COUNCIL_SEAT.test(words) && (council || !BOARD_SEAT.test(words)) && (council || board || !/\bmembers?\b/i.test(words))) return null;
+  return { ward: council || board ? WARD.exec(words)?.[1] ?? null : null };
+}
+
+interface LiveMember { readonly factId: number; readonly bodyId: string; readonly name: string; readonly words: string; readonly producedBy: string }
+
+/** Live members of the given bodies, each with the words that seated them: the member quote, and the office and its quote. */
+async function liveMembers(query: Query, bodyIds: readonly string[]): Promise<readonly LiveMember[]> {
+  return (await query(`SELECT f.id, f.entity_id, f.value->>'name' AS name, f.produced_by,
+      concat_ws(E'\\n', f.quote, f.value->>'office', o.value #>> '{}', o.quote) AS words
+    FROM fact f LEFT JOIN fact o ON o.entity_id = substr(f.field, 8) AND o.field = 'office:' || f.entity_id AND o.status = 'live'
+    WHERE f.entity_id = ANY($1::text[]) AND f.status = 'live' AND f.field LIKE 'member:%'`, [bodyIds]))
+    .map(row => ({ factId: Number(row.id), bodyId: String(row.entity_id), name: String(row.name), words: String(row.words), producedBy: String(row.produced_by) }));
+}
+
+/** Box seats whose words never showed the seat come down; one naming a ward another member holds is flagged for Sean. */
+async function reviewBoxSeats(query: Query): Promise<{ readonly pulled: number; readonly flagged: number }> {
+  const bodies = (await query("SELECT DISTINCT entity_id FROM fact WHERE produced_by = 'box' AND status = 'live' AND field LIKE 'member:%'")).map(row => String(row.entity_id));
+  const members = await liveMembers(query, bodies);
+  let pulled = 0, flagged = 0;
+  for (const member of members.filter(row => row.producedBy === "box")) {
+    const seat = seatIn(member.words, member.bodyId);
+    if (!seat) {
+      await query("UPDATE fact SET status = 'pulled', held_reason = 'SEAT_NOT_IN_QUOTE' WHERE id = $1", [member.factId]);
+      await query("INSERT INTO rebuild_queue (place_id) SELECT place_id FROM entity_place WHERE entity_id = $1 ON CONFLICT (place_id) DO NOTHING", [member.bodyId]);
+      pulled++;
+    } else if (seat.ward && members.some(other => other.bodyId === member.bodyId && nameKey(other.name) !== nameKey(member.name) && seatIn(other.words, other.bodyId)?.ward === seat.ward)) {
+      flagged += (await query(`INSERT INTO owner_flag (fact_id, kind) SELECT $1, 'AUDIT_LOOKS_WRONG'
+        WHERE NOT EXISTS (SELECT 1 FROM owner_flag WHERE fact_id = $1 AND resolved IS NULL) RETURNING id`, [member.factId])).length;
+    }
+  }
+  return { pulled, flagged };
 }
 
 const named = (quote: string, name: string) => boundedIndexOf(normalizeText(quote).toLowerCase(), normalizeText(name).toLowerCase()) !== -1;
@@ -101,7 +141,7 @@ export async function publishBoxFindings(input: {
 }): Promise<BoxPublicationReport> {
   const { repos, facts, clocks } = input;
   const now = new Date(input.now), since = now.getTime() - HUNTER_FINDING_DAYS * 86_400_000;
-  const report = { looked: 0, published: 0, publishedByRoute: {} as Record<string, number>, handed: 0, refused: 0,
+  const report = { looked: 0, published: 0, publishedByRoute: {} as Record<string, number>, handed: 0, refused: 0, seats: await reviewBoxSeats(facts.query),
     waitingByClass: {} as Record<string, number>, failuresByReason: {} as Record<string, number>,
     byPlace: {} as Record<string, { published: number; refused: number; waiting: number }> };
   // A packet's findings count toward its government; any other finding toward its own subject.
@@ -196,7 +236,8 @@ export async function publishBoxFindings(input: {
     }
     const people = group.filter(entry => entry.slot.class === "rosters" || entry.slot.class === "contacts");
     if (people.length) {
-      const known = [...people.filter(e => e.slot.slot === "member_name").map(e => String(e.finding.value)), ...await memberNames(facts.query, body.id)];
+      const seated = (await liveMembers(facts.query, [body.id])).map(row => row.name);
+      const known = [...people.filter(e => e.slot.slot === "member_name").map(e => String(e.finding.value)), ...seated];
       const members = new Map<string, RosterMember & { fields: Record<string, unknown>; fieldSources: Record<string, { quote: string; sourceUrl: string; sourceOrg: string; collectedAt: string; verifiedAt: null }> }>();
       const sourceFieldOf = new Map<BoxFinding, { recordId: string; field: string }>();
       const quoteOf = (quote: string) => ({ quote, sourceUrl: read.capture.evidence.canonicalUrl, sourceOrg: "", collectedAt: read.capture.observedAt, verifiedAt: null });
@@ -212,10 +253,13 @@ export async function publishBoxFindings(input: {
         members.set(recordId, member);
         sourceFieldOf.set(finding.row, { recordId, field });
       }
-      const tally = await publishRosterFacts(facts, { body, capture: read.capture, members: [...members.values()], complete: false, producedBy: "box" }, clocks, now);
+      const unseated = new Set([...members.values()].filter(member => !seated.some(name => nameKey(name) === nameKey(String(member.fields.name))) &&
+        !seatIn([member.fieldSources.name?.quote, member.fields.office, member.fieldSources.office?.quote].filter(Boolean).join("\n"), body.id)).map(member => member.recordId));
+      const tally = await publishRosterFacts(facts, { body, capture: read.capture, members: [...members.values()].filter(member => !unseated.has(member.recordId)),
+        complete: false, producedBy: "box" }, clocks, now);
       for (const { finding, slot } of people) {
         const at = sourceFieldOf.get(finding.row);
-        if (at) await settle(finding.row, tally.outcomes.get(at.recordId)?.get(at.field) ?? { blank: "NOT_CLAIMED" }, slot.class);
+        if (at) await settle(finding.row, unseated.has(at.recordId) ? { blank: "SEAT_NOT_IN_QUOTE" } : tally.outcomes.get(at.recordId)?.get(at.field) ?? { blank: "NOT_CLAIMED" }, slot.class);
       }
     }
     const own = group.filter(entry => entry.slot.class !== "rosters" && entry.slot.class !== "contacts");

@@ -31,7 +31,7 @@ import { readHeldCalendars, type HeldCalendarReading } from "../lib/control-plan
 import { readFreeDiscoveryWalks } from "../lib/control-plane/discovery/free-walks.ts";
 import { reviewedBodyForGovernment } from "../lib/control-plane/discovery/reviewed-body.ts";
 import { walkableByFreeWalk } from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
-import { applyDispatchWork, dispatchWorkReading, planDispatchWork, requirementsFor, scopeWorkTarget, type DispatchWorkReading } from "../lib/control-plane/expansion/dispatch-work.ts";
+import { applyDispatchWork, dispatchWorkReading, planDispatchWork, scopeWorkTarget, type DispatchWorkReading } from "../lib/control-plane/expansion/dispatch-work.ts";
 import type { PlannedScope } from "../lib/control-plane/expansion/membership.ts";
 import { loadExpansionPlan, readTerritoryIndex } from "../lib/control-plane/expansion/runner-load.ts";
 import { registrationGovernmentsPlaced, stateSendPreviewSentence, type PreviewCode } from "../lib/control-plane/expansion/send-preview.ts";
@@ -50,7 +50,6 @@ import {
   dispatchedAddressSource,
   materializedDiscoveryNeeds,
   meetingsDiscoveryProvider,
-  paidDiscoveryHold,
 } from "../lib/control-plane/scheduler/providers/meetings-discovery.ts";
 import { buildRegistry } from "../lib/control-plane/scheduler/registry.ts";
 import type { JurisdictionRegistry } from "../lib/hunt/jurisdiction-universe.ts";
@@ -304,7 +303,7 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   assert.equal(target.units.placed, dry.units.placed, "the cycle places what its own preview placed");
   assert.equal(target.requirements.created, dry.requirements.deferred, "and creates what that preview counted as owed");
   assert.equal(target.units.fromRegistration, target.units.placed, "every one of them from registration");
-  assert.equal(target.requirements.defined, target.units.placed * 7, "meetings, five missing families and body-directory discovery; public-comment work awaits an independently verified body");
+  assert.equal(target.requirements.defined, target.units.placed, "one meetings discovery need per government");
   assert.equal(target.requirements.created, target.requirements.defined);
   assert.equal(target.requirements.createdThisCycle, second.requirements.deferred, "the normal next cycle creates the remainder without duplicates");
   assert.equal(target.requirements.deferred, 0);
@@ -315,7 +314,7 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   assert.match(target.says.join(" "), new RegExp(`${n} of the ${n} governments here come from registration \\(the 2022 Census of Governments; OH version ${versionId}\\)`));
 
   const created = (await repos.obligations.list()).map((row) => row.value).filter((o) => o.materializedBy === OWNER_DISPATCH);
-  assert.equal(created.length, n * 7, "the store holds exactly what the runner counted");
+  assert.equal(created.length, n, "the store holds exactly what the runner counted");
   // The real gateway/runner marks survive the publisher's bounded list: the same exact-reference filter Admin reads.
   const assignmentSources = await readAllAssignmentSources(repos, { nowIso: T_CYCLE, activation: null, pilotZips: [] });
   const publishedWork = buildAssignmentView(assignmentSources, { perGroup: 1 });
@@ -329,17 +328,6 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   for (const id of placed) assert.ok(preview.certain.includes(id) || preview.edge.includes(id), `${id}: created, and inside the preview's edge`);
   assert.ok(n >= preview.certain.length && n <= preview.certain.length + preview.edge.length);
   assert.ok(created.every((o) => o.materializedFrom === "REGISTRATION"), "each created row says it came from registration");
-  const missingFamilies = created.filter(o => !o.id.startsWith(MEETINGS_DISCOVERY_NAMESPACE));
-  assert.equal(missingFamilies.length, n * 6);
-  assert.equal(missingFamilies.filter(o => o.autonomousPlan?.contract.recordClass === "OFFICIAL_BOARD_DIRECTORY").length, n);
-  assert.equal(missingFamilies.filter(o => o.autonomousPlan?.contract.recordClass === "CAMPAIGN_FINANCE_FILING").length, n, "finance filing discovery remains owed without inventing a body");
-  assert.equal(missingFamilies.filter(o => o.autonomousPlan?.contract.recordClass === "BALLOT_CONTEST").length, n, "candidate-list discovery remains owed");
-  assert.equal(missingFamilies.filter(o => o.autonomousPlan?.contract.recordClass === "SERVICE_CONTACT").length, n);
-  assert.equal(missingFamilies.filter(o => o.autonomousPlan?.contract.recordClass === "VOTER_ACCESS_ROUTE").length, n);
-  assert.ok(missingFamilies.filter(o => o.autonomousPlan?.contract.recordClass !== "OFFICIAL_BOARD_DIRECTORY").every(o => !o.autonomousPlan?.publication),
-    "unreviewed body IDs cannot reach reader publication contracts");
-  assert.equal(missingFamilies.filter(o => o.autonomousPlan?.publication?.contractId === "comment-access").length, 0, "government geography alone supplies no body for participation rules");
-  assert.ok(missingFamilies.every(o => o.autonomousPlan?.contract.schemaVersion === 2 && o.autonomousPlan.contract.extraction.format === "UNSUPPORTED" && o.autonomousPlan.sources.length === 0), "new discovery instructions invent no observed sources or extracted records");
   const ohio = requiredJurisdictionRegistry("oh");
   assert.equal(ohio.registration?.versionId, versionId, "read from the promoted version, the one readers use");
   const findOwnSite = created.filter((o) => o.id.endsWith("#find-own-site"));
@@ -367,8 +355,7 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   assert.equal(columbus.ownWebAddress, "http://www.columbus.gov/", "the Census of Governments' own record");
   assert.deepEqual(columbus.addressSource, { source: "REGISTRATION", versionId });
   const subjects = needs.map((n) => ({ jurisdictionId: n.jurisdictionId, walkable: walkableByFreeWalk(n) }));
-  const columbusId = `${MEETINGS_DISCOVERY_NAMESPACE}${COLUMBUS}#own-site-meetings`;
-  assert.equal(paidDiscoveryHold(columbusId, await readFreeDiscoveryWalks(repos, subjects)), null);
+  assert.equal((await readFreeDiscoveryWalks(repos, subjects)).latestFor(COLUMBUS), "NOT_WALKED");
   const vault = new Map<string, HeldBytes>();
   let tick = 0;
   await runCensusState({
@@ -397,7 +384,7 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   assert.equal(attempt!.found[0]?.url, COLUMBUS_ROUTE);
   assert.equal(attempt!.site?.address?.source, "WEBSITE_EVIDENCE");
   assert.ok(vault.has(attempt!.site!.address!.versionId!), "the host is attested by its saved source copy");
-  assert.match(paidDiscoveryHold(columbusId, await readFreeDiscoveryWalks(repos, subjects))?.why ?? "", /already found/);
+  assert.equal((await readFreeDiscoveryWalks(repos, subjects)).latestFor(COLUMBUS), "FOUND");
 
   /* 5. The automatic crosswalk, the wiring, Ohio's family and the Reader. */
   const regInput: DerivedInputRef = { kind: "PROMOTED_VERSION", recordClass: "REGISTRATION", scope: reg.metadata.scope, versionId, readModelSha256: sha(reg.value), promotedAt: reg.metadata.promotedAt! };
@@ -411,14 +398,6 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   const reviewedBody = { id: COLUMBUS_BODY, ocdId: columbusDivision, bodyClass: "GOVERNING", censusId: "209050" };
   const body = reviewedBodyForGovernment(loadRegistrationReference(ROOT, "OH"), COLUMBUS, [reviewedBody]);
   assert.ok(body, "the independently reviewed council joins only by native Census identity");
-  const reviewedRequirements = requirementsFor(ohio, {
-    ...ohio.jurisdictions.find(j => j.id === COLUMBUS)!, bodyId: body.bodyId,
-  }, null, UNREAD_MEETING_PARTITIONS, true);
-  const publications = reviewedRequirements.flatMap(r => r.obligation.autonomousPlan?.publication ?? []);
-  for (const contractId of ["official-filings", "ballot-contests", "everyday-routing", "ballot-navigation", "comment-access"]) {
-    assert.equal(publications.filter(p => p.contractId === contractId && p.bodyId === COLUMBUS_BODY).length, 1,
-      `${contractId} binds the separately verified body while its own facts remain owed`);
-  }
   const walk = { attempt: attempt!, recordId: "pos-columbus", recordedAt: attempt!.finishedAt };
   const review = reviewDiscoveryWalk({
     walk,
@@ -525,7 +504,7 @@ test("A SEND FOR A PUERTO RICO MUNICIPIO creates its discovery needs from regist
   const { reading } = await runnerCycle(repos, store, ADJUNTAS, T_CYCLE);
   const [target] = reading.targets;
   assert.deepEqual(target!.blocked, [], "a territory's governments are registered too: nothing is blocked");
-  assert.equal(target!.requirements.created, target!.units.placed * 7);
+  assert.equal(target!.requirements.created, target!.units.placed);
 
   const created = (await repos.obligations.list()).map((row) => row.value).filter((o) => o.materializedBy === OWNER_DISPATCH);
   const placed = [...new Set(created.map((o) => o.subjectId))].sort();
@@ -534,7 +513,6 @@ test("A SEND FOR A PUERTO RICO MUNICIPIO creates its discovery needs from regist
   for (const id of placed) assert.ok(inPreview.has(id), `${id} is inside the preview's edge`);
   assert.ok(created.every((o) => o.materializedFrom === "REGISTRATION"));
   assert.ok(created.filter(o => o.id.startsWith(MEETINGS_DISCOVERY_NAMESPACE)).every(o => o.id.endsWith("#find-own-site")));
-  assert.ok(created.filter(o => !o.id.startsWith(MEETINGS_DISCOVERY_NAMESPACE)).every(o => o.autonomousPlan?.seedUrls.length === 0 && o.autonomousPlan.sources.length === 0), "no territory source address is invented");
 
   const dispatched = materializedDiscoveryNeeds(created.map((o) => o.id));
   assert.deepEqual(dispatched.failures, []);
@@ -544,7 +522,6 @@ test("A SEND FOR A PUERTO RICO MUNICIPIO creates its discovery needs from regist
   assert.equal(walkableByFreeWalk(adjuntas.need), false, "the free walk has no site to open");
   const walks = await readFreeDiscoveryWalks(repos, [{ jurisdictionId: adjuntas.need.jurisdictionId, walkable: false }]);
   assert.equal(walks.latestFor(adjuntas.need.jurisdictionId), "NO_SITE_TO_WALK");
-  assert.equal(paidDiscoveryHold(`${MEETINGS_DISCOVERY_NAMESPACE}pr:county:adjuntas-municipio#find-own-site`, walks), null, "finding the site is the paid lane's, inside the owner's budgets");
   const route = buildRegistry([meetingsDiscoveryProvider({ registered: () => ({ registries: new Map(), refused: new Map() }), materialized: () => ({ ids: new Set(created.map((o) => o.id)) }) })], { root: ROOT, nowIso: T_NEXT })
     .routeFor(`${MEETINGS_DISCOVERY_NAMESPACE}pr:county:adjuntas-municipio#find-own-site`);
   assert.match(route?.citation ?? "", /PR's registration names this government \(promoted version .+\), and the Census records no web address for it, so none is invented/);

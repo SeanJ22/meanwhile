@@ -8,6 +8,7 @@ export const DATA_DOOR_KINDS = [
   "NOVUSAGENDA",
   "SWAGIT",
   "ESCRIBE",
+  "PRIMEGOV",
   "CIVICCLERK",
   "IQM2",
   "REVIZE",
@@ -74,6 +75,11 @@ export const DOOR_KIND_SPECS: Readonly<Record<DataDoorKind, DoorKindSpec>> = {
     sourceName: "civicclerk", agendaSourceType: "CIVICCLERK", entry: "lib/sources/civicclerk/index.ts",
     route: { key: "apiBase", as: "origin" },
     allowed: ["portalBase", "bodyMatch", "categoryId", "titleMatch"], required: ["portalBase", "categoryId"],
+  },
+  PRIMEGOV: {
+    sourceName: "primegov", agendaSourceType: "PRIMEGOV", entry: "lib/sources/primegov/index.ts",
+    route: { key: "portalUrl", as: "origin" },
+    allowed: ["committeeId"], required: ["committeeId"],
   },
   IQM2: {
     sourceName: "iqm2", agendaSourceType: "IQM2", entry: "lib/sources/iqm2/index.ts",

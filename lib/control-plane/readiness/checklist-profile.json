@@ -2,7 +2,7 @@
   "version": "Sean-full-checklist/2026-09-28@1",
   "sourceSha256": "2411e2ac121f87acd8157b61ae722d56a632fb520f0e938a1aacbc8a1d49cb55",
   "overlapVersion": "checklist-overlap/2026-09-28@1",
-  "definitionCount": 325,
+  "definitionCount": 327,
   "policyOverrideEvidence": "Sean implementation instruction 2026-09-28: one original lifetime $50 Anthropic hunt; no secondary discretionary review/count/spend stop.",
   "overlapRules": [
     {
@@ -3967,6 +3967,32 @@
       ],
       "canonicalPredicate": "ELE-26:residual",
       "contribution": "SUMMARY_WITH_RESIDUAL"
+    },
+    {
+      "id": "ELE-27",
+      "label": "C",
+      "requirement": "Measure information page — The official information page for the measure is captured with its source where one exists; its absence never holds the measure back.",
+      "group": "ELE",
+      "dimension": "CIVIC_FULL_TARGET",
+      "originalCore": true,
+      "owner": "C",
+      "policyOverride": null,
+      "overlapGroups": [],
+      "canonicalPredicate": "ELE-27",
+      "contribution": "DIRECT"
+    },
+    {
+      "id": "ELE-28",
+      "label": "C",
+      "requirement": "Measure committee sites — The committee sites for and against the measure are captured where they exist, each labeled by side and filed committee name.",
+      "group": "ELE",
+      "dimension": "CIVIC_FULL_TARGET",
+      "originalCore": true,
+      "owner": "C",
+      "policyOverride": null,
+      "overlapGroups": [],
+      "canonicalPredicate": "ELE-28",
+      "contribution": "DIRECT"
     },
     {
       "id": "CAM-13",

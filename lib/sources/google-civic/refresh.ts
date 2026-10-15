@@ -1,4 +1,5 @@
 import type { RoutineDataStore } from "../../civic-data/store.ts";
+import type { EvidenceStore } from "../../control-plane/evidence/store.ts";
 import { processRegisteredFanOutCandidate, processRegisteredRoutineCandidate } from "../../civic-data/promotion.ts";
 import { civicCandidate } from "./publication.ts";
 import { readCivicApi, recordCivicCatalogFailure, CivicSourceError, type CivicReadOptions } from "./acquisition.ts";
@@ -10,6 +11,7 @@ import { routineTaskFromContract } from "../../civic-data/runner.ts";
 
 export async function refreshGoogleCivic(input: {
   store: RoutineDataStore;
+  vault: EvidenceStore;
   readOptions?: CivicReadOptions;
   /** Existing government inventory describes coverage without sending addresses to Google. */
   registration?: typeof readRegistrationProjection;
@@ -52,12 +54,12 @@ export async function refreshGoogleCivic(input: {
     coverage.push(report);
     const checkedAt = (options.now ?? (() => new Date().toISOString()))();
     // The state marker describes catalog/inventory coverage; it is not a voterinfo probe.
-    const marker = civicCandidate(civicStateScope(state), { formatVersion: 1, kind: "STATE", checkedAt, rows: elections, coverage: [report] }, [catalog.raw], "elections");
+    const marker = await civicCandidate(input.vault, civicStateScope(state), { formatVersion: 1, kind: "STATE", checkedAt, rows: elections, coverage: [report] }, catalog.raw, "elections");
     await processRegisteredFanOutCandidate(input.store, GOOGLE_CIVIC_CONTRACT_ID, marker, checkedAt);
   }
   const checkedAt = (options.now ?? (() => new Date().toISOString()))();
   coverage.sort((a, b) => a.state.localeCompare(b.state));
-  const candidate = civicCandidate(GOOGLE_CIVIC_SCOPE, { formatVersion: 1, kind: "CATALOG", checkedAt, rows: elections, coverage }, [catalog.raw], "elections");
+  const candidate = await civicCandidate(input.vault, GOOGLE_CIVIC_SCOPE, { formatVersion: 1, kind: "CATALOG", checkedAt, rows: elections, coverage }, catalog.raw, "elections");
   const outcome = await processRegisteredRoutineCandidate(input.store, GOOGLE_CIVIC_CONTRACT_ID, candidate, checkedAt);
   return { candidate, outcome, coverage };
 }

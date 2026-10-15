@@ -2,6 +2,7 @@ import { normalizedHash, sha256 } from "../civic-data/candidate-builders.ts";
 import type { CivicRecordMember, IdentityEvidence, RoutineCandidate } from "../civic-data/types.ts";
 import { sourceProjectionEvidence } from "../civic-data/types.ts";
 import { isOfficialSource } from "../civic-data/source-authority.ts";
+import type { RawCaptureRef } from "../civic-data/raw-capture-vault.ts";
 import type { VotingJurisdiction, VotingSitesFile } from "./voting-sites.ts";
 
 export const VOTING_SITES_CONTRACT = {
@@ -11,6 +12,12 @@ export const VOTING_SITES_CONTRACT = {
   scope: "US:voting-sites",
   parserVersion: "official-voting-sites/4",
 } as const;
+
+/** One acquired source response; its bytes stay in the raw-capture vault. */
+export interface VotingRawCapture extends RawCaptureRef {
+  readonly url: string;
+  readonly contentType: string;
+}
 
 export interface VotingSiteAcquisitionFailure {
   readonly jurisdictionId?: string;
@@ -134,25 +141,22 @@ export function votingSitesCandidate(input: {
   readonly current: VotingSitesFile;
   readonly prior: VotingSitesFile | null;
   readonly failures: readonly VotingSiteAcquisitionFailure[];
-  readonly rawBodies: readonly string[];
+  readonly acquisition: readonly VotingRawCapture[];
   readonly successfulAuthorityReads: number;
   readonly requestedUrl: string;
   readonly finalUrl: string;
   readonly retrievedAt: string;
   readonly carriedFromVersionId?: string | null;
-  readonly retainRawBodies?: boolean;
 }): RoutineCandidate {
   const readModel = retainFailedVotingSiteScopes(input.current, input.prior, input.failures);
   const civicRecords = votingSiteMembers(readModel);
   const semanticViolations = violations(readModel);
-  const rawHash = sha256(input.rawBodies.map((body) => sha256(body)).join("\n"));
+  const rawHash = sha256(input.acquisition.map((capture) => capture.rawHash).join("\n"));
   const carriedJurisdictionIds = input.prior?.jurisdictions.filter(row =>
     readModel.jurisdictions.some(next => next.ocdId === row.ocdId && normalizedHash(next) === normalizedHash(row)))
     .map(row => row.ocdId).sort() ?? [];
-  const normalizedPayload = input.retainRawBodies || input.carriedFromVersionId
-    ? { projection: readModel, acquisition: input.retainRawBodies ? input.rawBodies : [],
-        carriedFromVersionId: input.carriedFromVersionId ?? null, carriedJurisdictionIds }
-    : readModel;
+  const normalizedPayload = { projection: readModel, acquisition: input.acquisition,
+    carriedFromVersionId: input.carriedFromVersionId ?? null, carriedJurisdictionIds };
   return {
     id: `cv-${sha256(`${VOTING_SITES_CONTRACT.sourceId}\u001f${VOTING_SITES_CONTRACT.scope}\u001f${rawHash}\u001f${input.retrievedAt}\u001f${input.finalUrl}\u001f${normalizedHash(readModel)}`).slice(0, 32)}`,
     sourceId: VOTING_SITES_CONTRACT.sourceId,
@@ -160,12 +164,12 @@ export function votingSitesCandidate(input: {
     scope: VOTING_SITES_CONTRACT.scope,
     sourceProjectionEvidence: sourceProjectionEvidence(VOTING_SITES_CONTRACT.sourceId, VOTING_SITES_CONTRACT.recordClass, VOTING_SITES_CONTRACT.scope),
     retrieval: {
-      succeeded: input.rawBodies.length > 0 && input.successfulAuthorityReads > 0,
+      succeeded: input.acquisition.length > 0 && input.successfulAuthorityReads > 0,
       requestedUrl: input.requestedUrl,
       finalUrl: input.finalUrl,
       httpStatus: input.successfulAuthorityReads > 0 ? 200 : null,
       retrievedAt: input.retrievedAt,
-      rawHash: input.rawBodies.length > 0 ? rawHash : null,
+      rawHash: input.acquisition.length > 0 ? rawHash : null,
       failureDetail: input.successfulAuthorityReads > 0 ? undefined : "No registered election authority returned successful bytes.",
     },
     normalization: {

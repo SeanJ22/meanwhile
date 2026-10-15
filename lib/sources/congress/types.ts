@@ -1,3 +1,4 @@
+import type { RawCaptureRef } from "../../civic-data/raw-capture-vault.ts";
 import type { FederalSourceId } from "./targets.ts";
 
 export interface FederalCapture {
@@ -10,6 +11,8 @@ export interface FederalCapture {
     /** Immutable held roster evidence, referenced rather than copied into every filing. */
     honoreeRosterVersionId?: string; honoreeRosterFailure?: string };
 }
+/** A capture as a candidate holds it: its bytes stay in the raw-capture vault. */
+export type HeldFederalCapture = Omit<FederalCapture, "body"> & { raw: RawCaptureRef };
 export interface LdaRosterMember {
   bioguideId: string;
   names: string[];

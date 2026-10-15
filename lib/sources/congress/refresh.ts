@@ -1,4 +1,5 @@
 import type { RoutineDataStore } from "../../civic-data/store.ts";
+import type { EvidenceStore } from "../../control-plane/evidence/store.ts";
 import { failedAcquisitionCandidate, normalizedHash } from "../../civic-data/candidate-builders.ts";
 import { processRegisteredRoutineCandidate } from "../../civic-data/promotion.ts";
 import { printSourceRunnerReceipt } from "../../civic-data/runner-receipt.ts";
@@ -14,6 +15,7 @@ import { readLdaRosterVersion } from "./lda-roster.ts";
 
 export interface FederalRefreshOptions extends FederalClientOptions {
   store: RoutineDataStore;
+  vault: EvidenceStore;
   /** Tests inject the same exact-ID join the runtime performs against held membership. */
   memberState?: (bioguide: string) => Promise<string | null>;
   doorOutcome?: (ok: boolean, at: string, reason?: string) => Promise<unknown>;
@@ -35,7 +37,7 @@ function replaceCounts(total: FederalCounts, before: FederalCounts | undefined, 
 }
 
 export async function refreshFederalSource(options: FederalRefreshOptions) {
-  const { source, store } = options, now = options.now ?? (() => new Date().toISOString()), startedAt = now();
+  const { source, store, vault } = options, now = options.now ?? (() => new Date().toISOString()), startedAt = now();
   const client = federalClient(options), config = FEDERAL_SOURCES[source];
   async function recordDoor(ok: boolean, at: string, reason?: string) {
     try { await options.doorOutcome?.(ok, at, reason); }
@@ -84,19 +86,19 @@ export async function refreshFederalSource(options: FederalRefreshOptions) {
       }
     }
     const nextCounts = countFederalFacts([...retained.values()].map(row => states.has(row.id) ? { ...row, state: states.get(row.id) } : row), joined);
-    const result = await publishFederalPartition({ source, partition, captures, records: facts, store, now: now(), counts: nextCounts, completePartition, ...replacement });
+    const result = await publishFederalPartition({ source, partition, captures, records: facts, store, vault, now: now(), counts: nextCounts, completePartition, ...replacement });
     const delta = result.outcome.candidate.candidate.changeSet;
     const changed = [...(delta?.added ?? []), ...(delta?.changed ?? [])].filter(row => row.key.startsWith("federal:")).length;
     if (changed > 0) console.log("RCD_PROGRESS=" + JSON.stringify({ key: result.candidate.id, records: changed }));
     if (primary) {
       replaceCounts(counts, result.previousCounts, nextCounts);
-      last = await publishFederalPartition({ source, partition: "national", captures, records: [], store, now: now(), counts });
+      last = await publishFederalPartition({ source, partition: "national", captures, records: [], store, vault, now: now(), counts });
     }
     return result;
   }
   async function checkpoint(cursor: string, capture: FederalCapture) {
     listing = capture;
-    last = await publishFederalPartition({ source, partition: "national", captures: [capture], records: [], store, now: now(), cursor, counts });
+    last = await publishFederalPartition({ source, partition: "national", captures: [capture], records: [], store, vault, now: now(), cursor, counts });
   }
   async function congressBill(row: Record<string, unknown>, sponsored?: FederalCapture, bioguide?: string) {
     const billId = billIdentity(row);
@@ -144,7 +146,7 @@ export async function refreshFederalSource(options: FederalRefreshOptions) {
                 await checkpoint(`bootstrap:${JSON.stringify({ url: page.capture.url, index, sponsoredUrl: bills.capture.url, billIndex: billIndex + 1, through })}`, bills.capture);
               }
             }
-            await publishFederalPartition({ source, partition: `congress:${bioguide}`, captures: [page.capture], records: [], store, now: now(), cursor: "sponsored-complete" });
+            await publishFederalPartition({ source, partition: `congress:${bioguide}`, captures: [page.capture], records: [], store, vault, now: now(), cursor: "sponsored-complete" });
             await checkpoint(`bootstrap:${JSON.stringify({ url: page.capture.url, index: index + 1, through })}`, page.capture);
           }
           if (page.next) await checkpoint(`bootstrap:${JSON.stringify({ url: page.next, index: 0, through })}`, page.capture);
@@ -171,7 +173,7 @@ export async function refreshFederalSource(options: FederalRefreshOptions) {
               await publish(partition, [bills.capture], normalizeFederalCapture(bills.capture));
               for (const bill of bills.items) await congressBill(bill, bills.capture, bioguide);
             }
-            await publishFederalPartition({ source, partition, captures: [page.capture], records: [], store, now: now(), cursor: "sponsored-complete" });
+            await publishFederalPartition({ source, partition, captures: [page.capture], records: [], store, vault, now: now(), cursor: "sponsored-complete" });
           }
         }
         const resume = cursor.startsWith("updatesPage:") ? JSON.parse(cursor.slice(12)) as { url: string; index: number; through: string } : null;
@@ -222,7 +224,7 @@ export async function refreshFederalSource(options: FederalRefreshOptions) {
       let roster, rosterFailure;
       try {
         const held = await readFederalDirectoryProjection({ store, now: startedAt, bypassCache: true });
-        roster = held.kind === "PROMOTED" ? await readLdaRosterVersion(store, held.metadata.versionId!) : undefined;
+        roster = held.kind === "PROMOTED" ? await readLdaRosterVersion(store, vault, held.metadata.versionId!) : undefined;
         if (!roster) rosterFailure = `Federal roster is ${held.kind}; no honoree identity link can be verified.`;
       } catch (error) {
         rosterFailure = error instanceof Error ? error.message : String(error);

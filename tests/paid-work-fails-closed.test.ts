@@ -94,20 +94,17 @@ function checkCycleFailsClosed(src: string): void {
   assert.match(closure[0], /unreadableControls,/);
   assert.match(src, /paused: intents\.runnerPause\.paused,\s*\/\*[^*]*\*\/\s*modelHold: laneDisabledReason,/, "FleetSafety does not hold model requests on the lane's answer");
 
-  assert.match(src, /admitScout: \(row\) => \{\s*if \(scoutFor\(row\)\.lane === "DETERMINISTIC"\) return \{ admit: true \};\s*if \(!modelLaneEnabled\)/,
-    "a held route reopened by a later source failure must pass the existing paid admission gates");
-
   /* 4 & 5. The row is read through the trusted reading, before the lane is decided. */
   assert.match(src, /const \{ config, holdPaidWork: configHold \} = adminConfigForPaidWork\(configRead\);/);
   assert.doesNotMatch(src, /isAdminConfig\(cfg\.value\)/, "the old reading that let a corrupt row fall back is back");
   assert.doesNotMatch(src, /built-in fallback \$\$\{[^}]*\} governs this cycle/, "an unreadable row still falls back to the built-in ceiling");
   assert.ok(src.indexOf("adminConfigForPaidWork(configRead)") < src.indexOf("const laneClosure = modelLaneClosure({"), "the row is read after the lane was decided");
 
-  /* 7. One switch, one budget: the Scout tool exists only under the switch and draws on the discovery walk's budget. */
+  /* 7. One switch, one budget: the hunters' search exists only under the switch and draws on the discovery walk's budget. */
   assert.match(src, /const searchBudget = !discoverySearchOn \? null : durableSearchBudget\(\{/);
   assert.equal(src.split("durableSearchBudget(").length - 1, 1, "a second paid-search budget was built");
-  assert.match(src, /const scoutSearch = searchBudget === null \? null : makeScoutSearch\(\{[\s\S]{0,200}?budget: searchBudget,/, "the Scout tool is built outside the switch or its budget");
-  assert.ok(src.indexOf("const scoutSearch =") < src.indexOf("const scoutFor ="), "the Scout tool is referenced before it is built");
+  assert.match(src, /const scoutSearch = searchBudget === null \? null : makeHuntSearch\(\{[\s\S]{0,200}?budget: searchBudget,/, "the hunters' search is built outside the switch or its budget");
+  assert.ok(src.indexOf("const scoutSearch =") < src.indexOf("async function makeAutonomousFleet"), "the hunters' search is referenced before it is built");
 
   /* 8. The auditor admits against the ceiling in force. */
   assert.match(src, /autonomousStandingRuntime\(\{(?:(?!\}\);)[\s\S])*?auditCeilingUsd: effectiveCeilingUsd,\s*lifetimeHuntSubject:/,
@@ -151,9 +148,8 @@ test("POSITIVE CONTROL: a cycle that drops any fail-closed wire, or gates free w
     ["  unreadableControls,\n});", "});", "a lane blind to unreadable controls"],
     ["  intentLogUnreadable = error instanceof Error ? error.message : String(error);\n", "", "an unreadable log that is not captured"],
     ["modelHold: laneDisabledReason,", "", "a FleetSafety that reserves under a closed lane"],
-    ["const scoutSearch = searchBudget === null ? null : makeScoutSearch({", "const scoutSearch = makeScoutSearch({", "a Scout search outside the switch"],
+    ["const scoutSearch = searchBudget === null ? null : makeHuntSearch({", "const scoutSearch = makeHuntSearch({", "a hunters' search outside the switch"],
     ["auditCeilingUsd: effectiveCeilingUsd,", "", "an auditor on the static default"],
-    ['if (scoutFor(row).lane === "DETERMINISTIC") return { admit: true };', 'if (heldScoutFor(row) !== null) return { admit: true };', "a paid investigation admitted from invalidated held discovery"],
   ];
   for (const [from, to, what] of mutations) {
     const mutated = src.replace(from, to);

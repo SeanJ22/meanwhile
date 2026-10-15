@@ -90,6 +90,7 @@ export function meetingAcquisitionFailureDomain(
       case "granicus": return wiring.config.publisherUrl;
       case "novusagenda": return wiring.config.portalUrl;
       case "swagit": return wiring.config.portalUrl;
+      case "primegov": return wiring.config.portalUrl;
       case "civicplus": return wiring.config.agendaCenterUrl ?? wiring.config.icalUrl;
       case "iqm2": return wiring.config.base;
       case "revize": return wiring.config.base;

@@ -315,7 +315,7 @@ export type RoutineRemovalEvidence =
   | MovedToHistoryRemovalEvidence
   | MovedToFactStoreRemovalEvidence;
 
-/** A roster row the registry partition no longer carries because each member is now its own fact. */
+/** A roster row removed from the registry partition: its members publish as facts. */
 export interface MovedToFactStoreRemovalEvidence {
   readonly key: string;
   readonly code: "MOVED_TO_FACT_STORE";

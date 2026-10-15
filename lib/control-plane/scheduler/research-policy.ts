@@ -12,7 +12,6 @@ import { MODELS } from "../../models.ts";
 import type { DispatchOrdering, ResearchMetrics } from "../research-metrics.ts";
 import { aggregateModelSpend, aggregatePricedSpend, type FleetSafetySnapshot, type PricedCharge } from "../fleet-safety.ts";
 import type { SpendHold } from "../budget.ts";
-import type { WorkerProcessSlots } from "../workers/worker-slots.ts";
 
 
 /** The workers' dedicated credential. NAME only; no value is ever read into a record. */
@@ -527,18 +526,4 @@ export function huntersTheDialBuys(input: {
     modelEnabled: true, spentUsd: input.spentLast24hUsd, ceilingUsd: input.dailyLimitUsd, requestUsd: scoutRequestUsd(),
     ...(input.requestsPerMinute === undefined ? {} : { requestsPerMinute: input.requestsPerMinute }),
   });
-}
-
-/** A paid job rechecks its admission after waiting for the shared host's
- * memory. Closing paid work leaves the memory slot available for plain work. */
-export function paidWorkerSlots(slots: WorkerProcessSlots, capacity: () => number): WorkerProcessSlots {
-  return { acquire: async (entry, ...deadline) => {
-    if (capacity() <= 0) throw new Error("MODEL_LANE_CLOSED: no paid Scout capacity");
-    const release = await slots.acquire(entry, ...deadline);
-    if (capacity() <= 0) {
-      release();
-      throw new Error("MODEL_LANE_CLOSED: no paid Scout capacity");
-    }
-    return release;
-  } };
 }

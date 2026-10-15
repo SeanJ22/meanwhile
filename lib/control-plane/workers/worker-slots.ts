@@ -6,13 +6,13 @@ import { randomUUID } from "node:crypto";
 import { join } from "node:path";
 
 const MIB = 1024 * 1024;
-/** Rounded-up measured RSS peaks; a reservation pays only for growth not yet in OS usage. */
+/** Rounded-up measured RSS peaks for a script never measured on this host; a reservation pays only for growth not yet in OS usage. */
 export const WORKER_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = { route: 285, scout: 248, lease: 342, national: 1258 };
 /** Rounded up from the ordinary staging research parent's 3,069,235,200-byte peak. */
 export const RESEARCH_PARENT_PEAK_MIB = 2928;
 /** Promoter peak 1,923 MiB plus the held national-worker peak; both may still grow. */
 export const NATIONAL_PLACE_PEAK_MIB = 1923 + WORKER_ENTRY_PEAK_MIB.national!;
-/** Bulk data families use the retained data-worker bound, covering their staging entry peaks. */
+/** Bulk data families use the retained data-worker bound until their own runs are measured on this host. */
 const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   // A complete 113 MiB Illinois session parsed and promoted in the fixture
   // store peaked at 3,013 MiB. Round up for these state-scoped bulk writers;
@@ -88,7 +88,33 @@ function alive(pid: number): boolean {
 }
 
 interface MemoryReservation { id: string; owner: number; pid: number | null; peak: number; entry: string }
-interface HostState { reservations: MemoryReservation[]; parents: { pid: number; peak: number }[] }
+interface HostState { reservations: MemoryReservation[]; parents: { pid: number; peak: number }[]; peaks?: Record<string, number[]> }
+
+/** How often a running reserved child's peak is read, and how many recent run peaks set its script's reservation. */
+const PEAK_SAMPLE_MS = 2000;
+const MEASURED_PEAK_RUNS = 5;
+/** The script an entry runs ("…/national-people-refresh.mts"); entries that name no script keep their table peak. */
+function measuredPeakKey(entry: string): string | null {
+  const script = entry.split(/[\\/]/).at(-1)!;
+  return /[.](?:mts|ts|mjs|js)$/.test(script) ? script : null;
+}
+/** The largest recent measured peak, 5% over and rounded up to a whole MiB. */
+function measuredReservationBytes(peaks: readonly number[]): number {
+  return Math.ceil(Math.max(...peaks) * 1.05 / MIB) * MIB;
+}
+/** Linux high-water RSS of a process and its live descendants; null once the process is gone. */
+async function processTreePeakBytes(root: number): Promise<number | null> {
+  let total = 0;
+  const pending = [root];
+  for (let index = 0; index < pending.length; index++) {
+    const pid = pending[index]!;
+    try { total += Number(/^VmHWM:\s+(\d+)/m.exec(await readFile(`/proc/${pid}/status`, "utf8"))?.[1] ?? 0) * 1024; }
+    catch { if (pid === root) return null; continue; }
+    try { pending.push(...(await readFile(`/proc/${pid}/task/${pid}/children`, "utf8")).split(/\s+/).filter(Boolean).map(Number)); }
+    catch { /* A descendant can exit between reads. */ }
+  }
+  return total;
+}
 export interface WorkerMemoryHost {
   transact(operation: (state: HostState, processes: readonly WorkerProcessMemory[]) => void, sampleProcesses?: boolean): boolean | Promise<boolean>;
 }
@@ -154,11 +180,13 @@ export interface WorkerProcessSlots {
   acquire(entry?: string, deadlineMs?: number): Promise<WorkerMemoryRelease>;
 }
 
+const rosterPublication = (entry: string): boolean => entry === "registry-runtime-bindings" ||
+  entry.startsWith("registry-runtime-bindings/") || entry.startsWith("worker-publication:registry-runtime-bindings:");
+
 export function routineProcessSlots(memory: WorkerMemoryLimit = {}): WorkerProcessSlots {
   return workerProcessSlots(() => Number.MAX_SAFE_INTEGER, { ...memory,
     peakBytes: memory.peakBytes ?? (entry => entry.startsWith("national-place:") ? NATIONAL_PLACE_PEAK_MIB * MIB :
-      entry === "registry-runtime-bindings" || entry.startsWith("registry-runtime-bindings/") || entry.startsWith("worker-publication:registry-runtime-bindings:")
-        ? REGISTRY_ROSTER_PUBLICATION_PEAK_MIB * MIB : (/^state-money-.+[.]mts$/.test(entry.split(/[\\/]/).at(-1)!)
+      rosterPublication(entry) ? REGISTRY_ROSTER_PUBLICATION_PEAK_MIB * MIB : (/^state-money-.+[.]mts$/.test(entry.split(/[\\/]/).at(-1)!)
           ? WORKER_ENTRY_PEAK_MIB.national! : ROUTINE_ENTRY_PEAK_MIB[entry.split(/[\\/]/).at(-1)!] ?? WORKER_ENTRY_PEAK_MIB.lease!) * MIB) });
 }
 
@@ -231,6 +259,12 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
           if (parent) parent.peak = Math.max(parent.peak, memory.parentPeakBytes ?? 0);
           else state.parents.push({ pid: process.pid, peak: memory.parentPeakBytes ?? 0 });
         }
+        // A child past its reserved peak has shown it can reach that size again.
+        for (const row of state.reservations) row.peak = Math.max(row.peak, rssFor(row.pid));
+        const reserve = (entry: string): number => {
+          const measured = state.peaks?.[measuredPeakKey(entry) ?? ""];
+          return measured?.length ? measuredReservationBytes(measured) : peakFor(entry);
+        };
         while (active < maximum && waiting.length) {
           const growth = state.reservations.reduce((sum, row) => sum + Math.max(0, row.peak - rssFor(row.pid)), 0) +
             state.parents.reduce((sum, row) => sum + Math.max(0, row.peak - (current.get(row.pid) ?? 0)), 0);
@@ -238,26 +272,42 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
           const participants = new Set(state.parents.flatMap(parent => [...idsFor(parent.pid)]));
           const used = rows.reduce((sum, row) => participants.has(row.pid) ? sum + row.rss : sum, 0);
           const free = Math.min(available(), Number.isFinite(hostMiB) && hostMiB > 0 ? Math.max(0, hostMiB * MIB - used) : Infinity);
-          const rosterLive = state.reservations.some(row => row.peak >= REGISTRY_ROSTER_PUBLICATION_PEAK_MIB * MIB);
+          const rosterLive = state.reservations.some(row => rosterPublication(row.entry));
           const index = waiting.findIndex(item => {
             if (Date.now() >= item.deadline) return false;
-            const peak = peakFor(item.entry);
-            return inherited || (!rosterLive && (peak < REGISTRY_ROSTER_PUBLICATION_PEAK_MIB * MIB || !state.reservations.length) && free >= headroom + growth + peak);
+            return inherited || (!rosterLive && (!rosterPublication(item.entry) || !state.reservations.length) && free >= headroom + growth + reserve(item.entry));
           });
           if (index < 0) break;
           const [item] = waiting.splice(index, 1);
           const id = randomUUID();
-          if (!inherited) state.reservations.push({ id, owner: process.pid, pid: null, peak: peakFor(item!.entry), entry: item!.entry });
+          let reserved = reserve(item!.entry);
+          if (!inherited) state.reservations.push({ id, owner: process.pid, pid: null, peak: reserved, entry: item!.entry });
           active++;
           let released = false;
+          let measured = 0;
+          let sampler: ReturnType<typeof setInterval> | undefined;
+          const key = measuredPeakKey(item!.entry);
           const release: WorkerMemoryRelease = Object.assign(() => {
             if (released) return;
             released = true; active--;
-            if (!inherited) mutate(state => { state.reservations = state.reservations.filter(row => row.id !== id); });
+            clearInterval(sampler);
+            if (!inherited) mutate(state => {
+              state.reservations = state.reservations.filter(row => row.id !== id);
+              if (key !== null && measured > 0) (state.peaks ??= {})[key] = [...state.peaks[key] ?? [], measured].slice(-MEASURED_PEAK_RUNS);
+            });
             requestDrain();
           }, { observe: (pid: number) => {
             if (released || inherited) return;
             mutate(state => { const row = state.reservations.find(row => row.id === id); if (row) row.pid = pid; });
+            if (platform() !== "linux") return;
+            sampler = setInterval(() => void processTreePeakBytes(pid).then(bytes => {
+              if (bytes === null || released) { clearInterval(sampler); return; }
+              measured = Math.max(measured, bytes);
+              if (bytes <= reserved) return;
+              reserved = bytes;
+              mutate(state => { const row = state.reservations.find(row => row.id === id); if (row) row.peak = Math.max(row.peak, bytes); });
+            }), PEAK_SAMPLE_MS);
+            sampler.unref();
           } });
           item!.resolve(release);
         }

@@ -1,3 +1,4 @@
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { runWorkerPublicationJob } from "../lib/civic-data/worker-publication-job.ts";
 import { factDb } from "./helpers/fact-db.ts";
 import {readGenericBallotProjection} from "../lib/ballot/generic-projection.ts";
@@ -161,7 +162,9 @@ test("verified directory bodies publish through the normal registry door and cre
     assert.deepEqual(child.value.autonomousPlan?.ownerInstructions, ["offline-send"]);
     assert.equal(child.value.autonomousPlan?.publication?.bodyId, body.id);
     assert.equal(child.value.dependencies[0].upstreamId, f.h.item.id);
-    assert.equal((await nextAutonomousOperation(f.runtime, child.id)).action, "SCOUT", "the normal coordinator continues unresolved source discovery");
+    const next = await nextAutonomousOperation(f.runtime, child.id);
+    assert.equal(next.action, "BLOCKED");
+    assert.match(next.reason, /hunted in its government's packet/, "unresolved source discovery is the government's hunt packet's");
   }
   assert.deepEqual(await publishWorkerDirectoryResults(f.input), published, "durable publication prevents duplicate bodies or child work");
   assert.equal((await f.h.repos.workItems.list()).length, 4);
@@ -453,7 +456,7 @@ test("completed polling workers publish every registered site through the existi
   await f.h.repos.doors.put(doorId, door, f.h.now());
   await f.h.repos.workItems.compareAndSet(item.id, item.revision, { ...item.value,
     autonomousPlan: { ...item.value.autonomousPlan!, sourceRegistryReferences: [...item.value.autonomousPlan!.sourceRegistryReferences, doorId] } }, f.h.now());
-  const report = await publishWorkerReaderResults({ ...f.input, repos: withoutWholeResultLog(f.h.repos) });
+  const report = await publishWorkerReaderResults({ ...f.input, repos: withoutWholeResultLog(f.h.repos), vault: new MemoryEvidenceStore() });
   assert.equal(report.length, 1); assert.equal(report[0].outcome.status, "PUBLISHED", report[0].outcome.detail);
   const read = await readVotingSitesProjection({ store: f.store, now: f.h.now(), bypassCache: true });
   assert.equal(read.kind, "PROMOTED");

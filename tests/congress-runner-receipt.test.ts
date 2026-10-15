@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import test from "node:test";
 import { refreshCongressDirectory } from "../scripts/fetch-congress-legislators.mts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { readFederalDirectoryProjection } from "../lib/officials/federal-directory-read-model.ts";
 import { durableRoutineRunnerReceiptIssue, parseRoutineRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
@@ -42,7 +43,7 @@ test("the Congress roster runner keeps each publication and emits one supervisor
     await create(...args); stages.push(args[0].candidate.id);
   });
   let acquired = 0;
-  await refreshCongressDirectory({ store, now: () => NOW, revision,
+  await refreshCongressDirectory({ store, vault: new MemoryEvidenceStore(), now: () => NOW, revision,
     acquire: async options => {
       if (acquired++) {
         const held = await readFederalDirectoryProjection({ store, now: NOW, bypassCache: true });
@@ -74,7 +75,7 @@ test("an unavailable optional Congress file keeps accepted people and a single d
   const store = new MemoryRoutineDataStore(), lines: string[] = [], diagnostics: string[] = [];
   t.mock.method(console, "log", (line: string) => { lines.push(line); });
   t.mock.method(console, "error", (line: string) => { diagnostics.push(line); });
-  await refreshCongressDirectory({ store, now: () => NOW, revision,
+  await refreshCongressDirectory({ store, vault: new MemoryEvidenceStore(), now: () => NOW, revision,
     acquire: async options => {
       if (options.releaseId.endsWith("legislators-social-media")) throw sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE", "Fixture optional file unavailable");
       const held = fixtureRelease(options); await options.validate?.(held.bytes, held); return held;
@@ -90,7 +91,7 @@ test("an unavailable optional Congress file keeps accepted people and a single d
 test("a Congress core-source failure emits one durable held receipt and never invents a successful publication", async t => {
   const store = new MemoryRoutineDataStore(), lines: string[] = [];
   t.mock.method(console, "log", (line: string) => { lines.push(line); });
-  await assert.rejects(refreshCongressDirectory({ store, now: () => NOW, revision,
+  await assert.rejects(refreshCongressDirectory({ store, vault: new MemoryEvidenceStore(), now: () => NOW, revision,
     acquire: async () => { throw sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE", "Fixture core file unavailable"); },
   }), /Fixture core file unavailable/);
   const parsed = parseRoutineRunnerReceipt(lines.join("\n"));

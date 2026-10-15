@@ -239,7 +239,7 @@ test("(h) every Postgres whole-table read goes through the held copies, and no s
   const runner = await readFile(new URL("../scripts/pilot-runner.mts", import.meta.url), "utf8");
   assert.match(runner, /process\.env\[CONTROL_PLANE_READS_DIR_ENV\] = join\(ROOT, "\.runtime", "control-plane", "reads"\);\nreadFromHeldCopies\(\);/);
   for (const entry of ["scripts/freshness-shadow.mts", "scripts/hunter-lane.mts", "scripts/publish-owner-snapshot.mts", "scripts/routine-civic-data-runner.mts",
-    "lib/control-plane/workers/lease-worker.ts", "lib/control-plane/workers/route-worker.ts", "lib/control-plane/workers/scout-worker.ts",
+    "lib/control-plane/workers/lease-worker.ts", "lib/control-plane/workers/route-worker.ts",
     "lib/control-plane/workers/national-worker.ts"]) {
     assert.match(await readFile(new URL(`../${entry}`, import.meta.url), "utf8"), /^readFromHeldCopies\(\);$/m, `${entry} reads whole tables from the held copies`);
   }

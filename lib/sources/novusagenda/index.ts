@@ -8,7 +8,7 @@ import { sourceAcquisitionSleep } from "../acquisition-deadline.ts";
 import { accountedNormalize } from "../normalize-account.ts";
 import type { Meeting, MeetingQuery, NormalizeDropCounts, PartialScopeFailure, ReportingMeetingSource } from "../types.ts";
 
-export interface NovusMeeting {
+interface NovusMeeting {
   id: string;
   date: string;
   body: string;
@@ -17,7 +17,7 @@ export interface NovusMeeting {
   links: Array<{ label: string; href: string }>;
   excerpt: string;
 }
-export interface NovusRaw {
+interface NovusRaw {
   wiring: BodySourceWiring;
   pages: Array<{ url: string; html: string }>;
   details?: Readonly<Record<string, string>>;
@@ -75,7 +75,7 @@ export function parseNovusMeetings(html: string, url: string): NovusMeeting[] {
   return result;
 }
 
-export function novusForm(html: string): Record<string, string> {
+function novusForm(html: string): Record<string, string> {
   const fields: Record<string, string> = {};
   for (const input of html.matchAll(/<input\b[^>]*>/gi)) {
     const name = attr(input[0], "name");

@@ -86,6 +86,7 @@ export async function readHeldPlaceFamilies(divisionIds: readonly string[], opti
   const rosters = [value(federal)?.roster, ...legislators.map(read => value(read)?.roster)].filter((row): row is OfficeholderSet => row !== undefined);
   targets.push(...rosters.flatMap(roster => roster.divisions.filter(row => divisionIds.includes(row.ocdId)).map(row => row.officeholderId)));
   const [ballots, votingSites, funding, money, filingRead, navigationRead] = await Promise.all([
+
     read<GenericBallotProjection>("BALLOT_CANDIDACY", GENERIC_BALLOT_SCOPE),
     read<VotingSitesFile>(VOTING_SITES_CONTRACT.recordClass, VOTING_SITES_CONTRACT.scope),
     read<FundingSnapshot>(fec.recordClass, fec.scope),
@@ -95,6 +96,7 @@ export async function readHeldPlaceFamilies(divisionIds: readonly string[], opti
   ]);
   const heldBallots = Object.values(value(ballots)?.ballots ?? {}).filter(ballot => states.has(ballot.election.state));
   const candidateLineups = heldBallots.flatMap(ballot => ballot.generalLineup?.contests ?? []);
+
   const plan = candidatePlan(divisionIds, heldBallots, candidateLineups);
   const readerKeys = [...new Set([...plan.values()].flatMap(row => [row.candidacyId, ...row.readerKeys]))];
   const profiles = requiredManualProductionContract("candidate-profiles"), corpus = requiredManualProductionContract("candidate-corpus");
@@ -181,15 +183,19 @@ export function projectHeldPlaceFamilies(divisionIds: readonly string[], registr
   for (const ballot of families.ballots ?? []) {
     for (const contest of ballot.contests) {
       const divisions = [contest.ocdId];
-      if (!subject(contest.id, "contest", divisions, contest.title)) continue;
+      if (!subject(contest.id, "contest", divisions, contest.title, contest.type === "MEASURE" ? "measure" : "race")) continue;
       const add = (id: string, item: unknown) => field(contest.id, id, item, contest.provenance.sourceUrl, contest.provenance.collectedAt, FRESHNESS_HOURS.daily);
       add("ELE-01", ballot.election);
       add("ELE-04", { office: contest.title, divisionId: contest.ocdId, termYears: contest.termYears, voteFor: contest.voteFor });
-      for (const candidate of ballot.candidacies.filter(row => row.contestId === contest.id)) {
+      const candidates = ballot.candidacies.filter(row => row.contestId === contest.id);
+      if (contest.candidateListComplete === true) add("ELE-07", { candidates: candidates.map(row => ({ id: row.id, name: `${row.givenName} ${row.familyName}` })) });
+      for (const candidate of candidates) {
         subject(candidate.id, "contest", divisions, `${candidate.givenName} ${candidate.familyName}`, "candidate");
         field(candidate.id, "CAN-01", { id: candidate.id, name: `${candidate.givenName} ${candidate.familyName}` }, candidate.provenance.sourceUrl, candidate.provenance.collectedAt, FRESHNESS_HOURS.daily);
         field(candidate.id, "CAN-02", { contestId: contest.id, electionId: contest.electionId, office: contest.title, divisionId: contest.ocdId }, candidate.provenance.sourceUrl, candidate.provenance.collectedAt, FRESHNESS_HOURS.daily);
         if (candidate.incumbent !== null) field(candidate.id, "CAN-03", candidate.incumbent, candidate.provenance.sourceUrl, candidate.provenance.collectedAt, FRESHNESS_HOURS.daily);
+        if (candidate.websiteUrl) for (const id of ["CAN-04", "CAN-05"]) field(candidate.id, id,
+          { kind: "campaign", url: candidate.websiteUrl, statedBy: "official candidate list" }, candidate.provenance.sourceUrl, candidate.provenance.collectedAt, FRESHNESS_HOURS.daily);
       }
       for (const measure of ballot.measures.filter(row => row.contestId === contest.id)) {
         field(contest.id, "ELE-11", { question: measure.questionText, divisionId: contest.ocdId }, measure.provenance.sourceUrl, measure.provenance.collectedAt, FRESHNESS_HOURS.daily);

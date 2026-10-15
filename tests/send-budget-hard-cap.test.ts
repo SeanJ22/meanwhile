@@ -30,7 +30,7 @@ import {
   assignmentMembership,
   malformedAssignmentBudgetsOf,
 } from "../lib/control-plane/expansion/assignment-budget.ts";
-import { scoutAttemptWorstCaseUsd, scoutJobWorstCaseUsd, type ModelRequest, type ModelResponse, type ModelTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
+import { scoutJobWorstCaseUsd, type ModelRequest, type ModelResponse, type ModelTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
 import { RESEARCH_BOUNDS, type ResearchIntent } from "../lib/control-plane/scheduler/research-policy.ts";
 import { FleetPreSendRefusal, FleetSafetyController, FleetSafetyRefusal, modelRequestWorstCaseUsd, modelResponseUsd } from "../lib/control-plane/fleet-safety.ts";
 import { ScopeBudgetGate, type BudgetScope } from "../lib/control-plane/expansion/membership.ts";
@@ -69,10 +69,10 @@ function fakeTransport(outputTokens = 1_000) {
 const request = (maxTokens = 8_192): ModelRequest => ({ model: MODELS.sonnet.model, max_tokens: maxTokens, system: [], tools: [], messages: [{ role: "user", content: "x" }] }) as unknown as ModelRequest;
 
 test("the initial hold uses the response allowance at the starting tier; requests extend it before sending", () => {
-  assert.equal(WORST, scoutAttemptWorstCaseUsd(MODELS.haiku.model, RESEARCH_BOUNDS.perDispatch));
+  assert.equal(WORST, scoutJobWorstCaseUsd(RESEARCH_BOUNDS.perDispatch, MODELS.haiku.model));
   /* One maximum response initially held at each execution tier. */
   assert.ok(Math.abs(WORST - 0.02048) < 1e-9, `worst case ${WORST}`);
-  assert.ok(Math.abs(scoutAttemptWorstCaseUsd(MODELS.opus.model, RESEARCH_BOUNDS.perDispatch)! - 0.16384) < 1e-9, "the escalation's worst case at Opus 5.5");
+  assert.ok(Math.abs(scoutJobWorstCaseUsd(RESEARCH_BOUNDS.perDispatch, MODELS.opus.model)! - 0.16384) < 1e-9, "the escalation's worst case at Opus 5.5");
 });
 
 test("a job that would exceed the Send's budget is refused before any spend", async () => {
@@ -96,7 +96,7 @@ test("a follow-up that would exceed is refused before it is sent: an escalation,
   /* The first tier fits; adding the frontier response hold would exceed $0.15. */
   const job = new JobSpend(spend, "job-esc", "ob-1", lines([send(0.15)]));
   assert.equal((await job.admit(WORST, "one Scout job")).admit, true);
-  const escalation = await job.extend(scoutAttemptWorstCaseUsd(MODELS.opus.model, RESEARCH_BOUNDS.perDispatch)!, "the escalation to claude-opus-5-5");
+  const escalation = await job.extend(scoutJobWorstCaseUsd(RESEARCH_BOUNDS.perDispatch, MODELS.opus.model)!, "the escalation to claude-opus-5-5");
   assert.equal(escalation.admit, false);
   assert.match(!escalation.admit ? escalation.why : "", /the escalation to claude-opus-5-5's worst case/);
   assert.equal(job.heldUsd, WORST, "a refused escalation holds nothing");
@@ -110,24 +110,6 @@ test("a follow-up that would exceed is refused before it is sent: an escalation,
   await guarded(request());
   await assert.rejects(guarded(request()), (error: unknown) => error instanceof SendBudgetRefusal && error.code === "ASSIGNMENT_BUDGET");
   assert.equal(sent.length, 1, "the request past the hold was never sent");
-});
-
-test("a pre-warm holds its own worst case on the budget of the work it serves, and is refused when that does not fit", async () => {
-  const worst = modelRequestWorstCaseUsd(request(0))!;
-  assert.ok(worst > 0);
-  const { spend } = holds();
-  /* Room for the job and half a pre-warm. */
-  const job = new JobSpend(spend, "job-pw", "ob-1", lines([send(WORST + worst / 2)]));
-  assert.equal((await job.admit(WORST, "one Scout job")).admit, true);
-  const prewarm = new JobSpend(spend, "prewarm:cycle", "ob-1", job.lines);
-  const held = await prewarm.admit(worst, "the cycle's pre-warm");
-  assert.equal(held.admit, false, "the pre-warm's worst case does not fit what the Send has left");
-  assert.match(!held.admit ? held.why : "", /the cycle's pre-warm's worst case/);
-  /* With room, it is held — and its measured cost is charged there. */
-  const { spend: roomy } = holds();
-  const job2 = new JobSpend(roomy, "job-pw2", "ob-1", lines([send(WORST + worst)]));
-  assert.equal((await job2.admit(WORST, "one Scout job")).admit, true);
-  assert.equal((await new JobSpend(roomy, "prewarm:cycle2", "ob-1", job2.lines).admit(worst, "the cycle's pre-warm")).admit, true);
 });
 
 test("N jobs racing for a budget that fits N−1 admit exactly N−1, on one ledger, whatever the interleaving", async () => {
@@ -381,7 +363,7 @@ test("the runner wires autonomous work to its jurisdiction's area only, never to
   const runner = readFileSync(join(process.cwd(), "scripts", "freshness-shadow.mts"), "utf8");
   /* The guards are built in paid-work-guards.ts, which the round calls. */
   const guards = readFileSync(join(process.cwd(), "lib", "control-plane", "workers", "paid-work-guards.ts"), "utf8");
-  assert.match(runner, /const \{ budgetLinesFor, guardedMessagesFor, autonomousTransportFor, paidWorkerCapacity \} = guards;/);
+  assert.match(runner, /const \{ autonomousTransportFor, paidWorkerCapacity \} = guards;/);
   const start = guards.indexOf("const autonomousTransportFor =");
   const end = guards.indexOf("});", start);
   const block = guards.slice(start, end);

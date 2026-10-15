@@ -1,13 +1,7 @@
-/**
- * Keeps server instances booted and ready for a cold Ask or map. `netlify/functions/keep-warm.mts` calls this
- * route fourteen times at once every five minutes. A marked call holds for up to a second and loads, on its
- * instance, the reader edge, one place per published state, and the Ask route's module graph and source
- * preloads. All of it runs in an edge-only context (`edgeOnly`), so it never reads the database. An unmarked
- * call loads nothing and answers at once.
- */
 import { numericInRange, refuse, rejectUnknown } from "@/lib/api/params";
 import { divisionIdsForZipArea, POINT_GEOMETRY_PLANS } from "@/lib/ballot/zip-divisions";
-import { settleAzBallotRead, settleCandidateCorpusRead, settleCandidateProfilesRead } from "@/lib/civic-data/manual-read-models";
+import { settleCandidateCorpusRead, settleCandidateProfilesRead } from "@/lib/civic-data/manual-read-models";
+import { readGenericBallotProjection } from "@/lib/ballot/generic-projection";
 import { settleAzPimaFinanceRead } from "@/lib/control-plane/campaign-finance/held-records";
 import { settleOfficeholderStatementsRead } from "@/lib/corpus/data-plane";
 import { settleFundingRead } from "@/lib/funding/snapshot";
@@ -56,7 +50,7 @@ export const ASK_SOURCE_PRELOADS: Readonly<Record<string, () => Promise<unknown>
   azPimaFinance: settleAzPimaFinanceRead,
   federalVotes: settleFederalVotesRead,
   federalKeyVotes: settleFederalKeyVotesRead,
-  azBallot: settleAzBallotRead,
+  ballots: readGenericBallotProjection,
   candidateProfiles: settleCandidateProfilesRead,
   candidateCorpus: settleCandidateCorpusRead,
   officeholderStatements: settleOfficeholderStatementsRead,

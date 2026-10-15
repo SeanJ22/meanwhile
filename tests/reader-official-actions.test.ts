@@ -3,13 +3,13 @@ import { test } from "node:test";
 import { actionText, executiveActionStore } from "../lib/officials/executive-actions.ts";
 import { officialActionsForTarget } from "../lib/officials/reader-actions.ts";
 import { currentStatewideExecutives } from "../lib/officials/statewide-executives.ts";
-import { installAzBallot, installRegistryAuthority, syntheticAzBallot } from "./helpers/promoted-fixtures.ts";
+import { installBallots, installRegistryAuthority, syntheticAzBallot } from "./helpers/promoted-fixtures.ts";
 import { installExecutiveActions, syntheticExecutiveActions } from "./helpers/reader-fixtures.ts";
 
 await installRegistryAuthority();
 // The registry's current Arizona governor, a certified lineup card reconciled to that candidacy, and a held action store for the seat.
 const governor = currentStatewideExecutives().find(row => row.holder.id === "statewide:az/governor")!.holder;
-await installAzBallot(syntheticAzBallot([{
+await installBallots(syntheticAzBallot([{
   id: "ballot-az-pima:governor",
   title: "Governor",
   candidacies: [

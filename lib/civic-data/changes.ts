@@ -364,48 +364,35 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
         ...keyed("meeting", array(root.meetings), ["id"]),
         ...agendaDocumentMembers(array(root.agendaDocuments)),
       ];
-    case "BALLOT_FILING": {
-      const ballot = object(root.ballot) ?? root;
-      const contacts = object(root.contacts);
-      return [
-        ...keyed("contest", array(ballot.contests), ["id"]),
-        ...keyed("candidacy", array(ballot.candidacies), ["id"]),
-        ...keyed("measure", array(ballot.measures), ["id"]),
-        ...keyed("removal", array(ballot.removals), ["id"]),
-        ...array(ballot.absences).map((record, index) => {
-          const row = object(record) ?? {};
-          const identity = [textKey(row, ["ocdId"]), textKey(row, ["statement"])].filter(Boolean).join(":");
-          return { key: `absence:${identity || `row-${index}`}`, record };
-        }),
-        ...keyed("contact", array(contacts?.contacts ?? root.contacts), ["id", "candidacyId", "candidateId"]),
-      ];
-    }
     case "BALLOT_CANDIDACY": {
-      if (root.kind === "ballot-contests") return Object.values(object(root.ballots) ?? {}).flatMap(ballot => civicRecordsFor("BALLOT_CANDIDACY", { ballot }));
-      const ballot = object(root.ballot) ?? root;
-      const lineup = object(root.generalLineup);
-      const analyses = object(root.measureAnalyses);
-      const filings = object(root.candidateFilings);
-      const identities = object(root.identityRegistry);
-      const reconciliation = object(root.lineupReconciliation);
-      return [
-        ...keyed("contest", array(ballot.contests), ["id"]),
-        ...keyed("candidacy", array(ballot.candidacies), ["id"]),
-        ...keyed("measure", array(ballot.measures), ["id", "contestId"]),
-        ...keyed("measure-record", array(ballot.measureRecords), ["contestId"]),
-        ...array(ballot.absences).map((record, index) => {
-          const row = object(record) ?? {};
-          const identity = [textKey(row, ["ocdId"]), textKey(row, ["statement"])].filter(Boolean).join(":");
-          return { key: `absence:${identity || `row-${index}`}`, record };
-        }),
-        ...keyed("certified-lineup", array(lineup?.contests), ["contestId"]),
-        ...keyed("measure-analysis", array(analyses?.analyses), ["contestId"]),
-        ...keyed("filing-contest", array(filings?.contests), ["id"]),
-        ...keyed("filing-candidacy", array(filings?.candidacies), ["id"]),
-        ...keyed("identity-contest", array(identities?.contests), ["identityId"]),
-        ...keyed("identity-candidate", array(identities?.candidates), ["identityId"]),
-        ...keyed("lineup-reconciliation", array(reconciliation?.rows), ["cardKey", "canonicalCandidacyId"]),
-      ];
+      return Object.values(object(root.ballots) ?? {}).flatMap(value => {
+        const ballot = object(value) ?? {};
+        const lineup = object(ballot.generalLineup);
+        const analyses = object(ballot.measureAnalyses);
+        const filings = object(ballot.candidateFilings);
+        const identities = object(ballot.identityRegistry);
+        const reconciliation = object(ballot.lineupReconciliation);
+        return [
+          ...keyed("contest", array(ballot.contests), ["id"]),
+          ...keyed("candidacy", array(ballot.candidacies), ["id"]),
+          ...keyed("measure", array(ballot.measures), ["id", "contestId"]),
+          ...keyed("measure-record", array(ballot.measureRecords), ["contestId"]),
+          ...array(ballot.absences).map((record, index) => {
+            const row = object(record) ?? {};
+            const identity = [textKey(row, ["ocdId"]), textKey(row, ["statement"])].filter(Boolean).join(":");
+            return { key: `absence:${identity || `row-${index}`}`, record };
+          }),
+          ...keyed("certified-lineup", array(lineup?.contests), ["contestId"]),
+          ...keyed("measure-analysis", array(analyses?.analyses), ["contestId"]),
+          ...keyed("filing-contest", array(filings?.contests), ["id"]),
+          ...keyed("filing-candidacy", array(filings?.candidacies), ["id"]),
+          ...keyed("identity-contest", array(identities?.contests), ["identityId"]),
+          ...keyed("identity-candidate", array(identities?.candidates), ["identityId"]),
+          ...keyed("lineup-reconciliation", array(reconciliation?.rows), ["cardKey", "canonicalCandidacyId"]),
+          ...keyed("removal", array(ballot.removals), ["id"]),
+          ...keyed("contact", array(ballot.contacts), ["candidacyId"]),
+        ];
+      });
     }
     case "CANDIDATE_PROFILE": {
       const cards = object(object(root.cards)?.cards) ?? {};

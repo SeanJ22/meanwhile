@@ -13,10 +13,8 @@ import type { PromotedPointerIdentity, RoutineRecordClass } from "./types.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import { requiredRoutineContract } from "./contracts.ts";
 import {
-  readAzBallotProjection,
   readCandidateCorpusProjection,
   readCandidateProfilesProjection,
-  readNhBallotProjection,
 } from "./manual-read-models.ts";
 import {
   DERIVED_CAMPAIGN_SITES_RECORD_CLASS,
@@ -68,8 +66,6 @@ export function promotedEdgePointers(): Readonly<Record<PromotedAuthorityFamily,
   return {
     "government-domains": [{ recordClass: "DOTGOV_REFERENCE", scope: DOTGOV_SCOPE, reader: readDotGovProjection }],
     "ballot-contests": [manual("ballot-contests", readGenericBallotProjection)],
-    "ballot-az": [manual("az-sos-ballot", readAzBallotProjection)],
-    "ballot-nh": [manual("nh-curated-ballot", readNhBallotProjection)],
     "candidate-profiles": [
       manual("candidate-profiles", readCandidateProfilesProjection),
       { recordClass: DERIVED_CAMPAIGN_SITES_RECORD_CLASS, scope: DERIVED_CAMPAIGN_SITES_SCOPE, reader: readDerivedCampaignSites },

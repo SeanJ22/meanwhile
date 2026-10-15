@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -11,16 +12,15 @@ import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import type { PromotedAuthorityFamily, PromotedFamilyArtifactValue } from "../lib/meetings/edge-artifacts.ts";
 import type { CensusDistrictEdge } from "../lib/census-geography/district-edge.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
-import { ballotElectionKey, genericBallotProblems, type GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
+import { ballotElectionKey, currentGenericBallotProjection, genericBallotProblems, type GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
+import { reconciledCandidacyIdForCard } from "../lib/identity/az-2026.ts";
 import { clearPromotedReadModelCache } from "../lib/civic-data/read-model.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
 import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
 import {
-  azBallotReadState,
   candidateCorpusReadState,
   candidateProfilesReadState,
-  nhBallotReadState,
 } from "../lib/civic-data/manual-read-models.ts";
 import { DERIVED_CAMPAIGN_SITES_RECORD_CLASS, DERIVED_CAMPAIGN_SITES_SCOPE } from "../lib/civic-data/derived-campaign-sites.ts";
 import { fundingReadState, readFundingSnapshot } from "../lib/funding/snapshot.ts";
@@ -35,11 +35,9 @@ import { STATE_CAMPAIGN_FINANCE_SOURCES, type StateCampaignFinanceJurisdiction }
 import {
   registryTransferImport,
   stateMoneyFixture,
-  syntheticAzBallot,
   syntheticCandidateCorpus,
   syntheticCandidateProfiles,
   syntheticFederalDirectory,
-  syntheticNhBallot,
 } from "./helpers/promoted-fixtures.ts";
 import { authorityVersionKey } from "../lib/registry/server.ts";
 import {
@@ -51,24 +49,16 @@ import {
 } from "./helpers/promoted-edge-entry.ts";
 import { azBallot as committedAzBallot, azDistricts } from "./helpers/ballot-district-fixtures.ts";
 
-/** The real /ballot page is rendered with no database: every Neon HTTP request is answered here with no rows and counted by record class. Async components are called from this test's context, as React calls them. */
-
 for (const key of ["DATABASE_URL", "DATABASE_URL_UNPOOLED", "NEON_DATABASE_URL", "NETLIFY", "NETLIFY_BLOBS_CONTEXT", "NETLIFY_SITE_ID"]) delete process.env[key];
 
 const REGISTRY_VERSION = "edge-test:ballot:registry";
 const FEDERAL_VERSION = "edge-test:ballot:federal";
 
-// The values the proven-pointer families carry, built before the fake database is installed: the committed
-// Arizona ballot file as the ballot rows, the recorded registry import, and small synthetic values elsewhere.
 const seedStore = new MemoryRoutineDataStore();
-const azBallot = { ...syntheticAzBallot(), ballot: JSON.parse(readFileSync("data/states/az/ballot/az-pima-2026.json", "utf8")) };
-// The synthetic NH ballot plus a state-senate race in every NH senate district the registry holds, so a NH
-// reader's ballot carries the legislative race the General Court roster answers.
-const nhSynthetic = syntheticNhBallot();
-const nhSenateDistricts = registryTransferImport().projection.payload.registry.divisions.filter((division) => /\/state:nh\/sldu:\d+$/.test(division.ocdId));
-const nhBallot = { ballot: { ...nhSynthetic.ballot,
-  contests: [...nhSynthetic.ballot.contests, ...nhSenateDistricts.map((division) => ({ ...nhSynthetic.ballot.contests[0]!, id: `ballot-nh-test:state-senate-${division.ocdId.split(":").at(-1)}`, ocdId: division.ocdId, title: `State Senator, District ${division.ocdId.split(":").at(-1)}` }))],
-  candidacies: [...nhSynthetic.ballot.candidacies, ...nhSenateDistricts.map((division) => ({ ...nhSynthetic.ballot.candidacies[0]!, id: `ballot-nh-test:state-senate-${division.ocdId.split(":").at(-1)}:candidate`, contestId: `ballot-nh-test:state-senate-${division.ocdId.split(":").at(-1)}` }))] } };
+const azBallot = committedAzBallot;
+const nationalStateBallot = (state: string) => Object.values((JSON.parse(readFileSync(`data/ballot/2026-general/${state}.json`, "utf8")) as GenericBallotProjection).ballots)[0]!;
+const nhBallot = nationalStateBallot("nh");
+const njBallot = nationalStateBallot("nj");
 const profiles = syntheticCandidateProfiles();
 const corpus = syntheticCandidateCorpus();
 const federal = syntheticFederalDirectory();
@@ -77,15 +67,15 @@ const stateMoneyFixtureEntries = (version: (state: string) => string) => (Object
 const funding = servedValue(await readFundingSnapshot({ store: seedStore, bypassCache: true }));
 const nhMembers = servedValue(await readNhMembers({ store: seedStore, bypassCache: true }));
 const nhLegislators = servedValue(await readOfficialStateLegislatorsProjection("US-NH", { store: seedStore, bypassCache: true }));
-// Arizona carries the committed publisher rows and their stored metadata. No
-// synthetic election interval can conceal a production applicability defect.
-const districts: CensusDistrictEdge = {
-  ...azDistricts, versionId: "edge-test:ballot:districts",
-  containers: [
-    ...azDistricts.containers,
-    { ref: { type: "state_leg_upper", version: "sldu:2024", geoid: "33008", ocdId: null, stateFips: "33", stateAbbr: "NH", memberStates: ["NH"], label: "NH State Senate District 8" }, plan: "NH reader-edge fixture" },
-  ],
-  codes: { ...azDistricts.codes, "03255": [[azDistricts.containers.length, true, 1]] },
+// The published Census edge resolves 07960 into both NJ congressional districts.
+const njDistricts: CensusDistrictEdge["containers"] = [7, 11].map(district => ({
+  ref: { type: "congressional_district", version: "cd:119", geoid: `34${String(district).padStart(2, "0")}`, ocdId: null,
+    stateFips: "34", stateAbbr: "NJ", memberStates: ["NJ"], label: `NJ Congressional District ${district} (119th Congress)` },
+  plan: "119th Congress",
+}));
+const districts: CensusDistrictEdge = { ...azDistricts, versionId: "edge-test:ballot:districts",
+  containers: [...azDistricts.containers, ...njDistricts],
+  codes: { ...azDistricts.codes, "07960": njDistricts.map((_, index) => [azDistricts.containers.length + index, false, null]) },
 };
 const navigation = {
   kind: "ballot-navigation",
@@ -99,8 +89,7 @@ const manual = manualEdgeEntry;
 const fec = requiredRoutineContract("fec-funding");
 const nhRoster = requiredRoutineContract("nh-members");
 const EDGE = {
-  az: "edge-test:ballot:az",
-  nh: "edge-test:ballot:nh",
+  ballots: "edge-test:ballot:national",
   profiles: "edge-test:ballot:profiles",
   corpus: "edge-test:ballot:corpus",
   funding: "edge-test:ballot:fec",
@@ -109,9 +98,9 @@ const EDGE = {
   stateMoney: (state: string) => `edge-test:ballot:money:${state}`,
 };
 const PROMOTED_BALLOT_FAMILIES: Partial<Record<PromotedAuthorityFamily, { value: PromotedFamilyArtifactValue; versionId: string }>> = {
-  "ballot-contests": promotedFamily([absentEdgeEntry("BALLOT_CANDIDACY", "US:state-election-ballots")], "edge-test:general-ballot-absent"),
-  "ballot-az": promotedFamily([manual("az-sos-ballot", azBallot, EDGE.az)], EDGE.az),
-  "ballot-nh": promotedFamily([manual("nh-curated-ballot", nhBallot, EDGE.nh)], EDGE.nh),
+  "ballot-contests": promotedFamily([manual("ballot-contests", { kind: "ballot-contests", ballots: {
+    [ballotElectionKey(azBallot)]: azBallot, [ballotElectionKey(nhBallot)]: nhBallot, [ballotElectionKey(njBallot)]: njBallot,
+  } }, EDGE.ballots)], EDGE.ballots),
   "candidate-profiles": promotedFamily([
     manual("candidate-profiles", profiles, EDGE.profiles),
     absentEdgeEntry(DERIVED_CAMPAIGN_SITES_RECORD_CLASS, DERIVED_CAMPAIGN_SITES_SCOPE),
@@ -228,7 +217,7 @@ globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
 }) as typeof fetch;
 
 /** One cold render: the page, then every async component it returned, called from outside the page. */
-async function renderBallot(zip: string): Promise<{ components: Map<string, number>; text: string; contestIds: Set<string> }> {
+async function renderBallot(zip: string): Promise<{ components: Map<string, number>; text: string; contestIds: Set<string>; candidateIds: Set<string>; sourceUrls: Set<string>; candidateSources: Map<string, string[]> }> {
   clearPromotedReadModelCache();
   databaseReads.length = 0;
   const { default: BallotPage } = await import("../app/ballot/page.tsx");
@@ -238,6 +227,9 @@ async function renderBallot(zip: string): Promise<{ components: Map<string, numb
   const components = new Map<string, number>();
   const text: string[] = [];
   const contestIds = new Set<string>();
+  const candidateIds = new Set<string>();
+  const sourceUrls = new Set<string>();
+  const candidateSources = new Map<string, string[]>();
   // A card hands some sections down inside a plain object prop (the battlecard's
   // `money`, which is `CandidateFunding`), so plain objects are walked too, once each.
   const seen = new WeakSet<object>();
@@ -248,12 +240,23 @@ async function renderBallot(zip: string): Promise<{ components: Map<string, numb
     if (Array.isArray(node)) { for (const child of node) await walk(child); return; }
     const element = node as { $$typeof?: symbol; type?: unknown; props?: Record<string, unknown> };
     if (element.$$typeof === undefined) {
-      if (Object.getPrototypeOf(node) === Object.prototype) for (const value of Object.values(node)) await walk(value);
+      if (Object.getPrototypeOf(node) === Object.prototype) for (const [key, value] of Object.entries(node)) {
+        if (key === "sourceUrl" && typeof value === "string") sourceUrls.add(value);
+        await walk(value);
+      }
       return;
     }
     const contestId = element.props?.["data-contest-id"] ?? (element.props?.attrs as Record<string, unknown> | undefined)?.["data-contest-id"];
     if (typeof contestId === "string") contestIds.add(contestId);
-    if (typeof element.type === "function" && element.type.constructor.name === "AsyncFunction") {
+    const candidateId = element.props?.["data-candidate-target"];
+    if (typeof candidateId === "string") candidateIds.add(candidateId);
+    const contributionId = element.props?.id;
+    if (typeof contributionId === "string" && contributionId.startsWith("candidate-filing:")) {
+      candidateSources.set(contributionId.slice("candidate-filing:".length), (element.props?.sources as { provenance: { sourceUrl: string } }[]).map(source => source.provenance.sourceUrl));
+    }
+    const href = element.props?.href;
+    if (typeof href === "string" && href.startsWith("https://")) sourceUrls.add(href);
+    if (typeof element.type === "function" && (element.type.constructor.name === "AsyncFunction" || ["CandidateSources", "CandidateContactSources", "CandidatePortraitSources"].includes(element.type.name))) {
       const name = element.type.name;
       components.set(name, (components.get(name) ?? 0) + 1);
       await walk(await (element.type as (props: unknown) => Promise<unknown>)(element.props ?? {}));
@@ -262,16 +265,11 @@ async function renderBallot(zip: string): Promise<{ components: Map<string, numb
     for (const value of Object.values(element.props ?? {})) await walk(value);
   };
   await walk(tree);
-  return { components, text: text.join(" "), contestIds };
+  return { components, text: text.join(" "), contestIds, candidateIds, sourceUrls, candidateSources };
 }
 
 const MAP_FAMILIES = ["REGISTRY_RUNTIME_BINDING", "FEDERAL_DIRECTORY", "STATE_LEGISLATOR"];
-/*
- * What a cold /ballot render reads from the database with only the map's families on the edge. The fake
- * database holds no pointer, so the page stops at its missing ballot: the two ballot pointers and the derived
- * campaign sites read beside them.
- */
-const MOVED_FAMILIES = ["BALLOT_CANDIDACY", "BALLOT_CANDIDACY", "CURATED_READER_RECORD"];
+const MOVED_FAMILIES = ["BALLOT_CANDIDACY", "CURATED_READER_RECORD"];
 
 test("React renders the page's async components outside the page's context: they see its edge only when handed it", () => {
   // Next's own compiled React Flight server, with the react-server condition it runs under.
@@ -338,7 +336,6 @@ test("a cold /ballot?zip=85701 with the whole ballot edge makes no database read
   assert.equal(federalDirectoryReadState().metadata?.versionId, FEDERAL_VERSION, "the federal directory was not served from the edge");
   // Each family is the edge's proven copy, read as PROMOTED through its own Reader.
   for (const [what, state, version] of [
-    ["the Arizona ballot", azBallotReadState(), EDGE.az],
     ["the candidate profiles", candidateProfilesReadState(), EDGE.profiles],
     ["the candidate publications", candidateCorpusReadState(), EDGE.corpus],
     ["FEC funding", fundingReadState(), EDGE.funding],
@@ -391,10 +388,103 @@ test("a cold /ballot?zip=03255 (Newbury, New Hampshire) with the whole ballot ed
     LocalFileArtifactStore.prototype.readBytes = originalRead;
   }
   assert.deepEqual(databaseReads, [], "a cold NH /ballot with the whole edge read the database");
-  assert.equal(nhBallotReadState().kind, "PROMOTED");
-  assert.equal(nhBallotReadState().metadata.versionId, EDGE.nh, "the NH ballot was not served from the edge");
+  assert.deepEqual(currentGenericBallotProjection().ballots[ballotElectionKey(nhBallot)], nhBallot);
+  assert.equal(manifest.authorityArtifacts!["ballot-contests"]!.version, EDGE.ballots);
   assert.ok(keys.includes(manifest.stateLegislators!["US-NH"].key), "the requested NH roster came from its jurisdiction edge artifact");
   assert.equal(keys.includes(manifest.stateLegislators!["US-AZ"].key), false, "an NH ballot does not load another state's people");
+});
+
+const nationalReaderCases = [
+  { zip: "85701", contests: 22, candidates: 24,
+    contestHash: "a2b93fbe3e669b28e1a63f193ecff3fe1721c99bc91762e9d0ce5b24a97cea83",
+    heldCandidates: [
+      "ballot-az-pima:governor|Katie Hobbs",
+      "ballot-az-pima:governor|Andy Biggs",
+      "ballot-az-pima:governor|Risa Lombardo",
+      "ballot-az-pima:governor|Teri Ann Hourihan",
+      "ballot-az-pima:secretary-of-state|Adrian Fontes",
+      "ballot-az-pima:secretary-of-state|Alexander Kolodin",
+      "ballot-az-pima:secretary-of-state|Duwayne Collier",
+      "ballot-az-pima:attorney-general|Kris Mayes",
+      "ballot-az-pima:attorney-general|Warren Petersen",
+      "ballot-az-pima:state-treasurer|Nick Mansour",
+      "ballot-az-pima:state-treasurer|Elijah Norton",
+      "ballot-az-pima:superintendent|Teresa Leyba Ruiz",
+      "ballot-az-pima:superintendent|Kimberly Yee",
+      "ballot-az-pima:mine-inspector|Brian Matlock",
+      "ballot-az-pima:mine-inspector|Walter \"Les\" Presmyk",
+      "ballot-az-pima:us-house-7|Adelita Grijalva",
+      "ballot-az-pima:us-house-7|Daniel Francis Butierez Sr.",
+      "ballot-az-pima:state-senate-20|Alma Hernandez",
+      "ballot-az-pima:state-house-20|Sally Ann Gonzales",
+      "ballot-az-pima:state-house-20|Betty Villegas",
+      "ballot-az-pima:corporation-commissioner:hill",
+      "ballot-az-pima:corporation-commissioner:pratte",
+      "ballot-az-pima:corporation-commissioner:thompson"
+],
+    sources: ["https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+      "https://apps.azsos.gov/election/2026/canvass/20260806_Primary_Canvass.pdf", "https://apps.azsos.gov/election/2026/canvass/2026_Primary_Canvass_Pima.pdf"] },
+  { zip: "03255", contests: 13, candidates: 47,
+    contestHash: "b4a7a32dcce7c74631f8eb4aab6e64a00e6d38435a2b4196ec7633a30afee2db",
+    candidateHash: "e0221e2a94941ba60461b34868892bfb533bf36e1576ae1b688396c62ce345d5",
+    sources: ["https://www.sos.nh.gov/sites/g/files/ehbemt561/files/docs/cumulative-filings-7.16.26.pdf"] },
+  { zip: "07960", contests: 22, candidates: 53,
+    contestHash: "d929e1057ff955fc1b67170758a02e176c5421341967c49d4106605f8d30dd68",
+    candidateHash: "3f46869ee22fc55ef7af34ffbf0db8d35ed2dabe8a232e4555fc6a31d658a906",
+    sources: ["https://www.morriscountyclerk.org/files/sharedassets/clerk/v/11/elections/past-results/2026-general-election-candidates-9012026.pdf",
+      "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/12/elections/past-results/2026-general-candidates.pdf",
+      "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/17/elections/past-results/2026-general-school-candidates.pdf"] },
+] as const;
+const idHash = (ids: Set<string>) => createHash("sha256").update([...ids].sort().join("\n")).digest("hex");
+
+for (const expected of nationalReaderCases) test(`BL-30: ${expected.zip} preserves every live contest, candidate and election source on the national ballot edge`, async () => {
+  process.env.WTP_READER_EDGE_DIR = ballotEdgeDir;
+  const rendered = await renderBallot(expected.zip);
+  assert.equal(rendered.contestIds.size, expected.contests, [...rendered.contestIds].join("\n"));
+  assert.equal(idHash(rendered.contestIds), expected.contestHash, [...rendered.contestIds].join("\n"));
+  if ("heldCandidates" in expected) {
+    const canonical = (id: string) => reconciledCandidacyIdForCard(id) ?? id;
+    const subjects = new Set([...rendered.candidateIds].map(canonical));
+    for (const id of expected.heldCandidates) assert.ok(subjects.has(canonical(id)), `The reader lost ${id}`);
+  } else {
+    assert.equal(rendered.candidateIds.size, expected.candidates, [...rendered.candidateIds].join("\n"));
+    assert.equal(idHash(rendered.candidateIds), expected.candidateHash, [...rendered.candidateIds].join("\n"));
+  }
+  for (const source of expected.sources) assert.ok(rendered.sourceUrls.has(source), `The reader lost ${source}`);
+  assert.deepEqual(databaseReads, [], "the national ballot and its cards use the published edge");
+});
+
+test("BL-30: Arizona additions and the corrected Corporation Commission slate each cite their official filing", async () => {
+  process.env.WTP_READER_EDGE_DIR = ballotEdgeDir;
+  const rendered = await renderBallot("85701");
+  const commissioner = azBallot.generalLineup!.contests.find(contest => contest.contestId.endsWith(":corporation-commissioner"))!;
+  const source = "https://storageccec.blob.core.usgovcloudapi.net/public/docs/1509-1497AllDistrictWebEnglishv2.pdf";
+  assert.deepEqual(commissioner.nominees.map(nominee => nominee.name).sort(), ["Clara Pratte", "Jonathon Hill", "Kevin Thompson", "Mike Cease", "Ralph Heap"]);
+  assert.ok(azBallot.candidacies.some(candidate => candidate.id === "ballot-az-pima:corporation-commissioner:myers"), "the superseded filing remains held");
+  assert.equal([...rendered.candidateIds].some(id => /(?:myers|Nicholas Myers)$/.test(id)), false, "the current official slate supersedes the prior Myers filing");
+  for (const nominee of commissioner.nominees) assert.equal(nominee.provenance?.sourceUrl, source);
+  for (const lineup of azBallot.generalLineup!.contests.filter(lineup => rendered.contestIds.has(lineup.contestId))) {
+    for (const nominee of lineup.nominees) {
+      if (!nominee.provenance) continue;
+      const id = `${lineup.contestId}|${nominee.name}`;
+      assert.ok(rendered.candidateIds.has(id), `The reader omitted the verified ${nominee.name} filing`);
+      assert.deepEqual(rendered.candidateSources.get(id), [nominee.provenance.sourceUrl]);
+    }
+  }
+  assert.ok(rendered.text.includes("General-election candidates"));
+  assert.deepEqual(databaseReads, []);
+});
+
+test("BL-30: ZIP 85260 renders the complete official Arizona District 1 House race from the national edge", async () => {
+  process.env.WTP_READER_EDGE_DIR = ballotEdgeDir;
+  const rendered = await renderBallot("85260");
+  const house = azBallot.contests.find(contest => contest.ocdId === "ocd-division/country:us/state:az/cd:1")!;
+  assert.ok(house, "the national Arizona file holds District 1");
+  assert.equal(house.candidateListComplete, true);
+  assert.ok(rendered.contestIds.has(house.id), "the AZ-01 ZIP shows its House race");
+  assert.ok(house.provenance.sourceUrl, "the House race has an official source");
+  assert.ok(rendered.sourceUrls.has(house.provenance.sourceUrl));
+  assert.deepEqual(databaseReads, [], "the added House race uses the published edge");
 });
 
 test("with no edge published, the same render reads its authority from the database: the fallback stays", async () => {

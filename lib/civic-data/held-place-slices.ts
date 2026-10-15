@@ -68,13 +68,18 @@ export async function readPlacePointerSlices<T>(recordClass: CivicDataReadMetada
     value = `jsonb_build_object('roster', ((payload->'roster') - 'divisions' - 'officeholders' - 'unmatched') || jsonb_build_object(
       'divisions', ${members}, 'unmatched', '[]'::jsonb,
       'officeholders', ${array("payload->'roster'->'officeholders'", `x->>'id' IN (SELECT m->>'officeholderId' FROM jsonb_array_elements(${members}) m)`)}))`;
-  } else if (recordClass === "BALLOT_CANDIDACY" || recordClass === "BALLOT_FILING") {
-    const contests = array("payload->'ballot'->'contests'", division);
+  } else if (recordClass === "BALLOT_CANDIDACY") {
+    const contests = array("ballot->'contests'", division);
     const inContest = `x->>'contestId' IN (SELECT c->>'id' FROM jsonb_array_elements(${contests}) c)`;
-    value = `jsonb_build_object('ballot', ((payload->'ballot') - 'contests' - 'candidacies' - 'measures') || jsonb_build_object(
-      'contests', ${contests}, 'candidacies', ${array("payload->'ballot'->'candidacies'", inContest)},
-      'measures', ${array("payload->'ballot'->'measures'", inContest)}),
-      'generalLineup', jsonb_build_object('contests', ${array("payload->'generalLineup'->'contests'", `x->>'contestId' IN (SELECT c->>'id' FROM jsonb_array_elements(${contests}) c)`)}))`;
+    value = `jsonb_build_object('kind', 'ballot-contests', 'ballots', (SELECT COALESCE(jsonb_object_agg(ballot_key,
+      jsonb_build_object('election', ballot->'election', 'contests', ${contests},
+        'candidacies', ${array("ballot->'candidacies'", inContest)}, 'measures', ${array("ballot->'measures'", inContest)},
+        'measureRecords', ${array("ballot->'measureRecords'", inContest)},
+        'generalLineup', jsonb_build_object('contests', ${array("ballot->'generalLineup'->'contests'", inContest)}))), '{}'::jsonb)
+      FROM jsonb_each(CASE WHEN jsonb_typeof(payload->'ballots')='object' AND NOT (payload->'ballots') ? '$civicPayloadPart'
+        THEN payload->'ballots' ELSE '{}'::jsonb END) b(ballot_key,ballot)
+      WHERE EXISTS (SELECT 1 FROM unnest($3::text[]) d(id)
+        WHERE lower(split_part(ballot_key, ':', 1))=substring(d.id from '/state:([a-z]{2})(?:/|$)'))))`;
   } else if (recordClass === "CANDIDATE_PROFILE") {
     value = `jsonb_build_object('cards', jsonb_build_object('cards', ${objectMap("payload->'cards'->'cards'")}),
       'links', jsonb_build_object('links', ${objectMap("payload->'links'->'links'")}))`;

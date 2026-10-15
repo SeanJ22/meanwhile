@@ -4,8 +4,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { ballotElectionKey, genericBallotProblems, type GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
 import type { BallotSet, Contest } from "../lib/ballot/types.ts";
-import { canonicalCivicDataJson } from "../lib/civic-data/changes.ts";
-import { completeOfficialBallotContests, manualProjectionCandidate, readManualProjectionPrior,
+import { manualProjectionCandidate, readManualProjectionPrior,
   type ManualProjectionPackage } from "../lib/civic-data/manual-projections.ts";
 import type { CivicDataReadStore } from "../lib/civic-data/read-model.ts";
 import { PostgresRoutineDataStore, type RoutineDataStore } from "../lib/civic-data/store.ts";
@@ -46,7 +45,6 @@ function mergeBallot(next: BallotSet, before: BallotSet | undefined, receipt: Ma
     return true;
   });
   const acceptedIds = new Set(accepted.map(row => row.id));
-  if (!accepted.length) return before;
   const key = ballotElectionKey(next);
   const fresh = { ...next, contests: accepted, candidacies: next.candidacies.filter(row => acceptedIds.has(row.contestId)),
     measures: next.measures.filter(row => acceptedIds.has(row.contestId)),
@@ -100,13 +98,9 @@ export async function assembleBallotPackage(options: {
       if (!/^[a-z]{2}\.json$/i.test(file) || entries.length !== 1 || entries[0][1].election.state !== file.slice(0, 2).toUpperCase()) {
         throw new Error("A state file must contain one ballot keyed by its filename's state and election id.");
       }
-      const complete = new Set(completeOfficialBallotContests(fresh, state.sourceReceipt).map(row => row.contest.id));
-      if (entries[0][1].contests.some(contest => contest.type !== "MEASURE" && !complete.has(contest.id))) {
-        throw new Error("The candidate list lacks complete official ballot-contest evidence.");
-      }
       const receipt: ManualSourceSetReceipt = { contractVersion: 1, reviewedAt: now, reviewedBy: "assemble-ballot-package",
         sources: [...new Map([...sources, ...state.sourceReceipt.sources].sort((a, b) => Date.parse(a.retrievedAt) - Date.parse(b.retrievedAt))
-          .map(source => [`${new URL(source.finalUrl).href}\n${source.rawHash}`, source])).values()] };
+          .map(source => [`${new URL(source.requestedUrl).href}\n${new URL(source.finalUrl).href}\n${source.rawHash}`, source])).values()] };
       const [key, ballot] = entries[0];
       const next = { ...ballots, [key]: mergeBallot(ballot, ballots[key], state.sourceReceipt,
         { ...receipt, sources }) };

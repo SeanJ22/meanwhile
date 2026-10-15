@@ -5,7 +5,7 @@ import { validateAnswer } from "./validate.ts";
 
 /** A general ballot's field needs no calendars, biographies, money or votes. */
 export function composeBallotOnlyAnswer(ballot: BallotForDivisions, question: string, today: string) {
-  if (ballot.authorityKind !== "GENERAL" || !ballot.set || ballot.loaderFailures.length) return null;
+  if (!ballot.set || ballot.loaderFailures.length) return null;
   const shape = ballotQuestionShape(question, ballot.contests);
   if (!shape) return null;
   const composed = shape.kind === "SUMMARY"

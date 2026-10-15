@@ -1,7 +1,3 @@
-/**
- * Missions split into parts from settings. The pure mapping from checklist family and record class to mission parts,
- * read from the overlay's squad and overridden by the `expansion.missionParts` setting.
- */
 import assert from "node:assert/strict";
 import test from "node:test";
 import { defaultAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
@@ -32,7 +28,7 @@ test("the starting value is the three §8.1 parts, with families from the overla
   for (const family of ["GOV", "MTG", "DOC", "GEO", "REF", "FIN", "PAR"]) assert.equal(part(family), "governments-meetings", family);
   for (const family of ["OFF", "CAN", "CAM", "LEG", "EXE", "PRL"]) assert.equal(part(family), "people-money", family);
   assert.equal(part("ELE"), "ballot");
-  assert.equal(missionPartOf({ recordClass: "BALLOT_FILING" }), "ballot", "measures ride the ballot");
+  assert.equal(missionPartOf({ recordClass: "BALLOT_CONTEST" }), "ballot", "measures ride the ballot");
   assert.deepEqual(DEFAULT_MISSION_PARTS.weightByGovernmentClass, ["governments-meetings"]);
 });
 

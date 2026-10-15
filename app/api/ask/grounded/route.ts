@@ -99,10 +99,10 @@ import { settleFederalVotesRead } from "@/lib/votes/snapshot";
 import { settleFederalKeyVotesRead } from "@/lib/votes/key-votes-projection";
 
 import {
-  settleAzBallotRead,
   settleCandidateCorpusRead,
   settleCandidateProfilesRead,
 } from "@/lib/civic-data/manual-read-models";
+import { readGenericBallotProjection } from "@/lib/ballot/generic-projection";
 import { promotedVersionOrThrow } from "@/lib/civic-data/read-model";
 import { settleOfficeholderStatementsRead } from "@/lib/corpus/data-plane";
 import {
@@ -536,7 +536,7 @@ async function answerWithSettings(request: Request) {
   let authorityEdge: ReaderAuthorityEdgeBundle | null = null;
   if (edgeManifest?.authorityArtifacts) {
     authorityEdge = await timed("authorityEdge", () => ensureReaderAuthorityEdge(edgeManifest, undefined,
-      ballotOnlyHint ? ["ballot-contests", "ballot-az", "ballot-nh"]
+      ballotOnlyHint ? ["ballot-contests"]
         : leanAsk ? READER_MAP_AUTHORITY_FAMILIES
         : deferUnrelatedEvidence ? AUTHORITY_FAMILIES.filter(family => !unrelatedFamilies.has(family)) : AUTHORITY_FAMILIES).catch(() => null))();
     if (authorityEdge) enterReaderAuthorityEdge(authorityEdge);
@@ -635,7 +635,7 @@ async function answerWithSettings(request: Request) {
     azPimaFinance: promotedSource("pima-finance"),
     federalVotes: promotedSource("federal-votes"),
     federalKeyVotes: promotedSource("federal-key-votes"),
-    azBallot: promotedSource("ballot-az"),
+    ballots: promotedSource("ballot-contests"),
     candidateProfiles: promotedSource("candidate-profiles"),
     candidateCorpus: promotedSource("candidate-publications"),
     officeholderStatements: promotedSource("officeholder-statements"),
@@ -664,7 +664,7 @@ async function answerWithSettings(request: Request) {
     () => { deferrableSourcesLoaded = true; return Promise.resolve(); },
     timed("funding", settleFundingRead),
     timed("stateMoney", settleStateMoneyReads),
-    timed("azBallot", async () => promotedVersionOrThrow(await settleAzBallotRead())),
+    timed("ballots", async () => promotedVersionOrThrow(await readGenericBallotProjection())),
     timed("candidateProfiles", settleCandidateProfilesRead),
     timed("candidateCorpus", settleCandidateCorpusRead),
     ...unrelatedPreloads.filter((preload) => !skippedPreloads.includes(preload)),

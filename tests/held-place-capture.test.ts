@@ -21,6 +21,7 @@ import { readPlacePayloadParts } from "../lib/civic-data/place-payload-slices.ts
 import { readPlacePointerSlice } from "../lib/civic-data/held-place-slices.ts";
 import { neonConfig } from "@neondatabase/serverless";
 import { candidateDescriptionQualityIssue } from "../lib/candidates/blurbs.ts";
+import { PGlite } from "@electric-sql/pglite";
 
 const county = "ocd-division/country:us/state:az/county:cochise";
 const neighbour = "ocd-division/country:us/state:az/county:pima";
@@ -184,6 +185,80 @@ test("encoded candidate object maps decode only selected facts and refuse a raci
   assert.ok(fetched.length > 0, "selected long biography was decoded through actual immutable parts");
   assert.ok(!fetched.includes((cards[other] as { $civicPayloadPart: string }).$civicPayloadPart), "unselected biography never crosses the read boundary");
   await assert.rejects(readPlacePayloadParts(query, "CANDIDATE_PROFILE", [scope], [county], [], [key], new Map([[scope, "other-version"]])), /CIVIC_POINTER_CHANGED_DURING_READ/);
+});
+
+for (const encoded of [false, true]) test(`${encoded ? "encoded" : "inline"} national ballot slices preserve selected races and measures without transferring other places`, async t => {
+  const pg = new PGlite();
+  t.after(() => pg.close());
+  await pg.exec(`CREATE TABLE civic_data_promotions (record_class text, scope text, current_version_id text, payload jsonb);
+    CREATE TABLE civic_data_payload_parts (hash text PRIMARY KEY, payload jsonb);`);
+  const scope = "US:state-election-ballots", state = "ocd-division/country:us/state:az", district = `${state}/cd:1`;
+  const details = (label: string) => encoded ? `${label} `.repeat(7000) : label;
+  const contests = [
+    { id: "az-governor", ocdId: state, title: "Governor", provenance },
+    { id: "az-cd1", ocdId: district, title: "U.S. House District 1", provenance },
+    { id: "az-cd2", ocdId: `${state}/cd:2`, title: "OTHER_DISTRICT", provenance },
+    { id: "az-measure", ocdId: county, title: "County question", provenance },
+    { id: "az-other-measure", ocdId: neighbour, title: "OTHER_DISTRICT", provenance },
+  ];
+  const ballot = {
+    election: { id: "2026-general", state: "AZ", name: "General election", date: "2026-11-03" }, contests,
+    candidacies: contests.slice(0, 3).map(contest => ({ id: `${contest.id}:candidate`, contestId: contest.id,
+      givenName: contest.title, familyName: "Candidate", incumbent: true, provenance, biography: details(contest.title) })),
+    measures: contests.slice(3).map(contest => ({ id: `${contest.id}:measure`, contestId: contest.id,
+      questionText: details(contest.title), officialStatement: "Official analysis", provenance })),
+    measureRecords: contests.slice(3).map(contest => ({ id: `${contest.id}:record`, contestId: contest.id,
+      sourceUrl: provenance.sourceUrl, text: details(contest.title) })),
+    generalLineup: { contests: contests.slice(0, 3).map(contest => ({ contestId: contest.id,
+      nominees: [{ name: `${contest.title} Candidate`, portraitUrl: "https://az.gov/portrait.jpg", provenance }] })) },
+  };
+  const payload = { kind: "ballot-contests", ballots: { "AZ:2026-general": ballot,
+    "NH:2026-general": { ...ballot, election: { ...ballot.election, state: "NH", name: "OTHER_STATE" },
+      contests: [{ id: "nh-governor", ocdId: "ocd-division/country:us/state:nh", title: details("OTHER_STATE"), provenance }] } } };
+  const plan = encoded ? partitionCivicPayload(payload) : { value: payload, parts: [] };
+  await pg.query("INSERT INTO civic_data_promotions VALUES ($1,$2,$3,$4)", ["BALLOT_CANDIDACY", scope, "held-v1", JSON.stringify(plan.value)]);
+  for (const part of plan.parts) await pg.query("INSERT INTO civic_data_payload_parts VALUES ($1,$2)", [part.hash, JSON.stringify(part.payload)]);
+  const transferred: string[] = [];
+  let partReads = 0;
+  const query: ReadOnlyQuery = async statements => {
+    const results = [];
+    for (const statement of statements) {
+      if (statement.text.startsWith("SELECT hash,payload")) partReads++;
+      const { rows } = await pg.query<Record<string, unknown>>(statement.text, [...statement.params]);
+      transferred.push(JSON.stringify(rows));
+      results.push(rows);
+    }
+    return results;
+  };
+  const [read] = await readPlacePointerSlices<typeof payload>("BALLOT_CANDIDACY", [scope], [state, district, county], [], [], query);
+  assert.equal(read.kind, "PROMOTED");
+  assert.equal(read.metadata.versionId, "held-v1");
+  assert.equal(read.value?.kind, "ballot-contests");
+  assert.deepEqual(Object.keys(read.value!.ballots), ["AZ:2026-general"]);
+  const selected = read.value!.ballots["AZ:2026-general"];
+  assert.deepEqual(selected.election, ballot.election);
+  const chosen = new Set(["az-governor", "az-cd1", "az-measure"]);
+  const sort = (rows: readonly { id?: string; contestId?: string }[]) => [...rows].sort((a, b) => (a.id ?? a.contestId!).localeCompare(b.id ?? b.contestId!));
+  assert.deepEqual(sort(selected.contests), sort(ballot.contests.filter(row => chosen.has(row.id))));
+  for (const field of ["candidacies", "measures", "measureRecords"] as const) {
+    assert.deepEqual(sort(selected[field]), sort(ballot[field].filter(row => chosen.has(row.contestId))));
+  }
+  assert.deepEqual(sort(selected.generalLineup.contests), sort(ballot.generalLineup.contests.filter(row => chosen.has(row.contestId))));
+  assert.doesNotMatch(transferred.join("\n"), /OTHER_STATE|OTHER_DISTRICT|NH:2026-general/);
+  assert.equal(partReads > 0, encoded, "large selected facts are decoded from immutable parts only for encoded payloads");
+  if (encoded) {
+    let advanced = false;
+    const racing: ReadOnlyQuery = async statements => {
+      const result = await query(statements);
+      if (!advanced) {
+        advanced = true;
+        await pg.query("UPDATE civic_data_promotions SET current_version_id='held-v2'");
+      }
+      return result;
+    };
+    await assert.rejects(readPlacePayloadParts(racing, "BALLOT_CANDIDACY", [scope], [state, district, county], [], [],
+      new Map([[scope, "held-v1"]])), /CIVIC_POINTER_CHANGED_DURING_READ/);
+  }
 });
 
 test("accepted registry slices keep the manifest's immutable version through both payload reads after the live pointer advances", async () => {

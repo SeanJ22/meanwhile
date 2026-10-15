@@ -9,13 +9,12 @@ import { documentsFor, failuresFor } from "../lib/candidates/positions.ts";
 import { statementEvidenceFor } from "../lib/ask/statements.ts";
 import { answerFor, type CandidateCorpus, type CandidateDocument } from "../lib/candidates/corpus.ts";
 import { createHash } from "node:crypto";
-import { installAzBallot, installCandidateCorpus, installOfficeholderStatements, installRegistryAuthority, registryTransferImport, syntheticCandidateCorpus } from "./helpers/promoted-fixtures.ts";
-import { servableAzBallot } from "./helpers/reader-fixtures.ts";
+import { installBallots, syntheticAzBallot, installCandidateCorpus, installOfficeholderStatements, installRegistryAuthority, registryTransferImport, syntheticCandidateCorpus } from "./helpers/promoted-fixtures.ts";
 import { officialCandidacySeatMatches } from "../lib/registry/runtime-data-plane.ts";
 
 await installRegistryAuthority();
 // The governor's certified card, reconciled to the governor's candidacy.
-await installAzBallot(servableAzBallot([{
+await installBallots(syntheticAzBallot([{
   id: "ballot-az-pima:governor",
   title: "Governor",
   candidacies: [{ id: "ballot-az-pima:governor:hobbs-katie", givenName: "Katie", familyName: "Hobbs" }],

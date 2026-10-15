@@ -1,9 +1,13 @@
 import { readGenericBallotProjection, type GenericBallotProjection } from "./generic-projection.ts";
-import { ballotSourcesForDivisions, ballotSourceForTargetId, type RegisteredBallotSource } from "./registry.ts";
-import { contestsForDivisions } from "../sources/ballot-nj-morris/index.ts";
-import type { BallotSet } from "./types.ts";
+import { contestsForDivisions } from "./contests.ts";
+import type { BallotSet, BallotSource } from "./types.ts";
 import type { PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 import { readTranslations, withMeasureTranslations } from "../translate/projection-reader.ts";
+
+export interface RegisteredBallotSource {
+  readonly state: string;
+  readonly source: BallotSource;
+}
 
 export function genericSourcesForDivisions(value: GenericBallotProjection, divisions: readonly string[]): RegisteredBallotSource[] {
   const today = new Date().toISOString().slice(0, 10);
@@ -27,7 +31,6 @@ export function genericSourcesForDivisions(value: GenericBallotProjection, divis
 
 export async function readerBallotSourcesForDivisions(divisions: readonly string[], options: PromotedCivicDataReadOptions = {}): Promise<readonly RegisteredBallotSource[]> {
   if (!divisions.length) return [];
-  const legacy = ballotSourcesForDivisions(divisions);
   const translationsRead = readTranslations(divisions, options).catch(() => []);
   const generalRead = readGenericBallotProjection(options);
   const attach = async (sources: readonly RegisteredBallotSource[]) => {
@@ -37,29 +40,33 @@ export async function readerBallotSourcesForDivisions(divisions: readonly string
   };
   try {
     const read = await generalRead;
-    if (read.kind === "PROMOTED") return attach([...genericSourcesForDivisions(read.value, divisions), ...legacy]);
-    if (read.kind !== "STORE_UNREACHABLE" || read.code === "STORE_NOT_CONFIGURED") return attach(legacy);
+    if (read.kind === "PROMOTED") return attach(genericSourcesForDivisions(read.value, divisions));
+    if (read.kind !== "STORE_UNREACHABLE" || read.code === "STORE_NOT_CONFIGURED") return [];
     throw new Error(read.code);
   } catch (error) {
-    // Expose the failed general authority through each entry point's existing
-    // holding-gap handling; the legacy authority keeps its own failure domain.
     return [{ state: "general ballot", source: { name: "ballot-contests",
       fetch: async () => { throw error; }, normalize: () => { throw error; },
       upsert: async () => { throw error; },
-    } }, ...await attach(legacy)];
+    } }];
   }
 }
 
 export async function readerBallotSourceForTargetId(targetId: string, options: PromotedCivicDataReadOptions = {}): Promise<RegisteredBallotSource | null> {
-  const legacy = ballotSourceForTargetId(targetId);
-  if (legacy) return legacy;
   const read = await readGenericBallotProjection(options);
   if (read.kind !== "PROMOTED") return null;
   for (const ballot of Object.values(read.value.ballots)) {
-    if (ballot.candidacies.some(row => row.id === targetId) || ballot.contests.some(row => row.id === targetId)
+    if (ballot.generalLineup?.contests.some(row => row.nominees.some(nominee => `${row.contestId}|${nominee.name}` === targetId))
+      || ballot.candidacies.some(row => row.id === targetId) || ballot.contests.some(row => row.id === targetId)
       || ballot.measureRecords?.some(row => row.parts.some(part => part.id === targetId))) {
       return genericSourcesForDivisions({ kind: "ballot-contests", ballots: { [ballot.election.id]: ballot } }, ballot.contests.map(row => row.ocdId))[0] ?? null;
     }
   }
   return null;
+}
+
+export async function readerBallotSources(options: PromotedCivicDataReadOptions = {}): Promise<readonly RegisteredBallotSource[]> {
+  const read = await readGenericBallotProjection(options);
+  if (read.kind === "STORE_UNREACHABLE") throw new Error(read.code);
+  if (read.kind !== "PROMOTED") return [];
+  return genericSourcesForDivisions(read.value, Object.values(read.value.ballots).flatMap(ballot => ballot.contests.map(contest => contest.ocdId)));
 }

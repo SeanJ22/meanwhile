@@ -47,13 +47,13 @@ test("assembles a two-contest state with a published prior, skips bad states, an
     await publish(store, packageFor(prior));
     await writeFile(resolve(directory, "tx.json"), JSON.stringify(await fixture()));
     const bad = changeSource(await fixture(), "OH", now);
-    ballotOf(bad).contests[0].candidateListComplete = false;
+    ballotOf(bad).candidacies[0].provenance.sourceUrl = "https://unreceipted.example.gov/candidates";
     await writeFile(resolve(directory, "oh.json"), JSON.stringify(bad));
     await writeFile(resolve(directory, "az.json"), "{");
     const result = await assembleBallotPackage({ directory, store, now });
     assert.deepEqual(result.merged, ["tx.json"]);
     assert.deepEqual(result.skipped.map(row => row.file), ["az.json", "oh.json"]);
-    assert.match(result.skipped[1].reason, /complete official/);
+    assert.match(result.skipped[1].reason, /unreceipted/);
     assert.deepEqual(Object.keys(payloadOf(result.package).ballots).sort(), ["NH:fixture-2026-general", "TX:fixture-2026-general"]);
     assert.deepEqual(payloadOf(result.package).ballots["NH:fixture-2026-general"], ballotOf(prior));
     assert.equal(payloadOf(result.package).ballots["TX:fixture-2026-general"].contests.length, 2);
@@ -86,6 +86,12 @@ test("candidate websites and measure links are values on the cited official reco
   await publish(new MemoryRoutineDataStore(), input);
   ballotOf(state).candidacies[0].provenance.sourceUrl = "https://unreceipted.example.gov/candidates";
   assert.ok(manualProjectionCandidate(input).semantics.violations.some(problem => problem.includes("unreceipted.example.gov")));
+  ballot.candidacies[0].provenance.sourceUrl = ballot.contests[0].provenance.sourceUrl;
+  ballot.measureAnalyses = { generatedAt: now, counts: { measures: 1, fetched: 1, extracted: 1, failed: 0 }, analyses: [{
+    contestId: "fixture-measure", measureTitle: "Fixture measure", analysisUrl: "https://analysis.example.gov/measure.pdf",
+    sourceOrg: "Election authority", retrievedAt: now, contentHash: "c".repeat(64), text: "Official analysis.",
+    extraction: "pdf", extractionNote: null }] };
+  assert.ok(manualProjectionCandidate(input).semantics.violations.some(problem => problem.includes("analysis.example.gov")));
 });
 
 test("only a newer complete list from the same authority replaces candidates and keeps unrelated contests", async () => {
@@ -129,4 +135,28 @@ test("refuses an unavailable published prior", async () => {
   const store = new MemoryRoutineDataStore();
   const broken = { readPromotion: async () => { throw new Error("unavailable"); }, readCandidate: store.readCandidate.bind(store) };
   await assert.rejects(assembleBallotPackage({ store: broken, now }), /BASE_UNAVAILABLE/);
+});
+
+
+test("supplemental contact changes publish without a changed contest list and stale copies cannot erase them", async () => {
+  const scratch = await mkdtemp(resolve(tmpdir(), "ballot-contact-"));
+  try {
+    const state = await fixture(), ballot = ballotOf(state);
+    const contact = { candidacyId: ballot.candidacies[0].id, email: "old@example.test",
+      sourceUrl: ballot.candidacies[0].provenance.sourceUrl!, sourceOrg: state.sourceReceipt.sources[0].publisher,
+      collectedAt: "2026-10-12T00:00:00.000Z" };
+    ballot.contacts = [contact];
+    const store = new MemoryRoutineDataStore();
+    await publish(store, packageFor(state));
+    const successor = structuredClone(state);
+    ballotOf(successor).contacts = [{ ...contact, email: "new@example.test", collectedAt: now }];
+    await writeFile(resolve(scratch, "tx.json"), JSON.stringify(successor));
+    const result = await assembleBallotPackage({ directory: scratch, store, now });
+    assert.deepEqual(result.skipped, []);
+    assert.equal(payloadOf(result.package).ballots[ballotElectionKey(ballot)].contacts?.[0].email, "new@example.test");
+    await publish(store, result.package);
+    await writeFile(resolve(scratch, "tx.json"), JSON.stringify(state));
+    const stale = await assembleBallotPackage({ directory: scratch, store, now });
+    assert.equal(payloadOf(stale.package).ballots[ballotElectionKey(ballot)].contacts?.[0].email, "new@example.test");
+  } finally { await rm(scratch, { recursive: true, force: true }); }
 });

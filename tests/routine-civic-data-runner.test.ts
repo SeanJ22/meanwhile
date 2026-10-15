@@ -297,7 +297,6 @@ test("the standing portfolio invokes data-plane scripts only", () => {
     "nj-state-rollcalls",
     "census-acs-population",
     "census-geography-overlaps",
-    "nj-morris-filing",
     "pima-legistar-outcomes",
     "mesa-legistar-minutes-outcomes",
     "dotgov",
@@ -418,7 +417,6 @@ test("routine release output labels the seven-zero constant as structural, never
     "scripts/nh-gencourt-members.mts",
     "scripts/acs-population-promote.mts",
     "scripts/ingest.ts",
-    "scripts/build-nj-morris-ballot.mts",
     "scripts/fetch-dotgov.mts",
     "scripts/routine-civic-data-runner.mts",
   ]) {
@@ -1446,7 +1444,6 @@ test("every standing source child emits its exact contract id and the supervisor
     ["scripts/fetch-fec.mts", "fec-funding"],
     ["scripts/nh-gencourt-members.mts", "nh-members"],
     ["scripts/acs-population-promote.mts", "census-acs-population"],
-    ["scripts/build-nj-morris-ballot.mts", "nj-morris-filing"],
     ["scripts/legistar-outcomes-ingest.mts", "pima-legistar-outcomes"],
     ["scripts/legistar-insite-minutes-ingest.mts", "mesa-legistar-minutes-outcomes"],
     ["scripts/fetch-dotgov.mts", "dotgov"],

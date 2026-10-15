@@ -1,3 +1,7 @@
+import type { GeneralLineup } from "./general-lineup.ts";
+import type { AnalysesFile } from "./analyses.ts";
+import type { CandidateContact } from "./candidate-contacts.ts";
+import type { AzIdentityRegistry, LineupReconciliation } from "../identity/types.ts";
 import type { MeasureRecord } from "./measure-records.ts";
 import type { OcdId, Provenance } from "../sources/types.ts";
 
@@ -84,6 +88,12 @@ export interface CandidacyRemoval {
 }
 
 export interface BallotSet {
+  generalLineup?: GeneralLineup;
+  measureAnalyses?: AnalysesFile;
+  candidateFilings?: unknown;
+  identityRegistry?: AzIdentityRegistry;
+  lineupReconciliation?: LineupReconciliation;
+  contacts?: readonly CandidateContact[];
   measureRecords?: readonly MeasureRecord[];
   election: Election;
   contests: Contest[];

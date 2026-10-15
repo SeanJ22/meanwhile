@@ -67,10 +67,10 @@ import { allCandidateLinks, campaignLinkIsDerived, linksForCandidacy } from "../
 import { candidateProfileEvidenceFor } from "../lib/ask/candidate-profile.ts";
 import { preloadCandidateEnrichmentAuthorities, candidateEnrichmentHoldings } from "../lib/control-plane/scheduler/providers/candidate-enrichment.ts";
 import { DUARTE, KAPNER, MAYES, TANG_WILLIAMS, committedSubjects, fixture, servedRuntime, sha256, subject } from "./helpers/campaign-sites.ts";
-import { installAzBallot, installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+import { installBallots, installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 
 await installRegistryAuthority();
-await installAzBallot();
+await installBallots();
 
 const ROOT = process.cwd();
 /* Past instants: the store refuses a candidate event later than its own clock. */
@@ -321,10 +321,10 @@ async function profilesStore() {
   };
   const outcome = await processRegisteredManualCandidate(store, "candidate-profiles", manualProjectionCandidate(pkg), T0, null);
   assert.equal(outcome.candidate.state, "PROMOTED");
-  const read = await readPromotedCivicData<CandidateProfilesProjection>("CANDIDATE_PROFILE", "US-AZ+US-NH+US-NJ:2026-supported-candidates", { store, bypassCache: true, now: T2 });
+  const read = await readPromotedCivicData<CandidateProfilesProjection>("CANDIDATE_PROFILE", "US:candidate-profiles", { store, bypassCache: true, now: T2 });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") throw new Error("unreachable");
-  const input = promotedInputRef("CANDIDATE_PROFILE", "US-AZ+US-NH+US-NJ:2026-supported-candidates", read.metadata.versionId, read.value, read.metadata.promotedAt);
+  const input = promotedInputRef("CANDIDATE_PROFILE", "US:candidate-profiles", read.metadata.versionId, read.value, read.metadata.promotedAt);
   assert.equal(input?.kind, "PROMOTED_VERSION");
   if (input?.kind !== "PROMOTED_VERSION") throw new Error("unreachable");
   return { store, profiles: { input, links: read.value.links.links } };
@@ -949,11 +949,11 @@ test("withinWallTime ends a promise that never settles and clears its timer when
 });
 
 test("who already carries a campaign link is read by the door's own rule: a reviewed campaign link on one of the candidacy's Reader keys", () => {
-  const az = JSON.parse(readFileSync(join(ROOT, "data", "states", "az", "ballot", "az-pima-2026.json"), "utf8")) as unknown;
+  const general = JSON.parse(readFileSync(join(ROOT, "data", "ballot", "2026-general", "az.json"), "utf8"));
   const link = { url: "https://www.krismayes.com", verification: "Fetched 2026-08-13: 'Kris Mayes for Arizona Attorney General'.", attemptedAt: "2026-08-13" };
   const official = { url: "https://azgovernor.gov/", verification: "Fetched 2026-08-13: the Governor's office.", attemptedAt: "2026-08-13" };
   const { subjects, linked } = campaignSiteSubjectsFromHoldings({
-    az: { ballot: az } as never, nh: null, nj: null,
+    general,
     profiles: {
       cards: { curatedAt: "2026-09-08", note: "reviewed cards", cards: {}, hunts: [] },
       links: { curatedAt: "2026-09-08", note: "reviewed links", links: { [MAYES_KEY]: { official: null, campaign: link }, "ballot-az-pima:governor:hobbs-katie": { official, campaign: null } }, hunts: [] },
@@ -1202,7 +1202,7 @@ test("national authority website URLs reach the verifier and publish candidate p
       candidacies: [{ id: candidateId, contestId, givenName: "Jane", familyName: "Doe", incumbent: null,
         partyLabel: null, slogan: null, websiteUrl: `https://janedoe${state.toLowerCase()}.example/`, provenance }], measures: [] }];
   }));
-  const holdings = campaignSiteSubjectsFromHoldings({ az: null, nh: null, nj: null, profiles, corpus: { documents: [] } as never,
+  const holdings = campaignSiteSubjectsFromHoldings({ profiles, corpus: { documents: [] } as never,
     failures: [], general: { kind: "ballot-contests", ballots } as never }, T1);
   assert.equal(holdings.subjects.size, 2);
   const pages = Object.fromEntries([...holdings.subjects.values()].flatMap(subject => {

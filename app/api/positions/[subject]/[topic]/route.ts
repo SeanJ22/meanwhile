@@ -6,22 +6,14 @@ import { unifiedCorpusFromHoldings } from "@/lib/corpus/unified";
 import type { StatementCorpus } from "@/lib/corpus/types";
 import type { CandidateCorpus } from "@/lib/candidates/corpus";
 import { getCandidateCorpus } from "@/lib/candidates/positions";
-import {
-  refreshAzBallotFromPromoted,
-  refreshCandidateCorpusFromPromoted,
-} from "@/lib/civic-data/manual-read-models";
+import { refreshCandidateCorpusFromPromoted } from "@/lib/civic-data/manual-read-models";
+import { readGenericBallotProjection } from "@/lib/ballot/generic-projection";
+import { promotedVersionOrThrow } from "@/lib/civic-data/read-model";
 import { refreshOfficeholderStatementsFromPromoted } from "@/lib/corpus/data-plane";
 import { currentOfficeholderStatements } from "@/lib/corpus/data-plane";
 import { refreshFederalDirectoryFromPromoted } from "@/lib/officials/federal-directory-read-model";
 import { refreshRegistryRuntimeFromPromoted } from "@/lib/registry/runtime-read-model";
 import { getRegistryRuntimeReadModel } from "@/lib/registry/runtime-read-model";
-
-/**
- * GET /api/positions/<subject>/<topic>
- *
- * Subject and topic are path segments because both vary the body and every cache keys on the path; the
- * response is also `no-store`. Returns the corpus's own words with URL and read date, or a named gap. No model.
- */
 
 export const runtime = "nodejs";
 
@@ -43,14 +35,14 @@ function currentPositionIdentityKeys(subject: string): Promise<string[]> {
   return positionIdentityKeys(subject, {
     refreshRegistry: () => refreshRegistryRuntimeFromPromoted(),
     refreshFederal: () => refreshFederalDirectoryFromPromoted(),
-    refreshAz: () => refreshAzBallotFromPromoted(),
+    refreshBallot: async () => promotedVersionOrThrow(await readGenericBallotProjection()),
     relatedAuthorities: (id) => {
       const related = getRegistryRuntimeReadModel().officialCandidacies.rows.filter((row) =>
         row.holder.id === id || row.candidacy?.candidacyId === id,
       );
       return {
         federal: related.some((row) => row.holder.authority === "FEDERAL_DIRECTORY"),
-        az: related.some((row) => row.candidacy?.candidacyId.startsWith("ballot-az-")),
+        ballot: related.some((row) => row.candidacy !== null),
       };
     },
     personKeys: verifiedReaderPersonKeys,

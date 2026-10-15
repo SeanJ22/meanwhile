@@ -4,12 +4,12 @@ import { allCandidateCards } from "../lib/ballot/candidate-cards.ts";
 import { allCandidateLinks } from "../lib/ballot/candidate-sites.ts";
 import { candidateProfileEvidenceFor, projectCandidateProfile } from "../lib/ask/candidate-profile.ts";
 import { readerPersonKeys } from "../lib/identity/reader-person.ts";
-import { installAzBallot, installRegistryAuthority, syntheticAzBallot } from "./helpers/promoted-fixtures.ts";
+import { installBallots, installRegistryAuthority, syntheticAzBallot } from "./helpers/promoted-fixtures.ts";
 import { installCandidateProfiles, syntheticCandidateCard, candidateProfilesFor } from "./helpers/reader-fixtures.ts";
 
 await installRegistryAuthority();
 // An Arizona governor contest whose certified lineup reconciles one card and records one party conflict.
-await installAzBallot(syntheticAzBallot([{
+await installBallots(syntheticAzBallot([{
   id: "ballot-az-pima:governor",
   title: "Governor",
   candidacies: [

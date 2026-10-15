@@ -16,7 +16,6 @@ import { projectFecDiscovery } from "../lib/funding/fec-collector.ts";
 import { stateCampaignFinanceCandidate, STATE_CAMPAIGN_FINANCE_SOURCES } from "../lib/funding/data-plane.ts";
 import type { FundingSnapshot, SecondHopCommittee } from "../lib/funding/types.ts";
 import type { StateMoneySnapshot } from "../lib/funding/state-money.ts";
-import { parseNjFiling, type FiledCandidate } from "../lib/hunt/nj-filing.ts";
 import { manualProjectionCandidate, type ManualProjectionPackage } from "../lib/civic-data/manual-projections.ts";
 import { mergeBallotContests } from "../lib/civic-data/worker-ballot-contests.ts";
 import type { GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
@@ -72,9 +71,9 @@ test("R2B money: second-hop facts and cursor-only progress survive the unchanged
 
 test("R2B candidates: only a newer complete official list removes a withdrawn candidacy from its contest", async () => {
   const raw = fixture("nj-filing/morris-clerk-2026-general-candidates-082126.txt");
-  const parsed = parseNjFiling(raw, "Morris County Clerk");
-  assert.equal(parsed.outcome, "EXTRACTED");
-  const names = (parsed.items as FiledCandidate[]).filter(row => row.jurisdiction === "Rockaway Borough" && row.office.includes("BOROUGH COUNCIL"));
+  const state = JSON.parse(readFileSync("data/ballot/2026-general/nj.json", "utf8")) as GenericBallotProjection;
+  const names = Object.values(state.ballots).flatMap(ballot => ballot.candidacies)
+    .filter(row => row.contestId === "ballot-nj-morris:rockaway-borough-member-of-the-borough-council-place-rockaway");
   assert.equal(names.length, 4);
   const sourceUrl = "https://www.morriscountynj.gov/files/sharedassets/public/v/1/departments/county-clerk/2026-general-candidates.pdf";
   const make = (count: number, time: string, complete: boolean): ManualProjectionPackage => {
@@ -82,7 +81,7 @@ test("R2B candidates: only a newer complete official list removes a withdrawn ca
     return { contractId: "ballot-contests", version: time, sourceThrough: time,
       sourceReceipt: { contractVersion: 1, reviewedAt: time, reviewedBy: "fixture replay", sources: [{ requestedUrl: sourceUrl,
         finalUrl: sourceUrl, publisher: "Morris County Clerk", sourceClass: "ELECTION_AUTHORITY", httpStatus: 200,
-        rawHash: sha(raw), retrievedAt: time, reviewedEvidence: "Candidate names parsed from the saved clerk list" }] },
+        rawHash: sha(raw), retrievedAt: time, reviewedEvidence: "Candidate names retained from the saved clerk list in the national state ballot" }] },
       payload: { kind: "ballot-contests", ballots: { "NJ:general": {
         election: { id: "general", state: "NJ", name: "General Election", date: "2026-11-03" },
         contests: [{ id: "council", electionId: "general", ocdId: "ocd-division/country:us/state:nj/place:rockaway",

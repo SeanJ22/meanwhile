@@ -40,11 +40,9 @@ test("all registered manual contracts have an invocation disposition; PRL, votin
   const matrix = manualProducerInvocationMatrix([ordinary], NOW);
   assert.deepEqual(matrix.map(row => row.id), MANUAL_PRODUCTION_SOURCE_CONTRACTS.map(contract => contract.id));
   assert.equal(new Set(matrix.map(row => row.id)).size, matrix.length);
-  assert.equal(matrix.find(row => row.id === "az-sos-ballot")?.commandReady, false,
-    "a manual projection is not source acquisition");
   assert.equal(matrix.find(row => row.id === "az-pima-local-finance")?.commandReady, false,
     "state membership does not establish Pima applicability");
-  for (const id of ["az-sos-ballot", "nh-curated-ballot", "candidate-profiles", "candidate-corpus", "officeholder-statements", "az-official-actions"]) {
+  for (const id of ["candidate-profiles", "candidate-corpus", "officeholder-statements", "az-official-actions"]) {
     assert.equal(matrix.find(row => row.id === id)?.mode, "SCOPED_ADAPTER_OWED", `${id} waits on owed plain code, never on a person's review`);
   }
   assert.equal(matrix.find(row => row.id === "campaign-sites")?.mode, "EXISTING_DERIVED");

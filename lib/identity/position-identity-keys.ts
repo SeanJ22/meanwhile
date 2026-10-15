@@ -1,19 +1,12 @@
 import { ReaderPersonIdentityError } from "./reader-person.ts";
 
-/**
- * A topic chip answers on the first click: every projection the subject's
- * chain can touch is refreshed, then the person keys are resolved. When one
- * could not be read, the subject resolves to its own key and the statements
- * held under it still answer. A refusal is kept only for a conflict found with
- * every needed projection in hand.
- */
 export interface PositionIdentityReaders {
   /** The registry bridge and rosters; the one projection every subject needs. */
   readonly refreshRegistry: () => Promise<unknown>;
   readonly refreshFederal: () => Promise<unknown>;
-  readonly refreshAz: () => Promise<unknown>;
+  readonly refreshBallot: () => Promise<unknown>;
   /** Registry rows tying this subject to a holder or candidacy, after the refresh. */
-  readonly relatedAuthorities: (subject: string) => { readonly federal: boolean; readonly az: boolean };
+  readonly relatedAuthorities: (subject: string) => { readonly federal: boolean; readonly ballot: boolean };
   readonly personKeys: (subject: string) => string[];
 }
 
@@ -23,17 +16,17 @@ export async function positionIdentityKeys(subject: string, readers: PositionIde
   } catch {
     return [subject];
   }
-  let related: { federal: boolean; az: boolean };
+  let related: { federal: boolean; ballot: boolean };
   try {
     related = readers.relatedAuthorities(subject);
   } catch {
     return [subject];
   }
   const federal = subject.startsWith("congress:") || related.federal;
-  const az = subject.startsWith("ballot-az-") || subject.startsWith("statewide:az/") || related.az;
+  const ballot = subject.startsWith("ballot-az-") || subject.startsWith("statewide:az/") || related.ballot;
   const refreshes = await Promise.allSettled([
     federal ? readers.refreshFederal() : Promise.resolve(),
-    az ? readers.refreshAz() : Promise.resolve(),
+    ballot ? readers.refreshBallot() : Promise.resolve(),
   ]);
   const incomplete = refreshes.some((result) => result.status === "rejected");
   try {

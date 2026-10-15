@@ -15,7 +15,7 @@ import { buildCensusDistrictEdge } from "../lib/census-geography/district-edge.t
 import type { BuiltDataset } from "../lib/census-geography/dataset.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { codeOf } from "./read-code.ts";
-import { contestsForDivisions } from "../lib/sources/ballot-nj-morris/index.ts";
+import { contestsForDivisions } from "../lib/ballot/contests.ts";
 import { azBallot, electionSelection } from "./helpers/ballot-district-fixtures.ts";
 
 const HERE = dirname(fileURLToPath(import.meta.url));

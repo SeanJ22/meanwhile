@@ -8,7 +8,7 @@ export const VOTING_SITES_CONTRACT = {
   id: "voting-sites",
   sourceId: "voting-sites",
   recordClass: "VOTING_SITE",
-  scope: "US-AZ+US-NH+US-NJ:2026-general:supported-jurisdictions",
+  scope: "US:voting-sites",
   parserVersion: "official-voting-sites/4",
 } as const;
 

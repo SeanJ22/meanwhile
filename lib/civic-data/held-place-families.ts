@@ -1,3 +1,4 @@
+import { GENERIC_BALLOT_SCOPE, type GenericBallotProjection } from "../ballot/generic-projection.ts";
 import type { BallotSet } from "../ballot/types.ts";
 import type { VotingSitesFile } from "../ballot/voting-sites.ts";
 import { VOTING_SITES_CONTRACT } from "../ballot/voting-sites-data-plane.ts";
@@ -72,13 +73,9 @@ export async function readHeldPlaceFamilies(divisionIds: readonly string[], opti
     ? readPlacePointerSlice<T>(recordClass, scope, divisionIds, [], targets)
     : readPromotedCivicData<T>(recordClass, scope, options);
   const states = new Set(divisionIds.flatMap(id => /\/state:([^/]+)/.exec(id)?.[1].toUpperCase() ?? []));
-  const ballotContracts = ["az-sos-ballot", "nh-curated-ballot"] as const;
-  const manualBallots = ballotContracts.map(id => requiredManualProductionContract(id))
-    .filter(contract => states.has(contract.scope.slice(3, 5)));
   const stateTargets = OFFICIAL_STATE_LEGISLATOR_TARGETS.filter(target => states.has(target.state));
   const moneyScopes = (Object.keys(STATE_CAMPAIGN_FINANCE_SOURCES) as StateCampaignFinanceJurisdiction[])
     .filter(state => states.has(state)).map(state => STATE_CAMPAIGN_FINANCE_SOURCES[state].scope);
-  const nj = requiredRoutineContract("nj-morris-filing");
   const filings = requiredManualProductionContract("official-filings");
   const navigation = requiredManualProductionContract("ballot-navigation");
   const fec = requiredRoutineContract("fec-funding");
@@ -88,17 +85,16 @@ export async function readHeldPlaceFamilies(divisionIds: readonly string[], opti
   ]);
   const rosters = [value(federal)?.roster, ...legislators.map(read => value(read)?.roster)].filter((row): row is OfficeholderSet => row !== undefined);
   targets.push(...rosters.flatMap(roster => roster.divisions.filter(row => divisionIds.includes(row.ocdId)).map(row => row.officeholderId)));
-  const [ballots, njBallot, votingSites, funding, money, filingRead, navigationRead] = await Promise.all([
-    Promise.all(manualBallots.map(contract => read<{ ballot: BallotSet; generalLineup?: { contests: readonly LineupContest[] } }>("BALLOT_CANDIDACY", contract.scope))),
-    states.has("NJ") ? read<{ ballot: BallotSet }>(nj.recordClass, nj.scope) : null,
+  const [ballots, votingSites, funding, money, filingRead, navigationRead] = await Promise.all([
+    read<GenericBallotProjection>("BALLOT_CANDIDACY", GENERIC_BALLOT_SCOPE),
     read<VotingSitesFile>(VOTING_SITES_CONTRACT.recordClass, VOTING_SITES_CONTRACT.scope),
     read<FundingSnapshot>(fec.recordClass, fec.scope),
     Promise.all(moneyScopes.map(scope => read<StateMoneySnapshot>("STATE_CAMPAIGN_FINANCE", scope))),
     read<CuratedReaderProjection>(filings.recordClass, filings.scope),
     read<CuratedReaderProjection>(navigation.recordClass, navigation.scope),
   ]);
-  const heldBallots = [...ballots, ...(njBallot ? [njBallot] : [])].flatMap(read => value(read)?.ballot ?? []);
-  const candidateLineups = ballots.flatMap(read => value(read)?.generalLineup?.contests ?? []);
+  const heldBallots = Object.values(value(ballots)?.ballots ?? {}).filter(ballot => states.has(ballot.election.state));
+  const candidateLineups = heldBallots.flatMap(ballot => ballot.generalLineup?.contests ?? []);
   const plan = candidatePlan(divisionIds, heldBallots, candidateLineups);
   const readerKeys = [...new Set([...plan.values()].flatMap(row => [row.candidacyId, ...row.readerKeys]))];
   const profiles = requiredManualProductionContract("candidate-profiles"), corpus = requiredManualProductionContract("candidate-corpus");

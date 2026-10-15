@@ -1,13 +1,3 @@
-/**
- * Which side of its deploy a migration belongs on.
- *   - expand: purely additive; apply BEFORE the code that uses it ships.
- *   - contract: narrows what the database accepts (dropped column or default,
- *     new constraint, NOT NULL with no fill); apply only AFTER the code that
- *     no longer needs the old shape is serving.
- * The phase is derived from the SQL and checked against MIGRATION_PHASES. A
- * migration with no entry there is a failure, never a default.
- */
-
 /** Which side of its deploy a migration is safe on. */
 export type MigrationPhase = "expand" | "contract";
 
@@ -179,6 +169,8 @@ export function phaseFromSql(sql: string): { phase: MigrationPhase; signals: Con
 
 /** Hand-written, one entry per committed migration; the suite checks each against phaseFromSql. */
 export const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
+  "BL-30_candidate_scopes": { phase: "expand", why: "Copies preserved candidate profiles, publications and voting sites into national scopes before their readers switch." },
+  "BL-30_retire_candidate_scopes": { phase: "contract", why: "Retires the replaced ballot-related pointers after national readers are serving, retaining immutable source versions." },
   "0000_square_stryfe": {
     phase: "expand",
     why: "Creates meetings, agenda_documents and search_log with their indexes. Nothing existed before it.",

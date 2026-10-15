@@ -1,8 +1,4 @@
-import { readerBallotSourceForTargetId } from "./reader-sources.ts";
-import {
-  BALLOT_SOURCES,
-  type RegisteredBallotSource,
-} from "./registry.ts";
+import { readerBallotSourceForTargetId, readerBallotSources, type RegisteredBallotSource } from "./reader-sources.ts";
 import { getGeneralLineup } from "./general-lineup.ts";
 
 interface Candidacy {
@@ -36,7 +32,7 @@ async function addSingleCandidateTargets(
 export async function getSingleCandidateTargetIds(targetId?: string): Promise<Set<string>> {
   const ids = new Set<string>();
   const exact = targetId === undefined ? null : await readerBallotSourceForTargetId(targetId);
-  const sources = targetId === undefined ? BALLOT_SOURCES : exact ? [exact] : [];
+  const sources = targetId === undefined ? await readerBallotSources() : exact ? [exact] : [];
   for (const source of sources) await addSingleCandidateTargets(ids, source);
 
   return ids;

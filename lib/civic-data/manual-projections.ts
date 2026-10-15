@@ -10,16 +10,11 @@ import { publicRecordIssue } from "./public-record-contract.ts";
 import { governmentBudgetIssue } from "./government-budget-contract.ts";
 
 import { genericBallotProblems, type GenericBallotProjection } from "../ballot/generic-projection.ts";
-import type { BallotSet } from "../ballot/types.ts";
 import { readerCandidateProfiles } from "../ballot/candidate-reader-privacy.ts";
-import { measureRecordIssue, seedMeasureRecords, type MeasureRecord } from "../ballot/measure-records.ts";
 import type { CandidateCardData } from "../ballot/candidate-cards.ts";
 import type { CandidateLinks, RecordedHunt } from "../ballot/candidate-sites.ts";
-import type { GeneralLineup } from "../ballot/general-lineup.ts";
-import type { AnalysesFile } from "../ballot/analyses.ts";
 import type { CandidateCorpus } from "../candidates/corpus.ts";
 import type { StatementCorpus } from "../corpus/types.ts";
-import type { AzIdentityRegistry, LineupReconciliation } from "../identity/types.ts";
 import {
   everydayRoutingProjectionFromRecords,
   everydayRoutingProjectionProblems,
@@ -59,8 +54,6 @@ export const MANUAL_PROJECTION_CONTRACT_IDS = [
   "government-budgets",
   "campaign-finance",
   "ballot-contests",
-  "az-sos-ballot",
-  "nh-curated-ballot",
   "candidate-profiles",
   "candidate-corpus",
   "officeholder-statements",
@@ -74,21 +67,6 @@ export const MANUAL_PROJECTION_CONTRACT_IDS = [
   "meeting-body-crosswalk",
 ] as const;
 export type ManualProjectionContractId = (typeof MANUAL_PROJECTION_CONTRACT_IDS)[number];
-
-export type MeasureAnalysesProjection = AnalysesFile;
-
-export interface AzBallotProjection {
-  readonly ballot: BallotSet & { readonly formatVersion?: number; readonly curatedAt?: string };
-  readonly generalLineup: GeneralLineup;
-  readonly measureAnalyses: MeasureAnalysesProjection;
-  readonly candidateFilings: unknown;
-  readonly identityRegistry: AzIdentityRegistry;
-  readonly lineupReconciliation: LineupReconciliation;
-}
-
-export interface NhBallotProjection {
-  readonly ballot: BallotSet & { readonly formatVersion?: number; readonly curatedAt?: string };
-}
 
 export interface CandidateProfilesProjection {
   readonly cards: {
@@ -116,8 +94,6 @@ export interface CuratedReaderProjection {
 export type ManualProjectionPayload =
   | TranslationProjection
   | GenericBallotProjection
-  | AzBallotProjection
-  | NhBallotProjection
   | CandidateProfilesProjection
   | CandidateCorpus
   | StatementCorpus
@@ -193,8 +169,10 @@ function ballotProvenanceUrls(value: unknown): Set<string> {
   if (Array.isArray(value)) return new Set(value.flatMap(row => [...ballotProvenanceUrls(row)]));
   const row = object(value);
   if (!row) return new Set();
-  const url = string(object(row.provenance)?.sourceUrl);
-  return new Set([...(url ? [url] : []), ...Object.values(row).flatMap(item => [...ballotProvenanceUrls(item)])]);
+  const citations = [string(row.sourceUrl), string(row.candidacySourceUrl), string(row.citesUrl), string(row.analysisUrl),
+    ...rows(row, "sources").map(source => string(source.url)), string(object(row.canvass)?.url), string(object(row.retrieval)?.url),
+    ...(Array.isArray(row.sourceUrls) ? row.sourceUrls.filter((url): url is string => typeof url === "string") : [])];
+  return new Set([...citations.filter(Boolean), ...Object.values(row).flatMap(item => [...ballotProvenanceUrls(item)])]);
 }
 
 /** An official page's linked lookup is a fact on that page, not another acquired source. */
@@ -632,12 +610,7 @@ function plainEnglishProjection(payload: ManualProjectionPayload): BuiltProjecti
 function genericBallotProjection(payload: ManualProjectionPayload): BuiltProjection {
   const value = payload as GenericBallotProjection;
   const ballots = Object.values(value?.ballots ?? {});
-  const records = ballots.flatMap(ballot => [
-    ...ballot.contests.map(record => ({ key: `contest:${record.id}`, record })),
-    ...ballot.candidacies.map(record => ({ key: `candidacy:${record.id}`, record })),
-    ...ballot.measures.map(record => ({ key: `measure:${record.id}`, record })),
-    ...(ballot.measureRecords ?? []).map(record => ({ key: `measure-record:${record.contestId}`, record })),
-  ]);
+  const records = civicRecordsFor("BALLOT_CANDIDACY", value);
   return { payload, records, identities: ballots.flatMap(ballot => [
     ...ballot.contests.map(row => ({ subjectId: row.id, jurisdiction: `US-${ballot.election.state}`,
       identifiers: { contest_id: row.id }, matchBasis: "EXACT_SCOPED_ID" as const, ambiguous: false })),
@@ -652,109 +625,6 @@ function genericBallotProjection(payload: ManualProjectionPayload): BuiltProject
     consumerChecks: [{ consumer: "generic state/election ballot Reader", passed: records.length > 0 && genericBallotProblems(value).length === 0,
       detail: `${ballots.length} state/election ballot(s) with independently verified contests and candidates.` }],
     factKind: "sourced official ballot contests and candidates" };
-}
-
-function ballotProjection(
-  contractId: "az-sos-ballot" | "nh-curated-ballot",
-  payload: ManualProjectionPayload,
-): BuiltProjection {
-  const original = payload as AzBallotProjection | NhBallotProjection;
-  if (original.ballot) {
-    payload = { ...original, ballot: seedMeasureRecords(original.ballot,
-      "measureAnalyses" in original ? original.measureAnalyses.analyses : []) };
-  }
-  const held = object(payload);
-  const ballot = object(held?.ballot);
-  const contests = rows(ballot, "contests");
-  const candidacies = rows(ballot, "candidacies");
-  const contestIds = contests.map((row) => string(row.id));
-  const candidacyIds = candidacies.map((row) => string(row.id));
-  const measureRecords = rows(ballot, "measureRecords");
-  const jurisdiction = contractId === "az-sos-ballot" ? "US-AZ" : "US-NH";
-  const records: CivicRecordMember[] = [
-    ...contests.map((record) => ({ key: `contest:${string(record.id)}`, record })),
-    ...candidacies.map((record) => ({ key: `candidacy:${string(record.id)}`, record })),
-    ...measureRecords.map((record) => ({ key: `measure-record:${string(record.contestId)}`, record })),
-  ];
-  const identities: IdentityEvidence[] = [
-    ...contests.map((row) => ({
-      subjectId: string(row.id),
-      jurisdiction,
-      identifiers: { contest_id: string(row.id) },
-      matchBasis: "OFFICIAL_ID" as const,
-      ambiguous: false,
-    })),
-    ...candidacies.map((row) => ({
-      subjectId: string(row.id),
-      jurisdiction,
-      identifiers: { candidacy_id: string(row.id), contest_id: string(row.contestId) },
-      matchBasis: "EXACT_SCOPED_ID" as const,
-      ambiguous: false,
-    })),
-  ];
-  const violations = [
-    ...duplicateProblems(measureRecords.map(row => string(row.contestId)), "Measure record"),
-    ...measureRecords.flatMap(row => {
-      const issue = measureRecordIssue(row as unknown as MeasureRecord);
-      const contest = contests.find(contest => contest.id === row.contestId && contest.type === "MEASURE");
-      return issue ? [issue] : contest ? [] : ["A measure record names no exact measure contest."];
-    }),
-    ...duplicateProblems(contestIds, "Contest"),
-    ...duplicateProblems(candidacyIds, "Candidacy"),
-    ...(candidacies.some((row) => !contestIds.includes(string(row.contestId)))
-      ? ["A candidacy names no exact retained contest."]
-      : []),
-  ];
-  if (contractId === "az-sos-ballot") {
-    const lineup = object(held?.generalLineup);
-    const analyses = object(held?.measureAnalyses);
-    const identity = object(held?.identityRegistry);
-    const reconciliation = object(held?.lineupReconciliation);
-    const identityCandidates = rows(identity, "candidates");
-    const identityIds = identityCandidates.map((row) => string(row.identityId));
-    const reconciliationRows = rows(reconciliation, "rows");
-    records.push(
-      ...identityCandidates.map((record) => ({ key: `identity:${string(record.identityId)}`, record })),
-      ...reconciliationRows.map((record) => ({ key: `lineup:${string(record.cardKey)}`, record })),
-    );
-    identities.push(
-      ...identityCandidates.map((row) => ({
-        subjectId: string(row.identityId),
-        jurisdiction,
-        identifiers: { identity_id: string(row.identityId) },
-        matchBasis: "OFFICIAL_ID_CROSSWALK" as const,
-        ambiguous: false,
-      })),
-      ...reconciliationRows.map((row) => ({
-        subjectId: string(row.cardKey),
-        jurisdiction,
-        identifiers: { candidacy_id: string(row.canonicalCandidacyId), contest_id: string(row.contestId) },
-        matchBasis: "OFFICIAL_ID_CROSSWALK" as const,
-        ambiguous: string(row.outcome) === "AMBIGUOUS",
-      })),
-    );
-    violations.push(
-      ...duplicateProblems(identityIds, "Arizona identity"),
-      ...(rows(lineup, "contests").length === 0 ? ["The Arizona package has no certified-lineup records."] : []),
-      ...(rows(analyses, "analyses").length === 0 ? ["The Arizona package has no retained measure-analysis records."] : []),
-      ...(identityCandidates.length === 0 ? ["The Arizona package has no exact candidate identity registry."] : []),
-      ...(reconciliationRows.length === 0 ? ["The Arizona package has no exact certified-lineup reconciliation."] : []),
-      ...(object(held?.candidateFilings) === null ? ["The Arizona package has no Secretary of State filing corpus."] : []),
-    );
-  }
-  return {
-    payload,
-    records,
-    identities,
-    missingRequiredFields: contests.length && candidacies.length ? [] : ["ballot.contests/candidacies"],
-    violations,
-    schemaVersion: `${contractId}:1`,
-    consumerChecks: [
-      { consumer: "/ballot and /api/ballot/scope", passed: contests.length > 0 && candidacies.length > 0, detail: `${contests.length} contests and ${candidacies.length} candidacies.` },
-      { consumer: "Ask ballot inventory", passed: candidacies.every((row) => contestIds.includes(string(row.contestId))), detail: "Every candidacy resolves to one retained contest." },
-    ],
-    factKind: contractId === "az-sos-ballot" ? "reviewed Arizona ballot, filing, analysis, and identity projection" : "reviewed New Hampshire ballot candidacy projection",
-  };
 }
 
 function profileProjection(payload: ManualProjectionPayload): BuiltProjection {
@@ -1009,8 +879,6 @@ export function manualProjectionCandidate(
     ? plainEnglishProjection(payload)
     : input.contractId === "ballot-contests"
     ? genericBallotProjection(payload)
-    : input.contractId === "az-sos-ballot" || input.contractId === "nh-curated-ballot"
-    ? ballotProjection(input.contractId, payload)
     : input.contractId === "candidate-profiles"
       ? profileProjection(payload)
       : input.contractId === "candidate-corpus"

@@ -1,64 +1,3 @@
-/**
- * TWO PROVING OBLIGATIONS — one federal, one genuinely local.
- *
- * A domain model that only ever runs against its own fixtures proves nothing.
- * These two obligations are attached to REAL contests on a REAL committed
- * ballot, `data/states/az/ballot/az-pima-2026.json`, election `az-2026-11-03`, and every
- * fact in them is either read from a committed artifact at call time or cited to
- * the file it was read from. Where a value is unknown it is null and the
- * obligation stays OPEN. Nothing here invents a committee, an amount or a
- * filing.
- *
- * ## (a) FEDERAL — `ballot-az-pima:us-house-6`
- *
- * U.S. Representative, District 6. Four candidacies on the certified list, and
- * the federal money for all four is ALREADY ACQUIRED: `data/fec/fec-2026.json`,
- * the committed FEC snapshot written by `scripts/fetch-fec.mts` and read by
- * `lib/funding/snapshot.ts`. This obligation reads that snapshot rather than
- * transcribing it, so a refreshed snapshot cannot leave a stale number here.
- *
- * It still does not close, and the reason is exactly the model's point:
- * the source registry records OpenFEC as "WIRED for committee TOTALS only", and
- * **independent expenditures (FEC Schedule E) are not read at all** — held
- * behind `D23`, the election-law counsel review of the
- * 52 U.S.C. § 30111(a)(4) sale-or-use restriction. Money spent ABOUT this race
- * by groups that gave these campaigns nothing is unmeasured, so the contest's
- * money is not fully described. That is an OPEN route with a named next move,
- * not an absence.
- *
- * ## (b) LOCAL ARIZONA — `ballot-az-pima:prop-423`
- *
- * Proposition 423, the Vail Unified School District No. 20 budget override
- * continuation, on the same ballot, consolidated with the November 3 general
- * election under A.R.S. § 15-481(P). It is genuinely local: a school-district
- * question, in one district, inside Pima County.
- *
- * **Its filing authority is resolved by statute, and the answer is not the
- * obvious one.** A.R.S. § 16-928 (read 2026-08-26 from `azleg.gov`, quoted in
- * `states/az/sources.md`) routes school-district elections to *the county
- * officer in charge of elections* — NOT to the Secretary of State, and not to
- * the school district. The authority's level is COUNTY while the office's level
- * is SCHOOL_DISTRICT, and no amount of portal-hunting produces that answer.
- *
- * **Nothing of its money is acquired**, and every route is recorded with the
- * disposition it actually has:
- *
- *   - See The Money answers HTTP 200 with an SPA shell (rung 2), and **rung 6,
- *     the live browser, is recorded as NOT YET WALKED** — `lib/funding/
- *     state-vocabulary.ts`, the AZ refusal, collected 2026-08-19.
- *   - The Pima County filing officer's own page is walked (HTTP 200) and its
- *     filings are not extracted.
- *   - The Pima County EasyVote portal is **not walked**.
- *   - **Whether an EasyVote tenant list exists is UNANSWERED as of 2026-08-26**,
- *     rowed as `AZ21` — the vendor question that would turn one county into many.
- *   - The anonymous FTP reference tables are walked and counted and **NOT YET
- *     WIRED** (`AZ19`).
- *
- * This obligation MUST stay OPEN. Absence is not completion, and a session with
- * no further avenue says "I have run out of ideas" — a claim about the session —
- * never "this is not published", which would be a claim about a government.
- */
-
 import type { Disposition, PermissionState, TransportState } from "../../workstate/types.ts";
 import { createWorkItem, type WorkItem } from "../work-item.ts";
 import { fundingForTarget } from "../../funding/snapshot.ts";
@@ -82,14 +21,12 @@ export const PROJECT = "we-the-people";
  * proving obligations below remain the rollout way back until live acceptance. */
 export { ballotFinanceObligations, ballotFinanceScheduledId, type BallotFinanceInputs } from "./ballot-obligations.ts";
 
-/** The Pima body id this project already uses for the county's governing body. */
 export const PIMA_BODY_ID = "ocd-division/country:us/state:az/county:pima#governing";
 
 export const AZ_PIMA_ELECTION_ID = "az-2026-11-03";
 export const AZ_PIMA_ELECTION_DATE = "2026-11-03";
-export const BALLOT_CITATION = "data/states/az/ballot/az-pima-2026.json";
+export const BALLOT_CITATION = "data/ballot/2026-general/az.json";
 
-/** The four candidacies certified for AZ-06, as `data/states/az/ballot/az-pima-2026.json` lists them. */
 export const US_HOUSE_6_CANDIDACIES: readonly { candidacyId: string; displayName: string }[] = [
   { candidacyId: "ballot-az-pima:us-house-6:mendoza-joanna", displayName: "JoAnna Mendoza" },
   { candidacyId: "ballot-az-pima:us-house-6:bah-iman", displayName: "Iman Bah" },
@@ -140,8 +77,6 @@ const TERMINAL: readonly Disposition[] = ["INGESTED", "WALKED_NO_YIELD", "NOT_AP
 export function openRoutesOf(routes: readonly PlannedRoute[]): readonly PlannedRoute[] {
   return routes.filter((r) => !TERMINAL.includes(r.disposition));
 }
-
-/* ── (a) The federal obligation ───────────────────────────────────────────── */
 
 export const FEDERAL_ROUTES: readonly PlannedRoute[] = [
   plannedRoute({
@@ -204,13 +139,6 @@ export const FEDERAL_ROUTES: readonly PlannedRoute[] = [
   }),
 ];
 
-/**
- * Per-candidate coverage for AZ-06, DERIVED from the committed snapshot.
- *
- * Read rather than transcribed on purpose: a hand-copied `latestThroughDate`
- * survives a snapshot refresh and becomes a false statement about a named
- * person's money. `deps.fundingForTarget` defaults to the real reader.
- */
 export function federalPerCandidateCoverage(deps?: {
   fundingForTarget?: (targetKey: string) => FundingCandidate | null;
 }): readonly CandidateFinanceCoverage[] {
@@ -224,14 +152,7 @@ export function federalPerCandidateCoverage(deps?: {
 
   return rows.map(({ c, funding }) => {
     const through = funding?.totals?.coverageEndDate ?? null;
-    /**
-     * The one legitimate asymmetry in this contest, and it is a property of the
-     * FILINGS rather than of how hard we looked: two of the four filers' most
-     * recent reports cover through a later date than the other two's. The value
-     * is read from the snapshot's own `coverageEndDate`, which is the filer's
-     * own report period, so the explanation cites the artifact it came from.
-     */
-    const asymmetryExplanation =
+        const asymmetryExplanation =
       through !== null && newestThrough !== undefined && through < newestThrough
         ? {
             reason:
@@ -283,9 +204,6 @@ export function federalObligation(
     electionDate: AZ_PIMA_ELECTION_DATE,
     jurisdictionOcdId: "ocd-division/country:us/state:az/cd:6",
     officeLevel: "FEDERAL",
-    // DERIVED from the resolution, never typed. A hand-written "RESOLVED" here
-    // would keep claiming the custodian is known after the registry stopped
-    // saying so.
     filingRegimeState: resolution.status,
     filingRegimeId: resolution.regimeId,
     candidateUniverse: US_HOUSE_6_CANDIDACIES.map((c) => c.candidacyId),
@@ -321,40 +239,7 @@ export function federalObligation(
       requiresValidation: true,
       requiresAudit: true,
       requiresCompleteDenominator: true,
-      /**
-       * **NULL, AND THAT IS A DECISION RATHER THAN AN OMISSION.**
-       *
-       * `acceptableDispositions` narrows the inherited route floor: a floor
-       * route landing outside the named set refuses completion with
-       * `DISPOSITION_OUTSIDE_CONTRACT`. The governed default — the
-       * `OPEN_DISPOSITIONS` / `TERMINAL_DISPOSITIONS` split in
-       * `lib/workstate/types.ts` — is the correct list HERE, and the tempting
-       * narrowing is a trap.
-       *
-       * The narrowing that suggests itself is "a finance obligation may not
-       * close on `WALKED_NO_YIELD`", so that the FEC answering with nothing
-       * cannot end the hunt. It is refused, because it asserts something this
-       * repository's law does not say anywhere: that a route which REACHED its
-       * publisher and honestly found nothing does not count. The opposite is
-       * already settled law here — `isRenderable` in `lib/funding/state-money.ts`
-       * renders `NO_REPORTS_ON_FILE`, a sourced and dated absence, precisely
-       * because a walked route that comes back empty is a FINDING, while a
-       * `LEAD` is not. Refusing `WALKED_NO_YIELD` would demote that finding back
-       * to a gap and make a truthful record unreportable.
-       *
-       * **What actually protects a local race from federal silence is not this
-       * field.** It is that the FEC route is never the only route on the floor,
-       * and that `fecAbsenceIsNotClosure` has no input that closes a contest:
-       * `coverageState` is the literal `"OPEN"` and `closesTheContest` the
-       * literal `false`. That invariant lives in the types and in test #12,
-       * where it cannot be lost by editing a list.
-       *
-       * **What would justify a narrowing here:** a rule, statute or proven
-       * invariant stating that a specific disposition cannot terminate a
-       * campaign-finance route. None exists. Until one does, tightening this
-       * list would be the model legislating.
-       */
-      acceptableDispositions: null,
+            acceptableDispositions: null,
     },
     now,
   });
@@ -370,13 +255,6 @@ export function federalObligation(
   };
 }
 
-/* ── (b) The Arizona local obligation ─────────────────────────────────────── */
-
-/**
- * Every route to Vail USD's ballot-measure money, with the disposition each one
- * actually has as of the date it was walked. Four of the six have never been
- * attempted, and saying so is the point of the record.
- */
 export const AZ_LOCAL_ROUTES: readonly PlannedRoute[] = [
   plannedRoute({
     routeId: "AZ_SEETHEMONEY_PLAIN_FETCH",
@@ -494,11 +372,7 @@ export const AZ_LOCAL_ROUTES: readonly PlannedRoute[] = [
 export function arizonaLocalObligation(now: string): CampaignFinanceObligation {
   const contestId = "ballot-az-pima:prop-423";
 
-  /**
-   * THE STATUTORY ROUTING, exercised rather than asserted. A.R.S. § 16-928 sends
-   * a SCHOOL DISTRICT election to the COUNTY officer in charge of elections.
-   */
-  const resolution = resolveFilingAuthority({
+    const resolution = resolveFilingAuthority({
     jurisdiction: "AZ",
     officeLevel: "SCHOOL_DISTRICT",
     contestId,
@@ -513,22 +387,13 @@ export function arizonaLocalObligation(now: string): CampaignFinanceObligation {
     knownLocalRoutes: AZ_LOCAL_ROUTES,
   });
 
-  /**
-   * A ballot-measure contest has no candidacies, so the owed subject is the
-   * MEASURE COMMITTEE universe — and that universe is not known. The gap is
-   * carried explicitly rather than as an empty list that would read as zero.
-   */
-  const coverage: CampaignFinanceCoverage = {
+    const coverage: CampaignFinanceCoverage = {
     contestId,
     contestTitle: "Proposition 423: Vail Unified School District budget override continuation",
     electionId: AZ_PIMA_ELECTION_ID,
     electionDate: AZ_PIMA_ELECTION_DATE,
     jurisdictionOcdId: "ocd-division/country:us/state:az/school_district:vail_unified_district",
     officeLevel: "SCHOOL_DISTRICT",
-    // DERIVED, and here it is the § 16-928 routing rule that answers: a
-    // SCHOOL_DISTRICT contest routes to the COUNTY officer, and the rule id
-    // travels with the coverage record so a later session can see WHICH rule
-    // was applied rather than re-deriving it.
     filingRegimeState: resolution.status,
     filingRegimeId: resolution.regimeId,
     candidateUniverse: [],
@@ -575,39 +440,7 @@ export function arizonaLocalObligation(now: string): CampaignFinanceObligation {
       requiresValidation: true,
       requiresAudit: true,
       requiresCompleteDenominator: true,
-      /**
-       * **NULL, AND THAT IS A DECISION RATHER THAN AN OMISSION.**
-       *
-       * The narrowing considered and refused here is different from the federal
-       * one, and closer to justified: A.R.S. § 16-928 makes the county officer
-       * in charge of elections THE filing officer for a school-district
-       * election, so a session could never honestly mark that officer's route
-       * `NOT_APPLICABLE` while the statute stands. Naming
-       * `["INGESTED", "WALKED_NO_YIELD"]` would encode exactly that.
-       *
-       * It is refused because **`acceptableDispositions` governs the WHOLE
-       * inherited floor, and this floor is not uniform.** Two of its seven
-       * routes can legitimately land on `NOT_APPLICABLE`:
-       *
-       *   - `EASYVOTE_TENANT_LIST` asks whether the vendor publishes a tenant
-       *     list at all. "It does not" is an ANSWER to that question, not a
-       *     failure to ask it.
-       *   - `PIMA_COUNTY_SCHOOL_SUPERINTENDENT` is recorded above as explicitly
-       *     "not the § 16-928 filing officer" — a route to knowing which
-       *     committees exist, which a register found elsewhere can retire.
-       *
-       * A list that is right about two routes and wrong about two others is not
-       * a tightening; it is a mis-aimed one, and it would refuse completion on
-       * an honest record. The safe expression of the statutory point is
-       * PER-ROUTE, and the contract has no per-route form today.
-       *
-       * **What would justify a narrowing here:** a per-route disposition
-       * contract, or a floor consisting only of routes the statute names as the
-       * custodian. Either is a real change to `CompletionContract` and belongs
-       * in `lib/control-plane/`, not in a list written from this file. Recorded
-       * as a cross-workstream request rather than worked around.
-       */
-      acceptableDispositions: null,
+            acceptableDispositions: null,
     },
     now,
   });

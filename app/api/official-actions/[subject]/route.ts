@@ -1,6 +1,7 @@
 import { officialActionsForTarget, type ReaderOfficialActions } from "@/lib/officials/reader-actions";
 import { refreshExecutiveActionsFromPromoted } from "@/lib/officials/executive-actions";
-import { refreshAzBallotFromPromoted } from "@/lib/civic-data/manual-read-models";
+import { readGenericBallotProjection } from "@/lib/ballot/generic-projection";
+import { promotedVersionOrThrow } from "@/lib/civic-data/read-model";
 import { refreshFederalDirectoryFromPromoted } from "@/lib/officials/federal-directory-read-model";
 import {
   getRegistryRuntimeReadModel,
@@ -11,13 +12,13 @@ export const runtime = "nodejs";
 
 export interface OfficialActionTargetPlan {
   readonly applies: boolean;
-  readonly azIdentity: boolean;
+  readonly ballotIdentity: boolean;
 }
 
 export interface OfficialActionHoldingReaders {
   readonly identityPlan: (subject: string) => Promise<OfficialActionTargetPlan>;
   readonly actions: () => Promise<void>;
-  readonly azIdentity: () => Promise<void>;
+  readonly ballotIdentity: () => Promise<void>;
   readonly answer: (subject: string) => ReaderOfficialActions;
 }
 
@@ -28,7 +29,7 @@ export type OfficialActionHoldingSettlement =
 /** Scope known from the target itself, safe when the identity store is down. */
 export function directOfficialActionTargetPlan(subject: string): OfficialActionTargetPlan {
   const applies = subject.startsWith("statewide:az/") || subject.startsWith("ballot-az-");
-  return { applies, azIdentity: subject.startsWith("ballot-az-") && subject.includes("|") };
+  return { applies, ballotIdentity: subject.startsWith("ballot-az-") && subject.includes("|") };
 }
 
 async function currentOfficialActionTargetPlan(subject: string): Promise<OfficialActionTargetPlan> {
@@ -45,7 +46,7 @@ async function currentOfficialActionTargetPlan(subject: string): Promise<Officia
   if (applies && related.some((row) => row.holder.authority === "FEDERAL_DIRECTORY")) {
     await refreshFederalDirectoryFromPromoted();
   }
-  return { applies, azIdentity: direct.azIdentity };
+  return { applies, ballotIdentity: direct.ballotIdentity };
 }
 
 const emptyAnswer = (subjectId: string): ReaderOfficialActions => ({
@@ -61,7 +62,7 @@ const emptyAnswer = (subjectId: string): ReaderOfficialActions => ({
 const defaultReaders: OfficialActionHoldingReaders = {
   identityPlan: currentOfficialActionTargetPlan,
   actions: async () => { await refreshExecutiveActionsFromPromoted(); },
-  azIdentity: async () => { await refreshAzBallotFromPromoted(); },
+  ballotIdentity: async () => { promotedVersionOrThrow(await readGenericBallotProjection()); },
   answer: officialActionsForTarget,
 };
 
@@ -88,15 +89,15 @@ export async function settleOfficialActionHoldingAnswer(
     return { kind: "HOLDING_UNAVAILABLE", unavailableAuthorities: ["PERSON_IDENTITY"] };
   }
 
-  const [actionResult, azIdentityResult] = await Promise.allSettled([
+  const [actionResult, ballotIdentityResult] = await Promise.allSettled([
     Promise.resolve().then(() => readers.actions()),
-    plan.azIdentity
-      ? Promise.resolve().then(() => readers.azIdentity())
+    plan.ballotIdentity
+      ? Promise.resolve().then(() => readers.ballotIdentity())
       : Promise.resolve(null),
   ]);
   const unavailableAuthorities: string[] = [];
   if (actionResult.status === "rejected") unavailableAuthorities.push("AZ_OFFICIAL_ACTION");
-  if (plan.azIdentity && azIdentityResult.status === "rejected") unavailableAuthorities.push("AZ_CANDIDACY_IDENTITY");
+  if (plan.ballotIdentity && ballotIdentityResult.status === "rejected") unavailableAuthorities.push("BALLOT_CANDIDACY_IDENTITY");
   if (unavailableAuthorities.length) return { kind: "HOLDING_UNAVAILABLE", unavailableAuthorities };
   try {
     return { kind: "ANSWER", answer: readers.answer(subject) };

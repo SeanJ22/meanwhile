@@ -1,13 +1,13 @@
 import assert from "node:assert/strict";
 import test from "./helpers/playbooks.ts";
-import { readFileSync } from "node:fs";
-import { installAzBallot, installFederalVotes, installRegistryAuthority, installStateLegislators, syntheticAzBallot } from "./helpers/promoted-fixtures.ts";
+import { azBallot } from "./helpers/ballot-district-fixtures.ts";
+import { installBallots, installFederalVotes, installRegistryAuthority, installStateLegislators } from "./helpers/promoted-fixtures.ts";
 
 await installRegistryAuthority();
 await installFederalVotes();
 installStateLegislators("US-AZ");
 /* The committed Arizona ballot file as the promoted ballot rows, so the reader's divisions reach a ballot. */
-await installAzBallot({ ...syntheticAzBallot(), ballot: JSON.parse(readFileSync("data/states/az/ballot/az-pima-2026.json", "utf8")) });
+await installBallots(azBallot);
 
 import { bodyNameFromQuestion, lexicalQuestionShape, lexicalReading, unheldNamedBodyQuestion } from "../lib/ask/lexical-reading.ts";
 import {
@@ -384,7 +384,8 @@ test("ROUTE: what is on my ballot is read from the words and composed from the c
   assert.deepEqual(made, [], "neither rung called a model");
   assert.equal(payload.trace.interpretation.why, "ballot-shape");
   assert.equal(payload.trace.synthesis.why, "composed-from-ballot-records");
-  assert.equal(payload.mode, "GROUNDED_COMPOSED");
+  assert.equal(payload.mode, "STRUCTURED_GROUNDED");
+  assert.equal(payload.trace.sourcesLoaded, "ESSENTIAL");
   assert.match(payload.answer ?? "", /^Your ballot for the .+ on .+ has \d+ races? and \d+ ballot measures?\./);
   assert.ok(payload.records.some((record) => record.kind === "CONTEST"), "each contest is a record the reader is shown");
 });

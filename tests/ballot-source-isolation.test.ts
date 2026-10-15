@@ -6,14 +6,10 @@ import * as React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import ts from "typescript";
 import { CardGapContribution } from "../components/ui/card-gap-context.tsx";
-import { GENERIC_BALLOT_SCOPE } from "../lib/ballot/generic-projection.ts";
+import { currentGenericBallotProjection, GENERIC_BALLOT_SCOPE } from "../lib/ballot/generic-projection.ts";
 
 import { getCandidateTargetIds } from "../lib/ballot/candidate-targets.ts";
-import {
-  BALLOT_SOURCES,
-  ballotSourceForTargetId,
-  ballotSourcesForDivisions,
-} from "../lib/ballot/registry.ts";
+import { readerBallotSourceForTargetId, readerBallotSourcesForDivisions } from "../lib/ballot/reader-sources.ts";
 import { getSingleCandidateTargetIds } from "../lib/ballot/uncontested.ts";
 import { loadBallotForDivisions } from "../lib/ask/server-sources.ts";
 import { displayFor } from "../lib/questionnaire/candidacy-display.ts";
@@ -23,43 +19,20 @@ import {
   settleBallotAuxiliaryPreloads,
   type BallotAuxiliaryFamily,
 } from "../lib/ballot/auxiliary-preloads.ts";
-import { readNhBallotProjection } from "../lib/civic-data/manual-read-models.ts";
-import type { NhBallotProjection } from "../lib/civic-data/manual-projections.ts";
-import { installAbsent, installAzBallot, installManualValue, installRegistryAuthority, promotedFixtureBundle, syntheticAzBallot } from "./helpers/promoted-fixtures.ts";
+import { installBallots, installRegistryAuthority, promotedFixtureBundle, syntheticAzBallot } from "./helpers/promoted-fixtures.ts";
 import { manualEdgeEntry } from "./helpers/promoted-edge-entry.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
+import { nhBallot } from "./helpers/reader-fixtures.ts";
 import { POST as ballotScope } from "../app/api/ballot/scope/route.ts";
 import { resolveZip } from "../lib/geo/zcta.ts";
 
-// The AZ and NH ballots' promoted pointers, each a small synthetic ballot
-// holding one statewide governor contest with one candidacy.
-// Make the separate generic source explicitly absent: a configured workspace
-// database must not add an unrelated store failure to this isolation test.
-installAbsent("BALLOT_CANDIDACY", GENERIC_BALLOT_SCOPE);
-const azBallot = syntheticAzBallot([{
-  id: "ballot-az-pima:governor",
-  title: "Governor",
+await installBallots(syntheticAzBallot([{
+  id: "ballot-az-pima:governor", title: "Governor",
   candidacies: [{ id: "ballot-az-pima:governor:candidate-a", givenName: "Alex", familyName: "Candidate" }],
-}]);
-await installAzBallot({ ...azBallot, ballot: { ...azBallot.ballot, formatVersion: 1 } });
-const NH_PROVENANCE = { sourceUrl: "https://example.test/nh-ballot", sourceOrg: "Synthetic test ballot", collectedAt: "2026-09-25", verifiedAt: null };
-installManualValue<NhBallotProjection>("nh-curated-ballot", {
-  ballot: {
-    formatVersion: 1,
-    election: { id: "nh-2026-general-test", date: "2026-11-03", name: "2026 General Election (test)", state: "NH" },
-    contests: [{
-      id: "ballot-nh-merrimack:governor", electionId: "nh-2026-general-test", ocdId: "ocd-division/country:us/state:nh",
-      divisionVintage: "2026", title: "Governor", type: "CANDIDACY", voteFor: 1, termYears: 2, scopeNote: null, provenance: NH_PROVENANCE,
-    }],
-    candidacies: [{
-      id: "ballot-nh-merrimack:governor:candidate-b", contestId: "ballot-nh-merrimack:governor", familyName: "Candidate", givenName: "Blair",
-      partyLabel: null, slogan: null, incumbent: null, websiteUrl: null, provenance: NH_PROVENANCE,
-    }],
-    measures: [],
-    absences: [],
-  },
-});
-await readNhBallotProjection();
+}]), nhBallot([{
+  id: "ballot-nh-merrimack:governor", title: "Governor", ocdId: "ocd-division/country:us/state:nh",
+  candidacies: [{ id: "ballot-nh-merrimack:governor:candidate-b", givenName: "Blair", familyName: "Candidate" }],
+}]));
 
 const DIVISIONS = {
   az: ["ocd-division/country:us/state:az"],
@@ -73,73 +46,63 @@ const TARGETS = {
   nj: "ballot-nj-morris:us-senate:booker",
 } as const;
 
-test("ballot authority selection happens from exact state or target identity before a read", () => {
-  for (const state of ["az", "nh", "nj"] as const) {
-    assert.deepEqual(
-      ballotSourcesForDivisions(DIVISIONS[state]).map((entry) => entry.state),
-      [state],
-    );
-    assert.equal(ballotSourceForTargetId(TARGETS[state])?.state, state);
+test("national ballot selection returns only the requested state or exact held target", async () => {
+  for (const state of ["az", "nh"] as const) {
+    assert.deepEqual((await readerBallotSourcesForDivisions(DIVISIONS[state])).map(entry => entry.state), [state]);
+    assert.equal((await readerBallotSourceForTargetId(TARGETS[state]))?.state, state);
+    const held = await loadBallotForDivisions(DIVISIONS[state]);
+    assert.equal(held.set?.election.state, state.toUpperCase());
+    assert.deepEqual(held.loaderFailures, []);
+    assert.ok((await getCandidateTargetIds(TARGETS[state])).has(TARGETS[state]));
+    assert.ok((await getSingleCandidateTargetIds(TARGETS[state])).has(TARGETS[state]));
+    assert.ok(await displayFor(TARGETS[state]));
   }
-  assert.deepEqual(ballotSourcesForDivisions(["ocd-division/country:us"]), []);
-  assert.equal(ballotSourceForTargetId("invented:target"), null);
+  assert.deepEqual(await readerBallotSourcesForDivisions(DIVISIONS.nj), []);
+  assert.deepEqual(await readerBallotSourcesForDivisions(["ocd-division/country:us"]), []);
+  assert.equal(await readerBallotSourceForTargetId("invented:target"), null);
 });
 
-test("a planted NJ authority failure cannot take down AZ or NH Readers and stays explicit for NJ", async () => {
-  const nj = BALLOT_SOURCES.find(({ state }) => state === "nj")!;
-  const original = nj.source.fetch;
-  let njReads = 0;
-  try {
-    nj.source.fetch = async () => {
-      njReads += 1;
-      throw new Error("PLANTED_NJ_CANONICAL_AUTHORITY_UNAVAILABLE");
-    };
-
-    const az = await loadBallotForDivisions(DIVISIONS.az);
-    const nh = await loadBallotForDivisions(DIVISIONS.nh);
-    assert.equal(az.set?.election.state, "AZ");
-    assert.equal(nh.set?.election.state, "NH");
-    assert.deepEqual(az.loaderFailures, []);
-    assert.deepEqual(nh.loaderFailures, []);
-    assert.equal(njReads, 0, "an AZ/NH Reader opened the unrelated NJ authority");
-
-    assert.ok((await getCandidateTargetIds(TARGETS.az)).has(TARGETS.az));
-    assert.ok((await getCandidateTargetIds(TARGETS.nh)).has(TARGETS.nh));
-    assert.ok(await displayFor(TARGETS.az));
-    assert.equal(njReads, 0, "exact AZ/NH target validation opened NJ");
-
-    const requested = await loadBallotForDivisions(DIVISIONS.nj);
-    assert.equal(requested.set, null);
-    assert.deepEqual(requested.loaderFailures, ["nj"]);
-    await assert.rejects(
-      () => getCandidateTargetIds(TARGETS.nj),
-      /PLANTED_NJ_CANONICAL_AUTHORITY_UNAVAILABLE/,
-    );
-    await assert.rejects(
-      () => getSingleCandidateTargetIds(TARGETS.nj),
-      /PLANTED_NJ_CANONICAL_AUTHORITY_UNAVAILABLE/,
-    );
-    await assert.rejects(
-      () => displayFor(TARGETS.nj),
-      /PLANTED_NJ_CANONICAL_AUTHORITY_UNAVAILABLE/,
-    );
-  } finally {
-    nj.source.fetch = original;
-  }
+test("a failed national ballot is an explicit gap for each state and exact target", async () => {
+  await readerBallotSourcesForDivisions(DIVISIONS.az);
+  assert.ok(Object.keys(currentGenericBallotProjection().ballots).length);
+  const failed = manualEdgeEntry("ballot-contests", { kind: "malformed-ballot-fixture", ballots: {} }, "test:failed-national-ballot");
+  const edge = promotedFixtureBundle({ promoted: new Map([[`BALLOT_CANDIDACY:${GENERIC_BALLOT_SCOPE}`, failed]]) });
+  await withReaderAuthorityEdge(edge, async () => {
+    for (const state of ["az", "nh", "nj"] as const) {
+      const result = await loadBallotForDivisions(DIVISIONS[state]);
+      assert.equal(result.set, null);
+      assert.deepEqual(result.loaderFailures, ["general ballot"]);
+      assert.throws(() => currentGenericBallotProjection(), /National ballot projection is UNREAD/);
+      await assert.rejects(() => getCandidateTargetIds(TARGETS[state]), /GENERIC_BALLOT_INVALID/);
+      await assert.rejects(() => getSingleCandidateTargetIds(TARGETS[state]), /GENERIC_BALLOT_INVALID/);
+      await assert.rejects(() => displayFor(TARGETS[state]), /GENERIC_BALLOT_INVALID/);
+    }
+  });
 });
 
-test("ballot scope skips a failed national source and returns the requested state's independently held ballot", async () => {
+test("an edge-only read failure clears the previously read national ballot", async () => {
+  await readerBallotSourcesForDivisions(DIVISIONS.az);
+  assert.ok(Object.keys(currentGenericBallotProjection().ballots).length);
+  await withReaderAuthorityEdge({ edgeOnly: true }, async () => {
+    const result = await loadBallotForDivisions(DIVISIONS.az);
+    assert.equal(result.set, null);
+    assert.deepEqual(result.loaderFailures, ["general ballot"]);
+    assert.throws(() => currentGenericBallotProjection(), /National ballot projection is UNREAD/);
+  });
+});
+
+test("ballot scope reports an unavailable national ballot without using another authority", async () => {
   await installRegistryAuthority();
   const failed = manualEdgeEntry("ballot-contests", { kind: "malformed-ballot-fixture", ballots: {} }, "test:failed-national-ballot");
   const edge = promotedFixtureBundle({ promoted: new Map([[`BALLOT_CANDIDACY:${GENERIC_BALLOT_SCOPE}`, failed]]) });
-  for (const [zip, expected] of [["85701", "ballot-az-pima:governor"], ["03255", "ballot-nh-merrimack:governor"]]) {
+  for (const zip of ["85701", "03255"]) {
     const location = resolveZip(zip);
     assert.ok(location.ok);
     const response = await withReaderAuthorityEdge(edge, () => ballotScope(new Request("https://fixture.test/api/ballot/scope", {
       method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(location.centroid),
     })));
-    assert.equal(response.status, 200, `${zip}'s state ballot survives the failed national source`);
-    assert.deepEqual(await response.json(), { ok: true, contestIds: [expected] });
+    assert.equal(response.status, 503);
+    assert.deepEqual(await response.json(), { ok: false });
     assert.match(response.headers.get("cache-control") ?? "", /no-store/);
   }
 });

@@ -29,7 +29,7 @@ test("staging ordinary child carries readable exact mutation authority and keeps
     WTP_CONTROL_PLANE_DATABASE_URL: "postgresql://local:local@staging.invalid/control",
     WTP_SANCTIONED_WRITE: "routine-civic-data-promotion" };
   for (const [capability, contract, sourceId, recordClass, scope] of [
-    ["MANUAL_CONTRACT", "voting-sites", "voting-sites", "VOTING_SITE", "US-AZ+US-NH+US-NJ:2026-general:supported-jurisdictions"],
+    ["MANUAL_CONTRACT", "voting-sites", "voting-sites", "VOTING_SITE", "US:voting-sites"],
     ["ROUTINE_CONTRACT", "fec-funding", "fec-open-api", "FEC_FUNDING", "federal-supported"],
   ] as const) {
     const child = admittedRuntimeChildEnvironment({ parentEnv, capability, contract });

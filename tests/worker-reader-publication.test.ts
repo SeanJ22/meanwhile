@@ -481,7 +481,7 @@ test("normal complete candidate workers publish their whole contest into general
   assert.ok(general);
   assert.equal(general.source.normalize(await general.source.fetch()).candidacies.length,2);
   const curatedAt=f.h.now();
-  const inventory=candidateEnrichmentUniversesFromHoldings({az:null,nh:null,nj:null,general:read.value,profiles:{cards:{curatedAt,note:"Offline empty enrichment",cards:{},hunts:[]},links:{curatedAt,note:"Offline empty enrichment",links:{},hunts:[]}},corpus:{formatVersion:1,fetchedAt:curatedAt,attempted:0,documents:[],failures:[]},failures:[]},f.h.now());
+  const inventory=candidateEnrichmentUniversesFromHoldings({general:read.value,profiles:{cards:{curatedAt,note:"Offline empty enrichment",cards:{},hunts:[]},links:{curatedAt,note:"Offline empty enrichment",links:{},hunts:[]}},corpus:{formatVersion:1,fetchedAt:curatedAt,attempted:0,documents:[],failures:[]},failures:[]},f.h.now());
   const universe=inventory.universes[ballot.election.state.toLowerCase()];
   assert.equal(universe?.candidacies.length,2);
   assert.deepEqual(new Set(universe!.candidacies.flatMap(row=>row.pilotIds)),new Set(ballot.candidacies.map(row=>row.id)));

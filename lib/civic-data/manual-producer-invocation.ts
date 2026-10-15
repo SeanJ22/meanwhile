@@ -17,8 +17,6 @@ const RULES = {
   "registry-runtime-bindings": { mode: "VERIFIED_WORKER_RESULT", reason: "Normal worker roster publication runs once it meets the section 3 standard; the audit follows and repairs what it finds." },
   "congress-rollcalls": { mode: "DIRECT_SOURCE", reason: "National recent roll calls acquired from their registered public source." },
   "federal-key-votes": { mode: "DIRECT_SOURCE", reason: "Reviewed national key-vote selection has an executable official acquisition." },
-  "az-sos-ballot": { mode: "SCOPED_ADAPTER_OWED", state: "AZ", reason: "Plain code that builds the Arizona ballot from its saved official source is still owed; the projection command takes a prepared input." },
-  "nh-curated-ballot": { mode: "SCOPED_ADAPTER_OWED", state: "NH", reason: "Plain code that builds the New Hampshire ballot from its saved official source is still owed; the projection command takes a prepared input." },
   "candidate-profiles": { mode: "SCOPED_ADAPTER_OWED", reason: "Plain code that builds candidate profiles from their saved source records is still owed; the projection command takes a prepared input." },
   "candidate-corpus": { mode: "SCOPED_ADAPTER_OWED", reason: "Plain code that builds the candidate publication corpus from saved primary publications is still owed; the projection command takes a prepared input." },
   "officeholder-statements": { mode: "SCOPED_ADAPTER_OWED", reason: "Plain code that builds attributed statements from saved primary publications is still owed; the projection command takes a prepared input." },

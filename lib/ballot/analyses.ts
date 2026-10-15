@@ -1,4 +1,4 @@
-import { currentAzBallotProjection } from "../civic-data/manual-read-models.ts";
+import { currentGenericBallotProjection } from "./generic-projection.ts";
 
 export interface MeasureAnalysis {
   contestId: string;
@@ -19,7 +19,7 @@ export interface AnalysesFile {
 }
 
 export function getMeasureAnalyses(): AnalysesFile | null {
-  return currentAzBallotProjection().measureAnalyses;
+  return Object.values(currentGenericBallotProjection().ballots).find(ballot => ballot.measureAnalyses)?.measureAnalyses ?? null;
 }
 
 /** Null when the ballot projection holding it cannot be read in this process. */

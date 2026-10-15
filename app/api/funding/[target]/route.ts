@@ -6,7 +6,7 @@ import {
   stateMoneyForTarget,
 } from "@/lib/funding/state-snapshot";
 import type { StateCampaignFinanceJurisdiction } from "@/lib/funding/data-plane";
-import { settleAzBallotRead } from "@/lib/civic-data/manual-read-models";
+import { readGenericBallotProjection } from "@/lib/ballot/generic-projection";
 import { getRegistryRuntimeReadModel } from "@/lib/registry/runtime-read-model";
 import { settleFederalDirectoryRead, settleRegistryAuthorityReads } from "@/lib/registry/server";
 import { ensureReaderAuthorityEdge, READER_FUNDING_AUTHORITY_FAMILIES, readReaderManifest } from "@/lib/meetings/edge-serving";
@@ -16,21 +16,13 @@ import { mayUseTestFixture, promotedVersionOrThrow, type CivicDataReadMetadata }
 
 export { directFundingTargetPlan, type FundingTargetPlan } from "@/lib/funding/target-authorities";
 
-/**
- * GET /api/funding/<app-side id> — the funding answer for one exact target.
- * The target is selected before a store is opened. Federal, state, and
- * identity holdings settle independently; one failed authority cannot erase
- * a source-linked answer from another and no tracked data is a runtime
- * fallback.
- */
-
 export const runtime = "nodejs";
 
 export interface FundingHoldingReaders {
   readonly identityPlan: (target: string) => Promise<FundingTargetPlan>;
   readonly federal: () => Promise<{ kind: "PROMOTED" | "BOOTSTRAP"; metadata: CivicDataReadMetadata }>;
   readonly state: (state: StateCampaignFinanceJurisdiction) => Promise<{ kind: "PROMOTED" | "BOOTSTRAP"; metadata: CivicDataReadMetadata | null }>;
-  readonly azIdentity: () => Promise<void>;
+  readonly ballotIdentity: () => Promise<void>;
   readonly answer: (
     target: string,
     contestId: string | undefined,
@@ -81,7 +73,7 @@ async function currentFundingTargetPlan(target: string, timings?: ReadTimings): 
       || related.some((row) => row.holder.authority === "FEDERAL_DIRECTORY")
       || (candidacy !== null && FEDERAL_CONTEST.test(candidacy.contestId)),
     state,
-    azIdentity: state === "AZ" && target.includes("|"),
+    ballotIdentity: target.includes("|"),
   };
 }
 
@@ -108,7 +100,7 @@ function defaultReadersFor(timings?: ReadTimings): FundingHoldingReaders {
       }
       throw new Error(result.detail);
     }),
-    azIdentity: () => timedRead(timings, "azBallot", async () => { promotedVersionOrThrow(await settleAzBallotRead()); }),
+    ballotIdentity: () => timedRead(timings, "ballots", async () => { promotedVersionOrThrow(await readGenericBallotProjection()); }),
     answer: (target, contestId, selection) => campaignMoneyApiAnswer(target, contestId, selection),
   };
 }
@@ -119,7 +111,7 @@ const defaultReaders: FundingHoldingReaders = defaultReadersFor();
 export interface DirectFundingReads {
   readonly federal?: ReturnType<FundingHoldingReaders["federal"]>;
   readonly state?: ReturnType<FundingHoldingReaders["state"]>;
-  readonly azIdentity?: ReturnType<FundingHoldingReaders["azIdentity"]>;
+  readonly ballotIdentity?: ReturnType<FundingHoldingReaders["ballotIdentity"]>;
 }
 
 /**
@@ -131,7 +123,7 @@ export function startDirectFundingReads(direct: FundingTargetPlan, readers: Fund
   return {
     ...(direct.federal ? { federal: observed(Promise.resolve().then(() => readers.federal())) } : {}),
     ...(direct.state ? { state: observed(Promise.resolve().then(() => readers.state(direct.state!))) } : {}),
-    ...(direct.azIdentity ? { azIdentity: observed(Promise.resolve().then(() => readers.azIdentity())) } : {}),
+    ...(direct.ballotIdentity ? { ballotIdentity: observed(Promise.resolve().then(() => readers.ballotIdentity())) } : {}),
   };
 }
 
@@ -153,26 +145,26 @@ export async function settleFundingHoldingAnswer(
   const statePromise = plan.state
     ? (early.state && plan.state === direct.state ? early.state : Promise.resolve().then(() => readers.state(plan.state!)))
     : Promise.resolve(null);
-  const azIdentityPromise = plan.azIdentity
-    ? early.azIdentity ?? Promise.resolve().then(() => readers.azIdentity())
+  const ballotIdentityPromise = plan.ballotIdentity
+    ? early.ballotIdentity ?? Promise.resolve().then(() => readers.ballotIdentity())
     : Promise.resolve(null);
-  const [federalResult, stateResult, azIdentityResult] = await Promise.allSettled([
+  const [federalResult, stateResult, ballotIdentityResult] = await Promise.allSettled([
     federalPromise,
     statePromise,
-    azIdentityPromise,
+    ballotIdentityPromise,
   ]);
 
   const unavailableAuthorities: string[] = [];
   if (identityResult.status === "rejected") unavailableAuthorities.push("PERSON_IDENTITY");
   if (plan.federal && federalResult.status === "rejected") unavailableAuthorities.push("FEC_FUNDING");
   if (plan.state && stateResult.status === "rejected") unavailableAuthorities.push(`STATE_CAMPAIGN_FINANCE:${plan.state}`);
-  if (plan.azIdentity && azIdentityResult.status === "rejected") unavailableAuthorities.push("AZ_CANDIDACY_IDENTITY");
+  if (plan.ballotIdentity && ballotIdentityResult.status === "rejected") unavailableAuthorities.push("BALLOT_CANDIDACY_IDENTITY");
 
   const federalHeld = plan.federal && federalResult.status === "fulfilled" && federalResult.value !== null;
   const stateHeld = plan.state !== null
     && stateResult.status === "fulfilled"
     && stateResult.value !== null
-    && (!plan.azIdentity || azIdentityResult.status === "fulfilled");
+    && (!plan.ballotIdentity || ballotIdentityResult.status === "fulfilled");
   const identityHeld = identityResult.status === "fulfilled";
   if ((plan.federal || plan.state !== null) && !federalHeld && !stateHeld) {
     return { kind: "HOLDING_UNAVAILABLE", unavailableAuthorities };
@@ -236,7 +228,7 @@ export async function GET(
     ...direct,
     federal: direct.federal && !onEdge("federal-funding"),
     state: onEdge("state-money") ? null : direct.state,
-    azIdentity: direct.azIdentity && !onEdge("ballot-az"),
+    ballotIdentity: direct.ballotIdentity && !onEdge("ballot-contests"),
   }, readers);
   if (manifest?.authorityArtifacts) {
     const edge = await timedRead(timings, "authorityEdge", () => ensureReaderAuthorityEdge(manifest, undefined, READER_FUNDING_AUTHORITY_FAMILIES).catch(() => null));
@@ -246,7 +238,7 @@ export async function GET(
     ...direct,
     federal: direct.federal && fromDatabase.federal === undefined,
     state: fromDatabase.state === undefined ? direct.state : null,
-    azIdentity: direct.azIdentity && fromDatabase.azIdentity === undefined,
+    ballotIdentity: direct.ballotIdentity && fromDatabase.ballotIdentity === undefined,
   }, readers);
   const settled = await settleFundingHoldingAnswer(target, readers, { ...fromDatabase, ...fromEdge });
   timings.total = Date.now() - startedAt;

@@ -1,11 +1,7 @@
-import { currentAzBallotProjection } from "../civic-data/manual-read-models.ts";
+import { currentGenericBallotProjection } from "../ballot/generic-projection.ts";
 import { bindNamedEntity, type BindableEntity } from "../routing/named-entity.ts";
 import type { EvidenceRecord } from "./evidence.ts";
 
-/** Source filings can have verified profiles before they have a mapped ballot card.
- * Read their identity from the same promoted authority, never from a URL or a
- * name guessed from its storage key. This does not add anyone to a ballot.
- */
 export interface HeldFilingSubject {
   readonly entity: BindableEntity;
   readonly ocdId: string;
@@ -13,7 +9,7 @@ export interface HeldFilingSubject {
   readonly record: EvidenceRecord;
 }
 
-export function azHeldFilingSubjects(value: unknown = currentAzBallotProjection().candidateFilings): HeldFilingSubject[] {
+export function azHeldFilingSubjects(value: unknown = Object.values(currentGenericBallotProjection().ballots).find(ballot => ballot.candidateFilings)?.candidateFilings): HeldFilingSubject[] {
   const doc = value as { contests?: unknown[]; candidacies?: unknown[] } | null;
   if (!Array.isArray(doc?.contests) || !Array.isArray(doc?.candidacies)) throw new Error("The promoted Arizona filing identity corpus is unreadable.");
   const contests = new Map(doc.contests.map(value => {

@@ -3,11 +3,10 @@ import { measureRecordsForBallot } from "../ballot/measure-records.ts";
 import { divisionIdsForZipArea } from "../ballot/zip-divisions.ts";
 
 import { readerBallotSourcesForDivisions } from "../ballot/reader-sources.ts";
-import { contestsForDivisions } from "../sources/ballot-nj-morris/index.ts";
-import { getGeneralLineup } from "../ballot/general-lineup.ts";
+import { contestsForDivisions } from "../ballot/contests.ts";
 import { summaryForContest } from "../ballot/measure-summary.ts";
 import { provisionsForContest } from "../ballot/measure-provisions.ts";
-import { getMeasureAnalyses, type MeasureAnalysis } from "../ballot/analyses.ts";
+import { type MeasureAnalysis } from "../ballot/analyses.ts";
 import { positionsFor } from "../candidates/positions.ts";
 import { readStanceTopics } from "../stances/read.ts";
 import type { StanceTopic } from "../stances/topics.ts";
@@ -82,7 +81,6 @@ export async function readerOfficeholders(ocdIds: readonly string[], bodyIds: re
 }
 
 export interface BallotForDivisions {
-  authorityKind?: "GENERAL" | "LEGACY";
   loaderFailures: string[];
   analysisLoaderFailed: boolean;
   measureAnalysis: (contestId: string) => MeasureAnalysis | null;
@@ -134,18 +132,17 @@ export async function loadBallotForDivisions(
       }) : ocdIds;
       const hit = contestsForDivisions(candidate, electionIds);
       if (hit.contests.length === 0 && hit.absences.length === 0) continue;
-      const analyses = heldOrUnreadable(getMeasureAnalyses);
-      const lineup = heldOrUnreadable(getGeneralLineup) ?? null;
+      const analyses = candidate.measureAnalyses;
+      const lineup = candidate.generalLineup ?? null;
       const measureRecords = measureRecordsForBallot(candidate);
       return {
-        authorityKind: source.name.startsWith("ballot-contests:") ? "GENERAL" : "LEGACY",
         loaderFailures,
-        analysisLoaderFailed: analyses === undefined,
+        analysisLoaderFailed: false,
         measureAnalysis: (contestId) => analyses?.analyses.find((analysis) => analysis.contestId === contestId) ?? null,
         set: candidate,
         contests: hit.contests,
         absences: hit.absences,
-        nominees: (contestId) => (lineup?.contests.find((contest) => contest.contestId === contestId)?.nominees ?? []).map((nominee) => ({ ...nominee, sourceUrl: lineup!.canvass.url, sourceOrg: lineup!.canvass.issuedBy, retrievedAt: lineup!.canvass.readAt })),
+        nominees: (contestId) => (lineup?.contests.find((contest) => contest.contestId === contestId)?.nominees ?? []).map((nominee) => ({ ...nominee, sourceUrl: nominee.provenance?.sourceUrl ?? lineup!.canvass.url, sourceOrg: nominee.provenance?.sourceOrg ?? lineup!.canvass.issuedBy, retrievedAt: nominee.provenance?.collectedAt ?? lineup!.canvass.readAt })),
         positions: (targetKey: string) => sourcedPositions(targetKey, stanceTopics),
         measureSummary: (contestId) => {
           const summary = summaryForContest(contestId, measureRecords);
@@ -166,15 +163,6 @@ export async function loadBallotForDivisions(
     }
   }
   return { ...EMPTY, loaderFailures };
-}
-
-/** `undefined` when the holding cannot be read; another state's ballot still loads. */
-function heldOrUnreadable<T>(read: () => T | null): T | null | undefined {
-  try {
-    return read();
-  } catch {
-    return undefined;
-  }
 }
 
 function sourcedPositions(targetKey: string, topics: readonly StanceTopic[]) {

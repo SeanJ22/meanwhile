@@ -29,13 +29,6 @@ function collections(recordClass: string): Record<string, string> {
     "roster.divisions": division,
     "roster.officeholders": `x->>'id' IN (SELECT b.x->>'officeholderId' FROM records b WHERE b.scope=records.scope AND b.field='roster.divisions' AND (${division.replaceAll("x->", "b.x->")}))`,
   };
-  if (recordClass === "BALLOT_CANDIDACY" || recordClass === "BALLOT_FILING") return {
-    "ballot.election": "TRUE",
-    "ballot.contests": division,
-    "ballot.candidacies": `x->>'contestId' IN (SELECT b.x->>'id' FROM records b WHERE b.scope=records.scope AND b.field='ballot.contests' AND (${division.replaceAll("x->", "b.x->")}))`,
-    "ballot.measures": `x->>'contestId' IN (SELECT b.x->>'id' FROM records b WHERE b.scope=records.scope AND b.field='ballot.contests' AND (${division.replaceAll("x->", "b.x->")}))`,
-    "generalLineup.contests": `x->>'contestId' IN (SELECT b.x->>'id' FROM records b WHERE b.scope=records.scope AND b.field='ballot.contests' AND (${division.replaceAll("x->", "b.x->")}))`,
-  };
   if (recordClass === "CANDIDATE_PROFILE") return { "cards.cards": "member_key=ANY($5::text[])", "links.links": "member_key=ANY($5::text[])" };
   if (recordClass === "CANDIDATE_PUBLICATION") return { documents: "x->>'candidateKey'=ANY($5::text[])" };
   if (recordClass === "FEC_FUNDING") return { candidates: "x->'targetKeys' ?| $5::text[]" };
@@ -48,11 +41,42 @@ export async function readPlacePayloadParts(query: ReadOnlyQuery, recordClass: s
   ids: readonly string[], bodies: readonly string[], targets: readonly string[], versions: ReadonlyMap<string, string> = new Map(),
   acceptedVersions?: ReadonlyMap<string, string>): Promise<Map<string, unknown>> {
   const derived = recordClass === "CURATED_READER_RECORD" && scopes.every(scope => scope === "US:candidate-campaign-sites-derived");
-  const fields = derived ? { records: "x->>'id'=ANY($5::text[]) OR x->>'candidacyId'=ANY($5::text[])", portraits: "x->>'id'=ANY($5::text[]) OR x->>'candidacyId'=ANY($5::text[])", kind: "TRUE", formatVersion: "TRUE" } : collections(recordClass);
+  let fields: Record<string, string> = derived ? { records: "x->>'id'=ANY($5::text[]) OR x->>'candidacyId'=ANY($5::text[])", portraits: "x->>'id'=ANY($5::text[]) OR x->>'candidacyId'=ANY($5::text[])", kind: "TRUE", formatVersion: "TRUE" } : collections(recordClass);
   const maps = recordClass === "CANDIDATE_PROFILE" ? ["cards.cards", "links.links"] : [];
-  const single = ["ballot.election", ...(derived ? ["kind", "formatVersion"] : [])];
+  const single = derived ? ["kind", "formatVersion"] : [];
+  if (recordClass === "BALLOT_CANDIDACY") {
+    const [keys] = await query([{ text: `WITH RECURSIVE projections AS (${placeProjectionSourceSql(acceptedVersions === undefined ? undefined : 4)}),
+      ballot_maps(scope,step,node) AS (
+        SELECT scope,0,payload FROM projections WHERE record_class=$1 AND scope=ANY($2::text[])
+        UNION ALL
+        SELECT w.scope,CASE WHEN p.hash IS NULL THEN w.step+1 ELSE w.step END,
+          CASE WHEN p.hash IS NULL THEN w.node->'ballots' ELSE p.payload->'value' END
+        FROM ballot_maps w LEFT JOIN civic_data_payload_parts p ON p.hash=w.node->>'$civicPayloadPart'
+        WHERE p.hash IS NOT NULL OR w.step=0 AND jsonb_typeof(w.node)='object' AND NOT w.node ? '$civicPayloadPart'
+      )
+      SELECT DISTINCT e.key FROM ballot_maps w CROSS JOIN LATERAL jsonb_object_keys(
+        CASE WHEN w.step=1 AND NOT w.node ? '$civicPayloadPart' THEN w.node ELSE '{}'::jsonb END) e(key)
+      WHERE EXISTS (SELECT 1 FROM unnest($3::text[]) d(id)
+        WHERE lower(split_part(e.key, ':', 1))=substring(d.id from '/state:([a-z]{2})(?:/|$)'))
+      UNION ALL SELECT '$missing' FROM ballot_maps w WHERE w.node ? '$civicPayloadPart'
+        AND NOT EXISTS (SELECT 1 FROM civic_data_payload_parts p WHERE p.hash=w.node->>'$civicPayloadPart')`,
+      params: [recordClass, [...scopes], [...ids],
+        ...(acceptedVersions === undefined ? [] : [JSON.stringify(Object.fromEntries(acceptedVersions))])] }]);
+    if (keys.some(row => row.key === "$missing")) throw new Error("CIVIC_PAYLOAD_PART_MISSING");
+    fields = { kind: "TRUE" };
+    single.push("kind");
+    for (const { key } of keys) {
+      const prefix = `ballots.${key}`;
+      const contestField = `${prefix}.contests`.replaceAll("'", "''");
+      const inContest = `x->>'contestId' IN (SELECT b.x->>'id' FROM records b WHERE b.scope=records.scope AND b.field='${contestField}' AND (${division.replaceAll("x->", "b.x->")}))`;
+      fields[`${prefix}.election`] = "TRUE";
+      fields[`${prefix}.contests`] = division;
+      for (const field of ["candidacies", "measures", "measureRecords", "generalLineup.contests"]) fields[`${prefix}.${field}`] = inContest;
+      single.push(`${prefix}.election`);
+    }
+  }
   const paths = Object.keys(fields);
-  const predicate = Object.entries(fields).map(([field, where]) => `(field='${field}' AND (${where}))`).join(" OR ");
+  const predicate = Object.entries(fields).map(([field, where]) => `(field='${field.replaceAll("'", "''")}' AND (${where}))`).join(" OR ");
   const [rows] = await query([{ text: `WITH RECURSIVE selected AS (SELECT $3::text[] ids,$4::text[] bodies,$5::text[] targets),
   projections AS (${placeProjectionSourceSql(acceptedVersions === undefined ? undefined : 8)}),
   walk(scope,path,step,node,member_key) AS (

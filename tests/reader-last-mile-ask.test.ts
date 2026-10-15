@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import test from "./helpers/playbooks.ts";
 import type { CandidateDocument } from "../lib/candidates/corpus.ts";
 import {
-  installAzBallot,
+  installBallots, syntheticAzBallot, promotedFixtureBundle,
   installCandidateCorpus,
   installFederalVotes,
   installOfficeholderStatements,
@@ -16,12 +16,9 @@ import {
 } from "./helpers/promoted-fixtures.ts";
 import {
   installMeetings,
-  installNhBallot,
-  installNjMorrisFiling,
   nhBallot,
   njMorrisFiling,
   recordedMeetings85701,
-  servableAzBallot,
   withAzMeasures,
 } from "./helpers/reader-fixtures.ts";
 
@@ -29,7 +26,9 @@ await installRegistryAuthority();
 
 import { campaignMoneyForTarget, resolvedCandidacyForOfficial } from "../lib/funding/campaign-money.ts";
 import { canonicalOfficialAliases } from "../lib/ask/official-identity.ts";
-import { BALLOT_SOURCES } from "../lib/ballot/registry.ts";
+import { GENERIC_BALLOT_SCOPE } from "../lib/ballot/generic-projection.ts";
+import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
+import { manualEdgeEntry } from "./helpers/promoted-edge-entry.ts";
 import { loadBallotForDivisions } from "../lib/ask/server-sources.ts";
 import { ballotAskInventory, ballotRecordsFor } from "../lib/ask/ballot-inventory.ts";
 import { campaignMoneyEvidenceFor } from "../lib/ask/campaign-money.ts";
@@ -53,7 +52,7 @@ const FINANCE = {
   NH: { key: "ballot-nh-merrimack:governor:ayotte-kelly", receipts: 400_000, expenditures: 200_000 },
 } as const;
 const PROP_425_NO = "A NO vote shall keep the current law unchanged (synthetic test measure).";
-const azBallot = withAzMeasures(servableAzBallot([
+const azBallot = withAzMeasures(syntheticAzBallot([
   {
     id: "ballot-az-pima:governor",
     title: "Governor",
@@ -82,7 +81,7 @@ const azBallot = withAzMeasures(servableAzBallot([
   { contestId: "ballot-az-pima:prop-141", whatItDoes: "Synthetic test measure 141.", yesMeans: null, noMeans: null,
     parts: [], sourceUrl: "https://example.test/prop-141", sourceHash: "1".repeat(64), writtenAt: "2026-09-20T00:00:00.000Z" },
 ]);
-await installAzBallot(azBallot);
+await installBallots(azBallot);
 const MEJIA = "ballot-nj-morris:us-house-11:mejia";
 const SELEN = "ballot-nj-morris:county-commissioner:selen";
 const morris = njMorrisFiling([
@@ -116,8 +115,8 @@ const morris = njMorrisFiling([
       sourceUrl: "https://example.test/morris-filing-september.pdf", sourceOrg: "Synthetic test clerk", collectedAt: "2026-09-10" },
   ],
 });
-await installNjMorrisFiling(morris);
-await installNhBallot(nhBallot([
+await installBallots(morris);
+await installBallots(nhBallot([
   { id: "ballot-nh-merrimack:governor", title: "Governor", ocdId: "ocd-division/country:us/state:nh",
     candidacies: [{ id: "ballot-nh-merrimack:governor:ayotte-kelly", givenName: "Kelly", familyName: "Ayotte" }] },
   { id: "ballot-nh-merrimack:us-house-2", title: "Representative in Congress", ocdId: "ocd-division/country:us/state:nh/cd:2",
@@ -219,7 +218,7 @@ async function ask(question: string, state: keyof typeof divisions = "AZ", extra
   const body = await response.json() as AskAnswerPayload;
   /* A named person's campaign-money question is composed in code from the held filings, never by a model. */
   if (body.answer !== null) {
-    assert.equal(body.mode, "GROUNDED_COMPOSED", "no general-model knowledge can supply the factual answer");
+    assert.equal(body.mode, body.trace.composition?.kind === "BALLOT" && body.trace.sourcesLoaded === "ESSENTIAL" ? "STRUCTURED_GROUNDED" : "GROUNDED_COMPOSED", "the response is composed from held records");
     assert.equal(body.trace.synthesis.ran, false, "a composed answer, never a model's");
   }
   if (body.records) assert.equal(body.trace.retrieval.recordCount, body.records.length);
@@ -406,21 +405,18 @@ test("one canonical Reader preload failure cannot reject or suppress an unrelate
   assert.equal(outcomes[1]?.status === "fulfilled" ? outcomes[1].value : null, "unrelated ballot authority remains readable");
 });
 
-test("an unreadable applicable ballot is a failed holding, never an empty civic population", async () => {
-  const source = BALLOT_SOURCES.find((source) => source.state === "nj")!.source;
-  const fetch = source.fetch;
-  try {
-    source.fetch = async () => { throw new Error("Planted canonical holding unavailable"); };
-    const ballot = await loadBallotForDivisions(divisions.NJ);
-    assert.equal(ballot.set, null);
-    assert.deepEqual(ballot.loaderFailures, ["nj"]);
+test("an unreadable national ballot is a failed holding, never an empty civic population", async () => {
+  const failed = manualEdgeEntry("ballot-contests", { kind: "malformed-ballot-fixture", ballots: {} }, "test:failed-national-ballot");
+  await withReaderAuthorityEdge(promotedFixtureBundle({ promoted: new Map([[`BALLOT_CANDIDACY:${GENERIC_BALLOT_SCOPE}`, failed]]) }), async () => {
+    for (const state of ["NJ", "AZ"] as const) {
+      const ballot = await loadBallotForDivisions(divisions[state]);
+      assert.equal(ballot.set, null);
+      assert.deepEqual(ballot.loaderFailures, ["general ballot"]);
+    }
     const body = await ask("Who is running for U.S. House in the 11th District?", "NJ");
     assert.equal(body.denominators.ballotLoaderFailures, 1);
-    assert.ok(body.gaps.some((gap) => gap.whose === "OURS" && /couldn't load the ballot for your area/.test(gap.statement)));
-    const unaffected = await loadBallotForDivisions(divisions.AZ);
-    assert.ok(unaffected.set);
-    assert.deepEqual(unaffected.loaderFailures, []);
-  } finally { source.fetch = fetch; }
+    assert.ok(body.gaps.some(gap => gap.whose === "OURS" && /couldn't load the ballot for your area/.test(gap.statement)));
+  });
 });
 
 test("the canonical body inventory remains available where no meeting has been acquired", async () => {
@@ -470,7 +466,7 @@ test("a congressional office's everyday name reaches the same canonical contest 
 
 test("filed candidate email and source survive Ask projection while mailing addresses stay out", () => {
   const census = candidateContactCensus();
-  assert.equal(census.contacts.length, morris.contacts.contacts.length);
+  assert.equal(census.contacts.length, morris.contacts!.length);
   assert.equal(census.withheld.length, 0);
   for (const row of census.contacts) {
     const contact = contactForCandidate(row.candidacyId, "Filed candidate", "Filed office");
@@ -488,21 +484,19 @@ test("filed candidate email and source survive Ask projection while mailing addr
 });
 
 test("the real Ask route carries a candidate's published filing contact with its own provenance", async () => {
-  const filed = morris.contacts.contacts.find((row) => row.candidacyId === SELEN)!;
+  const filed = morris.contacts!.find((row) => row.candidacyId === SELEN)!;
   const body = await ask("How can I contact Tayfun Selen?", "NJ");
   const record = body.records.find((record) => record.id === `candidate-contact:${SELEN}`);
   assert.ok(record);
   assert.ok(record.text.includes(filed.email!));
-  assert.ok(!record.text.includes(filed.filedAddress!));
-  assert.ok(!JSON.stringify(body).includes(filed.filedAddress!), "filed mailing addresses stay out of the whole Ask answer");
+  assert.ok(!record.text.includes("2 Filed Address Way (test)"));
+  assert.ok(!JSON.stringify(body).includes("2 Filed Address Way (test)"), "filed mailing addresses stay out of the whole Ask answer");
   assert.equal(record.sourceOrg, filed.sourceOrg);
   assert.equal(record.sourceUrl, filed.sourceUrl);
 });
 
 test("Ask's local council answer lists the same held candidates as the reader ballot", async () => {
-  const source = BALLOT_SOURCES.find(source => source.state === "nj")!.source;
-  const all = source.normalize(await source.fetch());
-  const local = all.contests.find(contest => contest.type === "CANDIDACY" && /council/i.test(contest.title))!;
+  const local = morris.contests.find(contest => contest.type === "CANDIDACY" && /council/i.test(contest.title))!;
   const ocdIds = [NJ, local.ocdId];
   const ballot = await loadBallotForDivisions(ocdIds);
   const contests = ballot.contests.filter(c => c.type === "CANDIDACY" && /council/i.test(c.title));

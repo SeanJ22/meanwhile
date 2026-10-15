@@ -27,7 +27,7 @@ import type { CandidateCorpus } from "../lib/candidates/corpus.ts";
 import type { FundingSnapshot } from "../lib/funding/types.ts";
 import { FEDERAL_ROLLCALL_SCOPE, FEDERAL_KEY_VOTE_SCOPE, FEDERAL_VOTES_SOURCE_ID } from "../lib/votes/data-plane.ts";
 import { absentEdgeEntry, manualEdgeEntry, promotedFamily, provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
-import { registryTransferImport, syntheticAzBallot, syntheticCandidateProfiles, syntheticFederalDirectory, syntheticFederalRollCalls, syntheticFederalKeyVotes, syntheticOfficeholderStatements, stateMoneyFixture } from "./helpers/promoted-fixtures.ts";
+import { registryTransferImport, syntheticCandidateProfiles, syntheticFederalDirectory, syntheticFederalRollCalls, syntheticFederalKeyVotes, syntheticOfficeholderStatements, stateMoneyFixture } from "./helpers/promoted-fixtures.ts";
 import { azBallot, azDistricts } from "./helpers/ballot-district-fixtures.ts";
 import { STATE_CAMPAIGN_FINANCE_SOURCES, type StateCampaignFinanceJurisdiction } from "../lib/funding/data-plane.ts";
 import { DERIVED_CAMPAIGN_SITES_RECORD_CLASS, DERIVED_CAMPAIGN_SITES_SCOPE, DERIVED_CAMPAIGN_SITES_SOURCE_ID, derivedCampaignSitesProjectionIssue, type DerivedCampaignSitesProjection } from "../lib/civic-data/derived-campaign-sites.ts";
@@ -102,7 +102,7 @@ test("BL-20: Ohio and Michigan national ballots render the same incumbent record
   const sourceHash = `sha256-${createHash("sha256").update(encoded).digest("hex")}`;
   const portraitPath = `/api/portraits/officials/${imageHash.slice(7)}.webp`;
   const ballots = cases.map(nationalBallot);
-  const generic = { kind: "ballot-contests" as const, ballots: Object.fromEntries(ballots.map(ballot => [ballotElectionKey(ballot), ballot])) };
+  const generic = { kind: "ballot-contests" as const, ballots: Object.fromEntries([...ballots, azBallot].map(ballot => [ballotElectionKey(ballot), ballot])) };
   assert.deepEqual(genericBallotProblems(generic), []);
   const registry = registryTransferImport().projection.payload;
   const federal = syntheticFederalDirectory(registry);
@@ -159,7 +159,6 @@ test("BL-20: Ohio and Michigan national ballots render the same incumbent record
     "federal-directory": { value: federal, versionId: "BL-20:federal" },
     "census-districts": { value: azDistricts, versionId: azDistricts.versionId },
     "ballot-contests": promotedFamily([manualEdgeEntry("ballot-contests", generic, "BL-20:ballots")], "BL-20:ballots"),
-    "ballot-az": promotedFamily([manualEdgeEntry("az-sos-ballot", { ...syntheticAzBallot(), ballot: azBallot }, "BL-20:az")], "BL-20:az"),
     "candidate-profiles": promotedFamily([manualEdgeEntry("candidate-profiles", profiles, "BL-20:profiles"), provenEdgeEntry({ recordClass: DERIVED_CAMPAIGN_SITES_RECORD_CLASS, scope: DERIVED_CAMPAIGN_SITES_SCOPE, sourceId: DERIVED_CAMPAIGN_SITES_SOURCE_ID, value: derived, versionId: "BL-20:derived-portraits" })], "BL-20:profiles"),
     "candidate-publications": promotedFamily([manualEdgeEntry("candidate-corpus", corpus, "BL-20:publications")], "BL-20:publications"),
     "official-filings": promotedFamily([absentEdgeEntry("CURATED_READER_RECORD", requiredManualProductionContract("official-filings").scope)], "BL-20:filings"),

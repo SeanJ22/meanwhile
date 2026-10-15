@@ -1,4 +1,4 @@
-import { contestsForDivisions } from "@/lib/sources/ballot-nj-morris";
+import { contestsForDivisions } from "@/lib/ballot/contests";
 import { readerBallotSourcesForDivisions } from "@/lib/ballot/reader-sources";
 import { divisionsAt } from "@/lib/registry/server";
 

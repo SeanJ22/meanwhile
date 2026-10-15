@@ -1,10 +1,3 @@
-/**
- * An established migration is immutable. `migrationTagsIn` cannot tell which way a migration file changed, so the
- * guard is run here as the real gate (`scripts/db-shipping-gate.mts`), spawned in a throwaway git repository: a
- * rewrite, a delete and a rename must exit 1 naming the file, and an append must pass. The child's environment has
- * `WTP_PRODUCTION_DATABASE_URL_READONLY` removed, so exit codes are deterministic and no connection is opened.
- */
-
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
@@ -580,4 +573,18 @@ test("if a database reports applying a retracted migration, the retraction is re
   assert.deepEqual(violations.map((v) => v.rule), ["retracted-migration-applied"]);
   assert.match(violations[0].what, /premise is false/);
   assert.deepEqual(checksumViolations(established, [], () => null), [], "an unapplied retracted migration is fine");
+});
+
+test("a reused retraction timestamp requires the exact committed replacement hash", () => {
+  const replacement: JournalEntry = { idx: PB_RETIRE.idx, when: PB_RETIRE.when, tag: "0035_replacement" };
+  const journal = [...established, replacement];
+  const recorded = createHash("sha256").update("replacement SQL").digest("hex");
+  const applied = [{ when: replacement.when, hash: recorded }];
+  const sourceHash = (tag: string) => tag === replacement.tag ? recorded : null;
+  assert.deepEqual(checksumViolations(journal, applied, sourceHash), []);
+  assert.deepEqual(checksumViolations(journal, applied, () => null).map(v => v.rule), ["retracted-migration-applied"]);
+  assert.deepEqual(checksumViolations(journal, applied, () => "different").map(v => v.rule),
+    ["retracted-migration-applied", "applied-sql-rewritten"]);
+  assert.deepEqual(checksumViolations([...established, PB_RETIRE], applied, () => recorded).map(v => v.rule),
+    ["retracted-migration-applied"]);
 });

@@ -236,14 +236,12 @@ export const READER_MAP_AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
   "state-legislators",
 ];
 
-const STATE_BALLOT_AUTHORITY_FAMILIES: readonly AuthorityFamily[] = PROMOTED_AUTHORITY_FAMILIES.filter((family) => /^ballot-[a-z]{2}$/.test(family));
-
 export const READER_FUNDING_AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
   "registry-runtime",
   "federal-directory",
   "federal-funding",
   "state-money",
-  ...STATE_BALLOT_AUTHORITY_FAMILIES,
+  "ballot-contests",
 ];
 
 const ASK_ONLY_AUTHORITY_FAMILIES: ReadonlySet<AuthorityFamily> = new Set<AuthorityFamily>([

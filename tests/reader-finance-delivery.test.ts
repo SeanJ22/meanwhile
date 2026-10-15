@@ -13,11 +13,11 @@ import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { type StateMoneyRecord } from "../lib/funding/state-money.ts";
 import { resetStateMoneyCache, stateMoneyForTarget } from "../lib/funding/state-snapshot.ts";
 import { resetAzIdentityCache } from "../lib/identity/az-2026.ts";
-import { readAzBallotProjection } from "../lib/civic-data/manual-read-models.ts";
+import { readGenericBallotProjection } from "../lib/ballot/generic-projection.ts";
 import { getRegistryRuntimeReadModel } from "../lib/registry/runtime-read-model.ts";
 import type { StateCampaignFinanceJurisdiction } from "../lib/funding/data-plane.ts";
 import { officialCandidacySeatMatches } from "../lib/registry/runtime-data-plane.ts";
-import { installAzBallot, installRegistryAuthority, installStateMoney, stateMoneyFixture, syntheticAzBallot, syntheticFiledStateMoneyRecord } from "./helpers/promoted-fixtures.ts";
+import { installBallots, installRegistryAuthority, installStateMoney, stateMoneyFixture, syntheticAzBallot, syntheticFiledStateMoneyRecord } from "./helpers/promoted-fixtures.ts";
 
 await installRegistryAuthority();
 
@@ -30,7 +30,7 @@ function withRecords(state: StateCampaignFinanceJurisdiction, records: StateMone
   const fixture = stateMoneyFixture(state);
   return { ...fixture, records: [...fixture.records, ...records] };
 }
-await installAzBallot(syntheticAzBallot([
+await installBallots(syntheticAzBallot([
   {
     id: "ballot-az-pima:governor",
     title: "Governor",
@@ -204,11 +204,11 @@ test("a missing canonical ballot identity projection cannot become a display-key
   const previous = env.NODE_ENV;
   env.NODE_ENV = "production";
   try {
-    assert.equal((await readAzBallotProjection({ store: failedStore, bypassCache: true })).kind, "STORE_UNREACHABLE");
+    assert.equal((await readGenericBallotProjection({ store: failedStore, bypassCache: true })).kind, "STORE_UNREACHABLE");
     resetAzIdentityCache();
     assert.throws(
       () => stateMoneyForCard("ballot-az-pima:governor|Katie Hobbs", "ballot-az-pima:governor"),
-      /Arizona ballot projection is STORE_UNREACHABLE|identity holding unavailable/,
+      /National ballot projection is STORE_UNREACHABLE|identity holding unavailable/,
     );
   } finally {
     if (previous === undefined) delete env.NODE_ENV;

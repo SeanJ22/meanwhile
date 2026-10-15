@@ -1,16 +1,3 @@
-/**
- * `pnpm jurisdictions:enumerate` — every local government that can hold an
- * election, named before a reader needs one, with the routes that serve it.
- *
- * Builds the reviewed jurisdiction-routing projection from the Census of
- * Governments and submits it to the production candidate/event/promotion
- * plane. It never writes a tracked repository file.
- *
- * Every source row carries `scope` (STATEWIDE, PER_COUNTY, THIS_JURISDICTION),
- * so a county's route is never presented as a state's. Statutes are cited where
- * read and quoted verbatim in `data/campaign-finance/filing-regimes.json`; an
- * unread statute is recorded as an open question, never paraphrased.
- */
 import { US_JURISDICTIONS } from "../lib/coverage/states.ts";
 import { NAME_BY_USPS } from "../lib/coverage/artifacts.ts";
 import type {
@@ -265,7 +252,7 @@ function azBallotSource(countyName: string): JurisdictionSource {
       "Arizona's statewide contests come from the Secretary of State and are already held; the " +
       "county-and-below contests are the county's own publication and are not.",
     citation:
-      "data/states/az/ballot/az-pima-2026.json — Pima County's certified list is held; no other Arizona county's is",
+      "data/ballot/2026-general/az.json — held Arizona contests and candidates",
   };
 }
 

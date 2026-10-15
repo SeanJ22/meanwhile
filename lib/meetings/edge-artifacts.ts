@@ -11,12 +11,6 @@ import {
   type SnapshotSourceReport,
 } from "./snapshot.ts";
 
-/**
- * Splits the composed national meeting snapshot into immutable geographic
- * serving artifacts, one per governing division with agenda text in its own
- * piece, and merges fetched pieces back into the `MeetingsSnapshot` shape. The
- * promoted partitions stay authoritative; these are serving copies.
- */
 export const READER_ARTIFACT_FORMAT_VERSION = 1 as const;
 
 /** The scope for meetings whose OCD division names no state (online/unresolved). */
@@ -168,8 +162,6 @@ export interface ReaderManifest {
 /** Each artifact carries one or more proven pointers whole, read through each pointer's own typed Reader. */
 export type PromotedAuthorityFamily =
   | "ballot-contests"
-  | "ballot-az"
-  | "ballot-nh"
   | "candidate-profiles"
   | "candidate-publications"
   | "ballot-navigation"
@@ -189,8 +181,6 @@ export type PromotedAuthorityFamily =
 
 export const PROMOTED_AUTHORITY_FAMILIES: readonly PromotedAuthorityFamily[] = [
   "ballot-contests",
-  "ballot-az",
-  "ballot-nh",
   "candidate-profiles",
   "candidate-publications",
   "ballot-navigation",

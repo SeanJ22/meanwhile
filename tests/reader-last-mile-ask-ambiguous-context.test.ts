@@ -7,14 +7,14 @@ import { lineupRowForCard } from "../lib/identity/az-2026.ts";
 import type { AskAnswerPayload } from "../lib/ask/answer.ts";
 import { bindNamedEntity } from "../lib/routing/named-entity.ts";
 import { createHash } from "node:crypto";
-import { installAzBallot, installCandidateCorpus, installOfficeholderStatements, installRegistryAuthority, syntheticCandidateCorpus } from "./helpers/promoted-fixtures.ts";
-import { installCandidateProfiles, servableAzBallot, syntheticCandidateCard, candidateProfilesFor } from "./helpers/reader-fixtures.ts";
+import { installBallots, syntheticAzBallot, installCandidateCorpus, installOfficeholderStatements, installRegistryAuthority, syntheticCandidateCorpus } from "./helpers/promoted-fixtures.ts";
+import { installCandidateProfiles, syntheticCandidateCard, candidateProfilesFor } from "./helpers/reader-fixtures.ts";
 
 const HOBBS_CARD = "ballot-az-pima:governor|Katie Hobbs";
 const HOURIHAN_CARD = "ballot-az-pima:governor|Teri Ann Hourihan";
 await installRegistryAuthority();
 // A governor contest whose certified lineup reconciles one card and records one party conflict.
-await installAzBallot(servableAzBallot([{
+await installBallots(syntheticAzBallot([{
   id: "ballot-az-pima:governor",
   title: "Governor",
   candidacies: [

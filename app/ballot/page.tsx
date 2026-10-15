@@ -12,7 +12,7 @@ import { OfficialFilings } from "@/components/ballot/official-filings";
 import { filingsForDivisions, type OfficialFiling } from "@/lib/civic-data/official-filings";
 import { readOfficialFilingsForReader } from "@/lib/civic-data/curated-reader-read-model";
 
-import { contestsForDivisions } from "@/lib/sources/ballot-nj-morris";
+import { contestsForDivisions } from "@/lib/ballot/contests";
 import { readerBallotSourcesForDivisions } from "@/lib/ballot/reader-sources";
 import { coverageNotesForScope } from "@/lib/ballot/coverage-notes";
 import {
@@ -33,12 +33,14 @@ import {
 import {
   getGeneralLineup,
   lineupForContest,
+  type LineupNominee,
 } from "@/lib/ballot/general-lineup";
 import {
   linksForCandidacy,
   linksForNominee,
   type CandidateLinks,
 } from "@/lib/ballot/candidate-sites";
+import type { Provenance } from "@/lib/sources/types";
 import type { OfficeBlurb } from "@/lib/officials/office-blurbs";
 import { readCuratedContestOfficeBlurbs } from "@/lib/officials/curated-definition-reader";
 import { surnameDisplayCase } from "@/lib/ballot/name-case";
@@ -182,6 +184,13 @@ const AUXILIARY_READER_LABEL: Record<BallotAuxiliaryFamily, string> = {
 
 const EXTENDED_MECHANICS_CHARS = 180;
 
+function nomineeProvenance(nominee: LineupNominee, contest: Contest): Provenance {
+  const canvass = getGeneralLineup()?.canvass;
+  return nominee.provenance ?? (canvass
+    ? { sourceUrl: canvass.url, sourceOrg: canvass.issuedBy, collectedAt: canvass.readAt, verifiedAt: null }
+    : contest.provenance);
+}
+
 function candidatesOf(set: BallotSet, contest: Contest): Candidacy[] {
   return set.candidacies
     .filter((c) => c.contestId === contest.id)
@@ -283,6 +292,7 @@ async function BallotBattlecard({
   card,
   links = null,
   targetKey,
+  filingSource,
   contestTitle,
   contestOcdId,
   officeBlurb,
@@ -303,6 +313,7 @@ async function BallotBattlecard({
   links?: CandidateLinks | null;
 
   targetKey: string;
+  filingSource: Provenance;
   contestTitle: string;
 
   contestOcdId: string;
@@ -411,6 +422,7 @@ async function BallotBattlecard({
         sources: (
           <>
             {!authorityAvailability.candidateProfiles && unavailableHolding("candidate-profile")}
+            <CardSourcesContribution id={`candidate-filing:${targetKey}`} sources={[{ what: "Candidate filing", provenance: filingSource }]} />
             <CandidatePortraitSources card={card ?? null} />
             {recordHolder && <CandidateSources holder={recordHolder} />}
             <CandidateContactSources links={links} filing={filingContact} />
@@ -701,7 +713,7 @@ export default async function BallotPage({
   const contestCites = new Map<string, { cite: SourceCite; count: number }>();
   for (const contest of candidacyContests) {
     const lineup = lineupForContest(contest.id);
-    const canvass = lineup ? getGeneralLineup()?.canvass : null;
+    const canvass = lineup && !lineup.nominees.some(nominee => nominee.provenance) ? getGeneralLineup()?.canvass : null;
     const cite: SourceCite =
       lineup && canvass
         ? {
@@ -736,7 +748,7 @@ export default async function BallotPage({
 
   const readerScopeNotes = new Map((matched?.contests ?? []).map((contest) => {
     const lineup = lineupForContest(contest.id);
-    const canvass = lineup ? getGeneralLineup()?.canvass : null;
+    const canvass = lineup && !lineup.nominees.some(nominee => nominee.provenance) ? getGeneralLineup()?.canvass : null;
     const scope = readerContestScope(contest, {
       certified: lineup && canvass ? { count: lineup.nominees.length, sourceUrl: canvass.url, sourceOrg: canvass.issuedBy, readAt: canvass.readAt } : null,
       questionTextHeld: set?.measures.some((measure) => measure.contestId === contest.id && Boolean(measure.questionText.trim())),
@@ -1087,7 +1099,10 @@ export default async function BallotPage({
       <div className="ballot-office-list">
       {candidacyContests.map((contest, contestIndex) => {
           const lineup = lineupForContest(contest.id);
-          const canvass = lineup ? getGeneralLineup()?.canvass : null;
+          const nomineeSourceOrgs = lineup
+            ? [...new Set(lineup.nominees.map(nominee => nomineeProvenance(nominee, contest).sourceOrg))].join(" and ")
+            : null;
+          const canvass = lineup && !lineup.nominees.some(nominee => nominee.provenance) ? getGeneralLineup()?.canvass : null;
           const sourceRef =
             lineup && canvass
               ? contestSourceRef(
@@ -1107,7 +1122,7 @@ export default async function BallotPage({
                 ...(contestIndex > 0 && tierForOffice(contest.title, contest.ocdId) !== tierForOffice(candidacyContests[contestIndex - 1].title, candidacyContests[contestIndex - 1].ocdId) ? { "data-office-tier-start": "true" } : {}),
                 ...(certainty && needsPill(certainty.certaintyOf(contest.ocdId)) ? { "data-could-govern": "true" } : {}),
               }}
-              sources={[{ what: "Candidates and voting instructions", provenance: contest.provenance }, ...(lineup && canvass ? [{ what: "Certified primary nominees", provenance: { sourceUrl: canvass.url, sourceOrg: canvass.issuedBy, collectedAt: canvass.readAt, verifiedAt: null } }] : [])]}
+              sources={[{ what: "Candidates and voting instructions", provenance: contest.provenance }, ...(lineup ? [...new Map(lineup.nominees.map(nominee => { const provenance = nomineeProvenance(nominee, contest); return [provenance.sourceUrl, { what: "General-election candidates", provenance }] as const; })).values()] : [])]}
               gaps={contest.voteFor === null ? [{ id: `contest-voting:${contest.id}`, label: "voting instructions" }] : []}
               className="ballot-office-card rounded-[10px] border border-[var(--panel-border)] bg-[var(--panel-bg)] p-5 shadow-[var(--shadow-panel)] [&>.reader-card-header]:sr-only [&>.reader-card-body]:p-0"
             >
@@ -1159,14 +1174,14 @@ export default async function BallotPage({
               {!sourceRef.shared && (
                 <FilingNote
                   summary={
-                    lineup && canvass
-                      ? `Nominees per the certified primary canvass (${canvass.issuedBy})`
+                    lineup
+                      ? `General-election candidates per ${nomineeSourceOrgs}`
                       : `Candidates as filed with ${contest.provenance.sourceOrg}`
                   }
                 >
-                  {lineup && canvass ? (
+                  {lineup && !canvass ? <>Official records for these candidates appear in Sources.</> : lineup && canvass ? (
                     <>
-                      Nominees per the{" "}
+                      Primary nominees per the{" "}
                       <a
                         href={canvass.url}
                         target="_blank"
@@ -1237,6 +1252,7 @@ export default async function BallotPage({
                             card={availableCardForNominee(contest.id, nominee.name)}
                             links={availableLinksForNominee(contest.id, nominee.name)}
                             targetKey={`${contest.id}|${nominee.name}`}
+                            filingSource={nomineeProvenance(nominee, contest)}
                             contestTitle={contest.title}
                             contestOcdId={contest.ocdId}
                             officeBlurb={officeBlurbs.get(contest.id) ?? null}
@@ -1361,6 +1377,7 @@ export default async function BallotPage({
                               card={availableCardForCandidacy(cand.id)}
                               links={availableLinksForCandidacy(cand.id)}
                               targetKey={cand.id}
+                              filingSource={cand.provenance}
                               contestTitle={contest.title}
                               contestOcdId={contest.ocdId}
                               officeBlurb={officeBlurbs.get(contest.id) ?? null}
@@ -1425,7 +1442,7 @@ export default async function BallotPage({
               <span className="font-mono">{s.marker}</span>{" "}
               {s.cite.kind === "canvass" ? (
                 <>
-                  Nominees per the{" "}
+                  Primary nominees per the{" "}
                   <a
                     href={s.cite.url}
                     target="_blank"

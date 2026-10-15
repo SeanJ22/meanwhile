@@ -83,7 +83,6 @@ function verifierIdFor(contract: ReaderContract): string {
     case "nj-state-rollcalls": return "lib/sources/legiscan/snapshot.ts#readOfficialStateVotesProjection";
     case "nh-state-rollcalls": return "lib/civic-data/read-model.ts#readPromotedStateLegislatorVotes";
     case "census-acs-population": return "lib/reference/acs-population.ts#readPopulationProjection";
-    case "nj-morris-filing": return "lib/sources/ballot-nj-morris/index.ts#readNjMorrisFiling";
     case "congress-bulk-roster": return "lib/officials/federal-directory-read-model.ts#readFederalDirectoryProjection";
     case "registry-runtime-bindings": return "lib/registry/runtime-read-model.ts#readRegistryRuntimeProjection";
     case "congress-rollcalls": return "lib/votes/snapshot.ts#readFederalRollCallsProjection";
@@ -94,8 +93,6 @@ function verifierIdFor(contract: ReaderContract): string {
     case "public-records": return "lib/civic-data/public-records.ts#readPublicRecords";
     case "campaign-finance": return "lib/funding/campaign-finance-reader.ts#readCampaignFinance";
     case "government-budgets": return "lib/civic-data/government-budgets.ts#readGovernmentBudgets";
-    case "az-sos-ballot": return "lib/civic-data/manual-read-models.ts#readAzBallotProjection";
-    case "nh-curated-ballot": return "lib/civic-data/manual-read-models.ts#readNhBallotProjection";
     case "candidate-profiles": return "lib/civic-data/manual-read-models.ts#readCandidateProfilesProjection";
     case "candidate-corpus": return "lib/civic-data/manual-read-models.ts#readCandidateCorpusProjection";
     case "officeholder-statements": return "lib/corpus/data-plane.ts#readOfficeholderStatementsProjection";
@@ -267,11 +264,6 @@ export async function verifyRoutineReaderProjection(
         const result = await readPopulationProjection({ store: options.store, now: options.now, bypassCache: true });
         return verifyExactVersion(verifierId, result, options.expectedVersionId, "ACS");
       }
-      case "nj-morris-filing": {
-        const { readNjMorrisFiling } = await import("../sources/ballot-nj-morris/index.ts");
-        const result = await readNjMorrisFiling({ store: options.store, now: options.now, bypassCache: true });
-        return verifyExactVersion(verifierId, result, options.expectedVersionId, "Morris ballot");
-      }
       case "congress-bulk-roster": {
         const { readFederalDirectoryProjection } = await import("../officials/federal-directory-read-model.ts");
         return verifyExactVersion(verifierId, await readFederalDirectoryProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "federal-directory");
@@ -320,18 +312,12 @@ export async function verifyRoutineReaderProjection(
         if (!options.scope?.startsWith(prefix)) return fail(verifierId, "Budget readback requires its exact jurisdiction.");
         return verifyExactVersion(verifierId, await readGovernmentBudgets(options.scope.slice(prefix.length), { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, contract.id);
       }
-      case "az-sos-ballot":
-      case "nh-curated-ballot":
       case "candidate-profiles":
       case "candidate-corpus": {
         const readers = await import("./manual-read-models.ts");
-        const result = contract.id === "az-sos-ballot"
-          ? await readers.readAzBallotProjection({ store: options.store, now: options.now, bypassCache: true })
-          : contract.id === "nh-curated-ballot"
-            ? await readers.readNhBallotProjection({ store: options.store, now: options.now, bypassCache: true })
-            : contract.id === "candidate-profiles"
-              ? await readers.readCandidateProfilesProjection({ store: options.store, now: options.now, bypassCache: true })
-              : await readers.readCandidateCorpusProjection({ store: options.store, now: options.now, bypassCache: true });
+        const result = contract.id === "candidate-profiles"
+          ? await readers.readCandidateProfilesProjection({ store: options.store, now: options.now, bypassCache: true })
+          : await readers.readCandidateCorpusProjection({ store: options.store, now: options.now, bypassCache: true });
         return verifyExactVersion(verifierId, result, options.expectedVersionId, contract.readerProjection?.id ?? contract.id);
       }
       case "officeholder-statements": {

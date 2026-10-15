@@ -88,7 +88,9 @@ export function certifiedNomineesFor(contestId: string): { source: string; names
   if (entry === null) return null;
   const canvass = getGeneralLineup()?.canvass;
   return {
-    source: canvass ? `${canvass.title} (${canvass.issuedBy}, read ${canvass.readAt})` : "the certified canvass",
+    source: [...new Set(entry.nominees.map(nominee => nominee.provenance
+      ? `${nominee.provenance.sourceOrg} (${nominee.provenance.sourceUrl}, read ${nominee.provenance.collectedAt})`
+      : canvass ? `${canvass.title} (${canvass.issuedBy}, read ${canvass.readAt})` : "the certified canvass"))].join("; "),
     names: entry.nominees.map((n) => n.name),
   };
 }

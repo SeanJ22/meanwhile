@@ -1,9 +1,6 @@
-/** Campaign finance: can a reader ask and get a grounded answer. Tests on ids beginning fixture: are function inputs, never claims about real filings; each seeded failure is paired with a positive control. */
-
+import { azBallot } from "./helpers/ballot-district-fixtures.ts";
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import { installFundingFirstSeed } from "./helpers/registry-runtime-first-seed.ts";
 
 await installFundingFirstSeed();
@@ -39,8 +36,6 @@ import {
   federalUniverse,
 } from "../lib/control-plane/campaign-finance/held-records.ts";
 
-const ROOT = join(import.meta.dirname, "..");
-const ASOF = "2026-08-29";
 
 function universe(over?: Partial<HeldFilingUniverse>): HeldFilingUniverse {
   return {
@@ -92,16 +87,21 @@ function ieReportSupporting(candidacyId: string, amount: number): IndependentExp
   };
 }
 
-test("FEDERAL CHAIN: the ballot's four candidacies resolve to the FEC and carry real held records", () => {
-  const ballot = JSON.parse(
-    readFileSync(join(ROOT, "data", "states", "az", "ballot", "az-pima-2026.json"), "utf8"),
-  ) as { candidacies: { id: string; contestId: string; familyName: string }[] };
+test("FEDERAL CHAIN: the ballot's six AZ-06 candidacies resolve to the FEC and carry real held records", () => {
+  const ballot = azBallot as { candidacies: { id: string; contestId: string; familyName: string }[] };
 
   // The DENOMINATOR comes from the ballot, never from what we found.
   const universeIds = ballot.candidacies
     .filter((c) => c.contestId === "ballot-az-pima:us-house-6")
     .map((c) => c.id);
-  assert.equal(universeIds.length, 4, "the certified AZ-06 candidate universe");
+  assert.deepEqual(universeIds.sort(), [
+    "az-2026-general-us-house-6:dorland-michael",
+    "az-2026-general-us-house-6:swing-gary",
+    "ballot-az-pima:us-house-6:bah-iman",
+    "ballot-az-pima:us-house-6:ciscomani-juan",
+    "ballot-az-pima:us-house-6:mendoza-joanna",
+    "ballot-az-pima:us-house-6:peters-jereme-lance",
+  ], "the held AZ-06 candidate universe includes official nominee and qualified write-in additions");
 
   const resolution = resolveFilingAuthority({
     jurisdiction: "US",

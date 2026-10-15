@@ -7,6 +7,7 @@ import { after, test } from "./helpers/playbooks.ts";
 import { publishReaderEdgeArtifacts, type PublishAuthority } from "../lib/meetings/edge-serving.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import type { PromotedAuthorityFamily, PromotedFamilyArtifactValue } from "../lib/meetings/edge-artifacts.ts";
+import { ballotElectionKey } from "../lib/ballot/generic-projection.ts";
 import { clearPromotedReadModelCache } from "../lib/civic-data/read-model.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
@@ -38,8 +39,6 @@ import {
 } from "./helpers/promoted-fixtures.ts";
 import { recordedMeetingsSnapshot, syntheticExecutiveActions } from "./helpers/reader-fixtures.ts";
 
-/** The real Ask route is asked with no database: every Neon HTTP request is answered here with no rows and counted by record class. */
-
 delete process.env.ANTHROPIC_API_KEY;
 for (const key of ["DATABASE_URL", "DATABASE_URL_UNPOOLED", "NEON_DATABASE_URL", "NETLIFY", "NETLIFY_BLOBS_CONTEXT", "NETLIFY_SITE_ID"]) delete process.env[key];
 process.env.WTP_LIMIT_LOG_IP_PER_MINUTE = "10000";
@@ -56,9 +55,9 @@ const federalVotes = { sourceId: FEDERAL_VOTES_SOURCE_ID };
 const EDGE = { funding: "edge-test:ask:fec", federalVotes: "edge-test:ask:federal-votes" };
 const stateMoneyEntries = (version: (state: string) => string) => (Object.keys(STATE_CAMPAIGN_FINANCE_SOURCES) as StateCampaignFinanceJurisdiction[]).map((state) =>
   provenEdgeEntry({ recordClass: "STATE_CAMPAIGN_FINANCE", scope: STATE_CAMPAIGN_FINANCE_SOURCES[state].scope, sourceId: STATE_CAMPAIGN_FINANCE_SOURCES[state].sourceId, versionId: version(state), value: stateMoneyFixture(state) }));
+const ballot = syntheticAzBallot();
 const PROMOTED: Partial<Record<PromotedAuthorityFamily, { value: PromotedFamilyArtifactValue; versionId: string }>> = {
-  "ballot-contests": family([absentEdgeEntry("BALLOT_CANDIDACY", "US:state-election-ballots")], "edge-test:general-ballot-absent"),
-  "ballot-az": family([manual("az-sos-ballot", syntheticAzBallot(), "edge-test:ask:az")], "edge-test:ask:az"),
+  "ballot-contests": family([manual("ballot-contests", { kind: "ballot-contests", ballots: { [ballotElectionKey(ballot)]: ballot } }, "edge-test:ask:ballots")], "edge-test:ask:ballots"),
   "candidate-profiles": family([
     manual("candidate-profiles", syntheticCandidateProfiles(), "edge-test:ask:profiles"),
     absentEdgeEntry(DERIVED_CAMPAIGN_SITES_RECORD_CLASS, DERIVED_CAMPAIGN_SITES_SCOPE),
@@ -166,7 +165,7 @@ const DEFERRABLE_FROM_DATABASE = [
 ];
 const classOf = (read: string) => read.split(":")[0]!;
 
-const DEFERRABLE_TRACE = ["funding", "stateMoney", "azPimaFinance", "federalVotes", "federalKeyVotes", "azBallot", "candidateProfiles", "candidateCorpus", "officeholderStatements", "executiveActions"];
+const DEFERRABLE_TRACE = ["funding", "stateMoney", "azPimaFinance", "federalVotes", "federalKeyVotes", "ballots", "candidateProfiles", "candidateCorpus", "officeholderStatements", "executiveActions"];
 const UNRELATED_TRACE = new Set(["azPimaFinance", "federalVotes", "federalKeyVotes", "officeholderStatements", "executiveActions"]);
 
 test("with the C20 edge, a cold Mesa question reads the complete identity inventory but skips unrelated evidence", async () => {
@@ -174,10 +173,9 @@ test("with the C20 edge, a cold Mesa question reads the complete identity invent
   const payload = await askMesa();
   assert.equal(payload.trace.sourcesLoaded, "IDENTITY_AND_MEETINGS");
   assert.deepEqual([...databaseReads].sort(), [
-    "BALLOT_CANDIDACY:US-AZ:2026-general:supported-ballot",
     "BALLOT_CANDIDACY:US:state-election-ballots",
-    "CANDIDATE_PROFILE:US-AZ+US-NH+US-NJ:2026-supported-candidates",
-    "CANDIDATE_PUBLICATION:US-AZ+US-NH+US-NJ:2026-supported-candidates",
+    "CANDIDATE_PROFILE:US:candidate-profiles",
+    "CANDIDATE_PUBLICATION:US:candidate-publications",
     "CURATED_READER_RECORD:US:candidate-campaign-sites-derived",
     "FEC_FUNDING:federal-supported",
     "STATE_CAMPAIGN_FINANCE:US-AZ:campaign-finance:2026",

@@ -1,6 +1,8 @@
-import { currentAzBallotProjection } from "../civic-data/manual-read-models.ts";
+import type { Provenance } from "../sources/types.ts";
+import { currentGenericBallotProjection } from "./generic-projection.ts";
 
 export interface LineupNominee {
+  provenance?: Provenance;
   name: string;
   partyLabel: string;
   note: string | null;
@@ -26,7 +28,7 @@ export interface GeneralLineup {
 }
 
 export function getGeneralLineup(): GeneralLineup | null {
-  return currentAzBallotProjection().generalLineup;
+  return Object.values(currentGenericBallotProjection().ballots).find(ballot => ballot.generalLineup)?.generalLineup ?? null;
 }
 
 /** Null when the ballot projection holding it cannot be read in this process. */

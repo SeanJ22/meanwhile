@@ -12,7 +12,7 @@ import {
 import { divisionsForCensusGeographies } from "@/lib/registry/server";
 import { censusVintageFor } from "@/lib/geo/census-geographies";
 import { currentRepresentationSelection, type GeographySelection } from "@/lib/census-geography/selection";
-import { contestsForDivisions } from "@/lib/sources/ballot-nj-morris";
+import { contestsForDivisions } from "@/lib/ballot/contests";
 import { readerBallotSourcesForDivisions } from "@/lib/ballot/reader-sources";
 import { postalArea, zipNeedsAddress } from "@/lib/geo/postal";
 import { lookupZcta } from "@/lib/geo/zcta";

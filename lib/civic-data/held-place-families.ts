@@ -188,11 +188,13 @@ export function projectHeldPlaceFamilies(divisionIds: readonly string[], registr
   for (const ballot of families.ballots ?? []) {
     for (const contest of ballot.contests) {
       const divisions = [contest.ocdId];
-      if (!subject(contest.id, "contest", divisions, contest.title)) continue;
+      if (!subject(contest.id, "contest", divisions, contest.title, contest.type === "MEASURE" ? "measure" : "race")) continue;
       const add = (id: string, item: unknown) => field(contest.id, id, item, contest.provenance.sourceUrl, contest.provenance.collectedAt, FRESHNESS_HOURS.daily);
       add("ELE-01", ballot.election);
       add("ELE-04", { office: contest.title, divisionId: contest.ocdId, termYears: contest.termYears, voteFor: contest.voteFor });
-      for (const candidate of ballot.candidacies.filter(row => row.contestId === contest.id)) {
+      const candidates = ballot.candidacies.filter(row => row.contestId === contest.id);
+      if (contest.candidateListComplete === true) add("ELE-07", { candidates: candidates.map(row => ({ id: row.id, name: `${row.givenName} ${row.familyName}` })) });
+      for (const candidate of candidates) {
         subject(candidate.id, "contest", divisions, `${candidate.givenName} ${candidate.familyName}`, "candidate");
         field(candidate.id, "CAN-01", { id: candidate.id, name: `${candidate.givenName} ${candidate.familyName}` }, candidate.provenance.sourceUrl, candidate.provenance.collectedAt, FRESHNESS_HOURS.daily);
         field(candidate.id, "CAN-02", { contestId: contest.id, electionId: contest.electionId, office: contest.title, divisionId: contest.ocdId }, candidate.provenance.sourceUrl, candidate.provenance.collectedAt, FRESHNESS_HOURS.daily);

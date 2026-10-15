@@ -97,25 +97,33 @@ test("a question Ask could not answer about a body becomes a blank on its calend
   assert.notEqual(blankFingerprint(withAsked), blankFingerprint(heldCadence), "a new question makes the packet due again");
 });
 
-test("each candidacy on a published ballot is a subject of its contest's government, owing its six candidate blanks minus a filed website", () => {
+test("a candidacy owes the candidate blanks, its race owes the candidate list, and a measure owes its websites", () => {
   const CD1 = "ocd-division/country:us/state:az/cd:1";
   const provenance = { sourceUrl: "https://azsos.gov/2026/candidates", sourceOrg: "Arizona Secretary of State", collectedAt: "2026-10-01T00:00:00.000Z" };
+  const contest = { electionId: "az-2026-general", ocdId: CD1, divisionVintage: "2024", voteFor: 1, termYears: 2, scopeNote: null, provenance };
   const ballot = {
     election: { id: "az-2026-general", date: "2026-11-03", name: "General", state: "AZ" },
-    contests: [{ id: "az-us-house-1", electionId: "az-2026-general", ocdId: CD1, divisionVintage: "2024", title: "U.S. House, District 1", type: "CANDIDACY",
-      voteFor: 1, termYears: 2, scopeNote: null, provenance }],
+    contests: [{ ...contest, id: "az-us-house-1", title: "U.S. House, District 1", type: "CANDIDACY", candidateListComplete: true },
+      { ...contest, id: "az-prop-1", title: "Proposition 1", type: "MEASURE" }],
     candidacies: [
       { id: "cand-a", contestId: "az-us-house-1", familyName: "Alpha", givenName: "Ann", partyLabel: null, slogan: null, incumbent: null, websiteUrl: "https://annalpha.example", provenance },
       { id: "cand-b", contestId: "az-us-house-1", familyName: "Bravo", givenName: "Ben", partyLabel: null, slogan: null, incumbent: null, websiteUrl: null, provenance },
     ],
-    measures: [], absences: [],
+    measures: [{ id: "m-1", contestId: "az-prop-1", questionText: "Shall the district issue bonds?", officialStatement: null, provenance }],
+    absences: [],
   } as unknown as BallotSet;
   const capture = projectHeldPlaceFamilies([CD1], null, { ballots: [ballot] });
   const items = buildPlaceOwedList({ divisions: [{ id: CD1, label: "Congressional District 1" }], subjects: capture.subjects, held: capture.held, now: NOW });
+  const owed = (id: string, family: string) => items.filter(row => row.subject.id === id && row.checklistId.startsWith(family)).map(row => row.checklistId);
   const [packet] = packetsFrom({ divisions: [{ id: CD1, label: "Congressional District 1" }], items });
   const blanksOf = (id: string) => packet!.blanks.filter(b => b.subjectId === id).map(b => b.checklistId).sort();
   assert.deepEqual(blanksOf("cand-b"), ["CAN-04", "CAN-05", "CAN-06", "CAN-07", "CAN-16", "CAN-17"]);
   assert.deepEqual(blanksOf("cand-a"), ["CAN-06", "CAN-07", "CAN-16", "CAN-17"], "the filed website is held");
   assert.ok(packet!.held.some(f => f.subjectId === "cand-a" && f.checklistId === "CAN-05" && /annalpha/.test(f.value)));
-  assert.ok(!packet!.blanks.some(b => b.subjectId === "az-us-house-1" && b.family === "CAN"), "the contest itself owes no candidate blank");
+  assert.deepEqual(owed("az-us-house-1", "CAN-"), [], "the race owes no candidate item");
+  assert.ok(items.some(row => row.subject.id === "az-us-house-1" && row.checklistId === "ELE-07" && row.state !== "missing"), "the race holds its verified candidate list");
+  assert.deepEqual(owed("az-prop-1", "CAN-"), [], "a measure owes no bio, photo or campaign contact");
+  assert.ok(!owed("az-prop-1", "ELE-").includes("ELE-07"), "a measure owes no candidate list");
+  assert.deepEqual(blanksOf("az-prop-1").filter(id => ["ELE-27", "ELE-28"].includes(id)), ["ELE-27", "ELE-28"], "its information page and committee sites are hunted");
+  assert.ok(!owed("az-us-house-1", "ELE-").includes("ELE-27"), "a race owes no measure website");
 });

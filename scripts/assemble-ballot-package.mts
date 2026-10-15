@@ -12,7 +12,7 @@ import { PostgresRoutineDataStore, type RoutineDataStore } from "../lib/civic-da
 import { authorityForManualReceipt } from "../lib/civic-data/source-authority.ts";
 import { mergeBallotContests } from "../lib/civic-data/worker-ballot-contests.ts";
 import type { ManualSourceSetReceipt } from "../lib/civic-data/types.ts";
-import { ballotInputHash, type BallotPublicationResult } from "../lib/civic-data/ballot-publication.ts";
+import { ballotInputHash, type BallotContestHold, type BallotPublicationResult } from "../lib/civic-data/ballot-publication.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { routineReceiptFields, type RoutineRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
@@ -32,7 +32,7 @@ class BallotAssemblyError extends Error {
     super(message); this.merged = merged; this.skipped = skipped;
   }
 }
-const authority = (contest: Contest, receipt: ManualSourceSetReceipt) => receipt.sources.find(source =>
+const authority = (contest: Pick<Contest, "provenance">, receipt: ManualSourceSetReceipt) => receipt.sources.find(source =>
   source.reviewOutcome !== "BLOCKED" && ["ELECTION_AUTHORITY", "OFFICIAL_PUBLISHER"].includes(source.sourceClass) &&
   [source.requestedUrl, source.finalUrl].includes(contest.provenance.sourceUrl ?? ""))?.publisher;
 
@@ -40,15 +40,28 @@ function mergeBallot(next: BallotSet, before: BallotSet | undefined, receipt: Ma
   if (!before) return next;
   if (next.election.date !== before.election.date) throw new Error("Election date conflicts with the published ballot.");
   const accepted = next.contests.filter(contest => {
-    const old = before.contests.find(row => row.id === contest.id);
-    if (old && Date.parse(old.provenance.collectedAt) >= Date.parse(contest.provenance.collectedAt)) return false;
+    const published = before.contests.find(row => row.id === contest.id);
+    const old = published ?? before.heldContests?.find(row => row.id === contest.id);
+    if (old && (Date.parse(old.provenance.collectedAt) > Date.parse(contest.provenance.collectedAt) ||
+      published && Date.parse(old.provenance.collectedAt) === Date.parse(contest.provenance.collectedAt))) return false;
     if (old && authority(old, priorReceipt) !== authority(contest, receipt)) throw new Error(`Contest authority conflicts: ${contest.id}`);
     return true;
   });
   const acceptedIds = new Set(accepted.map(row => row.id));
-  if (!accepted.length) return before;
+  const knownComplete = new Set(completeOfficialBallotContests({ kind: "ballot-contests", ballots: {
+    [ballotElectionKey(before)]: before } }, priorReceipt).map(row => row.contest.id));
+  const heldContests = next.heldContests?.filter(contest => {
+    if (knownComplete.has(contest.id)) return false;
+    const previousHold = before.heldContests?.find(row => row.id === contest.id);
+    const old = previousHold ?? before.contests.find(row => row.id === contest.id);
+    if (old && (Date.parse(old.provenance.collectedAt) > Date.parse(contest.provenance.collectedAt) ||
+      previousHold && Date.parse(old.provenance.collectedAt) === Date.parse(contest.provenance.collectedAt))) return false;
+    if (old && authority(old, priorReceipt) !== authority(contest, receipt)) throw new Error(`Contest authority conflicts: ${contest.id}`);
+    return true;
+  });
+  if (!accepted.length && !heldContests?.length) return before;
   const key = ballotElectionKey(next);
-  const fresh = { ...next, contests: accepted, candidacies: next.candidacies.filter(row => acceptedIds.has(row.contestId)),
+  const fresh = { ...next, heldContests, contests: accepted, candidacies: next.candidacies.filter(row => acceptedIds.has(row.contestId)),
     measures: next.measures.filter(row => acceptedIds.has(row.contestId)),
     ...(next.measureRecords ? { measureRecords: next.measureRecords.filter(row => acceptedIds.has(row.contestId)) } : {}) };
   const merged = mergeBallotContests({ contractId: "ballot-contests", version: "2026-general", sourceThrough: receipt.reviewedAt,
@@ -95,19 +108,26 @@ export async function assembleBallotPackage(options: {
     try {
       const state = JSON.parse(await readFile(resolve(directory, file), "utf8")) as BallotStateFile;
       if (!state.ballots || !state.sourceReceipt) throw new Error("A state file needs ballots and sourceReceipt at its top level.");
-      const fresh = validate(packageFor({ kind: "ballot-contests", ballots: state.ballots }, state.sourceReceipt));
-      const entries = Object.entries(fresh.ballots);
+      const entries = Object.entries(state.ballots);
       if (!/^[a-z]{2}\.json$/i.test(file) || entries.length !== 1 || entries[0][1].election.state !== file.slice(0, 2).toUpperCase()) {
         throw new Error("A state file must contain one ballot keyed by its filename's state and election id.");
       }
-      const complete = new Set(completeOfficialBallotContests(fresh, state.sourceReceipt).map(row => row.contest.id));
-      if (entries[0][1].contests.some(contest => contest.type !== "MEASURE" && !complete.has(contest.id))) {
-        throw new Error("The candidate list lacks complete official ballot-contest evidence.");
-      }
+      const complete = new Set(completeOfficialBallotContests({ kind: "ballot-contests", ballots: state.ballots }, state.sourceReceipt).map(row => row.contest.id));
+      const [key, raw] = entries[0];
+      const heldContests = raw.contests.filter(contest => contest.type !== "MEASURE" && !complete.has(contest.id))
+        .map(({ id, electionId, ocdId, title, provenance, candidateListComplete }) => ({ id, electionId, ocdId, title, provenance,
+          reason: candidateListComplete === true ? "The complete candidate list lacks matching official source evidence."
+            : "The official candidate list hasn't been fully checked." }));
+      const heldIds = new Set(heldContests.map(row => row.id));
+      const ballot: BallotSet = { ...raw, heldContests, contests: raw.contests.filter(row => !heldIds.has(row.id)),
+        candidacies: raw.candidacies.filter(row => !heldIds.has(row.contestId)),
+        measures: raw.measures.filter(row => !heldIds.has(row.contestId)),
+        ...(raw.measureRecords ? { measureRecords: raw.measureRecords.filter(row => !heldIds.has(row.contestId)) } : {}),
+        ...(raw.removals ? { removals: raw.removals.filter(row => !heldIds.has(row.contestId)) } : {}) };
+      validate(packageFor({ kind: "ballot-contests", ballots: { [key]: ballot } }, state.sourceReceipt));
       const receipt: ManualSourceSetReceipt = { contractVersion: 1, reviewedAt: now, reviewedBy: "assemble-ballot-package",
         sources: [...new Map([...sources, ...state.sourceReceipt.sources].sort((a, b) => Date.parse(a.retrievedAt) - Date.parse(b.retrievedAt))
           .map(source => [`${new URL(source.finalUrl).href}\n${source.rawHash}`, source])).values()] };
-      const [key, ballot] = entries[0];
       const next = { ...ballots, [key]: mergeBallot(ballot, ballots[key], state.sourceReceipt,
         { ...receipt, sources }) };
       validate(packageFor({ kind: "ballot-contests", ballots: next }, receipt));
@@ -118,7 +138,9 @@ export async function assembleBallotPackage(options: {
     { contractVersion: 1, reviewedAt: now, reviewedBy: "assemble-ballot-package", sources });
   try { validate(input); }
   catch (error) { throw new BallotAssemblyError(error instanceof Error ? error.message : String(error), merged, skipped); }
-  return { package: input, merged, skipped, prior };
+  const heldContests: BallotContestHold[] = Object.values(ballots).flatMap(ballot => (ballot.heldContests ?? []).map(row => ({
+    state: ballot.election.state, contestId: row.id, title: row.title, reason: row.reason })));
+  return { package: input, merged, skipped, heldContests, prior };
 }
 
 export async function runBallotPublication(options: { directory?: string; store?: RoutineDataStore; now?: string } = {}) {
@@ -128,23 +150,24 @@ export async function runBallotPublication(options: { directory?: string; store?
   const inputHash = await ballotInputHash(directory);
   const scratch = await mkdtemp(resolve(tmpdir(), "ballot-publication-"));
   let merged: string[] = [], skipped: { file: string; reason: string }[] = [];
+  let heldContests: BallotContestHold[] = [];
   let receipt: RoutineRunnerReceipt | null = null;
   let report: BallotPublicationResult;
   try {
     const store = options.store ?? new PostgresRoutineDataStore();
     const result = await assembleBallotPackage({ directory, store, now: at });
-    ({ merged, skipped } = result);
+    ({ merged, skipped, heldContests } = result);
     const packagePath = resolve(scratch, "package.json");
     await writeFile(packagePath, JSON.stringify(result.package, null, 2) + "\n");
     const candidate = manualProjectionCandidate(result.package, { prior: result.prior });
     const outcome = await processRegisteredManualCandidate(store, "ballot-contests", candidate, at, result.prior?.versionId ?? null);
     receipt = { source: "ballot-contests", ...routineReceiptFields(candidate, outcome), structuralReleaseContract: ZERO_RELEASE_EVENTS };
-    report = { kind: "BALLOT_PUBLICATION", inputHash, at, merged, skipped,
+    report = { kind: "BALLOT_PUBLICATION", inputHash, at, merged, skipped, heldContests,
       status: outcome.promoted || outcome.confirmed ? "PUBLISHED" : "HELD", versionId: receipt.promotedVersion,
       reason: outcome.promoted || outcome.confirmed ? null : outcome.candidate.failureDetail ?? "Ballot validation held the published prior." };
   } catch (error) {
     if (error instanceof BallotAssemblyError) ({ merged, skipped } = error);
-    report = { kind: "BALLOT_PUBLICATION", inputHash, at, merged, skipped, status: "HELD", versionId: null,
+    report = { kind: "BALLOT_PUBLICATION", inputHash, at, merged, skipped, heldContests, status: "HELD", versionId: null,
       reason: error instanceof Error ? error.message : String(error) };
   } finally { await rm(scratch, { recursive: true, force: true }); }
   return { report, receipt, exitCode: report.status === "PUBLISHED" ? 0 : 2 };

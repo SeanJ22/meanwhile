@@ -312,7 +312,14 @@ test("ranking one ZIP in a district reads its whole saved scope without admittin
     return Response.json(body.queries ? { results } : results[0]);
   };
   t.mock.method(globalThis, "fetch", async () => { assert.fail("scope ranking fetches no external source"); });
+  const targetSelections: unknown[] = [];
+  const readConfig = repos.adminConfig.read.bind(repos.adminConfig);
+  repos.adminConfig.read = async (id, sections) => {
+    if (sections?.placeTargets) targetSelections.push(sections.placeTargets);
+    return readConfig(id, sections);
+  };
   const reading = await nationalPlaceWorkReading(repos, ["03060"], now);
+  assert.deepEqual(targetSelections, [{ ids: ["geo:nh.congressional_district.3302", "nh.cd.3302"] }]);
   assert.deepEqual(lookupSelections, [["03060"], ["03060", "03101"]], "the saved district's other ZIP is loaded before declared-work membership");
   assert.deepEqual(reading.ordered, ["03060"], "the scope's full denominator does not widen this pass's selected workers");
   assert.deepEqual([...reading.belowTarget], ["03060"]);
@@ -536,11 +543,6 @@ test("redirected election pages keep their saved source identity and resolve lin
   assert.equal(field.value, "https://elections.example.gov/voters/current/polling");
 });
 
-/**
- * State legislators and their district reconciliation. Some states designate House districts by name
- * ("<County> 8") while this repo's identifiers are Census numeric codes (`sldl:608`); a direct join scores zero
- * silently.
- */
 
 const DIVISIONS = (
   registry as { divisions: { ocdId: string; label: string; divisionType: string }[] }
@@ -617,9 +619,7 @@ test("a CSV with a missing native person identifier is refused before publicatio
 });
 
 test("a roster with the wrong header or too few rows is refused, not read as empty", () => {
-  // An HTML error page served at 200 passes the comma blank-check and parses to
-  // a table whose header is not the roster's — rowsToPeople would then find no
-  // id column and return zero people, a whole legislature reading as absent.
+
   assert.match(pluralRosterIssue("<html>error, error</html>") ?? "", /missing id/);
 
   const header =

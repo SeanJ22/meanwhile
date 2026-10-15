@@ -127,8 +127,7 @@ export const BULK_ACTIONS: readonly RegisteredAction[] = [
           scopes = next.scopes;
         }
         const written = withExpansionScopes(current, { scopes, decidedAt: at });
-        if (existing === null) await deps.repos.adminConfig.put(ADMIN_CONFIG_ID, written, at);
-        else await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, existing.revision, written, at);
+        await deps.repos.adminConfig.save(existing, written, at);
       } catch (error) {
         return refuse(writeFailureSays("your list of hunts", error));
       }
@@ -215,7 +214,7 @@ export const BULK_ACTIONS: readonly RegisteredAction[] = [
           decidedBy: context.request.actorRef,
           receiptId: context.receiptId,
         });
-        await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, existing.revision, withExpansionScopes(current, { scopes: next.scopes, decidedAt: at }), at);
+        await deps.repos.adminConfig.save(existing, withExpansionScopes(current, { scopes: next.scopes, decidedAt: at }), at);
       } catch (error) {
         return refuse(writeFailureSays("the change to your hunt", error));
       }

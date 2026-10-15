@@ -1,9 +1,10 @@
-import { canonicalJson, type ArtifactRecord, type ControlPlaneRepositories, type RecordProjection } from "../repository/types.ts";
+import { canonicalJson, type ArtifactRecord, type ControlPlaneRepositories } from "../repository/types.ts";
 import type { Attempt } from "../attempt.ts";
 import { FRESHNESS_PROJECT, type FreshnessOccurrence, type StandingObligation } from "../scheduler/durable.ts";
 import { isScheduled, scheduleObligation } from "../scheduler/obligation.ts";
 import type { WorkItem } from "../work-item.ts";
 import type { AutonomousWorkPlan } from "./autonomous-plan.ts";
+import { readLineageHistory } from "./scoped-history.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 
 /** A standing source's period and instruction, independent of method-version or repaired extraction details. */
@@ -34,10 +35,7 @@ export interface StandingLineage {
   readonly publishedAt: string | null;
 }
 
-/** The capture and Attempt fields lineage selection reads; whole-store callers read only these (`readAllNarrowed`, `listNarrowed`). */
-export const LINEAGE_ARTIFACT_FIELDS: RecordProjection = { artifactId: true, workItemId: true, attemptId: true, partial: true, canonicalUrl: true };
 export type LineageArtifact = Pick<ArtifactRecord, "artifactId" | "workItemId" | "attemptId" | "partial" | "canonicalUrl">;
-export const LINEAGE_ATTEMPT_FIELDS: RecordProjection = { id: true, workItemId: true, outcome: true, worker: ["role"] };
 export type LineageAttempt = Pick<Attempt, "id" | "workItemId" | "outcome"> & { readonly worker: Pick<Attempt["worker"], "role"> };
 
 /** Every sibling remains durable; this selects only which one may spend the next work slice. */
@@ -119,9 +117,7 @@ export function selectStandingLineages(input: {
     // even when a legacy standing row still carries its original due anchor.
     const renewed = lastPublishedAt ? rows.filter(row => row.occurrence.openedAt > lastPublishedAt) : [];
     const eligible = renewed.length ? renewed : rows;
-    // Verified child publication belongs to its exact repair ancestor. Failed
-    // results never outrank actual accepted work. A source/provider hold on the
-    // selected root remains its normal debt; another sibling cannot evade it.
+
     const rank = (row: typeof rows[number]) => [
       publicationAt(row) === null ? 0 : 1,
       (families.get(row.item.id)?.length??1)-1,
@@ -149,9 +145,7 @@ export function standingLineageCoversDue(input: {
 }): StandingLineage | null {
   const existing = input.lineages.filter(lineage => lineage.key === input.key);
   if (!existing.length) return null;
-  // Once a verified publication ages past the configured source cadence, a
-  // fresh standing round can begin. Held output never starts that clock;
-  // partial accepted facts do, without completing their unresolved work.
+
   const active = existing.find(lineage => {
     if (lineage.publishedAt === null) return true;
     const observed = Date.parse(lineage.publishedAt), current = Date.parse(input.now);
@@ -162,9 +156,6 @@ export function standingLineageCoversDue(input: {
   return active ?? null;
 }
 
-/** A complete reader readback is a real observation for this standing source.
- * Keep the old occurrences and all unsettled WorkItems; only advance the
- * source's next freshness clock under its exact current instruction. */
 export async function persistVerifiedPublicationAnchors(repos:ControlPlaneRepositories,input:{
   readonly obligations:readonly StandingObligation[];readonly lineages:readonly StandingLineage[];readonly now:string;
 }):Promise<{readonly updated:ReadonlyMap<string,StandingObligation>;readonly anchored:readonly string[]}> {
@@ -198,9 +189,6 @@ export async function persistVerifiedPublicationAnchors(repos:ControlPlaneReposi
   return {updated,anchored};
 }
 
-/** Public bytes from a sibling are offered only when the completed Scout's
- * exact fetch/browser rung and metadata agree on ID, owner and official host.
- * Vault hash, permission and freshness are checked again when the ID is read. */
 export function brokeredSiblingCaptures(input: { readonly lineage: StandingLineage;
   readonly artifacts: readonly LineageArtifact[]; readonly attempts: readonly LineageAttempt[];
   readonly scouts: readonly Pick<ScoutResult,"attemptId"|"workItemId"|"rungs">[];
@@ -222,4 +210,32 @@ export function brokeredSiblingCaptures(input: { readonly lineage: StandingLinea
       {artifactId:record.artifactId,originWorkItemId:record.workItemId});
   }
   return [...out.values()];
+}
+
+export async function readStandingLineages(repos: ControlPlaneRepositories,
+  obligations: readonly StandingObligation[], now: string): Promise<readonly StandingLineage[]> {
+  const lineages = new Map<string, StandingLineage>();
+  for (const obligation of obligations) {
+    if (!obligation.autonomousPlan || !obligation.active) continue;
+    const held = await repos.dispatchState.lineages(obligation.id, async () => {
+      const occurrences = await repos.occurrences.listWhere(["obligationId"], obligation.id);
+      if (!occurrences.length) return [];
+      const history = await readLineageHistory(repos, occurrences[0].value.workItemId);
+      if (!history) throw new Error("STANDING_LINEAGE_SCOPED_READ_UNAVAILABLE");
+      return selectStandingLineages(history);
+    });
+    const matching = held.filter(lineage => standingLineageKeyFor({ obligationId: obligation.id,
+      dueAt: lineage.dueAt, project: FRESHNESS_PROJECT, subject: obligation.subjectId, plan: obligation.autonomousPlan,
+      instructionReceipts: (obligation.assignments ?? []).map(mark => mark.ref) }) === lineage.key);
+    const published = matching.filter(lineage => lineage.publishedAt && Date.parse(lineage.publishedAt) <= Date.parse(now))
+      .sort((a, b) => b.publishedAt!.localeCompare(a.publishedAt!))[0];
+    if (published) lineages.set(published.key, published);
+    const observedAt = published?.publishedAt;
+    const anchored = observedAt && obligation.openOccurrenceId === null &&
+      (!obligation.lastWorkedAt || Date.parse(obligation.lastWorkedAt) < Date.parse(observedAt))
+      ? { ...obligation, lastWorkedAt: observedAt, absentUntil: null, absenceUnlock: null } : obligation;
+    const scheduled = scheduleObligation(anchored, Date.parse(now));
+    if (isScheduled(scheduled)) for (const lineage of matching) if (lineage.dueAt === scheduled.nextDueAt) lineages.set(lineage.key, lineage);
+  }
+  return [...lineages.values()];
 }

@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import test from "node:test";
+import test, { afterEach, beforeEach } from "node:test";
+import { installFactReader } from "../lib/facts/db.ts";
 
 import {
   HELD_MEETING_PARTITIONS,
@@ -30,6 +31,23 @@ import {
   reconcileSuccessfulMeetingPartition,
   selectedMeetingPartitions,
 } from "../scripts/ingest.ts";
+
+const factReads: (string | string[])[] = [];
+beforeEach(() => {
+  factReads.length = 0;
+  installFactReader(async (_text, params) => {
+    const ids = params?.[0];
+    if (typeof ids === "string") {
+      assert.equal(ids, "meeting:");
+      factReads.push(ids);
+      return [{ newest: 0, live: 0 }];
+    }
+    assert.ok(Array.isArray(ids) && ids.every(id => typeof id === "string" && id.startsWith("meeting:")));
+    factReads.push([...ids].sort());
+    return [];
+  });
+});
+afterEach(() => installFactReader(undefined));
 
 const FIRST = "2026-09-08T12:00:00.000Z";
 const SECOND = "2026-09-08T13:00:00.000Z";
@@ -237,6 +255,7 @@ test("only exact out-of-window meeting evidence removes a row and its attached a
 
   const fresh = meeting(legistar, SECOND, "still-served");
   const previous = await readMeetingsProjection({ store, bypassCache: true, now: SECOND });
+  assert.deepEqual(factReads, [[`meeting:${old.id}`]]);
   assert.equal(previous.kind, "PROMOTED");
   const priorPartition = previous.kind === "PROMOTED"
     ? previous.value
@@ -378,9 +397,7 @@ test("meeting Reader repair composes the shared aggregate once and correlates ex
     "f".repeat(40),
   );
   assert.equal(store.readPromotionIdentitiesCalls, 1, "one identity-only pointer batch names every partition version");
-  // The payloads cross once, in the actual aggregate Reader read, plus one
-  // batch for the held pointers of successors with none yet
-  // (HELD_MEETING_PARTITIONS) — the college's successor has none in this store.
+
   assert.equal(
     store.readPromotionsCalls,
     1 + (HELD_MEETING_PARTITIONS.length > 0 ? 1 : 0),
@@ -610,6 +627,7 @@ test("the batched Reader bounds database calls and isolates a corrupt partition"
   };
 
   const read = await readMeetingsProjection({ store: corruptingStore, bypassCache: true, now: SECOND });
+  assert.deepEqual(factReads, [["meeting:legistar-insite:mesa-good"]]);
   assert.equal(read.kind, "PROMOTED");
   if (read.kind === "PROMOTED") {
     assert.deepEqual(read.value.meetings.map((row) => row.id), ["legistar-insite:mesa-good"]);
@@ -620,9 +638,7 @@ test("the batched Reader bounds database calls and isolates a corrupt partition"
   }
   assert.equal(scalarPromotionReads, 0);
   assert.equal(scalarCandidateReads, 0);
-  // One batch for every registered partition and its durable history,
-  // and one more only for the held pointers of successors that have none yet
-  // (HELD_MEETING_PARTITIONS) — the college's successor has none in this store.
+
   assert.equal(promotionBatchReads, 2);
   assert.equal(candidateBatchReads, 1);
   assert.deepEqual(requestedScopeBatches, [
@@ -660,6 +676,7 @@ test("batched pointer/candidate proof failure cannot suppress an unrelated parti
   };
 
   const read = await readMeetingsProjection({ store: batchStore, bypassCache: true, now: SECOND });
+  assert.deepEqual(factReads, [["meeting:legistar-insite:mesa-proof-good"]]);
   assert.equal(read.kind, "PROMOTED");
   if (read.kind === "PROMOTED") {
     assert.deepEqual(read.value.meetings.map((row) => row.id), ["legistar-insite:mesa-proof-good"]);
@@ -688,6 +705,7 @@ test("a cross-partition id collision holds every claimant and never hides an unr
   });
 
   const read = await readMeetingsProjection({ store, bypassCache: true, now: SECOND });
+  assert.deepEqual(factReads, [["meeting:legistar-insite:unrelated"]]);
   assert.equal(read.kind, "PROMOTED");
   if (read.kind === "PROMOTED") {
     assert.deepEqual(read.value.meetings.map((row) => row.id), ["legistar-insite:unrelated"]);

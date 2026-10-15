@@ -222,17 +222,14 @@ export async function resolvedHeldAuditAttribution(input: {
 async function generalizedIndependentContext(input: {
   root: string; repos: ControlPlaneRepositories; method: MethodKnowledge; readEvidence: FleetRuntime["readEvidence"];
   artifactId: string; contract: GeneralizedCivicExtractionContract; auditScope: IndependentAuditContext["scope"]; methodVersion: number; workItemId?: string;
-  siblingHeldRootFor?: ResearchRuntimeTools["siblingHeldRootFor"]; scopedReads?: boolean;
+  siblingHeldRootFor?: ResearchRuntimeTools["siblingHeldRootFor"];
 }): Promise<IndependentAuditContext> {
   const { contract } = input;
   // The method only grows, so a contract planned under an earlier version is still audited, against today's floor; one from a later version is not.
   if (contract.methodVersion > input.methodVersion) throw new Error("AUDIT_METHOD_VERSION_MISMATCH");
-  // When scoped, only the rows this audit reads (`readAuditHistory`); otherwise every row.
-  const scoped = input.scopedReads === true ? await readAuditHistory(input.repos, { workItemId: input.workItemId, subjectId: contract.subjectId,
+  const { artifacts, items } = await readAuditHistory(input.repos, { workItemId: input.workItemId, subjectId: contract.subjectId,
     requiredArtifactIds: [input.artifactId, ...contract.sourceScope.observationArtifactIds,
-      ...contract.verification.authorities.flatMap(authority => [...authority.artifactIds, ...authority.authorityEvidenceArtifactIds])] }) : null;
-  const artifacts = scoped?.artifacts ?? await input.repos.artifacts.readAll();
-  const items = scoped?.items ?? (await input.repos.workItems.list()).map(row => row.value);
+      ...contract.verification.authorities.flatMap(authority => [...authority.artifactIds, ...authority.authorityEvidenceArtifactIds])] });
   if (!input.workItemId) throw new Error("AUDIT_WORK_ITEM_SCOPE_REQUIRED");
   const { primary, owner } = await resolvedHeldAuditAttribution({ repos: input.repos, artifacts, items,
     artifactId: input.artifactId, contract, workItemId: input.workItemId, siblingHeldRootFor: input.siblingHeldRootFor });
@@ -311,8 +308,6 @@ async function generalizedIndependentContext(input: {
 /** `auditCeilingUsd`: the rolling ceiling in force, which the auditor admits against (model-audit.ts). */
 export function standingFleetRuntime(input: { root: string; /** The method knowledge, read from the field manual (`readMethodKnowledge`). */ method: MethodKnowledge; vaultRoot?: string; repos: ControlPlaneRepositories; transport?: ModelTransport; now?: () => string; auditCeilingUsd?: number;
   lifetimeHuntSubject?: (subjectId: string) => boolean;
-  /** Scope each task's history reads (`scoped-history.ts`). */
-  scopedReads?: boolean;
   siblingHeldRootFor?: ResearchRuntimeTools["siblingHeldRootFor"];
   /** The auditor's transport for the jurisdiction a record is about, held on the area budget covering it. */
   transportFor?: (jurisdiction: { readonly subjectId: string; readonly state: string | null }) => ModelTransport }): FleetRuntime {
@@ -320,26 +315,26 @@ export function standingFleetRuntime(input: { root: string; /** The method knowl
   const method = input.method;
   const readEvidence = workerVaultResolver(input.repos, new DurableEvidenceStore(input.vaultRoot ?? join(input.root, ...VAULT_DIR)), "freshness");
   return { repos: input.repos, readEvidence, methodVersion: method.version, now, requireModelAudit: true,
-    ...(input.scopedReads ? { scopedReads: true } : {}),
     ...(input.lifetimeHuntSubject === undefined ? {} : { lifetimeHuntSubject: input.lifetimeHuntSubject }),
     ...(input.transport ? (() => {
       const modelOptions = { ...(input.auditCeilingUsd === undefined ? {} : { ceilingUsd: input.auditCeilingUsd }), ...(input.transportFor === undefined ? {} : { transportFor: input.transportFor }),
         ...(input.lifetimeHuntSubject === undefined ? {} : { lifetimeHuntSubject: input.lifetimeHuntSubject }),
-        ...(input.scopedReads ? { scopedReads: true } : {}) };
+      };
       return { auditReasoner: modelAuditReasoner(input.repos, input.transport, now, modelOptions), parseReasoner: modelParseReasoner(input.repos, input.transport, now, modelOptions),
         modelAuditSample: createModelAuditSampler(input.repos) };
     })() : {}),
     independentContext: async ({ artifactId, contract, auditScope, methodVersion, workItemId }): Promise<IndependentAuditContext> => {
       if (methodVersion !== method.version) throw new Error("AUDIT_METHOD_VERSION_MISMATCH");
       if (contract.schemaVersion === 2) return generalizedIndependentContext({ ...input, method, readEvidence, artifactId, contract, auditScope, methodVersion, workItemId });
-      const primaryRow = (await input.repos.artifacts.readAll()).find(artifact => artifact.artifactId === artifactId);
+      const history = await readAuditHistory(input.repos,{workItemId,subjectId:contract.subjectId,requiredArtifactIds:[artifactId]});
+      const primaryRow = history.artifacts.find(artifact => artifact.artifactId === artifactId);
       const permanentContract = primaryRow && registeredHeldMeetingContract(primaryRow.canonicalUrl, contract.subjectId);
       if (permanentContract) {
         if (auditScope !== "CAPTURED_ARTIFACT") throw new Error("AUDIT_SOURCE_UNIVERSE_NOT_ESTABLISHED");
         if (canonicalJson(permanentContract) !== canonicalJson(contract)) throw new Error("AUDIT_CANONICAL_SCOPE_MISMATCH");
         const owner = (await input.repos.workItems.mustRead(primaryRow!.workItemId)).value;
         if (owner.subject !== contract.subjectId) throw new Error("AUDIT_ARTIFACT_SUBJECT_MISMATCH");
-        const captures = (await input.repos.artifacts.readAll()).filter(artifact => artifact.artifactId === artifactId && artifact.workItemId === owner.id &&
+        const captures = history.artifacts.filter(artifact => artifact.artifactId === artifactId && artifact.workItemId === owner.id &&
           !artifact.partial && registeredHeldMeetingContract(artifact.canonicalUrl, owner.subject));
         if (captures.length > HELD_AUDIT_MAX_ARTIFACTS || captures.reduce((sum, artifact) => sum + artifact.byteLength, 0) > HELD_AUDIT_CONTEXT_MAX_BYTES) throw new Error("AUDIT_EVIDENCE_UNIVERSE_BOUND_EXCEEDED");
         const evidence = await Promise.all(captures.map(async artifact => evidenceProjection(await readEvidence(artifact.artifactId))));
@@ -357,13 +352,12 @@ export function standingFleetRuntime(input: { root: string; /** The method knowl
           routes,
           evidence, startedFrom: ["CANONICAL_SUBJECT_IDENTITY", "PUBLISHER_SOURCE_UNIVERSE", "METHOD_REGISTRY", "EVIDENCE_VAULT"] };
       }
-      const artifacts = await input.repos.artifacts.readAll();
+      const artifacts = history.artifacts;
       const primary = artifacts.find(a => a.artifactId === artifactId);
       if (!primary) throw new Error("AUDIT_ARTIFACT_MISSING");
       const canonical = heldEventContract(input.root, primary);
       if (!canonical || canonicalJson(canonical) !== canonicalJson(contract)) throw new Error("AUDIT_CANONICAL_SCOPE_MISMATCH");
-      const items = await input.repos.workItems.list();
-      const subjectItems = new Set(items.filter(i => i.value.subject === canonical.subjectId).map(i => i.id));
+      const subjectItems = new Set(history.items.filter(item => item.subject === canonical.subjectId).map(item => item.id));
       if (!subjectItems.has(primary.workItemId)) throw new Error("AUDIT_ARTIFACT_SUBJECT_MISMATCH");
       const sameSubject = artifacts.filter(a => subjectItems.has(a.workItemId));
       const heldFeeds = sameSubject.filter(a => heldEventContract(input.root, a));
@@ -476,11 +470,6 @@ export async function advanceHeldWorkerFleet(root: string, runtime: FleetRuntime
   }
 }
 
-/**
- * Whether any schema-1 held evidence still has a Parser, Validator or Auditor
- * step to run (the only work the legacy plan can create). A chain ends at a
- * Parser that did not extract, a Validator that did not pass, or an Auditor result.
- */
 export async function legacyHeldWorkOwed(root: string, runtime: FleetRuntime): Promise<boolean> {
   const candidates = (await runtime.repos.artifacts.readAllNarrowed(HELD_EVENT_FIELDS) as HeldEventCapture[])
     .filter(artifact => !artifact.partial && heldEventContract(root, artifact) !== null);
@@ -505,9 +494,11 @@ export async function legacyHeldWorkOwed(root: string, runtime: FleetRuntime): P
 /** Held work joins the same lease queue as acquisition. Planning invokes no worker or model. */
 export async function planHeldWorkerFleet(root: string, runtime: FleetRuntime, legacyOnly = false): Promise<readonly RouteTask[]> {
   await advanceHeldWorkerFleet(root, runtime, Infinity, legacyOnly);
-  const attempts = (await runtime.repos.attempts.list()).map(row => row.value);
+  const snapshot = await runtime.repos.dispatchState.readOpen();
+  const workIds = [...new Set([...snapshot.routeTasks.values()].map(row => row.value.workItemId))];
+  const attempts = (await Promise.all(workIds.map(id => runtime.repos.attempts.listWhere(["workItemId"], id)))).flat().map(row => row.value);
   const tasks: RouteTask[] = [];
-  for (const { value: task } of await runtime.repos.routeTasks.list()) {
+  for (const { value: task } of snapshot.routeTasks.values()) {
     if (!task.workerTask || (legacyOnly && task.workerTask.contract.schemaVersion !== 1)) continue;
     const now = (runtime.now ?? (() => new Date().toISOString()))();
     const admission = workerTaskAdmission(task, attempts, now);

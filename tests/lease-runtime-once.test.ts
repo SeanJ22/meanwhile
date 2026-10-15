@@ -37,7 +37,7 @@ test("beginTask refreshes one task's worker history on a runtime that serves man
 });
 
 
-test("Box startup replays durable Scout findings once without resetting a completed build", async t => {
+test("Box preparation replays the place's durable Scout findings without resetting a completed build", async t => {
   const h = await autonomousHarness({ response: { transportError: "socket timeout" } });
   const root = await mkdtemp(join(tmpdir(), "box-runtime-"));
   t.after(() => rm(root, { recursive: true, force: true }));
@@ -45,7 +45,7 @@ test("Box startup replays durable Scout findings once without resetting a comple
   await writeFieldManual(h.repos, [...knowledgeEntries(method), methodVersionEntry(method)], h.now());
   const scout: ScoutResult = {
     formatVersion: 1, attemptId: "box-scout", obligationId: "box-obligation", routeTaskId: "box-task",
-    workItemId: "box-send", subjectId: "body:example", routeId: null, recordClass: "meetings", providerId: null,
+    workItemId: h.item.id, subjectId: h.item.subject, routeId: null, recordClass: "meetings", providerId: null,
     reason: "saved finding", outcome: "EVIDENCE_FOUND", stoppedBy: "MODEL", rungs: [], distinctEvidenceRungs: 0,
     candidates: [], findings: [{ kind: "RECORD", summary: "Clerk", exactQuote: "Alice Adams is Clerk",
       sourceUrl: "https://example.gov/roster", subjectId: "person:alice", artifactIds: ["saved-artifact"] }],
@@ -55,8 +55,10 @@ test("Box startup replays durable Scout findings once without resetting a comple
     startedAt: h.now(), recordedAt: h.now(),
   };
   await h.repos.scoutResults.append(scout.obligationId, scout.attemptId, scout, scout.recordedAt);
-  const start = () => autonomousStandingRuntime({ root, repos: h.repos, now: h.now,
-    auditCeilingUsd: 1, environment: { NODE_ENV: "test" } });
+  const start = async () => {
+    const runtime = await autonomousStandingRuntime({ root, repos: h.repos, now: h.now,auditCeilingUsd:1,environment:{NODE_ENV:"test"} });
+    await runtime.prepareWorkItem!(h.item);
+  };
   await start();
   const [row] = await h.repos.boxFindings.list();
   assert.equal(row.value.subjectId, "person:alice");

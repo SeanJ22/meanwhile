@@ -1,5 +1,4 @@
 import { runCensusState } from "../lib/control-plane/discovery/census-lane.ts";
-/** A Send to a county in a state no one has worked before reaches readers with no person and no code change: every step is the production path on in-memory stores, with no network and no model. */
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
@@ -48,6 +47,7 @@ import {
 import type { Jurisdiction, JurisdictionRegistry } from "../lib/hunt/jurisdiction-universe.ts";
 import { meetingsDiscoveryNeeds } from "../lib/hunt/meetings-discovery.ts";
 import { readMeetingsProjection } from "../lib/meetings/snapshot.ts";
+import { installFactReader } from "../lib/facts/db.ts";
 import { registrationCandidate, type RegistrationReadModel } from "../lib/registration/candidate.ts";
 import { REGISTRATION_SOURCE_BYTES, REGISTRATION_SOURCE_SHA256, REGISTRATION_SOURCE_URL, REGISTRATION_TARGETS, registrationTarget } from "../lib/registration/publication.ts";
 import { readRegistrationProjection } from "../lib/registration/reader.ts";
@@ -144,7 +144,7 @@ async function promoteVenues(store: MemoryRoutineDataStore): Promise<void> {
   assert.equal(outcome.candidate.state, "PROMOTED", outcome.candidate.failureDetail ?? "");
 }
 
-test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed by rule, wired and read by the Reader; an ambiguous calendar publishes nothing and says why", async () => {
+test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed by rule, wired and read by the Reader; an ambiguous calendar publishes nothing and says why", async (t) => {
   assert.ok(DERIVED_MEETING_FAMILY_STATES.includes("US-OH"), "Ohio has a derived family with no code change");
 
   /* 1. The owner's Send creates the work. */
@@ -338,7 +338,15 @@ test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed b
   assert.equal(familyOutcome.candidate.state, "PROMOTED", `${familyOutcome.candidate.failureCode ?? ""} ${familyOutcome.candidate.failureDetail ?? ""}`);
 
   /* 6. The Reader. */
+  let factReads = 0;
+  installFactReader(async (_text, params) => {
+    factReads++;
+    assert.deepEqual([...(params?.[0] as readonly string[])].sort(), reads.flatMap(read => read.freshMeetings.map(meeting => `meeting:${meeting.id}`)).sort());
+    return [];
+  });
+  t.after(() => installFactReader(undefined));
   const reader = await readMeetingsProjection({ store, now: T_READER, bypassCache: true });
+  assert.equal(factReads, 1, "the fixture has no separately published meeting fact overrides");
   assert.equal(reader.kind, "PROMOTED");
   if (reader.kind !== "PROMOTED") return;
   const sittings = reader.value.meetings.filter((m) => m.bodyId === COUNTY_BODY);

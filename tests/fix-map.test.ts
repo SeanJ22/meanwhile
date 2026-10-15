@@ -12,16 +12,16 @@ test("replays and future untried rows preserve the last result; a new attempt na
   assert.throws(() => applyFixResult(row, { ...row, placeId: "another" }), /identities/);
 });
 
-test("place workers read only their place; Admin reads only its selected method", async () => {
+test("place and tried checks read only the requested places", async () => {
   const calls: { sql: string; params: readonly unknown[] }[] = [];
   const repo = createFixMapRepository(async (sql, params) => { calls.push({ sql, params }); return []; });
   await repo.forPlace("division");
-  await repo.forMethod("method", 20);
+  await repo.forPlaces("method", ["division"]);
   await repo.put(row);
   assert.match(calls[0]!.sql, /WHERE place_id = \$1/);
   assert.deepEqual(calls[0]!.params, ["division", 200]);
   assert.match(calls[1]!.sql, /WHERE method_id = \$1/);
-  assert.deepEqual(calls[1]!.params, ["method", 20]);
+  assert.deepEqual(calls[1]!.params, ["method", ["division"]]);
   assert.match(calls[2]!.sql, /ON CONFLICT \(method_id, place_id\)/);
 });
 
@@ -30,4 +30,41 @@ test("a first trial replaces scheduled work, and ordering compares instants acro
   assert.equal(applyFixResult(pending, row).state, "WORKS");
   assert.equal(applyFixResult(pending, { ...pending, updatedAt: "2026-10-04T00:00:00Z" }), pending);
   assert.equal(applyFixResult(row, { ...row, triedAt: "2026-10-04T00:30:00+01:00" }), row);
+});
+
+test("method evidence and proof cover places beyond the first thousand without returning their histories", async () => {
+  const { PGlite } = await import("@electric-sql/pglite");
+  const { FIX_MAP_DDL, methodStatistics, methodWorksOf } = await import("../lib/method/fix-map.ts");
+  const { proofFromStatistics, DEFAULT_FIX_PROOF_BAR } = await import("../lib/method/fix-status.ts");
+  const db = new PGlite();
+  try {
+    for (const ddl of FIX_MAP_DDL) await db.exec(ddl);
+    const observations: FixMapRow[] = Array.from({ length: 2005 }, (_, i) => ({ ...row, methodId: "national",
+      placeId: `ocd-division/country:us/state:${["az", "nj", "wy"][i % 3]}/county:${String(i).padStart(5, "0")}`,
+      state: i < 1500 ? "WORKS" : "FAILS", triedAt: new Date(Date.parse(row.triedAt!) + i * 1000).toISOString() }));
+    await db.query(`INSERT INTO cp_fix_map (method_id, place_id, state, tried_at, attempt_id, cause, updated_at)
+      SELECT e->>'methodId', e->>'placeId', e->>'state', (e->>'triedAt')::timestamptz, e->>'attemptId', e->>'cause', (e->>'updatedAt')::timestamptz
+      FROM jsonb_array_elements($1::jsonb) e`, [JSON.stringify(observations)]);
+    const reads: string[] = [];
+    const responses: Record<string, unknown>[][] = [];
+    const map = createFixMapRepository(async (sql, params) => { reads.push(sql); const rows = (await db.query(sql, [...params])).rows as Record<string, unknown>[]; responses.push(rows); return rows; });
+    const recentSince = "2026-10-04T00:25:00Z";
+    const before = "2026-10-04T00:30:00Z";
+    const counts = await map.statistics("national", recentSince, before);
+    assert.deepEqual(counts, methodStatistics(observations, recentSince, before));
+    assert.equal(proofFromStatistics(counts, DEFAULT_FIX_PROOF_BAR, false).status, "TESTING");
+    assert.equal(proofFromStatistics(counts, DEFAULT_FIX_PROOF_BAR).status, "TESTING");
+    assert.deepEqual(await map.worksFor(["national"]), methodWorksOf(observations, ["national"]));
+    assert.match(reads.at(-1)!, /FROM cp_fix_method_summaries/);
+    assert.doesNotMatch(reads.at(-1)!, /FROM cp_fix_map\b/);
+    assert.deepEqual(await map.worksFor(["national"]), methodWorksOf(observations, ["national"]));
+    assert.equal(responses.at(-1)![0]!.value, null, "an unchanged summary crosses the wire only as its revision");
+    const last = observations.at(-1)!;
+    assert.equal((await map.forPlaces("national", [last.placeId]))[0]!.state, "FAILS");
+    const newest = observations[1499]!;
+    await map.put({ ...newest, state: "FAILS", triedAt: "2026-10-06T00:00:00Z" });
+    assert.deepEqual(await map.worksFor(["national"]), methodWorksOf(observations.map(r => r.placeId === newest.placeId ? { ...r, state: "FAILS" } : r), ["national"]));
+    await db.query("DELETE FROM cp_fix_map WHERE method_id = $1 AND place_id LIKE $2", ["national", "%state:az/%"]);
+    assert.deepEqual((await map.worksFor(["national"])).get("national")!.states, ["nj", "wy"]);
+  } finally { await db.close(); }
 });

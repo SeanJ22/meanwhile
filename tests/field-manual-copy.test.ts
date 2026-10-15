@@ -1,9 +1,3 @@
-/**
- * The one-time copy of the single-document field manual into one row per
- * entry: every entry kept, re-tagged with the place its record names, the rest
- * reported; methods' recorded results into the fix map; the document kept
- * under a new id; a later write by old code copied by the next start.
- */
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -87,7 +81,7 @@ test("the copy saves every entry as a row, records method results, keeps the doc
   const fix = new Map([...(await repos.fixMap.forPlace(PIMA)), ...(await repos.fixMap.forPlace(MORRIS))].map((r) => [`${r.methodId}@${r.placeId}`, r.state] as const));
   assert.deepEqual(Object.fromEntries(fix), { [`method@${PIMA}`]: "WORKS", [`method@${MORRIS}`]: "WORKS", [`route@${PIMA}`]: "FAILS" });
   assert.equal(await copyFieldManualDocument(table, repos, "2026-10-07T12:05:00.000Z"), null, "the next start finds nothing to copy");
-  const lines = updateRecords((await repos.adminConfig.read(ADMIN_CONFIG_ID))!.value as AdminConfig).filter((u) => u.id.startsWith("field-manual-copy:"));
+  const lines = updateRecords((await repos.adminConfig.read(ADMIN_CONFIG_ID, { updates: true }))!.value as AdminConfig).filter((u) => u.id.startsWith("field-manual-copy:"));
   assert.equal(lines.length, 1, "one line for the daily brief");
   assert.equal(lines[0]!.what, copyBriefLine(report));
   assert.equal(lines[0]!.what, "The field manual now keeps each lesson on its own: 9 lessons copied — 3 for one place, 1 for a state, 1 for a website platform, " +

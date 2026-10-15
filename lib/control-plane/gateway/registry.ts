@@ -248,7 +248,7 @@ const REGISTRY: readonly RegisteredAction[] = [
       let next: import("./admin-config.ts").AdminConfig;
       let revision: number;
       try {
-        const held = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID);
+        const held = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID, { settingHistory: { where: { path: ["key"], value: key }, limit: 1, includeIds: [context.receiptId] } });
         const current = held && isAdminConfig(held.value) ? held.value : defaultAdminConfig(context.at);
         if (input.undoOf) {
           const undo = settingUndo(current, String(input.undoOf));
@@ -256,8 +256,7 @@ const REGISTRY: readonly RegisteredAction[] = [
         }
         next = withSetting(current, { id: context.receiptId, key, after: input.value as SettingValue,
           at: context.at, why: String(input.why), ...(input.undoOf ? { undoOf: String(input.undoOf) } : {}) });
-        const written = held ? await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, held.revision, next, context.at)
-          : (await deps.repos.adminConfig.put(ADMIN_CONFIG_ID, next, context.at)).persisted;
+        const written = await deps.repos.adminConfig.save(held, next, context.at);
         revision = written.revision;
       } catch (error) { return storeRefusal("your setting", error); }
       let published = true;
@@ -309,7 +308,7 @@ const REGISTRY: readonly RegisteredAction[] = [
           says: at < 0 ? consequence : consequence.slice(at + WHERE_SEPARATOR.length),
           by: "owner", at: context.at,
         });
-        const held = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID);
+        const held = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID, { fixList: { ids: [subjectId] } });
         const item = held && isAdminConfig(held.value) ? fixItems(held.value).find(i => i.id === subjectId) : undefined;
         const where = at < 0 ? "the control centre" : consequence.slice(0, at);
         const says = at < 0 ? consequence : consequence.slice(at + WHERE_SEPARATOR.length);
@@ -370,7 +369,7 @@ const REGISTRY: readonly RegisteredAction[] = [
     async execute(deps, context, input) {
       const id = String(input.id);
       try {
-        const held = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID);
+        const held = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID, { fixList: { ids: [id] } });
         const config = held && isAdminConfig(held.value) ? held.value : null;
         if (!config || !fixItems(config).some((i) => i.id === id)) return refuse("INVALID_INPUT", "That item is not on the fix list.");
         await completeFixItem(deps.repos, id, {
@@ -427,8 +426,7 @@ const REGISTRY: readonly RegisteredAction[] = [
           const next = withScheduled(current, order);
           if (next === current) break;
           try {
-            if (held) await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, held.revision, next, context.at);
-            else await deps.repos.adminConfig.put(ADMIN_CONFIG_ID, next, context.at);
+            await deps.repos.adminConfig.save(held, next, context.at);
             break;
           } catch (error) { if (attempt >= 1) throw error; }
         }
@@ -459,7 +457,7 @@ const REGISTRY: readonly RegisteredAction[] = [
           const held = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID);
           const current = held && isAdminConfig(held.value) ? held.value : null;
           if (!held || !current || !scheduledOrders(current).some((o) => o.id === id)) return refuse("INVALID_INPUT", "That order is not scheduled any more.");
-          try { await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, held.revision, withoutScheduled(current, id, context.at), context.at); break; }
+          try { await deps.repos.adminConfig.save(held, withoutScheduled(current, id, context.at), context.at); break; }
           catch (error) { if (attempt >= 1) throw error; }
         }
       } catch (error) { return storeRefusal("your scheduled order", error); }
@@ -799,7 +797,7 @@ const REGISTRY: readonly RegisteredAction[] = [
       // Captured before the write so the receipt and undo name the previous ceiling.
       let previousUsd: number;
       try {
-        const existing = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID);
+        const existing = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID, { settingHistory: { ids: [context.receiptId] } });
         // A stored value that is not a config reads as the default — which
         const current = existing !== null && isAdminConfig(existing.value) ? existing.value : defaultAdminConfig(at);
         previousUsd = resolveRollingCeiling(fleetSpendCeilingOverrideUsd(current)).rollingCeilingUsd;
@@ -811,8 +809,7 @@ const REGISTRY: readonly RegisteredAction[] = [
           decidedBy: context.request.actorRef,
           receiptId: context.receiptId,
         }), { id: context.receiptId, key: SPEND_CEILING_LOG_KEY, before: previousUsd, after: rollingCeilingUsd, at, why: "" });
-        if (existing === null) await deps.repos.adminConfig.put(ADMIN_CONFIG_ID, next, at);
-        else await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, existing.revision, next, at);
+        await deps.repos.adminConfig.save(existing, next, at);
       } catch (error) {
         return storeRefusal("your Fleet spend ceiling", error);
       }
@@ -860,12 +857,11 @@ const REGISTRY: readonly RegisteredAction[] = [
       const at = context.at;
       let previous: number | null = null;
       try {
-        const existing = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID);
+        const existing = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID, { placeTargets: { ids: [placeKey] } });
         const current = existing !== null && isAdminConfig(existing.value) ? existing.value : defaultAdminConfig(at);
         previous = placeTargetOf(current, placeKey)?.goalPercent ?? null;
         const next = withPlaceTarget(current, { key: placeKey, goalPercent, decidedAt: at, decidedBy: context.request.actorRef, receiptId: context.receiptId });
-        if (existing === null) await deps.repos.adminConfig.put(ADMIN_CONFIG_ID, next, at);
-        else await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, existing.revision, next, at);
+        await deps.repos.adminConfig.save(existing, next, at);
       } catch (error) {
         return storeRefusal("your place target", error);
       }
@@ -920,8 +916,7 @@ const REGISTRY: readonly RegisteredAction[] = [
         const decided = dataSwitchOf(current, recipe, audience);
         before = decided !== null ? decided.on : defaultOn(audience);
         const next = withDataSwitch(current, { recipe, audience, on, decidedAt: at, decidedBy: context.request.actorRef, receiptId: context.receiptId });
-        if (existing === null) await deps.repos.adminConfig.put(ADMIN_CONFIG_ID, next, at);
-        else await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, existing.revision, next, at);
+        await deps.repos.adminConfig.save(existing, next, at);
       } catch (error) {
         return storeRefusal("your data switch", error);
       }
@@ -977,8 +972,7 @@ const REGISTRY: readonly RegisteredAction[] = [
           decidedBy: context.request.actorRef,
           receiptId: context.receiptId,
         });
-        if (existing === null) await deps.repos.adminConfig.put(ADMIN_CONFIG_ID, next, at);
-        else await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, existing.revision, next, at);
+        await deps.repos.adminConfig.save(existing, next, at);
       } catch (error) {
         return storeRefusal("your decision about paid discovery search", error);
       }
@@ -1070,8 +1064,7 @@ const REGISTRY: readonly RegisteredAction[] = [
         originalLifetime = selected?.key === ORIGINAL_LIFETIME_HUNT.key && selected.receiptId === ORIGINAL_LIFETIME_HUNT.receiptId &&
           selected.budgetStartedAt === ORIGINAL_LIFETIME_HUNT.budgetStartedAt && selected.budgetUsd === ORIGINAL_LIFETIME_HUNT.budgetUsd;
         const written = withExpansionScopes(current, { scopes: next.scopes, decidedAt: at });
-        if (existing === null) await deps.repos.adminConfig.put(ADMIN_CONFIG_ID, written, at);
-        else await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, existing.revision, written, at);
+        await deps.repos.adminConfig.save(existing, written, at);
       } catch (error) {
         return storeRefusal("your expansion scope", error);
       }
@@ -1146,7 +1139,7 @@ const REGISTRY: readonly RegisteredAction[] = [
           return { ok: true, outcome: "DONE", subject: key, says: "That geography was not on your expansion list, so nothing changed.", openedWork: [], readBackAt: "/admin/work", undo: null };
         }
         removedLabel = next.removed.geography.label;
-        await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, existing.revision, withExpansionScopes(current, { scopes: next.scopes, decidedAt: at }), at);
+        await deps.repos.adminConfig.save(existing, withExpansionScopes(current, { scopes: next.scopes, decidedAt: at }), at);
       } catch (error) {
         return storeRefusal("the change to your expansion list", error);
       }
@@ -1200,7 +1193,7 @@ const REGISTRY: readonly RegisteredAction[] = [
       };
       let previous: BillingFact | null = null;
       try {
-        const existing = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID);
+        const existing = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID, { billingFacts: { ids: [fact.id] } });
         const current = existing !== null && isAdminConfig(existing.value) ? existing.value : defaultAdminConfig(at);
         const held = billingFactsOf(current);
         if (held.malformed > 0) {
@@ -1212,8 +1205,7 @@ const REGISTRY: readonly RegisteredAction[] = [
         const next = withFactRecorded(held.facts, fact);
         previous = next.previous;
         const written = withBillingFacts(current, { facts: next.facts, decidedAt: at });
-        if (existing === null) await deps.repos.adminConfig.put(ADMIN_CONFIG_ID, written, at);
-        else await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, existing.revision, written, at);
+        await deps.repos.adminConfig.save(existing, written, at);
       } catch (error) {
         return storeRefusal("your billing figure", error);
       }
@@ -1254,7 +1246,7 @@ const REGISTRY: readonly RegisteredAction[] = [
       const at = context.at;
       let removed: BillingFact | null = null;
       try {
-        const existing = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID);
+        const existing = await deps.repos.adminConfig.read(ADMIN_CONFIG_ID, { billingFacts: { ids: [id] } });
         const current = existing !== null && isAdminConfig(existing.value) ? existing.value : null;
         if (existing === null || current === null) {
           return { ok: true, outcome: "DONE", subject: id, says: "That figure was not recorded, so nothing changed.", openedWork: [], readBackAt: "/admin/money", undo: null };
@@ -1271,7 +1263,7 @@ const REGISTRY: readonly RegisteredAction[] = [
           return { ok: true, outcome: "DONE", subject: id, says: "That figure was not recorded, so nothing changed.", openedWork: [], readBackAt: "/admin/money", undo: null };
         }
         removed = next.removed;
-        await deps.repos.adminConfig.compareAndSet(ADMIN_CONFIG_ID, existing.revision, withBillingFacts(current, { facts: next.facts, decidedAt: at }), at);
+        await deps.repos.adminConfig.save(existing, withBillingFacts(current, { facts: next.facts, decidedAt: at }), at);
       } catch (error) {
         return storeRefusal("the change to your billing figures", error);
       }

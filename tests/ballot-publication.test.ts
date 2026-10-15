@@ -69,7 +69,7 @@ test("Admin's ballot control queues the normal runner task even before its next 
   const result = await action.execute({ repos, now: () => now, currentStateVersion: null, codeSha: null },
     { at: now, receiptId: "fixture-ballot-action", request: { actorRef: "owner" } } as Parameters<typeof action.execute>[1], input);
   assert.equal(result.ok, true);
-  const request = (await repos.adminConfig.mustRead("current")).value.routineDueRequests![0];
+  const request = (await repos.adminConfig.mustRead("current", { routineDueRequests: true })).value.routineDueRequests![0];
   assert.equal(routineDueRequestFor(ballotTask, { lastAttemptedAt: "2026-10-13T23:59:00.000Z" }, Date.parse(now), [request])?.id, request.id);
   assert.equal(routineDueRequestFor(ballotTask, { lastAttemptedAt: now }, Date.parse(now), [request]), null);
   const report = { kind: "BALLOT_PUBLICATION", inputHash: "a".repeat(64), at: now, status: "PUBLISHED", versionId: "fixture",

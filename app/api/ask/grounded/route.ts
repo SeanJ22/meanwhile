@@ -171,30 +171,6 @@ import {
 } from "@/lib/ask/local-finance";
 import { statesOf, voteEvidenceForIncludingHistory, voteEvidenceReadsStateRollCalls } from "@/lib/ask/votes";
 
-/**
- * ```
- *   question
- *      ↓  the model, given the entity inventory and today's date
- *   INTERPRETATION           intent · entity mentions · tense · referent
- *      ↓  the registry's own binder
- *   CANONICAL RESOLUTION     reader words > model expansion > page context
- *      ↓  deterministic, scoped to the resolved id and the resolved tense
- *   RETRIEVAL                only records belonging to that exact subject
- *      ↓
- *   EVIDENCE PACK            records + provenance + NAMED GAPS + denominators
- *      ↓  the model, given the pack and nothing else
- *   SYNTHESIS
- *      ↓
- *   STRUCTURAL VALIDATION    invented URL · substituted subject · advice · tense
- *      ↓
- *   READER
- * ```
- *
- * Synthesis has no corpus, no tools and no network. A named body that resolves to more than one thing
- * produces `CLARIFY`, one that resolves to nothing produces `UNRESOLVED`; neither falls through to the
- * reader's own ZIP.
- */
-
 export const runtime = "nodejs";
 
 /** Logs the resolved model and effort once at startup, so an override is visible in the deployment log. Configuration only, never request content. */
@@ -240,11 +216,6 @@ interface MeetingLike {
   carried?: unknown;
 }
 
-/**
- * The meetings of one exact body, selected on `bodyId`, never on geography. An entity that is not
- * `level: "BODY"` gets no meetings at all, never its division's; the caller turns empty into a named gap.
- * Shared by the sitting selection and the agenda-topic sweep so the two cannot disagree.
- */
 function meetingsForBody(
   meetings: readonly MeetingLike[],
   bound: BindableEntity | null,
@@ -298,9 +269,6 @@ function officeholderActionEvidence(
     records.push({
       kind: "OFFICIAL_ACTION",
       id: action.id,
-      /* The office's own designation, title and date. Never a summary: a
-         summary of an executive order is a claim about what a government did,
-         made by us. */
       text: actionText(action),
       occurredAt: action.occurredAt,
       sourceUrl: action.documentUrl ?? action.sourceUrl,
@@ -353,11 +321,7 @@ function officeholderActionEvidence(
     }
   }
 
-  /*
-   * Rows we hold that no date-shaped question can reach. Surfaced rather than
-   * quietly filtered out by the window, because "we have this and cannot place
-   * it in time" is a different answer from not having it.
-   */
+  /* Undated records remain visible because an unknown date differs from a missing record. */
   const undated = undatedFor(seatId);
   denominators.actionRecordsWithNoDate = undated.length;
   if (trailingMonths && undated.length > 0) {
@@ -449,12 +413,6 @@ async function answerWithSettings(request: Request) {
     ? body.ocdIds.filter((v): v is string => typeof v === "string").slice(0, 40)
     : [];
 
-  // State-roll identity is established before any state pointer opens. Only
-  // the state(s) named by the reader's divisions or exact source-namespaced
-  // subject ids are eligible for this request; unrelated states are not
-  // touched and therefore cannot suppress or delay the answer. A retired
-  // STATE_ROLL_CALL scope (now per-legislator) is never opened:
-  // its pointer is a stale version nothing writes.
   const stateVoteScopes = new Set<OfficialStateVoteScope>();
   for (const state of statesOf(ocdIds)) {
     const target = officialStateRollCallTargetByScope(`US-${state.toUpperCase()}`);
@@ -471,11 +429,6 @@ async function answerWithSettings(request: Request) {
   let stageMark = Date.now();
   const lap = (name: string) => { const now = Date.now(); stageMs[name] = now - stageMark; stageMark = now; };
 
-  /*
-   * Sources are read only when the question needs them. The registry and federal directory come from the
-   * edge bundle when one exists, with the database as fallback. Each source owns its read state and failure
-   * gap: a missing or invalid pointer fails that source closed without failing the request.
-   */
   const readerVoteAsk = readerPersonVotesQuestion(question);
   const topicRoute = readerVoteAsk || personVotesQuestionShape(question) ? null : topicFocusedQuestion(question);
   /* "Who is my state senator?": a lookup in the officeholders held for the reader's divisions (lib/ask/reader-officials.ts). It reads the registry and the federal directory and nothing else. */
@@ -491,10 +444,6 @@ async function answerWithSettings(request: Request) {
     readSubjectRefs(body.activeSubjects).every(ref => !ref.focused) &&
     readSubjectRefs(body.priorSubjects, 8).length === 0 &&
     (!Array.isArray(body.priorTurns) || body.priorTurns.length === 0);
-  // A shape is only a scheduling hint here. The complete subject inventory
-  // still loads, and lexicalReading below must prove the body binding before
-  // unrelated evidence may stay unread. A failed/ambiguous binding restores
-  // every family before the normal interpretation and retrieval path runs.
   const sittingShapes = new Set(["MEETING_TIME", "BODY_AGENDA", "MEETING_OUTCOME", "PUBLIC_COMMENT"]);
   /* Shapes whose subject is never a person: their answer reads no vote, statement or action record, and no county finance
      unless it is a money question. Deferred the same way the sitting shapes are, on the same proof. */
@@ -516,10 +465,7 @@ async function answerWithSettings(request: Request) {
       preloadMs[name] = Date.now() - started;
     }
   };
-  /*
-   * The edge is entered in this function's own execution: `enterReaderAuthorityEdge` is
-   * `AsyncLocalStorage.enterWith`, and a store entered inside a helper never reaches the reads chained on it.
-   */
+  /* Enter this async context directly; AsyncLocalStorage entered inside a helper cannot reach subsequent reads. */
   const production = process.env.NODE_ENV === "production";
   const edgeManifest = await timed("edgeManifest", () => readReaderManifest().catch(() => null))();
   const onEdge = (family: AuthorityFamily) => Boolean(edgeManifest?.authorityArtifacts?.[family]);
@@ -528,9 +474,6 @@ async function answerWithSettings(request: Request) {
   const outcomesFromDatabase = leanAsk || ballotOnlyHint || onEdge("meeting-outcomes") ? null : timed("outcomes", refreshOutcomeSnapshotFromPromoted)();
   outcomesFromDatabase?.catch(() => undefined);
   const commentAccessFromDatabase = production && !leanAsk && !ballotOnlyHint && !onEdge("comment-access")
-    // Public-comment rules are an independent optional family. Initialize its
-    // pointer, but do not let a store outage suppress meetings, ballots,
-    // officials, or any other source's answer.
     ? timed("commentAccess", () => readCommentAccessFacts().catch(() => undefined))()
     : null;
   let authorityEdge: ReaderAuthorityEdgeBundle | null = null;
@@ -611,7 +554,6 @@ async function answerWithSettings(request: Request) {
     manifest: edgeManifest,
     window: "HELD",
     ...(ocdIds.length && (topicRoute || areaMeetingsAsk) ? { states: statesOf(ocdIds), ocdIds } : {}),
-
   });
   meetingsRead.catch(() => undefined);
   const essentialPreloads = [
@@ -671,10 +613,6 @@ async function answerWithSettings(request: Request) {
   ];
   /* The registry and the federal directory are the first two; an officials lookup needs no other source. */
   await settleGroundedSourcePreloads(topicRoute ? essentialPreloads : leanAsk ? essentialPreloads.slice(0, 2) : [...essentialPreloads, ...deferrablePreloads]);
-  // The recorded outcomes are what a topic answer leads with. A cold read that
-  // failed (a transient connect timeout on the first request) is retried once
-  // rather than silently answering from agenda lines alone. A retry that
-  // succeeds is a second-attempt success, and the trace names it.
   if (topicRoute && !["PROMOTED", "BOOTSTRAP"].includes(outcomeProjectionReadState().kind)) {
     await timed("outcomesRetry", () => refreshOutcomeSnapshotFromPromoted().catch(() => undefined))();
     if (["PROMOTED", "BOOTSTRAP"].includes(outcomeProjectionReadState().kind)) {
@@ -711,11 +649,7 @@ async function answerWithSettings(request: Request) {
   const scopedBodies = [...bodyIdentityIndex().values()].filter((entry) =>
     (entry.ocdId && ocdIds.includes(entry.ocdId)) || explicitBodyIds.has(entry.bodyId));
   const bodies = [...snapshotEntities([...meetings, ...scopedBodies], (bodyId) => canonicalBodyIdentity(bodyId)), ...listedGovernments];
-  /*
-   * A question that names a curated topic and binds its government lexically (the reader's own words, never
-   * page context, a prior turn or a model expansion) is answered without the model. Anything else loads every
-   * source and goes to the model.
-   */
+
   let deterministicTopicRoute = false;
   /* A topic question naming no government, pronoun or earlier turn, with no body open, is answered from the timelines of the bodies governing the reader's divisions, with no model. */
   let areaTopicRoute = false;
@@ -763,9 +697,6 @@ async function answerWithSettings(request: Request) {
   const preferredOfficialIds = [...readSubjectRefs(body.activeSubjects), ...readSubjectRefs(body.priorSubjects, 8)].flatMap((ref) => ref.id ? [ref.id] : []);
   const officialAliases = canonicalOfficialAliases(people.map((person) => person.id), preferredOfficialIds);
 
-  /* Loaded from the reader's divisions, not from what the client says is on screen; the same set `app/ballot/page.tsx` renders from. */
-  // A topic question bound lexically to a body is not a ballot question; its
-  // ballot is not read (loadBallotForDivisions([]) is the empty holding).
   const ballot = await loadBallotForDivisions(deterministicTopicRoute || areaTopicRoute || namedBodyTopicRoute || leanAsk ? [] : ocdIds, {}, ballotZip);
   const ballotLoadGaps: EvidenceGap[] = ballot.loaderFailures.length ? [{ whose: "OURS", statement: "We couldn't load the ballot for your area. Please try again in a moment." }] : [];
   const meetingLoadGaps: EvidenceGap[] = meetingDataState === "STORE_UNREACHABLE"
@@ -836,29 +767,16 @@ async function answerWithSettings(request: Request) {
   /* The office a held candidate is on the ballot for: a race the reader names ("for her state senate race") must be it. */
   const officeOf = (id: string) => ballotInventory.subjects.get(id)?.contestTitle ?? null;
 
-  /*
-   * Today is SUPPLIED, never derived from a model and never guessed. It is
-   * read from the server's clock here because this is a server; what matters
-   * is that neither model rung invents it, and both are told.
-   */
   const suppliedToday =
     typeof body.today === "string" && /^\d{4}-\d{2}-\d{2}$/.test(body.today);
   const today = suppliedToday
     ? body.today as string
     : new Date().toISOString().slice(0, 10);
-  /* A supplied date is the route's deterministic test/acceptance clock, not
-     prompt decoration. Noon UTC keeps the requested civil day stable across
-     every supported U.S. zone; ordinary production requests retain the exact
-     server instant so same-day past/future selection remains truthful. */
+  /* Noon UTC keeps a supplied civil date stable across supported U.S. zones; live requests retain the server instant. */
   const selectionNow = suppliedToday
     ? Date.parse(`${today}T12:00:00.000Z`)
     : Date.now();
 
-  /*
-   * What the reader has in front of them, as REFERENCES rather than display
-   * strings — canonical ids where the surface holds them, so a pronoun can
-   * resolve to a person the binder actually verified. See `lib/ask/subject.ts`.
-   */
   const canonicalReference = (ref: AskSubjectRef): AskSubjectRef => ({ ...ref, id: ref.id ? filingToBallot.get(ref.id) ?? officialToBallot.get(ref.id) ?? officialAliases.get(ref.id) ?? ref.id : ref.id });
   const activeSubjects: AskSubjectRef[] = readSubjectRefs(body.activeSubjects).map(canonicalReference);
   const priorSubjects: AskSubjectRef[] = readSubjectRefs(body.priorSubjects, 8).map(canonicalReference);
@@ -997,9 +915,6 @@ async function answerWithSettings(request: Request) {
       fellBackToDeterministic: true,
     };
   } else if (outcome === null) {
-    /* The deterministic topic route above: the topic is curated code and the
-       body bound on the reader's own words, so no model reading is needed and
-       no tense is imposed — a topic spans what was decided and what is next. */
     interpretation = { ...interpretWithoutModel(question), intent: "AGENDA_TOPIC", temporal: { kind: "NONE" } };
     trace.interpretation = {
       ran: false,
@@ -1020,18 +935,11 @@ async function answerWithSettings(request: Request) {
       intent: interpretation.intent,
       temporal: interpretation.temporal,
       mentionCount: interpretation.entityMentions.length,
-      /* Whether the rung produced a referent at all — a COUNT-shaped fact
-         about our machinery, never the referent itself, which is a subject the
-         reader may not have typed. */
+      /* Log whether a referent exists without logging a subject the reader may not have typed. */
       referentProposed: Boolean(interpretation.referent),
       fellBackToDeterministic: false,
     };
   } else {
-    /*
-     * **THE FALLBACK IS NARROWER, NOT LOOSER.** It reads tense and nothing
-     * else, so an unavailable model costs the reader precision and can never
-     * cost them correctness.
-     */
     interpretation = interpretWithoutModel(question);
     trace.interpretation = {
       ran: false,
@@ -1044,11 +952,7 @@ async function answerWithSettings(request: Request) {
 
   lap("interpretation");
 
-  /**
-   * Resolution, retrieval and composition for one reading of the question. It writes only to the trace it
-   * is handed, and an answer that ends here comes back as a response to send, so a speculative run never
-   * sends, captures or counts anything.
-   */
+  /* Defer sending and capture until respond() so speculative readings have no delivery side effects. */
   async function answerPath(interpretation: AskInterpretation, trace: AskTrace) {
     // A literal reader date outranks inferred tense, including a model's reading.
     if (requestedMeetingDate) {
@@ -1056,14 +960,19 @@ async function answerWithSettings(request: Request) {
       trace.interpretation.temporal = interpretation.temporal;
     }
 
-    /* "Who is the mayor of <city>?" names the city its answer is filtered to; the city is not a subject to bind or to ask which of. */
-    const initialResolution: ReturnType<typeof resolveInterpretation> = officialsAsk?.place
+    // Resolve the reader’s legislative office before interpreting topic words as body names.
+    const initialResolution: ReturnType<typeof resolveInterpretation> = readerVoteReading && readerVoteAsk
+      ? { binding: readerVoteChoices.length === 1
+          ? { kind: "BOUND", entity: readerVoteChoices[0]!, matchedOn: readerVoteAsk.office.phrase }
+          : { kind: "AMBIGUOUS", mention: `your ${readerVoteAsk.office.phrase}`, candidates: readerVoteChoices },
+        basis: "READER_WORDS", boundOn: question }
+      : officialsAsk?.place
       ? { binding: { kind: "NONE" }, basis: "NONE", boundOn: null }
       : resolveInterpretation(interpretation, question, inventory, {
         activeSubjects,
         priorSubjects,
       });
-    let bodyDecision: ReturnType<typeof decideNamedBody> = officialsAsk?.place ? { kind: "NONE" } : decideNamedBody(question, namedBodies, body.confirmation,
+    let bodyDecision: ReturnType<typeof decideNamedBody> = officialsAsk?.place || readerVoteReading ? { kind: "NONE" } : decideNamedBody(question, namedBodies, body.confirmation,
       initialResolution.binding.kind === "BOUND" && initialResolution.binding.entity.level === "BODY"
         ? interpretation.entityMentions : []);
     if (!explicitBodyClass && initialResolution.binding.kind === "BOUND" && initialResolution.binding.entity.level !== "BODY") bodyDecision = { kind: "NONE" };
@@ -1073,12 +982,7 @@ async function answerWithSettings(request: Request) {
       initialResolution.binding.entity.level === "BODY" && initialResolution.basis.startsWith("MODEL_EXPANSION")) bodyDecision = { kind: "CLARIFY" };
     const resolved = applyNamedBodyDecision(bodyDecision, initialResolution, question);
     /* A kind of body was named ("the school board") and the reader's ZIP reaches several: ask which, naming them. */
-    const resolution: ReturnType<typeof resolveInterpretation> = readerVoteReading && readerVoteAsk
-      ? { binding: readerVoteChoices.length === 1
-          ? { kind: "BOUND", entity: readerVoteChoices[0]!, matchedOn: readerVoteAsk.office.phrase }
-          : { kind: "AMBIGUOUS", mention: `your ${readerVoteAsk.office.phrase}`, candidates: readerVoteChoices },
-        basis: "READER_WORDS", boundOn: question }
-      : lexical?.areaChoices
+    const resolution: ReturnType<typeof resolveInterpretation> = lexical?.areaChoices
       ? { binding: { kind: "AMBIGUOUS", mention: lexical.areaChoices.mention, candidates: [...lexical.areaChoices.bodies] }, basis: "WHOLE_QUESTION", boundOn: question }
       : resolved;
     trace.resolution = {
@@ -1195,11 +1099,6 @@ async function answerWithSettings(request: Request) {
       } };
     }
 
-    /*
-     * A topic question bound to one body is answered from that body's topic
-     * timeline (every dated mention joined to its recorded outcome), never from
-     * the one sitting a tense word would pick. See `lib/ask/topic-timeline.ts`.
-     */
     const topicFocus = topicRoute && !requestedMeetingDate && resolution.binding.kind === "BOUND" && resolution.binding.entity.level === "BODY"
       ? topicRoute : null;
     if (topicFocus) {
@@ -1258,9 +1157,7 @@ async function answerWithSettings(request: Request) {
       records.push(...data.records);
       if(data.unavailable.length || data.notHeld.length)gaps.push({whose:"OURS",statement:"We're working on getting this info from all open-data and environmental sources for this place."});
     }
-    /* The gaps attached to the chosen sitting(s), by why they were attached, for
-       an answer composed from the sitting (`lib/ask/sitting-answer.ts`). Each is
-       also in `gaps`; this only remembers which ones are about the sitting. */
+
     const sittingGaps: SittingGap[] = [];
     const attachSittingGaps = (role: SittingGapRole, attached: readonly EvidenceGap[], meetingId?: string) => {
       for (const gap of attached) {
@@ -1380,16 +1277,8 @@ async function answerWithSettings(request: Request) {
       }
       /* The contacts for a ballot subject come from that subject's own division, not the reader's representatives. */
       /* The body name is the division, unslugged from its id, never the contest title. */
-      /* A ballot subject is a contest, a candidate or a measure — it has an AREA
-         and no body, so this is the DIVISION question and it asks the division
-         resolver by name rather than borrowing the body one. */
-      contacts.push(...contactsForDivision(ballotRecord.ocdId, divisionNameOf(ballotRecord.ocdId)));
 
-      /*
-       * A candidate with no published positions is a NAMED GAP, never silence.
-       * Silence there reads as "they have said nothing", which is a claim about
-       * a person made out of our own collection state.
-       */
+      contacts.push(...contactsForDivision(ballotRecord.ocdId, divisionNameOf(ballotRecord.ocdId)));
 
       /* Candidacy → officeholder uses the committed person relationship; officeholder → votes uses the publisher's stable key. An unresolved relationship produces an identity gap, never a name search. The office on every record is the one held. */
       if (ballotRecord.kind === "PERSON" && !moneyOnly) {
@@ -1436,9 +1325,7 @@ async function answerWithSettings(request: Request) {
       const bodyListingIdentity = meetingListingKnowledgeFor(snapshot?.meetings ?? [], forBody.map(meeting => meeting.id)).readback;
       denominators.calendarListingsHeldForThisBody = forBody.length;
       if (!bodyListingIdentity.groups.length) denominators.meetingsHeldForThisBody = forBody.length;
-      /* The SAME selection the deterministic agenda route uses — one rule, two
-         callers, so the two surfaces can never disagree about which meeting a
-         tensed question meant. */
+
       const chosen = topicFocus ? null : selectSitting(selection, forBody, selectionNow, requestedMeetingDate?.date);
       const calendarIds = new Set(forBody.map((meeting) => meeting.id));
       const archivedOutcomes = requestedMeetingDate?.date && meetingRecordQuestionClass(question)
@@ -1453,9 +1340,6 @@ async function answerWithSettings(request: Request) {
       denominators.archivedOutcomeSittingsForThatDate = archivedOutcomes.length;
 
       if (topicFocus) {
-        /* Every dated mention of the topic in this body's held agendas and
-           structured agenda records, each joined to the body's recorded outcome,
-           plus the recent sittings whose agenda we have not read. */
         const bodyMeetingIds = new Set(forBody.map((meeting) => meeting.id));
         topicTimeline = buildTopicTimeline({
           topic: topicFocus,
@@ -1502,9 +1386,7 @@ async function answerWithSettings(request: Request) {
         records.push({
           kind: "MEETING",
           id: chosen.id,
-          /* The meeting's OWN body, carried from the corpus rather than assumed
-             from the subject — so the validator is checking the record against
-             the subject rather than checking the subject against itself. */
+          /* Carry the meeting’s recorded body so validation checks independent evidence against the subject. */
           bodyId: chosen.bodyId,
           text: `${listingGroupFor(chosen.id) ? "Calendar listing: " : ""}${subject.name}: ${label}, ${readableSitting(chosen)}.${sittingVenue(chosen) ? ` Listed location: ${sittingVenue(chosen)}.` : ""}`,
           meetingListingIdentity: listingGroupFor(chosen.id),
@@ -1616,9 +1498,6 @@ async function answerWithSettings(request: Request) {
             records.push({
               kind: "AGENDA_ITEM",
               id: `${chosen.id}#${index}`,
-              /* Read out of THAT meeting's document, so it carries THAT meeting's
-                 body. The chain is BODY -> MEETING -> DOCUMENT -> ITEM and every
-                 link is an id, not an inference from a heading. */
               bodyId: chosen.bodyId,
               meetingId: chosen.id,
               documentId: newest.id,
@@ -1722,11 +1601,6 @@ async function answerWithSettings(request: Request) {
       }
     }
 
-    /*
-     * Campaign money from the filings held (`lib/ask/local-finance.ts`): linkage is the filing officer's own
-     * committee→office register row, never a name match; rows are date-ordered, never ranked or totalled; the
-     * independent-expenditure class is always named as not held.
-     */
     /* Every money question carries all three regime statements; one regime's absence never stands for all. */
     if (subject?.kind === "PERSON" && !moneyOnly) {
       const keyVotes = await keyVoteEvidenceFor(subject, [...canonicalSubjectKeys]);
@@ -1887,10 +1761,6 @@ async function answerWithSettings(request: Request) {
 
     /* The authority's own statements of absence, for the subject's division only; with no bound subject, every absence on the reader's ballot. */
     if (ballotRecord && ballotRecord.kind !== "PERSON") {
-      /* A CONTEST or a MEASURE is a question about what is on the ballot, and an
-         authority saying a race is not on it answers exactly that. A question
-         about a PERSON is not a question about the ballot lineup, so an absence
-         under it is a document the answer did not rest on. */
       records.push(...absencesForDivisions([ballotRecord.ocdId], absencesWithoutRemovals(ballot.absences, ballot.set?.removals ?? [])));
     } else if (surface === "BALLOT" && !subject) {
       records.push(...absencesForDivisions(ocdIds, absencesWithoutRemovals(ballot.absences, ballot.set?.removals ?? [])));
@@ -2201,13 +2071,6 @@ async function answerWithSettings(request: Request) {
     };
   }
 
-  /*
-   * **THE SPECULATIVE ANSWER IS KEPT ONLY WHEN THE MODEL'S READING AGREES.**
-   * Same subject, same body, same question kind and byte-identical writer
-   * input (`speculationVerdict`); otherwise it is discarded — its call aborted
-   * if still running — and the writer runs on the model's reading, as before.
-   * Either way the trace says which path delivered and why.
-   */
   const settleSpeculation = (model: ReadingOutcome | "MODEL_READING_UNAVAILABLE" | "MODEL_READING_NEEDS_NO_WRITER"): boolean => {
     if (!speculation) return false;
     const guess = speculation.codeIntent ? { codeIntent: speculation.codeIntent, codeTemporal: speculation.codeTemporal } : {};
@@ -2261,10 +2124,7 @@ async function answerWithSettings(request: Request) {
   let answer: string | null = null;
   let answerModel: string | null = null;
   let validationPassed: boolean | null = null;
-  /* The reader's structured answer is the GATED pack, so the mode is derived
-     from what actually reaches them: a subject whose only records were
-     off-subject and gated out is NO_EVIDENCE, honestly, not a structured answer
-     built from records the reader will never see. */
+
   let mode: AnswerMode = packRecords.length > 0 ? "STRUCTURED_GROUNDED" : "NO_EVIDENCE";
 
   if (missingMeasureMeaning) {
@@ -2308,9 +2168,7 @@ async function answerWithSettings(request: Request) {
       },
       ...writerTrace,
     };
-    /* And into the server console, so a collapsed hit rate is visible in the
-       deployment log rather than only in a trace somebody has to go and read.
-       Caller key and token counts only — no reader fact reaches this line. */
+
     if (!cachedSynthesis) console.log(cacheCallLine(synthesis.callerKey, synthesis.usage));
     /* The body inventory is the known-subject universe, so the substitution check refuses prose naming a different government we hold, and only that. */
     const verdict = validateAnswer(synthesis.answer, synthesis.citedUrls, pack, bodies);

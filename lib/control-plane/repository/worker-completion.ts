@@ -90,12 +90,6 @@ export async function applyWorkerCompletion(repos: ControlPlaneRepositories, rec
   }
 }
 
-/** How far before a process's last pass its next pass re-reads appended results, so a writer's clock running ahead loses none. */
-export const RECONCILE_APPEND_SLACK_MS = 10 * 60_000;
-
-/** Per process and store: the first pass reads every result; later passes read what was appended since (with slack) plus those still pending. */
-const reconcileState = new WeakMap<ControlPlaneRepositories, { since: string; pending: Map<string, WorkerResultRecord> }>();
-
 async function readByIds<T>(repo: { readMany?(ids: readonly string[]): Promise<readonly { id: string; value: T }[]>; read(id: string): Promise<{ id: string; value: T } | null> },
   ids: readonly string[]): Promise<Map<string, T>> {
   const unique = [...new Set(ids)];
@@ -104,15 +98,9 @@ async function readByIds<T>(repo: { readMany?(ids: readonly string[]): Promise<r
   return new Map(rows.map(row => [row.id, row.value]));
 }
 
-export async function reconcileWorkerCompletions(repos: ControlPlaneRepositories): Promise<void> {
-  const passStartedAt = new Date().toISOString();
-  const state = reconcileState.get(repos);
-  const appended = state === undefined ? await repos.workerResults.readAll()
-    : await repos.workerResults.readSince(new Date(Date.parse(state.since) - RECONCILE_APPEND_SLACK_MS).toISOString());
-  const candidates = new Map(state?.pending ?? []);
-  for (const record of appended) candidates.set(record.id, record);
-  const records = [...candidates.values()];
-  if (records.length === 0) { reconcileState.set(repos, { since: passStartedAt, pending: new Map() }); return; }
+export async function reconcileWorkerCompletions(repos: ControlPlaneRepositories, workItemIds: readonly string[]): Promise<void> {
+  const records = [...new Map([...(await readByKeys(repos.workerResults, workItemIds)).values()].flat().map(record => [record.id, record])).values()];
+  if (records.length === 0) return;
   // Only exact, fully applied commits skip replay; incomplete projections use the guarded writer.
   // Only the rows these results name are read.
   const itemIds = [...new Set(records.map(record => record.workItemId))];
@@ -127,7 +115,6 @@ export async function reconcileWorkerCompletions(repos: ControlPlaneRepositories
     needsDependents ? repos.workItems.list() : Promise.resolve([]),
   ]);
   const itemRows = dependentRows;
-  const stillPending = new Map<string, WorkerResultRecord>();
   const costsByAttempt = new Map<string, CostEntry[]>();
   for (const cost of costs) {
     const rows = costsByAttempt.get(cost.attemptId) ?? [];
@@ -158,16 +145,15 @@ export async function reconcileWorkerCompletions(repos: ControlPlaneRepositories
         canonicalJson(attempts.get(record.attemptId) ?? null) === canonicalJson(record.completion.closedAttempt) &&
         (!lease || lease.released || lease.id !== record.completion.closedAttempt.leaseId) &&
         costApplied && transitioned && dependentsApplied) continue;
-    /* Applied now; checked again next pass, so a failed apply is retried and never dropped. */
-    stillPending.set(record.id, record);
     await applyWorkerCompletion(repos, record, costApplied);
   }
-  reconcileState.set(repos, { since: passStartedAt, pending: stillPending });
 }
 
 /** Result consumers never accept output from an uncommitted, dead, or mismatched producer. */
 export async function readCompletedWorkerResult(repos: ControlPlaneRepositories, id: string): Promise<{ record: WorkerResultRecord; attempt: Attempt }> {
-  const record = (await repos.workerResults.readAll()).find(r => r.id === id);
+  if (!repos.workerResults.keysWhere) throw new Error("WORKER_RESULT_INDEXED_LOOKUP_UNAVAILABLE");
+  const keys = await repos.workerResults.keysWhere(["id"], id);
+  const record = [...(await readByKeys(repos.workerResults, keys)).values()].flat().find(r => r.id === id);
   if (!record) throw new Error("WORKER_RESULT_MISSING");
   const attempt = (await repos.attempts.mustRead(record.attemptId)).value;
   assertCompletedWorkerResult(record, attempt);
@@ -192,10 +178,7 @@ async function readAttemptsById(repos: ControlPlaneRepositories, ids: readonly s
 
 /** Same exact producer validation as a point read, with bounded repository reads for inherited history. */
 export async function readCompletedWorkerResults(repos: ControlPlaneRepositories, workItemId?: string): Promise<readonly WorkerResultRecord[]> {
-  /* One item's results can only have been produced by that item's Attempts
-     (`completeWorkerTask` refuses a result whose Attempt belongs to another
-     item), so an item-scoped read lists only those Attempts. */
-  /* The unscoped read point-reads each result's own Attempt by id rather than listing all Attempts. */
+
   const [records, scopedAttempts] = await Promise.all([
     workItemId === undefined ? repos.workerResults.readAll() : repos.workerResults.read(workItemId),
     workItemId === undefined ? Promise.resolve(null) : repos.attempts.listWhere(["workItemId"], workItemId),
@@ -212,7 +195,7 @@ export async function readCompletedWorkerResults(repos: ControlPlaneRepositories
 
 /** `readCompletedWorkerResults` for the named work items only, in one batched read of their results and of each result's own Attempt. */
 export async function readCompletedWorkerResultsOf(repos: ControlPlaneRepositories, workItemIds: readonly string[]): Promise<readonly WorkerResultRecord[]> {
-  const records = [...(await readByKeys(repos.workerResults, workItemIds)).values()].flat();
+  const records = [...new Map([...(await readByKeys(repos.workerResults, workItemIds)).values()].flat().map(record => [record.id, record])).values()];
   const attempts = new Map((await readAttemptsById(repos, records.map(record => record.attemptId))).map(row => [row.id, row.value]));
   return records.filter(record => {
     const attempt = attempts.get(record.attemptId);

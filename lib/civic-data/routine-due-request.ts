@@ -18,7 +18,6 @@ export interface RoutineDueRequest {
 export const ROUTINE_DUE_REQUEST_MAX_LIFETIME_MS = 2 * 60 * 60_000;
 export const ROUTINE_DUE_REQUEST_DEFAULT_LIFETIME_MS = 90 * 60_000;
 export const ROUTINE_DUE_REQUEST_MAX_DELAY_MS = 60 * 60_000;
-export const ROUTINE_DUE_REQUEST_HISTORY = 20;
 const REASON_MAX = 200;
 const DEFAULT_REASON = "controlled refresh verification (owner instruction 2026-09-25)";
 
@@ -150,7 +149,7 @@ export async function requestRoutineDue(repos: ControlPlaneRepositories, args: r
   if (command.contractId !== "ballot-contests") await refreshDoorsForPass(repos.doors);
   const nowMs = Date.parse(now);
   if (!canonicalInstant(now)) throw new Error("ROUTINE_DUE_REQUEST_CLOCK_INVALID");
-  const row = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+  const row = await repos.adminConfig.read(ADMIN_CONFIG_ID, { routineDueRequests: { activeAt: now, where: { path: ["contractId"], value: command.contractId } } });
   const config = row?.value ?? defaultAdminConfig();
   const prior = parseRoutineDueRequests(config.routineDueRequests);
   if (prior.issues.length > 0) throw new Error(`ROUTINE_DUE_REQUEST_HISTORY_INVALID:${prior.issues.join("; ")}`);
@@ -165,9 +164,8 @@ export async function requestRoutineDue(repos: ControlPlaneRepositories, args: r
     reason: command.reason,
     withdrawnAt: null,
   };
-  const next = { ...config, updatedAt: now, routineDueRequests: [...prior.requests, request].slice(-ROUTINE_DUE_REQUEST_HISTORY) };
-  if (row) await repos.adminConfig.compareAndSet(row.id, row.revision, next, now);
-  else await repos.adminConfig.put(ADMIN_CONFIG_ID, next, now);
+  const next = { ...config, updatedAt: now, routineDueRequests: [...prior.requests, request] };
+  await repos.adminConfig.save(row, next, now);
   return request;
 }
 
@@ -175,7 +173,7 @@ export async function withdrawRoutineDue(repos: ControlPlaneRepositories, args: 
   const command = routineDueCommand(args);
   if (command.kind !== "WITHDRAW") throw new Error("ROUTINE_DUE_REQUEST_EXPECTED_WITHDRAW");
   if (!canonicalInstant(now)) throw new Error("ROUTINE_DUE_REQUEST_CLOCK_INVALID");
-  const row = await repos.adminConfig.read(ADMIN_CONFIG_ID);
+  const row = await repos.adminConfig.read(ADMIN_CONFIG_ID, { routineDueRequests: { ids: [command.requestId] } });
   const prior = parseRoutineDueRequests(row?.value.routineDueRequests);
   const index = prior.requests.findIndex((request) => request.id === command.requestId);
   if (!row || index < 0) throw new Error(`ROUTINE_DUE_REQUEST_UNKNOWN:${command.requestId}`);
@@ -183,6 +181,6 @@ export async function withdrawRoutineDue(repos: ControlPlaneRepositories, args: 
   if (found.withdrawnAt !== null) return found;
   const withdrawn = { ...found, withdrawnAt: now };
   const requests = prior.requests.map((request, at) => (at === index ? withdrawn : request));
-  await repos.adminConfig.compareAndSet(row.id, row.revision, { ...row.value, updatedAt: now, routineDueRequests: requests }, now);
+  await repos.adminConfig.save(row, { ...row.value, updatedAt: now, routineDueRequests: requests }, now);
   return withdrawn;
 }

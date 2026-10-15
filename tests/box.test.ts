@@ -3,7 +3,7 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
-import { backfillBox, boxCounts, boxCountsByWorkItem, boxFindingId, finishBoxFinding, indexBoxFinding, takeBoxFinding, type BoxInput } from "../lib/control-plane/box.ts";
+import { indexScoutFindings, indexDetectiveFindings, boxCounts, boxCountsByWorkItem, boxFindingId, finishBoxFinding, indexBoxFinding, takeBoxFinding, type BoxInput } from "../lib/control-plane/box.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 
@@ -72,8 +72,10 @@ test("historical Scout and detective findings share the index, including missing
     } }],
     artifacts: new Map([["artifact-1", { canonicalUrl: input.sourceUrl! }]]),
   };
-  await backfillBox(repo, history, NOW);
-  await backfillBox(repo, history, LATER);
+  for (const now of [NOW,LATER]) {
+    for (const result of history.scouts) await indexScoutFindings(repo,result,now);
+    for (const result of history.detectives) await indexDetectiveFindings(repo,result,history.artifacts,now);
+  }
   assert.equal((await repo.list()).length, 3, "shared quote deduplicates; old pointer and detective finding are both retained");
   const shared = (await repo.mustRead(boxFindingId(input))).value;
   assert.equal(shared.origins.length, 2);

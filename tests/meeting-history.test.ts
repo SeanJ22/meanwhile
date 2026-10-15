@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import test from "node:test";
+import test, { afterEach, beforeEach } from "node:test";
+import { installFactReader } from "../lib/facts/db.ts";
 
 import { MEETING_PARTITION_CONTRACTS, meetingHistoryContract, meetingHistoryScope } from "../lib/civic-data/meeting-partitions.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -17,6 +18,23 @@ import { readMeetingsProjection, validateSnapshot, type MeetingsSnapshot } from 
 import type { Meeting } from "../lib/sources/types.ts";
 import type { ChildRunReport } from "../lib/sources/composite/index.ts";
 import { promoteMeetingPartition, promoteMeetingPartitions } from "../scripts/ingest.ts";
+
+const factReads: (string | string[])[] = [];
+beforeEach(() => {
+  factReads.length = 0;
+  installFactReader(async (_text, params) => {
+    const ids = params?.[0];
+    if (typeof ids === "string") {
+      assert.equal(ids, "meeting:");
+      factReads.push(ids);
+      return [{ newest: 0, live: 0 }];
+    }
+    assert.ok(Array.isArray(ids) && ids.every(id => typeof id === "string" && id.startsWith("meeting:")));
+    factReads.push([...ids].sort());
+    return [];
+  });
+});
+afterEach(() => installFactReader(undefined));
 
 const SEED = "2026-01-01T12:00:00.000Z";
 const NOW = "2026-09-08T13:00:01.000Z";
@@ -155,6 +173,7 @@ test("DB-06: an old concluded sitting with a record moves to history first, then
 
   // The Reader's composition still answers for it: nothing is in neither place.
   const composed = await readMeetingsProjection({ store, now: NOW, bypassCache: true });
+  assert.deepEqual(factReads, [[oldRecord.id, recent.id, fresh.id].map(id => `meeting:${id}`).sort()]);
   assert.equal(composed.kind, "PROMOTED", JSON.stringify("detail" in composed ? composed.detail : composed));
   const ids = composed.kind === "PROMOTED" ? composed.value.meetings.map(({ id }) => id) : [];
   assert.ok(ids.includes(oldRecord.id) && ids.includes(fresh.id));

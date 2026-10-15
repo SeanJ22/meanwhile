@@ -8,6 +8,7 @@ import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { LocalFileArtifactStore, type ReaderArtifactStore } from "../lib/meetings/edge-store.ts";
 import { routineCivicDataSupervisorOutcome } from "../lib/control-plane/freshness-cycle-outcome.ts";
 import { ownerDigestAttention } from "../lib/control-plane/owner-surface.ts";
+import { installFactReader } from "../lib/facts/db.ts";
 
 const NOW = "2026-10-05T18:00:00.000Z";
 // All transports here are temporary files; the Netlify-kind case tests the
@@ -21,6 +22,8 @@ for (const [kind, env, expectedOk] of [
   ["netlify-blobs", {}, true],
 ] as const) {
   test(`supervisor ${kind} with opt-in ${JSON.stringify(env)} reports the real destination`, async (t) => {
+    installFactReader(null);
+    t.after(() => installFactReader(undefined));
     const directory = mkdtempSync(join(tmpdir(), "slide-supervisor-"));
     t.after(() => rmSync(directory, { recursive: true, force: true }));
     const local = new LocalFileArtifactStore(directory);
@@ -66,6 +69,8 @@ test("no configured publication store fails without reading data", async () => {
 });
 
 test("uncomposable meetings fail even with the development opt-in", async (t) => {
+  installFactReader(null);
+  t.after(() => installFactReader(undefined));
   const directory = mkdtempSync(join(tmpdir(), "slide-uncomposable-"));
   t.after(() => rmSync(directory, { recursive: true, force: true }));
   const outcome = await publishSupervisorReaderEdge(new MemoryRoutineDataStore(), NOW,

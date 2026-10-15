@@ -1,3 +1,5 @@
+import { createDispatchState } from "./dispatch-state.ts";
+import { ADMIN_SECTIONS, storedAdminConfigRepository, type AdminSection, type StoredAdminSection } from "./admin-config.ts";
 import type { BoxFinding } from "../box.ts";
 import type { WorkerResultRecord } from "../workers/types.ts";
 import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
@@ -15,7 +17,8 @@ import type { Attempt, ExecutionLease } from "../attempt.ts";
 import type { FreshnessDebt } from "../scheduler/debt.ts";
 import type { FreshnessOccurrence, StandingObligation } from "../scheduler/durable.ts";
 import type { ResearchIntent, ResearchState } from "../scheduler/research-policy.ts";
-import type { SpendWindow } from "../spend-window.ts";
+import type { PricedCharge } from "../fleet-safety.ts";
+import { storedSpendRepository } from "./model-charges.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type {
   PromotionPipelineRecord,
@@ -326,8 +329,9 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
   const budgetAggregate = memoryAggregateRepository<BudgetLedger>("BudgetLedger");
   const artifacts = memoryAppendOnlyRepository<ArtifactRecord>("artifacts");
   const adminReceipts = memoryAppendOnlyRepository<ActionReceipt>("admin_receipts");
+  const scoutResults = memoryAppendOnlyRepository<ScoutResult>("scout_results");
 
-  return {
+  const repositories: ControlPlaneRepositories = {
     async adminActionHistoryPage(query) {
       // Positions belong to the append log, so new rows do not shift an older cursor.
       return (await adminReceipts.read("admin-action")).map((receipt, position) => ({ receipt, position }))
@@ -335,6 +339,7 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
           (query.beforePosition == null || row.position < query.beforePosition))
         .sort((a, b) => b.position - a.position).slice(0, query.limit);
     },
+    dispatchState: createDispatchState(() => repositories),
     workItems: memoryAggregateRepository<WorkItem>("WorkItem"),
     routeTasks: memoryAggregateRepository<RouteTask>("RouteTask"),
     attempts: memoryAggregateRepository<Attempt>("Attempt"),
@@ -366,11 +371,11 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     ownerDigests: memoryAppendOnlyRepository<OwnerDigestRecord>("owner_digests"),
     ownerDecisions: memoryAppendOnlyRepository<OwnerDecisionIntent>("owner_decisions"),
     researchState: memoryAggregateRepository<ResearchState>("ResearchState"),
-    spendWindow: memoryAggregateRepository<SpendWindow>("SpendWindow"),
+    spend: storedSpendRepository(memoryAggregateRepository<PricedCharge>("ModelCharge"), scoutResults),
     methodCandidates: memoryAggregateRepository<CandidateStore>("MethodCandidateStore"),
     researchIntents: memoryAppendOnlyRepository<ResearchIntent>("research_intents"),
     boxFindings: memoryAggregateRepository<BoxFinding>("BoxFinding"),
-    scoutResults: memoryAppendOnlyRepository<ScoutResult>("scout_results"),
+    scoutResults,
     workerResults: memoryAppendOnlyRepository<WorkerResultRecord>("worker_results"),
     promotionPipeline: memoryAppendOnlyRepository<PromotionPipelineRecord>("promotion_pipeline"),
     windowRuns: memoryAppendOnlyRepository<WindowRunRecord>("window_runs"),
@@ -381,7 +386,7 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     agentJobs: memoryAppendOnlyRepository<AgentJobRecord>("agent_jobs"),
     discoveryAttempts: memoryAppendOnlyRepository<MeetingsDiscoveryAttempt>("discovery_attempts"),
     liveAudits: memoryAppendOnlyRepository<LiveAuditLogRow>("live_audits"),
-    adminConfig: memoryAggregateRepository<AdminConfig>("AdminConfig"),
+    adminConfig: storedAdminConfigRepository(memoryAggregateRepository<AdminConfig>("AdminConfig"), Object.fromEntries(Object.keys(ADMIN_SECTIONS).map(key => [key, memoryAggregateRepository<StoredAdminSection>(key)])) as Record<AdminSection, AggregateRepository<StoredAdminSection>>, locks),
     askGapObservations: memoryAggregateRepository<AskGapObservation>("AskGapObservation"),
     doors: memoryAggregateRepository<DoorRecord>("Door"),
     leadOrders: memoryAggregateRepository<LeadOrder>("LeadOrder"),
@@ -391,4 +396,5 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     describe: () => "in-memory control-plane repositories (lost when this process ends)",
     durable: false,
   };
+  return repositories;
 }

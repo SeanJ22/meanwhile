@@ -90,7 +90,7 @@ async function linkedPublicationReads(vault: VaultIndex, approvals: readonly Pub
        FROM unnest($1::text[]) AS sources(url)
        JOIN cp_log_artifacts a ON md5(a.record->>'canonicalUrl') = md5(sources.url) AND a.record->>'canonicalUrl' = sources.url
        JOIN cp_attempts t ON t.id = a.record->>'attemptId'
-       JOIN cp_work_items w ON w.id = a.record->>'workItemId'
+       JOIN cp_work_items_history w ON w.id = a.record->>'workItemId'
        ORDER BY a.record->>'canonicalUrl', a.record->>'recordedAt', a.record->>'artifactId'`, [urls],
     ) as { record: unknown; attempt: unknown; work_item: unknown }[];
     const out: HeldLinkedPublicationRead[] = [];

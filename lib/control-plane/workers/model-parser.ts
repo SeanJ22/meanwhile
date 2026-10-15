@@ -1,10 +1,4 @@
 import { readRolePlaybook, workerSystemPrompt } from "../playbooks.ts";
-/**
- * The parser's fallback when no parsing rule exists: a model pulls each field with its exact quote, and code keeps
- * only fields whose quote occurs character for character in the saved document and contains the value, on a
- * record carrying every required and identity field. Everything else is dropped and named in a finding. The
- * field manual decides the starting tier and field names, and the outcome is written back.
- */
 
 import { performance } from "node:perf_hooks";
 import type { WorkerRef } from "../attempt.ts";
@@ -23,7 +17,7 @@ import type { ControlPlaneRepositories } from "../repository/types.ts";
 import { canonicalJson } from "../repository/types.ts";
 import { canonicalModelId } from "../../models.ts";
 import { assertStepMayEscalate, assertStepMayInvokeModel, MODEL_FOR_CLASS, type ModelClass } from "../scheduler/model-routing.ts";
-import { ceilingPermits, RESEARCH_BOUNDS, researchSpendInWindow } from "../scheduler/research-policy.ts";
+import { ceilingPermits, RESEARCH_BOUNDS } from "../scheduler/research-policy.ts";
 import { modelRequestAccounting, type ModelRequest, type ModelResponse, type ModelTransport } from "../scheduler/scout-executor.ts";
 import { SendBudgetRefusal } from "../expansion/spend-holds.ts";
 import { confirmQuotedRecords, MODEL_PARSER_IMPLEMENTATION, type ProposedRecord, type Rejection } from "./quoted-proof.ts";
@@ -46,8 +40,6 @@ export const PARSE_MAX_WINDOWS = 6;
 export const PARSE_LEARNING_SOURCE = "parser-learning";
 const MAX_FINDINGS = 60;
 
-
-
 const RECORD_EXTRACTION = {
   name: "record_extraction",
   description: "Return the records found in the document, each field with the exact quote it came from. This is a proposal only; code confirms every quote against the saved document.",
@@ -66,7 +58,6 @@ const RECORD_EXTRACTION = {
   },
   cache_control: { type: "ephemeral" as const, ttl: "1h" as const },
 };
-
 
 /** The tiers the extraction step may use, cheapest first. */
 export const PARSE_TIERS: readonly ModelClass[] = ["haiku", "sonnet"];
@@ -119,7 +110,6 @@ export function parseFieldsId(recordClass: string): string {
   return newFieldManualEntry(PARSE_LEARNING_SOURCE, `fields|${recordClass}`, { role: "PARSER", kind: "PARSE_FIELDS", title: "", summary: "", outcome: "REFERENCE" }).id;
 }
 
-
 /** The document cut into overlapping windows on line boundaries; each is [start, end) in the full text. */
 export function documentWindows(text: string, size = PARSE_WINDOW_CHARS, overlap = PARSE_WINDOW_OVERLAP, max = PARSE_MAX_WINDOWS): { readonly windows: readonly { readonly start: number; readonly end: number }[]; readonly unreadFrom: number | null } {
   const windows: { start: number; end: number }[] = [];
@@ -136,7 +126,6 @@ export function documentWindows(text: string, size = PARSE_WINDOW_CHARS, overlap
   }
   return { windows, unreadFrom: start < text.length ? windows[windows.length - 1]!.end : null };
 }
-
 
 /** What a finished parse teaches the next one: this tier's outcome for this publisher, and the field names used. */
 export function parseLearningEntries(
@@ -166,7 +155,6 @@ export function parseLearningEntries(
   }
   return entries;
 }
-
 
 export interface ModelParseRecord {
   readonly byModel?: readonly CostModelShare[];
@@ -242,8 +230,6 @@ export function modelParseReasoner(
   now: () => string,
   options: {
     readonly ceilingUsd?: number;
-    /** Read only the cost rows the rolling window can count. */
-    readonly scopedReads?: boolean;
     readonly transportFor?: (jurisdiction: { readonly subjectId: string; readonly state: string | null }) => ModelTransport;
     readonly lifetimeHuntSubject?: (subjectId: string) => boolean;
   } = {},
@@ -256,7 +242,7 @@ export function modelParseReasoner(
     const started = performance.now();
     const contract = input.contract;
     if (contract.schemaVersion !== 2 || contract.extraction.format !== "UNSUPPORTED") throw new Error("PARSE_MODEL_LANE_NOT_APPLICABLE");
-    const spend = researchSpendInWindow(await readSpendWindow(repos, now()), now());
+    const spend = await readSpendWindow(repos, now());
     const admission = ceilingPermits(spend.windowUsd, ceilingUsd);
     if (!admission.permits) throw new Error(`DENIED_BY_POLICY:PARSE_ROLLING_COST_CEILING; ${admission.why}`);
     const host = (() => { try { return new URL(input.evidence.canonicalUrl).host.toLowerCase(); } catch { return input.evidence.canonicalUrl; } })();

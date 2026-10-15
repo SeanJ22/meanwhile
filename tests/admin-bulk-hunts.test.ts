@@ -10,10 +10,6 @@ import { ADMIN_CONFIG_ID, isAdminConfig } from "@/lib/control-plane/gateway/admi
 import { expansionScopesOf } from "@/lib/control-plane/expansion/scopes.ts";
 import type { GatewayDeps } from "@/lib/control-plane/gateway/registry.ts";
 
-/**
- * Many hunts in one action: the CSV parse (quoted cells, inactive rows, a blank ZIP, a lost leading
- * zero), budgets that never add up past the total, and one config write for every hunt.
- */
 
 const COOK = [
   "district,state,cd,incumbent,map_status,zip,zip_type,active,city,county,other_cd119_touching,evidence,confidence,note",
@@ -72,10 +68,8 @@ const ask = (type: string, key: string, input: Record<string, unknown>): ActionR
 test("send many writes every hunt in ONE config write, with its own budget and group", async () => {
   const repos = createMemoryRepositories();
   let writes = 0;
-  const realPut = repos.adminConfig.put.bind(repos.adminConfig);
-  const realCas = repos.adminConfig.compareAndSet.bind(repos.adminConfig);
-  repos.adminConfig.put = async (...a) => { writes += 1; return realPut(...a); };
-  repos.adminConfig.compareAndSet = async (...a) => { writes += 1; return realCas(...a); };
+  const realSave = repos.adminConfig.save.bind(repos.adminConfig);
+  repos.adminConfig.save = async (...args) => { writes += 1; return realSave(...args); };
   const out = await submit(ask("expansion.scope.setMany", "many-key-00000001", {
     items: [
       { zip: "85635", stateAbbr: "AZ", budgetUsd: 25, group: "AZ-06" },

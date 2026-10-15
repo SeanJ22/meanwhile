@@ -1,12 +1,4 @@
-/**
- * Every round, each method that works somewhere is tried wherever a door has
- * the same kind of website (`planSpread`). The free try runs now, by plain
- * code, at every matching place (`plainTrier`); its result goes into the fix
- * map, the fix list and the method's own record in the field manual. Where the
- * free try cannot decide, a worker there is offered the method with where it
- * worked, and a paid try is allowed only inside places the owner has sent
- * money to. A place with a result is never tried again by the spread.
- */
+
 
 import { isTransferableMethod, placeLabel, saveFieldManualEntries, type FieldManualEntry, type FieldManualRepos } from "../control-plane/field-manual.ts";
 import { recordAttemptsKeepingHistory } from "../control-plane/fix-history.ts";
@@ -28,11 +20,7 @@ import { planSpread, SPREAD_ATTEMPT, type SpreadPlace } from "./spread.ts";
 /** At most this many free tries a round; the rest stay queued for the next. */
 export const FREE_TRIES_PER_ROUND = 200;
 
-/**
- * The places the owner has sent money to: members of a Send, and of an area with a budget, each as the division the
- * spread keys on. A member that is a registry government is read to its own division; a member that is no place
- * (a candidate, an office) funds no door.
- */
+
 export function sentMoneyPlaces(input: { readonly areas: readonly BudgetScope[] | null; readonly sends: AssignmentMembership | null }): ReadonlySet<string> {
   const out = new Set<string>();
   for (const scope of input.areas ?? []) {
@@ -137,7 +125,7 @@ export async function runSpreadPass(input: SpreadPassInput): Promise<SpreadPassR
     const plan = planSpread({
       method: { methodId: method.id, doorKind: method.platforms[0] ?? null, platforms: method.platforms },
       doors, detectedPlatforms: (doorId) => platformOf.get(doorId) ?? [],
-      fixMapRows: await repos.fixMap.forMethod(method.id, 1000),
+      fixMapRows: await repos.fixMap.forPlaces(method.id, doors.flatMap(door => door.ocdId === null ? [] : [door.ocdId])),
       ...(input.sizeFor ? { sizeFor: (host: string) => input.sizeFor!(`https://${host}/`) } : {}),
       sendPlaceIds: input.sendPlaceIds, paidTriesLeft: left,
     });

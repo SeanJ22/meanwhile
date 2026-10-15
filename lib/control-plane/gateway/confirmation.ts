@@ -1,38 +1,7 @@
 import { findScheduledChild } from "./receipts.ts";
 import { ownerDispatchWorkOf, type DispatchWorkReading, type OwnerDispatchWork } from "../expansion/dispatch-work.ts";
 import { confirmHuntScores, type PlaceScoreReader } from "./hunt-score.ts";
-/**
- * **"DONE" MEANS THE RUNNER SAYS SO.** (S11, rulings §0 test 5 and §6.)
- *
- * A click saves a receipt. A saved receipt proves the console recorded the
- * request; it does not prove anything has acted on it. This module asks the one
- * question the owner cares about — *has the runner picked this up?* — by
- * reading what the runner already writes, for each kind of action. It writes
- * nothing, and it adds no ledger: the receipts stay immutable and the runner's
- * own records are the proof.
- *
- * ```
- *   runner.pause / runner.resume / runner.runCycleNow / research.pause /
- *   fleet.deployHere        the runner's HONORED record beside the intent. The
- *                           receipt's subject IS the intent id, and the record's
- *                           `honors` names it: one point read, found by content
- *   expansion.scope.set     the runner's assignment reading names this receipt
- *                           (written when a round starts), else a round that
- *                           started after the save has read the new list
- *   config.setDiscoverySearch
- *                           the runner's own heartbeat names this receipt
- *   config.setFleetSpendCeiling / config.setPlaceTarget / expansion.scope.remove
- *                           a round started after the save: the runner reads
- *                           these when a round starts
- *   everything else         finished inside the console; nothing for the runner
- *                           (config.setDataSwitch is read at each read of a number, so it is in force when saved)
- * ```
- *
- * A round that has not started since the save is "waiting", and a paused runner
- * starts none: the words say so rather than pretend.
- *
- * PURE apart from the reads it is handed.
- */
+
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import { RESEARCH_INTENT_LOG_KEY, RESEARCH_STATE_ID, type ResearchIntent } from "../scheduler/research-policy.ts";
 import { RUNNER_ID } from "../admin-data.ts";
@@ -247,7 +216,7 @@ async function confirmCore(repos: ControlPlaneRepositories, receipt: ActionRecei
   }
   if (type === "queue.add") {
     try {
-      const item = (await repos.adminConfig.read("current"))?.value.fixList?.find(i=>i.id === receipt.subject);
+      const item = (await repos.adminConfig.read("current", { fixList: { ids: [receipt.subject] } }))?.value.fixList?.find(i=>i.id === receipt.subject);
       if (item?.dispatch) return confirmCore(repos, { ...receipt, type: "fleet.deployHere", subject: item.dispatch.intentId },nowMs,readPlaceScore);
     } catch { return { state: "unread", at: null, words: "Saved. Runner status —" }; }
   }

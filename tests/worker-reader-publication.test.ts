@@ -1,6 +1,7 @@
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { runWorkerPublicationJob } from "../lib/civic-data/worker-publication-job.ts";
 import { factDb } from "./helpers/fact-db.ts";
+import { installFactReader } from "../lib/facts/db.ts";
 import {readGenericBallotProjection} from "../lib/ballot/generic-projection.ts";
 import {readerBallotSourcesForDivisions} from "../lib/ballot/reader-sources.ts";
 import {candidateEnrichmentUniversesFromHoldings} from "../lib/control-plane/scheduler/providers/candidate-enrichment.ts";
@@ -15,7 +16,7 @@ import { readVotingSitesProjection } from "../lib/ballot/voting-sites-server.ts"
 import { createHash } from "node:crypto";
 import { CENSUS_PLACEHOLDER_LABELS } from "../lib/registry/census-placeholders.ts";
 import assert from "node:assert/strict";
-import test from "./helpers/playbooks.ts";
+import test, { afterEach, beforeEach } from "./helpers/playbooks.ts";
 import { readFileSync } from "node:fs";
 import { gunzipSync } from "node:zlib";
 import { autonomousHarness, FIXTURE_URL } from "./helpers/autonomous-fleet.ts";
@@ -45,6 +46,16 @@ import { filingsForDivisions, officialFilingIssue, type OfficialFiling } from ".
 import { renderCardWithSources } from "./helpers/render-card.ts";
 import { collectWorkerRosterReadback } from "../lib/control-plane/worker-reader-readback.ts";
 
+let publicationFacts: Awaited<ReturnType<typeof factDb>>;
+beforeEach(async () => {
+  publicationFacts = await factDb();
+  installFactReader(publicationFacts.query);
+});
+afterEach(async () => {
+  installFactReader(undefined);
+  await publicationFacts.pg.close();
+});
+
 /** The job's repositories with the whole worker-result log made unreadable: a publisher reads only its own job's results. */
 function withoutWholeResultLog<R extends { workerResults: object }>(repos: R): R {
   const whole = async (): Promise<never> => { throw new Error("the whole worker-result log was read"); };
@@ -57,8 +68,6 @@ async function workerFixture(contractId: WorkerReaderContract | "registry-runtim
   Object.assign(store, { candidates: new Map([[record.candidate.id, record]]), promotions: new Map([[projection.key, projection]]) });
   if (contractId === "registry-runtime-bindings") {
   const imported = (await readRegistryRuntimePrior(store, "2026-09-08T12:00:01.000Z"))!;
-  // Replay the already deployed placeholder correction before this worker test:
-  // the recorded transfer fixture predates it, unlike the production base.
   const divisions = imported.payload.registry.divisions.filter(row => CENSUS_PLACEHOLDER_LABELS[row.label]).map(row => ({ ...row, label: CENSUS_PLACEHOLDER_LABELS[row.label] }));
   const corrected = registryRuntimeCandidate({ contractId: "registry-runtime-bindings", version: "fixture-census-correction", sourceThrough: "2026-09-08T12:00:02.000Z",
     sourceReceipt: { contractVersion: 1, reviewedAt: "2026-09-08T12:00:02.000Z", reviewedBy: "recorded-fixture-control", sources: [...new Set(divisions.map(row => row.provenance!.sourceUrl!))].map(url => ({ requestedUrl: url, finalUrl: url, publisher: "U.S. Census Bureau", sourceClass: "OFFICIAL_PUBLISHER", retrievedAt: "2026-09-08T12:00:02.000Z", httpStatus: 200, rawHash: createHash("sha256").update(JSON.stringify(divisions)).digest("hex"), reviewedEvidence: "Offline fixture: Census LEA 99997 means no school district; retained transfer correction control." })) },
@@ -130,7 +139,7 @@ async function workerFixture(contractId: WorkerReaderContract | "registry-runtim
   if (contractId === "voting-sites") assert.deepEqual(queued[0].command.slice(0, 2), ["scripts/fetch-voting-sites.mts", "--promote"], "the existing voting command handles worker results before legacy acquisition");
   else if (!directory) assert.ok(queued[0].command.includes(`--contract=${contractId}`));
   assert.ok(queued[0].command.some(arg => arg === `--${directory ? "worker-directories" : "worker-results"}=${h.item.id}`));
-  const input = { repos: h.repos, store, facts: await factDb(), contractId: contractId as WorkerReaderContract, workItemIds: [h.item.id], now: h.now(),
+  const input = { repos: h.repos, store, facts: publicationFacts, contractId: contractId as WorkerReaderContract, workItemIds: [h.item.id], now: h.now(),
     readCapture: async (id: string) => { const evidence = evidenceProjection(await runtime.readEvidence(id));
       return { evidence, observedAt: evidence.retrievedAt, httpStatus: 200, transport: "REACHABLE", partial: false }; } };
   return { input, h, store, body, rows, results, artifact, ready, prior, runtime };

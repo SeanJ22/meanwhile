@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { ADMIN_SESSION_COOKIE } from "@/lib/control-plane/admin-auth.ts";
 import { openControlPlane, RUNNER_ID } from "@/lib/control-plane/admin-data.ts";
-import { projectSettings } from "@/lib/control-plane/admin-view/v6-settings-read.ts";
+import { projectSettings, SETTINGS_LOG_SHOWN } from "@/lib/control-plane/admin-view/v6-settings-read.ts";
 import { ADMIN_CONFIG_ID, isAdminConfig } from "@/lib/control-plane/gateway/admin-config.ts";
 import { guardAdminRequest } from "@/lib/control-plane/gateway/admin-guard.ts";
 import { settingsEdgeStore } from "@/lib/civic-data/reader-settings-publication.ts";
@@ -33,7 +33,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     const opened = await openControlPlane();
     if (!opened.ok) return NextResponse.json({ says: UNREAD }, { status: 503, headers: NO_STORE });
     const [row, beat, published] = await Promise.all([
-      opened.repos.adminConfig.read(ADMIN_CONFIG_ID),
+      opened.repos.adminConfig.read(ADMIN_CONFIG_ID, { settingHistory: { latestPerKey: SETTINGS_LOG_SHOWN } }),
       opened.repos.runnerHeartbeat.read(RUNNER_ID).catch(() => null),
       publishedValues(),
     ]);

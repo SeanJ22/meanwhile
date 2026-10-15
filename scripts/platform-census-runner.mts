@@ -1,3 +1,5 @@
+import { recordCost } from "../lib/control-plane/repository/coordinator.ts";
+import { EMPTY_SPEND } from "../lib/control-plane/spend-window.ts";
 import { ROUTE_HINTS } from "../lib/hunt/meetings-route-hints.ts";
 import { neon } from "@neondatabase/serverless";
 import { join } from "node:path";
@@ -28,7 +30,7 @@ let stopped = false;
 process.on("message", message => { if ((message as { kind?: string })?.kind === "RUNTIME_RELEASE_DRAIN") stopped = true; });
 const vault = cycleVault(join(root, ...VAULT_DIR));
 let sizeFor = websiteSizeFromHoldings([], root);
-const fleet = new FleetSafetyController({ now: now(), charges: [], modelHold: "Plain-code census lane", websitePacing: repos.websitePacing,
+const fleet = new FleetSafetyController({ now: now(), spend: EMPTY_SPEND, modelHold: "Plain-code census lane", websitePacing: repos.websitePacing,
   websiteSize: target => sizeFor(target) });
 const spaceOut = hostSpacer();
 let dotgov: Promise<Awaited<ReturnType<DiscoveryRuntime["open"]>>> | undefined;
@@ -50,7 +52,7 @@ const controlQuery = neon(url);
 const stateDoors = async (state: string) => {
   const ids = await controlQuery.query(`SELECT d.id FROM cp_doors d WHERE
     d.value->>'ocdId' LIKE $1 OR d.value->'bodyIds'::text LIKE $2 OR
-    EXISTS (SELECT 1 FROM cp_work_items w WHERE w.value #>> '{publicationOutcome,doorId}' = d.id
+    EXISTS (SELECT 1 FROM cp_work_items_history w WHERE w.value #>> '{publicationOutcome,doorId}' = d.id
       AND upper(w.value #>> '{autonomousPlan,jurisdiction}') = $3)`,
     [`${censusDivisionPrefix(state)}%`, `%/${censusDivisionPrefix(state).split("/").at(-1)}%`, state.toUpperCase()]);
   return (await Promise.all(ids.map(row => repos.doors.read(String(row.id))))).flatMap(row => row ? [row.value] : []);
@@ -104,7 +106,7 @@ try {
     }) : null;
     const stateRuntime = { ...runtime, fingerprints: bank.fingerprints, recipes: bank.recipes, ...(search ? { search } : {}),
       recordCost: async (entry: Parameters<NonNullable<DiscoveryRuntime["recordCost"]>>[0]) => {
-        await repos.costs.append(entry.workItemId, entry.attemptId, entry, now());
+        await recordCost(repos, entry, now());
       } };
     const report = await runCensusState({ repos, state, needs: reading.needs, runtime: stateRuntime, entries: bank.entries,
       onProgress: report => { if (report.checked % 25 === 0) console.log(`CENSUS_PROGRESS ${state}: ${report.checked} checked, ${report.walked} walked`); } });

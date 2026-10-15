@@ -1,4 +1,3 @@
-/** One connected live-audit cycle records every result, answers red flags at once, and marks pulled facts fixed. */
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -30,7 +29,7 @@ test("every result is kept by day; a red flag unpulled for want of a trace goes 
   const week = await readAuditWeek(repos, NOW);
   assert.equal(week.results.length, 3);
   assert.deepEqual(out.redFlags.map((r) => [r.factId, r.status]), [["comment-access:b", "ORIGIN_UNKNOWN"]]);
-  const config = (await repos.adminConfig.mustRead(ADMIN_CONFIG_ID)).value as AdminConfig;
+  const config = (await repos.adminConfig.mustRead(ADMIN_CONFIG_ID, { fixList: true })).value as AdminConfig;
   const items = fixItems(config);
   assert.equal(items.length, 1);
   assert.equal(items[0].where, "comment-access:b");

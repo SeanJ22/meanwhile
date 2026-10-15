@@ -10,7 +10,7 @@ import type { RoutineDataStore } from "../civic-data/store.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import { runPlaceSource, type NationalPlacePublicationInput } from "./place-source.ts";
 import { placeSourceReader, PlaceSourceDeferred } from "./place-source-reader.ts";
-import { nationalPlaceWorkReading } from "../control-plane/expansion/dispatch-work.ts";
+import { nationalPlaceBelowTarget } from "../control-plane/expansion/dispatch-work.ts";
 import { readHeldPlaceCapture } from "../civic-data/held-place-capture.ts";
 import { buildPlaceOwedList, type PlaceOwedItem } from "../coverage/place-owed.ts";
 import { canonicalJson } from "../control-plane/repository/types.ts";
@@ -101,9 +101,8 @@ export async function dueNationalPlaceZips(repos: ControlPlaneRepositories, zips
   const unique = [...new Set(zips)];
   if (unique.some(zip => !/^\d{5}$/.test(zip))) throw new Error("A five-digit ZIP is required");
   const held = new Map((await repos.obligations.listWhere(["routeId"], "national-place-sources")).map(row => [row.id, row.value]));
-  const targets = (await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value as { placeTargets?: unknown[] } | undefined;
-  const requests = sendRequests ?? await readNationalPlaceSendRequests(repos, unique, now, targets ?? null);
-  const belowTarget = targets?.placeTargets?.length ? (await nationalPlaceWorkReading(repos, unique, now)).belowTarget : new Set<string>();
+  const requests = sendRequests ?? await readNationalPlaceSendRequests(repos, unique, now);
+  const belowTarget = await nationalPlaceBelowTarget(repos, unique, now);
   const nowMs = Date.parse(now);
   const due = await Promise.all(unique.map(async zip => {
     const row = held.get(`national-place:${zip}`);
@@ -117,9 +116,6 @@ export async function dueNationalPlaceZips(repos: ControlPlaneRepositories, zips
   });
 }
 
-/** The registered registry source uses the ordinary acquiring Attempt, vault
- * and occurrence lifecycle. It costs no model tokens; remaining blanks stay
- * available to the shared hunt planner after each source publication. */
 export async function runNationalPlaceTask(input: {
   tools: ResearchRuntimeTools;
   store: RoutineDataStore;
@@ -139,7 +135,7 @@ export async function runNationalPlaceTask(input: {
     const definition = { id: `national-place:${zip}`, subjectId: `zip:${zip}`, recordClass: "OFFICIAL_ROSTER" as const,
       routeId: "national-place-sources", active: true, readerImpactAt: null, observedChangeRateHours: null, lastWorkedAt: null };
     const synced = await syncObligations(tools.repos, [definition], now, { exactReads: true });
-    let prior = await resumeOpenOccurrence(tools.repos, synced.all[0]);
+    let prior = await resumeOpenOccurrence(tools.repos, synced.all[0], await tools.repos.dispatchState.readOpen({ obligationIds: [synced.all[0].id] }));
     if (prior?.kind === "SETTLED") {
       await closeSettledOccurrence(tools.repos, { settled: prior.settled, now });
       prior = null;
@@ -147,9 +143,8 @@ export async function runNationalPlaceTask(input: {
     // Settlement can advance the clock, and another worker may have worked it
     // since admission. Always schedule the durable row, never a fresh null anchor.
     const durable = (await tools.repos.obligations.mustRead(definition.id)).value;
-    const targets = (await tools.repos.adminConfig.read(ADMIN_CONFIG_ID))?.value as { placeTargets?: unknown[] } | undefined;
-    const requests = await readNationalPlaceSendRequests(tools.repos, [zip], now, targets ?? null);
-    const belowTarget = targets?.placeTargets?.length ? (await nationalPlaceWorkReading(tools.repos, [zip], now)).belowTarget.has(zip) : false;
+    const requests = await readNationalPlaceSendRequests(tools.repos, [zip], now);
+    const belowTarget = (await nationalPlaceBelowTarget(tools.repos, [zip], now)).has(zip);
     const scheduled = await scheduleNationalPlace(tools.repos, durable, now, belowTarget, requests.get(zip));
     if (!("cadenceHours" in scheduled)) throw new Error(scheduled.reason);
     if (Date.parse(scheduled.nextDueAt) > Date.parse(now)) continue;

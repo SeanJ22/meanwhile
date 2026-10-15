@@ -96,7 +96,7 @@ test("Hunter transport failure is durable OPEN evidence and retry reuses the can
   const retry=await nextAutonomousOperation(h.runtime,h.item.id); assert.equal(retry.task?.workerTask?.role,"ACQUIRER"); assert.notEqual(retry.task?.id,first.task?.id);
   const restart=await nextAutonomousOperation(h.runtime,h.item.id); assert.equal(restart.task?.id,retry.task?.id);
   assert.ok(!(await h.repos.routeTasks.list()).some(t=>t.value.workerTask?.role==="PARSER"));
-  const activity=(await readAutonomousActivity(h.repos,undefined,{observedAt:h.now()}))[0]; assert.equal(activity.walk.state,"OPEN"); assert.ok(activity.timeline.some(event=>event.walk?.transport==="TIMEOUT"));
+  const activity=(await readAutonomousActivity(h.repos,[h.item.id],{observedAt:h.now()}))[0]; assert.equal(activity.walk.state,"OPEN"); assert.ok(activity.timeline.some(event=>event.walk?.transport==="TIMEOUT"));
 });
 
 test("CH-23 part 3 (DP-02): a passing outage on a known door is a free plain retry, with no paid walk", async () => {
@@ -150,7 +150,7 @@ test("the same coordinator advances real procedures Hunter → Parser → Valida
   assert.deepEqual(roles,["ACQUIRER","PARSER","VALIDATOR"]);
   const terminal=await nextAutonomousOperation(h.runtime,h.item.id); assert.equal(terminal.action,"STAGED");
   const count=(await h.repos.attempts.list()).length; await runAutonomousCoordinator(h.runtime,{maximum:2,concurrency:2}); assert.equal((await h.repos.attempts.list()).length,count);
-  const activity=(await readAutonomousActivity(h.repos,undefined,{observedAt:h.now()}))[0];
+  const activity=(await readAutonomousActivity(h.repos,[h.item.id],{observedAt:h.now()}))[0];
   assert.equal(activity.timeline.filter(event=>event.kind==="WORKER_RESULT").length,3);
   assert.deepEqual(activity.accounting.attemptIds,(await h.repos.attempts.list()).map(row=>row.id).sort());
   assert.deepEqual(activity.accounting.transitionIds,(await h.repos.transitions.readAll()).map(t=>t.transitionId).sort());
@@ -185,6 +185,8 @@ test("coordinator selection hands out canonical tasks without running tools or o
   const h = await autonomousHarness();
   const legacy = { ...h.item, id: "work:legacy-held", autonomousPlan: undefined };
   await h.repos.workItems.put(legacy.id, legacy, h.now());
+  const heldTask = (await h.repos.routeTasks.listWhere(["workItemId"],h.item.id))[0]!;
+  await h.repos.routeTasks.put("legacy-held-task",{...heldTask.value,id:"legacy-held-task",workItemId:legacy.id,state:"PENDING"},h.now());
   const before = (await h.repos.attempts.list()).length;
   let snapshotCalls = 0;
   let snapshot: readonly WorkItem[] = [];

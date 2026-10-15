@@ -1,15 +1,11 @@
-/**
- * Durable scheduler state. A standing obligation recurs; each due occurrence owns its own WorkItem and
- * RouteTask. Identity is derived from the obligation id and the occurrence sequence, so no RouteTask is
- * reused across occurrences.
- */
-
 import { createRouteTask, type RouteDisposition, type RouteTask } from "../route-task.ts";
 import { createWorkItem, type WorkItem } from "../work-item.ts";
 import { inheritPublicationConnection } from "../workers/autonomous-plan.ts";
 import { questionOfObligation } from "../work-question.ts";
 import { registerRouteTask, registerWorkItem } from "../repository/coordinator.ts";
 import { canonicalJson, type ControlPlaneRepositories } from "../repository/types.ts";
+
+import type { DispatchSnapshot } from "../repository/dispatch-state.ts";
 
 import type { FreshnessDebt } from "./debt.ts";
 import { DISCHARGING_DISPOSITIONS } from "./dispatch.ts";
@@ -27,11 +23,7 @@ export interface StandingObligation extends FreshnessObligation {
   /** How many occurrences this obligation has opened. Monotonic. */
   readonly occurrenceCount: number;
   readonly openOccurrenceId: string | null;
-  /**
-   * Set when an authority transfer permanently removes this clock from the
-   * standing corpus. The row remains as history, but `active: false` and a
-   * null next-due make it impossible to dispatch as live work.
-   */
+
   readonly retiredAt?: string;
   readonly retirementReason?: string;
   readonly updatedAt: string;
@@ -237,11 +229,6 @@ export async function retireObligationsByPrefix(
   return { retired, alreadyRetired };
 }
 
-/**
- * A row the registry no longer emits is retired only when it is active, its namespace belongs to exactly one
- * provider that read cleanly with at least one unit, and retiring it keeps that provider under
- * `SUPERSEDED_RETIREMENT_BOUND`. Every other such row is held back by name; re-emitting the id makes it live again.
- */
 export const SUPERSEDED_RETIREMENT_BOUND = 0.25;
 
 /** `freshness:<namespace>:`, the part of a standing obligation id its provider owns. Null for any other id. */
@@ -288,10 +275,6 @@ export function supersededRetirementReason(providerId: string): string {
   );
 }
 
-/**
- * The one provider that owns a row's namespace this cycle and read cleanly,
- * or the named reason there is none. Both retirement planners ask this.
- */
 function cleanOwnerOf(
   corpus: readonly { readonly providerId: string; readonly obligationId: string }[],
   providers: readonly ProviderReading[],
@@ -337,11 +320,6 @@ function cleanOwnerOf(
   };
 }
 
-/**
- * Which rows outside the corpus to retire, and which to hold back and why.
- * PURE: the caller passes the rows `syncObligations` read (`outside`), the
- * cycle's FULL, unfiltered registry units, and the provider reports.
- */
 export function planSupersededRetirement(input: {
   readonly outside: readonly StandingObligation[];
   readonly corpus: readonly { readonly providerId: string; readonly obligationId: string }[];
@@ -391,11 +369,6 @@ export function planSupersededRetirement(input: {
   return { retire, heldBack };
 }
 
-/**
- * Retires an old `freshness:jurisdiction:<id>#meetings-N` row only when it is active, the owning provider read
- * cleanly, and the government's exact body holds a calendar route on the owed rows. This planner owns every
- * such row; `planSupersededRetirement` is given none of them.
- */
 const JURISDICTION_MEETINGS_OBLIGATION = /^freshness:jurisdiction:([^#]+)#meetings-\d+$/;
 
 /** The jurisdiction a `freshness:jurisdiction:<id>#meetings-N` row was owed for; null for any other id. */
@@ -481,11 +454,6 @@ export function planRetiredResidue(outside: readonly StandingObligation[]): read
     .sort((a, b) => (a.obligationId < b.obligationId ? -1 : a.obligationId > b.obligationId ? 1 : 0));
 }
 
-/**
- * Retire each row, or settle one already retired: close every open occurrence it owns UNRESOLVED, then mark
- * the row inactive with no next-due. Nothing is deleted. Interruption-safe: the row stays active until the
- * last step. `budget` is asked before each row; the rest come back as `deferred`.
- */
 export async function settleRetirements(
   repos: ControlPlaneRepositories,
   input: {
@@ -559,25 +527,21 @@ export async function settleRetirements(
   return { retired, occurrencesClosed, failed, deferred };
 }
 
-/**
- * Resume the occurrence this obligation already has open; null when none is. An open occurrence whose
- * RouteTask is already disposed comes back as SETTLED with that disposition, to be closed with
- * `closeSettledOccurrence`, never dispatched again.
- */
+/** Resume the cycle's open occurrence; a committed disposition is recovered without another dispatch. */
 export async function resumeOpenOccurrence(
   repos: ControlPlaneRepositories,
   obligation: StandingObligation,
+  snapshot: DispatchSnapshot,
 ): Promise<ResumedOccurrence | null> {
   if (obligation.openOccurrenceId === null) return null;
-  const held = await repos.occurrences.read(obligation.openOccurrenceId);
+  const held = snapshot.occurrences.get(obligation.openOccurrenceId) ?? null;
   if (held === null) return null;
-  /* A CLOSED occurrence is finished work and is never re-dispatched: its
-     RouteTask carries a committed disposition, and re-opening it would attach a
-     second Attempt to a settled task. */
+
   if (held.value.closedAt !== null) return null;
   // A new Send can connect an already-open occurrence without a second discovery; existing or repaired instructions stay immutable.
   if (obligation.autonomousPlan) {
-    const item = await repos.workItems.mustRead(held.value.workItemId);
+    const item = snapshot.workItems.get(held.value.workItemId);
+    if (!item) throw new Error(`open occurrence ${held.id} has no work item ${held.value.workItemId}`);
     const connected = inheritPublicationConnection(item.value.autonomousPlan, obligation.autonomousPlan)!;
     const ownerInstructions = [...new Set([...(connected.ownerInstructions ?? []), ...(obligation.assignments ?? []).map(assignment => assignment.ref)])];
     if (connected !== item.value.autonomousPlan || JSON.stringify(ownerInstructions) !== JSON.stringify(connected.ownerInstructions)) {
@@ -585,7 +549,7 @@ export async function resumeOpenOccurrence(
         { ...item.value, autonomousPlan: { ...connected, ownerInstructions } }, obligation.updatedAt);
     }
   }
-  const task = await repos.routeTasks.read(held.value.routeTaskId);
+  const task = snapshot.routeTasks.get(held.value.routeTaskId) ?? null;
   /* `disposition !== null`, not `state`, decides settledness: a later claim can overwrite the state. */
   if (task !== null && task.value.disposition !== null) {
     return {
@@ -602,10 +566,6 @@ export async function resumeOpenOccurrence(
   return { kind: "OPEN", id: held.value.id, routeTaskId: held.value.routeTaskId };
 }
 
-/**
- * An open occurrence whose RouteTask already carries a committed disposition.
- * Recovered by closing it with that disposition; never dispatched again.
- */
 export interface SettledOccurrence {
   readonly occurrenceId: string;
   readonly obligationId: string;
@@ -633,10 +593,6 @@ export async function findSettledOccurrences(
   return (await scanOccurrences(repos, { ...input, neverClaimedRouteTaskIds: new Set() })).settled;
 }
 
-/**
- * An OPEN occurrence its obligation has moved on from without closing: nothing
- * points to it, so nothing will ever resume or dispatch it.
- */
 export interface AbandonedOccurrence {
   readonly occurrenceId: string;
   readonly obligationId: string;
@@ -645,16 +601,13 @@ export interface AbandonedOccurrence {
   readonly movedOnTo: number;
 }
 
-/**
- * One pass over the occurrences, two findings: settled (pointed at, on a disposed RouteTask) and abandoned
- * (open, not pointed at, its obligation already opened a later sequence, and its RouteTask never claimed).
- */
 export async function scanOccurrences(
   repos: ControlPlaneRepositories,
   input: {
     readonly obligations: readonly StandingObligation[];
     readonly settledRouteTaskIds: ReadonlySet<string>;
     readonly neverClaimedRouteTaskIds: ReadonlySet<string>;
+    readonly snapshot?: DispatchSnapshot;
   },
 ): Promise<{ readonly settled: readonly SettledOccurrence[]; readonly abandoned: readonly AbandonedOccurrence[] }> {
   const byId = new Map<string, StandingObligation>();
@@ -666,12 +619,13 @@ export async function scanOccurrences(
   const settled: SettledOccurrence[] = [];
   const abandoned: AbandonedOccurrence[] = [];
   if (byId.size === 0) return { settled, abandoned };
-  for (const occurrence of await repos.occurrences.list()) {
+  const snapshot = input.snapshot ?? await repos.dispatchState.readOpen({ obligationIds: [...byId.keys()] });
+  for (const occurrence of snapshot.occurrences.values()) {
     if (occurrence.value.closedAt !== null) continue;
     const pointedBy = byOpenOccurrence.get(occurrence.id);
     if (pointedBy !== undefined) {
       if (!input.settledRouteTaskIds.has(occurrence.value.routeTaskId)) continue;
-      const resumed = await resumeOpenOccurrence(repos, pointedBy);
+      const resumed = await resumeOpenOccurrence(repos, pointedBy, snapshot);
       if (resumed?.kind === "SETTLED") settled.push(resumed.settled);
       continue;
     }
@@ -689,7 +643,7 @@ export async function scanOccurrences(
   return { settled, abandoned };
 }
 
-/** Close an abandoned occurrence UNRESOLVED after re-checking every condition at write time. Writes only the occurrence row. */
+/** Recheck ownership and route state before closing an abandoned occurrence unresolved. */
 export async function closeAbandonedOccurrences(
   repos: ControlPlaneRepositories,
   input: { readonly abandoned: readonly AbandonedOccurrence[]; readonly now: string },
@@ -736,6 +690,7 @@ export async function closeAbandonedOccurrences(
         },
         input.now,
       );
+      await repos.dispatchState.archiveOccurrence(occurrence.id, input.now);
       closed.push(occurrence.id);
     } catch (error) {
       failed.push({ occurrenceId, why: error instanceof Error ? error.message : String(error) });
@@ -844,10 +799,6 @@ export async function openOccurrence(
   return { occurrence, workItem, routeTask };
 }
 
-/**
- * Close an occurrence. A non-null `disposition` discharges it and moves `lastWorkedAt` (to `workedAt` when
- * given); null leaves the anchor where it is.
- */
 export async function closeOccurrence(
   repos: ControlPlaneRepositories,
   input: {
@@ -859,7 +810,10 @@ export async function closeOccurrence(
   },
 ): Promise<FreshnessOccurrence> {
   const row = await repos.occurrences.mustRead(input.occurrenceId);
-  if (row.value.closedAt !== null) return row.value;
+  if (row.value.closedAt !== null) {
+    await repos.dispatchState.archiveOccurrence(row.id, input.now);
+    return row.value;
+  }
 
   const closed: FreshnessOccurrence = {
     ...row.value,
@@ -884,14 +838,11 @@ export async function closeOccurrence(
     },
     input.now,
   );
+  await repos.dispatchState.archiveOccurrence(row.id, input.now);
   return closed;
 }
 
-/**
- * Close a settled occurrence without walking its route again. INGESTED and WALKED_NO_YIELD discharge it with
- * the anchor at `disposition.at`; anything else closes it UNRESOLVED and the obligation stays due. Only the
- * occurrence and obligation rows are written.
- */
+/** Recover the committed reading's original time; an unproductive disposition leaves the obligation due. */
 export async function closeSettledOccurrence(
   repos: ControlPlaneRepositories,
   input: { readonly settled: SettledOccurrence; readonly now: string },
@@ -949,14 +900,11 @@ export async function recordArguedAbsence(
   await repos.obligations.compareAndSet(
     row.id,
     row.revision,
-    /* Advance the stored next-due to the expiry too, so the durable due-query
-       (`dueByStoredTime`) and the derived schedule agree at once rather than at
-       the next cycle's re-derivation. */
+
     { ...row.value, absentUntil, ...(unlock !== undefined ? { absenceUnlock: unlock } : {}), nextDueAt: absentUntil, updatedAt: input.now },
     input.now,
   );
 }
-
 
 /** Every debt row this control plane holds. */
 export async function loadDebts(

@@ -86,7 +86,7 @@ export async function readWorkerPublicationItems(
         'sourceObservedAt', value #> '{publicationOutcome,sourceObservedAt}',
         'code', value #> '{publicationOutcome,code}'
       )) ELSE NULL END AS publication_outcome
-      FROM cp_work_items
+      FROM cp_work_items_history
       WHERE value #>> '{autonomousPlan,publication,contractId}' = ANY($1::text[])
         ${afterId === null ? "" : "AND id > $2"}
       ORDER BY id ASC LIMIT ${AGGREGATE_LIST_READ_PAGE}`, afterId === null ? [contractIds] : [contractIds, afterId]);

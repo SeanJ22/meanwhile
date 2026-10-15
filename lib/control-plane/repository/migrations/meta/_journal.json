@@ -1,0 +1,14 @@
+{
+  "entries": [
+    {
+      "id": "CP-01_expand",
+      "phase": "expand",
+      "hash": "79d3d8a35c3579417774919df963da438d36b07fb5f3474e2e2bc7c5da1749ed"
+    },
+    {
+      "id": "CP-01_contract",
+      "phase": "contract",
+      "hash": "abf330e590cdaf9ea8a7f5f807c55a184953b896f1a0f2b0ba3ff12755eb6d39"
+    }
+  ]
+}

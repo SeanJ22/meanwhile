@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
-import test from "node:test";
+import test, { type TestContext } from "node:test";
 import { gunzipSync } from "node:zlib";
 
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS, requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
@@ -51,7 +51,16 @@ const T1 = "2026-09-08T12:01:00.000Z";
 
 const hash = (value: string) => createHash("sha256").update(value).digest("hex");
 
-/** The synthetic federal directory over the registry's own districts (the bundled first seed is gone). */
+function emptyRegistryFacts(t: TestContext): void {
+  let reads = 0;
+  installFactReader(async (_text, params) => {
+    assert.ok(Array.isArray(params?.[0]) && params[0].every(id => typeof id === "string"));
+    reads++;
+    return [];
+  });
+  t.after(() => { installFactReader(undefined); assert.ok(reads > 0, "the registry reader queries the fixture's body facts"); });
+}
+
 async function federalSeed() {
   return structuredClone(syntheticFederalDirectory());
 }
@@ -91,10 +100,6 @@ function receipt(value: RegistryRuntimeCarton, at: string, salt: string): Manual
   };
 }
 
-/**
- * The registry a current package carries: the recorded transfer-time import (the bundled first seed is
- * gone) without the two boards once minted on Census placeholder divisions, which every promotion drops.
- */
 function servedRegistry(): RegistryRuntimeCarton {
   const { bodyRosters: _rosters, rosterReaderDispositions: _dispositions, ...imported } = registryTransferImport().projection.payload;
   const placeholders = frozenPlaceholders().ids;
@@ -106,7 +111,8 @@ async function registryPackage(at: string, salt: string): Promise<RegistryRuntim
   return { contractId: "registry-runtime-bindings", version: at, sourceThrough: at, sourceReceipt: receipt(payload, at, salt), payload };
 }
 
-test("Ask reads native state people beside a partitioned registry without reviving superseded legislative seat rows", async () => {
+test("Ask reads native state people beside a partitioned registry without reviving superseded legislative seat rows", async (t) => {
+  emptyRegistryFacts(t);
   const memory = new MemoryRoutineDataStore();
   const pkg = await registryPackage(T0, "district-seats");
   const model = structuredClone(registryRuntimeCandidate(pkg).readModel) as { -readonly [K in keyof RegistryRuntimeCarton]: RegistryRuntimeCarton[K] };
@@ -132,8 +138,7 @@ test("Ask reads native state people beside a partitioned registry without revivi
   const parts = [...new Map([...payload.parts, ...envelope.parts].map(row => [row.hash, row])).values()];
   assert.ok(payload.parts.length > 0, "this must exercise a storage reference, not inline JSON");
   const originalUrl = process.env.DATABASE_URL;
-  process.env.DATABASE_URL = "postgresql://local:local@ep-test.neon.tech/neondb";
-  installFactReader(null);
+  process.env.DATABASE_URL ??= "postgresql://local:local@ep-test.neon.tech/neondb";
   try {
     const postgres = new PostgresRoutineDataStore();
     const queries: string[] = [];
@@ -186,7 +191,6 @@ test("Ask reads native state people beside a partitioned registry without revivi
     });
     assert.ok(stateReads.length > 0);
   } finally {
-    installFactReader(undefined);
     if (originalUrl === undefined) delete process.env.DATABASE_URL;
     else process.env.DATABASE_URL = originalUrl;
   }
@@ -259,7 +263,8 @@ test("registry civic member ordering is independent of JSONB object-key order", 
   assert.deepEqual(keys, [...keys].sort((left, right) => left.localeCompare(right)));
 });
 
-test("two registry publications in one pass never reuse a clock before the scope's latest event", async () => {
+test("two registry publications in one pass never reuse a clock before the scope's latest event", async (t) => {
+  emptyRegistryFacts(t);
   for (const changed of [false, true]) {
     const store = new MemoryRoutineDataStore();
     const firstPackage = await registryPackage(T0, "same-pass-first");
@@ -282,7 +287,8 @@ test("two registry publications in one pass never reuse a clock before the scope
   }
 });
 
-test("registry relational bindings remain coherent while exact member deltas promote and bad successors leave LKG live", async () => {
+test("registry relational bindings remain coherent while exact member deltas promote and bad successors leave LKG live", async (t) => {
+  emptyRegistryFacts(t);
   const store = new MemoryRoutineDataStore();
   const firstPackage = await registryPackage(T0, "first");
   const first = registryRuntimeCandidate(firstPackage);
@@ -345,7 +351,8 @@ test("registry relational bindings remain coherent while exact member deltas pro
   assert.equal((await store.readPromotion("REGISTRY_RUNTIME_BINDING", REGISTRY_RUNTIME_SCOPE))?.versionId, changed.id);
 });
 
-test("one blocked registry publisher holds only its dependent members while an unrelated body update promotes", async () => {
+test("one blocked registry publisher holds only its dependent members while an unrelated body update promotes", async (t) => {
+  emptyRegistryFacts(t);
   const store = new MemoryRoutineDataStore();
   const firstPackage = await registryPackage(T0, "isolation-first");
   const first = registryRuntimeCandidate(firstPackage);
@@ -408,7 +415,6 @@ test("one blocked registry publisher holds only its dependent members while an u
   );
 });
 
-/** The frozen first seed still holds the two bodies once minted on Census placeholders (Arizona, New Hampshire). */
 function frozenPlaceholders() {
   const frozen = JSON.parse(readFileSync("lib/registry/registry.json", "utf8")) as Registry;
   const divisions = frozen.divisions.filter((division) => isCensusPlaceholderDivision(division));
@@ -451,7 +457,8 @@ test("a Census placeholder division is geography: no body is derived on it and n
   );
 });
 
-test("a promotion drops placeholder bodies whichever side holds them, names why, and translates the placeholder's name", async () => {
+test("a promotion drops placeholder bodies whichever side holds them, names why, and translates the placeholder's name", async (t) => {
+  emptyRegistryFacts(t);
   const placeholders = frozenPlaceholders();
   // A prior holding both bodies and a raw Census name.
   const base = await registryPackage(T0, "placeholder-prior");
@@ -497,10 +504,6 @@ test("a promotion drops placeholder bodies whichever side holds them, names why,
   assert.equal(outcome.candidate.state, "PROMOTED");
 });
 
-/**
- * A recorded transfer-time import (tests/fixtures/registry-transfer-import.json.gz): not source-authenticated,
- * carrying both placeholder boards and a raw Census name, placed as retained history. Nothing admits it.
- */
 async function transferImportedRegistry(store: MemoryRoutineDataStore, at: string) {
   const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as {
     record: CandidateVersionRecord;
@@ -553,7 +556,8 @@ function placeholderCorrection(base: RegistryRuntimeReadModel, placeholderIds: R
   };
 }
 
-test("the owner door builds on the transfer-time import: untouched members keep its authority, the placeholder boards leave, and the plane re-proves both", async () => {
+test("the owner door builds on the transfer-time import: untouched members keep its authority, the placeholder boards leave, and the plane re-proves both", async (t) => {
+  emptyRegistryFacts(t);
   class BoundStore extends MemoryRoutineDataStore {
     #reads = { promotion: 0, proof: 0, candidate: 0 };
     get reads() { return { ...this.#reads }; }

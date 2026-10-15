@@ -1,9 +1,25 @@
 import assert from "node:assert/strict";
 import test from "./helpers/playbooks.ts";
-import { installFederalVotes, installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+import { installAbsent, installFederalVotes, installPimaLocalFinance, installRegistryAuthority, installStateMoney, promotedFixtureBundle } from "./helpers/promoted-fixtures.ts";
+import { installMeetings, installPimaOutcomes } from "./helpers/reader-fixtures.ts";
+import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
+import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
+import { AZ_OFFICIAL_ACTIONS_CONTRACT } from "../lib/outcomes/data-plane.ts";
+import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 
 await installRegistryAuthority();
 await installFederalVotes();
+await installPimaOutcomes();
+for (const id of ["az-sos-ballot", "candidate-profiles", "candidate-corpus", "officeholder-statements"] as const) {
+  const contract = requiredManualProductionContract(id);
+  installAbsent(contract.recordClass, contract.scope);
+}
+for (const state of ["AZ", "NH", "NJ"] as const) await installStateMoney(state);
+await installPimaLocalFinance();
+installMeetings([]);
+const funding = requiredRoutineContract("fec-funding");
+installAbsent(funding.recordClass, funding.scope);
+installAbsent(AZ_OFFICIAL_ACTIONS_CONTRACT.recordClass, AZ_OFFICIAL_ACTIONS_CONTRACT.scope);
 
 import { codeBestReading, speculationVerdict, type ReadingOutcome } from "../lib/ask/speculative-reading.ts";
 import { synthesizeWithLadder } from "../lib/ask/synthesize.ts";
@@ -27,9 +43,7 @@ test("the code's best reading: a guess from the reader's words, the page or the 
   assert.deepEqual(read("Who can I talk to at the Mesa City Council?"), { intent: "CONTACT", temporal: "NONE", basis: "WORDING", subject: MESA, mentions: 0, referent: null });
   // A canonical CONTACT shape: the same guess, read off the shape.
   assert.deepEqual(read("How do I contact the Mesa City Council?"), { intent: "CONTACT", temporal: "NONE", basis: "SHAPE", subject: MESA, mentions: 0, referent: null });
-  // Pronoun follow-ups: the lexical reading refuses a pronoun in the name slot. "It" binds the earlier turn's
-  // body in the binders; "they" is read there as people, so the guess proposes that body as the referent — as a
-  // model does — and the model's own referent decides whether the guess is kept.
+  // "They" proposes the earlier body as a referent; the model's own referent decides whether the guess is kept.
   assert.deepEqual(read("When does it meet next?", PRIOR_MESA), { intent: "MEETING_TIME", temporal: "NEXT", basis: "SHAPE", subject: MESA, mentions: 0, referent: null });
   assert.deepEqual(read("When do they meet next?", PRIOR_MESA), { intent: "MEETING_TIME", temporal: "NEXT", basis: "SHAPE", subject: MESA, mentions: 0, referent: "Mesa" });
   assert.deepEqual(read("How did they vote last time?", PRIOR_MESA), { intent: "PAST_MEETING", temporal: "LAST", basis: "SHAPE", subject: MESA, mentions: 0, referent: "Mesa" });
@@ -143,11 +157,11 @@ async function timedAsk(question: string, extra: Record<string, unknown> = {}): 
   resetGroundedState();
   const before = calls.length;
   const started = performance.now();
-  const response = await POST(new Request("https://wtp.test/api/ask/grounded", {
+  const response = await withReaderAuthorityEdge(promotedFixtureBundle({ edgeOnly: true }), () => POST(new Request("https://wtp.test/api/ask/grounded", {
     method: "POST",
     headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "ask-speculative-reading-test" },
     body: JSON.stringify({ question, ocdIds: [AZ, PIMA, VAIL], today: "2026-08-28", ...extra }),
-  }));
+  })));
   const ms = performance.now() - started;
   const text = await response.text();
   assert.equal(response.status, 200, text);

@@ -1,7 +1,6 @@
 import { createHash } from "node:crypto";
 import type { AggregateRepository } from "../control-plane/repository/types.ts";
 
-/** One observation per reusable method and place. */
 export type FixMapState = "WORKS" | "FAILS" | "UNTRIED";
 export interface FixMapRow {
   readonly methodId: string; readonly placeId: string; readonly state: FixMapState;
@@ -9,7 +8,6 @@ export interface FixMapRow {
   readonly updatedAt: string; readonly supersededAttemptId?: string | null;
 }
 
-/** The control-plane bootstrap's statements for the table, one statement each. */
 export const FIX_MAP_DDL: readonly string[] = [
   `CREATE TABLE IF NOT EXISTS cp_fix_map (
   method_id text NOT NULL, place_id text NOT NULL,
@@ -19,6 +17,51 @@ export const FIX_MAP_DDL: readonly string[] = [
 );`,
   "CREATE INDEX IF NOT EXISTS cp_fix_map_place ON cp_fix_map (place_id, method_id);",
   "CREATE INDEX IF NOT EXISTS cp_fix_map_works ON cp_fix_map (tried_at) WHERE state = 'WORKS';",
+  "CREATE INDEX IF NOT EXISTS cp_fix_map_method_works ON cp_fix_map (method_id, coalesce(tried_at, updated_at) DESC, place_id) WHERE state = 'WORKS';",
+  `CREATE TABLE IF NOT EXISTS cp_fix_method_summaries (
+    method_id text PRIMARY KEY, revision bigint NOT NULL DEFAULT 1, places text[] NOT NULL DEFAULT '{}', state_counts jsonb NOT NULL DEFAULT '{}'
+  );`,
+  `CREATE OR REPLACE FUNCTION cp_fix_method_summary_changed() RETURNS trigger LANGUAGE plpgsql AS $$
+  DECLARE method text; counts jsonb; state_key text; delta integer; old_state text; new_state text;
+  BEGIN
+    method := coalesce(NEW.method_id, OLD.method_id);
+    INSERT INTO cp_fix_method_summaries (method_id) VALUES (method) ON CONFLICT DO NOTHING;
+    SELECT state_counts INTO counts FROM cp_fix_method_summaries WHERE method_id = method FOR UPDATE;
+    IF TG_OP != 'INSERT' AND OLD.state = 'WORKS' THEN
+      old_state := lower(substring(OLD.place_id from '(?:^|/)state:([a-zA-Z]{2})(?:/|$|#)'));
+    END IF;
+    IF TG_OP != 'DELETE' AND NEW.state = 'WORKS' THEN
+      new_state := lower(substring(NEW.place_id from '(?:^|/)state:([a-zA-Z]{2})(?:/|$|#)'));
+    END IF;
+    IF old_state IS DISTINCT FROM new_state THEN
+      FOREACH state_key IN ARRAY ARRAY[old_state, new_state] LOOP
+        IF state_key IS NOT NULL THEN
+          delta := coalesce((counts->>state_key)::integer, 0) + CASE WHEN state_key = old_state THEN -1 ELSE 1 END;
+          counts := CASE WHEN delta <= 0 THEN counts - state_key ELSE jsonb_set(counts, ARRAY[state_key], to_jsonb(delta)) END;
+        END IF;
+      END LOOP;
+    END IF;
+    UPDATE cp_fix_method_summaries SET revision = revision + 1, state_counts = counts, places = ARRAY(
+      SELECT place_id FROM cp_fix_map WHERE method_id = method AND state = 'WORKS'
+      ORDER BY coalesce(tried_at, updated_at) DESC, place_id LIMIT 3
+    ) WHERE method_id = method;
+    RETURN NULL;
+  END $$;`,
+  `DO $$ BEGIN
+    LOCK TABLE cp_fix_map IN SHARE ROW EXCLUSIVE MODE;
+    INSERT INTO cp_fix_method_summaries (method_id, places, state_counts)
+      SELECT methods.method_id,
+        ARRAY(SELECT place_id FROM cp_fix_map works WHERE works.method_id = methods.method_id AND state = 'WORKS'
+          ORDER BY coalesce(tried_at, updated_at) DESC, place_id LIMIT 3),
+        coalesce((SELECT jsonb_object_agg(state_key, n) FROM (
+          SELECT lower(substring(place_id from '(?:^|/)state:([a-zA-Z]{2})(?:/|$|#)')) AS state_key, count(*) AS n
+          FROM cp_fix_map works WHERE works.method_id = methods.method_id AND state = 'WORKS' GROUP BY state_key
+        ) states WHERE state_key IS NOT NULL), '{}'::jsonb)
+      FROM (SELECT DISTINCT method_id FROM cp_fix_map) methods
+      ON CONFLICT (method_id) DO UPDATE SET revision = cp_fix_method_summaries.revision + 1, places = EXCLUDED.places, state_counts = EXCLUDED.state_counts;
+    CREATE OR REPLACE TRIGGER cp_fix_method_summary_changed AFTER INSERT OR UPDATE OR DELETE ON cp_fix_map
+      FOR EACH ROW EXECUTE FUNCTION cp_fix_method_summary_changed();
+  END $$;`,
 ];
 
 /** Where one method works: up to `WORKS_PLACES_SHOWN` places, newest first, and every state it works in. */
@@ -73,10 +116,35 @@ export function applyFixResult(prior: FixMapRow | null, incoming: FixMapRow): Fi
   return { ...incoming, supersededAttemptId: incoming.attemptId !== prior.attemptId ? prior.attemptId : prior.supersededAttemptId ?? null };
 }
 
+export interface MethodStatistics {
+  readonly total: number; readonly works: number; readonly tried: number;
+  readonly states: number; readonly districts: number;
+  readonly recentWorks: number; readonly recentTried: number;
+  readonly beforeWorks: number; readonly beforeFails: number; readonly since: number;
+}
+
+export function methodStatistics(observations: readonly FixMapRow[], recentSince?: string, before?: string): MethodStatistics {
+  if (new Set(observations.map(row => row.methodId)).size > 1) throw new Error("Read one method's map before measuring proof");
+  const latest = new Map<string, FixMapRow>();
+  for (const row of observations) latest.set(row.placeId, applyFixResult(latest.get(row.placeId) ?? null, row));
+  const rows = [...latest.values()];
+  const works = rows.filter(row => row.state === "WORKS");
+  const tried = rows.filter(row => row.state !== "UNTRIED");
+  const recent = tried.filter(row => recentSince === undefined || workedAt(row) >= Date.parse(recentSince));
+  const then = tried.filter(row => before === undefined || workedAt(row) <= Date.parse(before));
+  return { total: rows.length, works: works.length, tried: tried.length,
+    states: new Set(works.map(row => /(?:^|\/)state:([a-z]{2})(?:\/|$)/i.exec(row.placeId)?.[1]?.toLowerCase()).filter(Boolean)).size,
+    districts: new Set(works.map(row => /^(.+\/(?:county|congressional-district|sldu|sldl|school-district):[^/]+)/.exec(row.placeId)?.[1]).filter(Boolean)).size,
+    recentWorks: recent.filter(row => row.state === "WORKS").length, recentTried: recent.length,
+    beforeWorks: then.filter(row => row.state === "WORKS").length, beforeFails: then.filter(row => row.state === "FAILS").length,
+    since: tried.length - then.length };
+}
+
 type Query = (text: string, parameters: readonly unknown[]) => Promise<readonly Record<string, unknown>[]>;
 export interface FixMapRepository {
   forPlace(placeId: string, limit?: number): Promise<readonly FixMapRow[]>;
-  forMethod(methodId: string, limit?: number): Promise<readonly FixMapRow[]>;
+  forPlaces(methodId: string, placeIds: readonly string[]): Promise<readonly FixMapRow[]>;
+  statistics(methodId: string, recentSince?: string, before?: string): Promise<MethodStatistics>;
   /** For each named method, where it works. */
   worksFor(methodIds: readonly string[]): Promise<ReadonlyMap<string, MethodWorks>>;
   /** Each method that works somewhere: its newest working row, newest first. */
@@ -93,21 +161,41 @@ function decode(row: Record<string, unknown>): FixMapRow {
 
 /** Both reads require a scope; no whole-map loading in a place worker. */
 export function createFixMapRepository(query: Query): FixMapRepository {
+  let summaries = new Map<string, { revision: number; value: MethodWorks }>();
   const bounded = (limit = 200) => {
     if (!Number.isInteger(limit) || limit < 1 || limit > 1000) throw new Error("Invalid fix-map page size");
     return limit;
   };
   return {
     forPlace: async (placeId, limit) => (await query("SELECT * FROM cp_fix_map WHERE place_id = $1 ORDER BY method_id LIMIT $2", [placeId, bounded(limit)])).map(decode),
-    forMethod: async (methodId, limit) => (await query("SELECT * FROM cp_fix_map WHERE method_id = $1 ORDER BY place_id LIMIT $2", [methodId, bounded(limit)])).map(decode),
+    forPlaces: async (methodId, placeIds) => placeIds.length === 0 ? [] : (await query(
+      "SELECT * FROM cp_fix_map WHERE method_id = $1 AND place_id = ANY($2::text[]) ORDER BY place_id", [methodId, [...new Set(placeIds)]])).map(decode),
+    statistics: async (methodId, recentSince, before) => {
+      const [row] = await query(`SELECT count(*) AS total,
+        count(*) FILTER (WHERE state = 'WORKS') AS works,
+        count(*) FILTER (WHERE state != 'UNTRIED') AS tried,
+        count(DISTINCT lower(substring(place_id from '(?:^|/)state:([a-zA-Z]{2})(?:/|$)'))) FILTER (WHERE state = 'WORKS') AS states,
+        count(DISTINCT substring(place_id from '^(.+/(?:county|congressional-district|sldu|sldl|school-district):[^/]+)')) FILTER (WHERE state = 'WORKS') AS districts,
+        count(*) FILTER (WHERE state = 'WORKS' AND ($2::timestamptz IS NULL OR coalesce(tried_at, updated_at) >= $2::timestamptz)) AS "recentWorks",
+        count(*) FILTER (WHERE state != 'UNTRIED' AND ($2::timestamptz IS NULL OR coalesce(tried_at, updated_at) >= $2::timestamptz)) AS "recentTried",
+        count(*) FILTER (WHERE state = 'WORKS' AND ($3::timestamptz IS NULL OR coalesce(tried_at, updated_at) <= $3::timestamptz)) AS "beforeWorks",
+        count(*) FILTER (WHERE state = 'FAILS' AND ($3::timestamptz IS NULL OR coalesce(tried_at, updated_at) <= $3::timestamptz)) AS "beforeFails",
+        count(*) FILTER (WHERE state != 'UNTRIED' AND coalesce(tried_at, updated_at) > $3::timestamptz) AS since
+        FROM cp_fix_map WHERE method_id = $1`, [methodId, recentSince ?? null, before ?? null]);
+      return Object.fromEntries(Object.entries(row!).map(([key, value]) => [key, Number(value)])) as unknown as MethodStatistics;
+    },
     worksFor: async (methodIds) => {
-      if (methodIds.length === 0) return new Map();
-      const rows = await query(`SELECT method_id,
-          (array_agg(place_id ORDER BY coalesce(tried_at, updated_at) DESC, place_id))[1:${WORKS_PLACES_SHOWN}] AS places,
-          array_remove(array_agg(DISTINCT lower(substring(place_id from '(?:^|/)state:([a-zA-Z]{2})(?:/|$|#)'))), NULL) AS states
-        FROM cp_fix_map WHERE method_id = ANY($1::text[]) AND state = 'WORKS' GROUP BY method_id`, [[...new Set(methodIds)]]);
-      return new Map(rows.map((row) => [String(row.method_id),
-        { places: (row.places as string[] | null) ?? [], states: [...((row.states as string[] | null) ?? [])].sort() }] as const));
+      const ids = [...new Set(methodIds)];
+      if (ids.length === 0) { summaries.clear(); return new Map(); }
+      const prior = new Map(ids.flatMap(id => summaries.has(id) ? [[id, summaries.get(id)!] as const] : []));
+      const rows = await query(`SELECT s.method_id, s.revision,
+        CASE WHEN s.revision = held.revision THEN NULL ELSE jsonb_build_object('places', s.places,
+          'states', ARRAY(SELECT jsonb_object_keys(s.state_counts) ORDER BY 1)) END AS value
+        FROM cp_fix_method_summaries s JOIN unnest($1::text[], $2::bigint[]) held(method_id, revision) USING (method_id)`,
+      [ids, ids.map(id => prior.get(id)?.revision ?? null)]);
+      summaries = new Map(rows.map(row => [String(row.method_id), { revision: Number(row.revision),
+        value: row.value === null ? prior.get(String(row.method_id))!.value : row.value as MethodWorks }]));
+      return new Map([...summaries].filter(([, summary]) => summary.value.places.length > 0).map(([id, summary]) => [id, summary.value]));
     },
     workingMethods: async (limit) => (await query(
       `SELECT * FROM (SELECT DISTINCT ON (method_id) * FROM cp_fix_map WHERE state = 'WORKS'
@@ -133,7 +221,11 @@ export function aggregateFixMap(repo: AggregateRepository<FixMapRow>): FixMapRep
   const all = async () => (await repo.list()).map((row) => row.value);
   return {
     forPlace: async (placeId, limit = 200) => (await all()).filter((r) => r.placeId === placeId).sort((a, b) => a.methodId.localeCompare(b.methodId)).slice(0, limit),
-    forMethod: async (methodId, limit = 200) => (await all()).filter((r) => r.methodId === methodId).sort((a, b) => a.placeId.localeCompare(b.placeId)).slice(0, limit),
+    forPlaces: async (methodId, placeIds) => {
+      const rows = await Promise.all([...new Set(placeIds)].sort().map(placeId => repo.read(idOf({ methodId, placeId }))));
+      return rows.flatMap(row => row === null ? [] : [row.value]);
+    },
+    statistics: async (methodId, recentSince, before) => methodStatistics((await all()).filter(row => row.methodId === methodId), recentSince, before),
     worksFor: async (methodIds) => methodWorksOf(await all(), methodIds),
     workingMethods: async (limit = 200) => latestWorking(await all(), limit),
     put: async (row) => {

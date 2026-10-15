@@ -1,3 +1,5 @@
+import { createDispatchState } from "./dispatch-state.ts";
+import { ADMIN_SECTIONS, migrateStoredAdminConfig, storedAdminConfigRepository, type AdminSection, type StoredAdminSection } from "./admin-config.ts";
 import type { BoxFinding } from "../box.ts";
 import type { WorkerResultRecord } from "../workers/types.ts";
 import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
@@ -8,13 +10,15 @@ import { memoryWebsitePacing } from "../website-pacing.ts";
 import type { LiveAuditLogRow } from "../live-audit-log.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 import { unavailableActiveWorkClaims } from "./active-work-claims.ts";
-/** Durable filesystem store. Every write is an exclusive create, so compare-and-set and append are arbitrated by the filesystem. */
-
-import { appendFile, link, mkdir, open, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
+import { appendFile, link, mkdir, open, opendir, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
 import type { FreshnessDebt } from "../scheduler/debt.ts";
 import type { FreshnessOccurrence, StandingObligation } from "../scheduler/durable.ts";
 import type { ResearchIntent, ResearchState } from "../scheduler/research-policy.ts";
-import type { SpendWindow } from "../spend-window.ts";
+import { pricedModelCharge, type PricedCharge } from "../fleet-safety.ts";
+import { costRecordId } from "../spend-window.ts";
+import { createReadStream } from "node:fs";
+import { createInterface } from "node:readline";
+import { storedSpendRepository } from "./model-charges.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type {
   PromotionPipelineRecord,
@@ -92,11 +96,6 @@ function isEexist(error: unknown): boolean {
   return (error as NodeJS.ErrnoException)?.code === "EEXIST";
 }
 
-/**
- * All-or-nothing exclusive create: write a complete temp file, then `link` it into place (EEXIST when the
- * target exists). Where `link` is unavailable, an exclusive `open(path, "wx")` plus write lets a concurrent
- * reader briefly see an empty file, which reads as `CorruptPersistedState`, never a wrong answer.
- */
 async function exclusiveCreate(target: string, contents: string): Promise<boolean> {
   await mkdir(path.dirname(target), { recursive: true });
   const temp = tempPath(target);
@@ -564,6 +563,91 @@ export function fileLockManager(root: string): LockManager {
   };
 }
 
+async function* streamedSpendCharges(file: string): AsyncGenerator<PricedCharge> {
+  let prefix = "", suffix = "", entry = "";
+  let phase: "prefix" | "entries" | "suffix" = "prefix";
+  let depth = 0, quoted = false, escaped = false, comma = false, count = 0;
+  for await (const chunk of createReadStream(file, { encoding: "utf8" })) {
+    let text = String(chunk);
+    if (phase === "prefix") {
+      prefix += text;
+      const start = /"charges"\s*:\s*\[/.exec(prefix);
+      if (!start) continue;
+      const end = start.index + start[0].length;
+      text = prefix.slice(end);
+      prefix = prefix.slice(0, end);
+      phase = "entries";
+    }
+    if (phase === "suffix") { suffix += text; continue; }
+    for (let i = 0; i < text.length; i++) {
+      const char = text[i];
+      if (depth === 0) {
+        if (/\s/.test(char)) continue;
+        if (char === "]" && !comma) { suffix = text.slice(i); phase = "suffix"; break; }
+        if (char === "," && count > 0 && !comma) { comma = true; continue; }
+        if (char !== "{" || (count > 0 && !comma)) throw new CorruptPersistedState(file, "invalid spend charge array");
+        entry = "{"; depth = 1; quoted = false; escaped = false; comma = false;
+        continue;
+      }
+      entry += char;
+      if (escaped) { escaped = false; continue; }
+      if (quoted && char === "\\") { escaped = true; continue; }
+      if (char === '"') { quoted = !quoted; continue; }
+      if (quoted) continue;
+      if (char === "{" || char === "[") depth++;
+      if (char === "}" || char === "]") depth--;
+      if (depth === 0) {
+        const charge = JSON.parse(entry) as PricedCharge;
+        if (typeof charge.id !== "string" || typeof charge.at !== "string" || !charge.metered) throw new CorruptPersistedState(file, "invalid priced charge");
+        yield charge;
+        entry = ""; count++;
+      }
+    }
+  }
+  if (phase !== "suffix") throw new CorruptPersistedState(file, "incomplete spend charge array");
+  validateEnvelope(file, "SpendWindow", JSON.parse(prefix + suffix));
+}
+
+async function migrateFileSpend(root: string, locks: LockManager): Promise<void> {
+  const source = path.join(root, "aggregates", "spend-window");
+  try { await stat(source); } catch (error) { if (isEnoent(error)) return; throw error; }
+  await locks.withLock("cp01-spend-migration", async () => {
+    try { await stat(source); } catch (error) { if (isEnoent(error)) return; throw error; }
+    const target = path.join(root, "aggregates", "model-charges");
+    await mkdir(target, { recursive: true });
+    const insert = async (charge: PricedCharge) => {
+      await exclusiveCreate(path.join(target, `${fileNameFor(charge.id)}.r1.json`), canonicalJson({
+        id: charge.id, revision: 1, updatedAt: charge.at, value: charge,
+      }));
+    };
+    const prefix = `${fileNameFor("model-charges")}.r`;
+    let latest = 0;
+    for await (const file of await opendir(source)) {
+      if (!file.name.startsWith(prefix) || !file.name.endsWith(".json")) continue;
+      const revision = file.name.slice(prefix.length, -5);
+      if (/^\d+$/.test(revision)) latest = Math.max(latest, Number(revision));
+    }
+    if (latest > 0) for await (const charge of streamedSpendCharges(path.join(source, `${prefix}${latest}.json`))) await insert(charge);
+    const logs = path.join(root, "logs", "costs");
+    let directory;
+    try { directory = await opendir(logs); } catch (error) { if (!isEnoent(error)) throw error; }
+    if (directory) for await (const file of directory) {
+      if (!file.name.endsWith(".jsonl")) continue;
+      const sourceFile = path.join(logs, file.name);
+      const lines = createInterface({ input: createReadStream(sourceFile, { encoding: "utf8" }), crlfDelay: Infinity });
+      let lineNumber = 0;
+      for await (const line of lines) {
+        lineNumber++;
+        if (!line.trim()) continue;
+        const row = parseLogLine<CostEntry>(sourceFile, line, lineNumber);
+        const charge = pricedModelCharge(row.record, costRecordId(row.record));
+        if (charge) await insert(charge);
+      }
+    }
+    await rm(source, { recursive: true });
+  });
+}
+
 /** No default directory. After this call creates the root, a missing root is corruption, not emptiness. */
 export async function createFileRepositories(root: string): Promise<ControlPlaneRepositories> {
   if (typeof root !== "string" || root.trim().length === 0) {
@@ -577,8 +661,11 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
   await mkdir(resolved, { recursive: true });
   const locks = fileLockManager(resolved);
   const artifacts = fileAppendOnlyRepository<ArtifactRecord>(resolved, "artifacts");
+  const scoutResults = fileAppendOnlyRepository<ScoutResult>(resolved, "scout-results");
+  const adminBase = fileAggregateRepository<AdminConfig>(resolved, "AdminConfig", "admin-config");
 
-  return {
+  const repositories: ControlPlaneRepositories = {
+    dispatchState: createDispatchState(() => repositories),
     workItems: fileAggregateRepository<WorkItem>(resolved, "WorkItem", "work-items"),
     routeTasks: fileAggregateRepository<RouteTask>(resolved, "RouteTask", "route-tasks"),
     attempts: fileAggregateRepository<Attempt>(resolved, "Attempt", "attempts"),
@@ -630,11 +717,11 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
     ownerDigests: fileAppendOnlyRepository<OwnerDigestRecord>(resolved, "owner-digests"),
     ownerDecisions: fileAppendOnlyRepository<OwnerDecisionIntent>(resolved, "owner-decisions"),
     researchState: fileAggregateRepository<ResearchState>(resolved, "ResearchState", "research-state"),
-    spendWindow: fileAggregateRepository<SpendWindow>(resolved, "SpendWindow", "spend-window"),
+    spend: storedSpendRepository(fileAggregateRepository<PricedCharge>(resolved, "ModelCharge", "model-charges"), scoutResults),
     methodCandidates: fileAggregateRepository<CandidateStore>(resolved, "MethodCandidateStore", "method-candidates"),
     researchIntents: fileAppendOnlyRepository<ResearchIntent>(resolved, "research-intents"),
     boxFindings: fileAggregateRepository<BoxFinding>(resolved, "BoxFinding", "box-findings"),
-    scoutResults: fileAppendOnlyRepository<ScoutResult>(resolved, "scout-results"),
+    scoutResults,
     workerResults: fileAppendOnlyRepository<WorkerResultRecord>(resolved, "worker-results"),
     promotionPipeline: fileAppendOnlyRepository<PromotionPipelineRecord>(resolved, "promotion-pipeline"),
     windowRuns: fileAppendOnlyRepository<WindowRunRecord>(resolved, "window-runs"),
@@ -645,7 +732,7 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
     agentJobs: fileAppendOnlyRepository<AgentJobRecord>(resolved, "agent-jobs"),
     discoveryAttempts: fileAppendOnlyRepository<MeetingsDiscoveryAttempt>(resolved, "discovery-attempts"),
     liveAudits: fileAppendOnlyRepository<LiveAuditLogRow>(resolved, "live-audits"),
-    adminConfig: fileAggregateRepository<AdminConfig>(resolved, "AdminConfig", "admin-config"),
+    adminConfig: storedAdminConfigRepository(adminBase, Object.fromEntries(Object.entries(ADMIN_SECTIONS).map(([key, table]) => [key, fileAggregateRepository<StoredAdminSection>(resolved, key, `admin-${table}`)])) as Record<AdminSection, AggregateRepository<StoredAdminSection>>, locks),
     askGapObservations: fileAggregateRepository<AskGapObservation>(resolved, "AskGapObservation", "ask-gap-observations"),
     doors: fileAggregateRepository<DoorRecord>(resolved, "Door", "doors"),
     leadOrders: fileAggregateRepository<LeadOrder>(resolved, "LeadOrder", "lead-orders"),
@@ -657,4 +744,7 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
     describe: () => `durable control-plane repositories rooted at ${resolved}`,
     durable: true,
   };
+  await migrateFileSpend(resolved, locks);
+  await migrateStoredAdminConfig(adminBase, repositories.adminConfig);
+  return repositories;
 }

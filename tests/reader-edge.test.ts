@@ -29,6 +29,7 @@ import { MEETINGS_PREPARED_SCOPE, preparePublishedMeetingSnapshot } from "../lib
 import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 import type { CandidateVersionRecord, PromotedProjection } from "../lib/civic-data/types.ts";
+import { installFactReader } from "../lib/facts/db.ts";
 
 function meeting(id: string, ocdId: string | null, extra: Partial<Meeting> = {}): Meeting {
   return {
@@ -152,7 +153,9 @@ test("new readers lazily serve the accepted old state bundle until its publicati
   assert.equal(reads, 1, "the accepted bundle is read once without changing its evidence dates");
 });
 
-test("the first scoped publication converts the accepted state bundle without losing unselected states", async () => {
+test("the first scoped publication converts the accepted state bundle without losing unselected states", async (t) => {
+  installFactReader(null);
+  t.after(() => installFactReader(undefined));
   const artifacts = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reader-state-cutover-")));
   await publishReaderEdgeArtifacts(null, META, { store: artifacts, authority: { "state-legislators": {
     versionId: "US-AZ=az-prior|US-NH=nh-prior", value: {
@@ -168,7 +171,9 @@ test("the first scoped publication converts the accepted state bundle without lo
   assert.equal((await held.stateLegislators!.load("US-NH"))!.value.generatedAt, "2026-08-02");
 });
 
-test("a lost manifest CAS remains a retryable supervisor publication failure", async () => {
+test("a lost manifest CAS remains a retryable supervisor publication failure", async (t) => {
+  installFactReader(null);
+  t.after(() => installFactReader(undefined));
   const artifacts = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reader-supervisor-race-")));
   const raced = new Proxy(artifacts, { get(target, key) {
     if (key === "writeManifest") return async () => ({ modified: false, etag: "winner" });
@@ -210,7 +215,9 @@ test("every area a canonical body governs receives the same meeting and agenda w
   assert.equal(published.status, "PUBLISHED");
 });
 
-test("ordinary publication repairs old area copies once, carries quiet data, and rebuilds changed territories", async () => {
+test("ordinary publication repairs old area copies once, carries quiet data, and rebuilds changed territories", async (t) => {
+  installFactReader(null);
+  t.after(() => installFactReader(undefined));
   const primary = "ocd-division/country:us/state:az/county:cochise";
   const secondary = "ocd-division/country:us/state:az/county:pima";
   const bodyId = `${primary}#governing`;
@@ -270,7 +277,9 @@ test("ordinary publication repairs old area copies once, carries quiet data, and
   assert.deepEqual((await artifacts.readManifest())!.manifest, beforeFailure);
 });
 
-test("a racing prepared meeting copy keeps its exact LKG while an independent registry update publishes, then the next pass repairs meetings", async () => {
+test("a racing prepared meeting copy keeps its exact LKG while an independent registry update publishes, then the next pass repairs meetings", async (t) => {
+  installFactReader(null);
+  t.after(() => installFactReader(undefined));
   const imported = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as {
     record: CandidateVersionRecord; projection: PromotedProjection<RegistryRuntimeReadModel>;
   };
@@ -408,9 +417,6 @@ test("a stale publisher that read an older manifest cannot regress the pointer (
   const a = snapshot([meeting("az1", "ocd-division/country:us/state:az/place:tucson#governing")]);
   await publishReaderEdgeArtifacts(a, META, { store });
 
-  // Two overlapping publishers both saw sequence 1; simulate by having one write
-  // through a store whose manifest is pinned to the sequence-1 ETag while another
-  // advanced it. The second write must land against the CURRENT etag only.
   const staleExpected = (await store.readManifest())!.etag;
   // First writer advances 1 -> 2.
   const changed = snapshot([
@@ -507,7 +513,6 @@ test("mergeScopeArtifacts dedupes by id and takes the national sources accountin
   assert.equal(merged.sources, snap.sources.length ? merged.sources : merged.sources); // sources carried through
   assert.equal(merged.sources.length, 1);
 });
-
 
 test("authority-only publication carries geographic references and writes no meeting artifacts", async () => {
   const store = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reader-carry-")));

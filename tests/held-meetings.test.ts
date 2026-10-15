@@ -13,6 +13,7 @@ import { readHeldRoster } from "../lib/civic-data/worker-held-roster.ts";
 import { heldBodySchedule, readHeldMeetingSchedule } from "../lib/civic-data/worker-held-meetings.ts";
 import { publishBodyRoster, type WorkerPublicationCapture } from "../lib/civic-data/worker-roster-publication.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
+import { installFactReader } from "../lib/facts/db.ts";
 import { ensureFactEntities } from "../lib/facts/entities.ts";
 import { withFactRegistry } from "../lib/facts/registry-overlay.ts";
 import { factDb } from "./helpers/fact-db.ts";
@@ -50,13 +51,13 @@ async function fixtureStore() {
   const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
   const store = new MemoryRoutineDataStore();
   Object.assign(store, { candidates: new Map([[record.candidate.id, record]]), promotions: new Map([[projection.key, projection]]) });
-  // Replay the deployed Census placeholder correction the recorded fixture predates (as tests/held-roster-publication.test.ts does).
   const imported = (await readRegistryRuntimePrior(store, NOW))!;
   const divisions = imported.payload.registry.divisions.filter(row => CENSUS_PLACEHOLDER_LABELS[row.label]).map(row => ({ ...row, label: CENSUS_PLACEHOLDER_LABELS[row.label] }));
   const corrected = registryRuntimeCandidate({ contractId: "registry-runtime-bindings", version: "fixture-census-correction", sourceThrough: NOW,
     sourceReceipt: { contractVersion: 1, reviewedAt: NOW, reviewedBy: "recorded-fixture-control", sources: [...new Set(divisions.map(row => row.provenance!.sourceUrl!))].map(url => ({ requestedUrl: url, finalUrl: url, publisher: "U.S. Census Bureau", sourceClass: "OFFICIAL_PUBLISHER" as const, retrievedAt: NOW, httpStatus: 200, rawHash: createHash("sha256").update(JSON.stringify(divisions)).digest("hex"), reviewedEvidence: "Offline fixture: Census LEA 99997 means no school district." })) },
     payload: { ...imported.payload, registry: { ...imported.payload.registry, divisions, bodies: [] }, statewideExecutives: [], officialCandidacies: { ...imported.payload.officialCandidacies, rows: [] }, officialPhotos: { photos: [] }, rosterPhotos: {} } }, { prior: imported });
-  assert.ok((await processRegisteredManualCandidate(store, "registry-runtime-bindings", corrected, NOW, imported.versionId)).promoted);
+  const outcome = await processRegisteredManualCandidate(store, "registry-runtime-bindings", corrected, NOW, imported.versionId);
+  assert.ok(outcome.promoted, outcome.candidate.failureDetail ?? "Census correction was not promoted");
   return store;
 }
 
@@ -70,7 +71,10 @@ test("plain code reads a saved meeting page's regular schedule in its own words,
   assert.equal(readHeldMeetingSchedule(shell("Council Meetings", "<p>The council meets on the second Tuesday.</p>"), MEETINGS_URL), null, "a day with no time is not a schedule, and no link was given");
 });
 
-test("a saved meeting page from any job names the council's schedule and agenda link as facts beside its roster (§3)", async () => {
+test("a saved meeting page from any job names the council's schedule and agenda link as facts beside its roster (§3)", async (t) => {
+  const facts = await factDb();
+  installFactReader(facts.query);
+  t.after(async () => { installFactReader(undefined); await facts.pg.close(); });
   const store = await fixtureStore();
   const base = (await readRegistryRuntimePrior(store, NOW))!;
   assert.equal(base.payload.registry.bodies.find(body => body.id === BODY)?.name, null, "the fixture council is Census-derived and unnamed");
@@ -89,7 +93,6 @@ test("a saved meeting page from any job names the council's schedule and agenda 
   assert.equal(await heldBodySchedule({ body: { id: BODY, name: "Benson City Council" }, divisionLabel: "Benson", now: NOW,
     artifacts: [artifact(plain)], readHeld: async () => plain }), null, "the door accepts only HTTPS sources, so an http copy never holds the roster beside it");
 
-  const facts = await factDb();
   await ensureFactEntities(facts, ROOT, ["az"]);
   const body = base.payload.registry.bodies.find(row => row.id === BODY)!;
   await publishBodyRoster(facts, { body, division: new Map(base.payload.registry.divisions.map(row => [row.ocdId, row])).get(body.ocdId!)!, state: "AZ", schedule, clocks: factClocks(null), now: new Date(NOW),

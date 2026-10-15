@@ -19,6 +19,7 @@ import { captureSourceAcquisitions } from "../lib/sources/acquisition-trace.ts";
 import { readValidatedResponse } from "../lib/sources/http.ts";
 import { authorityFor } from "../lib/civic-data/source-authority.ts";
 import type { Meeting } from "../lib/sources/types.ts";
+import { installFactReader } from "../lib/facts/db.ts";
 
 const GENERATED_AT = "2026-09-20T12:00:00.000Z";
 
@@ -130,8 +131,14 @@ test("one partition carry-forward opens only its own pointer and ignores an unre
   assert.deepEqual(previous, promoted.outcome.promoted?.payload);
 });
 
-test("meetings candidate proves its meeting door's obligations independently of row count", async () => {
+test("meetings candidate proves its meeting door's obligations independently of row count", async (t) => {
   const evidenced = withAcquisitionEvidence(fixturePartition());
+  const factReads: unknown[] = [];
+  installFactReader(async (_text, params) => {
+    factReads.push(params?.[0]);
+    return [];
+  });
+  t.after(() => installFactReader(undefined));
   const candidate = candidateForMeetingPartition(partition, evidenced);
   assert.equal(candidate.retrieval.requestedUrl, "https://webapi.legistar.com/v1/pima/events");
   assert.equal(candidate.retrieval.finalUrl, "https://webapi.legistar.com/v1/pima/events");
@@ -161,6 +168,7 @@ test("meetings candidate proves its meeting door's obligations independently of 
     bypassCache: true,
   });
   assert.equal(read.kind, "PROMOTED");
+  assert.deepEqual(factReads, [evidenced.meetings.map(row => `meeting:${row.id}`)]);
   assert.equal(read.kind === "PROMOTED" && read.partitions.some((row) => row.versionId === promoted.candidate.id), true);
 });
 

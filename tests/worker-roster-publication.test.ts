@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { gunzipSync } from "node:zlib";
 import { createHash } from "node:crypto";
 import { join } from "node:path";
-import test from "node:test";
+import test, { type TestContext } from "node:test";
 import { ensureFactEntities } from "../lib/facts/entities.ts";
 import { installFactReader } from "../lib/facts/db.ts";
 import { readFactRosters } from "../lib/facts/roster-read.ts";
@@ -28,7 +28,15 @@ import { collectWorkerRosterReadback, type PublishedWorkerRead } from "../lib/co
 
 const ROOT = join(import.meta.dirname, "..");
 
-async function proveRosterPublication(partial = false) {
+async function rosterFactDb(t: TestContext) {
+  const facts = await factDb();
+  installFactReader(facts.query);
+  t.after(async () => { installFactReader(undefined); await facts.pg.close(); });
+  return facts;
+}
+
+async function proveRosterPublication(t: TestContext, partial = false) {
+  const facts = await rosterFactDb(t);
   const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
   const store = new MemoryRoutineDataStore();
   Object.assign(store, { candidates: new Map([[record.candidate.id, record]]), promotions: new Map([[projection.key, projection]]) });
@@ -81,9 +89,7 @@ async function proveRosterPublication(partial = false) {
   }
   const results = await h.repos.workerResults.read(h.item.id);
   assert.deepEqual(results.map(row => row.result.verdict), ["ACQUIRED", "EXTRACTED", "PASS"]);
-  const facts = await factDb();
   await ensureFactEntities(facts, ROOT, ["az"]);
-  installFactReader(facts.query);
   const input = { repos: h.repos, store, facts, workItemIds: [h.item.id], now: h.now(), readCapture: async (id: string) => {
     const evidence = evidenceProjection(await runtime.readEvidence(id));
     return { evidence, observedAt: evidence.retrievedAt, httpStatus: 200, transport: "REACHABLE", partial: false };
@@ -126,8 +132,6 @@ async function proveRosterPublication(partial = false) {
   await collectWorkerRosterReadback({ ...collector, now: h.now(), previous: readback });
   assert.equal(observations, 1, "the existing cycle reuses fresh exact public evidence instead of repeating unchanged browser visits");
   assert.deepEqual(await publishOwedRosterFacts(input), published, "restart reuses the durable publication receipt");
-  installFactReader(undefined);
-
   if (partial) {
     assert.deepEqual(await facts.query("SELECT stage, reason FROM blank"), [{ stage: "READ", reason: "NAME_NOT_A_PERSON" }], "navigation text never becomes a person");
     assert.match(published[0]!.outcome.detail, /1 stay open as blanks with their reasons/);
@@ -152,10 +156,11 @@ async function proveRosterPublication(partial = false) {
   assert.ok(assignment.delivery.blockers.some(reason => reason.includes("ROSTER_AUTHORITY_REPLAY_FAILED")));
 }
 
-test("ordinary independent workers publish a roster through the existing reader door, preserve prior facts, and reuse the receipt", () => proveRosterPublication());
-test("a stranded mixed roster publishes verified members while unresolved identities enter automatic repair", () => proveRosterPublication(true));
+test("ordinary independent workers publish a roster through the existing reader door, preserve prior facts, and reuse the receipt", (t) => proveRosterPublication(t));
+test("a stranded mixed roster publishes verified members while unresolved identities enter automatic repair", (t) => proveRosterPublication(t, true));
 
-test("owed roster work with nothing readable yet is held with its reason", async () => {
+test("owed roster work with nothing readable yet is held with its reason", async (t) => {
+  const facts = await rosterFactDb(t);
   const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
   const store = new MemoryRoutineDataStore();
   Object.assign(store, { candidates: new Map([[record.candidate.id, record]]), promotions: new Map([[projection.key, projection]]) });
@@ -165,7 +170,7 @@ test("owed roster work with nothing readable yet is held with its reason", async
   const plan = current.value.autonomousPlan!;
   await h.repos.workItems.compareAndSet(current.id, current.revision, { ...current.value,
     autonomousPlan: { ...plan, publication: { contractId: "registry-runtime-bindings", bodyId: prior.payload.registry.bodies[0]!.id } } }, h.now());
-  const report = await publishOwedRosterFacts({ repos: h.repos, store, facts: await factDb(), workItemIds: [h.item.id], now: h.now(),
+  const report = await publishOwedRosterFacts({ repos: h.repos, store, facts, workItemIds: [h.item.id], now: h.now(),
     readCapture: async () => { throw new Error("no extraction"); }, readHeld: async () => null });
   assert.deepEqual(report.map(row => [row.workItemId, row.outcome.status, row.outcome.code, row.outcome.recovery]),
     [[h.item.id, "HELD", "ROSTER_NO_READABLE_SAVED_PAGE", "WORKER"]], "every offered item is reported, never silently skipped");

@@ -1,3 +1,7 @@
+import { backfillAdminSections, pgAdminConfigRepository, ADMIN_SECTIONS_STRIP_DDL } from "./admin-config.ts";
+import { archivedAggregateRepository, createPgDispatchState } from "./dispatch-state.ts";
+import { pgSpendRepository } from "./model-charges.ts";
+import { migrateModelCharges } from "./migrations/CP-01.ts";
 import type { BoxFinding } from "../box.ts";
 import type { WorkerResultRecord } from "../workers/types.ts";
 import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
@@ -21,7 +25,7 @@ import type {
   OwnerSnapshot,
   RunnerHeartbeat,
 } from "../owner-surface.ts";
-import { coveringPlaces, entryInSlice, queryState, TRANSFERABLE_METHOD_KINDS, type FieldManualEntry, type FieldManualQuery } from "../field-manual.ts";
+import { coveringPlaces, queryState, TRANSFERABLE_METHOD_KINDS, type FieldManualEntry, type FieldManualQuery } from "../field-manual.ts";
 import { createFixMapRepository } from "../../method/fix-map.ts";
 import { copyFieldManualDocument, type SingleDocumentManual } from "../field-manual-copy.ts";
 import { ensureRolePlaybooks, retireInstructionsSql } from "../playbook-seed.ts";
@@ -35,7 +39,6 @@ import type { CandidateStore } from "../../method/candidate.ts";
 import type { FreshnessDebt } from "../scheduler/debt.ts";
 import type { FreshnessOccurrence, StandingObligation } from "../scheduler/durable.ts";
 import type { ResearchIntent, ResearchState } from "../scheduler/research-policy.ts";
-import type { SpendWindow } from "../spend-window.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type {
   PromotionPipelineRecord,
@@ -450,9 +453,7 @@ export function pgAggregateRepository<T>(
     },
 
     async compareAndSet(id, expectedRevision, next, now) {
-      /* The WHERE clause is the compare-and-set: zero rows affected is the refusal, decided by the database. */
-      // Keep the exact submitted JSON: the caller may mutate next while the
-      // request is pending, and JSON normalizes undefined, dates and numbers.
+
       const submitted = JSON.stringify(next);
       const updated = (await run(
         "compareAndSet",
@@ -521,6 +522,15 @@ export function pgAggregateRepository<T>(
 /** Records per log read page: a full-log read must never assume it fits in one 64 MiB response. */
 export const APPEND_ONLY_LOG_READ_PAGE = 100;
 
+function pgArchivedAggregateRepository<T>(sql: Sql, entity: string, table: string, bounds: PgRepositoryBounds): AggregateRepository<T> {
+  const options = { ...bounds, copies: null };
+  const archive = archivedAggregateRepository(pgAggregateRepository<T>(sql, entity, table, options),
+    pgAggregateRepository<T>(sql, entity, `${table}_archive`, options));
+  const history = pgAggregateRepository<T>(sql, entity, `${table}_history`, options);
+  return { ...archive, read: history.read, mustRead: history.mustRead,
+    readNarrowed: history.readNarrowed, readMany: history.readMany };
+}
+
 export function pgAppendOnlyRepository<T>(
   sql: Sql,
   log: string,
@@ -569,11 +579,7 @@ export function pgAppendOnlyRepository<T>(
 
   return callerPinned({
     async append(key, recordId, record, now): Promise<AppendOutcome<T>> {
-      /*
-       * The position is allocated by the position-allocator table, never computed as MAX+1 (which races under
-       * READ COMMITTED). The idempotency probe runs first, so a retry keeps its position. Positions may have
-       * gaps under contention: position is an order key, never a count.
-       */
+
       const already = (await run(
         "append:probe",
         recordClass,
@@ -959,17 +965,17 @@ export async function pgEnsureOnlineIndex(
   }
 }
 
-/**
- * Keep ordinary bootstrap on bounded HTTP and record the version only after
- * every statement succeeds. Online index creation/recovery alone needs a pinned
- * autocommit connection and a session lock, never a transaction.
- */
 export async function bootstrap(
   sql: Sql,
   nowIso: string,
   bounds: ControlPlaneRequestBounds = CONTROL_PLANE_REQUEST_BOUNDS_MS,
 ): Promise<void> {
   const run = boundedRunner(sql, "cp_schema", bounds);
+  if (process.env.WTP_RUNTIME_MODE === "production" || process.env.NETLIFY === "true" && process.env.CONTEXT === "production") {
+    const rows = await run("migration", "POINT", "SELECT id FROM cp_migrations WHERE id='CP-01_expand' AND completed_at IS NOT NULL") as { id: string }[];
+    if (!rows.length) throw new Error("CONTROL_PLANE_MIGRATION_REQUIRED: CP-01_expand");
+    return;
+  }
   for (const statement of BOOTSTRAP_DDL) {
     /* The way back (`WTP_SPEND_HOLDS_TABLE=0`) keeps the holds on the ledger row, so they are not moved off it. */
     if (statement === SPEND_HOLDS_MOVE_DDL && !spendHoldsTableEnabled()) continue;
@@ -977,47 +983,60 @@ export async function bootstrap(
     if (online) await pgEnsureOnlineIndex(sql, online, bounds);
     else await run("bootstrap", "POINT", statement);
   }
+  await backfillAdminSections(async (text, params) => await run("adminSections", "PAGE", text, params) as Record<string, unknown>[]);
+  await run("adminSections", "PAGE", ADMIN_SECTIONS_STRIP_DDL);
+  await migrateModelCharges(sql);
   await run("recordVersion", "POINT", recordVersionStatement(BOOTSTRAP_VERSION, nowIso));
 }
 
-/** The SQL half of `entryInSlice`: the rows one job could use, never fewer (the caller applies the exact rule). */
-export const FIELD_MANUAL_SLICE_SQL = `SELECT id, revision, updated_at, value FROM cp_field_manual_entries
-  WHERE ($1::text[] IS NULL OR value->>'role' = ANY($1::text[]))
-    AND ($2::text[] IS NULL OR value->>'kind' = ANY($2::text[]))
-    AND ($3::text IS NULL OR jsonb_array_length(coalesce(value->'recordClasses', '[]'::jsonb)) = 0 OR value->'recordClasses' ? $3::text)
-    AND (($4::boolean AND ($7::text IS NULL OR jsonb_array_length(coalesce(value->'platforms', '[]'::jsonb)) = 0 OR value->'platforms' ? $7::text))
-      OR (NOT $4::boolean AND (value->>'kind' = ANY($5::text[])
-        OR coalesce((value->'reach'->>'method')::boolean, false)
-        OR coalesce((value->'reach'->>'everywhere')::boolean, false)
-        OR coalesce(value->'reach'->'places', '[]'::jsonb) ?| $6::text[]
-        OR (jsonb_array_length(coalesce(value->'reach'->'platforms', '[]'::jsonb)) > 0 AND ($7::text IS NULL OR value->'reach'->'platforms' ? $7::text))
-        OR ($8::text IS NOT NULL AND coalesce(value->'reach'->'states', '[]'::jsonb) ? $8::text))))
-    AND ($9::text IS NULL OR id > $9::text)
+// Materialize indexed matches before LIMIT can favor walking the national primary-key index.
+export const FIELD_MANUAL_SLICE_SQL = `WITH eligible AS NOT MATERIALIZED (
+  SELECT id, revision, updated_at, value FROM cp_field_manual_entries
+    WHERE ($1::text[] IS NULL OR value->>'role' = ANY($1::text[]))
+      AND ($2::text[] IS NULL OR value->>'kind' = ANY($2::text[]))
+      AND ($3::text IS NULL OR jsonb_array_length(coalesce(value->'recordClasses', '[]'::jsonb)) = 0 OR value->'recordClasses' ? $3::text)
+      AND ($8::text IS NULL OR id > $8::text)
+), candidates AS MATERIALIZED (
+  SELECT id, revision, updated_at, value FROM eligible
+    WHERE $4::boolean AND ($6::text IS NULL OR jsonb_array_length(coalesce(value->'platforms', '[]'::jsonb)) = 0 OR value->'platforms' ? $6::text)
+  UNION
+  SELECT id, revision, updated_at, value FROM eligible
+    WHERE NOT $4::boolean AND coalesce(value->'reach'->'places', '[]'::jsonb) ?| $5::text[]
+  UNION
+  SELECT id, revision, updated_at, value FROM eligible
+    WHERE NOT $4::boolean AND $7::text IS NOT NULL AND coalesce(value->'reach'->'states', '[]'::jsonb) ? $7::text
+  UNION
+  SELECT id, revision, updated_at, value FROM eligible
+    WHERE NOT $4::boolean AND coalesce((value->'reach'->>'everywhere')::boolean, false)
+  UNION
+  SELECT id, revision, updated_at, value FROM eligible
+    WHERE NOT $4::boolean AND jsonb_array_length(coalesce(value->'reach'->'platforms', '[]'::jsonb)) > 0
+      AND ($6::text IS NULL OR value->'reach'->'platforms' ? $6::text)
+  UNION
+  SELECT id, revision, updated_at, value FROM eligible
+    WHERE NOT $4::boolean AND ((value->>'kind' IN (${[...TRANSFERABLE_METHOD_KINDS].map(kind => `'${kind}'`).join(", ")})
+      AND (value->>'url' IS NULL OR jsonb_array_length(coalesce(value->'platforms', '[]'::jsonb)) > 0))
+      OR coalesce((value->'reach'->>'method')::boolean, false))
+      AND ($6::text IS NULL OR jsonb_array_length(coalesce(value->'platforms', '[]'::jsonb)) = 0 OR value->'platforms' ? $6::text)
+)
+SELECT id, revision, updated_at, value FROM candidates
   ORDER BY id ASC LIMIT ${AGGREGATE_LIST_READ_PAGE}`;
 
-/** The slice's parameters, in `FIELD_MANUAL_SLICE_SQL`'s order (without the page cursor). */
 export function fieldManualSliceParams(query: FieldManualQuery): unknown[] {
   return [
     query.role === undefined ? null : [...new Set([query.role, "SHARED"])],
     query.kinds === undefined ? null : [...query.kinds],
     query.recordClass?.toLowerCase() ?? null,
     query.everywhere === true,
-    [...TRANSFERABLE_METHOD_KINDS],
     coveringPlaces(query),
     query.platform?.toLowerCase() ?? null,
     queryState(query) ?? null,
   ];
 }
 
-/**
- * The field manual's rows in `cp_field_manual_entries`. On the runner a slice is the held copy filtered by
- * `entryInSlice`, so a process pays only for rows changed since the copy's clock; without a copy (a page host or
- * a hand-run script) the slice crosses the wire one page at a time.
- */
 export function pgFieldManualRepository(sql: Sql, options: PgRepositoryBounds = {}): FieldManualRepository {
   const base = pgAggregateRepository<FieldManualEntry>(sql, "FieldManualEntry", "cp_field_manual_entries", options);
   const run = boundedRunner(sql, "cp_field_manual_entries", options.bounds ?? CONTROL_PLANE_REQUEST_BOUNDS_MS);
-  const copies = options.copies ?? null;
   return {
     ...base,
     readMany: base.readMany!,
@@ -1036,11 +1055,6 @@ export function pgFieldManualRepository(sql: Sql, options: PgRepositoryBounds = 
       return inserted;
     },
     async slice(query) {
-      if (copies !== null) {
-        const rows = await copies.aggregateList("cp_field_manual_entries", base.listChangedSince!,
-          (row) => (entryInSlice(row.value, query) ? row : null));
-        return rows.filter((row): row is Persisted<FieldManualEntry> => row !== null);
-      }
       const params = fieldManualSliceParams(query);
       const out: Persisted<FieldManualEntry>[] = [];
       let afterId: string | null = null;
@@ -1131,16 +1145,89 @@ export function pgSpendHoldRepository(sql: Sql, bounds: ControlPlaneRequestBound
 }
 
 /** The caller passes the connection string; `fromEnv` is the one place the variable is read. */
-const placeReadConnections = new WeakMap<ControlPlaneRepositories, Sql>();
+const connectionForReads = Symbol("control-plane-read-connection");
+const placeReadConnection = (repos: ControlPlaneRepositories): Sql | undefined =>
+  (repos as ControlPlaneRepositories & { [connectionForReads]?: () => Sql })[connectionForReads]?.();
 
-/** Reconcile all subjects in one place against one indexed query, rather
- * than opening a serverless connection for every field's subject. The filter is
- * the exact expression of `cp_work_items_subject` (`#>> '{subject}'`): `->>`
- * does not match that index and scanned the whole table. */
+export async function readCoordinatorWorkItems(repos: ControlPlaneRepositories, exaAgentLane = false): Promise<WorkItem[]> {
+  const sql = placeReadConnection(repos);
+  if (!sql) {
+    const items = (await repos.workItems.list()).map(row => row.value);
+    const adapterWork = new Map<string, WorkItem>();
+    for (const item of items) if (item.autonomousPlan) {
+      const held = adapterWork.get(item.subject);
+      const hunt=item.autonomousPlan.capability === "hunt-packet", heldHunt=held?.autonomousPlan?.capability === "hunt-packet";
+      if (!held || hunt && !heldHunt || hunt===heldHunt &&
+        (item.createdAt > held.createdAt || item.createdAt === held.createdAt && item.id > held.id)) adapterWork.set(item.subject,item);
+    }
+    if (!repos.scoutResults.keysWhere) throw new Error("SCOUT_SCOPED_READ_UNAVAILABLE");
+    const adapterSubjects = new Set<string>();
+    for (const key of await repos.scoutResults.keysWhere(["outcome"], "NEEDS_ADAPTER")) {
+      for (const result of await repos.scoutResults.read(key)) if (result.outcome === "NEEDS_ADAPTER" && result.refusal === null && adapterWork.has(result.subjectId)) adapterSubjects.add(result.subjectId);
+    }
+    for (const subject of adapterSubjects) {
+      const latest = new Map<string, ScoutResult>();
+      const results: ScoutResult[] = [];
+      for (const key of await repos.scoutResults.keysWhere(["subjectId"], subject)) results.push(...await repos.scoutResults.read(key));
+      for (const result of results.filter(result => result.subjectId === subject).sort((a, b) => a.recordedAt.localeCompare(b.recordedAt))) latest.set(result.recordClass, result);
+      if (![...latest.values()].some(result => result.outcome === "NEEDS_ADAPTER" && result.refusal === null)) adapterSubjects.delete(subject);
+    }
+    const selected: WorkItem[] = [];
+    for (const item of items) {
+      if (!item.autonomousPlan) continue;
+      const plan=item.autonomousPlan;
+      const continuation=plan.capability !== "hunt-packet" && (plan.acquisition.length>0 || plan.sources.length>0);
+      if (continuation || adapterSubjects.has(item.subject) && adapterWork.get(item.subject)?.id === item.id) { selected.push(item); continue; }
+      const tasks = (await repos.routeTasks.listWhere(["workItemId"], item.id)).map(row => row.value);
+      if (tasks.some(task => ["PENDING", "CLAIMED", "RECLAIMABLE", "POLICY_DENIED"].includes(task.state)) ||
+          exaAgentLane && plan.capability === "hunt-packet" && tasks.some(task => task.routeId === "hunter:packet") && !tasks.some(task => task.routeId === "hunter:exa-agent")) selected.push(item);
+    }
+    return selected;
+  }
+  return pgCoordinatorWorkItems(sql, exaAgentLane);
+}
+
+export async function pgCoordinatorWorkItems(sql: Sql, exaAgentLane = false): Promise<WorkItem[]> {
+  const run = boundedRunner(sql, "cp_work_items", CONTROL_PLANE_REQUEST_BOUNDS_MS);
+  const selected: WorkItem[] = [];
+  let after = "";
+  for (;;) {
+    const rows = await run("coordinatorItems", "PAGE", `WITH candidates AS (
+      SELECT id FROM cp_work_items_history WHERE value->'autonomousPlan' IS NOT NULL
+        AND value #>> '{autonomousPlan,capability}' IS DISTINCT FROM 'hunt-packet'
+        AND (jsonb_array_length(coalesce(value #> '{autonomousPlan,acquisition}', '[]'::jsonb)) > 0
+          OR jsonb_array_length(coalesce(value #> '{autonomousPlan,sources}', '[]'::jsonb)) > 0)
+      UNION SELECT value #>> '{workItemId}' FROM cp_route_tasks
+        WHERE value->>'state' IN ('PENDING','CLAIMED','RECLAIMABLE','POLICY_DENIED')
+      UNION SELECT latest.id FROM (
+        SELECT DISTINCT pending.record #>> '{subjectId}' AS subject FROM cp_log_scout_results pending
+        WHERE pending.record->>'outcome' = 'NEEDS_ADAPTER' AND pending.record->'refusal' = 'null'::jsonb
+          AND NOT EXISTS (SELECT 1 FROM cp_log_scout_results newer
+            WHERE newer.record #>> '{subjectId}' = pending.record #>> '{subjectId}'
+              AND newer.record->>'recordClass' = pending.record->>'recordClass'
+              AND (newer.record->>'recordedAt', newer.log_key, newer.position) > (pending.record->>'recordedAt', pending.log_key, pending.position))
+      ) owed CROSS JOIN LATERAL (
+        SELECT id FROM cp_work_items_history WHERE value #>> '{subject}' = owed.subject
+          AND value->'autonomousPlan' IS NOT NULL
+        ORDER BY CASE WHEN value #>> '{autonomousPlan,capability}' = 'hunt-packet' THEN 0 ELSE 1 END,
+          value->>'createdAt' DESC, id DESC LIMIT 1
+      ) latest
+      ${exaAgentLane ? `UNION SELECT w.id FROM cp_work_items_history w
+        WHERE w.value #>> '{autonomousPlan,capability}' = 'hunt-packet'
+          AND EXISTS (SELECT 1 FROM cp_route_tasks_history t WHERE t.value #>> '{workItemId}'=w.id AND t.value->>'routeId'='hunter:packet')
+          AND NOT EXISTS (SELECT 1 FROM cp_route_tasks_history t WHERE t.value #>> '{workItemId}'=w.id AND t.value->>'routeId'='hunter:exa-agent')` : ""}
+    ) SELECT w.id, w.value FROM candidates c JOIN cp_work_items_history w ON w.id=c.id
+      WHERE w.id > $1 AND w.value->'autonomousPlan' IS NOT NULL ORDER BY w.id LIMIT 100`, [after]) as Record<string, unknown>[];
+    selected.push(...rows.map(row => parseValue<WorkItem>(row.value, `coordinator work item ${String(row.id)}`)));
+    if (rows.length < 100) return selected;
+    after = String(rows.at(-1)!.id);
+  }
+}
+
 export async function readPlaceWorkItems(repos: ControlPlaneRepositories, subjects: readonly string[]): Promise<Persisted<WorkItem>[]> {
   if (!subjects.length) return [];
   const ids = [...new Set(subjects)];
-  const sql = placeReadConnections.get(repos);
+  const sql = placeReadConnection(repos);
   if (!sql) {
     const rows: Persisted<WorkItem>[] = [];
     for (const subject of ids) rows.push(...await repos.workItems.listWhere(["subject"], subject));
@@ -1148,13 +1235,13 @@ export async function readPlaceWorkItems(repos: ControlPlaneRepositories, subjec
   }
   const run = boundedRunner(sql, "cp_work_items", CONTROL_PLANE_REQUEST_BOUNDS_MS);
   const rows = await run("placeSubjects", "PAGE", `SELECT id, revision, updated_at, value
-    FROM cp_work_items WHERE value #>> '{subject}'=ANY($1::text[]) ORDER BY id`, [ids]) as Record<string, unknown>[];
+    FROM cp_work_items_history WHERE value #>> '{subject}'=ANY($1::text[]) ORDER BY id`, [ids]) as Record<string, unknown>[];
   return rows.map(row => ({ id: String(row.id), revision: Number(row.revision),
     updatedAt: new Date(row.updated_at as string).toISOString(), value: parseValue<WorkItem>(row.value, `place work item ${String(row.id)}`) }));
 }
 
 export async function readPlaceArtifacts(repos: ControlPlaneRepositories, url: string, cutoff: string, now: string): Promise<readonly ArtifactRecord[]> {
-  const sql = placeReadConnections.get(repos);
+  const sql = placeReadConnection(repos);
   if (!sql) return (await repos.artifacts.readAll()).filter(row => row.canonicalUrl === url && !row.partial &&
     row.tier !== "RESTRICTED_RAW" && row.recordedAt >= cutoff && row.recordedAt <= now);
   const run = boundedRunner(sql, "cp_log_artifacts", CONTROL_PLANE_REQUEST_BOUNDS_MS);
@@ -1167,7 +1254,7 @@ export async function readPlaceArtifacts(repos: ControlPlaneRepositories, url: s
 /** Declared work for the place/ring's exact divisions, including the portable
  * national and relevant state sources. No country-wide work objects are read. */
 export async function readPlaceStandingWork(repos: ControlPlaneRepositories, divisionIds: readonly string[]) {
-  const sql = placeReadConnections.get(repos);
+  const sql = placeReadConnection(repos);
   if (!sql) return (await repos.obligations.listWhere(["active"], "true")).map(row => row.value)
     .filter(row => row.scopeDivisions?.some(id => divisionIds.includes(id)));
   const run = boundedRunner(sql, "cp_obligations", CONTROL_PLANE_REQUEST_BOUNDS_MS);
@@ -1182,10 +1269,7 @@ export async function createPgRepositories(
   options: {
     /** Pages never own the schema: skip the bootstrap, and a schema that is behind reads as STORE_UNREACHABLE. */
     readonly skipBootstrap?: boolean;
-    /**
-     * Override the per-class request bounds (request-bounds.ts). Tests shrink
-     * them; production uses the measured defaults. No call is ever unbounded.
-     */
+
     readonly requestBounds?: Partial<ControlPlaneRequestBounds>;
   } = {},
 ): Promise<ControlPlaneRepositories> {
@@ -1236,9 +1320,7 @@ export async function createPgRepositories(
   const sharedBudget = budgetRepositoryFrom(
     pgAggregateRepository<BudgetLedger>(sql, "BudgetLedger", "cp_budget", bounded), locks, "ATOMIC_COMPARE_AND_SET",
   );
-  // One process need not contend with its own read/modify/write requests on
-  // this large aggregate. Other processes still contend through the same CAS.
-  // This queues accounting writes only; workers and their leases run in parallel.
+
   let budgetWrite: Promise<unknown> = Promise.resolve();
   const budget: ControlPlaneRepositories["budget"] = { ...sharedBudget, mutate: (mutator, now) => {
     const write = budgetWrite.then(() => sharedBudget.mutate(mutator, now));
@@ -1264,12 +1346,14 @@ export async function createPgRepositories(
     },
   };
 
+  const adminRun = boundedRunner(sql, "cp_admin_config", bounds);
   const fixMapRun = boundedRunner(sql, "cp_fix_map", bounds);
   const pacingRun = boundedRunner(sql, "cp_website_pacing", bounds);
   const repositories: ControlPlaneRepositories = {
     adminActionHistoryPage: query => readActionHistoryPage(sql, query, bounds),
-    workItems: pgAggregateRepository<WorkItem>(sql, "WorkItem", "cp_work_items", bounded),
-    routeTasks: pgAggregateRepository<RouteTask>(sql, "RouteTask", "cp_route_tasks", bounded),
+    dispatchState: callerPinned(createPgDispatchState(sql, () => repositories, bounds)),
+    workItems: pgArchivedAggregateRepository<WorkItem>(sql, "WorkItem", "cp_work_items", bounded),
+    routeTasks: pgArchivedAggregateRepository<RouteTask>(sql, "RouteTask", "cp_route_tasks", bounded),
     attempts: pgAggregateRepository<Attempt>(sql, "Attempt", "cp_attempts", bounded),
     obligations: pgAggregateRepository<StandingObligation>(
       sql,
@@ -1277,12 +1361,7 @@ export async function createPgRepositories(
       "cp_obligations",
       bounded,
     ),
-    occurrences: pgAggregateRepository<FreshnessOccurrence>(
-      sql,
-      "FreshnessOccurrence",
-      "cp_occurrences",
-      bounded,
-    ),
+    occurrences: pgArchivedAggregateRepository<FreshnessOccurrence>(sql, "FreshnessOccurrence", "cp_occurrences", bounded),
     debts: pgAggregateRepository<FreshnessDebt>(sql, "FreshnessDebt", "cp_debts", bounded),
     leases: pgAggregateRepository<ExecutionLease>(sql, "ExecutionLease", "cp_leases", bounded),
     activeWorkClaims: pgActiveWorkClaimReader(sql),
@@ -1320,7 +1399,7 @@ export async function createPgRepositories(
     ownerDigests: pgAppendOnlyRepository<OwnerDigestRecord>(sql, "owner_digests", bounded),
     ownerDecisions: pgAppendOnlyRepository<OwnerDecisionIntent>(sql, "owner_decisions", bounded),
     researchState: pgAggregateRepository<ResearchState>(sql, "ResearchState", "cp_research_state", bounded),
-    spendWindow: pgAggregateRepository<SpendWindow>(sql, "SpendWindow", "cp_spend_window", bounded),
+    spend: callerPinned(pgSpendRepository(sql, bounds)),
     methodCandidates: pgAggregateRepository<CandidateStore>(sql, "MethodCandidateStore", "cp_method_candidates", bounded),
     researchIntents: pgAppendOnlyRepository<ResearchIntent>(sql, "research_intents", bounded),
     boxFindings: pgAggregateRepository<BoxFinding>(sql, "BoxFinding", "cp_box_findings", bounded),
@@ -1335,7 +1414,8 @@ export async function createPgRepositories(
     agentJobs: pgAppendOnlyRepository<AgentJobRecord>(sql, "agent_jobs", bounded),
     discoveryAttempts: pgAppendOnlyRepository<MeetingsDiscoveryAttempt>(sql, "discovery_attempts", bounded),
     liveAudits: pgAppendOnlyRepository<LiveAuditLogRow>(sql, "live_audits", bounded),
-    adminConfig: pgAggregateRepository<AdminConfig>(sql, "AdminConfig", "cp_admin_config", bounded),
+    adminConfig: callerPinned(pgAdminConfigRepository(pgAggregateRepository<AdminConfig>(sql, "AdminConfig", "cp_admin_config", bounded), async (text, params) =>
+      (await adminRun("adminConfig", "PAGE", text, params)) as readonly Record<string, unknown>[])),
     askGapObservations: pgAggregateRepository<AskGapObservation>(sql, "AskGapObservation", "cp_ask_gap_observations", bounded),
     doors: pgAggregateRepository<DoorRecord>(sql, "Door", "cp_doors", bounded),
     leadOrders: pgAggregateRepository<LeadOrder>(sql, "LeadOrder", "cp_lead_orders", bounded),
@@ -1347,7 +1427,7 @@ export async function createPgRepositories(
       `${CONTROL_PLANE_URL_VAR})`,
     durable: true,
   };
-  placeReadConnections.set(repositories, sql);
+  Object.assign(repositories, { [connectionForReads]: () => sql });
   if (!options.skipBootstrap) {
     const copied = await copyFieldManualDocument(pgSingleDocumentManual(sql, bounded), repositories, nowIso).catch((error: unknown) => {
       console.error(`  field manual: the lessons were not copied into rows this start; the next start tries again (${error instanceof Error ? error.message : String(error)})`);

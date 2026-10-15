@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { keysWhere, type ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
-import { nextAutonomousOperation } from "../lib/control-plane/workers/coordinator.ts";
+import { nextAutonomousOperation, runAutonomousCoordinator } from "../lib/control-plane/workers/coordinator.ts";
 import { readAuditHistory, readScoutResultsForSubjects } from "../lib/control-plane/workers/scoped-history.ts";
 import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
@@ -27,6 +27,9 @@ import { gunzipSync } from "node:zlib";
 import type { PromotedProjection } from "../lib/civic-data/types.ts";
 import { withReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "../lib/registry/runtime-edge.ts";
 import { manualEdgeEntry } from "./helpers/promoted-edge-entry.ts";
+import { installRegistryRuntime } from "./helpers/promoted-fixtures.ts";
+
+await installRegistryRuntime();
 
 const WHOLE_TABLE = new Set(["list", "listNarrowed", "readAll", "keys"]);
 
@@ -57,15 +60,29 @@ function counted(repos: ControlPlaneRepositories) {
 const scout = (obligationId: string, subjectId: string, at: string): ScoutResult => ({ attemptId: `${obligationId}-a`, obligationId, subjectId,
   recordClass: "OFFICIAL_ROSTER", recordedAt: at, refusal: null, candidates: [], findings: [], rungs: [], nextRungs: [], artifactIds: [] }) as unknown as ScoutResult;
 
-test("CH-26: with the switch off, the old whole-table reads still run", async () => {
+test("coordinator decisions read only their work item's histories", async () => {
   const counter = counted(createMemoryRepositories());
   const h = await autonomousHarness({ repos: counter.repos, plan: plan => ({ ...plan, sources: [], acquisition: [] }) });
   counter.reset();
   await nextAutonomousOperation(h.runtime, h.item.id);
-  assert.ok(counter.whole().some(call => call.startsWith("attempts.list")), "the old path is the default");
-  counter.reset();
-  await nextAutonomousOperation({ ...h.runtime, scopedReads: true }, h.item.id);
   assert.deepEqual(counter.whole(), []);
+});
+
+test("coordinator selection ignores unrelated histories after choosing its work", async () => {
+  const counter=counted(createMemoryRepositories());
+  const h=await autonomousHarness({repos:counter.repos});
+  const capture=(await h.repos.artifacts.readAll())[0]!;
+  const attempt=(await h.repos.attempts.mustRead(capture.attemptId)).value;
+  for(let index=0;index<1200;index++) {
+    const workItemId=`unrelated-${index}`;
+    await h.repos.attempts.put(`unrelated-attempt-${index}`,{...attempt,id:`unrelated-attempt-${index}`,workItemId},h.now());
+    await h.repos.artifacts.append(workItemId,`capture-${index}`,{...capture,workItemId,artifactId:`capture-${index}`},h.now());
+  }
+  counter.reset();
+  const selected=await runAutonomousCoordinator(h.runtime,{planOnly:true,acceptsWorkItem:item=>item.id===h.item.id});
+  assert.equal(selected.decisions[0]?.action,"WORKER");
+  assert.deepEqual(counter.whole(),["workItems.list×1"],"the local provider selects work; all execution histories use indexed reads");
+  assert.ok(counter.rows.n<40,"unrelated attempts and captures never enter the coordinator snapshot");
 });
 
 test("CH-26: scoped reads return what the whole-table reads returned, after the caller's own filter", async () => {
@@ -76,13 +93,13 @@ test("CH-26: scoped reads return what the whole-table reads returned, after the 
     await repos.scoutResults.append(key, `${key}-${at}`, { ...scout(key, subject, at), attemptId: `${key}-${at}` }, at);
   }
   const all = await repos.scoutResults.readAll();
-  const scoped = await readScoutResultsForSubjects(repos, ["s:1"], true);
+  const scoped = await readScoutResultsForSubjects(repos, ["s:1"]);
   assert.deepEqual(scoped.filter(row => row.subjectId === "s:1"), all.filter(row => row.subjectId === "s:1"));
   assert.deepEqual(await keysWhere(repos.scoutResults, ["subjectId"], "s:1"), ["a", "c"]);
   const { keysWhere: _drop, ...withoutFilter } = repos.scoutResults;
   const plain = { ...repos, scoutResults: withoutFilter as typeof repos.scoutResults };
   assert.equal(await keysWhere(plain.scoutResults, ["subjectId"], "s:1"), null, "a store without the filtered read says so");
-  assert.deepEqual(await readScoutResultsForSubjects(plain, ["s:1"], true), all, "and the scoped read falls back to the whole log");
+  await assert.rejects(readScoutResultsForSubjects(plain,["s:1"]), /SCOUT_SCOPED_READ_UNAVAILABLE/);
 });
 
 test("CH-26: an audit's scoped rows are every row its whole-table reads would have used", async () => {
@@ -109,7 +126,7 @@ test("CH-26: an audit's scoped rows are every row its whole-table reads would ha
   assert.ok(scoped.artifacts.some(row => row.artifactId === "inherited"), "a capture the owner's plan inherits");
   assert.ok(!scoped.artifacts.some(row => row.artifactId === "unrelated"), "nothing else");
   const { keysWhere: _drop, ...withoutFilter } = repos.artifacts;
-  assert.equal(await readAuditHistory({ ...repos, artifacts: withoutFilter as typeof repos.artifacts }, { subjectId: "s:1", requiredArtifactIds: [] }), null);
+  await assert.rejects(readAuditHistory({ ...repos, artifacts: withoutFilter as typeof repos.artifacts }, { subjectId: "s:1", requiredArtifactIds: [] }), /ARTIFACT_SCOPED_READ_UNAVAILABLE/);
 });
 
 test("CH-26: a task's lineage, read through the lineage index, is the lineage the whole store gives", async () => {
@@ -150,7 +167,7 @@ test("CH-26: a lease worker's scoped runtime builds and begins a task without li
   counter.reset();
   const { projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { projection: PromotedProjection };
   const registry: ReaderAuthorityEdgeBundle = { promoted: new Map([[projection.key, manualEdgeEntry("registry-runtime-bindings", projection.payload, projection.versionId)]]) };
-  const runtime = await withReaderAuthorityEdge(registry, () => autonomousStandingRuntime({ root, repos: h.repos, now: h.now, auditCeilingUsd: 1, scopedReads: true, environment: { NODE_ENV: "test" } }));
+  const runtime = await withReaderAuthorityEdge(registry, () => autonomousStandingRuntime({ root, repos: h.repos, now: h.now, auditCeilingUsd: 1, environment: { NODE_ENV: "test" } }));
   assert.deepEqual(counter.whole(), [], "the build reads no whole table");
   for (const row of (await h.repos.routeTasks.listWhere(["workItemId"], h.item.id))) {
     counter.reset();
@@ -159,7 +176,7 @@ test("CH-26: a lease worker's scoped runtime builds and begins a task without li
   }
   counter.reset();
   await withReaderAuthorityEdge(registry, () => autonomousStandingRuntime({ root, repos: h.repos, now: h.now, auditCeilingUsd: 1 }));
-  assert.ok(counter.whole().length > 0, "the round's unscoped build still does the whole-store upkeep");
+  assert.deepEqual(counter.whole(), [], "the round builds without a national snapshot");
 });
 
 test("CH-26: schema version 20 builds the scoped indexes online, on the exact expressions the reads send", async () => {
@@ -194,7 +211,7 @@ test("CH-26: each lease task reports its repository calls, and the round records
   assert.match(worker, /const observer = observeCyclePhases\(stores\);\s*const repos = observer\.repos;/);
   assert.match(worker, /observer\.finish\("runtime"\);\s*await runtime\.beginTask\?\.\(task, item\);/, "the runtime build is not charged to the task");
   assert.match(worker, /repositoryCalls: observer\.finish\("task"\)\.repositoryCalls/);
-  assert.match(worker, /WTP_SCOPED_TASK_READS !== "0"/, "the scoped path is the default; the whole-table path stays behind its runner switch");
+  assert.doesNotMatch(worker, /WTP_SCOPED_TASK_READS/, "every lease task uses indexed history reads");
   const round = await readFile(new URL("../scripts/freshness-shadow.mts", import.meta.url), "utf8");
   assert.match(round, /if \(typeof result\.repositoryCalls === "number"\) leaseTaskCalls\.push\(result\.repositoryCalls\);/);
   assert.match(round, /cyclePhases: \[\.\.\.cycleObservation\.phases, \.\.\.leaseTaskReadsPhase\(\)\]/);

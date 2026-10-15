@@ -3,6 +3,7 @@ import test from "node:test";
 import { readFileSync } from "node:fs";
 import { createElement, isValidElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import { neonConfig } from "@neondatabase/serverless";
 import { GET } from "../app/api/votes/route.ts";
 import { POST } from "../app/api/ask/grounded/route.ts";
 import { RecentVoteRecords, type MemberRollCall } from "../components/map/popup/official-popup.tsx";
@@ -24,6 +25,8 @@ import type { StateVotesSnapshot } from "../lib/sources/legiscan/types.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { installAbsent, installPromotedValue, installRegistryAuthority, installFederalVotes, promotedFixtureBundle } from "./helpers/promoted-fixtures.ts";
 import { readerText } from "./helpers/reader-markup.ts";
+import type { AskTrace } from "../lib/ask/trace.ts";
+import { MemoryRoutineDataStore, PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 
 interface Sample {
   state: string; session: string; sourceUrl: string; fixtureArchive: string; fixtureArchiveSha256: string;
@@ -79,7 +82,10 @@ test("every supported state accepts its exact Open States person ID and establis
   }
 });
 
-test("real retained roll calls reach API, popup rows and Ask by exact native people across regions and a unicameral state", async () => {
+test("real retained roll calls reach API, popup rows and Ask by exact native people across regions and a unicameral state", async (context) => {
+  const prepared = new MemoryRoutineDataStore();
+  context.mock.method(PostgresRoutineDataStore.prototype, "readPreparedReaderProjection", prepared.readPreparedReaderProjection.bind(prepared));
+  context.mock.method(PostgresRoutineDataStore.prototype, "readPreparedReaderProjectionCoupling", prepared.readPreparedReaderProjectionCoupling.bind(prepared));
   await installRegistryAuthority();
   await installFederalVotes();
   const samples = manifest.states.filter((row): row is Sample & { readerExample: NonNullable<Sample["readerExample"]> } => Boolean(row.readerExample));
@@ -136,21 +142,34 @@ test("real retained roll calls reach API, popup rows and Ask by exact native peo
       assert.deepEqual(answer?.citedUrls, [payload.votes[0].rollCallUrl]);
       resetGroundedState();
       const fetchImpl = globalThis.fetch;
+      const databaseFetch = neonConfig.fetchFunction;
+      let databaseFetches = 0;
+      const databaseCallSites: string[] = [];
       globalThis.fetch = async () => { throw new Error("the retained-source reader journey requires no live fetch"); };
+      neonConfig.fetchFunction = async () => {
+        databaseFetches++;
+        const error = new Error("the retained-source reader journey requires no live database");
+        databaseCallSites.push(error.stack ?? error.message);
+        throw error;
+      };
       try {
         const started = performance.now();
+        const cpuStarted = process.cpuUsage();
         const response = await POST(new Request("https://meanwhile.test/api/ask/grounded", { method: "POST",
           headers: { "content-type": "application/json", origin: "https://meanwhile.test", host: "meanwhile.test", "x-wtp-synthetic-run": "state-votes-reader-test" },
           body: JSON.stringify({ question: `How did my state senator vote on ${topic}?`, ocdIds: [division], today: "2026-10-13", surface: "MAP" }),
         }));
-        const grounded = await response.json() as { mode: string; answer: string; subject: { id: string; name: string }; records: { rollCall?: { position: string } }[] };
+        const grounded = await response.json() as { mode: string; answer: string; subject: { id: string; name: string }; records: { rollCall?: { position: string } }[]; trace: AskTrace };
         assert.equal(response.status, 200);
         assert.equal(grounded.mode, "GROUNDED_COMPOSED", `${sample.state}: ${JSON.stringify(grounded)}`);
         assert.equal(grounded.subject.id, member);
         assert.equal(grounded.subject.name, source.personName);
         assert.ok(grounded.answer.includes(source.billNumber));
         assert.ok(grounded.records.some(record => record.rollCall?.position === source.position));
-        assert.ok(performance.now() - started < 3_000, `${sample.state}: the first requested Ask answer is usable within three seconds`);
+        const elapsed = performance.now() - started;
+        const cpu = process.cpuUsage(cpuStarted);
+        context.diagnostic(JSON.stringify({ state: sample.state, elapsedMs: Math.round(elapsed), cpuMs: Math.round((cpu.user + cpu.system) / 1_000), databaseFetches, stages: grounded.trace.stages }));
+        assert.ok(elapsed < 3_000, `${sample.state}: the first requested Ask answer took ${elapsed.toFixed(0)} ms; expected under three seconds; ${JSON.stringify(grounded.trace)}`);
         if (sample.state === "AZ") {
           const question = `How did my senator vote on ${topic}?`;
           const ask = async (activeSubjects: unknown[] = []) => {
@@ -167,7 +186,8 @@ test("real retained roll calls reach API, popup rows and Ask by exact native peo
           assert.equal(focused.subject?.id, member, "the exact focused state legislator supplies the context");
           assert.ok(focused.answer?.includes(source.billNumber));
         }
-      } finally { globalThis.fetch = fetchImpl; }
+        assert.equal(databaseFetches, 0, `the retained-source reader journey stays within its promoted fixtures: ${databaseCallSites.join("\n")}`);
+      } finally { globalThis.fetch = fetchImpl; neonConfig.fetchFunction = databaseFetch; }
       const stranger = await readNativeMemberVotes(`plural:${sample.state.toLowerCase()}:00000000-0000-4000-8000-000000000999`);
       assert.equal(stranger?.votes.length, 0, "a real roll call never transfers through a display name");
     });

@@ -1,4 +1,3 @@
-/** BR-12/13: capture scores at acceptance and compare them with the same live place score later. */
 import { readPlaceOwed } from "../admin-view/place-owed-read.ts";
 import { scorePlace } from "../admin-view/place-scorecard.ts";
 import { readerQuery } from "../../civic-data/promoted-reader-query.ts";
@@ -38,7 +37,7 @@ export async function confirmHuntScores(repos:ControlPlaneRepositories,receipt:A
   const accepted=receipt.huntScores;
   if(!accepted?.length)return core;
   try{
-    const [held,state]=await Promise.all([repos.adminConfig.read(ADMIN_CONFIG_ID),repos.researchState.readNarrowed(RESEARCH_STATE_ID,{assignments:true})]);
+    const [held,state]=await Promise.all([repos.adminConfig.read(ADMIN_CONFIG_ID, { placeTargets: { ids: accepted.map(score => score.placeKey) } }),repos.researchState.readNarrowed(RESEARCH_STATE_ID,{assignments:true})]);
     const config=held&&isAdminConfig(held.value)?held.value:null;
     const assignments=(state?.value as {assignments?:AssignmentCycleReading}|undefined)?.assignments;
     const scopes=config?expansionScopesOf(config):null;

@@ -1,11 +1,3 @@
-/**
- * The standing hunter lane arms the same paid-work guards the
- * round does, from the owner's live controls and the round's host-local Send
- * and area reading. Every unreadable or stale input holds paid work by name;
- * a task's Send lines come from its own obligation's marks; the lane's own
- * requests are counted once across refreshes, at their worst case until they
- * measure.
- */
 import assert from "node:assert/strict";
 import test from "node:test";
 import { mkdtempSync, writeFileSync } from "node:fs";
@@ -64,7 +56,7 @@ async function lane(options: { arming?: ReturnType<typeof reading> | "missing" |
     await repos.researchIntents.append("level-1", intent.intentId, intent, NOW);
   }
   if (options.intentsUnreadable) (repos.researchIntents as { read: unknown }).read = async () => { throw new Error("socket closed"); };
-  for (const cost of options.costs ?? []) await repos.costs.append(cost.workItemId, cost.attemptId, cost, cost.recordedAt);
+  for (const cost of options.costs ?? []) await recordCost(repos, cost, cost.recordedAt);
   const task = createRouteTask({ workItemId: "wi-1", routeId: "autonomous:scout:x", routeLabel: "Discover", target: "https://x.example.gov/", inherited: false, now: NOW });
   await repos.routeTasks.put(task.id, task, NOW);
   await repos.occurrences.put("occ-1", { id: "occ-1", obligationId: "ob-1", sequence: 1, dueAt: NOW, workItemId: "wi-1", routeTaskId: task.id,

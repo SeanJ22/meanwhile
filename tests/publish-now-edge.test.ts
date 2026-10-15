@@ -19,12 +19,15 @@ import { registrationTarget } from "../lib/registration/publication.ts";
 import { loadRegistrationReference } from "../lib/registration/reference.ts";
 import { normalize, yamlToPeople } from "../lib/sources/plural/index.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
+import { installFactReader } from "../lib/facts/db.ts";
 
 const vault = new MemoryEvidenceStore();
 
 const NOW = "2026-10-01T12:00:00.000Z";
 
-test("publish-now copies real baseline pointers during an unresolved finance pass, honors owner pauses and retries independent failures", async () => {
+test("publish-now copies real baseline pointers during an unresolved finance pass, honors owner pauses and retries independent failures", async (context) => {
+  installFactReader(null);
+  context.after(() => installFactReader(undefined));
   const memory = new MemoryRoutineDataStore();
   // The routine sweep also checks these existing canonical families. Seed them through their real promotion doors.
   const census = censusGeographyCandidate(JSON.parse(readFileSync("lib/census-geography/bootstrap-az.json", "utf8")));

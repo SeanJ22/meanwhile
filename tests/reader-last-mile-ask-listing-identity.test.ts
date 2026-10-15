@@ -14,20 +14,25 @@ import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 import { ambiguousListingPairs, dateOnlyListings, installMeetings, recordedMeetingsSnapshot } from "./helpers/reader-fixtures.ts";
 import { localDate } from "../lib/ask/meeting-time.ts";
 import { readMeetingsProjection, requireMeetingsProjection } from "../lib/meetings/snapshot.ts";
+import { clearPreparedMeetingsProjectionCache } from "../lib/meetings/prepared-snapshot.ts";
+import { MemoryRoutineDataStore, PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { isAnotherBodysNoticePage } from "../lib/meetings/notice-pages.ts";
 
 delete process.env.ANTHROPIC_API_KEY;
 process.env.WTP_LIMIT_LOG_IP_PER_MINUTE = "10000";
 await installRegistryAuthority();
-// The recorded 85701 calendar, three of its Tucson Unified sittings each listed a second time, and three date-only listings.
 const { meetings: listed, pairs } = ambiguousListingPairs(3);
 const installed = recordedMeetingsSnapshot([...listed, ...dateOnlyListings(3)]);
 installMeetings(installed.meetings, installed.agendaDocuments);
-// What the reader composes from those promoted partitions (each row stamped with its door).
 const snapshot = requireMeetingsProjection(await readMeetingsProjection());
 const headers = { "content-type": "application/json", origin: "https://wtp.test", "x-wtp-synthetic-run": "reader-listing-identity-control" };
 
-test("each date with two equal calendar listings retains both, with an unresolved distinct-meeting count, in real Ask", async () => {
+test("each date with two equal calendar listings retains both, with an unresolved distinct-meeting count, in real Ask", async (t) => {
+  const prepared = new MemoryRoutineDataStore();
+  clearPreparedMeetingsProjectionCache();
+  t.after(clearPreparedMeetingsProjectionCache);
+  t.mock.method(PostgresRoutineDataStore.prototype, "readPreparedReaderProjection", prepared.readPreparedReaderProjection.bind(prepared));
+  t.mock.method(PostgresRoutineDataStore.prototype, "readPreparedReaderProjectionCoupling", prepared.readPreparedReaderProjectionCoupling.bind(prepared));
   assert.equal(meetingListingIdentity(snapshot.meetings, canonicalBodyIdentity).groups.length, pairs.length);
   for (const pair of pairs) {
     const ids = pair.map(meeting => meeting.id);

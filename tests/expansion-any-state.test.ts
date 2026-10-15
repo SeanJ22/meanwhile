@@ -54,6 +54,7 @@ import {
 import { buildRegistry } from "../lib/control-plane/scheduler/registry.ts";
 import type { JurisdictionRegistry } from "../lib/hunt/jurisdiction-universe.ts";
 import { readMeetingsProjection } from "../lib/meetings/snapshot.ts";
+import { installFactReader } from "../lib/facts/db.ts";
 import { registrationCandidate, type RegistrationReadModel } from "../lib/registration/candidate.ts";
 import { preloadRegistrationJurisdictions } from "../lib/registration/jurisdictions.ts";
 import { REGISTRATION_SOURCE_BYTES, REGISTRATION_SOURCE_SHA256, REGISTRATION_SOURCE_URL, registrationTarget } from "../lib/registration/publication.ts";
@@ -258,7 +259,7 @@ async function promoteVenues(store: MemoryRoutineDataStore): Promise<void> {
   assert.equal(outcome.candidate.state, "PROMOTED", outcome.candidate.failureDetail ?? "");
 }
 
-test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner creates, from registration, and Columbus's calendar reaches the Reader", async () => {
+test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner creates, from registration, and Columbus's calendar reaches the Reader", async (t) => {
   clearRegistrationJurisdictionRegistries();
   const store = new MemoryRoutineDataStore();
   const repos = createMemoryRepositories();
@@ -466,6 +467,8 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   const familyOutcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, derivedFamilyCandidate(partition, build), T_FAMILY);
   assert.equal(familyOutcome.candidate.state, "PROMOTED", `${familyOutcome.candidate.failureCode ?? ""} ${familyOutcome.candidate.failureDetail ?? ""}`);
 
+  installFactReader(async () => []);
+  t.after(() => installFactReader(undefined));
   const reader = await readMeetingsProjection({ store, now: T_READER, bypassCache: true });
   assert.equal(reader.kind, "PROMOTED");
   if (reader.kind !== "PROMOTED") return;

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import test from "node:test";
+import test, { type TestContext } from "node:test";
 
 import {
   HELD_MEETING_PARTITIONS,
@@ -11,9 +11,9 @@ import {
   type MeetingPartitionContract,
 } from "../lib/civic-data/meeting-partitions.ts";
 import { processRoutineCandidate } from "../lib/civic-data/promotion.ts";
-import { clearPromotedReadModelCache } from "../lib/civic-data/read-model.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { RoutineRecordClass } from "../lib/civic-data/types.ts";
+import { installFactReader } from "../lib/facts/db.ts";
 import {
   preparePublishedMeetingSnapshot,
   readPreparedMeetingsProjection,
@@ -28,18 +28,27 @@ import type { ChildRunReport } from "../lib/sources/composite/index.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import { candidateForMeetingPartition, promoteMeetingPartitions } from "../scripts/ingest.ts";
 
-/*
- * A retired route hands its body to a successor partition. Until the successor's first promotion the retired
- * partition's last promoted version is HELD, composed in the successor's place and named on its readback; the
- * first promotion supersedes it. Never two authorities for one body, never none.
- */
-
 const BEFORE_CUTOVER = "2026-09-20T12:00:00.000Z";
 const FIRST_SUCCESSOR_RUN = "2026-09-20T14:00:00.000Z";
 const READ_AT = "2026-09-20T15:00:00.000Z";
 
 const [held] = HELD_MEETING_PARTITIONS;
 const successor = MEETING_PARTITION_CONTRACTS.find((partition) => partition.id === held?.successorId)!;
+const heldEntities = ["706", "707"].map(id => `meeting:${held!.meetingSource}:pcc:${id}`);
+const successorEntities = ["2026-09-25-regular", "2026-10-14-regular", "2026-10-29-study-session"]
+  .map(id => `meeting:${successor.meetingSource}:pcc:${id}`);
+
+function emptyMeetingFacts(t: TestContext): (string | string[])[] {
+  const reads: (string | string[])[] = [];
+  installFactReader(async (_text, params) => {
+    const ids = params?.[0];
+    assert.ok(typeof ids === "string" || Array.isArray(ids));
+    reads.push(typeof ids === "string" ? ids : [...ids].sort());
+    return [];
+  });
+  t.after(() => installFactReader(undefined));
+  return reads;
+}
 
 /** The retired identity as it was registered before the cutover — used only to seed its held pointer. */
 const retired = {
@@ -164,11 +173,13 @@ test("every retired route is a held partition whose successor is registered and 
   assert.equal(heldMeetingPartitionFor(MEETING_PARTITION_CONTRACTS.find((p) => !heldMeetingPartitionFor(p.id))!.id), null);
 });
 
-test("until its successor promotes, the retired route's held version is composed in its place and named", async () => {
+test("until its successor promotes, the retired route's held version is composed in its place and named", async (t) => {
   const store = new MemoryRoutineDataStore();
   const heldVersion = await seedRetiredPointer(store);
 
+  const factReads = emptyMeetingFacts(t);
   const read = await readMeetingsProjection({ store, bypassCache: true, now: READ_AT });
+  assert.deepEqual(factReads, [heldEntities]);
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;
   assert.deepEqual(
@@ -190,12 +201,14 @@ test("until its successor promotes, the retired route's held version is composed
   assert.match(read.detail, /1 composed from a retired route's held version/);
 });
 
-test("the successor's first promotion supersedes the held version, which stays in the store untouched", async () => {
+test("the successor's first promotion supersedes the held version, which stays in the store untouched", async (t) => {
   const store = new MemoryRoutineDataStore();
   const heldVersion = await seedRetiredPointer(store);
   const successorVersion = await promoteSuccessor(store);
 
+  const factReads = emptyMeetingFacts(t);
   const read = await readMeetingsProjection({ store, bypassCache: true, now: READ_AT });
+  assert.deepEqual(factReads, [successorEntities]);
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;
   assert.deepEqual(
@@ -214,7 +227,7 @@ test("the successor's first promotion supersedes the held version, which stays i
   assert.equal((await store.readPromotion("MEETING", held!.scope))?.versionId, heldVersion, "nothing moved the held pointer");
 });
 
-test("the held pointer is read only while its successor has none; a superseded route costs no further reads", async () => {
+test("the held pointer is read only while its successor has none; a superseded route costs no further reads", async (t) => {
   class ScopeCountingStore extends MemoryRoutineDataStore {
     readonly requested: string[][] = [];
     override async readPromotions<T = unknown>(recordClass: RoutineRecordClass, scopes: readonly string[]) {
@@ -231,6 +244,7 @@ test("the held pointer is read only while its successor has none; a superseded r
 
   const store = new ScopeCountingStore();
   await seedRetiredPointer(store);
+  const factReads = emptyMeetingFacts(t);
   await readMeetingsProjection({ store, bypassCache: true, now: READ_AT });
   await preparePublishedMeetingSnapshot(store, READ_AT);
   assert.equal(asksForHeld(store), true, "in the window, the held version is what the page shows");
@@ -241,12 +255,14 @@ test("the held pointer is read only while its successor has none; a superseded r
   await preparePublishedMeetingSnapshot(store, READ_AT);
   assert.ok(store.requested.length > 0);
   assert.equal(asksForHeld(store), false, "after the first promotion, nothing reads the retired pointer again");
+  assert.deepEqual(factReads, [heldEntities, "meeting:", heldEntities, successorEntities, "meeting:", successorEntities]);
 });
 
-test("the prepared reader snapshot couples to the held version, then recomposes on the successor's first promotion", async () => {
+test("the prepared reader snapshot couples to the held version, then recomposes on the successor's first promotion", async (t) => {
   const store = new MemoryRoutineDataStore();
   const heldVersion = await seedRetiredPointer(store);
 
+  const factReads = emptyMeetingFacts(t);
   const first = await preparePublishedMeetingSnapshot(store, READ_AT);
   assert.equal(first.status, "PUBLISHED");
   const servedHeld = await readPreparedMeetingsProjection({ store, now: READ_AT });
@@ -272,4 +288,5 @@ test("the prepared reader snapshot couples to the held version, then recomposes 
     servedSuccessor.value.meetings.every((meeting) => meeting.id.startsWith(`${successor.meetingSource}:`)),
     true,
   );
+  assert.deepEqual(factReads, ["meeting:", heldEntities, "meeting:", "meeting:", successorEntities]);
 });

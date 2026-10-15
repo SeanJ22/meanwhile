@@ -1,5 +1,3 @@
-/** The research lane's numbers: capacity, queue order, funnel, model share, cache hit rate and cost per useful outcome, each with its denominator. */
-
 import { MODELS, canonicalModelId, modelTierFor } from "../models.ts";
 import { cacheMeteringOf, costPortionsByModel, type MeteredCharge } from "./cost.ts";
 import { CACHE_RATE_MULTIPLIERS, cacheSavingUsd } from "./model-cost.ts";
@@ -42,6 +40,12 @@ export function scoutCapacity(input: {
     total += c.cost.usd;
     measured += 1;
   }
+  return scoutCapacityFromTotals({ ...input, totals: { usd: total, measured, unmeasured } });
+}
+
+export function scoutCapacityFromTotals(input: { readonly totals: { readonly usd: number; readonly measured: number; readonly unmeasured: number };
+  readonly windowHours: number; readonly ceilingUsd: number }): ScoutCapacity {
+  const { usd: total, measured, unmeasured } = input.totals;
   const mean = measured === 0 ? null : total / measured;
   return {
     meanUsdPerAttempt: mean,
@@ -381,9 +385,25 @@ export function cacheHitRateByRole(input: {
       byRole.set(role, acc);
     }
   }
-  return [...byRole.entries()].sort((a, b) => a[0].localeCompare(b[0])).map(([role, a]) => {
+  return cacheReadingsFromTotals([...byRole].map(([role, a]) => ({ role, read: a.read, write: a.write, uncached: a.uncached,
+    attempts: a.attempts, measured: a.measured, predating: a.predating, unreported: a.unreported,
+    uncachedMax: a.uncachedPerRow.length ? Math.max(...a.uncachedPerRow) : 0,
+    requests: a.requests, batched: a.batched, saved: a.saved, aggregatePriced: a.aggregatePriced,
+    turns: a.turns, misses: a.misses, stationary: a.stationary })));
+}
+
+export interface CacheRoleTotals {
+  readonly role: string; readonly read: number; readonly write: number; readonly uncached: number;
+  readonly attempts: number; readonly measured: number; readonly predating: number; readonly unreported: number;
+  readonly uncachedMax: number; readonly requests: number; readonly batched: number; readonly saved: number | null;
+  readonly aggregatePriced: number; readonly turns: number | null; readonly misses: number | null; readonly stationary: number | null;
+}
+
+export function cacheReadingsFromTotals(rows: readonly CacheRoleTotals[]): CacheHitRate[] {
+  return [...rows].sort((a, b) => a.role.localeCompare(b.role)).map(a => {
+    const role = a.role;
     const total = a.read + a.write + a.uncached;
-    const mean = a.uncachedPerRow.length === 0 ? null : a.uncachedPerRow.reduce((n, v) => n + v, 0) / a.uncachedPerRow.length;
+    const mean = a.measured === 0 ? null : a.uncached / a.measured;
     return {
       role,
       cacheRead: a.read,
@@ -397,7 +417,7 @@ export function cacheHitRateByRole(input: {
       measuredRows: a.measured,
       predatingRows: a.predating,
       unreportedRows: a.unreported,
-      uncachedPerAttempt: mean === null ? null : { mean, max: Math.max(...a.uncachedPerRow) },
+      uncachedPerAttempt: mean === null ? null : { mean, max: a.uncachedMax },
       batchShare: a.requests === 0 ? null : a.batched / a.requests,
       savedUsd: a.measured === 0 ? null : a.saved,
       aggregatePricedRows: a.aggregatePriced,

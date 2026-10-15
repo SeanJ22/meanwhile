@@ -1,4 +1,3 @@
-/** The build and runner share the migration command and existing Admin history. */
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { pathToFileURL } from "node:url";
@@ -42,7 +41,7 @@ export async function runDbApply(args: string[], env = process.env, deps: ApplyD
   } else {
     const execute = deps.execute ?? ((childArgs, childEnv) => {
       const child = spawnSync(process.execPath, ["--experimental-strip-types", "--input-type=module", "-e",
-        "import { applyMigrations } from './scripts/apply-migrations.mts'; await applyMigrations(process.argv.slice(1));", "--", ...childArgs], {
+        "import { applyMigrations } from './scripts/apply-migrations.mts'; import { applyControlPlaneMigrations } from './scripts/control-plane-migrations.mts'; const args = process.argv.slice(1); await applyMigrations(args); if (args.includes('--target=production')) await applyControlPlaneMigrations(args);", "--", ...childArgs], {
         cwd: process.cwd(), env: childEnv, encoding: "utf8", windowsHide: true, maxBuffer: 16 * 1024 * 1024,
       });
       return { status: child.status, stdout: child.stdout ?? "", stderr: child.stderr ?? child.error?.name ?? "" };

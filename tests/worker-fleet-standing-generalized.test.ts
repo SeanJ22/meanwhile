@@ -28,6 +28,7 @@ import { methodFixture } from "./method-store-fixture.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { CandidateVersionRecord, PromotedProjection } from "../lib/civic-data/types.ts";
 import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
+import { installFactReader } from "../lib/facts/db.ts";
 
 const ROOT = fileURLToPath(new URL("../", import.meta.url));
 const METHOD = methodFixture();
@@ -37,7 +38,15 @@ installOperationalReferenceBundle(operationalReferenceBundle(
 const registry = JSON.parse(gunzipSync(readFileSync(path.join(ROOT, "tests/fixtures/registry-transfer-import.json.gz"))).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
 const registryStore = new MemoryRoutineDataStore();
 Object.assign(registryStore, { candidates: new Map([[registry.record.candidate.id, registry.record]]), promotions: new Map([[registry.projection.key, registry.projection]]) });
-assert.equal((await readRegistryRuntimeProjection({ store: registryStore, bypassCache: true })).kind, "PROMOTED");
+const factReads: unknown[] = [];
+installFactReader(async (_text, params) => { factReads.push(params?.[0]); return []; });
+try {
+  assert.equal((await readRegistryRuntimeProjection({ store: registryStore, bypassCache: true })).kind, "PROMOTED");
+} finally {
+  installFactReader(undefined);
+}
+const bodyIds = (registry.projection.payload as { registry: { bodies: { id: string }[] } }).registry.bodies.map(body => body.id);
+assert.deepEqual(factReads, [bodyIds, bodyIds]);
 const SUBJECT = "curated:az/corona-de-tucson-fire-district#governing";
 const START = "2026-09-03T04:00:00.000Z";
 const PRIMARY = "https://www.coronafire.org/sitemap.xml";

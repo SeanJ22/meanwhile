@@ -1,20 +1,6 @@
-/**
- * A reviewed calendar publishes through the runner's doors with no code release, and keeps its verified sittings
- * through temporary outages. Every step is the production door, on the in-memory store:
- *
- * 1. a reviewed crosswalk row is promoted through the manual door;
- * 2. the wiring store is derived from it, a validated walk and the vault, and
- *    promoted through the routine door, which checks every promoted input;
- * 3. the state's derived family reads the member on its attested host and
- *    promotes through the meeting-partition door, which checks every member
- *    read's host against the wiring version it names;
- * 4. the meetings Reader composes the family's sittings beside every partition.
- *
- * No code names the body, the calendar or the host: they are data from step 1.
- */
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import test from "node:test";
+import test, { type TestContext } from "node:test";
 
 import { canonicalCivicDataJson } from "../lib/civic-data/changes.ts";
 import { readCuratedReaderProjection } from "../lib/civic-data/curated-reader-read-model.ts";
@@ -45,6 +31,7 @@ import {
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { deriveWiringDecisions } from "../lib/control-plane/discovery/derived-wiring.ts";
 import { walkMeetingsDiscoveryNeed, type DiscoveryOpen } from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
+import { installFactReader } from "../lib/facts/db.ts";
 import { readMeetingsProjection, reconcileCounts } from "../lib/meetings/snapshot.ts";
 import { preparePublishedMeetingSnapshot } from "../lib/meetings/prepared-snapshot.ts";
 import { makeIcalSource } from "../lib/sources/ical/index.ts";
@@ -78,6 +65,18 @@ const T_CROSSWALK = "2026-09-24T19:30:00.000Z";
 const T_WIRING = "2026-09-24T20:00:00.000Z";
 const T_FAMILY = "2026-09-24T20:30:00.000Z";
 const T_SECOND = "2026-09-24T21:30:00.000Z";
+
+function emptyMeetingFacts(t: TestContext): (string | string[])[] {
+  const reads: (string | string[])[] = [];
+  installFactReader(async (_text, params) => {
+    const ids = params?.[0];
+    assert.ok(typeof ids === "string" || Array.isArray(ids));
+    reads.push(typeof ids === "string" ? ids : [...ids].sort());
+    return [];
+  });
+  t.after(() => installFactReader(undefined));
+  return reads;
+}
 
 function crosswalkRow(): MeetingBodyCrosswalkRow {
   return {
@@ -261,7 +260,7 @@ test("two calendars combine distinct dates and repeated IDs; a failed sibling ca
   assert.equal(derivedFamilyCandidate(requiredMeetingPartitionContract(derivedMeetingFamilyId("US-AZ")), next).semantics.violations.length, 0);
 });
 
-test("a promoted family's internal fresh duplicates reconcile in composition and publish the prepared snapshot", async () => {
+test("a promoted family's internal fresh duplicates reconcile in composition and publish the prepared snapshot", async (t) => {
   const store = new MemoryRoutineDataStore();
   const crosswalk = await promoteCrosswalk(store);
   await deriveWiring(store, crosswalk, FEED, T_WIRING);
@@ -270,6 +269,7 @@ test("a promoted family's internal fresh duplicates reconcile in composition and
   }));
   assert.ok(family.outcome.promoted, family.outcome.candidate.failureDetail ?? "");
   assert.equal(family.build.snapshot.counts.duplicatesCollapsed, 3);
+  const factReads = emptyMeetingFacts(t);
   const read = await readMeetingsProjection({ store, bypassCache: true, now: T_FAMILY });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;
@@ -278,6 +278,8 @@ test("a promoted family's internal fresh duplicates reconcile in composition and
   assert.deepEqual(read.value.meetings, family.build.snapshot.meetings);
   assert.doesNotThrow(() => reconcileCounts(read.value));
   assert.equal((await preparePublishedMeetingSnapshot(store, T_FAMILY)).status, "PUBLISHED");
+  const entityIds = family.build.snapshot.meetings.map(meeting => `meeting:${meeting.id}`).sort();
+  assert.deepEqual(factReads, [entityIds, "meeting:", entityIds]);
 });
 
 test("a serving-window boundary crossed during collection uses the actual final input anchor", async () => {
@@ -300,7 +302,7 @@ test("a serving-window boundary crossed during collection uses the actual final 
   assert.ok(!next.build.snapshot.meetings.some(row => row.id === "ical:expires"));
 });
 
-test("an unverified row stays open while its verified sibling publishes and its prior good row survives", async () => {
+test("an unverified row stays open while its verified sibling publishes and its prior good row survives", async (t) => {
   const store = new MemoryRoutineDataStore();
   const crosswalk = await promoteCrosswalk(store);
   await deriveWiring(store, crosswalk, FEED, T_WIRING);
@@ -317,12 +319,14 @@ test("an unverified row stays open while its verified sibling publishes and its 
   assert.ok(next.build.snapshot.meetings.find(row => row.id === prior.id)?.carried);
   assert.ok(next.build.snapshot.meetings.some(row => row.id === "ical:new"));
   assert.ok(!next.build.snapshot.meetings.some(row => row.id === "ical:foreign"));
+  const factReads = emptyMeetingFacts(t);
   const reader = await readMeetingsProjection({ store, now: T_SECOND, bypassCache: true });
+  assert.deepEqual(factReads, [[`meeting:${prior.id}`, "meeting:ical:new"].sort()]);
   assert.equal(reader.kind, "PROMOTED");
   if (reader.kind === "PROMOTED") assert.ok(reader.value.meetings.some(row => row.id === "ical:new"));
 });
 
-test("C16 END TO END: a reviewed crosswalk row plus a validated route publishes through the doors with no code release", async () => {
+test("C16 END TO END: a reviewed crosswalk row plus a validated route publishes through the doors with no code release", async (t) => {
   const store = new MemoryRoutineDataStore();
   const crosswalkInput = await promoteCrosswalk(store);
 
@@ -336,7 +340,9 @@ test("C16 END TO END: a reviewed crosswalk row plus a validated route publishes 
   assert.deepEqual(family.build.snapshot.meetings.map((m) => m.title), ["Housing Commission"], "only the reviewed body's sittings; the Tourism Commission's never enter");
   assert.equal(family.build.snapshot.meetings[0]?.bodyId, BODY_ID);
 
+  const factReads = emptyMeetingFacts(t);
   const reader = await readMeetingsProjection({ store, now: T_FAMILY, bypassCache: true });
+  assert.deepEqual(factReads, [family.build.snapshot.meetings.map(meeting => `meeting:${meeting.id}`).sort()]);
   assert.equal(reader.kind, "PROMOTED");
   if (reader.kind !== "PROMOTED") return;
   assert.ok(reader.value.meetings.some((m) => m.bodyId === BODY_ID && m.title === "Housing Commission"), "the reader composes the family's sitting");
@@ -369,7 +375,7 @@ test("C16: a member read off its attested host is held on its verified sittings,
   assert.ok(pointer !== null, "the family's last known good stays live");
 });
 
-test("C16: a suspended connection publishes nothing new and keeps its previously verified sittings", async () => {
+test("C16: a suspended connection publishes nothing new and keeps its previously verified sittings", async (t) => {
   const store = new MemoryRoutineDataStore();
   const crosswalkInput = await promoteCrosswalk(store);
   await deriveWiring(store, crosswalkInput, FEED, T_WIRING);
@@ -386,7 +392,9 @@ test("C16: a suspended connection publishes nothing new and keeps its previously
   const held = await promoteFamily(store, T_SECOND, FEED);
   assert.equal(held.build.snapshot.derivedMembers?.[0]?.outcome, "HELD");
   assert.match(held.build.snapshot.derivedMembers?.[0]?.detail ?? "", /suspended for review \(ROUTE_GONE\)/);
+  const factReads = emptyMeetingFacts(t);
   const reader = await readMeetingsProjection({ store, now: T_SECOND, bypassCache: true });
+  assert.deepEqual(factReads, [first.build.snapshot.meetings.map(meeting => `meeting:${meeting.id}`).sort()]);
   assert.ok(reader.kind === "PROMOTED" && reader.value.meetings.some((m) => m.bodyId === BODY_ID), "the verified sitting is still what the reader sees");
 });
 

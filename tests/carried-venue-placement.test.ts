@@ -4,6 +4,7 @@ import test from "node:test";
 
 import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { installFactReader } from "../lib/facts/db.ts";
 import type { VenueEntry } from "../lib/meetings/venue-cache.ts";
 import { readMeetingsProjection, snapshotCounts, type MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
 import type { ChildRunReport } from "../lib/sources/composite/index.ts";
@@ -170,14 +171,18 @@ test("CARRIED-PLACE · (c) only the row's own division places it; unstated, onli
   assert.equal(read, 0, "the venue projection is read only for a row that needs it");
 });
 
-test("CARRIED-PLACE · (d) the promotion door accepts the placed carried row, and a reader is served its pin", async () => {
+test("CARRIED-PLACE · (d) the promotion door accepts the placed carried row, and a reader is served its pin", async (t) => {
   const store = new MemoryRoutineDataStore();
   const seeded = await promoteMeetingPartition(store, PARTITION, partitionSnapshot(LAST_LISTED, [SEPT_23]));
   assert.equal(seeded.outcome.candidate.state, "PROMOTED", seeded.outcome.candidate.failureDetail ?? "");
   const reconciled = reconcile(venues(CHOLLA));
   const accepted = await promoteMeetingPartition(store, PARTITION, partitionSnapshot(NEXT_READ, reconciled.meetings), [], reconciled.removalEvidence);
   assert.equal(accepted.outcome.candidate.state, "PROMOTED", accepted.outcome.candidate.failureDetail ?? "");
+  const factReads: string[][] = [];
+  installFactReader(async (_text, params) => { factReads.push([...(params?.[0] as readonly string[])].sort()); return []; });
+  t.after(() => installFactReader(undefined));
   const read = await readMeetingsProjection({ store, bypassCache: true, now: NEXT_READ });
+  assert.deepEqual(factReads, [[`meeting:${SEPT_23.id}`, `meeting:${SEPT_26.id}`].sort()]);
   assert.equal(read.kind, "PROMOTED");
   const served = (read as { value: MeetingsSnapshot }).value.meetings.find(({ id }) => id === SEPT_23.id)!;
   assert.deepEqual(served.location, { name: CHOLLA.name, address: CHOLLA.address, lat: CHOLLA.lat, lng: CHOLLA.lng });

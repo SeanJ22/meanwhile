@@ -34,7 +34,7 @@ export async function readHeldBallotInputs(
   const pagesAt = new Map<string, string>();
   for (let at = 0; at < subjects.length; at += SUBJECT_PAGE) {
     for (const row of await query(`SELECT w.value #>> '{subject}' AS subject, max(a.recorded_at) AS at
-      FROM cp_work_items w JOIN cp_log_artifacts a ON a.log_key = w.id
+      FROM cp_work_items_history w JOIN cp_log_artifacts a ON a.log_key = w.id
       WHERE w.value #>> '{subject}' = ANY($1::text[]) GROUP BY 1`, [subjects.slice(at, at + SUBJECT_PAGE)])) {
       const newest = iso(row.at);
       if (typeof row.subject === "string" && newest) pagesAt.set(row.subject, newest);

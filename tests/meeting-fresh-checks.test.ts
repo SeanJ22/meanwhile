@@ -3,7 +3,8 @@ import { createHash } from "node:crypto";
 import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import test from "node:test";
+import test, { afterEach, beforeEach } from "node:test";
+import { installFactReader } from "../lib/facts/db.ts";
 
 import {
   MEETING_PARTITION_CONTRACTS,
@@ -49,11 +50,22 @@ import {
 import type { Meeting } from "../lib/sources/types.ts";
 import { promoteMeetingPartitions } from "../scripts/ingest.ts";
 
-/*
- * A fresh check that finds nothing new writes an UNCHANGED_CONFIRMATION receipt instead of a new version. Readers
- * see the time of the last successful fresh check, new version or receipt; a failed request or a stale cache never
- * counts; receipts fire no failed-refresh disclosure; changed information publishes as before.
- */
+const factReads: (string | string[])[] = [];
+beforeEach(() => {
+  factReads.length = 0;
+  installFactReader(async (_text, params) => {
+    const ids = params?.[0];
+    if (typeof ids === "string") {
+      assert.equal(ids, "meeting:");
+      factReads.push(ids);
+      return [{ newest: 0, live: 0 }];
+    }
+    assert.ok(Array.isArray(ids) && ids.every(id => typeof id === "string" && id.startsWith("meeting:")));
+    factReads.push([...ids].sort());
+    return [];
+  });
+});
+afterEach(() => installFactReader(undefined));
 
 const ACQUIRED_URL = "https://www.pima.edu/about-pima/leadership-policies/governing-board/board-meetings/documents.html";
 const HOUR = 3_600_000;
@@ -140,6 +152,7 @@ async function composed(store: MemoryRoutineDataStore, now: string): Promise<Ext
   clearPromotedReadModelCache();
   const read = await readMeetingsProjection({ store, now, bypassCache: true });
   assert.equal(read.kind, "PROMOTED");
+  if (read.kind === "PROMOTED") assert.deepEqual(factReads.at(-1), read.value.meetings.flatMap(row => [row.id, ...row.mergedMeetingIds ?? []]).map(id => `meeting:${id}`).sort());
   return read as Extract<MeetingsProjectionReadResult, { kind: "PROMOTED" }>;
 }
 

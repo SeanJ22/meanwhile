@@ -24,7 +24,6 @@ import type {
 import type { FieldManualEntry, FieldManualQuery } from "../field-manual.ts";
 import type { FixMapRepository } from "../../method/fix-map.ts";
 import type { ResearchIntent, ResearchState } from "../scheduler/research-policy.ts";
-import type { SpendWindow } from "../spend-window.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type {
   PromotionPipelineRecord,
@@ -35,7 +34,6 @@ import type {
 import type { ActionReceipt } from "../gateway/contract.ts";
 import type { AgentJobRecord } from "../gateway/agent-job.ts";
 import type { MeetingsDiscoveryAttempt } from "../../hunt/meetings-site-discovery.ts";
-import type { AdminConfig } from "../gateway/admin-config.ts";
 import type { CandidateStore } from "../../method/candidate.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
 import type { LiveAuditLogRow } from "../live-audit-log.ts";
@@ -238,10 +236,7 @@ export interface AggregateRepository<T> {
   listWhere(path: readonly string[], value: string): Promise<readonly Persisted<T>[]>;
   /** `listWhere`, each value narrowed to the projection by the store before it leaves. */
   listWhereNarrowed(path: readonly string[], value: string, projection: RecordProjection): Promise<readonly Persisted<unknown>[]>;
-  /**
-   * Rows whose database-clock `changed_at` is at or after `since` (all when null), in id order, less any row `held`
-   * names at its current revision; `through` is the store's clock when the read began.
-   */
+
   listChangedSince?(since: string | null, held?: HeldSlots): Promise<ChangedRows<T>>;
 }
 
@@ -260,10 +255,7 @@ export interface FieldManualRepository extends AggregateRepository<FieldManualEn
   slice(query: FieldManualQuery): Promise<readonly Persisted<FieldManualEntry>[]>;
   /** Insert the rows that do not exist yet; the ids it inserted. A row already held is left as it is. */
   insertNew(entries: readonly FieldManualEntry[], now: string): Promise<ReadonlySet<string>>;
-  /**
-   * PB-01: remove the retired instruction rows and pointers in one transaction. Aggregates are never deleted
-   * (the table refuses it), so only the Postgres store has this path; a store without it has nothing to retire.
-   */
+
   retireInstructions?(): Promise<void>;
 }
 
@@ -418,9 +410,7 @@ export interface ArtifactRecord {
   /** True when the capture was interrupted: kept and labelled, never treated as complete. */
   readonly partial: boolean;
   readonly recordedAt: string;
-  /** A separately acquired candidate publication must retain the exact link
-   * on an approved campaign page that authorized walking this URL. Offsets
-   * address the captured UTF-16 HTML string, never a later reconstruction. */
+
   readonly publicationLink?: {
     readonly candidacyId: string;
     readonly approvalRecordId: string;
@@ -467,6 +457,7 @@ export interface ControlPlaneRepositories {
   readonly attempts: AggregateRepository<Attempt>;
   readonly obligations: AggregateRepository<StandingObligation>;
   readonly occurrences: AggregateRepository<FreshnessOccurrence>;
+  readonly dispatchState: import("./dispatch-state.ts").DispatchStateRepository;
   /** Keyed by OBLIGATION id: one debt row per obligation, so the row is the state. */
   readonly debts: AggregateRepository<FreshnessDebt>;
   /** Keyed by ROUTE TASK id: one lease slot per task, so the slot is the race. */
@@ -501,7 +492,7 @@ export interface ControlPlaneRepositories {
   readonly ownerDecisions: AppendOnlyRepository<OwnerDecisionIntent>;
   readonly researchState: AggregateRepository<ResearchState>;
   /** The running spend counter (`spend-window.ts`). */
-  readonly spendWindow: AggregateRepository<SpendWindow>;
+  readonly spend: import("../spend-window.ts").SpendRepository;
   /** Canonical live method-candidate lifecycle. Git holds historical evidence only. */
   readonly methodCandidates: AggregateRepository<CandidateStore>;
   readonly researchIntents: AppendOnlyRepository<ResearchIntent>;
@@ -519,7 +510,7 @@ export interface ControlPlaneRepositories {
   readonly discoveryAttempts: AppendOnlyRepository<MeetingsDiscoveryAttempt>;
   /** Live-audit results by UTC day, corrections, and pulls by work item (`live-audit-log.ts`). */
   readonly liveAudits: AppendOnlyRepository<LiveAuditLogRow>;
-  readonly adminConfig: AggregateRepository<AdminConfig>;
+  readonly adminConfig: import("./admin-config.ts").AdminConfigRepository;
   /** One aggregate per body, gap code and UTC day: `<body id>#<code>#<day>`. */
   readonly askGapObservations: AggregateRepository<AskGapObservation>;
   /** One aggregate per door. Written only through `door.save` and by derive steps that never overwrite a newer manual edit. */

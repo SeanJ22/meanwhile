@@ -3,6 +3,7 @@ import test from "node:test";
 import type { BallotSet } from "../lib/ballot/types.ts";
 import { publishOfficialBallotCandidacies, statePeopleCandidacyHolders } from "../lib/civic-data/official-candidacy-publication.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { installFactReader } from "../lib/facts/db.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import type { ManualSourceSetReceipt } from "../lib/civic-data/types.ts";
 import { officialIdsForCandidacy, resolvedCandidacyForOfficial } from "../lib/funding/campaign-money.ts";
@@ -91,7 +92,9 @@ test("state people used by a reader stay within that request", () => {
   });
 });
 
-test("published national ballot rows are written to the promoted registry bridge", async () => {
+test("published national ballot rows are written to the promoted registry bridge", async (context) => {
+  installFactReader(null);
+  context.after(() => installFactReader(undefined));
   const store = registryRuntimeStore(new MemoryRoutineDataStore());
   const ballots = [ballot("OH", "United States Senator", "Jon Husted"), ballot("MI", "U.S. Senator", "Elissa Slotkin")];
   const sourceReceipt: ManualSourceSetReceipt = { contractVersion: 1, reviewedAt: now, reviewedBy: "state-election-authority",

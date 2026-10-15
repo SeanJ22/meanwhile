@@ -5,16 +5,16 @@ owner: ballot-parity
 writer: the ballot-parity lane
 check: fold-conflict
 ready: no step ids unknown
-river: ab2f2cce6489dc307c3810b6cbb6ea71df8e42cb
-at: 2026-10-14T22:54:32Z
+river: d9107da58a23f9d38b60d300552af7e9d2509561
+at: 2026-10-15T04:44:31Z
 state: returned
-fix_subject: fix:e0b21df1
-fix: River · stream/ballot-parity — fold-conflict failed for ballot-parity: ballot-parity READY babd9bece (BL-20) conflicts with river ab2f2cce6489 by itself in lib/civic-data/election-field-publication.ts and lib/civic-data/manual-prior-authority.ts (fact-store, release 39, reworked the same code; the lane's last
+fix_subject: fix:7842580f
+fix: River · stream/ballot-parity — fold-conflict failed for ballot-parity: BL-20 (bda0cbec8) conflicts with river d9107da58 (BL-10 folded) in tests/ballot-reader-edge.test.ts, two hunks: the transformed-Arizona fixtures comment above houstonPolicyBallot, and MOVED_FAMILIES (river has BALLOT_CANDIDACY x2 plus CURAT
 
 ## Failure
 
 ```
-ballot-parity READY babd9bece (BL-20) conflicts with river ab2f2cce6489 by itself in lib/civic-data/election-field-publication.ts and lib/civic-data/manual-prior-authority.ts (fact-store, release 39, reworked the same code; the lane's last river merge predates it). Merge river into stream/ballot-parity, resolve against river's versions of those two files, and mark READY again.
+BL-20 (bda0cbec8) conflicts with river d9107da58 (BL-10 folded) in tests/ballot-reader-edge.test.ts, two hunks: the transformed-Arizona fixtures comment above houstonPolicyBallot, and MOVED_FAMILIES (river has BALLOT_CANDIDACY x2 plus CURATED_READER_RECORD x2; yours keeps one CURATED_READER_RECORD and adds a comment). Merge origin/river into stream/ballot-parity, settle that test so it matches what the code does after both changes, run the focused tests, push a new READY.
 ```
 
 ## Repair

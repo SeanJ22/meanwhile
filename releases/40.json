@@ -1,0 +1,23 @@
+{
+  "n": 40,
+  "branch": "release/40",
+  "river_sha": "d9107da58a23f9d38b60d300552af7e9d2509561",
+  "tested_sha": "d9107da58a23f9d38b60d300552af7e9d2509561",
+  "steps": [
+    "R3-GRANICUS",
+    "BL-10",
+    "PB-01"
+  ],
+  "lanes": [
+    "platform-granicus",
+    "ballot-national",
+    "playbooks-fix2"
+  ],
+  "integration_from": 213,
+  "integration_count": 216,
+  "pr": {
+    "number": 749,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/749"
+  },
+  "at": "2026-10-15T04:42:28Z"
+}

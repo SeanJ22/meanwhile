@@ -9,14 +9,19 @@ import { blankFingerprint, withAskedBlanks, packetCostEstimateUsd, packetFamilie
 import { SEARCH_PRICE_USD } from "./search.ts";
 
 type HeldReader = (divisionIds: readonly string[], now: string) => Promise<HeldPlaceCapture>;
-const readHeld: HeldReader = (ids, now) => readHeldPlaceCapture(ids, { now, bypassCache: true });
+const readHeld: HeldReader = (ids, now) => readHeldPlaceCapture(ids, { now });
+
+/** What Ask could not answer about these bodies. */
+export type AskedFor = (bodyIds: readonly string[]) => Promise<readonly AskedGap[]>;
+const NOTHING_ASKED: AskedFor = async () => [];
 
 /** Each government's packet as it stands now, recomputed from held data and what Ask could not answer. A government with nothing open has no blanks. */
-export async function readGovernmentPackets(governmentIds: readonly string[], now: string, asked: readonly AskedGap[] = [],
+export async function readGovernmentPackets(governmentIds: readonly string[], now: string, askedFor: AskedFor = NOTHING_ASKED,
   read: HeldReader = readHeld): Promise<ReadonlyMap<string, HuntPacket>> {
   const ids = [...new Set(governmentIds)];
   if (ids.length === 0) return new Map();
   const capture = await read(ids, now);
+  const asked = await askedFor(capture.subjects.filter(subject => subject.kind === "body").map(subject => subject.id));
   const labelOf = new Map(capture.subjects.filter(subject => subject.kind === "division").map(subject => [subject.id, subject.label] as const));
   const divisions = ids.map(id => ({ id, label: labelOf.get(id) ?? id }));
   const items = buildPlaceOwedList({ divisions, subjects: capture.subjects, held: capture.held, now });

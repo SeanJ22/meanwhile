@@ -674,7 +674,7 @@ export function hunterExecutor(deps: HunterExecutorDeps): DeclaredExecutor {
         : transportFailure !== null ? `Ended when the AI service stopped answering after ${turns} turn(s); every fact reported is in the Box.`
         : `Ended after ${turns} turn(s) without a summary; every fact reported is in the Box.`);
       const result: ScoutResult = {
-        instructions: { role, version: playbook.version, entryIds: playbook.entryIds, systemPrompt: prefix.system[0]!.text },
+        instructions: { role, version: playbook.version, entryIds: playbook.entryIds },
         researchRole: workerRole,
         formatVersion: 1,
         attemptId, obligationId: row.obligation.id, routeTaskId, workItemId, subjectId: row.obligation.subjectId,

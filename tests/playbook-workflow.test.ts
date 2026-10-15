@@ -36,8 +36,8 @@ nodeTest("PB-01 Settings save reaches the next real hunter request, its log, and
   assert.notEqual(text, initial.text);
   await savePlaybook({ type: "playbook.update", role: "HUNTER", text, expectedVersion: initial.version, why: "One word" }, "word-edit", fetchImpl);
   let sent: ModelRequest | undefined;
-  let loggedPrompt = "";
-  const executor = hunterExecutor({ role: "HUNTER", onResult: async result => { loggedPrompt = result.instructions!.systemPrompt; }, now: () => at, playbookFor: role => readRolePlaybook(repos, role),
+  let logged: { version: string; entryIds: readonly string[] } | undefined;
+  const executor = hunterExecutor({ role: "HUNTER", onResult: async result => { logged = result.instructions; }, now: () => at, playbookFor: role => readRolePlaybook(repos, role),
     transport: async request => { sent = request; throw new Error("Captured request without paid inference"); },
     toolkitFor: () => ({ specs: [], vaultedArtifactIds: new Set(), reported: [], requestCount: 0, bytesFetched: 0, toolCalls: 0,
       call: async () => { throw new Error("No new source needed to capture prompt"); } }),
@@ -48,7 +48,8 @@ nodeTest("PB-01 Settings save reaches the next real hunter request, its log, and
   await executor.run({ obligation: scheduled, routeTaskId: "pb01-task", workItemId: "pb01-work", attemptId: "pb01-attempt", executor: "BOUNDED_MODEL_WORKER",
     bound: { maxAttempts: 1, maxWallMs: 1000, maxCostUnits: 1 }, holder: "fixture" });
   assert.match(sent!.system[0].text, /Copy values verbatim/);
-  assert.equal(loggedPrompt, sent!.system[0].text);
+  const saved = await readRolePlaybook(repos, "HUNTER");
+  assert.deepEqual({ version: logged!.version, entryIds: logged!.entryIds }, { version: saved.version, entryIds: saved.entryIds }, "the log names the instruction version sent, not its text");
   const row = await repos.fieldManual.mustRead(fieldManualEntryId("role-playbook", "HUNTER"));
   const view = playbookEditView([row.value], "HUNTER");
   assert.equal(view.history[0].before, initial.text);

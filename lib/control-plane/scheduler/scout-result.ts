@@ -141,7 +141,7 @@ export interface ScoutIssue {
 
 /** One job's record, as persisted. */
 export interface ScoutResult {
-  readonly instructions?: { readonly role: "HUNTER" | "DETECTIVE"; readonly version: string; readonly entryIds: readonly string[]; readonly systemPrompt: string };
+  readonly instructions?: { readonly role: "HUNTER" | "DETECTIVE"; readonly version: string; readonly entryIds: readonly string[] };
   readonly researchRole?: "SCOUT" | "DETECTIVE";
   readonly formatVersion: 1;
   readonly attemptId: string;

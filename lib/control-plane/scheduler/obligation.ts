@@ -18,6 +18,8 @@ export const CADENCE_SOURCES = [
   "DECLARED_CYCLE",
   /** A scout argued this record absent; the next reading is owed when the absence expires. */
   "ARGUED_ABSENT",
+  /** A hunt packet had nothing new; an order, a shut door or a new blank wakes it sooner. */
+  "WAITING_FOR_CHANGE",
 ] as const;
 export type CadenceSource = (typeof CADENCE_SOURCES)[number];
 
@@ -66,6 +68,8 @@ export interface FreshnessObligation {
   readonly lastWorkedAt: string | null;
   /** A recorded, expiring absence; the obligation is not re-walked until this time. Runtime-owned. */
   readonly absentUntil?: string | null;
+  /** A hunt packet with nothing new to send waits until `until`; work since `since` is what wakes it sooner. Runtime-owned. */
+  readonly waiting?: { readonly since: string; readonly until: string } | null;
   /** What would reopen a recorded absence before it expires. Cleared with `absentUntil`. */
   readonly absenceUnlock?: import("./absence.ts").AbsenceUnlock | null;
   /** The last time a new capability cleared this obligation's absence early, and what it was. */
@@ -249,6 +253,12 @@ export function scheduleObligation(
         "(one measurement on one date; absences expire), so the next reading " +
         "is owed then rather than on the ordinary cadence, and the proven negative is not re-walked meanwhile",
     };
+  }
+
+  const waitingUntilMs = obligation.waiting ? Date.parse(obligation.waiting.until) : NaN;
+  if (Number.isFinite(waitingUntilMs) && waitingUntilMs > nowMs) {
+    return { obligation, nextDueAt: obligation.waiting!.until, cadenceHours, cadenceSource: "WAITING_FOR_CHANGE",
+      basis: `nothing changed for this packet since ${obligation.waiting!.since}; it is looked at again by ${obligation.waiting!.until}, or sooner when an order, a shut door or a new blank arrives` };
   }
 
   /* From the last work, not from now, so a row examined often is still due. */

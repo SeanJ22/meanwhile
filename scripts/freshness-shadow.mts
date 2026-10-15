@@ -122,7 +122,7 @@ import { missionPartCounts, missionPartsOf } from "../lib/control-plane/expansio
 import { HUNT_PACKET_NAMESPACE } from "../lib/hunt/packet.ts";
 import { divisionsOfPlace } from "../lib/hunt/packet-read.ts";
 import { readPlaceWords } from "../lib/hunt/place-words.ts";
-import { duePackets } from "../lib/hunt/runtime.ts";
+import { duePackets, packetWoken, readPacketSignals, type PacketSignals } from "../lib/hunt/runtime.ts";
 import { makeHuntSearch } from "../lib/hunt/search.ts";
 import { EXA_AGENT_LANE_SETTING } from "../lib/hunt/settings.ts";
 import { preloadAzOperationalReferenceBundle, preloadOperationalReferenceBundle } from "../lib/civic-data/operational-references.ts";
@@ -788,6 +788,23 @@ if (publicationAnchors.anchored.length) {
   console.log(`  verified standing publications advanced ${publicationAnchors.anchored.length} source clock(s)`);
 }
 
+/* Packets read their signals once a cycle; a waiting packet wakes only on an order, a shut door or a new blank. */
+const packetObligations = sync.all.filter(o => o.active && o.id.startsWith(HUNT_PACKET_NAMESPACE));
+let packetSignals: PacketSignals | null = null;
+const wokenPackets = new Map<string, string>();
+if (packetObligations.length > 0) {
+  try {
+    const since = packetObligations.flatMap(o => o.waiting && Date.parse(o.waiting.until) > nowMs ? [o.waiting.since] : []).sort()[0] ?? null;
+    packetSignals = await readPacketSignals(repos, NOW, since);
+    for (const o of packetObligations) {
+      const why = packetWoken(o, packetSignals);
+      if (why) wokenPackets.set(o.id, why);
+    }
+  } catch (error) {
+    runtimeConditions.push(`hunt packet signals could not be read (${error instanceof Error ? error.message : String(error)}); no packet is sent this round`);
+  }
+}
+
 const nextDueWrites: string[] = [];
 for (const o of sync.all) {
   const row = scheduleObligation(o, nowMs);
@@ -797,7 +814,7 @@ for (const o of sync.all) {
     nextDueWrites.push(o.id);
   }
   if (backedOff.has(o.id)) continue;
-  const isDue = Date.parse(row.nextDueAt) <= nowMs || retryNow.has(o.id);
+  const isDue = Date.parse(row.nextDueAt) <= nowMs || retryNow.has(o.id) || wokenPackets.has(o.id);
   if (!isDue) continue;
   dueThisCycle.push({ obligation: o, nextDueAt: row.nextDueAt, cadenceHours: row.cadenceHours });
 }
@@ -827,10 +844,24 @@ if (continuedStandingLineages.length) console.log(`  standing source periods con
   const packetRows = dueThisCycle.filter(row => row.obligation.id.startsWith(HUNT_PACKET_NAMESPACE));
   if (packetRows.length > 0) {
     try {
-      const due = await duePackets(repos, packetRows.map(row => ({ governmentId: row.obligation.subjectId, assignments: row.obligation.assignments })), NOW);
+      if (packetSignals === null) throw new Error("its signals were not read");
+      const due = await duePackets(repos, packetRows.map(row => ({ governmentId: row.obligation.subjectId, assignments: row.obligation.assignments })), NOW, packetSignals);
       const waiting = packetRows.filter(row => due.get(row.obligation.subjectId)?.due !== true);
       for (const row of waiting) dueThisCycle.splice(dueThisCycle.indexOf(row), 1);
-      console.log(`  hunt packets: ${packetRows.length - waiting.length} of ${packetRows.length} due to be sent` +
+      let held = 0;
+      for (const row of waiting) {
+        const until = due.get(row.obligation.subjectId)?.waitUntil;
+        if (!until) continue;
+        try {
+          const current = await repos.obligations.mustRead(row.obligation.id);
+          await repos.obligations.compareAndSet(current.id, current.revision, { ...current.value, waiting: { since: NOW, until }, nextDueAt: until, updatedAt: NOW }, NOW);
+          held++;
+        } catch (error) {
+          runtimeConditions.push(`hunt packet ${row.obligation.subjectId} could not be set to wait (${error instanceof Error ? error.message : String(error)}); it is looked at again next round`);
+        }
+      }
+      console.log(`  hunt packets: ${packetRows.length - waiting.length} of ${packetRows.length} due to be sent; ${held} waiting for an order, a shut door or a new blank` +
+        (wokenPackets.size ? `; woken: ${[...wokenPackets].slice(0, 3).map(([id, why]) => `${id} (${why})`).join("; ")}${wokenPackets.size > 3 ? " …" : ""}` : "") +
         (waiting.length ? `; waiting: ${waiting.slice(0, 3).map(row => `${row.obligation.subjectId} (${due.get(row.obligation.subjectId)?.why ?? "unread"})`).join("; ")}${waiting.length > 3 ? " …" : ""}` : ""));
     } catch (error) {
       runtimeConditions.push(`hunt packets could not be read (${error instanceof Error ? error.message : String(error)}); none is sent this round`);

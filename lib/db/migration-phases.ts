@@ -378,6 +378,7 @@ export const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
   },
   "0034_reader_events": { phase: "expand", why: "New aggregate and anonymous membership tables; existing capture stores are unaffected." },
   "0035_r1_fact_store": { phase: "expand", why: "Creates the fact store tables. Nothing reads or writes them before the build that ships with it." },
+  "H-01_place_rows": { phase: "expand", why: "Creates the per-division rows of promoted payloads and their change log. Nothing reads or writes them before the build that ships with it." },
   "0033_feedback_context": {
     phase: "expand",
     why: "Adds nullable report context columns. Older feedback writers keep working and existing reports retain unknown context.",

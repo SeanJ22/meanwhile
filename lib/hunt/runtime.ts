@@ -1,8 +1,5 @@
-/**
- * How a packet job runs inside the standing runtime: its packet recomputed when it starts, its brief, the tools bound
- * to its government, each reported fact written to the Box, each search priced, and what worked or failed saved to
- * the field manual for the next job.
- */
+/** A packet job inside the standing runtime: its packet read once, its brief and tools, each fact to the Box,
+ * each search priced, and what worked or failed saved to the field manual. */
 import { indexReportedFinding } from "../control-plane/box.ts";
 import { readSetting } from "../control-plane/settings.ts";
 import { recordCost } from "../control-plane/repository/coordinator.ts";
@@ -13,43 +10,58 @@ import { hunterExecutor, type ModelTransport } from "../control-plane/scheduler/
 import { buildScoutToolkit } from "../control-plane/scheduler/scout-tools.ts";
 import type { DeclaredExecutor } from "../control-plane/scheduler/dispatch.ts";
 import type { ScoutResult } from "../control-plane/scheduler/scout-result.ts";
-import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
+import type { ControlPlaneRepositories, RecordProjection } from "../control-plane/repository/types.ts";
+import type { StandingObligation } from "../control-plane/scheduler/durable.ts";
 import type { RouteTask } from "../control-plane/route-task.ts";
 import type { WorkItem } from "../control-plane/work-item.ts";
 import { DISCOVERY_SEARCH_ROLE, type CostEntry } from "../control-plane/cost.ts";
 import { readRolePlaybook } from "../control-plane/playbooks.ts";
 import { ADMIN_CONFIG_ID, isAdminConfig } from "../control-plane/gateway/admin-config.ts";
 import { ABSENCE_MAX_HOLD_DEFAULT_DAYS, ABSENCE_MAX_HOLD_SETTING } from "../control-plane/scheduler/absence-hold.ts";
-import { listDoors } from "../doors/registry.ts";
+import { isDoorRecord, listDoors, type DoorRecord } from "../doors/registry.ts";
 import { durableResearchTools, type ResearchRuntimeTools } from "../control-plane/workers/durable-research-tools.ts";
 import type { ScoutToolContext } from "../control-plane/scheduler/scout-contract.ts";
 import { huntBrief, type HuntRole } from "./brief.ts";
 import { blankDigest, packetDue, triedSteps, type LastPacketJob, type PacketDue, type ShutDoorNote } from "./packet-due.ts";
 import { blankFingerprint, HUNT_PACKET_ROUTE_ID, huntPacketObligationId, reportableSubjects, type HuntPacket } from "./packet.ts";
-import { readGovernmentPackets } from "./packet-read.ts";
+import { readGovernmentPackets, type AskedFor } from "./packet-read.ts";
+import { readPlaceChangesSince } from "../civic-data/held-place-slices.ts";
 import { stateOfDivision } from "./packet-plan.ts";
 import type { HuntSearch, SearchCharge } from "./search.ts";
 import { foldAskGapObservations, readAskGapObservations, type AskedGap } from "../control-plane/ask-gap-observations.ts";
 
 const NOTE_LIMIT = 12;
 
-/** The newest job on a packet, as the due rule and a detective's brief read it. */
-async function lastPacketJob(repos: Pick<ControlPlaneRepositories, "scoutResults">, governmentId: string): Promise<ScoutResult | null> {
-  return (await repos.scoutResults.readRecent(huntPacketObligationId(governmentId), 1))[0] ?? null;
+type LastJob = Partial<Pick<ScoutResult, "recordedAt" | "blankFingerprint" | "blankDigests" | "rungs" | "unfilled">>;
+const DUE_FIELDS: RecordProjection = { recordedAt: true, blankFingerprint: true, blankDigests: true };
+const DETECTIVE_FIELDS: RecordProjection = { ...DUE_FIELDS, rungs: true, unfilled: true };
+
+/** Each packet's newest job, narrowed to the fields asked for, in one batched read. */
+async function lastJobs(repos: Pick<ControlPlaneRepositories, "scoutResults">, governmentIds: readonly string[], fields: RecordProjection): Promise<ReadonlyMap<string, LastJob>> {
+  const latest = await repos.scoutResults.readLatest(governmentIds.map(huntPacketObligationId), fields);
+  return new Map(governmentIds.flatMap(id => { const job = latest.get(huntPacketObligationId(id)); return job ? [[id, job as LastJob] as const] : []; }));
 }
 
-const lastJobOf = (result: ScoutResult | null): LastPacketJob | null =>
-  result?.blankFingerprint ? { recordedAt: result.recordedAt, blankFingerprint: result.blankFingerprint, blankDigests: result.blankDigests ?? [] } : null;
+const lastJobOf = (result: LastJob | undefined): LastPacketJob | null =>
+  result?.blankFingerprint && result.recordedAt ? { recordedAt: result.recordedAt, blankFingerprint: result.blankFingerprint, blankDigests: result.blankDigests ?? [] } : null;
 
 /** When the newest order reached a packet; null when none is recorded. */
 const orderedAtOf = (assignments: readonly { readonly at: string }[] | undefined): string | null =>
   (assignments ?? []).reduce<string | null>((newest, mark) => newest === null || mark.at > newest ? mark.at : newest, null);
 
-/** A government's shut doors, with what each door's record says broke. */
-export async function shutDoorsOf(repos: Pick<ControlPlaneRepositories, "doors">, governmentId: string): Promise<ShutDoorNote[]> {
-  const { doors } = await listDoors(repos.doors);
-  return doors.filter(door => door.status === "SHUT" && door.ocdId === governmentId).map(door => ({ doorId: door.doorId, shutSince: door.shutSince,
-    evidence: `${door.shutReason ?? "no reason was recorded"}; it reads ${door.hosts.join(", ") || "no recorded host"}` }));
+const shutNote = (door: DoorRecord): ShutDoorNote => ({ doorId: door.doorId, shutSince: door.shutSince,
+  evidence: `${door.shutReason ?? "no reason was recorded"}; it reads ${door.hosts.join(", ") || "no recorded host"}` });
+
+/** Every government's shut doors, from one read of the doors. */
+async function shutDoorsByGovernment(repos: Pick<ControlPlaneRepositories, "doors">): Promise<ReadonlyMap<string, ShutDoorNote[]>> {
+  const out = new Map<string, ShutDoorNote[]>();
+  for (const door of (await listDoors(repos.doors)).doors) if (door.status === "SHUT" && door.ocdId) out.set(door.ocdId, [...out.get(door.ocdId) ?? [], shutNote(door)]);
+  return out;
+}
+
+/** One government's shut doors, read by its division. */
+async function shutDoorsOf(repos: Pick<ControlPlaneRepositories, "doors">, governmentId: string): Promise<ShutDoorNote[]> {
+  return (await repos.doors.listWhere(["ocdId"], governmentId)).map(row => row.value).filter(isDoorRecord).filter(door => door.status === "SHUT").map(shutNote);
 }
 
 /** The longest a dead end waits while coverage is expanding, from Admin. */
@@ -93,25 +105,59 @@ export function huntLearnings(result: ScoutResult, packet: Pick<HuntPacket, "gov
   ];
 }
 
-/** The questions Ask could not answer in its observation window. */
-export async function readAskedGaps(repos: Pick<ControlPlaneRepositories, "askGapObservations">, now: string): Promise<readonly AskedGap[]> {
+/** The questions Ask could not answer in its observation window, read once for a whole cycle. */
+async function readAskedGaps(repos: Pick<ControlPlaneRepositories, "askGapObservations">, now: string): Promise<readonly AskedGap[]> {
   const reading = await readAskGapObservations(repos.askGapObservations);
   if ("unreadable" in reading) throw new Error(`the questions Ask could not answer could not be read (${reading.unreadable})`);
   return [...foldAskGapObservations(reading.rows, now).asked.values()];
 }
 
-/** Whether each government's packet is sent this round: its blanks read now, its last job, its shut doors and newest order. */
-export async function duePackets(repos: Pick<ControlPlaneRepositories, "scoutResults" | "doors" | "adminConfig" | "askGapObservations">,
-  rows: readonly { readonly governmentId: string; readonly assignments?: readonly { readonly at: string }[] }[], now: string,
-  read: typeof readGovernmentPackets = readGovernmentPackets): Promise<Map<string, PacketDue>> {
-  const packets = await read(rows.map(row => row.governmentId), now, await readAskedGaps(repos, now));
-  const maxWaitMs = await deadEndWaitMs(repos);
-  const out = new Map<string, PacketDue>();
+/** What Ask could not answer about one packet's bodies, read by each body. */
+export function askedAbout(repos: Pick<ControlPlaneRepositories, "askGapObservations">, now: () => string): AskedFor {
+  return async bodyIds => [...foldAskGapObservations((await Promise.all(bodyIds.map(id => repos.askGapObservations.listWhere(["bodyId"], id))))
+    .flat().map(row => row.value), now()).asked.values()];
+}
+
+/** What a cycle reads once for every packet: shut doors, Ask's gaps, places whose held data changed, and the dead-end wait. */
+export interface PacketSignals {
+  readonly doors: ReadonlyMap<string, readonly ShutDoorNote[]>;
+  readonly asked: readonly AskedGap[];
+  readonly changedAt: ReadonlyMap<string, string>;
+  readonly maxWaitMs: number;
+}
+
+export async function readPacketSignals(repos: Pick<ControlPlaneRepositories, "doors" | "askGapObservations" | "adminConfig">, now: string,
+  changesSince: string | null, readChanges: (since: string) => Promise<ReadonlyMap<string, string>> = readPlaceChangesSince): Promise<PacketSignals> {
+  const [doors, asked, changedAt, maxWaitMs] = await Promise.all([shutDoorsByGovernment(repos), readAskedGaps(repos, now),
+    changesSince === null ? new Map<string, string>() : readChanges(changesSince), deadEndWaitMs(repos)]);
+  return { doors, asked, changedAt, maxWaitMs };
+}
+
+/** Why a waiting packet is looked at again before its time: an order, a shut door, a question or held data newer than its wait. */
+export function packetWoken(row: Pick<StandingObligation, "subjectId" | "waiting" | "assignments">, signals: PacketSignals): string | null {
+  const since = row.waiting?.since;
+  if (!since) return null;
+  if ((orderedAtOf(row.assignments) ?? "") > since) return "a new order";
+  if ((signals.doors.get(row.subjectId) ?? []).some(door => (door.shutSince ?? "") > since)) return "a door shut";
+  if (signals.asked.some(gap => gap.bodyId.split("#")[0] === row.subjectId && gap.lastDay > since.slice(0, 10))) return "a question Ask could not answer";
+  if ((signals.changedAt.get(row.subjectId) ?? "") > since) return "its held data changed";
+  return null;
+}
+
+/** Whether each government's packet is sent this round; one that is not waits until its dead end's limit unless something wakes it. */
+export async function duePackets(repos: Pick<ControlPlaneRepositories, "scoutResults">,
+  rows: readonly { readonly governmentId: string; readonly assignments?: readonly { readonly at: string }[] }[], now: string, signals: PacketSignals,
+  read: typeof readGovernmentPackets = readGovernmentPackets): Promise<Map<string, PacketDue & { readonly waitUntil?: string }>> {
+  const ids = rows.map(row => row.governmentId);
+  const [packets, last] = await Promise.all([read(ids, now, async () => signals.asked), lastJobs(repos, ids, DUE_FIELDS)]);
+  const out = new Map<string, PacketDue & { readonly waitUntil?: string }>();
   for (const row of rows) {
     const packet = packets.get(row.governmentId);
     if (packet === undefined) { out.set(row.governmentId, { due: false, why: "its owed list could not be read" }); continue; }
-    const [last, doors] = await Promise.all([lastPacketJob(repos, row.governmentId), shutDoorsOf(repos, row.governmentId)]);
-    out.set(row.governmentId, packetDue({ packet, last: lastJobOf(last), orderedAt: orderedAtOf(row.assignments), shutDoors: doors, now, maxWaitMs }));
+    const job = lastJobOf(last.get(row.governmentId));
+    const due = packetDue({ packet, last: job, orderedAt: orderedAtOf(row.assignments), shutDoors: signals.doors.get(row.governmentId) ?? [], now, maxWaitMs: signals.maxWaitMs });
+    out.set(row.governmentId, due.due ? due
+      : { ...due, waitUntil: new Date(Date.parse(job?.recordedAt ?? now) + signals.maxWaitMs).toISOString() });
   }
   return out;
 }
@@ -133,14 +179,14 @@ export interface HunterRuntimeInput {
 /** The executor for one packet job: hunter or detective, decided from the packet's last job and its government's doors. */
 export async function hunterFor(input: HunterRuntimeInput, item: WorkItem, task: RouteTask): Promise<DeclaredExecutor> {
   const governmentId = item.subject;
-  const last = await lastPacketJob(input.repos, governmentId);
-  const doors = await shutDoorsOf(input.repos, governmentId).catch(() => [] as ShutDoorNote[]);
-  const maxWaitMs = await deadEndWaitMs(input.repos);
   const read = input.readPackets ?? readGovernmentPackets;
-  const packetNow = async (): Promise<HuntPacket | null> =>
-    (await read([governmentId], input.now(), await readAskedGaps(input.repos, input.now()))).get(governmentId) ?? null;
-  const opening = await packetNow();
-  const owner = (await input.repos.obligations.read(huntPacketObligationId(governmentId)))?.value;
+  const [last, doors, maxWaitMs, opening, owner] = await Promise.all([
+    lastJobs(input.repos, [governmentId], DETECTIVE_FIELDS).then(jobs => jobs.get(governmentId)),
+    shutDoorsOf(input.repos, governmentId).catch(() => [] as ShutDoorNote[]),
+    deadEndWaitMs(input.repos),
+    read([governmentId], input.now(), askedAbout(input.repos, input.now)).then(packets => packets.get(governmentId) ?? null),
+    input.repos.obligations.read(huntPacketObligationId(governmentId)).then(row => row?.value),
+  ]);
   const assignmentKeys = [...new Set((owner?.assignments ?? []).map(mark => mark.assignmentKey))];
   const due = opening === null ? null : packetDue({ packet: opening, last: lastJobOf(last), orderedAt: orderedAtOf(owner?.assignments), shutDoors: doors, now: input.now(), maxWaitMs });
   const role: HuntRole = due?.due ? due.role : last ? "DETECTIVE" : "HUNTER";
@@ -154,7 +200,7 @@ export async function hunterFor(input: HunterRuntimeInput, item: WorkItem, task:
     now: input.now,
     toolkitFor: ctx => buildScoutToolkit({ ...ctx, root: input.root, ...(input.environment ? { sourceApi: { env: input.environment } } : {}) }),
     contextFor: async (row, job) => {
-      packet = await packetNow();
+      packet = opening;
       if (packet === null || packet.blanks.length === 0) return null;
       const manual = await readFieldManual(input.repos, scoutFieldManualQuery({ subjectId: governmentId, divisions: [governmentId] })).catch(() => null);
       const notes = manual === null ? [] : scoutFieldManualProjection(manual, { subjectId: governmentId, divisions: [governmentId],

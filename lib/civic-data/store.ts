@@ -8,6 +8,7 @@ import { getDb } from "../db/index.ts";
 import { runtimeCivicReadCache } from "../db/civic-read-cache.ts";
 import { civicDataCandidateEvents, civicDataCandidates, civicDataPromotions, civicDataReaderProjections, civicDataPayloadParts } from "../db/schema.ts";
 import { CivicPayloadParts } from "./payload-parts.ts";
+import { PLACE_ROW_CLASSES, placeRowsOf, placeRowStatements, UNBUILT_PLACE_ROWS_SQL, type PlaceRowStatement } from "./place-rows.ts";
 import {
   type CandidateEvent,
   type CandidateState,
@@ -1546,6 +1547,11 @@ function postgresCandidateEventRowToEvent(row: PostgresCandidateEventRow): Candi
   };
 }
 
+/** A numbered-parameter statement as Drizzle SQL, so the same text runs in a store batch. */
+function rawStatement(statement: PlaceRowStatement) {
+  return sql.join(statement.text.split(/\$(\d+)/).map((chunk, i) => i % 2 ? sql`${statement.params[Number(chunk) - 1]}` : sql.raw(chunk)));
+}
+
 export class PostgresRoutineDataStore implements RoutineDataStore {
   private readonly db = getDb();
   private readonly readCache = runtimeCivicReadCache();
@@ -2097,11 +2103,14 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       promotedVersionId: candidateId,
       lastKnownGoodVersionId: candidateId,
     }).where(sql`${eligibility} and ${pointerOwnsCandidate}`).returning({ candidateId: civicDataCandidates.id });
+    const placeRows = PLACE_ROW_CLASSES.has(candidate.recordClass) ? placeRowStatements({ recordClass: candidate.recordClass, scope: candidate.scope,
+      versionId: candidateId, replaces: prior?.currentVersionId ?? null, set: placeRowsOf(candidate.recordClass, candidate.scope, candidate.readModel), changedAt: at }) : [];
     const [, promotedRows, , updatedRows] = await this.db.batch([
       this.candidateEventLock(candidateId),
       promotionWrite,
       eventWrite,
       candidateWrite,
+      ...placeRows.map(statement => this.db.execute(rawStatement(statement))),
     ]);
     if (!promotedRows[0] || !updatedRows[0]) {
       const [actual] = await this.db.select({ versionId: civicDataPromotions.currentVersionId })
@@ -2118,6 +2127,24 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       payload: candidate.readModel,
       receipt: promotedRows[0].validationReceipt as ValidationReceipt,
     };
+  }
+
+  /** Builds the per-division rows of any current pointer that has none, dated by its own promotion. */
+  async buildPlaceRows(): Promise<number> {
+    this.assertMutationAuthority();
+    const pending = (await this.db.execute(rawStatement({ text: UNBUILT_PLACE_ROWS_SQL, params: [JSON.stringify([...PLACE_ROW_CLASSES])] }))).rows as
+      { record_class: string; scope: string; current_version_id: string; promoted_at: string }[];
+    for (const pointer of pending) {
+      const [row] = await this.db.select({ payload: civicDataPromotions.payload }).from(civicDataPromotions)
+        .where(and(eq(civicDataPromotions.recordClass, pointer.record_class), eq(civicDataPromotions.scope, pointer.scope),
+          eq(civicDataPromotions.currentVersionId, pointer.current_version_id))).limit(1);
+      if (!row) continue;
+      const set = placeRowsOf(pointer.record_class, pointer.scope, await this.payloadParts.load(row.payload));
+      const [first, ...rest] = placeRowStatements({ recordClass: pointer.record_class, scope: pointer.scope, versionId: pointer.current_version_id,
+        replaces: null, set, changedAt: new Date(pointer.promoted_at).toISOString() }).map(statement => this.db.execute(rawStatement(statement)));
+      await this.db.batch([first!, ...rest]);
+    }
+    return pending.length;
   }
 
   async events(candidateId: string): Promise<readonly CandidateEvent[]> {

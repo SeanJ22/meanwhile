@@ -87,6 +87,7 @@ const RUNTIME_OWNED = [
   "absentUntil",
   "absenceUnlock",
   "absenceReopened",
+  "waiting",
   /* The owner's dispatch materialized this row; a provider re-emitting it must not erase the mark. */
   "materializedBy",
   /* The owner's Sends that reached this row; no provider emits them, and a registration pass must never drop them. */
@@ -152,6 +153,7 @@ export async function syncObligations(
       lastWorkedAt: held.lastWorkedAt,
       absentUntil: held.absentUntil,
       ...(held.absenceUnlock !== undefined ? { absenceUnlock: held.absenceUnlock } : {}),
+      ...(held.waiting !== undefined ? { waiting: held.waiting } : {}),
       ...(held.materializedBy !== undefined ? { materializedBy: held.materializedBy } : {}),
       ...(held.assignments !== undefined ? { assignments: held.assignments } : {}),
       ...(held.materializedFrom !== undefined ? { materializedFrom: held.materializedFrom } : {}),
@@ -878,7 +880,7 @@ export async function closeOccurrence(
       openOccurrenceId: null,
       /* A productive disposition also clears any standing absence. */
       ...(input.disposition !== null
-        ? { lastWorkedAt: input.workedAt ?? input.now, absentUntil: null, absenceUnlock: null }
+        ? { lastWorkedAt: input.workedAt ?? input.now, absentUntil: null, absenceUnlock: null, waiting: null }
         : {}),
       updatedAt: input.now,
     },

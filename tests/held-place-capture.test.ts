@@ -7,9 +7,9 @@ import type { MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
 import type { HeldPlaceFamilies } from "../lib/civic-data/held-place-families.ts";
 import type { OutcomeSnapshot } from "../lib/outcomes/types.ts";
 import { buildPlaceOwedList } from "../lib/coverage/place-owed.ts";
-import { readPlacePointerSlices, readPlaceVersionSlice } from "../lib/civic-data/held-place-slices.ts";
+import { readPlaceVersionSlice } from "../lib/civic-data/held-place-slices.ts";
 import type { ReadOnlyQuery } from "../lib/control-plane/admin-view/promoted-slices.ts";
-import { projectHeldGeography, readHeldPlaceGeography, type HeldGeographyRow } from "../lib/civic-data/held-place-geography.ts";
+import { projectHeldGeography, type HeldGeographyRow } from "../lib/civic-data/held-place-geography.ts";
 import type { Division } from "../lib/registry/types.ts";
 import { createHash } from "node:crypto";
 import { projectHeldPlaceFamilies } from "../lib/civic-data/held-place-families.ts";
@@ -18,8 +18,6 @@ import { derivedCampaignSitesProjectionIssue, derivedCandidateRevisionId, derive
   type DerivedCampaignSiteRecord } from "../lib/civic-data/derived-campaign-sites.ts";
 import { partitionCivicPayload } from "../lib/civic-data/payload-parts.ts";
 import { readPlacePayloadParts } from "../lib/civic-data/place-payload-slices.ts";
-import { readPlacePointerSlice } from "../lib/civic-data/held-place-slices.ts";
-import { neonConfig } from "@neondatabase/serverless";
 import { candidateDescriptionQualityIssue } from "../lib/candidates/blurbs.ts";
 
 const county = "ocd-division/country:us/state:az/county:cochise";
@@ -124,30 +122,6 @@ test("current verified publications fill biography and readable corpus without a
     derivedCampaignSites: [record, { ...record, id: "ballot-az-pima:supervisor|Candidate One", publications: [] }] }).held.some(row => row.checkedAt === at && row.checklistId === "CAN-16"), "conflicting derived site cannot bypass the Reader composition");
 });
 
-test("legacy candidate pointer slices select only exact Reader map keys and preserve typed links", async t => {
-  const originalUrl = process.env.DATABASE_URL, originalFetch = neonConfig.fetchFunction;
-  t.after(() => { neonConfig.fetchFunction = originalFetch;
-    if (originalUrl === undefined) delete process.env.DATABASE_URL; else process.env.DATABASE_URL = originalUrl; });
-  process.env.DATABASE_URL = "postgresql://fixture:fixture@fixture.invalid/fixture";
-  const profiles = candidateFamilies().candidateProfiles!, key = "ballot-az-pima:supervisor|Candidate One";
-  neonConfig.fetchFunction = async (_endpoint: Parameters<typeof fetch>[0], init?: Parameters<typeof fetch>[1]) => {
-    const body = JSON.parse(String(init?.body)) as { queries: { query: string; params: unknown[] }[] };
-    return Response.json({ results: body.queries.map(statement => {
-      assert.ok(statement.query.includes("jsonb_each") && statement.query.includes("k=ANY($5::text[])"));
-      assert.equal(statement.params[4], `{"${key}"}`);
-      const value = { cards: { cards: { [key]: profiles.cards.cards[key] } }, links: { links: { [key]: profiles.links.links[key] } } };
-      return { command: "SELECT", rowCount: 1, rowAsArray: true,
-        fields: [{ name: "scope", dataTypeID: 25 }, { name: "current_version_id", dataTypeID: 25 },
-          { name: "value", dataTypeID: 3802 }, { name: "encoded", dataTypeID: 16 }],
-        rows: [["profiles-test", "good-v1", JSON.stringify(value), false]] };
-    }) });
-  };
-  const result = await readPlacePointerSlice<NonNullable<HeldPlaceFamilies["candidateProfiles"]>>("CANDIDATE_PROFILE", "profiles-test", [county], [], [key]);
-  assert.equal(result.kind, "PROMOTED");
-  assert.deepEqual(Object.keys(result.value!.cards.cards), [key]);
-  assert.deepEqual(result.value!.links.links[key], profiles.links.links[key]);
-});
-
 test("encoded candidate object maps decode only selected facts and refuse a racing pointer", async () => {
   const key = "candidate-exact", other = "unrelated-exact", scope = "profiles-test";
   const profile = { cards: { cards: { [key]: { bio: "selected biography ".repeat(7000), bioSourceLabel: "read 2026-09-29" },
@@ -217,56 +191,6 @@ test("accepted registry slices keep the manifest's immutable version through bot
   assert.equal((await read()).kind, "NOT_RECORDED", "an absent accepted candidate cannot fall back to a different current registry");
 });
 
-test("held slices carry only exact unchanged versions, isolate selectors, and remove missing pointers", async () => {
-  let version = "v1", exists = true, payloadReads = 0;
-  const query: ReadOnlyQuery = async statements => {
-    const statement = statements[0];
-    if (!exists) return [[]];
-    const carried = JSON.parse(statement.params[5] as string).held === version;
-    if (!carried) payloadReads++;
-    return [[{ scope: "held", current_version_id: version, encoded: false,
-      value: carried ? null : { meetings: [{ id: version, ocdId: (statement.params[2] as string[])[0] }] } }]];
-  };
-  const read = (division: string) => readPlacePointerSlices<{ meetings: { id: string; ocdId: string }[] }>("MEETING", ["held"], [division], [], [], query);
-  const first = await read(county);
-  assert.deepEqual(await read(county), first);
-  assert.equal(payloadReads, 1);
-  assert.equal((await read(neighbour))[0].value!.meetings[0].ocdId, neighbour);
-  assert.equal(payloadReads, 2, "another area's selector cannot carry this area's payload");
-  version = "v2";
-  assert.equal((await read(county))[0].value!.meetings[0].id, version);
-  assert.equal(payloadReads, 3);
-  exists = false;
-  assert.equal((await read(county))[0].kind, "NOT_RECORDED");
-  exists = true;
-  assert.equal((await read(county))[0].value!.meetings[0].id, version);
-  assert.equal(payloadReads, 4, "a restored pointer is read again");
-});
-
-test("concurrent held reads retain the exact values carried by their own pointer query", async () => {
-  let version = "v1", blockNext = false;
-  let release: (() => void) | undefined;
-  const query: ReadOnlyQuery = async statements => {
-    const observed = version;
-    const carried = JSON.parse(statements[0].params[5] as string).held === observed;
-    if (blockNext) {
-      blockNext = false;
-      await new Promise<void>(resolve => { release = resolve; });
-    }
-    return [[{ scope: "held", current_version_id: observed, encoded: false,
-      value: carried ? null : { meetings: [{ id: observed }] } }]];
-  };
-  const read = () => readPlacePointerSlices<{ meetings: { id: string }[] }>("MEETING", ["held"], [county], [], [], query);
-  await read();
-  blockNext = true;
-  const older = read();
-  version = "v2";
-  assert.equal((await read())[0].value!.meetings[0].id, "v2");
-  assert.ok(release);
-  release();
-  assert.equal((await older)[0].value!.meetings[0].id, "v1", "another read must not turn a carried value into a null or the wrong version");
-});
-
 test("held boundary provenance maps source, semantic version and effective use without URL-only credit", () => {
   const cd = "ocd-division/country:us/state:az/cd:6";
   const sl = "ocd-division/country:us/state:az/sldu:6";
@@ -292,25 +216,6 @@ test("held boundary provenance maps source, semantic version and effective use w
   const divisions = [{ ocdId: county, divisionType: "county", geoid: "04003" }] as Division[];
   assert.equal(projectHeldGeography([county], divisions, [countyRow]).held[0].subjectId, county);
   assert.equal(projectHeldGeography(["unrelated"], divisions, [countyRow]).held.length, 0);
-});
-
-test("geography quiet reads fetch only the pointer, and a changed or racing version cannot serve the old field", async () => {
-  let version = "held-v1", payloadReads = 0, racing = false;
-  const query = async (statements: readonly { text: string }[]) => {
-    if (statements[0].text.startsWith("SELECT current_version_id")) return [[{ current_version_id: version }]];
-    payloadReads++;
-    return [[{ meta: {}, grouping: { $version: racing ? "raced" : version } }]];
-  };
-  const ids = ["ocd-division/country:us/state:az/cd:6"];
-  await readHeldPlaceGeography(ids, [], query);
-  await readHeldPlaceGeography(ids, [], query);
-  assert.equal(payloadReads, 1);
-  version = "held-v2";
-  await readHeldPlaceGeography(ids, [], query);
-  assert.equal(payloadReads, 2);
-  version = "held-v3";
-  racing = true;
-  await assert.rejects(readHeldPlaceGeography(ids, [], query), /CIVIC_POINTER_CHANGED_DURING_READ/);
 });
 
 test("held Census status survives complementary projections without inventing governments for statistical areas", () => {

@@ -4,7 +4,7 @@ import { FIX_MAP_DDL } from "../../method/fix-map.ts";
 import { WEBSITE_PACING_DDL } from "../website-pacing.ts";
 
 /** Moves whenever `BOOTSTRAP_DDL` moves. The gate compares against it. */
-export const BOOTSTRAP_VERSION = 31;
+export const BOOTSTRAP_VERSION = 32;
 
 /**
  *   AGGREGATE     id, revision, updated_at, value   (CAS on revision)
@@ -135,6 +135,8 @@ export const SCOPED_HISTORY_INDEXES: readonly OnlineIndex[] = [
   onlineIndex("cp_log_artifacts_work_item", "cp_log_artifacts ((record #>> '{workItemId}'))"),
   onlineIndex("cp_log_artifacts_artifact_id", "cp_log_artifacts ((record #>> '{artifactId}'))"),
   onlineIndex("cp_log_costs_recorded_at", "cp_log_costs (recorded_at)"),
+  onlineIndex("cp_doors_ocd_id", "cp_doors ((value #>> '{ocdId}'))"),
+  onlineIndex("cp_ask_gap_observations_body", "cp_ask_gap_observations ((value #>> '{bodyId}'))"),
 ];
 
 /** Every aggregate and log table this schema declares, each of which carries `changed_at`. */

@@ -597,6 +597,13 @@ if (ROUTINE_DATA_PROCESS_LEASE !== null) {
 step = "opening the production store";
 prepareProductionCivicDataWrite();
 const store = new PostgresRoutineDataStore();
+step = "building per-division rows for current pointers";
+try {
+  const built = await store.buildPlaceRows();
+  if (built) console.log(`routine civic data: built per-division rows for ${built} current pointer(s)`);
+} catch (error) {
+  console.error(`routine civic data: per-division rows were not built (${error instanceof Error ? error.message : String(error)}); held reads of those scopes refuse until they are`);
+}
 let attempted = 0;
 let verifiedSourceSuccesses = 0;
 let verifiedSourceFailures = 0;

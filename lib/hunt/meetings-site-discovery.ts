@@ -9,6 +9,7 @@ import { granicusPublisherUrl, parseGranicusPublisher } from "../sources/granicu
 import { novusPortalUrl, parseNovusMeetings } from "../sources/novusagenda/index.ts";
 import { escribeCalendarUrl, parseEscribeMeetings } from "../sources/escribe/index.ts";
 import { boardDocsBase, parseBoardDocsMeetings } from "../sources/boarddocs/index.ts";
+import { parsePrimeGovMeetings } from "../sources/primegov/index.ts";
 import { parseOrganizationPage } from "../sources/boardbook/index.ts";
 import { parseSwagitMeetings } from "../sources/swagit/index.ts";
 import { meetingSourceCadenceHours } from "../control-plane/scheduler/obligation.ts";
@@ -30,6 +31,7 @@ export const VERIFIABLE_VENDORS = [
   "novusagenda",
   "swagit",
   "escribe",
+  "primegov",
   "diligent",
   /* A body's own page that dates its public events, verified for that body (`verifyOfficialPage`). */
   "official-page-events",
@@ -38,7 +40,6 @@ export type VerifiableVendor = (typeof VERIFIABLE_VENDORS)[number];
 
 /** Vendors recognised by host or markup that no content check covers yet: always a LEAD. */
 export const LEAD_ONLY_VENDORS: readonly { readonly vendor: string; readonly host: RegExp }[] = [
-  { vendor: "primegov", host: /(^|\.)primegov\.com$/i },
   { vendor: "municode-meetings", host: /(^|\.)municodemeetings\.com$/i },
   { vendor: "diligent", host: /(^|\.)(diligentoneplatform\.com|highbond\.com|civicweb\.net)$/i },
   /* Destiny Agenda (public.destinyhosted.com/agenda_publish.cfm?id=…). */
@@ -165,6 +166,16 @@ export function meetingEndpointCandidates(html: string, pageUrl: string, now?: s
       continue;
     }
     const clerk = /^([a-z0-9-]+)\.portal\.civicclerk\.com$/.exec(host);
+    if (/^[a-z0-9-]+\.primegov\.com$/i.test(host)) {
+      const publicOrigin = `https://${host}`;
+      add({ vendor: "primegov", url: `${publicOrigin}/api/v2/PublicPortal/ListUpcomingMeetings`, basis: "LINKED", evidence: href, verifiable: true });
+      if (now) {
+        for (let year = Number(new Date(Date.parse(now) - MEETING_HELD_LOOKBACK_DAYS * 86_400_000).toISOString().slice(0, 4)); year <= Number(now.slice(0, 4)); year++) {
+          add({ vendor: "primegov", url: `${publicOrigin}/api/v2/PublicPortal/ListArchivedMeetings?year=${year}`, basis: "LINKED", evidence: href, verifiable: true });
+        }
+      }
+      continue;
+    }
     if (clerk) {
       add({ vendor: "civicclerk-api", url: `https://${clerk[1]}.api.civicclerk.com/v1/Events?$top=5`, basis: "LINKED", evidence: href, verifiable: true });
       continue;
@@ -489,6 +500,14 @@ export function verifyEndpointBody(
       const rows = parseDiligentMeetings(body);
       return rows === null ? { verdict: "NOT_CONFIRMED", count: null, detail: "not a Diligent list with meeting identities and local dates" }
         : { verdict: rows.length ? "YIELDED" : "EMPTY", count: rows.length, detail: `${rows.length} public Diligent meeting record(s)` };
+    }
+    case "primegov": {
+      try {
+        const rows = parsePrimeGovMeetings(body);
+        return { verdict: rows.length ? "YIELDED" : "EMPTY", count: rows.length, detail: `${rows.length} public PrimeGov meeting record(s)` };
+      } catch {
+        return { verdict: "NOT_CONFIRMED", count: null, detail: "not a PrimeGov public meeting list" };
+      }
     }
     case "official-page-events":
       return verifyOfficialPage(response, identity);

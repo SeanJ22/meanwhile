@@ -1,7 +1,6 @@
-import { finishBoxFinding, holdBoxFinding, takeBoxFinding, type BoxFinding, type BoxOrigin } from "../control-plane/box.ts";
+import { findingFact, finishBoxFinding, holdBoxFinding, takeBoxFinding, type BoxFinding, type BoxOrigin } from "../control-plane/box.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
-import type { ScoutFinding, ScoutResult } from "../control-plane/scheduler/scout-result.ts";
 import { datesInQuote, electionFieldId, publishElectionFields } from "../civic-data/election-field-publication.ts";
 import type { ElectionFieldInput, ElectionFieldKind } from "../civic-data/election-fields.ts";
 import type { RoutineDataStore } from "../civic-data/store.ts";
@@ -135,27 +134,18 @@ const DATED: readonly ElectionFieldKind[] = ["registration_deadline", "early_vot
 
 /** Box findings from the last month, each routed where its record publishes, checked on its own page; what has no route waits with its reason. */
 export async function publishBoxFindings(input: {
-  readonly repos: Pick<ControlPlaneRepositories, "boxFindings" | "scoutResults" | "artifacts">;
+  readonly repos: Pick<ControlPlaneRepositories, "boxFindings" | "artifacts">;
   readonly facts: FactDb & { readonly query: Query }; readonly vault: EvidenceStore; readonly fetch: ProbeFetch;
   readonly store: RoutineDataStore; readonly clocks: Clocks; readonly now: string; readonly limit: number;
 }): Promise<BoxPublicationReport> {
   const { repos, facts, clocks } = input;
-  const now = new Date(input.now), since = now.getTime() - HUNTER_FINDING_DAYS * 86_400_000;
+  const now = new Date(input.now), since = new Date(now.getTime() - HUNTER_FINDING_DAYS * 86_400_000).toISOString();
   const report = { looked: 0, published: 0, publishedByRoute: {} as Record<string, number>, handed: 0, refused: 0, seats: await reviewBoxSeats(facts.query),
     waitingByClass: {} as Record<string, number>, failuresByReason: {} as Record<string, number>,
     byPlace: {} as Record<string, { published: number; refused: number; waiting: number }> };
   // A packet's findings count toward its government; any other finding toward its own subject.
   const place = (row: BoxFinding) => report.byPlace[placeOf(row)] ??= { published: 0, refused: 0, waiting: 0 };
-  const [waiting, taken] = await Promise.all([repos.boxFindings.listWhere(["state"], "waiting"), repos.boxFindings.listWhere(["state"], "taken")]);
-  const rows = [...waiting, ...taken].map(row => row.value).filter(row =>
-    (row.state === "waiting" && row.waitingFor?.slots !== FINDING_SLOTS_VERSION || row.state === "taken" && row.claim !== null && row.claim.expiresAt <= input.now) &&
-    row.origins.some(origin => Date.parse(origin.recordedAt) >= since)).slice(0, input.limit);
-  const results = new Map<string, Promise<ScoutResult | undefined>>();
-  const resultOf = (origin: BoxOrigin & { resultKey: string }) => {
-    if (!results.has(origin.resultId)) results.set(origin.resultId, repos.scoutResults.readWhere(origin.resultKey, ["attemptId"], origin.resultId)
-      .then(found => found.find(result => result.attemptId === origin.resultId)));
-    return results.get(origin.resultId)!;
-  };
+  const rows = await repos.boxFindings.due({ slots: FINDING_SLOTS_VERSION, now: input.now, since, limit: input.limit });
   const wait = (row: BoxFinding, slotClass: string, reason: string) =>
     holdBoxFinding(repos.boxFindings, row.id, { class: slotClass, reason, slots: FINDING_SLOTS_VERSION }, input.now);
   const hold = async (row: BoxFinding, slotClass: string, reason: string) => {
@@ -181,15 +171,13 @@ export async function publishBoxFindings(input: {
   const elections: { finding: Finding; kind: ElectionFieldKind; divisionId: string }[] = [];
   for (const row of rows) {
     report.looked++;
-    const origin = row.origins.find(o => o.kind === "SCOUT" && (o.reported || o.resultKey) && Date.parse(o.recordedAt) >= since);
-    if (!origin) { await hold(row, "detective", "DETECTIVE_SPAN_NAMES_NO_FIELD"); continue; }
-    const result = origin.reported || !origin.resultKey ? undefined : await resultOf({ ...origin, resultKey: origin.resultKey });
-    const raw: Partial<ScoutFinding> = origin.reported ? { field: origin.reported.field, value: origin.reported.value } : result?.findings[origin.findingIndex] ?? {};
-    if (!raw.field || raw.value === undefined || raw.value === null || !row.exactQuote || !row.sourceUrl) { await hold(row, "other", "FINDING_HAS_NO_FIELD_VALUE_OR_QUOTE"); continue; }
-    const slot = slotFor(raw.field, raw.value, result?.recordClass ?? null, row.exactQuote);
+    if (!row.origins.some(o => o.kind === "SCOUT")) { await hold(row, "detective", "DETECTIVE_SPAN_NAMES_NO_FIELD"); continue; }
+    const raw = findingFact(row);
+    if (!raw || !row.exactQuote || !row.sourceUrl) { await hold(row, "other", "FINDING_HAS_NO_FIELD_VALUE_OR_QUOTE"); continue; }
+    const slot = slotFor(raw.field, raw.value, raw.recordClass, row.exactQuote);
     if ("waiting" in slot) { await hold(row, slot.class, slot.waiting); continue; }
     if ("lead" in slot) { await wait(row, slot.class, slot.lead === "campaign-site" ? CAMPAIGN_SITE_LEAD : CANDIDATE_PROFILE_LEAD); report.handed++; continue; }
-    const finding: Finding = { row, origin, field: raw.field, value: raw.value, exactQuote: row.exactQuote, sourceUrl: row.sourceUrl, recordClass: result?.recordClass ?? null };
+    const finding: Finding = { row, origin: raw.origin, field: raw.field, value: raw.value, exactQuote: row.exactQuote, sourceUrl: row.sourceUrl, recordClass: raw.recordClass };
     if ("election" in slot) {
       const divisionId = [row.subjectId, placeOf(row)].find(id => id.startsWith("ocd-division/"));
       if (divisionId) elections.push({ finding, kind: slot.election, divisionId });

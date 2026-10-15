@@ -1,7 +1,7 @@
 import type { ReadOnlyQuery } from "../control-plane/admin-view/promoted-slices.ts";
 import { CivicPayloadParts } from "./payload-parts.ts";
 
-const division = "x->>'ocdId'=ANY($3::text[]) OR x->>'divisionId'=ANY($3::text[])";
+const division = "x->>'ocdId'=ANY($3::text[]) OR x->>'divisionId'=ANY($3::text[]) OR x->'value'->>'divisionId'=ANY($3::text[])";
 const serves = `(${division}) OR x->'alsoServesOcdIds' ?| $3::text[] OR x->>'id'=ANY($4::text[])`;
 
 export function placeProjectionSourceSql(acceptedVersionsParameter?: number): string {

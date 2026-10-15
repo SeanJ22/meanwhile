@@ -76,7 +76,7 @@ test("one verified election field publishes while an unrelated unconfirmed field
   assert.equal(result.fields.length, 1);
   assert.equal(result.gaps.length, 1);
   const read = await readElectionFieldsForDivisions([division], { store, now, bypassCache: true });
-  assert.equal(read.read.kind, "PROMOTED");
+  assert.equal(read.reads[0].kind, "PROMOTED");
   assert.equal(read.fields[0].value.collectedAt, now);
   assert.deepEqual(read.fields[0].value.dates, ["2026-10-05"]);
   assert.equal((await readElectionFieldsForDivisions(["ocd-division/country:us/state:az"], { store, now })).fields.length, 0);
@@ -105,7 +105,7 @@ test("missing/corrupt captures and invented calendar dates never replace the cur
   assert.equal(held.promotedVersionId, null);
   assert.equal(held.gaps.length, 3);
   const read = await readElectionFieldsForDivisions([division], { store, now, bypassCache: true });
-  assert.equal(read.read.metadata.versionId, prior.promotedVersionId);
+  assert.equal(read.reads[0].metadata.versionId, prior.promotedVersionId);
   assert.equal(read.fields[0].value.text, field.value);
 });
 

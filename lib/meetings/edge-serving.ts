@@ -153,8 +153,9 @@ export interface PublishAuthorityCarried {
   readonly versionId: string;
   readonly carried: true;
 }
-export type PublishAuthority = Partial<Record<AuthorityFamily, PublishAuthorityValue | PublishAuthorityCarried>>;
+export type PublishAuthority = Partial<Record<Exclude<AuthorityFamily, "ballot-navigation">, PublishAuthorityValue | PublishAuthorityCarried>>;
 /** Complete: one entry per promoted registration pointer, since the reader reads an unnamed state as having none. */
+export type PublishBallotNavigation = AsyncIterable<readonly [string, PublishAuthorityValue | PublishAuthorityCarried]>;
 export type PublishRegistrations = Readonly<Record<string, PublishAuthorityValue | PublishAuthorityCarried>>;
 
 interface RegistrationArtifactEnvelope {
@@ -367,7 +368,7 @@ export function prefetchReaderEdgeStates(
 }
 
 export async function ensureReaderAuthorityEdge(
-  manifest: Pick<ReaderManifest, "authorityArtifacts" | "registrations" | "stateLegislators">,
+  manifest: Pick<ReaderManifest, "authorityArtifacts" | "registrations" | "stateLegislators" | "ballotNavigation">,
   store: ReaderArtifactStore | null = resolveReaderArtifactStore(),
   families: readonly AuthorityFamily[] = AUTHORITY_FAMILIES,
 ): Promise<ReaderAuthorityEdgeBundle> {
@@ -376,6 +377,20 @@ export async function ensureReaderAuthorityEdge(
   const registrations = registrationRefs && store
     ? { registrations: { states: new Set(Object.keys(registrationRefs)), load: (state: string) => fetchRegistrationArtifact(state, registrationRefs[state], store) } }
     : {};
+  const navigationLoads = new Map<string, Promise<PromotedEdgeEntry | null>>();
+  const ballotNavigation = store && families.includes("ballot-navigation") ? { ballotNavigation: { load: (state: string) => {
+    let pending = navigationLoads.get(state);
+    if (!pending) {
+      pending = (async () => {
+        const value = await readAuthorityArtifactValue("ballot-navigation", manifest.ballotNavigation?.[state], store) as PromotedFamilyArtifactValue | null;
+        const entry = value?.kind === "PROMOTED_POINTERS" && value.entries.length === 1 ? value.entries[0] : null;
+        const scope = entry?.kind === "PROMOTED" ? entry.projection.scope : entry?.scope;
+        return scope === `US-${state}:official-ballot-navigation` ? entry : null;
+      })();
+      navigationLoads.set(state, pending);
+    }
+    return pending;
+  } } } : {};
   const stateLegislatorRefs = manifest.stateLegislators;
   const stateLegislators: { stateLegislators?: ReaderAuthorityEdgeBundle["stateLegislators"] } = {};
   if (store && families.includes("state-legislators")) {
@@ -401,7 +416,7 @@ export async function ensureReaderAuthorityEdge(
       }
     }
   }
-  if (!refs || !store) return { ...registrations, ...stateLegislators };
+  if (!refs || !store) return { ...registrations, ...stateLegislators, ...ballotNavigation };
   const bundle: {
     censusDistricts?: { value: CensusDistrictEdge; versionId: string };
     registryRuntime?: { value: RegistryRuntimeReadModel; versionId: string };
@@ -413,7 +428,7 @@ export async function ensureReaderAuthorityEdge(
   const wanted = new Set(families);
   const fetchWanted = (family: AuthorityFamily) =>
     wanted.has(family) ? readAuthorityArtifactValue(family, refs[family], store) : Promise.resolve(null);
-  const promotedFetch = Promise.all(PROMOTED_AUTHORITY_FAMILIES.map(fetchWanted));
+  const promotedFetch = Promise.all(PROMOTED_AUTHORITY_FAMILIES.map(family => family === "ballot-navigation" ? null : fetchWanted(family)));
   const [registry, federal, campaign, outcomes, commentAccess, censusDistricts] = await Promise.all([
     fetchWanted("registry-runtime"),
     fetchWanted("federal-directory"),
@@ -440,7 +455,7 @@ export async function ensureReaderAuthorityEdge(
       if (typeof pointer === "string") promoted.set(pointer, entry);
     }
   });
-  return { ...bundle, ...registrations, ...stateLegislators, ...(promoted.size > 0 ? { promoted, promotedFamilies } : {}) };
+  return { ...bundle, ...registrations, ...stateLegislators, ...ballotNavigation, ...(promoted.size > 0 ? { promoted, promotedFamilies } : {}) };
 }
 
 function scopeDataSha(artifact: ReaderGeoArtifact): string {
@@ -457,6 +472,7 @@ export async function publishReaderEdgeArtifacts(
     readonly authority?: PublishAuthority;
     readonly registrations?: PublishRegistrations;
     readonly stateLegislators?: PublishRegistrations;
+    readonly ballotNavigation?: PublishBallotNavigation;
     readonly meetingBodies?: Parameters<typeof partitionSnapshotByScope>[2];
     readonly meetingRegistryVersion?: string | null;
     readonly checks?: PublishReaderChecks;
@@ -474,9 +490,10 @@ export async function publishReaderEdgeArtifacts(
   }
   const shaByScope = new Map(artifacts.map((a) => [a.scope, scopeDataSha(a)]));
   const extrasSha = extrasFingerprint(options.extras);
+  const authorityFamilies = AUTHORITY_FAMILIES.filter((family): family is Exclude<AuthorityFamily, "ballot-navigation"> => family !== "ballot-navigation");
   const authorityVersions = (m: Pick<ReaderManifest, "authorityArtifacts"> | undefined) =>
-    AUTHORITY_FAMILIES.map((f) => `${f}=${m?.authorityArtifacts?.[f]?.version ?? ""}`).join("|");
-  const newAuthorityVersions = AUTHORITY_FAMILIES
+    authorityFamilies.map((f) => `${f}=${m?.authorityArtifacts?.[f]?.version ?? ""}`).join("|");
+  const newAuthorityVersions = authorityFamilies
     .map((f) => `${f}=${options.authority?.[f]?.versionId ?? ""}`)
     .join("|");
   const registrationVersions = (entries: readonly (readonly [string, string])[] | null) =>
@@ -489,6 +506,24 @@ export async function publishReaderEdgeArtifacts(
   let current;
   try {
     current = await store.readManifest();
+  } catch (error) {
+    return { status: "FAILED", error: error instanceof Error ? error.message : String(error) };
+  }
+
+  const ballotNavigation: Record<string, AuthorityArtifactRef> = { ...current?.manifest.ballotNavigation };
+  try {
+    if (options.ballotNavigation) for await (const [state, entry] of options.ballotNavigation) {
+      if ("carried" in entry) {
+        const served = current?.manifest.ballotNavigation?.[state];
+        if (!served || served.version !== entry.versionId) return { status: "RACED", sequence: (current?.manifest.sequence ?? 0) + 1 };
+        ballotNavigation[state] = served;
+      } else {
+        const envelope: AuthorityArtifactEnvelope = { formatVersion: READER_ARTIFACT_FORMAT_VERSION,
+          family: "ballot-navigation", versionId: entry.versionId, generatedAt: now, value: entry.value };
+        const key = await store.putImmutable(gzipSync(Buffer.from(JSON.stringify(envelope), "utf8")), "json.gz");
+        ballotNavigation[state] = { key, version: entry.versionId, sha: sha256OfJson(entry.value) };
+      }
+    }
   } catch (error) {
     return { status: "FAILED", error: error instanceof Error ? error.message : String(error) };
   }
@@ -509,7 +544,10 @@ export async function publishReaderEdgeArtifacts(
     const sameMeetingAreas = snapshot === null || options.meetingRegistryVersion === undefined ||
       current.manifest.meetingRegistryVersion === options.meetingRegistryVersion;
     const sameLegislators = options.stateLegislators === undefined || registrationVersions(current.manifest.stateLegislators === undefined ? null : Object.entries(current.manifest.stateLegislators).map(([scope, ref]) => [scope, ref.version] as const)) === newLegislatorVersions;
-    if (sameSet && sameExtras && sameAuthority && sameRegistrations && sameLegislators && sameMeetingAreas) {
+    const sameNavigation = options.ballotNavigation === undefined || !current.manifest.authorityArtifacts?.["ballot-navigation"] &&
+      registrationVersions(Object.entries(current.manifest.ballotNavigation ?? {}).map(([state, ref]) => [state, ref.version] as const)) ===
+      registrationVersions(Object.entries(ballotNavigation).map(([state, ref]) => [state, ref.version] as const));
+    if (sameSet && sameExtras && sameAuthority && sameRegistrations && sameLegislators && sameMeetingAreas && sameNavigation) {
       const generatedAt = snapshot?.generatedAt || (options.checks ? laterCheck(current.manifest.generatedAt, metadata.retrievedAt) : null) || current.manifest.generatedAt;
       const checks = options.checks ?? (snapshot === null && current.manifest.composition !== undefined
         ? { composition: current.manifest.composition, freshChecks: current.manifest.freshChecks ?? {} } : undefined);
@@ -536,6 +574,7 @@ export async function publishReaderEdgeArtifacts(
   const manifestScopes: ReaderManifestScope[] = snapshot === null ? [...(current?.manifest.scopes ?? [])] : [];
   const authorityArtifacts: Partial<Record<AuthorityFamily, AuthorityArtifactRef>> = options.authority === undefined ? { ...current?.manifest.authorityArtifacts } : {};
   const registrations: Record<string, AuthorityArtifactRef> = options.registrations === undefined ? { ...current?.manifest.registrations } : {};
+  if (options.ballotNavigation !== undefined) delete authorityArtifacts["ballot-navigation"];
   const stateLegislators: Record<string, AuthorityArtifactRef> = options.stateLegislators === undefined ? { ...current?.manifest.stateLegislators } : {};
   try {
     for (const artifact of artifacts) {
@@ -557,7 +596,7 @@ export async function publishReaderEdgeArtifacts(
         generatedAt: artifact.generatedAt,
       });
     }
-    for (const family of AUTHORITY_FAMILIES) {
+    for (const family of authorityFamilies) {
       const entry = options.authority?.[family];
       if (!entry) continue;
       if ("carried" in entry) {
@@ -636,6 +675,7 @@ export async function publishReaderEdgeArtifacts(
     ...(Object.keys(authorityArtifacts).length > 0 ? { authorityArtifacts } : {}),
     ...(options.registrations !== undefined || current?.manifest.registrations !== undefined ? { registrations } : {}),
     ...(options.stateLegislators !== undefined || current?.manifest.stateLegislators !== undefined ? { stateLegislators } : {}),
+    ...(options.ballotNavigation !== undefined || current?.manifest.ballotNavigation !== undefined ? { ballotNavigation } : {}),
     ...((options.checks?.freshChecks ?? (snapshot === null ? current?.manifest.freshChecks : undefined)) !== undefined
       ? { freshChecks: options.checks?.freshChecks ?? current!.manifest.freshChecks } : {}),
     ...((options.checks?.composition ?? (snapshot === null ? current?.manifest.composition : undefined)) !== undefined

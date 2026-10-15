@@ -91,14 +91,15 @@ test("a changed national navigation source input is due independently of the bal
       merged: [], skipped: [], reason: null } as const;
     const repos = await fixtureRepositories();
     await repos.ownerDigests.append("owner-digest", "fixture-navigation-report", { runtimeOutcome: {
-      ballotPublication: { ...report, inputHash: "a".repeat(64), versionId: "national-ballots" }, ballotNavigationPublication: report,
+      ballotPublication: { ...report, inputHash: "a".repeat(64), versionId: "national-ballots" }, ballotNavigationPublications: { OH: report },
     } } as never, now);
     assert.equal((await readLatestBallotPublication(repos))?.versionId, "national-ballots");
-    const prior = await readLatestBallotPublication(repos, "ballotNavigationPublication");
+    await repos.ownerDigests.append("ballot-navigation:OH", "fixture-state-report", report as never, now);
+    const prior = await readLatestBallotPublication(repos, "OH");
     assert.deepEqual(prior, report);
-    assert.equal(ballotPublicationDue("ballot-navigation", inputHash, prior), false);
+    assert.equal(ballotPublicationDue("ballot-navigation-oh", inputHash, prior), false);
     await writeFile(path, JSON.stringify({ electionDate: "2026-11-03", states: ["OH", "MI"] }));
-    assert.equal(ballotPublicationDue("ballot-navigation", await ballotInputHash(path), prior), true);
+    assert.equal(ballotPublicationDue("ballot-navigation-oh", await ballotInputHash(path), prior), true);
     assert.equal(ballotPublicationDue("state-people", await ballotInputHash(path), null), false);
   } finally { await rm(directory, { recursive: true, force: true }); }
 });

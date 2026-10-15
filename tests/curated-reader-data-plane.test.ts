@@ -19,8 +19,7 @@ import { curatedReaderSourceClass } from "./helpers/curated-reader-source-class.
 import { stanceId } from "../lib/civic-data/stance-rows.ts";
 import { CROSSWALK_CITATION } from "../lib/civic-data/meeting-body-crosswalk.ts";
 import { REGISTRATION_TARGETS } from "../lib/registration/publication.ts";
-import { currentPollingPlaceLinks } from "../lib/ballot/polling-place-links.ts";
-import { currentRegistrationLinks } from "../lib/ballot/registration-links.ts";
+import { ballotNavigationFor } from "../lib/ballot/navigation.ts";
 
 const T0 = "2026-09-08T12:00:00.000Z";
 const T1 = "2026-09-08T12:01:00.000Z";
@@ -198,34 +197,27 @@ test("each mutable curated Reader family promotes and reads from its own canonic
       ["FETCHED", "NORMALIZED", "VALIDATED", "PROMOTED", "PROMOTED"],
       id,
     );
-    const read = await readCuratedReaderProjection(id, { store, bypassCache: true, now: T0 });
+    const read = await readCuratedReaderProjection(id, { store, bypassCache: true, now: T0 }, id === "ballot-navigation" ? "AZ" : undefined);
     assert.equal(read.kind, "PROMOTED", id);
     if (read.kind === "PROMOTED") assert.equal(read.value.kind, id);
   }
 });
 
-test("every state's registration and polling links publish through the national navigation pointer", async () => {
+test("every state's registration and polling links publish through its own navigation pointer", async () => {
   const store = new MemoryRoutineDataStore();
-  const records = REGISTRATION_TARGETS.flatMap(({ state }) =>
-    payloadFor("ballot-navigation", T0).records.map(record => ({
-      ...record,
-      id: `${record.kind}:${state}`,
-      value: { ...(record.value as Record<string, unknown>), state },
-    }))
-  );
-  const candidate = manualProjectionCandidate({ ...packageFor("ballot-navigation"),
-    payload: { kind: "ballot-navigation", records } });
-  assert.equal(candidate.scope, "US:official-ballot-navigation");
-  const outcome = await processRegisteredManualCandidate(store, "ballot-navigation", candidate, T0);
-  assert.equal(outcome.candidate.state, "PROMOTED", outcome.candidate.failureDetail ?? undefined);
-  assert.equal(outcome.readerReadback?.status, "PASS");
-  assert.equal((await store.readPromotion("CURATED_READER_RECORD", "US:official-ballot-navigation"))?.versionId, candidate.id);
-  const read = await readCuratedReaderProjection("ballot-navigation", { store, now: T0, bypassCache: true });
-  assert.equal(read.kind, "PROMOTED");
-  assert.equal(read.metadata.scope, "US:official-ballot-navigation");
   for (const { state } of REGISTRATION_TARGETS) {
-    assert.equal(currentPollingPlaceLinks().find(link => link.state === state)?.url, URLS["ballot-navigation"][0], state);
-    assert.equal(currentRegistrationLinks().find(link => link.state === state)?.url, URLS["ballot-navigation"][1], state);
+    const records = payloadFor("ballot-navigation", T0).records.map(record => ({ ...record, id: `${record.kind}:${state}`,
+      value: { ...(record.value as Record<string, unknown>), state } }));
+    const candidate = manualProjectionCandidate({ ...packageFor("ballot-navigation"), payload: { kind: "ballot-navigation", records } });
+    assert.equal(candidate.scope, `US-${state}:official-ballot-navigation`);
+    const outcome = await processRegisteredManualCandidate(store, "ballot-navigation", candidate, T0);
+    assert.equal(outcome.candidate.state, "PROMOTED", outcome.candidate.failureDetail ?? undefined);
+    assert.equal(outcome.readerReadback?.status, "PASS");
+    const read = await readCuratedReaderProjection("ballot-navigation", { store, now: T0, bypassCache: true }, state);
+    assert.equal(read.kind, "PROMOTED");
+    const view = ballotNavigationFor(state, read.value!, read.metadata.versionId!, []);
+    assert.equal(view.polling[0]?.url, URLS["ballot-navigation"][0], state);
+    assert.equal(view.registrations[0]?.url, URLS["ballot-navigation"][1], state);
   }
 });
 
@@ -263,7 +255,7 @@ test("a bad curated family is held against its own LKG and cannot affect another
   for (const id of CURATED_READER_CONTRACT_IDS) {
     const contract = MANUAL_PRODUCTION_SOURCE_CONTRACTS.find((entry) => entry.id === id)!;
     assert.equal(
-      (await store.readPromotion(contract.recordClass, contract.scope))?.versionId,
+      (await store.readPromotion(contract.recordClass, id === "ballot-navigation" ? "US-AZ:official-ballot-navigation" : contract.scope))?.versionId,
       promotedIds.get(id),
       `${id} LKG/pointer changed after the unrelated campaign-site refusal`,
     );
@@ -278,7 +270,7 @@ test("curated Reader evidence is source-scoped and never names software certific
       kind: "SOURCE_PROJECTION_CONTRACT",
       sourceId: contract.sourceId,
       recordClass: contract.recordClass,
-      scope: contract.scope,
+      scope: candidate.scope,
     });
     assert.ok(candidate.dependentChecks.every((check) => !/(?:playwright|office-opening-spell|pnpm\s+(?:test|build)|browser installation|full test tier)/i.test(`${check.consumer} ${check.detail}`)));
   }
@@ -291,7 +283,7 @@ test("store failure does not reopen any curated tracked first seed", async () =>
     async readCandidate() { candidateReads += 1; return null; },
   };
   const reads = await Promise.all(CURATED_READER_CONTRACT_IDS.map((id) =>
-    readCuratedReaderProjection(id, { store: brokenStore, bypassCache: true })
+    readCuratedReaderProjection(id, { store: brokenStore, bypassCache: true }, id === "ballot-navigation" ? "AZ" : undefined)
   ));
   assert.ok(reads.every((read) => read.kind === "STORE_UNREACHABLE"));
   assert.equal(candidateReads, 0);

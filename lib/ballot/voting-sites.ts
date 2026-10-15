@@ -187,7 +187,7 @@ export interface VotingSitesAnswer {
   precision?: "ADDRESS" | "ZIP";
   googleFallback?: { available: boolean; requested: boolean; label?: string; message?: string };
 
-  pollingPlaceLinks: readonly import("./polling-place-links.ts").PollingPlaceLink[];
+  pollingPlaceLinks: readonly import("./navigation.ts").PollingPlaceLink[];
   ballotNavigationDataState?: "PROMOTED" | "FIRST_SEED" | "STORE_UNREACHABLE";
 }
 

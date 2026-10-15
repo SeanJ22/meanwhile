@@ -215,7 +215,7 @@ test("source refreshes are admitted daily without a Send and retry failed source
   const now = Date.parse("2026-09-30T12:00:00Z");
   for (const task of AUTOMATIC_REFRESH_TASKS) {
     assert.equal(task.ownerInvocation, undefined);
-    assert.equal(automaticRefreshContract(task.id), task.id);
+    assert.equal(automaticRefreshContract(task.id), task.id.startsWith("ballot-navigation-") ? "ballot-navigation" : task.id);
     assert.equal(routineTaskSelection([`--only=${task.id}`], [...ROUTINE_SOURCE_TASKS, ...AUTOMATIC_REFRESH_TASKS]).ok, true);
     assert.equal(routineTaskDue(task, undefined, now), true);
     const checked = "2026-09-29T12:00:00Z";

@@ -1,5 +1,5 @@
 import { readFileSync } from "node:fs";
-import { isAbsolute, join, relative, resolve } from "node:path";
+import { isAbsolute, relative, resolve } from "node:path";
 
 import {
   MANUAL_PROJECTION_CONTRACT_IDS,
@@ -15,52 +15,11 @@ import { assignment } from "./cli-args.mts";
 import { isWorkerReaderContract } from "../lib/civic-data/worker-reader-contracts.ts";
 import { runWorkerPublicationJob } from "../lib/civic-data/worker-publication-job.ts";
 import { workerPublicationContext } from "../lib/civic-data/worker-publication-context.ts";
-import { refreshBallotNavigation } from "../lib/civic-data/ballot-navigation-refresh.ts";
-import { BALLOT_NAVIGATION_INPUT_PATH, ballotInputHash, type BallotPublicationResult } from "../lib/civic-data/ballot-publication.ts";
-import { failedAcquisitionCandidate } from "../lib/civic-data/candidate-builders.ts";
-import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
-import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
-import { sanitizedErrorDiagnostic } from "../lib/ops/error-diagnostic.ts";
-import { cycleVault, VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
-import { printWorkerPublicationReceipt } from "../lib/civic-data/worker-publication-tasks.ts";
 
 const contractId = assignment(process.argv, "contract") as ManualProjectionContractId | null;
 const packageArgument = assignment(process.argv, "package");
 const workerResults = assignment(process.argv, "worker-results");
-const directory = assignment(process.argv, "directory");
-if (directory && (packageArgument || workerResults || contractId !== "ballot-navigation")) throw new Error("NAVIGATION_DIRECTORY_ARGUMENT_INVALID");
-if (contractId === "ballot-navigation" && !packageArgument && !workerResults) {
-  prepareProductionCivicDataWrite();
-  const now = new Date().toISOString();
-  const context = await workerPublicationContext(now);
-  const store = new PostgresRoutineDataStore();
-  const inputHash = await ballotInputHash(directory ?? BALLOT_NAVIGATION_INPUT_PATH);
-  let result: BallotPublicationResult;
-  try {
-    const report = await refreshBallotNavigation({ store, repos: context.repos,
-      vault: cycleVault(join(process.cwd(), ...VAULT_DIR)), now, ...(directory ? { directory } : {}) });
-    console.log("BALLOT_NAVIGATION_REFRESH=" + JSON.stringify(report));
-    if (!report.promotedVersionId) throw new Error(`NAVIGATION_NO_VERIFIED_FIELDS:${report.gaps.map(gap => gap.detail).join(";")}`);
-    const receipted = await printWorkerPublicationReceipt(store, "ballot-navigation", [], { records: report.fields.length,
-      versionId: report.promotedVersionId, candidateId: report.candidateId,
-      gaps: report.gaps.map(gap => ({ key: `${gap.divisionId}:${gap.kind}`, detail: gap.detail })) }, now);
-    if (!receipted) throw new Error("NAVIGATION_PUBLICATION_RECEIPT_MISSING");
-    result = { kind: "BALLOT_PUBLICATION", inputHash, at: now, status: "PUBLISHED", versionId: report.promotedVersionId,
-      merged: [], skipped: [], reason: null };
-  } catch (error) {
-    const reason = sanitizedErrorDiagnostic(error);
-    const contract = requiredManualProductionContract("ballot-navigation");
-    const candidate = failedAcquisitionCandidate({ sourceId: contract.sourceId, recordClass: contract.recordClass,
-      scope: contract.scope, requestedUrl: "", attemptedAt: now, failureDetail: reason,
-      parserVersion: contract.parserNormalizerVersion });
-    const outcome = await processRegisteredManualCandidate(store, "ballot-navigation", candidate, now);
-    printSourceRunnerReceipt("ballot-navigation", candidate, outcome);
-    result = { kind: "BALLOT_PUBLICATION", inputHash, at: now, status: "HELD", versionId: null,
-      merged: [], skipped: [], reason };
-    process.exitCode = 2;
-  }
-  console.log("BALLOT_PUBLICATION_RESULT=" + JSON.stringify(result));
-} else if (workerResults) {
+if (workerResults) {
   if (!contractId || !isWorkerReaderContract(contractId) || packageArgument) throw new Error("WORKER_PUBLICATION_CONTRACT_ARGUMENT_INVALID");
   prepareProductionCivicDataWrite();
   const now = new Date().toISOString();

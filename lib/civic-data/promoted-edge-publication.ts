@@ -1,3 +1,4 @@
+import { BALLOT_NAVIGATION_STATES, ballotNavigationScope, ballotNavigationState } from "./ballot-navigation-scope.ts";
 import { DOTGOV_SCOPE, readDotGovProjection } from "./dotgov.ts";
 import { readGenericBallotProjection } from "../ballot/generic-projection.ts";
 import { createHash } from "node:crypto";
@@ -76,7 +77,8 @@ export function promotedEdgePointers(): Readonly<Record<PromotedAuthorityFamily,
     ],
     "candidate-publications": [manual("candidate-corpus", readCandidateCorpusProjection),
       { recordClass: DERIVED_CAMPAIGN_SITES_RECORD_CLASS, scope: DERIVED_CAMPAIGN_SITES_SCOPE, reader: readDerivedCampaignSites }],
-    "ballot-navigation": [manual("ballot-navigation", (options) => readCuratedReaderProjection("ballot-navigation", options))],
+    "ballot-navigation": BALLOT_NAVIGATION_STATES.map(state => ({ recordClass: "CURATED_READER_RECORD", scope: ballotNavigationScope(state),
+      reader: options => readCuratedReaderProjection("ballot-navigation", options, state) })),
     "voting-sites": [{ ...VOTING_SITES_CONTRACT, reader: readVotingSitesProjection }],
     "official-filings": [manual("official-filings", (options) => readCuratedReaderProjection("official-filings", options))],
     "member-offices": [manual("member-offices", (options) => readCuratedReaderProjection("member-offices", options))],
@@ -115,7 +117,7 @@ export function promotedFamilyVersion(versions: readonly string[]): string {
 }
 
 export interface PromotedEdgeFamiliesRead {
-  readonly authority: Partial<Record<PromotedAuthorityFamily, PublishAuthorityValue | PublishAuthorityCarried>>;
+  readonly authority: Partial<Record<Exclude<PromotedAuthorityFamily, "ballot-navigation">, PublishAuthorityValue | PublishAuthorityCarried>>;
   readonly skipped: readonly string[];
 }
 
@@ -127,9 +129,10 @@ export async function readPromotedEdgeFamilies(input: {
   readonly readServedFamily?: (family: PromotedAuthorityFamily) => Promise<PromotedFamilyArtifactValue | null>;
 }): Promise<PromotedEdgeFamiliesRead> {
   const families = input.families ?? promotedEdgePointers();
-  const authority: Partial<Record<PromotedAuthorityFamily, PublishAuthorityValue | PublishAuthorityCarried>> = {};
+  const authority: Partial<Record<Exclude<PromotedAuthorityFamily, "ballot-navigation">, PublishAuthorityValue | PublishAuthorityCarried>> = {};
   const skipped: string[] = [];
   for (const [family, pointers] of Object.entries(families) as [PromotedAuthorityFamily, readonly PromotedEdgePointer[]][]) {
+    if (family === "ballot-navigation") continue;
     try {
       const served = servedAuthorityVersion(input.servedManifest, family);
       if (served !== null) {
@@ -147,7 +150,7 @@ export async function readPromotedEdgeFamilies(input: {
         let entry: PromotedEdgeEntry | null = null;
         try {
           const read = await readPromotedCivicData(recordClass, scope, { store: input.store, now: input.now });
-          entry = promotedEdgeEntryOf(read, recordClass, scope, input.store);
+          entry = promotedEdgeEntryOf(read, recordClass, scope);
           if (entry === null) throw new Error(`${recordClass}:${scope} read ${read.kind}, not a proven or answered-absent pointer`);
           if (entry.kind === "PROMOTED") {
             const accepted = await reader({ edge: entry, now: input.now });
@@ -174,4 +177,33 @@ export async function readPromotedEdgeFamilies(input: {
     }
   }
   return { authority, skipped };
+}
+
+export async function* readBallotNavigationEdgeStates(input: {
+  readonly store: Parameters<typeof readPromotedEdgeFamilies>[0]["store"];
+  readonly pointers: readonly PromotedEdgePointer[];
+  readonly manifest: Pick<ReaderManifest, "ballotNavigation"> | null;
+  readonly now: string;
+  readonly onFailure: (state: string, error: unknown) => void;
+}): import("../meetings/edge-serving.ts").PublishBallotNavigation {
+  for (const { recordClass, scope, reader } of input.pointers) {
+    const state = ballotNavigationState(scope);
+    if (!state) throw new Error(`Invalid navigation pointer ${scope}`);
+    const served = input.manifest?.ballotNavigation?.[state];
+    try {
+      const version = promotedPointerVersion(recordClass, scope, await input.store.readPromotionIdentity(recordClass, scope));
+      if (version === served?.version) { yield [state, { versionId: version, carried: true }]; continue; }
+      const read = await readPromotedCivicData(recordClass, scope, { store: input.store, now: input.now, bypassCache: true });
+      const entry = promotedEdgeEntryOf(read, recordClass, scope);
+      if (!entry) throw new Error(`${scope} read ${read.kind}`);
+      if (entry.kind === "PROMOTED") {
+        const accepted = await reader({ edge: entry, now: input.now });
+        if (accepted.kind !== "PROMOTED") throw new Error(`${scope} rejected its edge copy`);
+      }
+      yield [state, { versionId: version, value: { kind: "PROMOTED_POINTERS", entries: [entry] } }];
+    } catch (error) {
+      input.onFailure(state, error);
+      if (served) yield [state, { versionId: served.version, carried: true }];
+    }
+  }
 }

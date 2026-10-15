@@ -4,8 +4,12 @@ import { join, resolve } from "node:path";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import { DIGEST_LOG_KEY } from "../control-plane/admin-data.ts";
 import { REFERENCE_DIR } from "../reference/index.ts";
+import { ballotNavigationScope, ballotNavigationTaskState } from "./ballot-navigation-scope.ts";
 
-export const BALLOT_NAVIGATION_INPUT_PATH = join(REFERENCE_DIR, "..", "ballot", "2026-navigation.json");
+export function ballotNavigationInputPath(state: string): string {
+  ballotNavigationScope(state);
+  return join(REFERENCE_DIR, "..", "ballot", "2026-navigation", `${state.toLowerCase()}.json`);
+}
 
 export interface BallotPublicationResult {
   readonly kind: "BALLOT_PUBLICATION";
@@ -59,13 +63,15 @@ export function parseBallotPublicationResult(output: string): BallotPublicationR
 }
 
 export async function readLatestBallotPublication(repos: ControlPlaneRepositories,
-  field: "ballotPublication" | "ballotNavigationPublication" = "ballotPublication"): Promise<BallotPublicationResult | null> {
-  const rows = await repos.ownerDigests.readRecentWhere(DIGEST_LOG_KEY,
-    ["runtimeOutcome", field, "kind"], "BALLOT_PUBLICATION", 1, { runtimeOutcome: [field] });
-  const report = (rows[0] as { runtimeOutcome?: Partial<Record<typeof field, BallotPublicationResult>> } | undefined)?.runtimeOutcome?.[field];
+  state?: string): Promise<BallotPublicationResult | null> {
+  if (state) ballotNavigationScope(state);
+  const rows = state ? await repos.ownerDigests.readRecent(`ballot-navigation:${state}`, 1)
+    : await repos.ownerDigests.readRecentWhere(DIGEST_LOG_KEY,
+      ["runtimeOutcome", "ballotPublication", "kind"], "BALLOT_PUBLICATION", 1, { runtimeOutcome: ["ballotPublication"] });
+  const report = state ? rows[0] : (rows[0] as { runtimeOutcome?: { ballotPublication?: BallotPublicationResult } } | undefined)?.runtimeOutcome?.ballotPublication;
   return report ? parseBallotPublicationResult("BALLOT_PUBLICATION_RESULT=" + JSON.stringify(report)) : null;
 }
 
 export function ballotPublicationDue(taskId: string, inputHash: string | null, prior: BallotPublicationResult | null): boolean {
-  return ["ballot-contests", "ballot-navigation"].includes(taskId) && inputHash !== null && inputHash !== prior?.inputHash;
+  return (taskId === "ballot-contests" || ballotNavigationTaskState(taskId) !== null) && inputHash !== null && inputHash !== prior?.inputHash;
 }

@@ -1,3 +1,4 @@
+import { BALLOT_NAVIGATION_STATES, ballotNavigationScope } from "../lib/civic-data/ballot-navigation-scope.ts";
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
@@ -119,7 +120,6 @@ const PROMOTED_BALLOT_FAMILIES: Partial<Record<PromotedAuthorityFamily, { value:
     absentEdgeEntry(DERIVED_CAMPAIGN_SITES_RECORD_CLASS, DERIVED_CAMPAIGN_SITES_SCOPE),
   ], EDGE.profiles),
   "candidate-publications": promotedFamily([manual("candidate-corpus", corpus, EDGE.corpus)], EDGE.corpus),
-  "ballot-navigation": promotedFamily([manual("ballot-navigation", navigation, "edge-test:ballot:navigation")], "edge-test:ballot:navigation"),
   "official-filings": promotedFamily([absentEdgeEntry("CURATED_READER_RECORD", requiredManualProductionContract("official-filings").scope)], "edge-test:filings:absent"),
   "nh-members": promotedFamily([provenEdgeEntry({ recordClass: nhRoster.recordClass, scope: nhRoster.scope, sourceId: nhRoster.sourceId, versionId: EDGE.nhMembers, value: nhMembers })], EDGE.nhMembers),
   "federal-funding": promotedFamily([
@@ -147,7 +147,11 @@ async function publishEdge(withPromoted: boolean, authorityOverrides: PublishAut
     meetings: [],
     agendaDocuments: [],
   }, { sourceThrough: null, retrievedAt: null, promotedThrough: null }, { store: new LocalFileArtifactStore(dir), authority,
-    registrations: {},
+    ballotNavigation: (async function* () {
+      if (withPromoted) for (const state of BALLOT_NAVIGATION_STATES) yield [state, state === "AZ"
+        ? promotedFamily([manual("ballot-navigation", navigation, "edge-test:ballot:navigation")], "edge-test:ballot:navigation")
+        : promotedFamily([absentEdgeEntry("CURATED_READER_RECORD", ballotNavigationScope(state))], `navigation:${state}:absent`)] as const;
+    })(), registrations: {},
     stateLegislators: {
       "US-AZ": { versionId: "edge-test:ballot:az-people", value: {
         formatVersion: 1, sourceId: "plural-openstates", jurisdiction: "US-AZ", term: "2025-2026",

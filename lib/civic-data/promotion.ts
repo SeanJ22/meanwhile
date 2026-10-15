@@ -345,7 +345,7 @@ export function manualCandidateContractIssue(contractId: ManualProductionContrac
   if (candidate.sourceId !== contract.sourceId) return `source ${candidate.sourceId} does not equal ${contract.sourceId}`;
   if (candidate.recordClass !== contract.recordClass) return `record class ${candidate.recordClass} does not equal ${contract.recordClass}`;
   if (candidate.scope !== contract.scope && !isScopedManualContractScope(contractId, candidate.scope)) return `scope ${candidate.scope} does not equal ${contract.scope}`;
-  if (isScopedManualContractScope(contractId, candidate.scope)) {
+  if (candidate.retrieval.succeeded && isScopedManualContractScope(contractId, candidate.scope)) {
     try {
       if (manualPayloadScope(contractId, contract.scope, candidate.readModel) !== candidate.scope) return "scoped candidate records do not belong to its exact jurisdiction";
     } catch { return "scoped candidate records have no exact jurisdiction"; }

@@ -31,12 +31,6 @@ test("a reader sees every contest on their divisions and their state, and nothin
   assert.deepEqual(contestsForDivisions(SET, ["ocd-division/country:us/state:zz/county:none"]).contests, []);
 });
 
-test("polling lookup routes come from the held projection, without a literal state list", async () => {
-  const { currentPollingPlaceLinks } = await import(
-    "../lib/ballot/polling-place-links.ts"
-  );
-  assert.deepEqual(currentPollingPlaceLinks(), []);
-});
 
 test("VS-01: the ballot page always offers one in-app voting lookup without requiring dates or a ballot", async () => {
   const { readFileSync } = await import("node:fs");

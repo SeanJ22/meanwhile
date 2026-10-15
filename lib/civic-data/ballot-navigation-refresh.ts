@@ -1,27 +1,24 @@
 import { createHash } from "node:crypto";
-import { readFile, readdir, realpath } from "node:fs/promises";
+import { readFile, realpath } from "node:fs/promises";
 import { isAbsolute, join, relative, resolve } from "node:path";
 import { votingFetchSession } from "../ballot/voting-source-fetch.ts";
 import { artifactId, classifyAcquisition, defaultRetention, deriveSanitized, extractionSourceDocument, type Artifact } from "../control-plane/evidence/artifact.ts";
-import { runPool } from "../control-plane/scheduler/shadow-loop.ts";
 import type { CycleVault } from "../control-plane/scheduler/vault.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
-import { linkingPageFrom, section3Record } from "../control-plane/promotion/section3.ts";
+import { section3Record } from "../control-plane/promotion/section3.ts";
 import { readPublicationSourcePolicy } from "../control-plane/promotion/source-settings.ts";
 import { extractEmbeddedHtml, extractTextLayer } from "../extract/text-layer.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
-import { BALLOT_NAVIGATION_INPUT_PATH } from "./ballot-publication.ts";
+import { ballotNavigationInputPath } from "./ballot-publication.ts";
+import { ballotNavigationScope, ballotNavigationDivision } from "./ballot-navigation-scope.ts";
 import { publishElectionFields } from "./election-field-publication.ts";
 import { electionFieldState, type ElectionFieldInput } from "./election-fields.ts";
 import { isOfficialSource, type GovernmentWebsiteDelegation, type OfficialLinkingPage } from "./source-authority.ts";
 import type { RoutineDataStore } from "./store.ts";
 import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
 import { readManualProjectionPrior, type CuratedReaderProjection, type ManualProjectionPackage } from "./manual-projections.ts";
-import { prepareManualProjectionScopeTransfer, prepareManualProjectionSuccessor } from "./manual-successor.ts";
+import { prepareManualProjectionSuccessor } from "./manual-successor.ts";
 import { processRegisteredManualCandidate } from "./promotion.ts";
-import { requiredManualProductionContract } from "./manual-contracts.ts";
-import { recordRoutineReaderProjectionReadback } from "./reader-verification.ts";
-import { readPromotedCivicData } from "./read-model.ts";
 import { manualRecordSourceUrls } from "./manual-source-isolation.ts";
 import type { ManualSourceSetReceipt } from "./types.ts";
 
@@ -47,6 +44,7 @@ export interface BallotNavigationStateReport {
   readonly state: string;
   readonly electionDate: string;
   readonly facts: readonly {
+    readonly divisionId?: string;
     readonly kind: ElectionFieldInput["kind"];
     readonly value: string;
     readonly quote: string;
@@ -60,10 +58,11 @@ export interface BallotNavigationStateReport {
 }
 
 export interface BallotNavigationSourceConfig {
+  readonly state: string;
   readonly electionDate: string;
   readonly package: ManualProjectionPackage;
-  readonly states: readonly Omit<BallotNavigationStateReport, "facts">[];
-  readonly scopeTransfers?: readonly string[];
+  readonly sources: readonly BallotNavigationSourceReport[];
+  readonly gaps?: BallotNavigationStateReport["gaps"];
 }
 
 const digest = (value: string | Uint8Array) => createHash("sha256").update(value).digest("hex");
@@ -72,7 +71,22 @@ const decode = (bytes: Uint8Array, contentType = "") => {
   const encoding = /charset\s*=\s*["']?([\w-]+)/i.exec(header)?.[1] ?? "utf-8";
   return { text: new TextDecoder(encoding, { ignoreBOM: true, fatal: true }).decode(bytes), encoding };
 };
-const divisionFor = (state: string) => `ocd-division/country:us/${state === "DC" ? "district" : "state"}:${state.toLowerCase()}`;
+
+
+function indexAuthorityLinks(pages: Map<string, OfficialLinkingPage>, url: string, html: string, linkingPage?: OfficialLinkingPage) {
+  if (!isOfficialSource(url, linkingPage)) return;
+  for (const tag of html.matchAll(/<(?:a|link)\b[^>]*(?:href|src)\s*=[^>]*>/gi)) {
+    const href = /\b(?:href|src)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+))/i.exec(tag[0]);
+    if (!href) continue;
+    try {
+      const target = new URL((href[1] ?? href[2] ?? href[3]).replace(/&amp;/g, "&"), url);
+      if (!/^https?:$/.test(target.protocol) || isOfficialSource(target.href) || pages.has(target.hostname)) continue;
+      // A substring must not keep the fetched page alive.
+      const proof = Buffer.from(tag[0], "utf8").toString("utf8");
+      pages.set(target.hostname, { url, html: proof, ...(linkingPage ? { linkingPage } : {}) });
+    } catch { continue; }
+  }
+}
 
 function sourceTime(record: CuratedReaderProjection["records"][number], receipt: ManualSourceSetReceipt): number {
   const value = record.value as Record<string, unknown> | undefined;
@@ -87,7 +101,7 @@ async function publishReviewedInput(config: BallotNavigationSourceConfig, store:
   const source = config.package;
   if (source.contractId !== "ballot-navigation" || !("kind" in source.payload) || source.payload.kind !== "ballot-navigation") throw new Error("NAVIGATION_REVIEWED_INPUT_INVALID");
   const payload = source.payload;
-  const prior = await readManualProjectionPrior("ballot-navigation", store, now);
+  const prior = await readManualProjectionPrior("ballot-navigation", store, now, ballotNavigationScope(config.state));
   const before = new Map(((prior?.payload as CuratedReaderProjection | undefined)?.records ?? []).map(row => [row.id, row]));
   const priorCandidate = prior ? await store.readCandidate(prior.versionId) : null;
   const adoption: ManualProjectionPackage = { ...source, version: now,
@@ -104,48 +118,17 @@ async function publishReviewedInput(config: BallotNavigationSourceConfig, store:
     if (!outcome.promoted) throw new Error(`NAVIGATION_REVIEWED_INPUT_HELD:${outcome.candidate.failureDetail ?? outcome.candidate.state}`);
     candidateId = outcome.candidate.candidate.id; promotedVersionId = outcome.promoted.versionId;
   }
-  const contract = requiredManualProductionContract("ballot-navigation");
-  for (const scope of config.scopeTransfers ?? []) {
-    const read = await readPromotedCivicData<CuratedReaderProjection>(contract.recordClass, scope, { store, now, bypassCache: true });
-    if (read.kind === "NOT_RECORDED") continue;
-    if (read.kind !== "PROMOTED") throw new Error(`NAVIGATION_SCOPE_TRANSFER_UNAVAILABLE:${scope}`);
-    const prepared = await prepareManualProjectionScopeTransfer({ ...adoption,
-      payload: { ...payload, records: [] } }, store, scope, now);
-    let targetVersionId: string;
-    if (prepared.candidate.id === prepared.expectedBaseVersionId) {
-      const target = await readPromotedCivicData<CuratedReaderProjection>(contract.recordClass, contract.scope,
-        { store, now, bypassCache: true });
-      if (target.kind !== "PROMOTED" || target.projection.versionId !== prepared.expectedBaseVersionId ||
-          (await recordRoutineReaderProjectionReadback(store, contract, target.projection, now))?.status !== "PASS") {
-        throw new Error(`NAVIGATION_SCOPE_TRANSFER_READBACK_FAILED:${scope}`);
-      }
-      targetVersionId = target.projection.versionId;
-    } else {
-      const outcome = await processRegisteredManualCandidate(store, "ballot-navigation", prepared.candidate, now, prepared.expectedBaseVersionId);
-      const readback = outcome.readerReadback ?? (outcome.promoted
-        ? await recordRoutineReaderProjectionReadback(store, contract, outcome.promoted, now) : null);
-      if (!outcome.promoted || readback?.status !== "PASS") {
-        throw new Error(`NAVIGATION_SCOPE_TRANSFER_READBACK_FAILED:${scope}:${outcome.candidate.failureDetail ?? readback?.detail ?? outcome.candidate.state}`);
-      }
-      targetVersionId = outcome.promoted.versionId;
-    }
-    if (!store.retireTransferredProjection || !await store.retireTransferredProjection({ recordClass: contract.recordClass,
-      sourceScope: scope, sourceVersionId: read.projection.versionId, targetScope: contract.scope,
-      targetVersionId, at: now })) throw new Error(`NAVIGATION_SCOPE_RETIREMENT_FAILED:${scope}`);
-    candidateId = targetVersionId; promotedVersionId = targetVersionId;
-    fields.push(...read.value.records.filter(row => !before.has(row.id)).map(row => row.id));
-  }
   return { candidateId, promotedVersionId, fields };
 }
 
-function configuredReports(config: BallotNavigationSourceConfig): BallotNavigationStateReport[] {
-  const records = (config.package.payload as CuratedReaderProjection).records;
-  return config.states.map(state => ({ ...state, facts: records.filter(row => row.kind === "ELECTION_FIELD" &&
-    (row.value as Record<string, unknown>).state === state.state).map(row => {
+function configuredReport(config: BallotNavigationSourceConfig): BallotNavigationStateReport {
+  return { state: config.state, electionDate: config.electionDate, sources: config.sources, gaps: config.gaps,
+    facts: (config.package.payload as CuratedReaderProjection).records.filter(row => row.kind === "ELECTION_FIELD").map(row => {
       const value = row.value as import("./election-fields.ts").PublishedElectionField["value"];
-      return { kind: value.fieldKind, value: value.text, quote: value.quote, dates: value.dates, sourceUrl: value.url,
+      if (value.state !== config.state) throw new Error("NAVIGATION_INPUT_CROSSES_STATE");
+      return { divisionId: value.divisionId, kind: value.fieldKind, value: value.text, quote: value.quote, dates: value.dates, sourceUrl: value.url,
         phone: value.phone, navigationUrl: value.navigationUrl };
-    }) }));
+    }) };
 }
 
 async function sourceArtifact(input: {
@@ -211,23 +194,16 @@ async function sourceArtifact(input: {
     sourceDocument: { artifactId: artifact.id, contentHash: artifact.contentHash, kind: "PDF_TEXT" as const } };
 }
 
-export async function readBallotNavigationReports(directory: string) {
+export async function readBallotNavigationReport(directory: string, state: string) {
   const path = await realpath(resolve(directory));
   const relativePath = relative(await realpath(process.cwd()), path);
   if (!isAbsolute(relativePath) && relativePath !== ".." && !relativePath.startsWith(`..${process.platform === "win32" ? "\\" : "/"}`)) {
     throw new Error("NAVIGATION_REPORTS_MUST_BE_OUTSIDE_REPOSITORY");
   }
-  const reports: BallotNavigationStateReport[] = [];
-  const gaps: { divisionId: string; kind: string; detail: string }[] = [];
-  for (const file of (await readdir(path)).filter(file => /^[a-z]{2}\.json$/i.test(file)).sort()) {
-    const state = file.slice(0, 2).toUpperCase();
-    try {
-      const report = JSON.parse(await readFile(join(path, file), "utf8")) as BallotNavigationStateReport;
-      if (report.state !== state) throw new Error("NAVIGATION_REPORT_STATE_MISMATCH");
-      reports.push(report);
-    } catch (error) { gaps.push({ divisionId: divisionFor(state), kind: "source", detail: sanitizedErrorDiagnostic(error) }); }
-  }
-  return { reports, gaps };
+  ballotNavigationScope(state);
+  const report = JSON.parse(await readFile(join(path, `${state.toLowerCase()}.json`), "utf8")) as BallotNavigationStateReport;
+  if (report.state !== state) throw new Error("NAVIGATION_REPORT_STATE_MISMATCH");
+  return report;
 }
 
 export async function refreshBallotNavigation(input: {
@@ -235,38 +211,39 @@ export async function refreshBallotNavigation(input: {
   readonly repos: Pick<ControlPlaneRepositories, "artifacts" | "adminConfig">;
   readonly vault: Pick<CycleVault, "putBytes">;
   readonly now: string;
+  readonly state: string;
   readonly directory?: string;
-  readonly reports?: readonly BallotNavigationStateReport[];
+  readonly report?: BallotNavigationStateReport;
   readonly config?: BallotNavigationSourceConfig;
   readonly fetch?: typeof fetch;
 }) {
-  const loaded = input.directory ? await readBallotNavigationReports(input.directory) : null;
-  const config = input.config ?? (!input.reports && !loaded
-    ? JSON.parse(await readFile(BALLOT_NAVIGATION_INPUT_PATH, "utf8")) as BallotNavigationSourceConfig : null);
+  ballotNavigationScope(input.state);
+  const config = input.config ?? (!input.report && !input.directory
+    ? JSON.parse(await readFile(ballotNavigationInputPath(input.state), "utf8")) as BallotNavigationSourceConfig : null);
+  if (config && config.state !== input.state) throw new Error("NAVIGATION_INPUT_CROSSES_STATE");
   const reviewed = config ? await publishReviewedInput(config, input.store, input.now) : null;
-  const reports = input.reports ?? loaded?.reports ?? configuredReports(config!);
-  const gaps = [...loaded?.gaps ?? []];
+  const report = input.report ?? (input.directory ? await readBallotNavigationReport(input.directory, input.state) : configuredReport(config!));
+  if (report.state !== input.state) throw new Error("NAVIGATION_INPUT_CROSSES_STATE");
+  const gaps: { divisionId: string; kind: string; detail: string }[] = [];
   const sourcePolicy = await readPublicationSourcePolicy(input.repos);
-  const fetcher = input.fetch ?? fetch;
-  const runtime = { fetch: fetcher, captureCache: new Map() };
-  const fields: ElectionFieldInput[] = [];
-  await runPool(reports, 8, async report => {
-    const divisionId = divisionFor(report.state);
+  const fields = async function* (): AsyncGenerator<ElectionFieldInput> {
+    const divisionId = ballotNavigationDivision(report.state);
     if (!electionFieldState(divisionId) || !/^\d{4}-\d{2}-\d{2}$/.test(report.electionDate) ||
         !Array.isArray(report.sources) || !Array.isArray(report.facts) ||
         config && report.electionDate !== config.electionDate) {
       gaps.push({ divisionId, kind: "source", detail: "NAVIGATION_STATE_ELECTION_INVALID" }); return;
     }
-    const session = votingFetchSession(runtime);
-    const captures = new Map<string, { capture: WorkerPublicationCapture; linkingPage?: OfficialLinkingPage;
-      websiteDelegation?: GovernmentWebsiteDelegation }>();
-    let recorded: Set<string>;
-    try {
-      recorded = new Set((await input.repos.artifacts.read(`ballot-navigation:${report.state.toLowerCase()}`))
-        .map(row => `${row.artifactId}:${row.recordedAt}`));
-    } catch (error) {
-      gaps.push({ divisionId, kind: "source", detail: `SOURCE_ARCHIVE_READ_UNAVAILABLE:${sanitizedErrorDiagnostic(error)}` }); return;
+    const session = votingFetchSession({ fetch: input.fetch ?? fetch });
+    const authorities = new Map<string, OfficialLinkingPage>();
+    const bySource = new Map<string, BallotNavigationStateReport["facts"][number][]>();
+    for (const fact of report.facts) {
+      if (!fact || typeof fact.sourceUrl !== "string" || fact.divisionId && electionFieldState(fact.divisionId) !== input.state) {
+        gaps.push({ divisionId, kind: "source", detail: "NAVIGATION_FIELD_SOURCE_INVALID" }); continue;
+      }
+      const group = bySource.get(fact.sourceUrl) ?? [];
+      group.push(fact); bySource.set(fact.sourceUrl, group);
     }
+    const recorded = new Set<string>();
     const directAuthority = (source: BallotNavigationSourceReport) => Boolean(source && typeof source.finalUrl === "string" && isOfficialSource(source.finalUrl));
     for (const source of [...report.sources].sort((a, b) => Number(directAuthority(b)) - Number(directAuthority(a)))) {
       if (!source || typeof source.requestedUrl !== "string") {
@@ -285,11 +262,11 @@ export async function refreshBallotNavigation(input: {
           const capture = await session.get(source.requestedUrl);
           bytes = capture.bytes; url = capture.url; contentType = capture.contentType; observedAt = input.now;
         }
-        let linkingPage = source.linkingPage ?? linkingPageFrom(url,
-          [...captures.values()].map(saved => ({ canonicalUrl: saved.capture.evidence.canonicalUrl, text: saved.capture.evidence.text, linkingPage: saved.linkingPage }))) ?? undefined;
+        let linkingPage = source.linkingPage ?? authorities.get(new URL(url).hostname);
         if (source.officialFrom) {
           const official = await session.get(source.officialFrom);
-          linkingPage = { url: official.url, html: decode(official.bytes, official.contentType).text };
+          indexAuthorityLinks(authorities, official.url, decode(official.bytes, official.contentType).text);
+          linkingPage = authorities.get(new URL(url).hostname);
           await sourceArtifact({ bytes: official.bytes, url: official.url, contentType: official.contentType,
             observedAt: input.now, publisher: source.publisher, state: report.state, vault: input.vault, repos: input.repos, recorded });
         }
@@ -323,24 +300,22 @@ export async function refreshBallotNavigation(input: {
             canonicalUrl: url, retrievedAt: observedAt, sourceId: source.publisher,
             acquiredByAttemptId: saved.artifact.attemptId, methodRouteId: saved.artifact.methodRouteId,
             ...(saved.sourceDocument ? { sourceDocument: saved.sourceDocument } : {}) } };
-        for (const key of [source.requestedUrl, source.finalUrl, url]) captures.set(key, { capture, linkingPage, websiteDelegation });
+        const facts = new Set([source.requestedUrl, source.finalUrl, url].flatMap(key => bySource.get(key) ?? []));
+        for (const key of [source.requestedUrl, source.finalUrl, url]) bySource.delete(key);
+        for (const fact of facts) yield { divisionId: fact.divisionId ?? divisionId, kind: fact.kind, value: fact.value, quote: fact.quote, dates: fact.dates,
+          electionDate: report.electionDate, phone: fact.phone, navigationUrl: fact.navigationUrl,
+          sourceUrl: url, linkingPage, websiteDelegation,
+          document: { url, text: capture.evidence.text, collectedAt: observedAt, capture } };
+        indexAuthorityLinks(authorities, url, capture.evidence.text, linkingPage);
       } catch (error) { gaps.push({ divisionId, kind: "source", detail: `${source.requestedUrl}:${sanitizedErrorDiagnostic(error)}` }); }
+      finally { session.rawBodies.length = 0; }
     }
-    for (const fact of report.facts) {
-      if (!fact || typeof fact.sourceUrl !== "string") {
-        gaps.push({ divisionId, kind: "source", detail: "NAVIGATION_FIELD_SOURCE_INVALID" }); continue;
-      }
-      const saved = captures.get(fact.sourceUrl);
-      if (!saved) { gaps.push({ divisionId, kind: fact.kind, detail: `NAVIGATION_SOURCE_UNAVAILABLE:${fact.sourceUrl}` }); continue; }
-      const capture = saved.capture;
-      fields.push({ divisionId, kind: fact.kind, value: fact.value, quote: fact.quote, dates: fact.dates,
-        electionDate: report.electionDate, phone: fact.phone, navigationUrl: fact.navigationUrl,
-        sourceUrl: capture.evidence.canonicalUrl, linkingPage: saved.linkingPage, websiteDelegation: saved.websiteDelegation,
-        document: { url: capture.evidence.canonicalUrl, text: capture.evidence.text, collectedAt: capture.observedAt, capture } });
+    for (const [sourceUrl, facts] of bySource) for (const fact of facts) {
+      gaps.push({ divisionId, kind: fact.kind, detail: `NAVIGATION_SOURCE_UNAVAILABLE:${sourceUrl}` });
     }
     gaps.push(...(report.gaps ?? []).map(gap => typeof gap === "string" ? { divisionId, kind: "source", detail: gap } : { divisionId, ...gap }));
-  });
-  const published = await publishElectionFields({ store: input.store, now: input.now, fields, verify: section3Record });
+  };
+  const published = await publishElectionFields({ store: input.store, now: input.now, fields: fields(), verify: section3Record });
   return { candidateId: published.candidateId ?? reviewed?.candidateId ?? null,
     promotedVersionId: published.promotedVersionId ?? reviewed?.promotedVersionId ?? null,
     fields: [...new Set([...(reviewed?.fields ?? []), ...published.fields])], gaps: [...gaps, ...published.gaps] };

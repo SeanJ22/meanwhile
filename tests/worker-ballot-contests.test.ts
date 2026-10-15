@@ -143,7 +143,7 @@ test("a direct ballot request serves from its proven edge without unrelated sour
   const published = await processRegisteredManualCandidate(store, "ballot-contests", manualProjectionCandidate(checked), now, null);
   assert.ok(published.promoted);
   const read = await readGenericBallotProjection({ store, now });
-  const edge = promotedEdgeEntryOf(read, "BALLOT_CANDIDACY", GENERIC_BALLOT_SCOPE, store);
+  const edge = promotedEdgeEntryOf(read, "BALLOT_CANDIDACY", GENERIC_BALLOT_SCOPE);
   assert.ok(edge);
   const bundle = { promoted: new Map([[`BALLOT_CANDIDACY:${GENERIC_BALLOT_SCOPE}`, edge]]),
     promotedFamilies: new Set(["ballot-contests"]), edgeOnly: true as const };

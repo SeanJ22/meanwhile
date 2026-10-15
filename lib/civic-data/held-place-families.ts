@@ -1,3 +1,4 @@
+import { ballotNavigationScope } from "./ballot-navigation-scope.ts";
 import type { BallotSet } from "../ballot/types.ts";
 import { GENERIC_BALLOT_SCOPE, type GenericBallotProjection } from "../ballot/generic-projection.ts";
 import type { VotingSitesFile } from "../ballot/voting-sites.ts";
@@ -17,7 +18,7 @@ import type { CuratedReaderProjection } from "./manual-projections.ts";
 import { officialFilingIssue, type OfficialFiling } from "./official-filings.ts";
 import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "./read-model.ts";
 import type { HeldPlaceCapture } from "./held-place-capture.ts";
-import { electionFieldIssue, type PublishedElectionField } from "./election-fields.ts";
+import { electionFieldState, electionFieldIssue, type PublishedElectionField } from "./election-fields.ts";
 import { readPlacePointerSlice, type PlaceCaptureRead } from "./held-place-slices.ts";
 import type { PlaceCaptureKind } from "../coverage/place-owed.ts";
 import type { CandidateProfilesProjection } from "./manual-projections.ts";
@@ -70,7 +71,7 @@ export async function readHeldPlaceFamilies(divisionIds: readonly string[], opti
   const read = <T>(recordClass: Parameters<typeof readPlacePointerSlice>[0], scope: string) => sliced
     ? readPlacePointerSlice<T>(recordClass, scope, divisionIds, [], targets)
     : readPromotedCivicData<T>(recordClass, scope, options);
-  const states = new Set(divisionIds.flatMap(id => /\/state:([^/]+)/.exec(id)?.[1].toUpperCase() ?? []));
+  const states = new Set(divisionIds.map(electionFieldState).filter((state): state is string => state !== null));
   const ballotContracts = ["az-sos-ballot", "nh-curated-ballot"] as const;
   const manualBallots = ballotContracts.map(id => requiredManualProductionContract(id))
     .filter(contract => states.has(contract.scope.slice(3, 5)));
@@ -79,7 +80,6 @@ export async function readHeldPlaceFamilies(divisionIds: readonly string[], opti
     .filter(state => states.has(state)).map(state => STATE_CAMPAIGN_FINANCE_SOURCES[state].scope);
   const nj = requiredRoutineContract("nj-morris-filing");
   const filings = requiredManualProductionContract("official-filings");
-  const navigation = requiredManualProductionContract("ballot-navigation");
   const fec = requiredRoutineContract("fec-funding");
   const [federal, legislators] = await Promise.all([
     read<FederalDirectoryReadModel>("FEDERAL_DIRECTORY", FEDERAL_DIRECTORY_SCOPE),
@@ -95,7 +95,7 @@ export async function readHeldPlaceFamilies(divisionIds: readonly string[], opti
     read<FundingSnapshot>(fec.recordClass, fec.scope),
     Promise.all(moneyScopes.map(scope => read<StateMoneySnapshot>("STATE_CAMPAIGN_FINANCE", scope))),
     read<CuratedReaderProjection>(filings.recordClass, filings.scope),
-    read<CuratedReaderProjection>(navigation.recordClass, navigation.scope),
+    Promise.all([...states].map(state => read<CuratedReaderProjection>("CURATED_READER_RECORD", ballotNavigationScope(state)))),
   ]);
   const heldBallots = [...[...ballots, ...(njBallot ? [njBallot] : [])].flatMap(read => value(read)?.ballot ?? []),
     ...Object.values(value(nationalBallots)?.ballots ?? {}).filter(ballot => states.has(ballot.election.state))];
@@ -121,7 +121,7 @@ export async function readHeldPlaceFamilies(divisionIds: readonly string[], opti
     derivedCampaignSites: derived?.records ?? [],
     votingSites: value(votingSites), funding: value(funding), stateMoney: money.flatMap(read => value(read) ?? []),
     filings: (value(filingRead)?.records ?? []).filter(row => officialFilingIssue(row) === null) as unknown as OfficialFiling[],
-    electionFields: (value(navigationRead)?.records ?? []).filter(row => electionFieldIssue(row) === null) as unknown as PublishedElectionField[],
+    electionFields: navigationRead.flatMap(read => value(read)?.records ?? []).filter(row => electionFieldIssue(row) === null) as unknown as PublishedElectionField[],
   };
 }
 

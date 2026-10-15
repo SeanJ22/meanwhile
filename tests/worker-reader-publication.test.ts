@@ -289,7 +289,7 @@ test("an adopted budget publishes from saved official document bytes; a proposal
   const answer = composeGovernmentFinanceAnswer({subject:{kind:"BODY",id:f.body.id,name:f.body.name!},question:"What is this government's budget?",records:evidence});
   assert.equal(answer?.answer, facts.sourceSentence);
   const scope = scopedManualContractScope("government-budgets", f.body.ocdId!);
-  const edge = promotedEdgeEntryOf(await readGovernmentBudgets(f.body.ocdId!, {store:f.store,now:f.h.now()}), "CURATED_READER_RECORD", scope, f.store);
+  const edge = promotedEdgeEntryOf(await readGovernmentBudgets(f.body.ocdId!, {store:f.store,now:f.h.now()}), "CURATED_READER_RECORD", scope);
   assert.ok(edge);
   await withReaderAuthorityEdge({registryRuntime:{value:{...f.prior.payload,bodyRosters:[],rosterReaderDispositions:[]},versionId:f.prior.versionId},promoted:new Map([[`CURATED_READER_RECORD:${scope}`,edge]]),edgeOnly:true},async () => {
     assert.deepEqual(await governmentFinanceEvidence(f.body.id, f.body.ocdId!), evidence);
@@ -377,7 +377,7 @@ test("normal voter-access workers publish the independently verified statewide r
     coverage: "STATEWIDE", coverageEvidence: "The election authority identifies this lookup as serving the entire state." });
   const result = await publishWorkerReaderResults(input);
   assert.equal(result[0].outcome.status, "PUBLISHED", JSON.stringify(result));
-  const read = await readCuratedReaderProjection("ballot-navigation", { store, now: h.now(), bypassCache: true });
+  const read = await readCuratedReaderProjection("ballot-navigation", { store, now: h.now(), bypassCache: true }, "NH");
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") throw new Error("reader missing");
   assert.equal(read.value.records[0].kind, "REGISTRATION_LINK");
@@ -398,7 +398,7 @@ test("a BROKE audit names the published reader members it takes out of the next 
   const broke = { id: "wr-audit-broke", workItemId: h.item.id, endedAt: "2099-01-01T00:00:00.000Z",
     result: { role: "ADVERSARIAL_AUDITOR", verdict: "BROKE", producerAttemptId: parser.result.attemptId, brokenRecordIds: [parser.result.records[0].id] } } as unknown as typeof parser;
   const built = workerReaderPackageWithPulls({ ...check, results: [...results, broke] });
-  const live = await readCuratedReaderProjection("ballot-navigation", { store, now: h.now(), bypassCache: true });
+  const live = await readCuratedReaderProjection("ballot-navigation", { store, now: h.now(), bypassCache: true }, "NH");
   if (live.kind !== "PROMOTED") throw new Error("reader missing");
   assert.deepEqual([...built.pulledMemberIds], [live.value.records[0].id as string], "the pull names the exact published member");
   assert.equal((built.package.payload as CuratedReaderProjection).records.length, 0, "the pulled record is not republished");

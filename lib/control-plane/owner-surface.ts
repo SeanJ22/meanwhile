@@ -411,7 +411,7 @@ export interface RoutineCivicDataReaderReadbackReference {
 
 export interface RoutineCivicDataSupervisorOutcome {
   readonly ballotPublication?: import("../civic-data/ballot-publication.ts").BallotPublicationResult;
-  readonly ballotNavigationPublication?: import("../civic-data/ballot-publication.ts").BallotPublicationResult;
+  readonly ballotNavigationPublications?: Readonly<Record<string, import("../civic-data/ballot-publication.ts").BallotPublicationResult>>;
   readonly lane?: "routine-civic-data" | "publish-now";
   readonly readerEdge?: import("../civic-data/reader-edge-outcome.ts").ReaderEdgePublicationOutcome;
   /** Committed input snapshot attempted through an exact campaign publication receipt; not a publication count. */

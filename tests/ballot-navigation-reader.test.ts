@@ -1,3 +1,4 @@
+import { ballotNavigationFor } from "../lib/ballot/navigation.ts";
 import assert from "node:assert/strict";
 import { mkdtempSync, mkdirSync, readFileSync, rmSync } from "node:fs";
 import { join } from "node:path";
@@ -9,7 +10,6 @@ import { launchGuarded } from "../scripts/browser.mts";
 import { Card } from "../components/ui/card.tsx";
 import { publishReaderEdgeArtifacts } from "../lib/meetings/edge-serving.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
-import { primeCuratedReaderProjection } from "../lib/civic-data/curated-reader-read-model.ts";
 import type { CuratedReaderProjection, ManualProjectionPackage } from "../lib/civic-data/manual-projections.ts";
 import { electionDatesFor } from "../lib/ballot/election-dates.ts";
 import { electionFieldIssue, type PublishedElectionField } from "../lib/civic-data/election-fields.ts";
@@ -26,27 +26,26 @@ const zips: Readonly<Record<string, string>> = {
   OK: "73002", OR: "97002", PA: "15001", RI: "02804", SC: "29001", SD: "57001", TN: "37010", TX: "75001", UT: "82930",
   VT: "05001", VA: "20105", WA: "98001", WV: "24701", WI: "53001", WY: "82001",
 };
-const sourceInput = JSON.parse(readFileSync(new URL("../data/ballot/2026-navigation.json", import.meta.url), "utf8")) as {
-  package: ManualProjectionPackage;
-};
-const projection = sourceInput.package.payload as CuratedReaderProjection;
-const fields = projection.records.filter(row => row.kind === "ELECTION_FIELD") as unknown as PublishedElectionField[];
+const sourceInputs = Object.keys(zips).map(state => JSON.parse(readFileSync(new URL(`../data/ballot/2026-navigation/${state.toLowerCase()}.json`, import.meta.url), "utf8")) as { state: string; package: ManualProjectionPackage });
+const projection: CuratedReaderProjection = { kind: "ballot-navigation", records: sourceInputs.flatMap(input => (input.package.payload as CuratedReaderProjection).records) };
+const fields = projection.records as unknown as PublishedElectionField[];
 
 async function publishNavigationFixture(): Promise<void> {
   const dir = mkdtempSync(join(tmpdir(), "ballot-navigation-reader-"));
   after(() => rmSync(dir, { recursive: true, force: true }));
   process.env.WTP_READER_EDGE_DIR = dir;
   const registry = registryTransferImport().projection.payload;
-  const checkedAt = sourceInput.package.sourceReceipt.reviewedAt;
+  const checkedAt = "2026-10-15T20:10:00.000Z";
   const result = await publishReaderEdgeArtifacts({ formatVersion: 1, generatedAt: checkedAt, counts: { fresh: 0, carried: 0, total: 0, duplicatesCollapsed: 0 },
     sources: [], meetings: [], agendaDocuments: [] }, { sourceThrough: null, retrievedAt: null, promotedThrough: null }, {
     store: new LocalFileArtifactStore(dir), authority: {
       "registry-runtime": { value: registry, versionId: "BL-20:navigation-registry" },
       "federal-directory": { value: syntheticFederalDirectory(registry), versionId: "BL-20:navigation-federal" },
       "census-districts": { value: azDistricts, versionId: azDistricts.versionId },
-      "ballot-navigation": promotedFamily([manualEdgeEntry("ballot-navigation", projection, "BL-20:acquired-national-navigation")], "BL-20:acquired-national-navigation"),
       "ballot-contests": promotedFamily([absentEdgeEntry("BALLOT_CANDIDACY", "US:state-election-ballots")], "BL-20:no-ballots"),
-    }, registrations: {}, stateLegislators: {},
+    }, registrations: {}, stateLegislators: {}, ballotNavigation: (async function* () {
+      for (const input of sourceInputs) yield [input.state, promotedFamily([manualEdgeEntry("ballot-navigation", input.package.payload, `navigation:${input.state}`)], `navigation:${input.state}`)] as const;
+    })(),
   });
   assert.equal(result.status, "PUBLISHED");
 }
@@ -68,13 +67,11 @@ test("sourced no-date rules remain text and primary deadlines cannot stand in fo
   const rule = fields.find(row => row.value.fieldKind === "registration_deadline" && row.value.dates.length === 0)!;
   assert.ok(rule);
   assert.equal(electionFieldIssue(rule), null);
-  primeCuratedReaderProjection("ballot-navigation", { ...projection, records: [{ ...rule }] }, "BL-20:no-date-rule");
-  const calendar = electionDatesFor(rule.value.state)!;
+  const calendar = electionDatesFor(rule.value.state, ballotNavigationFor(rule.value.state, { ...projection, records: [{ ...rule }] }, "BL-20:no-date-rule", []).dates)!;
   assert.equal(calendar.steps[0].date, "");
   assert.equal(calendar.steps[0].detail, rule.value.quote);
   const primary = { ...rule, id: "test:primary-rule", value: { ...rule.value, electionDate: "2026-08-04" } };
-  primeCuratedReaderProjection("ballot-navigation", { ...projection, records: [primary] }, "BL-20:primary-rule");
-  assert.equal(electionDatesFor(rule.value.state), null);
+  assert.equal(electionDatesFor(rule.value.state, ballotNavigationFor(rule.value.state, { ...projection, records: [primary] }, "BL-20:primary-rule", []).dates), null);
 });
 
 test("a ZIP in every state and DC renders acquired official navigation and deadlines without a ballot", async () => {

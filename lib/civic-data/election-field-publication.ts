@@ -83,16 +83,33 @@ export function datesInQuote(quote: string, electionDate?: string): Set<string> 
   return dates;
 }
 
-/** Ready fields publish together through the existing pointer; unrelated gaps never hold them. */
 export async function publishElectionFields(input: {
-  readonly store: RoutineDataStore; readonly now: string; readonly fields: readonly ElectionFieldInput[];
+  readonly store: RoutineDataStore; readonly now: string;
+  readonly fields: Iterable<ElectionFieldInput> | AsyncIterable<ElectionFieldInput>;
   readonly verify: ElectionFieldVerifier;
-}) {
+}): Promise<{ candidateId: string | null; promotedVersionId: string | null; fields: string[]; gaps: { divisionId: string; kind: string; detail: string }[] }> {
   const records = new Map<string, PublishedElectionField>();
   const conflicts: NonNullable<import("./types.ts").RoutineCandidate["excludedFacts"]>[number][] = [];
   const sources = new Map<string, ManualSourceReview>();
   const gaps: { divisionId: string; kind: string; detail: string }[] = [];
-  for (const field of input.fields) {
+  const fields: string[] = [];
+  let candidateId: string | null = null, promotedVersionId: string | null = null, currentState: string | null = null;
+  const publish = async () => {
+    if (!records.size) return;
+    const { candidate, expectedBaseVersionId } = await prepareManualProjectionSuccessor({ contractId: "ballot-navigation",
+      version: input.now, sourceThrough: input.now,
+      sourceReceipt: { contractVersion: 1, reviewedAt: input.now, reviewedBy: "code:section3Record", sources: [...sources.values()] },
+      payload: { kind: "ballot-navigation", records: [...records.values()] as unknown as readonly (Record<string, unknown> & { id: string })[] },
+    }, input.store, input.now);
+    const outcome = await processRegisteredManualCandidate(input.store, "ballot-navigation", { ...candidate,
+      excludedFacts: [...(candidate.excludedFacts ?? []), ...conflicts] }, input.now, expectedBaseVersionId);
+    if (!outcome.promoted) throw new Error(`ELECTION_FIELD_PUBLICATION_HELD:${outcome.candidate.failureDetail ?? outcome.candidate.state}`);
+    candidateId = outcome.candidate.candidate.id; promotedVersionId = outcome.promoted.versionId;
+    fields.push(...records.keys());
+    records.clear(); sources.clear(); conflicts.length = 0;
+  };
+  for await (const inputField of input.fields) {
+    const field: ElectionFieldInput = inputField;
     const capture = field.document.capture;
     const state = electionFieldState(field.divisionId);
     const gap = (detail: string) => gaps.push({ divisionId: field.divisionId, kind: field.kind, detail });
@@ -102,6 +119,7 @@ export async function publishElectionFields(input: {
         capture.evidence.contentHash !== `sha256-${hash(capture.evidence.text)}` || capture.evidence.text !== field.document.text) {
       gap("Saved complete source capture is missing or does not match these bytes."); continue;
     }
+    if (currentState !== state) { await publish(); currentState = state; }
     const page = { url: field.sourceUrl, text: capture.evidence.text, retrievedAt: capture.observedAt, linkingPage: field.linkingPage,
       websiteDelegation: field.websiteDelegation, sourcePolicy: capture.sourcePolicy, campaign: capture.campaign };
     // An election office's phone line is a fact too: it must be on the saved page.
@@ -142,13 +160,6 @@ export async function publishElectionFields(input: {
       rawHash: (capture.rawContentHash ?? capture.evidence.sourceDocument?.contentHash ?? capture.evidence.contentHash).slice(7), reviewOutcome: "SUPPORTED",
       reviewedEvidence: "Saved official source; section3Record confirmed this field's value and quote within its freshness window." });
   }
-  if (!records.size) return { candidateId: null, promotedVersionId: null, fields: [] as string[], gaps };
-  const { candidate, expectedBaseVersionId } = await prepareManualProjectionSuccessor({ contractId: "ballot-navigation",
-    version: input.now, sourceThrough: input.now,
-    sourceReceipt: { contractVersion: 1, reviewedAt: input.now, reviewedBy: "code:section3Record", sources: [...sources.values()] },
-    payload: { kind: "ballot-navigation", records: [...records.values()] as unknown as readonly (Record<string, unknown> & { id: string })[] },
-  }, input.store, input.now);
-  const outcome = await processRegisteredManualCandidate(input.store, "ballot-navigation", { ...candidate, excludedFacts: [...(candidate.excludedFacts ?? []), ...conflicts] }, input.now, expectedBaseVersionId);
-  if (!outcome.promoted) throw new Error(`ELECTION_FIELD_PUBLICATION_HELD:${outcome.candidate.failureDetail ?? outcome.candidate.state}`);
-  return { candidateId: outcome.candidate.candidate.id, promotedVersionId: outcome.promoted.versionId, fields: [...records.keys()], gaps };
+  await publish();
+  return { candidateId, promotedVersionId, fields, gaps };
 }

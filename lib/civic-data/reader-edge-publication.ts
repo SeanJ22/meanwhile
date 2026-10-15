@@ -36,7 +36,7 @@ import { DOOR_OUTCOME_POINTERS } from "../outcomes/door-outcome-pointers.ts";
 import { outcomePartitionsAreCurrent } from "./outcome-partitions.ts";
 import { MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT, PIMA_LEGISTAR_OUTCOMES_CONTRACT } from "../outcomes/data-plane.ts";
 import type { RoutineDataStore } from "./store.ts";
-import { readPromotedEdgeFamilies, promotedEdgePointers } from "./promoted-edge-publication.ts";
+import { readBallotNavigationEdgeStates, readPromotedEdgeFamilies, promotedEdgePointers } from "./promoted-edge-publication.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { censusEdgePublication } from "../../scripts/lib/census-edge-publication.ts";
 
@@ -81,7 +81,7 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
     "meeting-outcomes": [PIMA_LEGISTAR_OUTCOMES_CONTRACT, MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT, ...DOOR_OUTCOME_POINTERS],
   };
   const refreshes = (family: keyof typeof specialPointers) => specialPointers[family].some(pointer => owns(pointer.recordClass, pointer.scope));
-  const pointerFamilies = Object.fromEntries(Object.entries(promotedEdgePointers()).filter(([, pointers]) => pointers.some(pointer => owns(pointer.recordClass, pointer.scope)))) as ReturnType<typeof promotedEdgePointers>;
+  const pointerFamilies = Object.fromEntries(Object.entries(promotedEdgePointers()).map(([family, pointers]) => [family, pointers.filter(pointer => owns(pointer.recordClass, pointer.scope))] as const).filter(([, pointers]) => pointers.length)) as Partial<ReturnType<typeof promotedEdgePointers>>;
 
     // The served manifest is read first; the prepared row is read only when the publish could change something.
     // A failure leaves the previous manifest serving.
@@ -101,7 +101,7 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
         throw new Error("Reader pages would be saved to a folder on the runner. Readers are still seeing the older copy.");
       }
       const grouped = new Map<RoutineRecordClass, Set<string>>();
-      for (const pointer of [...Object.values(specialPointers).flat().filter(pointer => owns(pointer.recordClass, pointer.scope)), ...Object.values(pointerFamilies).flat(),
+      for (const pointer of [...Object.values(specialPointers).flat().filter(pointer => owns(pointer.recordClass, pointer.scope)), ...Object.values(pointerFamilies).flatMap(pointers => pointers ?? []),
         ...[manual("everyday-routing")].filter(pointer => owns(pointer.recordClass, pointer.scope)),
         ...(selected === null || selected.some(pointer => pointer.recordClass === "REGISTRATION") ? REGISTRATION_SCOPES.map(scope => ({ recordClass: "REGISTRATION" as const, scope })) : [])]) {
         const scopes = grouped.get(pointer.recordClass) ?? new Set<string>();
@@ -182,7 +182,7 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
         const contract = MANUAL_PRODUCTION_SOURCE_CONTRACTS.find(({ id }) => id === contractId);
         return contract ? pointerVersion(contract.recordClass, contract.scope) : async () => null;
       };
-      const authority: PublishAuthority = Object.fromEntries(Object.entries(servedManifest?.authorityArtifacts ?? {}).filter(([family]) => family !== "state-legislators").map(([family, ref]) => [family, { versionId: ref.version, carried: true }]));
+      const authority: PublishAuthority = Object.fromEntries(Object.entries(servedManifest?.authorityArtifacts ?? {}).filter(([family]) => family !== "state-legislators" && family !== "ballot-navigation").map(([family, ref]) => [family, { versionId: ref.version, carried: true }]));
       if (refreshes("census-districts")) authority["census-districts"] = await censusEdgePublication({
         servedVersion: servedAuthorityVersion(servedManifest, "census-districts"),
         readVersion: pointerVersion(CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE),
@@ -389,10 +389,13 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
         meetingBodies = undefined;
         checks = undefined;
       }
+      const ballotNavigation = pointerFamilies["ballot-navigation"] ? readBallotNavigationEdgeStates({ store,
+        pointers: pointerFamilies["ballot-navigation"], manifest: servedManifest, now: observedAt,
+        onFailure: (state, error) => { failed = true; console.error(`READER_EDGE_AUTHORITY_SKIPPED: ${state} ${safeFailure(sanitizedErrorDiagnostic(error))}`); } }) : undefined;
       const edge = await publishReaderEdgeArtifacts(meetingRead?.kind === "PROMOTED" ? meetingRead.value : null,
         meetingRead?.kind === "PROMOTED" ? { sourceThrough: meetingRead.metadata.sourceThrough, retrievedAt: meetingRead.metadata.retrievedAt, promotedThrough: meetingRead.metadata.promotedAt }
           : { sourceThrough: servedManifest?.sourceThrough ?? null, retrievedAt: prepared?.status === "CURRENT" ? prepared.checkedAt : servedManifest?.retrievedAt ?? null, promotedThrough: servedManifest?.promotedThrough ?? null },
-        { store: artifactStore, now: observedAt, extras, authority, registrations, stateLegislators, meetingBodies, meetingRegistryVersion, ...(checks ? { checks } : {}) });
+        { store: artifactStore, now: observedAt, extras, authority, registrations, stateLegislators, ballotNavigation, meetingBodies, meetingRegistryVersion, ...(checks ? { checks } : {}) });
       status = edge.status;
       if ("sequence" in edge) sequence = edge.sequence;
       if (edge.status === "FAILED") throw new Error(edge.error);

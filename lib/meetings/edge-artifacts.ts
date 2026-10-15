@@ -150,6 +150,7 @@ export interface ReaderManifest {
   readonly registrations?: Readonly<Record<string, AuthorityArtifactRef>>;
   /** Legislative people loaded separately for each requested jurisdiction. */
   readonly stateLegislators?: Readonly<Record<string, AuthorityArtifactRef>>;
+  readonly ballotNavigation?: Readonly<Record<string, AuthorityArtifactRef>>;
   /**
    * Each route's (`<adapter>|<bodyId>`) newest successful fresh check that found
    * nothing new. The reader restamps that route's fresh rows with it, never

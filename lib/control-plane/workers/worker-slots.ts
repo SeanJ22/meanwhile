@@ -21,6 +21,7 @@ const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   "legiscan-votes-refresh.mts": 3072,
   "census-geography-refresh.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "promote-manual-civic-projection.mts": WORKER_ENTRY_PEAK_MIB.national!,
+  "ballot-navigation-refresh.mts": 3072,
   "ingest.ts": WORKER_ENTRY_PEAK_MIB.national!,
   "state-rollcalls.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "legistar-outcomes-ingest.mts": 355,
@@ -263,7 +264,9 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
         for (const row of state.reservations) row.peak = Math.max(row.peak, rssFor(row.pid));
         const reserve = (entry: string): number => {
           const measured = state.peaks?.[measuredPeakKey(entry) ?? ""];
-          return measured?.length ? measuredReservationBytes(measured) : peakFor(entry);
+          const peak = measured?.length ? measuredReservationBytes(measured) : peakFor(entry);
+          // A small state's run cannot size another state's navigation job.
+          return measuredPeakKey(entry) === "ballot-navigation-refresh.mts" ? Math.max(peak, peakFor(entry)) : peak;
         };
         while (active < maximum && waiting.length) {
           const growth = state.reservations.reduce((sum, row) => sum + Math.max(0, row.peak - rssFor(row.pid)), 0) +

@@ -1,3 +1,4 @@
+import { ballotNavigationState } from "./ballot-navigation-scope.ts";
 import { readLatestReaderReadbacks, routineEventObservedAt, type RoutineDataStore } from "./store.ts";
 import type { RoutineSourceContract } from "./contracts.ts";
 import type { ManualProductionSourceContract } from "./manual-contracts.ts";
@@ -395,7 +396,7 @@ export async function verifyRoutineReaderProjection(
       case "venue-resolutions":
       case "meeting-body-crosswalk": {
         const { readCuratedReaderProjection } = await import("./curated-reader-read-model.ts");
-        return verifyExactVersion(verifierId, await readCuratedReaderProjection(contract.id, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, contract.id);
+        return verifyExactVersion(verifierId, await readCuratedReaderProjection(contract.id, { store: options.store, now: options.now, bypassCache: true }, contract.id === "ballot-navigation" ? ballotNavigationState(options.scope ?? "") ?? "" : undefined), options.expectedVersionId, contract.id);
       }
       case "meeting-source-wiring": {
         const { readDerivedMeetingWiring } = await import("./derived-meeting-wiring.ts");

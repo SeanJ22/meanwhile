@@ -214,18 +214,18 @@ export type PromotedEdgeEntry<T = unknown> =
       readonly scope: string;
     };
 
+const readAttestations = new WeakMap<object, AttestedPromotion>();
+
 export function promotedEdgeEntryOf<T>(
   result: CivicDataReadResult<T>,
   recordClass: RoutineRecordClass,
   scope: string,
-  store?: CivicDataReadStore,
 ): PromotedEdgeEntry<T> | null {
   if (result.kind === "NOT_RECORDED") return { kind: "NOT_RECORDED", recordClass, scope };
   if (result.kind !== "PROMOTED") return null;
-  const proven = provenPointersOf(store).get(projectionKey(recordClass, scope));
-  if (!proven || proven.projection.versionId !== result.projection.versionId) return null;
-  const attested = attestationOf(recordClass, scope, result.projection, proven.candidate);
-  return attested === null ? null : { kind: "PROMOTED", projection: result.projection, attested };
+  const attested = readAttestations.get(result);
+  if (!attested || attested.recordClass !== recordClass || attested.scope !== scope || attested.versionId !== result.projection.versionId) return null;
+  return { kind: "PROMOTED", projection: result.projection, attested };
 }
 
 const verifiedEdgeEntries = new WeakSet<object>();
@@ -496,7 +496,7 @@ async function loadPromotedCivicData<T>(
   now: string,
   key: string,
 ): Promise<CivicDataReadResult<T>> {
-  const injected = options.store !== undefined;
+  const cacheResult = options.store === undefined && !options.bypassCache;
   let observedProjection: PromotedProjection<T> | null = null;
   try {
     const store = options.store ?? new PostgresRoutineDataStore();
@@ -505,13 +505,13 @@ async function loadPromotedCivicData<T>(
       const identity = await store.readPromotionIdentity(recordClass, scope);
       if (identity !== null && samePointer(identity, known.projection)) {
         const projection = withLatestConfirmation(known.projection, identity);
-        if (!injected) cache.set(key, { expiresAt: Date.now() + TTL_MS, projection, candidate: known.candidate });
+        if (cacheResult) cache.set(key, { expiresAt: Date.now() + TTL_MS, projection, candidate: known.candidate });
         return promotedResult(projection as PromotedProjection<T>, known.candidate, now, options.maxAgeMs);
       }
     }
     const projection = await store.readPromotion<T>(recordClass, scope);
     if (projection === null) {
-      if (!injected) cache.set(key, { expiresAt: Date.now() + TTL_MS, projection: null });
+      if (cacheResult) cache.set(key, { expiresAt: Date.now() + TTL_MS, projection: null });
       return {
         kind: "NOT_RECORDED",
         value: null,
@@ -523,14 +523,14 @@ async function loadPromotedCivicData<T>(
         // The supervisor proved this exact version in this pass; the attested record never enters the proven-version memo.
     if (!options.bypassCache && options.attested && attestationHolds(options.attested, recordClass, scope, projection)) {
       const candidate = attestedCandidate(options.attested, projection);
-      if (!injected) cache.set(key, { expiresAt: Date.now() + TTL_MS, projection, candidate });
+      if (cacheResult) cache.set(key, { expiresAt: Date.now() + TTL_MS, projection, candidate });
       return promotedResult(projection, candidate, now, options.maxAgeMs);
     }
         // A version already proven GOOD in this instance reuses its candidate and skips the proof. `bypassCache` re-proves.
     if (!options.bypassCache) {
       const proven = provenByVersion.get(projection.versionId);
       if (proven) {
-        if (!injected) cache.set(key, { expiresAt: Date.now() + TTL_MS, projection, candidate: proven.candidate });
+        if (cacheResult) cache.set(key, { expiresAt: Date.now() + TTL_MS, projection, candidate: proven.candidate });
         provenPointersOf(options.store).set(key, { projection, candidate: proven.candidate });
         return promotedResult(projection, proven.candidate, now, options.maxAgeMs);
       }
@@ -550,7 +550,7 @@ async function loadPromotedCivicData<T>(
       options.maxAgeMs,
     );
     if (result.kind === "PROMOTED" && candidate !== null) {
-      if (!injected) cache.set(key, { expiresAt: Date.now() + TTL_MS, projection, candidate });
+      if (cacheResult) cache.set(key, { expiresAt: Date.now() + TTL_MS, projection, candidate });
       if (!options.bypassCache) {
         provenByVersion.set(projection.versionId, { projection, candidate });
         provenPointersOf(options.store).set(key, { projection, candidate });
@@ -1149,7 +1149,7 @@ function promotedResult<T>(
     staleAtRetrieval: candidate.candidate.temporal.staleAtRetrieval,
     maxAgeMs,
   });
-  return {
+  const result: CivicDataReadResult<T> = {
     kind: "PROMOTED",
     value: projection.payload,
     projection,
@@ -1167,6 +1167,9 @@ function promotedResult<T>(
       ...temporal,
     },
   };
+  const attested = attestationOf(projection.recordClass, projection.scope, projection, candidate);
+  if (attested) readAttestations.set(result, attested);
+  return result;
 }
 
 function bootstrapResult<T>(

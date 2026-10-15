@@ -1,3 +1,4 @@
+import { BALLOT_NAVIGATION_STATES, ballotNavigationScope, ballotNavigationTaskId, ballotNavigationTaskState } from "./ballot-navigation-scope.ts";
 import { requiredManualProductionContract, type ManualProductionContractId } from "./manual-contracts.ts";
 import type { RoutineSourceTask } from "./runner.ts";
 import type { RoutineCadencePolicy } from "./contracts.ts";
@@ -29,10 +30,10 @@ export const AUTOMATIC_REFRESH_CONTRACT_IDS = [
   "congress-bulk-roster", "congress-rollcalls", "federal-key-votes",
 ] as const satisfies readonly ManualProductionContractId[];
 
-export const AUTOMATIC_REFRESH_TASKS: readonly RoutineSourceTask[] = AUTOMATIC_REFRESH_CONTRACT_IDS.map(id => {
+export const AUTOMATIC_REFRESH_TASKS: readonly RoutineSourceTask[] = AUTOMATIC_REFRESH_CONTRACT_IDS.flatMap(id => {
   const contract = requiredManualProductionContract(id);
   const everyMs = DAY;
-  return {
+  const task: RoutineSourceTask = {
     id, sourceId: contract.sourceId, recordClass: contract.recordClass, scope: contract.scope,
     acquisitionFailureDomain: `routine-source:${contract.sourceId}`,
     requestedUrl: "", authorityMode: "REGISTERED_SOURCE_ROUTES", parserVersion: contract.parserNormalizerVersion,
@@ -41,8 +42,12 @@ export const AUTOMATIC_REFRESH_TASKS: readonly RoutineSourceTask[] = AUTOMATIC_R
       cadence: id === "voting-sites" || id === "ballot-navigation" ? votingDoorRefreshCadence(election.electionDate)
         : { defaultEveryMs: everyMs, description: "daily official-source refresh on the continuous runner" } },
   };
+  return id === "ballot-navigation" ? BALLOT_NAVIGATION_STATES.map(state => ({ ...task,
+    id: ballotNavigationTaskId(state), scope: ballotNavigationScope(state),
+    acquisitionFailureDomain: `routine-source:${contract.sourceId}:${state}`,
+    command: [...task.command, `--state=${state}`] })) : [task];
 });
 
 export function automaticRefreshContract(taskId: string): ManualProductionContractId | null {
-  return AUTOMATIC_REFRESH_CONTRACT_IDS.find(id => id === taskId) ?? null;
+  return ballotNavigationTaskState(taskId) ? "ballot-navigation" : AUTOMATIC_REFRESH_CONTRACT_IDS.find(id => id !== "ballot-navigation" && id === taskId) ?? null;
 }

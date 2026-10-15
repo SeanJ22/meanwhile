@@ -77,9 +77,7 @@ import { derivedBlurbFor } from "@/lib/candidates/blurbs";
 import { MyPicks } from "@/components/ballot/my-picks";
 import { jurisdictionKeyForContestId } from "@/lib/ballot/pick-jurisdiction";
 import { PickControl } from "@/components/ballot/pick-control";
-import { currentRegistrationLinks } from "@/lib/ballot/registration-links";
-import { currentElectionOffices } from "@/lib/ballot/election-offices";
-import { currentPollingPlaceLinks } from "@/lib/ballot/polling-place-links";
+import { ballotNavigationFor, type BallotNavigation } from "@/lib/ballot/navigation";
 import { electionFieldState } from "@/lib/civic-data/election-fields";
 import { WhereToVote } from "@/components/ballot/where-to-vote";
 import { incumbentHolderFor } from "@/lib/ballot/incumbent-record";
@@ -128,7 +126,7 @@ import {
 } from "@/components/funding/funding-section";
 import { ReactionControl } from "@/components/reactions/reaction-control";
 import { questionForTargetType } from "@/lib/signal/reactions";
-import { currentElectionDates, electionDatesFor } from "@/lib/ballot/election-dates";
+import { electionDatesFor } from "@/lib/ballot/election-dates";
 import {
   calendarableSteps,
 } from "@/lib/ballot/dated-events";
@@ -527,7 +525,16 @@ export default async function BallotPage({
   }
 
   const auxiliaryPreloads = new Map<BallotAuxiliaryFamily, () => Promise<unknown>>();
-  if (centroid) auxiliaryPreloads.set("ballot-navigation", settleBallotNavigationRead);
+  const navigationStates = [...new Set(askOcdIds.map(electionFieldState).filter((state): state is string => state !== null))];
+  const navigation = new Map<string, BallotNavigation>();
+  if (centroid) auxiliaryPreloads.set("ballot-navigation", async () => {
+    const results = await Promise.allSettled(navigationStates.map(async state => {
+      const read = await settleBallotNavigationRead(state);
+      if (read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP") throw new Error(`Navigation ${state} is ${read.kind}`);
+      navigation.set(state, ballotNavigationFor(state, read.value, read.metadata.versionId!, askOcdIds));
+    }));
+    if (results.some(result => result.status === "rejected")) throw new Error("Some states' voting information is unavailable.");
+  });
   if (set && matched) {
     auxiliaryPreloads.set("candidate-profiles", settleCandidateProfilesRead);
     auxiliaryPreloads.set("candidate-publications", settleCandidateCorpusRead);
@@ -574,22 +581,6 @@ export default async function BallotPage({
       auxiliaryPreloads.has("federal-directory") && !auxiliaryFailed.has("federal-directory"),
   };
 
-  let registrationLinks: ReturnType<typeof currentRegistrationLinks> = [];
-  let electionOffices: ReturnType<typeof currentElectionOffices> = [];
-  let pollingLinks: ReturnType<typeof currentPollingPlaceLinks> = [];
-  let electionDates: ReturnType<typeof currentElectionDates> = [];
-  if (auxiliaryPreloads.has("ballot-navigation") && !auxiliaryFailed.has("ballot-navigation")) {
-    try {
-      registrationLinks = currentRegistrationLinks();
-      electionOffices = currentElectionOffices(askOcdIds);
-      pollingLinks = currentPollingPlaceLinks();
-      electionDates = currentElectionDates();
-    } catch {
-      auxiliaryFailures.push("ballot-navigation");
-      auxiliaryFailed.add("ballot-navigation");
-    }
-  }
-
   const availableCardForNominee = (contestId: string, name: string): CandidateCardData | null =>
     cardForNominee(contestId, name);
   const availableLinksForNominee = (contestId: string, name: string): CandidateLinks | null =>
@@ -600,8 +591,6 @@ export default async function BallotPage({
     authorityAvailability.candidateProfiles ? linksForCandidacy(candidacyId) : null;
   const availableDerivedBlurbFor = (candidateId: string) =>
     authorityAvailability.candidatePublications ? derivedBlurbFor(candidateId) : null;
-
-  const navigationStates = [...new Set(askOcdIds.map(electionFieldState).filter((state): state is string => state !== null))];
 
   const candidacyContests =
     matched?.contests.filter((c) => c.type === "CANDIDACY") ?? [];
@@ -808,11 +797,12 @@ export default async function BallotPage({
       <StateOfficeContacts offices={stateOfficesForDivisions(askOcdIds).filter(office => office.kind === "CAMPAIGN_FINANCE_OFFICE")} />
 
       {navigationStates.map(state => {
-        const dates = electionDatesFor(state, electionDates, set?.election.state === state ? set.election.date : "2026-11-03");
+        const info = navigation.get(state);
+        const dates = electionDatesFor(state, info?.dates ?? [], set?.election.state === state ? set.election.date : "2026-11-03");
         const registrationRequired = !dates?.steps.some(step => step.label === "Voter registration" &&
           /\b(?:do(?:es)?(?:\s+not|n['’]t)\s+require\s+(?:voter\s+)?registration|(?:voter\s+)?registration\s+is\s+not\s+required)\b/i.test(step.detail ?? ""));
-        const offices = electionOffices.filter(office => office.state === state);
-        const links = [...registrationLinks, ...pollingLinks].filter(link => link.state === state);
+        const offices = info?.offices ?? [];
+        const links = [...(info?.registrations ?? []), ...(info?.polling ?? [])];
         const sources = [
           ...offices.map(office => ({ what: "Election office", provenance: { sourceUrl: office.url, sourceOrg: office.sourceOrg, collectedAt: office.collectedAt, verifiedAt: office.verifiedAt } })),
           ...links.map(link => ({ what: link.label, provenance: { sourceUrl: link.sourceUrl ?? link.url, sourceOrg: link.sourceOrg, collectedAt: link.verifiedAt, verifiedAt: link.verifiedAt } })),

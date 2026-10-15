@@ -10,19 +10,6 @@ import type { PromotedCivicDataReadOptions, PromotedEdgeEntry } from "../civic-d
 import type { RoutineRecordClass } from "../civic-data/types.ts";
 import type { CensusDistrictEdge } from "../census-geography/district-edge.ts";
 
-/**
- * Request-scoped "reader authority" edge bundle: the large families the coverage
- * graph needs — registry-runtime, the federal directory, and campaign-site URLs.
- *
- * The reader (a Netlify function) fetches the runner-published edge artifacts and
- * calls {@link enterReaderAuthorityEdge} at the top of the request.
- * `settleRegistryAuthorityReads` and `currentAuthorityKey` then prime the module
- * caches from these values INSTEAD of reading Neon — but only for the request
- * that set them. The standing runner and the workers never set them, so they
- * keep the authoritative `refresh*FromPromoted` database path unchanged. This is
- * why the edge path is request-scoped rather than a global override: the two
- * clocks stay separate.
- */
 export interface RegistryRuntimeEdgeValue {
   readonly value: RegistryRuntimeReadModel;
   readonly versionId: string;
@@ -77,6 +64,7 @@ export interface ReaderAuthorityEdgeBundle {
    * applies to this copy too.
    */
   readonly promoted?: ReadonlyMap<string, PromotedEdgeEntry>;
+  readonly ballotNavigation?: { readonly load: (state: string) => Promise<PromotedEdgeEntry | null> };
   /** The proven-pointer families whose artifact this bundle loaded (a trace reports where each source came from). */
   readonly promotedFamilies?: ReadonlySet<string>;
   /**
@@ -145,6 +133,11 @@ export async function readPromotedEdgeFirst<R>(
   read: (options: PromotedCivicDataReadOptions) => Promise<R>,
   what: string,
 ): Promise<R> {
+  const navigationState = recordClass === "CURATED_READER_RECORD" ? /^US-([A-Z]{2}):official-ballot-navigation$/.exec(scope)?.[1] : null;
+  if (navigationState) {
+    const entry = await edgeStore.getStore()?.ballotNavigation?.load(navigationState);
+    if (entry) return read({ edge: entry });
+  }
   let result: { readonly value: R } | null = null;
   await settleEdgeFirst(
     () => currentPromotedEdge(recordClass, scope),

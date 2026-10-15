@@ -1,3 +1,4 @@
+import { ballotNavigationScope, ballotNavigationState, ballotNavigationTaskState } from "./ballot-navigation-scope.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import type { RoutineSourceTask } from "./runner.ts";
 import type { WorkItem } from "../control-plane/work-item.ts";
@@ -142,16 +143,24 @@ export async function workerPublicationReceipt(store: Pick<RoutineDataStore, "re
   now?: string) {
   const delivered = publicationDelivery(report, extra, now);
   const passAt = now ?? report.map(row => row.outcome.at).sort().at(-1);
+  const read = store.readCandidateSummary?.bind(store) ?? store.readCandidate.bind(store);
   let last: { readonly at: string; readonly candidateId?: string | null; readonly versionId?: string | null } | undefined =
     [...report.filter(row => row.outcome.status !== "HELD" && row.outcome.versionId && row.outcome.at === passAt).map(row => row.outcome),
       ...(extra?.versionId ? [{ at: "", candidateId: extra.candidateId, versionId: extra.versionId }] : [])].at(-1);
   if (!last && now && (report.length > 0 || (extra?.gaps.length ?? 0) > 0) && store.readPromotionIdentity) {
-    const contract = requiredManualProductionContract(source as Parameters<typeof requiredManualProductionContract>[0]);
-    const pointer = await store.readPromotionIdentity(contract.recordClass, contract.scope);
+    const state = ballotNavigationTaskState(source);
+    const contract = requiredManualProductionContract((state ? "ballot-navigation" : source) as Parameters<typeof requiredManualProductionContract>[0]);
+    let scope = state ? ballotNavigationScope(state) : contract.scope;
+    if (source === "ballot-navigation") {
+      const knownId = report.map(row => row.outcome.candidateId ?? row.outcome.versionId).filter(Boolean).at(-1);
+      const known = knownId ? await read(knownId) : null;
+      if (!known || !ballotNavigationState(known.candidate.scope)) return null;
+      scope = known.candidate.scope;
+    }
+    const pointer = await store.readPromotionIdentity(contract.recordClass, scope);
     // Named as the canonical candidate, never as a confirmation: only the store records a confirmation, and the runner re-proves this one.
     if (pointer) last = { at: now, candidateId: pointer.versionId, versionId: pointer.versionId };
   }
-  const read = store.readCandidateSummary?.bind(store) ?? store.readCandidate.bind(store);
   const created = last?.candidateId ? await read(last.candidateId) : null;
   const record = created ?? (last?.versionId ? await read(last.versionId) : null);
   if (!last || !record) return null;

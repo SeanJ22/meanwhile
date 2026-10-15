@@ -19,7 +19,7 @@ export type PlaceCaptureRead<T> = {
 };
 
 const array = (path: string, where: string) => `(SELECT COALESCE(jsonb_agg(x), '[]'::jsonb) FROM jsonb_array_elements(CASE WHEN jsonb_typeof(${path})='array' THEN ${path} ELSE '[]'::jsonb END) x WHERE ${where})`;
-const division = "x->>'ocdId'=ANY($3::text[]) OR x->>'divisionId'=ANY($3::text[])";
+const division = "x->>'ocdId'=ANY($3::text[]) OR x->>'divisionId'=ANY($3::text[]) OR x->'value'->>'divisionId'=ANY($3::text[])";
 const serves = `${division} OR x->'alsoServesOcdIds' ?| $3::text[] OR x->>'id'=ANY($4::text[])`;
 const objectMap = (path: string) => `(SELECT COALESCE(jsonb_object_agg(k,v), '{}'::jsonb) FROM jsonb_each(
   CASE WHEN jsonb_typeof(${path})='object' THEN ${path} ELSE '{}'::jsonb END) e(k,v) WHERE k=ANY($5::text[]))`;

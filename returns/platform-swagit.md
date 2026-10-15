@@ -1,37 +1,20 @@
 # Returned: platform-swagit
 
-## platform-swagit — cleanup list (River's review at fold; delete in stream/platform-swagit, then mark READY again)
-
-Lane platform-swagit (R3-SWAGIT), READY 1359d8e5b, folded into river-next. Measured effect against river 0e9d37e08299: +1,795 / −9 lines across 21 files (7 added, 0 deleted, 14 modified); code and tests +585 / −9 in 17 files. The READY commit gives no line or file counts; state them when marking READY again.
-
-Delete:
-1. Remove the unused `export` keyword (nothing outside the file imports them, tests included): lib/sources/swagit/index.ts:10 (SwagitMeeting) and :23 (SwagitRaw). If a symbol is also unused inside its file, delete it.
-
-Checked and clean otherwise: no commented-out code; every new code file and fixture is referenced.
-
-
 lane: platform-swagit
 owner: platform-swagit
 writer: the platform-swagit lane
-check: cleanliness
-ready: R3-SWAGIT 1359d8e5b63201edf6f8a05d68780dba819c273c
-river: 0e9d37e0829974dbf3c91800fe7e3cb12360f00e
-at: 2026-10-14T21:08:42Z
+check: fold-conflict
+ready: no step ids unknown
+river: 493311674ed4c1f3d15c14f70e19e7be9b9f58aa
+at: 2026-10-15T22:03:59Z
 state: returned
-fix_subject: fix:73623c9c
-fix: River · stream/platform-swagit — cleanliness failed for platform-swagit: ## platform-swagit — cleanup list (River's review at fold; delete in stream/platform-swagit, then mark READY again)
+fix_subject: fix:22434992
+fix: River · stream/platform-swagit — fold-conflict failed for platform-swagit: R3-SWAGIT (18914d679) merges clean with river alone but conflicts with R3-MUNICODE (25e501e90, folded this batch) in lib/control-plane/discovery/derived-wiring-reading.ts: the makeSwagitSource call (yours passes rows and from/to bounds; riv
 
 ## Failure
 
 ```
-## platform-swagit — cleanup list (River's review at fold; delete in stream/platform-swagit, then mark READY again)
-
-Lane platform-swagit (R3-SWAGIT), READY 1359d8e5b, folded into river-next. Measured effect against river 0e9d37e08299: +1,795 / −9 lines across 21 files (7 added, 0 deleted, 14 modified); code and tests +585 / −9 in 17 files. The READY commit gives no line or file counts; state them when marking READY again.
-
-Delete:
-1. Remove the unused `export` keyword (nothing outside the file imports them, tests included): lib/sources/swagit/index.ts:10 (SwagitMeeting) and :23 (SwagitRaw). If a symbol is also unused inside its file, delete it.
-
-Checked and clean otherwise: no commented-out code; every new code file and fixture is referenced.
+R3-SWAGIT (18914d679) merges clean with river alone but conflicts with R3-MUNICODE (25e501e90, folded this batch) in lib/control-plane/discovery/derived-wiring-reading.ts: the makeSwagitSource call (yours passes rows and from/to bounds; river's still passes pages) and the kind list on the next line (your side keeps MUNICODE in it, municode's side removes it). After R3-MUNICODE is on river, merge origin/river into stream/platform-swagit, keep your SWAGIT block and drop MUNICODE from the list, run the focused tests, push a new READY.
 ```
 
 ## Repair

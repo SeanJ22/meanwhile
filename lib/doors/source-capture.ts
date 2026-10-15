@@ -5,11 +5,11 @@ import type { ControlPlaneRepositories } from "../control-plane/repository/types
 import type { CycleVault } from "../control-plane/scheduler/vault.ts";
 import { pageDoorDraft, pageAddress } from "./page-doors.ts";
 import { upsertDerivedDoor } from "./registry.ts";
-import { repairDoor } from "./repair.ts";
+import { VOTING_SOURCE_DOOR_KIND } from "../ballot/voting-source-publication.ts";
 import type { SourceDisposition } from "./source-content.ts";
 
-type Repos = Pick<ControlPlaneRepositories, "doors" | "artifacts" | "fieldManual" | "adminConfig">;
-export interface SourceObservation {
+type Repos = Pick<ControlPlaneRepositories, "doors" | "artifacts" | "fieldManual">;
+interface SourceObservation {
   url: string;
   ocdId: string;
   state: string;
@@ -50,14 +50,7 @@ export async function recordSourceObservation(repos: Repos, observation: SourceO
     await upsertDerivedDoor(repos.doors, { ...draft, kind: prior?.value.kind ?? draft.kind, doorId: prior?.id ?? draft.doorId, ocdId: prior?.value.ocdId ?? draft.ocdId,
       holds: [...new Set([...(prior?.value.holds ?? []), ...draft.holds!])],
       config: { ...prior?.value.config, ...draft.config, sourceScopes: JSON.stringify(mappings) } }, at, at);
-  } else if (observation.capture && disposition.kind !== "DOOR") {
-    const held = await repos.doors.listWhere(["ocdId"], observation.ocdId);
-    for (const row of held) {
-      if (row.value.kind !== "page" || row.value.status === "SUSPENDED" || row.value.origin !== "DERIVED") continue;
-      if (pageAddress(String(row.value.config.url))?.url === address.url) await repairDoor(repos, row.id,
-        { status: "SUSPENDED", notes: disposition.reason }, at);
-    }
-  }
+  } else if (disposition.kind !== "DOOR") await retireSourceDoors(repos.doors, observation, at);
   return { copyId, disposition: disposition.kind };
 }
 
@@ -74,4 +67,22 @@ export async function recordSourceDisposition(repos: Pick<ControlPlaneRepositori
     payload: { ocdId: observation.ocdId, disposition: disposition.kind, copyId, quote: disposition.quote } });
   const written = await writeFieldManual(repos, [entry], at);
   if (written.error) throw new Error(written.error);
+}
+
+export async function retireSourceDoors(repo: ControlPlaneRepositories["doors"],
+  observation: Pick<SourceObservation, "url" | "ocdId" | "disposition" | "capture" | "workItemId">, at: string) {
+  const address = pageAddress(observation.url);
+  if (!address || observation.disposition.kind === "DOOR") return;
+  const rows = [...await repo.listWhere(["config", "url"], address.url), ...await repo.listWhere(["kind"], VOTING_SOURCE_DOOR_KIND)];
+  for (const row of new Map(rows.map(row => [row.id, row])).values()) {
+    const door = row.value;
+    if (door.origin !== "DERIVED" || door.status === "SUSPENDED" || !["page", VOTING_SOURCE_DOOR_KIND].includes(door.kind)) continue;
+    const url = door.kind === VOTING_SOURCE_DOOR_KIND
+      ? (JSON.parse(String(door.config.votingSource)) as { url: string }).url : String(door.config.url);
+    if (pageAddress(url)?.url !== address.url) continue;
+    if (!observation.capture && (door.lastSuccessAt || door.validators?.checkedAt)) continue;
+    if (observation.disposition.kind === "SKIP" && door.ocdId !== observation.ocdId && !(observation.workItemId && door.config.workItemId === observation.workItemId)) continue;
+    await repo.compareAndSet(row.id, row.revision, { ...door, status: "SUSPENDED", readNow: false,
+      notes: observation.disposition.reason, updatedAt: at }, at);
+  }
 }

@@ -1,12 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { surnameDisplayCase } from "../lib/ballot/name-case.ts";
-
-/**
- * Filed ledger-caps surnames render as names, not shouting.
- * The pass is display-only and fires only on all-caps input.
- */
+import { ballotCandidateDisplayName, surnameDisplayCase } from "../lib/ballot/name-case.ts";
 
 test("all-caps filed surnames case as names", () => {
   assert.equal(surnameDisplayCase("ROACH"), "Roach");
@@ -44,4 +39,17 @@ test("mixed-case input passes through byte-identical — never 'corrected'", () 
   assert.equal(surnameDisplayCase("DeCroce"), "DeCroce");
   assert.equal(surnameDisplayCase("van der Berg"), "van der Berg");
   assert.equal(surnameDisplayCase("McDonald"), "McDonald");
+});
+
+test("surname-first candidate tickets display each person's given name first without changing the official quote", () => {
+  const candidate = { givenName: "", familyName: "Benson, Jocelyn / Brinks, Winnie",
+    provenance: { quote: "Democratic Party | Benson, Jocelyn / Brinks, Winnie | 04/16/2026 | Petitions" } };
+  const saved = structuredClone(candidate);
+  assert.equal(ballotCandidateDisplayName(candidate), "Jocelyn Benson / Winnie Brinks");
+  assert.deepEqual(candidate, saved);
+  assert.equal(ballotCandidateDisplayName({ givenName: "", familyName: "O'BRIEN, ALEX / McDonald, Jordan" }), "Alex O'Brien / Jordan McDonald");
+  assert.equal(ballotCandidateDisplayName({ givenName: "", familyName: "SMITH, JOHN, JR." }), "John Smith, Jr.");
+  assert.equal(ballotCandidateDisplayName({ givenName: "", familyName: "John Smith, Jr." }), "John Smith, Jr.");
+  assert.equal(ballotCandidateDisplayName({ givenName: "Jocelyn", familyName: "Benson" }), "Jocelyn Benson");
+  assert.equal(ballotCandidateDisplayName({ givenName: "", familyName: "Jocelyn Benson / Winnie Brinks" }), "Jocelyn Benson / Winnie Brinks");
 });

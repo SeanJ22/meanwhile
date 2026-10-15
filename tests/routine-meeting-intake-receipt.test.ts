@@ -12,7 +12,7 @@ import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { FLEET_POLICY_VERSION } from "../lib/control-plane/workers/runtime.ts";
 import { PIMA_LEGISTAR_CONTRACT } from "../lib/control-plane/workers/held-meeting-contract.ts";
 import { retainRecentRoutineMeetingEvidence, retainRoutineMeetingForWorkers } from "../lib/control-plane/workers/routine-meeting-intake.ts";
-import type { RetainedMeetingCandidate, RetainedSourceResponse } from "../lib/civic-data/meeting-research-evidence.ts";
+import type { RetainedMeetingCandidate, RetainedSourceResponse } from "../lib/civic-data/retained-meeting-bytes.ts";
 import { meetingPartitionForRow } from "../lib/civic-data/meeting-partitions.ts";
 import { methodFixture } from "./method-store-fixture.ts";
 
@@ -24,7 +24,7 @@ const windowUrl = (from: string, to: string) =>
 const DAY_ONE = windowUrl("2026-06-26", "2027-01-22");
 const DAY_TWO = windowUrl("2026-06-27", "2027-01-23");
 const response = (url: string, retrievedAt: string): RetainedSourceResponse => ({
-  source: "legistar", requestedUrl: url, finalUrl: url, httpStatus: 200, rawHash, byteCount: bytes.byteLength, bytes, retrievedAt,
+  source: "legistar", requestedUrl: url, finalUrl: url, httpStatus: 200, rawHash, byteCount: bytes.byteLength, bytes, retrievedAt, contentType: "application/json",
 });
 const methodVersion = methodFixture().version;
 const subjectId = meetingPartitionForRow("legistar", PIMA_LEGISTAR_CONTRACT.subjectId).bodyId;

@@ -3,12 +3,15 @@ import type { RoutineDataStore } from "./store.ts";
 import type { OfficialLinkingPage } from "./source-authority.ts";
 import type { Body, Division, SourceDataset } from "../registry/types.ts";
 import { bodiesFor } from "../registry/derive.ts";
-import { readRegistryRuntimePrior, registryRuntimeCandidate, type RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
+import { readRegistryRuntimePrior, registryRuntimeCandidate, type RegistryRuntimeCarton } from "../registry/runtime-data-plane.ts";
 import { processRegisteredManualCandidate } from "./promotion.ts";
 import { recordRoutineReaderProjectionReadback } from "./reader-verification.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import { captureProblem, registryEdition, section3SourceReceipt } from "./worker-publication-evidence.ts";
-import { acceptedRegistryPrior, publishRosterReading, type RosterReading, type WorkerPublicationCapture } from "./worker-roster-publication.ts";
+import { acceptedRegistryPrior, type WorkerPublicationCapture } from "./worker-roster-publication.ts";
+import type { Clocks, FactDb, Query } from "../facts/publish.ts";
+import { publishRosterFacts } from "../facts/roster-facts.ts";
+import { rosterMemberId } from "../facts/roster-read.ts";
 import { section3Page, section3Record, valueOnPage } from "../control-plane/promotion/section3.ts";
 import type { StatewideExecutive } from "../officials/statewide-executives.ts";
 import { canonicalJson } from "../control-plane/repository/types.ts";
@@ -43,6 +46,8 @@ export interface NationalOfficialInput {
 
 export interface NationalPlacePublicationInput {
   readonly store: RoutineDataStore;
+  readonly facts: FactDb & { readonly query: Query };
+  readonly clocks: Clocks;
   readonly now: string;
   readonly divisions: readonly NationalDivisionInput[];
   readonly geographyCaptures: readonly WorkerPublicationCapture[];
@@ -68,7 +73,6 @@ const SCOPE_DIVISIONS = new Set(["country", "state"]);
 const GOVERNING_FUNCSTAT = new Set(["A", "B", "C", "G"]);
 const LEGISLATIVE = new Set<Division["divisionType"]>(["cd", "sldu", "sldl"]);
 const STATE_DIVISION = /^ocd-division\/country:us\/(?:state|district|territory):[a-z]{2}$/;
-const slug = (text: string) => text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
 function statewideRow(official: NationalOfficialInput, capture: WorkerPublicationCapture, now: string, stateLabel: string | null): StatewideExecutive | string {
   const page = { url: capture.evidence.canonicalUrl, text: capture.evidence.text, retrievedAt: capture.observedAt, linkingPage: official.linkingPage ?? null };
@@ -120,7 +124,7 @@ async function promote(store: RoutineDataStore, prepared: Parameters<typeof regi
     requiredManualProductionContract("registry-runtime-bindings"), published.promoted, now);
   if (readback?.status !== "PASS") throw new Error(`NATIONAL_REGISTRY_READBACK_FAILED:${readback?.detail ?? "missing typed reader receipt"}`);
   return { candidateId: candidate.id, versionId: published.promoted.versionId,
-    readModel: published.candidate.candidate.readModel as RegistryRuntimeReadModel, prior: acceptedRegistryPrior(published) };
+    readModel: published.candidate.candidate.readModel as RegistryRuntimeCarton, prior: acceptedRegistryPrior(published) };
 }
 
 export async function publishNationalPlaceSources(input: NationalPlacePublicationInput): Promise<NationalPlacePublication> {
@@ -163,7 +167,7 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
     const digest = createHash("sha256").update(canonicalJson({ divisions, bodies: bodies.map(b => b.id) })).digest("hex").slice(0, 16);
     const published = await promote(input.store, { contractId: "registry-runtime-bindings", scope: "MEMBERS", version: registryEdition(`national-place:${digest}`), sourceThrough: input.now, sourceReceipt,
       payload: { ...prior.payload, registry: { ...prior.payload.registry, divisions, bodies },
-        bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: [], officialPhotos: { photos: [] }, rosterPhotos: {},
+        statewideExecutives: [], officialPhotos: { photos: [] }, rosterPhotos: {},
         officialCandidacies: { ...prior.payload.officialCandidacies, rows: [] } } }, prior, input.now);
     ({ candidateId } = published); promotedVersionId = published.versionId;
     prior = published.prior;
@@ -199,7 +203,7 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
       const published = await promote(input.store, { contractId: "registry-runtime-bindings", scope: "MEMBERS", version: registryEdition(`national-statewide:${digest}`), sourceThrough: input.now, sourceReceipt,
         departures: statewide.flatMap(s=>prior!.payload.statewideExecutives.filter(old=>old.stateOcdId===s.row.stateOcdId && old.holder.officeTitle===s.row.holder.officeTitle && old.sourceUrl===s.row.sourceUrl && old.holder.id!==s.row.holder.id).map(old=>({bodyId:s.row.stateOcdId,holderId:old.holder.id,replacementHolderId:s.row.holder.id,officeTitle:s.row.holder.officeTitle,sourceUrl:s.row.sourceUrl}))),
         payload: { ...prior.payload, registry: { ...prior.payload.registry, divisions: [], bodies: [] },
-          bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: statewide.map(s => s.row), officialPhotos: { photos: [] }, rosterPhotos: {},
+          statewideExecutives: statewide.map(s => s.row), officialPhotos: { photos: [] }, rosterPhotos: {},
                     // A new holder of an office keyed by its seat owes its candidacy check again rather than inheriting the last holder's.
           officialCandidacies: { ...prior.payload.officialCandidacies, rows: statewide
             .map(s => ({ holder: { id: s.row.holder.id, name: s.row.holder.name, officeTitle: s.row.holder.officeTitle, divisions: [s.row.stateOcdId],
@@ -233,19 +237,19 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
   for (const [bodyId, officials] of byBody) {
     for (const official of officials) {
       const capture = official.document.capture!;
-      const ownReading: RosterReading = { id: `national:${official.discoveryId}`, capture, linkingPage: official.linkingPage ?? null, complete: false,
-        method: "Place-first national lead; official profile page read",
-        members: [{ recordId: `national:${official.discoveryId}`, fields: { name: official.name, office: official.officeTitle, websiteUrl: official.officialUrl } }] };
+      const recordId = `national:${official.discoveryId}`;
+      const body = prior.payload.registry.bodies.find(b => b.id === bodyId)!;
       try {
-        const published = await publishRosterReading({store:input.store,bodyId,reading:ownReading,now:input.now,prior,onPublished:next=>{prior=next;}});
-        if (!published.confirmed) promotedVersionId = published.versionId;
-        members.push({ bodyId, versionId: published.versionId, discoveryIds: [official.discoveryId] });
+        const tally = await publishRosterFacts(input.facts, { body: { id: bodyId, name: body.name, state: /\/state:([a-z]{2})/.exec(bodyId)?.[1]?.toUpperCase() ?? null, parentId: body.ocdId },
+          capture, members: [{ recordId, fields: { name: official.name, office: official.officeTitle, websiteUrl: official.officialUrl } }], complete: false,
+          producedBy: recordId }, input.clocks, new Date(input.now));
+        const personId = tally.people.get(recordId);
+        if (!personId || tally.live + tally.confirmed + tally.held === 0) throw new Error("OFFICIAL_FACTS_BLANK: the name and office were not confirmed on the saved page");
+        members.push({ bodyId, versionId: prior.versionId, discoveryIds: [official.discoveryId] });
         if (official.portrait) {
           try {
-            const holder = prior!.payload.bodyRosters.find(row => row.bodyId === bodyId)?.members
-              .find(row => row.id === published.accepted.find(binding=>binding.recordId===`national:${official.discoveryId}`)?.memberId);
-            if (!holder) throw Error("PORTRAIT_HOLDER_NOT_PUBLISHED");
-            const existing = prior!.payload.officialPhotos.photos.find(row => row.officeholderId === holder.id);
+            const [shown] = await input.facts.query("SELECT value FROM entity_external_id WHERE entity_id = $1 AND scheme = 'roster-member'", [personId]);
+            const holder = { id: rosterMemberId(bodyId, personId, shown?.value as string | undefined), personId, name: official.name, nativeIds: undefined };
             const photo = await storeVerifiedPortrait(holder.personId ?? holder.id, {...official.portrait,subject:{personId:holder.personId ?? holder.id,name:holder.name,nativeIds:holder.nativeIds,profileUrls:[official.document.url,official.officialUrl]}}, input.now, input.portraitRuntime);
             const receipt = section3SourceReceipt(official.portrait.captures,input.now,"section3:portrait",
               "The same named portrait is supported by two saved sources; its permitted use is attributed and its decoded bytes are stored on our origin.");
@@ -255,8 +259,7 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
                 {requestedUrl:photo.sourceUrl,finalUrl:photo.sourceUrl,publisher:new URL(photo.sourceUrl).hostname,
                   sourceClass:"REFERENCE_PUBLISHER",retrievedAt:photo.collectedAt,httpStatus:200,rawHash:photo.verification!.sourceImageHash.slice(7),
                   reviewedEvidence:"Downloaded, checked by the existing image decoder and stored; source identity and permitted use are bound to the saved corroborating pages."}]},
-              payload:{...prior!.payload,registry:{...prior!.payload.registry,divisions:[],bodies:[]},bodyRosters:[],
-                rosterReaderDispositions:[],statewideExecutives:[],officialCandidacies:{...prior!.payload.officialCandidacies,rows:[]},
+              payload:{...prior!.payload,registry:{...prior!.payload.registry,divisions:[],bodies:[]},statewideExecutives:[],officialCandidacies:{...prior!.payload.officialCandidacies,rows:[]},
                 officialPhotos:{photos:[{officeholderId:holder.id,personId:holder.personId ?? holder.id,name:official.name,...photo}]},rosterPhotos:{[holder.id]:photo.url}}},prior!,input.now);
             prior=saved.prior;candidateId=saved.candidateId;promotedVersionId=saved.versionId;
           } catch (error) {

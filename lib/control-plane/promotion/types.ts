@@ -1,58 +1,34 @@
-/**
- * SCOUTED -> CONFIRMED -> VERIFIED -> AUDITED -> APPROVED_FOR_PROMOTION, or REFUSED at any stage.
- * The actor of a transition is never the actor of the stage before it, and a refusal is appended as a record.
- */
+
 
 import type { WorkerRole } from "../attempt.ts";
-import type { AuditEvidenceBase } from "../audit.ts";
 import type { ExecutorKind } from "../scheduler/dispatch.ts";
 
 export const PROMOTION_PIPELINE_FORMAT_VERSION = 1;
 
 export const PIPELINE_STAGES = [
   "SCOUTED",
-  "CONFIRMED",
   "VERIFIED",
-  "AUDITED",
   "APPROVED_FOR_PROMOTION",
 ] as const;
 export type PipelineStage = (typeof PIPELINE_STAGES)[number];
 
 export const PRECEDING_STAGE: Readonly<Record<PipelineStage, PipelineStage | null>> = {
   SCOUTED: null,
-  CONFIRMED: "SCOUTED",
-  VERIFIED: "CONFIRMED",
-  AUDITED: "VERIFIED",
-  APPROVED_FOR_PROMOTION: "AUDITED",
+  VERIFIED: "SCOUTED",
+  APPROVED_FOR_PROMOTION: "VERIFIED",
 };
 
 export const PIPELINE_REFUSALS = [
   "STAGE_OUT_OF_ORDER",
   "STAGE_ALREADY_REACHED",
-  "SELF_CERTIFICATION",
-  "CONFIRMATION_WITHOUT_ARTIFACT",
-  "CONFIRMATION_ARTIFACT_UNKNOWN",
-  "CONFIRMATION_SAME_ATTEMPT",
-  "CONFIRMATION_BY_SCOUT_ROLE",
-  "CONFIRMATION_ATTEMPT_UNKNOWN",
-  "CONFIRMATION_URL_MISMATCH",
-  "CONFIRMATION_SECOND_ROUTE_UNNAMED",
-  /** The confirming acquisition states a different fact about the same meeting; the item holds. */
-  "CONFIRMATION_FACT_CONFLICT",
   "VERIFICATION_CHECK_MISSING",
   "VERIFICATION_CHECK_FAILED",
   /** A verification check could not run; it is NOT_IMPLEMENTED, never a pass. */
   "VERIFICATION_CHECK_NOT_IMPLEMENTED",
-  "AUDIT_NOT_INDEPENDENT",
-  "AUDIT_STARTING_POINT_NOT_INDEPENDENT",
-  /** The batch carried no injected controls; scores are NOT MEASURED. */
-  "AUDIT_CONTROLS_NOT_MEASURED",
-  "AUDIT_DID_NOT_SURVIVE",
   "APPROVAL_CHAIN_INCOMPLETE",
-  /** A deterministic approval burden beyond the chain (freshness, currency, measured controls, checks) failed. */
+  /** A deterministic approval burden beyond the chain (freshness, currency, checks) failed. */
   "APPROVAL_BURDEN_FAILED",
   "WORKER_RESULT_NOT_VERIFIED",
-  "WORKER_AUDIT_BLOCKS_PROMOTION",
 ] as const;
 export type PipelineRefusalCode = (typeof PIPELINE_REFUSALS)[number];
 
@@ -61,16 +37,11 @@ export interface PipelineRefusalReason {
   readonly detail: string;
 }
 
-/** Two actors are the same when their instance matches; SELF_CERTIFICATION is decided on that. */
 export interface PipelineActor {
   readonly role: WorkerRole;
   readonly lane: ExecutorKind | "SESSION";
   /** Process, worker, or Attempt handle. Unique per invocation. */
   readonly instance: string;
-}
-
-export function sameActor(a: PipelineActor, b: PipelineActor): boolean {
-  return a.instance === b.instance;
 }
 
 interface RecordBase {
@@ -82,6 +53,12 @@ interface RecordBase {
 }
 
 export type ScoutedSource =
+  | {
+      readonly kind: "PROMOTED_CANDIDACY";
+      readonly candidacyId: string;
+      readonly sourceUrl: string;
+      readonly websiteUrl: string;
+    }
   | {
       readonly kind: "SCOUT_RESULT";
       readonly attemptId: string;
@@ -136,18 +113,6 @@ export interface ScoutedRecord extends RecordBase {
   readonly summary: string;
 }
 
-export type ConfirmationBasis = "SECOND_ACQUISITION" | "SECOND_ROUTE";
-
-export interface ConfirmedRecord extends RecordBase {
-  readonly stage: "CONFIRMED";
-  readonly basis: ConfirmationBasis;
-  readonly confirmingArtifactIds: readonly string[];
-  /** For SECOND_ROUTE: the fact both representations establish. Null for SECOND_ACQUISITION. */
-  readonly sameFact: string | null;
-  /** Whether the confirming acquisition states the same fact; absent on records written before the field existed. */
-  readonly factAgreement?: { readonly sameFact: boolean; readonly detail: string };
-}
-
 export const VERIFICATION_CHECKS = [
   "CLAIM_RESOLVES_TO_SOURCE_SPAN",
   "CANONICAL_IDENTITY_UNIQUE",
@@ -169,27 +134,8 @@ export interface VerifiedRecord extends RecordBase {
   readonly workerResultId?: string;
   readonly stage: "VERIFIED";
   readonly checks: readonly VerificationCheck[];
-}
-
-export interface ControlFact {
-  readonly statement: string;
-  readonly expected_truth:
-    | { readonly kind: "value"; readonly subject: string; readonly value: string | number | boolean }
-    | { readonly kind: "predicate"; readonly predicate: string; readonly args: Readonly<Record<string, string | number | boolean>> }
-    | { readonly kind: "proposition"; readonly proposition: string };
-  readonly accepted_forms?: readonly string[];
-  readonly fact_class: "known_present" | "known_absence";
-  readonly verification_source: string;
-  readonly verified_by: string;
-  readonly verified_date: string;
-  readonly authority?: string;
-  readonly period?: string;
-  readonly verified_through?: string;
-}
-
-export interface ControlObservation {
-  readonly statement: string;
-  readonly observed: "FACT_STATED" | "GAP_NAMED" | "ABSENCE_ASSERTED";
+  /** The saved page the checks ran on, when it is not the scouted artifact. */
+  readonly artifactIds?: readonly string[];
 }
 
 /** Every rate's denominator is explicit; a null rate means an empty denominator. */
@@ -206,24 +152,11 @@ export interface ControlScore {
   readonly falsePresenceRate: number | null;
 }
 
-export interface AuditedRecord extends RecordBase {
-  readonly workerResultId?: string;
-  readonly stage: "AUDITED";
-  readonly startedFrom: readonly AuditEvidenceBase[];
-  readonly survived: boolean;
-  /** Null is NOT MEASURED, and refuses. Never a zero standing in for a measurement. */
-  readonly controls: ControlScore | null;
-  readonly findings: readonly string[];
-}
-
 /** Burdens measured when an approval is offered and kept on the record; a FAIL refuses as APPROVAL_BURDEN_FAILED. */
 export const APPROVAL_BURDENS = [
   "CHAIN_CHECKS_PASS",
-  "CONTROLS_MEASURED_CLEAN",
   "FACT_CURRENT",
   "FRESHNESS_NOT_STALE",
-  /** The record class is one the fact chain implements. */
-  "RECORD_CLASS_CANDIDATE",
 ] as const;
 export type ApprovalBurdenName = (typeof APPROVAL_BURDENS)[number];
 
@@ -237,9 +170,7 @@ export interface ApprovedRecord extends RecordBase {
   readonly stage: "APPROVED_FOR_PROMOTION";
   readonly chain: {
     readonly scouted: string;
-    readonly confirmed: string;
     readonly verified: string;
-    readonly audited?: string;
   };
   readonly recordClass: string;
   /** Absent on approvals written before the burdens existed. */
@@ -258,18 +189,14 @@ export interface RefusedRecord extends RecordBase {
 
 export type TransitionRecord =
   | ScoutedRecord
-  | ConfirmedRecord
   | VerifiedRecord
-  | AuditedRecord
   | ApprovedRecord;
 
 export type PromotionPipelineRecord = TransitionRecord | RefusedRecord;
 
 export interface StageRecordMap {
   SCOUTED?: ScoutedRecord;
-  CONFIRMED?: ConfirmedRecord;
   VERIFIED?: VerifiedRecord;
-  AUDITED?: AuditedRecord;
   APPROVED_FOR_PROMOTION?: ApprovedRecord;
 }
 

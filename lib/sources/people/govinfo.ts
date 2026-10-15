@@ -1,3 +1,4 @@
+import { officeIdentity } from "../../officials/office-identity.ts";
 import type { OfficeholderSet } from "../../officials/types.ts";
 import { decodeEntities } from "../http.ts";
 import { acquisition, array, emptyPerson, emptyRoster, gap, json, number, provenance, record, result, savedRead, sourced, stateIdentity, string, url, type PeopleAcquisitionOptions, type PeopleSourceRelease } from "./common.ts";
@@ -29,7 +30,7 @@ export function normalizeGovinfoMember(value: unknown, document: string, options
       holder.phone = /(?:\(?202\)?[\s.-]+)\d{3}[\s.-]+\d{4}/.exec(text)?.[0] ?? null;
     }
     const membershipId = `${id}:${chamber}:${district ?? "state"}:${string(summary.congress) ?? number(summary.congress) ?? ""}`;
-    holder.memberships = [{ id: membershipId, personId, officeId: `congress-office:${state.state}:${chamber}:${district ?? "state"}`, jurisdiction: state.jurisdiction,
+    holder.memberships = [{ id: membershipId, personId, officeId: `congress-office:${state.state}:${officeIdentity(holder.officeTitle)}:${district ?? "state"}`, jurisdiction: state.jurisdiction,
       chamber, district: district === null ? undefined : String(district), officeTitle: holder.officeTitle, level: "FEDERAL", current: true, divisionId, sourceUrl }];
     sourced(holder,source);
     if(documentSource)holder.fieldSources={...holder.fieldSources,...Object.fromEntries(["phone","websiteUrl"].filter(field=>holder[field as "phone"|"websiteUrl"]).map(field=>[field,provenance(documentSource.sourceUrl,"U.S. Government Publishing Office — Congressional Directory",documentSource.collectedAt)]))};
@@ -90,7 +91,6 @@ export async function acquireGovinfoDirectory(options: PeopleAcquisitionOptions)
           const parsed = normalizeGovinfoMember(data, document, options, summaryUrl, summary.retrievedAt,documentSource);
           roster.officeholders.push(...parsed.officeholders.filter(holder=>!roster.officeholders.some(prior=>prior.id===holder.id)));
           roster.divisions.push(...parsed.divisions); roster.unmatched.push(...parsed.unmatched);
-          if(parsed.officeholders.length)await options.onPerson?.(result(options,roster,acquisitions,gaps));
         } catch(error) { gap(gaps,options,summaryUrl,error); }
       }
       sourceUrl = url(data.nextPage) ?? "";

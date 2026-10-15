@@ -9,6 +9,7 @@ import { portraitHash, verifyPortraitSources, type PortraitSources } from "../li
 import { portraitBindingMatches } from "../lib/photos/binding.ts";
 import { storeVerifiedPortrait, type PortraitRuntime } from "../lib/photos/store.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { sourceAcquisitionFailure } from "../lib/civic-data/source-acquisition-error.ts";
 import type { KnownRelease, KnownReleaseOptions } from "../lib/sources/known-release.ts";
@@ -75,7 +76,7 @@ test("a failed member retains its old verified portrait and cannot block another
   assert.equal(result.projection.roster.officeholders[0].phone, "202-225-1000");
   assert.ok(result.excludedFacts.some(row => row.key === "congress:A000001:portrait" && row.code === "CONGRESS_PORTRAIT_SOURCE_FAILED"));
   const sourceUrl = `https://raw.githubusercontent.com/unitedstates/congress-legislators/${SHA}/legislators-current.yaml`;
-  const candidate = federalDirectoryCandidate({ projection: result.projection, excludedFacts: result.excludedFacts, retrievedAt: ORIGINAL,
+  const candidate = await federalDirectoryCandidate({ vault: new MemoryEvidenceStore(), projection: result.projection, excludedFacts: result.excludedFacts, retrievedAt: ORIGINAL,
     acquisitions: [{ requestedUrl: sourceUrl, finalUrl: sourceUrl, httpStatus: 200, body: JSON.stringify(raw(2)["legislators-current"]), retrievedAt: ORIGINAL }] });
   const store = new MemoryRoutineDataStore(), outcome = await processRegisteredManualCandidate(store, "congress-bulk-roster", candidate, VERIFIED);
   assert.ok(outcome.promoted, outcome.candidate.failureDetail ?? "");
@@ -123,7 +124,7 @@ test("a pass with no new portrait still persists its exact field failures withou
       } });
     assert.deepEqual(result.projection, model);
     assert.equal(result.excludedFacts.length, 3);
-    const candidate = federalDirectoryCandidate({ projection: model, excludedFacts: result.excludedFacts, retrievedAt: ORIGINAL,
+    const candidate = await federalDirectoryCandidate({ vault: new MemoryEvidenceStore(), projection: model, excludedFacts: result.excludedFacts, retrievedAt: ORIGINAL,
       acquisitions: [{ requestedUrl: sourceUrl, finalUrl: sourceUrl, httpStatus: 200, body: JSON.stringify(raw()["legislators-current"]), retrievedAt: ORIGINAL }] });
     assert.notEqual(candidate.id, priorId, "a later failed field attempt needs its own durable candidate identity"); priorId = candidate.id;
     const outcome = await processRegisteredManualCandidate(store, "congress-bulk-roster", candidate, at, undefined, { confirmUnchanged: false });

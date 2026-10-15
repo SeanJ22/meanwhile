@@ -18,21 +18,28 @@ const fixtureFetch = (async (url: string | URL | Request, init?: RequestInit) =>
   assert.equal(init?.method, "GET", "collector must never mutate budgets, keys or provider settings");
   const u = new URL(String(url)); calls.push(u);
   if (u.hostname === "api.anthropic.com" && u.pathname.endsWith("/me")) return response({ id: "org-anthropic" });
-  if (u.pathname.endsWith("cost_report")) return response({ data: [{ results: [{ amount: "123.45", currency: "USD", cost_type: "tokens" }, { amount: "20", currency: "USD", cost_type: "web_search" }] }], has_more: !u.searchParams.has("page"), next_page: u.searchParams.has("page") ? null : "second" });
-  if (u.pathname.endsWith("usage_report/messages")) return response({ data: [{ results: [{ model: "claude-opus-5", api_key_id: "key-one", workspace_id: "workspace-one", uncached_input_tokens: 42, cache_read_input_tokens: 100, output_tokens: 2 }] }], has_more: false });
+  if (u.pathname.endsWith("cost_report")) return response({ data: [{ starting_at: u.searchParams.has("page") ? "2026-09-26T00:00:00Z" : "2026-09-25T00:00:00Z", results: [{ amount: "123.45", currency: "USD", cost_type: "tokens" }, { amount: "20", currency: "USD", cost_type: "web_search" }] }], has_more: !u.searchParams.has("page"), next_page: u.searchParams.has("page") ? null : "second" });
+  if (u.pathname.endsWith("usage_report/messages")) return response({ data: [{ starting_at: "2026-09-25T00:00:00Z", results: [{ model: "claude-opus-5", api_key_id: "key-one", workspace_id: "workspace-one", uncached_input_tokens: 42, cache_read_input_tokens: 100, output_tokens: 2 }] }], has_more: false });
   if (u.hostname === "admin-api.exa.ai" && u.pathname.endsWith("/api-keys")) return response({ apiKeys: [{ id: "exa-1", budgetCents: 1000, isOverBudget: false, rateLimit: 5 }] });
-  if (u.hostname === "admin-api.exa.ai") return response({ total_cost_usd: 2.5, period: { start: now, end: now } });
+  if (u.hostname === "admin-api.exa.ai") return response({ total_cost_usd: u.searchParams.get("start_date") === "2026-09-01T00:00:00.000Z" && u.searchParams.get("end_date") === now ? 2.5 : 0.1, period: { start: now, end: now } });
   if (u.pathname.endsWith("/organizations")) return response({ organizations: [{ id: "org-neon" }] });
-  if (u.pathname.endsWith("/consumption_history/v2/projects")) return response(u.searchParams.has("cursor") ? { projects: [] } : { projects: [{ project_id: "proj-1", periods: [{ consumption: [{ metrics: [{ metric_name: "compute_unit_seconds", value: 3600 }, { metric_name: "snapshot_storage_bytes_month", value: 75 }] }] }] }], pagination: { cursor: "proj-1" } });
+  if (u.pathname.endsWith("/consumption_history/v2/projects")) return response(u.searchParams.has("cursor") ? { projects: [] } : { projects: [{ project_id: "proj-1", periods: [{ consumption: [{ timeframe_start: "2026-09-24T00:00:00Z", metrics: [{ metric_name: "compute_unit_seconds", value: 3600 }, { metric_name: "snapshot_storage_bytes_month", value: 75 }, { metric_name: "public_network_transfer_bytes", value: 2e9 }] }] }] }], pagination: { cursor: "proj-1" } });
   if (u.hostname === "api.github.com" && u.pathname === "/user") return response({ login: "owner" });
-  if (u.hostname === "api.github.com") return response({ usageItems: [{ product: "Actions", sku: "linux", netAmount: 3, discountAmount: 2, netQuantity: 100, unitType: "minutes" }] });
-  if (u.hostname === "api.netlify.com") return response({ id: "site-1", account_id: "team-1" });
+  if (u.hostname === "api.github.com" && u.pathname === "/users/owner/settings/billing/usage") return response({ usageItems: [
+    { date: "2026-09-24T00:00:00Z", product: "Actions", sku: "linux", quantity: 60, unitType: "minutes", netAmount: 1, discountAmount: 2 },
+    { date: "2026-09-25T00:00:00Z", product: "Actions", sku: "linux", quantity: 40, unitType: "minutes", netAmount: 2, discountAmount: 0 }] });
+  if (u.hostname === "api.netlify.com" && u.pathname === "/api/v1/sites/test-site") return response({ id: "site-1", account_id: "team-1" });
+  if (u.hostname === "api.netlify.com" && u.pathname === "/api/v1/accounts/team-1") return response({ plan_credits: 3000, current_usage_period_start: "2026-09-17T00:00:00.000Z" });
+  if (u.hostname === "api.netlify.com" && u.pathname === "/api/v1/sites/site-1/deploys") return response([
+    { published_at: "2026-09-20T10:00:00Z", created_at: "2026-09-20T09:58:00Z", context: "production" },
+    { published_at: "2026-09-20T12:00:00Z", created_at: "2026-09-20T11:58:00Z", context: "production" },
+    { published_at: "2026-09-25T12:00:00Z", created_at: "2026-09-25T11:58:00Z", context: "production" }]);
   throw new Error("Unexpected request");
 }) as typeof fetch;
 
 test("provider reporting uses documented GETs, cents/discounts correctly, and preserves historical model labels", async () => {
   calls.length = 0;
-  const report = await collectProviderBilling({ now, env, costs: [], fetcher: fixtureFetch, githubCredential: () => null });
+  const report = await collectProviderBilling({ now, env, costs: [], fetcher: fixtureFetch });
   const by = (key: string) => report.readings.find(r => r.provider === key)!;
   assert.ok(report.readings.every(r => r.error === null));
   assert.ok(Math.abs(by("anthropic-api").reportedUsd! - 2.869) < 1e-9);
@@ -45,6 +52,18 @@ test("provider reporting uses documented GETs, cents/discounts correctly, and pr
   assert.equal(by("neon").reportedUsd, null, "consumption metrics are not invoice dollars");
   assert.equal(by("neon").units.find(u => u.label.endsWith("snapshot_storage_bytes_month"))?.value, 75);
   assert.equal(by("netlify").reportedUsd, null, "site access never proves access to billing");
+  const day = (key: string, d: string) => by(key).days?.find(x => x.day === d);
+  assert.equal(by("anthropic-api").days?.length, 26, "every UTC day of the month so far, zero when the provider lists no charge");
+  assert.ok(Math.abs(day("anthropic-api", "2026-09-25")!.usd! - 1.4345) < 1e-9);
+  assert.equal(day("anthropic-api", "2026-09-01")?.usd, 0);
+  assert.equal(by("exa").days?.length, 26);
+  assert.ok(Math.abs(day("exa", "2026-09-26")!.usd! - 0.1) < 1e-9, "each day is its own provider read");
+  assert.equal(day("github", "2026-09-24")?.usd, 1);
+  assert.equal(day("github", "2026-09-25")?.usd, 2);
+  assert.deepEqual(by("github").units, [{ label: "Actions / linux", value: 100, unit: "minutes" }]);
+  assert.deepEqual(day("neon", "2026-09-24")?.usage, [{ label: "Compute", value: 1, unit: "CU-hours" }, { label: "Data transfer", value: 2e9, unit: "bytes" }]);
+  assert.equal(day("neon", "2026-09-24")?.usd, null, "Neon reports usage, not dollars");
+  assert.deepEqual(by("netlify").days?.map(d => [d.day, d.usage[0].value]), [["2026-09-20", 30], ["2026-09-25", 15]]);
   assert.ok(calls.some(u => u.pathname.includes("/consumption_history/v2/")));
   assert.ok(calls.every(u => !u.href.includes("secret-")));
   assert.doesNotMatch(JSON.stringify(report), /secret-/);
@@ -54,11 +73,11 @@ test("provider reporting uses documented GETs, cents/discounts correctly, and pr
 });
 
 test("a fresh cached sync makes no provider calls; failure retains last report and its actual period", async () => {
-  const previous = await collectProviderBilling({ now, env, costs: [], fetcher: fixtureFetch, githubCredential: () => null });
+  const previous = await collectProviderBilling({ now, env, costs: [], fetcher: fixtureFetch });
   const forbidden = (async () => { throw new Error("secret-provider-response") }) as typeof fetch;
   const cached = await collectProviderBilling({ now: "2026-09-26T08:30:00.000Z", env, previous, fetcher: forbidden });
   assert.deepEqual(cached.readings, previous.readings);
-  const failed = await collectProviderBilling({ now: "2026-10-01T08:00:00.000Z", env, previous, fetcher: forbidden, githubCredential: () => null });
+  const failed = await collectProviderBilling({ now: "2026-10-01T08:00:00.000Z", env, previous, fetcher: forbidden });
   const held = failed.readings.find(r => r.provider === "anthropic-api")!;
   assert.equal(held.syncedAt, now);
   assert.equal(held.periodStart, "2026-09-01T00:00:00.000Z");
@@ -68,8 +87,10 @@ test("a fresh cached sync makes no provider calls; failure retains last report a
 });
 
 test("missing reporting credentials and unread request ledger remain unknown; search keys are unchanged", async () => {
-  const report = await collectProviderBilling({ now, env: { EXA_API_KEY: "search-key", BRAVE_SEARCH_API_KEY: "brave-key" }, githubCredential: () => null, fetcher: fixtureFetch });
-  assert.equal(report.readings.find(r => r.provider === "exa")?.error, "MISSING_EXA_SERVICE_API_KEY");
+  const report = await collectProviderBilling({ now, env: { EXA_API_KEY: "search-key", BRAVE_SEARCH_API_KEY: "brave-key", NEON_API_KEY: "db-admin", NETLIFY_AUTH_TOKEN: "deploy", GH_TOKEN: "release", NETLIFY_SITE_ID: "test-site" }, fetcher: fixtureFetch });
+  assert.deepEqual(report.readings.filter(r => r.provider !== "brave").map(r => [r.provider, r.error]), [
+    ["anthropic-api", "MISSING_ANTHROPIC_ADMIN_API_KEY"], ["neon", "MISSING_NEON_BILLING_API_KEY"], ["exa", "MISSING_EXA_SERVICE_API_KEY"],
+    ["github", "MISSING_GITHUB_BILLING_TOKEN"], ["netlify", "MISSING_NETLIFY_BILLING_TOKEN"]], "each bill is read only with its own billing key, never another token");
   assert.equal(report.readings.find(r => r.provider === "brave")?.estimatedUsd, null);
   const stripped = withoutBillingSecrets<Record<string,string | undefined>>({ ...env, EXA_API_KEY: "search-key", BRAVE_SEARCH_API_KEY: "brave-key" });
   for (const name of BILLING_SECRET_NAMES) assert.equal(stripped[name], undefined);
@@ -78,9 +99,9 @@ test("missing reporting credentials and unread request ledger remain unknown; se
 });
 
 test("an incomplete report cannot silently replace a previously complete provider total", async () => {
-  const previous = await collectProviderBilling({ now, env, costs: [], fetcher: fixtureFetch, githubCredential: () => null });
+  const previous = await collectProviderBilling({ now, env, costs: [], fetcher: fixtureFetch });
   const repeating = (async (url: string | URL | Request, init?: RequestInit) => new URL(String(url)).hostname === "api.anthropic.com" ? response({ data: [], has_more: true, next_page: "same" }) : fixtureFetch(url,init)) as typeof fetch;
-  const report = await collectProviderBilling({ now: "2026-09-26T10:00:00.000Z", env, previous, fetcher: repeating, githubCredential: () => null });
+  const report = await collectProviderBilling({ now: "2026-09-26T10:00:00.000Z", env, previous, fetcher: repeating });
   const a = report.readings.find(r => r.provider === "anthropic-api")!;
   assert.equal(a.error, "REPORT_PAGINATION");
   assert.equal(a.reportedUsd, previous.readings[0].reportedUsd);
@@ -122,7 +143,7 @@ test("hunt attribution does not add account reports or count shared reservation 
 });
 
 test("missing Exa service access uses priced requests as estimates, without searching or claiming provider charges", async () => {
-  const report = await collectProviderBilling({now,env:{},githubCredential:()=>null,costs:[{source:"api.exa.ai",recordedAt:now,cost:{usd:0.05,requestCount:1}}] as never});
+  const report = await collectProviderBilling({now,env:{},costs:[{source:"api.exa.ai",recordedAt:now,cost:{usd:0.05,requestCount:1}}] as never});
   const exa=report.readings.find(r=>r.provider==="exa")!;
   assert.equal(exa.status,"ESTIMATED");
   assert.equal(exa.reportedUsd,null);

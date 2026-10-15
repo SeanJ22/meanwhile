@@ -8,12 +8,13 @@ import { recordRegisteredSourceAcquisitionFailure, sourceAcquisitionFailure } fr
 import { routineReceiptFields } from "./runner-receipt.ts";
 import { ZERO_RELEASE_EVENTS } from "./release.ts";
 import type { RoutineDataStore } from "./store.ts";
+import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import type { StatePeopleAcquisition } from "./state-people-publication.ts";
 import { statePeopleDivisions } from "../sources/plural/acquisition.ts";
 import type { RegistryDivisionLite } from "../sources/plural/index.ts";
 import type { Slice } from "../control-plane/admin-view/promoted-slices.ts";
 
-export interface PeopleSourceAcquired {
+interface PeopleSourceAcquired {
   readonly state: string;
   readonly releaseId: string;
   readonly roster: OfficeholderSet;
@@ -22,7 +23,7 @@ export interface PeopleSourceAcquired {
   readonly coverage?: unknown;
 }
 
-export const PEOPLE_SOURCE_FAILURE_ROUTES: Readonly<Record<StandingPeopleSourceId, string>> = {
+const PEOPLE_SOURCE_FAILURE_ROUTES: Readonly<Record<StandingPeopleSourceId, string>> = {
   "legiscan-api": "https://api.legiscan.com/?op=getSessionList",
   "official-state-people": "https://v3.openstates.org/jurisdictions",
   "statewide-executive-sources": "https://www.nga.org/governors/",
@@ -54,7 +55,6 @@ export interface PeopleSourceRuntimeDependencies {
     readonly signal: AbortSignal; readonly roster?: OfficeholderSet;
     readonly divisions?: readonly RegistryDivisionLite[];
     readonly now?: () => string;
-    readonly onPerson?: (release: PeopleSourceAcquired) => Promise<void>;
   }) => Promise<PeopleSourceAcquired>;
   readonly publish?: typeof publishPeopleSource;
   readonly writeLine?: (line: string) => void;
@@ -68,7 +68,7 @@ async function readHeld(state: string, store: RoutineDataStore, now: string): Pr
 
 /** A source advances its own pointer as soon as its acquired people pass the publication checks. */
 export async function runPeopleSourceRefresh(input: {
-  readonly state: string; readonly sourceId: StandingPeopleSourceId; readonly store: RoutineDataStore;
+  readonly state: string; readonly sourceId: StandingPeopleSourceId; readonly store: RoutineDataStore; readonly vault: EvidenceStore;
   readonly signal?: AbortSignal;
 }, dependencies: PeopleSourceRuntimeDependencies = {}): Promise<{ readonly succeeded: boolean; readonly coverage?: unknown }> {
   const now = dependencies.now ?? (() => new Date().toISOString());
@@ -77,16 +77,10 @@ export async function runPeopleSourceRefresh(input: {
   const signal = input.signal ?? new AbortController().signal;
   let acquired: PeopleSourceAcquired;
   const geographyGaps: {sourceUrl:string;detail:string}[] = [];
-  const publish = (release: PeopleSourceAcquired) => (dependencies.publish ?? publishPeopleSource)({ store: input.store,
+  const publish = (release: PeopleSourceAcquired) => (dependencies.publish ?? publishPeopleSource)({ store: input.store, vault: input.vault,
     state: input.state, sourceId: input.sourceId, contractId, roster: release.roster,
     acquisitions: release.acquisitions, releaseId: release.releaseId, gaps: [...release.gaps,...geographyGaps], now: now(),
   });
-  const onPerson = async (release: PeopleSourceAcquired) => {
-    const publication = await publish(release);
-    if (publication.outcome.promoted || publication.outcome.confirmed) {
-      writeLine(`RCD_PROGRESS=${JSON.stringify({ key: publication.candidate.id, records: release.roster.officeholders.length })}`);
-    }
-  };
   try {
     // State readers never request another state's source partitions.
     const asOf = now().slice(0,10);
@@ -108,7 +102,7 @@ export async function runPeopleSourceRefresh(input: {
           return [];
         }) : Promise.resolve([]),
     ]);
-    const options = { state: input.state, sourceId: input.sourceId, asOf, signal, roster, divisions, onPerson, now };
+    const options = { state: input.state, sourceId: input.sourceId, asOf, signal, roster, divisions, now };
     acquired = dependencies.acquire ? await dependencies.acquire(options)
       : input.sourceId === "statewide-executive-sources"
         ? await acquireStatewidePeople({ ...options, heldPeople: roster })

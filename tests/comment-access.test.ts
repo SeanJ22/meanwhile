@@ -1,8 +1,12 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { COMMENT_ACCESS, commentAccessFor } from "../lib/registry/comment-access.ts";
+import { commentAccessFor, primeCommentAccess } from "../lib/registry/comment-access.ts";
+import { COMMENT_ACCESS } from "./fixtures/comment-access.ts";
 import registry from "../lib/registry/registry.json" with { type: "json" };
+
+// Held as the reader edge serves them, so lookups read the process's current comment rules.
+primeCommentAccess({ kind: "comment-access", records: COMMENT_ACCESS.map((row) => ({ id: `comment-access:${row.bodyId}`, ...row })) }, "fixture");
 
 test("every comment-access row names a real registry body and cites a source", () => {
   const bodyIds = new Set(registry.bodies.map((b) => b.id));
@@ -64,10 +68,7 @@ test("lookup is by division plus published body name, never the wrong body's rul
 
 test("every held standing rule survives its exact canonical body join", () => {
   for (const row of COMMENT_ACCESS) {
-    // The Reader boundary now routes comment-access through the control-plane
-    // store (which carries a transport id) and strips that id on the way out,
-    // so it returns a value-equal copy rather than the COMMENT_ACCESS reference.
-    // The contract is exact content survival, checked by value.
+    // The edge copy carries a transport id that is stripped on the way out, so content survives by value.
     assert.deepEqual(commentAccessFor(row.ocdId, "Unrelated vendor heading", row.bodyId), row);
   }
 });

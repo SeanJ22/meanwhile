@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import manifest from "./fixtures/sl-03/manifest.json" with { type: "json" };
+import { officeIdentity } from "../lib/officials/office-identity.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -18,6 +19,8 @@ import { statePeoplePortraits } from "../lib/civic-data/state-people-publication
 import { portraitHash, type PortraitSources } from "../lib/photos/evidence.ts";
 import { storeVerifiedPortrait } from "../lib/photos/store.ts";
 import { portraitBindingMatches } from "../lib/photos/binding.ts";
+
+const vault = new MemoryEvidenceStore();
 
 const NOW = "2026-10-12T22:35:26.000Z";
 function fixture(name: string) {
@@ -70,6 +73,7 @@ for (const [state, count, name, phone, district] of [
     assert.equal(person.phone, phone);
     assert.equal(person.memberships?.[0].district ?? null, district);
     assert.equal(person.fieldSources?.name.sourceUrl, page.finalUrl);
+    assert.ok(person.memberships?.[0].officeId.includes(`:${officeIdentity(person.officeTitle)}:`));
     if (state === "az") {
       assert.ok(roster.officeholders.some(row => row.name === 'Timothy "Tim" Dunn'));
       assert.ok(roster.officeholders.some(row => row.name === "David Marshall, Sr."));
@@ -81,7 +85,7 @@ for (const [state, count, name, phone, district] of [
       assert.equal(roster.officeholders.find(row => row.name === "Dora Drake")?.phone, "(608) 266-5810");
     }
     const store = new MemoryRoutineDataStore();
-    const publication = await publishPeopleSource({ store, state, sourceId: "official-state-people", roster,
+    const publication = await publishPeopleSource({ vault, store, state, sourceId: "official-state-people", roster,
       acquisitions: [page], releaseId: page.sha256, now: NOW });
     assert.ok(publication.outcome.promoted, JSON.stringify(publication.outcome.candidate.receipt));
     const read = await readPeopleSourceProjection(`US-${state.toUpperCase()}`, "official-state-people", { store, now: NOW, bypassCache: true });
@@ -119,11 +123,12 @@ test("real official secretary pages preserve unresolved selection rather than in
     assert.ok("person" in verified, JSON.stringify(verified));
     if (!("person" in verified)) continue;
     assert.equal(verified.person.selectionMethod, "UNKNOWN");
+    assert.ok(verified.person.memberships?.[0].officeId.endsWith(`:office:${officeIdentity(verified.person.officeTitle)}`));
     assert.ok(verified.person.portraitCandidate);
     const roster = statewideRoster(state, [verified.person], page.retrievedAt);
     assert.equal(roster.divisions.length, 0);
     assert.equal(roster.unmatched[0]?.reason, "STATEWIDE_SELECTION_METHOD_UNRESOLVED");
-    const publication = await publishPeopleSource({ store: new MemoryRoutineDataStore(), state, sourceId: "statewide-executive-sources",
+    const publication = await publishPeopleSource({ vault, store: new MemoryRoutineDataStore(), state, sourceId: "statewide-executive-sources",
       roster, acquisitions: [page], releaseId: page.sha256, now: NOW });
     assert.ok(publication.outcome.promoted, JSON.stringify(publication.outcome.candidate.receipt));
   }
@@ -134,6 +139,7 @@ test("the real Congress member document retains its native term, state, contact 
   assert.ok(index.members.some((member: { bioguideId: string }) => member.bioguideId === "K000377"));
   const roster = normalizeCongressMember(JSON.parse(page.body), { ...options("az"), sourceId: "congress-api" }, page.finalUrl, page.retrievedAt);
   assert.equal(roster.officeholders[0]?.name, "Mark Kelly");
+  assert.ok(roster.officeholders[0]?.memberships?.[0].officeId.includes(":us_senator:"));
   assert.equal(roster.officeholders[0]?.termStart, "2025");
   assert.equal(roster.officeholders[0]?.phone, "(202) 224-2235");
   assert.equal(roster.divisions[0]?.ocdId, "ocd-division/country:us/state:az");

@@ -5,11 +5,8 @@ import { fileURLToPath } from "node:url";
 import { test } from "node:test";
 
 import { canonicalBodyIdentity } from "../lib/ask/body-identity.ts";
-import {
-  BODY_ROSTERS,
-  governingRosterHoldersForDivision,
-  rosterHoldersForBody,
-} from "../lib/registry/body-rosters.ts";
+import { governingRosterHoldersForDivision, rosterHoldersForBody } from "../lib/registry/body-rosters.ts";
+import { BODY_ROSTERS } from "./fixtures/held-body-rosters.ts";
 import { FIXTURE_DOOR_ROWS } from "./helpers/meeting-doors-fixture.ts";
 import { normalizeName } from "../lib/routing/exact-name.ts";
 import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";

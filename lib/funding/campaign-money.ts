@@ -1,4 +1,3 @@
-/** One reader answer for a candidacy, certified card, or current official. */
 import { currentStatewideExecutives } from "../officials/statewide-executives.ts";
 import { currentBodyRosters, currentRosterMemberReaderDisposition } from "../registry/body-rosters.ts";
 import { fundingAnswerForTarget, type FundingAnswer } from "./display.ts";
@@ -6,8 +5,10 @@ import { stateMoneyForCard, type CardMoney } from "./nominee-money.ts";
 import type { CivicDataReadMetadata } from "../civic-data/read-model.ts";
 import { getFederalOfficeholderSet } from "../officials/federal-directory-read-model.ts";
 import { getRegistryRuntimeReadModel } from "../registry/runtime-read-model.ts";
-import type { OfficialCandidacyBridgeRow } from "../registry/runtime-data-plane.ts";
+import { officialCandidacySeatMatches, type OfficialCandidacyBridgeRow } from "../registry/runtime-data-plane.ts";
 import { directFundingTargetPlan } from "./target-authorities.ts";
+import { currentStatePeopleProjection } from "../state-rollcalls/legislators.ts";
+import { statePeopleScopeForDivision } from "../officials/people-identity.ts";
 
 export type OfficialFinanceIdentity = "NOT_OFFICIAL" | "RESOLVED" | "NO_APPLICABLE_CANDIDACY" | "IDENTITY_UNRESOLVED";
 export interface CampaignMoney {
@@ -48,7 +49,7 @@ function bridgeIndex() {
   if (indexedBridge?.source === source) return indexedBridge;
   const byHolder = new Map(source.rows.map(row => [row.holder.id, row]));
   const byCandidacy = new Map<string, BridgeRow[]>();
-  for (const row of source.rows) if (row.status === "RESOLVED" && row.candidacy) {
+  for (const row of source.rows) if (officialCandidacySeatMatches(row) && row.candidacy) {
     const rows = byCandidacy.get(row.candidacy.candidacyId) ?? [];
     rows.push(row);
     byCandidacy.set(row.candidacy.candidacyId, rows);
@@ -70,6 +71,12 @@ export function officialFinanceIdentityMatches(row: BridgeRow, current: { id: st
 }
 
 function currentHolder(row: BridgeRow) {
+  if (row.holder.authority === "STATE_PEOPLE") {
+    const scope = row.holder.divisions.map(statePeopleScopeForDivision).find(scope => scope !== null);
+    const set = scope ? currentStatePeopleProjection(scope)?.roster : null;
+    const holder = set?.officeholders.find(holder => holder.id === row.holder.id);
+    return holder && set ? { ...holder, divisions: set.divisions.filter(division => division.officeholderId === holder.id).map(division => division.ocdId) } : null;
+  }
   if (row.holder.authority === "REGISTRY_STATEWIDE_EXECUTIVE") {
     const e = currentStatewideExecutives().find(e => e.holder.id === row.holder.id);
     return e ? { ...e.holder, divisions: [e.stateOcdId] } : null;
@@ -95,7 +102,7 @@ export function resolvedCandidacyForOfficial(officialId: string): { candidacyId:
   if (roster?.state === "IDENTITY_UNRESOLVED") return null;
   if (roster?.state === "EXACT_DUPLICATE") return resolvedCandidacyForOfficial(roster.canonicalId!);
   const row = bridgeIndex().byHolder.get(officialId);
-  return row?.status === "RESOLVED" && row.candidacy && officialFinanceIdentityMatches(row, currentHolder(row))
+  return row && officialCandidacySeatMatches(row) && row.candidacy && officialFinanceIdentityMatches(row, currentHolder(row))
     ? { candidacyId: row.candidacy.candidacyId, contestId: row.candidacy.contestId } : null;
 }
 
@@ -135,9 +142,8 @@ export function campaignMoneyForTarget(
   selection: CampaignMoneyReadSelection = {},
 ): CampaignMoney {
   const direct = directFundingTargetPlan(targetKey);
-  // A source-namespaced candidacy already identifies its finance authority, so
-  // an unrelated FEC or bridge read failure cannot erase its state records.
-  // Officeholder slots still require the current person/candidacy bridge.
+  // Source-namespaced candidacies identify their finance authority directly.
+  // Reusable officeholder slots require the current person/candidacy bridge.
   const readIdentity = (selection.identity ?? true) &&
     (targetKey.startsWith("congress:") || !(direct.federal || direct.state !== null) || targetKey.includes("|"));
   const roster = readIdentity ? currentRosterMemberReaderDisposition(targetKey) : null;
@@ -149,7 +155,8 @@ export function campaignMoneyForTarget(
   if (official && (!officialFinanceIdentityMatches(official, currentHolder(official)) || official.status === "IDENTITY_UNRESOLVED" || official.status === "NOT_CHECKED")) return {
     requestedTargetKey: targetKey, federal: { kind: "none" }, state: emptyState(), officialIdentity: "IDENTITY_UNRESOLVED",
   };
-  const plan = official?.candidacy ? directFundingTargetPlan(official.candidacy.candidacyId) : direct;
+  const candidacy = official && officialCandidacySeatMatches(official) ? official.candidacy : null;
+  const plan = candidacy ? directFundingTargetPlan(candidacy.candidacyId) : direct;
   const readFederal = selection.federal ?? (official
     ? official.holder.authority === "FEDERAL_DIRECTORY" || plan.federal
     : direct.contestId === null || direct.federal);
@@ -158,16 +165,14 @@ export function campaignMoneyForTarget(
     : direct.contestId === null || direct.state !== null);
   const federal = readFederal ? fundingAnswerForTarget(targetKey) : { kind: "none" } as const;
   if (official) {
-    if (official.status !== "RESOLVED" || !official.candidacy) {
+    if (!candidacy) {
       return { requestedTargetKey: targetKey, federal, state: emptyState(), officialIdentity: "NO_APPLICABLE_CANDIDACY" };
     }
     const state = readState
-      ? stateMoneyForCard(official.candidacy.candidacyId, official.candidacy.contestId)
+      ? stateMoneyForCard(candidacy.candidacyId, candidacy.contestId)
       : emptyState();
     return { requestedTargetKey: targetKey, federal, state, officialIdentity: "RESOLVED" };
   }
-  // The committed certified-lineup bridge resolves legacy display keys. There
-  // is no runtime name search and no fallback to another candidate.
   const state = readState
     ? stateMoneyForCard(targetKey, contestId ?? targetKey.split("|")[0])
     : emptyState(direct.federal);

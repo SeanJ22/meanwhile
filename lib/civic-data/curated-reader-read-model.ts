@@ -14,7 +14,6 @@ import { electionFieldIssue, type PublishedElectionField } from "./election-fiel
 
 export const CURATED_READER_CONTRACT_IDS = [
   "official-filings",
-  "comment-access",
   "ballot-navigation",
   "stances",
   "campaign-sites",
@@ -114,8 +113,6 @@ export function primeCuratedReaderProjection(
   });
 }
 
-export const refreshCommentAccessFromPromoted = (options: PromotedCivicDataReadOptions = {}) =>
-  refreshCuratedReaderProjection("comment-access", options);
 export const refreshBallotNavigationFromPromoted = (options: PromotedCivicDataReadOptions = {}) =>
   refreshCuratedReaderProjection("ballot-navigation", options);
 export const readOfficialFilingsForReader = (): Promise<CivicDataReadResult<CuratedReaderProjection>> => {

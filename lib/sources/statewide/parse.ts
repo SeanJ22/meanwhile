@@ -1,3 +1,4 @@
+import { officeIdentity } from "../../officials/office-identity.ts";
 import { createHash } from "node:crypto";
 import type { Officeholder, OfficeholderSet, PortraitCandidate } from "../../officials/types.ts";
 import type { Provenance } from "../types.ts";
@@ -28,8 +29,6 @@ export interface StatewideGap { readonly sourceUrl:string; readonly detail:strin
 const words = (s:string) => decodeEntities(s).normalize("NFKD").replace(/\p{M}/gu,"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
 const escaped = (s:string) => s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
 const hash = (s:string) => createHash("sha256").update(s).digest("hex").slice(0,24);
-/** State names qualify office labels in Wikidata; they are jurisdiction data,
- * not part of the office title that the official person's page must bind. */
 export function statewideOfficeTitle(title:string,state:string):string {
   const jurisdiction=statewideJurisdiction(state),name=escaped(jurisdiction.name);
   return title.replace(new RegExp(`\\s+(?:of|for) (?:the )?(?:state of )?${name}$`,"i"),"")
@@ -66,7 +65,6 @@ function personName(label:string,officeTitles:readonly string[]):string|null {
   if(namedStates(name).length)return null;
   return name;
 }
-/** All directories are leads. An ambiguous card stays a reported blank. */
 export function parseStatewideAssociation(html:string,source:StatewideReferenceSource,sourceUrl:string,collectedAt:string,state?:string):{leads:StatewideLead[];gaps:StatewideGap[]} {
   const leads:StatewideLead[]=[],gaps:StatewideGap[]=[];
   for(const {html:block} of htmlEvidenceBlocks(html)){
@@ -125,7 +123,6 @@ export function parseWikidataStatewide(body:string,sourceUrl:string,collectedAt:
   return {leads:[...new Map(leads.map(row=>[`${row.state}|${row.nativeIds?.wikidata?.[0]}|${words(row.officeTitle)}`,row])).values()],gaps};
 }
 
-/** Exact holder+office co-occurrence must be on a current own official page. */
 export function verifyStatewideOfficialPage(lead:StatewideLead,page:{url:string;html:string;retrievedAt:string;linkingPage?:OfficialLinkingPage|null}):{person:Officeholder;selectionQuote:string|null}|{reason:string} {
   if(!lead.profileUrls.includes(page.url))return {reason:"STATEWIDE_PAGE_NOT_PERSON_PROFILE"};
   if(!isOfficialSource(page.url,page.linkingPage))return {reason:"STATEWIDE_PAGE_NOT_OFFICIAL"};
@@ -186,7 +183,7 @@ export function verifyStatewideOfficialPage(lead:StatewideLead,page:{url:string;
   const person:Officeholder={id,personId:id,nativeIds:lead.nativeIds,state:jurisdiction.postal,name:lead.name,officeTitle:officialOfficeTitle,level:"STATE",
     termStart:lead.termStart??"",termEnd:lead.termEnd??"",birthDate:null,partyLabel:null,websiteUrl:page.url,profileUrls:[page.url],contactFormUrl:null,phone,email:emailLink,campaignUrl:null,photo:null,
     selectionMethod, ...(selectionQuote?{selectionMethodSourceUrl:page.url}:{}),
-    memberships:[{id:membershipId,personId:id,officeId:`${jurisdiction.root}:office:${office.replace(/ /g,"-")}`,jurisdiction:`US-${jurisdiction.postal}`,officeTitle:officialOfficeTitle,
+    memberships:[{id:membershipId,personId:id,officeId:`${jurisdiction.root}:office:${officeIdentity(officialOfficeTitle)}`,jurisdiction:`US-${jurisdiction.postal}`,officeTitle:officialOfficeTitle,
       level:"STATE",current:true,...(selectionMethod!=="UNKNOWN"?{divisionId:jurisdiction.root}:{}),termStart:lead.termStart??null,termEnd:lead.termEnd??null,sourceUrl:page.url,selectionMethod,...(selectionQuote?{selectionMethodSourceUrl:page.url}:{})}],
     ...(portrait?{portraitCandidate:{...(portrait.src===lead.portraitCandidate?.imageUrl?lead.portraitCandidate:{}),imageUrl:portrait.src,sourceUrl:page.url,collectedAt:page.retrievedAt}}:lead.portraitCandidate?{portraitCandidate:lead.portraitCandidate}:{}),
     fieldSources,provenance};

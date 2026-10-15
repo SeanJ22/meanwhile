@@ -1,10 +1,3 @@
-/**
- * Explicit owner-only promotion for reviewed manual civic-data packages.
- *
- * The package must live outside this repository. Tracked JSON is immutable
- * bootstrap/test evidence, never the mutable input to this production door.
- * This command writes only the canonical candidate/event/promotion plane.
- */
 import { readFileSync } from "node:fs";
 import { isAbsolute, relative, resolve } from "node:path";
 
@@ -42,9 +35,10 @@ if (workerResults) {
   if (receipt) console.log("RCD_RECEIPT=" + JSON.stringify(receipt));
   if (exitCode) process.exitCode = exitCode;
 } else {
-if (!contractId || !MANUAL_PROJECTION_CONTRACT_IDS.includes(contractId) || !packageArgument) {
+const packageContracts = MANUAL_PROJECTION_CONTRACT_IDS.filter(id => id !== "ballot-contests");
+if (!contractId || !packageContracts.some(id => id === contractId) || !packageArgument) {
   throw new Error(
-    `usage: tsx scripts/promote-manual-civic-projection.mts --contract=${MANUAL_PROJECTION_CONTRACT_IDS.join("|")} --package=<absolute path outside repository>`,
+    `usage: tsx scripts/promote-manual-civic-projection.mts --contract=${packageContracts.join("|")} --package=<absolute path outside repository>`,
   );
 }
 

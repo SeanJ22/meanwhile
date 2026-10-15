@@ -1,6 +1,5 @@
 "use client";
 
-/** Ages and a late round are worked out from the clock on each draw; the pulse redraws the page about every 45 seconds. */
 import { Fragment, useState, useSyncExternalStore } from "react";
 
 import { useV6 } from "./context.tsx";
@@ -17,6 +16,7 @@ const STAGES: readonly WorkerStage[] = ["finding", "collecting", "extracting", "
 
 const when = (iso: string | null | undefined, withDay = true): string => (iso && Number.isFinite(Date.parse(iso)) ? mst(iso, withDay) : "—");
 
+const megabytes = (bytes: number): string => `${(bytes / 1e6).toLocaleString("en-US", { maximumFractionDigits: 1 })} MB`;
 const MINUTE = 60_000;
 const noSubscription = () => () => {};
 const minuteNow = () => Math.floor(Date.now() / MINUTE) * MINUTE;
@@ -102,11 +102,7 @@ export function laneTotals(lanes: WorkerStatus["lanes"]): { readonly running: nu
 
 export type WorkerCard = "progress" | "jobs" | "waiting" | "events" | "other";
 
-/**
- * Put each of the section's `missingParts` beside the card it affects. The
- * wording is the backend's (`v6-workers-read.ts`); a part this does not
- * recognise is still shown, under "other", never dropped.
- */
+/** Puts each missing part beside the card it affects; an unrecognised part still shows under "other". */
 export function missingByCard(parts: readonly string[] | undefined): Readonly<Record<WorkerCard, readonly string[]>> {
   const out: Record<WorkerCard, string[]> = { progress: [], jobs: [], waiting: [], events: [], other: [] };
   for (const m of parts ?? []) {
@@ -127,11 +123,7 @@ export function workersSectionArrived(src: AdminV6Data["workers"]): boolean {
   return src.state === "sample" || src.state === "live" && !(src.missingParts ?? []).includes(SECTION_DEP.workers.need);
 }
 
-/**
- * The Workers page in a few plain sentences, read before any tile or table: whether the workers are current, when
- * they last checked in, the round, the work, the last useful progress and anything refused. An unknown is said as
- * not reported, never guessed.
- */
+/** The Workers page in a few plain sentences, read before any tile or table; an unknown is said as not reported. */
 export function workersInWords(input: {
   readonly update: { readonly status?: string; readonly title: string } | null | undefined;
   readonly status: WorkerStatus | null | undefined;
@@ -250,6 +242,27 @@ function Publication() {
     <Card title="Published versus reader-visible" aside={<span className={s.meta}>{p ? `${count(p.total)} routine contracts` : "—"}</span>}>
       {p && (
         <div className={s.stack}>
+          <div className={s.stack}>
+            <h3 className={s.h3}>State ballots</h3>
+            <Actions actions={[{ kind: "ballot-publish", target: "ballot-contests" }]} />
+            {p.ballotPublication ? <>
+              <p className={s.small}>{p.ballotPublication.status === "PUBLISHED" ? "Published" : "Held"} {when(p.ballotPublication.at)}</p>
+              <p className={s.small}>Merged: {p.ballotPublication.merged.map(file => file.slice(0, 2).toUpperCase()).join(", ") || "none"}</p>
+              {p.ballotPublication.reason && <p className={s.small}>{p.ballotPublication.reason}</p>}
+              {p.ballotPublication.skipped.length ? <ul className={s.stack}>
+                {p.ballotPublication.skipped.map(row => <li key={row.file} className={s.small}>Skipped {row.file.slice(0, 2).toUpperCase()}: {row.reason}</li>)}
+              </ul> : <p className={s.small}>Skipped: none</p>}
+              {p.ballotPublication.heldContests?.length ? <ul className={s.stack}>
+                {[...new Set(p.ballotPublication.heldContests.map(row => row.state))].sort().map(state => <li key={state} className={s.small}>
+                  <details>
+                    <summary>Held contests in {state} ({p.ballotPublication!.heldContests!.filter(row => row.state === state).length})</summary>
+                    <ul className={s.stack}>{p.ballotPublication!.heldContests!.filter(row => row.state === state).map(row =>
+                      <li key={row.contestId}>{row.title}: {row.reason}</li>)}</ul>
+                  </details>
+                </li>)}
+              </ul> : <p className={s.small}>Held contests: none</p>}
+            </> : <p className={s.small}>No ballot publication reported yet.</p>}
+          </div>
           <ul className={s.stack} style={{ listStyle: "none", padding: 0, margin: 0 }}>
             {p.counts.map((c) => <li key={c.verdict} className={s.small}><strong>{count(c.count)} of {count(p.total)}</strong> {c.words.charAt(0).toLowerCase() + c.words.slice(1)}</li>)}
             <li className={s.small}><strong>{count(p.latestAttemptFailing)} of {count(p.total)}</strong> latest attempt failed</li>
@@ -360,6 +373,12 @@ export function WorkersScreen() {
           {st?.lastUsefulProgress && <span className={s.meta}>{progressAge ? `${progressAge}. ` : ""}{st.lastUsefulProgress.what}</span>}
         </div>
         <div className={cx(s.row, round.overdue && s.cardWarn)}><span className={s.eyebrow}>Round of work</span><strong className={round.overdue ? s.textWarn : undefined}>{roundMissing ? "—" : round.headline}</strong>{st?.lastRoundFinishedAt && !round.headline.startsWith("Last finished") && <span className={s.meta}>Last finished {when(st.lastRoundFinishedAt, false)}</span>}{st?.cycle && <><span className={s.meta}>{round.detail}</span>{st.cycle.lastError && <><span className={cx(s.meta, s.textWarn)}>The last round ended with an error.</span><Technical lines={[st.cycle.lastError]} /></>}</>}</div>
+        <div className={s.row}>
+          <span className={s.eyebrow}>Database reads, last full hour</span>
+          <strong>{st?.databaseReads ? megabytes(st.databaseReads.controlPlaneBytes + st.databaseReads.readerBytes) : "—"}</strong>
+          {st?.databaseReads && <><span className={s.meta}>Work records {megabytes(st.databaseReads.controlPlaneBytes)} · reader data {megabytes(st.databaseReads.readerBytes)} · hour starting {mst(st.databaseReads.hour, false)}</span>
+            <Technical lines={st.databaseReads.byCaller.map(row => `${megabytes(row.bytes)} ← ${row.caller}`)} /></>}
+        </div>
         {st?.refused && <div className={cx(s.row, s.cardWarn)}><span className={s.eyebrow}>Refused before the AI</span><strong className={s.textWarn}>{count(st.refused.count)} paid jobs</strong><span className={s.meta}>Not sent to the AI because {st.refused.why}.</span></div>}
         <div className={s.row}>
           <span className={s.eyebrow}>{jobs ? `Work in ${v.place.name}` : isCountry ? "Work" : "Work, all places"}</span>

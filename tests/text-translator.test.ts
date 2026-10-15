@@ -9,6 +9,8 @@ import { runHeldTextTranslations, type TranslationAttempt } from "../lib/transla
 import { runTextTranslation } from "../lib/translate/text-runtime.ts";
 import { readTranslations } from "../lib/translate/publication.ts";
 import { readBodyTranslations, readOfficeTranslation, readMeetingTranslation } from "../lib/translate/reader.ts";
+import { readCuratedContestOfficeBlurbs, readCuratedOfficeBlurb } from "../lib/officials/curated-definition-reader.ts";
+import { blurbForTitle } from "../lib/officials/office-blurbs.ts";
 import { translationHash, type TextTranslation } from "../lib/translate/records.ts";
 import { DEFAULT_SOURCE_POLICY } from "../lib/control-plane/promotion/source-kinds.ts";
 import { translatedMeetingEvidenceFor } from "../lib/ask/meeting-knowledge.ts";
@@ -69,6 +71,12 @@ test("legal class, exact body, state office, agenda and minutes publish independ
   assert.equal(other.bodyDefinition, null); assert.equal(other.classDefinition?.text, specs[0].text);
   assert.equal((await readOfficeTranslation({ state: "MI", officeKey: "library-trustee" }, { store, now, bypassCache: true }))?.text, specs[2].text);
   assert.equal(await readOfficeTranslation({ state: "NH", officeKey: "library-trustee" }, { store, now, bypassCache: true }), null);
+  assert.equal(blurbForTitle("Library Trustee"), null);
+  assert.equal((await readCuratedOfficeBlurb("Library Trustee", division, { store, now, bypassCache: true }))?.text, specs[2].text);
+  const contestBlurbs = await readCuratedContestOfficeBlurbs([{ id: "library-contest", title: "Library Trustee - District 1", ocdId: division }],
+    { store, now, bypassCache: true });
+  assert.equal(contestBlurbs.get("library-contest")?.text, specs[2].text);
+  assert.equal(calls, 10, "office explanations reuse the already published text");
   const agenda = capture(specs[3]);
   const document = { kind: "AGENDA" as const, meetingId: "library-meeting", ocdId: division,
     documentUrl: agenda.evidence.canonicalUrl, contentHash: agenda.evidence.contentHash };

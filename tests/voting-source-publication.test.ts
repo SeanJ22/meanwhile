@@ -2,12 +2,17 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import { readVotingSource } from "../lib/ballot/voting-source-readers.ts";
-import { mergeVotingSourceRead, replaceVotingJurisdiction, votingRawEvidence } from "../lib/ballot/voting-source-publication.ts";
+import { mergeVotingSourceRead, recordVotingSourceRead, registeredVotingSourceDoors, replaceVotingJurisdiction, saveVotingSourceDoor, holdVotingRawEvidence } from "../lib/ballot/voting-source-publication.ts";
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
+import type { RawCaptureRef } from "../lib/civic-data/raw-capture-vault.ts";
 import { votingSitesCandidate } from "../lib/ballot/voting-sites-data-plane.ts";
 import { readVotingSitesProjection } from "../lib/ballot/voting-sites-server.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import type { VotingSourceDoor } from "../lib/ballot/voting-source-types.ts";
+import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { checkEveryFor } from "../lib/doors/page-doors.ts";
+import { listDoors } from "../lib/doors/registry.ts";
 
 const at = "2026-10-13T00:00:00.000Z";
 const doors = JSON.parse(readFileSync("data/reference/voting-source-doors.json", "utf8")) as VotingSourceDoor[];
@@ -25,8 +30,9 @@ test("saved official tables reach the existing public read model with hours, loc
   assert.match(drop.hours!, /7:00 pm/);
   assert.equal(drop.office?.phone, "(701) 845-8500 Ext. 6666");
   const current = replaceVotingJurisdiction(null, jurisdiction, at);
-  const candidate = votingSitesCandidate({ current, prior: null, failures: [], rawBodies: votingRawEvidence(read),
-    successfulAuthorityReads: read.sources.length, requestedUrl: door.url, finalUrl: door.url, retrievedAt: at, retainRawBodies: true });
+  const vault = new MemoryEvidenceStore();
+  const candidate = votingSitesCandidate({ current, prior: null, failures: [], acquisition: await holdVotingRawEvidence(vault, read),
+    successfulAuthorityReads: read.sources.length, requestedUrl: door.url, finalUrl: door.url, retrievedAt: at });
   const store = new MemoryRoutineDataStore();
   const outcome = await processRegisteredManualCandidate(store, "voting-sites", candidate, at);
   assert.ok(outcome.promoted, outcome.candidate.failureDetail ?? "the saved official table should publish");
@@ -34,7 +40,11 @@ test("saved official tables reach the existing public read model with hours, loc
   const projection = await readVotingSitesProjection({ store, now: at, bypassCache: true });
   assert.equal(projection.kind, "PROMOTED");
   if (projection.kind === "PROMOTED") assert.deepEqual(projection.value, JSON.parse(JSON.stringify(current)));
-  assert.ok(votingRawEvidence(read).some(frame => frame.endsWith(bytes.toString("base64"))));
+  const saved = (await store.readCandidate(candidate.id))!.candidate;
+  assert.ok(!JSON.stringify(saved).includes(bytes.toString("base64")) && !JSON.stringify(saved).includes("rgMasterTable"),
+    "the stored candidate holds refs, not the page bytes");
+  const page = (saved.normalizedPayload as { acquisition: (RawCaptureRef & { url: string })[] }).acquisition.find(ref => ref.url === door.url)!;
+  assert.deepEqual(Buffer.from((await vault.get(page.vaultKey))!.bytes), bytes);
 });
 
 test("a failed reread leaves all verified sites intact and keeps its attempted route as open work", async () => {
@@ -54,4 +64,27 @@ test("source rows replace themselves while independently published site kinds re
   const next = mergeVotingSourceRead({ ...prior, sites: [...prior.sites, otherSource] }, door, read, at);
   assert.equal(next.sites.length, prior.sites.length + 1);
   assert.deepEqual(next.sites.find(site => site.id === otherSource.id), otherSource);
+});
+
+test("candidate and measure doors retain shared mappings and reread their official source bytes", async () => {
+  const repos = createMemoryRepositories();
+  const candidateDoor: VotingSourceDoor = { ...door, id: "candidate-list", url: "https://elections.example.gov/ballot",
+    electionPageUrl: "https://elections.example.gov/ballot", covers: ["CANDIDATE_LIST"] };
+  const measureDoor: VotingSourceDoor = { ...candidateDoor, id: "measure-list", covers: ["BALLOT_MEASURES"] };
+  await saveVotingSourceDoor(repos.doors, candidateDoor, at);
+  await saveVotingSourceDoor(repos.doors, measureDoor, at);
+  const registered = await registeredVotingSourceDoors(repos.doors);
+  assert.deepEqual(registered.map(row => row.covers), [["CANDIDATE_LIST"], ["BALLOT_MEASURES"]]);
+  const [saved] = (await listDoors(repos.doors)).doors;
+  assert.deepEqual([...saved.holds].sort(), ["ballot-contests", "ballot-measures"]);
+  assert.equal(saved.checkEveryMinutes, checkEveryFor("BALLOT_CONTEST"));
+  const read = await readVotingSource(candidateDoor, { fetch: fetchSource, now: () => at });
+  assert.deepEqual(read.sites, []);
+  assert.deepEqual(read.blanks, []);
+  assert.equal(read.sources[0].url, candidateDoor.url);
+  assert.ok(read.rawBodies.some(body => body.url === candidateDoor.url));
+  await recordVotingSourceRead(repos.doors, candidateDoor, read, at);
+  const [checked] = (await listDoors(repos.doors)).doors;
+  assert.equal(checked.lastSuccessAt, at);
+  assert.equal(checked.validators?.checkedAt, at);
 });

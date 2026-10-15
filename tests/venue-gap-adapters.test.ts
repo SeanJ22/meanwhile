@@ -64,12 +64,11 @@ test("unplacedVenueGap: words are the stated place, verbatim; blank is the publi
 });
 
 test("civicclerk: an unreviewed room and a blank one are published with the gap, a reviewed room still placed", () => {
-  const wiring = row(["CIVICCLERK"], (w) => w.config.slug === "capaz");
-  // The OData Events row shape the adapter reads (the fact-bridge test pins the
-  // same shape on recorded bytes); three sittings, one placed, two planted.
+  const held = row(["CIVICCLERK"], (w) => w.config.slug === "capaz");
+  const wiring = { ...held, config: { ...held.config, categoryId: "1" } };
   const base: CivicClerkEvent = {
     id: 0, eventName: "Board Meeting", eventDate: "2026-10-01T10:00:00", startDateTime: "2026-10-01T10:00:00",
-    eventCategoryName: "Board Meeting", hasAgenda: false, isDeleted: false, isPublished: true,
+    categoryId: 1, eventCategoryName: "Board Meeting", hasAgenda: false, isDeleted: false, isPublished: true,
   };
   const events: CivicClerkEvent[] = [
     { ...base, id: 1, eventLocation: { locationName: "Musical Instrument Museum", address1: "4725 E Mayo Blvd", city: "Phoenix", state: "AZ", zipCode: "85050" } },
@@ -110,18 +109,18 @@ test("civicplus: an event whose LOCATION has no reviewed row is published in the
   assert.equal(accounting.dropped, 2, "only the yard sale and the open house, which are not this body's");
 });
 
-test("civicplus: an archived sitting with no one reviewed venue is published with our own gap", () => {
+test("civicplus: an archived sitting with no published venue names the publisher's silence", () => {
   const council = row(["CIVICPLUS"], (w) => w.bodyId.endsWith("#governing"));
   // The same body, scoped where no venue row exists, so `soleVenueForBody` finds none.
   const unscoped: BodySourceWiring = { ...council, ocdId: "ocd-division/country:us/state:nj/county:morris/place:dover" };
   const now = new Date("2026-08-13T12:00:00-07:00");
   const { meetings, drops, accounting } = makeCivicPlusSource([unscoped]).normalizeWithDrops(
-    [{ wiring: unscoped, ical: fixture("civicplus-rockaway.ics"), agendaCenter: fixture("civicplus-rockaway-agendacenter.html"), collectedAt: now.toISOString() }],
+    [{ wiring: unscoped, ical: fixture("civicplus-rockaway.ics"), agendaPages: [{ url: unscoped.config.agendaCenterUrl, text: fixture("civicplus-rockaway-agendacenter.html"), collectedAt: now.toISOString() }], collectedAt: now.toISOString() }],
     now,
   );
   const archived = meetings.filter((m) => m.startPrecision === "DAY");
   assert.ok(archived.length >= 13, `${archived.length} archived sittings published`);
-  for (const m of archived) assertUnrecorded(m);
+  for (const m of archived) assertNotStated(m, unscoped.publishingOrg);
   assert.equal(accounting.outcome, "CONSERVED");
   assert.equal(drops.unknownVenue, meetings.filter((m) => m.location === null && !m.online).length);
 });

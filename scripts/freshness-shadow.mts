@@ -1,6 +1,4 @@
-import { readShutDoors, shutDoorsProvider, parseShutDoorId } from "../lib/control-plane/scheduler/providers/shut-doors.ts";
-import { useDetectiveFind as applyDetectiveFind } from "../lib/doors/detective-repair.ts";
-import { readRolePlaybook } from "../lib/control-plane/playbooks.ts";
+import { huntPacketsProvider } from "../lib/control-plane/scheduler/providers/hunt-packets.ts";
 import { ensureReaderSettingsPublished, publishAskPlaybooks } from "../lib/civic-data/reader-settings-publication.ts";
 import "../lib/ask/model.ts";
 import { backgroundBatchTransport } from "../lib/control-plane/model-batch.ts";
@@ -8,22 +6,22 @@ import { ModelProviderQueue } from "../lib/control-plane/scheduler/model-lane.ts
 import { runLeaseWorkerProcesses, workerDispatchFailure, workerProcessSlots } from "../lib/control-plane/workers/process-pool.ts";
 import { RESEARCH_PARENT_PEAK_MIB, reportingWorkerSlots } from "../lib/control-plane/workers/worker-slots.ts";
 import { routeProcessExecutor } from "../lib/control-plane/workers/route-process.ts";
-import { scoutProcessExecutor } from "../lib/control-plane/workers/scout-process.ts";
 import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
 import { legacyHeldWorkOwed, planHeldWorkerFleet } from "../lib/control-plane/workers/standing.ts";
-import { persistVerifiedPublicationAnchors, selectStandingLineages, standingLineageCoversDue, standingLineageKeyFor } from "../lib/control-plane/workers/standing-lineage.ts";
+import { LINEAGE_ARTIFACT_FIELDS, LINEAGE_ATTEMPT_FIELDS, persistVerifiedPublicationAnchors, selectStandingLineages, standingLineageCoversDue, standingLineageKeyFor, type LineageArtifact, type LineageAttempt } from "../lib/control-plane/workers/standing-lineage.ts";
+import { sourceReliabilityKey } from "../lib/control-plane/scheduler/scout-reliability.ts";
+import { HOST_CONCURRENCY_DEFAULT, HOST_CONCURRENCY_SETTING, providerConcurrency } from "../lib/control-plane/scheduler/provider-limits.ts";
 import { browseWithPlaywright } from "./scout-browse.mts";
 import { autonomousCycleAllowed, runAutonomousCoordinator } from "../lib/control-plane/workers/coordinator.ts";
 import { MODELS } from "../lib/models.ts";
 import { paidWorkGuards } from "../lib/control-plane/workers/paid-work-guards.ts";
 import { hunterLaneArmingPath, laneArmingOf, writeLaneArming } from "../lib/control-plane/workers/hunter-lane-arming.ts";
 import { hunterQueuePath, writeHunterQueue } from "../lib/control-plane/workers/hunter-lane.ts";
-import { paidWorkerSlots, researchPaidWorkerCapacity } from "../lib/control-plane/scheduler/research-policy.ts";
+import { researchPaidWorkerCapacity } from "../lib/control-plane/scheduler/research-policy.ts";
 import { serializeHostSpacing } from "../lib/control-plane/workers/host-spacing.ts";
 import { projectFleetPipeline } from "../lib/control-plane/workers/pipeline.ts";
 import { isRetiredRoutineMeetingAcquisition } from "../lib/control-plane/workers/autonomous-plan.ts";
 import { plannedForHunters } from "../lib/control-plane/workers/route-plan.ts";
-import { planRepairBrief } from "../lib/control-plane/workers/plan-repair.ts";
 import { observeCyclePhases, type CyclePhase } from "../lib/control-plane/scheduler/cycle-phases.ts";
 import { cycleStateWriter } from "../lib/control-plane/scheduler/cycle-state-writer.ts";
 import { soleWriter } from "../lib/control-plane/repository/shared.ts";
@@ -62,10 +60,9 @@ import {
 import { WindowLockHeld, acquireWindowLease, releaseWindowLease } from "../lib/control-plane/promotion/window.ts";
 import { scheduleObligation, isScheduled, type ScheduledObligation } from "../lib/control-plane/scheduler/obligation.ts";
 import { retryable } from "../lib/control-plane/scheduler/debt.ts";
-import { ABSENCE_EXPIRY_DAYS, absenceExpiry, absenceUnlockFrom, isArguedAbsence } from "../lib/control-plane/scheduler/absence.ts";
 import { buildRegistry, registryLines } from "../lib/control-plane/scheduler/registry.ts";
 import { campaignFinanceProvider } from "../lib/control-plane/scheduler/providers/campaign-finance.ts";
-import { LOCAL_JURISDICTION_NAMESPACE, localJurisdictionsProvider } from "../lib/control-plane/scheduler/providers/local-jurisdictions.ts";
+import { localJurisdictionsProvider } from "../lib/control-plane/scheduler/providers/local-jurisdictions.ts";
 import {
   candidateEnrichmentHoldings,
   candidateEnrichmentProvider,
@@ -74,7 +71,7 @@ import {
 import {
   campaignSiteCycleLine,
   campaignSiteSubjectsFromHoldings,
-  heldMarginaliaFromManifest,
+  heldMarginaliaAnswers,
   runCampaignSiteCycle,
   withinWallTime,
   type CampaignSiteCycleReport,
@@ -87,7 +84,6 @@ import {
   dispatchedAddressSource,
   materializedDiscoveryNeeds,
   meetingsDiscoveryProvider,
-  paidDiscoveryHold,
   parseMeetingsDiscoveryId,
 } from "../lib/control-plane/scheduler/providers/meetings-discovery.ts";
 import { preloadRegistrationJurisdictions, stateOfJurisdictionId } from "../lib/registration/jurisdictions.ts";
@@ -123,13 +119,12 @@ import {
 import { readHeldPlaceCapture } from "../lib/civic-data/held-place-capture.ts";
 import { buildPlaceOwedList } from "../lib/coverage/place-owed.ts";
 import { missionPartCounts, missionPartsOf } from "../lib/control-plane/expansion/mission-parts.ts";
-import { missionBlanksFrom, relatedMissionBlanks, type MissionBlank } from "../lib/control-plane/workers/mission-brief.ts";
-import { liveFamiliesByGovernment } from "../lib/control-plane/expansion/live-families.ts";
-import { workerVaultResolver } from "../lib/control-plane/workers/vault.ts";
-import { evidenceProjection } from "../lib/control-plane/workers/evidence-projection.ts";
-import { researchVaultResolver } from "../lib/control-plane/workers/vault-object.ts";
-import { factChainLines } from "../lib/control-plane/promotion/fact-chain.ts";
-import { createPermanentMeetingFreshness } from "../lib/control-plane/promotion/meeting-freshness.ts";
+import { HUNT_PACKET_NAMESPACE } from "../lib/hunt/packet.ts";
+import { divisionsOfPlace } from "../lib/hunt/packet-read.ts";
+import { readPlaceWords } from "../lib/hunt/place-words.ts";
+import { duePackets } from "../lib/hunt/runtime.ts";
+import { makeHuntSearch } from "../lib/hunt/search.ts";
+import { EXA_AGENT_LANE_SETTING } from "../lib/hunt/settings.ts";
 import { preloadAzOperationalReferenceBundle, preloadOperationalReferenceBundle } from "../lib/civic-data/operational-references.ts";
 import { methodMaturityFromManual } from "../lib/control-plane/scheduler/maturity.ts";
 import type { MeetingsDiscoveryNeed } from "../lib/hunt/meetings-discovery.ts";
@@ -155,7 +150,6 @@ import {
   openOccurrence,
   resumeOpenOccurrence,
   persistDebts,
-  recordArguedAbsence,
   retireObligationsByPrefix,
   syncObligations,
   type AbandonedOccurrence,
@@ -165,26 +159,13 @@ import {
 import { hostSpacer } from "../lib/control-plane/scheduler/http-executor.ts";
 import { cycleVault, VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
 import {
-  promotionLines,
-  readStagingManifest,
-  stageOne,
-  writeStagingManifest,
-  type StagedEntry,
-} from "../lib/control-plane/scheduler/promotion-tail.ts";
-import {
   decideExecutor,
   type DeclaredExecutor,
   type DispatchResult,
   type ExecutorDecision,
   type RunWork,
-  type WorkArtifact,
 } from "../lib/control-plane/scheduler/dispatch.ts";
-import { SCOUT_PREWARM_ROUTE_ID, anthropicTransport, scoutJobWorstCaseUsd, scoutPrewarmPlan } from "../lib/control-plane/scheduler/scout-executor.ts";
-import { DETECTIVE_SHUT_THRESHOLD, failureResponderExecutor, plainRereadSlot, readSubjectScoutHistory, solvedScoutResult, sourceFailureRecovery, subjectScoutHistory, wakeInstalledAdapterDebts } from '../lib/control-plane/workers/detective.ts';
-import { buildScoutToolkit, scoutToolSpecsFor } from "../lib/control-plane/scheduler/scout-tools.ts";
-import { makeScoutSearch } from "../lib/control-plane/scheduler/scout-search.ts";
-import type { ArtifactProvenance, InheritedEvidence, PriorRung } from "../lib/control-plane/scheduler/scout-contract.ts";
-import { consecutiveTransportFailures, MIN_DISTINCT_RUNGS, type ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
+import { anthropicTransport, scoutJobWorstCaseUsd } from "../lib/control-plane/scheduler/scout-executor.ts";
 import {
   RESEARCH_BOUNDS,
   RESEARCH_FORMAT_VERSION,
@@ -202,24 +183,9 @@ import {
   type ResearchState,
   type RunningScout,
 } from "../lib/control-plane/scheduler/research-policy.ts";
-import { candidateStoreCounts, proposeScoutCandidates, readMethodCandidateStore, type ProposalReport } from "../lib/control-plane/scheduler/scout-candidates.ts";
-import { emptyFieldManual, readFieldManualForPlaces, type FieldManualRead, type FieldManualStore } from "../lib/control-plane/field-manual.ts";
-import {
-  compoundingPair,
-  fieldManualBriefLines,
-  knownRouteIds,
-  scoutDiscoveryEntries,
-  scoutFieldManualProjection,
-  scoutFieldManualQuery,
-  recordScoutMethods,
-  scoutStateHint,
-  usedFieldManualEntryIds,
-  writeFieldManualDiscoveries,
-} from "../lib/control-plane/scheduler/field-manual-scout.ts";
-import { recordFoundSources } from "../lib/doors/page-doors.ts";
 import { readResearchProgression } from "../lib/control-plane/research-progression.ts";
 import { readMethodKnowledge } from "../lib/method/manual-bridge.ts";
-import { candidateCounts as countMethodCandidates } from "../lib/method/candidate.ts";
+import { candidateCounts as countMethodCandidates, emptyCandidateStore } from "../lib/method/candidate.ts";
 import { readConclusionStore } from "../lib/method/conclusions.ts";
 import {
   NO_PIPELINE_RECORDED,
@@ -231,18 +197,12 @@ import {
   orderByReaderImpact,
   orderableDueRow,
   scoutCapacity,
-  compareReaderImpact,
   type DispatchOrdering,
   type OrderingInputs,
   type ResearchMetrics,
 } from "../lib/control-plane/research-metrics.ts";
 import { researchDigestLines } from "../lib/control-plane/research-digest.ts";
-import { modelRequestBoundFor, type CostEntry } from "../lib/control-plane/cost.ts";
-import type { SpendHold } from "../lib/control-plane/budget.ts";
-import type { AttemptCost } from "../lib/control-plane/attempt.ts";
-import { listPriceUsdForUsage, meteredCostFields, priceMeteredUsage, readMeteredUsage } from "../lib/control-plane/model-cost.ts";
-import { recordCost } from "../lib/control-plane/repository/coordinator.ts";
-import type { PrewarmOutcome } from "../lib/control-plane/scheduler/shadow-loop.ts";
+import { readSpendWindow } from "../lib/control-plane/spend-window.ts";
 import { coordinatorLane, lanesAtCycleEnd, lanesInFlight, type QueueLanes } from "../lib/control-plane/scheduler/lane-reading.ts";
 import type { CacheHitRate } from "../lib/control-plane/research-metrics.ts";
 import { RUNNER_ID } from "../lib/control-plane/admin-data.ts";
@@ -257,9 +217,7 @@ import {
   FleetSafetyController,
   FleetPreSendRefusal,
   resolveRollingCeiling,
-  scoutEscalationReservation,
-  modelRequestWorstCaseUsd,
-  modelResponseUsd,
+  type PricedCharge,
   type ProviderCircuit,
 } from "../lib/control-plane/fleet-safety.ts";
 import {
@@ -271,7 +229,7 @@ import {
   type AdminConfig,
   type AdminConfigRead,
 } from "../lib/control-plane/gateway/admin-config.ts";
-import { DETECTIVE_SHUT_THRESHOLD_SETTING, readSetting, runnerSettingsEcho } from "../lib/control-plane/settings.ts";
+import { readSetting, runnerSettingsEcho } from "../lib/control-plane/settings.ts";
 import { installNeonCircuitBreaker, readNeonCircuit } from "../lib/control-plane/neon-circuit.ts";
 import { retryStartupRead } from "../lib/control-plane/startup-read-retry.ts";
 import { modelLaneClosure, pendingResearchLaneAcknowledgment } from "../lib/control-plane/scheduler/model-lane.ts";
@@ -294,12 +252,7 @@ import {
 } from "../lib/control-plane/expansion/assignment-budget.ts";
 import {
   DurableSpendHolds,
-  JobSpend,
   SendBudgetRefusal,
-  budgetGuardedTransport,
-  hasBudgetLines,
-  readLiveSpendHolds,
-  releaseOpenJobs,
   SPEND_HOLD_STALE_MS,
 } from "../lib/control-plane/expansion/spend-holds.ts";
 import { evaluateAssignmentFromRecords, evaluateMissionDone, memberRecordsForSend, missionMapCount, type MissionMapCount } from "../lib/control-plane/assignment-completion.ts";
@@ -432,15 +385,6 @@ const ceilingArg = argv.find((a) => a.startsWith("--max="));
 const MAX_DISPATCHES = canary
   ? 1
   : boundedNumber(ceilingArg?.slice("--max=".length), Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY);
-const scoutMaxArg = argv.find((a) => a.startsWith("--scout-max="));
-const SCOUT_MAX = boundedNumber(
-  scoutMaxArg?.slice("--scout-max=".length),
-  canary ? 1 : Number.POSITIVE_INFINITY,
-  canary ? 1 : Number.POSITIVE_INFINITY,
-);
-
-const SCOUT_WORST_CASE_USD = 0.6;
-
 const SCOUT_JOB_WORST_CASE_USD = scoutJobWorstCaseUsd(RESEARCH_BOUNDS.perDispatch);
 const intervalArg = argv.find((a) => a.startsWith("--interval="));
 const INTERVAL_MIN = intervalArg ? Number(intervalArg.slice("--interval=".length)) : null;
@@ -503,15 +447,6 @@ const startupReadRetry = {
     ),
 };
 
-let candidateStoreUnreadable: string | null = null;
-if (wantsPostgres) {
-  try {
-    await retryStartupRead(() => readMethodCandidateStore(repos), () => null, startupReadRetry);
-  } catch (error) {
-    candidateStoreUnreadable = error instanceof Error ? error.message : String(error);
-  }
-}
-
 const [legacyOperationalReference, azOperationalReference] = await Promise.all([retryStartupRead(
   () => preloadOperationalReferenceBundle({ bypassCache: true }), () => null, startupReadRetry,
 ).catch(error => {
@@ -567,9 +502,8 @@ await meetingPartitions.readStates([
   ...("ids" in materialized ? [...materialized.ids].flatMap(id => stateOfJurisdictionId(id) ?? []) : []),
 ]);
 /* The providers and context are kept so the registry can be built again in the same round when the owner's dispatch has just written new work. */
-const shutDoorsReading = await readShutDoors(repos.doors);
 const registryProviders = [
-  shutDoorsProvider({ doors: () => shutDoorsReading }),
+  huntPacketsProvider({ materialized: () => materialized }),
   campaignFinanceProvider(),
   localJurisdictionsProvider({ trackedStates, materialized: () => materialized, meetingPartitions }),
   candidateEnrichmentProvider({ trackedStates }),
@@ -646,23 +580,7 @@ console.log(
 
 let sync = await syncObligations(repos, corpus, NOW, { exactReads: filteredCycle });
 finishPhase("references-and-registration");
-{
-  /* The tracked governments' paid rows and how many reach a reader door; a row with no door waits on its body join. */
-  const local = sync.all.filter(o => o.active && o.id.startsWith(LOCAL_JURISDICTION_NAMESPACE) && registry.routeFor(o.id)?.executorClass === "BOUNDED_MODEL_WORKER");
-  const planned = local.filter(o => o.autonomousPlan);
-  console.log(`  local research rows: ${local.length} paid; ${planned.length} carry a work plan; ${planned.filter(o => o.autonomousPlan?.publication).length} with a reader door`);
-  /* How much paid work in each provider is planned hunter work; with the switch on every paid row should be. */
-  const paidByProvider = new Map<string, { paid: number; planned: number }>();
-  for (const o of sync.all) {
-    if (!o.active || registry.routeFor(o.id)?.executorClass !== "BOUNDED_MODEL_WORKER") continue;
-    const tally = paidByProvider.get(registry.providerOf(o.id) ?? "unregistered") ?? { paid: 0, planned: 0 };
-    tally.paid += 1;
-    if (plannedForHunters(o.autonomousPlan)) tally.planned += 1;
-    paidByProvider.set(registry.providerOf(o.id) ?? "unregistered", tally);
-  }
-  console.log(`  paid rows planned as hunter work: ${[...paidByProvider].sort(([a], [b]) => a.localeCompare(b))
-    .map(([provider, tally]) => `${provider} ${tally.planned} of ${tally.paid}`).join("; ") || "none"}`);
-}
+console.log(`  hunt packets: ${sync.all.filter(o => o.active && o.id.startsWith(HUNT_PACKET_NAMESPACE)).length} government(s) an order sent agents to`);
 console.log(
   `  ${floorLine(
     floored(
@@ -706,12 +624,6 @@ const decisionDisagreements = units
 const nowMs = Date.parse(NOW);
 /** Named runtime conditions, accumulated from here on; the research state carries them. */
 const runtimeConditions: string[] = [];
-if (candidateStoreUnreadable !== null) runtimeConditions.push(
-  `method candidates could not be read (${candidateStoreUnreadable}); no candidate proposals this round, everything else continues`);
-let canonicalCandidateCounts = await candidateStoreCounts(repos);
-if (canonicalCandidateCounts === null) {
-  runtimeConditions.push("METHOD_CANDIDATE_STORE_NOT_SEEDED: canonical candidate lifecycle is unavailable; no tracked-file fallback was used");
-}
 
 const retirementWrites = !dry && !canary;
 const retirementOutside = sync.outside !== null && ONLY === null && IDS === null ? sync.outside : null;
@@ -826,7 +738,6 @@ if (movedIds.size > 0) {
 }
 finishPhase("retirement");
 const occurrenceByObligation = new Map<string, { id: string; routeTaskId: string }>();
-const nextDueByObligation = new Map<string, string>();
 let openedDeterministic = 0;
 let openedModel = 0;
 /** Occurrences a previous cycle opened and did not reach, picked back up. */
@@ -835,12 +746,12 @@ const preOpenSkipped: { obligationId: string; why: string }[] = [];
 const dueThisCycle: { obligation: (typeof sync.all)[number]; nextDueAt: string; cadenceHours: number }[] = [];
 
 /* A retired obligation owes no freshness: its debt stays out of the cycle, and `persistDebts` tombstones it as retired. */
-const debtsIn = await wakeInstalledAdapterDebts(repos,(canary
+const debtsIn = (canary
   ? (await Promise.all(corpus.map((obligation) => repos.debts.read(obligation.id))))
       .filter((row) => row !== null)
       .map((row) => row.value)
   : await loadDebts(repos)
-).filter((debt) => !retiredDebtReasons.has(debt.obligationId)),NOW);
+).filter((debt) => !retiredDebtReasons.has(debt.obligationId));
 /* The plain-code lane's queue key reads this debt (`waitingSince`); so does its reading while the cycle runs. */
 const debtAtCycleStart = new Map(debtsIn.map((d) => [d.obligationId, d] as const));
 
@@ -850,15 +761,6 @@ try {
   settingsConfig = row !== null && isAdminConfig(row.value) ? row.value : null;
 } catch (error) {
   runtimeConditions.push(`Admin settings could not be read; code defaults apply this round: ${error instanceof Error ? error.message : String(error)}`);
-}
-const shutThreshold = readSetting(settingsConfig, DETECTIVE_SHUT_THRESHOLD_SETTING, DETECTIVE_SHUT_THRESHOLD);
-/* A shut door goes to a detective; a passing outage keeps its plain retry. While the paid lane is closed the shut door's plain re-read still runs. */
-const plainDecisionBeforeDetective = new Map<string, ExecutorDecision>();
-for (const [id, decision] of decisions) {
-  const debt = debtAtCycleStart.get(id);
-  const recovered = sourceFailureRecovery(decision, debt, shutThreshold);
-  if (recovered !== decision) plainDecisionBeforeDetective.set(id, decision);
-  decisions.set(id, plainRereadSlot(debt, nowMs, shutThreshold) ? decision : recovered);
 }
 const modelClassUnits = units.filter((u) => decisions.get(u.obligation.id)?.kind === "BOUNDED_MODEL_WORKER");
 const debtIds = new Set(debtsIn.filter((d) => d.consecutiveFailures > 0).map((d) => d.obligationId));
@@ -874,10 +776,11 @@ console.log(
 // clock before deciding which standing source periods are due this cycle.
 const standingLineages = sync.all.some(o => o.autonomousPlan) ? await (async () => {
   const [occurrences, workItems, artifacts, attempts, workerResults] = await Promise.all([
-    repos.occurrences.list(), repos.workItems.list(), repos.artifacts.readAll(), repos.attempts.list(), repos.workerResults.readAll(),
+    repos.occurrences.list(), repos.workItems.list(), repos.artifacts.readAllNarrowed(LINEAGE_ARTIFACT_FIELDS),
+    repos.attempts.listNarrowed(LINEAGE_ATTEMPT_FIELDS), repos.workerResults.readAll(),
   ]);
   return selectStandingLineages({ occurrences: occurrences.map(row => row.value), workItems: workItems.map(row => row.value),
-    artifacts, attempts: attempts.map(row => row.value), workerResults });
+    artifacts: artifacts as LineageArtifact[], attempts: attempts.map(row => row.value as LineageAttempt), workerResults });
 })() : [];
 const publicationAnchors = await persistVerifiedPublicationAnchors(repos, { obligations: sync.all, lineages: standingLineages, now: NOW });
 if (publicationAnchors.anchored.length) {
@@ -893,7 +796,6 @@ for (const o of sync.all) {
   if (o.nextDueAt !== row.nextDueAt) {
     nextDueWrites.push(o.id);
   }
-  nextDueByObligation.set(o.id, row.nextDueAt);
   if (backedOff.has(o.id)) continue;
   const isDue = Date.parse(row.nextDueAt) <= nowMs || retryNow.has(o.id);
   if (!isDue) continue;
@@ -919,6 +821,23 @@ if (dueThisCycle.some(row => plannedForHunters(row.obligation.autonomousPlan) &&
   }
 }
 if (continuedStandingLineages.length) console.log(`  standing source periods continued: ${continuedStandingLineages.length}; no duplicate Scout root opened; canonical roots ${continuedStandingLineages.slice(0, 3).map(row=>row.rootWorkItemId).join(", ")}${continuedStandingLineages.length>3?" …":""}`);
+
+/* A packet is sent only while it has an open blank and something changed since its last job. */
+{
+  const packetRows = dueThisCycle.filter(row => row.obligation.id.startsWith(HUNT_PACKET_NAMESPACE));
+  if (packetRows.length > 0) {
+    try {
+      const due = await duePackets(repos, packetRows.map(row => ({ governmentId: row.obligation.subjectId, assignments: row.obligation.assignments })), NOW);
+      const waiting = packetRows.filter(row => due.get(row.obligation.subjectId)?.due !== true);
+      for (const row of waiting) dueThisCycle.splice(dueThisCycle.indexOf(row), 1);
+      console.log(`  hunt packets: ${packetRows.length - waiting.length} of ${packetRows.length} due to be sent` +
+        (waiting.length ? `; waiting: ${waiting.slice(0, 3).map(row => `${row.obligation.subjectId} (${due.get(row.obligation.subjectId)?.why ?? "unread"})`).join("; ")}${waiting.length > 3 ? " …" : ""}` : ""));
+    } catch (error) {
+      runtimeConditions.push(`hunt packets could not be read (${error instanceof Error ? error.message : String(error)}); none is sent this round`);
+      for (const row of packetRows) dueThisCycle.splice(dueThisCycle.indexOf(row), 1);
+    }
+  }
+}
 
 /* ------------------------------------------------- the owner's intents --- */
 
@@ -1058,9 +977,6 @@ let squadReading: { open: ReadonlyMap<string, ReadonlyMap<string, number>>; part
 /* Each Send's mission map count, read with the place order; `before` is filled from the prior reading when Done is decided. */
 let missionMaps = new Map<string, Omit<MissionMapCount, "before">>();
 let missionMapUnread: string | null = "the owed list has not been read this round";
-/* Every Send's open blanks, read with the place order; each Scout's brief lists the ones related to its government. */
-let missionBlanks: readonly MissionBlank[] = [];
-const missionBlanksFor = (subjectId: string): readonly MissionBlank[] => relatedMissionBlanks(subjectId, missionBlanks);
 let placeOrderDirty = true;
 let placeOrderRead: Promise<void> | null = null;
 async function refreshPlaceOrder(): Promise<void> {
@@ -1089,7 +1005,6 @@ async function refreshPlaceOrder(): Promise<void> {
       new Map(missionPartCounts(place.items, parts).map(count => [count.part, count.open] as const))] as const)) };
     missionMaps = new Map(places.map(place => [place.receiptId, missionMapCount(place.items, null)] as const));
     missionMapUnread = null;
-    missionBlanks = missionBlanksFrom(places.flatMap(place => place.items), parts);
   })().catch(error => {
     const detail = `place priority refresh failed; keeping last order: ${error instanceof Error ? error.message : String(error)}`;
     if (missionMaps.size === 0) missionMapUnread = detail;
@@ -1168,14 +1083,6 @@ const scoutOrder = expansionPlan === null
       ...modelOrder.ordered.filter((b) => !dispatchPriority.has(b.row.id)),
     ]
   : orderByPlacement(modelOrder.ordered, (b) => placementRank(b.row.id));
-const compareScoutRows = (left: ScheduledObligation, right: ScheduledObligation): number => {
-  const leftRank = placementRank(left.obligation.id) ?? Number.POSITIVE_INFINITY;
-  const rightRank = placementRank(right.obligation.id) ?? Number.POSITIVE_INFINITY;
-  if (leftRank !== rightRank) return leftRank < rightRank ? -1 : 1;
-  const orderable = (row: ScheduledObligation) =>
-    orderableDueRow(row, registry.providerOf(row.obligation.id), debtAtCycleStart.get(row.obligation.id));
-  return compareReaderImpact(orderable(left), orderable(right), orderingInputs);
-};
 
 let roundMethodVersionRead: Promise<number> | null = null;
 const roundMethodVersion = (): Promise<number> => {
@@ -1239,12 +1146,8 @@ const openOccurrenceInStep = async (
   try {
     const resumed = await resumeOpenOccurrence(repos, obligation);
     if (resumed?.kind === "SETTLED") {
-      /* The model lane admits a row before opening it; a recovery runs no Scout, so it hands its admission back. */
-      if (decisionFor(id, obligation.routeId).kind === "BOUNDED_MODEL_WORKER" && scoutFor(row).lane !== "DETERMINISTIC") {
-        openedModel += 1;
-        scoutsAdmittedThisCycle = Math.max(0, scoutsAdmittedThisCycle - 1);
-        if (!lifetimeHuntWork(id)) scoutsAdmittedOutsideLifetime = Math.max(0, scoutsAdmittedOutsideLifetime - 1);
-      } else openedDeterministic += 1;
+      if (decisionFor(id, obligation.routeId).kind === "BOUNDED_MODEL_WORKER") openedModel += 1;
+      else openedDeterministic += 1;
       return { settled: resumed.settled };
     }
     if (resumed !== null) {
@@ -1254,7 +1157,7 @@ const openOccurrenceInStep = async (
       if (occ === null) return false;
       occurrenceByObligation.set(id, { id: occ.occurrence.id, routeTaskId: occ.routeTask.id });
     }
-    if (decisionFor(id, obligation.routeId).kind === "BOUNDED_MODEL_WORKER" && scoutFor(row).lane !== "DETERMINISTIC") openedModel += 1;
+    if (decisionFor(id, obligation.routeId).kind === "BOUNDED_MODEL_WORKER") openedModel += 1;
     else openedDeterministic += 1;
     return true;
   } catch (error) {
@@ -1315,31 +1218,21 @@ let effectiveCeilingUsd = rollingCeiling.rollingCeilingUsd;
 /* The intent log was read, and RUN_CYCLE_NOW / DISPATCH honored, above the
    lane ordering — a DISPATCH has to reorder before anything is opened. */
 
-let costLedger: CostEntry[] = [];
-let historicalSpendHolds: readonly SpendHold[] = [];
+let spendCharges: readonly PricedCharge[] = [];
 let ledgerUnreadable: string | null = null;
 try {
-  // readSince already pages under the repository's PAGE request bound.
   // Only transient failures are retried, under the existing backoff and circuit.
-  costLedger = [...await retryStartupRead(
-    () => repos.costs.readSince(new Date(Date.parse(NOW) - RESEARCH_BOUNDS.windowHours * 3_600_000).toISOString()),
-    () => null, startupReadRetry)];
-  if (researchSpendInWindow(costLedger, NOW).windowUsd === null) {
-    /* The holds that count now, one row each (schema v24; the ledger row behind WTP_SPEND_HOLDS_TABLE=0). */
-    historicalSpendHolds = Object.values(await retryStartupRead(() => readLiveSpendHolds(repos, NOW), () => null, startupReadRetry));
-  }
+  spendCharges = await retryStartupRead(() => readSpendWindow(repos, NOW), () => null, startupReadRetry);
 } catch (error) {
   ledgerUnreadable = error instanceof Error ? error.message : String(error);
   runtimeConditions.push(`the cost ledger could not be read (${ledgerUnreadable}); paid model work waits while held and plain-code work continue`);
 }
-const spendWindow = researchSpendInWindow(costLedger, NOW, RESEARCH_BOUNDS.windowHours, historicalSpendHolds);
+const spendWindow = researchSpendInWindow(spendCharges, NOW, RESEARCH_BOUNDS.windowHours);
 const paidSpendHold = ledgerUnreadable !== null
   ? `the cost ledger could not be read (${ledgerUnreadable})`
-  : spendWindow.windowUsd === null
-    ? `model spend includes ${spendWindow.unmeasured} unmeasured row(s) without complete usage or an existing worst-case reservation; known model spend is $${spendWindow.knownUsd.toFixed(6)}`
-    : !ceilingPermits(spendWindow.windowUsd, effectiveCeilingUsd).permits
-      ? `the owner's $${effectiveCeilingUsd.toFixed(2)} model ceiling is reached`
-      : null;
+  : !ceilingPermits(spendWindow.windowUsd, effectiveCeilingUsd).permits
+    ? `the owner's $${effectiveCeilingUsd.toFixed(2)} model ceiling is reached`
+    : null;
 if (paidSpendHold !== null && ledgerUnreadable === null) {
   runtimeConditions.push(`${paidSpendHold}; paid model work waits while held and plain-code work continue`);
 }
@@ -1370,16 +1263,16 @@ const laneClosure = modelLaneClosure({
 /* The lane is closed only because paid work runs in the standing hunter lane (no pause, hold or unread control). */
 const queuesForHunterLane = laneClosure?.hunterLane === true;
 
-if (queuesForHunterLane && !canary) {
+/* Planned paid rows are opened for the hunters: the standing hunter lane, or this round's worker wave. */
+if ((queuesForHunterLane || laneClosure === null) && !canary) {
   let queued = 0;
   for (const row of dueModel) {
     if (!plannedForHunters(row.obligation.autonomousPlan)) continue;
     const scheduled = scheduleObligation(row.obligation, nowMs);
     if (isScheduled(scheduled) && await openOccurrenceInStep({ ...scheduled, nextDueAt: row.nextDueAt }) === true) queued += 1;
   }
-  console.log(`  planned paid rows queued for the hunter lane: ${queued} of ${dueModel.filter(row => plannedForHunters(row.obligation.autonomousPlan)).length} due`);
+  console.log(`  planned paid rows opened for the hunters: ${queued} of ${dueModel.filter(row => plannedForHunters(row.obligation.autonomousPlan)).length} due`);
 }
-const laneDisabledCode = laneClosure?.code ?? null;
 const laneDisabledReason = laneClosure?.reason ?? null;
 const modelLaneEnabled = laneClosure === null;
 
@@ -1400,9 +1293,6 @@ const workerCapacity = researchPaidWorkerCapacity({ readyWork: dueThisCycle.leng
   ...(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE ? { requestsPerMinute: Number(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE) } : {}) });
 let finalSpendWindow: ReturnType<typeof researchSpendInWindow> | null = null;
 let finalSpendAsOf: string | null = null;
-let spentThisCycle = 0;
-let scoutsAdmittedThisCycle = 0;
-let scoutsAdmittedOutsideLifetime = 0;
 let priorCircuits: readonly ProviderCircuit[] = [];
 let priorLastSuccessfulActivity: string | null = null;
 let priorResearchState: ResearchState | null = null;
@@ -1421,11 +1311,12 @@ try {
 
 const websiteSize = websiteSizeFromHoldings(trackedStateCodes, ROOT);
 const sizeForDiscovery = websiteSize;
+let hostConcurrency = readSetting(config, HOST_CONCURRENCY_SETTING, HOST_CONCURRENCY_DEFAULT);
 const fleetSafety = new FleetSafetyController({
   websiteSize: sizeForDiscovery,
+  hostConcurrency: () => hostConcurrency,
   now: NOW,
-  costs: costLedger,
-  spendHolds: historicalSpendHolds,
+  charges: spendCharges,
   costLedgerReadable: ledgerUnreadable === null,
   paused: intents.runnerPause.paused,
   /* The second lock: while the lane is closed for any reason, no model request is reserved at all. */
@@ -1446,6 +1337,7 @@ function refreshOwnerSettings(): Promise<void> {
   settingsReadAt = Date.now();
   settingsRead = (async () => {
     const reread = adminConfigForPaidWork({ row: await repos.adminConfig.read(ADMIN_CONFIG_ID) });
+    hostConcurrency = readSetting(reread.config, HOST_CONCURRENCY_SETTING, HOST_CONCURRENCY_DEFAULT);
     if (reread.holdPaidWork !== null) return;
     const next = resolveRollingCeiling(fleetSpendCeilingOverrideUsd(reread.config));
     if (next.rollingCeilingUsd === effectiveCeilingUsd) return;
@@ -1491,13 +1383,13 @@ const searchBudget = !discoverySearchOn ? null : durableSearchBudget({
   },
   now: nowIso,
 });
-/* Pointers only: the model still opens each hit with fetch_public/browse, which read and record robots.txt, wall on an access control, and vault. */
-const scoutSearch = searchBudget === null ? null : makeScoutSearch({
+/* One provider per query: Brave first, Exa when Brave misses; the hunter opens and saves the page it cites. */
+const scoutSearch = searchBudget === null ? null : makeHuntSearch({
   braveKey: process.env.BRAVE_SEARCH_API_KEY,
   exaKey: process.env.EXA_API_KEY,
   budget: searchBudget,
 });
-const scoutSearchLifetime = searchBudget === null || !hasLifetimeHunt ? null : makeScoutSearch({
+const scoutSearchLifetime = searchBudget === null || !hasLifetimeHunt ? null : makeHuntSearch({
   braveKey: process.env.BRAVE_SEARCH_API_KEY,
   exaKey: process.env.EXA_API_KEY,
   budget: searchBudget.lifetimeHunt,
@@ -1506,12 +1398,12 @@ console.log(
   scoutSearch === null
     ? `  scout search: OFF (${discoverySearchOn ? "no Brave or Exa key in this process" : configHold !== null ? "held: the owner's config row could not be trusted" : "the owner's paid-search switch is off"})`
     : `  scout search: ON under the owner's switch (${[process.env.BRAVE_SEARCH_API_KEY ? "brave" : null, process.env.EXA_API_KEY ? "exa" : null].filter(Boolean).join("+")}; ` +
-        `${SEARCH_PER_CYCLE}/cycle, ${SEARCH_PER_DAY}/day shared with discovery) — pointers only, robots.txt recorded downstream`,
+        `${SEARCH_PER_CYCLE}/cycle, ${SEARCH_PER_DAY}/day shared with discovery); Brave first, Exa only when Brave misses`,
 );
 
 const expansionBudget = expansionPlan === null
   ? null
-  : armExpansionBudget(expansionPlan, { now: NOW, costs: ledgerUnreadable === null ? costLedger : null, worstCaseUsd: SCOUT_JOB_WORST_CASE_USD ?? Number.POSITIVE_INFINITY });
+  : armExpansionBudget(expansionPlan, { now: NOW, charges: ledgerUnreadable === null ? spendCharges : null, worstCaseUsd: SCOUT_JOB_WORST_CASE_USD ?? Number.POSITIVE_INFINITY });
 let expansionReading: ExpansionCycleReading | null = expansionBudget === null || expansionPlan === null
   ? null
   : withCycleCounts(expansionBudget.reading, {
@@ -1578,23 +1470,22 @@ if (dispatchTargets.length > 0) {
     }
     const durable = new Map<string, DurableRowFacts>();
     for (const row of [...sync.all, ...(sync.outside ?? [])]) durable.set(row.id, { active: row.active, materializedBy: row.materializedBy, assignments: row.assignments });
-    /* A government whose family rows an earlier Send already made live gets no paid discovery Scout for it.
-     * The held capture is read once per cycle; if it cannot be read the Scouts are planned as before. */
-    let liveFamilies: ReadonlyMap<string, ReadonlySet<string>> | undefined;
-    try {
-      const wanted = new Set(dispatchScopes.flatMap(scope => scope.kind === "RESOLVED" ? [...scope.members] : []));
-      const governments = [...registries.values()].flatMap(reg => reg.jurisdictions.filter(j => wanted.has(j.id) && j.ocdId));
-      if (governments.length > 0) {
-        const capture = await readHeldPlaceCapture([...new Set(governments.map(j => j.ocdId!))], { now: nowIso(), bypassCache: true });
-        liveFamilies = liveFamiliesByGovernment({ governments, capture, now: nowIso() });
-      }
-    } catch (error) {
-      console.warn(`  held capture unread; discovery Scouts planned as before: ${error instanceof Error ? error.message : String(error)}`);
+    /* Every division each sent place touches gets one hunt packet; a send whose place cannot be read gets its placed governments' packets. */
+    const packetDivisions = new Map<string, readonly string[]>();
+    for (const target of dispatchTargets) {
+      try {
+        if (target.kind === "SCOPE" && target.scope.kind === "RESOLVED") packetDivisions.set(target.key, await divisionsOfPlace([...target.scope.zctas], target.scope.states));
+        if (target.kind === "DISPATCH") {
+          const place = await readPlaceWords(target.target.text);
+          if (place.state === "PLACE") packetDivisions.set(target.key, place.divisionIds);
+          if (place.state === "CHOICES") runtimeConditions.push(`“${target.target.text}” names ${place.choices.length} places (${place.choices.slice(0, 3).map(c => c.label).join("; ")}${place.choices.length > 3 ? " …" : ""}); choose one in Admin to hunt it`);
+        }
+      } catch (error) { console.warn(`  ${target.label}: the divisions it touches could not be read (${error instanceof Error ? error.message : String(error)})`); }
     }
     const plan = planDispatchWork({
       targets: dispatchTargets,
       world: {
-        liveFamilies,
+        packetDivisions,
         registries,
         territory: expansionLoad.territory ?? null,
         territoryDetail: expansionLoad.territoryDetail ?? null,
@@ -1715,7 +1606,7 @@ const assignmentBudget: AssignmentBudgetGate = armAssignmentBudget({
   now: NOW,
   specs: assignmentSpecs,
   membership: assignmentMembers,
-  costs: ledgerUnreadable === null ? costLedger : null,
+  charges: ledgerUnreadable === null ? spendCharges : null,
   worstCaseUsd: SCOUT_JOB_WORST_CASE_USD ?? Number.POSITIVE_INFINITY,
   /* An unread log cannot say which DISPATCH carries a budget, so its work is held (assignment-budget.ts). */
   intentsReadable: intentLogUnreadable === null,
@@ -1726,24 +1617,17 @@ const assignmentBudget: AssignmentBudgetGate = armAssignmentBudget({
 const assignmentLabels = new Map(dispatchTargets.map((t) => [t.key, t.label] as const));
 
 const spendHolds = new DurableSpendHolds({ budget: repos.budget, table: repos.spendHolds, now: nowIso });
-/** The admitted Scout job on each obligation this cycle, with what it holds. */
-const jobSpend = new Map<string, JobSpend>();
-/* A round's end settles what it never settled, then deletes the holds that no longer count (bounded; never accumulated). */
+/* A round's end deletes the holds that no longer count (bounded; never accumulated). */
 releaseRoundHolds = async () => {
-  const open = [...jobSpend.values()]; jobSpend.clear();
-  const failed = await releaseOpenJobs(spendHolds, open, nowIso());
   await spendHolds.sweep();
-  return failed;
+  return [];
 };
-/** Each held job's subject, so a pre-warm charged to it names the same jurisdiction. */
-const jobSubject = new Map<string, string>();
-let scoutJobSeq = 0;
 /* The paid-work guards are built in one module, so a standing lease-worker lane builds the same ones (paid-work-guards.ts). */
 const guards = paidWorkGuards({ repos, now: nowIso, armedAt: NOW, fleetSafety, providerQueue, spendHolds, assignmentBudget, expansionBudget,
   messages: workerMessages, batch: workerBatch, modelLaneEnabled, ceilingUsd: () => effectiveCeilingUsd,
   ...(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE ? { requestsPerMinute: Number(process.env.WTP_ANTHROPIC_REQUESTS_PER_MINUTE) } : {}),
   onCondition: sentence => { runtimeConditions.push(sentence); } });
-const { budgetLinesFor, guardedMessagesFor, autonomousTransportFor, paidWorkerCapacity } = guards;
+const { autonomousTransportFor, paidWorkerCapacity } = guards;
 /* The round's Send and area reading, for the standing hunter lane, which cannot read the whole corpus itself. Host-local; never a reader-facing write. */
 const writeHunterLaneReading = (): void => {
   if (dry || canary) return;
@@ -1774,7 +1658,6 @@ const dispatchDeadlineMs = Date.now() + 15 * 60_000;
 const reportedHostSlots = reportingWorkerSlots(hostWorkerSlots);
 const workerSlots = { acquire: (entry?: string, deadlineMs = dispatchDeadlineMs) =>
   reportedHostSlots.acquire(entry, Math.min(deadlineMs, dispatchDeadlineMs)) };
-const paidScoutSlots = paidWorkerSlots(workerSlots, paidWorkerCapacity);
 // Hand out durable leases before unrelated histories or parent execution.
 const autonomousCycleOpen = autonomousCycleAllowed({ dry, canary, only: ONLY, ids: IDS,
   runnerPaused: intents.runnerPause.paused });
@@ -1832,156 +1715,11 @@ const assignmentsReading = (): AssignmentCycleReading | null =>
         gate: assignmentBudget,
         specs: assignmentSpecs,
         membership: assignmentMembers,
-        costs: ledgerUnreadable === null ? costLedger : null,
+        charges: ledgerUnreadable === null ? spendCharges : null,
         intentsReadable: intentLogUnreadable === null,
         labels: assignmentLabels,
         completionFor: assignmentCompletion,
       });
-
-/* Prior context the Scout may inherit — read once, only when a Scout can run. */
-const priorScoutResults = new Map<string, ScoutResult[]>();
-const priorDispositionsByObligation = new Map<string, { disposition: string; permission: string; transport: string; note: string; at: string }[]>();
-/* Each due place's own field-manual rows, read once before its Scout is briefed. */
-const manualReads = new Map<string, FieldManualRead>();
-const inheritedManualStores = new Map<string, FieldManualStore>();
-/* The divisions each Scout's obligation covers, where its method results are recorded. */
-const scoutDivisions = new Map<string, readonly string[]>();
-const inheritedFieldManualCounts = new Map<string, number>();
-/** The exact projected doors handed to each obligation's scout at dispatch — captured input for the delivery audit, keyed by obligation id. */
-const inheritedFieldManualDoors = new Map<string, { readonly entryIds: readonly string[]; readonly lines: readonly string[] }>();
-if (modelLaneEnabled && dueModel.length > 0) {
-  try {
-    const priorResults = await readSubjectScoutHistory(repos,dueModel.map(row=>row.obligation));
-    for (const r of priorResults) {
-      const list = priorScoutResults.get(r.obligationId) ?? [];
-      list.push(r);
-      priorScoutResults.set(r.obligationId, list);
-    }
-  } catch (error) {
-    runtimeConditions.push(`prior Scout results could not be read: ${error instanceof Error ? error.message : String(error)}`);
-  }
-  // One read of the Scout rows for every due place; each place's rows are the same row objects narrowed to it.
-  const places = [...new Map(dueModel.map((row) => [row.obligation.subjectId, row.obligation] as const)).values()];
-  const reads = await readFieldManualForPlaces(repos, { role: "SCOUT", everywhere: true }, places.map((obligation) =>
-    scoutFieldManualQuery({ subjectId: obligation.subjectId, obligationId: obligation.id, divisions: obligation.scopeDivisions ?? [] })));
-  places.forEach((obligation, index) => manualReads.set(obligation.subjectId, reads[index]!));
-  const unread = reads.find((read) => read.error !== undefined);
-  if (unread) runtimeConditions.push(`the field manual could not be read: ${unread.error}`);
-  try {
-    const routeTaskToObligation = new Map<string, string>();
-    const priorDispositions: (Awaited<ReturnType<typeof repos.dispositions.readAll>>)[number][] = [];
-    if (canary) {
-      for (const row of dueModel) {
-        const standing = sync.all.find((entry) => entry.id === row.obligation.id);
-        if (!standing?.openOccurrenceId) continue;
-        const occurrence = await repos.occurrences.read(standing.openOccurrenceId);
-        if (!occurrence) continue;
-        routeTaskToObligation.set(occurrence.value.routeTaskId, occurrence.value.obligationId);
-        priorDispositions.push(...await repos.dispositions.read(occurrence.value.routeTaskId));
-      }
-    } else {
-      for (const occ of await repos.occurrences.list()) routeTaskToObligation.set(occ.value.routeTaskId, occ.value.obligationId);
-      priorDispositions.push(...await repos.dispositions.readAll());
-    }
-    for (const c of priorDispositions) {
-      const obligationId = routeTaskToObligation.get(c.routeTaskId);
-      if (obligationId === undefined) continue;
-      const list = priorDispositionsByObligation.get(obligationId) ?? [];
-      list.push({
-        disposition: c.disposition.disposition,
-        permission: c.disposition.permission,
-        transport: c.disposition.transport,
-        note: c.disposition.note,
-        at: c.committedAt,
-      });
-      priorDispositionsByObligation.set(obligationId, list);
-    }
-  } catch (error) {
-    runtimeConditions.push(`prior dispositions could not be read: ${error instanceof Error ? error.message : String(error)}`);
-  }
-}
-
-/** The most recent prior rungs a resumed Attempt is briefed with. A floor on the brief's size, never on the record. */
-const PRIOR_RUNGS_BRIEFED = 40;
-
-function inheritedFor(row: ScheduledObligation): InheritedEvidence {
-  const id = row.obligation.id;
-  const all = subjectScoutHistory([...priorScoutResults.values()].flat(),row.obligation.subjectId,row.obligation.recordClass);
-  const prior = all.slice(-2);
-  const dispositions = (priorDispositionsByObligation.get(id) ?? []).slice(-3);
-  const debt = debtsIn.find((d) => d.obligationId === id);
-  const lines: string[] = [];
-  for (const r of prior) {
-    // A retained legacy result can carry a non-array nextRungs value. Keep
-    // the evidence and resume from recorded rungs instead of aborting a Scout.
-    const nextRungs = Array.isArray(r.nextRungs)
-      ? r.nextRungs.filter((value): value is string => typeof value === "string")
-      : [];
-    lines.push(
-      `PRIOR SCOUT ${r.recordedAt}: ${r.refusal ? `REFUSED (${r.refusal.map((i) => i.code).join(", ")})` : r.outcome} (${r.stoppedBy}); ` +
-        `rungs: ${r.rungs.map((g) => `${g.rung} -> ${g.target} [${g.observed}]`).join("; ") || "none"}; ` +
-        `next rungs it named: ${nextRungs.join("; ") || "none"}${Array.isArray(r.nextRungs) ? "" : " (stored list unreadable; re-evaluate from retained rungs)"}; ` +
-        `candidates: ${r.candidates.map((c) => `${c.routeId} <${c.url}>`).join(", ") || "none"}`,
-    );
-  }
-  for (const d of dispositions) {
-    /* The robots.txt verdict is a record, never a reason to stop; the transport says whether a wall stood. */
-    lines.push(`PRIOR DISPOSITION ${d.at}: ${d.disposition} (robots.txt ${d.permission}, recorded, never a refusal; transport ${d.transport}) — ${d.note.slice(0, 300)}`);
-  }
-  if (debt) lines.push(`DEBT: ${debt.consecutiveFailures} consecutive failure(s), retry at ${debt.retryAt}; ${debt.target} ${debt.cause} at ${debt.lastFailedAt}: ${debt.detail}`);
-  /* A dispatched discovery row starts from what the free walk saw: its outcome and the leads it could not confirm. */
-  const discovery = parseMeetingsDiscoveryId(id);
-  const freeWalk = discovery === null ? null : (freeWalks.evidenceFor?.(discovery.jurisdictionId) ?? null);
-  if (freeWalk !== null) lines.push(freeWalk);
-
-  const priorRungs: PriorRung[] = all
-    .flatMap((r) => r.rungs.map((g) => ({ rung: g.rung, tool: g.tool, target: g.target, observed: g.observed, ok: g.ok ?? null, at: g.at, attemptId: r.attemptId })))
-    .slice(-PRIOR_RUNGS_BRIEFED);
-  const provenance: ArtifactProvenance[] = [];
-  const seen = new Set<string>();
-  for (const r of all) {
-    for (const g of r.rungs) {
-      const verdict = g.permission ?? (g.tool === "read_permission" ? "ALLOWED" : null);
-      if (verdict === null) continue;
-      for (const artifactId of g.artifactIds) {
-        if (seen.has(artifactId)) continue;
-        seen.add(artifactId);
-        provenance.push({
-          artifactId,
-          canonicalUrl: g.target,
-          retrievedAt: g.at,
-          permission: verdict,
-          methodRouteId: g.tool === "read_permission" ? "scout:read_permission" : g.tool === "browse" ? "scout:browse" : "scout:fetch_public",
-          httpStatus: Number(/HTTP (\d{3})/.exec(g.observed)?.[1] ?? NaN) || null,
-        });
-      }
-    }
-  }
-
-  const manual = manualReads.get(row.obligation.subjectId) ?? { store: emptyFieldManual() };
-  const projection = scoutFieldManualProjection(manual, {
-    subjectId: row.obligation.subjectId,
-    obligationId: row.obligation.id,
-    divisions: row.obligation.scopeDivisions ?? [],
-    recordClass: row.obligation.recordClass,
-  });
-  scoutDivisions.set(id, row.obligation.scopeDivisions ?? []);
-  inheritedFieldManualCounts.set(id, projection.entryIds.length);
-  inheritedManualStores.set(id, manual.store);
-  const manualLines = fieldManualBriefLines(projection);
-  // Capture the EXACT projected doors handed to this scout, at dispatch, for the delivery audit.
-  inheritedFieldManualDoors.set(id, { entryIds: projection.entryIds, lines: manualLines });
-  return {
-    artifactIds: [...new Set(prior.flatMap((r) => r.artifactIds))],
-    summary: [...manualLines, ...lines].join("\n"),
-    provenance,
-    priorRungs,
-    transportFailures: consecutiveTransportFailures(all),
-    nextRungs: Array.isArray(all.at(-1)?.nextRungs)
-      ? all.at(-1)!.nextRungs.filter((value): value is string => typeof value === "string")
-      : [],
-  };
-}
 
 /* ------------------------------------------------- host supervision --- */
 
@@ -2028,8 +1766,6 @@ console.log(
 /* ----------------------------------------------------- research state --- */
 
 const running: RunningScout[] = [];
-const scoutResultsThisCycle: ScoutResult[] = [];
-const candidateReports: ProposalReport[] = [];
 let laneCounts: { deterministicDispatched: number; modelDispatched: number; deferredBy: Record<string, number> } = {
   deterministicDispatched: 0,
   modelDispatched: 0,
@@ -2050,8 +1786,7 @@ type CycleResearchState = ResearchState & { readonly ownerDispatch: OwnerDispatc
 
 function researchState(cycleFinishedAt: string | null): CycleResearchState {
   const measuredSpend = finalSpendWindow ?? spendWindow;
-  const window = finalSpendWindow !== null ? finalSpendWindow.windowUsd
-    : spendWindow.windowUsd === null ? null : spendWindow.windowUsd + spentThisCycle;
+  const window = finalSpendWindow !== null ? finalSpendWindow.windowUsd : spendWindow.windowUsd;
   return {
     formatVersion: RESEARCH_FORMAT_VERSION,
     beatAt: nowIso(),
@@ -2110,12 +1845,7 @@ function researchState(cycleFinishedAt: string | null): CycleResearchState {
     running: [...running],
     runtimeConditions: [...runtimeConditions],
     cyclePhases: [...cycleObservation.phases, ...leaseTaskReadsPhase()],
-    methodCandidates: (() => {
-      const counts = canonicalCandidateCounts;
-      return counts === null
-        ? null
-        : { proposed: counts.PROPOSED, validated: counts.VALIDATED, admitted: counts.ADMITTED, rejected: counts.REJECTED };
-    })(),
+    methodCandidates: null,
     hostSupervision,
     dispatchOrdering,
     metrics,
@@ -2153,8 +1883,6 @@ await writeResearchState(null);
 /* ----------------------------------------------------------- the executor --- */
 
 const vault = cycleVault(join(ROOT, ...VAULT_DIR));
-const readScoutEvidence = workerVaultResolver(repos, new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)), "freshness");
-const readScoutCapture = researchVaultResolver(repos, new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)), "freshness");
 
 const simulated: RunWork = async ({ executor, routeTaskId }) => ({
   ranAs: "DETERMINISTIC",
@@ -2181,210 +1909,8 @@ const executorFor = (obligation: { obligation: { id: string } }): DeclaredExecut
   };
 };
 
-const prewarmScoutPrefix = async (): Promise<PrewarmOutcome> => {
-  const at = nowIso();
-  const started = Date.now();
-  try {
-    const playbook = await readRolePlaybook(repos, "SCOUT");
-    /* Warm the model the loop STARTS on, and only when its prefix can cache — else skip, by name, with no paid call. */
-    /* The Attempts' own tool list: with `search` exactly when `scoutFor` hands the toolkit `scoutSearch`, so the entry warmed is the one read. */
-    const plan = scoutPrewarmPlan({ playbook: playbook.text, toolkitSpecs: scoutToolSpecsFor(scoutSearch !== null), bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS });
-    if (plan.kind === "SKIP") return { status: "SKIPPED", at, model: plan.model, code: plan.code, detail: plan.detail, durationMs: Date.now() - started };
-    const { model, request } = plan;
-
-    const forJob = [...jobSpend.values()][0] ?? null;
-    let prewarmHold: JobSpend | null = null;
-    if (forJob !== null) {
-      const worst = modelRequestWorstCaseUsd(request);
-      if (worst === null) return { status: "SKIPPED", at, model, code: "ASSIGNMENT_BUDGET", detail: `no paid call: ${model} has no stated rate, so the pre-warm cannot be held against the budget of the work it serves`, durationMs: Date.now() - started };
-      prewarmHold = new JobSpend(spendHolds, `prewarm:${NOW}`, forJob.obligationId, forJob.lines);
-      const held = await prewarmHold.admit(worst, "the cycle's pre-warm");
-      if (!held.admit) return { status: "SKIPPED", at, model, code: held.code, detail: `no paid call: ${held.why}`, durationMs: Date.now() - started };
-    }
-    const transport = guardedMessagesFor(prewarmHold?.obligationId ?? "scout-prewarm");
-    /* A failed pre-warm leaves its hold standing: what it was billed is unknown. */
-    const response = await transport(request);
-    const metered = readMeteredUsage(response.usage ?? {});
-    const priced = priceMeteredUsage(model, metered, "1h");
-    const durationMs = Date.now() - started;
-    const cost: AttemptCost = {
-      inputTokens: metered.uncachedInputTokens === null ? null : metered.uncachedInputTokens + (metered.cacheReadInputTokens ?? 0) + (metered.cacheCreationInputTokens ?? 0),
-      outputTokens: metered.outputTokens,
-      usd: priced.usd,
-      durationMs,
-      bytesFetched: null,
-      requestCount: 1,
-      ...meteredCostFields(metered),
-      modelRequestCount: 1, batchRequestCount: 0, batchEligibleRequestCount: 0,
-      listPriceUsd: listPriceUsdForUsage(response.model, metered),
-    };
-    await recordCost(
-      repos,
-      {
-        attemptId: `scout-prewarm:${NOW}`, workItemId: "scout-prewarm", routeTaskId: null, routeId: SCOUT_PREWARM_ROUTE_ID, source: "api.anthropic.com",
-        /* Charged to the budgeted work it was held for, so the Send's and area's history carries it; otherwise as before. */
-        jurisdiction: prewarmHold === null ? null : (jobSubject.get(prewarmHold.obligationId) ?? null),
-        ...(prewarmHold === null ? {} : { obligationId: prewarmHold.obligationId, spendHoldJobId: prewarmHold.jobId }),
-        project: "freshness", role: "SCOUT", model: response.model, requestedModel: model, servedModel: response.model,
-        modelRequestBound: modelRequestBoundFor(model, Buffer.byteLength(JSON.stringify(request)), request.max_tokens) ?? undefined,
-        cost, recordedAt: at,
-      },
-      at,
-    );
-    if (prewarmHold !== null) {
-      const failed = await spendHolds.settle(prewarmHold.jobId, priced.usd, nowIso());
-      if (failed !== null) runtimeConditions.push(`the pre-warm's budget hold could not be settled (${failed}); it counts in full for its window`);
-    }
-    if (priced.usd !== null) spentThisCycle += priced.usd;
-    return { status: "WARMED", at, cacheCreationInputTokens: metered.cacheCreationInputTokens, cacheReadInputTokens: metered.cacheReadInputTokens, uncachedInputTokens: metered.uncachedInputTokens, usd: priced.usd, durationMs };
-  } catch (error) {
-    return { status: "FAILED", at, detail: error instanceof Error ? error.message : String(error), durationMs: Date.now() - started };
-  }
-};
-
-const heldScoutFor = (scheduled: ScheduledObligation) => solvedScoutResult([...priorScoutResults.values()].flat(),
-  scheduled.obligation.subjectId,scheduled.obligation.recordClass,scheduled.obligation.routeId);
-const scoutTransportFor = (scheduled: ScheduledObligation, taskId?: string) => {
-  const obligation = scheduled.obligation;
-  const election = /ballot|election|contest|measure/i.test(obligation.recordClass);
-  return budgetGuardedTransport({
-    transport: guards.guardedJobTransportFor(obligation.id, "BLANK", { now: NOW, subjectId: obligation.subjectId,
-      meetingStartsAt: obligation.meetingStartsAt,
-      electionAt: election && obligation.readerImpactAt ? [obligation.readerImpactAt] : [],
-      readerImpactAt: election ? null : obligation.readerImpactAt }, taskId),
-    job: () => jobSpend.get(obligation.id) ?? null,
-    worstCaseOf: modelRequestWorstCaseUsd, priceOf: modelResponseUsd,
-  });
-};
-const scoutFor = (scheduled: ScheduledObligation): DeclaredExecutor => modelLaneEnabled || heldScoutFor(scheduled)!==null
-  ? failureResponderExecutor({
-      playbookFor: role => readRolePlaybook(repos, role),
-      solved:heldScoutFor(scheduled),
-      sourceFailure:debtAtCycleStart.get(scheduled.obligation.id),
-      sourceRoute:registry.routeFor(scheduled.obligation.id),
-      shutThreshold,
-      toolkitFor: buildScoutToolkit,
-      executorFactory: deps => scoutProcessExecutor({ root: ROOT, postgres: wantsPostgres,
-        fileStoreRoot: CONTROL_PLANE_ROOT, slots: paidScoutSlots,
-        search: (lifetimeHuntWork(scheduled.obligation.id) ? scoutSearchLifetime : scoutSearch) ?? undefined,
-        onStarted: pid => console.log(`  Scout lease worker process: pid ${pid}; ${scheduled.obligation.id}`), deps: parseShutDoorId(scheduled.obligation.id) ? { ...deps, role: "DETECTIVE" } : deps }),
-      /* Every request is checked against what the job holds on its Send and area budgets before the Fleet guard reserves it. */
-      transport: scoutTransportFor(scheduled),
-      transportFor: taskId => scoutTransportFor(scheduled, taskId),
-      refusedBeforeSending: (error) => error instanceof FleetPreSendRefusal || error instanceof SendBudgetRefusal,
-      /* A Sonnet attempt that shows a recorded reason escalates only after its worst case is held against the rolling ceiling —
-         and (MW-021) against the Send and area budgets the job runs under, before its first frontier request. */
-      reserveEscalation: async (request) => {
-        const fleet = scoutEscalationReservation(fleetSafety)(request);
-        if (!fleet.admit) return fleet;
-        const job = jobSpend.get(request.obligationId);
-        if (job === undefined) return fleet;
-        const more = await job.extend(request.worstCaseUsd, `the escalation to ${request.to.model}`);
-        if (more.admit) return fleet;
-        fleet.release();
-        return { admit: false, code: "CEILING", why: `${more.code}: ${more.why}` };
-      },
-      contextFor: (row) => ({
-        route: registry.routeFor(row.obligation.id),
-        providerId: registry.providerOf(row.obligation.id),
-        reason: [decisionFor(row.obligation.id, row.obligation.routeId).why,
-          ...(row.obligation.autonomousPlan ? [planRepairBrief(row.obligation.autonomousPlan)] : [])].join("\n"),
-        /* A DETERMINISTIC decision reaching the Scout is refused before any request. */
-        decision: decisionFor(row.obligation.id, row.obligation.routeId).kind,
-        inherited: inheritedFor(row),
-        ownerQuestions: [...(row.obligation.assignments ?? []).flatMap(a => a.questions ?? []), ...dispatchRecorded.filter(d => d.obligationId === row.obligation.id).flatMap(d => d.entry.questions ?? [])],
-        tools: {
-          vault: vault.put,
-          vaultBytes: vault.putBytes,
-          readHeldArtifact: async id => {
-            const [evidence, { artifact }] = await Promise.all([readScoutEvidence(id), readScoutCapture(id)]);
-            return { ...evidenceProjection(evidence), provenance: {
-              artifactId: id, canonicalUrl: artifact.canonicalUrl, retrievalUrl: artifact.retrievalUrl,
-              contentType: artifact.contentType, retrievedAt: artifact.retrievedAt, permission: artifact.permission,
-              methodRouteId: artifact.methodRouteId, httpStatus: artifact.httpStatus,
-            } };
-          },
-          spaceOut: spacer,
-          openOne: fleetSafety.guardedOpenOne("public-web", scheduled.obligation.id),
-          openBytes: fleetSafety.guardedOpenBytes("public-web", scheduled.obligation.id),
-          browse: browseWithPlaywright,
-        },
-      }),
-      onStart: async ({ attemptId, obligationId, startedAt }) => {
-        running.push({ attemptId, obligationId, startedAt, assignmentKeys: assignmentMembers.keysOf.get(obligationId) ?? [] });
-        await writeResearchState(null);
-      },
-      onResult: async (result: ScoutResult, artifacts: readonly WorkArtifact[]) => {
-        let amended = result;
-        if (candidateStoreUnreadable === null && ((result.refusal === null && result.candidates.length > 0) || result.sourceDeadEnds?.length)) {
-          try {
-            const report = await proposeScoutCandidates({ repos, result, artifacts, stamp: today() });
-            candidateReports.push(report);
-            canonicalCandidateCounts = report.counts;
-            amended = {
-              ...result,
-              methodCandidateIds: report.proposed.map((p) => p.candidateId),
-              unverified: [...result.unverified, ...report.notProposed.map((n) => `${n.routeId}: ${n.why}`)],
-            };
-          } catch (error) {
-            amended = {
-              ...result,
-              unverified: [...result.unverified, `method candidate proposal failed: ${error instanceof Error ? error.message : String(error)}`],
-            };
-          }
-        }
-
-        const handedManual = inheritedManualStores.get(result.obligationId) ?? emptyFieldManual();
-        const pair = compoundingPair(inheritedFieldManualCounts.get(result.obligationId) ?? 0, result, knownRouteIds(handedManual));
-        const doors = inheritedFieldManualDoors.get(result.obligationId);
-        amended = {
-          ...amended,
-          inheritedFieldManual: pair.inheritedCount,
-          rebuiltExistingRoutes: pair.rebuiltExisting,
-          /* Beside what was handed, which handed doors the walk went through, matched against the manual it was handed from. */
-          ...(doors
-            ? { inheritedFieldManualEntryIds: doors.entryIds, inheritedFieldManualLines: doors.lines, usedFieldManualEntryIds: usedFieldManualEntryIds(result, doors.entryIds, handedManual) }
-            : {}),
-        };
-        if (result.refusal === null && result.candidates.length > 0) {
-          const written = await writeFieldManualDiscoveries(
-            repos,
-            scoutDiscoveryEntries(result, scoutStateHint(result.subjectId, result.obligationId)),
-            nowIso(),
-          );
-          if (written.error) {
-            amended = { ...amended, unverified: [...amended.unverified, `field manual write-back failed: ${written.error}`] };
-          }
-        }
-        const fixed = await recordScoutMethods(repos, amended, handedManual, scoutDivisions.get(amended.obligationId) ?? []);
-        if (fixed) amended = { ...amended, unverified: [...amended.unverified, fixed] };
-        const heldJobId = jobSpend.get(amended.obligationId)?.jobId;
-        if (heldJobId !== undefined) amended = { ...amended, spendHoldJobId: heldJobId };
-        await repos.scoutResults.append(amended.obligationId, amended.attemptId, amended, nowIso());
-        await recordFoundSources(repos, [amended], nowIso(), readScoutEvidence);
-        const shutDoorId = parseShutDoorId(amended.obligationId);
-        if (shutDoorId) await applyDetectiveFind(repos, shutDoorId, amended, nowIso());
-        scoutResultsThisCycle.push(amended);
-        priorScoutResults.set(amended.obligationId,[...(priorScoutResults.get(amended.obligationId)??[]),amended]);
-        const outcome = amended.refusal !== null ? "REFUSED"
-          : amended.outcome === "EVIDENCE_FOUND" ? "CAPTURED" : "NOTHING_FOUND";
-        console.log(`  Scout done: ${amended.obligationId}; ${outcome}; code ${amended.refusal?.map(issue => issue.code).join(",") || amended.outcome}; usd ${amended.usd === null ? "unmeasured" : amended.usd.toFixed(6)}`);
-        return amended;
-      },
-    })
-  : {
-      lane: "BOUNDED_MODEL_WORKER",
-      run: async () => ({
-        ranAs: "BOUNDED_MODEL_WORKER",
-        kind: "ABORTED",
-        detail: `the Scout lane is closed this cycle: ${laneDisabledReason ?? "(no reason recorded)"}`,
-      }),
-    };
-
 /* --------------------------------------------------------------- the cycle --- */
 
-// Registered investigations also need Scout after a known source fails or leaves
-// verification unresolved; initial source discovery is not the only model work.
 finishPhase("worker-context");
 
 let settledOccurrences: readonly SettledOccurrence[] = [];
@@ -2427,16 +1953,9 @@ if (modelLaneEnabled && freeWalkSubjects.length > 0) {
 // Retained results publish alongside acquisition rather than holding ready leases.
 // Join this pass before the later projection of new worker output.
 async function projectRetainedFacts(phase: string): Promise<void> {
-  const readEvidence = workerVaultResolver(repos, new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)), "freshness", { snapshot: true });
   try {
     const selected = filteredCycle ? await selectedCycleRepositories(repos, sync.all.map(row => row.id)) : repos;
-    const report = await pending.step(phase, () => projectFleetPipeline(selected, {
-        readArtifactText: async id => (await readEvidence(id)).text,
-        now: nowIso(), root: ROOT,
-        freshness: createPermanentMeetingFreshness({ connection: process.env.WTP_PRODUCTION_DATABASE_URL_READONLY,
-          onUnavailable: detail => runtimeConditions.push(detail) }),
-      }));
-    if (report !== null) for (const line of factChainLines(report)) console.log(line);
+    await pending.step(phase, () => projectFleetPipeline(selected));
   } catch (error) {
     const reason = isControlPlaneRequestTimeout(error)
       ? error.message
@@ -2448,6 +1967,11 @@ async function projectRetainedFacts(phase: string): Promise<void> {
 const retainedProjection = !dry && !canary
   ? projectRetainedFacts("retained-results:fact-projection") : Promise.resolve();
 
+/** Where a row's deterministic request goes, so an open breaker on that provider holds it. */
+const routeUrl = (obligationId: string): string | null => {
+  const open = registry.routeFor(obligationId)?.open;
+  return open && (open.kind === "HTTP_GET" || open.kind === "HTTP_POST") ? open.url : null;
+};
 const cycle = await runCycle({
   repos,
   recoveryRepos,
@@ -2474,126 +1998,25 @@ const cycle = await runCycle({
   settledOccurrences,
   onRecoveryComplete: () => finishPhase("lease-and-completion-recovery"),
   skipReclaim: canary,
-  admitDispatch: (row) => fleetSafety.admitDispatch(row.obligation.id),
+  admitDispatch: (row) => fleetSafety.admitDispatch(row.obligation.id, routeUrl(row.obligation.id)),
+  providerLimitOf: (row) => {
+    const url = routeUrl(row.obligation.id);
+    if (url === null) return null;
+    const key = sourceReliabilityKey(url);
+    return { key, limit: providerConcurrency(fleetSafety.providerState(url), hostConcurrency) };
+  },
   /* The owner's dispatch goes first in the dispatcher's own due order too. */
   placeFirst: dispatchPriority,
   /* With no DISPATCH pending (the set above is empty), the selected expansion scopes' due work goes first instead. */
   ...(scopePlaceFirst !== null ? { placeFirst: scopePlaceFirst } : {}),
   research: {
     decide: (row) => decisionFor(row.obligation.id, row.obligation.routeId),
-    plainBesideDetective: (row) => plainDecisionBeforeDetective.get(row.obligation.id) ?? null,
-    /* The same canonical band comparator used for the visible/opening queue reaches the actual Scout pool. */
-    compareModelRows: compareScoutRows,
-    admitScout: (row) => {
-      if (scoutFor(row).lane === "DETERMINISTIC") return { admit: true };
-      if (!modelLaneEnabled) return { admit: false, code: laneDisabledCode ?? "LANE_DISABLED", why: laneDisabledReason ?? "lane closed" };
-      if (paidWorkerCapacity() === 0) return { admit: false, code: "CEILING", why: "paid model capacity is closed; held and plain-code work continue" };
-      /* A materialized meetings-discovery row goes to a paid Scout only after the free walk read the site and found nothing. */
-      const freeWalkFirst = paidDiscoveryHold(row.obligation.id, freeWalks);
-      if (freeWalkFirst !== null) return { admit: false, code: freeWalkFirst.code, why: freeWalkFirst.why };
-      if (ledgerUnreadable !== null) return { admit: false, code: "CEILING", why: `the cost ledger could not be read, so the ceiling cannot be enforced (${ledgerUnreadable})` };
-      const window = spendWindow.windowUsd === null ? null : spendWindow.windowUsd + spentThisCycle;
-      // The scout daily ceiling is the value IN FORCE (the owner's override, or
-      // the fallback), not the RESEARCH_BOUNDS default — so raising the dial above
-      // the old default does not leave this gate silently binding at 100 while the
-      // console shows a higher number.
-      if (!lifetimeHuntWork(row.obligation.id)) {
-        const cap = ceilingPermits(window, effectiveCeilingUsd);
-        if (!cap.permits) return { admit: false, code: "CEILING", why: cap.why };
-      }
-
-      const rolling = fleetSafety.rollingCeilingReached(SCOUT_WORST_CASE_USD, row.obligation.id);
-      if (rolling.reached) {
-        return {
-          admit: false,
-          code: "CEILING",
-          why: `rolling 24h model spend ${rolling.spentUsd === null ? "unmeasured" : `$${rolling.spentUsd.toFixed(2)}`} of $${rolling.capUsd.toFixed(2)} reached — the scout lane is paused this cycle rather than busy-loop the ceiling`,
-        };
-      }
-      if (!lifetimeHuntWork(row.obligation.id) && Number.isFinite(SCOUT_MAX) && scoutsAdmittedOutsideLifetime >= SCOUT_MAX) return { admit: false, code: "CYCLE_MAX", why: `the diagnostic --scout-max cap of ${SCOUT_MAX} for this cycle is reached` };
-      /* Each Send's own budget, checked (nothing held yet) before the
-         geography's, so a Send's work is refused under the Send's own name. */
-      const sent = assignmentBudget.check(row.obligation.id);
-      if (!sent.admit) return { admit: false, code: sent.code, why: sent.why };
-      /* The owner's expansion-scope budgets: last, so a scope reservation is
-         only ever taken for a Scout every Fleet gate above already admitted. */
-      if (expansionBudget !== null) {
-        const scoped = expansionBudget.gate.admit(row.obligation.id, row.obligation.subjectId);
-        if (!scoped.admit) return { admit: false, code: scoped.code, why: scoped.why };
-      }
-      /* The in-memory gates are checked synchronously, so this re-check agrees with the one above; it takes the Send's in-cycle hold. */
-      assignmentBudget.admit(row.obligation.id);
-      scoutsAdmittedThisCycle += 1;
-      if (!lifetimeHuntWork(row.obligation.id)) scoutsAdmittedOutsideLifetime += 1;
-
-      const undo = (): void => {
-        scoutsAdmittedThisCycle -= 1;
-        if (!lifetimeHuntWork(row.obligation.id)) scoutsAdmittedOutsideLifetime -= 1;
-        expansionBudget?.gate.settle(row.obligation.id, 0);
-        assignmentBudget.settle(row.obligation.id, 0);
-      };
-      const lines = budgetLinesFor(row.obligation.id, row.obligation.subjectId);
-      if ("code" in lines) {
-        undo();
-        return { admit: false, code: lines.code, why: lines.why };
-      }
-      if (!hasBudgetLines(lines.lines)) return { admit: true };
-      if (SCOUT_JOB_WORST_CASE_USD === null) {
-        undo();
-        return { admit: false, code: "ASSIGNMENT_BUDGET", why: "the Scout's start model has no stated rate, so its worst case cannot be held against the budget; the work waits" };
-      }
-      scoutJobSeq += 1;
-      const job = new JobSpend(spendHolds, `scout:${NOW}:${scoutJobSeq}:${row.obligation.id}`, row.obligation.id, lines.lines);
-      return job.admit(SCOUT_JOB_WORST_CASE_USD, `one Scout job's worst case on ${row.obligation.id}`).then((held) => {
-        if (!held.admit) {
-          undo();
-          return { admit: false as const, code: held.code, why: held.why };
-        }
-        jobSpend.set(row.obligation.id, job);
-        jobSubject.set(row.obligation.id, row.obligation.subjectId);
-        return { admit: true as const };
-      });
-    },
-    /* A Scout admitted and then not run returns everything its admission held. */
-    onAdmittedNotDispatched: async (row) => {
-      expansionBudget?.gate.settle(row.obligation.id, 0);
-      assignmentBudget.settle(row.obligation.id, 0);
-      const job = jobSpend.get(row.obligation.id);
-      if (job === undefined) return;
-      jobSpend.delete(row.obligation.id);
-      const failed = await spendHolds.settle(job.jobId, 0, nowIso());
-      if (failed !== null) runtimeConditions.push(`a budget hold for ${row.obligation.id} could not be released (${failed}); it counts in full for its window`);
-    },
-    modelExecutor: scoutFor,
-    workerCapacity: workerCapacity,
-    scoutLeaseTtlMs: 300_000,
-    /* The pre-warm of the static prefix, once per cycle before the first admitted Scout. Never in a dry cycle. */
-    ...(modelLaneEnabled && !dry ? { prewarm: prewarmScoutPrefix } : {}),
-    onDispatched: async (result: DispatchResult, lane) => {
+    onDispatched: async (result: DispatchResult) => {
       placeOrderDirty = true;
       roundProgress.note("dispatch");
       startedThisCycle.add(result.obligationId);
       if (result.outcome === "WORKED") fleetSafety.recordSuccessfulActivity(nowIso());
-      if (lane === "BOUNDED_MODEL_WORKER") {
-        spentThisCycle += result.cost?.usd ?? 0;
-        /* A Scout that reported no dollar figure leaves its scope's spend unmeasured, which holds that scope's paid work. */
-        expansionBudget?.gate.settle(result.obligationId, result.cost?.usd ?? null);
-        /* The same for every Send it held against. */
-        assignmentBudget.settle(result.obligationId, result.cost?.usd ?? null);
-        /* The durable holds: book what it measured and release the rest; unmeasured, the whole hold keeps counting. */
-        const job = jobSpend.get(result.obligationId);
-        if (job !== undefined) {
-          jobSpend.delete(result.obligationId);
-          const failed = await spendHolds.settle(job.jobId, result.cost?.usd ?? null, nowIso());
-          if (failed !== null) runtimeConditions.push(`the budget hold for ${result.obligationId} could not be settled (${failed}); it counts in full for its window`);
-        }
-        const at = running.findIndex((r) => r.attemptId === result.attemptId);
-        if (at >= 0) running.splice(at, 1);
-        laneCounts = { ...laneCounts, modelDispatched: laneCounts.modelDispatched + 1 };
-        await writeResearchState(null);
-      } else {
-        laneCounts = { ...laneCounts, deterministicDispatched: laneCounts.deterministicDispatched + 1 };
-      }
+      laneCounts = { ...laneCounts, deterministicDispatched: laneCounts.deterministicDispatched + 1 };
     },
   },
 });
@@ -2697,15 +2120,16 @@ async function makeAutonomousFleet() {
   const runtime = await autonomousStandingRuntime({ root: ROOT, repos, now: nowIso, environment: process.env,
     ...(scoutSearch ? { search: scoutSearch } : {}),
     ...(scoutSearchLifetime ? { searchFor: subject => lifetimeHuntSubjects.has(subject) ? scoutSearchLifetime : scoutSearch ?? undefined } : {}),
+    ...(searchBudget ? { searchBudget } : {}),
     spaceOut: spacer, browse: browseWithPlaywright,
     openBytes: fleetSafety.guardedOpenBytes("public-web", "registered autonomous Fleet acquisition"),
     openBytesFor: subject => fleetSafety.guardedOpenBytes("public-web", subject),
     ...(fleetTransport !== null && paidWorkerCapacity() > 0 ? { transport: fleetTransport,
-      transportFor: autonomousTransportFor(fleetTransport), reserveScoutEscalation: scoutEscalationReservation(fleetSafety) } : {}),
+      transportFor: autonomousTransportFor(fleetTransport),
+      refusedBeforeSending: (error: unknown) => error instanceof FleetPreSendRefusal || error instanceof SendBudgetRefusal } : {}),
     auditCeilingUsd: effectiveCeilingUsd,
-    lifetimeHuntSubject: subject => lifetimeHuntSubjects.has(subject), missionBlanksFor });
-  /* The coordinator's known doors use Admin's shut threshold from this round, as the round's own doors do. */
-  return { ...runtime, shutThreshold };
+    lifetimeHuntSubject: subject => lifetimeHuntSubjects.has(subject) });
+  return { ...runtime, exaAgentLane: readSetting(config, EXA_AGENT_LANE_SETTING, false) };
 }
 async function runAutonomousWave() {
   placeOrderDirty = true;
@@ -2782,12 +2206,11 @@ async function runAutonomousWave() {
     childTimeoutMs: RUNTIME_NO_PROGRESS_MS - 60_000,
     slots: workerSlots,
     config: { root: ROOT, postgres: wantsPostgres, taskIds, modelEnabled: paidWorkerCapacity() > 0,
-      searchEnabled: scoutSearch !== null, get ceilingUsd() { return effectiveCeilingUsd; }, fundedSubjects: [...lifetimeHuntSubjects] },
+      searchEnabled: scoutSearch !== null, get ceilingUsd() { return effectiveCeilingUsd; }, hostConcurrency, fundedSubjects: [...lifetimeHuntSubjects] },
     capacity: () => Math.min(taskIds.length, plainTaskIds.size + paidWorkerCapacity(taskIds.length)),
     transportFor: guards.workerTransportFor,
     ...(scoutSearch ? { searchFor: subject => lifetimeHuntSubjects.has(subject) ? scoutSearchLifetime ?? scoutSearch : scoutSearch } : {}),
-    reserveEscalation: scoutEscalationReservation(fleetSafety),
-    missionBlanksFor,
+    ...(searchBudget ? { searchBudget } : {}),
     orderPending: async ids => {
       await Promise.all([refreshPlaceOrder(), refreshOwnerSettings()]);
       const queue = taskQueue ??= readTaskQueue();
@@ -2870,14 +2293,7 @@ const runCampaignSitesPass = async (): Promise<void> => {
         if (holdings === null) throw new Error("the canonical ballot and profile pointers were not preloaded this cycle");
         const { subjects, linked } = campaignSiteSubjectsFromHoldings(holdings, nowIso());
         const vaultIndex = await step("the saved-page index", () => readRoundVault());
-        /* An unreadable manifest holds only the Marginalia answers back a cycle; the held Scout findings still go through. */
-        let stagingManifest: ReturnType<typeof readStagingManifest> = null;
-        try {
-          stagingManifest = readStagingManifest(ROOT);
-        } catch (error) {
-          runtimeConditions.push(`campaign sites: the staging manifest could not be read (${error instanceof Error ? error.message : String(error)}); held Marginalia answers wait for the next cycle`);
-        }
-        const held = await step("the held Marginalia answers", () => heldMarginaliaFromManifest(ROOT, stagingManifest, vaultIndex, nowIso()));
+        const held = await step("the held Marginalia answers", () => heldMarginaliaAnswers(repos, vaultIndex, nowIso()));
         const methodVersion = await step("the method version", roundMethodVersion);
         const openCampaignSite = fleetSafety.guardedOpenBytes("discovery-web", "campaign-site-chain", fetch, { followRedirects: false });
         const report = await step("the campaign-site chain", () => runCampaignSiteCycle({
@@ -2903,7 +2319,7 @@ const runCampaignSitesPass = async (): Promise<void> => {
         return {
           report,
           state:
-            `ran over ${subjects.size} canonical candidacies (${linked.size} already carrying a campaign link, read last) and ${held.responses.length} held Marginalia answer(s) of ${held.entries} staged` +
+            `ran over ${subjects.size} canonical candidacies (${linked.size} already carrying a campaign link, read last) and ${held.responses.length} newest held Marginalia answer(s) of ${held.answers} vaulted` +
             (held.unreadable > 0 ? ` (${held.unreadable} answer(s) the vault could not produce)` : ""),
         };
       })(), dispatchDeadlineMs + CAMPAIGN_SITES_SETTLE_MS - Date.now());
@@ -2980,29 +2396,9 @@ if (DISCOVERY_SERIAL) {
   discoveryLaneIds = ["campaign-sites", "candidate-publications"];
 }
 
-if (!dry && !canary) {
-  const until = absenceExpiry(NOW);
-  let absencesRecorded = 0;
-  for (const r of scoutResultsThisCycle) {
-    if (!isArguedAbsence(r, MIN_DISTINCT_RUNGS)) continue;
-    try {
-      await pending.step("absences:record", () =>
-        recordArguedAbsence(repos, { obligationId: r.obligationId, absentUntil: until, now: NOW, unlockWhen: absenceUnlockFrom(r, until) }));
-      absencesRecorded += 1;
-    } catch (error) {
-      console.error(
-        `  argued absence not recorded for ${r.obligationId} (${error instanceof Error ? error.message : String(error)}); it re-walks next cycle`,
-      );
-    }
-  }
-  if (absencesRecorded > 0) {
-    console.log(`  argued absences recorded: ${absencesRecorded} (each rechecks in ${ABSENCE_EXPIRY_DAYS} days)`);
-  }
-}
-
 // Registered autonomous plans use the same dispatcher, vault, host spacing and
 // rolling model ceiling. Discovery shares this cycle's existing Scout allowance.
-// Leave a minute after the last worker for staging and the Admin state/heartbeat.
+// Leave a minute after the last worker for the Admin state/heartbeat.
 // A prior cycle's late worker ended at the dispatch deadline, then its final
 // research state and heartbeat could not start before the hard wall.
 // Selection can read several complete repositories before it admits a worker.
@@ -3027,8 +2423,6 @@ let autonomousWorked = false;
 if (earlyAutonomous !== null) {
   for (const row of earlyAutonomous.deferred) fleetSafety.defer(row.workItemId, row.reason, row.detail);
   if (finalQueueLanes !== null) finalQueueLanes = { ...finalQueueLanes, autonomous: coordinatorLane(earlyAutonomous) };
-  scoutsAdmittedThisCycle += earlyAutonomous.scoutsAdmitted;
-  scoutsAdmittedOutsideLifetime += earlyAutonomous.scoutsLimitedAdmitted;
   autonomousDispatchedThisCycle += earlyAutonomous.dispatches.filter(row => row.attemptId !== null).length;
   autonomousWorked = earlyAutonomous.dispatches.some(row => row.outcome === "WORKED");
   if (autonomousWorked) fleetSafety.recordSuccessfulActivity(nowIso());
@@ -3046,8 +2440,6 @@ if (autonomousCycleOpen) {
       const autonomous = wave.value;
       for (const row of autonomous.deferred) fleetSafety.defer(row.workItemId, row.reason, row.detail);
       if (finalQueueLanes !== null) finalQueueLanes = { ...finalQueueLanes, autonomous: coordinatorLane(autonomous) };
-      scoutsAdmittedThisCycle += autonomous.scoutsAdmitted;
-      scoutsAdmittedOutsideLifetime += autonomous.scoutsLimitedAdmitted;
       autonomousDispatchedThisCycle += autonomous.dispatches.filter(row => row.attemptId !== null).length;
       if (autonomous.dispatches.some(row => row.outcome === "WORKED")) { autonomousWorked = true; fleetSafety.recordSuccessfulActivity(nowIso()); }
       for (const row of autonomous.dispatches) console.log(`  worker fleet: ${row.worker?.role ?? "UNCLAIMED"} ${row.outcome} ${row.attemptId ?? "none"}: ${row.detail}`);
@@ -3077,114 +2469,17 @@ if (discoveryLaneRun !== null) {
   finishPhase("discovery-lanes");
 }
 
-/* ------------------------------------------------------- the promotion tail --- */
-
-const leavePromotionTail = pending.enter("promotion-tail");
-const staged: StagedEntry[] = [];
-for (const result of cycle.dispatched) {
-  const unit = units.find((u) => u.obligation.id === result.obligationId);
-  if (unit === undefined) continue;
-  let body: string | null = null;
-  let detail = result.detail;
-  for (const artifactId of result.artifactIds) {
-    const entry = vault.ledger.get(artifactId);
-    if (entry === undefined) continue;
-    const read = await boundedAfterCutoff(vault.readBack(entry.key));
-    if (!read.done) {
-      const line = `promotion tail: ${result.obligationId}'s vaulted bytes did not read back within ${Math.round(read.quietMs / 60_000)} min of the round's last output; it is staged as still owed`;
-      runtimeConditions.push(line);
-      console.log(`  ${line}`);
-      detail = `${detail}; its vaulted bytes did not read back this round, so it is staged as still owed`;
-      break;
-    }
-    body = read.value;
-    if (body !== null) break;
-  }
-
-  staged.push(
-    stageOne({
-      root: ROOT,
-      obligationId: result.obligationId,
-      providerId: unit.providerId,
-      recordClass: unit.record.recordClass,
-      subjectId: unit.record.subjectId,
-      route: unit.route,
-      disposition: result.disposition,
-      artifactIds: result.artifactIds,
-      body,
-      nextDueAt: nextDueByObligation.get(result.obligationId) ?? null,
-      detail,
-      stagedOn: today(),
-    }),
-  );
-}
-
-for (const recovered of cycle.recovered) {
-  const unit = units.find((u) => u.obligation.id === recovered.obligationId);
-  if (unit === undefined) continue;
-  const { disposition } = recovered;
-  let body: string | null = null;
-  try {
-    const readHeldBody = async (): Promise<string | null> => {
-      const held = disposition.artifactIds.length === 0 ? [] : await repos.artifacts.read(recovered.workItemId);
-      for (const artifactId of disposition.artifactIds) {
-        const record = held.find((a) => a.artifactId === artifactId);
-        if (record === undefined) continue;
-        const bytes = await vault.readHeld(record);
-        if (bytes !== null) return bytes;
-      }
-      return null;
-    };
-    const read = await boundedAfterCutoff(readHeldBody());
-    if (read.done) body = read.value;
-    else {
-      const line = `recovered ${recovered.obligationId}: its held bytes did not read back within ${Math.round(read.quietMs / 60_000)} min of the round's last output; it is staged as still owed`;
-      runtimeConditions.push(line);
-      console.log(`  ${line}`);
-    }
-  } catch (error) {
-    runtimeConditions.push(
-      `recovered ${recovered.obligationId}: its held bytes could not be read back ` +
-        `(${error instanceof Error ? error.message : String(error)}); it is staged as still owed`,
-    );
-  }
-  staged.push(
-    stageOne({
-      root: ROOT,
-      obligationId: recovered.obligationId,
-      providerId: unit.providerId,
-      recordClass: unit.record.recordClass,
-      subjectId: unit.record.subjectId,
-      route: unit.route,
-      disposition: disposition.disposition,
-      artifactIds: disposition.artifactIds,
-      body,
-      nextDueAt: nextDueByObligation.get(recovered.obligationId) ?? null,
-      detail:
-        `committed ${disposition.at} by Attempt ${disposition.attemptId} in a cycle that ended before ` +
-        "closing or staging it, and recovered without walking the route again" +
-        (disposition.disposition === "INGESTED" && body === null
-          ? "; its vaulted bytes were not found in this runner's vault, so the record is staged as still owed"
-          : "") +
-        `. ${disposition.note}`,
-      stagedOn: today(),
-    }),
-  );
-}
-const manifest = writeStagingManifest(ROOT, staged, today());
-leavePromotionTail();
-
 /* ------------------------------------------------- research metrics --- */
 
 // These independent final reads share the existing repository transport limit.
 // Join failures too: neither finalization view retries an unchanged failed read.
 const finalizationReads = canary ? null : Promise.allSettled([
   repos.scoutResults.readAll(),
-  repos.costs.readSince(new Date(Date.parse(nowIso()) - RESEARCH_BOUNDS.windowHours * 3_600_000).toISOString()),
+  readSpendWindow(repos, nowIso()),
   repos.ownerDigests.readRecentWhere(DIGEST_LOG_KEY, ["runtimeOutcome", "kind"], "FRESHNESS_CYCLE",
     Number.MAX_SAFE_INTEGER, { runtimeOutcome: ["kind", "startedAt", "research"] },
     new Date(Date.parse(nowIso()) - RESEARCH_BOUNDS.windowHours * 3_600_000).toISOString()),
-  readMethodCandidateStore(repos),
+  repos.methodCandidates.read("live").then(row => row?.value ?? emptyCandidateStore()),
   dry ? Promise.resolve(null) : readMethodKnowledge(repos),
 ] as const);
 async function computeMetrics(): Promise<ResearchMetrics | null> {
@@ -3195,9 +2490,9 @@ async function computeMetrics(): Promise<ResearchMetrics | null> {
     return null;
   }
   const results = resultsRead.value;
-  const costsNow = costsRead.value;
+  const costsNow = costsRead.value.map(charge => charge.metered);
   const at = nowIso();
-  finalSpendWindow = researchSpendInWindow(costsNow, at, RESEARCH_BOUNDS.windowHours, historicalSpendHolds);
+  finalSpendWindow = researchSpendInWindow(costsRead.value, at, RESEARCH_BOUNDS.windowHours);
   finalSpendAsOf = at;
   const windowCycles: { startedAt: string; deterministic: number; model: number }[] = [];
   try {
@@ -3226,7 +2521,7 @@ async function computeMetrics(): Promise<ResearchMetrics | null> {
   }
   const candidateCounts = counts === null ? null : { proposed: counts.PROPOSED, validated: counts.VALIDATED, admitted: counts.ADMITTED, rejected: counts.REJECTED };
   const pipeline = await NO_PIPELINE_RECORDED();
-
+  /* The cache rows, from the spend window the ceiling reads, over its trailing window and over this cycle for the COST section. */
   const windowSince = new Date(Date.parse(at) - RESEARCH_BOUNDS.windowHours * 3_600_000).toISOString();
   cacheThisCycle = cacheHitRateByRole({ costs: costsNow, results, sinceIso: NOW, untilIso: at });
   return {
@@ -3243,7 +2538,7 @@ async function computeMetrics(): Promise<ResearchMetrics | null> {
     share: modelShareTrend({ thisCycle: { deterministic: laneCounts.deterministicDispatched, model: laneCounts.modelDispatched }, windowCycles }),
     cacheByRole: cacheHitRateByRole({ costs: costsNow, results, sinceIso: windowSince, untilIso: at }),
     cacheWindow: { sinceIso: windowSince, untilIso: at },
-    costPerOutcome: costPerUsefulOutcome({ results, candidateCounts, confirmed: null }),
+    costPerOutcome: costPerUsefulOutcome({ results, candidateCounts }),
     cacheDefects: cacheDefectCounts(results),
   };
 }
@@ -3362,12 +2657,6 @@ try {
 
 /* ------------------------------------------------------------- the digest --- */
 
-const scoutDispatches = cycle.dispatched.filter((d) => d.executor === "BOUNDED_MODEL_WORKER");
-const outcomeCounts = new Map<string, number>();
-for (const r of scoutResultsThisCycle) {
-  const key = r.refusal ? "REFUSED" : r.outcome;
-  outcomeCounts.set(key, (outcomeCounts.get(key) ?? 0) + 1);
-}
 const deferredByLine = Object.entries(laneCounts.deferredBy)
   .map(([k, v]) => `${k} ${v}`)
   .join(", ");
@@ -3388,14 +2677,10 @@ const researchLines = [
   `  lane               ${modelLaneEnabled ? "ENABLED" : `CLOSED — ${laneDisabledReason}`}`,
   `  credential         ${WORKER_CREDENTIAL_VAR} configured in this process: ${credentialConfigured ? "yes" : "NO"} (by name; the value reaches only the provider request)`,
   `  model              ${SCOUT_MODEL} · ${workerCapacity} workers · Admin spend dial $${effectiveCeilingUsd}/day; each hunt retains its own budget`,
-  `  scouts             ${laneCounts.modelDispatched} dispatched of ${dueModel.length} due model-class (${modelClassUnits.length} registered model-class of ${allUnits.length}) · ` +
-    `deferred ${cycle.lanes?.model.deferred ?? 0}${deferredByLine ? ` (${deferredByLine})` : ""}` +
-    (dueModel.length - openedModel > 0 ? ` · ${dueModel.length - openedModel} not opened` : ""),
-  `  spend              rolling ${RESEARCH_BOUNDS.windowHours}h: ${spendWindow.windowUsd === null ? "UNMEASURED" : `$${(spendWindow.windowUsd + spentThisCycle).toFixed(4)}`} of $${effectiveCeilingUsd} ceiling (${rollingCeiling.source.toLowerCase()}) ` +
-    `(measured ${spendWindow.measured}, unmeasured ${spendWindow.unmeasured} before this cycle) · this cycle $${spentThisCycle.toFixed(4)}`,
-  `  results            ${scoutResultsThisCycle.length} typed result(s)${outcomeCounts.size > 0 ? ` — ${[...outcomeCounts].map(([k, v]) => `${k} ${v}`).join(", ")}` : ""}` +
-    ` · ${scoutDispatches.filter((d) => d.dispositionCommitted).length} disposition(s) committed`,
-  `  candidates         ${candidateReports.reduce((n, r) => n + r.proposed.length, 0)} method candidate(s) proposed and validated (never admitted here)`,
+  `  hunts              ${openedModel} packet(s) opened for the hunters of ${dueModel.length} due model-class · ` +
+    `${autonomousDispatchedThisCycle} worker task(s) run${deferredByLine ? ` · deferred ${deferredByLine}` : ""}`,
+  `  spend              rolling ${RESEARCH_BOUNDS.windowHours}h: ${spendWindow.windowUsd === null ? "UNMEASURED" : `$${spendWindow.windowUsd.toFixed(4)}`} of $${effectiveCeilingUsd} ceiling (${rollingCeiling.source.toLowerCase()}) ` +
+    `(measured ${spendWindow.measured}, unmeasured ${spendWindow.unmeasured} before this cycle)`,
   `  disagreements      ${decisionDisagreements.length} executor-decision disagreement(s) recorded in the run record, never reconciled`,
   `  intents            ${honoredIntents.length} RUN_CYCLE_NOW honored · ${honoredDispatch.length} of ${intents.pendingDispatch.length} pending DISPATCH honored · ` +
     `${honoredLaneIntents.length} lane PAUSE/RESUME acknowledged · paused: ${intentLogUnreadable !== null ? "UNKNOWN (log unreadable; paid lane held closed)" : intents.paused ? "yes" : "no"}`,
@@ -3405,18 +2690,6 @@ const researchLines = [
   `  runtime            ${runtimeConditions.length === 0 ? "no condition prevents eligible Scout work" : runtimeConditions.join("; ")}`,
   `  supervision        ${hostSupervision.measurable ? `relaunch trigger ${hostSupervision.relaunchTrigger.present === null ? "UNKNOWN" : hostSupervision.relaunchTrigger.present ? "present" : "ABSENT"}` : hostSupervision.notMeasurableReason} · ` +
     `proof ${hostSupervision.proof === null ? `ABSENT at ${hostSupervision.proofPath}` : `${hostSupervision.proof.verdict} ${hostSupervision.proof.measuredAt} (${hostSupervision.proof.secondsToRelaunch ?? "?"}s)`}`,
-  /* Every Attempt this cycle, by step — the cache reads per turn are the proof the prefix held. */
-  ...scoutResultsThisCycle.flatMap((r) => {
-    const model = (r.steps ?? []).filter((s) => s.kind === "MODEL");
-    const det = (r.steps ?? []).filter((s) => s.kind === "DETERMINISTIC");
-    return [
-      `  attempt ${r.attemptId}  ${r.refusal ? "REFUSED" : r.outcome} · effort ${r.effort ?? "n/a"} · ${r.usage.turns} turn(s) · usd ${r.usd === null ? "UNMEASURED" : r.usd.toFixed(4)}` +
-        ` · cache reads/turn ${model.map((s) => s.tokens.cacheRead).join("/") || "none recorded"}` +
-        (r.cacheDefect ? ` · CACHE DEFECT turn(s) ${r.cacheDefect.turns.join(", ")}` : "") +
-        ` · deterministic ${det.map((s) => `${s.step} x${s.count}`).join(", ") || "none"}` +
-        ` · guard refusals ${r.guardRefusals?.length ?? 0} · overruns ${r.representationOverruns?.length ?? 0} · resumed from ${r.resumedFromRungs ?? 0} rung(s)`,
-    ];
-  }),
   "",
   ...(metrics === null ? ["RESEARCH METRICS   NOT COMPUTED this cycle (a named runtime condition says why)"] : researchDigestLines(metrics)),
 ];
@@ -3449,9 +2722,6 @@ const lines = [
   ...researchLines,
   "",
   ...registryLines(registry),
-  "",
-  ...promotionLines(staged),
-  `  staging manifest   ${manifest.total} entry(ies) held, ${manifest.written} written this cycle`,
 ];
 console.log();
 for (const line of lines) console.log(line);
@@ -3597,36 +2867,6 @@ const runRecord = {
         lanes: cycle.lanes,
         /* This cycle's cache rows from the cost ledger, read by the digest's COST section. */
         cacheThisCycle,
-        scouts: scoutDispatches.map((d) => ({
-          obligationId: d.obligationId,
-          attemptId: d.attemptId,
-          outcome: d.outcome,
-          disposition: d.disposition,
-          worker: d.worker,
-          cost: d.cost,
-          artifacts: d.artifactIds.length,
-          detail: d.detail,
-        })),
-        results: scoutResultsThisCycle.map((r) => ({
-          obligationId: r.obligationId,
-          attemptId: r.attemptId,
-          outcome: r.outcome,
-          refused: r.refusal !== null,
-          stoppedBy: r.stoppedBy,
-          rungs: r.rungs.length,
-          distinctEvidenceRungs: r.distinctEvidenceRungs,
-          candidates: r.candidates.length,
-          methodCandidateIds: r.methodCandidateIds,
-          usd: r.usd,
-          elapsedMs: r.elapsedMs,
-          effort: r.effort ?? null,
-          steps: r.steps ?? null,
-          cacheDefect: r.cacheDefect ?? null,
-          guardRefusals: r.guardRefusals ?? null,
-          representationOverruns: r.representationOverruns ?? null,
-          resumedFromRungs: r.resumedFromRungs ?? null,
-        })),
-        candidateReports,
         decisionDisagreements,
         honoredIntents,
         /* Every DISPATCH this cycle acted on, what it matched, and which were honored. */
@@ -3647,8 +2887,6 @@ const runRecord = {
         metrics,
       },
       vaulted: [...vault.ledger.values()],
-      staged,
-      stagingManifest: `${[".runtime", "control-plane", "staging"].join("/")}/manifest.json`,
       deferred: cycle.deferred.length,
       deferredReasons: cycle.deferred,
       reclaim: cycle.reclaim,

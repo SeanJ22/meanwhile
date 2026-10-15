@@ -1,5 +1,7 @@
 /** Direct Census ACS retrieval/validation/promotion; writes no repository file. */
-import { fetch as acsFetch, KEY_VAR } from "../lib/sources/census-acs-population/index.ts";
+import { KEY_VAR } from "../lib/sources/census-acs-population/index.ts";
+import { acquireNationalAcs } from "../lib/sources/census-acs-population/national.ts";
+import { heldAcsJoinTargets } from "../lib/sources/census-acs-population/held-joins.ts";
 import { acsTableTooShort } from "../lib/sources/bulk-completeness.ts";
 import { censusAcsCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -25,26 +27,16 @@ async function main(): Promise<void> {
   const key = process.env[KEY_VAR];
   let candidate: RoutineCandidate;
   try {
-    const [zcta, state] = await withPublisherAcquisitionDeadline(
-      "Census ACS",
-      ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS,
-      async (signal) => {
-        const settled = await Promise.allSettled([
-          acsFetch("zcta", key, globalThis.fetch, signal),
-          acsFetch("state", key, globalThis.fetch, signal),
-        ]);
-        if (settled[0].status === "rejected") throw settled[0].reason;
-        if (settled[1].status === "rejected") throw settled[1].reason;
-        return [settled[0].value, settled[1].value] as const;
-      },
-    );
-    // A truncated-but-valid table parses cleanly and would promote a country
-    // with almost no ZCTAs; the adapter cannot see completeness from one call.
+    const national = await withPublisherAcquisitionDeadline("Census ACS", ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS,
+      signal => acquireNationalAcs({ key, signal, targets: heldAcsJoinTargets }));
+    const zcta = national.captures.find(table => table.scope === "zcta")!;
+    const state = national.captures.find(table => table.scope === "state")!;
     for (const fetched of [zcta, state]) {
-      const short = acsTableTooShort(fetched.scope, fetched.rows.length - 1);
+      const short = acsTableTooShort(fetched.scope as "zcta" | "state", fetched.rows.length - 1);
       if (short !== null) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", short);
     }
-    candidate = censusAcsCandidate(zcta, state);
+    candidate = censusAcsCandidate(zcta, state, national);
+    console.log(`CENSUS_ACS_ROWS=${JSON.stringify(national.counts)}`);
   } catch (error) {
     // A missing key stays a configuration failure. Only the source module's
     // narrow publisher/parser brand is permitted to write source state.

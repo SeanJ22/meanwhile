@@ -3,7 +3,7 @@
 The state's own memory: filing systems, vendor patterns, walls, statutory
 posting rules. Appended by every session that learns something about NH.
 Born 2026-08-15 (the NH/NJ depth session). The method across all states is
-`docs/zip-playbook.md`; this file is what is true of this one.
+the field manual; this file is what is true of this one.
 
 ## Elections and filings
 
@@ -13,7 +13,7 @@ Born 2026-08-15 (the NH/NJ depth session). The method across all states is
   Chrome UA string (that rung worked 2026-08-13 and had closed by 2026-08-14),
   and to a real Chromium navigation. The working route is the Internet Archive
   dated mirror, and the archive URL is what gets cited because it is the
-  document that was actually read. Full ladder in `docs/zip-playbook.md` §3.
+  document that was actually read. Full ladder in the field manual.
 - **Party on county offices** comes from the SoS's certified county-office
   results, which print the party as a letter beside the name (`Steve
   Shurtleff, d`). The general canvass is where to look — unlike Arizona.
@@ -97,7 +97,7 @@ path and serve a browser normally. **The rung is not the User-Agent.** Node's
 identical headers is served — the filter reads the TLS/HTTP2 fingerprint. The
 browser profile in `lib/sources/http.ts` sends the browser headers in-process
 and falls through to `curl` on a 403, keeping our contact address in the UA
-either way. Method and measurement in `docs/zip-playbook.md`.
+either way. Method and measurement in the field manual.
 
 What was behind the wall:
 
@@ -130,7 +130,7 @@ What was behind the wall:
   own heading, and another timed `7:00am` in the field while its items run
   from 7:05 p.m.
 
-(Dates in this file are wall clock. Older records in `docs/source-ladder.md`
+(Dates in this file are wall clock. Older records in the field manual
 label the same sessions "08-16" through "08-19" — sequence numbers that ran
 ahead of the clock under a convention retired 2026-08-14. `docs/state.md` §18
 explains them.)
@@ -139,7 +139,7 @@ explains them.)
 
 NH RSA 52 village districts and precincts are real governments with elected
 commissioners. Thirteen of them are in Merrimack County
-(`docs/coverage-audit-by-county.md`). **No village district's boundary reaches
+(the field manual). **No village district's boundary reaches
 Newbury** — the nearest is Lake Todd, in Bradford/Sutton. Checked against the
 2022 Census of Governments, not assumed.
 
@@ -281,7 +281,7 @@ a name string breaks on exactly this, and it broke on two of these three.
 `sos.nh.gov` and `cfs.sos.nh.gov` answer **HTTP 403 to both a plain client and
 a full browser header set, on `robots.txt` itself** — so the permission question
 is UNANSWERED rather than answered no. Last tested **2026-08-26**. Rungs 4, 5 and
-6 are unwalked. `docs/sources.md` records a 2.95 MB HTTP 200 from
+6 are unwalked. the source registry records a 2.95 MB HTTP 200 from
 `sos.nh.gov/elections/campaign-finance/` on 2026-08-24, so **the wall is
 intermittent**, which is itself the finding.
 

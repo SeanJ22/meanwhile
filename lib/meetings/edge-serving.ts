@@ -371,19 +371,6 @@ export async function ensureReaderAuthorityEdge(
   store: ReaderArtifactStore | null = resolveReaderArtifactStore(),
   families: readonly AuthorityFamily[] = AUTHORITY_FAMILIES,
 ): Promise<ReaderAuthorityEdgeBundle> {
-  // Every Reader route installs the published meeting doors here, beside its authority families: which partitions
-  // make up the meetings, which bodies a failed source serves, which publish no history.
-  const doors = import("../doors/meeting-doors.ts").then((module) => module.ensureMeetingDoors());
-  const bundle = await readerAuthorityEdge(manifest, store, families);
-  await doors;
-  return bundle;
-}
-
-async function readerAuthorityEdge(
-  manifest: Pick<ReaderManifest, "authorityArtifacts" | "registrations" | "stateLegislators">,
-  store: ReaderArtifactStore | null,
-  families: readonly AuthorityFamily[],
-): Promise<ReaderAuthorityEdgeBundle> {
   const refs = manifest.authorityArtifacts;
   const registrationRefs = manifest.registrations;
   const registrations = registrationRefs && store
@@ -421,7 +408,7 @@ async function readerAuthorityEdge(
     federalDirectory?: { value: FederalDirectoryReadModel; versionId: string };
     campaignSites?: { value: CuratedReaderProjection; versionId: string };
     meetingOutcomes?: { value: OutcomeSnapshot; versionId: string };
-    commentAccess?: { value: CuratedReaderProjection; versionId: string };
+    commentAccess?: { value: import("../registry/comment-access.ts").CommentAccessProjection; versionId: string };
   } = {};
   const wanted = new Set(families);
   const fetchWanted = (family: AuthorityFamily) =>
@@ -439,7 +426,7 @@ async function readerAuthorityEdge(
   if (federal !== null) bundle.federalDirectory = { value: federal as FederalDirectoryReadModel, versionId: refs["federal-directory"]!.version };
   if (campaign !== null) bundle.campaignSites = { value: campaign as CuratedReaderProjection, versionId: refs["campaign-sites"]!.version };
   if (outcomes !== null) bundle.meetingOutcomes = { value: outcomes as OutcomeSnapshot, versionId: refs["meeting-outcomes"]!.version };
-  if (commentAccess !== null) bundle.commentAccess = { value: commentAccess as CuratedReaderProjection, versionId: refs["comment-access"]!.version };
+  if (commentAccess !== null) bundle.commentAccess = { value: commentAccess as import("../registry/comment-access.ts").CommentAccessProjection, versionId: refs["comment-access"]!.version };
   if (censusDistricts !== null) bundle.censusDistricts = { value: censusDistricts as CensusDistrictEdge, versionId: refs["census-districts"]!.version };
   const promoted = new Map<string, PromotedEdgeEntry>();
   const promotedFamilies = new Set<string>();
@@ -672,7 +659,9 @@ const areaReads = new Map<string, MeetingsProjectionReadResult>();
 export async function readReaderEdgeMeetings(
   options: ReaderEdgeMeetingsOptions = {},
 ): Promise<MeetingsProjectionReadResult> {
-  const [read, settings] = await Promise.all([readReaderEdgeMeetingsHeld(options), options.settings ?? readReaderMeetingSettings()]);
+  const [read, settings] = await Promise.all([readReaderEdgeMeetingsHeld(options), options.settings ?? readReaderMeetingSettings(),
+    import("../doors/meeting-doors.ts").then(module => module.ensureMeetingDoors()),
+  ]);
   return applyServedWindow(read, options.window ?? "SHOWN", options.now, settings);
 }
 

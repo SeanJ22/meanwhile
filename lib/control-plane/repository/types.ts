@@ -24,6 +24,7 @@ import type {
 import type { FieldManualEntry, FieldManualQuery } from "../field-manual.ts";
 import type { FixMapRepository } from "../../method/fix-map.ts";
 import type { ResearchIntent, ResearchState } from "../scheduler/research-policy.ts";
+import type { SpendWindow } from "../spend-window.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type {
   PromotionPipelineRecord,
@@ -235,6 +236,8 @@ export interface AggregateRepository<T> {
   listNarrowed(projection: RecordProjection): Promise<readonly Persisted<unknown>[]>;
   /** Exactly `list()` filtered by the scalar `#>>` value at `path`. */
   listWhere(path: readonly string[], value: string): Promise<readonly Persisted<T>[]>;
+  /** `listWhere`, each value narrowed to the projection by the store before it leaves. */
+  listWhereNarrowed(path: readonly string[], value: string, projection: RecordProjection): Promise<readonly Persisted<unknown>[]>;
   /**
    * Rows whose database-clock `changed_at` is at or after `since` (all when null), in id order, less any row `held`
    * names at its current revision; `through` is the store's clock when the read began.
@@ -255,6 +258,8 @@ export interface FieldManualRepository extends AggregateRepository<FieldManualEn
   readMany(ids: readonly string[]): Promise<readonly Persisted<FieldManualEntry>[]>;
   /** The rows one job could use (`entryInSlice`); a store may return more, never fewer. */
   slice(query: FieldManualQuery): Promise<readonly Persisted<FieldManualEntry>[]>;
+  /** Insert the rows that do not exist yet; the ids it inserted. A row already held is left as it is. */
+  insertNew(entries: readonly FieldManualEntry[], now: string): Promise<ReadonlySet<string>>;
   /**
    * PB-01: remove the retired instruction rows and pointers in one transaction. Aggregates are never deleted
    * (the table refuses it), so only the Postgres store has this path; a store without it has nothing to retire.
@@ -300,6 +305,8 @@ export interface AppendOnlyRepository<T> {
   ): Promise<readonly unknown[]>;
   /** Every record, in key order then append order. */
   readAll(): Promise<readonly T[]>;
+  /** `readAll()` with each record narrowed to `projection` as it is read, so only the projection is ever held. */
+  readAllNarrowed(projection: RecordProjection): Promise<readonly unknown[]>;
   /** Records appended at or after `since`, in key then append order; filtered before transfer. */
   readSince(since: string): Promise<readonly T[]>;
   /** The newest `limit` records under one key, newest first. `limit` bounds the response. */
@@ -493,6 +500,8 @@ export interface ControlPlaneRepositories {
   /** What a decision button appended. */
   readonly ownerDecisions: AppendOnlyRepository<OwnerDecisionIntent>;
   readonly researchState: AggregateRepository<ResearchState>;
+  /** The running spend counter (`spend-window.ts`). */
+  readonly spendWindow: AggregateRepository<SpendWindow>;
   /** Canonical live method-candidate lifecycle. Git holds historical evidence only. */
   readonly methodCandidates: AggregateRepository<CandidateStore>;
   readonly researchIntents: AppendOnlyRepository<ResearchIntent>;

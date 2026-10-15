@@ -6,7 +6,7 @@ import { MeetingCard } from "../components/ui/meeting-card.tsx";
 import { MeetingRow } from "../components/ui/meeting-row.tsx";
 import { HowToBeHeard } from "../components/map/meeting-panel.tsx";
 import { DataProvider, type ShellData } from "../lib/state/data.tsx";
-import { COMMENT_ACCESS } from "../lib/registry/comment-access.ts";
+import { COMMENT_ACCESS } from "./fixtures/comment-access.ts";
 import { meetingCardGaps } from "../lib/meetings/card-gaps.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 

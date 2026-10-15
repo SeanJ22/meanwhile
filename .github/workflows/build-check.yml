@@ -1,4 +1,3 @@
-# Execution, retry safety and measured costs: docs/ci-efficiency.md.
 name: Build check
 on:
   push:

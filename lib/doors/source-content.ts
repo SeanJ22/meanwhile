@@ -2,8 +2,8 @@ import { readableContent } from "../extract/html-content.ts";
 import { sourceText } from "../ballot/voting-source-tables.ts";
 import { pageAddress } from "./page-doors.ts";
 
-export type SourceFamily = "meetings" | "agendas" | "results" | "rosters" | "channels" | "voting" | "funding" | "boundaries" | "contacts" | "public-records";
-export interface SourceContent {
+type SourceFamily = "meetings" | "agendas" | "results" | "rosters" | "channels" | "voting" | "funding" | "boundaries" | "contacts" | "public-records";
+interface SourceContent {
   url: string;
   text: string;
   contentType: string;

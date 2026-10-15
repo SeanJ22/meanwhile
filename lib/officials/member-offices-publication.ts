@@ -2,7 +2,6 @@
  * The daily member-office refresh: each state's promoted Open States offices,
  * published in one package through the curated `member-offices` pointer with a receipt for each file's exact bytes.
  */
-import { createHash } from "node:crypto";
 
 import { canonicalCivicDataJson } from "../civic-data/changes.ts";
 import { requiredManualProductionContract } from "../civic-data/manual-contracts.ts";
@@ -12,7 +11,7 @@ import { processRegisteredManualCandidate, type PromotionOutcome } from "../civi
 import { readPromotedCivicData } from "../civic-data/read-model.ts";
 import type { RoutineDataStore } from "../civic-data/store.ts";
 import type { ManualSourceReview } from "../civic-data/types.ts";
-import type { StatePeopleAcquisition } from "../civic-data/state-people-publication.ts";
+import type { StatePeopleCapture } from "../civic-data/state-people-publication.ts";
 import { mergeManualSourceCopies } from "../civic-data/manual-source-urls.ts";
 
 import { STATE_PEOPLE_JURISDICTIONS } from "./people-identity.ts";
@@ -41,7 +40,6 @@ export interface MemberOfficePublication {
   readonly outcome: PromotionOutcome | null;
 }
 
-const sha256 = (text: string) => createHash("sha256").update(text, "utf8").digest("hex");
 const message = (error: unknown) => (error instanceof Error ? error.message : String(error)).replace(/\s+/g, " ").slice(0, 300);
 
 /** The promoted offices, by id, so an unchanged office keeps the instant it was first collected. */
@@ -87,11 +85,11 @@ export async function publishMemberOffices(input: {
       // Derivation reuses the exact saved acquisition, rather than downloading it again or inventing a new source read.
       const sourceRead = await input.store.readPromotion("STATE_LEGISLATOR",`${jurisdiction}:openstates-people:v1`);
       const candidate = sourceRead ? await input.store.readCandidate(sourceRead.versionId) : null;
-      const acquisitions = (candidate?.candidate.normalizedPayload as {acquisitions?:readonly StatePeopleAcquisition[]})?.acquisitions ?? [];
+      const acquisitions = (candidate?.candidate.normalizedPayload as {captures?:readonly StatePeopleCapture[]})?.captures ?? [];
       if (!acquisitions.length) {gaps.push({key:jurisdiction,detail:"SOURCE_CAPTURE_UNAVAILABLE: prior offices retained"});continue;}
       records.push(...rows);
-      sources.push(...acquisitions.map(row=>({requestedUrl:row.requestedUrl,finalUrl:row.finalUrl,publisher:OPEN_STATES_ORG,sourceClass:"REFERENCE_PUBLISHER" as const,retrievedAt:row.retrievedAt,httpStatus:row.httpStatus,rawHash:row.rawHash ?? sha256(row.body),
-        ...(row.extractedFrom ? {extractedMembers:[{path:row.extractedFrom.member,sha256:sha256(row.body)}]} : {}),
+      sources.push(...acquisitions.map(row=>({requestedUrl:row.requestedUrl,finalUrl:row.finalUrl,publisher:OPEN_STATES_ORG,sourceClass:"REFERENCE_PUBLISHER" as const,retrievedAt:row.retrievedAt,httpStatus:row.httpStatus,rawHash:row.rawHash ?? row.capture.rawHash,
+        ...(row.extractedFrom ? {extractedMembers:[{path:row.extractedFrom.member,sha256:row.capture.rawHash}]} : {}),
         reviewOutcome:"SUPPORTED" as const,reviewedEvidence:"Exact source-native person aliases join each held office; archive extraction retains the original archive capture and member digest."})));
     } catch (error) {gaps.push({key:jurisdiction,detail:`ROSTER_UNREADABLE: ${message(error)}`});}
   }

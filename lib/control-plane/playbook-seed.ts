@@ -8,7 +8,10 @@
  */
 
 import seedRows from "./playbook-seed.json" with { type: "json" };
-import { newFieldManualEntry, type FieldManualEntry, type FieldManualRepos } from "./field-manual.ts";
+import { createHash } from "node:crypto";
+import { fieldManualEntryId, newFieldManualEntry, type FieldManualEntry, type FieldManualRepos } from "./field-manual.ts";
+import { updateRolePlaybook } from "./playbook-edit.ts";
+import { rolePlaybook } from "./playbooks.ts";
 
 /** The canonical role instructions, exactly as first written. A row that already exists always wins. */
 export const PLAYBOOK_SEED_ROWS: readonly FieldManualEntry[] = seedRows as unknown as readonly FieldManualEntry[];
@@ -92,6 +95,18 @@ export async function seedRolePlaybooks(repos: FieldManualRepos, now: string): P
   return { created, present };
 }
 
+/** The detective text written before hunting was rebuilt; a row still holding it exactly gets the current text, with undo. */
+const DETECTIVE_BEFORE_HUNTING = "31482734e7a60e424b35d5e29d1b4098176c0d844558d3fcf77517440f21a65d";
+
+async function refreshUnchangedDetective(repos: FieldManualRepos, now: string): Promise<void> {
+  const held = await repos.fieldManual.read(fieldManualEntryId("role-playbook", "DETECTIVE"));
+  const book = rolePlaybook(held ? [held.value] : [], "DETECTIVE");
+  if (createHash("sha256").update(book.text).digest("hex") !== DETECTIVE_BEFORE_HUNTING) return;
+  const text = (PLAYBOOK_SEED_ROWS.find(row => row.role === "DETECTIVE")?.payload as { text: string }).text;
+  await updateRolePlaybook(repos, { role: "DETECTIVE", text, expectedVersion: book.version, id: "h01-detective-blanks", at: now,
+    why: "Hunting rebuilt: the detective works a government's open blanks and reports each fact as found", factory: "H-01" });
+}
+
 export interface PlaybookSetupReport { readonly created: number; readonly present: number; readonly retired: boolean }
 
 /**
@@ -101,6 +116,7 @@ export interface PlaybookSetupReport { readonly created: number; readonly presen
  */
 export async function ensureRolePlaybooks(repos: FieldManualRepos, now: string): Promise<PlaybookSetupReport> {
   const seeded = await seedRolePlaybooks(repos, now);
+  await refreshUnchangedDetective(repos, now);
   const retire = repos.fieldManual.retireInstructions;
   if (retire === undefined) return { ...seeded, retired: false };
   if (await repos.fieldManual.read(PLAYBOOK_RETIREMENT_MARKER.id) !== null) return { ...seeded, retired: false };

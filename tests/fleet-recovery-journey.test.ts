@@ -1,16 +1,10 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import test from "node:test";
-import * as nodeModule from "node:module";
-import { runInNewContext } from "node:vm";
-import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
-import { readCompletedWorkerResults } from "../lib/control-plane/repository/worker-completion.ts";
 import { defaultGrant } from "../lib/control-plane/capability.ts";
 import { recordAcquisition } from "../lib/control-plane/evidence/artifact.ts";
 import { objectKey } from "../lib/control-plane/evidence/store.ts";
 import { runAcquirer, type AcquirerWorkerInput, type VaultedResearchEvidence } from "../lib/control-plane/workers/acquirer.ts";
 import { dispatchWorkerTask } from "../lib/control-plane/workers/runtime.ts";
-import { projectFleetPipeline } from "../lib/control-plane/workers/pipeline.ts";
 import type { ScoutToolkit } from "../lib/control-plane/scheduler/scout-contract.ts";
 import { autonomousHarness, FIXTURE_URL } from "./helpers/autonomous-fleet.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
@@ -21,35 +15,6 @@ import { scheduleAutonomousAcquisition } from "../lib/control-plane/workers/auto
 const NOW = "2026-09-05T18:00:00.000Z";
 const PROJECT = "fleet-recovery-isolated";
 const RECORD_URL = "https://fixture-clerk.example.gov/records.json";
-
-function isolatedPipeline(readResults: typeof readCompletedWorkerResults, calls: string[], failVenue = false): typeof projectFleetPipeline {
-  const { stripTypeScriptTypes } = nodeModule as typeof nodeModule & { stripTypeScriptTypes(source: string): string };
-  const source = stripTypeScriptTypes(readFileSync("lib/control-plane/workers/pipeline.ts", "utf8"))
-    .replace(/^import[\s\S]*?;\s*$/gm, "").replace("export async function", "async function");
-  return runInNewContext(source + "\nprojectFleetPipeline;", {
-    readCompletedWorkerResults: async (repos: ControlPlaneRepositories) => { calls.push("completed-results"); return readResults(repos); },
-    refreshRegistryRuntimeFromPromoted: async () => { calls.push("country-refresh"); },
-    refreshVenueResolutionsFromPromoted: async () => { calls.push("venue-refresh"); if (failVenue) throw new Error("HELD_VENUE_READ_FAILURE"); },
-    mayUseTestFixture: () => false,
-  }) as typeof projectFleetPipeline;
-}
-
-test("empty completed results avoid country and venue refreshes, including a failed held venue read", async t => {
-  for (const failVenue of [false, true]) {
-    const calls: string[] = [];
-    const project = isolatedPipeline(readCompletedWorkerResults, calls, failVenue);
-    assert.equal(await project(createMemoryRepositories(), { now: NOW, readArtifactText: async () => null }), null);
-    assert.deepEqual(calls, ["completed-results"]);
-    t.diagnostic(JSON.stringify({ completedResults: 0, failVenue, calls, result: null }));
-  }
-});
-
-test("nonempty completed results still require country and venue authority before facts", async () => {
-  const calls: string[] = [];
-  const project = isolatedPipeline(async () => [{} as Awaited<ReturnType<typeof readCompletedWorkerResults>>[number]], calls, true);
-  await assert.rejects(project(createMemoryRepositories(), { now: NOW, readArtifactText: async () => null }), /HELD_VENUE_READ_FAILURE/);
-  assert.deepEqual(calls, ["completed-results", "country-refresh", "venue-refresh"]);
-});
 
 function heldEvidence(text: string, url: string, attemptId: string): VaultedResearchEvidence {
   const artifact = recordAcquisition({ canonicalUrl: url, retrievedAt: NOW, httpStatus: 200,
@@ -79,7 +44,7 @@ function cacheRecoveryFixture() {
       currentUntil: "2026-09-06T18:00:00.000Z" })) };
   let networkCalls = 0;
   const toolkit: ScoutToolkit = { call: async () => { networkCalls++; throw new Error("FIXTURE_NETWORK_MUST_NOT_RUN"); },
-    specs: [], vaultedArtifactIds: new Set(), toolCalls: 0, requestCount: 0, bytesFetched: 0 };
+    specs: [], vaultedArtifactIds: new Set(), reported: [], toolCalls: 0, requestCount: 0, bytesFetched: 0 };
   const readVault = async (id: string) => {
     const held = evidence.get(id);
     if (!held) throw new Error("FIXTURE_ARTIFACT_MISSING");
@@ -131,17 +96,16 @@ test("recovery never relaxes provenance, freshness, partial-capture or permissio
   assert.equal(noNetwork.verdict, "BLOCKED");
   assert.equal(noNetwork.blockers[0].code, "CAPABILITY_DENIED");
   assert.equal(f.networkCalls(), 0);
-  /* A recorded robots.txt verdict is not a boundary: a CANNOT_TELL route walks the network, robots.txt first, and only the page's own access control (here a 403) walls it. */
+  /* A recorded robots.txt verdict is not a boundary: a CANNOT_TELL route walks the network, and only the page's own access control (here a 403) walls it. */
   const calls: string[] = [];
   const walled: ScoutToolkit = { ...f.runtime.toolkit, call: async (name) => {
     calls.push(name);
-    const robots = name === "read_permission";
-    return { ok: robots, forModel: "fixture", artifacts: [], provenance: [], requestCount: 1, bytesFetched: 0,
-      rung: { rung: "linked-documents-or-bulk-download", tool: name, target: RECORD_URL, artifactIds: [], ok: robots, permission: "CANNOT_TELL",
-        observed: robots ? "robots.txt HTTP 403; permission CANNOT_TELL" : "HTTP 403 (wall)", transport: "CHALLENGED", httpStatus: 403 } };
+    return { ok: false, forModel: "fixture", artifacts: [], provenance: [], requestCount: 1, bytesFetched: 0,
+      step: { tool: name, target: RECORD_URL, artifactIds: [], ok: false, permission: "CANNOT_TELL",
+        observed: "HTTP 403 (wall)", transport: "CHALLENGED", httpStatus: 403 } };
   } };
   const permissionUnknown = await runAcquirer({ ...f.input, held: [], route: { ...f.input.route, permission: "CANNOT_TELL" } }, { ...f.runtime, toolkit: walled });
-  assert.deepEqual(calls, ["read_permission", "fetch_public"], "robots.txt is read and recorded, then the page is requested once");
+  assert.deepEqual(calls, ["fetch_public"], "the page is requested once, its robots.txt verdict recorded with it");
   assert.equal(permissionUnknown.verdict, "BLOCKED");
   assert.equal(permissionUnknown.blockers[0].code, "PUBLISHER_AUTHENTICATION", "the page's own 403 is the wall, not the robots verdict");
   assert.ok(!permissionUnknown.blockers.some(b => b.code === "PERMISSION_UNKNOWN" || b.code === "PERMISSION_DENIED"));

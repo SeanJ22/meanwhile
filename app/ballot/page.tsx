@@ -41,7 +41,7 @@ import {
 } from "@/lib/ballot/candidate-sites";
 import type { OfficeBlurb } from "@/lib/officials/office-blurbs";
 import { readCuratedContestOfficeBlurbs } from "@/lib/officials/curated-definition-reader";
-import { surnameDisplayCase } from "@/lib/ballot/name-case";
+import { ballotCandidateDisplayName } from "@/lib/ballot/name-case";
 import {
   cardForCandidacy,
   cardForNominee,
@@ -64,7 +64,7 @@ import { personCardSources } from "@/lib/officials/card-sources";
 import { memberDirectoryReaches } from "@/lib/officials/member-directory-scope";
 import { currentMemberOffices } from "@/lib/officials/member-offices-read";
 import type { SeatHolder } from "@/lib/officials/lookup";
-import { CandidateCard } from "@/components/ballot/candidate-card";
+import { CandidateCard, CandidatePortraitSources } from "@/components/ballot/candidate-card";
 import {
   CandidatePositions,
 } from "@/components/ballot/candidate-positions";
@@ -98,7 +98,9 @@ import {
 } from "@/lib/funding/display";
 import { settleFundingRead } from "@/lib/funding/snapshot";
 import { settleStateMoneyRead } from "@/lib/funding/state-snapshot";
-import type { StateCampaignFinanceJurisdiction } from "@/lib/funding/data-plane";
+import { STATE_CAMPAIGN_FINANCE_SOURCES, type StateCampaignFinanceJurisdiction } from "@/lib/funding/data-plane";
+import { settleCampaignFinanceReads } from "@/lib/funding/campaign-finance-reader";
+import { officeIdentity } from "@/lib/officials/office-identity";
 import { settleFundingHoldingAnswer } from "@/app/api/funding/[target]/route";
 import {
   ensureReaderAuthorityEdge,
@@ -132,7 +134,6 @@ import {
 } from "@/lib/ballot/dated-events";
 import { AddToCalendar } from "@/components/calendar/add-to-calendar";
 import type {
-  BallotAbsence,
   BallotSet,
   Candidacy,
   Contest,
@@ -166,19 +167,18 @@ import {
 
 export const runtime = "nodejs";
 
-/** What each supporting holding means to a reader, in their words. */
 const AUXILIARY_READER_LABEL: Record<BallotAuxiliaryFamily, string> = {
   "candidate-profiles": "candidate profiles",
   "candidate-publications": "what candidates say in their own words",
   "federal-funding": "federal campaign money",
   "state-money": "state campaign money",
+  "campaign-finance": "campaign money filings",
   "federal-directory": "federal officeholders",
   "registry-runtime": "the officials and districts that go with this ZIP",
   "nh-members": "New Hampshire legislators",
   "ballot-navigation": "registration and polling-place links",
 };
 
-/** Above this many characters a contest's scope note collapses behind "More info"; roughly two lines on a phone. */
 const EXTENDED_MECHANICS_CHARS = 180;
 
 function candidatesOf(set: BallotSet, contest: Contest): Candidacy[] {
@@ -187,13 +187,10 @@ function candidatesOf(set: BallotSet, contest: Contest): Candidacy[] {
     .sort((a, b) => a.familyName.localeCompare(b.familyName));
 }
 
-/** Built once: both `PickControl` and the `MyPicks` manifest call this, so the tally's denominator is the rendered row count. A measure has no `reactionTargetId`: its reactions attach to provisions. */
 function pickOptionsFor(
   set: BallotSet | null,
   contest: Contest,
 ): { id: string; label: string; reactionTargetId?: string }[] {
-  // A measure's options are the question itself and need no candidacy data,
-  // which is why the measure section can call this without a set in hand.
   if (contest.type === "MEASURE") {
     return [
       { id: "YES", label: "Yes" },
@@ -211,48 +208,25 @@ function pickOptionsFor(
   }
   return candidatesOf(set, contest).map((cand) => ({
     id: cand.id,
-    label: `${cand.givenName} ${surnameDisplayCase(cand.familyName)}`,
+    label: ballotCandidateDisplayName(cand),
     reactionTargetId: cand.id,
   }));
 }
 
-/** Federal is decided by the contest, never by division shape — a governor's
- *  division is the state root exactly like a US Senate seat's. */
 function isFederalContest(contest: Contest): boolean {
-  return /:us-senate$|:us-house-\d+$/.test(contest.id);
+  const office = officeIdentity(contest.title);
+  return office === "us_senator" || office === "us_representative";
 }
 
-/** The candidate's name as filed, as the door to their battlecard; plain text where the exact-key join finds no record. */
-async function IncumbentName({
-  targetKey,
-  name,
-  context,
-  readerEdge,
-}: {
-  targetKey: string;
+async function IncumbentName({ name, context, holder }: {
   name: string;
   context: { zip: string; lat: number; lng: number } | null;
-  /** The page's reader edge: React renders this component outside the page's own context. */
-  readerEdge: ReaderAuthorityEdgeBundle | null;
+  holder: SeatHolder | null;
 }) {
-  let holder: SeatHolder | null = null;
-  try {
-    holder = await withReaderAuthorityEdge(readerEdge, () => incumbentHolderFor(targetKey));
-  } catch {
-    // The page-level canonical holding notice names this failure. The filed
-    // ballot name remains valid and must not disappear with an optional
-    // officeholder join.
-    holder = null;
-  }
-  if (!holder) {
-    return (
-      <span className="text-[0.9375rem] font-semibold tracking-tight">{name}</span>
-    );
-  }
-  return <IncumbentNameLink holder={holder} name={name} context={context} />;
+  return holder ? <IncumbentNameLink holder={holder} name={name} context={context} />
+    : <span className="text-[0.9375rem] font-semibold tracking-tight">{name}</span>;
 }
 
-/** The funding answer under one candidate: totals with the reaction control, an earned absence, or nothing. */
 async function CandidateFunding({
   targetKey,
   context,
@@ -267,7 +241,7 @@ async function CandidateFunding({
   if (!available) return unavailableHolding("federal campaign-finance");
   let answer: FundingAnswer;
   try {
-    answer = fundingAnswerForTarget(targetKey);
+    answer = await withReaderAuthorityEdge(readerEdge, async () => fundingAnswerForTarget(targetKey));
   } catch {
     return unavailableHolding("federal campaign-finance");
   }
@@ -281,7 +255,6 @@ async function CandidateFunding({
   if (answer.kind === "none") return partial
     ? <CardGapContribution id={`funding-holdings:${targetKey}`} label="campaign money records" />
     : null;
-  // The wrapper carries the marker `pnpm measure:ballot` counts.
   return (
     <div data-candidate-funding>
       {partial && <CardGapContribution id={`funding-holdings:${targetKey}`} label="campaign money records" />}
@@ -294,7 +267,6 @@ async function CandidateFunding({
   );
 }
 
-/** State records and their disclosure use the same already-loaded authority. */
 function stateCandidateFunding(
   records: ReturnType<typeof stateMoneyForCard>["records"],
   context: ReactionViewContext | null,
@@ -303,7 +275,6 @@ function stateCandidateFunding(
   return <StateMoneySection records={records} bare context={context} />;
 }
 
-/** One battlecard builder for every person on the ballot: both contest branches call it, and every person gets the same sections (`lib/ballot/battlecard-sections.ts`) whatever we hold. */
 async function BallotBattlecard({
   name,
   partyLine,
@@ -315,69 +286,40 @@ async function BallotBattlecard({
   contestOcdId,
   officeBlurb,
   federal,
-  contestCandidates,
+  resolvedStanding,
   contestId,
-  contestVoteFor,
   context,
   authorityAvailability,
   readerEdge,
 }: {
   name: string;
   partyLine: React.ReactNode;
-  /** The raw party label, so the card can render the coloured pill; `partyLine` stays as the fallback. */
+
   partyLabel?: string | null;
-  /** The candidate's own card row; a photo that failed review is already `null` here. */
+
   card?: CandidateCardData | null;
-  /** The campaign site, so the battlecard can hold what the row let go. */
+
   links?: CandidateLinks | null;
-  /** The candidate key — `${contest.id}|${nominee.name}` or a candidacy id. */
+
   targetKey: string;
   contestTitle: string;
-  /** The contest's division, so a state-scoped office explainer can resolve. */
+
   contestOcdId: string;
   officeBlurb: OfficeBlurb | null;
-  /** Whether the contest is federal, which decides whether FEC money applies. */
+
   federal: boolean;
-  /** Every name in this contest: incumbency is resolved per contest, so either the holder is known or every candidate reads the same not-yet-sourced line. */
-  contestCandidates: readonly { key: string; display: string; targetKey: string }[];
+
+  resolvedStanding: Awaited<ReturnType<typeof contestIncumbency>> | null;
   contestId: string;
-  /* How many seats this contest fills; the contest-level eligibility gate reconciles holders against it. */
-  contestVoteFor: number | null;
+
   context: { zip: string; lat: number; lng: number } | null;
   authorityAvailability: BallotAuthorityAvailability;
-  /** React renders this card outside the page function that entered the edge, so every read below runs inside it explicitly. */
+
   readerEdge: ReaderAuthorityEdgeBundle | null;
 }) {
-  /* One lookup for the record section, its empty state, and the committee and office sections, so they cannot disagree. */
-  let holder: SeatHolder | null = null;
-  let officeholdersAvailable = federal ? authorityAvailability.federalOfficeholders : authorityAvailability.officeholders;
-  try {
-    holder = await withReaderAuthorityEdge(readerEdge, () => incumbentHolderFor(targetKey));
-    if (holder) officeholdersAvailable = true;
-  } catch {
-    holder = null;
-  }
-
-  /* Incumbency comes from the officeholder side, per contest, in three states. A miss is UNKNOWN, never `Challenger`. */
-  let resolvedStanding: Awaited<ReturnType<typeof contestIncumbency>> | null = null;
-  if (contestVoteFor !== null) {
-    try {
-      resolvedStanding = await withReaderAuthorityEdge(readerEdge, () => contestIncumbency(
-        {
-          id: contestId,
-          title: contestTitle,
-          ocdId: contestOcdId,
-          candidates: contestCandidates,
-          federal,
-          voteFor: contestVoteFor,
-        },
-        incumbentHolderFor,
-      ));
-      officeholdersAvailable = true;
-    } catch {
-      resolvedStanding = null;
-    }
-  }
+  const recordHolder = resolvedStanding?.holderFor.get(targetKey) ?? null;
+  const officeholdersAvailable = recordHolder !== null || (federal
+    ? authorityAvailability.federalOfficeholders : authorityAvailability.officeholders);
   const standing = resolvedStanding?.decisions.get(targetKey) ?? {
     standing: "UNKNOWN" as const,
     basis: officeholdersAvailable
@@ -386,25 +328,23 @@ async function BallotBattlecard({
     source: null,
   };
 
-
-  const recordHolder = holder ?? resolvedStanding?.holderFor.get(targetKey) ?? null;
-
   let positions: ReturnType<typeof positionsFor> = [];
   let positionsUnavailable = !authorityAvailability.candidatePublications;
   if (!positionsUnavailable) {
     try {
-      positions = positionsFor(targetKey, null, await readStanceTopics());
+      positions = await withReaderAuthorityEdge(readerEdge, async () =>
+        positionsFor(targetKey, null, await readStanceTopics(), recordHolder?.id));
     } catch {
       positionsUnavailable = true;
     }
   }
-  /* State and local money. LEADs are filtered out inside `stateMoneyForTarget`. */
-  /* Keyed by the reconciled candidacy id through the precomputed identity bridge, never by name: a nominee card's key is `${contest.id}|${nominee.name}`. */
+
   let stateMoney: ReturnType<typeof stateMoneyForCard>["records"] = [];
-  let stateMoneyUnavailable = !federal && !authorityAvailability.stateMoney;
-  if (!federal && !stateMoneyUnavailable) {
+  let stateMoneyUnavailable = !federal && (!authorityAvailability.campaignFinance ||
+    (authorityAvailability.stateMoneyApplicable && !authorityAvailability.stateMoney));
+  if (!federal) {
     try {
-      stateMoney = stateMoneyForCard(targetKey, contestId).records;
+      stateMoney = await withReaderAuthorityEdge(readerEdge, async () => stateMoneyForCard(targetKey, contestId).records);
     } catch {
       stateMoneyUnavailable = true;
     }
@@ -415,24 +355,21 @@ async function BallotBattlecard({
   return (
     <CandidateBattlecard
       name={name}
-      /* The contest's real government tier for the modal's tier ring — derived
-         from the contest OCD id, never guessed; null stays neutral. */
+
       tier={tierForOffice(contestTitle, contestOcdId)}
       partyLine={partyLine}
       partyLabel={partyLabel}
-      photoUrl={card?.photoUrl ?? null}
+      photoUrl={card?.photoUrl ?? recordHolder?.photoUrl ?? null}
       incumbency={standing.standing}
-      /* Which gap the third state is: the eligibility gate can refuse a contest whose sitting member we hold. */
+
       incumbencyGap={standing.gap ?? null}
       speakContext={context ? { lat: context.lat, lng: context.lng } : null}
       subjectId={targetKey}
-      /* A fact about the person (do they hold or have they held this office), never about how much we hold on them. */
-      holdsOrHeldTheOffice={recordHolder !== null}
-      /* The same record the map battlecard renders contact routes from. */
+
       contactHolder={recordHolder}
       contact={<><CandidateContact card={card ?? null} links={links} filing={filingContact} />{recordHolder && <ContactPills holder={recordHolder} scope="primary" />}{!card?.email && !links?.campaign && !filingContact?.email && !recordHolder && <CardGapContribution id={`candidate-contact:${targetKey}`} label="contact details" subject={{ type: "CANDIDATE", id: targetKey }} />}</>}
       sections={{
-        /* Mandatory for every candidate and every elected official. */
+
         office: officeBlurb ? (
           <>
             <p className="t-body leading-relaxed text-voice">{officeBlurb.text}</p>
@@ -447,8 +384,7 @@ async function BallotBattlecard({
           ) : positions.length > 0 ? (
             <CandidatePositions headline={positionsHeadline(positions)} positions={positions} />
           ) : null,
-        /* `recordHolder` is the federal join or the officeholder the contest resolution matched by seat, the same record the map battlecard renders from. */
-        /* Null where the member directory does not cover them, so the named gap renders instead of an empty box. */
+
         committees:
           !officeholdersAvailable ? (
             unavailableHolding("officeholder-directory")
@@ -462,22 +398,20 @@ async function BallotBattlecard({
             <MemberOfficesContent holder={recordHolder} />
           ) : null,
         money: federal ? (
-          <CandidateFunding targetKey={targetKey} context={context} available={authorityAvailability.funding} readerEdge={readerEdge} />
-        ) : stateMoneyUnavailable ? (
-          unavailableHolding("state campaign-finance")
-        ) : stateCandidateFunding(stateMoney, context),
-        /* The record, in the card. Not `columns`: the two-column form builds its own top-level sections. */
-        /* Gated on whether records exist (`recordHolder`), not on the federal join. */
+          <CandidateFunding targetKey={recordHolder?.id ?? targetKey} context={context} available={authorityAvailability.funding} readerEdge={readerEdge} />
+        ) : <>{stateMoneyUnavailable && unavailableHolding("state campaign-finance")}{stateCandidateFunding(stateMoney, context)}</>,
+
         record: !officeholdersAvailable ? (
           unavailableHolding("officeholder-directory")
         ) : recordHolder ? (
           <RecentVotes holder={recordHolder} reactionContext={context} contentOnly />
         ) : null,
-        /* Renders even with no officeholder record, so a challenger's contacts reach the same Sources section. */
+
         sources: (
           <>
             {!authorityAvailability.candidateProfiles && unavailableHolding("candidate-profile")}
-            {holder && <CandidateSources holder={holder} />}
+            <CandidatePortraitSources card={card ?? null} />
+            {recordHolder && <CandidateSources holder={recordHolder} />}
             <CandidateContactSources links={links} filing={filingContact} />
 
           </>
@@ -487,9 +421,7 @@ async function BallotBattlecard({
   );
 }
 
-/** The card's sources for a person we hold an officeholder record for: the held roster and office records. */
 function CandidateSources({ holder }: { holder: SeatHolder }) {
-  // Read only as the reader edge primed it: this card never adds a database read to a cold ballot.
   const [office] = currentMemberOffices(holder.id);
   const sources = personCardSources(holder, office
     ? [{ what: "Their capitol and district offices", provenance: { sourceUrl: office.sourceUrl, sourceOrg: office.sourceOrg, collectedAt: office.collectedAt, verifiedAt: null } }]
@@ -503,6 +435,8 @@ interface BallotAuthorityAvailability {
   readonly candidatePublications: boolean;
   readonly funding: boolean;
   readonly stateMoney: boolean;
+  readonly stateMoneyApplicable: boolean;
+  readonly campaignFinance: boolean;
   readonly officeholders: boolean;
   readonly federalOfficeholders: boolean;
 }
@@ -519,7 +453,6 @@ function unavailableHolding(family: string) {
   return <CardGapContribution id={`ballot-holding:${family}`} label={HOLDING_LABEL[family]} />;
 }
 
-/** The tab names the page: this one inherited the map's "Public meetings near you". */
 export const metadata: Metadata = {
   title: titleFor("Your ballot"),
   description: "The contests on your ballot, the candidates in them, and where to vote.",
@@ -542,29 +475,17 @@ export default async function BallotPage({
 
   const resolution = zip ? resolveZip(zip) : null;
   const centroid = resolution?.ok ? resolution.centroid : null;
-
-    // Resolve the applicable state authority before opening its canonical
-    // pointer. An unavailable ballot in another state cannot take this
-    // Reader path down.
   let set: BallotSet | null = null;
-  let matched: {
-    contests: Contest[];
-    absences: BallotAbsence[];
-  } | null = null;
+  let matched: ReturnType<typeof contestsForDivisions> | null = null;
   let coverageNotes: string[] = [];
   let attempted = false;
   let divisionHoldingUnavailable = false;
   const ballotLoaderFailures: string[] = [];
-  /* The reader's resolved divisions, hoisted so the Ask surface receives the same list the contests were matched against. */
+
   let askOcdIds: string[] = [];
-  /* Which divisions cover the whole zip and which only part; the partial ones carry the pill. Null outside the committed geometry. */
-  // The reader edge and the committed geometry start before anything waits.
   const readerEdgeRead = centroid ? readBallotReaderEdge() : Promise.resolve(null);
   if (centroid) prefetchReaderGeography();
-  // Certainty now includes the publisher's Census serving copy. Read it in
-  // the same request bundle as the ballot, never ahead of the edge boundary.
   let certainty = await readerEdgeRead.then(edge => withReaderAuthorityEdge(edge, () => zipCertainty(zip)));
-
 
   let readerEdge: ReaderAuthorityEdgeBundle | null = null;
   if (centroid) {
@@ -577,12 +498,9 @@ export default async function BallotPage({
       const divisions = await divisionsAt(centroid.lat, centroid.lng);
       pointDivisionIds = divisions.map((division) => division.ocdId);
     } catch {
-      // The static, versioned zip-area index can still identify the requested
-      // state authority. The unavailable registry/officeholder holding is
-      // named below and may not turn a readable ballot into a 500.
       divisionHoldingUnavailable = true;
     }
-    /* A zip is an area: the centroid answer is widened to every division whose territory reaches inside it (`lib/ballot/zip-divisions.ts`). */
+
     const ocdIds = await divisionIdsForZipArea(zip, pointDivisionIds, undefined, POINT_GEOMETRY_PLANS);
     askOcdIds = ocdIds;
     for (const { state, source } of await readerBallotSourcesForDivisions(ocdIds)) {
@@ -591,7 +509,7 @@ export default async function BallotPage({
         const selection = { purpose: "election" as const, asOf: phoenixToday(), electionDate: candidate.election.date };
         const electionIds = await divisionIdsForZipArea(zip, pointDivisionIds, selection, POINT_GEOMETRY_PLANS);
         const hit = contestsForDivisions(candidate, electionIds);
-        if (hit.contests.length > 0 || hit.absences.length > 0) {
+        if (hit.contests.length > 0 || hit.absences.length > 0 || hit.heldContests?.length) {
           set = candidate;
           matched = hit;
           askOcdIds = electionIds;
@@ -608,33 +526,24 @@ export default async function BallotPage({
     }
   }
 
-
   const auxiliaryPreloads = new Map<BallotAuxiliaryFamily, () => Promise<unknown>>();
-  // Verified registration/polling routes are useful before a ballot or an
-  // election calendar has been acquired. Neither is a publication dependency.
   if (centroid) auxiliaryPreloads.set("ballot-navigation", process.env.NODE_ENV === "production" ? settleBallotNavigationRead : async () => null);
   if (set && matched) {
-    // Each edge first: the edge's proven copy through the family's own Reader, else the database.
     auxiliaryPreloads.set("candidate-profiles", settleCandidateProfilesRead);
     auxiliaryPreloads.set("candidate-publications", settleCandidateCorpusRead);
-    // Edge first: the same settles `divisionsAt` and the officeholder
-    // graph use, so an edge-served version is never read again from the
-    // database in the same render.
     auxiliaryPreloads.set("registry-runtime", () => settleRegistryAuthorityReads("REGISTRY"));
     if (matched.contests.some(isFederalContest)) {
       auxiliaryPreloads.set("federal-directory", settleFederalDirectoryRead);
     }
     if (matched.contests.some(nhLegislativeRosterAppliesTo)) {
-      // Incumbency completeness comes from the General Court's own whole
-      // membership projection. It must be established before the synchronous
-      // exact-seat resolver runs; a failed/absent read leaves that resolver
-      // explicitly incomplete and is surfaced in the holding-gap list below.
       auxiliaryPreloads.set("nh-members", settleNhSeatHolders);
     }
     if (matched.contests.some((contest) => isFederalContest(contest))) {
       auxiliaryPreloads.set("federal-funding", settleFundingRead);
     }
-    if (matched.contests.some((contest) => !isFederalContest(contest))) {
+    auxiliaryPreloads.set("campaign-finance", () => settleCampaignFinanceReads(askOcdIds));
+    if (matched.contests.some((contest) => !isFederalContest(contest)) &&
+        Object.hasOwn(STATE_CAMPAIGN_FINANCE_SOURCES, set.election.state)) {
       const state = set.election.state as StateCampaignFinanceJurisdiction;
       auxiliaryPreloads.set(
         "state-money",
@@ -656,6 +565,8 @@ export default async function BallotPage({
       auxiliaryPreloads.has("federal-funding") && !auxiliaryFailed.has("federal-funding"),
     stateMoney:
       auxiliaryPreloads.has("state-money") && !auxiliaryFailed.has("state-money"),
+    stateMoneyApplicable: auxiliaryPreloads.has("state-money"),
+    campaignFinance: auxiliaryPreloads.has("campaign-finance") && !auxiliaryFailed.has("campaign-finance"),
     officeholders:
       auxiliaryPreloads.has("registry-runtime") &&
       !auxiliaryFailed.has("registry-runtime"),
@@ -676,11 +587,11 @@ export default async function BallotPage({
   }
 
   const availableCardForNominee = (contestId: string, name: string): CandidateCardData | null =>
-    authorityAvailability.candidateProfiles ? cardForNominee(contestId, name) : null;
+    cardForNominee(contestId, name);
   const availableLinksForNominee = (contestId: string, name: string): CandidateLinks | null =>
     authorityAvailability.candidateProfiles ? linksForNominee(contestId, name) : null;
   const availableCardForCandidacy = (candidacyId: string): CandidateCardData | null =>
-    authorityAvailability.candidateProfiles ? cardForCandidacy(candidacyId) : null;
+    cardForCandidacy(candidacyId);
   const availableLinksForCandidacy = (candidacyId: string): CandidateLinks | null =>
     authorityAvailability.candidateProfiles ? linksForCandidacy(candidacyId) : null;
   const availableDerivedBlurbFor = (candidateId: string) =>
@@ -693,17 +604,26 @@ export default async function BallotPage({
 
   const candidacyContests =
     matched?.contests.filter((c) => c.type === "CANDIDACY") ?? [];
-  /* The authority's own ballot order wins where published; otherwise the proposition number, compared as a number (lib/ballot/measure-order.ts). */
+  const contestResolutions = new Map(await Promise.all(candidacyContests.map(async contest => {
+    const lineup = lineupForContest(contest.id);
+    const candidates = lineup ? lineup.nominees.map(n => ({ key: `${contest.id}|${n.name}`,
+      display: n.name, targetKey: `${contest.id}|${n.name}` })) : candidatesOf(set!, contest).map(c => ({
+      key: c.id, display: ballotCandidateDisplayName(c), targetKey: c.id,
+    }));
+    const result = await contestIncumbency({ ...contest, candidates, federal: isFederalContest(contest) },
+      incumbentHolderFor).catch(() => null);
+    return [contest.id, result] as const;
+  })));
+  const resolvedHolder = (contestId: string, key: string) => contestResolutions.get(contestId)?.holderFor.get(key) ?? null;
+
   const measureRecords = set ? measureRecordsForBallot(set) : [];
   const measureContests = orderMeasures(
     matched?.contests.filter((c) => c.type === "MEASURE") ?? [],
   );
 
-  /* Looked up by `contestId`; null renders no block. */
   const measureFor = (contestId: string): Measure | null =>
     set?.measures.find((m) => m.contestId === contestId) ?? null;
 
-  /* Statewide versus local is read off the contest's division: a bare `state:xx` is the whole state. */
   const isStatewideDivision = (ocdId: string): boolean =>
     /^ocd-division\/country:us\/state:[a-z]{2}$/.test(ocdId);
   const statewideMeasures = measureContests.filter((c) =>
@@ -713,7 +633,6 @@ export default async function BallotPage({
     (c) => !isStatewideDivision(c.ocdId),
   );
 
-  /* Canonical references, not display strings: each carries the id the cards are keyed with, for referent resolution only. */
   const askSubjects: {
     id: string;
     name: string;
@@ -729,8 +648,7 @@ export default async function BallotPage({
       name: c.title,
       kind: "MEASURE" as const,
     })),
-    /* Read through the page's OWN helper, so the people offered as referents
-       are exactly the people rendered on the cards above. */
+
     ...(set
       ? candidacyContests.flatMap((c) =>
           candidatesOf(set, c).map((k) => ({
@@ -750,7 +668,6 @@ export default async function BallotPage({
     ),
   ].filter((v) => v.name.length > 0);
 
-  /* The tally's denominator: every contest that renders a `PickControl` gets an entry, built by the same `pickOptionsFor`. */
   const pickableContests =
     set && matched
       ? [...candidacyContests, ...measureContests].filter(contest => contest.voteFor !== null).map((contest) => ({
@@ -762,15 +679,13 @@ export default async function BallotPage({
         }))
       : [];
 
-  /* Which ballot this page is, read off its own contests rather than the zip. */
   const currentJurisdictionKey =
     matched?.contests
       .map((c) => jurisdictionKeyForContestId(c.id))
       .find((key): key is string => key !== null) ?? null;
 
-  /* A source line identical on every contest renders once at the foot, with a marker at each contest. Distinct sources never collapse. */
   const FOOTNOTE_MARKERS = ["*", "†", "‡", "§", "‖", "¶"];
-  /* `*` is reserved for the incumbency footnote, unconditionally, so the source sequence starts at `†`. */
+
   const MARKER_START = 1;
   type SourceCite =
     | { kind: "canvass"; url: string; issuedBy: string; readAt: string }
@@ -802,8 +717,6 @@ export default async function BallotPage({
     if (entry) entry.count += 1;
     else contestCites.set(key, { cite, count: 1 });
   }
-  // Markers are assigned in first-appearance order, only to sources that
-  // actually repeat.
   const sharedSources: { key: string; marker: string; cite: SourceCite }[] = [];
   for (const [key, { cite, count }] of contestCites) {
     if (count > 1) {
@@ -816,7 +729,7 @@ export default async function BallotPage({
       });
     }
   }
-  /* Repeated scope notes use the same mechanism and continue the same marker sequence. */
+
   const readerScopeNotes = new Map((matched?.contests ?? []).map((contest) => {
     const lineup = lineupForContest(contest.id);
     const canvass = lineup ? getGeneralLineup()?.canvass : null;
@@ -847,7 +760,7 @@ export default async function BallotPage({
     ? filingsForDivisions(filingProjection.value.records as unknown as OfficialFiling[], askOcdIds) : [];
 
   return (
-    /* Prose stays capped at `lg:max-w-2xl`; the extra width buys a second column of whole cards, never of label/value rows. */
+
     <main className="mx-auto max-w-2xl px-4 py-8 text-paper lg:max-w-[68rem] lg:px-8 lg:py-10 xl:max-w-[76rem]">
       <BallotCapture zip={zip} />
       <div className="ballot-page-chrome flex items-center justify-between gap-3">
@@ -892,7 +805,7 @@ export default async function BallotPage({
       <div className="my-4"><WhereToVote /></div>
       <OfficialFilings rows={filingRows} />
       <StateOfficeContacts offices={stateOfficesForDivisions(askOcdIds)} />
-      {/* Who runs this reader's elections and how to reach them, from their own city's or county's saved page. */}
+
       {electionOffices.length > 0 && (
         <section aria-label="Your election offices" className="my-6 space-y-2 lg:max-w-3xl" data-ballot-election-offices>
           <h2 className="text-lg font-semibold">Your election offices</h2>
@@ -973,7 +886,7 @@ export default async function BallotPage({
                     <span className="font-mono t-body font-semibold">
                       {formatDateMDY(regStep.date)}
                     </span>
-                    {/* A deadline that has already passed gets no calendar control. */}
+
                     {isUpcoming({ start: regStep.date, end: null }) && (
                       <>
                         {" "}
@@ -1021,7 +934,7 @@ export default async function BallotPage({
 
               {(
                 <div className="mt-3 flex flex-col gap-3">
-              {/* Registration status is the state's to answer, so this pill leaves the app and says so. */}
+
                   {reg && (
                     <div>
                       <a
@@ -1047,7 +960,6 @@ export default async function BallotPage({
           );
         })()}
 
-      {/* The propositions sentence renders only where propositions share the ballot. */}
       {set && matched && (
         <p className="mt-3 t-body leading-relaxed text-voice lg:max-w-2xl">
           The contests below are recorded for areas that may overlap this ZIP. Check your address with your election office for the exact ballot.
@@ -1088,7 +1000,6 @@ export default async function BallotPage({
         <p className="mt-6 lg:max-w-2xl">We do not have a ballot for this location yet.</p>
       )}
 
-      {/* The private election-day list; renders only once something is marked. Device-local. */}
       <MyPicks
         currentJurisdictionKey={currentJurisdictionKey}
         pickable={pickableContests}
@@ -1101,7 +1012,7 @@ export default async function BallotPage({
           </h2>
           <ul className="mt-2.5 space-y-1.5">
             {calendarableSteps(dates.steps).map(({ step, window, upcoming }) => (
-              /* `flex-wrap` and a shrinkable value: the value drops to its own line rather than widening the page. */
+
               <li
                 key={step.label}
                 className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1"
@@ -1111,7 +1022,7 @@ export default async function BallotPage({
                   <span className="font-mono text-[0.75rem] text-signal">
                     {formatDateMDY(step.date)}
                   </span>
-                  {/* Every dated event with a known date gets the control, windows included; `upcoming` uses the Phoenix wall clock (`lib/ballot/dated-events.ts`). A step whose `date` is a phrase gets nothing. */}
+
                   {window && upcoming && (
                     <>
                       {" "}
@@ -1120,8 +1031,6 @@ export default async function BallotPage({
                           id: `ballot-${set?.election.state ?? "xx"}-${window.start}-${step.label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
                           title: `${step.label} (${set?.election.state ?? ""})`,
                           allDayDate: window.start,
-                          // Inclusive; the exclusive DTEND is computed once,
-                          // in lib/calendar/event-links.ts.
                           allDayEndDate: window.end ?? undefined,
                           description: step.detail ?? undefined,
                         }}
@@ -1147,7 +1056,6 @@ export default async function BallotPage({
         </section>
       )}
 
-      {/* The jurisdiction answer once, above the contests, built from the same `needsPill` decision each contest heading uses. */}
       {set && matched && certainty && (
         <JurisdictionNote
           electionDate={set?.election.date ?? null}
@@ -1161,12 +1069,12 @@ export default async function BallotPage({
             ...new Set(
               candidacyContests
                 .filter((contest) => certainty.certaintyOf(contest.ocdId) === "AMBIGUOUS")
-                /* The body, not the office: naming the jurisdictions is the point of the block. */
+
                 .map((contest) => jurisdictionNameFromOcdId(contest.ocdId))
                 .filter((name): name is string => name !== null),
             ),
           ]}
-          /* The block ends with the address prompt, scoped to this page's zip. */
+
           zip={zip ?? ""}
         />
       )}
@@ -1176,9 +1084,6 @@ export default async function BallotPage({
       {candidacyContests.map((contest, contestIndex) => {
           const lineup = lineupForContest(contest.id);
           const canvass = lineup ? getGeneralLineup()?.canvass : null;
-          // A source line identical across contests
-          // renders as a footnote marker here and one citation at the
-          // page's foot. Distinct sources never collapse together.
           const sourceRef =
             lineup && canvass
               ? contestSourceRef(
@@ -1205,13 +1110,13 @@ export default async function BallotPage({
               <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
                 <h2 className="text-[1.0625rem] font-semibold tracking-tight">
                   {contest.title}
-                  {/* The level tag, in the tier's accent; tier from the contest's OCD identity, never the office name. */}
+
                   <LevelTag tier={tierForOffice(contest.title, contest.ocdId)} />
-                  {/* One short mark tied to the page-level block above. Not a completeness marker. */}
+
                   {certainty && needsPill(certainty.certaintyOf(contest.ocdId)) && (
                     <JurisdictionMark />
                   )}
-                  {/* Only on contests that render candidate cards. */}
+
                   {(lineup || candidatesOf(set, contest).length > 0) && (
                     <IncumbencyMarker />
                   )}
@@ -1232,7 +1137,6 @@ export default async function BallotPage({
                 </p>}
               </div>
 
-              {/* What this office does; describes the office, never the people running for it. */}
               {(() => {
                 const blurb = officeBlurbs.get(contest.id) ?? null;
                 return blurb ? (
@@ -1287,7 +1191,6 @@ export default async function BallotPage({
 
               <FilingChanges removals={(set.removals ?? []).filter((record) => record.contestId === contest.id)} />
 
-              {/* The certified lineup replaces the filing list. */}
               {lineup ? (
                 <>
                 <ul className="ballot-candidate-grid mt-3.5">
@@ -1307,21 +1210,21 @@ export default async function BallotPage({
                           </>
                         }
                         card={availableCardForNominee(contest.id, nominee.name)}
+                        holder={resolvedHolder(contest.id, `${contest.id}|${nominee.name}`)}
                         links={availableLinksForNominee(contest.id, nominee.name)}
                         derivedBlurb={availableDerivedBlurbFor(`${contest.id}|${nominee.name}`)}
                         nameSlot={
                           <IncumbentName
-                            targetKey={`${contest.id}|${nominee.name}`}
+                            holder={resolvedHolder(contest.id, `${contest.id}|${nominee.name}`)}
                             name={nominee.name}
                             context={
                               centroid && zip
                                 ? { zip, lat: centroid.lat, lng: centroid.lng }
                                 : null
                             }
-                            readerEdge={readerEdge}
                           />
                         }
-                        /* The sections are server components handed across the boundary as children, which is why they are written here rather than inside the pill. */
+
                         battlecardSlot={
                           <BallotBattlecard
                             name={nominee.name}
@@ -1335,23 +1238,18 @@ export default async function BallotPage({
                             officeBlurb={officeBlurbs.get(contest.id) ?? null}
                             federal={isFederalContest(contest)}
                             contestId={contest.id}
-                            contestVoteFor={contest.voteFor}
-                            contestCandidates={lineup.nominees.map((n) => ({
-                              key: `${contest.id}|${n.name}`,
-                              display: n.name,
-                              targetKey: `${contest.id}|${n.name}`,
-                            }))}
+                            resolvedStanding={contestResolutions.get(contest.id) ?? null}
                             context={
                               centroid && zip
                                 ? { zip, lat: centroid.lat, lng: centroid.lng }
                                 : null
                             }
                             authorityAvailability={authorityAvailability}
-                            readerEdge={readerEdge}
+                              readerEdge={readerEdge}
                           />
                         }
                       />
-                      {/* Reader expression, never a recommendation: stored and aggregated, never rendered back, and nothing orders candidates by it. */}
+
                       <ReactionControl
                         targetType="CANDIDATE"
                         targetId={`${contest.id}|${nominee.name}`}
@@ -1361,9 +1259,6 @@ export default async function BallotPage({
                             ? { zip, lat: centroid.lat, lng: centroid.lng }
                             : null
                         }
-                        // Counted from the lineup itself, so a contest
-                        // stops being uncontested the moment a second name
-                        // appears. The server derives the same set.
                         singleCandidateContest={lineup.nominees.length === 1}
                       />
                     </li>
@@ -1373,18 +1268,18 @@ export default async function BallotPage({
                 {!isFederalContest(contest) && (
                   <StateFundingNote note={STATE_FUNDING_NOTE} />
                 )}
-                {/* The private pick, distinct from the reactions above. */}
-                <PickControl
+
+                {contest.voteFor !== null && <PickControl
                   contestId={contest.id}
                   contestTitle={contest.title}
-                  voteFor={contest.voteFor ?? 0}
-                  /* The reaction target for this nominee, through the shared builder so the tally counts exactly these rows. */
+                  voteFor={contest.voteFor}
+
                   options={pickOptionsFor(set, contest)}
-                />
+                />}
                 </>
               ) : (
                 <>
-                  {/* Inline when this note is this contest's alone; a marker when other contests carry the same note. */}
+
                   {readerScopeNotes.get(contest.id) &&
                     (scopeNotes.isShared(contest.id) ? (
                       <p className="mt-1.5 font-mono text-[0.6875rem] text-muted">
@@ -1396,7 +1291,7 @@ export default async function BallotPage({
                         </a>
                       </p>
                     ) : (readerScopeNotes.get(contest.id)?.length ?? 0) > EXTENDED_MECHANICS_CHARS ? (
-                      /* Extended election-mechanics text collapses behind "More info"; the office explainer above stays open. */
+
                       <details className="mt-1.5" data-scope-note-collapsed>
                         <summary className="t-eyebrow cursor-pointer text-muted hover:text-link">
                           More info
@@ -1417,11 +1312,10 @@ export default async function BallotPage({
                         data-candidate-target={cand.id}
                       >
                         <CandidateCard
-                          name={`${cand.givenName} ${surnameDisplayCase(cand.familyName)}`}
+                          name={ballotCandidateDisplayName(cand)}
                           partyLine={
                             <>
-                              {/* Display only; no-affiliation stays gray. */}
-                              {/* A missing party label renders nothing. */}
+
                               {cand.partyLabel !== null && (
                                 <span style={{ color: partyColorVar(cand.partyLabel) }}>
                                   {readerPartyLabel(cand.partyLabel)}
@@ -1439,25 +1333,26 @@ export default async function BallotPage({
                             </>
                           }
                           card={availableCardForCandidacy(cand.id)}
+                          holder={resolvedHolder(contest.id, cand.id)}
                           links={availableLinksForCandidacy(cand.id)}
                           derivedBlurb={availableDerivedBlurbFor(cand.id)}
                           filedSiteUrl={cand.websiteUrl}
+                          filingProvenance={cand.provenance}
                           nameSlot={
                             <IncumbentName
-                              targetKey={cand.id}
-                              name={`${cand.givenName} ${surnameDisplayCase(cand.familyName)}`}
+                              holder={resolvedHolder(contest.id, cand.id)}
+                              name={ballotCandidateDisplayName(cand)}
                               context={
                                 centroid && zip
                                   ? { zip, lat: centroid.lat, lng: centroid.lng }
                                   : null
                               }
-                              readerEdge={readerEdge}
                             />
                           }
-                          /* Both branches carry the same sections in the same order. */
+
                           battlecardSlot={
                             <BallotBattlecard
-                              name={`${cand.givenName} ${surnameDisplayCase(cand.familyName)}`}
+                              name={ballotCandidateDisplayName(cand)}
                               partyLine={readerPartyLabel(cand.partyLabel)}
                               partyLabel={readerPartyLabel(cand.partyLabel)}
                               card={availableCardForCandidacy(cand.id)}
@@ -1468,12 +1363,7 @@ export default async function BallotPage({
                               officeBlurb={officeBlurbs.get(contest.id) ?? null}
                               federal={isFederalContest(contest)}
                               contestId={contest.id}
-                              contestVoteFor={contest.voteFor}
-                              contestCandidates={candidatesOf(set, contest).map((x) => ({
-                                key: x.id,
-                                display: `${x.givenName} ${surnameDisplayCase(x.familyName)}`,
-                                targetKey: x.id,
-                              }))}
+                              resolvedStanding={contestResolutions.get(contest.id) ?? null}
                               context={
                                 centroid && zip
                                   ? { zip, lat: centroid.lat, lng: centroid.lng }
@@ -1484,7 +1374,7 @@ export default async function BallotPage({
                             />
                           }
                         />
-                        {/* Reader expression, never a recommendation. */}
+
                         <ReactionControl
                           targetType="CANDIDATE"
                           targetId={cand.id}
@@ -1494,9 +1384,6 @@ export default async function BallotPage({
                               ? { zip, lat: centroid.lat, lng: centroid.lng }
                               : null
                           }
-                          // The filing list's own count for this
-                          // contest — the same derivation the server makes
-                          // from the same committed file.
                           singleCandidateContest={
                             candidatesOf(set, contest).length === 1
                           }
@@ -1508,14 +1395,14 @@ export default async function BallotPage({
                   {!isFederalContest(contest) && (
                     <StateFundingNote note={STATE_FUNDING_NOTE} />
                   )}
-                  {/* The private pick, distinct from reactions. */}
-                  <PickControl
+
+                  {contest.voteFor !== null && <PickControl
                     contestId={contest.id}
                     contestTitle={contest.title}
-                    voteFor={contest.voteFor ?? 0}
-                    /* Keyed the way this branch keys reactions. */
+                    voteFor={contest.voteFor}
+
                     options={pickOptionsFor(set, contest)}
-                  />
+                  />}
                 </>
               )}
             </Card>
@@ -1524,7 +1411,6 @@ export default async function BallotPage({
       </div>
       )}
 
-      {/* The collapsed source lines, cited once. */}
       {sharedSources.length > 0 && (
         <section className="mt-5 border-t border-[var(--panel-border)] pt-3 lg:max-w-2xl">
           {sharedSources.map((s, i) => (
@@ -1565,7 +1451,6 @@ export default async function BallotPage({
         </section>
       )}
 
-      {/* The canvass caveat, once, under the contests it governs. */}
       {set &&
         matched &&
         candidacyContests.some((c) => lineupForContest(c.id)) && (
@@ -1574,7 +1459,6 @@ export default async function BallotPage({
           </p>
         )}
 
-      {/* Official words verbatim where the authority published them; the plain-language summary labeled as such. Statewide and local groups render separately, and an empty group renders no heading. */}
       {(
         [
           { scope: "STATEWIDE", heading: "Statewide measures", list: statewideMeasures, tier: "state" },
@@ -1584,7 +1468,7 @@ export default async function BallotPage({
         .filter((group) => group.list.length > 0)
         .map((group) => (
         <section className="mt-7" key={group.scope} data-measure-scope={group.scope}>
-          {/* The section header wears the tier's own colour. */}
+
           <h2
             className="t-structure level-heading"
             data-level-heading={group.tier}
@@ -1596,14 +1480,12 @@ export default async function BallotPage({
           {group.list.map((contest) => {
             const analysis = analysisForContest(contest.id);
             const summary = summaryForContest(contest.id, measureRecords);
-            /* The official words held for this contest; null renders nothing. */
+
             const measure = measureFor(contest.id);
             return (
               <Card key={contest.id} attrs={{"data-contest-id": contest.id}} title={contest.title} eyebrow={<LevelTag tier={tierForOffice(contest.title, contest.ocdId)} />} sources={[]}>
               <div>
 
-                {/* The question, verbatim, first. */}
-                {/* The plain-language summary leads, for a local measure as well as a statewide one. */}
                 {summary ? (
                   <div
                     className="mt-2.5 rounded-md bg-[var(--surface,rgba(255,255,255,0.04))] p-3"
@@ -1624,7 +1506,6 @@ export default async function BallotPage({
                   )
                 )}
 
-                {/* Reactions attach to provisions, never to the measure as a whole. Collapsed so the page stays navigable. */}
                 {provisionsForContest(contest.id, measureRecords).length > 0 && (
                   <details className="mt-3.5" data-provisions>
                     <summary className="provisions-summary">
@@ -1643,15 +1524,14 @@ export default async function BallotPage({
                           <p className="t-body font-semibold leading-snug">
                             {provision.label}
                           </p>
-                          {/* The kind names itself in the reader's words. The
-                              enum never renders — a label map or no row. */}
+
                           <p className="t-eyebrow mt-0.5 text-muted">
                             {PROVISION_KIND_LABEL[provision.kind]}
                           </p>
                           <p className="mt-1 text-[0.75rem] leading-relaxed text-paper-dim">
                             {provision.what}
                           </p>
-                          {/* The reaction attaches to the provision, after its explanation. `compact` because a measure carries several. */}
+
                           <div className="mt-1.5">
                             <ReactionControl
                               targetType="MEASURE_PROVISION"
@@ -1671,8 +1551,6 @@ export default async function BallotPage({
                   </details>
                 )}
 
-                {/* A held official statement renders verbatim; a null one says the gap is ours and points at the scope note's document. */}
-                {/* The verbatim ballot text sits in a collapsed disclosure; `<details>` keeps the `data-measure-*` children in the DOM. */}
                 {measure && (
                   <details className="mt-2.5" data-measure-official-text>
                     <summary className="t-eyebrow cursor-pointer text-muted hover:text-link">
@@ -1707,10 +1585,6 @@ export default async function BallotPage({
                 {measure && <CardSourcesContribution id={`measure-text:${contest.id}`} sources={[{ what: "Official measure text", provenance: measure.provenance }]} />}
 
                 {analysis?.text ? (
-                  // The official analysis collapses by
-                  // default — the control names it and its source, expands
-                  // downward on click. The plain-language summary stays open
-                  // above. Verbatim and whole once open — never excerpted.
                   <details className="mt-2.5">
                     <summary className="t-eyebrow cursor-pointer text-muted hover:text-link">
                       Official analysis — {analysis.sourceOrg}
@@ -1721,7 +1595,6 @@ export default async function BallotPage({
                   </details>
                 ) : (
                   analysis?.extractionNote && (
-                    // Extraction failed: say so honestly and keep the link.
                     <p className="mt-2 text-[0.75rem] leading-relaxed text-muted">
                       We retrieved this measure&apos;s official analysis but
                       couldn&apos;t extract its text — read it at the link
@@ -1730,7 +1603,6 @@ export default async function BallotPage({
                   )
                 )}
 
-                {/* Identical reader qualifications share one page note. */}
                 {readerScopeNotes.get(contest.id) &&
                   (scopeNotes.isShared(contest.id) ? (
                     <p className="mt-2 font-mono text-[0.6875rem] text-muted">
@@ -1747,7 +1619,6 @@ export default async function BallotPage({
                     </p>
                   ))}
 
-                {/* The private pick on measures: Yes/No, this device only. */}
                 <PickControl
                   contestId={contest.id}
                   contestTitle={contest.title}
@@ -1765,7 +1636,6 @@ export default async function BallotPage({
         </section>
       ))}
 
-      {/* Each note is a sourced fact about an authority's own publishing state, explaining why an expected contest is not there. */}
       {matched && !matched.contests.some((c) => tierForOcdId(c.ocdId) === "local") && (
         <section
           className="mt-6 rounded-[10px] border border-dashed border-[var(--panel-border)] p-4 lg:max-w-2xl"
@@ -1773,6 +1643,18 @@ export default async function BallotPage({
         >
           <h2 className="t-structure text-paper-dim">County, city and school-board races</h2>
           <p className="mt-2 t-body text-muted">We do not have county, city or school-board races for this ballot yet.</p>
+        </section>
+      )}
+
+      {matched && Boolean(matched.heldContests?.length) && (
+        <section className="mt-6 rounded-[10px] border border-dashed border-[var(--panel-border)] p-4 lg:max-w-2xl" data-ballot-held-contests>
+          <h2 className="t-structure text-paper-dim">Contests we don&apos;t hold yet</h2>
+          <p className="mt-2 t-body text-muted">We&apos;re working on getting complete candidate lists for these contests.</p>
+          <ul className="mt-2 space-y-2 t-body text-paper-dim">
+            {matched.heldContests?.map(contest => <li key={contest.id} data-contest-id={contest.id}>
+              <strong>{contest.title}</strong>: {contest.reason}
+            </li>)}
+          </ul>
         </section>
       )}
 
@@ -1792,7 +1674,7 @@ export default async function BallotPage({
 
       {matched && matched.contests.length > 0 && (
         <>
-          {/* `groupAbsences` merges only where sentence, source, URL and read date all agree, and names every jurisdiction. */}
+
           {groupAbsences(matched.absences).map((absence) => (
             <section
               key={absence.key}
@@ -1817,7 +1699,6 @@ export default async function BallotPage({
             </section>
           ))}
 
-          {/* Every scope note that repeats, once, at the foot, with its count. */}
           {scopeNotes.notes.length > 0 && (
             <div
               id="scope-notes"
@@ -1839,8 +1720,6 @@ export default async function BallotPage({
               ))}
             </div>
           )}
-
-          {/* The page-level disclosure, once, inside the block that renders when contests render. */}
 
         </>
       )}

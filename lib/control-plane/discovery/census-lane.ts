@@ -17,7 +17,7 @@ import { discoveryFieldManualEntries, walkMeetingsDiscoveryNeed, type DiscoveryO
 export const CENSUS_LANE_INTERVAL_MS = 5 * 60_000;
 const CHECK_MS = 12 * 3_600_000;
 const hash = (value: unknown) => createHash("sha256").update(JSON.stringify(value)).digest("hex");
-export type CensusPage = Awaited<ReturnType<DiscoveryOpen>> & { url: string; artifactId: string };
+type CensusPage = Awaited<ReturnType<DiscoveryOpen>> & { url: string; artifactId: string };
 type Repos = Pick<ControlPlaneRepositories, "fieldManual" | "discoveryAttempts">;
 
 export function censusCheckEntry(need: MeetingsDiscoveryNeed, payload: unknown, now: string): FieldManualEntry {
@@ -174,7 +174,7 @@ export async function resolveCensusWebsite(input: { repos: Repos; need: Meetings
   return { ...need, ownWebAddress: null };
 }
 
-export interface CensusStateReport { state: string; checked: number; walked: number; unchanged: number; notDue: number; platforms: Record<string, number>; failures: string[] }
+interface CensusStateReport { state: string; checked: number; walked: number; unchanged: number; notDue: number; platforms: Record<string, number>; failures: string[] }
 export async function runCensusState(input: { repos: Repos; state: string; needs: readonly MeetingsDiscoveryNeed[];
   runtime: DiscoveryRuntime; entries?: readonly FieldManualEntry[]; concurrency?: number; onProgress?: (report: CensusStateReport) => void }): Promise<CensusStateReport> {
   const report: CensusStateReport = { state: input.state, checked: 0, walked: 0, unchanged: 0, notDue: 0, platforms: {}, failures: [] };

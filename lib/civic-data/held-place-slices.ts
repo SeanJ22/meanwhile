@@ -1,4 +1,7 @@
 import { readerQuery } from "./promoted-reader-query.ts";
+import { factReader, statementQuery } from "../facts/db.ts";
+import { withFactRegistry } from "../facts/registry-overlay.ts";
+import type { RegistryRuntimeCarton } from "../registry/runtime-data-plane.ts";
 import type { CivicDataReadResult, CivicDataReadMetadata } from "./read-model.ts";
 import { placeProjectionSourceSql, readPlacePayloadParts } from "./place-payload-slices.ts";
 import type { ReadOnlyQuery } from "../control-plane/admin-view/promoted-slices.ts";
@@ -54,7 +57,6 @@ export async function readPlacePointerSlices<T>(recordClass: CivicDataReadMetada
   if (recordClass === "REGISTRY_RUNTIME_BINDING") {
     value = `jsonb_build_object('registry', jsonb_build_object('divisions', ${array("payload->'registry'->'divisions'", division)},
       'bodies', ${array("payload->'registry'->'bodies'", serves)}),
-      'bodyRosters', ${array("payload->'bodyRosters'", "x->>'bodyId' IN (SELECT b->>'id' FROM jsonb_array_elements(payload->'registry'->'bodies') b WHERE b->>'ocdId'=ANY($3::text[]) OR b->'alsoServesOcdIds' ?| $3::text[])")},
       'statewideExecutives', ${array("payload->'statewideExecutives'", "x->>'stateOcdId'=ANY($3::text[])")},
       'officialCandidacies', jsonb_build_object('rows', ${array("payload->'officialCandidacies'->'rows'", "x->'holder'->'divisions' ?| $3::text[]")}))`;
   } else if (recordClass === "MEETING") {
@@ -79,7 +81,7 @@ export async function readPlacePointerSlices<T>(recordClass: CivicDataReadMetada
   } else if (recordClass === "CANDIDATE_PUBLICATION") {
     value = `jsonb_build_object('documents', ${array("payload->'documents'", "x->>'candidateKey'=ANY($5::text[])")})`;
   } else if (recordClass === "CURATED_READER_RECORD" && scopes.every(scope => scope === "US:candidate-campaign-sites-derived")) {
-    value = `(payload - 'records') || jsonb_build_object('records', ${array("payload->'records'", "x->>'id'=ANY($5::text[]) OR x->>'candidacyId'=ANY($5::text[])")})`;
+    value = `(payload - 'records' - 'portraits') || jsonb_build_object('records', ${array("payload->'records'", "x->>'id'=ANY($5::text[]) OR x->>'candidacyId'=ANY($5::text[])" )}, 'portraits', ${array("payload->'portraits'", "x->>'id'=ANY($5::text[]) OR x->>'candidacyId'=ANY($5::text[])")})`;
   } else if (recordClass === "FEC_FUNDING") {
     value = `(payload - 'candidates') || jsonb_build_object('candidates', ${array("payload->'candidates'", "x->'targetKeys' ?| $5::text[]")})`;
   } else if (recordClass === "STATE_CAMPAIGN_FINANCE") {
@@ -111,5 +113,8 @@ export async function readPlacePointerSlices<T>(recordClass: CivicDataReadMetada
   });
   if (!slices.has(cacheKey) && slices.size >= 64) slices.delete(slices.keys().next().value!);
   slices.set(cacheKey, cached);
-  return result;
+  if (recordClass !== "REGISTRY_RUNTIME_BINDING") return result;
+  const facts = injected ? statementQuery(injected) : factReader();
+  return Promise.all(result.map(async read => read.value === null ? read
+    : { ...read, value: await withFactRegistry(read.value as unknown as RegistryRuntimeCarton, facts) as T }));
 }

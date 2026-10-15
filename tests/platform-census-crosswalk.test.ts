@@ -51,24 +51,25 @@ test("CivicClerk's recorded Mandan commission API uses Morton County's Central c
   const portal = "https://mandannd.portal.civicclerk.com/";
   const route = "https://mandannd.api.civicclerk.com/v1/Events?$top=5";
   const events = fixture("civicclerk-mandan-events.json");
-  const categories = [...new Map<number, string>(JSON.parse(events).value.map((event: { eventCategoryId: number; eventCategoryName: string }) => [event.eventCategoryId, event.eventCategoryName] as const))]
-    .map(([id, categoryName]) => ({ id, categoryName }));
+  const categories = JSON.parse(fixture("civicclerk/mandannd/EventCategories.json")).value.filter((category: { id: number }) => category.id === 26);
   const calendar = new URL("https://mandannd.api.civicclerk.com/v1/Events");
-  calendar.searchParams.set("$filter", "eventCategoryId eq 26");
+  calendar.searchParams.set("$filter", "categoryId eq 26");
+  calendar.searchParams.set("$top", "200");
+  calendar.searchParams.set("$orderby", "id desc");
   const result = await recordedReview({ jurisdictionId: "nd:city:city-of-mandan", ocdId: "ocd-division/country:us/state:nd/place:mandan", stateCode: "ND", countyFips: "38059", home: "https://www.cityofmandan.com/", name: "City of Mandan", govClass: "CITY_OR_TOWN",
     html: `<h1>Mandan City Commission</h1><a href="${portal}">City Commission meetings</a>`, replies: { "https://mandannd.portal.civicclerk.com/robots.txt": ALLOW, [portal]: { status: 200, body: '<h1>City Commission</h1>' }, "https://mandannd.api.civicclerk.com/robots.txt": ALLOW,
       [route]: { status: 200, body: events, contentType: "application/json" },
-      "https://mandannd.api.civicclerk.com/v1/Categories": { status: 200, body: JSON.stringify({ value: categories }), contentType: "application/json" },
+      "https://mandannd.api.civicclerk.com/v1/EventCategories": { status: 200, body: JSON.stringify({ value: categories }), contentType: "application/json" },
       [calendar.href]: { status: 200, body: events, contentType: "application/json" } } });
   const row = result.review.accepted.find(entry => entry.row.kind === "CIVICCLERK" && entry.row.bodyId === result.bodyId)?.row;
   assert.ok(row, JSON.stringify({held:result.review.held,attempt:result.attempt}));
-  assert.deepEqual(row.filter, { bodyMatch: "City Commission", portalBase: "https://mandannd.portal.civicclerk.com" });
+  assert.deepEqual(row.filter, { categoryId: "26", bodyMatch: "City Commission", portalBase: "https://mandannd.portal.civicclerk.com" });
   assert.equal(row.timeZone, "America/Chicago");
   assert.equal(row.evidence.calendar.selected, 15);
   assert.equal(row.route, calendar.href);
   assert.equal(result.review.accepted.filter(entry => entry.row.kind === "CIVICCLERK").length, categories.length);
   assert.equal(crosswalkRowIssue(row), null);
-  assert.equal(derivedAdapterConfig(row).bodyMatch, "City Commission");
+  assert.equal(derivedAdapterConfig(row).categoryId, "26");
 });
 
 test("IQM2's recorded Morris calendar reviews the complete printed county-board label", async () => {

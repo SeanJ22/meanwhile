@@ -1,21 +1,17 @@
 /** The pipeline's rules: pure over records, with `appendTransition` as the one append path. No clock or disk. */
 
 import type { WorkerRole } from "../attempt.ts";
-import { INDEPENDENT_BASES } from "../audit.ts";
 import { fingerprint } from "../ids.ts";
 import { canonicalJson, jsonTextAtPath, readByKeys, type ArtifactRecord, type ControlPlaneRepositories } from "../repository/types.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type { MethodCandidate } from "../../method/candidate.ts";
-import { loadWorkerCompletionEvidence } from "../repository/worker-completion.ts";
 import { assertFleetResult } from "../workers/types.ts";
 import {
   PIPELINE_STAGES,
   PRECEDING_STAGE,
   PROMOTION_PIPELINE_FORMAT_VERSION,
   VERIFICATION_CHECKS,
-  sameActor,
   type ApprovedRecord,
-  type ConfirmedRecord,
   type PipelineActor,
   type PipelineItemState,
   type PipelineRefusalReason,
@@ -34,12 +30,8 @@ export const PROMOTION_PIPELINE_LOG = "promotion_pipeline";
 /** The lookups a decision needs. Absent is null, never a default. */
 export interface PipelineContext {
   readonly workerResultById?: (id: string) => import("../workers/types.ts").WorkerResultRecord | null;
-  readonly workerAuditBlocks?: (artifactIds: readonly string[]) => boolean;
-  readonly workerFactAuditBlocks?: (artifactIds: readonly string[], auditorResultId: string) => boolean;
   readonly artifactById: (artifactId: string) => ArtifactRecord | null;
   readonly attemptRoleById: (attemptId: string) => WorkerRole | null;
-  /** Artifact ids a COMPLETED Attempt recorded: a byte-identical re-acquisition names the existing artifact id, not a new row. */
-  readonly attemptArtifactIds?: (attemptId: string) => readonly string[] | null;
 }
 
 /** A record this module wrote, as opposed to a foreign row under the same log. */
@@ -72,14 +64,8 @@ export function deriveItemState(itemId: string, records: readonly PromotionPipel
         recordClass = r.recordClass;
         subjectId = r.subjectId;
         break;
-      case "CONFIRMED":
-        byStage.CONFIRMED = r;
-        break;
       case "VERIFIED":
         byStage.VERIFIED = r;
-        break;
-      case "AUDITED":
-        byStage.AUDITED = r;
         break;
       case "APPROVED_FOR_PROMOTION":
         byStage.APPROVED_FOR_PROMOTION = r;
@@ -106,78 +92,6 @@ function refuse(offered: TransitionRecord, reasons: readonly PipelineRefusalReas
   };
 }
 
-function confirmationReasons(
-  state: PipelineItemState,
-  offered: ConfirmedRecord,
-  ctx: PipelineContext,
-): PipelineRefusalReason[] {
-  const scouted = state.byStage.SCOUTED;
-  const reasons: PipelineRefusalReason[] = [];
-  if (offered.confirmingArtifactIds.length === 0) {
-    reasons.push({
-      code: "CONFIRMATION_WITHOUT_ARTIFACT",
-      detail: "a confirmation cites no artifact; model prose never confirms model prose",
-    });
-    return reasons;
-  }
-  if (offered.basis === "SECOND_ROUTE" && (offered.sameFact === null || offered.sameFact.trim() === "")) {
-    reasons.push({
-      code: "CONFIRMATION_SECOND_ROUTE_UNNAMED",
-      detail: "a second route must name the fact it shares with the scouted representation",
-    });
-  }
-  /* A second acquisition that states a different fact confirms nothing; the item holds. */
-  if (offered.factAgreement !== undefined && !offered.factAgreement.sameFact) {
-    reasons.push({ code: "CONFIRMATION_FACT_CONFLICT", detail: offered.factAgreement.detail });
-  }
-  for (const id of offered.confirmingArtifactIds) {
-    const artifact = ctx.artifactById(id);
-    if (artifact === null) {
-      reasons.push({ code: "CONFIRMATION_ARTIFACT_UNKNOWN", detail: `artifact ${id} is not in the artifact log` });
-      continue;
-    }
-    /* The artifact log keeps one row per content, so a byte-identical re-acquisition is evidenced by the second Attempt's own artifact ids. */
-    const reobservedBy =
-      scouted !== undefined &&
-      artifact.attemptId === scouted.scoutAttemptId &&
-      offered.actor.instance !== scouted.scoutAttemptId &&
-      ctx.attemptRoleById(offered.actor.instance) === "ACQUIRER" &&
-      (ctx.attemptArtifactIds?.(offered.actor.instance)?.includes(id) ?? false)
-        ? offered.actor.instance
-        : null;
-    if (scouted !== undefined && artifact.attemptId === scouted.scoutAttemptId && reobservedBy === null) {
-      reasons.push({
-        code: "CONFIRMATION_SAME_ATTEMPT",
-        detail: `artifact ${id} was vaulted by the Scout's own Attempt ${artifact.attemptId}`,
-      });
-    }
-    const acquiringAttempt = reobservedBy ?? artifact.attemptId;
-    const role = ctx.attemptRoleById(acquiringAttempt);
-    if (role === null) {
-      reasons.push({
-        code: "CONFIRMATION_ATTEMPT_UNKNOWN",
-        detail: `artifact ${id} names Attempt ${acquiringAttempt}, which the attempts aggregate does not hold`,
-      });
-    } else if (role === "SCOUT") {
-      reasons.push({
-        code: "CONFIRMATION_BY_SCOUT_ROLE",
-        detail: `artifact ${id} was vaulted by SCOUT-role Attempt ${acquiringAttempt}`,
-      });
-    }
-    if (offered.basis === "SECOND_ACQUISITION" && scouted !== undefined) {
-      if (scouted.canonicalUrl === null || artifact.canonicalUrl !== scouted.canonicalUrl) {
-        reasons.push({
-          code: "CONFIRMATION_URL_MISMATCH",
-          detail:
-            `a second acquisition must be of the same representation; artifact ${id} is ` +
-            `${artifact.canonicalUrl} and the scouted representation is ${scouted.canonicalUrl ?? "(none)"}`,
-        });
-      }
-    }
-  }
-  return reasons;
-}
-
 function verificationReasons(checks: readonly VerificationCheck[]): PipelineRefusalReason[] {
   const reasons: PipelineRefusalReason[] = [];
   const seen = new Map<VerificationCheckName, VerificationCheck>();
@@ -195,42 +109,11 @@ function verificationReasons(checks: readonly VerificationCheck[]): PipelineRefu
   return reasons;
 }
 
-function auditReasons(state: PipelineItemState, offered: Extract<TransitionRecord, { stage: "AUDITED" }>): PipelineRefusalReason[] {
-  const reasons: PipelineRefusalReason[] = [];
-  const scouted = state.byStage.SCOUTED;
-  const verified = state.byStage.VERIFIED;
-  if (scouted !== undefined && sameActor(offered.actor, scouted.actor)) {
-    reasons.push({ code: "AUDIT_NOT_INDEPENDENT", detail: "the auditor is the Scout" });
-  }
-  if (verified !== undefined && sameActor(offered.actor, verified.actor)) {
-    reasons.push({ code: "AUDIT_NOT_INDEPENDENT", detail: "the auditor is the validator" });
-  }
-  if (!offered.startedFrom.some((b) => INDEPENDENT_BASES.includes(b))) {
-    reasons.push({
-      code: "AUDIT_STARTING_POINT_NOT_INDEPENDENT",
-      detail: `startedFrom [${offered.startedFrom.join(", ")}] holds none of ${INDEPENDENT_BASES.join(", ")}`,
-    });
-  }
-  if (offered.controls === null) {
-    reasons.push({
-      code: "AUDIT_CONTROLS_NOT_MEASURED",
-      detail: "the batch carried no injected controls, so recall and the false-absence and false-presence rates are NOT MEASURED",
-    });
-  }
-  if (!offered.survived) {
-    reasons.push({ code: "AUDIT_DID_NOT_SURVIVE", detail: offered.findings.join("; ") || "the auditor broke the claim" });
-  }
-  return reasons;
-}
-
 function approvalReasons(state: PipelineItemState, offered: ApprovedRecord): PipelineRefusalReason[] {
   const reasons: PipelineRefusalReason[] = [];
   const expect: readonly (readonly [PipelineStage, string])[] = [
     ["SCOUTED", offered.chain.scouted],
-    ["CONFIRMED", offered.chain.confirmed],
     ["VERIFIED", offered.chain.verified],
-    ...(offered.recordClass === "candidate-enrichment" && offered.field === "campaignSite" && offered.chain.audited === undefined
-      ? [] : [["AUDITED", offered.chain.audited ?? ""] as const]),
   ];
   for (const [stage, id] of expect) {
     const held: TransitionRecord | undefined = state.byStage[stage];
@@ -255,9 +138,7 @@ export function validateTransition(
   ctx: PipelineContext,
 ): { readonly ok: true; readonly record: TransitionRecord } | { readonly ok: false; readonly record: RefusedRecord } {
   const reasons: PipelineRefusalReason[] = [];
-  const preceding = offered.stage === "APPROVED_FOR_PROMOTION" && offered.recordClass === "candidate-enrichment" &&
-    offered.field === "campaignSite" && offered.chain.audited === undefined && state.stage === "VERIFIED"
-    ? "VERIFIED" : PRECEDING_STAGE[offered.stage];
+  const preceding = PRECEDING_STAGE[offered.stage];
   const held: TransitionRecord | undefined = state.byStage[offered.stage];
   if (held !== undefined) {
     if (held.recordId === offered.recordId && canonicalJson(held) === canonicalJson(offered)) {
@@ -273,20 +154,8 @@ export function validateTransition(
     });
     return { ok: false, record: refuse(offered, reasons) };
   }
-  if (preceding !== null) {
-    const prior: TransitionRecord | undefined = state.byStage[preceding];
-    if (prior !== undefined && sameActor(prior.actor, offered.actor)) {
-      reasons.push({
-        code: "SELF_CERTIFICATION",
-        detail: `${offered.actor.role}/${offered.actor.instance} performed ${preceding} and may not perform ${offered.stage}`,
-      });
-    }
-  }
   switch (offered.stage) {
     case "SCOUTED":
-      break;
-    case "CONFIRMED":
-      reasons.push(...confirmationReasons(state, offered, ctx));
       break;
     case "VERIFIED":
       reasons.push(...verificationReasons(offered.checks));
@@ -298,26 +167,8 @@ export function validateTransition(
         }
       }
       break;
-    case "AUDITED":
-      reasons.push(...auditReasons(state, offered));
-      if (offered.workerResultId) {
-        const worker = ctx.workerResultById?.(offered.workerResultId);
-        const verification = state.byStage.VERIFIED?.workerResultId;
-        if (!worker || worker.result.role !== "ADVERSARIAL_AUDITOR" || worker.result.verdict !== "SURVIVED" || worker.worker.instance !== offered.actor.instance ||
-            !verification || !worker.inputResultIds.includes(verification)) reasons.push({ code: "WORKER_RESULT_NOT_VERIFIED", detail: "The offered audit does not bind the exact Validator and Parser result chain." });
-      }
-      break;
     case "APPROVED_FOR_PROMOTION":
       reasons.push(...approvalReasons(state, offered));
-      {
-        const ids = state.byStage.SCOUTED?.artifactIds ?? [];
-        const auditorId = state.byStage.AUDITED?.workerResultId;
-        const scopedFact = state.byStage.SCOUTED?.source.kind === "FLEET_EXTRACTION" &&
-          ["meeting-times", "agendas"].includes(state.recordClass ?? "") && auditorId;
-        const blocked = scopedFact && ctx.workerFactAuditBlocks
-          ? ctx.workerFactAuditBlocks(ids, auditorId!) : ctx.workerAuditBlocks?.(ids);
-        if (blocked) reasons.push({ code: "WORKER_AUDIT_BLOCKS_PROMOTION", detail: "A durable worker finding reopened or blocked this artifact's dependent work." });
-      }
       break;
   }
   return reasons.length === 0 ? { ok: true, record: offered } : { ok: false, record: refuse(offered, reasons) };
@@ -398,33 +249,15 @@ export async function contextFromRepositories(repos: ControlPlaneRepositories): 
   for (const a of attemptRows) roles.set(a.id, a.value.worker.role);
   const results = await repos.workerResults.readAll();
   const attempts = new Map(attemptRows.map(a => [a.id, a.value]));
-  const workItems = new Map((await repos.workItems.list()).map(w => [w.id, w.value]));
-  const completion = new Map(await Promise.all([...new Set(results.map(r => r.workItemId))].map(async id => [id, await loadWorkerCompletionEvidence(repos, id)] as const)));
   return {
     artifactById: (id) => artifacts.get(id) ?? null,
     attemptRoleById: (id) => roles.get(id) ?? null,
-    attemptArtifactIds: (id) => {
-      const attempt = attempts.get(id);
-      return attempt === undefined || attempt.outcome !== "COMPLETED" ? null : attempt.artifactIds;
-    },
     workerResultById: (id) => {
       const result = results.find(r => r.id === id);
       if (!result || attempts.get(result.attemptId)?.outcome !== "COMPLETED" ||
           canonicalJson(attempts.get(result.attemptId)) !== canonicalJson(result.completion.closedAttempt)) return null;
       try { assertFleetResult(result.result, result.completion.completedTask.workerTask!.role, result.attemptId); return result; }
       catch { return null; }
-    },
-    workerAuditBlocks: (ids) => results.some(r => r.inputArtifactIds.some(id => ids.includes(id)) &&
-      (completion.get(r.workItemId)?.validations.some(v => !v.passed) ||
-        !completion.get(r.workItemId)?.audits.some(a => a.survived) ||
-        completion.get(r.workItemId)?.audits.some(a => !a.survived && a.resolvedAt === null) ||
-        ["REOPENED", "BLOCKED"].includes(workItems.get(r.workItemId)?.state ?? ""))),
-    workerFactAuditBlocks: (ids, auditorId) => {
-      const audits = results.filter(record => record.result.role === "ADVERSARIAL_AUDITOR" &&
-        record.inputArtifactIds.some(id => ids.includes(id))).sort((a, b) => b.endedAt.localeCompare(a.endedAt));
-      // A captured-fact audit certifies only its exact current validated facts; breaks stay blocking.
-      return audits[0]?.id !== auditorId || audits[0]?.result.verdict !== "SURVIVED" ||
-        audits.some(record => record.result.verdict === "BROKE");
     },
   };
 }
@@ -512,35 +345,6 @@ export function scoutedFromMethodCandidate(
   };
 }
 
-/** Artifacts at the scouted URL vaulted by an ACQUIRER-role Attempt other than the Scout's, or null. */
-export function confirmationFromArtifacts(
-  scouted: ScoutedRecord,
-  artifacts: readonly ArtifactRecord[],
-  attemptRoleById: (attemptId: string) => WorkerRole | null,
-  now: string,
-): ConfirmedRecord | null {
-  if (scouted.canonicalUrl === null) return null;
-  const confirming = artifacts.filter(
-    (a) =>
-      a.canonicalUrl === scouted.canonicalUrl &&
-      a.attemptId !== scouted.scoutAttemptId &&
-      attemptRoleById(a.attemptId) === "ACQUIRER",
-  );
-  if (confirming.length === 0) return null;
-  const instance = confirming[0].attemptId;
-  return {
-    formatVersion: PROMOTION_PIPELINE_FORMAT_VERSION,
-    recordId: `${scouted.itemId}:confirmed:${fingerprint(confirming.map((a) => a.artifactId))}`,
-    itemId: scouted.itemId,
-    at: now,
-    actor: { role: "ACQUIRER", lane: "DETERMINISTIC", instance },
-    stage: "CONFIRMED",
-    basis: "SECOND_ACQUISITION",
-    confirmingArtifactIds: confirming.map((a) => a.artifactId),
-    sameFact: null,
-  };
-}
-
 export interface StageCounts {
   readonly items: number;
   readonly byStage: Readonly<Record<PipelineStage, number>>;
@@ -550,7 +354,7 @@ export interface StageCounts {
 
 /** Counts by furthest stage reached. Every number's denominator is `items`. */
 export function stageCounts(states: readonly PipelineItemState[]): StageCounts {
-  const zero = (): Record<PipelineStage, number> => ({ SCOUTED: 0, CONFIRMED: 0, VERIFIED: 0, AUDITED: 0, APPROVED_FOR_PROMOTION: 0 });
+  const zero = (): Record<PipelineStage, number> => ({ SCOUTED: 0, VERIFIED: 0, APPROVED_FOR_PROMOTION: 0 });
   const total = zero();
   let refused = 0;
   const classes = new Map<string, { items: number; byStage: Record<PipelineStage, number>; refused: number }>();

@@ -480,14 +480,9 @@ test("the manual registry pointer and official state-roster contracts have no ov
   }
   assert.ok(!registryRuntimeProjectionIssues(seed).some((issue) => issue.startsWith("OFFICIAL_STATE_LEGISLATOR_SUBJECT_AUTHORITY_OVERLAP")));
 
-  const firstRoster = seed.bodyRosters[0]!;
-  const planted = {
-    ...seed,
-    bodyRosters: [{
-      ...firstRoster,
-      members: [{ ...firstRoster.members[0]!, id: "az-legislature:planted-overlap" }, ...firstRoster.members.slice(1)],
-    }, ...seed.bodyRosters.slice(1)],
-  };
+  const [firstRow, ...rows] = seed.officialCandidacies.rows;
+  const planted = { ...seed, officialCandidacies: { ...seed.officialCandidacies,
+    rows: [{ ...firstRow!, holder: { ...firstRow!.holder, id: "az-legislature:planted-overlap" } }, ...rows] } };
   assert.ok(registryRuntimeProjectionIssues(planted).some((issue) =>
     issue === "OFFICIAL_STATE_LEGISLATOR_SUBJECT_AUTHORITY_OVERLAP:az-legislature:planted-overlap"
   ));

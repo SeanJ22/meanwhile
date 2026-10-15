@@ -14,6 +14,48 @@ const HOP_HEADERS = ["connection", "keep-alive", "proxy-authenticate", "proxy-au
 type ProxyEnvironment = Readonly<Record<string, string | undefined>>;
 type PinnedRequest = (target: PublicTarget, request: { method: string; headers: Headers; body: Uint8Array | undefined; signal: AbortSignal }, proxy: URL | null) => Promise<Response>;
 
+type PublicAddress = PublicTarget["addresses"][number];
+const DNS_TTL_MS = 30_000;
+const AGENTS_KEPT = 256;
+const DNS_ANSWERS_KEPT = 4096;
+const agents = new Map<string, http.Agent | https.Agent>();
+
+/** One lookup per host per half minute, shared by concurrent callers; failures are never kept. Every answer is still checked on use. */
+export function sharedLookup(lookup: PublicLookup, now: () => number = Date.now): PublicLookup {
+  const answers = new Map<string, { at: number; addresses: Promise<readonly PublicAddress[]> }>();
+  return host => {
+    const held = answers.get(host);
+    if (held && now() - held.at < DNS_TTL_MS) return held.addresses;
+    const addresses = lookup(host);
+    addresses.catch(() => { if (answers.get(host)?.addresses === addresses) answers.delete(host); });
+    answers.delete(host);
+    answers.set(host, { at: now(), addresses });
+    if (answers.size > DNS_ANSWERS_KEPT) answers.delete(answers.keys().next().value!);
+    return addresses;
+  };
+}
+const sharedSystemLookup = sharedLookup(systemPublicLookup);
+
+/** One keep-alive agent per checked host, port and IP, so a socket is only ever reused for the destination that was checked. */
+function pooledAgent(url: URL, selected: PublicAddress): http.Agent | https.Agent {
+  const key = `${url.protocol}//${url.host}|${selected.address}`;
+  const held = agents.get(key);
+  if (held) { agents.delete(key); agents.set(key, held); return held; }
+  const options = { keepAlive: true, maxSockets: 4, maxFreeSockets: 2, timeout: 10_000 };
+  const agent = url.protocol === "https:" ? new https.Agent(options) : new http.Agent(options);
+  agents.set(key, agent);
+  if (agents.size > AGENTS_KEPT) {
+    const [oldKey, oldest] = agents.entries().next().value!;
+    agents.delete(oldKey);
+    // Idle sockets close now; any still in a request close when it finishes.
+    oldest.maxFreeSockets = 0;
+    for (const sockets of Object.values(oldest.freeSockets)) for (const socket of sockets ?? []) socket.destroy();
+  }
+  return agent;
+}
+
+class StaleSocket extends Error {}
+
 /** Proxy configuration is operator-owned. CONNECT still names the checked destination IP. */
 export function publicProxyFor(url: URL, env: ProxyEnvironment = process.env): URL | null {
   const hostname = url.hostname.replace(/^\[|\]$/g, "").toLowerCase();
@@ -71,6 +113,14 @@ async function proxyTunnel(target: PublicTarget, proxy: URL, signal: AbortSignal
 
 /** Uses core Node sockets; no fallback to global fetch, a global dispatcher or a second DNS lookup. */
 export const requestPinned: PinnedRequest = async (target, input, proxy) => {
+  try { return await sendPinned(target, input, proxy, true); }
+  catch (error) {
+    if (!(error instanceof StaleSocket)) throw error;
+    return sendPinned(target, input, proxy, false);
+  }
+};
+
+async function sendPinned(target: PublicTarget, input: Parameters<PinnedRequest>[1], proxy: URL | null, pooled: boolean): Promise<Response> {
   input.signal.throwIfAborted();
   const url = target.url;
   const host = url.hostname.replace(/^\[|\]$/g, "");
@@ -98,20 +148,25 @@ export const requestPinned: PinnedRequest = async (target, input, proxy) => {
     const headers = new Headers(input.headers);
     for (const name of HOP_HEADERS) headers.delete(name);
     headers.set("host", url.host);
-    headers.set("connection", "close");
+    if (proxy || !pooled) headers.set("connection", "close");
     if (!headers.has("accept-encoding")) headers.set("accept-encoding", "gzip, deflate, br");
     if (input.body) headers.set("content-length", String(input.body.byteLength));
     else headers.delete("content-length");
     const request = (url.protocol === "https:" ? https : http).request({
       protocol: url.protocol, hostname: proxy ? host : selected.address, family: proxy ? undefined : selected.family,
       port: url.port || (url.protocol === "https:" ? 443 : 80), path: `${url.pathname}${url.search}`,
-      method: input.method, headers: Object.fromEntries(headers), agent: agent ?? false, signal: input.signal,
+      method: input.method, headers: Object.fromEntries(headers), agent: agent ?? (pooled ? pooledAgent(url, selected) : false), signal: input.signal,
       ...(url.protocol === "https:" ? {
         servername: host.includes(":") || /^\d+\.\d+\.\d+\.\d+$/.test(host) ? undefined : host,
         checkServerIdentity: (_name: string, certificate: tls.PeerCertificate) => tls.checkServerIdentity(host, certificate),
       } : {}),
     });
-    request.once("error", error => { socket?.destroy(); agent?.destroy(); reject(error); });
+    request.once("error", error => {
+      socket?.destroy(); agent?.destroy();
+      const reset = (error as NodeJS.ErrnoException).code;
+      reject(request.reusedSocket && !input.body && ["GET", "HEAD"].includes(input.method) && (reset === "ECONNRESET" || reset === "EPIPE")
+        ? new StaleSocket() : error);
+    });
     request.once("response", response => {
       let decoded: Readable = response;
       try {
@@ -141,11 +196,11 @@ export const requestPinned: PinnedRequest = async (target, input, proxy) => {
     });
     request.end(input.body);
   });
-};
+}
 
 /** Dependencies are test seams. Production always uses system DNS and the pinned core transport. */
 export function createPublicFetch(dependencies: { lookup?: PublicLookup; request?: PinnedRequest; env?: ProxyEnvironment; timeoutMs?: number } = {}): typeof fetch {
-  const resolve = dependencies.lookup ?? systemPublicLookup;
+  const resolve = dependencies.lookup ?? sharedSystemLookup;
   const send = dependencies.request ?? requestPinned;
   return async (input, init) => {
     assertPublicUrl(input instanceof Request ? input.url : String(input));

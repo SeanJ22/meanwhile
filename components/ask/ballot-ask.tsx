@@ -103,13 +103,13 @@ export function BallotAsk({
       if (body.subject) {
         const resolved = body.subject;
         setPriorSubjects((prior) =>
-          [...prior, { id: resolved.id, name: resolved.name }],
+          [...prior, { id: resolved.id, name: resolved.name }].slice(-4),
         );
         setPriorTurns((prior) =>
-          [...prior, { question, resolvedSubject: resolved.name }],
+          [...prior, { question, resolvedSubject: resolved.name }].slice(-4),
         );
       } else {
-        setPriorTurns((prior) => [...prior, { question, resolvedSubject: null }]);
+        setPriorTurns((prior) => [...prior, { question, resolvedSubject: null }].slice(-4));
       }
     } catch (error) {
       if ((error as Error)?.name === "AbortError") return;

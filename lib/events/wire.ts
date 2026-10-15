@@ -3,7 +3,7 @@
  * `/api/events`. Pure, so both import it. An event carries a type, id, time,
  * the ZIP and district viewed, how the reader arrived at that ZIP, the card
  * and for how long, and for a reaction or pick the choice. No name, no
- * address or typed question; Ask capture uses its own server path.
+ * address, no free text beyond an Ask question, which the store scrubs.
  */
 
 export const CLIENT_EVENT_TYPES = [
@@ -55,20 +55,24 @@ export interface EventBatch {
 }
 
 export const MAX_EVENTS_PER_BATCH = 128;
+export const MAX_BATCH_BYTES = 64 * 1024;
 
 const ID_SHAPE = /^[A-Za-z0-9_.:-]{8,80}$/;
 const KEY_SHAPE = /^[A-Za-z0-9_-]{16,64}$/;
 const ZIP_SHAPE = /^\d{5}$/;
+const MAX_TEXT = 200;
 /** The event store's identifier alphabet (`lib/db/reader-events.ts`): anything else it refuses, so refuse it here with a 400 instead of a retry loop. */
-export const STORE_ID_SHAPE = /^[A-Za-z0-9/_.:#=+-]+$/;
+export const STORE_ID_SHAPE = /^[A-Za-z0-9/_.:#=+-]{1,200}$/;
 /** Make a free-form label (a card title) storable. */
 export function storeSafeId(value: string): string {
-  return value.replace(/[^A-Za-z0-9/_.:#=+-]/g, "_");
+  return value.replace(/[^A-Za-z0-9/_.:#=+-]/g, "_").slice(0, MAX_TEXT);
 }
+const MAX_CANDIDATES = 12;
+const MAX_DURATION_MS = 6 * 60 * 60 * 1000;
 
-function text(value: unknown): string | undefined | null {
+function text(value: unknown, max = MAX_TEXT): string | undefined | null {
   if (value === undefined) return undefined;
-  if (typeof value !== "string" || value.length === 0 || !STORE_ID_SHAPE.test(value)) return null;
+  if (typeof value !== "string" || value.length === 0 || value.length > max || !STORE_ID_SHAPE.test(value)) return null;
   return value;
 }
 
@@ -91,7 +95,7 @@ function readEvent(raw: unknown): ClientEvent | null {
     if (value !== undefined) event[key] = value;
   }
   if (e.durationMs !== undefined) {
-    if (typeof e.durationMs !== "number" || !Number.isFinite(e.durationMs) || e.durationMs < 0) {
+    if (typeof e.durationMs !== "number" || !Number.isFinite(e.durationMs) || e.durationMs < 0 || e.durationMs > MAX_DURATION_MS) {
       return null;
     }
     event.durationMs = Math.round(e.durationMs);
@@ -102,7 +106,7 @@ function readEvent(raw: unknown): ClientEvent | null {
     const contestId = text(pick.contestId);
     if (typeof contestId !== "string") return null;
     if (!PICK_CHOICES.includes(pick.choice as PickChoice)) return null;
-    if (!Array.isArray(pick.candidateIds)) return null;
+    if (!Array.isArray(pick.candidateIds) || pick.candidateIds.length > MAX_CANDIDATES) return null;
     const candidateIds: string[] = [];
     for (const id of pick.candidateIds) {
       const value = text(id);
@@ -120,7 +124,7 @@ export function readEventBatch(raw: unknown): EventBatch | null {
   const b = raw as Record<string, unknown>;
   if (typeof b.batchId !== "string" || !ID_SHAPE.test(b.batchId)) return null;
   if (typeof b.continuityKey !== "string" || !KEY_SHAPE.test(b.continuityKey)) return null;
-  if (!Array.isArray(b.events) || b.events.length === 0) return null;
+  if (!Array.isArray(b.events) || b.events.length === 0 || b.events.length > MAX_EVENTS_PER_BATCH) return null;
   const events: ClientEvent[] = [];
   const seen = new Set<string>();
   for (const item of b.events) {

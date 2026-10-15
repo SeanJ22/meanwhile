@@ -6,7 +6,7 @@ import { EventEmitter } from "node:events";
 import { PassThrough, Readable } from "node:stream";
 import { syncBuiltinESMExports } from "node:module";
 import { assertPublicUrl, EgressRefusal, isPublicAddress, resolvePublicTarget, type PublicLookup } from "../lib/hunt/egress.ts";
-import { createPublicFetch, publicProxyFor, requestPinned } from "../lib/hunt/public-transport.ts";
+import { createPublicFetch, publicProxyFor, requestPinned, sharedLookup } from "../lib/hunt/public-transport.ts";
 import { checkedCurlArguments } from "../lib/hunt/public-curl.ts";
 import { fulfillPublicSourceRoute } from "../lib/hunt/public-browser.ts";
 import { curlGetText } from "../lib/sources/http.ts";
@@ -102,9 +102,55 @@ test("core HTTPS connects to the checked IP while retaining Host and certificate
     assert.equal(await response.text(),"ok"); assert.equal(observed.length,1);
     assert.equal(observed[0].hostname,"93.184.216.34"); assert.equal(observed[0].servername,"county.gov");
     assert.equal((observed[0].headers as Record<string,string>).host,"county.gov");
-    assert.equal(observed[0].agent,false);
+    assert.equal((observed[0].agent as https.Agent).options.keepAlive,true);
+    assert.notEqual((observed[0].headers as Record<string,string>).connection,"close");
     assert.equal(typeof observed[0].checkServerIdentity,"function");
   } finally {t.mock.restoreAll();syncBuiltinESMExports();}
+});
+
+test("sockets are reused only for the same checked host and IP",async t=>{
+  const observed: https.RequestOptions[]=[];
+  t.mock.method(https,"request",(options:https.RequestOptions)=>{observed.push(options);return fakeRequest(request=>request.emit("response",fakeResponse()));});
+  syncBuiltinESMExports();
+  try {
+    const send=async(url:string,address:string)=>{
+      const target=await resolvePublicTarget(url,async()=>[{address,family:4}]);
+      await (await requestPinned(target,{method:"GET",headers:new Headers(),body:undefined,signal:AbortSignal.timeout(1000)},null)).text();
+    };
+    await send("https://pool.gov/a","93.184.216.40"); await send("https://pool.gov/b","93.184.216.40");
+    await send("https://pool.gov/c","93.184.216.41"); await send("https://other.gov/a","93.184.216.40");
+    assert.equal(observed[0].agent,observed[1].agent);
+    assert.notEqual(observed[0].agent,observed[2].agent);
+    assert.notEqual(observed[0].agent,observed[3].agent);
+  } finally {t.mock.restoreAll();syncBuiltinESMExports();}
+});
+
+test("a reused socket the server already closed is retried once on a fresh connection",async t=>{
+  const observed: https.RequestOptions[]=[];
+  t.mock.method(https,"request",(options:https.RequestOptions)=>{
+    observed.push(options);
+    const request=Object.assign(new EventEmitter(),{reusedSocket:observed.length===1,end:()=>queueMicrotask(()=>
+      observed.length===1?request.emit("error",Object.assign(Error("reset"),{code:"ECONNRESET"})):request.emit("response",fakeResponse()))});
+    return request;
+  });
+  syncBuiltinESMExports();
+  try {
+    const target=await resolvePublicTarget("https://retry.gov/document",publicDns);
+    const response=await requestPinned(target,{method:"GET",headers:new Headers(),body:undefined,signal:AbortSignal.timeout(1000)},null);
+    assert.equal(await response.text(),"ok"); assert.equal(observed.length,2);
+    assert.equal(observed[1].agent,false);
+    assert.equal((observed[1].headers as Record<string,string>).connection,"close");
+  } finally {t.mock.restoreAll();syncBuiltinESMExports();}
+});
+
+test("one system lookup per host serves concurrent callers until it expires, and a failure is not kept",async()=>{
+  let calls=0,clock=0,fail=true;
+  const lookup=sharedLookup(async()=>{calls++;if(fail)throw Error("DNS failed");return [{address:"93.184.216.34",family:4 as const}];},()=>clock);
+  await assert.rejects(lookup("dns.gov")); fail=false;
+  await Promise.all([lookup("dns.gov"),lookup("dns.gov"),lookup("dns.gov")]);
+  assert.equal(calls,2);
+  clock=29_000; await lookup("dns.gov"); assert.equal(calls,2);
+  clock=31_000; await lookup("dns.gov"); assert.equal(calls,3);
 });
 
 test("core proxy uses CONNECT to the checked IP, then reuses that tunnel without resolving the source",async t=>{

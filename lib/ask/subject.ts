@@ -14,12 +14,12 @@ export interface AskSubjectRef {
   focused?: boolean;
 }
 
-export function readSubjectRefs(raw: unknown): AskSubjectRef[] {
+export function readSubjectRefs(raw: unknown, max = 60): AskSubjectRef[] {
   if (!Array.isArray(raw)) return [];
   const out: AskSubjectRef[] = [];
-  for (const entry of raw) {
+  for (const entry of raw.slice(0, max)) {
     if (typeof entry === "string") {
-      if (entry.trim()) out.push({ name: entry.trim() });
+      if (entry.trim()) out.push({ name: entry.trim().slice(0, 160) });
       continue;
     }
     if (!entry || typeof entry !== "object") continue;
@@ -28,8 +28,8 @@ export function readSubjectRefs(raw: unknown): AskSubjectRef[] {
     const id = typeof value.id === "string" && value.id.trim() ? value.id.trim() : null;
     if (!name && !id) continue;
     out.push({
-      id,
-      name: name || id || "",
+      id: id ? id.slice(0, 240) : null,
+      name: (name || id || "").slice(0, 160),
       kind: SUBJECT_KINDS.includes(value.kind as AskSubjectKind)
         ? (value.kind as AskSubjectKind)
         : null,

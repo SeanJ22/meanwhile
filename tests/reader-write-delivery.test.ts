@@ -196,10 +196,19 @@ test("Ask, Speak and demand reach their real writers and report storage failure 
   for (const question of ["Who represents 412 elm st phoenix?", "What happened at the 2026 Budget Hearing?", "q".repeat(900)]) {
     const response = await ask(request("/api/ask/grounded", { ...askBody, question }));
     const answer = await response.json();
-    assert.equal(rows.get("ask_interactions")!.at(-1)!.question, question);
+    const kept = question.slice(0, 400);
+    assert.equal(rows.get("ask_interactions")!.at(-1)!.question, kept);
     assert.equal(rows.get("ask_interactions")!.at(-1)!.answer_text, answer.answer);
-    assert.equal((typeof rows.get("search_log")!.at(-1)!.detail === "string" ? JSON.parse(String(rows.get("search_log")!.at(-1)!.detail)) : rows.get("search_log")!.at(-1)!.detail as Record<string, unknown>).question, question);
+    assert.equal((typeof rows.get("search_log")!.at(-1)!.detail === "string" ? JSON.parse(String(rows.get("search_log")!.at(-1)!.detail)) : rows.get("search_log")!.at(-1)!.detail as Record<string, unknown>).question, kept);
   }
+
+  const heldBefore = rows.get("ask_interactions")!.length;
+  assert.equal((await ask(request("/api/ask/grounded", { ...askBody, padding: "x".repeat(17_000) }))).status, 413);
+  assert.equal(rows.get("ask_interactions")!.length, heldBefore, "an oversized request saves nothing");
+  const crowded = [...askBody.ocdIds, ...Array.from({ length: 60 }, (_, index) => `ocd-division/country:us/state:az/place:p${index}`)];
+  await ask(request("/api/ask/grounded", { ...askBody, ocdIds: crowded }));
+  const savedDivisions = rows.get("ask_interactions")!.at(-1)!.ocd_ids;
+  assert.deepEqual(typeof savedDivisions === "string" ? JSON.parse(savedDivisions) : savedDivisions, crowded.slice(0, 40));
 
   const beforeCompositionFailure = rows.get("ask_interactions")!.length;
   const realResponseJson = Response.json;

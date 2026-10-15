@@ -39,7 +39,7 @@ interface Aggregate {
 }
 const digest = (value: string) => createHash("sha256").update(value).digest("hex");
 const stableId = (value: string, label: string) => {
-  if (!/^[a-zA-Z0-9/_.:#=+-]+$/.test(value)) throw new Error(`READER_EVENT_INVALID_${label}`);
+  if (!/^[a-zA-Z0-9/_.:#=+-]{1,200}$/.test(value)) throw new Error(`READER_EVENT_INVALID_${label}`);
   return value;
 };
 export function eventWeek(day: string): string {
@@ -51,7 +51,7 @@ export function eventWeek(day: string): string {
 /** Whitelist fields and preserve Ask words exactly as captured. */
 export function prepareReaderEventBatch(input: ReaderEventBatchInput) {
   stableId(input.batchId, "BATCH_ID");
-  if (!input.continuityKey || input.events.length === 0) throw new Error("READER_EVENT_INVALID_BATCH");
+  if (!input.continuityKey || input.continuityKey.length > 200 || input.events.length === 0 || input.events.length > 128) throw new Error("READER_EVENT_INVALID_BATCH");
   const reader = digest(`reader-event:${input.continuityKey}`);
   const seen = new Set<string>();
   const events = input.events.map(event => {
@@ -61,7 +61,7 @@ export function prepareReaderEventBatch(input: ReaderEventBatchInput) {
     if (!READER_EVENT_TYPES.includes(event.type) || !Number.isFinite(Date.parse(event.occurredAt))) throw new Error("READER_EVENT_INVALID_TIME_OR_TYPE");
     const zip = event.zip == null ? null : /^\d{5}$/.test(event.zip) ? event.zip : (() => { throw new Error("READER_EVENT_INVALID_ZIP"); })();
     const district = event.district == null ? null : stableId(event.district, "DISTRICT");
-    const question = event.question ?? null;
+    const question = event.question == null ? null : event.question.slice(0, 4000);
     const pick = event.ballotPick == null ? null : {
       contestId: stableId(event.ballotPick.contestId, "CONTEST"),
       candidateIds: event.ballotPick.candidateIds.map(id => stableId(id, "CANDIDATE")),

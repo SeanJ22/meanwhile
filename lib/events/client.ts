@@ -133,7 +133,8 @@ export function flushEvents(options: { closing?: boolean } = {}): void {
       keepalive: true,
     })
       .then((response) => {
-        if (response.ok) pending = null;
+        // A refusal that will not change on retry would hold every later event behind it.
+        if (response.ok || (response.status >= 400 && response.status < 500 && response.status !== 429)) pending = null;
       })
       .catch(() => {
         /* Keep the same batch for the next send. */

@@ -368,12 +368,12 @@ export function AskBox({
           [
             ...prior,
             { id: resolved.id, name: resolved.name, kind: subjectKindOf(resolved.kind) },
-          ],
+          ].slice(-4),
         );        setPriorTurns((prior) =>
-          [...prior, { question, resolvedSubject: resolved.name }],
+          [...prior, { question, resolvedSubject: resolved.name }].slice(-4),
         );
       } else {
-        setPriorTurns((prior) => [...prior, { question, resolvedSubject: null }]);
+        setPriorTurns((prior) => [...prior, { question, resolvedSubject: null }].slice(-4));
       }
       /* The classifier runs only after the matcher refused and the grounded engine bound nothing. */
       if (result.answer.kind !== "ROUTED" && !answerSaysSomething(groundedAnswer)) {

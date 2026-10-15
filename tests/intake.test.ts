@@ -79,6 +79,7 @@ function reactionRequest(overrides: {
 function logRequest(overrides: {
   origin?: string | null;
   ip?: string;
+  ocdIds?: string[];
   detail?: Record<string, unknown>;
   body?: string;
 }): Request {
@@ -96,7 +97,7 @@ function logRequest(overrides: {
       overrides.body ??
       JSON.stringify({
         eventType: "SEARCH",
-        ocdIds: [],
+        ocdIds: overrides.ocdIds ?? [],
         detail: overrides.detail,
       }),
   });
@@ -349,12 +350,18 @@ test("log intake: an over-cap detail string is refused — the server no longer 
   assert.match(body.error, /cap/);
 });
 
-test("log intake: a long malformed body is refused as invalid JSON", async () => {
+test("log intake: an oversized body is refused outright", async () => {
   const response = await postLog(
     logRequest({ ip: "203.0.113.31", body: "x".repeat(5000) }),
   );
-  assert.equal(response.status, 400);
-  assert.deepEqual(await response.json(), { error: "body must be JSON" });
+  assert.equal(response.status, 413);
+});
+
+test("log intake: too many divisions or detail keys are refused", async () => {
+  const ocdIds = Array.from({ length: 41 }, (_, index) => `ocd-division/country:us/state:az/place:p${index}`);
+  assert.equal((await postLog(logRequest({ ip: "203.0.113.34", ocdIds }))).status, 400);
+  const detail = Object.fromEntries(Array.from({ length: 21 }, (_, index) => [`key${index}`, "v"]));
+  assert.equal((await postLog(logRequest({ ip: "203.0.113.35", detail }))).status, 400);
 });
 
 test("log intake: cross-origin submission is refused — text cannot be pumped in from scripts that never loaded the site", async () => {

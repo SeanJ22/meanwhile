@@ -6,6 +6,7 @@ import {
   isValidEventType,
   logSearchEvent,
 } from "@/lib/db/search-log";
+import { ASK_QUESTION_MAX_CHARS } from "@/lib/db/ask-signal";
 import { ripcordPulled } from "@/lib/ripcords";
 import {
   intakeLimits,
@@ -25,6 +26,11 @@ import { divisionsAt } from "@/lib/registry/server";
 
 export const runtime = "nodejs";
 
+const MAX_BODY_BYTES = 4096;
+const MAX_OCD_IDS = 40;
+const MAX_DETAIL_KEYS = 20;
+const MAX_DETAIL_KEY_CHARS = 64;
+
 let ipLimiter: SlidingWindowLimiter | null = null;
 function getIpLimiter() {
   ipLimiter ??= new SlidingWindowLimiter(
@@ -40,7 +46,13 @@ async function postWithSettings(request: Request) {
     return Response.json({ error: "intake is closed" }, { status: 503 });
   }
 
+  if (Number(request.headers.get("content-length")) > MAX_BODY_BYTES) {
+    return Response.json({ error: "payload too large" }, { status: 413 });
+  }
   const raw = await request.text();
+  if (raw.length > MAX_BODY_BYTES) {
+    return Response.json({ error: "payload too large" }, { status: 413 });
+  }
 
   let body: unknown;
   try {
@@ -79,9 +91,10 @@ async function postWithSettings(request: Request) {
   }
   if (
     !Array.isArray(event.ocdIds) ||
-    event.ocdIds.some((v) => typeof v !== "string")
+    event.ocdIds.length > MAX_OCD_IDS ||
+    event.ocdIds.some((v) => typeof v !== "string" || v.length > 200)
   ) {
-    return Response.json({ error: "ocdIds must be an array of strings" }, { status: 400 });
+    return Response.json({ error: "ocdIds must be a short array of strings" }, { status: 400 });
   }
   if (
     event.approximateLocation !== undefined &&
@@ -97,11 +110,15 @@ async function postWithSettings(request: Request) {
     return Response.json({ error: "continuityKey must be a string" }, { status: 400 });
   }
   if (event.detail) {
-    // Preserve Sean's configured detail limit; Ask questions retain every word.
+    // Ask questions keep their words up to the Ask limit; other values use the configured detail limit.
     const entries = Object.entries(event.detail as Record<string, unknown>);
     const maxChars = intakeLimits().logDetailValueMaxChars;
+    if (entries.length > MAX_DETAIL_KEYS) {
+      return Response.json({ error: "detail carries too many keys" }, { status: 400 });
+    }
     for (const [key, value] of entries) {
-      if (typeof value === "string" && value.length > maxChars && !(event.eventType === "QUESTION_ASKED" && key === "question")) {
+      const cap = event.eventType === "QUESTION_ASKED" && key === "question" ? ASK_QUESTION_MAX_CHARS : maxChars;
+      if (key.length > MAX_DETAIL_KEY_CHARS || (typeof value === "string" && value.length > cap)) {
         return Response.json(
           { error: "detail strings exceed the server cap" },
           { status: 400 },

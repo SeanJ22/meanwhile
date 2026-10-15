@@ -219,7 +219,7 @@ async function ask(question: string, state: keyof typeof divisions = "AZ", extra
   assert.equal(response.status, 200);
   const body = await response.json() as AskAnswerPayload;
   /* Refusals carry their displayed text too; factual answers still come only from held records. */
-  if (body.answer !== null && body.mode !== "UNRESOLVED") {
+  if (body.answer !== null && body.mode !== "UNRESOLVED" && body.mode !== "CLARIFY") {
     assert.equal(body.mode, "GROUNDED_COMPOSED", "no general-model knowledge can supply the factual answer");
   }
   assert.equal(body.trace.synthesis.ran, false, "neither a held answer nor a refusal is written by a model");

@@ -98,13 +98,16 @@ export interface AskInteractionRow {
   runId: string | null;
 }
 
-/** A five-digit ZIP or a place label with no digits; anything else is stored as null. */
+export const ASK_QUESTION_MAX_CHARS = 400;
+export const ASK_ANSWER_MAX_CHARS = 4000;
+
+/** A five-digit ZIP or a short place label with no digits; anything else is stored as null. */
 export function normalizeApproximateLocation(raw: string | null): string | null {
   if (!raw) return null;
   const value = raw.trim();
   if (!value) return null;
   if (/^\d{5}$/.test(value)) return value;
-  if (/^[A-Za-z][A-Za-z\s.,'’-]*$/.test(value)) return value;
+  if (value.length <= 60 && /^[A-Za-z][A-Za-z\s.,'’-]*$/.test(value)) return value;
   return null;
 }
 
@@ -123,8 +126,8 @@ export function askCoverageStamp(ocdIds: readonly string[]): {
 export function prepareAskInteraction(input: AskInteractionInput): AskInteractionRow {
   return {
     occurredAt: input.occurredAt,
-    question: input.question,
-    answerText: input.answerText,
+    question: input.question.slice(0, ASK_QUESTION_MAX_CHARS),
+    answerText: input.answerText?.slice(0, ASK_ANSWER_MAX_CHARS) ?? null,
     selfDisclosure: [],
     intent: input.intent,
     temporalKind: input.temporalKind,

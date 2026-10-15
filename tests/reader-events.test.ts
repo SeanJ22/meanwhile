@@ -15,10 +15,12 @@ test("history preserves exact event time, card context and Ask words and rolls c
   assert.equal(eventWeek("2026-09-28"), "2026-09-28");
   assert.ok(!prepared.json.includes(batch.continuityKey));
   assert.equal(prepared.body.events[0]!.question, batch.events[0]!.question);
-  for (const question of ["Who represents 412 elm st phoenix?", "What happened at the 2026 Budget Hearing?", "q".repeat(900), "q".repeat(5000)]) {
+  for (const question of ["Who represents 412 elm st phoenix?", "What happened at the 2026 Budget Hearing?", "q".repeat(900), "q".repeat(4000)]) {
     const full = prepareReaderEventBatch({ ...batch, events: [{ ...batch.events[0]!, question }] });
     assert.equal(full.body.events[0]!.question, question);
   }
+  const past = prepareReaderEventBatch({ ...batch, events: [{ ...batch.events[0]!, question: "q".repeat(5000) }] });
+  assert.equal(past.body.events[0]!.question, "q".repeat(4000));
   const day = prepared.aggregates.find(row => row.period === "DAY" && row.zip === "85635" && row.district === "" && row.topic === "water" && row.type === "*");
   assert.equal(day?.events, 2);
   assert.equal(day?.start, "2026-09-28");

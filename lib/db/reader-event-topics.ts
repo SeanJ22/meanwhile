@@ -49,7 +49,7 @@ function blobTopicCache(): ReaderTopicCache {
 export async function classifyReaderEventTopic(question: string, options: {
   cache?: ReaderTopicCache; fetchImpl?: typeof fetch; recordCost?: AskCostWriter;
 } = {}): Promise<string> {
-  const text = question.trim();
+  const text = question.slice(0, 4000).trim();
   if (!text) return "free-form";
   const direct = readerTopicInCode(text);
   if (direct) return direct;

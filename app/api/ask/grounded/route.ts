@@ -204,6 +204,23 @@ export const runtime = "nodejs";
 
 /** Logs the resolved model and effort once at startup, so an override is visible in the deployment log. Configuration only, never request content. */
 
+const MAX_BODY_BYTES = 16384;
+const MAX_QUESTION_CHARS = 400;
+const MAX_OCD_IDS = 40;
+const MAX_PRIOR_SUBJECTS = 8;
+const MAX_PRIOR_TURNS = 4;
+const MAX_ACTIVE_SUBJECTS = 6;
+
+/** The request text, or null when it is larger than any real question needs. */
+async function readBoundedBody(request: Request): Promise<string | null> {
+  if (Number(request.headers.get("content-length")) > MAX_BODY_BYTES) return null;
+  const raw = await request.text();
+  return raw.length > MAX_BODY_BYTES ? null : raw;
+}
+
+const readOcdIds = (raw: unknown): string[] =>
+  Array.isArray(raw) ? raw.filter((v): v is string => typeof v === "string").slice(0, MAX_OCD_IDS) : [];
+
 let ipLimiter: SlidingWindowLimiter | null = null;
 function getIpLimiter() {
   ipLimiter ??= new SlidingWindowLimiter(intakeLimits().logEventsPerIpPerMinute, 60_000);
@@ -418,14 +435,14 @@ export async function POST(request: Request) {
 /** A valid question remains demand even when answering fails before capture. */
 async function captureUnanswered(request: Request): Promise<AskSaveStatus | null> {
   let body: Record<string, unknown>;
-  try { body = await request.json(); } catch { return null; }
+  try { body = JSON.parse(await readBoundedBody(request) ?? ""); } catch { return null; }
   if (typeof body.question !== "string" || !body.question.trim()) return null;
-  return captureDelivered({ request, question: body.question, interpretation: unavailableInterpretation(),
+  return captureDelivered({ request, question: body.question.slice(0, MAX_QUESTION_CHARS), interpretation: unavailableInterpretation(),
     resolutionState: "NONE", mode: "TRANSPORT_FAILED", subjectIds: [], answer: null,
     answerModel: null, validationPassed: null, records: [], gaps: [],
     surface: body.surface === "MAP" || body.surface === "BALLOT" ? body.surface : "UNKNOWN",
     approximateLocation: typeof body.approximateLocation === "string" ? body.approximateLocation : null,
-    ocdIds: Array.isArray(body.ocdIds) ? body.ocdIds.filter((id): id is string => typeof id === "string") : [],
+    ocdIds: readOcdIds(body.ocdIds),
     residency: stampResidency(readLocationOrigin(body.locationOrigin)),
     continuityKey: typeof body.continuityKey === "string" ? body.continuityKey : "" });
 }
@@ -446,7 +463,8 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
     return Response.json(offAnswer("ripcord"), { status: 200 });
   }
 
-  const raw = await request.text();
+  const raw = await readBoundedBody(request);
+  if (raw === null) return Response.json({ error: "payload too large" }, { status: 413 });
 
   if (!ripcordPulled("ripcord.rateLimits")) {
     if (!isSameOriginSubmission(request)) {
@@ -479,11 +497,10 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
   if (typeof body.question !== "string" || body.question.trim().length === 0) {
     return Response.json({ error: "question is required" }, { status: 400 });
   }
-  const question = body.question;
+  const question = body.question.slice(0, MAX_QUESTION_CHARS);
   const ballotZip = typeof body.approximateLocation === "string" && /^\d{5}$/.test(body.approximateLocation) ? body.approximateLocation : undefined;
-  const ocdIds = Array.isArray(body.ocdIds)
-    ? body.ocdIds.filter((v): v is string => typeof v === "string")
-    : [];
+  const ocdIds = readOcdIds(body.ocdIds);
+  const priorSubjectRefs = readSubjectRefs(body.priorSubjects, MAX_PRIOR_SUBJECTS);
 
   // State-roll identity is established before any state pointer opens. Only
   // the state(s) named by the reader's divisions or exact source-namespaced
@@ -496,7 +513,7 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
     const target = officialStateRollCallTargetByScope(`US-${state.toUpperCase()}`);
     if (target && !isRetiredStateRollCallScope(target.jurisdiction)) stateVoteScopes.add(target.jurisdiction);
   }
-  for (const ref of [...readSubjectRefs(body.activeSubjects), ...readSubjectRefs(body.priorSubjects)]) {
+  for (const ref of [...readSubjectRefs(body.activeSubjects), ...priorSubjectRefs]) {
     if (!ref.id) continue;
     const scope = officialStateVoteScopeForOfficeholderId(ref.id);
     if (scope && !isRetiredStateRollCallScope(scope)) stateVoteScopes.add(scope);
@@ -525,7 +542,7 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
   const leanAsk = Boolean(officialsAsk || areaMeetingsAsk);
   const ballotOnlyHint = !topicRoute && !leanAsk && ocdIds.length > 0 && ballotQuestionHint(question) &&
     readSubjectRefs(body.activeSubjects).every(ref => !ref.focused) &&
-    readSubjectRefs(body.priorSubjects).length === 0 &&
+    priorSubjectRefs.length === 0 &&
     (!Array.isArray(body.priorTurns) || body.priorTurns.length === 0);
   // A shape is only a scheduling hint here. The complete subject inventory
   // still loads, and lexicalReading below must prove the body binding before
@@ -740,7 +757,7 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
     body.surface === "BALLOT" || body.surface === "MAP" ? body.surface : "UNKNOWN";
 
   /* Bodies resolve through the canonical registry, so a reader binds to one government rather than a shared geography. */
-  const explicitBodyIds = new Set([...readSubjectRefs(body.activeSubjects), ...readSubjectRefs(body.priorSubjects)]
+  const explicitBodyIds = new Set([...readSubjectRefs(body.activeSubjects), ...priorSubjectRefs]
     .filter((ref) => ref.kind === "BODY").flatMap((ref) => ref.id ? [ref.id] : []));
   const governmentListings = await readerGovernmentListings(question, ocdIds, [...explicitBodyIds]).catch(() => ({ records: [], unavailableStates: [] }));
   const listedGovernments = governmentListings.records.map(governmentListingEntity);
@@ -765,7 +782,7 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
       (probe.basis === "WHOLE_QUESTION" || probe.basis === "READER_WORDS");
     areaTopicRoute = !deterministicTopicRoute && probe.binding.kind === "NONE" && ocdIds.length > 0 &&
       readSubjectRefs(body.activeSubjects).every((ref) => !ref.focused) &&
-      readSubjectRefs(body.priorSubjects).length === 0 &&
+      priorSubjectRefs.length === 0 &&
       (!Array.isArray(body.priorTurns) || body.priorTurns.length === 0) &&
       !/\b(?:they|them|their|it|its|he|she|his|her|this|that|those)\b/i.test(question);
     // The reader's own words match several bodies (a township's
@@ -780,7 +797,7 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
   const officeholders = await readerOfficeholders(ocdIds, scopedBodies.map((body) => body.bodyId));
   let namedPeople = 0;
   try {
-    const explicitIds = [...readSubjectRefs(body.activeSubjects), ...readSubjectRefs(body.priorSubjects)]
+    const explicitIds = [...readSubjectRefs(body.activeSubjects), ...priorSubjectRefs]
       .flatMap((ref) => ref.id ? [ref.id] : []);
     const named = await namedOfficeholders(question, explicitIds, ocdIds);
     namedPeople = named.length;
@@ -796,7 +813,7 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
     trace.sourcesLoaded = "ALL";
   }
   const people = personEntities(officeholders.seats);
-  const preferredOfficialIds = [...readSubjectRefs(body.activeSubjects), ...readSubjectRefs(body.priorSubjects)].flatMap((ref) => ref.id ? [ref.id] : []);
+  const preferredOfficialIds = [...readSubjectRefs(body.activeSubjects), ...priorSubjectRefs].flatMap((ref) => ref.id ? [ref.id] : []);
   const officialAliases = canonicalOfficialAliases(people.map((person) => person.id), preferredOfficialIds);
 
   /* Loaded from the reader's divisions, not from what the client says is on screen; the same set `app/ballot/page.tsx` renders from. */
@@ -897,7 +914,7 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
    */
   const canonicalReference = (ref: AskSubjectRef): AskSubjectRef => ({ ...ref, id: ref.id ? filingToBallot.get(ref.id) ?? officialToBallot.get(ref.id) ?? officialAliases.get(ref.id) ?? ref.id : ref.id });
   const activeSubjects: AskSubjectRef[] = readSubjectRefs(body.activeSubjects).map(canonicalReference);
-  const priorSubjects: AskSubjectRef[] = readSubjectRefs(body.priorSubjects).map(canonicalReference);
+  const priorSubjects: AskSubjectRef[] = priorSubjectRefs.map(canonicalReference);
 
   /* "What is on my ballot?" and "Who is running for state senate in my district?" are answered from the contests the reader's divisions reach, only when the composition can be made (`lib/ask/ballot-summary.ts`). */
   const ballotShape = !topicRoute && !leanAsk && ballot.set ? ballotQuestionShape(question, ballot.contests) : null;
@@ -967,9 +984,9 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
       typeof body.approximateLocation === "string" ? body.approximateLocation : null,
     surface,
     priorTurns: Array.isArray(body.priorTurns)
-      ? (body.priorTurns as { question: string; resolvedSubject: string | null }[])
+      ? (body.priorTurns as { question: string; resolvedSubject: string | null }[]).slice(-MAX_PRIOR_TURNS)
       : [],
-    activeSubjects: activeSubjects.map((s) => s.name),
+    activeSubjects: activeSubjects.map((s) => s.name).slice(0, MAX_ACTIVE_SUBJECTS),
   };
   const unheldBody = !topicRoute && !leanAsk && !ballotAsk ? unheldNamedBodyQuestion(question, namedBodies) : null;
   const modelFreeTopicRoute = deterministicTopicRoute || areaTopicRoute || namedBodyTopicRoute || leanAsk || Boolean(ballotAsk) || Boolean(unheldBody);

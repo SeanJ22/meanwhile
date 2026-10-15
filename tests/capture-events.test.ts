@@ -52,6 +52,7 @@ test("S2.4 events: a malformed batch is refused whole, never partly accepted", (
     batch([event(1), { ...event(2), name: undefined, id: "x" }]),
     { ...batch([event(1)]), continuityKey: "short" },
     { ...batch([event(1)]), batchId: "!!" },
+    batch(Array.from({ length: MAX_EVENTS_PER_BATCH + 1 }, (_, i) => event(i))),
   ];
   for (const candidate of bad) assert.equal(readEventBatch(candidate), null, JSON.stringify(candidate)?.slice(0, 80));
 });
@@ -119,20 +120,43 @@ test("S2.4 events: an id the event store would refuse is refused here, and card 
   assert.equal(readEventBatch(batch([event(1, { cardId: "POPUP:official:Jane Roe" })])), null);
   assert.equal(storeSafeId("POPUP:official:Jane Roe"), "POPUP:official:Jane_Roe");
   assert.ok(readEventBatch(batch([event(1, { cardId: storeSafeId("POPUP:official:Jane Roe") })])));
-  assert.equal(storeSafeId("x".repeat(500)), "x".repeat(500));
+  assert.equal(storeSafeId("x".repeat(500)).length, 200);
 });
 
-test("events retain all candidates, long card ids, long visits and batches beyond the transport split size", () => {
-  const cardId = "OFFICIAL:" + "a".repeat(1000);
-  const candidateIds = Array.from({ length: 20 }, (_, index) => `candidate:${index}`);
-  const events = Array.from({ length: MAX_EVENTS_PER_BATCH + 1 }, (_, index) => event(index));
-  events[0] = event(0, { cardId, durationMs: 7 * 60 * 60 * 1000, ballotPick: { contestId: "contest", candidateIds, choice: "PICKED" } });
-  const parsed = readEventBatch(batch(events));
-  assert.ok(parsed);
-  assert.equal(parsed.events.length, events.length);
-  assert.equal(parsed.events[0].cardId, cardId);
-  assert.deepEqual(parsed.events[0].ballotPick?.candidateIds, candidateIds);
-  assert.equal(parsed.events[0].durationMs, events[0].durationMs);
+test("events past the store's shape limits are refused whole", () => {
+  const pick = (candidateIds: string[]) => event(0, { ballotPick: { contestId: "contest", candidateIds, choice: "PICKED" } });
+  assert.ok(readEventBatch(batch([pick(Array.from({ length: 12 }, (_, index) => `candidate:${index}`))])));
+  for (const bad of [event(0, { cardId: "OFFICIAL:" + "a".repeat(200) }), event(0, { durationMs: 7 * 60 * 60 * 1000 }),
+    pick(Array.from({ length: 13 }, (_, index) => `candidate:${index}`))]) assert.equal(readEventBatch(batch([bad])), null);
+});
+
+test("a batch the server refuses outright is dropped so later events are not held behind it", async () => {
+  const sent: { batchId: string }[] = [];
+  let status = 413;
+  const store = new Map<string, string>();
+  const g = globalThis as unknown as Record<string, unknown>;
+  g.window = {
+    addEventListener() {},
+    localStorage: { getItem: (k: string) => store.get(k) ?? null, setItem: (k: string, v: string) => void store.set(k, v) },
+  };
+  g.document = { addEventListener() {}, removeEventListener() {}, visibilityState: "visible" };
+  Object.defineProperty(globalThis, "navigator", { value: {}, configurable: true, writable: true });
+  g.fetch = async (_url: string, init: { body: string }) => {
+    sent.push(JSON.parse(init.body));
+    return { ok: status < 300, status };
+  };
+  const { captureEvent, flushEvents, resetEventClientForTests } = await import("../lib/events/client.ts");
+  resetEventClientForTests();
+  captureEvent({ type: "ZIP_VIEW", zip: "85701" });
+  flushEvents();
+  await new Promise((r) => setTimeout(r, 5));
+  status = 204;
+  captureEvent({ type: "ZIP_VIEW", zip: "85702" });
+  flushEvents();
+  await new Promise((r) => setTimeout(r, 5));
+  assert.equal(sent.length, 2);
+  assert.notEqual(sent[1].batchId, sent[0].batchId);
+  resetEventClientForTests();
 });
 
 test("a stalled send retains every queued reader event", async () => {

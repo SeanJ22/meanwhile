@@ -244,19 +244,23 @@ export interface EvidenceProvenance {
   retrievedTo: string | null;
 }
 
+/** How many references one row may carry. An audit trail, not an archive. */
+export const MAX_PROVENANCE_REFS = 40;
+export const MAX_PROVENANCE_REF_CHARS = 240;
+
 export function evidenceProvenance(records: readonly EvidenceRecord[]): EvidenceProvenance {
   const recordRefs: string[] = [];
   const sourceUrls: string[] = [];
   const sourceOrgs: string[] = [];
   const stamps: string[] = [];
 
-  for (const record of records) {
-    recordRefs.push(`${record.kind}:${record.id}`);
+  for (const record of records.slice(0, MAX_PROVENANCE_REFS)) {
+    recordRefs.push(`${record.kind}:${record.id}`.slice(0, MAX_PROVENANCE_REF_CHARS));
     if (record.sourceUrl && !sourceUrls.includes(record.sourceUrl)) {
-      sourceUrls.push(record.sourceUrl);
+      sourceUrls.push(record.sourceUrl.slice(0, MAX_PROVENANCE_REF_CHARS));
     }
     if (record.sourceOrg && !sourceOrgs.includes(record.sourceOrg)) {
-      sourceOrgs.push(record.sourceOrg);
+      sourceOrgs.push(record.sourceOrg.slice(0, MAX_PROVENANCE_REF_CHARS));
     }
     if (record.retrievedAt) stamps.push(record.retrievedAt);
   }

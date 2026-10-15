@@ -3,18 +3,23 @@
 lane: platform-primegov
 owner: platform-primegov
 writer: the platform-primegov lane
-check: fold-conflict
-ready: no step ids unknown
-river: dc5cddd3834ac04588782f84b6becc81fe6a5e25
-at: 2026-10-14T17:07:53Z
+check: cleanliness
+ready: R3-PRIMEGOV 7ed33b50d2530350bbf8dabb7330160f68e80bb4
+river: be06573dcbd3a61b776ddab90e6f20519d3eefbf
+at: 2026-10-15T14:32:19Z
 state: returned
-fix_subject: fix:ff818811
-fix: River · stream/platform-primegov — fold-conflict failed for platform-primegov: platform-primegov READY 954f2c405 conflicts with river dc5cddd3834a (checked 2026-10-14 Eastern) in 13 files. Eleven are additive registry lists or branches (PRIMEGOV beside NOVUSAGENDA/ESCRIBE: derived-door-kinds.ts, meeting-body-crosswalk
+fix_subject: fix:2bf3634e
+fix: River · stream/platform-primegov — cleanliness failed for platform-primegov: Cleanliness findings on R3-PRIMEGOV (7ed33b50d, folded as 95c230727). Fix in your next READY:
 
 ## Failure
 
 ```
-platform-primegov READY 954f2c405 conflicts with river dc5cddd3834a (checked 2026-10-14 Eastern) in 13 files. Eleven are additive registry lists or branches (PRIMEGOV beside NOVUSAGENDA/ESCRIBE: derived-door-kinds.ts, meeting-body-crosswalk.ts, meeting-partitions.ts, derived-wiring.ts, derived-wiring-reading.ts, meetings-discovery-executor.ts imports, meetings-recipes.ts, meetings-site-discovery.ts, registry/source-wiring.ts, registry/types.ts, sources/composite/wiring.ts) and River will resolve those on the next fold. Two are real logic conflicts, named here: (1) lib/control-plane/discovery/auto-crosswalk.ts, the governing-body proposal near 'const listed = [...named.get(governing[0]!)!.spellings][0]': river proposes spellings: [listed], this lane's own commit proposes the deduplicated observedSpellings list; pick one rule and delete the other. (2) lib/sources/known-release.ts, the DurableEvidenceStore vault path: river joins the segments 'data', 'control-plane', 'vault'; this lane writes the literal 'data/control-plane/vault'; keep one and delete the other comment. Merge river into stream/platform-primegov, resolve those two, and mark READY again.
+Cleanliness findings on R3-PRIMEGOV (7ed33b50d, folded as 95c230727). Fix in your next READY:
+Exports nothing outside their own file imports (unexport; tests count only for the last):
+   lib/sources/primegov/index.ts:15 PrimeGovDocument
+   lib/sources/primegov/index.ts:31 PrimeGovMeeting
+   lib/sources/primegov/index.ts:45 PrimeGovRaw
+   lib/sources/primegov/index.ts:90 primeGovDocumentUrl
 ```
 
 ## Repair

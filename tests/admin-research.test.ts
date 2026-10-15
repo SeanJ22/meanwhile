@@ -611,11 +611,11 @@ test("ADM-48: a Scout row carries the record class, the route, the refusals and 
   assert.equal(row.reason, "no deterministic route opens this representation");
   const refused = buildResearchView(
     healthyInput({
-      results: heldOut({ total: 1, latest: [scoutResult({ refusal: [{ code: "SCOUT_EARLY_ABSENCE", detail: "d" }] })] }),
+      results: heldOut({ total: 1, latest: [scoutResult({ refusal: [{ code: "SCOUT_TRANSPORT_FAILED", detail: "d" }] })] }),
     }),
   );
   assert.ok(refused.results.held);
-  if (refused.results.held) assert.deepEqual(refused.results.value.rows[0].refusalCodes, ["SCOUT_EARLY_ABSENCE"]);
+  if (refused.results.held) assert.deepEqual(refused.results.value.rows[0].refusalCodes, ["SCOUT_TRANSPORT_FAILED"]);
 });
 
 /* ================================================================== *

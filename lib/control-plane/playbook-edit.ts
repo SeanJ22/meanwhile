@@ -4,7 +4,7 @@ import { fieldManualEntryId, newFieldManualEntry, normalizeEntry, type FieldManu
 import { rolePlaybook } from "./playbooks.ts";
 import { ConcurrentModification, IdentityCollision } from "./repository/types.ts";
 
-export const EDITABLE_PLAYBOOK_ROLES = ["SCOUT", "DETECTIVE", "PARSER", "AUDITOR", "ENGINEER", "MEASURE_WRITER", "MEASURE_CHECKER", "ASK_READER", "ASK_WRITER", "ASK_FALLBACK"] as const;
+export const EDITABLE_PLAYBOOK_ROLES = ["HUNTER", "DETECTIVE", "PARSER", "AUDITOR", "ENGINEER", "MEASURE_WRITER", "MEASURE_CHECKER", "ASK_READER", "ASK_WRITER", "ASK_FALLBACK"] as const;
 export type EditablePlaybookRole = typeof EDITABLE_PLAYBOOK_ROLES[number];
 export function isEditablePlaybookRole(role: unknown): role is EditablePlaybookRole {
   return typeof role === "string" && (EDITABLE_PLAYBOOK_ROLES as readonly string[]).includes(role);
@@ -26,7 +26,7 @@ export function playbookEditView(entries: readonly FieldManualEntry[], role: Edi
   const book = rolePlaybook(entries, role);
   const history = playbookHistory(entries, role);
   const latest = history.at(-1);
-  const labels: Record<EditablePlaybookRole, string> = { SCOUT: "Scout", DETECTIVE: "Detective", PARSER: "Parser", AUDITOR: "Auditor", ENGINEER: "Engineer", MEASURE_WRITER: "Plain-English writer", MEASURE_CHECKER: "Plain-English checker", ASK_READER: "Ask reader", ASK_WRITER: "Ask writer", ASK_FALLBACK: "Ask general answer" };
+  const labels: Record<EditablePlaybookRole, string> = { HUNTER: "Hunter", DETECTIVE: "Detective", PARSER: "Parser", AUDITOR: "Auditor", ENGINEER: "Engineer", MEASURE_WRITER: "Plain-English writer", MEASURE_CHECKER: "Plain-English checker", ASK_READER: "Ask reader", ASK_WRITER: "Ask writer", ASK_FALLBACK: "Ask general answer" };
   return { role, label: `${labels[role]} instructions`, stuck: book.error ?? null, text: book.text, version: book.version,
     changedAt: latest?.at ?? null, history,
     undo: latest ? { id: latest.id, text: latest.before, expectedVersion: book.version } : null };

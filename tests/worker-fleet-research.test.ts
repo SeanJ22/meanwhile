@@ -43,7 +43,7 @@ async function acquirerFixture(options: { body?: string; status?: number; robots
     routeId: input.route.id, active: true, readerImpactAt: null, observedChangeRateHours: null, lastWorkedAt: null },
     nextDueAt: NOW, cadenceHours: 24, cadenceSource: "DEFAULT_NO_SIGNAL", basis: "test" }, route: null, providerId: null,
     attemptId: input.attemptId, workItemId: input.workItemId, routeTaskId: "rt-research", holder: "holder", vault: put,
-    spaceOut: async () => {}, bound: RESEARCH_BOUNDS.perDispatch, now: input.now, inherited: { artifactIds: [], summary: "" },
+    spaceOut: async () => {}, bound: RESEARCH_BOUNDS.perDispatch, now: input.now, handed: { artifactIds: [] },
     openOne: async ({ url, headers: sent }) => {
       seen.push(url);
       headers.push(sent);

@@ -8,7 +8,7 @@
  *   failing.
  * - Under the new order, it runs within ⌈(A + 1) / c⌉ cycles of the rows
  *   ahead of it in its band.
- * - The band order and the runner's placement-first ranking are unchanged.
+ * - The band order is unchanged.
  */
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -73,7 +73,7 @@ import { createWorkItem } from "../lib/control-plane/work-item.ts";
 import { compareReaderImpact, orderableDueRow, orderByReaderImpact, TIE_BREAK, type OrderingInputs } from "../lib/control-plane/research-metrics.ts";
 import { recordFailure, retryable, type FreshnessDebt } from "../lib/control-plane/scheduler/debt.ts";
 import { dueNow, scheduleAll, type FreshnessObligation, type ScheduledObligation } from "../lib/control-plane/scheduler/obligation.ts";
-import { runCycle, runPool, type CycleResult } from "../lib/control-plane/scheduler/shadow-loop.ts";
+import { runCycle, runPool } from "../lib/control-plane/scheduler/shadow-loop.ts";
 
 test("place-order read failure keeps the last priority and does not poison sibling selection", async () => {
   const ran: string[] = [];
@@ -164,43 +164,6 @@ function replay(lane: readonly FreshnessObligation[], compare: Comparator, input
   return { admittedAt, eligibleAt };
 }
 
-/** The real dispatcher's Scout lane, cycle after cycle, with the runner's comparator shape and its debt carried forward. */
-async function scoutLaneRun(input: { readonly cycles: number; readonly perCycle: number }) {
-  const repos = createMemoryRepositories();
-  let debts: readonly FreshnessDebt[] = [];
-  const cycles: CycleResult[] = [];
-  for (let c = 0; c < input.cycles; c += 1) {
-    const carried = new Map(debts.map((d) => [d.obligationId, d] as const));
-    let admitted = 0;
-    const cycle = await runCycle({
-      repos,
-      obligations: LANE,
-      debts,
-      routeTaskFor: () => null,
-      maturity: () => "UNGRADUATED",
-      executor: { lane: "DETERMINISTIC", run: async () => { throw new Error("no plain-code row in this lane"); } },
-      holder: "scout-queue",
-      now: new Date(START_MS + c * HOUR_MS).toISOString(),
-      leaseTtlMs: 60_000,
-      research: {
-        decide: () => ({ kind: "BOUNDED_MODEL_WORKER", why: "fixture: no address is known", disagreement: null }),
-        compareModelRows: (l, r) => NEW(l, r, (id) => carried.get(id)),
-        admitScout: () => {
-          if (admitted >= input.perCycle) return { admit: false, code: "CYCLE_MAX", why: "fixture: the cycle's Scouts are spent" };
-          admitted += 1;
-          return { admit: true };
-        },
-        modelExecutor: { lane: "BOUNDED_MODEL_WORKER", run: async () => ({ ranAs: "BOUNDED_MODEL_WORKER", kind: "ABORTED", detail: "fixture" }) },
-        workerCapacity: 1,
-        scoutLeaseTtlMs: 60_000,
-      },
-    });
-    debts = cycle.debts;
-    cycles.push(cycle);
-  }
-  return cycles;
-}
-
 function longestWaits(ranAt: readonly (readonly string[])[], eligibleAt: readonly ReadonlySet<string>[]): Map<string, number> {
   const current = new Map<string, number>();
   const longest = new Map<string, number>();
@@ -231,22 +194,11 @@ test("SEEDED STARVATION: within a band, ordered by next-due then id, a never-tri
   assert.deepEqual(LANE.map((o) => fair.filter((x) => x === o.id).length), Array(LANE.length).fill(80));
 });
 
-test("the replay is the dispatcher: runCycle's Scout pool admits exactly the replay's new order, cycle by cycle", async () => {
-  const cycles = await scoutLaneRun({ cycles: 48, perCycle: 1 });
-  assert.deepEqual(cycles.map((c) => c.dispatched.map((d) => d.obligationId)), replay(LANE, NEW, { cycles: 48, perCycle: 1 }).admittedAt);
-  /* Admission is untouched. Each cycle admits one Scout, and every other due row is refused under its own code. */
-  for (const c of cycles) {
-    const model = c.lanes!.model;
-    assert.equal(model.dispatched, 1);
-    assert.equal(model.dispatched + (model.deferredBy.CYCLE_MAX ?? 0), model.due);
-  }
-});
-
-test("actual paid and plain-code admissions retain hunt rounds through place priority refreshes", async () => {
+test("plain-code admissions retain hunt rounds through place priority refreshes", async () => {
   const repos = createMemoryRepositories();
   const now = new Date(START_MS).toISOString();
   const ids = ["a1", "a2", "b1", "b2", "c1", "c2"];
-  const obligations = ["plain", "paid"].flatMap(lane => ids.map(id => row(`${lane}:${id}`, TIE)));
+  const obligations = ids.map(id => row(`plain:${id}`, TIE));
   const tasks = new Map<string, string>();
   for (const obligation of obligations) {
     const item = createWorkItem({ project: "freshness", subject: obligation.subjectId,
@@ -258,34 +210,27 @@ test("actual paid and plain-code admissions retain hunt rounds through place pri
     tasks.set(obligation.id, task.id);
   }
   const huntFor = (scheduled: ScheduledObligation) => scheduled.obligation.id.split(":")[1]![0]!;
-  const ran = { plain: [] as string[], paid: [] as string[] };
+  const ran: string[] = [];
   let priority = ["a", "b", "c"];
-  const execute = (lane: keyof typeof ran, scheduled: ScheduledObligation) => async () => {
-    ran[lane].push(scheduled.obligation.id.split(":")[1]!);
-    if (ran[lane].length === 3) priority = ["c", "b", "a"];
-    return { kind: "ABORTED" as const, ranAs: lane === "plain" ? "DETERMINISTIC" as const : "BOUNDED_MODEL_WORKER" as const,
-      detail: "Offline lease-owned execution; no provider call" };
+  const execute = (scheduled: ScheduledObligation) => async () => {
+    ran.push(scheduled.obligation.id.split(":")[1]!);
+    if (ran.length === 3) priority = ["c", "b", "a"];
+    return { kind: "ABORTED" as const, ranAs: "DETERMINISTIC" as const, detail: "Offline lease-owned execution; no provider call" };
   };
   const cycle = await runCycle({ repos, obligations, debts: [], routeTaskFor: id => tasks.get(id) ?? null,
     maturity: () => "UNGRADUATED", holder: "hunt-round-regression", now, leaseTtlMs: 60_000,
-    executor: scheduled => ({ lane: "DETERMINISTIC", run: execute("plain", scheduled) }), workerCapacity: 1,
+    executor: scheduled => ({ lane: "DETERMINISTIC", run: execute(scheduled) }), workerCapacity: 1,
     huntFor, placeComparator: async () => (a, b) => priority.indexOf(huntFor(a)) - priority.indexOf(huntFor(b)),
-    research: { decide: scheduled => ({ kind: scheduled.obligation.id.startsWith("paid:") ? "BOUNDED_MODEL_WORKER" : "DETERMINISTIC",
-      why: "offline lane regression", disagreement: null }),
-      admitScout: () => ({ admit: true }), workerCapacity: 1, scoutLeaseTtlMs: 60_000,
-      modelExecutor: scheduled => ({ lane: "BOUNDED_MODEL_WORKER", run: execute("paid", scheduled) }) },
+    research: { decide: () => ({ kind: "DETERMINISTIC", why: "offline lane regression", disagreement: null }) },
   });
-  for (const lane of ["plain", "paid"] as const) {
-    assert.deepEqual([...ran[lane].slice(0, 3)].sort(), ["a1", "b1", "c1"], `${lane}: every hunt reaches execution before a second child`);
-    assert.deepEqual(ran[lane].slice(3), ["c2", "b2", "a2"], `${lane}: changed place priority orders the next round`);
-  }
-  assert.equal(cycle.dispatched.length, 12);
-  assert.equal(new Set(cycle.dispatched.map(result => result.attemptId)).size, 12, "each task has one actual attempt");
+  assert.deepEqual([...ran.slice(0, 3)].sort(), ["a1", "b1", "c1"], "every hunt reaches execution before a second child");
+  assert.deepEqual(ran.slice(3), ["c2", "b2", "a2"], "changed place priority orders the next round");
+  assert.equal(cycle.dispatched.length, 6);
+  assert.equal(new Set(cycle.dispatched.map(result => result.attemptId)).size, 6, "each task has one actual attempt");
 });
 
-test("BOUND: within its band a row gets a Scout within ⌈(A + 1) / c⌉ cycles, and no row waits more than ⌈N / c⌉ − 1", async () => {
-  const cycles = await scoutLaneRun({ cycles: 200, perCycle: 1 });
-  const ran = cycles.map((c) => c.dispatched.map((d) => d.obligationId));
+test("BOUND: within its band a row gets a Scout within ⌈(A + 1) / c⌉ cycles, and no row waits more than ⌈N / c⌉ − 1", () => {
+  const ran = replay(LANE, NEW, { cycles: 200, perCycle: 1 }).admittedAt;
   assert.equal(ran.findIndex((ids) => ids.includes(NEVER_TRIED.id)), 8, "eight rows were ahead of it (A = 8, c = 1)");
   const two = replay(LANE, NEW, { cycles: 300, perCycle: 2 });
   for (const [perCycle, run] of [[1, replay(LANE, NEW, { cycles: 200, perCycle: 1 })], [2, two]] as const) {
@@ -335,11 +280,8 @@ test("NOT SLOWED: a row with no failing debt never has more rows ahead of it tha
   }
 });
 
-test("the standing runner builds BOTH the recorded queue and the live Scout pool through orderableDueRow with the debt it carried in, after placement", () => {
+test("the standing runner builds the recorded queue through orderableDueRow with the debt it carried in", () => {
   const src = readFileSync(join(import.meta.dirname, "..", "scripts", "freshness-shadow.mts"), "utf8");
   assert.match(src, /\.\.\.orderableDueRow\(d, registry\.providerOf\(d\.obligation\.id\), debtAtCycleStart\.get\(d\.obligation\.id\)\)/, "the recorded queue");
-  assert.match(src, /orderableDueRow\(row, registry\.providerOf\(row\.obligation\.id\), debtAtCycleStart\.get\(row\.obligation\.id\)\)/, "the live Scout pool");
-  const compare = src.slice(src.indexOf("const compareScoutRows"), src.indexOf("return compareReaderImpact(orderable(left), orderable(right), orderingInputs);"));
-  assert.ok(compare.indexOf("placementRank(left.obligation.id)") >= 0 && compare.indexOf("placementRank(left.obligation.id)") < compare.indexOf("orderableDueRow"), "the owner's placement still ranks first");
   assert.ok(src.indexOf("const debtAtCycleStart") < src.indexOf("const modelOrder = orderByReaderImpact("), "the debt map is built before the order reads it");
 });

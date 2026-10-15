@@ -91,7 +91,7 @@ test("the section carries the score on top, the status bars, one window of items
   assert.equal(section.contract, "admin-v6/checklist@1");
   assert.equal(section.scope, "geo:az.zcta.85635");
   assert.equal(section.data.score.overall.percent, 50);
-  assert.equal(section.data.definitionCount, 325);
+  assert.equal(section.data.definitionCount, 327);
   assert.equal(section.data.items.length, 2);
   const missing = section.data.items.find((i) => i.key === "2")!;
   assert.deepEqual(missing.actions, [{ kind: "send-agents", target: "geo:az.zcta.85635", label: "Send agents", payload: { words: "Deploy fleet to Arizona Cochise" } }]);
@@ -102,7 +102,7 @@ test("the section carries the score on top, the status bars, one window of items
   assert.equal(section.page.total, 2);
   const none = v6PlaceNotMeasured("us", "Choose a place.", "2026-09-30T18:00:00.000Z");
   assert.equal(none.data.score, null);
-  assert.equal(none.data.definitions.length, 325);
+  assert.equal(none.data.definitions.length, 327);
   assert.deepEqual([...OWED_STATES].sort(), ["held", "missing", "published", "stale", "unpublished"]);
 });
 

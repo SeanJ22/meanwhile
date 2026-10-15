@@ -6,7 +6,7 @@ import { fixtureRolePlaybook } from "./helpers/playbooks.ts";
  * last static breakpoint, and per-request values (attempt id, obligation id, the reader's question) never appear in
  * that prefix. The hash is over the JSON the transport would send, which is what the cache keys on.
  *
- *   Scout                tools + system            (`scoutStaticPrefix`)
+ *   Hunter               tools + system            (`scoutStaticPrefix`)
  *   Adversarial audit    tools + system            (`model-audit.ts`)
  *   Grounded Ask         system + evidence block   (`synthesisRequestBody`)
  *   Ask interpret        system                    (one-hour instructions; inventory follows)
@@ -19,10 +19,10 @@ import { createHash } from "node:crypto";
 import test from "./helpers/playbooks.ts";
 
 import { createMemoryRepositories } from "./helpers/playbooks.ts";
-import { RESEARCH_BOUNDS } from "../lib/control-plane/scheduler/research-policy.ts";
-import { scoutExecutor, scoutStaticPrefix, type ModelRequest, type ModelTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
-import { SCOUT_TOOL_SPECS } from "../lib/control-plane/scheduler/scout-tools.ts";
-import { MIN_DISTINCT_RUNGS } from "../lib/control-plane/scheduler/scout-result.ts";
+import { cacheTtlOrderProblems, hunterExecutor, scoutStaticPrefix, type ModelRequest, type ModelTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
+import { HUNTER_TOOL_SPECS } from "../lib/control-plane/scheduler/scout-tools.ts";
+import { SCOUT_CACHE_POLICY } from "../lib/control-plane/scheduler/model-routing.ts";
+import { MODELS } from "../lib/models.ts";
 import type { ScoutToolContext, ScoutToolkit } from "../lib/control-plane/scheduler/scout-contract.ts";
 import { auditReasoningContext, modelAuditReasoner } from "../lib/control-plane/workers/model-audit.ts";
 import type { IndependentAuditContext, WorkerEvidence } from "../lib/control-plane/workers/types.ts";
@@ -36,16 +36,16 @@ import { askUnsourced } from "../lib/routing/unsourced-fallback.ts";
 const sha = (value: unknown): string => createHash("sha256").update(JSON.stringify(value)).digest("hex");
 const NOW = "2026-09-06T12:00:00.000Z";
 
-/* ------------------------------------------------------------------ Scout */
+/* ----------------------------------------------------------------- Hunter */
 
-function scoutRequestFor(attemptId: string, obligationId: string): Promise<ModelRequest> {
+function hunterRequestFor(attemptId: string, obligationId: string): Promise<ModelRequest> {
   return new Promise((resolve) => {
     const capture: ModelTransport = async (request) => { resolve(request); throw new Error("captured"); };
-    const toolkit: ScoutToolkit = { specs: SCOUT_TOOL_SPECS, vaultedArtifactIds: new Set(), requestCount: 0, bytesFetched: 0, toolCalls: 0, call: async () => { throw new Error("no tools"); } };
-    const exec = scoutExecutor({ playbookFor: fixtureRolePlaybook,
+    const toolkit: ScoutToolkit = { specs: HUNTER_TOOL_SPECS, vaultedArtifactIds: new Set(), reported: [], requestCount: 0, bytesFetched: 0, toolCalls: 0, call: async () => { throw new Error("no tools"); } };
+    const exec = hunterExecutor({ role: "HUNTER", playbookFor: fixtureRolePlaybook,
       transport: capture,
       toolkitFor: (_ctx: ScoutToolContext) => toolkit,
-      contextFor: () => ({ route: null, providerId: "p", reason: "r", inherited: { artifactIds: [], summary: "s" }, tools: { vault: async () => ({ stored: true, where: "x", why: "w" }), spaceOut: async () => undefined } }),
+      contextFor: async () => ({ brief: "Place: az:county:pima", reason: "r", blanks: 1, handed: { artifactIds: [] }, tools: { vault: async () => ({ stored: true, where: "x", why: "w" }), spaceOut: async () => undefined } }),
       now: () => NOW,
     });
     void exec.run({
@@ -55,19 +55,53 @@ function scoutRequestFor(attemptId: string, obligationId: string): Promise<Model
   });
 }
 
-test("PC-3 Scout: tools + system are byte-identical across Attempts and carry no Attempt id, obligation id or timestamp; the brief follows them", async () => {
-  const a = await scoutRequestFor("at-aaaaaaaa", "freshness:meetings:az:county:pima#one");
-  const b = await scoutRequestFor("at-bbbbbbbb", "freshness:meetings:az:county:pima#two");
+test("PC-3 Hunter: tools + system are byte-identical across Attempts and carry no Attempt id, obligation id or timestamp; the brief follows them", async () => {
+  const a = await hunterRequestFor("at-aaaaaaaa", "freshness:meetings:az:county:pima#one");
+  const b = await hunterRequestFor("at-bbbbbbbb", "freshness:meetings:az:county:pima#two");
   const prefixA = { tools: a.tools, system: a.system };
   const prefixB = { tools: b.tools, system: b.system };
   assert.equal(sha(prefixA), sha(prefixB), "the static prefix hash is identical across Attempts");
-  const built = scoutStaticPrefix({ playbook: rolePlaybook(playbookRows, "SCOUT").text, toolkitSpecs: SCOUT_TOOL_SPECS, bound: RESEARCH_BOUNDS.perDispatch, minRungs: MIN_DISTINCT_RUNGS });
-  assert.equal(sha(prefixA), sha({ tools: built.tools, system: built.system }), "the executor sends exactly what scoutStaticPrefix builds — the pre-warm's bytes");
+  const built = scoutStaticPrefix({ playbook: rolePlaybook(playbookRows, "HUNTER").text, toolkitSpecs: HUNTER_TOOL_SPECS, role: "HUNTER" });
+  assert.equal(sha(prefixA), sha({ tools: built.tools, system: built.system }), "the executor sends exactly what scoutStaticPrefix builds");
   const text = JSON.stringify(prefixA);
   for (const volatile of ["at-aaaaaaaa", "#one", NOW, "2026-09", "warmup"]) assert.ok(!text.includes(volatile), `${volatile} must not appear before the static breakpoint`);
   assert.match(JSON.stringify(a.messages[0]), /Place: az:county:pima/, "the place lives in the brief, after the static prefix");
   assert.equal(a.tools.at(-1)?.cache_control?.type, "ephemeral");
   assert.equal(a.system.at(-1)?.cache_control?.type, "ephemeral");
+});
+
+/** The API's answer to a 1h marker after a 5m one. */
+const API_MESSAGE =
+  "system.0.cache_control.ttl: a ttl='1h' cache_control block must not come after a ttl='5m' cache_control block. " +
+  "Note that blocks are processed in the following order: `tools`, `system`, `messages`.";
+
+test("PC-6: the moving breakpoint is 5 minutes, and a 1h marker after a 5m one is refused before sending with the API's own rule", () => {
+  assert.equal(SCOUT_CACHE_POLICY.ttl, "5m");
+  assert.match(String(SCOUT_CACHE_POLICY.movingBreakpoint), /TOP_LEVEL|LAST_BLOCK/);
+  const prefix = scoutStaticPrefix({ playbook: rolePlaybook(playbookRows, "HUNTER").text, toolkitSpecs: HUNTER_TOOL_SPECS, role: "HUNTER" });
+  const good: ModelRequest = { model: MODELS.opus.model, max_tokens: 0, tool_choice: { type: "auto" }, tools: prefix.tools, system: prefix.system,
+    messages: [{ role: "user", content: [{ type: "text", text: "warmup" }] }] };
+  assert.deepEqual(cacheTtlOrderProblems(good), []);
+  /* A 1h system marker with a 5m tool marker before it: exactly the planted request the API refused. */
+  const planted: ModelRequest = { ...good, tools: good.tools.map(t => t.cache_control ? { ...t, cache_control: { type: "ephemeral" } } : t), system: good.system.map((s) => ({ ...s, cache_control: { type: "ephemeral", ttl: "1h" } })) };
+  const problems = cacheTtlOrderProblems(planted);
+  assert.equal(problems.length, 1);
+  assert.match(problems[0], /system\[0\]: a ttl='1h' cache_control block must not come after the ttl='5m' block at tools\[\d+\]/);
+  assert.match(API_MESSAGE, /must not come after a ttl='5m' cache_control block/, "the rule this validator restates, in the API's words");
+  /* The lawful 1h shape: every 1h marker before every 5m marker. */
+  const lawful: ModelRequest = {
+    ...good,
+    tools: good.tools.map((t, i) => (i === good.tools.length - 1 ? { ...t, cache_control: { type: "ephemeral", ttl: "1h" } } : t)),
+    system: good.system.map((s) => ({ ...s, cache_control: { type: "ephemeral", ttl: "1h" } })),
+    messages: [{ role: "user", content: [{ type: "text", text: "warmup", cache_control: { type: "ephemeral" } }] }],
+  };
+  assert.deepEqual(cacheTtlOrderProblems(lawful), []);
+  /* A 1h marker in the messages after a 5m system marker is refused too. */
+  const late: ModelRequest = { ...good, system: good.system.map(s => ({ ...s, cache_control: { type: "ephemeral" } })), messages: [{ role: "user", content: [{ type: "text", text: "warmup", cache_control: { type: "ephemeral", ttl: "1h" } }] }] };
+  assert.match(cacheTtlOrderProblems(late)[0], /messages\[0\]\.content\[0\]/);
+  /* The provider's limit of four markers is refused by name. */
+  const five: ModelRequest = { ...lawful, cache_control: { type: "ephemeral" }, messages: [{ role: "user", content: [{ type: "text", text: "a", cache_control: { type: "ephemeral" } }, { type: "text", text: "b", cache_control: { type: "ephemeral" } }] }] };
+  assert.match(cacheTtlOrderProblems(five).join(" "), /5 cache_control markers exceed the provider's limit of 4/);
 });
 
 /* ------------------------------------------------------------------ audit */

@@ -21,7 +21,7 @@ import { namesItself, routeHintsFingerprint, routeHintsFor, type JurisdictionRou
 import { hitStanding, plannedQueries, requestPrice, type SearchProvider } from "../../hunt/discovery-search.ts";
 import { DISCOVERY_SEARCH_ROLE, type CostEntry } from "../cost.ts";
 import { fingerprint } from "../ids.ts";
-import type { SearchHit } from "../scheduler/scout-contract.ts";
+import type { SearchHit } from "../../hunt/search.ts";
 import {
   CIVICPLUS_CALENDAR_INDEX_PATH,
   civicPlusCategoryFeeds,

@@ -44,7 +44,6 @@ import { createMemoryRepositories } from "../lib/control-plane/repository/memory
 import {
   MEETINGS_DISCOVERY_NAMESPACE,
   materializedDiscoveryNeeds,
-  paidDiscoveryHold,
 } from "../lib/control-plane/scheduler/providers/meetings-discovery.ts";
 import type { Jurisdiction, JurisdictionRegistry } from "../lib/hunt/jurisdiction-universe.ts";
 import { meetingsDiscoveryNeeds } from "../lib/hunt/meetings-discovery.ts";
@@ -179,7 +178,7 @@ test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed b
   const needs = dispatched;
   const subjects = dispatched.map((n) => ({ jurisdictionId: n.jurisdictionId, walkable: walkableByFreeWalk(n) }));
   const before = await readFreeDiscoveryWalks(repos, subjects);
-  for (const id of ids) assert.equal(paidDiscoveryHold(id, before), null, "an unattempted free walk is no paid-admission prerequisite");
+  for (const s of subjects) assert.equal(before.latestFor(s.jurisdictionId), "NOT_WALKED");
 
   const site: Record<string, RecordedReply> = {
     [`https://${COUNTY_HOST}/robots.txt`]: ALLOW,
@@ -211,7 +210,7 @@ test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed b
   assert.deepEqual(walked.map((a) => a.jurisdictionId).sort(), [CITY, COUNTY], "the free walk took the Send's governments, not the ledger's rotation");
   assert.ok(walked.every((a) => a.outcome === "FOUND"));
   const after = await readFreeDiscoveryWalks(repos, subjects);
-  for (const id of ids) assert.match(paidDiscoveryHold(id, after)?.why ?? "", /already found/, "and the paid lane never re-walks what it read");
+  for (const s of subjects) assert.equal(after.latestFor(s.jurisdictionId), "FOUND");
 
   /* 3. Registration: which body each government is (the Census, through its own routine door). */
   const store = new MemoryRoutineDataStore();

@@ -1,48 +1,10 @@
 /**
- * A walk records which handed field-manual doors it actually used, and what the Scout results measure is drawn
- * week by week; a week with no record is a gap, never a zero.
+ * What the Scout results measure is drawn week by week; a week with no record is a gap, never a zero.
  */
 import assert from "node:assert/strict";
 import test from "node:test";
 
 import { buildLearningTrends, mondayOf, pointWords, weekRange, type WeekLearningRow } from "../lib/control-plane/admin-view/learning-trends.ts";
-import type { FieldManualEntry, FieldManualStore } from "../lib/control-plane/field-manual.ts";
-import { usedFieldManualEntryIds } from "../lib/control-plane/scheduler/field-manual-scout.ts";
-import type { ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
-
-function entry(id: string, url: string | null, routeId: string | null): FieldManualEntry {
-  return {
-    id, role: "SCOUT", kind: "ROUTE", title: id, summary: id, states: ["az"], recordClasses: [], platforms: [], outcome: "YIELDED",
-    url, source: "fixture", observedAt: null, tier: null, payload: routeId === null ? null : { routeId },
-  } as FieldManualEntry;
-}
-
-const STORE: FieldManualStore = {
-  entries: [
-    entry("fm:by-url", "https://Pima.Legistar.com/Calendar.aspx/", null),
-    entry("fm:duplicate-url", "https://pima.legistar.com/Calendar.aspx", "another-name-for-same-door"),
-    entry("fm:by-route", null, "pima-legistar-api"),
-    entry("fm:unwalked", "https://example.gov/never", "never-route"),
-  ],
-};
-
-function walk(over: Partial<ScoutResult>): ScoutResult {
-  return {
-    rungs: [{ index: 1, rung: "primary-site-navigation", tool: "fetch_public", target: "https://pima.legistar.com/Calendar.aspx", observed: "HTTP 200", artifactIds: ["ar:capture"], note: null, at: "2026-09-25T10:00:00.000Z", ok: true }],
-    candidates: [{ routeId: "pima-legistar-api" }],
-    ...over,
-  } as unknown as ScoutResult;
-}
-
-test("MW-025: actual successful route use gets one credit; a proposal and duplicate entry get none", () => {
-  const handed = ["fm:by-url", "fm:duplicate-url", "fm:by-route", "fm:unwalked", "fm:gone-from-store"];
-  assert.deepEqual(usedFieldManualEntryIds(walk({}), handed, STORE), ["fm:by-url"]);
-  assert.deepEqual(usedFieldManualEntryIds(walk({ rungs: [{ ...walk({}).rungs[0]!, rung: "pima-legistar-api", target: "https://example.gov/api" }] }), handed, STORE), ["fm:by-route"]);
-  assert.deepEqual(usedFieldManualEntryIds(walk({ rungs: [{ ...walk({}).rungs[0]!, ok: false }] }), handed, STORE), [], "failed use gives no successful reuse credit");
-  assert.deepEqual(usedFieldManualEntryIds(walk({ rungs: [], candidates: [] }), handed, STORE), [], "given is not used");
-  assert.deepEqual(usedFieldManualEntryIds(walk({}), [], STORE), [], "nothing handed, nothing used");
-  assert.deepEqual(usedFieldManualEntryIds(walk({}), ["fm:unwalked"], STORE), [], "a door handed and not walked is not used");
-});
 
 function row(week: string, over: Partial<WeekLearningRow> = {}): WeekLearningRow {
   return {

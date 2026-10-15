@@ -9,7 +9,7 @@ export type PlaceSubjectKind = "zip" | "division" | "body" | "seat" | "legislatu
 /** The canonical reader supplies this from the record's schema, never its label. */
 export type PlaceCaptureKind = "federal-legislator" | "state-legislator" | "executive" | "local-officeholder"
   | "campaign-finance" | "federal-campaign-finance" | "state-campaign-finance" | "public-finance" | "filing-deadline" | "voting-deadline"
-  | "voting-sites" | "election-navigation" | "candidate" | "election-result" | "meeting" | "body-calendar" | "registry-body"
+  | "voting-sites" | "election-navigation" | "race" | "measure" | "candidate" | "election-result" | "meeting" | "body-calendar" | "registry-body"
   | "federal-legislature" | "state-legislature";
 export interface PlaceSubject {
   readonly id: string;

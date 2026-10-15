@@ -161,7 +161,9 @@ test("verified directory bodies publish through the normal registry door and cre
     assert.deepEqual(child.value.autonomousPlan?.ownerInstructions, ["offline-send"]);
     assert.equal(child.value.autonomousPlan?.publication?.bodyId, body.id);
     assert.equal(child.value.dependencies[0].upstreamId, f.h.item.id);
-    assert.equal((await nextAutonomousOperation(f.runtime, child.id)).action, "SCOUT", "the normal coordinator continues unresolved source discovery");
+    const next = await nextAutonomousOperation(f.runtime, child.id);
+    assert.equal(next.action, "BLOCKED");
+    assert.match(next.reason, /hunted in its government's packet/, "unresolved source discovery is the government's hunt packet's");
   }
   assert.deepEqual(await publishWorkerDirectoryResults(f.input), published, "durable publication prevents duplicate bodies or child work");
   assert.equal((await f.h.repos.workItems.list()).length, 4);

@@ -98,6 +98,7 @@
     "eslint-config-next": "16.3.0",
     "pbf": "^5.1.2",
     "playwright": "1.62.1",
+    "postgres": "3.4.7",
     "tailwindcss": "^4",
     "tsx": "^4.20.7",
     "typescript": "^5",

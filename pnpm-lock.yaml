@@ -22,7 +22,7 @@ importers:
         version: 2.1.1
       drizzle-orm:
         specifier: ^0.45.2
-        version: 0.45.2(@electric-sql/pglite@0.3.11)(@neondatabase/serverless@1.1.0)(@opentelemetry/api@1.9.1)
+        version: 0.45.2(@electric-sql/pglite@0.3.11)(@neondatabase/serverless@1.1.0)(@opentelemetry/api@1.9.1)(postgres@3.4.7)
       lucide-react:
         specifier: ^1.31.0
         version: 1.31.0(react@19.2.8)
@@ -99,6 +99,9 @@ importers:
       playwright:
         specifier: 1.62.1
         version: 1.62.1
+      postgres:
+        specifier: 3.4.7
+        version: 3.4.7
       tailwindcss:
         specifier: ^4
         version: 4.3.3
@@ -2673,6 +2676,10 @@ packages:
     resolution: {integrity: sha512-u82N74LFzG8ca+dD8puPnplTXoGH4fTPpVGuIbt36G3qvNlkvfD0lEAZSxaly3KX8TS/L1A1gsCEmvKmBcVbkQ==}
     engines: {node: ^10 || ^12 || >=14}
 
+  postgres@3.4.7:
+    resolution: {integrity: sha512-Jtc2612XINuBjIl/QTWsV5UvE8UHuNblcO3vVADSrKsrc6RqGX6lOW1cEo3CM2v0XG4Nat8nI+YM7/f26VxXLw==}
+    engines: {node: '>=12'}
+
   potpack@2.1.0:
     resolution: {integrity: sha512-pcaShQc1Shq0y+E7GqJqvZj8DTthWV1KeHGdi0Z6IAin2Oi3JnLCOfwnCo84qc+HAp52wT9nK9H7FAJp5a44GQ==}
 
@@ -4385,11 +4392,12 @@ snapshots:
       esbuild: 0.25.12
       tsx: 4.23.12
 
-  drizzle-orm@0.45.2(@electric-sql/pglite@0.3.11)(@neondatabase/serverless@1.1.0)(@opentelemetry/api@1.9.1):
+  drizzle-orm@0.45.2(@electric-sql/pglite@0.3.11)(@neondatabase/serverless@1.1.0)(@opentelemetry/api@1.9.1)(postgres@3.4.7):
     optionalDependencies:
       '@electric-sql/pglite': 0.3.11
       '@neondatabase/serverless': 1.1.0
       '@opentelemetry/api': 1.9.1
+      postgres: 3.4.7
 
   dunder-proto@1.0.1:
     dependencies:
@@ -5449,6 +5457,8 @@ snapshots:
       nanoid: 3.3.18
       picocolors: 1.1.1
       source-map-js: 1.2.1
+
+  postgres@3.4.7: {}
 
   potpack@2.1.0: {}
 

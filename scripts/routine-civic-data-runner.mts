@@ -761,7 +761,7 @@ if (PUBLISH_NOW && selectedTasks.length === 0) {
 }
 step = "reading the routine task clocks";
 const memberClocks = !FORCE && selectedTasks.some(task => task.id.startsWith("legistar-members:"))
-  ? await legistarMemberClocks(store, new Date().toISOString()) : new Map();
+  ? await legistarMemberClocks(readerFactDb().query, selectedTasks.filter(task => task.id.startsWith("legistar-members:")).map(task => task.id)) : new Map();
 const clockReads = FORCE
   ? selectedTasks.map((task) => ({ task, ok: true as const, clock: undefined, error: null }))
   : await readRoutineTaskClocks(
@@ -1181,7 +1181,9 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
     child.kind === "SUPERVISOR_FAILURE" ? null : child.receipt.candidateId);
   if (child.kind === "VERIFIED_SOURCE_SUCCESS") {
     await recordTaskDoorOutcome(pending.task.id, "SUCCESS", child.receipt.promotedVersion !== null && child.receipt.confirmedAt === undefined, null,
-      () => store.clock(pending.task.sourceId, pending.task.recordClass, pending.task.scope));
+      () => pending.task.id.startsWith("legistar-members:")
+        ? Promise.resolve({ lastSucceededObservedAt: child.receipt.confirmedAt })
+        : store.clock(pending.task.sourceId, pending.task.recordClass, pending.task.scope));
     verifiedSourceSuccesses += 1;
     captureTaskReceipt(pending, child.receipt, "VERIFIED_SOURCE_SUCCESS");
     console.log("RCD_RECEIPT=" + JSON.stringify(child.receipt));

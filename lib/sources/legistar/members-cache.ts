@@ -1,14 +1,16 @@
 import { createHash } from "node:crypto";
 import { recordAcquisition, type Artifact } from "../../control-plane/evidence/artifact.ts";
-import { putArtifact, putManifest, buildManifest, readArtifact, type EvidenceStore, type EvidenceManifest } from "../../control-plane/evidence/store.ts";
+import { putArtifact, putManifest, buildManifest, readArtifact, type EvidenceStore, type EvidenceManifest, manifestKey } from "../../control-plane/evidence/store.ts";
 import { FRESHNESS_PROJECT } from "../../control-plane/scheduler/durable.ts";
 import { legistarMemberSignature, validateLegistarMembers, type LegistarMembers } from "./members.ts";
 
 export async function loadLegistarMembers(vault: EvidenceStore, slug: string): Promise<LegistarMembers | null> {
   const workItemId = `legistar-members:${slug}`;
-  const keys = await vault.list(`project/${FRESHNESS_PROJECT}/source/legistar:${slug}/`);
-  const key = keys.filter(key => key.endsWith(`/${workItemId}/manifest.json`)).sort().at(-1);
-  if (!key) return null;
+  const pointer = await vault.get(latestKey(slug));
+  if (!pointer) return null;
+  const key: unknown = JSON.parse(new TextDecoder().decode(pointer.bytes)).manifest;
+  if (typeof key !== "string" || !key.startsWith(`project/${FRESHNESS_PROJECT}/source/legistar:${slug}/`) ||
+    !key.endsWith(`/${workItemId}/manifest.json`) || key.includes("..")) throw new Error("LEGISTAR_MEMBERS_CACHE_POINTER_INVALID");
   const stored = await vault.get(key);
   if (!stored) throw new Error("LEGISTAR_MEMBERS_CACHE_MANIFEST_MISSING");
   const manifest: EvidenceManifest = JSON.parse(new TextDecoder().decode(stored.bytes));
@@ -50,4 +52,12 @@ export async function saveLegistarMembers(vault: EvidenceStore, raw: LegistarMem
   if (!artifacts.length) throw new Error("LEGISTAR_MEMBERS_CACHE_NO_SOURCE_READS");
   const latest = [...artifacts].sort((a, b) => Date.parse(a.retrievedAt) - Date.parse(b.retrievedAt)).at(-1)!;
   await putManifest(vault, FRESHNESS_PROJECT, latest, buildManifest(FRESHNESS_PROJECT, latest.workItemId, artifacts, now));
+  const pointer = Buffer.from(JSON.stringify({ manifest: manifestKey(FRESHNESS_PROJECT, latest) }));
+  await vault.put(latestKey(raw.slug), pointer, { contentType: "application/json", byteLength: pointer.byteLength,
+    contentHash: `sha256-${createHash("sha256").update(pointer).digest("hex")}`, objectClass: "MUTABLE_INDEX" });
+}
+
+function latestKey(slug: string): string {
+  if (!/^[a-z0-9_-]+$/i.test(slug)) throw new Error("LEGISTAR_MEMBERS_CLIENT_INVALID");
+  return `project/${FRESHNESS_PROJECT}/source/legistar:${slug}/latest.json`;
 }

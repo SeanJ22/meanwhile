@@ -43,6 +43,12 @@ type CheckReason =
 export type CheckResult = { readonly ok: true; readonly quoteStart: number } | { readonly ok: false; readonly reason: CheckReason };
 
 export const normalizeText = (s: string): string => s.normalize("NFC").replace(/\s+/g, " ").trim();
+const copyTexts = new WeakMap<SavedCopy, string>();
+function copyText(copy: SavedCopy): string {
+  let text = copyTexts.get(copy);
+  if (text === undefined) { text = normalizeText(copy.text); copyTexts.set(copy, text); }
+  return text;
+}
 const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 /** Finds needle only when it is not part of a longer word or number: "500" never matches inside "$1,500". */
@@ -82,7 +88,7 @@ export function needsSecondSource(kind: FieldKind, provenance: Provenance, url: 
 function quoteHolds(copy: SavedCopy, quote: string, valueText: string): "ARCHIVE_NEVER_PROVES_PRESENT" | "QUOTE_NOT_ON_SAVED_COPY" | "VALUE_NOT_IN_QUOTE" | number {
   if (copy.isArchive) return "ARCHIVE_NEVER_PROVES_PRESENT";
   const q = normalizeText(quote);
-  const start = q ? normalizeText(copy.text).indexOf(q) : -1;
+  const start = q ? copyText(copy).indexOf(q) : -1;
   if (start === -1) return "QUOTE_NOT_ON_SAVED_COPY";
   if (boundedIndexOf(q, normalizeText(valueText)) === -1) return "VALUE_NOT_IN_QUOTE";
   return start;
@@ -95,7 +101,7 @@ export const linkQuote = (value: string, quote: string): string =>
 /** The page is the entity's own site, carries one of its ids, or names it in its state. */
 function aboutEntity(entity: CheckEntity, copy: SavedCopy): boolean {
   if (entity.hosts.some(site => ownSite(copy.finalUrl, site))) return true;
-  const text = normalizeText(copy.text);
+  const text = copyText(copy);
   if (entity.externalIds.some(id => boundedIndexOf(text, id) !== -1)) return true;
   const lower = text.toLowerCase();
   return boundedIndexOf(lower, entity.fullName.toLowerCase()) !== -1 &&

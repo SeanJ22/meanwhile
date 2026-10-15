@@ -1,35 +1,26 @@
 import { join } from "node:path";
 import { DurableEvidenceStore } from "../../control-plane/evidence/durable-store.ts";
 import { VAULT_DIR } from "../../control-plane/scheduler/vault.ts";
-import { ensureMeetingDoors } from "../../doors/meeting-doors.ts";
-import type { BodySourceWiring } from "../../registry/source-wiring.ts";
-import { heldLegistarMemberRows } from "./members-tasks.ts";
-import type { RoutineDataStore } from "../../civic-data/store.ts";
+import { legistarTenantDoors } from "../../doors/legistar-tenant.ts";
+import { legistarDoorQuery } from "./members-tasks.ts";
 import { loadLegistarMembers, saveLegistarMembers } from "./members-cache.ts";
 import { makeLegistarMembersReader } from "./members.ts";
 import { publishLegistarMembers } from "./members-publication.ts";
+import type { Clocks, FactDb, Query } from "../../facts/publish.ts";
+import type { EvidenceStore } from "../../control-plane/evidence/store.ts";
 import { runInSourceAcquisitionDomain, ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS } from "../acquisition-deadline.ts";
 
-export async function refreshLegistarMembers(store: RoutineDataStore, now: string, slug: string) {
-  await ensureMeetingDoors({ store, now });
-  const rows = await heldLegistarMemberRows({ store, now, bypassCache: true });
-  const tenants = new Map<string, BodySourceWiring[]>();
-  for (const row of rows.filter(row => row.agendaSourceType === "LEGISTAR" && row.config.slug === slug)) {
-    const held = tenants.get(row.config.slug) ?? [];
-    if (!held.some(prior => prior.bodyId === row.bodyId)) tenants.set(row.config.slug, [...held, row]);
-  }
-  const vault = new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR));
-  const gaps: { key: string; detail: string }[] = [];
-  let records = 0, versionId: string | null = null, candidateId: string | null = null;
-  for (const [slug, own] of tenants) {
-    try {
-      const read = makeLegistarMembersReader(undefined, await loadLegistarMembers(vault, slug));
-      const raw = await runInSourceAcquisitionDomain({ sourceLabel: `legistar-members:${slug}`, timeoutMs: ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS }, signal => read(slug, signal));
-      await saveLegistarMembers(vault, raw, now);
-      const result = await publishLegistarMembers({ store, raw, rows: own, now: new Date().toISOString() });
-      gaps.push(...result.unbound.map(gap => ({ key: gap.key, detail: gap.code })));
-      records += result.changed; versionId = result.published.promoted!.versionId; candidateId = result.published.candidate.candidate.id;
-    } catch (error) { gaps.push({ key: slug, detail: error instanceof Error ? error.message : String(error) }); }
-  }
-  return { records, versionId, candidateId, gaps };
+export async function refreshLegistarMembers(input: {
+  facts: FactDb & { readonly query: Query }; clocks: Clocks; now: string; slug: string;
+  doors?: Query; vault?: EvidenceStore; fetchImpl?: typeof fetch;
+}) {
+  const rows = await legistarTenantDoors(input.doors ?? legistarDoorQuery(), input.slug);
+  if (!rows.length) throw new Error("LEGISTAR_MEMBERS_TENANT_UNBOUND");
+  const vault = input.vault ?? new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR));
+  let prior = await loadLegistarMembers(vault, input.slug);
+  if (prior && Date.parse(input.now) - Date.parse(prior.collectedAt) > input.clocks.windowHours("officeholder") * 3_600_000) prior = null;
+  const read = makeLegistarMembersReader(input.fetchImpl, prior);
+  const raw = await runInSourceAcquisitionDomain({ sourceLabel: `legistar-members:${input.slug}`, timeoutMs: ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS }, signal => read(input.slug, signal));
+  await saveLegistarMembers(vault, raw, input.now);
+  return publishLegistarMembers({ facts: input.facts, clocks: input.clocks, vault, raw, rows, now: input.now });
 }

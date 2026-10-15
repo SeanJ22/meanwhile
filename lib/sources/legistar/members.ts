@@ -30,9 +30,23 @@ export function makeLegistarMembersReader(fetchImpl?: typeof fetch, initial: Leg
   return async (slug: string, signal?: AbortSignal): Promise<LegistarMembers> => {
     const readings: LegistarMembers["readings"] = [];
     const options = { fetchImpl, signal, onRead: (reading: LegistarMembers["readings"][number]) => readings.push(reading) };
+    const day = new Date(Date.now() - 86_400_000).toISOString().slice(0, 10);
+    const officeFilter = `(OfficeRecordEndDate eq null or OfficeRecordEndDate ge datetime'${day}T00:00:00')`;
     const bodies = await fetchBodies<MemberBody>(slug, { ...options, select: ["BodyId", "BodyRowVersion"] });
-    const persons = await fetchPersons<MemberPerson>(slug, { ...options, select: ["PersonId", "PersonRowVersion"] });
-    const offices = await fetchOfficeRecords<MemberOffice>(slug, { ...options, select: ["OfficeRecordId", "OfficeRecordRowVersion"] });
+    const offices = await fetchOfficeRecords<MemberOffice>(slug, { ...options, filter: officeFilter,
+      select: ["OfficeRecordId", "OfficeRecordPersonId", "OfficeRecordRowVersion"] });
+    const personIds = [...new Set(offices.map(office => office.OfficeRecordPersonId))].sort((a, b) => a - b);
+    if (personIds.some(id => !Number.isSafeInteger(id) || id <= 0)) throw new Error("LEGISTAR_MEMBERS_PERSON_ID_MISSING");
+    const people = async (select?: readonly string[]) => {
+      const persons: MemberPerson[] = [];
+      for (let offset = 0; offset < Math.max(1, personIds.length); offset += 100) {
+        const ids = personIds.slice(offset, offset + 100);
+        persons.push(...await fetchPersons<MemberPerson>(slug, { ...options, select,
+          filter: `(${ids.length ? ids.map(id => `PersonId eq ${id}`).join(" or ") : "PersonId eq 0"})` }));
+      }
+      return persons.sort((a, b) => a.PersonId - b.PersonId);
+    };
+    const persons = await people(["PersonId", "PersonRowVersion"]);
     const signature = legistarMemberSignature({ bodies, persons, offices });
     const previous = held?.slug === slug ? held : null;
     const collectedAt = new Date().toISOString();
@@ -42,8 +56,8 @@ export function makeLegistarMembersReader(fetchImpl?: typeof fetch, initial: Leg
     }
     const result = { slug, signature, collectedAt, readings,
       bodies: await fetchBodies<MemberBody>(slug, options),
-      persons: await fetchPersons<MemberPerson>(slug, options),
-      offices: await fetchOfficeRecords<MemberOffice>(slug, options) };
+      persons: await people(),
+      offices: await fetchOfficeRecords<MemberOffice>(slug, { ...options, filter: officeFilter }) };
     validateLegistarMembers(result);
     if (legistarMemberSignature(result) !== signature) throw new Error("LEGISTAR_MEMBERS_CHANGED_DURING_READ");
     held = result;
@@ -68,15 +82,27 @@ function termDate(value: string | null): string | null {
   return date;
 }
 
+const sourcePages = new WeakMap<LegistarMembers, Map<string, string>>();
+
 export function memberSourceUrl(raw: LegistarMembers, collection: string, key: string, id?: number): string {
-  const read = raw.readings.find(reading => {
-    const url = new URL(reading.url);
-    if (url.pathname !== `/v1/${raw.slug}/${collection}` || url.searchParams.has("$select")) return false;
-    const rows = JSON.parse(reading.text);
-    return Array.isArray(rows) && (id === undefined || rows.some(row => row[key] === id));
-  });
-  if (!read) throw new Error("LEGISTAR_MEMBERS_SOURCE_PAGE_MISSING");
-  return read.url;
+  let pages = sourcePages.get(raw);
+  if (!pages) {
+    pages = new Map();
+    for (const reading of raw.readings) {
+      const url = new URL(reading.url), collection = url.pathname.split("/").at(-1)!;
+      if (url.pathname !== `/v1/${raw.slug}/${collection}` || url.searchParams.has("$select")) continue;
+      const rows = JSON.parse(reading.text);
+      if (!Array.isArray(rows)) throw new Error("LEGISTAR_MEMBERS_SOURCE_PAGE_INVALID");
+      if (!pages.has(collection)) pages.set(collection, reading.url);
+      for (const row of rows) for (const key of ["BodyId", "PersonId", "OfficeRecordId"]) {
+        if (row[key] !== undefined) pages.set(`${collection}:${key}:${row[key]}`, reading.url);
+      }
+    }
+    sourcePages.set(raw, pages);
+  }
+  const url = pages.get(id === undefined ? collection : `${collection}:${key}:${id}`);
+  if (!url) throw new Error("LEGISTAR_MEMBERS_SOURCE_PAGE_MISSING");
+  return url;
 }
 
 export function legistarMemberRosters(raw: LegistarMembers, rows: readonly BodySourceWiring[], now: string): BodyRoster[] {
@@ -97,7 +123,7 @@ export function legistarMemberRosters(raw: LegistarMembers, rows: readonly BodyS
       const name = office.OfficeRecordFullName?.trim();
       const officeTitle = office.OfficeRecordTitle?.trim() || office.OfficeRecordMemberType?.trim();
       if (!name || !officeTitle) throw new Error("LEGISTAR_MEMBERS_MINIMUMS_MISSING");
-      const source = { kind: "OFFICIAL" as const, sourceUrl: memberSourceUrl(raw, "officerecords", "OfficeRecordId", office.OfficeRecordId), sourceOrg: wiring.publishingOrg, collectedAt: raw.collectedAt, verifiedAt: now };
+      const source = { kind: "OFFICIAL" as const, sourceUrl: memberSourceUrl(raw, "officerecords", "OfficeRecordId", office.OfficeRecordId), sourceOrg: wiring.publishingOrg, collectedAt: raw.collectedAt, verifiedAt: raw.collectedAt };
       if (!Number.isSafeInteger(office.OfficeRecordPersonId) || office.OfficeRecordPersonId <= 0) throw new Error("LEGISTAR_MEMBERS_PERSON_ID_MISSING");
       const personId = `legistar:${raw.slug}:person:${office.OfficeRecordPersonId}`;
       members.push({ id: `${personId}:office:${office.OfficeRecordId}`, personId,

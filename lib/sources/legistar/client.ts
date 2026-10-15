@@ -44,6 +44,7 @@ interface RequestOptions {
   fetchImpl?: typeof fetch;
   signal?: AbortSignal;
   select?: readonly string[];
+  filter?: string;
   onRead?: (reading: { url: string; text: string; retrievedAt: string }) => void;
 }
 
@@ -214,11 +215,11 @@ export async function fetchBodies<T extends { BodyId: number }>(slug: string, op
 }
 
 export async function fetchPersons<T extends { PersonId: number }>(slug: string, options: RequestOptions = {}): Promise<T[]> {
-  return pageById<T>(`${slug}/persons`, "PersonId", row => row.PersonId, undefined, options);
+  return pageById<T>(`${slug}/persons`, "PersonId", row => row.PersonId, options.filter, options);
 }
 
 export async function fetchOfficeRecords<T extends { OfficeRecordId: number }>(slug: string, options: RequestOptions = {}): Promise<T[]> {
-  return pageById<T>(`${slug}/officerecords`, "OfficeRecordId", row => row.OfficeRecordId, undefined, options);
+  return pageById<T>(`${slug}/officerecords`, "OfficeRecordId", row => row.OfficeRecordId, options.filter, options);
 }
 
 export async function fetchEventItems<T>(

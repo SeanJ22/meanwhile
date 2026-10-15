@@ -10,7 +10,8 @@ import { requiredManualProductionContract } from "../lib/civic-data/manual-contr
 import type { CandidateProfilesProjection } from "../lib/civic-data/manual-projections.ts";
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import { holdBoxFinding, indexReportedFinding } from "../lib/control-plane/box.ts";
+import { holdBoxFinding, indexReportedFinding, indexScoutFindings } from "../lib/control-plane/box.ts";
+import type { ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
 import type { HeldVaultArtifact } from "../lib/control-plane/evidence/read-only-vault.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
@@ -48,14 +49,14 @@ async function setup(pages: Readonly<Record<string, string>>) {
   const stored = new Map<string, Uint8Array>();
   const portrait = { read: async () => png(), put: async (key: string, bytes: Uint8Array) => { stored.set(key, bytes); } };
   const store = new MemoryRoutineDataStore();
-  const run = (extra: Partial<Parameters<typeof publishCandidateFindings>[0]> = {}) => publishCandidateFindings({ boxFindings: repos.boxFindings,
+  const run = (extra: Partial<Parameters<typeof publishCandidateFindings>[0]> = {}) => publishCandidateFindings({ boxFindings: repos.boxFindings, scoutResults: repos.scoutResults,
     held: async id => [...artifacts.values()].find(row => row.id === id) ?? null, store, subjects: [JANE],
     campaignHosts: new Map([[JANE.candidacyId, ["janedoeforcouncil.com"]]]), clocks: factClocks(null), now: NOW, portrait, ...extra });
   const card = async () => {
     const read = await readPromotedCivicData<CandidateProfilesProjection>(PROFILES.recordClass, PROFILES.scope, { store, now: NOW, bypassCache: true });
     return read.kind === "PROMOTED" ? read.value.cards.cards[JANE.candidacyId] : undefined;
   };
-  return { repos, report, run, card, stored };
+  return { repos, report, run, card, stored, artifacts };
 }
 
 test("a hunter's bio, campaign phone and campaign-site portrait publish on the candidate's card once each holds on its saved page", async () => {
@@ -111,4 +112,20 @@ test("a Commons file publishes on its own when its description names the candida
   assert.equal(card.photoSource, "Wikimedia Commons: Photo Author, CC BY-SA 4.0");
   assert.equal(card.photoVerification?.basis, "COMMONS");
   assert.ok(portraitBindingMatches(JANE.candidacyId, { url: card.photoUrl!, sourceUrl: card.photoVerification!.imageUrl, verification: card.photoVerification }, "candidates"));
+});
+
+test("a Scout's saved candidate finding, named in its own words, publishes the same way once checked", async () => {
+  const s = await setup({ [SITE]: "<html><body><h1>Jane Doe for City Council 2026</h1><p>Jane Doe has taught in Columbus schools since 2004.</p></body></html>" });
+  const result: ScoutResult = { formatVersion: 1, attemptId: "at-enrich", obligationId: `freshness:candidate-enrichment:${JANE.candidacyId}`, routeTaskId: "rt",
+    workItemId: "wi-packet", subjectId: JANE.candidacyId, routeId: "candidate-site", recordClass: "candidate-enrichment", providerId: "fixture",
+    reason: "Recorded candidate findings", outcome: "EVIDENCE_FOUND", stoppedBy: "MODEL", rungs: [], distinctEvidenceRungs: 1, candidates: [], nextRungs: [],
+    unverified: [], narrative: "Saved fields", findings: [{ field: "candidate.bio", value: "Jane Doe has taught in Columbus schools since 2004.",
+      exactQuote: "Jane Doe has taught in Columbus schools since 2004.", sourceUrl: SITE, artifactIds: [s.artifacts.get(SITE)!.id], kind: "RECORD", summary: "bio" }],
+    worker: { provider: "fixture", model: "fixture", modelReported: "fixture" }, usage: { inputTokens: 1, outputTokens: 1, cacheReadInputTokens: 0,
+      cacheCreationInputTokens: 0, turns: 1, toolCalls: 1 }, usd: 0, elapsedMs: 1, artifactIds: [], methodCandidateIds: [], refusal: null, startedAt: NOW, recordedAt: NOW };
+  await s.repos.scoutResults.append(result.obligationId, result.attemptId, result, NOW);
+  const [row] = await indexScoutFindings(s.repos.boxFindings, result, NOW);
+  await holdBoxFinding(s.repos.boxFindings, row!.id, { class: "candidates", reason: CANDIDATE_PROFILE_LEAD, slots: FINDING_SLOTS_VERSION }, NOW);
+  assert.deepEqual((await s.run()).published, { "CAN-16": 1 });
+  assert.equal((await s.card())!.bio, "Jane Doe has taught in Columbus schools since 2004.");
 });

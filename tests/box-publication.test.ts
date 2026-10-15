@@ -69,7 +69,11 @@ test("hunter field names map to fact-store slots; a field with no slot names the
   assert.deepEqual(slot("body.name"), { class: "directory", waiting: "DIRECTORY_CLASS_NOT_MOVED" });
   assert.deepEqual(slot("recorder.phone"), { class: "services", waiting: "SERVICES_CLASS_NOT_MOVED" });
   assert.deepEqual(slot("meeting.location"), { class: "meetings", waiting: "FINDING_NAMES_NO_SITTING" });
-  assert.deepEqual(slot("officeholder.name", "x", "candidate-enrichment"), { class: "candidates", waiting: "CANDIDATE_CLASS_NOT_MOVED" });
+  assert.deepEqual(slot("officeholder.name", "x", "candidate-enrichment"), { class: "candidates", waiting: "NO_FACT_SLOT" });
+  assert.deepEqual(slot("candidate.bio", "x", "candidate-enrichment"), { class: "candidates", lead: "candidate-profile" });
+  assert.deepEqual(slot("candidate.contact.email", "jane@example.com", "candidate-enrichment"), { class: "candidates", lead: "candidate-profile" });
+  assert.deepEqual(slot("candidate.campaignSite", "https://janedoe.example.com", "candidate-enrichment"), { class: "campaign sites", lead: "campaign-site" });
+  assert.deepEqual(slot("candidate.position.education", "x", "candidate-enrichment"), { class: "candidates", waiting: "TAKES_WHOLE_RECORDS_ONLY" });
   assert.deepEqual(slot("population"), { class: "other", waiting: "NO_FACT_SLOT" });
   assert.deepEqual(slot("OFF-04", "Rex Scott"), { class: "rosters", slot: "member_name" });
   assert.deepEqual(slot("OFF-09", "clerk@tucsonaz.gov"), { class: "contacts", slot: "email" });
@@ -138,10 +142,10 @@ test("Box findings publish on their own page with no model turn: a held copy ins
 
   const input = { repos, facts, vault, fetch, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 100 };
   const report = await publishBoxFindings(input);
-  assert.deepEqual({ ...report, byPlace: undefined }, { looked: 9, published: 4, refused: 1, byPlace: undefined, handed: 0,
+  assert.deepEqual({ ...report, byPlace: undefined }, { looked: 9, published: 4, refused: 1, byPlace: undefined, handed: 1,
     publishedByRoute: { "office contacts": 1, rosters: 3 },
-    waitingByClass: { directory: 1, rosters: 1, candidates: 1, detective: 1 }, failuresByReason: { "SOURCE_BLOCKED:FETCH_FAILED:connect ECONNREFUSED": 1 } }, JSON.stringify(report));
-  assert.deepEqual(report.byPlace[TCCC], { published: 3, refused: 0, waiting: 3 });
+    waitingByClass: { directory: 1, rosters: 1, detective: 1 }, failuresByReason: { "SOURCE_BLOCKED:FETCH_FAILED:connect ECONNREFUSED": 1 } }, JSON.stringify(report));
+  assert.deepEqual(report.byPlace[TCCC], { published: 3, refused: 0, waiting: 2 });
   assert.deepEqual(report.byPlace[AGENDA], { published: 1, refused: 1, waiting: 0 });
   assert.deepEqual(fetched.sort(), [AGENDA_URL, "https://unreachable.tucsonaz.gov/agenda"], "the held TCCC copy is inside its clock; the stale agenda copy is read again once");
 
@@ -154,7 +158,7 @@ test("Box findings publish on their own page with no model turn: a held copy ins
   assert.deepEqual(await facts.query("SELECT stage, reason FROM blank WHERE entity_id = $1 AND field = 'member_name'", [AGENDA]), [{ stage: "ACQUIRE", reason: "SOURCE_BLOCKED" }]);
 
   const waiting = (await repos.boxFindings.listWhere(["state"], "waiting")).map(row => row.value.waitingFor?.reason).sort();
-  assert.deepEqual(waiting, ["CANDIDATE_CLASS_NOT_MOVED", "DETECTIVE_SPAN_NAMES_NO_FIELD", "DIRECTORY_CLASS_NOT_MOVED", "SUBJECT_HAS_NO_BODY_IN_THE_FACT_STORE"]);
+  assert.deepEqual(waiting, ["CAMPAIGN_SITE_CHAIN_TAKES_IT", "DETECTIVE_SPAN_NAMES_NO_FIELD", "DIRECTORY_CLASS_NOT_MOVED", "SUBJECT_HAS_NO_BODY_IN_THE_FACT_STORE"]);
   assert.equal((await publishBoxFindings(input)).looked, 0, "a held finding is looked at again only when the slot map moves");
 });
 

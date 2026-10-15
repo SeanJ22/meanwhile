@@ -112,12 +112,11 @@ function sourceCapture(source: MeasureSourceReference, text: string): WorkerPubl
     observedAt: source.retrievedAt, partial: false, httpStatus: 200, transport: "REACHABLE" };
 }
 
-export async function nationalMeasureInputs(ballot: BallotSet, vault: EvidenceStore, division: string) {
+export async function nationalMeasureInputs(ballot: BallotSet, vault: EvidenceStore, division: string, read = measureSourceReader(vault)) {
   const state = US_JURISDICTIONS.find(row => row.usps === ballot.election.state);
   if (!state) throw new Error("The ballot names an unknown jurisdiction.");
   if (jurisdictionFromOcdId(division)?.usps !== state.usps) throw new Error("Measure translation cannot cross its state boundary.");
   const captures: WorkerPublicationCapture[] = [], records = [];
-  const read = measureSourceReader(vault);
   for (const record of ballot.measureRecords ?? []) {
     const measure = ballot.measures.find(row => row.contestId === record.contestId);
     const contest = ballot.contests.find(row => row.id === record.contestId && row.type === "MEASURE" && row.ocdId === division);
@@ -250,11 +249,12 @@ export async function runNationalMeasureTranslations(input: {
         const checked = checkedProjection.kind === "PROMOTED" ? checkedProjection.value.records : [];
         const publishedBefore = report.published;
         const scope = translationScope(division);
+        const readSource = measureSourceReader(input.vault);
         let attempts: TranslationAttempt[] | null = null, sourceUnavailable = false;
         const admitMeasure = async (ballot: BallotSet, measure: BallotSet["measures"][number]) => {
           try {
             const admitted = await nationalMeasureInputs({ ...ballot, measures: [measure],
-              measureRecords: ballot.measureRecords?.filter(record => record.contestId === measure.contestId) }, input.vault, division);
+              measureRecords: ballot.measureRecords?.filter(record => record.contestId === measure.contestId) }, input.vault, division, readSource);
             if (!admitted.ballots[0].measureRecords.length) {
               sourceUnavailable = true; report.deferred++;
               input.report(`Measure summary deferred ${measure.contestId}: A complete source-bound official text is still owed.`);

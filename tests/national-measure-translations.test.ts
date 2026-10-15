@@ -343,11 +343,14 @@ test("one state worker translates county, city and school measures one place at 
   const vault = new MemoryEvidenceStore(), repos = createMemoryRepositories(), store = new MemoryRoutineDataStore();
   await saveSource(vault, text, ballot.measures[0].officialText!);
   await saveSource(vault, authorityHtml, authority);
+  const originalText = "Official enrolled legislative publication.";
+  const original = reference(originalText, "https://elections.example.gov/enrolled.txt");
+  await saveSource(vault, originalText, original);
   const places = ["county:alder", "place:alder", "school_district:alder"].map(suffix => `${division}/${suffix}`);
-  let vaultReads = 0, requests = 0, yielded = 0, sourceVersion = "initial", clock = at;
-  let heldSource = ballot.measures[0].officialText!, missingFirst = false;
+  let vaultReads = 0, originalReads = 0, requests = 0, yielded = 0, sourceVersion = "initial", clock = at;
+  let heldSource: MeasureSourceReference = { ...ballot.measures[0].officialText!, originals: [original] }, missingFirst = false;
   const streamed = vault.stream.bind(vault);
-  vault.stream = async key => { vaultReads++; return streamed(key); };
+  vault.stream = async key => { vaultReads++; if (key === original.vault.key) originalReads++; return streamed(key); };
   const published: string[] = [], currentIdentities: unknown[] = [];
   const input = { state: "OH", vault, repos, store, now: () => clock, capacity: () => 1,
     slots: { acquire: async () => () => {} }, continueWork: () => true, report: () => {},
@@ -377,6 +380,7 @@ test("one state worker translates county, city and school measures one place at 
     } };
   const firstPlaces = await runNationalMeasureTranslations(input);
   assert.equal(firstPlaces[0].published, 4, JSON.stringify(firstPlaces));
+  assert.equal(originalReads, places.length, "verified original identities are shared within one place and released before the next place");
   assert.equal(requests, 8);
   assert.deepEqual(published, places);
   const costs = await repos.costs.readAll(), charges = await repos.modelCharges.readSince("1970-01-01T00:00:00.000Z");
@@ -412,7 +416,7 @@ test("one state worker translates county, city and school measures one place at 
       const reordered = { ...Object.fromEntries(Object.entries(reference).reverse()),
         vault: Object.fromEntries(Object.entries(reference.vault).reverse()) } as MeasureSourceReference;
       assert.notEqual(JSON.stringify(reordered), JSON.stringify(reference));
-      const captures = await nationalMeasureInputs(ballot, vault, division);
+      const captures = await nationalMeasureInputs({ ...ballot, measures: [{ ...ballot.measures[0], officialText: heldSource }] }, vault, division);
       assert.doesNotThrow(() => translationPackage({ record: { ...checkedMeasure, sourceReference: reordered }, captures: captures.captures, now: at }));
       assert.throws(() => translationPackage({ record: { ...checkedMeasure, sourceReference: { ...reordered, publisher: "Another authority" } },
         captures: captures.captures, now: at }), /differs from its verified capture/);

@@ -7,7 +7,7 @@ import { newFieldManualEntry, writeFieldManual } from "../lib/control-plane/fiel
 import type { ModelRequest, ModelResponse } from "../lib/control-plane/scheduler/scout-executor.ts";
 import type { WorkerEvidence } from "../lib/control-plane/workers/types.ts";
 import { translateMeasure, translationPlaybook } from "../lib/translate/worker.ts";
-import { translationHash, translationRecordIssue } from "../lib/translate/records.ts";
+import { translationHash, translationRecordIssue, translationScope } from "../lib/translate/records.ts";
 import { publishTranslation, readTranslations, withMeasureTranslations } from "../lib/translate/publication.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { MeasureRecord } from "../lib/ballot/measure-records.ts";
@@ -129,6 +129,50 @@ test("a translation for another exact district remains separate and same-place p
   await publishTranslation(store, { record: { ...record, ocdId: elsewhere }, captures, now });
   assert.equal((await readTranslations([elsewhere], { store, now, bypassCache: true })).length, 1);
   assert.equal((await readTranslations([subject.ocdId], { store, now, bypassCache: true })).length, 2);
+});
+
+test("independent measures attach in source collection order while older revisions of the same measure cannot regress", async () => {
+  const store = new MemoryRoutineDataStore(), repos = createMemoryRepositories();
+  const prepare = async (number: string, retrievedAt: string, writtenAt: string, suffix = "") => {
+    const primary = { ...evidence, canonicalUrl: "https://elections.example.gov/state-measures.pdf", retrievedAt,
+      text: source + suffix, contentHash: `sha256-${translationHash(source + suffix)}` };
+    const sourceReference = measureReference(primary), contestId = `measure:${number}`;
+    const next = { ...measure, contestId, whatItDoes: suffix.trim() || measure.whatItDoes,
+      sourceUrl: primary.canonicalUrl, sourceHash: primary.contentHash.slice(7), writtenAt };
+    const nextSentences = ["whatItDoes", "yesMeans", "noMeans"].map(field => ({ field, text: next[field as "whatItDoes"], quote: next[field as "whatItDoes"] }));
+    const nextChecked = nextSentences.map(({ field, text }) => ({ field, text, supported: true as const }));
+    const translated = await translateMeasure({ repos, evidence: primary, sourceReference, now: writtenAt,
+      subject: { ...subject, contestId }, transportFor: () => async request => response(request,
+        request.tools[0].name === "write_measure_translation" ? { measure: next, sentences: nextSentences } : { checked: nextChecked }) });
+    return { record: translated.record, now: writtenAt,
+      captures: [{ evidence: primary, sourceReference, observedAt: retrievedAt, httpStatus: 200, partial: false, transport: "REACHABLE" as const }] };
+  };
+  const newer = await prepare("12", "2026-10-05T17:30:00Z", now);
+  assert.ok((await publishTranslation(store, newer)).promoted);
+  const older = await prepare("13", "2026-10-05T17:00:00Z", "2026-10-05T18:01:00Z");
+  const resumed = await publishTranslation(store, older);
+  assert.ok(resumed.promoted, JSON.stringify(resumed.candidate));
+  assert.equal(resumed.readerReadback?.status, "PASS");
+  assert.equal(resumed.candidate.candidate.temporal.sourceThrough, newer.record.retrievedAt);
+  assert.deepEqual((await readTranslations([subject.ocdId], { store, now: older.now, bypassCache: true }))
+    .map(record => [record.subjectId, record.retrievedAt]), [["measure:12", newer.record.retrievedAt], ["measure:13", older.record.retrievedAt]]);
+  assert.equal(older.record.sourceHash, translationHash(source));
+  const newest = await prepare("14", "2026-10-05T17:45:00Z", "2026-10-05T18:02:00Z", " This version applies in 2028.");
+  assert.ok((await publishTranslation(store, newest)).promoted);
+  const update = await prepare("13", "2026-10-05T17:15:00Z", "2026-10-05T18:03:00Z", " This version applies in 2027.");
+  const advanced = await publishTranslation(store, update);
+  assert.ok(advanced.promoted, JSON.stringify(advanced.candidate));
+  assert.equal(advanced.candidate.candidate.temporal.sourceThrough, newest.record.retrievedAt);
+  const before = await readTranslations([subject.ocdId], { store, now: update.now, bypassCache: true });
+  assert.equal(update.record.sourceHash, translationHash(`${source} This version applies in 2027.`));
+  assert.notEqual(update.record.sourceHash, older.record.sourceHash);
+  assert.equal(before.find(record => record.subjectId === "measure:13")!.sourceHash, update.record.sourceHash,
+    "another measure's later receipt for the shared URL cannot suppress this subject's newer source");
+  assert.deepEqual(before, [newer.record, update.record, newest.record], "each published record retains its exact source, sentences and independent checks");
+  const stale = await prepare("13", "2026-10-05T16:00:00Z", "2026-10-05T18:04:00Z", " This is the prior version.");
+  await assert.rejects(publishTranslation(store, stale), /TRANSLATION_SOURCE_TIME_REGRESSION:translation:measure:13/);
+  assert.deepEqual(await readTranslations([subject.ocdId], { store, now: stale.now, bypassCache: true }), before);
+  assert.equal((await store.readPromotionIdentity("CURATED_READER_RECORD", translationScope(subject.ocdId)))!.versionId, advanced.promoted!.versionId);
 });
 
 test("officially numbered parts retain their reaction identities on a checked rewrite", async () => {

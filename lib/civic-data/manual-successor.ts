@@ -51,6 +51,13 @@ export async function prepareManualProjectionSuccessor(
   const earlier = exactMembers(read.value);
   const resolved = (fresh.readModel as CuratedReaderProjection).records.map(record => {
     const old = earlier.get(record.id);
+    if (input.contractId === "plain-english-translations") {
+      if (old && typeof record.retrievedAt === "string" && typeof old.retrievedAt === "string" &&
+          Date.parse(record.retrievedAt) < Date.parse(old.retrievedAt)) {
+        throw new Error(`TRANSLATION_SOURCE_TIME_REGRESSION:${record.id}`);
+      }
+      return { record, conflicts: [] };
+    }
     return old ? resolveRecordConflicts(record, old, input.sourceReceipt, priorReceipt) : { record, conflicts: [] };
   });
   const conflicts = resolved.flatMap(result => result.conflicts);
@@ -98,8 +105,13 @@ export async function prepareManualProjectionSuccessor(
     : { ...(fresh.readModel as CuratedReaderProjection), records };
   const civicRecords = civicRecordsFor(fresh.recordClass, payload);
   const normalizedHash = hash(payload);
+  const sourceThrough = input.contractId === "plain-english-translations"
+    ? records.reduce((latest, record) => typeof record.retrievedAt === "string" && Date.parse(record.retrievedAt) > Date.parse(latest)
+      ? record.retrievedAt : latest, fresh.temporal.sourceThrough)
+    : fresh.temporal.sourceThrough;
   const candidate: ManualSuccessorCandidate = {
     ...fresh,
+    temporal: { ...fresh.temporal, sourceThrough },
     id: `${fresh.sourceId}:${hash({ freshId: fresh.id, base: base.candidate.id, normalizedHash }).slice(0, 32)}`,
     normalization: { ...fresh.normalization, normalizedHash, normalizedPayloadHash: normalizedHash,
       inputRecords: civicRecords.length + fresh.normalization.droppedRecords, outputRecords: civicRecords.length },

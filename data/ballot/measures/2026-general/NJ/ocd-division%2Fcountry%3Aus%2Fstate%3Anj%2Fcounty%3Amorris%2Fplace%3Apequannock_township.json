@@ -1,10 +1,10 @@
 {
   "contractId": "ballot-measures",
   "version": "2026-general:1867cedf4f421057089675065cd513873b1ab96b1e40f63b4adbd783629a5a75:eb6f31f3661075fb477c98320e59c2bdf2fdbdc7406e90be9461131847812e8d",
-  "sourceThrough": "2026-10-15T21:36:42.570025+00:00",
+  "sourceThrough": "2026-10-15T23:48:20.308350+00:00",
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-15T21:36:42.570025+00:00",
+    "reviewedAt": "2026-10-15T23:53:40.465835+00:00",
     "reviewedBy": "Codex MS-01",
     "sources": [
       {
@@ -46,6 +46,36 @@
         "publisher": "Pequannock Township",
         "sourceClass": "OFFICIAL_PUBLISHER",
         "reviewedEvidence": "Official township code new-laws ledger identifies ordinance 2026-02 as adopted April 28, 2026 and directly links the held full adopted ordinance PDF."
+      },
+      {
+        "requestedUrl": "https://www.morriscountynj.gov/Departments/County-Clerk",
+        "finalUrl": "https://www.morriscountynj.gov/Departments/County-Clerk",
+        "retrievedAt": "2026-10-15T23:47:30.875912+00:00",
+        "httpStatus": 200,
+        "rawHash": "49a5c46f4afc446d05ddd66b9af7be42b293d7d243005bc00ba9c0e70a218a1b",
+        "publisher": "Morris County Government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Actual saved Morris County government Department of the County Clerk page directly links https://www.morriscountyclerk.org/Elections/Sample-Ballots in its sample-ballots anchor."
+      },
+      {
+        "requestedUrl": "https://www.morriscountynj.gov/Residents/Community-Information/Cities-and-Towns",
+        "finalUrl": "https://www.morriscountynj.gov/Residents/Community-Information/Cities-and-Towns",
+        "retrievedAt": "2026-10-15T23:48:20.308350+00:00",
+        "httpStatus": 200,
+        "rawHash": "67bc9303e8bd10934834b5e9494c92694cbd27c2bec3e272069651c3baf6c71e",
+        "publisher": "Morris County Government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Actual saved Morris County government Cities and Towns directory links Pequannock Township to http://www.peqtwp.org/."
+      },
+      {
+        "requestedUrl": "https://www.peqtwp.org/293/Codes-Documents-Maps",
+        "finalUrl": "https://www.peqtwp.org/293/Township-Code-Ordinances-Resolutions-and",
+        "retrievedAt": "2026-10-15T23:48:12.622693+00:00",
+        "httpStatus": 200,
+        "rawHash": "3cdd300639bc7422a0a93a92ebd6467bcfd3299859fd83ded198b4b9afbd230a",
+        "publisher": "Pequannock Township",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Actual saved Pequannock Township code page links Township Code to https://ecode360.com/PE0939; the separately held publisher new-laws page links the adopted ordinance PDF."
       }
     ]
   },
@@ -230,6 +260,39 @@
             "vault": {
               "key": "project/freshness/source/ecode360.com/2026/10/15/ms-01-nj-local-eee3aa78b8b199ca/sha256-2fc06b742afbacd3e8141d4975fdb7126c150362f827ddc4a2439acc36bb6bcd.html",
               "byteLength": 62505,
+              "contentType": "text/html"
+            }
+          },
+          {
+            "sourceUrl": "https://www.morriscountynj.gov/Departments/County-Clerk",
+            "sourceHash": "49a5c46f4afc446d05ddd66b9af7be42b293d7d243005bc00ba9c0e70a218a1b",
+            "retrievedAt": "2026-10-15T23:47:30.875912+00:00",
+            "publisher": "Morris County Government",
+            "vault": {
+              "key": "project/freshness/source/www.morriscountynj.gov/2026/10/15/ms-01-nj-authority-cb00cada141e5268/sha256-49a5c46f4afc446d05ddd66b9af7be42b293d7d243005bc00ba9c0e70a218a1b.html",
+              "byteLength": 88401,
+              "contentType": "text/html"
+            }
+          },
+          {
+            "sourceUrl": "https://www.morriscountynj.gov/Residents/Community-Information/Cities-and-Towns",
+            "sourceHash": "67bc9303e8bd10934834b5e9494c92694cbd27c2bec3e272069651c3baf6c71e",
+            "retrievedAt": "2026-10-15T23:48:20.308350+00:00",
+            "publisher": "Morris County Government",
+            "vault": {
+              "key": "project/freshness/source/www.morriscountynj.gov/2026/10/15/ms-01-nj-authority-1c901a568d623f06/sha256-67bc9303e8bd10934834b5e9494c92694cbd27c2bec3e272069651c3baf6c71e.html",
+              "byteLength": 115196,
+              "contentType": "text/html"
+            }
+          },
+          {
+            "sourceUrl": "https://www.peqtwp.org/293/Township-Code-Ordinances-Resolutions-and",
+            "sourceHash": "3cdd300639bc7422a0a93a92ebd6467bcfd3299859fd83ded198b4b9afbd230a",
+            "retrievedAt": "2026-10-15T23:48:12.622693+00:00",
+            "publisher": "Pequannock Township",
+            "vault": {
+              "key": "project/freshness/source/www.peqtwp.org/2026/10/15/ms-01-nj-authority-6942ec3258745676/sha256-3cdd300639bc7422a0a93a92ebd6467bcfd3299859fd83ded198b4b9afbd230a.html",
+              "byteLength": 92217,
               "contentType": "text/html"
             }
           }

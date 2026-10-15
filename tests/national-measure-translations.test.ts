@@ -339,6 +339,64 @@ test("translation publication retains every verified original receipt without re
   await assert.rejects(nationalMeasureInputs(held, vault, division), /differs from its source reference/);
 });
 
+test("saved government links establish a local publisher and vendor chain without admitting unlinked pages", async () => {
+  const vault = new MemoryEvidenceStore(), store = new MemoryRoutineDataStore(), repos = createMemoryRepositories();
+  const url = "https://documents.vendor.example/measure.pdf";
+  const pages = [
+    { url: "https://school.example.org/documents", text: '<p>AUTHORITY_ONLY</p><a href="https://documents.vendor.example/">Documents</a>' },
+    { url: "https://cycle.example.org/", text: '<a href="https://other-cycle.example.org/">Other</a>' },
+    { url: "https://state.example.gov/directory", text: '<a href="https://school.example.org/">School</a>' },
+    { url: "https://unrelated.example.gov/", text: '<a href="https://unrelated.example.org/">Unrelated</a>' },
+    { url: "https://other-cycle.example.org/", text: '<a href="https://cycle.example.org/">Cycle</a>' },
+    { url: "https://county.example.gov/clerk", text: '<a href="https://clerk.example.org/">County Clerk</a>' },
+  ].map(page => ({ ...page, source: reference(page.text, page.url) }));
+  const originalText = "The county's published ballot question.";
+  const original = reference(originalText, "https://clerk.example.org/sample-ballot");
+  const held = { ...ballot, measureRecords: [{ ...record, sourceUrl: url }],
+    measures: [{ ...ballot.measures[0], officialText: { ...reference(text, url), originals: [original] } }], sourceAuthorities: pages.map(page => page.source) };
+  await saveSource(vault, text, held.measures[0].officialText!);
+  await saveSource(vault, originalText, original);
+  for (const page of pages) await saveSource(vault, page.text, page.source);
+  const admitted = await nationalMeasureInputs(held, vault, division);
+  assert.deepEqual(admitted.captures.map(capture => capture.evidence.canonicalUrl), [url, pages[0].url, pages[2].url, pages[5].url]);
+  let calls = 0;
+  const run = (input: typeof admitted) => runHeldMeasureTranslations({ ...input, repos, store, now: at, attempts: [], saveAttempt: async () => {},
+    transportFor: () => async request => {
+      calls++;
+      assert.ok(!JSON.stringify(request).includes("AUTHORITY_ONLY"));
+      const payload = JSON.parse(request.messages[0].content as string);
+      assert.equal(payload.source ?? payload.originalSource, text);
+      const sentences = ["whatItDoes", "yesMeans", "noMeans"].map(field => ({ field,
+        text: record[field as "whatItDoes"], quote: record[field as "whatItDoes"] }));
+      const value = request.tools[0].name === "write_measure_translation"
+        ? { measure: { ...record, sourceUrl: url, writtenAt: payload.writtenAt }, sentences }
+        : { checked: payload.proposal.sentences.map((row: { field: string; text: string }) => ({ ...row, supported: true })) };
+      return { model: request.model, stop_reason: "tool_use", content: [{ type: "tool_use", id: "result", name: request.tools[0].name, input: value }],
+        usage: { input_tokens: 100, output_tokens: 50 } };
+    } });
+  const published = await run(admitted);
+  assert.equal(published.outcomes[0]?.status, "PUBLISHED", JSON.stringify(published));
+  assert.equal(calls, 2);
+  const candidate = (await store.readCandidate(published.outcomes[0].versionId!))!;
+  assert.ok(candidate.candidate.retrieval.manualSourceReceipt!.sources.every(source => source.sourceClass === "OFFICIAL_PUBLISHER"));
+  assert.equal((await readTranslations([division], { store, now: at, bypassCache: true })).length, 1);
+  for (const missing of [pages[0], pages[2]]) {
+    const incomplete = await nationalMeasureInputs({ ...held, sourceAuthorities: pages.filter(page => page !== missing).map(page => page.source) }, vault, division);
+    const refused = await run(incomplete);
+    assert.equal(refused.outcomes.length, 0);
+    assert.match(refused.deferred[0]?.reason ?? "", /LINKED_SOURCE_UNVERIFIED/);
+  }
+  assert.equal(calls, 2, "a missing authority link is refused before either model call");
+  const stream = vault.stream.bind(vault);
+  vault.stream = async key => {
+    const source = await stream(key);
+    return key !== pages[0].source.vault.key || !source ? source : { ...source, body: new ReadableStream({ start(controller) {
+      controller.enqueue(new Uint8Array(pages[0].source.vault.byteLength)); controller.close();
+    } }) };
+  };
+  await assert.rejects(nationalMeasureInputs(held, vault, division), /differs from its source reference/);
+});
+
 test("one state worker translates county, city and school measures one place at a time and skips current sources", async () => {
   const vault = new MemoryEvidenceStore(), repos = createMemoryRepositories(), store = new MemoryRoutineDataStore();
   await saveSource(vault, text, ballot.measures[0].officialText!);

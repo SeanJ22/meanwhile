@@ -8,12 +8,13 @@ import type { PromotedPointerIdentity } from "../civic-data/types.ts";
 import { parseUnchangedConfirmation, UNCHANGED_CONFIRMATION_PREFIX } from "../civic-data/unchanged-confirmation.ts";
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
 import { isOfficialSource } from "../civic-data/source-authority.ts";
+import { officialLinkingPageFromAsync } from "../civic-data/official-linking.ts";
 import { ZERO_COST, type Attempt } from "../control-plane/attempt.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import type { WorkerMemoryRelease, WorkerProcessSlots } from "../control-plane/workers/worker-slots.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { runHeldMeasureTranslations, type TranslationAttempt } from "./standing.ts";
-import { TRANSLATION_SCOPE, translationScope } from "./records.ts";
+import { TRANSLATION_SCOPE, translationHash, translationScope } from "./records.ts";
 import { publishTranslation } from "./publication.ts";
 import type { TranslationBallotSource } from "./projection-contract.ts";
 import { currentMeasureTranslation } from "./runtime.ts";
@@ -126,10 +127,22 @@ export async function nationalMeasureInputs(ballot: BallotSet, vault: EvidenceSt
     captures.push(sourceCapture(source, text));
     records.push(record);
   }
-  const urls = captures.map(capture => capture.evidence.canonicalUrl).filter(url => !isOfficialSource(url));
-  if (urls.length) for (const authority of ballot.sourceAuthorities ?? []) {
-    const text = await read(authority);
-    if (urls.some(url => isOfficialSource(url, { url: authority.sourceUrl, html: text }))) captures.push(sourceCapture(authority, text));
+  const urls = new Set<string>(), sources = captures.map(capture => capture.sourceReference!);
+  for (const source of sources) {
+    if (!isOfficialSource(source.sourceUrl)) urls.add(source.sourceUrl);
+    sources.push(...source.originals ?? []);
+  }
+  const authorities = ballot.sourceAuthorities ?? [];
+  const pages = authorities.map(source => ({ canonicalUrl: source.sourceUrl, readText: () => read(source) }));
+  const selected = new Set(captures.map(capture => `${capture.evidence.canonicalUrl}\n${capture.evidence.contentHash}`));
+  for (const url of urls) {
+    for (let page = await officialLinkingPageFromAsync(url, pages); page; page = page.linkingPage ?? null) {
+      const hash = translationHash(page.html), sourceUrl = page.url;
+      const authority = authorities.find(source => source.sourceUrl === sourceUrl && source.sourceHash === hash);
+      if (!authority) throw new Error("Measure publisher authority differs from its verified capture.");
+      const identity = `${authority.sourceUrl}\nsha256-${hash}`;
+      if (!selected.has(identity)) { captures.push(sourceCapture(authority, page.html)); selected.add(identity); }
+    }
   }
   return { divisions: [division], ballots: [{ ...ballot, measureRecords: records }], captures };
 }

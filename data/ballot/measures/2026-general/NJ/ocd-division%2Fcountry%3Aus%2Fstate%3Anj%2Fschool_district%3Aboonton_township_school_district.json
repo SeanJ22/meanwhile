@@ -1,10 +1,10 @@
 {
   "contractId": "ballot-measures",
   "version": "2026-general:b5c156e3912581219b7e6b4b958c4c088e6c9385c593fadb25c13b1f60a3ff0f:446931adfb899b7cd681d1c074ee13e92b4002e736eae41cbc846cee60a4689b",
-  "sourceThrough": "2026-10-15T21:36:42.570025+00:00",
+  "sourceThrough": "2026-10-15T23:51:48.165Z",
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-15T21:36:42.570025+00:00",
+    "reviewedAt": "2026-10-15T23:53:40.465835+00:00",
     "reviewedBy": "Codex MS-01",
     "sources": [
       {
@@ -45,7 +45,7 @@
         "rawHash": "d42ea71583ccd377464289a7558d343df420fd5a4b4480df296b0fe2fb8aaaec",
         "publisher": "Boonton Township School District",
         "sourceClass": "OFFICIAL_PUBLISHER",
-        "reviewedEvidence": "Official Board of Education current-year minutes index directly links the captured adopted July 29, 2026 special meeting minutes PDF."
+        "reviewedEvidence": "Official Board of Education current-year minutes page. Its exact HTTP HTML was fetched again at 2026-10-15T23:51:46.183Z and matched the previously held bytes. An isolated Chromium browser rendered that TLS-verified HTTP response and its live resources at 2026-10-15T23:51:48.165Z. The saved rendered DOM contains an actual anchor labeled July 29, 2026 Special Meeting Minutes pointing to the exact held Thrillshare PDF. The rendered DOM source reference retains this unchanged HTTP HTML as its original; no link was inserted or rewritten."
       },
       {
         "requestedUrl": "https://vote.btrvs.org",
@@ -86,6 +86,26 @@
         "publisher": "Boonton Township School District",
         "sourceClass": "OFFICIAL_PUBLISHER",
         "reviewedEvidence": "Complete official district referendum guide page held with its project explanation and fiscal information. All published page text retained in the combined voter-guide entry. No separately labeled arguments for/against or passage threshold were found in these guide pages."
+      },
+      {
+        "requestedUrl": "https://www.morriscountynj.gov/Departments/County-Clerk",
+        "finalUrl": "https://www.morriscountynj.gov/Departments/County-Clerk",
+        "retrievedAt": "2026-10-15T23:47:30.875912+00:00",
+        "httpStatus": 200,
+        "rawHash": "49a5c46f4afc446d05ddd66b9af7be42b293d7d243005bc00ba9c0e70a218a1b",
+        "publisher": "Morris County Government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Actual saved Morris County government Department of the County Clerk page directly links https://www.morriscountyclerk.org/Elections/Sample-Ballots in its sample-ballots anchor."
+      },
+      {
+        "requestedUrl": "https://www.morriscountynj.gov/Residents/Community-Information/Schools",
+        "finalUrl": "https://www.morriscountynj.gov/Residents/Community-Information/Schools",
+        "retrievedAt": "2026-10-15T23:48:12.315955+00:00",
+        "httpStatus": 200,
+        "rawHash": "267a000d727d9f28d435c74bcd69751cafda7bd2580f3a892ff7b8ce400de5c2",
+        "publisher": "Morris County Government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Actual saved Morris County government Schools directory links Boonton Township to http://www.btrvs.org/ and Mount Olive to https://motsd.org/."
       }
     ]
   },
@@ -332,12 +352,47 @@
           },
           {
             "sourceUrl": "https://www.btrvs.org/documents/board-of-ed/board-meeting-minutes/1.-current-school-year-boe-minutes/22102603",
-            "sourceHash": "d42ea71583ccd377464289a7558d343df420fd5a4b4480df296b0fe2fb8aaaec",
-            "retrievedAt": "2026-10-15T21:32:15.571483+00:00",
+            "sourceHash": "3b53cc6056f0975b4d6e382231b1eb767d8d5a2178bf56cac4207639fbbacadc",
+            "retrievedAt": "2026-10-15T23:51:48.165Z",
             "publisher": "Boonton Township School District",
             "vault": {
-              "key": "project/freshness/source/www.btrvs.org/2026/10/15/ms-01-nj-local-d7da0cc543fbbf0b/sha256-d42ea71583ccd377464289a7558d343df420fd5a4b4480df296b0fe2fb8aaaec.html",
-              "byteLength": 1310315,
+              "key": "project/freshness/source/www.btrvs.org/2026/10/15/ms-01-nj-authority-d7da0cc543fbbf0b/sha256-3b53cc6056f0975b4d6e382231b1eb767d8d5a2178bf56cac4207639fbbacadc.html",
+              "byteLength": 1481012,
+              "contentType": "text/html"
+            },
+            "originals": [
+              {
+                "sourceUrl": "https://www.btrvs.org/documents/board-of-ed/board-meeting-minutes/1.-current-school-year-boe-minutes/22102603",
+                "sourceHash": "d42ea71583ccd377464289a7558d343df420fd5a4b4480df296b0fe2fb8aaaec",
+                "retrievedAt": "2026-10-15T21:32:15.571483+00:00",
+                "publisher": "Boonton Township School District",
+                "vault": {
+                  "key": "project/freshness/source/www.btrvs.org/2026/10/15/ms-01-nj-local-d7da0cc543fbbf0b/sha256-d42ea71583ccd377464289a7558d343df420fd5a4b4480df296b0fe2fb8aaaec.html",
+                  "byteLength": 1310315,
+                  "contentType": "text/html"
+                }
+              }
+            ]
+          },
+          {
+            "sourceUrl": "https://www.morriscountynj.gov/Departments/County-Clerk",
+            "sourceHash": "49a5c46f4afc446d05ddd66b9af7be42b293d7d243005bc00ba9c0e70a218a1b",
+            "retrievedAt": "2026-10-15T23:47:30.875912+00:00",
+            "publisher": "Morris County Government",
+            "vault": {
+              "key": "project/freshness/source/www.morriscountynj.gov/2026/10/15/ms-01-nj-authority-cb00cada141e5268/sha256-49a5c46f4afc446d05ddd66b9af7be42b293d7d243005bc00ba9c0e70a218a1b.html",
+              "byteLength": 88401,
+              "contentType": "text/html"
+            }
+          },
+          {
+            "sourceUrl": "https://www.morriscountynj.gov/Residents/Community-Information/Schools",
+            "sourceHash": "267a000d727d9f28d435c74bcd69751cafda7bd2580f3a892ff7b8ce400de5c2",
+            "retrievedAt": "2026-10-15T23:48:12.315955+00:00",
+            "publisher": "Morris County Government",
+            "vault": {
+              "key": "project/freshness/source/www.morriscountynj.gov/2026/10/15/ms-01-nj-authority-8256f0645ea936de/sha256-267a000d727d9f28d435c74bcd69751cafda7bd2580f3a892ff7b8ce400de5c2.html",
+              "byteLength": 94741,
               "contentType": "text/html"
             }
           }

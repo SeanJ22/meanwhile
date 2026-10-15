@@ -1,9 +1,3 @@
-/**
- * A fact passes when its value appears on a saved source page from the right place, captured inside
- * that kind of fact's freshness window, and code confirms the value is on the page. Evidence captured
- * by any job counts. A second, independent source is needed only for judgment calls. A record goes
- * live when its minimum facts pass; every other fact attaches when it passes.
- */
 import { DEFAULT_SOURCE_POLICY, hostSourceKind, type SourceKind, type SourcePolicy } from "./source-kinds.ts";
 export type { SourceKind, SourcePolicy } from "./source-kinds.ts";
 import { personNameField, personRecordBlocks } from "../workers/record-block.ts";
@@ -41,11 +35,6 @@ export const SECTION3_MINIMUMS: Readonly<Record<string, readonly string[]>> = {
   BALLOT_CONTEST: ["election", "office"],
 };
 
-/**
- * Category labels the reader of a page assigns (a body's type, a link's kind,
- * a YES/NO/UNKNOWN rule). They describe a verified record rather than quote the
- * page, so they ride with it; each reader door still checks its allowed values.
- */
 export const SECTION3_LABEL_FIELDS: readonly string[] = ["bodyClass", "coverage", "kind", "contactKind", "topicId", "commentPeriod", "state", "sourceKind"];
 
 /** Judgment calls: the only fields that need a second, independent source. */
@@ -61,15 +50,7 @@ export function needsSecondSource(contract: { readonly recordClass: string; read
       !(contract.portraitBasis === "OWN_PAGE" && ["photoUrl", "portrait"].includes(field)));
 }
 
-/** A saved official page among `pages` that links `url` — how a non-.gov page earns official standing. */
-export function linkingPageFrom(url: string, pages: readonly { readonly canonicalUrl: string; readonly text: string }[]): OfficialLinkingPage | null {
-  for (const page of pages) {
-    if (page.canonicalUrl === url) continue;
-    const candidate = { url: page.canonicalUrl, html: page.text };
-    if (isOfficialSource(page.canonicalUrl) && isOfficialSource(url, candidate)) return candidate;
-  }
-  return null;
-}
+export { officialLinkingPageFrom as linkingPageFrom } from "../../civic-data/official-linking.ts";
 
 const DAY = 24;
 /** How long a capture stays inside its freshness window, by kind of fact. Refresh cadence is separate. */

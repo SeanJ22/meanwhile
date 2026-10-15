@@ -1,10 +1,10 @@
 {
   "contractId": "ballot-measures",
   "version": "2026-general:3fd102b7fa473da65e147d9bbb30c2d853f95ba84d5f2f6a76c43bdf31d8cf1a:ec17788154f4a95a626aa7bb8064986a99a38f8a3bc20d132f10184361c6d20f",
-  "sourceThrough": "2026-10-15T21:36:42.570025+00:00",
+  "sourceThrough": "2026-10-15T23:48:12.315955+00:00",
   "sourceReceipt": {
     "contractVersion": 1,
-    "reviewedAt": "2026-10-15T21:36:42.570025+00:00",
+    "reviewedAt": "2026-10-15T23:53:40.465835+00:00",
     "reviewedBy": "Codex MS-01",
     "sources": [
       {
@@ -36,6 +36,26 @@
         "publisher": "Mount Olive Township School District",
         "sourceClass": "OFFICIAL_PUBLISHER",
         "reviewedEvidence": "Complete official current referendum page held, with project scope, financial plan, capital reserves, temporary-note interest estimates, state aid risk, and verbatim certified bond proposal. The 40% statutory aid rate and currently funded 34% rate are both preserved with the district explanation. No separately labeled arguments for/against or passage threshold appear. The separate August 18 resolution was not obtained: linked BoardDocs public landing/list GET and POST requests returned HTTP 403. The held legal source is the complete ballot proposal, not that unheld board resolution."
+      },
+      {
+        "requestedUrl": "https://www.morriscountynj.gov/Departments/County-Clerk",
+        "finalUrl": "https://www.morriscountynj.gov/Departments/County-Clerk",
+        "retrievedAt": "2026-10-15T23:47:30.875912+00:00",
+        "httpStatus": 200,
+        "rawHash": "49a5c46f4afc446d05ddd66b9af7be42b293d7d243005bc00ba9c0e70a218a1b",
+        "publisher": "Morris County Government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Actual saved Morris County government Department of the County Clerk page directly links https://www.morriscountyclerk.org/Elections/Sample-Ballots in its sample-ballots anchor."
+      },
+      {
+        "requestedUrl": "https://www.morriscountynj.gov/Residents/Community-Information/Schools",
+        "finalUrl": "https://www.morriscountynj.gov/Residents/Community-Information/Schools",
+        "retrievedAt": "2026-10-15T23:48:12.315955+00:00",
+        "httpStatus": 200,
+        "rawHash": "267a000d727d9f28d435c74bcd69751cafda7bd2580f3a892ff7b8ce400de5c2",
+        "publisher": "Morris County Government",
+        "sourceClass": "OFFICIAL_PUBLISHER",
+        "reviewedEvidence": "Actual saved Morris County government Schools directory links Boonton Township to http://www.btrvs.org/ and Mount Olive to https://motsd.org/."
       }
     ]
   },
@@ -177,6 +197,28 @@
             "vault": {
               "key": "project/freshness/source/www.morriscountyclerk.org/2026/10/15/ms-01-bl30-3d51e43b669bc9d1/sha256-b494b91bf51a537b3a34d194ae882ebe71f5a37e3e3c5d0c2fe3d99fc38d396c.html",
               "byteLength": 362779,
+              "contentType": "text/html"
+            }
+          },
+          {
+            "sourceUrl": "https://www.morriscountynj.gov/Departments/County-Clerk",
+            "sourceHash": "49a5c46f4afc446d05ddd66b9af7be42b293d7d243005bc00ba9c0e70a218a1b",
+            "retrievedAt": "2026-10-15T23:47:30.875912+00:00",
+            "publisher": "Morris County Government",
+            "vault": {
+              "key": "project/freshness/source/www.morriscountynj.gov/2026/10/15/ms-01-nj-authority-cb00cada141e5268/sha256-49a5c46f4afc446d05ddd66b9af7be42b293d7d243005bc00ba9c0e70a218a1b.html",
+              "byteLength": 88401,
+              "contentType": "text/html"
+            }
+          },
+          {
+            "sourceUrl": "https://www.morriscountynj.gov/Residents/Community-Information/Schools",
+            "sourceHash": "267a000d727d9f28d435c74bcd69751cafda7bd2580f3a892ff7b8ce400de5c2",
+            "retrievedAt": "2026-10-15T23:48:12.315955+00:00",
+            "publisher": "Morris County Government",
+            "vault": {
+              "key": "project/freshness/source/www.morriscountynj.gov/2026/10/15/ms-01-nj-authority-8256f0645ea936de/sha256-267a000d727d9f28d435c74bcd69751cafda7bd2580f3a892ff7b8ce400de5c2.html",
+              "byteLength": 94741,
               "contentType": "text/html"
             }
           }

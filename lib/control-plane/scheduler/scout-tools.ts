@@ -1,4 +1,4 @@
-import { fetchSource, runWithSourceFetch } from "../../sources/fetch-source.ts";
+import { fetchSource, runWithSourceFetch, SourceFetchDeferred } from "../../sources/fetch-source.ts";
 import { SOURCE_API_TOOLS, SOURCE_API_SPECS, readSourceApi, type SourceApiTool } from "./scout-api.ts";
 import { readClientSource, type ClientTool } from './scout-clients.ts';
 /** The hunter's research tools. robots.txt is read and recorded, never a refusal;
@@ -186,6 +186,7 @@ export const realOpenBytes: OpenBytes = async ({ url, headers, timeoutMs }) => {
       transportError: null,
     };
   } catch (error) {
+    if (error instanceof SourceFetchDeferred) throw error;
     return {
       status: null,
       bytes: new Uint8Array(0),
@@ -908,9 +909,6 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
         input.step(`HTTP ${status}, ${got.byteLength} bytes PDF, ${extracted.kind}`), acc, input.permission
       );
     }
-    // Retain the exact transcription shown to Scout so ordinary workers can
-    // replay it by artifact id. Its tier and parent explicitly distinguish it
-    // from the publisher's original PDF; verification remains independent.
     const transcriptions: string[] = [];
     for (const kind of ["PDF_TEXT", ...(extracted.tables.length ? ["PDF_TABLES"] : [])] as const) {
       const parent = report.artifact;
@@ -989,10 +987,6 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
 
     const status = obs.status ?? 0;
     const finalUrl = obs.finalUrl || url.toString();
-    /*
-     * An access control is never passed by rendering it: a navigation answered 401/403/429, or a challenge page, is a
-     * WALL even when the browser went on to render content behind it. The render is vaulted DIAGNOSTIC and not shown.
-     */
     const control = accessControlIn({ status: obs.status, text: obs.html });
     if (control !== null) {
       browserTransport = "CHALLENGED";

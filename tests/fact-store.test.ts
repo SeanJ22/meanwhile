@@ -140,3 +140,37 @@ test("a losing value is kept with its reason; an official value Sean typed over 
   assert.equal((await db.query("SELECT value FROM fact WHERE status = 'live'"))[0]!.value, "Sean Value");
   assert.deepEqual((await db.query("SELECT kind, resolved FROM owner_flag")), [{ kind: "OWNER_VALUE_CONTESTED", resolved: null }]);
 });
+
+test("a bounded claim batch independently confirms, replaces, holds, flags and leaves missing evidence open", async () => {
+  const { publishClaims } = await import("../lib/facts/publish.ts");
+  const db = await seeded();
+  const fields = ["confirm", "replace", "hold", "owner", "missing"];
+  await publishClaims(db, fields.map(field => claim({ field })), clocks, NOW);
+  await db.query("UPDATE fact SET provenance_kind = 'OWNER' WHERE field = 'owner'");
+  const later = new Date("2026-08-14T20:00:00Z");
+  const incoming = fields.map(field => claim({ field, value: field === "confirm" ? "Ned Beman" : "Jose Jimenez",
+    valueText: field === "confirm" ? "Ned Beman" : "Jose Jimenez", quote: field === "confirm" ? "Ned Beman" : "Jose Jimenez",
+    provenance: field === "hold" ? "NEWS" : "OFFICIAL",
+    copy: boardCopy({ id: 2, fetchedAt: later, text: field === "missing" ? "Ned Beman" : `${tucsonBoardPage}\nJose Jimenez` }) }));
+  const result = await publishClaims(db, incoming, clocks, later);
+  assert.deepEqual(result.map(row => "blank" in row ? row.blank : row.decision),
+    ["CONFIRM", "PUBLISH", "KEEP_CURRENT", "FLAG_OWNER", "QUOTE_NOT_ON_SAVED_COPY"]);
+  assert.deepEqual((await db.query("SELECT field, value FROM fact WHERE status = 'live' ORDER BY field")).map(row => [row.field, row.value]),
+    [["confirm", "Ned Beman"], ["hold", "Ned Beman"], ["missing", "Ned Beman"], ["owner", "Ned Beman"], ["replace", "Jose Jimenez"]]);
+  assert.equal((await db.query("SELECT count(*)::int n FROM owner_flag"))[0]!.n, 1);
+  assert.deepEqual((await db.query("SELECT field, reason FROM blank")), [{ field: "missing", reason: "CHECK_FAILED:QUOTE_NOT_ON_SAVED_COPY" }]);
+  const duplicate = await publishClaims(db, [claim({ field: "duplicate" }), claim({ field: "duplicate" })], clocks, NOW);
+  assert.deepEqual(duplicate.map(row => "decision" in row && row.decision), ["PUBLISH", "CONFIRM"]);
+  await db.pg.close();
+});
+
+test("a newer official capture replaces an older value even when the older capture was processed later", async () => {
+  const db = await seeded();
+  await publishClaim(db, claim(), clocks, new Date("2026-08-14T20:00:00Z"));
+  const newer = boardCopy({ id: 2, fetchedAt: new Date("2026-08-14T19:00:00Z"), text: "Jose Jimenez" });
+  const result = await publishClaim(db, claim({ copy: newer, value: "Jose Jimenez", valueText: "Jose Jimenez", quote: "Jose Jimenez" }),
+    clocks, new Date("2026-08-14T21:00:00Z"));
+  assert.equal("decision" in result && result.decision, "PUBLISH");
+  assert.equal((await db.query("SELECT value FROM fact WHERE status = 'live'"))[0]!.value, "Jose Jimenez");
+  await db.pg.close();
+});

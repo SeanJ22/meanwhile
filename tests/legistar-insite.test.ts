@@ -1,3 +1,5 @@
+import { fetchSource } from "../lib/sources/fetch-source.ts";
+import { withSourceTransport } from "./helpers/source-fetch.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -519,7 +521,7 @@ test("fetch drives the ASP.NET postback and reads back the range that was render
   };
   const fetchImpl = (async (url: string | URL, init?: RequestInit) => {
     const method = init?.method ?? "GET";
-    const body = typeof init?.body === "string" ? init.body : null;
+    const body = init?.body ? await new Request(url, init).text() : null;
     seen.push({ url: String(url), method, body });
 
     if (String(url).includes("Feed.ashx")) {
@@ -827,8 +829,7 @@ test("a clerk schedule page that moved is not followed: the grid's sittings surv
   };
   const clerkAsked: (RequestRedirect | undefined)[] = [];
   const requested: string[] = [];
-  const realFetch = globalThis.fetch;
-  globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
+  const transport: typeof fetch = async (input, init) => {
     const url = String(input instanceof Request ? input.url : input);
     requested.push(url);
     if (url === pima.clerkScheduleUrl) {
@@ -845,25 +846,17 @@ test("a clerk schedule page that moved is not followed: the grid's sittings surv
     if (url.includes("Feed.ashx")) {
       return new Response(PIMA_FEED, { status: 200, headers: { "content-type": "application/xml" } });
     }
-    const body = typeof init?.body === "string" ? init.body : null;
+    const body = init?.body ? await new Request(url, init).text() : null;
     const asked = body ? new URLSearchParams(body).get("ctl00$ContentPlaceHolder1$lstYears") : null;
     return new Response((asked && BY_RANGE[asked]) || PIMA_THIS_MONTH, {
       status: 200,
       headers: { "content-type": "text/html" },
     });
-  }) as typeof fetch;
-  let captured: Awaited<ReturnType<typeof captureSourceAcquisitions<LegistarInSiteRaw[]>>>;
-  try {
-    const source = makeLegistarInSiteSource({
-      fetchImpl: ((u: RequestInfo | URL, i?: RequestInit) => globalThis.fetch(u, i)) as typeof fetch,
-      tenants: [pima],
-    });
-    captured = await captureSourceAcquisitions((run) =>
-      run("legistar-insite", () => source.fetch({ lat: 32.2217, lng: -110.974, radiusKm: 40 })),
-    );
-  } finally {
-    globalThis.fetch = realFetch;
-  }
+  };
+  const source = makeLegistarInSiteSource({ fetchImpl: fetchSource, tenants: [pima] });
+  const captured = await withSourceTransport(transport, () => captureSourceAcquisitions(run =>
+    run("legistar-insite", () => source.fetch({ lat: 32.2217, lng: -110.974, radiusKm: 40 })),
+  ));
 
   assert.deepEqual(clerkAsked, ["manual"], "the clerk page is asked once and told not to follow a move");
   assert.ok(!requested.includes(MOVED), "the page it moved to is never requested");
@@ -900,8 +893,7 @@ test("Pima's clerk schedule is read at the county's current page, and that page 
     "This Year": PIMA_THIS_YEAR,
     "Next Year": PIMA_NEXT_YEAR,
   };
-  const realFetch = globalThis.fetch;
-  globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
+  const transport: typeof fetch = async (input, init) => {
     const url = String(input instanceof Request ? input.url : input);
     if (url === pima.clerkScheduleUrl) {
       const page = new Response(CURRENT, { status: 200, headers: { "content-type": "text/html; charset=utf-8" } });
@@ -911,22 +903,14 @@ test("Pima's clerk schedule is read at the county's current page, and that page 
     if (url.includes("Feed.ashx")) {
       return new Response(PIMA_FEED, { status: 200, headers: { "content-type": "application/xml" } });
     }
-    const body = typeof init?.body === "string" ? init.body : null;
+    const body = init?.body ? await new Request(url, init).text() : null;
     const asked = body ? new URLSearchParams(body).get("ctl00$ContentPlaceHolder1$lstYears") : null;
     return new Response((asked && BY_RANGE[asked]) || PIMA_THIS_MONTH, { status: 200, headers: { "content-type": "text/html" } });
-  }) as typeof fetch;
-  let captured: Awaited<ReturnType<typeof captureSourceAcquisitions<LegistarInSiteRaw[]>>>;
-  try {
-    const source = makeLegistarInSiteSource({
-      fetchImpl: ((u: RequestInfo | URL, i?: RequestInit) => globalThis.fetch(u, i)) as typeof fetch,
-      tenants: [pima],
-    });
-    captured = await captureSourceAcquisitions((run) =>
-      run("legistar-insite", () => source.fetch({ lat: 32.2217, lng: -110.974, radiusKm: 40 })),
-    );
-  } finally {
-    globalThis.fetch = realFetch;
-  }
+  };
+  const source = makeLegistarInSiteSource({ fetchImpl: fetchSource, tenants: [pima] });
+  const captured = await withSourceTransport(transport, () => captureSourceAcquisitions(run =>
+    run("legistar-insite", () => source.fetch({ lat: 32.2217, lng: -110.974, radiusKm: 40 })),
+  ));
   const reading = captured.value[0]!;
   assert.ok(reading.clerkScheduleHtml, "the county's schedule page was not read");
   assert.equal(reading.clerkScheduleNote, undefined, "a read page carries no refusal note");

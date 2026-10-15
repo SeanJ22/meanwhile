@@ -17,16 +17,18 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     : NextResponse.json({ says: guard.says }, { status: guard.status, headers: NO_STORE });
   const state = request.nextUrl.searchParams.get("state") ?? "US";
   const after = request.nextUrl.searchParams.get("after") ?? "";
-  if (!/^US(?:-[A-Z]{2})?$/.test(state) || !/^(?:[a-f0-9]{64})?$/.test(after)) {
+  const view = request.nextUrl.searchParams.get("view") ?? "registered";
+  if (!/^US(?:-[A-Z]{2})?$/.test(state) || !["registered", "responses"].includes(view) || after.length > 4096 ||
+    !(view === "registered" ? /^(?:r:[A-Za-z0-9_-]+)?$/ : /^(?:[a-f0-9]{64})?$/).test(after)) {
     return NextResponse.json({ says: "Choose a place and a page of sources." }, { status: 400, headers: NO_STORE });
   }
   try {
     const url = controlPlaneUrlFromEnv();
     if (!url) throw new Error("SOURCE_CHECK_STORE_UNAVAILABLE");
     const sql = neon(url);
-    const view = await readSourceChecks(async (text, params) => await sql.query(text, [...params]) as Record<string, unknown>[],
-      state, after, new Date().toISOString());
-    return NextResponse.json(view, { headers: NO_STORE });
+    const result = await readSourceChecks(async (text, params) => await sql.query(text, [...params]) as Record<string, unknown>[],
+      state, after, new Date().toISOString(), view as "registered" | "responses");
+    return NextResponse.json(result, { headers: NO_STORE });
   } catch {
     return NextResponse.json({ says: "Source checks could not be read just now." }, { status: 503, headers: NO_STORE });
   }

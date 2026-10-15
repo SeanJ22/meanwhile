@@ -1,8 +1,3 @@
-/**
- * The wiring derive reads the venue-resolutions projection before any adapter reading; otherwise the synchronous
- * selector throws in production and the derive files the throw as a changed calendar. These tests run with the
- * fixture fallback off, as production runs it.
- */
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -129,10 +124,6 @@ function reading(row = crosswalkRow(), text = ICS): HeldCalendarReading {
 
 test("C16: the derive reads venue resolutions before any adapter reading, with no test seed to fall back to", async () => {
   const store = await storeWithVenues();
-  /*
-   * The promotion's own readback read the projection into this process. A derive child starts with it unread, so
-   * forget it here: read an empty store, which leaves the selector with nothing it may answer from in production.
-   */
   await readCuratedReaderProjection("venue-resolutions", { store: new MemoryRoutineDataStore(), bypassCache: true, now: NOW });
   assert.throws(() => asProductionSync(() => currentVenueResolutionRecords()), /venue-resolutions projection is NOT_RECORDED/);
   const read = await asProduction(() => readHeldCalendars({

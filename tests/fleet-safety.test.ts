@@ -94,9 +94,8 @@ test("a funded lifetime hunt still obeys the Admin spend dial for requests", () 
 
 test("rollingCeilingReached is the PRE-admission read of the ceiling — so the lane pauses instead of busy-looping refusals", () => {
   const cap = 100;
-  const recent = "2026-09-05T02:00:00.000Z"; // within 24h of NIGHT
+  const recent = "2026-09-05T02:00:00.000Z";
 
-  // Well under: not reached, even allowing a worst-case scout.
   const under = fundedController({ now: NIGHT, charges: priced([cost(cap - 10, recent)]), clock: () => Date.parse(NIGHT) });
   assert.deepEqual(under.rollingCeilingReached(0.6), { reached: false, spentUsd: cap - 10, capUsd: cap });
 
@@ -134,9 +133,6 @@ test("the rolling ceiling is the injected owner override when given, the fallbac
   assert.equal(def.bounds.rolling24HourModelUsd, fallback);
   assert.equal(def.snapshot(NIGHT).bounds.rolling24HourModelUsd, fallback);
 
-  // An override of $300 governs. $200 already spent is OVER the $100 fallback but
-  // UNDER the override — the dial, not the constant, is what admits it, and the
-  // pre-admission read and the per-request reservation agree.
   const raised = fundedController({ now: NIGHT, charges: priced([cost(200, recent)]), rollingCeilingUsd: 300, clock: () => Date.parse(NIGHT) });
   assert.equal(raised.bounds.rolling24HourModelUsd, 300);
   assert.equal(raised.rollingCeilingReached(0.6).reached, false, "under the raised ceiling the lane is not paused");
@@ -841,9 +837,6 @@ test("an in-flight public read reserves only a bounded slice, so another source 
   });
   const firstPending = first({ url: "https://example.test/one", method: "GET", headers: {}, timeoutMs: 1_000 });
   await new Promise<void>((resolve) => setImmediate(resolve));
-  // While the first read is in flight it holds only its bounded reservation, not
-  // the whole remaining budget, so the second read is admitted and runs to 200
-  // instead of being refused PAYLOAD_BYTE_CEILING at turn 0.
   const secondResult = await second({ url: "https://other.test/two", method: "GET", headers: {}, timeoutMs: 1_000 });
   assert.equal(secondResult.status, 200);
   assert.equal(secondResult.body, "two");
@@ -909,9 +902,6 @@ test("the largest recurring record's stream budget clears ~9.2 MiB while a full 
   const a = holdOpen("scout-read-a");
   const b = holdOpen("scout-read-b");
   await new Promise<void>((resolve) => setImmediate(resolve));
-  // Now the serial deterministic lane opens the largest recurring record. Its
-  // honest per-fetch stream budget must still clear the
-  // 9,396,218-byte record even with the whole Scout lane holding reservations.
   const big = controller.guardedOpenOne("public-web", "nh-cfs-filing-entity-details", async (_input, init) => {
     assert.equal(new Headers(init?.headers).get('range'), null);
     return new Response(new Uint8Array(9_396_218), { status: 200 });
@@ -1079,7 +1069,7 @@ test('parent HTTP shares ten held small-publisher requests across text and byte 
   const controller=fundedController({now:NIGHT,charges: [],websiteSize});
   let calls=0;
   const vault=new MemoryEvidenceStore();
-  const store={pacing:memoryWebsitePacing(),withLease: async <T,>(_key: string, operation: () => Promise<T>) => operation(),read:async()=>null,record:async()=>{}};
+  const store={pacing:memoryWebsitePacing(),withLease: async <T,>(_key: string, operation: () => Promise<T>) => operation(),read:async()=>null,readEntryRequest:async()=>null,record:async()=>{}};
   const fetcher:typeof fetch=(input,init)=>runWithSourceFetch({vault,runtime:{store,transport:async()=>{calls++;return new Response('complete');}}},()=>fetchSource(input,init));
   const text=controller.guardedOpenOne('public-web','same-work',fetcher);
   const bytes=controller.guardedOpenBytes('public-web','same-work',fetcher);

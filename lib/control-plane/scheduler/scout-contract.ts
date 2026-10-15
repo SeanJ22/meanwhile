@@ -1,8 +1,4 @@
 import { SOURCE_API_TOOLS } from "./scout-api.ts";
-/**
- * The contract between a hunter and its research tools. The model never touches the network: page bytes reach it
- * only after a tool vaulted them, and search text is handed to it to read and never stored.
- */
 
 import type { PermissionState, TransportState } from "../../workstate/types.ts";
 import type { WorkArtifact } from "./dispatch.ts";

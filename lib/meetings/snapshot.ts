@@ -370,7 +370,10 @@ function assertAttributionIsHonest(snap: MeetingsSnapshot): void {
 
 const validatedProjectionValues = new WeakSet<object>();
 
-export type MeetingsProjectionReadOptions = PromotedCivicDataReadOptions & { readonly state?: string };
+export type MeetingsProjectionReadOptions = PromotedCivicDataReadOptions & {
+  readonly state?: string;
+  readonly partitions?: readonly MeetingPartitionContract[];
+};
 
 export interface MeetingPartitionReadback {
   readonly contractId: string;
@@ -467,8 +470,8 @@ export async function readMeetingsProjection(
   // The meeting partitions read here are the published doors' partitions, installed in this module graph.
   const requestedState = options.state ?? process.env.WTP_SOURCE_STATE;
   const state = requestedState ? routineScopeState(requestedState) : undefined;
-  await (await import("../doors/meeting-doors.ts")).ensureMeetingDoors(state ? { state } : {});
-  const partitions = [...MEETING_PARTITION_CONTRACTS].filter(partition => !state || routineScopeState(partition.bodyId) === state);
+  if (!options.partitions) await (await import("../doors/meeting-doors.ts")).ensureMeetingDoors(state ? { state } : {});
+  const partitions = options.partitions ?? [...MEETING_PARTITION_CONTRACTS].filter(partition => !state || routineScopeState(partition.bodyId) === state);
   const now = options.now ?? new Date().toISOString();
   const readOptions = {
     ...(options.store ? { store: options.store } : {}),

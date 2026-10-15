@@ -37,11 +37,6 @@ export type BoundedChildTermination =
 export interface BoundedChildCommand {
   readonly id: string;
   readonly onStarted?: (pid: number) => void;
-  readonly onStdoutLine?: (line: string) => Promise<void> | void;
-  /**
-   * Commands in one upstream/provider failure domain never run concurrently.
-   * Omitting this field keeps the command independent by using its unique id.
-   */
   readonly failureDomain?: string;
   /** Commands sharing a serial lane run one at a time, back to back: no same-domain gap, which is a host's courtesy. */
   readonly serialLane?: string;
@@ -98,7 +93,6 @@ function runOneBoundedChild(
     let lines = "";
     let stdout = "";
     let stderr = "";
-    let callbacks = Promise.resolve();
     const observed = new Set<string>();
     const child = spawn(command.executable, [...command.args], {
       cwd: options.cwd, env: command.env ?? options.env, windowsHide: true,
@@ -119,26 +113,19 @@ function runOneBoundedChild(
           }
         } catch {}
       }
-      if (command.onStdoutLine) callbacks = callbacks.then(() => command.onStdoutLine!(line)).catch(error => {
-        failure ??= error instanceof Error ? error : new Error(String(error)); child.kill("SIGTERM");
-      });
     };
     child.once("spawn", () => command.onStarted?.(child.pid!));
     child.once("error", error => { failure = error; });
     child.stdout.setEncoding("utf8");
     child.stderr.setEncoding("utf8");
     child.stdout.on("data", (chunk: string) => {
-      if (!command.onStdoutLine) stdout += chunk;
+      stdout += chunk;
       lines += chunk;
       const complete = lines.split(/\r?\n/);
       lines = complete.pop() ?? "";
       for (const line of complete) consumeLine(line);
-      if (Buffer.byteLength(command.onStdoutLine ? lines : stdout) > maxBuffer) {
+      if (Buffer.byteLength(stdout) > maxBuffer) {
         outputLimited = true; child.kill("SIGTERM");
-      }
-      if (command.onStdoutLine) {
-        child.stdout.pause();
-        void callbacks.finally(() => child.stdout.resume());
       }
     });
     child.stderr.on("data", (chunk: string) => {
@@ -146,14 +133,14 @@ function runOneBoundedChild(
       if (Buffer.byteLength(stderr) > maxBuffer) { outputLimited = true; child.kill("SIGTERM"); }
     });
     child.once("close", (status, signal) => {
-      clearTimeout(idle);
       if (lines) consumeLine(lines);
-      void callbacks.then(() => resolve({
-        id: command.id, status, signal, stdout, stderr,
+      clearTimeout(idle);
+      resolve({
+        id: command.id, status: failure ? null : status, signal, stdout, stderr,
         termination: outputLimited ? "OUTPUT_LIMIT_EXCEEDED" : paused ? "TIMED_OUT" : failure ? "SPAWN_FAILED" : "EXITED",
         errorMessage: outputLimited ? "Child output exceeded its retained stream limit" : paused
           ? `NO_PROGRESS_PAUSED: no new publication for ${timeout}ms.` : failure?.message ?? (status === 0 ? null : `Child exited ${status ?? signal}`),
-      }));
+      });
     });
     renew();
   });
@@ -294,10 +281,6 @@ export function routineChildPassWorstCaseMs(
   }
   if (commandCount === 0) return 0;
 
-  // With independent commands the exact bound remains the ordinary pool wave
-  // count. For domain chains, this is the standard work-plus-critical-path
-  // list-scheduling bound: (W-L)/C + L. It cannot understate a portfolio whose
-  // largest provider must be processed serially.
   const waves = largestFailureDomainSize === 1
     ? Math.ceil(commandCount / concurrency)
     : Math.ceil(

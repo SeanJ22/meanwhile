@@ -1,7 +1,7 @@
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import { vaultCapture } from "../facts/capture.ts";
 import { normalizeText } from "../facts/check.ts";
-import { publishMeetingFacts, sittingOnPage, type MeetingFactsReport } from "../facts/meeting-facts.ts";
+import { publishMeetingFactBatch, sittingOnPage, type MeetingFactsReport } from "../facts/meeting-facts.ts";
 import type { Clocks, FactDb, Query } from "../facts/publish.ts";
 import type { Meeting } from "../sources/types.ts";
 import type { RetainedSourceResponse } from "./retained-meeting-bytes.ts";
@@ -22,12 +22,12 @@ export async function publishReadMeetingFacts(input: {
   }
   const tally = { live: 0, confirmed: 0, held: 0, blanks: 0 };
   if (!captures.length) return { ...tally, unsaved };
-  for (const meeting of input.meetings) {
+  const normalized = new Map(captures.map(capture => [capture, normalizeText(capture.evidence.text)]));
+  const readings = input.meetings.map(meeting => {
     const title = normalizeText(meeting.title);
-    const states = (capture: WorkerPublicationCapture) => normalizeText(capture.evidence.text).includes(title);
+    const states = (capture: WorkerPublicationCapture) => normalized.get(capture)!.includes(title);
     const capture = captures.find(c => states(c) && sittingOnPage(c.evidence.text, meeting)) ?? captures.find(states) ?? captures[0]!;
-    const report = await publishMeetingFacts(input.facts, { meeting, capture, producedBy: input.producedBy }, input.clocks, input.now);
-    tally.live += report.live; tally.confirmed += report.confirmed; tally.held += report.held; tally.blanks += report.blanks;
-  }
-  return { ...tally, unsaved };
+    return { meeting, capture };
+  });
+  return { ...await publishMeetingFactBatch(input.facts, readings, input.producedBy, input.clocks, input.now), unsaved };
 }

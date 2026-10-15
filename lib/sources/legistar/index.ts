@@ -1,9 +1,4 @@
-/**
- * @freshness-reads-here
- *
- * The clock stamps in this file are minted by the code path that performs the read: the freshness date
- * is taken at the moment of the fetch.
- */
+// @freshness-reads-here
 import {
   MEETING_HELD_HORIZON_DAYS,
   MEETING_HELD_LOOKBACK_DAYS,
@@ -39,11 +34,6 @@ import {
 import type { LegistarOutcomeRecord } from "./outcomes.ts";
 import type { LegistarEvent, LegistarEventItem } from "./types.ts";
 
-/**
- * The outcome half of this adapter, re-exported so a caller reaching for
- * "what did they decide" finds it at the same import as everything else — and
- * finds the record classes already separated when they get there.
- */
 export {
   classifyRollCall,
   collectEventOutcomes,
@@ -69,27 +59,13 @@ export type {
   RollCallState,
 } from "./outcomes.ts";
 
-/**
- * Granicus Legistar meeting source. Reads the documented public Web API at `webapi.legistar.com`, which
- * returns only what a client has already marked public on its own InSite portal.
- */
 
 const SOURCE_NAME = "legistar";
 
-/**
- * The meeting id, minted in one place: `<adapter>:<tenant>:<upstream id>` (`legistar:pima:1825`). The
- * primary key of meeting records and the join key the durable outcome store (`lib/outcomes/`) links an
- * action and a roll call back to a sitting on. Two spellings of a join key would silently match nothing.
- */
 export function legistarMeetingId(slug: string, eventId: number): string {
   return `${SOURCE_NAME}:${slug}:${eventId}`;
 }
 
-/**
- * The sitting's start as an ISO instant, from the event alone, for callers (the outcome store) that walk a
- * wider window than `normalize()` serves. Uses the same `calendarDate` / `wallClock` / `toZonedIso` path as
- * `normalize()`. Null when the publisher gives no usable time; never an invented midnight.
- */
 export function legistarStartsAt(
   event: LegistarEvent,
   timeZone: string,
@@ -109,16 +85,7 @@ export interface LegistarEventWithClient {
   event: LegistarEvent;
   slug: string;
   collectedAt: string;
-  /**
-   * The event's agenda items, when this run fetched them. `null` is not `[]`: null means nobody asked (the
-   * item fetch was capped or refused); an empty array means the agenda was read and had no items.
-   */
   items: LegistarEventItem[] | null;
-  /**
-   * What the body did at this sitting, when a run collected it. Undefined means never collected; `null`
-   * means collection was attempted and failed; `[]` means the sitting genuinely recorded no actions.
-   * The default ingest does not populate this; `collectEventOutcomes` in `./outcomes.ts` is the entry point.
-   */
   outcomes?: LegistarOutcomeRecord[] | null;
 }
 
@@ -126,10 +93,11 @@ function isoDate(date: Date): string {
   return date.toISOString().slice(0, 10);
 }
 
-/**
- * `EventDate` arrives as `2026-08-11T00:00:00`. The time half is always
- * midnight and means nothing — the real time is in `EventTime`.
- */
+export function legistarReadWindow(now = new Date()): { from: string; to: string } {
+  return { from: isoDate(new Date(now.getTime() - WINDOW_BACK_DAYS * 86_400_000)),
+    to: isoDate(new Date(now.getTime() + WINDOW_FORWARD_DAYS * 86_400_000)) };
+}
+
 function calendarDate(
   raw: string,
 ): { year: number; month: number; day: number } | null {
@@ -155,16 +123,6 @@ function wallClock(raw: string): { hour: number; minute: number } | null {
   };
 }
 
-/**
- * Legistar has no cancellation field. Clients that cancel conventionally say so in the free-text comment
- * or the agenda status, so both are read, for an explicit word only. Deliberately narrow: a meeting
- * wrongly marked canceled keeps someone at home.
- */
-/**
- * The recording the publisher's own record links for this sitting: `EventVideoPath`, only while the
- * publisher marks the video "Public", and only as a plain https address without credentials. A pointer,
- * never fetched; null when the record carries none.
- */
 /** A Legistar `...UTC` stamp carries no zone designator; its name says UTC, so it is read as UTC. Null when absent or unreadable. */
 function utcInstant(value: string | null | undefined): string | null {
   const text = typeof value === "string" ? value.trim() : "";
@@ -173,10 +131,6 @@ function utcInstant(value: string | null | undefined): string | null {
   return Number.isFinite(at) ? new Date(at).toISOString() : null;
 }
 
-/**
- * The later of the publisher's own agenda and minutes posting stamps for this sitting, or null when it
- * states none.
- */
 export function publisherPostedAt(event: LegistarEvent): string | null {
   const stamps = [utcInstant(event.EventAgendaLastPublishedUTC), utcInstant(event.EventMinutesLastPublishedUTC)]
     .filter((stamp): stamp is string => stamp !== null)
@@ -217,19 +171,9 @@ function statusOf(
 export interface NormalizeDrops {
   /** Venue string names a real meeting with no physical place. */
   placeless: number;
-  /**
-   * Venue string is blank, or is not in the client's reviewed table — needs a
-   * curated entry. **Counted and KEPT** (the venue-gap class, 2026-09-23): the
-   * sitting is published with no place and its venue gap named, so this tallies
-   * a produced meeting, never a drop.
-   */
   unknownVenue: number;
   /** No usable date or time. */
   unplaceableInTime: number;
-  /**
-   * An event whose Legistar tenant is not in the client registry: counted, so every record is either
-   * produced or dropped with a reason.
-   */
   notConfigured: number;
 }
 
@@ -250,14 +194,8 @@ export function normalizeWithDrops(
     // An event whose tenant is not wired is counted, never silently skipped.
     notConfigured: 0,
   };
-  // How many of the meetings that survived had their agenda actually read.
-  // Its denominator is `meetings.length`, and the ingest prints both — a run
-  // where nothing was read must not look like a run where nothing was found.
   let agendasRead = 0;
 
-  // A-002 · one raw row is one event, so the document layer and the logical
-  // layer coincide here — which is why this adapter's gap was a skip rather
-  // than an expansion.
   let keptButPlaceless = 0;
 
   for (const { event, slug, collectedAt, items } of raw) {
@@ -288,10 +226,6 @@ export function normalizeWithDrops(
     }
 
     const venue = online || !location ? null : findVenue(client, location) ?? null;
-    // No reviewed place never suppresses the sitting: no coordinates means no pin, but the sitting is
-    // published with `location: null` and its gap named (the room as written, `STATED_NOT_PLACED`, or the
-    // publisher's silence where `EventLocation` is blank, `NOT_STATED_BY_PUBLISHER`). Still counted as
-    // `unknownVenue`, a tally of a kept sitting.
     const venueGap = !online && !venue ? unplacedVenueGap(location, client.publishingOrg) : null;
     if (venueGap) {
       drops.unknownVenue++;
@@ -315,9 +249,6 @@ export function normalizeWithDrops(
     if (items !== null) {
       agendasRead++;
       const segments = segmentAgenda(toAgendaItems(items), {
-        /* `bodyId: null` here is the AGENDA SEGMENTER's own parameter and
-         * deliberately null — it asks which sub-body a segment belongs to, a
-         * different question from which body held the sitting. */
         bodyId: null,
         ocdId: client.ocdId,
         name: event.EventBodyName,
@@ -330,9 +261,6 @@ export function normalizeWithDrops(
       ocdId: client.ocdId,
       bodyId: client.bodyId,
       bodyName: event.EventBodyName,
-      // The comment is what distinguishes one sitting from another — "Study
-      // Session" against a regular meeting. Where there is none, the body name
-      // is the most specific true thing available.
       title: event.EventComment?.trim() || event.EventBodyName,
       startsAt,
       ...(time ? {} : { startPrecision: "DAY" as const }),
@@ -350,9 +278,6 @@ export function normalizeWithDrops(
       agendaUrl: event.EventAgendaFile,
       ...(publicVideoUrl(event) ? { videoUrl: publicVideoUrl(event)! } : {}),
       ...(publisherPostedAt(event) ? { postedAt: publisherPostedAt(event)! } : {}),
-      // The API record itself is the observed surface: `EventAgendaFile` present with a null value means the
-      // publisher's place for the agenda was empty when we read it. `Object.hasOwn`, not a null test: a
-      // response that omits the field tells us nothing about what the body posted.
       ...(Object.hasOwn(event, "EventAgendaFile") && event.EventAgendaFile == null
         ? { agendaSlotObservedEmpty: true }
         : {}),
@@ -379,12 +304,6 @@ export function normalizeWithDrops(
   });
 }
 
-/**
- * Does this agenda show the host body sitting as some other body (e.g. a county board sitting as a
- * library district board)? This reports; it does not attribute. Attribution lives in
- * `lib/meetings/attribution.ts`, which splits the agenda into the bodies that acted and records the ones
- * it cannot name.
- */
 export function detectSittingAs(items: LegistarEventItem[]): string[] {
   const marker = /\b(sitting|acting)\s+as\b/i;
   const found = new Set<string>();
@@ -399,12 +318,6 @@ export function detectSittingAs(items: LegistarEventItem[]): string[] {
   return [...found];
 }
 
-/**
- * Adapt Legistar's agenda items to the shape `attribution.ts` works in, so the attribution layer never
- * knows a vendor's field names. `EventItemMatterFile` is present on business and absent on headings.
- * Deliberately notice-class only: outcome fields (action, passed flag, mover, seconder) are carried by
- * `toOutcomeRecords` in `./outcomes.ts` onto a record of a different class, never here.
- */
 export function toAgendaItems(items: LegistarEventItem[]): AgendaItem[] {
   return items.map((item) => ({
     id: item.EventItemId,
@@ -422,9 +335,7 @@ export function makeLegistarSource(
     name: SOURCE_NAME,
 
     async fetch(query: MeetingQuery): Promise<LegistarEventWithClient[]> {
-    const now = new Date();
-    const from = isoDate(new Date(now.getTime() - WINDOW_BACK_DAYS * 86_400_000));
-    const to = isoDate(new Date(now.getTime() + WINDOW_FORWARD_DAYS * 86_400_000));
+    const { from, to } = legistarReadWindow();
 
     const collected: LegistarEventWithClient[] = [];
 
@@ -460,9 +371,6 @@ export function makeLegistarSource(
     },
 
     async upsert(meetings: Meeting[]) {
-    // Still no tables — lib/db/schema.ts is `export {}`. Reporting these as
-    // updated rather than inserted keeps the same honest lie the mock tells,
-    // and persistence lands with the Phase 5 schema.
       return { inserted: 0, updated: meetings.length };
     },
   };
@@ -471,11 +379,6 @@ export function makeLegistarSource(
 /** The default source; its membership is the installed meeting doors'. */
 export const legistarSource: MeetingSource<LegistarEventWithClient> = makeLegistarSource();
 
-/**
- * Read one event's agenda items, or say that we did not. One extra request per event, run at ingest and
- * never per reader. A refusal returns `null`, not `[]`: "nobody read this agenda" and "this agenda named no
- * other body" are different facts.
- */
 async function readAgendaItems(
   slug: string,
   eventId: number,

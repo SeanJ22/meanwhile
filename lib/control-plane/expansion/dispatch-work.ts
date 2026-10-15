@@ -689,9 +689,6 @@ export function planDispatchWork(input: {
     }
 
     const members = new Set([...units.placed.map((u) => u.jurisdiction.id), ...(target.kind === "SCOPE" ? target.scope.members : [])]);
-    // Shared candidate/finance work already has its own standing provider. Mark
-    // the existing row with this Send so retries and later cycles retain its
-    // hunt budget; never manufacture a second acquisition clock.
     if (target.kind === "SCOPE") for (const obligation of world.corpus) {
       const row = world.durable.get(obligation.id);
       if (members.has(obligation.subjectId) && row?.active !== false && row !== undefined && !recorded(row) && !marks.some(m => m.obligationId === obligation.id && m.target.key === target.key)) {

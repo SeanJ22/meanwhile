@@ -192,9 +192,6 @@ test("controlled clock through the real store: a Pima-shaped body read across co
   assert.equal(hotAt(leaves), true, "still hourly seven days after the meeting concluded (the day bound)");
   assert.equal(hotAt(leaves + 1), false);
 
-  // Every seventh read changes the version, every eleventh fails, every
-  // thirteenth child dies before writing anything; the rest find nothing new.
-  // The partition starts never published and its first read fails.
   const outcomeOf = (index: number): ReadOutcome =>
     index === 0 ? "FAILED"
       : index === 1 ? "CHANGED"
@@ -220,9 +217,6 @@ test("controlled clock through the real store: a Pima-shaped body read across co
     const readAt = at + 20_000 + Math.floor(rand() * 50_000);
     if (outcome === "CHANGED") revision += 1;
     await read(store, task, outcome, readAt, starts, revision);
-    // A partition never read is owed at once (-Infinity). Every other read lands
-    // by its deadline, or, when the body has just turned hourly, within the hour
-    // of the instant it did (the deadline from a twice-daily success has passed).
     const lastCheckAt = checks.at(-1)?.at ?? Number.NEGATIVE_INFINITY;
     const owedBy = hot === true && lastCheckAt < enters && enters <= at ? Math.max(deadline, enters + HOUR) : deadline;
     if (Number.isFinite(deadline)) {
@@ -239,7 +233,7 @@ test("controlled clock through the real store: a Pima-shaped body read across co
       assert.deepEqual(after, clock, "a child that died wrote nothing, so nothing moved");
     } else if (outcome === "FAILED") {
       assert.equal(after.lastAttemptedAt, iso(readAt));
-      assert.equal(next, readAt + (published ? HOUR : 12 * HOUR), "a failed read owes its retry an hour later, or twice daily while never published");
+      assert.equal(next,readAt + (published || nextHot !== false ? HOUR : 12 * HOUR),"hot and unknown bodies retry within an hour; known cold bodies retain their calendar clock");
     } else {
       assert.equal(after.lastSucceededObservedAt, iso(readAt), `${outcome}: the store-observed success is this read`);
       assert.equal(next, readAt + (nextHot === false ? 12 * HOUR : HOUR), `${outcome}: owed an hour later while hourly, twelve otherwise`);
@@ -254,9 +248,6 @@ test("controlled clock through the real store: a Pima-shaped body read across co
     `outcomes: ${count("UNCHANGED")} unchanged, ${count("CHANGED")} changed, ${count("FAILED")} failed, ${died.length} died`);
   assert.equal((await store.readPromotion("MEETING", task.scope))!.versionId.startsWith("cv-"), true);
 
-  // Judge every gap by the refresh rule, minute by minute: while hourly, a
-  // check is owed within 60 minutes of the later of the last check and the
-  // minute the body turned hourly; every body is owed one within 12 hours.
   const late: string[] = [];
   const times = [...checks.map((check) => check.at), END];
   let longestHot = 0;
@@ -277,14 +268,11 @@ test("controlled clock through the real store: a Pima-shaped body read across co
   assert.deepEqual(late, []);
   assert.ok(longestHot <= HOUR && longest <= 12 * HOUR);
 
-  // The phases: never published (a failed first read waits twice daily, not an
-  // hour), twice daily while cold, hourly from the instant the meeting came
-  // within seven days until seven days after it concluded, then twice daily again.
-  assert.ok(checks[1]!.at - checks[0]!.at >= 10 * HOUR, "R20: the never-published retry is twice daily");
+  assert.ok(checks[1]!.at - checks[0]!.at <= HOUR,"an unknown body's failed first read is retried within an hour");
   const firstHot = checks.find((check) => check.at >= enters)!;
   assert.ok(firstHot.at - enters <= HOUR, `the body turned hourly at ${iso(enters)} and was read at ${iso(firstHot.at)}`);
   const coldBefore = checks.filter((check) => check.at > checks[1]!.at && check.at < enters);
-  assert.ok(coldBefore.length >= 4 && coldBefore.length <= 6, `${coldBefore.length} twice-daily reads while cold, not hourly ones`);
+  assert.ok(coldBefore.length >= 4 && coldBefore.length <= 7, `${coldBefore.length} calendar checks and failed-read retries while cold`);
   const coldAfter = checks.filter((check) => check.at > leaves);
   assert.ok(coldAfter.length >= 1 && coldAfter.length <= 3, `${coldAfter.length} reads in the ${((END - leaves) / HOUR).toFixed(1)} h after cooling`);
   for (let index = 1; index < coldAfter.length; index += 1) {
@@ -312,13 +300,14 @@ interface SimResult {
   readonly peakHot: number;
   readonly passes: number;
   readonly longestPassMs: number;
+  readonly longestOtherPassMs: number;
   readonly reads: number;
   readonly failedReads: number;
   readonly deadChildren: number;
   readonly maxHotGapMs: number;
   readonly maxGapMs: number;
-  /** Reads started by catch-up while a pass was held open. */
-  readonly catchUpReads: number;
+  /** Meeting reads completed while another family was still running. */
+  readonly independentReads: number;
 }
 
 function hotIntervals(starts: readonly string[]): (readonly [number, number])[] {
@@ -409,18 +398,14 @@ async function simulateRegistry(options: {
 
   let pass = 0;
   let longestPassMs = 0;
+  let longestOtherPassMs = 0;
   let peakHot = 0;
   let reads = 0;
   let failedReads = 0;
   let deadChildren = 0;
-  let catchUpReads = 0;
+  let independentReads = 0;
   const all = [...bodies.values()];
   const tasks = all.map(({ task }) => task);
-  // Each pass is admitted by the runner's own functions and run by
-  // tests/helpers/routine-pass-replay.ts: the runner's pool of four children
-  // (a lane's reads one at a time with the same-host gap) beside the rest of a
-  // recorded pass, then its Reader repair, with catch-up reads while either
-  // holds the pass open.
   const clock = new ControlledClock(start);
   await clock.run(async () => {
     let at = start;
@@ -454,7 +439,8 @@ async function simulateRegistry(options: {
         },
       });
       longestPassMs = Math.max(longestPassMs, result.endedAtMs - at);
-      catchUpReads += result.catchUpReads;
+      longestOtherPassMs = Math.max(longestOtherPassMs, result.otherDurationMs);
+      independentReads += result.independentReads;
       const handoff = at >= start + 3 * DAY && at < start + 3 * DAY + 10 * MIN ? 8 * MIN : 0;
       at = nextAdmissionMs(at, result.endedAtMs, handoff);
       pass += 1;
@@ -485,7 +471,7 @@ async function simulateRegistry(options: {
       }
     }
   }
-  return { hourlyLate, twiceDailyLate, peakHot, passes: pass, longestPassMs, reads, failedReads, deadChildren, maxHotGapMs, maxGapMs, catchUpReads };
+  return { hourlyLate, twiceDailyLate, peakHot, passes: pass, longestPassMs, longestOtherPassMs, reads, failedReads, deadChildren, maxHotGapMs, maxGapMs, independentReads };
 }
 
 test("controlled clock, whole registry: every sitting-window body uses persistent meeting workers, with failed reads, a crash-looping partition and a release handoff; clean passes read every hourly body within 60:00 and every body within 12:00:00", async () => {
@@ -497,21 +483,21 @@ test("controlled clock, whole registry: every sitting-window body uses persisten
   assert.ok(result.maxHotGapMs <= HOUR && result.maxGapMs <= 12 * HOUR);
 });
 
-test("controlled clock, whole registry under the passes production ran (2026-09-24, up to 15:52), with catch-up while a pass is held open: every hourly body is read within 60:00 and prioritising hourly bodies never pushes any body past 12 hours", async () => {
+test("controlled clock, whole registry under the passes production ran (2026-09-24, up to 15:52), with independent meeting turns while other families are held open: every hourly body is read within 60:00 and prioritising hourly bodies never pushes any body past 12 hours", async () => {
   // Two seeds; each must keep every hourly body within the hour.
   for (const seed of [925, 9]) {
     const result = await simulateRegistry({ recordedPasses: true, days: 14, seed });
     const detail = `seed ${seed}: longest hourly gap ${(result.maxHotGapMs / MIN).toFixed(2)} min, longest gap ${(result.maxGapMs / HOUR).toFixed(2)} h, ` +
-      `longest pass ${(result.longestPassMs / MIN).toFixed(2)} min, ${result.reads} reads, ${result.catchUpReads} by catch-up`;
-    assert.ok(result.longestPassMs >= 952_000, `the run drew the longest recorded pass (${detail})`);
+      `longest pass ${(result.longestPassMs / MIN).toFixed(2)} min, ${result.reads} reads, ${result.independentReads} while other families ran`;
+    assert.ok(result.longestOtherPassMs >= 952_000, `the run drew the longest recorded pass (${detail})`);
     assert.equal(result.twiceDailyLate.length, 0, `no body waits past 12 hours for the hourly ones (${detail}): ${result.twiceDailyLate.slice(0, 6).join(" | ")}`);
     assert.equal(result.hourlyLate.length, 0, `late hourly reads (${detail}): ${result.hourlyLate.slice(0, 6).join(" | ")}`);
     assert.ok(result.maxHotGapMs <= HOUR && result.maxGapMs <= 12 * HOUR, detail);
-    assert.ok(result.catchUpReads > 0, `the long passes admitted reads by catch-up (${detail})`);
+    assert.ok(result.independentReads > 0, `the long passes admitted reads while other families ran (${detail})`);
   }
 });
 
-test("failed meeting bodies retry within an hour and never-published bodies retain the calendar clock", () => {
+test("failed meeting bodies retry within an hour and known cold unpublished bodies retain the calendar clock", () => {
   const partition = registered(PIMA_LEGISTAR);
   assert.equal(partition.retryMs,HOUR);
   const at = Date.parse("2026-10-05T12:00:00.000Z");
@@ -525,7 +511,9 @@ test("failed meeting bodies retry within an hour and never-published bodies reta
   assert.equal(routineTaskDeadlineMs(partition,failed,undefined),at + HOUR,"unknown reads as hourly");
   const unproven: RoutineTaskClock = { lastAttemptedAt: iso(at), sittingStarts: [iso(at + 2 * DAY)] };
   assert.equal(routineTaskDeadlineMs(partition,unproven,true),at + HOUR);
-  assert.equal(routineTaskDeadlineMs(partition,{ lastAttemptedAt: iso(at) },true),at + 12 * HOUR);
+  assert.equal(routineTaskDeadlineMs(partition,{ lastAttemptedAt: iso(at) },true),at + HOUR);
+  assert.equal(routineTaskDeadlineMs(partition,{ lastAttemptedAt: iso(at) },undefined),at + HOUR);
+  assert.equal(routineTaskDeadlineMs(partition,{ lastAttemptedAt: iso(at) },false),at + 12 * HOUR);
   assert.equal(routineTaskDeadlineMs(partition, failed, true), at + HOUR);
   assert.equal(routineTaskDeadlineMs(partition, failed, false), at + HOUR);
 });

@@ -2,11 +2,12 @@
 import { createHash } from "node:crypto";
 import type { BodySourceWiring } from "../../registry/source-wiring.ts";
 import { isPlacelessLocation, resolveVenue, unplacedVenueGap } from "../../meetings/venue-cache.ts";
-import { toZonedIso } from "../../time/zoned.ts";
+import { cachedZoneFormatter, toZonedIso } from "../../time/zoned.ts";
 import { accountedNormalize } from "../normalize-account.ts";
 import { parseDtStart, parseIcs, publisherPostedAt } from "../ical/index.ts";
 import { acquireKnownRelease, type KnownReleaseOptions } from "../known-release.ts";
 import { recordAcquiredResponse } from "../acquisition-trace.ts";
+import type { SourcePrefetchRequest } from "../fetch-source.ts";
 import { readValidatedResponse, REQUEST_SPACING_MS } from "../http.ts";
 import { sourceAcquisitionSleep } from "../acquisition-deadline.ts";
 import type { Meeting, MeetingQuery, MeetingStatus, NormalizeDropCounts, PartialScopeFailure, ReportingMeetingSource } from "../types.ts";
@@ -15,7 +16,21 @@ import { agendaCenterPages, agendaCenterRssUrl, parseAgendaCenter, parseAgendaCe
 export { parseAgendaCenter, parseAgendaCenterCategories } from "./agenda-center.ts";
 
 const SOURCE_NAME = "civicplus";
+const clockFormatter = cachedZoneFormatter("en-US", {
+  year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23",
+});
+const dayFormatter = cachedZoneFormatter("en-CA", { year: "numeric", month: "2-digit", day: "2-digit" });
 type CacheOptions = Pick<KnownReleaseOptions, "store" | "locks" | "now">;
+type CivicPlusRequest = Pick<SourcePrefetchRequest, "url" | "headers" | "redirect">;
+
+function civicPlusRequest(url: string, accept: string): CivicPlusRequest {
+  return { url, headers: [["accept", accept]], redirect: "follow" };
+}
+
+export function civicPlusEntryRequest(wiring: BodySourceWiring): CivicPlusRequest | null {
+  if (wiring.config.agendaCenterUrl) return civicPlusRequest(wiring.config.rssUrl || agendaCenterRssUrl(wiring.config.agendaCenterUrl), "application/rss+xml");
+  return wiring.config.icalUrl ? civicPlusRequest(wiring.config.icalUrl, "text/calendar") : null;
+}
 
 export interface CivicPlusRaw {
   wiring: BodySourceWiring;
@@ -43,9 +58,7 @@ function clockAt(raw: string, zone: string): { iso: string; dayOnly: boolean } |
   if (!Number.isFinite(Date.parse(civil)) || new Date(civil).toISOString() !== civil) return null;
   const parsed = parseDtStart(raw, zone);
   if (!parsed) return null;
-  const parts = Object.fromEntries(new Intl.DateTimeFormat("en-US", {
-    timeZone: zone, year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23",
-  }).formatToParts(new Date(parsed.iso)).map(part => [part.type, part.value]));
+  const parts = Object.fromEntries(clockFormatter(zone).formatToParts(new Date(parsed.iso)).map(part => [part.type, part.value]));
   return { iso: toZonedIso(+parts.year, +parts.month, +parts.day, +parts.hour, +parts.minute, zone), dayOnly: parsed.dayOnly };
 }
 
@@ -58,7 +71,7 @@ function linksFor(sitting: ArchivedSitting, url: string): NonNullable<Meeting["p
 
 function statusOf(startsAt: string, dayOnly: boolean, now: Date, timeZone: string): MeetingStatus {
   if (!dayOnly) return Date.parse(startsAt) < now.getTime() ? "CONCLUDED" : "SCHEDULED";
-  const today = new Intl.DateTimeFormat("en-CA", { timeZone, year: "numeric", month: "2-digit", day: "2-digit" }).format(now);
+  const today = dayFormatter(timeZone).format(now);
   return startsAt.slice(0, 10) < today ? "CONCLUDED" : "SCHEDULED";
 }
 
@@ -153,13 +166,14 @@ export function makeCivicPlusSource(
       const collected: CivicPlusRaw[] = [];
       const responses = new Map<string, { text: string; collectedAt: string }>();
       const read = async (url: string, accept: string) => {
+        const request = civicPlusRequest(url, accept);
         const existing = responses.get(url);
         if (existing) return existing;
         if (responses.size) await sourceAcquisitionSleep(REQUEST_SPACING_MS, query?.signal);
         const release = await acquireKnownRelease({
           ...cache, sourceId: SOURCE_NAME, releaseId: createHash("sha256").update(url).digest("hex"), url,
           parserVersion: "civicplus/2", signal: query?.signal ?? AbortSignal.timeout(120_000), maxBytes: 8 * 1024 * 1024,
-          checkAfterMs: 0, fetchImpl, headers: { accept },
+          checkAfterMs: 0, fetchImpl, headers: [...request.headers],
           validate: (bytes, response) => { readValidatedResponse(url, 2, {
             status: response.httpStatus, contentType: response.contentType, text: new TextDecoder().decode(bytes),
           }, accept === "text/calendar" ? { label: "iCalendar feed", marker: "BEGIN:VCALENDAR" }
@@ -170,14 +184,15 @@ export function makeCivicPlusSource(
         responses.set(url, response); return response;
       };
       for (const wiring of wiringRows) {
-        if (!wiring.config.icalUrl && !wiring.config.agendaCenterUrl) throw new Error(`CIVICPLUS_SOURCE_WIRING_INVALID:${wiring.bodyId}`);
+        const entry = civicPlusEntryRequest(wiring);
+        if (!entry) throw new Error(`CIVICPLUS_SOURCE_WIRING_INVALID:${wiring.bodyId}`);
         const partialScopes: PartialScopeFailure[] = [];
         const agendaPages: NonNullable<CivicPlusRaw["agendaPages"]> = [];
         let rss: CivicPlusRaw["rss"];
         let ical = "", collectedAt = "", failure: unknown;
         if (wiring.config.agendaCenterUrl) {
           try {
-            const url = wiring.config.rssUrl || agendaCenterRssUrl(wiring.config.agendaCenterUrl);
+            const url = entry.url;
             rss = { url, ...await read(url, "application/rss+xml") };
           }
           catch (error) { query?.signal?.throwIfAborted(); partialScopes.push({ scope: "ARCHIVE", ocdIds: [wiring.ocdId], cause: String(error) }); }

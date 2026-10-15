@@ -1,3 +1,4 @@
+import { meetingPublication } from "./helpers/meeting-publication.ts";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { mkdtempSync, rmSync } from "node:fs";
@@ -225,9 +226,9 @@ test("the runner carries a family whose pointers have not moved, re-reads it whe
   const artifacts = new LocalFileArtifactStore(dir);
   const families = { "state-money": stateMoneyPointers(["AZ"]) };
   const publish = async (authority: PublishAuthority) => {
-    const result = await publishReaderEdgeArtifacts({
+    const result = await publishReaderEdgeArtifacts(meetingPublication({
       formatVersion: 1, generatedAt: T1, counts: { fresh: 0, carried: 0, total: 0, duplicatesCollapsed: 0 }, sources: [], meetings: [], agendaDocuments: [],
-    }, { sourceThrough: null, retrievedAt: null, promotedThrough: null }, { store: artifacts, now: T1, authority });
+    }), { sourceThrough: null, retrievedAt: null, promotedThrough: null }, { store: artifacts, now: T1, authority });
     assert.ok(result.status === "PUBLISHED" || result.status === "CURRENT", JSON.stringify(result));
     return (await artifacts.readManifest())!.manifest;
   };
@@ -277,9 +278,9 @@ test("published, fetched and entered: a reader request reads the family from the
   after(() => rmSync(dir, { recursive: true, force: true }));
   const artifacts = new LocalFileArtifactStore(dir);
   const { authority } = await readPromotedEdgeFamilies({ store, servedManifest: null, now: T1, families: { "state-money": stateMoneyPointers(["AZ"]) } });
-  const published = await publishReaderEdgeArtifacts({
+  const published = await publishReaderEdgeArtifacts(meetingPublication({
     formatVersion: 1, generatedAt: T1, counts: { fresh: 0, carried: 0, total: 0, duplicatesCollapsed: 0 }, sources: [], meetings: [], agendaDocuments: [],
-  }, { sourceThrough: null, retrievedAt: null, promotedThrough: null }, { store: artifacts, now: T1, authority });
+  }), { sourceThrough: null, retrievedAt: null, promotedThrough: null }, { store: artifacts, now: T1, authority });
   assert.equal(published.status, "PUBLISHED");
   const manifest = (await artifacts.readManifest())!.manifest;
 

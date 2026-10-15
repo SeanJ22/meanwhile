@@ -2,7 +2,8 @@ import { createHash } from "node:crypto";
 import { sourceCheckedAt } from "./source-check.ts";
 import { isScopedManualContractScope } from "./scoped-manual-contracts.ts";
 
-import { and, desc, eq, getTableColumns, inArray, like, sql } from "drizzle-orm";
+import { and, desc, eq, getTableColumns, inArray, sql, type SQLWrapper } from "drizzle-orm";
+import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 
 import { getDb } from "../db/index.ts";
 import { runtimeCivicReadCache } from "../db/civic-read-cache.ts";
@@ -42,6 +43,7 @@ import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "./manual-contracts.ts";
 import {
   assertSanctionedRuntimeAuthority,
   runtimeAuthorityEnvelope,
+  runtimeAuthorityEnvironment,
   RuntimeAuthorityRefused,
   type RuntimeAuthorityEnvelope,
 } from "./runtime-authority.ts";
@@ -150,7 +152,18 @@ export interface RoutineDataStore {
     scope: string,
     parserVersion?: string,
   ) => Promise<RoutineStoreClock>;
+  readonly clocks: (requests: readonly RoutineClockRequest[]) => Promise<readonly RoutineClockRead[]>;
 }
+
+export interface RoutineClockRequest {
+  readonly sourceId: string;
+  readonly recordClass: RoutineRecordClass;
+  readonly scope: string;
+  readonly parserVersion?: string;
+}
+
+export type RoutineClockRead = { readonly ok: true; readonly clock: RoutineStoreClock } | { readonly ok: false; readonly error: string };
+export const ROUTINE_CLOCK_BATCH_SIZE = 128;
 
 export interface RoutineStoreClock {
   readonly lastAttemptedAt?: string;
@@ -281,7 +294,7 @@ export function routineDataStoreCandidateAuthorityIssue(
 }
 
 export function assertRoutineDataStoreMutationAuthority(
-  env: Readonly<Record<string, string | undefined>> = process.env,
+  env: Readonly<Record<string, string | undefined>> = runtimeAuthorityEnvironment(),
 ): RuntimeAuthorityEnvelope {
   assertWriteAllowed(CIVIC_DATA_PROMOTION_OPERATION, env);
   const admitted = assertSanctionedRuntimeAuthority(CIVIC_DATA_PROMOTION_OPERATION, env);
@@ -1032,6 +1045,19 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
   }
 
   async clock(sourceId: string, recordClass: RoutineRecordClass, scope: string, parserVersion?: string): Promise<RoutineStoreClock> {
+    const [read] = await this.clocks([{ sourceId, recordClass, scope, parserVersion }]);
+    if (!read!.ok) throw new Error(read!.error);
+    return read!.clock;
+  }
+
+  async clocks(requests: readonly RoutineClockRequest[]): Promise<readonly RoutineClockRead[]> {
+    return requests.map(request => {
+      try { return { ok: true, clock: this.readClock(request) }; }
+      catch (error) { return { ok: false, error: sanitizedErrorDiagnostic(error) }; }
+    });
+  }
+
+  private readClock({ sourceId, recordClass, scope, parserVersion }: RoutineClockRequest): RoutineStoreClock {
     const attempts = [...this.candidates.values()]
       .filter((row) =>
         row.candidate.sourceId === sourceId &&
@@ -1090,8 +1116,7 @@ for (const field of [...ROUTINE_CLOCK_CANDIDATE_FIELDS.top, ...ROUTINE_CLOCK_CAN
   if (!CLOCK_FIELD_NAME.test(field)) throw new Error(`ROUTINE_CLOCK_FIELD_INVALID:${field}`);
 }
 
-function routineClockCandidateStub() {
-  const column = civicDataCandidates.candidate;
+function routineClockCandidateStub(column: SQLWrapper) {
   const top = ROUTINE_CLOCK_CANDIDATE_FIELDS.top.map((field) =>
     sql`${sql.raw(`'${field}'`)}, ${column}->${sql.raw(`'${field}'`)}`);
   const retrieval = ROUTINE_CLOCK_CANDIDATE_FIELDS.retrieval.map((field) =>
@@ -1106,22 +1131,6 @@ function routineClockCandidateStub() {
 }
 
 type RoutineClockDb = Pick<ReturnType<typeof getDb>, "select">;
-
-export function routineClockPointerRead(db: RoutineClockDb, recordClass: RoutineRecordClass, scope: string) {
-  return db
-    .select({
-      sourceId: civicDataPromotions.sourceId,
-      recordClass: civicDataPromotions.recordClass,
-      scope: civicDataPromotions.scope,
-      currentVersionId: civicDataPromotions.currentVersionId,
-      lastKnownGoodVersionId: civicDataPromotions.lastKnownGoodVersionId,
-      promotedAt: civicDataPromotions.promotedAt,
-      validationReceipt: civicDataPromotions.validationReceipt,
-    })
-    .from(civicDataPromotions)
-    .where(and(eq(civicDataPromotions.recordClass, recordClass), eq(civicDataPromotions.scope, scope)))
-    .limit(1);
-}
 
 function unchangedConfirmationRefusedByEventRule(error: unknown): boolean {
   const chain: unknown[] = [];
@@ -1165,50 +1174,87 @@ function confirmedClock(
   };
 }
 
-export function routineClockConfirmationRead(db: RoutineClockDb, recordClass: RoutineRecordClass, scope: string) {
-  return db
-    .select({ detail: civicDataCandidateEvents.detail })
-    .from(civicDataPromotions)
-    .innerJoin(civicDataCandidateEvents, eq(civicDataCandidateEvents.candidateId, civicDataPromotions.currentVersionId))
-    .where(and(
-      eq(civicDataPromotions.recordClass, recordClass),
-      eq(civicDataPromotions.scope, scope),
-      // `_` is a LIKE wildcard; the prefix is matched literally.
-      like(civicDataCandidateEvents.detail, `${UNCHANGED_CONFIRMATION_PREFIX.replaceAll("_", "\\_")}%`),
-    ))
-    .orderBy(desc(civicDataCandidateEvents.sequence))
-    .limit(1);
-}
-
-export function routineClockPointedObservedRead(db: RoutineClockDb, recordClass: RoutineRecordClass, scope: string) {
-  return db
-    .select({ observedAt: civicDataCandidateEvents.at })
-    .from(civicDataPromotions)
-    .innerJoin(civicDataCandidateEvents, and(
-      eq(civicDataCandidateEvents.candidateId, civicDataPromotions.currentVersionId),
-      eq(civicDataCandidateEvents.sequence, 1),
-    ))
-    .where(and(eq(civicDataPromotions.recordClass, recordClass), eq(civicDataPromotions.scope, scope)))
-    .limit(1);
-}
-
-export function sittingStartsRead(db: RoutineClockDb, scope: string) {
-  const payload = civicDataPromotions.payload;
-  return db
-    .select({
-      starts: sql<unknown>`coalesce((
-        select jsonb_agg(m->'startsAt')
-        from jsonb_array_elements(case when jsonb_typeof(${payload}->'meetings') = 'array' then ${payload}->'meetings' else '[]'::jsonb end) as m
-        where jsonb_typeof(m->'startsAt') = 'string'
-      ), '[]'::jsonb)`,
-    })
-    .from(civicDataPromotions)
-    .where(and(eq(civicDataPromotions.recordClass, "MEETING"), eq(civicDataPromotions.scope, scope)))
-    .limit(1);
-}
-
 function sittingStartsFromRow(value: unknown): readonly string[] | undefined {
   return Array.isArray(value) ? value.filter((start): start is string => typeof start === "string") : undefined;
+}
+
+interface RoutineClockRow {
+  readonly ordinal: number;
+  readonly attempted_at: string | null;
+  readonly invalid_source_check: boolean | null;
+  readonly pointer: (PromotionPointerProof & { readonly promotedAt: string }) | null;
+  readonly pointed_record: RoutineClockRecord | null;
+  readonly observed_at: string | null;
+  readonly confirmation_detail: string | null;
+  readonly sitting_starts: unknown;
+}
+
+export function routineClocksQuery(requests: readonly RoutineClockRequest[]) {
+  if (!requests.length || requests.length > ROUTINE_CLOCK_BATCH_SIZE) throw new Error("ROUTINE_CLOCK_BATCH_SIZE_INVALID");
+  const wanted = requests.map((request, ordinal) => ({ ordinal, source_id: request.sourceId, record_class: request.recordClass,
+    scope: request.scope, parser_version: request.parserVersion ?? null }));
+  return sql`WITH requested AS (
+    SELECT * FROM jsonb_to_recordset(${JSON.stringify(wanted)}::jsonb)
+      AS r(ordinal integer, source_id text, record_class text, scope text, parser_version text)
+  ) SELECT requested.ordinal, attempt.attempted_at::text, attempt.invalid_source_check,
+    CASE WHEN p.current_version_id IS NULL THEN NULL ELSE jsonb_build_object(
+      'sourceId',p.source_id,'recordClass',p.record_class,'scope',p.scope,'versionId',p.current_version_id,
+      'lastKnownGoodVersionId',p.last_known_good_version_id,'receipt',p.validation_receipt,'promotedAt',p.promoted_at::text
+    ) END AS pointer,
+    CASE WHEN pointed.id IS NULL THEN NULL ELSE jsonb_build_object(
+      'candidate',${routineClockCandidateStub(sql.raw("pointed.candidate"))},'state',pointed.state,
+      'acquisitionSucceeded',pointed.acquisition_succeeded,'receipt',pointed.validation_receipt,
+      'promotedVersion',pointed.promoted_version_id,'lastKnownGoodVersion',pointed.last_known_good_version_id,
+      'failureCode',pointed.failure_code,'failureDetail',pointed.failure_detail
+    ) END AS pointed_record,
+    observed.at::text AS observed_at, confirmation.detail AS confirmation_detail,
+    CASE WHEN requested.record_class='MEETING' AND p.current_version_id IS NOT NULL THEN (
+      SELECT coalesce(jsonb_agg(m->'startsAt'),'[]'::jsonb)
+      FROM jsonb_array_elements(CASE WHEN jsonb_typeof(p.payload->'meetings')='array' THEN p.payload->'meetings' ELSE '[]'::jsonb END) m
+      WHERE jsonb_typeof(m->'startsAt')='string'
+    ) ELSE NULL END AS sitting_starts
+    FROM requested
+    LEFT JOIN civic_data_promotions p ON p.record_class=requested.record_class AND p.scope=requested.scope
+    LEFT JOIN civic_data_candidates pointed ON pointed.id=p.current_version_id AND p.source_id=requested.source_id
+    LEFT JOIN civic_data_candidate_events observed ON observed.candidate_id=p.current_version_id AND observed.sequence=1
+    LEFT JOIN LATERAL (
+      SELECT max(CASE WHEN c.state='PROMOTED' AND c.acquisition_succeeded=true
+        AND c.candidate#>>'{retrieval,sourceCheck,checkedAt}' IS NOT NULL
+        THEN CASE WHEN pg_input_is_valid(c.candidate#>>'{retrieval,sourceCheck,checkedAt}','timestamp with time zone')
+          THEN least((c.candidate#>>'{retrieval,sourceCheck,checkedAt}')::timestamptz,e.at) END
+        ELSE e.at END) AS attempted_at,
+        bool_or(c.state='PROMOTED' AND c.acquisition_succeeded=true
+          AND c.candidate#>>'{retrieval,sourceCheck,checkedAt}' IS NOT NULL
+          AND NOT pg_input_is_valid(c.candidate#>>'{retrieval,sourceCheck,checkedAt}','timestamp with time zone')) AS invalid_source_check
+      FROM civic_data_candidates c JOIN civic_data_candidate_events e ON e.candidate_id=c.id AND e.sequence=1
+      WHERE c.source_id=requested.source_id AND c.record_class=requested.record_class AND c.scope=requested.scope
+        AND (requested.parser_version IS NULL OR c.parser_version=requested.parser_version)
+        AND coalesce(c.candidate#>>'{bootstrapImport,kind}','') NOT IN ('TRUSTED_LKG_IMPORT','TRUSTED_LKG_REATTESTATION')
+    ) attempt ON true
+    LEFT JOIN LATERAL (
+      SELECT detail FROM civic_data_candidate_events WHERE candidate_id=p.current_version_id
+        AND left(detail,${UNCHANGED_CONFIRMATION_PREFIX.length})=${UNCHANGED_CONFIRMATION_PREFIX}
+      ORDER BY sequence DESC LIMIT 1
+    ) confirmation ON true ORDER BY requested.ordinal`;
+}
+
+function clockFromRow(row: RoutineClockRow, parserVersion?: string): RoutineStoreClock {
+  if (row.invalid_source_check) throw new Error("ROUTINE_CLOCK_SOURCE_CHECK_INVALID");
+  const lastAttemptedAt = row.attempted_at === null ? undefined : canonicalPostgresRoutineTimestamp(row.attempted_at, "clock.lastAttemptedAt");
+  const pointer = row.pointer, pointedRecord = row.pointed_record;
+  const sittings = pointer && row.sitting_starts !== null ? { sittingStarts: sittingStartsFromRow(row.sitting_starts) } : {};
+  if (pointer && pointedRecord && isTrustedLkgImportCandidate(pointedRecord.candidate)) {
+    return { ...trustedLkgImportClock(lastAttemptedAt, canonicalPostgresRoutineTimestamp(pointer.promotedAt, "clock.importPromotedAt")), ...sittings };
+  }
+  const success = proofConsistentSuccess(pointedRecord, pointer);
+  const lastSucceededAt = success === undefined ? undefined : canonicalPostgresRoutineTimestamp(success, "clock.lastSucceededAt");
+  const lastSucceededObservedAt = proofConsistentObservedSuccess(pointedRecord, pointer, row.observed_at === null ? undefined
+    : canonicalPostgresRoutineTimestamp(row.observed_at, "clock.lastSucceededObservedAt"));
+  const confirmation = pointer && row.confirmation_detail ? parseUnchangedConfirmation(row.confirmation_detail) : null;
+  return confirmedClock({ lastAttemptedAt, lastSucceededAt, lastSucceededObservedAt,
+    ...(parserVersion !== undefined && proofConsistentPointedSuccess(pointedRecord, pointer)
+      ? { lastSucceededParserVersion: pointedRecord.candidate.normalization.parserVersion } : {}),
+  }, confirmation !== null && confirmation.versionId === pointer?.versionId ? confirmation : null, sittings, parserVersion);
 }
 
 export const CANDIDATE_PROOF_OMITTED = {
@@ -1252,36 +1298,6 @@ export function candidateProofRead(db: RoutineClockDb, candidateIds: readonly st
 function candidateProofRowToRecord(row: Awaited<ReturnType<typeof candidateProofRead>>[number]): CandidateVersionRecord {
   return {
     candidate: row.candidate as RoutineCandidate,
-    state: row.state as CandidateState,
-    acquisitionSucceeded: row.acquisitionSucceeded,
-    receipt: row.validationReceipt as ValidationReceipt | null,
-    promotedVersion: row.promotedVersionId,
-    lastKnownGoodVersion: row.lastKnownGoodVersionId,
-    failureCode: row.failureCode,
-    failureDetail: row.failureDetail,
-  };
-}
-
-export function routineClockCandidateRead(db: RoutineClockDb, versionId: string) {
-  return db
-    .select({
-      candidate: routineClockCandidateStub(),
-      state: civicDataCandidates.state,
-      acquisitionSucceeded: civicDataCandidates.acquisitionSucceeded,
-      validationReceipt: civicDataCandidates.validationReceipt,
-      promotedVersionId: civicDataCandidates.promotedVersionId,
-      lastKnownGoodVersionId: civicDataCandidates.lastKnownGoodVersionId,
-      failureCode: civicDataCandidates.failureCode,
-      failureDetail: civicDataCandidates.failureDetail,
-    })
-    .from(civicDataCandidates)
-    .where(eq(civicDataCandidates.id, versionId))
-    .limit(1);
-}
-
-function routineClockRowToRecord(row: Awaited<ReturnType<typeof routineClockCandidateRead>>[number]): RoutineClockRecord {
-  return {
-    candidate: row.candidate as RoutineClockCandidate,
     state: row.state as CandidateState,
     acquisitionSucceeded: row.acquisitionSucceeded,
     receipt: row.validationReceipt as ValidationReceipt | null,
@@ -1546,6 +1562,13 @@ function postgresCandidateEventRowToEvent(row: PostgresCandidateEventRow): Candi
   };
 }
 
+async function readKeyBatches<T>(input: readonly string[], read: (keys: readonly string[]) => Promise<readonly T[]>): Promise<T[]> {
+  const keys = [...new Set(input)];
+  const rows: T[] = [];
+  for (let offset = 0; offset < keys.length; offset += 128) rows.push(...await read(keys.slice(offset,offset+128)));
+  return rows;
+}
+
 export class PostgresRoutineDataStore implements RoutineDataStore {
   private readonly db: ReturnType<typeof getDb>;
   private readonly readCache: ReturnType<typeof runtimeCivicReadCache>;
@@ -1621,10 +1644,6 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     if (issue !== null) throw new RuntimeAuthorityRefused(issue);
   }
 
-    /**
-     * Neon HTTP batches are not interactive, so every sequence allocator takes a transaction-scoped advisory lock as the
-     * batch's first statement; a lock inside the INSERT would be too late for its snapshot.
-     */
   private candidateEventLock(candidateId: string) {
     return this.db.execute(sql`
       select pg_advisory_xact_lock(hashtextextended(${candidateId}, 0))
@@ -1776,9 +1795,10 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     recordClass: RoutineRecordClass,
     scopes: readonly string[],
   ): Promise<readonly PromotedProjection<T>[]> {
-    if (scopes.length === 0) return [];
-    const rows = await this.promotionRows(recordClass, scopes);
-    return Promise.all(rows.map(async row => ({ ...postgresPromotionRowToProjection<T>(row), payload: await this.payloadParts.load(row.payload) as T })));
+    return readKeyBatches(scopes,async selected => {
+      const rows = await this.promotionRows(recordClass,selected);
+      return Promise.all(rows.map(async row => ({ ...postgresPromotionRowToProjection<T>(row),payload: await this.payloadParts.load(row.payload) as T })));
+    });
   }
 
   async readPromotionIdentity(recordClass: RoutineRecordClass, scope: string): Promise<PromotedPointerIdentity | null> {
@@ -1794,11 +1814,11 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     if (scopes.length === 0) return [];
     const values = async (keys: readonly string[]) => promotedPointerIdentityRead(this.db, recordClass, keys.map(key => key.slice(recordClass.length + 1)));
     const keys = scopes.map(scope => projectionKey(recordClass, scope));
-    const rows = this.readCache ? await this.readCache.rows({ namespace: "promotion-identity", keys, values, keyOf: row => row.key,
+    const rows = await readKeyBatches(keys,async batch => this.readCache ? this.readCache.rows({ namespace: "promotion-identity", keys: batch, values, keyOf: row => row.key,
       versions: async selected => this.db.select({ key: civicDataPromotions.key,
         etag: sql<string>`concat(${civicDataPromotions}.xmin::text, '/', ${civicDataPromotions}.ctid::text, '/', coalesce(${LATEST_CONFIRMATION_SEQUENCE}, 0))`,
       }).from(civicDataPromotions).where(and(eq(civicDataPromotions.recordClass, recordClass), inArray(civicDataPromotions.key, [...selected]))),
-    }) : await values(keys);
+    }) : values(batch));
     return rows.map(postgresPromotedPointerIdentity);
   }
 
@@ -1807,7 +1827,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       eq(civicDataReaderProjections.recordClass, recordClass),
       eq(civicDataReaderProjections.scope, scope),
     )).limit(1);
-    return row ? preparedRowToProjection(row) : null;
+    return row ? { ...preparedRowToProjection(row), payload: await this.payloadParts.load(row.payload) } : null;
   }
 
   async readPreparedReaderProjectionCoupling(recordClass: RoutineRecordClass, scope: string): Promise<PreparedReaderProjectionCoupling | null> {
@@ -1833,7 +1853,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       key,
       recordClass: input.recordClass,
       scope: input.scope,
-      payload: input.payload,
+      payload: await this.payloadParts.store(input.payload),
       composedFrom: input.composedFrom,
       factSha256: input.factSha256,
       generatedAt: input.generatedAt,
@@ -1868,10 +1888,11 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   }
 
   async readCandidates(candidateIds: readonly string[]): Promise<readonly CandidateVersionReadback[]> {
-    if (candidateIds.length === 0) return [];
-    const rows = await this.candidateRows(candidateIds, "candidate", async ids =>
-      this.db.select().from(civicDataCandidates).where(inArray(civicDataCandidates.id, [...ids])));
-    return Promise.all(rows.map(async row => ({ candidateId: row.id, record: { ...rowToCandidate(row), candidate: await this.payloadParts.load(row.candidate) as RoutineCandidate } })));
+    return readKeyBatches(candidateIds,async selected => {
+      const rows = await this.candidateRows(selected,"candidate",async ids =>
+        this.db.select().from(civicDataCandidates).where(inArray(civicDataCandidates.id,[...ids])));
+      return Promise.all(rows.map(async row => ({ candidateId: row.id,record: { ...rowToCandidate(row),candidate: await this.payloadParts.load(row.candidate) as RoutineCandidate } })));
+    });
   }
 
   async readCandidateProof(candidateId: string): Promise<CandidateVersionRecord | null> {
@@ -1880,9 +1901,10 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   }
 
   async readCandidateProofs(candidateIds: readonly string[]): Promise<readonly CandidateVersionReadback[]> {
-    if (candidateIds.length === 0) return [];
-    const rows = await this.candidateRows(candidateIds, "candidate-proof", async ids => candidateProofRead(this.db, ids));
-    return Promise.all(rows.map(async row => ({ candidateId: row.id, record: { ...candidateProofRowToRecord(row), candidate: await this.payloadParts.load(row.candidate) as RoutineCandidate } })));
+    return readKeyBatches(candidateIds,async selected => {
+      const rows = await this.candidateRows(selected,"candidate-proof",async ids => candidateProofRead(this.db,ids));
+      return Promise.all(rows.map(async row => ({ candidateId: row.id,record: { ...candidateProofRowToRecord(row),candidate: await this.payloadParts.load(row.candidate) as RoutineCandidate } })));
+    });
   }
 
   async appendEvidence(candidateId: string, state: CandidateState, at: string, detail: string): Promise<CandidateEvent> {
@@ -2130,8 +2152,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   }
 
   async latestReaderReadbacks(candidateIds: readonly string[]): Promise<readonly CandidateEvent[]> {
-    if (candidateIds.length === 0) return [];
-    const rows = await latestReaderReadbacksRead(this.db, candidateIds);
+    const rows = await readKeyBatches(candidateIds,async selected => latestReaderReadbacksRead(this.db,selected));
     return rows.map(postgresCandidateEventRowToEvent);
   }
 
@@ -2140,100 +2161,30 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     return rows.map(postgresCandidateEventRowToEvent);
   }
 
-  /** Every input to a clock is a candidate row or event of its record class and scope, or that scope's pointer, so their versions decide a held clock's use. */
   async clock(sourceId: string, recordClass: RoutineRecordClass, scope: string, parserVersion?: string): Promise<RoutineStoreClock> {
-    const key = [sourceId, recordClass, scope, parserVersion ?? ""].join("\u0000");
-    if (!this.readCache) return this.readClock(sourceId, recordClass, scope, parserVersion);
-    const [held] = await this.readCache.rows({ namespace: "routine-clock", keys: [key], keyOf: row => row.key,
-      values: async () => [{ key, clock: await this.readClock(sourceId, recordClass, scope, parserVersion) }],
-      versions: async () => (await this.db.execute(sql`select concat(
-          (select concat(count(*), '/', max(e.at)::text, '/', max(c.xmin::text::bigint)) from ${civicDataCandidates} c
-            join ${civicDataCandidateEvents} e on e.candidate_id = c.id where c.record_class = ${recordClass} and c.scope = ${scope}),
-          '/', (select concat(p.xmin::text, '/', p.ctid::text) from ${civicDataPromotions} p where p.record_class = ${recordClass} and p.scope = ${scope})
-        ) as etag`)).rows.map(row => ({ key, etag: String((row as { etag: unknown }).etag) })),
-    });
-    return held!.clock;
+    const [read] = await this.clocks([{ sourceId, recordClass, scope, parserVersion }]);
+    if (!read!.ok) throw new Error(read!.error);
+    return read!.clock;
   }
 
-  private async readClock(sourceId: string, recordClass: RoutineRecordClass, scope: string, parserVersion?: string): Promise<RoutineStoreClock> {
-    // Successful retained-byte replay records processing, but no newer provider attempt.
-    // These fields occur only on validated promotions; failures keep their local retry clock.
-    const attemptAt = sql`CASE WHEN ${civicDataCandidates.state} = 'PROMOTED'
-      AND ${civicDataCandidates.acquisitionSucceeded} = true
-      AND ${civicDataCandidates.candidate}#>>'{retrieval,sourceCheck,checkedAt}' IS NOT NULL
-      THEN LEAST((${civicDataCandidates.candidate}#>>'{retrieval,sourceCheck,checkedAt}')::timestamptz, ${civicDataCandidateEvents.at})
-      ELSE ${civicDataCandidateEvents.at} END`;
-    const attemptQuery = this.db
-      .select({ attemptedAt: attemptAt })
-      .from(civicDataCandidates)
-      .innerJoin(civicDataCandidateEvents, and(
-        eq(civicDataCandidateEvents.candidateId, civicDataCandidates.id),
-        eq(civicDataCandidateEvents.sequence, 1),
-      ))
-      .where(and(
-        eq(civicDataCandidates.sourceId, sourceId),
-        eq(civicDataCandidates.recordClass, recordClass),
-        eq(civicDataCandidates.scope, scope),
-        parserVersion === undefined ? undefined : eq(civicDataCandidates.parserVersion, parserVersion),
-                // A frozen cutover import is not a publisher attempt, so the contract is due at once for its first live read.
-        sql`coalesce(${civicDataCandidates.candidate}#>>'{bootstrapImport,kind}', '') not in ('TRUSTED_LKG_IMPORT', 'TRUSTED_LKG_REATTESTATION')`,
-      ))
-      .orderBy(desc(attemptAt))
-      .limit(1);
-    const pointerQuery = routineClockPointerRead(this.db, recordClass, scope);
-    const observedQuery = routineClockPointedObservedRead(this.db, recordClass, scope);
-    const confirmationQuery = routineClockConfirmationRead(this.db, recordClass, scope);
-    const [rows, pointerRows, observedRows, confirmationRows, sittingRows] = recordClass === "MEETING"
-      ? await this.db.batch([attemptQuery, pointerQuery, observedQuery, confirmationQuery, sittingStartsRead(this.db, scope)])
-      : [...await this.db.batch([attemptQuery, pointerQuery, observedQuery, confirmationQuery]), null] as const;
-    // The first event is the store-observed attempt clock. A refused
-    // candidate's claimed retrievedAt is evidence, never scheduler authority.
-    const lastAttemptedAt = rows[0]?.attemptedAt === undefined
-      ? undefined
-      : canonicalPostgresRoutineTimestamp(rows[0].attemptedAt, "clock.lastAttemptedAt");
-    const pointer = pointerRows[0];
-    const [pointedRow] = pointer && pointer.sourceId === sourceId
-      ? await routineClockCandidateRead(this.db, pointer.currentVersionId)
-      : [];
-    const pointedRecord = pointedRow ? routineClockRowToRecord(pointedRow) : null;
-    const sittings = pointer && sittingRows !== null
-      ? { sittingStarts: sittingStartsFromRow(sittingRows[0]?.starts) }
-      : {};
-    if (pointer && pointedRecord && isTrustedLkgImportCandidate(pointedRecord.candidate)) {
-      return {
-        ...trustedLkgImportClock(
-          lastAttemptedAt,
-          canonicalPostgresRoutineTimestamp(pointer.promotedAt, "clock.importPromotedAt"),
-        ),
-        ...sittings,
-      };
+  async clocks(requests: readonly RoutineClockRequest[]): Promise<readonly RoutineClockRead[]> {
+    const results: RoutineClockRead[] = [];
+    for (let at = 0; at < requests.length; at += ROUTINE_CLOCK_BATCH_SIZE) {
+      const batch = requests.slice(at, at + ROUTINE_CLOCK_BATCH_SIZE);
+      try {
+        const rows = (await this.db.execute(routineClocksQuery(batch))).rows as unknown as readonly RoutineClockRow[];
+        const byIndex = new Map(rows.map(row => [row.ordinal, row]));
+        for (const [index, request] of batch.entries()) {
+          try {
+            const row = byIndex.get(index);
+            if (!row) throw new Error("ROUTINE_CLOCK_ROW_MISSING");
+            results.push({ ok: true, clock: clockFromRow(row, request.parserVersion) });
+          } catch (error) { results.push({ ok: false, error: sanitizedErrorDiagnostic(error) }); }
+        }
+      } catch (error) {
+        results.push(...batch.map(() => ({ ok: false as const, error: sanitizedErrorDiagnostic(error) })));
+      }
     }
-    const pointerProof: PromotionPointerProof | null = pointer ? {
-      sourceId: pointer.sourceId,
-      recordClass: pointer.recordClass as RoutineRecordClass,
-      scope: pointer.scope,
-      versionId: pointer.currentVersionId,
-      lastKnownGoodVersionId: pointer.lastKnownGoodVersionId,
-      receipt: pointer.validationReceipt as ValidationReceipt,
-    } : null;
-    const lastSucceededAt = proofConsistentSuccess(pointedRecord, pointerProof);
-    const canonicalLastSucceededAt = lastSucceededAt === undefined
-      ? undefined
-      : canonicalPostgresRoutineTimestamp(lastSucceededAt, "clock.lastSucceededAt");
-    const observed = observedRows[0]?.observedAt;
-    const lastSucceededObservedAt = proofConsistentObservedSuccess(
-      pointedRecord,
-      pointerProof,
-      observed === undefined ? undefined : canonicalPostgresRoutineTimestamp(observed, "clock.lastSucceededObservedAt"),
-    );
-    const confirmationRow = confirmationRows[0];
-    const confirmation = pointer && confirmationRow ? parseUnchangedConfirmation(confirmationRow.detail) : null;
-    return confirmedClock({
-      lastAttemptedAt,
-      lastSucceededAt: canonicalLastSucceededAt,
-      lastSucceededObservedAt,
-      ...(parserVersion !== undefined && proofConsistentPointedSuccess(pointedRecord, pointerProof)
-        ? { lastSucceededParserVersion: pointedRecord.candidate.normalization.parserVersion } : {}),
-    }, confirmation !== null && pointer !== undefined && confirmation.versionId === pointer.currentVersionId ? confirmation : null, sittings, parserVersion);
+    return results;
   }
 }

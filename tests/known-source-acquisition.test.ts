@@ -1,11 +1,13 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { createHash } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { MemoryEvidenceStore, type EvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { acquireKnownRelease, type KnownRelease } from "../lib/sources/known-release.ts";
 import { RepositoryLockHeld, type LockManager } from "../lib/control-plane/repository/types.ts";
 import { isSourceAcquisitionFailure } from "../lib/civic-data/source-acquisition-error.ts";
+import { fetchSource, prefetchSourceRequests, runWithSourceFetch } from "../lib/sources/fetch-source.ts";
+import { fileSourceFetchStore } from "../lib/sources/fetch-source-state.ts";
 
 const T0 = "2026-10-01T00:00:00.000Z", T1 = "2026-10-03T00:00:00.000Z", DAY = 86_400_000;
 const url = "https://publisher.example/releases/current.csv";
@@ -104,6 +106,48 @@ test("304 confirms a complete held body without changing its source date or orig
   assert.equal(confirmed.vaultKey, first.vaultKey);
   h.time("2026-10-05T00:00:00.000Z"); h.response(() => new Response("id,name\n1,A\n"));
   assert.equal((await acquireKnownRelease(h.options)).vaultKey, first.vaultKey, "an unchanged 200 retains the exact immutable source object");
+});
+test("prefetch revalidates held validators without a receipt key once and preserves its wire time for serial release consumers", async () => {
+  const h = harness(), durable = fileSourceFetchStore(`prefetch-known:${randomUUID()}`);
+  let checkedAt = T0, requests = 0, missingReceipt = false, receiptKey = "";
+  const store = { ...durable, read: async (key: string) => {
+    const saved = await durable.read(key);
+    if (!saved || !missingReceipt) return saved;
+    const held = { ...saved, checkedAt };
+    Reflect.deleteProperty(held, "checkKey");
+    receiptKey = key;
+    return held;
+  } };
+  const modified = "Thu, 01 Oct 2026 00:00:00 GMT";
+  const transport: typeof fetch = async (_input, init) => {
+    requests++;
+    if (requests === 1) return new Response("id,name\n1,A\n", { headers: { etag: '"one"', "last-modified": modified } });
+    assert.equal(requests, 2, "the serial adapter must reuse the completed conditional check");
+    assert.equal(new Headers(init?.headers).get("if-none-match"), '"one"');
+    assert.equal(new Headers(init?.headers).get("if-modified-since"), modified);
+    missingReceipt = false;
+    return new Response(null, { status: 304 });
+  };
+  const sourceId = h.options.sourceId, seed = { url, headers: [], redirect: "follow" as const, byteCount: 12 };
+  const read = () => runWithSourceFetch({ sourceId, state: "US-NJ", dueAt: checkedAt, vault: h.store,
+    runtime: { store, transport, now: () => Date.parse(checkedAt) } }, async () => {
+    await prefetchSourceRequests({ sourceId, state: "US-NJ", dueAt: checkedAt, seed });
+    return acquireKnownRelease({ ...h.options, fetchImpl: fetchSource });
+  });
+  h.time(T1);
+  const first = await read();
+  assert.equal(first.checkedAt, T0);
+  assert.equal(first.retrievedAt, T0);
+  checkedAt = T1;
+  missingReceipt = true;
+  h.time("2026-10-05T00:00:00.000Z");
+  const next = await read();
+  assert.equal(next.checkedAt, T1);
+  assert.equal(next.retrievedAt, T0);
+  assert.equal(next.lastCheckStatus, 304);
+  assert.deepEqual(next.bytes, first.bytes);
+  assert.equal((await durable.read(receiptKey))?.checkKey, receiptKey);
+  assert.equal(requests, 2, "parsing reused each completed prefetch without another source request");
 });
 test("new parser consumes held bytes before an overdue source request and does not mark that request complete", async () => {
   const h = harness(); await acquireKnownRelease(h.options); h.time(T1); let checked = 0;

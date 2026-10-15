@@ -1,5 +1,5 @@
 import { displayNameOf } from "../display-name.ts";
-import type { SittingWindowSchedule } from "../../civic-data/contracts.ts";
+import { sittingWindowRereadMs, type SittingWindowSchedule } from "../../civic-data/contracts.ts";
 import {
   sittingWindowHotByConclusion,
   sittingWindowObligation,
@@ -360,9 +360,10 @@ export function sittingClockOf(
   const schedule = contract.schedule;
   const source = sourceWords(contract.meetingSource);
   const published = version !== null;
-  const unpublishedWaitMs = sittingWindowRetryMs(schedule, contract.retry.afterMs, false);
+  const baseUnpublishedWaitMs = sittingWindowRetryMs(schedule, contract.retry.afterMs, false);
   if (version !== null && version.clock === undefined) {
-    return { source, schedule, unread: true, published, unpublishedWaitMs, hot: undefined, holding: null, nextSitting: null, owed: null };
+    return { source, schedule, unread: true, published, unpublishedWaitMs: Math.min(baseUnpublishedWaitMs, schedule.hotEveryMs),
+      hot: undefined, holding: null, nextSitting: null, owed: null };
   }
   const clock = version?.clock ?? null;
   const sittingLists = bodySittings ?? [clock?.sittings];
@@ -370,6 +371,7 @@ export function sittingClockOf(
   const ends = statedSittingEndsByScope([{ scope: contract.scope, pairs: sittings.map((s) => [s.startsAt, s.endsAt]) }]).get(contract.scope) ?? new Map<string, number>();
   const hotAt = (starts: readonly string[] | undefined) => sittingWindowHotByConclusion(schedule, [starts], nowMs, ends);
   const hot = sittingWindowHotByConclusion(schedule, sittingLists.map(rows => rows?.map(row => row.startsAt)), nowMs, ends);
+  const unpublishedWaitMs = Math.min(baseUnpublishedWaitMs, sittingWindowRereadMs(schedule, hot));
 
   const dated = sittings.filter((s) => Number.isFinite(ms(s.startsAt))).sort((a, b) => ms(a.startsAt) - ms(b.startsAt));
   const next = dated.find((s) => ms(s.startsAt) > nowMs) ?? null;
@@ -399,7 +401,7 @@ function sittingStandingWords(c: SittingClock): string {
   const window = spanWords(c.schedule.windowMs);
   const nextWords = c.nextSitting === null ? "no sitting ahead is listed" : `the next one listed is ${fmtDate(c.nextSitting)}`;
   if (!c.published) {
-    return `${cap(everyWords(c.unpublishedWaitMs))} until something from it is published: with no meeting on record, the runner waits ${spanWords(c.unpublishedWaitMs)} after each attempt`;
+    return `${cap(everyWords(c.unpublishedWaitMs))} until something from it is published: this source has no accepted version, so the runner waits ${spanWords(c.unpublishedWaitMs)} after each attempt`;
   }
   if (c.hot === false) return `${cap(everyWords(c.schedule.baseEveryMs))} now — no sitting is within ${window} ahead or behind; ${nextWords}`;
   const hourly = cap(everyWords(c.schedule.hotEveryMs));
@@ -439,9 +441,9 @@ export function sittingNextLookWords(clocks: readonly SittingClock[], nowMs: num
   return perSource(soonest, (c) => sittingOwedWords(c, nowMs), "; ");
 }
 
-function retryWords(contract: WatchedContract, published: boolean): string {
+function retryWords(contract: WatchedContract, published: boolean, unpublishedWaitMs?: number): string {
   if (contract.schedule?.kind !== "SITTING_WINDOW" || published) return contract.retry.description;
-  return `${spanWords(sittingWindowRetryMs(contract.schedule, contract.retry.afterMs, false))} after each attempt while nothing from it is published`;
+  return `${spanWords(unpublishedWaitMs ?? Math.min(sittingWindowRetryMs(contract.schedule, contract.retry.afterMs, false), contract.schedule.hotEveryMs))} after each attempt while nothing from it is published`;
 }
 
 const FAILED_STATES = new Set([
@@ -667,6 +669,7 @@ function bodyView(g: BodyGroup, l: Lookups): BodyView {
     sittingContracts.length === g.contracts.length
       ? sittingContracts.map((c) => sittingClockOf(c, l.versionByScope.get(c.scope) ?? null, l.attemptsByScope.get(c.scope) ?? [], l.nowMs, bodySittings))
       : [];
+  const unpublishedWaitMs = clocks.find(clock => clock.source === sourceWords(contract.meetingSource))?.unpublishedWaitMs;
 
   const lastFailed = last !== null && (!last.acquisitionSucceeded || FAILED_STATES.has(last.state));
   const access: BodyView["access"] = last === null ? "NOT_READ" : last.acquisitionSucceeded ? "GOT_IN" : "COULD_NOT";
@@ -802,7 +805,7 @@ function bodyView(g: BodyGroup, l: Lookups): BodyView {
       counts: day ? `${day.gotIn} of ${day.reads} reads got in · 24h` : "no reads in 24h",
       note:
         clocks.length > 0 && contract.schedule
-          ? `Runs on the standing runner's clock: ${sittingWindowRuleWords(contract.schedule)}; a failed read is retried ${retryWords(contract, version !== null)}.`
+          ? `Runs on the standing runner's clock: ${sittingWindowRuleWords(contract.schedule)}; a failed read is retried ${retryWords(contract, version !== null, unpublishedWaitMs)}.`
           : `Runs on the standing runner's clock (${contract.cadence.description}); a failed read is retried ${contract.retry.description}.`,
     },
     {
@@ -848,7 +851,7 @@ function bodyView(g: BodyGroup, l: Lookups): BodyView {
 
   let deadEnd: BodyDeadEnd | null = null;
     // A sitting-window source with nothing published waits twelve hours between attempts, not its one-hour retry.
-  const retryClause = clocks.length > 0 && version === null ? retryWords(contract, false) : `${contract.retry.description} after a failure`;
+  const retryClause = clocks.length > 0 && version === null ? retryWords(contract, false, unpublishedWaitMs) : `${contract.retry.description} after a failure`;
   if (last !== null && lastFailed) {
     const ruled = routineRuledOut(
       attempts.map((a) => ({

@@ -1,3 +1,4 @@
+import { meetingPublication } from "./helpers/meeting-publication.ts";
 import assert from "node:assert/strict";
 
 import { mkdtempSync, rmSync } from "node:fs";
@@ -85,10 +86,6 @@ const stateLegislators = Object.fromEntries(OFFICIAL_STATE_LEGISLATOR_TARGETS.ma
   roster: { scope: target.state.toLowerCase(), generatedAt: "2026-09-25", officeholders: [], divisions: [], unmatched: [] },
 }]));
 
-/**
- * The recorded 85701 meetings plus one synthetic sitting each for a New Jersey and a New Hampshire county
- * government, so the edge publishes meeting scopes for three states.
- */
 function multiStateSnapshot() {
   const recorded = recordedMeetingsSnapshot().meetings;
   const template = recorded.find((row) => row.id.startsWith("legistar:") && row.location)!;
@@ -131,7 +128,7 @@ async function publishEdge(tag: string, options: { readonly legislators?: boolea
     const meetings = snapshot.meetings.filter(meeting => (stateOfOcdId(meeting.ocdId) ?? "az") === state);
     const ids = new Set(meetings.map(meeting => meeting.id));
     const scoped = { ...snapshot,meetings,agendaDocuments: snapshot.agendaDocuments.filter(document => ids.has(document.meetingId)) };
-    const published = await publishReaderEdgeArtifacts(scoped,{ sourceThrough: snapshot.generatedAt,retrievedAt: snapshot.generatedAt,promotedThrough: snapshot.generatedAt },{
+    const published = await publishReaderEdgeArtifacts(meetingPublication(scoped),{ sourceThrough: snapshot.generatedAt,retrievedAt: snapshot.generatedAt,promotedThrough: snapshot.generatedAt },{
       store: scopedReaderArtifactStore(store,state),extras: { commentAccess: COMMENT_ACCESS },
       ...(state === "az" ? { authority: { "meeting-outcomes": { value: getOutcomeSnapshot(),versionId: `${tag}:outcomes` },
         "comment-access": { value: commentAccessProjection,versionId: `${tag}:comment-access` } } } : {}),

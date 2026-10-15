@@ -1,3 +1,4 @@
+import { withSourceTransport } from "./helpers/source-fetch.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFileSync } from "node:fs";
@@ -138,35 +139,37 @@ test("real retained roll calls reach API, popup rows and Ask by exact native peo
       const fetchImpl = globalThis.fetch;
       globalThis.fetch = async () => { throw new Error("the retained-source reader journey requires no live fetch"); };
       try {
-        const started = performance.now();
-        const response = await POST(new Request("https://meanwhile.test/api/ask/grounded", { method: "POST",
-          headers: { "content-type": "application/json", origin: "https://meanwhile.test", host: "meanwhile.test", "x-wtp-synthetic-run": "state-votes-reader-test" },
-          body: JSON.stringify({ question: `How did my state senator vote on ${topic}?`, ocdIds: [division], today: "2026-10-13", surface: "MAP" }),
-        }));
-        const grounded = await response.json() as { mode: string; answer: string; subject: { id: string; name: string }; records: { rollCall?: { position: string } }[] };
-        assert.equal(response.status, 200);
-        assert.equal(grounded.mode, "GROUNDED_COMPOSED", `${sample.state}: ${JSON.stringify(grounded)}`);
-        assert.equal(grounded.subject.id, member);
-        assert.equal(grounded.subject.name, source.personName);
-        assert.ok(grounded.answer.includes(source.billNumber));
-        assert.ok(grounded.records.some(record => record.rollCall?.position === source.position));
-        assert.ok(performance.now() - started < 3_000, `${sample.state}: the first requested Ask answer is usable within three seconds`);
-        if (sample.state === "AZ") {
-          const question = `How did my senator vote on ${topic}?`;
-          const ask = async (activeSubjects: unknown[] = []) => {
-            resetGroundedState();
-            const response = await POST(new Request("https://meanwhile.test/api/ask/grounded", { method: "POST",
-              headers: { "content-type": "application/json", origin: "https://meanwhile.test", host: "meanwhile.test", "x-wtp-synthetic-run": "state-votes-reader-test" },
-              body: JSON.stringify({ question, ocdIds: [division], today: "2026-10-13", surface: "MAP", activeSubjects }),
-            }));
-            return response.json() as Promise<{ mode: string; subject?: { id: string }; answer?: string }>;
-          };
-          assert.equal((await ask()).mode, "CLARIFY", "two federal senators and one state senator require a choice");
-          const focused = await ask([{ id: member, name: source.personName, kind: "PERSON", focused: true }]);
-          assert.equal(focused.mode, "GROUNDED_COMPOSED");
-          assert.equal(focused.subject?.id, member, "the exact focused state legislator supplies the context");
-          assert.ok(focused.answer?.includes(source.billNumber));
-        }
+        await withSourceTransport(globalThis.fetch, async () => {
+          const started = performance.now();
+          const response = await POST(new Request("https://meanwhile.test/api/ask/grounded", { method: "POST",
+            headers: { "content-type": "application/json", origin: "https://meanwhile.test", host: "meanwhile.test", "x-wtp-synthetic-run": "state-votes-reader-test" },
+            body: JSON.stringify({ question: `How did my state senator vote on ${topic}?`, ocdIds: [division], today: "2026-10-13", surface: "MAP" }),
+          }));
+          const grounded = await response.json() as { mode: string; answer: string; subject: { id: string; name: string }; records: { rollCall?: { position: string } }[] };
+          assert.equal(response.status, 200);
+          assert.equal(grounded.mode, "GROUNDED_COMPOSED", `${sample.state}: ${JSON.stringify(grounded)}`);
+          assert.equal(grounded.subject.id, member);
+          assert.equal(grounded.subject.name, source.personName);
+          assert.ok(grounded.answer.includes(source.billNumber));
+          assert.ok(grounded.records.some(record => record.rollCall?.position === source.position));
+          assert.ok(performance.now() - started < 3_000, `${sample.state}: the first requested Ask answer is usable within three seconds`);
+          if (sample.state === "AZ") {
+            const question = `How did my senator vote on ${topic}?`;
+            const ask = async (activeSubjects: unknown[] = []) => {
+              resetGroundedState();
+              const response = await POST(new Request("https://meanwhile.test/api/ask/grounded", { method: "POST",
+                headers: { "content-type": "application/json", origin: "https://meanwhile.test", host: "meanwhile.test", "x-wtp-synthetic-run": "state-votes-reader-test" },
+                body: JSON.stringify({ question, ocdIds: [division], today: "2026-10-13", surface: "MAP", activeSubjects }),
+              }));
+              return response.json() as Promise<{ mode: string; subject?: { id: string }; answer?: string }>;
+            };
+            assert.equal((await ask()).mode, "CLARIFY", "two federal senators and one state senator require a choice");
+            const focused = await ask([{ id: member, name: source.personName, kind: "PERSON", focused: true }]);
+            assert.equal(focused.mode, "GROUNDED_COMPOSED");
+            assert.equal(focused.subject?.id, member, "the exact focused state legislator supplies the context");
+            assert.ok(focused.answer?.includes(source.billNumber));
+          }
+        });
       } finally { globalThis.fetch = fetchImpl; }
       const stranger = await readNativeMemberVotes(`plural:${sample.state.toLowerCase()}:00000000-0000-4000-8000-000000000999`);
       assert.equal(stranger?.votes.length, 0, "a real roll call never transfers through a display name");

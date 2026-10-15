@@ -21,10 +21,6 @@ export interface PermissionGate {
   readonly readings: () => readonly { readonly url: string; readonly reading: PermissionReading }[];
 }
 
-/**
- * One GET with its robots reading recorded first. The single way an opted-in
- * adapter reads a page, so the record cannot be skipped by one call site.
- */
 export async function permittedText(
   gate: PermissionGate,
   url: string,

@@ -1,4 +1,5 @@
-import { runWithSourceFetch } from "../lib/sources/fetch-source.ts";
+import { runWithSourceFetch, SourceFetchDeferred } from "../lib/sources/fetch-source.ts";
+import { withSourceTransport } from "./helpers/source-fetch.ts";
 import { memoryWebsitePacing } from "../lib/control-plane/website-pacing.ts";
 import { SOURCE_API_SPECS } from "../lib/control-plane/scheduler/scout-api.ts";
 import assert from "node:assert/strict";
@@ -20,7 +21,7 @@ import {
   type ScoutToolContext,
   type VaultBytes,
 } from "../lib/control-plane/scheduler/scout-contract.ts";
-import { REPORT_FINDING_TOOL_SPEC, SCOUT_TOOL_SPECS, SEARCH_TOOL_SPEC, buildScoutToolkit, extractPdf, savedPageReader } from "../lib/control-plane/scheduler/scout-tools.ts";
+import { REPORT_FINDING_TOOL_SPEC, SCOUT_TOOL_SPECS, SEARCH_TOOL_SPEC, buildScoutToolkit, extractPdf, realOpenBytes, savedPageReader } from "../lib/control-plane/scheduler/scout-tools.ts";
 import { cannotRun, extracted } from "../lib/extract/types.ts";
 import type { HuntSearch, HuntSearchResult } from "../lib/hunt/search.ts";
 import { carriesCredential } from "../lib/hunt/access-control.ts";
@@ -32,20 +33,6 @@ import { runAcquirer } from "../lib/control-plane/workers/acquirer.ts";
 import { inventoryRecordEvidence } from "../lib/control-plane/workers/record-evidence.ts";
 import { evidenceProjection } from "../lib/control-plane/workers/evidence-projection.ts";
 
-/**
- * THE SEEDED FAILURE SUITE — the Scout's research tools.
- *
- * Each seeded failure plants one way a tool could hand the model something it
- * must not have (unvaulted bytes, a page behind an access control) and asserts
- * the exact refusal. A positive control proves each detector can fail.
- *
- * robots.txt is READ FIRST AND RECORDED, never a refusal of a public page
- * (ROBOTS_BLOCKS_ACQUISITION = false): the seeded
- * robots cases below assert the document is read and vaulted, the verdict
- * travels on the rung and the artifact, and the page GET happens. An access
- * control (a 403, a bot challenge) is a WALL: vaulted DIAGNOSTIC, never shown,
- * requested once, never retried with a credential.
- */
 
 const NOW = "2026-09-01T12:00:00.000Z";
 
@@ -129,7 +116,7 @@ function fakeTransport(routes: Readonly<Record<string, Route>>, canonical = fals
     };
   };
   const vault = new MemoryEvidenceStore();
-  const store = { pacing: memoryWebsitePacing(), withLease: async <T,>(_key: string, operation: () => Promise<T>) => operation(), read: async () => null, record: async () => {} };
+  const store = { pacing: memoryWebsitePacing(), withLease: async <T,>(_key: string, operation: () => Promise<T>) => operation(), read: async () => null, readEntryRequest: async () => null, record: async () => {} };
   const sourceOpen: OpenOne = input => runWithSourceFetch({ vault, runtime: { store, transport: async (url, init) => {
     const result = await open({ ...input, url: String(url), headers: Object.fromEntries(new Headers(init?.headers)) });
     if (result.transportError) throw new Error(result.transportError);
@@ -139,6 +126,15 @@ function fakeTransport(routes: Readonly<Record<string, Route>>, canonical = fals
 }
 
 type VaultMode = "accept" | "refuse" | "throw";
+
+test("source openers preserve a shared host deferral for their caller",async () => {
+  const deferred = new SourceFetchDeferred({ ok: false,until: Date.now()+3_600_000,why: "HOURLY_ALLOWANCE" });
+  await withSourceTransport(async () => { throw deferred; },async () => {
+    const request = { url: "https://town.example/calendar",method: "GET" as const,headers: {},timeoutMs: 1000 };
+    await assert.rejects(realOpen(request),error => error === deferred);
+    await assert.rejects(realOpenBytes(request),error => error === deferred);
+  });
+});
 
 function recordingVault(mode: VaultMode = "accept"): { readonly put: VaultPut; readonly puts: { artifact: Artifact; body: string }[] } {
   const puts: { artifact: Artifact; body: string }[] = [];

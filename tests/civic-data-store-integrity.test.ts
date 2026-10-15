@@ -5,6 +5,7 @@ import test from "node:test";
 
 import { neonConfig } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
+import { PgDialect } from "drizzle-orm/pg-core";
 
 import * as schema from "../lib/db/schema.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
@@ -21,10 +22,12 @@ import {
   readerEvidenceCandidateRead,
   readerEvidenceRowToRecord,
   routineDataStoreCandidateAuthorityIssue,
+  routineClocksQuery,
 } from "../lib/civic-data/store.ts";
 import type { RuntimeAuthorityEnvelope } from "../lib/civic-data/runtime-authority.ts";
 import { normalizedHash } from "../lib/civic-data/candidate-builders.ts";
 import { serializeReaderProjectionReadback } from "../lib/civic-data/reader-readback.ts";
+import { CivicReadCache } from "../lib/db/civic-read-cache.ts";
 import {
   VALIDATION_CHECKS,
   sourceProjectionEvidence,
@@ -75,8 +78,10 @@ test("Postgres routine-data timestamps have one fail-closed canonical evidence b
   assert.doesNotMatch(adapter, /const lastAttemptedAt = rows\[0\]\?\.attemptedAt;/);
   assert.match(adapter, /postgresPromotionRowToProjection/);
   assert.match(adapter, /postgresCandidateEventRowToEvent/);
-  assert.match(adapter, /canonicalPostgresRoutineTimestamp\(rows\[0\]\.attemptedAt/);
-  assert.match(adapter, /canonicalPostgresRoutineTimestamp\(lastSucceededAt/);
+  assert.match(adapter, /clockFromRow\(row, request\.parserVersion\)/);
+  const clock = source.slice(source.indexOf("function clockFromRow("), source.indexOf("export const CANDIDATE_PROOF_OMITTED"));
+  assert.match(clock, /canonicalPostgresRoutineTimestamp\(row\.attempted_at, "clock\.lastAttemptedAt"\)/);
+  assert.match(clock, /canonicalPostgresRoutineTimestamp\(success, "clock\.lastSucceededAt"\)/);
 });
 
 function candidate(id: string, retrievedAt = "2026-09-08T12:00:00.000Z", sourceId = "fec-open-api"): RoutineCandidate {
@@ -320,9 +325,6 @@ test("an atomic pointer race becomes durable CANNOT_TELL evidence without changi
   const baseReceipt = await seedValidated(store, base);
   await store.promote(base.id, baseReceipt, "2026-09-08T12:01:00.000Z");
   const staleBase = candidate("race-stale", "2026-09-08T12:30:00.000Z");
-  // Exercise the pointer race itself. Keep the same civic member key as the
-  // base so the independent incomplete-horizon removal firewall does not (and
-  // should not) refuse this candidate before it reaches atomic promotion.
   const stale: RoutineCandidate = {
     ...staleBase,
     normalizedPayload: { rows: [{ id: base.id, amount: 2 }] },
@@ -874,6 +876,49 @@ function returningList(query: string): string | null {
   return at < 0 ? null : query.slice(at + " returning ".length);
 }
 
+test("a largest-state meeting publication reads all current and history pointers in bounded database batches",async () => {
+  const scopes = Array.from({ length: 20_802 },(_,index) => [`US-IL:meeting:fixture-${index}`,`US-IL:meeting:fixture-${index}:history`]).flat();
+  const columns: NeonColumn[] = [["key","text"],["source_id","text"],["record_class","text"],["scope","text"],
+    ["current_version_id","text"],["last_known_good_version_id","text"],["promoted_at","timestamptz"]];
+  await withCannedNeon(statement => {
+    assert.ok(statement.params.length <= 131,`bounded parameter count: ${statement.params.length}`);
+    const selected = statement.params.filter((value): value is string => typeof value === "string" && /^(?:MEETING:)?US-IL:meeting:fixture-/.test(value));
+    if (statement.query.includes(".xmin")) return {
+      columns: [["key","text"],["etag","text"],...(statement.query.includes("latestConfirmation") ? [["latestConfirmation","text"] as const] : [])],
+      rows: selected.map(key => [key,"unchanged",...(statement.query.includes("latestConfirmation") ? [null] : [])]),
+    };
+    const payload = statement.query.includes('"payload"');
+    return { columns: [...columns,...(payload ? [["payload","jsonb"],["validation_receipt","jsonb"]] as NeonColumn[] : []),["latestConfirmation","text"]],
+      rows: selected.map(scope => [`MEETING:${scope}`,"fixture-source","MEETING",scope,`version:${scope}`,`version:${scope}`,"2026-10-15T00:00:00Z",
+        ...(payload ? [{ meetings: [{ id: scope }] },null] : []),null]) };
+  },async (store,sent) => {
+    const rows = await store.readPromotions<{ meetings: { id: string }[] }>("MEETING",[...scopes,scopes[0]!]);
+    assert.equal(rows.length,scopes.length);
+    assert.deepEqual(new Set(rows.map(row => row.payload.meetings[0]!.id)),new Set(scopes));
+    const identities = await store.readPromotionIdentities("MEETING",scopes);
+    assert.equal(identities.length,scopes.length);
+    assert.deepEqual(new Set(identities.map(row => row.scope)),new Set(scopes));
+    const candidateIds = scopes.map((_,index) => `cv-batch-${index}`);
+    for (const method of ["readCandidates","readCandidateProofs","latestReaderReadbacks"] as const) {
+      const start = sent.length;
+      assert.deepEqual(await store[method](candidateIds),[]);
+      const requested = sent.slice(start).flatMap(statement => statement.params.filter((value): value is string =>
+        typeof value === "string" && value.startsWith("cv-batch-")));
+      assert.deepEqual(new Set(requested),new Set(candidateIds),`${method} must ask for every requested body`);
+    }
+    const copies = new Map<string,string>();
+    Object.assign(store,{ readCache: new CivicReadCache({ read: async key => copies.get(key) ?? null,
+      write: async (key,value) => { copies.set(key,value); } }) });
+    const selected = scopes.slice(0,513);
+    assert.equal((await store.readPromotions("MEETING",selected)).length,selected.length);
+    assert.equal((await store.readPromotionIdentities("MEETING",selected)).length,selected.length);
+    const before = sent.length;
+    assert.equal((await store.readPromotions("MEETING",selected)).length,selected.length);
+    assert.equal((await store.readPromotionIdentities("MEETING",selected)).length,selected.length);
+    assert.ok(sent.slice(before).every(statement => statement.query.includes(".xmin")),"unchanged cached payloads need only bounded version reads");
+  });
+});
+
 test("Postgres promotion ships no dataset back and returns the pointer with the read model it copied", async () => {
   const value = candidate("postgres-promotion-returning", "2026-09-08T12:00:00.000Z", "fec-open-api");
   const persisted = receiptFor(value);
@@ -1140,19 +1185,15 @@ test("every Postgres candidate-event allocator is serialized inside its Neon bat
 });
 
 test("the Postgres retry clock keeps failed attempts local and uses an observed source check for successful held-byte replay", () => {
-  const source = readFileSync(join(ROOT, "lib", "civic-data", "store.ts"), "utf8");
-  const postgres = source.slice(source.indexOf("export class PostgresRoutineDataStore"));
-  const clock = postgres.slice(postgres.indexOf("  async clock("));
-  assert.match(clock, /CASE WHEN \$\{civicDataCandidates\.state\} = 'PROMOTED'[\s\S]*\$\{civicDataCandidates\.acquisitionSucceeded\} = true/);
-  assert.match(clock, /THEN LEAST\([\s\S]*retrieval,sourceCheck,checkedAt[\s\S]*civicDataCandidateEvents\.at[\s\S]*ELSE \$\{civicDataCandidateEvents\.at\} END/);
-  assert.match(clock, /select\(\{ attemptedAt: attemptAt \}\)/);
-  assert.match(clock, /eq\(civicDataCandidateEvents\.sequence, 1\)/);
-  assert.match(clock, /orderBy\(desc\(attemptAt\)\)/);
-  assert.doesNotMatch(
-    clock,
-    /orderBy\(desc\(civicDataCandidates\.retrievedAt\)\)/,
-    "an untrusted future retrievedAt would postpone a source retry",
-  );
+  const query = new PgDialect().sqlToQuery(routineClocksQuery([
+    { sourceId: "fec-open-api", recordClass: "FEC_FUNDING", scope: "federal-supported" },
+  ])).sql;
+  const attempt = query.slice(query.indexOf("SELECT max(CASE"), query.indexOf(") attempt ON true"));
+  assert.match(attempt, /max\(CASE WHEN c\.state='PROMOTED' AND c\.acquisition_succeeded=true/);
+  assert.match(attempt, /CASE WHEN pg_input_is_valid\([\s\S]*THEN least\([\s\S]*retrieval,sourceCheck,checkedAt[\s\S]*e\.at\) END\s+ELSE e\.at END\)/);
+  assert.match(attempt, /e\.candidate_id=c\.id AND e\.sequence=1/);
+  assert.match(attempt, /c\.source_id=requested\.source_id AND c\.record_class=requested\.record_class AND c\.scope=requested\.scope/);
+  assert.doesNotMatch(attempt, /retrievedAt|retrieved_at/, "an untrusted future retrievedAt would postpone a source retry");
 });
 
 test("every Postgres civic-data mutation proves the sanctioned runtime authority before touching the database", () => {
@@ -1199,7 +1240,6 @@ test("terminal store exposes no one-time import or aggregate retirement door", (
   assert.doesNotMatch(source, retiredDeclaration);
   assert.doesNotMatch(adapter, retiredDeclaration);
 });
-
 
 test("every jurisdiction roll-call candidate uses bounded immutable parts before insertion", async () => {
   const contract = ROUTINE_SOURCE_CONTRACTS.find(row => row.recordClass === "STATE_ROLL_CALL")!;

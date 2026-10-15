@@ -274,7 +274,9 @@ export async function acquireKnownRelease(options: KnownReleaseOptions): Promise
       await response.body?.cancel().catch(() => {});
       throw sourceAcquisitionFailure("PUBLISHER_RESPONSE_REFUSED", "KNOWN_SOURCE_REDIRECT_REFUSED");
     }
-    const checkedAt = options.now?.() ?? new Date().toISOString();
+    const sourceCheckedAt = response.headers.get("x-meanwhile-source-checked-at");
+    const checkedAt = sourceCheckedAt && Number.isFinite(Date.parse(sourceCheckedAt))
+      ? new Date(sourceCheckedAt).toISOString() : options.now?.() ?? new Date().toISOString();
     if (response.status === 304 || response.headers.get("x-meanwhile-source-status") === "304") {
       await response.body?.cancel().catch(() => {});
       if (!prior || !heldBytes) throw sourceAcquisitionFailure("PUBLISHER_RESPONSE_REFUSED", "KNOWN_SOURCE_304_WITHOUT_BYTES");

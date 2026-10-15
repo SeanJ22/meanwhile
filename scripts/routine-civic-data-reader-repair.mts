@@ -6,13 +6,13 @@ import { runBoundedWorkPool } from "../lib/ops/bounded-work-pool.ts";
 import { isDoorRecord } from "../lib/doors/registry.ts";
 import {
   routineReaderRepairRecord,
+  ROUTINE_READER_MEETING_TIMEOUT_MS,
   serializeRoutineReaderRepairRecord,
 } from "../lib/civic-data/reader-repair-protocol.ts";
 import {
-  repairMeetingReaderProjectionReadbacks,
+  runMeetingReaderRepairDomain,
   repairRoutineReaderProjectionReadback,
 } from "../lib/civic-data/reader-verification.ts";
-import { readMeetingsProjection, type MeetingsProjectionReadResult } from "../lib/meetings/snapshot.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
@@ -84,36 +84,12 @@ let failed = false;
 // A receipt from an earlier commit carries to this one when no typed Reader code changed between them.
 const attestor = readerVerifierClosureAttestor();
 if (meetingAggregate) {
-  // One composition per pass, shared by the Reader readbacks and the snapshot republication; a failed one is not kept.
-  let composing: Promise<MeetingsProjectionReadResult> | null = null;
-  const aggregate = (): Promise<MeetingsProjectionReadResult> => {
-    composing ??= readMeetingsProjection({ store, now: observedAt, bypassCache: true })
-      .catch((error: unknown) => {
-        composing = null;
-        throw error;
-      });
-    return composing;
-  };
-  const selectedContracts = selectedIds === null ? MEETING_PARTITION_CONTRACTS : MEETING_PARTITION_CONTRACTS.filter(contract => selectedIds.includes(contract.id));
-  if (selectedIds && (selectedIds.length !== selectedContracts.length || selectedContracts.length === 0)) throw new Error("READER_REPAIR_MEETING_SELECTION_INVALID");
-  const results = await repairMeetingReaderProjectionReadbacks(
-    store,
-    selectedContracts,
-    observedAt,
-    undefined,
-    { aggregate, attestor },
-  );
-  for (const result of results) {
-    const contract = MEETING_PARTITION_CONTRACTS.find(({ id }) => id === result.contractId);
-    if (!contract) throw new Error(`READER_REPAIR_MEETING_RESULT_UNKNOWN:${result.contractId}`);
-    failed ||= !result.ok;
-    console.log(serializeRoutineReaderRepairRecord(routineReaderRepairRecord(
-      contract,
-      result.ok
-        ? { ok: true, value: result.value }
-        : { ok: false, error: safeFailure(result.error) },
-    )));
-  }
+  const selectedContracts = MEETING_PARTITION_CONTRACTS.filter(contract => selectedIds!.includes(contract.id));
+  if (selectedIds!.length !== selectedContracts.length || selectedContracts.length === 0) throw new Error("READER_REPAIR_MEETING_SELECTION_INVALID");
+  const result = await runMeetingReaderRepairDomain({ store, observedAt, attestor,
+    domain: { id: "reader-readback:meetings-aggregate", mode: "MEETING_AGGREGATE", contracts: selectedContracts, timeoutMs: ROUTINE_READER_MEETING_TIMEOUT_MS } });
+  if (result.stdout) console.log(result.stdout);
+  failed = result.status !== 0;
 
 } else {
   const contracts = [

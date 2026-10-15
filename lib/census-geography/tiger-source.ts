@@ -1,7 +1,4 @@
 import { fetchSource } from "../sources/fetch-source.ts";
-/** Large Census archives stay compressed in the existing evidence vault and
- * are restored to disk a chunk at a time. A complete ZIP must validate before
- * the source index advances, so a broken update cannot replace held evidence. */
 import { createHash } from "node:crypto";
 import { createReadStream } from "node:fs";
 import { mkdtemp, open, rm, type FileHandle } from "node:fs/promises";

@@ -14,14 +14,11 @@ import { captureProvenance, fetchCapture } from "./capture.ts";
 import { boundedIndexOf, checkFact, linkQuote, normalizeText, type FieldKind } from "./check.ts";
 import { learnOfficialHost } from "./entities.ts";
 import { readCheckEntity } from "./entity-read.ts";
-import { CAMPAIGN_SITE_LEAD, CANDIDATE_PROFILE_LEAD, FINDING_SLOTS_VERSION, slotFor, type FindingSlot } from "./finding-slots.ts";
+import { BOX_PUBLICATION_LOOKBACK_MS, CAMPAIGN_SITE_LEAD, CANDIDATE_PROFILE_LEAD, FINDING_SLOTS_VERSION, slotFor, type FindingSlot } from "./finding-slots.ts";
 import { openBlank, publishClaim, type Clocks, type FactDb, type PublishOutcome, type Query } from "./publish.ts";
 import { nameKey, publishRosterFacts, type RosterMember } from "./roster-facts.ts";
 import { meetingEntityId } from "./meeting-read.ts";
 import { saveCaptureCopy } from "./source-copy.ts";
-
-/** How far back the Box is read for findings to publish. */
-const HUNTER_FINDING_DAYS = 30;
 
 interface Finding {
   readonly row: BoxFinding; readonly origin: BoxOrigin; readonly field: string; readonly value: string | number | boolean;
@@ -148,7 +145,7 @@ export async function publishBoxFindings(input: {
   readonly store: RoutineDataStore; readonly clocks: Clocks; readonly now: string; readonly limit: number;
 }): Promise<BoxPublicationReport> {
   const { repos, facts, clocks } = input;
-  const now = new Date(input.now), since = now.getTime() - HUNTER_FINDING_DAYS * 86_400_000;
+  const now = new Date(input.now), since = now.getTime() - BOX_PUBLICATION_LOOKBACK_MS;
   const report = { looked: 0, published: 0, publishedByRoute: {} as Record<string, number>, handed: 0, refused: 0, seats: await reviewBoxSeats(facts.query, input.state),
     waitingByClass: {} as Record<string, number>, failuresByReason: {} as Record<string, number>,
     byPlace: {} as Record<string, { published: number; refused: number; waiting: number }> };

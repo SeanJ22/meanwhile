@@ -83,3 +83,41 @@ test("readers see each sitting with its live facts and the saved page every one 
   assert.deepEqual([seen!.fieldSources?.title?.sourceUrl, seen!.fieldSources?.startsAt?.quote], [FEED, "2026-05-12T00:00:00 1:00 PM"]);
   assert.deepEqual(await withMeetingFacts([first], null), [first], "with no fact store the partition row stands");
 });
+
+test("24 UTC calendar sittings publish independent fields with one copy and bounded database round trips", async () => {
+  const { publishReadMeetingFacts } = await import("../lib/civic-data/meeting-fact-publication.ts");
+  const db = await factDb();
+  const at = "2026-10-15T12:00:00.000Z", feed = "https://il.example.gov/calendar.ics";
+  const meetings = Array.from({ length: 24 }, (_, i) => ({ id: `utc:${i}`, ocdId: "ocd-division/country:us/state:il/place:example",
+    bodyId: "ocd-division/country:us/state:il/place:example#governing", bodyName: "Council", title: `Public hearing ${i}`,
+    startsAt: new Date(Date.parse("2026-10-17T18:10:00Z") + i * 86_400_000).toISOString(), timeZone: "America/Chicago",
+    location: i ? null : { name: "Unstated room", address: "Unstated address" }, agendaUrl: null, status: "SCHEDULED",
+    provenance: { sourceUrl: feed, sourceOrg: "Council", collectedAt: at, verifiedAt: at } } as Meeting));
+  const ics = ["BEGIN:VCALENDAR", ...meetings.flatMap(m => ["BEGIN:VEVENT", `SUMMARY:${m.title}`,
+    `DTSTART:${m.startsAt.replaceAll(/[-:]/g, "").replace(".000", "")}`, "END:VEVENT"]), "END:VCALENDAR"].join("\r\n");
+  const bytes = Buffer.from(ics);
+  let queries = 0;
+  const count = (query: typeof db.query): typeof db.query => async (sql, args) => { queries++; return query(sql, args); };
+  const facts = { query: count(db.query), transaction: <T>(work: (query: typeof db.query) => Promise<T>) => db.transaction(query => work(count(query))) };
+  const request = { facts, vault: new MemoryEvidenceStore(), meetings, responses: [{ source: "civicplus", requestedUrl: feed, finalUrl: feed,
+    httpStatus: 200, rawHash: createHash("sha256").update(bytes).digest("hex"), byteCount: bytes.length, bytes, retrievedAt: at, contentType: "text/calendar" }],
+    producedBy: "door:calendar", clocks: factClocks(null), now: new Date(at) };
+  assert.deepEqual(await publishReadMeetingFacts(request), { live: 48, confirmed: 0, held: 0, blanks: 1, unsaved: [] });
+  assert.ok(queries <= 8, `one body's fields require ${queries} SQL round trips`);
+  assert.equal((await db.query("SELECT count(*)::int n FROM source_copy"))[0]!.n, 1);
+  assert.deepEqual(await db.query("SELECT quote FROM fact WHERE field = 'starts_at' ORDER BY id LIMIT 1"), [{ quote: "20261017T181000Z" }]);
+  const next = "2026-10-15T13:00:00.000Z";
+  assert.deepEqual(await publishReadMeetingFacts({ ...request, now: new Date(next), responses: request.responses.map(r => ({ ...r, retrievedAt: next })) }),
+    { live: 0, confirmed: 48, held: 0, blanks: 1, unsaved: [] });
+  assert.equal((await db.query("SELECT count(*)::int n FROM source_copy"))[0]!.n, 2, "a recheck records a new observation of shared bytes");
+  const changed = { ...meetings[0]!, startsAt: "2026-10-17T19:10:00Z", status: "CANCELED" as const,
+    provenance: { ...meetings[0]!.provenance, collectedAt: "2026-10-15T14:00:00Z", verifiedAt: "2026-10-15T14:00:00Z" } };
+  const [seen] = await withMeetingFacts([changed], db.query, "US-IL");
+  assert.equal(seen!.startsAt, changed.startsAt, "an older fact cannot erase a newer verified reschedule when mirroring fails");
+  assert.equal(seen!.status, "CANCELED");
+  const [observed] = await withMeetingFacts([{ ...changed, provenance: { ...changed.provenance, verifiedAt: null } }], db.query, "IL");
+  assert.equal(observed!.startsAt, changed.startsAt, "promoted adapter rows carry their observed time even without a separate verifiedAt stamp");
+  const [old] = await withMeetingFacts([{ ...meetings[0]!, startsAt: "2026-10-17T11:00:00Z" }], db.query, "IL");
+  assert.equal(old!.startsAt, meetings[0]!.startsAt, "the newer confirmed fact still replaces an older snapshot");
+  await db.pg.close();
+});

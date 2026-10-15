@@ -1,8 +1,8 @@
-/** Publisher size is a sourced state holding, never the size of the hunt's place. */
 import { closeSync, openSync, readSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { StringDecoder } from "node:string_decoder";
 import { US_JURISDICTIONS } from "../coverage/states.ts";
+import { websiteOf } from "../control-plane/website-pacing.ts";
 import type { WebsiteSize, WebsiteSizeForUrl } from "../control-plane/scheduler/host-supervision.ts";
 
 export interface PublisherSizeSource {
@@ -36,6 +36,10 @@ export function publisherHostname(value: string): string | null {
     return /^(?:http|https):$/.test(url.protocol) ? url.hostname.toLowerCase() : null;
   } catch { return null; }
 }
+function publisherWebsite(value: string): string | null {
+  const host = publisherHostname(value);
+  return host ? websiteOf(`https://${host}`) : null;
+}
 
 const count = (value: string | undefined): number | null => {
   const text = value?.trim().replace(/,/g, "") ?? "";
@@ -61,7 +65,7 @@ export function censusPublisherSize(row: Readonly<Record<string, string>>, sourc
     students: count(row.enrollment), studentsYear: count(row.enrollment_year), source };
 }
 
-/** Read fixed-size chunks; keep one line and the requested publisher, never the state inventory. */
+
 function* lines(path: string): Generator<string> {
   const fd = openSync(path, "r"), bytes = Buffer.alloc(64 * 1024), decoder = new StringDecoder("utf8");
   let rest = "";
@@ -79,48 +83,47 @@ function* lines(path: string): Generator<string> {
   } finally { closeSync(fd); }
 }
 
-/** Exact requested host in one state's holding. Shared hosts and unread holdings stay unknown. */
-export function heldPublisherSize(state: string, url: string, root = process.cwd()): HeldPublisherSize | null {
-  const key = state.toLowerCase(), host = publisherHostname(url);
-  if (!host || !US_JURISDICTIONS.some(j => j.slug === key)) return null;
-  let found: HeldPublisherSize | null = null;
+function mergePublisherSize(found: HeldPublisherSize | null | undefined, row: PublisherSizeHolding): HeldPublisherSize | null {
+  if (found === null) return null;
+  if (!found) { const { source, ...size } = row; return { ...size, sources: [source] }; }
+  if (row.censusId !== found.censusId || row.kind !== found.kind) return null;
+  for (const field of ["population", "students", "populationYear", "studentsYear"] as const) {
+    if (found[field] != null && row[field] != null && found[field] !== row[field]) return null;
+  }
+  const prior = found.sources.find(source => source.dataset === row.source.dataset);
+  if (prior && prior.sha256 !== row.source.sha256) return null;
+  return { ...found, population: found.population ?? row.population, students: found.students ?? row.students,
+    populationYear: found.populationYear ?? row.populationYear, studentsYear: found.studentsYear ?? row.studentsYear,
+    sources: prior ? found.sources : [...found.sources, row.source] };
+}
+
+let heldStateIndex: { path: string; version: string; hosts: Map<string, HeldPublisherSize | null> } | undefined;
+function publisherStateIndex(state: string, root: string): ReadonlyMap<string, HeldPublisherSize | null> | null {
+  const path = join(/* turbopackIgnore: true */ root, "data", "states", state, "reference", "publisher-sizes.jsonl");
   try {
-    const path = join(/* turbopackIgnore: true */ root, "data", "states", key, "reference", "publisher-sizes.jsonl");
+    const stat = statSync(path), version = `${stat.ino}:${stat.mtimeMs}:${stat.size}`;
+    if (heldStateIndex?.path === path && heldStateIndex.version === version) return heldStateIndex.hosts;
+    heldStateIndex = undefined;
+    const hosts = new Map<string, HeldPublisherSize | null>();
     for (const line of lines(path)) {
       if (!line.trim()) continue;
       const row = JSON.parse(line) as PublisherSizeHolding;
-      if (row.state !== key || row.host !== host) continue;
-      if (!found) { const { source, ...size } = row; found = { ...size, sources: [source] }; continue; }
-      if (row.censusId !== found.censusId || row.kind !== found.kind) return null;
-      for (const field of ["population", "students", "populationYear", "studentsYear"] as const) {
-        if (found[field] != null && row[field] != null && found[field] !== row[field]) return null;
-      }
-      // Counts can merge only for the same Census publisher identity, never merely a shared host.
-      const prior: PublisherSizeSource | undefined = found.sources.find(s => s.dataset === row.source.dataset);
-      if (prior && prior.sha256 !== row.source.sha256) return null;
-      found = { ...found, population: found.population ?? row.population, students: found.students ?? row.students,
-        populationYear: found.populationYear ?? row.populationYear, studentsYear: found.studentsYear ?? row.studentsYear,
-        sources: prior ? found.sources : [...found.sources, row.source] };
+      const host = publisherWebsite(row.host);
+      if (row.state === state && host) hosts.set(host, mergePublisherSize(hosts.get(host), { ...row, host }));
     }
-  } catch { return null; }
-  return found;
+    heldStateIndex = { path, version, hosts };
+    return hosts;
+  } catch { heldStateIndex = undefined; return null; }
 }
 
-/** Fits S8's synchronous callback; cache only the last requested hostname. */
+export function heldPublisherSize(state: string, url: string, root = process.cwd()): HeldPublisherSize | null {
+  const key = state.toLowerCase(), host = publisherWebsite(url);
+  if (!host || !US_JURISDICTIONS.some(j => j.slug === key)) return null;
+  return publisherStateIndex(key, root)?.get(host) ?? null;
+}
+
 export function publisherSizeForState(state: string, root = process.cwd()): WebsiteSizeForUrl {
   const key = state.toLowerCase();
   if (!US_JURISDICTIONS.some(j => j.slug === key)) return () => null;
-  const path = join(/* turbopackIgnore: true */ root, "data", "states", key, "reference", "publisher-sizes.jsonl");
-  let lastHost: string | null = null, lastVersion = "", lastSize: HeldPublisherSize | null = null;
-  return url => {
-    const host = publisherHostname(url);
-    if (!host) return null;
-    let version: string;
-    try { const stat = statSync(path); version = `${stat.ino}:${stat.mtimeMs}:${stat.size}`; }
-    catch { return null; }
-    if (host !== lastHost || version !== lastVersion) {
-      lastHost = host; lastVersion = version; lastSize = heldPublisherSize(key, url, root);
-    }
-    return lastSize;
-  };
+  return url => heldPublisherSize(key, url, root);
 }

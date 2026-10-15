@@ -1,9 +1,4 @@
-/**
- * @freshness-reads-here
- *
- * The clock stamps in this file are minted by the code path that performs the read: the freshness date
- * is taken at the moment of the fetch.
- */
+// @freshness-reads-here
 import type { BodySourceWiring } from "../../registry/source-wiring.ts";
 import {
   MEETING_HELD_HORIZON_DAYS,
@@ -40,15 +35,6 @@ import {
   type Accounted,
 } from "../normalize-account.ts";
 
-/**
- * Diligent Community / iCompass CivicWeb meeting source. Both brands ship the same portal software and
- * expose the same WCF JSON service the portal page itself calls:
- *
- *   <serviceBase>/Services/MeetingsService.svc/meetings?from=YYYY-MM-DD&to=YYYY-MM-DD
- *
- * The page renders "Loading…" to a plain client while this endpoint answers plain GET with no auth.
- * `CIVICWEB` and `DILIGENT` stay distinct `AgendaSourceType` values but dispatch here together.
- */
 
 const SOURCE_NAME = "diligent";
 
@@ -79,20 +65,7 @@ export interface DiligentRaw {
   wiring: BodySourceWiring;
   meetings: DiligentMeeting[];
   collectedAt: string;
-  /**
-   * The body's OWN per-sitting agenda records on a host that permits this
-   * client, when its wiring row names one (`agendaRecordsUrl`). Read raw here
-   * and parsed in normalize, like the meetings themselves.
-   */
   agendaRecords?: { url: string; html: string } | null;
-  /**
-   * The body's OWN meeting calendar on a permitted host, when its wiring row
-   * names one (`scheduleCalendarBase` + `scheduleCalendarPid` for the ixCal
-   * month fragments, or `scheduleCalendarKind: smartsites` + `siteBase` +
-   * `calendarApiId` for a SmartSites events response), read for the forward
-   * window and unioned with the portal's list in normalize
-   * (`./schedule-union.ts`).
-   */
   scheduleCalendar?: ScheduleCalendar | null;
 }
 
@@ -100,11 +73,12 @@ function isoDate(date: Date): string {
   return date.toISOString().slice(0, 10);
 }
 
-/**
- * The body's name for a row, from published text only: the service's own `MeetingTypeName` where the
- * tenant sends one, else the wiring row's `typeName:<TypeId>` (cited on the row), else the row's
- * published `Name`. Never minted.
- */
+export function diligentCalendarUrl(wiring: BodySourceWiring, now = Date.now()): string {
+  const from = isoDate(new Date(now - WINDOW_BACK_DAYS * 86_400_000));
+  const to = isoDate(new Date(now + WINDOW_FORWARD_DAYS * 86_400_000));
+  return `${wiring.config.serviceBase}/Services/MeetingsService.svc/meetings?from=${from}&to=${to}${wiring.config.extraQuery ?? ""}`;
+}
+
 function bodyNameFor(m: DiligentMeeting, wiring: BodySourceWiring): string {
   // A `typeName:<TypeId>` override wins: some tenants publish a sitting name in MeetingTypeName where a
   // body name belongs, and the override is itself a published name cited on the wiring row.
@@ -141,9 +115,6 @@ export function makeDiligentSource(
 
     for (const { wiring, meetings: rows, collectedAt, agendaRecords, scheduleCalendar } of raw) {
       considered += rows.length;
-      // Sittings new to the partition are identified by body + local date and
-      // time once a body's own calendar is unioned in (./schedule-union.ts);
-      // portal ids at or below this stay as readers already hold them.
       const legacyIdsThrough = wiring.config.legacyIdsThrough ? Number(wiring.config.legacyIdsThrough) : null;
       if (scheduleCalendar && (legacyIdsThrough === null || !Number.isInteger(legacyIdsThrough))) {
         // Without it, a sitting first published from the calendar would change
@@ -152,10 +123,6 @@ export function makeDiligentSource(
       }
       const portal: { id: string; key: string }[] = [];
       const taken = new Set<string>();
-      // A concluded sitting's agenda record from the body's own host. Where the wiring row names the body's
-      // own agenda-records index (`agendaRecordsUrl`) and the portal type ids it covers
-      // (`agendaRecordsTypeIds`), a concluded sitting of those types links its record instead of the portal
-      // page. Nothing else about the row changes.
       const recordsByDay = agendaRecords
         ? parseBoardActions(agendaRecords.html, agendaRecords.url)
         : new Map<string, string>();
@@ -255,9 +222,6 @@ export function makeDiligentSource(
             : null,
           ...(online ? { online } : {}),
           ...(venueGap ? { venueGap } : {}),
-          // The meeting page hosts the agenda once the tenant publishes it;
-          // `Published` is the service's own flag for exactly that. A body's
-          // own permitted agenda record for a concluded sitting comes first.
           agendaUrl: record ?? (m.Published ? meetingUrl : null),
           jurisdiction: wiring.jurisdiction,
           status,
@@ -309,14 +273,10 @@ export function makeDiligentSource(
 
     async fetch(query?: MeetingQuery): Promise<DiligentRaw[]> {
       const now = Date.now();
-      const from = isoDate(new Date(now - WINDOW_BACK_DAYS * 86_400_000));
-      const to = isoDate(new Date(now + WINDOW_FORWARD_DAYS * 86_400_000));
 
       const collected: DiligentRaw[] = [];
       for (const wiring of wiringRows) {
-        const url =
-          `${wiring.config.serviceBase}/Services/MeetingsService.svc/meetings` +
-          `?from=${from}&to=${to}${wiring.config.extraQuery ?? ""}`;
+        const url = diligentCalendarUrl(wiring, now);
         const rows = await politeGetJson<DiligentMeeting[]>(url, {
           fetchImpl,
           signal: query?.signal,
@@ -330,9 +290,6 @@ export function makeDiligentSource(
         if (recordsUrl) {
           agendaRecords = { url: recordsUrl, html: await permittedText(gate, recordsUrl, http) };
         }
-        // The body's own calendar for the forward window, under the same
-        // permission gate. Any refusal or failure throws, so the partition
-        // keeps its last good version rather than publishing half a union.
         const calendarBase = wiring.config.scheduleCalendarBase;
         const calendarPid = wiring.config.scheduleCalendarPid;
         let scheduleCalendar: DiligentRaw["scheduleCalendar"] = null;

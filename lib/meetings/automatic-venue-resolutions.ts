@@ -68,10 +68,6 @@ interface CensusMatch {
   };
 }
 
-/**
- * A Census street point is accepted only for one exact house/street/city/state match.
- * The ZIP is checked only when the published text carries one.
- */
 export function verifiedCensusVenuePoint(published: string, response: unknown): { lat: number; lng: number; address: string } | null {
   const matches = (response as { result?: { addressMatches?: CensusMatch[] } })?.result?.addressMatches;
   if (!Array.isArray(matches) || matches.length !== 1) return null;
@@ -125,12 +121,6 @@ export function retainPreviouslyVerifiedVenuePoints(meetings: readonly Meeting[]
   });
 }
 
-/**
- * Build an exact-source venue successor from already verified meeting acquisitions.
- * A failed or ambiguous geocode leaves the meeting's published address visible without a pin.
- * The clocked meeting-family caller retains each exact Census receipt in the
- * family read model and promotes the placed meetings through its routine gate.
- */
 export async function automaticVenuePackage(input: {
   readonly snapshot: MeetingsSnapshot;
   readonly existingIds: ReadonlySet<string>;
@@ -229,11 +219,6 @@ export interface CensusVenuePlacement {
   readonly package: ManualProjectionPackage | null;
 }
 
-/**
- * Match every newly published, freshly read address to a Census street point and place
- * its meeting. Works for any acquired set, derived family or hand-wired body. A match
- * that fails any check leaves the address visible without a pin.
- */
 export async function placeMeetingsFromCensusVenues(input: {
   readonly snapshot: MeetingsSnapshot;
   readonly existingIds: ReadonlySet<string>;

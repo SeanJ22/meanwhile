@@ -36,7 +36,7 @@ import {
   runPimaLegistarOutcomeIngest,
   type PimaOutcomeIngestArgs,
 } from "../scripts/legistar-outcomes-ingest.mts";
-import { withFetch } from "./helpers/with-fetch.ts";
+import { withSourceTransport as withFetch } from "./helpers/source-fetch.ts";
 
 // Events, items and votes are recorded responses under tests/fixtures. Native body fixtures are explicit;
 // the stub refuses any route it was not given.
@@ -143,10 +143,6 @@ const RECORDED_VOTES: Readonly<Record<number, unknown[]>> = {
   329182: fixture<unknown[]>("legistar/pima-votes-329182.json"),
 };
 
-/**
- * A recorded-response Legistar. A number answers that route with that HTTP
- * status; a route nobody recorded fails the test rather than inventing rows.
- */
 function recordedLegistar(routes: {
   readonly events: readonly LegistarEvent[] | number;
   readonly items?: Readonly<Record<number, number>>;
@@ -328,7 +324,7 @@ test("(b) a GOOD Pima candidate promotes through the routine door and a later fa
   const promoted = await processRegisteredRoutineCandidate(memory, CONTRACT_ID, good, "2026-09-20T19:01:00.000Z");
   assert.equal(promoted.candidate.state, "PROMOTED");
   assert.equal(promoted.promoted?.versionId, good.id);
-  assert.equal(promoted.readerReadback?.status, "PASS");
+  assert.equal(promoted.readerReadback?.status, "PASS", JSON.stringify(promoted.readerReadback));
 
   const failed = pimaLegistarOutcomesCandidate({
     snapshot: { ...snapshot, sittings: [{ ...snapshot.sittings[0]!, extraction: "REQUEST_FAILED", extractionNote: "seeded items timeout" }] },

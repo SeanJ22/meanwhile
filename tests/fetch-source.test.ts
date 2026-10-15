@@ -5,10 +5,11 @@ import { join } from "node:path";
 import http from "node:http";
 import { PassThrough, Readable } from "node:stream";
 import test from "node:test";
+import { captureSourceAcquisitions } from "../lib/sources/acquisition-trace.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
 import { memoryWebsitePacing, WEBSITE_PACING_DDL } from "../lib/control-plane/website-pacing.ts";
-import { fetchSource, runWithSourceFetch, SourceFetchDeferred, type SourceResponseCapture } from "../lib/sources/fetch-source.ts";
+import { fetchSource, prefetchSourceRequests, runWithSourceFetch, SourceFetchDeferred, type SourceResponseCapture } from "../lib/sources/fetch-source.ts";
 import { fileSourceFetchStore, postgresSourceFetchStore, SOURCE_FETCH_DDL, type SavedSourceResponse, type SourceCheck, type SourceFetchStore } from "../lib/sources/fetch-source-state.ts";
 import { checkedPublicAddress, isPublicAddress, publicTransport } from "../lib/hunt/public-transport.ts";
 
@@ -16,7 +17,7 @@ function memoryStore() {
   const values = new Map<string, SavedSourceResponse>(), checks: SourceCheck[] = [];
   const store: SourceFetchStore = {
     pacing: memoryWebsitePacing(), withLease: async (_key, operation) => operation(),
-    read: async key => values.get(key) ?? null,
+    read: async key => values.get(key) ?? null, readEntryRequest: async () => null,
     record: async (key, value, check) => { if (value) values.set(key, value); checks.push(check); },
   };
   return { store, checks, values };
@@ -97,19 +98,25 @@ test("large responses are completely saved in bounded chunks", async () => {
   assert.equal((await vault.list("project/freshness/source-fetch/body/")).length, 4);
 });
 
-test("redirects save each answer, recheck the destination, and drop origin credentials", async () => {
+test("redirects save each answer, recheck the destination, and redact durable credentials", async () => {
   const { store, checks } = memoryStore(), vault = new MemoryEvidenceStore();
   const credentials: (string | null)[] = [], captures: SourceResponseCapture[] = [];
-  const response = await runWithSourceFetch({ vault, onResponse: capture => { captures.push(capture); }, runtime: { store, transport: async (_input, init) => {
+  const capture = await captureSourceAcquisitions(run => run("calendar", () => runWithSourceFetch({ vault, sensitiveQueryParameters: ["client_secret"], onResponse: capture => { captures.push(capture); }, runtime: { store, transport: async (_input, init) => {
     credentials.push(new Headers(init?.headers).get("authorization"));
-    return credentials.length === 1 ? new Response("moved", { status: 302, headers: { location: "https://other.example/calendar" } }) : new Response("public");
-  } } }, () => fetchSource("https://state.example/calendar?api_key=private", { headers: { authorization: "Bearer private" } }));
+    return credentials.length === 1 ? new Response("moved", { status: 302, headers: { location: "https://other.example/calendar?client_secret=private-value" } }) : new Response("public");
+  } } }, () => fetchSource("https://state.example/calendar?api_key=private", { headers: { authorization: "Bearer private" } }))));
+  const response = capture.value;
   assert.equal(await response.text(), "public");
   assert.deepEqual(credentials, ["Bearer private", null]);
   assert.equal(checks.length, 2);
   assert.equal(checks[0]!.url.includes("private"), false);
-  assert.equal(captures[1]!.requestedUrl, "https://state.example/calendar?api_key=private");
-  assert.equal(captures[1]!.finalUrl, "https://other.example/calendar");
+  assert.equal(new URL(captures[1]!.requestedUrl).searchParams.get("api_key"), "[redacted]");
+  assert.equal(new URL(captures[1]!.finalUrl).searchParams.get("client_secret"), "[redacted]");
+  assert.equal(response.url, "https://other.example/calendar?client_secret=private-value");
+  assert.ok(capture.evidence.length > 0);
+  assert.doesNotMatch(JSON.stringify(capture.evidence), /private/);
+  assert.doesNotMatch(JSON.stringify(captures), /private/);
+  assert.equal(captures[1]!.finalUrl, "https://other.example/calendar?client_secret=%5Bredacted%5D");
   assert.equal((await vault.list("project/freshness/source-fetch/responses/")).length, 2);
 });
 
@@ -229,4 +236,106 @@ test("a caller-held validator counts a 304 without inventing an absent body", as
   assert.equal(checks[0]?.downloadedBytes, 0);
   assert.equal(values.size, 0);
   assert.equal((await vault.list("project/freshness/source-fetch/responses/")).length, 1);
+});
+
+test("root prefetch shares durable responses with serial adapters without duplicating checks or document reads", async () => {
+  const { PGlite } = await import("@electric-sql/pglite"), database = new PGlite();
+  try {
+    for (const statement of [...WEBSITE_PACING_DDL, ...SOURCE_FETCH_DDL]) await database.exec(statement);
+    const store = postgresSourceFetchStore(async (statement, parameters) => (await database.query<Record<string, unknown>>(statement, [...parameters])).rows);
+    const vault = new MemoryEvidenceStore(), calls: string[] = [], captures: SourceResponseCapture[] = [];
+    let now = Date.parse("2026-10-15T12:00:00Z");
+    const transport: typeof fetch = async (input, init) => {
+      const url = String(input); calls.push(url);
+      if (url.endsWith("/calendar")) return new Response(null, { status: 302, headers: { location: "/events" } });
+      if (url.endsWith("/events") && new Headers(init?.headers).has("if-none-match")) return new Response(null, { status: 304 });
+      return new Response(url.endsWith("/events") ? "calendar" : "document", { headers: { etag: '"current"' } });
+    };
+    const context = { vault, runtime: { store, transport, now: () => now }, sourceId: "council", state: "US-NJ" };
+    await runWithSourceFetch(context, async () => {
+      await (await fetchSource("https://town.example/calendar", { headers: { accept: "text/html" } })).body?.cancel();
+      await (await fetchSource("https://town.example/old-agenda.pdf")).body?.cancel();
+    });
+    assert.deepEqual(await store.readEntryRequest("US-NJ", "council"), {
+      url: "https://town.example/calendar", headers: [["accept", "text/html"]], redirect: "follow", byteCount: 8,
+    });
+    now += 3_600_000;
+    const dueAt = new Date(now).toISOString();
+    await runWithSourceFetch({ ...context, onResponse: capture => { captures.push(capture); } }, async () => {
+      const trace = await captureSourceAcquisitions(run => run("council", () => prefetchSourceRequests({ sourceId: "council", state: "US-NJ", dueAt })));
+      assert.deepEqual(trace.evidence, []);
+      assert.equal(captures.length, 0);
+      const response = await fetchSource("https://town.example/calendar", { headers: { accept: "text/html" }, source: { dueAt } });
+      assert.equal(await response.text(), "calendar");
+      assert.equal(response.headers.get("x-meanwhile-source-reused"), "true");
+      assert.equal(response.headers.get("x-meanwhile-source-status"), "304");
+      assert.equal(response.headers.get("x-meanwhile-source-checked-at"), dueAt);
+    });
+    assert.equal(captures.length, 1);
+    assert.equal(captures[0]!.retrievedAt, dueAt);
+    assert.equal(calls.filter(url => url.endsWith(".pdf")).length, 1);
+    assert.equal(calls.length, 5, "only the calendar redirect and its conditional target are prefetched");
+    const totals = await database.query<{ checks: string; unchanged: string }>("SELECT sum(checks)::text AS checks,sum(unchanged)::text AS unchanged FROM cp_source_check_days");
+    assert.deepEqual(totals.rows, [{ checks: "5", unchanged: "1" }]);
+    const checked = await database.query<{ next_due_at: string }>("SELECT next_due_at::text FROM cp_source_checks WHERE source_id='council' AND url LIKE '%events'");
+    assert.equal(Date.parse(checked.rows[0]!.next_due_at), now, "prefetch leaves the member's work due until its receipt settles");
+  } finally { await database.close(); }
+});
+
+test("prefetch inventory excludes secrets, POSTs, old documents and oversized roots", async () => {
+  const namespace = await mkdtemp(join(tmpdir(), "fetch-entry-")), store = fileSourceFetchStore(namespace), vault = new MemoryEvidenceStore();
+  try {
+    let sent = 0;
+    const runtime = { store, transport: async () => { sent += 1; return new Response("public"); } };
+    const cases: [string, string, RequestInit][] = [
+      ["secret-query", "https://town.example/calendar?client_secret=private", {}],
+      ["dated-query", "https://town.example/calendar?from=2026-10-15", {}],
+      ["secret-header", "https://town.example/calendar", { headers: { authorization: "private" } }],
+      ["unknown-header", "https://town.example/calendar", { headers: { "x-client": "private" } }],
+      ["post", "https://town.example/calendar", { method: "POST", body: "private" }],
+    ];
+    for (const [sourceId, url, init] of cases) {
+      await runWithSourceFetch({ sourceId, state: "US-NJ", sensitiveQueryParameters: ["client_secret"], vault, runtime }, async () => {
+        await (await fetchSource(url, init)).body?.cancel();
+        await (await fetchSource("https://town.example/old-agenda.pdf")).body?.cancel();
+      });
+      assert.equal(await store.readEntryRequest("US-NJ", sourceId), null);
+    }
+    const before = sent;
+    await runWithSourceFetch({ vault, runtime }, async () => {
+      await prefetchSourceRequests({ sourceId: "oversized", state: "US-NJ", dueAt: new Date().toISOString(),
+        seed: { url: "https://town.example/calendar", headers: [], redirect: "follow", byteCount: 1024 * 1024 + 1 } });
+      await prefetchSourceRequests({ sourceId: "auth-seed", state: "US-NJ", dueAt: new Date().toISOString(),
+        seed: { url: "https://town.example/calendar?api_key=private", headers: [], redirect: "follow", byteCount: 1 } });
+      await prefetchSourceRequests({ sourceId: "credential-seed", state: "US-NJ", dueAt: new Date().toISOString(),
+        seed: { url: "https://user:private@town.example/calendar", headers: [], redirect: "follow", byteCount: 1 } });
+    });
+    assert.equal(sent, before);
+  } finally { await rm(namespace, { recursive: true, force: true }); }
+});
+
+test("prefetch reserves held body bytes through vault completion and releases them after failures", async () => {
+  for (const fails of [false, true]) {
+    const { store } = memoryStore(), vault = new MemoryEvidenceStore(), events: string[] = [];
+    const transport: typeof fetch = async () => {
+      events.push("request");
+      if (fails) throw new Error("connection closed");
+      return new Response("public");
+    };
+    const work = runWithSourceFetch({ vault, runtime: { store, transport } }, () => prefetchSourceRequests({
+      sourceId: "council", state: "US-NJ", dueAt: "2026-10-15T00:00:00Z",
+      seed: { url: "https://town.example/calendar", headers: [], redirect: "follow", byteCount: 220_402 },
+      acquire: async bytes => {
+        assert.equal(bytes, 220_402);
+        events.push("reserve");
+        return () => { events.push("release"); };
+      },
+    }));
+    if (fails) await assert.rejects(work, /connection closed/);
+    else {
+      await work;
+      assert.equal((await vault.list("project/freshness/source-fetch/responses/")).length, 1);
+    }
+    assert.deepEqual(events, ["reserve", "request", "release"]);
+  }
 });

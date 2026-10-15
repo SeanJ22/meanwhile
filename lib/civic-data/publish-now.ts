@@ -1,10 +1,14 @@
 import type { IndependentRuntimeLane } from "../ops/independent-runtime-pass.ts";
-import type { RoutineSourceTask } from "./runner.ts";
+import { readRoutineTaskClocks, routineTaskDue, type RoutineSourceTask } from "./runner.ts";
 import type { WorkerResultRecord } from "../control-plane/workers/types.ts";
-import type { DoorRecord } from "../doors/registry.ts";
-import { doorPartitionIds } from "../doors/mission-refresh.ts";
 import { owedFactItems, owedWorkerPublications, workerPublicationTasks, workerPublicationTasksFor, type HeldBallotInputs, type OwedWorkerPublication, type WorkerPublicationItem } from "./worker-publication-tasks.ts";
-import { AGGREGATE_LIST_READ_PAGE } from "../control-plane/repository/pg-store.ts";
+import { AGGREGATE_LIST_READ_PAGE, readBoxPublicationFindings } from "../control-plane/repository/pg-store.ts";
+import { readCompletedWorkerResultsOf } from "../control-plane/repository/worker-completion.ts";
+import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
+import { BOX_PUBLICATION_LOOKBACK_MS, FINDING_SLOTS_VERSION } from "../facts/finding-slots.ts";
+import type { Query } from "../facts/publish.ts";
+import { readHeldBallotInputs } from "./worker-held-elections.ts";
+import type { RoutineDataStore } from "./store.ts";
 import { WORKER_PUBLICATION_TASK_IDS } from "./worker-reader-contracts.ts";
 import type { ReaderEdgePublicationOutcome } from "./reader-edge-outcome.ts";
 
@@ -69,11 +73,13 @@ export const WORKER_PUBLICATION_STATE_SQL = "upper(regexp_replace(coalesce(nulli
 export async function* readWorkerPublicationItems(
   query: (sql: string, parameters: readonly unknown[]) => Promise<readonly Record<string, unknown>[]>,
   state: string,
+  now: string,
   contractIds: readonly string[] = WORKER_PUBLICATION_TASK_IDS,
 ): AsyncGenerator<readonly WorkerPublicationItem[]> {
   const registered = new Set(WORKER_PUBLICATION_TASK_IDS);
   if (contractIds.some(id => !registered.has(id))) throw new Error("PUBLICATION_CONTRACT_SELECTION_INVALID");
   if (!/^(?:US|US-[A-Z]{2})$/.test(state)) throw new Error("PUBLICATION_STATE_SELECTION_INVALID");
+  if (!Number.isFinite(Date.parse(now))) throw new Error("PUBLICATION_TIME_INVALID");
   if (contractIds.length === 0) return;
   let afterId = "";
   for (;;) {
@@ -88,10 +94,26 @@ export async function* readWorkerPublicationItems(
         'sourceObservedAt', value #> '{publicationOutcome,sourceObservedAt}',
         'code', value #> '{publicationOutcome,code}'
       )) ELSE NULL END AS publication_outcome
-      FROM cp_work_items
+      FROM cp_work_items w
       WHERE value #>> '{autonomousPlan,publication,contractId}' = ANY($1::text[])
         AND ${WORKER_PUBLICATION_STATE_SQL} = $2 AND id > $3
-      ORDER BY id ASC LIMIT ${AGGREGATE_LIST_READ_PAGE}`, [contractIds, state.replace(/^US-/, ""), afterId]);
+        AND (jsonb_typeof(value->'publicationOutcome') IS DISTINCT FROM 'object'
+          OR coalesce(value #>> '{publicationOutcome,at}', '') <= $5
+          OR value #>> '{autonomousPlan,publication,contractId}' = 'ballot-navigation'
+          OR EXISTS (SELECT 1 FROM cp_log_worker_results r WHERE r.log_key=w.id AND (
+            (r.record #>> '{result,role}'='PARSER' AND r.record #>> '{result,verdict}'='EXTRACTED'
+              AND r.record->>'endedAt' <= $4 AND (
+                NOT (coalesce(w.value #>> '{publicationOutcome,workerResultId}', '') = r.record_id
+                  OR starts_with(coalesce(w.value #>> '{publicationOutcome,workerResultId}', ''),r.record_id || '+'))
+                OR w.value #>> '{publicationOutcome,recovery}'='PUBLISHER'
+                OR (w.value #>> '{publicationOutcome,status}'='PARTIALLY_PUBLISHED'
+                  AND w.value #>> '{autonomousPlan,contract,recordClass}'='BALLOT_MEASURE')
+                OR (w.value #>> '{publicationOutcome,status}'<>'HELD' AND coalesce(w.value #>> '{publicationOutcome,sourceObservedAt}', '')='')
+                OR (w.value #>> '{publicationOutcome,status}'='HELD' AND coalesce(w.value #>> '{publicationOutcome,recovery}', '')<>'WORKER')))
+            OR (r.record #>> '{result,role}'='ADVERSARIAL_AUDITOR' AND r.record #>> '{result,verdict}'='BROKE'
+              AND r.record->>'endedAt' > coalesce(w.value #>> '{publicationOutcome,at}', '')))))
+      ORDER BY id ASC LIMIT ${AGGREGATE_LIST_READ_PAGE}`,
+    [contractIds, state.replace(/^US-/, ""), afterId, now, new Date(Date.parse(now) - 3_600_000).toISOString()]);
     const items: WorkerPublicationItem[] = rows.map(row => {
       if (typeof row.id !== "string" || typeof row.contract_id !== "string" || !contractIds.includes(row.contract_id) ||
           typeof row.record_class !== "string" || !row.record_class.trim()) throw new Error("PUBLICATION_WORK_ITEM_METADATA_INVALID");
@@ -107,6 +129,34 @@ export async function* readWorkerPublicationItems(
     if (next <= afterId) throw new Error("PUBLICATION_WORK_ITEM_PAGE_NOT_ADVANCING");
     afterId = next;
   }
+}
+
+export async function hasPendingPublicationWork(input: {
+  readonly query: Query;
+  readonly repos: ControlPlaneRepositories;
+  readonly store: Pick<RoutineDataStore, "readPromotionIdentity" | "clocks">;
+  readonly state: string;
+  readonly now: string;
+}): Promise<boolean> {
+  const nowMs = Date.parse(input.now);
+  if ((await readBoxPublicationFindings(input.repos, input.state.replace(/^US-/, ""), FINDING_SLOTS_VERSION,
+    input.now, new Date(nowMs - BOX_PUBLICATION_LOOKBACK_MS).toISOString(), 1)).length) return true;
+  for await (const items of readWorkerPublicationItems(input.query, input.state, input.now)) {
+    const results = await readCompletedWorkerResultsOf(input.repos, items.map(item => item.id));
+    const facts = owedFactItems(items, results, input.now);
+    if (facts.rosters.length || facts.comments.length) return true;
+    const held = await readHeldBallotInputs(input.query,
+      async (recordClass, scope) => (await input.store.readPromotionIdentity(recordClass, scope))?.promotedAt ?? null, items);
+    const tasks = workerPublicationTasksFor(owedWorkerPublications(items, results, input.now, held), input.now);
+    const clocks = await readRoutineTaskClocks(tasks, targets => input.store.clocks(targets.map(task => ({
+      sourceId: task.sourceId, recordClass: task.recordClass, scope: task.scope, parserVersion: task.parserVersion,
+    }))));
+    for (const read of clocks) {
+      if (!read.ok) throw new Error(`PUBLICATION_CLOCK_UNREAD:${read.task.id}`);
+      if (routineTaskDue(read.task, read.clock, nowMs)) return true;
+    }
+  }
+  return false;
 }
 
 /** Keep only task descriptors across pages; source documents and completion evidence stay with each existing repository page. */
@@ -138,19 +188,4 @@ export async function readOwedFactItems(
     owed.comments.push(...found.comments);
   }
   return owed;
-}
-
-export function publishNowDoorTasks(doors: readonly DoorRecord[], tasks: readonly RoutineSourceTask[], now: string): RoutineSourceTask[] {
-  const requests = new Map<string, string>();
-  for (const door of doors) {
-    const at = door.validators?.changedAt;
-    if (door.status !== "OPEN" || !at || !Number.isFinite(Date.parse(at)) || Date.parse(at) > Date.parse(now) ||
-      (door.lastSuccessAt !== null && Date.parse(door.lastSuccessAt) >= Date.parse(at))) continue;
-    for (const id of doorPartitionIds(door)) if (!requests.has(id) || requests.get(id)! < at) requests.set(id, at);
-  }
-  return tasks.flatMap(task => {
-    const requestedAt = requests.get(task.id);
-    return requestedAt ? [{ ...task, ownerInvocation: { publicationPending: true, requestedAt,
-      instructions: ["publish-now:source-changed"] } }] : [];
-  });
 }

@@ -1,3 +1,4 @@
+import { meetingPublication } from "./helpers/meeting-publication.ts";
 import assert from "node:assert/strict";
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -5,7 +6,7 @@ import { join } from "node:path";
 import { after, test } from "./helpers/playbooks.ts";
 
 import { publishReaderEdgeArtifacts, type PublishAuthority } from "../lib/meetings/edge-serving.ts";
-import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
+import { LocalFileArtifactStore, scopedReaderArtifactStore } from "../lib/meetings/edge-store.ts";
 import { enterReaderAuthorityEdge, currentRegistryRuntimeEdge } from "../lib/registry/runtime-edge.ts";
 import { registryRuntimeReadState } from "../lib/registry/runtime-read-model.ts";
 import { federalDirectoryReadState } from "../lib/officials/federal-directory-read-model.ts";
@@ -20,12 +21,10 @@ import { factDb } from "./helpers/fact-db.ts";
 import { installRegistryAuthority, registryTransferImport, syntheticFederalDirectory } from "./helpers/promoted-fixtures.ts";
 import { installPimaOutcomes, pimaOutcomeFixture, recordedMeetingsSnapshot } from "./helpers/reader-fixtures.ts";
 import { september22Sitting } from "./helpers/pima-september-22-sitting.ts";
-
-/**
- * `enterReaderAuthorityEdge` is `AsyncLocalStorage.enterWith`: on Node 24 a store entered inside an async
- * helper never reaches promise reactions created from the caller. These tests publish a real local edge
- * store (`WTP_READER_EDGE_DIR`) and ask the real routes, so the reads must come from it.
- */
+import { MemoryRoutineDataStore, PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
+import { clearPromotedReadModelCache } from "../lib/civic-data/read-model.ts";
+import { pimaLegistarOutcomesCandidate } from "../lib/outcomes/data-plane.ts";
+import { provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
 
 delete process.env.ANTHROPIC_API_KEY;
 for (const key of ["DATABASE_URL", "DATABASE_URL_UNPOOLED", "NEON_DATABASE_URL"]) delete process.env[key];
@@ -70,12 +69,18 @@ async function publishEdge(versions: EdgeVersions): Promise<void> {
       : {}),
     ...(versions.commentAccess ? { "comment-access": { value: commentAccessProjection, versionId: versions.commentAccess } } : {}),
   };
-  const result = await publishReaderEdgeArtifacts(snapshot, {
+  const store = new LocalFileArtifactStore(edgeDir);
+  const metadata = {
     sourceThrough: snapshot.generatedAt,
     retrievedAt: snapshot.generatedAt,
     promotedThrough: snapshot.generatedAt,
-  }, {
-    store: new LocalFileArtifactStore(edgeDir),
+  };
+  const meetings = await publishReaderEdgeArtifacts(meetingPublication(snapshot), metadata, {
+    store: scopedReaderArtifactStore(store, "AZ"),
+  });
+  assert.ok(["PUBLISHED", "CURRENT"].includes(meetings.status), JSON.stringify(meetings));
+  const result = await publishReaderEdgeArtifacts(null, metadata, {
+    store,
     now: new Date().toISOString(),
     authority,
   });
@@ -131,9 +136,27 @@ test("Ask reads the registry, the federal directory and the recorded outcomes fr
   assert.match(payload.answer ?? "", /September 22nd, 2026/, "the edge-served outcomes still answer the Pima question");
 });
 
-test("a manifest without the outcomes family reads them from the database, and the trace says so", async () => {
+test("a manifest without the outcomes family reads them from the database, and the trace says so", async (t) => {
+  const candidate = pimaLegistarOutcomesCandidate({ snapshot: recordedOutcomes, acquisitions: [],
+    retrievedAt: "2026-09-25T12:00:00.000Z", sourceThrough: "2026-09-25" });
+  const entry = provenEdgeEntry({ ...candidate, versionId: candidate.id, value: recordedOutcomes });
+  const database = new MemoryRoutineDataStore();
+  Object.assign(database, {
+    promotions: new Map([[entry.projection.key, entry.projection]]),
+    candidates: new Map([[candidate.id, { candidate, state: "PROMOTED", acquisitionSucceeded: true,
+      receipt: entry.projection.receipt, promotedVersion: candidate.id, lastKnownGoodVersion: candidate.id,
+      failureCode: null, failureDetail: null }]]),
+  });
+  const read = t.mock.method(PostgresRoutineDataStore.prototype, "readPromotion", database.readPromotion.bind(database));
+  for (const method of ["readPromotions", "readPromotionIdentity", "readPromotionIdentities", "readCandidate", "readCandidates", "readCandidateProof", "readCandidateProofs"] as const) {
+    t.mock.method(PostgresRoutineDataStore.prototype, method, database[method].bind(database));
+  }
+  clearPromotedReadModelCache();
+  process.env.DATABASE_URL = "postgresql://fixture:fixture@database.test/reader";
+  t.after(() => { delete process.env.DATABASE_URL; clearPromotedReadModelCache(); });
   await publishEdge({ registry: "edge-test:registry:2", federal: "edge-test:federal:2" });
   const payload = await askPima();
+  assert.ok(read.mock.callCount() > 0, "the fallback consulted the durable pointer store");
   assert.equal(payload.trace.preloadSources?.outcomes, "DATABASE");
   assert.doesNotMatch(outcomeProjectionReadState().detail ?? "", /edge-test:outcomes:1/);
   assert.ok(["PROMOTED", "BOOTSTRAP"].includes(outcomeProjectionReadState().kind), "the database fallback read the outcomes");

@@ -22,30 +22,23 @@ function checkText(body: string, contentType: string, base: string): string {
 const jsonValues = (value: unknown): string[] => typeof value === "string" ? [value] : typeof value === "number" ? [String(value)]
   : value && typeof value === "object" ? Object.values(value).flatMap(jsonValues) : [];
 
-interface CopyRow {
-  readonly artifactId: string;
-  readonly url: string;
-  readonly finalUrl: string;
-  readonly fetchedAt: string;
-  readonly httpStatus: number | null;
-  readonly contentHash: string;
-}
-
-/** Each observed page keeps its URL and check time while identical bytes share the vaulted artifact. */
-async function saveCopy(query: Query, row: CopyRow): Promise<number> {
-  const [saved] = await query(`INSERT INTO source_copy (url, final_url, fetched_at, http_status, sha256, blob_key, is_archive)
-    VALUES ($1, $2, $3, $4, $5, $6, $7)
-    ON CONFLICT (blob_key, url, fetched_at) DO UPDATE SET blob_key = EXCLUDED.blob_key RETURNING id`,
-  [row.url, row.finalUrl, row.fetchedAt, row.httpStatus, row.contentHash.replace(/^sha256-/, ""), `artifact:${row.artifactId}`,
-    isArchive(row.finalUrl)]);
-  return Number(saved!.id);
+export async function saveCaptureCopies(query: Query, captures: readonly WorkerPublicationCapture[]): Promise<SavedCopy[]> {
+  if (!captures.length) return [];
+  const unique = [...new Map(captures.map(c => [JSON.stringify([c.evidence.artifactId, c.evidence.canonicalUrl, new Date(c.observedAt).toISOString()]), c])).values()];
+  const rows = await query(`INSERT INTO source_copy (url, final_url, fetched_at, http_status, sha256, blob_key, is_archive)
+    SELECT url, url, fetched_at, http_status, sha256, blob_key, is_archive FROM jsonb_to_recordset($1::jsonb)
+      AS x(url text, fetched_at timestamptz, http_status int, sha256 text, blob_key text, is_archive boolean)
+    ON CONFLICT (blob_key, url, fetched_at) DO UPDATE SET blob_key = EXCLUDED.blob_key RETURNING id, blob_key, url, fetched_at`,
+  [JSON.stringify(unique.map(c => ({ url: c.evidence.canonicalUrl, fetched_at: c.observedAt, http_status: c.httpStatus,
+    sha256: c.evidence.contentHash.replace(/^sha256-/, ""), blob_key: `artifact:${c.evidence.artifactId}`, is_archive: isArchive(c.evidence.canonicalUrl) })))]);
+  const saved = new Map(rows.map(row => [JSON.stringify([row.blob_key, row.url, new Date(row.fetched_at as string).toISOString()]), Number(row.id)]));
+  return captures.map(c => ({ id: saved.get(JSON.stringify([`artifact:${c.evidence.artifactId}`, c.evidence.canonicalUrl, new Date(c.observedAt).toISOString()]))!,
+    finalUrl: c.evidence.canonicalUrl, text: checkText(c.evidence.text, "", c.evidence.canonicalUrl),
+    fetchedAt: new Date(c.observedAt), isArchive: isArchive(c.evidence.canonicalUrl) }));
 }
 
 export async function saveCaptureCopy(query: Query, capture: WorkerPublicationCapture): Promise<SavedCopy> {
-  const { evidence } = capture;
-  const id = await saveCopy(query, { artifactId: evidence.artifactId, url: evidence.canonicalUrl, finalUrl: evidence.canonicalUrl,
-    fetchedAt: capture.observedAt, httpStatus: capture.httpStatus, contentHash: evidence.contentHash });
-  return { id, finalUrl: evidence.canonicalUrl, text: checkText(evidence.text, "", evidence.canonicalUrl), fetchedAt: new Date(capture.observedAt), isArchive: isArchive(evidence.canonicalUrl) };
+  return (await saveCaptureCopies(query, [capture]))[0]!;
 }
 
 /** A page another store holds, as checkFact reads it; it has no row here. */

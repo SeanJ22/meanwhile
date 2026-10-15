@@ -1,3 +1,4 @@
+import { meetingPublication } from "./helpers/meeting-publication.ts";
 import assert from "node:assert/strict";
 import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -15,13 +16,6 @@ import { loadRegistrationReference } from "../lib/registration/reference.ts";
 import { enterReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { installRegistryAuthority, promotedFixtureBundle } from "./helpers/promoted-fixtures.ts";
 
-/**
- * The reader never wakes the database for registration on an ordinary visit:
- * the runner publishes each state's promoted registration as its own artifact,
- * carries unchanged states forward by reference, and the reader fetches only
- * the states a request's divisions name. The published section is complete or
- * absent, never partial, so a registered state never reads as unregistered.
- */
 
 const ROOT = join(import.meta.dirname, "..");
 const META = { sourceThrough: null, retrievedAt: null, promotedThrough: null };
@@ -74,7 +68,7 @@ test("each state's registration is its own compressed artifact, read back lossle
   const store = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reg-edge-")));
   const oh = model("OH");
   const nh = model("NH");
-  const published = await publishReaderEdgeArtifacts(emptySnapshot(), META, {
+  const published = await publishReaderEdgeArtifacts(meetingPublication(emptySnapshot()), META, {
     store,
     registrations: { oh: { value: oh, versionId: "reg-oh-1" }, nh: { value: nh, versionId: "reg-nh-1" } },
   });
@@ -95,16 +89,16 @@ test("unchanged states carry forward, a moved state re-publishes alone, and a st
   const store = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reg-edge-")));
   const oh = model("OH");
   const nh = model("NH");
-  await publishReaderEdgeArtifacts(emptySnapshot(), META, { store, registrations: { oh: { value: oh, versionId: "reg-oh-1" }, nh: { value: nh, versionId: "reg-nh-1" } } });
+  await publishReaderEdgeArtifacts(meetingPublication(emptySnapshot()), META, { store, registrations: { oh: { value: oh, versionId: "reg-oh-1" }, nh: { value: nh, versionId: "reg-nh-1" } } });
   const first = (await store.readManifest())!.manifest;
 
-  const same = await publishReaderEdgeArtifacts(emptySnapshot(), META, {
+  const same = await publishReaderEdgeArtifacts(meetingPublication(emptySnapshot()), META, {
     store,
     registrations: { oh: { versionId: "reg-oh-1", carried: true }, nh: { versionId: "reg-nh-1", carried: true } },
   });
   assert.equal(same.status, "CURRENT", "nothing moved: nothing is written");
 
-  const moved = await publishReaderEdgeArtifacts(emptySnapshot(), META, {
+  const moved = await publishReaderEdgeArtifacts(meetingPublication(emptySnapshot()), META, {
     store,
     registrations: { oh: { value: oh, versionId: "reg-oh-2" }, nh: { versionId: "reg-nh-1", carried: true } },
   });
@@ -114,7 +108,7 @@ test("unchanged states carry forward, a moved state re-publishes alone, and a st
   assert.notEqual(second.registrations!.oh.key, first.registrations!.oh.key);
   assert.equal(second.registrations!.oh.version, "reg-oh-2");
 
-  const stale = await publishReaderEdgeArtifacts(emptySnapshot(), META, {
+  const stale = await publishReaderEdgeArtifacts(meetingPublication(emptySnapshot()), META, {
     store,
     registrations: { oh: { versionId: "reg-oh-2", carried: true }, nh: { versionId: "reg-nh-9", carried: true } },
   });

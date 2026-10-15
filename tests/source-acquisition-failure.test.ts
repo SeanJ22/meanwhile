@@ -416,7 +416,7 @@ test("dotgov refuses a registry CSV cut short of its declared length", async () 
     });
   };
   const { acquireDotGov } = await import("../scripts/fetch-dotgov.mts");
-  const store = { pacing: memoryWebsitePacing(), withLease: async <T,>(_key: string, operation: () => Promise<T>) => operation(), read: async () => null, record: async () => {} };
+  const store = { pacing: memoryWebsitePacing(), withLease: async <T,>(_key: string, operation: () => Promise<T>) => operation(), read: async () => null, readEntryRequest: async () => null, record: async () => {} };
   await runWithSourceFetch({ vault: new MemoryEvidenceStore(),runtime: { transport,store } }, async () => {
     await assert.rejects(acquireDotGov(),(error: unknown) => isSourceAcquisitionFailure(error) &&
       error.code === "PUBLISHER_RESPONSE_REFUSED" && /short read/.test(error.message));

@@ -1,4 +1,5 @@
 #!/usr/bin/env tsx
+// @freshness-reads-here
 import { fetchSource } from "../lib/sources/fetch-source.ts";
 import { readOfficialStateLegislatorsProjection } from "../lib/state-rollcalls/legislators.ts";
 import { readCompleteResponse } from "../lib/sources/source-bytes.ts";

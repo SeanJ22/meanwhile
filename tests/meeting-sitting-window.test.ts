@@ -166,18 +166,20 @@ test("the success is read in the attempt clock's own units, so a success is neve
   assert.equal(routineTaskDue(partition, {}, base, false), true);
 });
 
-test("R20: a meeting partition never published is retried twice daily, not hourly; a published one keeps its retry", () => {
+test("a meeting source without an accepted version follows its body's hot or cold retry clock", () => {
   const partition = task(PIMA_LEGISTAR);
   const at = "2026-09-24T09:00:00.000Z";
   const base = Date.parse(at);
   // The store reports no sitting list for a scope it holds no promotion for.
   const never: RoutineTaskClock = { lastAttemptedAt: at };
-  for (const hot of [true, false, undefined]) {
-    assert.equal(routineTaskDeadlineMs(partition, never, hot), base + 12 * HOUR);
-    assert.equal(routineTaskDue(partition, never, base + HOUR, hot), false, "not at the failure hour");
-    assert.equal(routineTaskDue(partition, never, base + 12 * HOUR - BASE_LEAD - 1, hot), false);
-    assert.equal(routineTaskDue(partition, never, base + 12 * HOUR - BASE_LEAD, hot), true, "admitted 2 hours before twelve hours");
+  for (const hot of [true, undefined]) {
+    assert.equal(routineTaskDeadlineMs(partition, never, hot), base + HOUR);
+    assert.equal(routineTaskDue(partition, never, base + HOUR - LEAD - 1, hot), false);
+    assert.equal(routineTaskDue(partition, never, base + HOUR - LEAD, hot), true);
   }
+  assert.equal(routineTaskDeadlineMs(partition, never, false), base + 12 * HOUR);
+  assert.equal(routineTaskDue(partition, never, base + 12 * HOUR - BASE_LEAD - 1, false), false);
+  assert.equal(routineTaskDue(partition, never, base + 12 * HOUR - BASE_LEAD, false), true);
   // A promoted scope reports its sitting list, even an empty one, so a read
   // that has not proven a success keeps the one-hour retry.
   for (const sittingStarts of [[], [at]]) {
@@ -196,6 +198,19 @@ test("R20: a meeting partition never published is retried twice daily, not hourl
   const outcomes = task(OUTCOMES);
   assert.ok(outcomes.retryMs < 12 * HOUR);
   assert.equal(routineTaskDue(outcomes, never, base + outcomes.retryMs - LEAD, true), true);
+});
+
+test("a sibling source's sitting keeps an unaccepted source on the hourly deadline from its own attempt", () => {
+  const own = task(PIMA_LEGISTAR), sibling = task(PIMA_INSITE);
+  const attemptedAt = "2026-09-24T09:00:00.000Z", base = Date.parse(attemptedAt);
+  const never: RoutineTaskClock = { lastAttemptedAt: attemptedAt };
+  const held = succeededAt("2026-09-24T08:00:00.000Z", ["2026-09-26T15:00:00.000Z"]);
+  const signals = sittingWindowSignals([{ task: own, ok: true, clock: never }, { task: sibling, ok: true, clock: held }], base);
+  assert.equal(signals.get(own.id), true);
+  assert.equal(routineTaskDeadlineMs(own, never, signals.get(own.id)), base + HOUR);
+  assert.equal(routineTaskDue(own, never, base + HOUR - LEAD - 1, signals.get(own.id)), false);
+  assert.equal(routineTaskDue(own, never, base + HOUR - LEAD, signals.get(own.id)), true);
+  assert.equal(routineTaskDeadlineMs(sibling, held, signals.get(sibling.id)), base);
 });
 
 test("the window rolls: a sitting coming within seven days makes a twice-daily source due at that instant", () => {

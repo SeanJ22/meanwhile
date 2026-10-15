@@ -1,3 +1,7 @@
+import { routineReaderRepairRecord, serializeRoutineReaderRepairRecord, type RoutineReaderRepairDomain } from "./reader-repair-protocol.ts";
+import type { BoundedChildResult } from "./bounded-child-pass.ts";
+import { MEETING_PARTITION_CONTRACTS, meetingPartitionOfId, refreshMeetingPartitions, type MeetingPartitionContract } from "./meeting-partitions.ts";
+import { routineScopeState } from "./state-scope.ts";
 import { readLatestReaderReadbacks, routineEventObservedAt, type RoutineDataStore } from "./store.ts";
 import type { RoutineSourceContract } from "./contracts.ts";
 import type { ManualProductionSourceContract } from "./manual-contracts.ts";
@@ -426,7 +430,11 @@ export async function verifyRoutineReaderProjection(
         }
         if (contract.recordClass === "MEETING") {
           const { readMeetingsProjection } = await import("../meetings/snapshot.ts");
-          const result = await readMeetingsProjection({ store: options.store, now: options.now, bypassCache: true });
+          const selected = contract as MeetingPartitionContract;
+          const identity = meetingPartitionOfId(selected.id);
+          if (!identity || selected.bodyId !== identity.bodyId) return fail(verifierId, `Invalid meeting partition ${contract.id}.`);
+          const result = await readMeetingsProjection({ store: options.store, now: options.now, bypassCache: true,
+            partitions: [selected], state: routineScopeState(selected.bodyId) });
           const partition = result.kind === "PROMOTED"
             ? result.partitions.find((item) => item.contractId === contract.id)
             : undefined;
@@ -567,10 +575,6 @@ export interface ReaderVerifierClosureAttestation {
   readonly detail: string;
 }
 
-/**
- * A PASS is carried to the executing commit only when every file the typed Reader verifiers execute is byte-identical
- * at both commits; the database admits the new receipt only while the pointer still names that version.
- */
 export type ReaderVerifierClosureAttestor = (
   priorVerifierCodeSha: string,
   currentVerifierCodeSha: string,
@@ -751,7 +755,7 @@ export async function repairMeetingReaderProjectionReadbacks(
   now: string = new Date().toISOString(),
   verifierCodeSha: string | null = headSha(),
   options: {
-    readonly aggregate?: () => Promise<MeetingsAggregateRead>;
+    readonly aggregate?: (partitions: readonly MeetingPartitionContract[]) => Promise<MeetingsAggregateRead>;
     readonly attestor?: ReaderVerifierClosureAttestor;
   } = {},
 ): Promise<readonly MeetingReaderReadbackRepairResult[]> {
@@ -764,199 +768,245 @@ export async function repairMeetingReaderProjectionReadbacks(
     throw new Error("MEETING_READER_REPAIR_CONTRACT_INVALID");
   }
   if (contracts.length === 0) return [];
+  const partitions = contracts as readonly MeetingPartitionContract[];
+  const wirings = partitions.map(contract => contract.wiring);
+  if (wirings.some(wiring => !wiring)) throw new Error("MEETING_READER_REPAIR_CONTRACT_INVALID");
+  const prior = [...MEETING_PARTITION_CONTRACTS];
+  const restored = refreshMeetingPartitions(wirings.filter(wiring => wiring !== null),
+    new Set(partitions.filter(contract => contract.suspended).map(contract => contract.id)));
+  if (!restored.refreshed) throw new Error(`MEETING_READER_REPAIR_REGISTRY_INVALID:${restored.reason}`);
 
-  const results = new Map<string, MeetingReaderReadbackRepairResult>();
-  let promotions: readonly PromotedPointerIdentity[];
   try {
-    promotions = await store.readPromotionIdentities("MEETING", scopes);
-  } catch (error) {
-    const detail = sanitizedErrorDiagnostic(error);
-    return contracts.map(({ id }) => ({ contractId: id, ok: false, value: null, error: detail }));
-  }
-  const promotionsByScope = new Map<string, PromotedPointerIdentity[]>();
-  for (const promotion of promotions) {
-    const rows = promotionsByScope.get(promotion.scope) ?? [];
-    rows.push(promotion);
-    promotionsByScope.set(promotion.scope, rows);
-  }
+    const results = new Map<string, MeetingReaderReadbackRepairResult>();
+    let promotions: readonly PromotedPointerIdentity[];
+    try {
+      promotions = await store.readPromotionIdentities("MEETING", scopes);
+    } catch (error) {
+      const detail = sanitizedErrorDiagnostic(error);
+      return contracts.map(({ id }) => ({ contractId: id, ok: false, value: null, error: detail }));
+    }
+    const promotionsByScope = new Map<string, PromotedPointerIdentity[]>();
+    for (const promotion of promotions) {
+      const rows = promotionsByScope.get(promotion.scope) ?? [];
+      rows.push(promotion);
+      promotionsByScope.set(promotion.scope, rows);
+    }
 
-  const eventInputs: { readonly contract: RoutineSourceContract; readonly promotion: PromotedPointerIdentity }[] = [];
-  for (const contract of contracts) {
-    const matching = promotionsByScope.get(contract.scope) ?? [];
-    if (matching.length === 0) {
-      results.set(contract.id, {
-        contractId: contract.id,
-        ok: true,
-        value: { kind: "NO_PROMOTION", receipt: null },
-        error: null,
-      });
-      continue;
-    }
-    if (matching.length !== 1) {
-      results.set(contract.id, {
-        contractId: contract.id,
-        ok: false,
-        value: null,
-        error: `MEETING_READER_PROMOTION_DUPLICATE:${contract.id}`,
-      });
-      continue;
-    }
-    const promotion = matching[0]!;
-    const identityIssue = promotionIdentityIssue(contract, promotion);
-    if (identityIssue !== null) {
-      results.set(contract.id, { contractId: contract.id, ok: false, value: null, error: identityIssue });
-      continue;
-    }
-    eventInputs.push({ contract, promotion });
-  }
-
-  const normalizedVerifierCodeSha = normalizeReaderCodeSha(verifierCodeSha);
-  const eventReads = await runBoundedWorkPool(
-    eventInputs,
-    MEETING_READER_EVENT_READ_CONCURRENCY,
-    ({ promotion }) => readLatestReaderReadbacks(store, [promotion.versionId]),
-  );
-  let pendingRecords: { readonly contract: RoutineSourceContract; readonly promotion: PromotedPointerIdentity }[] = [];
-  const attestable: {
-    readonly contract: RoutineSourceContract;
-    readonly promotion: PromotedPointerIdentity;
-    readonly prior: NonNullable<ReaderReadbackInspection["attestFrom"]>;
-  }[] = [];
-  for (const read of eventReads) {
-    const input = eventInputs[read.index]!;
-    if (!read.ok) {
-      results.set(input.contract.id, {
-        contractId: input.contract.id,
-        ok: false,
-        value: null,
-        error: read.error,
-      });
-      continue;
-    }
-    const inspection = inspectReaderReadbackEvents(
-      input.contract,
-      input.promotion,
-      read.value,
-      now,
-      normalizedVerifierCodeSha,
-    );
-    if (inspection.outcome !== null) {
-      results.set(input.contract.id, {
-        contractId: input.contract.id,
-        ok: true,
-        value: inspection.outcome,
-        error: null,
-      });
-    } else if (inspection.attestFrom !== undefined && options.attestor !== undefined) {
-      attestable.push({ ...input, prior: inspection.attestFrom });
-    } else {
-      pendingRecords.push(input);
-    }
-  }
-
-  if (attestable.length > 0) {
-    const attestations = await runBoundedWorkPool(
-      attestable,
-      MEETING_READER_EVIDENCE_WRITE_CONCURRENCY,
-      ({ contract, promotion, prior }) => attestReaderProjectionReadback(
-        store,
-        contract,
-        promotion,
-        prior,
-        now,
-        normalizedVerifierCodeSha,
-        options.attestor,
-      ),
-    );
-    const unattested: typeof pendingRecords = [];
-    for (const attestation of attestations) {
-      const { contract, promotion } = attestable[attestation.index]!;
-      if (attestation.ok && attestation.value !== null) {
+    const eventInputs: { readonly contract: RoutineSourceContract; readonly promotion: PromotedPointerIdentity }[] = [];
+    for (const contract of contracts) {
+      const matching = promotionsByScope.get(contract.scope) ?? [];
+      if (matching.length === 0) {
         results.set(contract.id, {
           contractId: contract.id,
           ok: true,
-          value: { kind: "RECORDED", receipt: attestation.value },
+          value: { kind: "NO_PROMOTION", receipt: null },
           error: null,
         });
-      } else {
-        // Not attested, or its append failed: the aggregate re-reads it.
-        unattested.push({ contract, promotion });
+        continue;
       }
-    }
-    pendingRecords = [...pendingRecords, ...unattested];
-  }
-
-  if (pendingRecords.length > 0) {
-    let aggregate: MeetingsAggregateRead | null = null;
-    let aggregateError: string | null = null;
-    try {
-      if (options.aggregate) {
-        aggregate = await options.aggregate();
-      } else {
-        const { readMeetingsProjection } = await import("../meetings/snapshot.ts");
-        aggregate = await readMeetingsProjection({ store, now, bypassCache: true });
-      }
-    } catch (error) {
-      aggregateError = sanitizedErrorDiagnostic(error);
-    }
-
-    if (aggregateError !== null || aggregate === null) {
-      for (const { contract } of pendingRecords) {
+      if (matching.length !== 1) {
         results.set(contract.id, {
           contractId: contract.id,
           ok: false,
           value: null,
-          error: aggregateError ?? "MEETING_READER_AGGREGATE_RESULT_MISSING",
+          error: `MEETING_READER_PROMOTION_DUPLICATE:${contract.id}`,
         });
+        continue;
       }
-    } else {
-      const evidenceWrites = await runBoundedWorkPool(
-        pendingRecords,
-        MEETING_READER_EVIDENCE_WRITE_CONCURRENCY,
-        async ({ contract, promotion }) => {
-          const partition = aggregate.kind === "PROMOTED"
-            ? aggregate.partitions.find(({ contractId }) => contractId === contract.id)
-            : undefined;
-          const verification = aggregate.kind === "PROMOTED" &&
-              partition?.kind === "PROMOTED" &&
-              partition.versionId === promotion.versionId
-            ? pass(
-                verifierIdFor(contract),
-                `The typed meetings Reader composed partition ${contract.id} at canonical version ${promotion.versionId}.`,
-              )
-            : fail(
-                verifierIdFor(contract),
-                `Expected meeting partition ${contract.id}:${promotion.versionId}; typed meetings Reader returned ` +
-                  `${aggregate.kind}:${partition?.kind ?? "missing"}:${partition?.versionId ?? "none"}.`,
-              );
-          return appendReaderProjectionReadback(
-            store,
-            contract,
-            promotion,
-            now,
-            normalizedVerifierCodeSha,
-            verification,
-          );
-        },
+      const promotion = matching[0]!;
+      const identityIssue = promotionIdentityIssue(contract, promotion);
+      if (identityIssue !== null) {
+        results.set(contract.id, { contractId: contract.id, ok: false, value: null, error: identityIssue });
+        continue;
+      }
+      eventInputs.push({ contract, promotion });
+    }
+
+    const normalizedVerifierCodeSha = normalizeReaderCodeSha(verifierCodeSha);
+    const eventReads = await runBoundedWorkPool(
+      eventInputs,
+      MEETING_READER_EVENT_READ_CONCURRENCY,
+      ({ promotion }) => readLatestReaderReadbacks(store, [promotion.versionId]),
+    );
+    let pendingRecords: { readonly contract: RoutineSourceContract; readonly promotion: PromotedPointerIdentity }[] = [];
+    const attestable: {
+      readonly contract: RoutineSourceContract;
+      readonly promotion: PromotedPointerIdentity;
+      readonly prior: NonNullable<ReaderReadbackInspection["attestFrom"]>;
+    }[] = [];
+    for (const read of eventReads) {
+      const input = eventInputs[read.index]!;
+      if (!read.ok) {
+        results.set(input.contract.id, {
+          contractId: input.contract.id,
+          ok: false,
+          value: null,
+          error: read.error,
+        });
+        continue;
+      }
+      const inspection = inspectReaderReadbackEvents(
+        input.contract,
+        input.promotion,
+        read.value,
+        now,
+        normalizedVerifierCodeSha,
       );
-      for (const write of evidenceWrites) {
-        const { contract } = pendingRecords[write.index]!;
-        results.set(contract.id, write.ok
-          ? {
-              contractId: contract.id,
-              ok: true,
-              value: { kind: "RECORDED", receipt: write.value },
-              error: null,
-            }
-          : { contractId: contract.id, ok: false, value: null, error: write.error });
+      if (inspection.outcome !== null) {
+        results.set(input.contract.id, {
+          contractId: input.contract.id,
+          ok: true,
+          value: inspection.outcome,
+          error: null,
+        });
+      } else if (inspection.attestFrom !== undefined && options.attestor !== undefined) {
+        attestable.push({ ...input, prior: inspection.attestFrom });
+      } else {
+        pendingRecords.push(input);
       }
     }
-  }
 
-  return contracts.map((contract) => results.get(contract.id) ?? ({
-    contractId: contract.id,
-    ok: false as const,
-    value: null,
-    error: `MEETING_READER_REPAIR_RESULT_MISSING:${contract.id}`,
-  }));
+    if (attestable.length > 0) {
+      const attestations = await runBoundedWorkPool(
+        attestable,
+        MEETING_READER_EVIDENCE_WRITE_CONCURRENCY,
+        ({ contract, promotion, prior }) => attestReaderProjectionReadback(
+          store,
+          contract,
+          promotion,
+          prior,
+          now,
+          normalizedVerifierCodeSha,
+          options.attestor,
+        ),
+      );
+      const unattested: typeof pendingRecords = [];
+      for (const attestation of attestations) {
+        const { contract, promotion } = attestable[attestation.index]!;
+        if (attestation.ok && attestation.value !== null) {
+          results.set(contract.id, {
+            contractId: contract.id,
+            ok: true,
+            value: { kind: "RECORDED", receipt: attestation.value },
+            error: null,
+          });
+        } else {
+          // Not attested, or its append failed: the aggregate re-reads it.
+          unattested.push({ contract, promotion });
+        }
+      }
+      pendingRecords = [...pendingRecords, ...unattested];
+    }
+
+    const groups = new Map<string, typeof pendingRecords>();
+    for (const input of pendingRecords) {
+      const partition = input.contract as MeetingPartitionContract;
+      const identity = meetingPartitionOfId(partition.id);
+      if (!identity || partition.bodyId !== identity.bodyId || partition.meetingSource !== identity.source) {
+        results.set(partition.id, { contractId: partition.id, ok: false, value: null, error: `MEETING_READER_REPAIR_PARTITION_INVALID:${partition.id}` });
+        continue;
+      }
+      const key = partition.ocdId ?? partition.bodyId;
+      const group = groups.get(key) ?? [];
+      group.push(input); groups.set(key, group);
+    }
+    for (const pending of groups.values()) {
+      const partitions = pending.map(({ contract }) => contract as MeetingPartitionContract);
+      let aggregate: MeetingsAggregateRead | null = null;
+      let aggregateError: string | null = null;
+      try {
+        if (options.aggregate) {
+          aggregate = await options.aggregate(partitions);
+        } else {
+          const { readMeetingsProjection } = await import("../meetings/snapshot.ts");
+          aggregate = await readMeetingsProjection({ store, now, bypassCache: true, partitions, state: routineScopeState(partitions[0]!.bodyId) });
+        }
+      } catch (error) {
+        aggregateError = sanitizedErrorDiagnostic(error);
+      }
+
+      if (aggregateError !== null || aggregate === null) {
+        for (const { contract } of pending) {
+          results.set(contract.id, {
+            contractId: contract.id,
+            ok: false,
+            value: null,
+            error: aggregateError ?? "MEETING_READER_AGGREGATE_RESULT_MISSING",
+          });
+        }
+      } else {
+        const evidenceWrites = await runBoundedWorkPool(
+          pending,
+          MEETING_READER_EVIDENCE_WRITE_CONCURRENCY,
+          async ({ contract, promotion }) => {
+            const partition = aggregate.kind === "PROMOTED"
+              ? aggregate.partitions.find(({ contractId }) => contractId === contract.id)
+              : undefined;
+            const verification = aggregate.kind === "PROMOTED" &&
+                partition?.kind === "PROMOTED" &&
+                partition.versionId === promotion.versionId
+              ? pass(
+                  verifierIdFor(contract),
+                  `The typed meetings Reader composed partition ${contract.id} at canonical version ${promotion.versionId}.`,
+                )
+              : fail(
+                  verifierIdFor(contract),
+                  `Expected meeting partition ${contract.id}:${promotion.versionId}; typed meetings Reader returned ` +
+                    `${aggregate.kind}:${partition?.kind ?? "missing"}:${partition?.versionId ?? "none"}.`,
+                );
+            return appendReaderProjectionReadback(
+              store,
+              contract,
+              promotion,
+              now,
+              normalizedVerifierCodeSha,
+              verification,
+            );
+          },
+        );
+        for (const write of evidenceWrites) {
+          const { contract } = pending[write.index]!;
+          results.set(contract.id, write.ok
+            ? {
+                contractId: contract.id,
+                ok: true,
+                value: { kind: "RECORDED", receipt: write.value },
+                error: null,
+              }
+            : { contractId: contract.id, ok: false, value: null, error: write.error });
+        }
+      }
+    }
+
+    return contracts.map((contract) => results.get(contract.id) ?? ({
+      contractId: contract.id,
+      ok: false as const,
+      value: null,
+      error: `MEETING_READER_REPAIR_RESULT_MISSING:${contract.id}`,
+    }));
+  } finally {
+    const restored = refreshMeetingPartitions(prior.flatMap(contract => contract.wiring ? [contract.wiring] : []),
+      new Set(prior.filter(contract => contract.suspended).map(contract => contract.id)));
+    if (!restored.refreshed) throw new Error(`MEETING_READER_REPAIR_REGISTRY_INVALID:${restored.reason}`);
+  }
+}
+
+export async function runMeetingReaderRepairDomain(input: {
+  readonly store: RoutineDataStore; readonly domain: RoutineReaderRepairDomain; readonly observedAt: string;
+  readonly verifierCodeSha?: string | null; readonly attestor?: ReaderVerifierClosureAttestor;
+}): Promise<BoundedChildResult> {
+  const { domain, store, observedAt } = input;
+  if (domain.mode !== "MEETING_AGGREGATE") throw new Error(`MEETING_READER_DOMAIN_REQUIRED:${domain.id}`);
+  let results: readonly MeetingReaderReadbackRepairResult[];
+  try {
+    results = await repairMeetingReaderProjectionReadbacks(store, domain.contracts as readonly RoutineSourceContract[], observedAt,
+      input.verifierCodeSha, { attestor: input.attestor });
+  } catch (error) {
+    results = domain.contracts.map(contract => ({ contractId: contract.id, ok: false, value: null, error: sanitizedErrorDiagnostic(error) }));
+  }
+  const contracts = new Map(domain.contracts.map(contract => [contract.id, contract]));
+  const lines = results.map(result => serializeRoutineReaderRepairRecord(routineReaderRepairRecord(contracts.get(result.contractId)!,
+    result.ok ? { ok: true, value: result.value } : { ok: false, error: result.error })));
+  return { id: domain.id, status: results.some(result => !result.ok) ? 2 : 0, signal: null, stdout: lines.join("\n"), stderr: "",
+    termination: "EXITED", errorMessage: null };
 }

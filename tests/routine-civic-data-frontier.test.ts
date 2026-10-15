@@ -22,6 +22,8 @@ import {
   type RoutineTaskClock,
 } from "../lib/civic-data/runner.ts";
 import { MEETING_SITTING_WINDOW } from "../lib/civic-data/contracts.ts";
+import { meetingPartitionId, meetingPartitionScope } from "../lib/civic-data/meeting-partitions.ts";
+import { MEETING_STATE_CONCURRENCY, meetingTaskBucket } from "../lib/civic-data/meeting-batch.ts";
 import { sittingWindowHotByConclusion } from "../lib/civic-data/sitting-window-admission.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 import { ControlledClock, nextAdmissionMs, recordedPasses, replayPass } from "./helpers/routine-pass-replay.ts";
@@ -186,6 +188,30 @@ test("the pass ceiling includes every meeting body and the admitted nonmeeting p
     ),
     Math.ceil(bound.commandCount / ROUTINE_CHILD_CONCURRENCY) * ROUTINE_CHILD_TIMEOUT_MS,
   );
+});
+
+test("meeting replay limits shared workers and resumes deferred bodies without waiting for other families", async () => {
+  const template = ROUTINE_SOURCE_TASKS.find(task => task.recordClass === "MEETING")!;
+  const task = (state: string, index: number): RoutineSourceTask => {
+    const body = `ocd-division/country:us/state:${state}/place:replay_${index}#governing`;
+    return { ...template, id: meetingPartitionId("ical", body), scope: meetingPartitionScope("ical", body) };
+  };
+  const queued = Array.from({ length: 30 }, (_, index) => task("az", index)).filter(value => meetingTaskBucket(value) === 0).slice(0, 5);
+  assert.equal(queued.length, 5);
+  const independent = ["al", "ak", "ar", "ca", "co", "ct", "de", "fl", "ga", "hi", "ia", "id"].map(state => task(state, 0));
+  const launched = [...queued, ...independent];
+  const clock = new ControlledClock(0);
+  const settled = new Map<string, number>();
+  const result = await clock.run(() => replayPass({ clock, admittedAtMs: 0, recorded: { durationMs: 952_000, sourceMs: 600_000 },
+    cleanRepairMs: 15_000, launched, windowed: launched, passClocks: new Map(), readMs: () => 60_000,
+    settled: (value, at) => { assert.equal(settled.has(value.id), false); settled.set(value.id, at); } }));
+  assert.equal([...settled.values()].filter(at => at === 80_000).length, MEETING_STATE_CONCURRENCY);
+  assert.equal(settled.get(queued[1]!.id), 140_000);
+  assert.equal(settled.get(queued[2]!.id), 235_000, "a deferred body resumes only after its turn's readback and next admission work");
+  assert.equal(settled.size, launched.length, "every resumed body settles once");
+  assert.equal(result.deferredReads, 4);
+  assert.equal(result.independentReads, launched.length);
+  assert.ok(result.endedAtMs < result.otherDurationMs, "the other family's long pass does not keep a meeting worker occupied");
 });
 
 test("frontier configuration and identities fail closed", () => {
@@ -388,11 +414,6 @@ test("a malformed exact receipt cannot suppress a valid prior supervisor attempt
   assert.match(history.issues[0]?.detail ?? "", /receipt/);
 });
 
-/**
- * The provider frontier reads its supervisor history through the store's
- * narrowed, bounded read (ROUTINE_SUPERVISOR_HISTORY_FIELDS, _WINDOW). These fixtures carry
- * every field a real outcome does, the Reader readback references included.
- */
 function wholeSupervisorOutcomes(): unknown[] {
   const [first, second, third] = nonMeetingProviderTasks();
   assert.ok(first && second && third);
@@ -584,9 +605,10 @@ interface TucsonLaneResult {
   readonly maxBaseGap: number;
   readonly peakHot: number;
   readonly longestPassMs: number;
+  readonly longestOtherPassMs: number;
   readonly reads: number;
-  /** Reads started by catch-up while a pass was held open. */
-  readonly catchUpReads: number;
+  /** Meeting reads completed while another family was still running. */
+  readonly independentReads: number;
 }
 
 async function simulateTucsonLane(withRecordedPasses: boolean, initialSeed = 20260925): Promise<TucsonLaneResult> {
@@ -628,15 +650,11 @@ async function simulateTucsonLane(withRecordedPasses: boolean, initialSeed = 202
   };
   bodies.forEach((body, index) => record(body, hot(body, start) === true ? start - (index % 8 + 1) * 5 * MIN : start - 12 * HOUR + 30 * MIN + index * 5 * MIN));
 
-  // Each pass is admitted by the runner's own functions and run by
-  // tests/helpers/routine-pass-replay.ts: this lane's reads (10-60 s each, one
-  // at a time with the same-host gap) beside the rest of a recorded pass, then
-  // its Reader repair, with catch-up reads while either holds the pass open.
-  // The runner is down 8 minutes for a release handoff on day 3.
   const clock = new ControlledClock(start);
   let pass = 0;
   let longestPassMs = 0;
-  let catchUpReads = 0;
+  let longestOtherPassMs = 0;
+  let independentReads = 0;
   await clock.run(async () => {
     let at = start;
     while (at < end) {
@@ -660,20 +678,16 @@ async function simulateTucsonLane(withRecordedPasses: boolean, initialSeed = 202
         settled: (task, endedAtMs) => record(byId.get(task.id)!, endedAtMs),
       });
       longestPassMs = Math.max(longestPassMs, result.endedAtMs - at);
-      catchUpReads += result.catchUpReads;
+      longestOtherPassMs = Math.max(longestOtherPassMs, result.otherDurationMs);
+      independentReads += result.independentReads;
       const handoff = at >= start + 3 * DAY && at < start + 3 * DAY + 10 * MIN ? 8 * MIN : 0;
       at = nextAdmissionMs(at, result.endedAtMs, handoff);
       pass += 1;
     }
   });
   assert.ok(pass > 7_000);
-  if (withRecordedPasses) assert.ok(longestPassMs >= 952_000, "the simulation ran the longest recorded pass");
+  if (withRecordedPasses) assert.ok(longestOtherPassMs >= 952_000, "the simulation ran the longest recorded other-family pass");
 
-  // Each gap is judged minute by minute against the owner's rule: while a body
-  // is hourly, a read is owed within 60 minutes of the later of its last read
-  // and the minute it turned hourly; every body is owed one within 12 hours.
-  // Every obligation due after the run's first instant is judged; one due
-  // before it belongs to the seeded history, which the run did not make.
   const misses: string[] = [];
   let hotGaps = 0;
   let maxHotGap = 0;
@@ -703,7 +717,7 @@ async function simulateTucsonLane(withRecordedPasses: boolean, initialSeed = 202
   assert.ok(hotGaps > 5_000);
   // Every read the run made (each body's first entry is its seeded history).
   const made = [...reads.values()].reduce((sum, times) => sum + times.length - 1, 0);
-  return { misses, maxHotGap, maxBaseGap, peakHot, longestPassMs, reads: made, catchUpReads };
+  return { misses, maxHotGap, maxBaseGap, peakHot, longestPassMs, longestOtherPassMs, reads: made, independentReads };
 }
 
 test("30 days on Tucson's board lane with persistent meeting workers and a release handoff: every hourly body is read within 60:00 and every other within 12:00:00", async () => {
@@ -713,15 +727,15 @@ test("30 days on Tucson's board lane with persistent meeting workers and a relea
   assert.ok(maxHotGap <= 3_600_000 && maxBaseGap <= 12 * 3_600_000);
 });
 
-test("30 days on Tucson's board lane under production's recorded passes (up to 15:52, drawn at random), with catch-up while a pass is held open: every hourly body is read within 60:00 and every other within 12:00:00", async () => {
+test("30 days on Tucson's board lane under production's recorded passes (up to 15:52, drawn at random), with independent meeting turns while other families are held open: every hourly body is read within 60:00 and every other within 12:00:00", async () => {
   for (const seed of [20260925, 10]) {
-    const { misses, maxHotGap, maxBaseGap, longestPassMs, reads, catchUpReads } = await simulateTucsonLane(true, seed);
+    const { misses, maxHotGap, maxBaseGap, longestPassMs, reads, independentReads } = await simulateTucsonLane(true, seed);
     const detail = `seed ${seed}: longest hourly gap ${(maxHotGap / 60_000).toFixed(2)} min, longest gap ${(maxBaseGap / 3_600_000).toFixed(2)} h, ` +
-      `longest pass ${(longestPassMs / 60_000).toFixed(2)} min, ${reads} reads, ${catchUpReads} by catch-up`;
+      `longest pass ${(longestPassMs / 60_000).toFixed(2)} min, ${reads} reads, ${independentReads} while other families ran`;
     assert.equal(misses.length, 0, `late reads (${detail}): ${misses.slice(0, 5).join(" | ")}`);
     assert.ok(maxHotGap <= 3_600_000, detail);
     assert.ok(maxBaseGap <= 12 * 3_600_000, detail);
-    assert.ok(catchUpReads > 0, `the long passes admitted reads by catch-up (${detail})`);
+    assert.ok(independentReads > 0, `the long passes admitted reads while other families ran (${detail})`);
   }
 });
 

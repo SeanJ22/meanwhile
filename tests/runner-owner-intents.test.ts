@@ -256,7 +256,7 @@ function checkRunnerHonorsOwnerIntents(src: string): void {
   assert.match(honor[0], /intentId: id,\s*honors: intent\.intentId/);
   assert.match(honor[0], /honoredBy: `pilot-runner@\$\{hostname\(\)\}#\$\{process\.pid\}`/, "honoredBy does not name pilot-runner@host#pid");
 
-  assert.match(src, /new IndependentRuntimeLaneScheduler\(\[[\s\S]*run: \(\) => runRoutineState\(state\)[\s\S]*run: runIntakeRuntime/, "the two permanent runtime lanes are not independently scheduled");
+  assert.match(src, /new IndependentRuntimeLaneScheduler\(\[[\s\S]*run: \(\) => runRoutineState\(state, family\)[\s\S]*run: runIntakeRuntime/, "the two permanent runtime lanes are not independently scheduled");
   assert.match(src, /function scheduleStandingRuntimeWake\(\)[\s\S]*standingRuntimeTimer = setTimeout\([\s\S]*runStandingRuntimeTick\("earliest source clock"\)/, "the runtime clock is not independently startable");
   assert.ok(src.indexOf("startStandingRuntimeClock();") < src.indexOf("while (cycle < CYCLES)"), "the runtime clock starts after research");
   assert.match(src, /if \(runtimeAdmissionsHeld\) return;/, "a release hold cannot close runtime admission");

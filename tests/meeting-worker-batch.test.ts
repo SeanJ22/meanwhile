@@ -1,28 +1,49 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { runMeetingPartition, runMeetingPartitionBatch } from "../scripts/ingest.ts";
-import { RUNTIME_AUTHORITY_ENV } from "../lib/civic-data/runtime-authority.ts";
+import { runMeetingPartition } from "../scripts/ingest.ts";
+import { meetingPartitionId } from "../lib/civic-data/meeting-partitions.ts";
+import { RUNTIME_AUTHORITY_ENV, runtimeAuthorityEnvironment, withRoutineContract } from "../lib/civic-data/runtime-authority.ts";
 import { agendaDocumentStore, type AgendaDocument } from "../lib/meetings/agenda-documents.ts";
 
-test("one failed body leaves sibling work running with its own authority and due clocks", async () => {
-  const previous = { capability: process.env[RUNTIME_AUTHORITY_ENV.capability], contract: process.env[RUNTIME_AUTHORITY_ENV.contract] };
-  const calls: string[] = [];
-  const output: string[] = [];
-  const tasks = ["one", "two", "three"].map((id, index) => ({ id, dueAt: `2026-10-15T0${index}:00:00.000Z`, nextDueAt: `2026-10-15T0${index + 1}:00:00.000Z` }));
-  await runMeetingPartitionBatch(tasks, async (id, options) => {
-    assert.equal(process.env[RUNTIME_AUTHORITY_ENV.capability], "ROUTINE_CONTRACT");
-    assert.equal(process.env[RUNTIME_AUTHORITY_ENV.contract], id);
-    assert.equal(options?.dueAt, tasks[calls.length]!.dueAt);
-    calls.push(id);
-    if (id === "two") throw new Error("source is unavailable");
-  }, line => output.push(line));
-  assert.deepEqual(calls, ["one", "two", "three"]);
-  assert.equal(output.filter(line => line.startsWith("RCD_PROGRESS")).length, 3);
-  assert.equal(output.filter(line => line.startsWith("RCD_MEETING_PARTITION_STARTED=")).length, 3);
-  const failed = JSON.parse(output.find(line => line.startsWith("RCD_MEETING_PARTITION_ERROR="))!.split("=").slice(1).join("="));
-  assert.deepEqual(failed, { id: "two", detail: "source is unavailable" });
-  assert.equal(process.env[RUNTIME_AUTHORITY_ENV.capability], previous.capability);
-  assert.equal(process.env[RUNTIME_AUTHORITY_ENV.contract], previous.contract);
+async function asSupervisor(work: () => Promise<void>): Promise<void> {
+  const keys = [RUNTIME_AUTHORITY_ENV.capability, RUNTIME_AUTHORITY_ENV.contract];
+  const previous = keys.map(key => process.env[key]);
+  process.env[RUNTIME_AUTHORITY_ENV.capability] = "ROUTINE_SUPERVISOR";
+  delete process.env[RUNTIME_AUTHORITY_ENV.contract];
+  try { await work(); }
+  finally {
+    keys.forEach((key, index) => {
+      if (previous[index] === undefined) delete process.env[key];
+      else process.env[key] = previous[index];
+    });
+  }
+}
+
+test("concurrent bodies retain separate contract authority while the supervisor reads their results", async () => {
+  await asSupervisor(async () => {
+    let release!: () => void;
+    const rendezvous = new Promise<void>(resolve => { release = resolve; });
+    let started = 0;
+    const contracts = ["governing", "planning"].map(body => meetingPartitionId("ical", `ocd-division/country:us/state:az/county:pima#${body}`));
+    const runs = contracts.map((contract, index) => withRoutineContract(contract, async () => {
+      assert.equal(runtimeAuthorityEnvironment()[RUNTIME_AUTHORITY_ENV.contract], contract);
+      if (++started === contracts.length) release();
+      await rendezvous;
+      assert.equal(runtimeAuthorityEnvironment()[RUNTIME_AUTHORITY_ENV.capability], "ROUTINE_CONTRACT");
+      assert.equal(runtimeAuthorityEnvironment()[RUNTIME_AUTHORITY_ENV.contract], contract);
+      assert.equal(process.env[RUNTIME_AUTHORITY_ENV.capability], "ROUTINE_SUPERVISOR");
+      assert.equal(process.env[RUNTIME_AUTHORITY_ENV.contract], undefined);
+      if (index === 0) throw new Error("body read failed");
+      return contract;
+    }));
+    assert.equal(runtimeAuthorityEnvironment()[RUNTIME_AUTHORITY_ENV.capability], "ROUTINE_SUPERVISOR");
+    assert.equal(runtimeAuthorityEnvironment()[RUNTIME_AUTHORITY_ENV.contract], undefined);
+    const results = await Promise.allSettled(runs);
+    assert.equal(results[0]!.status, "rejected");
+    assert.deepEqual(results[1], { status: "fulfilled", value: contracts[1] });
+    assert.equal(runtimeAuthorityEnvironment()[RUNTIME_AUTHORITY_ENV.capability], "ROUTINE_SUPERVISOR");
+    assert.equal(runtimeAuthorityEnvironment()[RUNTIME_AUTHORITY_ENV.contract], undefined);
+  });
 });
 
 test("a member refused before acquisition releases the preceding body's held agendas", async () => {

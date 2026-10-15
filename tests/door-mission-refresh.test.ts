@@ -3,8 +3,9 @@ import { describe, it } from "node:test";
 
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { recordDoorOutcome } from "../lib/doors/outcome.ts";
-import { listDoors } from "../lib/doors/registry.ts";
+import { listDoors, type DoorRecord } from "../lib/doors/registry.ts";
 import { seedMeetingDoors } from "../lib/doors/seed-meetings.ts";
+import { installDoorRecords } from "../lib/doors/meeting-doors.ts";
 import {
   doorInDivisions,
   doorPartitionIds,
@@ -12,13 +13,12 @@ import {
   ocdInside,
   readNowDueRequests,
   settleReadNow,
+  sourceChangesByTask,
 } from "../lib/doors/mission-refresh.ts";
 import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
 import { FIXTURE_DOOR_ROWS } from "./helpers/meeting-doors-fixture.ts";
 import { routineDueRequestFor } from "../lib/civic-data/routine-due-request.ts";
-import { ROUTINE_SOURCE_TASKS } from "../lib/civic-data/runner.ts";
-
-/** Starting a mission marks every open door already known in the place to be read now. */
+import { ROUTINE_SOURCE_TASKS, routineTaskDueAtMs } from "../lib/civic-data/runner.ts";
 
 const SEEDED = "2026-10-04T12:00:00.000Z";
 const MISSION = "2026-10-04T13:00:00.000Z";
@@ -27,8 +27,31 @@ const LATER = "2026-10-04T13:20:00.000Z";
 async function seeded() {
   const repos = createMemoryRepositories();
   await seedMeetingDoors({ repo: repos.doors, wiring: FIXTURE_DOOR_ROWS, derived: [], deriveInputAt: SEEDED, at: SEEDED });
+  installDoorRecords((await listDoors(repos.doors)).doors);
   return repos;
 }
+
+it("recorded source changes reach only their ordinary meeting and non-meeting task clocks", async () => {
+  const repos = await seeded();
+  const base = (await listDoors(repos.doors)).doors.find(door => door.meeting !== null)!;
+  const changed = (overrides: Partial<DoorRecord> = {}): DoorRecord => ({ ...base,
+    lastSuccessAt: LATER, validators: { etag: null, lastModified: null, contentHash: null, checkedAt: MISSION, changedAt: MISSION }, ...overrides });
+  const feed = ROUTINE_SOURCE_TASKS.find(task => task.recordClass === "STATE_LEGISLATOR")!;
+  assert.ok(feed);
+  const changes = sourceChangesByTask([
+    changed(), changed({ validators: { ...changed().validators!, changedAt: SEEDED } }),
+    changed({ bodyIds: ["shut"], status: "SHUT" }),
+    changed({ bodyIds: ["suspended"], status: "SUSPENDED" }),
+    changed({ bodyIds: ["invalid"], validators: { ...changed().validators!, changedAt: "not a date" } }),
+    changed({ bodyIds: ["new"], validators: null }),
+    changed({ meeting: null, kind: "source-feed", bodyIds: [], doorId: `feed:${feed.id}`, config: { contractId: feed.id } }),
+  ]);
+  assert.deepEqual([...changes], [...doorPartitionIds(base).map(id => [id, MISSION]), [feed.id, MISSION]]);
+  const task = { ...feed, sourceChangedAt: changes.get(feed.id) };
+  assert.equal(routineTaskDueAtMs(task, { lastAttemptedAt: SEEDED, lastSucceededObservedAt: SEEDED,
+    lastSucceededAt: LATER }, Date.parse(LATER)), Date.parse(MISSION), "parser completion does not erase a newer wire change");
+  assert.equal(task.ownerInvocation, undefined, "a member-list change stays on its ordinary source-family path");
+});
 
 describe("DB-56: mission start refreshes the doors already known in the place", () => {
   it("an OCD id is inside a division when it is that division, a child of it, or a body of it", () => {

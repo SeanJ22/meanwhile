@@ -1,4 +1,6 @@
-import { createHash } from "node:crypto";
+import { withSourceTransport } from "./helpers/source-fetch.ts";
+import { runWithSourceFetch } from "../lib/sources/fetch-source.ts";
+import { realOpenBytes } from "../lib/control-plane/scheduler/scout-tools.ts";
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { neonConfig } from "@neondatabase/serverless";
@@ -360,7 +362,8 @@ test("a national API completes its geography walk beyond ten requests and reuses
     `${Math.floor((year - 1) / 2) * 2} State Legislative Districts - Upper`,
     `${Math.floor((year - 1) / 2) * 2} State Legislative Districts - Lower`, "States", "Counties", "Incorporated Places",
     "County Subdivisions", "Unified School Districts", "Elementary School Districts", "Secondary School Districts"];
-  t.mock.method(globalThis, "fetch", async (url: string) => {
+  const transport: typeof fetch = async input => {
+    const url = input instanceof Request ? input.url : String(input);
     requests++;
     // Siblings still in flight when another request is refused must be vaulted.
     await new Promise(resolve => setTimeout(resolve, 5));
@@ -369,13 +372,13 @@ test("a national API completes its geography walk beyond ten requests and reuses
         ? [{ attributes: {}, geometry: { rings: [[[0, 0], [1, 0], [1, 1], [0, 0]]] } }]
         : url.includes("State_County/MapServer/4/query") ? [{ attributes: { STATE: "33", GEOID: "33", NAME: "New Hampshire" } }] : [] }
       : { url, layers: names.map((name, id) => ({ id, name, type: "Feature Layer" })) });
-  });
+  };
   const tools = { repos, store, now: () => "2026-09-30T00:00:00.000Z", spaceOut: async () => {} };
   const input = { tools, store: new MemoryRoutineDataStore(), zips: ["03060", "03101", "03301"],
     readPublished: async () => [],
     publish: async () => { assert.fail("incomplete geography cannot publish"); } };
   // The injected store holds no promoted registry, so the walk ends at the first held-family read it refuses.
-  await assert.rejects(runNationalPlaceTask(input), /HELD_PLACE_READ_FAILED:/);
+  await assert.rejects(withSourceTransport(transport, () => runNationalPlaceTask(input)), /HELD_PLACE_READ_FAILED:/);
   assert.ok(heartbeatWrites > 0, "the national acquisition exercised its canonical lease heartbeat");
   assert.ok(requests > RESEARCH_BOUNDS.perDispatch.maxRequestsPerHost, "Census is a national API, not a small local publisher");
   assert.ok((await repos.obligations.list()).every(row => row.value.lastWorkedAt === null));
@@ -385,7 +388,7 @@ test("a national API completes its geography walk beyond ten requests and reuses
   const before = requests;
   // The saved geography now completes within the same request bound. This
   // fixture has no registry runtime, so reaching its next read is the boundary.
-  await assert.rejects(runNationalPlaceTask(input), /HELD_PLACE_READ_FAILED:/);
+  await assert.rejects(withSourceTransport(transport, () => runNationalPlaceTask(input)), /HELD_PLACE_READ_FAILED:/);
   assert.equal(requests, before, "the second pass reads saved Census responses without repeating API calls");
   const next = await repos.artifacts.readAll();
   assert.ok(next.some(row => row.canonicalUrl.includes("School")), "the next pass advances using held responses");
@@ -403,7 +406,7 @@ test("a national API completes its geography walk beyond ten requests and reuses
     ["03401", "03301", "03101"]);
   // Actual acquisition must also recheck cadence after process admission.
   const beforeFresh = requests;
-  assert.deepEqual(await runNationalPlaceTask({ ...input, zips: ["03060"] }), []);
+  assert.deepEqual(await withSourceTransport(transport, () => runNationalPlaceTask({ ...input, zips: ["03060"] })), []);
   assert.equal(requests, beforeFresh, "a fresh place opens no occurrence and fetches no source");
 });
 
@@ -432,67 +435,70 @@ test("national collector binds saved CSV to its real Attempt and reuses another 
   const url = "https://legislature.gov/members.csv";
   const body = "id,name\n1,Ada Smith\n";
   let fetched = 0;
-  const reader = async (now: string, subject: string) => {
-    const work = createWorkItem({ project: "freshness", subject, obligation: "Read national sources", why: "Capture", now });
-    const task = createRouteTask({ workItemId: work.id, routeId: "national-place-sources", routeLabel: "National sources", target: subject, inherited: false, now });
-    await registerWorkItem(repos, work, now);
-    await registerRouteTask(repos, task, now);
-    const claimed = await claimRouteTask(repos, { routeTaskId: task.id, holder: subject, now, ttlMs: 300_000 });
-    const attempt = await beginAttemptFor(repos, { routeTaskId: task.id, workItemId: work.id,
-      worker: { role: "ACQUIRER", provider: "test", version: "1", instance: subject }, lease: claimed.lease.value,
-      now, methodVersion: 1, policyVersion: "test" });
-    const obligation: ScheduledObligation = { obligation: { id: subject, subjectId: subject, recordClass: "OFFICIAL_ROSTER",
-      routeId: "national-place-sources", active: true, readerImpactAt: null, observedChangeRateHours: null, lastWorkedAt: null },
-      nextDueAt: now, cadenceHours: 24, cadenceSource: "DEFAULT_NO_SIGNAL", basis: "test" };
-    return placeSourceReader({ project: "freshness", websiteSize: address => new URL(address).hostname === "legislature.gov"
-      ? { kind: "local-government", population: 9999 } : undefined, context: { obligation, route: null, providerId: null,
-      attemptId: attempt.id, workItemId: work.id, routeTaskId: task.id, holder: subject,
-      now: () => now, bound: RESEARCH_BOUNDS.perDispatch }, tools: {
-      repos, store, now: () => now, spaceOut: async () => {}, openBytes: async request => {
-        const robots = request.url.endsWith("/robots.txt");
-        if (!robots) fetched++;
-        return { status: 200, bytes: Buffer.from(robots ? "User-agent: *\nAllow: /" : request.url === url ? body : request.url),
-          contentType: robots ? "text/plain" : "text/csv", finalUrl: request.url, durationMs: 1, transportError: null };
-      },
-    } });
-  };
-  const first = await reader("2026-09-30T00:00:00.000Z", "job:first");
-  const acquired = await first.read(url);
-  assert.equal(acquired.text, body);
-  assert.equal(acquired.capture?.evidence.acquiredByAttemptId, (await repos.attempts.list())[0].id);
-  assert.equal(fetched, 1);
-  const geographyUrl = "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Legislative/MapServer/1/query?where=STATE%3D39";
-  const geography = '{"features":[{"attributes":{"GEOID":"39007"}}]}';
-  await first.captureGeography(geographyUrl, geography);
-  const second = await reader("2026-09-30T01:00:00.000Z", "job:other-place");
-  const reused = await second.read(url);
-  assert.equal(fetched, 1);
-  assert.equal(reused.capture?.evidence.artifactId, acquired.capture?.evidence.artifactId);
-  assert.equal(reused.collectedAt, acquired.collectedAt);
-  assert.equal(second.artifacts.size, 0);
-  assert.deepEqual(await Promise.all([second.readGeography(geographyUrl), second.readGeography(geographyUrl)]), [geography, geography]);
-  assert.equal(second.geographyCaptures[0].observedAt, "2026-09-30T00:00:00.000Z");
-  assert.deepEqual(second.cost, { requestCount: 0, bytesFetched: 0 });
-  const third = await reader("2026-10-02T01:00:00.000Z", "job:refresh");
-  assert.equal(await third.readGeography(geographyUrl), null, "expired Census bytes leave a source refresh owed");
-  const refreshed = await third.read(url);
-  assert.equal(fetched, 2);
-  assert.equal(refreshed.collectedAt, "2026-10-02T01:00:00.000Z");
-  assert.notEqual(refreshed.capture?.evidence.acquiredByAttemptId, acquired.capture?.evidence.acquiredByAttemptId);
-  const fourth = await reader("2026-10-02T02:00:00.000Z", "job:after-refresh");
-  const current = await fourth.read(url);
-  assert.equal(fetched, 2, "an old observation of identical bytes must not hide the fresh held acquisition");
-  assert.equal(current.collectedAt, refreshed.collectedAt);
-  assert.equal(current.capture?.evidence.acquiredByAttemptId, refreshed.capture?.evidence.acquiredByAttemptId);
-  for (let index = 2; index < RESEARCH_BOUNDS.perDispatch.maxRequestsPerHost; index++) {
-    await third.read(`https://legislature.gov/page-${index}`);
-  }
-  await assert.rejects(third.read("https://legislature.gov/next"), PlaceSourceDeferred);
-  assert.ok(third.deferred?.message.includes("next pass"), "ordinary page hosts defer just like Census");
-  assert.equal(third.cost.requestCount, RESEARCH_BOUNDS.perDispatch.maxRequestsPerHost);
-  assert.equal((await third.read(url)).text, body, "the bound never blocks already saved pages");
-  assert.equal((await third.read("https://federal.gov/official")).text, "https://federal.gov/official",
-    "a small publisher's bound does not stop another national source");
+  await withSourceTransport(async input => {
+    const address = input instanceof Request ? input.url : String(input), robots = address.endsWith("/robots.txt");
+    if (!robots) fetched++;
+    return new Response(robots ? "User-agent: *\nAllow: /" : address === url ? body : address,
+      { headers: { "content-type": robots ? "text/plain" : "text/csv" } });
+  }, async () => {
+    const reader = async (now: string, subject: string) => {
+      const work = createWorkItem({ project: "freshness", subject, obligation: "Read national sources", why: "Capture", now });
+      const task = createRouteTask({ workItemId: work.id, routeId: "national-place-sources", routeLabel: "National sources", target: subject, inherited: false, now });
+      await registerWorkItem(repos, work, now);
+      await registerRouteTask(repos, task, now);
+      const claimed = await claimRouteTask(repos, { routeTaskId: task.id, holder: subject, now, ttlMs: 300_000 });
+      const attempt = await beginAttemptFor(repos, { routeTaskId: task.id, workItemId: work.id,
+        worker: { role: "ACQUIRER", provider: "test", version: "1", instance: subject }, lease: claimed.lease.value,
+        now, methodVersion: 1, policyVersion: "test" });
+      const obligation: ScheduledObligation = { obligation: { id: subject, subjectId: subject, recordClass: "OFFICIAL_ROSTER",
+        routeId: "national-place-sources", active: true, readerImpactAt: null, observedChangeRateHours: null, lastWorkedAt: null },
+        nextDueAt: now, cadenceHours: 24, cadenceSource: "DEFAULT_NO_SIGNAL", basis: "test" };
+      return placeSourceReader({ project: "freshness", websiteSize: address => new URL(address).hostname === "legislature.gov"
+        ? { kind: "local-government", population: 9999 } : undefined, context: { obligation, route: null, providerId: null,
+        attemptId: attempt.id, workItemId: work.id, routeTaskId: task.id, holder: subject,
+        now: () => now, bound: RESEARCH_BOUNDS.perDispatch }, tools: {
+        repos, store, now: () => now, spaceOut: async () => {},
+        openBytes: request => runWithSourceFetch({ runtime: { now: () => Date.parse(now) } }, () => realOpenBytes(request)),
+      } });
+    };
+    const first = await reader("2026-09-30T00:00:00.000Z", "job:first");
+    const acquired = await first.read(url);
+    assert.equal(acquired.text, body);
+    assert.equal(acquired.capture?.evidence.acquiredByAttemptId, (await repos.attempts.list())[0].id);
+    assert.equal(fetched, 1);
+    const geographyUrl = "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Legislative/MapServer/1/query?where=STATE%3D39";
+    const geography = '{"features":[{"attributes":{"GEOID":"39007"}}]}';
+    await first.captureGeography(geographyUrl, geography);
+    const second = await reader("2026-09-30T01:00:00.000Z", "job:other-place");
+    const reused = await second.read(url);
+    assert.equal(fetched, 1);
+    assert.equal(reused.capture?.evidence.artifactId, acquired.capture?.evidence.artifactId);
+    assert.equal(reused.collectedAt, acquired.collectedAt);
+    assert.equal(second.artifacts.size, 0);
+    assert.deepEqual(await Promise.all([second.readGeography(geographyUrl), second.readGeography(geographyUrl)]), [geography, geography]);
+    assert.equal(second.geographyCaptures[0].observedAt, "2026-09-30T00:00:00.000Z");
+    assert.deepEqual(second.cost, { requestCount: 0, bytesFetched: 0 });
+    const third = await reader("2026-10-02T01:00:00.000Z", "job:refresh");
+    assert.equal(await third.readGeography(geographyUrl), null, "expired Census bytes leave a source refresh owed");
+    const refreshed = await third.read(url);
+    assert.equal(fetched, 2);
+    assert.equal(refreshed.collectedAt, "2026-10-02T01:00:00.000Z");
+    assert.notEqual(refreshed.capture?.evidence.acquiredByAttemptId, acquired.capture?.evidence.acquiredByAttemptId);
+    const fourth = await reader("2026-10-02T02:00:00.000Z", "job:after-refresh");
+    const current = await fourth.read(url);
+    assert.equal(fetched, 2, "an old observation of identical bytes must not hide the fresh held acquisition");
+    assert.equal(current.collectedAt, refreshed.collectedAt);
+    assert.equal(current.capture?.evidence.acquiredByAttemptId, refreshed.capture?.evidence.acquiredByAttemptId);
+    for (let index = 2; index < RESEARCH_BOUNDS.perDispatch.maxRequestsPerHost; index++) {
+      await third.read(`https://legislature.gov/page-${index}`);
+    }
+    await assert.rejects(third.read("https://legislature.gov/next"), PlaceSourceDeferred);
+    assert.ok(third.deferred?.message.includes("next pass"), "ordinary page hosts defer just like Census");
+    assert.equal(third.cost.requestCount, RESEARCH_BOUNDS.perDispatch.maxRequestsPerHost);
+    assert.equal((await third.read(url)).text, body, "the bound never blocks already saved pages");
+    assert.equal((await third.read("https://federal.gov/official")).text, "https://federal.gov/official",
+      "a small publisher's bound does not stop another national source");
+  });
 });
 
 test("official profile headings produce officeholders; news headlines do not", async () => {
@@ -536,11 +542,6 @@ test("redirected election pages keep their saved source identity and resolve lin
   assert.equal(field.value, "https://elections.example.gov/voters/current/polling");
 });
 
-/**
- * State legislators and their district reconciliation. Some states designate House districts by name
- * ("<County> 8") while this repo's identifiers are Census numeric codes (`sldl:608`); a direct join scores zero
- * silently.
- */
 
 const DIVISIONS = (
   registry as { divisions: { ocdId: string; label: string; divisionType: string }[] }
@@ -617,9 +618,6 @@ test("a CSV with a missing native person identifier is refused before publicatio
 });
 
 test("a roster with the wrong header or too few rows is refused, not read as empty", () => {
-  // An HTML error page served at 200 passes the comma blank-check and parses to
-  // a table whose header is not the roster's — rowsToPeople would then find no
-  // id column and return zero people, a whole legislature reading as absent.
   assert.match(pluralRosterIssue("<html>error, error</html>") ?? "", /missing id/);
 
   const header =

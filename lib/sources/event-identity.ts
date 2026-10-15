@@ -1,15 +1,10 @@
 import { createHash } from "node:crypto";
+import { cachedZoneFormatter } from "../time/zoned.ts";
 
-/**
- * Identity for an event the feed did not identify. Two events in one wiring row starting at the same
- * instant (common where one feed serves a whole town) must not collapse to one id.
- *
- * Identity is everything the feed did publish about the event: the body slug, the start instant, the
- * summary, the location and the description. Records agreeing on all five are the same sitting published
- * twice; records differing anywhere are two sittings. A hash of the fields, not the fields joined, so a
- * colon in a field cannot change how `lib/meetings/*` splits meeting ids on `:`. A weak-id collision (our
- * judgement) is counted separately from an exact duplicate (the feed repeating a UID).
- */
+const localClockFormatter = cachedZoneFormatter("en-CA", {
+  year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hour12: false,
+});
+
 export interface WeakEventIdentityFields {
   /** The wiring row's slug — a body, not a town. */
   slug: string;
@@ -20,14 +15,6 @@ export interface WeakEventIdentityFields {
   description: string | null;
 }
 
-/**
- * A stable identity for an event with no `UID`.
- *
- * The prefix `w-` marks it as WEAK in the id itself, so a meeting id read out
- * of a snapshot says whether its identity came from the publisher or from us.
- * That is the same discipline `carried` uses on a carried row: a value that was
- * inferred should say so where somebody will see it.
- */
 export function weakEventIdentity(fields: WeakEventIdentityFields): string {
   const parts = [
     fields.slug,
@@ -42,16 +29,6 @@ export function weakEventIdentity(fields: WeakEventIdentityFields): string {
   return `w-${digest.slice(0, 16)}`;
 }
 
-/**
- * One sitting of a recurring series is one record. An iCalendar feed publishes a recurring board as one
- * `UID` carried by several `VEVENT`s (the master with an `RRULE`, plus overrides naming their slot in
- * `RECURRENCE-ID`), so the `UID` alone cannot identify a sitting.
- *
- * Identity is RFC 5545's: the `UID` plus the instance's original start (its recurrence slot). A sitting
- * keeps its id when it is moved. The slot is a UTC instant `YYYYMMDDTHHMMSSZ` (or `YYYYMMDD` for an
- * all-day series) after the `UID` and a `/`. Nothing splits a meeting id on `/`. A non-recurring event's
- * id is `ical:<slug>:<UID>`.
- */
 export const OCCURRENCE_SEPARATOR = "/";
 
 /** A UTC instant `YYYYMMDDTHHMMSSZ`, or a calendar date `YYYYMMDD`. */
@@ -78,10 +55,6 @@ export function occurrenceId(seriesId: string, stamp: string): string {
   return `${seriesId}${OCCURRENCE_SEPARATOR}${stamp}`;
 }
 
-/**
- * The series id and slot an occurrence id was built from, or null for an id of
- * any other shape.
- */
 export function occurrenceParts(
   id: string,
 ): { readonly seriesId: string; readonly stamp: string } | null {
@@ -99,13 +72,6 @@ export interface OccurrenceSupersessionFacts {
   readonly startsAt: string;
 }
 
-/**
- * When an occurrence record replaces the series record it was hiding in: the old `UID`-only id is no
- * longer produced, and carrying it forward would show one sitting twice. Replaced only when the
- * replacement is an occurrence of the same series (`<old id>/<slot>`), for the same body, that is the
- * same sitting (same start) or the same instance (its slot is the old record's start). Anything else
- * takes the ordinary path.
- */
 export function supersedesSeriesRecord(
   prior: OccurrenceSupersessionFacts,
   successor: OccurrenceSupersessionFacts,
@@ -120,16 +86,6 @@ export function supersedesSeriesRecord(
   return slot !== null && Date.parse(slot) === before;
 }
 
-/**
- * Identity for a sitting two routes number differently (e.g. Legistar's WebAPI and its portal calendar
- * grid do not share an id space). The key is `body | local date | local wall-clock time` in the body's
- * own zone:
- * - The body, not the division: several bodies can share one division.
- * - Local date and time: what a clerk publishes and a reader reads.
- * - The kind is not in the key: one route may write it and the other leave it blank.
- * Two bodies at one time, one body twice in a day, and two routes disagreeing about the time all stay
- * separate sittings.
- */
 export interface SittingKeyFields {
   /** The registry body id — the strongest thing available. */
   bodyId?: string | null;
@@ -146,29 +102,13 @@ export interface SittingKeyFields {
 /** The separator, chosen because it cannot occur in an id, a date or a clock. */
 const UNIT_SEPARATOR = "";
 
-/**
- * The local calendar date and wall-clock time an instant lands on in a zone.
- *
- * `Intl` rather than string surgery on `startsAt`, because two adapters write
- * the same moment differently — `2026-09-08T13:00:00-07:00` from one and
- * `2026-09-08T20:00:00.000Z` from another — and a comparison that cannot see
- * through an offset is not a comparison of times.
- */
 export function localWallClock(
   startsAt: string,
   timeZone: string,
 ): { date: string; time: string } | null {
   const at = Date.parse(startsAt);
   if (!Number.isFinite(at)) return null;
-  const parts = new Intl.DateTimeFormat("en-CA", {
-    timeZone,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  }).formatToParts(new Date(at));
+  const parts = localClockFormatter(timeZone).formatToParts(new Date(at));
   const get = (type: string) => parts.find((p) => p.type === type)?.value ?? "";
   const date = `${get("year")}-${get("month")}-${get("day")}`;
   // Some ICU builds render midnight as "24"; normalize so two spellings of one
@@ -178,26 +118,12 @@ export function localWallClock(
   return { date, time: `${hour}:${get("minute")}` };
 }
 
-/**
- * The cross-route identity of one sitting, or null when the record cannot be
- * placed in time.
- *
- * Null rather than a fallback key: a record with an unparseable start has no
- * sitting identity, and giving it one would let two unrelated unparseable
- * records merge into one meeting.
- */
 export function sittingKey(fields: SittingKeyFields): string | null {
   const local = localWallClock(fields.startsAt, fields.timeZone);
   if (!local) return null;
   return sittingKeyFromLocal({ ...fields, ...local });
 }
 
-/**
- * The same key, for a route that never published an instant (a calendar grid, an RSS title, a clerk's
- * schedule table, none stating a zone). Built from the local date and wall clock directly; `sittingKey`
- * calls this, so the two cannot drift. `localDate` is `YYYY-MM-DD` and `localTime` is 24-hour `HH:MM`;
- * callers normalize first.
- */
 export interface LocalSittingKeyFields {
   bodyId?: string | null;
   ocdId?: string | null;
@@ -223,11 +149,6 @@ const NOT_THE_BODY = new Set([
   "session", "committee", "the", "of", "via", "zoom", "and", "a",
 ]);
 
-/**
- * The body a sitting belongs to, as its own published words name it: "GOVERNING BOARD AGENDA SPECIAL
- * MEETING" and "Governing Board Meeting - via Zoom" are both `governing-board`. Shared by the Diligent
- * schedule union and `reissuesSitting`, so they never disagree about which body a listing names.
- */
 export function sittingBodyKey(name: string): string {
   return name
     .toLowerCase()
@@ -247,16 +168,6 @@ export interface ListedSittingFacts extends OccurrenceSupersessionFacts {
   readonly timeZone?: string | null;
 }
 
-/**
- * A sitting its publisher re-issued under a new id. A fresh row of the same partition holds a prior
- * row's sitting only when every clause holds:
- * - the same registry body (`bodyId`), present on both;
- * - the same body in the listings' own words: `sittingBodyKey` of `bodyName` agrees and names something,
- *   and `sittingBodyKey` of `title` agrees;
- * - the same local date and minute in the same `timeZone` (`sittingKey`), both dated to the minute (a
- *   `DAY`-precision listing proves no time).
- * No fuzzy match. The title is required because some feeds give every row one body name.
- */
 export function reissuesSitting(prior: ListedSittingFacts, successor: ListedSittingFacts): boolean {
   if (prior.id === successor.id) return false;
   const bodyId = prior.bodyId ?? null;
@@ -282,11 +193,6 @@ export function reissuesSitting(prior: ListedSittingFacts, successor: ListedSitt
   return before !== null && before === at(successor.startsAt);
 }
 
-/**
- * Which route supplied this field. A merged record draws different fields from different routes (the
- * grid's location and kind, the RSS first-published instant, the per-meeting iCalendar wall clock, the
- * WebAPI agenda file), so each field names its own route.
- */
 export type SittingRoute =
   | "INSITE_CALENDAR_GRID"
   | "INSITE_CALENDAR_RSS"
@@ -306,10 +212,7 @@ export interface SittingFieldProvenance {
   insiteGuid?: string | null;
   /** The WebAPI's `EventId`, when that route supplied the record. */
   legistarEventId?: number | null;
-  /**
-   * When the publisher itself first published this sitting, from the RSS
-   * `pubDate`. Null when no feed item was read — never a stand-in date.
-   */
+
   firstPublishedAt?: string | null;
 }
 
@@ -327,39 +230,15 @@ export interface MeetingLike {
   agendaUrl?: string | null;
 }
 
-/**
- * How a sitting changed between two readings of the public record.
- *
- * Keyed on the SOURCE's own stable identifier (the namespaced meeting id, which
- * carries the portal's number) rather than on `sittingKey`, because the thing
- * most worth catching — a sitting moved to another time — is precisely a change
- * of the sitting key.
- */
 export type SittingChange =
   | { kind: "NEW"; meeting: MeetingLike }
   | { kind: "UNCHANGED"; meeting: MeetingLike }
   | { kind: "RESCHEDULED"; meeting: MeetingLike; from: string; to: string }
   | { kind: "CANCELED"; meeting: MeetingLike }
   | { kind: "UPDATED"; meeting: MeetingLike; changed: string[] }
-  /**
-   * The row was in the earlier reading and is not in the later one.
-   *
-   * **This is NOT a cancellation and may never be rendered as one.** A row can
-   * leave a grid because the range filter moved past it, because the portal was
-   * partially served, or because the clerk re-filed it — and "the calendar no
-   * longer lists it" is a fact about our reading, not about the body. The
-   * earlier record is carried with its own provenance and the state is named,
-   * so a surface can say what is true instead of asserting an absence.
-   */
+
   | { kind: "ABSENT_FROM_LATEST"; meeting: MeetingLike };
 
-/**
- * Reconcile an earlier reading of a body's calendar against a later one.
- *
- * Both arrays are readings of the SAME source. This only says what the public
- * record now says, in terms that keep a body's decision distinct from our own
- * retrieval; the caller decides what to do with it.
- */
 export function reconcileSittings(
   previous: MeetingLike[],
   current: MeetingLike[],

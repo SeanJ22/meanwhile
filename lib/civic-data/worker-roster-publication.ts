@@ -7,6 +7,8 @@ import { canonicalJson } from "../control-plane/repository/types.ts";
 import type { ArtifactRecord, ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import type { WorkerEvidence, WorkerResultRecord } from "../control-plane/workers/types.ts";
 import type { RegistryRuntimeCarton, RegistryRuntimePrior } from "../registry/runtime-data-plane.ts";
+import type { Body, Division } from "../registry/types.ts";
+import { readRegistryBodyIdentity } from "../registry/runtime-read-model.ts";
 import type { WorkItem } from "../control-plane/work-item.ts";
 import { readRegistryRuntimePrior, registryRuntimeCandidate, registryBaseSourceReceipt } from "../registry/runtime-data-plane.ts";
 import { canonicalCivicDataJson } from "./changes.ts";
@@ -72,8 +74,6 @@ const SCHOOL_BOARD = /\b(governing board|school board|board of (education|truste
 const BODY_NAME = [/\b(city|town|village|borough|township) (council|commission|committee)\b/, /\bboard of (supervisors|commissioners|education|trustees|aldermen|selectmen)\b/,
   /\b(governing board|school board|select ?board|township committee)\b/, /\bcouncil\b/];
 const titleCase = (text: string) => text.replace(/\b\p{L}/gu, c => c.toUpperCase());
-const governmentOf = <D extends { readonly ocdId: string }>(divisions: readonly D[], { ocdId }: { readonly ocdId: string | null }): D | null =>
-  divisions.find(row => row.ocdId === ocdId) ?? null;
 
 /** A page read in code must name the body in its title or main heading: a city page's navigation names many bodies. */
 export function pageIsAboutBody(html: string, body: { readonly id: string; readonly name: string | null }, divisionLabel: string | null, inTitle = true): boolean {
@@ -117,14 +117,12 @@ function parserReading(parser: WorkerResultRecord, contract: NonNullable<WorkIte
 }
 
 export async function heldRosterReading(input: {
-  readonly bodyId: string; readonly prior: RegistryRuntimePrior; readonly now: string;
+  readonly body: Pick<Body, "id" | "name">; readonly division: Pick<Division, "label"> | null; readonly now: string;
   readonly artifacts: readonly ArtifactRecord[];
   readonly readHeld: (record: ArtifactRecord) => Promise<WorkerPublicationCapture | null>;
   readonly limit?: number;
 }): Promise<RosterReading | null> {
-  const body = input.prior.payload.registry.bodies.find(row => row.id === input.bodyId);
-  if (!body) return null;
-  const division = governmentOf(input.prior.payload.registry.divisions, body);
+  const { body, division } = input;
   const seen = new Set<string>();
   const candidates = [...input.artifacts].filter(a => !a.partial && /html/i.test(a.contentType) && a.canonicalUrl.startsWith("https://"))
     .sort((a, b) => b.recordedAt.localeCompare(a.recordedAt))
@@ -182,7 +180,7 @@ async function itemsOf(repos: ControlPlaneRepositories, rule: (item: WorkItem) =
 
 /** Each owed roster becomes facts on its own; a member or field that fails its check stays a blank with the reason. */
 export async function publishOwedRosterFacts(input: {
-  readonly repos: ControlPlaneRepositories; readonly store: RoutineDataStore; readonly facts: FactDb & { readonly query: Query };
+  readonly repos: ControlPlaneRepositories; readonly facts: FactDb & { readonly query: Query };
   readonly workItemIds: readonly string[]; readonly now: string;
   readonly readCapture: (id: string, results: readonly WorkerResultRecord[]) => Promise<WorkerPublicationCapture>;
   readonly readHeld?: (record: ArtifactRecord) => Promise<WorkerPublicationCapture | null>;
@@ -193,7 +191,6 @@ export async function publishOwedRosterFacts(input: {
   const { readHeld } = captureReaders;
   const { results: records, readCapture } = await jobWorkerResults(input.repos, input.workItemIds, captureReaders.readCapture);
   const manual = await readValidatorManual(input.repos);
-  const prior = await readRegistryRuntimePrior(input.store, input.now);
   const report: { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[] = [];
   const heldByBody = new Map<string, Promise<RosterReading | null>>();
   for (const id of [...new Set(input.workItemIds)]) {
@@ -201,11 +198,12 @@ export async function publishOwedRosterFacts(input: {
     const plan = item.autonomousPlan;
     if (plan?.publication?.contractId !== "registry-runtime-bindings" || plan.contract.schemaVersion !== 2 || plan.contract.recordClass !== "OFFICIAL_ROSTER") continue;
     const bodyId = plan.publication.bodyId;
-    const body = prior?.payload.registry.bodies.find(row => row.id === bodyId);
     let outcome: NonNullable<WorkItem["publicationOutcome"]>;
     let reading: RosterReading | null = null;
     try {
-      if (!body || !prior) throw new Error("ROSTER_BODY_UNREGISTERED");
+      const identity = await readRegistryBodyIdentity(bodyId, input.facts.query);
+      if (!identity) throw new Error("ROSTER_BODY_UNREGISTERED");
+      const { body, division } = identity;
       const parser = latestParserResult(records, id);
       const pull = parser ? auditPull(records, parser) : null;
       const captures = parser ? await capturesForPublication({ repos: input.repos, workItemId: id, primaryId: (parser.result as { artifactId: string }).artifactId,
@@ -216,7 +214,7 @@ export async function publishOwedRosterFacts(input: {
         if (!heldByBody.has(bodyId)) heldByBody.set(bodyId, (async () => {
           const siblings = await itemsOf(input.repos, other => other.autonomousPlan?.publication?.bodyId === bodyId, [[["autonomousPlan", "publication", "bodyId"], bodyId]]);
           const artifacts = (await Promise.all(siblings.map(other => input.repos.artifacts.read(other.id)))).flat();
-          return heldRosterReading({ bodyId, prior, now: input.now, artifacts, readHeld });
+          return heldRosterReading({ body, division, now: input.now, artifacts, readHeld });
         })());
         reading = await heldByBody.get(bodyId)!;
       }
@@ -225,7 +223,6 @@ export async function publishOwedRosterFacts(input: {
         report.push({ workItemId: id, outcome: item.publicationOutcome });
         continue;
       }
-      const division = governmentOf(prior.payload.registry.divisions, body);
       const siblings = await itemsOf(input.repos, other => other.autonomousPlan?.publication?.bodyId === bodyId || other.autonomousPlan?.contract.subjectId === plan.contract.subjectId,
         [[["autonomousPlan", "publication", "bodyId"], bodyId], [["autonomousPlan", "contract", "subjectId"], plan.contract.subjectId]]);
       const schedule = await heldBodySchedule({ body: { id: bodyId, name: body.name }, divisionLabel: division?.label ?? null,

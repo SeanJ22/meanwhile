@@ -1,0 +1,33 @@
+import { readFile, writeFile } from "node:fs/promises";
+import { dirname, join } from "node:path";
+import { readerEdgeChildRequest } from "../lib/civic-data/reader-edge-child.ts";
+import { publishSupervisorReaderEdge } from "../lib/civic-data/reader-edge-publication.ts";
+import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
+import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
+import { assertRuntimeAuthority } from "../lib/civic-data/runtime-authority.ts";
+import { controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
+import { ensureMeetingDoors } from "../lib/doors/meeting-doors.ts";
+import { flushDatabaseTransfer } from "../lib/db/transfer.ts";
+import { installFatalLine } from "../lib/ops/fatal-line.ts";
+import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
+import { requiredAssignment } from "./cli-args.mts";
+
+let step = "reading the publication request";
+installFatalLine("publish-reader-edge", () => step);
+assertRuntimeAuthority({ capabilities: ["ROUTINE_SUPERVISOR"] });
+const path = requiredAssignment(process.argv.slice(2), "request", "READER_EDGE_CHILD_REQUEST_REQUIRED");
+const request = readerEdgeChildRequest(JSON.parse(await readFile(path, "utf8")));
+installNeonRequestDeadline();
+prepareProductionCivicDataWrite();
+step = "loading this state's meeting and outcome doors";
+const connection = controlPlaneUrlFromEnv();
+if (!connection) throw new Error("READER_EDGE_DOOR_REGISTRY_UNCONFIGURED");
+const repos = await createPgRepositories(connection, request.observedAt, { skipBootstrap: true });
+const doors = await ensureMeetingDoors({ repo: repos.doors, state: request.state });
+if (!doors.ready) throw new Error(doors.reason);
+step = "publishing changed reader artifacts";
+const outcome = await publishSupervisorReaderEdge(new PostgresRoutineDataStore(), request.observedAt, request.selected,
+  { state: request.state, publicationFingerprint: request.publicationFingerprint });
+await writeFile(join(dirname(path), "outcome.json"), JSON.stringify(outcome), { mode: 0o600 });
+await flushDatabaseTransfer();
+process.exit(outcome.ok ? 0 : 2);

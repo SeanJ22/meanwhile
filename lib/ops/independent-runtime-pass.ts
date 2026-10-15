@@ -3,6 +3,36 @@ export interface IndependentRuntimeOperation {
   readonly run: () => Promise<void>;
 }
 
+export class DeadlineRuntimePool {
+  readonly #capacity: number;
+  readonly #waiting: { deadline: number; run: () => Promise<void>; resolve: () => void; reject: (error: unknown) => void }[] = [];
+  #active = 0;
+
+  constructor(capacity: number) {
+    if (!Number.isSafeInteger(capacity) || capacity < 1) throw new Error("DEADLINE_RUNTIME_CAPACITY_INVALID");
+    this.#capacity = capacity;
+  }
+
+  run(deadline: number, run: () => Promise<void>): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      this.#waiting.push({ deadline, run, resolve, reject });
+      this.#waiting.sort((left, right) => left.deadline - right.deadline);
+      this.#drain();
+    });
+  }
+
+  #drain(): void {
+    while (this.#active < this.#capacity && this.#waiting.length) {
+      const next = this.#waiting.shift()!;
+      this.#active++;
+      void Promise.resolve().then(next.run).then(next.resolve, next.reject).finally(() => {
+        this.#active--;
+        this.#drain();
+      });
+    }
+  }
+}
+
 export type IndependentRuntimeOutcome =
   | { readonly id: string; readonly state: "COMPLETED"; readonly error: null }
   | { readonly id: string; readonly state: "FAILED"; readonly error: string };

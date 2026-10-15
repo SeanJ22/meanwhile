@@ -12,9 +12,9 @@ export async function withMeetingFacts(meetings: readonly Meeting[], query: Quer
   const owner = new Map<string, number>();
   meetings.forEach((meeting, index) => { for (const id of [meeting.id, ...meeting.mergedMeetingIds ?? []]) owner.set(meetingEntityId(id), index); });
   const scope = state === undefined ? "TRUE" : state === null || state === "US" ? "e.state IS NULL" : "e.state = $2::char(2)";
-  const rows = await query(`SELECT f.entity_id, f.field, f.value, f.quote, f.checked_at, s.url
+  const rows = await query(`SELECT f.entity_id, f.field, f.value, f.quote, f.checked_at, f.provenance_kind, s.fetched_at, s.url
     FROM entity e CROSS JOIN LATERAL (
-      SELECT entity_id, field, value, quote, checked_at, source_copy_id FROM fact
+      SELECT entity_id, field, value, quote, checked_at, provenance_kind, source_copy_id FROM fact
       WHERE entity_id = e.id AND status = 'live' AND field IN ('title', 'starts_at', 'location', 'agenda_url', 'video_url') OFFSET 0
     ) f JOIN source_copy s ON s.id = f.source_copy_id
     WHERE e.id = ANY($1::text[]) AND ${scope}`, typeof state === "string" && state !== "US" ? [[...owner.keys()], state] : [[...owner.keys()]]);
@@ -24,6 +24,10 @@ export async function withMeetingFacts(meetings: readonly Meeting[], query: Quer
     const field = FIELD[String(row.field) as keyof typeof FIELD];
     if (index === undefined || !field) continue;
     const meeting = out[index]!;
+    const prior = meeting.fieldSources?.[field] ?? meeting.provenance;
+    const observed = Math.max(new Date(row.checked_at as string).getTime(), new Date(row.fetched_at as string).getTime() || 0);
+    const verified = Math.max(Date.parse(prior?.verifiedAt ?? "") || 0, Date.parse(prior?.collectedAt ?? "") || 0);
+    if (row.provenance_kind !== "OWNER" && verified > observed) continue;
     const at = new Date(row.checked_at as string).toISOString();
     const source: Provenance = { sourceUrl: String(row.url), sourceOrg: new URL(String(row.url)).hostname, collectedAt: at, verifiedAt: at, quote: String(row.quote) };
     const value = row.value as unknown;

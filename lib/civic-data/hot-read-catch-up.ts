@@ -30,27 +30,17 @@ import {
 } from "./reader-repair-protocol.ts";
 import { STANDING_NEON_REQUEST_DEADLINE_MS } from "../ops/neon-request-deadline.ts";
 
-/**
- * While a pass is held open, a meeting lane with no read of this pass queued or running and its same-host gap
- * behind it starts the due sitting-window read it owes soonest, earliest deadline first across lanes, at most once a
- * pass. No read starts that could outlast the pass's time limit.
- */
+
 export interface HotReadCandidate {
   readonly task: RoutineSourceTask;
   readonly clock: RoutineTaskClock | undefined;
   readonly lastConsideredAt: string | null;
 }
 
-/**
- * Catch-up reads share the host with the pass's four children (source reads,
- * then Reader repair), so at most two run at once: six children at the peak.
- */
+
 export const HOT_READ_CATCH_UP_CONCURRENCY = Math.max(1, Math.floor(ROUTINE_CHILD_CONCURRENCY / 2));
 
-/**
- * A lane not ready now is looked at again within this: a read falling due or a
- * body turning hourly waits at most a minute, as a lane's same-host gap does.
- */
+
 export const HOT_READ_CATCH_UP_RECHECK_MS = 60_000;
 
 /** The longest one catch-up read can take: the child's ceiling and its settlement. */
@@ -69,17 +59,13 @@ function ascending(left: number, right: number): number {
   return left < right ? -1 : left > right ? 1 : 0;
 }
 
-/**
- * The catch-up reads to start at `nowMs`: for each lane with no read of this
- * pass queued or running and its same-host gap behind it, the due sitting-window
- * read it owes soonest (least recently considered on a tie); across lanes,
- * earliest deadline first, up to `slots`. `clockReads` are the pass's own.
- */
+
 export function hotReadCatchUpAdmission(input: {
   readonly nowMs: number;
   readonly candidates: readonly HotReadCandidate[];
   readonly clockReads: Parameters<typeof sittingWindowSignals>[0];
   readonly statedEnds: Parameters<typeof sittingWindowSignals>[2];
+  readonly sourceIds?: (taskId: string) => readonly string[];
   readonly laneLastEndedMs: ReadonlyMap<string, number>;
   readonly busyLanes: ReadonlySet<string>;
   readonly slots: number;
@@ -91,9 +77,6 @@ export function hotReadCatchUpAdmission(input: {
   let recheckAtMs = nowMs + HOT_READ_CATCH_UP_RECHECK_MS;
   // No child is free: a running read settling is the next change that matters.
   if (input.slots === 0) return { start: [], pastLimit: [], recheckAtMs };
-  // A task due as hourly is the only kind that can be due at all (hourly is the
-  // shortest schedule, and an unknown window reads as hourly), so the window is
-  // decided only for those, from their own clocks and the partitions they follow.
   const possible = input.candidates.flatMap((candidate, index) =>
     candidate.task.contract.schedule?.kind === "SITTING_WINDOW" &&
     !input.busyLanes.has(candidate.task.acquisitionFailureDomain) &&
@@ -101,8 +84,9 @@ export function hotReadCatchUpAdmission(input: {
       ? [{ ...candidate, index }]
       : []);
   if (possible.length === 0) return { start: [], pastLimit: [], recheckAtMs };
-  const decides = new Set(possible.flatMap(({ task }) => [task.id, ...sittingWindowSourceIds(task.id)]));
-  const signals = sittingWindowSignals(input.clockReads.filter(({ task }) => decides.has(task.id)), nowMs, input.statedEnds);
+  const sourceIds = input.sourceIds ?? sittingWindowSourceIds;
+  const decides = new Set(possible.flatMap(({ task }) => [task.id, ...sourceIds(task.id)]));
+  const signals = sittingWindowSignals(input.clockReads.filter(({ task }) => decides.has(task.id)), nowMs, input.statedEnds, sourceIds);
   const ready: { readonly task: RoutineSourceTask; readonly deadlineMs: number; readonly consideredMs: number; readonly index: number }[] = [];
   possible.forEach(({ task, clock, lastConsideredAt, index }) => {
     const lane = task.acquisitionFailureDomain;
@@ -156,11 +140,6 @@ export interface HotReadCatchUpResult<R> {
   readonly error?: string;
 }
 
-/**
- * Start due meeting reads while `work` holds the pass open, and return the
- * work's own result with the reads made. Every read begun settles before this
- * returns. A read due while the gate is closed starts as soon as it opens.
- */
 export async function runHotReadCatchUp<R>(input: HotReadCatchUpInput<R>): Promise<HotReadCatchUpResult<R>> {
   if (!Number.isSafeInteger(input.concurrency) || input.concurrency <= 0) {
     throw new Error(`HOT_READ_CATCH_UP_CONCURRENCY_INVALID:${input.concurrency}`);
@@ -214,14 +193,6 @@ export async function runHotReadCatchUp<R>(input: HotReadCatchUpInput<R>): Promi
   return error === undefined ? { work, reads } : { work, reads, error };
 }
 
-/**
- * One routine pass: its source reads, then its Reader repair, with catch-up
- * reads for as long as either holds the pass open. `startRepair` is called
- * once the source reads and every catch-up read begun beside them have
- * settled; it launches the repair and returns the gate that opens when no
- * running repair can race a meeting promotion. A catch-up defect in the source
- * phase stops catch-up for the rest of the pass.
- */
 export async function runRoutinePassWithHotReadCatchUp<S, R>(input: {
   readonly source: Promise<S>;
   readonly startRepair: (source: S) => { readonly repair: Promise<R>; readonly unblocked: Promise<void> };
@@ -280,12 +251,6 @@ function routinePassOuterBounds(
   };
 }
 
-/**
- * The outer time limit the standing pilot puts on a routine pass, from the same
- * inputs it uses (scripts/pilot-runner.mts, `ROUTINE_DATA_TIMEOUT_MS`), less
- * the coordination and grace the pass keeps for persisting its outcome: no
- * catch-up read may run past this.
- */
 export function routinePassWorkDeadlineMs(
   startedAtMs: number,
   readerDomains: readonly Pick<RoutineReaderRepairDomain, "mode">[],
@@ -296,10 +261,6 @@ export function routinePassWorkDeadlineMs(
   return startedAtMs + outer - ROUTINE_RUNNER_COORDINATION_AND_PERSISTENCE_BUDGET_MS - ROUTINE_RUNNER_OUTER_GRACE_MS;
 }
 
-/**
- * The same limit for a catch-up read begun beside the source reads: the Reader
- * repair starts after it settles, so the repair's own worst case stays free.
- */
 export function routinePassSourceCatchUpDeadlineMs(
   startedAtMs: number,
   readerDomains: readonly Pick<RoutineReaderRepairDomain, "mode">[],
@@ -313,11 +274,6 @@ export function routinePassSourceCatchUpDeadlineMs(
   return routinePassWorkDeadlineMs(startedAtMs, readerDomains, tasks) - readerWorstMs;
 }
 
-/**
- * The repair domains a catch-up read could race: the meeting aggregate (it
- * composes every partition) and the single repair of any task catch-up may read.
- * The runner launches these first and resumes catch-up once they settle.
- */
 export function repairDomainRacesHotReads(
   domain: Pick<RoutineReaderRepairDomain, "mode" | "contracts">,
   hotTaskIds: ReadonlySet<string>,

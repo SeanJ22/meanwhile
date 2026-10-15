@@ -1,8 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { withSourceTransport } from "./helpers/source-fetch.ts";
+import { runWithSourceFetch, SourceFetchDeferred } from "../lib/sources/fetch-source.ts";
+import { WEBSITE_BACKOFF_MS } from "../lib/control-plane/website-pacing.ts";
 
 import {
-  REQUEST_SPACING_MS,
   SourceHttpError,
   decodeEntities,
   politeGetJson,
@@ -27,14 +29,7 @@ function fakeFetch(
     const spec = responses[Math.min(i, responses.length - 1)];
     i += 1;
     calls.push({ url, headers: (init?.headers ?? {}) as Record<string, string> });
-    return {
-      ok: spec.status >= 200 && spec.status < 300,
-      status: spec.status,
-      headers: {
-        get: (name: string) => spec.headers?.[name.toLowerCase()] ?? null,
-      },
-      text: async () => spec.body ?? "",
-    };
+    return new Response(new TextEncoder().encode(spec.body ?? ""), { status: spec.status, headers: spec.headers });
   }) as unknown as typeof fetch;
 }
 
@@ -54,55 +49,47 @@ test("http: no request carries a borrowed browser identity or browser-only navig
   }
 });
 
-test("http: a 429 is retried, and Retry-After is honoured rather than the default backoff", async () => {
+test("http: a 429 defers every request until Retry-After and the next due read succeeds", async () => {
   const calls: Call[] = [];
-  const started = Date.now();
-  const text = await politeGetText("https://example.gov/a", {
-    fetchImpl: fakeFetch(
-      [
-        { status: 429, headers: { "retry-after": "1" } },
-        { status: 200, body: "the document" },
-      ],
-      calls,
-    ),
-  });
-  const elapsed = Date.now() - started;
-
-  assert.equal(text.text, "the document");
-  assert.equal(calls.length, 2, "the 429 was not retried");
-  assert.ok(
-    elapsed >= 1000,
-    `Retry-After said 1 second and the client waited ${elapsed}ms — a server asking us to slow down is not advisory`,
-  );
+  let now = Date.parse("2026-10-15T12:00:00Z");
+  const transport = fakeFetch([{ status: 429, headers: { "retry-after": "120" } }, { status: 200, body: "the document" }], calls);
+  await withSourceTransport(transport, () => runWithSourceFetch({ runtime: { now: () => now } }, async () => {
+    await assert.rejects(politeGetText("https://example.gov/a"), (error: unknown) => error instanceof SourceHttpError && error.status === 429);
+    now += 119_999;
+    await assert.rejects(politeGetText("https://example.gov/other"), (error: unknown) => error instanceof SourceFetchDeferred && error.until === Date.parse("2026-10-15T12:02:00Z"));
+    assert.equal(calls.length, 1, "a request reached the publisher before Retry-After");
+    now += 1;
+    assert.equal((await politeGetText("https://example.gov/a")).text, "the document");
+    assert.equal(calls.length, 2, "the due read did not retry the held source");
+  }));
 });
 
-test("http: a 500 is retried on exponential backoff when no Retry-After is given", async () => {
+test("http: a 500 without Retry-After holds the website for the shared backoff", async () => {
   const calls: Call[] = [];
-  const started = Date.now();
-  const result = await politeGetText("https://example.gov/b", {
-    fetchImpl: fakeFetch([{ status: 500 }, { status: 200, body: "ok" }], calls),
-  });
-  assert.equal(result.text, "ok");
-  assert.equal(calls.length, 2);
-  assert.ok(
-    Date.now() - started >= REQUEST_SPACING_MS,
-    "the retry did not wait at least one spacing interval",
-  );
+  let now = Date.parse("2026-10-15T12:00:00Z");
+  await withSourceTransport(fakeFetch([{ status: 500 }, { status: 200, body: "ok" }], calls), () => runWithSourceFetch({ runtime: { now: () => now } }, async () => {
+    await assert.rejects(politeGetText("https://example.gov/b"), (error: unknown) => error instanceof SourceHttpError && error.status === 500);
+    now += WEBSITE_BACKOFF_MS - 1;
+    await assert.rejects(politeGetText("https://example.gov/another"), SourceFetchDeferred);
+    assert.equal(calls.length, 1, "another reader bypassed the host backoff");
+    now += 1;
+    assert.equal((await politeGetText("https://example.gov/b")).text, "ok");
+    assert.equal(calls.length, 2);
+  }));
 });
 
-test("http: retries are BOUNDED — a permanently failing host is not hammered", async () => {
+test("http: a permanently failing host receives only one request per shared backoff", async () => {
   const calls: Call[] = [];
-  await assert.rejects(
-    politeGetText("https://example.gov/c", {
-      fetchImpl: fakeFetch([{ status: 503 }], calls),
-    }),
-    (error: unknown) => error instanceof SourceHttpError && error.status === 503,
-  );
-  assert.ok(
-    calls.length <= 3,
-    `${calls.length} requests to a failing host — never degrade a public body's service`,
-  );
-  assert.ok(calls.length > 1, "a 503 must be retried at least once");
+  let now = Date.parse("2026-10-15T12:00:00Z");
+  await withSourceTransport(fakeFetch([{ status: 503 }], calls), () => runWithSourceFetch({ runtime: { now: () => now } }, async () => {
+    await assert.rejects(politeGetText("https://example.gov/c"), (error: unknown) => error instanceof SourceHttpError && error.status === 503);
+    const waiting = await Promise.allSettled(Array.from({ length: 12 }, (_, index) => politeGetText(`https://example.gov/c/${index}`)));
+    assert.ok(waiting.every(result => result.status === "rejected" && result.reason instanceof SourceFetchDeferred));
+    assert.equal(calls.length, 1, "concurrent readers hammered a failing publisher");
+    now += WEBSITE_BACKOFF_MS;
+    await assert.rejects(politeGetText("https://example.gov/c"), (error: unknown) => error instanceof SourceHttpError && error.status === 503);
+    assert.equal(calls.length, 2, "the failing source was not retried when due");
+  }));
 });
 
 test("http: a 404 is NOT retried — it is an answer, not a wobble", async () => {
@@ -142,7 +129,6 @@ test("http: a rung is a number from the CLAUDE.md ladder, and never a `blocked` 
 });
 
 test("http: an injected fetchImpl is never routed around, even on a 403", async () => {
-  /* The 403 ladder shells out to curl; with an injected fetch the escalation must not fire. */
   const calls: Call[] = [];
   await assert.rejects(
     politeGetText("https://example.gov/g", {
@@ -203,9 +189,5 @@ test("http: entity decoding covers decimal AND hex, which is how ’ reached a r
 });
 
 test("http: &amp; is decoded LAST, so &amp;lt; does not become a tag", () => {
-  /*
-   * Decoding `&amp;` first turns `&amp;lt;` into `&lt;` and then into `<`,
-   * which is an injection an ordinary-looking body name can carry.
-   */
   assert.equal(decodeEntities("&amp;lt;script&amp;gt;"), "&lt;script&gt;");
 });

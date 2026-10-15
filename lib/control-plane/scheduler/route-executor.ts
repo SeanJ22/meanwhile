@@ -1,4 +1,4 @@
-import { fetchSource, runWithSourceFetch } from "../../sources/fetch-source.ts";
+import { fetchSource, runWithSourceFetch, SourceFetchDeferred } from "../../sources/fetch-source.ts";
 
 
 import { assertPublicUrl } from "../../hunt/egress.ts";
@@ -54,6 +54,7 @@ export const realOpen: OpenOne = async ({ url, method, headers, body, timeoutMs 
       contentRange: response.headers.get("content-range"),
     };
   } catch (error) {
+    if (error instanceof SourceFetchDeferred) throw error;
     return {
       status: null,
       bytes: 0,

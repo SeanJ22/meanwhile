@@ -1,3 +1,4 @@
+import { meetingPublication } from "./helpers/meeting-publication.ts";
 import assert from "node:assert/strict";
 import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -93,7 +94,7 @@ async function publishEdge(withPromoted: boolean, overrides: typeof PROMOTED = {
   };
   const store = new LocalFileArtifactStore(dir);
   const metadata = { sourceThrough: snapshot.generatedAt, retrievedAt: snapshot.generatedAt, promotedThrough: snapshot.generatedAt };
-  assert.equal((await publishReaderEdgeArtifacts(snapshot, metadata, { store: scopedReaderArtifactStore(store, "AZ") })).status, "PUBLISHED");
+  assert.equal((await publishReaderEdgeArtifacts(meetingPublication(snapshot), metadata, { store: scopedReaderArtifactStore(store, "AZ") })).status, "PUBLISHED");
   const result = await publishReaderEdgeArtifacts(null, {
     sourceThrough: snapshot.generatedAt,
     retrievedAt: snapshot.generatedAt,

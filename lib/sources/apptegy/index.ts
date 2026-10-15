@@ -1,12 +1,14 @@
-/**
- * @freshness-reads-here
- *
- * The clock stamps in this file are minted by the code path that performs the read: the freshness date
- * is taken at the moment of the fetch.
- */
+// @freshness-reads-here
 import type { BodySourceWiring } from "../../registry/source-wiring.ts";
 import { isPlacelessLocation, unplacedVenueGap } from "../../meetings/venue-cache.ts";
 import { decodeEntities, politeGetJson } from "../http.ts";
+
+export function apptegyCalendarUrl(wiring: BodySourceWiring, startsAfter?: string): string {
+  const first = new URL(`${wiring.config.apiBase}/cms/events`);
+  first.searchParams.set("locale", "en"); first.searchParams.set("page_no", "1");
+  if (startsAfter) first.searchParams.set("start_date", startsAfter.slice(0, 10));
+  return first.href;
+}
 import type {
   Meeting,
   MeetingQuery,
@@ -19,29 +21,11 @@ import {
   type Accounted,
 } from "../normalize-account.ts";
 
-/**
- * Apptegy / Thrillshare meeting source: the district website's own events API
- * (`/api/v4/o/<org>/cms/events`), the JSON the page itself renders from. The venue string and
- * coordinates are published by the district itself, so no venue cache is needed. Only events whose title
- * matches the wiring row's `titleMatch` are meetings; the rest count as `notConfigured`.
- */
 
 const SOURCE_NAME = "apptegy";
 
-/**
- * Pages to walk before stopping (20 events per page). A runaway stop, not a coverage cap: the walk
- * normally ends when a page runs past the query's forward horizon, and reaching the cap with a next page
- * still advertised throws {@link ApptegyPaginationError}.
- */
 const MAX_PAGES = 12;
 
-/**
- * The walk reached its safety cap with the server still offering more.
- *
- * It carries the numbers a reader needs to decide whether to raise the cap or
- * fix the walk: how many pages were fetched, how many events those held, and
- * the exact URL that was not followed.
- */
 export class ApptegyPaginationError extends Error {
   readonly pagesFetched: number;
   readonly eventsFetched: number;
@@ -89,11 +73,6 @@ function statusOf(startsAt: string, now: Date): MeetingStatus {
   return Date.parse(startsAt) < now.getTime() ? "CONCLUDED" : "SCHEDULED";
 }
 
-/**
- * Is this event announcing a cancellation? The event schema carries no status field, so a cancellation
- * can only reach us as text the district typed. Deliberately narrow: a meeting wrongly marked cancelled
- * keeps someone at home.
- */
 export function isCancelled(event: {
   title?: string | null;
   description?: string | null;
@@ -163,9 +142,6 @@ export function makeApptegySource(
         const lng = coordinate(event.longitude);
         const venueName = (event.venue ?? "").trim();
         const placed = Boolean(venueName) && Number.isFinite(lat) && Number.isFinite(lng);
-        // No placeable venue never suppresses the sitting: a venue naming no building is online (`placeless`);
-        // any other venue renders in the district's own words (`STATED_NOT_PLACED`); no venue is the district's
-        // own gap (`NOT_STATED_BY_PUBLISHER`).
         const online = !placed && venueName && isPlacelessLocation(venueName)
           ? { label: venueName, joinUrl: null }
           : null;
@@ -230,18 +206,13 @@ export function makeApptegySource(
     async fetch(query: MeetingQuery): Promise<ApptegyRaw[]> {
       // Ask for the recent past as well as the future: the feed defaults to upcoming-only, and `?start_date=`
       // is honoured through its own `meta.links.next`. The query's `startsAfter` is the window.
-      const startDate = query.startsAfter?.slice(0, 10);
       const horizonMs = query.startsBefore ? Date.parse(query.startsBefore) : NaN;
 
       const collected: ApptegyRaw[] = [];
       for (const wiring of wiringRows) {
         const events: ApptegyEvent[] = [];
-        const first = new URL(`${wiring.config.apiBase}/cms/events`);
-        first.searchParams.set("locale", "en");
-        first.searchParams.set("page_no", "1");
-        if (startDate) first.searchParams.set("start_date", startDate);
-
-        let url: string | null = first.toString();
+        const first = apptegyCalendarUrl(wiring, query.startsAfter);
+        let url: string | null = first;
         // A-006 · told apart from running out of pages, because only one of
         // the two is an end of data.
         let stoppedAtHorizon = false;
@@ -255,9 +226,6 @@ export function makeApptegySource(
           const batch = body.events ?? [];
           events.push(...batch);
 
-          // The feed runs forward in time, so once a page ends past the
-          // window there is nothing further to want. Stopping here is what
-          // keeps a 90-day lookback from turning into a walk to next May.
           const last = batch[batch.length - 1]?.start_at;
           if (last && Number.isFinite(horizonMs) && Date.parse(last) > horizonMs) {
             stoppedAtHorizon = true;

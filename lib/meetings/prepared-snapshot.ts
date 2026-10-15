@@ -1,6 +1,8 @@
 import { routineScopeState } from "../civic-data/state-scope.ts";
-import { factReader, factsVersion } from "../facts/db.ts";
+import { factReader } from "../facts/db.ts";
 import { createHash } from "node:crypto";
+import { runBoundedWorkPool } from "../ops/bounded-work-pool.ts";
+import type { MeetingPublication } from "./edge-artifacts.ts";
 
 import {
   PostgresRoutineDataStore,
@@ -28,6 +30,8 @@ import {
   type MeetingPartitionReadback,
   type MeetingsProjectionReadResult,
   type MeetingsSnapshot,
+  type SnapshotSourceReport,
+  type SnapshotCounts,
 } from "./snapshot.ts";
 import {
   applyMeetingFreshChecks,
@@ -94,13 +98,93 @@ export type PrepareMeetingSnapshotResult =
   | { readonly status: "FAILED"; readonly error: string; readonly lastValidGeneratedAt: string | null }
   | { readonly status: "NOT_COMPOSABLE"; readonly detail: string; readonly lastValidGeneratedAt: string | null };
 
+export const MEETING_LAYOUT_COUPLING = { contractId: "meeting-layout", versionId: "3" } as const;
+const HELD_COUPLING_PREFIX = "meeting-collision:";
+
+export interface PreparedMeetingChunk {
+  readonly key: string;
+  readonly scope: string;
+  readonly ocdId: string | null;
+  readonly bodyIds: readonly string[];
+  readonly meetingIds: readonly string[];
+  readonly documentIds: readonly string[];
+  readonly fingerprint: string;
+  readonly generatedAt: string;
+  readonly counts: SnapshotCounts;
+  readonly sources: readonly SnapshotSourceReport[];
+  readonly composedFrom: readonly FreshCheckCoupling[];
+  readonly sourceThrough: string | null;
+  readonly retrievedAt: string | null;
+  readonly promotedThrough: string | null;
+}
+
+export interface PreparedMeetingManifest {
+  readonly formatVersion: 2;
+  readonly chunks: readonly PreparedMeetingChunk[];
+  readonly heldChunks: readonly { readonly chunk: PreparedMeetingChunk; readonly detail: string }[];
+  readonly unavailableSources: readonly SnapshotSourceReport[];
+}
+
+function meetingManifest(value: unknown): PreparedMeetingManifest {
+  const manifest = value as PreparedMeetingManifest;
+  if (manifest?.formatVersion !== 2 || !Array.isArray(manifest.chunks) || !Array.isArray(manifest.heldChunks) ||
+      [...manifest.chunks, ...manifest.heldChunks.map(held => held.chunk)].some(chunk =>
+        !Array.isArray(chunk.meetingIds) || !Array.isArray(chunk.documentIds))) throw new Error("PREPARED_MEETING_LAYOUT_INVALID");
+  return manifest;
+}
+
+function observedCouplings(couplings: readonly PreparedProjectionCoupling[]): PreparedProjectionCoupling[] {
+  // Rejected versions remain observed without restamping the accepted facts they could not replace.
+  const observed = new Map(couplings.filter(entry => entry.contractId.startsWith(HELD_COUPLING_PREFIX))
+    .map(entry => [entry.contractId.slice(HELD_COUPLING_PREFIX.length), entry.versionId]));
+  return [...couplings.filter(entry => !entry.contractId.startsWith(HELD_COUPLING_PREFIX) && !observed.has(entry.contractId)),
+    ...[...observed].map(([contractId, versionId]) => ({ contractId, versionId }))];
+}
+
+function chunkCollisions(chunks: readonly PreparedMeetingChunk[]): Map<string, string> {
+  const invalid = new Map<string, string>();
+  for (const [field, code] of [["meetingIds", "MEETING_PARTITION_ID_COLLISION"], ["documentIds", "MEETING_PARTITION_DOCUMENT_COLLISION"]] as const) {
+    const owners = new Map<string, string>();
+    for (const chunk of chunks) for (const id of chunk[field]) {
+      const owner = owners.get(id);
+      if (owner !== undefined && owner !== chunk.key) {
+        invalid.set(owner, `${code}:${id}`);
+        invalid.set(chunk.key, `${code}:${id}`);
+      } else owners.set(id, chunk.key);
+    }
+  }
+  return invalid;
+}
+
+function compositionOf(partitions: readonly MeetingPartitionReadback[]): FreshCheckCoupling[] {
+  return partitions.flatMap(partition => {
+    const accepted = partition.kind === "PROMOTED" && partition.versionId
+      ? { contractId: partition.contractId, versionId: partition.versionId }
+      : partition.heldFrom;
+    return [...(accepted ? [{ contractId: accepted.contractId, versionId: accepted.versionId,
+      ...(partition.freshCheck ? { routes: partition.freshCheck.routes, ...(partition.freshCheck.checkedAt ? { checkedAt: partition.freshCheck.checkedAt } : {}) } : {}) }] : []),
+    ...(partition.history ? [partition.history] : [])];
+  });
+}
+
+const latest = (values: readonly (string | null)[]) => values.filter((value): value is string => value !== null).sort().at(-1) ?? null;
+
+async function meetingFactVersions(state: string | undefined): Promise<ReadonlyMap<string, string>> {
+  const query = factReader();
+  if (!query) return new Map();
+  const postal = state?.replace(/^US-/, "");
+  const rows = await query(`SELECT e.parent_id AS body_id, coalesce(max(f.id), 0) AS newest,
+      count(*) FILTER (WHERE f.status = 'live') AS live
+    FROM entity e CROSS JOIN LATERAL (SELECT id,status FROM fact WHERE entity_id=e.id OFFSET 0) f
+    WHERE e.kind='meeting' AND ${postal && postal !== "US" ? "e.state=$1::char(2)" : "e.state IS NULL"}
+    GROUP BY e.parent_id`, postal && postal !== "US" ? [postal] : []);
+  return new Map(rows.filter(row => typeof row.body_id === "string").map(row => [String(row.body_id), `facts:${row.newest}.${row.live}`]));
+}
+
 export async function preparePublishedMeetingSnapshot(
   store: RoutineDataStore,
   now: string = new Date().toISOString(),
-  options: {
-    readonly aggregate?: () => Promise<MeetingsProjectionReadResult>;
-    readonly state?: string;
-  } = {},
+  options: { readonly aggregate?: () => Promise<MeetingsProjectionReadResult>; readonly state?: string } = {},
 ): Promise<PrepareMeetingSnapshotResult> {
   const requestedState = options.state ?? process.env.WTP_SOURCE_STATE;
   const state = requestedState ? routineScopeState(requestedState) : undefined;
@@ -108,127 +192,127 @@ export async function preparePublishedMeetingSnapshot(
   const partitions = [...MEETING_PARTITION_CONTRACTS].filter(partition => !state || routineScopeState(partition.bodyId) === state);
   const preparedScope = preparedMeetingScope(state);
   const historyContracts = partitions.map(meetingHistoryContract);
-  const scopes = [...partitions.map((partition) => partition.scope), ...historyContracts.map(contract => contract.scope)];
-  const versionByScope = new Map<string, string>();
   const identityByScope = new Map<string, PromotedPointerIdentity>();
+  let prepared: Awaited<ReturnType<RoutineDataStore["readPreparedReaderProjectionCoupling"]>> = null;
   try {
-    for (const promotion of await store.readPromotionIdentities(MEETINGS_RECORD_CLASS, scopes)) {
-      versionByScope.set(promotion.scope, promotion.versionId);
-      identityByScope.set(promotion.scope, promotion);
+    for (const promotion of await store.readPromotionIdentities(MEETINGS_RECORD_CLASS,
+      [...partitions.map(partition => partition.scope), ...historyContracts.map(contract => contract.scope)])) identityByScope.set(promotion.scope, promotion);
+    const awaiting = HELD_MEETING_PARTITIONS.filter(held => (!state || routineScopeState(held.bodyId) === state) && !identityByScope.has(held.successorScope));
+    for (const promotion of await store.readPromotionIdentities(MEETINGS_RECORD_CLASS, awaiting.map(held => held.scope))) identityByScope.set(promotion.scope, promotion);
+    prepared = await store.readPreparedReaderProjectionCoupling(MEETINGS_RECORD_CLASS, preparedScope);
+    const factVersions = await meetingFactVersions(state);
+    const facts = { contractId: MEETING_FACTS_COUPLING, versionId: factVersions.size
+      ? createHash("sha256").update(JSON.stringify([...factVersions].sort(([a], [b]) => a.localeCompare(b)))).digest("hex") : "facts:none" };
+    const couplingsFor = (members: readonly MeetingPartitionContract[]): PreparedProjectionCoupling[] => members.flatMap(partition => {
+      const own = identityByScope.get(partition.scope);
+      const held = own ? undefined : heldMeetingPartitionFor(partition.id);
+      const predecessor = held && identityByScope.get(held.scope);
+      const history = meetingHistoryContract(partition);
+      const historyVersion = identityByScope.get(history.scope);
+      return [...(own ? [{ contractId: partition.id, versionId: own.versionId }]
+        : predecessor && held ? [{ contractId: held.id, versionId: predecessor.versionId }] : []),
+      ...(historyVersion ? [{ contractId: history.id, versionId: historyVersion.versionId }] : [])];
+    });
+    const currentCoupling = couplingsFor(partitions);
+    const currentFingerprint = couplingFingerprint([...currentCoupling, facts, MEETING_LAYOUT_COUPLING]);
+    if (prepared && couplingFingerprint(observedCouplings(prepared.composedFrom)) === currentFingerprint) {
+      return { status: "CURRENT", sequence: prepared.sequence, coupledPartitions: currentCoupling.length, generatedAt: prepared.generatedAt,
+        ...preparedChecks(prepared.generatedAt, withCurrentChecks(prepared.composedFrom as readonly FreshCheckCoupling[], identityByScope)) };
     }
-    const awaiting = HELD_MEETING_PARTITIONS.filter((held) => (!state || routineScopeState(held.bodyId) === state) && !versionByScope.has(held.successorScope));
-    if (awaiting.length > 0) {
-      for (const promotion of await store.readPromotionIdentities(MEETINGS_RECORD_CLASS, awaiting.map((held) => held.scope))) {
-        versionByScope.set(promotion.scope, promotion.versionId);
-        identityByScope.set(promotion.scope, promotion);
+    const prior = prepared?.composedFrom.some(entry => entry.contractId === MEETING_LAYOUT_COUPLING.contractId && entry.versionId === MEETING_LAYOUT_COUPLING.versionId)
+      ? await store.readPreparedReaderProjection(MEETINGS_RECORD_CLASS, preparedScope) : null;
+    const priorManifest = prior ? meetingManifest(prior.payload) : null;
+    const accepted = new Map((priorManifest?.chunks ?? []).map(chunk => [chunk.key, chunk]));
+    const previous = new Map([...accepted, ...(priorManifest?.heldChunks ?? []).map(({ chunk }) => [chunk.key, chunk] as const)]);
+    const byPlace = new Map<string, MeetingPartitionContract[]>();
+    for (const partition of partitions) {
+      const key = options.aggregate ? "aggregate" : partition.ocdId?.split("#")[0] ?? partition.bodyId.split("#")[0]!;
+      const members = byPlace.get(key) ?? [];
+      members.push(partition); byPlace.set(key, members);
+    }
+    if (options.aggregate && !byPlace.size) byPlace.set("aggregate", []);
+    const results = await runBoundedWorkPool([...byPlace.entries()].sort(([a], [b]) => a.localeCompare(b)), 8, async ([key, members]) => {
+      const fingerprint = couplingFingerprint([...couplingsFor(members), ...members.map(member => ({
+        contractId: `facts:${member.bodyId}`, versionId: factVersions.get(member.bodyId) ?? "facts:none",
+      }))]);
+      const former = previous.get(key);
+      if (former?.fingerprint === fingerprint) return { chunk: former, unavailable: [] as SnapshotSourceReport[] };
+      const aggregate = options.aggregate ? await options.aggregate() : await readMeetingsProjection({ store, now, bypassCache: true, state, partitions: members });
+      if (aggregate.kind !== "PROMOTED") return { chunk: null, unavailable: members.map(partition => ({ source: partition.meetingSource,
+        ok: false, error: `${partition.bodyId}: ${aggregate.detail}`, failure: "WALL" as const, fetched: 0, normalized: 0,
+        drops: { placeless: 0, unknownVenue: 0, unplaceableInTime: 0, notConfigured: 0 },
+        ...(partition.ocdId ? { unreachableOcdIds: [partition.ocdId] } : {}) })) };
+      const composedFrom = compositionOf(aggregate.partitions);
+      let value = aggregate.value;
+      const missingHistory = aggregate.partitions.filter(partition => partition.historyIssue);
+      if (former && missingHistory.length) {
+        const row = await store.readPreparedReaderProjection(MEETINGS_RECORD_CLASS, former.scope);
+        if (!row) throw new Error("PREPARED_MEETING_CHUNK_MISSING");
+        const held = row.payload as MeetingsSnapshot;
+        const documented = new Set(held.agendaDocuments.map(document => document.meetingId));
+        const meetings = held.meetings.filter(meeting => Date.parse(meeting.startsAt) < Date.parse(now) &&
+          meetingCarriesRecords(meeting, documented.has(meeting.id)) && missingHistory.some(partition =>
+            meeting.bodyId === partition.bodyId || meeting.id.startsWith(`${partition.source}:`)));
+        const ids = new Set(meetings.map(meeting => meeting.id));
+        value = mergeMeetingHistory(value, buildMeetingHistorySnapshot({ history: null, moved: meetings,
+          agendaDocuments: held.agendaDocuments.filter(document => ids.has(document.meetingId)), generatedAt: held.generatedAt }));
+        for (const partition of missingHistory) {
+          const contract = members.find(candidate => candidate.id === partition.contractId);
+          const history = contract && former.composedFrom.find(coupling => coupling.contractId === meetingHistoryContract(contract).id);
+          if (history) composedFrom.push(history);
+        }
       }
+      let factSha256: string;
+      try { factSha256 = pdcV2CanonicalMeetingFactEvidence([value]).sha256; }
+      catch { factSha256 = createHash("sha256").update(JSON.stringify(value)).digest("hex"); }
+      const hash = createHash("sha256").update(key).update(JSON.stringify(value)).update(couplingFingerprint(composedFrom)).digest("hex");
+      const scope = `${preparedScope}:place:${hash}`;
+      await store.writePreparedReaderProjection({ recordClass: MEETINGS_RECORD_CLASS, scope, payload: value, composedFrom, factSha256,
+        generatedAt: value.generatedAt, composedAt: now, sourceThrough: aggregate.metadata.sourceThrough,
+        retrievedAt: aggregate.metadata.retrievedAt, promotedThrough: aggregate.metadata.promotedAt }, null);
+      const chunk: PreparedMeetingChunk = { key, scope, fingerprint, ocdId: key.startsWith("ocd-division/") ? key : null,
+        bodyIds: [...new Set(value.meetings.flatMap(meeting => meeting.bodyId ? [meeting.bodyId] : []))],
+        meetingIds: value.meetings.map(meeting => meeting.id), documentIds: value.agendaDocuments.map(document => document.id),
+        generatedAt: value.generatedAt, counts: value.counts, sources: value.sources, composedFrom,
+        sourceThrough: aggregate.metadata.sourceThrough, retrievedAt: aggregate.metadata.retrievedAt, promotedThrough: aggregate.metadata.promotedAt };
+      return { chunk, unavailable: [] as SnapshotSourceReport[] };
+    });
+    const candidates: PreparedMeetingChunk[] = [];
+    const unavailableSources: SnapshotSourceReport[] = [];
+    for (const result of results) {
+      if (!result.ok) throw new Error(result.error);
+      if (result.value.chunk) candidates.push(result.value.chunk);
+      unavailableSources.push(...result.value.unavailable);
     }
-  } catch (error) {
-    return { status: "FAILED", error: error instanceof Error ? error.message : String(error), lastValidGeneratedAt: null };
-  }
-  // A successor with no pointer of its own couples to its retired predecessor's held version, so the successor's
-  // first promotion changes the fingerprint and recomposes.
-  const currentCoupling: PreparedProjectionCoupling[] = partitions.flatMap((partition) => {
-    const versionId = versionByScope.get(partition.scope);
-    if (typeof versionId === "string") return [{ contractId: partition.id, versionId }];
-    const held = heldMeetingPartitionFor(partition.id);
-    const heldVersionId = held ? versionByScope.get(held.scope) : undefined;
-    return held && typeof heldVersionId === "string" ? [{ contractId: held.id, versionId: heldVersionId }] : [];
-  });
-  for (const contract of historyContracts) {
-    const versionId = versionByScope.get(contract.scope);
-    if (versionId) currentCoupling.push({ contractId: contract.id, versionId });
-  }
-  const facts = { contractId: MEETING_FACTS_COUPLING, versionId: await factsVersion(factReader(), "meeting:", state) };
-  const currentFingerprint = couplingFingerprint([...currentCoupling, facts]);
-
-  const prepared = await store.readPreparedReaderProjectionCoupling(MEETINGS_RECORD_CLASS, preparedScope);
-  if (prepared && couplingFingerprint(prepared.composedFrom) === currentFingerprint) {
-    return {
-      status: "CURRENT",
-      sequence: prepared.sequence,
-      coupledPartitions: currentCoupling.length,
-      generatedAt: prepared.generatedAt,
-      ...preparedChecks(prepared.generatedAt, withCurrentChecks(prepared.composedFrom as readonly FreshCheckCoupling[], identityByScope)),
-    };
-  }
-
-  let aggregate: MeetingsProjectionReadResult;
-  try {
-    aggregate = options.aggregate
-      ? await options.aggregate()
-      : await readMeetingsProjection({ store, now, bypassCache: true, state });
+    if (!candidates.length) return { status: "NOT_COMPOSABLE", detail: "No proof-valid source/body meeting partition has been promoted.", lastValidGeneratedAt: prepared?.generatedAt ?? null };
+    const collisions = chunkCollisions(candidates);
+    const heldChunks = candidates.filter(chunk => collisions.has(chunk.key)).map(chunk => ({ chunk, detail: collisions.get(chunk.key)! }));
+    const chunks = candidates.filter(chunk => !collisions.has(chunk.key));
+    const former = heldChunks.flatMap(({ chunk }) => accepted.get(chunk.key) ?? []);
+    const unsafeFormer = chunkCollisions([...chunks, ...former]);
+    chunks.push(...former.filter(chunk => !unsafeFormer.has(chunk.key)));
+    chunks.sort((left, right) => left.key.localeCompare(right.key));
+    for (const { chunk, detail } of heldChunks) for (const partition of byPlace.get(chunk.key) ?? []) unavailableSources.push({
+      source: partition.meetingSource, ok: false, error: `${partition.bodyId}: ${detail}`, failure: "WALL", fetched: 0, normalized: 0,
+      drops: { placeless: 0, unknownVenue: 0, unplaceableInTime: 0, notConfigured: 0 },
+      ...(partition.ocdId ? { unreachableOcdIds: [partition.ocdId] } : {}),
+    });
+    const composedFrom = [...chunks.flatMap(chunk => chunk.composedFrom), ...heldChunks.flatMap(({ chunk }) => chunk.composedFrom
+      .map(entry => ({ contractId: `${HELD_COUPLING_PREFIX}${entry.contractId}`, versionId: entry.versionId })))];
+    const generatedAt = latest(chunks.map(chunk => chunk.generatedAt)) ?? now;
+    const input: PreparedReaderProjectionInput = { recordClass: MEETINGS_RECORD_CLASS, scope: preparedScope,
+      payload: { formatVersion: 2, chunks, heldChunks, unavailableSources } satisfies PreparedMeetingManifest,
+      composedFrom: [...composedFrom, facts, MEETING_LAYOUT_COUPLING],
+      factSha256: createHash("sha256").update(chunks.map(chunk => chunk.scope).join("|")).digest("hex"), generatedAt, composedAt: now,
+      sourceThrough: latest(chunks.map(chunk => chunk.sourceThrough)), retrievedAt: latest(chunks.map(chunk => chunk.retrievedAt)),
+      promotedThrough: latest(chunks.map(chunk => chunk.promotedThrough)) };
+    const result = await store.writePreparedReaderProjection(input, prepared?.sequence ?? null);
+    return result.published ? { status: "PUBLISHED", sequence: result.sequence, coupledPartitions: composedFrom.length, generatedAt,
+      ...preparedChecks(generatedAt, withCurrentChecks(input.composedFrom, identityByScope)) }
+      : { status: "RACED", sequence: result.sequence, coupledPartitions: composedFrom.length };
   } catch (error) {
     return { status: "FAILED", error: error instanceof Error ? error.message : String(error), lastValidGeneratedAt: prepared?.generatedAt ?? null };
   }
-  if (aggregate.kind !== "PROMOTED") {
-    return {
-      status: "NOT_COMPOSABLE",
-      detail: aggregate.detail,
-      lastValidGeneratedAt: prepared?.generatedAt ?? null,
-    };
-  }
-
-  const freshCheckOf = (partition: (typeof aggregate.partitions)[number]) => partition.freshCheck
-    ? { routes: partition.freshCheck.routes, ...(partition.freshCheck.checkedAt ? { checkedAt: partition.freshCheck.checkedAt } : {}) }
-    : {};
-  const composedFrom: FreshCheckCoupling[] = aggregate.partitions.flatMap((partition) =>
-    partition.kind === "PROMOTED" && typeof partition.versionId === "string"
-      ? [{ contractId: partition.contractId, versionId: partition.versionId, ...freshCheckOf(partition) }]
-      : partition.heldFrom
-        ? [{ contractId: partition.heldFrom.contractId, versionId: partition.heldFrom.versionId, ...freshCheckOf(partition) }]
-        : [],
-  );
-  for (const partition of aggregate.partitions) if (partition.history) composedFrom.push(partition.history);
-  let value = aggregate.value;
-  const missingHistory = aggregate.partitions.filter(partition => partition.historyIssue);
-  if (prepared && missingHistory.length > 0) {
-    // Retain accepted historical facts during a storage outage, without reviving future meetings.
-    const prior = await store.readPreparedReaderProjection(MEETINGS_RECORD_CLASS, preparedScope);
-    if (prior) {
-      const previous = prior.payload as MeetingsSnapshot;
-      const documented = new Set(previous.agendaDocuments.map(document => document.meetingId));
-      const meetings = previous.meetings.filter(meeting => Date.parse(meeting.startsAt) < Date.parse(now) &&
-        meetingCarriesRecords(meeting, documented.has(meeting.id)) && missingHistory.some(partition =>
-          meeting.bodyId === partition.bodyId || meeting.id.startsWith(`${partition.source}:`)));
-      const ids = new Set(meetings.map(meeting => meeting.id));
-      value = mergeMeetingHistory(value, buildMeetingHistorySnapshot({ history: null, moved: meetings,
-        agendaDocuments: previous.agendaDocuments.filter(document => ids.has(document.meetingId)), generatedAt: previous.generatedAt }));
-      for (const partition of missingHistory) {
-        const contract = partitions.find(candidate => candidate.id === partition.contractId);
-        const held = contract && prior.composedFrom.find(coupling => coupling.contractId === meetingHistoryContract(contract).id);
-        if (held) composedFrom.push(held);
-      }
-    }
-  }
-  let factSha256: string;
-  try {
-    factSha256 = pdcV2CanonicalMeetingFactEvidence([value]).sha256;
-  } catch {
-    factSha256 = createHash("sha256").update(JSON.stringify(value)).digest("hex");
-  }
-  const input: PreparedReaderProjectionInput = {
-    recordClass: MEETINGS_RECORD_CLASS,
-    scope: preparedScope,
-    payload: value,
-    composedFrom: [...composedFrom, facts],
-    factSha256,
-    generatedAt: aggregate.value.generatedAt,
-    composedAt: now,
-    sourceThrough: aggregate.metadata.sourceThrough,
-    retrievedAt: aggregate.metadata.retrievedAt,
-    promotedThrough: aggregate.metadata.promotedAt,
-  };
-  const result = await store.writePreparedReaderProjection(input, prepared?.sequence ?? null);
-  return result.published
-    ? {
-        status: "PUBLISHED",
-        sequence: result.sequence,
-        coupledPartitions: composedFrom.length,
-        generatedAt: aggregate.value.generatedAt,
-        ...preparedChecks(aggregate.value.generatedAt, withCurrentChecks([...composedFrom, facts], identityByScope)),
-      }
-    : { status: "RACED", sequence: result.sequence, coupledPartitions: composedFrom.length };
 }
 
 function partitionsFromCoupling(composedFrom: readonly PreparedProjectionCoupling[], partitions: readonly MeetingPartitionContract[]): MeetingPartitionReadback[] {
@@ -366,52 +450,77 @@ async function servedPreparedChecks(
   }
 }
 
-export async function readPreparedMeetingsProjection(
-  options: { readonly store?: RoutineDataStore; readonly now?: string; readonly expectedSequence?: number; readonly state?: string } = {},
-): Promise<MeetingsProjectionReadResult> {
-  // The meeting partitions read here are the published doors' partitions, installed in this module graph.
+export type PreparedMeetingPublicationRead = Omit<Extract<MeetingsProjectionReadResult, { kind: "PROMOTED" }>, "value"> & {
+  readonly value: MeetingPublication;
+  readonly checks: ReturnType<typeof meetingFreshChecks>;
+};
+
+export async function readPreparedMeetingPublication(
+  options: { readonly store?: RoutineDataStore; readonly now?: string; readonly expectedSequence?: number; readonly state?: string; readonly ocdIds?: readonly string[]; readonly partitions?: readonly MeetingPartitionContract[] } = {},
+): Promise<PreparedMeetingPublicationRead | null> {
   const requestedState = options.state ?? process.env.WTP_SOURCE_STATE;
   const state = requestedState ? routineScopeState(requestedState) : undefined;
-  await (await import("../doors/meeting-doors.ts")).ensureMeetingDoors(state ? { state } : {});
-  const heldPartitions = [...MEETING_PARTITION_CONTRACTS].filter(partition => !state || routineScopeState(partition.bodyId) === state);
+  if (!options.partitions) await (await import("../doors/meeting-doors.ts")).ensureMeetingDoors(state ? { state } : {});
+  const heldPartitions = (options.partitions ?? MEETING_PARTITION_CONTRACTS).filter(partition => !state || routineScopeState(partition.bodyId) === state);
   let prepared: PreparedReaderProjectionRow | null;
-  let store: RoutineDataStore | null = null;
+  let store: RoutineDataStore;
   try {
-    // Constructed inside the try: the Postgres store throws when DATABASE_URL is unset, which must fall through to
-    // the composing reader rather than escape.
     store = options.store ?? new PostgresRoutineDataStore();
     prepared = await readPreparedRowOnceUnchanged(store, options.store ?? DEFAULT_PREPARED_STORE, preparedMeetingScope(state));
   } catch {
     prepared = null;
   }
-  if (options.expectedSequence !== undefined && prepared?.sequence !== options.expectedSequence) {
-    throw new Error("PREPARED_MEETING_COPY_CHANGED_DURING_READ");
-  }
-  if (prepared === null || store === null) {
-    return readMeetingsProjection(options);
-  }
-  const partitions = partitionsFromCoupling(prepared.composedFrom, heldPartitions);
-  const ownComposed = new Set(prepared.composedFrom.map((entry) => entry.contractId));
-  const allComposed = heldPartitions.every((partition) => ownComposed.has(partition.id));
+  if (options.expectedSequence !== undefined && prepared?.sequence !== options.expectedSequence) throw new Error("PREPARED_MEETING_COPY_CHANGED_DURING_READ");
+  if (!prepared) return null;
+  const manifest = meetingManifest(prepared.payload);
+  const wanted = options.ocdIds && new Set(options.ocdIds.map(id => id.split("#")[0]));
+  const touching = wanted && factReader() ? await (await import("../civic-data/meeting-dependencies.ts")).readMeetingBodyIdsForDivisions(state ?? "US", [...wanted]) : null;
+  const chunks = wanted ? manifest.chunks.filter(chunk => chunk.ocdId !== null && wanted.has(chunk.ocdId) || chunk.bodyIds.some(id => touching?.has(id))) : manifest.chunks;
+  const composedFrom = wanted ? chunks.flatMap(chunk => chunk.composedFrom) : prepared.composedFrom;
+  const collisions = new Map(manifest.heldChunks.flatMap(({ chunk, detail }) => chunk.composedFrom.map(entry => [entry.contractId, detail] as const)));
+  const partitions = partitionsFromCoupling(composedFrom, wanted ? heldPartitions.filter(partition => partition.ocdId && wanted.has(partition.ocdId)) : heldPartitions)
+    .map(partition => collisions.has(partition.contractId) ? { ...partition, kind: "STORE_UNREACHABLE" as const,
+      detail: collisions.get(partition.contractId)!, versionId: null,
+      ...(partition.versionId ? { heldFrom: { contractId: partition.contractId, scope: partition.scope, versionId: partition.versionId } } : {}),
+    } : partition);
+  const ownComposed = new Set(composedFrom.map(entry => entry.contractId));
+  const allComposed = partitions.every(partition => ownComposed.has(partition.contractId));
   const nowMs = options.now !== undefined && Number.isFinite(Date.parse(options.now)) ? Date.parse(options.now) : Date.now();
-  const checks = meetingFreshChecks(await servedPreparedChecks(store, options.store ?? DEFAULT_PREPARED_STORE, prepared, nowMs));
-  return {
-    kind: "PROMOTED",
-    value: applyMeetingFreshChecks(prepared.payload as MeetingsSnapshot, checks),
-    metadata: {
-      recordClass: MEETINGS_RECORD_CLASS,
-      scope: MEETINGS_SCOPE,
-      sourceId: MEETINGS_SOURCE_ID,
-      version: null,
-      versionId: null,
-      lastKnownGoodVersionId: null,
-      sourceThrough: prepared.sourceThrough,
-      retrievedAt: laterCheck(prepared.retrievedAt, checks.checkedAt),
-      promotedAt: prepared.promotedThrough,
-      stale: allComposed ? "CURRENT" : "UNKNOWN",
-      staleAt: null,
-    },
-    partitions,
-    detail: `Served from the prepared reader snapshot (sequence ${prepared.sequence}, composed from ${prepared.composedFrom.length}/${MEETING_PARTITION_CONTRACTS.length} partitions).`,
-  };
+  const checks = meetingFreshChecks(await servedPreparedChecks(store!, options.store ?? DEFAULT_PREPARED_STORE, prepared, nowMs));
+  const generatedAt = laterCheck(prepared.generatedAt, checks.checkedAt) ?? prepared.generatedAt;
+  const value: MeetingPublication = { generatedAt, sources: [...chunks.flatMap(chunk => chunk.sources), ...manifest.unavailableSources],
+    meetingCount: chunks.reduce((sum, chunk) => sum + chunk.counts.total, 0),
+    chunks: (async function* () {
+      for (const chunk of chunks) {
+        yield { key: chunk.key, version: chunk.scope, read: async () => {
+          const row = await store!.readPreparedReaderProjection(MEETINGS_RECORD_CLASS, chunk.scope);
+          if (!row) throw new Error("PREPARED_MEETING_CHUNK_MISSING");
+          return { snapshot: row.payload as MeetingsSnapshot };
+        } };
+      }
+    })() };
+  return { kind: "PROMOTED", value, checks, metadata: { recordClass: MEETINGS_RECORD_CLASS, scope: MEETINGS_SCOPE, sourceId: MEETINGS_SOURCE_ID,
+    version: null, versionId: null, lastKnownGoodVersionId: null, sourceThrough: prepared.sourceThrough,
+    retrievedAt: laterCheck(prepared.retrievedAt, checks.checkedAt), promotedAt: prepared.promotedThrough,
+    stale: allComposed ? "CURRENT" : "UNKNOWN", staleAt: null }, partitions,
+    detail: `Served from the prepared reader snapshot (sequence ${prepared.sequence}, ${chunks.length} places).` };
+}
+
+export async function readPreparedMeetingsProjection(
+  options: { readonly store?: RoutineDataStore; readonly now?: string; readonly expectedSequence?: number; readonly state?: string; readonly ocdIds?: readonly string[] } = {},
+): Promise<MeetingsProjectionReadResult> {
+  const prepared = await readPreparedMeetingPublication(options);
+  if (!prepared) return readMeetingsProjection(options);
+  const value: MeetingsSnapshot = { formatVersion: 1, generatedAt: prepared.value.generatedAt,
+    counts: { fresh: 0, carried: 0, total: 0, duplicatesCollapsed: 0 }, sources: prepared.value.sources, meetings: [], agendaDocuments: [] };
+  for await (const chunk of prepared.value.chunks) {
+    const snapshot = applyMeetingFreshChecks((await chunk.read()).snapshot, prepared.checks);
+    for (const meeting of snapshot.meetings) value.meetings.push(meeting);
+    for (const document of snapshot.agendaDocuments) value.agendaDocuments.push(document);
+    value.counts.fresh += snapshot.counts.fresh;
+    value.counts.carried += snapshot.counts.carried;
+    value.counts.total += snapshot.counts.total;
+    value.counts.duplicatesCollapsed! += snapshot.counts.duplicatesCollapsed ?? 0;
+  }
+  return { ...prepared, value };
 }

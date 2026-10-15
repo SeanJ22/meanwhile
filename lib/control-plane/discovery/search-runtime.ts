@@ -31,11 +31,6 @@ function vendorBudget(perDay: number): VendorBudget {
   return { vendor: DISCOVERY_SEARCH_VENDOR, maxConcurrent: 2, dailyRequestCap: perDay, backoffUntil: null };
 }
 
-/**
- * The ledger with the two search hosts and the combined daily cap registered
- * where they are missing. It never changes an entry that is already there: a
- * cap someone set is theirs.
- */
 export function withSearchBudgets(ledger: BudgetLedger, perDay: number): BudgetLedger {
   const seeded = createLedger({
     hosts: Object.values(SEARCH_HOSTS).map(hostBudget),
@@ -68,11 +63,6 @@ export interface SearchBudget {
   done(host: string): Promise<void>;
 }
 
-/**
- * The durable budget: a per-cycle count held here, the per-day cap in the
- * shared ledger (installed with only the search budgets when no ledger exists),
- * and the caller's FleetSafety admission.
- */
 export function durableSearchBudget(input: {
   readonly repos: Pick<ControlPlaneRepositories, "budget">;
   readonly perCycle: number;
@@ -130,9 +120,6 @@ export function durableSearchBudget(input: {
         const refused = input.admitLifetimeHunt();
         if (refused !== null) return refused;
         await register();
-        // Ignore only the discretionary combined request count. The shared
-        // transaction still applies host spacing, concurrency, backoff and
-        // vendor concurrency/backoff to this exact hunt's request.
         const at = input.now();
         const outcome = await input.repos.budget.mutate((original) => {
           const ledger = recoverSearchSlots(original, at);
@@ -164,11 +151,6 @@ function dedupeKey(raw: string): string {
   }
 }
 
-/**
- * The executor's search seam, or null when no provider key is configured. A
- * domain restriction is expressed per provider: Brave's `site:` operator, and
- * Exa's `includeDomains`.
- */
 export function makeDiscoverySearch(options: {
   readonly braveKey?: string | null;
   readonly exaKey?: string | null;

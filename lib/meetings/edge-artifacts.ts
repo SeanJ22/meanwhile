@@ -11,12 +11,6 @@ import {
   type SnapshotSourceReport,
 } from "./snapshot.ts";
 
-/**
- * Splits the composed national meeting snapshot into immutable geographic
- * serving artifacts, one per governing division with agenda text in its own
- * piece, and merges fetched pieces back into the `MeetingsSnapshot` shape. The
- * promoted partitions stay authoritative; these are serving copies.
- */
 export const READER_ARTIFACT_FORMAT_VERSION = 1 as const;
 
 /** The scope for meetings whose OCD division names no state (online/unresolved). */
@@ -53,9 +47,25 @@ export interface ReaderGeoArtifact {
   readonly agendaDocuments: AgendaDocument[];
 }
 
+export interface MeetingPublication {
+  readonly generatedAt: string;
+  readonly sources: SnapshotSourceReport[];
+  readonly meetingCount: number;
+  readonly chunks: AsyncIterable<{
+    readonly key: string;
+    readonly version: string;
+    readonly read: () => Promise<{
+      readonly snapshot: MeetingsSnapshot;
+      readonly bodies?: readonly { readonly id: string; readonly ocdId: string | null; readonly alsoServesOcdIds?: readonly string[] }[];
+    }>;
+  }>;
+}
+
 /** The manifest's record of one published scope artifact. */
 export interface ReaderManifestScope {
   readonly scope: string;
+  readonly chunkKey?: string;
+  readonly chunkVersion?: string;
   readonly ocdId?: string;
   readonly bounds?: ReaderAreaBounds;
   readonly meetingIds?: readonly string[];
@@ -90,7 +100,7 @@ export function readerScopeApplies(
 ): boolean {
   if (area.includeAgenda === false && scope.agendaOnly) return false;
   if (area.meetingId) return scope.meetingIds ? scope.meetingIds.includes(area.meetingId) : true;
-  if (scope.scope === NATIONAL_SCOPE || scope.scope === `${NATIONAL_SCOPE}-agenda` || scope.ocdId && stateOfOcdId(scope.ocdId) === null) return true;
+  if (scope.scope === NATIONAL_SCOPE || scope.scope === `${NATIONAL_SCOPE}-agenda` || scope.scope.startsWith(`${NATIONAL_SCOPE}--`) || scope.ocdId && stateOfOcdId(scope.ocdId) === null) return true;
   if (!scope.ocdId) return !area.states || scopesForStates(area.states).includes(scope.scope);
   if (!area.ocdIds?.length) return !area.states || area.states.some(state => state.toLowerCase() === stateOfOcdId(scope.ocdId));
   if (area.ocdIds.some(id => id.split("#")[0] === scope.ocdId)) return true;
@@ -105,13 +115,8 @@ export function readerScopeApplies(
     [-360, 0, 360].some(shift => bounds.east + shift >= point.lng - lngDelta && bounds.west + shift <= point.lng + lngDelta);
 }
 
-/**
- * The tiny mutable pointer. The reader reads THIS (short-TTL, edge-cached) to
- * learn the current sequence and which immutable scope artifacts to fetch.
- * `sequence` is monotonic: a publish never lowers it, so an older composition
- * can never replace a newer one.
- */
 export interface ReaderManifest {
+  readonly publicationFingerprint?: string;
   /** Missing on the former state layout; the normal publisher replaces it once. */
   readonly meetingLayout?: "governing-area";
   /** Registry version used for canonical body areas; absent on single-area copies. */
@@ -125,43 +130,15 @@ export interface ReaderManifest {
   /** National per-source accounting the footer reads (shared across scopes). */
   readonly sources: SnapshotSourceReport[];
   readonly scopes: readonly ReaderManifestScope[];
-  /**
-   * The other ready-to-display reader families the /api/meetings response
-   * carries, embedded so the reader serves them from the edge instead of waking
-   * the database per visit. Typed loosely here to keep this module free of the
-   * comment-access / routing type graph; the reader casts them. Absent → the
-   * reader falls back to reading that family from the DB.
-   */
   readonly commentAccess?: readonly unknown[];
   readonly everydayRouting?: unknown;
   /** Pointer identities for the embedded serving copies; old manifests refresh once. */
   readonly extrasVersionIds?: Readonly<Partial<Record<"comment-access" | "everyday-routing", string | null>>>;
-  /**
-   * Families too large to embed in the manifest, which is read every request.
-   * The manifest points at one gzip-compressed immutable artifact per family;
-   * the reader fetches each once per version.
-   */
   readonly authorityArtifacts?: Partial<Record<AuthorityFamily, AuthorityArtifactRef>>;
-  /**
-   * Each state's promoted registration, one artifact per state. Present, it is
-   * complete: a state it does not name has no promoted registration. Absent,
-   * the reader reads registration from the database.
-   */
   readonly registrations?: Readonly<Record<string, AuthorityArtifactRef>>;
   /** Legislative people loaded separately for each requested jurisdiction. */
   readonly stateLegislators?: Readonly<Record<string, AuthorityArtifactRef>>;
-  /**
-   * Each route's (`<adapter>|<bodyId>`) newest successful fresh check that found
-   * nothing new. The reader restamps that route's fresh rows with it, never
-   * carried rows.
-   */
   readonly freshChecks?: Readonly<Record<string, string>>;
-  /**
-   * The partition versions these scope artifacts were composed from
-   * (`meetingCompositionId`): how the runner tells a quiet re-check, which
-   * republishes this manifest alone, from new data, which republishes the
-   * scopes.
-   */
   readonly composition?: string;
 }
 
@@ -255,13 +232,6 @@ function countsFor(meetings: readonly Meeting[]): ReaderArtifactCounts {
   return { fresh: base.fresh, carried: base.carried, total: base.total, duplicatesCollapsed: 0 };
 }
 
-/**
- * Split one composed national snapshot into per-scope artifacts, deterministic
- * and order-stable. A meeting's scope is its governing division; an agenda
- * stays in its meeting's area, even when its own geography differs. Agenda
- * text is separate so a calendar read never fetches it. Counts are for the
- * subset; the cross-source write-boundary invariant does not apply here.
- */
 export function partitionSnapshotByScope(
   snapshot: MeetingsSnapshot,
   now: string = new Date().toISOString(),
@@ -326,14 +296,6 @@ export function scopesForStates(states: Iterable<string>): string[] {
   return [...set].sort();
 }
 
-/**
- * Merge the fetched scope artifacts back into one `MeetingsSnapshot`, exactly
- * the shape `searchMeetings`/`snapshotClientMeta` consume. Meetings are
- * de-duplicated by id (a meeting can only be in one scope, but the merge is
- * defensive), agenda documents by id. The national `sources` accounting comes
- * from the manifest so the footer's failed-source attribution stays complete
- * even when only one state's meetings are loaded.
- */
 export function mergeScopeArtifacts(
   artifacts: readonly ReaderGeoArtifact[],
   manifest: Pick<ReaderManifest, "generatedAt" | "sources">,

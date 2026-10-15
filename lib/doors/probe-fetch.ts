@@ -3,6 +3,7 @@ import type { WebsitePacing } from "../control-plane/website-pacing.ts";
 import { fetchSource, runWithSourceFetch, SourceFetchDeferred } from "../sources/fetch-source.ts";
 import type { ProbeFetch } from "./probe.ts";
 
+export const PROBE_HOST_SPACING_MS = 400;
 export const PROBE_TIMEOUT_MS = 15_000;
 const MAX_BYTES = 1_048_576;
 
@@ -27,7 +28,7 @@ export function pacedProbeFetch(input: {
 }): ProbeFetch {
   return async (url, headers) => {
     try {
-      const response = await runWithSourceFetch({ pacing: input.pacing, websiteSize: input.sizeFor,
+      const response = await runWithSourceFetch({ pacing: input.pacing, websiteSize: input.sizeFor, spacingMs: PROBE_HOST_SPACING_MS,
         runtime: { transport: input.fetchImpl, now: input.clock, sleep: input.sleep } }, () => fetchSource(url, {
         method: "GET", headers: { Accept: "*/*", ...headers },
         signal: AbortSignal.timeout(PROBE_TIMEOUT_MS), redirect: "follow",

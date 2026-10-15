@@ -1,7 +1,10 @@
-import { runMeetingBatchPass } from "../lib/civic-data/meeting-batch.ts";
+import { runMeetingReaderRepairDomain } from "../lib/civic-data/reader-verification.ts";
+import { readerVerifierClosureAttestor } from "./lib/verifier-attestation.ts";
+import { MEETING_STATE_BUCKETS, meetingTaskBucket, runMeetingBatchPass } from "../lib/civic-data/meeting-batch.ts";
+import { meetingPrefetchSeed } from "../lib/civic-data/meeting-prefetch.ts";
 import { ROUTINE_STATES, routineScopeState } from "../lib/civic-data/state-scope.ts";
 import { refreshStaleFacts } from "../lib/facts/refresh.ts";
-import { runWithSourceFetch } from "../lib/sources/fetch-source.ts";
+import { prefetchSourceRequests, runWithSourceFetch } from "../lib/sources/fetch-source.ts";
 import { applyRoutineClockSettings, readHeldFinanceCalendars, type SourceCalendar } from "../lib/civic-data/clock-settings.ts";
 import { CAPTURE_CONVERSION_LOG_KEY, captureConversionRecord, captureConversionRecorded } from "../lib/civic-data/capture-conversion.ts";
 import { readMeetingDiscoveryInputs, meetingDiscoveryInputsDue, runMeetingDiscoveryChain, type MeetingDiscoveryInputs } from "../lib/civic-data/meeting-discovery-due.ts";
@@ -72,7 +75,7 @@ import { observedChangeMinutesByDoor } from "../lib/doors/observed-rate.ts";
 import { isDoorRecord } from "../lib/doors/registry.ts";
 import { refreshDoorsForPass } from "../lib/doors/install.ts";
 import { doorSyncLine, syncHeldDoors } from "../lib/doors/seed-all.ts";
-import { readNowDueRequests, settleReadNow } from "../lib/doors/mission-refresh.ts";
+import { readNowDueRequests, settleReadNow, sourceChangesByTask } from "../lib/doors/mission-refresh.ts";
 import { editDeriveDueRequests } from "../lib/doors/edit-derive.ts";
 import { listDoors } from "../lib/doors/registry.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -108,13 +111,10 @@ import { resolveScopes } from "../lib/control-plane/expansion/runner-load.ts";
 import { loadPublishedScopeLookupState } from "../lib/census-geography/scope-lookup.ts";
 import { readIntents, RESEARCH_INTENT_LOG_KEY } from "../lib/control-plane/scheduler/research-policy.ts";
 import { admittedHuntSourceScopes, huntSourceTasks } from "../lib/civic-data/hunt-source-tasks.ts";
-import { PUBLISH_NOW_PASS_BUDGET_MS, PUBLISH_NOW_SINGLETON_PORT, publishNowDoorTasks, publishNowHasNothingOwed, readOwedFactItems, readPublishNowWorkerTasks, readWorkerPublicationItems, startPublishNowEdgeChecks } from "../lib/civic-data/publish-now.ts";
+import { PUBLISH_NOW_PASS_BUDGET_MS, PUBLISH_NOW_SINGLETON_PORT, publishNowHasNothingOwed, readOwedFactItems, readPublishNowWorkerTasks, readWorkerPublicationItems, startPublishNowEdgeChecks } from "../lib/civic-data/publish-now.ts";
 import { publishOwedRosterFacts } from "../lib/civic-data/worker-roster-publication.ts";
 import { publishOwedCommentFacts } from "../lib/civic-data/worker-comment-facts.ts";
-import { runHourlyProbes } from "../lib/doors/hourly-check.ts";
-import { stateOfPlace } from "../lib/method/fix-map.ts";
 import { websiteSizeFromHoldings } from "../lib/control-plane/scheduler/host-supervision.ts";
-import { hotMeetingPartitions } from "../lib/doors/hot-partitions.ts";
 import { pacedProbeFetch } from "../lib/doors/probe-fetch.ts";
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
 import { VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
@@ -157,7 +157,9 @@ import { startCivicReadCacheHost } from "../lib/db/civic-read-cache-host.ts";
 import { placeSourceLaunchOrder, withNationalPlaceTasks } from "../lib/hunt/place-source-admission.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { flushDatabaseTransfer } from "../lib/db/transfer.ts";
-import { publishSupervisorReaderEdge, readerEdgeSupervisorFailure, type ReaderEdgePublicationOutcome } from "../lib/civic-data/reader-edge-publication.ts";
+import { readerEdgeSupervisorFailure, type ReaderEdgePublicationOutcome } from "../lib/civic-data/reader-edge-publication.ts";
+import { runReaderEdgePublicationChild } from "../lib/civic-data/reader-edge-child.ts";
+import { checkReaderEdgePublicationInputs } from "../lib/civic-data/reader-edge-inputs.ts";
 import { resolveReaderArtifactWriteStore } from "../lib/meetings/edge-store.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
@@ -186,17 +188,21 @@ if (!ROUTINE_STATES.includes(STATE_SCOPE)) throw new Error("Invalid source state
 const PUBLISH_NOW = process.argv.includes("--publish-now");
 const FAMILY = process.argv.find(arg => arg.startsWith("--family="))?.slice(9) ?? "all";
 if (!["all", "meetings", "other"].includes(FAMILY)) throw new Error("Invalid source family");
+const MEETING_BUCKET = Number(process.argv.find(arg => arg.startsWith("--meeting-bucket="))?.slice(17) ?? 0);
+if (!Number.isSafeInteger(MEETING_BUCKET) || MEETING_BUCKET < 0 || MEETING_BUCKET >= MEETING_STATE_BUCKETS) throw new Error("Invalid meeting bucket");
 /* A publish-now pass launches no child after its budget, so the runner can hand off a release between passes; what was not started stays owed. */
 const PASS_LAUNCH_DEADLINE_MS = PUBLISH_NOW ? Date.now() + PUBLISH_NOW_PASS_BUDGET_MS : Number.POSITIVE_INFINITY;
 if (PUBLISH_NOW && FORCE) throw new Error("Publish-now cannot force unrelated source work.");
 const ADMITTED_CODE_SHA = assertRuntimeAuthority({ capabilities: ["ROUTINE_SUPERVISOR"] }).sha;
 
+let sourceChanges: ReadonlyMap<string, string> = new Map();
 if (controlPlaneUrlFromEnv() === null) {
   console.warn("RCD_TASK routine-civic-data-runner: no door registry is configured, so this pass has no hand-wired meeting work");
-} else {
+} else if (!PUBLISH_NOW) {
   try {
     const doorRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, new Date().toISOString(), { skipBootstrap: true });
     const doorPass = await refreshDoorsForPass(doorRepos.doors, STATE_SCOPE);
+    sourceChanges = sourceChangesByTask(doorPass.doors ?? []);
     console.log(`RCD_TASK routine-civic-data-runner: meeting doors read from the registry (${doorPass.partitions?.partitions ?? 0} partitions)` +
       `${doorPass.reason ?? doorPass.partitions?.reason ? ` — ${doorPass.reason ?? doorPass.partitions?.reason}` : ""}` +
       `${(doorPass.partitions?.skipped.length ?? 0) > 0 ? `; ${doorPass.partitions!.skipped.length} door(s) left out (${doorPass.partitions!.skipped.join("; ")})` : ""}`);
@@ -224,7 +230,8 @@ const RUN_STARTED_AT = inheritedStartedAt && Number.isFinite(Date.parse(inherite
     new Date(Date.parse(inheritedStartedAt)).toISOString() === inheritedStartedAt
   ? inheritedStartedAt
   : new Date().toISOString();
-const SUPERVISOR_CYCLE_ID = routineSupervisorCycleId(`${hostname()}/${STATE_SCOPE}/${FAMILY}`, RUN_STARTED_AT, PUBLISH_NOW ? "publish-now" : "routine-civic-data");
+const cycleScope = PUBLISH_NOW ? `${hostname()}/${STATE_SCOPE}` : `${hostname()}/${STATE_SCOPE}/${FAMILY}${FAMILY === "meetings" ? `/${MEETING_BUCKET}` : ""}`;
+const SUPERVISOR_CYCLE_ID = routineSupervisorCycleId(cycleScope, RUN_STARTED_AT, PUBLISH_NOW ? "publish-now" : "routine-civic-data");
 const MEETING_PARTITION_TASK_IDS = new Set(MEETING_PARTITION_CONTRACTS.map((contract) => contract.id));
 
 // Every supervisor-side canonical read/write has real transport cancellation.
@@ -250,8 +257,8 @@ step = "taking the host-local singleton";
 const ROUTINE_DATA_PROCESS_LEASE = TASK_SELECTION.ok ? await (async () => {
   try {
     return await acquireProcessSingleton(
-      PUBLISH_NOW ? `publish-now-runner:${STATE_SCOPE}` : `routine-civic-data-runner:${STATE_SCOPE}:${FAMILY}`,
-      PUBLISH_NOW ? PUBLISH_NOW_SINGLETON_PORT + ROUTINE_STATES.indexOf(STATE_SCOPE) : ROUTINE_DATA_RUNNER_SINGLETON_PORT + (FAMILY === "meetings" ? 200 : 100) + ROUTINE_STATES.indexOf(STATE_SCOPE),
+      PUBLISH_NOW ? `publish-now-runner:${STATE_SCOPE}` : `routine-civic-data-runner:${STATE_SCOPE}:${FAMILY}:${MEETING_BUCKET}`,
+      PUBLISH_NOW ? PUBLISH_NOW_SINGLETON_PORT + ROUTINE_STATES.indexOf(STATE_SCOPE) : ROUTINE_DATA_RUNNER_SINGLETON_PORT + (FAMILY === "meetings" ? 200 + ROUTINE_STATES.indexOf(STATE_SCOPE) * MEETING_STATE_BUCKETS + MEETING_BUCKET : 100 + ROUTINE_STATES.indexOf(STATE_SCOPE)),
     );
   } catch (error) {
     if (!(error instanceof ProcessSingletonHeldError)) throw error;
@@ -265,20 +272,17 @@ const ROUTINE_DATA_PROCESS_LEASE = TASK_SELECTION.ok ? await (async () => {
 })() : null;
 
 const readCacheHost = ROUTINE_DATA_PROCESS_LEASE ? await startCivicReadCacheHost() : { close: async () => {} };
-if (ROUTINE_DATA_PROCESS_LEASE && controlPlaneUrlFromEnv()) {
+if (ROUTINE_DATA_PROCESS_LEASE && controlPlaneUrlFromEnv() && !PUBLISH_NOW) {
   try {
     const doorRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, RUN_STARTED_AT, { skipBootstrap: true });
-    if (!PUBLISH_NOW) {
-      console.log(`RCD_TASK routine-civic-data-runner: door registry — ${doorSyncLine(await syncHeldDoors(doorRepos.doors, STATE_SCOPE))}`);
-    }
-    await refreshDoorsForPass(doorRepos.doors, STATE_SCOPE);
-    if (!PUBLISH_NOW) {
-      const existingIds = new Set(STANDING_SOURCE_TASKS.map(task => task.id));
-      const added = [...ROUTINE_SOURCE_TASKS, ...OUTCOME_PARTITION_CONTRACTS.map(routineTaskFromContract)]
-        .filter(task => routineScopeState(task.scope, task.command) === STATE_SCOPE && !existingIds.has(task.id));
-      (STANDING_SOURCE_TASKS as RoutineSourceTask[]).push(...added);
-      for (const contract of MEETING_PARTITION_CONTRACTS) MEETING_PARTITION_TASK_IDS.add(contract.id);
-    }
+    console.log(`RCD_TASK routine-civic-data-runner: door registry — ${doorSyncLine(await syncHeldDoors(doorRepos.doors, STATE_SCOPE))}`);
+    const doorPass = await refreshDoorsForPass(doorRepos.doors, STATE_SCOPE);
+    if (doorPass.doors !== undefined) sourceChanges = sourceChangesByTask(doorPass.doors);
+    const existingIds = new Set(STANDING_SOURCE_TASKS.map(task => task.id));
+    const added = [...ROUTINE_SOURCE_TASKS, ...OUTCOME_PARTITION_CONTRACTS.map(routineTaskFromContract)]
+      .filter(task => routineScopeState(task.scope, task.command) === STATE_SCOPE && !existingIds.has(task.id));
+    (STANDING_SOURCE_TASKS as RoutineSourceTask[]).push(...added);
+    for (const contract of MEETING_PARTITION_CONTRACTS) MEETING_PARTITION_TASK_IDS.add(contract.id);
   } catch (error) {
     console.warn(`RCD_TASK routine-civic-data-runner: door refresh unavailable — ${safeFailure(sanitizedErrorDiagnostic(error))}; existing source work continues`);
   }
@@ -461,14 +465,14 @@ async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: Su
       failures.push({ taskId: "box-facts", code: "BOX_FACT_PUBLICATION_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
     }
     const publication: RoutineSourceTask[] = [];
-    for await (const items of readWorkerPublicationItems((query, params) => sql.query(query, [...params]), STATE_SCOPE, selected)) {
+    for await (const items of readWorkerPublicationItems((query, params) => sql.query(query, [...params]), STATE_SCOPE, RUN_STARTED_AT, selected)) {
       const owed = await readOwedFactItems(items, ids => readCompletedWorkerResultsOf(repos, ids), RUN_STARTED_AT);
       if (owed.rosters.length || owed.comments.length) try {
         const context = await workerPublicationContext(RUN_STARTED_AT, repos);
         const facts = readerFactDb();
         for (const [label, publish, ids] of [["rosters", publishOwedRosterFacts, owed.rosters], ["comment rules", publishOwedCommentFacts, owed.comments]] as const) {
           if (!ids.length) continue;
-          const report = await publish({ repos, store, facts, workItemIds: ids, now: RUN_STARTED_AT, readCapture: context.readCapture });
+          const report = await publish({ repos, facts, workItemIds: ids, now: RUN_STARTED_AT, readCapture: context.readCapture });
           console.log(`RCD_FACTS ${label}: ${report.filter(row => row.outcome.status !== "HELD").length} of ${report.length} published as facts`);
         }
       } catch (error) {
@@ -482,24 +486,7 @@ async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: Su
       });
       publication.push(...await readPublishNowWorkerTasks(items, ids => readCompletedWorkerResultsOf(repos, ids), RUN_STARTED_AT, heldInputs));
     }
-    if (!PUBLISH_NOW) return publication;
-    // The hourly first look: each hot door's page or feed is looked at once an hour; a change is stored on
-    // the door and read below at once. A look that cannot be made never stops a known-changed door's read.
-    try {
-      const listed = (await listDoors(repos.doors, STATE_SCOPE)).doors;
-      const clockStore = new PostgresRoutineDataStore();
-      const sizeFor = websiteSizeFromHoldings([...new Set(listed.flatMap((door) => stateOfPlace(door.ocdId ?? "") ?? []))]);
-      const report = await runHourlyProbes(repos.doors, listed, await hotMeetingPartitions({ readClock: (task) => clockStore.clock(task.sourceId, task.recordClass, task.scope), db: getDb() }, Date.now()),
-        pacedProbeFetch({ pacing: repos.websitePacing, sizeFor }), new Date().toISOString());
-      if (report.looked > 0 || report.deferred > 0 || report.waiting > 0) {
-        console.log(`RCD_PROBE ${report.looked} door(s) looked at (${report.requests} request(s)): ${report.changed} changed, ${report.unchanged} the same, ${report.failed} failed; ` +
-          `${report.waiting} waiting on their website's hour or its request to wait; ${report.deferred} not due`);
-      }
-    } catch (error) {
-      console.log(`RCD_PROBE CANNOT_TELL — ${safeFailure(sanitizedErrorDiagnostic(error))}; doors keep their routine schedule`);
-    }
-    return [...publication, ...publishNowDoorTasks((await listDoors(repos.doors, STATE_SCOPE)).doors,
-      MEETING_PARTITION_CONTRACTS.map(routineTaskFromContract), RUN_STARTED_AT)];
+    return publication;
   }
   const row = await repos.adminConfig.read(ADMIN_CONFIG_ID);
   if (row === null) return [];
@@ -662,7 +649,7 @@ const publishNowEdgeChecks = PUBLISH_NOW ? startPublishNowEdgeChecks({
     return readIntents([...(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY))]).runnerPause.paused;
   },
   check: async () => {
-    const outcome = await publishSupervisorReaderEdge(store, new Date().toISOString(), standingTasks, { state: STATE_SCOPE });
+    const outcome = await publishReaderEdge(null);
     const failure = readerEdgeSupervisorFailure(outcome);
     if (failure) supervisorFailures.push(failure);
     return outcome;
@@ -671,6 +658,13 @@ const publishNowEdgeChecks = PUBLISH_NOW ? startPublishNowEdgeChecks({
       detail: safeFailure(sanitizedErrorDiagnostic(error)) });
   },
 }) : null;
+function publishReaderEdge(selected: readonly Pick<RoutineSourceTask, "recordClass" | "scope">[] | null): Promise<ReaderEdgePublicationOutcome> {
+  return runReaderEdgePublicationChild({ state: STATE_SCOPE, observedAt: new Date().toISOString(), selected,
+    cwd: ROOT, memory: routineMemorySlots,
+    precheck: () => checkReaderEdgePublicationInputs({ state: STATE_SCOPE }),
+    env: admittedRuntimeChildEnvironment({ parentEnv: process.env, capability: "ROUTINE_SUPERVISOR", parentPid: process.pid }),
+  });
+}
 if (publishNowEdgeChecks) {
   step = "publishing changed source pointers before worker admission";
   await publishNowEdgeChecks.run();
@@ -769,7 +763,9 @@ const selectedTasks = [...STANDING_SOURCE_TASKS, ...huntTasks.filter(task => !ST
   .filter((task) => !ONLY || ONLY.has(task.id) || (task.registeredContractId !== undefined && ONLY.has(task.registeredContractId)))
   .filter(task => routineScopeState(task.scope, task.command) === STATE_SCOPE || task.ownerInvocation?.publicationPending === true)
   .filter(task => ONLY !== null || FAMILY === "all" || (task.contract.schedule?.kind === "SITTING_WINDOW") === (FAMILY === "meetings"))
-  .map(task => applyRoutineClockSettings(task, clockConfig, admissionNowMs, heldFinanceCalendars));
+  .filter(task => ONLY !== null || FAMILY !== "meetings" || meetingTaskBucket(task) === MEETING_BUCKET)
+  .map(task => applyRoutineClockSettings(sourceChanges.has(task.id)
+    ? { ...task, sourceChangedAt: sourceChanges.get(task.id)! } : task, clockConfig, admissionNowMs, heldFinanceCalendars));
 if (PUBLISH_NOW && selectedTasks.length === 0) {
   const readerEdge = (await publishNowEdgeChecks!.stop())!;
   if (publishNowHasNothingOwed(PUBLISH_NOW, selectedTasks.length, supervisorFailures.length, readerEdge)) {
@@ -804,15 +800,17 @@ const clockReads = FORCE
   ? selectedTasks.map((task) => ({ task, ok: true as const, clock: undefined, error: null }))
   : await readRoutineTaskClocks(
       selectedTasks,
-      (task) => store.clock(task.sourceId, task.recordClass, task.scope, task.parserVersion),
+      tasks => store.clocks(tasks.map(task => ({ sourceId: task.sourceId, recordClass: task.recordClass, scope: task.scope, parserVersion: task.parserVersion }))),
     );
 const selectedIds = new Set(selectedTasks.map(task => task.id));
 const siblingIds = new Set(selectedTasks.flatMap(task => sittingWindowSourceIds(task.id)).filter(id => !selectedIds.has(id)));
 const siblingClockReads = FORCE ? [] : await readRoutineTaskClocks(
   MEETING_PARTITION_CONTRACTS.filter(contract => siblingIds.has(contract.id)).map(routineTaskFromContract),
-  task => store.clock(task.sourceId, task.recordClass, task.scope, task.parserVersion),
+  tasks => store.clocks(tasks.map(task => ({ sourceId: task.sourceId, recordClass: task.recordClass, scope: task.scope, parserVersion: task.parserVersion }))),
 );
 const sittingClockReads = [...clockReads, ...siblingClockReads];
+const sittingSourcesByTask = new Map(sittingClockReads.map(({ task }) => [task.id, sittingWindowSourceIds(task.id)]));
+const admittedSittingSourceIds = (id: string): readonly string[] => sittingSourcesByTask.get(id) ?? [];
 
 let statedEndsByTask: ReadonlyMap<string, ReadonlyMap<string, number>> = new Map();
 if (!FORCE && selectedTasks.some(task => task.recordClass === "MEETING")) {
@@ -826,7 +824,7 @@ if (!FORCE && selectedTasks.some(task => task.recordClass === "MEETING")) {
     console.error(`RCD_TASK routine-civic-data-stated-sitting-ends: SUPERVISOR_FAILURE (CANNOT_TELL) — ${detail}`);
   }
 }
-const sittingSignals = sittingWindowSignals(sittingClockReads, admissionNowMs, statedEndsByTask);
+const sittingSignals = sittingWindowSignals(sittingClockReads, admissionNowMs, statedEndsByTask, admittedSittingSourceIds);
 // An owner due request brings one meeting partition's read forward; the pass
 // then treats it exactly as any due task (lib/civic-data/routine-due-request.ts).
 step = "reading the owner's due requests";
@@ -841,7 +839,7 @@ if (!FORCE) {
   }
 }
 // A door marked to be read now is the same due request an owner's controlled refresh makes. Spent marks are cleared first.
-if (!FORCE && controlPlaneUrlFromEnv() !== null) {
+if (!PUBLISH_NOW && !FORCE && controlPlaneUrlFromEnv() !== null) {
   try {
     const doorRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, RUN_STARTED_AT, { skipBootstrap: true });
     const settledAt = new Date().toISOString();
@@ -928,7 +926,7 @@ if (selectedTasks.length > 0) try {
 
 const sittingReadById = new Map(sittingClockReads.map(read => [read.task.id, read]));
 const hotReadClocks = new Map(sittingClockReads.flatMap((read) => read.ok ? [[read.task.id, read.clock] as const] : []));
-const observedChangeRates = await readObservedChangeRates();
+const observedChangeRates = PUBLISH_NOW ? new Map<string, number>() : await readObservedChangeRates();
 for (const read of clockReads) {
   const { task } = read;
   if (!read.ok) {
@@ -986,8 +984,7 @@ for (const read of clockReads) {
   });
 }
 
-// A meeting lane is read earliest deadline first, up to three a pass; a requested partition's
-// deadline is the earlier of its own and the request's.
+// Due bodies run by deadline; an owner request may bring its body forward.
 const admitted = routineFailureDomainFrontier(dueCandidates.map(({ pending, clock }) => ({
   task: pending.task,
   lastConsideredAt: newestConsideredAt(clock, supervisorAttempts.get(pending.task.id)),
@@ -1015,7 +1012,7 @@ const dueRequestLines = [...honouredDueRequests].map(([taskId, request]) => admi
 attempted = pendingRuns.length;
 
 const sourceConcurrency = ROUTINE_CHILD_CONCURRENCY;
-console.log(`RCD_PASS checking ${pendingRuns.length} sources; persistent meeting workers=${sourceConcurrency}; quiet timeout=${ROUTINE_CHILD_TIMEOUT_MS}ms`);
+console.log(`RCD_PASS checking ${pendingRuns.length} sources; meeting state worker=1; other source workers=${sourceConcurrency}; quiet timeout=${ROUTINE_CHILD_TIMEOUT_MS}ms`);
 function sourceChildCommand(pending: PendingRun): BoundedChildCommand {
   const now = new Date().toISOString();
   const observedMinutes = observedChangeRates.get(pending.task.id) ?? observedChangeRates.get(`feed:${pending.task.id}`);
@@ -1066,6 +1063,8 @@ function recordSourceSettlementFailures(runs: readonly BoundedChildResult[]): vo
 }
 
 step = "running the source pass";
+const admittedReaderContracts = [...observableRoutineContracts(), ...MANUAL_PRODUCTION_SOURCE_CONTRACTS];
+const admittedMeetingContracts = new Map(MEETING_PARTITION_CONTRACTS.map(contract => [contract.id, contract]));
 for (const { id } of pendingRuns) unsettledSourceRuns.add(id);
 const sourcePass = runMeetingDiscoveryChain(pendingRuns, runSourceTasks);
 
@@ -1078,16 +1077,17 @@ async function runSourceTasks(runs: readonly PendingRun[]): Promise<readonly Bou
       const environment = sourceChildCommand(run).env!;
       return { id: run.id, dueAt: environment.WTP_SOURCE_DUE_AT!, nextDueAt: environment.WTP_SOURCE_NEXT_DUE_AT ?? environment.WTP_SOURCE_DUE_AT! };
     }), {
-      cwd: ROOT, concurrency: sourceConcurrency,
-      env: { ...admittedRuntimeChildEnvironment({ parentEnv: process.env, capability: "ROUTINE_SUPERVISOR", parentPid: process.pid }), WTP_SOURCE_STATE: STATE_SCOPE },
-      onStarting: acquireChildMemory,
+      prefetch: async (member, signal, acquire) => {
+        const partition = admittedMeetingContracts.get(member.id);
+        const seed = partition ? await meetingPrefetchSeed(store, partition) : undefined;
+        await prefetchSourceRequests({ sourceId: member.id, state: STATE_SCOPE, dueAt: member.dueAt, signal, acquire, seed });
+      },
       onMemberStarted: async id => {
         startedSourceChildren.add(id);
         sourceStartedAt.set(id, new Date().toISOString());
         await recordHuntSourceProgress(meetingById.get(id)!.task, "COLLECTING_AND_VERIFYING", "Checking this body's current sources and saving each verified finding.");
       },
       onSettled: async (member, result) => settlePendingRun(meetingById.get(member.id)!, result),
-      onWorkerSettled: releaseChildMemory,
     }),
     runBoundedChildPass(singles.map(sourceChildCommand), {
       cwd: ROOT, env: process.env, timeoutMs: ROUTINE_CHILD_TIMEOUT_MS,
@@ -1114,10 +1114,10 @@ async function settlePendingRun(pending: PendingRun, run: BoundedChildResult): P
     if (startedSourceChildren.has(run.id)) {
       const clock = await store.clock(pending.task.sourceId, pending.task.recordClass, pending.task.scope).catch(() => undefined);
       hotReadClocks.set(pending.task.id, routineAdmissionClock(clock ?? hotReadClocks.get(pending.task.id), sourceStartedAt.get(pending.task.id), Date.now()));
-      const memberReads = sittingWindowSourceIds(pending.task.id).flatMap(id => {
+      const memberReads = admittedSittingSourceIds(pending.task.id).flatMap(id => {
         const read = sittingReadById.get(id); return read ? [{ ...read, clock: hotReadClocks.get(id) }] : [];
       });
-      const hot = sittingWindowSignals(memberReads, Date.now(), statedEndsByTask).get(pending.task.id);
+      const hot = sittingWindowSignals(memberReads, Date.now(), statedEndsByTask, admittedSittingSourceIds).get(pending.task.id);
       const due = routineTaskDueAtMs(pending.task, hotReadClocks.get(pending.task.id), Date.now(), hot);
       if (clockConnection && Number.isFinite(due)) await neon(clockConnection).query(
         "UPDATE cp_source_checks SET next_due_at = $2::timestamptz WHERE source_id = $1", [pending.task.id, new Date(due).toISOString()]
@@ -1276,12 +1276,12 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
   }
 }
 
-// Reader delivery is its own OS-killable evidence domain: one child per non-meeting Reader, one shared
-// child for all meeting partitions (the Reader composes them together once).
-const readerContracts = selectedReaderRepairContracts([
-  ...observableRoutineContracts(),
-  ...MANUAL_PRODUCTION_SOURCE_CONTRACTS,
-], !PUBLISH_NOW && ONLY === null && STATE_SCOPE === "US" && FAMILY === "all" ? null : selectedTasks);
+// Only attempted members need readback during a bounded meeting turn.
+const meetingTurnRuns = FAMILY === "meetings" ? await sourcePass : null;
+const meetingTurnIds = new Set(meetingTurnRuns?.filter(run => run.status !== null).map(run => run.id));
+const readerContracts = selectedReaderRepairContracts(admittedReaderContracts,
+  !PUBLISH_NOW && ONLY === null && STATE_SCOPE === "US" && FAMILY === "all" ? null :
+  meetingTurnRuns === null ? selectedTasks : selectedTasks.filter(task => meetingTurnIds.has(task.id)));
 const readerDomains = routineReaderRepairDomains(readerContracts);
 const readerReadbackReferences: RoutineCivicDataReaderReadbackReference[] = readerContracts
   .filter(({ readerProjection }) => readerProjection === null)
@@ -1334,7 +1334,7 @@ function settleReaderDomain(domain: RoutineReaderRepairDomain, run: BoundedChild
 
 // A meeting read that falls due while the pass is held open starts as soon as its lane is free
 // (lib/civic-data/hot-read-catch-up.ts). The repair starts once every such read has settled.
-const hotReadTasks = FORCE || PUBLISH_NOW
+const hotReadTasks = FORCE || PUBLISH_NOW || FAMILY === "meetings"
   ? []
   : clockReads.flatMap((read) => read.ok && read.task.contract.schedule?.kind === "SITTING_WINDOW" ? [read.task] : []);
 const hotReadTaskIds = new Set(hotReadTasks.map(({ id }) => id));
@@ -1354,8 +1354,15 @@ function startReaderRepair(
   let openHotReadCatchUp: () => void = () => undefined;
   const hotReadCatchUpOpen = new Promise<void>((resolve) => { openHotReadCatchUp = resolve; });
   if (racingRepairs === 0) openHotReadCatchUp();
-  const readerPass = runBoundedChildPass(
-    readerLaunch.map((domain) => ({
+  const childDomains = readerLaunch.filter(domain => domain.mode !== "MEETING_AGGREGATE");
+  const inProcessReaders = Promise.all(readerLaunch.filter(domain => domain.mode === "MEETING_AGGREGATE").map(async domain => {
+    const result = await runMeetingReaderRepairDomain({ store, domain, observedAt: readerObservedAt, attestor: readerVerifierClosureAttestor() });
+    settleReaderDomain(domain, result);
+    if (repairDomainRacesHotReads(domain, hotReadTaskIds) && --racingRepairs === 0) openHotReadCatchUp();
+    return { ...result, stdout: "", stderr: "" };
+  }));
+  const childReaders = runBoundedChildPass(
+    childDomains.map((domain) => ({
       id: domain.id,
       executable: process.execPath,
       args: [
@@ -1380,7 +1387,7 @@ function startReaderRepair(
       concurrency: ROUTINE_READER_CHILD_CONCURRENCY,
       onStarting: acquireChildMemory,
       onSettled: (run, index) => {
-        const domain = readerLaunch[index]!;
+        const domain = childDomains[index]!;
         try {
           settleReaderDomain(domain, run);
         } finally {
@@ -1391,7 +1398,7 @@ function startReaderRepair(
       discardOutputAfterSettlement: true,
     },
   );
-  return { repair: readerPass, unblocked: hotReadCatchUpOpen };
+  return { repair: Promise.all([inProcessReaders, childReaders]).then(results => results.flat()), unblocked: hotReadCatchUpOpen };
 }
 
 const launchedTaskIds = new Set(pendingRuns.map(({ id }) => id));
@@ -1414,6 +1421,7 @@ function admitHotReads(phase: "SOURCE" | "REPAIR", nowMs: number, slots: number,
       })),
     clockReads: sittingClockReads.map(read => ({ ...read, clock: hotReadClocks.get(read.task.id) })),
     statedEnds: statedEndsByTask,
+    sourceIds: admittedSittingSourceIds,
     laneLastEndedMs,
     busyLanes: new Set([
       ...runningLanes,
@@ -1466,8 +1474,11 @@ const readerRuns = pass.repair;
 // Source settlement publishes serving copies even when a readback child fails.
 step = "publishing changed reader edge copies";
 await publishNowEdgeChecks?.stop();
-const finalReaderEdge = publishNowEdgeChecks ? await publishNowEdgeChecks.run()
-  : await publishSupervisorReaderEdge(store, new Date().toISOString(), ONLY === null && STATE_SCOPE === "US" && FAMILY === "all" ? null : selectedTasks, { state: STATE_SCOPE });
+const finalReaderEdge: ReaderEdgePublicationOutcome = publishNowEdgeChecks ? await publishNowEdgeChecks.run()
+  : FAMILY === "meetings" ? { ok: true, readerEdge: "PENDING", sequence: null,
+    store: resolveReaderArtifactWriteStore()?.kind === "netlify-blobs" ? "Netlify Blobs" : resolveReaderArtifactWriteStore()?.kind === "local-file" ? "local folder" : "not configured",
+    detail: "Verified source changes are waiting for this state’s independent publication lane." }
+  : await publishReaderEdge(ONLY === null && STATE_SCOPE === "US" && FAMILY === "all" ? null : selectedTasks);
 const readerEdge = publishNowEdgeChecks ? (await publishNowEdgeChecks.stop())! : finalReaderEdge;
 const readerEdgeFailure = readerEdgeSupervisorFailure(finalReaderEdge);
 if (readerEdgeFailure && !publishNowEdgeChecks) supervisorFailures.push(readerEdgeFailure);
@@ -1567,9 +1578,11 @@ try {
 }
 
 const wakeNow = Date.now();
-const wakeSignals = sittingWindowSignals(sittingClockReads.map(read => ({ ...read, clock: hotReadClocks.get(read.task.id) })), wakeNow, statedEndsByTask);
+const wakeSignals = sittingWindowSignals(sittingClockReads.map(read => ({ ...read, clock: hotReadClocks.get(read.task.id) })), wakeNow, statedEndsByTask, admittedSittingSourceIds);
 let nextDueMs = factNextDueAt === null ? Number.POSITIVE_INFINITY : Date.parse(factNextDueAt);
+let nextDeadlineMs = Number.POSITIVE_INFINITY;
 for (const task of selectedTasks) {
+  nextDeadlineMs = Math.min(nextDeadlineMs, routineTaskDeadlineMs(task, hotReadClocks.get(task.id), wakeSignals.get(task.id), wakeNow) ?? Number.POSITIVE_INFINITY);
   const observed = observedChangeRates.get(task.id) ?? observedChangeRates.get(`feed:${task.id}`);
   nextDueMs = Math.min(nextDueMs, routineTaskDueAtMs(task,
     routineAdmissionClock(hotReadClocks.get(task.id), supervisorAttempts.get(task.id), wakeNow), wakeNow,
@@ -1580,6 +1593,7 @@ for (const task of selectedTasks) {
     if (becomesHotAt > wakeNow) nextDueMs = Math.min(nextDueMs, becomesHotAt);
   }
 }
+if (Number.isFinite(nextDeadlineMs)) console.log(`RCD_NEXT_DEADLINE=${new Date(nextDeadlineMs).toISOString()}`);
 if (Number.isFinite(nextDueMs)) console.log(`RCD_NEXT_DUE=${new Date(Math.max(wakeNow, nextDueMs)).toISOString()}`);
 
 const attemptedCount = floored(

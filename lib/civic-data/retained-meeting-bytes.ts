@@ -5,7 +5,7 @@ import type { MeetingsSnapshot } from "../meetings/snapshot.ts";
 
 export interface RetainedSourceResponse {
   readonly source: string; readonly requestedUrl: string; readonly finalUrl: string;
-  readonly httpStatus: number; readonly rawHash: string; readonly byteCount: number;
+  readonly httpStatus: number; readonly checkStatus?: number; readonly rawHash: string; readonly byteCount: number;
   readonly bytes: Uint8Array; readonly retrievedAt: string; readonly contentType: string;
 }
 type TracedFetch = Pick<RetainedSourceResponse, "requestedUrl" | "finalUrl" | "httpStatus" | "rawHash" | "byteCount">;
@@ -18,7 +18,7 @@ export async function retainMeetingFetchBytes<T>(operation: () => Promise<T>) {
   const value = await runWithSourceFetch({ onResponse: response => {
     if (response.responseStatus < 200 || response.responseStatus >= 300) return;
     if (responses.some(held => held.requestedUrl === response.requestedUrl && held.rawHash === response.rawHash)) return;
-    responses.push({ ...response, source: "", httpStatus: response.responseStatus });
+    responses.push({ ...response, source: "", httpStatus: response.responseStatus, checkStatus: response.httpStatus });
   } }, operation);
   return { value, responses };
 }

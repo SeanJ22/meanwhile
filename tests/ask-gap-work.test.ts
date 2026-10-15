@@ -17,7 +17,7 @@ import {
   type AskGapMeeting,
   type CarrierClock,
 } from "../lib/control-plane/scheduler/providers/ask-gaps.ts";
-import { askGapCarrierTasks, carrierClocks, readAskGapHoldings } from "../lib/control-plane/scheduler/ask-gap-holdings.ts";
+import { askGapCarrierTasks, carrierClocks, readAskGapHoldings, askGapsProviderFromHeld } from "../lib/control-plane/scheduler/ask-gap-holdings.ts";
 import { buildRegistry } from "../lib/control-plane/scheduler/registry.ts";
 import { routeExecutor } from "../lib/control-plane/scheduler/route-executor.ts";
 import { decideExecutor } from "../lib/control-plane/scheduler/dispatch.ts";
@@ -361,18 +361,18 @@ test("the runner's reading: the sitting window decides the cadence a carrying re
   assert.deepEqual(failed, { kind: "UNREAD", why: "statement timeout" });
 
   const unreachable = await readAskGapHoldings({
-    now: NOW_ISO,
+    now: NOW_ISO, state: "US-AZ",
     readMeetings: async () => ({ kind: "STORE_UNREACHABLE", value: null, metadata: {} as never, code: "STORE_READ_FAILED", detail: "connect timeout" } as never),
   });
   assert.deepEqual(unreachable, { unreadable: "the meetings projection is STORE_UNREACHABLE: connect timeout" });
-  const hung = await readAskGapHoldings({ now: NOW_ISO, boundMs: 20, readMeetings: () => new Promise(() => {}) });
+  const hung = await readAskGapHoldings({ now: NOW_ISO, state: "US-AZ", boundMs: 20, readMeetings: () => new Promise(() => {}) });
   assert.deepEqual(hung, { unreadable: "the held reading did not finish within 0 s, so no gap is decided on it this cycle" }, "a hung read is named; it never holds the registry to the wall");
 
   const reading = await readAskGapHoldings({
-    now: NOW_ISO,
+    now: NOW_ISO, state: "US-AZ",
     readMeetings: async () => ({ kind: "PROMOTED", value: { meetings, agendaDocuments: documents }, metadata: {}, partitions: [], detail: "fixture" } as never),
     readOutcomes: async () => ({ sittings: [pimaSitting(false)], unreadable: null }),
-    readClock: async () => undefined,
+    readClocks: async tasks => tasks.map(() => ({ ok: true, clock: {} })),
   });
   assert.ok(!("unreadable" in reading));
   if ("unreadable" in reading) return;
@@ -489,4 +489,37 @@ test("ADMIN: open Ask gaps are counted by code, drawn with their denominators, a
   );
   assert.ok(auditRenderedNumbers(assignmentRenderedNumbers(view)).ok);
   assert.ok(checkStatedEqualsRendered(assignmentCountClaims(view)).ok);
+});
+
+
+test("the gap scan drains each state's places into compact work and names unreadable states", async () => {
+  const states: string[] = [], outcomeBodies: string[][] = [];
+  const provider = await askGapsProviderFromHeld({ now: NOW_ISO, states: ["AZ", "NH"], readClocks: async tasks => tasks.map(() => ({ ok: true, clock: {} })),
+    readOutcomes: async bodies => { outcomeBodies.push([...bodies]); return { sittings: [pimaSitting(false)].filter(row => row.bodyId !== null && bodies.includes(row.bodyId)), unreadable: null }; },
+    readPrepared: async options => {
+      states.push(options?.state ?? "unscoped");
+      assert.ok(options?.partitions, "the shared registry stays installed while each state is read");
+      if (options?.state === "US-NH") throw new Error("New Hampshire store unavailable");
+      return { kind: "PROMOTED", metadata: {}, partitions: [], detail: "scoped fixture", checks: { checkedAt: null, routes: {} },
+        value: { generatedAt: FRESH, sources: [], meetingCount: meetings.length, chunks: (async function* () {
+          for (const [index, bodyId] of [PIMA, MESA].entries()) {
+            assert.equal(outcomeBodies.length, index, "the previous place was reduced before the next is read");
+            const own = meetings.filter(meeting => meeting.bodyId === bodyId);
+            yield { key: bodyId, version: bodyId, read: async () => ({ snapshot: { formatVersion: 1, generatedAt: FRESH,
+              counts: { fresh: own.length, carried: 0, total: own.length }, sources: [], meetings: own,
+              agendaDocuments: documents.filter(document => own.some(meeting => meeting.id === document.meetingId)) } }) };
+          }
+        })() } } as unknown as NonNullable<Awaited<ReturnType<typeof import("../lib/meetings/prepared-snapshot.ts").readPreparedMeetingPublication>>>;
+    } });
+  const result = provider.enumerate({ root: ".", nowIso: NOW_ISO });
+  assert.deepEqual(states, ["US-AZ", "US-NH"]);
+  assert.deepEqual(outcomeBodies, [[PIMA], [MESA]]);
+  assert.ok(result.obligations.some(row => row.subjectId === PIMA));
+  assert.ok(result.obligations.some(row => row.subjectId === MESA));
+  assert.match(result.readFailure ?? "", /US-NH.*New Hampshire store unavailable/);
+  assert.equal(JSON.stringify(result).includes("Moratorium on Data Center Development Discussion"), false, "agenda payloads do not survive in the provider");
+  const hung = await askGapsProviderFromHeld({ now: NOW_ISO, states: ["NJ"], boundMs: 20, readPrepared: () => new Promise(() => {}) });
+  const incomplete = hung.enumerate({ root: ".", nowIso: NOW_ISO });
+  assert.deepEqual(incomplete.obligations, []);
+  assert.match(incomplete.readFailure ?? "", /US-NJ.*did not finish/);
 });

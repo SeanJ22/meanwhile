@@ -4,7 +4,10 @@ import { mkdtempSync, mkdirSync, writeFileSync, rmSync, renameSync } from "node:
 import { dirname, join, resolve } from "node:path";
 import { tmpdir } from "node:os";
 import { censusPublisherSize, heldPublisherSize, publisherSizeForState, type PublisherSizeHolding, type PublisherSizeSource } from "../lib/sources/publisher-size.ts";
-import { websiteRequestLimit } from "../lib/control-plane/scheduler/host-supervision.ts";
+import { websiteRequestLimit, websiteSizeFromHoldings } from "../lib/control-plane/scheduler/host-supervision.ts";
+import { fetchSource, runWithSourceFetch, SourceFetchDeferred } from "../lib/sources/fetch-source.ts";
+import { fileSourceFetchStore } from "../lib/sources/fetch-source-state.ts";
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 
 const source: PublisherSizeSource = { url: "https://census.gov/test-fixture", dataset: "TEST FIXTURE", sha256: "a".repeat(64),
   archiveSha256: "b".repeat(64), row: 1, sheet: "TEST FIXTURE" };
@@ -44,16 +47,60 @@ test("independent schools use enrollment; dependent operations retain the parent
   assert.equal(state.kind, "state"); assert.equal(websiteRequestLimit(state), null);
 });
 
-test("the requested state's exact host alone supplies size; unrelated state bytes stay unopened", t => {
+test("the requested state's publisher supplies size across www aliases; unrelated holdings stay unopened", t => {
   const path = root(t), size = censusPublisherSize(row, source)!;
   holding(path, "ny", [size]);
   const other = holding(path, "pa", []); writeFileSync(other, "NOT JSON");
   assert.equal(heldPublisherSize("NY", "http://town.gov/calendar", path)?.population, 9999);
   assert.equal(heldPublisherSize("pa", "https://town.gov", path), null);
-  assert.equal(heldPublisherSize("ny", "https://www.town.gov", path), null);
+  assert.equal(heldPublisherSize("ny", "https://www.town.gov", path)?.population, 9999);
+  assert.equal(heldPublisherSize("ny", "https://meetings.town.gov", path), null);
   assert.equal(heldPublisherSize("ny", "https://census.gov", path), null);
   assert.equal(heldPublisherSize("../ny", "https://town.gov", path), null);
   assert.equal(heldPublisherSize("ny", "file:///town.gov", path), null);
+});
+
+test("www aliases merge only the same government and retain independent subdomains", t => {
+  const path = root(t), size = censusPublisherSize(row, source)!;
+  const supplement = { ...size, host: "www.town.gov", population: null, populationYear: null,
+    students: 3000, studentsYear: 2020, source: { ...source, dataset: "TEST SUPPLEMENT" } };
+  holding(path, "ny", [size, supplement]);
+  for (const host of ["town.gov", "www.town.gov"]) {
+    const merged = heldPublisherSize("ny", `https://${host}`, path)!;
+    assert.equal(merged.population, 9999);
+    assert.equal(merged.students, 3000);
+    assert.equal(merged.sources.length, 2);
+  }
+  holding(path, "ny", [size, { ...supplement, censusId: "TEST-OTHER" },
+    { ...size, host: "meetings.town.gov", censusId: "TEST-SUBDOMAIN", population: 20000 }]);
+  assert.equal(heldPublisherSize("ny", "https://town.gov", path), null);
+  assert.equal(heldPublisherSize("ny", "https://www.town.gov", path), null);
+  assert.equal(heldPublisherSize("ny", "https://meetings.town.gov", path)?.population, 20000);
+});
+
+test("canonical fetch counts apex and www redirects together against the held small publisher's hourly limit", async t => {
+  for (const heldHost of ["town.gov", "www.town.gov"]) {
+    const path = root(t), size = censusPublisherSize(row, source)!;
+    holding(path, "ny", [{ ...size, host: heldHost }]);
+    let requests = 0, now = Date.parse("2026-10-15T12:00:00Z");
+    const transport: typeof fetch = async input => {
+      requests++;
+      return String(input) === "https://town.gov/calendar"
+        ? new Response(null, { status: 302, headers: { location: "https://www.town.gov/calendar" } })
+        : new Response("calendar");
+    };
+    await runWithSourceFetch({ websiteSize: websiteSizeFromHoldings(["ny"], path), vault: new MemoryEvidenceStore(),
+      runtime: { store: fileSourceFetchStore(path), transport, now: () => now } }, async () => {
+      assert.equal(await (await fetchSource("https://town.gov/calendar")).text(), "calendar");
+      for (let index = 0; index < 8; index++) await (await fetchSource(`https://${index % 2 ? "www." : ""}town.gov/page/${index}`)).body?.cancel();
+      assert.equal(requests, 10);
+      for (const host of ["town.gov", "www.town.gov"]) await assert.rejects(fetchSource(`https://${host}/next`), SourceFetchDeferred);
+      assert.equal(requests, 10, `${heldHost} supplies the cap to both forms of its publisher hostname`);
+      now += 3_600_000;
+      await (await fetchSource("https://www.town.gov/next")).body?.cancel();
+      assert.equal(requests, 11);
+    });
+  }
 });
 
 test("shared-host ambiguity stays unknown; counts merge only for the same PID6 publisher", t => {

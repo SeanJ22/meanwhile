@@ -1,3 +1,4 @@
+import { meetingPublication } from "./helpers/meeting-publication.ts";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { mkdtempSync } from "node:fs";
@@ -13,7 +14,8 @@ import {
   type MeetingPartitionContract,
 } from "../lib/civic-data/meeting-partitions.ts";
 import { clearPromotedReadModelCache } from "../lib/civic-data/read-model.ts";
-import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { MemoryRoutineDataStore, type PreparedReaderProjectionInput } from "../lib/civic-data/store.ts";
+import { installFactReader } from "../lib/facts/db.ts";
 import { VALIDATION_CHECKS, type RoutineCandidate, type ValidationReceipt } from "../lib/civic-data/types.ts";
 import { AUTHORITY_FAMILIES, type ReaderManifest } from "../lib/meetings/edge-artifacts.ts";
 import {
@@ -39,6 +41,8 @@ import {
   preparePublishedMeetingSnapshot,
   readComposedSourcePlaces,
   readPreparedMeetingsProjection,
+  readPreparedMeetingPublication,
+  type PreparedMeetingManifest,
 } from "../lib/meetings/prepared-snapshot.ts";
 import { RETIRED_MEETING_ROUTES } from "../lib/registry/source-wiring.ts";
 import {
@@ -243,9 +247,9 @@ test("controlled clock, the prepared serving copy and the edge: a receipt republ
     for (const [state, partition] of [["AZ", PIMA], ["NH", NEWBURY]] as const) {
       const meetings = snapshot.meetings.filter(meeting => meeting.bodyId === partition.bodyId);
       const carried = meetings.filter(meeting => meeting.carried).length;
-      const result = await publishReaderEdgeArtifacts({ ...snapshot, meetings,
+      const result = await publishReaderEdgeArtifacts(meetingPublication({ ...snapshot, meetings,
         sources: snapshot.sources.filter(source => source.source === partition.meetingSource),
-        counts: { total: meetings.length, fresh: meetings.length - carried, carried } }, metadata,
+        counts: { total: meetings.length, fresh: meetings.length - carried, carried } }), metadata,
       { ...options, store: scopedReaderArtifactStore(edge, state) });
       assert.equal(result.status, "PUBLISHED");
     }
@@ -431,4 +435,61 @@ test("prepared meeting copies normalize state names and keep another state's bod
   assert.ok(read.partitions.every(partition => !partition.bodyId.includes("state:nh")));
   assert.ok(await store.readPreparedReaderProjection("MEETING", "composed-reader-snapshot:US-AZ"));
   assert.equal(await store.readPreparedReaderProjection("MEETING", "composed-reader-snapshot:US-NH"), null);
+});
+
+
+test("prepared publication keeps one place in each payload, streams lazily and rebuilds only a changed fact's place", async () => {
+  const store = new MemoryRoutineDataStore();
+  await readPartition(store, PIMA, T1, ["bounded-pima"]);
+  await readPartition(store, NEWBURY, T1, ["bounded-newbury"]);
+  const writes: PreparedReaderProjectionInput[] = [];
+  const reads: string[] = [];
+  const write = store.writePreparedReaderProjection.bind(store);
+  const read = store.readPreparedReaderProjection.bind(store);
+  store.writePreparedReaderProjection = async (input, expected) => { writes.push(input); return write(input, expected); };
+  store.readPreparedReaderProjection = async (recordClass, scope) => { reads.push(scope); return read(recordClass, scope); };
+  let newest = 1;
+  installFactReader(async (text, params) => {
+    if (text.includes("GROUP BY e.parent_id")) return [{ body_id: PIMA.bodyId, newest, live: 1 }];
+    if (newest === 1) return [];
+    const ids = params?.[0] as string[];
+    return ids.includes(`meeting:${row(PIMA, "bounded-pima", T1, T1).id}`) ? [{
+      entity_id: `meeting:${row(PIMA, "bounded-pima", T1, T1).id}`, field: "title", value: "Owner corrected meeting", quote: "Owner corrected meeting",
+      checked_at: T4, fetched_at: T4, url: ACQUIRED_URL, provenance_kind: "OWNER",
+    }] : [];
+  });
+  try {
+    const first = await preparePublishedMeetingSnapshot(store, T1);
+    assert.equal(first.status, "PUBLISHED", JSON.stringify(first));
+    const root = await read("MEETING", MEETINGS_PREPARED_SCOPE);
+    const manifest = root!.payload as PreparedMeetingManifest;
+    assert.equal(manifest.formatVersion, 2);
+    assert.equal(manifest.chunks.length, 2);
+    assert.ok(writes.filter(input => input.scope !== MEETINGS_PREPARED_SCOPE).every(input => (input.payload as MeetingsSnapshot).meetings.length === 1));
+    const stream = await readPreparedMeetingPublication({ store, now: T1 });
+    assert.ok(stream);
+    const before = reads.length;
+    const iterator = stream.value.chunks[Symbol.asyncIterator]();
+    const firstChunk = await iterator.next();
+    assert.equal(firstChunk.done, false);
+    assert.equal(reads.length, before, "chunk identities do not load place payloads");
+    assert.ok(firstChunk.value.version.includes(":place:"));
+    await firstChunk.value.read();
+    assert.equal(reads.length, before + 1, "only the first place payload is loaded");
+    await iterator.return?.();
+    writes.length = 0;
+    await readPartition(store, PIMA, T2, ["bounded-pima"]);
+    const confirmed = await preparePublishedMeetingSnapshot(store, T2);
+    assert.equal(confirmed.status, "CURRENT", JSON.stringify(confirmed));
+    assert.equal(writes.length, 0, "unchanged source confirmations never rewrite prepared chunks");
+    newest = 2;
+    const changed = await preparePublishedMeetingSnapshot(store, T4);
+    assert.equal(changed.status, "PUBLISHED", JSON.stringify(changed));
+    const chunkWrites = writes.filter(input => input.scope !== MEETINGS_PREPARED_SCOPE);
+    assert.equal(chunkWrites.length, 1, "an owner edit rebuilds only its governing place");
+    assert.equal((chunkWrites[0]!.payload as MeetingsSnapshot).meetings[0]!.title, "Owner corrected meeting");
+    const next = (await read("MEETING", MEETINGS_PREPARED_SCOPE))!.payload as PreparedMeetingManifest;
+    const untouched = manifest.chunks.find(chunk => chunk.bodyIds.includes(NEWBURY.bodyId))!;
+    assert.equal(next.chunks.find(chunk => chunk.key === untouched.key)!.scope, untouched.scope);
+  } finally { installFactReader(undefined); }
 });

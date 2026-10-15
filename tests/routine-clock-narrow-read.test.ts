@@ -4,11 +4,18 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 
 import { drizzle } from "drizzle-orm/neon-http";
+import { drizzle as pgliteDrizzle } from "drizzle-orm/pglite";
+import { PgDialect } from "drizzle-orm/pg-core";
+import { PGlite } from "@electric-sql/pglite";
 
 import * as schema from "../lib/db/schema.ts";
 import {
   CANDIDATE_PROOF_OMITTED,
   MemoryRoutineDataStore,
+  PostgresRoutineDataStore,
+  routineClocksQuery,
+  ROUTINE_CLOCK_BATCH_SIZE,
+  type RoutineClockRequest,
   candidateProofRead,
   candidateProofView,
   latestReaderReadbacksRead,
@@ -20,13 +27,8 @@ import {
   readPointerMoveEvents,
   proofConsistentSuccess,
   ROUTINE_CLOCK_CANDIDATE_FIELDS,
-  routineClockCandidateRead,
   routineClockCandidateView,
-  routineClockConfirmationRead,
   promotedPointerIdentityRead,
-  routineClockPointedObservedRead,
-  routineClockPointerRead,
-  sittingStartsRead,
   type RoutineClockRecord,
 } from "../lib/civic-data/store.ts";
 import { normalizedHash } from "../lib/civic-data/candidate-builders.ts";
@@ -160,26 +162,32 @@ function narrowed(record: CandidateVersionRecord): RoutineClockRecord {
   return { ...record, candidate: routineClockCandidateView(record.candidate) };
 }
 
+function clockSql(): string {
+  return new PgDialect().sqlToQuery(routineClocksQuery([{ sourceId: "fec-open-api", recordClass: "FEC_FUNDING", scope: "federal-supported" }])).sql;
+}
+
 test("the routine clock reads a pointer's identity and proof, never its promoted payload", () => {
-  const select = selectList(routineClockPointerRead(drizzle.mock({ schema }), "FEC_FUNDING", "federal-supported"));
+  const text = clockSql();
+  const select = text.slice(text.indexOf("'sourceId',p.source_id"), text.indexOf(") END AS pointer"));
   assert.doesNotMatch(select, DATASET);
   for (const column of ["source_id", "record_class", "scope", "current_version_id", "last_known_good_version_id", "validation_receipt"]) {
-    assert.match(select, new RegExp(`"${column}"`), `the pointer read must still carry ${column}`);
+    assert.match(select, new RegExp(column), `the pointer read must still carry ${column}`);
   }
 });
 
 test("the routine clock builds its candidate view in Postgres; the payload and read model never leave the database", () => {
-  const select = selectList(routineClockCandidateRead(drizzle.mock({ schema }), "cv-example"));
+  const text = clockSql();
+  const select = text.slice(text.indexOf("'candidate',"), text.indexOf("'state',pointed.state"));
   assert.doesNotMatch(select, DATASET);
-  assert.doesNotMatch(select, /"candidate"(?!\s*(?:->|#>))/, "the whole candidate column is never selected");
+  assert.doesNotMatch(select, /pointed\.candidate(?!\s*(?:->|#>))/, "the whole candidate column is never selected");
   assert.match(select, /jsonb_strip_nulls\(jsonb_build_object\(/);
   for (const field of ROUTINE_CLOCK_CANDIDATE_FIELDS.top) {
-    assert.match(select, new RegExp(`'${field}', "civic_data_candidates"\\."candidate"->'${field}'`));
+    assert.ok(select.includes(`'${field}', pointed.candidate->'${field}'`));
   }
   for (const field of ROUTINE_CLOCK_CANDIDATE_FIELDS.retrieval) {
-    assert.match(select, new RegExp(`'${field}', "civic_data_candidates"\\."candidate"#>'\\{retrieval,${field}\\}'`));
+    assert.ok(select.includes(`'${field}', pointed.candidate#>'{retrieval,${field}}'`));
   }
-  assert.match(select, /'parserVersion', "civic_data_candidates"\."candidate"#>'\{normalization,parserVersion\}'/);
+  assert.ok(select.includes("'parserVersion', pointed.candidate#>'{normalization,parserVersion}'"));
 });
 
 test("the clock view names exactly the fields the clock proves; widening it is a visible cost decision", () => {
@@ -199,8 +207,8 @@ test("both stores' clocks read through the narrowed view, never a whole row", ()
   const source = readFileSync(join(ROOT, "lib", "civic-data", "store.ts"), "utf8");
   const postgres = source.slice(source.indexOf("export class PostgresRoutineDataStore"));
   const postgresClock = postgres.slice(postgres.indexOf("  async clock("));
-  assert.match(postgresClock, /routineClockPointerRead\(this\.db, recordClass, scope\)/);
-  assert.match(postgresClock, /routineClockCandidateRead\(this\.db, pointer\.currentVersionId\)/);
+  assert.match(postgresClock, /this\.clocks\(\[\{ sourceId, recordClass, scope, parserVersion \}\]\)/);
+  assert.match(postgresClock, /routineClocksQuery\(batch\)/);
   assert.doesNotMatch(postgresClock, /\.select\(\)/, "a whole-row select in the clock moves every promoted dataset each pass");
   const memory = source.slice(source.indexOf("export class MemoryRoutineDataStore"), source.indexOf("function rowToCandidate("));
   const memoryClock = memory.slice(memory.indexOf("  async clock("));
@@ -292,19 +300,16 @@ test("a MEETING clock reports its sitting starts, and the pointed success as its
   });
 });
 
-test("a MEETING pointer's sitting starts are built in Postgres; the promoted payload never leaves the database", () => {
-  const text = sittingStartsRead(drizzle.mock({ schema }), "source:x:body:y").toSQL().sql;
-  const select = text.slice(0, text.indexOf(" from \"civic_data_promotions\""));
-  assert.match(select, /jsonb_agg\(m->'startsAt'\)/);
-  assert.match(select, /'\[\]'::jsonb\)/, "a promoted scope with no sittings reports an empty list, never none (R20)");
+test("a MEETING pointer's sitting starts are built in Postgres only for requested scopes", () => {
+  const text = clockSql();
+  assert.match(text, /jsonb_agg\(m->'startsAt'\)/);
+  assert.match(text, /coalesce\(jsonb_agg\(m->'startsAt'\),'\[\]'::jsonb\)/);
   assert.deepEqual(meetingPayloadSittingStarts({ meetings: [] }), []);
   assert.deepEqual(meetingPayloadSittingStarts({}), []);
-  assert.match(select, /jsonb_array_elements\(case when jsonb_typeof\((?:"civic_data_promotions"\.)?"payload"->'meetings'\) = 'array'/);
-  assert.doesNotMatch(select, /select (?:"civic_data_promotions"\.)?"payload"[,\s]/, "the payload column is never selected whole");
-  assert.doesNotMatch(select, /::timestamptz/, "no cast can fail the clock; the runner parses the strings");
-  const observed = routineClockPointedObservedRead(drizzle.mock({ schema }), "MEETING", "source:x:body:y").toSQL().sql;
-  assert.doesNotMatch(observed.slice(0, observed.indexOf(" from ")), DATASET);
-  assert.match(observed, /"civic_data_candidate_events"\."sequence" = \$\d/);
+  assert.match(text, /requested\.record_class='MEETING' AND p\.current_version_id IS NOT NULL/);
+  assert.match(text, /p\.record_class=requested\.record_class AND p\.scope=requested\.scope/);
+  assert.doesNotMatch(text, /select p\.payload[,\s]/);
+  assert.match(text, /observed\.candidate_id=p\.current_version_id AND observed\.sequence=1/);
 });
 
 test("a live candidate's proof reads neither its identity set nor its change set and records, and decides the same", async () => {
@@ -468,6 +473,99 @@ async function promotedStore(value: RoutineCandidate): Promise<MemoryRoutineData
   await store.promote(value.id, receipt, "2026-09-08T12:01:00.000Z");
   return store;
 }
+
+test("batched Postgres clocks preserve durable proof and source timing in one query per 128 requested scopes", async context => {
+  const pg = new PGlite();
+  context.after(() => pg.close());
+  await pg.exec(`CREATE TABLE civic_data_candidates(id text PRIMARY KEY,source_id text,record_class text,scope text,state text,
+    acquisition_succeeded boolean,parser_version text,candidate jsonb,validation_receipt jsonb,promoted_version_id text,
+    last_known_good_version_id text,failure_code text,failure_detail text);
+    CREATE INDEX clock_candidate_scope ON civic_data_candidates(record_class,scope);
+    CREATE TABLE civic_data_candidate_events(candidate_id text,sequence integer,state text,at timestamptz,detail text,PRIMARY KEY(candidate_id,sequence));
+    CREATE TABLE civic_data_promotions(source_id text,record_class text,scope text,current_version_id text,
+    last_known_good_version_id text,promoted_at timestamptz,payload jsonb,validation_receipt jsonb,PRIMARY KEY(record_class,scope));`);
+  const values = ["success", "unchanged", "later-failed", "imported", "meeting"].map(name => {
+    const value = candidate(`batch-${name}`, { scope: `clock:${name}` });
+    return name === "meeting" ? { ...value, recordClass: "MEETING" as const,
+      readModel: { meetings: [{ startsAt: "2026-09-10T12:00:00Z" }, { startsAt: null }] } } : value;
+  });
+  const memory = new MemoryRoutineDataStore();
+  const state = { candidates: new Map<string, CandidateVersionRecord>(), promotions: new Map<string, unknown>(), history: new Map<string, unknown>() };
+  for (const value of values) {
+    const part = await promotedStore(value);
+    const held = part as unknown as typeof state;
+    for (const key of ["candidates", "promotions", "history"] as const) for (const [id, row] of held[key]) (state[key] as Map<string, unknown>).set(id, row);
+  }
+  Object.assign(memory, state);
+  const imported = state.candidates.get(values[3]!.id)!;
+  state.candidates.set(values[3]!.id, { ...imported, candidate: { ...imported.candidate,
+    bootstrapImport: { kind: "TRUSTED_LKG_IMPORT" } as RoutineCandidate["bootstrapImport"] } });
+  const confirmed = values[1]!;
+  const checkedAt = "2026-09-08T18:00:00.000Z";
+  assert.equal((await memory.confirmUnchanged({ sourceId: confirmed.sourceId, recordClass: confirmed.recordClass, scope: confirmed.scope,
+    parserVersion: confirmed.normalization.parserVersion, pointerVersionId: confirmed.id, readModelHash: confirmed.normalization.normalizedHash!,
+    basis: "READ_MODEL_RECOMPUTED", retrieval: { ...confirmed.retrieval, rawHash: confirmed.retrieval.rawHash!, sourceCheck: {
+      requestedUrl: confirmed.retrieval.requestedUrl, finalUrl: confirmed.retrieval.finalUrl!, rawHash: confirmed.retrieval.rawHash!, httpStatus: 304, checkedAt,
+    } } }, "2026-09-08T18:00:03.000Z")).kind, "CONFIRMED");
+  const failed = candidate("batch-failed-attempt", { scope: values[2]!.scope,
+    retrieval: { ...values[2]!.retrieval, succeeded: false, retrievedAt: "2030-01-01T00:00:00Z" } });
+  state.candidates.set(failed.id, { ...promoted(failed), state: "SOURCE_BLOCKED", acquisitionSucceeded: false, receipt: null,
+    promotedVersion: null, lastKnownGoodVersion: values[2]!.id });
+  state.history.set(failed.id, [{ candidateId: failed.id, sequence: 1, state: "SOURCE_BLOCKED", at: "2026-09-08T19:00:00.000Z", detail: "publisher unavailable" }]);
+  for (const [id, record] of state.candidates) {
+    const value = record.candidate;
+    await pg.query("INSERT INTO civic_data_candidates VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)",
+      [id, value.sourceId, value.recordClass, value.scope, record.state, record.acquisitionSucceeded, value.normalization.parserVersion,
+        JSON.stringify(value), JSON.stringify(record.receipt), record.promotedVersion, record.lastKnownGoodVersion, record.failureCode, record.failureDetail]);
+    for (const event of await memory.events(id)) await pg.query("INSERT INTO civic_data_candidate_events VALUES ($1,$2,$3,$4,$5)",
+      [id, event.sequence, event.state, event.at, event.detail]);
+  }
+  for (const value of values) {
+    const pointer = (await memory.readPromotion(value.recordClass, value.scope))!;
+    await pg.query("INSERT INTO civic_data_promotions VALUES ($1,$2,$3,$4,$5,$6,$7,$8)",
+      [pointer.sourceId, pointer.recordClass, pointer.scope, pointer.versionId, pointer.lastKnownGoodVersionId, pointer.promotedAt,
+        JSON.stringify(pointer.payload), JSON.stringify(pointer.receipt)]);
+  }
+  let queries = 0;
+  const db = pgliteDrizzle(pg, { logger: { logQuery: () => { queries++; } } });
+  const store = new PostgresRoutineDataStore(db as never, null);
+  const requests: RoutineClockRequest[] = [...values.map(value => ({ sourceId: value.sourceId, recordClass: value.recordClass, scope: value.scope })),
+    { sourceId: confirmed.sourceId, recordClass: confirmed.recordClass, scope: confirmed.scope, parserVersion: "new-parser" },
+    { sourceId: "missing", recordClass: "MEETING", scope: "missing" }];
+  const expected = await memory.clocks(requests);
+  const clocks = await store.clocks(requests);
+  assert.deepEqual(clocks, expected);
+  assert.equal(queries, 1);
+  assert.deepEqual(clocks[1], { ok: true, clock: { lastAttemptedAt: checkedAt, lastSucceededAt: confirmed.retrieval.retrievedAt, lastSucceededObservedAt: checkedAt } });
+  assert.equal(clocks[2]!.ok && clocks[2].clock.lastAttemptedAt, "2026-09-08T19:00:00.000Z");
+  assert.deepEqual(clocks[3], { ok: true, clock: {} });
+  assert.equal(clocks[5]!.ok && clocks[5].clock.lastAttemptedAt, undefined);
+  assert.deepEqual(clocks[6], { ok: true, clock: {} });
+  assert.deepEqual(await store.clock(confirmed.sourceId, confirmed.recordClass, confirmed.scope), clocks[1]!.ok ? clocks[1].clock : null);
+  assert.equal(queries, 2, "one-source reads use the same batch query");
+  queries = 0;
+  const many = Array.from({ length: ROUTINE_CLOCK_BATCH_SIZE * 2 + 1 }, (_, index) => requests[index % requests.length]!);
+  assert.deepEqual(await store.clocks(many), many.map((_, index) => expected[index % expected.length]));
+  assert.equal(queries, 3);
+  await pg.query("UPDATE civic_data_candidates SET candidate=jsonb_set(candidate,'{retrieval,retrievedAt}','\"not-a-time\"') WHERE id=$1", [values[0]!.id]);
+  const isolated = await store.clocks(requests);
+  assert.equal(isolated[0]!.ok, false);
+  assert.deepEqual(isolated.slice(1), expected.slice(1), "one malformed clock does not discard healthy siblings");
+  for (const checkedAt of ["not-a-time", "2026-02-30T12:00:00.000Z"]) {
+    const value = values[0]!;
+    await pg.query("UPDATE civic_data_candidates SET candidate=$2::jsonb WHERE id=$1", [value.id, JSON.stringify({
+      ...value, retrieval: { ...value.retrieval, sourceCheck: { checkedAt, requestedUrl: value.retrieval.requestedUrl,
+        finalUrl: value.retrieval.finalUrl, rawHash: value.retrieval.rawHash, httpStatus: 200 } },
+    })]);
+    queries = 0;
+    const damaged = await store.clocks(requests);
+    assert.equal(damaged[0]!.ok, false);
+    if (!damaged[0]!.ok) assert.match(damaged[0]!.error, /ROUTINE_CLOCK_SOURCE_CHECK_INVALID/);
+    assert.deepEqual(damaged.slice(1), expected.slice(1), `invalid persisted source check ${checkedAt} does not poison sibling clocks`);
+    assert.equal(queries, 1, "bad timestamps remain isolated within the single batch query");
+  }
+  context.diagnostic(JSON.stringify({ clocks: many.length, batchSize: ROUTINE_CLOCK_BATCH_SIZE, queries: 3 }));
+});
 
 const CONFIRMING_RETRIEVAL = {
   requestedUrl: "https://api.open.fec.gov/v1/",
@@ -633,9 +731,10 @@ test("the Postgres confirmation is one guarded insert, and the clock reads one e
     /this\.candidateEventLock\(id\)/,
     /\$\{priorCheckedAt\} > \$\{checkedAt\}::timestamptz/,
   ]) assert.match(method, guard);
-  const select = selectList(routineClockConfirmationRead(drizzle.mock({ schema }), "FEC_FUNDING", "federal-supported"));
+  const query = clockSql();
+  const select = query.slice(query.indexOf("SELECT detail FROM civic_data_candidate_events"));
   assert.doesNotMatch(select, DATASET);
-  assert.match(select, /"detail"/);
+  assert.match(select, /candidate_id=p\.current_version_id/);
 });
 
 test("a confirmed version is as fresh as its confirmation, on the cold, warm and batch reads", async () => {

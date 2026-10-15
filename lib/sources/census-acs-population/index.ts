@@ -1,3 +1,4 @@
+// @freshness-reads-here
 import { fetchSource } from "../fetch-source.ts";
 
 import {
@@ -42,11 +43,6 @@ export interface AcsPopulationRow {
   readonly code: string;
   readonly name: string;
   readonly population: number;
-  /**
-   * The Bureau's 90%-confidence margin of error on `population`, or null when
-   * the Bureau published a jam value instead of a margin. Null means "the
-   * Bureau did not state one", which is a different fact from a margin of 0.
-   */
   readonly marginOfError: number | null;
   readonly geography?: AcsScope;
   readonly stateFips?: string | null;
@@ -84,11 +80,6 @@ export function describeUrl(scope: AcsScope): string {
   return `${BASE}?get=NAME,${VARIABLE},${MARGIN_VARIABLE}&for=${encodeURIComponent(geography(scope))}&key=<${KEY_VAR}>`;
 }
 
-/**
- * One call per scope. A missing key is refused up front (the API answers a
- * keyless call with a 302 to `missing_key.html`, which would otherwise read as
- * an empty dataset); a refused response is reported with its status and credential-free route.
- */
 export async function fetch(
   scope: AcsScope,
   key: string | undefined,
@@ -145,14 +136,6 @@ export async function censusRequest(label: string, url: string, fetcher: typeof 
   return requestPublisher(label, () => fetcher(url, { redirect: "manual", headers: { accept: "application/json" }, signal }));
 }
 
-/**
- * A published margin, or null for one the Bureau did not state.
- *
- * Every ACS jam value is negative (`-555555555`, `-333333333`, `-222222222`,
- * `-999999999` …). A margin cannot be negative, so the sign is the whole test
- * and no jam-value list has to be kept current here. A blank cell is likewise
- * "not stated", never zero.
- */
 export function marginOf(raw: string | null | undefined): number | null {
   if (raw === null || raw === undefined) return null;
   const text = String(raw).trim();

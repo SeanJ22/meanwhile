@@ -11,6 +11,10 @@ import {
 import type { BodySourceWiring } from "../../registry/source-wiring.ts";
 import { toZonedIso } from "../../time/zoned.ts";
 import { politeGetJson } from "../http.ts";
+
+export function civicClerkEntryUrl(apiBase: string): string {
+  return `${new URL(apiBase).origin}/v1/Events?${new URLSearchParams({ $top: "1", $orderby: "id desc" })}`;
+}
 import { sittingStatus, saysCanceled } from "../sitting-status.ts";
 import {
   accountedNormalize,
@@ -267,7 +271,7 @@ export function makeCivicClerkSource(
           $orderby: "id asc", $top: "200",
         });
         // No complete event revision is exposed; an unchanged latest id cannot rule out cancellations or new documents.
-        await politeGetJson(`${base}/v1/Events?${new URLSearchParams({ $top: "1", $orderby: "id desc" })}`, { fetchImpl, signal: meetingQuery?.signal });
+        await politeGetJson(civicClerkEntryUrl(base), { fetchImpl, signal: meetingQuery?.signal });
         const readPages = <T extends { id: number }>(url: string) => readCivicClerkPages<T>(url,
           page => politeGetJson<CivicClerkPage<T>>(page, { fetchImpl, signal: meetingQuery?.signal }), meetingQuery?.signal);
         const categories = await readPages<{ id: number; categoryDesc: string }>(`${base}/v1/EventCategories`);

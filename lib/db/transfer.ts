@@ -18,7 +18,8 @@ let installed = false;
 let lastFlush = 0;
 let flushing: Promise<boolean> | null = null;
 
-const easternDay = (at: Date) => new Intl.DateTimeFormat("sv-SE", { timeZone: "America/New_York" }).format(at);
+const easternDateFormat = new Intl.DateTimeFormat("sv-SE", { timeZone: "America/New_York" });
+const easternDay = (at: Date) => easternDateFormat.format(at);
 
 function runnerClient(): boolean {
   return Boolean(process.env.WTP_RUNTIME_AUTHORITY_CAPABILITY) || process.env.WTP_SANCTIONED_WRITE === "routine-civic-data-promotion";
@@ -90,10 +91,6 @@ function accumulate(row: DatabaseTransfer): void {
     requestBytes: prior.requestBytes + row.requestBytes, responseBytes: prior.responseBytes + row.responseBytes } : row);
 }
 
-/**
- * A standing-runner process hands its counts to the runner in its hour reports, which reach the runner even when the
- * process exits at once or is ended; the runner alone writes their daily rows (`keepRunnerTransfer`).
- */
 function reportsToRunner(): boolean {
   return process.env[VITAL_SIGNS_REPORT_ENV] === "1";
 }
@@ -156,10 +153,6 @@ export function installDatabaseTransferCounter(): void {
 const runnerParts = new Map<string, { readonly hour: string; readonly bytes: NeonBytesHour["bytes"]; readonly sent: NonNullable<NeonBytesHour["sent"]> }>();
 const NOTHING_SENT: NonNullable<NeonBytesHour["sent"]> = { reader: { requests: 0, bytes: 0 }, "control-plane": { requests: 0, bytes: 0 } };
 
-/**
- * The standing runner's daily rows: each hour report (one process's whole hour so far, its own or a child's) adds
- * what that process read and sent since its previous report, written once a minute by this process.
- */
 export function keepRunnerTransfer(part: NeonBytesHour): void {
   if (!Number.isSafeInteger(part.pid)) return;
   installDatabaseTransferCounter();

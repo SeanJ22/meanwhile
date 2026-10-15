@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
+import { withSourceTransport } from "./helpers/source-fetch.ts";
 import { acquireDotGov } from "../scripts/fetch-dotgov.mts";
 import { dotGovCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { attachGovernmentDomains, DOTGOV_BOUNDARY, DOTGOV_SCOPE, dotGovSnapshotIssues, parseDotGovRegistry, readDotGovProjection, type DotGovSnapshot } from "../lib/civic-data/dotgov.ts";
@@ -60,16 +61,13 @@ test("the real CISA snapshot retains every domain and registrant, including non-
 });
 
 test("the pinned acquisition keeps all real CSV rows and refuses conflicting duplicate identifiers", async () => {
-  const original = globalThis.fetch;
-  globalThis.fetch = (async (url: RequestInfo | URL) => String(url).includes("api.github.com")
+  const transport: typeof fetch = async url => String(url).includes("api.github.com")
     ? new Response(JSON.stringify([{ sha: source.sha }]), { status: 200 })
-    : new Response(csv, { status: 200 })) as typeof fetch;
-  try {
-    const acquisition = await acquireDotGov();
-    assert.equal(acquisition.snapshot.domains.length, source.domains);
-    assert.equal(acquisition.snapshot.counts.electionDomains, 719);
-    assert.ok(acquisition.snapshot.domains.some(row => row.domain === "29palms.gov"));
-  } finally { globalThis.fetch = original; }
+    : new Response(csv, { status: 200 });
+  const acquisition = await withSourceTransport(transport, acquireDotGov);
+  assert.equal(acquisition.snapshot.domains.length, source.domains);
+  assert.equal(acquisition.snapshot.counts.electionDomains, 719);
+  assert.ok(acquisition.snapshot.domains.some(row => row.domain === "29palms.gov"));
   const first = csv.split("\n")[1]!;
   assert.throws(() => parseDotGovRegistry(`${csv}\n${first}\n`), /repeats a domain/);
 });

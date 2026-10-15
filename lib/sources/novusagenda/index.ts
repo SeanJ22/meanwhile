@@ -42,6 +42,13 @@ export function novusPortalUrl(route: string): string {
   return url.toString();
 }
 
+function novusDate(iso: string): string { const [year, month, day] = iso.slice(0, 10).split("-"); return `${month}/${day}/${year}`; }
+export function novusCalendarUrl(wiring: BodySourceWiring, from: string, to: string): URL {
+  const url = new URL(novusPortalUrl(wiring.config.portalUrl));
+  url.search = new URLSearchParams({ Date: "cus", From: novusDate(from), To: novusDate(to) }).toString();
+  return url;
+}
+
 export function parseNovusMeetings(html: string, url: string): NovusMeeting[] {
   if (!/(?:rptMeetings|radGridMeetings)/i.test(html)) throw new Error("NOVUS_MEETING_LIST_CHANGED");
   const result: NovusMeeting[] = [];
@@ -162,11 +169,9 @@ export function makeNovusAgendaSource(rows: BodySourceWiring[], fetchImpl?: type
       const now = Date.now();
       const from = query.startsAfter ?? new Date(now - MEETING_HELD_LOOKBACK_DAYS * 86_400_000).toISOString();
       const to = query.startsBefore ?? new Date(now + MEETING_HELD_HORIZON_DAYS * 86_400_000).toISOString();
-      const format = (iso: string) => { const [year, month, day] = iso.slice(0, 10).split("-"); return `${month}/${day}/${year}`; };
       for (const wiring of rows) {
         if (!wiring.config.bodyMatch?.trim()) throw new Error(`NOVUS_BODY_FILTER_MISSING:${wiring.bodyId}`);
-        const url = new URL(novusPortalUrl(wiring.config.portalUrl));
-        url.search = new URLSearchParams({ Date: "cus", From: format(from), To: format(to) }).toString();
+        const url = novusCalendarUrl(wiring, from, to);
         try {
           if (refusals.has(url.toString())) throw refusals.get(url.toString());
           let pages = heldPages.get(url.toString());
@@ -180,8 +185,8 @@ export function makeNovusAgendaSource(rows: BodySourceWiring[], fetchImpl?: type
                 const form = novusForm(got.text);
                 for (const key of Object.keys(form)) {
                   if (key.endsWith("ddlDateRange")) form[key] = "cus";
-                  if (key.endsWith("txtCalendarFrom")) form[key] = format(from);
-                  if (key.endsWith("txtCalendarTo")) form[key] = format(to);
+                  if (key.endsWith("txtCalendarFrom")) form[key] = novusDate(from);
+                  if (key.endsWith("txtCalendarTo")) form[key] = novusDate(to);
                 }
                 const search = /<input\b[^>]*\bname=["']([^"']*\$btnSearch)["'][^>]*>/i.exec(got.text)?.[1];
                 if (!search) throw new Error("NOVUS_DATE_SEARCH_CHANGED");

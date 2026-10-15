@@ -3,7 +3,7 @@ import { mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
-import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { MemoryRoutineDataStore, type RoutineDataStore } from "../lib/civic-data/store.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { censusGeographyCandidate } from "../lib/census-geography/candidate.ts";
 import { CENSUS_GEO_CONTRACT_ID } from "../lib/census-geography/publication.ts";
@@ -12,7 +12,7 @@ import { publishRoutineReaderEdgeOutcome } from "../lib/civic-data/reader-edge-p
 import { PUBLISH_NOW_INTERVAL_MS, publishNowHasNothingOwed, startPublishNowEdgeChecks } from "../lib/civic-data/publish-now.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import { ensureReaderAuthorityEdge } from "../lib/meetings/edge-serving.ts";
-import { MEETINGS_PREPARED_SCOPE } from "../lib/meetings/prepared-snapshot.ts";
+import { MEETING_LAYOUT_COUPLING, preparedMeetingScope } from "../lib/meetings/prepared-snapshot.ts";
 import { heldRegistrationReceipt } from "../lib/registration/acquire.ts";
 import { registrationCandidate } from "../lib/registration/candidate.ts";
 import { registrationTarget } from "../lib/registration/publication.ts";
@@ -29,14 +29,21 @@ test("publish-now copies real baseline pointers during an unresolved finance pas
   // The routine sweep also checks these existing canonical families. Seed them through their real promotion doors.
   const census = censusGeographyCandidate(JSON.parse(readFileSync("lib/census-geography/bootstrap-az.json", "utf8")));
   assert.ok((await processRegisteredRoutineCandidate(memory, CENSUS_GEO_CONTRACT_ID, census, NOW)).promoted);
-  await memory.writePreparedReaderProjection({ recordClass: "MEETING", scope: MEETINGS_PREPARED_SCOPE,
-    payload: { formatVersion: 1, generatedAt: NOW, counts: { fresh: 0, carried: 0, total: 0, duplicatesCollapsed: 0 },
-      meetings: [], agendaDocuments: [], sources: [] }, composedFrom: [{ contractId: "meeting-facts", versionId: "facts:none" }], factSha256: "a".repeat(64),
+  const states = ["US", "US-AZ", "US-NH"];
+  for (const state of states) await memory.writePreparedReaderProjection({ recordClass: "MEETING", scope: preparedMeetingScope(state),
+    payload: { formatVersion: 2, chunks: [], heldChunks: [], unavailableSources: [] },
+    composedFrom: [{ contractId: "meeting-facts", versionId: "facts:none" }, MEETING_LAYOUT_COUPLING], factSha256: "a".repeat(64),
     generatedAt: NOW, composedAt: NOW, sourceThrough: null, retrievedAt: null, promotedThrough: null,
   }, null);
   const artifacts = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "publish-now-baseline-")));
-  assert.equal((await publishRoutineReaderEdgeOutcome(memory, NOW, null, { artifactStore: artifacts })).readerEdge, "PUBLISHED");
-  const before = (await artifacts.readManifest())!.manifest;
+  const publish = async (store: RoutineDataStore) => {
+    const results = await Promise.all(states.map(state => publishRoutineReaderEdgeOutcome(store, NOW, null, { artifactStore: artifacts, state })));
+    return results.find(result => !result.ok) ?? results.find(result => result.readerEdge === "PUBLISHED") ?? results[0]!;
+  };
+  const manifests = async () => ({ root: (await artifacts.readManifest())!.manifest,
+    az: (await artifacts.readManifest("AZ"))!.manifest, nh: (await artifacts.readManifest("NH"))!.manifest });
+  assert.equal((await publish(memory)).readerEdge, "PUBLISHED");
+  const before = await manifests();
 
   let finishFinance!: () => void;
   let financeSettled = false;
@@ -80,7 +87,7 @@ test("publish-now copies real baseline pointers during an unresolved finance pas
     check: async () => {
       sweeps++;
       if (gate) await gate;
-      const outcome = await publishRoutineReaderEdgeOutcome(store, NOW, null, { artifactStore: artifacts });
+      const outcome = await publish(store);
       outcomes.push(outcome.readerEdge);
       return outcome;
     },
@@ -88,22 +95,22 @@ test("publish-now copies real baseline pointers during an unresolved finance pas
   try {
     assert.equal((await checks.run()).readerEdge, "SKIPPED_OWNER_PAUSE");
     assert.equal(sweeps, 0, "a pause at start performs no pointer or payload sweep");
-    assert.deepEqual((await artifacts.readManifest())!.manifest, before);
+    assert.deepEqual(await manifests(), before);
 
     paused = false;
     tick();
     assert.equal((await checks.run()).readerEdge, "FAILED", "one failed family keeps publication owed");
-    const partial = (await artifacts.readManifest())!.manifest;
-    assert.equal(partial.stateLegislators!["US-AZ"].version, people.outcome.promoted!.versionId,
+    const partial = await manifests();
+    assert.equal(partial.az.stateLegislators!["US-AZ"].version, people.outcome.promoted!.versionId,
       "independent people publish while registration is unavailable");
-    assert.equal(partial.registrations?.nh, undefined);
+    assert.equal(partial.nh.registrations?.nh, undefined);
     assert.equal(financeSettled, false, "neither the source pass nor its long finance task has settled");
 
     paused = true;
     failRegistration = false;
     tick();
     assert.equal((await checks.run()).readerEdge, "SKIPPED_OWNER_PAUSE");
-    assert.deepEqual((await artifacts.readManifest())!.manifest, partial, "pausing during the long pass preserves every artifact reference");
+    assert.deepEqual(await manifests(), partial, "pausing during the long pass preserves every artifact reference");
 
     paused = false;
     let releaseSweep!: () => void;
@@ -116,10 +123,10 @@ test("publish-now copies real baseline pointers during an unresolved finance pas
     releaseSweep();
     assert.equal((await running).readerEdge, "PUBLISHED");
     gate = null;
-    const published = (await artifacts.readManifest())!.manifest;
-    assert.equal(published.registrations!.nh.version, registration.id);
-    assert.equal(published.stateLegislators!["US-AZ"].version, people.outcome.promoted!.versionId);
-    const edge = await ensureReaderAuthorityEdge(published, artifacts, ["state-legislators"]);
+    const published = await manifests();
+    assert.equal(published.nh.registrations!.nh.version, registration.id);
+    assert.equal(published.az.stateLegislators!["US-AZ"].version, people.outcome.promoted!.versionId);
+    const edge = await ensureReaderAuthorityEdge(published.root, artifacts, ["state-legislators"], ["AZ", "NH"]);
     assert.ok((await edge.registrations!.load("nh"))!.value.governments?.some(row => row.kind === "EDUCATION_AGENCY"));
     assert.equal((await edge.stateLegislators!.load("US-AZ"))!.value.roster.officeholders[0].personId, "plural:member-one");
     assert.equal(financeSettled, false, "both native source projections reach real reader artifacts before the long task finishes");
@@ -141,13 +148,13 @@ test("publish-now copies real baseline pointers during an unresolved finance pas
     paused = true;
     assert.equal((await checks.run()).readerEdge, "SKIPPED_OWNER_PAUSE", "the explicit final sweep checks the pause again after stopping ticks");
     assert.equal(sweeps, 3);
-    assert.deepEqual((await artifacts.readManifest())!.manifest, published);
+    assert.deepEqual(await manifests(), published);
     pauseReadFailure = new Error("owner control temporarily unreadable");
     assert.equal((await checks.run()).readerEdge, "FAILED", "an unreadable owner control remains a durable failure, never permission to publish");
     assert.deepEqual(errors, [pauseReadFailure]);
     assert.equal((await checks.stop())?.readerEdge, "FAILED");
     assert.equal(sweeps, 3);
-    assert.deepEqual((await artifacts.readManifest())!.manifest, published);
+    assert.deepEqual(await manifests(), published);
   } finally {
     await checks.stop();
     finishFinance();

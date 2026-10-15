@@ -5,7 +5,7 @@ import type { GuardedBrowser } from "../scripts/browser.mts";
 import { startWorkerToolsHost } from "../lib/control-plane/workers/process-pool.ts";
 import { newFieldManualEntry, readFieldManual, writeFieldManual } from "../lib/control-plane/field-manual.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
-import { availableWorkerMemoryBytes, routineProcessSlots, workerProcessSlots, workerMemoryHost, NATIONAL_PLACE_PEAK_MIB, WORKER_ENTRY_PEAK_MIB } from "../lib/control-plane/workers/worker-slots.ts";
+import { availableWorkerMemoryBytes, routineProcessSlots, workerProcessSlots, workerMemoryHost, NATIONAL_PLACE_PEAK_MIB, WORKER_ENTRY_PEAK_MIB, MEETING_WORKER_PEAK_MIB, READER_PUBLISH_PEAK_MIB, PUBLICATION_OUTBOX_PEAK_MIB } from "../lib/control-plane/workers/worker-slots.ts";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -105,14 +105,105 @@ test("a nested research parent keeps only its inherited reservation after the fr
   release();
 });
 
+test("a queued reader publisher gets released capacity before later smaller source jobs", async () => {
+  const slots = routineProcessSlots({ availableBytes: () => 1600, headroomBytes: 100,
+    peakBytes: entry => entry.startsWith("reader-publish:") ? 900 : 500 });
+  const first = await slots.acquire("meeting-batch:AZ");
+  const second = await slots.acquire("meeting-batch:IL");
+  const started: string[] = [];
+  const publication = slots.acquire("reader-publish:IL/publish-reader-edge.mts").then(release => { started.push("publication"); return release; });
+  const later = slots.acquire("meeting-batch:CA").then(release => { started.push("source"); return release; });
+  await yieldToEventLoop();
+  assert.deepEqual(started, []);
+  first();
+  const publishDone = await publication;
+  assert.deepEqual(started, ["publication"]);
+  publishDone();
+  const sourceDone = await later;
+  assert.deepEqual(started, ["publication", "source"]);
+  sourceDone(); second();
+});
+
+test("a publication outbox reserves its own process while its children retain separate memory admission", async () => {
+  const host = workerMemoryHost({ processes: () => [
+    { pid: process.pid, parentPid: process.ppid, rss: 200 },
+    { pid: process.pid + 100000, parentPid: process.pid, rss: 1000 },
+  ] });
+  host.transact(state => { state.reservations.push({ id: "publisher", owner: process.ppid, pid: process.pid,
+    peak: 600, entry: "publish-outbox:IL/publish-now-runner.mts", scope: "process" }); }, false);
+  let available = 0;
+  const slots = routineProcessSlots({ host, availableBytes: () => available, headroomBytes: 100, peakBytes: () => 300 });
+  await assert.rejects(slots.acquire("ordinary-child.ts", Date.now() + 25), /WORKER_MEMORY_DEADLINE/);
+  available = 1000;
+  const release = await slots.acquire("registry-runtime-bindings");
+  host.transact(state => {
+    assert.equal(state.reservations.length, 2);
+    assert.equal(state.reservations.find(row => row.id === "publisher")!.peak, 600);
+    assert.ok(state.reservations.some(row => row.entry === "registry-runtime-bindings" && row.peak === 300));
+  }, false);
+  release();
+});
+
+test("reader publication priority crosses independently owned worker pools", async () => {
+  const host = workerMemoryHost({ processes: () => [] });
+  const memory = { host, availableBytes: () => 1600, headroomBytes: 100,
+    peakBytes: (entry: string) => entry.startsWith("reader-publish:") ? 900 : 500 };
+  const sources = routineProcessSlots(memory), publishers = routineProcessSlots(memory);
+  const first = await sources.acquire("meeting-batch:AZ");
+  const second = await sources.acquire("meeting-batch:IL");
+  const admitted: string[] = [];
+  const publication = publishers.acquire("reader-publish:IL/publish-reader-edge.mts")
+    .then(release => { admitted.push("publication"); return release; });
+  const later = sources.acquire("meeting-batch:CA").then(release => { admitted.push("source"); return release; });
+  await yieldToEventLoop();
+  assert.deepEqual(admitted, []);
+  first();
+  const publishDone = await publication;
+  assert.deepEqual(admitted, ["publication"]);
+  publishDone();
+  const sourceDone = await later;
+  sourceDone(); second();
+});
+
+test("two publication coordinators cannot deadlock their roster children behind finished edge heaps", async () => {
+  const mib = 1024 * 1024;
+  const host = workerMemoryHost({ processes: () => [
+    { pid: 100001, parentPid: process.pid, rss: 512 * mib },
+    { pid: 100002, parentPid: process.pid, rss: 512 * mib },
+  ] });
+  host.transact(state => {
+    for (const [index, stateCode] of ["AZ", "IL"].entries()) state.reservations.push({
+      id: stateCode, owner: process.pid, pid: 100001 + index, peak: 512 * mib,
+      entry: `publish-outbox:${stateCode}/publish-now-runner.mts`, scope: "process",
+    });
+  }, false);
+  const memory = { host, availableBytes: () => (8192 - 2 * 512 - 256) * mib };
+  const firstParent = routineProcessSlots(memory), secondParent = routineProcessSlots(memory);
+  const firstEdge = await firstParent.acquire("reader-publish:AZ/publish-reader-edge.mts");
+  const secondEdge = await secondParent.acquire("reader-publish:IL/publish-reader-edge.mts");
+  let admitted = 0;
+  const firstRoster = firstParent.acquire("registry-runtime-bindings").then(release => { admitted++; return release; });
+  const secondRoster = secondParent.acquire("registry-runtime-bindings").then(release => { admitted++; return release; });
+  await yieldToEventLoop();
+  assert.equal(admitted, 0);
+  firstEdge();
+  const firstDone = await firstRoster;
+  assert.equal(admitted, 1);
+  firstDone(); secondEdge();
+  const secondDone = await secondRoster;
+  secondDone();
+  assert.equal(admitted, 2);
+});
+
 test("concurrent workers share a browser and close only their own contexts", async () => {
-  let launches = 0, pages = 0, contextsClosed = 0, browsersClosed = 0;
+  let launches = 0, pages = 0, routes = 0, contextsClosed = 0, browsersClosed = 0;
   const browser = sharedScoutBrowser(async () => {
     launches++;
     return { page: async () => {
       pages++;
       let address = "";
-      return { on: () => {}, goto: async (url: string) => { address = url; return { status: () => 200 }; },
+      return { on: () => {}, route: async (pattern: string) => { assert.equal(pattern, "**/*"); routes++; },
+        goto: async (url: string) => { address = url; return { status: () => 200 }; },
         waitForLoadState: async () => {}, content: async () => "<body>official</body>", evaluate: async () => "official",
         url: () => address, context: () => ({ close: async () => { contextsClosed++; } }) };
     }, close: async () => { browsersClosed++; } } as unknown as GuardedBrowser;
@@ -120,6 +211,7 @@ test("concurrent workers share a browser and close only their own contexts", asy
   const results = await Promise.all(["https://one.gov", "https://two.gov"].map(url => browser.browse({ url, timeoutMs: 1000, holder: "test" })));
   assert.deepEqual(results.map(row => row.finalUrl), ["https://one.gov", "https://two.gov"]);
   assert.equal(launches, 1); assert.equal(pages, 2); assert.equal(contextsClosed, 2); assert.equal(browsersClosed, 0);
+  assert.equal(routes, 2);
   await browser.close(); assert.equal(browsersClosed, 1);
 });
 
@@ -188,9 +280,8 @@ test("all publication siblings and routine script families reserve their measure
   }
 });
 
-test("legacy registry roster publications reserve their measured RSS and queue until memory is released", async () => {
-  // Roster publication runs alone on either host while keeping its measured peak.
-  for (const [availableMiB, expected] of [[8192 - 1024, 1], [2 * 4012 + 768, 1]] as const) {
+test("registry roster publications reserve their measured RSS and queue until memory is released", async () => {
+  for (const [availableMiB, expected] of [[8192 - 1024, 1], [2 * 4012 + 768, 2]] as const) {
     const slots = routineProcessSlots({ availableBytes: () => availableMiB * 1024 * 1024 });
     const entries = ["worker-publication:registry-runtime-bindings:roster-one",
       "worker-publication:registry-runtime-bindings:directory-two",
@@ -241,7 +332,7 @@ test("a routine child uses the lease peak and a large queue head does not block 
   assert.equal(rosterStarted, false); small();
   free = (768 + 4012) * mib;
   const large = await roster;
-  assert.equal(rosterStarted, true, "the roster runs alone once memory can fit it");
+  assert.equal(rosterStarted, true, "the roster runs once memory can fit it");
   large();
 });
 
@@ -427,4 +518,40 @@ test("a running child's high-water memory is sampled, raises its live reservatio
   const next = await slots.acquire("probe/peak-probe.mts");
   host.transact(state => { assert.equal(state.reservations[0]!.peak, reservedFor(recorded)); }, false);
   next();
+});
+
+test("meeting state workers reserve their measured peak separately from bulk ingest", async () => {
+  const mib = 1024 * 1024;
+  let free = (768 + 2 * MEETING_WORKER_PEAK_MIB) * mib;
+  const slots = routineProcessSlots({ availableBytes: () => free });
+  const first = await slots.acquire("meeting-batch:US-IL/routine-civic-data-runner.mts");
+  const second = await slots.acquire("meeting-batch:US-TX/routine-civic-data-runner.mts");
+  let admitted = false;
+  const third = slots.acquire("meeting-batch:US-PA/routine-civic-data-runner.mts").then(release => { admitted = true; return release; });
+  await yieldToEventLoop(); assert.equal(admitted, false);
+  first(); (await third)(); second();
+  free = (768 + MEETING_WORKER_PEAK_MIB) * mib;
+  await assert.rejects(slots.acquire("ordinary/ingest.ts", Date.now() + 20), /WORKER_MEMORY_DEADLINE/);
+});
+
+test("small-state measurements cannot under-reserve the next large-state worker", async () => {
+  const mib = 1024 * 1024;
+  const host = workerMemoryHost({ processes: () => [] });
+  const entries = [
+    ["meeting-batch", "meeting-batch:US-IL/routine-civic-data-runner.mts", MEETING_WORKER_PEAK_MIB],
+    ["reader-publish", "reader-publish:US-IL/publish-reader-edge.mts", READER_PUBLISH_PEAK_MIB],
+    ["publish-outbox", "publish-outbox:US-IL/publish-now-runner.mts", PUBLICATION_OUTBOX_PEAK_MIB],
+  ] as const;
+  host.transact(state => { state.peaks = Object.fromEntries(entries.map(([key]) => [key, Array(5).fill(100 * mib)])); }, false);
+  let free = 0;
+  const slots = routineProcessSlots({ host, availableBytes: () => free });
+  for (const [key, entry, baseline] of entries) {
+    free = (768 + baseline - 1) * mib;
+    await assert.rejects(slots.acquire(entry, Date.now() + 20), /WORKER_MEMORY_DEADLINE/);
+    free += mib;
+    (await slots.acquire(entry, Date.now() + 100))();
+    host.transact(state => { state.peaks![key] = [2 * baseline * mib]; }, false);
+    await assert.rejects(slots.acquire(entry, Date.now() + 20), /WORKER_MEMORY_DEADLINE/,
+      "a later observed larger state still raises the reservation");
+  }
 });

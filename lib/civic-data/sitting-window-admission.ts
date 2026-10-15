@@ -104,7 +104,7 @@ export function sittingWindowObligation(
 ): SittingWindowObligation {
   const rereadMs = sittingWindowRereadMs(schedule, hot);
   const [fromMs, periodMs] = !Number.isFinite(reads.succeededMs)
-    ? [reads.attemptedMs, reads.published ? Math.min(sittingWindowRetryMs(schedule, retryMs, true), rereadMs) : sittingWindowRetryMs(schedule, retryMs, false)]
+    ? [reads.attemptedMs, Math.min(sittingWindowRetryMs(schedule, retryMs, reads.published), rereadMs)]
     : reads.attemptedMs > reads.succeededMs
       ? [reads.attemptedMs, Math.min(retryMs, rereadMs)]
       : [reads.succeededMs, rereadMs];

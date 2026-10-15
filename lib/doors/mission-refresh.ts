@@ -57,6 +57,20 @@ export function doorPartitionIds(door: DoorRecord): readonly string[] {
   return door.bodyIds.map(bodyId => meetingPartitionId(door.kind, bodyId));
 }
 
+export function sourceChangesByTask(doors: readonly DoorRecord[]): ReadonlyMap<string, string> {
+  const changes = new Map<string, string>();
+  for (const door of doors) {
+    const changedAt = door.validators?.changedAt;
+    if (door.status !== "OPEN" || !changedAt || !Number.isFinite(Date.parse(changedAt))) continue;
+    const ids = door.meeting !== null ? doorPartitionIds(door)
+      : typeof door.config.contractId === "string" ? [door.config.contractId] : [door.doorId];
+    for (const id of ids) {
+      if (!changes.has(id) || Date.parse(changedAt) > Date.parse(changes.get(id)!)) changes.set(id, changedAt);
+    }
+  }
+  return changes;
+}
+
 export function readNowDueRequests(
   doors: readonly DoorRecord[],
   known: ReadonlySet<string>,

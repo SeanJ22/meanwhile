@@ -198,7 +198,7 @@ test("each mutable curated Reader family promotes and reads from its own canonic
       ["FETCHED", "NORMALIZED", "VALIDATED", "PROMOTED", "PROMOTED"],
       id,
     );
-    const read = await readCuratedReaderProjection(id, { store, bypassCache: true, now: T0 });
+    const read = await readCuratedReaderProjection(id, { store, bypassCache: true, now: T0, scope: candidate.scope });
     assert.equal(read.kind, "PROMOTED", id);
     if (read.kind === "PROMOTED") assert.equal(read.value.kind, id);
   }
@@ -263,7 +263,7 @@ test("a bad curated family is held against its own LKG and cannot affect another
   for (const id of CURATED_READER_CONTRACT_IDS) {
     const contract = MANUAL_PRODUCTION_SOURCE_CONTRACTS.find((entry) => entry.id === id)!;
     assert.equal(
-      (await store.readPromotion(contract.recordClass, contract.scope))?.versionId,
+      (await store.readPromotion(contract.recordClass, promotedCandidates.get(id)!.scope))?.versionId,
       promotedIds.get(id),
       `${id} LKG/pointer changed after the unrelated campaign-site refusal`,
     );
@@ -278,7 +278,7 @@ test("curated Reader evidence is source-scoped and never names software certific
       kind: "SOURCE_PROJECTION_CONTRACT",
       sourceId: contract.sourceId,
       recordClass: contract.recordClass,
-      scope: contract.scope,
+      scope: id === "venue-resolutions" ? "US:venue-resolutions:ocd-division/country:us/state:az/place:test" : contract.scope,
     });
     assert.ok(candidate.dependentChecks.every((check) => !/(?:playwright|office-opening-spell|pnpm\s+(?:test|build)|browser installation|full test tier)/i.test(`${check.consumer} ${check.detail}`)));
   }

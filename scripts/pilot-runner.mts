@@ -1,3 +1,4 @@
+import { MEETING_STATE_BUCKETS, MEETING_STATE_CONCURRENCY } from "../lib/civic-data/meeting-batch.ts";
 import { ROUTINE_STATES } from "../lib/civic-data/state-scope.ts";
 import { CENSUS_LANE_INTERVAL_MS } from "../lib/control-plane/discovery/census-lane.ts";
 
@@ -78,9 +79,11 @@ import {
 } from "../lib/civic-data/runner-receipt.ts";
 import { childFatalLine, childStderrCause, nativeAbortLine } from "../lib/ops/fatal-line.ts";
 import { hunterLaneArmingPath } from "../lib/control-plane/workers/hunter-lane-arming.ts";
-import { IndependentRuntimeLaneScheduler } from "../lib/ops/independent-runtime-pass.ts";
+import { DeadlineRuntimePool, IndependentRuntimeLaneScheduler } from "../lib/ops/independent-runtime-pass.ts";
 import { boundedBeat } from "../lib/ops/bounded-beat.ts";
-import { publishNowLane } from "../lib/civic-data/publish-now.ts";
+import { hasPendingPublicationWork, publishNowLane } from "../lib/civic-data/publish-now.ts";
+import { checkReaderEdgePublicationInputs } from "../lib/civic-data/reader-edge-inputs.ts";
+import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import {
   appendIntakeRuntimeObservationDigest,
   appendRoutineCivicDataSupervisorDigest,
@@ -189,9 +192,6 @@ function standingChildEnvironment(
     : billingCollector ? { ...parentEnv } : withoutBillingSecrets(parentEnv);
 }
 
-// The installed dispatcher, the scheduled task, and any stale Startup entry
-// all reach this same atomic host-local door. The kernel releases it on process death;
-// a second clock therefore fails before writing a heartbeat or launching work.
 const PILOT_PROCESS_LEASE = await acquireProcessSingleton(
   "pilot-runner",
   PILOT_RUNNER_SINGLETON_PORT,
@@ -679,23 +679,23 @@ async function publishConsoleChildren(): Promise<boolean> {
 /** The same standing clock runs the production data plane after each cycle. */
 const nextRoutineDueAt = new Map<string, number>();
 type SourceFamily = "meetings" | "other";
-const routineStatePools = { meetings: { active: 0, waiting: [] as (() => void)[] }, other: { active: 0, waiting: [] as (() => void)[] } };
-async function runRoutineState(state: string, family: SourceFamily): Promise<void> {
-  const pool = routineStatePools[family];
-  if (pool.active >= 2) await new Promise<void>(resolve => pool.waiting.push(resolve));
-  pool.active += 1;
-  try { if (!runtimeAdmissionsHeld) await runRoutineCivicData(state, family); }
-  finally { pool.active -= 1; pool.waiting.shift()?.(); }
+const nextRoutineDeadline = new Map<string, number>();
+const routineStateMemory = routineProcessSlots();
+const routineStatePools = { meetings: new DeadlineRuntimePool(MEETING_STATE_CONCURRENCY), other: new DeadlineRuntimePool(2) };
+async function runRoutineState(state: string, family: SourceFamily, bucket = 0): Promise<void> {
+  await routineStatePools[family].run(nextRoutineDeadline.get(`${family}:${state}:${bucket}`) ?? Date.now(), async () => {
+    if (!runtimeAdmissionsHeld) await runRoutineCivicData(state, family, bucket);
+  });
 }
-async function runRoutineCivicData(state: string, family: SourceFamily): Promise<void> {
-  const laneKey = `${family}:${state}`;
+async function runRoutineCivicData(state: string, family: SourceFamily, bucket: number): Promise<void> {
+  const laneKey = `${family}:${state}:${bucket}`;
   nextRoutineDueAt.delete(laneKey);
   if (provider !== "postgres" || canary) {
     console.log("  routine civic data: skipped — only the standing production runner owns this data plane");
     return;
   }
   const startedAt = new Date().toISOString();
-  const cycleId = routineSupervisorCycleId(`${hostname()}/${state}/${family}`, startedAt);
+  const cycleId = routineSupervisorCycleId(`${hostname()}/${state}/${family}${family === "meetings" ? `/${bucket}` : ""}`, startedAt);
   const refreshRepos = await ownerRepositories();
   const ownerRefresh = refreshRepos && family === "other" ? await reserveRoutineRefresh(refreshRepos, startedAt, state) : null;
   if (ownerRefresh) console.log(`  owner routine refresh ${ownerRefresh.requestId}: attempt ${ownerRefresh.ordinal + 1} of exact partition ${ownerRefresh.contractId}`);
@@ -706,26 +706,31 @@ async function runRoutineCivicData(state: string, family: SourceFamily): Promise
       [ROUTINE_SUPERVISOR_STARTED_AT_ENV]: startedAt,
     },
   );
+  const memory = family === "meetings" ? await routineStateMemory.acquire(`meeting-batch:${state}:${bucket}/routine-civic-data-runner.mts`) : null;
   // A routine pass between research cycles still checks in, so a long pass never reads as a silent runner.
   const beat = boundedBeat(() => writeLiveCycleBeat(null), BEAT_BOUND_MS, lateBeat);
   const beatTimer = setInterval(() => { if (!researchCycleActive) void beat(); }, 60_000);
   const [run] = await runRuntimeChildren([{
     id: "routine-civic-data",
     executable: process.execPath,
-    args: [...TS_CHILD, "scripts/routine-civic-data-runner.mts", `--state=${state}`, `--family=${family}`, ...(ownerRefresh?.args ?? [])],
+    args: [...TS_CHILD, "scripts/routine-civic-data-runner.mts", `--state=${state}`, `--family=${family}`, ...(family === "meetings" ? [`--meeting-bucket=${bucket}`] : []), ...(ownerRefresh?.args ?? [])],
     env: childEnvironment,
   }], {
     cwd: CODE_ROOT,
     env: process.env,
 
     maxBufferBytes: 64 * 1024 * 1024,
+    onStarted: (_id, child) => { if (child.pid) memory?.observe?.(child.pid); },
     onStdout: (_id, output) => process.stdout.write(output),
     onStderr: (_id, output) => process.stderr.write(output),
-  }).finally(() => clearInterval(beatTimer));
+  }).finally(() => { clearInterval(beatTimer); memory?.(); });
   if (!run) throw new Error("ROUTINE_CIVIC_DATA_CHILD_RESULT_MISSING");
   const nextDueLine = run.stdout.split("\n").findLast(line => line.startsWith("RCD_NEXT_DUE="));
   const nextDue = nextDueLine ? Date.parse(nextDueLine.slice("RCD_NEXT_DUE=".length)) : NaN;
   if (Number.isFinite(nextDue)) nextRoutineDueAt.set(laneKey, Math.max(Date.now(), nextDue));
+  const deadlineLine = run.stdout.split("\n").findLast(line => line.startsWith("RCD_NEXT_DEADLINE="));
+  const deadline = deadlineLine ? Date.parse(deadlineLine.slice("RCD_NEXT_DEADLINE=".length)) : NaN;
+  if (Number.isFinite(deadline)) nextRoutineDeadline.set(laneKey, deadline);
   if (ownerRefresh && refreshRepos) await finishRoutineRefresh(refreshRepos, ownerRefresh, new Date().toISOString(), run.status);
   const lines = `${run.stdout ?? ""}\n${run.stderr ?? ""}`.split("\n").filter((line) => /^(RCD_|RCD_RECEIPT=)/.test(line));
   const readerFailures = lines.filter((line) =>
@@ -764,15 +769,26 @@ async function runRoutineCivicData(state: string, family: SourceFamily): Promise
 /** Each minute, saved parser results and changed doors publish without waiting for the routine pass (publish-now.ts). */
 let activePublishStates = 0;
 const waitingPublishStates: (() => void)[] = [];
+let publicationInputStore: PostgresRoutineDataStore | undefined;
 async function runPublishState(state: string): Promise<void> {
   if (activePublishStates >= 2) await new Promise<void>(resolve => waitingPublishStates.push(resolve));
-  activePublishStates += 1;
+  else activePublishStates += 1;
   try { if (!runtimeAdmissionsHeld) await runPublishNow(state); }
-  finally { activePublishStates -= 1; waitingPublishStates.shift()?.(); }
+  finally { const next = waitingPublishStates.shift(); if (next) next(); else activePublishStates -= 1; }
 }
 async function runPublishNow(state: string): Promise<void> {
   if (provider !== "postgres" || canary) return;
+  const repos = await ownerRepositories();
+  const connection = controlPlaneUrlFromEnv();
+  if (!repos || !connection) throw new Error("PUBLICATION_INPUT_STORE_UNCONFIGURED");
+  if (readIntents([...(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY))]).runnerPause.paused) return;
+  const store = publicationInputStore ??= new PostgresRoutineDataStore();
+  const sql = neon(connection);
+  const owed = await hasPendingPublicationWork({ query: (statement, params = []) => sql.query(statement, [...params]),
+    repos, store, state, now: new Date().toISOString() });
+  if (!owed && (await checkReaderEdgePublicationInputs({ state })).current) return;
   const startedAt = new Date().toISOString();
+  const memory = await routineStateMemory.acquire(`publish-outbox:${state}/publish-now-runner.mts`);
   const [run] = await runRuntimeChildren([{
     id: "publish-now",
     executable: process.execPath,
@@ -782,9 +798,10 @@ async function runPublishNow(state: string): Promise<void> {
     cwd: CODE_ROOT,
     env: process.env,
     maxBufferBytes: 16 * 1024 * 1024,
+    onStarted: (_id, child) => { if (child.pid) memory.observe?.(child.pid); },
     onStdout: (_id, output) => process.stdout.write(output),
     onStderr: (_id, output) => process.stderr.write(output),
-  });
+  }).finally(memory);
   if (!run) throw new Error("PUBLISH_NOW_CHILD_RESULT_MISSING");
   if (run.status !== 0) {
     await persistOuterRoutineChildFailure(routineSupervisorCycleId(`${hostname()}/${state}`, startedAt, "publish-now"), startedAt, run,
@@ -1230,10 +1247,10 @@ async function runPlatformCensus(): Promise<void> {
 
 const standingRuntimeScheduler = new IndependentRuntimeLaneScheduler([
   { id: "platform-census", everyMs: CENSUS_LANE_INTERVAL_MS, run: runPlatformCensus },
-  ...(["meetings", "other"] as const).flatMap(family => ROUTINE_STATES.map(state => ({
-    id: `routine-civic-data:${family}:${state}`, everyMs: ROUTINE_DATA_ADMISSION_MS,
-    nextDueAt: () => nextRoutineDueAt.get(`${family}:${state}`) ?? null, run: () => runRoutineState(state, family),
-  }))),
+  ...(["meetings", "other"] as const).flatMap(family => ROUTINE_STATES.flatMap(state => Array.from({ length: family === "meetings" ? MEETING_STATE_BUCKETS : 1 }, (_, bucket) => ({
+    id: `routine-civic-data:${family}:${state}:${bucket}`, everyMs: ROUTINE_DATA_ADMISSION_MS,
+    nextDueAt: () => nextRoutineDueAt.get(`${family}:${state}:${bucket}`) ?? null, run: () => runRoutineState(state, family, bucket),
+  })))),
   { id: "intake-runtime", everyMs: INTAKE_RUNTIME_TICK_MS, run: runIntakeRuntime },
   { id: "hunter-lane", everyMs: 60_000, run: runHunterLane },
   ...ROUTINE_STATES.map(state => ({ ...publishNowLane(() => runPublishState(state)), id: `publish-now:${state}` })),
@@ -1497,15 +1514,14 @@ async function reconcileRuntimeReleaseAtBoundary(): Promise<number | null> {
     return null;
   }
 
-  // At process startup no clock has passed the method-authority gate yet. A
-  // transient target that moves back to this SHA while we drain must not turn
-  // reconciliation into a pre-gate clock opener. During a later boundary the
-  // timer is already live, so that exact prior state may be restored.
+
+
+
   const reopenStandingClock = standingRuntimeTimer !== null;
   const reopenAdminCopyClock = adminCopyTimer !== null;
-  // Between rounds, a release that leaves the parent's code alone loads
-  // without closing admissions. At process start nothing runs yet, so the
-  // ordinary restart path is already gap-free.
+
+
+
   if (RELEASE_QUICK_SWITCH && first.state === "UPDATE_REQUIRED" && first.targetSha !== null && reopenStandingClock && !runtimeAdmissionsHeld) {
     const step = await advanceStagedRelease(first.targetSha);
     if (step !== "DRAIN") return null;
@@ -1730,10 +1746,10 @@ async function ownerSays(): Promise<OwnerSays> {
     );
     return "START_NOW";
   }
-  // A saved Send does not open the paid lane. Once the owner has resumed it,
-  // wake for a receipt the last completed cycle did not actually consume.
-  // This also handles a Send made while a cycle was active without overlapping
-  // that cycle or needlessly repeating one that already read the new receipt.
+
+
+
+
   if (!reading.paused) {
     const resumeId = unacknowledgedResearchResume(log);
     if (resumeId !== null) {
@@ -1884,9 +1900,7 @@ console.log(
 );
 
 console.log("\npilot-runner · publishing the console before the first cycle (the runner may have just come up on new code)");
-// This clock is independent of research and console children. All long-lived
-// children below are asynchronous, so the timer can keep admitting a due lane
-// while research is still pending; the lane scheduler prevents same-lane overlap.
+
 startStandingRuntimeClock();
 startAdminCopyClock();
 await publishConsole();
@@ -1894,9 +1908,9 @@ await publishConsole();
 while (cycle < CYCLES) {
   /* PAUSE_RUNNER holds research only; runtime data keeps its own tick. */
   const owner = await holdWhilePaused();
-  // A deployment can finish while the runner is asleep (including a
-  // RUN_CYCLE_NOW wake). Reconcile before admitting another research child;
-  // the previous end-of-cycle check cannot observe a later deployment.
+
+
+
   const wakeReleaseExit = await reconcileRuntimeReleaseAtBoundary();
   if (wakeReleaseExit !== null) {
     handoffExitCode = wakeReleaseExit;

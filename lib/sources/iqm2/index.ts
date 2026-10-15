@@ -1,9 +1,4 @@
-/**
- * @freshness-reads-here
- *
- * The clock stamps in this file are minted by the code path that performs the read: the freshness date
- * is taken at the moment of the fetch.
- */
+// @freshness-reads-here
 import type { BodySourceWiring } from "../../registry/source-wiring.ts";
 import {
   MEETING_HELD_HORIZON_DAYS,
@@ -28,13 +23,6 @@ import {
   type Accounted,
 } from "../normalize-account.ts";
 
-/**
- * Granicus IQM2 meeting source. `/Citizens/Calendar.aspx?From=&To=` is fully server-rendered, future
- * meetings included, and each row's `title` tooltip carries the board, the meeting type, the status, and
- * the venue with its full street address; agenda links (`FileOpen.aspx?Type=14`) appear where an agenda
- * is published. The `/Services/RSS.aspx?Feed=Calendar` pseudo-feed lists only published documents and is
- * not used.
- */
 
 const SOURCE_NAME = "iqm2";
 
@@ -88,15 +76,6 @@ function parseWhen(when: string, timeZone: string): string | null {
   return toZonedIso(Number(m[3]), month, Number(m[2]), hour, Number(m[5]), timeZone);
 }
 
-/**
- * Pull the meeting rows out of the calendar page.
- *
- * Each row is a `Row MeetingRow` div holding a Detail_Meeting link whose
- * tooltip states everything, plus the download links. Parsed with anchored
- * patterns rather than a DOM because the page is rigidly repetitive ASP.NET
- * output — and the parse is covered by a recorded fixture, so a template
- * change fails a test instead of silently returning zero rows.
- */
 export function parseCalendarRows(html: string): Iqm2Row[] {
   const rows: Iqm2Row[] = [];
   const chunks = html.split(/class="Row MeetingRow/).slice(1);
@@ -120,9 +99,6 @@ export function parseCalendarRows(html: string): Iqm2Row[] {
       .filter((l) => l.length > 0)
       .join(", ");
 
-    // An agenda link is real only when its href is non-empty — unpublished
-    // documents render the same anchor with class HiddenDocumentLink and no
-    // href, and matching those as agendas would fabricate a citation.
     const agenda = /<a href='(FileOpen\.aspx\?Type=14&(?:amp;)?ID=\d+[^']*)'[^>]*>Agenda<\/a>/.exec(
       chunk,
     );
@@ -143,6 +119,12 @@ export function parseCalendarRows(html: string): Iqm2Row[] {
 
 function usDate(date: Date): string {
   return `${date.getUTCMonth() + 1}/${date.getUTCDate()}/${date.getUTCFullYear()}`;
+}
+
+export function iqm2CalendarUrl(wiring: BodySourceWiring, now = Date.now()): string {
+  const from = usDate(new Date(now - WINDOW_BACK_DAYS * 86_400_000));
+  const to = usDate(new Date(now + WINDOW_FORWARD_DAYS * 86_400_000));
+  return `${wiring.config.base}/Citizens/Calendar.aspx?From=${from}&To=${to}`;
 }
 
 export function makeIqm2Source(
@@ -185,11 +167,6 @@ export function makeIqm2Source(
           continue;
         }
 
-        // No place never suppresses the sitting; each case is kept with no pin and counted:
-        // - a tooltip venue naming no building is online, counted `placeless`;
-        // - a venue with no reviewed row renders as the county's own words (`STATED_NOT_PLACED`), counted
-        //   `unknownVenue`;
-        // - a row stating no venue is the county's own gap (`NOT_STATED_BY_PUBLISHER`), counted `unknownVenue`.
         const online = row.location && isPlacelessLocation(row.location)
           ? { label: row.location, joinUrl: null }
           : null;
@@ -259,12 +236,10 @@ export function makeIqm2Source(
 
     async fetch(query?: MeetingQuery): Promise<Iqm2Raw[]> {
       const now = Date.now();
-      const from = usDate(new Date(now - WINDOW_BACK_DAYS * 86_400_000));
-      const to = usDate(new Date(now + WINDOW_FORWARD_DAYS * 86_400_000));
 
       const collected: Iqm2Raw[] = [];
       for (const wiring of wiringRows) {
-        const url = `${wiring.config.base}/Citizens/Calendar.aspx?From=${from}&To=${to}`;
+        const url = iqm2CalendarUrl(wiring, now);
         const { text } = await politeGetText(url, {
           fetchImpl,
           signal: query?.signal,

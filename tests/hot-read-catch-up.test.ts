@@ -98,10 +98,6 @@ function busiestLane(): readonly [string, readonly RoutineSourceTask[]] {
   return [...byLane.entries()].sort((left, right) => right[1].length - left[1].length)[0]!;
 }
 
-/**
- * Catch-up over `candidates` with the production admission and dispatcher; each
- * read takes `readMs` and is recorded as it starts.
- */
 function catchUpOver(input: {
   readonly fake: FakeClock;
   readonly candidates: readonly HotReadCandidate[];
@@ -214,9 +210,6 @@ test("C6: a lane with many due reads keeps reading, one read at a time a minute 
   );
   // One at a time: each starts 30 s (the read) + 60 s (the same-host gap) after the last.
   assert.deepEqual(onLane.map(({ atMs }) => (atMs - now) / 1_000), [0, 90, 180, 270, 360]);
-  // The busy lane (owed soonest) and the next-soonest lane take the two
-  // children first, whatever the registry order; the last lane starts when the
-  // first read settles.
   assert.deepEqual(started.slice(0, 2), [{ id: laneCandidates[4]!.task.id, atMs: now }, { id: other.id, atMs: now }]);
   assert.deepEqual(started.find(({ id }) => id === third.id), { id: third.id, atMs: now + 30_000 });
   assert.equal(HOT_READ_CATCH_UP_CONCURRENCY, 2);
@@ -435,14 +428,17 @@ test("C6: the repairs a catch-up read could race run first", () => {
 
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   assert.match(runner, /const readerLaunch = \[\s*\.\.\.readerDomains\.filter\(\(domain\) => repairDomainRacesHotReads\(domain, hotReadTaskIds\)\),\s*\.\.\.readerDomains\.filter\(\(domain\) => !repairDomainRacesHotReads/);
-  assert.match(runner, /const readerPass = runBoundedChildPass\(\s*readerLaunch\.map/);
-  assert.match(runner, /return \{ repair: readerPass, unblocked: hotReadCatchUpOpen \};/);
-  assert.match(runner, /await runRoutinePassWithHotReadCatchUp\(\{\s*source: sourcePass,\s*startRepair: startReaderRepair,/);
-  assert.match(runner, /onSettled: async \(result\) => settlePendingRun\(run, result\)/, "catch-up reads settle exactly as the pass's own");
+  assert.match(runner, /const childDomains = readerLaunch\.filter\(domain => domain\.mode !== "MEETING_AGGREGATE"\)/);
+  assert.match(runner, /const inProcessReaders = Promise\.all\(readerLaunch\.filter\(domain => domain\.mode === "MEETING_AGGREGATE"\)/);
+  assert.match(runner, /await runMeetingReaderRepairDomain\(/);
+  assert.match(runner, /const childReaders = runBoundedChildPass\(\s*childDomains\.map/);
+  assert.match(runner, /return \{ repair: Promise\.all\(\[inProcessReaders, childReaders\]\)\.then\(results => results\.flat\(\)\), unblocked: hotReadCatchUpOpen \};/);
+  assert.match(runner, /await runRoutinePassWithHotReadCatchUp\(\{\s*source: Promise\.all\(\[sourcePass, refreshFacts\(\)\]\)\.then\(\(\[runs\]\) => runs\),\s*startRepair: startReaderRepair,/);
+  assert.match(runner, /recordSourceSettlementFailures\(await runSourceTasks\(\[run\]\)\)/, "catch-up reads use the same body batch and settlement path as the pass");
   assert.match(runner, /\.\.\.\[\.\.\.unsettledSourceRuns\]\.map\(\(id\) => pendingByTaskId\.get\(id\)!\.task\.acquisitionFailureDomain\)/, "never beside a read of the same lane");
   assert.match(runner, /limitMs: hotReadLimitsMs\[phase\]/);
   assert.match(runner, /setTimeout\(resolve, Math\.max\(0, atMs - Date\.now\(\)\)\)\.unref\(\)/);
-  assert.match(runner, /const hotReadTasks = FORCE \|\| PUBLISH_NOW\s*\? \[\]/, "a forced pass keeps its exact selection");
+  assert.match(runner, /const hotReadTasks = FORCE \|\| PUBLISH_NOW \|\| FAMILY === "meetings"\s*\? \[\]/, "forced and bounded meeting turns keep their exact selection");
 });
 
 test("C6: the parent's account of a killed pass counts the reads admitted during repair", () => {

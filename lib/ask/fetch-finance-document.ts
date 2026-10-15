@@ -5,9 +5,6 @@ import type { DoorRecord } from "../doors/registry.ts";
 import type { EvidenceRecord } from "./evidence.ts";
 import type { FinanceDetailRead } from "./fetch-through-key.ts";
 
-/** Re-read the document address and map held by this exact published filing.
- * An API key reference can authorize only this registered HTTPS host; redirects
- * never forward a key. Raw private columns stay inside the source reader. */
 export async function fetchFinanceDocument(input: {
   readonly question?: string; readonly summary: EvidenceRecord; readonly deadlineMs: number;
   readonly fetchImpl?: typeof fetch; readonly env?: Readonly<Record<string, string | undefined>>;

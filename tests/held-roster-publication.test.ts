@@ -50,7 +50,7 @@ async function setup() {
   const body = base.payload.registry.bodies.find(row => row.id === BODY)!;
   const division = new Map(base.payload.registry.divisions.map(row => [row.ocdId, row])).get(body.ocdId!)!;
   const publish = (reading: RosterReading) => publishBodyRoster(facts, { body, division, state: "AZ", reading, clocks, now: new Date(NOW) });
-  return { base, facts, body, publish };
+  return { base, facts, body, division, publish };
 }
 
 const reading = (saved: WorkerPublicationCapture, complete = true, id = `held:${saved.evidence.artifactId}`): RosterReading => ({ id, capture: saved, linkingPage: null, complete, method: "fixture",
@@ -67,10 +67,10 @@ test("plain code reads a CMS staff-directory roster once, with display names and
 });
 
 test("a saved official page puts an unnamed council live with its name, seats, office phone and source link (§3)", async () => {
-  const { base, facts, publish } = await setup();
+  const { base, facts, body, division, publish } = await setup();
   assert.equal(base.payload.registry.bodies.find(body => body.id === BODY)?.name, null);
   const held = capture(page("Contact the Mayor & Council"));
-  const found = await heldRosterReading({ bodyId: BODY, prior: base, now: NOW, readHeld: async () => held,
+  const found = await heldRosterReading({ body, division, now: NOW, readHeld: async () => held,
     artifacts: [{ artifactId: held.evidence.artifactId, workItemId: "wi-directory", routeTaskId: null, attemptId: "at-scout", tier: "RAW", contentHash: held.evidence.contentHash,
       byteLength: held.evidence.text.length, contentType: "text/html; charset=utf-8", canonicalUrl: URL_, partial: false, recordedAt: held.observedAt } as ArtifactRecord] });
   assert.ok(found);
@@ -153,15 +153,15 @@ test("CP-19/CP-05: another roster row's term cannot supply a date", async () => 
 });
 
 test("CP-03: a labeled voter-guide roster is considered from held evidence and publishes as reference, never as official", async () => {
-  const { base, facts, publish } = await setup();
+  const { facts, body, division, publish } = await setup();
   await facts.query("UPDATE entity SET name = 'Benson City Council' WHERE id = $1", [BODY]);
   const saved = { ...capture(page("Contact the Mayor & Council").replace("<h1>", "<p>Benson City Council, Arizona</p><h1>"), "https://vote411.org/council"), sourcePolicy: { hosts: { "vote411.org": "VOTER_GUIDE" as const }, enabled: { OFFICIAL: true, CAMPAIGN: true, FILING: true, VOTER_GUIDE: true, FORUM: true, NEWS: true, REFERENCE: true, OTHER: true } } };
   const artifacts = [{ artifactId: saved.evidence.artifactId, contentHash: saved.evidence.contentHash, contentType: "text/html", canonicalUrl: saved.evidence.canonicalUrl, recordedAt: saved.observedAt, partial: false } as ArtifactRecord];
-  const found = await heldRosterReading({ bodyId: BODY, prior: base, now: NOW, artifacts, readHeld: async () => saved });
+  const found = await heldRosterReading({ body, division, now: NOW, artifacts, readHeld: async () => saved });
   assert.ok(found);
   await publish(found);
   assert.deepEqual([...new Set((await facts.query("SELECT provenance_kind FROM fact WHERE field LIKE 'member:%'")).map(row => row.provenance_kind))], ["REFERENCE"]);
   assert.equal((await readFactRosters(facts.query, [BODY])).rosters[0]!.members.length, 3);
   const disabled = { ...saved, sourcePolicy: { ...saved.sourcePolicy, enabled: { ...saved.sourcePolicy.enabled, VOTER_GUIDE: false } } };
-  assert.equal(await heldRosterReading({ bodyId: BODY, prior: base, now: NOW, artifacts, readHeld: async () => disabled }), null);
+  assert.equal(await heldRosterReading({ body, division, now: NOW, artifacts, readHeld: async () => disabled }), null);
 });

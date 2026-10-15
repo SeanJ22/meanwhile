@@ -1,9 +1,4 @@
-/**
- * @freshness-reads-here
- *
- * The clock stamps in this file are minted by the code path that performs the read: the freshness date
- * is taken at the moment of the fetch.
- */
+// @freshness-reads-here
 import type { BodySourceWiring } from "../../registry/source-wiring.ts";
 import {
   MEETING_HELD_HORIZON_DAYS,
@@ -39,33 +34,10 @@ import {
   type Accounted,
 } from "../normalize-account.ts";
 
-/**
- * An `.ics` feed is a calendar handed to us: a format, not a vendor. A town publishing through any
- * iCalendar-speaking calendar hands over start, end, title, venue string and often the board's own name
- * in `CATEGORIES`.
- *
- * The Events Calendar's `/events/?ical=1` returns only the current view; `/events/list/?ical=1` returns the
- * whole calendar. So the wiring row names the full feed URL explicitly, and the parsed count is reported
- * per row.
- *
- * What is dropped, and counted:
- * * An event with no parseable `DTSTART` → `unplaceableInTime`.
- * * An event whose `LOCATION` and row `venueMatch` resolve to no curated venue → counted `unknownVenue` and
- *   kept, with no pin and its venue gap named; never suppressed, never placed.
- * * An event whose `CATEGORIES` does not name a board this row serves → `notConfigured`.
- * * A second event on an id already produced → `duplicates`; the publisher's latest revision keeps the id.
- *
- * A recurring series is one record per sitting: `ical:<slug>:<UID>/<slot>` (see `occurrenceId` in
- * `lib/sources/event-identity.ts`). The master's `RRULE` is expanded into its in-window sittings when every
- * part of it is supported (`lib/sources/ical/recurrence.ts`); otherwise the refused part is named in
- * `recurrence.notExpanded` and the master stands for its own first sitting. An edited sitting belongs to its
- * series' body.
- *
- * Per-body isolation: one row is one feed. A host refusing us empties that row and nothing else, and the
- * refusal is reported as a refusal, never written into the data as an absence.
- */
 
 const SOURCE_NAME = "ical";
+export const ICAL_ACCEPT = "text/calendar,text/plain;q=0.9,*/*;q=0.8";
+export function icalFeedUrl(wiring: BodySourceWiring): string | undefined { return wiring.config.feedUrl; }
 
 const WINDOW_FORWARD_DAYS = MEETING_HELD_HORIZON_DAYS;
 const WINDOW_BACK_DAYS = MEETING_HELD_LOOKBACK_DAYS;
@@ -73,10 +45,6 @@ const WINDOW_BACK_DAYS = MEETING_HELD_LOOKBACK_DAYS;
 /** The body itself says so, in its own summary (including the bare verb "CANCEL"). */
 const CANCELED = /\bcancel(?:l?ed)?\b/i;
 
-/**
- * A `LOCATION` that names no place a reader could go: blank, or a bare state code. Only then may a row's
- * standing `venueMatch` stand in for it; any other text is the town's own words for the place.
- */
 export function namesNoPlace(rawLocation: string): boolean {
   const text = rawLocation.trim().replace(/[.,]+$/, "");
   return text === "" || US_STATE_CODES.has(text.toUpperCase()) || /^(?:New Hampshire|Arizona|New Jersey)$/i.test(text);
@@ -115,14 +83,6 @@ function namedDay(own: number, month: number, day: number, year: string | undefi
   return best;
 }
 
-/**
- * A sitting the body moved off its day was not held on it. A summary that says rescheduled or postponed
- * is read for the day it names:
- * - "to <day>", or a later bare day, names where the sitting went: not held here.
- * - "from <day>", an earlier bare day, or the sitting's own day names where it came from: this is the
- *   moved sitting on its new day, and it keeps the clock's status.
- * - A summary naming no day: only "postponed" counts, since "rescheduled" can describe either end.
- */
 export function movedOffItsDay(title: string, startsAt: string, zone: string): boolean {
   const said = MOVED.exec(title);
   if (!said) return false;
@@ -155,10 +115,6 @@ export interface IcalRaw {
   refusedKind?: "WALL" | "JOB";
   /** The furthest ladder rung the refused retrieval reached, when the client knew it. */
   refusedRung?: number;
-  /**
-   * The upcoming feed answered and the past feed did not: the row still produces its upcoming sittings, so
-   * it is partial, not refused.
-   */
   archiveRefused?: string;
   sourceUrl: string;
 }
@@ -173,11 +129,6 @@ export interface IcalEvent {
   dtstart: string | null;
   status: string | null;
   url: string | null;
-  /**
-   * The raw `RECURRENCE-ID`, in the same `params:value` shape as `dtstart`:
-   * this event overrides ONE sitting of the series its `UID` names, and this
-   * is that sitting's original start. Null on anything that is not an override.
-   */
   recurrenceId: string | null;
   /** The event carries an `RRULE` or `RDATE`: it is the master of a series. */
   recurs: boolean;
@@ -195,28 +146,11 @@ export interface IcalEvent {
   rdates: string[];
   /** The `RECURRENCE-ID` carries a `RANGE` parameter (this-and-future). */
   recurrenceRange: boolean;
-  /**
-   * Every property the feed published for this event, as served and in the
-   * order served, less the publisher's own record-keeping — see
-   * `publishedFieldsOf`. Absent on an event built by hand rather than parsed,
-   * which is never merged with anything (`collapsePublisherRelistings`).
-   */
   publishedFields?: string;
 }
 
-/**
- * The lines of an event that are the publisher's RECORD-KEEPING about its own
- * calendar entry, not anything it published about the sitting: the entry's id,
- * when the entry was stamped, created and last edited, and its revision number.
- */
 const RECORD_KEEPING = new Set(["UID", "DTSTAMP", "CREATED", "LAST-MODIFIED", "SEQUENCE"]);
 
-/**
- * What an event published, with its own id taken out: every unfolded property line in the order served,
- * less the `RECORD_KEEPING` lines. In a `URL`, a path segment or query value that is the `UID`'s own
- * number is written `{uid}` (only tokens carrying a digit). Two events whose strings are equal published
- * the same thing in every field a reader could see.
- */
 export function publishedFieldsOf(body: string, uid: string | null): string {
   const idTokens = new Set((uid ?? "").split(/[^A-Za-z0-9]+/).filter((t) => t.length >= 3 && /\d/.test(t)));
   const kept: string[] = [];
@@ -249,10 +183,6 @@ function listedValues(body: string, name: string): string[] {
   );
 }
 
-/**
- * Unfold RFC 5545 line folding, then split into events. Without unfolding a long `LOCATION` is truncated at
- * a byte boundary and matches nothing.
- */
 export function parseIcs(ics: string): IcalEvent[] {
   const unfolded = ics.replace(/\r\n[ \t]/g, "").replace(/\n[ \t]/g, "");
   const blocks = unfolded.split("BEGIN:VEVENT").slice(1);
@@ -292,14 +222,6 @@ export function parseIcs(ics: string): IcalEvent[] {
   return events;
 }
 
-/**
- * The recurrence SLOT a date or date-time names, as an occurrence stamp.
- *
- * A timed value resolves through its own `TZID` (or the row's zone) to a UTC
- * instant, so one instant spelled in two zones is one slot. An all-day value
- * is its calendar date as written: a day has no instant to resolve. Null when
- * the value cannot be placed in time, exactly as `parseDtStart` refuses it.
- */
 export function slotStamp(raw: string, fallbackZone: string): string | null {
   const parsed = parseDtStart(raw, fallbackZone);
   if (!parsed) return null;
@@ -320,15 +242,6 @@ function unescapeText(value: string | null): string | null {
     .trim();
 }
 
-/**
- * `DTSTART;TZID=America/New_York:20260819T180000` → an instant.
- *
- * The zone comes from the feed's own `TZID` where it has one, and from the
- * wiring row otherwise. A `Z` suffix is already UTC. A DATE-only value
- * (`VALUE=DATE:20260819`) has no time and is reported as such by the caller —
- * this returns the midnight instant and a precision flag, never an invented
- * hour.
- */
 export function parseDtStart(
   raw: string,
   fallbackZone: string,
@@ -345,9 +258,6 @@ export function parseDtStart(
   if (z) {
     return { iso: `${y}-${mo}-${d}T${hh}:${mi}:${ss}.000Z`, dayOnly };
   }
-  // A wall-clock time in a named zone. Resolve it by asking what offset that
-  // zone had at that instant, which is the only correct way across a DST
-  // boundary — a fixed offset is right for half the year.
   const naive = Date.UTC(+y, +mo - 1, +d, +hh, +mi, +ss);
   const offset = wallClockOffsetMs(naive, tzid);
   // A zone we could not interpret produces no timestamp: the caller counts it as `unplaceableInTime`.
@@ -356,18 +266,6 @@ export function parseDtStart(
   return { iso: new Date(naive - offset).toISOString(), dayOnly };
 }
 
-/**
- * The zone's UTC offset for a WALL-CLOCK time (given as if it were UTC), or
- * `null` when the zone cannot be read.
- *
- * Asking for the offset at the naive instant is right except within hours of
- * a daylight-saving change, where the naive instant and the real one fall on
- * opposite sides of it: 3am on 1 November 2026 in New York came out 7:00Z,
- * which is 2am EST. So both the offset before and the offset after are
- * tried, and the one that reproduces the wall clock wins, the earlier where
- * both do (a repeated hour's first occurrence) and the offset before the gap
- * where neither does (an hour that does not exist): RFC 5545 §3.3.5.
- */
 function wallClockOffsetMs(naive: number, zone: string): number | null {
   const before = zoneOffsetMs(naive - 43_200_000, zone);
   const after = zoneOffsetMs(naive + 43_200_000, zone);
@@ -383,15 +281,6 @@ function splitOnce(s: string, sep: string): [string, string] {
   return i < 0 ? [s, ""] : [s.slice(0, i), s.slice(i + 1)];
 }
 
-/**
- * How far the named zone was from UTC at `utcMs`, in milliseconds, or `null` when the zone cannot be
- * interpreted. Never 0 as a fallback: zero is a claim that the meeting is in UTC.
- */
-/**
- * One formatter per zone, because constructing one is the expensive part and
- * an expanded series asks for the same zone hundreds of times. A zone `Intl`
- * refuses is remembered as refused (`null`), never as UTC.
- */
 const zoneFormatters = new Map<string, Intl.DateTimeFormat | null>();
 
 function zoneFormatter(zone: string): Intl.DateTimeFormat | null {
@@ -453,20 +342,11 @@ function lastModifiedAt(value: string | null): number | null {
   return m ? Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +m[6]) : null;
 }
 
-/**
- * The publisher's own `LAST-MODIFIED` as an ISO instant, or null when the event states none. `DTSTAMP` is
- * never used.
- */
 export function publisherPostedAt(event: Pick<IcalEvent, "lastModified">): string | null {
   const at = lastModifiedAt(event.lastModified);
   return at === null ? null : new Date(at).toISOString();
 }
 
-/**
- * Which of two events on one id keeps it, decided by what they say: the publisher's latest revision (the
- * higher `SEQUENCE`, absent is 0, then the later `LAST-MODIFIED`); at the same revision the tie is broken
- * on content, so the answer never depends on feed order.
- */
 function preferredClaim(held: IdentityClaim, incoming: IdentityClaim): IdentityClaim {
   const sequence = (claim: IdentityClaim) => claim.event.sequence ?? 0;
   if (sequence(held) !== sequence(incoming)) {
@@ -494,14 +374,6 @@ export function relistedNote(listings: number): string {
   return `listed ${listings === 2 ? "twice" : `${listings} times`} in the publisher's own calendar`;
 }
 
-/**
- * One sitting the publisher's own calendar lists twice is one sitting. Within one wiring row, claims
- * merge only when their events published exactly the same thing (`IcalEvent.publishedFields`) and state
- * the same sitting instant; only the publisher's record-keeping may differ. Anything else that differs
- * keeps both listings, each with the listing-identity notice. The survivor is the lowest id and carries
- * every listing's id and page (`provenance.publisherListings`). An engineering correctness rule: remove the
- * one call in `normalizeWithDrops` and every pair returns as two listings.
- */
 export function collapsePublisherRelistings(
   claims: readonly IdentityClaim[],
 ): { readonly survivor: IdentityClaim; readonly merged: readonly string[] }[] {
@@ -570,15 +442,6 @@ function localDay(raw: string): number | null {
   return m ? dayNumber(+m[1], +m[2], +m[3]) : null;
 }
 
-/**
- * **THE SITTINGS ONE SERIES STATES, OR THE PART OF ITS RULE THAT WAS REFUSED.**
- *
- * An expanded series states every sitting its `RRULE` (and `RDATE`) produces
- * inside the serving window, less the ones its `EXDATE` strikes out; its
- * overrides are applied by the caller, which holds them. A series whose rule
- * is refused states its own first sitting only, exactly as it did before
- * expansion existed, and names the refused part: nothing is guessed.
- */
 function planSeries(input: {
   readonly master: IcalEvent;
   readonly owners: readonly IcalEvent[];
@@ -687,13 +550,6 @@ function planSeries(input: {
   return { sittings, excluded, unsupported: null };
 }
 
-/**
- * A feed that publishes every sitting as its own event while restating the series' `RRULE` on each.
- * Expanding those would publish each sitting many times and invent sittings past the series' end. The
- * evidence: two events with different `UID`s, the same title and rule, the later starting on a sitting of
- * the earlier one's rule. Then no rule is expanded and every event is one sitting. Returns the evidence,
- * or null.
- */
 function ruleRestatedOnSittings(events: readonly IcalEvent[]): string | null {
   const groups = new Map<string, IcalEvent[]>();
   for (const event of events) {
@@ -748,11 +604,6 @@ export function makeIcalSource(
       notConfigured: 0,
     };
     const unreachable: string[] = [];
-    /**
-     * Every id produced so far and the event that holds it. A second event on
-     * an id held already is a duplicate, and which of the two keeps the id is
-     * decided by `preferredClaim`, never by which came first in the feed.
-     */
     const claims = new Map<string, IdentityClaim>();
     /** Events parsed and dated, then set aside as outside the served window. */
     let outOfWindow = 0;
@@ -760,22 +611,10 @@ export function makeIcalSource(
     let considered = 0;
     /** A-002 · events whose identity had already been produced. */
     let duplicates = 0;
-    /**
-     * Sittings tallied in `placeless` or `unknownVenue` that are then kept and produced (or counted as
-     * duplicates), so the tally is not a drop.
-     */
     let keptButPlaceless = 0;
     /** A-005 · the feed published the same UID twice. Its own doing. */
     let exactDuplicates = 0;
-    /**
-     * Two UID-less records this code judged to be the same sitting, counted apart from exact duplicates
-     * because it is our judgement rather than the feed's statement.
-     */
     let weakIdCollisions = 0;
-    /**
-     * Listings the publisher's calendar carried more than once under another id, every published field
-     * identical, merged by `collapsePublisherRelistings`.
-     */
     let publisherRelisted = 0;
     /** Divisions whose archive feed refused while their upcoming feed answered, collected per cause. */
     const archiveRefusals = new Map<string, (string | null)[]>();
@@ -796,15 +635,6 @@ export function makeIcalSource(
         continue;
       }
 
-      // Which events on this calendar are this body's sittings; one of these is required:
-      // - `categoryMatch`: the feed's own `CATEGORIES` names the board (the publisher's classification).
-      // - `titleMatch`: comma-separated phrases, any of which in the `SUMMARY` makes the event this body's. A list
-      //   because a body's name is spelled several ways on its own calendar; nothing is inferred from a
-      //   near-miss.
-      // - `feedScope: "category"`: the feed is the body's own calendar category, so every event is the body's.
-      //   Only a reviewed row sets it, and `crosswalkRowIssue` admits it only on a category-scoped feed and never
-      //   beside `titleMatch` or `categoryMatch`.
-      // `titleExclude` removes what a phrase would over-catch.
       const feedScope = wiring.config.feedScope ?? "";
       const category = wiring.config.categoryMatch ?? "";
       const titleTerms = (wiring.config.titleMatch ?? "")
@@ -817,14 +647,6 @@ export function makeIcalSource(
         .filter(Boolean);
 
       const events = parseIcs(ics);
-      /*
-       * THE SITTINGS AN OVERRIDE HAS REPLACED, read from the WHOLE feed
-       * before any filter runs. An override replaces its sitting even when its
-       * own title no longer names this body or its new date is outside the
-       * window: a Planning Board sitting re-titled "Room reserved", or moved
-       * out of range, is no longer a Planning Board sitting at its old time,
-       * and the series master must not keep asserting that it is.
-       */
       const overriddenSlots = new Set<string>();
       /** Each series' own event(s): the non-override events carrying its `UID`. */
       const seriesOwners = new Map<string, IcalEvent[]>();
@@ -840,12 +662,6 @@ export function makeIcalSource(
         const slot = slotStamp(event.recurrenceId, wiring.timeZone);
         if (slot) overriddenSlots.add(`${event.uid} ${slot}`);
       }
-      /*
-       * A feed that publishes every sitting itself and restates the series'
-       * rule on each one is read event by event: no rule in it is expanded,
-       * and each event keeps the id a single event always had. See
-       * `ruleRestatedOnSittings`.
-       */
       let restatedSeriesEvents = 0;
       /** Every id THIS row produced, in the order first claimed: the scope `collapsePublisherRelistings` merges within. */
       const rowIds: string[] = [];
@@ -870,9 +686,6 @@ export function makeIcalSource(
         // A-002 · the logical record here is the EVENT, never the document.
         // One `.ics` file is one raw row and, at Newbury, 1,157 of these.
         considered += 1;
-        // An edited sitting belongs to its series' body, not its own title: the series event decides the body,
-        // the override's `DTSTART` says when the sitting now is, and its title is shown as written. An override
-        // whose series event is not in the feed is read by its own fields.
         const owners = event.uid && event.recurrenceId ? seriesOwners.get(event.uid) : undefined;
         const matched = owners && owners.length > 0
           ? owners.some(namesThisBody)
@@ -892,16 +705,6 @@ export function makeIcalSource(
           continue;
         }
 
-        /*
-         * **WHICH SITTINGS THIS EVENT STATES.** (2026-09-23.)
-         *
-         * A single event and an override state one sitting each: their own
-         * start. A series event states every sitting of its rule inside the
-         * window (`planSeries`), and each of those is a logical record of
-         * its own, so the series event is replaced in the count by its
-         * sittings. One with no sitting in the window counts once, as out
-         * of window, which is where it counted before expansion existed.
-         */
         const seriesEvent = Boolean(event.uid && event.recurs && !event.recurrenceId);
         if (seriesEvent && restated) restatedSeriesEvents += 1;
         let sittings: { iso: string; dayOnly: boolean; slot: string | null }[];
@@ -940,9 +743,6 @@ export function makeIcalSource(
             });
           }
           if (plan.sittings.length === 0) {
-            // COUNTED, because an uncounted exit path is how a zero-row
-            // extraction passes for an accounted one. See `outOfWindow` in
-            // lib/sources/normalize-account.ts.
             outOfWindow++;
             continue;
           }
@@ -979,21 +779,10 @@ export function makeIcalSource(
         }
 
         const rawLocation = (event.location ?? "").trim();
-        // Venue resolution. An empty `LOCATION` is not a placeless meeting: `placeless` means the body published
-        // a location string naming no building ("Virtual Meeting"). The feed's own location comes first; only a
-        // blank one or a bare state code reaches the row's `venueMatch` (the body's own sourced standing
-        // statement). A `LOCATION` naming another place is the town's own words and renders as its named gap.
         let venue = resolveVenue(SOURCE_NAME, wiring.ocdId, rawLocation);
         if (!venue && wiring.config.venueMatch && namesNoPlace(rawLocation)) {
           venue = resolveVenue(SOURCE_NAME, wiring.ocdId, wiring.config.venueMatch);
         }
-        // Neither resolves: kept, never placed, never suppressed:
-        // - a `LOCATION` naming no building is online, counted `placeless`;
-        // - any other `LOCATION` is the town's own words, rendered as its named gap (`STATED_NOT_PLACED`);
-        // - no `LOCATION` and no `venueMatch` is the publisher's own gap (`NOT_STATED_BY_PUBLISHER`);
-        // - no `LOCATION` and a `venueMatch` with no reviewed row keeps our own place-not-recorded gap.
-        // Each is counted (`unknownVenue` for the last three) and then produced, so the tally is
-        // `keptButPlaceless`, never a drop.
         let online: OnlineAccess | null = null;
         let venueGap: MeetingVenueGap | null = null;
         if (!venue) {
@@ -1010,9 +799,6 @@ export function makeIcalSource(
         }
 
         const title = (event.summary ?? wiring.publishingOrg).trim();
-        // Identity when the feed gives none. A `UID` is the identity whenever it exists; a UID-less event is
-        // identified by everything the feed did publish (body slug, start, summary, location, description), so
-        // two boards sitting at the same time stay two sittings.
         const fallbackIdentity = weakEventIdentity({
           slug: wiring.config.slug,
           startIso: start.iso,
@@ -1023,9 +809,6 @@ export function makeIcalSource(
         const seriesId = `${SOURCE_NAME}:${wiring.config.slug}:${event.uid ?? fallbackIdentity}`;
 
         for (const sitting of sittings) {
-          // One sitting of a recurring series is one record: the `UID` plus its recurrence slot (an override's
-          // `RECURRENCE-ID`, or the instance the rule places). A single event keeps the id it always had. See
-          // `occurrenceId` in lib/sources/event-identity.ts.
           const id = sitting.slot === null ? seriesId : occurrenceId(seriesId, sitting.slot);
           const meeting: Meeting = {
             id,
@@ -1125,9 +908,6 @@ export function makeIcalSource(
         recurrence,
         ...(archiveRefusals.size > 0
           ? {
-              // A-004 · the third state, between `ok` and refused. The
-              // upcoming feed answered; the archive did not; and the two must
-              // not be reported as one.
               partialScopes: [...archiveRefusals].map(([cause, ocdIds]) => ({
                 scope: "ARCHIVE" as const,
                 ocdIds,
@@ -1157,7 +937,7 @@ export function makeIcalSource(
       // document once per wiring row. A refusal is shared by every row on that URL: one retrieval, one wall.
       const fetched = new Map<string, { ics: string; refused: boolean; refusedReason?: string; refusedKind?: "WALL" | "JOB"; refusedRung?: number }>();
       for (const wiring of wiringRows) {
-        const url = wiring.config.feedUrl;
+        const url = icalFeedUrl(wiring);
         if (!url) {
           collected.push({
             wiring,
@@ -1192,7 +972,7 @@ export function makeIcalSource(
         try {
           const res = await politeGetText(url, {
             fetchImpl,
-            accept: "text/calendar,text/plain;q=0.9,*/*;q=0.8",
+            accept: ICAL_ACCEPT,
             signal: query.signal,
             // A 200 with no VCALENDAR in it is a failed retrieval, not an empty calendar. See `expect` in
             // lib/sources/http.ts.
@@ -1217,10 +997,6 @@ export function makeIcalSource(
               archiveRefused = String((error as Error)?.message ?? error);
             }
           }
-          // A calendar with no events in it is a failed retrieval, not an empty calendar: a well-formed
-          // `BEGIN:VCALENDAR` envelope with no VEVENT passes every transport check. The row is refused, so the body
-          // keeps its last known sittings (clipped to the serving window) instead of the whole source going red. A
-          // calendar that genuinely empties is marked refused too, until its carried rows age out.
           if (!/BEGIN:VEVENT/i.test(ics)) {
             const refusedReason = `${url} answered a calendar envelope holding no events`;
             fetched.set(url, { ics: "", refused: true, refusedReason, refusedKind: "WALL" });

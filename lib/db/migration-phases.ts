@@ -165,6 +165,7 @@ export function phaseFromSql(sql: string): { phase: MigrationPhase; signals: Con
 /** Hand-written, one entry per committed migration; the suite checks each against phaseFromSql. */
 export const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
   "R4_meeting_artifacts": { phase: "expand", why: "Copies existing meeting artifacts into state manifests before state readers ship." },
+  "R4_reader_publication_inputs": { phase: "expand", why: "Indexes promotion scope identities for bounded publication input checks without reading source payloads." },
   "R4_meeting_dependencies": { phase: "expand", why: "Projects held registry and venue dependencies into indexed body rows before body workers read them." },
   "R4_meeting_partitions": { phase: "expand", why: "Transfers saved meeting evidence into independently checked body partitions before their readers ship." },
   "R4_source_copy_observations": { phase: "expand", why: "Adds the unique observation identity used by source copies without removing the old key." },

@@ -10,7 +10,7 @@ import type { KnownReleaseOptions } from "../lib/sources/known-release.ts";
 test("profile and portrait readers share publisher holds and hourly allowance, and reuse saved captures", async () => {
   const repos = createMemoryRepositories(), vault = new MemoryEvidenceStore();
   const now = Date.parse("2026-10-12T12:00:00.000Z"), sent: string[] = [];
-  const state: SourceFetchStore = { pacing: repos.websitePacing, withLease: async (_key, operation) => operation(), read: async () => null, record: async () => {} };
+  const state: SourceFetchStore = { pacing: repos.websitePacing, withLease: async (_key, operation) => operation(), read: async () => null, readEntryRequest: async () => null, record: async () => {} };
   const request = (sourceId: string, url: string): KnownReleaseOptions => ({ sourceId, url, releaseId: url,
     parserVersion: "fixture/1", signal: new AbortController().signal, maxBytes: 1024,
     checkAfterMs: 7 * 86_400_000, now: () => new Date(now).toISOString(), store: vault, locks: repos.locks });

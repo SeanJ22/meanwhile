@@ -5,7 +5,6 @@ import {
   ROUTINE_SOURCE_CONTRACTS,
   cadenceMsAt,
   type RoutineSourceContract,
-  type SittingWindowSchedule,
 } from "./contracts.ts";
 import { MEETING_PARTITION_CONTRACTS, onMeetingPartitionsRefreshed, sittingWindowSourceIds } from "./meeting-partitions.ts";
 import { sittingWindowHotByConclusion, sittingWindowObligation } from "./sitting-window-admission.ts";
@@ -17,6 +16,7 @@ import {
 } from "./runner-receipt.ts";
 import { runBoundedWorkPool } from "../ops/bounded-work-pool.ts";
 import type { BoundedChildResult } from "./bounded-child-pass.ts";
+import { ROUTINE_CLOCK_BATCH_SIZE, type RoutineClockRead } from "./store.ts";
 
 /** A command never spawned because memory stayed full or the pass's time ran out: still owed, not failed. */
 export function routinePreSpawnDeferral(run: BoundedChildResult, childStarted: boolean): string | null {
@@ -59,6 +59,7 @@ export interface RoutineSourceTask {
   readonly retryMs: number;
   readonly childTimeoutMs?: number;
   readonly clockBoundaryAt?: string;
+  readonly sourceChangedAt?: string;
   readonly contract: Pick<RoutineSourceContract, "cadence" | "schedule" | "readerProjection">;
   readonly ownerInvocation?: {
     readonly publicationPending?: true;
@@ -502,26 +503,34 @@ export type RoutineTaskClockRead =
 
 export async function readRoutineTaskClocks(
   tasks: readonly RoutineSourceTask[],
-  readClock: (task: RoutineSourceTask) => Promise<RoutineTaskClock | undefined>,
+  readClocks: (tasks: readonly RoutineSourceTask[]) => Promise<readonly RoutineClockRead[]>,
   concurrency: number = ROUTINE_CLOCK_READ_CONCURRENCY,
 ): Promise<readonly RoutineTaskClockRead[]> {
-  const reads = await runBoundedWorkPool(tasks, concurrency, readClock);
-  return reads.map((read) => read.ok
-    ? { task: tasks[read.index]!, ok: true as const, clock: read.value, error: null }
-    : { task: tasks[read.index]!, ok: false as const, clock: undefined, error: read.error });
+  const batches = Array.from({ length: Math.ceil(tasks.length / ROUTINE_CLOCK_BATCH_SIZE) }, (_, index) => tasks.slice(index * ROUTINE_CLOCK_BATCH_SIZE, (index + 1) * ROUTINE_CLOCK_BATCH_SIZE));
+  const reads = await runBoundedWorkPool(batches, concurrency, async batch => {
+    const clocks = await readClocks(batch);
+    if (clocks.length !== batch.length) throw new Error("ROUTINE_CLOCK_BATCH_RESULT_MISMATCH");
+    return clocks;
+  });
+  return reads.flatMap(read => batches[read.index]!.map((task, index) => {
+    const result = read.ok ? read.value[index]! : { ok: false as const, error: read.error };
+    return result.ok ? { task, ok: true as const, clock: result.clock, error: null }
+      : { task, ok: false as const, clock: undefined, error: result.error };
+  }));
 }
 
 export function sittingWindowSignals(
   reads: readonly { readonly task: RoutineSourceTask; readonly ok: boolean; readonly clock?: RoutineTaskClock }[],
   nowMs: number,
   statedEnds: ReadonlyMap<string, ReadonlyMap<string, number>> = new Map(),
+  sourceIds: (taskId: string) => readonly string[] = sittingWindowSourceIds,
 ): ReadonlyMap<string, boolean | undefined> {
   const clocks = new Map(reads.map((read) => [read.task.id, read.ok ? read.clock ?? {} : undefined]));
   const signals = new Map<string, boolean | undefined>();
   for (const read of reads) {
     const schedule = read.task.contract.schedule;
     if (schedule?.kind !== "SITTING_WINDOW") continue;
-    const sources = sittingWindowSourceIds(read.task.id);
+    const sources = sourceIds(read.task.id);
     const lists = sources.map((id) => clocks.get(id)?.sittingStarts);
     const ends = new Map(sources.flatMap((id) => [...(statedEnds.get(id) ?? new Map<string, number>())]));
     signals.set(read.task.id, sittingWindowHotByConclusion(schedule, lists, nowMs, ends));
@@ -533,7 +542,10 @@ export function routineTaskDeadlineMs(
   task: RoutineSourceTask,
   clock: RoutineTaskClock | undefined,
   sittingHot?: boolean,
+  nowMs: number = Date.now(),
 ): number | undefined {
+  const sourceChange = sourceChangeDueAtMs(task, clock, nowMs);
+  if (sourceChange !== undefined) return sourceChange;
   const schedule = task.contract?.schedule;
   if (schedule?.kind !== "SITTING_WINDOW") return undefined;
   if (!clock?.lastAttemptedAt) return Number.NEGATIVE_INFINITY;
@@ -610,6 +622,14 @@ export function routineCodeChangeRetryTaskIds(reads: readonly RoutineTaskClockRe
   ) ? [read.task.id] : []));
 }
 
+function sourceChangeDueAtMs(task: RoutineSourceTask, clock: RoutineTaskClock | undefined, nowMs: number): number | undefined {
+  const changed = Date.parse(task.sourceChangedAt ?? "");
+  const succeeded = Date.parse(clock?.lastSucceededObservedAt ?? "");
+  if (!Number.isFinite(changed) || changed > nowMs || (Number.isFinite(succeeded) && succeeded >= changed)) return undefined;
+  const attempted = Date.parse(clock?.lastAttemptedAt ?? "");
+  return !Number.isFinite(attempted) || attempted > nowMs || attempted < changed ? changed : attempted + task.retryMs;
+}
+
 export function routineTaskDueAtMs(
   task: RoutineSourceTask,
   clock: RoutineTaskClock | undefined,
@@ -630,6 +650,8 @@ export function routineTaskDueAtMs(
     return !Number.isFinite(attempted) || attempted < requested ? nowMs : attempted + task.retryMs;
   }
   if (!Number.isFinite(attempted) || attempted > nowMs || (Number.isFinite(succeeded) && succeeded > nowMs)) return nowMs;
+  const sourceChange = sourceChangeDueAtMs(task, clock, nowMs);
+  if (sourceChange !== undefined) return sourceChange;
   if (clock?.lastSucceededParserVersion !== undefined && clock.lastSucceededParserVersion !== task.parserVersion) {
     return attempted + task.retryMs;
   }

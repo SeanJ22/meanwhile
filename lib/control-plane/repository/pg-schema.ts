@@ -4,7 +4,7 @@ import { WEBSITE_PACING_DDL } from "../website-pacing.ts";
 import { SOURCE_FETCH_DDL } from "../../sources/fetch-source-state.ts";
 
 /** Moves whenever `BOOTSTRAP_DDL` moves. The gate compares against it. */
-export const BOOTSTRAP_VERSION = 32;
+export const BOOTSTRAP_VERSION = 33;
 
 
 export const AGGREGATE_KINDS = [
@@ -73,6 +73,7 @@ export const DECLARED_TABLES: readonly string[] = [
   "cp_fix_map",
   "cp_website_pacing",
   "cp_source_responses",
+  "cp_source_requests",
   "cp_source_checks",
   "cp_source_check_days",
   ...AGGREGATE_KINDS.map((k) => `cp_${k}`),
@@ -132,6 +133,8 @@ export const SCOPED_HISTORY_INDEXES: readonly OnlineIndex[] = [
   onlineIndex("cp_occurrences_obligation_path", "cp_occurrences ((value #>> '{obligationId}'))"),
   onlineIndex("cp_work_items_repair_parent", "cp_work_items ((value #>> '{planRepair,parentWorkItemId}'))"),
   onlineIndex("cp_work_items_subject", "cp_work_items ((value #>> '{subject}'))"),
+  onlineIndex("cp_work_items_publication_body", "cp_work_items ((value #>> '{autonomousPlan,publication,bodyId}'))"),
+  onlineIndex("cp_work_items_contract_subject", "cp_work_items ((value #>> '{autonomousPlan,contract,subjectId}'))"),
   onlineIndex("cp_work_items_publication_state", "cp_work_items ((upper(regexp_replace(coalesce(nullif(value #>> '{autonomousPlan,jurisdiction}', ''), value #>> '{autonomousPlan,contract,jurisdiction,state}', 'US'), '^US-', '', 'i'))), (value #>> '{autonomousPlan,publication,contractId}'), id)"),
   onlineIndex("cp_box_findings_publication_state", `cp_box_findings ((${BOX_PUBLICATION_STATE_SQL}), id)`),
   onlineIndex("cp_log_scout_results_subject", "cp_log_scout_results ((record #>> '{subjectId}'))"),

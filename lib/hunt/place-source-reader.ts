@@ -19,9 +19,6 @@ export class PlaceSourceDeferred extends Error {
   }
 }
 
-/** Bind the ordinary saved reader to an actual acquiring Attempt. Every job's
- * fresh captures are eligible; missing local bytes fall through to acquisition.
- * No timestamp is advanced by replaying a held document. */
 export async function placeSourceReader(input: {
   tools: ResearchRuntimeTools;
   context: Omit<ScoutToolContext, "vault" | "spaceOut" | "handed">;
@@ -39,6 +36,7 @@ export async function placeSourceReader(input: {
     try { return await runWithSourceFetch({ websiteSize: input.websiteSize }, operation); }
     catch (error) {
       if (error instanceof SourceFetchDeferred) {
+        cost.requestCount--;
         deferred ??= new PlaceSourceDeferred(new URL(url).hostname);
         throw deferred;
       }

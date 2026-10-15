@@ -18,7 +18,7 @@ function fakeRuntime(map: Readonly<Record<string, Reply>>, over: Partial<Researc
   const slept: number[] = [];
   let clock = Date.parse("2026-09-24T20:00:00.000Z");
   const vault = new MemoryEvidenceStore();
-  const store = { pacing: memoryWebsitePacing(), withLease: async <T,>(_key: string, operation: () => Promise<T>) => operation(), read: async () => null, record: async () => {} };
+  const store = { pacing: memoryWebsitePacing(), withLease: async <T,>(_key: string, operation: () => Promise<T>) => operation(), read: async () => null, readEntryRequest: async () => null, record: async () => {} };
   const transport: typeof fetch = async (input, init) => {
     const url = String(input), headers = new Headers(init?.headers); seen.push(url);
     assert.match(headers.get("user-agent") ?? "", /we-the-people/);

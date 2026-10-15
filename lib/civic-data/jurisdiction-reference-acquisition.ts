@@ -414,10 +414,6 @@ export async function acquireJurisdictionReferenceInputs(): Promise<Jurisdiction
   return acquireWith(fetchSource, () => new Date().toISOString(), PRODUCTION_DENOMINATORS);
 }
 
-/**
- * Explicit deterministic seam for unit tests only. Production callers use the
- * zero-argument function above and cannot redirect acquisition to repo files.
- */
 export const jurisdictionReferenceAcquisitionTestOnly = Object.freeze({
   acquire(
     fetchImpl: typeof fetch,

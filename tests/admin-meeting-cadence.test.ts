@@ -141,15 +141,15 @@ test("a read that published nothing after the last good one is retried an hour a
   assert.equal(Date.parse("2026-09-25T21:20:00.000Z"), runner.deadlineMs);
 });
 
-test("a source with nothing published waits twelve hours between attempts, and every sentence on the card says so (R20)", () => {
-  const tried = "2026-09-25T17:19:04.224Z";
+test("a source with no accepted version retries hourly while its body's window is unknown, and Admin says so", () => {
+  const tried = "2026-09-25T20:19:04.224Z";
   const v = card(store(null, [attempt(tried, "CANNOT_TELL", true)]));
-  assert.equal(row(v, "How often"), "Twice a day until something from it is published: with no meeting on record, the runner waits twelve hours after each attempt. The rule: twice a day, and within the hour while a sitting is within seven days ahead or behind.");
-  assert.equal(row(v, "Next look"), "Owed by Sep 26, 1:19 AM ET, twelve hours after the last attempt, since nothing from it is published yet; the runner may read it from Sep 25, 11:19 PM ET");
-  assert.match(v.lanes.find((l) => l.name === "Acquisition")!.note, /a failed read is retried twelve hours after each attempt while nothing from it is published\.$/);
-  assert.equal(v.deadEnd!.whoMoves, "The runner reads it again on its clock (twelve hours after each attempt while nothing from it is published). Nothing else is scheduled to change it.");
+  assert.equal(row(v, "How often"), "Hourly until something from it is published: this source has no accepted version, so the runner waits an hour after each attempt. The rule: twice a day, and within the hour while a sitting is within seven days ahead or behind.");
+  assert.equal(row(v, "Next look"), "Owed by Sep 25, 5:19 PM ET, an hour after the last attempt, since nothing from it is published yet; the runner may read it from Sep 25, 4:54 PM ET");
+  assert.match(v.lanes.find((l) => l.name === "Acquisition")!.note, /a failed read is retried an hour after each attempt while nothing from it is published\.$/);
+  assert.equal(v.deadEnd!.whoMoves, "The runner reads it again on its clock (an hour after each attempt while nothing from it is published). Nothing else is scheduled to change it.");
   const runner = runnerSays({ lastAttemptedAt: tried }, undefined);
-  assert.equal(Date.parse("2026-09-26T05:19:04.224Z"), runner.deadlineMs);
+  assert.equal(Date.parse("2026-09-25T21:19:04.224Z"), runner.deadlineMs);
 });
 
 test("a trusted-LKG import is never a success: only a live read after it counts, and with none the runner owes one at once", () => {
@@ -229,4 +229,9 @@ test("one source's upcoming sitting makes every source of that body hourly while
     assert.equal(clock.owed!.deadlineMs, routineTaskDeadlineMs(tasks[index]!, reads[index]!.clock, signals.get(tasks[index]!.id)));
   }
   assert.equal(own.owed!.deadlineMs - peer.owed!.deadlineMs, Date.parse(LAST_GOOD) - Date.parse(earlier));
+  const unaccepted = sittingClockOf(CONTRACT, null, [attempt(LAST_GOOD, "SOURCE_BLOCKED", false)], NOW_MS, [undefined, hot]);
+  assert.equal(unaccepted.published, false);
+  assert.equal(unaccepted.hot, true);
+  assert.equal(unaccepted.unpublishedWaitMs, HOUR);
+  assert.equal(unaccepted.owed!.deadlineMs, Date.parse(LAST_GOOD) + HOUR);
 });

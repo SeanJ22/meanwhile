@@ -210,6 +210,26 @@ test("a date-only council meeting stays upcoming through its local day without i
   assert.equal(tomorrow?.status, "CONCLUDED");
 });
 
+test("reused CivicPlus formatters retain each body's local date, offset and day-only status across DST", () => {
+  const ical = ["BEGIN:VCALENDAR", "BEGIN:VEVENT", "UID:timed", "SUMMARY:Council", "DTSTART:20260715T003000Z", "LOCATION:Zoom", "END:VEVENT",
+    "BEGIN:VEVENT", "UID:day", "SUMMARY:Council", "DTSTART;VALUE=DATE:20261101", "LOCATION:Zoom", "END:VEVENT", "END:VCALENDAR"].join("\r\n");
+  for (let pass = 0; pass < 2; pass++) for (const [zone, timed, day, laterStatus] of [
+    ["America/New_York", "2026-07-14T20:30:00-04:00", "2026-11-01T00:00:00-04:00", "CONCLUDED"],
+    ["America/Chicago", "2026-07-14T19:30:00-05:00", "2026-11-01T00:00:00-05:00", "SCHEDULED"],
+    ["America/Phoenix", "2026-07-14T17:30:00-07:00", "2026-11-01T00:00:00-07:00", "SCHEDULED"],
+  ] as const) {
+    const row = wiring("NJ", "Council", "fixture.gov", "1", zone);
+    const source = makeCivicPlusSource([row]);
+    const raw = [{ wiring: row, ical, collectedAt: NOW.toISOString() }];
+    const early = source.normalize(raw, new Date("2026-11-02T04:30:00Z"));
+    assert.equal(early.find(meeting => meeting.id.endsWith(":timed"))?.startsAt, timed);
+    assert.equal(early.find(meeting => meeting.id.endsWith(":day"))?.startsAt, day);
+    assert.equal(early.find(meeting => meeting.id.endsWith(":day"))?.status, "SCHEDULED");
+    const later = source.normalize(raw, new Date("2026-11-02T05:01:00Z"));
+    assert.equal(later.find(meeting => meeting.id.endsWith(":day"))?.status, laterStatus);
+  }
+});
+
 test("cancellations and minutes-only rows remain distinct; impossible iCal dates are dropped", () => {
   const row = wiring("NJ", "Board of Adjustment", "www.rockawaytownship.org", "3", "America/New_York");
   const altered = NJ.replace("BOA Agenda 8/4/26", "BOA Meeting Cancelled 8/4/26")

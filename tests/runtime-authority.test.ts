@@ -7,6 +7,7 @@ import test from "node:test";
 
 import {
   admittedRuntimeChildEnvironment,
+  withRoutineContract,
   assertRuntimeAuthority,
   GIT_READ_ATTEMPTS,
   inspectRuntimeCheckout,
@@ -251,4 +252,26 @@ test("the capture conversion child writes held people, vote and directory versio
   assert.equal(conversion(null), null);
   assert.match(conversion("fec-funding") ?? "", /may not carry a source contract/);
   assert.match(issue({ ...envelope(), capability: "CAPTURE_CONVERSION", contract: null }) ?? "", /not one of/, "it never satisfies a source child's expectation");
+});
+
+
+test("in-process body writes use their scoped contract while the supervisor keeps its authority", async () => {
+  const { assertRoutineDataStoreMutationAuthority, routineDataStoreCandidateAuthorityIssue } = await import("../lib/civic-data/store.ts");
+  const scoped = admittedRuntimeChildEnvironment({ capability: "ROUTINE_SUPERVISOR", parentEnv: {
+    NODE_ENV: "development", WTP_RUNTIME_MODE: "staging", WTP_DB_ROLE: "local",
+    DATABASE_URL: "postgresql://local:local@staging.invalid/reader",
+    WTP_CONTROL_PLANE_DATABASE_URL: "postgresql://local:local@staging.invalid/control",
+    WTP_SANCTIONED_WRITE: "routine-civic-data-promotion",
+  } });
+  const saved = new Map(Object.keys(scoped).map(key => [key, process.env[key]]));
+  try {
+    for (const [key, value] of Object.entries(scoped)) if (value === undefined) delete process.env[key]; else process.env[key] = value;
+    await withRoutineContract("fec-funding", async () => {
+      await Promise.resolve();
+      const authority = assertRoutineDataStoreMutationAuthority();
+      assert.equal(authority.contract, "fec-funding");
+      assert.equal(routineDataStoreCandidateAuthorityIssue({ id: "scoped-body", sourceId: "fec-open-api", recordClass: "FEC_FUNDING", scope: "federal-supported" }, authority, "candidate"), null);
+    });
+    assert.equal(assertRoutineDataStoreMutationAuthority().capability, "ROUTINE_SUPERVISOR");
+  } finally { for (const [key, value] of saved) if (value === undefined) delete process.env[key]; else process.env[key] = value; }
 });

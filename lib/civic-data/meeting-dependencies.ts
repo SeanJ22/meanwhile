@@ -5,6 +5,7 @@ import { installMeetingRegistryProjection } from "../registry/runtime-read-model
 import { REGISTRY_RUNTIME_SCOPE } from "../registry/runtime-data-plane.ts";
 import { installMeetingVenueProjection } from "./curated-reader-read-model.ts";
 import type { CuratedReaderProjection } from "./manual-projections.ts";
+import { routineScopeState } from "./state-scope.ts";
 
 export interface MeetingDependencyScope {
   readonly bodyId: string;
@@ -40,6 +41,22 @@ export async function readMeetingBodiesForPublication(bodyIds: readonly string[]
     WHERE d.kind IN ('body','registered-body') AND d.member_id=ANY($1::text[]) ORDER BY d.member_id,d.kind`, [ids]);
   if (rows.length !== ids.length) throw new Error("MEETING_DEPENDENCY_VERSION_MISMATCH");
   return rows.map(row => row.value as Body);
+}
+
+export async function readMeetingBodyIdsForDivisions(state: string, ocdIds: readonly string[], query?: Query | null): Promise<ReadonlySet<string>> {
+  if (!/^(?:US(?:-[A-Z]{2})?|[A-Z]{2})$/i.test(state)) throw new Error("MEETING_REGISTRY_STATE_INVALID");
+  const scope = routineScopeState(state);
+  const divisions = [...new Set(ocdIds.map(id => id.split("#")[0]!))];
+  if (divisions.some(id => routineScopeState(id) !== scope)) throw new Error("MEETING_DEPENDENCY_CROSSES_STATE");
+  if (!divisions.length) return new Set();
+  const rows = await requiredQuery(query)(`WITH bodies AS MATERIALIZED (
+    SELECT DISTINCT ON (d.member_id) d.member_id,d.value
+    FROM civic_meeting_dependencies d JOIN civic_data_promotions p ON p.scope=d.pointer_scope AND p.current_version_id=d.version_id
+      AND p.record_class=CASE d.kind WHEN 'body' THEN 'REGISTRY_RUNTIME_BINDING' ELSE 'REGISTRATION' END
+    WHERE d.kind IN ('body','registered-body') AND d.scope=$1 ORDER BY d.member_id,d.kind
+  ) SELECT member_id FROM bodies WHERE value->>'ocdId'=ANY($2::text[])
+    OR coalesce(value->'alsoServesOcdIds','[]'::jsonb) ?| $2::text[]`, [scope, divisions]);
+  return new Set(rows.map(row => String(row.member_id)));
 }
 
 export async function readMeetingVenues(scopes: readonly string[], query?: Query | null): Promise<void> {

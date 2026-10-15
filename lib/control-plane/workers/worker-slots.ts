@@ -14,9 +14,6 @@ export const RESEARCH_PARENT_PEAK_MIB = 2928;
 export const NATIONAL_PLACE_PEAK_MIB = 1923 + WORKER_ENTRY_PEAK_MIB.national!;
 /** Bulk data families use the retained data-worker bound until their own runs are measured on this host. */
 const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
-  // A complete 113 MiB Illinois session parsed and promoted in the fixture
-  // store peaked at 3,013 MiB. Round up for these state-scoped bulk writers;
-  // the existing host observer still accounts for their whole process trees.
   "openstates-votes-refresh.mts": 3072,
   "legiscan-votes-refresh.mts": 3072,
   "census-geography-refresh.mts": WORKER_ENTRY_PEAK_MIB.national!,
@@ -33,6 +30,9 @@ const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
 };
 export const REGISTRY_ROSTER_PUBLICATION_PEAK_MIB = 4012;
 export const WORKER_MEMORY_HEADROOM_MIB = 768;
+export const MEETING_WORKER_PEAK_MIB = 896;
+export const READER_PUBLISH_PEAK_MIB = 1536;
+export const PUBLICATION_OUTBOX_PEAK_MIB = 512;
 
 export function availableWorkerMemoryBytes(): number {
   let available = freemem();
@@ -87,14 +87,22 @@ function alive(pid: number): boolean {
   catch (error) { return (error as NodeJS.ErrnoException).code !== "ESRCH"; }
 }
 
-interface MemoryReservation { id: string; owner: number; pid: number | null; peak: number; entry: string }
-interface HostState { reservations: MemoryReservation[]; parents: { pid: number; peak: number }[]; peaks?: Record<string, number[]> }
+interface MemoryReservation { id: string; owner: number; pid: number | null; peak: number; entry: string; scope?: "process" | "tree" }
+interface HostState {
+  reservations: MemoryReservation[];
+  parents: { pid: number; peak: number }[];
+  peaks?: Record<string, number[]>;
+  priority?: { id: string; owner: number; deadline: number }[];
+}
 
 /** How often a running reserved child's peak is read, and how many recent run peaks set its script's reservation. */
 const PEAK_SAMPLE_MS = 2000;
 const MEASURED_PEAK_RUNS = 5;
 /** The script an entry runs ("…/national-people-refresh.mts"); entries that name no script keep their table peak. */
 function measuredPeakKey(entry: string): string | null {
+  if (entry.startsWith("meeting-batch:")) return "meeting-batch";
+  if (entry.startsWith("reader-publish:")) return "reader-publish";
+  if (entry.startsWith("publish-outbox:")) return "publish-outbox";
   const script = entry.split(/[\\/]/).at(-1)!;
   return /[.](?:mts|ts|mjs|js)$/.test(script) ? script : null;
 }
@@ -103,13 +111,14 @@ function measuredReservationBytes(peaks: readonly number[]): number {
   return Math.ceil(Math.max(...peaks) * 1.05 / MIB) * MIB;
 }
 /** Linux high-water RSS of a process and its live descendants; null once the process is gone. */
-async function processTreePeakBytes(root: number): Promise<number | null> {
+async function processTreePeakBytes(root: number, scope: "process" | "tree"): Promise<number | null> {
   let total = 0;
   const pending = [root];
   for (let index = 0; index < pending.length; index++) {
     const pid = pending[index]!;
     try { total += Number(/^VmHWM:\s+(\d+)/m.exec(await readFile(`/proc/${pid}/status`, "utf8"))?.[1] ?? 0) * 1024; }
     catch { if (pid === root) return null; continue; }
+    if (scope === "process") break;
     try { pending.push(...(await readFile(`/proc/${pid}/task/${pid}/children`, "utf8")).split(/\s+/).filter(Boolean).map(Number)); }
     catch { /* A descendant can exit between reads. */ }
   }
@@ -142,6 +151,7 @@ export function workerMemoryHost(input: { readonly shared?: boolean; readonly pr
       // A dead parent cannot retain future growth. A surviving job tree still can.
       local.parents = local.parents.filter(parent => alive(parent.pid));
       local.reservations = local.reservations.filter(row => alive(row.owner) || (row.pid !== null && alive(row.pid)));
+      local.priority = local.priority?.filter(row => alive(row.owner) && row.deadline > Date.now());
       operation(local, rows);
       if (input.shared) {
         writeFileSync(temporary, JSON.stringify(local)); renameSync(temporary, path);
@@ -182,10 +192,15 @@ export interface WorkerProcessSlots {
 
 const rosterPublication = (entry: string): boolean => entry === "registry-runtime-bindings" ||
   entry.startsWith("registry-runtime-bindings/") || entry.startsWith("worker-publication:registry-runtime-bindings:");
+const readerPublication = (entry: string): boolean => entry.startsWith("reader-publish:");
+const publicationOutbox = (entry: string): boolean => entry.startsWith("publish-outbox:");
 
 export function routineProcessSlots(memory: WorkerMemoryLimit = {}): WorkerProcessSlots {
   return workerProcessSlots(() => Number.MAX_SAFE_INTEGER, { ...memory,
-    peakBytes: memory.peakBytes ?? (entry => entry.startsWith("national-place:") ? NATIONAL_PLACE_PEAK_MIB * MIB :
+    peakBytes: memory.peakBytes ?? (entry => entry.startsWith("meeting-batch:") ? MEETING_WORKER_PEAK_MIB * MIB :
+      readerPublication(entry) ? READER_PUBLISH_PEAK_MIB * MIB :
+      publicationOutbox(entry) ? PUBLICATION_OUTBOX_PEAK_MIB * MIB :
+      entry.startsWith("national-place:") ? NATIONAL_PLACE_PEAK_MIB * MIB :
       rosterPublication(entry) ? REGISTRY_ROSTER_PUBLICATION_PEAK_MIB * MIB : (/^state-money-.+[.]mts$/.test(entry.split(/[\\/]/).at(-1)!)
           ? WORKER_ENTRY_PEAK_MIB.national! : ROUTINE_ENTRY_PEAK_MIB[entry.split(/[\\/]/).at(-1)!] ?? WORKER_ENTRY_PEAK_MIB.lease!) * MIB) });
 }
@@ -202,7 +217,7 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
     const kind = /(?:^|\/|\\)(route|scout|lease|national)-worker[.]ts$/.exec(entry)?.[1] ?? "lease";
     return WORKER_ENTRY_PEAK_MIB[kind]! * MIB;
   });
-  const waiting: { entry: string; deadline: number; resolve: (release: WorkerMemoryRelease) => void; reject: (error: Error) => void }[] = [];
+  const waiting: { id: string; entry: string; deadline: number; resolve: (release: WorkerMemoryRelease) => void; reject: (error: Error) => void }[] = [];
   const mutate = (operation: (state: HostState, processes: readonly WorkerProcessMemory[]) => void): void => {
     try {
       void Promise.resolve(host.transact(operation, false)).then(applied => {
@@ -220,6 +235,7 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
     for (let index = waiting.length - 1; index >= 0; index--) {
       if (memory.admissionsOpen?.() === false || now >= waiting[index]!.deadline) {
         const [item] = waiting.splice(index, 1);
+        if (readerPublication(item!.entry)) mutate(state => { state.priority = state.priority?.filter(row => row.id !== item!.id); });
         item!.reject(new Error(memory.admissionsOpen?.() === false ? "RUNTIME_RELEASE_DRAINED: queued work remains owed" : "WORKER_MEMORY_DEADLINE: memory wait deferred; work remains owed"));
       }
     }
@@ -232,6 +248,8 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
     expire();
     const maximum = capacity();
     if (!Number.isSafeInteger(maximum) || maximum <= 0) {
+      const ids = new Set(waiting.map(item => item.id));
+      mutate(state => { state.priority = state.priority?.filter(row => !ids.has(row.id)); });
       for (const item of waiting.splice(0)) item.reject(new Error("LEASE_WORKER_CAPACITY_INVALID"));
       scheduleWake();
       return;
@@ -243,6 +261,8 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
         expire();
         const maximum = capacity();
         if (!Number.isSafeInteger(maximum) || maximum <= 0) {
+          const ids = new Set(waiting.map(item => item.id));
+          state.priority = state.priority?.filter(row => !ids.has(row.id));
           for (const item of waiting.splice(0)) item.reject(new Error("LEASE_WORKER_CAPACITY_INVALID"));
           return;
         }
@@ -251,8 +271,9 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
         const idsFor = (pid: number): Set<number> => {
           let ids = trees.get(pid); if (!ids) { ids = descendants(pid, rows); trees.set(pid, ids); } return ids;
         };
-        const rssFor = (pid: number | null): number => pid === null ? 0 : rows.reduce((sum, row) => idsFor(pid).has(row.pid) ? sum + row.rss : sum, 0);
-        const inherited = state.reservations.find(row => row.owner !== process.pid && row.pid !== null && idsFor(row.pid).has(process.pid));
+        const rssFor = (reservation: Pick<MemoryReservation, "pid" | "scope">): number => reservation.pid === null ? 0 : reservation.scope === "process"
+          ? current.get(reservation.pid) ?? 0 : rows.reduce((sum, row) => idsFor(reservation.pid!).has(row.pid) ? sum + row.rss : sum, 0);
+        const inherited = state.reservations.find(row => row.scope !== "process" && row.owner !== process.pid && row.pid !== null && idsFor(row.pid).has(process.pid));
         if (inherited) state.parents = state.parents.filter(parent => parent.pid !== process.pid);
         else {
           const parent = state.parents.find(row => row.pid === process.pid);
@@ -260,28 +281,36 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
           else state.parents.push({ pid: process.pid, peak: memory.parentPeakBytes ?? 0 });
         }
         // A child past its reserved peak has shown it can reach that size again.
-        for (const row of state.reservations) row.peak = Math.max(row.peak, rssFor(row.pid));
+        for (const row of state.reservations) row.peak = Math.max(row.peak, rssFor(row));
         const reserve = (entry: string): number => {
           const measured = state.peaks?.[measuredPeakKey(entry) ?? ""];
-          return measured?.length ? measuredReservationBytes(measured) : peakFor(entry);
+          const baseline = peakFor(entry);
+          if (!measured?.length) return baseline;
+          const recent = measuredReservationBytes(measured);
+          // Small states cannot lower the reservation needed by the next large state.
+          return entry.startsWith("meeting-batch:") || readerPublication(entry) || publicationOutbox(entry)
+            ? Math.max(baseline, recent) : recent;
         };
+        waiting.sort((left, right) => Number(readerPublication(right.entry)) - Number(readerPublication(left.entry)));
         while (active < maximum && waiting.length) {
-          const growth = state.reservations.reduce((sum, row) => sum + Math.max(0, row.peak - rssFor(row.pid)), 0) +
+          const growth = state.reservations.reduce((sum, row) => sum + Math.max(0, row.peak - rssFor(row)), 0) +
             state.parents.reduce((sum, row) => sum + Math.max(0, row.peak - (current.get(row.pid) ?? 0)), 0);
           const hostMiB = Number(process.env.WTP_WORKER_HOST_MEMORY_MIB);
           const participants = new Set(state.parents.flatMap(parent => [...idsFor(parent.pid)]));
           const used = rows.reduce((sum, row) => participants.has(row.pid) ? sum + row.rss : sum, 0);
           const free = Math.min(available(), Number.isFinite(hostMiB) && hostMiB > 0 ? Math.max(0, hostMiB * MIB - used) : Infinity);
-          const rosterLive = state.reservations.some(row => rosterPublication(row.entry));
+          const priority = state.priority?.[0] ?? waiting.find(item => readerPublication(item.entry));
           const index = waiting.findIndex(item => {
             if (Date.now() >= item.deadline) return false;
-            return inherited || (!rosterLive && (!rosterPublication(item.entry) || !state.reservations.length) && free >= headroom + growth + reserve(item.entry));
+            return inherited || ((!priority || priority.id === item.id) && free >= headroom + growth + reserve(item.entry));
           });
           if (index < 0) break;
           const [item] = waiting.splice(index, 1);
+          state.priority = state.priority?.filter(row => row.id !== item!.id);
           const id = randomUUID();
           let reserved = reserve(item!.entry);
-          if (!inherited) state.reservations.push({ id, owner: process.pid, pid: null, peak: reserved, entry: item!.entry });
+          const scope = publicationOutbox(item!.entry) ? "process" : "tree";
+          if (!inherited) state.reservations.push({ id, owner: process.pid, pid: null, peak: reserved, entry: item!.entry, scope });
           active++;
           let released = false;
           let measured = 0;
@@ -300,7 +329,7 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
             if (released || inherited) return;
             mutate(state => { const row = state.reservations.find(row => row.id === id); if (row) row.pid = pid; });
             if (platform() !== "linux") return;
-            sampler = setInterval(() => void processTreePeakBytes(pid).then(bytes => {
+            sampler = setInterval(() => void processTreePeakBytes(pid, scope).then(bytes => {
               if (bytes === null || released) { clearInterval(sampler); return; }
               measured = Math.max(measured, bytes);
               if (bytes <= reserved) return;
@@ -321,16 +350,17 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
     queueMicrotask(() => { drainScheduled = false; void drain(); });
   };
   return { acquire: (entry = "lease-worker.ts", deadlineMs = Date.now() + (memory.waitMs ?? 120_000)) =>
-    new Promise<WorkerMemoryRelease>((resolve, reject) => { waiting.push({ entry, deadline: deadlineMs, resolve, reject }); requestDrain(); }) };
+    new Promise<WorkerMemoryRelease>((resolve, reject) => {
+      const id = randomUUID();
+      waiting.push({ id, entry, deadline: deadlineMs, resolve, reject });
+      if (readerPublication(entry)) mutate(state => { (state.priority ??= []).push({ id, owner: process.pid, deadline: deadlineMs }); });
+      requestDrain();
+    }) };
 }
 
 /** How often a wait for host memory says it is still waiting. */
 export const MEMORY_WAIT_REPORT_EVERY_MS = 60_000;
 
-/**
- * A wait for host memory reports once a minute that it is still waiting, so the
- * runner's no-output timeout does not end it as a crash. Quick admissions print nothing.
- */
 export function reportingWorkerSlots(slots: WorkerProcessSlots, options: {
   readonly write?: (line: string) => void;
   readonly everyMs?: number;
@@ -357,12 +387,6 @@ export function reportingWorkerSlots(slots: WorkerProcessSlots, options: {
   } };
 }
 
-/**
- * What the host holds, for the runner's heartbeat. Read-only: the reservation
- * file is read without its lock (writers replace it whole). `fitLeaseWorkers`
- * is free memory less the 0.75 GiB margin and reserved growth, over one lease
- * worker's peak.
- */
 export interface HostMemoryReading {
   readonly at: string;
   readonly totalBytes: number;
@@ -382,7 +406,7 @@ export interface HostMemoryReading {
 
 export function memoryReading(input: {
   readonly at: string; readonly totalBytes: number; readonly availableBytes: number; readonly rootPid: number;
-  readonly rows: readonly WorkerProcessMemory[]; readonly state: { readonly reservations: readonly { pid: number | null; peak: number; entry: string }[];
+  readonly rows: readonly WorkerProcessMemory[]; readonly state: { readonly reservations: readonly { pid: number | null; peak: number; entry: string; scope?: "process" | "tree" }[];
     readonly parents: readonly { pid: number; peak: number }[] } | null;
   readonly headroomBytes?: number; readonly leaseWorkerPeakBytes?: number;
 }): HostMemoryReading {
@@ -396,7 +420,8 @@ export function memoryReading(input: {
   const runner = descendants(input.rootPid, input.rows);
   const parents = (input.state?.parents ?? []).map(row => ({ pid: row.pid, peakBytes: row.peak,
     rssBytes: input.rows.find(r => r.pid === row.pid)?.rss ?? 0 }));
-  const reservations = (input.state?.reservations ?? []).map(row => ({ entry: row.entry.split(/[\\/]/).at(-1) ?? row.entry, peakBytes: row.peak, rssBytes: treeRss(row.pid) }));
+  const reservations = (input.state?.reservations ?? []).map(row => ({ entry: row.entry.split(/[\\/]/).at(-1) ?? row.entry, peakBytes: row.peak,
+    rssBytes: row.scope === "process" ? input.rows.find(process => process.pid === row.pid)?.rss ?? 0 : treeRss(row.pid) }));
   const reservedGrowthBytes = [...parents, ...reservations].reduce((sum, row) => sum + Math.max(0, row.peakBytes - row.rssBytes), 0);
   const spare = input.availableBytes - headroomBytes - reservedGrowthBytes;
   return { at: input.at, totalBytes: input.totalBytes, availableBytes: input.availableBytes, headroomBytes,

@@ -1,13 +1,4 @@
-/**
- * A killable wall-clock domain for one source acquisition.
- *
- * This deliberately does not use `Promise.race`: the timeout aborts the
- * transport and the caller still awaits the operation's real settlement, so
- * no request, body reader, retry sleep, or child process can continue as an
- * orphan after the source has been reported failed.
- */
 
-/** Leaves ten minutes inside the 30-minute source child for exact durable proof. */
 export const ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS = 20 * 60_000;
 export const ROUTINE_SOURCE_SETTLEMENT_BUDGET_MS = 10 * 60_000;
 
@@ -88,9 +79,6 @@ export async function runInSourceAcquisitionDomain<T>(
   try {
     domain.assertActive();
     const value = await operation(domain.signal);
-    // Some adapters intentionally contain partial-refusal catches. They may
-    // catch an AbortError along with an HTTP refusal; the deadline itself may
-    // never be converted into partial success.
     domain.assertActive();
     return value;
   } finally {

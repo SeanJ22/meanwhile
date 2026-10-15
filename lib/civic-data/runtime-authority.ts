@@ -1,3 +1,4 @@
+import { AsyncLocalStorage } from "node:async_hooks";
 import { execFileSync, type ExecFileSyncOptionsWithStringEncoding } from "node:child_process";
 import { randomBytes } from "node:crypto";
 import { realpathSync } from "node:fs";
@@ -12,6 +13,16 @@ export const RUNTIME_AUTHORITY_ENV = Object.freeze({
   parentPid: "WTP_RUNTIME_AUTHORITY_PARENT_PID",
   nonce: "WTP_RUNTIME_AUTHORITY_NONCE",
 });
+
+const routineAuthority = new AsyncLocalStorage<NodeJS.ProcessEnv>();
+export function runtimeAuthorityEnvironment(): NodeJS.ProcessEnv {
+  return routineAuthority.getStore() ?? process.env;
+}
+export function withRoutineContract<T>(contract: string, work: () => T): T {
+  const env = runtimeAuthorityEnvironment();
+  if (env[RUNTIME_AUTHORITY_ENV.capability] !== "ROUTINE_SUPERVISOR") throw new RuntimeAuthorityRefused("only a routine supervisor can select a source contract");
+  return routineAuthority.run({ ...env, [RUNTIME_AUTHORITY_ENV.capability]: "ROUTINE_CONTRACT", [RUNTIME_AUTHORITY_ENV.contract]: contract }, work);
+}
 
 export const RUNTIME_AUTHORITY_CAPABILITIES = [
   "STANDING_PARENT",
@@ -74,10 +85,7 @@ function samePath(left: string, right: string): boolean {
   }
 }
 
-/**
- * Only a read that failed to answer (Git's fatal exit, a timeout, a failed spawn) is re-read, at most
- * `GIT_READ_ATTEMPTS` times; a read that answered is a fact and never re-read. The failure travels with the facts.
- */
+
 export const GIT_READ_ATTEMPTS = 3;
 const GIT_READ_PAUSES_MS = [50, 200] as const;
 
@@ -198,7 +206,7 @@ export function inspectRuntimeCheckout(
 }
 
 export function runtimeAuthorityEnvelope(
-  env: Readonly<Record<string, string | undefined>> = process.env,
+  env: Readonly<Record<string, string | undefined>> = runtimeAuthorityEnvironment(),
 ): RuntimeAuthorityEnvelope | null {
   const repo = env[RUNTIME_AUTHORITY_ENV.repo] ?? "";
   const sha = (env[RUNTIME_AUTHORITY_ENV.sha] ?? "").toLowerCase();
@@ -256,7 +264,7 @@ export function runtimeAuthorityIssue(input: {
 
 export function assertRuntimeAuthority(
   expectation: Omit<RuntimeAuthorityExpectation, "immediateParentPid"> & { readonly immediateParentPid?: number },
-  env: Readonly<Record<string, string | undefined>> = process.env,
+  env: Readonly<Record<string, string | undefined>> = runtimeAuthorityEnvironment(),
   options: {
     readonly cwd?: string;
     readonly checkout?: RuntimeCheckoutFacts;
@@ -309,7 +317,7 @@ export function admittedRuntimeChildEnvironment(input: {
   readonly nonce?: string;
   readonly billingCollector?: boolean;
 }): NodeJS.ProcessEnv {
-  const env = input.parentEnv ?? process.env;
+  const env = input.parentEnv ?? runtimeAuthorityEnvironment();
   if (env.WTP_RUNTIME_MODE === "staging") {
     const parent = assertRuntimeAuthority({ capabilities: RUNTIME_AUTHORITY_CAPABILITIES }, env);
     return {
@@ -341,7 +349,7 @@ export function admittedRuntimeChildEnvironment(input: {
 export function assertRegisteredRuntimeContract(
   contractId: string,
   kind: "routine" | "manual",
-  env: Readonly<Record<string, string | undefined>> = process.env,
+  env: Readonly<Record<string, string | undefined>> = runtimeAuthorityEnvironment(),
 ): void {
   // The one-time capture conversion republishes every source's held version under its own admission.
   if (runtimeAuthorityEnvelope(env)?.capability === "CAPTURE_CONVERSION") {
@@ -356,7 +364,7 @@ export function assertRegisteredRuntimeContract(
 
 export function assertSanctionedRuntimeAuthority(
   operation: string,
-  env: Readonly<Record<string, string | undefined>> = process.env,
+  env: Readonly<Record<string, string | undefined>> = runtimeAuthorityEnvironment(),
 ): RuntimeAuthorityEnvelope {
   if (operation === "an intake limiter purge") {
     return assertRuntimeAuthority({ capabilities: ["INTAKE_RUNTIME"] }, env);

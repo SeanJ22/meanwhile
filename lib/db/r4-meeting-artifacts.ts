@@ -2,7 +2,8 @@ import { createHash } from "node:crypto";
 import { gzipSync, gunzipSync } from "node:zlib";
 import { routineScopeState } from "../civic-data/state-scope.ts";
 import { snapshotCounts } from "../meetings/snapshot.ts";
-import { meetingAreaScope, sha256OfJson, stateOfOcdId, type AuthorityArtifactRef, type AuthorityFamily,
+import { meetingAreaScope, PROMOTED_AUTHORITY_FAMILIES, sha256OfJson, stateOfOcdId, type AuthorityArtifactRef, type AuthorityFamily,
+  type PromotedFamilyArtifactValue,
   type ReaderGeoArtifact, type ReaderManifest, type ReaderManifestScope } from "../meetings/edge-artifacts.ts";
 import { resolveReaderArtifactWriteStore, type ReaderArtifactStore, type StoredManifest } from "../meetings/edge-store.ts";
 import type { OutcomeSnapshot } from "../outcomes/types.ts";
@@ -111,7 +112,8 @@ async function dividedArtifacts(store: ReaderArtifactStore, scope: ReaderManifes
 }
 
 async function copyAuthorities(store: ReaderArtifactStore, root: ReaderManifest, states: Set<string>) {
-  for (const family of ["meeting-outcomes", "comment-access"] as const) {
+  const rootRefs = { ...root.authorityArtifacts };
+  for (const family of ["meeting-outcomes", "comment-access", ...PROMOTED_AUTHORITY_FAMILIES] as const) {
     const ref = root.authorityArtifacts?.[family];
     if (!ref) continue;
     const bytes = await store.readBytes(ref.key);
@@ -120,6 +122,11 @@ async function copyAuthorities(store: ReaderArtifactStore, root: ReaderManifest,
     if (envelope.formatVersion !== root.formatVersion || envelope.family !== family || envelope.versionId !== ref.version || sha256OfJson(envelope.value) !== ref.sha) {
       throw new Error(`R4_MEETING_AUTHORITY_INVALID:${family}`);
     }
+    const save = async (value: unknown, state: string) => {
+      const version = `${ref.version}:${state}`, next = { ...envelope, versionId: version, value };
+      const key = await store.putImmutable(gzipSync(JSON.stringify(next)), "json.gz");
+      return { key, version, sha: sha256OfJson(value) };
+    };
     const values = new Map<string, unknown>();
     if (family === "meeting-outcomes") {
       const value = envelope.value as OutcomeSnapshot;
@@ -134,7 +141,8 @@ async function copyAuthorities(store: ReaderArtifactStore, root: ReaderManifest,
         const tenants = [...new Set(sittings.map(row => row.slug))];
         values.set(state, { ...value, sittings, tenants, ...(value.pointers ? { pointers: value.pointers.filter(row => tenants.includes(row.tenant)) } : {}) });
       }
-    } else {
+      delete rootRefs[family];
+    } else if (family === "comment-access") {
       const value = envelope.value as { records: Located[] };
       for (const record of value.records) {
         const state = stateOf(record);
@@ -142,18 +150,33 @@ async function copyAuthorities(store: ReaderArtifactStore, root: ReaderManifest,
         states.add(state);
       }
       for (const state of states) values.set(state, { ...value, records: value.records.filter(row => stateOf(row) === state) });
+      delete rootRefs[family];
+    } else {
+      const value = envelope.value as PromotedFamilyArtifactValue;
+      if (value.kind !== "PROMOTED_POINTERS" || !Array.isArray(value.entries)) throw new Error(`R4_PROMOTED_AUTHORITY_INVALID:${family}`);
+      const groups = new Map<string, PromotedFamilyArtifactValue["entries"][number][]>();
+      for (const entry of value.entries) {
+        const scope = entry.kind === "PROMOTED" ? entry.projection.scope : entry.kind === "NOT_RECORDED" ? entry.scope : null;
+        if (typeof scope !== "string") throw new Error(`R4_PROMOTED_AUTHORITY_SCOPE_MISSING:${family}`);
+        const state = routineScopeState(scope).replace(/^US-/, ""), rows = groups.get(state) ?? [];
+        rows.push(entry); groups.set(state, rows);
+      }
+      for (const [state, entries] of groups) if (state !== "US") {
+        states.add(state); values.set(state, { ...value, entries });
+      }
+      if (values.size === 0) continue;
+      const national = groups.get("US");
+      if (national?.length) rootRefs[family] = await save({ ...value, entries: national }, "US");
+      else delete rootRefs[family];
     }
     for (const [state, value] of values) {
-      const version = `${ref.version}:${state}`, next = { ...envelope, versionId: version, value };
-      const payload = gzipSync(JSON.stringify(next));
-      const key = await store.putImmutable(payload, "json.gz");
-      await writeState(store, root, state, [], new Set(), new Set(), { [family]: { key, version,
-        sha: sha256OfJson(value) } });
+      await writeState(store, root, state, [], new Set(), new Set(), { [family]: await save(value, state) });
     }
   }
+  return rootRefs;
 }
 
-async function copyRoot(store: ReaderArtifactStore, root: StoredManifest): Promise<{ states: number; scopes: number }> {
+async function copyRoot(store: ReaderArtifactStore, root: StoredManifest) {
   const states = new Set<string>();
   let scopes = 0;
   for (const scope of [...root.manifest.scopes].sort((a, b) => Number(!!a.agendaOnly) - Number(!!b.agendaOnly))) {
@@ -167,28 +190,27 @@ async function copyRoot(store: ReaderArtifactStore, root: StoredManifest): Promi
         new Set(part.artifact.meetings.map(row => row.id.split(":")[0]!)));
     }
   }
-  await copyAuthorities(store, root.manifest, states);
-  return { states: states.size, scopes };
+  const authorityArtifacts = await copyAuthorities(store, root.manifest, states);
+  return { states: states.size, scopes, authorityArtifacts };
 }
 
 export async function transferMeetingArtifacts(store: ReaderArtifactStore | null = resolveReaderArtifactWriteStore()) {
   if (!store) throw new Error("R4_MEETING_ARTIFACT_STORE_UNAVAILABLE");
   const root = await store.readManifest();
-  return root ? copyRoot(store, root) : { states: 0, scopes: 0 };
+  if (!root) return { states: 0, scopes: 0 };
+  const { authorityArtifacts: _refs, ...moved } = await copyRoot(store, root);
+  return moved;
 }
 
 export async function retireMeetingArtifacts(store: ReaderArtifactStore | null = resolveReaderArtifactWriteStore()) {
   if (!store) throw new Error("R4_MEETING_ARTIFACT_STORE_UNAVAILABLE");
   const root = await store.readManifest();
   if (!root) return { states: 0, scopes: 0 };
-  if (!root.manifest.scopes.length && !root.manifest.sources.length && !root.manifest.freshChecks && !root.manifest.commentAccess &&
-    !root.manifest.authorityArtifacts?.["meeting-outcomes"] && !root.manifest.authorityArtifacts?.["comment-access"]) return { states: 0, scopes: 0 };
-  const moved = await copyRoot(store, root);
+  const { authorityArtifacts, ...moved } = await copyRoot(store, root);
   const { freshChecks: _checks, composition: _composition, meetingLayout: _layout, meetingRegistryVersion: _registry,
     commentAccess: _comments, ...authority } = root.manifest;
-  const refs = { ...authority.authorityArtifacts };
-  delete refs["meeting-outcomes"]; delete refs["comment-access"];
-  const next = { ...authority, sequence: authority.sequence + 1, scopes: [], sources: [], authorityArtifacts: refs };
-  if (!(await store.writeManifest(next, root.etag)).modified) throw new Error("R4_MEETING_ROOT_MANIFEST_MOVED");
+  const next = { ...authority, scopes: [], sources: [], authorityArtifacts };
+  if (JSON.stringify(next) === JSON.stringify(root.manifest)) return moved;
+  if (!(await store.writeManifest({ ...next, sequence: authority.sequence + 1 }, root.etag)).modified) throw new Error("R4_MEETING_ROOT_MANIFEST_MOVED");
   return moved;
 }

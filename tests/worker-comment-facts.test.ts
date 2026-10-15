@@ -38,7 +38,12 @@ async function owedCommentRules(rules: Record<string, string> = RULES) {
     assert.equal((await dispatchWorkerTask(h.runtime, next.task!)).outcome, "WORKED");
   }
   const facts = await factDb();
-  const input = { repos: h.repos, store, facts, workItemIds: [h.item.id], now: h.now(), readHeld: async () => null,
+  await facts.pg.exec(`CREATE TABLE civic_data_payload_parts (hash text PRIMARY KEY,payload jsonb NOT NULL);
+    CREATE TABLE civic_data_promotions (record_class text,scope text,current_version_id text,payload jsonb,PRIMARY KEY(record_class,scope));`);
+  await facts.pg.exec(readFileSync(new URL("../lib/db/migrations/R4_meeting_dependencies.sql", import.meta.url), "utf8"));
+  await facts.pg.query("INSERT INTO civic_data_promotions VALUES ('REGISTRATION','US-AZ:registration:v1',$1,$2::jsonb)",
+    [prior.versionId, JSON.stringify({ state: "AZ", bodies: [body], divisions: prior.payload.registry.divisions.filter(row => row.ocdId === body.ocdId) })]);
+  const input = { repos: h.repos, facts, workItemIds: [h.item.id], now: h.now(), readHeld: async () => null,
     readCapture: async (id: string) => {
       const evidence = evidenceProjection(await h.runtime.readEvidence(id));
       return { evidence, observedAt: evidence.retrievedAt, httpStatus: 200, transport: "REACHABLE", partial: false };
@@ -58,7 +63,17 @@ function withParserRecords(repos: ControlPlaneRepositories, change: (fields: Rec
 test("an owed comment-rule extraction publishes each rule as a live fact citing its saved page, and a rerun reuses the receipt", async () => {
   const { h, body, facts, input } = await owedCommentRules();
   const results = await h.repos.workerResults.read(h.item.id);
-  const [published] = await publishOwedCommentFacts(input);
+  let identityReads = 0;
+  const scoped = { ...input, facts: { ...facts, query: async (sql: string, params?: readonly unknown[]) => {
+    if (sql.includes("civic_meeting_dependencies")) {
+      identityReads++;
+      assert.deepEqual(params, [body.id]);
+      assert.doesNotMatch(sql, /jsonb_array_elements|civic_data_payload_parts/);
+    }
+    return facts.query(sql, params);
+  } } };
+  const [published] = await publishOwedCommentFacts(scoped);
+  assert.equal(identityReads, 1, "state registration alone supplies this body's current identity");
   assert.equal(published!.outcome.status, "PUBLISHED", JSON.stringify(published));
   assert.equal(published!.outcome.code, "VERIFIED_RESULT_PUBLISHED");
   assert.deepEqual(published!.outcome.records, { added: 4, changed: 0, reused: 0 });
@@ -79,7 +94,8 @@ test("an owed comment-rule extraction publishes each rule as a live fact citing 
   assert.deepEqual(await facts.query("SELECT entity_id, field, reason FROM blank"), []);
   const count = async () => Number((await facts.query("SELECT count(*)::int AS n FROM fact"))[0]!.n);
   assert.equal(await count(), 4);
-  assert.deepEqual(await publishOwedCommentFacts(input), [published], "a restart reuses the durable publication outcome");
+  assert.deepEqual(await publishOwedCommentFacts(scoped), [published], "a restart reuses the durable publication outcome");
+  assert.equal(identityReads, 1, "reusing the saved outcome does not reread registry identities");
   assert.equal(await count(), 4, "no duplicate facts");
 });
 

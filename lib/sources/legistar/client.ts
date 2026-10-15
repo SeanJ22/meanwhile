@@ -1,7 +1,7 @@
 import { fetchSource } from "../fetch-source.ts";
 import { sourceUserAgent } from "../http.ts";
 
-const API_ROOT = "https://webapi.legistar.com/v1";
+export const API_ROOT = "https://webapi.legistar.com/v1";
 
 /** Legistar caps a reply at 1000 rows regardless of what `$top` asks for. */
 const PAGE_SIZE = 1000;
@@ -25,10 +25,6 @@ export class LegistarError extends Error {
   }
 }
 
-/**
- * What a status code from this API actually means: a bare 500 from this live API is the answer for a slug
- * that is not a client, not an outage.
- */
 export function describeStatus(status: number): string {
   if (status === 403) {
     return "client requires an API token — many are issued free on request";
@@ -71,16 +67,17 @@ async function inClientSlot<T>(slug: string, options: RequestOptions, read: () =
   }
 }
 
+export function legistarRequestHeaders(): Record<string, string> {
+  return { "User-Agent": sourceUserAgent(), Accept: "application/json" };
+}
+
 async function requestOnce(
   url: string,
   options: RequestOptions,
 ): Promise<Response> {
   const impl = options.fetchImpl ?? fetchSource;
   return impl(url, {
-    headers: {
-      "User-Agent": sourceUserAgent(),
-      Accept: "application/json",
-    },
+    headers: legistarRequestHeaders(),
     signal: options.signal,
   });
 }
@@ -98,14 +95,19 @@ async function getJsonInSlot<T>(path: string, options: RequestOptions): Promise<
   return body;
 }
 
-/**
- * Page through a collection by ascending id.
- *
- * **Not `$skip`.** Offset paging drops rows when the underlying set changes
- * between requests, which on a busy client during a long query it does. Filtering
- * on `id gt <highest seen>` is stable under insertion, which is the documented
- * advice for exactly this reason.
- */
+export function legistarPagePath(path: string, idField: string, filter?: string, cursor = 0): string {
+  const clauses = [`${idField} gt ${cursor}`];
+  if (filter) clauses.push(filter);
+  const query = [`$filter=${encodeURIComponent(clauses.join(" and "))}`, `$orderby=${idField}`, `$top=${PAGE_SIZE}`].join("&");
+  return `${path}?${query}`;
+}
+
+export function legistarEventFilter(window: { from: string; to: string; bodyId?: number }): string {
+  if (window.bodyId !== undefined && (!Number.isSafeInteger(window.bodyId) || window.bodyId <= 0)) throw new Error("LEGISTAR_NATIVE_BODY_INVALID");
+  return `EventDate ge datetime'${window.from}' and EventDate le datetime'${window.to}'` +
+    (window.bodyId === undefined ? "" : ` and EventBodyId eq ${window.bodyId}`);
+}
+
 async function pageById<T>(
   path: string,
   idField: string,
@@ -120,16 +122,7 @@ async function pageById<T>(
   // A runaway stop, not a coverage limit: exiting on the cap after a full last page (the server saying there
   // is more) is reported as a failure, never a clean success.
   while (guard++ < MAX_PAGES) {
-    const clauses = [`${idField} gt ${cursor}`];
-    if (filter) clauses.push(filter);
-
-    const query = [
-      `$filter=${encodeURIComponent(clauses.join(" and "))}`,
-      `$orderby=${idField}`,
-      `$top=${PAGE_SIZE}`,
-    ].join("&");
-
-    const page = await getJson<T[]>(`${path}?${query}`, options);
+    const page = await getJson<T[]>(legistarPagePath(path, idField, filter, cursor), options);
     if (!Array.isArray(page) || page.length > PAGE_SIZE || page.some(row => !Number.isSafeInteger(idOf(row)) || idOf(row) <= cursor) ||
       new Set(page.map(idOf)).size !== page.length ||
       (page.length === PAGE_SIZE && page.some((row, index) => index > 0 && idOf(row) <= idOf(page[index - 1])))) {
@@ -158,28 +151,16 @@ async function pageById<T>(
   return collected;
 }
 
-/**
- * Upcoming and recently concluded events for one client.
- *
- * The date window is applied upstream rather than locally: an unfiltered
- * `/events` call on a long-running client returns every meeting it has ever
- * held, which is rude and slow for no benefit.
- */
 export async function fetchEvents<T>(
   slug: string,
   window: { from: string; to: string; bodyId?: number },
   options: RequestOptions = {},
 ): Promise<T[]> {
-  if (window.bodyId !== undefined && (!Number.isSafeInteger(window.bodyId) || window.bodyId <= 0)) throw new Error("LEGISTAR_NATIVE_BODY_INVALID");
-  const filter =
-    `EventDate ge datetime'${window.from}' and EventDate le datetime'${window.to}'` +
-    (window.bodyId === undefined ? "" : ` and EventBodyId eq ${window.bodyId}`);
-
   return pageById<T>(
     `${slug}/events`,
     "EventId",
     (row) => (row as { EventId: number }).EventId,
-    filter,
+    legistarEventFilter(window),
     options,
   );
 }
@@ -189,12 +170,6 @@ export async function fetchBodies<T extends { BodyId: number }>(slug: string, op
   return pageById<T>(`${slug}/bodies`, "BodyId", row => row.BodyId, undefined, options);
 }
 
-/**
- * Agenda items for one meeting.
- *
- * The response carries BOTH record classes — what was noticed and what the
- * body did about it. `outcomes.ts` splits them; see `types.ts`.
- */
 export async function fetchEventItems<T>(
   slug: string,
   eventId: number,
@@ -213,13 +188,6 @@ export async function fetchEvent<T>(
   return getJson<T>(`${slug}/events/${eventId}`, options);
 }
 
-/**
- * The per-person roll call for one agenda item (`/v1/{slug}/eventitems/{EventItemId}/votes`). It returns
- * 200 even for items with no votes, so a 200 proves nothing about the item. This returns the rows, never
- * a verdict: whether a zero-row reply is a legitimate empty or a failed extraction is decided by
- * `classifyRollCall` in `outcomes.ts`, where the item is in scope. Not paged: one body's membership fits
- * in one request.
- */
 export async function fetchEventItemVotes<T>(
   slug: string,
   eventItemId: number,

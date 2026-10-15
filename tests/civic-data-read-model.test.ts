@@ -377,5 +377,6 @@ test("Reader freshness derives from the canonical source contract", () => {
   const day = 24 * 60 * 60 * 1_000;
   assert.equal(routineFreshnessMs("nj-morris-filing", "2026-11-03T23:59:59.999Z"), day);
   assert.equal(routineFreshnessMs("nj-morris-filing", "2026-11-04T00:00:00.000Z"), 7 * day);
-  assert.equal(meetingPartitionFreshnessMs("2026-11-04T00:00:00.001Z"), 7 * day);
+  assert.equal(meetingPartitionFreshnessMs("2026-11-03T23:59:59.999Z"), day / 2);
+  assert.equal(meetingPartitionFreshnessMs("2026-11-04T00:00:00.001Z"), day / 2);
 });

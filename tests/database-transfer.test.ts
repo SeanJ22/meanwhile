@@ -23,6 +23,19 @@ test("government/API requests do not count as database transfer", async () => {
   assert.equal(await (await counted("https://example.gov")).text(), "official page");
 });
 
+test("successive database checks use their current Eastern day across daylight-saving offsets", async context => {
+  context.mock.timers.enable({ apis: ["Date"], now: new Date("2026-01-02T04:59:59.000Z") });
+  const days: string[] = [];
+  const counted = databaseTransferFetch(async () => new Response("[]"), row => { days.push(row.day); });
+  for (const at of ["2026-01-02T04:59:59.000Z", "2026-01-02T05:00:00.000Z", "2026-07-02T03:59:59.000Z", "2026-07-02T04:00:00.000Z"]) {
+    context.mock.timers.setTime(Date.parse(at));
+    await (await counted("https://database.invalid/sql", {
+      headers: { "neon-connection-string": "postgresql://local.invalid/staging" },
+    })).text();
+  }
+  assert.deepEqual(days, ["2026-01-01", "2026-01-02", "2026-07-01", "2026-07-02"]);
+});
+
 test("an admitted direct parent counts as runner and a dedicated feedback read is excluded", async () => {
   const saved = { ...process.env };
   const rows: DatabaseTransfer[] = [];

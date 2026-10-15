@@ -1,12 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { isoDaysFromNow, toZonedIso } from "../lib/time/zoned.ts";
-
-/**
- * Meeting times are the product. A council session listed an hour off because
- * of a DST assumption sends someone to a locked building.
- */
+import { cachedZoneFormatter, isoDaysFromNow, toZonedIso } from "../lib/time/zoned.ts";
 
 test("Arizona stays on -07:00 through what would be DST elsewhere", () => {
   const january = toZonedIso(2026, 1, 14, 17, 30, "America/Phoenix");
@@ -49,4 +44,17 @@ test("day offsets cross a DST boundary without drifting an hour", () => {
   const result = isoDaysFromNow(5, 19, 0, "America/New_York", now);
 
   assert.equal(result, "2026-11-04T19:00:00-05:00");
+});
+
+test("zone formatters reuse bounded native instances and reject invalid zones without evicting a valid one", () => {
+  const formatter = cachedZoneFormatter("en-CA", { year: "numeric", month: "2-digit", day: "2-digit" });
+  const zones = Intl.supportedValuesOf("timeZone").slice(0, 33);
+  const first = formatter(zones[0]!);
+  for (const zone of zones.slice(1, 32)) formatter(zone);
+  assert.equal(formatter(zones[0]!), first);
+  assert.throws(() => formatter("Not/A_Zone"), RangeError);
+  assert.equal(formatter(zones[0]!), first);
+  formatter(zones[32]!);
+  assert.notEqual(formatter(zones[0]!), first, "the oldest native formatter is released after 32 zones");
+  assert.equal(formatter(zones[0]!).format(new Date("2026-11-01T06:30:00Z")), first.format(new Date("2026-11-01T06:30:00Z")));
 });

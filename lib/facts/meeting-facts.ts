@@ -1,12 +1,11 @@
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
 import type { Meeting } from "../sources/types.ts";
 import { captureProvenance } from "./capture.ts";
-import { normalizeText } from "./check.ts";
-import { ensureEntity, learnDoorChannel } from "./entities.ts";
+import { hostOf, normalizeText } from "./check.ts";
 import { meetingEntityId } from "./meeting-read.ts";
 import { readCheckEntity } from "./entity-read.ts";
-import { openBlank, publishClaim, type Clocks, type FactDb, type PublishOutcome, type Query } from "./publish.ts";
-import { saveCaptureCopy } from "./source-copy.ts";
+import { publishClaims, type Clocks, type FactDb, type PublishInput, type Query } from "./publish.ts";
+import { saveCaptureCopies } from "./source-copy.ts";
 
 const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
@@ -24,7 +23,8 @@ export function sittingOnPage(text: string, meeting: Pick<Meeting, "startsAt" | 
   const p = localParts(meeting.startsAt, meeting.timeZone);
   const month = MONTHS[p.m - 1]!;
   const day = meeting.startPrecision === "DAY";
-  const together = day ? [] : [`${p.y}${p.mm}${p.dd}T${p.hh}${p.mi}00`, `${p.y}-${p.mm}-${p.dd}T${p.hh}:${p.mi}`];
+  const utc = new Date(meeting.startsAt).toISOString();
+  const together = day ? [] : [utc.replaceAll(/[-:]/g, "").replace(".000", ""), utc, `${p.y}${p.mm}${p.dd}T${p.hh}${p.mi}00`, `${p.y}-${p.mm}-${p.dd}T${p.hh}:${p.mi}`];
   for (const token of together) if (page.includes(token)) return { valueText: token, quote: token };
   const dates = [`${p.y}-${p.mm}-${p.dd}T00:00:00`, `${p.y}-${p.mm}-${p.dd}`, `${p.y}${p.mm}${p.dd}`, `${p.m}/${p.d}/${p.y}`, `${p.mm}/${p.dd}/${p.y}`,
     `${month} ${p.d}, ${p.y}`, `${month.slice(0, 3)} ${p.d}, ${p.y}`, `${month.slice(0, 3)}. ${p.d}, ${p.y}`, `${p.d} ${month} ${p.y}`];
@@ -44,44 +44,76 @@ export function sittingOnPage(text: string, meeting: Pick<Meeting, "startsAt" | 
 
 export interface MeetingFactsReport { readonly live: number; readonly confirmed: number; readonly held: number; readonly blanks: number }
 
-/** One sitting read from its body's door becomes facts, each found on the saved copy: title, start, place and links. */
 export async function publishMeetingFacts(db: FactDb & { readonly query: Query }, input: {
   readonly meeting: Meeting; readonly capture: WorkerPublicationCapture; readonly producedBy: string;
 }, clocks: Clocks, now: Date): Promise<MeetingFactsReport> {
-  const { meeting, capture } = input;
-  const id = meetingEntityId(meeting.id);
-  const state = /\/state:([a-z]{2})/.exec(meeting.ocdId ?? meeting.bodyId ?? "")?.[1]?.toUpperCase() ?? null;
-  const owner = meeting.bodyId ?? meeting.ocdId;
-  if (owner) {
-    await ensureEntity(db.query, { id: owner, kind: meeting.bodyId ? "body" : "place", name: meeting.bodyName, state, parentId: meeting.bodyId ? meeting.ocdId : null });
-    await learnDoorChannel(db.query, owner, capture.evidence.canonicalUrl);
-  }
-  await ensureEntity(db.query, { id, kind: "meeting", name: meeting.bodyName, state, parentId: owner ?? null });
-  if (owner) await db.query("INSERT INTO entity_place (entity_id, place_id) SELECT $1, place_id FROM entity_place WHERE entity_id = $2 ON CONFLICT DO NOTHING", [id, owner]);
-  const entity = (await readCheckEntity(db.query, id))!;
-  const copy = await db.transaction(query => saveCaptureCopy(query, capture));
-  const provenance = captureProvenance(capture, entity.hosts);
+  return publishMeetingFactBatch(db, [{ meeting: input.meeting, capture: input.capture }], input.producedBy, clocks, now);
+}
+
+export async function publishMeetingFactBatch(db: FactDb & { readonly query: Query }, readings: readonly {
+  readonly meeting: Meeting; readonly capture: WorkerPublicationCapture;
+}[], producedBy: string, clocks: Clocks, now: Date): Promise<MeetingFactsReport> {
   const tally = { live: 0, confirmed: 0, held: 0, blanks: 0 };
-  const count = (outcome: PublishOutcome) => {
-    if ("blank" in outcome) tally.blanks++;
-    else if (outcome.decision === "PUBLISH") tally.live++;
-    else if (outcome.decision === "CONFIRM") tally.confirmed++;
-    else tally.held++;
-  };
-  const claim = async (field: string, value: unknown, valueText: string, quote: string = valueText) =>
-    count(await publishClaim(db, { entity, field, fieldKind: field === "agenda_url" ? "agenda" : "meeting", provenance, value, valueText, quote, copy,
-      producedBy: input.producedBy, costUsd: 0 }, clocks, now));
-  await claim("title", meeting.title, meeting.title);
-  const sitting = sittingOnPage(copy.text, meeting);
-  const start = { startsAt: meeting.startsAt, timeZone: meeting.timeZone, precision: meeting.startPrecision ?? "MINUTE" };
-  if (sitting) await claim("starts_at", start, sitting.valueText, sitting.quote);
-  else {
-    await openBlank(db.query, { entityId: id, field: "starts_at", stage: "CHECK", reason: "CHECK_FAILED:QUOTE_NOT_ON_SAVED_COPY",
-      detail: `${meeting.startsAt} is not written on ${capture.evidence.canonicalUrl}`, retryMinutes: clocks.retryMinutes("meeting") });
-    tally.blanks++;
+  for (let at = 0; at < readings.length; at += 48) {
+    const batch = readings.slice(at, at + 48);
+    const captures = [...new Set(batch.map(row => row.capture))];
+    const owners = [...new Map(batch.flatMap(({ meeting, capture }) => {
+      const id = meeting.bodyId ?? meeting.ocdId;
+      return id ? [[id, { id, kind: meeting.bodyId ? "body" : "place", name: meeting.bodyName,
+        state: /\/state:([a-z]{2})/.exec(meeting.ocdId ?? meeting.bodyId ?? "")?.[1]?.toUpperCase() ?? null,
+        parent: meeting.bodyId ? meeting.ocdId : null, url: capture.evidence.canonicalUrl }] as const] : [];
+    })).values()];
+    const entities = batch.map(({ meeting }) => ({ id: meetingEntityId(meeting.id), name: meeting.bodyName,
+      state: /\/state:([a-z]{2})/.exec(meeting.ocdId ?? meeting.bodyId ?? "")?.[1]?.toUpperCase() ?? null,
+      parent: meeting.bodyId ?? meeting.ocdId ?? null }));
+    const copies = await db.transaction(async query => {
+      await query(`WITH owners AS (
+          INSERT INTO entity (id, kind, name, state, parent_id)
+          SELECT x.id, x.kind, x.name, x.state, p.id FROM jsonb_to_recordset($1::jsonb)
+            AS x(id text, kind text, name text, state text, parent text) LEFT JOIN entity p ON p.id = x.parent
+          ON CONFLICT (id) DO NOTHING RETURNING id
+        ) INSERT INTO entity (id, kind, name, state, parent_id)
+          SELECT x.id, 'meeting', x.name, x.state, coalesce(p.id, o.id) FROM jsonb_to_recordset($2::jsonb)
+            AS x(id text, name text, state text, parent text)
+          LEFT JOIN entity p ON p.id = x.parent LEFT JOIN owners o ON o.id = x.parent ON CONFLICT (id) DO NOTHING`,
+      [JSON.stringify(owners), JSON.stringify(entities)]);
+      const channels = batch.flatMap(({ meeting, capture }) => {
+        const owner = meeting.bodyId ?? meeting.ocdId;
+        if (!owner) return [];
+        const url = capture.evidence.canonicalUrl, { pathname } = new URL(url);
+        return [{ id: owner, host: `${hostOf(url)}${pathname.slice(0, pathname.lastIndexOf("/")) || ""}` }];
+      });
+      await query(`WITH channels AS (
+          INSERT INTO entity_host (entity_id, host) SELECT DISTINCT id, host FROM jsonb_to_recordset($1::jsonb) AS x(id text, host text)
+          ON CONFLICT DO NOTHING
+        ) INSERT INTO entity_place (entity_id, place_id)
+          SELECT x.id, ep.place_id FROM jsonb_to_recordset($2::jsonb) AS x(id text, parent text)
+          JOIN entity_place ep ON ep.entity_id = x.parent ON CONFLICT DO NOTHING`, [JSON.stringify(channels), JSON.stringify(entities)]);
+      return saveCaptureCopies(query, captures);
+    });
+    const authorities = new Map(await Promise.all(owners.map(async owner => [owner.id, (await readCheckEntity(db.query, owner.id))!] as const)));
+    const claims: PublishInput[] = [];
+    for (const { meeting, capture } of batch) {
+      const id = meetingEntityId(meeting.id), owner = meeting.bodyId ?? meeting.ocdId;
+      const authority = owner ? authorities.get(owner)! : (await readCheckEntity(db.query, id))!;
+      const entity = { ...authority, id, fullName: meeting.bodyName, externalIds: [] };
+      const copy = copies[captures.indexOf(capture)]!, provenance = captureProvenance(capture, entity.hosts);
+      const claim = (field: string, value: unknown, valueText: string, quote = valueText) => claims.push({ entity, field,
+        fieldKind: field === "agenda_url" ? "agenda" : "meeting", provenance, value, valueText, quote, copy, producedBy, costUsd: 0 });
+      claim("title", meeting.title, meeting.title);
+      const sitting = sittingOnPage(copy.text, meeting);
+      claim("starts_at", { startsAt: meeting.startsAt, timeZone: meeting.timeZone, precision: meeting.startPrecision ?? "MINUTE" },
+        sitting?.valueText ?? meeting.startsAt, sitting?.quote ?? "");
+      if (meeting.location) claim("location", { name: meeting.location.name, address: meeting.location.address }, meeting.location.address ?? meeting.location.name);
+      if (meeting.agendaUrl) claim("agenda_url", meeting.agendaUrl, meeting.agendaUrl);
+      if (meeting.videoUrl) claim("video_url", meeting.videoUrl, meeting.videoUrl);
+    }
+    for (const outcome of await publishClaims(db, claims, clocks, now)) {
+      if ("blank" in outcome) tally.blanks++;
+      else if (outcome.decision === "PUBLISH") tally.live++;
+      else if (outcome.decision === "CONFIRM") tally.confirmed++;
+      else tally.held++;
+    }
   }
-  if (meeting.location) await claim("location", { name: meeting.location.name, address: meeting.location.address }, meeting.location.address ?? meeting.location.name);
-  if (meeting.agendaUrl) await claim("agenda_url", meeting.agendaUrl, meeting.agendaUrl);
-  if (meeting.videoUrl) await claim("video_url", meeting.videoUrl, meeting.videoUrl);
   return tally;
 }

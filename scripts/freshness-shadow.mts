@@ -1,3 +1,4 @@
+import { routineScopeState } from "../lib/civic-data/state-scope.ts";
 import { huntPacketsProvider } from "../lib/control-plane/scheduler/providers/hunt-packets.ts";
 import { ensureReaderSettingsPublished, publishAskPlaybooks } from "../lib/civic-data/reader-settings-publication.ts";
 import "../lib/ask/model.ts";
@@ -405,15 +406,6 @@ observeControlPlaneTimeouts((timeout) => console.error(`freshness:shadow · ${ti
 let repos: ControlPlaneRepositories;
 if (wantsPostgres) {
   installNeonCircuitBreaker(ROOT, nowIso);
-  // Bound EACH Neon connect/query attempt. Without this, the
-  // bootstrap connect-retry (052b26e8) re-established a faulting TLS handshake
-  // with no per-attempt deadline, driving Node 24 into a native OpenSSL
-  // (X509) stack overflow at cycle start — the ~2-day cycle crash-loop that
-  // read as "0 providers / 0 units". connect-retry.ts's header names this as
-  // the required composition; routine-civic-data-runner already installs it,
-  // and freshness-shadow was the lone Neon caller missing it. A bounded
-  // attempt aborts a hung/faulting connect into a retryable transient, and a
-  // persistent failure then fails FAST (clean exit) instead of crashing.
   installNeonRequestDeadline();
   const url = controlPlaneUrlFromEnv();
   if (url === null) {
@@ -509,10 +501,14 @@ const registryProviders = [
   candidateEnrichmentProvider({ trackedStates }),
   meetingsDiscoveryProvider({ materialized: () => materialized }),
 
-  (await import("../lib/control-plane/scheduler/providers/ask-gaps.ts")).askGapsProvider(
-    await pending.step("ask-gaps:held-reading", async () =>
-      (await import("../lib/control-plane/scheduler/ask-gap-holdings.ts")).askGapsInputFromHeld({ now: NOW, observations: repos.askGapObservations })),
-  ),
+  await pending.step("ask-gaps:held-reading", async () => {
+    const { askGapCarrierTasks, askGapsProviderFromHeld } = await import("../lib/control-plane/scheduler/ask-gap-holdings.ts");
+    return askGapsProviderFromHeld({ now: NOW, observations: repos.askGapObservations, states: [
+      ...("states" in ownershipStates ? ownershipStates.states : []),
+      ...("ids" in materialized ? [...materialized.ids].flatMap(id => stateOfJurisdictionId(id) ?? []) : []),
+      ...askGapCarrierTasks().map(task => routineScopeState(task.scope, task.command)),
+    ] });
+  }),
 ];
 /* Every unplanned paid route carries the shared coordinator plan. */
 const registryContext = { root: ROOT, nowIso: NOW };
@@ -771,9 +767,6 @@ console.log(
     (debtIds.size === 0 ? "" : ` — ${[...debtIds].slice(0, 3).join(", ")}${debtIds.size > 3 ? " …" : ""}`),
 );
 
-// A completed, reader-verified publication is the source's next freshness
-// observation even when it was made by a linked repair child. Persist that
-// clock before deciding which standing source periods are due this cycle.
 const standingLineages = sync.all.some(o => o.autonomousPlan) ? await (async () => {
   const [occurrences, workItems, artifacts, attempts, workerResults] = await Promise.all([
     repos.occurrences.list(), repos.workItems.list(), repos.artifacts.readAllNarrowed(LINEAGE_ARTIFACT_FIELDS),
@@ -802,9 +795,6 @@ for (const o of sync.all) {
   dueThisCycle.push({ obligation: o, nextDueAt: row.nextDueAt, cadenceHours: row.cadenceHours });
 }
 
-// A discovery-only standing disposition does not settle downstream parsing,
-// verification or publication. Continue the same recorded source period instead
-// of opening another paid root every cycle while its actual work remains owed.
 const continuedStandingLineages: { obligationId: string; rootWorkItemId: string }[] = [];
 if (dueThisCycle.some(row => plannedForHunters(row.obligation.autonomousPlan) && row.obligation.openOccurrenceId === null)) {
   for (let i = dueThisCycle.length - 1; i >= 0; i--) {
@@ -1805,10 +1795,6 @@ function researchState(cycleFinishedAt: string | null): CycleResearchState {
       context: `standing runner child process (freshness-shadow) on ${HOST}, env via node --env-file`,
     },
     model: SCOUT_MODEL,
-    // The daily ceiling the page and `deriveLevel1` read is the value IN FORCE
-    // (the owner's override, or the fallback) — the same number the admission
-    // gates below use — never the compile-time RESEARCH_BOUNDS default, so the
-    // console can never show a ceiling that is not the one being enforced.
     bounds: { ...RESEARCH_BOUNDS, workerCapacity, dailyCeilingUsd: effectiveCeilingUsd },
     spend: {
       windowUsd: window,
@@ -2349,9 +2335,6 @@ const runCandidatePublicationsPass = async (): Promise<void> => {
     const leavePublications = pending.enter("candidate-publications");
     try {
       const vaultRead = await readRoundVault();
-      // Once an ACQUIRER begins committing a captured page or a typed blocked
-      // disposition, let that repository operation settle. Racing a writer with
-      // a wall timer would leave an apparently stopped pass writing in the back.
       const pass = await runCandidatePublicationCycle({
         repos, eligibleCandidacyIds: lifetimeHuntSubjects,
         heldVault: vaultRead, vaultRoot: join(ROOT, ...VAULT_DIR),
@@ -2396,15 +2379,6 @@ if (DISCOVERY_SERIAL) {
   discoveryLaneIds = ["campaign-sites", "candidate-publications"];
 }
 
-// Registered autonomous plans use the same dispatcher, vault, host spacing and
-// rolling model ceiling. Discovery shares this cycle's existing Scout allowance.
-// Leave a minute after the last worker for the Admin state/heartbeat.
-// A prior cycle's late worker ended at the dispatch deadline, then its final
-// research state and heartbeat could not start before the hard wall.
-// Selection can read several complete repositories before it admits a worker.
-// Its own store budget must end before finalization starts, while a worker
-// admitted earlier still has time to finish and settle. This is a technical
-// slice boundary, not a count or spend cap: undispatched work remains owed.
 } finally {
 
   if (earlyOriginal !== null) {
@@ -2972,9 +2946,6 @@ try {
   failedStep("window-lease:release", error);
 }
 await (stallDiagnostic as CycleStallDiagnostic | null)?.stop();
-// Optional private Admin copy of verified originals. This follows the canonical
-// cycle outcome: an unavailable mirror can never rewrite acquisition/publication
-// truth, and the next ordinary cycle resumes the rotating reconciliation cursor.
 if (!dry && !canary && process.env.WTP_ADMIN_EVIDENCE_MIRROR_ENABLED === "1") {
   try {
     const mirror = await runAdminEvidenceMirror({ repos, vaultRoot: join(ROOT, ...VAULT_DIR),

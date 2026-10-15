@@ -40,7 +40,7 @@ import {
   rangesForWindow,
   runInSiteMinutesOutcomeIngest,
 } from "../scripts/legistar-insite-minutes-ingest.mts";
-import { withFetch } from "./helpers/with-fetch.ts";
+import { withSourceTransport as withFetch } from "./helpers/source-fetch.ts";
 
 const CONTRACT_ID = "mesa-legistar-minutes-outcomes";
 const SCOPE = "US-AZ:place:mesa:legistar-minutes-outcomes";
@@ -105,7 +105,7 @@ function recordedPortal(options: {
     if (parsed.pathname === "/Calendar.aspx") {
       if (options.calendarStatus) return new Response("refused", { status: options.calendarStatus });
       if (method === "GET") return html(FRESH);
-      const form = new URLSearchParams(String(init?.body ?? ""));
+      const form = new URLSearchParams(await new Request(url, init).text());
       if (form.get("__EVENTTARGET") === DATE_RANGE_CONTROL) {
         assert.equal(form.get(DATE_RANGE_CONTROL), "This Year", "only the range the window needs is asked for");
         return html(THIS_YEAR);
@@ -277,7 +277,7 @@ test("R2B minutes: every linked sitting on the real calendar is attempted beyond
   const rows = concludedSittingRows([FRESH, THIS_YEAR, THIS_YEAR_PAGE_2].flatMap(parseCalendarRows), tenant, window, new Date(AFTER_READS));
   const linked = rows.filter(row => minutesLinkFor(row, tenant.host));
   assert.ok(linked.length > 25, `${linked.length} linked official sittings`);
-  const documents = Object.fromEntries(linked.map(row => [row.insiteId!, 503]));
+  const documents = Object.fromEntries(linked.map(row => [row.insiteId!, 404]));
   const portal = recordedPortal({ documents });
   const result = await pass(new MemoryRoutineDataStore(), portal, window, AFTER_READS);
   assert.equal(result.result.documentsRead, linked.length);

@@ -7,11 +7,12 @@ import test from "node:test";
 import { gzipSync } from "node:zlib";
 import { retireMeetingArtifacts, transferMeetingArtifacts } from "../lib/db/r4-meeting-artifacts.ts";
 import { sha256OfJson, type AuthorityFamily, type ReaderGeoArtifact, type ReaderManifest, type ReaderManifestScope } from "../lib/meetings/edge-artifacts.ts";
-import { readAuthorityArtifactValue, readReaderEdgeMeetings } from "../lib/meetings/edge-serving.ts";
+import { ensureReaderAuthorityEdge, readAuthorityArtifactValue, readReaderEdgeMeetings } from "../lib/meetings/edge-serving.ts";
 import { LocalFileArtifactStore, type ReaderArtifactStore } from "../lib/meetings/edge-store.ts";
 import { meetingSettingsFromValues } from "../lib/meetings/settings.ts";
 import type { AgendaDocument } from "../lib/meetings/agenda-documents.ts";
 import type { Meeting } from "../lib/sources/types.ts";
+import { absentEdgeEntry, provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
 
 const savedAt = "2026-10-01T00:00:00.000Z", checkedAt = "2026-10-10T00:00:00.000Z", now = "2026-10-15T00:00:00.000Z";
 const division = (state: string, place = "fixture") => `ocd-division/country:us/state:${state}/place:${place}`;
@@ -127,6 +128,38 @@ test("local authority copies preserve evidence and dates while root references r
     ...comments, records: [comments.records[0]] });
   assert.deepEqual((await store.readManifest())!.manifest.authorityArtifacts, { "registry-runtime": registry });
   assert.equal(state.generatedAt, savedAt);
+}));
+
+test("legacy promoted pointer families move state entries intact and retain only national entries in the root", () => fixture(async store => {
+  const az = provenEdgeEntry({ recordClass: "STATE_CAMPAIGN_FINANCE", scope: "US-AZ", sourceId: "fixture-az",
+    versionId: "az-saved", value: { amount: 100, sourceQuote: "Filed total $100" }, retrievedAt: savedAt });
+  const ca = absentEdgeEntry("STATE_CAMPAIGN_FINANCE", "US-CA");
+  const us = provenEdgeEntry({ recordClass: "FEC_FUNDING", scope: "federal-supported", sourceId: "fixture-us",
+    versionId: "us-saved", value: { amount: 200, sourceQuote: "Filed total $200" }, retrievedAt: savedAt });
+  const mixed = { kind: "PROMOTED_POINTERS", entries: [az, ca, us] };
+  const ref = await authority(store, "state-money", mixed);
+  await store.writeManifest(manifest([], { authorityArtifacts: { "state-money": ref } }), null);
+  const original = await store.readManifest();
+  assert.deepEqual(await transferMeetingArtifacts(store), { states: 2, scopes: 0 });
+  assert.deepEqual(await store.readManifest(), original);
+  const azManifest = (await store.readManifest("AZ"))!.manifest;
+  assert.deepEqual(await readAuthorityArtifactValue("state-money", azManifest.authorityArtifacts!["state-money"], store), {
+    ...mixed, entries: [az] });
+  const caManifest = (await store.readManifest("CA"))!.manifest;
+  assert.deepEqual(await readAuthorityArtifactValue("state-money", caManifest.authorityArtifacts!["state-money"], store), {
+    ...mixed, entries: [ca] });
+  await retireMeetingArtifacts(store);
+  const root = (await store.readManifest())!.manifest;
+  assert.deepEqual(await readAuthorityArtifactValue("state-money", root.authorityArtifacts!["state-money"], store), {
+    ...mixed, entries: [us] });
+  const selected = await ensureReaderAuthorityEdge(root, store, ["state-money"], ["AZ"]);
+  assert.deepEqual([...selected.promoted!.values()], [us, az]);
+  assert.equal(root.generatedAt, savedAt);
+  assert.equal(azManifest.generatedAt, savedAt);
+  const heldRoot = await store.readManifest(), heldState = await store.readManifest("AZ");
+  await retireMeetingArtifacts(store);
+  assert.deepEqual(await store.readManifest(), heldRoot);
+  assert.deepEqual(await store.readManifest("AZ"), heldState);
 }));
 
 test("catch-up never replaces a newer state publication or clears a root changed during transfer", () => fixture(async store => {

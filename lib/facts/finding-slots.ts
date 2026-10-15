@@ -18,6 +18,7 @@ export type FindingSlot =
 
 /** Moves whenever a class gains slots, so findings waiting on it are looked at again. */
 export const FINDING_SLOTS_VERSION = "5";
+export const BOX_PUBLICATION_LOOKBACK_MS = 30 * 86_400_000;
 
 /** The reason a campaign-site finding waits in the Box: the campaign-site chain takes it, checks it and offers it as a lead. */
 export const CAMPAIGN_SITE_LEAD = "CAMPAIGN_SITE_CHAIN_TAKES_IT";

@@ -19,19 +19,7 @@ function validatorsOf(response: Response): DocumentValidators {
   return { etag: response.headers.get("etag"), lastModified: response.headers.get("last-modified") };
 }
 
-/**
- * One tenant's session for the length of one fetch.
- *
- * Calendar.aspx is a stateful WebForm: the postback that changes the date
- * range is only accepted alongside the `ASP.NET_SessionId` and the
- * `__VIEWSTATE` that were issued together. A jar per fetch keeps that pairing
- * honest and keeps nothing between runs.
- */
 export class InSiteSession {
-  /**
-   * Cookies by the host that set them. A portal's ASP.NET session goes back to that portal only, never to
-   * another host (e.g. a vendor document host).
-   */
   private readonly jar = new Map<string, Map<string, string>>();
   private readonly impl: typeof fetch;
   private readonly signal?: AbortSignal;
@@ -44,10 +32,6 @@ export class InSiteSession {
     fetchImpl?: typeof fetch;
     spacingMs?: number;
     signal?: AbortSignal;
-    /**
-     * False for an optional read that must end on the exact URL it was registered for: a redirect is then
-     * answered as a refusal naming where the page moved, and is never followed.
-     */
     followRedirects?: boolean;
   } = {}) {
     this.impl = options.fetchImpl ?? ((input, init) => runWithSourceFetch({ spacingMs: options.spacingMs ?? INSITE_SPACING_MS }, () => fetchSource(input, init)));
@@ -131,10 +115,6 @@ export class InSiteSession {
     });
   }
 
-  /**
-   * A document's exact bytes (e.g. a minutes PDF on the portal host). Paced and identified like every other
-   * read here; a non-2xx status throws, and the caller judges the bytes.
-   */
   async getBytes(
     url: string,
     accept = "*/*",
@@ -159,10 +139,6 @@ export class InSiteSession {
     return { status: response.status, contentType: response.headers.get("content-type") ?? "", finalUrl: response.url || url, bytes, ...validatorsOf(response) };
   }
 
-  /**
-   * A document's identity without its bytes: one paced HEAD, so an unchanged document whose last read
-   * failed is not downloaded again. Never throws for the site: a failed request is `null`.
-   */
   async head(url: string, accept = "*/*"): Promise<({ status: number; contentType: string; contentLength: number | null } & DocumentValidators) | null> {
     this.signal?.throwIfAborted();
     try {
@@ -188,12 +164,6 @@ export class InSiteSession {
     }
   }
 
-  /**
-   * The postback. `form` is sent verbatim: every field the page rendered, with
-   * the caller's overrides already applied — an ASP.NET page that receives a
-   * subset of its own fields answers with the page it already had, which is
-   * how a silent no-op looks exactly like a successful filter change.
-   */
   async postForm(
     url: string,
     form: Record<string, string>,

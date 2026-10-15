@@ -1,18 +1,10 @@
-/**
- * Two UID-less events at the same start in one calendar feed are two meetings. An id built from the start instant
- * alone would collapse them and lose the second with no counter anywhere.
- */
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { weakEventIdentity } from "../lib/sources/event-identity.ts";
+import { localWallClock, weakEventIdentity } from "../lib/sources/event-identity.ts";
 import { makeIcalSource } from "../lib/sources/ical/index.ts";
 import type { BodySourceWiring } from "../lib/registry/source-wiring.ts";
 
-/**
- * Two boards are two wiring rows with their own slugs, so they never collide. The collision is within one wiring
- * row: two events at the same start, both matching the row's `titleMatch` and neither carrying a `UID`.
- */
 const WIRING = {
   ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
   jurisdiction: "Newbury, NH",
@@ -194,4 +186,20 @@ test("A-005 · whitespace and case differences are the same sitting", () => {
     description: null,
   });
   assert.equal(a, b);
+});
+
+test("reused sitting formatters preserve midnight, DST transitions, zones and invalid inputs", () => {
+  const cases = [
+    ["2026-03-08T06:59:00Z", "America/New_York", "2026-03-08", "01:59"],
+    ["2026-03-08T07:00:00Z", "America/New_York", "2026-03-08", "03:00"],
+    ["2026-11-01T05:30:00Z", "America/New_York", "2026-11-01", "01:30"],
+    ["2026-11-01T06:30:00Z", "America/New_York", "2026-11-01", "01:30"],
+    ["2026-11-01T06:30:00Z", "America/Phoenix", "2026-10-31", "23:30"],
+    ["2026-11-01T00:00:00Z", "UTC", "2026-11-01", "00:00"],
+  ] as const;
+  for (let pass = 0; pass < 3; pass++) for (const [instant, zone, date, time] of cases) {
+    assert.deepEqual(localWallClock(instant, zone), { date, time });
+  }
+  assert.equal(localWallClock("not a date", "UTC"), null);
+  assert.throws(() => localWallClock("2026-11-01T00:00:00Z", "Not/A_Zone"), RangeError);
 });

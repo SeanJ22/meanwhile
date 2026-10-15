@@ -18,6 +18,8 @@ test("encoded meeting bodies, feed scopes and route hints use their own state wo
   assert.equal(routineScopeState("source:ical:body:ocd-division%2Fcountry%3Aus%2Fstate%3Atx%2Fplace%3Aa%23council"), "US-TX");
   assert.equal(routineScopeState("US:meeting-doors"), "US");
   assert.equal(routineScopeState("US:registry-runtime", ["--state=TX"]), "US-TX");
+  assert.equal(routineScopeState("US-AZ+US-NH+US-NJ:2026-general:supported-jurisdictions"), "US");
+  assert.equal(routineScopeState("US-AZ%2BUS-NH%2BUS-NJ:2026-general", ["--state=NJ"]), "US");
   assert.equal(doorScopeState({ ocdId: null, bodyIds: [], config: { scope: "US-AZ:members" } }), "US-AZ");
   assert.equal(doorScopeState({ ocdId: null, bodyIds: [], config: { jurisdictionId: "nh:city:town-of-newbury" } }), "US-NH");
 });

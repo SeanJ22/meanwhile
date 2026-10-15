@@ -1,16 +1,20 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
+import * as nodeModule from "node:module";
+import { runInNewContext } from "node:vm";
 import test from "node:test";
 import { IndependentRuntimeLaneScheduler } from "../lib/ops/independent-runtime-pass.ts";
-import { publishNowHasNothingOwed, publishNowLane, publishNowDoorTasks, publishNowWorkerTasks, readPublishNowWorkerTasks, readWorkerPublicationItems } from "../lib/civic-data/publish-now.ts";
+import { hasPendingPublicationWork, publishNowHasNothingOwed, publishNowLane, publishNowWorkerTasks, readOwedFactItems, readPublishNowWorkerTasks, readWorkerPublicationItems } from "../lib/civic-data/publish-now.ts";
+import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { AGGREGATE_LIST_READ_PAGE } from "../lib/control-plane/repository/pg-store.ts";
 import { owedFactItems, type WorkerPublicationItem } from "../lib/civic-data/worker-publication-tasks.ts";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
 import type { WorkerResultRecord } from "../lib/control-plane/workers/types.ts";
-import type { DoorRecord } from "../lib/doors/registry.ts";
 import { routineSupervisorCycleId, type RoutineSourceTask } from "../lib/civic-data/runner.ts";
 import type { ReaderEdgePublicationOutcome } from "../lib/civic-data/reader-edge-outcome.ts";
 const NOW = "2026-10-05T18:00:00.000Z";
+const { stripTypeScriptTypes } = nodeModule as unknown as { stripTypeScriptTypes(source: string): string };
 
 test("BX-12: publish-now runs each minute while a routine pass remains in flight", async () => {
   let finish!: () => void;
@@ -46,19 +50,6 @@ test("BX-03: all unacknowledged parser results stay owed across restart; an ackn
   const published = { ...item, publicationOutcome: { workerResultId: parser.id, status: "PUBLISHED", at: NOW, sourceObservedAt: parser.endedAt } } as WorkItem;
   assert.equal(publishNowWorkerTasks([published, sibling], [parser, siblingParser], NOW).length, 1);
   assert.equal(publishNowWorkerTasks([item], [], NOW).length, 1, "held-page publication shares the independent publication lane");
-});
-
-test("BX-12: changed doors persist until success and unrelated or shut doors are never offered", () => {
-  const door = { doorId: "door-a", kind: "ical", bodyIds: ["body-a"], status: "OPEN", meeting: { family: null }, lastSuccessAt: null,
-    validators: { changedAt: "2026-10-01T12:00:00.000Z" } } as unknown as DoorRecord;
-  const tasks = [{ id: "meetings:ical:body-a" }, { id: "unrelated" }] as RoutineSourceTask[];
-  const pending = publishNowDoorTasks([door], tasks, NOW);
-  assert.equal(pending.length, 1);
-  assert.equal(pending[0].id, "meetings:ical:body-a");
-  assert.ok(pending[0].ownerInvocation?.publicationPending);
-  assert.equal(publishNowDoorTasks([{ ...door, status: "SHUT" }], tasks, NOW).length, 0);
-  assert.equal(publishNowDoorTasks([{ ...door, lastSuccessAt: NOW }], tasks, NOW).length, 0);
-  assert.equal(publishNowDoorTasks([{ ...door, lastFailureAt: NOW }], tasks, NOW).length, 1);
 });
 
 test("the independent publication lane preserves held roster, board and ballot-route fallbacks with their existing retry clocks", () => {
@@ -116,7 +107,7 @@ test("publication admission filters and projects work-item metadata in the datab
     assert.match(query, /AND id > \$3/);
     parameters.push([...values]);
     return rows.filter(row => after === undefined || row.id > String(after)).slice(0, AGGREGATE_LIST_READ_PAGE);
-  }, "US-AZ", ["registry-runtime-bindings"])) {
+  }, "US-AZ", NOW, ["registry-runtime-bindings"])) {
     assert.ok(page.length <= AGGREGATE_LIST_READ_PAGE);
     items.push(...page);
   }
@@ -126,12 +117,100 @@ test("publication admission filters and projects work-item metadata in the datab
   assert.deepEqual(items[0], { id: rows[0].id, autonomousPlan: { publication: { contractId: "registry-runtime-bindings" }, contract: { recordClass: "OFFICIAL_ROSTER" } } });
 });
 
+test("publication candidate SQL skips quiet holds while retaining new evidence, recoverable publications and held ballot inputs", async () => {
+  const { PGlite } = await import("@electric-sql/pglite");
+  const db = new PGlite();
+  try {
+    await db.exec("CREATE TABLE cp_work_items(id text PRIMARY KEY,value jsonb); CREATE TABLE cp_log_worker_results(log_key text,record_id text,record jsonb)");
+    const insert = async (id: string, outcome: Record<string, unknown> | null, parser?: string, target = "registry-runtime-bindings", recordClass = "OFFICIAL_ROSTER", state = "AZ") => {
+      await db.query("INSERT INTO cp_work_items VALUES($1,$2)", [id, { autonomousPlan: { jurisdiction: state, publication: { contractId: target }, contract: { recordClass } },
+        ...(outcome ? { publicationOutcome: { at: NOW, ...outcome } } : {}) }]);
+      if (parser) await db.query("INSERT INTO cp_log_worker_results VALUES($1,$2,$3)", [id, parser,
+        { id: parser, endedAt: NOW, result: { role: "PARSER", verdict: "EXTRACTED" } }]);
+    };
+    await insert("quiet-hold", { status: "HELD" });
+    await insert("old-hold", { status: "HELD", at: "2026-10-05T17:00:00.000Z" });
+    await insert("new-evidence", { status: "HELD", workerResultId: "before", recovery: "WORKER" }, "new");
+    await insert("worker-dead-end", { status: "HELD", workerResultId: "done", recovery: "WORKER" }, "done");
+    await insert("published", { status: "PUBLISHED", workerResultId: "done+group", sourceObservedAt: NOW }, "done");
+    await insert("repair", { status: "PUBLISHED", workerResultId: "done" }, "done");
+    await insert("publisher-retry", { status: "HELD", workerResultId: "done", recovery: "PUBLISHER" }, "done");
+    await insert("partial-measure", { status: "PARTIALLY_PUBLISHED", workerResultId: "done", sourceObservedAt: NOW }, "done", "ballot-contests", "BALLOT_MEASURE");
+    await insert("held-ballot", { status: "HELD" }, undefined, "ballot-navigation", "VOTER_ACCESS_ROUTE");
+    await insert("new-work", null);
+    await insert("unrelated-state", null, undefined, "registry-runtime-bindings", "OFFICIAL_ROSTER", "NM");
+    await insert("broken", { status: "PUBLISHED", workerResultId: "done", sourceObservedAt: NOW }, "done");
+    await db.query("INSERT INTO cp_log_worker_results VALUES($1,$2,$3)", ["broken", "audit",
+      { endedAt: "2026-10-05T18:01:00.000Z", result: { role: "ADVERSARIAL_AUDITOR", verdict: "BROKE" } }]);
+    const ids: string[] = [];
+    for await (const items of readWorkerPublicationItems(async (sql, params) => (await db.query<Record<string, unknown>>(sql, [...params])).rows, "US-AZ", NOW)) {
+      ids.push(...items.map(item => item.id));
+    }
+    assert.deepEqual(ids, ["broken", "held-ballot", "new-evidence", "new-work", "old-hold", "partial-measure", "publisher-retry", "repair"]);
+  } finally { await db.close(); }
+});
+
+test("the pilot Boolean preserves held roster retry timing without loading source doors", async () => {
+  const repos = createMemoryRepositories(), store = new MemoryRoutineDataStore();
+  let outcomeAt = NOW;
+  const query = async (sql: string) => sql.includes("FROM cp_work_items") ? [{ id: "held-roster", contract_id: "registry-runtime-bindings",
+    record_class: "OFFICIAL_ROSTER", publication_outcome: { status: "HELD", at: outcomeAt } }] : [];
+  const input = { repos, store, query, state: "US-AZ", now: NOW };
+  assert.equal(await hasPendingPublicationWork(input), false);
+  outcomeAt = "2026-10-05T17:00:00.000Z";
+  assert.equal(await hasPendingPublicationWork(input), true);
+});
+
 test("BX-12: the executable selects only publication work and never holds the routine singleton", () => {
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   assert.match(runner, /PUBLISH_NOW \? PUBLISH_NOW_SINGLETON_PORT \+ ROUTINE_STATES.indexOf\(STATE_SCOPE\) : ROUTINE_DATA_RUNNER_SINGLETON_PORT/);
-  assert.match(runner, /PUBLISH_NOW \? \[\]\s*: await withNationalPlaceTasks/);
-  assert.match(runner, /return \[\.\.\.publication, \.\.\.publishNowDoorTasks/);
-  assert.match(runner, /const finalReaderEdge = publishNowEdgeChecks \? await publishNowEdgeChecks\.run\(\)/);
+  assert.match(runner, /PUBLISH_NOW \? \[\]\s*: FAMILY === "meetings" \? standingTasks : await withNationalPlaceTasks/);
+  assert.doesNotMatch(runner, /publishNowDoorTasks|readPublishNowDoors|installDoorRecords/);
+  assert.match(runner, /if \(!PUBLISH_NOW && !FORCE && controlPlaneUrlFromEnv\(\) !== null\)/);
+  assert.match(runner, /const observedChangeRates = PUBLISH_NOW \? new Map<string, number>\(\) : await readObservedChangeRates\(\)/);
+  assert.match(runner, /const finalReaderEdge: ReaderEdgePublicationOutcome = publishNowEdgeChecks \? await publishNowEdgeChecks\.run\(\)/);
+});
+
+test("the publication coordinator leaves 20,802 changed source doors to their ordinary clocks", async () => {
+  const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
+  const declaration = runner.slice(runner.indexOf("async function readHuntSourceTasks("), runner.indexOf("function newestConsideredAt("));
+  let doorReads = 0, sourceReads = 0;
+  const noSourceRead = () => { sourceReads++; throw new Error("publication must not acquire meeting sources"); };
+  const changedDoors = Array.from({ length: 20_802 }, (_, index) => ({ id: `changed-${index}`,
+    value: { status: "OPEN", lastSuccessAt: null, validators: { changedAt: NOW } } }));
+  const noDoorRead = async () => { doorReads++; throw new Error(`${changedDoors.length} changed sources belong to ordinary clocks`); };
+  const repos = { researchIntents: { read: async () => [] }, doors: { list: noDoorRead, listWhere: noDoorRead, read: noDoorRead },
+    websitePacing: {}, adminConfig: { read: async () => null } };
+  const readTasks = runInNewContext(`(${stripTypeScriptTypes(declaration)})`, {
+    FORCE: false, ONLY: null, PUBLISH_NOW: true, STATE_SCOPE: "US-IL", RUN_STARTED_AT: NOW,
+    ROOT: "/fixture", VAULT_DIR: [], BOX_FINDINGS_PER_PASS: 300, RESEARCH_INTENT_LOG_KEY: "policy", ADMIN_CONFIG_ID: "current",
+    WORKER_PUBLICATION_TASK_IDS: ["registry-runtime-bindings"], MEETING_PARTITION_CONTRACTS: [], MEETING_PARTITION_TASK_IDS: new Set(),
+    controlPlaneUrlFromEnv: () => "fixture", createPgRepositories: async () => repos,
+    readIntents: () => ({ runnerPause: { paused: false } }),
+    neon: () => ({ query: async (query: string) => {
+      if (query.includes("cp_doors")) return noDoorRead();
+      return [{ id: "held-board", contract_id: "registry-runtime-bindings", record_class: "OFFICIAL_BOARD_DIRECTORY", publication_outcome: null }];
+    } }),
+    readWorkerPublicationItems, readOwedFactItems, readPublishNowWorkerTasks,
+    readCompletedWorkerResultsOf: async (_repos: unknown, ids: readonly string[]) => ids.map(id => ({
+      id: `parser:${id}`, workItemId: id, endedAt: NOW, result: { role: "PARSER", verdict: "EXTRACTED" },
+    })),
+    readHeldBallotInputs: async () => null,
+    PostgresRoutineDataStore: class { clock = noSourceRead; readPromotionIdentity = async () => null; },
+    publishBoxFindings: async () => ({ looked: 0 }), readerFactDb: () => ({}), factClocks: () => ({}),
+    DurableEvidenceStore: class {}, join: () => "/fixture/vault", pacedProbeFetch: () => noSourceRead,
+    routineTaskFromContract: noSourceRead, getDb: noSourceRead,
+    safeFailure: String, sanitizedErrorDiagnostic: String,
+    console: { log: (line: string) => { throw new Error(`unexpected publication failure: ${line}`); } },
+  }) as (store: unknown, failures: unknown[]) => Promise<readonly RoutineSourceTask[]>;
+  const failures: unknown[] = [];
+  const tasks = await readTasks({}, failures);
+  assert.equal(tasks.length, 1);
+  assert.ok(tasks[0]!.id.endsWith(":held-board"));
+  assert.equal(tasks[0]!.ownerInvocation?.publicationPending, true);
+  assert.deepEqual(failures, []);
+  assert.equal(doorReads, 0, "the outbox does not retain or execute changed source work");
+  assert.equal(sourceReads, 0);
 });
 
 test("a publish-now minute with nothing owed ends quietly with exit 0, before any outcome or count", () => {
@@ -164,14 +243,15 @@ test("a publish-now minute with nothing owed ends quietly with exit 0, before an
 test("the standing runner starts publish-now each minute on its own lane, beside the routine pass", () => {
   const pilot = readFileSync("scripts/pilot-runner.mts", "utf8");
   const lanes = pilot.slice(pilot.indexOf("const standingRuntimeScheduler = new IndependentRuntimeLaneScheduler(["));
-  assert.match(lanes.slice(0, lanes.indexOf("], (outcome) =>")), /\.\.\.ROUTINE_STATES\.map\(state =>[\s\S]*run: \(\) => runRoutineState\(state\)[\s\S]*publishNowLane\(\(\) => runPublishState\(state\)\)/);
+  assert.match(lanes.slice(0, lanes.indexOf("], (outcome) =>")), /flatMap\(family => ROUTINE_STATES\.flatMap\(state =>[\s\S]*run: \(\) => runRoutineState\(state, family, bucket\)[\s\S]*publishNowLane\(\(\) => runPublishState\(state\)\)/);
   const run = pilot.slice(pilot.indexOf("async function runPublishNow(state: string)"), pilot.indexOf("async function persistOuterRoutineChildFailure("));
   assert.match(run, /if \(provider !== "postgres" \|\| canary\) return;/, "only the standing production runner publishes");
   assert.match(run, /args: \[\.\.\.TS_CHILD, "scripts\/publish-now-runner\.mts", `--state=\$\{state\}`\]/);
   assert.match(run, /standingChildEnvironment\("ROUTINE_SUPERVISOR", \{ \.\.\.process\.env, \[ROUTINE_SUPERVISOR_STARTED_AT_ENV\]: startedAt \}\)/);
   assert.match(run, /persistOuterRoutineChildFailure\(routineSupervisorCycleId\(`\$\{hostname\(\)\}\/\$\{state\}`, startedAt, "publish-now"\)/, "a crash still reaches Admin, under its own lane");
   const routine = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
-  assert.match(routine, /routineSupervisorCycleId\(`\$\{hostname\(\)\}\/\$\{STATE_SCOPE\}`, RUN_STARTED_AT, PUBLISH_NOW \? "publish-now" : "routine-civic-data"\)/);
+  assert.match(routine, /const cycleScope = PUBLISH_NOW \? `\$\{hostname\(\)\}\/\$\{STATE_SCOPE\}`/);
+  assert.match(routine, /routineSupervisorCycleId\(cycleScope, RUN_STARTED_AT, PUBLISH_NOW \? "publish-now" : "routine-civic-data"\)/);
 });
 
 test("the two lanes started in one millisecond never share an outcome's identity", () => {

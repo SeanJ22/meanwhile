@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
 import { COLD_CHECK_MINUTES, HOT_CHECK_MINUTES, STANDING_CHECK_MINUTES, checkEveryFor, doorFactsKey, meetingFactsByDoor, overdueDoors } from "../lib/doors/overdue.ts";
+import { defaultAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
+import { withSetting } from "../lib/control-plane/settings.ts";
 import type { DoorRecord } from "../lib/doors/registry.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 
@@ -36,6 +38,46 @@ describe("DB-31: overdue doors", () => {
     assert.deepEqual(facts.get(doorFactsKey("legistar", "body-b")), { liveFacts: 1, hot: false });
   });
 
+  it("a hot sibling gives every source of the body an hourly clock while keeping each source's fact count", () => {
+    const siblings = meetingFactsByDoor({ meetings: [
+      row("legistar:hot", "body-a", "2026-10-05T12:00:00.000Z"),
+      row("legistar:old", "body-a", "2026-06-01T12:00:00.000Z"),
+      row("ical:cold", "body-a", "2026-06-02T12:00:00.000Z"),
+      row("ical:other", "body-b", "2026-06-02T12:00:00.000Z"),
+    ] }, NOW);
+    assert.deepEqual(siblings.get(doorFactsKey("legistar", "body-a")), { liveFacts: 2, hot: true });
+    assert.deepEqual(siblings.get(doorFactsKey("ical", "body-a")), { liveFacts: 1, hot: true });
+    assert.deepEqual(siblings.get(doorFactsKey("ical", "body-b")), { liveFacts: 1, hot: false });
+    const listed = overdueDoors([
+      door({ doorId: "cold-sibling", kind: "ical", lastSuccessAt: minutesAgo(90) }),
+      door({ doorId: "empty-sibling", kind: "boarddocs", lastSuccessAt: minutesAgo(90) }),
+    ], siblings, NOW);
+    assert.deepEqual(listed.map(({ checkEveryMinutes, liveFacts }) => [checkEveryMinutes, liveFacts]), [[60, 1], [60, 0]]);
+  });
+
+  it("uses each body's stated conclusion and the runner's bounded unstated conclusion", () => {
+    const held = meetingFactsByDoor({ meetings: [
+      { ...row("legistar:long", "body-a", "2026-09-20T12:00:00.000Z"), endsAt: "2026-09-28T12:00:00.000Z" },
+      row("ical:sibling", "body-a", "2026-06-01T12:00:00.000Z"),
+      row("ical:other", "body-b", "2026-09-20T12:00:00.000Z"),
+      row("ical:bounded", "body-c", "2026-09-26T18:00:00.000Z"),
+    ] }, NOW);
+    assert.equal(held.get(doorFactsKey("ical", "body-a"))?.hot, true);
+    assert.equal(held.get(doorFactsKey("ical", "body-b"))?.hot, false);
+    assert.equal(held.get(doorFactsKey("ical", "body-c"))?.hot, true);
+  });
+
+  it("Admin's saved meeting window and check intervals determine the overdue list", () => {
+    let config = defaultAdminConfig(NOW);
+    for (const [key, after] of [["meetings.hourlyWindowDays", 10], ["meetings.hotEveryMinutes", 15], ["meetings.baseEveryMinutes", 180]] as const)
+      config = withSetting(config, { id: key, key, after, at: NOW, why: "" });
+    const held = meetingFactsByDoor({ meetings: [row("legistar:later", "body-a", "2026-10-13T12:00:00.000Z")] }, NOW, config);
+    const listed = overdueDoors([door({ doorId: "hot", lastSuccessAt: minutesAgo(40) }),
+      door({ doorId: "cold", bodyIds: ["body-b"], lastSuccessAt: minutesAgo(200) })], held, NOW, config);
+    assert.deepEqual(listed.map(({ doorId, checkEveryMinutes, overdueByMinutes }) => [doorId, checkEveryMinutes, overdueByMinutes]),
+      [["hot", 15, 25], ["cold", 180, 20]]);
+  });
+
   it("a hot meeting door owes an hourly check, a cold one twice daily, a setting of its own wins", () => {
     assert.equal(checkEveryFor(door({ doorId: "a" }), { liveFacts: 1, hot: true }).minutes, HOT_CHECK_MINUTES);
     assert.equal(checkEveryFor(door({ doorId: "a" }), { liveFacts: 1, hot: false }).minutes, COLD_CHECK_MINUTES);
@@ -59,6 +101,12 @@ describe("DB-31: overdue doors", () => {
     assert.deepEqual(listed.map(({ overdueByMinutes }) => overdueByMinutes), [1560, 180, 70]);
     assert.deepEqual(listed.map(({ liveFacts }) => liveFacts), [null, 1, 2]);
     assert.equal(listed.find(({ doorId }) => doorId === "late-hot")!.checkEveryMinutes, HOT_CHECK_MINUTES);
+  });
+
+  it("an unread sitting list remains on the hot clock with an uncounted fact total", () => {
+    const listed = overdueDoors([door({ doorId: "unread", lastSuccessAt: minutesAgo(120) })], null, NOW);
+    assert.equal(listed[0]?.checkEveryMinutes, 60);
+    assert.equal(listed[0]?.liveFacts, null);
   });
 
   it("a door that never succeeded is measured from its last change, so a new door is not late", () => {

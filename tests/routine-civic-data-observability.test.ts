@@ -1911,7 +1911,7 @@ test("a confirmed re-check keeps Admin current: the newest confirmation is the l
   assert.deepEqual(day.attempts.map((item) => [item.candidateId, item.canonicalOutcome]), [[row.id, { kind: "MEASURED", value: "UNCHANGED" }]]);
 });
 
-test("R20: Admin shows the retry the runner admits on; a meeting partition never published is next due at the base cadence", () => {
+test("Admin shows the hourly retry for a source whose body window is unknown, even before its first accepted version", () => {
   const contract = MEETING_PARTITION_CONTRACTS[0];
   const blockedAt = "2026-09-08T11:30:00.000Z";
   const code = "SOURCE_UNAVAILABLE";
@@ -1951,11 +1951,10 @@ test("R20: Admin shows the retry the runner admits on; a meeting partition never
     [contract],
   ).contracts[0];
   assert.equal(unpublished.canonicalPromotion.kind, "NOT_RECORDED");
-  // Owed twelve hours after the attempt, admitted 2 hours before.
-  assert.deepEqual(unpublished.cadence.nextDue, { kind: "MEASURED", value: "2026-09-08T21:30:00.000Z" });
+  assert.deepEqual(unpublished.cadence.nextDue, { kind: "MEASURED", value: "2026-09-08T12:05:00.000Z" });
   assert.equal(unpublished.cadence.operationalState, "RETRYING");
-  assert.match(unpublished.cadence.operationalDetail, /retry is due 2026-09-08T21:30:00\.000Z/);
-  assert.match(unpublished.cadence.retryDescription, /never published, so 12 hours after its last attempt/);
+  assert.match(unpublished.cadence.operationalDetail, /retry is due 2026-09-08T12:05:00\.000Z/);
+  assert.ok(unpublished.cadence.retryDescription.startsWith(contract.retry.description));
 
   const lkg = candidateRow(contract, { id: "meeting-lkg", at: "2026-09-08T09:00:00.000Z" });
   const failed = outage(lkg.id);

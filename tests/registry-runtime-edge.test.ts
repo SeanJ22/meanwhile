@@ -1,3 +1,4 @@
+import { meetingPublication } from "./helpers/meeting-publication.ts";
 import assert from "node:assert/strict";
 import { mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -36,7 +37,7 @@ test("the runner publishes registry-runtime as a compressed artifact the reader 
   const value = registryTransferImport().projection.payload;
   const versionId = "test-registry-runtime-v-lossless";
 
-  const published = await publishReaderEdgeArtifacts(emptySnapshot(), META, { store, authority: { "registry-runtime": { value, versionId } } });
+  const published = await publishReaderEdgeArtifacts(meetingPublication(emptySnapshot()), META, { store, authority: { "registry-runtime": { value, versionId } } });
   assert.equal(published.status, "PUBLISHED");
 
   const manifest = (await store.readManifest())!.manifest;
@@ -55,11 +56,11 @@ test("the runner publishes registry-runtime as a compressed artifact the reader 
 test("republishing the same authority version is idempotent; a new version advances the pointer", async () => {
   const store = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "rt-edge-")));
   const value = registryTransferImport().projection.payload;
-  const first = await publishReaderEdgeArtifacts(emptySnapshot(), META, { store, authority: { "registry-runtime": { value, versionId: "rt-v1" } } });
+  const first = await publishReaderEdgeArtifacts(meetingPublication(emptySnapshot()), META, { store, authority: { "registry-runtime": { value, versionId: "rt-v1" } } });
   assert.equal(first.status, "PUBLISHED");
-  const same = await publishReaderEdgeArtifacts(emptySnapshot(), META, { store, authority: { "registry-runtime": { value, versionId: "rt-v1" } } });
+  const same = await publishReaderEdgeArtifacts(meetingPublication(emptySnapshot()), META, { store, authority: { "registry-runtime": { value, versionId: "rt-v1" } } });
   assert.equal(same.status, "CURRENT", "same authority version + same meetings → nothing republished");
-  const advanced = await publishReaderEdgeArtifacts(emptySnapshot(), META, { store, authority: { "registry-runtime": { value, versionId: "rt-v2" } } });
+  const advanced = await publishReaderEdgeArtifacts(meetingPublication(emptySnapshot()), META, { store, authority: { "registry-runtime": { value, versionId: "rt-v2" } } });
   assert.equal(advanced.status, "PUBLISHED", "a new authority version advances the pointer even with unchanged meetings");
 });
 
@@ -101,7 +102,7 @@ test("the registry-runtime edge value is request-scoped: absent by default (runn
 test("an unchanged authority version carries its served artifact forward; the runner never re-reads it", async () => {
   const store = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "rt-edge-")));
   const value = registryTransferImport().projection.payload;
-  const first = await publishReaderEdgeArtifacts(emptySnapshot(), META, { store, authority: { "registry-runtime": { value, versionId: "rt-v1" } } });
+  const first = await publishReaderEdgeArtifacts(meetingPublication(emptySnapshot()), META, { store, authority: { "registry-runtime": { value, versionId: "rt-v1" } } });
   assert.equal(first.status, "PUBLISHED");
   const servedManifest = (await store.readManifest())!.manifest;
   const servedRef = servedManifest.authorityArtifacts?.["registry-runtime"];
@@ -109,14 +110,11 @@ test("an unchanged authority version carries its served artifact forward; the ru
   assert.equal(servedAuthorityVersion(servedManifest, "federal-directory"), null);
 
   // Nothing changed: a carried family is as current as a re-read one.
-  const same = await publishReaderEdgeArtifacts(emptySnapshot(), META, { store, authority: { "registry-runtime": { versionId: "rt-v1", carried: true } } });
+  const same = await publishReaderEdgeArtifacts(meetingPublication(emptySnapshot()), META, { store, authority: { "registry-runtime": { versionId: "rt-v1", carried: true } } });
   assert.equal(same.status, "CURRENT");
 
-  // Another family changed, so a new manifest is written: the carried family
-  // keeps pointing at the exact artifact already served, and the Reader reads
-  // the same value back from it.
   const campaignSites = { records: [{ id: "site-1" }] };
-  const advanced = await publishReaderEdgeArtifacts(emptySnapshot(), META, {
+  const advanced = await publishReaderEdgeArtifacts(meetingPublication(emptySnapshot()), META, {
     store,
     authority: {
       "registry-runtime": { versionId: "rt-v1", carried: true },
@@ -133,7 +131,7 @@ test("an unchanged authority version carries its served artifact forward; the ru
 
   // A stale producer cannot remove a newer served authority while publishing
   // another family. It retries against the winning manifest.
-  const moved = await publishReaderEdgeArtifacts(emptySnapshot(), META, {
+  const moved = await publishReaderEdgeArtifacts(meetingPublication(emptySnapshot()), META, {
     store,
     authority: {
       "registry-runtime": { versionId: "rt-v0-not-served", carried: true },

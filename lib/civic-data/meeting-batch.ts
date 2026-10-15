@@ -1,87 +1,118 @@
-import { mkdtemp, rm, writeFile } from "node:fs/promises";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
-import { runBoundedChildPass, ROUTINE_CHILD_CONCURRENCY, type BoundedChildCommand, type BoundedChildLauncher, type BoundedChildPassOptions, type BoundedChildResult } from "./bounded-child-pass.ts";
+import { meetingPartitionOfId } from "./meeting-partitions.ts";
+import { withRoutineContract } from "./runtime-authority.ts";
+import type { BoundedChildResult } from "./bounded-child-pass.ts";
+import type { MeetingPartitionRunOptions } from "../../scripts/ingest.ts";
+import { routineScopeState } from "./state-scope.ts";
+import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 
+export const MEETING_STATE_TURN_MS = 2 * 60_000;
+export const MEETING_STATE_CONCURRENCY = 12;
+export const MEETING_STATE_BUCKETS = 4;
+export const MEETING_PREFETCH_CONCURRENCY = 64;
+export const MEETING_PREFETCH_BYTES = 32 * 1024 * 1024;
+export function meetingTaskBucket(task: { readonly id: string; readonly scope: string }): number {
+  const body = meetingPartitionOfId(task.id)?.bodyId ?? task.scope;
+  let hash = 2166136261;
+  for (const character of body) hash = Math.imul(hash ^ character.charCodeAt(0), 16777619);
+  return (hash >>> 0) % MEETING_STATE_BUCKETS;
+}
 export interface MeetingBatchMember {
   readonly id: string;
   readonly dueAt: string;
   readonly nextDueAt: string;
 }
-export interface MeetingBatchOptions extends Pick<BoundedChildPassOptions, "cwd" | "env" | "concurrency" | "onStarting"> {
+export interface MeetingBatchOptions {
   readonly onMemberStarted: (id: string) => Promise<void> | void;
   readonly onSettled: (member: MeetingBatchMember, result: BoundedChildResult) => Promise<void> | void;
-  readonly onWorkerSettled: (id: string) => Promise<void> | void;
+  readonly now?: () => number;
+  readonly prefetch?: (member: MeetingBatchMember, signal: AbortSignal, acquire: MeetingPrefetchAcquire) => Promise<void>;
+}
+type MeetingPrefetchAcquire = (bytes: number, signal?: AbortSignal) => Promise<() => void>;
+export type MeetingMemberRunner = (id: string, options: MeetingPartitionRunOptions) => Promise<void>;
+let activeTurn: Promise<unknown> = Promise.resolve();
+
+function prefetchBudget(): MeetingPrefetchAcquire {
+  let used = 0;
+  const waiting: (() => void)[] = [];
+  return (bytes, signal) => new Promise((resolve, reject) => {
+    if (!Number.isFinite(bytes) || bytes < 0 || bytes > MEETING_PREFETCH_BYTES) { reject(new Error("PREFETCH_BYTE_BUDGET")); return; }
+    const remove = () => { const index = waiting.indexOf(admit); if (index >= 0) waiting.splice(index, 1); };
+    const abort = () => { remove(); reject(signal?.reason ?? new Error("Prefetch stopped")); waiting[0]?.(); };
+    const admit = () => {
+      if (signal?.aborted) { abort(); return; }
+      if (waiting[0] !== admit || used + bytes > MEETING_PREFETCH_BYTES) return;
+      remove(); signal?.removeEventListener("abort", abort); used += bytes;
+      let released = false;
+      resolve(() => { if (released) return; released = true; used -= bytes; waiting[0]?.(); });
+      waiting[0]?.();
+    };
+    waiting.push(admit); signal?.addEventListener("abort", abort, { once: true }); admit();
+  });
 }
 
-export function meetingBatchGroups<T>(members: readonly T[], concurrency = ROUTINE_CHILD_CONCURRENCY): T[][] {
-  if (!Number.isSafeInteger(concurrency) || concurrency < 1) throw new Error("MEETING_BATCH_CONCURRENCY_INVALID");
-  const groups = Array.from({ length: Math.min(concurrency, members.length) }, () => [] as T[]);
-  members.forEach((member, index) => groups[index % groups.length]!.push(member));
-  return groups;
+async function prefetchMeetingMember(member: MeetingBatchMember, signal: AbortSignal, acquire: MeetingPrefetchAcquire): Promise<void> {
+  const partition = meetingPartitionOfId(member.id);
+  if (!partition) return;
+  const { prefetchSourceRequests } = await import("../sources/fetch-source.ts");
+  await prefetchSourceRequests({ sourceId: member.id, state: routineScopeState(partition.bodyId), dueAt: member.dueAt, signal, acquire });
 }
 
-export async function runMeetingBatchPass(
-  members: readonly MeetingBatchMember[], options: MeetingBatchOptions, launch?: BoundedChildLauncher,
+export function runMeetingBatchPass(
+  members: readonly MeetingBatchMember[], options: MeetingBatchOptions, run?: MeetingMemberRunner,
 ): Promise<readonly BoundedChildResult[]> {
-  if (!members.length) return [];
-  if (new Set(members.map(member => member.id)).size !== members.length) throw new Error("MEETING_BATCH_DUPLICATE_MEMBER");
-  const groups = meetingBatchGroups(members, options.concurrency);
-  const directory = await mkdtemp(join(tmpdir(), "meanwhile-meeting-batch-"));
-  const results = new Map<string, BoundedChildResult>();
-  const started = new Set<string>();
-  const settle = async (member: MeetingBatchMember, result: BoundedChildResult) => {
-    if (results.has(member.id)) throw new Error(`MEETING_BATCH_DUPLICATE_RESULT:${member.id}`);
+  const turn = activeTurn.then(async () => {
+    if (!members.length) return [];
+    if (new Set(members.map(member => member.id)).size !== members.length) throw new Error("MEETING_BATCH_DUPLICATE_MEMBER");
+    const execute = run ?? (await import("../../scripts/ingest.ts")).runMeetingPartition;
+    const now = options.now ?? Date.now;
+    const until = now() + MEETING_STATE_TURN_MS;
+    const results: BoundedChildResult[] = [];
+    const stop = new AbortController(), prepared = new Map<string, Promise<void>>();
+    const acquire = prefetchBudget();
+    const timer = setTimeout(() => stop.abort(), MEETING_STATE_TURN_MS);
+    timer.unref();
+    let next = 0;
+    const fill = (index: number) => {
+      while (next < Math.min(members.length, index + MEETING_PREFETCH_CONCURRENCY) && now() < until && !stop.signal.aborted) {
+        const member = members[next++]!;
+        prepared.set(member.id, Promise.resolve().then(() => (options.prefetch ?? prefetchMeetingMember)(member, stop.signal, acquire)).catch(error => {
+          if (!stop.signal.aborted) console.warn(`RCD_PREFETCH ${member.id}: ${sanitizedErrorDiagnostic(error)}`);
+        }));
+      }
+    };
     try {
-      await options.onSettled(member, result);
-      results.set(member.id, { ...result, stdout: "", stderr: "", settlementErrorMessage: null });
-    } catch (error) {
-      results.set(member.id, { ...result, stdout: "", stderr: "", settlementErrorMessage: error instanceof Error ? error.message : String(error) });
+      fill(0);
+      for (let index = 0; index < members.length; index++) {
+        const member = members[index]!;
+        if (now() >= until) stop.abort();
+        await prepared.get(member.id);
+        prepared.delete(member.id);
+        let receipt = "";
+        let errorMessage: string | null = null;
+        let result: BoundedChildResult;
+        if (now() >= until) {
+          result = { id: member.id, status: null, signal: null, stdout: "", stderr: "", termination: "SPAWN_FAILED",
+            errorMessage: "PASS_TIME_BUDGET: state turn ended before this member started", settlementErrorMessage: null };
+        } else {
+          await options.onMemberStarted(member.id);
+          try { await withRoutineContract(member.id, () => execute(member.id, { dueAt: member.dueAt, nextDueAt: member.nextDueAt, onReceipt: line => { receipt = line; } })); }
+          catch (error) { errorMessage = error instanceof Error ? error.message : String(error); }
+          result = { id: member.id, status: receipt ? 0 : 1, signal: null, stdout: receipt, stderr: "", termination: "EXITED",
+            errorMessage: errorMessage ?? (receipt ? null : "Meeting member returned without its source receipt"),
+            settlementErrorMessage: receipt ? errorMessage : null };
+        }
+        try { await options.onSettled(member, result); }
+        catch (error) { result = { ...result, settlementErrorMessage: error instanceof Error ? error.message : String(error) }; }
+        results.push({ ...result, stdout: "", stderr: "" });
+        fill(index + 1);
+      }
+      return results;
+    } finally {
+      clearTimeout(timer);
+      stop.abort();
+      await Promise.allSettled(prepared.values());
     }
-  };
-  try {
-    const commands: BoundedChildCommand[] = [];
-    for (const [index, group] of groups.entries()) {
-      const file = join(directory, `${index}.json`);
-      await writeFile(file, JSON.stringify(group), { mode: 0o600 });
-      const memberById = new Map(group.map(member => [member.id, member]));
-      commands.push({
-        id: `meeting-batch:${options.env.WTP_SOURCE_STATE ?? "US"}:${index}`, executable: process.execPath,
-        args: ["--experimental-strip-types", "scripts/ingest.ts", `--meeting-tasks-file=${file}`], env: options.env,
-        onStdoutLine: async line => {
-          const match = /^RCD_MEETING_PARTITION_(STARTED|RECEIPT|ERROR)=(.*)$/.exec(line);
-          if (!match) return;
-          const record = JSON.parse(match[2]!) as { id?: string; source?: string; detail?: string };
-          const id = match[1] === "RECEIPT" ? record.source : record.id;
-          const member = id === undefined ? undefined : memberById.get(id);
-          if (!member) throw new Error(`MEETING_BATCH_UNEXPECTED_MEMBER:${id}`);
-          if (match[1] === "STARTED") {
-            if (started.has(member.id)) throw new Error(`MEETING_BATCH_DUPLICATE_START:${member.id}`);
-            started.add(member.id); await options.onMemberStarted(member.id); return;
-          }
-          if (!started.has(member.id)) throw new Error(`MEETING_BATCH_RESULT_BEFORE_START:${member.id}`);
-          await settle(member, {
-            id: member.id, status: match[1] === "RECEIPT" ? 0 : 1, signal: null,
-            stdout: match[1] === "RECEIPT" ? line : "", stderr: "", termination: "EXITED",
-            errorMessage: match[1] === "ERROR" ? record.detail ?? "Meeting member failed" : null,
-          });
-        },
-      });
-    }
-    await runBoundedChildPass(commands, {
-      ...options, discardOutputAfterSettlement: true,
-      onSettled: async (result, index) => {
-        try {
-          for (const member of groups[index]!) {
-            if (results.has(member.id)) continue;
-            await settle(member, started.has(member.id) ? { ...result, id: member.id } : {
-              id: member.id, status: null, signal: null, stdout: "", stderr: "", termination: "SPAWN_FAILED",
-              errorMessage: `PASS_TIME_BUDGET: meeting worker ended before this member started (${result.errorMessage ?? result.termination})`,
-            });
-          }
-        } finally { await options.onWorkerSettled(result.id); }
-      },
-    }, launch);
-    return members.map(member => results.get(member.id)!);
-  } finally { await rm(directory, { recursive: true, force: true }); }
+  });
+  activeTurn = turn.catch(() => undefined);
+  return turn;
 }

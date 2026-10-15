@@ -1,3 +1,4 @@
+import { withSourceTransport } from "./helpers/source-fetch.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -11,11 +12,6 @@ import { FIXTURE_DOOR_ROWS } from "./helpers/meeting-doors-fixture.ts";
 import { agendaRetrievalRefusal } from "../scripts/ingest.ts";
 import { agendaDocumentStore } from "../lib/meetings/agenda-documents.ts";
 
-/**
- * A proved source cutover disables its old writer in the same transaction: never two authoritative clocks,
- * never none. A retirement closes a route's clock, and closes its host only when there is nothing there to
- * read; robots.txt alone closes nothing.
- */
 const PCC = "curated:az/pima-community-college#governing";
 
 const ROOT = join(import.meta.dirname, "..");
@@ -47,10 +43,6 @@ test("every retired route has exactly one wired successor for the same body, and
   }
 });
 
-/*
- * A portal host that answers NXDOMAIN is retired beside the town's already-wired calendar feed, and nothing
- * is held.
- */
 const NEWBURY_SELECTBOARD = "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#governing";
 
 test("Newbury's dead CivicWeb route is retired, and its already-wired calendar feed is the Selectboard's one clock", () => {
@@ -140,10 +132,6 @@ test("only a dead retired route's host is held as a link; the robots-retired col
   assert.equal(isUnreadableRetiredMeetingHost("not a url"), false);
 });
 
-/*
- * A route retired for robots.txt alone stays retired when its successor carries every sitting, but its host
- * is read again when the body links into it.
- */
 test("a superseded retired route's host is readable for agenda retrieval while its clock stays off", async () => {
   const retired = RETIRED_MEETING_ROUTES.find((route) => route.bodyId === PCC && route.meetingSource === "diligent");
   assert.ok(retired, "the college's Diligent route is named as retired");
@@ -162,26 +150,24 @@ test("a superseded retired route's host is readable for agenda retrieval while i
   assert.equal(agendaRetrievalRefusal(tenantLink), null);
   const { retrieveAgendas } = await import("../scripts/ingest.ts");
   const requested: string[] = [];
-  const realFetch = globalThis.fetch;
   const realLog = console.log;
-  globalThis.fetch = (async (input: RequestInfo | URL) => {
+  const transport: typeof fetch = async input => {
     const url = String(input instanceof Request ? input.url : input);
     requested.push(url);
     return new Response(
       "<html><body><h1>Finance and Audit Committee Meeting - Aug 28 2026</h1><p>1. General Matters 1.01 Call to Order</p><p>2. Action Items 2.01 Approval of Minutes</p></body></html>",
       { status: 200, headers: { "content-type": "text/html; charset=utf-8" } },
     );
-  }) as typeof fetch;
+  };
   console.log = () => undefined;
   try {
-    await retrieveAgendas([{
+    await withSourceTransport(transport, () => retrieveAgendas([{
       id: "pima-edu:pcc:2026-08-28-committee", ocdId: null, bodyId: PCC, bodyName: "Finance and Audit Committee",
       title: "Finance and Audit Committee", startsAt: "2026-08-28T09:00:00-07:00", timeZone: "America/Phoenix",
       location: null, agendaUrl: tenantLink, jurisdiction: "Pima Community College District, AZ", status: "CONCLUDED",
       provenance: { sourceUrl: "https://www.pima.edu/about-pima/leadership-policies/governing-board/finance-advisory-committee/agendas-minutes.html", sourceOrg: "Pima Community College Governing Board", collectedAt: "2026-09-25T20:00:00Z", verifiedAt: null },
-    }] as never);
+    }] as never));
   } finally {
-    globalThis.fetch = realFetch;
     console.log = realLog;
   }
   assert.deepEqual(requested, [tenantLink], "the college's link into its tenant is read");

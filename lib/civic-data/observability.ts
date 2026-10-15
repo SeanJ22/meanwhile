@@ -1217,22 +1217,21 @@ function runnerSeesPublished(contract: RoutineSourceContract, published: boolean
   return published || contract.recordClass !== "MEETING";
 }
 
-/** A sitting-window retry is owed on the contract clock, or twice daily for a meeting partition never published, and admitted 15 minutes early. */
-function observedRetryAtMs(contract: RoutineSourceContract, attemptedMs: number, published: boolean): number {
+function observedRetryAtMs(contract: RoutineSourceContract, attemptedMs: number, published: boolean, sittingHot?: boolean): number {
   const schedule = contract.schedule;
   if (schedule?.kind !== "SITTING_WINDOW") return attemptedMs + contract.retry.afterMs;
   return sittingWindowObligation(
     schedule,
     contract.retry.afterMs,
     { attemptedMs, succeededMs: Number.NaN, published: runnerSeesPublished(contract, published) },
-    undefined,
+    sittingHot,
   ).eligibleAtMs;
 }
 
-function observedRetryDescription(contract: RoutineSourceContract, published: boolean): string {
+function observedRetryDescription(contract: RoutineSourceContract, published: boolean, sittingHot?: boolean): string {
   const schedule = contract.schedule;
   if (schedule?.kind !== "SITTING_WINDOW") return contract.retry.description;
-  const retryMs = sittingWindowRetryMs(schedule, contract.retry.afterMs, runnerSeesPublished(contract, published));
+  const retryMs = Math.min(sittingWindowRetryMs(schedule, contract.retry.afterMs, runnerSeesPublished(contract, published)), sittingWindowRereadMs(schedule, sittingHot));
   const lead = `; an hourly read or retry is admitted up to ${SITTING_WINDOW_ADMISSION_LEAD_MS / 60_000} minutes before it is owed, a twice-daily read up to ${SITTING_WINDOW_BASE_ADMISSION_LEAD_MS / 3_600_000} hours`;
   return retryMs === contract.retry.afterMs
     ? `${contract.retry.description}${lead}`
@@ -1286,6 +1285,7 @@ function operationalState(
   canonicalFreshness: FreshnessState,
   events: readonly RoutineCandidateEventRow[],
   nowMs: number,
+  sittingHot?: boolean,
 ): { readonly state: SourceOperationalState; readonly detail: string } {
   if (!latest) return { state: "UNKNOWN", detail: "No source attempt is recorded." };
   const state = candidateState(latest.state);
@@ -1327,7 +1327,7 @@ function operationalState(
           : `The latest owner-invoked attempt ended ${state}; canonical/LKG service is ${canonical.kind}: ${canonical.detail}`,
       };
     }
-    const retryAt = observedRetryAtMs(contract, latestAt, canonical.kind !== "NOT_RECORDED");
+    const retryAt = observedRetryAtMs(contract, latestAt, canonical.kind !== "NOT_RECORDED", sittingHot);
     if (nowMs < retryAt) {
       return {
         state: "RETRYING",
@@ -2025,7 +2025,7 @@ function projectContract(
     operationalAttempt?.kind !== "MEASURED" || Date.parse(sourceCheckedAt(confirmation.retrieval, confirmation.observedAt) ?? "") >= Date.parse(operationalAttempt.value)
   );
   const operation = latestOrderIssue === null
-    ? operationalState(contract, confirmedLatest ? canonicalCandidate : operationalLatest, candidates, canonicalCandidate, canonical, readerVisible, fresh.state, events, nowMs)
+    ? operationalState(contract, confirmedLatest ? canonicalCandidate : operationalLatest, candidates, canonicalCandidate, canonical, readerVisible, fresh.state, events, nowMs, sittingHot)
     : { state: "UNKNOWN" as const, detail: latestOrderIssue };
   const changes: RoutineContractObservation["latestChanges"] = latestOrderIssue !== null
     ? unknown(latestOrderIssue)
@@ -2171,7 +2171,7 @@ function projectContract(
       activeEveryMs,
       retryDescription: isManualContract(contract)
         ? "explicit owner rerun after inspecting the durable refusal"
-        : observedRetryDescription(contract, canonical.kind !== "NOT_RECORDED"),
+        : observedRetryDescription(contract, canonical.kind !== "NOT_RECORDED", sittingHot),
       nextDue: nextDue(contract, operationalLatest, canonicalCandidate, events, nowMs, latestOrderIssue, sittingHot, confirmation, canonical.kind !== "NOT_RECORDED"),
       operationalState: operation.state,
       operationalDetail: operation.detail,

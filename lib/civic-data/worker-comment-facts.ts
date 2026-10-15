@@ -6,9 +6,8 @@ import { factClocks } from "../facts/clocks.ts";
 import { publishCommentFacts } from "../facts/comment-facts.ts";
 import type { FactDb, Query } from "../facts/publish.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
-import { readRegistryRuntimePrior } from "../registry/runtime-data-plane.ts";
+import { readRegistryBodyIdentity } from "../registry/runtime-read-model.ts";
 import { parserFieldSources } from "./field-sources.ts";
-import type { RoutineDataStore } from "./store.ts";
 import { publicationCaptureReaders } from "./worker-publication-context.ts";
 import { auditPull, capturesForPublication, jobWorkerResults, latestParserResult } from "./worker-publication-evidence.ts";
 import { recordPublishedPageDoor, withPageDoor } from "./worker-page-doors.ts";
@@ -16,7 +15,7 @@ import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
 
 /** Each owed comment-rule extraction becomes facts on its body, one rule at a time. */
 export async function publishOwedCommentFacts(input: {
-  readonly repos: ControlPlaneRepositories; readonly store: RoutineDataStore; readonly facts: FactDb & { readonly query: Query };
+  readonly repos: ControlPlaneRepositories; readonly facts: FactDb & { readonly query: Query };
   readonly workItemIds: readonly string[]; readonly now: string;
   readonly readCapture: (id: string, results: readonly WorkerResultRecord[]) => Promise<WorkerPublicationCapture>;
   readonly readHeld?: (record: ArtifactRecord) => Promise<WorkerPublicationCapture | null>;
@@ -26,7 +25,6 @@ export async function publishOwedCommentFacts(input: {
   const captureReaders = await publicationCaptureReaders(input.repos, input.readCapture, input.readHeld);
   const { results, readCapture } = await jobWorkerResults(input.repos, input.workItemIds, captureReaders.readCapture);
   const manual = await readValidatorManual(input.repos);
-  const registry = await readRegistryRuntimePrior(input.store, input.now);
   const report: { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[] = [];
   for (const id of [...new Set(input.workItemIds)]) {
     const item = (await input.repos.workItems.mustRead(id)).value;
@@ -46,7 +44,7 @@ export async function publishOwedCommentFacts(input: {
       const capture = captures.find(c => c.evidence.artifactId === extraction.artifactId);
       if (!capture) throw new Error("COMMENT_PAGE_NOT_SAVED");
       const bodyId = plan.publication.bodyId;
-      const body = registry?.payload.registry.bodies.find(row => row.id === bodyId) ?? null;
+      const body = (await readRegistryBodyIdentity(bodyId, input.facts.query))?.body ?? null;
       let live = 0, added = 0, reused = 0, blanks = 0;
       for (const record of extraction.records.filter(record => !pull?.recordIds.has(record.id) && !pull?.all)) {
         const outcomes = await publishCommentFacts(input.facts, { body: { id: bodyId, name: body?.name ?? null,

@@ -5,7 +5,7 @@ import test from "node:test";
 import { readStateReference } from "../lib/control-plane/expansion/state-references.ts";
 import { factDb } from "./helpers/fact-db.ts";
 import { partitionCivicPayload } from "../lib/civic-data/payload-parts.ts";
-import { preloadMeetingDependencies, readMeetingRegistryBodyIdsForState, readMeetingBodiesForPublication } from "../lib/civic-data/meeting-dependencies.ts";
+import { preloadMeetingDependencies, readMeetingRegistryBodyIdsForState, readMeetingBodiesForPublication, readMeetingBodyIdsForDivisions } from "../lib/civic-data/meeting-dependencies.ts";
 import { getRegistryRuntimeReadModel } from "../lib/registry/runtime-read-model.ts";
 import { currentCuratedReaderRecords } from "../lib/civic-data/curated-reader-read-model.ts";
 import { REGISTRY_RUNTIME_SCOPE } from "../lib/registry/runtime-data-plane.ts";
@@ -13,6 +13,28 @@ import { REGISTRY_RUNTIME_SCOPE } from "../lib/registry/runtime-data-plane.ts";
 const ROOT = "ocd-division/country:us";
 const AZ = `${ROOT}/state:az`;
 const BODY = `${AZ}/place:fixture#council`;
+
+test("place reads include overlapping bodies from their current reviewed territories only", async () => {
+  const db = await factDb();
+  try {
+    await db.pg.exec(`CREATE TABLE civic_data_payload_parts (hash text PRIMARY KEY,payload jsonb NOT NULL);
+      CREATE TABLE civic_data_promotions (record_class text,scope text,current_version_id text,payload jsonb,PRIMARY KEY(record_class,scope));`);
+    await db.pg.exec(readFileSync(new URL("../lib/db/migrations/R4_meeting_dependencies.sql", import.meta.url), "utf8"));
+    const place = `${AZ}/place:fixture`;
+    const neighbor = `${AZ}/place:neighbor`;
+    const district = { id: `${AZ}/special:water#board`, ocdId: `${AZ}/special:water`, alsoServesOcdIds: [place] };
+    const reviewed = { id: BODY, ocdId: neighbor };
+    const wrongState = { id: `${ROOT}/state:ca#board`, ocdId: `${ROOT}/state:ca`, alsoServesOcdIds: [place] };
+    await db.pg.query("INSERT INTO civic_data_promotions VALUES ('REGISTRY_RUNTIME_BINDING',$1,'registry-1',$2::jsonb)",
+      [REGISTRY_RUNTIME_SCOPE, JSON.stringify({ registry: { generatedAt: "2026-10-15T00:00:00Z", bodies: [district, reviewed, wrongState], divisions: [] } })]);
+    await db.pg.query("INSERT INTO civic_data_promotions VALUES ('REGISTRATION','US-AZ:registration:v1','registration-1',$1::jsonb)",
+      [JSON.stringify({ state: "AZ", bodies: [{ id: BODY, ocdId: place }], divisions: [] })]);
+    assert.deepEqual([...await readMeetingBodyIdsForDivisions("AZ", [place], db.query)], [district.id]);
+    assert.deepEqual([...await readMeetingBodyIdsForDivisions("US-AZ", [neighbor], db.query)], [BODY]);
+    assert.deepEqual([...await readMeetingBodyIdsForDivisions("AZ", [], db.query)], []);
+    await assert.rejects(readMeetingBodyIdsForDivisions("AZ", [`${ROOT}/state:ca`], db.query), /CROSSES_STATE/);
+  } finally { await db.pg.close(); }
+});
 
 test("referenced national promotions become indexed dependencies and a worker reads one body", async context => {
   const db = await factDb();

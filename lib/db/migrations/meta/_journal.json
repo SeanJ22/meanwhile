@@ -295,6 +295,13 @@
       "when": 1792022400006,
       "tag": "R4_meeting_artifacts",
       "breakpoints": true
+    },
+    {
+      "idx": 42,
+      "version": "7",
+      "when": 1792022400007,
+      "tag": "R4_reader_publication_inputs",
+      "breakpoints": true
     }
   ]
 }

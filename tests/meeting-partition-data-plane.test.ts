@@ -7,17 +7,19 @@ import {
   MEETING_PARTITION_CONTRACTS,
   LEGACY_MEETINGS_AGGREGATE_SCOPE,
   meetingHistoryScope,
+  refreshMeetingPartitions,
 } from "../lib/civic-data/meeting-partitions.ts";
 import { readMeetingsProjection, type MeetingPartitionReadback } from "../lib/meetings/snapshot.ts";
 import { MEETINGS_PREPARED_SCOPE, preparePublishedMeetingSnapshot } from "../lib/meetings/prepared-snapshot.ts";
 import type { AgendaDocument } from "../lib/meetings/agenda-documents.ts";
 import { getMeetingSource } from "../lib/meetings/registry.ts";
-import { routineTaskDue, routineTaskFromContract } from "../lib/civic-data/runner.ts";
+import { routineTaskDue, routineTaskFromContract, routineAdmissionClock, routineTaskDueAtMs, routineTaskDeadlineMs } from "../lib/civic-data/runner.ts";
 import { normalizedHash } from "../lib/civic-data/candidate-builders.ts";
 import { agendaDocumentRecordKey } from "../lib/civic-data/changes.ts";
-import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { MemoryRoutineDataStore, assertRoutineDataStoreMutationAuthority, routineDataStoreCandidateAuthorityIssue } from "../lib/civic-data/store.ts";
+import { admittedRuntimeChildEnvironment } from "../lib/civic-data/runtime-authority.ts";
 import type { RoutineRecordClass } from "../lib/civic-data/types.ts";
-import { repairMeetingReaderProjectionReadbacks } from "../lib/civic-data/reader-verification.ts";
+import { repairMeetingReaderProjectionReadbacks, runMeetingReaderRepairDomain } from "../lib/civic-data/reader-verification.ts";
 import { READER_PROJECTION_READBACK_PREFIX } from "../lib/civic-data/reader-readback.ts";
 import { parseUnchangedConfirmation } from "../lib/civic-data/unchanged-confirmation.ts";
 import type { Meeting } from "../lib/sources/types.ts";
@@ -348,7 +350,7 @@ test("one meeting source/body failure retains only its LKG while another partiti
   assert.equal(routineTaskDue(healthyTask, healthyClock, Date.parse(SECOND) + 35 * 60_000, true), true);
 });
 
-test("meeting Reader repair composes the shared aggregate once and correlates exact partition receipts", async () => {
+test("meeting Reader repair composes each governing division and correlates exact partition receipts", async () => {
   const store = new CountingMeetingStore();
   const promoted = await promoteMeetingPartitions({
     store,
@@ -378,13 +380,10 @@ test("meeting Reader repair composes the shared aggregate once and correlates ex
     "f".repeat(40),
   );
   assert.equal(store.readPromotionIdentitiesCalls, 1, "one identity-only pointer batch names every partition version");
-  // The payloads cross once, in the actual aggregate Reader read, plus one
-  // batch for the held pointers of successors with none yet
-  // (HELD_MEETING_PARTITIONS) — the college's successor has none in this store.
   assert.equal(
     store.readPromotionsCalls,
-    1 + (HELD_MEETING_PARTITIONS.length > 0 ? 1 : 0),
-    "the payloads cross once, in the actual aggregate Reader read, and its held-pointer batch",
+    2,
+    "each governing division reads its own current and history payloads once",
   );
   assert.deepEqual(repairs.map(({ contractId, ok }) => ({ contractId, ok })), [
     { contractId: legistar.id, ok: true },
@@ -444,9 +443,9 @@ test("R31: meeting receipts carry across a commit that changed no Reader code wi
   assert.deepEqual(first.map((repair) => repair.ok ? repair.value.kind : repair.error), ["RECORDED", "RECORDED"]);
 
   let compositions = 0;
-  const aggregate = () => {
+  const aggregate = (partitions: readonly typeof legistar[]) => {
     compositions += 1;
-    return readMeetingsProjection({ store, now: SECOND, bypassCache: true });
+    return readMeetingsProjection({ store, now: SECOND, bypassCache: true, partitions });
   };
   const later = (ms: number) => new Date(Date.parse(SECOND) + ms).toISOString();
 
@@ -472,7 +471,7 @@ test("R31: meeting receipts carry across a commit that changed no Reader code wi
     attestor: () => ({ identical: false, detail: "closure changed" }),
   });
   assert.deepEqual(reread.map((repair) => repair.ok && repair.value.kind === "RECORDED" ? repair.value.receipt.status : "not recorded"), ["PASS", "PASS"]);
-  assert.equal(compositions, 1, "a changed closure composes the aggregate once");
+  assert.equal(compositions, 2, "a changed closure composes each governing division once");
   for (const repair of reread) {
     if (repair.ok && repair.value.kind === "RECORDED") assert.doesNotMatch(repair.value.receipt.detail, /ATTESTED/);
   }
@@ -491,7 +490,7 @@ test("a pass that records readbacks and republishes the prepared snapshot compos
   assert.equal(promoted.every(({ outcome }) => outcome.promoted !== null), true);
   store.readPromotionsCalls = 0;
 
-  // Exactly the reader-repair child's provider: one composition, kept once made.
+  // A caller can reuse one bounded composition for both its readback and its publication.
   let compositions = 0;
   let composing: ReturnType<typeof readMeetingsProjection> | null = null;
   const aggregate = () => {
@@ -512,7 +511,7 @@ test("a pass that records readbacks and republishes the prepared snapshot compos
   const row = await store.readPreparedReaderProjection("MEETING", MEETINGS_PREPARED_SCOPE);
   assert.deepEqual(
     new Set(row?.composedFrom.map(({ contractId }) => contractId)),
-    new Set([legistar.id, insite.id, "meeting-facts"]),
+    new Set([legistar.id, insite.id, "meeting-facts", "meeting-layout"]),
     "the published row is coupled to the versions and the meeting facts that composition read",
   );
 });
@@ -620,9 +619,6 @@ test("the batched Reader bounds database calls and isolates a corrupt partition"
   }
   assert.equal(scalarPromotionReads, 0);
   assert.equal(scalarCandidateReads, 0);
-  // One batch for every registered partition and its durable history,
-  // and one more only for the held pointers of successors that have none yet
-  // (HELD_MEETING_PARTITIONS) — the college's successor has none in this store.
   assert.equal(promotionBatchReads, 2);
   assert.equal(candidateBatchReads, 1);
   assert.deepEqual(requestedScopeBatches, [
@@ -909,4 +905,94 @@ test("DB-01: the validator accepts a V1 removal for one pass and refuses removin
     { ...window("MEETING_READER_SERVING_WINDOW_V1", 90, HELD_LATER), key: `meeting:${old.id}`, priorStartsAt: old.startsAt },
   ]);
   assert.equal(accepted.outcome.candidate.state, "PROMOTED", accepted.outcome.candidate.failureDetail ?? "");
+});
+
+
+test("in-process meeting readback preserves failed evidence while healthy divisions validate independently", async () => {
+  const store = new MemoryRoutineDataStore();
+  const promoted = await promoteMeetingPartitions({ store, partitions: [legistar, insite],
+    meetings: [meeting(legistar, FIRST, "reader-failed"), meeting(insite, FIRST, "reader-good")], agendaDocuments: [],
+    reports: [report("legistar", FIRST), report("legistar-insite", FIRST)], generatedAt: FIRST });
+  assert.ok(promoted.every(row => row.outcome.promoted));
+  const read = store.readPromotions.bind(store), scopesRead: string[][] = [];
+  store.readPromotions = async (kind, scopes) => {
+    scopesRead.push([...scopes]);
+    if (scopes.includes(legistar.scope)) throw new Error("one division's payload is unavailable");
+    return read(kind, scopes);
+  };
+  const result = await runMeetingReaderRepairDomain({ store, observedAt: SECOND, verifierCodeSha: "f".repeat(40),
+    domain: { id: "reader-readback:meetings-aggregate", mode: "MEETING_AGGREGATE", contracts: [legistar, insite], timeoutMs: 300_000 } });
+  const records = result.stdout.split("\n").map(line => JSON.parse(line.slice("RCD_READER_REPAIR=".length)));
+  assert.deepEqual(records.map(row => row.contractId), [legistar.id, insite.id]);
+  assert.equal(records[0]!.receipt.status, "FAIL");
+  assert.equal(records[1]!.receipt.status, "PASS");
+  assert.ok(scopesRead.every(scopes => !(scopes.includes(legistar.scope) && scopes.includes(insite.scope))));
+  for (const row of promoted) assert.equal((await store.readPromotion("MEETING", row.candidate.scope))?.versionId, row.candidate.id);
+});
+
+test("in-process readback restores admitted body authority and preserves the current registry", async () => {
+  const store = new MemoryRoutineDataStore();
+  const promoted = await promoteMeetingPartitions({ store, partitions: [legistar, insite],
+    meetings: [meeting(legistar, FIRST, "admitted-pima"), meeting(insite, FIRST, "admitted-mesa")], agendaDocuments: [],
+    reports: [report("legistar", FIRST), report("legistar-insite", FIRST)], generatedAt: FIRST });
+  const authority = assertRoutineDataStoreMutationAuthority(admittedRuntimeChildEnvironment({ capability: "ROUTINE_SUPERVISOR", parentEnv: {
+    NODE_ENV: "development", WTP_RUNTIME_MODE: "staging", WTP_DB_ROLE: "local", WTP_SANCTIONED_WRITE: "routine-civic-data-promotion",
+    DATABASE_URL: "postgresql://local:local@staging.invalid/reader", WTP_CONTROL_PLANE_DATABASE_URL: "postgresql://local:local@staging.invalid/control",
+  } }));
+  const append = store.appendEvidence.bind(store);
+  store.appendEvidence = async (id, state, at, detail) => {
+    const candidate = (await store.readCandidate(id))!.candidate;
+    assert.equal(routineDataStoreCandidateAuthorityIssue(candidate, authority, "reader-evidence"), null);
+    return append(id, state, at, detail);
+  };
+  const original = [...MEETING_PARTITION_CONTRACTS];
+  try {
+    assert.equal(refreshMeetingPartitions([insite.wiring!]).refreshed, true);
+    const narrowed = MEETING_PARTITION_CONTRACTS.map(row => row.id);
+    assert.ok(routineDataStoreCandidateAuthorityIssue(promoted[0]!.candidate, authority, "reader-evidence"));
+    const result = await runMeetingReaderRepairDomain({ store, observedAt: SECOND, verifierCodeSha: "f".repeat(40),
+      domain: { id: "reader-readback:meetings-aggregate", mode: "MEETING_AGGREGATE", contracts: [legistar, insite], timeoutMs: 300_000 } });
+    const records = result.stdout.split("\n").map(line => JSON.parse(line.slice("RCD_READER_REPAIR=".length)));
+    assert.equal(result.status, 0);
+    assert.deepEqual(records.map(row => row.receipt?.status), ["PASS", "PASS"]);
+    for (const row of promoted) assert.ok((await store.events(row.candidate.id)).some(event => event.detail.startsWith(READER_PROJECTION_READBACK_PREFIX)));
+    assert.deepEqual(MEETING_PARTITION_CONTRACTS.map(row => row.id), narrowed);
+  } finally {
+    refreshMeetingPartitions(original.flatMap(row => row.wiring ? [row.wiring] : []), new Set(original.filter(row => row.suspended).map(row => row.id)));
+  }
+});
+
+test("prefetched 200 and 304 checks keep their physical times through parsing, confirmation and admission", async () => {
+  const store = new MemoryRoutineDataStore();
+  const checkedAt = "2026-09-08T12:55:00.000Z";
+  const bytes = Buffer.from(`legistar:${FIRST}`);
+  const response = { ...evidence("legistar", FIRST)[0]!, bytes, retrievedAt: checkedAt, checkStatus: 304, contentType: "application/json" };
+  const initial = await promoteMeetingPartition(store, legistar, { formatVersion: 1, generatedAt: "2026-09-08T12:05:00.000Z",
+    counts: { fresh: 1, carried: 0, total: 1 }, sources: [report("legistar", FIRST)],
+    meetings: [meeting(legistar, FIRST, "prefetched-check")], agendaDocuments: [],
+  }, [], [], [], [], "", [{ ...response, retrievedAt: FIRST, checkStatus: 200 }]);
+  assert.equal(initial.outcome.candidate.state, "PROMOTED");
+  assert.equal(initial.candidate.retrieval.sourceCheck?.checkedAt, FIRST);
+  assert.equal(initial.candidate.retrieval.sourceCheck?.httpStatus, 200);
+  const result = await promoteMeetingPartition(store, legistar, { formatVersion: 1, generatedAt: SECOND,
+    counts: { fresh: 1, carried: 0, total: 1 }, sources: [report("legistar", FIRST)],
+    meetings: [meeting(legistar, SECOND, "prefetched-check")], agendaDocuments: [],
+  }, [], [], [], [], "", [response]);
+  assert.equal(result.outcome.candidate.state, "PROMOTED");
+  assert.ok(result.outcome.confirmed, "an unchanged 304 confirms the existing version");
+  assert.equal(result.outcome.promoted?.versionId, initial.outcome.promoted?.versionId);
+  assert.equal(result.candidate.retrieval.sourceCheck?.checkedAt, checkedAt);
+  assert.equal(result.candidate.retrieval.sourceCheck?.httpStatus, 304);
+  const clock = await store.clock(legistar.sourceId, "MEETING", legistar.scope);
+  assert.equal(clock.lastSucceededObservedAt, checkedAt);
+  assert.equal(clock.lastAttemptedAt, checkedAt);
+  const task = routineTaskFromContract(legistar), now = Date.parse(SECOND), wire = Date.parse(checkedAt);
+  const admitted = routineAdmissionClock(clock, SECOND, now);
+  assert.deepEqual(admitted, clock, "a durable verified receipt defeats a later supervisor start stamp");
+  assert.equal(routineTaskDeadlineMs(task, admitted, false), wire + 12 * 3_600_000);
+  assert.equal(routineTaskDueAtMs(task, admitted, now, false), wire + 10 * 3_600_000);
+  const failedAt = "2026-09-08T13:01:00.000Z";
+  const failed = routineAdmissionClock(clock, failedAt, Date.parse(failedAt));
+  assert.equal(failed?.lastAttemptedAt, failedAt, "an unreceipted later failure remains a real retry");
+  assert.equal(routineTaskDeadlineMs(task, failed, false), Date.parse(failedAt) + 3_600_000);
 });

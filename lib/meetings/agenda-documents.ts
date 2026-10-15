@@ -1,3 +1,4 @@
+// @freshness-reads-here
 import { fetchSource } from "../sources/fetch-source.ts";
 
 import { createHash } from "node:crypto";

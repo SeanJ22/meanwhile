@@ -1,5 +1,5 @@
 import { createHash, randomUUID } from "node:crypto";
-import { closeSync, linkSync, mkdirSync, openSync, readFileSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
+import { closeSync, linkSync, mkdirSync, openSync, readFileSync, readSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 
 import type { ReaderGeoArtifact, ReaderManifest } from "./edge-artifacts.ts";
@@ -13,10 +13,22 @@ export interface StoredManifest {
   readonly etag: string | null;
 }
 
+export interface ReaderPublicationIdentity {
+  readonly fingerprint: string;
+  readonly sequence: number;
+}
+
+function publicationIdentity(fingerprint: unknown, sequence: unknown): ReaderPublicationIdentity | null {
+  return typeof fingerprint === "string" && /^[a-f0-9]{64}$/.test(fingerprint) &&
+    typeof sequence === "number" && Number.isSafeInteger(sequence) && sequence > 0
+    ? { fingerprint, sequence } : null;
+}
+
 export interface ReaderArtifactStore {
   readonly kind: "netlify-blobs" | "local-file";
   readonly state?: string;
   readManifest(state?: string): Promise<StoredManifest | null>;
+  readPublicationIdentity(state?: string): Promise<ReaderPublicationIdentity | null>;
   readArtifact(key: string): Promise<ReaderGeoArtifact | null>;
   /** Store complete bytes once, under their digest; never overwrite a serving artifact. */
   putImmutable(bytes: Uint8Array, suffix: "json" | "json.gz"): Promise<string>;
@@ -46,6 +58,7 @@ export function scopedReaderArtifactStore(base: ReaderArtifactStore, state: stri
   return {
     kind: base.kind, state: selected,
     readManifest: (requested = selected) => base.readManifest(requested),
+    readPublicationIdentity: (requested = selected) => base.readPublicationIdentity(requested),
     writeManifest: (manifest,etag) => base.writeManifest(manifest,etag,selected),
     readArtifact: key => base.readArtifact(key), putImmutable: (bytes,suffix) => base.putImmutable(bytes,suffix),
     readBytes: key => base.readBytes(key), readMeetingState: id => base.readMeetingState(id),
@@ -92,6 +105,12 @@ export class NetlifyBlobsArtifactStore implements ReaderArtifactStore {
     return { manifest: res.data as ReaderManifest, etag: res.etag ?? null };
   }
 
+  async readPublicationIdentity(state?: string): Promise<ReaderPublicationIdentity | null> {
+    const store = await this.store("strong");
+    const held = await store.getMetadata(readerManifestKey(state));
+    return publicationIdentity(held?.metadata.publicationFingerprint, held?.metadata.publicationSequence);
+  }
+
   async readArtifact(key: string): Promise<ReaderGeoArtifact | null> {
     const store = await this.store("eventual");
     const data = await store.get(key, { type: "json" });
@@ -108,7 +127,9 @@ export class NetlifyBlobsArtifactStore implements ReaderArtifactStore {
     const result = await store.setJSON(
       readerManifestKey(state),
       manifest,
-      expectedEtag === null ? { onlyIfNew: true } : { onlyIfMatch: expectedEtag },
+      { ...(expectedEtag === null ? { onlyIfNew: true } : { onlyIfMatch: expectedEtag }),
+        metadata: { ...(manifest.publicationFingerprint ? { publicationFingerprint: manifest.publicationFingerprint } : {}),
+          publicationSequence: manifest.sequence } },
     );
     return { modified: result.modified, etag: result.etag ?? null };
   }
@@ -174,6 +195,20 @@ export class LocalFileArtifactStore implements ReaderArtifactStore {
     }
   }
 
+  async readPublicationIdentity(state?: string): Promise<ReaderPublicationIdentity | null> {
+    let descriptor: number | undefined;
+    try {
+      descriptor = openSync(this.path(readerManifestKey(state)), "r");
+      const bytes = Buffer.alloc(256);
+      const length = readSync(descriptor, bytes, 0, bytes.length, 0);
+      const header = /^\{"publicationFingerprint":"([a-f0-9]{64})","sequence":(\d+)(?:,|\})/.exec(bytes.toString("utf8", 0, length));
+      return header ? publicationIdentity(header[1], Number(header[2])) : null;
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code === "ENOENT") return null;
+      throw error;
+    } finally { if (descriptor !== undefined) closeSync(descriptor); }
+  }
+
   async readArtifact(key: string): Promise<ReaderGeoArtifact | null> {
     try {
       return JSON.parse(readFileSync(this.path(key), "utf8")) as ReaderGeoArtifact;
@@ -212,7 +247,9 @@ export class LocalFileArtifactStore implements ReaderArtifactStore {
       try { etag = this.etagOf(path); }
       catch (error) { if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error; etag = null; }
       if (etag !== expectedEtag) return { modified: false, etag };
-      writeFileSync(temporary, JSON.stringify(manifest), { flag: "wx" });
+      // A bounded header read answers publication checks without loading meeting IDs.
+      const { publicationFingerprint, sequence, ...contents } = manifest;
+      writeFileSync(temporary, JSON.stringify({ publicationFingerprint, sequence, ...contents }), { flag: "wx" });
       renameSync(temporary, path);
       return { modified: true, etag: this.etagOf(path) };
     } finally {

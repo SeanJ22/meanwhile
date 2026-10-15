@@ -1,8 +1,8 @@
+// @freshness-reads-here
 import { fetchSource, runWithSourceFetch } from "../lib/sources/fetch-source.ts";
 import { pathToFileURL } from "node:url";
-import { readFile } from "node:fs/promises";
+import { routineScopeState } from "../lib/civic-data/state-scope.ts";
 import { clearPromotedReadModelCache } from "../lib/civic-data/read-model.ts";
-import { RUNTIME_AUTHORITY_ENV, assertRuntimeAuthority } from "../lib/civic-data/runtime-authority.ts";
 import type { DoorRepository } from "../lib/doors/registry.ts";
 
 import {
@@ -507,16 +507,16 @@ async function publishVenuePins(store: RoutineDataStore, partitionId: string, pk
 }
 
 export interface MeetingPartitionRunOptions {
+  readonly onReceipt?: (line: string) => void;
   readonly dueAt?: string;
   readonly nextDueAt?: string;
   readonly doors?: DoorRepository;
   readonly store?: RoutineDataStore;
   readonly dependencyQuery?: Query;
-  readonly facts?: { readonly db: FactDb | null; readonly vault: EvidenceStore };
+  readonly facts?: { readonly db: (FactDb & { readonly query: Query }) | null; readonly vault: EvidenceStore };
 }
 
 let workerDoors: Promise<DoorRepository> | undefined;
-let workerStore: RoutineDataStore | undefined;
 
 export async function runMeetingPartition(id: string, options: MeetingPartitionRunOptions = {}): Promise<void> {
   try {
@@ -574,9 +574,10 @@ async function runMeetingIngest(args: readonly string[], options: MeetingPartiti
   await preloadCanonicalMeetingDependencies({ bodyId: partition.bodyId, ocdId: partition.ocdId,
     tenant: partition.wiring?.config.slug, query: options.dependencyQuery });
   REGISTRY = getRegistryRuntimeReadModel().registry;
-  const promotionStore = promote ? options.store ?? (workerStore ??= new PostgresRoutineDataStore()) : null;
+  const promotionStore = promote ? options.store ?? new PostgresRoutineDataStore() : null;
 
-  const state = /\/(?:state|district|territory):([a-z]{2})(?:[\/#]|$)/.exec(body ?? "")?.[1];
+  const scopeState = routineScopeState(body ?? "US");
+  const state = scopeState === "US" ? undefined : scopeState.slice(3).toLowerCase();
   const websiteSize = websiteSizeFromHoldings(state ? [state] : []);
   const memberFetch = meetingFetchPass({ websiteSize });
   return runWithSourceFetch({ sourceId: partition.id, state, websiteSize, dueAt: options.dueAt ?? process.env.WTP_SOURCE_DUE_AT, nextDueAt: options.nextDueAt ?? process.env.WTP_SOURCE_NEXT_DUE_AT }, async () => {
@@ -690,6 +691,7 @@ async function runMeetingIngest(args: readonly string[], options: MeetingPartiti
         workerResponses,
         retained.responses,
         options.facts,
+        options.onReceipt,
       );
     } else {
       const dropped = raw.length - meetings.length;
@@ -1122,13 +1124,21 @@ export async function promoteMeetingPartition(
   retainedResponses: readonly RetainedSourceResponse[] = [],
   heldFacts: NonNullable<RoutineCandidate["excludedFacts"]> = [],
   idSuffix = "",
+  checkedResponses: readonly RetainedSourceResponse[] = retainedResponses,
 ): Promise<{
   readonly candidate: RoutineCandidate;
   readonly outcome: PromotionOutcome;
 }> {
   validateSnapshot(snapshot);
+  const checked = tracedResponses(snapshot.sources, checkedResponses)
+    .filter(response => Number.isFinite(Date.parse(response.retrievedAt)) && response.httpStatus === 200)
+    .sort((left, right) => Date.parse(left.retrievedAt) - Date.parse(right.retrievedAt))[0];
+  const sourceCandidate = candidateForMeetingPartition(partition, snapshot, additionalViolations, removalEvidence, heldFacts);
   const built = retainMeetingCandidateEvidence(
-    candidateForMeetingPartition(partition, snapshot, additionalViolations, removalEvidence, heldFacts),
+    checked ? { ...sourceCandidate, retrieval: { ...sourceCandidate.retrieval, sourceCheck: {
+      requestedUrl: checked.requestedUrl, finalUrl: checked.finalUrl, httpStatus: checked.checkStatus === 304 ? 304 : 200,
+      rawHash: checked.rawHash, checkedAt: checked.retrievedAt,
+    } } } : sourceCandidate,
     snapshot,
     retainedResponses,
   );
@@ -1146,8 +1156,9 @@ export function printMeetingPartitionReceipt(
   outcome: PromotionOutcome,
   failureDetail: string | null = null,
   failureKind: "WALL" | "JOB" | null = null,
+  onReceipt?: (line: string) => void,
 ): void {
-  console.log("RCD_MEETING_PARTITION_RECEIPT=" + JSON.stringify({
+  const line = "RCD_MEETING_PARTITION_RECEIPT=" + JSON.stringify({
     source: partition.id,
     partitionId: partition.id,
     meetingSource: partition.meetingSource,
@@ -1168,7 +1179,9 @@ export function printMeetingPartitionReceipt(
     // from the pointer's identity and newest confirmation, not the dataset.
     ...(outcome.confirmed ? { confirmedAt: outcome.confirmed.at } : {}),
     structuralReleaseContract: ZERO_RELEASE_EVENTS,
-  }));
+  });
+  console.log(line);
+  onReceipt?.(line);
 }
 
 /** The fresh sittings a promoted partition read become facts; a failure here never holds the partition. */
@@ -1193,6 +1206,7 @@ export interface MeetingPartitionPromotionResult {
 }
 
 export async function promoteMeetingPartitions(input: {
+  readonly onReceipt?: (line: string) => void;
   readonly store: RoutineDataStore;
   readonly partitions: readonly MeetingPartitionContract[];
   readonly meetings: readonly Meeting[];
@@ -1201,6 +1215,7 @@ export async function promoteMeetingPartitions(input: {
   readonly generatedAt: string;
   readonly previousByContract?: ReadonlyMap<string, MeetingsSnapshot | null>;
   readonly retainedResponses?: readonly RetainedSourceResponse[];
+  readonly checkedResponses?: readonly RetainedSourceResponse[];
   readonly facts?: MeetingFactsTarget;
   /** Test seam for the Census geocoder; production uses the global fetch. */
   readonly venueFetch?: typeof fetch;
@@ -1224,7 +1239,7 @@ export async function promoteMeetingPartitions(input: {
         parserVersion: "meetings-composite/2",
       });
       const outcome = await processRegisteredMeetingPartitionCandidate(input.store, partition.id, failed, input.generatedAt);
-      printMeetingPartitionReceipt(partition, failed, outcome, failureDetail, failureKind);
+      printMeetingPartitionReceipt(partition, failed, outcome, failureDetail, failureKind, input.onReceipt);
       results.push({ partition, candidate: failed, outcome });
       continue;
     }
@@ -1312,6 +1327,7 @@ export async function promoteMeetingPartitions(input: {
         input.retainedResponses,
         [...recurrence.held, ...heldRows],
         idSuffix,
+        input.checkedResponses,
       );
       return { reconciled, candidate, outcome, census };
     };
@@ -1329,6 +1345,7 @@ export async function promoteMeetingPartitions(input: {
       candidate,
       outcome,
       outcome.promoted ? null : outcome.candidate.failureDetail,
+      null, input.onReceipt,
     );
     if (outcome.promoted || outcome.confirmed) {
       await publishVenuePins(input.store, partition.id, attempted.census?.package ?? null);
@@ -1348,6 +1365,7 @@ async function promoteSelectedMeetingPartitions(
   retainedResponses: readonly RetainedSourceResponse[],
   readResponses: readonly RetainedSourceResponse[],
   facts?: MeetingPartitionRunOptions["facts"],
+  onReceipt?: (line: string) => void,
 ): Promise<void> {
   const report = source.lastReport;
   if (!report) {
@@ -1398,6 +1416,7 @@ async function promoteSelectedMeetingPartitions(
   };
 
   const partitionResults = await promoteMeetingPartitions({
+    onReceipt,
     store: promotionStore,
     partitions,
     meetings,
@@ -1406,7 +1425,9 @@ async function promoteSelectedMeetingPartitions(
     generatedAt: snapshot.generatedAt,
     previousByContract: new Map(partitions.map((partition) => [partition.id, previous])),
     retainedResponses,
-    facts: { db: facts ? facts.db : readerFactDb(), vault: facts?.vault ?? new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR)), responses: readResponses },
+    checkedResponses: readResponses,
+    ...(facts?.db === null ? {} : { facts: { db: facts?.db ?? readerFactDb(),
+      vault: facts?.vault ?? new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR)), responses: readResponses } }),
   });
   const promotedCount = partitionResults.filter((result) => result.outcome.promoted !== null).length;
   const heldCount = partitionResults.length - promotedCount;
@@ -1451,46 +1472,8 @@ async function promoteSelectedMeetingPartitions(
   }
 }
 
-async function main(): Promise<void> {
-  const batchFile = process.argv.slice(2).find(arg => arg.startsWith("--meeting-tasks-file="))?.slice("--meeting-tasks-file=".length);
-  if (!batchFile) return runMeetingIngest(process.argv.slice(2));
-  assertRuntimeAuthority({ capabilities: ["ROUTINE_SUPERVISOR"] });
-  const tasks: unknown = JSON.parse(await readFile(batchFile, "utf8"));
-  if (!Array.isArray(tasks) || tasks.some(task => !task || typeof task.id !== "string" || !meetingPartitionOfId(task.id) ||
-      typeof task.dueAt !== "string" || !Number.isFinite(Date.parse(task.dueAt)) ||
-      typeof task.nextDueAt !== "string" || !Number.isFinite(Date.parse(task.nextDueAt)))) throw new Error("MEETING_BATCH_TASKS_INVALID");
-  const states = new Set(tasks.map(task => /\/(?:state|district|territory):([a-z]{2})(?:[\/#]|$)/.exec(meetingPartitionOfId(task.id)!.bodyId)?.[1]));
-  if (states.size > 1 || states.has(undefined)) throw new Error("MEETING_BATCH_STATE_MISMATCH");
-  await runMeetingPartitionBatch(tasks);
-}
-
-export interface MeetingPartitionTask {
-  readonly id: string;
-  readonly dueAt: string;
-  readonly nextDueAt: string;
-}
-
-export async function runMeetingPartitionBatch(tasks: readonly MeetingPartitionTask[],
-  run: typeof runMeetingPartition = runMeetingPartition, emit: (line: string) => void = console.log): Promise<void> {
-  const capability = process.env[RUNTIME_AUTHORITY_ENV.capability];
-  const contract = process.env[RUNTIME_AUTHORITY_ENV.contract];
-  try {
-    for (const task of tasks) {
-      process.env[RUNTIME_AUTHORITY_ENV.capability] = "ROUTINE_CONTRACT";
-      process.env[RUNTIME_AUTHORITY_ENV.contract] = task.id;
-      emit("RCD_MEETING_PARTITION_STARTED=" + JSON.stringify({ id: task.id }));
-      try { await run(task.id, { dueAt: task.dueAt, nextDueAt: task.nextDueAt }); }
-      catch (error) { emit("RCD_MEETING_PARTITION_ERROR=" + JSON.stringify({ id: task.id, detail: error instanceof Error ? error.message : String(error) })); }
-      emit("RCD_PROGRESS=" + JSON.stringify({ key: `meeting-partition:${task.id}`, records: 1 }));
-    }
-  } finally {
-    if (capability === undefined) delete process.env[RUNTIME_AUTHORITY_ENV.capability]; else process.env[RUNTIME_AUTHORITY_ENV.capability] = capability;
-    if (contract === undefined) delete process.env[RUNTIME_AUTHORITY_ENV.contract]; else process.env[RUNTIME_AUTHORITY_ENV.contract] = contract;
-  }
-}
-
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  main().catch((error) => {
+  runMeetingIngest(process.argv.slice(2)).catch((error) => {
     console.error(error);
     process.exitCode = 1;
   });

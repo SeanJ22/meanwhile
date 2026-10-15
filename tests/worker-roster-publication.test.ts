@@ -17,7 +17,7 @@ import { dispatchWorkerTask, evidenceProjection, FLEET_POLICY_VERSION } from "..
 import { nextAutonomousOperation } from "../lib/control-plane/workers/coordinator.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { publishOwedRosterFacts } from "../lib/civic-data/worker-roster-publication.ts";
-import { readRegistryRuntimePrior, registryRuntimeCandidate, type RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
+import { readRegistryRuntimePrior, registryRuntimeCandidate, REGISTRY_RUNTIME_SCOPE, type RegistryRuntimePrior, type RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 import { CENSUS_PLACEHOLDER_LABELS } from "../lib/registry/census-placeholders.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import type { CandidateVersionRecord, PromotedProjection } from "../lib/civic-data/types.ts";
@@ -27,6 +27,16 @@ import { owedFactItems } from "../lib/civic-data/worker-publication-tasks.ts";
 import { collectWorkerRosterReadback, type PublishedWorkerRead } from "../lib/control-plane/worker-reader-readback.ts";
 
 const ROOT = join(import.meta.dirname, "..");
+
+async function seedRosterIdentity(facts: Awaited<ReturnType<typeof factDb>>, prior: RegistryRuntimePrior, bodyId: string) {
+  await facts.pg.exec(`CREATE TABLE civic_data_payload_parts (hash text PRIMARY KEY,payload jsonb NOT NULL);
+    CREATE TABLE civic_data_promotions (record_class text,scope text,current_version_id text,payload jsonb,PRIMARY KEY(record_class,scope));`);
+  await facts.pg.exec(readFileSync(new URL("../lib/db/migrations/R4_meeting_dependencies.sql", import.meta.url), "utf8"));
+  const body = prior.payload.registry.bodies.find(row => row.id === bodyId)!;
+  await facts.pg.query("INSERT INTO civic_data_promotions VALUES ('REGISTRY_RUNTIME_BINDING',$1,$2,$3::jsonb)",
+    [REGISTRY_RUNTIME_SCOPE, prior.versionId, JSON.stringify({ registry: { generatedAt: prior.payload.registry.generatedAt,
+      bodies: [body], divisions: prior.payload.registry.divisions.filter(row => row.ocdId === body.ocdId) } })]);
+}
 
 async function proveRosterPublication(partial = false) {
   const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
@@ -83,8 +93,9 @@ async function proveRosterPublication(partial = false) {
   assert.deepEqual(results.map(row => row.result.verdict), ["ACQUIRED", "EXTRACTED", "PASS"]);
   const facts = await factDb();
   await ensureFactEntities(facts, ROOT, ["az"]);
+  await seedRosterIdentity(facts, prior, body.id);
   installFactReader(facts.query);
-  const input = { repos: h.repos, store, facts, workItemIds: [h.item.id], now: h.now(), readCapture: async (id: string) => {
+  const input = { repos: h.repos, facts, workItemIds: [h.item.id], now: h.now(), readCapture: async (id: string) => {
     const evidence = evidenceProjection(await runtime.readEvidence(id));
     return { evidence, observedAt: evidence.retrievedAt, httpStatus: 200, transport: "REACHABLE", partial: false };
   } };
@@ -155,7 +166,7 @@ async function proveRosterPublication(partial = false) {
 test("ordinary independent workers publish a roster through the existing reader door, preserve prior facts, and reuse the receipt", () => proveRosterPublication());
 test("a stranded mixed roster publishes verified members while unresolved identities enter automatic repair", () => proveRosterPublication(true));
 
-test("owed roster work with nothing readable yet is held with its reason", async () => {
+test("owed roster work reads one current body and place even with national registry noise", async context => {
   const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
   const store = new MemoryRoutineDataStore();
   Object.assign(store, { candidates: new Map([[record.candidate.id, record]]), promotions: new Map([[projection.key, projection]]) });
@@ -165,10 +176,34 @@ test("owed roster work with nothing readable yet is held with its reason", async
   const plan = current.value.autonomousPlan!;
   await h.repos.workItems.compareAndSet(current.id, current.revision, { ...current.value,
     autonomousPlan: { ...plan, publication: { contractId: "registry-runtime-bindings", bodyId: prior.payload.registry.bodies[0]!.id } } }, h.now());
-  const report = await publishOwedRosterFacts({ repos: h.repos, store, facts: await factDb(), workItemIds: [h.item.id], now: h.now(),
-    readCapture: async () => { throw new Error("no extraction"); }, readHeld: async () => null });
+  const facts = await factDb();
+  context.after(() => facts.pg.close());
+  await seedRosterIdentity(facts, prior, prior.payload.registry.bodies[0]!.id);
+  let rowsRead = 0, bytesRead = 0;
+  const input = { repos: h.repos, facts: { ...facts, query: async (sql: string, params?: readonly unknown[]) => {
+    assert.doesNotMatch(sql, /jsonb_array_elements|civic_data_payload_parts|SELECT\s+\*/i);
+    const rows = await facts.query(sql, params);
+    rowsRead += rows.length;
+    bytesRead += Buffer.byteLength(JSON.stringify(rows));
+    return rows;
+  } }, workItemIds: [h.item.id], now: h.now(),
+  readCapture: async () => { throw new Error("no extraction"); }, readHeld: async () => null };
+  const report = await publishOwedRosterFacts(input);
   assert.deepEqual(report.map(row => [row.workItemId, row.outcome.status, row.outcome.code, row.outcome.recovery]),
     [[h.item.id, "HELD", "ROSTER_NO_READABLE_SAVED_PAGE", "WORKER"]], "every offered item is reported, never silently skipped");
   assert.equal((await h.repos.workItems.mustRead(h.item.id)).value.publicationOutcome?.code, "ROSTER_NO_READABLE_SAVED_PAGE", "Admin sees why");
   assert.equal(owedFactItems([(await h.repos.workItems.mustRead(h.item.id)).value], [], h.now()).rosters.length, 0, "re-read hourly, not every pass");
+  const before = { rowsRead, bytesRead };
+  assert.equal(rowsRead, 1);
+  assert.ok(bytesRead < 4000, String(bytesRead));
+  await facts.pg.query(`INSERT INTO civic_meeting_dependencies
+    SELECT 'body','noise:' || id,'US-TX',$1,$2,jsonb_build_object('id','noise:' || id,'name','Unrelated body','ocdId','unrelated-place:' || id)
+    FROM generate_series(1,276411) id`, [REGISTRY_RUNTIME_SCOPE, prior.versionId]);
+  rowsRead = 0; bytesRead = 0;
+  assert.deepEqual(await publishOwedRosterFacts(input), report);
+  assert.deepEqual({ rowsRead, bytesRead }, before);
+  context.diagnostic(JSON.stringify({ unrelatedBodies: 276411, rowsRead, bytesRead }));
+  await facts.pg.query("UPDATE civic_data_promotions SET current_version_id='newer-registry' WHERE record_class='REGISTRY_RUNTIME_BINDING'");
+  const stale = await publishOwedRosterFacts(input);
+  assert.equal(stale[0]!.outcome.code, "ROSTER_BODY_UNREGISTERED", "stale projected identity cannot authorize publication");
 });

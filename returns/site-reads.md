@@ -1,5 +1,10 @@
 # Returned: site-reads
 
+Cleanliness findings on NE-01 (8782164dd, folded as 1041944e6). Fix in your next READY:
+Export nothing imports (unexport or delete if unused in the file too):
+   lib/api/reader-route.ts:21 selectionForReader
+
+
 lane: site-reads
 owner: site-reads
 writer: the site-reads lane

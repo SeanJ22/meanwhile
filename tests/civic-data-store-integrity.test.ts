@@ -922,6 +922,7 @@ test("Postgres promotion ships no dataset back and returns the pointer with the 
     if (text.startsWith(`insert into "civic_data_promotions"`)) return answer(pointerRow);
     if (text.startsWith(`insert into "civic_data_candidate_events"`)) return none;
     if (text.startsWith(`update "civic_data_candidates"`)) return { columns: [["id", "text"]], rows: [[value.id]] };
+    if (/civic_data_place_(rows|changes)/.test(text)) return none;
     throw new Error(`unexpected statement: ${text.slice(0, 80)}`);
   }, async (store, sent) => {
     // Judge the statements sent before the answer is mapped, so a whole-row
@@ -938,6 +939,8 @@ test("Postgres promotion ships no dataset back and returns the pointer with the 
     assert.doesNotMatch(pointerReturning ?? "", /"payload"/, "the promoted payload is not shipped back");
     const candidateWrite = sent.find(({ query }) => query.startsWith(`update "civic_data_candidates"`));
     assert.equal(returningList(candidateWrite?.query ?? ""), `"id"`, "the candidate write returns its id, never the envelope");
+    assert.ok(sent.slice(sent.indexOf(pointerWrite!)).some(({ query }) => query.startsWith("INSERT INTO civic_data_place_rows")),
+      "the per-division rows are written with the pointer that names them");
     if ("error" in settled) throw settled.error;
     return settled.result;
   });

@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import type { BodySourceWiring } from "../../registry/source-wiring.ts";
-import { MEETING_HELD_LOOKBACK_DAYS } from "../../meetings/constants.ts";
+import { MEETING_HELD_HORIZON_DAYS, MEETING_HELD_LOOKBACK_DAYS } from "../../meetings/constants.ts";
 import { unplacedVenueGap } from "../../meetings/venue-cache.ts";
 import { toZonedIso } from "../../time/zoned.ts";
 import { decodeEntities, politeGetText } from "../http.ts";
@@ -18,7 +18,9 @@ export interface MunicodeMeeting {
   sourceUrl: string;
   excerpt: string;
 }
-export interface MunicodeRaw { wiring: BodySourceWiring; pages: { url: string; text: string }[]; collectedAt: string }
+export interface MunicodeRaw { wiring: BodySourceWiring; meetings: MunicodeMeeting[]; outOfWindow: number; notConfigured: number; collectedAt: string }
+
+export const MUNICODE_MAX_PAGES = 10;
 
 const plain = (html: string) => decodeEntities(html.replace(/<[^>]*>/g, " ")).replace(/\s+/g, " ").trim();
 const attribute = (html: string, name: string) => decodeEntities(new RegExp(`\\b${name}\\s*=\\s*["']([^"']*)["']`, "i").exec(html)?.[1] ?? "");
@@ -26,6 +28,16 @@ const attribute = (html: string, name: string) => decodeEntities(new RegExp(`\\b
 export function municodePortalUrl(value: string): string {
   const url = new URL(value);
   if (url.protocol !== "https:" || url.username || url.password || !(/^[a-z0-9-]+\.municodemeetings\.com$/i.test(url.hostname) || url.hostname === "meetings.municode.com" && /^\/PublishPage(?:\/index)?\/?$/i.test(url.pathname) && url.searchParams.has("cid") && url.searchParams.has("ppid"))) throw new Error("MUNICODE_PORTAL_INVALID");
+  return url.toString();
+}
+
+export function municodePortalKey(value: string): string {
+  const url = new URL(municodePortalUrl(value));
+  url.searchParams.delete("p");
+  url.searchParams.delete("page");
+  url.searchParams.sort();
+  if (url.hostname === "meetings.municode.com") url.pathname = "/PublishPage/index";
+  url.hash = "";
   return url.toString();
 }
 
@@ -62,9 +74,7 @@ export function parseMunicodeMeetings(html: string, portalUrl: string): Municode
       return /^https?:$/.test(url.protocol) ? [{ label, href: url.toString(), kind }] : [];
     }));
     const identity = links.map(l => new URL(l.href).searchParams.get("me") ?? /MEET-(?:Agenda|Packet|Minutes)-([a-f0-9]{32})/i.exec(decodeURIComponent(l.href))?.[1]).find(Boolean);
-    const identityUrl = new URL(portalUrl);
-    identityUrl.searchParams.delete("p");
-    identityUrl.searchParams.delete("page");
+    const identityUrl = municodePortalKey(portalUrl);
     const detail = links.find(l => /view|details|meeting/.test(l.kind) && /View Details/i.test(l.label));
     const namedTitle = title.replace(/^(?:(?:regular|special|called|joint|combined)\s+)*/i, "");
     const ownScope = scopeName && namedTitle.toLowerCase().startsWith(scopeName.toLowerCase()) && !bodyNoun.test(namedTitle.slice(scopeName.length));
@@ -73,6 +83,7 @@ export function parseMunicodeMeetings(html: string, portalUrl: string): Municode
       links, sourceUrl: detail?.href ?? portalUrl, excerpt: plain(match[1]),
     });
   }
+  if (rows.length === 0 && !/class=["'][^"']*\bview-empty\b/i.test(html)) throw new Error("MUNICODE_MEETING_ROWS_MISSING");
   return rows;
 }
 
@@ -105,11 +116,14 @@ export function makeMunicodeSource(rows: BodySourceWiring[], fetchImpl?: typeof 
   const normalizeWithDrops = (raw: MunicodeRaw[], now = new Date()) => {
     const meetings: Meeting[] = [];
     const drops: NormalizeDropCounts = { placeless: 0, unknownVenue: 0, unplaceableInTime: 0, notConfigured: 0 };
-    let logicalInput = 0, countedButProduced = 0, duplicates = 0;
+    let logicalInput = 0, countedButProduced = 0, duplicates = 0, outOfWindow = 0;
     const seen = new Set<string>();
-    for (const { wiring, pages, collectedAt } of raw) {
+    for (const { wiring, meetings: rows, outOfWindow: outside, notConfigured, collectedAt } of raw) {
+      logicalInput += outside + notConfigured;
+      outOfWindow += outside;
+      drops.notConfigured += notConfigured;
       if (!wiring.config.nameTerms?.trim()) throw new Error(`MUNICODE_BODY_FILTER_MISSING:${wiring.bodyId}`);
-      for (const page of pages) for (const row of parseMunicodeMeetings(page.text, page.url)) {
+      for (const row of rows) {
         logicalInput++;
         if (!selected(`${row.title} ${row.scopeName}`, wiring.config.nameTerms)) { drops.notConfigured++; continue; }
         const id = `municode:${wiring.config.slug}:${row.id}`;
@@ -129,40 +143,44 @@ export function makeMunicodeSource(rows: BodySourceWiring[], fetchImpl?: typeof 
         });
       }
     }
-    return accountedNormalize("municode", raw, { meetings, drops }, { logicalInput: logicalInput, countedButProduced, duplicates });
+    return accountedNormalize("municode", raw.filter(row => row.meetings.length + row.outOfWindow + row.notConfigured > 0), { meetings, drops }, { logicalInput: logicalInput, countedButProduced, duplicates, outOfWindow });
   };
   return {
     name: "municode",
     async fetch(query) {
-      const tenants = new Map<string, MunicodeRaw["pages"]>();
-      const result: MunicodeRaw[] = [];
+      let portal: string | null = null;
+      for (const wiring of rows) {
+        const key = municodePortalKey(wiring.config.portalUrl);
+        if (portal !== null && key !== municodePortalKey(portal)) throw new Error("MUNICODE_PORTAL_SCOPE_MIXED");
+        portal ??= municodePortalUrl(wiring.config.portalUrl);
+      }
+      if (portal === null) return [];
       const now = Date.now();
       const firstDay = (query?.startsAfter ?? new Date(now - MEETING_HELD_LOOKBACK_DAYS * 86_400_000).toISOString()).slice(0, 10);
-      for (const wiring of rows) {
-        const portal = municodePortalUrl(wiring.config.portalUrl);
-        let pages = tenants.get(portal);
-        if (!pages) {
-          pages = [];
-          let url: string | null = portal;
-          const seen = new Set<string>();
-          while (url !== null) {
-            if (seen.has(url)) throw new Error("MUNICODE_PAGING_LOOP");
-            seen.add(url);
-            // The listing carries document links. Read it before following
-            // archive pages; no document download is needed to check changes.
-            const response = await politeGetText(url, { fetchImpl, signal: query?.signal, accept: "text/html" });
-            const meetings = parseMunicodeMeetings(response.text, url);
-            pages.push({ url, text: response.text });
-            const descending = meetings.every((m, i) => i === 0 || m.date <= meetings[i - 1].date);
-            if (descending && meetings.length && meetings.at(-1)!.date < firstDay) break;
-            const next = municodeNextPage(response.text, url);
-            if (next === null) break;
-            url = next;
-          }
-          tenants.set(portal, pages);
-        }
-        result.push({ wiring, pages, collectedAt: new Date().toISOString() });
+      const lastDay = (query?.startsBefore ?? new Date(now + MEETING_HELD_HORIZON_DAYS * 86_400_000).toISOString()).slice(0, 10);
+      const meetings: MunicodeMeeting[] = [];
+      let outOfWindow = 0;
+      let url: string | null = portal;
+      const seen = new Set<string>();
+      while (url !== null) {
+        if (seen.has(url)) throw new Error("MUNICODE_PAGING_LOOP");
+        if (seen.size >= MUNICODE_MAX_PAGES) throw new Error(`MUNICODE_PAGE_LIMIT:${MUNICODE_MAX_PAGES}`);
+        seen.add(url);
+        const response = await politeGetText(url, { fetchImpl, signal: query?.signal, accept: "text/html" });
+        const parsed = parseMunicodeMeetings(response.text, url);
+        const held = parsed.filter(row => row.date >= firstDay && row.date <= lastDay);
+        outOfWindow += parsed.length - held.length;
+        meetings.push(...held);
+        if (held.length === 0) break;
+        const next = municodeNextPage(response.text, url);
+        if (next !== null && municodePortalKey(next) !== municodePortalKey(portal)) throw new Error("MUNICODE_PAGING_PORTAL_CHANGED");
+        url = next;
       }
+      const collectedAt = new Date().toISOString();
+      const result = rows.map(wiring => {
+        const own = meetings.filter(row => selected(`${row.title} ${row.scopeName}`, wiring.config.nameTerms ?? ""));
+        return { wiring, meetings: own, outOfWindow, notConfigured: meetings.length - own.length, collectedAt };
+      });
       return result;
     },
     normalize: (raw, now) => normalizeWithDrops(raw, now).meetings, normalizeWithDrops,

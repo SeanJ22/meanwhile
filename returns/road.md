@@ -3,18 +3,27 @@
 lane: road
 owner: road
 writer: the road lane
-check: test
-ready: R0 5fe88f8a6373934e4bdf847c6f15de26c357d9b8
-river: 0e9d37e0829974dbf3c91800fe7e3cb12360f00e
-at: 2026-10-14T20:44:33Z
+check: cleanliness
+ready: R0 374e58d57792f9181f0c5397581525311512cd7d
+river: d9107da58a23f9d38b60d300552af7e9d2509561
+at: 2026-10-15T04:44:19Z
 state: returned
-fix_subject: fix:b35710d1
-fix: River · stream/road — test failed for road: road READY 5fe88f8a6 (R0) fails pnpm gates on river 0e9d37e08299 (BL-10 is now on river). tests/ballot-publication.test.ts, 'the runner's ballot child assembles outside the checkout, publishes under its exact manual authority, and reports s
+fix_subject: fix:29a6e4be
+fix: River · stream/road — cleanliness failed for road: Cleanliness findings on R0 (374e58d57, folded as 3b2ec1266). Fix in your next READY:
 
 ## Failure
 
 ```
-road READY 5fe88f8a6 (R0) fails pnpm gates on river 0e9d37e08299 (BL-10 is now on river). tests/ballot-publication.test.ts, 'the runner's ballot child assembles outside the checkout, publishes under its exact manual authority, and reports skipped states', evals the slice of scripts/routine-civic-data-runner.mts from 'function sourceChildCommand(' to 'function recordSourceSettlementFailures' with only admittedRuntimeChildEnvironment, automaticRefreshContract and process in scope. This lane's sourceChildCommand now uses routineSerialLane, which that slice does not provide: 'ReferenceError: routineSerialLane is not defined' at sourceChildCommand. Merge river into stream/road and make the two agree: either keep sourceChildCommand self-contained or pass routineSerialLane into the test's Function scope (the test is BL-10's; change it only as far as the lane needs). Run tests/ballot-publication.test.ts, then mark READY again. Every other gate passed (lint, tsc, db:gate, build, bundle, standalone).
+Cleanliness findings on R0 (374e58d57, folded as 3b2ec1266). Fix in your next READY:
+Exports nothing outside their own file imports (tests count only; unexport):
+   lib/civic-data/raw-capture-vault.ts:23 readRawCapture
+   lib/control-plane/workers/worker-slots.ts:102 measuredReservationBytes
+   lib/sources/congress/publication.ts:39 holdFederalCapture
+   lib/sources/plural/votes.ts:51 PluralVoteAcquisition
+   scripts/convert-embedded-captures.mts:34 convertEmbeddedCaptures
+Doc comments over two lines (cut to two lines max):
+   lib/ops/bounded-beat.ts (4 lines)
+   lib/ops/fatal-line.ts (4 lines)
 ```
 
 ## Repair

@@ -222,13 +222,18 @@ function completeBallotRemovalCheck(candidate: RoutineCandidate, prior: Candidat
   if (!(candidate.changeSet?.removed ?? []).every(delta => {
     const held = old.find(row => delta.key === `candidacy:${row.candidacy.id}`);
     if (!held) return false;
+    const oldContest = held.ballot.contests.find(contest => contest.id === held.candidacy.contestId);
+    const hold = next.ballots[`${held.ballot.election.state}:${held.ballot.election.id}`]?.heldContests?.find(row => row.id === oldContest?.id);
+    if (oldContest?.candidateListComplete !== true && hold && hold.ocdId === oldContest?.ocdId &&
+      hold.provenance.sourceUrl === oldContest.provenance.sourceUrl &&
+      Date.parse(hold.provenance.collectedAt) >= Date.parse(held.candidacy.provenance.collectedAt)) return true;
     const matches = complete.filter(row => row.contest.id === held.candidacy.contestId &&
       row.ballot.election.id === held.ballot.election.id && row.ballot.election.date === held.ballot.election.date &&
       row.contest.ocdId === held.ballot.contests.find(contest => contest.id === held.candidacy.contestId)?.ocdId);
     return matches.length === 1 && Date.parse(matches[0].contest.provenance.collectedAt) >= Date.parse(held.candidacy.provenance.collectedAt);
   })) return null;
   return result("COMPLETENESS_HORIZON_VALIDITY", "PASS", "COMPLETE_OFFICIAL_CONTEST_REMOVAL",
-    "Each removed candidacy is absent from its exact contest's newer complete election-authority list.");
+    "Each removed candidacy belongs to a newer complete official list or an explicitly held incomplete contest; no hold claims absence.");
 }
 
 function incompleteHorizonRemovalCheck(candidate: RoutineCandidate, prior: CandidateVersionRecord | null, validatedAt: string, sourceChecks:readonly DependentCheck[]): ValidationCheck | null {

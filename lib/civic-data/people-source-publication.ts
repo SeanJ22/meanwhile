@@ -120,7 +120,7 @@ export async function publishPeopleSource(input: PublishPeopleSourceInput) {
   // A page read this run replaces its earlier capture; pages not read again keep theirs.
   const read = await holdPeopleCaptures(input.vault,input.sourceId,input.acquisitions);
   const reread = new Set(read.map(row=>row.finalUrl));
-  const carried = (await priorPeopleCaptures(input.vault,input.sourceId,old?.candidate.normalizedPayload)).filter(row=>!reread.has(row.finalUrl));
+  const carried = priorPeopleCaptures(old?.candidate.normalizedPayload).filter(row=>!reread.has(row.finalUrl));
   const captures = [...new Map(read.map(row=>[row.finalUrl,row])).values(), ...carried];
   const violations = await peopleSourceViolations({sourceId:input.sourceId,roster,captures,read:input.acquisitions,vault:input.vault});
   const candidate = peopleSourceCandidate({...input,roster,captures,violations,excludedFacts:[...(input.excludedFacts ?? []),...comparisonFacts]});

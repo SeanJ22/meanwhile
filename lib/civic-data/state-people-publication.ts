@@ -30,10 +30,8 @@ export async function holdPeopleCaptures(vault:EvidenceStore,sourceId:string,pag
 }
 export const capturedText = (vault:EvidenceStore,row:StatePeopleCapture):Promise<string> => readRawCaptureText(vault,row.capture);
 /** A held candidate's captures, newest per page. */
-export async function priorPeopleCaptures(vault:EvidenceStore,sourceId:string,payload:unknown):Promise<StatePeopleCapture[]> {
-  const held=payload as {captures?:StatePeopleCapture[];acquisitions?:StatePeopleAcquisition[]}|undefined;
-  // Converts candidates written before captures held vault references; delete once every people last-good version holds them.
-  const captures=held?.captures ?? await holdPeopleCaptures(vault,sourceId,held?.acquisitions ?? []);
+export function priorPeopleCaptures(payload:unknown):StatePeopleCapture[] {
+  const captures=(payload as {captures?:StatePeopleCapture[]}|undefined)?.captures ?? [];
   const newest=new Map<string,StatePeopleCapture>();
   for (const row of captures) {
     const key=`${row.finalUrl}|${row.extractedFrom?.member ?? ""}`, seen=newest.get(key);
@@ -116,7 +114,7 @@ export async function publishStatePeople(input: {store:RoutineDataStore;vault:Ev
   };
   const read=await holdPeopleCaptures(input.vault,input.sourceId ?? "plural-openstates",input.acquisitions);
   const captured=new Set(read.map(captureUrl));
-  const priorCaptures=await priorPeopleCaptures(input.vault,input.sourceId ?? "plural-openstates",priorCandidate?.candidate.normalizedPayload);
+  const priorCaptures=priorPeopleCaptures(priorCandidate?.candidate.normalizedPayload);
   const captures=[...read,...priorCaptures.filter(row=>{
     const url=captureUrl(row);
     if (!referenced.has(url) || captured.has(url)) return false;

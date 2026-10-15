@@ -14,6 +14,7 @@ import { normalizedHash } from "../lib/civic-data/candidate-builders.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { readLdaRosterVersion } from "../lib/sources/congress/lda-roster.ts";
 import type { FederalDirectoryCapture } from "../lib/officials/federal-directory-data-plane.ts";
+import { convertEmbeddedCaptures } from "../scripts/convert-embedded-captures.mts";
 
 const vault = new MemoryEvidenceStore();
 
@@ -43,18 +44,21 @@ test("the federal directory candidate holds roster references, and the LDA roste
   assert.ok(roster.members.find(row => row.bioguideId === "S000033")!.names.includes("Bernie Sanders"));
 });
 
-test("a directory version promoted before the vault still yields its roster, without published aliases", async () => {
-  const store = new MemoryRoutineDataStore(), own = new MemoryEvidenceStore(), roster = await seedSrcCgRoster(store, own);
-  const promoted = (await store.readCandidate(roster.versionId))!.candidate;
+test("a directory version promoted with its files embedded converts to vault references in one pass, and its roster reads its aliases", async () => {
+  const promoted = (await (async () => { const seeded = new MemoryRoutineDataStore(); return (await seeded.readCandidate((await seedSrcCgRoster(seeded, new MemoryEvidenceStore())).versionId))!.candidate; })());
   const body = readFileSync(new URL("./fixtures/src-cg/federal-roster.yaml", import.meta.url), "utf8");
-  const legacyPayload = { ...(promoted.normalizedPayload as object), acquisitions: (promoted.normalizedPayload as { acquisitions: FederalDirectoryCapture[] }).acquisitions
+  const embeddedPayload = { ...(promoted.normalizedPayload as object), acquisitions: (promoted.normalizedPayload as { acquisitions: FederalDirectoryCapture[] }).acquisitions
     .map(({ raw: _raw, ...row }) => ({ ...row, body })) };
-  const legacy = { ...promoted, id: `${promoted.id}-legacy`, normalizedPayload: legacyPayload, normalization: { ...promoted.normalization, normalizedPayloadHash: normalizedHash(legacyPayload) } };
-  const legacyStore = new MemoryRoutineDataStore();
-  assert.ok((await processRegisteredManualCandidate(legacyStore, "congress-bulk-roster", legacy, SRC_CG_NOW)).promoted);
-  const read = await readLdaRosterVersion(legacyStore, own, legacy.id);
-  assert.equal(read?.members.length, roster.members.length);
-  assert.ok(!read!.members.find(row => row.bioguideId === "S000033")!.names.includes("Bernie Sanders"));
+  const embedded = { ...promoted, id: `${promoted.id}-embedded`, normalizedPayload: embeddedPayload, normalization: { ...promoted.normalization, normalizedPayloadHash: normalizedHash(embeddedPayload) } };
+  const store = new MemoryRoutineDataStore(), own = new MemoryEvidenceStore();
+  assert.ok((await processRegisteredManualCandidate(store, "congress-bulk-roster", embedded, SRC_CG_NOW)).promoted);
+  const later = () => "2026-10-14T00:00:00.000Z";
+  const [converted] = await convertEmbeddedCaptures({ store, vault: own, now: later, states: [] });
+  assert.equal(converted?.from, embedded.id); assert.ok(converted?.to, converted?.refusal);
+  const held = (await store.readCandidate(converted.to))!.candidate;
+  assert.ok(!JSON.stringify(held).includes(body.slice(0, 400)));
+  assert.ok((await readLdaRosterVersion(store, own, converted.to))!.members.find(row => row.bioguideId === "S000033")!.names.includes("Bernie Sanders"));
+  assert.deepEqual(await convertEmbeddedCaptures({ store, vault: own, now: later, states: [] }), [], "a converted store has nothing left to convert");
 });
 
 test("chamber and state conflicts, ambiguous names, missing honorees and inferred nicknames never publish a member link", async () => {

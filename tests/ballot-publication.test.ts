@@ -8,6 +8,7 @@ import { transpileModule, ScriptTarget, ModuleKind } from "typescript";
 import { AUTOMATIC_REFRESH_TASKS, automaticRefreshContract } from "../lib/civic-data/automatic-refresh.ts";
 import { ballotInputHash, ballotPublicationDue, parseBallotPublicationResult, readLatestBallotPublication } from "../lib/civic-data/ballot-publication.ts";
 import { admittedRuntimeChildEnvironment } from "../lib/civic-data/runtime-authority.ts";
+import { routineSerialLane } from "../lib/civic-data/runner.ts";
 import { parseRoutineRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import { workerPublicationTasksFor } from "../lib/civic-data/worker-publication-tasks.ts";
 import { routineDueRequestFor } from "../lib/civic-data/routine-due-request.ts";
@@ -29,8 +30,8 @@ test("the runner's ballot child assembles outside the checkout, publishes under 
       { compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.None } }).outputText;
     const parentEnv = { ...process.env, NODE_ENV: "development", WTP_RUNTIME_MODE: "staging", WTP_DB_ROLE: "local",
       DATABASE_URL: "postgresql://local:local@staging.invalid/reader", WTP_CONTROL_PLANE_DATABASE_URL: "postgresql://local:local@staging.invalid/control" };
-    const commandFor = new Function("admittedRuntimeChildEnvironment", "automaticRefreshContract", "process",
-      `${snippet} return sourceChildCommand;`)(admittedRuntimeChildEnvironment, automaticRefreshContract, { ...process, env: parentEnv });
+    const commandFor = new Function("admittedRuntimeChildEnvironment", "automaticRefreshContract", "routineSerialLane", "process",
+      `${snippet} return sourceChildCommand;`)(admittedRuntimeChildEnvironment, automaticRefreshContract, routineSerialLane, { ...process, env: parentEnv });
     assert.deepEqual(ballotTask.command, ["scripts/assemble-ballot-package.mts"]);
     const command = commandFor({ id: ballotTask.id, kind: "SOURCE", task: ballotTask, command: ballotTask.command });
     const run = spawnSync(command.executable, ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs",

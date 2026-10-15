@@ -90,13 +90,12 @@ export async function publishFederalPartition(input: { source: FederalSourceId; 
     ...(input.cursor !== undefined ? { cursor: input.cursor } : held?.cursor ? { cursor: held.cursor } : {}),
     ...(input.counts ? { counts: input.counts } : held?.counts ? { counts: held.counts } : {}) };
   const priorCandidate = prior.kind === "PROMOTED" ? await input.store.readCandidate(prior.metadata.versionId!) : null;
-  const previousCaptures = (priorCandidate?.candidate.normalizedPayload as { captures?: (HeldFederalCapture | FederalCapture)[] } | null)?.captures ?? [];
+  const previousCaptures = (priorCandidate?.candidate.normalizedPayload as { captures?: HeldFederalCapture[] } | null)?.captures ?? [];
   const fresh = await Promise.all(input.captures.map(capture => holdFederalCapture(input.vault, capture)));
   const evidence = new Map(fresh.map(row => [row.url, row.raw.rawHash]));
   // Replaced pages can retain records absent from the latest partial response. Keep their original bytes.
-  // Converts captures written before refs; delete once every FEDERAL_CIVIC_RECORD last-good version holds refs.
-  const reads = await runBoundedWorkPool(previousCaptures.filter(row => evidence.get(row.url) !== ("raw" in row ? row.raw.rawHash : sha256(row.body))), RETAINED_READ_CONCURRENCY,
-    async (row): Promise<VaultedCapture> => "raw" in row ? { ...row, body: await readRawCaptureText(input.vault, row.raw) } : holdFederalCapture(input.vault, row));
+  const reads = await runBoundedWorkPool(previousCaptures.filter(row => evidence.get(row.url) !== row.raw.rawHash), RETAINED_READ_CONCURRENCY,
+    async (row): Promise<VaultedCapture> => ({ ...row, body: await readRawCaptureText(input.vault, row.raw) }));
   const unread = reads.find(read => !read.ok);
   if (unread) throw new Error(unread.error!);
   const captures = [...fresh, ...reads.flatMap(read => read.ok ? [read.value] : [])];

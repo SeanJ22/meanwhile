@@ -19,8 +19,7 @@ export async function readLdaRosterVersion(store: RoutineDataStore, vault: Evide
     const projection = saved.candidate.readModel as FederalDirectoryReadModel;
     if (federalDirectoryProjectionIssues(projection).length) return undefined;
     const acquisitions = (saved.candidate.normalizedPayload as { acquisitions?: FederalDirectoryCapture[] })?.acquisitions ?? [];
-    // Reads a directory version without vault references as having no aliases; delete once every promoted version holds them.
-    const core = acquisitions.find(row => row.raw && row.finalUrl.endsWith(`/${projection.sourceSha}/legislators-current.yaml`));
+    const core = acquisitions.find(row => row.finalUrl.endsWith(`/${projection.sourceSha}/legislators-current.yaml`));
     const names = new Map<string, string[]>();
     if (core) {
       const raw = parse(await readRawCaptureText(vault, core.raw), { maxAliasCount: 0, uniqueKeys: true }) as { id?: { bioguide?: string }; name?: { first?: string; middle?: string; last?: string; nickname?: string; official_full?: string } }[];

@@ -14,7 +14,6 @@ import { federalApiTimestamp, refreshFederalSource } from "../lib/sources/congre
 import { FEDERAL_SOURCE_IDS, FEDERAL_SOURCES, type FederalSourceId } from "../lib/sources/congress/targets.ts";
 import type { FederalCapture, HeldFederalCapture } from "../lib/sources/congress/types.ts";
 import { readRawCaptureText } from "../lib/civic-data/raw-capture-vault.ts";
-import { normalizedHash } from "../lib/civic-data/candidate-builders.ts";
 import { federalCalendarDate, federalDeadlineDate } from "../lib/sources/congress/presentation.ts";
 
 const vault = new MemoryEvidenceStore();
@@ -192,25 +191,6 @@ test("a federal candidate holds vault references, not source bytes, and a later 
   assert.equal((await own.list("project/freshness/source/congress-api/raw/")).length, 2, "identical bytes are stored once");
   await assert.rejects(publishFederalPartition({ vault: new MemoryEvidenceStore(), source: "congress-api", partition: "bill:117:hr:21", captures: [detail],
     records: normalizeFederalCapture(detail), store, now: nextAt }), /RAW_CAPTURE_MISSING_OR_CORRUPT/);
-});
-
-test("a partition whose held version still embeds source bodies re-proves them from a partial page and publishes references only", async () => {
-  const store = new MemoryRoutineDataStore(), own = new MemoryEvidenceStore();
-  const captures = [bill(), capture("congress-api", "committees", "congress-committees.json", { billId: "117:hr:21" })];
-  const records = captures.flatMap(normalizeFederalCapture).sort((a, b) => a.id.localeCompare(b.id));
-  const modern = federalCandidate({ source: "congress-api", partition: "bill:117:hr:21", now: NOW, captures: await Promise.all(captures.map(c => holdFederalCapture(new MemoryEvidenceStore(), c))),
-    projection: { formatVersion: 1, source: "congress-api", records } });
-  const legacyPayload = { captures };
-  const legacy = { ...modern, normalizedPayload: legacyPayload, normalization: { ...modern.normalization, normalizedPayloadHash: normalizedHash(legacyPayload) } };
-  assert.ok((await processRegisteredFanOutCandidate(store, "congress-api", legacy, NOW)).promoted);
-  const nextAt = "2026-10-12T19:00:00.000Z", detail = { ...captures[0], retrievedAt: nextAt, body: captures[0].body.replace('"FedRAMP Authorization Act"', '"FedRAMP Authorization Act of 2021"') };
-  const result = await publishFederalPartition({ vault: own, source: "congress-api", partition: "bill:117:hr:21", captures: [detail], records: normalizeFederalCapture(detail), store, now: nextAt });
-  assert.ok(result.outcome.promoted);
-  const saved = (result.candidate.normalizedPayload as { captures: HeldFederalCapture[] }).captures;
-  assert.ok(saved.every(row => !("body" in row) && row.raw));
-  assert.equal(await readRawCaptureText(own, saved.find(row => row.kind === "committees")!.raw), captures[1].body);
-  const held = await readFederalSourceProjection("congress-api", "bill:117:hr:21", { store, now: nextAt, bypassCache: true });
-  assert.ok(held.kind === "PROMOTED" && held.value.records.some(row => row.kind === "COMMITTEE_REFERRAL"));
 });
 
 test("unchanged provider checks succeed, and later outages preserve facts and record the actual door reason", async t => {

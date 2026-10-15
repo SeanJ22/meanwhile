@@ -136,7 +136,7 @@ test("D40: no query-keyed API route marks itself publicly cacheable unless the C
       keyedOnEveryParameter.push(relative(ROOT, file).replaceAll("\\", "/"));
     }
   }
-  assert.deepEqual(keyedOnEveryParameter, ["app/api/meetings/route.ts"], "a new publicly cached query route is a decision to name here");
+  assert.deepEqual(keyedOnEveryParameter, ["app/api/boundaries/representation/route.ts", "app/api/meetings/route.ts"], "a new publicly cached query route is a decision to name here");
   const block = readFileSync(join(ROOT, "components", "funding", "funding-block.tsx"), "utf8");
   assert.match(block, /\/api\/funding\/\$\{encodeURIComponent\(holder\.id\)\}/, "funding block must fetch the path-keyed route");
 });

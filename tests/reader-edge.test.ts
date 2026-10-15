@@ -15,7 +15,7 @@ import {
   stateOfOcdId,
   type ReaderManifest,
 } from "../lib/meetings/edge-artifacts.ts";
-import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
+import { LocalFileArtifactStore } from "../lib/meetings/edge-store-local.ts";
 import {
   publishReaderEdgeArtifacts,
   readReaderEdgeMeetings,

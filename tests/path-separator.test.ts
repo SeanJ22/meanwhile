@@ -137,6 +137,8 @@ test("no file URL is used as a path without fileURLToPath", () => {
     ["lib/civic-data/derived-meeting-wiring.ts", ["new URL(input.route)", "pathname"].join(".")],
     // The Census downloader takes only the final HTTPS path segment for its cache filename.
     ["scripts/fetch-districts.ts", ["new URL(url)", "pathname"].join(".")],
+    // Overlay provenance records the filename of each acquired HTTPS source.
+    ["lib/overlay-geography/acquire.ts", ["new URL(url)", "pathname"].join(".")],
     // The live-write guard compares a browser request's HTTPS path against the write routes.
     ["lib/ops/live-write-guard.ts", ["new URL(requestUrl)", "pathname"].join(".")],
   ]);

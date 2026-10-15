@@ -17,7 +17,7 @@ import { reconcileOfficialCandidacies } from "../lib/registry/runtime-data-plane
 import { normalizePortrait } from "../lib/photos/decode.ts";
 import type { PortraitVerification } from "../lib/photos/binding.ts";
 import { publishReaderEdgeArtifacts, ensureReaderAuthorityEdge, type PublishAuthority } from "../lib/meetings/edge-serving.ts";
-import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
+import { LocalFileArtifactStore } from "../lib/meetings/edge-store-local.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
 import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";

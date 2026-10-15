@@ -11,7 +11,7 @@ import { representationDivisionsAt } from "../lib/geo/representation-geography.t
 import { stateContainers, type ReadOnlyQuery } from "../lib/control-plane/admin-view/promoted-slices.ts";
 import { buildCensusDistrictEdge } from "../lib/census-geography/district-edge.ts";
 import { hydrateBoundaryGeometries } from "../lib/census-geography/boundary-artifacts.ts";
-import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
+import { LocalFileArtifactStore } from "../lib/meetings/edge-store-local.ts";
 import type { BuiltScope } from "../lib/census-geography/dataset.ts";
 import { realOverlayScope, realTribalScope, SOURCE_FIXTURE_NOW } from "./helpers/representation-source-fixtures.ts";
 

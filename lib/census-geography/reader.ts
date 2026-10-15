@@ -1,13 +1,9 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
-
 import { readerQuery } from "../civic-data/promoted-reader-query.ts";
 import { readCensusGeographyIndex } from "../control-plane/admin-view/promoted-slices.ts";
 import { readPromotedCivicData, type CivicDataReadResult, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
-import { resolveReaderArtifactStore, type ReaderArtifactStore } from "../meetings/edge-store.ts";
+import { resolveReaderArtifactStore, type ReaderArtifactReadStore } from "../meetings/edge-store.ts";
 import { FIPS_TO_STATE } from "../ocd/fips.ts";
 import type { CensusGeographyLookup, GeographyKey, GeographyType } from "./contract.ts";
-import type { BuiltDataset } from "./dataset.ts";
 import { censusStateDataset, createCensusDistrictReaderEdge, readCensusDistrictState, type CensusDistrictEdge } from "./district-edge.ts";
 import { createLookup, notYetPublishedLookup } from "./lookup.ts";
 import { CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } from "./publication.ts";
@@ -16,12 +12,8 @@ export { CENSUS_GEO_SCOPE } from "./publication.ts";
 
 const CENSUS_GEO_MAX_AGE_MS = 100 * 365 * 24 * 60 * 60 * 1000;
 
-function readBootstrapDataset(): BuiltDataset {
-  return JSON.parse(readFileSync(join(import.meta.dirname, "bootstrap-az.json"), "utf8")) as BuiltDataset;
-}
-
 export interface CensusGeographyReadOptions extends PromotedCivicDataReadOptions {
-  readonly artifactStore?: ReaderArtifactStore | null;
+  readonly artifactStore?: ReaderArtifactReadStore | null;
 }
 
 export async function readCensusGeographyProjection(
@@ -39,7 +31,7 @@ export interface PublishedLookupState {
   readonly versionId: string;
 }
 
-export function createPublishedIndexLookup(index: CensusDistrictEdge, versionId: string, store: ReaderArtifactStore | null): CensusGeographyLookup {
+export function createPublishedIndexLookup(index: CensusDistrictEdge, versionId: string, store: ReaderArtifactReadStore | null): CensusGeographyLookup {
   const empty = notYetPublishedLookup(versionId);
   const edge = store ? createCensusDistrictReaderEdge(index, store, versionId) : null;
   const states = new Map<string, Promise<CensusGeographyLookup | null>>();
@@ -113,8 +105,4 @@ export async function loadPublishedLookupState(options: CensusGeographyReadOptio
 
 export async function loadPublishedLookup(options: CensusGeographyReadOptions = {}): Promise<CensusGeographyLookup> {
   return (await loadPublishedLookupState(options)).lookup;
-}
-
-export function loadBootstrapLookup(): CensusGeographyLookup {
-  return createLookup(readBootstrapDataset(), "bootstrap:census-geography:az");
 }

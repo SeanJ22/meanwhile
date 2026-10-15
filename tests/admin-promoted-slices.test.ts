@@ -7,7 +7,7 @@ import test, { after } from "node:test";
 import type { GeographyType } from "../lib/census-geography/contract.ts";
 import type { BuiltDataset } from "../lib/census-geography/dataset.ts";
 import { buildCensusDistrictEdge } from "../lib/census-geography/district-edge.ts";
-import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
+import { LocalFileArtifactStore } from "../lib/meetings/edge-store-local.ts";
 import { createLookup } from "../lib/census-geography/lookup.ts";
 import { CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } from "../lib/census-geography/publication.ts";
 import {

@@ -5,8 +5,8 @@ import type { SeatHolder } from "@/lib/officials/lookup";
 import { tribalSeatListingsFor, tribalSeatForHolder, tribalSeatDescription, tribalSeatCardSources } from "@/lib/officials/tribal-seats";
 import { mergeSources, personCardSources } from "@/lib/officials/card-sources";
 import { OfficialModal } from "@/components/map/popup/official-modal";
-import { CardSourcesList } from "./card-sources-list";
-import { WorkingOnIt } from "@/components/demand/working-on-it";
+import { Card } from "@/components/ui/card";
+import type { CardGap } from "@/lib/design/card-gaps";
 
 /** The directory lists seats from references and people from the current published roster. */
 export function LegislatureDirectory({ state, holders, unavailable }: {
@@ -21,9 +21,18 @@ export function LegislatureDirectory({ state, holders, unavailable }: {
     ...holders.flatMap(holder => personCardSources(holder)),
     ...tribalSeats.flatMap(seat => tribalSeatCardSources(seat.reference)),
   ]);
+  const subject = { type: "BODY" as const, id: `US-${state}:legislature` };
+  const gaps: CardGap[] = [
+    ...tribalSeats.filter(seat => !seat.vacant && seat.holders.length === 0).map(seat => ({
+      id: `tribal-holder:${seat.reference.chamber}:${seat.reference.district}`,
+      label: `who holds the ${seat.reference.nation} seat`, subject,
+    })),
+    ...(unavailable || holders.length === 0 ? [{ id: `legislature-roster:${state}`, label: "the current legislature roster", subject }] : []),
+  ];
   const openPerson = (holder: SeatHolder) => <button type="button" onClick={() => setSelected(holder)} className="cursor-pointer text-left text-paper hover:text-link hover:underline">{holder.name}</button>;
 
   return <>
+    <Card title="Seats and members" sources={sources} gaps={gaps} className="mt-6">
     {tribalSeats.length > 0 && <section className="mt-6" aria-labelledby="tribal-seats-heading">
       <h2 id="tribal-seats-heading" className="t-structure text-state">Tribal representatives</h2>
       <ul className="mt-2 space-y-4">
@@ -33,13 +42,12 @@ export function LegislatureDirectory({ state, holders, unavailable }: {
           <div className="mt-2 t-body">
             {seat.vacant ? <p data-seat-vacancy="official-roster">Vacant · <a href={seat.reference.status!.sourceUrl} target="_blank" rel="noreferrer" className="text-link underline decoration-dotted">Legislature roster</a></p>
               : seat.holders.length > 0 ? seat.holders.map(holder => <p key={holder.id}>{openPerson(holder)}</p>)
-                : <WorkingOnIt about="who holds this seat" subject={{type:"BODY", id:`US-${state}:${seat.reference.chamber}:${seat.reference.district}`}} />}
+                : null}
           </div>
         </li>)}
       </ul>
     </section>}
 
-    {unavailable && <p className="mt-6 t-detail text-muted">We couldn&apos;t load the current legislature roster just now.</p>}
     {[{chamber:"upper",label:"Senate"},{chamber:"lower",label:"House"},{chamber:"legislature",label:"Legislature"}].map(({chamber,label}) => {
       const members = regular.filter(holder => holder.chamber === chamber);
       return members.length > 0 ? <section key={chamber} className="mt-6" aria-label={label}>
@@ -51,11 +59,7 @@ export function LegislatureDirectory({ state, holders, unavailable }: {
         </ul>
       </section> : null;
     })}
-    {!unavailable && holders.length === 0 && <div className="mt-6"><WorkingOnIt about="the current legislature roster" subject={{type:"BODY",id:`US-${state}:legislature`}} /></div>}
-    <details className="mt-8 border-t border-[var(--panel-border)] pt-4">
-      <summary className="cursor-pointer t-structure">Sources</summary>
-      <div className="mt-3"><CardSourcesList sources={sources} /></div>
-    </details>
+    </Card>
     {selected && <OfficialModal holder={selected} seatLabel={tribalSeatForHolder(selected)?.nation ?? selected.memberships?.find(membership => membership.current !== false)?.district ?? null} tier="state" reactionContext={null} onClose={() => setSelected(null)} />}
   </>;
 }

@@ -5,7 +5,7 @@ import { join } from "node:path";
 import { after, test } from "./helpers/playbooks.ts";
 
 import { publishReaderEdgeArtifacts, type PublishAuthority } from "../lib/meetings/edge-serving.ts";
-import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
+import { LocalFileArtifactStore } from "../lib/meetings/edge-store-local.ts";
 import type { PromotedAuthorityFamily, PromotedFamilyArtifactValue } from "../lib/meetings/edge-artifacts.ts";
 import { clearPromotedReadModelCache } from "../lib/civic-data/read-model.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";

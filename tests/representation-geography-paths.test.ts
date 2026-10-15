@@ -8,7 +8,7 @@ import type { MapLibreMap } from "maplibre-gl";
 import type { BuiltDataset, BuiltScope } from "../lib/census-geography/dataset.ts";
 import { buildCensusDistrictEdge, createCensusDistrictReaderEdge } from "../lib/census-geography/district-edge.ts";
 import { publishScopeBoundaries, hydrateBoundaryGeometries } from "../lib/census-geography/boundary-artifacts.ts";
-import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
+import { LocalFileArtifactStore } from "../lib/meetings/edge-store-local.ts";
 import { representationDivisionsAt, excludedRepresentationAtPoints, requestRepresentationGeographyReader, supplementPointDivisions } from "../lib/geo/representation-geography.ts";
 import { withCensusDistricts } from "../lib/geo/zip-census-districts.ts";
 import { resolveAddress } from "../lib/geo/address-resolution.ts";

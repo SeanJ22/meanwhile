@@ -7,7 +7,8 @@ import { publishScopeBoundaries } from "../lib/census-geography/boundary-artifac
 import type { BuiltScope } from "../lib/census-geography/dataset.ts";
 import type { GeographySlice, Slice } from "../lib/control-plane/admin-view/promoted-slices.ts";
 import { excludedRepresentationAtPoints, publishedRepresentationGeography, requestRepresentationGeographyReader, supplementPointDivisions } from "../lib/geo/representation-geography.ts";
-import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
+import { LocalFileArtifactStore } from "../lib/meetings/edge-store-local.ts";
+import { LocalFileArtifactReader } from "../lib/meetings/edge-store.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 
 const selection = { purpose: "representation" as const, asOf: "2026-10-15" };
@@ -25,7 +26,7 @@ const scope: BuiltScope = {
 test("metadata reads fetch no polygons; four address samples share only their matching artifact; other districts exclude by source bounds", async () => {
   const directory = mkdtempSync(join(tmpdir(), "sl02-boundary-reader-"));
   const previousDirectory = process.env.WTP_READER_EDGE_DIR;
-  const originalRead = LocalFileArtifactStore.prototype.readBytes;
+  const originalRead = LocalFileArtifactReader.prototype.readBytes;
   try {
     process.env.WTP_READER_EDGE_DIR = directory;
     const published = await publishScopeBoundaries(scope, new LocalFileArtifactStore(directory));
@@ -40,7 +41,7 @@ test("metadata reads fetch no polygons; four address samples share only their ma
       assert.equal(container.ref.geometry, undefined, "metadata must not carry polygon arrays");
     }
     const reads: string[] = [];
-    LocalFileArtifactStore.prototype.readBytes = async function (key) { reads.push(key); return originalRead.call(this, key); };
+    LocalFileArtifactReader.prototype.readBytes = async function (key) { reads.push(key); return originalRead.call(this, key); };
     let statesRead = 0;
     const edge = { censusDistricts: { versionId: "constructed-reader", loadState: async (state: string) => {
       assert.equal(state, "NH"); statesRead += 1; return slice;
@@ -65,7 +66,7 @@ test("metadata reads fetch no polygons; four address samples share only their ma
       assert.equal(reads.includes(distant), false);
     });
   } finally {
-    LocalFileArtifactStore.prototype.readBytes = originalRead;
+    LocalFileArtifactReader.prototype.readBytes = originalRead;
     if (previousDirectory === undefined) delete process.env.WTP_READER_EDGE_DIR;
     else process.env.WTP_READER_EDGE_DIR = previousDirectory;
     rmSync(directory, { recursive: true, force: true });

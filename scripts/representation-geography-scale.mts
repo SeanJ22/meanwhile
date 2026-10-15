@@ -11,7 +11,7 @@ import { FIPS_TO_STATE } from "../lib/ocd/fips.ts";
 import { ScopeAccumulator, parseTab20Header, resolveTab20Columns, type Tab20Spec } from "../lib/census-geography/build.ts";
 import type { BuiltDataset, BuiltGrouping, BuiltOverlap, BuiltScope } from "../lib/census-geography/dataset.ts";
 import type { GeographyGeometry, GeographyVersion } from "../lib/census-geography/contract.ts";
-import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
+import { LocalFileArtifactStore } from "../lib/meetings/edge-store-local.ts";
 import { contains, type GeoFeature } from "../lib/registry/resolve.ts";
 
 const root = resolve(import.meta.dirname, "..");
@@ -25,11 +25,16 @@ const sources: readonly (Tab20Spec & { file: string; url: string })[] = [
   { type: "state_leg_upper", version: "sldu:2024", geoTag: "SLDU2024_20", file: "sldu2024.txt", url: "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_sldu202420_zcta520_natl.txt" },
   { type: "state_leg_lower", version: "sldl:2024", geoTag: "SLDL2024_20", file: "sldl2024.txt", url: "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_sldl202420_zcta520_natl.txt" },
 ];
-interface Government { id: string; name: string; dependent: boolean }
+interface Government {
+  id: string; name: string; dependent: boolean; category: "census" | "state" | "territorial" | "tribal";
+  areaIds?: readonly string[]; componentIds?: readonly string[];
+}
 interface ZipWork { zip: string; edges: number }
 interface Workload { stateFips: string; state: string; governments: Government[]; zips: ZipWork[] }
 interface WorkerResult {
   state: string; governments: number; dependentSchools: number; districts: number; zips: number; localEdges: number;
+  censusGovernments: number; stateGovernments: number; territorialGovernments: number; tribalNations: number;
+  aiannhAreas: number; aiannhComponents: number; polygons: number; pointRequests: number;
   peakRssBytes: number; runtimeMs: number; rawGeometryBytes: number; artifactBytesWritten: number;
   metadataBytesWritten: number;
   readerDatabaseBytes: number; pointArtifactBytes: number; largestPointArtifactBytes: number; largestPointArtifactReads: number;
@@ -60,17 +65,38 @@ async function* lines(file: string) {
 async function prepare() {
   await mkdir(join(directory, "work"), { recursive: true });
   for (const stateFips of selected) await writeFile(join(directory, "work", `${stateFips}.jsonl`), "");
+  const government = (stateFips: string, value: Government) => {
+    if (selected.has(stateFips)) appendFileSync(join(directory, "work", `${stateFips}.jsonl`), `${JSON.stringify({ government: value })}\n`);
+  };
   for (const name of ["census_govt_units_2022.csv", "census_govt_units_2022_dependent_school_systems.csv"]) {
     let header: string[] | undefined;
     for await (const line of lines(join(root, "data", "reference", name))) {
       const row = parseCsv(line)[0];
       if (!header) { header = row; continue; }
       const stateFips = row[header.indexOf("fips_state")];
-      if (selected.has(stateFips)) appendFileSync(join(directory, "work", `${stateFips}.jsonl`), `${JSON.stringify({ government: {
-        id: row[header.indexOf("census_id_pid6")], name: row[header.indexOf("unit_name")], dependent: name.includes("dependent"),
-      } })}\n`);
+      government(stateFips, { id: row[header.indexOf("census_id_pid6")], name: row[header.indexOf("unit_name")],
+        dependent: name.includes("dependent"), category: "census" });
     }
   }
+  for (const stateFips of selected) {
+    const held = JSON.parse(await readFile(join(root, "data", "derived", "registration", `${FIPS_TO_STATE[stateFips].postal.toLowerCase()}.json`), "utf8")) as { governments: string[][] };
+    const states = held.governments.filter(row => row[3] === "STATE");
+    assert.equal(states.length, 1, `${stateFips} statewide government`);
+    government(stateFips, { id: states[0][0], name: states[0][2], dependent: false, category: "state" });
+  }
+  let territoryHeader: string[] | undefined;
+  for await (const line of lines(join(root, "data", "reference", "census_tiger_2023_territory_functional_status.csv"))) {
+    const row = parseCsv(line)[0];
+    if (!territoryHeader) { territoryHeader = row; continue; }
+    if (!["A", "B", "C", "G"].includes(row[territoryHeader.indexOf("funcstat")])) continue;
+    government(row[territoryHeader.indexOf("statefp")], {
+      id: `${row[territoryHeader.indexOf("layer")]}-${row[territoryHeader.indexOf("geoid")]}`,
+      name: row[territoryHeader.indexOf("namelsad")], dependent: false, category: "territorial",
+    });
+  }
+  const tribal = JSON.parse(await readFile(join(root, "data", "reference", "geography", "tribal-seat-areas.json"), "utf8")) as { stateFips: string; nation: string; aiannhAreaIds: string[] }[];
+  for (const [index, nation] of tribal.entries()) government(nation.stateFips, { id: `tribal-${index}`, name: nation.nation,
+    dependent: false, category: "tribal", areaIds: [...new Set(nation.aiannhAreaIds.map(id => id.slice(0, 4)))], componentIds: nation.aiannhAreaIds });
   const index = JSON.parse(await readFile(join(root, "data", "derived", "zip-divisions", "index.json"), "utf8"));
   let uniqueZips = 0;
   for (const shard of Object.keys(index.shards)) {
@@ -161,26 +187,49 @@ async function worker(stateFips: string): Promise<WorkerResult> {
     return put(bytes, suffix);
   };
   store.readBytes = async key => { const bytes = await get(key); artifactBytesRead += bytes?.byteLength ?? 0; artifactReads++; return bytes; };
-  let ordinal = 0, rawGeometryBytes = 0;
+  let ordinal = 0, rawGeometryBytes = 0, districts = 0;
   const points: [number, number][] = [];
+  const jobs: { name: string; type: "overlay_district" | "aiannh"; targets: { geoid: string; point: [number, number] }[] }[] = [];
   const grouping = (identity: Omit<BuiltGrouping, "geometry">): BuiltGrouping => {
     const generated = geometryAt(originals[ordinal % originals.length], origins[ordinal % origins.length], ordinal++);
     points.push(generated.point);
     rawGeometryBytes += Buffer.byteLength(JSON.stringify(generated.geometry));
     return { ...identity, geometry: generated.geometry };
   };
-  const governments = workload.governments.length ? workload.governments : [{ id: `${stateFips}-generated`, name: "Generated territorial government", dependent: false }];
-  const overlaps: BuiltOverlap[][] = Array.from({ length: governments.length }, () => []);
+  const governments = workload.governments;
+  assert.ok(governments.length > 0);
+  const boundaries = governments.filter(government => government.category !== "tribal");
+  const overlaps: BuiltOverlap[][] = Array.from({ length: boundaries.length }, () => []);
   for (const [zipIndex, zip] of workload.zips.entries()) for (let edge = 0; edge < zip.edges; edge++) {
-    overlaps[(zipIndex + edge) % governments.length].push({ zcta5: zip.zip, whole: true, fraction: 1 });
+    overlaps[(zipIndex + edge) % boundaries.length].push({ zcta5: zip.zip, whole: true, fraction: 1 });
   }
-  const governmentIds = governments.map(government => `${stateFips}G${government.id}`);
-  const governmentGroups = governments.map((government, index) => grouping({ geoid: governmentIds[index], ocdId: null,
-    label: government.name, stateFips, stateAbbr: workload.state, memberStates: [workload.state], chamber: "lower", representation: "overlay",
-    overlaps: overlaps[index] }));
+  const governmentGroups = boundaries.map((government, index) => {
+    const group = grouping({ geoid: `${stateFips}G${government.id}`, ocdId: null,
+      label: government.name, stateFips, stateAbbr: workload.state, memberStates: [workload.state], chamber: "lower", representation: "overlay", overlaps: overlaps[index] });
+    jobs.push({ name: government.name, type: "overlay_district", targets: [{ geoid: group.geoid, point: points.at(-1)! }] });
+    return group;
+  });
   const scopes: BuiltScope[] = [{ type: "overlay_district", version: "overlay:scale", versionMeta: metadata("overlay_district", "overlay:scale", stateFips),
     fractionBasis: "area", groupings: governmentGroups, instanceCount: governmentGroups.length,
     zctaEdgeCount: governmentGroups.reduce((sum, group) => sum + group.overlaps.length, 0) }];
+  const areaGroups: BuiltGrouping[] = [];
+  for (const nation of governments.filter(government => government.category === "tribal")) {
+    const targets: { geoid: string; point: [number, number] }[] = [];
+    for (const geoid of nation.areaIds ?? []) {
+      assert.ok(!areaGroups.some(group => group.geoid === geoid));
+      const zip = workload.zips[areaGroups.length % workload.zips.length];
+      assert.ok(zip);
+      const group = grouping({ geoid, ocdId: null, label: nation.name, stateFips, stateAbbr: workload.state, memberStates: [workload.state],
+        chamber: "lower", representation: "tribal", overlaps: [{ zcta5: zip.zip, whole: true, fraction: 1 }] });
+      areaGroups.push(group);
+      targets.push({ geoid, point: points.at(-1)! });
+    }
+    jobs.push({ name: nation.name, type: "aiannh", targets });
+  }
+  assert.equal(jobs.length, governments.length);
+  const aiannhAreas = areaGroups.length;
+  if (aiannhAreas) scopes.push({ type: "aiannh", version: "aiannh:2020", versionMeta: metadata("aiannh", "aiannh:2020", stateFips),
+    fractionBasis: "area", groupings: areaGroups, instanceCount: aiannhAreas, zctaEdgeCount: aiannhAreas });
   for (const source of sources) {
     let accumulator: ScopeAccumulator | undefined;
     let column = 0;
@@ -197,6 +246,7 @@ async function worker(stateFips: string): Promise<WorkerResult> {
     assert.ok(accumulator);
     const scope = accumulator.finish(metadata(source.type, source.version, stateFips));
     if (!scope.groupings.length) continue;
+    districts += scope.groupings.length * 2;
     scopes.push({ ...scope, groupings: scope.groupings.map(grouping) });
     const successor = source.type === "congressional_district" ? "cd:120" : source.version.replace("2024", "2026");
     scopes.push({ ...scope, version: successor, versionMeta: metadata(source.type, successor, stateFips), groupings: scope.groupings.map(grouping) });
@@ -206,6 +256,7 @@ async function worker(stateFips: string): Promise<WorkerResult> {
   for (const scope of scopes) published.push(await publishScopeBoundaries(scope, store));
   scopes.length = 0;
   governmentGroups.length = 0;
+  areaGroups.length = 0;
   const clean = { ...dataset, scopes: published };
   const metadataBytesWritten = Buffer.byteLength(JSON.stringify(clean));
   assert.ok(!JSON.stringify(clean).includes('"coordinates"'), "database metadata must contain no polygons");
@@ -218,11 +269,11 @@ async function worker(stateFips: string): Promise<WorkerResult> {
   assert.equal(slice.value.containers.length, published.reduce((sum, scope) => sum + scope.groupings.length, 0));
   let largestPointArtifactBytes = 0, largestPointArtifactReads = 0;
   artifactBytesRead = 0;
-  for (let job = 0; job < governments.length; job++) {
+  for (const job of jobs) for (const { geoid, point } of job.targets) {
     const before = artifactBytesRead, reads = artifactReads;
-    const local = await hydrateBoundaryGeometries(slice.value, "accurate", store, { points: [points[job]] });
-    const hits = local.containers.filter(container => container.ref.geometry && contains(points[job], { geometry: container.ref.geometry } as GeoFeature));
-    assert.ok(hits.some(hit => hit.ref.geoid === governmentIds[job]), `${workload.state} government ${job} point`);
+    const local = await hydrateBoundaryGeometries(slice.value, "accurate", store, { points: [point] });
+    const hits = local.containers.filter(container => container.ref.geometry && contains(point, { geometry: container.ref.geometry } as GeoFeature));
+    assert.ok(hits.some(hit => hit.ref.geoid === geoid && hit.ref.type === job.type && (job.type !== "aiannh" || hit.ref.representation === "tribal")), `${workload.state} ${job.name} point`);
     assert.ok(local.containers.filter(container => container.ref.geometry).length <= originals.length, "a place must not hydrate the state");
     largestPointArtifactBytes = Math.max(largestPointArtifactBytes, artifactBytesRead - before);
     largestPointArtifactReads = Math.max(largestPointArtifactReads, artifactReads - reads);
@@ -231,7 +282,13 @@ async function worker(stateFips: string): Promise<WorkerResult> {
   for (const zip of workload.zips) assert.equal((await edge.loadZip(zip.zip)).kind, "HELD");
   return { state: workload.state, governments: workload.governments.filter(government => !government.dependent).length,
     dependentSchools: workload.governments.filter(government => government.dependent).length,
-    districts: ordinal - governments.length, zips: workload.zips.length, localEdges: workload.zips.reduce((sum, zip) => sum + zip.edges, 0),
+    censusGovernments: governments.filter(government => government.category === "census" && !government.dependent).length,
+    stateGovernments: governments.filter(government => government.category === "state").length,
+    territorialGovernments: governments.filter(government => government.category === "territorial").length,
+    tribalNations: governments.filter(government => government.category === "tribal").length,
+    aiannhAreas, aiannhComponents: governments.reduce((sum, government) => sum + (government.componentIds?.length ?? 0), 0),
+    polygons: ordinal, pointRequests: jobs.reduce((sum, job) => sum + job.targets.length, 0),
+    districts, zips: workload.zips.length, localEdges: workload.zips.reduce((sum, zip) => sum + zip.edges, 0),
     peakRssBytes: peakRssBytes(), runtimeMs: performance.now() - started, rawGeometryBytes, artifactBytesWritten,
     metadataBytesWritten, readerDatabaseBytes: 0, pointArtifactBytes,
     largestPointArtifactBytes, largestPointArtifactReads, stateIndex: index };
@@ -329,15 +386,21 @@ async function main() {
   const report = { measuredAt: new Date().toISOString(), runtimeMs: performance.now() - started, coordinatorPeakRssBytes,
     ...(previous ? { boundaryRunRuntimeMs: previous.boundaryRunRuntimeMs ?? previous.runtimeMs } : {}),
     localDatabaseMeasurementPeakRssBytes: database.peakRssBytes, database,
-    nationalInputs: { sourceEvidence: input.sourceEvidence, uniqueZips: input.uniqueZips, jurisdictions: workers.length, governments: total("governments"), dependentSchools: total("dependentSchools"), localEdges: total("localEdges"), districts: total("districts") },
+    nationalInputs: { sourceEvidence: input.sourceEvidence, uniqueZips: input.uniqueZips, jurisdictions: workers.length,
+      governments: total("governments"), censusGovernments: total("censusGovernments"), stateGovernments: total("stateGovernments"),
+      territorialGovernments: total("territorialGovernments"), tribalNations: total("tribalNations"), dependentSchools: total("dependentSchools"),
+      aiannhAreas: total("aiannhAreas"), aiannhComponents: total("aiannhComponents"), polygons: total("polygons"), pointRequests: total("pointRequests"),
+      localEdges: total("localEdges"), districts: total("districts") },
     databaseMeasurement: database.method,
-    geometryMeasurement: "Synthetic polygons for all governments and districts, generated from the three retained real floterials; real 2024/119th district identities and ZIP memberships, duplicated at full volume for 2026/120th plans.",
+    geometryMeasurement: "Synthetic polygons from three retained real floterials for Census governments, all statewide and governing territorial identities, and five typed AIANNH areas for three nations; real 2024/119th district identities and ZIP memberships duplicated for 2026/120th plans.",
     countryGrowthCheck: { requestedState: state, catalogStates: Object.keys(national.states).length, localArtifactReads: onePlaceKeys.length, identicalReadKeys: true },
     perRun: { databaseBytesRead, databaseBytesWritten, artifactBytesWritten: total("artifactBytesWritten") + catalogArtifactBytes, rawGeometryBytes: total("rawGeometryBytes") },
     perDayAtMonthlyCadence: { databaseBytesRead: databaseBytesRead / 30, databaseBytesWritten: databaseBytesWritten / 30, artifactBytesWritten: (total("artifactBytesWritten") + catalogArtifactBytes) / 30 },
     peakWorkerRssBytes: peak, peakReaderRssBytes: Math.max(...readers.map(reader => reader.peakRssBytes)), productionHostBytes: 8 * 1024 ** 3, marginBytes: 768 * 1024 ** 2,
-    copiesAtMargin: Math.floor((8 * 1024 ** 3 - 768 * 1024 ** 2) / peak),
-    copiesWithResearchParent: Math.floor((8 * 1024 ** 3 - (768 + 2928) * 1024 ** 2) / peak),
+    copiesAtMargin: Math.floor((8 * 1024 ** 3 - 768 * 1024 ** 2 - coordinatorPeakRssBytes) / peak),
+    copiesWithResearchParent: Math.floor((8 * 1024 ** 3 - (768 + 2928) * 1024 ** 2 - coordinatorPeakRssBytes) / peak),
+    configuredCensusReservationBytes: 1258 * 1024 ** 2,
+    admissionsAtConfiguredReservation: Math.floor((8 * 1024 ** 3 - 768 * 1024 ** 2 - coordinatorPeakRssBytes) / (1258 * 1024 ** 2)),
     limitations: ["Full national real-source boundary geometry was not tested; polygon complexity is bounded to the largest retained real fixture. SQL ran locally through the real Neon HTTP driver; production network latency and physical storage I/O were not measured."], workers, readers, nationalReader };
   await writeFile(join(directory, "report.json"), JSON.stringify(report, null, 2));
   process.stdout.write(`${JSON.stringify({ ...report, workers: undefined, readers: undefined })}\n`);

@@ -5,7 +5,7 @@ import type { BuiltDataset, BuiltScope } from "./dataset.ts";
 import type { GeographyType } from "./contract.ts";
 import { publishScopeBoundaries } from "./boundary-artifacts.ts";
 import type { CodeSlice, ContainerSlice, GeographySlice, ScopeSlice, Slice } from "../control-plane/admin-view/promoted-slices.ts";
-import type { ReaderArtifactStore } from "../meetings/edge-store.ts";
+import type { ReaderArtifactReadStore, ReaderArtifactStore } from "../meetings/edge-store.ts";
 
 export const REPRESENTATION_GEOGRAPHY_TYPES: readonly GeographyType[] = ["congressional_district", "state_leg_upper", "state_leg_lower", "overlay_district", "aiannh"];
 export const censusDistrictEdgeVersion = (sourceVersion: string): string => `census-districts/v4:${sourceVersion}`;
@@ -74,7 +74,6 @@ function stateArtifact(dataset: BuiltDataset, state: string, versionId: string):
   const scopeDetails: Omit<BuiltScope, "groupings">[] = [];
   for (const scope of dataset.scopes) {
     const groups = scope.groupings.filter(group => group.stateAbbr === state || group.memberStates.includes(state));
-    if (groups.length === 0) continue;
     const { groupings: _groupings, ...details } = scope;
     scopeDetails.push({ ...details, instanceCount: groups.length, zctaEdgeCount: groups.reduce((sum, group) => sum + group.overlaps.length, 0) });
     scopes.push({ type: scope.type, version: scope.version, plan: scope.versionMeta.plan,
@@ -235,7 +234,7 @@ export function censusDistrictEdgeSlice(value: CensusDistrictStateArtifact, vers
     containers: (rows ?? []).map(([index, whole, fraction]) => ({ ...value.containers[index], overlaps: [{ zcta5: zip, whole, fraction }] })) } };
 }
 
-async function readArtifact<T>(ref: CensusDistrictArtifactRef | undefined, store: ReaderArtifactStore): Promise<T | null> {
+async function readArtifact<T>(ref: CensusDistrictArtifactRef | undefined, store: ReaderArtifactReadStore): Promise<T | null> {
   if (!ref || typeof ref.key !== "string" || !/^[a-f0-9]{64}$/.test(ref.sha256) || !Number.isSafeInteger(ref.bytes) || ref.bytes <= 0) return null;
   try {
     const bytes = await store.readBytes(ref.key);
@@ -244,7 +243,7 @@ async function readArtifact<T>(ref: CensusDistrictArtifactRef | undefined, store
   } catch { return null; }
 }
 
-export async function readCensusDistrictState(index: CensusDistrictEdge, state: string, store: ReaderArtifactStore): Promise<CensusDistrictStateArtifact | null> {
+export async function readCensusDistrictState(index: CensusDistrictEdge, state: string, store: ReaderArtifactReadStore): Promise<CensusDistrictStateArtifact | null> {
   const value = await readArtifact<CensusDistrictStateArtifact>(index.states[state], store);
   if (!value || value.formatVersion !== 2 || value.versionId !== index.versionId || value.state !== state || !Array.isArray(value.scopes) ||
     !Array.isArray(value.containers) || !value.codes || !Array.isArray(value.scopeDetails) || !Array.isArray(value.zctaUniverse) ||
@@ -252,7 +251,7 @@ export async function readCensusDistrictState(index: CensusDistrictEdge, state: 
   return value;
 }
 
-export function createCensusDistrictReaderEdge(index: CensusDistrictEdge, store: ReaderArtifactStore, versionId = index.versionId): CensusDistrictReaderEdge {
+export function createCensusDistrictReaderEdge(index: CensusDistrictEdge, store: ReaderArtifactReadStore, versionId = index.versionId): CensusDistrictReaderEdge {
   const artifactVersion = index.versionId;
   const stateReads = new Map<string, Promise<CensusDistrictStateArtifact | null>>();
   const prefixReads = new Map<string, Promise<CensusZipPrefixArtifact | null>>();

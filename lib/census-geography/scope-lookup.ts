@@ -1,14 +1,14 @@
 import { readerQuery } from "../civic-data/promoted-reader-query.ts";
 import { readCensusGeographyIndex, type ReadOnlyQuery } from "../control-plane/admin-view/promoted-slices.ts";
 import type { ExpansionScopeGeography } from "../control-plane/expansion/scopes.ts";
-import { resolveReaderArtifactStore, type ReaderArtifactStore } from "../meetings/edge-store.ts";
+import { resolveReaderArtifactStore, type ReaderArtifactReadStore } from "../meetings/edge-store.ts";
 import { mergeCensusDatasets, selectedStateDatasets, unavailableCensusLookup } from "./area-lookup.ts";
 import { createCensusDistrictReaderEdge } from "./district-edge.ts";
 import { createLookup } from "./lookup.ts";
 import type { PublishedLookupState } from "./reader.ts";
 
 export async function loadPublishedScopeLookupState(scopes: readonly ExpansionScopeGeography[], query: ReadOnlyQuery | null = readerQuery(),
-  store: ReaderArtifactStore | null = resolveReaderArtifactStore()): Promise<PublishedLookupState> {
+  store: ReaderArtifactReadStore | null = resolveReaderArtifactStore()): Promise<PublishedLookupState> {
   const index = await readCensusGeographyIndex(query);
   if (index.kind !== "HELD") return unavailableCensusLookup(index.kind);
   if (!store) return unavailableCensusLookup("ARTIFACT_STORE_UNAVAILABLE");

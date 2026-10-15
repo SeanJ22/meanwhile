@@ -3,7 +3,7 @@ import { gzipSync, gunzipSync } from "node:zlib";
 import type { GeographyGeometry, GeographyRef } from "./contract.ts";
 import type { BuiltScope } from "./dataset.ts";
 import type { GeographySlice } from "../control-plane/admin-view/promoted-slices.ts";
-import { resolveReaderArtifactStore, type ReaderArtifactStore } from "../meetings/edge-store.ts";
+import { resolveReaderArtifactStore, type ReaderArtifactReadStore, type ReaderArtifactStore } from "../meetings/edge-store.ts";
 import { boundaryGeometries } from "./geometry-transform.ts";
 
 export interface BoundaryArtifactRef {
@@ -56,10 +56,15 @@ export function boundaryTouchesArea(ref: BoundaryArtifactRef, area: BoundaryArea
   const [west,south,east,north] = ref.bounds;
   if (area.points?.some(([longitude,latitude])=>longitude>=west&&longitude<=east&&latitude>=south&&latitude<=north)) return true;
   const bounds = area.bounds;
-  return !!bounds && north>=bounds[1] && south<=bounds[3] && (bounds[0]>bounds[2] ? east>=bounds[0]||west<=bounds[2] : east>=bounds[0]&&west<=bounds[2]);
+  if (!bounds || north<bounds[1] || south>bounds[3]) return false;
+  if (Math.abs(bounds[2]-bounds[0])>=360) return true;
+  // MapLibre retains the displayed world copy in bounds after wrapping its center.
+  const wrap = (longitude: number) => ((longitude+180)%360+360)%360-180;
+  const left = wrap(bounds[0]), right = wrap(bounds[2]);
+  return left>right ? east>=left||west<=right : east>=left&&west<=right;
 }
 
-export async function hydrateBoundaryGeometries(slice: GeographySlice, mode: "accurate" | "display", store: ReaderArtifactStore | null = resolveReaderArtifactStore(), area?: BoundaryArea): Promise<GeographySlice> {
+export async function hydrateBoundaryGeometries(slice: GeographySlice, mode: "accurate" | "display", store: ReaderArtifactReadStore | null = resolveReaderArtifactStore(), area?: BoundaryArea): Promise<GeographySlice> {
   const reads = new Map<string, Promise<BoundaryArtifact>>();
   async function read(ref: GeographyRef): Promise<GeographyGeometry> {
     const pointer = ref.geometryRef!;

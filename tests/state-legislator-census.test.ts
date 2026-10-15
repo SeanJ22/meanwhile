@@ -9,7 +9,7 @@ import { containersOfCode, stateContainers, type ReadOnlyQuery, type Row } from 
 import { buildCensusDistrictEdge } from "../lib/census-geography/district-edge.ts";
 import type { BuiltDataset, BuiltGrouping } from "../lib/census-geography/dataset.ts";
 import type { GeographyVersion } from "../lib/census-geography/contract.ts";
-import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
+import { LocalFileArtifactStore } from "../lib/meetings/edge-store-local.ts";
 import { withCensusDistricts } from "../lib/geo/zip-census-districts.ts";
 import { statePeopleDivisions } from "../lib/sources/plural/acquisition.ts";
 import { designationFromLabel, designationKey, indexDivisions, normalize, type PluralPerson, type RegistryDivisionLite } from "../lib/sources/plural/index.ts";

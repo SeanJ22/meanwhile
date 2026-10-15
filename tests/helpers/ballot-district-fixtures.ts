@@ -6,7 +6,8 @@ import type { BallotSet } from "../../lib/ballot/types.ts";
 import type { BuiltDataset } from "../../lib/census-geography/dataset.ts";
 import { buildCensusDistrictEdge, createCensusDistrictReaderEdge } from "../../lib/census-geography/district-edge.ts";
 import type { CodeSlice, Slice } from "../../lib/control-plane/admin-view/promoted-slices.ts";
-import { LocalFileArtifactStore, type ReaderArtifactStore } from "../../lib/meetings/edge-store.ts";
+import { type ReaderArtifactStore } from "../../lib/meetings/edge-store.ts";
+import { LocalFileArtifactStore } from "../../lib/meetings/edge-store-local.ts";
 
 export const azDistrictDataset = JSON.parse(readFileSync(join(import.meta.dirname, "../../lib/census-geography/bootstrap-az.json"), "utf8")) as BuiltDataset;
 export const publishDistrictFixture = (store: ReaderArtifactStore, version = "ballot-production-district-fixture", dataset = azDistrictDataset) => buildCensusDistrictEdge(dataset, version, store);

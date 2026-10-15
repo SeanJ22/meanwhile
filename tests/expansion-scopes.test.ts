@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { join } from "node:path";
 import test from "node:test";
 
-import { loadBootstrapLookup } from "@/lib/census-geography/reader.ts";
+import { loadBootstrapLookup } from "./helpers/census-geography-fixtures.ts";
 import { huntSearchScope } from "../lib/control-plane/discovery/hunt-search-scope.ts";
 import type { CostEntry } from "@/lib/control-plane/cost.ts";
 import { pricedModelCharge } from "@/lib/control-plane/fleet-safety.ts";
@@ -46,10 +46,6 @@ import { placeFirstRows } from "@/lib/control-plane/scheduler/shadow-loop.ts";
 import { createMemoryRepositories } from "@/lib/control-plane/repository/memory.ts";
 import type { JurisdictionRegistry } from "@/lib/hunt/jurisdiction-universe.ts";
 
-/**
- * Expansion scopes: the owner's geography, order and paid-work budget. Pure, or against in-memory repositories and
- * the committed Arizona census-geography bootstrap. No network, no database.
- */
 
 const NOW = "2026-09-23T04:00:00.000Z";
 

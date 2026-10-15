@@ -20,7 +20,8 @@ import {
 
 import { stateOfOcdId, type ReaderManifest } from "../lib/meetings/edge-artifacts.ts";
 
-import { LocalFileArtifactStore, type ReaderArtifactStore } from "../lib/meetings/edge-store.ts";
+import { LocalFileArtifactReader, type ReaderArtifactStore } from "../lib/meetings/edge-store.ts";
+import { LocalFileArtifactStore } from "../lib/meetings/edge-store-local.ts";
 
 
 import { edgeValidationsRun } from "../lib/civic-data/validated-once.ts";
@@ -143,15 +144,15 @@ class RecordingStore extends LocalFileArtifactStore {
 
 async function recordingBytes<T>(run: () => Promise<T>): Promise<{ value: T; keys: string[] }> {
   const keys: string[] = [];
-  const original = LocalFileArtifactStore.prototype.readBytes;
-  LocalFileArtifactStore.prototype.readBytes = async function (this: LocalFileArtifactStore, key: string) {
+  const original = LocalFileArtifactReader.prototype.readBytes;
+  LocalFileArtifactReader.prototype.readBytes = async function (this: LocalFileArtifactReader, key: string) {
     keys.push(key);
     return original.call(this, key);
   };
   try {
     return { value: await run(), keys };
   } finally {
-    LocalFileArtifactStore.prototype.readBytes = original;
+    LocalFileArtifactReader.prototype.readBytes = original;
   }
 }
 

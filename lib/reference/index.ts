@@ -1,20 +1,6 @@
-/**
- * The reference universe: the official enumerations under `data/reference/` that coverage is measured
- * against, never our own registry's count. Every read goes through `REFERENCE_DIR`. The files are large,
- * so nothing is read at import time.
- */
-
-import { readFileSync, readdirSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
-/** The one path. Everything below resolves from it; nothing else may. */
-export const REFERENCE_DIR = join(process.cwd(), "data", "reference");
-
-/**
- * The inventory, as a committed expectation rather than as whatever happens
- * to be on disk. A file going missing has to fail a gate, because the way it
- * would otherwise surface is a denominator quietly getting smaller.
- */
 export const REFERENCE_DATASETS = [
   "boarddocs_tenants",
   // Which office in each state holds campaign-finance reports. Derived from the FEC directory below.
@@ -40,12 +26,7 @@ export const REFERENCE_JSON_DATASETS = [
   "voting-root-discovery",
   "voting-source-doors",
 ] as const;
-type ReferenceJsonDataset = (typeof REFERENCE_JSON_DATASETS)[number];
 
-/**
- * The Census of Governments does not enumerate the territories, so their registration reads
- * TIGER/Line 2023 functional status (FUNCSTAT) for county-equivalents, county subdivisions and places.
- */
 export const REFERENCE_ROW_COUNTS: Record<ReferenceDataset, number> = {
   boarddocs_tenants: 0,
   census_govt_units_2022: 90_837,
@@ -59,31 +40,24 @@ export const REFERENCE_ROW_COUNTS: Record<ReferenceDataset, number> = {
   fec_combined_federal_state_disclosure_directory: 323,
   // Expected data-row counts, verified against the files themselves.
   "state-cf-agencies": 56,
-  /*
-   * Every territory row of the 2023 TIGER/Line county file (91) and of the
-   * five territories' county-subdivision (1,010, of which 46 are the "not
-   * defined" water placeholders the cartographic files omit) and place (571)
-   * files. Moves only with a new TIGER/Line vintage.
-   */
+
+  // Full territory county, county-subdivision and place files, including water placeholders.
   census_tiger_2023_territory_functional_status: 1_672,
 };
 
-export function dataPath(dataset: ReferenceDataset): string {
-  return join(REFERENCE_DIR, `${dataset}.csv`);
-}
-
-export function notePath(dataset: ReferenceDataset | ReferenceJsonDataset): string {
-  return join(REFERENCE_DIR, `${dataset}.md`);
-}
-
-function jsonDataPath(dataset: ReferenceJsonDataset): string {
-  return join(REFERENCE_DIR, `${dataset}.json`);
-}
-
-/** Everything actually in the directory, for the inventory gate. */
-export function referenceFiles(): string[] {
-  return readdirSync(REFERENCE_DIR, { withFileTypes: true }).filter((entry) => entry.isFile()).map((entry) => entry.name).sort();
-}
+const DATA_READERS: Readonly<Record<ReferenceDataset, () => string>> = {
+  "boarddocs_tenants": () => readFileSync(join(process.cwd(), "data", "reference", "boarddocs_tenants.csv"), "utf8"),
+  "state-cf-agencies": () => readFileSync(join(process.cwd(), "data", "reference", "state-cf-agencies.csv"), "utf8"),
+  "census_govt_units_2022": () => readFileSync(join(process.cwd(), "data", "reference", "census_govt_units_2022.csv"), "utf8"),
+  "census_govt_units_2022_dependent_school_systems": () => readFileSync(join(process.cwd(), "data", "reference", "census_govt_units_2022_dependent_school_systems.csv"), "utf8"),
+  "civicplus_tenants": () => readFileSync(join(process.cwd(), "data", "reference", "civicplus_tenants.csv"), "utf8"),
+  "granicus_legistar_tenants": () => readFileSync(join(process.cwd(), "data", "reference", "granicus_legistar_tenants.csv"), "utf8"),
+  "nces_ccd_lea_directory_2025_26": () => readFileSync(join(process.cwd(), "data", "reference", "nces_ccd_lea_directory_2025_26.csv"), "utf8"),
+  "openstates_legislators": () => readFileSync(join(process.cwd(), "data", "reference", "openstates_legislators.csv"), "utf8"),
+  "fec_state_election_offices": () => readFileSync(join(process.cwd(), "data", "reference", "fec_state_election_offices.csv"), "utf8"),
+  "fec_combined_federal_state_disclosure_directory": () => readFileSync(join(process.cwd(), "data", "reference", "fec_combined_federal_state_disclosure_directory.csv"), "utf8"),
+  "census_tiger_2023_territory_functional_status": () => readFileSync(join(process.cwd(), "data", "reference", "census_tiger_2023_territory_functional_status.csv"), "utf8"),
+};
 
 import { parseCsv } from "./csv.ts";
 export { parseCsv } from "./csv.ts";
@@ -96,7 +70,7 @@ export type ReferenceTable = {
 };
 
 export function readTable(dataset: ReferenceDataset): ReferenceTable {
-  const parsed = parseCsv(readFileSync(dataPath(dataset), "utf8"));
+  const parsed = parseCsv(DATA_READERS[dataset]());
   const [header = [], ...rows] = parsed;
   return { header, rows, count: rows.length };
 }
@@ -115,49 +89,20 @@ export function readRecords(dataset: ReferenceDataset): Record<string, string>[]
 
 // Recorded properties of this data, enforced in tests/reference-data.test.ts.
 
-/**
- * 339 Census units carry `is_active = N` and are RETAINED on purpose.
- * The Census counts dormant units as governments; filtering them breaks the
- * 90,837 reconciliation. Nobody removes them without restating the
- * denominator, and the test asserts the retained count so a filter added
- * upstream fails here rather than showing up as a smaller universe.
- */
+// Dormant units remain governments in the Census denominator.
 export const CENSUS_INACTIVE_UNITS = 339;
 
-/**
- * 13 Texas special districts have blank state, city and zip. They carry
- * `fips_state = 48`, so the state IS recoverable — and they are deliberately
- * left as a stated gap rather than filled in, because a silently repaired row
- * is indistinguishable from a row that was always complete.
- */
+// These units retain a stated place gap even though state FIPS is available.
 export const CENSUS_BLANK_PLACE_TX_UNITS = 13;
 
-/**
- * `web_address` is blank for 51,655 of 90,837 Census units, and the populated ones had minimal quality
- * control. A seed list for crawling, never a detection surface: a blank value does not mean a body has
- * no website, and a populated one says nothing about its agenda platform.
- */
+// Missing URLs do not establish that a government has no website.
 export const CENSUS_BLANK_WEB_ADDRESS = 51_655;
 
-/**
- * NCES CCD SY 2025-26 is preliminary v.0a and WILL be revised. It is a
- * DISCOVERY surface, not a source of record: nothing in this product keys to
- * a CCD status value, and no reader-facing claim rests on one.
- */
+// The directory is a discovery source; a later release may revise it.
 export const CCD_IS_PRELIMINARY = true;
 
-/**
- * The Legistar file is 39 rows of TEST FIXTURE harvested from open-source
- * scraper repositories. It is not an enumeration of Granicus/Legistar
- * tenants, its jurisdiction and state columns are deliberately blank, and no
- * coverage claim may cite it as a tenant count.
- */
+// These scraper fixtures establish no vendor coverage count.
 export const LEGISTAR_IS_FIXTURE_NOT_ENUMERATION = true;
 
-/**
- * The BoardDocs file is deliberately EMPTY — header only. Zero rows is the
- * correct current state. It is not a failed acquisition, and it is not
- * evidence that BoardDocs has no tenants: roughly 4,000 organizations are
- * missing from it, and finding them is a tracker row, not an absence.
- */
+// A header-only fixture establishes no absence of actual tenants.
 export const BOARDDOCS_IS_DELIBERATELY_EMPTY = true;

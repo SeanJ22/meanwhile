@@ -22,7 +22,7 @@ import { STATE_CAMPAIGN_FINANCE_SOURCES, stateCampaignFinanceCandidate } from ".
 import { computeSplit, type StateMoneySnapshot } from "../lib/funding/state-money.ts";
 import { readStateMoneyProjection, settleStateMoneyRead } from "../lib/funding/state-snapshot.ts";
 import { ensureReaderAuthorityEdge, publishReaderEdgeArtifacts, type PublishAuthority } from "../lib/meetings/edge-serving.ts";
-import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
+import { LocalFileArtifactStore } from "../lib/meetings/edge-store-local.ts";
 import type { PromotedFamilyArtifactValue } from "../lib/meetings/edge-artifacts.ts";
 import { readPromotedEdgeFirst, ReaderEdgeOnlyRefusal, withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { VOTING_SITES_CONTRACT, votingSitesCandidate } from "../lib/ballot/voting-sites-data-plane.ts";

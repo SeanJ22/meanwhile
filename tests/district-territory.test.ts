@@ -1,13 +1,9 @@
-/**
- * A Send places every district its own law bounds: a county community college district takes the county's territory;
- * a technology district takes its member districts', which need not be the county.
- */
 
 import assert from "node:assert/strict";
 import { join } from "node:path";
 import test from "node:test";
 
-import { loadBootstrapLookup } from "@/lib/census-geography/reader.ts";
+import { loadBootstrapLookup } from "./helpers/census-geography-fixtures.ts";
 import {
   DISTRICT_TERRITORIES,
   ruledDistrictTerritory,

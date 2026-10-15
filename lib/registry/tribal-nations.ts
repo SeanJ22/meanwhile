@@ -1,7 +1,7 @@
 import REFERENCES from "../../data/reference/geography/tribal-nations.json" with { type: "json" };
 
 export interface TribalNation {
-  /** PROJECT-MINTED. The key is the Census AIANNH code — see the module note. */
+  /** PROJECT-MINTED from Census AIANNH; the OCD registry has no tribal division type. */
   ocdId: string;
   /** The Census AIANNH code, 2020 vintage. The basis for the id above. */
   censusAiannhCode: string;

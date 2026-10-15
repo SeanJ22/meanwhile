@@ -15,7 +15,7 @@ import { CENSUS_GEO_CONTRACT_ID, CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } fro
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
-import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
+import { LocalFileArtifactStore } from "../lib/meetings/edge-store-local.ts";
 
 const artifactDirectory = mkdtempSync(join(tmpdir(), "census-tiger-artifacts-"));
 after(() => rmSync(artifactDirectory, { recursive: true, force: true }));

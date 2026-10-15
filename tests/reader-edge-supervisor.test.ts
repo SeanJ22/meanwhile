@@ -5,7 +5,8 @@ import { join } from "node:path";
 import { test } from "node:test";
 import { publishSupervisorReaderEdge, readerEdgeSupervisorFailure } from "../lib/civic-data/reader-edge-publication.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import { LocalFileArtifactStore, type ReaderArtifactStore } from "../lib/meetings/edge-store.ts";
+import { type ReaderArtifactStore } from "../lib/meetings/edge-store.ts";
+import { LocalFileArtifactStore } from "../lib/meetings/edge-store-local.ts";
 import { routineCivicDataSupervisorOutcome } from "../lib/control-plane/freshness-cycle-outcome.ts";
 import { ownerDigestAttention } from "../lib/control-plane/owner-surface.ts";
 

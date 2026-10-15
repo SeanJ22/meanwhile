@@ -16,7 +16,9 @@ function stateLiteralsInRepresentationLogic(code: string): string[] {
   const inspect = (node: ts.Node) => {
     if (ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node)) {
       const statusValue = /^(?:OK|ok)$/.test(node.text) && !/state|jurisdiction|postal/i.test(node.parent.getText(ast));
-      if (!statusValue && isState(node.text)) failures.add(node.text);
+      const fieldName = node.text === "id" && (ts.isLiteralTypeNode(node.parent) ||
+        ts.isCallExpression(node.parent) && ts.isIdentifier(node.parent.expression) && node.parent.expression.text === "get");
+      if (!statusValue && !fieldName && isState(node.text)) failures.add(node.text);
     }
     ts.forEachChild(node, inspect);
   };
@@ -44,7 +46,10 @@ test("overlay and tribal behavior uses reference rows across every lib file", ()
 
 test("the code check rejects state-named conditions, constants and district identifiers", () => {
   assert.ok(stateLiteralsInRepresentationLogic('if (state === "NH") linkOverlay();').length);
+  assert.ok(stateLiteralsInRepresentationLogic('if (state === "id") linkOverlay();').length);
   assert.ok(stateLiteralsInRepresentationLogic('const tribalState = "Maine";').length);
   assert.ok(stateLiteralsInRepresentationLogic('function overlayId() { return "ocd-division/country:us/state:nh/sldl:ro31"; }').length);
   assert.deepEqual(stateLiteralsInRepresentationLogic('function linkOverlay(source) { return source.state; }'), []);
+  assert.deepEqual(stateLiteralsInRepresentationLogic('function tribalRow(get) { return get("id"); }'), []);
+  assert.deepEqual(stateLiteralsInRepresentationLogic('function tribalField(row) { return row.key as "id" | "name"; }'), []);
 });

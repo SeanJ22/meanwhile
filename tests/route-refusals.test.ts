@@ -3,6 +3,7 @@ import test from "node:test";
 
 import { GET as meetingsGET } from "../app/api/meetings/route.ts";
 import { GET as directoryGET } from "../app/api/directory/route.ts";
+import { GET as representationGET } from "../app/api/boundaries/representation/route.ts";
 import {
   matching,
   numeric,
@@ -11,6 +12,18 @@ import {
 } from "../lib/api/params.ts";
 
 const url = (path: string) => new Request(`https://example.test${path}`);
+
+test("representation boundaries refuse absent, blank and malformed map coordinates before reading artifacts", async () => {
+  for (const query of [
+    "lng=0&bounds=-1,-1,1,1", "lat=&lng=0&bounds=-1,-1,1,1", "lat=0&lng=181&bounds=-1,-1,1,1",
+    "lat=0&lng=0&bounds=-1,,1,1", "lat=0&lng=0&bounds=-1,2,1,1", "lat=0&lng=0&bounds=NaN,-1,1,1",
+  ]) {
+    const response = await representationGET(url(`/api/boundaries/representation?${query}`));
+    assert.equal(response.status, 400, query);
+    assert.equal(response.headers.get("Netlify-Vary"), "query");
+    assert.equal(response.headers.get("Cache-Control"), "no-store");
+  }
+});
 
 test("Number(null) is 0 — the coercion this whole file exists for", () => {
   assert.equal(Number(null), 0);

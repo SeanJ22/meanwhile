@@ -5,7 +5,7 @@ import { join } from "node:path";
 import { after, test } from "./helpers/playbooks.ts";
 
 import { publishReaderEdgeArtifacts, type PublishAuthority } from "../lib/meetings/edge-serving.ts";
-import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
+import { LocalFileArtifactStore } from "../lib/meetings/edge-store-local.ts";
 import { enterReaderAuthorityEdge, currentRegistryRuntimeEdge } from "../lib/registry/runtime-edge.ts";
 import { registryRuntimeReadState } from "../lib/registry/runtime-read-model.ts";
 import { federalDirectoryReadState } from "../lib/officials/federal-directory-read-model.ts";

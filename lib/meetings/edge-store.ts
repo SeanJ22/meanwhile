@@ -1,6 +1,6 @@
-import { createHash, randomUUID } from "node:crypto";
-import { closeSync, linkSync, mkdirSync, openSync, readFileSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 
 import type { ReaderGeoArtifact, ReaderManifest } from "./edge-artifacts.ts";
 
@@ -13,25 +13,23 @@ export interface StoredManifest {
   readonly etag: string | null;
 }
 
-export interface ReaderArtifactStore {
+export interface ReaderArtifactReadStore {
   readonly kind: "netlify-blobs" | "local-file";
   readManifest(): Promise<StoredManifest | null>;
   readArtifact(key: string): Promise<ReaderGeoArtifact | null>;
-  /** Store complete bytes once, under their digest; never overwrite a serving artifact. */
-  putImmutable(bytes: Uint8Array, suffix: "json" | "json.gz"): Promise<string>;
-  /** Compare-and-set against `expectedEtag` (null = expect absent); modified:false when the stored ETag moved. */
-  writeManifest(
-    manifest: ReaderManifest,
-    expectedEtag: string | null,
-  ): Promise<{ modified: boolean; etag: string | null }>;
   readBytes(key: string): Promise<Uint8Array | null>;
 }
 
-function immutableKey(bytes: Uint8Array, suffix: "json" | "json.gz"): string {
+export interface ReaderArtifactStore extends ReaderArtifactReadStore {
+  putImmutable(bytes: Uint8Array, suffix: "json" | "json.gz"): Promise<string>;
+  writeManifest(manifest: ReaderManifest, expectedEtag: string | null): Promise<{ modified: boolean; etag: string | null }>;
+}
+
+export function immutableKey(bytes: Uint8Array, suffix: "json" | "json.gz"): string {
   return `reader/artifacts/${createHash("sha256").update(bytes).digest("hex")}.${suffix}`;
 }
 
-function sameBytes(actual: Uint8Array | null, expected: Uint8Array): void {
+export function sameBytes(actual: Uint8Array | null, expected: Uint8Array): void {
   if (actual === null || !Buffer.from(actual).equals(Buffer.from(expected))) throw new Error("READER_IMMUTABLE_ARTIFACT_CONFLICT");
 }
 
@@ -106,7 +104,7 @@ export class NetlifyBlobsArtifactStore implements ReaderArtifactStore {
   }
 }
 
-export class LocalFileArtifactStore implements ReaderArtifactStore {
+export class LocalFileArtifactReader implements ReaderArtifactReadStore {
   readonly kind = "local-file" as const;
   private readonly root: string;
 
@@ -114,11 +112,11 @@ export class LocalFileArtifactStore implements ReaderArtifactStore {
     this.root = root;
   }
 
-  private path(key: string): string {
+  protected path(key: string): string {
     return join(this.root, key);
   }
 
-  private etagOf(path: string): string {
+  protected etagOf(path: string): string {
     return createHash("sha256").update(readFileSync(path)).digest("hex").slice(0, 16);
   }
 
@@ -142,45 +140,6 @@ export class LocalFileArtifactStore implements ReaderArtifactStore {
     }
   }
 
-  async writeManifest(
-    manifest: ReaderManifest,
-    expectedEtag: string | null,
-  ): Promise<{ modified: boolean; etag: string | null }> {
-    const path = this.path(READER_MANIFEST_KEY);
-    mkdirSync(dirname(path), { recursive: true });
-    const lock = `${path}.lock`;
-    let descriptor: number | undefined;
-    for (let attempt = 0; attempt < 200; attempt++) {
-      try { descriptor = openSync(lock, "wx"); writeFileSync(descriptor, String(process.pid)); break; }
-      catch (error) {
-        if ((error as NodeJS.ErrnoException).code !== "EEXIST") throw error;
-        try {
-          const pid = Number(readFileSync(lock, "utf8"));
-          if (Number.isSafeInteger(pid) && pid > 0) {
-            try { process.kill(pid, 0); }
-            catch (held) { if ((held as NodeJS.ErrnoException).code === "ESRCH") unlinkSync(lock); }
-          }
-        } catch { /* Another writer may already have released the lock. */ }
-        await new Promise(resolve => setTimeout(resolve, 5));
-      }
-    }
-    if (descriptor === undefined) throw new Error("READER_MANIFEST_BUSY");
-    const temporary = `${path}.${randomUUID()}.tmp`;
-    try {
-      let etag: string | null;
-      try { etag = this.etagOf(path); }
-      catch (error) { if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error; etag = null; }
-      if (etag !== expectedEtag) return { modified: false, etag };
-      writeFileSync(temporary, JSON.stringify(manifest), { flag: "wx" });
-      renameSync(temporary, path);
-      return { modified: true, etag: this.etagOf(path) };
-    } finally {
-      closeSync(descriptor);
-      try { unlinkSync(temporary); } catch { /* The atomic rename consumed it. */ }
-      unlinkSync(lock);
-    }
-  }
-
   async readBytes(key: string): Promise<Uint8Array | null> {
     try {
       return new Uint8Array(readFileSync(this.path(key)));
@@ -188,27 +147,11 @@ export class LocalFileArtifactStore implements ReaderArtifactStore {
       return null;
     }
   }
-
-  async putImmutable(bytes: Uint8Array, suffix: "json" | "json.gz"): Promise<string> {
-    const key = immutableKey(bytes, suffix);
-    const path = this.path(key);
-    mkdirSync(dirname(path), { recursive: true });
-    const temporary = `${path}.${randomUUID()}.tmp`;
-    writeFileSync(temporary, bytes, { flag: "wx" });
-    try {
-      try { linkSync(temporary, path); }
-      catch (error) {
-        if ((error as NodeJS.ErrnoException).code !== "EEXIST") throw error;
-        sameBytes(new Uint8Array(readFileSync(path)), bytes);
-      }
-    } finally { unlinkSync(temporary); }
-    return key;
-  }
 }
 
-export function resolveReaderArtifactStore(): ReaderArtifactStore | null {
+export function resolveReaderArtifactStore(): ReaderArtifactReadStore | null {
   const localDir = process.env.WTP_READER_EDGE_DIR?.trim();
-  if (localDir) return new LocalFileArtifactStore(localDir);
+  if (localDir) return new LocalFileArtifactReader(localDir);
   // On Netlify the reader gets credentials automatically; off Netlify with no
   // local dir there is no reader store, and the caller falls back to the DB.
   if (process.env.NETLIFY || process.env.NETLIFY_BLOBS_CONTEXT || process.env.NETLIFY_SITE_ID) {
@@ -218,8 +161,6 @@ export function resolveReaderArtifactStore(): ReaderArtifactStore | null {
 }
 
 export function resolveReaderArtifactWriteStore(): ReaderArtifactStore | null {
-  const localDir = process.env.WTP_READER_EDGE_DIR?.trim();
-  if (localDir) return new LocalFileArtifactStore(localDir);
   const siteID = process.env.NETLIFY_SITE_ID?.trim() || process.env.NETLIFY_BLOBS_SITE_ID?.trim();
   const token = process.env.NETLIFY_BLOBS_TOKEN?.trim() || process.env.NETLIFY_API_TOKEN?.trim();
   if (siteID && token) return new NetlifyBlobsArtifactStore({ siteID, token });

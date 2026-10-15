@@ -24,7 +24,7 @@ import {
   type PublishReaderExtras,
   type PublishRegistrations,
 } from "../lib/meetings/edge-serving.ts";
-import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
+import { LocalFileArtifactStore } from "../lib/meetings/edge-store-local.ts";
 import {
   applyMeetingFreshChecks,
   confirmationCheckedAt,

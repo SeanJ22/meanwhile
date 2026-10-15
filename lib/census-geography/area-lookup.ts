@@ -1,6 +1,6 @@
 import { readerQuery } from "../civic-data/promoted-reader-query.ts";
 import { readCensusGeographyIndex, type ReadOnlyQuery } from "../control-plane/admin-view/promoted-slices.ts";
-import { resolveReaderArtifactStore, type ReaderArtifactStore } from "../meetings/edge-store.ts";
+import { resolveReaderArtifactStore, type ReaderArtifactReadStore } from "../meetings/edge-store.ts";
 import type { BuiltDataset, BuiltScope } from "./dataset.ts";
 import { censusStateDataset, createCensusDistrictReaderEdge, readCensusDistrictState, type CensusDistrictEdge } from "./district-edge.ts";
 import { createLookup, notYetPublishedLookup } from "./lookup.ts";
@@ -10,7 +10,7 @@ export function unavailableCensusLookup(versionId: string): PublishedLookupState
   return { lookup: notYetPublishedLookup(versionId), source: "unavailable", versionId };
 }
 
-export async function selectedStateDatasets(index: CensusDistrictEdge, states: readonly string[], store: ReaderArtifactStore): Promise<BuiltDataset[]> {
+export async function selectedStateDatasets(index: CensusDistrictEdge, states: readonly string[], store: ReaderArtifactReadStore): Promise<BuiltDataset[]> {
   return Promise.all([...new Set(states)].map(async state => {
     const artifact = await readCensusDistrictState(index, state, store);
     if (!artifact) throw new Error("Selected Census state artifact is unavailable");
@@ -43,7 +43,7 @@ export function mergeCensusDatasets(index: CensusDistrictEdge, datasets: readonl
 }
 
 export async function loadPublishedAreaLookupState(zips: readonly string[], query: ReadOnlyQuery | null = readerQuery(),
-  store: ReaderArtifactStore | null = resolveReaderArtifactStore()): Promise<PublishedLookupState> {
+  store: ReaderArtifactReadStore | null = resolveReaderArtifactStore()): Promise<PublishedLookupState> {
   if (!zips.length || zips.some(zip => !/^\d{5}$/.test(zip))) throw new Error("A five-digit ZIP is required");
   const index = await readCensusGeographyIndex(query);
   if (index.kind !== "HELD") return unavailableCensusLookup(index.kind);

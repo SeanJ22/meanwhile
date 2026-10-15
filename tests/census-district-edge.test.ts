@@ -7,7 +7,7 @@ import { after, test } from "node:test";
 import type { BuiltDataset } from "../lib/census-geography/dataset.ts";
 import { buildCensusDistrictEdge, censusStateDataset, createCensusDistrictReaderEdge, publishCensusDistrictStates, readCensusDistrictState } from "../lib/census-geography/district-edge.ts";
 import { createLookup } from "../lib/census-geography/lookup.ts";
-import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
+import { LocalFileArtifactStore } from "../lib/meetings/edge-store-local.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { publishedZipDistricts, withCensusDistricts } from "../lib/geo/zip-census-districts.ts";
 
@@ -159,4 +159,19 @@ test("publishing a state writes its polygon separately and cold metadata reads l
   assert.ok(ref.geometryRef?.key);
   assert.deepEqual(reads, [published.states.AZ.key]);
   assert.ok(await store.readBytes(ref.geometryRef.key));
+});
+
+test("a proven empty source scope survives state reconstruction for the next conditional refresh", async () => {
+  const input = constructedState("AZ", "04", 1);
+  const empty = { ...input.scopes[0], type: "state_leg_upper" as const, version: "sldu:proven-empty", instanceCount: 0, zctaEdgeCount: 0, groupings: [],
+    versionMeta: { ...input.scopes[0].versionMeta, type: "state_leg_upper" as const, key: "sldu:proven-empty", retrievalComplete: true } };
+  const published = await buildCensusDistrictEdge({ ...input, scopes: [...input.scopes, empty] }, "empty-scope-reuse", store);
+  assert.ok(published.scopes.every(scope => scope.instanceCount > 0));
+  const state = await readCensusDistrictState(published, "AZ", store);
+  assert.ok(state);
+  const restored = censusStateDataset(state).scopes.find(scope => scope.version === empty.version);
+  assert.ok(restored);
+  assert.equal(restored.versionMeta.retrievalComplete, true);
+  assert.deepEqual(restored.groupings, []);
+  assert.deepEqual(restored.versionMeta.provenance, empty.versionMeta.provenance);
 });

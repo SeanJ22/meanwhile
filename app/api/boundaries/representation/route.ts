@@ -4,21 +4,31 @@ import { divisionsAt } from "@/lib/registry/server";
 import { requestRepresentationGeographyReader, selectedRepresentationContainers, representationDivision } from "@/lib/geo/representation-geography";
 import { hydrateBoundaryGeometries } from "@/lib/census-geography/boundary-artifacts";
 import { FIPS_TO_STATE } from "@/lib/ocd/fips";
+import { numeric, numericInRange } from "@/lib/api/params";
 
 export const runtime = "nodejs";
+const variation = { "Netlify-Vary": "query" };
 
 /** The visible state's independently published overlapping representation areas. */
 export async function GET(request: Request) {
   const url = new URL(request.url);
-  const lat = Number(url.searchParams.get("lat")), lng = Number(url.searchParams.get("lng"));
+  const latitude = numericInRange(url.searchParams, "lat", -90, 90, "refuse");
+  const longitude = numericInRange(url.searchParams, "lng", -180, 180, "refuse");
   const requestedState = url.searchParams.get("state")?.toUpperCase();
-  const bounds = url.searchParams.get("bounds")?.split(",").map(Number);
-  if (!Number.isFinite(lat) || !Number.isFinite(lng) || Math.abs(lat) > 90 || Math.abs(lng) > 180 ||
-      !url.searchParams.has("lat") || !url.searchParams.has("lng") ||
-      requestedState && !Object.values(FIPS_TO_STATE).some(row => row.postal === requestedState) ||
-      !bounds || bounds.length !== 4 || bounds.some(value => !Number.isFinite(value)) || bounds[1] > bounds[3]) {
-    return Response.json({ ok: false }, { status: 400 });
+  const parts = url.searchParams.get("bounds")?.split(",") ?? [];
+  if (!latitude.ok || !longitude.ok || parts.length !== 4 ||
+      requestedState && !Object.values(FIPS_TO_STATE).some(row => row.postal === requestedState)) {
+    return Response.json({ ok: false }, { status: 400, headers: { ...variation, "Cache-Control": "no-store" } });
   }
+  const bounds = parts.flatMap((raw, index) => {
+    const params = new URLSearchParams({ bounds: raw });
+    const read = index % 2 === 0 ? numeric(params, "bounds", "refuse") : numericInRange(params, "bounds", -90, 90, "refuse");
+    return read.ok ? [read.value] : [];
+  });
+  if (bounds.length !== 4 || bounds[1] > bounds[3]) {
+    return Response.json({ ok: false }, { status: 400, headers: { ...variation, "Cache-Control": "no-store" } });
+  }
+  const lat = latitude.value, lng = longitude.value;
   const manifest = await readReaderManifest().catch(() => null);
   if (manifest?.authorityArtifacts) {
     const edge = await ensureReaderAuthorityEdge(manifest, undefined, READER_MAP_AUTHORITY_FAMILIES).catch(() => null);
@@ -37,7 +47,7 @@ export async function GET(request: Request) {
     }
   }));
   if (slices.some(slice => slice.kind !== "HELD")) {
-    return Response.json({ ok: false, status: "NOT_YET_PUBLISHED" }, { status: 503, headers: { "Cache-Control": "no-store" } });
+    return Response.json({ ok: false, status: "NOT_YET_PUBLISHED" }, { status: 503, headers: { ...variation, "Cache-Control": "no-store" } });
   }
   const features = slices.flatMap(slice => {
     if (slice.kind !== "HELD") return [];
@@ -52,6 +62,7 @@ export async function GET(request: Request) {
     });
   });
   return Response.json({ ok: true, type: "FeatureCollection", features }, { headers: {
+    ...variation,
     "Netlify-CDN-Cache-Control": "public, durable, s-maxage=300, stale-while-revalidate=3600",
     "Netlify-Cache-Tag": READER_MANIFEST_CACHE_TAG, "Cache-Control": "public, max-age=0, must-revalidate",
   } });

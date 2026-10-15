@@ -29,6 +29,7 @@ import type { PromotedEdgeEntry } from "../civic-data/read-model.ts";
 import {
   resolveReaderArtifactStore,
   resolveReaderArtifactWriteStore,
+  type ReaderArtifactReadStore,
   type ReaderArtifactStore,
 } from "./edge-store.ts";
 import {
@@ -202,7 +203,7 @@ function extrasFingerprint(extras: PublishReaderExtras | undefined): string {
 export const READER_MANIFEST_MEMO_MS = 15_000;
 let manifestMemo: { readonly at: number; readonly value: Promise<ReaderManifest | null> } | null = null;
 
-async function readManifestFrom(store: ReaderArtifactStore): Promise<ReaderManifest | null> {
+async function readManifestFrom(store: ReaderArtifactReadStore): Promise<ReaderManifest | null> {
   try {
     const stored = await store.readManifest();
     return stored?.manifest ?? null;
@@ -212,7 +213,7 @@ async function readManifestFrom(store: ReaderArtifactStore): Promise<ReaderManif
 }
 
 export async function readReaderManifest(
-  store: ReaderArtifactStore | null = resolveReaderArtifactStore(),
+  store: ReaderArtifactReadStore | null = resolveReaderArtifactStore(),
   now: () => number = Date.now,
 ): Promise<ReaderManifest | null> {
   if (!store) return null;
@@ -281,7 +282,7 @@ function heldFetch<K, V>(
 export async function readAuthorityArtifactValue(
   family: AuthorityFamily,
   ref: AuthorityArtifactRef | undefined,
-  store: ReaderArtifactStore,
+  store: ReaderArtifactReadStore,
 ): Promise<unknown | null> {
   if (!ref?.key || !ref.version) return null;
   return heldFetch(authorityEdgeCache, family, `${ref.version}:${ref.key}`, async () => {
@@ -299,7 +300,7 @@ export async function readAuthorityArtifactValue(
 }
 
 export async function readServedPromotedFamily(family: PromotedAuthorityFamily, ref: AuthorityArtifactRef | undefined,
-  store: ReaderArtifactStore): Promise<PromotedFamilyArtifactValue | null> {
+  store: ReaderArtifactReadStore): Promise<PromotedFamilyArtifactValue | null> {
   const value = await readAuthorityArtifactValue(family, ref, store) as Partial<PromotedFamilyArtifactValue> | null;
   return value?.kind === "PROMOTED_POINTERS" && Array.isArray(value.entries) ? value as PromotedFamilyArtifactValue : null;
 }
@@ -308,7 +309,7 @@ const scopeArtifactCache = new Map<string, { version: string; value: Promise<Rea
 
 function fetchScopeArtifact(
   scope: ReaderManifestScope,
-  store: ReaderArtifactStore,
+  store: ReaderArtifactReadStore,
 ): Promise<ReaderGeoArtifact | null> {
   return heldFetch(scopeArtifactCache, scope.scope, scope.sha256, () => store.readArtifact(scope.key));
 }
@@ -318,7 +319,7 @@ const registrationEdgeCache = new Map<string, { version: string; value: Promise<
 async function fetchRegistrationArtifact(
   state: string,
   ref: AuthorityArtifactRef | undefined,
-  store: ReaderArtifactStore,
+  store: ReaderArtifactReadStore,
 ): Promise<{ value: RegistrationReadModel; versionId: string } | null> {
   if (!ref?.key || !ref.version) return null;
   const version = ref.version;
@@ -338,7 +339,7 @@ async function fetchRegistrationArtifact(
 
 const stateLegislatorsEdgeCache = new Map<string, { version: string; value: Promise<OfficialStateLegislatorReadModel | null> }>();
 
-async function fetchStateLegislatorsArtifact(jurisdiction: string, ref: AuthorityArtifactRef | undefined, store: ReaderArtifactStore) {
+async function fetchStateLegislatorsArtifact(jurisdiction: string, ref: AuthorityArtifactRef | undefined, store: ReaderArtifactReadStore) {
   if (!ref?.key || !ref.version) return null;
   const value = await heldFetch(stateLegislatorsEdgeCache, jurisdiction, `${ref.version}:${ref.key}`, async () => {
     try {
@@ -355,7 +356,7 @@ async function fetchStateLegislatorsArtifact(jurisdiction: string, ref: Authorit
 export function prefetchReaderEdgeStates(
   manifest: ReaderManifest | null,
   states: readonly string[],
-  store: ReaderArtifactStore | null = resolveReaderArtifactStore(),
+  store: ReaderArtifactReadStore | null = resolveReaderArtifactStore(),
 ): void {
   if (!manifest || !store || states.length === 0) return;
   const wanted = new Set(scopesForStates(states));
@@ -368,7 +369,7 @@ export function prefetchReaderEdgeStates(
 
 export async function ensureReaderAuthorityEdge(
   manifest: Pick<ReaderManifest, "authorityArtifacts" | "registrations" | "stateLegislators">,
-  store: ReaderArtifactStore | null = resolveReaderArtifactStore(),
+  store: ReaderArtifactReadStore | null = resolveReaderArtifactStore(),
   families: readonly AuthorityFamily[] = AUTHORITY_FAMILIES,
 ): Promise<ReaderAuthorityEdgeBundle> {
   // Every Reader route installs the published meeting doors here, beside its authority families: which partitions
@@ -382,7 +383,7 @@ export async function ensureReaderAuthorityEdge(
 /** Load only requested authority families; callers without meetings do not need meeting doors. */
 export async function readerAuthorityEdge(
   manifest: Pick<ReaderManifest, "authorityArtifacts" | "registrations" | "stateLegislators">,
-  store: ReaderArtifactStore | null = resolveReaderArtifactStore(),
+  store: ReaderArtifactReadStore | null = resolveReaderArtifactStore(),
   families: readonly AuthorityFamily[] = AUTHORITY_FAMILIES,
 ): Promise<ReaderAuthorityEdgeBundle> {
   const refs = manifest.authorityArtifacts;
@@ -725,7 +726,7 @@ function applyServedWindow(
 }
 
 type ReaderEdgeMeetingsOptions = {
-    readonly store?: ReaderArtifactStore | null;
+    readonly store?: ReaderArtifactReadStore | null;
     readonly states?: readonly string[];
     readonly ocdIds?: readonly string[];
     readonly meetingId?: string;

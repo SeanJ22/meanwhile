@@ -7,6 +7,7 @@ import test from "node:test";
 
 // Plain .mjs, shared with the plain-node scripts that never see tsx.
 import { posixRelative } from "../scripts/repo-path.mjs";
+import { dataPath, notePath } from "../scripts/lib/reference-paths.ts";
 import {
   BOARDDOCS_IS_DELIBERATELY_EMPTY,
   CENSUS_BLANK_PLACE_TX_UNITS,
@@ -18,10 +19,11 @@ import {
   REFERENCE_ROW_COUNTS,
   parseCsv,
   readTable,
-  referenceFiles,
 } from "../lib/reference/index.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
+const referenceFiles = (): string[] => readdirSync(join(ROOT, "data", "reference"), { withFileTypes: true })
+  .filter(entry => entry.isFile()).map(entry => entry.name).sort();
 // Voting routes and election scope use the JSON reference loader; county clocks are a static JSON import.
 // Both retain the same required provenance pairing as the CSV tables.
 const JSON_REFERENCE_DATASETS = [...REFERENCE_JSON_DATASETS, "national_county_time_zones", "statewide-executive-sources", "us-jurisdiction-labels"] as const;
@@ -254,6 +256,8 @@ test("no module reads reference data from any path outside data/reference", () =
 });
 
 test("the loader resolves every dataset inside data/reference", () => {
+  for (const dataset of REFERENCE_DATASETS) assert.equal(dataPath(dataset), join(ROOT, "data", "reference", `${dataset}.csv`));
+  for (const dataset of [...REFERENCE_DATASETS, ...REFERENCE_JSON_DATASETS]) assert.equal(notePath(dataset), join(ROOT, "data", "reference", `${dataset}.md`));
   for (const file of REFERENCE_DATA_FILES) {
     const dataset = file.replace(/\.(csv|json)$/, "");
     for (const name of [file, `${dataset}.md`]) {

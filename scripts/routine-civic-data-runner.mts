@@ -157,6 +157,7 @@ import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-wr
 import { flushDatabaseTransfer } from "../lib/db/transfer.ts";
 import { publishSupervisorReaderEdge, readerEdgeSupervisorFailure, type ReaderEdgePublicationOutcome } from "../lib/civic-data/reader-edge-publication.ts";
 import { resolveReaderArtifactWriteStore } from "../lib/meetings/edge-store.ts";
+import { LocalFileArtifactStore } from "../lib/meetings/edge-store-local.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { startWorkerToolsHost } from "../lib/control-plane/workers/process-pool.ts";
@@ -646,7 +647,9 @@ async function recordHuntSourceProgress(task: RoutineSourceTask, stage: HuntSour
 
 // Source pointers may settle in the other routine process while publication has a large outbox.
 // Copy them before admission, then once per existing publication minute without overlapping sweeps.
-const publishNowEdgeStore = PUBLISH_NOW ? resolveReaderArtifactWriteStore() : null;
+const localArtifactDirectory = process.env.WTP_READER_EDGE_LOCAL_OK === "1" ? process.env.WTP_READER_EDGE_DIR?.trim() : undefined;
+const readerArtifactWriteStore = localArtifactDirectory ? new LocalFileArtifactStore(localArtifactDirectory) : resolveReaderArtifactWriteStore();
+const publishNowEdgeStore = PUBLISH_NOW ? readerArtifactWriteStore : null;
 const publishNowEdgeChecks = PUBLISH_NOW ? startPublishNowEdgeChecks({
   store: publishNowEdgeStore?.kind === "local-file" ? "local folder" : publishNowEdgeStore?.kind === "netlify-blobs" ? "Netlify Blobs" : "not configured",
   readPaused: async () => {
@@ -656,7 +659,7 @@ const publishNowEdgeChecks = PUBLISH_NOW ? startPublishNowEdgeChecks({
     return readIntents([...(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY))]).runnerPause.paused;
   },
   check: async () => {
-    const outcome = await publishSupervisorReaderEdge(store, new Date().toISOString());
+    const outcome = await publishSupervisorReaderEdge(store, new Date().toISOString(), null, { artifactStore: readerArtifactWriteStore });
     const failure = readerEdgeSupervisorFailure(outcome);
     if (failure) supervisorFailures.push(failure);
     return outcome;
@@ -1422,7 +1425,7 @@ const readerRuns = pass.repair;
 step = "publishing changed reader edge copies";
 await publishNowEdgeChecks?.stop();
 const finalReaderEdge = publishNowEdgeChecks ? await publishNowEdgeChecks.run()
-  : await publishSupervisorReaderEdge(store, new Date().toISOString(), ONLY === null ? null : selectedTasks);
+  : await publishSupervisorReaderEdge(store, new Date().toISOString(), ONLY === null ? null : selectedTasks, { artifactStore: readerArtifactWriteStore });
 const readerEdge = publishNowEdgeChecks ? (await publishNowEdgeChecks.stop())! : finalReaderEdge;
 const readerEdgeFailure = readerEdgeSupervisorFailure(finalReaderEdge);
 if (readerEdgeFailure && !publishNowEdgeChecks) supervisorFailures.push(readerEdgeFailure);

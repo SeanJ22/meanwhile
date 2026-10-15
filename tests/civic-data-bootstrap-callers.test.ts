@@ -5,7 +5,6 @@ import test from "node:test";
 
 const ROOT = join(import.meta.dirname, "..");
 const EXPECTED_CALLERS = [
-  "lib/census-geography/reader.ts",
   "lib/civic-data/state-members.ts",
   "lib/funding/snapshot.ts",
 ] as const;

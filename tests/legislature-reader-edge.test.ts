@@ -6,7 +6,7 @@ import test from "node:test";
 import { renderToStaticMarkup } from "react-dom/server";
 import LegislaturePage from "../app/legislature/[state]/page.tsx";
 import { TRIBAL_SEAT_REFERENCES } from "../lib/officials/tribal-seats.ts";
-import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
+import { LocalFileArtifactStore } from "../lib/meetings/edge-store-local.ts";
 import { publishReaderEdgeArtifacts, readerAuthorityEdge } from "../lib/meetings/edge-serving.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { settleStateLegislatorsRead } from "../lib/registry/server.ts";

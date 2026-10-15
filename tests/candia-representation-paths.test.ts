@@ -14,7 +14,7 @@ import { publishScopeBoundaries } from "../lib/census-geography/boundary-artifac
 import { publishedZipDistricts, withCensusDistricts } from "../lib/geo/zip-census-districts.ts";
 import { districtsAt, fillLayerId } from "../lib/map/districts.ts";
 import { publishReaderEdgeArtifacts, readReaderManifest, readerAuthorityEdge } from "../lib/meetings/edge-serving.ts";
-import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
+import { LocalFileArtifactStore } from "../lib/meetings/edge-store-local.ts";
 import { contains, type GeoFeature } from "../lib/registry/resolve.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { divisionsByOcdIds, seatHoldersForDivision } from "../lib/registry/server.ts";
@@ -122,6 +122,11 @@ test("a Candia map click returns both actual-source districts and their three pl
   const response = await boundaryAreas(new Request(`http://localhost/api/boundaries/representation?lat=${point.lat}&lng=${point.lng}&state=nh&bounds=-71.4,43,-71.2,43.2`));
   assert.equal(response.status, 200);
   const collection = await response.json();
+  for (const bounds of ["288.6,43,288.8,43.2", "-431.4,43,-431.2,43.2"]) {
+    const shifted = await boundaryAreas(new Request(`http://localhost/api/boundaries/representation?lat=${point.lat}&lng=${point.lng}&state=nh&bounds=${bounds}`));
+    assert.equal(shifted.status, 200);
+    assert.deepEqual(await shifted.json(), collection, "a wrapped map center must preserve its visible world copy");
+  }
   const overlays = collection.features.filter((feature: GeoFeature) => contains([point.lng, point.lat], feature));
   assert.deepEqual(overlays.map((feature: GeoFeature) => feature.properties.ocdId), [overlayId]);
   const base = JSON.parse(readFileSync(new URL("../data/states/nh/geo/sldl-33.geojson", import.meta.url), "utf8"))

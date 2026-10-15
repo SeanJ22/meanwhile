@@ -1,7 +1,7 @@
 import type { GeographyRef, GeographyType } from "../../census-geography/contract.ts";
 import { censusStateDataset, createCensusDistrictReaderEdge, readCensusDistrictState,
   type CensusDistrictEdge, type CensusDistrictStateArtifact } from "../../census-geography/district-edge.ts";
-import { resolveReaderArtifactStore, type ReaderArtifactStore } from "../../meetings/edge-store.ts";
+import { resolveReaderArtifactStore, type ReaderArtifactReadStore } from "../../meetings/edge-store.ts";
 import { FIPS_TO_STATE } from "../../ocd/fips.ts";
 import { CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } from "../../census-geography/publication.ts";
 import { REGISTRATION_RECORD_CLASS, REGISTRATION_TARGETS } from "../../registration/publication.ts";
@@ -86,7 +86,7 @@ function stateGeography(value: CensusDistrictStateArtifact, types: readonly Geog
 
 export async function stateContainers(
   stateAbbr: string, types: readonly GeographyType[], withOverlaps: boolean, query: ReadOnlyQuery | null,
-  store: ReaderArtifactStore | null = resolveReaderArtifactStore(),
+  store: ReaderArtifactReadStore | null = resolveReaderArtifactStore(),
 ): Promise<Slice<GeographySlice>> {
   const index = await readCensusGeographyIndex(query);
   if (index.kind !== "HELD") return index;
@@ -100,7 +100,7 @@ export async function stateContainers(
 
 export async function oneContainer(
   type: GeographyType, geoid: string, query: ReadOnlyQuery | null,
-  store: ReaderArtifactStore | null = resolveReaderArtifactStore(), stateAbbr?: string,
+  store: ReaderArtifactReadStore | null = resolveReaderArtifactStore(), stateAbbr?: string,
 ): Promise<Slice<GeographySlice>> {
   const state = stateAbbr ?? (type !== "cbsa" && type !== "aiannh" ? FIPS_TO_STATE[geoid.slice(0, 2)]?.postal : undefined);
   if (!state) return { kind: "UNREAD", detail: "A state is required to read this Census geography." };
@@ -116,7 +116,7 @@ export interface CodeSlice extends GeographySlice {
 
 export async function containersOfCode(
   zcta5: string, types: readonly GeographyType[], query: ReadOnlyQuery | null,
-  store: ReaderArtifactStore | null = resolveReaderArtifactStore(),
+  store: ReaderArtifactReadStore | null = resolveReaderArtifactStore(),
 ): Promise<Slice<CodeSlice>> {
   const index = await readCensusGeographyIndex(query);
   if (index.kind !== "HELD") return index;

@@ -1,5 +1,6 @@
 import { readFileSync, writeFileSync } from "node:fs";
-import { readRecords, dataPath, notePath } from "../lib/reference/index.ts";
+import { readRecords } from "../lib/reference/index.ts";
+import { dataPath, notePath } from "./lib/reference-paths.ts";
 import { compileStateCampaignFinanceAgencies, STATE_CF_HEADER } from "../lib/reference/state-campaign-finance.ts";
 
 const corrections = JSON.parse(readFileSync("tests/fixtures/reference/fec-campaign-office-blocks.json", "utf8")) as {

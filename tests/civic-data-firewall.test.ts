@@ -572,3 +572,15 @@ test("publication closure follows runtime imports but not erased TypeScript inte
     assert.equal(audit(files).some(row => row.code === "MANUAL_DATA_PATH_WRITES_REPOSITORY" && row.path === "lib/fixture-writer.ts"), reachable, declaration);
   }
 });
+
+test("artifact readers grant no local write capability and an explicitly imported local writer stays detectable", () => {
+  const files = minimalFiles();
+  const adapter = ROUTINE_SOURCE_CONTRACTS[0]!.acquisitionAdapter.command[0]!;
+  files[adapter] = 'import { resolveReaderArtifactStore } from "../lib/meetings/edge-store.ts"; await resolveReaderArtifactStore()?.readManifest();';
+  for (const name of ["edge-store.ts", "edge-store-local.ts"]) {
+    files[`lib/meetings/${name}`] = readFileSync(new URL(`../lib/meetings/${name}`, import.meta.url), "utf8");
+  }
+  assert.deepEqual(audit(files).filter(row => row.code === "ROUTINE_PATH_WRITES_REPOSITORY"), []);
+  files[adapter] += '\nimport { LocalFileArtifactStore } from "../lib/meetings/edge-store-local.ts"; const local = new LocalFileArtifactStore("data/held");';
+  assert.deepEqual(audit(files).filter(row => row.code === "ROUTINE_PATH_WRITES_REPOSITORY").map(row => row.path), ["lib/meetings/edge-store-local.ts"]);
+});

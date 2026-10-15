@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { assignment } from "./cli-args.mts";
-import { REFERENCE_DIR } from "../lib/reference/index.ts";
+import { REFERENCE_DIR } from "./lib/reference-paths.ts";
 import { readRegistryRuntimePrior } from "../lib/registry/runtime-data-plane.ts";
 import type { Division, Registry } from "../lib/registry/types.ts";
 import { CENSUS_BENCHMARK, CENSUS_GEOCODER_URL, parseCensusPoint } from "../lib/geo/census-geocoder.ts";

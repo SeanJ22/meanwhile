@@ -10,10 +10,6 @@ import { ADMIN_CONFIG_ID, isAdminConfig } from "@/lib/control-plane/gateway/admi
 import { expansionScopesOf } from "@/lib/control-plane/expansion/scopes.ts";
 import type { GatewayDeps } from "@/lib/control-plane/gateway/registry.ts";
 
-/**
- * Many hunts in one action: the CSV parse (quoted cells, inactive rows, a blank ZIP, a lost leading
- * zero), budgets that never add up past the total, and one config write for every hunt.
- */
 
 const COOK = [
   "district,state,cd,incumbent,map_status,zip,zip_type,active,city,county,other_cd119_touching,evidence,confidence,note",
@@ -150,7 +146,7 @@ test("an Excel workbook is read through the repository's own reader, and a ZIP t
 import { resolveStateScope } from "@/lib/control-plane/expansion/runner-load.ts";
 import { scopeKeyOf, validateScopeGeography, validateScopeKey, withScopeSet } from "@/lib/control-plane/expansion/scopes.ts";
 import { huntPlaceKey, huntRelation, parseV6PlaceKey } from "@/lib/control-plane/admin-view/v6-hunts-read.ts";
-import { loadBootstrapLookup } from "@/lib/census-geography/reader.ts";
+import { loadBootstrapLookup } from "./helpers/census-geography-fixtures.ts";
 
 const STATE_AZ = { type: "state", geoid: "04", version: "state:2020", label: "Arizona", stateAbbr: "AZ" } as const;
 

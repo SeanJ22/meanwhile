@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { loadBootstrapLookup } from "../lib/census-geography/reader.ts";
+import { loadBootstrapLookup } from "./helpers/census-geography-fixtures.ts";
 import { declaredWorkMembers } from "../lib/control-plane/expansion/declared-work-scope.ts";
 import { resolveScopes } from "../lib/control-plane/expansion/runner-load.ts";
 import { withScopeSet } from "../lib/control-plane/expansion/scopes.ts";

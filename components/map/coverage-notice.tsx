@@ -3,6 +3,7 @@ import { PlaceOpenData } from "./open-data";
 
 import { useShellData } from "@/lib/state/data";
 import { CardGapContribution } from "@/components/ui/card-gap-context";
+import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
 import Link from "next/link";
 import { legislativeRepresentationLabel, tribalSeatDescription } from "@/lib/officials/tribal-seats";
@@ -161,6 +162,10 @@ function marksOverlap(standing: BodyStanding | undefined): boolean {
 /** A seat shows its held name and representatives; gaps join the card footer. */
 function SeatRow({ seat, zip, onOpenOfficial }: { seat: PanelSeat; zip: string; onOpenOfficial?: OpenOfficial }) {
   return <>
+    <CardSourcesContribution id={`seat-sources:${seat.ocdId}`} sources={(seat.sourceUrls ?? []).map(sourceUrl => ({
+      what: "The district boundary and representation",
+      provenance: { sourceUrl, sourceOrg: new URL(sourceUrl).hostname, collectedAt: "", verifiedAt: null },
+    }))} />
     {!seat.label && seat.sourcing !== "looking" && <CardGapContribution id={`seat-name:${seat.ocdId}`} label="district names" unit="district" />}
     {seat.representatives.length === 0 && seat.sourcing !== "looking" && <CardGapContribution id={`seat-representatives:${seat.ocdId}`} label="representatives" unit="district" />}
     {(seat.label || seat.representatives.length > 0) && <li
@@ -180,10 +185,6 @@ function SeatRow({ seat, zip, onOpenOfficial }: { seat: PanelSeat; zip: string; 
       {seat.representation === "tribal" && seat.nation && (
         <p className="mt-1 t-caption leading-relaxed text-paper-dim">{tribalSeatDescription(seat.nation)}</p>
       )}
-      {!!seat.sourceUrls?.length && <details className="mt-1 t-caption text-muted">
-        <summary className="cursor-pointer">Sources</summary>
-        <ul className="mt-1 space-y-1">{seat.sourceUrls.map(sourceUrl => <li key={sourceUrl}><a href={sourceUrl} target="_blank" rel="noreferrer" className="text-link underline decoration-dotted">{new URL(sourceUrl).hostname}</a></li>)}</ul>
-      </details>}
     </li>}
   </>;
 }

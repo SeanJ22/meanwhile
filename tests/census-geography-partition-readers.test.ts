@@ -10,7 +10,7 @@ import { buildCensusDistrictEdge } from "../lib/census-geography/district-edge.t
 import { createPublishedIndexLookup } from "../lib/census-geography/reader.ts";
 import { loadPublishedScopeLookupState } from "../lib/census-geography/scope-lookup.ts";
 import { containersOfCode, stateContainers, type ReadOnlyQuery } from "../lib/control-plane/admin-view/promoted-slices.ts";
-import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
+import { LocalFileArtifactStore } from "../lib/meetings/edge-store-local.ts";
 
 const bootstrap = JSON.parse(readFileSync("lib/census-geography/bootstrap-az.json", "utf8")) as BuiltDataset;
 const zip = "85701", otherZip = "99999";

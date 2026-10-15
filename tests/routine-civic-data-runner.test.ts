@@ -1392,11 +1392,11 @@ test("Reader readback repair covers the observable registry independently of sou
   assert.match(child, /const attestor = readerVerifierClosureAttestor\(\);/);
   assert.match(child, /repairRoutineReaderProjectionReadback\(store, contract, observedAt, undefined, \{ attestor \}\)/);
   assert.doesNotMatch(child, /preparePublishedMeetingSnapshot|publishReaderEdgeArtifacts/);
-  assert.match(runner, /await publishNowEdgeChecks\?\.stop\(\);\s*const finalReaderEdge = publishNowEdgeChecks \? await publishNowEdgeChecks\.run\(\)\s*:\s*await publishSupervisorReaderEdge\(store, new Date\(\)\.toISOString\(\), ONLY === null \? null : selectedTasks\)/,
-    "publish-now completes its serialized pointer sweep while ordinary repair keeps the selected source scope");
+  assert.match(runner, /await publishNowEdgeChecks\?\.stop\(\);\s*const finalReaderEdge = publishNowEdgeChecks \? await publishNowEdgeChecks\.run\(\)\s*:\s*await publishSupervisorReaderEdge\(store, new Date\(\)\.toISOString\(\), ONLY === null \? null : selectedTasks, \{ artifactStore: readerArtifactWriteStore \}\)/,
+    "publish-now completes its serialized pointer sweep while ordinary repair keeps the selected source scope and explicit publication store");
   const publicationChecks = runner.slice(runner.indexOf("const publishNowEdgeChecks ="), runner.indexOf("const admissionNowMs ="));
-  assert.match(publicationChecks, /publishSupervisorReaderEdge\(store, new Date\(\)\.toISOString\(\)\)/,
-    "publish-now checks all promoted families independently of selected source work");
+  assert.match(publicationChecks, /publishSupervisorReaderEdge\(store, new Date\(\)\.toISOString\(\), null, \{ artifactStore: readerArtifactWriteStore \}\)/,
+    "publish-now checks all promoted families independently of selected source work through the explicit publication store");
   assert.equal(child.match(/readMeetingsProjection\(/g)?.length, 1, "the child composes in one place");
   assert.match(child, /serializeRoutineReaderRepairRecord/);
   assert.doesNotMatch(child, /processRegisteredRoutineCandidate|promoteMeetingPartitions|\.promote\(/);

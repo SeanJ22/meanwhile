@@ -6,7 +6,7 @@ import { after, test } from "node:test";
 import { censusEdgePublication } from "../scripts/lib/census-edge-publication.ts";
 import { buildCensusDistrictEdge, createCensusDistrictReaderEdge, censusDistrictEdgeVersion } from "../lib/census-geography/district-edge.ts";
 import type { BuiltDataset } from "../lib/census-geography/dataset.ts";
-import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
+import { LocalFileArtifactStore } from "../lib/meetings/edge-store-local.ts";
 
 const directory = mkdtempSync(join(tmpdir(), "census-edge-publication-"));
 after(() => rmSync(directory, { recursive: true, force: true }));

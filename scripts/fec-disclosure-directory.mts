@@ -3,7 +3,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { extractTextLayer } from "../lib/extract/text-layer.ts";
 import { extracted, zeroRows, type ExtractResult } from "../lib/extract/types.ts";
-import { dataPath, notePath } from "../lib/reference/index.ts";
+import { dataPath, notePath } from "./lib/reference-paths.ts";
 
 /** One office in one state, as the directory prints it. */
 interface DirectoryOffice {

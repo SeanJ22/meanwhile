@@ -11,7 +11,7 @@ import { CENSUS_GEO_CONTRACT_ID } from "../lib/census-geography/publication.ts";
 import { publishStatePeople } from "../lib/civic-data/state-people-publication.ts";
 import { publishRoutineReaderEdgeOutcome } from "../lib/civic-data/reader-edge-publication.ts";
 import { PUBLISH_NOW_INTERVAL_MS, publishNowHasNothingOwed, startPublishNowEdgeChecks } from "../lib/civic-data/publish-now.ts";
-import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
+import { LocalFileArtifactStore } from "../lib/meetings/edge-store-local.ts";
 import { ensureReaderAuthorityEdge } from "../lib/meetings/edge-serving.ts";
 import { MEETINGS_PREPARED_SCOPE } from "../lib/meetings/prepared-snapshot.ts";
 import { heldRegistrationReceipt } from "../lib/registration/acquire.ts";

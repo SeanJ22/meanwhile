@@ -8,7 +8,8 @@ import { after, test } from "node:test";
 
 import { ensureReaderAuthorityEdge, publishReaderEdgeArtifacts, type PublishAuthority } from "../lib/meetings/edge-serving.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
-import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
+import { LocalFileArtifactStore } from "../lib/meetings/edge-store-local.ts";
+import { LocalFileArtifactReader } from "../lib/meetings/edge-store.ts";
 import type { PromotedAuthorityFamily, PromotedFamilyArtifactValue } from "../lib/meetings/edge-artifacts.ts";
 import type { BuiltDataset } from "../lib/census-geography/dataset.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
@@ -425,12 +426,12 @@ test("a cold /ballot?zip=03255 (Newbury, New Hampshire) with the whole ballot ed
   process.env.WTP_READER_EDGE_DIR = ballotEdgeDir;
   const manifest = (await new LocalFileArtifactStore(ballotEdgeDir).readManifest())!.manifest;
   const keys: string[] = [];
-  const originalRead = LocalFileArtifactStore.prototype.readBytes;
-  LocalFileArtifactStore.prototype.readBytes = async function (key) { keys.push(key); return originalRead.call(this, key); };
+  const originalRead = LocalFileArtifactReader.prototype.readBytes;
+  LocalFileArtifactReader.prototype.readBytes = async function (key) { keys.push(key); return originalRead.call(this, key); };
   try {
     await renderBallot("03255");
   } finally {
-    LocalFileArtifactStore.prototype.readBytes = originalRead;
+    LocalFileArtifactReader.prototype.readBytes = originalRead;
   }
   assert.deepEqual(databaseReads, [], "a cold NH /ballot with the whole edge read the database");
   assert.equal(nhBallotReadState().kind, "PROMOTED");

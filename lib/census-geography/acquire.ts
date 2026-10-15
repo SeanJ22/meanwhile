@@ -1,5 +1,7 @@
-import { createReadStream, closeSync, openSync, writeSync } from "node:fs";
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { once } from "node:events";
+import { createReadStream, createWriteStream } from "node:fs";
+import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { finished } from "node:stream/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { createInterface } from "node:readline";
@@ -139,31 +141,56 @@ function validateSource(bytes: Uint8Array, src: Source): void {
   if (!count) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", `tab20 returned no rows from ${src.url}`);
 }
 
-async function partitionSource(src: Source, directory: string, options: CensusSourceOptions): Promise<PartitionedSource> {
+interface TemporarySourceFile {
+  readonly path: string;
+  append(bytes: string | Uint8Array): Promise<void>;
+  finish(): Promise<void>;
+  dispose(): Promise<void>;
+}
+
+async function temporarySourceFile(files: TemporarySourceFile[]): Promise<TemporarySourceFile> {
+  const stagingRoot = await mkdtemp(join(tmpdir(), "meanwhile-census-source-"));
+  const stagingPath = join(stagingRoot, "source.data");
+  const output = createWriteStream(stagingPath, { flags: "wx" });
+  const completion = finished(output);
+  void completion.catch(() => {});
+  const file: TemporarySourceFile = {
+    path: stagingPath,
+    async append(bytes) {
+      if (output.errored) throw output.errored;
+      if (!output.write(bytes)) await once(output, "drain");
+    },
+    async finish() { output.end(); await completion; },
+    async dispose() { output.destroy(); await completion.catch(() => {}); await rm(stagingRoot, { recursive: true, force: true }); },
+  };
+  files.push(file);
+  return file;
+}
+
+async function partitionSource(src: Source, files: TemporarySourceFile[], options: CensusSourceOptions): Promise<PartitionedSource> {
   const source = await censusSourceRelease(src.url, options, bytes => validateSource(bytes, src));
-  const allPath = join(directory, `${src.version.replaceAll(":", "-")}-national.txt`);
-  await writeFile(allPath, source.bytes);
+  const national = await temporarySourceFile(files);
+  await national.append(source.bytes);
+  await national.finish();
   const lines = byteLines(source.bytes);
   const rawHeader = lines.next().value ?? "";
   const header = parseTab20Header(rawHeader), columns = resolveTab20Columns(header, src.geoTag);
-  const handles = new Map<string, number>(), paths = new Map<string, string>();
-  try {
-    for (const line of lines) {
-      if (!line.trim()) continue;
-      const fields = line.split("|"), geoid = fields[columns.geoGeoid]?.trim() ?? "";
-      if (!geoid) continue;
-      const state = geoid.slice(0, 2);
-      if (!FIPS_TO_STATE[state]) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", `tab20 geography has unknown state ${geoid}`);
-      let handle = handles.get(state);
-      if (handle === undefined) {
-        const path = join(directory, `${src.version.replaceAll(":", "-")}-${state}.txt`);
-        handle = openSync(path, "w"); handles.set(state, handle); paths.set(state, path);
-        writeSync(handle, `${rawHeader}\n`);
-      }
-      writeSync(handle, `${line}\n`);
+  const writers = new Map<string, TemporarySourceFile>(), paths = new Map<string, string>();
+  for (const line of lines) {
+    if (!line.trim()) continue;
+    const fields = line.split("|"), geoid = fields[columns.geoGeoid]?.trim() ?? "";
+    if (!geoid) continue;
+    const state = geoid.slice(0, 2);
+    if (!FIPS_TO_STATE[state]) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", `tab20 geography has unknown state ${geoid}`);
+    let writer = writers.get(state);
+    if (!writer) {
+      writer = await temporarySourceFile(files); writers.set(state, writer); paths.set(state, writer.path);
+      await writer.append(`${rawHeader}\n`);
     }
-  } finally { for (const handle of handles.values()) closeSync(handle); }
-  return { source: src, paths, allPath, versionMeta: sourceMetadata(src, source) };
+    await writer.append(`${line}\n`);
+  }
+  for (const writer of writers.values()) await writer.finish();
+  return { source: src, paths, allPath: national.path, versionMeta: sourceMetadata(src, source) };
 }
 
 async function parsePartition(partition: PartitionedSource, state: string): Promise<BuiltScope> {
@@ -227,7 +254,7 @@ function cbsaVersionMeta(countyScope: BuiltScope, xlsxUrl: string, xlsxSha: stri
   };
 }
 
-async function acquisitionContext(options: AcquireStatesOptions, directory: string): Promise<AcquisitionContext> {
+async function acquisitionContext(options: AcquireStatesOptions, files: TemporarySourceFile[]): Promise<AcquisitionContext> {
   const keys = options.only ?? DEFAULT_SCOPES, discover = options.discoverPlans ?? options.only === undefined;
   const sources = new Map<string, Source>();
   for (const key of keys) {
@@ -248,7 +275,7 @@ async function acquisitionContext(options: AcquireStatesOptions, directory: stri
   const partitions = new Map<string, Promise<PartitionedSource>>();
   const partition = (src: Source): Promise<PartitionedSource> => {
     let found = partitions.get(src.version);
-    if (!found) { found = partitionSource(src, directory, options); partitions.set(src.version, found); }
+    if (!found) { found = partitionSource(src, files, options); partitions.set(src.version, found); }
     return found;
   };
   let cbsa: AcquisitionContext["cbsa"];
@@ -256,12 +283,16 @@ async function acquisitionContext(options: AcquireStatesOptions, directory: stri
     let parsed: CbsaDelineation | undefined;
     const source = await censusSourceRelease(CBSA_DELINEATION.url, options, bytes => { parsed = parseCbsaDelineation(Buffer.from(bytes)); });
     const delineation = parsed ?? parseCbsaDelineation(Buffer.from(source.bytes));
+    const paths = new Map<string, string>();
     for (const state of Object.keys(FIPS_TO_STATE)) {
+      const file = await temporarySourceFile(files);
       const areas = [...delineation.cbsa].filter(([, info]) => info.stateFips.has(state));
-      await writeFile(join(directory, `cbsa-${state}.json`), JSON.stringify(areas.map(([code, info]) => [code, { ...info, stateFips: [...info.stateFips] }])));
+      await file.append(JSON.stringify(areas.map(([code, info]) => [code, { ...info, stateFips: [...info.stateFips] }])));
+      await file.finish();
+      paths.set(state, file.path);
     }
     cbsa = { read: async state => {
-      const areas = JSON.parse(await readFile(join(directory, `cbsa-${state}.json`), "utf8")) as [string, { title: string; cbsaClass: "metropolitan" | "micropolitan"; counties: string[]; stateFips: string[] }][];
+      const areas = JSON.parse(await readFile(paths.get(state)!, "utf8")) as [string, { title: string; cbsaClass: "metropolitan" | "micropolitan"; counties: string[]; stateFips: string[] }][];
       const cbsa = new Map(areas.map(([code, info]) => [code, { ...info, stateFips: new Set(info.stateFips) }]));
       return { cbsa, cbsaByCounty: new Map(areas.flatMap(([code, info]) => info.counties.map(county => [county, code] as const))) };
     }, url: CBSA_DELINEATION.url, sha256: source.sha256, validator: sourceValidator(source) };
@@ -364,16 +395,16 @@ async function acquireStateDataset(options: AcquireOptions, context: Acquisition
 
 export async function acquireDataset(options: AcquireOptions = {}): Promise<BuiltDataset> {
   if (options.states?.size !== 1) throw new Error("Census geography acquisition requires exactly one state");
-  const directory = await mkdtemp(join(tmpdir(), "census-geography-"));
+  const files: TemporarySourceFile[] = [];
   try {
-    return await acquireStateDataset(options, await acquisitionContext({ ...options, previousScopes: options.previousDataset?.scopes }, directory));
-  } finally { await rm(directory, { recursive: true, force: true }); }
+    return await acquireStateDataset(options, await acquisitionContext({ ...options, previousScopes: options.previousDataset?.scopes }, files));
+  } finally { for (const file of files) await file.dispose(); }
 }
 
 export async function* acquireStateDatasets(options: AcquireStatesOptions = {}): AsyncGenerator<CensusDistrictStateInput> {
-  const directory = await mkdtemp(join(tmpdir(), "census-geography-"));
+  const files: TemporarySourceFile[] = [];
   try {
-    const context = await acquisitionContext(options, directory);
+    const context = await acquisitionContext(options, files);
     for (const stateFips of [...options.states ?? Object.keys(FIPS_TO_STATE)].sort()) {
       options.signal?.throwIfAborted();
       const state = FIPS_TO_STATE[stateFips]?.postal;
@@ -387,5 +418,5 @@ export async function* acquireStateDatasets(options: AcquireStatesOptions = {}):
         !hasGrf && FIPS_TO_STATE[stateFips].prefix === "territory" ? { ...context, grfRelease: undefined } : context);
       yield { state, dataset };
     }
-  } finally { await rm(directory, { recursive: true, force: true }); }
+  } finally { for (const file of files) await file.dispose(); }
 }

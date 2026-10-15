@@ -92,7 +92,11 @@ test("the real reference seats all render on the legislature page with the exact
   }
   assert.ok(html.includes("Sources"));
   assert.ok(html.includes("Sourced Representative"));
-  assert.ok(html.includes("data-working-on-it"),"a sourced seat lacking a holder remains an explicit information gap");
+  assert.ok(html.includes("data-card-gap"),"a sourced seat lacking a holder remains an explicit information gap in the shared footer");
+  assert.equal((html.match(/data-card-footer/g) ?? []).length, 1);
+  assert.equal((html.match(/data-card-sources/g) ?? []).length, 1);
+  assert.doesNotMatch(html, /data-working-on-it|data-seat-vacancy/);
+  for (const reference of tribalSeatReferencesFor(state).slice(1)) assert.ok(html.includes(`who holds the ${reference.nation} seat`));
 });
 
 test("one address retains its base and overlay district, with independent labels", () => {

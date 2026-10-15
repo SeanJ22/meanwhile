@@ -3,7 +3,8 @@ import { createReadStream, closeSync, mkdirSync, openSync, readFileSync, renameS
 import { createHash } from "node:crypto";
 import { dirname, join } from "node:path";
 import { createInterface } from "node:readline";
-import { dataPath, notePath, parseCsv } from "../lib/reference/index.ts";
+import { parseCsv } from "../lib/reference/index.ts";
+import { dataPath, notePath } from "./lib/reference-paths.ts";
 import { US_JURISDICTIONS } from "../lib/coverage/states.ts";
 import { censusPublisherSize } from "../lib/sources/publisher-size.ts";
 

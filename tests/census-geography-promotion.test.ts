@@ -11,7 +11,7 @@ import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import { SOURCE_AUTHORITIES, isOfficialSource } from "../lib/civic-data/source-authority.ts";
 import { censusGeographyCandidate } from "../lib/census-geography/candidate.ts";
 import { buildCensusDistrictEdge, createCensusDistrictReaderEdge, type CensusDistrictEdge } from "../lib/census-geography/district-edge.ts";
-import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
+import { LocalFileArtifactStore } from "../lib/meetings/edge-store-local.ts";
 import {
   CENSUS_GEO_CONTRACT_ID,
   CENSUS_GEO_PARSER_VERSION,

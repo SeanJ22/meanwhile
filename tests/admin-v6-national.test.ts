@@ -1,5 +1,8 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import test, { after } from "node:test";
+import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 
 import type { HeldPlaceCapture } from "../lib/civic-data/held-place-capture.ts";
 import type { ExpansionScopeDecision } from "../lib/control-plane/expansion/scopes.ts";
@@ -7,7 +10,7 @@ import type { StuckRowLike } from "../lib/control-plane/admin-view/blocker-cause
 import { districtLabelOf } from "../lib/control-plane/admin-view/district-label.ts";
 import { readPlaceOwed, resolvePlaceKey, type PlaceOwedDeps } from "../lib/control-plane/admin-view/place-owed-read.ts";
 import { scorePlace, type OwedRowLike } from "../lib/control-plane/admin-view/place-scorecard.ts";
-import type { ReadOnlyQuery, Row } from "../lib/control-plane/admin-view/promoted-slices.ts";
+import type { ReadOnlyQuery } from "../lib/control-plane/admin-view/promoted-slices.ts";
 import { parseV6PlaceKey } from "../lib/control-plane/admin-view/v6-hunts-read.ts";
 import {
   districtDivisions, forgetNationalGeography, labelOfDivisionId, readStateDistricts, unionDivisions, zipDivisionIds, type DistrictInfo,
@@ -17,13 +20,14 @@ import {
   type NationalDeps, type NationalHuntSources,
 } from "../lib/control-plane/admin-view/v6-national-read.ts";
 import { buildPlaceOwedList } from "../lib/coverage/place-owed.ts";
+import { buildCensusDistrictEdge } from "../lib/census-geography/district-edge.ts";
+import type { BuiltDataset, BuiltGrouping, BuiltScope } from "../lib/census-geography/dataset.ts";
+import { LocalFileArtifactStore } from "../lib/meetings/edge-store-local.ts";
 import { CENSUS_GEO_RECORD_CLASS } from "../lib/census-geography/publication.ts";
 
 const NOW = "2026-10-01T18:00:00.000Z";
 const AZ = "ocd-division/country:us/state:az";
 const COUNTRY = "ocd-division/country:us";
-
-/* ------------------------------------------------------------ fixtures */
 
 const district = (geoid: string, zips: string[], state = "az"): DistrictInfo => ({
   state, geoid, label: districtLabelOf(state, geoid), placeKey: `geo:${state}.congressional_district.${geoid}`,
@@ -56,8 +60,6 @@ const stuckRow = (id: string, stateCode: string | null, zip: string | null = nul
 });
 
 const countsByState = new Map([["az", 420], ["nj", 600]]);
-
-/* ------------------------------------------------------------ the rows */
 
 test("the country lists every state with its hunts, ZIPs worked of total, score and stuck, and a figure we lack is null", () => {
   const rows = nationalRows({
@@ -128,8 +130,6 @@ test("district names: AZ-06, and AL for a state with one seat or a delegate", ()
   assert.equal(districtLabelOf("ca", "0652"), "CA-52");
 });
 
-/* --------------------------------------------------------- the query */
-
 test("a malformed or repeated scope is refused, never widened to the country", () => {
   const q = (s: string) => nationalScopeOf(new URLSearchParams(s));
   assert.deepEqual(q("scope=us"), { ok: true, scopeKey: "us", scope: { kind: "country" } });
@@ -141,22 +141,38 @@ test("a malformed or repeated scope is refused, never widened to the country", (
   assert.deepEqual(q("scope=geo:az.bogus.1"), { ok: false, code: "INVALID_SCOPE" });
 });
 
-/* ------------------------------------------------- districts and union */
+const artifactDirectory = mkdtempSync(join(tmpdir(), "admin-national-census-"));
+const artifactStore = new LocalFileArtifactStore(artifactDirectory);
+const priorArtifactDirectory = process.env.WTP_READER_EDGE_DIR;
+process.env.WTP_READER_EDGE_DIR = artifactDirectory;
+after(() => {
+  if (priorArtifactDirectory === undefined) delete process.env.WTP_READER_EDGE_DIR;
+  else process.env.WTP_READER_EDGE_DIR = priorArtifactDirectory;
+  rmSync(artifactDirectory, { recursive: true, force: true });
+});
+const fixtureDataset = JSON.parse(readFileSync("lib/census-geography/bootstrap-az.json", "utf8")) as BuiltDataset;
+const fixtureScope = fixtureDataset.scopes.find(scope => scope.type === "congressional_district")!;
 
-function censusQuery(opts: { plans?: string[]; published?: boolean; containers?: Row[] } = {}): { query: ReadOnlyQuery; calls: () => number } {
+function censusQuery(opts: { plans?: string[]; published?: boolean; containers?: BuiltGrouping[] } = {}): { query: ReadOnlyQuery; calls: () => number } {
   let calls = 0;
-  const plans = opts.plans ?? ["cd:119"];
-  const grouping = (geoid: string, zips: string[], extra: Row = {}): Row => ({ row_kind: "grouping", type: "congressional_district", version: "cd:119", plan: "119th Congress", geoid,
-    ocd_id: null, label: `AZ Congressional District ${Number(geoid.slice(2))} (119th Congress)`, state_fips: "04", state_abbr: "AZ", cbsa_class: null, member_states: ["AZ"],
-    overlaps: zips.map((z) => ({ zcta5: z, whole: true, fraction: 1 })), ...extra });
-  return { calls: () => calls, query: async (statements) => {
+  const grouping = (geoid: string, zips: string[], extra: Partial<BuiltGrouping> = {}): BuiltGrouping => ({ geoid,
+    ocdId: null, label: `AZ Congressional District ${Number(geoid.slice(2))} (119th Congress)`, stateFips: "04", stateAbbr: "AZ", memberStates: ["AZ"],
+    overlaps: zips.map(zcta5 => ({ zcta5, whole: true, fraction: 1 })), ...extra });
+  const groups = opts.containers ?? [grouping("0406", ["85635", "85122", "85635"]), grouping("0405", ["85201"]), grouping("04ZZ", ["85000"]),
+    grouping("0201", ["99501"], { stateFips: "02", stateAbbr: "AK", memberStates: ["AK"] })];
+  const scopes: BuiltScope[] = (opts.plans ?? ["cd:119"]).map(version => ({ ...fixtureScope, version,
+    versionMeta: { ...fixtureScope.versionMeta, key: version }, groupings: groups, instanceCount: groups.length,
+    zctaEdgeCount: groups.reduce((sum, group) => sum + group.overlaps.length, 0) }));
+  const index = buildCensusDistrictEdge({ ...fixtureDataset, scopes,
+    zctaUniverse: [...new Set(groups.flatMap(group => group.overlaps.map(overlap => overlap.zcta5)))] }, "national-fixture", artifactStore);
+  return { calls: () => calls, query: async statements => {
     calls += 1;
-    assert.equal(statements.length, 2, "one pointer and one statement");
+    assert.equal(statements.length, 1, "only the compact index is read from the canonical store");
     assert.equal(statements[0].params[0], CENSUS_GEO_RECORD_CLASS);
-    if (opts.published === false) return [[], []];
-    const rows: Row[] = [...plans.map((version): Row => ({ row_kind: "scope", type: "congressional_district", version, plan: version })),
-      ...(opts.containers ?? [grouping("0406", ["85635", "85122", "85635"]), grouping("0405", ["85201"]), grouping("04ZZ", ["85000"]), grouping("0201", ["99501"], { state_fips: "02", state_abbr: "AK", member_states: ["AK"] })])];
-    return [[{ version_id: "cv-1" }], rows];
+    assert.match(statements[0].text, /^SELECT current_version_id AS version_id, payload FROM/);
+    assert.match(statements[0].text, /payload->>'formatVersion' = '2'/);
+    assert.doesNotMatch(statements[0].text, /jsonb_array_elements/);
+    return opts.published === false ? [[]] : [[{ version_id: "cv-1", payload: await index }]];
   } };
 }
 
@@ -230,8 +246,6 @@ test("the district place offers no send: the fleet's registry names governments,
   assert.equal(placeSendWords("st:az", "Arizona"), "Deploy fleet to Arizona");
 });
 
-/* ------------------------------------------------------------- scores */
-
 const held: HeldPlaceCapture = {
   subjects: [
     { id: "body-cochise", kind: "body", divisionIds: [`${AZ}/county:cochise`], label: "Cochise Board" },
@@ -291,8 +305,6 @@ test("a failed read of held data is null scores and a response; it is not rememb
   assert.deepEqual((await scoresWithin("k2", async () => [t], failing, 1_000)).ready, false);
   assert.equal(calls, 2, "tried again, not cached as a result");
 });
-
-/* ------------------------------------------------------- the section */
 
 function deps(over: Partial<NationalDeps> = {}): NationalDeps & { reads: { held: number; districts: number } } {
   const reads = { held: 0, districts: 0 };

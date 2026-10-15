@@ -33,7 +33,7 @@ export async function openBlank(query: Query, input: { readonly entityId: string
   [input.entityId, input.field, input.stage, input.reason, input.detail ?? null, Math.max(1, Math.round(input.retryMinutes))]);
 }
 
-/** Checks one claim under rulings §3 and, when it passes, decides it against the live value and writes it alone. */
+/** Checks one claim and, when it passes, decides it against the live value and writes it alone. */
 export async function publishClaim(db: FactDb, c: PublishInput, clocks: Clocks, now: Date = new Date()): Promise<PublishOutcome> {
   const verdict = checkFact(c, now, clocks.windowHours);
   return db.transaction(async (query) => {

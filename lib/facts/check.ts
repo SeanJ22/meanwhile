@@ -102,7 +102,7 @@ function aboutEntity(entity: CheckEntity, copy: SavedCopy): boolean {
     (entity.stateName === null || boundedIndexOf(lower, entity.stateName.toLowerCase()) !== -1);
 }
 
-/** Rulings §3 and nothing more: the value is on a saved page about this entity, captured inside its freshness window. */
+/** The value is on a saved page about this entity, captured inside its freshness window, and nothing more. */
 export function checkFact(c: Claim, now: Date, windowHours: (k: FieldKind) => number): CheckResult {
   const held = quoteHolds(c.copy, c.quote, c.valueText);
   if (typeof held === "string") return { ok: false, reason: held };

@@ -208,7 +208,7 @@ async function publishHuntedCandidateFields(subjects: readonly CampaignSiteSubje
   const campaignHosts = new Map<string, string[]>();
   for (const approval of approvals) campaignHosts.set(approval.campaignSite.candidacyId,
     [...campaignHosts.get(approval.campaignSite.candidacyId) ?? [], approval.campaignSite.host]);
-  const report = await publishCandidateFindings({ boxFindings: repos.boxFindings, held, store, subjects, campaignHosts,
+  const report = await publishCandidateFindings({ boxFindings: repos.boxFindings, scoutResults: repos.scoutResults, held, store, subjects, campaignHosts,
     clocks: factClocks((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value ?? null), now });
   console.log(`RCD_CANDIDATE_FINDINGS=${JSON.stringify(report)}`);
 }

@@ -1,45 +1,3 @@
-/**
- * The schema shipping gate, asked before the merge: `build-check.yml`'s gates
- * job and `pnpm gates` run it. It uses the same comparator and reader as
- * `pnpm db:check` (`lib/db/applied-migrations.ts`) but differs in three ways:
- *
- *   1. It is scoped: a change that does not touch the schema contract is NOT
- *      APPLICABLE and never opens a connection.
- *   2. It knows EXPAND and CONTRACT (`lib/db/migration-phases.ts`): expands may
- *      be pending for the production build to apply; a contract migration is
- *      supposed to be missing until its code is live.
- *   3. It reads the change, so it can tell a migration this change introduces
- *      from one already owed.
- *
- * It never applies anything: it reads through
- * `WTP_PRODUCTION_DATABASE_URL_READONLY` only. Applying is `pnpm db:apply`.
- *
- * Established migrations are immutable: the applied-join is on the journal's
- * `when`, never the SQL, so a rewritten applied migration would still read as
- * applied. That check (`lib/db/migration-immutability.ts`) runs first and needs
- * no credential or network.
- *
- * `--smoke` (or `WTP_SCHEMA_GATE_SMOKE=true`) contacts production on a commit
- * that changed nothing, proving the read-only credential.
- *
- * `--moment=post-deploy` (or `WTP_SCHEMA_GATE_MOMENT=post-deploy`) is the
- * reading after a deploy; it is the one that fails on an unapplied CONTRACT
- * migration, which pre-deploy allows. `post-deploy-integrity.yml` runs it.
- *
- * Exit codes, matching `db:check`:
- *   0  the invariant holds, or the change does not touch the schema contract
- *   1  REFUSED — a migration is on the wrong side of the deploy, or an
- *      established migration was rewritten, deleted or renamed. Named.
- *   2  COULD NOT TELL — no credential, an unreadable migrations table, or an
- *      unreachable merge base. Never a pass.
- *
- * Run:
- *   pnpm exec tsx scripts/db-shipping-gate.mts
- *   pnpm exec tsx scripts/db-shipping-gate.mts --moment=post-deploy
- *   pnpm exec tsx scripts/db-shipping-gate.mts --paths=lib/db/migrations/<tag>.sql
- *   pnpm exec tsx scripts/db-shipping-gate.mts --base=origin/main
- *   pnpm exec tsx scripts/db-shipping-gate.mts --smoke
- */
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { readdirSync, readFileSync } from "node:fs";
@@ -57,7 +15,6 @@ import {
   JOURNAL_PATH,
   MIGRATION_SQL_PATH,
   parseNameStatus,
-  parsePorcelain,
   type ChangedEntry,
 } from "../lib/db/migration-immutability.ts";
 import {
@@ -76,11 +33,6 @@ const arg = (name: string): string | null => {
   return hit ? hit.slice(name.length + 3) : null;
 };
 
-/**
- * Which side of the deploy this run asks from. The environment variable lets a
- * `workflow_dispatch` input select it without changing the `run:` line in
- * `build-check.yml`.
- */
 const MOMENT: ShipMoment =
   arg("moment") === "post-deploy" || process.env.WTP_SCHEMA_GATE_MOMENT === "post-deploy"
     ? "post-deploy"
@@ -99,122 +51,45 @@ function complain(line: string): void {
   process.stderr.write(`${line}\n`);
 }
 
-/* -------------------------------------------------------------------------- */
-/* WHAT CHANGED                                                               */
-/* -------------------------------------------------------------------------- */
-
 function git(args: string[]): { ok: boolean; out: string } {
   const r = spawnSync("git", args, {
     encoding: "utf8",
     env: { ...process.env, GIT_TERMINAL_PROMPT: "0" },
   });
-  return { ok: r.status === 0, out: (r.stdout ?? "").trim() };
+  return { ok: r.status === 0, out: (r.stdout ?? "").trimEnd() };
 }
 
-/**
- * The changed paths, or `null` when they could not be read. The method used is
- * printed. `null` is not an empty list: `schemaInvolvement` treats it as involved.
- */
-function changedPaths(): string[] | null {
+function changedPaths(reading: BaseReading): string[] | null {
+  if (reading.changes === null && ["push", "pull_request"].includes(process.env.GITHUB_EVENT_NAME ?? "")) return null;
   const explicit = arg("paths");
   if (explicit !== null) {
-    say(`  paths: stated on the command line`);
-    return explicit.split(",").map((p) => p.trim()).filter(Boolean);
+    say("  paths: stated on the command line");
+    return explicit.split(",").map(path => path.trim()).filter(Boolean);
   }
-
-  const eventPath = process.env.GITHUB_EVENT_PATH;
-  const eventName = process.env.GITHUB_EVENT_NAME;
-  if (eventPath && eventName) {
-    try {
-      const event = JSON.parse(readFileSync(eventPath, "utf8")) as {
-        commits?: { added?: string[]; modified?: string[]; removed?: string[] }[];
-        pull_request?: { base?: { sha?: string } };
-      };
-
-      if (eventName === "push" && Array.isArray(event.commits)) {
-        const paths = new Set<string>();
-        for (const c of event.commits) {
-          for (const p of [...(c.added ?? []), ...(c.modified ?? []), ...(c.removed ?? [])]) {
-            paths.add(p);
-          }
-        }
-        say(`  paths: the push event's own commit list (${paths.size} path(s))`);
-        return [...paths];
-      }
-
-      const base = event.pull_request?.base?.sha;
-      if (eventName === "pull_request" && base) {
-        if (!git(["cat-file", "-e", `${base}^{commit}`]).ok) {
-          // A shallow `actions/checkout` will not have the base commit.
-          spawnSync("git", ["fetch", "--depth=100", "origin", base], { stdio: "ignore" });
-        }
-        const diff = git(["diff", "--name-only", base, "HEAD"]);
-        if (diff.ok) {
-          say(`  paths: git diff ${base.slice(0, 7)}..HEAD (the pull request's base)`);
-          return diff.out ? diff.out.split("\n") : [];
-        }
-        complain(`  paths: the base commit ${base.slice(0, 7)} could not be diffed against HEAD`);
-        return null;
-      }
-    } catch (error) {
-      complain(`  paths: the event payload could not be read — ${(error as Error).message}`);
-      return null;
-    }
-  }
-
-  // Local: committed changes unioned with the working tree, so an uncommitted
-  // migration is seen.
-  const committed = git(["diff", "--name-only", "origin/main...HEAD"]);
-  const dirty = git(["status", "--porcelain"]);
-  if (!committed.ok && !dirty.ok) {
-    complain("  paths: neither origin/main...HEAD nor the working tree could be read");
-    return null;
-  }
-  const paths = new Set<string>();
-  if (committed.ok) for (const p of committed.out.split("\n").filter(Boolean)) paths.add(p);
-  if (dirty.ok) {
-    for (const line of dirty.out.split("\n").filter(Boolean)) {
-      const body = line.slice(3);
-      paths.add(body.includes(" -> ") ? body.split(" -> ")[1] : body);
-    }
-  }
-  say(
-    `  paths: ${committed.ok ? "origin/main...HEAD" : "(origin/main unreadable)"} union the working tree ` +
-      `(${paths.size} path(s))`,
-  );
-  return [...paths];
+  if (reading.changes === null) return null;
+  const paths = [...new Set(reading.changes.flatMap(change => change.from ? [change.from, change.path] : [change.path]))];
+  say(`  paths: ${reading.how} (${paths.length} path(s))`);
+  return paths;
 }
 
-/* -------------------------------------------------------------------------- */
-/* WHICH WAY IT CHANGED — the merge base, and how it is reached on CI         */
-/* -------------------------------------------------------------------------- */
-
-/** The base tree behind the immutability guard: which way each path changed. */
 interface BaseReading {
-  /** The commit-ish everything is compared against, or null when unreachable. */
-  readonly base: string | null;
-  /** Printed verbatim in the verdict. Names the rung, not just the sha. */
   readonly how: string;
-  /** The directed changes, or null when they could not be computed. */
   readonly changes: ChangedEntry[] | null;
-  /** The journal AS OF the base, or null when it could not be read. */
   readonly baseJournal: JournalEntry[] | null;
 }
 
-/**
- * `actions/checkout` clones at depth 1, where `git merge-base` fails and a
- * per-file `git log` returns the tip date. So the base is taken from the
- * platform wherever it is stated:
- *
- *   PULL REQUEST — `pull_request.base.sha`. The checked-out ref already merges
- *   the base, so `diff base HEAD` is the pull request's own changes. A missing
- *   commit is fetched by sha, deepening rather than unshallowing.
- *   PUSH TO MAIN — the push event's own `added`/`modified`/`removed` lists;
- *   `event.before` supplies the base journal when it can be fetched.
- *   LOCAL / DISPATCH — `git merge-base origin/main HEAD` on a complete clone.
- *
- * An unreachable base is `null` and reports COULD NOT TELL, never "nothing changed".
- */
+function netChanges(base: string, workingTree: boolean): ChangedEntry[] | null {
+  const diff = git(["diff", "--name-status", "--find-renames", base, ...(workingTree ? [] : ["HEAD"]), "--"]);
+  if (!diff.ok) return null;
+  const changes = parseNameStatus(diff.out);
+  if (!workingTree) return changes;
+  const untracked = git(["ls-files", "--others", "--exclude-standard", "-z"]);
+  if (!untracked.ok) return null;
+  return [...changes, ...untracked.out.split("\0").filter(Boolean).map(path => ({
+    status: "added" as const, path, from: null, raw: `A\t${path}`,
+  }))];
+}
+
 function ensureCommit(sha: string): boolean {
   if (git(["cat-file", "-e", `${sha}^{commit}`]).ok) return true;
   for (const depth of [100, 1000]) {
@@ -240,122 +115,48 @@ function journalAt(base: string): JournalEntry[] | null {
 function baseReading(): BaseReading {
   const stated = arg("base");
   if (stated !== null) {
-    const ok = ensureCommit(stated) || git(["rev-parse", "--verify", stated]).ok;
-    if (!ok) {
+    if (!ensureCommit(stated)) {
       complain(`  base: --base=${stated} does not resolve in this checkout`);
-      return { base: null, how: `--base=${stated} (UNRESOLVABLE)`, changes: null, baseJournal: null };
+      return { how: `--base=${stated} (UNRESOLVABLE)`, changes: null, baseJournal: null };
     }
-    const diff = git(["diff", "--name-status", stated, "HEAD"]);
-    return {
-      base: stated,
-      how: `--base=${stated}, stated on the command line`,
-      changes: diff.ok ? parseNameStatus(diff.out) : null,
-      baseJournal: journalAt(stated),
-    };
+    return { how: `--base=${stated}, compared directly to the working tree`,
+      changes: netChanges(stated, true), baseJournal: journalAt(stated) };
   }
 
-  const eventPath = process.env.GITHUB_EVENT_PATH;
-  const eventName = process.env.GITHUB_EVENT_NAME;
-  if (eventPath && eventName) {
+  const eventPath = process.env.GITHUB_EVENT_PATH, eventName = process.env.GITHUB_EVENT_NAME;
+  if (eventPath && (eventName === "push" || eventName === "pull_request")) {
     try {
       const event = JSON.parse(readFileSync(eventPath, "utf8")) as {
         before?: string;
-        commits?: { added?: string[]; modified?: string[]; removed?: string[] }[];
         pull_request?: { base?: { sha?: string } };
       };
-
-      if (eventName === "pull_request") {
-        const base = event.pull_request?.base?.sha;
-        if (base && ensureCommit(base)) {
-          const diff = git(["diff", "--name-status", base, "HEAD"]);
-          return {
-            base,
-            how: `the pull request's base ${base.slice(0, 7)} (git diff --name-status ${base.slice(0, 7)} HEAD, against refs/pull/N/merge)`,
-            changes: diff.ok ? parseNameStatus(diff.out) : null,
-            baseJournal: journalAt(base),
-          };
-        }
-        complain(
-          `  base: the pull request's base commit ${(base ?? "(absent from the event)").slice(0, 7)} ` +
-            "could not be reached even after deepening",
-        );
-        return {
-          base: null,
-          how: "the pull request's base (UNREACHABLE)",
-          changes: null,
-          baseJournal: null,
-        };
+      const base = eventName === "push" ? event.before : event.pull_request?.base?.sha;
+      const how = eventName === "push" ? "the push event's before commit" : "the pull request's base";
+      if (base && ensureCommit(base)) {
+        return { how: `${how} ${base.slice(0, 7)}, compared directly to HEAD`,
+          changes: netChanges(base, false), baseJournal: journalAt(base) };
       }
-
-      if (eventName === "push" && Array.isArray(event.commits)) {
-        // A rename arrives as a removal plus an addition; the removal alone refuses it.
-        const changes: ChangedEntry[] = [];
-        const seen = new Set<string>();
-        for (const c of event.commits) {
-          for (const [status, list] of [
-            ["modified", c.modified ?? []],
-            ["deleted", c.removed ?? []],
-            ["added", c.added ?? []],
-          ] as const) {
-            for (const path of list) {
-              const key = `${status} ${path}`;
-              if (seen.has(key)) continue;
-              seen.add(key);
-              changes.push({ status, path, from: null, raw: `${status}\t${path}` });
-            }
-          }
-        }
-        const before = event.before;
-        const baseJournal = before && ensureCommit(before) ? journalAt(before) : null;
-        return {
-          base: before ?? null,
-          how:
-            `the push event's own added/modified/removed lists across ${event.commits.length} ` +
-            `commit(s)${before ? `, journal read at ${before.slice(0, 7)}` : ""}`,
-          changes,
-          baseJournal,
-        };
-      }
+      complain(`  base: ${how} ${(base ?? "(absent from the event)").slice(0, 7)} could not be reached even after deepening`);
+      return { how: `${how} (UNREACHABLE)`, changes: null, baseJournal: null };
     } catch (error) {
       complain(`  base: the event payload could not be read — ${(error as Error).message}`);
-      return { base: null, how: "the event payload (UNREADABLE)", changes: null, baseJournal: null };
+      return { how: "the event payload (UNREADABLE)", changes: null, baseJournal: null };
     }
   }
-
-  // Local and dispatch: the clone is complete, so `merge-base` is sound; the
-  // working tree is unioned in, as in `changedPaths()`.
+  if (eventName === "push" || eventName === "pull_request") {
+    return { how: "the event payload (MISSING)", changes: null, baseJournal: null };
+  }
 
   const mergeBase = git(["merge-base", "origin/main", "HEAD"]);
-  const base = mergeBase.ok && mergeBase.out ? mergeBase.out : git(["rev-parse", "HEAD"]).out;
-  if (!base) {
-    complain("  base: neither origin/main nor HEAD resolves in this checkout");
-    return { base: null, how: "the local merge base (UNRESOLVABLE)", changes: null, baseJournal: null };
+  if (!mergeBase.ok || !mergeBase.out) {
+    complain("  base: origin/main and HEAD have no reachable merge base");
+    return { how: "the local merge base (UNRESOLVABLE)", changes: null, baseJournal: null };
   }
-  const committed = git(["diff", "--name-status", base, "HEAD"]);
-  const dirty = git(["status", "--porcelain"]);
-  if (!committed.ok && !dirty.ok) {
-    return {
-      base,
-      how: `${base.slice(0, 7)} (NEITHER the diff NOR the working tree could be read)`,
-      changes: null,
-      baseJournal: journalAt(base),
-    };
-  }
-  const changes = [
-    ...(committed.ok ? parseNameStatus(committed.out) : []),
-    ...(dirty.ok ? parsePorcelain(dirty.out) : []),
-  ];
-  return {
-    base,
-    how:
-      `${mergeBase.ok ? "git merge-base origin/main HEAD" : "HEAD (origin/main unresolvable)"} ` +
-      `= ${base.slice(0, 7)}, union the working tree`,
-    changes,
-    baseJournal: journalAt(base),
-  };
+  const base = mergeBase.out;
+  return { how: `git merge-base origin/main HEAD = ${base.slice(0, 7)}, compared directly to the working tree`,
+    changes: netChanges(base, true), baseJournal: journalAt(base) };
 }
 
-/** Every `NNNN_tag` with a committed `.sql` file, read off the disk at HEAD. */
 function sqlTagsOnDisk(): string[] {
   return readdirSync(join(process.cwd(), "lib", "db", "migrations"))
     .filter((f) => f.endsWith(".sql"))
@@ -376,22 +177,14 @@ function sha256OfMigration(tag: string): string | null {
   }
 }
 
-/* -------------------------------------------------------------------------- */
-/* THE GATE                                                                   */
-/* -------------------------------------------------------------------------- */
-
 say(`db:gate  moment=${MOMENT}${SMOKE ? "  SMOKE (production contact forced)" : ""}`);
 
-const changed = changedPaths();
+const reading = baseReading();
+const changed = changedPaths(reading);
 const involvement = schemaInvolvement(changed);
-
-/* -------------------------------------------------------------------------- */
-/* IMMUTABILITY — FIRST, and with no credential                               */
-/* -------------------------------------------------------------------------- */
 
 // Runs before the credential and before the NOT APPLICABLE exit, so no change
 // to the scope test can turn it off.
-const reading = baseReading();
 say(`  base:  ${reading.how}`);
 
 const immutability = evaluateMigrationImmutability({
@@ -416,9 +209,7 @@ if (immutability.verdict === "fail") {
   process.exit(1);
 }
 if (immutability.verdict === "cannot-tell") {
-  // An unreachable base leaves direction unknown, but a readable changed-path
-  // list with no migration path means no migration changed in any direction.
-  // An unreadable list (`changed === null`) is involved and keeps the refusal.
+  // An explicit non-schema path list can establish non-involvement independently of an unreadable base.
   if (!involvement.involved) {
     say(`\n  ${immutability.summary}`);
     say(
@@ -505,12 +296,6 @@ if (SMOKE) {
   say("  WTP_PRODUCTION_DATABASE_URL_WRITE through lib/db/write-handle.ts, which refuses this one.");
 }
 
-/*
- * The checksum cross-check compares committed SQL against the sha256 that
- * `scripts/apply-migrations.mts` records on every apply. It catches a rewrite
- * that predates the merge-base guard; that guard catches a rewrite of a
- * migration production never applied. When unavailable it says so.
- */
 const appliedHashes = appliedHashesFrom(read);
 if (appliedHashes === null) {
   say(

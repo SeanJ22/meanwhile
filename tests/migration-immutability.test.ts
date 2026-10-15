@@ -1,10 +1,3 @@
-/**
- * An established migration is immutable. `migrationTagsIn` cannot tell which way a migration file changed, so the
- * guard is run here as the real gate (`scripts/db-shipping-gate.mts`), spawned in a throwaway git repository: a
- * rewrite, a delete and a rename must exit 1 naming the file, and an append must pass. The child's environment has
- * `WTP_PRODUCTION_DATABASE_URL_READONLY` removed, so exit codes are deterministic and no connection is opened.
- */
-
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
@@ -65,9 +58,6 @@ test("the applier's sha256 is read back — the content anchor, wired end to end
   assert.match(applier, /INSERT INTO drizzle\.__drizzle_migrations \(hash, created_at\)/);
 
   const reader = readFileSync(join(ROOT, "lib", "db", "applied-migrations.ts"), "utf8");
-  // `[\s\S]` rather than the `s` flag: tsconfig targets below es2018, where the
-  // flag is a compile error rather than a runtime one — it would pass the suite
-  // on this machine and fail `tsc --noEmit` on the fresh-checkout gate.
   assert.ok(
     new RegExp(
       `SELECT[\\s\\S]*?\\bhash\\b[\\s\\S]*?\\bFROM\\s+drizzle\\.__drizzle_migrations\\b`,
@@ -157,20 +147,21 @@ function writeJournal(dir: string, entries: readonly JournalEntry[]): void {
   );
 }
 
-/**
- * Run the real gate in the scratch repository, in an environment carrying only what this test put there: the
- * credential and every variable the gate reads, CI event context included, are removed.
- */
-function runGate(dir: string, base: string): { status: number; out: string } {
+function runGate(dir: string, base: string | null, event?: { name: string; payload: unknown }, paths?: readonly string[]): { status: number; out: string } {
   const env = { ...process.env };
   delete env.WTP_PRODUCTION_DATABASE_URL_READONLY;
   delete env.WTP_SCHEMA_GATE_SMOKE;
   delete env.WTP_SCHEMA_GATE_MOMENT;
   // The CI event context the gate reads to find its base.
   for (const key of Object.keys(env)) if (key.startsWith("GITHUB_")) delete env[key];
+  if (event) {
+    env.GITHUB_EVENT_NAME = event.name;
+    env.GITHUB_EVENT_PATH = join(dir, "event.json");
+    writeFileSync(env.GITHUB_EVENT_PATH, JSON.stringify(event.payload));
+  }
   const r = spawnSync(
     process.execPath,
-    ["--experimental-strip-types", "--no-warnings", GATE, `--base=${base}`],
+    ["--experimental-strip-types", "--no-warnings", GATE, ...(base ? [`--base=${base}`] : []), ...(paths ? [`--paths=${paths.join(",")}`] : [])],
     { cwd: dir, encoding: "utf8", env },
   );
   return { status: r.status ?? -1, out: `${r.stdout ?? ""}\n${r.stderr ?? ""}` };
@@ -270,13 +261,104 @@ test("REGRESSION · a NORMAL APPEND passes — the guard does not refuse ordinar
     assert.doesNotMatch(out, /\[migration-/, out);
     assert.equal(
       status,
-      0,
-      "a run whose only change is a new migration, with no credential in the environment and " +
-        `nothing else touched, must exit 0:\n${out}`,
+      2,
+      `the append passes immutability, but its production schema check needs the deliberately absent credential:\n${out}`,
     );
+    assert.match(out, /WTP_PRODUCTION_DATABASE_URL_READONLY is not set/);
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
+});
+
+function appendMigration(dir: string): string {
+  const migration = "lib/db/migrations/0002_gamma.sql";
+  writeFileSync(join(dir, migration), 'CREATE TABLE "0002_gamma" ("id" uuid PRIMARY KEY NOT NULL);\n');
+  writeJournal(dir, [...established, { idx: 2, when: 1_780_000_000_002, tag: "0002_gamma" }]);
+  return migration;
+}
+
+for (const staged of [false, true]) test(`a branch-new migration remains added after a ${staged ? "staged" : "working-tree"} edit`, () => {
+  const { dir, base } = scratch();
+  try {
+    git(dir, ["update-ref", "refs/remotes/origin/main", base]);
+    const migration = appendMigration(dir);
+    git(dir, ["add", "-A"]);
+    git(dir, ["commit", "--quiet", "-m", "add pending migration"]);
+    writeFileSync(join(dir, migration), 'CREATE TABLE "0002_gamma" ("id" uuid PRIMARY KEY NOT NULL, "value" text);\n');
+    if (staged) git(dir, ["add", migration]);
+    const { status, out } = runGate(dir, null);
+    assert.match(out, /migration immutability HOLDS/, out);
+    assert.doesNotMatch(out, /\[migration-modified\]/, out);
+    assert.match(out, /migrations introduced by this change: 0002_gamma/, out);
+    assert.equal(status, 2, out);
+    assert.match(out, /WTP_PRODUCTION_DATABASE_URL_READONLY is not set/, out);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test("the local net tree still refuses an uncommitted edit to an established migration", () => {
+  const { dir, base } = scratch();
+  try {
+    git(dir, ["update-ref", "refs/remotes/origin/main", base]);
+    writeFileSync(join(dir, "lib/db/migrations/0001_beta.sql"), 'CREATE TABLE "rewritten" ("id" uuid);\n');
+    const { status, out } = runGate(dir, null);
+    assert.equal(status, 1, out);
+    assert.match(out, /\[migration-modified\]/, out);
+    assert.match(out, /0001_beta\.sql/, out);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test("the local net tree includes an untracked migration and its uncommitted journal entry", () => {
+  const { dir, base } = scratch();
+  try {
+    git(dir, ["update-ref", "refs/remotes/origin/main", base]);
+    appendMigration(dir);
+    const { status, out } = runGate(dir, null);
+    assert.match(out, /migration immutability HOLDS/, out);
+    assert.match(out, /migrations introduced by this change: 0002_gamma/, out);
+    assert.equal(status, 2, out);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test("a push adding then modifying one migration reads before-to-HEAD as one addition", () => {
+  const { dir, base } = scratch();
+  try {
+    const migration = appendMigration(dir);
+    git(dir, ["add", "-A"]);
+    git(dir, ["commit", "--quiet", "-m", "add pending migration"]);
+    writeFileSync(join(dir, migration), 'CREATE TABLE "0002_gamma" ("id" uuid PRIMARY KEY NOT NULL, "value" text);\n');
+    git(dir, ["commit", "--quiet", "-a", "-m", "finish pending migration"]);
+    const { status, out } = runGate(dir, null, { name: "push", payload: {
+      before: base, commits: [{ added: [migration] }, { modified: [migration] }],
+    } });
+    assert.match(out, /migration immutability HOLDS/, out);
+    assert.doesNotMatch(out, /\[migration-modified\]/, out);
+    assert.match(out, /the push event's before commit/, out);
+    assert.equal(status, 2, out);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test("push commit lists cannot hide an established migration edit from its actual tree diff", () => {
+  const { dir, base } = scratch();
+  try {
+    const migration = "lib/db/migrations/0001_beta.sql";
+    writeFileSync(join(dir, migration), 'CREATE TABLE "rewritten" ("id" uuid);\n');
+    git(dir, ["commit", "--quiet", "-a", "-m", "rewrite established migration"]);
+    const { status, out } = runGate(dir, null, { name: "push", payload: { before: base, commits: [{ added: [migration] }] } });
+    assert.equal(status, 1, out);
+    assert.match(out, /\[migration-modified\]/, out);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test("an inaccessible push before commit refuses even when its commit list claims only docs changed", () => {
+  const { dir } = scratch();
+  try {
+    const { status, out } = runGate(dir, null, { name: "push", payload: {
+      before: "0123456789abcdef0123456789abcdef01234567", commits: [{ modified: ["docs/DESIGN.md"] }],
+    } }, ["docs/DESIGN.md"]);
+    assert.equal(status, 2, out);
+    assert.match(out, /COULD NOT TELL/, out);
+    assert.doesNotMatch(out, /immutability HOLDS|NOT APPLICABLE/, out);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 
 test("an unreachable merge base is COULD NOT TELL, never a pass", () => {
@@ -480,16 +562,13 @@ test("appliedHashesFrom reads real rows and refuses malformed ones", () => {
   assert.equal(appliedHashesFrom({ ok: false, why: "refused" }), null);
 });
 
-/**
- * An unreachable merge base makes direction unknown, so the gate refuses, but only where a migration is in play: a
- * readable path list with nothing under `lib/db/migrations/` is a second, independent finding. Both halves are asserted.
- */
 function withUnreachableBase(paths: string): { status: number; out: string } {
   const { dir } = scratch();
   try {
     const env = { ...process.env };
     delete env.WTP_PRODUCTION_DATABASE_URL_READONLY;
     delete env.WTP_SCHEMA_GATE_SMOKE;
+    for (const key of Object.keys(env)) if (key.startsWith("GITHUB_")) delete env[key];
     const r = spawnSync(
       process.execPath,
       [
@@ -522,8 +601,6 @@ test("an unreachable base does NOT refuse a docs-only change — a second readin
   assert.match(out, /SECOND reading rather than a lowered bar/);
   assert.match(out, /no migration changed in any direction/);
 });
-
-/* ---- retracted, never-applied migrations (PB-01) ---------------------- */
 
 const PB_RETIRE = { idx: 35, when: 1_790_889_600_001, tag: "0035_pb01_retire_playbooks" };
 const PB_SEED = { idx: 36, when: 1_790_889_600_002, tag: "0036_pb01_role_playbooks" };

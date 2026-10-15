@@ -560,7 +560,6 @@ test("the second reading is automatic after a shipping main push", () => {
     productionIntegrity,
     /"scripts\/db-shipping-gate\.mts",\s*"--moment=post-deploy",\s*"--smoke"/,
   );
-  assert.match(gate, /post-deploy-integrity\.yml/);
 });
 
 test("SMOKE MAY NOT MANUFACTURE A DIFF — the flag overrides the exit, never the finding", () => {

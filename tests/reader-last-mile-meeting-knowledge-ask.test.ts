@@ -9,6 +9,8 @@ import { NOTICE_SUMMARIES } from "../lib/meetings/notice-summary.ts";
 import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 
 import { recordedMeetingsSnapshot } from "./helpers/reader-fixtures.ts";
+import { primeCommentAccess } from "../lib/registry/comment-access.ts";
+import { COMMENT_ACCESS } from "./fixtures/comment-access.ts";
 
 await installRegistryAuthority();
 
@@ -54,6 +56,7 @@ test("minutes paraphrases never attach to another body or supply a member roll c
 });
 
 test("standing comment rules require the exact body and division and never inherit a sibling policy", () => {
+  primeCommentAccess({ kind: "comment-access", records: COMMENT_ACCESS.map(record => ({ id: `comment-access:${record.bodyId}`, ...record })) }, "fixture");
   const division = "ocd-division/country:us/state:az/place:tucson";
   assert.ok(commentAccessEvidenceFor(`${division}#planning-commission`, division, "Planning Commission").records.length > 0);
   assert.equal(commentAccessEvidenceFor(`${division}#unheld-advisory-body`, division, "Planning Commission").records.length, 0);

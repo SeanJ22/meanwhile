@@ -4,8 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import { processRegisteredManualCandidate, processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
-import { manualProjectionCandidate } from "../lib/civic-data/manual-projections.ts";
+import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { censusGeographyCandidate } from "../lib/census-geography/candidate.ts";
 import { CENSUS_GEO_CONTRACT_ID } from "../lib/census-geography/publication.ts";
 import { publishStatePeople } from "../lib/civic-data/state-people-publication.ts";
@@ -30,18 +29,9 @@ test("publish-now copies real baseline pointers during an unresolved finance pas
   // The routine sweep also checks these existing canonical families. Seed them through their real promotion doors.
   const census = censusGeographyCandidate(JSON.parse(readFileSync("lib/census-geography/bootstrap-az.json", "utf8")));
   assert.ok((await processRegisteredRoutineCandidate(memory, CENSUS_GEO_CONTRACT_ID, census, NOW)).promoted);
-  const commentUrl = "https://public.example.gov/comment-policy";
-  const comment = manualProjectionCandidate({ contractId: "comment-access", version: NOW, sourceThrough: NOW,
-    sourceReceipt: { contractVersion: 1, reviewedAt: NOW, reviewedBy: "publication-fixture", sources: [{
-      requestedUrl: commentUrl, finalUrl: commentUrl, publisher: "Fixture public body", sourceClass: "OFFICIAL_PUBLISHER",
-      retrievedAt: NOW, httpStatus: 200, rawHash: "a".repeat(64), reviewedEvidence: "The body publishes this comment period.",
-    }] }, payload: { kind: "comment-access", records: [{ id: "comment-access:body:test", bodyId: "body:test",
-      commentPeriod: "YES", commentPeriodDetail: "The body publishes this comment period.", sourceUrl: commentUrl, collectedAt: NOW, verifiedAt: NOW }] },
-  });
-  assert.ok((await processRegisteredManualCandidate(memory, "comment-access", comment, NOW)).promoted);
   await memory.writePreparedReaderProjection({ recordClass: "MEETING", scope: MEETINGS_PREPARED_SCOPE,
     payload: { formatVersion: 1, generatedAt: NOW, counts: { fresh: 0, carried: 0, total: 0, duplicatesCollapsed: 0 },
-      meetings: [], agendaDocuments: [], sources: [] }, composedFrom: [], factSha256: "a".repeat(64),
+      meetings: [], agendaDocuments: [], sources: [] }, composedFrom: [{ contractId: "meeting-facts", versionId: "facts:none" }], factSha256: "a".repeat(64),
     generatedAt: NOW, composedAt: NOW, sourceThrough: null, retrievedAt: null, promotedThrough: null,
   }, null);
   const artifacts = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "publish-now-baseline-")));

@@ -187,7 +187,7 @@ export type PipelineStageReader = () => Promise<readonly { readonly stage: strin
 /** The default reader: the pipeline records nothing yet, and says so. */
 export const NO_PIPELINE_RECORDED: PipelineStageReader = async () => [];
 
-export const PIPELINE_STAGES = ["CONFIRMED", "VERIFIED", "AUDITED", "APPROVED"] as const;
+export const PIPELINE_STAGES = ["VERIFIED", "APPROVED"] as const;
 
 export interface GraduationFunnel {
   readonly stages: readonly FunnelStage[];
@@ -422,7 +422,6 @@ export interface CostPerOutcome {
 export function costPerUsefulOutcome(input: {
   readonly results: readonly ScoutResult[];
   readonly candidateCounts: { readonly validated: number; readonly admitted: number } | null;
-  readonly confirmed: number | null;
 }): CostPerOutcome[] {
   const measured = input.results.filter((r) => r.usd !== null);
   const spend = measured.reduce((n, r) => n + (r.usd ?? 0), 0);
@@ -438,7 +437,6 @@ export function costPerUsefulOutcome(input: {
   return [
     per("ROUTE_CANDIDATE", accepted.filter((r) => r.outcome === "ROUTE_CANDIDATE").length),
     per("EVIDENCE_FOUND", accepted.filter((r) => r.outcome === "EVIDENCE_FOUND").length),
-    per("CONFIRMED", input.confirmed),
     per("GRADUATED_ROUTE", input.candidateCounts === null ? null : input.candidateCounts.admitted),
   ];
 }

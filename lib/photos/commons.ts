@@ -5,6 +5,8 @@ import { freelyLicensedPortrait, type CommonsCandidacyIdentity, type PortraitVer
 export type { CommonsCandidacyIdentity } from "./binding.ts";
 import type { PortraitCapture, PortraitSources } from "./evidence.ts";
 
+const words = (value: string) => ` ${value.normalize("NFKD").replace(/\p{M}/gu, "").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim()} `;
+
 const fileName = (value: string): string => {
   const url = new URL(value);
   return decodeURIComponent(url.pathname.split("/").at(-1) ?? "").replace(/_/g, " ");
@@ -42,13 +44,13 @@ export function verifiedCommonsPortrait(input: PortraitSources, captures: readon
   Omit<PortraitVerification, "imageHash" | "sourceImageHash"> | null {
   const identity = input.commons;
   if (!identity || identity.candidacyId !== input.subject.personId) return null;
-  const identityCapture = captures.find(capture => {
+  const identityCapture = identity.wikidataId === "" ? null : captures.find(capture => {
     const url = new URL(capture.evidence.canonicalUrl);
     if (url.hostname !== "query.wikidata.org" || url.pathname !== "/sparql") return false;
     const image = wikidataCandidacyPortraitIdentity(identity, input.subject.name, capture.evidence.text);
     return image !== null && ["commons.wikimedia.org", "upload.wikimedia.org"].includes(new URL(image).hostname) && fileName(image) === fileName(input.imageUrl);
   });
-  if (!identityCapture || new URL(input.imageUrl).hostname !== "upload.wikimedia.org") return null;
+  if (identityCapture === undefined || new URL(input.imageUrl).hostname !== "upload.wikimedia.org") return null;
   for (const capture of captures) {
     const url = new URL(capture.evidence.canonicalUrl);
     if (url.hostname !== "commons.wikimedia.org" || url.pathname !== "/w/api.php") continue;
@@ -61,11 +63,14 @@ export function verifiedCommonsPortrait(input: PortraitSources, captures: readon
           const license = metadata?.LicenseShortName?.value?.trim() ?? "";
           const author = decodeEntities((metadata?.Artist?.value ?? "").replace(/<[^>]+>/g, "")).trim();
           if (info.url !== input.imageUrl || !freelyLicensedPortrait(license) || !author) continue;
+          // Without a Wikidata match, the file's own description must name the person.
+          const described = decodeEntities(`${metadata?.ObjectName?.value ?? ""} ${metadata?.ImageDescription?.value ?? ""}`.replace(/<[^>]+>/g, " "));
+          if (identityCapture === null && !words(described).includes(words(input.subject.name))) continue;
           return { personId: input.subject.personId, name: input.subject.name, imageUrl: input.imageUrl, checkedAt: now,
-            basis: "COMMONS", commons: { ...identity, identitySourceUrl: identityCapture.evidence.canonicalUrl },
+            basis: "COMMONS", commons: { ...identity, identitySourceUrl: (identityCapture ?? capture).evidence.canonicalUrl },
             attribution: { sourceUrl: capture.evidence.canonicalUrl, name: input.subject.name, author },
             license: { value: license, sourceUrl: capture.evidence.canonicalUrl, quote: license },
-            sources: [identityCapture, capture].map(row => ({ url: row.evidence.canonicalUrl,
+            sources: [...identityCapture ? [identityCapture] : [], capture].map(row => ({ url: row.evidence.canonicalUrl,
               ...(row.evidence.artifactId ? { artifactId: row.evidence.artifactId } : { vaultKey: row.evidence.vaultKey }),
               contentHash: row.evidence.contentHash, retrievedAt: row.evidence.retrievedAt })) };
         }

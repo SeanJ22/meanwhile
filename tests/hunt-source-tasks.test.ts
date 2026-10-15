@@ -42,8 +42,11 @@ test("all registered manual contracts have an invocation disposition; PRL, votin
   assert.equal(new Set(matrix.map(row => row.id)).size, matrix.length);
   assert.equal(matrix.find(row => row.id === "az-sos-ballot")?.commandReady, false,
     "a manual projection is not source acquisition");
-  assert.equal(matrix.find(row => row.id === "az-pima-local-finance")?.instructionIds.length, 0,
+  assert.equal(matrix.find(row => row.id === "az-pima-local-finance")?.commandReady, false,
     "state membership does not establish Pima applicability");
+  for (const id of ["az-sos-ballot", "nh-curated-ballot", "candidate-profiles", "candidate-corpus", "officeholder-statements", "az-official-actions"]) {
+    assert.equal(matrix.find(row => row.id === id)?.mode, "SCOPED_ADAPTER_OWED", `${id} waits on owed plain code, never on a person's review`);
+  }
   assert.equal(matrix.find(row => row.id === "campaign-sites")?.mode, "EXISTING_DERIVED");
   assert.equal(matrix.find(row => row.id === "meeting-body-crosswalk")?.mode, "EXISTING_DERIVED");
   const ids = (sends: ResolvedScope[]) => huntSourceTasks(sends, "2026-09-28T08:00:00.000Z").map(task => task.id);

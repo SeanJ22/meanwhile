@@ -10,6 +10,7 @@ import { novusPortalUrl, parseNovusMeetings } from "../sources/novusagenda/index
 import { escribeCalendarUrl, parseEscribeMeetings } from "../sources/escribe/index.ts";
 import { boardDocsBase, parseBoardDocsMeetings } from "../sources/boarddocs/index.ts";
 import { parseOrganizationPage } from "../sources/boardbook/index.ts";
+import { parseSwagitMeetings } from "../sources/swagit/index.ts";
 import { meetingSourceCadenceHours } from "../control-plane/scheduler/obligation.ts";
 import { governmentTimeZone } from "../time/county-time-zones.ts";
 
@@ -27,6 +28,7 @@ export const VERIFIABLE_VENDORS = [
   "boarddocs",
   "granicus",
   "novusagenda",
+  "swagit",
   "escribe",
   "diligent",
   /* A body's own page that dates its public events, verified for that body (`verifyOfficialPage`). */
@@ -39,7 +41,6 @@ export const LEAD_ONLY_VENDORS: readonly { readonly vendor: string; readonly hos
   { vendor: "primegov", host: /(^|\.)primegov\.com$/i },
   { vendor: "municode-meetings", host: /(^|\.)municodemeetings\.com$/i },
   { vendor: "diligent", host: /(^|\.)(diligentoneplatform\.com|highbond\.com|civicweb\.net)$/i },
-  { vendor: "swagit", host: /(^|\.)swagit\.com$/i },
   /* Destiny Agenda (public.destinyhosted.com/agenda_publish.cfm?id=…). */
   { vendor: "destiny-agenda", host: /(^|\.)destinyhosted\.com$/i },
 ];
@@ -166,6 +167,10 @@ export function meetingEndpointCandidates(html: string, pageUrl: string, now?: s
     const clerk = /^([a-z0-9-]+)\.portal\.civicclerk\.com$/.exec(host);
     if (clerk) {
       add({ vendor: "civicclerk-api", url: `https://${clerk[1]}.api.civicclerk.com/v1/Events?$top=5`, basis: "LINKED", evidence: href, verifiable: true });
+      continue;
+    }
+    if (/(^|\.)swagit\.com$/i.test(host) && !/^\/(?:videos|events|play)\//i.test(url.pathname)) {
+      add({ vendor: "swagit", url: href, basis: "LINKED", evidence: href, verifiable: true });
       continue;
     }
     if (`${url.protocol}//${url.host}` === origin && /^\/AgendaCenter(?:\/|$)/i.test(url.pathname)) {
@@ -468,6 +473,16 @@ export function verifyEndpointBody(
         return { verdict: rows.length ? "YIELDED" : "EMPTY", count: rows.length, detail: `${rows.length} public NovusAgenda meeting record(s)` };
       } catch {
         return { verdict: "NOT_CONFIRMED", count: null, detail: "not a NovusAgenda public meeting list" };
+      }
+    }
+    case "swagit": {
+      try {
+        const rows = parseSwagitMeetings(body, response.finalUrl);
+        const dated = rows.filter(row => row.date !== null).length;
+        return { verdict: dated ? "YIELDED" : rows.length ? "NOT_CONFIRMED" : "EMPTY", count: dated,
+          detail: `${dated} dated Swagit meeting record(s)` };
+      } catch {
+        return { verdict: "NOT_CONFIRMED", count: null, detail: "not a Swagit public meeting list" };
       }
     }
     case "diligent": {

@@ -122,9 +122,15 @@ import {
   derivedFamilyFailedCandidate,
   type FamilyMemberRead,
 } from "../lib/civic-data/derived-meeting-family.ts";
-import { retainMeetingFetchBytes, holdMeetingSourceResponses, retainMeetingCandidateEvidence, readMeetingResearchWitness,
-  type HeldSourceResponse, type ApprovedResearchMeetingPartition } from "../lib/civic-data/meeting-research-evidence.ts";
-import { rawCaptureVault } from "../lib/civic-data/raw-capture-remote.ts";
+import { retainingFetch, retainMeetingFetchBytes, retainMeetingCandidateEvidence, tracedResponses, type RetainedSourceResponse } from "../lib/civic-data/retained-meeting-bytes.ts";
+import { publishReadMeetingFacts } from "../lib/civic-data/meeting-fact-publication.ts";
+import { readerFactDb } from "../lib/facts/db.ts";
+import { factClocks } from "../lib/facts/clocks.ts";
+import type { FactDb, Query } from "../lib/facts/publish.ts";
+import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
+import type { EvidenceStore } from "../lib/control-plane/evidence/store.ts";
+import { VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
+import { join } from "node:path";
 
 /*
  * The committed registry, read the same way lib/registry/server.ts reads it:
@@ -734,12 +740,13 @@ export async function promoteDerivedMeetingFamily(
   partition: MeetingPartitionContract,
   /* The registry and venue preload, run only once the family has a member: a family with none reads nothing else. */
   prepare: () => Promise<void> = async () => {},
+  facts?: Omit<MeetingFactsTarget, "responses">,
 ): Promise<void> {
   const generatedAt = new Date().toISOString();
   const refuse = async (detail: string, kind: "WALL" | "JOB"): Promise<void> => {
     const failed = derivedFamilyFailedCandidate(partition, generatedAt, detail);
     const outcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, failed, generatedAt);
-    printMeetingPartitionReceipt(partition, outcome, detail, kind);
+    printMeetingPartitionReceipt(partition, failed, outcome, detail, kind);
   };
   const wiring = await readDerivedMeetingWiring({ store, bypassCache: true, now: generatedAt });
   if (wiring.kind !== "PROMOTED") {
@@ -759,7 +766,8 @@ export async function promoteDerivedMeetingFamily(
   await prepare();
   const previous = await readPreviousMeetingPartition(store, partition);
   const reads: FamilyMemberRead[] = [];
-  const fetchImpl = meetingFetchPass();
+  const retaining = retainingFetch(meetingFetchPass());
+  const fetchImpl = retaining.fetch;
   for (const member of members) {
     if (member.status !== "ACTIVE") continue;
     const read = await readDerivedFamilyMember(member, fetchImpl);
@@ -825,8 +833,14 @@ export async function promoteDerivedMeetingFamily(
   const candidate = derivedFamilyCandidate(partition, finalBuild);
   // An unchanged family pass is receipted on the pointed version.
   const outcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, candidate, new Date().toISOString(), undefined, { confirmUnchanged: true });
-  printMeetingPartitionReceipt(partition, outcome, outcome.promoted ? null : outcome.candidate.failureDetail);
-  if (outcome.promoted || outcome.confirmed) await publishVenuePins(store, partition.id, census.package);
+  printMeetingPartitionReceipt(partition, candidate, outcome, outcome.promoted ? null : outcome.candidate.failureDetail);
+  if (outcome.promoted || outcome.confirmed) {
+    await publishVenuePins(store, partition.id, census.package);
+    for (const read of facts ? reads.filter(row => row.ok) : []) {
+      await publishPartitionFacts({ ...facts!, responses: retaining.responses }, read.member.id, DERIVED_WIRING_SOURCE_NAMES[read.member.row.kind],
+        read.freshMeetings, read.acquisitions, candidate.id, generatedAt);
+    }
+  }
   console.log(`AUTOMATIC_VENUE_MEETING_RECEIPT=${JSON.stringify({ candidateId: candidate.id,
     placedFromReviewed: fromReviewed.placedCount, placedFromCensus: placed.placedCount,
     retainedFromPrior: retained.filter((meeting, index) => meeting !== cited[index]).length,
@@ -883,7 +897,7 @@ async function main() {
     await promoteDerivedMeetingFamily(new PostgresRoutineDataStore(), partitions[0]!, async () => {
       await preloadCanonicalMeetingDependencies({ sourceName: name });
       REGISTRY = getRegistryRuntimeReadModel().registry;
-    });
+    }, { db: readerFactDb(), vault: new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR)) });
     return;
   }
   await preloadCanonicalMeetingDependencies({ sourceName: name });
@@ -918,9 +932,10 @@ async function main() {
     startsBefore: new Date(
       now + MEETING_HELD_HORIZON_DAYS * 86_400_000,
     ).toISOString(),
-  }), "legistar", value => {
-    const url = new URL(value);
-    return url.protocol === "https:" && url.hostname === "webapi.legistar.com" && partitions.some(partition =>
+  }));
+  const workerResponses = retained.responses.filter(response => {
+    const url = new URL(response.finalUrl);
+    return url.hostname === "webapi.legistar.com" && partitions.some(partition =>
       partition.meetingSource === "legistar" && url.pathname.toLowerCase() === `/v1/${partition.wiring?.config.slug}/events`);
   });
   const raw = retained.value;
@@ -1019,7 +1034,8 @@ async function main() {
       previous,
       promotionStore,
       partitions,
-      retained.responses.length ? await holdMeetingSourceResponses(rawCaptureVault(), retained.responses) : [],
+      workerResponses,
+      retained.responses,
     );
     for (const refusal of retained.refusals) console.error(refusal);
   } else {
@@ -1540,7 +1556,7 @@ export async function promoteMeetingPartition(
   snapshot: MeetingsSnapshot,
   additionalViolations: readonly string[] = [],
   removalEvidence: readonly RoutineRemovalEvidence[] = [],
-  retainedResponses: readonly HeldSourceResponse[] = [],
+  retainedResponses: readonly RetainedSourceResponse[] = [],
   heldFacts: NonNullable<RoutineCandidate["excludedFacts"]> = [],
   idSuffix = "",
 ): Promise<{
@@ -1563,6 +1579,7 @@ export async function promoteMeetingPartition(
 
 export function printMeetingPartitionReceipt(
   partition: MeetingPartitionContract,
+  candidate: RoutineCandidate,
   outcome: PromotionOutcome,
   failureDetail: string | null = null,
   failureKind: "WALL" | "JOB" | null = null,
@@ -1593,17 +1610,25 @@ export function printMeetingPartitionReceipt(
   }));
 }
 
+/** The fresh sittings a promoted partition read become facts; a failure here never holds the partition. */
+async function publishPartitionFacts(facts: MeetingFactsTarget, label: string, source: string,
+  meetings: readonly Meeting[], acquisitions: Parameters<typeof tracedResponses>[0][number]["acquisitions"], producedBy: string, at: string): Promise<void> {
+  try {
+    const responses = tracedResponses([{ source, acquisitions }], facts.responses);
+    const report = await publishReadMeetingFacts({ facts: facts.db, vault: facts.vault, meetings, responses, producedBy, clocks: factClocks(null), now: new Date(at) });
+    console.log(`  ${label}: facts ${report.live} new, ${report.confirmed} confirmed, ${report.blanks} blank${report.unsaved.length ? `; unsaved ${report.unsaved.join("; ")}` : ""}`);
+  } catch (error) {
+    console.error(`MEETING_FACTS_FAILED ${label}: ${error instanceof Error ? error.message : String(error)}`);
+  }
+}
+
+/** Where the sittings each door read become facts, on every response the read made. */
+interface MeetingFactsTarget { readonly db: FactDb & { readonly query: Query }; readonly vault: EvidenceStore; readonly responses: readonly RetainedSourceResponse[] }
+
 export interface MeetingPartitionPromotionResult {
   readonly partition: MeetingPartitionContract;
   readonly candidate: RoutineCandidate;
   readonly outcome: PromotionOutcome;
-}
-
-/** The routine partition child reads research; only its existing production door writes. */
-async function standingResearchMeetingIntake(partition: MeetingPartitionContract, previous: MeetingsSnapshot | null, now: string, observed: MeetingsSnapshot) {
-  if (!previous || Date.parse(now) - Date.parse(previous.generatedAt) > 24 * 3_600_000) return null;
-  const activationReceipt = await readMeetingResearchWitness(partition, observed);
-  return activationReceipt ? { snapshot: previous, activationReceipt } : null;
 }
 
 export async function promoteMeetingPartitions(input: {
@@ -1614,39 +1639,12 @@ export async function promoteMeetingPartitions(input: {
   readonly reports: NonNullable<CompositeSource["lastReport"]>["children"];
   readonly generatedAt: string;
   readonly previousByContract?: ReadonlyMap<string, MeetingsSnapshot | null>;
-  readonly researchIntake?: (partition: MeetingPartitionContract, current: MeetingsSnapshot | null, now: string, observed: MeetingsSnapshot) => Promise<ApprovedResearchMeetingPartition | null>;
-  readonly retainedResponses?: readonly HeldSourceResponse[];
+  readonly retainedResponses?: readonly RetainedSourceResponse[];
+  readonly facts?: MeetingFactsTarget;
   /** Test seam for the Census geocoder; production uses the global fetch. */
   readonly venueFetch?: typeof fetch;
 }): Promise<readonly MeetingPartitionPromotionResult[]> {
   const results: MeetingPartitionPromotionResult[] = [];
-  const intake = input.researchIntake ?? (input.store instanceof PostgresRoutineDataStore ? standingResearchMeetingIntake : undefined);
-  const offerResearch = async (partition: MeetingPartitionContract, current: MeetingsSnapshot, observed: MeetingsSnapshot): Promise<MeetingPartitionPromotionResult | null> => {
-    if (!intake) return null;
-    try {
-      const research = await intake(partition, current, input.generatedAt, observed);
-      if (!research) return null;
-      const covered = new Set(research.activationReceipt.coveredMeetingIds);
-      if (research.activationReceipt.evidenceScope !== "CURRENT_CAPTURE_MEETING_FACTS" ||
-          research.activationReceipt.partitionId !== partition.id || covered.size !== observed.meetings.length ||
-          observed.meetings.some(meeting => !covered.has(meeting.id)) ||
-          research.activationReceipt.approvedFactCount !== observed.meetings.reduce((count, meeting) => count + 1 + Number(Boolean(meeting.agendaUrl)), 0)) {
-        throw new Error("RESEARCH_MEETING_CAPTURE_SCOPE_MISMATCH");
-      }
-      // Approval covers current acquired facts. Carried rows and richer routine
-      // fields keep the authority of the just-validated complete partition.
-      const base = candidateForMeetingPartition(partition, current);
-      const receipt = JSON.stringify(research.activationReceipt);
-      const candidate: RoutineCandidate = { ...base, id: `${base.id}-research-${sha256(receipt).slice(0, 16)}`,
-        dependentChecks: [...base.dependentChecks, { consumer: research.activationReceipt.kind, passed: true, detail: receipt }] };
-      const outcome = await processRegisteredMeetingPartitionCandidate(input.store, partition.id, candidate, input.generatedAt);
-      printMeetingPartitionReceipt(partition, outcome, outcome.candidate.failureDetail);
-      return { partition, candidate, outcome };
-    } catch (error) {
-      console.error(`Research meeting intake refused for ${partition.id}: ${error instanceof Error ? error.message : String(error)}`);
-      return null;
-    }
-  };
   for (const partition of input.partitions) {
     const report = input.reports.find((candidate) => candidate.source === partition.meetingSource);
     if (!report || !report.ok) {
@@ -1669,7 +1667,7 @@ export async function promoteMeetingPartitions(input: {
         parserVersion: "meetings-composite/2",
       });
       const outcome = await processRegisteredMeetingPartitionCandidate(input.store, partition.id, failed, input.generatedAt);
-      printMeetingPartitionReceipt(partition, outcome, failureDetail, failureKind);
+      printMeetingPartitionReceipt(partition, failed, outcome, failureDetail, failureKind);
       results.push({ partition, candidate: failed, outcome });
       continue;
     }
@@ -1754,7 +1752,7 @@ export async function promoteMeetingPartitions(input: {
         recurrence.held,
         idSuffix,
       );
-      return { reconciled, snapshot, candidate, outcome, census };
+      return { reconciled, candidate, outcome, census };
     };
     let attempted = await attempt(history.moved);
     // DB-06's safety net: a partition that is refused while sittings are moving to history must not stop its fresh
@@ -1764,19 +1762,18 @@ export async function promoteMeetingPartitions(input: {
       console.warn(`  ${partition.id}: refused while sittings were moving to history (${attempted.outcome.candidate.failureDetail ?? attempted.outcome.candidate.state}); promoting again with every sitting kept`);
       attempted = await attempt(new Map(), "-kept");
     }
-    const { snapshot, candidate, outcome } = attempted;
+    const { candidate, outcome } = attempted;
     printMeetingPartitionReceipt(
       partition,
+      candidate,
       outcome,
       outcome.promoted ? null : outcome.candidate.failureDetail,
     );
-    // The exact-byte re-observation supplies current freshness to retained
-    // independent reviews. Its separate durable witness may certify no change.
-    const observed: MeetingsSnapshot = { ...snapshot, meetings: [...freshRows], agendaDocuments: [...freshDocuments],
-      counts: snapshotCounts(freshRows, 0) };
-    if (outcome.promoted || outcome.confirmed) await publishVenuePins(input.store, partition.id, attempted.census?.package ?? null);
-    const research = outcome.promoted ? await offerResearch(partition, snapshot, observed) : null;
-    results.push(research ?? { partition, candidate, outcome });
+    if (outcome.promoted || outcome.confirmed) {
+      await publishVenuePins(input.store, partition.id, attempted.census?.package ?? null);
+      if (input.facts) await publishPartitionFacts(input.facts, partition.id, partition.meetingSource, freshRows, report.acquisitions ?? [], candidate.id, input.generatedAt);
+    }
+    results.push({ partition, candidate, outcome });
   }
   return results;
 }
@@ -1794,7 +1791,8 @@ async function promoteSelectedMeetingPartitions(
   previous: MeetingsSnapshot | null,
   promotionStore: RoutineDataStore,
   partitions: readonly MeetingPartitionContract[],
-  retainedResponses: readonly HeldSourceResponse[] = [],
+  retainedResponses: readonly RetainedSourceResponse[],
+  readResponses: readonly RetainedSourceResponse[],
 ): Promise<void> {
   const report = source.lastReport;
   if (!report) {
@@ -1857,6 +1855,7 @@ async function promoteSelectedMeetingPartitions(
     generatedAt: snapshot.generatedAt,
     previousByContract: new Map(partitions.map((partition) => [partition.id, previous])),
     retainedResponses,
+    facts: { db: readerFactDb(), vault: new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR)), responses: readResponses },
   });
   const promotedCount = partitionResults.filter((result) => result.outcome.promoted !== null).length;
   const heldCount = partitionResults.length - promotedCount;

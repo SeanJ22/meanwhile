@@ -133,20 +133,15 @@ export function projectResearchProgression(input: {
       if (r.stage === "VERIFIED" && (!worker || worker.result.role !== "VALIDATOR" || !worker.result.externalVerifications?.length || worker.result.externalVerifications.some(v => v.verdict !== "PASS"))) {
         gaps.add(`${id}:INDEPENDENT_VERIFICATION_NOT_REPRODUCED:${r.recordId}`); continue;
       }
-      if (r.stage === "AUDITED" && (!r.workerResultId || !workers.some(w => w.id === r.workerResultId && w.result.role === "ADVERSARIAL_AUDITOR" && w.result.verdict === "SURVIVED"))) {
-        gaps.add(`${id}:INDEPENDENT_AUDIT_NOT_REPRODUCED:${r.recordId}`); continue;
-      }
       const chain = accepted.filter(p => p.itemId === r.itemId);
       const decision = validateTransition(deriveItemState(r.itemId, chain), r, {
         artifactById: artifactId => [...a.facts.artifacts, ...a.referencedArtifacts].find(art => art.artifactId === artifactId && instant(art.recordedAt) <= instant(r.at)) ?? null,
         attemptRoleById: attemptId => [...a.facts.attempts, ...a.referencedAttempts].find(at => at.id === attemptId)?.worker.role ?? null,
         workerResultById: workerId => workers.find(w => w.id === workerId && instant(w.endedAt) <= instant(r.at)) ?? null,
-        workerAuditBlocks: artifactIds => workers.some(w => instant(w.endedAt) <= instant(r.at) && w.result.role === "ADVERSARIAL_AUDITOR" && w.result.reopenRequired && w.inputArtifactIds.some(art => artifactIds.includes(art))),
       });
       if (!decision.ok) { gaps.add(`${id}:PIPELINE_REPLAY_REFUSED:${r.recordId}`); continue; }
       accepted.push(r);
       if (r.stage === "VERIFIED") { add("verified",r.at,r.recordId); if (r.checks.some(c => c.name === "CANONICAL_IDENTITY_UNIQUE" && c.result === "PASS")) add("canonicallyLinked",r.at,r.recordId); }
-      if (r.stage === "AUDITED") add("audited",r.at,r.recordId);
       if (r.stage === "APPROVED_FOR_PROMOTION") add("promotionReady",r.at,r.recordId);
     }
     for (const t of a.workItem.transitions) if (t.to === "REOPENED" && inWindow(t.at)) reopened.push({ workItemId:id,at:t.at,reason:t.why });

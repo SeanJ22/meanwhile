@@ -275,14 +275,14 @@ test("ordinary registered doors reject authority-transfer markers without changi
     await assert.rejects(processRegisteredRoutineCandidate(store, "fec-funding", {...good, bootstrapImport: marker} as unknown as RoutineCandidate, T0), /TRUSTED_LKG_ADMISSION_RETIRED/);
     assert.deepEqual(await store.readPromotion(good.recordClass, good.scope), before);
   }
-  const manual = MANUAL_PRODUCTION_SOURCE_CONTRACTS.find((contract) => contract.id === "comment-access")!;
+  const manual = MANUAL_PRODUCTION_SOURCE_CONTRACTS.find((contract) => contract.id === "ballot-navigation")!;
   const manualStore = new MemoryRoutineDataStore();
   const marked = {
     ...good, sourceId: manual.sourceId, recordClass: manual.recordClass, scope: manual.scope,
     normalization: {...good.normalization, parserVersion: manual.parserNormalizerVersion},
     bootstrapImport: {kind: "RETIRED_TRANSFER", contractId: manual.id},
   } as unknown as RoutineCandidate;
-  await assert.rejects(processRegisteredManualCandidate(manualStore, "comment-access", marked, T0), /TRUSTED_LKG_ADMISSION_RETIRED/);
+  await assert.rejects(processRegisteredManualCandidate(manualStore, "ballot-navigation", marked, T0), /TRUSTED_LKG_ADMISSION_RETIRED/);
   assert.equal(await manualStore.readPromotion(manual.recordClass, manual.scope), null);
 });
 
@@ -1347,7 +1347,7 @@ test("--only selection refuses typos and empty tokens before store access", () =
   ]);
   assert.equal(publication.ok, true, "targeted publication must stay selectable beside automatic refresh tasks");
   if (publication.ok) assert.deepEqual([...publication.only ?? []], ["registry-runtime-bindings"]);
-  assert.match(runner, /let huntTasks: readonly RoutineSourceTask\[\] = \[\];\s*try \{\s*huntTasks = await readHuntSourceTasks\(\);/,
+  assert.match(runner, /let huntTasks: readonly RoutineSourceTask\[\] = \[\];\s*try \{\s*huntTasks = await readHuntSourceTasks\(store, supervisorFailures\);/,
     "a selected publication door must read its owed work; readHuntSourceTasks skips selected source-only passes itself");
   const refusal = runner.indexOf("if (!TASK_SELECTION.ok)");
   const singleton = runner.indexOf("await acquireProcessSingleton(");

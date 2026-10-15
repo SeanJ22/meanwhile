@@ -1,0 +1,4043 @@
+{
+  "kind": "ballot-contests",
+  "ballots": {
+    "WY:wy-2026-general": {
+      "election": {
+        "id": "wy-2026-general",
+        "date": "2026-11-03",
+        "name": "2026 General Election",
+        "state": "WY"
+      },
+      "contests": [
+        {
+          "id": "wy-sos-2026-general-united-states-senator",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy",
+          "divisionVintage": "2026",
+          "title": "U.S. Senate",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-united-states-representative",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/cd:at-large",
+          "divisionVintage": "2026",
+          "title": "U.S. House of Representatives — At Large",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-governor",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy",
+          "divisionVintage": "2026",
+          "title": "Governor",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-secretary-of-state",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy",
+          "divisionVintage": "2026",
+          "title": "Secretary Of State",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-auditor",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy",
+          "divisionVintage": "2026",
+          "title": "State Auditor",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-treasurer",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy",
+          "divisionVintage": "2026",
+          "title": "State Treasurer",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-superintendent-of-public-instruction",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy",
+          "divisionVintage": "2026",
+          "title": "Superintendent Of Public Instruction",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-senator-01",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldu:1",
+          "divisionVintage": "2026",
+          "title": "State Senate District 1",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-senator-03",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldu:3",
+          "divisionVintage": "2026",
+          "title": "State Senate District 3",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-senator-05",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldu:5",
+          "divisionVintage": "2026",
+          "title": "State Senate District 5",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-senator-06",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldu:6",
+          "divisionVintage": "2026",
+          "title": "State Senate District 6",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": "The Sixth Senate District will hold an election to fill the remainder of an unexpired term.",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-senator-07",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldu:7",
+          "divisionVintage": "2026",
+          "title": "State Senate District 7",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-senator-09",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldu:9",
+          "divisionVintage": "2026",
+          "title": "State Senate District 9",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-senator-11",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldu:11",
+          "divisionVintage": "2026",
+          "title": "State Senate District 11",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-senator-13",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldu:13",
+          "divisionVintage": "2026",
+          "title": "State Senate District 13",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-senator-15",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldu:15",
+          "divisionVintage": "2026",
+          "title": "State Senate District 15",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-senator-17",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldu:17",
+          "divisionVintage": "2026",
+          "title": "State Senate District 17",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-senator-19",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldu:19",
+          "divisionVintage": "2026",
+          "title": "State Senate District 19",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-senator-21",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldu:21",
+          "divisionVintage": "2026",
+          "title": "State Senate District 21",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-senator-23",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldu:23",
+          "divisionVintage": "2026",
+          "title": "State Senate District 23",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-senator-25",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldu:25",
+          "divisionVintage": "2026",
+          "title": "State Senate District 25",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-senator-27",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldu:27",
+          "divisionVintage": "2026",
+          "title": "State Senate District 27",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-senator-29",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldu:29",
+          "divisionVintage": "2026",
+          "title": "State Senate District 29",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-senator-31",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldu:31",
+          "divisionVintage": "2026",
+          "title": "State Senate District 31",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-01",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:1",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 1",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-02",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:2",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 2",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-03",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:3",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 3",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-04",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:4",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 4",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-05",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:5",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 5",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-06",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:6",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 6",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-07",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:7",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 7",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-08",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:8",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 8",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-09",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:9",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 9",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-10",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:10",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 10",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-11",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:11",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 11",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-12",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:12",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 12",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-13",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:13",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 13",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-14",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:14",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 14",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-15",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:15",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 15",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-16",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:16",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 16",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-17",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:17",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 17",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-18",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:18",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 18",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-19",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:19",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 19",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-20",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:20",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 20",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-21",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:21",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 21",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-22",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:22",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 22",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-23",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:23",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 23",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-24",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:24",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 24",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-25",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:25",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 25",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-26",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:26",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 26",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-27",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:27",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 27",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-28",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:28",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 28",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-29",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:29",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 29",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-30",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:30",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 30",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-31",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:31",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 31",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-32",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:32",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 32",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-33",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:33",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 33",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-34",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:34",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 34",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-35",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:35",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 35",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-36",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:36",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 36",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-37",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:37",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 37",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-38",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:38",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 38",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-39",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:39",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 39",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-40",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:40",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 40",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-41",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:41",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 41",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-42",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:42",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 42",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-43",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:43",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 43",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-44",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:44",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 44",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-45",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:45",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 45",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-46",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:46",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 46",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-47",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:47",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 47",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-48",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:48",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 48",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-49",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:49",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 49",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-50",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:50",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 50",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-51",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:51",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 51",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-52",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:52",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 52",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-53",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:53",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 53",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-54",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:54",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 54",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-55",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:55",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 55",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-56",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:56",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 56",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-57",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:57",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 57",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-58",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:58",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 58",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-59",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:59",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 59",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-60",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:60",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 60",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-61",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:61",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 61",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-62",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy/sldl:62",
+          "divisionVintage": "2026",
+          "title": "State House of Representatives District 62",
+          "type": "CANDIDACY",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-sc-02-justice-of-the-supreme-court",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy",
+          "divisionVintage": "2026",
+          "title": "SC-02 - JUSTICE OF THE SUPREME COURT (Retention)",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-sc-01-justice-of-the-supreme-court",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy",
+          "divisionVintage": "2026",
+          "title": "SC-01 - JUSTICE OF THE SUPREME COURT (Retention)",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-chc-01-judge-of-the-chancery-court",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy",
+          "divisionVintage": "2026",
+          "title": "CHC-01 - JUDGE OF THE CHANCERY COURT (Retention)",
+          "type": "RETENTION",
+          "candidateListComplete": true,
+          "voteFor": 1,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-initiative-proposition-one",
+          "electionId": "wy-2026-general",
+          "ocdId": "ocd-division/country:us/state:wy",
+          "divisionVintage": "2026",
+          "title": "PROPOSED INITIATIVE PROPOSITION NUMBER ONE",
+          "type": "MEASURE",
+          "measureTextUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_Statewide_Ballot_Propositions.pdf",
+          "voteFor": null,
+          "termYears": null,
+          "scopeNote": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_Statewide_Ballot_Propositions.pdf",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:14.825330+00:00",
+            "verifiedAt": "2026-10-14T05:05:14.825330+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        }
+      ],
+      "candidacies": [
+        {
+          "id": "wy-sos-2026-general-united-states-senator-candidate-harriet-hageman",
+          "contestId": "wy-sos-2026-general-united-states-senator",
+          "familyName": "Hageman",
+          "givenName": "Harriet",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "HAGEMANFORWYOMING.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-united-states-senator-candidate-james-byrd",
+          "contestId": "wy-sos-2026-general-united-states-senator",
+          "familyName": "Byrd",
+          "givenName": "James",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "BYRDFORSENATE.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-united-states-representative-candidate-chuck-gray",
+          "contestId": "wy-sos-2026-general-united-states-representative",
+          "familyName": "Gray",
+          "givenName": "Chuck",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "CHUCKFORWYOMING.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-united-states-representative-candidate-lisa-kinney",
+          "contestId": "wy-sos-2026-general-united-states-representative",
+          "familyName": "Kinney",
+          "givenName": "Lisa",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "LISAKINNEYFORCONGRESS.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-united-states-representative-candidate-shawn-johnson",
+          "contestId": "wy-sos-2026-general-united-states-representative",
+          "familyName": "Johnson",
+          "givenName": "Shawn",
+          "partyLabel": "LBR",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-united-states-representative-candidate-jeffrey-haggit",
+          "contestId": "wy-sos-2026-general-united-states-representative",
+          "familyName": "Haggit",
+          "givenName": "Jeffrey",
+          "partyLabel": "CT",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "HAGGITFORHOUSE.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-governor-candidate-eric-barlow",
+          "contestId": "wy-sos-2026-general-governor",
+          "familyName": "Barlow",
+          "givenName": "Eric",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-governor-candidate-kenneth-r-casner",
+          "contestId": "wy-sos-2026-general-governor",
+          "familyName": "Casner",
+          "givenName": "Kenneth R.",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-governor-candidate-rebecca-bextel",
+          "contestId": "wy-sos-2026-general-governor",
+          "familyName": "Bextel",
+          "givenName": "Rebecca",
+          "partyLabel": "CT",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "REBECCAFORWYOMING.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-secretary-of-state-candidate-robert-short",
+          "contestId": "wy-sos-2026-general-secretary-of-state",
+          "familyName": "Short",
+          "givenName": "Robert",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-secretary-of-state-candidate-bryan-mccarty",
+          "contestId": "wy-sos-2026-general-secretary-of-state",
+          "familyName": "McCarty",
+          "givenName": "Bryan",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "HTTPS://WWW.FACEBOOK.COM/SHARE/18REMNWSBM/",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-secretary-of-state-candidate-tamara-trujillo",
+          "contestId": "wy-sos-2026-general-secretary-of-state",
+          "familyName": "Trujillo",
+          "givenName": "Tamara",
+          "partyLabel": "CT",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-auditor-candidate-kristi-racines",
+          "contestId": "wy-sos-2026-general-state-auditor",
+          "familyName": "Racines",
+          "givenName": "Kristi",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "KRISTIRACINES.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-treasurer-candidate-curt-meier",
+          "contestId": "wy-sos-2026-general-state-treasurer",
+          "familyName": "Meier",
+          "givenName": "Curt",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "MEIER4WYO.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-superintendent-of-public-instruction-candidate-steve-harshman",
+          "contestId": "wy-sos-2026-general-superintendent-of-public-instruction",
+          "familyName": "Harshman",
+          "givenName": "Steve",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "HARSHMANFORWYOMING.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-superintendent-of-public-instruction-candidate-ana-cordova",
+          "contestId": "wy-sos-2026-general-superintendent-of-public-instruction",
+          "familyName": "Cordova",
+          "givenName": "Ana",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-senator-01-candidate-ogden-driskill",
+          "contestId": "wy-sos-2026-general-state-senator-01",
+          "familyName": "Driskill",
+          "givenName": "Ogden",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "OGDENDRISKILL.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-senator-03-candidate-cheri-e-steinmetz",
+          "contestId": "wy-sos-2026-general-state-senator-03",
+          "familyName": "Steinmetz",
+          "givenName": "Cheri E",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "STEINMETZFORSENATE3.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-senator-05-candidate-lauren-schoenfeld",
+          "contestId": "wy-sos-2026-general-state-senator-05",
+          "familyName": "Schoenfeld",
+          "givenName": "Lauren",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "LAURENSCHOENFELD.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-senator-05-candidate-ted-hanlon",
+          "contestId": "wy-sos-2026-general-state-senator-05",
+          "familyName": "Hanlon",
+          "givenName": "Ted",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "HANLO4WYOMING.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-senator-06-candidate-taft-love",
+          "contestId": "wy-sos-2026-general-state-senator-06",
+          "familyName": "Love",
+          "givenName": "Taft",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "TAFTLOVE.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-senator-07-candidate-mark-rinne",
+          "contestId": "wy-sos-2026-general-state-senator-07",
+          "familyName": "Rinne",
+          "givenName": "Mark",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-senator-07-candidate-jim-lee",
+          "contestId": "wy-sos-2026-general-state-senator-07",
+          "familyName": "Lee",
+          "givenName": "Jim",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-senator-09-candidate-chris-rothfuss",
+          "contestId": "wy-sos-2026-general-state-senator-09",
+          "familyName": "Rothfuss",
+          "givenName": "Chris",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-senator-11-candidate-bob-davis",
+          "contestId": "wy-sos-2026-general-state-senator-11",
+          "familyName": "Davis",
+          "givenName": "Bob",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-senator-11-candidate-jim-wilson",
+          "contestId": "wy-sos-2026-general-state-senator-11",
+          "familyName": "Wilson",
+          "givenName": "Jim",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "WILSONFORWYOMING.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-senator-11-candidate-don-vanmatre",
+          "contestId": "wy-sos-2026-general-state-senator-11",
+          "familyName": "VanMatre",
+          "givenName": "Don",
+          "partyLabel": "CT",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-senator-13-candidate-stacy-jones",
+          "contestId": "wy-sos-2026-general-state-senator-13",
+          "familyName": "Jones",
+          "givenName": "Stacy",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "JONES4WYOMING.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-senator-15-candidate-wendy-davis-schuler",
+          "contestId": "wy-sos-2026-general-state-senator-15",
+          "familyName": "Schuler",
+          "givenName": "Wendy Davis",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "SCHULERFORWYSENATE.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-senator-17-candidate-mike-gierau",
+          "contestId": "wy-sos-2026-general-state-senator-17",
+          "familyName": "Gierau",
+          "givenName": "Mike",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-senator-19-candidate-r-j-kost",
+          "contestId": "wy-sos-2026-general-state-senator-19",
+          "familyName": "Kost",
+          "givenName": "R. J.",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "RJKOST.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-senator-21-candidate-melissa-butcher",
+          "contestId": "wy-sos-2026-general-state-senator-21",
+          "familyName": "Butcher",
+          "givenName": "Melissa",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "HTTPS://BUTCHERFORWYOMINGSENATE.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-senator-23-candidate-abby-angelos",
+          "contestId": "wy-sos-2026-general-state-senator-23",
+          "familyName": "Angelos",
+          "givenName": "Abby",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "WWW.VOTEFORABBY.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-senator-25-candidate-cale-case",
+          "contestId": "wy-sos-2026-general-state-senator-25",
+          "familyName": "Case",
+          "givenName": "Cale",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-senator-27-candidate-kevin-helling",
+          "contestId": "wy-sos-2026-general-state-senator-27",
+          "familyName": "Helling",
+          "givenName": "Kevin",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "HTTPS://WWW.HELLINGFORWYOMING.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-senator-29-candidate-lisa-engebretsen",
+          "contestId": "wy-sos-2026-general-state-senator-29",
+          "familyName": "Engebretsen",
+          "givenName": "Lisa",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-senator-31-candidate-evie-brennan",
+          "contestId": "wy-sos-2026-general-state-senator-31",
+          "familyName": "Brennan",
+          "givenName": "Evie",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "EVIEBRENNANFORWYOSENATE.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-senator-31-candidate-shifa-hamid",
+          "contestId": "wy-sos-2026-general-state-senator-31",
+          "familyName": "Hamid",
+          "givenName": "Shifa",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "HTTPS://WWW.LARAMIECOUNTYDEMOCRATS.ORG/",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-01-candidate-troy-claycomb",
+          "contestId": "wy-sos-2026-general-state-representative-01",
+          "familyName": "Claycomb",
+          "givenName": "Troy",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "WWW.ELECTTROYCLAYCOMB.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-02-candidate-jd-williams",
+          "contestId": "wy-sos-2026-general-state-representative-02",
+          "familyName": "Williams",
+          "givenName": "JD",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-03-candidate-earl-collier",
+          "contestId": "wy-sos-2026-general-state-representative-03",
+          "familyName": "Collier",
+          "givenName": "Earl",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "COLLIERFORWYOMING.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-04-candidate-jeremy-haroldson",
+          "contestId": "wy-sos-2026-general-state-representative-04",
+          "familyName": "Haroldson",
+          "givenName": "Jeremy",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "HAROLDSONFORHOUSE.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-05-candidate-joe-speckner",
+          "contestId": "wy-sos-2026-general-state-representative-05",
+          "familyName": "Speckner",
+          "givenName": "Joe",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-06-candidate-tomi-strock",
+          "contestId": "wy-sos-2026-general-state-representative-06",
+          "familyName": "Strock",
+          "givenName": "Tomi",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-07-candidate-bob-nicholas",
+          "contestId": "wy-sos-2026-general-state-representative-07",
+          "familyName": "Nicholas",
+          "givenName": "Bob",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-07-candidate-gavin-lobmeyer",
+          "contestId": "wy-sos-2026-general-state-representative-07",
+          "familyName": "Lobmeyer",
+          "givenName": "Gavin",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "GAVINFORWYOMING.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-08-candidate-luke-reiner",
+          "contestId": "wy-sos-2026-general-state-representative-08",
+          "familyName": "Reiner",
+          "givenName": "Luke",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "REINERFORWYOMING.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-08-candidate-brenda-j-lyttle",
+          "contestId": "wy-sos-2026-general-state-representative-08",
+          "familyName": "Lyttle",
+          "givenName": "Brenda J",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "HTTP://LYTTLEHOUSE.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-09-candidate-boyd-o-wiggam",
+          "contestId": "wy-sos-2026-general-state-representative-09",
+          "familyName": "Wiggam",
+          "givenName": "Boyd O.",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-09-candidate-stephen-d-latham",
+          "contestId": "wy-sos-2026-general-state-representative-09",
+          "familyName": "Latham",
+          "givenName": "Stephen D.",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-10-candidate-justin-fornstrom",
+          "contestId": "wy-sos-2026-general-state-representative-10",
+          "familyName": "Fornstrom",
+          "givenName": "Justin",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "JUSTINFORNSTROM.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-10-candidate-tony-perry",
+          "contestId": "wy-sos-2026-general-state-representative-10",
+          "familyName": "Perry",
+          "givenName": "Tony",
+          "partyLabel": "CT",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-11-candidate-dan-mcintosh",
+          "contestId": "wy-sos-2026-general-state-representative-11",
+          "familyName": "McIntosh",
+          "givenName": "Dan",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "MCINTOSHFORWYOMING.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-11-candidate-britney-tennant",
+          "contestId": "wy-sos-2026-general-state-representative-11",
+          "familyName": "Tennant",
+          "givenName": "Britney",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "TENNANTFORWYOMING.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-11-candidate-ryan-shollenberger",
+          "contestId": "wy-sos-2026-general-state-representative-11",
+          "familyName": "Shollenberger",
+          "givenName": "Ryan",
+          "partyLabel": "LBR",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "WWW.RYANFORWYOMING.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-12-candidate-clarence-styvar",
+          "contestId": "wy-sos-2026-general-state-representative-12",
+          "familyName": "Styvar",
+          "givenName": "Clarence",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-13-candidate-shane-swett",
+          "contestId": "wy-sos-2026-general-state-representative-13",
+          "familyName": "Swett",
+          "givenName": "Shane",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-13-candidate-ken-chestek",
+          "contestId": "wy-sos-2026-general-state-representative-13",
+          "familyName": "Chestek",
+          "givenName": "Ken",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "CHESTEKFORHD13.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-14-candidate-emily-study",
+          "contestId": "wy-sos-2026-general-state-representative-14",
+          "familyName": "Study",
+          "givenName": "Emily",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-14-candidate-trey-sherwood",
+          "contestId": "wy-sos-2026-general-state-representative-14",
+          "familyName": "Sherwood",
+          "givenName": "Trey",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "WWW.TREYSHERWOOD.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-15-candidate-pamela-thayer",
+          "contestId": "wy-sos-2026-general-state-representative-15",
+          "familyName": "Thayer",
+          "givenName": "Pamela",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-15-candidate-cheryl-hulme",
+          "contestId": "wy-sos-2026-general-state-representative-15",
+          "familyName": "Hulme",
+          "givenName": "Cheryl",
+          "partyLabel": "CT",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-16-candidate-mike-yin",
+          "contestId": "wy-sos-2026-general-state-representative-16",
+          "familyName": "Yin",
+          "givenName": "Mike",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "HTTPS://ELECTMIKEYIN.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-17-candidate-elizabeth-bingham",
+          "contestId": "wy-sos-2026-general-state-representative-17",
+          "familyName": "Bingham",
+          "givenName": "Elizabeth",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "BINGHAM4WYOMING.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-17-candidate-rah-reinholz",
+          "contestId": "wy-sos-2026-general-state-representative-17",
+          "familyName": "Reinholz",
+          "givenName": "Rah",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "WYORAH.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-18-candidate-kenneth-d-roberts",
+          "contestId": "wy-sos-2026-general-state-representative-18",
+          "familyName": "Roberts",
+          "givenName": "Kenneth D",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-19-candidate-chad-stephens",
+          "contestId": "wy-sos-2026-general-state-representative-19",
+          "familyName": "Stephens",
+          "givenName": "Chad",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-20-candidate-albert-sommers",
+          "contestId": "wy-sos-2026-general-state-representative-20",
+          "familyName": "Sommers",
+          "givenName": "Albert",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "VOTEFORALBERT.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-21-candidate-mckay-l-erickson",
+          "contestId": "wy-sos-2026-general-state-representative-21",
+          "familyName": "Erickson",
+          "givenName": "McKay L.",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-22-candidate-andrew-byron",
+          "contestId": "wy-sos-2026-general-state-representative-22",
+          "familyName": "Byron",
+          "givenName": "Andrew",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "WWW.ABHD22.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-23-candidate-shannon-a-brennan",
+          "contestId": "wy-sos-2026-general-state-representative-23",
+          "familyName": "Brennan",
+          "givenName": "Shannon A.",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "SABRENNANFORWYHOUSE.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-23-candidate-liz-storer",
+          "contestId": "wy-sos-2026-general-state-representative-23",
+          "familyName": "Storer",
+          "givenName": "Liz",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "STORERFORSTATEHOUSE.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-24-candidate-quin-blair",
+          "contestId": "wy-sos-2026-general-state-representative-24",
+          "familyName": "Blair",
+          "givenName": "Quin",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "HTTPS://WWW.QUINBLAIRFORWYOMING.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-25-candidate-john-wetzel",
+          "contestId": "wy-sos-2026-general-state-representative-25",
+          "familyName": "Wetzel",
+          "givenName": "John",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "WETZEL4WYO.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-26-candidate-dalton-banks",
+          "contestId": "wy-sos-2026-general-state-representative-26",
+          "familyName": "Banks",
+          "givenName": "Dalton",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-26-candidate-ralph-nieder-westermann",
+          "contestId": "wy-sos-2026-general-state-representative-26",
+          "familyName": "Nieder-Westermann",
+          "givenName": "Ralph",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "WWW.WYO26FORWARD.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-27-candidate-martha-lawley",
+          "contestId": "wy-sos-2026-general-state-representative-27",
+          "familyName": "Lawley",
+          "givenName": "Martha",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "LAWLEYFORWYOMING.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-27-candidate-theresa-livingston",
+          "contestId": "wy-sos-2026-general-state-representative-27",
+          "familyName": "Livingston",
+          "givenName": "Theresa",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-28-candidate-allen-hogg",
+          "contestId": "wy-sos-2026-general-state-representative-28",
+          "familyName": "Hogg",
+          "givenName": "Allen",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "HTTPS://ALLENHOGGFORWYOMING.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-28-candidate-larry-alwin",
+          "contestId": "wy-sos-2026-general-state-representative-28",
+          "familyName": "Alwin",
+          "givenName": "Larry",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "HTTPS://WWW.FACEBOOK.COM/PROFILE.PHP?ID=61565131001018",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-29-candidate-myca-sturtevant",
+          "contestId": "wy-sos-2026-general-state-representative-29",
+          "familyName": "Sturtevant",
+          "givenName": "Myca",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "WWW.MYCAFORSHERIDAN.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-30-candidate-ryan-koltiska",
+          "contestId": "wy-sos-2026-general-state-representative-30",
+          "familyName": "Koltiska",
+          "givenName": "Ryan",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "WWW.KOLTISKAFORSHERIDAN.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-31-candidate-douglas-moore",
+          "contestId": "wy-sos-2026-general-state-representative-31",
+          "familyName": "Moore",
+          "givenName": "Douglas",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-31-candidate-dave-hardesty",
+          "contestId": "wy-sos-2026-general-state-representative-31",
+          "familyName": "Hardesty",
+          "givenName": "Dave",
+          "partyLabel": "IND",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-32-candidate-ken-clouston",
+          "contestId": "wy-sos-2026-general-state-representative-32",
+          "familyName": "Clouston",
+          "givenName": "Ken",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "WWW.ELECTKENCLOUSTON.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-33-candidate-justin-morgan",
+          "contestId": "wy-sos-2026-general-state-representative-33",
+          "familyName": "Morgan",
+          "givenName": "Justin",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-33-candidate-ivan-d-posey",
+          "contestId": "wy-sos-2026-general-state-representative-33",
+          "familyName": "Posey",
+          "givenName": "Ivan D.",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "POSEYFORHD33.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-34-candidate-pepper-l-ottman",
+          "contestId": "wy-sos-2026-general-state-representative-34",
+          "familyName": "Ottman",
+          "givenName": "Pepper L",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "HTTPS://WWW.WYOLEG.GOV/LEGISLATORS",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-35-candidate-christopher-dresang",
+          "contestId": "wy-sos-2026-general-state-representative-35",
+          "familyName": "Dresang",
+          "givenName": "Christopher",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "DRESANGFORNATRONA.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-36-candidate-art-washut",
+          "contestId": "wy-sos-2026-general-state-representative-36",
+          "familyName": "Washut",
+          "givenName": "Art",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "ARTWASHUTFORHOUSE36.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-36-candidate-stewart-mcadoo",
+          "contestId": "wy-sos-2026-general-state-representative-36",
+          "familyName": "McAdoo",
+          "givenName": "Stewart",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "MCADOOFORDISTRICT36.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-37-candidate-brian-costello",
+          "contestId": "wy-sos-2026-general-state-representative-37",
+          "familyName": "Costello",
+          "givenName": "Brian",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "WWW.COSTELLOFORCASPER.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-37-candidate-betsy-erickson",
+          "contestId": "wy-sos-2026-general-state-representative-37",
+          "familyName": "Erickson",
+          "givenName": "Betsy",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "BETSYERICKSON.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-38-candidate-robert-l-hendry",
+          "contestId": "wy-sos-2026-general-state-representative-38",
+          "familyName": "Hendry",
+          "givenName": "Robert L.",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-38-candidate-catherine-mcqueen",
+          "contestId": "wy-sos-2026-general-state-representative-38",
+          "familyName": "McQueen",
+          "givenName": "Catherine",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-39-candidate-cody-wylie",
+          "contestId": "wy-sos-2026-general-state-representative-39",
+          "familyName": "Wylie",
+          "givenName": "Cody",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "WYLIE4WYOFROMWYO.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-40-candidate-marilyn-connolly",
+          "contestId": "wy-sos-2026-general-state-representative-40",
+          "familyName": "Connolly",
+          "givenName": "Marilyn",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "CONNOLLYFOR40.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-41-candidate-erin-edwards",
+          "contestId": "wy-sos-2026-general-state-representative-41",
+          "familyName": "Edwards",
+          "givenName": "Erin",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-41-candidate-stacy-becker",
+          "contestId": "wy-sos-2026-general-state-representative-41",
+          "familyName": "Becker",
+          "givenName": "Stacy",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-42-candidate-rob-geringer",
+          "contestId": "wy-sos-2026-general-state-representative-42",
+          "familyName": "Geringer",
+          "givenName": "Rob",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "GERINGERWYO.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-42-candidate-jim-vandyke",
+          "contestId": "wy-sos-2026-general-state-representative-42",
+          "familyName": "VanDyke",
+          "givenName": "Jim",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "VANDYKE4WYOMING.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-43-candidate-jessica-crowder",
+          "contestId": "wy-sos-2026-general-state-representative-43",
+          "familyName": "Crowder",
+          "givenName": "Jessica",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "WWW.CROWDERFORWYO.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-44-candidate-lee-filer",
+          "contestId": "wy-sos-2026-general-state-representative-44",
+          "familyName": "Filer",
+          "givenName": "Lee",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-45-candidate-ross-davenport",
+          "contestId": "wy-sos-2026-general-state-representative-45",
+          "familyName": "Davenport",
+          "givenName": "Ross",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-45-candidate-karlee-provenza",
+          "contestId": "wy-sos-2026-general-state-representative-45",
+          "familyName": "Provenza",
+          "givenName": "Karlee",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "WWW.PROVENZA4WYOMING.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-46-candidate-cam-wright",
+          "contestId": "wy-sos-2026-general-state-representative-46",
+          "familyName": "Wright",
+          "givenName": "Cam",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "WRIGHT4WYOMING.ORG",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-46-candidate-gary-wilken",
+          "contestId": "wy-sos-2026-general-state-representative-46",
+          "familyName": "Wilken",
+          "givenName": "Gary",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "HTTPS://GARYWILKENHD46.COM/",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-47-candidate-eamon-o-toole",
+          "contestId": "wy-sos-2026-general-state-representative-47",
+          "familyName": "O'Toole",
+          "givenName": "Eamon",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-48-candidate-james-wamsley",
+          "contestId": "wy-sos-2026-general-state-representative-48",
+          "familyName": "Wamsley",
+          "givenName": "James",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "WWW.JAMESWAMSLEYFORWYOMING.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-48-candidate-suzie-schmid",
+          "contestId": "wy-sos-2026-general-state-representative-48",
+          "familyName": "Schmid",
+          "givenName": "Suzie",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "SUZIESCHMID.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-49-candidate-david-walton",
+          "contestId": "wy-sos-2026-general-state-representative-49",
+          "familyName": "Walton",
+          "givenName": "David",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-50-candidate-david-hill",
+          "contestId": "wy-sos-2026-general-state-representative-50",
+          "familyName": "Hill",
+          "givenName": "David",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "HILL4WYO.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-50-candidate-carrie-satterwhite",
+          "contestId": "wy-sos-2026-general-state-representative-50",
+          "familyName": "Satterwhite",
+          "givenName": "Carrie",
+          "partyLabel": "LBR",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-51-candidate-laurie-bratten",
+          "contestId": "wy-sos-2026-general-state-representative-51",
+          "familyName": "Bratten",
+          "givenName": "Laurie",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "WWW.LAURIEFORWYOMING.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-52-candidate-ronda-boller",
+          "contestId": "wy-sos-2026-general-state-representative-52",
+          "familyName": "Boller",
+          "givenName": "Ronda",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "VOTEBOLLERHD52.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-53-candidate-christopher-r-knapp",
+          "contestId": "wy-sos-2026-general-state-representative-53",
+          "familyName": "Knapp",
+          "givenName": "Christopher R",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-54-candidate-lloyd-charles-larsen",
+          "contestId": "wy-sos-2026-general-state-representative-54",
+          "familyName": "Larsen",
+          "givenName": "Lloyd Charles",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-54-candidate-holly-m-butler",
+          "contestId": "wy-sos-2026-general-state-representative-54",
+          "familyName": "Butler",
+          "givenName": "Holly M.",
+          "partyLabel": "LBR",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "WWW.HOLLY4HD54.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-55-candidate-carl-manning",
+          "contestId": "wy-sos-2026-general-state-representative-55",
+          "familyName": "Manning",
+          "givenName": "Carl",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-56-candidate-elissa-campbell",
+          "contestId": "wy-sos-2026-general-state-representative-56",
+          "familyName": "Campbell",
+          "givenName": "Elissa",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "CAMPBELL4WYOMING.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-57-candidate-julie-jarvis",
+          "contestId": "wy-sos-2026-general-state-representative-57",
+          "familyName": "Jarvis",
+          "givenName": "Julie",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "WWW.JARVISWYO.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-57-candidate-luc-colgrove",
+          "contestId": "wy-sos-2026-general-state-representative-57",
+          "familyName": "Colgrove",
+          "givenName": "Luc",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "LUCASCOLGROVE.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-58-candidate-bill-allemand",
+          "contestId": "wy-sos-2026-general-state-representative-58",
+          "familyName": "Allemand",
+          "givenName": "Bill",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "WWW.BILLFOR58.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-58-candidate-keenan-morgan",
+          "contestId": "wy-sos-2026-general-state-representative-58",
+          "familyName": "Morgan",
+          "givenName": "Keenan",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "LINKTR.EE/MORGANFORWYOMING58",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-58-candidate-joseph-porambo",
+          "contestId": "wy-sos-2026-general-state-representative-58",
+          "familyName": "Porambo",
+          "givenName": "Joseph",
+          "partyLabel": "LBR",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "RORAMBO4WYO.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-59-candidate-j-r-riggins",
+          "contestId": "wy-sos-2026-general-state-representative-59",
+          "familyName": "Riggins",
+          "givenName": "J.R.",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "WWW.JRFORHOUSE.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-59-candidate-laurie-longtine",
+          "contestId": "wy-sos-2026-general-state-representative-59",
+          "familyName": "Longtine",
+          "givenName": "Laurie",
+          "partyLabel": "DEM",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-60-candidate-tony-niemiec",
+          "contestId": "wy-sos-2026-general-state-representative-60",
+          "familyName": "Niemiec",
+          "givenName": "Tony",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "TONYNIEMIECFORWYOMING.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-61-candidate-andrew-server",
+          "contestId": "wy-sos-2026-general-state-representative-61",
+          "familyName": "Server",
+          "givenName": "Andrew",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": "SERVERFORWY.COM",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-state-representative-62-candidate-kevin-j-campbell",
+          "contestId": "wy-sos-2026-general-state-representative-62",
+          "familyName": "Campbell",
+          "givenName": "Kevin J.",
+          "partyLabel": "REP",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-sc-02-justice-of-the-supreme-court-candidate-bridget-hill",
+          "contestId": "wy-sos-2026-general-sc-02-justice-of-the-supreme-court",
+          "familyName": "Hill",
+          "givenName": "Bridget",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-sc-01-justice-of-the-supreme-court-candidate-robert-c-jarosh",
+          "contestId": "wy-sos-2026-general-sc-01-justice-of-the-supreme-court",
+          "familyName": "Jarosh",
+          "givenName": "Robert C.",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        },
+        {
+          "id": "wy-sos-2026-general-chc-01-judge-of-the-chancery-court-candidate-ben-burningham",
+          "contestId": "wy-sos-2026-general-chc-01-judge-of-the-chancery-court",
+          "familyName": "Burningham",
+          "givenName": "Ben",
+          "partyLabel": null,
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:13.944341+00:00",
+            "verifiedAt": "2026-10-14T05:05:13.944341+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        }
+      ],
+      "measures": [
+        {
+          "id": "wy-sos-2026-general-initiative-proposition-one-text",
+          "contestId": "wy-sos-2026-general-initiative-proposition-one",
+          "officialNumber": "PROPOSED INITIATIVE PROPOSITION NUMBER ONE",
+          "questionText": "Shall a law be enacted:\nEstablishing a property tax exemption for qualified homeowners’ primary residence in the\namount of fifty percent (50%) of the assessed value of the dwelling; AND\nDefining “homeowner” and “primary residence”; providing that no more than one exemption\nshall apply to a single property or be claimed by a single owner per year; requiring a homeowner\nto be a resident of Wyoming for at least one year and to have occupied the primary residence for\nat least six months of the previous tax year to qualify; requiring an initial sworn claim to be filed\nwith the county assessor by the fourth Monday in May; providing for continuing the exemption in\nsubsequent years through annually confirming eligibility; providing a penalty for false claims;\nclarifying that the exemption applies to the residential structure; and specifying applicability?",
+          "officialStatement": "Estimated Fiscal Impact:\nAnticipated Revenue / (decrease)\nFiscal Year 2028 ($92,614,266)\nFiscal Year 2029 ($95,855,766)\nThe above estimate is based on residential property assessed value and property tax data from the\nComputer Assisted Mass Appraisal (CAMA) system provided by the Department of Revenue in\n2023. The future fiscal impact estimates are derived by using the January 2023 Consensus\nRevenue Estimating Group (CREG) report, estimating annual growth of 3.5% for properties in\nthe future years. This is an estimate of fiscal impact to the State of Wyoming only and does not\ninclude an estimate of any impact upon political subdivisions. The proposition references a\nbeginning in 2025, but if passed in 2026 the earliest applicable tax year would be 2027, with\nimpact to the state beginning in 2028. Fiscal impact will apply to each year so long as the\nexemption is in place. Future impacts depend on unpredictable economic conditions.",
+          "provenance": {
+            "sourceUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_Statewide_Ballot_Propositions.pdf",
+            "sourceOrg": "Wyoming Secretary of State",
+            "collectedAt": "2026-10-14T05:05:14.825330+00:00",
+            "verifiedAt": "2026-10-14T05:05:14.825330+00:00",
+            "doorId": "fec-wy-chief"
+          }
+        }
+      ],
+      "absences": [],
+      "coverageNotes": []
+    }
+  },
+  "sourceReceipt": {
+    "contractVersion": 1,
+    "reviewedAt": "2026-10-14T05:05:15.144850+00:00",
+    "reviewedBy": "Codex BL-16",
+    "sources": [
+      {
+        "requestedUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+        "finalUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_WY_General_Election_Candidates.csv",
+        "httpStatus": 200,
+        "rawHash": "2f5727287045d2596097ddbfc84e98984f18c518009ca61e4ef194807b6080a2",
+        "retrievedAt": "2026-10-14T05:05:13.944341+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "publisher": "Wyoming Secretary of State",
+        "reviewedEvidence": "Official 2026 general election candidate data file linked from the Secretary of State election root; all required federal, statewide, Senate and House candidates and statewide retention candidates converted from the CSV."
+      },
+      {
+        "requestedUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_Statewide_Ballot_Propositions.pdf",
+        "finalUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_Statewide_Ballot_Propositions.pdf",
+        "httpStatus": 200,
+        "rawHash": "d14cbcee098c14c8526025d778bbbcaa4e7ce79c292138a988078166aa9e786f",
+        "retrievedAt": "2026-10-14T05:05:14.825330+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "publisher": "Wyoming Secretary of State",
+        "reviewedEvidence": "Official statewide ballot propositions file for the 2026 general election: Proposed Initiative Proposition Number One ballot language, estimated fiscal impact and attached full initiative text."
+      },
+      {
+        "requestedUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_Offices_Up_for_Election.pdf",
+        "finalUrl": "https://sos.wyo.gov/Elections/Docs/2026/2026_Offices_Up_for_Election.pdf",
+        "httpStatus": 200,
+        "rawHash": "b7c7af9174d695ca37d2f8719803118306c723e7f556234ddc37ef453f666e4a",
+        "retrievedAt": "2026-10-14T05:05:15.144850+00:00",
+        "sourceClass": "ELECTION_AUTHORITY",
+        "publisher": "Wyoming Secretary of State",
+        "reviewedEvidence": "Official offices on the 2026 general ballot, including all House districts, odd-numbered Senate districts, Senate District 6 unexpired-term election and statewide judicial retention offices."
+      }
+    ]
+  }
+}

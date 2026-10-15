@@ -92,22 +92,16 @@ const opened = [
   { artifactId: "raw-1", tier: "RAW" as const, contentHash: "sha256-x", byteLength: 1, contentType: "text/calendar", canonicalUrl: "https://testville.gov/meetings.ics", partial: false, recordedAt: STAMP },
 ];
 
-const seedFixtureStore = async (repos: ReturnType<typeof createMemoryRepositories>): Promise<void> => {
-  await repos.methodCandidates.put(METHOD_CANDIDATE_STORE_ID, emptyCandidateStore(), STAMP);
-};
-
-test("0. an absent canonical candidate store refuses instead of becoming an empty tracked/local authority", async () => {
+test("0. an absent canonical candidate store is an empty store: it reads as no candidates and the first proposal creates it", async () => {
   const repos = await seededRepos();
-  await assert.rejects(
-    proposeScoutCandidates({ repos, result: result([candidate()]), artifacts: opened, stamp: STAMP }),
-    /METHOD_CANDIDATE_STORE_NOT_SEEDED/,
-  );
-  assert.equal(await repos.methodCandidates.read(METHOD_CANDIDATE_STORE_ID), null);
+  assert.deepEqual(await readMethodCandidateStore(repos), emptyCandidateStore());
+  const report = await proposeScoutCandidates({ repos, result: result([candidate()]), artifacts: opened, stamp: STAMP });
+  assert.equal(report.proposed.length, 1);
+  assert.equal((await repos.methodCandidates.read(METHOD_CANDIDATE_STORE_ID))?.value.candidates.length, 1);
 });
 
 test("1. an opened, evidence-backed candidate is validated and used the moment it works once (DP-25)", async () => {
   const repos = await seededRepos();
-  await seedFixtureStore(repos);
   const report = await proposeScoutCandidates({ repos, result: result([candidate()]), artifacts: opened, stamp: STAMP });
   assert.equal(report.proposed.length, 1);
   assert.equal(report.proposed[0].lifecycle, "ADMITTED", report.proposed[0].issues.join("; "));
@@ -140,7 +134,6 @@ test("1. an opened, evidence-backed candidate is validated and used the moment i
 
 test("2. a candidate whose URL the Attempt never opened is NOT proposed, and the reason is named", async () => {
   const repos = await seededRepos();
-  await seedFixtureStore(repos);
   const report = await proposeScoutCandidates({ repos, result: result([candidate({ url: "https://testville.gov/never-opened" })]), artifacts: opened, stamp: STAMP });
   assert.equal(report.proposed.length, 0);
   assert.equal(report.notProposed.length, 1);
@@ -149,7 +142,6 @@ test("2. a candidate whose URL the Attempt never opened is NOT proposed, and the
 
 test("3. a malformed proposal is REJECTED durably with its issue", async () => {
   const repos = await seededRepos();
-  await seedFixtureStore(repos);
   const bad = candidate({ routeId: "Bad Route Id!" });
   const report = await proposeScoutCandidates({ repos, result: result([bad]), artifacts: opened, stamp: STAMP });
   assert.equal(report.proposed.length, 0, "a non-kebab id never reaches the store");
@@ -171,7 +163,6 @@ test("3. a malformed proposal is REJECTED durably with its issue", async () => {
 
 test("4. the first Attempt that makes it work admits the candidate into the manual and selects deterministic replay", async () => {
   const repos = await seededRepos();
-  await seedFixtureStore(repos);
   const before = await methodMaturityFromManual(repos);
   assert.equal(before("testville-meetings-ics"), "UNGRADUATED");
   assert.equal(
@@ -212,7 +203,6 @@ test("4. the first Attempt that makes it work admits the candidate into the manu
 
 test("5. replaying one Attempt on another date learns the same route once", async () => {
   const repos = await seededRepos();
-  await seedFixtureStore(repos);
   const first = await proposeScoutCandidates({ repos, result: result([candidate()]), artifacts: opened, stamp: STAMP });
   const replay = await proposeScoutCandidates({ repos, result: result([candidate()]), artifacts: opened, stamp: "2026-09-02" });
   assert.equal(replay.proposed[0].lifecycle, "ADMITTED");
@@ -222,7 +212,6 @@ test("5. replaying one Attempt on another date learns the same route once", asyn
 
 test("6. a failed manual write leaves the candidate validated and a replay finishes admission", async () => {
   const repos = await seededRepos();
-  await seedFixtureStore(repos);
   const write = repos.fieldManual.compareAndSet.bind(repos.fieldManual);
   const create = repos.fieldManual.put.bind(repos.fieldManual);
   repos.fieldManual.compareAndSet = async () => { throw new Error("manual unavailable"); };
@@ -240,7 +229,7 @@ test("6. a failed manual write leaves the candidate validated and a replay finis
 
 test("7. the store is read whole only when its revision moved since this process last read or wrote it", async () => {
   const repos = await seededRepos();
-  await seedFixtureStore(repos);
+  await repos.methodCandidates.put(METHOD_CANDIDATE_STORE_ID, emptyCandidateStore(), STAMP);
   const list = repos.methodCandidates.list.bind(repos.methodCandidates);
   let whole = 0;
   repos.methodCandidates.list = async () => { whole += 1; return list(); };

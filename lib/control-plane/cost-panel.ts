@@ -446,7 +446,7 @@ export const ROLE_COST_POLICY: Readonly<Record<WorkerRole, RoleCostPolicy>> = {
   RELEASE_ORCHESTRATOR: {
     role: "RELEASE_ORCHESTRATOR",
     access: "NO_MODEL_STEP_ROUTED",
-    provenIn: "lib/control-plane/promotion/fact-chain.ts — the fact approver is declared deterministic and opens no Attempt against a provider",
+    provenIn: "lib/control-plane/promotion/campaign-site-chain.ts — the campaign-site approver is declared deterministic and opens no Attempt against a provider",
   },
   DISCOVERY_SEARCH: {
     role: "DISCOVERY_SEARCH",

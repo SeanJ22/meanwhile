@@ -71,6 +71,8 @@ export type AgendaSourceType =
   | "SUITEONE"
   | "GRANICUS"
   | "PRIMEGOV"
+  | "NOVUSAGENDA"
+  | "SWAGIT"
   | "SIMBLI"
   | "ICAL"
   | "RSS"
@@ -185,7 +187,7 @@ export interface Body {
   /** The saved official page that states `meetingCadence`, when it is not the body's own source. */
   meetingCadenceSource?: { sourceUrl: string; collectedAt: string };
   homepageUrl: string | null;
-  /** The body's office address, as its own page states it. Its source is the body's `provenance`. */
+  /** The body's office address, as its own page states it; its source is in `fieldSources`. */
   officeAddress?: string;
   /** The body's office phone, as its own page states it. */
   officePhone?: string;

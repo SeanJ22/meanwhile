@@ -1,0 +1,21 @@
+{
+  "n": 43,
+  "branch": "release/43",
+  "river_sha": "3282584e25b82498304d73f67088071caa28702a",
+  "tested_sha": "3282584e25b82498304d73f67088071caa28702a",
+  "steps": [
+    "R3-MUNICODE",
+    "NE-01"
+  ],
+  "lanes": [
+    "platform-municode",
+    "site-reads"
+  ],
+  "integration_from": 224,
+  "integration_count": 226,
+  "pr": {
+    "number": 752,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/752"
+  },
+  "at": "2026-10-15T23:03:39Z"
+}

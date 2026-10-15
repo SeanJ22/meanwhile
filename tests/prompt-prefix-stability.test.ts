@@ -20,7 +20,7 @@ import test from "./helpers/playbooks.ts";
 
 import { createMemoryRepositories } from "./helpers/playbooks.ts";
 import { cacheTtlOrderProblems, hunterExecutor, scoutStaticPrefix, type ModelRequest, type ModelTransport } from "../lib/control-plane/scheduler/scout-executor.ts";
-import { HUNTER_TOOL_SPECS } from "../lib/control-plane/scheduler/scout-tools.ts";
+import { HUNTER_SPECS } from "./helpers/hunter-tool-specs.ts";
 import { SCOUT_CACHE_POLICY } from "../lib/control-plane/scheduler/model-routing.ts";
 import { MODELS } from "../lib/models.ts";
 import type { ScoutToolContext, ScoutToolkit } from "../lib/control-plane/scheduler/scout-contract.ts";
@@ -41,7 +41,7 @@ const NOW = "2026-09-06T12:00:00.000Z";
 function hunterRequestFor(attemptId: string, obligationId: string): Promise<ModelRequest> {
   return new Promise((resolve) => {
     const capture: ModelTransport = async (request) => { resolve(request); throw new Error("captured"); };
-    const toolkit: ScoutToolkit = { specs: HUNTER_TOOL_SPECS, vaultedArtifactIds: new Set(), reported: [], requestCount: 0, bytesFetched: 0, toolCalls: 0, call: async () => { throw new Error("no tools"); } };
+    const toolkit: ScoutToolkit = { specs: HUNTER_SPECS, vaultedArtifactIds: new Set(), reported: [], requestCount: 0, bytesFetched: 0, toolCalls: 0, call: async () => { throw new Error("no tools"); } };
     const exec = hunterExecutor({ role: "HUNTER", playbookFor: fixtureRolePlaybook,
       transport: capture,
       toolkitFor: (_ctx: ScoutToolContext) => toolkit,
@@ -61,7 +61,7 @@ test("PC-3 Hunter: tools + system are byte-identical across Attempts and carry n
   const prefixA = { tools: a.tools, system: a.system };
   const prefixB = { tools: b.tools, system: b.system };
   assert.equal(sha(prefixA), sha(prefixB), "the static prefix hash is identical across Attempts");
-  const built = scoutStaticPrefix({ playbook: rolePlaybook(playbookRows, "HUNTER").text, toolkitSpecs: HUNTER_TOOL_SPECS, role: "HUNTER" });
+  const built = scoutStaticPrefix({ playbook: rolePlaybook(playbookRows, "HUNTER").text, toolkitSpecs: HUNTER_SPECS, role: "HUNTER" });
   assert.equal(sha(prefixA), sha({ tools: built.tools, system: built.system }), "the executor sends exactly what scoutStaticPrefix builds");
   const text = JSON.stringify(prefixA);
   for (const volatile of ["at-aaaaaaaa", "#one", NOW, "2026-09", "warmup"]) assert.ok(!text.includes(volatile), `${volatile} must not appear before the static breakpoint`);
@@ -78,7 +78,7 @@ const API_MESSAGE =
 test("PC-6: the moving breakpoint is 5 minutes, and a 1h marker after a 5m one is refused before sending with the API's own rule", () => {
   assert.equal(SCOUT_CACHE_POLICY.ttl, "5m");
   assert.match(String(SCOUT_CACHE_POLICY.movingBreakpoint), /TOP_LEVEL|LAST_BLOCK/);
-  const prefix = scoutStaticPrefix({ playbook: rolePlaybook(playbookRows, "HUNTER").text, toolkitSpecs: HUNTER_TOOL_SPECS, role: "HUNTER" });
+  const prefix = scoutStaticPrefix({ playbook: rolePlaybook(playbookRows, "HUNTER").text, toolkitSpecs: HUNTER_SPECS, role: "HUNTER" });
   const good: ModelRequest = { model: MODELS.opus.model, max_tokens: 0, tool_choice: { type: "auto" }, tools: prefix.tools, system: prefix.system,
     messages: [{ role: "user", content: [{ type: "text", text: "warmup" }] }] };
   assert.deepEqual(cacheTtlOrderProblems(good), []);

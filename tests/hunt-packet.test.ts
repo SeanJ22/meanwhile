@@ -1,10 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { checklistItem } from "../lib/coverage/checklist-map.ts";
 import { buildPlaceOwedList } from "../lib/coverage/place-owed.ts";
 import type { HeldPlaceCapture } from "../lib/civic-data/held-place-capture.ts";
 import { projectHeldPlaceFamilies } from "../lib/civic-data/held-place-families.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
-import { blankFingerprint, huntableItem, withAskedBlanks, packetCostEstimateUsd, packetFamilies, packetsFrom, reportableSubjects } from "../lib/hunt/packet.ts";
+import { blankFingerprint, withAskedBlanks, packetCostEstimateUsd, packetFamilies, packetsFrom, reportableSubjects } from "../lib/hunt/packet.ts";
 
 const NOW = "2026-10-14T12:00:00.000Z";
 const COUNTY = "ocd-division/country:us/state:az/county:santa_cruz";
@@ -50,9 +51,13 @@ test("a stale value is held for its source's refresh, not hunted", () => {
 
 test("blanks are only what an agent can find on a page", () => {
   const packets = packetsFrom({ divisions, items: owed([]) });
-  for (const blank of packets.flatMap(p => p.blanks)) assert.ok(huntableItem(blank.checklistId), blank.checklistId);
-  assert.equal(huntableItem("GATE-01"), false);
-  assert.equal(huntableItem("ASK-01"), false);
+  const ids = packets.flatMap(p => p.blanks.map(b => b.checklistId));
+  assert.ok(ids.length > 0);
+  for (const id of ids) {
+    const rule = checklistItem(id)!;
+    assert.ok(rule.unit !== "system" && rule.unit !== "zip" && ["fact", "identity", "source", "freshness"].includes(rule.predicateKind), id);
+  }
+  assert.ok(!ids.some(id => id.startsWith("GATE-") || id.startsWith("ASK-")));
 });
 
 test("a packet's subjects are its government and every subject it holds or owes", () => {

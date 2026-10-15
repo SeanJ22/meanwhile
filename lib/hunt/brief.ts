@@ -1,7 +1,5 @@
-/**
- * A packet's brief: what we hold (never looked for again), the open blanks by family with the fields owed, what
- * was tried before, and the field manual's notes for this kind of place as optional reading. Pure.
- */
+/** A packet's brief. What we hold is listed so it is never looked for again;
+ * the field manual's notes are optional reading. */
 import { CHECKLIST_FAMILIES } from "../coverage/checklist-map.ts";
 import type { HuntPacket, PacketField } from "./packet.ts";
 

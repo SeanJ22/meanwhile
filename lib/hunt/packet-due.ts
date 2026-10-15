@@ -1,8 +1,5 @@
-/**
- * Whether a government's packet is sent again, and as a hunter or a detective. A packet runs only while it has an
- * open blank and something changed since its last job: its blanks, a new order, a door that shut, or the longest a
- * dead end may wait while coverage is expanding. Pure.
- */
+/** A packet runs again only while a blank is open and something changed since its last job:
+ * its blanks, a new order, a door that shut, or the longest a dead end may wait. */
 import { createHash } from "node:crypto";
 import type { HuntRole, TriedStep } from "./brief.ts";
 import { blankFingerprint, type HuntPacket, type PacketField } from "./packet.ts";

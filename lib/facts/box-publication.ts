@@ -52,12 +52,16 @@ interface Target { readonly body: { id: string; name: string; state: string | nu
 
 const BODY_SQL = "SELECT id, name, state, parent_id FROM entity WHERE kind = 'body' AND id = $1";
 const SITTING_SQL = "SELECT m.id AS meeting_id, m.parent_id AS body_id FROM entity m WHERE m.kind = 'meeting' AND m.id = $1";
-const GOVERNING_SQL = `SELECT b.id, b.name, b.state, b.parent_id FROM entity b LEFT JOIN entity g ON g.id = b.parent_id AND g.kind = 'government'
-  WHERE b.kind = 'body' AND (b.id LIKE '%#governing' OR b.id LIKE '%#board') AND (b.parent_id = $1 OR g.parent_id = $1 OR b.id LIKE $1 || '#%')
-  ORDER BY b.parent_id = $1 DESC, b.id LIMIT 1`;
+const GOVERNS = "b.kind = 'body' AND (b.id LIKE '%#governing' OR b.id LIKE '%#board')";
+// Each branch is one index lookup: by parent, by the government's parent, and by id prefix (`#` then `$` in C collation).
+const GOVERNING_SQL = `SELECT id, name, state, parent_id FROM (
+    SELECT b.id, b.name, b.state, b.parent_id FROM entity b WHERE b.parent_id = $1 AND ${GOVERNS}
+    UNION SELECT b.id, b.name, b.state, b.parent_id FROM entity g JOIN entity b ON b.parent_id = g.id WHERE g.parent_id = $1 AND g.kind = 'government' AND ${GOVERNS}
+    UNION SELECT b.id, b.name, b.state, b.parent_id FROM entity b WHERE b.id > $1 || '#' AND b.id < $1 || '$' AND ${GOVERNS}
+  ) found ORDER BY parent_id = $1 DESC, id LIMIT 1`;
 const SEAT_SQL = `SELECT f.entity_id AS body_id, f.value->>'name' AS holder FROM fact f
-  LEFT JOIN entity_external_id x ON x.scheme = 'roster-member' AND x.value = $1 AND f.field = 'member:' || x.entity_id
-  WHERE f.status = 'live' AND f.field LIKE 'member:%' AND (x.entity_id IS NOT NULL OR 'roster:' || f.entity_id || '#' || substr(f.field, 8) = $1) LIMIT 1`;
+  WHERE f.entity_id = $1 AND f.status = 'live' AND f.field IN ('member:' || $2,
+    (SELECT 'member:' || x.entity_id FROM entity_external_id x WHERE x.scheme = 'roster-member' AND x.value = $3)) LIMIT 1`;
 
 const bodyRow = (row: Record<string, unknown> | undefined) =>
   row ? { id: String(row.id), name: String(row.name), state: row.state as string | null, parentId: row.parent_id as string | null } : null;
@@ -72,7 +76,8 @@ async function targetOf(query: Query, subjectId: string): Promise<Target | null>
     const body = bodyRow((await query(BODY_SQL, [String(sitting.body_id)]))[0]);
     return body ? { body, holder: null, entityId: String(sitting.meeting_id) } : null;
   }
-  const [seat] = subjectId.startsWith("roster:") ? await query(SEAT_SQL, [subjectId]) : [];
+  const cut = subjectId.lastIndexOf("#");
+  const [seat] = subjectId.startsWith("roster:") && cut > 7 ? await query(SEAT_SQL, [subjectId.slice(7, cut), subjectId.slice(cut + 1), subjectId]) : [];
   if (seat) {
     const body = bodyRow((await query(BODY_SQL, [String(seat.body_id)]))[0]);
     return body ? { body, holder: seat.holder === null ? null : String(seat.holder), entityId: body.id } : null;

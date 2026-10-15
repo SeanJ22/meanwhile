@@ -171,6 +171,7 @@ async function writer() {
     const { manualProjectionCandidate } = await import("../lib/civic-data/manual-projections.ts");
     const { processRegisteredManualCandidate } = await import("../lib/civic-data/promotion.ts");
     const { publishRoutineReaderEdgeOutcome } = await import("../lib/civic-data/reader-edge-publication.ts");
+    const { publishPlaceReaderEdgeOutcome } = await import("../lib/civic-data/place-edge-publication.ts");
     const { LocalFileArtifactStore } = await import("../lib/meetings/edge-store.ts");
     const { ensureReaderAuthorityEdge } = await import("../lib/meetings/edge-serving.ts");
     const repos = await createPgRepositories(process.env.DATABASE_URL!, at, { skipBootstrap: true });
@@ -274,8 +275,8 @@ async function writer() {
     let armed = await arm();
     assert.equal(armed.closed, null, JSON.stringify(armed.closed));
     const startup = { milliseconds: performance.now() - firstStart, ...database.bytes };
-    const input: Parameters<typeof runNationalMeasureTranslations>[0] = { state, readPlaces, publishPlace: async division => {
-      assert.ok((await publishRoutineReaderEdgeOutcome(store, now(), [{ recordClass: "CURATED_READER_RECORD", scope: translationScope(division) }], { artifactStore })).ok);
+    const input: Parameters<typeof runNationalMeasureTranslations>[0] = { state, readPlaces, publishPlace: async (division, currentIdentity) => {
+      assert.ok((await publishPlaceReaderEdgeOutcome(store, now(), [{ recordClass: "CURATED_READER_RECORD", scope: translationScope(division), currentIdentity }], { artifactStore })).ok);
       const edge = await ensureReaderAuthorityEdge({}, artifactStore, []);
       assert.equal((await edge.translations?.load(division))?.kind, "PROMOTED");
       if (publishInputs) assert.equal((await edge.localMeasures?.load(division))?.kind, "PROMOTED");

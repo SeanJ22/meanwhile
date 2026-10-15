@@ -7,6 +7,9 @@ import { test } from "node:test";
 import type { PromotedEdgeEntry } from "../lib/civic-data/read-model.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { publishRoutineReaderEdgeOutcome } from "../lib/civic-data/reader-edge-publication.ts";
+import { publishPlaceReaderEdgeOutcome } from "../lib/civic-data/place-edge-publication.ts";
+import { promotedPointerVersion } from "../lib/civic-data/reader-edge-outcome.ts";
+import type { UnchangedConfirmation } from "../lib/civic-data/unchanged-confirmation.ts";
 import { ensureReaderAuthorityEdge } from "../lib/meetings/edge-serving.ts";
 import { publishReaderPlaceArtifact, readerPlaceManifestKey } from "../lib/meetings/place-edge.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
@@ -15,6 +18,34 @@ const NOW = "2026-10-15T18:00:00.000Z";
 const division = "ocd-division/country:us/state:co/county:denver";
 const family = "ballot-measures";
 const empty = (place: string): PromotedEdgeEntry => ({ kind: "NOT_RECORDED", recordClass: "BALLOT_CANDIDACY", scope: `US:${family}:${place}` });
+
+test("a cursor's confirmed place identity skips every database read without widening to another place", async t => {
+  const directory = mkdtempSync(join(tmpdir(), "place-current-"));
+  t.after(() => rmSync(directory, { recursive: true, force: true }));
+  const artifactStore = new LocalFileArtifactStore(directory), scope = `US:plain-english-translations:${division}`;
+  const confirmation: UnchangedConfirmation = { kind: "UNCHANGED_CONFIRMATION_V1", sourceId: "fixture", recordClass: "CURATED_READER_RECORD",
+    scope, pointerKey: `CURATED_READER_RECORD:${scope}`, versionId: "checked-1", readModelHash: "a".repeat(64),
+    basis: "READ_MODEL_RECOMPUTED", parserVersion: "fixture", observedAt: NOW, stamps: null,
+    retrieval: { requestedUrl: "https://elections.example.gov/measure", finalUrl: "https://elections.example.gov/measure",
+      httpStatus: 200, rawHash: "b".repeat(64), retrievedAt: NOW } };
+  const currentIdentity = { versionId: "checked-1", latestConfirmation: confirmation };
+  await publishReaderPlaceArtifact({ family: "plain-english-translations", division,
+    versionId: promotedPointerVersion("CURATED_READER_RECORD", scope, currentIdentity),
+    read: async () => ({ kind: "NOT_RECORDED", recordClass: "CURATED_READER_RECORD", scope }) }, { store: artifactStore, now: NOW });
+  const noDatabase = new Proxy(new MemoryRoutineDataStore(), { get() { throw new Error("A current manifest needs no database read."); } });
+  assert.equal((await publishPlaceReaderEdgeOutcome(noDatabase, NOW,
+    [{ recordClass: "CURATED_READER_RECORD", scope, currentIdentity }], { artifactStore })).readerEdge, "CURRENT");
+  const neighborScope = `US:plain-english-translations:${division}/place:neighbor`, reads: string[] = [];
+  const neighborStore = new Proxy(new MemoryRoutineDataStore(), { get(_target, key) {
+    if (key === "readPromotionIdentity") return async (_recordClass: string, foundScope: string) => { reads.push(foundScope); return null; };
+    throw new Error(`Unexpected read ${String(key)}`);
+  } });
+  const result = await publishPlaceReaderEdgeOutcome(neighborStore, NOW,
+    [{ recordClass: "CURATED_READER_RECORD", scope: neighborScope, currentIdentity }], { artifactStore });
+  assert.equal(result.readerEdge, "CURRENT");
+  assert.deepEqual(reads, [neighborScope], "another division cannot inherit the cursor's matching artifact");
+  assert.equal(await artifactStore.readManifest(readerPlaceManifestKey("plain-english-translations", `${division}/place:neighbor`)), null);
+});
 
 test("place publications and reads never open a country manifest, and current pointers skip payloads", async t => {
   const directory = mkdtempSync(join(tmpdir(), "place-edge-"));

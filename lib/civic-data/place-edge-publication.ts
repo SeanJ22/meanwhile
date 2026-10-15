@@ -5,12 +5,14 @@ import { promotedPointerVersion, safeReaderEdgeFailure, type ReaderEdgePublicati
 import { isTranslationScope, TRANSLATION_SCOPE } from "../translate/records.ts";
 import { readTranslationProjection } from "../translate/projection-reader.ts";
 import { isPlaceMeasureScope, PLACE_MEASURE_SCOPE, readPlaceMeasureProjection } from "../ballot/place-measures.ts";
-import { publishReaderPlaceArtifact } from "../meetings/place-edge.ts";
+import { publishReaderPlaceArtifact, readerPlaceManifestKey, readerPlaceManifestMatches } from "../meetings/place-edge.ts";
 import { resolveReaderBlobWriteStore, purgeReaderCacheTags, READER_MANIFEST_CACHE_TAG } from "../meetings/edge-blob-store.ts";
 import type { ReaderArtifactStore } from "../meetings/edge-store.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 
-type PlacePointer = Pick<PromotedPointerIdentity, "recordClass" | "scope">;
+type PlacePointer = Pick<PromotedPointerIdentity, "recordClass" | "scope"> & {
+  readonly currentIdentity?: Pick<PromotedPointerIdentity, "versionId" | "latestConfirmation">;
+};
 export function isPlaceEdgePointer(pointer: PlacePointer): boolean {
   return pointer.recordClass === "CURATED_READER_RECORD" && isTranslationScope(pointer.scope) ||
     pointer.recordClass === "BALLOT_CANDIDACY" && isPlaceMeasureScope(pointer.scope);
@@ -29,6 +31,14 @@ export async function publishPlaceReaderEdgeOutcome(store: RoutineDataStore, obs
     if (!isPlaceEdgePointer(selectedPointer)) throw new Error("Place publication requires one exact place pointer.");
     const family = selectedPointer.recordClass === "BALLOT_CANDIDACY" ? "ballot-measures" : "plain-english-translations";
     const division = selectedPointer.scope.slice((family === "ballot-measures" ? PLACE_MEASURE_SCOPE : TRANSLATION_SCOPE).length + 1);
+    if (selectedPointer.currentIdentity) {
+      const current = await artifactStore.readManifest(readerPlaceManifestKey(family, division));
+      const versionId = promotedPointerVersion(selectedPointer.recordClass, selectedPointer.scope, selectedPointer.currentIdentity);
+      if (readerPlaceManifestMatches(current?.manifest, { family, division, versionId })) {
+        sequence = current!.manifest.sequence;
+        continue;
+      }
+    }
     const pointer = await store.readPromotionIdentity(selectedPointer.recordClass, selectedPointer.scope);
     if (!pointer) continue;
     const versionId = promotedPointerVersion(selectedPointer.recordClass, selectedPointer.scope, pointer);

@@ -29,6 +29,7 @@ import { buildResearchIntent } from "../lib/control-plane/research-view.ts";
 import { scopeModelSpend } from "../lib/control-plane/expansion/membership.ts";
 import { SETTLED_HOLD_RETENTION_MS } from "../lib/control-plane/expansion/spend-holds.ts";
 import { defaultAdminConfig, withFleetSpendCeiling } from "../lib/control-plane/gateway/admin-config.ts";
+import { serializeUnchangedConfirmation, type UnchangedConfirmation } from "../lib/civic-data/unchanged-confirmation.ts";
 
 const at = "2026-10-14T18:00:00Z";
 function reference(body: string, url: string, retrievedAt = at, publisher = "Ohio election authority"): MeasureSourceReference {
@@ -108,6 +109,11 @@ test("national translation binds its official question and uses the full legisla
   const edgePublication = await publishPlaceReaderEdgeOutcome(store, now,
     [{ recordClass: "CURATED_READER_RECORD", scope: translationScope(division) }], { artifactStore: artifacts });
   assert.equal(edgePublication.readerEdge, "PUBLISHED", JSON.stringify(edgePublication));
+  const currentIdentity = (await store.readPromotionIdentity("CURATED_READER_RECORD", translationScope(division)))!;
+  const noDatabase = new Proxy(store, { get() { throw new Error("A current place must not read the database."); } });
+  const currentPublication = await publishPlaceReaderEdgeOutcome(noDatabase, now,
+    [{ recordClass: "CURATED_READER_RECORD", scope: translationScope(division), currentIdentity }], { artifactStore: artifacts });
+  assert.equal(currentPublication.readerEdge, "CURRENT", JSON.stringify(currentPublication));
   const manifest = (await artifacts.readManifest(readerPlaceManifestKey("plain-english-translations", division)))!.manifest;
   assert.ok(manifest.place?.artifact);
   let edgeReads = 0;
@@ -164,6 +170,29 @@ test("national translation binds its official question and uses the full legisla
   now = "2026-10-15T18:17:00Z"; rejects = false;
   assert.equal((await runNationalMeasureTranslations(input))[0].published, 1);
   assert.equal(requests.length, 6);
+  const repairedArtifacts = new LocalFileArtifactStore(join(directory, "repair"));
+  let identityReads = 0;
+  const authoritative = new Proxy(store, { get(target, key) {
+    if (key === "readPromotionIdentity") return async (...args: Parameters<typeof target.readPromotionIdentity>) => {
+      identityReads++; assert.deepEqual(args, ["CURATED_READER_RECORD", translationScope(division)]);
+      return target.readPromotionIdentity(...args);
+    };
+    const value = Reflect.get(target, key); return typeof value === "function" ? value.bind(target) : value;
+  } });
+  const selected = [{ recordClass: "CURATED_READER_RECORD" as const, scope: translationScope(division), currentIdentity }];
+  assert.equal((await publishPlaceReaderEdgeOutcome(authoritative, now, selected, { artifactStore: repairedArtifacts })).readerEdge, "PUBLISHED");
+  assert.equal(identityReads, 1, "a missing artifact discards the cursor's old version and reads the authoritative current identity");
+  const repaired = (await repairedArtifacts.readManifest(readerPlaceManifestKey("plain-english-translations", division)))!;
+  const latestIdentity = (await store.readPromotionIdentity("CURATED_READER_RECORD", translationScope(division)))!;
+  assert.notEqual(latestIdentity.versionId, currentIdentity.versionId);
+  assert.ok(repaired.manifest.place!.artifact.version.includes(latestIdentity.versionId));
+  assert.equal((await publishPlaceReaderEdgeOutcome(authoritative, now, selected, { artifactStore: repairedArtifacts })).readerEdge, "CURRENT");
+  assert.equal(identityReads, 2, "an older cursor observes the newer artifact through the latest authoritative identity");
+  assert.equal((await repairedArtifacts.readManifest(readerPlaceManifestKey("plain-english-translations", division)))!.etag, repaired.etag,
+    "an old cursor cannot overwrite a concurrent later promotion");
+  assert.equal((await publishPlaceReaderEdgeOutcome(authoritative, now,
+    [{ ...selected[0], currentIdentity: latestIdentity }], { artifactStore: artifacts })).readerEdge, "PUBLISHED");
+  assert.equal(identityReads, 3, "a stale artifact is repaired after checking the authoritative identity");
   const attempts = await repos.attempts.list();
   assert.equal(attempts.filter(row => row.value.translation?.status === "HELD").length, 1);
   now = "2026-10-15T18:18:00Z";
@@ -209,9 +238,18 @@ test("the canonical state input decodes only measure fields and keeps unchanged 
   await assert.rejects(readNationalBallotState("OH", async () => [[{ field: "$source", value: sourceBallot }, ...invalid]]), /invalid/);
   await assert.rejects(readNationalBallotState("OH", async () => [[{ field: "$missing", value: "missing" }]]), /CIVIC_PAYLOAD_PART_MISSING/);
   let reads = 0;
-  assert.deepEqual(await readNationalBallotState("OH", async () => { reads++; return [[{ field: "$source", value: { ...sourceBallot, measureCount: 1 } }]]; }),
-    { division, sourceBallot, ballots: [], currentMeasureCount: 1 });
+  const currentTranslation = { versionId: "checked-state-v1" };
+  assert.deepEqual(await readNationalBallotState("OH", async () => { reads++; return [[{ field: "$source", value: { ...sourceBallot, measureCount: 1, currentTranslation } }]]; }),
+    { division, sourceBallot, ballots: [], currentMeasureCount: 1, currentTranslation });
+  await assert.rejects(readNationalBallotState("OH", async () => [[{ field: "$source", value: { ...sourceBallot, measureCount: 1 } }]]), /exact promoted identity/);
   assert.equal(reads, 1);
+  const confirmation: UnchangedConfirmation = { kind: "UNCHANGED_CONFIRMATION_V1", sourceId: "fixture", recordClass: "CURATED_READER_RECORD",
+    scope: translationScope(division), pointerKey: `CURATED_READER_RECORD:${translationScope(division)}`, versionId: currentTranslation.versionId,
+    readModelHash: "a".repeat(64), basis: "READ_MODEL_RECOMPUTED", parserVersion: "fixture", observedAt: at, stamps: null,
+    retrieval: { requestedUrl: sourceUrl, finalUrl: sourceUrl, httpStatus: 200, rawHash: "b".repeat(64), retrievedAt: at } };
+  const confirmed = await readNationalBallotState("OH", async () => [[{ field: "$source", value: { ...sourceBallot, measureCount: 1,
+    currentTranslation: { ...currentTranslation, confirmation: serializeUnchangedConfirmation(confirmation) } } }]]);
+  assert.deepEqual(confirmed.currentTranslation, { ...currentTranslation, latestConfirmation: confirmation });
 });
 
 test("national measures require complete vaulted text with matching source and state identities", async () => {
@@ -240,10 +278,10 @@ test("one state worker translates county, city and school measures one place at 
   let heldSource = ballot.measures[0].officialText!, missingFirst = false;
   const streamed = vault.stream.bind(vault);
   vault.stream = async key => { vaultReads++; return streamed(key); };
-  const published: string[] = [];
+  const published: string[] = [], currentIdentities: unknown[] = [];
   const input = { state: "OH", vault, repos, store, now: () => clock, capacity: () => 1,
     slots: { acquire: async () => () => {} }, continueWork: () => true, report: () => {},
-    publishPlace: async (division: string) => { published.push(division); },
+    publishPlace: async (division: string, identity?: { versionId: string }) => { published.push(division); currentIdentities.push(identity); },
     readPlaces: async function* () {
       for (const place of places) {
         yielded++;
@@ -337,12 +375,14 @@ test("one state worker translates county, city and school measures one place at 
       }
     }
   }
-  vaultReads = 0; published.length = 0;
+  vaultReads = 0; published.length = 0; currentIdentities.length = 0;
   const narrow = await runNationalMeasureTranslations({ ...input, readPlaces: async function* () {
-    for (const place of places) yield { division: place, ballots: [], currentMeasureCount: place === places[0] ? 2 : 1 };
+    for (const place of places) yield { division: place, ballots: [], currentMeasureCount: place === places[0] ? 2 : 1,
+      currentTranslation: { versionId: `checked:${place}` } };
   } });
   assert.equal(narrow[0].reused, 4); assert.equal(requests, 8); assert.equal(vaultReads, 0);
   assert.deepEqual(published, places);
+  assert.deepEqual(currentIdentities, places.map(place => ({ versionId: `checked:${place}` })), "the bounded cursor identity reaches the exact place publisher");
   missingFirst = true; sourceVersion = "source-gap"; clock = "2026-10-15T20:00:00Z"; yielded = 0;
   places.push(`${division}/place:later`);
   const isolated = await runNationalMeasureTranslations(input);

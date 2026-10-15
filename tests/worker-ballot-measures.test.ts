@@ -178,12 +178,14 @@ test("translation input keysets one state's place pointers and loads only the yi
   const currentQuery: ReadOnlyQuery = async statements => statements.map(statement => {
     assert.match(statement.text, /sourceBallot/);
     const after = String(statement.params[1]);
-    return scopes.filter(scope => scope > after).slice(0, 2).map(scope => ({ scope, current_measure_count: 1 }));
+    return scopes.filter(scope => scope > after).slice(0, 2).map(scope => ({ scope, current_measure_count: 1,
+      current_translation: { versionId: `checked:${scope}` } }));
   });
   const current = [];
   for await (const place of readMeasurePlaces("OH", { store, now: () => now, readState: async () => ({ division: "ocd-division/country:us/state:oh", ballots: [] }), query: currentQuery })) current.push(place);
   assert.equal(reads.length, 0, "current raw and checked payloads never load");
   assert.deepEqual(current.slice(1).map(place => place.currentMeasureCount), [1, 1, 1]);
+  assert.deepEqual(current.slice(1).map(place => place.currentTranslation), scopes.map(scope => ({ versionId: `checked:${scope}` })));
   assert.ok(current.slice(1).every(place => place.ballots.length === 0));
 });
 

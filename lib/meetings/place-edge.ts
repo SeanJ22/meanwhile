@@ -20,6 +20,12 @@ export function readerPlaceManifestKey(family: PlaceAuthorityFamily, division: s
   return `reader/places/${family}/${sha256OfJson(division)}.json`;
 }
 
+export function readerPlaceManifestMatches(manifest: ReaderManifest | undefined,
+  input: { readonly family: PlaceAuthorityFamily; readonly division: string; readonly versionId: string }): boolean {
+  return manifest?.formatVersion === READER_ARTIFACT_FORMAT_VERSION && manifest.place?.family === input.family &&
+    manifest.place.division === input.division && manifest.place.artifact.version === input.versionId;
+}
+
 export async function publishReaderPlaceArtifact(input: {
   readonly family: PlaceAuthorityFamily; readonly division: string; readonly versionId: string;
   readonly read: () => Promise<PromotedEdgeEntry>;
@@ -28,9 +34,8 @@ export async function publishReaderPlaceArtifact(input: {
     const { store, now } = options;
     const manifestKey = readerPlaceManifestKey(input.family, input.division);
     const current = await store.readManifest(manifestKey);
-    if (current?.manifest.place?.family === input.family && current.manifest.place.division === input.division &&
-        current.manifest.place.artifact.version === input.versionId) {
-      return { status: "CURRENT", sequence: current.manifest.sequence, scopes: 1 };
+    if (readerPlaceManifestMatches(current?.manifest, input)) {
+      return { status: "CURRENT", sequence: current!.manifest.sequence, scopes: 1 };
     }
     const value = await input.read();
     const envelope: PlaceArtifactEnvelope = { formatVersion: READER_ARTIFACT_FORMAT_VERSION,

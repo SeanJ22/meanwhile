@@ -4,6 +4,8 @@ import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import { measureRecordIssue } from "../ballot/measure-record-contract.ts";
 import { canonicalCivicDataJson } from "../civic-data/changes.ts";
 import type { RoutineDataStore } from "../civic-data/store.ts";
+import type { PromotedPointerIdentity } from "../civic-data/types.ts";
+import { parseUnchangedConfirmation, UNCHANGED_CONFIRMATION_PREFIX } from "../civic-data/unchanged-confirmation.ts";
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
 import { isOfficialSource } from "../civic-data/source-authority.ts";
 import { ZERO_COST, type Attempt } from "../control-plane/attempt.ts";
@@ -24,6 +26,18 @@ import { CivicPayloadParts } from "../civic-data/payload-parts.ts";
 import type { ReadOnlyQuery } from "../control-plane/admin-view/promoted-slices.ts";
 import { PLACE_MEASURE_SCOPE, readPlaceMeasureProjection } from "../ballot/place-measures.ts";
 
+type CurrentTranslationIdentity = Pick<PromotedPointerIdentity, "versionId" | "latestConfirmation">;
+const checkedIdentitySql = `jsonb_build_object('versionId',t.current_version_id,'confirmation',(
+  SELECT c.detail FROM civic_data_candidate_events c WHERE c.candidate_id=t.current_version_id
+    AND left(c.detail,${UNCHANGED_CONFIRMATION_PREFIX.length})='${UNCHANGED_CONFIRMATION_PREFIX}' ORDER BY c.sequence DESC LIMIT 1))`;
+
+function currentTranslationIdentity(value: unknown): CurrentTranslationIdentity {
+  const row = value as { versionId?: unknown; confirmation?: unknown } | null;
+  if (!row || typeof row.versionId !== "string" || !row.versionId) throw new Error("Current measure translations lack their exact promoted identity.");
+  const confirmation = typeof row.confirmation === "string" ? parseUnchangedConfirmation(row.confirmation) : null;
+  return { versionId: row.versionId, ...(confirmation?.versionId === row.versionId ? { latestConfirmation: confirmation } : {}) };
+}
+
 export async function readNationalBallotState(state: string, query: ReadOnlyQuery | null = readerQuery()): Promise<MeasurePlaceInput> {
   const jurisdiction = US_JURISDICTIONS.find(row => row.usps === requireBallotState(state))!;
   const division = `ocd-division/country:us/${jurisdiction.prefix}:${jurisdiction.slug}`;
@@ -32,7 +46,9 @@ export async function readNationalBallotState(state: string, query: ReadOnlyQuer
     SELECT scope,current_version_id,payload FROM civic_data_promotions WHERE record_class='BALLOT_CANDIDACY' AND scope=$1
   ), checked AS (
     SELECT CASE WHEN v.payload->'sourceBallot'->>'versionId'=s.current_version_id AND v.payload->'sourceBallot'->>'scope'=s.scope
-      THEN v.payload->'sourceBallot'->'measureCount' END measure_count
+      THEN v.payload->'sourceBallot'->'measureCount' END measure_count,
+      CASE WHEN v.payload->'sourceBallot'->>'versionId'=s.current_version_id AND v.payload->'sourceBallot'->>'scope'=s.scope
+        THEN ${checkedIdentitySql} END identity
     FROM source s LEFT JOIN civic_data_promotions t ON t.record_class='CURATED_READER_RECORD' AND t.scope=$2
     LEFT JOIN civic_data_payload_parts p ON p.hash=t.payload->>'$civicPayloadPart'
     CROSS JOIN LATERAL (SELECT CASE WHEN p.hash IS NULL THEN t.payload WHEN p.payload->>'kind'='object' THEN p.payload->'value' ELSE p.payload END payload) v
@@ -61,14 +77,15 @@ export async function readNationalBallotState(state: string, query: ReadOnlyQuer
     UNION ALL SELECT NULL,'$missing',node FROM walk WHERE node ? '$civicPayloadPart'
       AND NOT EXISTS (SELECT 1 FROM civic_data_payload_parts p WHERE p.hash=node->>'$civicPayloadPart')
     UNION ALL SELECT NULL,'$source',jsonb_build_object('scope',scope,'versionId',current_version_id,
-      'measureCount',(SELECT measure_count FROM checked)) FROM source`,
+      'measureCount',(SELECT measure_count FROM checked),'currentTranslation',(SELECT identity FROM checked)) FROM source`,
     params: [stateBallotScope("ballot-contests", state), translationScope(division),
       ["election", "contests", "measures", "measureRecords", "sourceAuthorities", "sourceCorpus"], division] }]);
   if (rows.some(row => row.field === "$missing")) throw new Error("CIVIC_PAYLOAD_PART_MISSING");
-  const identity = rows.find(row => row.field === "$source")?.value as { scope: string; versionId: string; measureCount?: number } | undefined;
+  const identity = rows.find(row => row.field === "$source")?.value as { scope: string; versionId: string; measureCount?: number; currentTranslation?: unknown } | undefined;
   if (!identity) return { division, ballots: [] };
   const sourceBallot = { scope: identity.scope, versionId: identity.versionId };
-  if (Number.isSafeInteger(identity.measureCount) && identity.measureCount! > 0) return { division, ballots: [], sourceBallot, currentMeasureCount: identity.measureCount };
+  if (Number.isSafeInteger(identity.measureCount) && identity.measureCount! > 0) return { division, ballots: [], sourceBallot,
+    currentMeasureCount: identity.measureCount, currentTranslation: currentTranslationIdentity(identity.currentTranslation) };
   const parts = new CivicPayloadParts({ existing: async () => [], write: async () => { throw new Error("READ_ONLY"); },
     read: async hashes => {
       const [found] = await query([{ text: "SELECT hash,payload FROM civic_data_payload_parts WHERE hash=ANY($1::text[])", params: [[...hashes]] }]);
@@ -121,6 +138,7 @@ export interface MeasurePlaceInput {
   readonly division: string; readonly ballots: readonly BallotSet[];
   readonly sourceBallot?: Omit<TranslationBallotSource, "measureCount">;
   readonly currentMeasureCount?: number;
+  readonly currentTranslation?: CurrentTranslationIdentity;
 }
 
 export async function* readMeasurePlaces(state: string, input: {
@@ -140,10 +158,12 @@ export async function* readMeasurePlaces(state: string, input: {
       SELECT scope,current_version_id FROM civic_data_promotions
       WHERE record_class='BALLOT_CANDIDACY' AND scope LIKE $1
         AND scope COLLATE "C">$2 AND scope COLLATE "C"<$3 ORDER BY scope COLLATE "C" LIMIT 100
-    ) SELECT p.scope, p.current_version_id, CASE
+    ) SELECT p.scope, CASE
       WHEN v.payload->'sourceBallot'->>'versionId'=p.current_version_id
         AND v.payload->'sourceBallot'->>'scope'=p.scope
-      THEN v.payload->'sourceBallot'->'measureCount' END current_measure_count
+      THEN v.payload->'sourceBallot'->'measureCount' END current_measure_count,
+      CASE WHEN v.payload->'sourceBallot'->>'versionId'=p.current_version_id AND v.payload->'sourceBallot'->>'scope'=p.scope
+        THEN ${checkedIdentitySql} END current_translation
       FROM places p LEFT JOIN civic_data_promotions t ON t.record_class='CURATED_READER_RECORD'
         AND t.scope=$4||substring(p.scope from $5::integer)
       LEFT JOIN civic_data_payload_parts part ON part.hash=t.payload->>'$civicPayloadPart'
@@ -158,7 +178,8 @@ export async function* readMeasurePlaces(state: string, input: {
       after = scope;
       const place = scope.slice(PLACE_MEASURE_SCOPE.length + 1);
       if (typeof row.current_measure_count === "number" && Number.isSafeInteger(row.current_measure_count) && row.current_measure_count > 0) {
-        yield { division: place, ballots: [], currentMeasureCount: row.current_measure_count }; continue;
+        yield { division: place, ballots: [], currentMeasureCount: row.current_measure_count,
+          currentTranslation: currentTranslationIdentity(row.current_translation) }; continue;
       }
       const read = await readPlaceMeasureProjection(place, { store: input.store, now: input.now(), bypassCache: true });
       if (read.kind !== "PROMOTED") throw new Error(`Local measure input ${place} is ${read.kind}.`);
@@ -198,7 +219,7 @@ export async function runNationalMeasureTranslations(input: {
   readonly report: (line: string) => void;
   readonly readPlaces?: (state: string) => AsyncIterable<MeasurePlaceInput>;
   readonly state: string;
-  readonly publishPlace?: (division: string) => Promise<void>;
+  readonly publishPlace?: (division: string, currentIdentity?: CurrentTranslationIdentity) => Promise<void>;
 }) {
   const state = requireBallotState(input.state);
   const reports: { state: string; published: number; reused: number; held: number; deferred: number; error: string | null }[] = [];
@@ -212,16 +233,16 @@ export async function runNationalMeasureTranslations(input: {
     await input.repos.locks.withLock(`measure-translations:${state}`, async () => {
       if (!input.continueWork()) return;
       const places = input.readPlaces ? input.readPlaces(state) : readMeasurePlaces(state, input);
-      for await (const { division, ballots, sourceBallot, currentMeasureCount } of places) {
+      for await (const { division, ballots, sourceBallot, currentMeasureCount, currentTranslation } of places) {
         if (!input.continueWork()) break;
         if (jurisdictionFromOcdId(division)?.usps !== state) throw new Error("Measure worker crossed its state boundary.");
-        const publishPlace = async () => {
-          if (input.publishPlace) return input.publishPlace(division);
+        const publishPlace = async (currentIdentity?: CurrentTranslationIdentity) => {
+          if (input.publishPlace) return input.publishPlace(division, currentIdentity);
           const { publishPlaceReaderEdgeOutcome } = await import("../civic-data/place-edge-publication.ts");
-          const edge = await publishPlaceReaderEdgeOutcome(input.store, input.now(), [{ recordClass: "CURATED_READER_RECORD", scope: translationScope(division) }]);
+          const edge = await publishPlaceReaderEdgeOutcome(input.store, input.now(), [{ recordClass: "CURATED_READER_RECORD", scope: translationScope(division), currentIdentity }]);
           if (!edge.ok) throw new Error(edge.detail ?? "Checked measure summaries have not reached the place reader.");
         };
-        if (currentMeasureCount !== undefined) { report.reused += currentMeasureCount; await publishPlace(); continue; }
+        if (currentMeasureCount !== undefined) { report.reused += currentMeasureCount; await publishPlace(currentTranslation); continue; }
         if (!ballots.some(ballot => ballot.measures.length)) continue;
         const checkedProjection = await readTranslationProjection({ scope: translationScope(division), store: input.store, now: input.now(), bypassCache: true });
         if (checkedProjection.kind !== "PROMOTED" && checkedProjection.kind !== "NOT_RECORDED") throw new Error(`Checked measure input ${division} is ${checkedProjection.kind}.`);

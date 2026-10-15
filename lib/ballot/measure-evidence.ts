@@ -5,6 +5,7 @@ import { measureRecordIssue, type MeasureRecord } from "./measure-record-contrac
 import { measureSourceReferenceValid } from "./measure-source-contract.ts";
 import { readBallotSourceCorpus } from "./source-corpus.ts";
 import { sourceCorpusReferenceValid } from "./source-corpus-contract.ts";
+import type { ManualSourceReview } from "../civic-data/types.ts";
 import { extensionFor, objectClassOf, type EvidenceStore, type StoredObjectStream } from "../control-plane/evidence/store.ts";
 
 type SourceReader = (reference: MeasureSourceReference) => Promise<string>;
@@ -109,6 +110,17 @@ export async function verifyMeasureSource(vault: EvidenceStore, reference: Measu
 
 export async function readMeasureSource(vault: EvidenceStore, reference: MeasureSourceReference): Promise<string> {
   return measureSourceReader(vault)(reference);
+}
+
+export function measureOriginalSourceReceipts(source: MeasureSourceReference): readonly ManualSourceReview[] {
+  const originals = new Map<string, ManualSourceReview>(), pending = [...source.originals ?? []];
+  for (const original of pending) {
+    originals.set(`${original.sourceUrl}\n${original.sourceHash}`, { requestedUrl: original.sourceUrl, finalUrl: original.sourceUrl,
+      publisher: original.publisher, sourceClass: "OFFICIAL_PUBLISHER", retrievedAt: original.retrievedAt, httpStatus: 200,
+      rawHash: original.sourceHash, reviewOutcome: "SUPPORTED", reviewedEvidence: "The original document matched its saved content hash before translation." });
+    pending.push(...original.originals ?? []);
+  }
+  return [...originals.values()];
 }
 
 function validateRecordSource(record: MeasureRecord, source: MeasureSourceReference): void {

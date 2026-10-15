@@ -8,6 +8,7 @@ import { captureIntact, section3SourceReceipt } from "../civic-data/worker-publi
 import { isOfficialSource } from "../civic-data/source-authority.ts";
 import { section3Page, linkingPageFrom } from "../control-plane/promotion/section3.ts";
 import type { TranslationBallotSource } from "./projection-contract.ts";
+import type { MeasureSourceReference } from "../ballot/types.ts";
 import { translationHash, translationRecordIssue, type TranslationRecord } from "./records.ts";
 
 export function translationPackage(input: {
@@ -24,10 +25,31 @@ export function translationPackage(input: {
   const verified = section3Page({ url: record.sourceUrl, text: primary.evidence.text, retrievedAt: record.retrievedAt, linkingPage, sourcePolicy: primary.sourcePolicy },
     record.kind === "MEASURE" ? "BALLOT_MEASURE" : record.kind === "AGENDA" || record.kind === "MINUTES" ? "MEETING" : "OFFICIAL_BOARD_DIRECTORY", now);
   if (!verified.ok || !isOfficialSource(record.sourceUrl) && !linkingPage) throw new Error("Translation source is stale or not an official document.");
+  let sourceReceipt = section3SourceReceipt(input.captures, now, record.checkerModel,
+    "Writer and independent checker compared every translated sentence with the saved official source; code confirmed every supporting passage.");
+  if (record.kind === "MEASURE") {
+    const originals = new Map<string, MeasureSourceReference>();
+    const pending = [...record.sourceReference.originals ?? []];
+    for (const original of pending) {
+      originals.set(`${original.sourceUrl}\n${original.sourceHash}`, original);
+      pending.push(...original.originals ?? []);
+    }
+    const receipts = primary.originalSourceReceipts ?? [];
+    if (receipts.length !== originals.size || receipts.some(receipt => {
+      const original = originals.get(`${receipt.finalUrl}\n${receipt.rawHash}`);
+      return !original || receipt.requestedUrl !== original.sourceUrl || receipt.publisher !== original.publisher ||
+        receipt.retrievedAt !== original.retrievedAt || receipt.httpStatus !== 200 || receipt.sourceClass !== "OFFICIAL_PUBLISHER" ||
+        receipt.reviewOutcome !== "SUPPORTED" || !receipt.reviewedEvidence.trim();
+    }) || new Set(receipts.map(receipt => `${receipt.finalUrl}\n${receipt.rawHash}`)).size !== originals.size) {
+      throw new Error("Translation originals lack their exact verified source receipts.");
+    }
+    const sources = new Map(sourceReceipt.sources.map(receipt => [`${receipt.finalUrl}\n${receipt.rawHash}`, receipt]));
+    for (const receipt of receipts) sources.set(`${receipt.finalUrl}\n${receipt.rawHash}`, receipt);
+    sourceReceipt = { ...sourceReceipt, sources: [...sources.values()] };
+  }
   // The review clock orders the place fact set independently of each sentence’s original check.
   return { contractId: "plain-english-translations", version: `translations-v2:${new Date(now).toISOString()}`,
-    sourceThrough: record.retrievedAt, sourceReceipt: section3SourceReceipt(input.captures, now, record.checkerModel,
-      "Writer and independent checker compared every translated sentence with the saved official source; code confirmed every supporting passage."),
+    sourceThrough: record.retrievedAt, sourceReceipt,
     payload: { kind: "plain-english-translations", records: [record], ...(input.sourceBallot ? { sourceBallot: input.sourceBallot } : {}) } };
 }
 

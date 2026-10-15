@@ -38,7 +38,7 @@ const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   "assemble-ballot-package.mts": STATE_BALLOT_PEAK_MIB["ballot-contests"]!,
   "fetch-voting-sites.mts": STATE_BALLOT_PEAK_MIB["voting-sites"]!,
   "translate-national-measures.mts": 1258,
-  "publish-held-measures.mts": 384,
+  "publish-held-measures.mts": 1536,
 };
 export const REGISTRY_ROSTER_PUBLICATION_PEAK_MIB = 4012;
 export const WORKER_MEMORY_HEADROOM_MIB = 768;

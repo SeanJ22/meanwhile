@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { createHash } from "node:crypto";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -267,6 +268,72 @@ test("national measures require complete vaulted text with matching source and s
     contests: [{ ...ballot.contests[0], ocdId: "ocd-division/country:us/district:dc" }] }, vault, "ocd-division/country:us/district:dc");
   assert.equal(district.captures.length, 2);
   assert.deepEqual(district.divisions, ["ocd-division/country:us/district:dc"]);
+});
+
+test("translation publication retains every verified original receipt without reading binary documents again", async () => {
+  const vault = new MemoryEvidenceStore(), store = new MemoryRoutineDataStore(), repos = createMemoryRepositories();
+  const url = "https://elections.example.gov/pamphlet.pdf";
+  const pdf = async (sourceUrl: string): Promise<MeasureSourceReference> => {
+    const bytes = Buffer.concat([Buffer.from(`%PDF-1.7 ORIGINAL_BINARY ${sourceUrl}\n`), Buffer.from([255, 254, 0])]);
+    const sourceHash = createHash("sha256").update(bytes).digest("hex");
+    const source = { sourceUrl, sourceHash, retrievedAt: at, publisher: "State election authority",
+      vault: { key: `project/freshness/source/${new URL(sourceUrl).hostname}/2026/10/14/translation-test/sha256-${sourceHash}.pdf`,
+        byteLength: bytes.byteLength, contentType: "application/pdf" } };
+    await vault.put(source.vault.key, bytes, { contentHash: `sha256-${sourceHash}`, contentType: source.vault.contentType,
+      byteLength: bytes.byteLength, custom: { tier: "RAW", canonicalUrl: sourceUrl } });
+    return source;
+  };
+  const pamphlet = await pdf(url), legislation = await pdf("https://legislature.example.gov/resolution.pdf");
+  const question = { ...await pdf("https://elections.example.gov/ballot-language.pdf"), originals: [legislation] };
+  const source = { ...reference(text, url), originals: [pamphlet, question, legislation] };
+  await vault.put(source.vault.key, Buffer.from(text), { contentHash: `sha256-${source.sourceHash}`, contentType: source.vault.contentType,
+    byteLength: source.vault.byteLength, custom: { tier: "SANITIZED_DERIVED", canonicalUrl: url,
+      format: "measure-source-text@1", originals: JSON.stringify(source.originals) } });
+  const held = { ...ballot, sourceAuthorities: [], measureRecords: [{ ...record, sourceUrl: url }],
+    measures: [{ ...ballot.measures[0], officialText: source }] };
+  const reads = new Map<string, number>(), stream = vault.stream.bind(vault);
+  vault.get = async () => { throw new Error("Original bytes must only be streamed."); };
+  vault.stream = async key => { reads.set(key, (reads.get(key) ?? 0) + 1); return stream(key); };
+  const admitted = await nationalMeasureInputs(held, vault, division);
+  assert.equal(admitted.captures.length, 1, "binary originals do not become text captures");
+  assert.equal(admitted.captures[0].originalSourceReceipts?.length, 3, "shared nested originals are receipted once");
+  assert.deepEqual([...reads.values()], [1, 1, 1, 1]);
+  let requests = 0;
+  const result = await runHeldMeasureTranslations({ ...admitted, repos, store, now: at, attempts: [], saveAttempt: async () => {},
+    transportFor: () => async request => {
+      requests++;
+      assert.ok(!JSON.stringify(request).includes("ORIGINAL_BINARY"));
+      const payload = JSON.parse(request.messages[0].content as string);
+      assert.equal(payload.source ?? payload.originalSource, text);
+      const sentences = ["whatItDoes", "yesMeans", "noMeans"].map(field => ({ field,
+        text: record[field as "whatItDoes"], quote: record[field as "whatItDoes"] }));
+      const value = request.tools[0].name === "write_measure_translation"
+        ? { measure: { ...record, sourceUrl: url, writtenAt: payload.writtenAt }, sentences }
+        : { checked: payload.proposal.sentences.map((row: { field: string; text: string }) => ({ ...row, supported: true })) };
+      return { model: request.model, stop_reason: "tool_use", content: [{ type: "tool_use", id: "result", name: request.tools[0].name, input: value }],
+        usage: { input_tokens: 100, output_tokens: 50 } };
+    } });
+  assert.equal(result.outcomes[0].status, "PUBLISHED", JSON.stringify(result));
+  assert.equal(requests, 2);
+  assert.deepEqual([...reads.values()], [1, 1, 1, 1], "publication reuses verified lineage metadata without vault reads");
+  const candidate = (await store.readCandidate(result.outcomes[0].versionId!))!;
+  const receipts = candidate.candidate.retrieval.manualSourceReceipt!.sources;
+  assert.equal(receipts.length, 4, "the derived text and its same-URL original retain distinct content hashes");
+  for (const reference of [source, pamphlet, question, legislation]) assert.ok(receipts.some(receipt =>
+    receipt.finalUrl === reference.sourceUrl && receipt.rawHash === reference.sourceHash && receipt.publisher === reference.publisher));
+  const checked = (await readTranslations([division], { store, now: at, bypassCache: true }))[0];
+  for (const originals of [[], admitted.captures[0].originalSourceReceipts!.map((receipt, index) =>
+    index ? receipt : { ...receipt, rawHash: "0".repeat(64) })]) {
+    assert.throws(() => translationPackage({ record: checked, captures: [{ ...admitted.captures[0], originalSourceReceipts: originals }], now: at }),
+      /originals lack their exact verified source receipts/);
+  }
+  vault.stream = async key => {
+    const held = await stream(key);
+    return key !== legislation.vault.key || !held ? held : { ...held, body: new ReadableStream({ start(controller) {
+      controller.enqueue(new Uint8Array(legislation.vault.byteLength)); controller.close();
+    } }) };
+  };
+  await assert.rejects(nationalMeasureInputs(held, vault, division), /differs from its source reference/);
 });
 
 test("one state worker translates county, city and school measures one place at a time and skips current sources", async () => {

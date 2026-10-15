@@ -10,6 +10,7 @@ import type { ArtifactRecord, ControlPlaneRepositories } from "../control-plane/
 import type { Artifact } from "../control-plane/evidence/artifact.ts";
 import { datePath, objectKey, readForParser, type EvidenceStore } from "../control-plane/evidence/store.ts";
 import type { MeasureSourceReference } from "../ballot/types.ts";
+import { measureOriginalSourceReceipts } from "../ballot/measure-evidence.ts";
 import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
 import type { CapturedFinanceResponse } from "../funding/campaign-finance.ts";
 
@@ -45,7 +46,8 @@ export async function workerPublicationContext(now: string, existingRepos?: Cont
     });
     const observedAt = [evidence.retrievedAt, ...observations].sort().at(-1)!;
     if (artifact.id !== evidence.artifactId || artifact.contentHash !== evidence.contentHash) throw new Error("PUBLICATION_CAPTURE_VAULT_IDENTITY_MISMATCH");
-    return { evidence, sourcePolicy, sourceReference: sourceReference(artifact, key, observedAt), observedAt, httpStatus: artifact.httpStatus,
+    const reference = sourceReference(artifact, key, observedAt);
+    return { evidence, sourcePolicy, sourceReference: reference, originalSourceReceipts: measureOriginalSourceReceipts(reference), observedAt, httpStatus: artifact.httpStatus,
       transport: artifact.transport, partial: artifact.httpStatus === 206 || artifact.retentionPolicy === "DIAGNOSTIC" || artifact.extraction?.complete === false };
   } };
 }
@@ -74,8 +76,8 @@ export function heldCaptureReader(store: EvidenceStore, project = "freshness") {
         ...(m.extraction ? { extraction: JSON.parse(m.extraction) as Artifact["extraction"] } : {}) };
       try {
         const { input, read } = await readForParser(store, project, artifact);
-        return { evidence: evidenceProjection(input), sourceReference: sourceReference(read.artifact,
-          objectKey(project, read.artifact), artifact.retrievedAt, project), observedAt: artifact.retrievedAt,
+        const reference = sourceReference(read.artifact, objectKey(project, read.artifact), artifact.retrievedAt, project);
+        return { evidence: evidenceProjection(input), sourceReference: reference, originalSourceReceipts: measureOriginalSourceReceipts(reference), observedAt: artifact.retrievedAt,
           httpStatus: artifact.httpStatus, transport: artifact.transport,
           partial: artifact.httpStatus === 206 || artifact.retentionPolicy === "DIAGNOSTIC" || artifact.extraction?.complete === false };
       } catch { return null; }

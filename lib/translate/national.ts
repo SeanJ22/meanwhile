@@ -1,5 +1,5 @@
 import type { BallotSet, MeasureSourceReference } from "../ballot/types.ts";
-import { measureSourceReader, validateMeasureRecordEvidence } from "../ballot/measure-evidence.ts";
+import { measureOriginalSourceReceipts, measureSourceReader, validateMeasureRecordEvidence } from "../ballot/measure-evidence.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import { measureRecordIssue } from "../ballot/measure-record-contract.ts";
 import { canonicalCivicDataJson } from "../civic-data/changes.ts";
@@ -108,7 +108,8 @@ function sourceCapture(source: MeasureSourceReference, text: string): WorkerPubl
   return { evidence: { artifactId: source.vault.key, acquiredByAttemptId: "",
     sourceId: source.publisher, methodRouteId: "", canonicalUrl: source.sourceUrl,
     contentHash: `sha256-${source.sourceHash}`, text, retrievedAt: source.retrievedAt },
-    sourceReference: source, observedAt: source.retrievedAt, partial: false, httpStatus: 200, transport: "REACHABLE" };
+    sourceReference: source, originalSourceReceipts: measureOriginalSourceReceipts(source),
+    observedAt: source.retrievedAt, partial: false, httpStatus: 200, transport: "REACHABLE" };
 }
 
 export async function nationalMeasureInputs(ballot: BallotSet, vault: EvidenceStore, division: string) {

@@ -203,7 +203,7 @@ test("translation parents and standalone children reserve their own script above
 
 test("five small unchanged observations cannot lower the next changed place's measured memory floor", async () => {
   const mib = 1024 * 1024;
-  for (const [script, floor] of [["translate-national-measures.mts", 1258], ["publish-held-measures.mts", 384]] as const) {
+  for (const [script, floor] of [["translate-national-measures.mts", 1258], ["publish-held-measures.mts", 1536]] as const) {
     const entry = `measure-worker:CA/${script}`;
     for (const child of [false, true]) {
       const host = workerMemoryHost({ processes: () => [] });

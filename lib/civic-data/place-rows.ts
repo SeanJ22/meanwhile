@@ -177,6 +177,21 @@ export function placeValueOf(base: unknown, rows: readonly Pick<PlaceRow, "colle
 
 export interface PlaceRowStatement { readonly text: string; readonly params: readonly string[] }
 
+/** Postgres refuses one jsonb value over 256 MB; a national scope's groups go in statements well under it. */
+const STATEMENT_BYTES = 32 * 2 ** 20;
+
+function chunks(groups: readonly unknown[]): string[] {
+  const out: string[] = [];
+  let current: string[] = [], size = 0;
+  for (const group of groups) {
+    const text = JSON.stringify(group);
+    if (current.length && size + text.length > STATEMENT_BYTES) { out.push(`[${current.join(",")}]`); current = []; size = 0; }
+    current.push(text);
+    size += text.length + 1;
+  }
+  return [...out, `[${current.join(",")}]`];
+}
+
 /** What a scope's rows already hold, so a promotion writes only the groups that changed. */
 export const HELD_PLACE_ROWS_SQL = `SELECT collection || '|' || group_key AS id, digest FROM civic_data_place_rows WHERE record_class=$1 AND scope=$2`;
 
@@ -188,19 +203,19 @@ export function placeRowStatements(input: { readonly recordClass: string; readon
   readonly set: PlaceRowSet; readonly held: ReadonlyMap<string, string>; readonly changedAt: string }): PlaceRowStatement[] {
   const current = (version: string) =>
     `EXISTS (SELECT 1 FROM civic_data_promotions WHERE record_class=$1 AND scope=$2 AND current_version_id=${version})`;
-  const changed = input.set.rows.filter(row => input.held.get(`${row.collection}|${row.groupKey}`) !== row.digest);
-  const groups = JSON.stringify([{ collection: "", group_key: "", keys: [], digest: "", members: input.set.base },
-    ...changed.map(row => ({ collection: row.collection, group_key: row.groupKey, keys: row.keys, digest: row.digest, members: row.members }))]);
+  const changed = [{ collection: "", group_key: "", keys: [], digest: "", members: input.set.base },
+    ...input.set.rows.filter(row => input.held.get(`${row.collection}|${row.groupKey}`) !== row.digest)
+      .map(row => ({ collection: row.collection, group_key: row.groupKey, keys: row.keys, digest: row.digest, members: row.members }))];
   const ids = JSON.stringify(input.set.rows.map(row => `${row.collection}|${row.groupKey}`));
   const digests = JSON.stringify(Object.fromEntries(input.set.digests));
   const scoped = [input.recordClass, input.scope];
   return [
-    { text: `INSERT INTO civic_data_place_rows (record_class, scope, collection, group_key, version_id, keys, digest, members)
+    ...chunks(changed).map(groups => ({ text: `INSERT INTO civic_data_place_rows (record_class, scope, collection, group_key, version_id, keys, digest, members)
       SELECT $1, $2, g.collection, g.group_key, $3, ARRAY(SELECT $1 || '|' || $2 || '|' || k FROM jsonb_array_elements_text(g.keys) k), g.digest, g.members
       FROM jsonb_to_recordset($4::jsonb) AS g(collection text, group_key text, keys jsonb, digest text, members jsonb) WHERE ${current("$3")}
       ON CONFLICT (record_class, scope, collection, group_key) DO UPDATE
         SET version_id=excluded.version_id, keys=excluded.keys, digest=excluded.digest, members=excluded.members`,
-      params: [...scoped, input.versionId, groups] },
+      params: [...scoped, input.versionId, groups] })),
     { text: `DELETE FROM civic_data_place_rows r WHERE r.record_class=$1 AND r.scope=$2 AND r.collection<>'' AND ${current("$3")}
       AND NOT EXISTS (SELECT 1 FROM jsonb_array_elements_text($4::jsonb) i WHERE i = r.collection || '|' || r.group_key)`,
       params: [...scoped, input.versionId, ids] },

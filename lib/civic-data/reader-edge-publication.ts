@@ -9,7 +9,9 @@ import {
   READER_MANIFEST_CACHE_TAG,
   servedAuthorityVersion,
   readServedPromotedFamily,
-  readServedStateFacts,
+  readServedFactBucket,
+  readServedStateFactsIndex,
+  writeFactBucket,
   readAuthorityArtifactValue,
   type PublishAuthority,
   type PublishAuthorityCarried,
@@ -190,7 +192,11 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
           else if (rt.kind !== "NOT_RECORDED") throw new Error(`registry-runtime read ${rt.kind}`);
         }
         const facts = factReader();
-        if (facts) stateFacts = await planStateFacts(facts, servedManifest?.stateFacts, (state, ref) => readServedStateFacts(state, ref, artifactStore));
+        if (facts) stateFacts = await planStateFacts(facts, servedManifest?.stateFacts, {
+          readIndex: (state, ref) => readServedStateFactsIndex(state, ref, artifactStore),
+          readBucket: (state, bucket, ref) => readServedFactBucket(state, bucket, ref, artifactStore),
+          writeBucket: (state, bucket, versionId, value) => writeFactBucket(artifactStore, state, bucket, versionId, value, observedAt),
+        });
       } catch (error) {
         failed = true;
         process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: registry-runtime ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);

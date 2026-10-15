@@ -15,6 +15,7 @@ import {
   READER_MANIFEST_CACHE_TAG,
   READER_MANIFEST_MEMO_MS,
   READER_MAP_AUTHORITY_FAMILIES,
+  writeFactBucket,
   type PublishAuthority,
 } from "../lib/meetings/edge-serving.ts";
 
@@ -125,8 +126,8 @@ async function publishEdge(tag: string, options: { readonly legislators?: boolea
     store,
     now: new Date().toISOString(),
     extras: { everydayRouting: currentEverydayRoutingProjection() },
-    stateFacts: { AZ: { value: { bodies: {}, rosters: registry.bodyRosters ?? [], dispositions: registry.rosterReaderDispositions ?? [], comments: COMMENT_ACCESS },
-      versionId: `${tag}:facts:AZ` } },
+    stateFacts: { AZ: { versionId: `${tag}:facts:AZ`, value: { buckets: [await writeFactBucket(store, "AZ", 0, `${tag}:facts:AZ`,
+      { bodies: {}, rosters: registry.bodyRosters ?? [], dispositions: registry.rosterReaderDispositions ?? [], comments: COMMENT_ACCESS }, new Date().toISOString())] } } },
     authority,
     ...(options.legislators ? { stateLegislators: Object.fromEntries(Object.entries(stateLegislators).map(([scope, value]) => [scope, { value, versionId: `${tag}:legislators:${scope}` }])) } : {}),
     registrations: {},

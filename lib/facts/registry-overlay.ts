@@ -6,7 +6,7 @@ import { readFactCommentAccess } from "./comment-read.ts";
 import type { Query } from "./publish.ts";
 import { readFactRosters } from "./roster-read.ts";
 
-const SCHEDULE_SQL = `SELECT f.entity_id, f.field, f.value, f.checked_at, s.url FROM fact f JOIN source_copy s ON s.id = f.source_copy_id
+const SCHEDULE_SQL = `SELECT f.entity_id, f.field, f.value, f.checked_at, (SELECT s.url FROM source_copy s WHERE s.id = f.source_copy_id) AS url FROM fact f
   WHERE f.status = 'live' AND f.field IN ('name', 'homepage', 'meeting_cadence', 'agenda_url', 'office_address', 'office_phone') AND f.entity_id = ANY($1::text[])`;
 
 /** One state's live facts as readers see them: each body's own fields, its members and its comment rules. */

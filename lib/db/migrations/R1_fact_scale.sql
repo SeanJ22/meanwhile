@@ -8,7 +8,7 @@ CREATE TABLE "pass_cursor" (
   "position" text NOT NULL
 );
 --> statement-breakpoint
-CREATE INDEX "fact_live_member" ON "fact" ("field") WHERE "status" = 'live' AND "field" LIKE 'member:%';
+CREATE INDEX "fact_live_member" ON "fact" (substr("field", 8)) WHERE "status" = 'live' AND "field" LIKE 'member:%';
 --> statement-breakpoint
 CREATE OR REPLACE FUNCTION fact_changed() RETURNS trigger LANGUAGE plpgsql AS $$
 BEGIN
@@ -22,7 +22,7 @@ BEGIN
   INSERT INTO rebuild_queue (place_id, queued_at)
     SELECT DISTINCT place, clock_timestamp() FROM (
       SELECT b.id FROM entity b WHERE b.id = NEW.entity_id AND b.kind = 'body'
-      UNION SELECT m.entity_id FROM fact m WHERE m.status = 'live' AND m.field LIKE 'member:%' AND m.field = 'member:' || NEW.entity_id
+      UNION SELECT m.entity_id FROM fact m WHERE m.status = 'live' AND m.field LIKE 'member:%' AND substr(m.field, 8) = NEW.entity_id
     ) bodies(id)
     CROSS JOIN LATERAL (SELECT p.place_id FROM entity_place p WHERE p.entity_id = bodies.id
       UNION SELECT split_part(bodies.id, '#', 1) WHERE bodies.id LIKE 'ocd-division/%#%') places(place)

@@ -846,12 +846,12 @@ export function pgAppendOnlyRepository<T>(
   });
 }
 
-const BOX_DUE_SQL = `SELECT id, value FROM (
-    SELECT id, value FROM cp_box_findings WHERE value->>'state' = 'waiting' AND value->>'lastRecordedAt' >= $3
-      AND ((value #>> '{waitingFor,slots}') IS NULL OR (value #>> '{waitingFor,slots}') < $1 OR (value #>> '{waitingFor,slots}') > $1)
-    UNION ALL
-    SELECT id, value FROM cp_box_findings WHERE value->>'state' = 'taken' AND (value #>> '{claim,expiresAt}') <= $2 AND value->>'lastRecordedAt' >= $3
-  ) due ORDER BY id LIMIT $4`;
+// One index range per branch, unsorted, so the scan stops at the limit however many rows a new slot map makes due.
+const BOX_DUE_SQL = `SELECT id, value FROM cp_box_findings WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,slots}') IS NULL AND value->>'lastRecordedAt' >= $3
+  UNION ALL SELECT id, value FROM cp_box_findings WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,slots}') < $1 AND value->>'lastRecordedAt' >= $3
+  UNION ALL SELECT id, value FROM cp_box_findings WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,slots}') > $1 AND value->>'lastRecordedAt' >= $3
+  UNION ALL SELECT id, value FROM cp_box_findings WHERE value->>'state' = 'taken' AND (value #>> '{claim,expiresAt}') <= $2 AND value->>'lastRecordedAt' >= $3
+  LIMIT $4`;
 const BOX_WAITING_SQL = `SELECT id, value FROM cp_box_findings WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,reason}') = $1 ORDER BY id LIMIT $2`;
 
 /** The Box with its builder queue answered by the partial indexes on state, slot map, lease and reason. */

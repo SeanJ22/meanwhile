@@ -20,6 +20,7 @@ import {
 import type { RegistryRuntimeCarton, RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
 import type { CommentAccessProjection } from "../registry/comment-access.ts";
 import { withStateFacts, type StateFacts } from "../facts/registry-overlay.ts";
+import type { StateFactsIndex } from "../facts/state-facts-publication.ts";
 import type { FederalDirectoryReadModel } from "../officials/federal-directory-data-plane.ts";
 import type { CuratedReaderProjection } from "../civic-data/manual-projections.ts";
 import type { OfficialStateLegislatorReadModel } from "../civic-data/candidate-builders.ts";
@@ -171,6 +172,16 @@ interface StateFactsArtifactEnvelope {
   readonly formatVersion: typeof READER_ARTIFACT_FORMAT_VERSION;
   readonly family: "state-facts";
   readonly state: string;
+  readonly versionId: string;
+  readonly generatedAt: string;
+  readonly value: StateFactsIndex;
+}
+
+interface FactBucketArtifactEnvelope {
+  readonly formatVersion: typeof READER_ARTIFACT_FORMAT_VERSION;
+  readonly family: "fact-bucket";
+  readonly state: string;
+  readonly bucket: number;
   readonly versionId: string;
   readonly generatedAt: string;
   readonly value: StateFacts;
@@ -345,20 +356,36 @@ async function fetchRegistrationArtifact(
   return value === null ? null : { value, versionId: version };
 }
 
-const stateFactsEdgeCache = new Map<string, { version: string; value: Promise<StateFacts | null> }>();
+const stateFactsEdgeCache = new Map<string, { version: string; value: Promise<StateFactsIndex | null> }>();
+const factBucketEdgeCache = new Map<string, { version: string; value: Promise<StateFacts | null> }>();
 
-/** One state's served facts, read once per version per process. */
-export async function readServedStateFacts(state: string, ref: AuthorityArtifactRef | undefined, store: ReaderArtifactStore): Promise<StateFacts | null> {
+async function readEnvelope<T extends { readonly value: unknown; readonly versionId: string }>(ref: AuthorityArtifactRef, store: ReaderArtifactStore,
+  belongs: (envelope: T) => boolean): Promise<T["value"] | null> {
+  try {
+    const bytes = await store.readBytes(ref.key);
+    if (!bytes) return null;
+    const envelope = JSON.parse(gunzipSync(bytes).toString("utf8")) as T;
+    return belongs(envelope) && envelope.versionId === ref.version && sha256OfJson(envelope.value) === ref.sha ? envelope.value : null;
+  } catch { return null; }
+}
+
+/** One state's served bucket list, read once per version per process. */
+export async function readServedStateFactsIndex(state: string, ref: AuthorityArtifactRef | undefined, store: ReaderArtifactStore): Promise<StateFactsIndex | null> {
   if (!ref?.key || !ref.version) return null;
-  return heldFetch(stateFactsEdgeCache, state, `${ref.version}:${ref.key}`, async () => {
-    try {
-      const bytes = await store.readBytes(ref.key);
-      if (!bytes) return null;
-      const envelope = JSON.parse(gunzipSync(bytes).toString("utf8")) as StateFactsArtifactEnvelope;
-      if (envelope.family !== "state-facts" || envelope.state !== state || envelope.versionId !== ref.version || sha256OfJson(envelope.value) !== ref.sha) return null;
-      return envelope.value;
-    } catch { return null; }
-  });
+  return heldFetch(stateFactsEdgeCache, state, `${ref.version}:${ref.key}`,
+    () => readEnvelope<StateFactsArtifactEnvelope>(ref, store, envelope => envelope.family === "state-facts" && envelope.state === state));
+}
+
+/** One bucket of a state's served facts, read once per version per process. */
+export async function readServedFactBucket(state: string, bucket: number, ref: AuthorityArtifactRef, store: ReaderArtifactStore): Promise<StateFacts | null> {
+  return heldFetch(factBucketEdgeCache, `${state}/${bucket}`, `${ref.version}:${ref.key}`,
+    () => readEnvelope<FactBucketArtifactEnvelope>(ref, store, envelope => envelope.family === "fact-bucket" && envelope.state === state && envelope.bucket === bucket));
+}
+
+/** Writes one bucket's immutable bytes ahead of the manifest that will name it. */
+export async function writeFactBucket(store: ReaderArtifactStore, state: string, bucket: number, versionId: string, value: StateFacts, now: string): Promise<AuthorityArtifactRef> {
+  const envelope: FactBucketArtifactEnvelope = { formatVersion: READER_ARTIFACT_FORMAT_VERSION, family: "fact-bucket", state, bucket, versionId, generatedAt: now, value };
+  return { key: await store.putImmutable(gzipSync(Buffer.from(JSON.stringify(envelope), "utf8")), "json.gz"), version: versionId, sha: sha256OfJson(value) };
 }
 
 const mergedRegistryCache = new Map<string, { version: string; value: Promise<RegistryRuntimeReadModel | null> }>();
@@ -444,7 +471,12 @@ export async function ensureReaderAuthorityEdge(
   // Every state's facts lay on the national partition once per set of versions; comment rules come from the same artifacts.
   const stateFactRefs = Object.entries(manifest.stateFacts ?? {}).sort(([a], [b]) => a.localeCompare(b));
   const factsVersion = sha256OfJson(stateFactRefs.map(([state, ref]) => [state, ref.version])).slice(0, 16);
-  const statesRead = wanted.has("registry-runtime") ? Promise.all(stateFactRefs.map(([state, ref]) => readServedStateFacts(state, ref, store))) : Promise.resolve([]);
+  const statesRead = wanted.has("registry-runtime") ? Promise.all(stateFactRefs.map(async ([state, ref]) => {
+    const index = await readServedStateFactsIndex(state, ref, store);
+    if (!index) return null;
+    const buckets = await Promise.all(index.buckets.map((bucket, n) => bucket ? readServedFactBucket(state, n, bucket, store) : Promise.resolve({ bodies: {}, rosters: [], dispositions: [], comments: [] })));
+    return buckets.every(bucket => bucket !== null) ? buckets as StateFacts[] : null;
+  })) : Promise.resolve([]);
   const [registry, federal, campaign, outcomes, censusDistricts, states] = await Promise.all([
     fetchWanted("registry-runtime"),
     fetchWanted("federal-directory"),
@@ -453,8 +485,8 @@ export async function ensureReaderAuthorityEdge(
     fetchWanted("census-districts"),
     statesRead,
   ]);
-  const held = states.flatMap(state => state ? [state] : []);
-  if (registry !== null && held.length === stateFactRefs.length) {
+  const held = states.every(state => state !== null) ? states.flat() as StateFacts[] : null;
+  if (registry !== null && held !== null) {
     const versionId = stateFactRefs.length ? `${refs["registry-runtime"]!.version}+${factsVersion}` : refs["registry-runtime"]!.version;
     const value = await heldFetch(mergedRegistryCache, "registry-runtime", versionId,
       async () => withStateFacts(registry as RegistryRuntimeCarton, held));
@@ -655,7 +687,7 @@ export async function publishReaderEdgeArtifacts(
         stateFacts[state] = served;
         continue;
       }
-      const envelope: StateFactsArtifactEnvelope = { formatVersion: READER_ARTIFACT_FORMAT_VERSION, family: "state-facts", state, versionId: entry.versionId, generatedAt: now, value: entry.value as StateFacts };
+      const envelope: StateFactsArtifactEnvelope = { formatVersion: READER_ARTIFACT_FORMAT_VERSION, family: "state-facts", state, versionId: entry.versionId, generatedAt: now, value: entry.value as StateFactsIndex };
       const key = await store.putImmutable(gzipSync(Buffer.from(JSON.stringify(envelope), "utf8")), "json.gz");
       stateFacts[state] = { key, version: entry.versionId, sha: sha256OfJson(entry.value) };
     }

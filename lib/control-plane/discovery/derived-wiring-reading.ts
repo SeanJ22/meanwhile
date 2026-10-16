@@ -17,7 +17,7 @@ import { makeMunicodeSource, parseMunicodeMeetings } from "../../sources/municod
 import { makeEscribeSource } from "../../sources/escribe/index.ts";
 import { makeCivicClerkSource } from "../../sources/civicclerk/index.ts";
 import { makeIqm2Source } from "../../sources/iqm2/index.ts";
-import { makeSwagitSource } from "../../sources/swagit/index.ts";
+import { makeSwagitSource, parseSwagitMeetings } from "../../sources/swagit/index.ts";
 import { normalizeWithDrops as normalizeLegistar } from "../../sources/legistar/index.ts";
 import { legistarClientsFromWiring } from "../../sources/legistar/client-registry.ts";
 import type { LegistarEvent } from "../../sources/legistar/types.ts";
@@ -97,13 +97,17 @@ async function readOne(reading: HeldCalendarReading, now: string, adapterDigest:
       const ownEvents = events.filter(event => event.EventBodyId === clients[0]?.eventBodyId);
       meetings = normalizeLegistar(ownEvents.map(event => ({ event, slug: wiring.config.slug,
         collectedAt: reading.evidence.retrievedAt, items: [] })), new Date(now), clients).meetings;
-    } else if (row.kind === "SWAGIT") {
-      meetings = makeSwagitSource([wiring]).normalizeWithDrops([{ wiring, pages: [{ url: row.route, text }], collectedAt: reading.evidence.retrievedAt }], new Date(now)).meetings;
-    } else if (["CIVICPLUS", "CIVICCLERK", "BOARDBOOK", "BOARDDOCS", "IQM2", "MUNICODE", "GRANICUS", "ESCRIBE", "NOVUSAGENDA", "PRIMEGOV"].includes(row.kind)) {
+    } else if (["CIVICPLUS", "CIVICCLERK", "BOARDBOOK", "BOARDDOCS", "IQM2", "MUNICODE", "SWAGIT", "GRANICUS", "ESCRIBE", "NOVUSAGENDA", "PRIMEGOV"].includes(row.kind)) {
       // The exact retained route is the adapter's input. Running its fetch
       // here would ask for additional URLs whose bytes were never vaulted.
       const collectedAt = reading.evidence.retrievedAt;
-      if (row.kind === "MUNICODE") {
+      if (row.kind === "SWAGIT") {
+        meetings = makeSwagitSource([wiring]).normalizeWithDrops([{ wiring,
+          rows: parseSwagitMeetings(text, row.route).map(meeting => ({ ...meeting, sourceUrl: row.route })),
+          from: new Date(Date.parse(now) - MEETING_HELD_LOOKBACK_DAYS * 86_400_000).toISOString(),
+          to: new Date(Date.parse(now) + MEETING_HELD_HORIZON_DAYS * 86_400_000).toISOString(),
+          collectedAt }], new Date(now)).meetings;
+      } else if (row.kind === "MUNICODE") {
         meetings = makeMunicodeSource([wiring]).normalizeWithDrops([{ wiring, meetings: parseMunicodeMeetings(text, row.route), outOfWindow: 0, notConfigured: 0, collectedAt }], new Date(now)).meetings;
       } else if (row.kind === "GRANICUS") {
         meetings = makeGranicusSource([wiring]).normalizeWithDrops([{ wiring, html: text, collectedAt }], new Date(now)).meetings;

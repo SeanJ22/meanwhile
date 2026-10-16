@@ -18,6 +18,7 @@ export const HELD_WINDOW_FETCH_SOURCES: ReadonlySet<string> = new Set([
   "document-listing",
   "suiteone",
   "apptegy",
+  "swagit",
 ]);
 
 /** The dates a read of `sourceName` fetched, around `anchor`. Null for an unparseable anchor. */

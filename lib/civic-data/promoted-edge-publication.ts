@@ -40,11 +40,11 @@ import { AZ_OFFICIAL_ACTIONS_CONTRACT } from "../outcomes/data-plane.ts";
 import type { PromotedAuthorityFamily, PromotedFamilyArtifactValue, ReaderManifest } from "../meetings/edge-artifacts.ts";
 import { servedAuthorityVersion, type PublishAuthorityCarried, type PublishAuthorityValue } from "../meetings/edge-serving.ts";
 import { PRL_ARCHIVE_SCOPE, readPrlArchiveProjection } from "../sources/prl/archive-publication.ts";
+import { PRL_CONTRACT } from "../sources/prl/data-plane.ts";
+import { readPrlProjection } from "../sources/prl/snapshot.ts";
+import type { RoutineDataStore } from "./store.ts";
 
-/**
- * Each pointer is proved exactly as a database Reader proves it, then handed to its family's own Reader; a family
- * whose Reader rejects an update retains the previous entry. A family is read only when its pointers moved.
- */
+
 
 interface ReaderAnswer {
   readonly kind: string;
@@ -66,6 +66,8 @@ const manual = (id: Parameters<typeof requiredManualProductionContract>[0], read
 export function promotedEdgePointers(): Readonly<Record<PromotedAuthorityFamily, readonly PromotedEdgePointer[]>> {
   const nhMembers = requiredRoutineContract("nh-members");
   return {
+    "other-reader-data": [],
+    "state-votes": [],
     "government-domains": [{ recordClass: "DOTGOV_REFERENCE", scope: DOTGOV_SCOPE, reader: readDotGovProjection }],
     "ballot-contests": [manual("ballot-contests", readGenericBallotProjection)],
     "ballot-az": [manual("az-sos-ballot", readAzBallotProjection)],
@@ -96,6 +98,7 @@ export function promotedEdgePointers(): Readonly<Record<PromotedAuthorityFamily,
     "federal-key-votes": [{ recordClass: "FEDERAL_KEY_VOTE", scope: FEDERAL_KEY_VOTE_SCOPE, reader: readFederalKeyVotesProjection }],
     "officeholder-statements": [manual("officeholder-statements", readOfficeholderStatementsProjection)],
     "prl-archives": [{ recordClass: "PRL_ARCHIVE", scope: PRL_ARCHIVE_SCOPE, reader: readPrlArchiveProjection }],
+    "prl-profiles": [{ ...PRL_CONTRACT, reader: readPrlProjection }],
     "executive-actions": [{ recordClass: AZ_OFFICIAL_ACTIONS_CONTRACT.recordClass, scope: AZ_OFFICIAL_ACTIONS_CONTRACT.scope, reader: readExecutiveActionsProjection }],
   };
 }
@@ -120,13 +123,21 @@ export interface PromotedEdgeFamiliesRead {
 }
 
 export async function readPromotedEdgeFamilies(input: {
-  readonly store: CivicDataReadStore & { readonly readPromotionIdentity: NonNullable<CivicDataReadStore["readPromotionIdentity"]> };
+  readonly store: CivicDataReadStore & Pick<RoutineDataStore, "listPromotionScopes"> & { readonly readPromotionIdentity: NonNullable<CivicDataReadStore["readPromotionIdentity"]> };
   readonly servedManifest: Pick<ReaderManifest, "authorityArtifacts"> | null;
   readonly now: string;
   readonly families?: Readonly<Partial<Record<PromotedAuthorityFamily, readonly PromotedEdgePointer[]>>>;
   readonly readServedFamily?: (family: PromotedAuthorityFamily) => Promise<PromotedFamilyArtifactValue | null>;
 }): Promise<PromotedEdgeFamiliesRead> {
-  const families = input.families ?? promotedEdgePointers();
+  const families = { ...input.families ?? promotedEdgePointers() };
+  if (families["other-reader-data"]?.length === 0) {
+    const known = new Set(Object.values(promotedEdgePointers()).flat().map(pointer => `${pointer.recordClass}:${pointer.scope}`));
+    families["other-reader-data"] = (await input.store.listPromotionScopes?.(["CURATED_READER_RECORD", "OPERATIONAL_REFERENCE", "BALLOT_FILING", "STATE_LEGISLATOR"]) ?? [])
+      .filter(pointer => !known.has(`${pointer.recordClass}:${pointer.scope}`))
+      .map(pointer => ({ ...pointer, reader: options => readPromotedCivicData(pointer.recordClass, pointer.scope, options) }));
+  }
+  if (families["state-votes"]?.length === 0) families["state-votes"] = (await input.store.listPromotionScopes?.(["STATE_ROLL_CALL", "STATE_LEGISLATOR_VOTES"]) ?? [])
+    .map(pointer => ({ ...pointer, reader: options => readPromotedCivicData(pointer.recordClass, pointer.scope, options) }));
   const authority: Partial<Record<PromotedAuthorityFamily, PublishAuthorityValue | PublishAuthorityCarried>> = {};
   const skipped: string[] = [];
   for (const [family, pointers] of Object.entries(families) as [PromotedAuthorityFamily, readonly PromotedEdgePointer[]][]) {

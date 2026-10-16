@@ -17,10 +17,10 @@ export interface CommentAccessProjection {
 
 let held: { readonly records: readonly CommentAccess[]; readonly versionId: string } | null = null;
 
-/** Comment rules composed from live facts; the version moves whenever any fact does. */
+/** Comment rules composed from live facts; the version moves whenever a comment fact does. */
 export async function readCommentAccessFacts(query: Query | null = factReader()): Promise<{ readonly value: CommentAccessProjection; readonly versionId: string }> {
   const records = query ? await readFactCommentAccess(query) : [];
-  held = { records, versionId: await factsVersion(query) };
+  held = { records, versionId: await factsVersion(query, "comment") };
   return { value: { kind: "comment-access", records: records.map(record => ({ id: `comment-access:${record.bodyId}`, ...record })) }, versionId: held.versionId };
 }
 

@@ -17,6 +17,7 @@ const pimaBody = JSON.parse(readFileSync(new URL("./fixtures/legistar-members/pi
 const SAMPLE_ROWS: BodySourceWiring[] = [
   { ...FIXTURE_DOOR_ROWS.find(row => row.config.slug === "pima")!, agendaSourceType: "LEGISTAR" as const,
     config: { slug: "pima", eventBodyId: String(pimaBody.BodyId) } },
+  { ...FIXTURE_DOOR_ROWS[0], agendaSourceType: "MUNICODE" as const, config: { portalUrl: "https://meetings.municode.com/PublishPage/index?cid=BREM&ppid=d33416d7-25d1-44e6-9d32-55b97fa53824", nameTerms: "City Council" } },
   { bodyId: "ocd-division/country:us/state:nd/place:mandan#body:safety-and-wellness-committee", ocdId: "ocd-division/country:us/state:nd/place:mandan",
     jurisdiction: "Mandan, ND", publishingOrg: "City of Mandan", timeZone: "America/Chicago", verifiedAt: "2026-10-13T19:21:00Z", agendaSourceType: "CIVICCLERK" as const,
     config: { apiBase: "https://mandannd.api.civicclerk.com", portalBase: "https://mandannd.portal.civicclerk.com", titleMatch: sharedCategory.eventName, categoryId: String(sharedCategory.categoryId) } },

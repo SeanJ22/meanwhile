@@ -1,3 +1,5 @@
+import { currentReaderRoute } from "../db/reader-route.ts";
+import { currentReaderSelection } from "../db/reader-route.ts";
 import { readerCandidateProfiles } from "../ballot/candidate-reader-privacy.ts";
 
 import type { CandidateCorpus } from "../candidates/corpus.ts";
@@ -15,6 +17,7 @@ import {
   refreshDerivedCampaignSites,
   currentDerivedCandidateDocuments,
 } from "./derived-campaign-sites.ts";
+import { validateOnce } from "./validated-once.ts";
 import { readPromotedEdgeFirst } from "../registry/runtime-edge.ts";
 import type {
   AzBallotProjection,
@@ -34,7 +37,7 @@ function arrays(value: unknown, keys: readonly string[]): boolean {
 }
 
 function validateAz(value: AzBallotProjection, version: string): void {
-  if (!arrays(value.ballot, ["contests", "candidacies"]) || value.ballot.contests.length === 0 || value.ballot.candidacies.length === 0) {
+  if (!arrays(value.ballot, ["contests", "candidacies"])) {
     throw new Error(`Arizona ballot projection ${version} has no ballot rows.`);
   }
   if (!arrays(value.generalLineup, ["contests"]) || !arrays(value.measureAnalyses, ["analyses"])) {
@@ -49,7 +52,7 @@ function validateAz(value: AzBallotProjection, version: string): void {
 }
 
 function validateNh(value: NhBallotProjection, version: string): void {
-  if (!arrays(value.ballot, ["contests", "candidacies"]) || value.ballot.contests.length === 0 || value.ballot.candidacies.length === 0) {
+  if (!arrays(value.ballot, ["contests", "candidacies"])) {
     throw new Error(`New Hampshire ballot projection ${version} has no ballot rows.`);
   }
 }
@@ -59,28 +62,44 @@ function validateProfiles(value: CandidateProfilesProjection, version: string): 
   const links = value.links?.links;
   if (
     !cards || typeof cards !== "object" || Array.isArray(cards) ||
-    !links || typeof links !== "object" || Array.isArray(links) ||
-    Object.keys(cards).length + Object.keys(links).length === 0
+    !links || typeof links !== "object" || Array.isArray(links)
   ) {
     throw new Error(`Candidate profile projection ${version} has no card or link records.`);
   }
 }
 
 function validateCorpus(value: CandidateCorpus, version: string): void {
-  if (!Array.isArray(value.documents) || !Array.isArray(value.failures) || value.documents.length === 0) {
+  if (!Array.isArray(value.documents) || !Array.isArray(value.failures)) {
     throw new Error(`Candidate publication projection ${version} has no document versions.`);
   }
 }
 
-let azState: CivicDataReadResult<AzBallotProjection> = civicDataReadNotInitialized("BALLOT_CANDIDACY", AZ.scope, "The Arizona ballot pointer has not been read for this process.");
-let nhState: CivicDataReadResult<NhBallotProjection> = civicDataReadNotInitialized("BALLOT_CANDIDACY", NH.scope, "The New Hampshire ballot pointer has not been read for this process.");
-let profilesState: CivicDataReadResult<CandidateProfilesProjection> = civicDataReadNotInitialized("CANDIDATE_PROFILE", PROFILES.scope, "The candidate profile pointer has not been read for this process.");
-let corpusState: CivicDataReadResult<CandidateCorpus> = civicDataReadNotInitialized("CANDIDATE_PUBLICATION", CORPUS.scope, "The candidate publication pointer has not been read for this process.");
+interface ReaderStates {
+  az: CivicDataReadResult<AzBallotProjection>;
+  nh: CivicDataReadResult<NhBallotProjection>;
+  profiles: CivicDataReadResult<CandidateProfilesProjection>;
+  corpus: CivicDataReadResult<CandidateCorpus>;
+}
+function initialStates(): ReaderStates {
+  return {
+    az: civicDataReadNotInitialized("BALLOT_CANDIDACY", AZ.scope, "The Arizona ballot has not been read."),
+    nh: civicDataReadNotInitialized("BALLOT_CANDIDACY", NH.scope, "The New Hampshire ballot has not been read."),
+    profiles: civicDataReadNotInitialized("CANDIDATE_PROFILE", PROFILES.scope, "The candidate profiles have not been read."),
+    corpus: civicDataReadNotInitialized("CANDIDATE_PUBLICATION", CORPUS.scope, "The candidate publications have not been read."),
+  };
+}
+const states = initialStates();
+const observedStates = { ...states };
+const selectedStates = new WeakMap<object, ReturnType<typeof initialStates>>();
+function readerStates() {
+  const selection = currentReaderSelection();
+  if (!selection) return states;
+  let held = selectedStates.get(selection);
+  if (!held) { held = { ...states }; selectedStates.set(selection, held); }
+  return held;
+}
 
-/** `class:scope:versionId` triples already validated in this process; a promoted version is immutable. An injected store (tests) re-validates every time. */
-const validatedVersions = new Set<string>();
-
-async function readManual<T>(
+async function readManual<T extends object>(
   contract: typeof AZ | typeof NH | typeof PROFILES | typeof CORPUS,
   validate: (value: T, version: string) => void,
   options: PromotedCivicDataReadOptions,
@@ -89,41 +108,41 @@ async function readManual<T>(
   if (result.kind === "PROMOTED" || result.kind === "BOOTSTRAP") {
     const injected = options.store !== undefined;
     const version = result.metadata.versionId ?? result.kind;
-    const key = `${contract.recordClass}:${contract.scope}:${version}`;
-    if (injected || !validatedVersions.has(key)) {
-      validate(result.value, version);
-      if (!injected) validatedVersions.add(key);
-    }
+    if (injected) validate(result.value, version);
+    else validateOnce(`${contract.recordClass}:${contract.scope}`, result.value, version, () => validate(result.value, version));
   }
   return result;
 }
 
 export async function readAzBallotProjection(options: PromotedCivicDataReadOptions = {}): Promise<CivicDataReadResult<AzBallotProjection>> {
-  azState = await readManual(AZ, validateAz, options);
-  return azState;
+  const result = await readManual(AZ, validateAz, options);
+  readerStates().az = result;
+  observedStates.az = result;
+  return result;
 }
 
 export async function readNhBallotProjection(options: PromotedCivicDataReadOptions = {}): Promise<CivicDataReadResult<NhBallotProjection>> {
-  nhState = await readManual(NH, validateNh, options);
-  return nhState;
+  const result = await readManual(NH, validateNh, options);
+  readerStates().nh = result;
+  observedStates.nh = result;
+  return result;
 }
 
 export async function readCandidateProfilesProjection(options: PromotedCivicDataReadOptions = {}): Promise<CivicDataReadResult<CandidateProfilesProjection>> {
-  profilesState = await readManual(PROFILES, validateProfiles, options);
-  return profilesState;
+  const result = await readManual(PROFILES, validateProfiles, options);
+  readerStates().profiles = result;
+  observedStates.profiles = result;
+  return result;
 }
 
 export async function readCandidateCorpusProjection(options: PromotedCivicDataReadOptions = {}): Promise<CivicDataReadResult<CandidateCorpus>> {
-  corpusState = await readManual(CORPUS, validateCorpus, options);
-  return corpusState;
+  const result = await readManual(CORPUS, validateCorpus, options);
+  readerStates().corpus = result;
+  observedStates.corpus = result;
+  return result;
 }
 
-/**
- * The profile Reader's preload. It also reads the verified campaign sites the
- * standing runner publishes (`derived-campaign-sites.ts`), in their own failure
- * domain: that read never fails or delays the profiles it accompanies, and the
- * Reader composes the two (`lib/ballot/candidate-sites.ts`).
- */
+
 export async function refreshCandidateProfilesFromPromoted(options: PromotedCivicDataReadOptions = {}): Promise<string | null> {
   const [profiles] = await Promise.all([readCandidateProfilesProjection(options), refreshDerivedCampaignSites(options)]);
   return promotedVersionOrThrow(profiles);
@@ -169,18 +188,22 @@ function current<T>(result: CivicDataReadResult<T>, name: string): T {
   throw new Error(`${name} is ${result.kind}; initialize its canonical read before using the synchronous projection.`);
 }
 
-export const currentAzBallotProjection = (): AzBallotProjection => current(azState, "Arizona ballot projection");
-export const currentNhBallotProjection = (): NhBallotProjection => current(nhState, "New Hampshire ballot projection");
-export const currentCandidateProfilesProjection = (): CandidateProfilesProjection => readerCandidateProfiles(current(profilesState, "Candidate profile projection"));
+export const currentAzBallotProjection = (): AzBallotProjection => current(readerStates().az, "Arizona ballot projection");
+export const currentNhBallotProjection = (): NhBallotProjection => current(readerStates().nh, "New Hampshire ballot projection");
+export const currentCandidateProfilesProjection = (): CandidateProfilesProjection => readerCandidateProfiles(current(readerStates().profiles, "Candidate profile projection"));
 export const currentCandidateCorpusProjection = (): CandidateCorpus => {
-  const prior = current(corpusState, "Candidate publication projection");
+  const prior = current(readerStates().corpus, "Candidate publication projection");
   const documents = new Map(prior.documents.map(row => [row.id, row]));
   for (const row of currentDerivedCandidateDocuments()) if (!documents.has(row.id)) documents.set(row.id, row);
   return { ...prior, documents: [...documents.values()], attempted: Math.max(prior.attempted,
     new Set([...documents.values()].map(row => row.candidateKey).concat(prior.failures.map(row => row.candidateKey))).size) };
 };
 
-export const azBallotReadState = (): CivicDataReadResult<AzBallotProjection> => azState;
-export const nhBallotReadState = (): CivicDataReadResult<NhBallotProjection> => nhState;
-export const candidateProfilesReadState = (): CivicDataReadResult<CandidateProfilesProjection> => profilesState;
-export const candidateCorpusReadState = (): CivicDataReadResult<CandidateCorpus> => corpusState;
+function observedReaderStates() {
+  return currentReaderSelection() || currentReaderRoute() !== "unattributed" ? readerStates() : observedStates;
+}
+
+export const azBallotReadState = (): CivicDataReadResult<AzBallotProjection> => observedReaderStates().az;
+export const nhBallotReadState = (): CivicDataReadResult<NhBallotProjection> => observedReaderStates().nh;
+export const candidateProfilesReadState = (): CivicDataReadResult<CandidateProfilesProjection> => observedReaderStates().profiles;
+export const candidateCorpusReadState = (): CivicDataReadResult<CandidateCorpus> => observedReaderStates().corpus;

@@ -1,3 +1,4 @@
+import { readerRoute } from "@/lib/api/reader-route";
 import {
   prlProfileForSubject,
   refreshPrlFromPromoted,
@@ -7,12 +8,12 @@ import { ensureReaderAuthorityEdge, readReaderManifest } from "@/lib/meetings/ed
 import { withReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
 
 export const runtime = "nodejs";
-export async function GET(_request: Request, { params }: { params: Promise<{ subject: string }> }) {
+export const GET = readerRoute("/api/profile/[subject]", async function GET(_request: Request, { params }: { params: Promise<{ subject: string }> }) {
   const subject = decodeURIComponent((await params).subject);
   if (!subject || subject.length > 128) return Response.json({ error: "subject required" }, { status: 400 });
   try {
     const manifest = await readReaderManifest().catch(() => null);
-    const edge = manifest ? await ensureReaderAuthorityEdge(manifest, undefined, ["registry-runtime", "federal-directory", "prl-archives"]) : null;
+    const edge = manifest ? await ensureReaderAuthorityEdge(manifest, undefined, ["registry-runtime", "federal-directory", "prl-archives", "prl-profiles"]) : null;
     return await withReaderAuthorityEdge(edge, async () => {
       const [profile, archive] = await Promise.allSettled([
         /^congress:[A-Z]\d{6}$/.test(subject) ? refreshPrlFromPromoted().then(() => prlProfileForSubject(subject)) : Promise.resolve(null),
@@ -27,4 +28,4 @@ export async function GET(_request: Request, { params }: { params: Promise<{ sub
     console.error("profile holding unavailable", error);
     return Response.json({ error: "profile data unavailable" }, { status: 503 });
   }
-}
+});

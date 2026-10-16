@@ -284,7 +284,7 @@ test("published, fetched and entered: a reader request reads the family from the
   const manifest = (await artifacts.readManifest())!.manifest;
 
   // A caller that does not ask for the family never fetches it.
-  assert.equal((await ensureReaderAuthorityEdge(manifest, artifacts, ["registry-runtime"])).promoted, undefined);
+  assert.equal((await ensureReaderAuthorityEdge(manifest, artifacts, ["registry-runtime"])).promoted?.size, 0);
   const bundle = await ensureReaderAuthorityEdge(manifest, artifacts, ["state-money"]);
   assert.ok(bundle.promoted?.has(`STATE_CAMPAIGN_FINANCE:${AZ.scope}`));
 

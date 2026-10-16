@@ -1,11 +1,9 @@
-/** The control-plane schema, versioned in this module. */
-
 import { LEGISTAR_TENANT_SQL } from "../../doors/legistar-tenant.ts";
 import { FIX_MAP_DDL } from "../../method/fix-map.ts";
 import { WEBSITE_PACING_DDL } from "../website-pacing.ts";
 
 /** Moves whenever `BOOTSTRAP_DDL` moves. The gate compares against it. */
-export const BOOTSTRAP_VERSION = 32;
+export const BOOTSTRAP_VERSION = 33;
 
 /**
  *   AGGREGATE     id, revision, updated_at, value   (CAS on revision)
@@ -136,6 +134,12 @@ export const SCOPED_HISTORY_INDEXES: readonly OnlineIndex[] = [
   onlineIndex("cp_log_artifacts_work_item", "cp_log_artifacts ((record #>> '{workItemId}'))"),
   onlineIndex("cp_log_artifacts_artifact_id", "cp_log_artifacts ((record #>> '{artifactId}'))"),
   onlineIndex("cp_log_costs_recorded_at", "cp_log_costs (recorded_at)"),
+  onlineIndex("cp_work_items_publication_contract", "cp_work_items ((value #>> '{autonomousPlan,publication,contractId}'))"),
+  onlineIndex("cp_work_items_publication_body", "cp_work_items ((value #>> '{autonomousPlan,publication,bodyId}'))"),
+  onlineIndex("cp_work_items_contract_subject", "cp_work_items ((value #>> '{autonomousPlan,contract,subjectId}'))"),
+  onlineIndex("cp_box_findings_due", "cp_box_findings ((value #>> '{waitingFor,slots}'), (value->>'lastRecordedAt')) WHERE value->>'state' = 'waiting'"),
+  onlineIndex("cp_box_findings_lease", "cp_box_findings ((value #>> '{claim,expiresAt}')) WHERE value->>'state' = 'taken'"),
+  onlineIndex("cp_box_findings_reason", "cp_box_findings ((value #>> '{waitingFor,reason}'), id) WHERE value->>'state' = 'waiting'"),
   onlineIndex("cp_doors_legistar_tenant", `cp_doors ((${LEGISTAR_TENANT_SQL}))`),
 ];
 

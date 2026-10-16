@@ -1,16 +1,3 @@
-/**
- * `pnpm jurisdictions:enumerate` — every local government that can hold an
- * election, named before a reader needs one, with the routes that serve it.
- *
- * Builds the reviewed jurisdiction-routing projection from the Census of
- * Governments and submits it to the production candidate/event/promotion
- * plane. It never writes a tracked repository file.
- *
- * Every source row carries `scope` (STATEWIDE, PER_COUNTY, THIS_JURISDICTION),
- * so a county's route is never presented as a state's. Statutes are cited where
- * read and quoted verbatim in `data/campaign-finance/filing-regimes.json`; an
- * unread statute is recorded as an open question, never paraphrased.
- */
 import { US_JURISDICTIONS } from "../lib/coverage/states.ts";
 import { NAME_BY_USPS } from "../lib/coverage/artifacts.ts";
 import type {
@@ -265,7 +252,7 @@ function azBallotSource(countyName: string): JurisdictionSource {
       "Arizona's statewide contests come from the Secretary of State and are already held; the " +
       "county-and-below contests are the county's own publication and are not.",
     citation:
-      "data/states/az/ballot/az-pima-2026.json — Pima County's certified list is held; no other Arizona county's is",
+      "data/ballot/2026-general/az.json — held Arizona contests and candidates",
   };
 }
 
@@ -362,10 +349,7 @@ const NJ_STATUTE =
   "every route this project has walked is the Election Law Enforcement Commission.";
 
 function newHampshireSources(unit: CensusUnit, govClass: JurisdictionClass): JurisdictionSource[] {
-  /*
-   * The statewide CFS holds state and county filers; whether a local candidate
-   * files there is not established, so local rows carry it as DISCOVERY_OWED.
-   */
+  // The statewide CFS does not establish where local candidates file, so those rows remain discovery work.
   const proven = govClass === "STATE" || govClass === "COUNTY";
   const out: JurisdictionSource[] = [
     {
@@ -539,10 +523,7 @@ function build(plan: StatePlan): JurisdictionRegistry {
     let id = `${plan.code.toLowerCase()}:${PREFIX_OF[govClass]}:${slug(unit.name)}`;
     if (seen.has(id)) id = `${id}-${unit.pid}`;
     seen.add(id);
-    /*
-     * A reviewed website correction replaces the Census address only while Census still records the address it
-     * replaces, and only as this promotion read its sources again: refused, the Census address stays and says why.
-     */
+    // Apply a reviewed correction only while Census still reports the address it replaces.
     const census = ownWebAddress(unit);
     const correction = websiteCorrectionFor(id, census);
     const reading = correction === null ? undefined : websiteCorrectionOutcomes.get(id);

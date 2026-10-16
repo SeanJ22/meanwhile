@@ -10,7 +10,7 @@ export async function publishCampaignSitePortraits(input: {
   readonly plan: DerivedCampaignSitesPlan;
   readonly approvals: readonly PublishableCampaignSiteApproval[];
   readonly subjects?: readonly CampaignSiteSubject[];
-  readonly held: (approval: PublishableCampaignSiteApproval) => HeldVerifyingRead | null;
+  readonly held: (approval: PublishableCampaignSiteApproval) => HeldVerifyingRead | null | Promise<HeldVerifyingRead | null>;
   readonly now: string;
   readonly portraitRuntime?: PortraitRuntime;
   readonly commonsRuntime?: CommonsPortraitRuntime;
@@ -36,9 +36,9 @@ export async function publishCampaignSitePortraits(input: {
     const approvals = (byCandidacy.get(candidacyId) ?? [])
       .sort((a, b) => b.campaignSite.evidence.readAt.localeCompare(a.campaignSite.evidence.readAt));
     for (const approval of approvals) {
-      const site = approval.campaignSite, held = input.held(approval);
-      if (!held || !reverifyApprovedSite(approval, held).ok) continue;
       try {
+        const site = approval.campaignSite, held = await input.held(approval);
+        if (!held || !reverifyApprovedSite(approval, held).ok) continue;
         const portrait = await candidatePortraitFromOwnSite({ identity: site.identity, cycleSource: held.cycleSource, capture: {
             evidence: { artifactId: site.evidence.artifactId, contentHash: `sha256-${site.evidence.sha256}`, text: held.body,
               canonicalUrl: site.evidence.finalUrl, retrievedAt: site.evidence.readAt, sourceId: new URL(site.url).hostname,

@@ -5,8 +5,9 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, test } from "node:test";
 
+import { sourceProjectionEvidence } from "../lib/civic-data/types.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
-import { publishRoutineReaderEdge } from "../lib/civic-data/reader-edge-publication.ts";
+import { publishSupervisorReaderEdge } from "../lib/civic-data/reader-edge-publication.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import {
   readPromotedCivicData,
@@ -151,14 +152,19 @@ const comparable = <T,>(read: CivicDataReadResult<T> | { kind: string }) => {
   return { kind, value, metadata, projection };
 };
 
-test("published voting sites serve the same jurisdictions and sites from the request edge without a database", async () => {
+function nationalVotingFixture() {
+  const candidate = votingSitesCandidate({ state: "AZ", current: structuredClone(VOTING_SITES), prior: null,
+    failures: [], acquisition: PIMA_CAPTURE, successfulAuthorityReads: 1,
+    requestedUrl: "https://www.pima.gov/3199/Pima-Votes", finalUrl: "https://www.pima.gov/3199/Pima-Votes", retrievedAt: T0 });
+  const { sourceId, recordClass, scope } = VOTING_SITES_CONTRACT;
+  return { ...candidate, scope, sourceProjectionEvidence: sourceProjectionEvidence(sourceId, recordClass, scope),
+    id: `cv-${createHash("sha256").update([sourceId, scope, candidate.retrieval.rawHash, T0,
+      candidate.retrieval.finalUrl, candidate.normalization.normalizedHash].join("\u001f")).digest("hex").slice(0, 32)}` };
+}
+
+test("previously published national voting sites retain their jurisdictions and sites on the request edge", async () => {
   const store = new MemoryRoutineDataStore();
-  const current = structuredClone(VOTING_SITES);
-  const candidate = votingSitesCandidate({
-    current, prior: null, failures: [], acquisition: PIMA_CAPTURE,
-    successfulAuthorityReads: 1, requestedUrl: "https://www.pima.gov/3199/Pima-Votes",
-    finalUrl: "https://www.pima.gov/3199/Pima-Votes", retrievedAt: T0,
-  });
+  const candidate = nationalVotingFixture();
   assert.equal((await processRegisteredManualCandidate(store, "voting-sites", candidate, T0)).candidate.state, "PROMOTED");
   const database = await readVotingSitesProjection({ store, bypassCache: true, now: T1 });
   const published = await readPromotedEdgeFamilies({
@@ -306,9 +312,7 @@ test("published, fetched and entered: a reader request reads the family from the
 
 test("direct scoped runner publication skips unrelated contracts and every unchanged payload", async () => {
   const store = new MemoryRoutineDataStore();
-  const current = structuredClone(VOTING_SITES);
-  const candidate = votingSitesCandidate({ current, prior: null, failures: [], acquisition: PIMA_CAPTURE,
-    successfulAuthorityReads: 1, requestedUrl: "https://www.pima.gov/3199/Pima-Votes", finalUrl: "https://www.pima.gov/3199/Pima-Votes", retrievedAt: T0 });
+  const candidate = nationalVotingFixture();
   assert.ok((await processRegisteredManualCandidate(store, "voting-sites", candidate, T0)).promoted);
   let payloadReads = 0;
   const scoped = new Proxy(store, { get(target, key) {
@@ -323,12 +327,12 @@ test("direct scoped runner publication skips unrelated contracts and every uncha
     return typeof value === "function" ? value.bind(target) : value;
   } });
   const artifacts = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "runner-scoped-edge-")));
-  assert.equal(await publishRoutineReaderEdge(scoped, T1, [VOTING_SITES_CONTRACT], { artifactStore: artifacts }), true);
+  assert.equal((await publishSupervisorReaderEdge(scoped, T1, [VOTING_SITES_CONTRACT], { artifactStore: artifacts }, { WTP_READER_EDGE_LOCAL_OK: "1" })).ok, true);
   assert.ok((await artifacts.readManifest())!.manifest.authorityArtifacts?.["voting-sites"]);
   const initialReads = payloadReads;
   assert.ok(initialReads > 0);
   const initialSequence = (await artifacts.readManifest())!.manifest.sequence;
-  assert.equal(await publishRoutineReaderEdge(scoped, T1, [VOTING_SITES_CONTRACT], { artifactStore: artifacts }), true);
+  assert.equal((await publishSupervisorReaderEdge(scoped, T1, [VOTING_SITES_CONTRACT], { artifactStore: artifacts }, { WTP_READER_EDGE_LOCAL_OK: "1" })).ok, true);
   assert.equal(payloadReads, initialReads);
   assert.equal((await artifacts.readManifest())!.manifest.sequence, initialSequence);
 });

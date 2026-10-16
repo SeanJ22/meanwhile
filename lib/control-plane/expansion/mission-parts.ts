@@ -1,13 +1,3 @@
-/**
- * Mission parts: each worked by its own squad (governments and meetings;
- * people and money; ballot). Maps a checklist family, item or record class to
- * its part. Families start from the checklist overlay's `squad`
- * (`lib/coverage/checklist-map.json`); the `expansion.missionParts` setting
- * overrides any of it. Anything no part takes reads as null and is shown under
- * "other".
- *
- * Pure. No store, no clock, no environment.
- */
 import type { AdminConfig } from "../gateway/admin-config.ts";
 import { readSetting, registerSetting, type SettingValue } from "../settings.ts";
 import { SQUAD_START } from "../../coverage/checklist-map.ts";
@@ -27,7 +17,7 @@ export interface MissionPartsSetting {
   readonly parts: readonly MissionPart[];
   /** Checklist family (`GEO`, `OFF`, …) → part id. Families left out keep the overlay's squad. */
   readonly families: Readonly<Record<string, string>>;
-  /** Record class (`MEETING`, `BALLOT_FILING`, …) → part id, for work that names a record class and no checklist item. */
+  /** Record class (`MEETING`, `BALLOT_CANDIDACY`, …) → part id, for work that names a record class and no checklist item. */
   readonly recordClasses: Readonly<Record<string, string>>;
   /** Parts whose squad is weighted by government class (county, city, school district, …). One part, still; the split only weights it. */
   readonly weightByGovernmentClass: readonly string[];
@@ -60,7 +50,7 @@ export const DEFAULT_MISSION_PARTS: MissionPartsSetting = {
     BALLOT_CANDIDACY: PEOPLE, FEC_FUNDING: PEOPLE, STATE_CAMPAIGN_FINANCE: PEOPLE, LOCAL_CAMPAIGN_FINANCE: PEOPLE,
     OFFICEHOLDERS: PEOPLE, OFFICIAL_ROSTER: PEOPLE, CAMPAIGN_FINANCE: PEOPLE, CAMPAIGN_FINANCE_FILING: PEOPLE, CANDIDATE_FILING_DOCUMENT: PEOPLE,
     // Elections, the ballot itself (contests and measures) and where to vote.
-    BALLOT_FILING: BALLOT, VOTING_SITE: BALLOT, GOOGLE_CIVIC_VOTERINFO: BALLOT, BALLOT_AND_CANDIDATES: BALLOT, BALLOT_CONTEST: BALLOT, VOTER_ACCESS: BALLOT, VOTER_ACCESS_ROUTE: BALLOT,
+    VOTING_SITE: BALLOT, GOOGLE_CIVIC_VOTERINFO: BALLOT, BALLOT_AND_CANDIDATES: BALLOT, BALLOT_FILING: BALLOT, BALLOT_CONTEST: BALLOT, BALLOT_MEASURE: BALLOT, VOTER_ACCESS: BALLOT, VOTER_ACCESS_ROUTE: BALLOT,
   },
   weightByGovernmentClass: [GOVERNMENTS],
 };
@@ -117,11 +107,6 @@ export function missionPartOf(work: { readonly checklistId?: string | null; read
   return null;
 }
 
-/**
- * The part of a work plan. The plan's record class decides under the parts in
- * force, so a changed setting re-parts held work without rewriting it; the
- * stored `missionPart` is the fallback.
- */
 export function missionPartOfPlan(plan: { readonly missionPart?: string; readonly contract: { readonly recordClass: string } },
   parts: MissionPartsSetting = DEFAULT_MISSION_PARTS): string | null {
   return missionPartOf({ recordClass: plan.contract.recordClass }, parts) ?? plan.missionPart ?? null;

@@ -44,16 +44,16 @@ export function jurisdictionDiscoveryPlan(jurisdiction: Jurisdiction, source: Ju
     if (!url) return false;
     try { const parsed = new URL(url); return parsed.protocol === "https:" && !parsed.username && !parsed.password; } catch { return false; }
   }))];
+  const state = jurisdiction.id.split(":")[0].toUpperCase();
+  const publicationContract = workerDoorForRecord(spec.recordClass, state);
   return {
-    version: 1, capability: source.recordClass === "OFFICEHOLDERS" ? "officials/offices" : source.recordClass, jurisdiction: jurisdiction.id.split(":")[0].toUpperCase(),
+    version: 1, capability: source.recordClass === "OFFICEHOLDERS" ? "officials/offices" : source.recordClass, jurisdiction: state,
     sourceRegistryReferences: [jurisdiction.id, routeId], seedUrls, sources: [], acquisition: [], auditScope: "SOURCE_UNIVERSE",
     ...partFor(spec.recordClass),
-    ...(bodyId && workerDoorForRecord(spec.recordClass) ? { publication: { contractId: workerDoorForRecord(spec.recordClass)!, bodyId } } : {}),
+    ...(bodyId && publicationContract ? { publication: { contractId: publicationContract, bodyId } } : {}),
     ...(source.recordClass === "OFFICEHOLDERS" && bodyId ? { publication: { contractId: "registry-runtime-bindings" as const, bodyId } } : {}),
     ...(source.recordClass === "PUBLIC_SERVICES" && bodyId ? { publication: { contractId: "everyday-routing" as const, bodyId } } : {}),
-    ...(source.recordClass === "POLLING_PLACES" && bodyId ? { publication: { contractId: "voting-sites" as const, bodyId } } : {}),
     ...(source.recordClass === "VOTER_ACCESS" && bodyId ? { publication: { contractId: "ballot-navigation" as const, bodyId } } : {}),
-    ...(["BALLOT_CONTEST", "BALLOT_MEASURE"].includes(spec.recordClass) && bodyId ? { publication: { contractId: "ballot-contests" as const, bodyId } } : {}),
     ...(spec.recordClass === "PUBLIC_RECORD" && bodyId ? { publication: { contractId: source.recordClass === "SPECIAL_DISTRICT_BOUNDARIES" ? "special-district-boundaries" as const : source.recordClass === "GOVERNMENT_FINANCE" ? "government-budgets" as const : "public-records" as const, bodyId } } : {}),
     ...(["ADOPTED_BUDGET", "BUDGET_RESPONSIBILITY", "BUDGET_AMENDMENT"].includes(spec.recordClass) && bodyId ? { publication: { contractId: "government-budgets" as const, bodyId } } : {}),
     ...(["CANDIDATE_FILING_DOCUMENT", "CAMPAIGN_FINANCE_FILING"].includes(spec.recordClass) && bodyId ? { publication: { contractId: "official-filings" as const, bodyId } } : {}),
@@ -62,9 +62,7 @@ export function jurisdictionDiscoveryPlan(jurisdiction: Jurisdiction, source: Ju
       requiredFields: spec.fields, identity: { namespace: `${jurisdiction.id}:${source.recordClass}`, keyFields: spec.fields },
       jurisdiction: { country: "US", state: jurisdiction.id.split(":")[0].toUpperCase(), canonicalId: jurisdiction.id },
       completenessScope: `${source.recordClass} for ${jurisdiction.name}. ${source.owed ?? source.authorityBasis} This initial source contract does not discharge downstream information families or establish publisher absence.`,
-      // Zero means an unbound instruction template, never an extraction result.
-      // The standing runtime binds its actual inherited method-store version
-      // before consuming any repair or dispatching a worker.
+      // Discovery templates acquire their method version when the runtime binds them.
       expectedSourceDate: null, methodVersion: 0,
       sourceScope: { sourceId: `unobserved:${routeId}`, publisher: source.authority, routeIds: [routeId], canonicalUrls: [], observationArtifactIds: [] },
       extraction: { format: "UNSUPPORTED", mediaType: "unobserved", fields: {}, reason: "Discover actual source bytes, applicability and an executable mapping." },
@@ -90,12 +88,6 @@ export function publicCommentDiscoveryPlan(jurisdiction: Jurisdiction, bodyId: s
       completenessScope: `Published participation rules for registered body ${bodyId}. YES, NO or UNKNOWN must describe what the source actually supports. Each instruction must appear in a saved source that can be checked; this work does not discharge calendars, agendas, minutes or other bodies.` } };
 }
 
-/**
- * These legacy worker contracts acquire the same meeting event feeds now
- * owned by the meeting-partition contracts built from the meeting doors. They
- * remain readable as immutable engineering evidence, but the standing runtime
- * may never schedule or dispatch another acquisition for them.
- */
 export const RETIRED_ROUTINE_MEETING_ACQUISITION_CLASSES = [
   "LEGISTAR_EVENTS",
   "CIVICCLERK_EVENTS",

@@ -1,12 +1,17 @@
+import { rememberStatePublicationPrior } from "./state-publication.ts";
+import type { Registry } from "../registry/types.ts";
+import { parseStateBallotContractId, stateBallotContractId, stateBallotScope } from "./state-scopes.ts";
 import { canonicalJson } from "../control-plane/repository/types.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import type { WorkItem } from "../control-plane/work-item.ts";
 import type { WorkerResultRecord } from "../control-plane/workers/types.ts";
-import { listDoors, type DoorRecord } from "../doors/registry.ts";
+import { type DoorRecord } from "../doors/registry.ts";
 import { readPollingDoor, POLLING_DOOR_KINDS } from "../ballot/polling-door-reader.ts";
-import { votingSitesCandidate, votingSitesScopedSuccessor } from "../ballot/voting-sites-data-plane.ts";
-import { readVotingSitesProjection } from "../ballot/voting-sites-server.ts";
-import { readRegistryRuntimePrior } from "../registry/runtime-data-plane.ts";
+import { votingSitesCandidate, votingSitesScopedSuccessor, votingSitesContract } from "../ballot/voting-sites-data-plane.ts";
+import type { VotingSitesFile } from "../ballot/voting-sites.ts";
+import { readPromotedCivicData } from "./read-model.ts";
+import { REGISTRY_RUNTIME_SCOPE, type RegistryRuntimeCarton } from "../registry/runtime-data-plane.ts";
+import { readPlacePointerSlice } from "./held-place-slices.ts";
 import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
 import { captureIntact, capturesForPublication, jobWorkerResults, latestParserResult, verifiedWorkerRecords, requirePublication } from "./worker-publication-evidence.ts";
 import { section3Page, linkingPageFrom } from "../control-plane/promotion/section3.ts";
@@ -17,7 +22,7 @@ import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import { holdRawCapture } from "./raw-capture-vault.ts";
 import { rawCaptureVault } from "./raw-capture-remote.ts";
 
-export async function publishPollingDoor(input: {
+async function publishPollingDoor(input: {
   readonly store: RoutineDataStore; readonly door: DoorRecord;
   readonly capture: WorkerPublicationCapture; readonly jurisdictionName: string;
   readonly linkingCaptures?: readonly WorkerPublicationCapture[]; readonly now: string; readonly vault?: EvidenceStore;
@@ -27,35 +32,40 @@ export async function publishPollingDoor(input: {
   requirePublication(input.door.status !== "SUSPENDED" && section3Page({ url: capture.evidence.canonicalUrl, text: capture.evidence.text,
     retrievedAt: capture.observedAt, sourcePolicy: capture.sourcePolicy, linkingPage }, "VOTING_SITE", input.now).ok, "POLLING_SOURCE_NOT_ADMITTED");
   const jurisdiction = readPollingDoor({ ...input, linkingPage: linkingPage ?? undefined });
-  const prior = await readVotingSitesProjection({ store: input.store, now: input.now, bypassCache: true });
+  let prior: Awaited<ReturnType<typeof readPromotedCivicData<VotingSitesFile>>> | null = await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", jurisdiction.state), { store: input.store, now: input.now, bypassCache: true });
   requirePublication(prior.kind === "PROMOTED" || prior.kind === "NOT_RECORDED", "POLLING_PRIOR_UNAVAILABLE");
-  const held = prior.kind === "PROMOTED" ? prior.value : null;
+  requirePublication(prior.kind !== "PROMOTED" || prior.metadata.sourceId === votingSitesContract(jurisdiction.state).sourceId, "POLLING_PRIOR_PUBLISHER_MISMATCH");
+  if (prior.kind === "PROMOTED") rememberStatePublicationPrior(input.store, prior.projection);
+  let held = prior.kind === "PROMOTED" ? prior.value : null;
   const base = prior.kind === "PROMOTED" ? prior.metadata.versionId : null;
-  const candidate = votingSitesCandidate({ current: votingSitesScopedSuccessor(held, jurisdiction, input.now.slice(0, 10)),
+  const candidate = votingSitesCandidate({ state: jurisdiction.state, current: votingSitesScopedSuccessor(held, jurisdiction, input.now.slice(0, 10)),
     prior: held, failures: [], successfulAuthorityReads: 1,
     acquisition: [{ url: capture.evidence.canonicalUrl, contentType: "text/plain",
       ...await holdRawCapture(input.vault ?? rawCaptureVault(), "voting-sites", capture.evidence.text, "text/plain") }],
     requestedUrl: capture.evidence.canonicalUrl, finalUrl: capture.evidence.canonicalUrl,
     retrievedAt: input.now, carriedFromVersionId: base });
-  const published = await processRegisteredManualCandidate(input.store, "voting-sites", candidate, input.now, base);
-  const read = await readVotingSitesProjection({ store: input.store, now: input.now, bypassCache: true });
+  prior = null; held = null;
+  const published = await processRegisteredManualCandidate(input.store, stateBallotContractId("voting-sites", jurisdiction.state), candidate, input.now, base);
+  const read = await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", jurisdiction.state), { store: input.store, now: input.now, bypassCache: true });
   requirePublication(published.promoted && read.kind === "PROMOTED" && read.metadata.versionId === published.promoted.versionId,
     `POLLING_TYPED_READBACK_FAILED:${published.candidate.failureDetail ?? "pointer not readable"}`);
   return { ...published, jurisdiction };
 }
 
+export type PollingRegistrySlice = (divisionIds: readonly string[], bodyIds: readonly string[]) => Promise<Pick<Registry, "divisions" | "bodies"> | null>;
+
 export async function publishWorkerPollingResults(input: {
+  readonly readRegistrySlice?: PollingRegistrySlice;
   readonly repos: ControlPlaneRepositories; readonly store: RoutineDataStore;
   readonly workItemIds: readonly string[]; readonly now: string; readonly vault?: EvidenceStore;
   readonly readCapture: (id: string, results: readonly WorkerResultRecord[]) => Promise<WorkerPublicationCapture>;
 }) {
-  const [{ results, readCapture }, doors, registry] = await Promise.all([jobWorkerResults(input.repos, input.workItemIds, input.readCapture),
-    listDoors(input.repos.doors), readRegistryRuntimePrior(input.store, input.now)]);
   const report: { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[] = [];
   for (const id of [...new Set(input.workItemIds)]) {
+    const { results, readCapture } = await jobWorkerResults(input.repos, [id], input.readCapture);
     const item = await input.repos.workItems.mustRead(id), plan = item.value.autonomousPlan;
     const parser = latestParserResult(results, id);
-    if (!plan || plan.publication?.contractId !== "voting-sites" || !parser || parser.result.role !== "PARSER") continue;
+    if (!plan || parseStateBallotContractId(plan.publication?.contractId ?? "")?.family !== "voting-sites" || !parser || parser.result.role !== "PARSER") continue;
     if (item.value.publicationOutcome?.workerResultId === parser.id && item.value.publicationOutcome.status === "PUBLISHED" &&
       item.value.publicationOutcome.sourceObservedAt) {
       report.push({ workItemId: id, outcome: item.value.publicationOutcome }); continue;
@@ -64,10 +74,14 @@ export async function publishWorkerPollingResults(input: {
     let outcome: NonNullable<WorkItem["publicationOutcome"]>;
     try {
       requirePublication(plan.contract.schemaVersion === 2 && plan.contract.recordClass === "VOTING_SITE", "POLLING_CONTRACT_UNRESOLVED");
-      const body = registry?.payload.registry.bodies.find(row => row.id === plan.publication!.bodyId);
-      const divisionId = body?.ocdId ?? plan.publication.bodyId;
-      const division = registry?.payload.registry.divisions.find(row => row.ocdId === divisionId);
-      const matching = doors.doors.filter(door => door.status !== "SUSPENDED" && door.ocdId === divisionId &&
+      const divisionIds = [plan.contract.jurisdiction.canonicalId], bodyIds = [plan.publication!.bodyId];
+      const registry = input.readRegistrySlice ? await input.readRegistrySlice(divisionIds, bodyIds)
+        : (await readPlacePointerSlice<RegistryRuntimeCarton>("REGISTRY_RUNTIME_BINDING", REGISTRY_RUNTIME_SCOPE, divisionIds, bodyIds)).value?.registry;
+      const body = registry?.bodies.find(row => row.id === plan.publication!.bodyId);
+      const divisionId = body?.ocdId ?? plan.publication!.bodyId;
+      const division = registry?.divisions.find(row => row.ocdId === divisionId);
+      const doors = (await Promise.all(plan.sourceRegistryReferences.map(id => input.repos.doors.read(id)))).flatMap(row => row ? [row.value] : []);
+      const matching = doors.filter(door => door.status !== "SUSPENDED" && door.ocdId === divisionId &&
         (POLLING_DOOR_KINDS as readonly string[]).includes(door.kind) && plan.sourceRegistryReferences.includes(door.doorId));
       requirePublication(division?.label && matching.length === 1, "POLLING_EXACT_DOOR_OR_DIVISION_MISSING");
       const door = matching[0], primaryId = parser.result.artifactId;

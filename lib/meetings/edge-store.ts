@@ -61,8 +61,6 @@ export class NetlifyBlobsArtifactStore implements ReaderArtifactStore {
   }
 
   async readManifest(): Promise<StoredManifest | null> {
-    // Eventual consistency is correct for the reader: the CDN layer, not this
-    // read, is the reader's hot path, and a <=60s-stale pointer is honest.
     const store = await this.store("eventual");
     const res = await store.getWithMetadata(READER_MANIFEST_KEY, { type: "json" });
     if (!res || res.data == null) return null;

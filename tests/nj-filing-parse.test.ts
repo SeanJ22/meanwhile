@@ -34,7 +34,6 @@ function parse() {
 
 test("the document yields a real number of candidates, not merely no error", () => {
   const { candidates } = parse();
-  // A minimum, not an equality: the clerk republishes and the count grows.
   assert.ok(candidates.length >= 130, `only ${candidates.length} candidates parsed`);
   assert.ok(
     candidates.filter((c) => c.email).length >= 120,
@@ -141,14 +140,10 @@ test("a document with no office headings is ZERO_ROWS with a reason, not success
   assert.notEqual(out.outcome, "EXTRACTED");
   assert.match(String(out.reason), /grammar/);
 });
-
-// Row grammar: `<Jurisdiction> <ALL-CAPS OFFICE> <term> <seats> <payload>`, anchored on the
-// Title-Case-to-CAPS transition so a capitalised surname cannot match.
 const ROW_GRAMMAR =
   /[a-z]\s+((?:[A-Z][A-Z.'\-/]*|-|WARD|\d)(?:\s+(?:[A-Z][A-Z.'\-/]*|-|WARD|\d))*?)\s+\d{1,2}\s+\d{1,2}\s+[A-Z]/g;
 
 test("every office-heading SHAPE the DOCUMENT exposes is recognised as a heading", () => {
-  // Heading shapes are read from the fixture, not declared, so a new heading fails here.
   const flat = text.replace(/\s+/g, " ");
   const shapes = new Set<string>();
   for (const m of flat.matchAll(ROW_GRAMMAR)) shapes.add(m[1].trim().replace(/\s+/g, " "));
@@ -188,7 +183,6 @@ test("no candidate's NAME is an office heading, a term count, or a seat count", 
 });
 
 test("the parser's count matches an INDEPENDENT count of the same document", () => {
-  // Occurrences, not distinct values: a joint ticket files one shared mailbox.
   const emails = text.match(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g)?.length ?? 0;
   assert.ok(emails > 100, `the fixture carries only ${emails} email(s) — the instrument is broken, not the parser`);
   const { candidates } = parse();

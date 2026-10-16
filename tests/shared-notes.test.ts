@@ -1,11 +1,10 @@
+import { azBallot } from "./helpers/ballot-district-fixtures.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { test } from "node:test";
 
 import { sharedNotesFor } from "../lib/ballot/shared-notes.ts";
-
-/** A note that is the same on every contest is a page note. */
 
 const note = (id: string, scopeNote: string | null) => ({ id, scopeNote });
 
@@ -68,26 +67,13 @@ test("F01 11.1: contests with no note contribute nothing and break nothing", () 
 });
 
 test("F01 11.1: the Arizona measures actually collapse — eleven into one", () => {
-  // Against the shipped data rather than a fixture.
-  const ballot = JSON.parse(
-    readFileSync(join(process.cwd(), "data", "states", "az", "ballot", "az-pima-2026.json"), "utf8"),
-  ) as { contests: { id: string; scopeNote: string | null }[] };
-
-  const { notes, isShared } = sharedNotesFor(ballot.contests);
-  const wording = notes.find((n) =>
-    /has not yet published the final ballot wording/.test(n.text),
-  );
+  const { notes, isShared } = sharedNotesFor(azBallot.contests);
+  const wording = notes.find((n) => /has not yet published the final ballot wording/.test(n.text));
   assert.ok(wording, "the repeated ballot-wording note did not collapse");
-  assert.ok(
-    wording.count >= 10,
-    `expected the wording note on ten-plus contests, found ${wording.count}`,
-  );
-  // And every contest carrying it now points at the one note.
-  const carriers = ballot.contests.filter((c) =>
-    /has not yet published the final ballot wording/.test(c.scopeNote ?? ""),
-  );
+  assert.ok(wording.count >= 10, `expected the wording note on ten-plus contests, found ${wording.count}`);
+  const carriers = azBallot.contests.filter((contest) => /has not yet published the final ballot wording/.test(contest.scopeNote ?? ""));
   assert.equal(carriers.length, wording.count);
-  for (const c of carriers) assert.equal(isShared(c.id), true);
+  for (const contest of carriers) assert.equal(isShared(contest.id), true);
 });
 
 test("F01 11.2 / 11.3: the ballot page drops the contradiction and the false claim", () => {

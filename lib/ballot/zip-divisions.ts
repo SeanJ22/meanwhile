@@ -13,9 +13,7 @@ type PointPlans = Partial<Readonly<Record<DistrictFamily, string>>>;
 const TYPES: Record<DistrictFamily, GeographyType> = { cd: "congressional_district", sldu: "state_leg_upper", sldl: "state_leg_lower" };
 const OFFICES: Record<DistrictFamily, string> = { cd: "U.S. House", sldu: "State Senate", sldl: "State House" };
 
-/** Every qualified district touching the ZIP, plus point and sampled local
- * divisions. A point district needs its own applicable plan when no ZIP rows
- * qualified that state's family. */
+
 export async function divisionIdsForZipArea(
   zip: string | null,
   pointDivisionIds: readonly string[],

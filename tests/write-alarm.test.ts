@@ -5,8 +5,8 @@ import { fileURLToPath } from "node:url";
 import test from "node:test";
 
 import { compareSchemaState, describeSchemaState } from "../lib/db/schema-state.ts";
-import { MIGRATION_SQL_PATH } from "../lib/db/migration-immutability.ts";
 import { errorCodeOf, errorMessageOf } from "../lib/db/write-alarm.ts";
+import { migrationTagsIn } from "../lib/db/shipping-invariant.ts";
 
 import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
 
@@ -213,17 +213,21 @@ test("6.1: the schema gate names the missing migration, and never rounds up", ()
   // An empty journal has no head, and "unknown" is the named gap rather than
   // a plausible tag.
   assert.equal(compareSchemaState([], []).codeHead, "unknown");
+
+  const pendingSteps = [...journal,
+    { idx: 3, when: 4, tag: "ZZ-02_pending_expand" },
+    { idx: 4, when: 5, tag: "AA-01_pending_contract" },
+  ];
+  const pending = compareSchemaState(pendingSteps, [1, 2, 3]);
+  assert.equal(pending.codeHead, "AA-01_pending_contract", "the journal defines the head, regardless of filename sorting");
+  assert.deepEqual(pending.missing, ["ZZ-02_pending_expand", "AA-01_pending_contract"]);
 });
 
-test("6.1: the committed journal matches every migration file", () => {
+test("6.1: the committed journal names every migration file exactly once", () => {
   const journal = JSON.parse(
     readFileSync(join(ROOT, "lib", "db", "migrations", "meta", "_journal.json"), "utf8"),
   ) as { entries: { tag: string }[] };
-  const files = filesThatWouldBeCommitted({ cwd: ROOT, paths: ["lib/db/migrations"] })
-    .map((f) => f.trim())
-    .map((f) => MIGRATION_SQL_PATH.exec(f)?.[1])
-    .filter((tag): tag is string => tag !== undefined)
-    .sort();
+  const files = migrationTagsIn(filesThatWouldBeCommitted({ cwd: ROOT, paths: ["lib/db/migrations"] }));
   const tags = journal.entries.map((e) => e.tag).sort();
   assert.deepEqual(
     tags,
@@ -335,10 +339,7 @@ test("NH32: the code is found under originalError", () => {
 });
 
 test("NH32: an AggregateError's real failures are reached", () => {
-  /*
-   * What a pooled driver raises when every connection in the pool fails. Its
-   * own message says nothing; each entry in `errors` is a real database error.
-   */
+  // Pool connection errors retain the useful database diagnostics in their nested errors.
   const real = Object.assign(new Error("terminating connection due to administrator command"), {
     code: "57P01",
   });

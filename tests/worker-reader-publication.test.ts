@@ -1,17 +1,18 @@
+import type { VotingSitesFile } from "../lib/ballot/voting-sites.ts";
+import { stateBallotScope, stateBallotContractId } from "../lib/civic-data/state-scopes.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { runWorkerPublicationJob } from "../lib/civic-data/worker-publication-job.ts";
 import { factDb } from "./helpers/fact-db.ts";
-import {readGenericBallotProjection} from "../lib/ballot/generic-projection.ts";
-import {readerBallotSourcesForDivisions} from "../lib/ballot/reader-sources.ts";
+import { type GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
+import { genericSourcesForDivisions } from "../lib/ballot/reader-sources.ts";
 import {candidateEnrichmentUniversesFromHoldings} from "../lib/control-plane/scheduler/providers/candidate-enrichment.ts";
-import { promotedEdgeEntryOf } from "../lib/civic-data/read-model.ts";
+import { readPromotedCivicData, promotedEdgeEntryOf } from "../lib/civic-data/read-model.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { scopedManualContractScope } from "../lib/civic-data/scoped-manual-contracts.ts";
 import { readPublicKindOwed } from "../lib/coverage/public-kind-owed.ts";
 import { governmentMoneyView } from "../lib/funding/government-money.ts";
 import { governmentFinanceEvidence, composeGovernmentFinanceAnswer } from "../lib/ask/government-finance.ts";
 import { checkDoorDraft, applyManualEdit } from "../lib/doors/registry.ts";
-import { readVotingSitesProjection } from "../lib/ballot/voting-sites-server.ts";
 import { createHash } from "node:crypto";
 import { CENSUS_PLACEHOLDER_LABELS } from "../lib/registry/census-placeholders.ts";
 import assert from "node:assert/strict";
@@ -19,7 +20,7 @@ import test from "./helpers/playbooks.ts";
 import { readFileSync } from "node:fs";
 import { gunzipSync } from "node:zlib";
 import { autonomousHarness, FIXTURE_URL } from "./helpers/autonomous-fleet.ts";
-import { WORKER_READER_CLASSES, type WorkerReaderContract } from "../lib/civic-data/worker-reader-contracts.ts";
+import { type WorkerReaderContract } from "../lib/civic-data/worker-reader-contracts.ts";
 import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { registerRouteTask, claimRouteTask, beginAttemptFor, recordArtifactMetadata, disposeRouteTask } from "../lib/control-plane/repository/coordinator.ts";
 import { recordAcquisition } from "../lib/control-plane/evidence/artifact.ts";
@@ -28,8 +29,7 @@ import { dispatchWorkerTask, evidenceProjection, FLEET_POLICY_VERSION } from "..
 import { nextAutonomousOperation } from "../lib/control-plane/workers/coordinator.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { readRegistryRuntimePrior, registryRuntimeCandidate, type RegistryRuntimePrior } from "../lib/registry/runtime-data-plane.ts";
-import { publishWorkerReaderResults, workerReaderPackageWithPulls } from "../lib/civic-data/worker-reader-publication.ts";
-import type { CuratedReaderProjection } from "../lib/civic-data/manual-projections.ts";
+import { publishWorkerReaderResults } from "../lib/civic-data/worker-reader-publication.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { workerPublicationTasks } from "../lib/civic-data/worker-publication-tasks.ts";
 import { verifiedWorkerRecords } from "../lib/civic-data/worker-publication-evidence.ts";
@@ -51,7 +51,7 @@ function withoutWholeResultLog<R extends { workerResults: object }>(repos: R): R
   return { ...repos, workerResults: { ...repos.workerResults, readAll: whole, readSince: whole } };
 }
 
-async function workerFixture(contractId: WorkerReaderContract | "registry-runtime-bindings", facts: Record<string, string | number> | Record<string, string | number>[] | ((prior: RegistryRuntimePrior, bodyId: string) => Record<string, string | number>[]), classOverride?: "CAMPAIGN_FINANCE_FILING" | "BUDGET_RESPONSIBILITY" | "BUDGET_AMENDMENT" | "PUBLIC_RECORD") {
+async function workerFixture(contractId: WorkerReaderContract | "registry-runtime-bindings" | "ballot-contests" | "voting-sites", facts: Record<string, string | number> | Record<string, string | number>[] | ((prior: RegistryRuntimePrior, bodyId: string) => Record<string, string | number>[]), classOverride?: "CAMPAIGN_FINANCE_FILING" | "BUDGET_RESPONSIBILITY" | "BUDGET_AMENDMENT" | "PUBLIC_RECORD") {
   const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
   const store = new MemoryRoutineDataStore();
   Object.assign(store, { candidates: new Map([[record.candidate.id, record]]), promotions: new Map([[projection.key, projection]]) });
@@ -72,7 +72,13 @@ async function workerFixture(contractId: WorkerReaderContract | "registry-runtim
     (!["official-filings", "ballot-contests"].includes(contractId) || prior.payload.registry.divisions.filter(other => other.state === d.state && other.label.toLowerCase() === d.label.toLowerCase()).length === 1))))!;
   const publisherDivisionId = body.ocdId;
   const division = prior.payload.registry.divisions.find(row => row.ocdId === publisherDivisionId)!;
-  const recordClass = classOverride ?? (directory ? "OFFICIAL_BOARD_DIRECTORY" : WORKER_READER_CLASSES[contractId]);
+  const publicationContract = contractId === "ballot-contests" || contractId === "voting-sites"
+    ? stateBallotContractId(contractId, division.state) : contractId;
+  const recordClass = classOverride ?? (directory ? "OFFICIAL_BOARD_DIRECTORY" : ({
+    "voting-sites": "VOTING_SITE", "government-budgets": "ADOPTED_BUDGET", "public-records": "PUBLIC_RECORD",
+    "ballot-contests": "BALLOT_CONTEST", "everyday-routing": "SERVICE_CONTACT", "ballot-navigation": "VOTER_ACCESS_ROUTE",
+    "official-filings": "CANDIDATE_FILING_DOCUMENT", stances: "STANCE",
+  } as Record<string, string>)[contractId]);
   const supplied = typeof facts === "function" ? facts(prior, body.id) : facts;
   const rows: Record<string, string | number>[] = (Array.isArray(supplied) ? supplied : [supplied]).map(fact => ({ bodyName: body.name!, ...(["official-filings","ballot-contests"].includes(contractId) ? { jurisdictionName: division.label } : {}), ...(directory ? {
     jurisdictionName: division.label, coverage: "entire jurisdiction", coverageEvidence: `This body serves all of ${division.label}.` } : {}), ...fact }));
@@ -80,12 +86,12 @@ async function workerFixture(contractId: WorkerReaderContract | "registry-runtim
   const fields = Object.fromEntries(Object.keys(rows[0]).map(field => [field, { source: `/${field}`, type: typeof rows[0][field] === "number" ? "NUMBER" as const : "STRING" as const }]));
   const extraction = { format: "JSON_RECORDS" as const, rowsPointer: "", fields };
   const h = await autonomousHarness({ clock: "2026-09-08T12:01:00.000Z", response: { text }, plan: plan => ({ ...plan,
-    ownerInstructions: ["offline-send"], publication: { contractId, bodyId: body.id }, auditScope: "SOURCE_UNIVERSE",
+    ownerInstructions: ["offline-send"], publication: { contractId: publicationContract, bodyId: body.id }, auditScope: "SOURCE_UNIVERSE",
     ...(directory ? { directorySubject: { divisionId: body.ocdId, jurisdiction: { id: plan.contract.subjectId,
       stateCode: "NH", name: division.label, govClass: "COUNTY" as const, countyName: null, enumeratedFrom: "offline-fixture", ownWebAddress: FIXTURE_URL,
       sourceIds: [], ocdId: body.ocdId, bodyId: body.id } } } : {}),
     sources: plan.sources.map(route => ({ ...route, recordClass })),
-    contract: { ...plan.contract, ...(["official-filings","ballot-contests"].includes(contractId) ? { jurisdiction: { country: "US", state: division.state, canonicalId: contractId === "ballot-contests" ? body.ocdId : plan.contract.subjectId } } : {}), schemaVersion: 2, recordClass, identity: { namespace: contractId, keyFields: contractId === "ballot-contests" ? ["candidateName"] : ["bodyName"] },
+    contract: { ...plan.contract, ...(["official-filings","ballot-contests","voting-sites"].includes(contractId) ? { jurisdiction: { country: "US", state: division.state, canonicalId: contractId === "official-filings" ? plan.contract.subjectId : body.ocdId } } : {}), schemaVersion: 2, recordClass, identity: { namespace: contractId, keyFields: contractId === "ballot-contests" ? ["candidateName"] : contractId === "ballot-navigation" ? ["kind"] : ["bodyName"] },
       requiredFields: Object.keys(fields), extraction, verification: { required: true, authorities: [] } } as never }) });
   const task = createRouteTask({ workItemId: h.item.id, routeId: "independent-rule", routeLabel: "Offline independent rule record", target: "https://register.example.gov/rules.json", inherited: false, now: h.now() });
   await registerRouteTask(h.repos, task, h.now());
@@ -110,7 +116,7 @@ async function workerFixture(contractId: WorkerReaderContract | "registry-runtim
   const ready = { ...plan, contract: { ...plan.contract, verification: { required: true, authorities: [{ id: "rules", type: "STATUTORY_RECORD" as const,
     publisher: "Independent Register", sourceId: artifact.sourceId, canonicalUrls: [artifact.canonicalUrl], artifactIds: [artifact.id], authorityEvidenceArtifactIds: [artifact.id],
     independenceBasis: "DISTINCT_AUTHORITY" as const, independenceExplanation: "Separately retained official rules confirm every published detail.",
-    extraction: { ...extraction, rowsPointer: "/records" }, comparison: { kind: "RECORD_VALUES" as const, keyFields: contractId === "ballot-contests" ? ["candidateName"] : ["bodyName"], fields: Object.keys(fields) } }] } } };
+    extraction: { ...extraction, rowsPointer: "/records" }, comparison: { kind: "RECORD_VALUES" as const, keyFields: contractId === "ballot-contests" ? ["candidateName"] : contractId === "ballot-navigation" ? ["kind"] : ["bodyName"], fields: Object.keys(fields) } }] } } };
   await h.repos.workItems.compareAndSet(item.id, item.revision, { ...item.value, autonomousPlan: ready }, h.now());
   const authorityEvidence = evidenceProjection(await h.runtime.readEvidence(artifact.id));
   const runtime = { ...h.runtime, independentContext: async (scope: Parameters<typeof h.runtime.independentContext>[0]) => ({
@@ -127,10 +133,14 @@ async function workerFixture(contractId: WorkerReaderContract | "registry-runtim
   assert.equal((await nextAutonomousOperation(runtime, h.item.id)).action, "STAGED", "no auditor is dispatched");
   const queued = workerPublicationTasks([(await h.repos.workItems.mustRead(h.item.id)).value], results, h.now());
   assert.equal(queued.length, 1);
-  if (contractId === "voting-sites") assert.deepEqual(queued[0].command.slice(0, 2), ["scripts/fetch-voting-sites.mts", "--promote"], "the existing voting command handles worker results before legacy acquisition");
-  else if (!directory) assert.ok(queued[0].command.includes(`--contract=${contractId}`));
+  if (contractId === "voting-sites") assert.deepEqual(queued[0].command.slice(0, 3), ["scripts/fetch-voting-sites.mts", `--state=${division.state}`, "--promote"], "the state voting command handles only its workers");
+  else if (!directory) assert.ok(queued[0].command.includes(`--contract=${publicationContract}`));
   assert.ok(queued[0].command.some(arg => arg === `--${directory ? "worker-directories" : "worker-results"}=${h.item.id}`));
-  const input = { repos: h.repos, store, facts: await factDb(), contractId: contractId as WorkerReaderContract, workItemIds: [h.item.id], now: h.now(),
+  const input = { repos: h.repos, store, facts: await factDb(), contractId: publicationContract as WorkerReaderContract, workItemIds: [h.item.id], now: h.now(),
+    readRegistrySlice: async (ids: readonly string[], bodyIds: readonly string[]) => ({
+      divisions: prior.payload.registry.divisions.filter(row => ids.includes(row.ocdId)),
+      bodies: prior.payload.registry.bodies.filter(row => bodyIds.includes(row.id)),
+    }),
     readCapture: async (id: string) => { const evidence = evidenceProjection(await runtime.readEvidence(id));
       return { evidence, observedAt: evidence.retrievedAt, httpStatus: 200, transport: "REACHABLE", partial: false }; } };
   return { input, h, store, body, rows, results, artifact, ready, prior, runtime };
@@ -386,22 +396,35 @@ test("normal voter-access workers publish the independently verified statewide r
 });
 
 test("a BROKE audit names the published reader members it takes out of the next version (DP-15)", async () => {
-  const { input, h, store, results, artifact, ready, prior } = await workerFixture("ballot-navigation", { state: "NH", kind: "REGISTRATION_LINK", url: FIXTURE_URL,
-    coverage: "STATEWIDE", coverageEvidence: "The election authority identifies this lookup as serving the entire state." });
+  const { input, h, store, results } = await workerFixture("ballot-navigation", ["REGISTRATION_LINK", "POLLING_PLACE_LINK"].map(kind => ({ state: "NH", kind, url: FIXTURE_URL,
+    coverage: "STATEWIDE", coverageEvidence: "The election authority identifies this lookup as serving the entire state." })));
   const published = await publishWorkerReaderResults(input);
   assert.equal(published[0].outcome.status, "PUBLISHED", JSON.stringify(published));
-  const parser = results.find(row => row.result.role === "PARSER")!;
-  if (parser.result.role !== "PARSER") throw new Error("parser missing");
-  const captures = await Promise.all([parser.result.artifactId, artifact.id].map(input.readCapture));
-  const check = { plan: ready, parser, captures, registry: prior, now: h.now() };
-  assert.equal(workerReaderPackageWithPulls({ ...check, results }).pulledMemberIds.size, 0, "no audit, nothing pulled");
-  const broke = { id: "wr-audit-broke", workItemId: h.item.id, endedAt: "2099-01-01T00:00:00.000Z",
-    result: { role: "ADVERSARIAL_AUDITOR", verdict: "BROKE", producerAttemptId: parser.result.attemptId, brokenRecordIds: [parser.result.records[0].id] } } as unknown as typeof parser;
-  const built = workerReaderPackageWithPulls({ ...check, results: [...results, broke] });
   const live = await readCuratedReaderProjection("ballot-navigation", { store, now: h.now(), bypassCache: true });
   if (live.kind !== "PROMOTED") throw new Error("reader missing");
-  assert.deepEqual([...built.pulledMemberIds], [live.value.records[0].id as string], "the pull names the exact published member");
-  assert.equal((built.package.payload as CuratedReaderProjection).records.length, 0, "the pulled record is not republished");
+  assert.equal(live.value.records.length, 2);
+  const parser = results.find(row => row.result.role === "PARSER")!;
+  if (parser.result.role !== "PARSER") throw new Error("parser missing");
+  const at = new Date(Date.parse(h.now()) + 1000).toISOString();
+  const worker = { ...parser.worker, role: "ADVERSARIAL_AUDITOR" as const };
+  const closedAttempt = { ...parser.completion.closedAttempt, id: "audit-attempt", worker, endedAt: at };
+  const broke = { ...parser, id: "wr-audit-broke", attemptId: closedAttempt.id, worker, endedAt: at,
+    completion: { ...parser.completion, closedAttempt, completedTask: { ...parser.completion.completedTask,
+      workerTask: { ...parser.completion.completedTask.workerTask!, role: worker.role } } },
+    result: { role: worker.role, attemptId: closedAttempt.id, verdict: "BROKE" as const, producerAttemptId: parser.result.attemptId,
+      validatorAttemptId: results.find(row => row.result.role === "VALIDATOR")!.attemptId,
+      brokenRecordIds: [parser.result.records[0].id], startedFrom: ["EVIDENCE_VAULT" as const], attacks: [],
+      findings: [], artifactIds: [parser.result.artifactId], survivingRecordCount: 0, reopenRequired: true } };
+  await h.repos.attempts.put(closedAttempt.id, closedAttempt, at);
+  await h.repos.workerResults.append(h.item.id, broke.id, broke, at);
+  const removed = await publishWorkerReaderResults({ ...input, now: at });
+  assert.equal(removed[0].outcome.status, "PUBLISHED", JSON.stringify(removed));
+  assert.notEqual(removed[0].outcome.versionId, published[0].outcome.versionId);
+  const after = await readCuratedReaderProjection("ballot-navigation", { store, now: at, bypassCache: true });
+  if (after.kind !== "PROMOTED") throw new Error("reader missing after audit");
+  const pulledId = `ballot-navigation:${parser.result.records[0].fields.kind}:NH`;
+  assert.deepEqual(after.value.records.map(row => row.id), live.value.records.filter(row => row.id !== pulledId).map(row => row.id),
+    "only the exact audited member is removed");
 });
 
 test("CP-09: an amountless filing reaches its reader as a document without manufacturing Money", async () => {
@@ -458,7 +481,7 @@ test("completed polling workers publish every registered site through the existi
     autonomousPlan: { ...item.value.autonomousPlan!, sourceRegistryReferences: [...item.value.autonomousPlan!.sourceRegistryReferences, doorId] } }, f.h.now());
   const report = await publishWorkerReaderResults({ ...f.input, repos: withoutWholeResultLog(f.h.repos), vault: new MemoryEvidenceStore() });
   assert.equal(report.length, 1); assert.equal(report[0].outcome.status, "PUBLISHED", report[0].outcome.detail);
-  const read = await readVotingSitesProjection({ store: f.store, now: f.h.now(), bypassCache: true });
+  const read = await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", f.prior.payload.registry.divisions.find(row => row.ocdId === f.body.ocdId)!.state), { store: f.store, now: f.h.now(), bypassCache: true });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind === "PROMOTED") {
     const sites = read.value.jurisdictions.find(j => j.ocdId === f.body.ocdId)!.sites;
@@ -474,12 +497,12 @@ test("normal complete candidate workers publish their whole contest into general
   const f=await workerFixture("ballot-contests",facts);
   const published=await publishWorkerReaderResults({...f.input,repos:withoutWholeResultLog(f.h.repos)});
   assert.equal(published[0].outcome.status,"PUBLISHED",JSON.stringify(published));
-  const read=await readGenericBallotProjection({store:f.store,now:f.h.now(),bypassCache:true});
+  const read=await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", f.prior.payload.registry.divisions.find(row => row.ocdId === f.body.ocdId)!.state), {store:f.store,now:f.h.now(),bypassCache:true});
   assert.equal(read.kind,"PROMOTED");if(read.kind!=="PROMOTED")throw new Error("General ballot missing");
   const ballot=Object.values(read.value.ballots)[0];
   assert.equal(ballot.candidacies.length,2);
   assert.equal(ballot.contests.length,1);
-  const sources=await readerBallotSourcesForDivisions([f.body.ocdId!],{store:f.store,now:f.h.now()});
+  const sources=genericSourcesForDivisions(read.value,[f.body.ocdId!]);
   const general=sources.find(row=>row.source.name.startsWith("ballot-contests:"));
   assert.ok(general);
   assert.equal(general.source.normalize(await general.source.fetch()).candidacies.length,2);

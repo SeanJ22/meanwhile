@@ -1,10 +1,4 @@
-/**
- * Keeps server instances booted and ready for a cold Ask or map. `netlify/functions/keep-warm.mts` calls this
- * route fourteen times at once every five minutes. A marked call holds for up to a second and loads, on its
- * instance, the reader edge, one place per published state, and the Ask route's module graph and source
- * preloads. All of it runs in an edge-only context (`edgeOnly`), so it never reads the database. An unmarked
- * call loads nothing and answers at once.
- */
+
 import { numericInRange, refuse, rejectUnknown } from "@/lib/api/params";
 import { divisionIdsForZipArea, POINT_GEOMETRY_PLANS } from "@/lib/ballot/zip-divisions";
 import { settleAzBallotRead, settleCandidateCorpusRead, settleCandidateProfilesRead } from "@/lib/civic-data/manual-read-models";
@@ -42,10 +36,7 @@ export const PRIME_PLACES_BUDGET_MS = 4000;
 /** The longest a marked call spends loading the Ask's code and sources before it answers; the rest goes on in the background. */
 export const PRIME_ASK_BUDGET_MS = 4000;
 
-/**
- * The Ask's own source preloads, under the names its trace times them by (`essentialPreloads` and
- * `deferrablePreloads` in app/api/ask/grounded/route.ts). The state roll calls are left out.
- */
+
 export const ASK_SOURCE_PRELOADS: Readonly<Record<string, () => Promise<unknown>>> = {
   registry: () => settleRegistryAuthorityReads("REGISTRY"),
   federalDirectory: settleFederalDirectoryRead,
@@ -138,12 +129,7 @@ async function primeReaderPlaces(manifest: ReaderManifest): Promise<{ places: nu
   return { ...counts };
 }
 
-/**
- * Load, on this instance, the Ask route's module graph and settle its source
- * preloads, in the caller's edge-only context. Importing the route module runs
- * its module-level code only (one startup log line); its handler is never
- * called, so no question is read, resolved, logged or sent to a model.
- */
+
 async function primeAsk(): Promise<AskPrimed> {
   const primed: { -readonly [K in keyof AskPrimed]: AskPrimed[K] } = { graphMs: null, sources: 0, sourcesRefused: 0, sourcesFailed: 0, sourcesMs: null };
   const work = (async () => {
@@ -186,11 +172,7 @@ export async function primeReaderEdge(): Promise<ReaderEdgePrimed> {
   return { manifest: true, authorityFamilies: bundle ? Object.keys(bundle).length : 0, meetings, ...places, ask };
 }
 
-/**
- * One place per county the reader edge manifest publishes, for the post-deploy
- * warm (lib/ops/post-deploy-warm.ts): the county's lowest indexed ZIP and the
- * centroid the map sends for it. Reads the manifest and the ZIP index only.
- */
+
 export async function publishedWarmPlaces(): Promise<{ readonly places: readonly WarmPlace[]; readonly skipped: number }> {
   const manifest = await readReaderManifest().catch(() => null);
   if (!manifest) return { places: [], skipped: 0 };

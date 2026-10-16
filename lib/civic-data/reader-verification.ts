@@ -1,3 +1,5 @@
+import { parseStateBallotContractId, stateBallotScope } from "./state-scopes.ts";
+import { stateFromRegistryRuntimeContractId } from "./state-scopes.ts";
 import { readLatestReaderReadbacks, routineEventObservedAt, type RoutineDataStore } from "./store.ts";
 import type { RoutineSourceContract } from "./contracts.ts";
 import type { ManualProductionSourceContract } from "./manual-contracts.ts";
@@ -65,6 +67,8 @@ function verifyExactVersion(
 }
 
 function verifierIdFor(contract: ReaderContract): string {
+  if (parseStateBallotContractId(contract.id)) return "lib/civic-data/read-model.ts#readPromotedCivicData";
+  if (stateFromRegistryRuntimeContractId(contract.id)) return "lib/civic-data/read-model.ts#readStateRegistryRuntimeProjection";
   if (contract.recordClass === "FEDERAL_MONEY") return "lib/federal-money/verify.ts#readFederalMoneyPartition";
   // Congress.gov and GovInfo also publish federal civic records under the same source ids; only people records read back as people.
   if (isPeopleSource(contract.sourceId) && contract.recordClass !== "FEDERAL_CIVIC_RECORD") return "lib/civic-data/people-source-publication.ts#readPeopleSourceProjection";
@@ -86,19 +90,19 @@ function verifierIdFor(contract: ReaderContract): string {
     case "nj-state-rollcalls": return "lib/sources/legiscan/snapshot.ts#readOfficialStateVotesProjection";
     case "nh-state-rollcalls": return "lib/civic-data/read-model.ts#readPromotedStateLegislatorVotes";
     case "census-acs-population": return "lib/reference/acs-population.ts#readPopulationProjection";
-    case "nj-morris-filing": return "lib/sources/ballot-nj-morris/index.ts#readNjMorrisFiling";
     case "congress-bulk-roster": return "lib/officials/federal-directory-read-model.ts#readFederalDirectoryProjection";
     case "registry-runtime-bindings": return "lib/registry/runtime-read-model.ts#readRegistryRuntimeProjection";
     case "congress-rollcalls": return "lib/votes/snapshot.ts#readFederalRollCallsProjection";
     case "federal-key-votes": return "lib/votes/key-votes-projection.ts#readFederalKeyVotesProjection";
     case "ballot-contests": return "lib/ballot/generic-projection.ts#readGenericBallotProjection";
+    case "az-sos-ballot": return "lib/civic-data/manual-read-models.ts#readAzBallotProjection";
+    case "nh-curated-ballot": return "lib/civic-data/manual-read-models.ts#readNhBallotProjection";
+    case "nj-morris-filing": return "lib/sources/ballot-nj-morris/index.ts#readNjMorrisFiling";
     case "plain-english-translations": return "lib/translate/projection-reader.ts#readTranslationProjection";
     case "special-district-boundaries": return "lib/registry/special-district-boundary-reader.ts#readSpecialDistrictBoundaries";
     case "public-records": return "lib/civic-data/public-records.ts#readPublicRecords";
     case "campaign-finance": return "lib/funding/campaign-finance-reader.ts#readCampaignFinance";
     case "government-budgets": return "lib/civic-data/government-budgets.ts#readGovernmentBudgets";
-    case "az-sos-ballot": return "lib/civic-data/manual-read-models.ts#readAzBallotProjection";
-    case "nh-curated-ballot": return "lib/civic-data/manual-read-models.ts#readNhBallotProjection";
     case "candidate-profiles": return "lib/civic-data/manual-read-models.ts#readCandidateProfilesProjection";
     case "candidate-corpus": return "lib/civic-data/manual-read-models.ts#readCandidateCorpusProjection";
     case "officeholder-statements": return "lib/corpus/data-plane.ts#readOfficeholderStatementsProjection";
@@ -142,6 +146,15 @@ export async function verifyRoutineReaderProjection(
 ): Promise<RoutineReaderVerification> {
   const verifierId = verifierIdFor(contract);
   try {
+    const state = parseStateBallotContractId(contract.id);
+    if (state) {
+      const scope = stateBallotScope(state.family, state.state);
+      if (contract.scope !== scope || options.scope !== undefined && options.scope !== scope) return fail(verifierId, "State publication readback requires its exact state scope.");
+      const { readPromotedCivicData } = await import("./read-model.ts");
+      const read = await readPromotedCivicData(contract.recordClass, scope, { store: options.store, now: options.now, bypassCache: true });
+      if (read.kind === "PROMOTED" && read.metadata.sourceId !== contract.sourceId) return fail(verifierId, "State publication readback names a different publisher.");
+      return verifyExactVersion(verifierId, read, options.expectedVersionId, contract.id);
+    }
     if (contract.recordClass === "FEDERAL_MONEY") {
       const source = FEDERAL_MONEY_SOURCES.find(source => source === contract.sourceId);
       if (!source) return fail(verifierId, "The federal source is not registered.");
@@ -184,7 +197,15 @@ export async function verifyRoutineReaderProjection(
         : await (await import("../sources/legiscan/votes.ts")).readLegiscanVotesProjection(state, {store: options.store, now: options.now, bypassCache: true});
       return verifyExactVersion(verifierId, read, options.expectedVersionId, `${state} attributed votes`);
     }
-    switch (contract.id) {
+    const registryState = stateFromRegistryRuntimeContractId(contract.id);
+    if (registryState) {
+      const { readStateRegistryRuntimeProjection } = await import("./read-model.ts");
+      return verifyExactVersion(verifierId, await readStateRegistryRuntimeProjection(registryState, {
+        store: options.store, now: options.now, bypassCache: true,
+      }), options.expectedVersionId, `${registryState} registry-runtime`);
+    }
+    const family = contract.id;
+    switch (family) {
       case "legiscan-bulk": {
         const { readBulkProjection } = await import("../sources/legiscan/reader.ts");
         return verifyExactVersion(verifierId, await readBulkProjection(options.scope ?? contract.scope, {store:options.store,now:options.now,bypassCache:true}),options.expectedVersionId,"LegiScan bills");
@@ -200,7 +221,7 @@ export async function verifyRoutineReaderProjection(
         const prefix = `${contract.id}:`;
         const scope = options.scope ?? contract.scope;
         if (!scope.startsWith(prefix)) return fail(verifierId, "Open-data readback requires its native source partition.");
-        return verifyExactVersion(verifierId, await readOpenDataProjection(contract.id,scope.slice(prefix.length), {
+        return verifyExactVersion(verifierId, await readOpenDataProjection(family as "socrata-discovery" | "epa-echo",scope.slice(prefix.length), {
           store:options.store,now:options.now,bypassCache:true,
         }), options.expectedVersionId, contract.id);
       }
@@ -284,11 +305,6 @@ export async function verifyRoutineReaderProjection(
         const result = await readPopulationProjection({ store: options.store, now: options.now, bypassCache: true });
         return verifyExactVersion(verifierId, result, options.expectedVersionId, "ACS");
       }
-      case "nj-morris-filing": {
-        const { readNjMorrisFiling } = await import("../sources/ballot-nj-morris/index.ts");
-        const result = await readNjMorrisFiling({ store: options.store, now: options.now, bypassCache: true });
-        return verifyExactVersion(verifierId, result, options.expectedVersionId, "Morris ballot");
-      }
       case "congress-bulk-roster": {
         const { readFederalDirectoryProjection } = await import("../officials/federal-directory-read-model.ts");
         return verifyExactVersion(verifierId, await readFederalDirectoryProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "federal-directory");
@@ -304,6 +320,10 @@ export async function verifyRoutineReaderProjection(
       case "federal-key-votes": {
         const { readFederalKeyVotesProjection } = await import("../votes/key-votes-projection.ts");
         return verifyExactVersion(verifierId, await readFederalKeyVotesProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "federal-key-vote");
+      }
+      case "nj-morris-filing": {
+        const { readNjMorrisFiling } = await import("../sources/ballot-nj-morris/index.ts");
+        return verifyExactVersion(verifierId, await readNjMorrisFiling({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "NJ Morris ballot");
       }
       case "ballot-contests": {
         const { readGenericBallotProjection } = await import("../ballot/generic-projection.ts");
@@ -412,7 +432,7 @@ export async function verifyRoutineReaderProjection(
       case "venue-resolutions":
       case "meeting-body-crosswalk": {
         const { readCuratedReaderProjection } = await import("./curated-reader-read-model.ts");
-        return verifyExactVersion(verifierId, await readCuratedReaderProjection(contract.id, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, contract.id);
+        return verifyExactVersion(verifierId, await readCuratedReaderProjection(family as Parameters<typeof readCuratedReaderProjection>[0], { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, contract.id);
       }
       case "meeting-source-wiring": {
         const { readDerivedMeetingWiring } = await import("./derived-meeting-wiring.ts");
@@ -589,10 +609,6 @@ export interface ReaderVerifierClosureAttestation {
   readonly detail: string;
 }
 
-/**
- * A PASS is carried to the executing commit only when every file the typed Reader verifiers execute is byte-identical
- * at both commits; the database admits the new receipt only while the pointer still names that version.
- */
 export type ReaderVerifierClosureAttestor = (
   priorVerifierCodeSha: string,
   currentVerifierCodeSha: string,

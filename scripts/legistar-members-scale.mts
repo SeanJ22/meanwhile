@@ -105,7 +105,7 @@ if (process.argv.includes("--worker")) {
     child.on("message", async (message: { id: number; kind: string; payload: { text: string; params: unknown[] } | string; result?: unknown; peakMemoryBytes?: number; runMs?: number; stages?: unknown }) => {
       if (message.kind === "done") {
         done = true;
-        console.log(JSON.stringify({ phase: label, runMs: message.runMs, peakMemoryBytes: message.peakMemoryBytes, queries, readBytes, writtenBytes }));
+        console.log(JSON.stringify({ phase: label, runMs: message.runMs, peakMemoryBytes: message.peakMemoryBytes, queries, readBytes, writtenBytes, stages: message.stages }));
         resolve({ label, ...message.result as object, peakMemoryBytes: message.peakMemoryBytes, runMs: message.runMs,
           databaseReadBytes: readBytes, databaseRequestBytes: writtenBytes, queries, sourceReads, sourceBytes, stages: message.stages }); return;
       }

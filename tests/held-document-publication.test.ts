@@ -3,7 +3,7 @@ import test from "node:test";
 import { artifactId, recordAcquisition, type Artifact } from "../lib/control-plane/evidence/artifact.ts";
 import { contentHash } from "../lib/control-plane/ids.ts";
 import { MemoryEvidenceStore, objectKey, putArtifact } from "../lib/control-plane/evidence/store.ts";
-import { readMeasureSource } from "../lib/ballot/measure-evidence.ts";
+import { measureSourceReader } from "../lib/ballot/measure-evidence.ts";
 import { heldCaptureReader } from "../lib/civic-data/worker-publication-context.ts";
 import { heldPageCopies, section3SourceReceipt, captureIntact } from "../lib/civic-data/worker-publication-evidence.ts";
 import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
@@ -32,7 +32,7 @@ test("CA-31 hook: held PDF transcription retains its raw document receipt and CS
   assert.equal(capture.sourceReference?.originals?.[0].vault.key, objectKey("freshness", parent));
   assert.equal(capture.sourceReference?.originals?.[0].sourceHash, parent.contentHash.slice(7));
   assert.equal(capture.originalSourceReceipts?.[0].rawHash, parent.contentHash.slice(7));
-  assert.equal(await readMeasureSource(store, capture.sourceReference!), text);
+  assert.equal(await measureSourceReader(store)(capture.sourceReference!), text);
   assert.equal(section3SourceReceipt([capture], at, "section3-validator", "Exact saved transcription").sources[0].rawHash, parent.contentHash.slice(7));
   assert.equal(await heldCaptureReader(store)({ ...record(extracted), partial: true }), null);
 });

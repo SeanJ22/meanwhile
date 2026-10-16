@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import type { BallotSet, MeasureSourceReference } from "../lib/ballot/types.ts";
 import { measureSourceReferenceValid } from "../lib/ballot/measure-source-contract.ts";
-import { measureSourceReader, readMeasureSource, validateBallotMeasureEvidence, verifyMeasureSource } from "../lib/ballot/measure-evidence.ts";
+import { measureSourceReader, validateBallotMeasureEvidence } from "../lib/ballot/measure-evidence.ts";
 import { contentHash } from "../lib/control-plane/ids.ts";
 import { extensionFor, MemoryEvidenceStore, type EvidenceStore, type StoredObject } from "../lib/control-plane/evidence/store.ts";
 
@@ -57,7 +57,7 @@ test("state evidence validates exact legal and attributed guide excerpts while r
     ? Object.fromEntries(Object.entries(value).reverse()) : value) as BallotSet;
   await validateBallotMeasureEvidence(reordered, tracked, ballot);
   assert.equal(reads.size, 0);
-  assert.equal(await readMeasureSource(vault, reordered.measures[0].officialText!), text);
+  assert.equal(await measureSourceReader(vault)(reordered.measures[0].officialText!), text);
   await validateBallotMeasureEvidence({ ...ballot, measureRecords: [{ ...record, whatItDoes: "SECTION 1. Libraries receive funding." }] }, tracked, ballot);
   assert.deepEqual([...reads], [[officialText.vault.key, 1]]);
   reads.clear();
@@ -69,9 +69,9 @@ test("state evidence validates exact legal and attributed guide excerpts while r
   const collateral = await put(vault, "%PDF additional source", { type: "application/pdf" });
   await validateBallotMeasureEvidence({ ...ballot, measures: [...ballot.measures, { contestId: "measure:2", officialText: collateral } as BallotSet["measures"][number]] }, tracked, ballot);
   assert.deepEqual([...reads], [[collateral.vault.key, 1]]);
-  assert.equal(await readMeasureSource(vault, officialText), text);
-  await verifyMeasureSource(vault, original);
-  await assert.rejects(readMeasureSource(vault, original), /transcription/);
+  assert.equal(await measureSourceReader(vault)(officialText), text);
+  await validateBallotMeasureEvidence({ ...ballot, measures: [{ contestId: "measure:pdf", officialText: original }], measureRecords: [] } as unknown as BallotSet, vault);
+  await assert.rejects(measureSourceReader(vault)(original), /transcription/);
   await assert.rejects(validateBallotMeasureEvidence({ ...ballot, measureRecords: [{ ...record, whatItDoes: "Invented benefit." }] }, vault, ballot), /absent/);
   await assert.rejects(validateBallotMeasureEvidence({ ...ballot, measures: [{ ...ballot.measures[0], voterGuide: {
     ...ballot.measures[0].voterGuide!, argumentsFor: ["Invented argument."] } }] }, vault, ballot), /differs/);
@@ -90,7 +90,7 @@ test("compact source references reject inline source text, traversal and mismatc
 
 test("vault reads refuse corrupt bodies, untrusted metadata and incomplete document lineage", async () => {
   const vault = new MemoryEvidenceStore(), source = await put(vault, "Official source.");
-  await assert.rejects(readMeasureSource(new MemoryEvidenceStore(), source), /missing/);
+  await assert.rejects(measureSourceReader(new MemoryEvidenceStore())(source), /missing/);
   const alterations: ((object: StoredObject) => StoredObject)[] = [
     object => ({ ...object, bytes: new TextEncoder().encode("Different text.") }),
     object => ({ ...object, key: `${object.key}-other` }),
@@ -102,12 +102,12 @@ test("vault reads refuse corrupt bodies, untrusted metadata and incomplete docum
     object => ({ ...object, meta: { ...object.meta, custom: { ...object.meta.custom, format: "measure-source-text@1" } } }),
     object => ({ ...object, meta: { ...object.meta, custom: { ...object.meta.custom, tier: "EXTRACTED_DERIVED", extraction: JSON.stringify({ complete: false }) } } }),
   ];
-  for (const alter of alterations) await assert.rejects(readMeasureSource(countingStore(vault, new Map(), alter), source));
+  for (const alter of alterations) await assert.rejects(measureSourceReader(countingStore(vault, new Map(), alter))(source));
   const original = await put(vault, "%PDF original", { type: "application/pdf" });
   const derived = await put(vault, "Transcribed source.", { originals: [original] });
   const missing = countingStore(vault, new Map());
   missing.stream = async key => key === original.vault.key ? null : vault.stream(key);
-  await assert.rejects(readMeasureSource(missing, derived), /missing/);
+  await assert.rejects(measureSourceReader(missing)(derived), /missing/);
 });
 
 
@@ -156,7 +156,8 @@ test("metadata refusal cancels an unread source stream", async () => {
   let cancelled = false, pulled = false;
   vault.stream = async key => ({ key, meta: { ...object.meta, custom: { tier: "RESTRICTED_RAW", canonicalUrl: sourceUrl } },
     body: new ReadableStream<Uint8Array>({ pull() { pulled = true; }, cancel() { cancelled = true; } }, { highWaterMark: 0 }) });
-  await assert.rejects(verifyMeasureSource(vault, source), /not readable/);
+  const ballot = { measures: [{ contestId: "measure:restricted", officialText: source }] } as unknown as BallotSet;
+  await assert.rejects(validateBallotMeasureEvidence(ballot, vault), /not readable/);
   assert.equal(cancelled, true);
   assert.equal(pulled, false);
 });

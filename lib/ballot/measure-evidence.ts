@@ -104,14 +104,6 @@ function sourceReader(vault: EvidenceStore, verified = new Set<string>()) {
 
 export function measureSourceReader(vault: EvidenceStore): SourceReader { return sourceReader(vault).read; }
 
-export async function verifyMeasureSource(vault: EvidenceStore, reference: MeasureSourceReference): Promise<void> {
-  await sourceReader(vault).verify(reference);
-}
-
-export async function readMeasureSource(vault: EvidenceStore, reference: MeasureSourceReference): Promise<string> {
-  return measureSourceReader(vault)(reference);
-}
-
 export function measureOriginalSourceReceipts(source: MeasureSourceReference): readonly ManualSourceReview[] {
   const originals = new Map<string, ManualSourceReview>(), pending = [...source.originals ?? []];
   for (const original of pending) {

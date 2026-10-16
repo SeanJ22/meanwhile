@@ -15,7 +15,7 @@ import { type GenericBallotProjection } from "../lib/ballot/generic-projection.t
 import { readPlaceMeasureProjection } from "../lib/ballot/place-measures.ts";
 import { loadBallotForDivisions } from "../lib/ask/server-sources.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
-import { readMeasureSource, validateBallotMeasureEvidence } from "../lib/ballot/measure-evidence.ts";
+import { measureSourceReader, validateBallotMeasureEvidence } from "../lib/ballot/measure-evidence.ts";
 import type { MeasureSourceReference } from "../lib/ballot/types.ts";
 import { DEFAULT_SOURCE_POLICY } from "../lib/control-plane/promotion/source-kinds.ts";
 import { readMeasurePlaces } from "../lib/translate/national.ts";
@@ -78,7 +78,7 @@ test("local measures publish in their own place with full official text referenc
     if (read.kind !== "PROMOTED") continue;
     const ballot = Object.values(read.value.ballots)[0];
     assert.equal(ballot.measures[0].questionText, input.question); assert.equal(ballot.measures[0].officialNumber, "12");
-    assert.equal(await readMeasureSource(input.evidenceStore, ballot.measures[0].officialText!), input.captures[1].evidence.text);
+    assert.equal(await measureSourceReader(input.evidenceStore)(ballot.measures[0].officialText!), input.captures[1].evidence.text);
     assert.equal("text" in ballot.measures[0].officialText!, false);
     assert.equal(ballot.measures[0].officialText?.sourceHash, ballot.measureRecords?.[0].sourceHash);
     assert.equal(ballot.measureRecords?.[0].noMeans, "A NO vote keeps the existing levy.");
@@ -225,7 +225,7 @@ test("a refreshed measure keeps independent guide evidence and replaces its lega
   await changedInput.evidenceStore.put(reference.vault.key, Buffer.from(nextText), { ...reference.vault,
     contentHash: `sha256-${reference.sourceHash}`, custom: { tier: "RAW", canonicalUrl: reference.sourceUrl } });
   const changed = Object.values((mergeBallotContests(workerBallotContestsPackage(changedInput).package, prior).payload as GenericBallotProjection).ballots)[0];
-  assert.equal(await readMeasureSource(changedInput.evidenceStore, changed.measures[0].officialText!), changedInput.captures[1].evidence.text);
+  assert.equal(await measureSourceReader(changedInput.evidenceStore)(changed.measures[0].officialText!), changedInput.captures[1].evidence.text);
   assert.notEqual(changed.measureRecords?.[0].sourceHash, ballot.measureRecords?.[0].sourceHash);
   assert.deepEqual(changed.measures[0].voterGuide, measure.voterGuide);
   await validateBallotMeasureEvidence(changed, changedInput.evidenceStore);

@@ -75,11 +75,7 @@ import { MemoryRoutineDataStore } from "@/lib/civic-data/store.ts";
 import { meetingsDiscoveryNeeds } from "@/lib/hunt/meetings-discovery.ts";
 import { sourcesOf, type Jurisdiction, type JurisdictionRegistry } from "@/lib/hunt/jurisdiction-universe.ts";
 
-/**
- * Sending the fleet to a geography creates the work it is missing. Runs on recorded data (the jurisdiction registry
- * fixture, native Census unit identities and explicit area-relationship fixtures) against in-memory repositories and
- * a fixed clock. No network, no database, no model.
- */
+
 
 const ROOT = join(import.meta.dirname, "..");
 const T0 = "2026-09-23T21:00:00.000Z";

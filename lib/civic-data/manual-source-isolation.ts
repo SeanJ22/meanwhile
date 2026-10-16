@@ -9,9 +9,9 @@ export interface SourceScopedMember<T = unknown> {
   readonly record: T;
 }
 
-export interface SourceScopedPrior<T = unknown> {
+interface SourceScopedPrior<T = unknown> {
   readonly members: readonly SourceScopedMember<T>[];
-  readonly sourceReceipt: ManualSourceSetReceipt;
+  readonly sourceReceipt?: ManualSourceSetReceipt;
 }
 
 export interface SourceScopedHeldFact {
@@ -35,10 +35,7 @@ function sourceOutcome(source: ManualSourceReview): "SUPPORTED" | "BLOCKED" {
   return source.reviewOutcome ?? "SUPPORTED";
 }
 
-/**
- * Exact HTTPS values asserted positively by one member. Negative attempt and
- * retired-URL containers are operational/history facts, not support claims.
- */
+// Failed and retired URLs describe attempts, not evidence for a published fact.
 export function directPositiveSourceUrls(value: unknown, found: Set<string> = new Set()): Set<string> {
   if (typeof value === "string") {
     if (/^https:\/\/[^\s]+$/.test(value)) found.add(value);
@@ -94,9 +91,7 @@ function sourcesSupportingMembers<T>(
   urlsForMember: (member: SourceScopedMember<T>) => readonly string[],
 ): readonly ManualSourceReview[] {
   const cited = new Set(members.flatMap((member) => urlsForMember(member)));
-  // Some reviewed records (for example a phone-only candidate card) carry no
-  // URL field of their own. Their prior GOOD source set remains the only exact
-  // evidence boundary and must travel with the retained member.
+  // A record without its own URL still needs its prior source evidence.
   if (members.some((member) => urlsForMember(member).length === 0)) {
     return receipt.sources.filter((source) => sourceOutcome(source) === "SUPPORTED");
   }
@@ -141,15 +136,7 @@ function sourceDisposition<T>(
   return { ok: true };
 }
 
-/**
- * Merge independently keyed manual facts without inventing absence.
- *
- * A current member may replace its own prior member only when every source it
- * cites is supported by the current review and its member-local shape passes.
- * Any blocked/malformed member is held alone. Every omitted prior member is
- * retained because open manual packages currently have no non-meeting,
- * validator-recognized positive-removal evidence contract.
- */
+// Omission from an open package does not establish that a previously published fact disappeared.
 export function reconcileSourceScopedMembers<T>(input: {
   readonly current: readonly SourceScopedMember<T>[];
   readonly currentReceipt: ManualSourceSetReceipt;

@@ -13,11 +13,7 @@ const sourceUrl = (url: string | null | undefined) => Boolean(url && /^https?:\/
 const embeddedUrl = (text: string | null | undefined) => text?.match(/https?:\/\/[^\s)]+/)?.[0] ?? null;
 const contactValue = (text: string) => text.toLowerCase().replace(/[^a-z0-9@]/g, "");
 
-/**
- * Same curated fields that feed candidate cards; pictures retain their image-review contract.
- * `campaignHolding` names the pointer a key's campaign link is held in when it is not candidate-profiles:
- * a verified site the standing runner published (lib/civic-data/derived-campaign-sites.ts).
- */
+
 export function projectCandidateProfile(
   subject: EvidenceSubject,
   keys: readonly string[],

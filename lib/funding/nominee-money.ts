@@ -1,14 +1,4 @@
-/**
- * A ballot card asks the state money corpus about a candidacy. Certified
- * lineup nominee cards are keyed by display name; the corpus is keyed by
- * canonical candidacy id. This resolves the card key through the precomputed
- * certified-lineup bridge and asks with the reconciled candidacy id. It
- * performs no name matching.
- *
- * A certified nominee the bridge could not resolve renders the OURS-gap
- * state (what we have not settled, the agency's next filing deadline, and the
- * reader's route to look), never the generic "no filing" line.
- */
+
 
 import {
   lineupBridgeCovers,
@@ -30,10 +20,7 @@ export type MoneyResolution =
   | "RECONCILED_NOMINEE"
   /** A certified-lineup nominee the bridge could not resolve. Renders OURS gap. */
   | "UNRECONCILED_NOMINEE"
-  /**
-   * Reconciled, and the finance corpus holds no record for that candidacy.
-   * Also an OURS gap: the corpus was read and we have not resolved a filing.
-   */
+
   | "RECONCILED_NO_CORPUS_RECORD";
 
 export interface CardMoney {
@@ -59,19 +46,13 @@ function financeAuthority(): FinanceAuthority {
     bridge?.financeAuthority ?? {
       agency: AZ_AGENCY_FALLBACK,
       filingsUrl: "https://seethemoney.az.gov/",
-      /* A read stamp is never invented. With no artifact there is no read to
-         stamp, so the generator's own date is used and the record carries the
-         empty office rather than a plausible date nobody took. */
+
       snapshotCollectedAt: bridge?.generatedAt ?? "",
     }
   );
 }
 
-/**
- * The OURS-gap record a certified nominee renders when identity is
- * unresolved. Built here, not stored in the money corpus, because it is a
- * fact about the identity layer.
- */
+
 export function unresolvedNomineeGapRecord(
   row: LineupReconciliationRow,
   whatIsMissing: string,
@@ -124,11 +105,7 @@ export function unresolvedNomineeGapRecord(
   };
 }
 
-/**
- * The state-money records one ballot card renders. A canonical candidacy id
- * passes straight through; a certified-lineup nominee key is resolved through
- * the bridge first, and only the resolved id reaches `stateMoneyForTarget`.
- */
+
 export function stateMoneyForCard(cardKey: string, contestId: string): CardMoney {
   // The Arizona bridge has no authority over another state's candidacy, so an
   // Arizona outage cannot erase another state's finance answer.
@@ -162,10 +139,7 @@ export function stateMoneyForCard(cardKey: string, contestId: string): CardMoney
 
   const row = lineupRowForCard(cardKey);
   if (!row) {
-    /* The bridge speaks for this contest and not for this card: a nominee the
-       lineup does not carry, or a key built some other way. It is treated as a
-       direct key rather than as a gap, because inventing a gap sentence about a
-       card the identity layer never saw would be a claim we cannot support. */
+
     return {
       records: stateMoneyForTarget(cardKey),
       resolution: "DIRECT_CANDIDACY_KEY",
@@ -196,10 +170,7 @@ export function stateMoneyForCard(cardKey: string, contestId: string): CardMoney
     };
   }
 
-  /*
-   * Reconciled, and the corpus holds nothing for that candidacy: our gap,
-   * rendered as one rather than as the generic line.
-   */
+
   return {
     records: [
       unresolvedNomineeGapRecord(

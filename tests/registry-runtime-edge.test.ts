@@ -112,9 +112,6 @@ test("an unchanged authority version carries its served artifact forward; the ru
   const same = await publishReaderEdgeArtifacts(emptySnapshot(), META, { store, authority: { "registry-runtime": { versionId: "rt-v1", carried: true } } });
   assert.equal(same.status, "CURRENT");
 
-  // Another family changed, so a new manifest is written: the carried family
-  // keeps pointing at the exact artifact already served, and the Reader reads
-  // the same value back from it.
   const campaignSites = { records: [{ id: "site-1" }] };
   const advanced = await publishReaderEdgeArtifacts(emptySnapshot(), META, {
     store,

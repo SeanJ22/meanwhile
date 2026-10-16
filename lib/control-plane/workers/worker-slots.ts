@@ -12,6 +12,7 @@ export const WORKER_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = { route: 
 export const RESEARCH_PARENT_PEAK_MIB = 2928;
 /** Promoter peak 1,923 MiB plus the held national-worker peak; both may still grow. */
 export const NATIONAL_PLACE_PEAK_MIB = 1923 + WORKER_ENTRY_PEAK_MIB.national!;
+const STATE_PUBLICATION_PEAK_MIB = 512;
 /** Bulk data families use the retained data-worker bound until their own runs are measured on this host. */
 const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   // A complete 113 MiB Illinois session peaked at 3,013 MiB;
@@ -29,7 +30,11 @@ const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   "national-people-refresh.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "people-portraits-refresh.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "campaign-finance-az-pima-transactions.mts": 368,
-  "build-nj-morris-ballot.mts": 345,
+  "assemble-ballot-package.mts": STATE_PUBLICATION_PEAK_MIB,
+  "fetch-voting-sites.mts": STATE_PUBLICATION_PEAK_MIB,
+  "derive-candidate-campaign-sites.mts": STATE_PUBLICATION_PEAK_MIB,
+  "restore-state-buckets.mts": STATE_PUBLICATION_PEAK_MIB,
+  "publish-state-authority.mts": STATE_PUBLICATION_PEAK_MIB,
 };
 export const REGISTRY_ROSTER_PUBLICATION_PEAK_MIB = 4012;
 export const WORKER_MEMORY_HEADROOM_MIB = 768;
@@ -161,11 +166,12 @@ export function workerMemoryHost(input: { readonly shared?: boolean; readonly pr
 }
 const sharedHost = workerMemoryHost({ shared: true });
 
-export interface WorkerMemoryLimit {
+interface WorkerMemoryLimit {
   readonly admissionsOpen?: () => boolean;
   readonly availableBytes?: () => number;
   readonly headroomBytes?: number;
   readonly peakBytes?: (entry: string) => number;
+  readonly minimumPeakBytes?: (entry: string) => number;
   /** Measured parent peak; current RSS is already excluded from OS free memory. */
   readonly parentPeakBytes?: number;
   readonly host?: WorkerMemoryHost;
@@ -183,11 +189,20 @@ export interface WorkerProcessSlots {
 const rosterPublication = (entry: string): boolean => entry === "registry-runtime-bindings" ||
   entry.startsWith("registry-runtime-bindings/") || entry.startsWith("worker-publication:registry-runtime-bindings:");
 
+function statePublicationPeakBytes(entry: string): number {
+  const script = entry.split(/[\\/]/).at(-1)!;
+  const family = /^(?:worker-publication:|candidate-findings:)?(ballot-contests|candidate-profiles|candidate-corpus|voting-sites|candidate-campaign-sites-derived|registry-runtime):[A-Z]{2}(?=[:/]|$)/.exec(entry)?.[1];
+  if (family) return STATE_PUBLICATION_PEAK_MIB * MIB;
+  return ["assemble-ballot-package.mts", "fetch-voting-sites.mts", "derive-candidate-campaign-sites.mts", "restore-state-buckets.mts", "publish-state-authority.mts"].includes(script) ? ROUTINE_ENTRY_PEAK_MIB[script]! * MIB : 0;
+}
+
 export function routineProcessSlots(memory: WorkerMemoryLimit = {}): WorkerProcessSlots {
   return workerProcessSlots(() => Number.MAX_SAFE_INTEGER, { ...memory,
-    peakBytes: memory.peakBytes ?? (entry => entry.startsWith("national-place:") ? NATIONAL_PLACE_PEAK_MIB * MIB :
+    // Recent small-state runs cannot lower the full-state publication reservation.
+    minimumPeakBytes: memory.minimumPeakBytes ?? statePublicationPeakBytes,
+    peakBytes: memory.peakBytes ?? (entry => statePublicationPeakBytes(entry) || (entry.startsWith("national-place:") ? NATIONAL_PLACE_PEAK_MIB * MIB :
       rosterPublication(entry) ? REGISTRY_ROSTER_PUBLICATION_PEAK_MIB * MIB : (/^state-money-.+[.]mts$/.test(entry.split(/[\\/]/).at(-1)!)
-          ? WORKER_ENTRY_PEAK_MIB.national! : ROUTINE_ENTRY_PEAK_MIB[entry.split(/[\\/]/).at(-1)!] ?? WORKER_ENTRY_PEAK_MIB.lease!) * MIB) });
+          ? WORKER_ENTRY_PEAK_MIB.national! : ROUTINE_ENTRY_PEAK_MIB[entry.split(/[\\/]/).at(-1)!] ?? WORKER_ENTRY_PEAK_MIB.lease!) * MIB)) });
 }
 
 export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryLimit = {}): WorkerProcessSlots {
@@ -263,7 +278,7 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
         for (const row of state.reservations) row.peak = Math.max(row.peak, rssFor(row.pid));
         const reserve = (entry: string): number => {
           const measured = state.peaks?.[measuredPeakKey(entry) ?? ""];
-          return measured?.length ? measuredReservationBytes(measured) : peakFor(entry);
+          return Math.max(measured?.length ? measuredReservationBytes(measured) : peakFor(entry), memory.minimumPeakBytes?.(entry) ?? 0);
         };
         while (active < maximum && waiting.length) {
           const growth = state.reservations.reduce((sum, row) => sum + Math.max(0, row.peak - rssFor(row.pid)), 0) +
@@ -327,10 +342,7 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
 /** How often a wait for host memory says it is still waiting. */
 export const MEMORY_WAIT_REPORT_EVERY_MS = 60_000;
 
-/**
- * A wait for host memory reports once a minute that it is still waiting, so the
- * runner's no-output timeout does not end it as a crash. Quick admissions print nothing.
- */
+/** Report pending admission so the runner's no-output timeout does not mistake a wait for a crash. */
 export function reportingWorkerSlots(slots: WorkerProcessSlots, options: {
   readonly write?: (line: string) => void;
   readonly everyMs?: number;
@@ -357,12 +369,7 @@ export function reportingWorkerSlots(slots: WorkerProcessSlots, options: {
   } };
 }
 
-/**
- * What the host holds, for the runner's heartbeat. Read-only: the reservation
- * file is read without its lock (writers replace it whole). `fitLeaseWorkers`
- * is free memory less the 0.75 GiB margin and reserved growth, over one lease
- * worker's peak.
- */
+/** Heartbeat reads the atomically replaced reservation file without taking the admission lock. */
 export interface HostMemoryReading {
   readonly at: string;
   readonly totalBytes: number;

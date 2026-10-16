@@ -708,9 +708,7 @@ async function answerWithSettings(request: Request) {
   const preferredOfficialIds = [...readSubjectRefs(body.activeSubjects), ...readSubjectRefs(body.priorSubjects, 8)].flatMap((ref) => ref.id ? [ref.id] : []);
   const officialAliases = canonicalOfficialAliases(people.map((person) => person.id), preferredOfficialIds);
 
-  /* Loaded from the reader's divisions, not from what the client says is on screen; the same set `app/ballot/page.tsx` renders from. */
-  // A topic question bound lexically to a body is not a ballot question; its
-  // ballot is not read (loadBallotForDivisions([]) is the empty holding).
+
   const ballot = await loadBallotForDivisions(deterministicTopicRoute || areaTopicRoute || namedBodyTopicRoute || leanAsk ? [] : ocdIds, {}, ballotZip);
   const ballotLoadGaps: EvidenceGap[] = ballot.loaderFailures.length ? [{ whose: "OURS", statement: "We couldn't load the ballot for your area. Please try again in a moment." }] : [];
   const meetingLoadGaps: EvidenceGap[] = meetingDataState === "STORE_UNREACHABLE"

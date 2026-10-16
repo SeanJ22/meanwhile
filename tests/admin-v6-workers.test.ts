@@ -46,7 +46,7 @@ function votingSitesLoop(n: number, lastAt = Date.parse("2026-09-28T21:56:48.000
     const at = new Date(lastAt - i * 100_000).toISOString();
     const stage = stages[i % 3];
     return { id: `cycle-${n - i}:voting-sites:cochise-2026:${stage}`, p: { instructionIds: [ORIGINAL.receiptId], taskId: "voting-sites:cochise-2026",
-      sourceId: "voting-sites", scope: "US-AZ+US-NH+US-NJ:2026-general:supported-jurisdictions", stage, at,
+      sourceId: "voting-sites", scope: "US-AZ:voting-sites", stage, at,
       detail: stage === "FAILED" ? "RECEIPT_COUNT_INVALID: Expected exactly one RCD_RECEIPT line; observed 0." : "", candidateId: null, readerPaths: [] } };
   }).reverse();
 }

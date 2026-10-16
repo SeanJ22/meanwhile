@@ -9,11 +9,7 @@ import {
   type OfficeClass,
 } from "@/lib/questionnaire/instrument";
 
-/**
- * The page a candidate lands on. Unknown, expired and used links are separate refusals (`tokenRefusalLine`),
- * and an unreachable store is its own named gap. Only `sha256(token)` is stored; `noindex` because the URL
- * carries a credential.
- */
+
 export const dynamic = "force-dynamic";
 
 export const metadata = {
@@ -106,11 +102,7 @@ export default async function QuestionnairePage({
 
   const questions = questionsFor(officeClass);
 
-  /*
-   * A candidacy id is not a name and a contest id is not an office. Where they
-   * resolve to neither, the page says something true and general rather than
-   * printing a slug at the person it belongs to — see `candidacy-display.ts`.
-   */
+
   const display = await displayFor(verdict.candidacyId);
 
   return (

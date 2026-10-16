@@ -43,8 +43,6 @@
     "ordinary dependency bump does not fail a build and teach people to raise",
     "ceilings.",
     "",
-    "`scripts/check-build-output.mjs` exports HEADROOM and ceilingCap().",
-    "",
     "WHAT THE RULE CHANGED WHEN IT WAS ADOPTED, stated rather than left to a",
     "diff: serverTrace.appManifest.ceiling came DOWN from 240 to 220, because 240",
     "was above the cap for a baseline of 195. The framework ceilings and the",

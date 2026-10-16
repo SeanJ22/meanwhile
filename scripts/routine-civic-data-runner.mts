@@ -11,9 +11,13 @@ import { readHeldInputs, readHeldPointerTimes } from "../lib/civic-data/worker-h
 import { hostname } from "node:os";
 import { resolve } from "node:path";
 import { AUTOMATIC_REFRESH_TASKS, automaticRefreshContract } from "../lib/civic-data/automatic-refresh.ts";
-import { ballotInputHash, ballotPublicationDue, parseBallotPublicationResult, readLatestBallotPublication, type BallotPublicationResult } from "../lib/civic-data/ballot-publication.ts";
+import { ballotInputStamp } from "../lib/civic-data/ballot-input.ts";
+import { ballotPublicationDue, ballotPublicationSummary, parseBallotPublicationResult,
+  readLatestBallotPublicationSummary, recordBallotPublication, type BallotPublicationResult,
+  type BallotPublicationSummary, type BallotPublicationSummaries } from "../lib/civic-data/ballot-publication.ts";
+import { parseStateBallotContractId, type BallotState } from "../lib/civic-data/state-scopes.ts";
 import { neon } from "@neondatabase/serverless";
-import { campaignPublicationInputsDue, readCampaignPublicationInputs, CAMPAIGN_PUBLICATION_TASK, type CampaignPublicationInputs } from "../lib/civic-data/campaign-publication-due.ts";
+import { campaignPublicationInputsDue, readCampaignPublicationInputs, campaignPublicationTask, readCandidateProfilePublicationTasks, type CampaignPublicationInputs } from "../lib/civic-data/campaign-publication-due.ts";
 
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 import {
@@ -169,6 +173,7 @@ import {
   assertRuntimeAuthority,
 } from "../lib/civic-data/runtime-authority.ts";
 import { readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
+import { restoreStateBuckets } from "../lib/civic-data/state-bucket-dispatch.ts";
 
 readFromHeldCopies();
 
@@ -184,9 +189,7 @@ const PUBLISH_NOW = process.argv.includes("--publish-now");
 const PASS_LAUNCH_DEADLINE_MS = PUBLISH_NOW ? Date.now() + PUBLISH_NOW_PASS_BUDGET_MS : Number.POSITIVE_INFINITY;
 if (PUBLISH_NOW && FORCE) throw new Error("Publish-now cannot force unrelated source work.");
 const ADMITTED_CODE_SHA = assertRuntimeAuthority({ capabilities: ["ROUTINE_SUPERVISOR"] }).sha;
-// The door registry is the only door list. Every routine pass first brings the doors the system holds into the
-// registry, publishes its meeting doors for every child to read, then builds its meeting work from the registry.
-// A registry that cannot be read leaves the pass without hand-wired meeting work, and the pass says so.
+// Publish registry meeting doors before launching children so they all use the same door inventory.
 if (controlPlaneUrlFromEnv() === null) {
   console.warn("RCD_TASK routine-civic-data-runner: no door registry is configured, so this pass has no hand-wired meeting work");
 } else {
@@ -240,9 +243,7 @@ const RUNNING_CODE_SHA = TASK_SELECTION.ok
   ? ADMITTED_CODE_SHA
   : null;
 
-// Manual invocation and the standing pilot share this same atomic host-local
-// door. A second runner fails before opening the store or reading due clocks;
-// the kernel releases the lease if this process dies.
+// Acquire the process lease before reading due clocks; the kernel releases it if the runner dies.
 step = "taking the host-local singleton";
 const ROUTINE_DATA_PROCESS_LEASE = TASK_SELECTION.ok ? await (async () => {
   try {
@@ -539,9 +540,9 @@ function newestConsideredAt(
 }
 
 async function persistSupervisorOutcome(input: {
-  readonly ballotPublication?: BallotPublicationResult;
+  readonly ballotPublications?: BallotPublicationSummaries;
   readonly readerEdge: ReaderEdgePublicationOutcome;
-  readonly campaignPublicationApprovalsAttempted?: number;
+  readonly campaignPublicationApprovalsByState?: Readonly<Record<string, number>>;
   readonly failures: readonly SupervisorFailure[];
   readonly attemptedTasks: number;
   readonly verifiedSourceSuccesses: number;
@@ -572,9 +573,9 @@ async function persistSupervisorOutcome(input: {
   assertDurableRepositories(repos, "routine civic-data supervisor outcomes");
   const cycleId = SUPERVISOR_CYCLE_ID;
   const outcome = routineCivicDataSupervisorOutcome({
-    ...(input.ballotPublication ? { ballotPublication: input.ballotPublication } : {}),
+    ...(input.ballotPublications ? { ballotPublications: input.ballotPublications } : {}),
     lane: PUBLISH_NOW ? "publish-now" : "routine-civic-data",
-    ...(input.campaignPublicationApprovalsAttempted !== undefined ? { campaignPublicationApprovalsAttempted: input.campaignPublicationApprovalsAttempted } : {}),
+    ...(input.campaignPublicationApprovalsByState !== undefined ? { campaignPublicationApprovalsByState: input.campaignPublicationApprovalsByState } : {}),
     cycleId,
     startedAt: RUN_STARTED_AT,
     finishedAt: input.finishedAt,
@@ -618,6 +619,17 @@ let attempted = 0;
 let verifiedSourceSuccesses = 0;
 let verifiedSourceFailures = 0;
 const supervisorFailures: SupervisorFailure[] = [];
+if (!PUBLISH_NOW && ONLY === null) {
+  step = "restoring state ballot and registry publications";
+  try {
+    const sql = neon(process.env.DATABASE_URL!);
+    const restored = await restoreStateBuckets({ query: (text, params) => sql.query(text, [...params]), env: process.env });
+    console.log(`RCD_STATE_BUCKETS published=${restored.published} unchanged=${restored.unchanged} failed=${restored.failures.length}`);
+    for (const detail of restored.failures) supervisorFailures.push({ taskId: "state-bucket-restore", code: "STATE_BUCKET_RESTORE_FAILED", detail });
+  } catch (error) {
+    supervisorFailures.push({ taskId: "state-bucket-restore", code: "STATE_BUCKET_RESTORE_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
+  }
+}
 const crashedTasks: { readonly taskId: string; readonly detail: string }[] = [];
 const pendingRuns: PendingRun[] = [];
 const verifiedTaskReceipts: RoutineCivicDataTaskReceiptReference[] = [];
@@ -661,10 +673,8 @@ async function recordHuntSourceProgress(task: RoutineSourceTask, stage: HuntSour
     testedSha: RUNNING_CODE_SHA, huntSourceProgress: progress }, at);
 }
 
-// Source pointers may settle in the other routine process while publication has a large outbox.
-// Copy them before admission, then once per existing publication minute without overlapping sweeps.
-// Federal backfills publish state pages while their child is still running.
-// The existing minute sweep brings those facts to readers before the national pass ends.
+// The minute sweep picks up independently published state pages while national backfills are still running.
+// Sweep once before admission and prevent overlapping copies.
 const periodicFederalTasks = STANDING_SOURCE_TASKS.filter(task => task.recordClass === "FEDERAL_MONEY" &&
   (!ONLY || ONLY.has(task.id) || (task.registeredContractId !== undefined && ONLY.has(task.registeredContractId))));
 const periodicSourceEdge = PUBLISH_NOW || periodicFederalTasks.length > 0;
@@ -742,9 +752,7 @@ if (!PUBLISH_NOW) {
   }
 }
 
-// Resolve every due scope at one frozen instant before launching. The provider frontier below
-// admits one least-recently-considered partition per upstream, so a host with many partitions
-// cannot stretch one pass and keep a newly due unrelated source out of the next.
+// Freeze due scopes before launch so a large upstream cannot starve unrelated sources.
 const admissionNowMs = Date.now();
 let huntTasks: readonly RoutineSourceTask[] = [];
 try {
@@ -754,8 +762,18 @@ try {
   supervisorFailures.push({ taskId: "hunt-source-admission", code: "HUNT_SCOPE_UNREAD", detail });
   console.error(`RCD_TASK hunt-source-admission: SUPERVISOR_FAILURE (CANNOT_TELL) — ${detail}`);
 }
+let candidateFindingTasks: readonly RoutineSourceTask[] = [];
+if (controlPlaneUrlFromEnv()) try {
+  const sql = neon(controlPlaneUrlFromEnv()!);
+  const waiting = await readCandidateProfilePublicationTasks((text, params) => sql.query(text, params), RUN_STARTED_AT);
+  candidateFindingTasks = waiting.tasks;
+  if (waiting.unscoped) supervisorFailures.push({ taskId: "candidate-profile-findings", code: "CANDIDATE_FINDING_JURISDICTION_UNRESOLVED",
+    detail: `${waiting.unscoped} waiting findings have no recorded work jurisdiction; their Box rows remain waiting.` });
+} catch (error) {
+  supervisorFailures.push({ taskId: "candidate-profile-findings", code: "CANDIDATE_FINDING_ADMISSION_UNREAD", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
+}
 // A standing refresh already covers a Send for its source; don't launch duplicate children for the same pointer.
-const selectedTasks = [...STANDING_SOURCE_TASKS, ...huntTasks.filter(task => !STANDING_SOURCE_TASKS.some(standing => standing.id === task.id))]
+const selectedTasks = [...STANDING_SOURCE_TASKS, ...candidateFindingTasks, ...huntTasks.filter(task => !STANDING_SOURCE_TASKS.some(standing => standing.id === task.id))]
   .filter((task) => !ONLY || ONLY.has(task.id) || (task.registeredContractId !== undefined && ONLY.has(task.registeredContractId)));
 if (PUBLISH_NOW && selectedTasks.length === 0) {
   const readerEdge = (await publishNowEdgeChecks!.stop())!;
@@ -794,9 +812,7 @@ const clockReads = FORCE
       selectedTasks,
       (task) => store.clock(task.sourceId, task.recordClass, task.scope, task.parserVersion),
     );
-// Meeting sources follow their bodies' sittings; the window is decided once, at the same frozen
-// instant. A sitting's publisher-stated end decides when it concluded; an unreadable end set falls
-// back to the day bound and is reported.
+// Use publisher-stated ends for the sitting window; report unreadable ends before using the day bound.
 let statedEndsByTask: ReadonlyMap<string, ReadonlyMap<string, number>> = new Map();
 if (!FORCE && selectedTasks.some(task => task.recordClass === "MEETING")) {
   try {
@@ -853,30 +869,42 @@ if (!FORCE && selectedTasks.some(task => task.id === "meeting-body-crosswalk-der
 }
 // Newly verified findings need not wait for the hourly fallback clock. This
 // read changes no data; admission uses the same frontier and publication child.
-let campaignPublicationInputs: CampaignPublicationInputs | null = null;
+const campaignPublicationInputs = new Map<string, CampaignPublicationInputs>();
 const publicationInputLines: string[] = [];
-let ballotHash: string | null = null;
-let priorBallotPublication: BallotPublicationResult | null = null;
-let ballotPublication: BallotPublicationResult | null = null;
-if (selectedTasks.some(task => task.id === "ballot-contests")) {
-  try {
-    ballotHash = await ballotInputHash(resolve(ROOT, "data/ballot/2026-general"));
-    const connection = controlPlaneUrlFromEnv();
-    if (connection) priorBallotPublication = await readLatestBallotPublication(await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true }));
+const ballotStamps = new Map<BallotState, string>();
+const priorBallotPublications = new Map<BallotState, BallotPublicationSummary>();
+const ballotPublications = new Map<BallotState, BallotPublicationSummary>();
+let ballotPublicationRepos: Awaited<ReturnType<typeof createPgRepositories>> | null = null;
+const ballotStates = new Set(selectedTasks.flatMap(task => {
+  const contract = parseStateBallotContractId(task.id);
+  return contract?.family === "ballot-contests" ? [contract.state] : [];
+}));
+if (ballotStates.size) {
+  const connection = controlPlaneUrlFromEnv();
+  ballotPublicationRepos = connection ? await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true }).catch(error => {
+    console.error(`RCD_INPUT_CHANGED ballot-contests: ${safeFailure(sanitizedErrorDiagnostic(error))}; publication history unavailable`);
+    return null;
+  }) : null;
+  for (const state of ballotStates) try {
+    ballotStamps.set(state, await ballotInputStamp(resolve(ROOT, "data/ballot/2026-general"), state));
+    const prior = ballotPublicationRepos ? await readLatestBallotPublicationSummary(ballotPublicationRepos, state) : null;
+    if (prior) priorBallotPublications.set(state, prior);
   } catch (error) {
-    console.error(`RCD_INPUT_CHANGED ballot-contests: ${safeFailure(sanitizedErrorDiagnostic(error))}; normal cadence retained`);
+    console.error(`RCD_INPUT_CHANGED ballot-contests:${state}: ${safeFailure(sanitizedErrorDiagnostic(error))}; normal cadence retained`);
   }
 }
-if (!FORCE && selectedTasks.some(task => task.id === CAMPAIGN_PUBLICATION_TASK)) {
+for (const task of selectedTasks) {
+  const target = parseStateBallotContractId(task.id);
+  if (FORCE || target?.family !== "candidate-campaign-sites-derived") continue;
   try {
     const connection = controlPlaneUrlFromEnv();
     if (!connection) throw new Error("control-plane reporting connection is unavailable");
     const sql = neon(connection);
-    campaignPublicationInputs = await readCampaignPublicationInputs((query, params) => sql.query(query, params), RUNNING_CODE_SHA);
+    campaignPublicationInputs.set(task.id, await readCampaignPublicationInputs(target.state, (query, params) => sql.query(query, params), RUNNING_CODE_SHA));
   } catch (error) {
     const detail = safeFailure(sanitizedErrorDiagnostic(error));
-    supervisorFailures.push({ taskId: CAMPAIGN_PUBLICATION_TASK, code: "PUBLICATION_INPUT_CLOCK_UNREAD", detail });
-    console.error(`RCD_INPUT_CHANGED ${CAMPAIGN_PUBLICATION_TASK}: ${detail}; normal cadence retained`);
+    supervisorFailures.push({ taskId: task.id, code: "PUBLICATION_INPUT_CLOCK_UNREAD", detail });
+    console.error(`RCD_INPUT_CHANGED ${task.id}: ${detail}; normal cadence retained`);
   }
 }
 step = "reading unreceipted supervisor attempts";
@@ -919,7 +947,9 @@ for (const read of clockReads) {
   }
   const durableClock = routineAdmissionClock(read.clock, supervisorAttempts.get(task.id), admissionNowMs);
   const dueRequest = FORCE ? null : routineDueRequestFor(task, durableClock, admissionNowMs, dueRequests);
-  const ballotsDue = ballotPublicationDue(task.id, ballotHash, priorBallotPublication);
+  const ballotState = parseStateBallotContractId(task.id);
+  const ballotsDue = ballotState?.family === "ballot-contests" && ballotPublicationDue(task.id,
+    ballotStamps.get(ballotState.state) ?? null, priorBallotPublications.get(ballotState.state) ?? null, read.clock);
   if (!FORCE && !ballotsDue && dueRequest === null && unchangedRoutineProtocolFailure(task, read.clock, protocolFailures, RUNNING_CODE_SHA, admissionNowMs)) {
     console.log(`RCD_SKIP ${task.id}: unchanged receipt failure; awaiting changed code, Send or source evidence`);
     continue;
@@ -927,7 +957,7 @@ for (const read of clockReads) {
   const sittingHot = sittingSignals.get(task.id);
   const observedChange = observedChangeRates.get(task.id) ?? observedChangeRates.get(`feed:${task.id}`);
   const observedEveryMs = observedChange === undefined ? undefined : observedChange * 60_000;
-  const publicationDue = campaignPublicationInputsDue(task.id, campaignPublicationInputs);
+  const publicationDue = campaignPublicationInputsDue(task.id, campaignPublicationInputs.get(task.id) ?? null);
   const discoveryDue = meetingDiscoveryInputsDue(task.id, durableClock, meetingDiscoveryInputs, admissionNowMs);
   if (task.ownerInvocation) {
     const due = routineTaskDue(task, durableClock, admissionNowMs);
@@ -935,14 +965,18 @@ for (const read of clockReads) {
     const reused = !task.ownerInvocation.publicationPending && Number.isFinite(succeeded) && succeeded >= Date.parse(task.ownerInvocation.requestedAt) && succeeded <= admissionNowMs;
     publicationInputLines.push(`Send ${task.ownerInvocation.instructions.join(", ")}: shared ${task.id} ${due ? "refresh offered to the normal source frontier" : reused ? "verified shared result reused" : "failed attempt held under retry backoff"}; canonical scope ${task.scope}.`);
   }
-  if (!FORCE && !routineTaskDue(task, durableClock, admissionNowMs, sittingHot, observedEveryMs) && dueRequest === null && !publicationDue && !ballotsDue && !discoveryDue) {
-    console.log(`RCD_SKIP ${task.id}: cadence not due${
+  const cadenceDue = routineTaskDue(task, durableClock, admissionNowMs, sittingHot, observedEveryMs);
+  const taskDue = ballotState?.family === "ballot-contests"
+    ? ballotsDue || (!ballotStamps.has(ballotState.state) || priorBallotPublications.get(ballotState.state)?.status === "HELD") && cadenceDue
+    : cadenceDue;
+  if (!FORCE && !taskDue && dueRequest === null && !publicationDue && !discoveryDue) {
+    console.log(`RCD_SKIP ${task.id}: ${ballotState?.family === "ballot-contests" ? "state file unchanged" : "cadence not due"}${
       sittingSignals.has(task.id) ? ` (sitting window ${sittingHot === false ? "base" : sittingHot ? "hot" : "unknown, read as hot"})` : ""
     }`);
     continue;
   }
   if (publicationDue) {
-    const detail = `${task.id}: ${campaignPublicationInputs!.approvals - campaignPublicationInputs!.attemptedApprovals} committed approval(s) not attempted by this code; offered to the normal publication frontier without waiting for hourly cadence.`;
+    const detail = `${task.id}: ${campaignPublicationInputs.get(task.id)!.approvals - campaignPublicationInputs.get(task.id)!.attemptedApprovals} committed approval(s) not attempted by this code; offered to the normal publication frontier without waiting for hourly cadence.`;
     publicationInputLines.push(detail);
     console.log(`RCD_INPUT_CHANGED ${detail}`);
   }
@@ -994,9 +1028,7 @@ const dueRequestLines = [...honouredDueRequests].map(([taskId, request]) => admi
   : `Owner due request ${request.id}: ${taskId} was due but deferred by the provider frontier; the next pass offers it again.`).concat(publicationInputLines);
 attempted = pendingRuns.length;
 
-// Every meeting child proves the registry-runtime pointer before it acquires anything. With two or
-// more in a pass, prove it once here and hand each child the attestation; a child whose pointer no
-// longer matches runs its own full proof.
+// Share registry proof across children; a child rechecks if its pointer changes.
 const meetingPartitionRuns = pendingRuns.filter((pending) => pending.kind === "MEETING_PARTITION").length;
 let meetingChildAttestations: Readonly<Record<string, string>> = {};
 if (meetingPartitionRuns >= 2) {
@@ -1196,11 +1228,28 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
     exitStatus: run.status,
     childDiagnostic: run.status === 0 ? null : safeFailure(`${run.errorMessage ?? ""}\n${output}`),
   });
-  if (pending.task.id === "ballot-contests") {
+  const ballotTask = parseStateBallotContractId(pending.task.id);
+  if (ballotTask?.family === "ballot-contests") {
     const report = parseBallotPublicationResult(output);
-    if (report) ballotPublication = child.kind === "VERIFIED_SOURCE_SUCCESS"
-      ? { ...report, status: "PUBLISHED", versionId: child.receipt.promotedVersion, reason: null }
-      : { ...report, status: "HELD", versionId: null, reason: child.detail };
+    if (report?.state === ballotTask.state) {
+      const settled: BallotPublicationResult = child.kind === "VERIFIED_SOURCE_SUCCESS"
+        ? { ...report, status: "PUBLISHED", versionId: child.receipt.promotedVersion, reason: null }
+        : { ...report, status: "HELD", versionId: null, reason: child.detail };
+      ballotPublications.set(ballotTask.state, ballotPublicationSummary(settled));
+      try {
+        if (!ballotPublicationRepos) {
+          const connection = controlPlaneUrlFromEnv();
+          if (!connection) throw new Error("Ballot publication history has no reporting connection.");
+          ballotPublicationRepos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
+        }
+        await withControlPlaneConnectRetry(() => recordBallotPublication(ballotPublicationRepos!, settled,
+          { cycleId: SUPERVISOR_CYCLE_ID, testedSha: RUNNING_CODE_SHA }));
+      } catch (error) {
+        const detail = safeFailure(sanitizedErrorDiagnostic(error));
+        supervisorFailures.push({ taskId: pending.task.id, code: "BALLOT_PUBLICATION_HISTORY_UNWRITTEN", detail });
+        console.error(`RCD_BALLOT_REPORT ${ballotTask.state}: ${detail}; state publication history remains owed`);
+      }
+    }
   }
   await recordHuntSourceProgress(pending.task,
     child.kind === "VERIFIED_SOURCE_SUCCESS" ? child.receipt.confirmedAt ? "REUSED" : "PUBLISHED" : child.kind === "VERIFIED_SOURCE_FAILURE" ? "HELD" : "FAILED",
@@ -1500,9 +1549,9 @@ for (const reference of readerReadbackReferences) {
 step = "persisting the supervisor outcome";
 try {
   const cycleId = await persistSupervisorOutcome({
-    ...(ballotPublication ? { ballotPublication } : {}),
-    ...(campaignPublicationInputs !== null && verifiedTaskReceipts.some(row => row.taskId === CAMPAIGN_PUBLICATION_TASK)
-      ? { campaignPublicationApprovalsAttempted: campaignPublicationInputs.approvals } : {}),
+    ...(ballotPublications.size ? { ballotPublications: Object.fromEntries(ballotPublications) } : {}),
+    campaignPublicationApprovalsByState: Object.fromEntries([...campaignPublicationInputs.values()].filter(input =>
+      verifiedTaskReceipts.some(row => row.taskId === campaignPublicationTask(input.state))).map(input => [input.state, input.approvals])),
     readerEdge,
     failures: supervisorFailures,
     attemptedTasks: attempted,

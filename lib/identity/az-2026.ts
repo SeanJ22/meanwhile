@@ -1,8 +1,4 @@
-/**
- * Reads the Arizona 2026 candidate registry and the precomputed bridge from
- * each certified-lineup nominee card to its canonical candidacy. Nothing here
- * matches names at run time; the bridge is a lookup table.
- */
+
 
 import { currentAzBallotProjection } from "../civic-data/manual-read-models.ts";
 
@@ -38,11 +34,7 @@ function index(): Map<string, LineupReconciliationRow> {
   return rowIndex;
 }
 
-/**
- * Whether the bridge speaks for this contest. `false` is not "unresolved": the
- * contest's cards are not certified Arizona lineup cards, and the caller's own
- * behaviour stands.
- */
+
 export function lineupBridgeCovers(contestId: string): boolean {
   if (!contestId.startsWith("ballot-az-")) return false;
   if (!coveredContests) {
@@ -58,25 +50,14 @@ export function lineupRowForCard(cardKey: string): LineupReconciliationRow | nul
   return index().get(cardKey) ?? null;
 }
 
-/**
- * The canonical candidacy id a nominee card resolves to, or `null` for every
- * unresolved outcome alike; the row itself carries the reason.
- */
+
 export function reconciledCandidacyIdForCard(cardKey: string): string | null {
   const row = lineupRowForCard(cardKey);
   if (!row || row.outcome !== "RECONCILED") return null;
   return row.canonicalCandidacyId;
 }
 
-/**
- * A `PARTY_CONFLICT` card is one name match in its contest whose two
- * authorities publish different party labels. The card still has no canonical
- * candidacy; this returns the pair so a reader surface can treat the name as
- * one subject and state both parties with their sources. It never attaches the
- * filing's money or records to the card. `null` unless the row is a
- * PARTY_CONFLICT with exactly one registry identity naming a canonical
- * candidacy.
- */
+
 export interface PartyConflictFiling {
   readonly cardKey: string;
   readonly contestId: string;

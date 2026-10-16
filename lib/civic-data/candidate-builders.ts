@@ -1,7 +1,7 @@
+import { isMorrisGeneralCandidatesDocument, isMorrisSchoolCandidatesDocument } from "./morris-filing-documents.ts";
 import { DOTGOV_SCOPE, DOTGOV_PARSER_VERSION, dotGovSnapshotIssues, type DotGovSnapshot } from "./dotgov.ts";
 import { mergeStatePeople } from "../state-rollcalls/legislators.ts";
 import { createHash } from "node:crypto";
-import { isMorrisGeneralCandidatesDocument, isMorrisSchoolCandidatesDocument } from "./morris-filing-documents.ts";
 
 import type { FundingSnapshot } from "../funding/types.ts";
 import type { AcsNationalLoad, AcsLoadCounts } from "../sources/census-acs-population/national.ts";
@@ -210,17 +210,9 @@ export interface OfficialStateLegislatorReadModel {
 
 const NH_MEMBERS_SUPPORTED_TERM = "2025-2026";
 const NH_MEMBERS_SUPPORTED_UNTIL = Date.parse("2026-12-01T00:00:00.000Z");
-// The official legislature has 400 House seats and 24 Senate seats. Keep the
-// floor deliberately below that published shape so vacancies do not block a
-// run, while a truncated response containing merely one row per chamber can
-// never replace the canonical roster.
 export const NH_MEMBER_CHAMBER_FLOORS = { H: 350, S: 20 } as const;
 
-/**
- * Members.txt does not expose a term field. Stop the current parser before the
- * biennial turnover window so a freshly downloaded prior-term file can never
- * be treated as current merely because the transport succeeded.
- */
+
 export function expectedNhMembersTerm(retrievedAt: string): string {
   const instant = Date.parse(retrievedAt);
   if (!Number.isFinite(instant)) return "INVALID_RETRIEVAL_DATE";
@@ -230,11 +222,7 @@ export function expectedNhMembersTerm(retrievedAt: string): string {
   return `${start}-${start + 1}`;
 }
 
-/**
- * Stable identity used only by the explicit tracked bootstrap/import seed.
- * Production nhMembersCandidate receives exact PersonID values from the
- * official legislators/history crosswalk and never calls this function.
- */
+
 export function nhMemberOfficialPersonId(member: MembersExtraction["members"][number]): string {
   return sha256(canonical({
     chamber: member.chamber,
@@ -357,10 +345,7 @@ export function officialStateIdentityAuthorityEvidence(input: {
   };
 }
 
-/**
- * Official state roll calls use state publisher ids end to end. LegiScan may
- * still discover a lead, but its ids are not accepted by this constructor.
- */
+
 export function officialStateRollCallsCandidate(input: {
   readonly sourceId: OfficialStateRollCallSourceId;
   readonly jurisdiction: OfficialStateVoteScope;
@@ -685,9 +670,6 @@ export function officialStateLegislatorVotesCandidate(input: {
   readonly retrievedAt: string;
   readonly identityAuthority: NonNullable<StateVotesSnapshot["officialIdentityAuthority"]>;
 }): RoutineCandidate {
-  // The roster mints a source-namespaced officeholder id (`<sourceId>:<personId>`),
-  // which is already globally unique and distinct from the marker's jurisdiction
-  // scope, so it is the per-member scope verbatim — never re-prefixed.
   const scope = input.officeholderId;
   const positions = [...input.positions].sort((left, right) => left.rollCallId.localeCompare(right.rollCallId));
   const parserVersion = input.sourceId === "nh-general-court" ? "nh-general-court/3" : `${input.sourceId}/2`;
@@ -1213,11 +1195,6 @@ export function fecFundingCandidate(input: {
   const missing: string[] = [];
   const violations: string[] = [];
   for (const row of snapshot.candidates) {
-    // FEC candidate ids are nine characters. Congressional ids carry the
-    // office, cycle digit, two-letter state and five digits (H8VA01233);
-    // presidential ids carry the office plus eight digits (P80001571).
-    // Requiring eight digits after every office letter rejects every real
-    // House/Senate identifier while accepting a shape the FEC does not issue.
     if (!/^(?:[HS]\d[A-Z]{2}\d{5}|P\d{8})$/.test(row.fecCandidateId)) missing.push(`${row.name}:candidate_id`);
     if (row.principalCommitteeId && !/^C\d{8}$/.test(row.principalCommitteeId)) missing.push(`${row.name}:committee_id`);
     if (!Number.isSafeInteger(row.cycle) || row.cycle < 1900 || row.cycle % 2) violations.push(`${row.fecCandidateId} has an invalid filing period.`);
@@ -1405,7 +1382,7 @@ export function meetingsCandidate(input: {
 type BallotCandidateDocument = {
   readonly formatVersion?: number;
   readonly election?: { readonly id?: string; readonly date?: string };
-  readonly contests?: readonly { readonly id?: string; readonly ocdId?: string; readonly provenance?: { readonly sourceUrl?: string } }[];
+  readonly contests?: readonly { readonly id?: string; readonly ocdId?: string; readonly provenance?: { readonly sourceUrl?: string | null } }[];
   readonly candidacies?: readonly { readonly id?: string; readonly contestId?: string; readonly familyName?: string; readonly givenName?: string }[];
   readonly measures?: readonly unknown[];
   readonly absences?: readonly unknown[];

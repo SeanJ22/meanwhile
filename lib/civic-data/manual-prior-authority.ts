@@ -3,6 +3,7 @@ import { manualRecordSourceUrls } from "./manual-source-isolation.ts";
 import { authorityForManualReceipt } from "./source-authority.ts";
 import { trustedLkgImportEvidenceIssue } from "./trusted-lkg-import.ts";
 import { parseValidationReceipt } from "./receipt.ts";
+import { publicationBaseHash } from "./navigation-publication-base.ts";
 import { registryMemberCitedUrls } from "../registry/cited-urls.ts";
 import type { CandidateVersionRecord, RoutineCandidate } from "./types.ts";
 
@@ -71,7 +72,7 @@ export function manualPriorAuthorityIssue(candidate: RoutineCandidate, base: Can
         source.promotedVersion !== authority.versionId || source.lastKnownGoodVersion !== authority.versionId ||
         source.candidate.id !== authority.versionId || source.candidate.sourceId !== candidate.sourceId ||
         source.candidate.recordClass !== candidate.recordClass || source.candidate.scope !== authority.scope ||
-        hash(source.candidate.readModel) !== authority.readModelSha256) {
+        publicationBaseHash(source) !== authority.readModelSha256) {
       return "The inherited authority does not identify the exact GOOD base and its payload.";
     }
     versions.add(authority.versionId);

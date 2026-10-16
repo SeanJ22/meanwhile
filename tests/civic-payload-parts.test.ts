@@ -17,6 +17,20 @@ function memoryParts() {
   return { saved, writes, reads, io };
 }
 
+test("a record cursor reads the next group only as consumed and preserves interleaved order", async () => {
+  const memory = memoryParts();
+  const records = Array.from({ length: 240 }, (_, index) => row(index % 2 ? "az" : "oh", index));
+  const stored = await new CivicPayloadParts(memory.io).store({ kind: "ballot-navigation", records });
+  const reader = new CivicPayloadParts(memory.io);
+  const cursor = reader.rows(await reader.path(stored, ["records"]));
+  assert.deepEqual((await cursor.next()).value, records[0]);
+  const firstRead = memory.reads.flat().length;
+  assert.ok(firstRead < memory.saved.size / 2, "starting a cursor does not load the complete publication");
+  const remaining = [];
+  for await (const record of cursor) remaining.push(record);
+  assert.deepEqual(remaining, records.slice(1));
+});
+
 test("a large registry plus one new state writes only new state records and small reference metadata", async () => {
   const memory = memoryParts();
   const parts = new CivicPayloadParts(memory.io);

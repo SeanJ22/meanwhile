@@ -3,8 +3,8 @@ import { manualClassForKind } from "../control-plane/promotion/source-kinds.ts";
 import { preferCurrentSource, receiptSourceKind } from "./source-conflicts.ts";
 import { createHash } from "node:crypto";
 import { ELECTION_FIELD_KINDS, electionFieldState, sourcedElectionDate, type ElectionFieldInput, type PublishedElectionField } from "./election-fields.ts";
-import { prepareManualProjectionSuccessor } from "./manual-successor.ts";
-import { processRegisteredManualCandidate } from "./promotion.ts";
+import { prepareNavigationSuccessor } from "./navigation-successor.ts";
+import { processNavigationCandidate } from "./promotion.ts";
 import type { RoutineDataStore } from "./store.ts";
 import type { ManualSourceReview } from "./types.ts";
 
@@ -97,15 +97,14 @@ export async function publishElectionFields(input: {
   let candidateId: string | null = null, promotedVersionId: string | null = null, currentState: string | null = null;
   const publish = async () => {
     if (!records.size) return;
-    const { candidate, expectedBaseVersionId } = await prepareManualProjectionSuccessor({ contractId: "ballot-navigation",
+    const { candidate, comparison } = await prepareNavigationSuccessor({ contractId: "ballot-navigation",
       version: input.now, sourceThrough: input.now,
       sourceReceipt: { contractVersion: 1, reviewedAt: input.now, reviewedBy: "code:section3Record", sources: [...sources.values()] },
       payload: { kind: "ballot-navigation", records: [...records.values()] as unknown as readonly (Record<string, unknown> & { id: string })[] },
-    }, input.store, input.now);
-    const outcome = await processRegisteredManualCandidate(input.store, "ballot-navigation", { ...candidate,
-      excludedFacts: [...(candidate.excludedFacts ?? []), ...conflicts] }, input.now, expectedBaseVersionId);
-    if (!outcome.promoted) throw new Error(`ELECTION_FIELD_PUBLICATION_HELD:${outcome.candidate.failureDetail ?? outcome.candidate.state}`);
-    candidateId = outcome.candidate.candidate.id; promotedVersionId = outcome.promoted.versionId;
+    }, input.store);
+    const outcome = await processNavigationCandidate(input.store, { ...candidate,
+      excludedFacts: [...(candidate.excludedFacts ?? []), ...conflicts] }, comparison, input.now);
+    candidateId = outcome.candidateId; promotedVersionId = outcome.promotedVersionId;
     fields.push(...records.keys());
     records.clear(); sources.clear(); conflicts.length = 0;
   };

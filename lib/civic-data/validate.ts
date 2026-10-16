@@ -58,11 +58,6 @@ function durableCanonicalHash(value: unknown): { readonly canonical: string | nu
   }
 }
 
-function canonicalMembers(value: readonly { readonly key: string; readonly record: unknown }[]): string | null {
-  const durable = durableCanonicalHash([...value].sort((left, right) => left.key.localeCompare(right.key)));
-  return durable.canonical;
-}
-
 function result(check: ValidationCheckName, verdict: ValidationCheck["verdict"], code: string, detail: string): ValidationCheck {
   return { check, verdict, code, detail };
 }
@@ -543,10 +538,18 @@ export function validateRoutineCandidate(
   const derivedCivicRecordKeys = derivedCivicRecords.map((member) => member.key);
   const invalidDerivedCivicRecordKey = derivedCivicRecordKeys.find((key) => typeof key !== "string" || key.trim().length === 0);
   const duplicateDerivedCivicRecordKeys = derivedCivicRecordKeys.length - new Set(derivedCivicRecordKeys).size;
-  const normalizedPayload = durableCanonicalHash(candidate.normalizedPayload);
   const readModel = durableCanonicalHash(candidate.readModel);
-  const suppliedCivicRecords = candidate.civicRecords === undefined ? null : canonicalMembers(candidate.civicRecords);
-  const canonicalDerivedCivicRecords = canonicalMembers(derivedCivicRecords);
+  const normalizedPayload = candidate.normalizedPayload === candidate.readModel
+    ? readModel : durableCanonicalHash(candidate.normalizedPayload);
+  const suppliedByKey = candidate.civicRecords === undefined ? null : new Map(candidate.civicRecords.map(member => [member.key, member.record]));
+  const civicMembersMatch = suppliedByKey === null || suppliedByKey.size === derivedCivicRecords.length &&
+    derivedCivicRecords.every(member => {
+      if (!suppliedByKey.has(member.key)) return false;
+      const supplied = suppliedByKey.get(member.key);
+      if (supplied === member.record) return true;
+      const expected = durableCanonicalHash(member.record), actual = durableCanonicalHash(supplied);
+      return expected.canonical !== null && actual.canonical === expected.canonical;
+    });
   const authority = candidate.retrieval.derived
     ? derivedAuthorityFor(candidate)
     : candidate.retrieval.manualSourceReceipt
@@ -689,11 +692,7 @@ export function validateRoutineCandidate(
       "DERIVED_CIVIC_RECORD_KEYS_DUPLICATED",
       `${duplicateDerivedCivicRecordKeys} exact Reader-projection member key(s) are duplicated; no supplied member list may conceal them.`,
     ));
-  } else if (candidate.civicRecords !== undefined && (
-    suppliedCivicRecords === null ||
-    canonicalDerivedCivicRecords === null ||
-    suppliedCivicRecords !== canonicalDerivedCivicRecords
-  )) {
+  } else if (!civicMembersMatch) {
     checks.push(result(
       "SCHEMA_PARSE_VALIDITY",
       "FAIL",

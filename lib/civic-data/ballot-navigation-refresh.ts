@@ -16,11 +16,9 @@ import { electionFieldState, type ElectionFieldInput } from "./election-fields.t
 import { isOfficialSource, type GovernmentWebsiteDelegation, type OfficialLinkingPage } from "./source-authority.ts";
 import type { RoutineDataStore } from "./store.ts";
 import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
-import { readManualProjectionPrior, type CuratedReaderProjection, type ManualProjectionPackage } from "./manual-projections.ts";
-import { prepareManualProjectionSuccessor } from "./manual-successor.ts";
-import { processRegisteredManualCandidate } from "./promotion.ts";
-import { manualRecordSourceUrls } from "./manual-source-isolation.ts";
-import type { ManualSourceSetReceipt } from "./types.ts";
+import type { CuratedReaderProjection, ManualProjectionPackage } from "./manual-projections.ts";
+import { prepareNavigationSuccessor, readNavigationBase } from "./navigation-successor.ts";
+import { processNavigationCandidate } from "./promotion.ts";
 
 export interface BallotNavigationSourceReport {
   readonly requestedUrl: string;
@@ -88,37 +86,15 @@ function indexAuthorityLinks(pages: Map<string, OfficialLinkingPage>, url: strin
   }
 }
 
-function sourceTime(record: CuratedReaderProjection["records"][number], receipt: ManualSourceSetReceipt): number {
-  const value = record.value as Record<string, unknown> | undefined;
-  const at = value?.collectedAt ?? record.collectedAt;
-  if (typeof at === "string" && Number.isFinite(Date.parse(at))) return Date.parse(at);
-  const urls = new Set(manualRecordSourceUrls(record));
-  return Math.max(-Infinity, ...receipt.sources.filter(source => urls.has(source.requestedUrl) || urls.has(source.finalUrl))
-    .map(source => Date.parse(source.retrievedAt)).filter(Number.isFinite));
-}
-
 async function publishReviewedInput(config: BallotNavigationSourceConfig, store: RoutineDataStore, now: string) {
   const source = config.package;
   if (source.contractId !== "ballot-navigation" || !("kind" in source.payload) || source.payload.kind !== "ballot-navigation") throw new Error("NAVIGATION_REVIEWED_INPUT_INVALID");
-  const payload = source.payload;
-  const prior = await readManualProjectionPrior("ballot-navigation", store, now, ballotNavigationScope(config.state));
-  const before = new Map(((prior?.payload as CuratedReaderProjection | undefined)?.records ?? []).map(row => [row.id, row]));
-  const priorCandidate = prior ? await store.readCandidate(prior.versionId) : null;
-  const adoption: ManualProjectionPackage = { ...source, version: now,
-    sourceThrough: [source.sourceThrough, ...(priorCandidate ? [priorCandidate.candidate.temporal.sourceThrough] : [])]
-      .sort((left, right) => Date.parse(left) - Date.parse(right)).at(-1)!,
-    sourceReceipt: { ...source.sourceReceipt, reviewedAt: now, reviewedBy: "reviewed-ballot-navigation-input" } };
-  const records = payload.records.filter(row => !before.has(row.id) ||
-    sourceTime(row, source.sourceReceipt) > sourceTime(before.get(row.id)!, prior!.sourceReceipt));
-  let candidateId: string | null = null, promotedVersionId: string | null = null;
-  const fields = records.map(row => row.id);
-  if (records.length) {
-    const prepared = await prepareManualProjectionSuccessor({ ...adoption, payload: { ...payload, records } }, store, now);
-    const outcome = await processRegisteredManualCandidate(store, "ballot-navigation", prepared.candidate, now, prepared.expectedBaseVersionId);
-    if (!outcome.promoted) throw new Error(`NAVIGATION_REVIEWED_INPUT_HELD:${outcome.candidate.failureDetail ?? outcome.candidate.state}`);
-    candidateId = outcome.candidate.candidate.id; promotedVersionId = outcome.promoted.versionId;
-  }
-  return { candidateId, promotedVersionId, fields };
+  const base = await readNavigationBase(store, ballotNavigationScope(config.state));
+  if (base && Date.parse(base.record.candidate.temporal.sourceThrough) >= Date.parse(source.sourceThrough)) return null;
+  const prepared = await prepareNavigationSuccessor({ ...source, version: now,
+    sourceReceipt: { ...source.sourceReceipt, reviewedAt: now, reviewedBy: "reviewed-ballot-navigation-input" } }, store);
+  const result = await processNavigationCandidate(store, prepared.candidate, prepared.comparison, now);
+  return { ...result, fields: source.payload.records.map(record => record.id) };
 }
 
 function configuredReport(config: BallotNavigationSourceConfig): BallotNavigationStateReport {

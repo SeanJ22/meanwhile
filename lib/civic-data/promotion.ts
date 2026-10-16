@@ -2,7 +2,7 @@ import { jsonSnapshot } from "./json-snapshot.ts";
 import type { CandidateState, CandidateVersionRecord, PromotedProjection, RoutineCandidate, ValidationReceipt } from "./types.ts";
 import { PostgresRoutineDataStore, PromotionBaseChangedError, routineEventObservedAt, type RoutineDataStore } from "./store.ts";
 import { validateRoutineCandidate } from "./validate.ts";
-import { canonicalCivicDataJson, candidateChangeSet } from "./changes.ts";
+import { canonicalCivicDataJson, candidateChangeSet, heldCivicRecords } from "./changes.ts";
 import { promotionProofIssue } from "./read-model.ts";
 import { requiredRoutineContract, type RoutineSourceContract } from "./contracts.ts";
 import { meetingHistoryContract, requiredMeetingPartitionContract } from "./meeting-partitions.ts";
@@ -25,6 +25,7 @@ import { derivedInputAuthorityIssue } from "./derived-door.ts";
 import { isScopedManualContractScope, manualPayloadScope } from "./scoped-manual-contracts.ts";
 import { manualPriorAuthorityOf } from "./manual-prior-authority.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
+import { navigationBaseProjection, type NavigationComparison } from "./navigation-successor.ts";
 
 /** Only the exact registered contract doors in this module possess this token. */
 const REGISTERED_PRODUCTION_DOOR = Symbol("REGISTERED_PRODUCTION_DOOR");
@@ -408,6 +409,40 @@ export async function processRegisteredManualCandidate(
   );
 }
 
+export async function processNavigationCandidate(
+  store: RoutineDataStore,
+  candidate: RoutineCandidate,
+  comparison: NavigationComparison,
+  now: string,
+): Promise<{ readonly candidateId: string; readonly promotedVersionId: string }> {
+  if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract("ballot-navigation", "manual");
+  const bounded = durableCandidateSnapshot(candidate);
+  const contract = requiredManualProductionContract("ballot-navigation");
+  const issue = manualCandidateContractIssue("ballot-navigation", bounded);
+  if (issue !== null) throw new Error(`MANUAL_CANDIDATE_CONTRACT_MISMATCH:ballot-navigation:${issue}`);
+  const verification = await verifySourceScopedCandidateProjection(contract, bounded, sourceProjectionObservedAt(store, now), null);
+  const base = comparison.base;
+  const at = await routineEventObservedAt(store, bounded.recordClass, bounded.scope, now);
+  if (comparison.kind === "MATCHED_REVIEW" && base && store.confirmUnchanged) {
+    const checked = { ...bounded, changeSet: { ...comparison.changes, held: heldCivicRecords(bounded) } };
+    const validated = validateRoutineCandidate(checked, base.record, at, [{ consumer: `${verification.verifierId} (source-scoped pre-promotion)`,
+      passed: verification.status === "PASS", detail: verification.detail }]);
+    if (validated.receipt.decision !== "GOOD") throw new Error(`ELECTION_FIELD_PUBLICATION_HELD:${failureOf(validated.receipt).detail}`);
+    const confirmed = await store.confirmUnchanged({ sourceId: bounded.sourceId, recordClass: bounded.recordClass, scope: bounded.scope,
+      parserVersion: bounded.normalization.parserVersion, pointerVersionId: base.pointer.versionId,
+      readModelHash: base.record.candidate.normalization.normalizedHash!, basis: "CHANGE_SET_UNCHANGED",
+      retrieval: { requestedUrl: bounded.retrieval.requestedUrl, finalUrl: bounded.retrieval.finalUrl,
+        httpStatus: bounded.retrieval.httpStatus, rawHash: bounded.retrieval.rawHash!, retrievedAt: bounded.retrieval.retrievedAt } }, at);
+    if (confirmed.kind !== "CONFIRMED") throw new Error(`ELECTION_FIELD_CONFIRMATION_REFUSED:${confirmed.kind}:${confirmed.detail}`);
+    return { candidateId: confirmed.versionId, promotedVersionId: confirmed.versionId };
+  }
+  const outcome = await appendTypedReaderProjectionReadback(store, contract,
+    await processRoutineCandidate(store, bounded, now, base?.pointer.versionId ?? null, REGISTERED_PRODUCTION_DOOR,
+      verification, { confirmUnchanged: false }, comparison), now);
+  if (!outcome.promoted) throw new Error(`ELECTION_FIELD_PUBLICATION_HELD:${outcome.candidate.failureDetail ?? outcome.candidate.state}`);
+  return { candidateId: outcome.candidate.candidate.id, promotedVersionId: outcome.promoted.versionId };
+}
+
 function invalidLkgReceipt(receipt: ValidationReceipt, code: string, detail: string): ValidationReceipt {
   return {
     ...receipt,
@@ -460,6 +495,7 @@ export async function processRoutineCandidate(
   registeredDoor: symbol | null = null,
   sourceProjectionVerification: RoutineReaderVerification | null = null,
   options: { readonly confirmUnchanged?: boolean; readonly vault?: EvidenceStore } = {},
+  navigation?: NavigationComparison,
 ): Promise<PromotionOutcome> {
   const productionStore = store instanceof PostgresRoutineDataStore;
   if (productionStore && registeredDoor !== REGISTERED_PRODUCTION_DOOR) {
@@ -468,10 +504,13 @@ export async function processRoutineCandidate(
   if (Object.prototype.hasOwnProperty.call(inputCandidate, "bootstrapImport") && inputCandidate.bootstrapImport !== undefined) {
     throw new Error("TRUSTED_LKG_ADMISSION_RETIRED");
   }
-  const current = await store.readPromotion(inputCandidate.recordClass, inputCandidate.scope);
-  const observedBaseVersionId = current?.versionId ?? null;
+  const current = navigation ? navigation.base ? navigationBaseProjection(navigation.base) : null
+    : await store.readPromotion(inputCandidate.recordClass, inputCandidate.scope);
+  const observedBaseVersionId = navigation
+    ? (await store.readPromotionIdentity(inputCandidate.recordClass, inputCandidate.scope))?.versionId ?? null
+    : current?.versionId ?? null;
   const preloadedBaseChanged = expectedBaseVersionId !== undefined && expectedBaseVersionId !== observedBaseVersionId;
-  const lkg = current ? await store.readCandidate(current.lastKnownGoodVersionId) : null;
+  const lkg = navigation ? navigation.base?.record ?? null : current ? await store.readCandidate(current.lastKnownGoodVersionId) : null;
   const lkgPredecessorVersionId = lkg === null
     ? null
     : trustedLkgPredecessorVersionId(lkg.candidate);
@@ -479,7 +518,7 @@ export async function processRoutineCandidate(
     ? null
     : await store.readCandidate(lkgPredecessorVersionId);
   const declaredBase = preloadedBaseChanged && expectedBaseVersionId !== null && expectedBaseVersionId !== undefined
-    ? await store.readCandidate(expectedBaseVersionId)
+    ? navigation?.base?.record ?? await store.readCandidate(expectedBaseVersionId)
     : null;
   const exactDeclaredBase = declaredBase &&
       declaredBase.candidate.id === expectedBaseVersionId &&
@@ -492,7 +531,7 @@ export async function processRoutineCandidate(
       declaredBase.lastKnownGoodVersion === expectedBaseVersionId
     ? declaredBase
     : null;
-  const lkgProofIssue = current === null
+  const lkgProofIssue = navigation ? null : current === null
     ? null
     : lkg === null
       ? "The canonical pointer's last-known-good candidate row is missing."
@@ -506,7 +545,7 @@ export async function processRoutineCandidate(
   const candidate: RoutineCandidate = {
     ...inputCandidate,
     // A receiptless curated base contributes no verified records to the change set.
-    changeSet: candidateChangeSet(
+    changeSet: navigation ? { ...navigation.changes, held: heldCivicRecords(inputCandidate) } : candidateChangeSet(
       inputCandidate,
       inputCandidate.recordClass === "CURATED_READER_RECORD" && inputCandidate.retrieval.manualSourceReceipt &&
         !(preloadedBaseChanged ? exactDeclaredBase : lkg)?.candidate.retrieval.manualSourceReceipt
@@ -677,5 +716,5 @@ export async function processRoutineCandidate(
   const summary = await store.readCandidateSummary(candidate.id);
   if (summary === null) throw new Error(`CANDIDATE_NOT_FOUND:${candidate.id}`);
   const { candidate: _sameRow, ...promotedColumns } = summary;
-  return { candidate: { ...promotedColumns, candidate: validatedRecord.candidate }, promoted, readerReadback: null };
+  return { candidate: { ...promotedColumns, receipt: validatedRecord.receipt, candidate: validatedRecord.candidate }, promoted, readerReadback: null };
 }

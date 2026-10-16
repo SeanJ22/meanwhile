@@ -298,7 +298,7 @@ export async function durableRoutineRunnerReceiptIssue(
       candidate.promotedVersion !== receipt.promotedVersion ||
       candidate.lastKnownGoodVersion !== receipt.lastKnownGoodVersion
     ) return "the emitted state/version summary differs from the durable candidate";
-    const durableReceipt = parseValidationReceipt(candidate.receipt);
+    const durableReceipt = candidate.receipt === null ? null : parseValidationReceipt({ ...candidate.receipt, excludedFacts: [] });
     if (
       !durableReceipt ||
       durableReceipt.candidateId !== receipt.candidateId ||

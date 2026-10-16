@@ -136,6 +136,42 @@ test("an unchanged later source capture confirms the prior version without anoth
   assert.equal(second.candidateId, first.candidateId);
 });
 
+test("an unchanged partial review confirms the publication and keeps its inherited field", async () => {
+  const store = new MemoryRoutineDataStore();
+  const deadline = make("Registration deadline October 5, 2026");
+  const target = "https://voter.example.gov/lookup";
+  const lookup = make(`Find your polling place ${target}`, "polling_lookup", target, "Find your polling place");
+  await publishElectionFields({ store, now, fields: [deadline, lookup], verify });
+  const partial = await publishElectionFields({ store, now, fields: [deadline], verify });
+  const repeat = await publishElectionFields({ store, now, fields: [deadline], verify });
+  assert.equal(repeat.promotedVersionId, partial.promotedVersionId);
+  const complete = await store.readCandidate(partial.candidateId!);
+  const summary = await store.readCandidateSummary(partial.candidateId!);
+  assert.ok(complete?.receipt?.excludedFacts.some(fact => fact.code === "MANUAL_MEMBER_HELD_LKG"));
+  assert.ok(summary?.receipt && !("excludedFacts" in summary.receipt));
+  const read = await readElectionFieldsForDivisions([division], { store, now, bypassCache: true });
+  assert.equal(read.fields.length, 2);
+  assert.ok(read.fields.some(field => field.value.navigationUrl === target));
+});
+
+test("successive deadline revisions carry only the source receipts their current conflicts cite", async () => {
+  const store = new MemoryRoutineDataStore();
+  let published;
+  for (const day of [5, 6, 7]) {
+    const at = `2026-09-30T12:0${day}:00.000Z`;
+    const field = make(`Registration deadline October ${day}, 2026`);
+    published = await publishElectionFields({ store, now: at, verify, fields: [{ ...field, dates: [`2026-10-0${day}`],
+      document: { ...field.document, collectedAt: at, capture: { ...field.document.capture!, observedAt: at,
+        evidence: { ...field.document.capture!.evidence, retrievedAt: at } } } }] });
+  }
+  const candidate = await store.readCandidate(published!.candidateId!);
+  assert.equal(candidate?.candidate.retrieval.manualSourceReceipt?.sources.length, 2);
+  assert.ok(candidate?.candidate.retrieval.manualSourceReceipt?.sources.every(source => source.retrievedAt >= "2026-09-30T12:06:00.000Z"));
+  const repeat = await publishElectionFields({ store, now: "2026-09-30T13:00:00.000Z", verify,
+    fields: [{ ...make("Registration deadline October 7, 2026"), dates: ["2026-10-07"] }] });
+  assert.equal(repeat.promotedVersionId, published!.promotedVersionId, "the same winning facts keep their conflict history without republishing");
+});
+
 test("the actual section3 verifier holds stale captures without holding fresh sibling fields", async () => {
   const store = new MemoryRoutineDataStore();
   const field = make("Registration deadline October 5, 2026");

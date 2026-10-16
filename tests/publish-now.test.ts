@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import { IndependentRuntimeLaneScheduler } from "../lib/ops/independent-runtime-pass.ts";
-import { publishNowHasNothingOwed, publishNowLane, publishNowDoorTasks, publishNowWorkerTasks, readPublishNowWorkerTasks, readWorkerPublicationItems } from "../lib/civic-data/publish-now.ts";
+import { PUBLISH_NOW_PASS_BUDGET_MS, publishNowHasNothingOwed, publishNowLane, publishNowDoorTasks, publishNowWorkerTasks, readPublishNowWorkerTasks, readWorkerPublicationItems } from "../lib/civic-data/publish-now.ts";
 import { AGGREGATE_LIST_READ_PAGE } from "../lib/control-plane/repository/pg-store.ts";
 import { owedFactItems, type WorkerPublicationItem } from "../lib/civic-data/worker-publication-tasks.ts";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
@@ -16,7 +16,7 @@ test("BX-12: publish-now runs each minute while a routine pass remains in flight
   let finish!: () => void;
   let count = 0;
   const scheduler = new IndependentRuntimeLaneScheduler([
-    { id: "routine", everyMs: 300_000, run: () => new Promise<void>(resolve => { finish = resolve; }) },
+    { id: "routine", everyMs: 300_000, budgetMs: 300_000, run: () => new Promise<void>(resolve => { finish = resolve; }) },
     publishNowLane(async () => { count++; }),
   ]);
   assert.deepEqual(scheduler.tick(0), ["routine", "publish-now"]);
@@ -28,6 +28,14 @@ test("BX-12: publish-now runs each minute while a routine pass remains in flight
   assert.equal(count, 3);
   assert.ok(scheduler.inFlightIds().includes("routine"));
   finish(); await scheduler.waitForIdle();
+});
+
+test("each lane run is handed its own deadline, the tick plus its budget", async () => {
+  const deadlines: number[] = [];
+  const scheduler = new IndependentRuntimeLaneScheduler([publishNowLane(async deadlineMs => { deadlines.push(deadlineMs); })]);
+  scheduler.tick(5_000);
+  await scheduler.waitForIdle();
+  assert.deepEqual(deadlines, [5_000 + PUBLISH_NOW_PASS_BUDGET_MS]);
 });
 
 test("BX-03: all unacknowledged parser results stay owed across restart; an acknowledgement removes only its result", () => {
@@ -163,8 +171,8 @@ test("a publish-now minute with nothing owed ends quietly with exit 0, before an
 test("the standing runner starts publish-now each minute on its own lane, beside the routine pass", () => {
   const pilot = readFileSync("scripts/pilot-runner.mts", "utf8");
   const lanes = pilot.slice(pilot.indexOf("const standingRuntimeScheduler = new IndependentRuntimeLaneScheduler(["));
-  assert.match(lanes.slice(0, lanes.indexOf("], (outcome) =>")), /\{ id: "routine-civic-data", everyMs: ROUTINE_DATA_ADMISSION_MS, run: runRoutineCivicData \},[\s\S]*publishNowLane\(runPublishNow\),\n$/);
-  const run = pilot.slice(pilot.indexOf("async function runPublishNow()"), pilot.indexOf("async function persistOuterRoutineChildFailure("));
+  assert.match(lanes.slice(0, lanes.indexOf("], (outcome) =>")), /\{ id: "routine-civic-data", everyMs: ROUTINE_DATA_ADMISSION_MS, budgetMs: ROUTINE_PASS_BUDGET_MS, run: runRoutineCivicData \},[\s\S]*publishNowLane\(runPublishNow\),\n$/);
+  const run = pilot.slice(pilot.indexOf("async function runPublishNow("), pilot.indexOf("async function persistOuterRoutineChildFailure("));
   assert.match(run, /if \(provider !== "postgres" \|\| canary\) return;/, "only the standing production runner publishes");
   assert.match(run, /args: \[\.\.\.TS_CHILD, "scripts\/publish-now-runner\.mts"\]/);
   assert.match(run, /standingChildEnvironment\("ROUTINE_SUPERVISOR", \{ \.\.\.process\.env, \[ROUTINE_SUPERVISOR_STARTED_AT_ENV\]: startedAt \}\)/);

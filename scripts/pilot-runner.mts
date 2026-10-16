@@ -1,4 +1,4 @@
-import { CENSUS_LANE_INTERVAL_MS } from "../lib/control-plane/discovery/census-lane.ts";
+import { CENSUS_LANE_BUDGET_MS, CENSUS_LANE_INTERVAL_MS } from "../lib/control-plane/discovery/census-lane.ts";
 
 import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { hostname } from "node:os";
@@ -69,6 +69,7 @@ import { auditPassClock } from "./audit-pass-clock.mts";
 import { lastChildLines, recordFailedCycle } from "../lib/control-plane/scheduler/cycle-finalization.ts";
 import {
   ROUTINE_DATA_ADMISSION_MS,
+  ROUTINE_PASS_BUDGET_MS,
   ROUTINE_SUPERVISOR_STARTED_AT_ENV,
   routineSupervisorCycleId,
 } from "../lib/civic-data/runner.ts";
@@ -77,6 +78,7 @@ import {
 } from "../lib/civic-data/runner-receipt.ts";
 import { childFatalLine, childStderrCause, nativeAbortLine } from "../lib/ops/fatal-line.ts";
 import { hunterLaneArmingPath } from "../lib/control-plane/workers/hunter-lane-arming.ts";
+import { HUNTER_LANE_LIFE_MS, HUNTER_WORKER_WALL_MS } from "../lib/control-plane/workers/hunter-lane.ts";
 import { IndependentRuntimeLaneScheduler } from "../lib/ops/independent-runtime-pass.ts";
 import { boundedBeat } from "../lib/ops/bounded-beat.ts";
 import { publishNowLane } from "../lib/civic-data/publish-now.ts";
@@ -676,7 +678,7 @@ async function publishConsoleChildren(): Promise<boolean> {
 }
 
 /** The same standing clock runs the production data plane after each cycle. */
-async function runRoutineCivicData(): Promise<void> {
+async function runRoutineCivicData(deadlineMs: number): Promise<void> {
   if (provider !== "postgres" || canary) {
     console.log("  routine civic data: skipped — only the standing production runner owns this data plane");
     return;
@@ -704,6 +706,7 @@ async function runRoutineCivicData(): Promise<void> {
   }], {
     cwd: CODE_ROOT,
     env: process.env,
+    deadlineMs,
 
     maxBufferBytes: 64 * 1024 * 1024,
     onStdout: (_id, output) => process.stdout.write(output),
@@ -746,7 +749,7 @@ async function runRoutineCivicData(): Promise<void> {
 }
 
 /** Each minute, saved parser results and changed doors publish without waiting for the routine pass (publish-now.ts). */
-async function runPublishNow(): Promise<void> {
+async function runPublishNow(deadlineMs: number): Promise<void> {
   if (provider !== "postgres" || canary) return;
   const startedAt = new Date().toISOString();
   const [run] = await runRuntimeChildren([{
@@ -757,6 +760,7 @@ async function runPublishNow(): Promise<void> {
   }], {
     cwd: CODE_ROOT,
     env: process.env,
+    deadlineMs,
     maxBufferBytes: 16 * 1024 * 1024,
     onStdout: (_id, output) => process.stdout.write(output),
     onStderr: (_id, output) => process.stderr.write(output),
@@ -829,7 +833,7 @@ async function persistOuterRoutineChildFailure(
   }
 }
 
-async function runIntakeRuntime(): Promise<void> {
+async function runIntakeRuntime(deadlineMs: number): Promise<void> {
   if (provider !== "postgres" || canary) {
     console.log("  intake runtime: skipped — only the standing production runner owns this observation");
     return;
@@ -843,6 +847,7 @@ async function runIntakeRuntime(): Promise<void> {
   }], {
     cwd: CODE_ROOT,
     env: process.env,
+    deadlineMs,
 
     maxBufferBytes: 16 * 1024 * 1024,
 
@@ -1127,6 +1132,7 @@ const POLL_MS = 60_000;
 const PAUSE_BEAT_MS = 30 * 60_000;
 
 const INTAKE_RUNTIME_TICK_MS = Math.max(POLL_MS, INTERVAL_MIN * 60_000);
+const INTAKE_RUNTIME_BUDGET_MS = 5 * 60_000;
 let intentRepos: ControlPlaneRepositories | null = null;
 let intentReposOpening: Promise<ControlPlaneRepositories> | null = null;
 let controlReader: ReturnType<typeof runnerControlReader> | null = null;
@@ -1152,7 +1158,7 @@ const honorFailurePrinted = new Set<string>();
 const CONTINUOUS_HUNTERS = process.env.WTP_CONTINUOUS_HUNTERS === "1";
 if (!process.env.WTP_HUNTER_LANE_ARMING) process.env.WTP_HUNTER_LANE_ARMING = hunterLaneArmingPath(ROOT);
 let hunterLaneChild: ChildProcess | null = null;
-async function runHunterLane(): Promise<void> {
+async function runHunterLane(deadlineMs: number): Promise<void> {
   if (!CONTINUOUS_HUNTERS || canary || runtimeAdmissionsHeld) return;
   const [run] = await runRuntimeChildren([{
     id: "hunter-lane",
@@ -1162,6 +1168,7 @@ async function runHunterLane(): Promise<void> {
   }], {
     cwd: CODE_ROOT,
     env: process.env,
+    deadlineMs,
     maxBufferBytes: 16 * 1024 * 1024,
     noProgressMs: RUNTIME_NO_PROGRESS_MS,
     onStdout: (_id, output) => process.stdout.write(output),
@@ -1188,7 +1195,7 @@ const auditPasses = auditPassClock({
 });
 
 const censusMemory = routineProcessSlots();
-async function runPlatformCensus(): Promise<void> {
+async function runPlatformCensus(deadlineMs: number): Promise<void> {
   if (provider !== "postgres" || canary || runtimeAdmissionsHeld) return;
   const release = await censusMemory.acquire("platform-census-runner.mts", Date.now() + 60_000);
   try {
@@ -1196,7 +1203,7 @@ async function runPlatformCensus(): Promise<void> {
       id: "platform-census", executable: process.execPath,
       args: [...TS_CHILD, "scripts/platform-census-runner.mts"],
       env: standingChildEnvironment("ROUTINE_SUPERVISOR"),
-    }], { cwd: CODE_ROOT, env: process.env, maxBufferBytes: 16 * 1024 * 1024,
+    }], { cwd: CODE_ROOT, env: process.env, maxBufferBytes: 16 * 1024 * 1024, deadlineMs,
       onStarted: (_id, child) => { if (child.pid) release.observe?.(child.pid); },
       onStdout: (_id, output) => process.stdout.write(output), onStderr: (_id, output) => process.stderr.write(output) });
     if (!run || run.status !== 0) throw new Error(`CENSUS_LANE_FAILED: ${run?.errorMessage ?? run?.status ?? "no child result"}`);
@@ -1204,10 +1211,11 @@ async function runPlatformCensus(): Promise<void> {
 }
 
 const standingRuntimeScheduler = new IndependentRuntimeLaneScheduler([
-  { id: "platform-census", everyMs: CENSUS_LANE_INTERVAL_MS, run: runPlatformCensus },
-  { id: "routine-civic-data", everyMs: ROUTINE_DATA_ADMISSION_MS, run: runRoutineCivicData },
-  { id: "intake-runtime", everyMs: INTAKE_RUNTIME_TICK_MS, run: runIntakeRuntime },
-  { id: "hunter-lane", everyMs: 60_000, run: runHunterLane },
+  { id: "platform-census", everyMs: CENSUS_LANE_INTERVAL_MS, budgetMs: CENSUS_LANE_BUDGET_MS, run: runPlatformCensus },
+  { id: "routine-civic-data", everyMs: ROUTINE_DATA_ADMISSION_MS, budgetMs: ROUTINE_PASS_BUDGET_MS, run: runRoutineCivicData },
+  { id: "intake-runtime", everyMs: INTAKE_RUNTIME_TICK_MS, budgetMs: INTAKE_RUNTIME_BUDGET_MS, run: runIntakeRuntime },
+  // The lane retires at its life; the wall covers the last task a worker still holds.
+  { id: "hunter-lane", everyMs: 60_000, budgetMs: HUNTER_LANE_LIFE_MS + HUNTER_WORKER_WALL_MS, run: runHunterLane },
   publishNowLane(runPublishNow),
 ], (outcome) => {
   if (outcome.state === "FAILED") {

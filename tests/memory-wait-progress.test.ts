@@ -95,3 +95,15 @@ test("a round the runner ended carries the child's last lines into its crash rec
   const failure = (digest!.runtimeOutcome as { failure?: { detail?: string } } | null)?.failure?.detail ?? "";
   assert.match(failure, /last output before it stopped:\nphase dispatch: 812ms/);
 });
+
+test("a standing child that keeps printing still ends at its lane deadline, and is told the deadline", async () => {
+  const deadlineMs = Date.now() + 800;
+  const started = Date.now();
+  const [result] = await runRuntimeChildren([{ id: "routine-civic-data", executable: process.execPath,
+    args: ["-e", "console.log('deadline ' + process.env.WTP_PASS_DEADLINE_AT); setInterval(() => console.log('progress ' + Date.now()), 50)"] }], {
+    cwd: process.cwd(), env: process.env, maxBufferBytes: 1 << 20, deadlineMs });
+  assert.equal(result!.termination, "TIMED_OUT");
+  assert.match(result!.errorMessage!, /^PASS_TIME_BUDGET: routine-civic-data reached its lane deadline/);
+  assert.match(result!.stdout, new RegExp(`deadline ${new Date(deadlineMs).toISOString()}`));
+  assert.ok(Date.now() - started < 5_000, "the drain waited for the deadline, not for the child to go quiet");
+});

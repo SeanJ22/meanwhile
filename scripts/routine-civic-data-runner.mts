@@ -49,9 +49,9 @@ import {
   routineAdmissionClock,
   unchangedRoutineProtocolFailure,
   routineTaskSelection,
-  routinePreSpawnDeferral,
+  routineDeferral,
   routineSerialLane,
-  ROUTINE_SERIAL_LANE_LAUNCH_MS,
+  ROUTINE_PASS_BUDGET_MS,
   sittingWindowSignals,
   routineUnreceiptedSupervisorAttemptHistory,
   type RoutineSupervisorAttemptHistory,
@@ -111,6 +111,7 @@ import { loadPublishedScopeLookupState } from "../lib/census-geography/scope-loo
 import { readIntents, RESEARCH_INTENT_LOG_KEY } from "../lib/control-plane/scheduler/research-policy.ts";
 import { admittedHuntSourceScopes, huntSourceTasks } from "../lib/civic-data/hunt-source-tasks.ts";
 import { PUBLISH_NOW_PASS_BUDGET_MS, PUBLISH_NOW_SINGLETON_PORT, publishNowDoorTasks, publishNowHasNothingOwed, readOwedFactItems, readPublishNowWorkerTasks, readWorkerPublicationItems, startPublishNowEdgeChecks } from "../lib/civic-data/publish-now.ts";
+import { passDeadlineFromEnv } from "../lib/ops/independent-runtime-pass.ts";
 import { publishOwedRosterFacts } from "../lib/civic-data/worker-roster-publication.ts";
 import { publishOwedCommentFacts } from "../lib/civic-data/worker-comment-facts.ts";
 import { runHourlyProbes } from "../lib/doors/hourly-check.ts";
@@ -185,8 +186,11 @@ const ROOT = process.cwd();
 // Admit the supervisor before opening hosts or changing durable source state.
 const FORCE = process.argv.includes("--force");
 const PUBLISH_NOW = process.argv.includes("--publish-now");
-/* A publish-now pass launches no child after its budget, so the runner can hand off a release between passes; what was not started stays owed. */
-const PASS_LAUNCH_DEADLINE_MS = PUBLISH_NOW ? Date.now() + PUBLISH_NOW_PASS_BUDGET_MS : Number.POSITIVE_INFINITY;
+/* The pass ends by its deadline: sources launch and run in the first two thirds of its budget, repairs until the last sixth,
+   which settles and publishes what ran. Whatever did not finish stays owed to the next pass. */
+const PASS_DEADLINE_MS = Math.min(passDeadlineFromEnv(), Date.now() + (PUBLISH_NOW ? PUBLISH_NOW_PASS_BUDGET_MS : ROUTINE_PASS_BUDGET_MS));
+const PASS_LAUNCH_DEADLINE_MS = PASS_DEADLINE_MS - Math.floor((PASS_DEADLINE_MS - Date.now()) / 3);
+const PASS_REPAIR_DEADLINE_MS = PASS_DEADLINE_MS - Math.floor((PASS_DEADLINE_MS - Date.now()) / 6);
 if (PUBLISH_NOW && FORCE) throw new Error("Publish-now cannot force unrelated source work.");
 const ADMITTED_CODE_SHA = assertRuntimeAuthority({ capabilities: ["ROUTINE_SUPERVISOR"] }).sha;
 // Publish registry meeting doors before launching children so they all use the same door inventory.
@@ -1104,15 +1108,13 @@ const sourcePass = runMeetingDiscoveryChain(pendingRuns, runs => runBoundedChild
     cwd: ROOT,
     env: process.env,
     timeoutMs: ROUTINE_CHILD_TIMEOUT_MS,
+    deadlineMs: PASS_LAUNCH_DEADLINE_MS,
     maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES,
     concurrency: sourceConcurrency,
     // Two reads of one host in this pass start at least a minute apart.
     sameDomainGapMs: ROUTINE_SAME_DOMAIN_CHILD_GAP_MS,
     onStarting: async (command, index) => {
       if (Date.now() >= PASS_LAUNCH_DEADLINE_MS) throw new Error("PASS_TIME_BUDGET: this pass's time is spent, so release handoff can run before the next one");
-      if (command.serialLane !== undefined && Date.now() >= Date.parse(RUN_STARTED_AT) + ROUTINE_SERIAL_LANE_LAUNCH_MS) {
-        throw new Error(`PASS_TIME_BUDGET: ${command.serialLane} has had this pass's turn; the next pass continues it`);
-      }
       await acquireChildMemory(command);
       await recordHuntSourceProgress(runs[index]!.task, "COLLECTING_AND_VERIFYING", "The source command has a worker slot. Collecting current source records and running the existing identity, content, freshness and reader checks. No model call is used.");
     },
@@ -1137,12 +1139,12 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
     console.error(`RCD_TASK ${pending.id}: SUPERVISOR_FAILURE (CANNOT_TELL) — ${detail}`);
     return;
   }
-  const deferral = routinePreSpawnDeferral(run, startedSourceChildren.has(run.id));
+  const deferral = routineDeferral(run, startedSourceChildren.has(run.id));
   if (deferral !== null) {
     attempted -= 1;
     // Admission already wrote this pass's QUEUED progress row, and append-only history refuses a second one.
     const detail = safeFailure(deferral);
-    console.log(`RCD_DEFER ${pending.task.id}: ${detail}; no child spawned; source work remains owed`);
+    console.log(`RCD_DEFER ${pending.task.id}: ${detail}; source work remains owed`);
     return;
   }
   const crash = childCrash(run);
@@ -1340,6 +1342,11 @@ function settleReaderDomain(domain: RoutineReaderRepairDomain, run: BoundedChild
     supervisorFailures.push(...reconciled.failures);
     return;
   }
+  const deferral = routineDeferral(run, run.termination !== "SPAWN_FAILED");
+  if (deferral !== null) {
+    console.log(`RCD_DEFER ${domain.id}: ${safeFailure(deferral)}; the reader repair remains owed`);
+    return;
+  }
   const executionFailure = readerDomainExecutionFailure(domain, run);
   const reconciled = reconcileRoutineReaderRepairDomain(
     domain,
@@ -1394,9 +1401,13 @@ function startReaderRepair(
       cwd: ROOT,
       env: process.env,
       timeoutMs: ROUTINE_READER_SINGLE_TIMEOUT_MS,
+      deadlineMs: PASS_REPAIR_DEADLINE_MS,
       maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES,
       concurrency: ROUTINE_READER_CHILD_CONCURRENCY,
-      onStarting: acquireChildMemory,
+      onStarting: async (command) => {
+        if (Date.now() >= PASS_REPAIR_DEADLINE_MS) throw new Error("PASS_TIME_BUDGET: this pass's time is spent; the next pass repairs this reader");
+        await acquireChildMemory(command);
+      },
       onSettled: (run, index) => {
         const domain = readerLaunch[index]!;
         try {
@@ -1415,8 +1426,8 @@ function startReaderRepair(
 const hotReadClocks = new Map(clockReads.flatMap((read) => read.ok ? [[read.task.id, read.clock] as const] : []));
 const launchedTaskIds = new Set(pendingRuns.map(({ id }) => id));
 const hotReadLimitsMs = {
-  SOURCE: routinePassSourceCatchUpDeadlineMs(Date.parse(RUN_STARTED_AT), readerDomains),
-  REPAIR: routinePassWorkDeadlineMs(Date.parse(RUN_STARTED_AT), readerDomains),
+  SOURCE: Math.min(PASS_LAUNCH_DEADLINE_MS, routinePassSourceCatchUpDeadlineMs(Date.parse(RUN_STARTED_AT), readerDomains)),
+  REPAIR: Math.min(PASS_REPAIR_DEADLINE_MS, routinePassWorkDeadlineMs(Date.parse(RUN_STARTED_AT), readerDomains)),
 } as const;
 const hotReadsPastLimit = new Set<string>();
 
@@ -1467,6 +1478,7 @@ async function runHotRead(task: RoutineSourceTask, atMs: number): Promise<void> 
     cwd: ROOT,
     env: process.env,
     timeoutMs: ROUTINE_CHILD_TIMEOUT_MS,
+    deadlineMs: hotReadLimitsMs.REPAIR,
     maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES,
     concurrency: 1,
     onStarting: acquireChildMemory,

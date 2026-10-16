@@ -131,6 +131,7 @@ test("a losing value is kept with its reason; an official value Sean typed over 
   assert.equal("decision" in lost && lost.decision, "KEEP_CURRENT");
   assert.deepEqual(await db.query("SELECT value, status, held_reason FROM fact ORDER BY id"), [
     { value: "Ned Beman", status: "live", held_reason: null }, { value: "Jose Jimenez", status: "held", held_reason: "LOSES_TO_CURRENT" }]);
+  assert.deepEqual(await publishClaim(db, claim(), clocks, NOW), { decision: "CONFIRM", factId: 1 });
 
   await db.query("UPDATE fact SET status = 'superseded' WHERE status = 'live'");
   await db.query(`INSERT INTO fact (entity_id, field, value, value_text, status, provenance_kind, quote, checked_at, live_at, produced_by)

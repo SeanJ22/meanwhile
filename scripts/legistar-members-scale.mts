@@ -70,7 +70,7 @@ if (process.argv.includes("--worker")) {
   } });
   const pg = { query: async <T extends Record<string, unknown> = Record<string, unknown>>(text: string, params: readonly unknown[] = []) =>
     ({ rows: await sql.unsafe(text, params as never[]) as unknown as T[] }), exec: (text: string) => sql.unsafe(text), close: () => sql.end() };
-  for (const migration of ["0035_r1_fact_store.sql", "0037_r1_fact_scale.sql", "R3-LEGISTAR-MEMBERS.sql"]) {
+  for (const migration of ["0035_r1_fact_store.sql", "0037_r1_fact_scale.sql", "R3-LEGISTAR-MEMBERS.sql", "R3-LEGISTAR-MEMBERS_retire_index.sql"]) {
     for (const statement of readFileSync(join(root, "lib/db/migrations", migration), "utf8").split("--> statement-breakpoint")) await pg.exec(statement);
   }
   await pg.exec(`CREATE TABLE cp_doors (id text PRIMARY KEY, value jsonb NOT NULL);
@@ -95,7 +95,9 @@ if (process.argv.includes("--worker")) {
     meeting: { agendaSourceType: "LEGISTAR", jurisdiction: "Pima", publishingOrg: "Pima", timeZone: "America/Phoenix", verifiedAt: now, family: null } };
   await pg.query("INSERT INTO cp_doors VALUES ('pima', $1)", [JSON.stringify(own)]);
   const run = async (label: string) => {
+    await pg.query("SELECT pg_stat_force_next_flush()");
     const [start] = (await pg.query("SELECT pg_current_wal_lsn() AS lsn")).rows;
+    const [before] = (await pg.query("SELECT seq_tup_read,idx_tup_fetch FROM pg_stat_user_tables WHERE relname='fact'")).rows;
     const measured = await new Promise<Record<string, unknown>>((resolve, reject) => {
     let readBytes = 0, writtenBytes = 0, queries = 0, sourceReads = 0, sourceBytes = 0;
     const child = fork(fileURLToPath(import.meta.url), ["--worker", `--directory=${directory}`], {
@@ -138,10 +140,13 @@ if (process.argv.includes("--worker")) {
     });
     child.on("exit", code => { if (!done) reject(new Error(`${label} worker exited ${code}`)); });
     });
+    await pg.query("SELECT pg_stat_force_next_flush()");
+    const [after] = (await pg.query("SELECT seq_tup_read,idx_tup_fetch FROM pg_stat_user_tables WHERE relname='fact'")).rows;
+    const factRowsVisited = Number(after.seq_tup_read) + Number(after.idx_tup_fetch) - Number(before.seq_tup_read) - Number(before.idx_tup_fetch);
     const [wal] = (await pg.query("SELECT pg_wal_lsn_diff(pg_current_wal_lsn(), $1) AS bytes", [start.lsn])).rows;
     const [live] = (await pg.query("SELECT count(*) AS members FROM fact WHERE produced_by='legistar-members:pima' AND field LIKE 'member:%' AND status='live'")).rows;
     if (Number(live.members) !== members) throw new Error("READER_MEMBERSHIP_COUNT_DIFFERS_FROM_SOURCE");
-    return { ...measured, databaseWalBytes: Number(wal.bytes) };
+    return { ...measured, databaseWalBytes: Number(wal.bytes), factRowsVisited };
   };
   const measurements: Record<string, unknown>[] = [];
   const changeOffice = () => pg.query("UPDATE source_rows SET data=jsonb_set(jsonb_set(data,'{OfficeRecordTitle}','\"Changed Office Title\"'),'{OfficeRecordRowVersion}','\"changed\"') WHERE collection='officerecords' AND id=1");
@@ -166,14 +171,19 @@ if (process.argv.includes("--worker")) {
       'ocdId','ocd-division/country:us/state:'||lower(g.state)||'/government:'||g.id,'notes',repeat('Generated production-volume door ',20))
     FROM governments g CROSS JOIN generate_series(1,$1::int) n`, [boards]);
   await pg.query("INSERT INTO entity (id,kind,name,state) SELECT 'background:'||id,'body','Generated background body',state FROM governments");
-  await pg.query(`INSERT INTO fact(entity_id,field,value,value_text,status,provenance_kind,quote,checked_at,produced_by)
-    SELECT e.id,'field:'||n,'"background"','background','superseded','OWNER','background',now(),'scale'
+  await pg.query("INSERT INTO entity_external_id (entity_id,scheme,value) SELECT 'background:'||id,'census',id FROM governments");
+  await pg.query(`INSERT INTO source_copy (url,final_url,fetched_at,http_status,sha256,blob_key,is_archive)
+    SELECT 'https://fixture.gov/'||id,'https://fixture.gov/'||id,now(),200,repeat('0',64),'generated:'||id,false FROM governments ORDER BY id`);
+  await pg.exec("ALTER TABLE fact DISABLE TRIGGER fact_changed");
+  await pg.query(`INSERT INTO fact(entity_id,field,value,value_text,status,provenance_kind,quote,checked_at,produced_by,source_copy_id)
+    SELECT e.id,'field:'||n,'"background"','background','live','OWNER','background',now(),'scale',e.rn
     FROM (SELECT id,row_number() OVER (ORDER BY id) AS rn FROM entity WHERE starts_with(id,'background:')) e
     CROSS JOIN generate_series(1,ceil($1::numeric/(SELECT count(*) FROM governments))::int) n
     WHERE (n-1)*(SELECT count(*) FROM governments)+e.rn <= $1`, [backgroundFacts]);
+  await pg.exec("ALTER TABLE fact ENABLE TRIGGER fact_changed");
   await pg.query("INSERT INTO fact_store_load (source,sha256) SELECT 'legistar-members:'||lower(state)||'-'||id,repeat('a',64) FROM governments");
   await pg.exec("ANALYZE");
-  const sizes = (await pg.query("SELECT (SELECT count(*) FROM cp_doors) AS doors,(SELECT count(*) FROM fact) AS facts,(SELECT count(*) FROM governments) AS governments")).rows[0];
+  const sizes = (await pg.query("SELECT (SELECT count(*) FROM cp_doors) AS doors,(SELECT count(*) FROM fact) AS facts,(SELECT count(*) FROM governments) AS governments,(SELECT count(*) FROM source_copy) AS source_copies")).rows[0];
   console.log(JSON.stringify({ seeded: sizes, states: [...new Set(governments.map(row => row.state))].sort() }));
   measurements.push(await run("national-cold"));
   await changeOffice();
@@ -186,6 +196,11 @@ if (process.argv.includes("--worker")) {
   const before = measurements.find(row => row.label === "one-government-unchanged")!;
   const after = measurements.find(row => row.label === "national-unchanged")!;
   if (before.databaseReadBytes !== after.databaseReadBytes || before.databaseRequestBytes !== after.databaseRequestBytes || after.records !== 0) throw new Error("COUNTRY_SIZE_CHANGED_TENANT_IO");
+  for (const phase of ["cold", "changed", "unchanged"]) {
+    const one = measurements.find(row => row.label === `one-government-${phase}`)!;
+    const national = measurements.find(row => row.label === `national-${phase}`)!;
+    if (one.queries !== national.queries) throw new Error("COUNTRY_SIZE_CHANGED_TENANT_QUERY_COUNT");
+  }
   const report = { sizes, bodies, members, historyPersons: history, historyOffices: history, states: [...new Set(governments.map(row => row.state))].sort(),
     runnerBytes, marginBytes: margin, copies: Math.floor((runnerBytes-margin)/peak), measurements,
     byteDefinition: "UTF-8 SQL request JSON and result-row JSON excluding protocol/TLS; native PostgreSQL WAL bytes and source API bytes reported separately",

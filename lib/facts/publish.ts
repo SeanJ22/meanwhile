@@ -42,9 +42,15 @@ export async function publishClaim(db: FactDb, c: PublishInput, clocks: Clocks, 
         detail: c.copy.finalUrl, retryMinutes: clocks.retryMinutes(c.fieldKind) });
       return { blank: verdict.reason };
     }
-    const [row] = await query(`SELECT f.id, f.value, f.provenance_kind, coalesce(s.fetched_at, f.checked_at) AS fetched_at
-      FROM fact f LEFT JOIN source_copy s ON s.id = f.source_copy_id
-      WHERE f.entity_id = $1 AND f.field = $2 AND f.status = 'live' FOR UPDATE OF f`, [c.entity.id, c.field]);
+    // Scope first: a sparse live-status index can otherwise scan every published fact for one claim.
+    const [row] = await query(`WITH head AS MATERIALIZED (
+      SELECT id FROM fact WHERE entity_id = $1 AND field = $2
+      ORDER BY (status = 'live') DESC, id DESC LIMIT 1 FOR UPDATE
+    ), own AS MATERIALIZED (
+      SELECT id, value, provenance_kind, source_copy_id, checked_at, status FROM fact WHERE id = (SELECT id FROM head)
+    ) SELECT f.id, f.value, f.provenance_kind,
+      coalesce((SELECT fetched_at FROM source_copy WHERE id = f.source_copy_id), f.checked_at) AS fetched_at
+      FROM own f WHERE f.status = 'live'`, [c.entity.id, c.field]);
     const decision = decide(row ? { value: row.value, provenance: row.provenance_kind as Claim["provenance"], fetchedAt: new Date(row.fetched_at as string) } : null,
       { value: c.value, provenance: c.provenance, fetchedAt: c.copy.fetchedAt });
     if (decision === "CONFIRM") {

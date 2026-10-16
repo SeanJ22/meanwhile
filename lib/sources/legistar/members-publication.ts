@@ -89,10 +89,12 @@ export async function publishLegistarMembers(input: {
       }
     }
     for (const roster of legistarMemberRosters(input.raw, prepared.bound, input.now)) {
-      const departed = await input.facts.query(`UPDATE fact f SET status = 'superseded', held_reason = 'NOT_ON_CURRENT_OFFICIAL_ROSTER'
-        FROM source_copy s WHERE s.id = f.source_copy_id AND starts_with(s.url, $2) AND f.entity_id = $1
-          AND f.status = 'live' AND f.provenance_kind = 'OFFICIAL' AND f.field LIKE 'member:%'
-          AND NOT EXISTS (SELECT 1 FROM entity_external_id x WHERE x.entity_id = substr(f.field, 8) AND x.scheme = $3 AND x.value = ANY($4::text[])) RETURNING f.id`,
+      const departed = await input.facts.query(`WITH own AS MATERIALIZED (
+        SELECT id, field, status, provenance_kind, source_copy_id FROM fact WHERE entity_id = $1
+      ) UPDATE fact f SET status = 'superseded', held_reason = 'NOT_ON_CURRENT_OFFICIAL_ROSTER'
+        FROM own WHERE f.id = own.id AND own.status = 'live' AND own.provenance_kind = 'OFFICIAL' AND own.field LIKE 'member:%'
+          AND (SELECT starts_with(url, $2) FROM source_copy WHERE id = own.source_copy_id)
+          AND NOT EXISTS (SELECT 1 FROM entity_external_id x WHERE x.entity_id = substr(own.field, 8) AND x.scheme = $3 AND x.value = ANY($4::text[])) RETURNING f.id`,
       [roster.bodyId, `https://webapi.legistar.com/v1/${input.raw.slug}/officerecords?`, `legistar:${input.raw.slug}`,
         roster.members.map(member => member.nativeIds![`legistar:${input.raw.slug}`][0])]);
       if (departed.length) await input.facts.query("INSERT INTO rebuild_queue (place_id) SELECT place_id FROM entity_place WHERE entity_id = $1 ON CONFLICT DO NOTHING", [roster.bodyId]);

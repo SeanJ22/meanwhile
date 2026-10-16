@@ -274,6 +274,13 @@
       "when": 1790889600004,
       "tag": "R3-LEGISTAR-MEMBERS",
       "breakpoints": true
+    },
+    {
+      "idx": 39,
+      "version": "7",
+      "when": 1790889600005,
+      "tag": "R3-LEGISTAR-MEMBERS_retire_index",
+      "breakpoints": true
     }
   ]
 }

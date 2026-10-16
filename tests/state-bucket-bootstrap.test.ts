@@ -6,7 +6,7 @@ import { join } from "node:path";
 import { prepareStateAuthorityBootstrap, type StateBootstrapQuery } from "../lib/civic-data/state-bucket-bootstrap.ts";
 import { partitionCivicPayload } from "../lib/civic-data/payload-codec.ts";
 import { StreamedCivicPayload } from "../lib/civic-data/streamed-payload.ts";
-import { REGISTRY_STATES, registryJurisdictions, stateFromRegistryRuntimeScope } from "../lib/registry/state-scopes.ts";
+import { REGISTRY_STATES, registryJurisdictions, stateFromRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
 
 test("streamed payload reads each encoded part once and retains the original mixed-state row order", async () => {
   const directory = await mkdtemp(join(tmpdir(), "state-stream-"));

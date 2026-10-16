@@ -1,5 +1,5 @@
-import { BALLOT_STATES, stateBallotContractId, stateBallotScope } from "../ballot/state-scopes.ts";
-import { REGISTRY_STATES, stateRegistryRuntimeContractId, stateRegistryRuntimeScope } from "../registry/state-scopes.ts";
+import { BALLOT_STATES, stateBallotContractId, stateBallotScope } from "./state-scopes.ts";
+import { REGISTRY_STATES, stateRegistryRuntimeContractId, stateRegistryRuntimeScope } from "./state-scopes.ts";
 import { VALIDATION_CHECKS, type RoutineDataClassification, type RoutineRecordClass } from "./types.ts";
 import type { SourceAuthorityId } from "./source-authority.ts";
 

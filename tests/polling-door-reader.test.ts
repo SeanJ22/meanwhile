@@ -7,7 +7,7 @@ import { dispatchWorkerTask, evidenceProjection } from "../lib/control-plane/wor
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import type { VotingSitesFile } from "../lib/ballot/voting-sites.ts";
-import { stateBallotScope, stateBallotContractId } from "../lib/ballot/state-scopes.ts";
+import { stateBallotScope, stateBallotContractId } from "../lib/civic-data/state-scopes.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createHash } from "node:crypto";

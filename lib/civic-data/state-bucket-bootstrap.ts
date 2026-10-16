@@ -1,9 +1,10 @@
+import { temporaryPath } from "./temporary-path.ts";
 import { createHash } from "node:crypto";
 import { access, mkdir, open, readFile, rename, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import { join } from "node:path";
-import { BALLOT_STATES, stateBallotContractId, stateBallotScope, type StateBallotFamily } from "../ballot/state-scopes.ts";
-import { registryJurisdictions, REGISTRY_STATES, stateRegistryRuntimeContractId, stateRegistryRuntimeScope } from "../registry/state-scopes.ts";
+import { BALLOT_STATES, stateBallotContractId, stateBallotScope, type StateBallotFamily } from "./state-scopes.ts";
+import { registryJurisdictions, REGISTRY_STATES, stateRegistryRuntimeContractId, stateRegistryRuntimeScope } from "./state-scopes.ts";
 import { StreamedCivicPayload } from "./streamed-payload.ts";
 import type { RoutineRecordClass } from "./types.ts";
 
@@ -331,7 +332,7 @@ function payloadEmitter(family: StateBootstrapFamily, metadata: Row, spool: Spoo
 export async function prepareStateAuthorityBootstrap(input: { readonly directory: string; readonly query: StateBootstrapQuery; readonly streamRows: StateBootstrapRows }): Promise<{
   readonly origins: readonly Origin[]; readonly units: readonly StateBootstrapUnit[]; readonly unassigned: readonly Row[]; readonly missingOrigins: readonly StateBootstrapFamily[];
 }> {
-  await mkdir(input.directory, { recursive: true, mode: 0o700 });
+  await mkdir(temporaryPath(input.directory), { recursive: true, mode: 0o700 });
   const origins: Origin[] = [], missingOrigins: StateBootstrapFamily[] = [];
   for (const [family, recordClass, scope] of ORIGINS) {
     const rows = await input.query(`SELECT p.current_version_id,p.promoted_at,c.normalized_hash FROM civic_data_promotions p JOIN civic_data_candidates c ON c.id=p.current_version_id
@@ -390,7 +391,7 @@ export async function prepareStateAuthorityBootstrap(input: { readonly directory
         const emitter = record({ family: json(origin.family), state: json(state), inputHash: json(inputHash), originId: json(origin.versionId), originScope: json(origin.scope),
           originReadModelHash: json(origin.hash), promotedAt: json(origin.promotedAt), candidate: record(candidate), receipt: record({ ...fields(receipts[0]?.receipt), excludedFacts: members(spool, origin.versionId, state, "excludedFacts") }),
           payload: payloadEmitter(origin.family, metadata, spool, origin.versionId, state), normalizedMetadata, events: json(stateEvents) });
-        const file = await open(inputFile, "w", 0o600), fileHash = createHash("sha256");
+        const file = await open(temporaryPath(inputFile), "w", 0o600), fileHash = createHash("sha256");
         try { await emitter(async chunk => { fileHash.update(chunk); await file.write(chunk); }); } finally { await file.close(); }
         units.push({ family: origin.family, state, contractId: origin.family === "registry-runtime" ? stateRegistryRuntimeContractId(state) : stateBallotContractId(origin.family, state),
           recordClass: origin.recordClass, scope: origin.family === "registry-runtime" ? stateRegistryRuntimeScope(state) : stateBallotScope(origin.family, state),
@@ -399,8 +400,8 @@ export async function prepareStateAuthorityBootstrap(input: { readonly directory
     }
     const operationalAssignments = Array.from(spool.statement("SELECT id,state,evidence FROM bindings WHERE id LIKE 'promotion-0823:%' ORDER BY id,state").iterate(), row => ({ id: row.id, state: row.state, evidence: JSON.parse(String(row.evidence)) }));
     const plan = { origins, units, unassigned, missingOrigins, operationalAssignments };
-    await writeFile(`${planFile}.tmp`, JSON.stringify(plan), { mode: 0o600 });
-    await rename(`${planFile}.tmp`, planFile);
+    await writeFile(temporaryPath(`${planFile}.tmp`), JSON.stringify(plan), { mode: 0o600 });
+    await rename(temporaryPath(`${planFile}.tmp`), temporaryPath(planFile));
     return plan;
   } finally { spool.db.close(); }
 }

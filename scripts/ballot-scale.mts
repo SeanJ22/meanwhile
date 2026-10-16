@@ -111,7 +111,7 @@ async function database() {
 
 async function generate() {
   const { parseCsv } = await import("../lib/reference/csv.ts");
-  const { BALLOT_STATES } = await import("../lib/ballot/state-scopes.ts");
+  const { BALLOT_STATES } = await import("../lib/civic-data/state-scopes.ts");
   const groups = new Map<string, Record<string, string>[]>();
   for (const file of ["census_govt_units_2022", "census_govt_units_2022_dependent_school_systems"]) {
     const [headers, ...records] = parseCsv(await readFile(resolve(root, `data/reference/${file}.csv`), "utf8"));
@@ -266,7 +266,7 @@ async function generateDerived() {
 }
 
 async function changeInput() {
-  const { requireBallotState } = await import("../lib/ballot/state-scopes.ts");
+  const { requireBallotState } = await import("../lib/civic-data/state-scopes.ts");
   const state = requireBallotState(arg("state")!);
   const family = arg("family") ?? "ballot-contests";
   const path = resolve(directory, `${state.toLowerCase()}${family === "ballot-contests" ? "" : `.${family}`}.json`);
@@ -337,7 +337,7 @@ async function changeInput() {
 async function isolationSnapshot() {
   const { ballotInputHash, ballotInputStamp } = await import("../lib/civic-data/ballot-input.ts");
   const { ballotPublicationDue } = await import("../lib/civic-data/ballot-publication.ts");
-  const { BALLOT_STATES, requireBallotState } = await import("../lib/ballot/state-scopes.ts");
+  const { BALLOT_STATES, requireBallotState } = await import("../lib/civic-data/state-scopes.ts");
   const { LocalFileArtifactStore } = await import("../lib/meetings/edge-store.ts");
   const authority = (await new LocalFileArtifactStore(edgeDirectory).readManifest())!.manifest.stateAuthorities!;
   assert.equal(Object.keys(authority["ballot-contests"]!).length, 51);
@@ -425,7 +425,7 @@ async function worker() {
   }
   const started = performance.now();
   markStage("module-load", "start");
-  const { requireBallotState, stateBallotScope, stateBallotContractId } = await import("../lib/ballot/state-scopes.ts");
+  const { requireBallotState, stateBallotScope, stateBallotContractId } = await import("../lib/civic-data/state-scopes.ts");
   const { LocalFileArtifactStore } = await import("../lib/meetings/edge-store.ts");
   const heldArtifactStore = new LocalFileArtifactStore(edgeDirectory);
   const artifactTransfer = { manifestReads: 0, manifestReadBytes: 0, manifestWrites: 0, manifestWriteBytes: 0,
@@ -477,7 +477,7 @@ async function worker() {
     "candidate-corpus": "CANDIDATE_PUBLICATION", "voting-sites": "VOTING_SITE", "candidate-campaign-sites-derived": "CURATED_READER_RECORD",
     "registry-runtime": "REGISTRY_RUNTIME_BINDING" } as const;
   const recordClass = recordClassFor[family as keyof typeof recordClassFor];
-  const { stateRegistryRuntimeScope } = await import("../lib/registry/state-scopes.ts");
+  const { stateRegistryRuntimeScope } = await import("../lib/civic-data/state-scopes.ts");
   const scope = family === "registry-runtime" ? stateRegistryRuntimeScope(state) : stateBallotScope(family as "ballot-contests", state);
   const division = arg("division") ?? `ocd-division/country:us/state:${state.toLowerCase()}`;
   const ids = [division.split("/place:")[0], division];

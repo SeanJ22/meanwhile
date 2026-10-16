@@ -1,4 +1,6 @@
-import { statePublicationPriorOf, rememberStatePublicationHashes } from "./state-publication-prior.ts";
+import { stateRegistryRuntimeScope } from "./state-scopes.ts";
+import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
+import { statePublicationPriorOf, rememberStatePublicationHashes } from "./state-publication.ts";
 import { readerQuery } from "./promoted-reader-query.ts";
 import { currentReaderRoute, currentReaderSelection, type ReaderSelection } from "../db/reader-route.ts";
 import { createHash } from "node:crypto";
@@ -1400,4 +1402,8 @@ async function loadReaderProjection(recordClass: RoutineRecordClass, scope: stri
     attested: { recordClass, scope, versionId: row.current_version_id as string, payloadSha256: promotedPayloadSha256(row.payload),
       retrievedAt: new Date(row.retrieved_at as string).toISOString(), staleAtRetrieval: temporal?.staleAtRetrieval === true,
       version: temporal?.version ?? null, sourceThrough: temporal?.sourceThrough ?? null } };
+}
+
+export async function readStateRegistryRuntimeProjection(state: string, options: PromotedCivicDataReadOptions = {}): Promise<CivicDataReadResult<RegistryRuntimeReadModel>> {
+  return readPromotedCivicData<RegistryRuntimeReadModel>("REGISTRY_RUNTIME_BINDING", stateRegistryRuntimeScope(state), options);
 }

@@ -9,7 +9,7 @@ import { publishCampaignSitePortraits } from "../lib/control-plane/promotion/cam
 import { derivedCampaignSitesCandidate } from "../lib/civic-data/derived-campaign-site-writer.ts";
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import type { DerivedCampaignSitesProjection } from "../lib/civic-data/derived-campaign-sites.ts";
-import { stateBallotScope, stateBallotContractId } from "../lib/ballot/state-scopes.ts";
+import { stateBallotScope, stateBallotContractId } from "../lib/civic-data/state-scopes.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { portraitBindingMatches } from "../lib/photos/binding.ts";

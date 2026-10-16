@@ -1,5 +1,5 @@
 import checklist from "../coverage/checklist-map.json" with { type: "json" };
-import { BALLOT_STATES, parseStateBallotContractId, stateBallotContractId, type StateBallotContractId } from "../ballot/state-scopes.ts";
+import { BALLOT_STATES, parseStateBallotContractId, stateBallotContractId, type StateBallotContractId } from "./state-scopes.ts";
 
 const WORKER_READER_FAMILIES = {
   "voting-sites": "VOTING_SITE",

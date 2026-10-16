@@ -1,4 +1,4 @@
-import { stateBallotContractId } from "../ballot/state-scopes.ts";
+import { stateBallotContractId } from "./state-scopes.ts";
 import { candidatePortraitFromCommonsFile, type CandidatePortraitPatch, type CommonsPortraitRuntime } from "../ballot/candidate-portraits.ts";
 import type { CandidateCardData } from "../ballot/candidate-cards.ts";
 import type { CampaignSiteIdentity } from "../candidates/campaign-site-verifier.ts";
@@ -19,7 +19,7 @@ import { mergeManualSourceCopies } from "./manual-source-urls.ts";
 import { processRegisteredManualCandidate, type PromotionOutcome } from "./promotion.ts";
 import type { RoutineDataStore } from "./store.ts";
 import type { ManualSourceReview } from "./types.ts";
-import { consumeStatePublicationRecord } from "./state-publication-prior.ts";
+import { consumeStatePublicationRecord } from "./state-publication.ts";
 
 const EMPTY_CARD: CandidateCardData = { photoUrl: null, photoSource: null, bio: null, bioSourceUrl: null, bioSourceLabel: null,
   email: null, phone: null, phoneLabel: null, filedAddress: null, filedAddressSource: null };

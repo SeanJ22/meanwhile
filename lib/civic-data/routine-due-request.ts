@@ -1,4 +1,4 @@
-import { parseStateBallotContractId } from "../ballot/state-scopes.ts";
+import { parseStateBallotContractId } from "./state-scopes.ts";
 import { randomUUID } from "node:crypto";
 
 import { ADMIN_CONFIG_ID, defaultAdminConfig } from "../control-plane/gateway/admin-config.ts";

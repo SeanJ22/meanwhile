@@ -1,11 +1,11 @@
 import { manualPriorAuthorityIssue } from "../lib/civic-data/manual-prior-authority.ts";
 import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
 import { candidateChangeSet, civicRecordsFor, rowKeyedCivicRecordsFor, ROW_KEYED_CIVIC_CHANGE_CONTRACT } from "../lib/civic-data/changes.ts";
-import { withStateRecordHashes } from "../lib/civic-data/state-publication-prior.ts";
+import { withStateRecordHashes } from "../lib/civic-data/state-publication.ts";
 import { trustedLkgCandidateEnvelopeSha256, trustedLkgCandidateId, trustedLkgImportEvidenceIssue, trustedLkgImportUrl, trustedLkgValidatorIds } from "../lib/civic-data/trusted-lkg-import.ts";
 import type { CandidateVersionRecord, PromotedProjection, RoutineCandidate } from "../lib/civic-data/types.ts";
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
-import { stateBallotScope } from "../lib/ballot/state-scopes.ts";
+import { stateBallotScope } from "../lib/civic-data/state-scopes.ts";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";

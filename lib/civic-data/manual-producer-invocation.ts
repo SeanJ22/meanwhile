@@ -1,5 +1,5 @@
-import { stateFromRegistryRuntimeContractId, type StateRegistryContractId } from "../registry/state-scopes.ts";
-import { parseStateBallotContractId, type StateBallotContractId, type StateBallotFamily } from "../ballot/state-scopes.ts";
+import { stateFromRegistryRuntimeContractId, type StateRegistryContractId } from "./state-scopes.ts";
+import { parseStateBallotContractId, type StateBallotContractId, type StateBallotFamily } from "./state-scopes.ts";
 import type { ResolvedScope } from "../control-plane/expansion/membership.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS, type ManualProductionContractId } from "./manual-contracts.ts";
 

@@ -1,5 +1,5 @@
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
-import { stateBallotScope, stateBallotContractId, BALLOT_STATES, type BallotState } from "../lib/ballot/state-scopes.ts";
+import { stateBallotScope, stateBallotContractId, BALLOT_STATES, type BallotState } from "../lib/civic-data/state-scopes.ts";
 import assert from "node:assert/strict";
 import { mkdtemp, readFile, rm, writeFile, readdir } from "node:fs/promises";
 import { tmpdir } from "node:os";

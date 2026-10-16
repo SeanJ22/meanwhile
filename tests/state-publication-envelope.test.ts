@@ -1,5 +1,5 @@
 import { immutableStateHash, immutableStateValue } from "../lib/civic-data/state-publication.ts";
-import { bindStatePublicationPrior, consumeStatePublicationRecord, rememberStatePublicationHashes, rememberStatePublicationPrior, takeStatePublicationPrior, withStateRecordHashes } from "../lib/civic-data/state-publication-prior.ts";
+import { bindStatePublicationPrior, consumeStatePublicationRecord, rememberStatePublicationHashes, rememberStatePublicationPrior, takeStatePublicationPrior, withStateRecordHashes } from "../lib/civic-data/state-publication.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createHash } from "node:crypto";

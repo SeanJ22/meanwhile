@@ -1,4 +1,4 @@
-import { rememberStatePublicationHashes, withStateRecordHashes } from "./state-publication-prior.ts";
+import { rememberStatePublicationHashes, withStateRecordHashes } from "./state-publication.ts";
 import { processRoutineCandidate } from "./candidate-lifecycle.ts";
 import type { CandidateVersionRecord, PromotedProjection, RoutineCandidate } from "./types.ts";
 import { PostgresRoutineDataStore, type RoutineDataStore } from "./store.ts";

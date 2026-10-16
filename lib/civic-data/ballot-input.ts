@@ -3,7 +3,7 @@ import { execFile } from "node:child_process";
 import { createReadStream } from "node:fs";
 import { resolve } from "node:path";
 import { promisify } from "node:util";
-import { requireBallotState, type BallotState } from "../ballot/state-scopes.ts";
+import { requireBallotState, type BallotState } from "./state-scopes.ts";
 
 const git = promisify(execFile);
 

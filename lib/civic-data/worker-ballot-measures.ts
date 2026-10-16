@@ -1,8 +1,8 @@
-import { parseStateBallotContractId, requireBallotState, stateBallotContractId } from "../ballot/state-scopes.ts";
+import { parseStateBallotContractId, requireBallotState, stateBallotContractId } from "./state-scopes.ts";
 import { createHash } from "node:crypto";
 import type { AutonomousWorkPlan } from "../control-plane/workers/autonomous-plan.ts";
 import type { WorkerResultRecord } from "../control-plane/workers/types.ts";
-import type { RegistryDivisionMatch } from "./registry-divisions.ts";
+import type { RegistryDivisionMatch } from "./store.ts";
 import { linkingPageFrom, section3Page } from "../control-plane/promotion/section3.ts";
 import { jurisdictionFromOcdId } from "../coverage/states.ts";
 import type { BallotSet, Measure } from "../ballot/types.ts";

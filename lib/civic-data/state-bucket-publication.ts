@@ -1,7 +1,7 @@
-import { withStateRecordHashes } from "./state-publication-prior.ts";
+import { withStateRecordHashes } from "./state-publication.ts";
 import { createHash } from "node:crypto";
-import { requireBallotState, stateBallotContractId, stateBallotScope, type StateBallotFamily } from "../ballot/state-scopes.ts";
-import { requireRegistryState, stateRegistryRuntimeContractId, stateRegistryRuntimeScope } from "../registry/state-scopes.ts";
+import { requireBallotState, stateBallotContractId, stateBallotScope, type StateBallotFamily } from "./state-scopes.ts";
+import { requireRegistryState, stateRegistryRuntimeContractId, stateRegistryRuntimeScope } from "./state-scopes.ts";
 import { assertWriteAllowed } from "../db/write-guard.ts";
 import { canonicalCivicDataHash } from "./canonical-hash.ts";
 import { candidateChangeSet, canonicalCivicDataJson, civicRecordsFor, rowKeyedCivicRecordsFor, ROW_KEYED_CIVIC_CHANGE_CONTRACT } from "./changes.ts";

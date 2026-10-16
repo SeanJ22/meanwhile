@@ -1,5 +1,5 @@
 import { PLURAL_STATES } from "../lib/sources/plural/targets.ts";
-import { BALLOT_STATES } from "../lib/ballot/state-scopes.ts";
+import { BALLOT_STATES } from "../lib/civic-data/state-scopes.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";

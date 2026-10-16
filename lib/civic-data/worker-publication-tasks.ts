@@ -1,4 +1,4 @@
-import { parseStateBallotContractId } from "../ballot/state-scopes.ts";
+import { parseStateBallotContractId } from "./state-scopes.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import type { RoutineSourceTask } from "./runner.ts";
 import type { WorkItem } from "../control-plane/work-item.ts";

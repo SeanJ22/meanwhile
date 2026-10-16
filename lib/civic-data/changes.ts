@@ -1,4 +1,4 @@
-import type { StatePublicationPrior } from "./state-publication-prior.ts";
+import type { StatePublicationPrior } from "./state-publication.ts";
 import { createHash } from "node:crypto";
 import { canonicalCivicDataHash } from "./canonical-hash.ts";
 import { immutableStateHash, statePublicationScope } from "./state-publication.ts";

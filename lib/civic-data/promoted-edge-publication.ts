@@ -1,5 +1,5 @@
-import { BALLOT_STATES, stateBallotScope, type BallotState } from "../ballot/state-scopes.ts";
-import { REGISTRY_STATES, stateRegistryRuntimeScope } from "../registry/state-scopes.ts";
+import { BALLOT_STATES, stateBallotScope, type BallotState } from "./state-scopes.ts";
+import { REGISTRY_STATES, stateRegistryRuntimeScope } from "./state-scopes.ts";
 import { DOTGOV_SCOPE, readDotGovProjection } from "./dotgov.ts";
 import { readGenericBallotProjection } from "../ballot/generic-projection.ts";
 import { createHash } from "node:crypto";

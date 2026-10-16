@@ -1,4 +1,4 @@
-import { parseStateBallotContractId } from "../lib/ballot/state-scopes.ts";
+import { parseStateBallotContractId } from "../lib/civic-data/state-scopes.ts";
 import { readFileSync } from "node:fs";
 import { isAbsolute, relative, resolve, join } from "node:path";
 import { neon } from "@neondatabase/serverless";

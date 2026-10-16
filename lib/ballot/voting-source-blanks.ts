@@ -1,4 +1,4 @@
-import { stateBallotContractId } from "./state-scopes.ts";
+import { stateBallotContractId } from "../civic-data/state-scopes.ts";
 import { fingerprint } from "../control-plane/ids.ts";
 import { openOccurrence, recordNextDue, resumeOpenOccurrence, syncObligations } from "../control-plane/scheduler/durable.ts";
 import { scheduleObligation } from "../control-plane/scheduler/obligation.ts";

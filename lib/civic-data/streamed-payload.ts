@@ -1,3 +1,4 @@
+import { temporaryPath } from "./temporary-path.ts";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
@@ -22,8 +23,8 @@ export class StreamedCivicPayload {
       const held = (await this.readParts([hash])).find(part => part.hash === hash);
       if (!held) throw new Error(`STATE_BOOTSTRAP_PART_MISSING:${hash}`);
       value = held.payload;
-      await mkdir(this.directory, { recursive: true, mode: 0o700 });
-      await writeFile(join(this.directory, `${hash}.json`), JSON.stringify(value), { mode: 0o600, flag: "wx" });
+      await mkdir(temporaryPath(this.directory), { recursive: true, mode: 0o700 });
+      await writeFile(temporaryPath(join(this.directory, `${hash}.json`)), JSON.stringify(value), { mode: 0o600, flag: "wx" });
     }
     this.cached.set(hash, value);
     if (this.cached.size > 8) this.cached.delete(this.cached.keys().next().value!);

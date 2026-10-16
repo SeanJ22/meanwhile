@@ -1,4 +1,4 @@
-import { stateBallotContractId, stateBallotScope } from "../ballot/state-scopes.ts";
+import { stateBallotContractId, stateBallotScope } from "./state-scopes.ts";
 import {
   civicDataReadNotInitialized,
   readPromotedCivicData,

@@ -1,4 +1,4 @@
-import { rememberStatePublicationHashes, rememberStatePublicationPrior, withStateRecordHashes } from "../lib/civic-data/state-publication-prior.ts";
+import { rememberStatePublicationHashes, rememberStatePublicationPrior, withStateRecordHashes } from "../lib/civic-data/state-publication.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
@@ -11,7 +11,7 @@ import { getTableColumns } from "drizzle-orm";
 import * as schema from "../lib/db/schema.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
-import { STATE_BALLOT_FAMILIES, stateBallotContractId } from "../lib/ballot/state-scopes.ts";
+import { STATE_BALLOT_FAMILIES, stateBallotContractId } from "../lib/civic-data/state-scopes.ts";
 import { CivicPayloadParts } from "../lib/civic-data/payload-parts.ts";
 import { decodeStateCandidate, encodeStateCandidate, immutableStateCandidate, withStatePublicationRead } from "../lib/civic-data/state-publication.ts";
 import { promotionProofIssue, readPromotedCivicData } from "../lib/civic-data/read-model.ts";

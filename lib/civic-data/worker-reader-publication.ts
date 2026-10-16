@@ -1,4 +1,4 @@
-import { parseStateBallotContractId, type StateBallotContractId } from "../ballot/state-scopes.ts";
+import { parseStateBallotContractId, type StateBallotContractId } from "./state-scopes.ts";
 import { recordPublicationFlow } from "./publication-flow.ts";
 import { resolveRecordConflicts } from "./source-conflicts.ts";
 import { parserFieldSources } from "./field-sources.ts";

@@ -1,15 +1,16 @@
+import { temporaryPath } from "../lib/civic-data/temporary-path.ts";
 import { createHash } from "node:crypto";
 import { readFile, rename, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { Client, neon } from "@neondatabase/serverless";
-import { STATE_BALLOT_FAMILIES, stateBallotContractId } from "../lib/ballot/state-scopes.ts";
+import { STATE_BALLOT_FAMILIES, stateBallotContractId } from "../lib/civic-data/state-scopes.ts";
 import { installDatabaseTransferCounter } from "../lib/db/transfer.ts";
 import { readJsonFile } from "../lib/ops/json-file.ts";
 import { sanitizedErrorDiagnostic } from "../lib/ops/error-diagnostic.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { assertRegisteredRuntimeContract } from "../lib/civic-data/runtime-authority.ts";
 import type { StateBucketSource } from "../lib/civic-data/state-bucket-publication.ts";
-import { stateRegistryRuntimeContractId } from "../lib/registry/state-scopes.ts";
+import { stateRegistryRuntimeContractId } from "../lib/civic-data/state-scopes.ts";
 import { assignment } from "./cli-args.mts";
 import { withStateBucketCursor } from "../lib/civic-data/state-bucket-cursor.ts";
 
@@ -23,7 +24,7 @@ try {
     assertRegisteredRuntimeContract("registry-runtime-bindings", "manual");
     const connection = process.env.DATABASE_URL;
     if (!connection) throw new Error("STATE_BUCKET_DATABASE_UNAVAILABLE");
-    const directory = resolve(prepare);
+    const directory = temporaryPath(resolve(prepare));
     const { prepareStateAuthorityBootstrap } = await import("../lib/civic-data/state-bucket-bootstrap.ts");
     const client = new Client({ connectionString: connection });
     await client.connect();
@@ -37,8 +38,8 @@ try {
     catch (error) { if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error; }
     if (prior !== text) {
       const temporary = `${manifestPath}.${process.pid}.tmp`;
-      await writeFile(temporary, text, { mode: 0o600 });
-      await rename(temporary, manifestPath);
+      await writeFile(temporaryPath(temporary), text, { mode: 0o600 });
+      await rename(temporaryPath(temporary), temporaryPath(manifestPath));
     }
     console.log("STATE_BUCKET_PREPARED=" + JSON.stringify({ manifestPath, unitCount: plan.units.length, unassignedCount: plan.unassigned.length, missingOriginCount: plan.missingOrigins.length }));
   } else {

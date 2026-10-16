@@ -1,4 +1,4 @@
-import { statePublicationPriorOf } from "./state-publication-prior.ts";
+import { statePublicationPriorOf } from "./state-publication.ts";
 import { createHash } from "node:crypto";
 import { durableStateHash, statePublicationScope } from "./state-publication.ts";
 import { sourceCheckIssue } from "./source-check.ts";

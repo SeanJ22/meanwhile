@@ -575,12 +575,12 @@ function executableDependencyClosure(
   const nodes: ExecutableDependencyNode[] = [];
   const problems = new Set<string>();
   while (pending.length > 0) {
+    const path = pending.shift()!;
+    if (seen.has(path)) continue;
     if (seen.size >= EXECUTABLE_CLOSURE_NODE_LIMIT) {
       problems.add(`registered executable closure exceeded ${EXECUTABLE_CLOSURE_NODE_LIMIT} files`);
       break;
     }
-    const path = pending.shift()!;
-    if (seen.has(path)) continue;
     seen.add(path);
     const source = stripExecutableComments(files[path] ?? "");
     const packageClosure = expandExecutable(path);

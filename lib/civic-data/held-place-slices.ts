@@ -1,4 +1,4 @@
-import { stateFromBallotScope } from "../ballot/state-scopes.ts";
+import { stateFromBallotScope } from "./state-scopes.ts";
 import { readerQuery } from "./promoted-reader-query.ts";
 import { factReader, statementQuery } from "../facts/db.ts";
 import { withFactRegistry } from "../facts/registry-overlay.ts";

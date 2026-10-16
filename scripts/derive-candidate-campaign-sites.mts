@@ -1,4 +1,4 @@
-import { requireBallotState, stateBallotScope, stateBallotContractId } from "../lib/ballot/state-scopes.ts";
+import { requireBallotState, stateBallotScope, stateBallotContractId } from "../lib/civic-data/state-scopes.ts";
 import { assignment } from "./cli-args.mts";
 import type { GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
 import { deriveCandidateUniverse } from "../lib/hunt/candidate-universe.ts";
@@ -33,7 +33,7 @@ import { candidatePublicationLinks, candidatePublicationCaptureUrls,
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { heldArtifactCaptures } from "../lib/civic-data/held-artifact-captures.ts";
-import { rememberStatePublicationPrior } from "../lib/civic-data/state-publication-prior.ts";
+import { rememberStatePublicationPrior } from "../lib/civic-data/state-publication.ts";
 
 if (!process.argv.includes("--promote")) {
   throw new Error("usage: scripts/derive-candidate-campaign-sites.mts --promote (the standing runner's child; there is no dry mode against production)");

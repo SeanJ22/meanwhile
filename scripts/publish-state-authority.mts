@@ -1,7 +1,7 @@
 import { prepareStateArtifactChild, stateArtifactResultLine } from "../lib/civic-data/state-artifact-dispatch.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
-import { requireBallotState, stateBallotContractId, type StateBallotFamily } from "../lib/ballot/state-scopes.ts";
-import { requireRegistryState, stateRegistryRuntimeContractId } from "../lib/registry/state-scopes.ts";
+import { requireBallotState, stateBallotContractId, type StateBallotFamily } from "../lib/civic-data/state-scopes.ts";
+import { requireRegistryState, stateRegistryRuntimeContractId } from "../lib/civic-data/state-scopes.ts";
 import { isStateAuthorityFamily } from "../lib/meetings/edge-artifacts.ts";
 import { resolveReaderArtifactWriteStore } from "../lib/meetings/edge-store.ts";
 import { assertRegisteredRuntimeContract } from "../lib/civic-data/runtime-authority.ts";

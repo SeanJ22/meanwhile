@@ -1,5 +1,5 @@
 import type { VotingSitesFile } from "../lib/ballot/voting-sites.ts";
-import { stateBallotScope, stateBallotContractId } from "../lib/ballot/state-scopes.ts";
+import { stateBallotScope, stateBallotContractId } from "../lib/civic-data/state-scopes.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { runWorkerPublicationJob } from "../lib/civic-data/worker-publication-job.ts";
 import { factDb } from "./helpers/fact-db.ts";

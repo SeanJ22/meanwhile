@@ -18,7 +18,7 @@ import { lookupAction } from "../lib/control-plane/gateway/registry.ts";
 import { fixtureRepositories } from "./helpers/meeting-doors-fixture.ts";
 import { actionInput } from "../app/(admin)/_mw/admin-v6/contract.ts";
 import { actionDef } from "../app/(admin)/_mw/admin-v6/actions.ts";
-import { BALLOT_STATES, type BallotState } from "../lib/ballot/state-scopes.ts";
+import { BALLOT_STATES, type BallotState } from "../lib/civic-data/state-scopes.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import { pgAppendOnlyRepository } from "../lib/control-plane/repository/pg-store.ts";

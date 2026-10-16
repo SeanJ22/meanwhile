@@ -1,5 +1,5 @@
-import { rememberStatePublicationPrior, takeStatePublicationPrior } from "../lib/civic-data/state-publication-prior.ts";
-import { stateBallotScope } from "../lib/ballot/state-scopes.ts";
+import { rememberStatePublicationPrior, takeStatePublicationPrior } from "../lib/civic-data/state-publication.ts";
+import { stateBallotScope } from "../lib/civic-data/state-scopes.ts";
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";

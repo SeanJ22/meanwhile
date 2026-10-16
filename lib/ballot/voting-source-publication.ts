@@ -1,4 +1,4 @@
-import { requireBallotState } from "./state-scopes.ts";
+import { requireBallotState } from "../civic-data/state-scopes.ts";
 import { createHash } from "node:crypto";
 import { recordDoorOutcome } from "../doors/outcome.ts";
 import { pageAddress, pageDoorId, checkEveryFor } from "../doors/page-doors.ts";

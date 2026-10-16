@@ -1,6 +1,6 @@
-import { rememberStatePublicationPrior } from "./state-publication-prior.ts";
+import { rememberStatePublicationPrior } from "./state-publication.ts";
 import type { Registry } from "../registry/types.ts";
-import { parseStateBallotContractId, stateBallotContractId, stateBallotScope } from "../ballot/state-scopes.ts";
+import { parseStateBallotContractId, stateBallotContractId, stateBallotScope } from "./state-scopes.ts";
 import { canonicalJson } from "../control-plane/repository/types.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import type { WorkItem } from "../control-plane/work-item.ts";

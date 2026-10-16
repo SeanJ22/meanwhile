@@ -1,4 +1,4 @@
-import { BALLOT_STATES, parseStateBallotContractId, requireBallotState, stateBallotContractId } from "../ballot/state-scopes.ts";
+import { BALLOT_STATES, parseStateBallotContractId, requireBallotState, stateBallotContractId } from "./state-scopes.ts";
 import { CANDIDATE_PROFILE_LEAD } from "../facts/finding-slots.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import type { RoutineSourceTask } from "./runner.ts";

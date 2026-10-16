@@ -1,4 +1,4 @@
-import { requireBallotState, stateBallotContractId, stateBallotScope } from "../ballot/state-scopes.ts";
+import { requireBallotState, stateBallotContractId, stateBallotScope } from "./state-scopes.ts";
 import type { GenericBallotProjection } from "../ballot/generic-projection.ts";
 import { canonicalCandidacyId, canonicalContestId } from "../hunt/candidate-universe.ts";
 import { ADMIN_CONFIG_ID } from "../control-plane/gateway/admin-config.ts";

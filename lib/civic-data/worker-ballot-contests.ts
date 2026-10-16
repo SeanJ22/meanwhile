@@ -1,13 +1,13 @@
 import { immutableStateValue } from "./state-publication.ts";
-import { consumeStatePublicationRecord } from "./state-publication-prior.ts";
-import { parseStateBallotContractId, requireBallotState, stateBallotContractId } from "../ballot/state-scopes.ts";
+import { consumeStatePublicationRecord } from "./state-publication.ts";
+import { parseStateBallotContractId, requireBallotState, stateBallotContractId } from "./state-scopes.ts";
 import { recordPublicationFlow } from "./publication-flow.ts";
 import { publicationRecordChanges } from "./publication-record-changes.ts";
 import { createHash } from "node:crypto";
 import type { AutonomousWorkPlan } from "../control-plane/workers/autonomous-plan.ts";
 import type { WorkerResultRecord } from "../control-plane/workers/types.ts";
 import { linkingPageFrom, section3Contest } from "../control-plane/promotion/section3.ts";
-import type { RegistryDivisionMatch } from "./registry-divisions.ts";
+import type { RegistryDivisionMatch } from "./store.ts";
 import type { BallotSet, Contest, Candidacy, HeldBallotContest } from "../ballot/types.ts";
 import { ballotElectionKey, type GenericBallotProjection } from "../ballot/generic-projection.ts";
 import type { ManualProjectionPackage, ManualProjectionPrior } from "./manual-projections.ts";

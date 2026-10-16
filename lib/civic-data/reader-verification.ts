@@ -1,5 +1,5 @@
-import { parseStateBallotContractId, stateBallotScope } from "../ballot/state-scopes.ts";
-import { stateFromRegistryRuntimeContractId } from "../registry/state-scopes.ts";
+import { parseStateBallotContractId, stateBallotScope } from "./state-scopes.ts";
+import { stateFromRegistryRuntimeContractId } from "./state-scopes.ts";
 import { readLatestReaderReadbacks, routineEventObservedAt, type RoutineDataStore } from "./store.ts";
 import type { RoutineSourceContract } from "./contracts.ts";
 import type { ManualProductionSourceContract } from "./manual-contracts.ts";
@@ -68,7 +68,7 @@ function verifyExactVersion(
 
 function verifierIdFor(contract: ReaderContract): string {
   if (parseStateBallotContractId(contract.id)) return "lib/civic-data/read-model.ts#readPromotedCivicData";
-  if (stateFromRegistryRuntimeContractId(contract.id)) return "lib/registry/state-runtime.ts#readStateRegistryRuntimeProjection";
+  if (stateFromRegistryRuntimeContractId(contract.id)) return "lib/civic-data/read-model.ts#readStateRegistryRuntimeProjection";
   if (contract.recordClass === "FEDERAL_MONEY") return "lib/federal-money/verify.ts#readFederalMoneyPartition";
   // Congress.gov and GovInfo also publish federal civic records under the same source ids; only people records read back as people.
   if (isPeopleSource(contract.sourceId) && contract.recordClass !== "FEDERAL_CIVIC_RECORD") return "lib/civic-data/people-source-publication.ts#readPeopleSourceProjection";
@@ -199,7 +199,7 @@ export async function verifyRoutineReaderProjection(
     }
     const registryState = stateFromRegistryRuntimeContractId(contract.id);
     if (registryState) {
-      const { readStateRegistryRuntimeProjection } = await import("../registry/state-runtime.ts");
+      const { readStateRegistryRuntimeProjection } = await import("./read-model.ts");
       return verifyExactVersion(verifierId, await readStateRegistryRuntimeProjection(registryState, {
         store: options.store, now: options.now, bypassCache: true,
       }), options.expectedVersionId, `${registryState} registry-runtime`);

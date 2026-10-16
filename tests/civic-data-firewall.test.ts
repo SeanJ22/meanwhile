@@ -639,3 +639,17 @@ test("publication closure follows runtime imports but not erased TypeScript inte
     assert.equal(audit(files).some(row => row.code === "MANUAL_DATA_PATH_WRITES_REPOSITORY" && row.path === "lib/fixture-writer.ts"), reachable, declaration);
   }
 });
+
+test("executable closure permits its exact bound with duplicate pending imports and rejects the next module", () => {
+  const files = minimalFiles();
+  const command = ROUTINE_SOURCE_CONTRACTS[0]!.acquisitionAdapter.command[0]!;
+  const first = '../lib/closure/0.ts';
+  files[command] = `import "${first}"; import "${first}";`;
+  for (let i = 0; i < 511; i++) {
+    files[`lib/closure/${i}.ts`] = i === 510 ? 'export const last = true;' : `import "./${i + 1}.ts"; import "./${i + 1}.ts";`;
+  }
+  assert.equal(audit(files).some(row => row.code === "DATA_EXECUTABLE_CLOSURE_UNRESOLVED"), false);
+  files['lib/closure/510.ts'] = 'import "./511.ts";';
+  files['lib/closure/511.ts'] = 'export const last = true;';
+  assert.ok(audit(files).some(row => row.code === "DATA_EXECUTABLE_CLOSURE_UNRESOLVED"));
+});

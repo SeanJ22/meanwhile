@@ -5,7 +5,7 @@ import { join, resolve } from "node:path";
 import test, { type TestContext } from "node:test";
 import { runInNewContext } from "node:vm";
 import { ModuleKind, ScriptTarget, transpileModule } from "typescript";
-import { stateBallotContractId, stateBallotScope, type StateBallotFamily } from "../lib/ballot/state-scopes.ts";
+import { stateBallotContractId, stateBallotScope, type StateBallotFamily } from "../lib/civic-data/state-scopes.ts";
 import type { BoundedChildCommand, BoundedChildLauncher, BoundedChildResult } from "../lib/civic-data/bounded-child-pass.ts";
 import { restoreStateBuckets } from "../lib/civic-data/state-bucket-dispatch.ts";
 import type { StateBootstrapQuery, StateBootstrapUnit } from "../lib/civic-data/state-bucket-bootstrap.ts";

@@ -1,4 +1,4 @@
-import { BALLOT_STATES } from "../../ballot/state-scopes.ts";
+import { BALLOT_STATES } from "../../civic-data/state-scopes.ts";
 import { NextResponse, type NextRequest } from "next/server";
 import { readRoutinePublicationStatus } from "../../civic-data/observability-server.ts";
 import { readLatestBallotPublication, readLatestBallotPublicationSummary } from "../../civic-data/ballot-publication.ts";

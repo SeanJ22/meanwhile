@@ -1,4 +1,4 @@
-import { STATE_BALLOT_FAMILIES, stateFromBallotScope } from "../ballot/state-scopes.ts";
+import { STATE_BALLOT_FAMILIES, stateFromBallotScope } from "../civic-data/state-scopes.ts";
 import type { StateAuthorityFamily, PromotedFamilyArtifactValue } from "../meetings/edge-artifacts.ts";
 import { AsyncLocalStorage } from "node:async_hooks";
 

@@ -1,7 +1,7 @@
 import type { RoutineTaskClock } from "./runner.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import { OWNER_SURFACE_FORMAT_VERSION } from "../control-plane/owner-surface.ts";
-import { parseStateBallotContractId, requireBallotState, type BallotState } from "../ballot/state-scopes.ts";
+import { parseStateBallotContractId, requireBallotState, type BallotState } from "./state-scopes.ts";
 
 export interface BallotPublicationResult {
   readonly kind: "BALLOT_PUBLICATION";

@@ -1,4 +1,4 @@
-import { statePublicationPriorOf } from "./state-publication-prior.ts";
+import { statePublicationPriorOf } from "./state-publication.ts";
 import type { CandidateState, CandidateVersionRecord, PromotedProjection, RoutineCandidate, ValidationReceipt } from "./types.ts";
 import { PostgresRoutineDataStore, PromotionBaseChangedError, routineEventObservedAt, type RoutineDataStore } from "./store.ts";
 import { validateRoutineCandidate } from "./validate.ts";

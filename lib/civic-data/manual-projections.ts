@@ -1,11 +1,11 @@
 import { statePublicationScope } from "./state-publication.ts";
-import { consumeStatePublicationRecord, rememberStatePublicationPrior } from "./state-publication-prior.ts";
+import { consumeStatePublicationRecord, rememberStatePublicationPrior } from "./state-publication.ts";
 import type { BallotSet } from "../ballot/types.ts";
 import { measureRecordIssue, seedMeasureRecords, type MeasureRecord } from "../ballot/measure-records.ts";
 import type { GeneralLineup } from "../ballot/general-lineup.ts";
 import type { AnalysesFile } from "../ballot/analyses.ts";
 import type { AzIdentityRegistry, LineupReconciliation } from "../identity/types.ts";
-import { BALLOT_STATES, parseStateBallotContractId, stateBallotContractId, type BallotState, type StateBallotContractId } from "../ballot/state-scopes.ts";
+import { BALLOT_STATES, parseStateBallotContractId, stateBallotContractId, type BallotState, type StateBallotContractId } from "./state-scopes.ts";
 import { campaignFinanceRecordIssue } from "../funding/campaign-finance-reader.ts";
 import { createHash } from "node:crypto";
 import { officialFilingIssue } from "./official-filings.ts";

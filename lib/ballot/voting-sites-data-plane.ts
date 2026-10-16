@@ -1,5 +1,5 @@
-import { consumeStatePublicationRecord } from "../civic-data/state-publication-prior.ts";
-import { requireBallotState, stateBallotContractId, stateBallotScope } from "./state-scopes.ts";
+import { consumeStatePublicationRecord } from "../civic-data/state-publication.ts";
+import { requireBallotState, stateBallotContractId, stateBallotScope } from "../civic-data/state-scopes.ts";
 import { sha256 } from "../civic-data/candidate-builders.ts";
 import { canonicalCivicDataHash } from "../civic-data/canonical-hash.ts";
 import type { CivicRecordMember, IdentityEvidence, RoutineCandidate } from "../civic-data/types.ts";

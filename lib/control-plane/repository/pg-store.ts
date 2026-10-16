@@ -6,7 +6,7 @@ import { withCallerSite } from "../../db/transfer-by-caller.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
 import type { DoorRecord } from "../../doors/registry.ts";
 import { pageAddress } from "../../doors/page-doors.ts";
-import { requireBallotState } from "../../ballot/state-scopes.ts";
+import { requireBallotState } from "../../civic-data/state-scopes.ts";
 import type { VotingSourceDoor } from "../../ballot/voting-source-types.ts";
 import type { LeadOrder } from "../leads/order.ts";
 import { createWebsitePacing } from "../website-pacing.ts";

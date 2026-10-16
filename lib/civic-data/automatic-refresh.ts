@@ -2,7 +2,7 @@ import { requiredManualProductionContract, type ManualProductionContractId } fro
 import type { RoutineSourceTask } from "./runner.ts";
 import type { RoutineCadencePolicy } from "./contracts.ts";
 import election from "../../data/reference/voting-election.json" with { type: "json" };
-import { BALLOT_STATES, parseStateBallotContractId, stateBallotContractId } from "../ballot/state-scopes.ts";
+import { BALLOT_STATES, parseStateBallotContractId, stateBallotContractId } from "./state-scopes.ts";
 
 const HOUR = 60 * 60_000;
 const DAY = 24 * HOUR;

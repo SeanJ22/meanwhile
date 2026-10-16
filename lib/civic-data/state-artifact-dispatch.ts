@@ -1,6 +1,6 @@
 import { resolve } from "node:path";
-import { stateRegistryRuntimeContractId } from "../registry/state-scopes.ts";
-import { stateBallotContractId, type StateBallotFamily } from "../ballot/state-scopes.ts";
+import { stateRegistryRuntimeContractId } from "./state-scopes.ts";
+import { stateBallotContractId, type StateBallotFamily } from "./state-scopes.ts";
 import { routineProcessSlots, type WorkerProcessSlots, type WorkerMemoryRelease } from "../control-plane/workers/worker-slots.ts";
 import type { ReaderManifest, StateAuthorityFamily } from "../meetings/edge-artifacts.ts";
 import type { ReaderArtifactStore } from "../meetings/edge-store.ts";

@@ -1,7 +1,7 @@
 import { dirname, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { type GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
-import { requireBallotState, stateBallotContractId, type BallotState } from "../lib/ballot/state-scopes.ts";
+import { requireBallotState, stateBallotContractId, type BallotState } from "../lib/civic-data/state-scopes.ts";
 import { manualProjectionCandidate, readManualProjectionPrior } from "../lib/civic-data/manual-projections.ts";
 import type { CivicDataReadStore } from "../lib/civic-data/read-model.ts";
 import { PostgresRoutineDataStore, type RoutineDataStore } from "../lib/civic-data/store.ts";

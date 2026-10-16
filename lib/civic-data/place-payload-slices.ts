@@ -1,4 +1,4 @@
-import { stateFromBallotScope } from "../ballot/state-scopes.ts";
+import { stateFromBallotScope } from "./state-scopes.ts";
 import type { ReadOnlyQuery } from "../control-plane/admin-view/promoted-slices.ts";
 import { CivicPayloadParts } from "./payload-parts.ts";
 

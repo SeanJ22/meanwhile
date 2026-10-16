@@ -1,4 +1,4 @@
-import { statePublicationPriorOf } from "./state-publication-prior.ts";
+import { statePublicationPriorOf } from "./state-publication.ts";
 import { canonicalCivicDataHash } from "./canonical-hash.ts";
 import { civicRecordsFor } from "./changes.ts";
 import { directPositiveSourceUrls } from "./manual-source-isolation.ts";

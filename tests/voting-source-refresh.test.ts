@@ -10,7 +10,7 @@ import { votingRowsToSites } from "../lib/ballot/voting-source-readers.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { fairAutonomousWorkIds } from "../lib/control-plane/workers/coordinator.ts";
 import type { VotingDoorScope, VotingSourceDoor, VotingSourceRead } from "../lib/ballot/voting-source-types.ts";
-import { BALLOT_STATES } from "../lib/ballot/state-scopes.ts";
+import { BALLOT_STATES } from "../lib/civic-data/state-scopes.ts";
 
 const ELECTION = "2026-11-03";
 const NOW = "2026-10-13T12:00:00.000Z";

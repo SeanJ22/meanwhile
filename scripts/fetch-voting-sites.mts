@@ -1,4 +1,4 @@
-import { rememberStatePublicationPrior } from "../lib/civic-data/state-publication-prior.ts";
+import { rememberStatePublicationPrior } from "../lib/civic-data/state-publication.ts";
 /* @freshness-reads-here */
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
@@ -9,7 +9,7 @@ import { REFERENCE_DIR } from "../lib/reference/index.ts";
 import { REGISTRY_RUNTIME_SCOPE, type RegistryRuntimeCarton } from "../lib/registry/runtime-data-plane.ts";
 import { readRegistrationProjection } from "../lib/registration/reader.ts";
 import { readPlacePointerSlice } from "../lib/civic-data/held-place-slices.ts";
-import { requireBallotState } from "../lib/ballot/state-scopes.ts";
+import { requireBallotState } from "../lib/civic-data/state-scopes.ts";
 import type { Division, Registry } from "../lib/registry/types.ts";
 import { CENSUS_BENCHMARK, CENSUS_GEOCODER_URL, parseCensusPoint } from "../lib/geo/census-geocoder.ts";
 import { OUTBOUND_USER_AGENT } from "../lib/geo/outbound-agent.ts";

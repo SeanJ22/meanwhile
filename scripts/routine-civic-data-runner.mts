@@ -15,7 +15,7 @@ import { ballotInputStamp } from "../lib/civic-data/ballot-input.ts";
 import { ballotPublicationDue, ballotPublicationSummary, parseBallotPublicationResult,
   readLatestBallotPublicationSummary, recordBallotPublication, type BallotPublicationResult,
   type BallotPublicationSummary, type BallotPublicationSummaries } from "../lib/civic-data/ballot-publication.ts";
-import { parseStateBallotContractId, type BallotState } from "../lib/ballot/state-scopes.ts";
+import { parseStateBallotContractId, type BallotState } from "../lib/civic-data/state-scopes.ts";
 import { neon } from "@neondatabase/serverless";
 import { campaignPublicationInputsDue, readCampaignPublicationInputs, campaignPublicationTask, readCandidateProfilePublicationTasks, type CampaignPublicationInputs } from "../lib/civic-data/campaign-publication-due.ts";
 

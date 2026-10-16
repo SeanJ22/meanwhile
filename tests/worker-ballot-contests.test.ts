@@ -1,5 +1,5 @@
 import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
-import { stateBallotContractId, stateBallotScope } from "../lib/ballot/state-scopes.ts";
+import { stateBallotContractId, stateBallotScope } from "../lib/civic-data/state-scopes.ts";
 import { readPromotedCivicData, promotedEdgeEntryOf } from "../lib/civic-data/read-model.ts";
 import { genericSourcesForDivisions } from "../lib/ballot/reader-sources.ts";
 import { ballotQuestionShape, composeOfficeField } from "../lib/ask/ballot-summary.ts";

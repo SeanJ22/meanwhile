@@ -8,7 +8,7 @@ import { join } from "node:path";
 import { prepareStateAuthorityArtifact, ensureReaderAuthorityEdge, type PublishAuthorityValue } from "../lib/meetings/edge-serving.ts";
 import { READER_ARTIFACT_FORMAT_VERSION } from "../lib/meetings/edge-artifacts.ts";
 import { LocalFileArtifactStore, type ReaderArtifactStore } from "../lib/meetings/edge-store.ts";
-import { stateRegistryRuntimeScope } from "../lib/registry/state-scopes.ts";
+import { stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
 import { withReaderSelection } from "../lib/db/reader-route.ts";
 
 test("state artifact encoding streams records with the same JSON and compressed digest", async t => {

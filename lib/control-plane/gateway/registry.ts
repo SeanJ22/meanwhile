@@ -1,4 +1,4 @@
-import { BALLOT_STATES, stateBallotContractId } from "../../ballot/state-scopes.ts";
+import { BALLOT_STATES, stateBallotContractId } from "../../civic-data/state-scopes.ts";
 import "../../ask/model.ts";
 import "../../hunt/settings.ts";
 import "../../facts/clocks.ts";

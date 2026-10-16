@@ -1,4 +1,4 @@
-import { stateBallotScope } from "../lib/ballot/state-scopes.ts";
+import { stateBallotScope } from "../lib/civic-data/state-scopes.ts";
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";

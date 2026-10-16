@@ -59,7 +59,7 @@ import {
   type HeldLinkedPublicationRead,
   type PublishableCampaignSiteApproval,
 } from "../lib/civic-data/derived-campaign-site-writer.ts";
-import { stateBallotContractId, stateBallotScope } from "../lib/ballot/state-scopes.ts";
+import { stateBallotContractId, stateBallotScope } from "../lib/civic-data/state-scopes.ts";
 import { DUARTE, KAPNER, MAYES, TANG_WILLIAMS, committedSubjects, fixture, servedRuntime, sha256, subject } from "./helpers/campaign-sites.ts";
 import { installAzBallot, installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 

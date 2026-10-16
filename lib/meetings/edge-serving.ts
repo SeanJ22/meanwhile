@@ -1,8 +1,8 @@
 import { publishAuthorityRecords, readAuthorityRecords, type RecordIndex } from "./authority-records.ts";
 import { currentReaderSelection } from "../db/reader-route.ts";
 import { createHash } from "node:crypto";
-import { stateBallotScope } from "../ballot/state-scopes.ts";
-import { stateRegistryRuntimeScope } from "../registry/state-scopes.ts";
+import { stateBallotScope } from "../civic-data/state-scopes.ts";
+import { stateRegistryRuntimeScope } from "../civic-data/state-scopes.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { registerIntegrityCheckedEdgeEntries } from "../civic-data/read-model.ts";
 import { gzipSync, gunzipSync, createGzip } from "node:zlib";

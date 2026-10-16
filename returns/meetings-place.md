@@ -3,18 +3,18 @@
 lane: meetings-place
 owner: meetings-place
 writer: the meetings-place lane
-check: at-scale
+check: fold-conflict
 ready: no step ids unknown
-river: 965bf002ea7ba2dd209f8d07852708e5e1fa1a8d
-at: 2026-10-16T03:31:40Z
+river: 1d3d303d70dc9d14aab69d61ea9b0d76d76b6e6f
+at: 2026-10-16T04:35:25Z
 state: returned
-fix_subject: fix:3cd0fdeb
-fix: River · stream/meetings-place — at-scale failed for meetings-place: MT-01 (a22bfdfb4): memory finding withdrawn after re-review under the corrected rule. The state worker's 447 MiB peak at Illinois is one state's own run on a roughly 250 MiB process baseline, and the cached canonical body index (29 MB, buil
+fix_subject: fix:75b22613
+fix: River · stream/meetings-place — fold-conflict failed for meetings-place: MT-01 (a22bfdfb4): River settled its conflicts with river in river-next (edge-artifacts.ts took river's side; tests/meetings-place.test.tsx drops the removed commentAccess extra) and is gating it with R3-SWAGIT. No action needed from the la
 
 ## Failure
 
 ```
-MT-01 (a22bfdfb4): memory finding withdrawn after re-review under the corrected rule. The state worker's 447 MiB peak at Illinois is one state's own run on a roughly 250 MiB process baseline, and the cached canonical body index (29 MB, built once per registry model) is the registry's own structure, which MT-01 stops rebuilding per request; neither is a multiple of the unit it works on. Remaining item is only the fold conflict with river 1d3d303d7 in app/api/meetings/route.ts and lib/meetings/edge-artifacts.ts (NE-01), which River settles in river-next.
+MT-01 (a22bfdfb4): River settled its conflicts with river in river-next (edge-artifacts.ts took river's side; tests/meetings-place.test.tsx drops the removed commentAccess extra) and is gating it with R3-SWAGIT. No action needed from the lane; its memory return stays withdrawn.
 ```
 
 ## Repair

@@ -126,8 +126,13 @@ export function memberSourceUrl(raw: LegistarMembers, collection: string, key: s
 export function* legistarMemberRosters(raw: LegistarMembers, rows: readonly BodySourceWiring[], now: string, pageUrl?: string): Generator<BodyRoster> {
   validateLegistarMembers(raw);
   const persons = new Map(raw.persons.map(person => [person.PersonId, person]));
+  const days = new Map<string, string>();
   for (const wiring of rows.filter(row => row.config.slug === raw.slug)) {
-    const today = new Intl.DateTimeFormat("en-CA", { timeZone: wiring.timeZone, year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(now));
+    let today = days.get(wiring.timeZone);
+    if (!today) {
+      today = new Intl.DateTimeFormat("en-CA", { timeZone: wiring.timeZone, year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(now));
+      days.set(wiring.timeZone, today);
+    }
     const nativeId = Number(wiring.config.eventBodyId);
     const body = raw.bodies.find(body => body.BodyId === nativeId);
     if (!body) throw new Error(`LEGISTAR_MEMBERS_BODY_UNBOUND:${wiring.bodyId}`);

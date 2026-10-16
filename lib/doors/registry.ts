@@ -304,6 +304,7 @@ function shutSinceFor(status: DoorStatus, previous: DoorRecord | null, at: strin
 function healthKept(previous: DoorRecord | null, status: DoorStatus): Partial<DoorRecord> {
   if (previous === null) return {};
   return {
+    ...(previous.lastFailureReason !== undefined ? { lastFailureReason: previous.lastFailureReason } : {}),
     ...(previous.transportFailures !== undefined ? { transportFailures: previous.transportFailures } : {}),
     ...(status === "SHUT" && previous.shutReason !== undefined ? { shutReason: previous.shutReason } : {}),
     ...(previous.reopenedAt !== undefined ? { reopenedAt: previous.reopenedAt } : {}),

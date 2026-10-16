@@ -1,40 +1,39 @@
-/**
- * A CSV reader that handles quoted fields with embedded commas, quotes and newlines. Returns rows as
- * string arrays; the caller maps to objects.
- */
-export function parseCsv(text: string): string[][] {
-  const rows: string[][] = [];
+export function* csvRows(text: string): Generator<string[]> {
   let row: string[] = [];
-  let field = "";
+  let parts: string[] = [];
+  let start = 0;
   let quoted = false;
+  const field = (end: number) => {
+    if (!parts.length) return text.slice(start, end);
+    parts.push(text.slice(start, end));
+    const value = parts.join(""); parts = []; return value;
+  };
 
   for (let i = 0; i < text.length; i += 1) {
     const c = text[i];
     if (quoted) {
       if (c === '"') {
         if (text[i + 1] === '"') {
-          field += '"';
+          parts.push(text.slice(start, i), '"');
           i += 1;
-        } else quoted = false;
-      } else field += c;
+          start = i + 1;
+        } else { parts.push(text.slice(start, i)); start = i + 1; quoted = false; }
+      }
       continue;
     }
-    if (c === '"') quoted = true;
+    if (c === '"') { parts.push(text.slice(start, i)); start = i + 1; quoted = true; }
     else if (c === ",") {
-      row.push(field);
-      field = "";
+      row.push(field(i)); start = i + 1;
     } else if (c === "\n") {
-      row.push(field);
-      rows.push(row);
-      row = [];
-      field = "";
-    } else if (c !== "\r") field += c;
+      row.push(field(i)); start = i + 1;
+      yield row; row = [];
+    } else if (c === "\r") { parts.push(text.slice(start, i)); start = i + 1; }
   }
-  // A final line with no trailing newline is a row, not a discard.
-  if (field !== "" || row.length > 0) {
-    row.push(field);
-    rows.push(row);
+  const last = field(text.length);
+  if (last !== "" || row.length > 0) {
+    row.push(last); yield row;
   }
-  return rows;
 }
+
+export function parseCsv(text: string): string[][] { return [...csvRows(text)]; }
 

@@ -663,8 +663,13 @@ async function recordHuntSourceProgress(task: RoutineSourceTask, stage: HuntSour
 
 // Source pointers may settle in the other routine process while publication has a large outbox.
 // Copy them before admission, then once per existing publication minute without overlapping sweeps.
-const publishNowEdgeStore = PUBLISH_NOW ? resolveReaderArtifactWriteStore() : null;
-const publishNowEdgeChecks = PUBLISH_NOW ? startPublishNowEdgeChecks({
+// Federal backfills publish state pages while their child is still running.
+// The existing minute sweep brings those facts to readers before the national pass ends.
+const periodicFederalTasks = STANDING_SOURCE_TASKS.filter(task => task.recordClass === "FEDERAL_MONEY" &&
+  (!ONLY || ONLY.has(task.id) || (task.registeredContractId !== undefined && ONLY.has(task.registeredContractId))));
+const periodicSourceEdge = PUBLISH_NOW || periodicFederalTasks.length > 0;
+const publishNowEdgeStore = periodicSourceEdge ? resolveReaderArtifactWriteStore() : null;
+const publishNowEdgeChecks = periodicSourceEdge ? startPublishNowEdgeChecks({
   store: publishNowEdgeStore?.kind === "local-file" ? "local folder" : publishNowEdgeStore?.kind === "netlify-blobs" ? "Netlify Blobs" : "not configured",
   readPaused: async () => {
     const connection = controlPlaneUrlFromEnv();
@@ -673,7 +678,8 @@ const publishNowEdgeChecks = PUBLISH_NOW ? startPublishNowEdgeChecks({
     return readIntents([...(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY))]).runnerPause.paused;
   },
   check: async () => {
-    const outcome = await publishSupervisorReaderEdge(store, new Date().toISOString());
+    const outcome = await publishSupervisorReaderEdge(store, new Date().toISOString(), PUBLISH_NOW ? null
+      : periodicFederalTasks);
     const failure = readerEdgeSupervisorFailure(outcome);
     if (failure) supervisorFailures.push(failure);
     return outcome;
@@ -1439,11 +1445,11 @@ const readerRuns = pass.repair;
 // Source settlement publishes serving copies even when a readback child fails.
 step = "publishing changed reader edge copies";
 await publishNowEdgeChecks?.stop();
-const finalReaderEdge = publishNowEdgeChecks ? await publishNowEdgeChecks.run()
+const finalReaderEdge = PUBLISH_NOW && publishNowEdgeChecks ? await publishNowEdgeChecks.run()
   : await publishSupervisorReaderEdge(store, new Date().toISOString(), ONLY === null ? null : selectedTasks);
-const readerEdge = publishNowEdgeChecks ? (await publishNowEdgeChecks.stop())! : finalReaderEdge;
+const readerEdge = PUBLISH_NOW && publishNowEdgeChecks ? (await publishNowEdgeChecks.stop())! : finalReaderEdge;
 const readerEdgeFailure = readerEdgeSupervisorFailure(finalReaderEdge);
-if (readerEdgeFailure && !publishNowEdgeChecks) supervisorFailures.push(readerEdgeFailure);
+if (readerEdgeFailure && !(PUBLISH_NOW && publishNowEdgeChecks)) supervisorFailures.push(readerEdgeFailure);
 for (const run of readerRuns) {
   if (run.settlementErrorMessage === null) continue;
   const detail = safeFailure(run.settlementErrorMessage ?? "unknown Reader settlement failure");

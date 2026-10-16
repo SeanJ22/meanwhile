@@ -40,6 +40,7 @@ export const ROUTINE_RECORD_CLASSES = [
   "DOTGOV_REFERENCE",
   "OPERATIONAL_REFERENCE",
   "REGISTRATION",
+  "FEDERAL_MONEY",
 ] as const;
 export type RoutineRecordClass = (typeof ROUTINE_RECORD_CLASSES)[number];
 
@@ -314,7 +315,15 @@ export type RoutineRemovalEvidence =
   | RosterDepartureRemovalEvidence
   | AuditPullRemovalEvidence
   | MovedToHistoryRemovalEvidence
-  | MovedToFactStoreRemovalEvidence;
+  | MovedToFactStoreRemovalEvidence
+  | FederalRepartitionRemovalEvidence;
+
+export interface FederalRepartitionRemovalEvidence {
+  readonly key: string;
+  readonly code: "FEDERAL_RECORD_REPARTITIONED";
+  readonly targetScope: string;
+  readonly targetVersionId: string;
+}
 
 /** A roster row removed from the registry partition: its members publish as facts. */
 export interface MovedToFactStoreRemovalEvidence {

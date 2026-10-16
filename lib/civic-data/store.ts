@@ -161,6 +161,7 @@ export interface RoutineStoreClock {
   /** Returned for a parser-scoped clock; the prior GOOD keeps its original source timestamps. */
   readonly lastSucceededParserVersion?: string;
   readonly sittingStarts?: readonly string[];
+  readonly continuationPending?: boolean;
 }
 
 /** Every pointer move's event detail begins with this (both stores' `promote`). */
@@ -1072,6 +1073,8 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
       lastAttemptedAt,
       lastSucceededAt: proofConsistentSuccess(pointedRecord, pointer),
       lastSucceededObservedAt: proofConsistentObservedSuccess(pointedRecord, pointer, pointedObservedAt),
+      ...(recordClass === "FEDERAL_MONEY" && scope === `${sourceId}:US` && pointer?.sourceId === sourceId
+        ? { continuationPending: federalMoneyContinuationPending(pointer.payload, sourceId) } : {}),
       ...(parserVersion !== undefined && proofConsistentPointedSuccess(pointedRecord, pointer)
         ? { lastSucceededParserVersion: pointedRecord.candidate.normalization.parserVersion } : {}),
     }, confirmation, sittings, parserVersion);
@@ -1124,6 +1127,15 @@ export function routineClockPointerRead(db: RoutineClockDb, recordClass: Routine
       lastKnownGoodVersionId: civicDataPromotions.lastKnownGoodVersionId,
       promotedAt: civicDataPromotions.promotedAt,
       validationReceipt: civicDataPromotions.validationReceipt,
+      ...(recordClass === "FEDERAL_MONEY" && scope.endsWith(":US") ? { continuationPending: sql<boolean>`
+        coalesce(${civicDataPromotions.payload}->>'state', '') = 'US'
+        and ${civicDataPromotions.payload}->>'source' = ${civicDataPromotions.sourceId}
+        and exists (
+          select 1 from jsonb_array_elements(case when jsonb_typeof(${civicDataPromotions.payload}->'states') = 'array'
+            then ${civicDataPromotions.payload}->'states' else '[]'::jsonb end) as state_progress
+          where state_progress->>'status' = 'BACKFILL'
+            or state_progress->'cursor' is not null and state_progress->'cursor' <> 'null'::jsonb
+        )` } : {}),
     })
     .from(civicDataPromotions)
     .where(and(eq(civicDataPromotions.recordClass, recordClass), eq(civicDataPromotions.scope, scope)))
@@ -1168,8 +1180,21 @@ function confirmedClock(
     ...(lastSucceededAt ? { lastSucceededAt } : {}),
     ...(lastSucceededObservedAt ? { lastSucceededObservedAt } : {}),
     ...(clock.lastSucceededParserVersion ? { lastSucceededParserVersion: clock.lastSucceededParserVersion } : {}),
+    ...(clock.continuationPending !== undefined ? { continuationPending: clock.continuationPending } : {}),
     ...sittings,
   };
+}
+
+/** Only the source's promoted national marker owns the unfinished acquisition pages. */
+export function federalMoneyContinuationPending(payload: unknown, sourceId: string): boolean {
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) return false;
+  const marker = payload as { readonly state?: unknown; readonly source?: unknown; readonly states?: unknown };
+  if (marker.state !== "US" || marker.source !== sourceId || !Array.isArray(marker.states)) return false;
+  return marker.states.some(value => {
+    if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+    const progress = value as { readonly status?: unknown; readonly cursor?: unknown };
+    return progress.status === "BACKFILL" || progress.cursor !== undefined && progress.cursor !== null;
+  });
 }
 
 export function routineClockConfirmationRead(db: RoutineClockDb, recordClass: RoutineRecordClass, scope: string) {
@@ -2242,6 +2267,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       lastAttemptedAt,
       lastSucceededAt: canonicalLastSucceededAt,
       lastSucceededObservedAt,
+      ...(recordClass === "FEDERAL_MONEY" && scope === `${sourceId}:US` && pointer?.sourceId === sourceId
+        ? { continuationPending: pointer.continuationPending === true } : {}),
       ...(parserVersion !== undefined && proofConsistentPointedSuccess(pointedRecord, pointerProof)
         ? { lastSucceededParserVersion: pointedRecord.candidate.normalization.parserVersion } : {}),
     }, confirmation !== null && pointer !== undefined && confirmation.versionId === pointer.currentVersionId ? confirmation : null, sittings, parserVersion);

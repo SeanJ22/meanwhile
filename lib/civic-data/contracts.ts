@@ -9,6 +9,8 @@ import {
 import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_ID, REGISTRATION_TARGETS } from "../registration/publication.ts";
 
 import { PLURAL_STATES, PLURAL_PARSER_VERSION, PLURAL_SOURCE_ID } from "../sources/plural/targets.ts";
+import { FEDERAL_MONEY_SOURCES, FEDERAL_MONEY_PARSER } from "../federal-money/model.ts";
+import { FEDERAL_MONEY_CONFIG } from "../federal-money/sources.ts";
 import { GOOGLE_CIVIC_SOURCE_ID, GOOGLE_CIVIC_SCOPE, GOOGLE_CIVIC_PARSER_VERSION } from "../sources/google-civic/targets.ts";
 import { PEOPLE_SOURCE_CONTRACTS } from "./people-source-contracts.ts";
 import { OPEN_DATA_SOURCES, OPEN_DATA_PARSER, OPEN_DATA_CLOCKS, SOCRATA_CATALOG, ECHO_EXPORT } from "../sources/open-data/model.ts";
@@ -593,6 +595,19 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],
   },
+  ...FEDERAL_MONEY_SOURCES.map((source): RoutineSourceContract => ({
+    id: source, sourceId: source, recordClass: "FEDERAL_MONEY", scope: `${source}:US`, fanOut: true,
+    acquisitionFailureDomain: `routine-source:${source}`,
+    acquisitionAdapter: { authorityMode: "SINGLE_ROUTE", command: ["scripts/federal-money-refresh.mts", "--promote", `--source=${source}`], requestedUrl: FEDERAL_MONEY_CONFIG[source].route },
+    parserNormalizerVersion: FEDERAL_MONEY_PARSER,
+    cadence: { description: FEDERAL_MONEY_CONFIG[source].clock, defaultEveryMs: FEDERAL_MONEY_CONFIG[source].everyMs },
+    retry: { afterMs: HOUR, description: "one hour after an outage; successful unfinished backfills continue on the next pass; provider Retry-After is honored" },
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: source }, validationContract: CHECKS,
+    canonicalProductionStore: STORE,
+    readerProjection: { id: `${source}-federal-money`, consumers: ["government cards", "district cards", "/api/federal-money", "Ask", "Admin"] },
+    lkgBehavior: "Each state's verified records and every unmatched native row remain held after a failed read. No unchanged check implies an absence or removes a record.",
+    autoPromotable: true, classification: "RUNTIME_CIVIC_DATA", bootstrapFixturePaths: ["tests/fixtures/federal-money/"],
+  })),
   {
     id: "legiscan-bulk", sourceId: "legiscan-bills", recordClass: "STATE_BILL", scope: "US:legiscan-datasets",
     acquisitionAdapter: { authorityMode: "SINGLE_ROUTE", command: ["scripts/legiscan-bulk.mts", "--promote"], requestedUrl: "https://api.legiscan.com/?op=getDatasetList" },

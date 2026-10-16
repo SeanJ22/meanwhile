@@ -1,9 +1,3 @@
-/**
- * A deploy may not cross its own migrations. The reasoning lives in `lib/db/shipping-invariant.ts` and
- * `lib/db/migration-phases.ts`. Fixture-driven and hermetic; the fixtures use real migration tags so they exercise
- * the real phase declaration.
- */
-
 import assert from "node:assert/strict";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
@@ -159,11 +153,12 @@ test("migrationTagsIn reads tags off the changed files and ignores the journal",
   assert.deepEqual(
     migrationTagsIn([
       "lib/db/migrations/0021_mixed_red_ghost.sql",
+      "lib/db/migrations/SRC-EXAMPLE_lookup.sql",
       "lib/db/migrations/meta/_journal.json",
       "lib/db/migrations/meta/0021_snapshot.json",
       "docs/DESIGN.md",
     ]),
-    ["0021_mixed_red_ghost"],
+    ["0021_mixed_red_ghost", "SRC-EXAMPLE_lookup"],
   );
 });
 

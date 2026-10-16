@@ -38,11 +38,14 @@ test("the database counter reads 'not recorded yet' until installed, then sums i
   assert.match(NOT_RECORDED.detail ?? "", /migration 0030/);
   assert.equal(neonTransferOf(null).kind, "not-recorded");
   const recorded = neonTransferOf({ kind: "RECORDED", rows: [
-    { day: "2026-09-29", database: "reader", client: "reader", requests: 2, requestBytes: 10, responseBytes: 100 },
+    { day: "2026-09-29", database: "reader", client: "reader", requests: 2, requestBytes: 10, responseBytes: 100,
+      reads: { "/api/directory\tcivic_data_promotions:FEDERAL_DIRECTORY": [2, 10, 100] } },
     { day: "2026-09-30", database: "reader", client: "reader", requests: 1, requestBytes: 5, responseBytes: 50 },
     { day: "2026-09-30", database: "reader", client: "runner", requests: 3, requestBytes: 6, responseBytes: 70 },
   ] });
   assert.deepEqual(recorded.days, [{ day: "2026-09-30", responseBytes: 120, requestBytes: 11, requests: 4 }, { day: "2026-09-29", responseBytes: 100, requestBytes: 10, requests: 2 }]);
+  assert.deepEqual(recorded.readerReads, [{ day: "2026-09-29", route: "/api/directory", read: "civic_data_promotions:FEDERAL_DIRECTORY",
+    requests: 2, requestBytes: 10, responseBytes: 100 }]);
 });
 
 test("the ledger is aggregated in the database, in Eastern days, with a split charge counted at each model's own share", () => {

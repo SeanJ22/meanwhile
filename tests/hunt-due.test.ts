@@ -15,7 +15,7 @@ const DAY = 86_400_000;
 
 const packet = (governmentId: string): HuntPacket => ({ governmentId, label: governmentId, held: [],
   blanks: [{ subjectId: `${governmentId}#board`, subjectLabel: "Board", checklistId: "MTG-01", family: "MTG", requirement: "Regular meeting schedule" }] });
-const signals = (over: Partial<PacketSignals> = {}): PacketSignals => ({ doors: new Map(), asked: [], changedAt: new Map(), maxWaitMs: 5 * DAY, ...over });
+const signals = (over: Partial<PacketSignals> = {}): PacketSignals => ({ doors: new Map(), askedOn: new Map(), changedAt: new Map(), maxWaitMs: 5 * DAY, ...over });
 
 test("the due check reads every packet's last job in one narrowed read and tells a packet with nothing new how long to wait", async () => {
   const repos = createMemoryRepositories();
@@ -50,25 +50,39 @@ test("a waiting packet is not due before its time, and only an order, a shut doo
   assert.equal(packetWoken({ ...row, assignments: [{ at: "2026-10-15T06:00:00.000Z" }] } as never, signals()), "a new order");
   assert.equal(packetWoken({ ...row, assignments: [{ at: "2026-10-14T06:00:00.000Z" }] } as never, signals()), null, "an order the last check already saw");
   assert.equal(packetWoken(row, signals({ doors: new Map([[PIMA, [{ doorId: "d1", shutSince: "2026-10-15T08:00:00.000Z", evidence: "403" }]]]) })), "a door shut");
-  assert.equal(packetWoken(row, signals({ asked: [{ bodyId: `${PIMA}#board`, code: "MEETINGS_NOT_HELD", recordClass: "MEETING", asks: 2, days: 1,
-    firstDay: "2026-10-16", lastDay: "2026-10-16" }] as never })), "a question Ask could not answer");
+  assert.equal(packetWoken(row, signals({ askedOn: new Map([[PIMA, "2026-10-16"]]) })), "a question Ask could not answer");
+  assert.equal(packetWoken(row, signals({ askedOn: new Map([[PIMA, "2026-10-15"]]) })), null, "a question on the day the wait began");
   assert.equal(packetWoken(row, signals({ changedAt: new Map([[PIMA, "2026-10-15T09:00:00.000Z"]]) })), "its held data changed");
   assert.equal(packetWoken(row, signals({ changedAt: new Map([[COCHISE, "2026-10-15T09:00:00.000Z"]]) })), null, "another place's change");
 });
 
-test("a cycle reads shut doors and Ask's gaps once for every packet, and held changes only since the oldest wait", async () => {
+test("a cycle reads shut doors once and Ask's gaps and held changes only for the days since the oldest wait", async () => {
   const repos = createMemoryRepositories();
-  let doorLists = 0, gapLists = 0;
-  const doors = repos.doors.listWhereNarrowed.bind(repos.doors), gaps = repos.askGapObservations.list.bind(repos.askGapObservations);
+  const gap = (day: string, bodyId: string) => repos.askGapObservations.put(`${day}|${bodyId}|MEETINGS_NOT_HELD`,
+    { bodyId, code: "MEETINGS_NOT_HELD", recordClass: "MEETING", day, count: 1 } as never, NOW);
+  await gap("2026-10-01", `${COCHISE}#board`);
+  await gap("2026-10-13", `${PIMA}#board`);
+  await gap("2026-10-14", `${PIMA}#planning`);
+  let doorLists = 0;
+  const days: string[] = [];
+  const doors = repos.doors.listWhereNarrowed.bind(repos.doors), gaps = repos.askGapObservations.listWhereNarrowed.bind(repos.askGapObservations);
   repos.doors.listWhereNarrowed = async (path, value, projection) => {
     doorLists++;
     assert.deepEqual([path, value], [["status"], "SHUT"], "only shut doors are read");
     return doors(path, value, projection);
   };
-  repos.askGapObservations.list = async () => { gapLists++; return gaps(); };
+  repos.askGapObservations.list = async () => { throw new Error("the whole table is never read"); };
+  repos.askGapObservations.listWhereNarrowed = async (path, value, projection) => {
+    assert.deepEqual([path, Object.keys(projection).sort()], [["day"], ["bodyId", "day"]]);
+    days.push(value);
+    return gaps(path, value, projection);
+  };
   const since: string[] = [];
   const read = await readPacketSignals(repos, NOW, "2026-10-12T00:00:00.000Z", async from => { since.push(from); return new Map([[PIMA, NOW]]); });
-  assert.deepEqual([doorLists, gapLists, since], [1, 1, ["2026-10-12T00:00:00.000Z"]]);
+  assert.deepEqual([doorLists, days, since], [1, ["2026-10-12", "2026-10-13", "2026-10-14", "2026-10-15"], ["2026-10-12T00:00:00.000Z"]]);
+  assert.deepEqual([...read.askedOn], [[PIMA, "2026-10-14"]], "each government's newest stumped day; older days are never read");
   assert.equal(read.changedAt.get(PIMA), NOW);
-  assert.equal((await readPacketSignals(repos, NOW, null, async () => { throw new Error("no wait, no change read"); })).changedAt.size, 0);
+  days.length = 0;
+  const none = await readPacketSignals(repos, NOW, null, async () => { throw new Error("no wait, no change read"); });
+  assert.deepEqual([none.changedAt.size, none.askedOn.size, days.length], [0, 0, 0]);
 });

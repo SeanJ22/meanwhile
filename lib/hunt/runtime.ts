@@ -28,7 +28,7 @@ import { readGovernmentPackets, type AskedFor } from "./packet-read.ts";
 import { readPlaceChangesSince } from "../civic-data/held-place-slices.ts";
 import { stateOfDivision } from "./packet-plan.ts";
 import type { HuntSearch, SearchCharge } from "./search.ts";
-import { foldAskGapObservations, readAskGapObservations, type AskedGap } from "../control-plane/ask-gap-observations.ts";
+import { foldAskGapObservations } from "../control-plane/ask-gap-observations.ts";
 
 const NOTE_LIMIT = 12;
 
@@ -110,11 +110,20 @@ export function huntLearnings(result: ScoutResult, packet: Pick<HuntPacket, "gov
   ];
 }
 
-/** The questions Ask could not answer in its observation window, read once for a whole cycle. */
-async function readAskedGaps(repos: Pick<ControlPlaneRepositories, "askGapObservations">, now: string): Promise<readonly AskedGap[]> {
-  const reading = await readAskGapObservations(repos.askGapObservations);
-  if ("unreadable" in reading) throw new Error(`the questions Ask could not answer could not be read (${reading.unreadable})`);
-  return [...foldAskGapObservations(reading.rows, now).asked.values()];
+/** The newest day each government's bodies were asked about without an answer, from the days since `since` only. */
+async function askedDaysSince(repos: Pick<ControlPlaneRepositories, "askGapObservations">, now: string, since: string | null): Promise<Map<string, string>> {
+  const out = new Map<string, string>();
+  if (since === null) return out;
+  const days: string[] = [];
+  for (let day = Date.parse(since.slice(0, 10)); day <= Date.parse(now); day += 86_400_000) days.push(new Date(day).toISOString().slice(0, 10));
+  for (const rows of await Promise.all(days.map(day => repos.askGapObservations.listWhereNarrowed(["day"], day, { bodyId: true, day: true })))) {
+    for (const row of rows) {
+      const { bodyId, day } = row.value as { bodyId: string; day: string };
+      const government = bodyId.split("#")[0]!;
+      if ((out.get(government) ?? "") < day) out.set(government, day);
+    }
+  }
+  return out;
 }
 
 /** What Ask could not answer about one packet's bodies, read by each body. */
@@ -123,19 +132,19 @@ export function askedAbout(repos: Pick<ControlPlaneRepositories, "askGapObservat
     .flat().map(row => row.value), now()).asked.values()];
 }
 
-/** What a cycle reads once for every packet: shut doors, Ask's gaps, places whose held data changed, and the dead-end wait. */
+/** What a cycle reads once for every packet: shut doors, the days Ask was stumped, places whose held data changed, and the dead-end wait. */
 export interface PacketSignals {
   readonly doors: ReadonlyMap<string, readonly ShutDoorNote[]>;
-  readonly asked: readonly AskedGap[];
+  readonly askedOn: ReadonlyMap<string, string>;
   readonly changedAt: ReadonlyMap<string, string>;
   readonly maxWaitMs: number;
 }
 
 export async function readPacketSignals(repos: Pick<ControlPlaneRepositories, "doors" | "askGapObservations" | "adminConfig">, now: string,
-  changesSince: string | null, readChanges: (since: string) => Promise<ReadonlyMap<string, string>> = readPlaceChangesSince): Promise<PacketSignals> {
-  const [doors, asked, changedAt, maxWaitMs] = await Promise.all([shutDoorsByGovernment(repos), readAskedGaps(repos, now),
-    changesSince === null ? new Map<string, string>() : readChanges(changesSince), deadEndWaitMs(repos)]);
-  return { doors, asked, changedAt, maxWaitMs };
+  since: string | null, readChanges: (since: string) => Promise<ReadonlyMap<string, string>> = readPlaceChangesSince): Promise<PacketSignals> {
+  const [doors, askedOn, changedAt, maxWaitMs] = await Promise.all([shutDoorsByGovernment(repos), askedDaysSince(repos, now, since),
+    since === null ? new Map<string, string>() : readChanges(since), deadEndWaitMs(repos)]);
+  return { doors, askedOn, changedAt, maxWaitMs };
 }
 
 /** Why a waiting packet is looked at again before its time: an order, a shut door, a question or held data newer than its wait. */
@@ -144,7 +153,7 @@ export function packetWoken(row: Pick<StandingObligation, "subjectId" | "waiting
   if (!since) return null;
   if ((orderedAtOf(row.assignments) ?? "") > since) return "a new order";
   if ((signals.doors.get(row.subjectId) ?? []).some(door => (door.shutSince ?? "") > since)) return "a door shut";
-  if (signals.asked.some(gap => gap.bodyId.split("#")[0] === row.subjectId && gap.lastDay > since.slice(0, 10))) return "a question Ask could not answer";
+  if ((signals.askedOn.get(row.subjectId) ?? "") > since.slice(0, 10)) return "a question Ask could not answer";
   if ((signals.changedAt.get(row.subjectId) ?? "") > since) return "its held data changed";
   return null;
 }
@@ -153,14 +162,14 @@ export function packetWoken(row: Pick<StandingObligation, "subjectId" | "waiting
 const DUE_BATCH = 100;
 
 /** Whether each government's packet is sent this round; one that is not waits until its dead end's limit unless something wakes it. */
-export async function duePackets(repos: Pick<ControlPlaneRepositories, "scoutResults">,
+export async function duePackets(repos: Pick<ControlPlaneRepositories, "scoutResults" | "askGapObservations">,
   rows: readonly { readonly governmentId: string; readonly assignments?: readonly { readonly at: string }[] }[], now: string, signals: PacketSignals,
   read: typeof readGovernmentPackets = readGovernmentPackets): Promise<Map<string, PacketDue & { readonly waitUntil?: string }>> {
   const out = new Map<string, PacketDue & { readonly waitUntil?: string }>();
   for (let at = 0; at < rows.length; at += DUE_BATCH) {
     const batch = rows.slice(at, at + DUE_BATCH);
     const ids = batch.map(row => row.governmentId);
-    const [packets, last] = await Promise.all([read(ids, now, async () => signals.asked), lastJobs(repos, ids, DUE_FIELDS)]);
+    const [packets, last] = await Promise.all([read(ids, now, askedAbout(repos, () => now)), lastJobs(repos, ids, DUE_FIELDS)]);
     for (const row of batch) {
       const packet = packets.get(row.governmentId);
       if (packet === undefined) { out.set(row.governmentId, { due: false, why: "its owed list could not be read" }); continue; }

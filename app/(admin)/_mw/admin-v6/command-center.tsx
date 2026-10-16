@@ -285,7 +285,7 @@ export function CommandCenter(props: CommandCenterProps) {
 
   return (
     <V6Context.Provider value={v6}>
-      <div className={s.root}>
+      <div className={cx(s.root, view === "now" && !detail && s.rootNow)}>
         <a className={s.skip} href="#v6-main">Skip to the page</a>
         <header className={s.header}>
           <div className={s.headerTop}>
@@ -348,7 +348,7 @@ export function CommandCenter(props: CommandCenterProps) {
           )}
         </header>
 
-        <main id="v6-main" ref={mainRef} tabIndex={-1} className={s.main} style={{ outline: "none" }}>
+        <main id="v6-main" ref={mainRef} tabIndex={-1} className={cx(s.main, view === "now" && !detail && s.mainNow)} style={{ outline: "none" }}>
           {props.reviewPanel}
           {props.mode==="live"&&<AlertStrip/>}
           {connWarn && props.connection !== "connecting" && (

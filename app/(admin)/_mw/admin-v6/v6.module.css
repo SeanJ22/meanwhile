@@ -8,11 +8,20 @@
   --v6-dark: oklch(0.5 0 0);
   --v6-mono: var(--font-mono, ui-monospace, monospace);
   min-height: 100vh;
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 6rem;
+  box-sizing: content-box;
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-sans);
   font-size: 14px;
   line-height: 1.45;
+}
+/* Now runs the full width of the window; its own page padding and 1360px column are set on .mainNow. */
+.root.rootNow {
+  max-width: none;
+  padding: 0;
 }
 
 .root :where(button, input, select, textarea) {
@@ -274,6 +283,19 @@
   font-weight: 600;
   margin: 4px 0 0;
   letter-spacing: -0.01em;
+}
+.main.mainNow {
+  max-width: 1360px;
+  padding: clamp(24px, 5vw, 64px) clamp(16px, 5vw, 72px);
+  gap: 40px;
+}
+.eyebrow.nowEyebrow {
+  font-size: 13px;
+}
+.h1.nowH1 {
+  font-size: 40px;
+  letter-spacing: -0.02em;
+  margin-top: 8px;
 }
 .h2 {
   font-size: 16px;
@@ -632,31 +654,114 @@
   line-height: 1.15;
 }
 
+.card.country {
+  padding: clamp(24px, 4vw, 48px);
+  border-radius: 14px;
+  gap: 40px;
+  --country-tile-gap: 8px;
+  --country-row-pad: 16px;
+}
+.card.country[data-density="compact"] {
+  --country-tile-gap: 5px;
+  --country-row-pad: 10px;
+}
+.countryHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px 40px;
+}
+.countryIntro {
+  flex: 1 1 360px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.card.country .countryTitle {
+  font-size: 26px;
+  padding-top: 0;
+}
+.card.country .countryTitle::before {
+  display: none;
+}
+.countryLine {
+  font-size: 16px;
+  line-height: 1.55;
+  max-width: 60ch;
+}
+.countryAside {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 16px;
+  min-width: 0;
+}
+.countryStats {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 8px 16px;
+}
+.stat {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.statNum {
+  font-family: var(--font-app-mono, var(--v6-mono));
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.15;
+}
+.statLabel {
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.statSep {
+  color: var(--text-dim);
+}
+
 .nation {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.45fr);
-  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 520px), 1fr));
+  gap: 48px 56px;
   align-items: start;
+}
+.mapColumn {
+  position: sticky;
+  top: 144px; /* 24px below the sticky app header, which is about 120px tall */
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  min-width: 0;
 }
 .map {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
   grid-template-rows: repeat(9, auto);
-  gap: 4px;
+  gap: var(--country-tile-gap);
 }
 .tile {
+  --tile-inset: 0 0 0 0 transparent;
+  --tile-glow: 0 0 0 0 transparent;
   position: relative;
   aspect-ratio: 1 / 1;
   border: 1px dashed var(--panel-border);
-  border-radius: 5px;
+  border-radius: 8px;
   background: transparent;
   color: var(--text-dim);
-  font-family: var(--v6-mono);
-  font-size: 11px;
+  font-family: var(--font-app-mono, var(--v6-mono));
+  font-size: clamp(11px, 1.1vw, 14px);
   font-weight: 600;
   cursor: pointer;
   padding: 0;
   min-width: 0;
+  box-shadow: inset var(--tile-inset), var(--tile-glow);
 }
 /* What readers have in a place, one hue from faint to strong; a place not counted yet keeps the dashed outline. */
 .tile[data-band="none"],
@@ -686,19 +791,51 @@
   border: 1px dashed var(--panel-border);
 }
 .tileHunt {
-  box-shadow: inset 0 0 0 2px var(--text);
+  --tile-inset: 0 0 0 2px var(--text);
 }
 .tileSelected {
-  box-shadow: inset 0 0 0 2px var(--ring);
+  --tile-inset: 0 0 0 2px var(--ring);
+}
+.tileLinked {
+  --tile-glow: 0 0 0 1px var(--ring), 0 0 14px var(--link-glow);
 }
 .stuckDot {
   position: absolute;
-  top: 3px;
-  right: 3px;
-  width: 6px;
-  height: 6px;
+  top: 5px;
+  right: 5px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background: var(--pill-amber-text);
+}
+.mapLegend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 22px;
+  font-size: 14px;
+  color: var(--text-dim);
+}
+.mapLegend .legendItem {
+  gap: 8px;
+}
+.mapLegend .swatch {
+  width: 14px;
+  height: 14px;
+}
+.countryTable {
+  font-size: 15px;
+}
+.countryTable th {
+  font-size: 12px;
+  padding: 0 12px 16px;
+  white-space: normal;
+  vertical-align: bottom;
+}
+.countryTable td {
+  padding: var(--country-row-pad) 12px;
+}
+.countryTable tbody tr.rowLinked {
+  background: rgba(79, 201, 232, 0.07);
 }
 .legend {
   display: flex;
@@ -982,12 +1119,6 @@
   max-width: min(420px, calc(100vw - 32px));
 }
 
-@media (max-width: 860px) {
-  .nation {
-    grid-template-columns: 1fr;
-  }
-}
-
 @media (max-width: 600px) {
   .headerTop,
   .scopeBar,
@@ -1019,13 +1150,6 @@
   }
   .facts dd {
     margin-bottom: 6px;
-  }
-  .tile {
-    font-size: 8px;
-    border-radius: 3px;
-  }
-  .map {
-    gap: 2px;
   }
   .h1 {
     font-size: 22px;

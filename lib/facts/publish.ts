@@ -63,11 +63,7 @@ export async function publishClaim(db: FactDb, c: PublishInput, clocks: Clocks, 
       live ? null : decision === "FLAG_OWNER" ? "OWNER_VALUE_CONTESTED" : "LOSES_TO_CURRENT", c.producedBy, c.costUsd]);
     const factId = Number(inserted!.id);
     if (decision === "FLAG_OWNER") await query("INSERT INTO owner_flag (fact_id, kind) VALUES ($1, 'OWNER_VALUE_CONTESTED')", [factId]);
-    if (live) {
-      await query("DELETE FROM blank WHERE entity_id = $1 AND field = $2", [c.entity.id, c.field]);
-      await query(`INSERT INTO rebuild_queue (place_id) SELECT place_id FROM entity_place WHERE entity_id = $1
-        ON CONFLICT (place_id) DO NOTHING`, [c.entity.id]);
-    }
+    if (live) await query("DELETE FROM blank WHERE entity_id = $1 AND field = $2", [c.entity.id, c.field]);
     return { decision, factId };
   });
 }

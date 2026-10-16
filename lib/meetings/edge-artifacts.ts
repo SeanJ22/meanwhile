@@ -120,16 +120,17 @@ export interface ReaderManifest {
   readonly sources: SnapshotSourceReport[];
   readonly scopes: readonly ReaderManifestScope[];
 
-  readonly commentAccess?: readonly unknown[];
   readonly everydayRouting?: unknown;
   /** Pointer identities for the embedded serving copies; old manifests refresh once. */
-  readonly extrasVersionIds?: Readonly<Partial<Record<"comment-access" | "everyday-routing", string | null>>>;
+  readonly extrasVersionIds?: Readonly<Partial<Record<"everyday-routing", string | null>>>;
 
   readonly authorityArtifacts?: Partial<Record<AuthorityFamily, AuthorityArtifactRef>>;
 
   readonly registrations?: Readonly<Record<string, AuthorityArtifactRef>>;
   /** Legislative people loaded separately for each requested jurisdiction. */
   readonly stateLegislators?: Readonly<Record<string, AuthorityArtifactRef>>;
+  /** Each state's live facts, in buckets, each republished only when its facts move. */
+  readonly stateFacts?: Readonly<Record<string, AuthorityArtifactRef>>;
 
   readonly freshChecks?: Readonly<Record<string, string>>;
 
@@ -203,7 +204,6 @@ export type AuthorityFamily =
   | "campaign-sites"
   | "state-legislators"
   | "meeting-outcomes"
-  | "comment-access"
   | PromotedAuthorityFamily;
 
 export const AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
@@ -213,7 +213,6 @@ export const AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
   "campaign-sites",
   "state-legislators",
   "meeting-outcomes",
-  "comment-access",
   ...PROMOTED_AUTHORITY_FAMILIES,
 ];
 

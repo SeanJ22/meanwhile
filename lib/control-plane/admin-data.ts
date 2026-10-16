@@ -1,5 +1,3 @@
-/** Server-only. Three answers: HELD, NOT_RECORDED (reachable, no record) and STORE_UNREACHABLE (could not ask); never collapse the last two. */
-
 import {
   CONTROL_PLANE_URL_VAR,
   controlPlaneUrlFromEnv,
@@ -41,7 +39,6 @@ export function unreachable<T>(which: string, error: unknown): ReadOutcome<T> {
   };
 }
 
-/** On the deployed admin host `NOT_CONFIGURED` is a defect, so the detail names the missing variable, never its value. */
 export async function openControlPlane(): Promise<
   { readonly ok: true; readonly repos: ControlPlaneRepositories } | { readonly ok: false; readonly detail: string }
 > {
@@ -60,8 +57,7 @@ export async function openControlPlane(): Promise<
     assertDurableRepositories(repos, "the owner control centre");
     return { ok: true, repos };
   } catch (error) {
-    // The message may contain the connection string on some driver errors.
-    // Naming the variable instead is both safer and more useful.
+
     return {
       ok: false,
       detail:
@@ -158,7 +154,6 @@ export async function readLatestDigest(repos: ControlPlaneRepositories): Promise
   }
 }
 
-/** Not the bounded digest view: unrelated outcomes between two map attempts would erase the 7d/30d history. */
 export async function readMapTilerUsageDigests(
   repos: ControlPlaneRepositories,
 ): Promise<ReadOutcome<readonly OwnerDigestRecord[]>> {
@@ -237,8 +232,8 @@ export async function readFleetSafety(repos: ControlPlaneRepositories): Promise<
   return readAggregate(repos, "the Fleet safety state", () => repos.researchState.read(RESEARCH_STATE_ID));
 }
 
-export async function readAdminConfig(repos: ControlPlaneRepositories): Promise<ReadOutcome<AdminConfig>> {
-  return readAggregate(repos, "the owner operational policy", () => repos.adminConfig.read(ADMIN_CONFIG_ID));
+export async function readAdminConfig(repos: ControlPlaneRepositories,state?:string): Promise<ReadOutcome<AdminConfig>> {
+  return readAggregate(repos, "the owner operational policy", () => repos.adminConfig.read(ADMIN_CONFIG_ID,{expansionScopes:state?{where:{path:["geography","stateAbbr"],value:state.toUpperCase()}}:true}));
 }
 
 export async function readDecisions(
@@ -255,7 +250,6 @@ export async function readDecisions(
   }
 }
 
-/** The admin surface's only write: an intent, never the canonical record. Reader-level fields are checked before writing. */
 export async function appendDecisionIntent(
   repos: ControlPlaneRepositories,
   intent: OwnerDecisionIntent,

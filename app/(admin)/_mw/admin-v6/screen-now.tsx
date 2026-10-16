@@ -50,7 +50,6 @@ const MOTION_KINDS = new Set(["order", "scheduled", "send", "hunt"]);
 
 interface MotionRow { readonly key: string; readonly what: string; readonly chip: string; readonly tone: QueueRow["tone"]; readonly lines: readonly string[] }
 
-/** Orders one by one; hunts that share a status and a reason are one row with a count, so a pause is said once. */
 export function motionRows(rows: readonly QueueRow[]): MotionRow[] {
   const moving = rows.filter((r) => MOTION_KINDS.has(r.kind) && (r.filter === "in-progress" || r.filter === "scheduled" || r.filter === "waiting"));
   const out: MotionRow[] = [];
@@ -111,7 +110,6 @@ function NeedsMe() {
 const gb = (n: number | null): string => (n === null ? "—" : `${n.toFixed(2)} GB`);
 const orDash = (n: number | null, f: (n: number) => string): string => (n === null ? "—" : f(n));
 
-/** The five numbers that say whether the system is working, for the last full hour against the hour before. */
 function IsItWorking() {
   const v = useV6();
   const hours = v.data.scoreboard.data?.vital ?? null;
@@ -153,7 +151,6 @@ const NAT_COLUMNS: readonly { readonly key: NatKey; readonly label: string; read
   { key: "stuck", label: "Stuck", num: true },
 ];
 
-/** How much readers have in a place, as the map shades it. */
 export function holdingBand(score: number | null | undefined): "none" | "some" | "half" | "most" | "unknown" {
   if (score === null || score === undefined) return "unknown";
   return score >= 75 ? "most" : score >= 40 ? "half" : score > 0 ? "some" : "none";
@@ -165,7 +162,6 @@ function natNumber(r: StateRow, key: Exclude<NatKey, "name">): number | null {
   return (key === "population" ? r.population?.population : key === "hunts" ? r.hunts : key === "zips" ? r.zipsWorked : key === "score" ? r.score : r.stuck) ?? null;
 }
 
-/** A row with no figure for the sorted column goes last, whichever way it sorts. */
 function compareRows(sort: NatSort, a: StateRow, b: StateRow): number {
   const byName = a.name.localeCompare(b.name, "en", { numeric: true });
   if (sort.key === "name") return sort.down ? -byName : byName;
@@ -181,11 +177,11 @@ function National() {
   const depth = nationalDepth(v.scopeKey) ?? "states";
   const [sort, setSort] = useState<NatSort>(depth === "states" ? { key: "name", down: false } : { key: "name", down: false });
   const [all, setAll] = useState(false);
-  // Only the rows that belong to this scope: the pre-load state list is never shown under a state or a district.
+
   const rows = (v.data.national.data ?? []).filter((r) => (r.parentKey ?? COUNTRY_KEY) === v.scopeKey);
   const byCode = new Map(rows.map((r) => [r.code, r]));
   const sorted = [...rows].sort((a, b) => compareRows(sort, a, b));
-  // Every state and territory is listed, tracked or not; only the longer district and ZIP lists start at the top rows.
+
   const shown = all || depth === "states" ? sorted : sorted.slice(0, NAT_TOP);
   const tracked = rows.filter((r) => r.tracked).length;
   const live = v.data.hunts.state === "not-connected" ? null : v.hunts.filter((h) => h.status !== "stopped");
@@ -275,8 +271,6 @@ function National() {
   );
 }
 
-/* ------------------------------------------------------------ instruction */
-
 export function ResultRow(props: { readonly r: ReaderResult; readonly shared?: boolean }) {
   const v = useV6();
   const r = props.r;
@@ -340,7 +334,6 @@ function HuntCard(props: { readonly h: Hunt }) {
   );
 }
 
-/** A state's hunts as one line with a count; opening it lists each hunt. */
 function StateHuntRow(props: { readonly group: StateHunts }) {
   const { group } = props;
   const running = group.hunts.filter((h) => h.status === "running").length;
@@ -367,7 +360,7 @@ function DirectWork() {
   const groups = hunt ? [] : huntsByState(v.index, huntsWithin(v.index, v.hunts, v.scopeKey));
   const [open, setOpen] = useState(true);
   const total = groups.reduce((n, g) => n + g.hunts.length, 0);
-  // A pause you set over all paid work or the runner is said once, above the hunts it holds.
+
   const held = v.hunts.find((h) => h.status === "paused" && (h.pause?.kind === "paid-work" || h.pause?.kind === "runner"));
   const ownerPause = held ? huntStatus(held).next : null;
   return (
@@ -376,13 +369,14 @@ function DirectWork() {
       <div className={s.stack} style={{ marginTop: 12 }}>
         {ownerPause && <p className={cx(s.p, s.small, s.textWarn)}>Paused. {ownerPause}</p>}
         {!!hunt && <HuntCard h={hunt} />}
+        {v.scopeKey.startsWith("st:") && <Actions actions={[{kind:"hunt-stop-state",target:v.scopeKey,label:`Stop every hunt in ${v.place.name}`}]} />}
         <div className={s.row}>
           <strong className={s.small}>Start a hunt</strong>
           <Actions actions={[{ kind: "hunt-start", target: v.scopeKey }]} primaryFirst />
         </div>
         <div className={cx(s.row, s.cardGlobal)}>
           <strong className={s.small}>Whole system</strong>
-          <Actions actions={[{ kind: "global-paid", target: "system" }, { kind: "global-paid-resume", target: "system" }, { kind: "global-ceiling", target: "system" }, { kind: "global-search-on", target: "system" }, { kind: "global-search-off", target: "system" }, { kind: "global-runner-pause", target: "runner" }, { kind: "global-runner-resume", target: "runner" }]} />
+          <Actions actions={[{ kind: "hunt-stop-all", target: "us" }, { kind: "global-paid", target: "system" }, { kind: "global-paid-resume", target: "system" }, { kind: "global-ceiling", target: "system" }, { kind: "global-search-on", target: "system" }, { kind: "global-search-off", target: "system" }, { kind: "global-runner-pause", target: "runner" }, { kind: "global-runner-resume", target: "runner" }]} />
         </div>
         {!!groups.length && (
           <div className={s.stack}>

@@ -1,9 +1,3 @@
-/**
- * Publishes the one owner snapshot Admin reads, from canonical control-plane
- * state. Mutable civic and operational truth never arrives through a tracked
- * file. Every panel that cannot be computed publishes a named gap, never a zero.
- */
-
 import { collectPlaceHistory } from "../lib/control-plane/admin-view/place-history-collect.ts";
 import { readPlaceOwed } from "../lib/control-plane/admin-view/place-owed-read.ts";
 
@@ -75,8 +69,6 @@ function log(line: string): void {
   console.log(`owner-snapshot · ${line}`);
 }
 
-/* The runner ends a child that prints no new line for ten minutes (RUNTIME_NO_PROGRESS_MS),
-   so every finished collection step prints one. */
 function stepDone(what: string): void {
   log(`${what} (${Math.round((Date.now() - NOW.getTime()) / 1000)}s into this publish)`);
 }
@@ -87,12 +79,10 @@ const newestCycle: { record: CycleRecord; file: string } | null = canonicalCycle
   ? { record: canonicalCycle.outcome as unknown as CycleRecord, file: canonicalCycle.digestId }
   : null;
 
-/** Candidate display names belong to the canonical candidate-profile projection, not this snapshot. */
 function candidateNames(): Record<string, string> {
   return {};
 }
 
-/** Measured spend per Eastern calendar day over the trailing fortnight. */
 function spendByDay(reads: ControlPlaneReads | null): OwnerSnapshot["spendByDay"] {
   if (reads === null) return [];
   const day = new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit" });
@@ -112,7 +102,6 @@ function spendByDay(reads: ControlPlaneReads | null): OwnerSnapshot["spendByDay"
     .map(([d, v]) => ({ day: d, usd: Math.round(v.usd * 10_000) / 10_000, attempts: v.attempts }));
 }
 
-/** The run record's shapes as `scripts/freshness-shadow.mts` writes them, narrowed to what the snapshot shows. */
 interface CycleRecord {
   risk?: {
     obligationsScheduled?: number;
@@ -138,7 +127,6 @@ function zipRows(): Held<readonly OwnerZipRow[]> {
       "republish them. A canonical exact-release certification projection is not wired here.",
   );
 }
-
 
 function intake(): {
   folder: Held<string>;
@@ -169,7 +157,6 @@ const registeredUnits =
     : providerRows.reduce((n, p) => n + (typeof p.units === "number" ? p.units : 0), 0);
 const cycleSource = `freshness-shadow run ${cycle?.file ?? "unknown"}`;
 
-/** Read once so every cost row and the by-state deployment come from one instant. Null when the store was not opened. */
 interface ControlPlaneReads {
   readonly runnerHeartbeat: RunnerHeartbeat | null;
   readonly billingScopes: Parameters<typeof providerBillingAttribution>[0]["scopes"];
@@ -187,8 +174,8 @@ interface ControlPlaneReads {
 async function readControlPlane(repos: ControlPlaneRepositories): Promise<ControlPlaneReads> {
   const runnerHeartbeat = await repos.runnerHeartbeat.read(RUNNER_ID).then(row=>row?.value??null).catch(()=>null);
   const [billingScopes, billingHolds] = await Promise.all([
-    repos.adminConfig.read(ADMIN_CONFIG_ID).then(r => { const parsed = expansionScopesOf(r?.value ?? null); return parsed.malformed ? null : parsed.scopes; }).catch(() => null),
-    // Only live holds count as set aside.
+    repos.adminConfig.read(ADMIN_CONFIG_ID,{expansionScopes:true}).then(r => { const parsed = expansionScopesOf(r?.value ?? null); return parsed.malformed ? null : parsed.scopes; }).catch(() => null),
+
     readLiveSpendHolds(repos, new Date().toISOString()).catch(() => null),
   ]);
   const [costs, attempts, obligations, research] = await Promise.all([
@@ -223,7 +210,7 @@ async function readControlPlane(repos: ControlPlaneRepositories): Promise<Contro
       ),
     };
   } catch (error) {
-    // The error NAME only: a driver message can carry the connection string.
+
     const name = (error as Error)?.name ?? "error";
     log(`the assignment view's records could not be read (${name}) — the assignment view publishes as NOT_BUILT`);
     assignmentSources = { ok: false, says: `The records the assignment view joins could not be read on this publish (${name}); nothing is claimed about the work.` };
@@ -270,7 +257,6 @@ function assignmentPublication(reads: ControlPlaneReads): AssignmentPublication 
   };
 }
 
-/** Standing obligations by state from obligation ids; an obligation naming no state lands in "other". */
 function obligationsByState(reads: ControlPlaneReads | null): OwnerSnapshot["obligationsByState"] {
   if (reads === null || reads.obligations.length === 0) return [];
   const counts = new Map<string, number>();
@@ -402,19 +388,17 @@ async function repositories(): Promise<ControlPlaneRepositories | null> {
     );
   }
   if (!DRY_RUN) assertRuntimeAuthority({ capabilities: ["CONSOLE_PUBLISHER"] });
-  // Without a per-request deadline one hung request holds the publisher until the runner's ceiling kills it.
+
   installNeonRequestDeadline();
   return createPgRepositories(url, NOW_ISO);
 }
 
-/** The parts of the published snapshot this publish carries forward; the rest is rebuilt, so it is never read back. */
 const CARRIED_FORWARD = { maptiler: true, providerBilling: true, servedReaderReadback: true, placeHistory: true } as const;
 type CarriedForward = Partial<Pick<OwnerSnapshot, keyof typeof CARRIED_FORWARD>>;
 
 async function main(): Promise<void> {
   log(`HEAD ${HEAD?.slice(0, 8) ?? "unknown"}`);
 
-  // Opened first so the cost panel and the by-state deployment read the same instant.
   const repos = publisherRepos;
   if (repos) log(repos.describe());
   const reads = repos ? await readControlPlane(repos) : null;
@@ -536,7 +520,6 @@ async function main(): Promise<void> {
     return;
   }
 
-  // The snapshot is one aggregate that moves, so compare-and-set is the write that replaces it.
   if (existing === null) await repos.ownerSnapshots.put(SNAPSHOT_ID, snapshot, NOW_ISO);
   else await repos.ownerSnapshots.compareAndSet(SNAPSHOT_ID, existing.revision, snapshot, NOW_ISO);
   const cacheExisting = await repos.cacheObservations.read(CACHE_OBSERVATION_ID);
@@ -560,7 +543,7 @@ async function main(): Promise<void> {
     `published: snapshot; ${canonicalCycle ? `canonical cycle ${canonicalCycle.outcome.cycleId}` : "no canonical cycle recorded"}; the heartbeat is the runner's own; ` +
       `${decisions.length} owner decision intent(s) on record`,
   );
-  // A transient failed input read must not count as a successful publication.
+
   if (reads && (!reads.assignmentSources.ok || reads.billingScopes === null ||
       reads.billingHolds === null || reads.verifiedRecords === null)) {
     log("published with incomplete control-plane inputs; the standing runner will retry");

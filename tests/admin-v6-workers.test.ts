@@ -23,14 +23,14 @@ import { ADMIN_HOST, PUBLIC_HOST, adminSessionCookie, withAdminSessionKey } from
 
 const NOW = "2026-09-28T22:00:00.000Z";
 const Z85635 = "geo:az.zcta.85635";
-/** One saved hunt. */
+
 const ORIGINAL: ExpansionScopeDecision = {
   key: ORIGINAL_LIFETIME_HUNT.key,
   geography: { type: "zcta", geoid: "85635", version: "zcta:2020", label: "ZIP 85635 (Census ZCTA)", stateAbbr: "AZ" },
   priority: 1, budgetUsd: 50, budgetStartedAt: ORIGINAL_LIFETIME_HUNT.budgetStartedAt, sourceWorkVersion: 1,
   note: null, decidedAt: ORIGINAL_LIFETIME_HUNT.budgetStartedAt, decidedBy: "session:owner", receiptId: ORIGINAL_LIFETIME_HUNT.receiptId, previous: null,
 };
-/** A synthetic second ZIP hunt in another state (two ZCTA GEOIDs never overlap), to prove "outside" comes from saved Sends. */
+
 const NH: ExpansionScopeDecision = {
   ...ORIGINAL, key: "zcta:2020/03301", receiptId: "expansion.scope.set:scope:03301:test",
   geography: { type: "zcta", geoid: "03301", version: "zcta:2020", label: "ZIP 03301 (Census ZCTA)", stateAbbr: "NH" },
@@ -39,7 +39,6 @@ const NH: ExpansionScopeDecision = {
 
 const mark = (d: ExpansionScopeDecision, at = "2026-09-27T23:10:31.451Z") => ({ assignmentKey: d.key, ref: d.receiptId, relation: "REORDERED", at });
 
-/** A repeating loop on one source: QUEUED → COLLECTING_AND_VERIFYING → FAILED. */
 function votingSitesLoop(n: number, lastAt = Date.parse("2026-09-28T21:56:48.000Z")): { id: string; p: HuntSourceProgress }[] {
   const stages: HuntSourceProgress["stage"][] = ["FAILED", "COLLECTING_AND_VERIFYING", "QUEUED"];
   return Array.from({ length: n }, (_, i) => {
@@ -78,7 +77,6 @@ const SENDS = { formatVersion: 1, at: "2026-09-28T21:52:41.202Z", costsReadable:
     budgetWhyNot: null,
     completion: { kind: "NOT_COMPLETE", assignmentKey: ORIGINAL.key, members: 194, settled: 20, exceptions: [], refusedCount: 30, unsettledCount: 144 } }] };
 
-/** One live-lease row as the bounded read returns it; `jobs` and `progress` on `world` stand in for the store's two indexed reads. */
 interface JobFixture { id: string; startedAt?: string; expiresAt?: string; released?: boolean; attempt?: "open" | "ended" | "none" | "other-lease"; role?: string;
   obligation?: null | { recordClass?: string; subjectId?: string; marks?: { assignmentKey: string; ref: string; at: string }[]; divisions?: string[] } }
 const jobMark = (d: ExpansionScopeDecision, at = "2026-09-27T23:10:31.451Z") => ({ assignmentKey: d.key, ref: d.receiptId, at });
@@ -115,10 +113,15 @@ async function world(opts: { scouts?: ScoutFixture[]; sources?: { id: string; p:
     lastCycleFinishedAt: "2026-09-28T21:30:00.000Z", lastCycleOk: true, nextCycleDueAt: "2026-09-28T22:30:00.000Z", testedSha: "a".repeat(40),
     ...opts.heartbeat } as never, NOW);
   const scouts = opts.scouts ?? [LIVE, EXPIRED, ENDED];
-  if (opts.research !== null) await repos.researchState.put(RESEARCH_STATE_ID, { beatAt: "2026-09-28T21:52:41.202Z", cycleStartedAt: "2026-09-28T21:46:34.342Z",
+  if (opts.research !== null) {
+    const payload= { beatAt: "2026-09-28T21:52:41.202Z", cycleStartedAt: "2026-09-28T21:46:34.342Z",
     cycleFinishedAt: null, pausedByOwner: false, queue: { lanes: LANES }, assignments: SENDS,
     running: scouts.map(s => ({ attemptId: s.attemptId, obligationId: s.obligationId, startedAt: s.startedAt,
-      ...(s.assignmentKeys ? { assignmentKeys: s.assignmentKeys } : {}) })), ...opts.research } as never, NOW);
+      ...(s.assignmentKeys ? { assignmentKeys: s.assignmentKeys } : {}) })), ...opts.research };
+    await repos.researchState.put(RESEARCH_STATE_ID,payload as never,NOW);
+    for(const state of ["az","nh"])await repos.researchState.put(`${RESEARCH_STATE_ID}:${state}`,{...payload,
+      running:payload.running?.filter(row=>{const scout=scouts.find(s=>s.attemptId===row.attemptId);return (scout?.marks?.some(mark=>mark!==null && typeof mark==="object" && "ref" in mark && mark.ref===NH.receiptId)?"nh":"az")===state;})} as never,NOW);
+  }
   for (const s of scouts) {
     const task = `rt-${s.attemptId}`;
     await repos.attempts.put(s.attemptId, { id: s.attemptId, routeTaskId: task, workItemId: `wi-${s.attemptId}`, leaseId: `ls-${s.attemptId}`,
@@ -147,8 +150,6 @@ function refused(out: unknown): V6Refusal {
   assert.ok(out && typeof out === "object" && "kind" in out, "expected a refusal");
   return out as V6Refusal;
 }
-
-/* ------------------------------------------------ running, expired, ended */
 
 test("only an open attempt with its own live lease is running; an expired lease and an ended attempt are not", async () => {
   const s = ok(await section("us", await world()));
@@ -203,8 +204,6 @@ test("the saved retry loop is one feed line, and a past-due round is not present
   assert.ok(!(s.data.next ?? []).some(n => /Next round due/.test(n)));
 });
 
-/* ------------------------------------------------------- place binding */
-
 test("the 85635 hunt's work is bound by its exact original receipt; other hunts and unsent work stay out", async () => {
   const repos = await world({ scouts: [LIVE, NH_SCOUT, UNSENT], scopes: [ORIGINAL, NH] });
   const s = ok(await section(Z85635, repos));
@@ -236,8 +235,6 @@ test("an unbound place refuses 409 instead of guessing from a breadcrumb or pref
     assert.equal(r.code, "SCOPE_BINDING_NOT_CONNECTED");
   }
 });
-
-/* ---------------------------------------------- waiting, next, and unknowns */
 
 test("waiting explains the hunt's unfinished tasks, its money limit and the failing source in plain words", async () => {
   const s = ok(await section(Z85635, await world({ scouts: [] })));
@@ -380,8 +377,6 @@ test("the revision follows saved sources, not the clock or a lease renewal", asy
   assert.notEqual(expiredNow.revision, a.revision, "running → stopped is a change");
 });
 
-/* ------------------------------------------------------- jobs running now */
-
 const ids = (out: unknown) => ok(out).data.jobs?.map(j => j.id) ?? null;
 
 test("a job is running only with an open attempt on its own unreleased, unexpired lease", async () => {
@@ -520,8 +515,6 @@ test("the revision follows which jobs run, not a lease renewal", async () => {
   assert.notEqual(more.revision, a.revision);
 });
 
-/* --------------------------------------------------------------- the route */
-
 test("route: public 404, unauthenticated 401, strict query 400, unbound 409, unread 503, private no-store 200", async () => {
   const path = "/api/admin/v6/workers?scope=us";
   assert.equal((await GET(new NextRequest(`https://${PUBLIC_HOST}${path}`, { headers: { host: PUBLIC_HOST } }))).status, 404);
@@ -557,8 +550,6 @@ test("route: public 404, unauthenticated 401, strict query 400, unbound 409, unr
   });
 });
 
-/* ------------------------------------------------ the page reads this section */
-
 test("an open v6 page picks up the Workers section through LiveSync and shows every row for its place", async () => {
   const repos = await world({ scouts: [LIVE, EXPIRED, NH_SCOUT], scopes: [ORIGINAL, NH],
     jobs: [{ id: "at-live-job", obligation: { marks: [jobMark(ORIGINAL)] } }, { id: "at-other-job", obligation: null }] });
@@ -579,7 +570,7 @@ test("an open v6 page picks up the Workers section through LiveSync and shows ev
       const bundle = buildLiveBundle(sync.snapshot(), ref, null as never);
       const w = bundle.workers.data!;
       const index = indexPlaces(bundle.places.data ?? []);
-      // The Workers screen filters by `relation(index, applies, scopeKey)`; nothing proven here may vanish.
+
       assert.equal(w.events?.filter(e => relation(index, e.applies, scope) !== null).length, w.events?.length, scope);
       assert.equal(w.waiting?.filter(x => relation(index, x.applies, scope) !== null).length, w.waiting?.length, scope);
       const expected = scope === "us" ? 2 : 1;
@@ -591,7 +582,6 @@ test("an open v6 page picks up the Workers section through LiveSync and shows ev
   });
 });
 
-// Compile-time proof the backend shape is the UI's shape (tsc checks tests).
 const _workersFit = (w: AdminV6WorkersView): NonNullable<AdminV6Data["workers"]["data"]> => w;
 void _workersFit;
 const _sources = (s: V6WorkersSources) => s;

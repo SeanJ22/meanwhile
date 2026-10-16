@@ -5,6 +5,8 @@ Sean, 11:17 PM Arizona: "I want you (or someone) being able to direct things whi
 Read it every 10 minutes:
   git fetch origin board/oversight && git show origin/board/oversight:instructions.md
 
+Scope: SB-01 only, until it is live and verified. Nothing here adds work outside SB-01, and no lane takes on anything beyond its SB-01 paste because of this file.
+
 Newest entries at the top. Each entry names the session it is for. Act on entries for you at once.
 
 ## 11:20 PM Arizona (06:20Z): standing orders for SB-01

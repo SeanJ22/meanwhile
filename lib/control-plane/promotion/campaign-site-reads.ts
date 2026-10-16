@@ -1,8 +1,7 @@
-/** A lead with no saved page is read as a COMPLETED Attempt by a deterministic ACQUIRER, whose artifact enters the log and vault. */
 import { DurableEvidenceStore } from "../evidence/durable-store.ts";
 import { recordAcquisition } from "../evidence/artifact.ts";
 import { putArtifact } from "../evidence/store.ts";
-import { includeVaultCapture, readHeldBytes, type VaultIndex } from "../evidence/read-only-vault.ts";
+import { findHeldCapture, includeVaultCapture, readHeldBytes, type VaultIndex } from "../evidence/read-only-vault.ts";
 import { fingerprint } from "../ids.ts";
 import { abandonAttempt, beginAttemptFor, claimRouteTask, disposeRouteTask, recordArtifactMetadata, registerRouteTask, registerWorkItem } from "../repository/coordinator.ts";
 import type { ArtifactRecord, ControlPlaneRepositories } from "../repository/types.ts";
@@ -191,7 +190,7 @@ export function campaignSiteReadRecorder(input: {
   const heldPage: CampaignSiteReadRecorder["heldPage"] = async (artifact) => {
     const own = made.get(artifact.artifactId);
     if (own !== undefined) return own;
-    const held = input.heldVault?.byId.get(artifact.artifactId) ?? null;
+    const held = input.heldVault?.byId.get(artifact.artifactId) ?? await findHeldCapture(input.vaultRoot, artifact);
     if (held === null) return null;
     const bytes = await readHeldBytes(held);
     const page = heldPageRead({

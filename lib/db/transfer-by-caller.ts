@@ -1,14 +1,5 @@
-/**
- * Neon response bytes by calling code, per UTC hour. Each body measured by
- * `databaseTransferFetch` (transfer.ts) is added to an hour bucket under
- *
- *   <repository operation> ← <first frame outside the repository layer>
- *
- * When `WTP_VITAL_SIGNS_REPORT=1`, each process prints its whole hour so far
- * as one `vital-signs-bytes {json}` stdout line once a minute and at exit; the
- * runner parent strips and sums those lines. This module writes no files: it
- * is in every data command's import closure. Elsewhere the counts stay in memory.
- */
+import type { DatabaseTransfer } from "./transfer.ts";
+import { currentReaderRoute, transferRead } from "./reader-route.ts";
 import { AsyncLocalStorage } from "node:async_hooks";
 import { basename } from "node:path";
 
@@ -69,20 +60,10 @@ export function hourStart(nowMs: number): string {
   return new Date(Math.floor(nowMs / 3_600_000) * 3_600_000).toISOString();
 }
 
-/**
- * Run one control-plane call with its operation name in scope, so the bytes of
- * the HTTP response it causes are counted under it and under the code that
- * asked for it. The call site is read here, synchronously with the caller.
- */
 export function withQueryCaller<T>(operation: string, run: () => T): T {
   return scope.run(`${operation} ← ${pinnedSite.getStore() ?? callSite()}`, run);
 }
 
-/**
- * Read the calling code's site now, for a repository read whose queries start
- * only after its own awaits (a held copy is opened first), so their bytes
- * still count under the code that asked.
- */
 export function withCallerSite<T>(run: () => T): T {
   const site = callSite();
   const outer = pinnedSite.getStore();
@@ -119,10 +100,6 @@ function callSite(): string {
   return callerFromStack(holder.stack);
 }
 
-/**
- * Called once per counted Neon HTTP response, and per message a database socket receives or sends (transfer.ts).
- * `sent` is the request side (one request with no body unless given); `caller` names a socket's opener. Never throws.
- */
 export function countNeonBytes(database: NeonDatabase, bytes: number, nowMs: number = Date.now(),
   sent: NeonSent = { requests: 1, bytes: 0 }, caller?: string): void {
   try {
@@ -175,10 +152,6 @@ export function processNeonBytes(): readonly NeonBytesHour[] {
   return [...buckets.entries()].map(([hour, bucket]) => snapshot(hour, bucket));
 }
 
-/**
- * This process's hours with counts not yet handed on (its whole total for each),
- * marked handed on; finished hours are forgotten once handed on.
- */
 export function takeNeonBytesHours(nowMs: number = Date.now()): readonly NeonBytesHour[] {
   const current = hourStart(nowMs);
   const taken: NeonBytesHour[] = [];
@@ -190,10 +163,6 @@ export function takeNeonBytesHours(nowMs: number = Date.now()): readonly NeonByt
   return taken;
 }
 
-/**
- * The report line for one process's hour. Callers beyond what fits one atomic
- * pipe write are summed as "other" (largest kept), so the totals stay whole.
- */
 export function formatVitalSignsReport(part: NeonBytesHour): string {
   const ranked = Object.entries(part.byCaller).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
   const line = (byCaller: Record<string, number>) => `${VITAL_SIGNS_LINE_PREFIX}${JSON.stringify({ ...part, byCaller })}`;
@@ -220,10 +189,6 @@ export function parseVitalSignsReport(line: string): NeonBytesHour | null {
   } catch { return null; }
 }
 
-/**
- * Print this process's unreported hour totals as report lines, when the runner
- * asked for them. Synchronous so it can run at exit. Never throws.
- */
 export function reportNeonBytes(nowMs: number = Date.now(), write: (text: string) => void = text => { process.stdout.write(text); }): boolean {
   if (keptInProcess || process.env[VITAL_SIGNS_REPORT_ENV] !== "1") return false;
   try {
@@ -232,12 +197,6 @@ export function reportNeonBytes(nowMs: number = Date.now(), write: (text: string
   } catch { return false; }
 }
 
-/**
- * Take report lines out of a child's output stream, chunk by chunk: each whole
- * report line goes to `onReport`, everything else comes back unchanged and in
- * order. Only a partial line that may still become a report line is held for
- * the next chunk; `end()` returns whatever is still held when the stream closes.
- */
 export function vitalSignsLineFilter(onReport: (part: NeonBytesHour) => void): { readonly take: (chunk: string) => string; readonly end: () => string } {
   let held = "";
   let midLine = false;
@@ -307,4 +266,49 @@ export function formatNeonBytesLine(summary: NeonBytesSummary, label: string, to
   return `neon bytes ${label} (hour from ${summary.hour}, ${summary.processCount} runner processes, ${summary.requests} requests): ` +
     `control plane ${megabytes(summary.controlPlaneBytes)}, reader ${megabytes(summary.readerBytes)}` +
     (callers ? `; largest: ${callers}` : "");
+}
+
+export const easternDay = (at: Date) => new Intl.DateTimeFormat("sv-SE", { timeZone: "America/New_York" }).format(at);
+
+export function runnerClient(): boolean {
+  return Boolean(process.env.WTP_RUNTIME_AUTHORITY_CAPABILITY) || process.env.WTP_SANCTIONED_WRITE === "routine-civic-data-promotion";
+}
+
+type FetchLike = typeof fetch;
+
+export function databaseTransferFetch(underlying: FetchLike, record: (value: DatabaseTransfer) => void | Promise<unknown>, internal: () => boolean = () => false): FetchLike {
+  return async (input, init) => {
+    const response = await underlying(input, init);
+    const headers = new Headers(input instanceof Request ? input.headers : undefined);
+    new Headers(init?.headers).forEach((value, key) => headers.set(key, value));
+    const connection = headers.get("neon-connection-string");
+    if (connection === null || internal()) return response;
+    if (connection === process.env.FEEDBACK_DATABASE_URL && connection !== process.env.DATABASE_URL &&
+        connection !== process.env.WTP_CONTROL_PLANE_DATABASE_URL) return response;
+    const day = easternDay(new Date()), database = connection === process.env.DATABASE_URL ? "reader" : "control-plane";
+    const client = runnerClient() ? "runner" : "reader";
+    const requestBytes = typeof init?.body === "string" ? Buffer.byteLength(init.body) : 0;
+    const read = `${currentReaderRoute()}\t${transferRead(typeof init?.body === "string" ? init.body : undefined)}`;
+    let received = 0, recorded: Promise<void> | null = null;
+    const finish = (): Promise<void> => recorded ??= Promise.resolve().then(() => record({
+      day, database, client, requests: 1, requestBytes, responseBytes: received,
+      reads: { [read]: [1, requestBytes, received] },
+    })).then(() => undefined);
+    if (response.body === null) { await finish(); return response; }
+    const reader = response.body.getReader();
+    const body = new ReadableStream<Uint8Array>({
+      async pull(controller) {
+        try {
+          const chunk = await reader.read();
+          if (chunk.done) { await finish(); controller.close(); }
+          else { received += chunk.value.byteLength; controller.enqueue(chunk.value); }
+        } catch (error) { await finish(); controller.error(error); }
+      },
+      async cancel(reason) {
+        try { await reader.cancel(reason); }
+        finally { await finish(); }
+      },
+    }, { highWaterMark: 0 });
+    return new Response(body, { status: response.status, statusText: response.statusText, headers: response.headers });
+  };
 }

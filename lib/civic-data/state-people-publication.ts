@@ -128,8 +128,11 @@ export async function publishStatePeople(input: {store:RoutineDataStore;vault:Ev
     const ballotPrior = await readManualProjectionPrior("ballot-contests", input.store, input.now);
     const ballots = Object.values((ballotPrior?.payload as GenericBallotProjection | undefined)?.ballots ?? {})
       .filter(ballot => ballot.election.state === input.state.toUpperCase());
-    if (ballots.length && ballotPrior) await publishOfficialBallotCandidacies({ store: input.store, now: input.now, ballots,
-      sourceReceipt: ballotPrior.sourceReceipt, statePeople: new Map([[jurisdiction, roster]]) });
+    if (ballots.length && ballotPrior) {
+      if (!ballotPrior.sourceReceipt) throw new Error("OFFICIAL_CANDIDACIES_BALLOT_RECEIPT_MISSING");
+      await publishOfficialBallotCandidacies({ store: input.store, now: input.now, ballots,
+        sourceReceipt: ballotPrior.sourceReceipt, statePeople: new Map([[jurisdiction, roster]]) });
+    }
   }
   return {candidate,outcome};
 }

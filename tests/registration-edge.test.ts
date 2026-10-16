@@ -15,8 +15,6 @@ import { loadRegistrationReference } from "../lib/registration/reference.ts";
 import { enterReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { installRegistryAuthority, promotedFixtureBundle } from "./helpers/promoted-fixtures.ts";
 
-
-
 const ROOT = join(import.meta.dirname, "..");
 const META = { sourceThrough: null, retrievedAt: null, promotedThrough: null };
 const RECEIPT: RegistrationSourceReceipt = {

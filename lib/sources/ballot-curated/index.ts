@@ -12,10 +12,7 @@ import {
 } from "../../civic-data/manual-read-models.ts";
 import type { AzBallotProjection, NhBallotProjection } from "../../civic-data/manual-projections.ts";
 
-/**
- * Curated ballots read their exact promoted projections. A reader request that entered the reader edge
- * reads the pointer's proven copy through the same Reader; any other caller reads the database.
- */
+
 type CuratedProjection = AzBallotProjection | NhBallotProjection;
 type CuratedEntry = {
   readonly read: () => Promise<CivicDataReadResult<CuratedProjection>>;
@@ -36,11 +33,7 @@ const CURATED_FILES: Record<string, CuratedEntry> = {
 /** The names a curated source may be registered under — the map's own keys. */
 export const CURATED_BALLOT_NAMES = Object.keys(CURATED_FILES);
 
-/**
- * A curated ballot source over one canonical production pointer. The validator
- * remains shared: count, citation, and no-empty-contest invariants are applied
- * after the durable promotion proof has been verified.
- */
+
 export function curatedBallotSource(name: string): BallotSource {
   const entry = CURATED_FILES[name];
   if (!entry) {

@@ -1,8 +1,4 @@
-/**
- * Resolves a candidacy id to what the person and the seat are called, from the canonical promoted
- * ballot projections. Ids never render to a reader. Where an id resolves to nothing this returns `null`
- * and never prettifies the id. Store failures propagate.
- */
+
 import { surnameDisplayCase } from "../ballot/name-case.ts";
 import { readerBallotSourceForTargetId } from "../ballot/reader-sources.ts";
 

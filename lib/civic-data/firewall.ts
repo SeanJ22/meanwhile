@@ -96,11 +96,7 @@ function stripShellComments(source: string, path: string): string {
   return source;
 }
 
-/**
- * Mask literal bodies before looking for calls. This keeps an error string or
- * recorded incident such as `"call rename(...)"` from manufacturing a writer
- * finding while leaving identifiers, punctuation, and line positions intact.
- */
+
 function maskStringLiterals(source: string): string {
   let quote: "'" | '"' | "`" | null = null;
   let escaped = false;
@@ -144,12 +140,7 @@ function parseNamedBindings(specifiers: string): readonly { imported: string; lo
   });
 }
 
-/**
- * Follow capabilities detached from an already-known namespace or callable.
- * The sets only grow, so reversed alias chains converge and cycles terminate.
- * This deliberately does not treat an arbitrary object method with the same
- * name as a Node capability: the chain must originate at a recognized module.
- */
+
 function resolveDetachedMethodBindings(
   source: string,
   namespaces: Set<string>,
@@ -276,9 +267,6 @@ function callCarriesReleasePayload(call: string): boolean {
   const invokesGit = /["'`]git(?:\.exe)?["'`]|["'`][^"'`]{0,200}\bgit(?:\.exe)?\s+[^"'`]*/i.test(call);
   if (!invokesGit) return false;
   if (GIT_MUTATION_ARGUMENT.test(call)) return true;
-  // Exact code-identity reads are the only legitimate Git dependency in the
-  // real registered closure. An unknown Git verb fails closed; it does not get
-  // to masquerade as another read-only identity operation.
   return !GIT_READ_ONLY_ARGUMENT.test(call);
 }
 
@@ -587,21 +575,18 @@ function executableDependencyClosure(
   const nodes: ExecutableDependencyNode[] = [];
   const problems = new Set<string>();
   while (pending.length > 0) {
+    const path = pending.shift()!;
+    if (seen.has(path)) continue;
     if (seen.size >= EXECUTABLE_CLOSURE_NODE_LIMIT) {
       problems.add(`registered executable closure exceeded ${EXECUTABLE_CLOSURE_NODE_LIMIT} files`);
       break;
     }
-    const path = pending.shift()!;
-    if (seen.has(path)) continue;
     seen.add(path);
     const source = stripExecutableComments(files[path] ?? "");
     const packageClosure = expandExecutable(path);
     for (const problem of packageClosure.problems) problems.add(problem);
     const launchCalls = processLaunchCalls(packageClosure.executable);
     nodes.push({ path, executable: packageClosure.executable, launchCalls });
-    // Type-only imports cannot grant runtime capabilities. Let Node's own TS
-    // parser erase them, rather than walking a repository interface into its
-    // unrelated writers. Unparseable syntax retains the conservative closure.
     let importSource = source;
     if (/\b(?:import|export)\s+(?:type\b|\{[^}]*\btype\b)/.test(source)) {
       // Runtime Node exposes this API before this repository's @types/node.
@@ -639,13 +624,7 @@ interface WorkflowExecutableClosure {
 
 const WORKFLOW_CLOSURE_NODE_LIMIT = 256;
 
-/**
- * Expand only executable indirection GitHub itself can follow without code
- * review: package-script aliases and repository-local composite actions.
- * Cycles are ordinary (scripts can alias each other while being edited), so a
- * visited set terminates them; a path that cannot be resolved is a named,
- * fail-closed instrumentation problem rather than an invisible workflow body.
- */
+
 function workflowExecutableClosure(
   files: Readonly<Record<string, string>>,
   workflowPath: string,
@@ -684,10 +663,6 @@ function workflowExecutableClosure(
     chunks.push(next.body);
     if (next.id.startsWith("package-script:")) packageCommands.push(next.body);
 
-    // YAML/composite actions and package-script bodies are shell text. Source
-    // files are not: a diagnostic/error string such as "run `pnpm x`" is not
-    // executable reachability. For code, follow only balanced child-process
-    // calls projected by processInvocationProjection.
     const shellLike = next.id.startsWith("package-script:")
       || /(?:\.ya?ml|\.ps1|\.sh|\.cmd|\.bat)$/i.test(next.id);
     const invocationSurface = `${shellLike ? next.body : ""}\n${processInvocationProjection(next.body)}`;
@@ -781,7 +756,7 @@ export function civicDataFirewall(tree: CivicDataFirewallTree): readonly CivicDa
   for (const [path, source] of Object.entries(tree.files)) {
     if (!/^(?:app|components|lib|scripts)\/.*\.[cm]?[jt]sx?$/.test(path) || path === "lib/civic-data/firewall.ts") continue;
     const executable = stripExecutableComments(source);
-    if (path !== "lib/civic-data/promotion.ts" && /\bprocessRoutineCandidate\b/.test(executable)) {
+    if (!["lib/civic-data/promotion.ts", "lib/civic-data/candidate-lifecycle.ts"].includes(path) && /\bprocessRoutineCandidate\b/.test(executable)) {
       add(
         "UNREGISTERED_PRODUCTION_PROMOTION_DOOR",
         path,
@@ -791,9 +766,6 @@ export function civicDataFirewall(tree: CivicDataFirewallTree): readonly CivicDa
   }
 
   const ids = new Set<string>();
-  // The canonical projection key is recordClass:scope. Source identity is
-  // evidence about the writer, not a namespace that permits a second writer
-  // to claim the same Reader authority.
   const authorityKeys = new Map<string, string>();
   const commands = new Set<string>();
   const routineAdaptersReachingManualDoor = new Set<string>();

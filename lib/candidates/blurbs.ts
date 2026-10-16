@@ -8,11 +8,7 @@ export interface DerivedBlurb {
   basis: CandidateDocument["basis"];
 }
 
-/** These exact captured descriptions were reviewed against their retained
- * page text. They are navigation copy, an old election appeal, or end mid-
- * sentence. Suppressing the quoted field does not suppress the source or
- * silently replace it with words chosen by us; a new capture must earn a new
- * description on its own evidence. */
+
 const UNUSABLE_CAPTURED_DESCRIPTIONS: Readonly<Record<string, string>> = {
   "73db6c3ad8e2b48990c36e7ef2e423c03f5353798308432b2685fb7fd1d14505": "The Attorney General description ends mid-sentence.",
   "dc455aac3bd696630dbf2344997e7fe1848be52fb8c46fa32cfd6fc34787e090": "The legislative description ends inside a word.",

@@ -11,12 +11,7 @@ import { sourceKindLabel } from "@/lib/corpus/source-kinds";
 import { AskAnswerRecords } from "@/components/ask/answer-records";
 import type { StoredTopicAnswer } from "@/lib/corpus/topic-answers";
 
-/**
- * Three answers kept visually distinct: MATCHED (quoted passages with page and
- * read date), SEARCHED_NOTHING_MATCHED (our search and its denominator, never
- * "no position"), and NOT_YET_COLLECTED (contributes to the card gap).
- * The search covers this person's corpus only.
- */
+
 export function PositionsSection({
   subjectId,
   subjectName,

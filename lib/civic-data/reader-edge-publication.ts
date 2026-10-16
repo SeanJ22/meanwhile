@@ -17,9 +17,10 @@ import {
   type PublishAuthorityCarried,
   type PublishAuthorityValue,
   type PublishRegistrations,
+  type PublishStateAuthorities,
 } from "../meetings/edge-serving.ts";
 import { resolveReaderArtifactWriteStore, type ReaderArtifactStore } from "../meetings/edge-store.ts";
-import type { AuthorityFamily } from "../meetings/edge-artifacts.ts";
+import { type AuthorityFamily } from "../meetings/edge-artifacts.ts";
 import type { RoutineRecordClass, PromotedPointerIdentity } from "./types.ts";
 import { readCuratedReaderProjection } from "./curated-reader-read-model.ts";
 import { readPromotedCivicData } from "./read-model.ts";
@@ -39,9 +40,10 @@ import { DOOR_OUTCOME_POINTERS } from "../outcomes/door-outcome-pointers.ts";
 import { outcomePartitionsAreCurrent } from "./outcome-partitions.ts";
 import { MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT, PIMA_LEGISTAR_OUTCOMES_CONTRACT } from "../outcomes/data-plane.ts";
 import type { RoutineDataStore } from "./store.ts";
-import { readPromotedEdgeFamilies, promotedEdgePointers } from "./promoted-edge-publication.ts";
+import { readPromotedEdgeFamilies, promotedEdgePointers, selectedStateEdgePointers } from "./promoted-edge-publication.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { censusEdgePublication } from "../../scripts/lib/census-edge-publication.ts";
+import { dispatchStateArtifacts, type StateArtifactChildren } from "./state-artifact-dispatch.ts";
 
 function safeFailure(value: string): string {
   return value
@@ -54,17 +56,25 @@ function safeFailure(value: string): string {
     .slice(0, 4_000) || "Reader repair failed without a diagnostic.";
 }
 
-
 import type { ReaderEdgePublicationOutcome } from "./reader-edge-outcome.ts";
 
 export type { ReaderEdgePublicationOutcome } from "./reader-edge-outcome.ts";
 
-export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, observedAt: string,
+interface ReaderEdgePublishOptions {
+  readonly artifactStore?: ReaderArtifactStore | null;
+  readonly stateArtifactChildren?: StateArtifactChildren;
+  readonly readMeetingRegistry?: (divisions: readonly string[], bodies: readonly string[], versionId: string) => Promise<PlaceCaptureRead<RegistryRuntimeReadModel>>;
+}
+
+export async function publishSupervisorReaderEdge(store: RoutineDataStore, observedAt: string,
   selected: readonly Pick<PromotedPointerIdentity, "recordClass" | "scope">[] | null = null,
-  options: { readonly artifactStore?: ReaderArtifactStore | null;
-    readonly requireLiveStore?: boolean;
-    readonly readMeetingRegistry?: (divisions: readonly string[], bodies: readonly string[], versionId: string) => Promise<PlaceCaptureRead<RegistryRuntimeReadModel>> } = {},
+  options: ReaderEdgePublishOptions = {},
+  env: Readonly<Record<string, string | undefined>> = process.env,
 ): Promise<ReaderEdgePublicationOutcome> {
+  const currentStore = store;
+  const states = new Set(selectedStateEdgePointers(selected ?? []).filter(unit => unit.family === "ballot-contests").map(unit => unit.state));
+  selected = selected === null ? null : [...selected, ...selectedStateEdgePointers(null)
+    .filter(unit => states.has(unit.state)).flatMap(unit => unit.pointers)];
   let failed = false;
   let destination: ReaderEdgePublicationOutcome["store"] = "not configured";
   let sequence: number | null = null;
@@ -82,11 +92,15 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
     "meeting-outcomes": [PIMA_LEGISTAR_OUTCOMES_CONTRACT, MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT, ...DOOR_OUTCOME_POINTERS],
   };
   const refreshes = (family: keyof typeof specialPointers) => specialPointers[family].some(pointer => owns(pointer.recordClass, pointer.scope));
+  const preparesMeetings = selected === null || selected.some(pointer => pointer.recordClass === "MEETING" || pointer.recordClass === "REGISTRY_RUNTIME_BINDING" && pointer.scope === REGISTRY_RUNTIME_SCOPE);
+  const statePointerFamilies = selectedStateEdgePointers(selected);
   const pointerFamilies = Object.fromEntries(Object.entries(promotedEdgePointers()).filter(([, pointers]) => pointers.some(pointer => owns(pointer.recordClass, pointer.scope)))) as ReturnType<typeof promotedEdgePointers>;
   if (selected === null || selected.some(pointer => ["STATE_ROLL_CALL", "STATE_LEGISLATOR_VOTES"].includes(pointer.recordClass))) {
     (pointerFamilies as Record<string, unknown>)["state-votes"] = [];
   }
-  if (selected === null || selected.some(pointer => ["CURATED_READER_RECORD", "OPERATIONAL_REFERENCE", "BALLOT_FILING", "STATE_LEGISLATOR"].includes(pointer.recordClass))) {
+  const statePointerKeys = new Set(statePointerFamilies.flatMap(row => row.pointers.map(pointer => `${pointer.recordClass}:${pointer.scope}`)));
+  if (selected === null || selected.some(pointer => ["CURATED_READER_RECORD", "OPERATIONAL_REFERENCE", "STATE_LEGISLATOR"].includes(pointer.recordClass) &&
+    !statePointerKeys.has(`${pointer.recordClass}:${pointer.scope}`))) {
     (pointerFamilies as Record<string, unknown>)["other-reader-data"] = [];
   }
 
@@ -103,12 +117,13 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
       // A failed read cannot establish that no serving copy exists. Let the
       // outer publication error handler retain it and report a retryable error.
       const servedManifest = (await artifactStore.readManifest())?.manifest ?? null;
+      const servedMeetings = preparesMeetings ? servedManifest : null;
       sequence = servedManifest?.sequence ?? null;
-      if (options.requireLiveStore && artifactStore.kind === "local-file") {
+      if (env.WTP_READER_EDGE_LOCAL_OK !== "1" && artifactStore.kind === "local-file") {
         throw new Error("Reader pages would be saved to a folder on the runner. Readers are still seeing the older copy.");
       }
       const grouped = new Map<RoutineRecordClass, Set<string>>();
-      for (const pointer of [...Object.values(specialPointers).flat().filter(pointer => owns(pointer.recordClass, pointer.scope)), ...Object.values(pointerFamilies).flat(),
+      for (const pointer of [...Object.values(specialPointers).flat().filter(pointer => owns(pointer.recordClass, pointer.scope)), ...Object.values(pointerFamilies).flat(), ...statePointerFamilies.flatMap(row => row.pointers),
         ...[manual("everyday-routing")].filter(pointer => owns(pointer.recordClass, pointer.scope)),
         ...(selected === null || selected.some(pointer => pointer.recordClass === "REGISTRATION") ? REGISTRATION_SCOPES.map(scope => ({ recordClass: "REGISTRATION" as const, scope })) : [])]) {
         const scopes = grouped.get(pointer.recordClass) ?? new Set<string>();
@@ -134,7 +149,6 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
         };
         const value = Reflect.get(target, key); return typeof value === "function" ? value.bind(target) : value;
       } });
-      const preparesMeetings = selected === null || selected.some(pointer => pointer.recordClass === "MEETING" || pointer.recordClass === "REGISTRY_RUNTIME_BINDING");
       const prepared = preparesMeetings ? await preparePublishedMeetingSnapshot(store, observedAt) : null;
       if (prepared?.status === "FAILED" || prepared?.status === "NOT_COMPOSABLE") {
         failed = true;
@@ -143,24 +157,6 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
       }
       if (prepared?.status === "RACED") { failed = true; detail = "A newer meeting composition won publication; retry remains owed."; }
 
-      // Each failed refresh keeps its accepted reference while independent replacements publish.
-      const extras: { everydayRouting?: unknown; versionIds: Partial<Record<"everyday-routing", string | null>> } = {
-        everydayRouting: servedManifest?.everydayRouting, versionIds: { "everyday-routing": servedManifest?.extrasVersionIds?.["everyday-routing"] ?? null },
-      };
-      const routingContract = manual("everyday-routing");
-      if (owns(routingContract.recordClass, routingContract.scope)) try {
-        const versionId = (await store.readPromotionIdentity(routingContract.recordClass, routingContract.scope))?.versionId ?? null;
-        if (servedManifest?.extrasVersionIds?.["everyday-routing"] !== versionId) {
-          const routing = await readEverydayRoutingProjection({ store, now: observedAt, bypassCache: true });
-          if (routing.kind !== "PROMOTED" && routing.kind !== "NOT_RECORDED") throw new Error("everyday routing read " + routing.kind);
-          extras.everydayRouting = routing.kind === "PROMOTED" ? routing.value : null;
-          extras.versionIds["everyday-routing"] = versionId;
-        }
-      } catch (error) {
-        failed = true;
-        console.error("READER_EDGE_EXTRAS_SKIPPED: " + safeFailure(sanitizedErrorDiagnostic(error)));
-      }
-            // A family whose pointer is still the version the edge serves carries its artifact forward unread.
       const servedIfCurrent = async (family: AuthorityFamily, currentVersion: () => Promise<string | null>): Promise<string | null> => {
         const served = servedAuthorityVersion(servedManifest, family);
         if (served === null) return null;
@@ -176,7 +172,20 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
         const contract = MANUAL_PRODUCTION_SOURCE_CONTRACTS.find(({ id }) => id === contractId);
         return contract ? pointerVersion(contract.recordClass, contract.scope) : async () => null;
       };
-      const authority: PublishAuthority = Object.fromEntries(Object.entries(servedManifest?.authorityArtifacts ?? {}).filter(([family]) => family !== "state-legislators").map(([family, ref]) => [family, { versionId: ref.version, carried: true }]));
+      const authority: PublishAuthority = Object.fromEntries(Object.entries(servedManifest?.authorityArtifacts ?? {}).filter(([family]) =>
+        family !== "state-legislators").map(([family, ref]) => [family, { versionId: ref.version, carried: true }]));
+      const routingContract = manual("everyday-routing");
+      if (owns(routingContract.recordClass, routingContract.scope)) try {
+        const versionId = (await store.readPromotionIdentity(routingContract.recordClass, routingContract.scope))?.versionId ?? "not-recorded";
+        if (servedAuthorityVersion(servedManifest, "everyday-routing") !== versionId) {
+          const routing = await readEverydayRoutingProjection({ store, now: observedAt, bypassCache: true });
+          if (routing.kind !== "PROMOTED" && routing.kind !== "NOT_RECORDED") throw new Error("everyday routing read " + routing.kind);
+          authority["everyday-routing"] = { value: { projection: routing.kind === "PROMOTED" ? routing.value : null }, versionId };
+        }
+      } catch (error) {
+        failed = true;
+        console.error("READER_EDGE_AUTHORITY_SKIPPED: everyday-routing " + safeFailure(sanitizedErrorDiagnostic(error)));
+      }
       if (refreshes("census-districts")) authority["census-districts"] = await censusEdgePublication({
         servedVersion: servedAuthorityVersion(servedManifest, "census-districts"),
         readVersion: pointerVersion(CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE),
@@ -303,6 +312,17 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
         failed = true;
         process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: promoted pointers ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
       }
+      let stateAuthorities: PublishStateAuthorities = {};
+      try {
+        const promoted = await dispatchStateArtifacts({ store, currentStore, servedManifest, now: observedAt,
+          selected: statePointerFamilies, env, children: options.stateArtifactChildren });
+        stateAuthorities = promoted.stateAuthorities;
+        if (promoted.skipped.length) failed = true;
+        for (const line of promoted.skipped) process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: ${safeFailure(line)}\n`);
+      } catch (error) {
+        failed = true;
+        process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: state pointers ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
+      }
       let registrations: PublishRegistrations | undefined = servedManifest?.registrations === undefined ? undefined : Object.fromEntries(Object.entries(servedManifest.registrations).map(([state, ref]) => [state, { versionId: ref.version, carried: true }]));
       if (selected === null || selected.some(pointer => pointer.recordClass === "REGISTRATION")) try {
         const plan = registrationEdgePlan(await store.readPromotionIdentities("REGISTRATION", REGISTRATION_SCOPES), servedManifest?.registrations);
@@ -324,9 +344,9 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
         process.stderr.write(`READER_EDGE_REGISTRATIONS_SKIPPED: ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
       }
       const meetingRegistryVersion = authority["registry-runtime"]?.versionId ?? null;
-      const sameComposition = prepared?.status === "CURRENT" && servedManifest?.meetingLayout === "governing-area" &&
-        servedManifest.meetingRegistryVersion !== undefined && servedManifest.meetingRegistryVersion === meetingRegistryVersion &&
-        (servedManifest.composition !== undefined ? servedManifest.composition === prepared.composition : servedManifest.generatedAt === prepared.generatedAt);
+      const sameComposition = prepared?.status === "CURRENT" && servedMeetings?.meetingLayout === "governing-area" &&
+        servedMeetings.meetingRegistryVersion !== undefined && servedMeetings.meetingRegistryVersion === meetingRegistryVersion &&
+        (servedMeetings.composition !== undefined ? servedMeetings.composition === prepared.composition : servedMeetings.generatedAt === prepared.generatedAt);
       let checks = prepared?.status === "CURRENT" || prepared?.status === "PUBLISHED" ? { composition: prepared.composition, freshChecks: prepared.freshChecks } : undefined;
       let meetingRead: Awaited<ReturnType<typeof readPreparedMeetingsProjection>> | null = null;
       let meetingBodies: RegistryRuntimeReadModel["registry"]["bodies"] | undefined;
@@ -365,9 +385,10 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
       }
       const edge = await publishReaderEdgeArtifacts(meetingRead?.kind === "PROMOTED" ? meetingRead.value : null,
         meetingRead?.kind === "PROMOTED" ? { sourceThrough: meetingRead.metadata.sourceThrough, retrievedAt: meetingRead.metadata.retrievedAt, promotedThrough: meetingRead.metadata.promotedAt }
-          : { sourceThrough: servedManifest?.sourceThrough ?? null, retrievedAt: prepared?.status === "CURRENT" ? prepared.checkedAt : servedManifest?.retrievedAt ?? null, promotedThrough: servedManifest?.promotedThrough ?? null },
-        { store: artifactStore, now: observedAt, extras, authority, registrations, stateLegislators, meetingBodies, meetingRegistryVersion,
-          meetingPlaces: preparesMeetings || !servedManifest?.meetingPlaces ? Object.fromEntries(await readComposedSourcePlaces({ store }) ?? []) : servedManifest.meetingPlaces,
+          : { sourceThrough: servedMeetings?.sourceThrough ?? null, retrievedAt: prepared?.status === "CURRENT" ? prepared.checkedAt : servedMeetings?.retrievedAt ?? null, promotedThrough: servedMeetings?.promotedThrough ?? null },
+        { store: artifactStore, now: observedAt, authority, stateAuthorities, registrations, meetingBodies, meetingRegistryVersion,
+          ...(servedManifest?.stateLegislators !== undefined || refreshes("state-legislators") ? { stateLegislators } : {}),
+          ...(preparesMeetings ? { meetingPlaces: Object.fromEntries(await readComposedSourcePlaces({ store }) ?? []) } : {}),
           ...(stateFacts ? { stateFacts: stateFacts.entries } : {}), ...(checks ? { checks } : {}) });
       if (stateFacts && (edge.status === "PUBLISHED" || edge.status === "CURRENT")) {
         await stateFacts.settle();
@@ -391,20 +412,6 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
     store: destination, sequence, ...(supersededMeetingFields !== undefined ? { supersededMeetingFields } : {}), detail: failed ? detail ?? "Reader pages could not be fully updated. The earlier serving copies remain available." : null };
   console.log(JSON.stringify(outcome));
   return outcome;
-}
-
-export async function publishRoutineReaderEdge(...args: Parameters<typeof publishRoutineReaderEdgeOutcome>): Promise<boolean> {
-  return (await publishRoutineReaderEdgeOutcome(...args)).ok;
-}
-
-export async function publishSupervisorReaderEdge(
-  store: RoutineDataStore, observedAt: string,
-  selected: Parameters<typeof publishRoutineReaderEdgeOutcome>[2] = null,
-  options: Parameters<typeof publishRoutineReaderEdgeOutcome>[3] = {},
-  env: Readonly<Record<string, string | undefined>> = process.env,
-): Promise<ReaderEdgePublicationOutcome> {
-  return publishRoutineReaderEdgeOutcome(store, observedAt, selected,
-    { ...options, requireLiveStore: env.WTP_READER_EDGE_LOCAL_OK !== "1" });
 }
 
 export function readerEdgeSupervisorFailure(outcome: ReaderEdgePublicationOutcome) {

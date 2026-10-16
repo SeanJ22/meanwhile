@@ -15,7 +15,7 @@ import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts
 import { MemoryRoutineDataStore, PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { getTableName } from "drizzle-orm";
-import { partitionCivicPayload } from "../lib/civic-data/payload-parts.ts";
+import { partitionCivicPayload } from "../lib/civic-data/payload-codec.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { readerOfficeholders } from "../lib/ask/server-sources.ts";
 import { composeReaderOfficials, readerOfficialsQuestion } from "../lib/ask/reader-officials.ts";
@@ -91,10 +91,6 @@ function receipt(value: RegistryRuntimeCarton, at: string, salt: string): Manual
   };
 }
 
-/**
- * The registry a current package carries: the recorded transfer-time import (the bundled first seed is
- * gone) without the two boards once minted on Census placeholder divisions, which every promotion drops.
- */
 function servedRegistry(): RegistryRuntimeCarton {
   const { bodyRosters: _rosters, rosterReaderDispositions: _dispositions, ...imported } = registryTransferImport().projection.payload;
   const placeholders = frozenPlaceholders().ids;
@@ -497,10 +493,7 @@ test("a promotion drops placeholder bodies whichever side holds them, names why,
   assert.equal(outcome.candidate.state, "PROMOTED");
 });
 
-/**
- * A recorded transfer-time import (tests/fixtures/registry-transfer-import.json.gz): not source-authenticated,
- * carrying both placeholder boards and a raw Census name, placed as retained history. Nothing admits it.
- */
+// This transfer fixture is retained history, without source authentication or publication authority.
 async function transferImportedRegistry(store: MemoryRoutineDataStore, at: string) {
   const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as {
     record: CandidateVersionRecord;

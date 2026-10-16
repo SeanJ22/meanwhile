@@ -1,23 +1,3 @@
-/**
- * A county ballot generated from the clerk's own filing documents.
- *
- *   corepack pnpm nj:ballot             # acquire and validate without writing
- *   corepack pnpm nj:ballot -- --promote # atomically promote to the production data plane
- *
- * Parses the CURRENT documents discovered from the clerk's own page hrefs and
- * promotes the result through the canonical candidate/validation/pointer door.
- *
- * - **It never guesses a division.** A jurisdiction whose OCD id cannot be
- *   resolved from the committed TIGER layers produces NO contest and is named
- *   in the output: a contest on the wrong division is a false claim.
- * - **It never invents a field.** Party, slogan, term and seats come from the
- *   filing; incumbency and websites stay null. Filed email and address go to
- *   the contact store, never rendered as the candidate's own words.
- *
- * Every run states candidates read, contests built, jurisdictions mapped and
- * jurisdictions REFUSED by name. A zero-contest build exits non-zero.
- */
-
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
@@ -63,10 +43,6 @@ const ELECTION = { id: "nj-2026-11-03", date: "2026-11-03", name: "2026 General 
 const VINTAGE = "TIGER_GENZ2025";
 const UA = "we-the-people/1.0 (civic data; seanj22@gmail.com)";
 
-/* -------------------------------------------------------------------------- */
-/* Jurisdiction name → OCD id, from the committed layers and nothing else      */
-/* -------------------------------------------------------------------------- */
-
 type Feature = { properties: Record<string, string> };
 const layers = new Map<string, Feature[]>();
 for (const name of readdirSync(join(ROOT, "data", "states", "nj", "geo"))) {
@@ -84,12 +60,6 @@ const norm = (s: string) =>
     .replace(/[^A-Z0-9]+/g, " ")
     .trim();
 
-/**
- * The municipality's own division. Where the county-subdivision row is
- * Census's FICTITIOUS filler (`FUNCSTAT F`), the real government is the
- * coextensive PLACE row, which is what `lib/registry/derive.ts` built the
- * registry body from. Joined by GEOID.
- */
 const placeByGeoidTail = new Map<string, Feature>();
 for (const f of layers.get("place") ?? []) {
   const g = String(f.properties.geoid ?? "");
@@ -109,12 +79,6 @@ function municipalDivision(jurisdiction: string): string | null {
   return String(sub.properties.ocdId);
 }
 
-/**
- * The school district serving a municipality, by name: the clerk heads a
- * school row with the MUNICIPALITY. Matched on the district layer's label with
- * the purpose words removed, and accepted ONLY when exactly one district
- * answers (two districts can differ by one word).
- */
 function schoolDivision(jurisdiction: string): { ocdId: string; label: string } | null {
   const all = [...(layers.get("unsd") ?? []), ...(layers.get("elsd") ?? []), ...(layers.get("scsd") ?? [])];
   const match = (want: string) => {
@@ -123,11 +87,7 @@ function schoolDivision(jurisdiction: string): { ocdId: string; label: string } 
     );
     return hits.length === 1 ? hits[0]! : null;
   };
-  /*
-   * A slashed name (`<A> Borough/Township`) is one filing jurisdiction for a
-   * district two municipalities run together; each is tried in the clerk's
-   * order, still accepted only on a UNIQUE match.
-   */
+
   const candidates =
     jurisdiction.includes("/")
       ? (() => {
@@ -144,12 +104,6 @@ function schoolDivision(jurisdiction: string): { ocdId: string; label: string } 
   return null;
 }
 
-/* -------------------------------------------------------------------------- */
-/* Ids are carried forward: reactions, cards, links and explainers key on      */
-/* contest and candidacy ids, so re-minting an id orphans readers' answers.   */
-/* The previous promoted ballot is read first; a contest matches on DIVISION   */
-/* plus office, a candidacy on its contest plus the filed name.               */
-/* -------------------------------------------------------------------------- */
 type PriorCandidacy = {
   id: string;
   contestId: string;
@@ -181,19 +135,6 @@ const officeKey = (title: string) =>
     .replace(/\bMEMBER OF THE\b/, "")
     .trim();
 
-/*
- * The carry key must be the mint key (jurisdiction + office + DIVISION). A
- * regional board's seats are allocated per constituent municipality, so
- * several contests share one division and office title. Prior contests are
- * therefore BUCKETED by division-and-office:
- *
- * - exactly one prior contest in the bucket → carry it (including ids like
- *   `ballot-nj-morris:us-senate` that encode no jurisdiction);
- * - several → disambiguate on the jurisdiction the id itself encodes;
- * - several and none matches this jurisdiction → carry NOTHING and mint. A
- *   wrong carried id attaches a reaction to the wrong race; a fresh id is
- *   merely a gap.
- */
 const priorContestsByDivisionOffice = new Map<string, { id: string }[]>();
 for (const c of prior.contests ?? []) {
   const key = `${c.ocdId}|${officeKey(c.title)}`;
@@ -214,8 +155,6 @@ function carriedContestId(
   return bucket.find((p) => p.id.startsWith(wanted))?.id;
 }
 const priorCandidacyId = new Map<string, string>();
-// A person the clerk removed and later lists again gets the id back: the
-// removal record kept it precisely so the join key would survive the gap.
 for (const c of [...(prior.candidacies ?? []), ...(prior.removals ?? [])]) {
   priorCandidacyId.set(
     `${c.contestId}|${norm(c.familyName)}|${norm(c.givenName)}`,
@@ -224,10 +163,6 @@ for (const c of [...(prior.candidacies ?? []), ...(prior.removals ?? [])]) {
 }
 let idsCarried = 0;
 let idsMinted = 0;
-
-/* -------------------------------------------------------------------------- */
-/* Read the documents                                                         */
-/* -------------------------------------------------------------------------- */
 
 async function readPdf(url: string, signal: AbortSignal) {
   const res = await requestPublisher("Morris County Clerk filing PDF", () =>
@@ -356,17 +291,12 @@ if (filed.length === 0) {
   ));
 }
 
-/* -------------------------------------------------------------------------- */
-/* Build contests                                                             */
-/* -------------------------------------------------------------------------- */
-
 const slug = (s: string) =>
   s
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
 
-/** Federal and county offices sit on divisions the municipality name cannot give. */
 function statewideDivision(office: string, jurisdiction: string): string | null {
   if (/UNITED STATES SENATE/.test(office)) return "ocd-division/country:us/state:nj";
   if (/HOUSE OF REPRESENTATIVES/.test(office)) {
@@ -403,11 +333,7 @@ for (const c of filed) {
   let scopeNote: string | null = null;
 
   if (!ocdId && SCHOOL_OFFICE.test(office)) {
-    /*
-     * The document's own district cell is tried first: a township's "MEMBER OF
-     * THE REGIONAL BOARD OF EDUCATION" row is a regional board seat, not the
-     * township district's. The municipality is the fallback, not the source.
-     */
+
     const bareType = /^(?:Town|Township|Borough|City|Village|Regional|W\d+|At Large)$/i;
     const cell = c.district && !bareType.test(c.district) ? c.district : null;
     const hit = (cell ? schoolDivision(cell) : null) ?? schoolDivision(c.jurisdiction);
@@ -431,10 +357,7 @@ for (const c of filed) {
     continue;
   }
 
-    /*
-     * The contest KEY includes the resolved division, so a municipality's own
-     * board and a regional board can never collapse into one id.
-     */
+
   const mintedContestId = `ballot-nj-morris:${slug(c.jurisdiction)}-${slug(office)}-${slug(ocdId.split("/").pop() ?? "")}`;
   const carried = carriedContestId(ocdId, office, c.jurisdiction);
   const contestId = carried ?? mintedContestId;
@@ -444,10 +367,7 @@ for (const c of filed) {
     contests.set(contestId, {
       contestId,
       ocdId,
-      /*
-       * A carried contest keeps its TITLE: reviewed titles say which seats a
-       * contest is for, and `office-blurbs` resolves explainers off them.
-       */
+
       title:
         prior.contests.find((p) => p.id === contestId)?.title ??
         office
@@ -485,11 +405,7 @@ for (const c of filed) {
     },
   });
 
-  /*
-   * The filed email and street address are CONTACT, kept out of the ballot
-   * payload so a home address can never reach a page; the contact store has
-   * the rules for what may be shown.
-   */
+
   if (c.email || c.address) {
     contacts.push({
       candidacyId: carriedPerson ?? `${contestId}:${personSlug}`,
@@ -503,8 +419,6 @@ for (const c of filed) {
     });
   }
 }
-
-/* -------------------------------------------------------------------------- */
 
 const absences = noElection
   .map((n) => {
@@ -529,17 +443,6 @@ const absences = noElection
   })
   .filter((a): a is NonNullable<typeof a> => a !== null);
 
-/* -------------------------------------------------------------------------- */
-/* What the clerk no longer lists                                             */
-/* -------------------------------------------------------------------------- */
-
-/*
- * A candidacy the previous ballot carried and the current documents do not is
- * written as a REMOVAL: its id, the document that listed it, the document that
- * does not, and the day it was first found absent (carried forward unchanged).
- * The same fact is written as an absence on the contest's division. It is not
- * rendered as a candidate: the clerk's current list is the ballot.
- */
 const currentIds = new Set(candidacies.map((c) => c.id as string));
 const docFor = (priorUrl: string | undefined) =>
   docs.find((d) => /school/i.test(d.url) === /school/i.test(priorUrl ?? "")) ?? docs[0]!;
@@ -547,7 +450,7 @@ const contestDivision = (contestId: string) =>
   contests.get(contestId)?.ocdId ?? prior.contests.find((p) => p.id === contestId)?.ocdId ?? null;
 const ordinal = (n: number) =>
   `${n}${[11, 12, 13].includes(n % 100) ? "th" : (["th", "st", "nd", "rd"][n % 10] ?? "th")}`;
-/** The contest as a reader would name it — the carried title, plus the district a federal seat's title omits. */
+
 const contestTitle = (contestId: string) => {
   const title =
     contests.get(contestId)?.title ?? prior.contests.find((p) => p.id === contestId)?.title ?? contestId;
@@ -589,8 +492,6 @@ for (const c of prior.candidacies ?? []) {
       `${absentFrom.url.split("/").pop()} read ${STAMP}. The revision does not say why.`,
   });
 }
-// A removal recorded earlier whose person is neither listed nor in the prior
-// candidacies is carried as it stands — the file never forgets a change it saw.
 for (const r of prior.removals ?? []) {
   if (currentIds.has(r.id) || removals.some((x) => x.id === r.id)) continue;
   removals.push(r);

@@ -1083,7 +1083,7 @@ test("PDC-13: a feature/preview build cannot certify production Reader visibilit
 });
 
 test("PDC-13: receipt-held records retain their exact key and record payload", () => {
-  const contract = ROUTINE_SOURCE_CONTRACTS.find((item) => item.id === "nj-morris-filing")!;
+  const contract = ROUTINE_SOURCE_CONTRACTS[0];
   const base = validationReceipt(contract, "nj-held", "2026-09-08T02:00:00.000Z");
   const heldReceipt: ValidationReceipt = {
     ...base,

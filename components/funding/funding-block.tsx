@@ -13,10 +13,7 @@ import {
 } from "./funding-section";
 import { StateMoneySection } from "./state-money-section";
 
-/**
- * Fetches the funding answer for any officeholder from /api/funding. A fetch
- * failure renders nothing.
- */
+
 
 
 

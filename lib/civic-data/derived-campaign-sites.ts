@@ -1,3 +1,4 @@
+import { stateBallotContractId, stateBallotScope } from "./state-scopes.ts";
 import {
   civicDataReadNotInitialized,
   readPromotedCivicData,
@@ -22,6 +23,8 @@ export interface CandidateLinksShape {
   readonly campaign: VerifiedLinkShape | null;
 }
 
+export const derivedCampaignSitesContractId = (state: string) => stateBallotContractId("candidate-campaign-sites-derived", state);
+export const derivedCampaignSitesScope = (state: string) => stateBallotScope("candidate-campaign-sites-derived", state);
 export const DERIVED_CAMPAIGN_SITES_CONTRACT_ID = "candidate-campaign-sites-derived" as const;
 export const DERIVED_CAMPAIGN_SITES_SOURCE_ID = "candidate-campaign-site-chain" as const;
 export const DERIVED_CAMPAIGN_SITES_RECORD_CLASS = "CURATED_READER_RECORD" as const;
@@ -247,9 +250,7 @@ async function refreshDerivedCampaignSitesOnce(options: PromotedCivicDataReadOpt
   }
 }
 
-// Profiles and publication text now load this same pointer concurrently. Share
-// only an in-flight default read, including NOT_RECORDED; no result is retained
-// here and explicit stores, clocks, cache bypasses and edge versions stay isolated.
+
 let defaultRefresh: Promise<CivicDataReadResult<DerivedCampaignSitesProjection>> | null = null;
 export async function refreshDerivedCampaignSites(options: PromotedCivicDataReadOptions = {}): Promise<CivicDataReadResult<DerivedCampaignSitesProjection>> {
   if (Object.values(options).some(value => value !== undefined)) return refreshDerivedCampaignSitesOnce(options);

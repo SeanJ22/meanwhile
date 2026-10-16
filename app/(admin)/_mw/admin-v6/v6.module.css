@@ -7,6 +7,7 @@
   --v6-violet: oklch(0.68 0.13 305);
   --v6-dark: oklch(0.5 0 0);
   --v6-mono: var(--font-mono, ui-monospace, monospace);
+  --header-height: 120px; /* until the app header is measured; command-center.tsx then sets its real height */
   min-height: 100vh;
   max-width: 60rem;
   margin: 0 auto;

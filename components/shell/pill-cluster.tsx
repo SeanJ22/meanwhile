@@ -13,6 +13,8 @@ export type ReaderPop = "zip" | "vote" | "ask" | null;
 export function PillCluster({
   placement,
   zip,
+  state,
+  point,
   pop,
   governsOpen,
   onOpenPop,
@@ -22,6 +24,8 @@ export function PillCluster({
   placement: AskPillPlacement;
   /** The zip the viewport currently resolves to. Null shows a ZIP chooser. */
   zip: string | null;
+  state: string | null;
+  point: { lat: number; lng: number } | null;
   pop: ReaderPop;
   /** The Who governs here? card is the view on screen. */
   governsOpen: boolean;
@@ -32,6 +36,14 @@ export function PillCluster({
   onOpenBallot?: () => void;
 }) {
   const validZip = zip && /^\d{5}$/.test(zip) ? zip : null;
+  const ballotParams = new URLSearchParams();
+  if (state) ballotParams.set("state", state);
+  if (validZip) ballotParams.set("zip", validZip);
+  if (point) {
+    ballotParams.set("lat", String(point.lat));
+    ballotParams.set("lng", String(point.lng));
+  }
+  const ballotHref = `/ballot${ballotParams.size ? `?${ballotParams}` : ""}`;
   // Ask's full example label at every placement; the pill is always alone on its row.
   const readerCopy = useReaderCopy();
   const pill = { ...ASK_PILL_LABELS.sidebar, label: readerCopy("copy.askSidebar"), ariaLabel: readerCopy("copy.askAccessible") };
@@ -40,8 +52,8 @@ export function PillCluster({
     <div className="mw-nav-wrap" data-pill-cluster={placement}>
       <nav className="mw-compound-nav" aria-label="Main">
         <Link
-          href={validZip ? `/ballot?zip=${validZip}` : "/ballot"}
-          prefetch={false}
+          href={ballotHref}
+          prefetch={true}
           className="mw-nav-seg mw-nav-ballot"
           onClick={onOpenBallot}
           title={`What's on the ballot${validZip ? ` near ${validZip}` : ""}`}

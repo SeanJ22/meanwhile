@@ -1,24 +1,6 @@
 import type { FilterSpecification } from "maplibre-gl";
 import { pointInRings } from "../geo/polygon.ts";
 
-/**
- * The active state rises out of the map. A shadow is cast by the shape, not
- * drawn along its edge: two blurred silhouettes of the state, one white offset
- * toward a top-left light and one black offset away from it, each masked to
- * the region outside the state.
- *
- * 1. No visible line: the mask's inner edge is feathered (`FEATHER_PX`), a
- *    blurred `<mask>` rather than a binary `<clipPath>`.
- * 2. One light source: the offset is in screen space, so the light does not
- *    rotate or scale with the map, and each silhouette is offset a full
- *    `OFFSET_PX` before blurring, so neither reaches the other's side.
- * 3. The projected rings are simplified in screen space at a sub-pixel
- *    tolerance (`simplifyScreenRing`), so digitization never shows.
- *
- * The effect never releases on zoom-out; only the size of the rise scales
- * with zoom, and it stays well above zero.
- */
-
 export const STATE_FOCUS_SOURCE = "state-outlines";
 
 /** Where the outlines live. Generalized geometry — see the fetch script. */
@@ -45,11 +27,34 @@ export function stateOcdIdAt(
 ): string | null {
   if (!outlines) return null;
   for (const feature of outlines.features) {
-    if (pointInPolygon(lng, lat, feature.geometry.coordinates)) {
-      return feature.properties.ocdId;
-    }
+    if (stateContainsPoint(feature, lat, lng)) return feature.properties.ocdId;
   }
   return null;
+}
+
+const ringBounds = new WeakMap<number[][], { west: number; south: number; east: number; north: number }>();
+
+export function stateContainsPoint(feature: StateOutlineFeature | null, lat: number, lng: number): boolean {
+  if (!feature) return false;
+  const longitude = ((lng + 180) % 360 + 360) % 360 - 180;
+  for (const x of [longitude, longitude - 360, longitude + 360]) {
+    const rings = feature.geometry.coordinates.filter(ring => {
+      let bounds = ringBounds.get(ring);
+      if (!bounds) {
+        bounds = { west: Infinity, south: Infinity, east: -Infinity, north: -Infinity };
+        for (const [rx, ry] of ring) {
+          bounds.west = Math.min(bounds.west, rx);
+          bounds.south = Math.min(bounds.south, ry);
+          bounds.east = Math.max(bounds.east, rx);
+          bounds.north = Math.max(bounds.north, ry);
+        }
+        ringBounds.set(ring, bounds);
+      }
+      return lat >= bounds.south && lat <= bounds.north && x >= bounds.west && x <= bounds.east;
+    });
+    if (pointInRings(x, lat, rings)) return true;
+  }
+  return false;
 }
 
 export function outlineFor(
@@ -60,30 +65,17 @@ export function outlineFor(
   return outlines.features.find((f) => f.properties.ocdId === ocdId) ?? null;
 }
 
-/**
- * The two-letter state code inside a state OCD-ID, upper-cased, or null: the
- * one place the OCD-ID focus meets the overlays' USPS `state` property.
- */
 export function stateAbbrFromOcdId(ocdId: string | null): string | null {
   if (!ocdId) return null;
-  const match = /\/state:([a-z]{2})$/.exec(ocdId);
+  const match = /\/(?:state|district|territory):([a-z]{2})$/.exec(ocdId);
   return match ? match[1].toUpperCase() : null;
 }
-
-/** Even-odd ray casting over a polygon's rings; see lib/geo/polygon.ts. */
-const pointInPolygon = (x: number, y: number, rings: number[][][]): boolean =>
-  pointInRings(x, y, rings);
 
 export interface ScreenPoint {
   x: number;
   y: number;
 }
 
-/**
- * Ramer–Douglas–Peucker, in screen pixels. Simplifying after projection
- * makes one sub-pixel tolerance zoom-adaptive, and drops most points to
- * serialize at continental zoom. A ring is never simplified below a triangle.
- */
 export function simplifyScreenRing(
   points: readonly ScreenPoint[],
   tolerance: number,
@@ -153,20 +145,12 @@ function perpendicularDistanceSquared(
 
 /* ----------------------------------------------------------- the light --- */
 
-/**
- * The rise, in screen pixels, as a function of zoom. `offset` equals `blur`:
- * smaller and the silhouettes overlap toward grey; much larger and each
- * shadow detaches into a second outline.
- */
 export interface ExtrusionSpec {
   /** How far each silhouette is displaced along the light's axis. */
   offsetPx: number;
   /** Gaussian sigma applied to each displaced silhouette. */
   blurPx: number;
-  /**
-   * Gaussian sigma of the mask's edge: how far the shadow takes to rise from
-   * nothing at the border.
-   */
+
   featherPx: number;
   /** Sub-pixel simplification tolerance for the projected rings. */
   simplifyPx: number;
@@ -203,12 +187,6 @@ export function extrusionSpecForZoom(zoom: number): ExtrusionSpec {
   };
 }
 
-/**
- * The rise, capped by the size of the shape it marks, so a small state at
- * far zoom keeps a fully masked interior: the feather may not exceed a sixth
- * of the state's smaller on-screen dimension, and the offset and blur a
- * third. Nothing reaches zero.
- */
 export function capSpecToSpan(spec: ExtrusionSpec, span: number): ExtrusionSpec {
   if (!Number.isFinite(span) || span <= 0) return spec;
   return {
@@ -219,12 +197,6 @@ export function capSpecToSpan(spec: ExtrusionSpec, span: number): ExtrusionSpec 
   };
 }
 
-/**
- * Opacity of each silhouette, by theme. A white silhouette barely shows on a
- * pale basemap, and the mute darkens outside the state in dark mode and
- * brightens it in light mode, so the pairs differ. Both stay low: the effect
- * carries no information.
- */
 export interface RiseAlphas {
   /** The silhouette displaced TOWARD the light, at top-left. */
   light: number;
@@ -240,17 +212,6 @@ export function riseAlphasFor(theme: "light" | "dark"): RiseAlphas {
 
 /* ------------------------------------------------- the viewport clip --- */
 
-/**
- * The box a projected ring is cut down to before it reaches a mask, clip or
- * filter. Chromium silently drops a `clip-path` that is too large (a state at
- * city zoom projects to tens of thousands of pixels), and a dropped clip lets
- * the scrim cover the whole frame. Everything beyond `FILTER_PAD` of the
- * canvas cannot contribute a visible pixel, so cutting there loses nothing.
- *
- * An empty result is a real answer: the viewport does not touch the active
- * state, and the frame renders fully muted. Callers treat "no rings" as
- * "everything is outside", never as "draw nothing".
- */
 export interface ScreenBox {
   minX: number;
   minY: number;
@@ -258,12 +219,6 @@ export interface ScreenBox {
   maxY: number;
 }
 
-/**
- * Sutherland–Hodgman: one polygon ring cut down to an axis-aligned box. Rings
- * are clipped independently and the result is still evaluated even-odd, so
- * holes survive (and a viewport inside a hole cancels to nothing). The
- * connecting edges along the box enclose no area.
- */
 export function clipRingToBox(
   points: readonly ScreenPoint[],
   box: ScreenBox,
@@ -319,23 +274,23 @@ function intersectEdge(
   return { x: from.x + t * dx, y: limit };
 }
 
-/**
- * Which state a district layer's filter is pinned to, read back off the map
- * by `__wtpMapProbe`. Null for the "no active state" filter.
- */
 export function filterStateAbbr(
   // `map.getFilter()` may return nothing for an unfiltered layer.
   filter: FilterSpecification | void | undefined,
 ): string | null {
-  if (!Array.isArray(filter) || filter.length < 3) return null;
+  if (!Array.isArray(filter)) return null;
+  if (filter[0] === "all") {
+    for (const part of filter.slice(1)) {
+      const state = filterStateAbbr(part as FilterSpecification);
+      if (state) return state;
+    }
+    return null;
+  }
+  if (filter[0] !== "==" || JSON.stringify(filter[1]) !== '["get","state"]') return null;
   const value = filter[2];
   return typeof value === "string" && value !== NO_STATE ? value : null;
 }
 
-/**
- * The sentinel a layer is filtered to when no state is active: a string no
- * state code can equal. Never rendered.
- */
 export const NO_STATE = "__none__";
 
 /** The filter that pins a district layer to one state, or to nothing. */

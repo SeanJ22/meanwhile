@@ -43,6 +43,7 @@ import {
   withDistricts,
   preserveDistrictStyle,
   addDistrictLayer,
+  setDistrictState,
   boundsOfDistrict,
   fullBoundsOfDistrict,
   districtLayerPresent,
@@ -57,6 +58,7 @@ import {
 } from "@/lib/map/districts";
 import {
   filterStateAbbr,
+  stateAbbrFromOcdId,
 } from "@/lib/map/state-focus";
 import type { DistrictType } from "@/lib/state/types";
 import type { Theme } from "@/hooks/use-stored-theme";
@@ -99,16 +101,14 @@ import type { MapBounds, OfficeSite } from "@/lib/map/office-pins";
 const NO_OFFICE_SITES: readonly OfficeSite[] = [];
 
 interface MapCanvasProps {
+  isOutsideActiveState?: (lat: number, lng: number) => boolean;
   officeSites?: readonly OfficeSite[];
   onSelectOffice?: (id: string) => void;
   selectedOfficeId?: string | null;
   /** The settled view's edges, after every camera move. */
   onBoundsChange?: (bounds: MapBounds) => void;
   onPresentationReadyChange?: (ready: boolean) => void;
-  /**
-   * Every venue the data contains, not the filtered list: this drives the
-   * marker pool. {@link MapCanvasProps.visibleVenueKeys} drives what is shown.
-   */
+
   venues: Venue[];
   /** The keys the current filters leave visible, a subset of `venues`. `null` shows every venue. */
   visibleVenueKeys?: ReadonlySet<string> | null;
@@ -131,15 +131,9 @@ interface MapCanvasProps {
   frameAllVenues: boolean;
   /** Basemap follows the UI theme; changing it restyles the map in place. */
   theme: Theme;
-  /**
-   * Pixels of the map's left edge covered by the floating rail (0 when
-   * hidden), applied as camera padding so framing centres on the visible area.
-   */
+
   leftInset?: number;
-  /**
-   * The unobstructed map area. When present it replaces `leftInset` as camera
-   * padding, and the selected boundary refits when it changes.
-   */
+
   insets?: { top: number; right: number; bottom: number; left: number };
   /** Bumped by "Fit boundary": re-fit the selected district. */
   fitNonce?: number;
@@ -147,10 +141,7 @@ interface MapCanvasProps {
   onTileError: () => void;
   /** The basemap is drawing again after a tile error, so the error notice can clear. */
   onTilesRecovered?: () => void;
-  /**
-   * The reader panned or zoomed and the map came to rest. Fired only for
-   * gestures, after a debounce; never for camera moves the app issued.
-   */
+
   onViewportSettle?: (view: {
     lat: number;
     lng: number;
@@ -161,10 +152,7 @@ interface MapCanvasProps {
   allowAutoFrame: boolean;
   /** The reader's state OCD-ID, raised out of the map. Null before a zip resolves: nothing raised or muted. */
   focusStateOcdId?: string | null;
-  /**
-   * Voting locations, drawn as their own pin class with a separate colour
-   * token and marker set (no pooling), never folded into `venues`.
-   */
+
   votingSites?: VotingSitePin[];
   /** The point the reader's typed address resolved to; the address never reaches the map. */
   votingAddressPoint?: { lat: number; lng: number } | null;
@@ -225,6 +213,7 @@ export function MapCanvas({
   onViewportSettle,
   allowAutoFrame,
   focusStateOcdId = null,
+  isOutsideActiveState,
   officeSites,
   onSelectOffice,
   selectedOfficeId = null,
@@ -252,10 +241,7 @@ export function MapCanvas({
   const onBoundsChangeRef = useRef(onBoundsChange);
   useEffect(() => { onBoundsChangeRef.current = onBoundsChange; }, [onBoundsChange]);
   const votePinsRef = useRef(new Map<string, Marker>());
-  /**
-   * Whether the reader has taken the camera by hand. A ref so pans do not
-   * re-render. Lowered only by a new `camera` or a new `focus`.
-   */
+
   const userMovedRef = useRef(false);
 
   // Handlers live in a ref so re-renders don't tear down and rebuild markers.
@@ -293,6 +279,9 @@ export function MapCanvas({
     onViewportSettleRef.current = onViewportSettle;
   }, [onViewportSettle]);
 
+  const outsideStateRef = useRef(isOutsideActiveState);
+  useEffect(() => { outsideStateRef.current = isOutsideActiveState; }, [isOutsideActiveState]);
+
   const focusOcdRef = useRef<string | null>(focusStateOcdId ?? null);
   useEffect(() => {
     focusOcdRef.current = focusStateOcdId ?? null;
@@ -317,11 +306,16 @@ export function MapCanvas({
     }
 
     for (const type of wanted) {
-      try { addDistrictLayer(map, type); }
+      try { addDistrictLayer(map, type, stateAbbrFromOcdId(focusOcdRef.current)); }
       catch { onDistrictErrorRef.current(); }
     }
+    setDistrictState(map, stateAbbrFromOcdId(focusOcdRef.current));
     } finally { attachingDistrictsRef.current = false; }
   }, []);
+
+  useEffect(() => {
+    ensureDistricts();
+  }, [focusStateOcdId, ensureDistricts]);
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
@@ -347,7 +341,7 @@ export function MapCanvas({
     const map = startMap(() => new MapLibreMap({
       container,
       // Districts start without any dependency on the basemap provider.
-      style: withDistricts(FALLBACK_STYLE, districtTypesRef.current),
+      style: withDistricts(FALLBACK_STYLE, districtTypesRef.current, stateAbbrFromOcdId(focusOcdRef.current)),
       ...(camera
         ? { center: [camera.lng, camera.lat] as [number, number], zoom: initialZoomForZip(camera.zip) }
         : remembered
@@ -400,10 +394,6 @@ export function MapCanvas({
       // Keep the usable style; resetting on each tile error restarts the failing requests.
     });
 
-    /**
-     * The tile-error notice clears once the map goes idle with a real style.
-     * `idle` fires at every rest, so a later recovery is caught too.
-     */
     map.on("idle", () => {
       if (!map.isStyleLoaded()) return;
       // Recovering into the fallback would clear the notice with no basemap.
@@ -432,6 +422,10 @@ export function MapCanvas({
       /* A press on the map puts a fanned pin group back; pin presses never reach here. */
       clearSpiderfy(pool);
 
+      if (outsideStateRef.current?.(event.lngLat.lat, event.lngLat.lng)) {
+        map.easeTo({ center: event.lngLat, duration: prefersReducedMotion() ? 0 : 300 }, { originalEvent: event.originalEvent });
+        return;
+      }
       const hits = districtsAt(map, event.point, districtTypesRef.current);
       if (hits.length === 0) return;
       onDistrictClickRef.current(hits, { x: event.point.x, y: event.point.y });
@@ -482,10 +476,7 @@ export function MapCanvas({
       window.clearTimeout(settleTimer);
     };
     const onMoveEnd = () => {
-      /*
-       * The camera is remembered on any settled arrival, including the end of
-       * an app fly-to. Only the re-query below is gated on a user gesture.
-       */
+
       // Movement ending does not imply tiles have settled; idle owns reveal.
       const wasUserMove = userMoved;
       userMoved = false;
@@ -647,10 +638,6 @@ export function MapCanvas({
       .setAttribute("aria-label", `Center of zip code ${camera.zip}`);
   }, [camera, presentationReady]);
 
-  /*
-   * Voting-site pins, reconciled by id. Unplaceable sites never reach here
-   * (`isPinnable` filters upstream); they are listed with their address.
-   */
   useEffect(() => {
     const map = mapRef.current;
     if (!map || mapPresentationHeld(map)) return;
@@ -765,10 +752,6 @@ export function MapCanvas({
     }
   }, [selectedVotingSiteId, votingSites]);
 
-  /*
-   * Rail and inset padding via `setPadding`, which every later flyTo, jumpTo
-   * and fitBounds honours. Not animated.
-   */
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
@@ -806,10 +789,6 @@ export function MapCanvas({
     const map = mapRef.current;
     if (!map) return;
 
-    /*
-     * A press on a pin that collides with another fans the group and selects
-     * nothing; the next press on a fanned pin selects it.
-     */
     if (mapPresentationHeld(map)) return;
     rebuildMarkerPool(poolRef.current, map, venues, (venue) => {
       const pool = poolRef.current;
@@ -845,10 +824,6 @@ export function MapCanvas({
       ).length;
   }, [venues, presentationReady]);
 
-  /*
-   * Visibility depends on the filtered keys only, so a filter change touches
-   * just the pins whose visibility changed. Null shows the whole pool.
-   */
   useEffect(() => {
     if (!mapRef.current || mapPresentationHeld(mapRef.current)) return;
     applyVisibility(
@@ -889,10 +864,6 @@ export function MapCanvas({
       selectedDistrict?.ocdId ?? null,
     );
 
-    /*
-     * A click centres the selected district. An explicit action, so
-     * `userMovedRef` is not consulted. Deselect moves nothing.
-     */
     if (!selectedDistrict) return;
     const rendered = boundsOfDistrict(map, selectedDistrict.type, selectedDistrict.ocdId);
     // The whole boundary, from the source geometry, when it can be read;
@@ -996,18 +967,10 @@ export function MapCanvas({
     });
   }, [districtTypes]);
 
-  /*
-   * Selection is a data attribute on the marker element. `venues` is not a
-   * dependency: the pool tracks the selected key, and new markers start unset.
-   */
   useEffect(() => {
     applySelection(poolRef.current, selectedVenueKey);
   }, [selectedVenueKey]);
 
-  /**
-   * Frame the visible pins with the centroid.
-   * `framed` uses the same key set as the visibility effect.
-   */
   const framed = useMemo(
     () =>
       visibleVenueKeys ? venues.filter((v) => visibleVenueKeys.has(v.key)) : venues,

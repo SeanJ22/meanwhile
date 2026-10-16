@@ -17,12 +17,6 @@ import {
 } from "../lib/map/state-focus.ts";
 import { DISTRICT_TYPES, DISTRICT_LAYERS } from "../lib/map/districts.ts";
 
-/**
- * The state extrusion and the per-state map: the rules decidable without a
- * browser — which state is raised, what gets fetched, and the geometry that
- * keeps the silhouette from sawing. The pixels are `pnpm measure:extrusion`'s job.
- */
-
 /** A square state and a triangular one, in the shape the real file ships. */
 const OUTLINES: StateOutlines = {
   type: "FeatureCollection",
@@ -69,21 +63,16 @@ const OUTLINES: StateOutlines = {
   ],
 };
 
-
 test("a point resolves to the state it is actually in", () => {
   assert.equal(stateOcdIdAt(OUTLINES, 0, 0), "ocd-division/country:us/state:az");
   assert.equal(stateOcdIdAt(OUTLINES, 55, 52), "ocd-division/country:us/state:nh");
 });
 
 test("a point in no covered state resolves to NULL, never to the last one", () => {
-  /*
-   * An unresolvable point raises no state and mutes nothing: a null stays a
-   * null all the way to the map.
-   */
+
   assert.equal(stateOcdIdAt(OUTLINES, 0, 200), null);
   assert.equal(stateOcdIdAt(null, 0, 0), null);
 });
-
 
 test("the state code comes off the OCD-ID, never off a name string", () => {
   assert.equal(stateAbbrFromOcdId("ocd-division/country:us/state:az"), "AZ");
@@ -107,7 +96,6 @@ test("the layer filter pins a layer to one state, and reads back", () => {
   assert.equal(String((stateFilter(null) as unknown[])[2]), NO_STATE);
   assert.equal(filterStateAbbr(undefined), null);
 });
-
 
 test("simplification drops collinear noise and keeps the silhouette", () => {
   // A straight run of points with one real corner in it.
@@ -153,10 +141,6 @@ test("the rise scales with zoom and never reaches zero", () => {
   assert.ok(near.offsetPx > far.offsetPx, "the rise does not scale with zoom");
   assert.ok(near.blurPx > far.blurPx);
 
-  /*
-   * The effect NEVER releases: a spec that interpolated to zero would be a
-   * release arriving through the back door.
-   */
   for (const zoom of [0, 1, 2, 3, 4, 6, 8, 10, 14, 18]) {
     const spec = extrusionSpecForZoom(zoom);
     assert.ok(spec.offsetPx > 0, `the rise vanished at zoom ${zoom}`);
@@ -166,10 +150,7 @@ test("the rise scales with zoom and never reaches zero", () => {
 });
 
 test("the offset stays comparable to the blur at every zoom", () => {
-  /*
-   * Two silhouettes whose offset is small against their blur composite to a
-   * grey band, so the ratio is pinned rather than left to the next retune.
-   */
+
   for (const zoom of [1, 4, 7, 10, 16]) {
     const spec = extrusionSpecForZoom(zoom);
     const ratio = spec.offsetPx / spec.blurPx;
@@ -182,10 +163,7 @@ test("the offset stays comparable to the blur at every zoom", () => {
 });
 
 test("the light is brighter than the shade on a light ground", () => {
-  /*
-   * A white silhouette at half opacity over a pale basemap is almost invisible
-   * while the same black one is not, so the two themes carry their own alphas.
-   */
+
   const light = riseAlphasFor("light");
   const dark = riseAlphasFor("dark");
   assert.ok(
@@ -198,20 +176,6 @@ test("the light is brighter than the shade on a light ground", () => {
     assert.ok(alphas.dark > 0 && alphas.dark <= 1);
   }
 });
-
-
-/**
- * The scrim's `clip-path` must not be fed the active state's rings at full
- * projected extent, which at city zoom is tens
- * of thousands of pixels across. Chromium DROPS a clip that large instead of
- * applying it, and a dropped clip on a `backdrop-filter` scrim mutes the
- * whole map.
- *
- * Cutting each ring to the filter region fixes it, and the two cases that
- * look identical in the code and opposite on screen are the ones worth
- * pinning: a viewport INSIDE the state clips to the box (nothing is muted),
- * and a viewport OUTSIDE it clips to nothing (everything is muted).
- */
 
 const BOX = { minX: -120, minY: -120, maxX: 780, maxY: 920 };
 
@@ -323,11 +287,7 @@ test("the clip runs before simplification and leaves a ring the simplifier can h
 });
 
 test("the rise is capped by the size of the state it is marking", () => {
-  /*
-   * A small state is a few screen pixels across at continental zoom; feathers
-   * from each side must not meet in the middle and keep the mask from full
-   * strength anywhere inside the state.
-   */
+
   const far = extrusionSpecForZoom(4);
   const tiny = capSpecToSpan(far, 25);
   assert.ok(tiny.featherPx <= 25 / 6, `feather ${tiny.featherPx} swamps a 25px state`);
@@ -349,4 +309,15 @@ test("the rise is capped by the size of the state it is marking", () => {
   assert.deepEqual(capSpecToSpan(far, Number.POSITIVE_INFINITY), far);
   // No shape on screen at all leaves the spec alone rather than collapsing it.
   assert.deepEqual(capSpecToSpan(far, 0), far);
+});
+
+test("district:dc and all territory identifiers select their postal state", () => {
+  for (const [prefix, code] of [["district", "dc"], ...["as", "gu", "mp", "pr", "vi"].map(code => ["territory", code])]) {
+    assert.equal(stateAbbrFromOcdId(`ocd-division/country:us/${prefix}:${code}`), code.toUpperCase());
+  }
+});
+
+test("a composed district filter reports the state while preserving boundary-kind selection", () => {
+  assert.equal(filterStateAbbr(["all", ["==", ["get", "boundaryType"], "county"], stateFilter("NM")] as import("maplibre-gl").FilterSpecification), "NM");
+  assert.equal(filterStateAbbr(["==", ["get", "boundaryType"], "county"]), null);
 });

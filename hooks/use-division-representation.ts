@@ -8,14 +8,6 @@ import { representationForDivision } from "@/lib/registry/representation";
 import type { RosterReaderGap } from "@/lib/registry/body-rosters";
 import { projectedRosterGapsForDivision } from "@/lib/registry/body-roster-client";
 
-/**
- * Who represents each requested division. When the local
- * resolver has nobody, `/api/representation/<ocd-id>` is asked by the
- * division's own key. `status`: `resolved`, `looking` (not an absence),
- * `unsourced` (asked and hold nobody) or `unavailable` (the lookup failed).
- * The answer is bound to its `ocdId` and compared on every render, so another
- * division's members never show under this heading.
- */
 export type RepresentationStatus =
   | "resolved"
   | "looking"
@@ -43,7 +35,8 @@ export function useDivisionsRepresentation(
   const ids = [...new Set(ocdIds)];
   const local = new Map(ids.map(id => [id, representationForDivision(coverage, id)]));
   const remoteIdsKey = JSON.stringify(ids.filter(id => !local.get(id)?.length).sort());
-  const [answers, setAnswers] = useState<Record<string, Answer>>({});
+  const [answers, setAnswers] = useState<{ key: string; values: Record<string, Answer> }>({ key: remoteIdsKey, values: {} });
+  if (answers.key !== remoteIdsKey) setAnswers({ key: remoteIdsKey, values: {} });
 
   useEffect(() => {
     const remoteIds = JSON.parse(remoteIdsKey) as string[];
@@ -51,7 +44,9 @@ export function useDivisionsRepresentation(
     const controller = new AbortController();
     const record = (answer: Answer) => {
       if (!controller.signal.aborted) {
-        setAnswers(previous => ({ ...previous, [answer.ocdId]: answer }));
+        setAnswers(previous => ({ key: remoteIdsKey, values: {
+          ...(previous.key === remoteIdsKey ? previous.values : {}), [answer.ocdId]: answer,
+        } }));
       }
     };
     for (const ocdId of remoteIds) {
@@ -83,7 +78,7 @@ export function useDivisionsRepresentation(
   return Object.fromEntries(ids.map(ocdId => {
     const holders = local.get(ocdId)!;
     if (holders.length) return [ocdId, { holders, status: "resolved", rosterGaps: projectedRosterGapsForDivision(coverage, ocdId) }];
-    const answer = answers[ocdId];
+    const answer = answers.key === remoteIdsKey ? answers.values[ocdId] : undefined;
     if (!answer) return [ocdId, { holders: [], status: "looking" }];
     if (answer.failed) return [ocdId, { holders: [], status: "unavailable" }];
     return [ocdId, {

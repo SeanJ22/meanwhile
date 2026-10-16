@@ -1,7 +1,6 @@
 import type { StatePublicationPrior } from "./state-publication.ts";
 import { createHash } from "node:crypto";
-import { canonicalCivicDataHash } from "./canonical-hash.ts";
-import { immutableStateHash, statePublicationScope } from "./state-publication.ts";
+import { immutableStateHash, statePublicationRecordHash, statePublicationScope } from "./state-publication.ts";
 
 import { agendaContentGroups, type AgendaContentRow } from "../meetings/agenda-content.ts";
 import { stateMoneyRecordKey } from "../funding/state-money.ts";
@@ -608,7 +607,9 @@ export function candidateChangeSet(
   const priorByKey = new Map(prior.map((member) => [member.key, member]));
   const nextByKey = new Map(next.map((member) => [member.key, member.record]));
   const scoped = statePublicationScope(candidate.scope);
-  const facts = (member: CivicRecordMember) => scoped ? immutableStateHash(contract.facts(candidate.recordClass, member)) :
+  const facts = (member: CivicRecordMember) => scoped ?
+    (contract === CIVIC_CHANGE_CONTRACT ? statePublicationRecordHash(candidate.recordClass, member)?.factsHash : undefined) ??
+      immutableStateHash(contract.facts(candidate.recordClass, member)) :
     canonicalCivicDataJson(contract.facts(candidate.recordClass, member));
   const added = next
     .filter((member) => !priorByKey.has(member.key))
@@ -624,7 +625,7 @@ export function candidateChangeSet(
     for (const delta of [...changed, ...removed]) {
       const original = priorIndex.members.get(delta.key)!;
       if (!Object.hasOwn(original, "record")) throw new Error(`STATE_PRIOR_RECORD_RELEASED:${delta.key}`);
-      if (canonicalCivicDataHash(delta.before) !== original.sha256) throw new Error(`STATE_PRIOR_RECORD_MUTATED:${delta.key}`);
+      if (immutableStateHash(delta.before) !== original.sha256) throw new Error(`STATE_PRIOR_RECORD_MUTATED:${delta.key}`);
     }
     for (const member of priorIndex.members.values()) delete member.record;
   }

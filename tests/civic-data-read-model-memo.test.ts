@@ -545,8 +545,9 @@ test("state publication metadata and the one loaded payload must still agree", a
     if (read.kind === "STORE_UNREACHABLE") assert.equal(read.code,
       proof === null ? "PROMOTION_CANDIDATE_MISSING" : "PROMOTION_PROOF_INVALID", name);
   }
-  const { store } = spyStore(new Map([[STATE_SCOPE, source]]));
-  store.readPublishedCandidateMetadata = async () => ({ ...metadata, receipt: structuredClone(metadata.receipt) });
+  const { store: originalStore } = spyStore(new Map([[STATE_SCOPE, source]]));
+  const store = { ...originalStore,
+    readPublishedCandidateMetadata: async () => ({ ...metadata, receipt: structuredClone(metadata.receipt) }) };
   const read = await readPromotedCivicData(STATE_CLASS, STATE_SCOPE, { store, bypassCache: true });
   const edge = promotedEdgeEntryOf(read, STATE_CLASS, STATE_SCOPE, store);
   assert.equal(edge?.kind, "PROMOTED");

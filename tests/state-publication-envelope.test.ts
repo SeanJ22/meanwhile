@@ -259,3 +259,55 @@ test("a prior index cannot seed member digests without the exact privately owned
   rememberStatePublicationPrior(store, projection);
   assert.equal(takeStatePublicationPrior(store, input.recordClass, input.scope)!.recordHashes, indexed.normalization.stateRecordHashes);
 });
+
+test("successor indexes share verified immutable entries only for the same record and civic key", t => {
+  const held = { name: "Official candidate", office: "Mayor" }, changed = { ...held, office: "Council" };
+  const before = { kind: "candidate-profiles", cards: { cards: { original: held } } };
+  const input = { ...candidate(), recordClass: "CANDIDATE_PROFILE" as const, scope: "US-AZ:candidate-profiles",
+    readModel: structuredClone(before), normalization: { ...candidate().normalization, normalizedHash: canonicalCivicDataHash(before) } };
+  const stored = withStateRecordHashes(input).normalization.stateRecordHashes!;
+  const projection = { scope: input.scope, recordClass: input.recordClass, versionId: input.id, payload: immutableStateValue(before) };
+  assert.equal(immutableStateHash(projection.payload), stored.readModelHash);
+  rememberStatePublicationHashes(projection, { ...input.normalization, stateRecordHashes: stored });
+  rememberStatePublicationPrior({}, projection);
+  const next = immutableStateValue({ ...before, note: "Checked again" });
+  const nextHash = immutableStateHash(next), stringify = t.mock.method(JSON, "stringify", () => assert.fail("unchanged member entries are shared"));
+  const shared = withStateRecordHashes({ ...input, readModel: next, normalization: { ...input.normalization, normalizedHash: nextHash } });
+  assert.equal(shared.normalization.stateRecordHashes!.members[0], stored.members[0]);
+  stringify.mock.restore();
+  const moved = immutableStateValue({ kind: "candidate-profiles", cards: { cards: { moved: held, original: changed } } });
+  const updated = withStateRecordHashes({ ...input, readModel: moved, normalization: { ...input.normalization, normalizedHash: immutableStateHash(moved) } });
+  const [movedEntry, changedEntry] = updated.normalization.stateRecordHashes!.members;
+  assert.notEqual(movedEntry, stored.members[0]);
+  assert.equal(movedEntry.sha256, stored.members[0].sha256);
+  assert.equal(movedEntry.key, "card:moved");
+  assert.notEqual(changedEntry.sha256, stored.members[0].sha256);
+  assert.throws(() => { held.office = "Mutation"; }, TypeError);
+});
+
+test("member-index caching separates record classes and never trusts a caller's shallow freeze", () => {
+  const row = immutableStateValue({ id: "contest-one", title: "Official contest" });
+  const payload = immutableStateValue({ contests: [row] });
+  const input = { ...candidate(), recordClass: "BALLOT_CANDIDACY" as const, scope: "US-AZ:state-election-ballots",
+    readModel: payload, normalization: { ...candidate().normalization, normalizedHash: immutableStateHash(payload) } };
+  const first = withStateRecordHashes(input).normalization.stateRecordHashes!.members[0];
+  const other = withStateRecordHashes({ ...input, recordClass: "BALLOT_FILING" }).normalization.stateRecordHashes!.members[0];
+  assert.deepEqual(other, first);
+  assert.notEqual(other, first);
+  const nested = { title: "Before" }, shallow = Object.freeze({ id: "contest-two", nested });
+  const mutable = { ...input, readModel: { contests: [shallow] } };
+  const prior = withStateRecordHashes(mutable).normalization.stateRecordHashes!.members[0];
+  nested.title = "After";
+  const successor = withStateRecordHashes(mutable).normalization.stateRecordHashes!.members[0];
+  assert.notEqual(successor.sha256, prior.sha256);
+});
+
+
+test("state change auditing honors custom facts even when standard record hashes are cached", () => {
+  const before = immutableStateCandidate(candidate()), after = immutableStateCandidate(candidate(NOW, "Different official address"));
+  withStateRecordHashes(before);
+  withStateRecordHashes(after);
+  assert.equal(candidateChangeSet(after, before.readModel).changed.length, 1);
+  const custom = { members: civicRecordsFor, facts: () => null };
+  assert.equal(candidateChangeSet(after, before.readModel, custom).changed.length, 0);
+});

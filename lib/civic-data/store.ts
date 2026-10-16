@@ -1923,31 +1923,35 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     const column = civicDataCandidates.candidate;
     const candidateColumns = prior ? { ...getTableColumns(civicDataCandidates),
       identity: sql<unknown>`'[]'::jsonb`,
+      validationReceipt: sql<unknown>`null::jsonb`,
       candidate: sql<unknown>`jsonb_build_object(
         'id', ${column}->'id', 'sourceId', ${column}->'sourceId', 'recordClass', ${column}->'recordClass',
         'scope', ${column}->'scope', 'normalization', (${column}->'normalization') - 'stateRecordHashes', 'temporal', ${column}->'temporal',
         'retrieval', (${column}->'retrieval') - 'derived', 'readModel', ${column}->'readModel')`,
     } : getTableColumns(civicDataCandidates);
-    const [row] = await this.db.select({ promotion: civicDataPromotions, candidate: candidateColumns })
+    const [row] = await this.db.select({ promotion: civicDataPromotions, candidate: candidateColumns,
+      ...(prior ? { receiptsCoupled: sql<boolean>`${civicDataPromotions.validationReceipt} = ${civicDataCandidates.validationReceipt}` } : {}) })
       .from(civicDataPromotions).leftJoin(civicDataCandidates, eq(civicDataCandidates.id, civicDataPromotions.lastKnownGoodVersionId))
       .where(eq(civicDataPromotions.key, projectionKey(recordClass, scope))).limit(1);
     if (!row) return { current: null, lkg: null };
     if (!row.candidate) return { current: { ...postgresPromotionRowToProjection(row.promotion), payload: null }, lkg: null };
-    const encoded = row.candidate.candidate as RoutineCandidate;
+    if (prior && row.receiptsCoupled !== true) throw new Error(`STATE_PUBLICATION_POINTER_RECEIPT_MISMATCH:${row.promotion.key}`);
+    const candidateRow = prior ? { ...row.candidate, validationReceipt: row.promotion.validationReceipt } : row.candidate;
+    const encoded = candidateRow.candidate as RoutineCandidate;
     const encodedHash = durableStateHash(row.promotion.payload);
     if (encodedHash !== durableStateHash(encoded.readModel))
       throw new Error(`STATE_PUBLICATION_POINTER_PAYLOAD_MISMATCH:${row.promotion.key}`);
-    const indexed = prior?.versionId === row.promotion.currentVersionId && prior.payloadHash === row.candidate.normalizedHash;
+    const indexed = prior?.versionId === row.promotion.currentVersionId && prior.payloadHash === candidateRow.normalizedHash;
     if (prior && !indexed) throw new Error(`STATE_PUBLICATION_BASE_CHANGED:${row.promotion.key}`);
     const metadata = { id: encoded.id, sourceId: encoded.sourceId, recordClass: encoded.recordClass, scope: encoded.scope,
       normalization: encoded.normalization, temporal: encoded.temporal, readModel: null, normalizedPayload: null, civicRecords: [], identities: [],
-      excludedFacts: (row.candidate.validationReceipt as ValidationReceipt | null)?.excludedFacts ?? [],
+      excludedFacts: (candidateRow.validationReceipt as ValidationReceipt | null)?.excludedFacts ?? [],
       retrieval: { ...encoded.retrieval, derived: undefined } };
     const loaded = await this.loadPayload(prior ? metadata : encoded, scope) as RoutineCandidate;
     const candidate = indexed ? { ...loaded, normalization: { ...loaded.normalization, stateRecordHashes: prior.recordHashes } } : loaded;
     if (indexed) bindStatePublicationPrior(candidate, prior);
     const current = { ...postgresPromotionRowToProjection(row.promotion), payload: candidate.readModel };
-    return { current, lkg: { ...rowToCandidate(row.candidate), candidate } };
+    return { current, lkg: { ...rowToCandidate(candidateRow), candidate } };
   }
 
   async readPromotion<T = unknown>(recordClass: RoutineRecordClass, scope: string): Promise<PromotedProjection<T> | null> {

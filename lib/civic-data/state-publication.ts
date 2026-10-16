@@ -156,14 +156,32 @@ export interface StatePublicationPrior {
 }
 
 type RecordHashes = NonNullable<NormalizationEvidence["stateRecordHashes"]>;
+type RecordHash = RecordHashes["members"][number];
 const provenHashes = new WeakMap<object, RecordHashes>();
+const recordHashes = new WeakMap<object, Map<string, RecordHash>>();
 const SHA256 = /^[a-f0-9]{64}$/;
+
+function rememberRecordHash(record: object, recordClass: RoutineCandidate["recordClass"], member: RecordHash): void {
+  let keys = recordHashes.get(record);
+  if (!keys) { keys = new Map(); recordHashes.set(record, keys); }
+  keys.set(`${recordClass}:${member.key}`, member);
+}
+
+export function statePublicationRecordHash(recordClass: RoutineCandidate["recordClass"], member: { key: string; record: unknown }): RecordHash | undefined {
+  if (member.record === null || typeof member.record !== "object" || !immutableValues.has(member.record)) return undefined;
+  return recordHashes.get(member.record)?.get(`${recordClass}:${member.key}`);
+}
 
 export function withStateRecordHashes(candidate: RoutineCandidate): RoutineCandidate {
   if (!statePublicationScope(candidate.scope) || !candidate.normalization.normalizedHash) return candidate;
   const members = civicRecordsFor(candidate.recordClass, candidate.readModel).map(member => {
+    const owned = member.record !== null && typeof member.record === "object" && immutableValues.has(member.record);
+    const saved = statePublicationRecordHash(candidate.recordClass, member);
+    if (saved) return saved;
     const facts = civicRecordFacts(candidate.recordClass, member), sha256 = immutableStateHash(member.record);
-    return Object.freeze({ key: member.key, sha256, factsHash: facts === member.record ? sha256 : immutableStateHash(facts) });
+    const next = Object.freeze({ key: member.key, sha256, factsHash: facts === member.record ? sha256 : immutableStateHash(facts) });
+    if (owned) rememberRecordHash(member.record as object, candidate.recordClass, next);
+    return next;
   });
   const stateRecordHashes = Object.freeze({ readModelHash: candidate.normalization.normalizedHash, members: Object.freeze(members) });
   return Object.freeze({ ...candidate, normalization: Object.freeze({ ...candidate.normalization, stateRecordHashes }) });
@@ -225,6 +243,7 @@ export function rememberStatePublicationPrior(store: object, projection: Pick<Pr
       const existing = immutableHashes.get(record as object);
       if (existing && existing !== hashes.sha256) throw new Error("STATE_PRIOR_RECORD_HASHES_MISMATCH");
       immutableHashes.set(record as object, hashes.sha256);
+      rememberRecordHash(record as object, projection.recordClass, hashes);
     }
     const entry = { ...member, record, factsHash: hashes.factsHash, sha256: hashes.sha256 };
     prior.members.set(member.key, entry);

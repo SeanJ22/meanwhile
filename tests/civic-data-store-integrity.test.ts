@@ -1512,18 +1512,19 @@ test("state publication reads its pointer and candidate together and rejects a d
     readModel: payload, normalizedPayload: payload, normalization: { ...candidate("metadata").normalization,
       normalizedHash: normalizedHash(payload), normalizedPayloadHash: normalizedHash(payload) } });
   const receipt = receiptFor(value), key = `${value.recordClass}:${value.scope}`;
-  let divergent = false;
+  let divergent = false, receiptDivergent = false;
   await withCannedNeon(({ query, params }) => {
     assert.match(query, /left join "civic_data_candidates"/);
     assert.deepEqual(params, [key, "1"]);
     const promotion = { key, sourceId: value.sourceId, recordClass: value.recordClass, scope: value.scope,
       currentVersionId: value.id, lastKnownGoodVersionId: value.id, promotedAt: "2026-09-08T12:01:00.000Z",
       payload: divergent ? { rows: [] } : payload, validationReceipt: receipt };
+    const indexed = query.includes("null::jsonb");
     const record = { id: value.id, sourceId: value.sourceId, recordClass: value.recordClass, scope: value.scope,
       state: "PROMOTED", acquisitionSucceeded: true, rawHash: value.retrieval.rawHash,
       normalizedHash: value.normalization.normalizedHash, retrievedAt: value.retrieval.retrievedAt,
       sourceThrough: value.temporal.sourceThrough, parserVersion: value.normalization.parserVersion,
-      identity: value.identities, candidate: encodeStateCandidate(value), validationReceipt: receipt,
+      identity: value.identities, candidate: encodeStateCandidate(value), validationReceipt: indexed ? null : receipt,
       promotedVersionId: value.id, lastKnownGoodVersionId: value.id, failureCode: null, failureDetail: null };
     const columns: NeonColumn[] = [], row: unknown[] = [];
     for (const [table, data] of [[schema.civicDataPromotions, promotion], [schema.civicDataCandidates, record]] as const) {
@@ -1533,6 +1534,7 @@ test("state publication reads its pointer and candidate together and rejects a d
         row.push((data as Record<string, unknown>)[property]);
       }
     }
+    if (indexed) { columns.push(["receiptsCoupled", "bool"]); row.push(!receiptDivergent); }
     return { columns, rows: [row] };
   }, async (store, sent) => {
     const base = await store.readStatePublicationBase(value.recordClass, value.scope);
@@ -1549,7 +1551,12 @@ test("state publication reads its pointer and candidate together and rejects a d
     assert.equal(indexed.current?.payload, null, "the old graph is absent from the validation base");
     assert.equal(indexed.lkg?.candidate.readModel, null);
     assert.equal(indexed.lkg?.candidate.normalizedPayload, null);
+    assert.equal(indexed.current!.receipt, indexed.lkg!.receipt, "one durable receipt serves both proven records");
+    assert.match(sent.at(-1)!.query, /"civic_data_promotions"\."validation_receipt" = "civic_data_candidates"\."validation_receipt"/);
     assert.equal(promotionProofIssue(value.recordClass, value.scope, indexed.current!, indexed.lkg!), null);
+    rememberStatePublicationPrior(store, base.current!);
+    receiptDivergent = true;
+    await assert.rejects(() => store.readStatePublicationBase(value.recordClass, value.scope), /POINTER_RECEIPT_MISMATCH/);
     divergent = true;
     await assert.rejects(() => store.readStatePublicationBase(value.recordClass, value.scope), /POINTER_PAYLOAD_MISMATCH/);
   });

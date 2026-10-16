@@ -101,6 +101,11 @@ const SHAPES: readonly ShapePattern[] = [
   { shape: "BODY_ROSTER", kind: "BODY", pattern: /^who are the members of (?:the )?(.+?)$/ },
   { shape: "GOVERNMENT_MONEY", kind: "BODY", pattern: /^(?:what is|what s|show) (?:the )?(.+?)(?: s)? (?:adopted )?budget$/ },
   { shape: "GOVERNMENT_MONEY", kind: "BODY", pattern: /^what is (?:the )?(?:adopted )?budget (?:of|for) (?:the )?(.+?)$/ },
+  { shape: "GOVERNMENT_MONEY", kind: "BODY", pattern: /^(?:what|which) federal (?:grants?|contracts?|loans?|funding|money|awards?) (?:reach|reaches|cover|covers|are in|go to|are going to) (?:the )?(.+?)$/ },
+  { shape: "GOVERNMENT_MONEY", kind: "BODY", pattern: /^(?:what|which) federal (?:grants?|contracts?|loans?|funding|money|awards?) (?:has|does) (?:the )?(.+?) (?:received|receive|get)$/ },
+  { shape: "GOVERNMENT_MONEY", kind: "BODY", pattern: /^(?:what|which|show) (?:the )?(?:federal )?audit findings (?:for|of|in) (?:the )?(.+?)$/ },
+  { shape: "GOVERNMENT_MONEY", kind: "BODY", pattern: /^(?:what|which) (?:federal )?disaster declarations (?:cover|are in|apply to|are for|for) (?:the )?(.+?)$/ },
+  { shape: "GOVERNMENT_MONEY", kind: "BODY", pattern: /^(?:what is|what s|show) (?:the )?(?:uei|sam gov registration) (?:of|for) (?:the )?(.+?)$/ },
   /* BODY_CIVICS — what a named body does. */
   { shape: "BODY_CIVICS", kind: "BODY", pattern: /^what does (?:the )?(.+?) do$/ },
   /* MEASURE_EXPLAIN — what a named ballot measure means. */
@@ -495,8 +500,13 @@ export function lexicalReading(input: LexicalReadingInput): LexicalReading | nul
   if (group !== undefined) return group;
   const votes = personVotesReading(input);
   if (votes) return votes;
-  // The body's open card supplies context only for this fully referential shape.
-  if (/^(?:what is|what s|show) (?:this|that) government s (?:adopted )?budget$/.test(normalizeName(input.question))) {
+  // The body's open card supplies context for a fully referential finance question.
+  const normalizedQuestion = normalizeName(input.question);
+  const referentialFederal = /^(?:what|which) federal (?:grants?|contracts?|loans?|funding|money|awards?) (?:reach|reaches|cover|covers) (?:this|that) (?:government|place|county|city|school district|district)$/.test(normalizedQuestion)
+    || /^(?:what|which) (?:federal )?audit findings does (?:this|that) government have$/.test(normalizedQuestion)
+    || /^(?:what|which) (?:federal )?disaster declarations (?:cover|are in|apply to) (?:this|that) county$/.test(normalizedQuestion)
+    || /^(?:what is|what s|show) (?:this|that) government s (?:uei|sam gov registration)$/.test(normalizedQuestion);
+  if (referentialFederal || /^(?:what is|what s|show) (?:this|that) government s (?:adopted )?budget$/.test(normalizedQuestion)) {
     const temporal = { kind: "NONE" as const };
     const resolved = resolveInterpretation({ ...unavailableInterpretation(), temporal }, input.question, input.inventory, {
       activeSubjects: input.activeSubjects ?? [], priorSubjects: input.priorSubjects ?? [],

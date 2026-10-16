@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import test from "node:test";
 
 import { compareSchemaState, describeSchemaState } from "../lib/db/schema-state.ts";
+import { MIGRATION_SQL_PATH } from "../lib/db/migration-immutability.ts";
 import { errorCodeOf, errorMessageOf } from "../lib/db/write-alarm.ts";
 
 import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
@@ -203,9 +204,7 @@ test("6.1: the schema gate names the missing migration, and never rounds up", ()
   const gap = compareSchemaState(journal, [1, 3]);
   assert.deepEqual(gap.missing, ["0001_b"]);
 
-  // A database AHEAD of the code is its own problem and is reported as its
-  // own thing — folding it into `missing` would tell somebody to apply a
-  // migration that is already there.
+  // Applied migrations ahead of the code must not be recommended for reapplication.
   const ahead = compareSchemaState(journal, [1, 2, 3, 99]);
   assert.deepEqual(ahead.missing, []);
   assert.deepEqual(ahead.unknownApplied, [99]);
@@ -216,20 +215,20 @@ test("6.1: the schema gate names the missing migration, and never rounds up", ()
   assert.equal(compareSchemaState([], []).codeHead, "unknown");
 });
 
-test("6.1: the committed journal head matches the newest migration file", () => {
+test("6.1: the committed journal matches every migration file", () => {
   const journal = JSON.parse(
     readFileSync(join(ROOT, "lib", "db", "migrations", "meta", "_journal.json"), "utf8"),
   ) as { entries: { tag: string }[] };
   const files = filesThatWouldBeCommitted({ cwd: ROOT, paths: ["lib/db/migrations"] })
     .map((f) => f.trim())
-    .filter((f) => /\/\d{4}_[^/]+\.sql$/.test(f))
-    .map((f) => f.replace(/^lib\/db\/migrations\//, "").replace(/\.sql$/, ""))
+    .map((f) => MIGRATION_SQL_PATH.exec(f)?.[1])
+    .filter((tag): tag is string => tag !== undefined)
     .sort();
   const tags = journal.entries.map((e) => e.tag).sort();
   assert.deepEqual(
     tags,
     files,
-    "every numbered migration is journalled; River numbers step-named lane migrations",
+    "every migration is journalled, including step-named lane migrations",
   );
 });
 

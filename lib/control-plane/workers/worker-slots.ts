@@ -14,11 +14,11 @@ export const RESEARCH_PARENT_PEAK_MIB = 2928;
 export const NATIONAL_PLACE_PEAK_MIB = 1923 + WORKER_ENTRY_PEAK_MIB.national!;
 /** Bulk data families use the retained data-worker bound until their own runs are measured on this host. */
 const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
-  // A complete 113 MiB Illinois session parsed and promoted in the fixture
-  // store peaked at 3,013 MiB. Round up for these state-scoped bulk writers;
-  // the existing host observer still accounts for their whole process trees.
+  // A complete 113 MiB Illinois session peaked at 3,013 MiB;
+  // the host observer also accounts for each worker's descendants.
   "openstates-votes-refresh.mts": 3072,
   "legiscan-votes-refresh.mts": 3072,
+  "federal-money-refresh.mts": 768,
   "census-geography-refresh.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "promote-manual-civic-projection.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "ingest.ts": WORKER_ENTRY_PEAK_MIB.national!,

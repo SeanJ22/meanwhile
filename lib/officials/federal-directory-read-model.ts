@@ -9,8 +9,8 @@ import {
 } from "../civic-data/read-model.ts";
 import { validateOnce } from "../civic-data/validated-once.ts";
 import {
-  FEDERAL_DIRECTORY_SCOPE,
   FEDERAL_DIRECTORY_SOURCE_ID,
+  federalDirectoryScope,
   federalDirectoryProjectionIssues,
   type FederalDirectoryReadModel,
 } from "./federal-directory-data-plane.ts";
@@ -19,6 +19,7 @@ import { peopleSourceScope } from "./people-sources.ts";
 import { federalDirectoryVersion } from "./people-version.ts";
 import type { OfficeholderSet } from "./types.ts";
 
+const FEDERAL_DIRECTORY_SCOPE = "US:current-congress-directory";
 const selectedStates = new WeakMap<object, CivicDataReadResult<FederalDirectoryReadModel>>();
 let cache: FederalDirectoryReadModel | null = null;
 let readState: CivicDataReadResult<FederalDirectoryReadModel> = civicDataReadNotInitialized(
@@ -30,6 +31,13 @@ let readState: CivicDataReadResult<FederalDirectoryReadModel> = civicDataReadNot
 function validate(value: FederalDirectoryReadModel, versionId: string): void {
   const issues = federalDirectoryProjectionIssues(value);
   if (issues.length) throw new Error(`Federal directory projection ${versionId} is invalid: ${issues.join(", ")}.`);
+}
+
+/** One place's members of Congress, held to the directory's reader contract. */
+export async function readStateFederalDirectory(state: string, options: PromotedCivicDataReadOptions = {}): Promise<CivicDataReadResult<FederalDirectoryReadModel>> {
+  const result = await readPromotedCivicData<FederalDirectoryReadModel>("FEDERAL_DIRECTORY", federalDirectoryScope(state), options);
+  if (result.kind === "PROMOTED" || result.kind === "BOOTSTRAP") validate(result.value, result.metadata.versionId ?? result.kind);
+  return result;
 }
 
 /** Where standing portrait work publishes the verified photos it finds for the federal directory. */

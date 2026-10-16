@@ -5,6 +5,7 @@ import { createHash } from "node:crypto";
 import { currentReaderSelection } from "../db/reader-route.ts";
 import { sourceCheckedAt } from "./source-check.ts";
 import { isScopedManualContractScope } from "./scoped-manual-contracts.ts";
+import { federalDirectoryStateOf } from "../officials/federal-directory-data-plane.ts";
 import { decodeStateCandidate, durableStateHash, encodeStateCandidate, heldStatePublication, heldStatePublicationHashes, statePublicationScope } from "./state-publication.ts";
 
 import { and, desc, eq, getTableColumns, inArray, like, sql, type SQL } from "drizzle-orm";
@@ -289,10 +290,10 @@ export function routineDataStoreCandidateAuthorityIssue(
       ? null
       : `routine supervisor cannot mutate source candidate ${contract.id}`;
   }
-  // The one-time capture conversion republishes held people, vote and directory versions, and nothing else.
-  if (authority.capability === "CAPTURE_CONVERSION") {
-    return !hasAuthorityTransferMarker && (/^(?:people-|openstates-people-|openstates-votes-)/.test(contract.id) || contract.id === "congress-bulk-roster")
-      ? null : `capture conversion cannot mutate ${contract.id}`;
+  // The one-time federal people split publishes place directories and member positions, and nothing else.
+  if (authority.capability === "FEDERAL_PEOPLE_SPLIT") {
+    return !hasAuthorityTransferMarker && (federalDirectoryStateOf(contract.id) !== null || contract.id === "congress-rollcalls")
+      ? null : `the federal people split cannot mutate ${contract.id}`;
   }
   const expectedCapability = contract.kind === "manual" ? "MANUAL_CONTRACT" : "ROUTINE_CONTRACT";
   if (authority.capability !== expectedCapability) {

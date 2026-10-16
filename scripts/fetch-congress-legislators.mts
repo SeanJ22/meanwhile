@@ -1,10 +1,10 @@
 /** @freshness-reads-here — the held capture keeps the date the source bytes were read. */
 import { parse } from "yaml";
 import { pathToFileURL } from "node:url";
-import { failedFederalDirectoryCandidate, federalDirectoryCandidate, federalDirectoryContractId, federalDirectoryForState, federalDirectoryScope,
-  FEDERAL_DIRECTORY_PARSER_VERSION, type FederalDirectoryAcquisition, type FederalDirectoryReadModel } from "../lib/officials/federal-directory-data-plane.ts";
+import { failedFederalDirectoryCandidate, federalDirectoryCandidate, federalDirectoryContractId, federalDirectoryForState,
+  FEDERAL_DIRECTORY_PARSER_VERSION, type FederalDirectoryAcquisition } from "../lib/officials/federal-directory-data-plane.ts";
 import { normalizeCongressDirectory } from "../lib/officials/congress-normalize.ts";
-import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
+import { readStateFederalDirectory } from "../lib/officials/federal-directory-read-model.ts";
 import { requiredAssignment } from "./cli-args.mts";
 import { processRegisteredManualCandidate, type PromotionOutcome } from "../lib/civic-data/promotion.ts";
 import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
@@ -30,7 +30,7 @@ export async function refreshCongressDirectory(input: {
   let finalReceipt: { candidate: RoutineCandidate; outcome: PromotionOutcome } | null = null;
   try {
     const now = clock();
-    const priorRead = await readPromotedCivicData<FederalDirectoryReadModel>("FEDERAL_DIRECTORY",federalDirectoryScope(state),{store,now,bypassCache:true});
+    const priorRead = await readStateFederalDirectory(state,{store,now,bypassCache:true});
     if (priorRead.kind === "STORE_UNREACHABLE") throw Error("CONGRESS_PRIOR_UNAVAILABLE");
     const prior = priorRead.kind === "PROMOTED" || priorRead.kind === "BOOTSTRAP" ? priorRead.value : null;
     const {sha:sourceSha,sourceCheck} = await (input.revision ?? acquireCongressSourceRevision)();

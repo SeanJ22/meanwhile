@@ -7,7 +7,7 @@ import type { BillSummariesFile } from "./bill-summaries.ts";
 import type { KeyVoteEntry } from "./key-votes.ts";
 import { federalKeyVoteSelectionV1Issue } from "./key-vote-selection-v1.ts";
 import { partyBreakdownFor, type PartyTally } from "./party-breakdown.ts";
-import type { MemberVote, VotePosition, VotesSnapshot } from "./types.ts";
+import type { MemberVote, RollCallVote, VotePosition, VotesSnapshot } from "./types.ts";
 
 export const FEDERAL_VOTES_SOURCE_ID = "federal-legislative-records" as const;
 export const FEDERAL_ROLLCALL_SCOPE = "US:recent-federal-rollcalls" as const;
@@ -41,13 +41,13 @@ export interface FederalRollCallsReadModel {
   readonly billSummaries: BillSummariesFile;
 }
 
-/** One member's recorded positions on the window's roll calls. */
+/** One member's recorded positions, with the roll calls they answer, from the latest window that recorded the member. */
 export interface FederalMemberVotesReadModel {
   readonly formatVersion: 1;
   readonly officeholderId: string;
   readonly congress: number;
   readonly session: number;
-  readonly window: VotesSnapshot["window"];
+  readonly votes: readonly RollCallVote[];
   readonly positions: readonly MemberVote[];
 }
 
@@ -86,9 +86,9 @@ function sha256(value: string): string {
   return createHash("sha256").update(value).digest("hex");
 }
 
-function candidateId(scope: string, acquisitions: readonly HeldAcquisition[], retrievedAt: string): string {
+function candidateId(scope: string, acquisitions: readonly HeldAcquisition[], retrievedAt: string, normalizedHash: string): string {
   const exact = acquisitions.map(({ requestedUrl, finalUrl, httpStatus, rawHash }) => ({ requestedUrl, finalUrl, httpStatus, rawHash }));
-  return `cv-${sha256(`${FEDERAL_VOTES_SOURCE_ID}\u001f${scope}\u001f${canonicalCivicDataJson(exact)}\u001f${retrievedAt}`).slice(0, 32)}`;
+  return `cv-${sha256(`${FEDERAL_VOTES_SOURCE_ID}\u001f${scope}\u001f${canonicalCivicDataJson(exact)}\u001f${retrievedAt}\u001f${normalizedHash}`).slice(0, 32)}`;
 }
 
 function acquisitionIssues(recordClass: "FEDERAL_ROLL_CALL" | "FEDERAL_KEY_VOTE", acquisitions: readonly HeldAcquisition[]): string[] {
@@ -166,9 +166,9 @@ export function federalRollCallsCandidate(input: {
     congress: snapshot.congress,
     session: snapshot.session,
   };
-  const rawHash = acquisitionRawHash(input.acquisitions);
+  const rawHash = acquisitionRawHash(input.acquisitions), normalizedHash = canonicalCivicDataHash(readModel);
   return {
-    id: candidateId(FEDERAL_ROLLCALL_SCOPE, input.acquisitions, input.retrievedAt),
+    id: candidateId(FEDERAL_ROLLCALL_SCOPE, input.acquisitions, input.retrievedAt, normalizedHash),
     sourceId: FEDERAL_VOTES_SOURCE_ID,
     recordClass: "FEDERAL_ROLL_CALL",
     scope: FEDERAL_ROLLCALL_SCOPE,
@@ -185,7 +185,7 @@ export function federalRollCallsCandidate(input: {
       succeeded: true,
       parserVersion: FEDERAL_VOTES_PARSER_VERSION,
       schemaVersion: `federal-rollcalls:${snapshot.congress}-${snapshot.session}`,
-      normalizedHash: canonicalCivicDataHash(readModel),
+      normalizedHash,
       normalizedPayloadHash: canonicalCivicDataHash(normalizedPayload),
       inputRecords: snapshot.votes.length,
       outputRecords: snapshot.votes.length,
@@ -243,19 +243,20 @@ export function federalMemberVotesCandidate(input: {
   readonly positions: readonly MemberVote[];
 }): RoutineCandidate {
   const { snapshot, officeholderId, positions } = input, scope = federalMemberVotesScope(officeholderId);
-  const voteIds = new Set(snapshot.votes.map(vote => vote.id)), named = new Set(positions.map(row => row.voteId));
-  const acquisitions = rollAcquisitions(snapshot, named.size ? named : voteIds, input.acquisitions);
+  const named = new Set(positions.map(row => row.voteId)), votes = snapshot.votes.filter(vote => named.has(vote.id));
+  const acquisitions = rollAcquisitions(snapshot, named, input.acquisitions);
   const issues = acquisitionIssues("FEDERAL_ROLL_CALL", acquisitions);
   if (federalMemberOfScope(scope) !== officeholderId) issues.push("MEMBER_ID_INVALID");
+  if (positions.length === 0) issues.push("MEMBER_HAS_NO_RECORDED_POSITION");
   if (positions.some(row => row.officeholderId !== officeholderId)) issues.push("POSITION_UNDER_ANOTHER_MEMBER");
   if (named.size !== positions.length) issues.push("DUPLICATE_MEMBER_POSITION");
-  if ([...named].some(id => !voteIds.has(id))) issues.push("POSITION_POINTS_OUTSIDE_ROLL_WINDOW");
+  if (votes.length !== named.size) issues.push("POSITION_POINTS_OUTSIDE_ROLL_WINDOW");
   if ([...named].some(id => rollAcquisitions(snapshot, new Set([id]), acquisitions).length === 0)) issues.push("ROLL_ACQUISITION_RECEIPT_MISSING");
-  const readModel: FederalMemberVotesReadModel = { formatVersion: 1, officeholderId, congress: snapshot.congress, session: snapshot.session, window: snapshot.window, positions };
+  const readModel: FederalMemberVotesReadModel = { formatVersion: 1, officeholderId, congress: snapshot.congress, session: snapshot.session, votes, positions };
   const normalizedPayload = { acquisitions, congress: snapshot.congress, session: snapshot.session };
-  const rawHash = acquisitionRawHash(acquisitions);
+  const rawHash = acquisitionRawHash(acquisitions), normalizedHash = canonicalCivicDataHash(readModel);
   return {
-    id: candidateId(scope, acquisitions, input.retrievedAt),
+    id: candidateId(scope, acquisitions, input.retrievedAt, normalizedHash),
     sourceId: FEDERAL_VOTES_SOURCE_ID,
     recordClass: "FEDERAL_ROLL_CALL",
     scope,
@@ -272,24 +273,25 @@ export function federalMemberVotesCandidate(input: {
       succeeded: true,
       parserVersion: FEDERAL_VOTES_PARSER_VERSION,
       schemaVersion: `federal-member-positions:${snapshot.congress}-${snapshot.session}`,
-      normalizedHash: canonicalCivicDataHash(readModel),
+      normalizedHash,
       normalizedPayloadHash: canonicalCivicDataHash(normalizedPayload),
       inputRecords: positions.length,
       outputRecords: positions.length,
       droppedRecords: 0,
       missingRequiredFields: [],
     },
-    identities: [{ subjectId: officeholderId, jurisdiction: "US", identifiers: { bioguide_id: officeholderId.slice("congress:".length) }, matchBasis: "OFFICIAL_ID" as const, ambiguous: false }],
+    identities: positions.map(row => ({ subjectId: `${row.voteId}|${officeholderId}`, jurisdiction: "US",
+      identifiers: { roll_call_id: row.voteId, bioguide_id: officeholderId.slice("congress:".length) }, matchBasis: "OFFICIAL_ID" as const, ambiguous: false })),
     temporal: {
       version: `${snapshot.congress}-${snapshot.session}`,
       expectedVersion: `${input.expectedCongress}-${input.expectedSession}`,
-      sourceThrough: latestVoteInstant(snapshot),
+      sourceThrough: latestVoteInstant({ ...snapshot, votes }),
       staleAtRetrieval: false,
     },
     semantics: { factKind: "one member's recorded positions on official federal chamber roll calls", violations: issues },
     horizon: {
       kind: "BOUNDED",
-      query: `${officeholderId} on ${snapshot.window.houseRolls.length} declared House rolls and ${snapshot.window.senateRolls.length} declared Senate rolls`,
+      query: `${officeholderId} on the ${votes.length} roll calls that record the member in the declared window`,
       returnedRecords: positions.length,
       declaredTotal: positions.length,
       paginationComplete: true,
@@ -349,9 +351,9 @@ export function federalKeyVotesCandidate(input: {
     selectionVersion: "v1",
     acquisitions,
   };
-  const rawHash = acquisitionRawHash(acquisitions);
+  const rawHash = acquisitionRawHash(acquisitions), normalizedHash = canonicalCivicDataHash(readModel);
   return {
-    id: candidateId(FEDERAL_KEY_VOTE_SCOPE, acquisitions, input.retrievedAt),
+    id: candidateId(FEDERAL_KEY_VOTE_SCOPE, acquisitions, input.retrievedAt, normalizedHash),
     sourceId: FEDERAL_VOTES_SOURCE_ID,
     recordClass: "FEDERAL_KEY_VOTE",
     scope: FEDERAL_KEY_VOTE_SCOPE,
@@ -368,7 +370,7 @@ export function federalKeyVotesCandidate(input: {
       succeeded: true,
       parserVersion: FEDERAL_VOTES_PARSER_VERSION,
       schemaVersion: "federal-key-votes:selection-v1",
-      normalizedHash: canonicalCivicDataHash(readModel),
+      normalizedHash,
       normalizedPayloadHash: canonicalCivicDataHash(normalizedPayload),
       inputRecords: refs.length,
       outputRecords: refs.length,

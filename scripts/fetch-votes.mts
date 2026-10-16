@@ -133,7 +133,9 @@ async function latestHouseRoll(): Promise<number> {
     const url = `https://clerk.house.gov/evs/${YEAR}/roll${String(mid).padStart(3, "0")}.xml`;
     let response: Response;
     try {
-      response = await fetch(url, { method: "HEAD", headers: { "user-agent": UA } });
+      // The clerk refuses HEAD with 405, so the probe reads and drops the body.
+      response = await fetch(url, { headers: { "user-agent": UA } });
+      await response.body?.cancel();
     } catch (error) {
       await recordFailure(url, error instanceof Error ? error.message : "House roll horizon lookup failed");
       throw error;
@@ -203,7 +205,7 @@ for (const n of houseRolls) {
   if (legisNum) billNums.add(legisNum);
 
   for (const m of xml.matchAll(
-    /<recorded-vote><legislator name-id="([^"]+)"[^>]*>[^<]*<\/legislator><vote>([^<]+)<\/vote><\/recorded-vote>/g,
+    /<recorded-vote>\s*<legislator name-id="([^"]+)"[^>]*>[^<]*<\/legislator>\s*<vote>([^<]+)<\/vote>\s*<\/recorded-vote>/g,
   )) {
     houseTotal++;
     if (!bioguides.has(m[1])) continue;
@@ -380,8 +382,9 @@ const snapshot: VotesSnapshot = {
 
 const attemptedAt = new Date().toISOString(), held = heldAcquisitions(acquisitions);
 const { positions: _positions, ...window } = snapshot;
-const byMember = new Map<string, MemberVote[]>([...bioguides].map(id => [`congress:${id}`, []]));
-for (const position of positions) byMember.get(position.officeholderId)!.push(position);
+// A member no roll in this window records keeps the record from the last window that did.
+const byMember = new Map<string, MemberVote[]>();
+for (const position of positions) byMember.set(position.officeholderId, [...byMember.get(position.officeholderId) ?? [], position]);
 const refused: string[] = [];
 for (const [officeholderId, recorded] of byMember) {
   const member = federalMemberVotesCandidate({ acquisitions: held, retrievedAt: attemptedAt, expectedCongress: CONGRESS, expectedSession: SESSION, snapshot: window, officeholderId, positions: recorded });

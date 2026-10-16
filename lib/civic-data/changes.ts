@@ -224,7 +224,8 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
         : [{ key: `session-marker:${textKey(root, ["jurisdiction"]) ?? "state"}`, record: root }];
     case "FEDERAL_ROLL_CALL": {
       if (typeof root.officeholderId === "string" && root.officeholderId) return [
-        { key: "projection:member-window", record: { officeholderId: root.officeholderId, congress: root.congress, session: root.session, window: root.window } },
+        { key: "projection:member-session", record: { officeholderId: root.officeholderId, congress: root.congress, session: root.session } },
+        ...keyed("roll", array(root.votes), ["id"]),
         ...array(root.positions).map((record, index) => ({ key: `position:${textKey(record, ["voteId"]) ?? `row-${index}`}:${root.officeholderId as string}`, record })),
       ].sort((left, right) => left.key.localeCompare(right.key));
       const snapshot = object(root.snapshot) ?? root;

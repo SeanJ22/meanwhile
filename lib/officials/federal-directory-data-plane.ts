@@ -118,7 +118,8 @@ export async function federalDirectoryCandidate(input: {
   return heldDirectoryCandidate({ ...input, acquisitions: captures });
 }
 
-function heldDirectoryCandidate(input: {
+/** A place's candidate over captures already held in the vault. */
+export function heldDirectoryCandidate(input: {
   readonly state: string;
   readonly acquisitions: readonly FederalDirectoryCapture[];
   readonly retrievedAt: string;
@@ -180,7 +181,7 @@ function heldDirectoryCandidate(input: {
     },
     identities: input.projection.roster.officeholders.map((holder) => ({
       subjectId: holder.id,
-      jurisdiction: `US-${place}`,
+      jurisdiction: "US",
       identifiers: { bioguide_id: holder.id.slice("congress:".length) },
       matchBasis: "OFFICIAL_ID" as const,
       ambiguous: false,

@@ -1,5 +1,7 @@
 import { parseStateBallotContractId, stateBallotScope } from "./state-scopes.ts";
 import { stateFromRegistryRuntimeContractId } from "./state-scopes.ts";
+import { federalDirectoryStateOf } from "../officials/federal-directory-data-plane.ts";
+import { federalMemberOfScope } from "../votes/data-plane.ts";
 import { readLatestReaderReadbacks, routineEventObservedAt, type RoutineDataStore } from "./store.ts";
 import type { RoutineSourceContract } from "./contracts.ts";
 import type { ManualProductionSourceContract } from "./manual-contracts.ts";
@@ -69,6 +71,7 @@ function verifyExactVersion(
 function verifierIdFor(contract: ReaderContract): string {
   if (parseStateBallotContractId(contract.id)) return "lib/civic-data/read-model.ts#readPromotedCivicData";
   if (stateFromRegistryRuntimeContractId(contract.id)) return "lib/civic-data/read-model.ts#readStateRegistryRuntimeProjection";
+  if (federalDirectoryStateOf(contract.id)) return "lib/officials/federal-directory-read-model.ts#readStateFederalDirectory";
   if (contract.recordClass === "FEDERAL_MONEY") return "lib/federal-money/verify.ts#readFederalMoneyPartition";
   // Congress.gov and GovInfo also publish federal civic records under the same source ids; only people records read back as people.
   if (isPeopleSource(contract.sourceId) && contract.recordClass !== "FEDERAL_CIVIC_RECORD") return "lib/civic-data/people-source-publication.ts#readPeopleSourceProjection";
@@ -90,7 +93,6 @@ function verifierIdFor(contract: ReaderContract): string {
     case "nj-state-rollcalls": return "lib/sources/legiscan/snapshot.ts#readOfficialStateVotesProjection";
     case "nh-state-rollcalls": return "lib/civic-data/read-model.ts#readPromotedStateLegislatorVotes";
     case "census-acs-population": return "lib/reference/acs-population.ts#readPopulationProjection";
-    case "congress-bulk-roster": return "lib/officials/federal-directory-read-model.ts#readFederalDirectoryProjection";
     case "registry-runtime-bindings": return "lib/registry/runtime-read-model.ts#readRegistryRuntimeProjection";
     case "congress-rollcalls": return "lib/votes/snapshot.ts#readFederalRollCallsProjection";
     case "federal-key-votes": return "lib/votes/key-votes-projection.ts#readFederalKeyVotesProjection";
@@ -196,6 +198,11 @@ export async function verifyRoutineReaderProjection(
         ? await (await import("../sources/plural/votes.ts")).readPluralVotesProjection(state, {store: options.store, now: options.now, bypassCache: true})
         : await (await import("../sources/legiscan/votes.ts")).readLegiscanVotesProjection(state, {store: options.store, now: options.now, bypassCache: true});
       return verifyExactVersion(verifierId, read, options.expectedVersionId, `${state} attributed votes`);
+    }
+    const directoryState = federalDirectoryStateOf(contract.id);
+    if (directoryState) {
+      const { readStateFederalDirectory } = await import("../officials/federal-directory-read-model.ts");
+      return verifyExactVersion(verifierId, await readStateFederalDirectory(directoryState, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, `${directoryState} federal-directory`);
     }
     const registryState = stateFromRegistryRuntimeContractId(contract.id);
     if (registryState) {
@@ -305,17 +312,16 @@ export async function verifyRoutineReaderProjection(
         const result = await readPopulationProjection({ store: options.store, now: options.now, bypassCache: true });
         return verifyExactVersion(verifierId, result, options.expectedVersionId, "ACS");
       }
-      case "congress-bulk-roster": {
-        const { readFederalDirectoryProjection } = await import("../officials/federal-directory-read-model.ts");
-        return verifyExactVersion(verifierId, await readFederalDirectoryProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "federal-directory");
-      }
       case "registry-runtime-bindings": {
         const { readRegistryRuntimeProjection } = await import("../registry/runtime-read-model.ts");
         return verifyExactVersion(verifierId, await readRegistryRuntimeProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "registry-runtime");
       }
       case "congress-rollcalls": {
-        const { readFederalRollCallsProjection } = await import("../votes/snapshot.ts");
-        return verifyExactVersion(verifierId, await readFederalRollCallsProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "federal-roll-call");
+        const { readFederalMemberVotes, readFederalRollCallsProjection } = await import("../votes/snapshot.ts");
+        const member = federalMemberOfScope(options.scope ?? contract.scope), read = { store: options.store, now: options.now, bypassCache: true };
+        return member
+          ? verifyExactVersion(verifierId, await readFederalMemberVotes(member, read), options.expectedVersionId, "federal member positions")
+          : verifyExactVersion(verifierId, await readFederalRollCallsProjection(read), options.expectedVersionId, "federal-roll-call");
       }
       case "federal-key-votes": {
         const { readFederalKeyVotesProjection } = await import("../votes/key-votes-projection.ts");

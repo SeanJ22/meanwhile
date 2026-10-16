@@ -201,7 +201,7 @@ import { appendFileSync } from 'node:fs';
 neonConfig.fetchFunction = async (_url, init) => {
   const body = JSON.parse(String(init.body));
   appendFileSync(${JSON.stringify(queries)}, JSON.stringify(body) + '\\n');
-  if (!body.query.toLowerCase().startsWith('select')) throw new Error('Unexpected database write');
+  if (!/^(?:select\\b|with\\s+recursive\\b)/i.test(body.query.trimStart()) || /\\b(?:insert|update|delete)\\b/i.test(body.query)) throw new Error('Unexpected database write');
   return new Response(JSON.stringify({ command: 'SELECT', rowCount: 0, rowAsArray: true, fields: [], rows: [] }));
 };`);
   const version = promotedPointerVersion(IL.recordClass, IL.scope, null);
@@ -225,7 +225,7 @@ neonConfig.fetchFunction = async (_url, init) => {
   const captured = readFileSync(queries, "utf8").trim().split("\n").map(line => JSON.parse(line) as { query: string; params: string[] });
   assert.ok(captured.length >= 3);
   assert.ok(captured.every(row => row.params?.some(value => String(value).includes(IL.scope))), JSON.stringify(captured));
-  assert.equal(captured.filter(row => row.query.includes('"payload"')).length, 1);
+  assert.equal(captured.filter(row => /\bpayload\b/i.test(row.query)).length, 1);
   const derivedVersion = promotedPointerVersion("CURATED_READER_RECORD", stateBallotScope("candidate-campaign-sites-derived", "IL"), null);
   const derived = spawnSync(process.execPath, ["--experimental-strip-types", "--import", preload, resolve("scripts/publish-state-authority.mts"),
     "--state=IL", "--family=candidate-campaign-sites-derived", `--version=${derivedVersion}`, `--observed-at=${NOW}`], {

@@ -9,8 +9,6 @@ import { normalizeWithDrops, publicVideoUrl, type LegistarEventWithClient } from
 import type { LegistarEvent } from "../lib/sources/legistar/types.ts";
 import { meetingCardSources } from "../lib/officials/card-sources.ts";
 
-/** A concluded meeting links the recording its publisher's own record gives. */
-
 const EVENTS = JSON.parse(
   readFileSync(new URL("./fixtures/legistar-pima-events.json", import.meta.url), "utf8"),
 ) as LegistarEvent[];
@@ -41,11 +39,14 @@ test("BX-10: no video, a video that is not public, or an unsafe address yields n
 test("BX-10: the meeting card's Sources names the publisher record the recording is linked from", () => {
   const meeting = normalizeOne({ EventVideoStatus: "Public", EventVideoPath: VIDEO });
   const sources = meetingCardSources(meeting, []);
-  assert.equal(sources.length, 2, "the recording and sitting share one publisher record; the agenda has its own source URL");
-  assert.equal(sources[1]!.provenance.sourceUrl, meeting.agendaUrl);
-  assert.equal(sources[0]!.provenance.sourceUrl, meeting.provenance.sourceUrl);
-  assert.match(sources[0]!.what, /The recording of this sitting/, "the recording's coverage is named behind its publisher record");
-  assert.doesNotMatch(sources[0]!.what, /and \d+ more from this source/);
+  const minutes = meeting.publishedLinks!.find(link => link.kind === "MINUTES")!;
+  assert.ok(minutes, "the publisher also links this sitting's minutes");
+  assert.deepEqual(sources.map(source => source.provenance.sourceUrl).sort(),
+    [meeting.provenance.sourceUrl, meeting.agendaUrl, minutes.href].sort(), "the recording shares its publisher record; agenda and minutes retain their own source URLs");
+  const publisher = sources.find(source => source.provenance.sourceUrl === meeting.provenance.sourceUrl)!;
+  assert.match(publisher.what, /The recording of this sitting/, "the recording's coverage is named behind its publisher record");
+  assert.doesNotMatch(publisher.what, /and \d+ more from this source/);
+  assert.match(sources.find(source => source.provenance.sourceUrl === minutes.href)!.what, /document contents not yet read/);
   const without = meetingCardSources(normalizeOne({ EventVideoPath: null }), []);
   assert.doesNotMatch(without[0]!.what, /recording/);
 });

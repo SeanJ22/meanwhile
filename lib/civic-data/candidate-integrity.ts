@@ -143,6 +143,12 @@ function candidateReadOnlyStore(
       recordClass === candidate.recordClass && scopes.includes(candidate.scope)
         ? [promotedPointerIdentity(projection)]
         : [],
+    readPromotedMeetingChecks: async (scope, versionId) => {
+      if (candidate.recordClass !== "MEETING" || scope !== candidate.scope || versionId !== candidate.id) throw new Error("MEETING_DOCUMENT_CHECKS_RACED");
+      return candidate.retrieval.meetingChecks;
+    },
+    meetingCheckState: async (sourceId, scope) => candidate.recordClass === "MEETING" && sourceId === candidate.sourceId && scope === candidate.scope
+      ? { sourceCheck: candidate.retrieval.sourceCheck, meetingChecks: candidate.retrieval.meetingChecks } : {},
     events: async (_candidateId): Promise<readonly CandidateEvent[]> => [],
     clock: async () => ({}),
     clocks: async requests => requests.map(() => ({ ok: true, clock: {} })),

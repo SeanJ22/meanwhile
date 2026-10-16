@@ -34,7 +34,7 @@ test("registered bodies appear before their first fetch and stay distinct behind
     return ["council", "school-board"].map((body, index) => ({ id: "calendar", ordinality: index + 1,
       body_id: `ocd-division/country:us/state:tx/place:example#${body}`, kind: "ical", status: "OPEN", is_meeting: true,
       source_name: "Example City", url: "https://example.gov/calendar.ics" }));
-  }, "US-TX", "", "2026-10-15T12:30:00Z");
+  }, "US-TX", "", "2026-10-15T12:30:00Z", "registered", async requests => requests.map(() => ({ ok: true, clock: {} })));
   assert.equal(view.rows.length, 2);
   assert.deepEqual(view.rows.map(row => row.name), ["Example City — council", "Example City — school board"]);
   assert.equal(view.rows[0]!.result, "Unchanged without a download");
@@ -64,4 +64,43 @@ test("registered nonmeeting contracts retain their identity and paused sources a
   assert.equal(view.rows[0]!.result, "Set aside");
   assert.equal(view.rows[0]!.nextDueAt, null);
   assert.equal(view.rows[0]!.url, "https://example.gov/votes?year=2026");
+});
+
+test("registered meeting rows expose owed documents and read only the displayed body clocks", async () => {
+  let requested = 0;
+  const view = await readSourceChecks(async text => {
+    if (text.includes("cp_source_check_days")) return [];
+    if (text.includes("cp_source_checks")) return [];
+    return Array.from({ length: SOURCE_CHECK_PAGE_SIZE + 1 }, (_, index) => ({ id: `door-${index}`, ordinality: 1,
+      body_id: `ocd-division/country:us/state:tx/place:example#body-${index}`, kind: "ical", status: index === 3 ? "SUSPENDED" : "OPEN",
+      is_meeting: true, source_name: "Example City", url: "https://example.gov/calendar.ics" }));
+  }, "US-TX", "", "2026-10-15T12:30:00Z", "registered", async requests => {
+    requested = requests.length;
+    assert.ok(requests.every(request => request.sourceId === "meetings-public-bodies" && request.scope.includes("state%3Atx")));
+    return requests.map((_, index) => ({ ok: true, clock: {
+      pendingDocumentCount: index === 0 || index === 3 ? 2 : 0,
+      nextDocumentDueAt: index === 1 ? "2026-10-15T12:29:00Z" : "2026-10-15T12:45:00Z",
+      ...(index === 2 ? { calendarRetryAt: "2026-10-15T12:37:13Z" } : {}),
+    } }));
+  });
+  assert.equal(requested, SOURCE_CHECK_PAGE_SIZE);
+  assert.equal(view.rows[0]!.result, "2 documents waiting");
+  assert.equal(view.rows[0]!.nextDueAt, "2026-10-15T12:45:00.000Z");
+  assert.equal(view.rows[1]!.result, "Documents due");
+  assert.equal(view.rows[2]!.result, "Calendar waiting to retry");
+  assert.equal(view.rows[2]!.nextDueAt, "2026-10-15T12:37:13.000Z");
+  assert.equal(view.rows[3]!.result, "Set aside");
+  assert.equal(view.rows[3]!.nextDueAt, null);
+});
+
+test("an unavailable document clock never labels a registered meeting source fully checked", async () => {
+  const view = await readSourceChecks(async text => {
+    if (text.includes("cp_source_check_days")) return [];
+    if (text.includes("cp_source_checks")) return [{ source_id: "meetings:ical:city%23council", http_status: 304, unchanged: true,
+      checked_at: "2026-10-15T12:00:00Z", next_due_at: "2026-10-15T13:00:00Z" }];
+    return [{ id: "calendar", ordinality: 1, body_id: "city#council", kind: "ical", status: "OPEN", is_meeting: true,
+      source_name: "Example City", url: "https://example.gov/calendar.ics" }];
+  }, "US-TX", "", "2026-10-15T12:30:00Z", "registered", async () => { throw new Error("unavailable"); });
+  assert.equal(view.rows[0]!.result, "Document status unavailable");
+  assert.equal(view.rows[0]!.nextDueAt, null);
 });

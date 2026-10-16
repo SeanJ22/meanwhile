@@ -9,6 +9,7 @@ import { DataProvider, type ShellData } from "../lib/state/data.tsx";
 import { COMMENT_ACCESS } from "./fixtures/comment-access.ts";
 import { meetingCardGaps } from "../lib/meetings/card-gaps.ts";
 import type { Meeting } from "../lib/sources/types.ts";
+import { meetingCardSources } from "../lib/officials/card-sources.ts";
 
 const base: Meeting = { id: "meeting:shared", title: "Budget hearing", bodyName: "Council", jurisdiction: "Example", ocdId: "ocd-division/country:us/state:az/place:example", startsAt: "2026-10-06T18:00:00Z", endsAt: null, timeZone: "America/Phoenix", status: "SCHEDULED", location: null, agendaUrl: null, provenance: { sourceUrl: "https://clerk.example.gov/calendar", sourceOrg: "Example Clerk", collectedAt: new Date().toISOString(), verifiedAt: null } } as Meeting;
 const render = (meeting: Meeting) => renderToStaticMarkup(<MeetingRow meeting={meeting} compact />);
@@ -20,6 +21,25 @@ test("shared meeting row keeps its native identity and published online action",
   assert.match(html, /href="https:\/\/join.example.gov\/room"[^>]*>Join online/);
   assert.match(html, /Publisher&#x27;s online room/);
   assert.doesNotMatch(html, /data-card-sources/);
+});
+
+test("minutes and results expose saved text while their source links and check dates stay in Sources", () => {
+  const meeting: Meeting = { ...base, publishedLinks: [
+    { label: "Minutes", href: "https://clerk.example.gov/minutes" },
+    { label: "Results", href: "https://clerk.example.gov/results", kind: "RESULTS" },
+  ], publishedDocuments: [{ meetingId: base.id, kind: "MINUTES", url: "https://clerk.example.gov/minutes", publisherLabel: "Minutes",
+    contentHash: "a".repeat(64), contentType: "text/html", retrievedAt: "2026-10-06T12:00:00Z", checkedAt: "2026-10-06T13:00:00Z",
+    text: "The clerk published these minutes.", extraction: "TEXT_EXTRACTED", extractionNote: null }] };
+  const html = renderToStaticMarkup(<MeetingRow meeting={meeting} />);
+  assert.match(html, /data-meeting-document-kind="MINUTES"/);
+  assert.match(html, /data-meeting-document-kind="RESULTS"/);
+  assert.doesNotMatch(html, /href="https:\/\/clerk.example.gov\/(?:minutes|results)"|Saved copy read|2026-10-06T13:00:00Z/);
+  assert.match(html, /The clerk published these minutes/);
+  assert.match(html, /Document contents not yet read/);
+  assert.doesNotMatch(html, /Read the agenda|approved|passed/);
+  const sources = meetingCardSources(meeting, []);
+  assert.equal(sources.find(source => source.provenance.sourceUrl === "https://clerk.example.gov/minutes")?.provenance.collectedAt, "2026-10-06T13:00:00Z");
+  assert.match(sources.find(source => source.provenance.sourceUrl === "https://clerk.example.gov/results")?.what ?? "", /contents not yet read/);
 });
 
 test("only a fresh first-party empty-slot observation contributes a not-posted agenda gap", () => {

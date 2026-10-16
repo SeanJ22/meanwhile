@@ -1,7 +1,8 @@
 import { runMeetingReaderRepairDomain } from "../lib/civic-data/reader-verification.ts";
 import { readerVerifierClosureAttestor } from "./lib/verifier-attestation.ts";
 import { MEETING_STATE_BUCKETS, meetingTaskBucket, runMeetingBatchPass } from "../lib/civic-data/meeting-batch.ts";
-import { meetingPrefetchSeed } from "../lib/civic-data/meeting-prefetch.ts";
+import { meetingPrefetchSeeds } from "../lib/civic-data/meeting-prefetch.ts";
+import { MEETING_DOCUMENT_TURN_URLS } from "../lib/meetings/document-checks.ts";
 import { ROUTINE_STATES, routineScopeState } from "../lib/civic-data/state-scope.ts";
 import { refreshStaleFacts } from "../lib/facts/refresh.ts";
 import { prefetchSourceRequests, runWithSourceFetch } from "../lib/sources/fetch-source.ts";
@@ -48,6 +49,7 @@ import {
   routineTaskDeadlineMs,
   routineTaskDue,
   routineTaskDueAtMs,
+  routineCalendarDueAtMs,
   routineBaselineOwed,
   routineCodeChangeRetryTaskIds,
   routineAdmissionClock,
@@ -1075,12 +1077,23 @@ async function runSourceTasks(runs: readonly PendingRun[]): Promise<readonly Bou
   const [meetingResults, singleResults] = await Promise.all([
     runMeetingBatchPass(meetings.map(run => {
       const environment = sourceChildCommand(run).env!;
-      return { id: run.id, dueAt: environment.WTP_SOURCE_DUE_AT!, nextDueAt: environment.WTP_SOURCE_NEXT_DUE_AT ?? environment.WTP_SOURCE_DUE_AT! };
+      const now = Date.now();
+      const calendarDue = FORCE ? now : Math.min(
+        routineCalendarDueAtMs(run.task, routineAdmissionClock(hotReadClocks.get(run.id), supervisorAttempts.get(run.id), now),
+          now, sittingSignals.get(run.id)),
+        Date.parse(honouredDueRequests.get(run.id)?.dueAt ?? "") || Number.POSITIVE_INFINITY,
+      );
+      return { id: run.id, dueAt: environment.WTP_SOURCE_DUE_AT!, nextDueAt: environment.WTP_SOURCE_NEXT_DUE_AT ?? environment.WTP_SOURCE_DUE_AT!,
+        calendarDueAt: Number.isFinite(calendarDue) ? new Date(calendarDue).toISOString() : undefined,
+        meetingSchedule: run.task.contract.schedule, documentRetryEveryMs: run.task.retryMs };
     }), {
-      prefetch: async (member, signal, acquire) => {
+      prefetch: async (member, signal, acquire, phase) => {
         const partition = admittedMeetingContracts.get(member.id);
-        const seed = partition ? await meetingPrefetchSeed(store, partition) : undefined;
-        await prefetchSourceRequests({ sourceId: member.id, state: STATE_SCOPE, dueAt: member.dueAt, signal, acquire, seed });
+        const seeds = phase === "CALENDAR" && partition ? await meetingPrefetchSeeds(store, partition) : [];
+        const checks = phase === "DOCUMENT" && partition ? await store.meetingCheckState(partition.sourceId, partition.scope) : undefined;
+        const documents = checks?.meetingChecks?.documents.filter(check => Date.parse(check.nextDueAt) <= Date.now()).slice(0, MEETING_DOCUMENT_TURN_URLS);
+        await prefetchSourceRequests({ sourceId: member.id, state: STATE_SCOPE, dueAt: member.dueAt, calendarDueAt: member.calendarDueAt,
+          signal, acquire, seeds, phase, documents });
       },
       onMemberStarted: async id => {
         startedSourceChildren.add(id);

@@ -32,7 +32,8 @@ import { WEBSITE_PACING_DDL } from "../lib/control-plane/website-pacing.ts";
 import { RUNTIME_AUTHORITY_ENV } from "../lib/civic-data/runtime-authority.ts";
 import { runMeetingPartition } from "./ingest.ts";
 import { MEETING_STATE_BUCKETS, MEETING_STATE_CONCURRENCY, meetingTaskBucket, runMeetingBatchPass } from "../lib/civic-data/meeting-batch.ts";
-import { meetingPrefetchSeed } from "../lib/civic-data/meeting-prefetch.ts";
+import { meetingPrefetchSeeds } from "../lib/civic-data/meeting-prefetch.ts";
+import { MEETING_DOCUMENT_TURN_URLS } from "../lib/meetings/document-checks.ts";
 import { readMeetingBodiesForPublication } from "../lib/civic-data/meeting-dependencies.ts";
 import { durableRoutineRunnerReceiptIssue, parseMeetingPartitionRunnerReceipts } from "../lib/civic-data/runner-receipt.ts";
 import { recordDoorOutcome, taskDoorIds } from "../lib/doors/outcome.ts";
@@ -457,8 +458,12 @@ async function worker() {
     installFactReader(factQuery);
     process.env[RUNTIME_AUTHORITY_ENV.capability] = "ROUTINE_SUPERVISOR";
     const taskAt = new Date().toISOString();
-    const tasks = wirings.map(wiring => ({ id: partitions.get(wiring.bodyId)!.id, dueAt: taskAt,
-      nextDueAt: new Date(Date.parse(taskAt) + 60 * 60_000).toISOString() }));
+    const tasks = wirings.map(wiring => {
+      const partition = partitions.get(wiring.bodyId)!;
+      return { id: partition.id, dueAt: taskAt, calendarDueAt: taskAt,
+        nextDueAt: new Date(Date.parse(taskAt) + 60 * 60_000).toISOString(),
+        meetingSchedule: partition.schedule, documentRetryEveryMs: partition.retry.afterMs };
+    });
     const selected = new Map(wirings.map(wiring => [partitions.get(wiring.bodyId)!.id, wiring]));
     const dependencyQuery = async (sql: string, params: readonly unknown[] = []) => (await request([{ sql, params: [...params] }], false))[0]!.rows as Record<string, unknown>[];
     const seedStarted = performance.now(), seedCpuStarted = process.cpuUsage();
@@ -540,13 +545,17 @@ async function worker() {
     while (completed.size < tasks.length) {
       stateTurns++;
       const turnResults = await runMeetingBatchPass(tasks.filter(task => !completed.has(task.id)), {
-        prefetch: async (member, signal, acquire) => {
+        prefetch: async (member, signal, acquire, phase) => {
           const partition = partitions.get(selected.get(member.id)!.bodyId)!;
-          const seed = await meetingPrefetchSeed(new PostgresRoutineDataStore(db, null), partition);
+          const store = new PostgresRoutineDataStore(db, null);
+          const seeds = phase === "CALENDAR" ? await meetingPrefetchSeeds(store, partition) : [];
+          const checks = phase === "DOCUMENT" ? await store.meetingCheckState(partition.sourceId, partition.scope) : undefined;
+          const documents = checks?.meetingChecks?.documents.filter(check => Date.parse(check.nextDueAt) <= Date.now()).slice(0, MEETING_DOCUMENT_TURN_URLS);
           await runWithSourceFetch({ vault, state, sourceId: member.id,
             runtime: { store: fetchStore, transport: transportFor(selected.get(member.id)!), now: Date.now },
             websiteSize },
-            () => prefetchSourceRequests({ sourceId: member.id, state, dueAt: member.dueAt, signal, acquire, seed }));
+            () => prefetchSourceRequests({ sourceId: member.id, state, dueAt: member.dueAt, calendarDueAt: member.calendarDueAt,
+              signal, acquire, seeds, phase, documents }));
         }, onMemberStarted: id => {
         memberStartedAt.set(id, new Date().toISOString());
       }, onSettled: async (task, result) => {

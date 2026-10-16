@@ -61,7 +61,14 @@ export class AgendaDocumentStore {
     const versions = this.byMeeting.get(doc.meetingId) ?? [];
     const latest = versions[versions.length - 1];
     if (latest && latest.documentUrl === doc.documentUrl && sameAgendaContent(latest, doc)) {
-      return { stored: false, revised: false };
+      if (!successfulExtraction(doc)) return { stored: false, revised: false };
+      const repaired = !successfulExtraction(latest);
+      versions[versions.length - 1] = {
+        ...latest,
+        ...(repaired ? { text: doc.text, extraction: doc.extraction, extractionNote: doc.extractionNote } : {}),
+        retrievedAt: laterCheck(latest.retrievedAt, doc.retrievedAt),
+      };
+      return { stored: repaired, revised: false };
     }
     versions.push(doc);
     this.byMeeting.set(doc.meetingId, versions);
@@ -76,11 +83,6 @@ export class AgendaDocumentStore {
   latestFor(meetingId: string): AgendaDocument | null {
     const versions = this.byMeeting.get(meetingId);
     return versions?.length ? versions[versions.length - 1] : null;
-  }
-
-  /** The hash an unchanged document would carry — the never-re-fetch guard. */
-  latestHashFor(meetingId: string): string | null {
-    return this.latestFor(meetingId)?.contentHash ?? null;
   }
 
   isUrlOnAnotherMeeting(documentUrl: string, meetingId: string): boolean {
@@ -160,15 +162,20 @@ export async function extractPdfText(bytes: Uint8Array): Promise<string> {
 
 export interface RetrieveOptions {
   fetchImpl?: typeof fetch;
-  /** Skip the fetch entirely when the stored hash is known-current. */
-  knownHash?: string | null;
-
   urlOverride?: string;
-
-  held?: Pick<AgendaDocumentStore, "publisherPageWitness">;
+  held?: Pick<AgendaDocumentStore, "publisherPageWitness" | "versionsFor">;
 }
 
 const NO_READABLE_TEXT = "No readable text";
+
+function successfulExtraction(document: AgendaDocument): boolean {
+  return document.extraction !== "failed" && agendaReadableText(canonicalAgendaDocument(document)) !== null;
+}
+
+function laterCheck(previous: string, current: string): string {
+  const prior = Date.parse(previous), next = Date.parse(current);
+  return Number.isFinite(next) && (!Number.isFinite(prior) || next > prior) ? current : previous;
+}
 
 function failedRead(
   base: Omit<AgendaDocument, "text" | "extraction" | "extractionNote">,
@@ -195,7 +202,12 @@ export async function retrieveAgendaDocument(
   const bytes = new Uint8Array(await response.arrayBuffer());
   const contentType = response.headers.get("content-type") ?? "";
   const hash = contentHashOf(bytes);
-  const retrievedAt = new Date().toISOString();
+  const checkedAt = response.headers.get("x-meanwhile-source-checked-at");
+  const retrievedAt = checkedAt && Number.isFinite(Date.parse(checkedAt)) ? checkedAt : new Date().toISOString();
+  const held = options.held ?? agendaDocumentStore;
+  const previous = held.versionsFor(meeting.id).findLast(document => document.documentUrl === url &&
+    document.contentHash === hash && successfulExtraction(document));
+  if (previous) return { ...previous, retrievedAt: laterCheck(previous.retrievedAt, retrievedAt) };
 
   const base: Omit<AgendaDocument, "text" | "extraction" | "extractionNote"> = {
     id: `${meeting.id}@${hash}`,
@@ -245,7 +257,7 @@ export async function retrieveAgendaDocument(
         `${NO_READABLE_TEXT}: once its scripts, controls and site navigation were set aside, the page held no words.`,
       );
     }
-    const witness = (options.held ?? agendaDocumentStore).publisherPageWitness({
+    const witness = held.publisherPageWitness({
       meetingId: meeting.id,
       documentUrl: url,
       text,

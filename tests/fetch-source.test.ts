@@ -9,15 +9,20 @@ import { captureSourceAcquisitions } from "../lib/sources/acquisition-trace.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
 import { memoryWebsitePacing, WEBSITE_PACING_DDL } from "../lib/control-plane/website-pacing.ts";
-import { fetchSource, prefetchSourceRequests, runWithSourceFetch, SourceFetchDeferred, type SourceResponseCapture } from "../lib/sources/fetch-source.ts";
-import { fileSourceFetchStore, postgresSourceFetchStore, SOURCE_FETCH_DDL, type SavedSourceResponse, type SourceCheck, type SourceFetchStore } from "../lib/sources/fetch-source-state.ts";
+import { fetchSource, prefetchSourceRequests, runWithSourceFetch, runWithSourceRequestPlan, SOURCE_PREFETCH_MAX_BYTES, SourceFetchDeferred, type SourceFetchDeferral, type SourceResponseCapture } from "../lib/sources/fetch-source.ts";
+import { fileSourceFetchStore, postgresSourceFetchStore, SOURCE_FETCH_DDL, type SavedSourceResponse, type SourceCheck, type SourceFetchStore, type SourceRequestPlan } from "../lib/sources/fetch-source-state.ts";
 import { checkedPublicAddress, isPublicAddress, publicTransport } from "../lib/hunt/public-transport.ts";
 
 function memoryStore() {
   const values = new Map<string, SavedSourceResponse>(), checks: SourceCheck[] = [];
+  const plans = new Map<string, SourceRequestPlan>();
   const store: SourceFetchStore = {
     pacing: memoryWebsitePacing(), withLease: async (_key, operation) => operation(),
-    read: async key => values.get(key) ?? null, readEntryRequest: async () => null,
+    read: async key => values.get(key) ?? null, readRequestPlan: async (state, sourceId) => plans.get(`${state}:${sourceId}`) ?? null,
+    saveRequestGroup: async (state, sourceId, kind, targetUrl, requests) => {
+      const key = `${state}:${sourceId}`, previous = plans.get(key) ?? { calendar: [], documents: {} };
+      plans.set(key, kind === "CALENDAR" ? { ...previous, calendar: requests } : { ...previous, documents: { ...previous.documents, [targetUrl!]: requests } });
+    },
     record: async (key, value, check) => { if (value) values.set(key, value); checks.push(check); },
   };
   return { store, checks, values };
@@ -83,6 +88,85 @@ test("Retry-After seconds and HTTP date hold every reader and failed bodies reac
     await runWithSourceFetch(context, () => fetchSource("https://state.example/other"));
     assert.equal(sent, 2);
   }
+});
+
+test("interrupted responses retain partial evidence and a failed check without replacing a complete body", async () => {
+  for (const status of [200, 503]) {
+    for (const length of [19, 8 * 1024 * 1024 + 19]) {
+      const { store, checks, values } = memoryStore(), vault = new MemoryEvidenceStore();
+      const captures: SourceResponseCapture[] = [], partial = new Uint8Array(length).fill(97), failure = new Error("fixture socket reset");
+      let calls = 0, now = Date.parse("2026-10-16T12:00:00Z");
+      const transport: typeof fetch = async (_url, init) => {
+        calls++;
+        if (calls === 1) return new Response("complete calendar", { headers: { etag: '"complete"' } });
+        assert.equal(new Headers(init?.headers).get("if-none-match"), '"complete"');
+        if (calls === 3) return new Response(null, { status: 304 });
+        let sent = false;
+        return new Response(new ReadableStream({ pull(controller) {
+          if (sent) { controller.error(failure); return; }
+          sent = true; controller.enqueue(partial);
+        } }), { status, headers: { etag: '"partial"', "content-type": "text/plain", "content-length": String(length + 100) } });
+      };
+      const read = () => runWithSourceFetch({ sourceId: "council", state: "US-NJ", vault,
+        runtime: { store, transport, now: () => now }, onResponse: capture => { captures.push(capture); } },
+      () => fetchSource("https://town.example/calendar"));
+      assert.equal(await (await read()).text(), "complete calendar");
+      const complete = [...values.values()][0];
+      now += 60_000;
+      const trace = await captureSourceAcquisitions(run => run("council", async () => {
+        await assert.rejects(read(), error => error === failure);
+      }));
+      assert.deepEqual(trace.evidence, []);
+      assert.equal(captures.length, 1);
+      assert.equal(values.size, 1);
+      assert.equal([...values.values()][0], complete);
+      assert.deepEqual(checks[1], { sourceId: "council", state: "US-NJ", url: "https://town.example/calendar",
+        checkedAt: new Date(now).toISOString(), httpStatus: 0, unchanged: false, downloadedBytes: length, nextDueAt: undefined });
+      const receipts = await Promise.all((await vault.list("project/freshness/source-fetch/responses/"))
+        .map(async key => JSON.parse(new TextDecoder().decode((await vault.get(key))!.bytes))));
+      assert.equal(receipts.length, 2);
+      const broken = receipts.find(receipt => receipt.complete === false);
+      assert.ok(broken);
+      assert.equal(broken.failure, "BODY_STREAM_FAILED");
+      assert.equal(broken.status, status);
+      assert.equal(broken.checkStatus, status);
+      assert.equal(broken.byteCount, length);
+      assert.equal(broken.checkedAt, new Date(now).toISOString());
+      assert.equal(new Headers(broken.headers).get("content-length"), String(length + 100));
+      assert.equal(new Headers(broken.headers).get("etag"), '"partial"');
+      assert.equal(broken.chunks.length, length > 8 * 1024 * 1024 ? 2 : 1);
+      const saved = await Promise.all((broken.chunks as string[]).map(async key => (await vault.get(key))!.bytes));
+      assert.deepEqual(Buffer.concat(saved), Buffer.from(partial));
+      now += 60_000;
+      const unchanged = await read();
+      assert.equal(unchanged.headers.get("x-meanwhile-source-status"), "304");
+      assert.equal(await unchanged.text(), "complete calendar");
+      assert.equal(calls, 3);
+      assert.equal(checks[2]?.unchanged, true);
+      assert.equal(checks[2]?.downloadedBytes, 0);
+      assert.equal(captures.length, 2);
+    }
+  }
+});
+
+test("nested source observers retain redacted deferrals even when an adapter catches the typed error", async () => {
+  const { store, checks } = memoryStore(), vault = new MemoryEvidenceStore();
+  const now = Date.parse("2026-10-15T00:00:00.000Z"), events: { observer: string; admission: SourceFetchDeferral }[] = [];
+  await store.pacing.hold("town.example", now + 60_000, now);
+  let requests = 0;
+  const result = await runWithSourceFetch({ vault, runtime: { store, now: () => now, transport: async () => {
+    requests++; return new Response("must not be sent");
+  } }, onDeferred: admission => { events.push({ observer: "outer", admission }); } }, () =>
+    runWithSourceFetch({ onDeferred: async admission => { events.push({ observer: "inner", admission }); } }, async () => {
+      try { await fetchSource("https://town.example/calendar?api_key=private-value"); }
+      catch (error) { assert.ok(error instanceof SourceFetchDeferred); return error.message; }
+    }));
+  assert.match(result ?? "", /2026-10-15T00:01:00\.000Z/);
+  assert.deepEqual(events, ["outer", "inner"].map(observer => ({ observer, admission: {
+    until: now + 60_000, why: "ASKED_TO_WAIT", url: "https://town.example/calendar?api_key=%5Bredacted%5D",
+  } })));
+  assert.equal(requests, 0);
+  assert.equal(checks.length, 0, "a deferred request is not a physical source check");
 });
 
 test("large responses are completely saved in bounded chunks", async () => {
@@ -207,22 +291,27 @@ test("sibling body clocks share a due response across store instances while each
 
 test("browser navigation and subrequests use the same publisher allowance and saved transport", async () => {
   const { routeSourceRequests } = await import("../scripts/scout-browse.mts");
-  const { store } = memoryStore(), vault = new MemoryEvidenceStore();
-  let handle: ((route: import("playwright").Route) => Promise<void>) | undefined, sent = 0, fulfilled = 0, aborted = 0;
-  const page = { route: async (pattern: string, callback: typeof handle) => { assert.equal(pattern, "**/*"); handle = callback; } };
-  await routeSourceRequests(page as unknown as import("playwright").Page, "https://town.example", 60_000);
-  await runWithSourceFetch({ vault, websiteSize: { kind: "local-government", population: 2000 },
-    runtime: { store, now: () => 1_000_000, transport: async (_url, init) => {
-      assert.match(new Headers(init?.headers).get("user-agent") ?? "", /we-the-people/);
-      sent += 1; return new Response("public page");
-    } } }, async () => {
-    for (let index = 0; index < 11; index += 1) await handle!({
-      request: () => ({ url: () => `https://town.example/page/${index}`, method: () => "GET", headers: () => ({}), postData: () => null }),
-      fulfill: async () => { fulfilled += 1; }, abort: async () => { aborted += 1; },
-    } as unknown as import("playwright").Route);
-  });
-  assert.deepEqual({ sent, fulfilled, aborted }, { sent: 10, fulfilled: 10, aborted: 1 });
-  assert.equal((await vault.list("project/freshness/source-fetch/responses/")).length, 10);
+  const size = { kind: "local-government", population: 2000 } as const;
+  for (const initialHost of ["town.example", "www.town.example"]) {
+    const { store } = memoryStore(), vault = new MemoryEvidenceStore();
+    let handle: ((route: import("playwright").Route) => Promise<void>) | undefined, sent = 0, fulfilled = 0, aborted = 0;
+    const page = { route: async (pattern: string, callback: typeof handle) => { assert.equal(pattern, "**/*"); handle = callback; } };
+    await routeSourceRequests(page as unknown as import("playwright").Page, `https://${initialHost}`, 60_000, size);
+    await runWithSourceFetch({ vault, websiteSize: url => new URL(url).hostname === "school.example" ? size : undefined,
+      runtime: { store, now: () => 1_000_000, transport: async (_url, init) => {
+        assert.match(new Headers(init?.headers).get("user-agent") ?? "", /we-the-people/);
+        sent += 1; return new Response("public page");
+      } } }, async () => {
+      for (const hosts of [["town.example", "www.town.example"], ["school.example"], ["api.town.example"]]) {
+        for (let index = 0; index < 11; index += 1) await handle!({
+          request: () => ({ url: () => `https://${hosts[index % hosts.length]}/page/${index}`, method: () => "GET", headers: () => ({}), postData: () => null }),
+          fulfill: async () => { fulfilled += 1; }, abort: async () => { aborted += 1; },
+        } as unknown as import("playwright").Route);
+      }
+    });
+    assert.deepEqual({ sent, fulfilled, aborted }, { sent: 31, fulfilled: 31, aborted: 2 });
+    assert.equal((await vault.list("project/freshness/source-fetch/responses/")).length, 31);
+  }
 });
 
 
@@ -253,12 +342,14 @@ test("root prefetch shares durable responses with serial adapters without duplic
     };
     const context = { vault, runtime: { store, transport, now: () => now }, sourceId: "council", state: "US-NJ" };
     await runWithSourceFetch(context, async () => {
-      await (await fetchSource("https://town.example/calendar", { headers: { accept: "text/html" } })).body?.cancel();
+      await runWithSourceRequestPlan({ kind: "CALENDAR" }, async () => {
+        await (await fetchSource("https://town.example/calendar", { headers: { accept: "text/html" } })).body?.cancel();
+      });
       await (await fetchSource("https://town.example/old-agenda.pdf")).body?.cancel();
     });
-    assert.deepEqual(await store.readEntryRequest("US-NJ", "council"), {
+    assert.deepEqual(await store.readRequestPlan("US-NJ", "council"), { calendar: [{
       url: "https://town.example/calendar", headers: [["accept", "text/html"]], redirect: "follow", byteCount: 8,
-    });
+    }], documents: {} });
     now += 3_600_000;
     const dueAt = new Date(now).toISOString();
     await runWithSourceFetch({ ...context, onResponse: capture => { captures.push(capture); } }, async () => {
@@ -289,26 +380,25 @@ test("prefetch inventory excludes secrets, POSTs, old documents and oversized ro
     const runtime = { store, transport: async () => { sent += 1; return new Response("public"); } };
     const cases: [string, string, RequestInit][] = [
       ["secret-query", "https://town.example/calendar?client_secret=private", {}],
-      ["dated-query", "https://town.example/calendar?from=2026-10-15", {}],
       ["secret-header", "https://town.example/calendar", { headers: { authorization: "private" } }],
       ["unknown-header", "https://town.example/calendar", { headers: { "x-client": "private" } }],
       ["post", "https://town.example/calendar", { method: "POST", body: "private" }],
     ];
     for (const [sourceId, url, init] of cases) {
       await runWithSourceFetch({ sourceId, state: "US-NJ", sensitiveQueryParameters: ["client_secret"], vault, runtime }, async () => {
-        await (await fetchSource(url, init)).body?.cancel();
+        await runWithSourceRequestPlan({ kind: "CALENDAR" }, async () => { await (await fetchSource(url, init)).body?.cancel(); });
         await (await fetchSource("https://town.example/old-agenda.pdf")).body?.cancel();
       });
-      assert.equal(await store.readEntryRequest("US-NJ", sourceId), null);
+      assert.deepEqual(await store.readRequestPlan("US-NJ", sourceId), { calendar: [], documents: {} });
     }
     const before = sent;
     await runWithSourceFetch({ vault, runtime }, async () => {
       await prefetchSourceRequests({ sourceId: "oversized", state: "US-NJ", dueAt: new Date().toISOString(),
-        seed: { url: "https://town.example/calendar", headers: [], redirect: "follow", byteCount: 1024 * 1024 + 1 } });
+        seeds: [{ url: "https://town.example/calendar", headers: [], redirect: "follow", byteCount: SOURCE_PREFETCH_MAX_BYTES + 1 }] });
       await prefetchSourceRequests({ sourceId: "auth-seed", state: "US-NJ", dueAt: new Date().toISOString(),
-        seed: { url: "https://town.example/calendar?api_key=private", headers: [], redirect: "follow", byteCount: 1 } });
+        seeds: [{ url: "https://town.example/calendar?api_key=private", headers: [], redirect: "follow", byteCount: 1 }] });
       await prefetchSourceRequests({ sourceId: "credential-seed", state: "US-NJ", dueAt: new Date().toISOString(),
-        seed: { url: "https://user:private@town.example/calendar", headers: [], redirect: "follow", byteCount: 1 } });
+        seeds: [{ url: "https://user:private@town.example/calendar", headers: [], redirect: "follow", byteCount: 1 }] });
     });
     assert.equal(sent, before);
   } finally { await rm(namespace, { recursive: true, force: true }); }
@@ -324,7 +414,7 @@ test("prefetch reserves held body bytes through vault completion and releases th
     };
     const work = runWithSourceFetch({ vault, runtime: { store, transport } }, () => prefetchSourceRequests({
       sourceId: "council", state: "US-NJ", dueAt: "2026-10-15T00:00:00Z",
-      seed: { url: "https://town.example/calendar", headers: [], redirect: "follow", byteCount: 220_402 },
+      seeds: [{ url: "https://town.example/calendar", headers: [], redirect: "follow", byteCount: 220_402 }],
       acquire: async bytes => {
         assert.equal(bytes, 220_402);
         events.push("reserve");
@@ -338,4 +428,54 @@ test("prefetch reserves held body bytes through vault completion and releases th
     }
     assert.deepEqual(events, ["reserve", "request", "release"]);
   }
+});
+
+test("the per-body request plan prefetches every recurring root and only currently due documents", async () => {
+  const { store, checks } = memoryStore(), vault = new MemoryEvidenceStore();
+  let now = Date.parse("2026-10-15T12:00:00Z");
+  const calls: string[] = [];
+  const context = { sourceId: "council", state: "US-NJ", vault, runtime: { store, now: () => now,
+    transport: (async (input, init) => {
+      calls.push(String(input));
+      return new Headers(init?.headers).has("if-none-match") ? new Response(null, { status: 304 })
+        : new Response("public calendar or document", { headers: { etag: '"one"' } });
+    }) as typeof fetch,
+  } };
+  const roots = ["https://town.example/rss?CID=3", "https://town.example/calendar.ics", "https://town.example/AgendaCenter"];
+  const documents = Array.from({ length: 24 }, (_, index) => `https://town.example/ViewFile?id=${index}`);
+  await runWithSourceFetch(context, async () => {
+    await runWithSourceRequestPlan({ kind: "CALENDAR" }, async () => {
+      for (const url of [...roots, "https://town.example/old-window?from=2026-01-01"]) await (await fetchSource(url)).body?.cancel();
+    });
+    for (const targetUrl of documents) await runWithSourceRequestPlan({ kind: "DOCUMENT", targetUrl }, async () => {
+      await (await fetchSource(targetUrl)).body?.cancel();
+    });
+  });
+  const plan = await store.readRequestPlan("US-NJ", "council");
+  assert.equal(plan?.calendar.length, 4);
+  assert.equal(Object.keys(plan?.documents ?? {}).length, 24);
+  now += 3_600_000;
+  const dueAt = new Date(now).toISOString(), future = new Date(now + 3_600_000).toISOString();
+  const before = calls.length;
+  await runWithSourceFetch(context, () => prefetchSourceRequests({ sourceId: "council", state: "US-NJ", dueAt,
+    seeds: plan!.calendar.filter(request => roots.includes(request.url)),
+    documents: documents.map((url, index) => ({ url, nextDueAt: index < 3 ? dueAt : future })),
+  }));
+  assert.deepEqual(calls.slice(before), [...roots, ...documents.slice(0, 3)]);
+  assert.ok(checks.slice(-6).every(check => check.unchanged && check.downloadedBytes === 0));
+  await runWithSourceFetch({ ...context, dueAt }, async () => {
+    for (const url of [...roots, ...documents.slice(0, 3)]) {
+      const response = await fetchSource(url);
+      assert.equal(response.headers.get("x-meanwhile-source-reused"), "true");
+      assert.equal(response.headers.get("x-meanwhile-source-checked-at"), dueAt);
+      await response.body?.cancel();
+    }
+  });
+  assert.equal(calls.length, before + 6, "normal serial adapters issue no duplicate network requests");
+  now += 3_600_000;
+  const nextDueAt = new Date(now).toISOString();
+  await runWithSourceFetch(context, () => prefetchSourceRequests({ sourceId: "council", state: "US-NJ", dueAt: nextDueAt,
+    calendarDueAt: new Date(now + 3_600_000).toISOString(), documents: [{ url: documents[3]!, nextDueAt }],
+  }));
+  assert.deepEqual(calls.slice(before + 6), [documents[3]], "a document-only turn never spends requests on the fresh calendar");
 });

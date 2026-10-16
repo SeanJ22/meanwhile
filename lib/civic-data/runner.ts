@@ -485,6 +485,10 @@ export interface RoutineTaskClock {
   readonly lastSucceededObservedAt?: string;
   readonly lastSucceededParserVersion?: string;
   readonly sittingStarts?: readonly string[];
+  readonly nextDocumentDueAt?: string;
+  readonly pendingDocumentCount?: number;
+  readonly lastDocumentAttemptedAt?: string;
+  readonly calendarRetryAt?: string;
 }
 
 export type RoutineTaskClockRead =
@@ -546,18 +550,20 @@ export function routineTaskDeadlineMs(
 ): number | undefined {
   const sourceChange = sourceChangeDueAtMs(task, clock, nowMs);
   if (sourceChange !== undefined) return sourceChange;
+  const documentDue = task.recordClass === "MEETING" ? Date.parse(clock?.nextDocumentDueAt ?? "") : Number.NaN;
   const schedule = task.contract?.schedule;
-  if (schedule?.kind !== "SITTING_WINDOW") return undefined;
+  if (schedule?.kind !== "SITTING_WINDOW") return Number.isFinite(documentDue) ? documentDue : undefined;
   if (!clock?.lastAttemptedAt) return Number.NEGATIVE_INFINITY;
   const attempted = Date.parse(clock.lastAttemptedAt);
   const succeeded = clock.lastSucceededObservedAt ? Date.parse(clock.lastSucceededObservedAt) : Number.NaN;
   if (!Number.isFinite(attempted)) return Number.NEGATIVE_INFINITY;
-  return sittingWindowObligation(
+  const calendarDeadline = sittingWindowObligation(
     schedule,
     task.retryMs,
     { attemptedMs: attempted, succeededMs: succeeded, published: sittingTaskPublished(task, clock) },
     sittingHot,
   ).deadlineMs;
+  return Number.isFinite(documentDue) ? Math.min(calendarDeadline, documentDue) : calendarDeadline;
 }
 
 function sittingTaskPublished(task: RoutineSourceTask, clock: RoutineTaskClock): boolean {
@@ -571,7 +577,7 @@ export function routineAdmissionClock(
 ): RoutineTaskClock | undefined {
   const attempted = Date.parse(supervisorAttemptAt ?? "");
   if (!Number.isFinite(attempted) || attempted > nowMs) return clock;
-  const sourceTimes = [clock?.lastAttemptedAt, clock?.lastSucceededAt, clock?.lastSucceededObservedAt]
+  const sourceTimes = [clock?.lastAttemptedAt, clock?.lastSucceededAt, clock?.lastSucceededObservedAt, clock?.lastDocumentAttemptedAt]
     .map(value => Date.parse(value ?? "")).filter(Number.isFinite);
   if (sourceTimes.some(at => at >= attempted)) return clock;
   return { ...clock, lastAttemptedAt: supervisorAttemptAt! };
@@ -630,7 +636,7 @@ function sourceChangeDueAtMs(task: RoutineSourceTask, clock: RoutineTaskClock | 
   return !Number.isFinite(attempted) || attempted > nowMs || attempted < changed ? changed : attempted + task.retryMs;
 }
 
-export function routineTaskDueAtMs(
+export function routineCalendarDueAtMs(
   task: RoutineSourceTask,
   clock: RoutineTaskClock | undefined,
   nowMs: number,
@@ -639,6 +645,8 @@ export function routineTaskDueAtMs(
 ): number {
   const attempted = Date.parse(clock?.lastAttemptedAt ?? "");
   const succeeded = Date.parse(clock?.lastSucceededObservedAt ?? "");
+  const calendarRetry = Date.parse(clock?.calendarRetryAt ?? "");
+  if (task.recordClass === "MEETING" && Number.isFinite(calendarRetry)) return calendarRetry;
   if (task.ownerInvocation) {
     const requested = Date.parse(task.ownerInvocation.requestedAt);
     const success = Date.parse(clock?.lastSucceededObservedAt ?? clock?.lastSucceededAt ?? "");
@@ -665,6 +673,18 @@ export function routineTaskDueAtMs(
   const cadence = observedEveryMs === undefined ? policyMs : Math.min(policyMs, Math.max(observedEveryMs, MIN_OBSERVED_CHECK_MS));
   const boundary = Date.parse(task.clockBoundaryAt ?? "");
   return Math.min(succeeded + cadence, Number.isFinite(boundary) && boundary > succeeded ? boundary : Number.POSITIVE_INFINITY);
+}
+
+export function routineTaskDueAtMs(
+  task: RoutineSourceTask,
+  clock: RoutineTaskClock | undefined,
+  nowMs: number,
+  sittingHot?: boolean,
+  observedEveryMs?: number,
+): number {
+  const calendar = routineCalendarDueAtMs(task, clock, nowMs, sittingHot, observedEveryMs);
+  const document = task.recordClass === "MEETING" ? Date.parse(clock?.nextDocumentDueAt ?? "") : Number.NaN;
+  return Number.isFinite(document) ? Math.min(calendar, document) : calendar;
 }
 
 export function routineTaskDue(

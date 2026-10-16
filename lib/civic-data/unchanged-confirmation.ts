@@ -3,6 +3,7 @@ import { derivedRequestedUrl } from "./derived-door.ts";
 import type { RoutineRecordClass, SourceCheckEvidence } from "./types.ts";
 import { sourceCheckIssue } from "./source-check.ts";
 import { authorityFor } from "./source-authority.ts";
+import { meetingDocumentChecksIssue, type MeetingDocumentChecks } from "../meetings/document-checks.ts";
 
 /** An append-only event on the pointed candidate naming the version it confirms; the pointer, candidate row and readers stay as they are. */
 export const UNCHANGED_CONFIRMATION_PREFIX = "UNCHANGED_CONFIRMATION_V1 ";
@@ -18,6 +19,7 @@ export interface UnchangedConfirmationRetrieval {
   readonly rawHash: string;
   readonly retrievedAt: string;
   readonly sourceCheck?: SourceCheckEvidence;
+  readonly meetingChecks?: MeetingDocumentChecks;
 }
 
 function isOwnDerivedRetrieval(retrieval: Record<string, unknown>, sourceId: unknown, scope: unknown): boolean {
@@ -97,10 +99,8 @@ export function unchangedConfirmationShapeIssue(value: unknown): string | null {
   if (Date.parse(retrieval.retrievedAt) > Date.parse(row.observedAt)) return "retrieved after it was observed";
   const checkIssue = sourceCheckIssue(retrieval.sourceCheck, row.observedAt);
   if (checkIssue !== null) return checkIssue;
-  if (retrieval.sourceCheck !== undefined) {
-    const check = retrieval.sourceCheck as SourceCheckEvidence;
-    if ([check.requestedUrl, check.finalUrl].some(url => !authorityFor(String(row.sourceId), row.recordClass as RoutineRecordClass, url).ok)) return "The source check is outside this source's registered authority.";
-  }
+  const documentIssue = meetingDocumentChecksIssue(retrieval.meetingChecks, row.observedAt as string);
+  if (documentIssue !== null) return documentIssue;
   const stamps = row.stamps;
   if (row.basis === "PUBLISHER_STAMPS_UNCHANGED") {
     if (!Array.isArray(stamps) || stamps.length === 0) return "a stamp basis needs every held record's stamps";
@@ -162,12 +162,18 @@ export function buildUnchangedConfirmation(
       rawHash: input.retrieval.rawHash,
       retrievedAt: input.retrieval.retrievedAt,
       ...(input.retrieval.sourceCheck ? { sourceCheck: input.retrieval.sourceCheck } : {}),
+      ...(input.retrieval.meetingChecks ? { meetingChecks: input.retrieval.meetingChecks } : {}),
     },
     stamps: input.stamps ?? null,
     observedAt,
   };
   const issue = unchangedConfirmationShapeIssue(confirmation);
-  return issue === null ? { ok: true, confirmation } : { ok: false, detail: issue };
+  if (issue !== null) return { ok: false, detail: issue };
+  const check = confirmation.retrieval.sourceCheck;
+  if (check && [check.requestedUrl, check.finalUrl].some(url => !authorityFor(confirmation.sourceId, confirmation.recordClass, url).ok)) {
+    return { ok: false, detail: "The source check is outside this source's registered authority." };
+  }
+  return { ok: true, confirmation };
 }
 
 export function latestUnchangedConfirmation(

@@ -59,6 +59,14 @@ test("normalizes recorded Pima events into Meetings", () => {
   );
 });
 
+test("a published minutes file remains a minutes source, separate from the agenda", () => {
+  const event = { ...EVENTS[0], EventMinutesFile: "https://pima.legistar.com/minutes.pdf" };
+  const meeting = normalizeWithDrops(wrap([event]), NOW).meetings[0];
+  assert.ok(meeting);
+  assert.equal(meeting.agendaUrl, event.EventAgendaFile);
+  assert.deepEqual(meeting.publishedLinks, [{ label: "Minutes", href: event.EventMinutesFile, kind: "MINUTES" }]);
+});
+
 test("wall-clock time is reassembled against the body's zone, not UTC", () => {
   // Phoenix never observes DST, so a 1:30 PM local time is 20:30Z year round.
   const event = EVENTS.find((e) => e.EventId === 1823);

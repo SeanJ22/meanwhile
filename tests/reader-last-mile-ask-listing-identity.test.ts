@@ -123,6 +123,7 @@ test("date-only listing identities remain date-only records without an invented 
 });
 
 test("a proved listing alias keeps the selected sitting's documents, publication observation and identity", async () => {
+  assert.ok(aliasTarget.provenance.sourceUrl);
   recordPublisherAgendaObservation({ meetingId: aliasTarget.id, provenance: "FIRST_PARTY_PUBLISHER", report: "AVAILABLE",
     observedAt: new Date().toISOString(), observedUrl: aliasTarget.provenance.sourceUrl,
     sourceOrg: aliasTarget.provenance.sourceOrg, evidenceQuote: "Agenda available" });

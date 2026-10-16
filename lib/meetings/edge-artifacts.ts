@@ -4,6 +4,7 @@ import { createHash } from "node:crypto";
 import { ocdStateCode } from "../ocd/state-of.ts";
 import type { Meeting } from "../sources/types.ts";
 import type { AgendaDocument } from "./agenda-documents.ts";
+import type { MeetingDocumentChecks } from "./document-checks.ts";
 import type { PromotedEdgeEntry } from "../civic-data/read-model.ts";
 import {
   snapshotCounts,
@@ -61,11 +62,19 @@ export interface MeetingPublication {
   }>;
 }
 
+export interface MeetingDocumentCheckPublication {
+  readonly chunkKey: string;
+  readonly chunkVersion: string;
+  readonly version: string;
+  readonly read: () => Promise<MeetingDocumentChecks>;
+}
+
 /** The manifest's record of one published scope artifact. */
 export interface ReaderManifestScope {
   readonly scope: string;
   readonly chunkKey?: string;
   readonly chunkVersion?: string;
+  readonly documentChecks?: { readonly key: string; readonly version: string };
   readonly ocdId?: string;
   readonly bounds?: ReaderAreaBounds;
   readonly meetingIds?: readonly string[];

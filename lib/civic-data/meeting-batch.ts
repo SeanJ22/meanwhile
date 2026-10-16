@@ -4,6 +4,8 @@ import type { BoundedChildResult } from "./bounded-child-pass.ts";
 import type { MeetingPartitionRunOptions } from "../../scripts/ingest.ts";
 import { routineScopeState } from "./state-scope.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
+import type { SittingWindowSchedule } from "./contracts.ts";
+import { MEETING_DOCUMENT_TURN_URLS } from "../meetings/document-checks.ts";
 
 export const MEETING_STATE_TURN_MS = 2 * 60_000;
 export const MEETING_STATE_CONCURRENCY = 12;
@@ -20,41 +22,51 @@ export interface MeetingBatchMember {
   readonly id: string;
   readonly dueAt: string;
   readonly nextDueAt: string;
+  readonly calendarDueAt?: string;
+  readonly meetingSchedule?: SittingWindowSchedule;
+  readonly documentRetryEveryMs?: number;
 }
 export interface MeetingBatchOptions {
   readonly onMemberStarted: (id: string) => Promise<void> | void;
   readonly onSettled: (member: MeetingBatchMember, result: BoundedChildResult) => Promise<void> | void;
   readonly now?: () => number;
-  readonly prefetch?: (member: MeetingBatchMember, signal: AbortSignal, acquire: MeetingPrefetchAcquire) => Promise<void>;
+  readonly prefetch?: (member: MeetingBatchMember, signal: AbortSignal, acquire: MeetingPrefetchAcquire, phase: "CALENDAR" | "DOCUMENT") => Promise<void>;
 }
 type MeetingPrefetchAcquire = (bytes: number, signal?: AbortSignal) => Promise<() => void>;
 export type MeetingMemberRunner = (id: string, options: MeetingPartitionRunOptions) => Promise<void>;
 let activeTurn: Promise<unknown> = Promise.resolve();
 
-function prefetchBudget(): MeetingPrefetchAcquire {
-  let used = 0;
-  const waiting: (() => void)[] = [];
-  return (bytes, signal) => new Promise((resolve, reject) => {
+function prefetchBudget() {
+  let used = 0, active = 0;
+  const waiting: { admit: () => void; priority: number }[] = [];
+  return (bytes: number, signal?: AbortSignal, priority = 0): Promise<() => void> => new Promise((resolve, reject) => {
     if (!Number.isFinite(bytes) || bytes < 0 || bytes > MEETING_PREFETCH_BYTES) { reject(new Error("PREFETCH_BYTE_BUDGET")); return; }
-    const remove = () => { const index = waiting.indexOf(admit); if (index >= 0) waiting.splice(index, 1); };
-    const abort = () => { remove(); reject(signal?.reason ?? new Error("Prefetch stopped")); waiting[0]?.(); };
+    const remove = () => { const index = waiting.findIndex(entry => entry.admit === admit); if (index >= 0) waiting.splice(index, 1); };
+    const abort = () => { remove(); reject(signal?.reason ?? new Error("Prefetch stopped")); waiting[0]?.admit(); };
     const admit = () => {
       if (signal?.aborted) { abort(); return; }
-      if (waiting[0] !== admit || used + bytes > MEETING_PREFETCH_BYTES) return;
-      remove(); signal?.removeEventListener("abort", abort); used += bytes;
+      if (waiting[0]?.admit !== admit || used + bytes > MEETING_PREFETCH_BYTES || active >= MEETING_PREFETCH_CONCURRENCY) return;
+      remove(); signal?.removeEventListener("abort", abort); used += bytes; active++;
       let released = false;
-      resolve(() => { if (released) return; released = true; used -= bytes; waiting[0]?.(); });
-      waiting[0]?.();
+      resolve(() => { if (released) return; released = true; used -= bytes; active--; waiting[0]?.admit(); });
+      waiting[0]?.admit();
     };
-    waiting.push(admit); signal?.addEventListener("abort", abort, { once: true }); admit();
+    waiting.push({ admit, priority }); waiting.sort((a, b) => a.priority - b.priority);
+    signal?.addEventListener("abort", abort, { once: true }); admit();
   });
 }
 
-async function prefetchMeetingMember(member: MeetingBatchMember, signal: AbortSignal, acquire: MeetingPrefetchAcquire): Promise<void> {
+async function prefetchMeetingMember(member: MeetingBatchMember, signal: AbortSignal, acquire: MeetingPrefetchAcquire, phase: "CALENDAR" | "DOCUMENT"): Promise<void> {
   const partition = meetingPartitionOfId(member.id);
   if (!partition) return;
   const { prefetchSourceRequests } = await import("../sources/fetch-source.ts");
-  await prefetchSourceRequests({ sourceId: member.id, state: routineScopeState(partition.bodyId), dueAt: member.dueAt, signal, acquire });
+  const { PostgresRoutineDataStore } = await import("./store.ts");
+  const { MEETING_PARTITION_POLICY } = await import("./contracts.ts");
+  const store = new PostgresRoutineDataStore();
+  const documents = phase === "DOCUMENT" ? (await store.meetingCheckState(MEETING_PARTITION_POLICY.sourceId, partition.scope)).meetingChecks?.documents
+    .filter(check => Date.parse(check.nextDueAt) <= Date.now()).slice(0, MEETING_DOCUMENT_TURN_URLS) : undefined;
+  await prefetchSourceRequests({ sourceId: member.id, state: routineScopeState(partition.bodyId), dueAt: member.dueAt,
+    calendarDueAt: member.calendarDueAt, phase, documents, signal, acquire });
 }
 
 export function runMeetingBatchPass(
@@ -75,9 +87,13 @@ export function runMeetingBatchPass(
     const fill = (index: number) => {
       while (next < Math.min(members.length, index + MEETING_PREFETCH_CONCURRENCY) && now() < until && !stop.signal.aborted) {
         const member = members[next++]!;
-        prepared.set(member.id, Promise.resolve().then(() => (options.prefetch ?? prefetchMeetingMember)(member, stop.signal, acquire)).catch(error => {
-          if (!stop.signal.aborted) console.warn(`RCD_PREFETCH ${member.id}: ${sanitizedErrorDiagnostic(error)}`);
-        }));
+        const prefetch = async (phase: "CALENDAR" | "DOCUMENT") => {
+          if (stop.signal.aborted || phase === "CALENDAR" && Date.parse(member.calendarDueAt ?? "") > now()) return;
+          try { await (options.prefetch ?? prefetchMeetingMember)(member, stop.signal,
+            (bytes, signal) => acquire(bytes, signal, phase === "CALENDAR" ? 0 : 1), phase); }
+          catch (error) { if (!stop.signal.aborted) console.warn(`RCD_PREFETCH ${member.id}: ${sanitizedErrorDiagnostic(error)}`); }
+        };
+        prepared.set(member.id, Promise.resolve().then(() => prefetch("CALENDAR")).then(() => prefetch("DOCUMENT")));
       }
     };
     try {
@@ -95,7 +111,11 @@ export function runMeetingBatchPass(
             errorMessage: "PASS_TIME_BUDGET: state turn ended before this member started", settlementErrorMessage: null };
         } else {
           await options.onMemberStarted(member.id);
-          try { await withRoutineContract(member.id, () => execute(member.id, { dueAt: member.dueAt, nextDueAt: member.nextDueAt, onReceipt: line => { receipt = line; } })); }
+          try { await withRoutineContract(member.id, () => execute(member.id, {
+            dueAt: member.dueAt, nextDueAt: member.nextDueAt, calendarDueAt: member.calendarDueAt,
+            meetingSchedule: member.meetingSchedule, documentRetryEveryMs: member.documentRetryEveryMs,
+            onReceipt: line => { receipt = line; },
+          })); }
           catch (error) { errorMessage = error instanceof Error ? error.message : String(error); }
           result = { id: member.id, status: receipt ? 0 : 1, signal: null, stdout: receipt, stderr: "", termination: "EXITED",
             errorMessage: errorMessage ?? (receipt ? null : "Meeting member returned without its source receipt"),

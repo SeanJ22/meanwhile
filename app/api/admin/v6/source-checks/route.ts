@@ -27,7 +27,10 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     if (!url) throw new Error("SOURCE_CHECK_STORE_UNAVAILABLE");
     const sql = neon(url);
     const result = await readSourceChecks(async (text, params) => await sql.query(text, [...params]) as Record<string, unknown>[],
-      state, after, new Date().toISOString(), view as "registered" | "responses");
+      state, after, new Date().toISOString(), view as "registered" | "responses", async requests => {
+        const { PostgresRoutineDataStore } = await import("@/lib/civic-data/store.ts");
+        return new PostgresRoutineDataStore().clocks(requests);
+      });
     return NextResponse.json(result, { headers: NO_STORE });
   } catch {
     return NextResponse.json({ says: "Source checks could not be read just now." }, { status: 503, headers: NO_STORE });

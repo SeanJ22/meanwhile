@@ -363,7 +363,7 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
       const sameComposition = prepared?.status === "CURRENT" && servedMeetingManifest?.meetingLayout === "governing-area" &&
         servedMeetingManifest.meetingRegistryVersion !== undefined && servedMeetingManifest.meetingRegistryVersion === meetingRegistryVersion &&
         (servedMeetingManifest.composition !== undefined ? servedMeetingManifest.composition === prepared.composition : servedMeetingManifest.generatedAt === prepared.generatedAt);
-      let checks = prepared?.status === "CURRENT" || prepared?.status === "PUBLISHED" ? { composition: prepared.composition, freshChecks: prepared.freshChecks } : undefined;
+      let checks = prepared?.status === "CURRENT" || prepared?.status === "PUBLISHED" ? { composition: prepared.composition, freshChecks: prepared.freshChecks, documentChecks: prepared.documentChecks } : undefined;
       let meetingRead: Awaited<ReturnType<typeof readPreparedMeetingPublication>> = null;
       try {
         if (prepared !== null && !sameComposition && (prepared.status === "CURRENT" || prepared.status === "PUBLISHED")) {

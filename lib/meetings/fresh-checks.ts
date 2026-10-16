@@ -1,14 +1,9 @@
 import { createHash } from "node:crypto";
 
+import type { MeetingDocumentChecks } from "./document-checks.ts";
 import type { Meeting } from "../sources/types.ts";
 import type { UnchangedConfirmation } from "../civic-data/unchanged-confirmation.ts";
 import type { MeetingsSnapshot, SnapshotSourceReport } from "./snapshot.ts";
-
-/**
- * A partition version's newest confirmation counts as a successful fresh check only when it confirms the version the
- * pointer names now and that version reads at least one source. Carried rows keep their own `lastFreshAt` and
- * `collectedAt`: a re-check that confirmed them confirmed only that they are still carried.
- */
 
 export interface MeetingPartitionFreshCheck {
   /** The route of every fresh (not carried) row the version holds, sorted. */
@@ -17,10 +12,6 @@ export interface MeetingPartitionFreshCheck {
   readonly checkedAt: string | null;
 }
 
-/**
- * The route a row was read through: its adapter (the id's namespace) and body.
- * Null for an id without a namespace, which no check is applied to.
- */
 export function meetingRouteKey(meeting: Pick<Meeting, "id" | "bodyId">): string | null {
   const colon = meeting.id.indexOf(":");
   if (colon <= 0) return null;
@@ -44,18 +35,14 @@ export function laterCheck(left: string | null | undefined, right: string | null
   return r > l ? right! : left!;
 }
 
-/**
- * The successful fresh check a confirmation records for `versionId`, or null:
- * only a confirmation of that exact version, and only for a version that reads
- * a source (`readsASource`).
- */
 export function confirmationCheckedAt(
   confirmation: Pick<UnchangedConfirmation, "versionId" | "retrieval"> | null | undefined,
   versionId: string | null | undefined,
   readsASource: boolean,
 ): string | null {
   if (!readsASource || !confirmation || !versionId || confirmation.versionId !== versionId) return null;
-  return Number.isFinite(instant(confirmation.retrieval.retrievedAt)) ? confirmation.retrieval.retrievedAt : null;
+  const checkedAt = confirmation.retrieval.sourceCheck?.checkedAt ?? confirmation.retrieval.retrievedAt;
+  return Number.isFinite(instant(checkedAt)) ? checkedAt : null;
 }
 
 /** The fresh-row routes of one partition version, or null when the version reads no source. */
@@ -79,13 +66,6 @@ function restamped(meeting: Meeting, checkedAt: string | undefined): Meeting {
   return { ...meeting, provenance: { ...meeting.provenance, collectedAt: checkedAt } };
 }
 
-/**
- * A snapshot with later successful checks applied: `generatedAt` ("Last checked")
- * becomes the later of its own and `checkedAt`, and each fresh row whose route has
- * a later check is restamped with it. Carried rows, sources, counts and every fact
- * are untouched. The snapshot itself when nothing is later, so an unchanged serve
- * stays the same object.
- */
 export function applyMeetingFreshChecks(
   snapshot: MeetingsSnapshot,
   checks: { readonly checkedAt: string | null; readonly routes: Readonly<Record<string, string>> },
@@ -99,6 +79,35 @@ export function applyMeetingFreshChecks(
     return next;
   });
   return changed ? { ...snapshot, generatedAt, meetings } : snapshot;
+}
+
+export function applyDocumentFreshChecks(snapshot: MeetingsSnapshot, checks: MeetingDocumentChecks | undefined): MeetingsSnapshot {
+  if (!checks) return snapshot;
+  const byIdentity = new Map(checks.documents.flatMap(check => check.contentHash && check.checkedAt
+    ? [[`${check.url}|${check.contentHash}`, check] as const] : []));
+  const meetingById = new Map(snapshot.meetings.map(meeting => [meeting.id, meeting]));
+  let changed = false;
+  const agendaDocuments = snapshot.agendaDocuments.map(document => {
+    const meeting = meetingById.get(document.meetingId);
+    const check = byIdentity.get(`${document.documentUrl}|${document.contentHash}`) ?? byIdentity.get(`${meeting?.agendaUrl}|${document.contentHash}`);
+    if (!check || check.url !== document.documentUrl && check.url !== meeting?.agendaUrl ||
+      Date.parse(check.checkedAt!) <= Date.parse(document.retrievedAt)) return document;
+    changed = true;
+    return { ...document, retrievedAt: check.checkedAt! };
+  });
+  const meetings = snapshot.meetings.map(meeting => {
+    let documentChanged = false;
+    const publishedDocuments = meeting.publishedDocuments?.map(document => {
+      const check = byIdentity.get(`${document.url}|${document.contentHash}`);
+      if (!check || check.url !== document.url || Date.parse(check.checkedAt!) <= Date.parse(document.checkedAt)) return document;
+      documentChanged = true;
+      return { ...document, checkedAt: check.checkedAt! };
+    });
+    if (!documentChanged) return meeting;
+    changed = true;
+    return { ...meeting, publishedDocuments };
+  });
+  return changed ? { ...snapshot, agendaDocuments, meetings } : snapshot;
 }
 
 export function applyPartitionFreshCheck(snapshot: MeetingsSnapshot, checkedAt: string | null): MeetingsSnapshot {
@@ -120,13 +129,6 @@ export interface FreshCheckCoupling {
   readonly checkedAt?: string | null;
 }
 
-/**
- * What the serving copy and the edge apply for a set of coupled versions:
- * `checkedAt`, the newest check of any version that reads a source (the footer's
- * "Last checked" floor), and each route's newest check. A route two versions both
- * hold is left out: it cannot be told which version's check its rows had, and a
- * row is never stamped fresher than it is proven.
- */
 export function meetingFreshChecks(couplings: readonly FreshCheckCoupling[]): {
   readonly checkedAt: string | null;
   readonly routes: Readonly<Record<string, string>>;
@@ -156,11 +158,6 @@ export function sameMeetingFreshChecks(
   return l.length === r.length && l.every(([route, at], index) => r[index]![0] === route && r[index]![1] === at);
 }
 
-/**
- * The identity of a composition: the exact partition versions it was composed
- * from. The same versions compose the same rows, whatever checks came after, so
- * the edge can tell a check from a new composition without reading either.
- */
 export function meetingCompositionId(couplings: readonly Pick<FreshCheckCoupling, "contractId" | "versionId">[]): string {
   const fingerprint = couplings.map((entry) => `${entry.contractId}=${entry.versionId}`).sort().join("|");
   return createHash("sha256").update(fingerprint).digest("hex");

@@ -881,8 +881,9 @@ test("a largest-state meeting publication reads all current and history pointers
   const columns: NeonColumn[] = [["key","text"],["source_id","text"],["record_class","text"],["scope","text"],
     ["current_version_id","text"],["last_known_good_version_id","text"],["promoted_at","timestamptz"]];
   await withCannedNeon(statement => {
-    assert.ok(statement.params.length <= 131,`bounded parameter count: ${statement.params.length}`);
     const selected = statement.params.filter((value): value is string => typeof value === "string" && /^(?:MEETING:)?US-IL:meeting:fixture-/.test(value));
+    const candidateKeys = statement.params.filter(value => typeof value === "string" && value.startsWith("cv-batch-"));
+    assert.ok(selected.length + candidateKeys.length <= 128, `bounded identity count: ${selected.length + candidateKeys.length}`);
     if (statement.query.includes(".xmin")) return {
       columns: [["key","text"],["etag","text"],...(statement.query.includes("latestConfirmation") ? [["latestConfirmation","text"] as const] : [])],
       rows: selected.map(key => [key,"unchanged",...(statement.query.includes("latestConfirmation") ? [null] : [])]),
@@ -1192,7 +1193,8 @@ test("the Postgres retry clock keeps failed attempts local and uses an observed 
   assert.match(attempt, /max\(CASE WHEN c\.state='PROMOTED' AND c\.acquisition_succeeded=true/);
   assert.match(attempt, /CASE WHEN pg_input_is_valid\([\s\S]*THEN least\([\s\S]*retrieval,sourceCheck,checkedAt[\s\S]*e\.at\) END\s+ELSE e\.at END\)/);
   assert.match(attempt, /e\.candidate_id=c\.id AND e\.sequence=1/);
-  assert.match(attempt, /c\.source_id=requested\.source_id AND c\.record_class=requested\.record_class AND c\.scope=requested\.scope/);
+  assert.match(attempt, /WHERE record_class=requested\.record_class AND scope=requested\.scope OFFSET 0\) c/);
+  assert.match(attempt, /WHERE c\.source_id=requested\.source_id/);
   assert.doesNotMatch(attempt, /retrievedAt|retrieved_at/, "an untrusted future retrievedAt would postpone a source retry");
 });
 

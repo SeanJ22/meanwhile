@@ -16,6 +16,7 @@ import {
   type PromotedFamilyArtifactValue,
   type ReaderGeoArtifact,
   type MeetingPublication,
+  type MeetingDocumentCheckPublication,
   type ReaderManifest,
   type ReaderManifestScope,
 } from "./edge-artifacts.ts";
@@ -36,7 +37,8 @@ import {
 import {
   readPreparedMeetingsProjection,
 } from "./prepared-snapshot.ts";
-import { applyMeetingFreshChecks, laterCheck, sameMeetingFreshChecks } from "./fresh-checks.ts";
+import { applyDocumentFreshChecks, applyMeetingFreshChecks, laterCheck, sameMeetingFreshChecks } from "./fresh-checks.ts";
+import { meetingDocumentChecksIssue, type MeetingDocumentChecks } from "./document-checks.ts";
 import {
   MEETINGS_RECORD_CLASS,
   MEETINGS_SCOPE,
@@ -84,6 +86,36 @@ export interface PublishMetadata {
 export interface PublishReaderChecks {
   readonly composition: string;
   readonly freshChecks: Readonly<Record<string, string>>;
+  readonly documentChecks?: AsyncIterable<MeetingDocumentCheckPublication>;
+}
+
+async function scopesWithDocumentChecks(scopes: readonly ReaderManifestScope[], updates: AsyncIterable<MeetingDocumentCheckPublication> | undefined, store: ReaderArtifactStore): Promise<readonly ReaderManifestScope[]> {
+  if (!updates) return scopes;
+  const result = [...scopes], byChunk = new Map<string, number[]>(), suppliedChunks = new Set<string>();
+  for (const [index, scope] of scopes.entries()) if (scope.chunkKey !== undefined) {
+    const indices = byChunk.get(scope.chunkKey) ?? [];
+    indices.push(index); byChunk.set(scope.chunkKey, indices);
+  }
+  for await (const update of updates) {
+    suppliedChunks.add(update.chunkKey);
+    const indices = byChunk.get(update.chunkKey);
+    if (!indices?.length) continue;
+    if (indices.some(index => result[index]!.chunkVersion !== update.chunkVersion)) throw new Error("MEETING_DOCUMENT_CHECKS_RACED");
+    if (indices.every(index => result[index]!.documentChecks?.version === update.version)) continue;
+    const checks = await update.read();
+    const key = await store.putImmutable(Buffer.from(JSON.stringify({ version: update.version, checks }), "utf8"), "json");
+    for (const index of indices) result[index] = { ...result[index]!, documentChecks: { key, version: update.version } };
+  }
+  for (const [index, scope] of result.entries()) if (scope.documentChecks && scope.chunkKey !== undefined && !suppliedChunks.has(scope.chunkKey)) {
+    const { documentChecks: _documentChecks, ...withoutChecks } = scope;
+    result[index] = withoutChecks;
+  }
+  return result;
+}
+
+function sameDocumentCheckRefs(left: readonly ReaderManifestScope[], right: readonly ReaderManifestScope[]): boolean {
+  const versions = new Map(left.map(scope => [scope.scope, scope.documentChecks?.key]));
+  return left.length === right.length && right.every(scope => versions.get(scope.scope) === scope.documentChecks?.key);
 }
 
 function manifestStatesChecks(manifest: ReaderManifest, generatedAt: string, checks: PublishReaderChecks | undefined): boolean {
@@ -96,13 +128,14 @@ function manifestWithChecks(
   manifest: ReaderManifest,
   sequence: number,
   update: { readonly generatedAt: string; readonly retrievedAt: string | null; readonly checks: PublishReaderChecks | undefined;
-    readonly publicationFingerprint?: string },
+    readonly publicationFingerprint?: string; readonly scopes?: readonly ReaderManifestScope[] },
 ): ReaderManifest {
   const { freshChecks: _freshChecks, composition: _composition, publicationFingerprint: _publicationFingerprint, ...rest } = manifest;
   return {
     ...rest,
     sequence,
     generatedAt: update.generatedAt,
+    scopes: update.scopes ?? manifest.scopes,
     retrievedAt: laterCheck(manifest.retrievedAt, update.retrievedAt),
     ...(update.publicationFingerprint ? { publicationFingerprint: update.publicationFingerprint } : {}),
     ...(update.checks && Object.keys(update.checks.freshChecks).length > 0 ? { freshChecks: update.checks.freshChecks } : {}),
@@ -128,13 +161,16 @@ export async function publishReaderEdgeChecks(
     return { status: "NOT_COMPOSABLE", detail: "the served manifest was partitioned from another composition" };
   }
   const generatedAt = laterCheck(current.manifest.generatedAt, update.generatedAt) ?? update.generatedAt;
-  if (manifestStatesChecks(current.manifest, generatedAt, update.checks)) {
+  let scopes: readonly ReaderManifestScope[];
+  try { scopes = await scopesWithDocumentChecks(current.manifest.scopes, update.checks.documentChecks, store); }
+  catch (error) { return { status: "FAILED", error: error instanceof Error ? error.message : String(error) }; }
+  if (manifestStatesChecks(current.manifest, generatedAt, update.checks) && sameDocumentCheckRefs(current.manifest.scopes, scopes)) {
     return { status: "CURRENT", sequence: current.manifest.sequence, scopes: current.manifest.scopes.length };
   }
   const sequence = current.manifest.sequence + 1;
   let result;
   try {
-    result = await store.writeManifest(manifestWithChecks(current.manifest, sequence, { ...update, generatedAt }), current.etag ?? null);
+    result = await store.writeManifest(manifestWithChecks(current.manifest, sequence, { ...update, generatedAt, scopes }), current.etag ?? null);
   } catch (error) {
     return { status: "FAILED", error: error instanceof Error ? error.message : String(error) };
   }
@@ -505,7 +541,7 @@ export async function publishReaderEdgeArtifacts(
     return { status: "FAILED", error: error instanceof Error ? error.message : String(error) };
   }
 
-  const manifestScopes: ReaderManifestScope[] = publication === null && store.state ? [...(current?.manifest.scopes ?? [])] : [];
+  let manifestScopes: ReaderManifestScope[] = publication === null && store.state ? [...(current?.manifest.scopes ?? [])] : [];
   const shaByScope = new Map<string, string>();
   try {
     const priorScopes = new Map(current?.manifest.scopes.map(scope => [scope.scope, scope]));
@@ -558,6 +594,7 @@ export async function publishReaderEdgeArtifacts(
       }
     }
     manifestScopes.sort((a, b) => a.scope.localeCompare(b.scope));
+    manifestScopes = [...await scopesWithDocumentChecks(manifestScopes, options.checks?.documentChecks, store)];
   } catch (error) {
     return { status: "FAILED", error: error instanceof Error ? error.message : String(error) };
   }
@@ -584,7 +621,7 @@ export async function publishReaderEdgeArtifacts(
       const generatedAt = publication?.generatedAt || (options.checks ? laterCheck(current.manifest.generatedAt, metadata.retrievedAt) : null) || current.manifest.generatedAt;
       const checks = options.checks ?? (publication === null && current.manifest.composition !== undefined
         ? { composition: current.manifest.composition, freshChecks: current.manifest.freshChecks ?? {} } : undefined);
-      if (manifestStatesChecks(current.manifest, generatedAt, checks) &&
+      if (manifestStatesChecks(current.manifest, generatedAt, checks) && sameDocumentCheckRefs(current.manifest.scopes, manifestScopes) &&
           (options.publicationFingerprint === undefined || current.manifest.publicationFingerprint === options.publicationFingerprint)) {
         return { status: "CURRENT", sequence: current.manifest.sequence, scopes: current.manifest.scopes.length };
       }
@@ -593,7 +630,7 @@ export async function publishReaderEdgeArtifacts(
       try {
         written = await store.writeManifest(
           { ...manifestWithChecks(current.manifest, sequence, { generatedAt, retrievedAt: metadata.retrievedAt, checks,
-            publicationFingerprint: options.publicationFingerprint }), sources: publication?.sources ?? current.manifest.sources },
+            publicationFingerprint: options.publicationFingerprint, scopes: manifestScopes }), sources: publication?.sources ?? current.manifest.sources },
           current.etag ?? null,
         );
       } catch (error) {
@@ -819,15 +856,26 @@ async function readReaderEdgeMeetingsHeld(options: ReaderEdgeMeetingsOptions): P
   const cachedArea = areaReads.get(areaKey);
   if (cachedArea) return cachedArea;
   let artifacts: ReaderGeoArtifact[];
+  const documentChecks: MeetingDocumentChecks["documents"][number][] = [];
   try {
     const fetched = await Promise.all(needed.map(scope => fetchScopeArtifact(scope,store)));
     artifacts = fetched.filter((artifact): artifact is ReaderGeoArtifact => artifact !== null);
+    const refs = new Map(needed.flatMap(scope => scope.documentChecks ? [[scope.documentChecks.key, scope.documentChecks] as const] : []));
+    for (const ref of refs.values()) {
+      const bytes = await store.readBytes(ref.key);
+      if (!bytes) throw new Error("MEETING_DOCUMENT_CHECKS_MISSING");
+      const envelope = JSON.parse(Buffer.from(bytes).toString("utf8")) as { version: string; checks: MeetingDocumentChecks };
+      if (envelope.version !== ref.version || !Array.isArray(envelope.checks?.documents) ||
+        envelope.checks.documents.some(check => meetingDocumentChecksIssue({ documents: [check] }) !== null)) throw new Error("MEETING_DOCUMENT_CHECKS_INVALID");
+      documentChecks.push(...envelope.checks.documents);
+    }
   } catch { return fallback(); }
   if (artifacts.length !== needed.length) return fallback();
   const latest = (key: "generatedAt" | "sourceThrough" | "retrievedAt" | "promotedThrough") => manifests
     .flatMap(manifest => manifest[key] === null ? [] : [manifest[key]!]).sort().at(-1) ?? null;
-  const value = applyMeetingFreshChecks(mergeScopeArtifacts(artifacts,{ generatedAt: latest("generatedAt")!,sources: manifests.flatMap(manifest => manifest.sources) }),
-    { checkedAt: null,routes: Object.assign({},...manifests.map(manifest => manifest.freshChecks ?? {})) });
+  documentChecks.sort((a, b) => Date.parse(a.checkedAt!) - Date.parse(b.checkedAt!));
+  const value = applyDocumentFreshChecks(applyMeetingFreshChecks(mergeScopeArtifacts(artifacts,{ generatedAt: latest("generatedAt")!,sources: manifests.flatMap(manifest => manifest.sources) }),
+    { checkedAt: null,routes: Object.assign({},...manifests.map(manifest => manifest.freshChecks ?? {})) }), { documents: documentChecks });
 
   const read: MeetingsProjectionReadResult = { kind: "PROMOTED",value,metadata: { recordClass: MEETINGS_RECORD_CLASS,
     scope: MEETINGS_SCOPE,sourceId: MEETINGS_SOURCE_ID,version: null,versionId: null,lastKnownGoodVersionId: null,

@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { test } from "node:test";
 
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
+import { memoryWebsitePacing } from "../lib/control-plane/website-pacing.ts";
 import { PUBLISHER_PAGE_SIGNAL, isPublisherPageNote } from "../lib/meetings/agenda-content.ts";
 import {
   AgendaDocumentStore,
@@ -12,12 +14,8 @@ import {
   type AgendaDocument,
 } from "../lib/meetings/agenda-documents.ts";
 import type { Meeting } from "../lib/sources/types.ts";
-
-/**
- * The agenda-document store's append-only contract, and retrieval against a
- * stubbed fetch. No live calls; extraction failure is a recorded state, not
- * an exception.
- */
+import { runWithSourceFetch } from "../lib/sources/fetch-source.ts";
+import type { SavedSourceResponse, SourceFetchStore } from "../lib/sources/fetch-source-state.ts";
 
 function docOf(meetingId: string, hash: string, text: string): AgendaDocument {
   return {
@@ -51,6 +49,19 @@ test("an unchanged document is not stored twice", () => {
   assert.equal(store.documentCount, 1);
 });
 
+test("an unchanged successful check advances only the last-check date and never moves it backwards", () => {
+  const store = new AgendaDocumentStore();
+  const original = { ...docOf("m1", "aaa", "v1"), verifiedAt: "2026-08-13T01:00:00Z" };
+  store.append(original);
+  const checkedAt = "2026-08-14T00:00:00Z";
+  assert.deepEqual(store.append({ ...original, retrievedAt: checkedAt, collectedAt: checkedAt, verifiedAt: null }),
+    { stored: false, revised: false });
+  assert.deepEqual(store.latestFor("m1"), { ...original, retrievedAt: checkedAt });
+  store.append(original);
+  assert.deepEqual(store.latestFor("m1"), { ...original, retrievedAt: checkedAt });
+  assert.equal(store.documentCount, 1);
+});
+
 test("a revised agenda appends beside the old version, never over it", () => {
   const store = new AgendaDocumentStore();
   store.append(docOf("m1", "aaa", "the original"));
@@ -61,7 +72,7 @@ test("a revised agenda appends beside the old version, never over it", () => {
   assert.equal(versions.length, 2, "both versions kept");
   assert.equal(versions[0].text, "the original");
   assert.equal(store.latestFor("m1")?.text, "the revision");
-  assert.equal(store.latestHashFor("m1"), "bbb");
+  assert.equal(store.latestFor("m1")?.contentHash, "bbb");
 });
 
 test("extractHtmlText strips markup and scripts, keeps the words", () => {
@@ -120,6 +131,79 @@ test("retrieveAgendaDocument extracts HTML text and records provenance", async (
   assert.equal(doc.sourceOrg, "Example Clerk");
   assert.ok(doc.contentHash.length === 64, "sha-256 hex");
   assert.equal(doc.id, `stub:x:1@${doc.contentHash}`);
+});
+
+test("unchanged HTML reuses only the same meeting's exact URL and byte hash", async t => {
+  const held = new AgendaDocumentStore();
+  const body = "<html><main><p>1. Call to order.</p><p>2. Approval of the agenda.</p></main></html>";
+  const read = (meeting: Meeting) => retrieveAgendaDocument(meeting, { held, fetchImpl: stubFetch(body, "text/html") });
+  const first = await read(meetingWithAgenda);
+  assert.ok(first);
+  held.append(first);
+  const decode = t.mock.method(TextDecoder.prototype, "decode");
+  const same = await read(meetingWithAgenda);
+  assert.equal(same?.text, first.text);
+  assert.equal(same?.collectedAt, first.collectedAt);
+  assert.equal(decode.mock.callCount(), 0, "the held successful extraction avoids decoding and HTML extraction");
+  const otherMeeting = await read({ ...meetingWithAgenda, id: "stub:x:2" });
+  assert.equal(otherMeeting?.meetingId, "stub:x:2");
+  assert.equal(decode.mock.callCount(), 1, "another meeting must acquire its own extraction");
+  const otherUrl = await read({ ...meetingWithAgenda, agendaUrl: "https://example.gov/another-agenda" });
+  assert.equal(otherUrl?.documentUrl, "https://example.gov/another-agenda");
+  assert.equal(decode.mock.callCount(), 2, "a different document URL is checked separately");
+});
+
+test("a failed extraction retries the same bytes and repairs its existing version", async () => {
+  const held = new AgendaDocumentStore(), body = "<html><main><p>Public Hearing</p></main></html>";
+  const original = { ...docOf(meetingWithAgenda.id, contentHashOf(new TextEncoder().encode(body)), ""),
+    documentUrl: meetingWithAgenda.agendaUrl!, sourceUrl: meetingWithAgenda.agendaUrl!, contentType: "text/html",
+    text: null, extraction: "failed" as const, extractionNote: "The previous extractor could not run." };
+  held.append(original);
+  const retry = await retrieveAgendaDocument(meetingWithAgenda, { held, fetchImpl: stubFetch(body, "text/html") });
+  assert.equal(retry?.extraction, "html");
+  assert.equal(retry?.text, "Public Hearing");
+  assert.deepEqual(held.append(retry!), { stored: true, revised: false });
+  assert.equal(held.documentCount, 1);
+  assert.equal(held.latestFor(meetingWithAgenda.id)?.collectedAt, original.collectedAt);
+  assert.equal(held.latestFor(meetingWithAgenda.id)?.text, "Public Hearing");
+});
+
+test("a conditional PDF check reuses its successful extraction and a cached replay preserves the wire check time", async t => {
+  const { PDFWorker } = await import("pdfjs-dist/legacy/build/pdf.mjs");
+  const extraction = t.mock.method(PDFWorker, "create");
+  const bytes = readFileSync("tests/fixtures/pima-edu/agenda-2026-08-10.pdf");
+  const values = new Map<string, SavedSourceResponse>();
+  const store: SourceFetchStore = {
+    pacing: memoryWebsitePacing(), withLease: async (_key, operation) => operation(),
+    read: async key => values.get(key) ?? null, readRequestPlan: async () => null, saveRequestGroup: async () => {},
+    record: async (key, value) => { if (value) values.set(key, value); },
+  };
+  const held = new AgendaDocumentStore(), vault = new MemoryEvidenceStore();
+  const meeting = { ...meetingWithAgenda, agendaUrl: "https://example.gov/agenda.pdf" };
+  let clock = Date.parse("2026-10-15T00:00:00.000Z"), requests = 0;
+  const transport: typeof fetch = async (_url, init) => {
+    requests++;
+    if (requests === 1) return new Response(bytes, { headers: { "content-type": "application/pdf", etag: '"agenda-one"' } });
+    assert.equal(new Headers(init?.headers).get("if-none-match"), '"agenda-one"');
+    return new Response(null, { status: 304 });
+  };
+  const read = (dueAt: string) => runWithSourceFetch({ sourceId: meeting.id, dueAt, vault,
+    runtime: { store, transport, now: () => clock } }, () => retrieveAgendaDocument(meeting, { held }));
+  const first = await read(new Date(clock).toISOString());
+  assert.equal(first?.extraction, "pdf");
+  assert.ok(first?.text?.includes("Agenda"));
+  assert.equal(extraction.mock.callCount(), 1);
+  const original = { ...first!, verifiedAt: "2026-10-15T00:01:00.000Z" };
+  held.append(original);
+  clock += 3_600_000;
+  const dueAt = new Date(clock).toISOString(), checked = await read(dueAt);
+  assert.deepEqual(checked, { ...original, retrievedAt: dueAt });
+  assert.deepEqual(held.append(checked!), { stored: false, revised: false });
+  clock += 300_000;
+  assert.deepEqual(await read(dueAt), checked, "saved response reuse cannot claim the later parser time as a source check");
+  assert.equal(extraction.mock.callCount(), 1, "the unchanged PDF never enters the extraction engine again");
+  assert.equal(requests, 2, "one initial download and one conditional check");
+  assert.equal(held.documentCount, 1);
 });
 
 test("a meeting with no agenda link yields null, not a fabricated fetch", async () => {

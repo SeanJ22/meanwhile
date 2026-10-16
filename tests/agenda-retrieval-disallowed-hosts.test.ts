@@ -8,8 +8,6 @@ import { join } from "node:path";
 import { agendaDocumentStore } from "../lib/meetings/agenda-documents.ts";
 import { isLegistarMeetingDetailUrl, isPortalAgendaLinkFor, portalAgendaLinkFrom } from "../lib/sources/legistar/portal-agenda-link.ts";
 
-
-
 const AGENDA_HTML = "<html><body><h1>Agenda</h1><p>1. Call to order.</p><p>2. Adjourn.</p></body></html>";
 const DEAD_RETIRED_HOST_URL = "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3370";
 /** A real agenda PDF with a text layer, standing in for the vendor's file. */
@@ -56,7 +54,7 @@ const pimaMeeting = (id: string, agendaUrl: string, sourceUrl = "https://pima.le
 });
 
 async function run(meetings: unknown[], respond: (url: string, init?: RequestInit) => Response): Promise<{ requested: string[]; logged: string[] }> {
-  const { retrieveAgendas } = await import("../scripts/ingest.ts");
+  const { retrieveMeetingDocuments } = await import("../scripts/ingest.ts");
   const requested: string[] = [];
   const logged: string[] = [];
   const realLog = console.log;
@@ -67,7 +65,7 @@ async function run(meetings: unknown[], respond: (url: string, init?: RequestIni
   }) as typeof fetch;
   console.log = (...args: unknown[]) => { logged.push(args.map(String).join(" ")); };
   try {
-    await withSourceTransport(transport, () => retrieveAgendas(meetings as never));
+    await withSourceTransport(transport, () => retrieveMeetingDocuments(meetings as never));
   } finally {
     console.log = realLog;
   }
@@ -76,7 +74,7 @@ async function run(meetings: unknown[], respond: (url: string, init?: RequestIni
 
 test("the ingest's agenda retrieval reads a robots-disallowed vendor host, and holds only a dead retired host's link", async () => {
   const vendor = "https://legistar.granicus.com/pima/meetings/2026/9/990001_A_Board_of_Supervisors_26-09-22_Online_Agenda.pdf";
-  const { requested, logged } = await run(
+  const { requested } = await run(
     [
       // No detail page on the row, so there is no portal route: the vendor file is the route.
       pimaMeeting("legistar:pima:990001", vendor),
@@ -92,13 +90,12 @@ test("the ingest's agenda retrieval reads a robots-disallowed vendor host, and h
   assert.ok(requested.some((url) => new URL(url).hostname === "webapi.legistar.com"), `the API host was not read: ${requested.join(", ")}`);
   assert.ok(!requested.some((url) => new URL(url).hostname === "newburynh.civicweb.net"), "a host that no longer resolves is never requested");
   assert.equal(agendaDocumentStore.latestFor("legistar:pima:990001")?.documentUrl, vendor, "the vendor's agenda is stored");
-  assert.ok(logged.some((line) => line.includes("1 link(s) held as links only") && line.includes("retired route's")), logged.join("\n"));
+  assert.equal(agendaDocumentStore.latestFor("legistar:pima:990006"), null);
 });
-
 
 test("an agenda link that redirects into a dead retired host is held as a link; a redirect into a robots-disallowed host is followed", async () => {
   const vendor = "https://legistar.granicus.com/pima/meetings/2026/9/990003_A_Agenda.pdf";
-  const { requested, logged } = await run(
+  const { requested } = await run(
     [
       pimaMeeting("legistar:pima:990003", "https://redirecting.example.gov/View.ashx?M=A&ID=990003"),
       pimaMeeting("legistar:pima:990004", "https://moved.example.gov/agenda/990004"),
@@ -118,10 +115,7 @@ test("an agenda link that redirects into a dead retired host is held as a link; 
   assert.ok(requested.includes("https://moved.example.gov/agendas/990004.html"), `a redirect is still followed: ${requested.join(", ")}`);
   assert.ok(!requested.some((url) => new URL(url).hostname === "newburynh.civicweb.net"), `a dead retired host was requested through a redirect: ${requested.join(", ")}`);
   assert.ok(requested.includes("https://to-dead.example.gov/agenda/990007"), "the first hop is still requested");
-  assert.ok(logged.some((line) => line.includes("agenda link held as a link for legistar:pima:990007") && line.includes("retired route's")), logged.join("\n"));
-  assert.ok(logged.some((line) => line.includes("1 redirect(s) into a refused host not followed") && /, 2 stored, .*, 0 failed, /.test(line)), logged.join("\n"));
 });
-
 
 const DETAIL_1828 = "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1828&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394";
 const PORTAL_AGENDA_1828 = "https://pima.legistar.com/View.ashx?M=A&ID=1381577&GUID=00EFD752-6A28-42D3-B329-E717E49891D0&G=7B470E9E-E35C-4698-8FA6-D778FB28F394";
@@ -155,7 +149,6 @@ test("a vendor-host API agenda link is read through the sitting's portal link fi
   const first = await run([sept22], respond);
   const second = await run([sept22], respond);
   const requested = [...first.requested, ...second.requested];
-  const logged = [...first.logged, ...second.logged];
   assert.ok(!requested.includes(vendor), `the vendor file is the fallback, and the portal linked the agenda: ${requested.join(", ")}`);
   assert.equal(requested.filter((url) => url === DETAIL_1828).length, 1, `the detail page is read once, then its link is reused: ${requested.join(", ")}`);
   assert.equal(requested.filter((url) => url === PORTAL_AGENDA_1828).length, 2, "the portal agenda is read on each pass");
@@ -164,7 +157,7 @@ test("a vendor-host API agenda link is read through the sitting's portal link fi
   assert.equal(held.documentUrl, PORTAL_AGENDA_1828, "and records the link it was actually read from");
   assert.equal(held.sourceUrl, PORTAL_AGENDA_1828, "its provenance is the portal URL it was read from");
   assert.match(held.text ?? "", /Data Center Development Standards/);
-  assert.ok(logged.some((line) => /, 1 vendor-host link\(s\) read through the portal, 0 read from the vendor's file, /.test(line)), logged.join("\n"));
+
 });
 
 test("when the portal page links no agenda, or cannot be read, the vendor's file is read instead", async () => {
@@ -175,7 +168,7 @@ test("when the portal page links no agenda, or cannot be read, the vendor's file
     pimaMeeting("legistar:pima:990008", vendor(990008), detail(990008)),
     pimaMeeting("legistar:pima:990009", vendor(990009), detail(990009)),
   ];
-  const { requested, logged } = await run(rows, (url, init) => {
+  const { requested } = await run(rows, (url, init) => {
     if (init?.redirect !== "manual") throw new Error(`requested with redirects left to fetch: ${url}`);
     // Posted on the vendor's host, not yet linked from the portal page.
     if (url === detail(990005)) return new Response(unpostedExcerpt, { status: 200, headers: { "content-type": "text/html; charset=utf-8" } });
@@ -194,7 +187,4 @@ test("when the portal page links no agenda, or cannot be read, the vendor's file
     assert.equal(held?.extraction, "pdf", `and read for ${n}`);
   }
   assert.ok(!requested.some((url) => new URL(url).hostname === "newburynh.civicweb.net"), "a dead retired host is never requested");
-  assert.ok(logged.some((line) => line.includes("legistar:pima:990005 read from the vendor's file: its portal detail page links no agenda yet")), logged.join("\n"));
-  assert.ok(logged.some((line) => line.includes("legistar:pima:990008 read from the vendor's file: its portal detail page could not be read (HTTP 503")), logged.join("\n"));
-  assert.ok(logged.some((line) => /, 0 vendor-host link\(s\) read through the portal, 3 read from the vendor's file, /.test(line)), logged.join("\n"));
 });

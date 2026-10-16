@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import test from "./helpers/playbooks.ts";
+import test, { afterEach } from "./helpers/playbooks.ts";
 
 import { agendaItems, agendaTopicFor, type AgendaDocumentLike } from "../lib/routing/agenda-search.ts";
 import { classifyAgendaPublication } from "../lib/ask/agenda-publication.ts";
@@ -11,6 +11,11 @@ import {
   type BindableEntity,
 } from "../lib/routing/named-entity.ts";
 import type { Meeting } from "../lib/sources/types.ts";
+import { AgendaDocumentStore, agendaDocumentStore, contentHashOf, type AgendaDocument } from "../lib/meetings/agenda-documents.ts";
+import { retrieveMeetingDocuments, seedHeldAgendaDocuments } from "../scripts/ingest.ts";
+import { withSourceTransport } from "./helpers/source-fetch.ts";
+
+afterEach(() => agendaDocumentStore.clear());
 
 const DISTRICT = "ocd-division/country:us/state:xx/school_district:example_unified_district";
 const TOWN_A = "ocd-division/country:us/state:xx/place:alpha";
@@ -46,6 +51,21 @@ const snapshot: { meetings: Pick<Meeting, "id" | "ocdId">[]; agendaDocuments: Ag
     agendaDocument("gamma-1", "https://gamma.example.gov/calendar", CALENDAR),
   ],
 };
+
+function heldMeeting(row: Pick<Meeting, "id" | "ocdId">, agendaUrl: string): Meeting {
+  return { ...row, bodyId: `${row.ocdId}#governing`, bodyName: "Example council", title: "Council meeting",
+    startsAt: "2026-08-21T12:00:00.000Z", timeZone: "America/Phoenix", location: null, agendaUrl,
+    jurisdiction: "Example", status: "CONCLUDED", provenance: { sourceUrl: agendaUrl, sourceOrg: "Example publisher",
+      collectedAt: "2026-08-21T00:00:00.000Z", verifiedAt: null } };
+}
+
+function heldDocument(row: AgendaDocumentLike): AgendaDocument {
+  const contentHash = contentHashOf(new TextEncoder().encode(row.text ?? ""));
+  return { id: `${row.meetingId}@${contentHash}`, meetingId: row.meetingId, ocdId: snapshot.meetings.find(meeting => meeting.id === row.meetingId)!.ocdId,
+    documentUrl: row.documentUrl, contentHash, retrievedAt: "2026-08-21T00:00:00.000Z", contentType: "text/html",
+    text: row.text ?? null, extraction: "html", extractionNote: null, sourceUrl: row.documentUrl,
+    sourceOrg: "Example publisher", collectedAt: "2026-08-21T00:00:00.000Z", verifiedAt: null };
+}
 
 /** The same inventory the route builds, from the canonical division id. */
 function entities(): BindableEntity[] {
@@ -235,26 +255,21 @@ test("a document belonging to TWO governments is never handed to either as its a
 });
 
 test("the ingest refuses to carry forward a document belonging to two governments", () => {
-  const ingest = readFileSync(join(process.cwd(), "scripts/ingest.ts"), "utf8");
-  assert.match(
-    ingest,
-    /agenda documents carried forward/,
-    "the carry-forward no longer states its denominator",
-  );
-  assert.match(
-    ingest,
-    /more than one government/,
-    "the ingest no longer re-checks a carried-forward document's government",
-  );
-  assert.ok(
-    !/for \(const doc of previous\.agendaDocuments\) agendaDocumentStore\.append\(doc\);/.test(
-      ingest,
-    ),
-    "the unconditional carry-forward is back — a wiring error would become permanent again",
-  );
+  const store = new AgendaDocumentStore();
+  const documents = snapshot.agendaDocuments.map(heldDocument);
+  const result = seedHeldAgendaDocuments({ agendaDocuments: documents,
+    meetings: snapshot.meetings.map(row => heldMeeting(row, documents.find(document => document.meetingId === row.id)!.documentUrl)),
+  }, store);
+  assert.equal(result.carried + result.refused + result.noticePagesSetAside, documents.length);
+  assert.equal(result.carried, 3);
+  assert.equal(result.refused, 2);
+  assert.deepEqual([...result.refusedUrls], ["https://gamma.example.gov/calendar"]);
+  assert.equal(store.latestFor("beta-1"), null);
+  assert.equal(store.latestFor("gamma-1"), null);
+  assert.deepEqual(store.latestFor("alpha-1"), documents.find(document => document.meetingId === "alpha-1"));
 });
 
-test("the ingest refuses a landing page, and the rule is drawn where the evidence is", () => {
+test("the ingest refuses a reused landing page while retaining a joint agenda that states items", async () => {
   const byUrl = new Map<string, AgendaDocumentLike[]>();
   for (const d of snapshot.agendaDocuments) {
     const a = byUrl.get(d.documentUrl) ?? [];
@@ -264,7 +279,6 @@ test("the ingest refuses a landing page, and the rule is drawn where the evidenc
 
   let sharedDocs = 0;
   let sharedYieldingItems = 0;
-  let soloDocs = 0;
   let soloYieldingItems = 0;
   for (const arr of byUrl.values()) {
     const items = agendaItems(arr[0].text).length;
@@ -272,7 +286,6 @@ test("the ingest refuses a landing page, and the rule is drawn where the evidenc
       sharedDocs += arr.length;
       if (items > 0) sharedYieldingItems += arr.length;
     } else {
-      soloDocs++;
       if (items > 0) soloYieldingItems++;
     }
   }
@@ -289,13 +302,28 @@ test("the ingest refuses a landing page, and the rule is drawn where the evidenc
     "no solo document yields an item either — then the extractor is broken, not the sharing",
   );
 
-  const ingest = readFileSync(join(process.cwd(), "scripts/ingest.ts"), "utf8");
-  assert.match(
-    ingest,
-    /alreadyOnAnotherMeeting && agendaItems\(doc\.text\)\.length === 0/,
-    "the landing-page refusal is no longer conditioned on yielding NO items — a joint agenda would be discarded",
-  );
-  assert.match(ingest, /landing page\(s\) refused/, "the refusal is no longer counted in the report");
+  const [first, second] = snapshot.meetings;
+  const portalUrl = snapshot.agendaDocuments[0]!.documentUrl;
+  agendaDocumentStore.append(heldDocument(snapshot.agendaDocuments[0]!));
+  await withSourceTransport(async () => new Response(`<main><p>${PORTAL}</p></main>`, { headers: { "content-type": "text/html" } }),
+    () => retrieveMeetingDocuments([heldMeeting(second!, portalUrl)], { now: () => Date.parse("2026-08-21T12:00:00Z") }));
+  assert.equal(agendaDocumentStore.latestFor(second!.id), null, "a shared portal page supplies no agenda for the second sitting");
+  assert.equal(agendaDocumentStore.latestFor(first!.id)?.text, PORTAL);
+
+  agendaDocumentStore.clear();
+  const jointUrl = "https://district.example.gov/joint-agenda";
+  const joint = [first!, second!].map(row => heldMeeting(row, jointUrl));
+  let reads = 0;
+  await withSourceTransport(async () => { reads++; return new Response("<main><p>1. Call to order</p><p>2. Joint budget hearing</p><p>3. Adjournment</p></main>",
+    { headers: { "content-type": "text/html" } }); },
+  () => retrieveMeetingDocuments(joint, { now: () => Date.parse("2026-08-21T12:00:00Z") }));
+  assert.equal(reads, 1, "one shared document is fetched once");
+  for (const meeting of joint) {
+    const held = agendaDocumentStore.latestFor(meeting.id);
+    assert.equal(held?.documentUrl, jointUrl);
+    assert.match(held?.text ?? "", /Joint budget hearing/);
+    assert.ok(agendaItems(held?.text ?? "").length > 0);
+  }
 });
 
 test("no server reply is discarded on the way to the reader", () => {

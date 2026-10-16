@@ -276,6 +276,7 @@ export function normalizeWithDrops(
       ...(online ? { online } : {}),
       ...(venueGap ? { venueGap } : {}),
       agendaUrl: event.EventAgendaFile,
+      ...(event.EventMinutesFile?.trim() ? { publishedLinks: [{ label: "Minutes", href: event.EventMinutesFile.trim(), kind: "MINUTES" as const }] } : {}),
       ...(publicVideoUrl(event) ? { videoUrl: publicVideoUrl(event)! } : {}),
       ...(publisherPostedAt(event) ? { postedAt: publisherPostedAt(event)! } : {}),
       ...(Object.hasOwn(event, "EventAgendaFile") && event.EventAgendaFile == null

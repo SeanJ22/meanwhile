@@ -32,6 +32,8 @@ import {
   type RoutineClockRecord,
 } from "../lib/civic-data/store.ts";
 import { normalizedHash } from "../lib/civic-data/candidate-builders.ts";
+import { installDoorHosts } from "../lib/civic-data/source-authority.ts";
+import { installFixtureDoors } from "./helpers/meeting-doors-fixture.ts";
 import {
   attestPromotedVersion,
   clearPromotedReadModelCache,
@@ -59,11 +61,6 @@ const ROOT = resolve(import.meta.dirname, "..");
 const HASH = "a".repeat(64);
 /** Anything that carries a promoted dataset; none of it may cross the wire for the clock. */
 const DATASET = /payload|normalizedPayload|readModel|retainedSourceResponses|identities|"identity"/i;
-
-function selectList(query: { toSQL(): { sql: string } }): string {
-  const text = query.toSQL().sql;
-  return text.slice(0, text.indexOf(" from "));
-}
 
 function candidate(id: string, overrides: Partial<RoutineCandidate> = {}): RoutineCandidate {
   const normalizedPayload = { rows: Array.from({ length: 50 }, (_, index) => ({ id: `${id}-${index}` })) };
@@ -486,7 +483,13 @@ test("batched Postgres clocks preserve durable proof and source timing in one qu
     last_known_good_version_id text,promoted_at timestamptz,payload jsonb,validation_receipt jsonb,PRIMARY KEY(record_class,scope));`);
   const values = ["success", "unchanged", "later-failed", "imported", "meeting"].map(name => {
     const value = candidate(`batch-${name}`, { scope: `clock:${name}` });
-    return name === "meeting" ? { ...value, recordClass: "MEETING" as const,
+    const meetingUrl = "https://webapi.legistar.com/v1/pima/events";
+    return name === "meeting" ? { ...value, sourceId: "meetings-public-bodies", recordClass: "MEETING" as const,
+      sourceProjectionEvidence: sourceProjectionEvidence("meetings-public-bodies", "MEETING", value.scope),
+      retrieval: { ...value.retrieval, requestedUrl: meetingUrl, finalUrl: meetingUrl, sourceCheck: { requestedUrl: meetingUrl,
+        finalUrl: meetingUrl, rawHash: value.retrieval.rawHash!, httpStatus: 200 as const,
+        checkedAt: value.retrieval.retrievedAt }, meetingChecks: { documents: [{ url: "https://clerk.gov/agenda.pdf",
+          checkedAt: null, attemptedAt: value.retrieval.retrievedAt, nextDueAt: "2026-09-08T12:20:00.000Z", outcome: "DEFERRED" as const }] } },
       readModel: { meetings: [{ startsAt: "2026-09-10T12:00:00Z" }, { startsAt: null }] } } : value;
   });
   const memory = new MemoryRoutineDataStore();
@@ -507,6 +510,30 @@ test("batched Postgres clocks preserve durable proof and source timing in one qu
     basis: "READ_MODEL_RECOMPUTED", retrieval: { ...confirmed.retrieval, rawHash: confirmed.retrieval.rawHash!, sourceCheck: {
       requestedUrl: confirmed.retrieval.requestedUrl, finalUrl: confirmed.retrieval.finalUrl!, rawHash: confirmed.retrieval.rawHash!, httpStatus: 304, checkedAt,
     } } }, "2026-09-08T18:00:03.000Z")).kind, "CONFIRMED");
+  const meeting = values[4]!;
+  assert.equal((await memory.readPromotionIdentity("MEETING", meeting.scope))?.meetingChecksVersion, undefined,
+    "unread documents have no reader date sidecar");
+  const documentsCheckedAt = "2026-09-08T12:20:00.000Z";
+  const checkedDocuments = { documents: [{ url: "https://clerk.gov/agenda.pdf", contentHash: HASH, checkedAt: documentsCheckedAt,
+    attemptedAt: documentsCheckedAt, nextDueAt: "2026-09-08T13:20:00.000Z", outcome: "CHECKED" as const }] };
+  const documentConfirmation = await memory.confirmUnchanged({ sourceId: meeting.sourceId, recordClass: meeting.recordClass, scope: meeting.scope,
+    parserVersion: meeting.normalization.parserVersion, pointerVersionId: meeting.id, readModelHash: meeting.normalization.normalizedHash!,
+    basis: "READ_MODEL_RECOMPUTED", retrieval: { ...meeting.retrieval, rawHash: meeting.retrieval.rawHash!,
+      retrievedAt: documentsCheckedAt, meetingChecks: checkedDocuments } }, documentsCheckedAt);
+  assert.equal(documentConfirmation.kind, "CONFIRMED", JSON.stringify(documentConfirmation));
+  const documentOnlyClock = await memory.clock(meeting.sourceId, "MEETING", meeting.scope);
+  assert.equal(documentOnlyClock.lastSucceededObservedAt, meeting.retrieval.retrievedAt);
+  assert.equal(documentOnlyClock.lastAttemptedAt, meeting.retrieval.retrievedAt);
+  assert.equal(documentOnlyClock.lastDocumentAttemptedAt, documentsCheckedAt);
+  assert.equal(documentOnlyClock.pendingDocumentCount, 0);
+  const calendarFailureAt = "2026-09-08T12:25:00.000Z";
+  const calendarRetryAt = "2026-09-08T13:25:00.000Z";
+  const calendarFailure = { ...meeting, id: "batch-meeting-calendar-deferred", retrieval: {
+    ...meeting.retrieval, succeeded: false, retrievedAt: calendarFailureAt,
+    meetingChecks: { ...checkedDocuments, calendarRetryAt } } };
+  state.candidates.set(calendarFailure.id, { ...promoted(calendarFailure), state: "SOURCE_BLOCKED", acquisitionSucceeded: false,
+    receipt: null, promotedVersion: null, lastKnownGoodVersion: meeting.id });
+  state.history.set(calendarFailure.id, [{ candidateId: calendarFailure.id, sequence: 1, state: "SOURCE_BLOCKED", at: calendarFailureAt, detail: "publisher requested a wait" }]);
   const failed = candidate("batch-failed-attempt", { scope: values[2]!.scope,
     retrieval: { ...values[2]!.retrieval, succeeded: false, retrievedAt: "2030-01-01T00:00:00Z" } });
   state.candidates.set(failed.id, { ...promoted(failed), state: "SOURCE_BLOCKED", acquisitionSucceeded: false, receipt: null,
@@ -547,6 +574,36 @@ test("batched Postgres clocks preserve durable proof and source timing in one qu
   const many = Array.from({ length: ROUTINE_CLOCK_BATCH_SIZE * 2 + 1 }, (_, index) => requests[index % requests.length]!);
   assert.deepEqual(await store.clocks(many), many.map((_, index) => expected[index % expected.length]));
   assert.equal(queries, 3);
+  const stateFromPg = await store.meetingCheckState(meeting.sourceId, meeting.scope);
+  assert.deepEqual(stateFromPg, await memory.meetingCheckState(meeting.sourceId, meeting.scope));
+  assert.equal(stateFromPg.sourceCheck?.checkedAt, meeting.retrieval.retrievedAt);
+  assert.deepEqual(stateFromPg.meetingChecks, { ...checkedDocuments, calendarRetryAt });
+  assert.equal(clocks[4]!.ok && clocks[4].clock.calendarRetryAt, calendarRetryAt);
+  assert.equal(clocks[4]!.ok && clocks[4].clock.lastSucceededObservedAt, meeting.retrieval.retrievedAt);
+  assert.equal(clocks[4]!.ok && clocks[4].clock.nextDocumentDueAt, checkedDocuments.documents[0].nextDueAt);
+  assert.doesNotMatch(JSON.stringify(clocks), /clerk\.gov|agenda\.pdf/, "batch clocks transfer only document summaries");
+  assert.deepEqual(await store.meetingCheckState(meeting.sourceId, "clock:somewhere-else"), {});
+  await pg.exec("ALTER TABLE civic_data_promotions ADD COLUMN key text GENERATED ALWAYS AS (record_class || ':' || scope) STORED");
+  const memoryIdentity = await memory.readPromotionIdentity("MEETING", meeting.scope);
+  const identity = await store.readPromotionIdentity("MEETING", meeting.scope);
+  assert.deepEqual(identity, memoryIdentity);
+  assert.equal(identity?.meetingChecksVersion, `${meeting.id}:5`);
+  assert.equal(identity?.latestConfirmation?.retrieval.meetingChecks, undefined);
+  assert.doesNotMatch(JSON.stringify(identity), /clerk\.gov|agenda\.pdf/, "broad pointer identities do not carry documents");
+  for (const reader of [store, memory]) {
+    assert.deepEqual(await reader.readPromotedMeetingChecks(meeting.scope, meeting.id, identity!.meetingChecksVersion), checkedDocuments);
+    await assert.rejects(reader.readPromotedMeetingChecks(meeting.scope, "moved-version"), /MEETING_DOCUMENT_CHECKS_RACED/);
+    await assert.rejects(reader.readPromotedMeetingChecks(meeting.scope, meeting.id, `${meeting.id}:0`), /MEETING_DOCUMENT_CHECKS_RACED/);
+  }
+  const heldConfirmation = (await memory.readPromotion("MEETING", meeting.scope))!.latestConfirmation!;
+  const { meetingChecks: omitted, ...retrievalWithoutChecks } = heldConfirmation.retrieval;
+  assert.ok(omitted);
+  const noChecksDetail = `UNCHANGED_CONFIRMATION_V1 ${JSON.stringify({ ...heldConfirmation, retrieval: retrievalWithoutChecks })}`;
+  await pg.query("INSERT INTO civic_data_candidate_events VALUES ($1,6,'PROMOTED','2026-09-08T12:21:00Z',$2)", [meeting.id, noChecksDetail]);
+  await memory.recordRecheck(meeting.id, "2026-09-08T12:21:00.000Z", noChecksDetail);
+  assert.deepEqual(await store.readPromotedMeetingChecks(meeting.scope, meeting.id), checkedDocuments);
+  assert.deepEqual(await memory.readPromotedMeetingChecks(meeting.scope, meeting.id), checkedDocuments);
+  assert.equal((await store.readPromotionIdentity("MEETING", meeting.scope))?.meetingChecksVersion, identity!.meetingChecksVersion);
   await pg.query("UPDATE civic_data_candidates SET candidate=jsonb_set(candidate,'{retrieval,retrievedAt}','\"not-a-time\"') WHERE id=$1", [values[0]!.id]);
   const isolated = await store.clocks(requests);
   assert.equal(isolated[0]!.ok, false);
@@ -681,6 +738,44 @@ test("a real 304 advances the source clock while held replay preserves both chec
   assert.deepEqual(await store.clock(value.sourceId, value.recordClass, value.scope), checked);
   assert.equal((await store.confirmUnchanged({ ...input, retrieval: { ...input.retrieval,
     sourceCheck: { ...input.retrieval.sourceCheck, checkedAt: "2026-10-01T00:00:00Z" } } }, "2026-09-09T18:00:01.000Z")).kind, "EVIDENCE_INVALID");
+});
+
+test("shared-publisher body confirmations keep their checked times after the loaded door registry changes", async () => {
+  const host = "shared-clock.example.gov", checkedAt = "2026-09-09T12:00:00.000Z", observedAt = "2026-09-09T12:00:03.000Z";
+  const sourceId = "meetings-public-bodies", requestedUrl = `https://${host}/RSSFeed.aspx?CID=All-0&ModID=65`;
+  installDoorHosts([host]);
+  try {
+    const bodies = await Promise.all(["governing", "planning", "finance"].map(async role => {
+      const scope = `source:civicplus:body:fixture#${role}`, base = candidate(`shared-clock-${role}`);
+      const value: RoutineCandidate = { ...base, sourceId, recordClass: "MEETING", scope,
+        sourceProjectionEvidence: sourceProjectionEvidence(sourceId, "MEETING", scope),
+        retrieval: { ...base.retrieval, requestedUrl, finalUrl: requestedUrl,
+          sourceCheck: { requestedUrl, finalUrl: requestedUrl, httpStatus: 200, rawHash: HASH, checkedAt: base.retrieval.retrievedAt } } };
+      const store = await promotedStore(value);
+      const input = { sourceId, recordClass: value.recordClass, scope, parserVersion: value.normalization.parserVersion,
+        pointerVersionId: value.id, readModelHash: value.normalization.normalizedHash!, basis: "READ_MODEL_RECOMPUTED" as const,
+        retrieval: { ...value.retrieval, rawHash: HASH,
+          sourceCheck: { requestedUrl, finalUrl: requestedUrl, httpStatus: 304 as const, rawHash: HASH, checkedAt } } };
+      assert.equal((await store.confirmUnchanged(input, observedAt)).kind, "CONFIRMED");
+      return { value, store, input };
+    }));
+    for (const hosts of [null, ["other-body.example.gov"]]) {
+      installDoorHosts(hosts);
+      for (const { value, store, input } of bodies) {
+        const clock = await store.clock(sourceId, "MEETING", value.scope);
+        assert.equal(clock.lastSucceededObservedAt, checkedAt);
+        assert.equal(clock.lastAttemptedAt, checkedAt);
+        assert.equal((await store.meetingCheckState(sourceId, value.scope)).sourceCheck?.checkedAt, checkedAt);
+        assert.equal((await store.readPromotion("MEETING", value.scope))?.latestConfirmation?.retrieval.sourceCheck?.checkedAt, checkedAt);
+        assert.equal(parseUnchangedConfirmation((await store.events(value.id)).at(-1)!.detail)?.retrieval.sourceCheck?.checkedAt, checkedAt);
+        const outsider = "https://unregistered-source.example.gov/calendar.ics";
+        const refused = await store.confirmUnchanged({ ...input, retrieval: { ...input.retrieval,
+          sourceCheck: { ...input.retrieval.sourceCheck, requestedUrl: outsider, finalUrl: outsider } } }, observedAt);
+        assert.equal(refused.kind, "EVIDENCE_INVALID");
+        assert.equal((await store.events(value.id)).length, 5, "an unregistered source cannot append a new confirmation");
+      }
+    }
+  } finally { installFixtureDoors(); }
 });
 
 test("a trusted-LKG import is never confirmed: a live read of it promotes instead", async () => {

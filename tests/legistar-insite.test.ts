@@ -102,6 +102,23 @@ function webapiMeetings(events: Record<string, unknown>[] = WEBAPI_AUG_OCT): Mee
   return legistarNormalize(raw, NOW).meetings;
 }
 
+test("calendar minutes and results cells survive normalization with their publisher labels", () => {
+  const meetings = normalizeWithDrops([pimaReading()], NOW).meetings;
+  const rows = parseCalendarRows(PIMA_THIS_MONTH);
+  let checked = 0;
+  for (const row of rows) {
+    const meeting = meetings.find(meeting => meeting.id === `legistar-insite:pima:${row.insiteId}`);
+    if (!meeting) continue;
+    for (const cell of [row.accessibleMinutes, row.minutes]) {
+      if (!cell.href || /not available/i.test(cell.status)) continue;
+      checked++;
+      assert.ok(meeting.publishedLinks?.some(link => link.href === new URL(cell.href!, "https://pima.legistar.com").href &&
+        link.label === (cell.status || "Minutes") && link.kind === (/\bresults?\b/i.test(cell.status) ? "RESULTS" : "MINUTES")));
+    }
+  }
+  assert.ok(checked > 0, "The recorded calendar includes published minutes or results.");
+});
+
 test("the WebAPI returns ZERO September rows — the measurement, reproduced", () => {
   const september = WEBAPI_AUG_OCT.filter((event) =>
     String(event.EventDate).startsWith("2026-09"),

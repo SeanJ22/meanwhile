@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { applyRoutineClockSettings, readHeldFinanceCalendars } from "../lib/civic-data/clock-settings.ts";
 import { defaultAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import { registerSetting, withSetting } from "../lib/control-plane/settings.ts";
-import { routineTaskDueAtMs, type RoutineSourceTask } from "../lib/civic-data/runner.ts";
+import { routineAdmissionClock, routineCalendarDueAtMs, routineTaskDeadlineMs, routineTaskDueAtMs, type RoutineSourceTask } from "../lib/civic-data/runner.ts";
 import { MEETING_SITTING_WINDOW } from "../lib/civic-data/contracts.ts";
 import { IndependentRuntimeLaneScheduler } from "../lib/ops/independent-runtime-pass.ts";
 import { routineScopeState } from "../lib/civic-data/state-scope.ts";
@@ -64,6 +64,29 @@ test("independent lanes wake at the earliest source due time and never overlap",
   await scheduler.waitForIdle();
   assert.equal(runs, 1);
   assert.equal(scheduler.nextDueAt(1250), 2250);
+});
+
+test("document retries wake a body without advancing or failing its verified calendar clock", () => {
+  const meeting = { ...task("MEETING"), contract: { ...task("MEETING").contract, schedule: MEETING_SITTING_WINDOW } };
+  const clock = { lastAttemptedAt: "2026-10-15T11:50:00Z", lastSucceededAt: "2026-10-15T11:50:00Z",
+    lastSucceededObservedAt: "2026-10-15T11:50:00Z", sittingStarts: [now],
+    lastDocumentAttemptedAt: "2026-10-15T12:00:00Z", nextDocumentDueAt: "2026-10-15T12:05:00Z", pendingDocumentCount: 2 };
+  const admitted = routineAdmissionClock(clock, "2026-10-15T11:59:59Z", at);
+  assert.deepEqual(admitted, clock);
+  assert.equal(routineTaskDueAtMs(meeting, admitted, at, true), Date.parse(clock.nextDocumentDueAt));
+  assert.equal(routineTaskDeadlineMs(meeting, admitted, true, at), Date.parse(clock.nextDocumentDueAt));
+  assert.equal(routineCalendarDueAtMs(meeting, admitted, at, true), Date.parse("2026-10-15T12:25:00Z"));
+  const laterDocument = { ...clock, nextDocumentDueAt: "2026-10-15T13:00:00Z", pendingDocumentCount: 0 };
+  assert.equal(routineTaskDueAtMs(meeting, laterDocument, at, true), routineCalendarDueAtMs(meeting, clock, at, true));
+});
+
+test("a calendar publisher's precise retry time survives ordinary failure and changed-source admission", () => {
+  const meeting = { ...task("MEETING"), sourceChangedAt: "2026-10-15T11:59:00Z",
+    contract: { ...task("MEETING").contract, schedule: MEETING_SITTING_WINDOW } };
+  const clock = { lastAttemptedAt: now, calendarRetryAt: "2026-10-15T12:07:13Z", nextDocumentDueAt: "2026-10-15T12:03:00Z" };
+  assert.equal(routineCalendarDueAtMs(meeting, clock, at, true), Date.parse(clock.calendarRetryAt));
+  assert.equal(routineTaskDueAtMs(meeting, clock, at, true), Date.parse(clock.nextDocumentDueAt));
+  assert.equal(routineTaskDueAtMs(meeting, { ...clock, nextDocumentDueAt: undefined }, at, true), Date.parse(clock.calendarRetryAt));
 });
 
 

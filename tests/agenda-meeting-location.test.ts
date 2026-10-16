@@ -11,11 +11,6 @@ import {
   type PlaceableVenue,
 } from "../scripts/lib/agenda-meeting-location.ts";
 
-/**
- * A sitting's place, as its own agenda states it: the address published by the official meeting
- * source, read from the agenda's header.
- */
-
 const fixture = JSON.parse(readFileSync(join(import.meta.dirname, "fixtures", "agenda-location-headers.json"), "utf8")) as {
   headers: { meetingId: string; ocdId: string; text: string }[];
 };
@@ -95,11 +90,12 @@ test("an agenda address with no reviewed venue keeps the sitting's named gap, an
   assert.match(report.lines[0]!, /its agenda states "1 East Main Street"; no reviewed venue of its division carries that address/);
 });
 
-test("the ingest places unplaced sittings from their own agendas before a partition is promoted", () => {
+test("the ingest publishes calendar facts before document work and then publishes agenda-based placement", () => {
   const ingest = readFileSync(join(import.meta.dirname, "..", "scripts", "ingest.ts"), "utf8");
   const call = ingest.indexOf("placeUnplacedFromAgendas(");
-  assert.ok(call > ingest.indexOf("await retrieveAgendas(meetings);"), "after the agendas are read");
-  assert.ok(call < ingest.indexOf("await promoteSelectedMeetingPartitions("), "before the partition is promoted");
+  assert.ok(call > ingest.indexOf("await retrieveMeetingDocuments(meetings,"), "after the agendas are read");
+  assert.ok(ingest.indexOf("await promoteSelectedMeetingPartitions(") < call, "calendar facts publish before document work");
+  assert.ok(call < ingest.lastIndexOf("await promoteSelectedMeetingPartitions("), "placement publishes after document work");
   assert.match(ingest, /promoteSelectedMeetingPartitions\(\s*source,\s*agendaPlaced\.rows,/, "the placed rows are the ones promoted");
   assert.match(ingest, /currentVenueCache\(\)/, "only promoted reviewed venues are matched");
 });

@@ -112,6 +112,7 @@ test("every adapter routes its normalize result through the factory", () => {
     const text = readFileSync(file, "utf8");
     // The contract's own definition and the composite (which CONSUMES the
     // results rather than producing one) are not implementors.
+    if (rel === "lib/sources/types.ts") continue;
     if (rel.endsWith("normalize-account.ts")) continue;
     if (rel.endsWith("composite/index.ts")) continue;
     if (!/normalizeWithDrops[(:,]/.test(text)) continue;

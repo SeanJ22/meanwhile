@@ -154,7 +154,7 @@ export interface MinutesIngestResult {
   readonly documentsRead: number;
   readonly notYetPublished: number;
   readonly skippedUnchanged: number;
-  /** Held failed extractions whose document a cheap check found unchanged (or could not check): not downloaded. */
+  /** Documents read this pass whose extraction still failed. */
   readonly heldFailedExtractions: number;
 }
 
@@ -303,18 +303,16 @@ export async function runInSiteMinutesOutcomeIngest(input: MinutesIngestInput): 
     }
 
     if (!decision.walk && decision.check) {
-      const failedExtraction = decision.reason === "FAILED_DOCUMENT_CHECK";
       if (!writes) {
-        log(`  would check ${meetingId} ${link.url} before reading it again — held failed extraction`);
+        log(`  would check ${meetingId} ${link.url} before reading it again`);
         skippedUnchanged += 1;
         continue;
       }
       const head = await session.head(link.url, link.format === "PDF" ? "application/pdf" : "text/html,application/xhtml+xml");
       const checked = minutesDocumentCheck(decision.check, head);
-      log(`  ${meetingId} ${row.date} ${row.bodyName}: held failed extraction — ${checked.reason} (${checked.detail})`);
-      if (!checked.walk && (failedExtraction || checked.reason === "DOCUMENT_UNCHANGED" &&
-          (decision.check.etag !== null || decision.check.lastModified !== null))) {
-        if (failedExtraction) heldFailedExtractions += 1;
+      log(`  ${meetingId} ${row.date} ${row.bodyName}: ${checked.reason} (${checked.detail})`);
+      if (!checked.walk && checked.reason === "DOCUMENT_UNCHANGED" &&
+          (decision.check.etag !== null || decision.check.lastModified !== null)) {
         skippedUnchanged += 1;
         continue;
       }
@@ -356,7 +354,9 @@ export async function runInSiteMinutesOutcomeIngest(input: MinutesIngestInput): 
       const fresh = parsed.minutesDocument ? { ...parsed, minutesDocument: { ...parsed.minutesDocument,
         ...read.value.response, readAt: observedAt } } : parsed;
       // A failure on the bytes is held with their identity; over verified minutes, beside them.
-      persisted = sittingAfterRead(heldSitting, fresh, failedMinutesReadFor(fresh, document, read.value.response, observedAt));
+      const failedRead = failedMinutesReadFor(fresh, document, read.value.response, observedAt);
+      if (failedRead) heldFailedExtractions += 1;
+      persisted = sittingAfterRead(heldSitting, fresh, failedRead);
     }
     const proposed = applyMinutesApprovals(mergeSnapshot(snapshot, [...pending, persisted], {
       generatedOn: observedAt.slice(0, 10),

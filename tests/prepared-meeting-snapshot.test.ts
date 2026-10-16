@@ -71,6 +71,8 @@ function fakeStore(overrides: Partial<RoutineDataStore>): RoutineDataStore {
     readPromotions: async () => [],
     readPromotionIdentity: async () => null,
     readPromotionIdentities: async () => [],
+    readPromotedMeetingChecks: async () => undefined,
+    meetingCheckState: async () => ({}),
     readPreparedReaderProjection: async () => null,
     readPreparedReaderProjectionCoupling: async () => null,
     writePreparedReaderProjection: async () => ({ published: false, sequence: 0 }),
@@ -104,6 +106,62 @@ test("the prepared projection publishes monotonically — an older composition c
   const row = await store.readPreparedReaderProjection("MEETING", scope);
   assert.equal(row?.sequence, 2);
   assert.equal(row?.generatedAt, "2026-09-02T00:00:00.000Z", "the newest composition is what serves");
+});
+
+test("prepared document checks stay lazy by place and overlay only matching saved bytes", async () => {
+  const first = contractsForState().find(partition => partition.ocdId)!;
+  const second = contractsForState().find(partition => partition.ocdId && partition.ocdId !== first.ocdId)!;
+  assert.ok(first && second);
+  const old = "2026-09-05T00:00:00Z", checkedAt = "2026-09-06T00:00:00Z", hash = "a".repeat(64);
+  const places = [first, second].map((partition, index) => {
+    const composedFrom = [{ contractId: partition.id, versionId: `source-${index}`, routes: [`${partition.meetingSource}|${partition.bodyId}`] }];
+    const id = `${partition.meetingSource}:document-${index}`, url = `https://clerk.example.gov/${index}/minutes`;
+    const snapshot: MeetingsSnapshot = { formatVersion: 1, generatedAt: old, sources: [], agendaDocuments: [],
+      counts: { fresh: 1, carried: 0, total: 1, duplicatesCollapsed: 0 }, meetings: [{ id, bodyId: partition.bodyId,
+        ocdId: partition.ocdId, bodyName: "Council", title: "Council meeting", jurisdiction: "Example", status: "CONCLUDED",
+        startsAt: old, timeZone: "America/Phoenix", location: null, agendaUrl: null,
+        provenance: { sourceUrl: url, sourceOrg: "Clerk", collectedAt: old, verifiedAt: null },
+        publishedDocuments: [{ meetingId: id, kind: "MINUTES", url, publisherLabel: "Minutes", contentHash: hash,
+          contentType: "text/html", retrievedAt: old, checkedAt: old, text: "Held minutes", extraction: "TEXT_EXTRACTED", extractionNote: null }] }] };
+    const copy = placeCopy(snapshot, composedFrom, index);
+    return { ...copy, chunk: { ...copy.chunk, key: partition.ocdId!, ocdId: partition.ocdId }, partition, url, composedFrom };
+  });
+  const couplings = [...places.flatMap(place => place.composedFrom), { contractId: "meeting-facts", versionId: "facts:none" }, MEETING_LAYOUT_COUPLING];
+  const prepared: PreparedReaderProjectionRow = { ...preparedInput({ payload: { formatVersion: 2, chunks: places.map(place => place.chunk), heldChunks: [], unavailableSources: [] },
+    composedFrom: couplings, generatedAt: old }), sequence: 1 };
+  const reads: string[] = [];
+  const store = fakeStore({
+    readPreparedReaderProjection: async (_recordClass, scope) => places.find(place => place.row.scope === scope)?.row ?? prepared,
+    readPreparedReaderProjectionCoupling: async () => prepared,
+    readPromotionIdentities: async (_recordClass, scopes) => places.flatMap((place, index) => scopes.includes(place.partition.scope) ? [{
+      key: `MEETING:${place.partition.scope}`, sourceId: place.partition.sourceId, recordClass: "MEETING" as const,
+      scope: place.partition.scope, versionId: `source-${index}`, lastKnownGoodVersionId: `source-${index}`, promotedAt: old,
+      meetingChecksVersion: `source-${index}:7`,
+    }] : []),
+    readPromotedMeetingChecks: async (scope, version, marker) => {
+      reads.push(scope);
+      assert.equal(scope, first.scope, "the unrelated place's document map is never loaded");
+      assert.equal(version, "source-0"); assert.equal(marker, "source-0:7");
+      return { documents: [{ url: places[0]!.url, contentHash: hash, checkedAt, attemptedAt: checkedAt,
+        nextDueAt: "2026-09-06T01:00:00Z", outcome: "CHECKED" }] };
+    },
+  });
+  const preparation = await preparePublishedMeetingSnapshot(store, checkedAt, { state: STATE });
+  assert.equal(preparation.status, "CURRENT");
+  if (preparation.status !== "CURRENT") throw new Error("The prepared content must remain current");
+  const publications = [];
+  for await (const entry of preparation.documentChecks) publications.push(entry);
+  assert.equal(publications.length, 2);
+  assert.deepEqual(reads, []);
+  await publications.find(entry => entry.chunkKey === first.ocdId)!.read();
+  const read = await readPreparedMeetingsProjection({ store, state: STATE, ocdIds: [first.ocdId!], now: checkedAt });
+  assert.equal(read.kind, "PROMOTED");
+  if (read.kind !== "PROMOTED") throw new Error("The requested prepared place must be readable");
+  assert.equal(read.value.meetings.length, 1);
+  assert.equal(read.value.meetings[0]!.publishedDocuments![0]!.checkedAt, checkedAt);
+  assert.equal(read.value.meetings[0]!.publishedDocuments![0]!.retrievedAt, old);
+  assert.equal(read.value.meetings[0]!.provenance.collectedAt, old);
+  assert.deepEqual(reads, [first.scope, first.scope]);
 });
 
 test("the reader fast-path serves the prepared index and immutable place row with the exact partitions shape", async () => {

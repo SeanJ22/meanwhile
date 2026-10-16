@@ -1,4 +1,6 @@
-import { meetingPartitionId } from "../../civic-data/meeting-partitions.ts";
+import { meetingPartitionId, meetingPartitionOfId } from "../../civic-data/meeting-partitions.ts";
+import { MEETING_PARTITION_POLICY } from "../../civic-data/contracts.ts";
+import type { RoutineDataStore } from "../../civic-data/store.ts";
 
 export const SOURCE_CHECK_PAGE_SIZE = 100;
 export const SOURCE_CHECK_DAYS = 14;
@@ -31,7 +33,7 @@ function sourceUrl(value: unknown): string | null {
   } catch { return null; }
 }
 
-async function registeredSources(query: Query, state: string, after: string, now: string): Promise<readonly Record<string, unknown>[]> {
+async function registeredSources(query: Query, state: string, after: string, now: string, readClocks?: RoutineDataStore["clocks"]): Promise<readonly Record<string, unknown>[]> {
   const cursor: [string, number] = after ? JSON.parse(Buffer.from(after.slice(2), "base64url").toString()) : ["", 0];
   if (!Array.isArray(cursor) || cursor.length !== 2 || typeof cursor[0] !== "string" || !Number.isSafeInteger(cursor[1])) throw new Error("Invalid source cursor");
   const rows = await query(`SELECT d.id, body.ordinality, body.id AS body_id, d.value->>'kind' AS kind,
@@ -53,19 +55,37 @@ async function registeredSources(query: Query, state: string, after: string, now
   const checks = identities.length ? await query(`SELECT DISTINCT ON (source_id) source_id,url,checked_at,http_status,unchanged,next_due_at
     FROM cp_source_checks WHERE state = $1 AND source_id = ANY($2::text[]) ORDER BY source_id,checked_at DESC`, [state, identities]) : [];
   const bySource = new Map(checks.map(row => [String(row.source_id), row]));
+  const meetings = [...new Set(identities.slice(0, SOURCE_CHECK_PAGE_SIZE))].flatMap(id => {
+    const partition = meetingPartitionOfId(id);
+    return partition ? [{ id, scope: partition.scope }] : [];
+  });
+  const clocks = meetings.length && readClocks ? await readClocks(meetings.map(meeting => ({
+    sourceId: MEETING_PARTITION_POLICY.sourceId, recordClass: "MEETING", scope: meeting.scope,
+  }))).catch(() => []) : [];
+  const byMeeting = new Map(meetings.map((meeting, index) => [meeting.id, clocks[index]]));
   return rows.map((row, index) => {
     const checked = bySource.get(identities[index]!);
+    const reading = byMeeting.get(identities[index]!);
+    const clock = reading?.ok ? reading.clock : undefined;
+    const documentDue = timestamp(clock?.nextDocumentDueAt), calendarRetry = timestamp(clock?.calendarRetryAt);
+    const pending = clock?.pendingDocumentCount ?? 0;
+    const documentUnknown = byMeeting.has(identities[index]!) && !clock && !!checked;
+    const documentResult = pending > 0 ? `${pending} document${pending === 1 ? "" : "s"} waiting`
+      : documentDue && Date.parse(documentDue) <= Date.parse(now) ? "Documents due"
+      : calendarRetry ? "Calendar waiting to retry"
+      : documentUnknown ? "Document status unavailable" : null;
+    const due = [timestamp(checked?.next_due_at), documentDue, calendarRetry].filter((value): value is string => value !== null).sort()[0];
     const body = row.body_id ? String(row.body_id).split("#").at(-1)!.split("/").at(-1)!.replace(/[-_]/g, " ") : undefined;
     return { ...checked, cache_key: `r:${Buffer.from(JSON.stringify([row.id, Number(row.ordinality)])).toString("base64url")}`,
       source_name: [String(row.source_name), body].filter(Boolean).join(" — "), url: checked?.url ?? row.url,
-      checked_at: checked?.checked_at ?? null, next_due_at: row.status === "OPEN" ? checked?.next_due_at ?? now : null,
-      result: row.status === "SUSPENDED" ? "Set aside" : row.status === "SHUT" ? "Source unavailable" : checked ? null : "Not checked yet" };
+      checked_at: checked?.checked_at ?? null, next_due_at: row.status === "OPEN" && !documentUnknown ? due ?? (checked ? null : now) : null,
+      result: row.status === "SUSPENDED" ? "Set aside" : row.status === "SHUT" ? "Source unavailable" : documentResult ?? (checked ? null : "Not checked yet") };
   });
 }
 
-export async function readSourceChecks(query: Query, state: string, after: string, now: string, view: "registered" | "responses" = "registered"): Promise<SourceChecksView> {
+export async function readSourceChecks(query: Query, state: string, after: string, now: string, view: "registered" | "responses" = "registered", readClocks?: RoutineDataStore["clocks"]): Promise<SourceChecksView> {
   const [sources, days] = await Promise.all([
-    view === "registered" ? registeredSources(query, state, after, now) : query(`SELECT cache_key, source_id, url, checked_at, http_status, unchanged, next_due_at
+    view === "registered" ? registeredSources(query, state, after, now, readClocks) : query(`SELECT cache_key, source_id, url, checked_at, http_status, unchanged, next_due_at
       FROM cp_source_checks WHERE state = $1 AND cache_key > $2 ORDER BY cache_key LIMIT $3`, [state, after, SOURCE_CHECK_PAGE_SIZE + 1]),
     query(`SELECT day::text, sum(checks) AS checks, sum(unchanged) AS unchanged FROM cp_source_check_days
       WHERE state = $1 AND day >= ($2::timestamptz AT TIME ZONE 'America/New_York')::date - $3::int

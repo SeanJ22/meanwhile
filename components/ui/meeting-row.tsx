@@ -6,6 +6,7 @@ import type { EvidenceRecord } from "@/lib/ask/evidence";
 import { formatMeetingDate, formatMeetingTime, formatRelativeDay, locationLine, meetingEntryTitle, meetingSubline } from "@/lib/map/format";
 import { onlineAccessFor, venueGapOf, statedVenueText } from "@/lib/meetings/online";
 import { meetingCardGaps } from "@/lib/meetings/card-gaps";
+import { publishedMeetingDocumentLinks } from "@/lib/meetings/document-checks";
 import { meetingCardSources } from "@/lib/officials/card-sources";
 import { venueLink } from "@/lib/registry/links";
 import { CalendarLinks } from "@/components/map/popup/calendar-links";
@@ -49,6 +50,10 @@ export function MeetingRow(props: RowProps) {
   const directions = meeting.location && meeting.status !== "CONCLUDED" ? venueLink(meeting.location) : null;
   const agendaLink = meeting.agendaUrl ?? meeting.provenance.sourceUrl;
   const recording = meeting.status === "CONCLUDED" ? meeting.videoUrl : null;
+  const publishedDocuments = new Map(publishedMeetingDocumentLinks(meeting).map(link => [link.href, link]));
+  for (const document of meeting.publishedDocuments ?? []) if (!publishedDocuments.has(document.url)) {
+    publishedDocuments.set(document.url, { href: document.url, label: document.publisherLabel, kind: document.kind });
+  }
   return <article data-meeting-row data-meeting-id={meeting.id} className={compact ? "py-2 t-detail leading-relaxed" : "px-5 pb-5 pt-4 t-body leading-relaxed"}>
     <CardGapsContribution id={`meeting:${meeting.id}`} gaps={meetingCardGaps(meeting)} />
     <h3 className="font-display t-heading font-semibold text-paper">
@@ -69,6 +74,16 @@ export function MeetingRow(props: RowProps) {
         : access ? <>Online · {access.label}{access.joinUrl && <> · <CheckedLink href={access.joinUrl} target="_blank" rel="noreferrer" className="text-link underline">Join online</CheckedLink></>}</>
           : statedPlace}
     </div>}
+    {[...publishedDocuments.values()].map(link => {
+      const held = meeting.publishedDocuments?.find(document => document.url === link.href && document.kind === link.kind);
+      return <div key={link.href} className="mt-2 t-detail" data-meeting-document-kind={link.kind}>
+        {(compact || !held || held.extraction === "UNREADABLE") && <p className="t-caption text-muted">{link.kind === "MINUTES" ? "Minutes" : "Results"}: {held ? held.extraction === "UNREADABLE" ? "Text not readable" : "Text available" : "Document contents not yet read"}</p>}
+        {!compact && held?.extraction === "TEXT_EXTRACTED" && held.text && <details className="mt-1">
+          <summary className="text-link">Read saved {link.kind === "MINUTES" ? "minutes" : "results"} text</summary>
+          <p className="mt-2 whitespace-pre-wrap">{held.text}</p>
+        </details>}
+      </div>;
+    })}
     {(agendaLink || recording) && <div className="mt-2 flex flex-wrap items-baseline gap-2 t-detail">
       {agendaLink && <CheckedLink href={agendaLink} target="_blank" rel="noreferrer" className="text-link underline">{meeting.agendaUrl ? "Read the agenda" : "Meeting page"}</CheckedLink>}
       {recording && <CheckedLink href={recording} target="_blank" rel="noreferrer" className="text-link underline">Watch the recording</CheckedLink>}

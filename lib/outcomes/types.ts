@@ -6,6 +6,20 @@ import type {
 } from "../sources/legistar/outcomes.ts";
 import type { AgendaPublicationObservation } from "./publication.ts";
 
+export interface PublishedMeetingDocument {
+  readonly meetingId: string;
+  readonly kind: "MINUTES" | "RESULTS";
+  readonly url: string;
+  readonly publisherLabel: string;
+  readonly contentHash: string;
+  readonly contentType: string;
+  readonly retrievedAt: string;
+  readonly checkedAt: string;
+  readonly text: string | null;
+  readonly extraction: "TEXT_EXTRACTED" | "UNREADABLE";
+  readonly extractionNote: string | null;
+}
+
 export interface PersistedPublicationStatus {
   /** "Final", "Draft", null — the tenant's label, which a clerk may rename. */
   readonly agendaStatusName: string | null;

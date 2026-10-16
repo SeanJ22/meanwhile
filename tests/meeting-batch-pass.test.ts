@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { MEETING_PREFETCH_BYTES, MEETING_PREFETCH_CONCURRENCY, MEETING_STATE_TURN_MS, runMeetingBatchPass, type MeetingBatchMember } from "../lib/civic-data/meeting-batch.ts";
 import { RUNTIME_AUTHORITY_ENV, runtimeAuthorityEnvironment } from "../lib/civic-data/runtime-authority.ts";
+import { MEETING_SITTING_WINDOW } from "../lib/civic-data/contracts.ts";
 
 const previousCapability = process.env[RUNTIME_AUTHORITY_ENV.capability];
 test.beforeEach(() => { process.env[RUNTIME_AUTHORITY_ENV.capability] = "ROUTINE_SUPERVISOR"; });
@@ -51,6 +52,22 @@ test("a failure after saving a receipt keeps the saved source result and reports
   assert.equal(results[0]!.settlementErrorMessage, "later mirror failed");
 });
 
+test("document-only work keeps the configured calendar clock and does not prefetch a fresh calendar", async () => {
+  const task = { ...member("documents"), calendarDueAt: "2026-10-15T12:25:00.000Z",
+    meetingSchedule: { ...MEETING_SITTING_WINDOW, hotEveryMs: 30 * 60_000 }, documentRetryEveryMs: 5 * 60_000 };
+  const phases: string[] = [];
+  const result = await runMeetingBatchPass([task], {
+    now: () => Date.parse(task.dueAt), prefetch: async (_member, _signal, _acquire, phase) => { phases.push(phase); }, onMemberStarted: () => {}, onSettled: () => {},
+  }, async (id, options) => {
+    assert.equal(options.calendarDueAt, task.calendarDueAt);
+    assert.deepEqual(options.meetingSchedule, task.meetingSchedule);
+    assert.equal(options.documentRetryEveryMs, task.documentRetryEveryMs);
+    options.onReceipt!(`RCD_MEETING_PARTITION_RECEIPT=${JSON.stringify({ source: id })}`);
+  });
+  assert.deepEqual(phases, ["DOCUMENT"]);
+  assert.equal(result[0]!.status, 0);
+});
+
 test("bounded source prefetch overlaps waiting roots without starting or settling unprocessed bodies", async () => {
   let now = 0, active = 0, peak = 0, aborted = 0;
   let firstReady: () => void = () => {};
@@ -58,7 +75,7 @@ test("bounded source prefetch overlaps waiting roots without starting or settlin
   const tasks = Array.from({ length: MEETING_PREFETCH_CONCURRENCY + 2 }, (_, index) => member(String(index)));
   const work = runMeetingBatchPass(tasks, {
     now: () => now,
-    prefetch: (task, signal) => new Promise<void>((resolve, reject) => {
+    prefetch: (task, signal, _acquire, phase) => phase === "DOCUMENT" ? Promise.resolve() : new Promise<void>((resolve, reject) => {
       prepared.push(task.id); peak = Math.max(peak, ++active);
       const abort = () => { active--; aborted++; reject(new Error("prefetch turn ended")); };
       signal.addEventListener("abort", abort, { once: true });
@@ -84,7 +101,7 @@ test("bounded source prefetch overlaps waiting roots without starting or settlin
 test("a speculative request failure leaves the ordinary source check authoritative", async t => {
   const warnings = t.mock.method(console, "warn", () => {});
   const results = await runMeetingBatchPass([member("source")], {
-    prefetch: async () => { throw new Error("prefetch request failed"); },
+    prefetch: async (_member, _signal, _acquire, phase) => { if (phase === "CALENDAR") throw new Error("prefetch request failed"); },
     onMemberStarted: () => {}, onSettled: () => {},
   }, async (id, options) => { options.onReceipt!(`RCD_MEETING_PARTITION_RECEIPT=${JSON.stringify({ source: id })}`); });
   assert.equal(results[0]!.status, 0);
@@ -98,7 +115,8 @@ test("root prefetch holds at most 32 MiB of known responses and aborts waiting r
   const tasks = Array.from({ length: MEETING_PREFETCH_CONCURRENCY }, (_, index) => member(String(index)));
   const work = runMeetingBatchPass(tasks, {
     now: () => now,
-    prefetch: async (task, signal, acquire) => {
+    prefetch: async (task, signal, acquire, phase) => {
+      if (phase === "DOCUMENT") return;
       const count = 1024 * 1024, release = await acquire(count, signal);
       admitted++; bytes += count; peak = Math.max(peak, bytes);
       try {
@@ -122,4 +140,31 @@ test("root prefetch holds at most 32 MiB of known responses and aborts waiting r
   assert.equal(bytes, 0);
   assert.equal(results.filter(result => result.status === 0).length, 1);
   assert.ok(admitted < tasks.length);
+});
+
+test("one body's multi-request plan still admits only 64 physical requests at once", async () => {
+  let active = 0, peak = 0;
+  const full = Promise.withResolvers<void>(), finish = Promise.withResolvers<void>();
+  const phases: string[] = [];
+  const work = runMeetingBatchPass([member("many-roots")], {
+    onMemberStarted: () => {}, onSettled: () => {},
+    prefetch: async (_member, signal, acquire, phase) => {
+      phases.push(phase);
+      if (phase === "DOCUMENT") return;
+      await Promise.all(Array.from({ length: 70 }, async () => {
+        const release = await acquire(1, signal);
+        peak = Math.max(peak, ++active);
+        if (active === MEETING_PREFETCH_CONCURRENCY) full.resolve();
+        try { await finish.promise; }
+        finally { active--; release(); }
+      }));
+    },
+  }, async (id, options) => { options.onReceipt!(`RCD_MEETING_PARTITION_RECEIPT=${JSON.stringify({ source: id })}`); });
+  await full.promise;
+  assert.equal(active, MEETING_PREFETCH_CONCURRENCY);
+  finish.resolve();
+  assert.equal((await work)[0]?.status, 0);
+  assert.equal(peak, MEETING_PREFETCH_CONCURRENCY);
+  assert.equal(active, 0);
+  assert.deepEqual(phases, ["CALENDAR", "DOCUMENT"]);
 });

@@ -1,5 +1,6 @@
 import { carriedRowClause, relativeAge } from "../meetings/freshness.ts";
 import type { Meeting, Provenance } from "../sources/types.ts";
+import { publishedMeetingDocumentLinks } from "../meetings/document-checks.ts";
 
 import type { RollCallVote } from "../votes/types.ts";
 import type { ExecutiveAction } from "./executive-actions.ts";
@@ -143,6 +144,11 @@ export function meetingCardSources(
     entries.push({ what: `Last reached ${relativeAge(meeting.carried.lastFreshAt)}${clause ? ` — ${clause}` : ""}`, dataAttrs: { "data-meeting-carried-source": meeting.id }, status: true, provenance: { ...meeting.provenance, collectedAt: meeting.carried.lastFreshAt } });
   }
   if (meeting.agendaUrl) entries.push({ what: "The published agenda link", provenance: { ...meeting.provenance, sourceUrl: meeting.agendaUrl } });
+  for (const link of publishedMeetingDocumentLinks(meeting)) if (!meeting.publishedDocuments?.some(document => document.url === link.href && document.kind === link.kind)) {
+    entries.push({ what: `${link.label} — published link; document contents not yet read`, provenance: { ...meeting.provenance, sourceUrl: link.href } });
+  }
+  for (const document of meeting.publishedDocuments ?? []) entries.push({ what: document.publisherLabel,
+    provenance: { ...meeting.provenance, sourceUrl: document.url, collectedAt: document.checkedAt, verifiedAt: null } });
   for (const [kind, label] of Object.entries(MEETING_SOURCE_LABELS)) {
     for (const provenance of evidence[kind as keyof MeetingCardEvidence] ?? []) entries.push({ what: label, provenance });
   }

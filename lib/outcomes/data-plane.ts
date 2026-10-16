@@ -532,11 +532,6 @@ export function mesaMinutesOutcomeScopeIssue(snapshot: OutcomeSnapshot): string 
   return minutesOutcomeScopeIssue(snapshot, MESA_OUTCOME_TENANT);
 }
 
-/**
- * A minutes-outcome candidate built only from exact HTTP-response receipts. A failed minutes request refuses the
- * candidate; a read whose extraction failed is held as a failed extraction with its bytes; minutes not yet published
- * are a stated row, a fact about the publisher.
- */
 export function legistarMinutesOutcomesCandidate(input: {
   readonly snapshot: OutcomeSnapshot;
   readonly acquisitions: readonly SourceAcquisitionEvidence[];
@@ -553,11 +548,6 @@ export function legistarMinutesOutcomesCandidate(input: {
   if (new Set(ids).size !== ids.length) violations.push(`${tenant.label} sitting ids are duplicated.`);
   const scopeIssue = minutesOutcomeScopeIssue(snapshot, tenant);
   if (scopeIssue) violations.push(scopeIssue);
-  /*
-   * A failed request refuses the candidate and the prior GOOD pointer stays live. A document whose extraction failed on
-   * its bytes is admitted as that failed extraction, with no record, so the unchanged document is not re-downloaded and
-   * failed again on every retry.
-   */
   const failed = snapshot.sittings.filter((sitting) =>
     sitting.extraction === "REQUEST_FAILED" || (sitting.extraction === "ZERO_ROWS_FAILED" && sitting.failedMinutesRead === undefined));
   if (failed.length > 0) {
@@ -592,7 +582,9 @@ export function legistarMinutesOutcomesCandidate(input: {
       violations.push(`${sitting.meetingId} has a recorded action without its exact passage of ${document.url}.`);
     }
     const read = acquisitions.filter((row) => row.finalUrl === document.url || row.requestedUrl === document.url);
-    if (read.length > 0 && !read.some((row) => row.rawHash === document.sha256)) {
+    const retainedAfterFailure = sitting.failedMinutesRead?.url === document.url &&
+      read.some(row => row.rawHash === sitting.failedMinutesRead!.sha256);
+    if (read.length > 0 && !retainedAfterFailure && !read.some((row) => row.rawHash === document.sha256)) {
       violations.push(`${sitting.meetingId}'s minutes digest does not match the bytes this run acquired from ${document.url}.`);
     }
   }
@@ -686,7 +678,7 @@ export function legistarMinutesOutcomesCandidate(input: {
           detail:
             `${sitting.failedMinutesRead!.url} (${sitting.failedMinutesRead!.byteCount} bytes, sha256 ${sitting.failedMinutesRead!.sha256.slice(0, 16)}…, ` +
             `parser ${sitting.failedMinutesRead!.parserRevision}, read ${sitting.failedMinutesRead!.readAt}): ${sitting.failedMinutesRead!.reason} ` +
-            "Read again when the document changes, the parser changes, or the failure is a week old.",
+            "Read again on the body's next scheduled check.",
         })),
     ],
   };

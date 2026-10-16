@@ -131,7 +131,7 @@ test("prefetch revalidates held validators without a receipt key once and preser
   const sourceId = h.options.sourceId, seed = { url, headers: [], redirect: "follow" as const, byteCount: 12 };
   const read = () => runWithSourceFetch({ sourceId, state: "US-NJ", dueAt: checkedAt, vault: h.store,
     runtime: { store, transport, now: () => Date.parse(checkedAt) } }, async () => {
-    await prefetchSourceRequests({ sourceId, state: "US-NJ", dueAt: checkedAt, seed });
+    await prefetchSourceRequests({ sourceId, state: "US-NJ", dueAt: checkedAt, seeds: [seed] });
     return acquireKnownRelease({ ...h.options, fetchImpl: fetchSource });
   });
   h.time(T1);

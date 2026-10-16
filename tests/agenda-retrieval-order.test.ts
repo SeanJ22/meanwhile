@@ -15,12 +15,9 @@ import {
   agendaRetrievalOrder,
   inRetrievalOrder,
   reconcileSuccessfulMeetingPartition,
-  retrieveAgendas,
+  retrieveMeetingDocuments,
   seedHeldAgendaDocuments,
 } from "../scripts/ingest.ts";
-
-
-
 
 interface HeldRowsFixture {
   readonly shared: Omit<AgendaDocument, "id" | "retrievedAt" | "contentHash" | "text" | "collectedAt">;
@@ -146,9 +143,12 @@ test("two runs of seed, re-read and reconcile add no row and write the rows in r
     assert.equal(reconciled.agendaDocuments.length, 153, `the ${at} run changed the number of held rows`);
     assert.deepEqual(
       reconciled.agendaDocuments.map(({ id }) => id),
-      inRetrievalOrder(held167).map(({ id }) => id),
+      inRetrievalOrder(reconciled.agendaDocuments).map(({ id }) => id),
       "the written rows are not in read order",
     );
+    assert.deepEqual(new Set(reconciled.agendaDocuments.map(({ id }) => id)), new Set(held167.map(({ id }) => id)),
+      "the re-check must preserve every historical version identity");
+    assert.equal(reconciled.agendaDocuments.at(-1)?.retrievedAt, at, "the unchanged content carries its actual last check");
     previous = snapshotOf([sunnyside167], [...reconciled.agendaDocuments]);
   }
 });
@@ -207,82 +207,30 @@ function tucsonUnified(prefix: string, store: AgendaDocumentStore): Meeting[] {
   return meetings;
 }
 
-test("a link never read goes first, re-reads by nearness to today, and another sitting's page last", () => {
-  const store = new AgendaDocumentStore();
-  const meetings = tucsonUnified("", store);
-  const order = agendaRetrievalOrder(meetings, Date.parse(NOW), store).map(({ id }) => id);
-  assert.deepEqual(order.slice(0, 6), boardActions.map(([id]) => id), "the Board Actions links are not read first");
-  assert.deepEqual(order.slice(6, 9), ["diligent:tusd1:499", "diligent:tusd1:502", "diligent:tusd1:495"]);
-  assert.deepEqual(order.slice(9), noticeOnly.map(([id]) => id), "the shared notice page is not last");
+test("hot sittings precede older missing links and cold sittings follow by proximity", () => {
+  const meetings = tucsonUnified("", new AgendaDocumentStore());
+  const order = agendaRetrievalOrder(meetings, Date.parse(NOW)).map(({ id }) => id);
+  assert.equal(order[0], "diligent:tusd1:499");
+  assert.ok(order.indexOf("diligent:tusd1:502") < order.indexOf(boardActions[0]![0]));
+  assert.ok(order.indexOf(boardActions[0]![0]) < order.indexOf(boardActions.at(-1)![0]));
 });
 
-test("one run reads every link once, new links first and the shared notice page last; the next run reads no link twice", async () => {
+test("one bounded turn reads each URL once and resumes only remaining due documents", async () => {
   const meetings = tucsonUnified("run:", agendaDocumentStore);
   const requested: string[] = [];
-  const pdf = readFileSync("tests/fixtures/tusd-govboard/board-actions-2026-09-22.pdf");
   const transport = (async (input: RequestInfo | URL) => {
-    const url = String(input instanceof Request ? input.url : input);
-    requested.push(url);
-    return url.endsWith(".pdf")
-      ? new Response(new Uint8Array(pdf), { status: 200, headers: { "content-type": "application/pdf" } })
-      : new Response("<html><body><main><p>1. Call to order.</p></main></body></html>", {
-        status: 200,
-        headers: { "content-type": "text/html; charset=utf-8" },
-      });
+    requested.push(String(input));
+    return String(input).endsWith(".pdf")
+      ? new Response(new Uint8Array(readFileSync("tests/fixtures/tusd-govboard/board-actions-2026-09-22.pdf")), { headers: { "content-type": "application/pdf" } })
+      : new Response("<main><p>1. Call to order and public hearing.</p></main>", { headers: { "content-type": "text/html" } });
   }) as typeof fetch;
-
-  await withSourceTransport(transport, () => retrieveAgendas(meetings));
-  assert.deepEqual(
-    requested,
-    [
-      ...boardActions.map(([, , link]) => link),
-      `${ACTIONS}09-22-2026S.pdf`,
-      `${PORTAL}502`,
-      NOTICE,
-    ],
-    "one run did not read new links first, re-reads next and the shared notice page once, last",
-  );
-  for (const [raw, , link] of boardActions) {
-    assert.ok(
-      agendaDocumentStore.versionsFor(`run:${raw}`).some(({ documentUrl }) => documentUrl === link),
-      `run:${raw} holds nothing read from its Board Actions link`,
-    );
-  }
-
+  const first = await withSourceTransport(transport, () => retrieveMeetingDocuments(meetings, { now: () => Date.parse(NOW), maxUrls: 3 }));
+  assert.equal(requested.length, 3);
+  assert.equal(new Set(requested).size, 3);
+  assert.equal(requested[0], `${ACTIONS}09-22-2026S.pdf`);
+  const before = new Set(requested);
   requested.length = 0;
-  await withSourceTransport(transport, () => retrieveAgendas(meetings));
-  assert.equal(new Set(requested).size, requested.length, "one run read a link twice");
-  assert.deepEqual(
-    [...requested].sort(),
-    [...boardActions.map(([, , link]) => link), `${ACTIONS}09-22-2026S.pdf`, `${PORTAL}502`, NOTICE].sort(),
-    "the second run did not re-read every held link",
-  );
-  assert.deepEqual(
-    requested.filter((url) => url.endsWith(".pdf")),
-    [`${ACTIONS}09-22-2026S.pdf`, ...boardActions.map(([, , link]) => link)],
-    "re-reads did not go nearest today first",
-  );
-});
-
-test("a vendor-host link read through its portal page ranks as read once the sitting holds the portal's link", () => {
-  const API = "https://legistar.granicus.com/pima/meetings/2026/9/1828_A_Board_of_Supervisors_26-09-22_Online_Agenda.pdf";
-  const DETAIL = "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1828&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394";
-  const PORTAL_AGENDA = "https://pima.legistar.com/View.ashx?M=A&ID=1381577&GUID=00EFD752-6A28-42D3-B329-E717E49891D0&G=7B470E9E-E35C-4698-8FA6-D778FB28F394";
-  const PIMA = "ocd-division/country:us/state:az/county:pima";
-  const pima: Meeting = {
-    ...sitting("legistar:pima:1828", "2026-09-22T17:00:00-07:00", API, PIMA),
-    provenance: { sourceUrl: DETAIL, sourceOrg: "Pima County Clerk", collectedAt: "2026-09-24T00:00:00Z", verifiedAt: null },
-  };
-  const unread = sitting("legistar:pima:1829", "2026-10-06T17:00:00-07:00", "https://example.gov/agendas/1829", PIMA);
-  const store = new AgendaDocumentStore();
-  assert.deepEqual(agendaRetrievalOrder([pima, unread], Date.parse(NOW), store).map(({ id }) => id),
-    ["legistar:pima:1828", "legistar:pima:1829"], "an unread portal-routed sitting does not compete as unread");
-  store.append(version(pima.id, PORTAL_AGENDA, "1. Call to order. 2. Minutes.", "2026-09-24T11:14:00.000Z", PIMA));
-  assert.deepEqual(agendaRetrievalOrder([pima, unread], Date.parse(NOW), store).map(({ id }) => id),
-    ["legistar:pima:1829", "legistar:pima:1828"], "a portal-routed sitting holding its portal agenda does not rank as unread");
-  // A sitting holding the vendor's own file has been read too.
-  const vendorHeld = new AgendaDocumentStore();
-  vendorHeld.append(version(pima.id, API, "1. Call to order. 2. Minutes.", "2026-09-25T11:14:00.000Z", PIMA));
-  assert.deepEqual(agendaRetrievalOrder([pima, unread], Date.parse(NOW), vendorHeld).map(({ id }) => id),
-    ["legistar:pima:1829", "legistar:pima:1828"], "a sitting holding the vendor's file does not rank as unread");
+  await withSourceTransport(transport, () => retrieveMeetingDocuments(meetings, { previous: first, now: () => Date.parse(NOW), maxUrls: 3 }));
+  assert.equal(requested.length, 3);
+  assert.ok(requested.every(url => !before.has(url)));
 });

@@ -1,5 +1,7 @@
-/** One concluded sitting's minutes to one durable row, and whether to read them again. Pure: the caller fetches. */
 import { createHash } from "node:crypto";
+import { fetchSource } from "../sources/fetch-source.ts";
+import type { Meeting } from "../sources/types.ts";
+import { publishedMeetingDocumentLinks, type MeetingDocumentTarget } from "../meetings/document-checks.ts";
 
 import { decodeEntities } from "../sources/http.ts";
 import type { InSiteCalendarRow } from "../sources/legistar-insite/calendar.ts";
@@ -23,6 +25,7 @@ import type {
   PersistedMinutesDocument,
   PersistedPublicationStatus,
   PersistedSittingOutcomes,
+  PublishedMeetingDocument,
 } from "./types.ts";
 
 /** The route id (lib/sources/legistar/routes.ts) a minutes-read sitting walked. */
@@ -130,18 +133,14 @@ export type MinutesRefreshReason =
   | "PRIOR_EXTRACTION_FAILED"
   /** Held with unread "It was moved" passages under an older parser revision: read again. Under the same revision it is not. */
   | "UNREAD_PASSAGES_HELD"
-  /** The link serves a document whose extraction failed: the caller checks whether it changed before downloading again. */
-  | "FAILED_DOCUMENT_CHECK"
-  /** The failed document's cheap check says it changed: read it again at once. */
+  /** The document's metadata changed: read it again at once. */
   | "DOCUMENT_CHANGED"
-  /** The failed document's cheap check says it is the same document: held, not downloaded. */
+  /** The document's length, type and validators match. */
   | "DOCUMENT_UNCHANGED"
-  /** The cheap check could not be made (the portal did not answer it): held until the re-verification date. */
+  /** The portal did not answer the metadata check. */
   | "DOCUMENT_UNCHECKED"
   /** A newer parser revision than the one that failed on these bytes: read again at once. */
   | "FAILED_DOCUMENT_PARSER_CHANGED"
-  /** The failed read is `FAILED_MINUTES_REVERIFY_DAYS` old: the bytes are read once more, whatever the check says. */
-  | "FAILED_DOCUMENT_REVERIFY"
   | "FORCED"
   /** Held and unchanged. */
   | "DOCUMENT_CHECK"
@@ -151,8 +150,7 @@ export type MinutesRefreshReason =
   /** Minutes held from a link the portal no longer shows: kept, since a withdrawn link is not a reversed decision. */
   | "LINK_WITHDRAWN_KEPT";
 
-/** How long a held failed extraction goes before its bytes are re-read anyway: the HEAD check cannot see a same-length replacement. */
-export const FAILED_MINUTES_REVERIFY_DAYS = 7;
+const MINUTES_REVERIFY_DAYS = 7;
 
 /** The words `minutesSitting` writes when a document leaves "It was moved" passages unread. */
 const UNREAD_PASSAGES_PHRASE = "were not in the clerk's usual form and were not read";
@@ -171,11 +169,7 @@ export function minutesRefreshDecision(
   const failed = held.failedMinutesRead;
   if (failed && failed.url === link.url && failed.publisherLabel === link.label) {
     if (failed.parserRevision !== MINUTES_PARSER_REVISION) return { walk: true, reason: "FAILED_DOCUMENT_PARSER_CHANGED" };
-    const readAt = Date.parse(failed.readAt);
-    if (!Number.isFinite(readAt) || now.getTime() - readAt >= FAILED_MINUTES_REVERIFY_DAYS * 86_400_000) {
-      return { walk: true, reason: "FAILED_DOCUMENT_REVERIFY" };
-    }
-    return { walk: false, reason: "FAILED_DOCUMENT_CHECK", check: failed };
+    return { walk: true, reason: "PRIOR_EXTRACTION_FAILED" };
   }
   if (held.extraction !== "RETRIEVED") return { walk: true, reason: "PRIOR_EXTRACTION_FAILED" };
   const document = held.minutesDocument;
@@ -185,7 +179,7 @@ export function minutesRefreshDecision(
   if (UNREAD_PASSAGES_NOTE.test(held.extractionNote ?? "") && document.parserRevision !== MINUTES_PARSER_REVISION) {
     return { walk: true, reason: "UNREAD_PASSAGES_HELD" };
   }
-  if (!document.readAt || !Number.isFinite(Date.parse(document.readAt)) || now.getTime() - Date.parse(document.readAt) >= FAILED_MINUTES_REVERIFY_DAYS * 86_400_000) {
+  if (!document.readAt || !Number.isFinite(Date.parse(document.readAt)) || now.getTime() - Date.parse(document.readAt) >= MINUTES_REVERIFY_DAYS * 86_400_000) {
     return { walk: true, reason: "DOCUMENT_REVERIFY" };
   }
   return { walk: false, reason: "DOCUMENT_CHECK", check: {
@@ -201,7 +195,7 @@ export interface MinutesDocumentIdentity {
   readonly lastModified: string | null;
 }
 
-/** What a HEAD of the failed document answered, or null when it could not be asked. */
+/** What the document's HEAD answered, or null when it could not be asked. */
 export interface MinutesDocumentHead {
   readonly status: number;
   readonly contentType: string;
@@ -318,6 +312,44 @@ export async function readMinutesDocument(link: MinutesLink, bytes: Uint8Array):
     pages: result.outcome === "EXTRACTED" ? result.items : [],
     unreadable: result.outcome === "EXTRACTED" ? null : result.reason || `The text layer returned ${result.outcome}.`,
   };
+}
+
+export function meetingDocumentTargets(meetings: readonly Meeting[]): MeetingDocumentTarget[] {
+  return meetings.flatMap(meeting => publishedMeetingDocumentLinks(meeting).map(link => ({
+    meeting, url: link.href, kind: link.kind, publisherLabel: link.label,
+  })));
+}
+
+export async function retrievePublishedMeetingDocument(
+  target: MeetingDocumentTarget,
+  fetchImpl: typeof fetch = fetchSource,
+  previous: readonly PublishedMeetingDocument[] = [],
+): Promise<PublishedMeetingDocument> {
+  if (target.kind === "AGENDA") throw new Error("Agenda documents use their own reader.");
+  const response = await fetchImpl(target.url);
+  if (!response.ok) throw new Error(`HTTP ${response.status} for ${target.url}`);
+  const bytes = new Uint8Array(await response.arrayBuffer());
+  const contentType = response.headers.get("content-type") ?? "";
+  const contentHash = createHash("sha256").update(bytes).digest("hex");
+  const observed = response.headers.get("x-meanwhile-source-checked-at");
+  const checkedAt = observed && Number.isFinite(Date.parse(observed)) ? observed : new Date().toISOString();
+  const held = previous.findLast(document => document.url === target.url && document.kind === target.kind &&
+    document.contentHash === contentHash && document.extraction === "TEXT_EXTRACTED" && document.text?.trim());
+  const base = { meetingId: target.meeting.id, kind: target.kind, url: target.url,
+    publisherLabel: target.publisherLabel || (target.kind === "MINUTES" ? "Minutes" : "Results"), contentHash, contentType, checkedAt };
+  if (held) return { ...held, ...base };
+  const pdf = contentType.includes("pdf") || new TextDecoder().decode(bytes.subarray(0, 5)) === "%PDF-";
+  if (!pdf && !/text\/(?:html|plain)|application\/xhtml\+xml/i.test(contentType)) return { ...base, retrievedAt: checkedAt,
+    extraction: "UNREADABLE", text: null, extractionNote: "The published document is not a readable PDF or web page." };
+  try {
+    const read = await readMinutesDocument({ url: target.url, label: base.publisherLabel, format: pdf ? "PDF" : "HTML" }, bytes);
+    const text = read.pages.map(page => page.text).join("\n\n").trim();
+    return { ...base, retrievedAt: checkedAt, extraction: text && !read.unreadable ? "TEXT_EXTRACTED" : "UNREADABLE",
+      text: text || null, extractionNote: read.unreadable };
+  } catch (error) {
+    return { ...base, retrievedAt: checkedAt, extraction: "UNREADABLE", text: null,
+      extractionNote: error instanceof Error ? error.message : "The published document could not be read." };
+  }
 }
 
 function publicationFromRow(

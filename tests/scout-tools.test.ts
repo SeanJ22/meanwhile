@@ -116,7 +116,7 @@ function fakeTransport(routes: Readonly<Record<string, Route>>, canonical = fals
     };
   };
   const vault = new MemoryEvidenceStore();
-  const store = { pacing: memoryWebsitePacing(), withLease: async <T,>(_key: string, operation: () => Promise<T>) => operation(), read: async () => null, readEntryRequest: async () => null, record: async () => {} };
+  const store = { pacing: memoryWebsitePacing(), withLease: async <T,>(_key: string, operation: () => Promise<T>) => operation(), read: async () => null, readRequestPlan: async () => ({ calendar: [], documents: {} }), saveRequestGroup: async () => {}, record: async () => {} };
   const sourceOpen: OpenOne = input => runWithSourceFetch({ vault, runtime: { store, transport: async (url, init) => {
     const result = await open({ ...input, url: String(url), headers: Object.fromEntries(new Headers(init?.headers)) });
     if (result.transportError) throw new Error(result.transportError);

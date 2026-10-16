@@ -247,18 +247,19 @@ test("all assigned runtime consumers use the promoted meetings projection", () =
   const ingest = readFileSync("scripts/ingest.ts", "utf8");
   assert.match(ingest, /RCD_MEETING_PARTITION_RECEIPT=/);
   assert.doesNotMatch(ingest, /scope:\s*["']supported-bodies["']/);
-  assert.match(ingest, /name === "composite" && !promote/);
   assert.match(ingest, /promoteSelectedMeetingPartitions/);
   assert.doesNotMatch(ingest, /promoteCompositeMeetingsSnapshot/);
   assert.doesNotMatch(ingest, /meetings-snapshot-write|writeMeetingsSnapshotStampStable/);
 });
 
-test("production-capable composite ingest has no non-promotion file door", () => {
-  const run = spawnSync(
-    process.execPath,
-    ["--experimental-strip-types", "scripts/ingest.ts", "composite"],
-    { cwd: process.cwd(), encoding: "utf8" },
-  );
-  assert.equal(run.status, 1);
-  assert.match(run.stderr, /requires --promote/);
+test("meeting ingest refuses runs without promotion or an exact source/body partition", () => {
+  const env = { ...process.env };
+  delete env.NODE_TEST_CONTEXT;
+  for (const args of [["composite"], ["composite", `--only-partition=${partition.id}`], ["composite", "--promote"]]) {
+    const run = spawnSync(process.execPath, ["--experimental-strip-types", "scripts/ingest.ts", ...args],
+      { cwd: process.cwd(), env, encoding: "utf8", timeout: 30_000 });
+    assert.ifError(run.error);
+    assert.equal(run.status, 1);
+    assert.match(run.stderr, args.includes("--promote") ? /MEETING_DEPENDENCY_BODY_REQUIRED/ : /Usage: pnpm ingest composite --promote --only-partition=/);
+  }
 });

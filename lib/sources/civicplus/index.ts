@@ -27,9 +27,12 @@ function civicPlusRequest(url: string, accept: string): CivicPlusRequest {
   return { url, headers: [["accept", accept]], redirect: "follow" };
 }
 
-export function civicPlusEntryRequest(wiring: BodySourceWiring): CivicPlusRequest | null {
-  if (wiring.config.agendaCenterUrl) return civicPlusRequest(wiring.config.rssUrl || agendaCenterRssUrl(wiring.config.agendaCenterUrl), "application/rss+xml");
-  return wiring.config.icalUrl ? civicPlusRequest(wiring.config.icalUrl, "text/calendar") : null;
+export function civicPlusCalendarRequests(wiring: BodySourceWiring): readonly CivicPlusRequest[] {
+  return [
+    ...(wiring.config.agendaCenterUrl ? [civicPlusRequest(wiring.config.rssUrl || agendaCenterRssUrl(wiring.config.agendaCenterUrl), "application/rss+xml")] : []),
+    ...(wiring.config.icalUrl ? [civicPlusRequest(wiring.config.icalUrl, "text/calendar")] : []),
+    ...(wiring.config.agendaCenterUrl ? [civicPlusRequest(wiring.config.agendaCenterUrl, "text/html")] : []),
+  ];
 }
 
 export interface CivicPlusRaw {
@@ -184,25 +187,26 @@ export function makeCivicPlusSource(
         responses.set(url, response); return response;
       };
       for (const wiring of wiringRows) {
-        const entry = civicPlusEntryRequest(wiring);
-        if (!entry) throw new Error(`CIVICPLUS_SOURCE_WIRING_INVALID:${wiring.bodyId}`);
+        const roots = civicPlusCalendarRequests(wiring);
+        if (!roots.length) throw new Error(`CIVICPLUS_SOURCE_WIRING_INVALID:${wiring.bodyId}`);
+        const rootFor = (accept: string) => roots.find(request => request.headers.some(([name, value]) => name === "accept" && value === accept));
         const partialScopes: PartialScopeFailure[] = [];
         const agendaPages: NonNullable<CivicPlusRaw["agendaPages"]> = [];
         let rss: CivicPlusRaw["rss"];
         let ical = "", collectedAt = "", failure: unknown;
         if (wiring.config.agendaCenterUrl) {
           try {
-            const url = entry.url;
+            const url = rootFor("application/rss+xml")!.url;
             rss = { url, ...await read(url, "application/rss+xml") };
           }
           catch (error) { query?.signal?.throwIfAborted(); partialScopes.push({ scope: "ARCHIVE", ocdIds: [wiring.ocdId], cause: String(error) }); }
         }
         if (wiring.config.icalUrl) {
-          try { const reply = await read(wiring.config.icalUrl, "text/calendar"); ical = reply.text; collectedAt = reply.collectedAt; }
+          try { const reply = await read(rootFor("text/calendar")!.url, "text/calendar"); ical = reply.text; collectedAt = reply.collectedAt; }
           catch (error) { query?.signal?.throwIfAborted(); failure = error; partialScopes.push({ scope: "UPCOMING", ocdIds: [wiring.ocdId], cause: String(error) }); }
         }
         if (wiring.config.agendaCenterUrl) {
-          const pending = [wiring.config.agendaCenterUrl], visited = new Set<string>();
+          const pending = [rootFor("text/html")!.url], visited = new Set<string>();
           while (pending.length) {
             const url = pending.shift()!;
             if (visited.has(url)) continue;

@@ -148,7 +148,7 @@ test("a superseded retired route's host is readable for agenda retrieval while i
   // The host is read: the college's own link into the tenant is requested like any public agenda link.
   const tenantLink = "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=698";
   assert.equal(agendaRetrievalRefusal(tenantLink), null);
-  const { retrieveAgendas } = await import("../scripts/ingest.ts");
+  const { retrieveMeetingDocuments } = await import("../scripts/ingest.ts");
   const requested: string[] = [];
   const realLog = console.log;
   const transport: typeof fetch = async input => {
@@ -161,7 +161,7 @@ test("a superseded retired route's host is readable for agenda retrieval while i
   };
   console.log = () => undefined;
   try {
-    await withSourceTransport(transport, () => retrieveAgendas([{
+    await withSourceTransport(transport, () => retrieveMeetingDocuments([{
       id: "pima-edu:pcc:2026-08-28-committee", ocdId: null, bodyId: PCC, bodyName: "Finance and Audit Committee",
       title: "Finance and Audit Committee", startsAt: "2026-08-28T09:00:00-07:00", timeZone: "America/Phoenix",
       location: null, agendaUrl: tenantLink, jurisdiction: "Pima Community College District, AZ", status: "CONCLUDED",
@@ -177,11 +177,11 @@ test("a superseded retired route's host is readable for agenda retrieval while i
 test("agenda retrieval consults the retired-host rule before any request", () => {
   const ingest = readFileSync(join(ROOT, "scripts", "ingest.ts"), "utf8");
   // One refusal rule: a retired route's host that nothing may fetch. No robots.txt rule.
-  const helper = ingest.slice(ingest.indexOf("export function agendaRetrievalRefusal"), ingest.indexOf("export async function retrieveAgendas"));
+  const helper = ingest.slice(ingest.indexOf("export function agendaRetrievalRefusal"), ingest.indexOf("export async function retrieveMeetingDocuments"));
   assert.match(helper, /isUnreadableRetiredMeetingHost\(url\)/, "the refusal consults the retired-host rule");
   assert.doesNotMatch(helper, /isDisallowedLegistarHost|"RECORDED_DISALLOWED"/, "and no robots.txt rule");
-  const body = ingest.slice(ingest.indexOf("async function retrieveAgendas"), ingest.indexOf("async function main"));
-  assert.match(body, /agendaRetrievalRefusal\(url\)/, "retrieveAgendas must filter refused hosts");
+  const body = ingest.slice(ingest.indexOf("async function retrieveMeetingDocuments"), ingest.indexOf("async function main"));
+  assert.match(body, /agendaRetrievalRefusal\(target.url\)/, "retrieveMeetingDocuments must filter refused hosts");
   assert.ok(
     body.indexOf("agendaRetrievalRefusal") < body.indexOf("retrieveAgendaDocument("),
     "the filter must run before the fetch",

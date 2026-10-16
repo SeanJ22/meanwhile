@@ -24,17 +24,21 @@ export interface SourceFetchRuntime {
   readonly transport?: typeof fetch; readonly store?: SourceFetchStore; readonly now?: () => number;
   readonly sleep?: (milliseconds: number) => Promise<void>;
 }
+export interface SourceFetchDeferral {
+  readonly until: number; readonly why: "ASKED_TO_WAIT" | "HOURLY_ALLOWANCE"; readonly url: string;
+}
 export interface SourceFetchContext {
   readonly sourceId?: string; readonly state?: string; readonly nextDueAt?: string; readonly dueAt?: string;
   readonly websiteSize?: WebsiteSize | WebsiteSizeForUrl;
   readonly vault?: EvidenceStore; readonly pacing?: WebsitePacing; readonly runtime?: SourceFetchRuntime;
   readonly spacingMs?: number;
   readonly onResponse?: (capture: SourceResponseCapture) => void | Promise<void>;
+  readonly onDeferred?: (admission: SourceFetchDeferral) => void | Promise<void>;
   readonly sensitiveQueryParameters?: readonly string[];
 }
 export type SourceFetchInit = RequestInit & { readonly source?: SourceFetchContext };
 interface SourceFetchScope extends SourceFetchContext {
-  readonly rootRequest: { claimed: boolean }; readonly prefetch?: boolean;
+  readonly requestCapture?: Map<string, SourcePrefetchRequest>; readonly prefetch?: boolean;
 }
 const contexts = new AsyncLocalStorage<SourceFetchScope>();
 export function runWithSourceFetch<T>(context: SourceFetchContext, operation: () => T): T {
@@ -44,9 +48,26 @@ export function runWithSourceFetch<T>(context: SourceFetchContext, operation: ()
   const onResponse = previous?.onResponse && context.onResponse && previous.onResponse !== context.onResponse
     ? async (capture: SourceResponseCapture) => { await previous.onResponse!(capture); await context.onResponse!(capture); }
     : context.onResponse ?? previous?.onResponse;
-  const rootRequest = !previous || (context.sourceId !== undefined && context.sourceId !== previous.sourceId)
-    ? { claimed: false } : previous.rootRequest;
-  return contexts.run({ ...previous, ...defined, rootRequest, onResponse, runtime: { ...previous?.runtime, ...runtime } }, operation);
+  const onDeferred = previous?.onDeferred && context.onDeferred && previous.onDeferred !== context.onDeferred
+    ? async (admission: SourceFetchDeferral) => { await previous.onDeferred!(admission); await context.onDeferred!(admission); }
+    : context.onDeferred ?? previous?.onDeferred;
+  return contexts.run({ ...previous, ...defined, onResponse, onDeferred, runtime: { ...previous?.runtime, ...runtime } }, operation);
+}
+
+export async function runWithSourceRequestPlan<T>(
+  group: { readonly kind: "CALENDAR" } | { readonly kind: "DOCUMENT"; readonly targetUrl: string }, operation: () => Promise<T>,
+): Promise<T> {
+  const context = contexts.getStore() ?? {}, sourceId = context.sourceId ?? process.env.WTP_SOURCE_ID;
+  if (!sourceId) throw new Error("SOURCE_REQUEST_PLAN_SOURCE_REQUIRED");
+  const state = sourceState(context.state ?? process.env.WTP_SOURCE_STATE ?? "US"), requestCapture = new Map<string, SourcePrefetchRequest>();
+  const result = await contexts.run({ ...context, requestCapture }, operation);
+  if (group.kind === "DOCUMENT") {
+    try { if (safeUrl(group.targetUrl, context) !== assertPublicUrl(group.targetUrl).href) return result; }
+    catch { return result; }
+  }
+  const store = context.runtime?.store ?? await defaultSourceFetchStore();
+  await store.saveRequestGroup(state, sourceId, group.kind, group.kind === "DOCUMENT" ? group.targetUrl : null, [...requestCapture.values()]);
+  return result;
 }
 
 export class SourceFetchDeferred extends Error {
@@ -61,7 +82,7 @@ export class SourceFetchDeferred extends Error {
 const hash = (bytes: Uint8Array | string) => createHash("sha256").update(bytes).digest("hex");
 const CHUNK_BYTES = 8 * 1024 * 1024;
 const EMPTY_STATUSES = new Set([204, 205, 304]);
-export const SOURCE_PREFETCH_MAX_BYTES = 1024 * 1024;
+export const SOURCE_PREFETCH_MAX_BYTES = 32 * 1024 * 1024;
 let defaultVault: EvidenceStore | undefined;
 const vaultFor = () => defaultVault ??= new DurableEvidenceStore(join(tmpdir(), "meanwhile-source-vault"));
 function safeUrl(raw: string, context: SourceFetchContext): string {
@@ -71,38 +92,77 @@ function safeUrl(raw: string, context: SourceFetchContext): string {
   }
   return url.href;
 }
-function reusableEntry(request: Request, context: SourceFetchContext, byteCount: number, currentDescriptor = false): SourcePrefetchRequest | null {
+function reusableRequest(request: Request, context: SourceFetchContext, byteCount: number): SourcePrefetchRequest | null {
   if (request.method !== "GET" || safeUrl(request.url, context) !== request.url) return null;
-  if (!currentDescriptor && new URL(request.url).search) return null;
   const headers = [...request.headers].filter(([name]) => !["user-agent", "if-none-match", "if-modified-since"].includes(name));
   if (headers.some(([name]) => !["accept", "accept-language", "content-type"].includes(name))) return null;
   return { url: request.url, headers, redirect: request.redirect, byteCount, ...(context.spacingMs ? { spacingMs: context.spacingMs } : {}) };
 }
 
+function sourceState(state: string): string {
+  const code = state.toUpperCase().replace(/^US-/, "");
+  return /^[A-Z]{2}$/.test(code) && code !== "US" ? `US-${code}` : "US";
+}
+
+function requestIdentity(request: SourcePrefetchRequest): string {
+  return JSON.stringify([request.url, request.redirect, [...request.headers].sort()]);
+}
+
+function captureRequest(request: Request, context: SourceFetchContext, byteCount: number): void {
+  const capture = contexts.getStore()?.requestCapture;
+  if (!capture) return;
+  const descriptor = reusableRequest(request, context, byteCount);
+  if (descriptor) capture.set(requestIdentity(descriptor), descriptor);
+}
+
 export async function prefetchSourceRequests(input: {
   readonly sourceId: string; readonly state: string; readonly dueAt: string;
-  readonly websiteSize?: SourceFetchContext["websiteSize"]; readonly signal?: AbortSignal; readonly seed?: SourcePrefetchRequest;
+  readonly calendarDueAt?: string; readonly phase?: "CALENDAR" | "DOCUMENT";
+  readonly documents?: readonly { readonly url: string; readonly nextDueAt: string }[];
+  readonly websiteSize?: SourceFetchContext["websiteSize"]; readonly signal?: AbortSignal; readonly seeds?: readonly SourcePrefetchRequest[];
   readonly acquire?: (bytes: number, signal?: AbortSignal) => Promise<() => void>;
 }): Promise<void> {
   const previous = contexts.getStore(), runtime = previous?.runtime ?? {};
   const store = runtime.store ?? await defaultSourceFetchStore();
-  const state = input.state.toUpperCase().replace(/^US-/, "");
-  const sourceState = /^[A-Z]{2}$/.test(state) && state !== "US" ? `US-${state}` : "US";
-  const entry = input.seed ?? await store.readEntryRequest(sourceState, input.sourceId);
-  if (!entry || !Number.isFinite(entry.byteCount) || entry.byteCount < 0 || entry.byteCount > SOURCE_PREFETCH_MAX_BYTES) return;
-  let request: Request;
-  try { request = new Request(entry.url, { headers: [...entry.headers], redirect: entry.redirect }); }
-  catch { return; }
-  if (!reusableEntry(request, previous ?? {}, entry.byteCount, input.seed !== undefined)) return;
-  input.signal?.throwIfAborted();
-  const release = await input.acquire?.(entry.byteCount, input.signal);
-  try {
-    await contexts.run({ ...previous, ...input, state: sourceState, nextDueAt: input.dueAt, spacingMs: entry.spacingMs,
-      rootRequest: { claimed: false }, prefetch: true, onResponse: undefined, runtime: { ...runtime, store } }, async () => {
-      const response = await fetchSource(request, { signal: input.signal ?? AbortSignal.timeout(180_000) });
-      await response.body?.cancel();
-    });
-  } finally { release?.(); }
+  const state = sourceState(input.state), plan = await store.readRequestPlan(state, input.sourceId);
+  const now = (runtime.now ?? Date.now)(), seen = new Set<string>();
+  const roots = new Map((input.seeds ?? []).map(request => [requestIdentity(request), request]));
+  const read = async (entry: SourcePrefetchRequest, dueAt: string, queryIsCurrent: boolean) => {
+    if (!Number.isFinite(entry.byteCount) || entry.byteCount < 0 || entry.byteCount > SOURCE_PREFETCH_MAX_BYTES) return;
+    let request: Request;
+    try { request = new Request(entry.url, { headers: [...entry.headers], redirect: entry.redirect }); }
+    catch { return; }
+    if (!reusableRequest(request, previous ?? {}, entry.byteCount) || !queryIsCurrent && new URL(request.url).search) return;
+    const identity = requestIdentity(entry);
+    if (seen.has(identity)) return;
+    seen.add(identity);
+    input.signal?.throwIfAborted();
+    const release = await input.acquire?.(entry.byteCount, input.signal);
+    try {
+      await contexts.run({ ...previous, ...input, state, dueAt, nextDueAt: dueAt, spacingMs: entry.spacingMs,
+        requestCapture: undefined, prefetch: true, onResponse: undefined, runtime: { ...runtime, store } }, async () => {
+        const response = await fetchSource(request, { signal: input.signal ?? AbortSignal.timeout(180_000) });
+        await response.body?.cancel();
+      });
+    } finally { release?.(); }
+  };
+  const calendarDueAt = input.calendarDueAt ?? input.dueAt;
+  const readGroup = async (requests: readonly { entry: SourcePrefetchRequest; dueAt: string; current: boolean }[]) => {
+    if (!input.acquire) {
+      for (const request of requests) await read(request.entry, request.dueAt, request.current);
+      return;
+    }
+    const results = await Promise.allSettled(requests.map(request => read(request.entry, request.dueAt, request.current)));
+    const failed = results.find(result => result.status === "rejected");
+    if (failed?.status === "rejected") throw failed.reason;
+  };
+  if (input.phase !== "DOCUMENT" && Date.parse(calendarDueAt) <= now) {
+    await readGroup([...roots.values(), ...(plan?.calendar ?? [])].map(entry =>
+      ({ entry, dueAt: calendarDueAt, current: roots.has(requestIdentity(entry)) })));
+  }
+  if (input.phase !== "CALENDAR") await readGroup((input.documents ?? []).filter(document => Date.parse(document.nextDueAt) <= now)
+    .flatMap(document => (plan?.documents[document.url] ?? []).map(entry =>
+      ({ entry, dueAt: document.nextDueAt, current: entry.url === document.url }))));
 }
 function savedHeaders(headers: Headers, context: SourceFetchContext): [string, string][] {
   const names = new Set(["content-type", "content-length", "content-language", "etag", "last-modified", "cache-control", "expires", "date", "vary", "retry-after", "location"]);
@@ -115,8 +175,9 @@ function savedHeaders(headers: Headers, context: SourceFetchContext): [string, s
 async function storeBytes(vault: EvidenceStore, key: string, bytes: Uint8Array, contentType: string): Promise<void> {
   await vault.put(key, bytes, { contentType, byteLength: bytes.byteLength, contentHash: `sha256-${hash(bytes)}`, objectClass: "IMMUTABLE_BODY" });
 }
-async function saveBody(vault: EvidenceStore, response: Response, chunkBytes: number): Promise<Pick<SavedSourceResponse, "rawHash" | "byteCount" | "vaultKey" | "chunks">> {
+async function saveBody(vault: EvidenceStore, response: Response, chunkBytes: number): Promise<Pick<SavedSourceResponse, "rawHash" | "byteCount" | "vaultKey" | "chunks"> & { failure?: { error: unknown } }> {
   const digest = createHash("sha256"), chunks: string[] = [];
+  let failure: { error: unknown } | undefined;
   let pending: Uint8Array[] = [], used = 0, byteCount = 0;
   const flush = async () => {
     const bytes = pending.length === 1 ? pending[0]! : Buffer.concat(pending, used), key = `project/freshness/source-fetch/body/${hash(bytes)}`;
@@ -127,7 +188,10 @@ async function saveBody(vault: EvidenceStore, response: Response, chunkBytes: nu
   if (reader) {
     try {
       for (;;) {
-        const { done, value } = await reader.read();
+        let next: ReadableStreamReadResult<Uint8Array>;
+        try { next = await reader.read(); }
+        catch (error) { failure = { error }; break; }
+        const { done, value } = next;
         if (done) break;
         digest.update(value); byteCount += value.byteLength;
         for (let offset = 0; offset < value.byteLength;) {
@@ -137,14 +201,17 @@ async function saveBody(vault: EvidenceStore, response: Response, chunkBytes: nu
         }
       }
     } catch (error) { await reader.cancel(error).catch(() => {}); throw error; }
-    finally { reader.releaseLock(); }
+    finally {
+      if (failure) await reader.cancel(failure.error).catch(() => {});
+      reader.releaseLock();
+    }
   }
   if (used > 0 || chunks.length === 0) await flush();
   const rawHash = digest.digest("hex");
-  if (chunks.length === 1) return { rawHash, byteCount, vaultKey: chunks[0]!, chunks };
+  if (chunks.length === 1) return { rawHash, byteCount, vaultKey: chunks[0]!, chunks, failure };
   const vaultKey = `project/freshness/source-fetch/body/${rawHash}.json`;
   await storeBytes(vault, vaultKey, new TextEncoder().encode(JSON.stringify({ rawHash, byteCount, chunks })), "application/json");
-  return { rawHash, byteCount, vaultKey, chunks };
+  return { rawHash, byteCount, vaultKey, chunks, failure };
 }
 
 export function sourceResponseBody(vault: EvidenceStore, saved: Pick<SavedSourceResponse, "chunks">): ReadableStream<Uint8Array> {
@@ -173,8 +240,7 @@ export async function fetchSource(input: RequestInfo | URL, init?: SourceFetchIn
   const state = context.state?.toUpperCase().replace(/^US-/, "");
   const websiteSize = context.websiteSize ?? websiteSizeFromHoldings(state && state !== "US" ? [state] : []);
   const original = new Request(input, init), start = assertPublicUrl(original.url);
-  const scope = contexts.getStore(), entryRequest = scope ? !scope.rootRequest.claimed : false;
-  if (scope) scope.rootRequest.claimed = true;
+  const scope = contexts.getStore();
   const signal = init?.signal || input instanceof Request ? original.signal : AbortSignal.timeout(180_000);
   let url = start, method = original.method, body = method === "GET" || method === "HEAD" ? undefined : await original.arrayBuffer();
   const baseHeaders = new Headers(original.headers);
@@ -188,6 +254,7 @@ export async function fetchSource(input: RequestInfo | URL, init?: SourceFetchIn
       const key = responseKeyFor();
       const previous = method === "GET" ? await store.read(key) : null, headers = new Headers(baseHeaders);
       if (previous?.checkKey && context.dueAt && Date.parse(previous.checkedAt) >= Date.parse(context.dueAt)) {
+        captureRequest(original, context, previous.byteCount);
         const unchanged = previous.checkStatus === 304, resultHeaders = new Headers([...previous.headers]);
         if (unchanged) resultHeaders.set("x-meanwhile-source-status", "304");
         resultHeaders.set("x-meanwhile-source-reused", "true");
@@ -196,7 +263,7 @@ export async function fetchSource(input: RequestInfo | URL, init?: SourceFetchIn
         await store.record(previous.checkKey, null, { sourceId: context.sourceId ?? url.hostname,
           state: state && state !== "US" && /^[A-Z]{2}$/.test(state) ? `US-${state}` : "US", url: safeUrl(previous.finalUrl, context),
           checkedAt: previous.checkedAt, httpStatus: previous.checkStatus, unchanged, downloadedBytes: 0, nextDueAt: context.nextDueAt,
-          reused: true, ...(entryRequest ? { entryRequest: reusableEntry(original, context, previous.byteCount) } : {}) });
+          reused: true });
         if (!scope?.prefetch) recordAcquiredResponse({ requestedUrl: safeUrl(start.href, context), finalUrl: safeUrl(previous.finalUrl, context), httpStatus: result.status, rawHash: previous.rawHash, byteCount: previous.byteCount });
         if (context.onResponse) await context.onResponse({ requestedUrl: safeUrl(start.href, context), finalUrl: safeUrl(previous.finalUrl, context), httpStatus: previous.checkStatus, responseStatus: result.status,
           rawHash: previous.rawHash, byteCount: previous.byteCount, bytes: new Uint8Array(await result.clone().arrayBuffer()), retrievedAt: previous.checkedAt,
@@ -214,22 +281,31 @@ export async function fetchSource(input: RequestInfo | URL, init?: SourceFetchIn
         if (wait > 0) await (runtime.sleep ?? (milliseconds => delay(milliseconds, undefined, { signal })))(wait);
       }
       const admission = await admitWebsiteRequest(pacing, url.href, websiteRequestLimit(size), now());
-      if (!admission.ok) throw new SourceFetchDeferred(admission);
+      if (!admission.ok) {
+        await context.onDeferred?.({ until: admission.until, why: admission.why, url: safeUrl(url.href, context) });
+        throw new SourceFetchDeferred(admission);
+      }
       let response: Response;
       try { response = await (runtime.transport ?? publicTransport)(url, { method, headers, body, redirect: "manual", signal }); }
       catch (error) {
         await store.record(key, null, { sourceId: context.sourceId ?? url.hostname,
           state: state && state !== "US" && /^[A-Z]{2}$/.test(state) ? `US-${state}` : "US", url: safeUrl(url.href, context),
-          checkedAt: new Date(now()).toISOString(), httpStatus: 0, unchanged: false, downloadedBytes: 0, nextDueAt: context.nextDueAt,
-          ...(entryRequest ? { entryRequest: null } : {}) });
+          checkedAt: new Date(now()).toISOString(), httpStatus: 0, unchanged: false, downloadedBytes: 0, nextDueAt: context.nextDueAt });
         throw error;
       }
       const checkedAt = new Date(now()).toISOString(), finalUrl = response.url || url.href;
       await holdWebsiteAfter(pacing, url.href, response.status, response.headers.get("retry-after"), now());
-      const receivedBody = await saveBody(vault, response, scope?.prefetch ? 64 * 1024 : CHUNK_BYTES), receivedHeaders = savedHeaders(response.headers, context);
+      const { failure, ...receivedBody } = await saveBody(vault, response, scope?.prefetch ? 64 * 1024 : CHUNK_BYTES), receivedHeaders = savedHeaders(response.headers, context);
       const wire = { ...receivedBody, checkKey: key, checkedAt, checkStatus: response.status, status: response.status, headers: receivedHeaders, finalUrl: safeUrl(finalUrl, context) };
       const responseKey = `project/freshness/source-fetch/responses/${key}/${checkedAt.slice(0, 10)}/${randomUUID()}.json`;
-      await storeBytes(vault, responseKey, new TextEncoder().encode(JSON.stringify({ ...wire, requestedUrl: safeUrl(url.href, context), checkedAt })), "application/json");
+      await storeBytes(vault, responseKey, new TextEncoder().encode(JSON.stringify({ ...wire, requestedUrl: safeUrl(url.href, context), checkedAt,
+        ...(failure ? { complete: false, failure: "BODY_STREAM_FAILED" } : {}) })), "application/json");
+      if (failure) {
+        await store.record(key, null, { sourceId: context.sourceId ?? url.hostname,
+          state: state && state !== "US" && /^[A-Z]{2}$/.test(state) ? `US-${state}` : "US", url: safeUrl(url.href, context),
+          checkedAt, httpStatus: 0, unchanged: false, downloadedBytes: receivedBody.byteCount, nextDueAt: context.nextDueAt });
+        throw failure.error;
+      }
       const unchanged = response.status === 304, rehydrate = unchanged && previous !== null;
       const mergedHeaders = new Headers(rehydrate ? [...previous.headers] : receivedHeaders);
       for (const [name, value] of receivedHeaders) mergedHeaders.set(name, value);
@@ -239,8 +315,6 @@ export async function fetchSource(input: RequestInfo | URL, init?: SourceFetchIn
         sourceId: context.sourceId ?? url.hostname, state: state && state !== "US" && /^[A-Z]{2}$/.test(state) ? `US-${state}` : "US",
         url: safeUrl(url.href, context), checkedAt, httpStatus: response.status, unchanged,
         downloadedBytes: receivedBody.byteCount, nextDueAt: context.nextDueAt,
-        ...(entryRequest && ![301, 302, 303, 307, 308].includes(response.status)
-          ? { entryRequest: nextValue ? reusableEntry(original, context, saved.byteCount) : null } : {}),
       }, original.method === "GET" && nextValue ? [initialKey] : []);
       const resultHeaders = new Headers(response.headers);
       resultHeaders.set("x-meanwhile-source-checked-at", checkedAt);
@@ -250,6 +324,7 @@ export async function fetchSource(input: RequestInfo | URL, init?: SourceFetchIn
         resultHeaders.delete("content-length");
       }
       const result = hydratedResponse(vault, saved, saved.status, resultHeaders, finalUrl, method === "HEAD");
+      if (result.ok) captureRequest(original, context, saved.byteCount);
       if (result.ok && !scope?.prefetch) recordAcquiredResponse({ requestedUrl: safeUrl(start.href, context), finalUrl: safeUrl(finalUrl, context), httpStatus: result.status, rawHash: saved.rawHash, byteCount: saved.byteCount });
       if (context.onResponse) {
         await context.onResponse({ requestedUrl: safeUrl(start.href, context), finalUrl: safeUrl(finalUrl, context), httpStatus: response.status, responseStatus: result.status,

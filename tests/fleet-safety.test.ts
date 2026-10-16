@@ -1069,7 +1069,7 @@ test('parent HTTP shares ten held small-publisher requests across text and byte 
   const controller=fundedController({now:NIGHT,charges: [],websiteSize});
   let calls=0;
   const vault=new MemoryEvidenceStore();
-  const store={pacing:memoryWebsitePacing(),withLease: async <T,>(_key: string, operation: () => Promise<T>) => operation(),read:async()=>null,readEntryRequest:async()=>null,record:async()=>{}};
+  const store={pacing:memoryWebsitePacing(),withLease: async <T,>(_key: string, operation: () => Promise<T>) => operation(),read:async()=>null,readRequestPlan:async()=>({calendar:[],documents:{}}),saveRequestGroup:async()=>{},record:async()=>{}};
   const fetcher:typeof fetch=(input,init)=>runWithSourceFetch({vault,runtime:{store,transport:async()=>{calls++;return new Response('complete');}}},()=>fetchSource(input,init));
   const text=controller.guardedOpenOne('public-web','same-work',fetcher);
   const bytes=controller.guardedOpenBytes('public-web','same-work',fetcher);

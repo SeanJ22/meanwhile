@@ -2,7 +2,8 @@ import { routineScopeState } from "../civic-data/state-scope.ts";
 import { factReader } from "../facts/db.ts";
 import { createHash } from "node:crypto";
 import { runBoundedWorkPool } from "../ops/bounded-work-pool.ts";
-import type { MeetingPublication } from "./edge-artifacts.ts";
+import type { MeetingDocumentCheckPublication, MeetingPublication } from "./edge-artifacts.ts";
+import type { MeetingDocumentChecks } from "./document-checks.ts";
 
 import {
   PostgresRoutineDataStore,
@@ -35,6 +36,7 @@ import {
 } from "./snapshot.ts";
 import {
   applyMeetingFreshChecks,
+  applyDocumentFreshChecks,
   confirmationCheckedAt,
   laterCheck,
   meetingCompositionId,
@@ -61,16 +63,19 @@ function couplingFingerprint(coupling: readonly PreparedProjectionCoupling[]): s
 /** A composed partition's scope, read from its id: the composition is checked whatever doors this process holds. */
 const scopeOfContract = (contractId: string): string | undefined => meetingPartitionOfId(contractId)?.scope;
 
+type CheckedCoupling = FreshCheckCoupling & { readonly meetingChecksVersion?: string };
+
 function withCurrentChecks(
   couplings: readonly FreshCheckCoupling[],
-  identityByScope: ReadonlyMap<string, Pick<PromotedPointerIdentity, "versionId" | "latestConfirmation">>,
-): FreshCheckCoupling[] {
+  identityByScope: ReadonlyMap<string, Pick<PromotedPointerIdentity, "versionId" | "latestConfirmation" | "meetingChecksVersion">>,
+): CheckedCoupling[] {
   return couplings.map((coupling) => {
     if (coupling.routes === undefined) return coupling;
     const scope = scopeOfContract(coupling.contractId);
     const identity = scope === undefined ? undefined : identityByScope.get(scope);
     const checkedAt = laterCheck(coupling.checkedAt ?? null, confirmationCheckedAt(identity?.latestConfirmation, coupling.versionId, true));
-    return checkedAt === (coupling.checkedAt ?? null) ? coupling : { ...coupling, checkedAt };
+    return { ...coupling, checkedAt, ...(identity?.versionId === coupling.versionId && identity.meetingChecksVersion
+      ? { meetingChecksVersion: identity.meetingChecksVersion } : {}) };
   });
 }
 
@@ -79,15 +84,17 @@ export interface PreparedMeetingChecks {
   readonly checkedAt: string | null;
   readonly freshChecks: Readonly<Record<string, string>>;
   readonly composition: string;
+  readonly documentChecks: AsyncIterable<MeetingDocumentCheckPublication>;
 }
 
-function preparedChecks(generatedAt: string | null, couplings: readonly FreshCheckCoupling[]): PreparedMeetingChecks {
+function preparedChecks(generatedAt: string | null, couplings: readonly FreshCheckCoupling[], documentChecks: AsyncIterable<MeetingDocumentCheckPublication>): PreparedMeetingChecks {
   const checks = meetingFreshChecks(couplings);
   return {
     servedGeneratedAt: laterCheck(generatedAt, checks.checkedAt),
     checkedAt: checks.checkedAt,
     freshChecks: checks.routes,
     composition: meetingCompositionId(couplings),
+    documentChecks,
   };
 }
 
@@ -123,6 +130,40 @@ export interface PreparedMeetingManifest {
   readonly chunks: readonly PreparedMeetingChunk[];
   readonly heldChunks: readonly { readonly chunk: PreparedMeetingChunk; readonly detail: string }[];
   readonly unavailableSources: readonly SnapshotSourceReport[];
+}
+
+function chunkDocumentChecks(chunk: PreparedMeetingChunk, checked: ReadonlyMap<string, CheckedCoupling>, store: RoutineDataStore): MeetingDocumentCheckPublication | null {
+  const members = chunk.composedFrom.flatMap(coupling => {
+    const current = checked.get(coupling.contractId), scope = scopeOfContract(coupling.contractId);
+    return scope && current?.versionId === coupling.versionId && current.meetingChecksVersion
+      ? [{ scope, versionId: coupling.versionId, checksVersion: current.meetingChecksVersion }] : [];
+  });
+  if (!members.length) return null;
+  return { chunkKey: chunk.key, chunkVersion: chunk.scope,
+    version: createHash("sha256").update(JSON.stringify(members)).digest("hex"), read: async () => {
+      const documents: MeetingDocumentChecks["documents"][number][] = [];
+      for (const member of members) {
+        const checks = await store.readPromotedMeetingChecks(member.scope, member.versionId, member.checksVersion);
+        documents.push(...(checks?.documents ?? []).filter(check => check.contentHash && check.checkedAt));
+      }
+      documents.sort((a, b) => Date.parse(a.checkedAt!) - Date.parse(b.checkedAt!) || a.url.localeCompare(b.url));
+      return { documents };
+    } };
+}
+
+async function* preparedDocumentChecks(store: RoutineDataStore, scope: string, couplings: readonly CheckedCoupling[], manifest?: PreparedMeetingManifest, expectedSequence?: number): AsyncIterable<MeetingDocumentCheckPublication> {
+  if (!couplings.some(coupling => coupling.meetingChecksVersion)) return;
+  if (!manifest) {
+    const row = await store.readPreparedReaderProjection(MEETINGS_RECORD_CLASS, scope);
+    if (!row) throw new Error("PREPARED_MEETING_CHUNK_MISSING");
+    if (expectedSequence !== undefined && row.sequence !== expectedSequence) throw new Error("PREPARED_MEETING_COPY_CHANGED_DURING_READ");
+    manifest = meetingManifest(row.payload);
+  }
+  const checked = new Map(couplings.map(coupling => [coupling.contractId, coupling]));
+  for (const chunk of manifest.chunks) {
+    const publication = chunkDocumentChecks(chunk, checked, store);
+    if (publication) yield publication;
+  }
 }
 
 function meetingManifest(value: unknown): PreparedMeetingManifest {
@@ -216,8 +257,9 @@ export async function preparePublishedMeetingSnapshot(
     const currentCoupling = couplingsFor(partitions);
     const currentFingerprint = couplingFingerprint([...currentCoupling, facts, MEETING_LAYOUT_COUPLING]);
     if (prepared && couplingFingerprint(observedCouplings(prepared.composedFrom)) === currentFingerprint) {
+      const checked = withCurrentChecks(prepared.composedFrom as readonly FreshCheckCoupling[], identityByScope);
       return { status: "CURRENT", sequence: prepared.sequence, coupledPartitions: currentCoupling.length, generatedAt: prepared.generatedAt,
-        ...preparedChecks(prepared.generatedAt, withCurrentChecks(prepared.composedFrom as readonly FreshCheckCoupling[], identityByScope)) };
+        ...preparedChecks(prepared.generatedAt, checked, preparedDocumentChecks(store, preparedScope, checked, undefined, prepared.sequence)) };
     }
     const prior = prepared?.composedFrom.some(entry => entry.contractId === MEETING_LAYOUT_COUPLING.contractId && entry.versionId === MEETING_LAYOUT_COUPLING.versionId)
       ? await store.readPreparedReaderProjection(MEETINGS_RECORD_CLASS, preparedScope) : null;
@@ -307,8 +349,9 @@ export async function preparePublishedMeetingSnapshot(
       sourceThrough: latest(chunks.map(chunk => chunk.sourceThrough)), retrievedAt: latest(chunks.map(chunk => chunk.retrievedAt)),
       promotedThrough: latest(chunks.map(chunk => chunk.promotedThrough)) };
     const result = await store.writePreparedReaderProjection(input, prepared?.sequence ?? null);
+    const checked = withCurrentChecks(input.composedFrom, identityByScope);
     return result.published ? { status: "PUBLISHED", sequence: result.sequence, coupledPartitions: composedFrom.length, generatedAt,
-      ...preparedChecks(generatedAt, withCurrentChecks(input.composedFrom, identityByScope)) }
+      ...preparedChecks(generatedAt, checked, preparedDocumentChecks(store, preparedScope, checked, input.payload as PreparedMeetingManifest)) }
       : { status: "RACED", sequence: result.sequence, coupledPartitions: composedFrom.length };
   } catch (error) {
     return { status: "FAILED", error: error instanceof Error ? error.message : String(error), lastValidGeneratedAt: prepared?.generatedAt ?? null };
@@ -424,14 +467,14 @@ export function clearPreparedMeetingsProjectionCache(): void {
 
 /** Within this window the stated "Last checked" can only lag a newer check, never claim one that did not happen. */
 export const PREPARED_CHECKS_TTL_MS = 60_000;
-let servedChecks = new WeakMap<object, { readonly sequence: number; readonly scope: string; readonly readAtMs: number; readonly couplings: readonly FreshCheckCoupling[] }>();
+let servedChecks = new WeakMap<object, { readonly sequence: number; readonly scope: string; readonly readAtMs: number; readonly couplings: readonly CheckedCoupling[] }>();
 
 async function servedPreparedChecks(
   store: RoutineDataStore,
   scope: object,
   prepared: PreparedReaderProjectionRow,
   nowMs: number,
-): Promise<readonly FreshCheckCoupling[]> {
+): Promise<readonly CheckedCoupling[]> {
   const couplings = prepared.composedFrom as readonly FreshCheckCoupling[];
   const checkable = couplings.filter((coupling) => coupling.routes !== undefined);
   if (checkable.length === 0) return couplings;
@@ -486,7 +529,9 @@ export async function readPreparedMeetingPublication(
   const ownComposed = new Set(composedFrom.map(entry => entry.contractId));
   const allComposed = partitions.every(partition => ownComposed.has(partition.contractId));
   const nowMs = options.now !== undefined && Number.isFinite(Date.parse(options.now)) ? Date.parse(options.now) : Date.now();
-  const checks = meetingFreshChecks(await servedPreparedChecks(store!, options.store ?? DEFAULT_PREPARED_STORE, prepared, nowMs));
+  const checked = await servedPreparedChecks(store!, options.store ?? DEFAULT_PREPARED_STORE, prepared, nowMs);
+  const checkedByContract = new Map(checked.map(coupling => [coupling.contractId, coupling]));
+  const checks = meetingFreshChecks(checked);
   const generatedAt = laterCheck(prepared.generatedAt, checks.checkedAt) ?? prepared.generatedAt;
   const value: MeetingPublication = { generatedAt, sources: [...chunks.flatMap(chunk => chunk.sources), ...manifest.unavailableSources],
     meetingCount: chunks.reduce((sum, chunk) => sum + chunk.counts.total, 0),
@@ -495,7 +540,8 @@ export async function readPreparedMeetingPublication(
         yield { key: chunk.key, version: chunk.scope, read: async () => {
           const row = await store!.readPreparedReaderProjection(MEETINGS_RECORD_CLASS, chunk.scope);
           if (!row) throw new Error("PREPARED_MEETING_CHUNK_MISSING");
-          return { snapshot: row.payload as MeetingsSnapshot };
+          const documents = chunkDocumentChecks(chunk, checkedByContract, store!);
+          return { snapshot: applyDocumentFreshChecks(row.payload as MeetingsSnapshot, documents ? await documents.read() : undefined) };
         } };
       }
     })() };

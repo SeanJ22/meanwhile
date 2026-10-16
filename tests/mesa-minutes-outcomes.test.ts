@@ -7,7 +7,6 @@ import { NEVER_READ } from "../lib/ops/freshness.ts";
 import {
   applyMinutesApprovals,
   concludedSittingRows,
-  FAILED_MINUTES_REVERIFY_DAYS,
   minutesDocumentCheck,
   failedMinutesReadFor,
   isHeldFailedExtraction,
@@ -469,16 +468,16 @@ test("a document read whose extraction failed is held with the identity of the b
   assert.equal(isHeldFailedExtraction(requestFailed), false);
 });
 
-test("the next pass asks the portal first: an unchanged document is not downloaded, a changed one is read at once", () => {
+test("a failed extraction reads again on the next body pass without a HEAD gate", () => {
   const held = heldStrategicFailure();
   const link = minutesLinkFor(STRATEGIC(), tenant.host)!;
   const hourLater = new Date("2026-09-25T23:31:11.000Z");
   const decision = minutesRefreshDecision(link, held, hourLater);
-  assert.equal(decision.walk, false);
-  assert.equal(decision.reason, "FAILED_DOCUMENT_CHECK");
-  assert.equal(decision.check, held.failedMinutesRead);
+  assert.deepEqual(decision, { walk: true, reason: "PRIOR_EXTRACTION_FAILED" });
+});
 
-  const failed = held.failedMinutesRead!;
+test("document metadata detects changed validators and distinguishes an unavailable check", () => {
+  const failed = heldStrategicFailure().failedMinutesRead!;
   assert.deepEqual(minutesDocumentCheck(failed, MESA_HEAD()), { walk: false, reason: "DOCUMENT_UNCHANGED", detail: "the same 18779714 bytes by length, type and validators" });
   assert.equal(minutesDocumentCheck(failed, MESA_HEAD({ contentType: "application/pdf; charset=binary" })).reason, "DOCUMENT_UNCHANGED", "the type's parameters are not the type");
   for (const [changed, why] of [
@@ -492,14 +491,13 @@ test("the next pass asks the portal first: an unchanged document is not download
     assert.equal(check.reason, "DOCUMENT_CHANGED");
     assert.match(check.detail, why);
   }
-  // A check the portal does not answer says nothing: the failure stays held, nothing is downloaded.
   for (const unanswered of [null, MESA_HEAD({ status: 405 }), MESA_HEAD({ contentLength: null })]) {
     const check = minutesDocumentCheck(failed, unanswered);
     assert.deepEqual({ walk: check.walk, reason: check.reason }, { walk: false, reason: "DOCUMENT_UNCHECKED" });
   }
 });
 
-test("a held failed extraction is read again at once when the parser changes, when its link changes, and after a week", () => {
+test("failed extraction retries preserve parser and changed-link reasons without a seven-day wait", () => {
   const held = heldStrategicFailure();
   const link = minutesLinkFor(STRATEGIC(), tenant.host)!;
   const soon = new Date("2026-09-26T12:00:00.000Z");
@@ -507,10 +505,9 @@ test("a held failed extraction is read again at once when the parser changes, wh
   assert.deepEqual(minutesRefreshDecision(link, olderParser, soon), { walk: true, reason: "FAILED_DOCUMENT_PARSER_CHANGED" });
   assert.deepEqual(minutesRefreshDecision({ ...link, url: `${link.url}&v=2` }, held, soon), { walk: true, reason: "PRIOR_EXTRACTION_FAILED" }, "a new link is a new document");
   assert.deepEqual(minutesRefreshDecision({ ...link, label: "Results" }, held, soon), { walk: true, reason: "PRIOR_EXTRACTION_FAILED" });
-  const justUnder = new Date(Date.parse(FAILED_AT) + FAILED_MINUTES_REVERIFY_DAYS * 86_400_000 - 1);
-  assert.equal(minutesRefreshDecision(link, held, justUnder).reason, "FAILED_DOCUMENT_CHECK");
-  const aWeek = new Date(Date.parse(FAILED_AT) + FAILED_MINUTES_REVERIFY_DAYS * 86_400_000);
-  assert.deepEqual(minutesRefreshDecision(link, held, aWeek), { walk: true, reason: "FAILED_DOCUMENT_REVERIFY" });
+  for (const elapsed of [1, 60 * 60_000, 7 * 86_400_000]) {
+    assert.deepEqual(minutesRefreshDecision(link, held, new Date(Date.parse(FAILED_AT) + elapsed)), { walk: true, reason: "PRIOR_EXTRACTION_FAILED" });
+  }
 });
 
 test("a failure over verified minutes keeps the verified reading and remembers the failed document beside it; a success clears it", () => {
@@ -523,6 +520,19 @@ test("a failure over verified minutes keeps the verified reading and remembers t
   assert.deepEqual(relabeled.outcomes, verified.outcomes);
   assert.equal(relabeled.failedMinutesRead, failed);
   assert.equal(sittingAfterRead(strategic, verified, null).failedMinutesRead, undefined, "a read that succeeds clears the remembered failure");
+});
+
+test("retained minutes require the replacement failure to match the newly acquired bytes", () => {
+  const verified = sittingFrom("1336059", textDocument("1336059"));
+  const failed = { ...heldStrategicFailure().failedMinutesRead!, url: verified.minutesDocument!.url };
+  const candidate = (rawHash: string, rememberFailure = true) => mesaLegistarMinutesOutcomesCandidate({
+    snapshot: snapshotOf([{ ...verified, ...(rememberFailure ? { failedMinutesRead: failed } : {}) }]),
+    acquisitions: [{ source: "mesa-legistar-minutes-outcomes", requestedUrl: failed.url, finalUrl: failed.url,
+      httpStatus: 200, rawHash, byteCount: failed.byteCount }], retrievedAt: FAILED_AT, sourceThrough: FAILED_AT,
+  });
+  assert.deepEqual(candidate(failed.sha256).semantics.violations, []);
+  assert.match(candidate("f".repeat(64)).semantics.violations.join(" "), /failed minutes digest does not match/);
+  assert.match(candidate(failed.sha256, false).semantics.violations.join(" "), /minutes digest does not match/);
 });
 
 test("the Mesa candidate admits a held failed extraction, names it, and still refuses a failure with no document identity", () => {

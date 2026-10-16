@@ -15,17 +15,22 @@ export interface SourceCheck {
   readonly sourceId: string; readonly state: string; readonly url: string;
   readonly checkedAt: string; readonly httpStatus: number; readonly unchanged: boolean;
   readonly downloadedBytes: number; readonly nextDueAt?: string;
-  readonly reused?: boolean; readonly entryRequest?: SourcePrefetchRequest | null;
+  readonly reused?: boolean;
 }
 export interface SourcePrefetchRequest {
   readonly url: string; readonly headers: readonly [string, string][]; readonly redirect: RequestRedirect;
   readonly byteCount: number; readonly spacingMs?: number;
 }
+export interface SourceRequestPlan {
+  readonly calendar: readonly SourcePrefetchRequest[];
+  readonly documents: Readonly<Record<string, readonly SourcePrefetchRequest[]>>;
+}
 export interface SourceFetchStore {
   readonly pacing: WebsitePacing;
   withLease<T>(key: string, operation: () => Promise<T>, signal?: AbortSignal): Promise<T>;
   read(key: string): Promise<SavedSourceResponse | null>;
-  readEntryRequest(state: string, sourceId: string): Promise<SourcePrefetchRequest | null>;
+  readRequestPlan(state: string, sourceId: string): Promise<SourceRequestPlan | null>;
+  saveRequestGroup(state: string, sourceId: string, kind: "CALENDAR" | "DOCUMENT", targetUrl: string | null, requests: readonly SourcePrefetchRequest[]): Promise<void>;
   record(key: string, value: SavedSourceResponse | null, check: SourceCheck, aliases?: readonly string[]): Promise<void>;
 }
 
@@ -71,18 +76,21 @@ export function postgresSourceFetchStore(query: Query): SourceFetchStore {
       const row = (await query("SELECT value FROM cp_source_responses WHERE cache_key = $1", [key]))[0];
       return row?.value as SavedSourceResponse | null ?? null;
     },
-    async readEntryRequest(state, sourceId) {
+    async readRequestPlan(state, sourceId) {
       const row = (await query("SELECT request FROM cp_source_requests WHERE state=$1 AND source_id=$2", [state, sourceId]))[0];
-      return row?.request as SourcePrefetchRequest | null ?? null;
+      return requestPlan(row?.request);
+    },
+    async saveRequestGroup(state, sourceId, kind, targetUrl, requests) {
+      const empty = { calendar: [], documents: {} };
+      const path = kind === "CALENDAR" ? ["calendar"] : ["documents", targetUrl!];
+      const initial = kind === "CALENDAR" ? { ...empty, calendar: requests } : { ...empty, documents: { [targetUrl!]: requests } };
+      await query(`INSERT INTO cp_source_requests (state,source_id,request) VALUES ($1,$2,$3::jsonb)
+        ON CONFLICT (state,source_id) DO UPDATE SET request=jsonb_set(cp_source_requests.request,$4::text[],$5::jsonb,true)`,
+      [state, sourceId, JSON.stringify(initial), path, JSON.stringify(requests)]);
     },
     async record(key, value, check, aliases = []) {
       await query(`WITH previous AS (
         SELECT checked_at,http_status FROM cp_source_checks WHERE cache_key=$1
-      ), entry_removed AS (
-        DELETE FROM cp_source_requests WHERE state=$3 AND source_id=$2 AND $13::boolean AND $14::jsonb IS NULL
-      ), entry_saved AS (
-        INSERT INTO cp_source_requests (state,source_id,request) SELECT $3,$2,$14::jsonb WHERE $14::jsonb IS NOT NULL
-        ON CONFLICT (state,source_id) DO UPDATE SET request=EXCLUDED.request
       ), response AS (
         INSERT INTO cp_source_responses (cache_key,value) SELECT unnest($11::text[]),$9::jsonb WHERE $9::jsonb IS NOT NULL
         ON CONFLICT (cache_key) DO UPDATE SET value=EXCLUDED.value
@@ -98,12 +106,16 @@ export function postgresSourceFetchStore(query: Query): SourceFetchStore {
         WHERE NOT ($12::boolean AND EXISTS (SELECT 1 FROM previous WHERE checked_at=$5::timestamptz AND http_status=$6))
         ON CONFLICT (state,day,source_id) DO UPDATE SET checks=d.checks+1,
           unchanged=d.unchanged+EXCLUDED.unchanged,downloaded_bytes=d.downloaded_bytes+EXCLUDED.downloaded_bytes`,
-      [keyFor(`${check.state}\n${check.sourceId}\n${key}`),check.sourceId,check.state,check.url,check.checkedAt,check.httpStatus,check.unchanged,check.nextDueAt ?? null,value ? JSON.stringify(value) : null,check.downloadedBytes,[...new Set([key, ...aliases])],check.reused ?? false,check.entryRequest !== undefined,check.entryRequest ? JSON.stringify(check.entryRequest) : null]);
+      [keyFor(`${check.state}\n${check.sourceId}\n${key}`),check.sourceId,check.state,check.url,check.checkedAt,check.httpStatus,check.unchanged,check.nextDueAt ?? null,value ? JSON.stringify(value) : null,check.downloadedBytes,[...new Set([key, ...aliases])],check.reused ?? false]);
     },
   };
 }
 
 const keyFor = (value: string) => createHash("sha256").update(value).digest("hex");
+function requestPlan(value: unknown): SourceRequestPlan | null {
+  const plan = value as SourceRequestPlan | null;
+  return plan && Array.isArray(plan.calendar) && plan.documents && typeof plan.documents === "object" && !Array.isArray(plan.documents) ? plan : null;
+}
 const easternDay = new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit" });
 type SqlValue = string | number | null;
 interface FileDatabase {
@@ -181,9 +193,23 @@ export function fileSourceFetchStore(namespace: string): SourceFetchStore {
       const row = withDatabase(database => database.prepare("SELECT value FROM responses WHERE key=?").get(key));
       return row?.value ? JSON.parse(String(row.value)) as SavedSourceResponse : null;
     },
-    async readEntryRequest(state, sourceId) {
+    async readRequestPlan(state, sourceId) {
       const row = withDatabase(database => database.prepare("SELECT value FROM requests WHERE state=? AND source_id=?").get(state, sourceId));
-      return row?.value ? JSON.parse(String(row.value)) as SourcePrefetchRequest : null;
+      return row?.value ? requestPlan(JSON.parse(String(row.value))) : null;
+    },
+    async saveRequestGroup(state, sourceId, kind, targetUrl, requests) {
+      withDatabase(database => {
+        database.exec("BEGIN IMMEDIATE");
+        try {
+          const row = database.prepare("SELECT value FROM requests WHERE state=? AND source_id=?").get(state, sourceId);
+          const previous = row?.value ? requestPlan(JSON.parse(String(row.value))) : null;
+          const plan = previous ?? { calendar: [], documents: {} };
+          const next = kind === "CALENDAR" ? { ...plan, calendar: requests } : { ...plan, documents: { ...plan.documents, [targetUrl!]: requests } };
+          database.prepare("INSERT INTO requests VALUES (?,?,?) ON CONFLICT(state,source_id) DO UPDATE SET value=excluded.value")
+            .run(state, sourceId, JSON.stringify(next));
+          database.exec("COMMIT");
+        } catch (error) { database.exec("ROLLBACK"); throw error; }
+      });
     },
     async record(key, value, check, aliases = []) {
       const dayStamp = easternDay.format(new Date(check.checkedAt));
@@ -194,9 +220,6 @@ export function fileSourceFetchStore(namespace: string): SourceFetchStore {
           const held = database.prepare("SELECT value FROM checks WHERE key=?").get(checkKey);
           const previous = held ? JSON.parse(String(held.value)) as SourceCheck : null;
           const counted = !check.reused || previous?.checkedAt !== check.checkedAt || previous.httpStatus !== check.httpStatus;
-          if (check.entryRequest) database.prepare("INSERT INTO requests VALUES (?,?,?) ON CONFLICT(state,source_id) DO UPDATE SET value=excluded.value")
-            .run(check.state, check.sourceId, JSON.stringify(check.entryRequest));
-          else if (check.entryRequest === null) database.prepare("DELETE FROM requests WHERE state=? AND source_id=?").run(check.state, check.sourceId);
           if (value) {
             const save = database.prepare("INSERT INTO responses (key,value) VALUES (?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value");
             for (const responseKey of new Set([key, ...aliases])) save.run(responseKey, JSON.stringify(value));

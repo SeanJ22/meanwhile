@@ -197,6 +197,7 @@ export interface RetrievalEvidence {
   readonly rawHash: string | null;
   /** Last actual provider check, retained unchanged on held-byte or parser replay. */
   readonly sourceCheck?: SourceCheckEvidence;
+  readonly meetingChecks?: import("../meetings/document-checks.ts").MeetingDocumentChecks;
   readonly failureDetail?: string;
   readonly manualSourceReceipt?: ManualSourceSetReceipt;
   readonly derived?: { readonly inputs: readonly DerivedInputRef[] };
@@ -571,4 +572,4 @@ export interface PromotedProjection<T = unknown> {
 export type PromotedPointerIdentity = Pick<
   PromotedProjection,
   "key" | "sourceId" | "recordClass" | "scope" | "versionId" | "lastKnownGoodVersionId" | "promotedAt" | "latestConfirmation"
->;
+> & { readonly meetingChecksVersion?: string };

@@ -574,6 +574,7 @@ export async function processRoutineCandidate(
         rawHash: candidate.retrieval.rawHash ?? "",
         retrievedAt: candidate.retrieval.retrievedAt,
         ...(candidate.retrieval.sourceCheck ? { sourceCheck: candidate.retrieval.sourceCheck } : {}),
+        ...(candidate.retrieval.meetingChecks ? { meetingChecks: candidate.retrieval.meetingChecks } : {}),
       },
       retainedSourceResponses: retained ?? null,
     }, transitionAt);

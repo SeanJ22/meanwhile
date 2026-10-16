@@ -4,6 +4,7 @@ import type { BrowseFn, BrowseObservation } from "../lib/control-plane/scheduler
 import { launchGuarded, type GuardedBrowser } from "./browser.mts";
 import type { Page } from "playwright";
 import type { WebsiteSize } from "../lib/control-plane/scheduler/host-supervision.ts";
+import { websiteOf } from "../lib/control-plane/website-pacing.ts";
 
 type Observed = {
   url: string;
@@ -17,12 +18,12 @@ type Observed = {
 const NETWORK_IDLE_CAP_MS = 10_000;
 
 export async function routeSourceRequests(page: Page, url: string, timeoutMs: number, websiteSize?: WebsiteSize | null): Promise<void> {
-  const started = Date.now(), sourceHost = new URL(url).hostname;
+  const started = Date.now(), sourceHost = websiteOf(url);
   await page.route("**/*", async route => {
     const request = route.request(), target = request.url();
     if (!/^https?:/i.test(target)) { await route.abort(); return; }
     try {
-      const response = await runWithSourceFetch(websiteSize ? { websiteSize: targetUrl => new URL(targetUrl).hostname === sourceHost ? websiteSize : undefined } : {},
+      const response = await runWithSourceFetch(websiteSize && websiteOf(target) === sourceHost ? { websiteSize } : {},
         () => fetchSource(target, { method: request.method(), headers: request.headers(), body: request.postData(), redirect: "manual",
           signal: AbortSignal.timeout(Math.max(1, timeoutMs - (Date.now() - started))) }));
       await route.fulfill({ status: response.status, headers: Object.fromEntries(response.headers), body: Buffer.from(await response.arrayBuffer()) });

@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import { sourceCheckedAt } from "./source-check.ts";
+import { meetingDocumentCheckClock, meetingDocumentChecksIssue, type MeetingDocumentChecks } from "../meetings/document-checks.ts";
 import { isScopedManualContractScope } from "./scoped-manual-contracts.ts";
 
 import { and, desc, eq, getTableColumns, inArray, sql, type SQLWrapper } from "drizzle-orm";
@@ -17,6 +18,7 @@ import {
   type PromotedProjection,
   type RoutineCandidate,
   type RoutineRecordClass,
+  type RetrievalEvidence,
   type ValidationReceipt,
 } from "./types.ts";
 import { canonicalCivicDataJson } from "./changes.ts";
@@ -134,6 +136,7 @@ export interface RoutineDataStore {
   readonly readPromotions: <T = unknown>(recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly PromotedProjection<T>[]>;
   readonly readPromotionIdentity: (recordClass: RoutineRecordClass, scope: string) => Promise<PromotedPointerIdentity | null>;
   readonly readPromotionIdentities: (recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly PromotedPointerIdentity[]>;
+  readonly readPromotedMeetingChecks: (scope: string, versionId: string, checksVersion?: string) => Promise<MeetingDocumentChecks | undefined>;
   readonly readPreparedReaderProjection: (recordClass: RoutineRecordClass, scope: string) => Promise<PreparedReaderProjectionRow | null>;
   readonly readPreparedReaderProjectionCoupling: (recordClass: RoutineRecordClass, scope: string) => Promise<PreparedReaderProjectionCoupling | null>;
     /** Lands only if the row is still at `expectedSequence` (null = expect absent); a stale pass gets `published:false`. */
@@ -153,6 +156,7 @@ export interface RoutineDataStore {
     parserVersion?: string,
   ) => Promise<RoutineStoreClock>;
   readonly clocks: (requests: readonly RoutineClockRequest[]) => Promise<readonly RoutineClockRead[]>;
+  readonly meetingCheckState: (sourceId: string, scope: string) => Promise<Pick<RetrievalEvidence, "meetingChecks" | "sourceCheck">>;
 }
 
 export interface RoutineClockRequest {
@@ -172,6 +176,10 @@ export interface RoutineStoreClock {
   /** Returned for a parser-scoped clock; the prior GOOD keeps its original source timestamps. */
   readonly lastSucceededParserVersion?: string;
   readonly sittingStarts?: readonly string[];
+  readonly nextDocumentDueAt?: string;
+  readonly pendingDocumentCount?: number;
+  readonly lastDocumentAttemptedAt?: string;
+  readonly calendarRetryAt?: string;
 }
 
 /** Every pointer move's event detail begins with this (both stores' `promote`). */
@@ -718,6 +726,9 @@ export function candidateVersionSummary(record: CandidateVersionRecord): Candida
 }
 
 export function promotedPointerIdentity(pointer: PromotedPointerIdentity): PromotedPointerIdentity {
+  const confirmation = pointer.latestConfirmation;
+  const retrieval = confirmation ? { ...confirmation.retrieval } : undefined;
+  if (retrieval) delete retrieval.meetingChecks;
   return {
     key: pointer.key,
     sourceId: pointer.sourceId,
@@ -726,7 +737,8 @@ export function promotedPointerIdentity(pointer: PromotedPointerIdentity): Promo
     versionId: pointer.versionId,
     lastKnownGoodVersionId: pointer.lastKnownGoodVersionId,
     promotedAt: pointer.promotedAt,
-    ...(pointer.latestConfirmation ? { latestConfirmation: pointer.latestConfirmation } : {}),
+    ...(confirmation && retrieval ? { latestConfirmation: { ...confirmation, retrieval } } : {}),
+    ...(pointer.meetingChecksVersion ? { meetingChecksVersion: pointer.meetingChecksVersion } : {}),
   };
 }
 
@@ -854,17 +866,38 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
 
   async readPromotionIdentity(recordClass: RoutineRecordClass, scope: string): Promise<PromotedPointerIdentity | null> {
     const row = this.pointerRead(recordClass, scope);
-    return row ? promotedPointerIdentity(row) : null;
+    if (!row) return null;
+    const checks = recordClass === "MEETING" ? this.promotedMeetingChecks(row) : undefined;
+    return promotedPointerIdentity({ ...row, ...(checks?.checks.documents.some(check => check.contentHash && check.checkedAt)
+      ? { meetingChecksVersion: checks.version } : {}) });
   }
 
   async readPromotionIdentities(
     recordClass: RoutineRecordClass,
     scopes: readonly string[],
   ): Promise<readonly PromotedPointerIdentity[]> {
-    return scopes.flatMap((scope) => {
-      const row = this.pointerRead(recordClass, scope);
-      return row ? [promotedPointerIdentity(row)] : [];
-    });
+    const rows = await Promise.all(scopes.map(scope => this.readPromotionIdentity(recordClass, scope)));
+    return rows.filter((row): row is PromotedPointerIdentity => row !== null);
+  }
+
+  private promotedMeetingChecks(pointer: PromotedPointerIdentity) {
+    for (const event of [...this.history.get(pointer.versionId) ?? []].reverse()) {
+      const confirmation = parseUnchangedConfirmation(event.detail);
+      if (confirmation?.versionId === pointer.versionId && confirmation.sourceId === pointer.sourceId &&
+        confirmation.scope === pointer.scope && confirmation.retrieval.meetingChecks) {
+        return { version: `${pointer.versionId}:${event.sequence}`, checks: confirmation.retrieval.meetingChecks };
+      }
+    }
+    const checks = this.candidates.get(pointer.versionId)?.candidate.retrieval.meetingChecks;
+    return checks ? { version: `${pointer.versionId}:0`, checks } : undefined;
+  }
+
+  async readPromotedMeetingChecks(scope: string, versionId: string, checksVersion?: string): Promise<MeetingDocumentChecks | undefined> {
+    const pointer = this.pointerRead("MEETING", scope);
+    if (pointer?.versionId !== versionId) throw new Error("MEETING_DOCUMENT_CHECKS_RACED");
+    const held = this.promotedMeetingChecks(pointer);
+    if (checksVersion !== undefined && checksVersion !== held?.version) throw new Error("MEETING_DOCUMENT_CHECKS_RACED");
+    return held ? structuredClone(held.checks) : undefined;
   }
 
   async readPreparedReaderProjection(recordClass: RoutineRecordClass, scope: string): Promise<PreparedReaderProjectionRow | null> {
@@ -1044,6 +1077,28 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     return structuredClone((this.history.get(candidateId) ?? []).filter(isPointerMoveEvent));
   }
 
+  private currentMeetingCheckState(sourceId: string, scope: string): Pick<RetrievalEvidence, "meetingChecks" | "sourceCheck"> {
+    const pointer = this.promotions.get(projectionKey("MEETING", scope));
+    const pointed = pointer?.sourceId === sourceId ? this.candidates.get(pointer.versionId) : undefined;
+    const confirmation = pointed ? latestUnchangedConfirmation(this.history.get(pointed.candidate.id) ?? [], pointed.candidate.id) : null;
+    const sourceCheck = confirmation?.retrieval.sourceCheck ?? pointed?.candidate.retrieval.sourceCheck;
+    const readings = [...this.candidates.values()].flatMap(row => {
+      const candidate = row.candidate;
+      if (candidate.sourceId !== sourceId || candidate.recordClass !== "MEETING" || candidate.scope !== scope || isTrustedLkgImportCandidate(candidate)) return [];
+      const first = this.history.get(candidate.id)?.find(event => event.sequence === 1);
+      return candidate.retrieval.meetingChecks && first ? [{ checks: candidate.retrieval.meetingChecks, at: first.at, sequence: first.sequence }] : [];
+    });
+    if (confirmation?.retrieval.meetingChecks) readings.push({ checks: confirmation.retrieval.meetingChecks, at: confirmation.observedAt, sequence: Number.MAX_SAFE_INTEGER });
+    readings.sort((a, b) => Date.parse(b.at) - Date.parse(a.at) || b.sequence - a.sequence);
+    const latest = readings[0];
+    if (latest && meetingDocumentChecksIssue(latest.checks, latest.at)) throw new Error("MEETING_DOCUMENT_CHECKS_INVALID");
+    return { ...(sourceCheck ? { sourceCheck } : {}), ...(latest ? { meetingChecks: structuredClone(latest.checks) } : {}) };
+  }
+
+  async meetingCheckState(sourceId: string, scope: string): Promise<Pick<RetrievalEvidence, "meetingChecks" | "sourceCheck">> {
+    return structuredClone(this.currentMeetingCheckState(sourceId, scope));
+  }
+
   async clock(sourceId: string, recordClass: RoutineRecordClass, scope: string, parserVersion?: string): Promise<RoutineStoreClock> {
     const [read] = await this.clocks([{ sourceId, recordClass, scope, parserVersion }]);
     if (!read!.ok) throw new Error(read!.error);
@@ -1087,13 +1142,14 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     const pointedHistory = pointedRow ? this.history.get(pointedRow.candidate.id) ?? [] : [];
     const pointedObservedAt = pointedHistory.find((event) => event.sequence === 1)?.at;
     const confirmation = pointedRow ? latestUnchangedConfirmation(pointedHistory, pointedRow.candidate.id) : null;
-    return confirmedClock({
+    const clock = confirmedClock({
       lastAttemptedAt,
       lastSucceededAt: proofConsistentSuccess(pointedRecord, pointer),
       lastSucceededObservedAt: proofConsistentObservedSuccess(pointedRecord, pointer, pointedObservedAt),
       ...(parserVersion !== undefined && proofConsistentPointedSuccess(pointedRecord, pointer)
         ? { lastSucceededParserVersion: pointedRecord.candidate.normalization.parserVersion } : {}),
     }, confirmation, sittings, parserVersion);
+    return { ...clock, ...(recordClass === "MEETING" ? meetingDocumentCheckClock(this.currentMeetingCheckState(sourceId, scope).meetingChecks) : {}) };
   }
 }
 
@@ -1187,6 +1243,50 @@ interface RoutineClockRow {
   readonly observed_at: string | null;
   readonly confirmation_detail: string | null;
   readonly sitting_starts: unknown;
+  readonly meeting_check_clock?: Readonly<Record<string, unknown>> | null;
+}
+
+function confirmationJson(detail: SQLWrapper) {
+  return sql`CASE WHEN pg_input_is_valid(substring(${detail} from ${UNCHANGED_CONFIRMATION_PREFIX.length + 1}::integer),'jsonb')
+    THEN substring(${detail} from ${UNCHANGED_CONFIRMATION_PREFIX.length + 1}::integer)::jsonb ELSE '{}'::jsonb END`;
+}
+
+function latestMeetingChecksQuery(sourceId: string | SQLWrapper, scope: string | SQLWrapper) {
+  // Decode candidate JSON after the scope lookup so other bodies' documents never enter this read.
+  return sql`SELECT checks,observed_at FROM (
+    (SELECT c.candidate#>'{retrieval,meetingChecks}' AS checks,e.at AS observed_at,1 AS rank
+    FROM (SELECT id,source_id,candidate FROM civic_data_candidates
+      WHERE record_class='MEETING' AND scope=${scope} OFFSET 0) c
+    JOIN civic_data_candidate_events e ON e.candidate_id=c.id AND e.sequence=1
+    WHERE c.source_id=${sourceId}
+      AND c.candidate#>'{retrieval,meetingChecks}' IS NOT NULL
+      AND coalesce(c.candidate#>>'{bootstrapImport,kind}','') NOT IN ('TRUSTED_LKG_IMPORT','TRUSTED_LKG_REATTESTATION')
+    ORDER BY e.at DESC LIMIT 1)
+    UNION ALL
+    SELECT held.value#>'{retrieval,meetingChecks}',e.at,2
+    FROM civic_data_promotions p JOIN LATERAL (
+      SELECT detail,at FROM civic_data_candidate_events WHERE candidate_id=p.current_version_id
+        AND left(detail,${UNCHANGED_CONFIRMATION_PREFIX.length})=${UNCHANGED_CONFIRMATION_PREFIX}
+      ORDER BY sequence DESC LIMIT 1
+    ) e ON true
+    CROSS JOIN LATERAL (SELECT ${confirmationJson(sql.raw("e.detail"))} AS value) held
+    WHERE p.source_id=${sourceId} AND p.record_class='MEETING' AND p.scope=${scope}
+      AND held.value->>'versionId'=p.current_version_id AND held.value->>'sourceId'=p.source_id
+      AND held.value->>'scope'=p.scope AND held.value->>'recordClass'=p.record_class
+      AND held.value#>'{retrieval,meetingChecks}' IS NOT NULL
+  ) readings ORDER BY observed_at DESC,rank DESC LIMIT 1`;
+}
+
+function documentClockFromRow(value: RoutineClockRow["meeting_check_clock"]): Partial<RoutineStoreClock> {
+  if (!value) return {};
+  if (value.invalid || typeof value.pendingDocumentCount !== "number" || !Number.isInteger(value.pendingDocumentCount) || value.pendingDocumentCount < 0) {
+    throw new Error("MEETING_DOCUMENT_CHECKS_INVALID");
+  }
+  const result: { nextDocumentDueAt?: string; lastDocumentAttemptedAt?: string; calendarRetryAt?: string; pendingDocumentCount: number } = { pendingDocumentCount: value.pendingDocumentCount };
+  for (const key of ["nextDocumentDueAt", "lastDocumentAttemptedAt", "calendarRetryAt"] as const) {
+    if (value[key] !== null && value[key] !== undefined) result[key] = canonicalPostgresRoutineTimestamp(value[key], `clock.${key}`);
+  }
+  return result;
 }
 
 export function routineClocksQuery(requests: readonly RoutineClockRequest[]) {
@@ -1207,7 +1307,15 @@ export function routineClocksQuery(requests: readonly RoutineClockRequest[]) {
       'promotedVersion',pointed.promoted_version_id,'lastKnownGoodVersion',pointed.last_known_good_version_id,
       'failureCode',pointed.failure_code,'failureDetail',pointed.failure_detail
     ) END AS pointed_record,
-    observed.at::text AS observed_at, confirmation.detail AS confirmation_detail,
+    observed.at::text AS observed_at,
+    CASE WHEN confirmation.detail IS NULL THEN NULL ELSE ${UNCHANGED_CONFIRMATION_PREFIX} ||
+      jsonb_set(${confirmationJson(sql.raw("confirmation.detail"))},'{retrieval}',
+        (${confirmationJson(sql.raw("confirmation.detail"))}->'retrieval')-'meetingChecks')::text END AS confirmation_detail,
+    CASE WHEN checks.checks IS NULL THEN NULL ELSE jsonb_build_object(
+      'nextDocumentDueAt',documents.next_due_at,'pendingDocumentCount',documents.pending,
+      'lastDocumentAttemptedAt',documents.attempted_at,'calendarRetryAt',checks.checks->'calendarRetryAt',
+      'invalid',jsonb_typeof(checks.checks->'documents') IS DISTINCT FROM 'array' OR documents.invalid
+    ) END AS meeting_check_clock,
     CASE WHEN requested.record_class='MEETING' AND p.current_version_id IS NOT NULL THEN (
       SELECT coalesce(jsonb_agg(m->'startsAt'),'[]'::jsonb)
       FROM jsonb_array_elements(CASE WHEN jsonb_typeof(p.payload->'meetings')='array' THEN p.payload->'meetings' ELSE '[]'::jsonb END) m
@@ -1226,16 +1334,27 @@ export function routineClocksQuery(requests: readonly RoutineClockRequest[]) {
         bool_or(c.state='PROMOTED' AND c.acquisition_succeeded=true
           AND c.candidate#>>'{retrieval,sourceCheck,checkedAt}' IS NOT NULL
           AND NOT pg_input_is_valid(c.candidate#>>'{retrieval,sourceCheck,checkedAt}','timestamp with time zone')) AS invalid_source_check
-      FROM civic_data_candidates c JOIN civic_data_candidate_events e ON e.candidate_id=c.id AND e.sequence=1
-      WHERE c.source_id=requested.source_id AND c.record_class=requested.record_class AND c.scope=requested.scope
-        AND (requested.parser_version IS NULL OR c.parser_version=requested.parser_version)
+      FROM (SELECT id,source_id,candidate,state,acquisition_succeeded,parser_version FROM civic_data_candidates
+        WHERE record_class=requested.record_class AND scope=requested.scope OFFSET 0) c
+      JOIN civic_data_candidate_events e ON e.candidate_id=c.id AND e.sequence=1
+      WHERE c.source_id=requested.source_id AND (requested.parser_version IS NULL OR c.parser_version=requested.parser_version)
         AND coalesce(c.candidate#>>'{bootstrapImport,kind}','') NOT IN ('TRUSTED_LKG_IMPORT','TRUSTED_LKG_REATTESTATION')
     ) attempt ON true
     LEFT JOIN LATERAL (
       SELECT detail FROM civic_data_candidate_events WHERE candidate_id=p.current_version_id
         AND left(detail,${UNCHANGED_CONFIRMATION_PREFIX.length})=${UNCHANGED_CONFIRMATION_PREFIX}
       ORDER BY sequence DESC LIMIT 1
-    ) confirmation ON true ORDER BY requested.ordinal`;
+    ) confirmation ON true
+    LEFT JOIN LATERAL (${latestMeetingChecksQuery(sql.raw("requested.source_id"), sql.raw("requested.scope"))}) checks ON requested.record_class='MEETING'
+    LEFT JOIN LATERAL (
+      SELECT min(d->>'nextDueAt') AS next_due_at,
+        count(*) FILTER (WHERE d->>'outcome' IS DISTINCT FROM 'CHECKED')::integer AS pending,
+        max(d->>'attemptedAt') AS attempted_at,
+        coalesce(bool_or(NOT coalesce(pg_input_is_valid(d->>'nextDueAt','timestamp with time zone'),false)
+          OR coalesce(d->>'outcome','') NOT IN ('CHECKED','FAILED','DEFERRED')),false) AS invalid
+      FROM jsonb_array_elements(CASE WHEN jsonb_typeof(checks.checks->'documents')='array'
+        THEN checks.checks->'documents' ELSE '[]'::jsonb END) d
+    ) documents ON checks.checks IS NOT NULL ORDER BY requested.ordinal`;
 }
 
 function clockFromRow(row: RoutineClockRow, parserVersion?: string): RoutineStoreClock {
@@ -1251,10 +1370,11 @@ function clockFromRow(row: RoutineClockRow, parserVersion?: string): RoutineStor
   const lastSucceededObservedAt = proofConsistentObservedSuccess(pointedRecord, pointer, row.observed_at === null ? undefined
     : canonicalPostgresRoutineTimestamp(row.observed_at, "clock.lastSucceededObservedAt"));
   const confirmation = pointer && row.confirmation_detail ? parseUnchangedConfirmation(row.confirmation_detail) : null;
-  return confirmedClock({ lastAttemptedAt, lastSucceededAt, lastSucceededObservedAt,
+  const clock = confirmedClock({ lastAttemptedAt, lastSucceededAt, lastSucceededObservedAt,
     ...(parserVersion !== undefined && proofConsistentPointedSuccess(pointedRecord, pointer)
       ? { lastSucceededParserVersion: pointedRecord.candidate.normalization.parserVersion } : {}),
   }, confirmation !== null && confirmation.versionId === pointer?.versionId ? confirmation : null, sittings, parserVersion);
+  return { ...clock, ...documentClockFromRow(row.meeting_check_clock) };
 }
 
 export const CANDIDATE_PROOF_OMITTED = {
@@ -1337,7 +1457,7 @@ export const PROMOTED_POINTER_COLUMNS = {
 type PostgresPromotedPointerIdentityRow = Pick<
   typeof civicDataPromotions.$inferSelect,
   keyof typeof PROMOTED_POINTER_IDENTITY_COLUMNS
-> & { readonly latestConfirmation?: string | null };
+> & { readonly latestConfirmation?: string | null; readonly meetingChecksVersion?: string | null };
 
 const LATEST_CONFIRMATION_DETAIL = sql<string | null>`(
   select confirmation.detail from civic_data_candidate_events as confirmation
@@ -1356,9 +1476,34 @@ const LATEST_CONFIRMATION_SEQUENCE = sql<number | null>`(
   limit 1
 )`;
 
+function promotedMeetingChecksQuery(pointer: SQLWrapper) {
+  return sql`SELECT checks,${pointer}.current_version_id || ':' || sequence::text AS version FROM (
+    (SELECT ${confirmationJson(sql.raw("e.detail"))}#>'{retrieval,meetingChecks}' AS checks,e.sequence
+      FROM civic_data_candidate_events e
+      WHERE e.candidate_id=${pointer}.current_version_id
+        AND left(e.detail,${UNCHANGED_CONFIRMATION_PREFIX.length})=${UNCHANGED_CONFIRMATION_PREFIX}
+        AND ${confirmationJson(sql.raw("e.detail"))}->>'versionId'=${pointer}.current_version_id
+        AND ${confirmationJson(sql.raw("e.detail"))}->>'sourceId'=${pointer}.source_id
+        AND ${confirmationJson(sql.raw("e.detail"))}->>'scope'=${pointer}.scope
+        AND ${confirmationJson(sql.raw("e.detail"))}#>'{retrieval,meetingChecks}' IS NOT NULL
+      ORDER BY e.sequence DESC LIMIT 1)
+    UNION ALL
+    SELECT c.candidate#>'{retrieval,meetingChecks}',0 FROM civic_data_candidates c
+      WHERE c.id=${pointer}.current_version_id AND c.candidate#>'{retrieval,meetingChecks}' IS NOT NULL
+  ) readings ORDER BY sequence DESC LIMIT 1`;
+}
+
 const PROMOTED_POINTER_READ_COLUMNS = {
   ...PROMOTED_POINTER_IDENTITY_COLUMNS,
-  latestConfirmation: LATEST_CONFIRMATION_DETAIL,
+  latestConfirmation: sql<string | null>`(SELECT ${UNCHANGED_CONFIRMATION_PREFIX} ||
+    jsonb_set(held.value,'{retrieval}',(held.value->'retrieval')-'meetingChecks')::text
+    FROM (SELECT ${confirmationJson(sql`(${LATEST_CONFIRMATION_DETAIL})`)} AS value) held
+    WHERE held.value ? 'retrieval')`,
+  meetingChecksVersion: sql<string | null>`CASE WHEN ${civicDataPromotions.recordClass}='MEETING' THEN
+    (SELECT version FROM (${promotedMeetingChecksQuery(sql.raw('"civic_data_promotions"'))}) checks
+      WHERE EXISTS (SELECT 1 FROM jsonb_array_elements(CASE WHEN jsonb_typeof(checks.checks->'documents')='array'
+        THEN checks.checks->'documents' ELSE '[]'::jsonb END) d
+        WHERE d->>'contentHash' ~ '^[a-f0-9]{64}$' AND pg_input_is_valid(d->>'checkedAt','timestamp with time zone'))) END`,
 } as const;
 
 function postgresPromotedPointerIdentity(row: PostgresPromotedPointerIdentityRow): PromotedPointerIdentity {
@@ -1372,6 +1517,7 @@ function postgresPromotedPointerIdentity(row: PostgresPromotedPointerIdentityRow
     lastKnownGoodVersionId: row.lastKnownGoodVersionId,
     promotedAt: canonicalPostgresRoutineTimestamp(row.promotedAt, "promotion.promotedAt"),
     ...(confirmation !== null && confirmation.versionId === row.currentVersionId ? { latestConfirmation: confirmation } : {}),
+    ...(row.meetingChecksVersion ? { meetingChecksVersion: row.meetingChecksVersion } : {}),
   };
 }
 
@@ -1822,6 +1968,20 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     return rows.map(postgresPromotedPointerIdentity);
   }
 
+  async readPromotedMeetingChecks(scope: string, versionId: string, checksVersion?: string): Promise<MeetingDocumentChecks | undefined> {
+    const rows = (await this.db.execute(sql`SELECT p.current_version_id,checks.version,checks.checks
+      FROM civic_data_promotions p LEFT JOIN LATERAL (${promotedMeetingChecksQuery(sql.raw("p"))}) checks ON true
+      WHERE p.record_class='MEETING' AND p.scope=${scope}`)).rows as unknown as readonly {
+        current_version_id: string; version: string | null; checks: MeetingDocumentChecks | null;
+      }[];
+    const row = rows[0];
+    if (row?.current_version_id !== versionId || checksVersion !== undefined && checksVersion !== row.version) {
+      throw new Error("MEETING_DOCUMENT_CHECKS_RACED");
+    }
+    if (row.checks && meetingDocumentChecksIssue(row.checks)) throw new Error("MEETING_DOCUMENT_CHECKS_INVALID");
+    return row.checks ?? undefined;
+  }
+
   async readPreparedReaderProjection(recordClass: RoutineRecordClass, scope: string): Promise<PreparedReaderProjectionRow | null> {
     const [row] = await this.db.select().from(civicDataReaderProjections).where(and(
       eq(civicDataReaderProjections.recordClass, recordClass),
@@ -1959,8 +2119,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     // This receipt shares the existing candidate lock. A delayed parser replay cannot replace a newer real check.
     const priorCheckedAt = sql`case when left(prior_confirmation.detail, ${UNCHANGED_CONFIRMATION_PREFIX.length}) = ${UNCHANGED_CONFIRMATION_PREFIX}
       then coalesce(
-        (substring(prior_confirmation.detail from ${UNCHANGED_CONFIRMATION_PREFIX.length + 1})::jsonb #>> '{retrieval,sourceCheck,checkedAt}')::timestamptz,
-        (substring(prior_confirmation.detail from ${UNCHANGED_CONFIRMATION_PREFIX.length + 1})::jsonb ->> 'observedAt')::timestamptz
+        (substring(prior_confirmation.detail from ${UNCHANGED_CONFIRMATION_PREFIX.length + 1}::integer)::jsonb #>> '{retrieval,sourceCheck,checkedAt}')::timestamptz,
+        (substring(prior_confirmation.detail from ${UNCHANGED_CONFIRMATION_PREFIX.length + 1}::integer)::jsonb ->> 'observedAt')::timestamptz
       ) end`;
     let eventRows: readonly { readonly sequence: number }[];
     try {
@@ -2159,6 +2319,31 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   async pointerMoveEvents(candidateId: string): Promise<readonly CandidateEvent[]> {
     const rows = await pointerMoveEventsRead(this.db, candidateId);
     return rows.map(postgresCandidateEventRowToEvent);
+  }
+
+  async meetingCheckState(sourceId: string, scope: string): Promise<Pick<RetrievalEvidence, "meetingChecks" | "sourceCheck">> {
+    const rows = (await this.db.execute(sql`SELECT p.current_version_id AS version_id,
+      c.candidate#>'{retrieval,sourceCheck}' AS source_check,confirmation.detail AS confirmation_detail,
+      checks.checks AS meeting_checks,checks.observed_at::text
+      FROM (SELECT ${sourceId}::text AS source_id,${scope}::text AS scope) requested
+      LEFT JOIN civic_data_promotions p ON p.source_id=requested.source_id AND p.record_class='MEETING' AND p.scope=requested.scope
+      LEFT JOIN civic_data_candidates c ON c.id=p.current_version_id
+      LEFT JOIN LATERAL (
+        SELECT detail FROM civic_data_candidate_events WHERE candidate_id=p.current_version_id
+          AND left(detail,${UNCHANGED_CONFIRMATION_PREFIX.length})=${UNCHANGED_CONFIRMATION_PREFIX}
+        ORDER BY sequence DESC LIMIT 1
+      ) confirmation ON true
+      LEFT JOIN LATERAL (${latestMeetingChecksQuery(sql.raw("requested.source_id"), sql.raw("requested.scope"))}) checks ON true`)).rows as unknown as readonly {
+        version_id: string | null; source_check: RetrievalEvidence["sourceCheck"] | null;
+        confirmation_detail: string | null; meeting_checks: MeetingDocumentChecks | null; observed_at: string | null;
+      }[];
+    const row = rows[0];
+    if (!row) throw new Error("MEETING_CHECK_STATE_MISSING");
+    const confirmation = row.confirmation_detail ? parseUnchangedConfirmation(row.confirmation_detail) : null;
+    const sourceCheck = confirmation?.versionId === row.version_id && confirmation.sourceId === sourceId && confirmation.scope === scope
+      ? confirmation.retrieval.sourceCheck ?? row.source_check : row.source_check;
+    if (row.meeting_checks && meetingDocumentChecksIssue(row.meeting_checks, row.observed_at ?? undefined)) throw new Error("MEETING_DOCUMENT_CHECKS_INVALID");
+    return { ...(sourceCheck ? { sourceCheck } : {}), ...(row.meeting_checks ? { meetingChecks: row.meeting_checks } : {}) };
   }
 
   async clock(sourceId: string, recordClass: RoutineRecordClass, scope: string, parserVersion?: string): Promise<RoutineStoreClock> {

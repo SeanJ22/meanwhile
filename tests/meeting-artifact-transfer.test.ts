@@ -76,7 +76,9 @@ test("expand preserves the root reader while state readers serve saved checks, c
   assert.equal(state.commentAccess!.length, 1);
   assert.equal(state.generatedAt, savedAt);
   assert.equal((await read(store, "ical:alias")).value.meetings[0]!.provenance.collectedAt, checkedAt);
-  assert.equal((await read(store, carried.id)).value.meetings[0]!.provenance.collectedAt, savedAt);
+  const carriedPlace = (await read(store, carried.id)).value.meetings;
+  assert.equal(carriedPlace.find(row => row.id === carried.id)!.provenance.collectedAt, savedAt);
+  assert.equal(carriedPlace.find(row => row.id === fresh.id)!.provenance.collectedAt, checkedAt);
   assert.equal((await read(store, fresh.id)).value.agendaDocuments[0]!.collectedAt, savedAt);
   const first = await store.readManifest("AZ");
   await transferMeetingArtifacts(store);

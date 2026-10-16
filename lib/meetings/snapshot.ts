@@ -27,6 +27,7 @@ import { collapseDuplicateSittings } from "../sources/composite/index.ts";
 import { stampMeetingDoor } from "../civic-data/fact-door.ts";
 import {
   applyPartitionFreshCheck,
+  applyDocumentFreshChecks,
   confirmationCheckedAt,
   meetingVersionReadsASource,
   meetingVersionRoutes,
@@ -39,7 +40,7 @@ export const MEETINGS_SCOPE = "source-wiring-partitions";
 export const MEETINGS_SOURCE_ID = "meetings-public-bodies";
 /** Observation-only fields excluded when research projections compare civic facts. */
 export const MEETINGS_SNAPSHOT_STAMPS = {
-  stampKeys: ["generatedAt", "collectedAt", "verifiedAt", "retrievedAt", "lastFreshAt"],
+  stampKeys: ["generatedAt", "collectedAt", "verifiedAt", "retrievedAt", "checkedAt", "lastFreshAt"],
   ignoreTopLevel: ["counts", "sources"],
 } as const;
 
@@ -452,7 +453,10 @@ function validateMeetingPartitionProjection(
         throw new Error(`MEETING_PARTITION_ROW_SCOPE_MISMATCH:${partition.id}:${meeting.id}`);
       }
     }
-    return result;
+    const confirmation = result.projection?.latestConfirmation;
+    const value = confirmation?.versionId === result.metadata.versionId
+      ? applyDocumentFreshChecks(result.value, confirmation.retrieval.meetingChecks) : result.value;
+    return value === result.value ? result : { ...result, value };
   } catch (error) {
     return {
       kind: "STORE_UNREACHABLE",

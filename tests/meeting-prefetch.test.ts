@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { meetingPrefetchSeed } from "../lib/civic-data/meeting-prefetch.ts";
+import { meetingPrefetchSeeds } from "../lib/civic-data/meeting-prefetch.ts";
 import { buildMeetingPartitions, MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
 import type { RoutineDataStore } from "../lib/civic-data/store.ts";
 import type { PromotedProjection, RoutineRecordClass } from "../lib/civic-data/types.ts";
@@ -8,7 +8,7 @@ import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import type { BodySourceWiring } from "../lib/registry/source-wiring.ts";
 import type { SourceAcquisitionEvidence } from "../lib/sources/acquisition-trace.ts";
-import { civicPlusEntryRequest, makeCivicPlusSource } from "../lib/sources/civicplus/index.ts";
+import { civicPlusCalendarRequests, makeCivicPlusSource } from "../lib/sources/civicplus/index.ts";
 import { SOURCE_PREFETCH_MAX_BYTES, prefetchSourceRequests, runWithSourceFetch } from "../lib/sources/fetch-source.ts";
 import { memoryWebsitePacing } from "../lib/control-plane/website-pacing.ts";
 import type { SavedSourceResponse, SourceFetchStore } from "../lib/sources/fetch-source-state.ts";
@@ -37,21 +37,21 @@ function held(acquisitions: readonly SourceAcquisitionEvidence[], reads: string[
   } };
 }
 
-test("rollout prefetch uses the current CivicPlus first GET and only that body's matching held byte count", async () => {
+test("rollout prefetch uses current calendar requests and only that body's matching held byte count", async () => {
   const priorRegistry = MEETING_PARTITION_CONTRACTS.map(row => row.id), reads: string[] = [];
-  const root = civicPlusEntryRequest(wiring)!;
-  const seed = await meetingPrefetchSeed(held([evidence("https://fixture.gov/old-calendar.ics"), evidence(root.url)], reads), partition);
+  const root = civicPlusCalendarRequests(wiring)[0]!;
+  const [seed] = await meetingPrefetchSeeds(held([evidence("https://fixture.gov/old-calendar.ics"), evidence(root.url)], reads), partition);
   assert.deepEqual(seed, { ...root, byteCount: 220_402 });
   assert.deepEqual(reads, [partition.scope]);
   assert.deepEqual(MEETING_PARTITION_CONTRACTS.map(row => row.id), priorRegistry);
-  assert.equal(await meetingPrefetchSeed(held([evidence("https://fixture.gov/old-calendar.ics")]), partition), undefined);
-  assert.equal(await meetingPrefetchSeed(held([evidence(root.url, SOURCE_PREFETCH_MAX_BYTES + 1)]), partition), undefined);
-  assert.equal(await meetingPrefetchSeed(held([evidence(root.url), evidence(root.url, SOURCE_PREFETCH_MAX_BYTES + 1)]), partition), undefined);
-  assert.equal(await meetingPrefetchSeed(held([evidence(root.url, -1)]), partition), undefined);
-  assert.equal(await meetingPrefetchSeed(held([{ ...evidence(root.url), httpStatus: 403 }]), partition), undefined);
+  assert.deepEqual(await meetingPrefetchSeeds(held([evidence("https://fixture.gov/old-calendar.ics")]), partition), []);
+  assert.deepEqual(await meetingPrefetchSeeds(held([evidence(root.url, SOURCE_PREFETCH_MAX_BYTES + 1)]), partition), []);
+  assert.deepEqual(await meetingPrefetchSeeds(held([evidence(root.url), evidence(root.url, SOURCE_PREFETCH_MAX_BYTES + 1)]), partition), []);
+  assert.deepEqual(await meetingPrefetchSeeds(held([evidence(root.url, -1)]), partition), []);
+  assert.deepEqual(await meetingPrefetchSeeds(held([{ ...evidence(root.url), httpStatus: 403 }]), partition), []);
   const skipped: string[] = [];
-  assert.equal(await meetingPrefetchSeed(held([], skipped), { ...partition, suspended: true }), undefined);
-  assert.equal(await meetingPrefetchSeed(held([], skipped), { ...partition, meetingSource: "legistar" }), undefined);
+  assert.deepEqual(await meetingPrefetchSeeds(held([], skipped), { ...partition, suspended: true }), []);
+  assert.deepEqual(await meetingPrefetchSeeds(held([], skipped), { ...partition, meetingSource: "legistar" }), []);
   assert.deepEqual(skipped, []);
 });
 
@@ -68,7 +68,7 @@ test("prefetch bounds held body reads independently of queued transport work and
       return await source.readPromotion<T>(recordClass, scope);
     } finally { active--; }
   } };
-  const pending = Promise.allSettled(Array.from({ length: 64 }, () => meetingPrefetchSeed(store, partition)));
+  const pending = Promise.allSettled(Array.from({ length: 64 }, () => meetingPrefetchSeeds(store, partition)));
   try {
     await new Promise<void>(resolve => setImmediate(resolve));
     assert.equal(started, 4);
@@ -79,7 +79,7 @@ test("prefetch bounds held body reads independently of queued transport work and
   assert.equal(peak, 4);
   assert.equal(active, 0);
   assert.equal(results.filter(result => result.status === "rejected").length, 1);
-  assert.equal(results.filter(result => result.status === "fulfilled" && result.value?.byteCount === 220_402).length, 63);
+  assert.equal(results.filter(result => result.status === "fulfilled" && result.value[0]?.byteCount === 220_402).length, 63);
 });
 
 test("Legistar prefetch rebuilds current dates through the actual request builder instead of replaying an old query", async () => {
@@ -90,7 +90,7 @@ test("Legistar prefetch rebuilds current dates through the actual request builde
   const requests: Request[] = [];
   const fetchImpl: typeof fetch = async (input, init) => { requests.push(new Request(input, init)); return new Response("[]"); };
   for (const at of [oldAt, now]) await fetchEvents("fixture", { ...legistarReadWindow(at), bodyId: 42 }, { fetchImpl });
-  const seed = await meetingPrefetchSeed(held([{ ...evidence(requests[0]!.url), source: "legistar" }], [], "legistar", oldAt.toISOString()), selected, now);
+  const [seed] = await meetingPrefetchSeeds(held([{ ...evidence(requests[0]!.url), source: "legistar" }], [], "legistar", oldAt.toISOString()), selected, now);
   assert.ok(seed);
   assert.equal(seed.url, requests[1]!.url);
   assert.notEqual(seed.url, requests[0]!.url);
@@ -98,32 +98,37 @@ test("Legistar prefetch rebuilds current dates through the actual request builde
   assert.equal(seed.byteCount, 220_402);
   const otherBody = requests[0]!.url.replace("BodyId%20eq%2042", "BodyId%20eq%2043");
   assert.notEqual(otherBody, requests[0]!.url);
-  assert.equal(await meetingPrefetchSeed(held([{ ...evidence(otherBody), source: "legistar" }], [], "legistar", oldAt.toISOString()), selected, now), undefined);
+  assert.deepEqual(await meetingPrefetchSeeds(held([{ ...evidence(otherBody), source: "legistar" }], [], "legistar", oldAt.toISOString()), selected, now), []);
 });
 
-test("CivicPlus descriptor matches the adapter's actual initial calendar or AgendaCenter RSS request", async () => {
+test("CivicPlus descriptors match every RSS, calendar and AgendaCenter root the adapter reads", async () => {
   for (const row of [wiring, { ...wiring, config: { ...wiring.config, agendaCenterUrl: "https://fixture.gov/AgendaCenter", agendaCenterCategoryId: "7" } }]) {
-    const expected = civicPlusEntryRequest(row)!;
-    const stop = new AbortController(), requests: Request[] = [];
+    const expected = civicPlusCalendarRequests(row);
+    const requests: Request[] = [];
     const source = makeCivicPlusSource([row], async (input, init) => {
-      requests.push(new Request(input, init)); stop.abort(new Error("captured first GET"));
-      throw stop.signal.reason;
+      const request = new Request(input, init); requests.push(request);
+      const accept = request.headers.get("accept")!;
+      return new Response(accept === "text/calendar" ? "BEGIN:VCALENDAR\nVERSION:2.0\nEND:VCALENDAR"
+        : accept === "application/rss+xml" ? "<rss><channel></channel></rss>" : '<html><div id="cat7"></div></html>',
+      { headers: { "content-type": accept } });
     }, { store: new MemoryEvidenceStore(), locks: createMemoryRepositories().locks });
-    await assert.rejects(source.fetch({ lat: 0, lng: 0, radiusKm: 1, signal: stop.signal }), /captured first GET/);
-    assert.equal(requests.length, 1);
-    const request = requests[0]!;
-    assert.equal(request.method, "GET"); assert.equal(request.url, expected.url); assert.equal(request.redirect, expected.redirect);
-    assert.deepEqual([...request.headers].filter(([name]) => name !== "user-agent"), expected.headers);
+    await source.fetch({ lat: 0, lng: 0, radiusKm: 1 });
+    assert.equal(requests.length, expected.length);
+    for (const [index, request] of requests.entries()) {
+      assert.equal(request.method, "GET"); assert.equal(request.url, expected[index]!.url); assert.equal(request.redirect, expected[index]!.redirect);
+      assert.deepEqual([...request.headers].filter(([name]) => name !== "user-agent"), expected[index]!.headers);
+    }
     const selected = buildMeetingPartitions([row])[0]!;
-    const seed = await meetingPrefetchSeed(held([evidence(row.config.icalUrl), evidence(expected.url)]), selected);
-    assert.equal(seed?.url, expected.url, "the RSS root precedes the calendar whenever AgendaCenter is configured");
+    const seeds = await meetingPrefetchSeeds(held(requests.map(request => evidence(request.url))), selected);
+    assert.deepEqual(seeds, expected.map(request => ({ ...request, byteCount: 220_402 })));
+    assert.equal(seeds.length, row.config.agendaCenterUrl ? 3 : 1);
   }
 });
 
 test("a CivicPlus adapter consumes prefetched 200 and 304 responses without a second physical request", async () => {
   const saved = new Map<string, SavedSourceResponse>(), vault = new MemoryEvidenceStore();
   const store: SourceFetchStore = { pacing: memoryWebsitePacing(), withLease: async (_key, work) => work(),
-    read: async key => saved.get(key) ?? null, readEntryRequest: async () => null,
+    read: async key => saved.get(key) ?? null, readRequestPlan: async () => ({ calendar: [], documents: {} }), saveRequestGroup: async () => {},
     record: async (key, value) => { if (value) saved.set(key, value); } };
   const locks = createMemoryRepositories().locks, calls: Headers[] = [];
   let now = Date.parse("2026-10-15T12:00:00.000Z");
@@ -134,9 +139,9 @@ test("a CivicPlus adapter consumes prefetched 200 and 304 responses without a se
   }) as typeof fetch };
   for (let pass = 0; pass < 2; pass++) {
     const dueAt = new Date(now).toISOString();
-    const seed = await meetingPrefetchSeed(held([evidence(wiring.config.icalUrl)]), partition);
+    const [seed] = await meetingPrefetchSeeds(held([evidence(wiring.config.icalUrl)]), partition);
     await runWithSourceFetch({ sourceId: partition.id, state: "US-IL", dueAt, vault, runtime }, async () => {
-      await prefetchSourceRequests({ sourceId: partition.id, state: "US-IL", dueAt, seed });
+      await prefetchSourceRequests({ sourceId: partition.id, state: "US-IL", dueAt, seeds: seed ? [seed] : [] });
       const source = makeCivicPlusSource([wiring], undefined, { store: vault, locks, now: () => dueAt });
       const raw = await source.fetch({ lat: 0, lng: 0, radiusKm: 1 });
       assert.equal(raw[0]!.collectedAt, dueAt);
@@ -174,7 +179,7 @@ test("query-root seeds use each adapter's current GET with its exact headers and
         }).catch(() => []);
       }
       assert.equal(requests.length, 2, row.source);
-      const seed = await meetingPrefetchSeed(held([{ ...evidence(requests[0]!.url), source: row.source }], [], row.source), selected, new Date("2026-10-15T12:00:00.000Z"));
+      const [seed] = await meetingPrefetchSeeds(held([{ ...evidence(requests[0]!.url), source: row.source }], [], row.source), selected, new Date("2026-10-15T12:00:00.000Z"));
       assert.ok(seed, row.source);
       assert.equal(requests[1]!.method, "GET", row.source);
       assert.equal(seed.url, requests[1]!.url, row.source);

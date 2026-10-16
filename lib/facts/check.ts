@@ -54,6 +54,7 @@ const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 /** Finds needle only when it is not part of a longer word or number: "500" never matches inside "$1,500". */
 export function boundedIndexOf(hay: string, needle: string): number {
   if (!needle) return -1;
+  if (hay === needle) return 0;
   const re = new RegExp(`(?<![\\p{L}\\p{N}]|\\p{N}[.,])${escapeRegExp(needle)}(?![\\p{L}\\p{N}]|[.,]\\p{N})`, "u");
   const m = re.exec(hay);
   return m ? m.index : -1;

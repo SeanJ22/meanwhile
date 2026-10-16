@@ -1,6 +1,6 @@
 import { createDispatchState } from "./dispatch-state.ts";
 import { ADMIN_SECTIONS, storedAdminConfigRepository, type AdminSection, type StoredAdminSection } from "./admin-config.ts";
-import type { BoxFinding } from "../box.ts";
+import { listedBoxRepository, type BoxFinding } from "../box.ts";
 import type { WorkerResultRecord } from "../workers/types.ts";
 import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
@@ -374,7 +374,7 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     spend: storedSpendRepository(memoryAggregateRepository<PricedCharge>("ModelCharge"), scoutResults),
     methodCandidates: memoryAggregateRepository<CandidateStore>("MethodCandidateStore"),
     researchIntents: memoryAppendOnlyRepository<ResearchIntent>("research_intents"),
-    boxFindings: memoryAggregateRepository<BoxFinding>("BoxFinding"),
+    boxFindings: listedBoxRepository(memoryAggregateRepository<BoxFinding>("BoxFinding")),
     scoutResults,
     workerResults: memoryAppendOnlyRepository<WorkerResultRecord>("worker_results"),
     promotionPipeline: memoryAppendOnlyRepository<PromotionPipelineRecord>("promotion_pipeline"),

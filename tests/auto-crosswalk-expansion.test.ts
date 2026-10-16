@@ -339,14 +339,13 @@ test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed b
 
   /* 6. The Reader. */
   let factReads = 0;
-  installFactReader(async (_text, params) => {
+  installFactReader(async () => {
     factReads++;
-    assert.deepEqual([...(params?.[0] as readonly string[])].sort(), reads.flatMap(read => read.freshMeetings.map(meeting => `meeting:${meeting.id}`)).sort());
-    return [];
+    assert.fail("published meeting composition must not query facts");
   });
   t.after(() => installFactReader(undefined));
   const reader = await readMeetingsProjection({ store, now: T_READER, bypassCache: true });
-  assert.equal(factReads, 1, "the fixture has no separately published meeting fact overrides");
+  assert.equal(factReads, 0, "published meeting composition does not query facts");
   assert.equal(reader.kind, "PROMOTED");
   if (reader.kind !== "PROMOTED") return;
   const sittings = reader.value.meetings.filter((m) => m.bodyId === COUNTY_BODY);

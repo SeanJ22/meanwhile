@@ -11,13 +11,16 @@ import { createRouteTask, type RouteTask } from "../lib/control-plane/route-task
 import { registerRouteTask } from "../lib/control-plane/repository/coordinator.ts";
 import { autonomousHarness } from "./helpers/autonomous-fleet.ts";
 import { nextAutonomousOperation, dispatchAutonomousTask } from "../lib/control-plane/workers/coordinator.ts";
+import { readWorkerPublicationItems } from "../lib/civic-data/publish-now.ts";
+import { readHeldInputs } from "../lib/civic-data/worker-held-elections.ts";
+import { CHANGED_AT_TOUCH_FUNCTION_DDL, changedAtColumnDdl } from "../lib/control-plane/repository/pg-schema.ts";
 
 const NOW = "2026-10-01T12:00:00.000Z";
 async function fixture() {
   const db = new PGlite();
   const statements: string[] = [];
   const hooks: { before: ((text: string) => Promise<void>) | null } = { before: null };
-  const sql: Sql = { async query(text, params) { statements.push(text); await hooks.before?.(text); return (await db.query(text, [...params ?? []])).rows; } };
+  const sql = { async query(text: string, params?: readonly unknown[]) { statements.push(text); await hooks.before?.(text); return (await db.query<Record<string, unknown>>(text, [...params ?? []])).rows; } } satisfies Sql;
   for (const table of ["work_items", "route_tasks", "occurrences", "attempts"]) await db.exec(`CREATE TABLE cp_${table} (
     id text PRIMARY KEY, revision bigint NOT NULL, updated_at timestamptz NOT NULL,
     value jsonb NOT NULL, changed_at timestamptz NOT NULL DEFAULT now());`);
@@ -68,6 +71,41 @@ test("closed occurrences leave hot tables; exact and scoped history and later pu
     assert.equal((await f.db.query<{ moved: number }>(DISPATCH_ARCHIVE_MOVE_SQL)).rows[0].moved, 1);
     assert.equal((await f.db.query<{ moved: number }>(DISPATCH_ARCHIVE_MOVE_SQL)).rows[0].moved, 0);
     assert.equal((await f.db.query<{ n: number }>("SELECT count(*)::int AS n FROM cp_occurrences_archive")).rows[0].n, 1002);
+  } finally { await f.db.close(); }
+});
+
+test("archived publication work is selected when its result or saved body page changes", async () => {
+  const f = await fixture();
+  try {
+    await f.db.exec("ALTER TABLE cp_log_worker_results ADD COLUMN changed_at timestamptz; ALTER TABLE cp_log_artifacts ADD COLUMN changed_at timestamptz, ADD COLUMN recorded_at timestamptz;");
+    const opened = await openOccurrence(f.repos, { obligation: f.obligation, dueAt: NOW, now: NOW });
+    assert.ok(opened);
+    await closeOccurrence(f.repos, { occurrenceId: opened.occurrence.id, disposition: "INGESTED", unresolvedReason: null, now: NOW });
+    const before = "2026-10-01T11:00:00.000Z", after = "2026-10-01T13:00:00.000Z";
+    await f.db.query("UPDATE cp_work_items_archive SET value = value || $2::jsonb, changed_at = $3 WHERE id = $1", [opened.workItem.id,
+      JSON.stringify({ subject: "place", autonomousPlan: { publication: { contractId: "ballot-navigation", bodyId: "body" }, contract: { recordClass: "VOTER_ACCESS_ROUTE" } } }), before]);
+    const read = (sharedInputsMoved = false) => readWorkerPublicationItems(f.sql.query, ["ballot-navigation"], { at: NOW, sharedInputsMoved });
+    const ids = async (shared = false) => (await read(shared)).map(row => row.id);
+    assert.deepEqual(await ids(), []);
+    assert.deepEqual(await ids(true), [opened.workItem.id]);
+    await f.db.query("UPDATE cp_work_items_archive SET changed_at = $2 WHERE id = $1", [opened.workItem.id, after]);
+    assert.deepEqual(await ids(), [opened.workItem.id]);
+    await f.db.query("UPDATE cp_work_items_archive SET changed_at = $2 WHERE id = $1", [opened.workItem.id, before]);
+    await f.db.query("INSERT INTO cp_log_worker_results (log_key, record, changed_at) VALUES ($1, '{}'::jsonb, $2)", [opened.workItem.id, after]);
+    assert.deepEqual(await ids(), [opened.workItem.id]);
+    await f.db.exec("DELETE FROM cp_log_worker_results");
+    await f.db.query("INSERT INTO cp_log_artifacts (log_key, record, changed_at, recorded_at) VALUES ($1, '{}'::jsonb, $2, $2)", [opened.workItem.id, after]);
+    assert.deepEqual(await ids(), [opened.workItem.id]);
+    const inputs = await readHeldInputs(f.sql.query, { nationalAt: null, registryAt: null, routesAt: null }, await read());
+    assert.equal(inputs.pagesAt.get("place"), after);
+    assert.equal(inputs.bodyPagesAt.get("body"), after);
+    await f.db.exec("DELETE FROM cp_log_artifacts");
+    assert.deepEqual(await ids(), []);
+    await f.db.exec(CHANGED_AT_TOUCH_FUNCTION_DDL);
+    await f.db.exec(changedAtColumnDdl("cp_work_items_archive"));
+    const held = await f.repos.workItems.mustRead(opened.workItem.id);
+    await f.repos.workItems.compareAndSet(held.id, held.revision, { ...held.value, why: "publication updated after archival" }, NOW);
+    assert.deepEqual(await ids(), [opened.workItem.id]);
   } finally { await f.db.close(); }
 });
 

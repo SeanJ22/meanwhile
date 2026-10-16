@@ -98,6 +98,15 @@ test("expand retains old writers; contract catches overlap prices, deletes tempo
     const watched = { query: async (statement: string, params?: readonly unknown[]) => { queries.push(statement); return sql.query(statement, params); } };
     const withDatabase = async <T>(_connection: string, operation: (value: Sql) => Promise<T>) => operation(watched);
     await applyControlPlaneMigrations(expandArgs, { env: buildEnv, committed, withDatabase });
+    const publicationIndexes = ["cp_work_items_changed_at", "cp_work_items_contract_subject", "cp_work_items_publication_body", "cp_work_items_publication_contract"];
+    const archivedIndexes = await sql.query(`SELECT source.relname AS name, count(archived.indexrelid)::integer AS copies
+      FROM pg_class source JOIN pg_index original ON original.indexrelid = source.oid
+      LEFT JOIN pg_index archived ON archived.indrelid = 'cp_work_items_archive'::regclass AND archived.indisvalid
+        AND archived.indpred IS NULL AND pg_get_indexdef(archived.indexrelid, 1, true) = pg_get_indexdef(original.indexrelid, 1, true)
+      WHERE source.relname = ANY($1::text[]) GROUP BY source.relname ORDER BY source.relname`, [publicationIndexes]);
+    assert.deepEqual(archivedIndexes, publicationIndexes.map(name => ({ name, copies: 1 })), "archived publication reads retain each index without duplicating LIKE copies");
+    assert.deepEqual(await sql.query(`SELECT count(*)::integer AS n FROM pg_trigger WHERE tgfoid = 'cp_touch_changed_at'::regproc
+      AND tgrelid IN ('cp_work_items_archive'::regclass, 'cp_occurrences_archive'::regclass, 'cp_route_tasks_archive'::regclass)`), [{ n: 3 }]);
     const beforeRepeat = queries.length;
     await applyControlPlaneMigrations(expandArgs, { env: buildEnv, committed, withDatabase });
     assert.ok(queries.slice(beforeRepeat).every(query => query.startsWith("SELECT")), "completed migration retries do not write");

@@ -49,7 +49,7 @@ async function setup(pages: Readonly<Record<string, string>>) {
   const stored = new Map<string, Uint8Array>();
   const portrait = { read: async () => png(), put: async (key: string, bytes: Uint8Array) => { stored.set(key, bytes); } };
   const store = new MemoryRoutineDataStore();
-  const run = (extra: Partial<Parameters<typeof publishCandidateFindings>[0]> = {}) => publishCandidateFindings({ boxFindings: repos.boxFindings, scoutResults: repos.scoutResults,
+  const run = (extra: Partial<Parameters<typeof publishCandidateFindings>[0]> = {}) => publishCandidateFindings({ boxFindings: repos.boxFindings,
     held: async id => [...artifacts.values()].find(row => row.id === id) ?? null, store, subjects: [JANE],
     campaignHosts: new Map([[JANE.candidacyId, ["janedoeforcouncil.com"]]]), clocks: factClocks(null), now: NOW, portrait, ...extra });
   const card = async () => {

@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { contentHash } from "./ids.ts";
-import { canonicalJson, ConcurrentModification, IdentityCollision, type AggregateRepository, type AppendOnlyRepository, type ArtifactRecord } from "./repository/types.ts";
+import { canonicalJson, ConcurrentModification, IdentityCollision, type AggregateRepository, type ArtifactRecord } from "./repository/types.ts";
 import type { ScoutResult } from "./scheduler/scout-result.ts";
 import type { DetectiveResult } from "./workers/research-types.ts";
 
@@ -19,11 +19,14 @@ export interface BoxOrigin {
   /** A mid-walk drop has no Scout result row yet, so its origin carries the fact itself. */
   readonly reported?: { readonly field: string; readonly value: string | number | boolean; readonly subjectHint: string | null };
 }
+/** What a finding claims, held on its row so a builder never reads the whole result it came from. */
+interface BoxFact { readonly field: string; readonly value: string | number | boolean; readonly recordClass: string | null }
 export interface BoxInput {
   readonly subjectId: string;
   readonly exactQuote: string | null;
   readonly sourceUrl: string | null;
   readonly origin: BoxOrigin;
+  readonly fact?: BoxFact;
 }
 export interface BoxClaim {
   readonly builder: string;
@@ -38,6 +41,9 @@ export interface BoxFinding {
   readonly exactQuote: string | null;
   readonly sourceUrl: string | null;
   readonly origins: readonly BoxOrigin[];
+  readonly fact?: BoxFact;
+  /** The newest origin's time, so the due queue reads a window without opening every row. */
+  readonly lastRecordedAt?: string;
   readonly state: "waiting" | "taken" | "built" | "refused";
   readonly claim: BoxClaim | null;
   readonly attempts: readonly (BoxClaim & { readonly outcome: "failed" | "expired" | "built" | "refused"; readonly endedAt: string; readonly detail: string })[];
@@ -48,6 +54,25 @@ export interface BoxFinding {
   readonly refusal: string | null;
   /** Why a waiting finding has no slot yet, under the slot map it was read with; a newer map looks at it again. */
   readonly waitingFor?: { readonly class: string; readonly reason: string; readonly slots: string };
+}
+
+/** The Box's reads for builders, filtered and limited by the store rather than read whole. */
+interface BoxQueue {
+  /** Rows a pass must look at: waiting under another slot map, or taken past their lease; recorded since `since`, at most `limit`. */
+  due(input: { readonly slots: string; readonly now: string; readonly since: string; readonly limit: number }): Promise<readonly BoxFinding[]>;
+  /** Waiting rows handed to one builder, by the reason it gave them. */
+  waitingFor(reason: string, limit: number): Promise<readonly BoxFinding[]>;
+}
+export type BoxRepository = AggregateRepository<BoxFinding> & BoxQueue;
+
+/** The queue for a store that is read whole: the in-memory and file stores. */
+export function listedBoxRepository(repo: AggregateRepository<BoxFinding>): BoxRepository {
+  const rows = async () => (await repo.list()).map(row => row.value).sort((a, b) => a.id.localeCompare(b.id));
+  return { ...repo,
+    due: async ({ slots, now, since, limit }) => (await rows()).filter(row => (row.lastRecordedAt ?? "") >= since &&
+      (row.state === "waiting" && row.waitingFor?.slots !== slots || row.state === "taken" && row.claim !== null && row.claim.expiresAt <= now)).slice(0, limit),
+    waitingFor: async (reason, limit) => (await rows()).filter(row => row.state === "waiting" && row.waitingFor?.reason === reason).slice(0, limit),
+  };
 }
 
 /** Missing old evidence is retained by origin; it must not collapse into one empty finding. */
@@ -73,15 +98,19 @@ export async function indexBoxFinding(repo: AggregateRepository<BoxFinding>, inp
     const held = await repo.read(id);
     if (!held) {
       const next: BoxFinding = { id, subjectId: input.subjectId, exactQuote: input.exactQuote, sourceUrl: input.sourceUrl,
-        origins: [input.origin], state: "waiting", claim: null, attempts: [], generation: 0, publicationId: null, refusal: null };
+        origins: [input.origin], ...(input.fact ? { fact: input.fact } : {}), lastRecordedAt: input.origin.recordedAt,
+        state: "waiting", claim: null, attempts: [], generation: 0, publicationId: null, refusal: null };
       try { return (await repo.put(id, next, now)).persisted.value; }
       catch (error) { if (error instanceof IdentityCollision) continue; throw error; }
     }
     const prior = held.value.origins.find(origin => originId(origin) === originId(input.origin));
-    if (prior && (!input.origin.resultKey || prior.resultKey === input.origin.resultKey)) return held.value;
-    const origins = prior ? held.value.origins.map(origin => origin === prior ? { ...origin, resultKey: input.origin.resultKey } : origin)
+    const gains = !held.value.fact && input.fact !== undefined || held.value.lastRecordedAt === undefined;
+    if (prior && (!input.origin.resultKey || prior.resultKey === input.origin.resultKey) && !gains) return held.value;
+    const origins = prior ? held.value.origins.map(origin => origin === prior ? { ...origin, resultKey: input.origin.resultKey ?? origin.resultKey } : origin)
       : [...held.value.origins, input.origin];
-    const next = { ...held.value, origins: origins.sort((a, b) => originId(a).localeCompare(originId(b))) };
+    const fact = held.value.fact ?? input.fact;
+    const next = { ...held.value, origins: origins.sort((a, b) => originId(a).localeCompare(originId(b))), ...(fact ? { fact } : {}),
+      lastRecordedAt: origins.map(origin => origin.recordedAt).sort().at(-1)! };
     try { return (await repo.compareAndSet(id, held.revision, next, now)).value; }
     catch (error) { if (!(error instanceof ConcurrentModification)) throw error; }
   }
@@ -138,25 +167,21 @@ export async function finishBoxFinding(repo: AggregateRepository<BoxFinding>, id
   }
 }
 
-/** A finding's field, value and origin: a mid-hunt drop carries them; a Scout finding is read from its saved result. */
-export async function findingFact(results: Pick<AppendOnlyRepository<ScoutResult>, "readWhere">, row: BoxFinding):
-  Promise<{ readonly origin: BoxOrigin; readonly field: string; readonly value: string | number | boolean } | null> {
-  const origin = row.origins.find(o => o.reported) ?? row.origins.find(o => o.kind === "SCOUT" && o.resultKey);
-  if (!origin) return null;
-  if (origin.reported) return { origin, field: origin.reported.field, value: origin.reported.value };
-  const result = (await results.readWhere(origin.resultKey!, ["attemptId"], origin.resultId)).find(row => row.attemptId === origin.resultId);
-  const finding = result?.findings[origin.findingIndex];
-  return finding?.field && finding.value !== undefined && finding.value !== null ? { origin, field: finding.field, value: finding.value } : null;
+/** A finding's field, value and the Scout origin that carried them; null when it names no field. */
+export function findingFact(row: BoxFinding): (BoxFact & { readonly origin: BoxOrigin }) | null {
+  const origin = row.origins.find(o => o.reported) ?? row.origins.find(o => o.kind === "SCOUT");
+  return origin && row.fact ? { origin, ...row.fact } : null;
 }
 
 /** Used by both Scout writers and the historical-result backfill. No finding is filtered out. */
-export type BoxScoutResult = Pick<ScoutResult, "findings" | "subjectId" | "attemptId" | "workItemId" | "recordedAt"> & Partial<Pick<ScoutResult, "obligationId">>;
+type BoxScoutResult = Pick<ScoutResult, "findings" | "subjectId" | "attemptId" | "workItemId" | "recordedAt"> & Partial<Pick<ScoutResult, "obligationId" | "recordClass">>;
 export async function indexScoutFindings(repo: AggregateRepository<BoxFinding>, result: BoxScoutResult, now: string): Promise<readonly BoxFinding[]> {
   const indexed: BoxFinding[] = [];
   for (const [findingIndex, finding] of result.findings.entries()) indexed.push(await indexBoxFinding(repo, {
     subjectId: finding.subjectId ?? result.subjectId, exactQuote: finding.exactQuote ?? null, sourceUrl: finding.sourceUrl ?? null,
     origin: { kind: "SCOUT", resultId: result.attemptId, ...(result.obligationId ? { resultKey: result.obligationId } : {}), workItemId: result.workItemId, findingIndex,
       artifactIds: finding.artifactIds, recordedAt: result.recordedAt, ...(finding.missionPart ? { missionPart: finding.missionPart } : {}) },
+    ...(finding.field && finding.value !== undefined && finding.value !== null ? { fact: { field: finding.field, value: finding.value, recordClass: result.recordClass ?? null } } : {}),
   }, now));
   return indexed;
 }
@@ -172,7 +197,8 @@ export async function indexReportedFinding(repo: AggregateRepository<BoxFinding>
     origin: { kind: "SCOUT", resultId: input.attemptId, ...(input.obligationId ? { resultKey: input.obligationId } : {}), workItemId: input.workItemId,
       findingIndex: finding.index, collection: "reported", artifactIds: finding.artifactIds, recordedAt: now,
       ...(input.missionPart ? { missionPart: input.missionPart } : {}),
-      reported: { field: finding.field, value: finding.value, subjectHint: finding.subjectHint } } }, now);
+      reported: { field: finding.field, value: finding.value, subjectHint: finding.subjectHint } },
+    fact: { field: finding.field, value: finding.value, recordClass: null } }, now);
 }
 
 export interface BoxDetectiveRecord {

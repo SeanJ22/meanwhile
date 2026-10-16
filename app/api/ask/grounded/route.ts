@@ -1,3 +1,4 @@
+import { readerRoute } from "@/lib/api/reader-route";
 import { composePopulationAnswer, populationQuestion, populationEvidenceIds, readPopulationEvidence } from "@/lib/ask/population";
 import { withPublishedAskSettings, askPlaybookVersion } from "@/lib/ask/runtime-settings.ts";
 import { governmentFinanceEvidence, governmentFinanceQuestion, composeGovernmentFinanceAnswer } from "@/lib/ask/government-finance";
@@ -355,12 +356,12 @@ function personEntities(seats: readonly SeatHolder[]): BindableEntity[] {
   return out;
 }
 
-export async function POST(request: Request) {
+export const POST = readerRoute("/api/ask/grounded", async function POST(request: Request) {
   return withPublishedAskSettings(() => {
     console.log(askModelStartupLine());
     return answerWithSettings(request);
   });
-}
+});
 
 async function answerWithSettings(request: Request) {
   const started = Date.now();
@@ -473,7 +474,7 @@ async function answerWithSettings(request: Request) {
   // fetched is never an unhandled rejection; the settle below still records it.
   const outcomesFromDatabase = leanAsk || ballotOnlyHint || onEdge("meeting-outcomes") ? null : timed("outcomes", refreshOutcomeSnapshotFromPromoted)();
   outcomesFromDatabase?.catch(() => undefined);
-  const commentAccessFromDatabase = production && !leanAsk && !ballotOnlyHint && !onEdge("comment-access")
+  const commentAccessFromDatabase = production && !leanAsk && !ballotOnlyHint && edgeManifest?.stateFacts === undefined
     ? timed("commentAccess", () => readCommentAccessFacts().catch(() => undefined))()
     : null;
   let authorityEdge: ReaderAuthorityEdgeBundle | null = null;
@@ -612,7 +613,9 @@ async function answerWithSettings(request: Request) {
     ...unrelatedPreloads.filter((preload) => !skippedPreloads.includes(preload)),
   ];
   /* The registry and the federal directory are the first two; an officials lookup needs no other source. */
-  await settleGroundedSourcePreloads(topicRoute ? essentialPreloads : leanAsk ? essentialPreloads.slice(0, 2) : [...essentialPreloads, ...deferrablePreloads]);
+  const identityReady = settleGroundedSourcePreloads(essentialPreloads.slice(0, 2));
+  await settleGroundedSourcePreloads(topicRoute ? [() => identityReady, ...essentialPreloads.slice(2)] : leanAsk ? [() => identityReady]
+    : [() => identityReady, ...essentialPreloads.slice(2), ...deferrablePreloads.map(preload => async () => { await identityReady; return preload(); })]);
   if (topicRoute && !["PROMOTED", "BOOTSTRAP"].includes(outcomeProjectionReadState().kind)) {
     await timed("outcomesRetry", () => refreshOutcomeSnapshotFromPromoted().catch(() => undefined))();
     if (["PROMOTED", "BOOTSTRAP"].includes(outcomeProjectionReadState().kind)) {

@@ -178,11 +178,14 @@ test("CARRIED-PLACE · (d) the promotion door accepts the placed carried row, an
   const reconciled = reconcile(venues(CHOLLA));
   const accepted = await promoteMeetingPartition(store, PARTITION, partitionSnapshot(NEXT_READ, reconciled.meetings), [], reconciled.removalEvidence);
   assert.equal(accepted.outcome.candidate.state, "PROMOTED", accepted.outcome.candidate.failureDetail ?? "");
-  const factReads: string[][] = [];
-  installFactReader(async (_text, params) => { factReads.push([...(params?.[0] as readonly string[])].sort()); return []; });
+  const factReads: string[] = [];
+  installFactReader(async text => {
+    factReads.push(text);
+    assert.fail("published meeting composition must not query facts");
+  });
   t.after(() => installFactReader(undefined));
   const read = await readMeetingsProjection({ store, bypassCache: true, now: NEXT_READ });
-  assert.deepEqual(factReads, [[`meeting:${SEPT_23.id}`, `meeting:${SEPT_26.id}`].sort()]);
+  assert.deepEqual(factReads, [], "published meeting composition does not query facts");
   assert.equal(read.kind, "PROMOTED");
   const served = (read as { value: MeetingsSnapshot }).value.meetings.find(({ id }) => id === SEPT_23.id)!;
   assert.deepEqual(served.location, { name: CHOLLA.name, address: CHOLLA.address, lat: CHOLLA.lat, lng: CHOLLA.lng });

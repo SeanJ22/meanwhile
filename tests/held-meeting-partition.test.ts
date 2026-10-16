@@ -34,17 +34,12 @@ const READ_AT = "2026-09-20T15:00:00.000Z";
 
 const [held] = HELD_MEETING_PARTITIONS;
 const successor = MEETING_PARTITION_CONTRACTS.find((partition) => partition.id === held?.successorId)!;
-const heldEntities = ["706", "707"].map(id => `meeting:${held!.meetingSource}:pcc:${id}`);
-const successorEntities = ["2026-09-25-regular", "2026-10-14-regular", "2026-10-29-study-session"]
-  .map(id => `meeting:${successor.meetingSource}:pcc:${id}`);
 
-function emptyMeetingFacts(t: TestContext): (string | string[])[] {
-  const reads: (string | string[])[] = [];
-  installFactReader(async (_text, params) => {
-    const ids = params?.[0];
-    assert.ok(typeof ids === "string" || Array.isArray(ids));
-    reads.push(typeof ids === "string" ? ids : [...ids].sort());
-    return [];
+function rejectMeetingFactReads(t: TestContext): string[] {
+  const reads: string[] = [];
+  installFactReader(async text => {
+    reads.push(text);
+    assert.fail("published meeting composition must not query facts");
   });
   t.after(() => installFactReader(undefined));
   return reads;
@@ -177,9 +172,9 @@ test("until its successor promotes, the retired route's held version is composed
   const store = new MemoryRoutineDataStore();
   const heldVersion = await seedRetiredPointer(store);
 
-  const factReads = emptyMeetingFacts(t);
+  const factReads = rejectMeetingFactReads(t);
   const read = await readMeetingsProjection({ store, bypassCache: true, now: READ_AT });
-  assert.deepEqual(factReads, [heldEntities]);
+  assert.deepEqual(factReads, [], "published meeting composition does not query facts");
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;
   assert.deepEqual(
@@ -206,9 +201,9 @@ test("the successor's first promotion supersedes the held version, which stays i
   const heldVersion = await seedRetiredPointer(store);
   const successorVersion = await promoteSuccessor(store);
 
-  const factReads = emptyMeetingFacts(t);
+  const factReads = rejectMeetingFactReads(t);
   const read = await readMeetingsProjection({ store, bypassCache: true, now: READ_AT });
-  assert.deepEqual(factReads, [successorEntities]);
+  assert.deepEqual(factReads, [], "published meeting composition does not query facts");
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;
   assert.deepEqual(
@@ -244,7 +239,7 @@ test("the held pointer is read only while its successor has none; a superseded r
 
   const store = new ScopeCountingStore();
   await seedRetiredPointer(store);
-  const factReads = emptyMeetingFacts(t);
+  const factReads = rejectMeetingFactReads(t);
   await readMeetingsProjection({ store, bypassCache: true, now: READ_AT });
   await preparePublishedMeetingSnapshot(store, READ_AT);
   assert.equal(asksForHeld(store), true, "in the window, the held version is what the page shows");
@@ -255,14 +250,14 @@ test("the held pointer is read only while its successor has none; a superseded r
   await preparePublishedMeetingSnapshot(store, READ_AT);
   assert.ok(store.requested.length > 0);
   assert.equal(asksForHeld(store), false, "after the first promotion, nothing reads the retired pointer again");
-  assert.deepEqual(factReads, [heldEntities, "meeting:", heldEntities, successorEntities, "meeting:", successorEntities]);
+  assert.deepEqual(factReads, [], "published meeting composition does not query facts");
 });
 
 test("the prepared reader snapshot couples to the held version, then recomposes on the successor's first promotion", async (t) => {
   const store = new MemoryRoutineDataStore();
   const heldVersion = await seedRetiredPointer(store);
 
-  const factReads = emptyMeetingFacts(t);
+  const factReads = rejectMeetingFactReads(t);
   const first = await preparePublishedMeetingSnapshot(store, READ_AT);
   assert.equal(first.status, "PUBLISHED");
   const servedHeld = await readPreparedMeetingsProjection({ store, now: READ_AT });
@@ -288,5 +283,5 @@ test("the prepared reader snapshot couples to the held version, then recomposes 
     servedSuccessor.value.meetings.every((meeting) => meeting.id.startsWith(`${successor.meetingSource}:`)),
     true,
   );
-  assert.deepEqual(factReads, ["meeting:", heldEntities, "meeting:", "meeting:", successorEntities]);
+  assert.deepEqual(factReads, [], "published meeting composition does not query facts");
 });

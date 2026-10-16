@@ -16,16 +16,18 @@ import { MEETING_PARTITION_CONTRACTS, meetingHistoryContract } from "../lib/civi
 import type { MeetingsProjectionReadResult, MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
 import { installFactReader } from "../lib/facts/db.ts";
 
-const factReads: unknown[] = [];
+let factReads = 0;
 beforeEach(() => {
-  factReads.length = 0;
-  installFactReader(async (_text, params) => {
-    assert.deepEqual(params, ["meeting:"]);
-    factReads.push(params);
-    return [{ newest: 0, live: 0 }];
+  factReads = 0;
+  installFactReader(async () => {
+    factReads++;
+    throw new Error("PREPARED_SNAPSHOT_MUST_NOT_READ_FACT_STORE");
   });
 });
-afterEach(() => installFactReader(undefined));
+afterEach(() => {
+  installFactReader(undefined);
+  assert.equal(factReads, 0, "meeting preparation and serving use their published partitions");
+});
 
 function preparedInput(overrides: Partial<PreparedReaderProjectionInput> = {}): PreparedReaderProjectionInput {
   const generatedAt = overrides.generatedAt ?? "2026-09-01T00:00:00.000Z";
@@ -162,8 +164,7 @@ test("preparing over an unchanged promoted set is idempotent and never recompose
     payload: {},
     receipt: {} as never,
   }));
-  const composedFrom = [...contracts.map((contract) => ({ contractId: contract.id, versionId: `ver-${contract.id}` })),
-    { contractId: "meeting-facts", versionId: "facts:0.0" }];
+  const composedFrom = contracts.map((contract) => ({ contractId: contract.id, versionId: `ver-${contract.id}` }));
   // The idempotent pass decides from identities and the serving copy's coupling alone: no partition or composed
   // payload is read to learn that nothing changed.
   const store = fakeStore({
@@ -183,7 +184,6 @@ test("preparing over an unchanged promoted set is idempotent and never recompose
 
   const result = await preparePublishedMeetingSnapshot(store, "2026-09-06T00:05:00.000Z");
   assert.equal(result.status, "CURRENT");
-  assert.deepEqual(factReads, [["meeting:"]]);
   if (result.status === "CURRENT") {
     assert.equal(result.coupledPartitions, contracts.length);
     assert.equal(result.sequence, 3);
@@ -317,14 +317,12 @@ test("prepare composes through the pass's shared composition, and only when the 
     recordClass: "MEETING",
     scope: MEETINGS_PREPARED_SCOPE,
     sequence: 1,
-    composedFrom: [...contracts.map((contract) => ({ contractId: contract.id, versionId: `ver-${contract.id}` })),
-      { contractId: "meeting-facts", versionId: "facts:0.0" }],
+    composedFrom: contracts.map((contract) => ({ contractId: contract.id, versionId: `ver-${contract.id}` })),
     generatedAt: snapshot.generatedAt,
   };
   const current = await preparePublishedMeetingSnapshot(store, "2026-09-06T00:10:00.000Z", { aggregate });
   assert.equal(current.status, "CURRENT");
   assert.equal(composed, 1, "an unchanged set asks for no composition");
-  assert.deepEqual(factReads, [["meeting:"], ["meeting:"]]);
 });
 
 test("history-only changes republish, and an unreadable history keeps its accepted records and version", async () => {
@@ -366,5 +364,4 @@ test("history-only changes republish, and an unreadable history keeps its accept
   row = (await memory.readPreparedReaderProjection("MEETING", MEETINGS_PREPARED_SCOPE))!;
   assert.equal((row.payload as MeetingsSnapshot).meetings[0].title, "history-2");
   assert.equal(row.composedFrom.find(entry => entry.contractId === history.id)?.versionId, "history-2", "a failed read never claims the new history version");
-  assert.deepEqual(factReads, [["meeting:"], ["meeting:"], ["meeting:"], ["meeting:"]]);
 });

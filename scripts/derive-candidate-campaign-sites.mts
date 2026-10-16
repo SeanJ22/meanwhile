@@ -32,7 +32,7 @@ import { requiredManualProductionContract } from "../lib/civic-data/manual-contr
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { RoutineCandidate } from "../lib/civic-data/types.ts";
-import { indexVault, type VaultIndex } from "../lib/control-plane/evidence/read-only-vault.ts";
+import { findHeldCapture, heldVaultIndex } from "../lib/control-plane/evidence/read-only-vault.ts";
 import { heldArtifactCaptures } from "../lib/civic-data/held-artifact-captures.ts";
 import { candidatePublicationLinks, candidatePublicationCaptureUrls,
   heldCandidatePublicationRead } from "../lib/control-plane/promotion/campaign-publication-links.ts";
@@ -70,9 +70,14 @@ async function readApprovals(): Promise<PublishableCampaignSiteApproval[] | { re
   }
 }
 
-/** Distinct completed publication acquisitions. The child never infers
- * article authority from a URL in prose or from uncommitted vault bytes. */
-async function linkedPublicationReads(vault: VaultIndex, approvals: readonly PublishableCampaignSiteApproval[],
+/** The same address with `www.` added or dropped, as a saved capture may have requested it before its redirect. */
+function wwwAlias(url: string): string {
+  const alias = new URL(url);
+  alias.hostname = alias.hostname.startsWith("www.") ? alias.hostname.slice(4) : `www.${alias.hostname}`;
+  return alias.href;
+}
+
+async function linkedPublicationReads(vaultRoot: string, approvals: readonly PublishableCampaignSiteApproval[],
   held: ReadonlyMap<string, HeldVerifyingRead>): Promise<readonly HeldLinkedPublicationRead[] | { readonly unreadable: string }> {
   const controlPlane = process.env.WTP_CONTROL_PLANE_DATABASE_URL;
   if (!controlPlane) return { unreadable: "the control plane's publication attempts are not configured" };
@@ -82,22 +87,31 @@ async function linkedPublicationReads(vault: VaultIndex, approvals: readonly Pub
       sourceArtifactId: site.evidence.artifactId, sourceContentHash: `sha256-${site.evidence.sha256}`,
       approvalRecordId: approval.recordId, candidacyId: site.candidacyId }) : [];
   });
-  const urls = candidatePublicationCaptureUrls(links, vault);
-  if (!urls.length) return [];
+  if (!links.length) return [];
   try {
     const rows = await neon(controlPlane).query(
-      `SELECT a.record, t.value AS attempt, w.value AS work_item
-       FROM unnest($1::text[]) AS sources(url)
-       JOIN cp_log_artifacts a ON md5(a.record->>'canonicalUrl') = md5(sources.url) AND a.record->>'canonicalUrl' = sources.url
-       JOIN cp_attempts t ON t.id = a.record->>'attemptId'
-       JOIN cp_work_items_history w ON w.id = a.record->>'workItemId'
-       ORDER BY a.record->>'canonicalUrl', a.record->>'recordedAt', a.record->>'artifactId'`, [urls],
+      `WITH found AS (
+         SELECT a.record FROM unnest($1::text[]) AS sources(url)
+         JOIN cp_log_artifacts a ON md5(a.record->>'canonicalUrl') = md5(sources.url) AND a.record->>'canonicalUrl' = sources.url
+         UNION
+         SELECT a.record FROM cp_work_items_history w JOIN cp_log_artifacts a ON a.record #>> '{workItemId}' = w.id
+         WHERE w.value #>> '{subject}' = ANY($2::text[]))
+       SELECT f.record, t.value AS attempt, w.value AS work_item FROM found f
+       JOIN cp_attempts t ON t.id = f.record->>'attemptId'
+       JOIN cp_work_items_history w ON w.id = f.record->>'workItemId'
+       ORDER BY f.record->>'canonicalUrl', f.record->>'recordedAt', f.record->>'artifactId'`,
+      [[...new Set(links.flatMap(link => [link.url, wwwAlias(link.url)]))], [...new Set(links.map(link => `candidate-publication:${link.source.candidacyId}`))]],
     ) as { record: unknown; attempt: unknown; work_item: unknown }[];
+    const parsed = rows.map(row => ({
+      record: (typeof row.record === "string" ? JSON.parse(row.record) : row.record) as HeldLinkedPublicationRead["record"],
+      attempt: (typeof row.attempt === "string" ? JSON.parse(row.attempt) : row.attempt) as HeldLinkedPublicationRead["attempt"],
+      workItem: (typeof row.work_item === "string" ? JSON.parse(row.work_item) : row.work_item) as { subject?: unknown },
+    }));
+    const located = await Promise.all(parsed.map(row => findHeldCapture(vaultRoot, row.record).catch(() => null)));
+    const vault = heldVaultIndex(located.flatMap(row => row ? [row] : []));
+    const captureUrls = new Set(candidatePublicationCaptureUrls(links, vault));
     const out: HeldLinkedPublicationRead[] = [];
-    for (const row of rows) {
-      const record = (typeof row.record === "string" ? JSON.parse(row.record) : row.record) as HeldLinkedPublicationRead["record"];
-      const attempt = (typeof row.attempt === "string" ? JSON.parse(row.attempt) : row.attempt) as HeldLinkedPublicationRead["attempt"];
-      const workItem = (typeof row.work_item === "string" ? JSON.parse(row.work_item) : row.work_item) as { subject?: unknown };
+    for (const { record, attempt, workItem } of parsed.filter(row => captureUrls.has(row.record.canonicalUrl))) {
       // One unreadable capture holds only its own publication (it stays unverified, owed work);
       // it never blocks every other approved campaign link from reaching readers.
       let capture;
@@ -135,6 +149,7 @@ async function main(): Promise<void> {
       : { unreadable: `${profilesRead.kind}${"detail" in profilesRead ? `: ${profilesRead.detail}` : ": the promoted version names no version or promotion time"}` };
   let held = new Map<string, HeldVerifyingRead>();
   let linkedPublications: readonly HeldLinkedPublicationRead[] = [];
+  let blocked: string | null = null;
   if (!("unreadable" in approvals) && approvals.length > 0) {
     try {
       const vaultRoot = join(process.cwd(), "data", "control-plane", "vault");
@@ -142,34 +157,35 @@ async function main(): Promise<void> {
         ...(row.campaignSite.evidence.cycleSource ? [row.campaignSite.evidence.cycleSource.artifactId] : [])]);
       const capture = await heldArtifactCaptures(vaultRoot, artifactIds, process.env.WTP_CONTROL_PLANE_DATABASE_URL!);
       held = await heldCampaignSiteReads(capture, approvals);
-      const linked = await linkedPublicationReads(await indexVault(vaultRoot), approvals, held);
-      if ("unreadable" in linked) {
-        await finish(derivedCampaignSitesFailedCandidate(now, `The linked candidate-publication record could not be read: ${linked.unreadable}`));
-        return;
-      }
-      linkedPublications = linked;
+      const linked = await linkedPublicationReads(vaultRoot, approvals, held);
+      if ("unreadable" in linked) blocked = `The linked candidate-publication record could not be read: ${linked.unreadable}`;
+      else linkedPublications = linked;
     } catch (error) {
-      await finish(derivedCampaignSitesFailedCandidate(now, `The evidence vault could not be read: ${error instanceof Error ? error.message : String(error)}`));
-      return;
+      blocked = `The evidence vault could not be read: ${error instanceof Error ? error.message : String(error)}`;
     }
   }
-  const pass = derivedCampaignSitesPass({
-    approvals,
-    prior,
-    held: (record) => held.get(record.recordId) ?? null,
-    linkedPublications,
-    profiles,
-    now,
-  });
-  for (const p of pass.plan?.published ?? []) console.log(`  published ${p.key}: ${p.url} (${p.approvalRecordId})`);
-  for (const h of pass.plan?.held ?? []) console.log(`  held ${h.key}: ${h.code}: ${h.detail}`);
-  await finish(pass.candidate);
-  const readablePrior = prior && !("unreadable" in prior) ? prior : null;
-  let plan: DerivedCampaignSitesPlan | null = pass.plan ?? (prior && "unreadable" in prior ? null : {
-    records: readablePrior?.projection.records ?? [], portraits: readablePrior?.projection.portraits ?? [],
-    inputs: readablePrior ? [readablePrior.input] : [], published: [], held: [],
-    ...(readablePrior ? { prior: readablePrior } : {}),
-  });
+  // Hunted bios, contacts and portraits go to the profile cards whether or not the site pass can read its evidence.
+  let plan: DerivedCampaignSitesPlan | null = null;
+  if (blocked) await finish(derivedCampaignSitesFailedCandidate(now, blocked));
+  else {
+    const pass = derivedCampaignSitesPass({
+      approvals,
+      prior,
+      held: (record) => held.get(record.recordId) ?? null,
+      linkedPublications,
+      profiles,
+      now,
+    });
+    for (const p of pass.plan?.published ?? []) console.log(`  published ${p.key}: ${p.url} (${p.approvalRecordId})`);
+    for (const h of pass.plan?.held ?? []) console.log(`  held ${h.key}: ${h.code}: ${h.detail}`);
+    await finish(pass.candidate);
+    const readablePrior = prior && !("unreadable" in prior) ? prior : null;
+    plan = pass.plan ?? (prior && "unreadable" in prior ? null : {
+      records: readablePrior?.projection.records ?? [], portraits: readablePrior?.projection.portraits ?? [],
+      inputs: readablePrior ? [readablePrior.input] : [], published: [], held: [],
+      ...(readablePrior ? { prior: readablePrior } : {}),
+    });
+  }
   let subjects: ReturnType<typeof campaignSiteSubjects> = new Map();
   try {
     const national = await readGenericBallotProjection({ store, bypassCache: true, now });
@@ -201,14 +217,14 @@ async function publishHuntedCandidateFields(subjects: readonly CampaignSiteSubje
   const controlPlane = process.env.WTP_CONTROL_PLANE_DATABASE_URL;
   if (!controlPlane || !subjects.length) return;
   const repos = await createPgRepositories(controlPlane, now, { skipBootstrap: true });
-  const waiting = (await repos.boxFindings.listWhere(["state"], "waiting")).filter(row => row.value.waitingFor?.reason === CANDIDATE_PROFILE_LEAD);
+  const waiting = await repos.boxFindings.waitingFor(CANDIDATE_PROFILE_LEAD, 500);
   if (!waiting.length) return;
   const held = await heldArtifactCaptures(join(process.cwd(), "data", "control-plane", "vault"),
-    waiting.flatMap(row => row.value.origins.flatMap(origin => origin.artifactIds)), controlPlane);
+    waiting.flatMap(row => row.origins.flatMap(origin => origin.artifactIds)), controlPlane);
   const campaignHosts = new Map<string, string[]>();
   for (const approval of approvals) campaignHosts.set(approval.campaignSite.candidacyId,
     [...campaignHosts.get(approval.campaignSite.candidacyId) ?? [], approval.campaignSite.host]);
-  const report = await publishCandidateFindings({ boxFindings: repos.boxFindings, scoutResults: repos.scoutResults, held, store, subjects, campaignHosts,
+  const report = await publishCandidateFindings({ boxFindings: repos.boxFindings, held, store, subjects, campaignHosts,
     clocks: factClocks((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value ?? null), now });
   console.log(`RCD_CANDIDATE_FINDINGS=${JSON.stringify(report)}`);
 }

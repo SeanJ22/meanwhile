@@ -19,19 +19,12 @@ import type { Meeting } from "../lib/sources/types.ts";
 import type { ChildRunReport } from "../lib/sources/composite/index.ts";
 import { promoteMeetingPartition, promoteMeetingPartitions } from "../scripts/ingest.ts";
 
-const factReads: (string | string[])[] = [];
+const factReads: string[] = [];
 beforeEach(() => {
   factReads.length = 0;
-  installFactReader(async (_text, params) => {
-    const ids = params?.[0];
-    if (typeof ids === "string") {
-      assert.equal(ids, "meeting:");
-      factReads.push(ids);
-      return [{ newest: 0, live: 0 }];
-    }
-    assert.ok(Array.isArray(ids) && ids.every(id => typeof id === "string" && id.startsWith("meeting:")));
-    factReads.push([...ids].sort());
-    return [];
+  installFactReader(async text => {
+    factReads.push(text);
+    assert.fail("published meeting composition must not query facts");
   });
 });
 afterEach(() => installFactReader(undefined));
@@ -173,7 +166,7 @@ test("DB-06: an old concluded sitting with a record moves to history first, then
 
   // The Reader's composition still answers for it: nothing is in neither place.
   const composed = await readMeetingsProjection({ store, now: NOW, bypassCache: true });
-  assert.deepEqual(factReads, [[oldRecord.id, recent.id, fresh.id].map(id => `meeting:${id}`).sort()]);
+  assert.deepEqual(factReads, [], "published meeting composition does not query facts");
   assert.equal(composed.kind, "PROMOTED", JSON.stringify("detail" in composed ? composed.detail : composed));
   const ids = composed.kind === "PROMOTED" ? composed.value.meetings.map(({ id }) => id) : [];
   assert.ok(ids.includes(oldRecord.id) && ids.includes(fresh.id));

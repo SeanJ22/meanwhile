@@ -50,18 +50,11 @@ import {
 import type { Meeting } from "../lib/sources/types.ts";
 import { promoteMeetingPartitions } from "../scripts/ingest.ts";
 
-const factReads: (string | string[])[] = [];
+const factReads: string[] = [];
 beforeEach(() => {
   factReads.length = 0;
-  installFactReader(async (_text, params) => {
-    const ids = params?.[0];
-    if (typeof ids === "string") {
-      assert.equal(ids, "meeting:");
-      factReads.push(ids);
-      return [{ newest: 0, live: 0 }];
-    }
-    assert.ok(Array.isArray(ids) && ids.every(id => typeof id === "string" && id.startsWith("meeting:")));
-    factReads.push([...ids].sort());
+  installFactReader(async text => {
+    factReads.push(text);
     return [];
   });
 });
@@ -152,7 +145,7 @@ async function composed(store: MemoryRoutineDataStore, now: string): Promise<Ext
   clearPromotedReadModelCache();
   const read = await readMeetingsProjection({ store, now, bypassCache: true });
   assert.equal(read.kind, "PROMOTED");
-  if (read.kind === "PROMOTED") assert.deepEqual(factReads.at(-1), read.value.meetings.flatMap(row => [row.id, ...row.mergedMeetingIds ?? []]).map(id => `meeting:${id}`).sort());
+  assert.deepEqual(factReads, [], "published meeting composition does not query facts");
   return read as Extract<MeetingsProjectionReadResult, { kind: "PROMOTED" }>;
 }
 
@@ -245,7 +238,7 @@ test("controlled clock, the composing reader: a receipt-only period advances Las
   assert.deepEqual(collectedOf(changed.value, PIMA), [checkedAt], "Pima keeps its receipt's check");
 });
 
-const EXTRAS: PublishReaderExtras = { commentAccess: [], everydayRouting: null };
+const EXTRAS: PublishReaderExtras = { everydayRouting: null };
 const VALUES: PublishAuthority = Object.fromEntries(AUTHORITY_FAMILIES.map((family) => [family, { value: { family }, versionId: `${family}-v1` }]));
 const CARRIED: PublishAuthority = Object.fromEntries(AUTHORITY_FAMILIES.map((family) => [family, { versionId: `${family}-v1`, carried: true as const }]));
 const REGISTRATIONS: PublishRegistrations = { az: { value: { state: "az" }, versionId: "reg-az-v1" } };

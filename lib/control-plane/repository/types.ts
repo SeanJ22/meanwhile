@@ -1,4 +1,4 @@
-import type { BoxFinding } from "../box.ts";
+import type { BoxRepository } from "../box.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 import type { ActiveWorkClaimReader } from "./active-work-claims.ts";
 import type { WorkerResultRecord } from "../workers/types.ts";
@@ -497,7 +497,7 @@ export interface ControlPlaneRepositories {
   readonly methodCandidates: AggregateRepository<CandidateStore>;
   readonly researchIntents: AppendOnlyRepository<ResearchIntent>;
   readonly scoutResults: AppendOnlyRepository<ScoutResult>;
-  readonly boxFindings: AggregateRepository<BoxFinding>;
+  readonly boxFindings: BoxRepository;
   readonly workerResults: AppendOnlyRepository<WorkerResultRecord>;
   readonly promotionPipeline: AppendOnlyRepository<PromotionPipelineRecord>;
   readonly windowRuns: AppendOnlyRepository<WindowRunRecord>;

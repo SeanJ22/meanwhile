@@ -191,8 +191,11 @@ test("CARRIED-SUPERSEDE · (a) Tucson Unified's re-issued Audit Committee sittin
   assert.equal(TUSD.wiring!.timeZone, "America/Phoenix");
 
   const store = new MemoryRoutineDataStore();
-  const factReads: string[][] = [];
-  installFactReader(async (_text, params) => { factReads.push([...(params?.[0] as readonly string[])].sort()); return []; });
+  const factReads: string[] = [];
+  installFactReader(async text => {
+    factReads.push(text);
+    assert.fail("published meeting composition must not query facts");
+  });
   t.after(() => installFactReader(undefined));
   await seedMeasuredVersion(store);
   assert.deepEqual(atTheSitting(await readerRows(store, MEASURED_READ)), ["diligent:tusd1:495", "diligent:tusd1:501"]);
@@ -230,7 +233,7 @@ test("CARRIED-SUPERSEDE · (a) Tucson Unified's re-issued Audit Committee sittin
   const composed = await readerRows(store, NEXT_READ);
   assert.deepEqual(atTheSitting(composed), ["diligent:tusd1:501"]);
   assert.equal(composed.counts.total, composed.meetings.length);
-  assert.deepEqual(factReads, [["meeting:diligent:tusd1:495", "meeting:diligent:tusd1:501"], ["meeting:diligent:tusd1:501"]]);
+  assert.deepEqual(factReads, [], "published meeting composition does not query facts");
 });
 
 test("CARRIED-SUPERSEDE · (b) a carried row with no fresh twin stays carried, with its reason and its last-listed instant", async () => {

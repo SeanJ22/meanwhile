@@ -32,18 +32,11 @@ import {
   selectedMeetingPartitions,
 } from "../scripts/ingest.ts";
 
-const factReads: (string | string[])[] = [];
+const factReads: string[] = [];
 beforeEach(() => {
   factReads.length = 0;
-  installFactReader(async (_text, params) => {
-    const ids = params?.[0];
-    if (typeof ids === "string") {
-      assert.equal(ids, "meeting:");
-      factReads.push(ids);
-      return [{ newest: 0, live: 0 }];
-    }
-    assert.ok(Array.isArray(ids) && ids.every(id => typeof id === "string" && id.startsWith("meeting:")));
-    factReads.push([...ids].sort());
+  installFactReader(async text => {
+    factReads.push(text);
     return [];
   });
 });
@@ -255,7 +248,7 @@ test("only exact out-of-window meeting evidence removes a row and its attached a
 
   const fresh = meeting(legistar, SECOND, "still-served");
   const previous = await readMeetingsProjection({ store, bypassCache: true, now: SECOND });
-  assert.deepEqual(factReads, [[`meeting:${old.id}`]]);
+  assert.deepEqual(factReads, [], "published meeting composition does not query facts");
   assert.equal(previous.kind, "PROMOTED");
   const priorPartition = previous.kind === "PROMOTED"
     ? previous.value
@@ -529,8 +522,8 @@ test("a pass that records readbacks and republishes the prepared snapshot compos
   const row = await store.readPreparedReaderProjection("MEETING", MEETINGS_PREPARED_SCOPE);
   assert.deepEqual(
     new Set(row?.composedFrom.map(({ contractId }) => contractId)),
-    new Set([legistar.id, insite.id, "meeting-facts"]),
-    "the published row is coupled to the versions and the meeting facts that composition read",
+    new Set([legistar.id, insite.id]),
+    "the published row is coupled to the versions that composition read",
   );
 });
 
@@ -627,7 +620,7 @@ test("the batched Reader bounds database calls and isolates a corrupt partition"
   };
 
   const read = await readMeetingsProjection({ store: corruptingStore, bypassCache: true, now: SECOND });
-  assert.deepEqual(factReads, [["meeting:legistar-insite:mesa-good"]]);
+  assert.deepEqual(factReads, [], "published meeting composition does not query facts");
   assert.equal(read.kind, "PROMOTED");
   if (read.kind === "PROMOTED") {
     assert.deepEqual(read.value.meetings.map((row) => row.id), ["legistar-insite:mesa-good"]);
@@ -676,7 +669,7 @@ test("batched pointer/candidate proof failure cannot suppress an unrelated parti
   };
 
   const read = await readMeetingsProjection({ store: batchStore, bypassCache: true, now: SECOND });
-  assert.deepEqual(factReads, [["meeting:legistar-insite:mesa-proof-good"]]);
+  assert.deepEqual(factReads, [], "published meeting composition does not query facts");
   assert.equal(read.kind, "PROMOTED");
   if (read.kind === "PROMOTED") {
     assert.deepEqual(read.value.meetings.map((row) => row.id), ["legistar-insite:mesa-proof-good"]);
@@ -705,7 +698,7 @@ test("a cross-partition id collision holds every claimant and never hides an unr
   });
 
   const read = await readMeetingsProjection({ store, bypassCache: true, now: SECOND });
-  assert.deepEqual(factReads, [["meeting:legistar-insite:unrelated"]]);
+  assert.deepEqual(factReads, [], "published meeting composition does not query facts");
   assert.equal(read.kind, "PROMOTED");
   if (read.kind === "PROMOTED") {
     assert.deepEqual(read.value.meetings.map((row) => row.id), ["legistar-insite:unrelated"]);

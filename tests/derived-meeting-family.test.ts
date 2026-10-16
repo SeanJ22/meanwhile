@@ -66,13 +66,11 @@ const T_WIRING = "2026-09-24T20:00:00.000Z";
 const T_FAMILY = "2026-09-24T20:30:00.000Z";
 const T_SECOND = "2026-09-24T21:30:00.000Z";
 
-function emptyMeetingFacts(t: TestContext): (string | string[])[] {
-  const reads: (string | string[])[] = [];
-  installFactReader(async (_text, params) => {
-    const ids = params?.[0];
-    assert.ok(typeof ids === "string" || Array.isArray(ids));
-    reads.push(typeof ids === "string" ? ids : [...ids].sort());
-    return [];
+function rejectMeetingFactReads(t: TestContext): string[] {
+  const reads: string[] = [];
+  installFactReader(async text => {
+    reads.push(text);
+    assert.fail("published meeting composition must not query facts");
   });
   t.after(() => installFactReader(undefined));
   return reads;
@@ -269,7 +267,7 @@ test("a promoted family's internal fresh duplicates reconcile in composition and
   }));
   assert.ok(family.outcome.promoted, family.outcome.candidate.failureDetail ?? "");
   assert.equal(family.build.snapshot.counts.duplicatesCollapsed, 3);
-  const factReads = emptyMeetingFacts(t);
+  const factReads = rejectMeetingFactReads(t);
   const read = await readMeetingsProjection({ store, bypassCache: true, now: T_FAMILY });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;
@@ -278,8 +276,7 @@ test("a promoted family's internal fresh duplicates reconcile in composition and
   assert.deepEqual(read.value.meetings, family.build.snapshot.meetings);
   assert.doesNotThrow(() => reconcileCounts(read.value));
   assert.equal((await preparePublishedMeetingSnapshot(store, T_FAMILY)).status, "PUBLISHED");
-  const entityIds = family.build.snapshot.meetings.map(meeting => `meeting:${meeting.id}`).sort();
-  assert.deepEqual(factReads, [entityIds, "meeting:", entityIds]);
+  assert.deepEqual(factReads, [], "published meeting composition does not query facts");
 });
 
 test("a serving-window boundary crossed during collection uses the actual final input anchor", async () => {
@@ -319,9 +316,9 @@ test("an unverified row stays open while its verified sibling publishes and its 
   assert.ok(next.build.snapshot.meetings.find(row => row.id === prior.id)?.carried);
   assert.ok(next.build.snapshot.meetings.some(row => row.id === "ical:new"));
   assert.ok(!next.build.snapshot.meetings.some(row => row.id === "ical:foreign"));
-  const factReads = emptyMeetingFacts(t);
+  const factReads = rejectMeetingFactReads(t);
   const reader = await readMeetingsProjection({ store, now: T_SECOND, bypassCache: true });
-  assert.deepEqual(factReads, [[`meeting:${prior.id}`, "meeting:ical:new"].sort()]);
+  assert.deepEqual(factReads, [], "published meeting composition does not query facts");
   assert.equal(reader.kind, "PROMOTED");
   if (reader.kind === "PROMOTED") assert.ok(reader.value.meetings.some(row => row.id === "ical:new"));
 });
@@ -340,9 +337,9 @@ test("C16 END TO END: a reviewed crosswalk row plus a validated route publishes 
   assert.deepEqual(family.build.snapshot.meetings.map((m) => m.title), ["Housing Commission"], "only the reviewed body's sittings; the Tourism Commission's never enter");
   assert.equal(family.build.snapshot.meetings[0]?.bodyId, BODY_ID);
 
-  const factReads = emptyMeetingFacts(t);
+  const factReads = rejectMeetingFactReads(t);
   const reader = await readMeetingsProjection({ store, now: T_FAMILY, bypassCache: true });
-  assert.deepEqual(factReads, [family.build.snapshot.meetings.map(meeting => `meeting:${meeting.id}`).sort()]);
+  assert.deepEqual(factReads, [], "published meeting composition does not query facts");
   assert.equal(reader.kind, "PROMOTED");
   if (reader.kind !== "PROMOTED") return;
   assert.ok(reader.value.meetings.some((m) => m.bodyId === BODY_ID && m.title === "Housing Commission"), "the reader composes the family's sitting");
@@ -392,9 +389,9 @@ test("C16: a suspended connection publishes nothing new and keeps its previously
   const held = await promoteFamily(store, T_SECOND, FEED);
   assert.equal(held.build.snapshot.derivedMembers?.[0]?.outcome, "HELD");
   assert.match(held.build.snapshot.derivedMembers?.[0]?.detail ?? "", /suspended for review \(ROUTE_GONE\)/);
-  const factReads = emptyMeetingFacts(t);
+  const factReads = rejectMeetingFactReads(t);
   const reader = await readMeetingsProjection({ store, now: T_SECOND, bypassCache: true });
-  assert.deepEqual(factReads, [first.build.snapshot.meetings.map(meeting => `meeting:${meeting.id}`).sort()]);
+  assert.deepEqual(factReads, [], "published meeting composition does not query facts");
   assert.ok(reader.kind === "PROMOTED" && reader.value.meetings.some((m) => m.bodyId === BODY_ID), "the verified sitting is still what the reader sees");
 });
 

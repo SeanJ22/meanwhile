@@ -1,6 +1,6 @@
 import { createDispatchState } from "./dispatch-state.ts";
 import { ADMIN_SECTIONS, migrateStoredAdminConfig, storedAdminConfigRepository, type AdminSection, type StoredAdminSection } from "./admin-config.ts";
-import type { BoxFinding } from "../box.ts";
+import { listedBoxRepository, type BoxFinding } from "../box.ts";
 import type { WorkerResultRecord } from "../workers/types.ts";
 import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
@@ -720,7 +720,7 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
     spend: storedSpendRepository(fileAggregateRepository<PricedCharge>(resolved, "ModelCharge", "model-charges"), scoutResults),
     methodCandidates: fileAggregateRepository<CandidateStore>(resolved, "MethodCandidateStore", "method-candidates"),
     researchIntents: fileAppendOnlyRepository<ResearchIntent>(resolved, "research-intents"),
-    boxFindings: fileAggregateRepository<BoxFinding>(resolved, "BoxFinding", "box-findings"),
+    boxFindings: listedBoxRepository(fileAggregateRepository<BoxFinding>(resolved, "BoxFinding", "box-findings")),
     scoutResults,
     workerResults: fileAppendOnlyRepository<WorkerResultRecord>(resolved, "worker-results"),
     promotionPipeline: fileAppendOnlyRepository<PromotionPipelineRecord>(resolved, "promotion-pipeline"),

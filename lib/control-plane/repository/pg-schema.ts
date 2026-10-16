@@ -5,7 +5,7 @@ import { FIX_MAP_DDL } from "../../method/fix-map.ts";
 import { WEBSITE_PACING_DDL } from "../website-pacing.ts";
 
 /** Moves whenever `BOOTSTRAP_DDL` moves. The gate compares against it. */
-export const BOOTSTRAP_VERSION = 32;
+export const BOOTSTRAP_VERSION = 33;
 export const CP_MIGRATIONS_DDL = `CREATE TABLE IF NOT EXISTS cp_migrations (
   id text PRIMARY KEY, hash text NOT NULL, completed_at timestamptz NOT NULL)`;
 
@@ -144,6 +144,12 @@ export const SCOPED_HISTORY_INDEXES: readonly OnlineIndex[] = [
   onlineIndex("cp_log_promotion_pipeline_attempt", "cp_log_promotion_pipeline ((record #>> '{source,attemptId}'))"),
   onlineIndex("cp_log_worker_results_id", "cp_log_worker_results ((record #>> '{id}'))"),
   onlineIndex("cp_log_costs_recorded_at", "cp_log_costs (recorded_at)"),
+  onlineIndex("cp_work_items_publication_contract", "cp_work_items ((value #>> '{autonomousPlan,publication,contractId}'))"),
+  onlineIndex("cp_work_items_publication_body", "cp_work_items ((value #>> '{autonomousPlan,publication,bodyId}'))"),
+  onlineIndex("cp_work_items_contract_subject", "cp_work_items ((value #>> '{autonomousPlan,contract,subjectId}'))"),
+  onlineIndex("cp_box_findings_due", "cp_box_findings ((value #>> '{waitingFor,slots}'), (value->>'lastRecordedAt')) WHERE value->>'state' = 'waiting'"),
+  onlineIndex("cp_box_findings_lease", "cp_box_findings ((value #>> '{claim,expiresAt}')) WHERE value->>'state' = 'taken'"),
+  onlineIndex("cp_box_findings_reason", "cp_box_findings ((value #>> '{waitingFor,reason}'), id) WHERE value->>'state' = 'waiting'"),
 ];
 
 /** Every aggregate and log table this schema declares, each of which carries `changed_at`. */
@@ -407,13 +413,24 @@ export const FIELD_MANUAL_ENTRIES_KIND_INDEX_DDL =
 export const ONLINE_INDEXES: ReadonlyMap<string, OnlineIndex> = new Map(
   [ARTIFACT_SOURCE_INDEX, ...SCOPED_HISTORY_INDEXES, ...CHANGED_AT_INDEXES, ...ROUTE_TASK_INDEXES].map(index => [index.ddl, index] as const));
 
+const WORK_ITEM_PUBLICATION_INDEXES = [...SCOPED_HISTORY_INDEXES, ...CHANGED_AT_INDEXES].filter(index =>
+  ["cp_work_items_publication_contract", "cp_work_items_publication_body", "cp_work_items_contract_subject", "cp_work_items_changed_at"].includes(index.name));
+
 export const CONTROL_READS_EXPAND_DDL: readonly string[] = [
   CP_MIGRATIONS_DDL,
   ...FIX_MAP_DDL,
   ...MODEL_CHARGES_DDL,
   ...ADMIN_SECTIONS_DDL,
   ...ADMIN_SECTION_INDEXES,
+  ...WORK_ITEM_PUBLICATION_INDEXES.map(index => index.ddl.replace(" CONCURRENTLY", "")),
   ...DISPATCH_STATE_DDL,
+  ...DISPATCH_ARCHIVE_TABLES.map(changedAtColumnDdl),
+  ...WORK_ITEM_PUBLICATION_INDEXES.map(index => `DO $$ BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_index WHERE indrelid = 'cp_work_items_archive'::regclass AND indisvalid AND indpred IS NULL
+      AND pg_get_indexdef(indexrelid, 1, true) = pg_get_indexdef('${index.name}'::regclass, 1, true)) THEN
+      ${index.ddl.replace(" CONCURRENTLY", "").replaceAll("cp_work_items", "cp_work_items_archive")}
+    END IF;
+  END $$;`),
   ...["cp_work_items", "cp_work_items_archive"].map(table => `CREATE INDEX IF NOT EXISTS ${table}_autonomous_followup ON ${table} (id)
     WHERE value->'autonomousPlan' IS NOT NULL AND value #>> '{autonomousPlan,capability}' IS DISTINCT FROM 'hunt-packet'
       AND (jsonb_array_length(coalesce(value #> '{autonomousPlan,acquisition}', '[]'::jsonb)) > 0

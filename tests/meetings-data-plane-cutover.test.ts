@@ -133,10 +133,10 @@ test("one partition carry-forward opens only its own pointer and ignores an unre
 
 test("meetings candidate proves its meeting door's obligations independently of row count", async (t) => {
   const evidenced = withAcquisitionEvidence(fixturePartition());
-  const factReads: unknown[] = [];
-  installFactReader(async (_text, params) => {
-    factReads.push(params?.[0]);
-    return [];
+  const factReads: string[] = [];
+  installFactReader(async text => {
+    factReads.push(text);
+    assert.fail("published meeting composition must not query facts");
   });
   t.after(() => installFactReader(undefined));
   const candidate = candidateForMeetingPartition(partition, evidenced);
@@ -168,7 +168,7 @@ test("meetings candidate proves its meeting door's obligations independently of 
     bypassCache: true,
   });
   assert.equal(read.kind, "PROMOTED");
-  assert.deepEqual(factReads, [evidenced.meetings.map(row => `meeting:${row.id}`)]);
+  assert.deepEqual(factReads, [], "published meeting composition does not query facts");
   assert.equal(read.kind === "PROMOTED" && read.partitions.some((row) => row.versionId === promoted.candidate.id), true);
 });
 

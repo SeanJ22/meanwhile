@@ -85,3 +85,21 @@ test("historical Scout and detective findings share the index, including missing
   assert.equal(counts["send-1"].waiting, 2);
   assert.equal(counts["send-2"].waiting, 2);
 });
+
+test("a Box row keeps its finding's field and value; a row from before that gains them on one re-index, and the queue hands builders only due rows", async () => {
+  const repo = createMemoryRepositories().boxFindings;
+  const scout = { subjectId: "place:start", attemptId: "scout-9", workItemId: "send-9", recordedAt: NOW, recordClass: "roster", findings: [
+    { subjectId: "person:alice", field: "officeholder.name", value: "Alice Adams", kind: "RECORD" as const, summary: "Clerk",
+      exactQuote: input.exactQuote!, sourceUrl: input.sourceUrl!, artifactIds: ["artifact-1"] }] };
+  const id = boxFindingId(input);
+  await indexScoutFindings(repo, scout, NOW);
+  const held = await repo.mustRead(id);
+  const { fact: _fact, lastRecordedAt: _at, ...older } = held.value;
+  await repo.compareAndSet(id, held.revision, older, NOW);
+  await indexScoutFindings(repo, scout, LATER);
+  const row = (await repo.mustRead(id)).value;
+  assert.deepEqual([row.fact, row.lastRecordedAt], [{ field: "officeholder.name", value: "Alice Adams", recordClass: "roster" }, NOW]);
+  assert.deepEqual((await repo.due({ slots: "5", now: LATER, since: NOW, limit: 10 })).map(due => due.id), [id], "never looked at under this slot map");
+  assert.deepEqual(await repo.due({ slots: "5", now: LATER, since: LATER, limit: 10 }), [], "recorded before the window");
+  assert.deepEqual(await repo.waitingFor("ANY_REASON", 10), []);
+});

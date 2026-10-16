@@ -14,6 +14,7 @@ import { wiringShapeFor } from "@/lib/control-plane/discovery/derived-wiring.ts"
 const mandan = JSON.parse(readFileSync(new URL("./fixtures/civicclerk-mandan-events.json", import.meta.url), "utf8")).value[0];
 const sharedCategory = JSON.parse(readFileSync(new URL("./fixtures/civicclerk/mandannd/Events.json", import.meta.url), "utf8")).value[0];
 const SAMPLE_ROWS: BodySourceWiring[] = [
+  { ...FIXTURE_DOOR_ROWS[0], agendaSourceType: "MUNICODE" as const, config: { portalUrl: "https://meetings.municode.com/PublishPage/index?cid=BREM&ppid=d33416d7-25d1-44e6-9d32-55b97fa53824", nameTerms: "City Council" } },
   { bodyId: "ocd-division/country:us/state:nd/place:mandan#body:safety-and-wellness-committee", ocdId: "ocd-division/country:us/state:nd/place:mandan",
     jurisdiction: "Mandan, ND", publishingOrg: "City of Mandan", timeZone: "America/Chicago", verifiedAt: "2026-10-13T19:21:00Z", agendaSourceType: "CIVICCLERK" as const,
     config: { apiBase: "https://mandannd.api.civicclerk.com", portalBase: "https://mandannd.portal.civicclerk.com", titleMatch: sharedCategory.eventName, categoryId: String(sharedCategory.categoryId) } },

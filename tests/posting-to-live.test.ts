@@ -87,10 +87,10 @@ test("DB-27: an unchanged stamp is not a new posting", () => {
 });
 
 test("DB-27: read from the store, the clock stops at the readback PASS of the version", async (t) => {
-  const factReads: unknown[] = [];
-  installFactReader(async (_text, params) => {
-    factReads.push(params?.[0]);
-    return [];
+  const factReads: string[] = [];
+  installFactReader(async text => {
+    factReads.push(text);
+    assert.fail("published meeting composition must not query facts");
   });
   t.after(() => installFactReader(undefined));
   const store = new MemoryRoutineDataStore();
@@ -112,7 +112,7 @@ test("DB-27: read from the store, the clock stops at the readback PASS of the ve
 
   const repaired = await repairMeetingReaderProjectionReadbacks(store, [legistar], LIVE, "f".repeat(40));
   assert.deepEqual(repaired.map(row => ({ ok: row.ok, error: row.error })), [{ ok: true, error: null }]);
-  assert.deepEqual(factReads, [["meeting:legistar:sitting"]]);
+  assert.deepEqual(factReads, [], "published meeting composition does not query facts");
   const after = (await readPostingToLive(store, versionId))!.find((row) => row.kind === "AGENDA_LINK")!;
   assert.equal(after.liveAt, LIVE);
   assert.equal(after.minutesToLive, 47, "posted 14:20, live 15:07");

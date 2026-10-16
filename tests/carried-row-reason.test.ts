@@ -255,11 +255,14 @@ test("the reason survives its writer, the Reader composition, the edge artifacts
 
   const expected = { source: "civicplus", lastFreshAt: LAST_HELD, reason: "UNEXPLAINED_DISAPPEARANCE" };
 
-  const factReads: string[][] = [];
-  installFactReader(async (_text, params) => { factReads.push([...(params?.[0] as readonly string[])].sort()); return []; });
+  const factReads: string[] = [];
+  installFactReader(async text => {
+    factReads.push(text);
+    assert.fail("published meeting composition must not query facts");
+  });
   t.after(() => installFactReader(undefined));
   const read = await readMeetingsProjection({ store, bypassCache: true, now: NO_LONGER_HELD });
-  assert.deepEqual(factReads, [["meeting:civicplus:rockaway_township:1824", "meeting:civicplus:rockaway_township:archive:2026-09-22"]]);
+  assert.deepEqual(factReads, [], "published meeting composition does not query facts");
   assert.equal(read.kind, "PROMOTED");
   const composed = (read as { value: MeetingsSnapshot }).value;
   assert.deepEqual(composed.meetings.find((row) => row.id === "civicplus:rockaway_township:1824")?.carried, expected);

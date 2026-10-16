@@ -3,6 +3,7 @@ import { FIPS_TO_STATE } from "../ocd/fips.ts";
 import { FEDERAL_SOURCE_AUTHORITIES } from "../sources/congress/authority.ts";
 import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_ROUTE_PREFIX, REGISTRATION_TARGETS } from "../registration/publication.ts";
 import { extractedMemberUrl } from "./manual-source-urls.ts";
+import { FEDERAL_MONEY_AUTHORITIES } from "../federal-money/authority.ts";
 import {
   MANUAL_SOURCE_CLASSES,
   type ManualSourceSetReceipt,
@@ -84,6 +85,7 @@ function sharedAuthority(people: SourceAuthorityContract, federal: SourceAuthori
 }
 
 export const SOURCE_AUTHORITIES = {
+  ...FEDERAL_MONEY_AUTHORITIES,
   "google-civic-voterinfo": {
     id: "google-civic-voterinfo", publisher: "Google Civic Information; upstream publishers and official flags retained per fact",
     trust: "T3_ATTRIBUTED_PRIMARY", sourceClass: "INTERMEDIARY",

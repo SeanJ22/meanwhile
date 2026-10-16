@@ -1,19 +1,5 @@
-/**
- * A deploy may not cross its own migrations. Pure: takes the committed
- * journal, the phase declarations, the `created_at` values production has
- * applied and the tags this change introduces, and names every migration on
- * the wrong side of the deploy.
- *
- *   - an EXPAND migration must precede its serving code; still pending after
- *     the deploy fails;
- *   - a CONTRACT migration may not precede its code; one introduced by this
- *     change and already applied fails.
- *
- * Only changes to the schema contract need the database; an unreadable
- * changed-path list counts as involved.
- */
-
 import { compareSchemaState, type JournalEntry, type SchemaState } from "./schema-state.ts";
+import { MIGRATION_SQL_PATH } from "./migration-immutability.ts";
 import {
   declaredPhase,
   PHASE_ORDERING,
@@ -90,7 +76,7 @@ export function schemaInvolvement(changed: readonly string[] | null): SchemaInvo
 export function migrationTagsIn(changed: readonly string[]): string[] {
   const tags = changed
     .map(normalisePath)
-    .map((p) => /^lib\/db\/migrations\/([0-9]{4}_[A-Za-z0-9_]+)\.sql$/.exec(p)?.[1])
+    .map((p) => MIGRATION_SQL_PATH.exec(p)?.[1])
     .filter((t): t is string => typeof t === "string");
   return [...new Set(tags)].sort();
 }

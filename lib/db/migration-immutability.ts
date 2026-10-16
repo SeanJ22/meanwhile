@@ -1,15 +1,3 @@
-/**
- * An established migration is immutable; a correction is a new migration.
- * "Applied" is decided by the journal's `when` timestamp, never the SQL, so a
- * rewritten applied file still reports in sync everywhere. This git-only guard
- * asks four questions against the merge base:
- *   1. Was any NNNN_*.sql modified, deleted or renamed rather than added?
- *   2. Was any established meta/NNNN_snapshot.json rewritten?
- *   3. Is the journal append-only (same index, `when` and `tag`)?
- *   4. Do the journal and the .sql files on disk correspond exactly?
- * `changes === null` means unreadable, never a pass. Pure; no I/O.
- */
-
 import type { JournalEntry } from "./schema-state.ts";
 
 
@@ -97,8 +85,8 @@ export function parsePorcelain(raw: string): ChangedEntry[] {
 }
 
 
-/** `lib/db/migrations/NNNN_tag.sql` — the executable half. */
-export const MIGRATION_SQL_PATH = /^lib\/db\/migrations\/([0-9]{4}_[A-Za-z0-9_]+)\.sql$/;
+// Lane migrations carry step names until River assigns their sequence numbers.
+export const MIGRATION_SQL_PATH = /^lib\/db\/migrations\/([A-Za-z0-9][A-Za-z0-9_-]*)\.sql$/;
 /** `lib/db/migrations/meta/NNNN_snapshot.json` — what the next diff is generated against. */
 export const MIGRATION_SNAPSHOT_PATH = /^lib\/db\/migrations\/meta\/([0-9]{4})_snapshot\.json$/;
 /** The journal itself. Appending to it is the ONLY sanctioned edit. */

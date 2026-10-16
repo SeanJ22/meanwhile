@@ -90,6 +90,13 @@ function agendaDocumentMembers(values: readonly unknown[]): CivicRecordMember[] 
 
 /** Facts decide a change; observation stamps such as `collectedAt` stay on the record but never decide it. */
 export function civicRecordFacts(recordClass: RoutineRecordClass, member: CivicRecordMember): unknown {
+  if (recordClass === "FEDERAL_MONEY" && member.key === "federal-money-checkpoint") {
+    const row = object(member.record);
+    if (row) { const { lastCompleteAt: _at, refreshStartedAt: _started, ...progress } = row; return progress; }
+  }
+  if (recordClass === "FEDERAL_MONEY" && member.key.startsWith("federal-money:")) {
+    return withoutProvenanceStamps(member.record, ["retrievedAt", "rawHash"]);
+  }
   if (recordClass === "CENSUS_REFERENCE") {
     const row = object(member.record), attribution = object(row?.attribution);
     if (row && attribution) {
@@ -187,6 +194,13 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
           : [row.chamber, row.seatNo, row.district].filter((part) => typeof part === "string" && part).join(":");
         return { key: `member:${identity || `row-${index}`}`, record };
       });
+    case "FEDERAL_MONEY":
+      return root.state === "US"
+        ? keyed("federal-money-state", array(root.states), ["state"])
+        : [...keyed("federal-money", array(root.records), ["id"]),
+          ...(root.checkpoint ? [{ key: "federal-money-checkpoint", record: { ...object(root.checkpoint), counts: root.counts } }] : []),
+          ...(root.partition ? [{ key: "federal-money-partition", record: { partition: root.partition, children: root.children ?? [],
+            counts: root.counts, subtreeCounts: root.subtreeCounts ?? null, childCounts: root.childCounts ?? null } }] : [])];
     case "STATE_ROLL_CALL":
       return [
         ...keyed("roll", array(root.rollCalls), ["id", "officialRollCallId", "rollCallId"]),

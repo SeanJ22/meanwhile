@@ -219,14 +219,14 @@ async function publishHuntedCandidateFields(subjects: readonly CampaignSiteSubje
   const controlPlane = process.env.WTP_CONTROL_PLANE_DATABASE_URL;
   if (!controlPlane || !subjects.length) return;
   const repos = await createPgRepositories(controlPlane, now, { skipBootstrap: true });
-  const waiting = (await repos.boxFindings.listWhere(["state"], "waiting")).filter(row => row.value.waitingFor?.reason === CANDIDATE_PROFILE_LEAD);
+  const waiting = await repos.boxFindings.waitingFor(CANDIDATE_PROFILE_LEAD, 500);
   if (!waiting.length) return;
   const held = await heldArtifactCaptures(join(process.cwd(), "data", "control-plane", "vault"),
-    waiting.flatMap(row => row.value.origins.flatMap(origin => origin.artifactIds)), controlPlane);
+    waiting.flatMap(row => row.origins.flatMap(origin => origin.artifactIds)), controlPlane);
   const campaignHosts = new Map<string, string[]>();
   for (const approval of approvals) campaignHosts.set(approval.campaignSite.candidacyId,
     [...campaignHosts.get(approval.campaignSite.candidacyId) ?? [], approval.campaignSite.host]);
-  const report = await publishCandidateFindings({ boxFindings: repos.boxFindings, scoutResults: repos.scoutResults, held, store, subjects, campaignHosts,
+  const report = await publishCandidateFindings({ boxFindings: repos.boxFindings, held, store, subjects, campaignHosts,
     clocks: factClocks((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value ?? null), now });
   console.log(`RCD_CANDIDATE_FINDINGS=${JSON.stringify(report)}`);
 }

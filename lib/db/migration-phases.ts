@@ -368,6 +368,7 @@ export const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
   },
   "0034_reader_events": { phase: "expand", why: "New aggregate and anonymous membership tables; existing capture stores are unaffected." },
   "0035_r1_fact_store": { phase: "expand", why: "Creates the fact store tables. Nothing reads or writes them before the build that ships with it." },
+  "R1_fact_scale": { phase: "expand", why: "Adds the fact watermark, the pass cursors and the trigger that queues changed places; existing writers keep working." },
   "0036_ne01": { phase: "expand", why: "Adds defaulted read counters and reader selection functions; existing readers and writers keep working." },
   "0033_feedback_context": {
     phase: "expand",

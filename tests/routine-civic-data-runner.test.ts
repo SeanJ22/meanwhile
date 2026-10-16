@@ -1443,8 +1443,11 @@ test("Reader readback repair covers the observable registry independently of sou
   assert.match(runner, /FAMILY === "meetings" \? \{ ok: true, readerEdge: "PENDING"/,
     "source turns report publication pending while the independent state lane publishes");
   const publicationChecks = runner.slice(runner.indexOf("const publishNowEdgeChecks ="), runner.indexOf("const admissionNowMs ="));
-  assert.match(publicationChecks, /publishSupervisorReaderEdge\(store, new Date\(\)\.toISOString\(\), standingTasks, \{ state: STATE_SCOPE \}\)/,
-    "publish-now checks promoted families in the selected state");
+  assert.match(publicationChecks, /await publishReaderEdge\(null\)/, "publish-now considers every promoted family in its state");
+  assert.match(publicationChecks, /runReaderEdgePublicationChild\(\{ state: STATE_SCOPE,[\s\S]*selected,/,
+    "publication runs in a child scoped to the selected state");
+  const publisher = readFileSync("scripts/publish-reader-edge.mts", "utf8");
+  assert.match(publisher, /publishSupervisorReaderEdge\(new PostgresRoutineDataStore\(\), request\.observedAt, request\.selected,[\s\S]*state: request\.state/);
   assert.doesNotMatch(child, /readMeetingsProjection\(/, "the CLI uses the same scoped verification helper as state workers");
   assert.match(child, /serializeRoutineReaderRepairRecord/);
   assert.doesNotMatch(child, /processRegisteredRoutineCandidate|promoteMeetingPartitions|\.promote\(/);

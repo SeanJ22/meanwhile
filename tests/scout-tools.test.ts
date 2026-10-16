@@ -664,10 +664,11 @@ test("SEEDED (e): the (N+1)th request to one host is refused, naming the count; 
   const refused = await kit.call("fetch_public", { url: `${HOST}/c` });
   assert.equal(refused.ok, false);
   assert.match(refused.forModel, /Source website may be checked again/);
+  assert.equal(refused.requestCount, 0, "a deferred request was never sent");
   assert.equal(seen.filter((u) => u.startsWith(HOST)).length, 10, "robots and nine pages consume the small website allowance");
   const elsewhere = await kit.call("fetch_public", { url: `${other}/x` });
   assert.equal(elsewhere.ok, true, "the bound is per host");
-  assert.equal(kit.requestCount, 13);
+  assert.equal(kit.requestCount, 12);
 });
 
 test("unknown and larger websites can read past ten without small-publisher spacing", async () => {

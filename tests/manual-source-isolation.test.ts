@@ -59,9 +59,9 @@ test("corrupt imported proof and tampered inherited authority are refused", asyn
   const corruptStore = { readPromotion: store.readPromotion.bind(store), readCandidate: async () => ({
     ...record, candidate: { ...record.candidate, bootstrapImport: { ...record.candidate.bootstrapImport!, candidateEnvelopeSha256: "0".repeat(64) } },
   }) };
-  await assert.rejects(prepareManualProjectionSuccessor(packageFor("venue-resolutions", T1, "new", false, true), corruptStore, T1), /MANUAL_PROMOTION_BASE_UNAVAILABLE/);
+  await assert.rejects(readManualProjectionPrior("venue-resolutions", corruptStore, T1, projection.scope), /MANUAL_PROMOTION_BASE_UNAVAILABLE/);
   const corruptPointer = { readCandidate: store.readCandidate.bind(store), readPromotion: async <T>() => ({ ...projection, payload: { kind: "venue-resolutions", records: [] } as T }) };
-  await assert.rejects(prepareManualProjectionSuccessor(packageFor("venue-resolutions", T1, "new", false, true), corruptPointer, T1), /MANUAL_PROMOTION_BASE_UNAVAILABLE/);
+  await assert.rejects(readManualProjectionPrior("venue-resolutions", corruptPointer, T1, projection.scope), /MANUAL_PROMOTION_BASE_UNAVAILABLE/);
   const ordinaryStore = new MemoryRoutineDataStore();
   const ordinary = await processRegisteredManualCandidate(ordinaryStore, "venue-resolutions", manualProjectionCandidate(packageFor("venue-resolutions", T0, "ordinary")), T0);
   const { candidate: next } = await prepareManualProjectionSuccessor(packageFor("venue-resolutions", T1, "new", false, true), ordinaryStore, T1);
@@ -83,7 +83,7 @@ test("receiptless bases contribute no inherited members to a fresh sourced publi
     const record = { ...base.candidate, candidate: { ...base.candidate.candidate,
       retrieval: { ...base.candidate.candidate.retrieval, manualSourceReceipt: undefined } } };
     Object.assign(store, { candidates: new Map([[record.candidate.id, record]]) });
-    assert.equal(await readManualProjectionPrior(contractId, store, T1), null);
+    assert.equal(await readManualProjectionPrior(contractId, store, T1, record.candidate.scope), null);
     const input = packageFor(contractId, T1, "new", false, true);
     const { candidate, expectedBaseVersionId } = await prepareManualProjectionSuccessor(input, store, T1);
     assert.equal(expectedBaseVersionId, record.candidate.id);
@@ -96,17 +96,19 @@ test("receiptless bases contribute no inherited members to a fresh sourced publi
   }
 });
 
-test("a receiptless trusted bootstrap is fully replaced by fresh source-reviewed records", async () => {
-  const { store, record } = importedVenueFixture();
-  assert.equal(await readManualProjectionPrior("venue-resolutions", store, T1), null);
+test("a scoped publication inherits nothing from an unrelated receiptless trusted bootstrap", async () => {
+  const { store, record, projection } = importedVenueFixture();
+  assert.equal(await readManualProjectionPrior("venue-resolutions", store, T1, projection.scope), null);
   const input = packageFor("venue-resolutions", T1, "new", false, true);
   const { candidate, expectedBaseVersionId } = await prepareManualProjectionSuccessor(input, store, T1);
-  assert.equal(expectedBaseVersionId, record.candidate.id);
+  assert.equal(expectedBaseVersionId, null);
+  assert.notEqual(candidate.scope, record.candidate.scope);
   assert.equal(candidate.manualPriorAuthority, undefined);
   assert.deepEqual(candidate.readModel, input.payload);
   const outcome = await processRegisteredManualCandidate(store, "venue-resolutions", candidate, T1, expectedBaseVersionId);
   assert.ok(outcome.promoted, JSON.stringify(outcome.candidate.receipt));
   assert.deepEqual(outcome.promoted.payload, input.payload);
+  assert.equal((await store.readPromotion(record.candidate.recordClass, record.candidate.scope))?.versionId, record.candidate.id);
 });
 
 test("an existing malformed source receipt still refuses inherited records", async () => {
@@ -199,7 +201,7 @@ function records(id: CuratedId, at: string, revision: string): CuratedReaderProj
   return [one, two].map((url, index) => ({
     id: `venue:test:${index + 1}`,
     sourceId: `venue-source-${index + 1}`,
-    bodyOcdId: `ocd-division/country:us/state:az/place:test-${index + 1}`,
+    bodyOcdId: "ocd-division/country:us/state:az/place:test-1",
     match: `${index + 1} Main St`,
     name: `Room ${revision}-${index + 1}`,
     address: `${index + 1} Main St, Test, AZ 85000`,

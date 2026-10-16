@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { isDeepStrictEqual } from "node:util";
 import { gzipSync, gunzipSync } from "node:zlib";
 import { routineScopeState } from "../civic-data/state-scope.ts";
 import { snapshotCounts } from "../meetings/snapshot.ts";
@@ -64,8 +65,9 @@ async function writeState(store: ReaderArtifactStore, root: ReaderManifest, stat
       authorityArtifacts: { ...current?.authorityArtifacts, ...authority },
       registrations: { ...current?.registrations, ...extras.registrations },
       stateLegislators: { ...current?.stateLegislators, ...extras.stateLegislators } };
-    if (current && JSON.stringify(current) === JSON.stringify(manifest)) return;
-    if ((await store.writeManifest({ ...manifest, sequence: current ? current.sequence + 1 : manifest.sequence }, held?.etag ?? null, state)).modified) return;
+    if (current && isDeepStrictEqual(current, manifest)) return;
+    const { publicationFingerprint: _fingerprint, ...changed } = manifest;
+    if ((await store.writeManifest({ ...changed, sequence: current ? current.sequence + 1 : manifest.sequence }, held?.etag ?? null, state)).modified) return;
   }
 }
 
@@ -210,7 +212,8 @@ export async function retireMeetingArtifacts(store: ReaderArtifactStore | null =
   const { freshChecks: _checks, composition: _composition, meetingLayout: _layout, meetingRegistryVersion: _registry,
     commentAccess: _comments, ...authority } = root.manifest;
   const next = { ...authority, scopes: [], sources: [], authorityArtifacts };
-  if (JSON.stringify(next) === JSON.stringify(root.manifest)) return moved;
-  if (!(await store.writeManifest({ ...next, sequence: authority.sequence + 1 }, root.etag)).modified) throw new Error("R4_MEETING_ROOT_MANIFEST_MOVED");
+  if (isDeepStrictEqual(next, root.manifest)) return moved;
+  const { publicationFingerprint: _fingerprint, ...changed } = next;
+  if (!(await store.writeManifest({ ...changed, sequence: authority.sequence + 1 }, root.etag)).modified) throw new Error("R4_MEETING_ROOT_MANIFEST_MOVED");
   return moved;
 }

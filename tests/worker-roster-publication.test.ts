@@ -33,9 +33,12 @@ async function seedRosterIdentity(facts: Awaited<ReturnType<typeof factDb>>, pri
     CREATE TABLE civic_data_promotions (record_class text,scope text,current_version_id text,payload jsonb,PRIMARY KEY(record_class,scope));`);
   await facts.pg.exec(readFileSync(new URL("../lib/db/migrations/R4_meeting_dependencies.sql", import.meta.url), "utf8"));
   const body = prior.payload.registry.bodies.find(row => row.id === bodyId)!;
+  assert.ok(body);
+  const division = body.ocdId ? new Map(prior.payload.registry.divisions.map(row => [row.ocdId, row])).get(body.ocdId) : undefined;
+  assert.ok(!body.ocdId || division, "a body naming a governing division must have that exact registered division");
   await facts.pg.query("INSERT INTO civic_data_promotions VALUES ('REGISTRY_RUNTIME_BINDING',$1,$2,$3::jsonb)",
     [REGISTRY_RUNTIME_SCOPE, prior.versionId, JSON.stringify({ registry: { generatedAt: prior.payload.registry.generatedAt,
-      bodies: [body], divisions: prior.payload.registry.divisions.filter(row => row.ocdId === body.ocdId) } })]);
+      bodies: [body], divisions: division ? [division] : [] } })]);
 }
 
 async function proveRosterPublication(partial = false) {
@@ -166,19 +169,21 @@ async function proveRosterPublication(partial = false) {
 test("ordinary independent workers publish a roster through the existing reader door, preserve prior facts, and reuse the receipt", () => proveRosterPublication());
 test("a stranded mixed roster publishes verified members while unresolved identities enter automatic repair", () => proveRosterPublication(true));
 
-test("owed roster work reads one current body and place even with national registry noise", async context => {
+test("owed roster work reads one current body without inventing its missing division despite national registry noise", async context => {
   const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
   const store = new MemoryRoutineDataStore();
   Object.assign(store, { candidates: new Map([[record.candidate.id, record]]), promotions: new Map([[projection.key, projection]]) });
   const prior = (await readRegistryRuntimePrior(store, "2026-09-08T12:01:00.000Z"))!;
+  const body = prior.payload.registry.bodies.find(row => row.ocdId === null);
+  assert.ok(body);
   const h = await autonomousHarness({ clock: "2026-09-08T12:01:00.000Z", response: { text: "{}" } });
   const current = await h.repos.workItems.mustRead(h.item.id);
   const plan = current.value.autonomousPlan!;
   await h.repos.workItems.compareAndSet(current.id, current.revision, { ...current.value,
-    autonomousPlan: { ...plan, publication: { contractId: "registry-runtime-bindings", bodyId: prior.payload.registry.bodies[0]!.id } } }, h.now());
+    autonomousPlan: { ...plan, publication: { contractId: "registry-runtime-bindings", bodyId: body.id } } }, h.now());
   const facts = await factDb();
   context.after(() => facts.pg.close());
-  await seedRosterIdentity(facts, prior, prior.payload.registry.bodies[0]!.id);
+  await seedRosterIdentity(facts, prior, body.id);
   let rowsRead = 0, bytesRead = 0;
   const input = { repos: h.repos, facts: { ...facts, query: async (sql: string, params?: readonly unknown[]) => {
     assert.doesNotMatch(sql, /jsonb_array_elements|civic_data_payload_parts|SELECT\s+\*/i);

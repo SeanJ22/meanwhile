@@ -1,8 +1,3 @@
-/**
- * Research leads from Admin: pasted or uploaded links become one tracked
- * order, known links are marked held, new ones are tested by plain code, and
- * what works becomes a lesson with the owner as its source that spreads.
- */
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -28,6 +23,8 @@ import type { ProbeFetch } from "../lib/doors/probe.ts";
 import { runSpreadPass } from "../lib/method/spread-pass.ts";
 import { sheetAsCsv } from "../lib/control-plane/bulk-hunts/workbook.ts";
 import { previewLeads } from "../lib/control-plane/leads/preview.ts";
+import { fetchSource } from "../lib/sources/fetch-source.ts";
+import { withSourceTransport } from "./helpers/source-fetch.ts";
 
 const NOW = "2026-10-07T16:00:00.000Z";
 const TUCSON = "ocd-division/country:us/state:az/place:tucson";
@@ -265,14 +262,15 @@ function roundSafety(pacing: WebsitePacing, clock: () => number, small: (host: s
 }
 /** A website answering from a table of pages, robots.txt allowing everything, and counting what it was asked. */
 function site(pages: Readonly<Record<string, Page>>, asked: string[]): typeof fetch {
-  return (async (input: string | URL | Request) => {
+  const transport: typeof fetch = async (input: string | URL | Request) => {
     const url = String(input instanceof Request ? input.url : input);
     asked.push(url);
     if (url.endsWith("/robots.txt")) return new Response(ROBOTS, { status: 200, headers: { "content-type": "text/plain" } });
     const page = pages[url];
     if (!page) return new Response("not found", { status: 404 });
     return new Response(page.body ?? "", { status: page.status, headers: { "content-type": page.type ?? "text/html", ...(page.retryAfter ? { "retry-after": page.retryAfter } : {}) } });
-  }) as typeof fetch;
+  };
+  return (input, init) => withSourceTransport(transport, () => fetchSource(input, init));
 }
 
 test("pacing: lead tests and every other reader share one hourly count per small website, across processes and rounds", async () => {
@@ -341,12 +339,12 @@ test("pacing: a 429 with Retry-After from a lead holds that website for every re
   // Another process, reading through the shared store, is held too.
   const worker = roundSafety(repos.websitePacing, clock.now, () => false);
   const held = await worker.guardedOpenOne("public-web", "hunt-acquisition", site(pages, asked))({ url: "https://busy.example.gov/agendas", method: "GET", headers: {}, timeoutMs: 1000 });
-  assert.match(held.transportError ?? "", /^WEBSITE_ASKED_TO_WAIT: busy\.example\.gov asked to be left alone until /);
+  assert.match(held.transportError ?? "", /^WEBSITE_ASKED_TO_WAIT: Source website may be checked again at /);
   assert.equal(held.requestCount, 0);
 
   // And a 503 another reader got holds the leads for that website.
   const later = await submit(ask("leads-key-held", [{ link: "https://flaky.example.gov/a", notes: {} }]), deps(repos));
-  await worker.guardedOpenBytes("public-web", "hunt-acquisition", (async () => new Response("down", { status: 503 })) as typeof fetch)({ url: "https://flaky.example.gov/", headers: {}, timeoutMs: 1000 });
+  await worker.guardedOpenBytes("public-web", "hunt-acquisition", site({ "https://flaky.example.gov/": { status: 503, body: "down" } }, asked))({ url: "https://flaky.example.gov/", headers: {}, timeoutMs: 1000 });
   const fresh = roundSafety(repos.websitePacing, clock.now, () => false);
   await runLeadsPass({ repos, ...clock, sendPlaceIds: new Set(), spacingMs: 0, get: guardedLeadGet(fresh, site({ "https://flaky.example.gov/a": { status: 200, body: "ok" } }, asked)) });
   const flaky = (await orderOf(repos, later.receipt.receiptId)).rows[0]!;

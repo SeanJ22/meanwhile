@@ -1,5 +1,11 @@
 import assert from "node:assert/strict";
-import test from "./helpers/playbooks.ts";
+import test, { after } from "./helpers/playbooks.ts";
+import { mkdtemp, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { LocalFileArtifactStore, scopedReaderArtifactStore } from "../lib/meetings/edge-store.ts";
+import { publishReaderEdgeArtifacts } from "../lib/meetings/edge-serving.ts";
+import { meetingPublication } from "./helpers/meeting-publication.ts";
 import { POST } from "../app/api/ask/grounded/route.ts";
 import { resetGroundedState } from "../lib/ask/grounded-state.ts";
 import { POST as agendaPOST } from "../app/api/ask/agenda/route.ts";
@@ -15,6 +21,7 @@ import { ambiguousListingPairs, dateOnlyListings, installMeetings, recordedMeeti
 import { localDate } from "../lib/ask/meeting-time.ts";
 import { readMeetingsProjection, requireMeetingsProjection } from "../lib/meetings/snapshot.ts";
 import { isAnotherBodysNoticePage } from "../lib/meetings/notice-pages.ts";
+import { recordPublisherAgendaObservation } from "../lib/ask/agenda-publication.ts";
 
 delete process.env.ANTHROPIC_API_KEY;
 process.env.WTP_LIMIT_LOG_IP_PER_MINUTE = "10000";
@@ -24,7 +31,23 @@ const { meetings: listed, pairs } = ambiguousListingPairs(3);
 const installed = recordedMeetingsSnapshot([...listed, ...dateOnlyListings(3)]);
 installMeetings(installed.meetings, installed.agendaDocuments);
 // What the reader composes from those promoted partitions (each row stamped with its door).
-const snapshot = requireMeetingsProjection(await readMeetingsProjection());
+const snapshot = requireMeetingsProjection(await readMeetingsProjection({ state: "AZ" }));
+const ambiguousIds = new Set(pairs.flatMap(pair => pair.map(meeting => meeting.id)));
+const aliasTarget = snapshot.meetings.find(meeting => !ambiguousIds.has(meeting.id) &&
+  snapshot.agendaDocuments.some(document => document.meetingId === meeting.id))!;
+const alias = `${aliasTarget.id}:verified-alias`;
+aliasTarget.mergedMeetingIds = [...(aliasTarget.mergedMeetingIds ?? []), alias];
+const artifactPath = await mkdtemp(join(tmpdir(), "reader-listing-identity-"));
+const previousArtifactPath = process.env.WTP_READER_EDGE_DIR;
+process.env.WTP_READER_EDGE_DIR = artifactPath;
+after(async () => {
+  if (previousArtifactPath === undefined) delete process.env.WTP_READER_EDGE_DIR;
+  else process.env.WTP_READER_EDGE_DIR = previousArtifactPath;
+  await rm(artifactPath, { recursive: true, force: true });
+});
+assert.equal((await publishReaderEdgeArtifacts(meetingPublication(snapshot), {
+  sourceThrough: snapshot.generatedAt, retrievedAt: snapshot.generatedAt, promotedThrough: snapshot.generatedAt,
+}, { store: scopedReaderArtifactStore(new LocalFileArtifactStore(artifactPath), "AZ") })).status, "PUBLISHED");
 const headers = { "content-type": "application/json", origin: "https://wtp.test", "x-wtp-synthetic-run": "reader-listing-identity-control" };
 
 test("each date with two equal calendar listings retains both, with an unresolved distinct-meeting count, in real Ask", async () => {
@@ -97,6 +120,27 @@ test("date-only listing identities remain date-only records without an invented 
   assert.equal(reading.sourceListingCount, dateOnly.length);
   assert.deepEqual(reading.groups, []);
   assert.deepEqual([...reading.unresolvedTimeSourceIds].sort(), dateOnly.map(meeting => meeting.id).sort());
+});
+
+test("a proved listing alias keeps the selected sitting's documents, publication observation and identity", async () => {
+  recordPublisherAgendaObservation({ meetingId: aliasTarget.id, provenance: "FIRST_PARTY_PUBLISHER", report: "AVAILABLE",
+    observedAt: new Date().toISOString(), observedUrl: aliasTarget.provenance.sourceUrl,
+    sourceOrg: aliasTarget.provenance.sourceOrg, evidenceQuote: "Agenda available" });
+  const response = await agendaGET(new Request(`https://wtp.test/api/agenda?meetingId=${encodeURIComponent(alias)}`));
+  const canonical = await agendaGET(new Request(`https://wtp.test/api/agenda?meetingId=${encodeURIComponent(aliasTarget.id)}`));
+  const reading = await response.json(), expected = await canonical.json();
+  assert.equal(response.status, 200);
+  assert.equal(reading.meetingId, alias);
+  assert.equal(reading.publication.publication, "REPORTS_AVAILABLE");
+  assert.deepEqual(reading.documents, expected.documents);
+  assert.deepEqual(reading.listingIdentity, expected.listingIdentity);
+  assert.equal(reading.listingIdentity.sourceListingCount, 1);
+  const asked = await agendaPOST(new Request("https://wtp.test/api/ask/agenda", { method: "POST", headers, body: JSON.stringify({ meetingId: alias }) }));
+  const answer = await asked.json();
+  assert.equal(asked.status, 200);
+  assert.equal(answer.meetingId, alias);
+  assert.deepEqual(answer.listingIdentity, expected.listingIdentity);
+  assert.equal(answer.documentsHeld, snapshot.agendaDocuments.filter(document => document.meetingId === aliasTarget.id).length);
 });
 
 test("listing knowledge cannot borrow a summary or notice through equal body/time fields", () => {

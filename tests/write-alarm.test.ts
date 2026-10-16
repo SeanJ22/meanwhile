@@ -203,9 +203,6 @@ test("6.1: the schema gate names the missing migration, and never rounds up", ()
   const gap = compareSchemaState(journal, [1, 3]);
   assert.deepEqual(gap.missing, ["0001_b"]);
 
-  // A database AHEAD of the code is its own problem and is reported as its
-  // own thing — folding it into `missing` would tell somebody to apply a
-  // migration that is already there.
   const ahead = compareSchemaState(journal, [1, 2, 3, 99]);
   assert.deepEqual(ahead.missing, []);
   assert.deepEqual(ahead.unknownApplied, [99]);
@@ -216,20 +213,20 @@ test("6.1: the schema gate names the missing migration, and never rounds up", ()
   assert.equal(compareSchemaState([], []).codeHead, "unknown");
 });
 
-test("6.1: the committed journal head matches the newest migration file", () => {
+test("6.1: the committed journal enumerates every migration file", () => {
   const journal = JSON.parse(
     readFileSync(join(ROOT, "lib", "db", "migrations", "meta", "_journal.json"), "utf8"),
   ) as { entries: { tag: string }[] };
   const files = filesThatWouldBeCommitted({ cwd: ROOT, paths: ["lib/db/migrations"] })
     .map((f) => f.trim())
-    .filter((f) => /\/\d{4}_[^/]+\.sql$/.test(f))
+    .filter((f) => /^lib\/db\/migrations\/[^/]+\.sql$/.test(f))
     .map((f) => f.replace(/^lib\/db\/migrations\//, "").replace(/\.sql$/, ""))
     .sort();
   const tags = journal.entries.map((e) => e.tag).sort();
   assert.deepEqual(
     tags,
     files,
-    "every numbered migration is journalled; River numbers step-named lane migrations",
+    "every runnable migration is journalled, including step-named migrations",
   );
 });
 
@@ -336,10 +333,6 @@ test("NH32: the code is found under originalError", () => {
 });
 
 test("NH32: an AggregateError's real failures are reached", () => {
-  /*
-   * What a pooled driver raises when every connection in the pool fails. Its
-   * own message says nothing; each entry in `errors` is a real database error.
-   */
   const real = Object.assign(new Error("terminating connection due to administrator command"), {
     code: "57P01",
   });

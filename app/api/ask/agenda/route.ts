@@ -1,4 +1,4 @@
-import { readMeetingsProjection } from "@/lib/meetings/snapshot";
+import { readReaderEdgeMeetings } from "@/lib/meetings/edge-serving";
 import type { CivicDataReadMetadata } from "@/lib/civic-data/read-model";
 import { readMeetingTranslation } from "@/lib/translate/reader";
 import { classifyAgendaPublication, type AgendaPublicationReading } from "@/lib/ask/agenda-publication";
@@ -6,11 +6,6 @@ import { intakeLimits, isSameOriginSubmission } from "@/lib/signal/intake-limits
 import { ripcordPulled } from "@/lib/ripcords";
 import { SlidingWindowLimiter } from "@/lib/signal/rate-limit";
 import { meetingListingKnowledgeFor } from "@/lib/ask/meeting-knowledge";
-
-/**
- * POST /api/ask/agenda: one meeting's own item list, keyed on a meeting id. It stores nothing and calls no
- * model; every item is the clerk's own text. Zero documents held and zero items extracted are different facts.
- */
 
 export const runtime = "nodejs";
 
@@ -72,12 +67,13 @@ export async function POST(request: Request) {
     }
   }
 
-  // No corpus is a STATE, and it is reported as one — never as an answer
-  // of "nothing is scheduled", which is the same absence-as-assertion the
-  // render rule forbids one layer up.
+  if (typeof body.meetingId !== "string" || body.meetingId.length === 0) {
+    return Response.json({ error: "this route answers one meeting's agenda; pass meetingId" }, { status: 400 });
+  }
+  const meetingId = body.meetingId.slice(0, 200);
   let read;
   try {
-    read = await readMeetingsProjection();
+    read = await readReaderEdgeMeetings({ meetingId, window: "HELD" });
   } catch (error) {
     return Response.json(
       {
@@ -104,64 +100,45 @@ export async function POST(request: Request) {
 
   const documents = snapshot.agendaDocuments ?? [];
 
-  if (typeof body.meetingId === "string" && body.meetingId.length > 0) {
-    const meetingId = body.meetingId.slice(0, 200);
-    const meeting = snapshot.meetings.find((m) => m.id === meetingId);
-    if (!meeting) {
-      return Response.json({ error: "unknown meeting" }, { status: 400 });
-    }
-    const forMeeting = documents.filter((d) => d.meetingId === meetingId);
-    // Newest retrieval wins — an agenda is revised, and the revision is the
-    // one the reader is going to.
-    const newest = [...forMeeting].sort((a, b) =>
-      a.retrievedAt < b.retrievedAt ? 1 : -1,
-    )[0];
-
-    /*
-     * A document attached to meetings of more than one government is not this one's agenda: its items are
-     * withheld and the link is returned without attribution.
-     */
-    const publication = classifyAgendaPublication({ meetingId, bodyName: meeting.bodyName,
-      documentsForMeeting: forMeeting, documentsAcrossCorpus: documents, meetingsAcrossCorpus: snapshot.meetings,
-      discoveredDocumentUrl: meeting.agendaUrl, now: Date.now() });
-    const sharedAcrossGovernments = publication.documentSharedAcrossGovernments === true;
-    const items = newest && !sharedAcrossGovernments ? [...publication.items] : [];
-    const translated = newest?.text && meeting.ocdId && meeting.bodyId && !sharedAcrossGovernments
-      ? await readMeetingTranslation({ kind: "AGENDA", meetingId, ocdId: meeting.ocdId,
-        bodyId: meeting.bodyId, documentUrl: newest.documentUrl, contentHash: newest.contentHash }).catch(() => null) : null;
-    const reply: AgendaMeetingReply = {
-      mode: "meeting",
-      meetingId,
-      title: meeting.title,
-      bodyName: meeting.bodyName,
-      startsAt: meeting.startsAt,
-      /* Stated so the client can say the true thing rather than infer from an
-         empty item list, which would read as "nothing is on the agenda". */
-      documentSharedAcrossGovernments: sharedAcrossGovernments,
-      // The raw link, ALWAYS, whether or not items were extracted. A05's
-      // own rule: this sits alongside the agenda link and never replaces it.
-      agendaUrl: meeting.agendaUrl ?? null,
-      documentUrl: newest?.documentUrl ?? null,
-      /* Not attributed when the document belongs to more than one government. */
-      sourceOrg: sharedAcrossGovernments ? null : (newest?.sourceOrg ?? null),
-      retrievedAt: newest?.retrievedAt ?? null,
-      items,
-      summary: translated ? { text: translated.text, sourceUrl: translated.sourceUrl,
-        sourceHash: translated.sourceHash, writtenAt: translated.writtenAt } : null,
-      // The denominators. `documentsHeld` 0 and `items` 0 mean different
-      // things and the client says which.
-      documentsHeld: forMeeting.length,
-      readable: publication.acquisition === "ITEMS_READER_READY" || publication.acquisition === "READ_NO_ITEMS_EXTRACTED" ? 1 : 0,
-      publication,
-      listingIdentity: meetingListingKnowledgeFor(snapshot.meetings, [meetingId]).readback,
-      dataState: read.kind,
-      dataMetadata: read.metadata,
-    };
-    return Response.json(reply);
+  const meeting = snapshot.meetings.find((m) => m.id === meetingId || m.mergedMeetingIds?.includes(meetingId));
+  if (!meeting) {
+    return Response.json({ error: "unknown meeting" }, { status: 400 });
   }
+  const forMeeting = documents.filter((d) => d.meetingId === meeting.id);
+  // Newest retrieval wins — an agenda is revised, and the revision is the
+  // one the reader is going to.
+  const newest = [...forMeeting].sort((a, b) =>
+    a.retrievedAt < b.retrievedAt ? 1 : -1,
+  )[0];
 
-  return Response.json(
-    { error: "this route answers one meeting's agenda; pass meetingId" },
-    { status: 400 },
-  );
+  const publication = classifyAgendaPublication({ meetingId: meeting.id, bodyName: meeting.bodyName,
+    documentsForMeeting: forMeeting, documentsAcrossCorpus: documents, meetingsAcrossCorpus: snapshot.meetings,
+    discoveredDocumentUrl: meeting.agendaUrl, now: Date.now() });
+  const sharedAcrossGovernments = publication.documentSharedAcrossGovernments === true;
+  const items = newest && !sharedAcrossGovernments ? [...publication.items] : [];
+  const translated = newest?.text && meeting.ocdId && meeting.bodyId && !sharedAcrossGovernments
+    ? await readMeetingTranslation({ kind: "AGENDA", meetingId: meeting.id, ocdId: meeting.ocdId,
+      bodyId: meeting.bodyId, documentUrl: newest.documentUrl, contentHash: newest.contentHash }).catch(() => null) : null;
+  const reply: AgendaMeetingReply = {
+    mode: "meeting",
+    meetingId,
+    title: meeting.title,
+    bodyName: meeting.bodyName,
+    startsAt: meeting.startsAt,
+    documentSharedAcrossGovernments: sharedAcrossGovernments,
+    agendaUrl: meeting.agendaUrl ?? null,
+    documentUrl: newest?.documentUrl ?? null,
+    sourceOrg: sharedAcrossGovernments ? null : (newest?.sourceOrg ?? null),
+    retrievedAt: newest?.retrievedAt ?? null,
+    items,
+    summary: translated ? { text: translated.text, sourceUrl: translated.sourceUrl,
+      sourceHash: translated.sourceHash, writtenAt: translated.writtenAt } : null,
+    documentsHeld: forMeeting.length,
+    readable: publication.acquisition === "ITEMS_READER_READY" || publication.acquisition === "READ_NO_ITEMS_EXTRACTED" ? 1 : 0,
+    publication,
+    listingIdentity: meetingListingKnowledgeFor(snapshot.meetings, [meeting.id]).readback,
+    dataState: read.kind,
+    dataMetadata: read.metadata,
+  };
+  return Response.json(reply);
 }

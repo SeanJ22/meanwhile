@@ -1,9 +1,6 @@
 import { fetchSource, runWithSourceFetch, SourceFetchDeferred } from "../../sources/fetch-source.ts";
 import { SOURCE_API_TOOLS, SOURCE_API_SPECS, readSourceApi, type SourceApiTool } from "./scout-api.ts";
 import { readClientSource, type ClientTool } from './scout-clients.ts';
-/** The hunter's research tools. robots.txt is read and recorded, never a refusal;
- * an access control is a wall, saved as diagnostic and never defeated. */
-
 import { accessControlIn } from "../../hunt/access-control.ts";
 import { runOcr } from "../../extract/ocr.ts";
 import { rowsFromItems, cellsFromRow, tablesFromRows, type ExtractedTable } from "../../extract/tables.ts";
@@ -201,6 +198,7 @@ export const realOpenBytes: OpenBytes = async ({ url, headers, timeoutMs }) => {
 };
 
 interface Retrieved extends BytesOutcome {
+  readonly deferred?: SourceFetchDeferred;
   readonly byteLength: number;
 }
 
@@ -469,7 +467,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
       ? final.toString() : requested.toString();
   }
 
-  async function preferHttps<T extends { readonly status: number | null; readonly transportError: string | null }>(
+  async function preferHttps<T extends { readonly status: number | null; readonly transportError: string | null; readonly deferred?: SourceFetchDeferred }>(
     url: URL, open: (target: URL) => Promise<T>,
   ): Promise<T> {
     if (url.protocol !== "http:") return open(url);
@@ -478,9 +476,11 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
     let first: T;
     try {
       first = await open(secure);
-    } catch {
+    } catch (error) {
+      if (error instanceof SourceFetchDeferred) throw error;
       return open(url);
     }
+    if (first.deferred) return first;
     if (first.transportError === null && first.status !== null && first.status >= 200 && first.status < 300) return first;
     return open(url);
   }
@@ -488,20 +488,26 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
   async function retrieve(url: URL, accept: string, acc: CallAccount): Promise<Retrieved> {
     const headers = { "user-agent": DEFAULT_USER_AGENT, accept };
     let got: Retrieved;
-    if (openBytes !== null) {
-      const b = await openBytes({ url: url.toString(), headers, timeoutMs });
-      got = { ...b, finalUrl: b.finalUrl ?? url.toString(), byteLength: b.bytes.byteLength };
-    } else {
-      const s = await openOne({ url: url.toString(), method: "GET", headers, timeoutMs });
-      got = {
-        status: s.status,
-        bytes: Buffer.from(s.body, "utf8"),
-        contentType: s.contentType,
-        finalUrl: url.toString(),
-        durationMs: s.durationMs,
-        transportError: s.transportError,
-        byteLength: s.bytes,
-      };
+    try {
+      if (openBytes !== null) {
+        const b = await openBytes({ url: url.toString(), headers, timeoutMs });
+        got = { ...b, finalUrl: b.finalUrl ?? url.toString(), byteLength: b.bytes.byteLength };
+      } else {
+        const s = await openOne({ url: url.toString(), method: "GET", headers, timeoutMs });
+        got = {
+          status: s.status,
+          bytes: Buffer.from(s.body, "utf8"),
+          contentType: s.contentType,
+          finalUrl: url.toString(),
+          durationMs: s.durationMs,
+          transportError: s.transportError,
+          byteLength: s.bytes,
+        };
+      }
+    } catch (error) {
+      if (!(error instanceof SourceFetchDeferred)) throw error;
+      return { status: null, bytes: new Uint8Array(0), contentType: "", finalUrl: url.toString(),
+        durationMs: 0, transportError: error.message, byteLength: 0, deferred: error };
     }
     requestCount += 1;
     bytesFetched += got.byteLength;

@@ -1,6 +1,6 @@
 import { spawn } from "node:child_process";
 
-import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
+import { ERROR_DIAGNOSTIC_MAX_CHARS, redactDiagnosticText, sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { VITAL_SIGNS_LINE_PREFIX } from "../db/transfer-by-caller.ts";
 
 /** Maximum quiet interval; each new source publication renews it. Never a child wall. */
@@ -135,11 +135,15 @@ function runOneBoundedChild(
     child.once("close", (status, signal) => {
       if (lines) consumeLine(lines);
       clearTimeout(idle);
+      const reason = outputLimited ? "Child output exceeded its retained stream limit" : paused
+        ? `NO_PROGRESS_PAUSED: no new publication for ${timeout}ms.` : failure?.message ?? (status === 0 ? null : `Child exited ${status ?? signal}`);
+      const message = reason === null ? null : sanitizedErrorDiagnostic(reason);
+      const tail = message === null ? "" : redactDiagnosticText(stderr.slice(-4_096)).trim().split(/\r?\n/).filter(Boolean).slice(-8).join("\n");
+      const tailLimit = ERROR_DIAGNOSTIC_MAX_CHARS - (message?.length ?? 0) - 1;
       resolve({
         id: command.id, status: failure ? null : status, signal, stdout, stderr,
         termination: outputLimited ? "OUTPUT_LIMIT_EXCEEDED" : paused ? "TIMED_OUT" : failure ? "SPAWN_FAILED" : "EXITED",
-        errorMessage: outputLimited ? "Child output exceeded its retained stream limit" : paused
-          ? `NO_PROGRESS_PAUSED: no new publication for ${timeout}ms.` : failure?.message ?? (status === 0 ? null : `Child exited ${status ?? signal}`),
+        errorMessage: message !== null && tail && tailLimit > 0 ? `${message}\n${tail.slice(-tailLimit)}` : message,
       });
     });
     renew();

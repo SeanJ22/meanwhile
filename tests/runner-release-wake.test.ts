@@ -73,7 +73,10 @@ test("both release and shutdown bound coordination and idle waits, and never awa
   const hold = source.match(/async function holdStandingRuntimeAtQuiescence\(\): Promise<void> \{[\s\S]*?\n\}/)?.[0];
   assert.ok(hold);
   assert.match(hold, /waitForRuntimeQuiescence\(async \(\) => \{\s*await stopAdminCopyClock\(\);\s*await stopScheduledOrderClock\(\);\s*await activeControlRead;\s*await standingRuntimeScheduler.waitForIdle\(\);/);
-  const shutdown = source.slice(source.lastIndexOf("if (standingRuntimeTimer !== null) clearInterval"));
+  const shutdownAt = source.lastIndexOf("if (standingRuntimeTimer !== null) clearTimeout");
+  assert.ok(shutdownAt >= 0, "shutdown cancels the earliest-source wake timer");
+  const shutdown = source.slice(shutdownAt);
+  assert.match(shutdown, /if \(ownerControlTimer !== null\) clearInterval\(ownerControlTimer\)/);
   assert.match(shutdown, /if \(!standingDrainFailed\) \{[\s\S]*waitForRuntimeQuiescence\(async \(\) => \{\s*await stopAdminCopyClock\(\);\s*await stopScheduledOrderClock\(\);\s*await activeControlRead;\s*await standingRuntimeScheduler.waitForIdle\(\);/);
   assert.match(shutdown, /if \(handoffExitCode !== null\) process.exit\(handoffExitCode\)/);
 });

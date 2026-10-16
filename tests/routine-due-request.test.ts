@@ -17,6 +17,7 @@ import {
 import {
   ROUTINE_SOURCE_TASKS,
   routineFailureDomainFrontier,
+  routinePassLaunchOrder,
   routineTaskDeadlineMs,
   routineTaskDue,
   type RoutineSourceTask,
@@ -170,7 +171,9 @@ test("a request only brings a read forward: on its lane it goes by deadline, nev
     { task: later, lastConsideredAt: iso(NOW_MS - 40 * MIN), deadlineMs: NOW_MS + 20 * MIN },
     { task: latest, lastConsideredAt: iso(NOW_MS - 30 * MIN), deadlineMs: NOW_MS + 25 * MIN },
   ]);
-  assert.deepEqual(admitted.map(({ task: row }) => row.id).sort(), [requested.id, overdue.id, soon.id].sort());
+  assert.equal(admitted.length, 5, "every due meeting body stays admitted even when it shares a publisher");
+  assert.deepEqual(routinePassLaunchOrder(admitted, NOW_MS).map(({ task: row }) => row.id),
+    [overdue.id, requested.id, soon.id, later.id, latest.id], "an owner request never displaces an earlier deadline");
   assert.equal(routineDueRequestDeadlineMs(NOW_MS - HOUR, request), NOW_MS - HOUR);
   assert.equal(routineDueRequestDeadlineMs(NOW_MS + HOUR, null), NOW_MS + HOUR);
 });

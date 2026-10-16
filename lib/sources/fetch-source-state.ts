@@ -1,6 +1,5 @@
 import { createHash, randomUUID } from "node:crypto";
 import { mkdirSync } from "node:fs";
-import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
@@ -119,7 +118,7 @@ interface FileDatabase {
 export function fileSourceFetchStore(namespace: string): SourceFetchStore {
   mkdirSync(join(tmpdir(), "meanwhile-source-fetch"), { recursive: true });
   const file = join(tmpdir(), "meanwhile-source-fetch", `${keyFor(namespace)}.sqlite`);
-  const { DatabaseSync } = createRequire(import.meta.url)("node:sqlite") as { DatabaseSync: new(path: string) => FileDatabase };
+  const { DatabaseSync } = process.getBuiltinModule("node:sqlite") as { DatabaseSync: new(path: string) => FileDatabase };
   const withDatabase = <T>(operation: (database: FileDatabase) => T): T => {
     const database = new DatabaseSync(file);
     try {

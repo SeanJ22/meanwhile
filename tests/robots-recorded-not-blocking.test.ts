@@ -16,6 +16,7 @@ import { RECORDED_WALLS } from "../lib/hunt/recorded-walls.ts";
 import {
   OWNER_DECISION_HOSTS,
   memoryInProcess,
+  nodeResearchGet,
   researchFetch,
   type ResearchGet,
 } from "../lib/hunt/robots-first-fetch.ts";
@@ -23,6 +24,7 @@ import { makePermissionGate, permittedText } from "../lib/sources/permission-gat
 import { SourceHttpError, politeGetBytes, politeGetText, sourceUserAgent } from "../lib/sources/http.ts";
 import { FIXTURE_DOOR_ROWS } from "./helpers/meeting-doors-fixture.ts";
 import { InSiteSession } from "../lib/sources/legistar-insite/http.ts";
+import { withSourceTransport } from "./helpers/source-fetch.ts";
 
 const DISALLOW_ALL = "User-agent: *\nDisallow: /\n";
 
@@ -162,26 +164,36 @@ test("THE RESEARCH FETCH names each access control, sends each request once, and
     "https://guarded.example.gov/busy": { status: 429, body: "Too Many Requests" },
     "https://guarded.example.gov/next": { status: 200, body: "ok" },
   };
-  const get: ResearchGet = async ({ url, headers }) => {
+  const transport: typeof fetch = async (input, init) => {
+    const url = String(input), headers = Object.fromEntries(new Headers(init?.headers));
     seen.push(url);
     assert.equal(carriesCredential(headers), false);
     const r = replies[url] ?? { status: 404, body: "" };
-    return { status: r.status, body: new TextEncoder().encode(r.body), contentType: "text/html", location: null, transportError: null };
+    return new Response(r.body, { status: r.status, headers: { "content-type": "text/html" } });
   };
   const slept: number[] = [];
   let clock = Date.parse("2026-09-25T18:00:00.000Z");
-  const runtime = { get, memory: memoryInProcess(), now: () => clock, sleep: async (ms: number) => void (slept.push(ms), (clock += ms)) };
-  const kinds: (string | null)[] = [];
-  for (const path of ["login", "waf", "cf", "busy"]) {
-    const got = await researchFetch(`https://guarded.example.gov/${path}`, runtime);
-    kinds.push(got.outcome === "FETCHED" ? (got.accessControl?.kind ?? null) : got.reason);
-  }
-  assert.deepEqual(kinds, ["AUTHENTICATION", "FORBIDDEN", "CHALLENGE", "RATE_LIMIT"]);
-  for (const path of ["login", "waf", "cf", "busy"]) {
-    assert.equal(seen.filter((u) => u.endsWith(`/${path}`)).length, 1, `${path} was asked once, never re-sent`);
-  }
-  await researchFetch("https://guarded.example.gov/next", runtime);
-  assert.ok((slept.at(-1) ?? 0) >= 60_000, `a 429 backs the host off before it is asked anything else: ${slept.join(", ")}`);
+  const runtime = { get: nodeResearchGet, memory: memoryInProcess(), now: () => clock, sleep: async (ms: number) => void (slept.push(ms), (clock += ms)) };
+  await withSourceTransport(transport, async () => {
+    const kinds: (string | null)[] = [];
+    for (const path of ["login", "waf", "cf", "busy"]) {
+      const got = await researchFetch(`https://guarded.example.gov/${path}`, runtime);
+      kinds.push(got.outcome === "FETCHED" ? (got.accessControl?.kind ?? null) : got.reason);
+    }
+    assert.deepEqual(kinds, ["AUTHENTICATION", "FORBIDDEN", "CHALLENGE", "RATE_LIMIT"]);
+    for (const path of ["login", "waf", "cf", "busy"]) {
+      assert.equal(seen.filter((u) => u.endsWith(`/${path}`)).length, 1, `${path} was asked once, never re-sent`);
+    }
+    const held = await researchFetch("https://guarded.example.gov/next", runtime);
+    assert.equal(held.outcome, "FETCHED");
+    if (held.outcome === "FETCHED") assert.match(held.transportError ?? "", /checked again at 2026-09-25T18:01:00\.000Z/);
+    assert.ok(!seen.includes("https://guarded.example.gov/next"), "the shared hold prevents any request before the backoff ends");
+    await runtime.sleep(60_000);
+    const resumed = await researchFetch("https://guarded.example.gov/next", runtime);
+    assert.equal(resumed.outcome, "FETCHED");
+    if (resumed.outcome === "FETCHED") assert.equal(resumed.status, 200);
+    assert.equal(seen.filter(url => url.endsWith("/next")).length, 1);
+  });
 });
 
 test("THE DISCOVERY WALK honours a 429 at robots.txt (nothing more is asked) and records a homepage 403 as a wall, never re-sent", async () => {

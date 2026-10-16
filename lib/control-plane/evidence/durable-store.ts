@@ -1,19 +1,3 @@
-/**
- * `EvidenceStore` over a local content-addressed filesystem root (`durable = true`).
- *
- *   1. Writes are atomic: temp name in the same directory, then `rename`.
- *   2. The sidecar `<key>.meta.json` is the commit point, written after the
- *      body; an object without one does not exist to `head`, `get` or `list`.
- *   3. `get` re-verifies the digest against the sidecar; corruption is a failed
- *      read naming both digests.
- *   4. Immutability is enforced here too, via `reconcileExistingObject`.
- *
- * `RESTRICTED_RAW` is refused by name unless a `RestrictedEvidenceProvider`
- * declaring encryption at rest and access control is supplied.
- *
- * No clock is read. The temp-file suffix is random and never persisted.
- */
-
 import { netlifyEvidenceStoreFromEnv } from "./netlify-store.ts";
 import { randomBytes } from "node:crypto";
 import type { Dirent } from "node:fs";
@@ -31,18 +15,9 @@ import {
   type StoredObject,
 } from "./store.ts";
 
-/** ------------------------------------------------- the restricted seam */
-
-/**
- * The seam a substrate fit for quarantined bytes implements: the four
- * `EvidenceStore` verbs plus declarations about the substrate. The declarations
- * are the implementer's claims; this module refuses anything that does not
- * make them.
- */
 export interface RestrictedEvidenceProvider {
   /** A stable, non-secret identifier for the substrate. Never a credential. */
   readonly providerId: string;
-  /** Does the substrate encrypt bodies at rest? */
   readonly encryptedAtRest: boolean;
   /** Does the substrate gate reads on an identity this process does not hold by default? */
   readonly accessControlled: boolean;
@@ -52,11 +27,6 @@ export interface RestrictedEvidenceProvider {
   list(prefix: string): Promise<string[]>;
 }
 
-/**
- * A `RESTRICTED_RAW` body was offered to a substrate that cannot hold one: a
- * missing activation, not a bad retrieval. The message never names a
- * credential, class or fingerprint.
- */
 export class RestrictedDurabilityUnavailable extends EvidenceStoreRefusal {
   readonly key: string;
   readonly providerId: string | null;
@@ -80,7 +50,6 @@ export class RestrictedDurabilityUnavailable extends EvidenceStoreRefusal {
   }
 }
 
-/** A key that cannot be mapped onto a path inside the root. */
 export class UnsafeEvidenceKey extends EvidenceStoreRefusal {
   readonly key: string;
   readonly reason: string;
@@ -98,7 +67,6 @@ export class UnsafeEvidenceKey extends EvidenceStoreRefusal {
   }
 }
 
-/** The bytes on disk are not the bytes that were written. */
 export class EvidenceCorrupted extends EvidenceStoreRefusal {
   readonly key: string;
   readonly recordedHash: string;
@@ -119,18 +87,12 @@ export class EvidenceCorrupted extends EvidenceStoreRefusal {
   }
 }
 
-/** ------------------------------------------------------ key -> path */
-
 /** The sidecar suffix. A key ending in it is refused, so the two spaces cannot collide. */
 export const SIDECAR_SUFFIX = ".meta.json";
 
 /** In-flight writes. Excluded from `list`, and never renamed to a real key. */
 const TEMP_PREFIX = ".wtp-evidence-tmp-";
 
-/**
- * Map a key onto a relative path, or refuse it by name. Every traversal case is
- * refused explicitly; the final containment check stays as a backstop.
- */
 export function keyToRelativePath(key: string): string {
   if (typeof key !== "string" || key.length === 0) {
     throw new UnsafeEvidenceKey(String(key), "the key is empty");
@@ -174,38 +136,22 @@ export function keyToRelativePath(key: string): string {
   return segments.map(encodePathSegment).join(sep);
 }
 
-/**
- * Percent-encodes what a Windows path segment cannot hold (`<>:"|?*`, control
- * characters, a trailing `.` or space) and `%` itself, so the mapping reverses.
- * A segment holding none of them maps to itself.
- */
 const UNSAFE_IN_PATH_SEGMENT = /[<>:"|?*%\u0001-\u001f]|[. ]$/g;
 
 export function encodePathSegment(segment: string): string {
   return segment.replace(UNSAFE_IN_PATH_SEGMENT, (c) => `%${c.charCodeAt(0).toString(16).toUpperCase().padStart(2, "0")}`);
 }
 
-/** The key segment a name on disk encodes: the inverse of {@link encodePathSegment}. */
 export function decodePathSegment(name: string): string {
   return name.replace(/%([0-9A-F]{2})/g, (_, hex: string) => String.fromCharCode(Number.parseInt(hex, 16)));
 }
 
-/** ---------------------------------------------------------- the sidecar */
-
-/**
- * What sits beside every body. `meta` answers `head` without reading bytes.
- * `bodySha256` is what this store hashed and what `get` verifies;
- * `meta.contentHash` is the caller's claim (for a manifest it is
- * `manifest:<workItemId>`, which no bytes hash to).
- */
 interface Sidecar {
   readonly key: string;
   readonly meta: ObjectMeta;
   readonly bodySha256: string;
   readonly bodyBytes: number;
 }
-
-/** ------------------------------------------------------- the adapter */
 
 export interface DurableEvidenceStoreOptions {
   /** Null selects the local source during an explicit transfer. */
@@ -214,12 +160,7 @@ export interface DurableEvidenceStoreOptions {
   readonly restricted?: RestrictedEvidenceProvider;
 }
 
-/**
- * `EvidenceStore` over a local content-addressed filesystem root. The root is
- * a constructor parameter only: no environment variable or default path.
- */
 export class DurableEvidenceStore implements EvidenceStore {
-  /** Read by `assertDurable`. */
   readonly durable: boolean;
 
   readonly root: string;
@@ -241,10 +182,9 @@ export class DurableEvidenceStore implements EvidenceStore {
     this.restricted = options.restricted ?? null;
   }
 
-  /** The absolute body path for a key, refusing anything that would leave the root. */
   private bodyPath(key: string): string {
     const relative = keyToRelativePath(key);
-    const absolute = resolve(this.root, relative);
+    const absolute = join(this.root, relative);
     if (absolute !== this.root && !absolute.startsWith(this.root + sep)) {
       throw new UnsafeEvidenceKey(key, "the resolved path is outside the evidence root");
     }
@@ -280,11 +220,6 @@ export class DurableEvidenceStore implements EvidenceStore {
     }
   }
 
-  /**
-   * Is this object's tier one the plain filesystem root may hold? An object with
-   * no declared tier is unrestricted; a `RESTRICTED_RAW` artifact always
-   * carries its tier.
-   */
   private restrictedRouting(key: string, meta: ObjectMeta): RestrictedEvidenceProvider | null {
     const tier = meta.custom?.tier as ArtifactTier | undefined;
     if (tier !== "RESTRICTED_RAW") return null;
@@ -304,14 +239,6 @@ export class DurableEvidenceStore implements EvidenceStore {
     return this.restricted;
   }
 
-  /**
-   * Write body then sidecar, each through a temp name and a `rename`.
-   *
-   * On Windows, a rename onto a destination another process is renaming onto
-   * fails with `EPERM`/`EACCES`/`EEXIST`. A lost rename consults the mandatory
-   * `acceptExisting`: an equivalent object already there means the other writer
-   * won; otherwise the error is rethrown.
-   */
   private async atomicWrite(
     absolutePath: string,
     bytes: Uint8Array,
@@ -331,7 +258,6 @@ export class DurableEvidenceStore implements EvidenceStore {
         // The other writer won the race with an equivalent object. Nothing to do.
       }
     } finally {
-      // Cleanup after a failure, which would otherwise leave a temp file behind.
       await rm(temp, { force: true }).catch(() => undefined);
     }
   }
@@ -345,11 +271,6 @@ export class DurableEvidenceStore implements EvidenceStore {
     const offeredSha = contentHash(bytes);
     const objectClass = objectClassOf(meta);
 
-    /*
-     * The content address is verified at the provider boundary too. A
-     * `MUTABLE_INDEX` is exempt: its `contentHash` names the obligation, and
-     * `bodySha256` is what a read verifies.
-     */
     if (objectClass === "IMMUTABLE_BODY" && meta.contentHash !== offeredSha) {
       throw new EvidenceStoreRefusal(
         `Key ${key} was offered ${bytes.byteLength} byte(s) hashing to ${offeredSha} under ` +
@@ -360,7 +281,6 @@ export class DurableEvidenceStore implements EvidenceStore {
 
     const existing = await this.readSidecar(key);
     if (existing) {
-      // The shared rule, so this adapter and the in-memory double agree on "already there".
       const noop = reconcileExistingObject(key, bytes, meta, { meta: existing.meta });
       if (objectClass === "IMMUTABLE_BODY") {
         if (existing.bodySha256 !== offeredSha) {
@@ -413,10 +333,6 @@ export class DurableEvidenceStore implements EvidenceStore {
     return (await this.get(key))?.meta ?? null;
   }
 
-  /**
-   * Read, recomputing the digest against the sidecar. A body with no sidecar is
-   * an incomplete write and returns `null`; a sidecar with no body is a failed read.
-   */
   async get(key: string): Promise<StoredObject | null> {
     if (this.restricted) {
       const fromProvider = await this.restricted.get(key);
@@ -452,7 +368,6 @@ export class DurableEvidenceStore implements EvidenceStore {
     return bytes;
   }
 
-  /** Committed keys under a prefix, sorted. Orphan bodies and temp files are never listed. */
   async list(prefix: string): Promise<string[]> {
     const keys = this.remote ? await this.remote.list(prefix) : await this.walk(this.root, "");
     if (this.restricted) keys.push(...(await this.restricted.list(prefix)));
@@ -485,10 +400,6 @@ export class DurableEvidenceStore implements EvidenceStore {
   }
 }
 
-/**
- * An in-memory `RestrictedEvidenceProvider` for tests only. Its declarations are
- * constructor parameters; it has no `durable` and never satisfies `assertDurable`.
- */
 export class InMemoryRestrictedProvider implements RestrictedEvidenceProvider {
   readonly providerId: string;
   readonly encryptedAtRest: boolean;
@@ -528,7 +439,6 @@ export class InMemoryRestrictedProvider implements RestrictedEvidenceProvider {
     return [...this.objects.keys()].filter((k) => k.startsWith(prefix)).sort();
   }
 
-  /** Test affordance only. */
   get size(): number {
     return this.objects.size;
   }

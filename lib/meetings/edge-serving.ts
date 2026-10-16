@@ -826,13 +826,9 @@ async function readReaderEdgeMeetingsHeld(options: ReaderEdgeMeetingsOptions): P
   if (artifacts.length !== needed.length) return fallback();
   const latest = (key: "generatedAt" | "sourceThrough" | "retrievedAt" | "promotedThrough") => manifests
     .flatMap(manifest => manifest[key] === null ? [] : [manifest[key]!]).sort().at(-1) ?? null;
-  let value = applyMeetingFreshChecks(mergeScopeArtifacts(artifacts,{ generatedAt: latest("generatedAt")!,sources: manifests.flatMap(manifest => manifest.sources) }),
+  const value = applyMeetingFreshChecks(mergeScopeArtifacts(artifacts,{ generatedAt: latest("generatedAt")!,sources: manifests.flatMap(manifest => manifest.sources) }),
     { checkedAt: null,routes: Object.assign({},...manifests.map(manifest => manifest.freshChecks ?? {})) });
-  if (options.meetingId) {
-    const meetings = value.meetings.filter(meeting => meeting.id === options.meetingId || meeting.mergedMeetingIds?.includes(options.meetingId!));
-    const ids = new Set(meetings.flatMap(meeting => [meeting.id,...(meeting.mergedMeetingIds ?? [])]));
-    value = { ...value,meetings,agendaDocuments: value.agendaDocuments.filter(document => ids.has(document.meetingId)),counts: snapshotCounts(meetings,0) };
-  }
+
   const read: MeetingsProjectionReadResult = { kind: "PROMOTED",value,metadata: { recordClass: MEETINGS_RECORD_CLASS,
     scope: MEETINGS_SCOPE,sourceId: MEETINGS_SOURCE_ID,version: null,versionId: null,lastKnownGoodVersionId: null,
     sourceThrough: latest("sourceThrough"),retrievedAt: latest("retrievedAt"),promotedAt: latest("promotedThrough"),stale: "CURRENT",staleAt: null },

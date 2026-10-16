@@ -817,8 +817,11 @@ export class FleetSafetyController {
         else if (error instanceof FleetSafetyRefusal) this.defer(work, error.code, error.message);
         else if (requests > 0) this.latchProvider(provider,
           `transport failed: ${error instanceof Error ? error.message : String(error)}`, work, new Date(this.clock()).toISOString());
+        const transportError = error instanceof SourceFetchDeferred
+          ? `${error.why === "HOURLY_ALLOWANCE" ? "WEBSITE_REQUEST_CAP" : "WEBSITE_ASKED_TO_WAIT"}: ${error.message}`
+          : error instanceof Error ? error.message : String(error);
         return { status: null, bytes: 0, contentType: "", body: "", durationMs: Date.now() - started,
-          transportError: error instanceof Error ? error.message : String(error), requestCount: requests };
+          transportError, requestCount: requests };
       } finally {
         recoveries.forEach(([, release]) => release());
         // Held until the answer is classified, so requests queued behind it see a failure before they send.
@@ -913,13 +916,16 @@ export class FleetSafetyController {
           this.latchProvider(provider, failure.condition, work, new Date(this.clock()).toISOString(), null,
             failure.class === "HARD" ? "HARD" : "TRANSIENT");
         }
+        const transportError = error instanceof SourceFetchDeferred
+          ? `${error.why === "HOURLY_ALLOWANCE" ? "WEBSITE_REQUEST_CAP" : "WEBSITE_ASKED_TO_WAIT"}: ${error.message}`
+          : error instanceof Error ? error.message : String(error);
         return {
           status: null,
           bytes: new Uint8Array(0),
           contentType: "",
           finalUrl: null,
           durationMs: Date.now() - started,
-          transportError: error instanceof Error ? error.message : String(error),
+          transportError,
         };
       } finally { recoveries.forEach(([, release]) => release()); leave?.(); }
     };

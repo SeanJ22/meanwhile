@@ -3,12 +3,7 @@ import { test } from "node:test";
 
 import { runBoundedChildPass } from "../lib/civic-data/bounded-child-pass.ts";
 import { stageLine, traceMethodCalls } from "../lib/ops/stage-trace.ts";
-
-/**
- * A killed child says where it stopped: a Reader-repair child writes stage
- * lines to stderr through `traceMethodCalls`, and the runner keeps a killed
- * child's last output lines as the failure detail.
- */
+import { ERROR_DIAGNOSTIC_MAX_CHARS } from "../lib/ops/error-diagnostic.ts";
 
 function clock(...readings: number[]): () => number {
   let index = 0;
@@ -63,6 +58,8 @@ test("a child killed mid-call leaves that call, started and never settled, as it
     "const { stageLine, traceMethodCalls } = await import('./lib/ops/stage-trace.ts');",
     "const stage = (what) => process.stderr.write(stageLine('READER_REPAIR_STAGE', what) + '\\n');",
     "stage('modules loaded for nj-state-rollcalls');",
+    "process.stderr.write('x'.repeat(6000) + '\\n');",
+    "stage('waiting for https://source-user:source-secret@database.fixture.gov/');",
     "const store = traceMethodCalls({ async readPromotionIdentity() { return {}; }, readPromotion: () => new Promise(() => {}) }, 'store', stage);",
     "await store.readPromotionIdentity();",
     "setInterval(() => {}, 1000);",
@@ -81,4 +78,7 @@ test("a child killed mid-call leaves that call, started and never settled, as it
   assert.match(lines.at(-2) ?? "", /^READER_REPAIR_STAGE \+\d+\.\ds store\.readPromotionIdentity settled in \d+\.\ds$/);
   assert.match(lines.at(-1) ?? "", /^READER_REPAIR_STAGE \+\d+\.\ds store\.readPromotion$/);
   assert.match(result?.errorMessage ?? "", /store\.readPromotion$/m, "the kill's own message lost the stage lines");
+  assert.match(result?.errorMessage ?? "", /^NO_PROGRESS_PAUSED:/);
+  assert.ok((result?.errorMessage?.length ?? 0) <= ERROR_DIAGNOSTIC_MAX_CHARS);
+  assert.doesNotMatch(result?.errorMessage ?? "", /source-user|source-secret|database\.fixture\.gov/);
 });

@@ -93,6 +93,27 @@ test("expand preserves the root reader while state readers serve saved checks, c
   assert.deepEqual(await store.readManifest(), completed);
 }));
 
+test("unchanged transfers preserve publication identity while new transferred content clears it", () => fixture(async store => {
+  const row = meeting("ical:az"), scope = await saveScope(store, "az", [row]);
+  await store.writeManifest(manifest([scope]), null);
+  await transferMeetingArtifacts(store);
+  const first = (await store.readManifest("AZ"))!;
+  const publicationFingerprint = "a".repeat(64);
+  await store.writeManifest({ ...first.manifest, publicationFingerprint }, first.etag, "AZ");
+  const current = await store.readManifest("AZ");
+  await transferMeetingArtifacts(store);
+  assert.deepEqual(await store.readManifest("AZ"), current);
+  assert.deepEqual(await store.readPublicationIdentity("AZ"), { fingerprint: publicationFingerprint, sequence: first.manifest.sequence });
+  const root = (await store.readManifest())!;
+  await store.writeManifest({ ...root.manifest, publicationFingerprint,
+    freshChecks: { [`ical|${row.bodyId}`]: checkedAt } }, root.etag);
+  await transferMeetingArtifacts(store);
+  assert.equal((await store.readManifest("AZ"))!.manifest.freshChecks![`ical|${row.bodyId}`], checkedAt);
+  assert.equal(await store.readPublicationIdentity("AZ"), null);
+  await retireMeetingArtifacts(store);
+  assert.equal(await store.readPublicationIdentity(), null);
+}));
+
 test("mixed national buckets split by governing place, keep federal meetings and index agenda aliases", () => fixture(async store => {
   const rows = [meeting("ical:az-one"), meeting("ical:az-two", division("az", "second")), meeting("ical:ca", division("ca")),
     meeting("ical:federal", "ocd-division/country:us")];

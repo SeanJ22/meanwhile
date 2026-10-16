@@ -182,9 +182,11 @@ test("CH-26: schema version 20 builds the scoped indexes online, on the exact ex
     if (text.includes("pg_try_advisory_lock")) return [{ locked: true }];
     return [];
   } };
-  await pgEnsureOnlineIndex(sql, SCOPED_HISTORY_INDEXES[0]!);
+  const attemptIndex = SCOPED_HISTORY_INDEXES.find(index => index.name === "cp_attempts_work_item");
+  assert.ok(attemptIndex);
+  await pgEnsureOnlineIndex(sql, attemptIndex);
   assert.ok(calls.some(text => text.includes("to_regclass('cp_attempts_work_item')")));
-  assert.equal(calls.filter(text => text === SCOPED_HISTORY_INDEXES[0]!.ddl).length, 1);
+  assert.equal(calls.filter(text => text === attemptIndex.ddl).length, 1);
   assert.ok(!calls.some(text => /\bBEGIN\b|\bCOMMIT\b/.test(text)), "never inside a transaction");
 });
 

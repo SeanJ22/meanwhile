@@ -25,6 +25,9 @@ async function owedCommentRules(rules: Record<string, string> = RULES) {
   Object.assign(store, { candidates: new Map([[record.candidate.id, record]]), promotions: new Map([[projection.key, projection]]) });
   const prior = (await readRegistryRuntimePrior(store, "2026-09-08T12:01:00.000Z"))!;
   const body = prior.payload.registry.bodies.find(row => row.name && row.ocdId?.includes("/state:az"))!;
+  assert.ok(body.ocdId);
+  const division = new Map(prior.payload.registry.divisions.map(row => [row.ocdId, row])).get(body.ocdId);
+  assert.ok(division, "the selected body has its own registered governing division");
   const text = JSON.stringify({ page: `${body.name}, Arizona: how to address the board`, records: [{ bodyName: body.name, ...rules }] });
   const fields = Object.fromEntries(["bodyName", ...Object.keys(rules)].map(field => [field, { source: `/${field}`, type: "STRING" as const }]));
   const h = await autonomousHarness({ clock: "2026-09-08T12:01:00.000Z", response: { text }, plan: plan => ({ ...plan,
@@ -42,7 +45,7 @@ async function owedCommentRules(rules: Record<string, string> = RULES) {
     CREATE TABLE civic_data_promotions (record_class text,scope text,current_version_id text,payload jsonb,PRIMARY KEY(record_class,scope));`);
   await facts.pg.exec(readFileSync(new URL("../lib/db/migrations/R4_meeting_dependencies.sql", import.meta.url), "utf8"));
   await facts.pg.query("INSERT INTO civic_data_promotions VALUES ('REGISTRATION','US-AZ:registration:v1',$1,$2::jsonb)",
-    [prior.versionId, JSON.stringify({ state: "AZ", bodies: [body], divisions: prior.payload.registry.divisions.filter(row => row.ocdId === body.ocdId) })]);
+    [prior.versionId, JSON.stringify({ state: "AZ", bodies: [body], divisions: [division] })]);
   const input = { repos: h.repos, facts, workItemIds: [h.item.id], now: h.now(), readHeld: async () => null,
     readCapture: async (id: string) => {
       const evidence = evidenceProjection(await h.runtime.readEvidence(id));

@@ -300,6 +300,9 @@ test("C6: the runner reads the stated ends once a pass and hands them to the sit
   assert.equal(sittingWindowSignals([read, { ...read, task: task(PIMA_INSITE) }], now).get(partition.id), false);
   assert.equal(sittingWindowSignals([read, { ...read, task: task(PIMA_INSITE) }], now, new Map([[partition.id, new Map([[start, now - 6 * DAY]])]])).get(partition.id), true);
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
-  assert.ok(runner.indexOf("statedSittingEndsRead(getDb(),") < runner.indexOf("sittingWindowSignals(sittingClockReads, admissionNowMs, statedEndsByTask)"));
+  const readCall = "statedSittingEndsRead(getDb(),";
+  const admissionCall = "sittingWindowSignals(sittingClockReads, admissionNowMs, statedEndsByTask, admittedSittingSourceIds)";
+  assert.equal(runner.split(readCall).length - 1, 1, "stated ends are read only once for the selected body scopes");
+  assert.ok(runner.indexOf(admissionCall) > runner.indexOf(readCall), "admission uses the stated ends and captured sibling identities after their scoped read");
   assert.match(runner, /sameDomainGapMs: ROUTINE_SAME_DOMAIN_CHILD_GAP_MS/);
 });

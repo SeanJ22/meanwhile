@@ -658,6 +658,7 @@
   padding: clamp(24px, 4vw, 48px);
   border-radius: 14px;
   gap: 40px;
+  container-type: inline-size;
   --country-tile-gap: 8px;
   --country-row-pad: 16px;
 }
@@ -733,12 +734,17 @@
   align-items: start;
 }
 .mapColumn {
-  position: sticky;
-  top: 184px; /* 24px below the sticky app header, which is 120px to 160px tall depending on the window */
   display: flex;
   flex-direction: column;
   gap: 28px;
   min-width: 0;
+}
+/* The map follows the page only while the table sits beside it: 1096px is two 520px columns and the 56px gap. */
+@container (min-width: 1096px) {
+  .mapColumn {
+    position: sticky;
+    top: calc(var(--header-height) + 24px);
+  }
 }
 .map {
   display: grid;

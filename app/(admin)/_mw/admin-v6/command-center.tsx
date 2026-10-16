@@ -79,6 +79,8 @@ export function CommandCenter(props: CommandCenterProps) {
   const pickerInput = useRef<HTMLInputElement>(null);
   const pickerButton = useRef<HTMLButtonElement>(null);
   const mainRef = useRef<HTMLElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLElement>(null);
 
   const [typedZips, setTypedZips] = useState<readonly Place[]>([]);
   const places = useMemo(() => {
@@ -234,6 +236,16 @@ export function CommandCenter(props: CommandCenterProps) {
     setPeriod(easternMonth(new Date()));
   };
 
+  // The sticky app header's height, for anything that sticks beneath it: it changes as the header wraps.
+  useEffect(() => {
+    const header = headerRef.current, root = rootRef.current;
+    if (!header || !root) return;
+    const write = () => root.style.setProperty("--header-height", `${header.getBoundingClientRect().height}px`);
+    write();
+    const watch = new ResizeObserver(write);
+    watch.observe(header);
+    return () => watch.disconnect();
+  }, []);
   useEffect(() => {
     if (pickerOpen) pickerInput.current?.focus();
   }, [pickerOpen]);
@@ -285,9 +297,9 @@ export function CommandCenter(props: CommandCenterProps) {
 
   return (
     <V6Context.Provider value={v6}>
-      <div className={cx(s.root, view === "now" && !detail && s.rootNow)}>
+      <div ref={rootRef} className={cx(s.root, view === "now" && !detail && s.rootNow)}>
         <a className={s.skip} href="#v6-main">Skip to the page</a>
-        <header className={s.header}>
+        <header ref={headerRef} className={s.header}>
           <div className={s.headerTop}>
             <span className={s.brand}>meanwhile<span style={{ color: "var(--pill-teal-text)" }}> …</span></span>
             <nav className={s.nav} aria-label="Admin">

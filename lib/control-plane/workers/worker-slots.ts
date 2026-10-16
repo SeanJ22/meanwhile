@@ -15,10 +15,11 @@ export const NATIONAL_PLACE_PEAK_MIB = 1923 + WORKER_ENTRY_PEAK_MIB.national!;
 const STATE_PUBLICATION_PEAK_MIB = 512;
 /** Bulk data families use the retained data-worker bound until their own runs are measured on this host. */
 const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
-  // A complete 113 MiB Illinois session peaked at 3,013 MiB.
-  // The host observer also accounts for each writer's descendants.
+  // A complete 113 MiB Illinois session peaked at 3,013 MiB;
+  // the host observer also accounts for each worker's descendants.
   "openstates-votes-refresh.mts": 3072,
   "legiscan-votes-refresh.mts": 3072,
+  "federal-money-refresh.mts": 768,
   "census-geography-refresh.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "promote-manual-civic-projection.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "ingest.ts": WORKER_ENTRY_PEAK_MIB.national!,

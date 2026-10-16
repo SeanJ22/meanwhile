@@ -399,11 +399,34 @@ function expressionParts(source: string): string[] {
 }
 
 /** Only exempt destinations derived from the OS temp root, never names like 'tmp'. */
-function temporaryPathClassifier(executable: string): (expression: string) => boolean {
+function confinedTemporaryBindings(executable: string, files: Readonly<Record<string, string>>, importer: string): ReadonlySet<string> {
+  const bindings = new Set<string>();
+  for (const match of executable.matchAll(/\bimport\s*\{([^}]*)\}\s*from\s*["']([^"']+)["']/g)) {
+    const path = resolveLocalModule(files, importer, match[2]!);
+    if (path === null) continue;
+    const source = stripExecutableComments(files[path]!).replace(/\s+/g, "");
+    // Recognize the complete confinement algorithm, including symlink and repository checks.
+    // A changed validator or an arbitrary same-named import remains untrusted.
+    const proof = new RegExp([
+      String.raw`^import\{existsSync,realpathSync\}from["']node:fs["'];import\{tmpdir\}from["']node:os["'];import\{dirname,resolve,sep\}from["']node:path["'];`,
+      String.raw`exportfunction([A-Za-z_$][\w$]*)\(value(?::string)?\)(?::string)?\{consttarget=resolve\(value\);consttemporary=resolve\(tmpdir\(\)\);constroot=realpathSync\(tmpdir\(\)\);`,
+      String.raw`letancestor=target;while\(!existsSync\(ancestor\)\)ancestor=dirname\(ancestor\);constparent=realpathSync\(ancestor\);`,
+      String.raw`if\(!target\.startsWith\(temporary\+sep\)\|\|!\(parent===root\|\|parent\.startsWith\(root\+sep\)\)\)\{thrownewError\("[^"\\]*"\);\}`,
+      String.raw`constrepository=realpathSync\(process\.cwd\(\)\);if\(target===repository\|\|target\.startsWith\(repository\+sep\)\|\|parent===repository\|\|parent\.startsWith\(repository\+sep\)\)\{thrownewError\("[^"\\]*"\);\}returntarget;\}$`,
+    ].join(""));
+    const name = proof.exec(source)?.[1];
+    if (name === undefined) continue;
+    for (const { imported, local } of parseNamedBindings(match[1]!)) if (imported === name) bindings.add(local);
+  }
+  return bindings;
+}
+
+function temporaryPathClassifier(executable: string, confined: ReadonlySet<string>): (expression: string) => boolean {
   const masked = maskStringLiterals(executable);
   const parameters = [
     ...matchingExecutableCalls(executable, masked, /\b(?:function(?:\s*\*)?(?:\s+[\w$]+)?|catch)\s*\(/g),
     ...[...masked.matchAll(/\(([^()]*)\)\s*(?::[^=;{}]+)?=>|\b([A-Za-z_$][\w$]*)\s*=>/g)].map(match => match[1] ?? match[2]!),
+    ...[...masked.matchAll(/\b[\w$]+\s*\(([^()]*)\)\s*(?::[^=;{}]+)?\{/g)].map(match => match[1]!),
   ];
   // A same-named parameter must not inherit another scope's temporary path.
   const shadowed = new Set(parameters.flatMap(value => maskStringLiterals(value).match(/[A-Za-z_$][\w$]*/g) ?? []));
@@ -426,6 +449,11 @@ function temporaryPathClassifier(executable: string): (expression: string) => bo
   };
   const isTemporary = (raw: string, seen = new Set<string>()): boolean => {
     const value = raw.trim().replace(/^await\s+/, "");
+    for (const name of confined) {
+      if (shadowed.has(name) || declarations.has(name)) continue;
+      const call = new RegExp(`^${escapeRegExp(name)}\\s*\\(`).exec(value);
+      if (call && call[0].length - 1 + balancedCall(value, call[0].length - 1).length === value.length) return true;
+    }
     if (new RegExp(`^${tmpdir}\\s*\\(\\s*\\)$`).test(value)) return true;
     if (constants.has(value) && !duplicates.has(value) && !shadowed.has(value) && !seen.has(value)) {
       return isTemporary(constants.get(value)!, new Set([...seen, value]));
@@ -441,10 +469,10 @@ function temporaryPathClassifier(executable: string): (expression: string) => bo
   return expression => isTemporary(expression);
 }
 
-function invokesFilesystemMutation(source: string): boolean {
+function invokesFilesystemMutation(source: string, files: Readonly<Record<string, string>>, importer: string): boolean {
   const executable = stripExecutableComments(source);
   const masked = maskStringLiterals(executable);
-  const isTemporary = temporaryPathClassifier(executable);
+  const isTemporary = temporaryPathClassifier(executable, confinedTemporaryBindings(executable, files, importer));
   const destinationOnly = new Set(["copyFile", "copyFileSync", "cp", "cpSync", "link", "linkSync", "symlink", "symlinkSync"]);
   const moves = new Set(["rename", "renameSync"]);
   const firstPath = new Set([...FILESYSTEM_MUTATION_METHODS].filter(method => !destinationOnly.has(method) && !moves.has(method)));
@@ -744,6 +772,7 @@ export function civicDataFirewall(tree: CivicDataFirewallTree): readonly CivicDa
   const certificationPaths = new Set<string>();
   const releaseInvocationPaths = new Set<string>();
   const repositoryWriterPaths = new Set<string>();
+  const filesystemMutations = new Map<string, boolean>();
   const executableClosureProblems = new Set<string>();
   const dataCommandClosureCache = new Map<string, ExecutableDependencyClosure>();
   const inspectedDataCommands = new Set<string>();
@@ -809,9 +838,14 @@ export function civicDataFirewall(tree: CivicDataFirewallTree): readonly CivicDa
         : "MANUAL_DATA_PATH_WRITES_REPOSITORY";
       const writerKey = `${writerCode}:${path}`;
       const shellWriter = SHELL_EXECUTABLE.test(path) && SHELL_FILESYSTEM_MUTATION.test(executable);
+      let filesystemMutation = filesystemMutations.get(path);
+      if (filesystemMutation === undefined) {
+        filesystemMutation = invokesFilesystemMutation(executable, tree.files, path);
+        filesystemMutations.set(path, filesystemMutation);
+      }
       if (
         !repositoryWriterPaths.has(writerKey)
-        && (invokesFilesystemMutation(executable) || shellWriter)
+        && (filesystemMutation || shellWriter)
       ) {
         repositoryWriterPaths.add(writerKey);
         add(

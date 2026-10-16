@@ -9,6 +9,8 @@ import { runBoundedWorkPool } from "../ops/bounded-work-pool.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { isScopedManualContractScope } from "./scoped-manual-contracts.ts";
 import { isPeopleSource } from "../officials/people-sources.ts";
+import { FEDERAL_MONEY_SOURCES, federalMoneyScope } from "../federal-money/model.ts";
+import { readFederalMoneyPartition, readFederalMoneyNationalProjection, readFederalMoneyCheckpoint } from "../federal-money/verify.ts";
 import {
   normalizeReaderCodeSha,
   parseReaderProjectionReadback,
@@ -67,6 +69,7 @@ function verifyExactVersion(
 function verifierIdFor(contract: ReaderContract): string {
   if (parseStateBallotContractId(contract.id)) return "lib/civic-data/read-model.ts#readPromotedCivicData";
   if (stateFromRegistryRuntimeContractId(contract.id)) return "lib/registry/state-runtime.ts#readStateRegistryRuntimeProjection";
+  if (contract.recordClass === "FEDERAL_MONEY") return "lib/federal-money/verify.ts#readFederalMoneyPartition";
   // Congress.gov and GovInfo also publish federal civic records under the same source ids; only people records read back as people.
   if (isPeopleSource(contract.sourceId) && contract.recordClass !== "FEDERAL_CIVIC_RECORD") return "lib/civic-data/people-source-publication.ts#readPeopleSourceProjection";
   if (contract.recordClass === "FEDERAL_CIVIC_RECORD") return "lib/sources/congress/publication.ts#readFederalSourceProjection";
@@ -151,6 +154,20 @@ export async function verifyRoutineReaderProjection(
       const read = await readPromotedCivicData(contract.recordClass, scope, { store: options.store, now: options.now, bypassCache: true });
       if (read.kind === "PROMOTED" && read.metadata.sourceId !== contract.sourceId) return fail(verifierId, "State publication readback names a different publisher.");
       return verifyExactVersion(verifierId, read, options.expectedVersionId, contract.id);
+    }
+    if (contract.recordClass === "FEDERAL_MONEY") {
+      const source = FEDERAL_MONEY_SOURCES.find(source => source === contract.sourceId);
+      if (!source) return fail(verifierId, "The federal source is not registered.");
+      const scope = options.scope ?? contract.scope;
+      if (scope === `${source}:US`) {
+        return verifyExactVersion(verifierId, await readFederalMoneyNationalProjection(source, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "national federal acquisition progress");
+      }
+      const state = scope.slice(source.length + 1).split(":")[0];
+      if (!/^[A-Z]{2}$/.test(state)) return fail(verifierId, "The federal state scope is invalid.");
+      if (scope === federalMoneyScope(source, state)) {
+        return verifyExactVersion(verifierId, await readFederalMoneyCheckpoint(source, state, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "federal source checkpoint");
+      }
+      return verifyExactVersion(verifierId, await readFederalMoneyPartition(source, scope, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "federal government records");
     }
     if (isPeopleSource(contract.sourceId) && contract.recordClass !== "FEDERAL_CIVIC_RECORD") {
       const { readPeopleSourceProjection } = await import("./people-source-read.ts");
@@ -636,7 +653,8 @@ async function attestReaderProjectionReadback(
 }
 
 function promotionIdentityIssue(contract: ReaderContract, promotion: PromotedPointerIdentity): string | null {
-  const scope = isScopedManualContractScope(contract.id, promotion.scope) ? promotion.scope : contract.scope;
+  const fanOut = "fanOut" in contract && contract.fanOut === true && promotion.scope.startsWith(`${contract.sourceId}:`);
+  const scope = isScopedManualContractScope(contract.id, promotion.scope) || fanOut ? promotion.scope : contract.scope;
   const expectedKey = `${contract.recordClass}:${scope}`;
   if (
     promotion.key !== expectedKey ||

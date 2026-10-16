@@ -204,7 +204,7 @@ test("6.1: the schema gate names the missing migration, and never rounds up", ()
   const gap = compareSchemaState(journal, [1, 3]);
   assert.deepEqual(gap.missing, ["0001_b"]);
 
-  // Reporting already-applied migrations as missing would recommend applying them again.
+  // Applied migrations ahead of the code must not be recommended for reapplication.
   const ahead = compareSchemaState(journal, [1, 2, 3, 99]);
   assert.deepEqual(ahead.missing, []);
   assert.deepEqual(ahead.unknownApplied, [99]);
@@ -232,7 +232,7 @@ test("6.1: the committed journal names every migration file exactly once", () =>
   assert.deepEqual(
     tags,
     files,
-    "every numbered or step-named migration is journalled exactly once",
+    "every migration is journalled, including step-named lane migrations",
   );
 });
 

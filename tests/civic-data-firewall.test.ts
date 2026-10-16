@@ -1,5 +1,7 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync, symlinkSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import test from "node:test";
 
 import { observableRoutineContracts } from "../lib/civic-data/meeting-partitions.ts";
@@ -8,6 +10,8 @@ import {
   type ManualProductionSourceContract,
 } from "../lib/civic-data/manual-contracts.ts";
 import { civicDataFirewall } from "../lib/civic-data/firewall.ts";
+import { temporaryPath } from "../lib/civic-data/temporary-path.ts";
+import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 
 const ROUTINE_SOURCE_CONTRACTS = observableRoutineContracts();
 
@@ -29,6 +33,69 @@ const audit = (files: Record<string, string>, extra: Partial<Parameters<typeof c
 
 test("civic-data firewall accepts one release-free adapter and clock per contract", () => {
   assert.deepEqual(audit(minimalFiles()), []);
+});
+
+test("filesystem writers prove runtime temporary confinement across module boundaries", () => {
+  const files = minimalFiles();
+  const command = ROUTINE_SOURCE_CONTRACTS[0]!.acquisitionAdapter.command[0]!;
+  files["lib/unrelated-path-name.ts"] = readFileSync(new URL("../lib/civic-data/temporary-path.ts", import.meta.url), "utf8");
+  files[command] = [
+    'import { temporaryPath as confined } from "../lib/unrelated-path-name.ts";',
+    'import { mkdir, open, rename, writeFile } from "node:fs/promises";',
+    'export async function acquire(destination: string, bytes: Uint8Array) {',
+    '  await mkdir(confined(destination), { recursive: true });',
+    '  const file = await open(confined(`${destination}/body`), "w");',
+    '  await file.write(bytes); await file.close();',
+    '  await writeFile(confined(`${destination}/state`), "complete");',
+    '  await rename(confined(`${destination}/body`), confined(`${destination}/ready`));',
+    '}',
+  ].join("\n");
+  assert.deepEqual(audit(files), []);
+  const original = files["lib/unrelated-path-name.ts"]!;
+  for (const change of [
+    (value: string) => value.replace("!target.startsWith(temporary + sep)", "false"),
+    (value: string) => value.replace("parent.startsWith(root + sep)", "true"),
+    (value: string) => value.replace("target.startsWith(repository + sep)", "false"),
+    (value: string) => value.replace("return target;", "return value;"),
+    (value: string) => value.replace('from "node:fs"', 'from "./pretend-fs.ts"'),
+    (value: string) => `${value}\nprocess.chdir("/");`,
+  ]) {
+    files["lib/unrelated-path-name.ts"] = change(original);
+    assert.ok(audit(files).some(({ code, path }) => code === "ROUTINE_PATH_WRITES_REPOSITORY" && path === command));
+  }
+  files["lib/unrelated-path-name.ts"] = original;
+  for (const writer of [
+    'function acquire(confined) { writeFile(confined(destination), bytes); }',
+    'class Acquisition { acquire(confined) { writeFile(confined(destination), bytes); } }',
+    'function acquire() { const confined = value => value; writeFile(confined(destination), bytes); }',
+    'function acquire() { writeFile(confined(destination) + "/../../repo/data.json", bytes); }',
+  ]) {
+    files[command] = `import { temporaryPath as confined } from "../lib/unrelated-path-name.ts"; import { writeFile } from "node:fs/promises"; ${writer}`;
+    assert.ok(audit(files).some(({ code }) => code === "ROUTINE_PATH_WRITES_REPOSITORY"));
+  }
+});
+
+test("temporary destinations reject repository paths, traversal and symlink escapes", async () => {
+  const root = mkdtempSync(join(tmpdir(), "firewall-confinement-"));
+  const previous = process.env.TMPDIR;
+  try {
+    assert.equal(temporaryPath(join(root, "pending", "body.csv")), join(root, "pending", "body.csv"));
+    assert.throws(() => temporaryPath(join(process.cwd(), "data", "live.json")), /temporary|repository/);
+    assert.throws(() => temporaryPath(join(root, "..", "..", "etc", "unsafe")), /temporary/);
+    symlinkSync(process.cwd(), join(root, "escaped"), "dir");
+    assert.throws(() => temporaryPath(join(root, "escaped", "data", "not-created.json")), /temporary|repository/);
+    const store = new LocalFileArtifactStore(root);
+    await assert.rejects(store.writeJsonPointer("../escaped.json", {}, null), /escaped/);
+    assert.equal((await store.writeJsonPointer("reader/safe.json", {}, null)).modified, true);
+    symlinkSync(root, join(root, "temporary-alias"), "dir");
+    process.env.TMPDIR = join(root, "temporary-alias");
+    assert.equal(temporaryPath(join(tmpdir(), "body.csv")), join(tmpdir(), "body.csv"));
+    process.env.TMPDIR = process.cwd();
+    assert.throws(() => temporaryPath(join(process.cwd(), "data", "live.json")), /repository/);
+  } finally {
+    if (previous === undefined) delete process.env.TMPDIR; else process.env.TMPDIR = previous;
+    rmSync(root, { recursive: true, force: true });
+  }
 });
 
 test("a package alias cannot restore a direct production child command", () => {

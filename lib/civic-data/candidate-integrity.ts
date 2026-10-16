@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import { durableStateHash, statePublicationScope } from "./state-publication.ts";
+import { federalMoneySavedSourceIssue } from "../federal-money/verify.ts";
 
 import { candidateChangeSet, canonicalCivicDataJson } from "./changes.ts";
 import type { RoutineSourceContract } from "./contracts.ts";
@@ -162,6 +163,7 @@ export async function verifySourceScopedCandidateProjection(
   candidate: RoutineCandidate,
   observedAt: string,
   predecessor: CandidateVersionRecord | null = null,
+  proofStore?: RoutineDataStore,
 ): Promise<RoutineReaderVerification> {
   if (!candidate.retrieval.succeeded || !candidate.normalization.succeeded) {
     return pass(
@@ -223,6 +225,15 @@ export async function verifySourceScopedCandidateProjection(
   }
 
   if (contract.readerProjection === null) return fail("lib/civic-data/candidate-integrity.ts#readerProjection", "The source contract declares no typed Reader projection.");
+
+  if (candidate.recordClass === "FEDERAL_MONEY") {
+    const { FEDERAL_MONEY_SOURCES } = await import("../federal-money/model.ts");
+    const source = FEDERAL_MONEY_SOURCES.find((source) => source === contract.sourceId);
+    const verifierId = "lib/federal-money/verify.ts#federalMoneySavedSourceIssue";
+    if (!source) return fail(verifierId, "The federal source is not registered.");
+    const sourceIssue = await federalMoneySavedSourceIssue(candidate, source, predecessor?.candidate ?? null, proofStore);
+    if (sourceIssue) return fail(verifierId, sourceIssue);
+  }
 
   const store = candidateReadOnlyStore(candidate, observedAt, predecessor);
   if (candidate.recordClass === "MEETING") {

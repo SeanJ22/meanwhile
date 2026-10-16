@@ -33,6 +33,7 @@ import type {
   CandidateVersionRecord,
   AuditPullRemovalEvidence,
   MovedToFactStoreRemovalEvidence,
+  FederalRepartitionRemovalEvidence,
   CensusPlaceholderBodyRemovalEvidence,
   DependentCheck,
   RoutineCandidate,
@@ -302,6 +303,16 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate, prior: Candi
   const statePeopleRetirement=statePeopleRetirementCheck(candidate,prior,validatedAt,sourceChecks);
   if (statePeopleRetirement !== null) return statePeopleRetirement;
 
+  if (candidate.recordClass === "FEDERAL_MONEY") {
+    const checked = sourceChecks.some(check => check.passed && check.consumer === "lib/federal-money/verify.ts#readFederalMoneyPartition (source-scoped pre-promotion)");
+    const keys = new Set(evidence.map(row => row.key));
+    const valid = checked && keys.size === removed.length && evidence.length === removed.length && removed.every(delta =>
+      delta.key.startsWith("federal-money:") && evidence.some(row => row.key === delta.key && row.code === "FEDERAL_RECORD_REPARTITIONED" &&
+        row.targetScope !== candidate.scope && row.targetScope.startsWith(`${candidate.sourceId}:`) && Boolean(row.targetVersionId)));
+    return result("COMPLETENESS_HORIZON_VALIDITY", valid ? "PASS" : "FAIL", valid ? "FEDERAL_RECORD_REPARTITIONED" : "FEDERAL_REPARTITION_UNPROVEN",
+      valid ? "Every moved federal record is already held in its verified destination partition." : "Federal record removal has no verified destination partition.");
+  }
+
   if (candidate.recordClass !== "MEETING" && candidate.recordClass !== "REGISTRY_RUNTIME_BINDING") {
     return result(
       "COMPLETENESS_HORIZON_VALIDITY",
@@ -335,7 +346,7 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate, prior: Candi
   if (candidate.recordClass === "REGISTRY_RUNTIME_BINDING") return registryPlaceholderRemovalCheck(candidate, removed, evidenceByKey);
 
   // A meeting removal is proven only by a meeting's authority; the registry's placeholder code never proves one.
-  const validMeetingEvidence = new Map<string, Exclude<RoutineRemovalEvidence, CensusPlaceholderBodyRemovalEvidence | AuditPullRemovalEvidence | MovedToFactStoreRemovalEvidence>>();
+  const validMeetingEvidence = new Map<string, Exclude<RoutineRemovalEvidence, CensusPlaceholderBodyRemovalEvidence | AuditPullRemovalEvidence | MovedToFactStoreRemovalEvidence | FederalRepartitionRemovalEvidence>>();
   const registeredWindow = meetingReaderServingWindowAt(candidate.retrieval.retrievedAt);
     // A `V1` row (the old shown window) is still accepted.
   const legacyWindow = meetingLegacyServingWindowAt(candidate.retrieval.retrievedAt);
@@ -351,7 +362,7 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate, prior: Candi
     if (row.code === "REMOVED_BY_AUDIT_PULL") {
       return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} is a meeting; an audit pull removes only curated Reader members.`);
     }
-    if (row.code === "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT" || row.code === "MOVED_TO_FACT_STORE") {
+    if (row.code === "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT" || row.code === "MOVED_TO_FACT_STORE" || row.code === "FEDERAL_RECORD_REPARTITIONED") {
       return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} is a meeting; a registry removal cannot prove it.`);
     }
     const before = object(delta.before);
@@ -466,7 +477,7 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate, prior: Candi
 
   for (const delta of removed.filter(({ key }) => key.startsWith("agenda-document:"))) {
     const row = evidenceByKey.get(delta.key)!;
-    if (row.code === "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT" || row.code === "REMOVED_BY_AUDIT_PULL" || row.code === "OFFICIAL_ROSTER_NO_LONGER_LISTS" || row.code === "MOVED_TO_FACT_STORE") {
+    if (row.code === "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT" || row.code === "REMOVED_BY_AUDIT_PULL" || row.code === "OFFICIAL_ROSTER_NO_LONGER_LISTS" || row.code === "MOVED_TO_FACT_STORE" || row.code === "FEDERAL_RECORD_REPARTITIONED") {
       return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} does not inherit authority from its exact removed meeting.`);
     }
     const before = object(delta.before);

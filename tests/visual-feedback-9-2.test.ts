@@ -4,7 +4,8 @@ import { join } from "node:path";
 import test from "node:test";
 
 import { summaryForContest } from "../lib/ballot/measure-summary.ts";
-import { azBallot } from "./helpers/ballot-district-fixtures.ts";
+import { provisionsForContest } from "../lib/ballot/measure-provisions.ts";
+import { azBallot, azPlaceMeasures } from "./helpers/ballot-district-fixtures.ts";
 
 const records = azBallot.measureRecords ?? [];
 const summaries = records.map(record => summaryForContest(record.contestId, records)!);
@@ -63,14 +64,21 @@ test("BAL-40: on every wordmark-above-headline page the logo is larger than the 
   }
 });
 
-test("BAL-46: every local measure carries a plain-language summary, cited to its own source, never advocacy", () => {
-  const local = summaries.filter((s) => s.citation === "measure-source");
-  assert.ok(local.length >= 4, `expected the four local-measure summaries, found ${local.length}`);
+test("BAL-46: every local measure source record cites its own official text without advocacy", () => {
+  const local = azPlaceMeasures.flatMap(place => Object.values(place.ballots).flatMap(ballot =>
+    (ballot.measureRecords ?? []).map(record => ({ place, ballot, record, summary: summaryForContest(record.contestId, ballot.measureRecords ?? [])! }))));
+  assert.deepEqual(local.map(({ record }) => record.contestId).sort(), [423, 425, 428, 429].map(number => `ballot-az-pima:prop-${number}`));
   const forbidden = /\b(should|vote yes|vote no|good|bad|dangerous|we recommend|we support|we oppose)\b/i;
-  for (const s of local) {
+  for (const { place, ballot, record, summary: s } of local) {
+    const contest = ballot.contests.find(row => row.id === s.contestId)!;
+    const measure = ballot.measures.find(row => row.contestId === s.contestId)!;
+    assert.equal(contest.ocdId, place.ocdId);
+    assert.notEqual(contest.ocdId, "ocd-division/country:us/state:az");
     assert.ok(s.summary.length >= 100, `${s.contestId}: summary too thin`);
     assert.equal(s.summary.match(forbidden), null, `${s.contestId}: advocacy vocabulary in a summary`);
-    assert.ok(s.summarizesUrl.length > 0, `${s.contestId}: a local summary must cite its measure source`);
+    assert.equal(s.summarizesUrl, measure.officialText!.sourceUrl);
+    assert.equal(record.sourceHash, measure.officialText!.sourceHash);
+    assert.ok(measure.officialText!.vault.key);
   }
 });
 
@@ -98,17 +106,34 @@ test("BAL-48: extended election-mechanics text collapses behind a disclosure by 
   assert.ok(!/data-scope-note-collapsed[^>]*\bopen\b/.test(page), "the mechanics disclosure is not open by default");
 });
 
-test("POS-5: the statewide measure treatment the owner praised is intact — summary, part-by-part, collapsed analysis", () => {
+test("POS-5: statewide measures retain source-bound summaries, parts, full text and collapsed official guides", () => {
   const ids = ["ballot-az-pima:prop-319", "ballot-az-pima:prop-320"];
   for (const id of ids) {
     const s = summaries.find((x) => x.contestId === id);
     assert.ok(s, `${id}: the statewide summary is gone`);
-    assert.notEqual(s.citation, "measure-source", `${id}: a statewide measure must cite its Legislative Council analysis`);
+    const measure = azBallot.measures.find(row => row.contestId === id)!;
+    const record = records.find(row => row.contestId === id)!;
+    assert.equal(s.citation, "measure-source");
+    assert.equal(s.summarizesUrl, measure.officialText!.sourceUrl);
+    assert.equal(record.sourceHash, measure.officialText!.sourceHash);
+    assert.ok(measure.officialText!.vault.key);
+    assert.ok(measure.voterGuide!.vault.key);
+    assert.match(measure.voterGuide!.publisher, /Arizona Secretary of State.*Legislative Council/);
+    assert.ok(measure.voterGuide!.summary!.length > 100);
+    const parts = provisionsForContest(id, records);
+    assert.ok(parts.length > 0);
+    assert.ok(parts.every(part => part.citesUrl === measure.officialText!.sourceUrl));
   }
   const page = read("app/ballot/page.tsx");
   assert.match(page, /What&apos;s in it, part by part/, "the part-by-part pill is gone");
   assert.match(page, /provisionsForContest\(contest\.id, measureRecords\)\.length > 0/);
-  assert.match(page, /Official analysis — \{analysis\.sourceOrg\}/, "the collapsed official analysis is gone");
+  assert.match(page, /<details[^>]*data-measure-official-text>/, "official wording remains collapsed");
+  assert.match(page, /\["Full proposed law", "Complete guide entry", "Passage threshold", "Fiscal impact"\]/);
+  assert.match(page, /<details[^>]*data-measure-voter-guide>/, "the official guide remains collapsed");
+  assert.match(page, /Official voter guide — \{measure\.voterGuide\.publisher\}/, "the official guide must name its publisher");
+  assert.match(page, /\["Official analysis", measure\.voterGuide\.summary\]/);
+  assert.match(page, /measure\.voterGuide\.argumentsFor\?\.map/);
+  assert.match(page, /measure\.voterGuide\.argumentsAgainst\?\.map/);
   assert.ok(!/t-record[^"]*"[^>]*>\s*\{summary\.summary\}/.test(page), "the plain-language summary must not wear the serif record face");
 });
 

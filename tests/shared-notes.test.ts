@@ -66,22 +66,38 @@ test("F01 11.1: contests with no note contribute nothing and break nothing", () 
   assert.equal(sharedNotesFor([]).notes.length, 0);
 });
 
-test("F01 11.1: the eleven Arizona measure gaps collapse into one truthful note", () => {
-  const text = "The exact ballot question has not been recorded here. The Legislative Council's official analysis is available below.";
+test("Arizona measures with held wording have no wording gap, and absent proposals stay held", () => {
   const { notes, isShared, markerFor } = sharedNotesFor(azBallot.contests);
-  const wording = notes.find((n) => n.text === text);
-  assert.ok(wording, "the repeated ballot-wording gap did not collapse verbatim");
-  assert.equal(wording.count, 11);
-  const carriers = azBallot.contests.filter((contest) => contest.scopeNote === text);
-  assert.equal(carriers.length, 11);
-  for (const contest of carriers) {
-    assert.equal(isShared(contest.id), true);
-    assert.equal(markerFor(contest.id), wording.marker);
+  const measures = azBallot.contests.filter(contest => contest.type === "MEASURE");
+  assert.equal(measures.length, 8);
+  for (const contest of measures) {
+    const measure = azBallot.measures.find(row => row.contestId === contest.id)!;
+    assert.ok(measure.questionText.trim().length > 120);
+    assert.ok(measure.officialText?.vault.key);
+    assert.equal(contest.scopeNote ?? null, null);
+    assert.equal(isShared(contest.id), false);
+    assert.equal(markerFor(contest.id), "");
+  }
+  assert.deepEqual(azBallot.heldContests?.map(contest => contest.id).sort(),
+    [143, 145, 212].map(number => `ballot-az-pima:prop-${number}`));
+  for (const held of azBallot.heldContests ?? []) {
+    assert.equal(held.ocdId, "ocd-division/country:us/state:az");
+    assert.match(held.reason, /absent from both final lists/);
+    assert.match(held.reason, /https:\/\/azsos\.gov\/sites\/default\/files\/docs\/2026-Ballot-Language-English-2026-0819\.pdf/);
+    assert.equal(azBallot.contests.some(contest => contest.id === held.id), false);
+    assert.equal(isShared(held.id), false);
+    assert.equal(markerFor(held.id), "");
+  }
+  for (const shared of notes) {
+    const carriers = azBallot.contests.filter(contest => contest.scopeNote === shared.text);
+    assert.equal(shared.count, carriers.length);
+    assert.ok(carriers.length > 1);
+    for (const contest of carriers) assert.equal(markerFor(contest.id), shared.marker);
   }
   assert.doesNotMatch(
     azBallot.contests.map((contest) => contest.scopeNote ?? "").join("\n"),
-    /has not yet published the final ballot wording/,
-    "missing reader wording does not establish that the election authority has not published it",
+    /has not yet published the final ballot wording|exact ballot question has not been recorded here/,
+    "held official wording must not carry an obsolete publication or acquisition gap",
   );
 });
 

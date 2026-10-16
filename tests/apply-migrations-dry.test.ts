@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { cpSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
+import { cpSync, mkdtempSync, readFileSync, rmSync, statSync, symlinkSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { tmpdir } from "node:os";
 import { spawnSync } from "node:child_process";
@@ -293,8 +293,11 @@ const productionBuild = { NETLIFY: "true", CONTEXT: "production", BRANCH: "main"
   WTP_PRODUCTION_DATABASE_URL_WRITE: "" };
 const expandBuildArgs = ["--target=production", "--phase=expand", "--production-build"];
 
-test("production refuses uncommitted journal or SQL bytes before database access", () => {
-  for (const file of ["meta/_journal.json", `${journal().entries[0].tag}.sql`]) {
+test("production refuses uncommitted journal or SQL bytes, including a large migration's tail, before database access", () => {
+  const large = journal().entries.map(entry => `${entry.tag}.sql`)
+    .find(file => statSync(join(FIXTURE_ROOT, "lib/db/migrations", file)).size > 1024 * 1024);
+  assert.ok(large, "the committed journal includes a migration larger than the subprocess output buffer");
+  for (const file of ["meta/_journal.json", `${journal().entries[0].tag}.sql`, large]) {
     const path = join(FIXTURE_ROOT, "lib/db/migrations", file);
     const original = readFileSync(path);
     try {

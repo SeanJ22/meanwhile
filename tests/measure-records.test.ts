@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { azBallot } from "./helpers/ballot-district-fixtures.ts";
+import { azBallot, azPlaceMeasures } from "./helpers/ballot-district-fixtures.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
 import { measureRecordIssue, measureRecordsForBallot, type MeasureRecord } from "../lib/ballot/measure-records.ts";
 import { summaryForContest } from "../lib/ballot/measure-summary.ts";
@@ -33,10 +33,28 @@ test("records outside this ballot and malformed or repeated reaction identities 
   assert.deepEqual(measureRecordsForBallot({ ...ballot, measureRecords: [] }), []);
 });
 
-test("the national Arizona ballot retains its sourced measure records and reaction identities", () => {
-  const rows = measureRecordsForBallot(azBallot);
-  assert.equal(rows.length, 15);
-  assert.equal(getProvisionTargetIds(rows).size, 52);
-  assert.ok(rows.every(row => azBallot.contests.some(contest => contest.type === "MEASURE" && contest.id === row.contestId)));
-  assert.ok(rows.every(row => !measureRecordIssue(row)));
+test("Arizona state and place records keep source bindings and distinct reaction identities", () => {
+  const places = [
+    { ocdId: "ocd-division/country:us/state:az", ballots: { state: azBallot } },
+    ...azPlaceMeasures,
+  ];
+  const allRows: MeasureRecord[] = [];
+  for (const place of places) for (const set of Object.values(place.ballots)) {
+    const rows = measureRecordsForBallot(set);
+    assert.equal(rows.length, place.ocdId === "ocd-division/country:us/state:az" ? 8 : 1);
+    for (const row of rows) {
+      assert.ok(set.contests.some(contest => contest.type === "MEASURE" && contest.id === row.contestId && contest.ocdId === place.ocdId));
+      assert.equal(measureRecordIssue(row), null);
+      const source = set.measures.find(measure => measure.contestId === row.contestId)!.officialText!;
+      assert.equal(row.sourceUrl, source.sourceUrl);
+      assert.equal(row.sourceHash, source.sourceHash);
+      assert.ok(source.vault.key);
+    }
+    allRows.push(...rows);
+  }
+  assert.equal(allRows.length, 12);
+  assert.equal(new Set(allRows.map(row => row.contestId)).size, 12);
+  assert.equal(getProvisionTargetIds(allRows).size, 17);
+  assert.deepEqual([...getProvisionTargetIds(allRows)].sort(), allRows.flatMap(row => row.parts.map(part => part.id)).sort());
+  for (const held of [143, 145, 212]) assert.equal(allRows.some(row => row.contestId === `ballot-az-pima:prop-${held}`), false);
 });

@@ -41,7 +41,7 @@ import type { MemberVote, RollCallVote, VotePosition } from "../../lib/votes/typ
 import { provenEdgeEntry } from "./promoted-edge-entry.ts";
 import { rosterFactReader } from "./roster-fact-reader.ts";
 import { installFactReader } from "../../lib/facts/db.ts";
-import { placeMeasureScope } from "../../lib/ballot/place-measures.ts";
+import { placeMeasureScope, readPlaceMeasureProjection, type PlaceMeasureProjection } from "../../lib/ballot/place-measures.ts";
 import { translationScope } from "../../lib/translate/records.ts";
 
 import { ballotElectionKey, readGenericBallotProjection, type GenericBallotProjection } from "../../lib/ballot/generic-projection.ts";
@@ -496,6 +496,15 @@ export async function installBallots(...ballots: BallotSet[]): Promise<GenericBa
   }
   resetAzIdentityCache();
   return installed;
+}
+
+export async function installPlaceMeasures(...places: PlaceMeasureProjection[]): Promise<void> {
+  const contract = requiredManualProductionContract("ballot-measures");
+  for (const value of places) {
+    installPromotedValue({ recordClass: contract.recordClass, scope: placeMeasureScope(value.ocdId), sourceId: contract.sourceId,
+      versionId: `test:ballot-measures:${value.ocdId}`, value });
+    served(await readPlaceMeasureProjection(value.ocdId), `${value.ocdId} measures`);
+  }
 }
 
 export function syntheticPimaLocalFinance(over: { readonly held?: Partial<AzPimaFinanceReadModel["held"]>; readonly transactions?: Partial<AzPimaFinanceReadModel["transactions"]> } = {}): AzPimaFinanceReadModel {

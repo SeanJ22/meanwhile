@@ -6,6 +6,8 @@ import { after, test } from "./helpers/playbooks.ts";
 
 import { publishReaderEdgeArtifacts, type PublishAuthority } from "../lib/meetings/edge-serving.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
+import { READER_MANIFEST_KEY } from "../lib/meetings/edge-blob-store.ts";
+import { readerPlaceManifestKey } from "../lib/meetings/place-edge.ts";
 import { enterReaderAuthorityEdge, currentRegistryRuntimeEdge } from "../lib/registry/runtime-edge.ts";
 import { federalDirectoryReadState } from "../lib/officials/federal-directory-read-model.ts";
 import { getOutcomeSnapshot, loadedFrom, outcomeProjectionReadState, refreshOutcomeSnapshotFromPromoted } from "../lib/outcomes/store.ts";
@@ -101,16 +103,17 @@ async function publishEdge(versions: EdgeVersions): Promise<void> {
   placeReads.length = 0;
 }
 
-async function withoutMeetingManifest<T>(run: () => Promise<T>): Promise<T> {
+async function withoutMeetingManifest<T>(run: () => Promise<T>, expectedPlaceKeys: readonly string[]): Promise<T> {
   const original = LocalFileArtifactStore.prototype.readManifest;
-  let reads = 0;
-  LocalFileArtifactStore.prototype.readManifest = async function () {
-    reads += 1;
-    return original.call(this);
+  const keys: string[] = [];
+  LocalFileArtifactStore.prototype.readManifest = async function (key = READER_MANIFEST_KEY) {
+    keys.push(key);
+    return original.call(this, key);
   };
   try {
     const result = await run();
-    assert.equal(reads, 0, "this request must not read the country's meeting manifest");
+    assert.equal(keys.includes(READER_MANIFEST_KEY), false, "this request must not read the country's meeting manifest");
+    assert.deepEqual(keys, expectedPlaceKeys, "the request reads only its exact place authority");
     return result;
   } finally {
     LocalFileArtifactStore.prototype.readManifest = original;
@@ -208,7 +211,7 @@ test("Campaign money reads the selected registry at the accepted edge version an
   const { GET } = await import("../app/api/funding/[target]/route.ts");
   const response = await withoutMeetingManifest(() => GET(new Request("https://wtp.test/api/funding/congress%3AC001133?division=ocd-division%2Fcountry%3Aus%2Fstate%3Aaz"), {
     params: Promise.resolve({ target: "congress%3AC001133" }),
-  }));
+  }), [readerPlaceManifestKey("plain-english-translations", AZ)]);
   assert.ok([200, 503].includes(response.status));
   assert.deepEqual(placeReads, ["edge-test:registry:3"], "funding selects only this place from the accepted registry version");
   const timing = response.headers.get("server-timing") ?? "";
@@ -232,7 +235,7 @@ test("a ballot Ask reads its state authority without opening the meeting manifes
     method: "POST",
     headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "reader-edge-context-ballot" },
     body: JSON.stringify({ question: "Who is running for Synthetic Office?", approximateLocation: "85701", surface: "BALLOT", ocdIds: [AZ], today: "2026-10-15" }),
-  })));
+  })), [readerPlaceManifestKey("plain-english-translations", AZ)]);
   assert.equal(response.status, 200);
   const payload = await response.json();
   assert.equal(payload.trace.resolution.basis, "HELD_BALLOT");

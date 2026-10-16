@@ -1,9 +1,10 @@
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { BallotSet } from "../../lib/ballot/types.ts";
 import type { BuiltDataset } from "../../lib/census-geography/dataset.ts";
 import { buildCensusDistrictEdge, censusDistrictEdgeSlice } from "../../lib/census-geography/district-edge.ts";
 import type { CodeSlice, Slice } from "../../lib/control-plane/admin-view/promoted-slices.ts";
+import type { PlaceMeasureProjection } from "../../lib/ballot/place-measures.ts";
 
 /** Held publisher rows and ballot contests, through the same edge shape readers use. */
 export const azDistricts = buildCensusDistrictEdge(
@@ -11,6 +12,9 @@ export const azDistricts = buildCensusDistrictEdge(
   "ballot-production-district-fixture",
 );
 export const azBallot = Object.values(JSON.parse(readFileSync(join(import.meta.dirname, "../../data/ballot/2026-general/az.json"), "utf8")).ballots)[0] as BallotSet;
+const measuresDirectory = join(import.meta.dirname, "../../data/ballot/measures/2026-general/AZ");
+export const azPlaceMeasures = readdirSync(measuresDirectory).filter(file => file.endsWith(".json")).sort()
+  .map(file => JSON.parse(readFileSync(join(measuresDirectory, file), "utf8")).payload as PlaceMeasureProjection);
 export const electionSelection = { purpose: "election" as const, asOf: "2026-10-12", electionDate: azBallot.election.date };
 
 export function azDistrictSlice(zip: string): Slice<CodeSlice> & { kind: "HELD" } {

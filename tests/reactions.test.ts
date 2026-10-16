@@ -480,12 +480,13 @@ test("every provision is a valid reaction target, and reactions attach to the PA
   const { provisionsForContest, getProvisionTargetIds } = await import(
     "../lib/ballot/measure-provisions.ts"
   );
-  const { azBallot } = await import("./helpers/ballot-district-fixtures.ts");
-  const records = azBallot.measureRecords ?? [];
+  const { azBallot, azPlaceMeasures } = await import("./helpers/ballot-district-fixtures.ts");
+  const ballots = [azBallot, ...azPlaceMeasures.flatMap(place => Object.values(place.ballots))];
+  const records = ballots.flatMap(ballot => ballot.measureRecords ?? []);
   const provisions = records.flatMap(record => provisionsForContest(record.contestId, records));
   const ids = getProvisionTargetIds(records);
 
-  assert.ok(provisions.length > 0, "no provisions to react to");
+  assert.equal(provisions.length, 17, "state and place source parts are all available");
   assert.equal(ids.size, provisions.length, "a provision lost its target id");
 
   // The id names both the measure and the part answered.
@@ -495,12 +496,22 @@ test("every provision is a valid reaction target, and reactions attach to the PA
       `${provision.id} does not name its contest`,
     );
     assert.ok(provision.id.length > provision.contestId.length + 1);
+    assert.ok(isPlausibleTargetId(provision.id));
   }
 
-  const kinds = new Set(provisions.map((provision) => provision.kind));
-  for (const kind of ["FUNDING", "PROGRAM", "OVERSIGHT", "SUNSET", "START"] as const) {
-    assert.ok(kinds.has(kind), `no provision of kind ${kind} exists to react to`);
-  }
+  const kinds = ["FUNDING", "PROGRAM", "OVERSIGHT", "SUNSET", "START"] as const;
+  const synthetic = { ...records[0], contestId: "test:five-kinds", parts: kinds.map(kind => ({
+    id: `test:five-kinds#${kind.toLowerCase()}`, number: null, kind,
+    label: `Synthetic ${kind.toLowerCase()}`, what: `A synthetic ${kind.toLowerCase()} provision.`,
+  })) };
+  const kindIds = getProvisionTargetIds([synthetic]);
+  assert.equal(kindIds.size, kinds.length);
+  const tallies = aggregateReactions([...kindIds].map(targetId => ({
+    targetType: "MEASURE_PROVISION" as const, targetId, reaction: "YES" as const,
+    ocdIds: ["ocd-division/country:us/state:az"], verificationTier: "ANONYMOUS" as const, runClass: "ORGANIC" as const,
+  })));
+  assert.deepEqual(tallies.map(tally => tally.targetId).sort(), synthetic.parts.map(part => part.id).sort());
+  assert.ok(tallies.every(tally => tally.n === 1 && tally.tiers.ANONYMOUS.YES === 1));
 });
 
 test("the provision question asks about the part, never how to vote", () => {

@@ -10,6 +10,8 @@ import { after, test } from "node:test";
 import { ensureReaderAuthorityEdge, publishReaderEdgeArtifacts, type PublishAuthority, type PublishStateAuthorities } from "../lib/meetings/edge-serving.ts";
 import { withReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "../lib/registry/runtime-edge.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
+import { publishReaderPlaceArtifact } from "../lib/meetings/place-edge.ts";
+import { placeMeasureScope } from "../lib/ballot/place-measures.ts";
 import type { GlobalPromotedAuthorityFamily, PromotedFamilyArtifactValue } from "../lib/meetings/edge-artifacts.ts";
 import type { CensusDistrictEdge } from "../lib/census-geography/district-edge.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
@@ -52,7 +54,7 @@ import {
   provenEdgeEntry,
   servedValue,
 } from "./helpers/promoted-edge-entry.ts";
-import { azBallot as committedAzBallot, azDistricts } from "./helpers/ballot-district-fixtures.ts";
+import { azBallot as committedAzBallot, azDistricts, azPlaceMeasures } from "./helpers/ballot-district-fixtures.ts";
 import { registryPlaceFixtureResult } from "./helpers/registry-place-fetch.ts";
 
 for (const key of ["DATABASE_URL", "DATABASE_URL_UNPOOLED", "NEON_DATABASE_URL", "NETLIFY", "NETLIFY_BLOBS_CONTEXT", "NETLIFY_SITE_ID"]) delete process.env[key];
@@ -164,6 +166,13 @@ async function publishEdge(withPromoted: boolean, authorityOverrides: PublishAut
     },
   });
   assert.equal(published.status, "PUBLISHED", JSON.stringify(published));
+  if (withPromoted) for (const value of azPlaceMeasures) {
+    const contract = requiredManualProductionContract("ballot-measures"), versionId = `edge-test:${value.ocdId}`;
+    const place = await publishReaderPlaceArtifact({ family: "ballot-measures", division: value.ocdId, versionId,
+      read: async () => provenEdgeEntry({ recordClass: contract.recordClass, scope: placeMeasureScope(value.ocdId),
+        sourceId: contract.sourceId, versionId, value }) }, { store: new LocalFileArtifactStore(dir), now: "2026-10-15T18:00:00.000Z" });
+    assert.equal(place.status, "PUBLISHED", JSON.stringify(place));
+  }
   return dir;
 }
 const mapEdgeDir = await publishEdge(false);

@@ -258,34 +258,41 @@
       "idx": 36,
       "version": "7",
       "when": 1790889600002,
-      "tag": "MS-01_measure_place_cursor",
+      "tag": "0036_ne01",
       "breakpoints": true
     },
     {
       "idx": 37,
       "version": "7",
       "when": 1790889600003,
-      "tag": "MS-01_model_charge_storage",
+      "tag": "MS-01_measure_place_cursor",
       "breakpoints": true
     },
     {
       "idx": 38,
       "version": "7",
       "when": 1790889600004,
-      "tag": "MS-01_model_charge_retirement",
+      "tag": "MS-01_model_charge_storage",
       "breakpoints": true
     },
     {
       "idx": 39,
       "version": "7",
       "when": 1790889600005,
-      "tag": "BL-30_candidate_scopes",
+      "tag": "MS-01_model_charge_retirement",
       "breakpoints": true
     },
     {
       "idx": 40,
       "version": "7",
       "when": 1790889600006,
+      "tag": "BL-30_candidate_scopes",
+      "breakpoints": true
+    },
+    {
+      "idx": 41,
+      "version": "7",
+      "when": 1790889600007,
       "tag": "BL-30_retire_candidate_scopes",
       "breakpoints": true
     }

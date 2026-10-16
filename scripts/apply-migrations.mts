@@ -10,6 +10,12 @@ import { neon } from "@neondatabase/serverless";
 import { resolveProductionWriteHandle, WriteHandleRefused, isReadonlyUser } from "../lib/db/write-handle.ts";
 import { declaredPhase, phaseFromSql } from "../lib/db/migration-phases.ts";
 
+function matchesCommittedFile(relative: string, raw: Buffer): boolean {
+  const committed = execFileSync("git", ["rev-parse", "--verify", `HEAD:${relative}`], { encoding: "utf8" }).trim();
+  const current = execFileSync("git", ["hash-object", "--stdin", "--no-filters"], { input: raw, encoding: "utf8" }).trim();
+  return current === committed;
+}
+
 export function controlPlaneMigrationConnection(env: Record<string, string | undefined>, production: boolean): string {
   const connection = env.WTP_CONTROL_PLANE_DATABASE_URL;
   if (!connection) throw new Error("db:apply: REFUSED — control-plane migrations require WTP_CONTROL_PLANE_DATABASE_URL");
@@ -153,14 +159,12 @@ export async function applyMigrations(args: string[], options: { beforeContract?
       throw new Error(`db:apply: REFUSED — ${entry.tag} has no matching migration phase`);
     }
     if (PRODUCTION) {
-      const committed = execFileSync("git", ["show", `HEAD:${relative}`], { cwd: process.cwd(), stdio: ["ignore", "pipe", "pipe"] });
-      if (!committed.equals(raw)) throw new Error(`db:apply: REFUSED — ${entry.tag} differs from its committed SQL`);
+      if (!matchesCommittedFile(relative, raw)) throw new Error(`db:apply: REFUSED — ${entry.tag} differs from its committed SQL`);
     }
   }
   if (PRODUCTION) {
     const relative = "lib/db/migrations/meta/_journal.json";
-    const committed = execFileSync("git", ["show", `HEAD:${relative}`], { cwd: process.cwd(), stdio: ["ignore", "pipe", "pipe"] });
-    if (!committed.equals(readFileSync(join(process.cwd(), relative)))) throw new Error("db:apply: REFUSED — migration journal differs from its committed version");
+    if (!matchesCommittedFile(relative, readFileSync(join(process.cwd(), relative)))) throw new Error("db:apply: REFUSED — migration journal differs from its committed version");
   }
 
   type AppliedMigration = { hash: string; created_at: string | number };

@@ -1,9 +1,11 @@
-import { azBallot } from "./helpers/ballot-district-fixtures.ts";
+import { azBallot, azPlaceMeasures } from "./helpers/ballot-district-fixtures.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 
 import { measureNumber, orderMeasures } from "../lib/ballot/measure-order.ts";
 import type { Contest } from "../lib/ballot/types.ts";
+import { installBallots, installPlaceMeasures } from "./helpers/promoted-fixtures.ts";
+import { readerBallotSources } from "../lib/ballot/reader-sources.ts";
 
 const contest = (id: string, title: string, ballotOrder?: number): Contest & { ballotOrder?: number } =>
   ({
@@ -30,22 +32,25 @@ test("BAL-29: Proposition 423 precedes 425, the reported regression", () => {
   );
 });
 
-test("BAL-29: the real Pima measure set comes out ascending", () => {
-  const set = azBallot as { contests: (Contest & { ballotOrder?: number })[] };
-
+test("BAL-29: the reader composes and orders state, county and school measures", async () => {
+  await installBallots(azBallot);
+  await installPlaceMeasures(...azPlaceMeasures);
+  const sources = await readerBallotSources([
+    "ocd-division/country:us/state:az",
+    "ocd-division/country:us/state:az/county:pima",
+    "ocd-division/country:us/state:az/school_district:vail_unified_district",
+  ]);
+  assert.equal(sources.length, 1);
+  const set = sources[0].source.normalize(await sources[0].source.fetch());
   const measures = set.contests.filter((c) => c.type === "MEASURE");
-  assert.ok(measures.length >= 15, "the curated set must still hold the measures");
-
-  const numbers = orderMeasures(measures).map((m) => measureNumber(m));
+  assert.equal(measures.length, 10, "eight state measures join only the county and school in scope");
+  const numbers = orderMeasures(measures.slice().reverse()).map(measureNumber);
   assert.deepEqual(
     numbers,
-    [...numbers].sort((a, b) => (a ?? 0) - (b ?? 0)),
+    [141, 142, 144, 316, 317, 318, 319, 320, 423, 425],
     "measures must come out in ascending proposition order",
   );
-
-  // The file itself is out of order, so this measures the sort, not the data.
-  const asFiled = measures.map((m) => measureNumber(m));
-  assert.notDeepEqual(asFiled, numbers, "the curated file order is not sorted");
+  assert.deepEqual(orderMeasures(measures).map(measureNumber), numbers);
 });
 
 test("BAL-29 control: three digits never sort before two", () => {

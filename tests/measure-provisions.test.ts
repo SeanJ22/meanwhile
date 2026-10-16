@@ -9,9 +9,10 @@ import {
 } from "../lib/ballot/measure-provisions.ts";
 import { measureRecordsForBallot } from "../lib/ballot/measure-records.ts";
 import { summaryForContest } from "../lib/ballot/measure-summary.ts";
-import { azBallot } from "./helpers/ballot-district-fixtures.ts";
+import { azBallot, azPlaceMeasures } from "./helpers/ballot-district-fixtures.ts";
 
-const records = measureRecordsForBallot(azBallot);
+const ballots = [azBallot, ...azPlaceMeasures.flatMap(place => Object.values(place.ballots))];
+const records = ballots.flatMap(ballot => measureRecordsForBallot(ballot));
 const provisions = records.flatMap(record => provisionsForContest(record.contestId, records));
 const summaries = records.map(record => summaryForContest(record.contestId, records)!);
 
@@ -98,7 +99,7 @@ test("no internal identifier reaches a reader through a provision", () => {
   }
 });
 
-test("every provision says something, and says it in plain language", () => {
+test("every source provision has readable text and a concise label", () => {
   for (const provision of provisions) {
     assert.ok(provision.label.trim().length >= 8, `${provision.id}: label is too thin to read`);
     assert.ok(provision.what.trim().length >= 40, `${provision.id}: 'what' is too thin to read`);
@@ -114,23 +115,16 @@ test("every provision says something, and says it in plain language", () => {
   }
 });
 
-test("the shape of the decomposition, stated as measured", () => {
-  // Measured, not expected: not every measure has every kind, and manufacturing one would invent a claim.
+test("state and place provisions preserve each held source part without invented kinds", () => {
   const byKind: Record<string, number> = {};
   for (const provision of provisions) {
     byKind[provision.kind] = (byKind[provision.kind] ?? 0) + 1;
   }
-  assert.equal(provisions.length, 52, `provision count changed: ${provisions.length}`);
-  assert.deepEqual(byKind, {
-    FUNDING: 10,
-    PROGRAM: 26,
-    OVERSIGHT: 12,
-    SUNSET: 2,
-    START: 2,
-  });
+  assert.equal(provisions.length, 17, `provision count changed: ${provisions.length}`);
+  assert.deepEqual(byKind, { PROGRAM: 17 });
   assert.equal(
     Object.values(byKind).reduce((a, b) => a + b, 0),
-    52,
+    17,
     "the kinds no longer sum to the provision count",
   );
 
@@ -138,33 +132,41 @@ test("the shape of the decomposition, stated as measured", () => {
   for (const provision of provisions) {
     perContest.set(provision.contestId, (perContest.get(provision.contestId) ?? 0) + 1);
   }
-  for (const [contestId, n] of perContest) {
-    assert.ok(n >= 1, `${contestId} has no provisions`);
+  for (const record of records) {
+    assert.equal(perContest.get(record.contestId), record.parts.length);
+    for (const part of record.parts) {
+      const actual = provisionById(part.id, records)!;
+      assert.deepEqual(actual, {
+        id: part.id, contestId: record.contestId, kind: part.kind, label: part.label,
+        what: part.what, citesUrl: record.sourceUrl, writtenAt: record.writtenAt,
+      });
+    }
   }
-  assert.equal(perContest.get("ballot-az-pima:prop-212"), 11);
-  assert.equal(perContest.get("ballot-az-pima:prop-141"), 3);
+  assert.equal(perContest.get("ballot-az-pima:prop-141"), 1);
+  assert.equal(perContest.get("ballot-az-pima:prop-423"), 2);
+  assert.equal(perContest.get("ballot-az-pima:prop-425"), 2);
+  assert.equal(perContest.get("ballot-az-pima:prop-428"), 3);
+  assert.equal(perContest.get("ballot-az-pima:prop-429"), 2);
+  for (const held of [143, 145, 212]) assert.equal(perContest.has(`ballot-az-pima:prop-${held}`), false);
 });
 
-test("Proposition 141's absences survive the fifth kind", () => {
-  // Proposition 141 has no oversight and no clock in its analysis; a new kind must not fill that absence.
+test("Proposition 141 gains no oversight or clock claims from provision kinds", () => {
   const kinds = provisions.filter(
     (p) => p.contestId === "ballot-az-pima:prop-141",
   ).map((p) => p.kind);
 
   assert.deepEqual(
     kinds.slice().sort(),
-    ["FUNDING", "PROGRAM", "PROGRAM"],
+    ["PROGRAM"],
     "Proposition 141's provision kinds changed",
   );
   for (const absent of ["OVERSIGHT", "SUNSET", "START"] as const) {
     assert.ok(
       !kinds.includes(absent),
-      `Proposition 141 gained a ${absent} provision. It has none in the analysis — ` +
-        "if this is real it needs the citation, and if it is not it is an invented claim.",
+      `Proposition 141 gained a ${absent} provision without a source-bound part`,
     );
   }
 
-  /* No provision of 141 carries a date; asserted on the text so a mis-kinded provision cannot satisfy both halves. */
   for (const provision of provisions.filter(
     (p) => p.contestId === "ballot-az-pima:prop-141",
   )) {

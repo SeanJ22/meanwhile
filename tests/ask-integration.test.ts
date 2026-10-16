@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { azBallot } from "./helpers/ballot-district-fixtures.ts";
+import { azBallot, azPlaceMeasures } from "./helpers/ballot-district-fixtures.ts";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "./helpers/playbooks.ts";
@@ -22,7 +22,8 @@ import {
   type AskInteractionRow,
 } from "../lib/db/ask-signal.ts";
 import type { BindableEntity } from "../lib/routing/named-entity.ts";
-import { installBallots, installRegistryAuthority, syntheticAzBallot } from "./helpers/promoted-fixtures.ts";
+import { installBallots, installPlaceMeasures, installRegistryAuthority, syntheticAzBallot } from "./helpers/promoted-fixtures.ts";
+import { readerBallotSources } from "../lib/ballot/reader-sources.ts";
 
 await installRegistryAuthority();
 
@@ -50,8 +51,6 @@ const GROUNDED_ROUTE = readFileSync(
   "utf8",
 );
 
-/** Comments stripped: this repo's guards read raw text, and the modules that
- *  DOCUMENT a removal quote the call they deleted. */
 function code(text: string): string {
   return text.replace(/\/\*[\s\S]*?\*\//g, " ").replace(/(^|[^:])\/\/.*$/gm, "$1");
 }
@@ -364,8 +363,6 @@ test("readSubjectRefs refuses anything that is neither a name nor an id", () => 
   assert.equal(refs[1].focused, true);
 });
 
-const AZ_BALLOT = azBallot;
-
 const GOVERNOR_NOMINEES = [
   { name: "Katie Hobbs", partyLabel: "Democratic" },
   { name: "Andy Biggs", partyLabel: "Republican" },
@@ -374,8 +371,6 @@ const GOVERNOR_NOMINEES = [
 ];
 const nominees = (contestId: string) => (contestId === "ballot-az-pima:governor" ? GOVERNOR_NOMINEES : []);
 
-/* The committed ballot file as the promoted ballot rows, with the certified governor lineup bridged: the two
-   nominees who filed under the same name reconcile to their filings, the other two are left unresolved. */
 await installBallots({
   ...syntheticAzBallot([{
     id: "ballot-az-pima:governor",
@@ -391,8 +386,12 @@ await installBallots({
       ...(nominee.name === "Andy Biggs" ? { candidacyId: "ballot-az-pima:governor:biggs-andy" } : {}),
     })),
   }]),
-  ...AZ_BALLOT,
+  ...azBallot,
 });
+await installPlaceMeasures(...azPlaceMeasures);
+const azSources = await readerBallotSources([...new Set([...azBallot.contests.map(contest => contest.ocdId), VAIL])]);
+assert.equal(azSources.length, 1);
+const AZ_BALLOT = azSources[0].source.normalize(await azSources[0].source.fetch());
 
 test("BLOCKER 4: a non-statewide CHALLENGER on the reader's ballot is a resolvable entity", () => {
   const inventory = ballotAskInventory(AZ_BALLOT, AZ_BALLOT.contests, nominees);
@@ -425,9 +424,6 @@ test("BLOCKER 4: contests and measures are resolvable, with the designations a r
   assert.ok(ids.has("ballot-az-pima:governor"), "a contest is an entity");
   assert.ok(ids.has("ballot-az-pima:prop-423"), "a measure is an entity");
 
-  /* The clerk files "Proposition 423: …". A reader types "Prop 423". The binder
-     needs every distinctive token present, so the filing title alone can never
-     be bound by a person. */
   assert.deepEqual(
     measureDesignations("Proposition 423: Vail Unified School District budget override continuation"),
     ["Proposition 423", "Prop 423"],

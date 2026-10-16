@@ -3059,5 +3059,17 @@
     "tested_sha": "1d3d303d70dc9d14aab69d61ea9b0d76d76b6e6f",
     "gates": "pass",
     "at": "2026-10-16T03:03:04Z"
+  },
+  {
+    "lane": "platform-swagit",
+    "steps": [
+      "R3-SWAGIT"
+    ],
+    "ready_sha": "ef48e7fbb3438987dcddcc3eaa6f14553e6793ba",
+    "merge_sha": "656062ece8908c88c01af8b7cdb5116ed6c4c5ab",
+    "river_sha": "e1a1071a9c2283315ac5ada017cfac9d4a42f3cc",
+    "tested_sha": "e1a1071a9c2283315ac5ada017cfac9d4a42f3cc",
+    "gates": "pass",
+    "at": "2026-10-16T05:11:25Z"
   }
 ]

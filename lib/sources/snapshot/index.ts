@@ -6,16 +6,6 @@ import type {
 } from "../types.ts";
 import { accountedNormalize } from "../normalize-account.ts";
 
-/**
- * The promoted-projection-backed meeting source — what production serves.
- * Everything above `lib/meetings/registry.ts` sees the same `Meeting` records
- * it would have seen live; `generatedAt` renders as "last checked".
- *
- * `normalize()` re-derives SCHEDULED/CONCLUDED from `now` rather than trusting
- * the frozen statuses. CANCELED is the body's decision, not the clock's, so it
- * survives.
- */
-
 const ZERO_DROPS: NormalizeDropCounts = {
   placeless: 0,
   unknownVenue: 0,
@@ -52,7 +42,7 @@ export function makeSnapshotSource(
     name: "snapshot",
 
     // The query is ignored on purpose: the snapshot holds everything the last
-    // refresh saw, and the cascade above filters by time and radius itself.
+    // refresh saw; the query above selects the place’s divisions and time window.
     async fetch(): Promise<Meeting[]> {
       const snapshot = await load();
       if (!snapshot) {

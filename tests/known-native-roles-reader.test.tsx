@@ -100,8 +100,7 @@ test("the first coverage read renders known local and state people with no legis
   assert.deepEqual(coverage.seats.flatMap(row => row.representatives.map(holder => holder.name)), ["Taylor Mayor"]);
   const data: ShellData = { allMeetings: [], meetings: [], venues: [], result: null, location: null, drawnDistricts: [],
     dropped: 0, searchFailed: false, atAddress: false, governing: null, zipPartial: null, basis: "ZIP" };
-  const html = renderToStaticMarkup(<DataProvider value={data}><CoverageNotice tier="none" zip="43215" radiusKm={0}
-    requestedRadiusKm={0} count={0} coverage={coverage} /></DataProvider>);
+  const html = renderToStaticMarkup(<DataProvider value={data}><CoverageNotice tier="none" zip="43215" coverage={coverage} /></DataProvider>);
   assert.match(html, /Morgan Governor/); assert.match(html, /Taylor Mayor/);
   assert.doesNotMatch(html, /Other Mayor|Former Mayor/);
   assert.doesNotMatch(html, /no mayor or city council/);
@@ -116,8 +115,7 @@ test("the first coverage read renders known local and state people with no legis
     const local = await seatHoldersForDivision(PLACE);
     assert.deepEqual(local.map(row => row.officeTitle).sort(), ["Councilmember", "Mayor"]);
     const dualCoverage = { ...coverage, seats: coverage.seats.map(seat => ({ ...seat, representatives: local })) };
-    const dualHtml = renderToStaticMarkup(<DataProvider value={data}><CoverageNotice tier="none" zip="43215" radiusKm={0}
-      requestedRadiusKm={0} count={0} coverage={dualCoverage} /></DataProvider>);
+    const dualHtml = renderToStaticMarkup(<DataProvider value={data}><CoverageNotice tier="none" zip="43215" coverage={dualCoverage} /></DataProvider>);
     assert.match(dualHtml, />Mayor<\/span>/);
     assert.match(dualHtml, />Council member<\/span>/);
     assert.equal(dualHtml.split("Taylor Mayor").length - 1, 2, "each current role remains visible with its own title");
@@ -225,8 +223,7 @@ test("captured county mayors and district executives reach exact routes, first c
     assert.ok([...groups.local, ...groups.state].some(row => row.holder.name === example.name && row.holder.officeTitle === example.title));
     const data: ShellData = { allMeetings: [], meetings: [], venues: [], result: null, location: null, drawnDistricts: [],
       dropped: 0, searchFailed: false, atAddress: false, governing: null, zipPartial: null, basis: "ZIP" };
-    const html = renderToStaticMarkup(<DataProvider value={data}><CoverageNotice tier="none" zip="96813" radiusKm={0}
-      requestedRadiusKm={0} count={0} coverage={coverage} /></DataProvider>);
+    const html = renderToStaticMarkup(<DataProvider value={data}><CoverageNotice tier="none" zip="96813" coverage={coverage} /></DataProvider>);
     assert.ok(html.includes(example.name), `${example.name} appears on first coverage`);
   }
 });

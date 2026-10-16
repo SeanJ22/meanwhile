@@ -74,11 +74,6 @@ import { fanOffsets, findCollisionGroups } from "@/lib/map/spiderfy";
 
 import "maplibre-gl/dist/maplibre-gl.css";
 
-/**
- * The map. Owns the MapLibre instance and the markers; it takes venues and a
- * camera target and knows nothing about zip codes or the cascade.
- */
-
 /** Where the map should be looking. A new object means a new fly-to. */
 export interface CameraTarget {
   zip: string;
@@ -86,12 +81,6 @@ export interface CameraTarget {
   lng: number;
 }
 
-/**
- * A one-off camera move, from search or the list overlay.
- *
- * `key` identifies the request rather than the place, so picking the same
- * result twice flies again instead of being deduplicated into nothing.
- */
 export interface MapFocus {
   lat: number;
   lng: number;
@@ -138,7 +127,7 @@ interface MapCanvasProps {
   onDistrictClick: (hits: DistrictHit[], at: { x: number; y: number }) => void;
   /** The boundary file could not be loaded; the caller says so and disables the toggle. */
   onDistrictError: () => void;
-  /** Frame every venue rather than resting on the centroid; set when the cascade widened or fell back. */
+  /** Frame every venue rather than resting on the centroid; set for recent meetings. */
   frameAllVenues: boolean;
   /** Basemap follows the UI theme; changing it restyles the map in place. */
   theme: Theme;
@@ -208,12 +197,6 @@ function createHereElement(zipLabel: string): HTMLDivElement {
   return element;
 }
 
-
-/**
- * The theme from the attribute `app/layout.tsx` sets before first paint. The
- * `theme` prop is "dark" during hydration, so this avoids building the map
- * with the wrong style and swapping.
- */
 function documentTheme(): Theme {
   return document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
 }
@@ -310,11 +293,6 @@ export function MapCanvas({
     onViewportSettleRef.current = onViewportSettle;
   }, [onViewportSettle]);
 
-  /*
-   * `ensureDistricts` runs on every `styledata`: setStyle drops custom layers
-   * and `styledata` also fires for the outgoing style, so a one-shot re-attach
-   * misses. Guarded on wanted, absent and parsed, it is idempotent.
-   */
   const focusOcdRef = useRef<string | null>(focusStateOcdId ?? null);
   useEffect(() => {
     focusOcdRef.current = focusStateOcdId ?? null;
@@ -467,12 +445,6 @@ export function MapCanvas({
     };
     window.addEventListener("keydown", onKeyDown);
 
-    /*
-     * Only user gestures carry `originalEvent` on movestart; the debounce means
-     * "came to rest". The motion hold (hiding layers and markers) runs only on
-     * a positively identified CPU rasteriser (components/map/raster-capability.ts),
-     * read once per map.
-     */
     const degradeInMotion = detectRaster().kind === "software";
     const enterMotionDegrade = () => {
       if (!degradeInMotion) return;
@@ -654,7 +626,6 @@ export function MapCanvas({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-
   // Mark the zip's centroid.
   useEffect(() => {
     const map = mapRef.current;
@@ -717,11 +688,6 @@ export function MapCanvas({
     }
   }, [votingSites, presentationReady]);
 
-  /*
-   * The ten-mile ring around the entered address: orientation, never a filter.
-   * A projected GeoJSON polygon, because `circle-radius` is in screen pixels
-   * and would be ten miles at only one zoom.
-   */
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
@@ -836,11 +802,6 @@ export function MapCanvas({
     cameraMapRef.current = map;
   }, [camera]);
 
-  /*
-   * Reconcile the marker pool against the venues the data contains. Depends
-   * on the data list only; visibility is the separate effect below. See
-   * lib/map/marker-pool.ts.
-   */
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
@@ -1044,7 +1005,7 @@ export function MapCanvas({
   }, [selectedVenueKey]);
 
   /**
-   * Frame the visible pins with the centroid when the cascade widened.
+   * Frame the visible pins with the centroid.
    * `framed` uses the same key set as the visibility effect.
    */
   const framed = useMemo(

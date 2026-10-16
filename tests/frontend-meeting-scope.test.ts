@@ -26,14 +26,12 @@ test("online-only venues use only the exact body's published office, without cha
   assert.equal(groupByVenue([physical, online], undefined, [office]).length, 2);
 });
 
-test("a widened search counts each own government's held calendar apart from nearby results and agendas", () => {
+test("each own government has its held calendar and linked agendas counted", () => {
   const ownMeeting = make("own");
   const nearby = make("nearby", { ocdId: "ocd-division/country:us/state:az/place:other", bodyId: "body:other", agendaUrl: "https://example.gov/agenda" });
   const bodies = [{ bodyId: "body:one", name: "Council", ocdId: own }, { bodyId: "body:empty", name: "School board", ocdId: own }] as CoveredBody[];
-  const args = { heldMeetings: [ownMeeting, nearby], shownMeetings: [nearby], bodies, ownDivisionIds: new Set([own]), radiusKm: 150, requestedRadiusKm: 25, now: new Date("2026-10-05T00:00:00Z") };
+  const args = { heldMeetings: [ownMeeting, nearby], bodies, ownDivisionIds: new Set([own]), now: new Date("2026-10-05T00:00:00Z") };
   const scope = readerMeetingScope(args);
-  assert.deepEqual(scope.nearbyMeetingIds, ["nearby"]);
   assert.deepEqual(scope.governments, [{ bodyId: "body:one", name: "Council", upcoming: 1, agendasLinked: 0 }, { bodyId: "body:empty", name: "School board", upcoming: 0, agendasLinked: 0 }]);
   assert.equal(readerMeetingScope({ ...args, ownDivisionIds: null }).governments, null);
-  assert.deepEqual(readerMeetingScope({ ...args, radiusKm: 25 }).nearbyMeetingIds, []);
 });

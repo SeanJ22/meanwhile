@@ -8,17 +8,15 @@ import { lastChildLines, recordFailedCycle } from "../lib/control-plane/schedule
 
 const slotsModule = JSON.stringify(new URL("../lib/control-plane/workers/worker-slots.ts", import.meta.url).href);
 
-/*
- * A worker waiting for host memory must report progress so the runner does not end the round as
- * RESEARCH_CHILD_NO_PROGRESS before the wait can end as a deferral. Every time is the real one scaled down by the
- * same factor, so the relationship is the production one.
- */
 const QUIET_MS = 600;
 const scale = QUIET_MS / RUNTIME_NO_PROGRESS_MS;
 const DISPATCH_WAIT_MS = Math.round(15 * 60_000 * scale);
 
 const waitingRound = (report: boolean) => `
-  import { reportingWorkerSlots, workerProcessSlots } from ${slotsModule};
+  console.log('boot started');
+  const boot = setInterval(() => console.log('boot ' + Date.now()), ${Math.round(QUIET_MS / 3)});
+  const { reportingWorkerSlots, workerProcessSlots } = await import(${slotsModule});
+  clearInterval(boot);
   // A host whose memory never frees.
   const host = workerProcessSlots(() => Number.MAX_SAFE_INTEGER, { availableBytes: () => 0 });
   const slots = ${report ? `reportingWorkerSlots(host, { everyMs: ${Math.round(MEMORY_WAIT_REPORT_EVERY_MS * scale)}, minuteMs: ${60_000 * scale} })` : "host"};

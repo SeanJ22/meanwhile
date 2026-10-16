@@ -110,20 +110,11 @@ export function ListOverlay({
   /* One `now` for the whole render, so sort and Concluded pill agree. */
   const [now, setNow] = useState(0);
   useEffect(() => {
-    /*
-     * `Date.now()` is impure, so it is read in an effect and published on a
-     * frame. Zero until then puts every meeting in the upcoming block, so
-     * nothing is labelled finished early.
-     */
+
     const frame = window.requestAnimationFrame(() => setNow(Date.now()));
     return () => window.cancelAnimationFrame(frame);
   }, [meetings]);
 
-  /*
-   * A body or division focus, applied before the sort and always shown as a
-   * chip that clears it. A focus matching nothing falls back to the full list.
-   * See lib/state/list-focus.ts.
-   */
    const focused = useMemo(
      () => focusList(meetings, ui),
      [meetings, ui],
@@ -153,11 +144,6 @@ export function ListOverlay({
     }
   }, [focused, ui.listSort, ui.nearMe, location, now]);
 
-  /*
-   * Meetings of the bodies that govern this ZIP lead; nearby ones follow,
-   * each block in the chosen sort. When the division lookup failed
-   * (`governing` is null), nothing is promoted.
-   */
   const sorted = useMemo(() => {
     if (!governing) return ordered;
     const rank = (m: Meeting) => {
@@ -357,7 +343,6 @@ export function ListOverlay({
                         title={meetingRowTitle(meeting, { jurisdictionShown: ui.listGroupBy === "jurisdiction" })}
                         onOpen={() => { onPickMeeting(meeting); dispatch({ type: "list/open", open: false }); }}
                         jurisdiction={groupBadge === null ? <JurisdictionPill badge={badgeOf(meeting)} bodyClass={bodyClassOf(meeting)} zip={location?.zip ?? null} detail={false} /> : undefined}
-                        nearby={result?.readerScope?.nearbyMeetingIds.includes(meeting.id)}
                         distance={km !== null ? `${formatMiles(km) < 1 ? "<1" : formatMiles(km)} mi` : null} />
                     </div>
                   );

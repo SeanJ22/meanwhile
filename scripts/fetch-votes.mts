@@ -31,7 +31,8 @@ import type {
   VotePosition,
   VotesSnapshot,
 } from "../lib/votes/types.ts";
-import { federalRollCallsCandidate, FEDERAL_ROLLCALL_SCOPE, FEDERAL_VOTES_PARSER_VERSION, FEDERAL_VOTES_SOURCE_ID, type OfficialAcquisition } from "../lib/votes/data-plane.ts";
+import { federalMemberVotesCandidate, federalPartyBreakdowns, federalRollCallsCandidate, heldAcquisitions, FEDERAL_ROLLCALL_SCOPE, FEDERAL_VOTES_PARSER_VERSION, FEDERAL_VOTES_SOURCE_ID,
+  type OfficialAcquisition } from "../lib/votes/data-plane.ts";
 import {
   billSummariesForRollCallAcquisition,
   readFederalRollCallsProjection,
@@ -113,11 +114,13 @@ const legislators = JSON.parse(
     "https://unitedstates.github.io/congress-legislators/legislators-current.json",
     false,
   ),
-) as { id: { bioguide: string; lis?: string } }[];
+) as { id: { bioguide: string; lis?: string }; terms?: { party?: string }[] }[];
 const lisToBioguide = new Map<string, string>();
 const bioguides = new Set<string>();
+const parties = new Map<string, string | null>();
 for (const person of legislators) {
   bioguides.add(person.id.bioguide);
+  parties.set(`congress:${person.id.bioguide}`, person.terms?.at(-1)?.party ?? null);
   if (person.id.lis) lisToBioguide.set(person.id.lis, person.id.bioguide);
 }
 
@@ -375,13 +378,27 @@ const snapshot: VotesSnapshot = {
   positions,
 };
 
-const attemptedAt = new Date().toISOString();
+const attemptedAt = new Date().toISOString(), held = heldAcquisitions(acquisitions);
+const { positions: _positions, ...window } = snapshot;
+const byMember = new Map<string, MemberVote[]>([...bioguides].map(id => [`congress:${id}`, []]));
+for (const position of positions) byMember.get(position.officeholderId)!.push(position);
+const refused: string[] = [];
+for (const [officeholderId, recorded] of byMember) {
+  const member = federalMemberVotesCandidate({ acquisitions: held, retrievedAt: attemptedAt, expectedCongress: CONGRESS, expectedSession: SESSION, snapshot: window, officeholderId, positions: recorded });
+  const result = await processRegisteredManualCandidate(store, "congress-rollcalls", member, attemptedAt);
+  if (!result.promoted && !result.confirmed) refused.push(`${officeholderId}:${result.candidate.failureCode ?? result.candidate.state}`);
+}
+if (refused.length) {
+  await recordFailure(acquisitions[0]?.requestedUrl ?? "https://www.senate.gov/legislative/", `Member positions refused: ${refused.join(", ")}`);
+  throw new Error(`FEDERAL_MEMBER_POSITIONS_REFUSED:${refused.join(",")}`);
+}
 const candidate = federalRollCallsCandidate({
-  acquisitions,
+  acquisitions: held,
   retrievedAt: attemptedAt,
   expectedCongress: CONGRESS,
   expectedSession: SESSION,
-  snapshot,
+  snapshot: window,
+  partyBreakdowns: federalPartyBreakdowns(snapshot, parties),
   billSummaries,
 });
 const outcome = await processRegisteredManualCandidate(store, "congress-rollcalls", candidate, attemptedAt);

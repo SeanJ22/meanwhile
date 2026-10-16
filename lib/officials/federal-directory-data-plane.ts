@@ -4,12 +4,21 @@ import { canonicalCivicDataJson, civicRecordsFor } from "../civic-data/changes.t
 import { authorityFor } from "../civic-data/source-authority.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "../civic-data/types.ts";
 import { holdRawCapture, type RawCaptureRef } from "../civic-data/raw-capture-vault.ts";
+import { REGISTRY_STATES, requireRegistryState } from "../civic-data/state-scopes.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import type { OfficeholderSet } from "./types.ts";
 import type { DirectoryFile } from "./directory.ts";
 
 export const FEDERAL_DIRECTORY_SOURCE_ID = "congress-directory-project" as const;
-export const FEDERAL_DIRECTORY_SCOPE = "US:current-congress-directory" as const;
+export type FederalDirectoryState = typeof REGISTRY_STATES[number];
+export const FEDERAL_DIRECTORY_STATES: readonly FederalDirectoryState[] = REGISTRY_STATES;
+export const federalDirectoryScope = (state: string) => `US-${requireRegistryState(state)}:current-congress-directory`;
+export type FederalDirectoryContractId = `congress-bulk-roster:${FederalDirectoryState}`;
+export const federalDirectoryContractId = (state: string): FederalDirectoryContractId => `congress-bulk-roster:${requireRegistryState(state)}`;
+export function federalDirectoryStateOf(contractId: string): FederalDirectoryState | null {
+  const state = /^congress-bulk-roster:([A-Z]{2})$/.exec(contractId)?.[1];
+  return FEDERAL_DIRECTORY_STATES.find(place => place === state) ?? null;
+}
 export const FEDERAL_DIRECTORY_PARSER_VERSION = "congress-directory/4" as const;
 
 export interface FederalDirectoryAcquisition {
@@ -58,7 +67,8 @@ export function federalDirectoryProjectionIssues(value: FederalDirectoryReadMode
   const bioguides = holders.map((holder) => holder.id.replace(/^congress:/, ""));
   if (value.formatVersion !== 1) issues.push("FORMAT_VERSION_UNSUPPORTED");
   if (!/^[a-f0-9]{40}$/.test(value.sourceSha)) issues.push("SOURCE_SHA_INVALID");
-  if (holders.length === 0) issues.push("FEDERAL_ROSTER_EMPTY");
+  // A place with every seat vacant is a complete fact only when the whole current membership was read.
+  if (holders.length === 0 && value.currentMembershipComplete !== true) issues.push("FEDERAL_ROSTER_EMPTY");
   if (new Set(holderIds).size !== holderIds.length || holderIds.some((id) => !/^congress:[A-Z]\d{6}$/.test(id))) issues.push("OFFICEHOLDER_ID_INVALID_OR_DUPLICATED");
   if (bioguides.some((id) => !byMember[id])) issues.push("OFFICEHOLDER_DIRECTORY_JOIN_MISSING");
   if (divisions.some((link) => !holderSet.has(link.officeholderId) || !link.ocdId)) issues.push("DIVISION_LINK_UNRESOLVED");
@@ -69,7 +79,32 @@ export function federalDirectoryProjectionIssues(value: FederalDirectoryReadMode
   return issues;
 }
 
+/** One place's senators, House members and delegates, with only the committees they sit on. */
+export function federalDirectoryForState(model: FederalDirectoryReadModel, state: string): FederalDirectoryReadModel {
+  const place = requireRegistryState(state);
+  const officeholders = model.roster.officeholders.filter(holder => holder.state === place);
+  const ids = new Set(officeholders.map(holder => holder.id));
+  const byMember = Object.fromEntries(officeholders.flatMap(holder => {
+    const entry = model.directory.byMember[holder.id.slice(9)];
+    return entry ? [[holder.id.slice(9), entry]] : [];
+  }));
+  const seats = Object.values(byMember).flatMap(entry => entry.committees);
+  const seated = new Set(seats.map(seat => seat.committeeId));
+  const committees = Object.fromEntries(Object.entries(model.directory.committees).filter(([id]) => seated.has(id)));
+  return {
+    ...model,
+    roster: { ...model.roster, officeholders, divisions: model.roster.divisions.filter(row => ids.has(row.officeholderId)),
+      unmatched: model.roster.unmatched.filter(row => ids.has(row.officeholderId)) },
+    directory: { ...model.directory, committees, byMember, counts: {
+      members: officeholders.length, committees: Object.keys(committees).length, membershipRows: seats.length,
+      districtOffices: Object.values(byMember).reduce((total, entry) => total + entry.districtOffices.length, 0),
+      membersWithCommittee: Object.values(byMember).filter(entry => entry.committees.length > 0).length,
+    } },
+  };
+}
+
 export async function federalDirectoryCandidate(input: {
+  readonly state: string;
   readonly acquisitions: readonly FederalDirectoryAcquisition[];
   readonly vault: EvidenceStore;
   readonly retrievedAt: string;
@@ -84,12 +119,15 @@ export async function federalDirectoryCandidate(input: {
 }
 
 function heldDirectoryCandidate(input: {
+  readonly state: string;
   readonly acquisitions: readonly FederalDirectoryCapture[];
   readonly retrievedAt: string;
   readonly projection: FederalDirectoryReadModel;
   readonly excludedFacts?: RoutineCandidate["excludedFacts"];
 }): RoutineCandidate {
+  const scope = federalDirectoryScope(input.state), place = requireRegistryState(input.state);
   const issues = federalDirectoryProjectionIssues(input.projection);
+  if (input.projection.roster.officeholders.some(holder => holder.state !== place)) issues.push("OFFICEHOLDER_OUTSIDE_PLACE");
   for (const acquisition of input.acquisitions) {
     const authority = authorityFor(FEDERAL_DIRECTORY_SOURCE_ID, "FEDERAL_DIRECTORY", acquisition.finalUrl);
     if (!authority.ok) issues.push(`${authority.code}:${acquisition.finalUrl}`);
@@ -115,10 +153,10 @@ function heldDirectoryCandidate(input: {
   const records = civicRecordsFor("FEDERAL_DIRECTORY", input.projection);
   const acquisitionProblems = issues.filter((issue) => /^(?:FINAL_|SOURCE_|HTTP_|EMPTY_BODY|ACQUISITION_|CORE_SOURCE|DUPLICATE_SOURCE)/.test(issue));
   return {
-    id: `cv-${sha256(`${FEDERAL_DIRECTORY_SOURCE_ID}\u001f${FEDERAL_DIRECTORY_SCOPE}\u001f${FEDERAL_DIRECTORY_PARSER_VERSION}\u001f${rawHash}\u001f${normalizedHash}\u001f${normalizedPayloadHash}\u001f${input.projection.sourceSha}\u001f${input.retrievedAt}\u001f${canonicalCivicDataJson(sourceCheck ?? null)}`).slice(0, 32)}`,
+    id: `cv-${sha256(`${FEDERAL_DIRECTORY_SOURCE_ID}\u001f${scope}\u001f${FEDERAL_DIRECTORY_PARSER_VERSION}\u001f${rawHash}\u001f${normalizedHash}\u001f${normalizedPayloadHash}\u001f${input.projection.sourceSha}\u001f${input.retrievedAt}\u001f${canonicalCivicDataJson(sourceCheck ?? null)}`).slice(0, 32)}`,
     sourceId: FEDERAL_DIRECTORY_SOURCE_ID,
     recordClass: "FEDERAL_DIRECTORY",
-    scope: FEDERAL_DIRECTORY_SCOPE,
+    scope,
     retrieval: {
       succeeded: acquiredFiles.includes("legislators-current.yaml") && acquisitionProblems.length === 0,
       requestedUrl: input.acquisitions[0]?.requestedUrl ?? "",
@@ -142,7 +180,7 @@ function heldDirectoryCandidate(input: {
     },
     identities: input.projection.roster.officeholders.map((holder) => ({
       subjectId: holder.id,
-      jurisdiction: "US",
+      jurisdiction: `US-${place}`,
       identifiers: { bioguide_id: holder.id.slice("congress:".length) },
       matchBasis: "OFFICIAL_ID" as const,
       ambiguous: false,
@@ -158,14 +196,14 @@ function heldDirectoryCandidate(input: {
     semantics: { factKind: "attributed current federal membership, contact, district-office, social, and committee directory facts", violations: issues },
     horizon: {
       kind: input.projection.currentMembershipComplete ? "BOUNDED" : "OPEN_FACT_SET",
-      query: `independently acquired congress-legislators files at ${input.projection.sourceSha}`,
+      query: `${place} members in independently acquired congress-legislators files at ${input.projection.sourceSha}`,
       returnedRecords: records.length,
       declaredTotal: records.length,
       paginationComplete: true,
       claimsComplete: input.projection.currentMembershipComplete === true,
     },
     absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
-    sourceProjectionEvidence: sourceProjectionEvidence(FEDERAL_DIRECTORY_SOURCE_ID, "FEDERAL_DIRECTORY", FEDERAL_DIRECTORY_SCOPE),
+    sourceProjectionEvidence: sourceProjectionEvidence(FEDERAL_DIRECTORY_SOURCE_ID, "FEDERAL_DIRECTORY", scope),
     dependentChecks: [
       { consumer: "registry/representation/map/ballot", passed: input.projection.roster.officeholders.length > 0 && input.projection.roster.divisions.every(row => input.projection.roster.officeholders.some(holder => holder.id === row.officeholderId)), detail: `${input.projection.roster.officeholders.length} federal holders and ${input.projection.roster.divisions.length} exact division links.` },
       { consumer: "/api/directory and Ask", passed: input.projection.roster.officeholders.every(holder => Boolean(input.projection.directory.byMember[holder.id.slice(9)])), detail: `${Object.keys(input.projection.directory.byMember).length} bioguide-keyed directory entries.` },
@@ -178,7 +216,7 @@ function heldDirectoryCandidate(input: {
 }
 
 /** Durable failed-attempt shape used when acquisition cannot produce a source set. */
-export function failedFederalDirectoryCandidate(attemptedAt: string, detail: string): RoutineCandidate {
+export function failedFederalDirectoryCandidate(state: string, attemptedAt: string, detail: string): RoutineCandidate {
   const sourceSha = "0".repeat(40);
   const projection: FederalDirectoryReadModel = {
     formatVersion: 1,
@@ -191,7 +229,7 @@ export function failedFederalDirectoryCandidate(attemptedAt: string, detail: str
       byMember: {},
     },
   };
-  const candidate = heldDirectoryCandidate({ acquisitions: [], retrievedAt: attemptedAt, projection });
+  const candidate = heldDirectoryCandidate({ state, acquisitions: [], retrievedAt: attemptedAt, projection });
   return {
     ...candidate,
     retrieval: { ...candidate.retrieval, succeeded: false, failureDetail: detail },

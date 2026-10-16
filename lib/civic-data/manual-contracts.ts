@@ -1,5 +1,6 @@
 import { BALLOT_STATES, stateBallotContractId, stateBallotScope } from "./state-scopes.ts";
 import { REGISTRY_STATES, stateRegistryRuntimeContractId, stateRegistryRuntimeScope } from "./state-scopes.ts";
+import { FEDERAL_DIRECTORY_STATES, federalDirectoryContractId, federalDirectoryScope } from "../officials/federal-directory-data-plane.ts";
 import { VALIDATION_CHECKS, type RoutineDataClassification, type RoutineRecordClass } from "./types.ts";
 import type { SourceAuthorityId } from "./source-authority.ts";
 
@@ -198,22 +199,17 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     bootstrapFixturePaths: [],
     lkgBehavior: "Complete sourced contests publish; incomplete contests remain named. Prior complete lists remain until a newer complete list establishes any change.",
   } as const)),
-  {
-    id: "congress-bulk-roster",
-    execution: "EXPLICIT_OWNER_INVOCATION_ONLY",
-    sourceId: "congress-directory-project",
-    recordClass: "FEDERAL_DIRECTORY",
-    scope: "US:current-congress-directory",
-    command: ["scripts/fetch-congress-legislators.mts", "--promote"],
+  ...FEDERAL_DIRECTORY_STATES.map(state => ({
+    id: federalDirectoryContractId(state), execution: "EXPLICIT_OWNER_INVOCATION_ONLY" as const,
+    sourceId: "congress-directory-project" as const, recordClass: "FEDERAL_DIRECTORY" as const,
+    scope: federalDirectoryScope(state), command: ["scripts/fetch-congress-legislators.mts", "--promote", `--state=${state}`],
     parserNormalizerVersion: "congress-directory/4",
-    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "congress-directory-project" },
-    validationContract: VALIDATION_CHECKS,
-    canonicalProductionStore: STORE,
-    readerProjection: { id: "federal-membership-contact-directory", consumers: ["registry", "/api/directory", "representation", "map", "ballot", "Ask", "funding identity"] },
-    classification: "RUNTIME_CIVIC_DATA",
-    bootstrapFixturePaths: [],
-    lkgBehavior: "A missing current-member file or invalid identity retains prior membership; optional files publish independently and retain prior valid facts and acquisition dates when unavailable.",
-  },
+    authorityConstraint: { registry: "SOURCE_AUTHORITIES" as const, sourceId: "congress-directory-project" as const },
+    validationContract: VALIDATION_CHECKS, canonicalProductionStore: STORE,
+    readerProjection: { id: `federal-membership-contact-directory:${state}`, consumers: ["registry", "/api/directory", "representation", "map", "ballot", "Ask", "funding identity"] },
+    classification: "RUNTIME_CIVIC_DATA" as const, bootstrapFixturePaths: [],
+    lkgBehavior: "A missing current-member file or invalid identity retains the place's prior membership; optional files publish independently and retain prior valid facts and acquisition dates when unavailable.",
+  })),
   {
     id: "registry-runtime-bindings",
     execution: "EXPLICIT_OWNER_INVOCATION_ONLY",

@@ -2,6 +2,7 @@ import { stateFromRegistryRuntimeContractId, type StateRegistryContractId } from
 import { parseStateBallotContractId, type StateBallotContractId, type StateBallotFamily } from "./state-scopes.ts";
 import type { ResolvedScope } from "../control-plane/expansion/membership.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS, type ManualProductionContractId } from "./manual-contracts.ts";
+import { federalDirectoryStateOf, type FederalDirectoryContractId } from "../officials/federal-directory-data-plane.ts";
 
 type ManualProducerMode = "DIRECT_SOURCE" | "VERIFIED_WORKER_RESULT" | "EXISTING_DERIVED" | "SCOPED_ADAPTER_OWED";
 interface Rule { readonly mode: ManualProducerMode; readonly state?: string; readonly reason: string }
@@ -15,7 +16,7 @@ const RULES = {
   "public-records": { mode: "VERIFIED_WORKER_RESULT", reason: "Source-worded kind and title publish with their exact jurisdiction and saved source sentence." },
   "plain-english-translations": { mode: "VERIFIED_WORKER_RESULT", reason: "Every sentence is supported by the original official text and checked independently under the existing budget dial." },
   "ballot-contests": { mode: "VERIFIED_WORKER_RESULT", reason: "Each verified candidate on the saved official list publishes with its exact contest; incomplete listings retain other held candidates." },
-  "congress-bulk-roster": { mode: "DIRECT_SOURCE", reason: "National congressional directory acquired from its registered public source." },
+  "congress-bulk-roster": { mode: "DIRECT_SOURCE", reason: "Each place's members of Congress, acquired from the registered national directory source." },
   "registry-runtime-bindings": { mode: "VERIFIED_WORKER_RESULT", reason: "Normal worker roster publication runs once it meets the section 3 standard; the audit follows and repairs what it finds." },
   "congress-rollcalls": { mode: "DIRECT_SOURCE", reason: "National recent roll calls acquired from their registered public source." },
   "federal-key-votes": { mode: "DIRECT_SOURCE", reason: "Reviewed national key-vote selection has an executable official acquisition." },
@@ -40,7 +41,7 @@ const RULES = {
   "venue-resolutions": { mode: "EXISTING_DERIVED", reason: "Each meeting pass matches a newly published address to one exact Census street point and promotes the pin through this pointer itself (lib/meetings/venue-publication.ts); no person reviews it." },
   "meeting-body-crosswalk": { mode: "EXISTING_DERIVED", reason: "The existing meeting source-wiring session owns the normal held meeting/body binding and publication path." },
   "everyday-routing": { mode: "VERIFIED_WORKER_RESULT", reason: "Normal worker output publishes once it meets the section 3 standard; audits run afterward and repair what they find." },
-} as const satisfies Record<Exclude<ManualProductionContractId, StateBallotContractId | StateRegistryContractId> | StateBallotFamily, Rule>;
+} as const satisfies Record<Exclude<ManualProductionContractId, StateBallotContractId | StateRegistryContractId | FederalDirectoryContractId> | StateBallotFamily | "congress-bulk-roster", Rule>;
 
 export interface ManualProducerInvocation {
   readonly id: ManualProductionContractId;
@@ -60,9 +61,9 @@ export function manualProducerInvocationMatrix(scopes: readonly ResolvedScope[],
     Number.isFinite(Date.parse(scope.decision.decidedAt)) && Date.parse(scope.decision.decidedAt) <= nowMs);
   return MANUAL_PRODUCTION_SOURCE_CONTRACTS.map(contract => {
     const stateContract = parseStateBallotContractId(contract.id);
-    const registryState = stateFromRegistryRuntimeContractId(contract.id);
-    const rule = RULES[registryState ? "registry-runtime-bindings" : stateContract?.family ?? contract.id as keyof typeof RULES];
-    const state = registryState ?? stateContract?.state ?? ("state" in rule ? rule.state : null);
+    const registryState = stateFromRegistryRuntimeContractId(contract.id), directoryState = federalDirectoryStateOf(contract.id);
+    const rule = RULES[registryState ? "registry-runtime-bindings" : directoryState ? "congress-bulk-roster" : stateContract?.family ?? contract.id as keyof typeof RULES];
+    const state = registryState ?? directoryState ?? stateContract?.state ?? ("state" in rule ? rule.state : null);
     const applicable = sends.filter(scope => !state || scope.states.includes(state));
     return { id: contract.id, mode: rule.mode,
       instructionIds: [...new Set(applicable.map(scope => scope.decision.receiptId))],

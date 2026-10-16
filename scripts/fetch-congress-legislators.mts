@@ -1,9 +1,11 @@
 /** @freshness-reads-here — the held capture keeps the date the source bytes were read. */
 import { parse } from "yaml";
 import { pathToFileURL } from "node:url";
-import { failedFederalDirectoryCandidate, federalDirectoryCandidate, FEDERAL_DIRECTORY_PARSER_VERSION, type FederalDirectoryAcquisition } from "../lib/officials/federal-directory-data-plane.ts";
+import { failedFederalDirectoryCandidate, federalDirectoryCandidate, federalDirectoryContractId, federalDirectoryForState, federalDirectoryScope,
+  FEDERAL_DIRECTORY_PARSER_VERSION, type FederalDirectoryAcquisition, type FederalDirectoryReadModel } from "../lib/officials/federal-directory-data-plane.ts";
 import { normalizeCongressDirectory } from "../lib/officials/congress-normalize.ts";
-import { readFederalDirectoryProjection } from "../lib/officials/federal-directory-read-model.ts";
+import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
+import { requiredAssignment } from "./cli-args.mts";
 import { processRegisteredManualCandidate, type PromotionOutcome } from "../lib/civic-data/promotion.ts";
 import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
@@ -16,18 +18,19 @@ import { acquireKnownRelease } from "../lib/sources/known-release.ts";
 
 const FILES = ["legislators-current", "legislators-social-media", "legislators-district-offices", "committees-current", "committee-membership-current"] as const;
 export async function refreshCongressDirectory(input: {
+  state: string;
   store: RoutineDataStore;
   vault: EvidenceStore;
   acquire?: typeof acquireKnownRelease;
   revision?: typeof acquireCongressSourceRevision;
   now?: () => string;
 }): Promise<void> {
-  const {store,vault} = input, clock = input.now ?? (() => new Date().toISOString());
-  const acquire = input.acquire ?? acquireKnownRelease;
+  const {store,vault,state} = input, clock = input.now ?? (() => new Date().toISOString());
+  const acquire = input.acquire ?? acquireKnownRelease, contractId = federalDirectoryContractId(state);
   let finalReceipt: { candidate: RoutineCandidate; outcome: PromotionOutcome } | null = null;
   try {
     const now = clock();
-    const priorRead = await readFederalDirectoryProjection({store,now,bypassCache:true});
+    const priorRead = await readPromotedCivicData<FederalDirectoryReadModel>("FEDERAL_DIRECTORY",federalDirectoryScope(state),{store,now,bypassCache:true});
     if (priorRead.kind === "STORE_UNREACHABLE") throw Error("CONGRESS_PRIOR_UNAVAILABLE");
     const prior = priorRead.kind === "PROMOTED" || priorRead.kind === "BOOTSTRAP" ? priorRead.value : null;
     const {sha:sourceSha,sourceCheck} = await (input.revision ?? acquireCongressSourceRevision)();
@@ -53,9 +56,9 @@ export async function refreshCongressDirectory(input: {
       }
       // The core becomes readable immediately; optional files each enrich that same pointer.
       if (!raw["legislators-current"]) continue;
-      const projection = normalizeCongressDirectory(raw,sourceSha,dates["legislators-current"]!,prior,dates,now);
-      const candidate = await federalDirectoryCandidate({acquisitions,vault,retrievedAt:dates["legislators-current"]!,projection});
-      const outcome = await processRegisteredManualCandidate(store,"congress-bulk-roster",candidate,clock());
+      const projection = federalDirectoryForState(normalizeCongressDirectory(raw,sourceSha,dates["legislators-current"]!,prior,dates,now),state);
+      const candidate = await federalDirectoryCandidate({state,acquisitions,vault,retrievedAt:dates["legislators-current"]!,projection});
+      const outcome = await processRegisteredManualCandidate(store,contractId,candidate,clock());
       finalReceipt = {candidate,outcome};
       if (!outcome.promoted && !outcome.confirmed) throw Error(`Federal directory held as ${outcome.candidate.state}: ${outcome.candidate.failureDetail ?? "validation refused"}`);
     }
@@ -63,21 +66,22 @@ export async function refreshCongressDirectory(input: {
   } catch (error) {
     if (!finalReceipt) {
       try {
-        const now=clock(), candidate=failedFederalDirectoryCandidate(now,error instanceof Error ? error.message : String(error));
-        const outcome=await processRegisteredManualCandidate(store,"congress-bulk-roster",candidate,now);
+        const now=clock(), candidate=failedFederalDirectoryCandidate(state,now,error instanceof Error ? error.message : String(error));
+        const outcome=await processRegisteredManualCandidate(store,contractId,candidate,now);
         finalReceipt={candidate,outcome};
       } catch (receiptError) { console.error(`Failed attempt receipt: ${String(receiptError)}`); }
     }
     throw error;
   } finally {
     // Every file/field promotion is already durable. Only the last outcome represents this child to its supervisor.
-    if (finalReceipt) printSourceRunnerReceipt("congress-bulk-roster",finalReceipt.candidate,finalReceipt.outcome);
+    if (finalReceipt) printSourceRunnerReceipt(contractId,finalReceipt.candidate,finalReceipt.outcome);
   }
 }
 async function main() {
   if (!process.argv.includes("--promote")) throw Error("Run with --promote; tracked federal files are first-seed/test evidence only.");
   prepareProductionCivicDataWrite();
-  await refreshCongressDirectory({store:new PostgresRoutineDataStore(),vault:rawCaptureVault()});
+  const state = requiredAssignment(process.argv.slice(2),"state","CONGRESS_STATE_REQUIRED");
+  await refreshCongressDirectory({state,store:new PostgresRoutineDataStore(),vault:rawCaptureVault()});
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) void main().catch((error:unknown)=>{
   console.error(error instanceof Error ? error.message : String(error)); process.exitCode=1;

@@ -1,5 +1,4 @@
-import { immutableStateValue } from "./state-publication.ts";
-import { consumeStatePublicationRecord } from "./state-publication.ts";
+import { consumeStatePublicationRecord, immutableStateValue, reuseStatePublicationRecord } from "./state-publication.ts";
 import { parseStateBallotContractId, requireBallotState, stateBallotContractId } from "./state-scopes.ts";
 import { recordPublicationFlow } from "./publication-flow.ts";
 import { publicationRecordChanges } from "./publication-record-changes.ts";
@@ -325,7 +324,7 @@ export class BallotContestMerge {
         state.rows.set("heldContests", holds); state.rows.get("contests")?.delete(id); state.holds.add(id);
       } else {
         this.onContest?.(id, value, old);
-        const next = immutableStateValue(old ? { ...old, ...row } : row);
+        const next = reuseStatePublicationRecord(old, row) ?? immutableStateValue(old ? { ...old, ...row } : row);
         consumeStatePublicationRecord(previous, next);
         rows.set(id, next); state.incoming.add(id);
         if (complete) state.complete.add(id);
@@ -347,7 +346,7 @@ export class BallotContestMerge {
     const parent = field.split(".")[0];
     if (old && (observedAt(value) || state.incomingTimes.get(parent) || 0) < (observedAt(old) || state.beforeTimes.get(parent) || 0)) return;
     if (field === "measures") state.measures.add(contestId);
-    const next = immutableStateValue(field === "candidacies" && old ? { ...old as object, ...row } : value);
+    const next = reuseStatePublicationRecord(old, value) ?? immutableStateValue(field === "candidacies" && old ? { ...old as object, ...row } : value);
     consumeStatePublicationRecord(old, next);
     rows.set(id, next);
   }

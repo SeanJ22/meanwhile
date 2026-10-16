@@ -148,6 +148,7 @@ import type { NormalizationEvidence } from "./types.ts";
 export interface StatePublicationPrior {
   readonly versionId: string;
   readonly payloadHash: string;
+  readonly recordHashes: RecordHashes;
   readonly members: Map<string, { readonly key: string; readonly factsHash: string; readonly sha256: string; record?: unknown }>;
   readonly ballotCandidates: Map<string, { electionId: string; electionDate: string; contestId: string; ocdId: string;
     candidateListComplete: boolean; sourceUrl: string | null; candidacyCollectedAt: string }>;
@@ -198,7 +199,7 @@ export function rememberStatePublicationPrior(store: object, projection: Pick<Pr
   if (!statePublicationScope(projection.scope)) return;
   const hashes = provenHashes.get(projection);
   if (!hashes) throw new Error("STATE_RECORD_HASHES_NOT_VERIFIED");
-  const prior: StatePublicationPrior = { versionId: projection.versionId, payloadHash: hashes.readModelHash,
+  const prior: StatePublicationPrior = { versionId: projection.versionId, payloadHash: hashes.readModelHash, recordHashes: hashes,
     members: new Map(), ballotCandidates: new Map(), officialIdentityAuthority: object(projection.payload)?.officialIdentityAuthority ?? null };
   const index = (value: unknown, member: StatePublicationPrior["members"] extends Map<string, infer T> ? T : never,
     project?: (value: unknown) => unknown) => {
@@ -241,13 +242,21 @@ export function rememberStatePublicationPrior(store: object, projection: Pick<Pr
   states.set(`${projection.recordClass}:${projection.scope}`, prior);
 }
 
+export function reuseStatePublicationRecord(previous: unknown, incoming: unknown): unknown | null {
+  if (!object(previous)) return null;
+  const entry = replacements.get(previous as object)?.find(entry => !entry.project && entry.member.record === previous);
+  if (!entry || immutableStateHash(immutableStateValue(incoming)) !== entry.member.sha256) return null;
+  const shared = immutableStateValue(previous);
+  return shared === previous && immutableStateHash(shared) === entry.member.sha256 ? shared : null;
+}
+
 export function consumeStatePublicationRecord(previous: unknown, next: unknown | null, key?: string): void {
   if (!object(previous)) return;
   const entries = replacements.get(previous as object) ?? [];
   for (const entry of entries) {
     if (key !== undefined && entry.member.key !== key) continue;
     const record = next === null ? null : entry.project ? entry.project(next) : next;
-    if (next !== null && immutableStateHash(civicRecordFacts(entry.recordClass, { key: entry.member.key, record })) === entry.member.factsHash)
+    if (next === previous || next !== null && immutableStateHash(civicRecordFacts(entry.recordClass, { key: entry.member.key, record })) === entry.member.factsHash)
       delete entry.member.record;
   }
   const remaining = key === undefined ? [] : entries.filter(entry => entry.member.key !== key);

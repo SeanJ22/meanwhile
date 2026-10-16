@@ -1858,7 +1858,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       identity: sql<unknown>`'[]'::jsonb`,
       candidate: sql<unknown>`jsonb_build_object(
         'id', ${column}->'id', 'sourceId', ${column}->'sourceId', 'recordClass', ${column}->'recordClass',
-        'scope', ${column}->'scope', 'normalization', ${column}->'normalization', 'temporal', ${column}->'temporal',
+        'scope', ${column}->'scope', 'normalization', (${column}->'normalization') - 'stateRecordHashes', 'temporal', ${column}->'temporal',
         'retrieval', (${column}->'retrieval') - 'derived', 'readModel', ${column}->'readModel')`,
     } : getTableColumns(civicDataCandidates);
     const [row] = await this.db.select({ promotion: civicDataPromotions, candidate: candidateColumns })
@@ -1876,7 +1876,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       normalization: encoded.normalization, temporal: encoded.temporal, readModel: null, normalizedPayload: null, civicRecords: [], identities: [],
       excludedFacts: (row.candidate.validationReceipt as ValidationReceipt | null)?.excludedFacts ?? [],
       retrieval: { ...encoded.retrieval, derived: undefined } };
-    const candidate = await this.loadPayload(prior ? metadata : encoded, scope) as RoutineCandidate;
+    const loaded = await this.loadPayload(prior ? metadata : encoded, scope) as RoutineCandidate;
+    const candidate = indexed ? { ...loaded, normalization: { ...loaded.normalization, stateRecordHashes: prior.recordHashes } } : loaded;
     if (indexed) bindStatePublicationPrior(candidate, prior);
     const current = { ...postgresPromotionRowToProjection(row.promotion), payload: candidate.readModel };
     return { current, lkg: { ...rowToCandidate(row.candidate), candidate } };

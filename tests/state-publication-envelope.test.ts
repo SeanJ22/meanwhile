@@ -1,5 +1,5 @@
 import { immutableStateHash, immutableStateValue } from "../lib/civic-data/state-publication.ts";
-import { bindStatePublicationPrior, consumeStatePublicationRecord, rememberStatePublicationHashes, rememberStatePublicationPrior, takeStatePublicationPrior, withStateRecordHashes } from "../lib/civic-data/state-publication.ts";
+import { bindStatePublicationPrior, consumeStatePublicationRecord, rememberStatePublicationHashes, rememberStatePublicationPrior, reuseStatePublicationRecord, takeStatePublicationPrior, withStateRecordHashes } from "../lib/civic-data/state-publication.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createHash } from "node:crypto";
@@ -85,6 +85,28 @@ test("state publication uses scalar encoding and an unchanged verified pass writ
   assert.deepEqual(await store.events(first.candidate.candidate.id), history);
 });
 
+
+test("identical state rows share their owned prior while any durable field change remains distinct", () => {
+  const input = candidate(), indexed = withStateRecordHashes(input), store = {};
+  const payload = input.readModel as { jurisdictions: { sites: { id: string; address: string }[] }[] };
+  const original = payload.jurisdictions[0].sites[0];
+  const projection = { scope: input.scope, recordClass: input.recordClass, versionId: input.id, payload };
+  rememberStatePublicationHashes(projection, indexed.normalization);
+  rememberStatePublicationPrior(store, projection);
+  assert.equal(reuseStatePublicationRecord(original, structuredClone(original)), original);
+  assert.ok(Object.isFrozen(original));
+  assert.equal(reuseStatePublicationRecord(original, { ...original, address: "Changed official address" }), null);
+  assert.equal(reuseStatePublicationRecord(original, { ...original, checkedAt: "2026-10-16T14:00:00.000Z" }), null);
+  assert.throws(() => reuseStatePublicationRecord(original, { ...original, address: BigInt(1) }), /BigInt/);
+  const altered = payload.jurisdictions[0].sites[1], captured = structuredClone(altered);
+  altered.address = "Changed after index verification";
+  assert.equal(reuseStatePublicationRecord(altered, captured), null);
+  consumeStatePublicationRecord(original, original);
+  const prior = takeStatePublicationPrior(store, input.recordClass, input.scope)!;
+  assert.equal(prior.recordHashes, indexed.normalization.stateRecordHashes);
+  const member = civicRecordsFor(input.recordClass, payload).find(member => member.record === original)!;
+  assert.ok(!Object.hasOwn(prior.members.get(member.key)!, "record"));
+});
 
 test("state merge releases reused prior facts immediately and preserves exact changed audit values", () => {
   const prior = candidate(), next = candidate("2026-10-16T13:00:00.000Z"), store = {};

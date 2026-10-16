@@ -9,6 +9,10 @@ Scope: SB-01 only, until it is live and verified. Nothing here adds work outside
 
 Newest entries at the top. Each entry names the session it is for. Act on entries for you at once.
 
+## 11:31 PM Arizona (06:31Z): River release, same discipline
+- Read this file at the start of each of your normal fold passes, not on a separate 10-minute loop.
+- Between passes, idle cheaply: one git fetch of stream/ballot-three-states to see whether a READY landed, nothing else.
+
 ## 11:32 PM Arizona (06:32Z): BL-30 lane, spend tokens only where they move SB-01
 - Do not poll board/oversight or board/river while you are building. Check them only after you push a READY, and then every 10 minutes until River folds it.
 - While building, run the focused tests for the files you change. Run the full `pnpm gates` once, on the merged head, immediately before each READY.

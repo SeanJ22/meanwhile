@@ -1,0 +1,19 @@
+{
+  "n": 47,
+  "branch": "release/47",
+  "river_sha": "229ea25863f7aa7960c89d635117c886e5e96dfa",
+  "tested_sha": "229ea25863f7aa7960c89d635117c886e5e96dfa",
+  "steps": [
+    "SRC-MN"
+  ],
+  "lanes": [
+    "src-money"
+  ],
+  "integration_from": 229,
+  "integration_count": 230,
+  "pr": {
+    "number": 756,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/756"
+  },
+  "at": "2026-10-16T06:34:39Z"
+}

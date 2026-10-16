@@ -23,9 +23,9 @@ test("an actual resolved Send selects each shared native source producer once", 
   assert.deepEqual(huntSourceTasks([{ ...legacy, decision: { ...legacy.decision, sourceWorkVersion: undefined } }], NOW), [], "deployment alone cannot launch the paused hunt or expand old Sends");
   const unresolved: ResolvedScope = { kind: "UNRESOLVED", decision: scope("AZ").decision, states: ["AZ"], why: "vintage absent" };
   assert.deepEqual(huntSourceTasks([unresolved], NOW), []);
-  assert.equal(huntSourceTasks([scope("NH")], NOW).length, 7, "national sources, known PRL datasets, voting sites and native New Hampshire finance");
+  assert.equal(huntSourceTasks([scope("NH")], NOW).length, 8, "national sources, state candidate profiles and publications, known PRL datasets, voting sites and native New Hampshire finance");
   const tasks = huntSourceTasks([scope("AZ"), scope("AZ", "owner-send-2")], NOW);
-  assert.equal(tasks.length, 8);
+  assert.equal(tasks.length, 9);
   assert.equal(new Set(tasks.map(task => task.id)).size, tasks.length);
   for (const task of tasks) {
     assert.deepEqual(task.ownerInvocation?.instructions, ["owner-send-1", "owner-send-2"]);

@@ -11,8 +11,8 @@ test("shared publication decides the meeting carry before it reads the prepared 
   const rowRead = child.indexOf("await readPreparedMeetingsProjection(");
   const publish = child.indexOf("await publishReaderEdgeArtifacts(");
   assert.ok(manifestRead > 0 && manifestRead < carry, "the served manifest is read before the decision");
-  assert.match(child, /const servedMeetings = preparesMeetings \? \(await artifactStore\.readManifest\(\)\)/,
-    "authority-only publication never reads the meeting catalogue");
+  assert.match(child, /const servedMeetings = preparesMeetings \? servedManifest : null/,
+    "authority-only publication uses the shared manifest without preparing meetings");
   assert.match(child.slice(carry, current), /servedMeetings\.composition === prepared\.composition/, "carry compares the serving copy's actual composition");
   assert.match(child.slice(carry, current), /servedMeetings\?\.meetingLayout === "governing-area"/, "old state pieces read the prepared row once to repartition");
   assert.match(child.slice(carry, current), /servedMeetings\.meetingRegistryVersion === meetingRegistryVersion/, "registry-only changes rebuild body areas");

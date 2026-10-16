@@ -209,14 +209,14 @@ test("legacy registry roster publications reserve their measured RSS and queue u
   }
 });
 
-test("state publishers retain full-state headroom after small-state measurements", async () => {
+test("state publishers retain their state-unit floor after small-state measurements", async () => {
   const mib = 1024 * 1024;
   for (const [family, script, measured] of [
-    ["ballot-contests", "assemble-ballot-package.mts", 3_818_700_800],
-    ["candidate-profiles", "promote-manual-civic-projection.mts", 3_705_548_800],
-    ["candidate-corpus", "promote-manual-civic-projection.mts", 1_934_823_424],
-    ["voting-sites", "fetch-voting-sites.mts", 1_432_571_904],
-    ["candidate-campaign-sites-derived", "derive-candidate-campaign-sites.mts", 3_810_279_424],
+    ["ballot-contests", "assemble-ballot-package.mts", 512 * mib],
+    ["candidate-profiles", "promote-manual-civic-projection.mts", 512 * mib],
+    ["candidate-corpus", "promote-manual-civic-projection.mts", 512 * mib],
+    ["voting-sites", "fetch-voting-sites.mts", 512 * mib],
+    ["candidate-campaign-sites-derived", "derive-candidate-campaign-sites.mts", 512 * mib],
   ] as const) {
     const host = workerMemoryHost({ processes: () => [] });
     host.transact(state => { state.peaks = { [script]: Array(5).fill(200 * mib) }; }, false);
@@ -235,8 +235,8 @@ test("state artifact children reserve their own measured unit and fit together b
   const mib = 1024 * 1024;
   const script = "publish-state-authority.mts";
   for (const [family, measured] of [
-    ["ballot-contests", 738_279_424], ["candidate-profiles", 802_652_160], ["candidate-corpus", 403_283_968],
-    ["voting-sites", 309_972_992], ["candidate-campaign-sites-derived", 598_245_376],
+    ["ballot-contests", 512 * mib], ["candidate-profiles", 512 * mib], ["candidate-corpus", 512 * mib],
+    ["voting-sites", 512 * mib], ["candidate-campaign-sites-derived", 512 * mib],
   ] as const) {
     const host = workerMemoryHost({ processes: () => [] });
     host.transact(state => { state.peaks = { [script]: Array(5).fill(200 * mib) }; }, false);
@@ -250,8 +250,10 @@ test("state artifact children reserve their own measured unit and fit together b
   const slots = routineProcessSlots({ host, availableBytes: () => 3 * 1024 * mib });
   const first = await slots.acquire(`candidate-profiles:IL:reader-artifact/${script}`, Date.now() + 500);
   const second = await slots.acquire(`candidate-profiles:TX:reader-artifact/${script}`, Date.now() + 500);
-  await assert.rejects(slots.acquire("candidate-profiles:CA/promote-manual-civic-projection.mts", Date.now() + 25), /WORKER_MEMORY_DEADLINE/);
-  first(); second();
+  const third = await slots.acquire("candidate-profiles:CA/promote-manual-civic-projection.mts", Date.now() + 500);
+  const fourth = await slots.acquire("registry-runtime:AZ:reader-artifact/publish-state-authority.mts", Date.now() + 500);
+  await assert.rejects(slots.acquire("ballot-contests:NY/assemble-ballot-package.mts", Date.now() + 25), /WORKER_MEMORY_DEADLINE/);
+  first(); second(); third(); fourth();
 });
 
 test("OS-free memory reserves only unreached child peaks and the research parent's growth", async () => {

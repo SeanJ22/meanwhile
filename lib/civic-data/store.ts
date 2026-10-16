@@ -78,7 +78,8 @@ export function publishedCandidateMetadata(row: CandidateVersionRecord): Publish
   delete publishedRetrieval.derived;
   return { ...row, candidate: { id, sourceId, recordClass, scope, retrieval: publishedRetrieval, temporal,
     normalization: { succeeded: normalization.succeeded, normalizedHash: normalization.normalizedHash,
-      normalizedPayloadHash: normalization.normalizedPayloadHash, stateRecordHashes: normalization.stateRecordHashes } } };
+      normalizedPayloadHash: normalization.normalizedPayloadHash,
+      ...(normalization.stateRecordHashes === undefined ? {} : { stateRecordHashes: normalization.stateRecordHashes }) } } };
 }
 
 /** Preserve the SQL row identity even when its untrusted JSON body is corrupt. */

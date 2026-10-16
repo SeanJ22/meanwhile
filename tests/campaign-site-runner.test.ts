@@ -22,7 +22,7 @@ import {
   withinWallTime,
   type CampaignSiteCycleInput,
 } from "../lib/control-plane/promotion/campaign-site-cycle.ts";
-import { indexVault, readHeldBytes } from "../lib/control-plane/evidence/read-only-vault.ts";
+import { findHeldCapture, heldVaultIndex, indexVault, readHeldBytes } from "../lib/control-plane/evidence/read-only-vault.ts";
 import { runCandidatePublicationCycle } from "../lib/control-plane/promotion/campaign-publication-cycle.ts";
 import { candidatePublicationLinks, candidatePublicationCaptureIssue, candidatePublicationCaptureUrls,
   heldCandidatePublicationRead } from "../lib/control-plane/promotion/campaign-publication-links.ts";
@@ -578,6 +578,10 @@ test("already captured linked pages from another job reach the corpus without a 
   const captures: HeldLinkedPublicationRead[] = [];
   for (const record of records) captures.push((await heldCandidatePublicationRead(record,
     (await p.repos.attempts.mustRead(record.attemptId)).value, vault))!);
+  const located = heldVaultIndex((await Promise.all(records.map(record => findHeldCapture(p.vaultRoot, record, null)))).map(row => row!));
+  assert.deepEqual(candidatePublicationCaptureUrls(links, located), candidatePublicationCaptureUrls(links, vault), "captures found one record at a time alias the same addresses");
+  for (const [index, record] of records.entries()) assert.deepEqual(await heldCandidatePublicationRead(record,
+    (await p.repos.attempts.mustRead(record.attemptId)).value, located), captures[index]);
   const { store, profiles } = await profilesStore();
   const pass = derivedCampaignSitesPass({ approvals: inputs.approvals, held: inputs.held,
     linkedPublications: captures, profiles, gateOpen: true, now: PUBLISH });

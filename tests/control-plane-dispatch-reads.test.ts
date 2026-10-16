@@ -1,9 +1,10 @@
+import { ARCHIVE_STATE_SQL, CONTROL_READS_BACKFILL_DDL } from "../lib/control-plane/repository/control-reads-backfill.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { PGlite } from "@electric-sql/pglite";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { pgAggregateRepository, pgCoordinatorWorkItems, readCoordinatorWorkItems, type Sql } from "../lib/control-plane/repository/pg-store.ts";
-import { archivedAggregateRepository, createPgDispatchState, DISPATCH_ARCHIVE_MOVE_SQL, DISPATCH_STATE_DDL } from "../lib/control-plane/repository/dispatch-state.ts";
+import { archivedAggregateRepository, createPgDispatchState, DISPATCH_STATE_DDL } from "../lib/control-plane/repository/dispatch-state.ts";
 import { closeOccurrence, openOccurrence, resumeOpenOccurrence, scanOccurrences, settledRouteTaskIds, standing, type FreshnessOccurrence } from "../lib/control-plane/scheduler/durable.ts";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
 import type { ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
@@ -29,6 +30,7 @@ async function fixture() {
   await db.exec("CREATE INDEX cp_route_tasks_state ON cp_route_tasks ((value->>'state')); CREATE INDEX cp_route_tasks_changed_at ON cp_route_tasks (changed_at);");
   await db.exec("CREATE FUNCTION cp_reject_rewrite() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'delete refused'; END $$;");
   for (const ddl of DISPATCH_STATE_DDL) await db.exec(ddl);
+  await db.exec(CONTROL_READS_BACKFILL_DDL[0]);
   const repos = createMemoryRepositories();
   const aggregate = <T>(kind: "work_items" | "route_tasks" | "occurrences") => {
     const name = { work_items: "WorkItem", route_tasks: "RouteTask", occurrences: "FreshnessOccurrence" }[kind];
@@ -67,9 +69,9 @@ test("closed occurrences leave hot tables; exact and scoped history and later pu
     await f.db.exec(`INSERT INTO cp_occurrences (id,revision,updated_at,value)
       SELECT 'occ-batch-'||n,1,now(),jsonb_build_object('id','occ-batch-'||n,'closedAt',now(),
       'workItemId','work-batch-'||n,'routeTaskId','task-batch-'||n) FROM generate_series(1,1001) n`);
-    assert.equal((await f.db.query<{ moved: number }>(DISPATCH_ARCHIVE_MOVE_SQL)).rows[0].moved, 1000);
-    assert.equal((await f.db.query<{ moved: number }>(DISPATCH_ARCHIVE_MOVE_SQL)).rows[0].moved, 1);
-    assert.equal((await f.db.query<{ moved: number }>(DISPATCH_ARCHIVE_MOVE_SQL)).rows[0].moved, 0);
+    const sizes:number[]=[];
+    for(;;) {const moved=(await f.db.query<{moved:number}>(ARCHIVE_STATE_SQL,["system"])).rows[0].moved;sizes.push(moved);if(!moved)break;}
+    assert.deepEqual(sizes,[...Array<number>(10).fill(100),1,0]);
     assert.equal((await f.db.query<{ n: number }>("SELECT count(*)::int AS n FROM cp_occurrences_archive")).rows[0].n, 1002);
   } finally { await f.db.close(); }
 });
@@ -155,9 +157,11 @@ test("an archive move between the writer's read and CAS preserves the update and
     let rebuilds = 0;
     const rebuild = async () => { rebuilds++; return [{ key: "lineage", obligationId: f.obligation.id, dueAt: NOW,
       rootWorkItemId: item.id, siblingRootIds: [item.id], publishedAt: null }]; };
+    await f.repos.dispatchState.prepareLineages([f.obligation.id]);
     await f.repos.dispatchState.lineages(f.obligation.id, rebuild);
+    await f.repos.dispatchState.prepareLineages([f.obligation.id]);
     await f.repos.dispatchState.lineages(f.obligation.id, rebuild);
-    assert.equal(rebuilds, 1, "unchanged history is reduced to its per-place fingerprint");
+    assert.equal(rebuilds, 1, "unchanged history reuses its per-place summary");
     f.hooks.before = async text => {
       if (!text.startsWith("UPDATE cp_work_items\n")) return;
       f.hooks.before = null;
@@ -167,9 +171,11 @@ test("an archive move between the writer's read and CAS preserves the update and
     assert.equal((await f.repos.workItems.mustRead(item.id)).value.why, "concurrent publication");
     assert.equal((await f.db.query<{ n: number }>("SELECT count(*)::int AS n FROM cp_work_items")).rows[0].n, 0);
     assert.equal((await f.repos.workItems.list()).length, 1);
+    await f.repos.dispatchState.prepareLineages([f.obligation.id]);
     await f.repos.dispatchState.lineages(f.obligation.id, rebuild);
     assert.equal(rebuilds, 2, "an archived item's later publication invalidates its summary");
     await f.db.query("INSERT INTO cp_log_artifacts VALUES ($1,$2::jsonb)", [item.id, JSON.stringify({ workItemId: item.id })]);
+    await f.repos.dispatchState.prepareLineages([f.obligation.id]);
     await f.repos.dispatchState.lineages(f.obligation.id, rebuild);
     assert.equal(rebuilds, 3, "a new capture invalidates even when its transaction clock is old");
     for (const ddl of DISPATCH_STATE_DDL) await f.db.exec(ddl);
@@ -299,4 +305,25 @@ test("pending latest Scout outcomes select a Hunt or an autonomous continuation 
     assert.deepEqual((await readCoordinatorWorkItems(f.repos)).map(row => row.id).sort(), expected);
     assert.ok(!f.statements.some(statement => /SELECT .*record FROM cp_log_scout_results/.test(statement)), "selection transfers work candidates only");
   } finally { await f.db.close(); }
+});
+
+test("lineage summaries invalidate on writes and retain invalidation that races a refresh",async()=>{
+  const f=await fixture();
+  try {
+    const opened=await openOccurrence(f.repos,{obligation:f.obligation,dueAt:NOW,now:NOW});assert.ok(opened);
+    const id=f.obligation.id;let loads=0;
+    const load=async()=>{loads++;return [];};
+    await f.repos.dispatchState.prepareLineages([id]);await f.repos.dispatchState.lineages(id,load,"same");
+    await f.repos.dispatchState.prepareLineages([id]);await f.repos.dispatchState.lineages(id,load,"same");assert.equal(loads,1);
+    await f.db.query("INSERT INTO cp_log_worker_results(log_key,record) VALUES($1,$2::jsonb)",[opened.workItem.id,JSON.stringify({workItemId:opened.workItem.id})]);
+    await f.repos.dispatchState.prepareLineages([id]);
+    await f.repos.dispatchState.lineages(id,async()=>{
+      loads++;
+      await f.db.query("INSERT INTO cp_log_worker_results(log_key,record) VALUES($1,$2::jsonb)",[opened.workItem.id,JSON.stringify({workItemId:opened.workItem.id})]);
+      return [];
+    },"same");
+    await f.repos.dispatchState.prepareLineages([id]);await f.repos.dispatchState.lineages(id,load,"same");assert.equal(loads,3);
+    await f.repos.dispatchState.prepareLineages([id]);await f.repos.dispatchState.lineages(id,load,"same");assert.equal(loads,3);
+    assert.ok(!f.statements.some(text=>text.includes("sum(revision)")));
+  } finally {await f.db.close();}
 });

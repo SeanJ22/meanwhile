@@ -11,12 +11,11 @@ import { openHeldCopies } from "../lib/control-plane/repository/incremental-read
 import { FIELD_MANUAL_SLICE_SQL, fieldManualSliceParams, pgFieldManualRepository, type Sql } from "../lib/control-plane/repository/pg-store.ts";
 import { createFixMapRepository, FIX_MAP_DDL, methodWorksOf, stateOfPlace, type FixMapRow } from "../lib/method/fix-map.ts";
 
-test("bootstrap declares the manual rows and fix-map summaries, one statement per entry", () => {
+test("bootstrap declares the manual rows and indexed method aggregates, one statement per entry", () => {
   assert.ok(BOOTSTRAP_VERSION >= 32);
   assert.ok(DECLARED_TABLES.includes("cp_field_manual_entries"));
   assert.ok(DECLARED_TABLES.includes("cp_fix_map"));
-  assert.ok(DECLARED_TABLES.includes("cp_fix_method_summaries"));
-  assert.ok(DECLARED_TABLES.includes("cp_field_manual"), "the old document table stays declared while its copy is kept");
+  assert.equal(DECLARED_TABLES.includes("cp_field_manual"),false);
   for (const ddl of [...FIX_MAP_DDL, FIELD_MANUAL_ENTRIES_KIND_INDEX_DDL]) {
     assert.ok(BOOTSTRAP_DDL.includes(ddl));
     assert.equal(ddl.replace(/\$\$[\s\S]*?\$\$/g, "").trim().split(";").filter((part) => part.trim() !== "").length, 1, "the HTTP driver prepares one statement per query");
@@ -41,8 +40,8 @@ test("where a method works is read per method, never the whole map", async () =>
   assert.equal(calls.length, 0, "no methods, no read");
   await repo.worksFor(["a", "b", "a"]);
   await repo.workingMethods(50);
-  assert.match(calls[0]!.sql, /FROM cp_fix_method_summaries s JOIN unnest/);
-  assert.deepEqual(calls[0]!.params, [["a", "b"], [null, null]]);
+  assert.match(calls[0]!.sql, /FROM unnest\(\$1::text\[\]\) AS methods/);
+  assert.deepEqual(calls[0]!.params, [["a", "b"]]);
   assert.match(calls[1]!.sql, /DISTINCT ON \(method_id\) \* FROM cp_fix_map WHERE state = 'WORKS'/);
   assert.deepEqual(calls[1]!.params, [50]);
   const row = (placeId: string, at: string, state: FixMapRow["state"] = "WORKS"): FixMapRow =>

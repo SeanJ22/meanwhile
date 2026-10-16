@@ -1,17 +1,19 @@
+import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { BANK_WRITE_HEALTH_ID } from "../lib/control-plane/bank-write-health.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import { PGlite } from "@electric-sql/pglite";
 import { applyControlPlaneMigrations, controlPlaneMigrationHash, productionControlPlaneTarget } from "../scripts/control-plane-migrations.mts";
-import { BOOTSTRAP_DDL, CONTROL_READS_EXPAND_DDL, CP_MIGRATIONS_DDL } from "../lib/control-plane/repository/pg-schema.ts";
-import { ADMIN_SECTIONS_STRIP_DDL } from "../lib/control-plane/repository/admin-config.ts";
+import { BOOTSTRAP_DDL, CONTROL_READS_EXPAND_DDL } from "../lib/control-plane/repository/pg-schema.ts";
+import { pgControlReadsBackfill } from "../lib/control-plane/repository/control-reads-backfill.ts";
+import { runControlBackfills } from "../lib/control-plane/scheduler/state-planning.ts";
 import type { Sql } from "../lib/control-plane/repository/pg-store.ts";
 import { pgSpendRepository } from "../lib/control-plane/repository/model-charges.ts";
 import { pricedModelCharge } from "../lib/control-plane/fleet-safety.ts";
 import { costRecordId } from "../lib/control-plane/spend-window.ts";
 import { ZERO_COST } from "../lib/control-plane/attempt.ts";
 import type { CostEntry } from "../lib/control-plane/cost.ts";
-import { cacheHitRateByRole } from "../lib/control-plane/research-metrics.ts";
 
 const connection = "postgresql://writer:fixture@ep-dark-night-aeo1ekz3.c-2.us-east-2.aws.neon.tech/control";
 const buildEnv: NodeJS.ProcessEnv = { NODE_ENV: "test", NETLIFY: "true", CONTEXT: "production", BRANCH: "main", WTP_CONTROL_PLANE_DATABASE_URL: connection };
@@ -35,19 +37,16 @@ test("control-plane migrations use only the declared production context and its 
   assert.throws(() => productionControlPlaneTarget(["--phase=expand"], buildEnv), /REFUSED/);
 });
 
-test("committed journal hashes cover both phase definitions", () => {
+test("committed journal hashes cover the expand-only definition", () => {
   const journal = JSON.parse(readFileSync("lib/control-plane/repository/migrations/meta/_journal.json", "utf8"));
-  for (const row of journal.entries) assert.equal(row.hash, controlPlaneMigrationHash(row.phase));
+  for (const row of journal.entries) assert.equal(row.hash, controlPlaneMigrationHash());
 });
 
 test("uncommitted migrations and contract checks refuse before a database opens", async () => {
   let opened = false;
   const withDatabase = async <T>(_connection: string, _operation: (sql: Sql) => Promise<T>): Promise<T> => { opened = true; throw Error("unexpected database"); };
   await assert.rejects(applyControlPlaneMigrations(expandArgs, { env: buildEnv, committed: () => Buffer.from("changed"), withDatabase }), /differs from its committed/);
-  await assert.rejects(applyControlPlaneMigrations(["--target=production", "--phase=contract", "--production-runtime"], {
-    env: { ...buildEnv, WTP_RUNTIME_MODE: "production", WTP_CONTROL_PLANE_DATABASE_URL: connection }, committed, withDatabase,
-    beforeContract: async () => { throw Error("not serving"); },
-  }), /not serving/);
+  await assert.rejects(applyControlPlaneMigrations(["--target=production","--phase=contract","--production-runtime"],{env:{...buildEnv,WTP_RUNTIME_MODE:"production"},committed,withDatabase}),/REFUSED/);
   assert.equal(opened, false);
 });
 
@@ -64,12 +63,11 @@ test("dry migration only reads an existing control plane and reports a pending c
 });
 
 test("wrong database, applied hash drift and missing expand never issue DDL", async () => {
-  for (const scenario of ["database", "hash", "phase"] as const) {
+  for (const scenario of ["database", "hash"] as const) {
     const queries: string[] = [];
-    const phase = scenario === "phase" ? "contract" : "expand";
     await assert.rejects(applyControlPlaneMigrations(
-      phase === "expand" ? expandArgs : ["--target=production", "--phase=contract", "--production-runtime"], {
-        env: { ...buildEnv, WTP_RUNTIME_MODE: "production" }, committed, beforeContract: async () => {},
+      expandArgs, {
+        env: { ...buildEnv, WTP_RUNTIME_MODE: "production" }, committed,
         withDatabase: async (_connection, operation) => operation({ query: async statement => {
           queries.push(statement);
           if (statement.includes("to_regclass")) return [{ schema: scenario === "database" ? null : "cp_schema_version", journal: "cp_migrations" }];
@@ -80,56 +78,49 @@ test("wrong database, applied hash drift and missing expand never issue DDL", as
   }
 });
 
-test("expand retains old writers; contract catches overlap prices, deletes temporary capture and archives closed work", async () => {
-  const db = new PGlite();
-  const sql = { query: async (statement: string, params: readonly unknown[] = []) => (await db.query<Record<string, unknown>>(statement, [...params])).rows };
-  const queries: string[] = [];
+test("expand copies no production rows; runner jobs backfill one state and retain exact charge prices", async()=>{
+  const db=new PGlite();
+  let requests=0;
+  const sql={query:async(text:string,params:readonly unknown[]=[]) => {requests++;return (await db.query<Record<string,unknown>>(text,[...params])).rows;}};
   try {
-    const skipped = new Set([...CONTROL_READS_EXPAND_DDL, ADMIN_SECTIONS_STRIP_DDL, CP_MIGRATIONS_DDL]);
-    for (const statement of BOOTSTRAP_DDL) if (!skipped.has(statement)) await sql.query(statement.replace("CREATE INDEX CONCURRENTLY", "CREATE INDEX"));
-    await sql.query("CREATE TABLE cp_spend_window (id text PRIMARY KEY, value jsonb)");
-    const first = entry("before");
-    const stored = { ...pricedModelCharge(first, costRecordId(first))!, usd: 7, knownUsd: 7 };
-    await sql.query("INSERT INTO cp_spend_window VALUES ('model-charges',$1::jsonb)", [JSON.stringify({ charges: [stored] })]);
-    await sql.query("INSERT INTO cp_log_costs(log_key,record_id,position,recorded_at,record) VALUES ('work','before',0,$1,$2::jsonb)", [now, JSON.stringify(first)]);
-    await sql.query("INSERT INTO cp_occurrences(id,revision,updated_at,value) VALUES ('done',1,$1,$2::jsonb)", [now, JSON.stringify({ occurrenceId: "done", workItemId: "work-done", routeTaskId: "task-done", closedAt: now })]);
-    await sql.query("INSERT INTO cp_work_items(id,revision,updated_at,value) VALUES ('work-done',1,$1,'{}')", [now]);
-    await sql.query("INSERT INTO cp_route_tasks(id,revision,updated_at,value) VALUES ('task-done',1,$1,$2::jsonb)", [now, JSON.stringify({ workItemId: "work-done", state: "DISPOSED" })]);
-    const watched = { query: async (statement: string, params?: readonly unknown[]) => { queries.push(statement); return sql.query(statement, params); } };
-    const withDatabase = async <T>(_connection: string, operation: (value: Sql) => Promise<T>) => operation(watched);
-    await applyControlPlaneMigrations(expandArgs, { env: buildEnv, committed, withDatabase });
-    const publicationIndexes = ["cp_work_items_changed_at", "cp_work_items_contract_subject", "cp_work_items_publication_body", "cp_work_items_publication_contract"];
-    const archivedIndexes = await sql.query(`SELECT source.relname AS name, count(archived.indexrelid)::integer AS copies
-      FROM pg_class source JOIN pg_index original ON original.indexrelid = source.oid
-      LEFT JOIN pg_index archived ON archived.indrelid = 'cp_work_items_archive'::regclass AND archived.indisvalid
-        AND archived.indpred IS NULL AND pg_get_indexdef(archived.indexrelid, 1, true) = pg_get_indexdef(original.indexrelid, 1, true)
-      WHERE source.relname = ANY($1::text[]) GROUP BY source.relname ORDER BY source.relname`, [publicationIndexes]);
-    assert.deepEqual(archivedIndexes, publicationIndexes.map(name => ({ name, copies: 1 })), "archived publication reads retain each index without duplicating LIKE copies");
-    assert.deepEqual(await sql.query(`SELECT count(*)::integer AS n FROM pg_trigger WHERE tgfoid = 'cp_touch_changed_at'::regproc
-      AND tgrelid IN ('cp_work_items_archive'::regclass, 'cp_occurrences_archive'::regclass, 'cp_route_tasks_archive'::regclass)`), [{ n: 3 }]);
-    const beforeRepeat = queries.length;
-    await applyControlPlaneMigrations(expandArgs, { env: buildEnv, committed, withDatabase });
-    assert.ok(queries.slice(beforeRepeat).every(query => query.startsWith("SELECT")), "completed migration retries do not write");
-    assert.equal((await sql.query("SELECT count(*) AS n FROM cp_occurrences"))[0].n, 1);
-    assert.ok((await sql.query("SELECT to_regclass('cp_spend_window') AS held"))[0].held);
-    const next = entry("during");
-    const nextPriced = { ...pricedModelCharge(next, costRecordId(next))!, usd: 11, knownUsd: 11 };
-    await sql.query("INSERT INTO cp_log_costs(log_key,record_id,position,recorded_at,record) VALUES ('work','during',1,$1,$2::jsonb)", [now, JSON.stringify(next)]);
-    await sql.query("UPDATE cp_spend_window SET value = $1::jsonb", [JSON.stringify({ charges: [stored, nextPriced] })]);
-    const spend = pgSpendRepository(sql);
-    const query = { since: "2026-10-14T12:00:00.000Z", until: now };
-    assert.equal((await spend.aggregate(query)).usd, 18, "the deployed reader sees exact overlap prices before contract");
-    const contractArgs = ["--target=production", "--phase=contract", "--production-runtime"];
-    const contractDeps = { env: { ...buildEnv, WTP_RUNTIME_MODE: "production", WTP_CONTROL_PLANE_DATABASE_URL: connection },
-      committed, withDatabase, beforeContract: async () => {} };
-    await applyControlPlaneMigrations(contractArgs, contractDeps);
-    await applyControlPlaneMigrations(contractArgs, contractDeps);
-    assert.deepEqual((await sql.query("SELECT id FROM cp_migrations ORDER BY id")).map(row => row.id), ["CP-01_contract", "CP-01_expand"]);
-    assert.equal((await spend.aggregate(query)).usd, 18);
-    assert.deepEqual((await spend.metrics(query)).cache, cacheHitRateByRole({ costs: [stored.metered, nextPriced.metered], results: [] }));
-    assert.deepEqual(await sql.query("SELECT to_regclass('cp_spend_window') AS old, to_regclass('cp01_spend_capture') AS queue"), [{ old: null, queue: null }]);
-    assert.equal((await sql.query("SELECT count(*) AS n FROM cp_occurrences"))[0].n, 0);
-    assert.equal((await sql.query("SELECT count(*) AS n FROM cp_occurrences_archive"))[0].n, 1);
-    assert.ok(queries.filter(text => text.startsWith("SELECT held.charge") || text.startsWith("SELECT log_key, position, record")).every(text => text.includes("LIMIT 100")));
-  } finally { await db.close(); }
+    const skipped=new Set(CONTROL_READS_EXPAND_DDL);
+    for(const ddl of BOOTSTRAP_DDL) if(!skipped.has(ddl)) await sql.query(ddl.replace("CREATE INDEX CONCURRENTLY","CREATE INDEX"));
+    await sql.query("CREATE TABLE cp_spend_window(id text PRIMARY KEY,value jsonb)");
+    const az={...entry("az"),jurisdiction:"ocd-division/country:us/state:az/county:pima"};
+    const nh={...entry("nh"),jurisdiction:"ocd-division/country:us/state:nh/county:coos"};
+    const charges=[az,nh].map((record,index)=>({...pricedModelCharge(record,costRecordId(record))!,usd:index?11:7,knownUsd:index?11:7}));
+    await sql.query("INSERT INTO cp_spend_window VALUES('model-charges',$1::jsonb)",[JSON.stringify({charges})]);
+    for(const [index,state] of ["az","nh"].entries()) {
+      await sql.query("INSERT INTO cp_log_costs(log_key,record_id,position,recorded_at,record) VALUES('work',$1,$2,$3,$4::jsonb)",[state,index,now,JSON.stringify(index?nh:az)]);
+      const obligationId=`freshness:hunt-packet:ocd-division/country:us/state:${state}/county:fixture`;
+      await sql.query("INSERT INTO cp_occurrences(id,revision,updated_at,value) VALUES($1,1,$2,$3::jsonb)",[state,now,JSON.stringify({obligationId,workItemId:`work-${state}`,routeTaskId:`task-${state}`,closedAt:now})]);
+      await sql.query("INSERT INTO cp_work_items(id,revision,updated_at,value) VALUES($1,1,$2,$3::jsonb)",[`work-${state}`,now,JSON.stringify({subject:`ocd-division/country:us/state:${state}/county:fixture`})]);
+      await sql.query("INSERT INTO cp_route_tasks(id,revision,updated_at,value) VALUES($1,1,$2,$3::jsonb)",[`task-${state}`,now,JSON.stringify({workItemId:`work-${state}`,state:"DISPOSED"})]);
+    }
+    const config={formatVersion:1,apiFallback:{enabled:false,decidedAt:null,decidedBy:null,receiptId:null},updatedAt:now,
+      placeTargets:[{key:"st:az",goalPercent:75},{key:"st:nh",goalPercent:80}],settingHistory:[{id:"old-change",key:"alerts.on",before:false,after:true,at:now}]};
+    await sql.query("INSERT INTO cp_admin_config(id,revision,updated_at,value) VALUES('current',1,$1,$2::jsonb)",[now,JSON.stringify(config)]);
+    await applyControlPlaneMigrations(expandArgs,{env:buildEnv,committed,withDatabase:async(_connection,operation)=>operation(sql)});
+    assert.equal((await sql.query("SELECT count(*)::integer AS n FROM cp_occurrences"))[0].n,2);
+    for(const table of ["cp_occurrences_archive","cp_model_charges","cp_admin_place_targets","cp_admin_setting_history"])
+      assert.equal((await sql.query(`SELECT count(*)::integer AS n FROM ${table}`))[0].n,0,`${table} stays empty during expand`);
+    assert.deepEqual((await sql.query("SELECT value FROM cp_admin_config"))[0].value,config);
+    await sql.query("CREATE TABLE cp_field_manual(id text PRIMARY KEY,revision bigint NOT NULL,updated_at timestamptz NOT NULL,value jsonb NOT NULL)");
+    await sql.query("INSERT INTO cp_field_manual(id,revision,updated_at,value) VALUES('write-errors',1,$1,$2::jsonb)",[now,JSON.stringify({entries:[{payload:{count:3}}]})]);
+    await sql.query("INSERT INTO cp_field_manual_entries(id,revision,updated_at,value) VALUES($1,1,$2,$3::jsonb)",[BANK_WRITE_HEALTH_ID,now,JSON.stringify({id:BANK_WRITE_HEALTH_ID,payload:{count:2}})]);
+    const manual=createMemoryRepositories();
+    const jobs=pgControlReadsBackfill(sql,()=>manual);const first=await jobs.runState("az");assert.equal(first.complete,true);
+    assert.deepEqual((await sql.query("SELECT id FROM cp_occurrences_archive")).map(row=>row.id),["az"]);
+    assert.deepEqual((await sql.query("SELECT id FROM cp_admin_place_targets")).map(row=>row.id),["st:az"]);
+    assert.equal((await pgSpendRepository(sql).aggregate({since:"2026-10-14T12:00:00Z",until:now})).usd,7);
+    assert.equal((await jobs.runState("az")).copied,0);
+    await runControlBackfills(jobs,()=>{});
+    assert.equal((await sql.query("SELECT count(*)::integer AS n FROM cp_occurrences"))[0].n,0);
+    assert.equal((await pgSpendRepository(sql).aggregate({since:"2026-10-14T12:00:00Z",until:now})).usd,18);
+    assert.deepEqual((await sql.query("SELECT id FROM cp_migrations")).map(row=>row.id),["CP-01_expand"]);
+    assert.equal((await sql.query("SELECT value ? 'placeTargets' AS embedded FROM cp_admin_config"))[0].embedded,false);
+    assert.deepEqual(await sql.query("SELECT to_regclass('cp_spend_window') AS old"),[{old:null}]);
+    assert.equal((await sql.query("SELECT (value #>> '{payload,count}')::integer AS n FROM cp_field_manual_entries WHERE id=$1",[BANK_WRITE_HEALTH_ID]))[0].n,5);
+    requests=0;await runControlBackfills(jobs,()=>{});assert.equal(requests,1,"completed backfills read one marker and perform no writes");
+  } finally {await db.close();}
 });

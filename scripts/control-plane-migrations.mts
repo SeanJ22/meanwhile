@@ -5,29 +5,27 @@ import { join } from "node:path";
 import { Pool, neonConfig } from "@neondatabase/serverless";
 import type { Sql } from "../lib/control-plane/repository/pg-store.ts";
 import { CP_MIGRATIONS_DDL } from "../lib/control-plane/repository/pg-schema.ts";
-import { CP01_DECLARATION_SOURCES, controlReadsMigrationDefinition, expandControlReads, contractControlReads } from "../lib/control-plane/repository/migrations/CP-01.ts";
+import { CP01_DECLARATION_SOURCES, controlReadsMigrationDefinition, expandControlReads } from "../lib/control-plane/repository/migrations/CP-01.ts";
 
 const JOURNAL = "lib/control-plane/repository/migrations/meta/_journal.json";
 const SOURCE = "lib/control-plane/repository/migrations/CP-01.ts";
-interface Entry { readonly id: string; readonly phase: "expand" | "contract"; readonly hash: string }
+interface Entry { readonly id: string; readonly phase: "expand"; readonly hash: string }
 interface Dependencies {
   readonly root?: string;
   readonly env?: NodeJS.ProcessEnv;
   readonly committed?: (path: string) => Buffer;
   readonly withDatabase?: <T>(connection: string, operation: (sql: Sql) => Promise<T>) => Promise<T>;
-  readonly beforeContract?: () => Promise<void>;
 }
 
-export function controlPlaneMigrationHash(phase: Entry["phase"], root = process.cwd()): string {
-  return createHash("sha256").update(readFileSync(join(root, SOURCE))).update(controlReadsMigrationDefinition(phase)).digest("hex");
+export function controlPlaneMigrationHash(root = process.cwd()): string {
+  return createHash("sha256").update(readFileSync(join(root, SOURCE))).update(controlReadsMigrationDefinition()).digest("hex");
 }
 
 export function productionControlPlaneTarget(args: readonly string[], env: NodeJS.ProcessEnv): string {
   const phase = args.find(arg => arg.startsWith("--phase="))?.slice(8);
   const build = args.includes("--production-build") && env.NETLIFY === "true" && env.CONTEXT === "production" && env.BRANCH === "main";
-  const runtime = args.includes("--production-runtime") && env.WTP_RUNTIME_MODE === "production";
-  if (!args.includes("--target=production") || !(phase === "expand" && build || phase === "contract" && runtime)) {
-    throw new Error("db:apply: REFUSED — control-plane migrations require the production main build or deployed production runtime");
+  if (!args.includes("--target=production") || !(phase === "expand" && build)) {
+    throw new Error("db:apply: REFUSED — control-plane migrations require the production main build");
   }
   const connection = env.WTP_CONTROL_PLANE_DATABASE_URL;
   let url: URL;
@@ -64,21 +62,8 @@ export async function applyControlPlaneMigrations(args: string[], deps: Dependen
   }
   const journal = JSON.parse(readFileSync(join(root, JOURNAL), "utf8")) as { entries: Entry[] };
   const entry = journal.entries.find(row => row.phase === phase);
-  if (!entry || entry.id !== `CP-01_${phase}` || journal.entries.length !== 2 || new Set(journal.entries.map(row => row.id)).size !== 2) {
+  if (!entry || entry.id !== `CP-01_${phase}` || journal.entries.length !== 1 || new Set(journal.entries.map(row => row.id)).size !== 1) {
     throw new Error("db:apply: REFUSED — control-plane migration journal is invalid");
-  }
-  if (phase === "contract" && !dry) {
-    if (deps.beforeContract) await deps.beforeContract();
-    else {
-      const sha = execFileSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).trim();
-      const expected = args.find(arg => arg.startsWith("--runtime-commit="))?.slice(17);
-      const [{ fetchServedCommit }, { PUBLIC_SITE_ORIGIN }] = await Promise.all([
-        import("./post-deploy-observer.mts"), import("../lib/ops/origins.ts"),
-      ]);
-      if (expected !== sha || (await fetchServedCommit(PUBLIC_SITE_ORIGIN)).sha !== sha) {
-        throw new Error("db:apply: REFUSED — control-plane contracts require the exact runtime commit to be serving");
-      }
-    }
   }
   await (deps.withDatabase ?? withDatabase)(connection, async sql => {
     const present = await sql.query("SELECT to_regclass('cp_schema_version') AS schema, to_regclass('cp_migrations') AS journal") as { schema: string | null; journal: string | null }[];
@@ -90,8 +75,7 @@ export async function applyControlPlaneMigrations(args: string[], deps: Dependen
         if (declared && declared.hash !== row.hash) throw new Error(`db:apply: REFUSED — ${row.id} differs from the applied journal hash`);
       }
       if (rows.some(row => row.id === entry.id)) return false;
-      if (entry.hash !== controlPlaneMigrationHash(phase, root)) throw new Error(`db:apply: REFUSED — ${entry.id} definition differs from the committed journal hash`);
-      if (phase === "contract" && !rows.some(row => row.id === "CP-01_expand")) throw new Error("db:apply: REFUSED — control-plane expand must complete before contract");
+      if (entry.hash !== controlPlaneMigrationHash(root)) throw new Error(`db:apply: REFUSED — ${entry.id} definition differs from the committed journal hash`);
       return true;
     };
     if (!validate(present[0].journal ? await readApplied() : [])) {
@@ -102,8 +86,7 @@ export async function applyControlPlaneMigrations(args: string[], deps: Dependen
     try {
       await sql.query(CP_MIGRATIONS_DDL);
       if (!validate(await readApplied())) { console.log(`control-plane: ${entry.id} applied by another migration process`); return; }
-      if (phase === "expand") await expandControlReads(sql);
-      else await contractControlReads(sql);
+      await expandControlReads(sql);
       await sql.query("INSERT INTO cp_migrations(id,hash,completed_at) VALUES ($1,$2,now())", [entry.id, entry.hash]);
       console.log(`control-plane: ${entry.id} applied to ${new URL(connection).hostname}`);
     } finally { await sql.query("SELECT pg_advisory_unlock(1835360622,2)"); }

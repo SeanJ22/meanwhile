@@ -5,7 +5,7 @@ import { join } from "node:path";
 import assert from "node:assert/strict";
 import { PGlite } from "@electric-sql/pglite";
 import { pgAggregateRepository } from "../lib/control-plane/repository/pg-store.ts";
-import { ADMIN_SECTIONS, ADMIN_SECTIONS_DDL, ADMIN_SECTIONS_EXPAND_DDL, ADMIN_SECTIONS_CONTRACT_DDL, backfillAdminSections, pgAdminConfigRepository, storedAdminConfigRepository, type AdminSection, type StoredAdminSection } from "../lib/control-plane/repository/admin-config.ts";
+import { ADMIN_SECTIONS, ADMIN_SECTIONS_EXPAND_DDL, pgAdminConfigRepository, storedAdminConfigRepository, type AdminSection, type StoredAdminSection } from "../lib/control-plane/repository/admin-config.ts";
 import { createFileRepositories, fileAggregateRepository } from "../lib/control-plane/repository/file-store.ts";
 import { memoryAggregateRepository, memoryLockManager } from "../lib/control-plane/repository/memory.ts";
 import type { AggregateRepository } from "../lib/control-plane/repository/types.ts";
@@ -14,22 +14,15 @@ import { settingUndo, withSetting } from "../lib/control-plane/settings.ts";
 
 const now = "2026-10-15T12:00:00.000Z";
 
-test("Admin history migrates once; settings reads transfer a body only when the revision changes", async () => {
+test("settings reads transfer a body only when the revision changes and history stays indexed", async () => {
   const pg = new PGlite();
   try {
     await pg.exec("CREATE TABLE cp_admin_config (id text PRIMARY KEY, revision bigint NOT NULL, updated_at timestamptz NOT NULL, value jsonb NOT NULL, changed_at timestamptz DEFAULT now())");
     const settingHistory = Array.from({ length: 2000 }, (_, n) => ({ id: `change-${n}`, key: "alerts.on", before: false, after: true, at: now, why: `change ${n}` }));
-    await pg.query("INSERT INTO cp_admin_config VALUES ('current',1,$1,$2,now())", [now, JSON.stringify({ ...defaultAdminConfig(now), settingHistory })]);
+    await pg.query("INSERT INTO cp_admin_config VALUES ('current',1,$1,$2,now())", [now, JSON.stringify(defaultAdminConfig(now))]);
     for (const ddl of ADMIN_SECTIONS_EXPAND_DDL) await pg.exec(ddl);
-    const pageSizes: number[] = [];
-    await backfillAdminSections(async (statement, params) => {
-      const rows = (await pg.query<Record<string, unknown>>(statement, [...(params ?? [])])).rows;
-      if (statement.startsWith("WITH source") && statement.includes("INSERT INTO cp_admin_setting_history")) pageSizes.push(Number(rows[0].count));
-      return rows;
-    });
-    assert.deepEqual(pageSizes, [...Array<number>(20).fill(100), 0]);
-    assert.deepEqual((await pg.query<{ id: string }>("SELECT id FROM cp_admin_setting_history ORDER BY ordinal")).rows.map(row => row.id), settingHistory.map(row => row.id));
-    for (const ddl of ADMIN_SECTIONS_CONTRACT_DDL) await pg.exec(ddl);
+    await pg.query(`INSERT INTO cp_admin_setting_history(config_id,id,updated_at,value)
+      SELECT 'current',entry.value->>'id',$1::timestamptz,entry.value FROM jsonb_array_elements($2::jsonb) WITH ORDINALITY entry(value,n) ORDER BY n`,[now,JSON.stringify(settingHistory)]);
     const transferred: Record<string, unknown>[][] = [];
     const sql = { async query(text: string, params?: readonly unknown[]) { return (await pg.query(text, [...(params ?? [])])).rows as Record<string, unknown>[]; } };
     const repo = pgAdminConfigRepository(pgAggregateRepository<AdminConfig>(sql, "AdminConfig", "cp_admin_config"), async (text, params) => {
@@ -60,7 +53,7 @@ test("saving one place target leaves other places intact, including clearing its
   const pg = new PGlite();
   try {
     await pg.exec("CREATE TABLE cp_admin_config (id text PRIMARY KEY, revision bigint NOT NULL, updated_at timestamptz NOT NULL, value jsonb NOT NULL, changed_at timestamptz DEFAULT now())");
-    for (const ddl of ADMIN_SECTIONS_DDL) await pg.exec(ddl);
+    for (const ddl of ADMIN_SECTIONS_EXPAND_DDL) await pg.exec(ddl);
     const sql = { async query(text: string, params?: readonly unknown[]) { return (await pg.query(text, [...(params ?? [])])).rows as Record<string, unknown>[]; } };
     const repo = pgAdminConfigRepository(pgAggregateRepository<AdminConfig>(sql, "AdminConfig", "cp_admin_config"), sql.query);
     const target = (key: string) => ({ key, goalPercent: 75, setAt: now, decidedBy: "owner", receiptId: key });
@@ -157,7 +150,7 @@ test("a limited settings log includes a prior receipt so replay cannot append it
   const pg = new PGlite();
   try {
     await pg.exec("CREATE TABLE cp_admin_config (id text PRIMARY KEY, revision bigint NOT NULL, updated_at timestamptz NOT NULL, value jsonb NOT NULL, changed_at timestamptz DEFAULT now())");
-    for (const ddl of ADMIN_SECTIONS_DDL) await pg.exec(ddl);
+    for (const ddl of ADMIN_SECTIONS_EXPAND_DDL) await pg.exec(ddl);
     const query = async (statement: string, params?: readonly unknown[]) => (await pg.query(statement, [...(params ?? [])])).rows as Record<string, unknown>[];
     const sql = { query }, repo = pgAdminConfigRepository(pgAggregateRepository<AdminConfig>(sql, "AdminConfig", "cp_admin_config"), query);
     const config = { ...defaultAdminConfig(now), settingHistory: [change("first", false), change("second", true)] };
@@ -176,7 +169,7 @@ test("a config read retries when a section changes after its revision was read",
   const pg = new PGlite();
   try {
     await pg.exec("CREATE TABLE cp_admin_config (id text PRIMARY KEY, revision bigint NOT NULL, updated_at timestamptz NOT NULL, value jsonb NOT NULL, changed_at timestamptz DEFAULT now())");
-    for (const ddl of ADMIN_SECTIONS_DDL) await pg.exec(ddl);
+    for (const ddl of ADMIN_SECTIONS_EXPAND_DDL) await pg.exec(ddl);
     const query = async (statement: string, params?: readonly unknown[]) => (await pg.query(statement, [...(params ?? [])])).rows as Record<string, unknown>[];
     const base = pgAggregateRepository<AdminConfig>({ query }, "AdminConfig", "cp_admin_config");
     const writer = pgAdminConfigRepository(base, query);
@@ -198,35 +191,19 @@ test("a config read retries when a section changes after its revision was read",
   } finally { await pg.close(); }
 });
 
-test("expand captures late old-build writes and contract removes the embedded histories and capture trigger", async () => {
-  const pg = new PGlite();
+test("79 independent place orders share a settings revision without conflicting; a stale order for the same place refuses",async()=>{
+  const pg=new PGlite();
   try {
-    await pg.exec("CREATE TABLE cp_admin_config (id text PRIMARY KEY, revision bigint NOT NULL, updated_at timestamptz NOT NULL, value jsonb NOT NULL, changed_at timestamptz DEFAULT now())");
-    const target = (key: string) => ({ key, goalPercent: 75, setAt: now, decidedBy: "owner", receiptId: key });
-    const history = Array.from({ length: 205 }, (_, index) => change(`history-${index}`, false));
-    const config = { ...defaultAdminConfig(now), settingHistory: history, placeTargets: [target("st:az"), target("st:ca")] };
-    await pg.query("INSERT INTO cp_admin_config VALUES ('current',1,$1,$2,now())", [now, JSON.stringify(config)]);
-    for (const ddl of ADMIN_SECTIONS_EXPAND_DDL) await pg.exec(ddl);
-    const oldBuildWrite = async (settingHistory: typeof history) => pg.query("UPDATE cp_admin_config SET revision=revision+1,value=$1 WHERE id='current'", [JSON.stringify({ ...config,
-      settingHistory, placeTargets: [target("st:az")] })]);
-    await oldBuildWrite([...history.slice(101), change("late", true)]);
-    const batchCounts: number[] = [];
-    const query = async (statement: string, params?: readonly unknown[]) => {
-      const rows = (await pg.query(statement, [...(params ?? [])])).rows as Record<string, unknown>[];
-      if (statement.startsWith("WITH source")) {
-        batchCounts.push(Number(rows[0].count));
-        if (batchCounts.length === 1) await oldBuildWrite([change("later", false)]);
-      }
-      return rows;
-    };
-    await backfillAdminSections(query);
-    assert.ok(batchCounts.includes(100));
-    assert.ok(batchCounts.every(count => count <= 100));
-    await backfillAdminSections(query);
-    for (const ddl of ADMIN_SECTIONS_CONTRACT_DDL) await pg.exec(ddl);
-    assert.equal(Number((await query("SELECT count(*) AS n FROM cp_admin_setting_history"))[0].n), 207);
-    assert.deepEqual((await query("SELECT id FROM cp_admin_place_targets")).map(row => row.id), ["st:az"]);
-    assert.equal(((await query("SELECT value FROM cp_admin_config"))[0].value as AdminConfig).settingHistory, undefined);
-    assert.equal(Number((await query("SELECT count(*) AS n FROM pg_trigger WHERE tgname='cp_capture_admin_sections'"))[0].n), 0);
-  } finally { await pg.close(); }
+    await pg.exec("CREATE TABLE cp_admin_config(id text PRIMARY KEY,revision bigint NOT NULL,updated_at timestamptz NOT NULL,value jsonb NOT NULL,changed_at timestamptz DEFAULT now())");
+    for(const ddl of ADMIN_SECTIONS_EXPAND_DDL)await pg.exec(ddl);
+    const query=async(text:string,params?:readonly unknown[])=>(await pg.query<Record<string,unknown>>(text,[...params??[]])).rows;
+    const repo=pgAdminConfigRepository(pgAggregateRepository<AdminConfig>({query},"AdminConfig","cp_admin_config"),query);
+    const targets=Array.from({length:79},(_,n)=>({key:`geo:az.zcta.${85000+n}`,goalPercent:75,setAt:now,decidedBy:"owner",receiptId:`send-${n}`}));
+    await repo.save(null,{...defaultAdminConfig(now),placeTargets:targets},now);
+    const snapshots=await Promise.all(targets.map(target=>repo.mustRead("current",{placeTargets:{ids:[target.key]}})));
+    await Promise.all(snapshots.map(row=>repo.save(row,{...row.value,placeTargets:[]},now)));
+    assert.deepEqual((await repo.mustRead("current",{placeTargets:true})).value.placeTargets,[]);
+    assert.equal((await repo.mustRead("current")).revision,snapshots[0].revision);
+    await assert.rejects(repo.save(snapshots[0],{...snapshots[0].value,placeTargets:[{...targets[0],goalPercent:90}]},now),/modified concurrently|conflict/i);
+  }finally{await pg.close();}
 });

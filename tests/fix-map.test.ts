@@ -55,16 +55,17 @@ test("method evidence and proof cover places beyond the first thousand without r
     assert.equal(proofFromStatistics(counts, DEFAULT_FIX_PROOF_BAR, false).status, "TESTING");
     assert.equal(proofFromStatistics(counts, DEFAULT_FIX_PROOF_BAR).status, "TESTING");
     assert.deepEqual(await map.worksFor(["national"]), methodWorksOf(observations, ["national"]));
-    assert.match(reads.at(-1)!, /FROM cp_fix_method_summaries/);
-    assert.doesNotMatch(reads.at(-1)!, /FROM cp_fix_map\b/);
+    assert.match(reads.at(-1)!, /FROM cp_fix_map/);
+    const oncePerCycle=reads.length;
     assert.deepEqual(await map.worksFor(["national"]), methodWorksOf(observations, ["national"]));
-    assert.equal(responses.at(-1)![0]!.value, null, "an unchanged summary crosses the wire only as its revision");
+    assert.equal(reads.length,oncePerCycle,"an unchanged method is aggregated only once in this cycle");
     const last = observations.at(-1)!;
     assert.equal((await map.forPlaces("national", [last.placeId]))[0]!.state, "FAILS");
     const newest = observations[1499]!;
     await map.put({ ...newest, state: "FAILS", triedAt: "2026-10-06T00:00:00Z" });
     assert.deepEqual(await map.worksFor(["national"]), methodWorksOf(observations.map(r => r.placeId === newest.placeId ? { ...r, state: "FAILS" } : r), ["national"]));
     await db.query("DELETE FROM cp_fix_map WHERE method_id = $1 AND place_id LIKE $2", ["national", "%state:az/%"]);
-    assert.deepEqual((await map.worksFor(["national"])).get("national")!.states, ["nj", "wy"]);
+    const nextCycle=createFixMapRepository(async(sql,params)=>(await db.query(sql,[...params])).rows as Record<string,unknown>[]);
+    assert.deepEqual((await nextCycle.worksFor(["national"])).get("national")!.states, ["nj", "wy"]);
   } finally { await db.close(); }
 });

@@ -21,7 +21,8 @@ export interface DispatchRead {
 export interface DispatchStateRepository {
   readOpen(input?: DispatchRead): Promise<DispatchSnapshot>;
   archiveOccurrence(id: string, now: string): Promise<void>;
-  lineages(obligationId: string, load: () => Promise<readonly StandingLineage[]>): Promise<readonly StandingLineage[]>;
+  prepareLineages(ids: readonly string[]): Promise<void>;
+  lineages(obligationId: string, load: () => Promise<readonly StandingLineage[]>, stamp?: string): Promise<readonly StandingLineage[]>;
 }
 
 const OPEN_STATES = ["PENDING", "CLAIMED", "RECLAIMABLE", "POLICY_DENIED"];
@@ -97,6 +98,7 @@ export function createDispatchState(repos: () => ControlPlaneRepositories,
       return { occurrences: byId(occurrences), routeTasks: tasks, workItems: byId(items), through: new Date().toISOString() };
     },
     async archiveOccurrence(id, now) { const row = await repos().occurrences.read(id); if (row?.value.closedAt !== null && row) await archive(row.value, now); },
+    prepareLineages: async () => {},
     lineages: (_id, load) => load(),
   };
 }
@@ -107,7 +109,7 @@ function persisted<T>(row: Record<string, unknown>): Persisted<T> {
 }
 
 export function createPgDispatchState(sql: Sql, repos: () => ControlPlaneRepositories,
-  bounds: ControlPlaneRequestBounds = CONTROL_PLANE_REQUEST_BOUNDS_MS): DispatchStateRepository {
+  bounds: ControlPlaneRequestBounds = CONTROL_PLANE_REQUEST_BOUNDS_MS, state?: string): DispatchStateRepository {
   const run = (operation: string, text: string, params: readonly unknown[] = [], page = false) =>
     boundedQuery(sql, { operation: `cp_dispatch.${operation}`, callClass: page ? "PAGE" : "POINT" }, text, params, { bounds });
   async function rows<T>(table: string, predicate: string, params: readonly unknown[]): Promise<Persisted<T>[]> {
@@ -115,16 +117,17 @@ export function createPgDispatchState(sql: Sql, repos: () => ControlPlaneReposit
     let after = "";
     for (;;) {
       const page = await run(`readOpen:${table}`, `SELECT id, revision, updated_at, value FROM ${table}
-        WHERE ${predicate} AND id > $${params.length + 1} ORDER BY id LIMIT 100`, [...params, after], true) as Record<string, unknown>[];
+        WHERE ${predicate} ${state ? table === 'cp_route_tasks' ? `AND EXISTS (SELECT 1 FROM cp_work_items_history w WHERE w.id=${table}.value->>'workItemId' AND cp_control_state(w.value)='${state}')` : `AND cp_control_state(value)='${state}'` : ""} AND id > $${params.length + 1} ORDER BY id LIMIT 100`, [...params, after], true) as Record<string, unknown>[];
       out.push(...page.map(row => persisted<T>(row)));
       if (page.length < 100) return out;
       after = String(page[page.length - 1].id);
     }
   }
+  const lineageCache=new Map<string,{stamp:string;value:StandingLineage[];dirty:boolean;generation:number}>();
   return {
     async readOpen(input = {}) {
       return withCallerSite(async () => {
-      const scope = input.obligationIds ? createHash("sha256").update([...input.obligationIds].sort().join("\n")).digest("hex") : "*";
+      const scope = input.obligationIds ? createHash("sha256").update([...input.obligationIds].sort().join("\n")).digest("hex") : state ?? "*";
       const clock = await run("readOpen:cursor", "SELECT now() AS at, (SELECT through FROM cp_dispatch_cursors WHERE id=$1) AS since", [scope]) as { at: string; since: string | null }[];
       const through = new Date(clock[0].at).toISOString();
       const since = input.since ?? (clock[0].since ? new Date(Date.parse(String(clock[0].since)) - 120_000).toISOString() : null);
@@ -147,27 +150,29 @@ export function createPgDispatchState(sql: Sql, repos: () => ControlPlaneReposit
       });
     },
     async archiveOccurrence(id) { await withCallerSite(() => run("archiveOccurrence", "SELECT cp_archive_occurrences(ARRAY[$1]::text[])", [id])); },
-    async lineages(obligationId, load) {
-      return withCallerSite(async () => {
-        const result = await run("lineages", `WITH occurrence AS (
-          SELECT revision, value FROM cp_occurrences_history WHERE value #>> '{obligationId}'=$1
-        ), family AS (
-          SELECT w.id, w.revision FROM cp_work_items_history w JOIN occurrence o ON w.id=o.value->>'workItemId'
-          UNION SELECT w.id, w.revision FROM cp_work_items_history w JOIN occurrence o
-            ON w.value #>> '{planRepair,rootWorkItemId}'=o.value->>'workItemId'
-        ), fingerprint AS (SELECT jsonb_build_array(
-          (SELECT coalesce(sum(revision),0)::text FROM occurrence),
-          (SELECT coalesce(sum(revision),0)::text FROM family),
-          (SELECT coalesce(sum(a.revision),0)::text FROM cp_attempts a JOIN family f ON a.value #>> '{workItemId}'=f.id),
-          (SELECT count(*)::text FROM cp_log_artifacts a JOIN family f ON a.record #>> '{workItemId}'=f.id),
-          (SELECT count(*)::text FROM cp_log_worker_results r JOIN family f ON r.log_key=f.id)
-        )::text AS stamp)
-        SELECT f.stamp, CASE WHEN c.stamp=f.stamp THEN c.value ELSE NULL END AS value
-        FROM fingerprint f LEFT JOIN cp_lineage_cache c ON c.id=$1`, [obligationId], true) as { stamp: string; value: StandingLineage[] | null }[];
-        if (result[0].value !== null) return result[0].value;
-        const value = await load();
-        await run("lineages:save", `INSERT INTO cp_lineage_cache (id, stamp, value) VALUES ($1,$2,$3::jsonb)
-          ON CONFLICT (id) DO UPDATE SET stamp=EXCLUDED.stamp, value=EXCLUDED.value`, [obligationId, result[0].stamp, JSON.stringify(value)], true);
+    async prepareLineages(ids) {
+      lineageCache.clear();
+      for(let at=0;at<ids.length;at+=100) {
+        const rows=await run("lineages:prepare","SELECT id,stamp,value,dirty,generation FROM cp_lineage_cache WHERE id=ANY($1::text[])",[ids.slice(at,at+100)],true) as {id:string;stamp:string;value:StandingLineage[];dirty:boolean;generation:number}[];
+        for(const row of rows)lineageCache.set(row.id,{...row,generation:Number(row.generation)});
+      }
+    },
+    async lineages(obligationId,load,stamp) {
+      return withCallerSite(async()=>{
+        let held=lineageCache.get(obligationId);
+        if(stamp===undefined) {
+          const rows=await run("lineages:revision","SELECT dirty,generation FROM cp_lineage_cache WHERE id=$1",[obligationId]) as {dirty:boolean;generation:number}[];
+          if(rows[0])held=held?{...held,dirty:rows[0].dirty || Number(rows[0].generation)!==held.generation,generation:Number(rows[0].generation)}
+            :{stamp:"",value:[],dirty:true,generation:Number(rows[0].generation)};
+        }
+        const currentStamp=stamp??held?.stamp??"";
+        if(held && !held.dirty && held.stamp===currentStamp)return held.value;
+        const value=await load();
+        const rows=await run("lineages:save",held
+          ? "UPDATE cp_lineage_cache SET stamp=$2,value=$3::jsonb,dirty=false WHERE id=$1 AND generation=$4 RETURNING generation"
+          : "INSERT INTO cp_lineage_cache(id,stamp,value,dirty,generation) VALUES($1,$2,$3::jsonb,false,$4) ON CONFLICT(id) DO NOTHING RETURNING generation",
+        [obligationId,currentStamp,JSON.stringify(value),held?.generation??1],true) as {generation:number}[];
+        if(rows.length)lineageCache.set(obligationId,{stamp:currentStamp,value:[...value],dirty:false,generation:Number(rows[0].generation)});
         return value;
       });
     },
@@ -178,10 +183,29 @@ const ARCHIVED_TABLES = ["occurrences", "route_tasks", "work_items"] as const;
 export const DISPATCH_ARCHIVE_TABLES = ARCHIVED_TABLES.map(kind => `cp_${kind}_archive`);
 export const DISPATCH_STATE_DDL: readonly string[] = [
   `CREATE TABLE IF NOT EXISTS cp_dispatch_cursors (id text PRIMARY KEY, through timestamptz NOT NULL);`,
-  `CREATE TABLE IF NOT EXISTS cp_lineage_cache (id text PRIMARY KEY, stamp text NOT NULL, value jsonb NOT NULL);`,
+  `CREATE TABLE IF NOT EXISTS cp_lineage_cache (id text PRIMARY KEY,stamp text NOT NULL,value jsonb NOT NULL,dirty boolean NOT NULL DEFAULT true,generation bigint NOT NULL DEFAULT 1);`,
   ...ARCHIVED_TABLES.map(kind => `CREATE TABLE IF NOT EXISTS cp_${kind}_archive (LIKE cp_${kind} INCLUDING ALL);`),
   ...ARCHIVED_TABLES.map(kind => `CREATE OR REPLACE VIEW cp_${kind}_history AS
     SELECT * FROM cp_${kind} UNION ALL SELECT * FROM cp_${kind}_archive;`),
+  `CREATE OR REPLACE FUNCTION cp_invalidate_lineage_cache() RETURNS trigger LANGUAGE plpgsql AS $$
+    DECLARE envelope jsonb; body jsonb; work_id text; root_id text; obligations text[];
+    BEGIN
+      envelope:=coalesce(to_jsonb(NEW),to_jsonb(OLD)); body:=coalesce(envelope->'value',envelope->'record');
+      IF TG_TABLE_NAME IN ('cp_occurrences','cp_occurrences_archive') THEN obligations:=ARRAY[body->>'obligationId'];
+      ELSE
+        work_id:=coalesce(body->>'workItemId',CASE WHEN TG_TABLE_NAME IN ('cp_work_items','cp_work_items_archive') THEN envelope->>'id' END,envelope->>'log_key');
+        root_id:=coalesce(body #>> '{planRepair,rootWorkItemId}',work_id);
+        SELECT array_agg(value->>'obligationId') INTO obligations FROM cp_occurrences_history
+          WHERE value->>'workItemId'=ANY(ARRAY[work_id,root_id]);
+      END IF;
+      INSERT INTO cp_lineage_cache(id,stamp,value,dirty,generation)
+        SELECT DISTINCT id,'','[]'::jsonb,true,1 FROM unnest(obligations) id WHERE id IS NOT NULL
+        ON CONFLICT(id) DO UPDATE SET dirty=true,generation=cp_lineage_cache.generation+1;
+      RETURN NULL;
+    END $$;`,
+  ...["cp_occurrences","cp_occurrences_archive","cp_work_items","cp_work_items_archive","cp_route_tasks","cp_route_tasks_archive","cp_attempts","cp_log_artifacts","cp_log_worker_results"]
+    .map(table=>`CREATE OR REPLACE TRIGGER ${table}_lineage_changed AFTER INSERT OR UPDATE OR DELETE ON ${table}
+      FOR EACH ROW EXECUTE FUNCTION cp_invalidate_lineage_cache();`),
   `CREATE OR REPLACE FUNCTION cp_check_archive_insert() RETURNS trigger LANGUAGE plpgsql AS $$
     DECLARE archived boolean;
     BEGIN
@@ -203,10 +227,8 @@ export const DISPATCH_STATE_DDL: readonly string[] = [
       IF NOT preserved THEN RAISE EXCEPTION 'deletion requires an exact archived copy' USING ERRCODE='restrict_violation'; END IF;
       RETURN OLD;
     END $$;`,
-  ...ARCHIVED_TABLES.flatMap(kind => [
-    `DROP TRIGGER IF EXISTS cp_${kind}_no_rewrite ON cp_${kind};`,
-    `CREATE TRIGGER cp_${kind}_no_rewrite BEFORE DELETE ON cp_${kind} FOR EACH ROW EXECUTE FUNCTION cp_allow_archived_delete();`,
-  ]),
+  ...ARCHIVED_TABLES.map(kind =>
+    `CREATE OR REPLACE TRIGGER cp_${kind}_no_rewrite BEFORE DELETE ON cp_${kind} FOR EACH ROW EXECUTE FUNCTION cp_allow_archived_delete();`),
   `CREATE OR REPLACE FUNCTION cp_archive_occurrences(requested_ids text[]) RETURNS integer LANGUAGE plpgsql AS $$
     DECLARE held_ids text[];
     BEGIN
@@ -237,7 +259,3 @@ export const DISPATCH_STATE_DDL: readonly string[] = [
   `CREATE INDEX IF NOT EXISTS cp_work_items_repair_root ON cp_work_items ((value #>> '{planRepair,rootWorkItemId}'));`,
   `CREATE INDEX IF NOT EXISTS cp_work_items_archive_repair_root ON cp_work_items_archive ((value #>> '{planRepair,rootWorkItemId}'));`,
 ];
-
-export const DISPATCH_ARCHIVE_MOVE_SQL = `SELECT cp_archive_occurrences(ARRAY(
-  SELECT id FROM cp_occurrences WHERE value->>'closedAt' IS NOT NULL ORDER BY id LIMIT 1000 FOR UPDATE SKIP LOCKED
-)) AS moved`;

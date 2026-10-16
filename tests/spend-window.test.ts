@@ -5,7 +5,6 @@ import { join } from "node:path";
 import { createFileRepositories, fileAggregateRepository, fileAppendOnlyRepository } from "../lib/control-plane/repository/file-store.ts";
 import { PGlite } from "@electric-sql/pglite";
 import { MODEL_CHARGES_DDL, pgSpendRepository } from "../lib/control-plane/repository/model-charges.ts";
-import { migrateModelCharges } from "../lib/control-plane/repository/migrations/CP-01.ts";
 import type { SpendHold } from "../lib/control-plane/budget.ts";
 import assert from "node:assert/strict";
 import { ZERO_COST } from "../lib/control-plane/attempt.ts";
@@ -140,24 +139,6 @@ test("Postgres concurrent writers are idempotent; admissions preserve exact boun
     assert.deepEqual(await spend.aggregate(query), summarizeCharges(assignmentRows, query));
     assert.equal((await spend.aggregate(query)).usd, 0.75);
 
-  } finally { await db.close(); }
-});
-
-test("migration preserves stored prices, backfills lifetime costs and removes the old table", async () => {
-  const { db, sql, spend } = await database();
-  try {
-    await sql.query("CREATE TABLE cp_spend_window (id text PRIMARY KEY, value jsonb)");
-    await sql.query("CREATE TABLE cp_log_costs (log_key text, position bigint, record jsonb)");
-    const entry = charge("old-price", at(1), { usd: 1 });
-    const oldCharge = { ...pricedModelCharge(entry, costRecordId(entry))!, usd: 7, knownUsd: 7 };
-    const older = charge("lifetime", at(100), { usd: 5 });
-    await sql.query("INSERT INTO cp_spend_window VALUES ('model-charges',$1::jsonb)", [JSON.stringify({ charges: [oldCharge] })]);
-    for (const [i, row] of [entry, older].entries()) await sql.query("INSERT INTO cp_log_costs VALUES ('work',$1,$2::jsonb)", [i, JSON.stringify(row)]);
-    await migrateModelCharges(sql);
-    await migrateModelCharges(sql);
-    assert.equal((await spend.aggregate({ since: at(24), until: NOW })).usd, 7);
-    assert.equal((await spend.aggregate({ since: at(120), until: NOW })).usd, 12);
-    assert.deepEqual(await sql.query("SELECT to_regclass('cp_spend_window') AS old_table"), [{ old_table: null }]);
   } finally { await db.close(); }
 });
 

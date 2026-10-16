@@ -18,65 +18,19 @@ export const FIX_MAP_DDL: readonly string[] = [
   "CREATE INDEX IF NOT EXISTS cp_fix_map_place ON cp_fix_map (place_id, method_id);",
   "CREATE INDEX IF NOT EXISTS cp_fix_map_works ON cp_fix_map (tried_at) WHERE state = 'WORKS';",
   "CREATE INDEX IF NOT EXISTS cp_fix_map_method_works ON cp_fix_map (method_id, coalesce(tried_at, updated_at) DESC, place_id) WHERE state = 'WORKS';",
-  `CREATE TABLE IF NOT EXISTS cp_fix_method_summaries (
-    method_id text PRIMARY KEY, revision bigint NOT NULL DEFAULT 1, places text[] NOT NULL DEFAULT '{}', state_counts jsonb NOT NULL DEFAULT '{}'
-  );`,
-  `CREATE OR REPLACE FUNCTION cp_fix_method_summary_changed() RETURNS trigger LANGUAGE plpgsql AS $$
-  DECLARE method text; counts jsonb; state_key text; delta integer; old_state text; new_state text;
-  BEGIN
-    method := coalesce(NEW.method_id, OLD.method_id);
-    INSERT INTO cp_fix_method_summaries (method_id) VALUES (method) ON CONFLICT DO NOTHING;
-    SELECT state_counts INTO counts FROM cp_fix_method_summaries WHERE method_id = method FOR UPDATE;
-    IF TG_OP != 'INSERT' AND OLD.state = 'WORKS' THEN
-      old_state := lower(substring(OLD.place_id from '(?:^|/)state:([a-zA-Z]{2})(?:/|$|#)'));
-    END IF;
-    IF TG_OP != 'DELETE' AND NEW.state = 'WORKS' THEN
-      new_state := lower(substring(NEW.place_id from '(?:^|/)state:([a-zA-Z]{2})(?:/|$|#)'));
-    END IF;
-    IF old_state IS DISTINCT FROM new_state THEN
-      FOREACH state_key IN ARRAY ARRAY[old_state, new_state] LOOP
-        IF state_key IS NOT NULL THEN
-          delta := coalesce((counts->>state_key)::integer, 0) + CASE WHEN state_key = old_state THEN -1 ELSE 1 END;
-          counts := CASE WHEN delta <= 0 THEN counts - state_key ELSE jsonb_set(counts, ARRAY[state_key], to_jsonb(delta)) END;
-        END IF;
-      END LOOP;
-    END IF;
-    UPDATE cp_fix_method_summaries SET revision = revision + 1, state_counts = counts, places = ARRAY(
-      SELECT place_id FROM cp_fix_map WHERE method_id = method AND state = 'WORKS'
-      ORDER BY coalesce(tried_at, updated_at) DESC, place_id LIMIT 3
-    ) WHERE method_id = method;
-    RETURN NULL;
-  END $$;`,
-  `DO $$ BEGIN
-    LOCK TABLE cp_fix_map IN SHARE ROW EXCLUSIVE MODE;
-    INSERT INTO cp_fix_method_summaries (method_id, places, state_counts)
-      SELECT methods.method_id,
-        ARRAY(SELECT place_id FROM cp_fix_map works WHERE works.method_id = methods.method_id AND state = 'WORKS'
-          ORDER BY coalesce(tried_at, updated_at) DESC, place_id LIMIT 3),
-        coalesce((SELECT jsonb_object_agg(state_key, n) FROM (
-          SELECT lower(substring(place_id from '(?:^|/)state:([a-zA-Z]{2})(?:/|$|#)')) AS state_key, count(*) AS n
-          FROM cp_fix_map works WHERE works.method_id = methods.method_id AND state = 'WORKS' GROUP BY state_key
-        ) states WHERE state_key IS NOT NULL), '{}'::jsonb)
-      FROM (SELECT DISTINCT method_id FROM cp_fix_map) methods
-      ON CONFLICT (method_id) DO UPDATE SET revision = cp_fix_method_summaries.revision + 1, places = EXCLUDED.places, state_counts = EXCLUDED.state_counts;
-    CREATE OR REPLACE TRIGGER cp_fix_method_summary_changed AFTER INSERT OR UPDATE OR DELETE ON cp_fix_map
-      FOR EACH ROW EXECUTE FUNCTION cp_fix_method_summary_changed();
-  END $$;`,
+
 ];
 
-/** Where one method works: up to `WORKS_PLACES_SHOWN` places, newest first, and every state it works in. */
 export interface MethodWorks {
   readonly places: readonly string[];
   readonly states: readonly string[];
 }
 export const WORKS_PLACES_SHOWN = 3;
 
-/** The two-letter state a place id names, or null. */
 export function stateOfPlace(placeId: string): string | null {
   return /(?:^|\/)state:([a-z]{2})(?:\/|$|#)/i.exec(placeId)?.[1]?.toLowerCase() ?? null;
 }
 
-/** Pure: the `worksFor` answer from rows already held. */
 export function methodWorksOf(rows: readonly FixMapRow[], methodIds: readonly string[]): ReadonlyMap<string, MethodWorks> {
   const wanted = new Set(methodIds);
   const out = new Map<string, MethodWorks>();
@@ -95,7 +49,6 @@ export function methodWorksOf(rows: readonly FixMapRow[], methodIds: readonly st
 
 const workedAt = (r: FixMapRow): number => Date.parse(r.triedAt ?? r.updatedAt);
 
-/** Pure: the `workingMethods` answer from rows already held. */
 export function latestWorking(rows: readonly FixMapRow[], limit: number): FixMapRow[] {
   const newest = new Map<string, FixMapRow>();
   for (const row of rows) {
@@ -106,7 +59,6 @@ export function latestWorking(rows: readonly FixMapRow[], limit: number): FixMap
   return [...newest.values()].sort((a, b) => workedAt(b) - workedAt(a) || a.methodId.localeCompare(b.methodId)).slice(0, limit);
 }
 
-/** An old replay or a newly scheduled trial cannot erase a known result. */
 export function applyFixResult(prior: FixMapRow | null, incoming: FixMapRow): FixMapRow {
   if (!prior) return incoming;
   if (prior.methodId !== incoming.methodId || prior.placeId !== incoming.placeId) throw new Error("Fix-map row identities differ");
@@ -145,9 +97,9 @@ export interface FixMapRepository {
   forPlace(placeId: string, limit?: number): Promise<readonly FixMapRow[]>;
   forPlaces(methodId: string, placeIds: readonly string[]): Promise<readonly FixMapRow[]>;
   statistics(methodId: string, recentSince?: string, before?: string): Promise<MethodStatistics>;
-  /** For each named method, where it works. */
+
   worksFor(methodIds: readonly string[]): Promise<ReadonlyMap<string, MethodWorks>>;
-  /** Each method that works somewhere: its newest working row, newest first. */
+
   workingMethods(limit?: number): Promise<readonly FixMapRow[]>;
   put(row: FixMapRow): Promise<void>;
 }
@@ -159,9 +111,8 @@ function decode(row: Record<string, unknown>): FixMapRow {
     updatedAt: date(row.updated_at)!, supersededAttemptId: row.superseded_attempt_id as string | null };
 }
 
-/** Both reads require a scope; no whole-map loading in a place worker. */
 export function createFixMapRepository(query: Query): FixMapRepository {
-  let summaries = new Map<string, { revision: number; value: MethodWorks }>();
+  const summaries = new Map<string, MethodWorks>();
   const bounded = (limit = 200) => {
     if (!Number.isInteger(limit) || limit < 1 || limit > 1000) throw new Error("Invalid fix-map page size");
     return limit;
@@ -184,24 +135,27 @@ export function createFixMapRepository(query: Query): FixMapRepository {
         FROM cp_fix_map WHERE method_id = $1`, [methodId, recentSince ?? null, before ?? null]);
       return Object.fromEntries(Object.entries(row!).map(([key, value]) => [key, Number(value)])) as unknown as MethodStatistics;
     },
-    worksFor: async (methodIds) => {
-      const ids = [...new Set(methodIds)];
-      if (ids.length === 0) { summaries.clear(); return new Map(); }
-      const prior = new Map(ids.flatMap(id => summaries.has(id) ? [[id, summaries.get(id)!] as const] : []));
-      const rows = await query(`SELECT s.method_id, s.revision,
-        CASE WHEN s.revision = held.revision THEN NULL ELSE jsonb_build_object('places', s.places,
-          'states', ARRAY(SELECT jsonb_object_keys(s.state_counts) ORDER BY 1)) END AS value
-        FROM cp_fix_method_summaries s JOIN unnest($1::text[], $2::bigint[]) held(method_id, revision) USING (method_id)`,
-      [ids, ids.map(id => prior.get(id)?.revision ?? null)]);
-      summaries = new Map(rows.map(row => [String(row.method_id), { revision: Number(row.revision),
-        value: row.value === null ? prior.get(String(row.method_id))!.value : row.value as MethodWorks }]));
-      return new Map([...summaries].filter(([, summary]) => summary.value.places.length > 0).map(([id, summary]) => [id, summary.value]));
+    worksFor: async methodIds => {
+      const ids = [...new Set(methodIds)], missing = ids.filter(id => !summaries.has(id));
+      if (missing.length) {
+        const rows = await query(`SELECT methods.method_id,
+          ARRAY(SELECT place_id FROM cp_fix_map WHERE method_id=methods.method_id AND state='WORKS'
+            ORDER BY coalesce(tried_at,updated_at) DESC,place_id LIMIT 3) AS places,
+          ARRAY(SELECT DISTINCT lower(substring(place_id from '(?:^|/)state:([a-zA-Z]{2})(?:/|$|#)')) AS state
+            FROM cp_fix_map WHERE method_id=methods.method_id AND state='WORKS'
+            AND substring(place_id from '(?:^|/)state:([a-zA-Z]{2})(?:/|$|#)') IS NOT NULL ORDER BY state) AS states
+          FROM unnest($1::text[]) AS methods(method_id)`,[missing]);
+        for (const id of missing) summaries.set(id,{ places: [],states: [] });
+        for (const row of rows) summaries.set(String(row.method_id),{ places: row.places as string[],states: row.states as string[] });
+      }
+      return new Map(ids.flatMap(id => summaries.get(id)!.places.length ? [[id,summaries.get(id)!] as const] : []));
     },
     workingMethods: async (limit) => (await query(
       `SELECT * FROM (SELECT DISTINCT ON (method_id) * FROM cp_fix_map WHERE state = 'WORKS'
         ORDER BY method_id, coalesce(tried_at, updated_at) DESC, place_id) newest
       ORDER BY coalesce(tried_at, updated_at) DESC, method_id LIMIT $1`, [bounded(limit)])).map(decode),
     put: async row => {
+      summaries.delete(row.methodId);
       await query(`INSERT INTO cp_fix_map (method_id, place_id, state, tried_at, attempt_id, cause, updated_at)
         VALUES ($1, $2, $3, $4, $5, $6, $7)
         ON CONFLICT (method_id, place_id) DO UPDATE SET state = EXCLUDED.state, tried_at = EXCLUDED.tried_at,
@@ -215,7 +169,6 @@ export function createFixMapRepository(query: Query): FixMapRepository {
   };
 }
 
-/** The fix map over any aggregate store (one aggregate per method and place), with the table's replace rules. */
 export function aggregateFixMap(repo: AggregateRepository<FixMapRow>): FixMapRepository {
   const idOf = (r: Pick<FixMapRow, "methodId" | "placeId">): string => createHash("sha256").update(`${r.methodId}\u0000${r.placeId}`).digest("hex").slice(0, 32);
   const all = async () => (await repo.list()).map((row) => row.value);

@@ -5,7 +5,7 @@ import { ConcurrentModification, IdentityCollision, UnknownAggregate, canonicalJ
 export const ADMIN_SECTIONS = {
   settingHistory: "setting_history", updates: "updates", fixList: "fix_list", methodStandings: "method_standings",
   routineDueRequests: "routine_due_requests", routineRefreshRequests: "routine_refresh_requests",
-  placeTargets: "place_targets", billingFacts: "billing_facts",
+  placeTargets: "place_targets", billingFacts: "billing_facts", expansionScopes: "expansion_scopes",
 } as const;
 export type AdminSection = keyof typeof ADMIN_SECTIONS;
 export interface AdminSectionQuery {
@@ -27,7 +27,6 @@ export interface AdminConfigRepository extends AggregateRepository<AdminConfig> 
   save(held: Persisted<AdminConfig> | null, next: AdminConfig, now: string): Promise<Persisted<AdminConfig>>;
 }
 
-const sectionIdField = (section: string): string => section === "methodStandings" ? "methodId" : section === "placeTargets" ? "key" : "id";
 export const ADMIN_SECTION_TABLES = Object.values(ADMIN_SECTIONS).map(name => `cp_admin_${name}`);
 export const ADMIN_SECTIONS_DDL = Object.values(ADMIN_SECTIONS).flatMap(name => [
   `CREATE TABLE IF NOT EXISTS cp_admin_${name} (
@@ -35,73 +34,37 @@ export const ADMIN_SECTIONS_DDL = Object.values(ADMIN_SECTIONS).flatMap(name => 
     updated_at timestamptz NOT NULL, value jsonb NOT NULL, PRIMARY KEY (config_id, id));`,
   `CREATE INDEX IF NOT EXISTS cp_admin_${name}_order ON cp_admin_${name} (config_id, ordinal DESC);`,
 ]);
-export const ADMIN_SECTIONS_STRIP_DDL = `UPDATE cp_admin_config SET value = value - ARRAY[${Object.keys(ADMIN_SECTIONS).map(key => `'${key}'`).join(",")}], revision = revision + 1
-  WHERE value ?| ARRAY[${Object.keys(ADMIN_SECTIONS).map(key => `'${key}'`).join(",")}];`;
 export const ADMIN_SECTION_INDEXES = [
+  "CREATE INDEX IF NOT EXISTS cp_admin_expansion_scopes_reach ON cp_admin_expansion_scopes USING gin ((value->'planningStates'));",
+  "CREATE INDEX IF NOT EXISTS cp_admin_expansion_scopes_state ON cp_admin_expansion_scopes (config_id, (value #>> '{geography,stateAbbr}'));",
   "CREATE INDEX IF NOT EXISTS cp_admin_setting_history_key ON cp_admin_setting_history (config_id, (value->>'key'), ordinal DESC);",
   "CREATE INDEX IF NOT EXISTS cp_admin_updates_unshown ON cp_admin_updates (config_id, ordinal) WHERE value->>'shownAt' IS NULL;",
   "CREATE INDEX IF NOT EXISTS cp_admin_routine_due_active ON cp_admin_routine_due_requests (config_id, (value->>'expiresAt')) WHERE value->>'withdrawnAt' IS NULL;",
   "CREATE INDEX IF NOT EXISTS cp_admin_routine_refresh_pending ON cp_admin_routine_refresh_requests (config_id, ordinal) WHERE jsonb_array_length(value->'attempts') < (value->>'maximumAttempts')::integer OR value->'attempts' @> '[{\"finishedAt\":null}]'::jsonb;",
   "CREATE INDEX IF NOT EXISTS cp_admin_fix_pending ON cp_admin_fix_list (config_id, id) WHERE value->'dispatch' IS NOT NULL AND value #>> '{dispatch,honoredAt}' IS NULL;",
 ];
-const adminRows = (source: string, section: string) => `jsonb_array_elements(coalesce(nullif(${source}->'${section}', 'null'::jsonb), '[]'::jsonb))`;
-export const ADMIN_SECTIONS_EXPAND_DDL = [
-  ...ADMIN_SECTIONS_DDL, ...ADMIN_SECTION_INDEXES,
-  `CREATE OR REPLACE FUNCTION cp_capture_admin_sections() RETURNS trigger LANGUAGE plpgsql AS $capture$
-    BEGIN
-      ${Object.entries(ADMIN_SECTIONS).map(([section, name]) => `IF NEW.value ? '${section}' THEN
-        ${section !== "placeTargets" && section !== "billingFacts" ? `IF TG_OP = 'UPDATE' THEN
-          INSERT INTO cp_admin_${name} (config_id, id, updated_at, value)
-            SELECT OLD.id, entry.value->>'${sectionIdField(section)}', OLD.updated_at, entry.value FROM ${adminRows("OLD.value", section)} entry
-            ON CONFLICT (config_id, id) DO NOTHING;
-        END IF;` : ""}
-        INSERT INTO cp_admin_${name} (config_id, id, updated_at, value)
-          SELECT NEW.id, entry.value->>'${sectionIdField(section)}', NEW.updated_at, entry.value FROM ${adminRows("NEW.value", section)} entry
-          ON CONFLICT (config_id, id) DO UPDATE SET value = EXCLUDED.value, updated_at = EXCLUDED.updated_at
-          WHERE cp_admin_${name}.value IS DISTINCT FROM EXCLUDED.value;
-        ${section === "placeTargets" || section === "billingFacts" ? `IF TG_OP = 'UPDATE' THEN
-          DELETE FROM cp_admin_${name} held WHERE held.config_id = NEW.id
-            AND held.id IN (SELECT entry.value->>'${sectionIdField(section)}' FROM ${adminRows("OLD.value", section)} entry)
-            AND NOT EXISTS (SELECT 1 FROM ${adminRows("NEW.value", section)} entry WHERE entry.value->>'${sectionIdField(section)}' = held.id);
-        END IF;` : ""}
-      END IF;`).join("\n")}
-      RETURN NEW;
-    END $capture$;`,
-  "DROP TRIGGER IF EXISTS cp_capture_admin_sections ON cp_admin_config;",
-  "CREATE TRIGGER cp_capture_admin_sections AFTER INSERT OR UPDATE OF value ON cp_admin_config FOR EACH ROW EXECUTE FUNCTION cp_capture_admin_sections();",
-];
-export async function backfillAdminSections(query: Query): Promise<void> {
-  for (const [section, name] of Object.entries(ADMIN_SECTIONS)) {
-    const configs = await query("SELECT id FROM cp_admin_config WHERE value ? $1 ORDER BY id", [section]);
-    for (const config of configs) {
-      let through = 0;
-      for (;;) {
-        const result = await query(`WITH source AS MATERIALIZED (
-          SELECT id, updated_at, coalesce(nullif(value->'${section}', 'null'::jsonb), '[]'::jsonb) AS entries
-          FROM cp_admin_config WHERE id = $1 FOR SHARE
-        ), batch AS (
-          SELECT c.id AS config_id, c.updated_at, c.entries->e.position AS value, e.position + 1 AS n
-          FROM source c CROSS JOIN LATERAL generate_series($2::integer,
-            least($2::integer + 99, jsonb_array_length(c.entries) - 1)) AS e(position)
-        ), saved AS (
-          INSERT INTO cp_admin_${name} (config_id, id, updated_at, value)
-          SELECT config_id, value->>'${sectionIdField(section)}', updated_at, value FROM batch ORDER BY n
-          ON CONFLICT (config_id, id) DO NOTHING RETURNING id
-        ) SELECT coalesce(max(n), $2::bigint) AS through, count(*) AS count FROM batch`, [config.id, through]);
-        through = Number(result[0].through);
-        if (Number(result[0].count) < 100) break;
-      }
-    }
-  }
-}
-export const ADMIN_SECTIONS_CONTRACT_DDL = [
-  `DO $contract$ BEGIN
-    LOCK TABLE cp_admin_config IN ACCESS EXCLUSIVE MODE;
-    ${ADMIN_SECTIONS_STRIP_DDL}
-    DROP TRIGGER IF EXISTS cp_capture_admin_sections ON cp_admin_config;
-    DROP FUNCTION IF EXISTS cp_capture_admin_sections();
-  END $contract$;`,
-];
+export const ADMIN_SCOPED_SAVE_DDL = `CREATE OR REPLACE FUNCTION cp_save_admin_places(config text, patch jsonb, at_time timestamptz)
+RETURNS void LANGUAGE plpgsql AS $$
+DECLARE entry jsonb; held jsonb; table_name text;
+BEGIN
+  FOR entry IN SELECT value FROM jsonb_array_elements(patch) ORDER BY value->>'section', value->>'id' LOOP
+    IF entry->>'section' NOT IN ('placeTargets','expansionScopes') THEN RAISE EXCEPTION 'Unknown place section'; END IF;
+    table_name := CASE entry->>'section' WHEN 'placeTargets' THEN 'cp_admin_place_targets' ELSE 'cp_admin_expansion_scopes' END;
+    PERFORM pg_advisory_xact_lock(hashtext(table_name || config), hashtext(entry->>'id'));
+    EXECUTE format('SELECT value FROM %I WHERE config_id=$1 AND id=$2 FOR UPDATE', table_name)
+      INTO held USING config, entry->>'id';
+    IF coalesce(held,'null'::jsonb) IS DISTINCT FROM entry->'before' THEN RAISE EXCEPTION 'CP_ADMIN_PLACE_CONFLICT'; END IF;
+    IF entry->'after' = 'null'::jsonb THEN
+      EXECUTE format('DELETE FROM %I WHERE config_id=$1 AND id=$2',table_name) USING config,entry->>'id';
+    ELSE
+      EXECUTE format('INSERT INTO %I(config_id,id,updated_at,value) VALUES($1,$2,$3,$4)
+        ON CONFLICT(config_id,id) DO UPDATE SET updated_at=EXCLUDED.updated_at,value=EXCLUDED.value',table_name)
+        USING config,entry->>'id',at_time,entry->'after';
+    END IF;
+  END LOOP;
+END $$;`;
+
+export const ADMIN_SECTIONS_EXPAND_DDL = [...ADMIN_SECTIONS_DDL,...ADMIN_SECTION_INDEXES,ADMIN_SCOPED_SAVE_DDL];
 
 const COMMIT_KEY = "__adminSectionsCommit";
 function currentSettings(config: AdminConfig): AdminConfig {
@@ -111,7 +74,7 @@ const copy = <T>(value: T): T => JSON.parse(JSON.stringify(value)) as T;
 const entries = (config: AdminConfig | null, key: AdminSection): readonly Record<string, unknown>[] =>
   (config?.[key] ?? []) as unknown as readonly Record<string, unknown>[];
 const itemId = (section: AdminSection, item: Record<string, unknown>): string => {
-  const id = item[section === "methodStandings" ? "methodId" : section === "placeTargets" ? "key" : "id"];
+  const id = item[section === "methodStandings" ? "methodId" : section === "placeTargets" || section === "expansionScopes" ? "key" : "id"];
   if (typeof id !== "string" || !id) throw new Error(`Invalid ${section} row identity`);
   return id;
 };
@@ -121,8 +84,17 @@ function changes(held: AdminConfig | null, next: AdminConfig) {
     const before = new Map(entries(held, section).map(item => [itemId(section, item), item]));
     const after = new Map(entries(next, section).map(item => [itemId(section, item), item]));
     const put = [...after].filter(([id, item]) => canonicalJson(before.get(id)) !== canonicalJson(item)).map(([id, value]) => ({ id, value }));
-    const remove = section === "placeTargets" || section === "billingFacts" ? [...before.keys()].filter(id => !after.has(id)) : [];
+    const remove = section === "placeTargets" || section === "billingFacts" || section === "expansionScopes" ? [...before.keys()].filter(id => !after.has(id)) : [];
     return put.length || remove.length ? [{ section, put, remove }] : [];
+  });
+}
+const placeSections = (patch: ReturnType<typeof changes>) => patch.length > 0 && patch.every(change => change.section === "placeTargets" || change.section === "expansionScopes");
+const sameSettings = (before: AdminConfig, after: AdminConfig) => canonicalJson({ ...currentSettings(before), updatedAt: undefined }) === canonicalJson({ ...currentSettings(after), updatedAt: undefined });
+function placePatch(held: AdminConfig, patch: ReturnType<typeof changes>) {
+  return patch.flatMap(change => {
+    const before = new Map(entries(held, change.section).map(item => [itemId(change.section, item), item]));
+    return [...change.put.map(item => ({ section: change.section, id: item.id, before: before.get(item.id) ?? null, after: item.value })),
+      ...change.remove.map(id => ({ section: change.section, id, before: before.get(id) ?? null, after: null }))];
   });
 }
 const scopeOf = (config: AdminConfig): AdminSectionsQuery => Object.fromEntries(
@@ -136,7 +108,7 @@ export function pgAdminConfigRepository(base: AggregateRepository<AdminConfig>, 
   async function read(id: string, sections: AdminSectionsQuery = {}): Promise<Persisted<AdminConfig> | null> {
     for (;;) {
       const previous = cached;
-      const rows = await query(`SELECT id, revision, updated_at, CASE WHEN revision = $2::bigint THEN NULL ELSE value END AS value
+      const rows = await query(`SELECT id, revision, updated_at, CASE WHEN revision = $2::bigint THEN NULL ELSE value - ARRAY[${Object.keys(ADMIN_SECTIONS).map(key=>`'${key}'`).join(",")}] END AS value
         FROM cp_admin_config WHERE id = $1`, [id, previous?.id === id ? previous.revision : null]);
       const row = rows[0];
       if (!row) { if (cached === previous) cached = null; return null; }
@@ -157,7 +129,10 @@ export function pgAdminConfigRepository(base: AggregateRepository<AdminConfig>, 
         if (options.where) {
           if (!options.where.path.length || options.where.path.some(key => !/^[a-zA-Z][a-zA-Z0-9]*$/.test(key))) throw new Error("Invalid Admin section path");
           const path = `value #>> '{${options.where.path.join(",")}}'`;
-          filters.push(options.where.value === null ? `${path} IS NULL` : `${path} = ${at(options.where.value)}`);
+          const parameter=options.where.value===null?null:at(options.where.value);
+          filters.push(options.where.value!==null && section==="expansionScopes" && options.where.path.join(".")==="geography.stateAbbr"
+            ? `(${path}=${parameter} OR value->'planningStates' ? ${parameter})`
+            : options.where.value===null?`${path} IS NULL`:`${path}=${parameter}`);
         }
         if (options.pending && section === "fixList") filters.push("value->'dispatch' IS NOT NULL AND value #>> '{dispatch,honoredAt}' IS NULL");
         if (options.pending && section === "routineRefreshRequests") filters.push("(jsonb_array_length(value->'attempts') < (value->>'maximumAttempts')::integer OR value->'attempts' @> '[{\"finishedAt\":null}]'::jsonb)");
@@ -181,6 +156,11 @@ export function pgAdminConfigRepository(base: AggregateRepository<AdminConfig>, 
   async function save(held: Persisted<AdminConfig> | null, next: AdminConfig, now: string): Promise<Persisted<AdminConfig>> {
     const id = held?.id ?? ADMIN_CONFIG_ID;
     const patch = changes(held?.value ?? null, next);
+    if (held && placeSections(patch) && sameSettings(held.value, next)) {
+      try { await query("SELECT cp_save_admin_places($1,$2::jsonb,$3::timestamptz)", [id, JSON.stringify(placePatch(held.value, patch)), now]); }
+      catch (error) { if (String(error).includes("CP_ADMIN_PLACE_CONFLICT")) throw new ConcurrentModification("AdminPlace", id, held.revision, null); throw error; }
+      return { ...held, value: copy(next) };
+    }
     if (held && !patch.length && canonicalJson(currentSettings(held.value)) === canonicalJson(currentSettings(next))) {
       const current = await read(id);
       if (current?.revision !== held.revision) throw new ConcurrentModification("AdminConfig", id, held.revision, current?.revision ?? null);
@@ -189,7 +169,7 @@ export function pgAdminConfigRepository(base: AggregateRepository<AdminConfig>, 
     const params: unknown[] = [id, now, JSON.stringify(currentSettings(next)), held?.revision ?? null];
     const at = (value: unknown) => `$${params.push(value)}`;
     const clauses = [held
-      ? `saved AS (UPDATE cp_admin_config SET revision = revision + 1, updated_at = $2::timestamptz, value = $3::jsonb WHERE id = $1 AND revision = $4::bigint RETURNING id, revision, updated_at)`
+      ? `saved AS (UPDATE cp_admin_config SET revision = revision + 1, updated_at = $2::timestamptz, value = value || $3::jsonb WHERE id = $1 AND revision = $4::bigint RETURNING id, revision, updated_at)`
       : `saved AS (INSERT INTO cp_admin_config (id, revision, updated_at, value) SELECT $1, 1, $2::timestamptz, $3::jsonb WHERE $4::bigint IS NULL ON CONFLICT (id) DO NOTHING RETURNING id, revision, updated_at)`];
     for (const [index, change] of patch.entries()) {
       const table = `cp_admin_${ADMIN_SECTIONS[change.section]}`;
@@ -283,7 +263,9 @@ export function storedAdminConfigRepository(base: AggregateRepository<AdminConfi
           .sort((a, b) => a.ordinal - b.ordinal).map(row => row.item!);
         if (options.where) items = items.filter(item => {
           const value = options.where!.path.reduce<unknown>((at, key) => at && typeof at === "object" ? (at as Record<string, unknown>)[key] : undefined, item);
-          return options.where!.value === null ? value == null : String(value) === options.where!.value;
+          return options.where!.value === null ? value == null : String(value) === options.where!.value ||
+            section==="expansionScopes" && options.where!.path.join(".")==="geography.stateAbbr" &&
+            Array.isArray(item.planningStates) && item.planningStates.includes(options.where!.value);
         });
         if (options.pending && section === "fixList") items = items.filter(item => item.dispatch && !(item.dispatch as Record<string, unknown>).honoredAt);
         if (options.pending && section === "routineRefreshRequests") items = items.filter(item => (item.attempts as {finishedAt:string|null}[]).length < Number(item.maximumAttempts) || (item.attempts as {finishedAt:string|null}[]).some(attempt => attempt.finishedAt === null));
@@ -307,6 +289,18 @@ export function storedAdminConfigRepository(base: AggregateRepository<AdminConfi
   }
   async function save(held: Persisted<AdminConfig> | null, next: AdminConfig, now: string): Promise<Persisted<AdminConfig>> {
     const id = held?.id ?? ADMIN_CONFIG_ID;
+    const placeChanges = changes(held?.value ?? null, next);
+    if (held && placeSections(placeChanges) && sameSettings(held.value, next)) {
+      for (const entry of placePatch(held.value, placeChanges)) await locks.withLock(`admin-place:${entry.section}:${id}:${entry.id}`, async () => {
+        const repo = sections[entry.section], key = rowId(id, entry.id), old = await repo.read(key);
+        const head = await base.mustRead(id) as Persisted<StoredAdminConfig>;
+        const prior = old ? visible(old, head) : null;
+        if (canonicalJson(prior?.item ?? null) !== canonicalJson(entry.before)) throw new ConcurrentModification("AdminPlace", key, old?.revision ?? 0, null);
+        const value = { configId: id, item: entry.after, ordinal: prior?.ordinal ?? Date.parse(now), updatedAt: now };
+        if (old) await repo.compareAndSet(key, old.revision, value, now); else await repo.put(key, value, now);
+      });
+      return { ...held, value: copy(next) };
+    }
     return locks.withLock(`admin-config:${id}`, async () => {
       const current = await base.read(id) as Persisted<StoredAdminConfig> | null;
       if ((current?.revision ?? null) !== (held?.revision ?? null)) throw new ConcurrentModification("AdminConfig", id, held?.revision ?? 0, current?.revision ?? null);
@@ -315,7 +309,7 @@ export function storedAdminConfigRepository(base: AggregateRepository<AdminConfi
       if (current && !patch.length && canonicalJson({ ...current.value, [COMMIT_KEY]: undefined }) === canonicalJson(currentSettings(next))) {
         return { ...current, value: copy(next) };
       }
-      // Finalize only the last committed write; abandoned stages never become visible to a later revision.
+
       for (const changed of priorCommit?.rows ?? []) {
         const repo = sections[changed.section], key = rowId(id, changed.id), row = await repo.read(key);
         if (row?.value.pending?.token !== priorCommit!.token) continue;

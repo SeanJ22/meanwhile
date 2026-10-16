@@ -6,8 +6,9 @@ export const COMMENT_FIELDS: readonly (readonly [CommentField, string])[] = [["c
   ["writtenComment", "comment:written"], ["attend", "comment:attend"], ["timeLimit", "comment:time_limit"]];
 export const COMMENT_PERIOD = "comment:period";
 
-const COMMENT_SQL = `SELECT f.entity_id, f.field, f.value, f.quote, f.checked_at, s.url, b.parent_id
-  FROM fact f JOIN source_copy s ON s.id = f.source_copy_id JOIN entity b ON b.id = f.entity_id
+const COMMENT_SQL = `SELECT f.entity_id, f.field, f.value, f.quote, f.checked_at, (SELECT s.url FROM source_copy s WHERE s.id = f.source_copy_id) AS url,
+  (SELECT b.parent_id FROM entity b WHERE b.id = f.entity_id) AS parent_id
+  FROM fact f
   WHERE f.status = 'live' AND f.field LIKE 'comment:%' AND ($1::text[] IS NULL OR f.entity_id = ANY($1::text[]))
   ORDER BY f.entity_id, f.field`;
 

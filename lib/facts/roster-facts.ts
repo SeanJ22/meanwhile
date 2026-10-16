@@ -114,7 +114,6 @@ export async function publishRosterFacts(db: FactDb & { readonly query: (text: s
         AND f.field LIKE 'member:%' AND NOT (substr(f.field, 8) = ANY($3::text[])) RETURNING f.id`,
     [body.id, capture.evidence.canonicalUrl, [...seated]]));
     tally.departed = gone.length;
-    if (gone.length) await db.query(`INSERT INTO rebuild_queue (place_id) SELECT place_id FROM entity_place WHERE entity_id = $1 ON CONFLICT DO NOTHING`, [body.id]);
   }
   return tally;
 }

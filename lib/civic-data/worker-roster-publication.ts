@@ -242,8 +242,11 @@ export async function publishOwedRosterFacts(input: {
       const detail = sanitizedErrorDiagnostic(error);
       outcome = { at: input.now, workerResultId: reading?.id ?? "none", status: "HELD", code: detail.split(":")[0]!, detail, recovery: "WORKER", candidateId: null, versionId: null };
     }
+    // The same outcome at a later time is not written: an unchanged row stays out of every reader's changed set.
     const current = await input.repos.workItems.mustRead(id);
-    await input.repos.workItems.compareAndSet(id, current.revision, { ...current.value, publicationOutcome: outcome }, input.now);
+    const { at: _was, ...before } = current.value.publicationOutcome ?? { at: "" };
+    const { at: _now, ...after } = outcome;
+    if (canonicalJson(before) !== canonicalJson(after)) await input.repos.workItems.compareAndSet(id, current.revision, { ...current.value, publicationOutcome: outcome }, input.now);
     report.push({ workItemId: id, outcome });
     if (outcome.code !== "VERIFIED_RESULT_REUSED" && reading) await recordPublishedPageDoor({ repos: input.repos, page: reading.capture, recordClass: plan.contract.recordClass, bodyId,
       ocdId: plan.contract.jurisdiction.canonicalId, workItemId: id, published: outcome.status === "HELD" ? 0 : 1, now: input.now });

@@ -23,11 +23,11 @@ test("version 27 declares the manual's rows and the fix map, one statement per b
 });
 
 test("a slice is asked of Postgres by role, kind, record class, platform and the job's place and state", () => {
-  const params = fieldManualSliceParams({ role: "SCOUT", recordClass: "Meetings", platform: "Legistar",
+  const params = fieldManualSliceParams({ role: "SCOUT", recordClass: "Meetings", platform: "Legistar", withinState: "AZ",
     ocdIds: ["ocd-division/country:us/state:az/county:pima/place:tucson#governing"] });
   assert.deepEqual(params, [["SCOUT", "SHARED"], null, "meetings", false, ["METHOD", "ROUTE", "MANIFEST_BRANCH"],
     ["ocd-division/country:us", "ocd-division/country:us/state:az", "ocd-division/country:us/state:az/county:pima",
-      "ocd-division/country:us/state:az/county:pima/place:tucson"], "legistar", "az"]);
+      "ocd-division/country:us/state:az/county:pima/place:tucson"], "legistar", "az", "az"]);
   assert.match(FIELD_MANUAL_SLICE_SQL, /value->'reach'->'places', '\[\]'::jsonb\) \?\| \$6::text\[\]/);
   assert.match(FIELD_MANUAL_SLICE_SQL, /ORDER BY id ASC LIMIT \d+/);
   assert.deepEqual(fieldManualSliceParams({ kinds: ["PLAYBOOK"], everywhere: true }).slice(0, 4), [null, ["PLAYBOOK"], null, true]);
@@ -83,5 +83,8 @@ test("on the runner a slice is the held copy filtered by the slice rule: a later
   seen.length = 0;
   const plain = pgFieldManualRepository(sql);
   await plain.slice(query);
+  assert.deepEqual(seen, [FIELD_MANUAL_SLICE_SQL]);
+  seen.length = 0;
+  await held.slice({ kinds: ["ROUTE"], state: "az", withinState: "az" });
   assert.deepEqual(seen, [FIELD_MANUAL_SLICE_SQL]);
 });

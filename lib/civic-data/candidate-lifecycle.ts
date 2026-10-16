@@ -74,7 +74,7 @@ export async function processRoutineCandidate(
   let base = scoped && store.readStatePublicationBase ? await store.readStatePublicationBase(inputCandidate.recordClass, inputCandidate.scope) : null;
   let current = base ? base.current : await store.readPromotion(inputCandidate.recordClass, inputCandidate.scope);
   let lkg = base ? base.lkg : current ? await store.readCandidate(current.lastKnownGoodVersionId) : null;
-  const indexedPrior = lkg ? statePublicationPriorOf(lkg.candidate) : undefined;
+  let indexedPrior = lkg ? statePublicationPriorOf(lkg.candidate) : undefined;
   const observedBaseVersionId = current?.versionId ?? null;
   const preloadedBaseChanged = expectedBaseVersionId !== undefined && expectedBaseVersionId !== observedBaseVersionId;
   const lkgPredecessorVersionId = lkg === null
@@ -201,6 +201,7 @@ export async function processRoutineCandidate(
   }
   const missingLkg = lkg === null;
   if (scoped) {
+    indexedPrior = undefined;
     base = null;
     lkg = null;
     lkgTransferPredecessor = null;

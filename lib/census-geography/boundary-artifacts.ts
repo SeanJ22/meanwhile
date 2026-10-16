@@ -39,17 +39,18 @@ function geometryBounds(geometry: GeographyGeometry): [number, number, number, n
 }
 
 export async function publishScopeBoundaries(scope: BuiltScope, store: ReaderArtifactStore): Promise<BuiltScope> {
-  const groupings: BuiltScope["groupings"][number][] = [];
   for (const group of scope.groupings) {
-    const { geometry, ...metadata } = group;
-    if (!geometry) { groupings.push(metadata); continue; }
-    const { accurate, display } = boundaryGeometries(geometry);
+    if (!group.geometry) continue;
+    const { accurate, display } = boundaryGeometries(group.geometry);
     const value: BoundaryArtifact = {formatVersion:1,stateFips:group.stateFips,type:scope.type,version:scope.version,geoid:group.geoid,accurate,display};
     const bytes = gzipSync(Buffer.from(JSON.stringify(value)));
     const geometryRef: BoundaryArtifactRef = {key:await store.putImmutable(bytes,"json.gz"),sha256:createHash("sha256").update(bytes).digest("hex"),bytes:bytes.byteLength,bounds:geometryBounds(accurate)};
-    groupings.push({...metadata,geometryRef});
+    // Acquisition transfers these groups to publication; release each polygon after its durable write.
+    const owned = group as { geometry?: GeographyGeometry; geometryRef?: BoundaryArtifactRef };
+    owned.geometryRef = geometryRef;
+    delete owned.geometry;
   }
-  return {...scope,groupings};
+  return scope;
 }
 
 export function boundaryTouchesArea(ref: BoundaryArtifactRef, area: BoundaryArea): boolean {

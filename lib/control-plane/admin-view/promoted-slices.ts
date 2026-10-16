@@ -3,7 +3,8 @@ import { censusStateDataset, createCensusDistrictReaderEdge, readCensusDistrictS
   type CensusDistrictEdge, type CensusDistrictStateArtifact } from "../../census-geography/district-edge.ts";
 import { resolveReaderArtifactStore, type ReaderArtifactReadStore } from "../../meetings/edge-store.ts";
 import { FIPS_TO_STATE } from "../../ocd/fips.ts";
-import { CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } from "../../census-geography/publication.ts";
+import { CENSUS_GEO_RECORD_CLASS, censusGeographyScope } from "../../census-geography/publication.ts";
+import { heldZipStates } from "../../geo/zip-division-shards.ts";
 import { REGISTRATION_RECORD_CLASS, REGISTRATION_TARGETS } from "../../registration/publication.ts";
 import { REGISTRY_RUNTIME_SCOPE } from "../../registry/runtime-data-plane.ts";
 
@@ -58,15 +59,18 @@ function text(value: unknown): string | null {
   return typeof value === "string" ? value : null;
 }
 
-export async function readCensusGeographyIndex(query: ReadOnlyQuery | null): Promise<Slice<CensusDistrictEdge>> {
+export async function readCensusGeographyIndex(query: ReadOnlyQuery | null, state: string): Promise<Slice<CensusDistrictEdge>> {
+  const postal = state.toUpperCase();
+  if (!/^[A-Z]{2}$/.test(postal)) return { kind: "UNREAD", detail: "A state is required to read Census geography." };
   if (query === null) return { kind: "UNREAD", detail: "Census geography was not read: this deployment names no reader store." };
   try {
     const [rows] = await query([{ text: "SELECT current_version_id AS version_id, payload FROM civic_data_promotions WHERE record_class = $1 AND scope = $2 AND payload->>'formatVersion' = '2'",
-      params: [CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE] }]);
+      params: [CENSUS_GEO_RECORD_CLASS, censusGeographyScope(postal)] }]);
     const row = rows?.[0];
     if (typeof row?.version_id !== "string") return { kind: "NOT_PUBLISHED" };
     const index = row.payload as CensusDistrictEdge | undefined;
-    if (!index || index.formatVersion !== 2 || typeof index.versionId !== "string" || !index.states || !index.zipPrefixes || !Array.isArray(index.scopes)) {
+    if (!index || index.formatVersion !== 2 || typeof index.versionId !== "string" || !index.states || !index.zipPrefixes || !Array.isArray(index.scopes)
+      || Object.keys(index.states).length !== 1 || !Object.hasOwn(index.states, postal)) {
       return { kind: "UNREAD", detail: "The promoted Census geography index is invalid." };
     }
     return { kind: "HELD", versionId: row.version_id, value: index };
@@ -76,6 +80,8 @@ export async function readCensusGeographyIndex(query: ReadOnlyQuery | null): Pro
 }
 
 function stateGeography(value: CensusDistrictStateArtifact, types: readonly GeographyType[], withOverlaps: boolean): GeographySlice {
+  if (!withOverlaps) return { scopes: value.scopes.filter(scope => types.includes(scope.type)),
+    containers: value.containers.filter(row => types.includes(row.ref.type)).map(row => ({ ...row, overlaps: null })) };
   const dataset = censusStateDataset(value);
   return { scopes: value.scopes.filter(scope => types.includes(scope.type)), containers: dataset.scopes.flatMap(scope =>
     types.includes(scope.type) ? scope.groupings.map(group => {
@@ -88,7 +94,7 @@ export async function stateContainers(
   stateAbbr: string, types: readonly GeographyType[], withOverlaps: boolean, query: ReadOnlyQuery | null,
   store: ReaderArtifactReadStore | null = resolveReaderArtifactStore(),
 ): Promise<Slice<GeographySlice>> {
-  const index = await readCensusGeographyIndex(query);
+  const index = await readCensusGeographyIndex(query, stateAbbr);
   if (index.kind !== "HELD") return index;
   const state = stateAbbr.toUpperCase();
   if (!Object.hasOwn(index.value.states, state)) return { kind: "NOT_PUBLISHED" };
@@ -118,14 +124,29 @@ export async function containersOfCode(
   zcta5: string, types: readonly GeographyType[], query: ReadOnlyQuery | null,
   store: ReaderArtifactReadStore | null = resolveReaderArtifactStore(),
 ): Promise<Slice<CodeSlice>> {
-  const index = await readCensusGeographyIndex(query);
-  if (index.kind !== "HELD") return index;
-  if (!store) return { kind: "UNREAD", detail: "The Census geography artifact store is unavailable." };
-  const slice = await createCensusDistrictReaderEdge(index.value, store, index.versionId).loadZip(zcta5);
-  if (slice.kind !== "HELD") return slice;
-  return { ...slice, value: { ...slice.value, scopes: slice.value.scopes.filter(scope => types.includes(scope.type)),
-    containers: slice.value.containers.filter(row => types.includes(row.ref.type)),
-    zctaTabulations: [...new Set(index.value.scopes.filter(scope => types.includes(scope.type)).map(scope => scope.versionMeta.zctaTabulation))] } };
+  const states = await heldZipStates(zcta5);
+  if (!states) return { kind: "UNREAD", detail: "The held ZIP graph does not establish this ZIP's states." };
+  const versions: string[] = [], scopes = new Map<string, ScopeSlice>(), containers = new Map<string, ContainerSlice>();
+  const zctaTabulations = new Set<string>();
+  let known = false;
+  for (const state of states) {
+    const index = await readCensusGeographyIndex(query, state);
+    if (index.kind !== "HELD") return index;
+    if (!store) return { kind: "UNREAD", detail: "The Census geography artifact store is unavailable." };
+    const slice = await createCensusDistrictReaderEdge(index.value, store, index.versionId).loadZip(zcta5);
+    if (slice.kind !== "HELD") return slice;
+    versions.push(`${state}:${index.versionId}`);
+    known ||= slice.value.known;
+    for (const scope of slice.value.scopes) if (types.includes(scope.type)) scopes.set(`${scope.type}|${scope.version}|${scope.stateFips ?? ""}`, scope);
+    for (const row of slice.value.containers) if (types.includes(row.ref.type)) {
+      const key = `${row.ref.type}|${row.ref.version}|${row.ref.geoid}`, prior = containers.get(key);
+      if (prior && JSON.stringify(prior.overlaps) !== JSON.stringify(row.overlaps)) return { kind: "UNREAD", detail: "The Census ZIP sources disagree." };
+      containers.set(key, row);
+    }
+    for (const scope of index.value.scopes) if (types.includes(scope.type)) zctaTabulations.add(scope.versionMeta.zctaTabulation);
+  }
+  return { kind: "HELD", versionId: versions.length === 1 ? versions[0].slice(3) : versions.join("|"), value: {
+    known, scopes: [...scopes.values()], containers: [...containers.values()], zctaTabulations: [...zctaTabulations] } };
 }
 
 export interface RegisteredGovernmentSlice {

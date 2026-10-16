@@ -3,7 +3,7 @@ import { test, type TestContext } from "node:test";
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { buildCensusDistrictEdge } from "../lib/census-geography/district-edge.ts";
+import { buildCensusDistrictEdge } from "../lib/census-geography/state-publication.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store-local.ts";
 import { neonConfig } from "@neondatabase/serverless";
 

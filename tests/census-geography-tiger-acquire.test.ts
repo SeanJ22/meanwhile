@@ -5,15 +5,16 @@ import { join } from "node:path";
 import test, { after } from "node:test";
 import { acquireDataset } from "../lib/census-geography/acquire.ts";
 import { acquireTigerScopes, discoverTigerDistrictFiles, TIGER_ROOT, TIGER_ZCTA_2020 } from "../lib/census-geography/tiger-acquire.ts";
-import { buildCensusDistrictEdge, createCensusDistrictReaderEdge, type CensusDistrictEdge } from "../lib/census-geography/district-edge.ts";
+import { createCensusDistrictReaderEdge, type CensusDistrictEdge } from "../lib/census-geography/district-edge.ts";
+import { buildCensusDistrictEdge } from "../lib/census-geography/state-publication.ts";
 import { selectGeographyVersion } from "../lib/census-geography/selection.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { isSourceAcquisitionFailure } from "../lib/civic-data/source-acquisition-error.ts";
 import { censusGeographyCandidate } from "../lib/census-geography/candidate.ts";
-import { CENSUS_GEO_CONTRACT_ID, CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } from "../lib/census-geography/publication.ts";
+import { CENSUS_GEO_CONTRACT_ID, CENSUS_GEO_RECORD_CLASS, censusGeographyScope } from "../lib/census-geography/publication.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
+import { processRegisteredFanOutCandidate } from "../lib/civic-data/promotion.ts";
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store-local.ts";
 
@@ -86,9 +87,9 @@ test("the routine discovers and acquires all three TIGER-only successor plans fr
   assert.deepEqual(state.value.scopes.find(scope => scope.version === "cd:121")!.states, ["AZ"]);
 
   const store = new MemoryRoutineDataStore();
-  const outcome = await processRegisteredRoutineCandidate(store, CENSUS_GEO_CONTRACT_ID, censusGeographyCandidate(edge), dataset.builtAt);
+  const outcome = await processRegisteredFanOutCandidate(store, CENSUS_GEO_CONTRACT_ID, censusGeographyCandidate(edge), dataset.builtAt);
   assert.ok(outcome.promoted, `TIGER memberships must pass the routine publication door: ${outcome.candidate.state}`);
-  const read = await readPromotedCivicData<CensusDistrictEdge>(CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE, { store, now: dataset.builtAt, bypassCache: true });
+  const read = await readPromotedCivicData<CensusDistrictEdge>(CENSUS_GEO_RECORD_CLASS, censusGeographyScope("AZ"), { store, now: dataset.builtAt, bypassCache: true });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;
   const memberships = await createCensusDistrictReaderEdge(read.value, artifactStore).loadZip("90002");

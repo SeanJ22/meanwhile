@@ -5,8 +5,10 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, test } from "node:test";
 import type { BuiltDataset } from "../lib/census-geography/dataset.ts";
-import { buildCensusDistrictEdge, censusStateDataset, createCensusDistrictReaderEdge, publishCensusDistrictStates, readCensusDistrictState } from "../lib/census-geography/district-edge.ts";
+import { censusStateDataset, createCensusDistrictReaderEdge, readCensusDistrictState, type CensusDistrictEdge } from "../lib/census-geography/district-edge.ts";
+import { buildCensusDistrictEdge, publishCensusDistrictState } from "../lib/census-geography/state-publication.ts";
 import { createLookup } from "../lib/census-geography/lookup.ts";
+import { publishReaderEdgeArtifacts, readerAuthorityEdge } from "../lib/meetings/edge-serving.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store-local.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { publishedZipDistricts, withCensusDistricts } from "../lib/geo/zip-census-districts.ts";
@@ -15,7 +17,7 @@ const directory = mkdtempSync(join(tmpdir(), "census-state-edge-"));
 after(() => rmSync(directory, { recursive: true, force: true }));
 const store = new LocalFileArtifactStore(directory);
 const dataset = JSON.parse(readFileSync(new URL("../lib/census-geography/bootstrap-az.json", import.meta.url), "utf8")) as BuiltDataset;
-const index = await buildCensusDistrictEdge(dataset, "isolated-promoted-census", store);
+const index = await buildCensusDistrictEdge(structuredClone(dataset), "isolated-promoted-census", store);
 
 function observedStore() {
   const reads: string[] = [];
@@ -25,7 +27,7 @@ function observedStore() {
   return { reads, observed };
 }
 
-test("state artifacts preserve every published membership without putting containers or codes in the national index", async () => {
+test("state artifacts preserve every published membership without putting containers or codes in the state index", async () => {
   assert.equal(Object.hasOwn(index, "containers"), false);
   assert.equal(Object.hasOwn(index, "codes"), false);
   assert.ok(index.scopes.every(scope => !Object.hasOwn(scope, "groupings")));
@@ -84,72 +86,89 @@ test("unknown ZIPs and corrupt immutable artifacts do not manufacture certainty"
 function constructedState(state: string, fips: string, fraction: number): BuiltDataset {
   const source = dataset.scopes.find(scope => scope.type === "state_leg_lower")!;
   const url = `https://policy-fixture.example/${state}.txt`;
-  return { ...dataset, coverage: "Constructed cross-state policy fixture", zctaUniverse: ["00001", "00002"], scopes: [{ ...source,
+  return { ...dataset, coverage: "Constructed cross-state policy fixture", zctaUniverse: ["86515", "85635"], scopes: [{ ...source, instanceCount: 1, zctaEdgeCount: 1,
     versionMeta: { ...source.versionMeta, states: [state], provenance: { ...source.versionMeta.provenance,
       sourceUrls: [url], sourceFiles: [`${state}.txt`], sourceChecksums: [createHash("sha256").update(state).digest("hex")],
       sourceValidators: [{ url, etag: state, lastModified: null, bytes: state.length }] } },
     groupings: [{ ...source.groupings[0],
     stateAbbr: state, stateFips: fips, memberStates: [state], geoid: `${fips}001`, ocdId: null,
-    overlaps: [{ zcta5: "00001", whole: false, fraction }],
+    overlaps: [{ zcta5: "86515", whole: false, fraction }],
   }] }] };
 }
 
-test("streamed state publication joins cross-state ZIPs and preserves known ZIPs without representation rows", async () => {
+async function publishStateFixture(state: string, input: BuiltDataset, version: string): Promise<CensusDistrictEdge> {
+  const value = await publishCensusDistrictState({ state, dataset: structuredClone(input) }, `${version}:${state}`, store);
+  const result = await publishReaderEdgeArtifacts(null, { sourceThrough: null, retrievedAt: input.builtAt, promotedThrough: input.builtAt }, {
+    store, now: "2026-10-16T00:00:00Z", censusDistricts: { [state]: { value, versionId: value.versionId } },
+  });
+  assert.equal(result.status, "PUBLISHED");
+  return value;
+}
+async function manifestReader(observed = store) {
+  const current = await store.readManifest();
+  assert.ok(current);
+  const edge = await readerAuthorityEdge(current.manifest, observed, ["census-districts"]);
+  assert.ok(edge.censusDistricts);
+  return { reader: edge.censusDistricts, manifest: current.manifest };
+}
+
+test("independent state publication joins cross-state ZIPs and preserves known ZIPs without representation rows", async () => {
   const order: string[] = [];
-  async function* inputs() {
-    for (const [state, fips, fraction] of [["AZ", "04", 0.4], ["NM", "35", 0.6]] as const) {
-      order.push(state);
-      yield { state, dataset: constructedState(state, fips, fraction) };
-    }
+  const published: Record<string, CensusDistrictEdge> = {};
+  for (const [state, fips, fraction] of [["AZ", "04", 0.4], ["NM", "35", 0.6]] as const) {
+    order.push(state);
+    published[state] = await publishStateFixture(state, constructedState(state, fips, fraction), "cross-state-policy-fixture");
   }
-  const published = await publishCensusDistrictStates(inputs(), "cross-state-policy-fixture", store);
   const { observed, reads } = observedStore();
-  const edge = createCensusDistrictReaderEdge(published, observed);
+  const { reader: edge, manifest } = await manifestReader(observed);
   assert.deepEqual(order, ["AZ", "NM"]);
-  assert.deepEqual(published.scopes[0].versionMeta.states, ["AZ", "NM"]);
-  assert.deepEqual(published.scopes[0].versionMeta.provenance.sourceFiles, ["AZ.txt", "NM.txt"]);
-  assert.deepEqual(published.scopes[0].versionMeta.provenance.sourceChecksums, ["AZ", "NM"].map(state => createHash("sha256").update(state).digest("hex")));
-  assert.deepEqual(published.scopes[0].versionMeta.provenance.sourceUrls, ["AZ", "NM"].map(state => `https://policy-fixture.example/${state}.txt`));
-  assert.equal(published.scopes[0].versionMeta.provenance.sourceValidators?.length, 2);
-  const zip = await edge.loadZip("00001");
+  const summaries = Object.values(published).map(index => index.scopes[0]);
+  assert.deepEqual(summaries.flatMap(scope => scope.versionMeta.states ?? []), ["AZ", "NM"]);
+  assert.deepEqual(summaries.flatMap(scope => scope.versionMeta.provenance.sourceFiles), ["AZ.txt", "NM.txt"]);
+  assert.deepEqual(summaries.flatMap(scope => scope.versionMeta.provenance.sourceChecksums), ["AZ", "NM"].map(state => createHash("sha256").update(state).digest("hex")));
+  assert.deepEqual(summaries.flatMap(scope => scope.versionMeta.provenance.sourceUrls), ["AZ", "NM"].map(state => `https://policy-fixture.example/${state}.txt`));
+  assert.equal(summaries.flatMap(scope => scope.versionMeta.provenance.sourceValidators ?? []).length, 2);
+  const zip = await edge.loadZip("86515");
   assert.equal(zip.kind, "HELD");
   assert.ok(zip.kind === "HELD" && zip.value.known);
   if (zip.kind === "HELD") assert.deepEqual(zip.value.containers.map(row => [row.ref.stateAbbr, row.overlaps?.[0].fraction]), [["AZ", 0.4], ["NM", 0.6]]);
-  assert.deepEqual(reads, [published.zipPrefixes["000"].key, published.states.AZ.key, published.states.NM.key]);
-  const empty = await edge.loadZip("00002");
+  assert.deepEqual([...reads].sort(), [manifest.censusDistricts!.AZ.key, manifest.censusDistricts!.NM.key,
+    published.AZ.zipPrefixes["865"].key, published.AZ.states.AZ.key, published.NM.zipPrefixes["865"].key, published.NM.states.NM.key].sort());
+  const empty = await edge.loadZip("85635");
   assert.ok(empty.kind === "HELD" && empty.value.known && empty.value.containers.length === 0);
 });
 
 test("shared metros retain each state's ZIP rows without forcing the other state's artifact into a cold request", async () => {
   const original = dataset.scopes.find(scope => scope.type === "cbsa")!;
-  async function* inputs() {
-    for (const [state, fips, zip] of [["AZ", "04", "00001"], ["NM", "35", "00002"]] as const) {
-      const local = constructedState(state, fips, 1);
-      yield { state, dataset: { ...local, zctaUniverse: [zip], scopes: [
-        { ...local.scopes[0], groupings: local.scopes[0].groupings.map(group => ({ ...group, overlaps: [{ zcta5: zip, whole: true, fraction: 1 }] })) },
-        { ...original, groupings: [{ ...original.groupings[0], geoid: "99999", stateAbbr: "AZ", stateFips: "04", memberStates: ["AZ", "NM"],
-          overlaps: ["00001", "00002"].map(zcta5 => ({ zcta5, whole: true, fraction: 1 })) }] },
-      ] } };
-    }
+  const published: Record<string, CensusDistrictEdge> = {};
+  for (const [state, fips, zip] of [["AZ", "04", "85635"], ["NM", "35", "88001"]] as const) {
+    const local = constructedState(state, fips, 1);
+    const input: BuiltDataset = { ...local, zctaUniverse: [zip], scopes: [
+      { ...local.scopes[0], groupings: local.scopes[0].groupings.map(group => ({ ...group, overlaps: [{ zcta5: zip, whole: true, fraction: 1 }] })) },
+      { ...original, instanceCount: 1, zctaEdgeCount: 1, groupings: [{ ...original.groupings[0], geoid: "99999", stateAbbr: "AZ", stateFips: "04", memberStates: ["AZ", "NM"],
+        overlaps: [{ zcta5: zip, whole: true, fraction: 1 }] }] },
+    ] };
+    published[state] = await publishStateFixture(state, input, "shared-metro-policy-fixture");
   }
-  const published = await publishCensusDistrictStates(inputs(), "shared-metro-policy-fixture", store);
-  const summary = published.scopes.find(scope => scope.type === "cbsa")!;
-  assert.equal(summary.instanceCount, 1);
-  assert.equal(summary.zctaEdgeCount, 2);
-  const state = await readCensusDistrictState(published, "NM", store);
+  const states = await Promise.all(Object.entries(published).map(([state, index]) => readCensusDistrictState(index, state, store)));
+  const metros = states.flatMap(state => state ? censusStateDataset(state).scopes.filter(scope => scope.type === "cbsa").flatMap(scope => scope.groupings) : []);
+  assert.equal(new Set(metros.map(group => group.geoid)).size, 1);
+  assert.equal(metros.reduce((sum, group) => sum + group.overlaps.length, 0), 2);
+  const state = await readCensusDistrictState(published.NM, "NM", store);
   assert.ok(state);
-  assert.deepEqual(censusStateDataset(state).scopes.find(scope => scope.type === "cbsa")!.groupings[0].overlaps, [{ zcta5: "00002", whole: true, fraction: 1 }]);
+  assert.deepEqual(censusStateDataset(state).scopes.find(scope => scope.type === "cbsa")!.groupings[0].overlaps, [{ zcta5: "88001", whole: true, fraction: 1 }]);
   const { observed, reads } = observedStore();
-  const zip = await createCensusDistrictReaderEdge(published, observed).loadZip("00002");
+  const { reader, manifest } = await manifestReader(observed);
+  const zip = await reader.loadZip("88001");
   assert.ok(zip.kind === "HELD" && zip.value.containers.some(row => row.ref.type === "cbsa"));
-  assert.deepEqual(reads, [published.zipPrefixes["000"].key, published.states.NM.key]);
+  assert.deepEqual(reads, [manifest.censusDistricts!.NM.key, published.NM.zipPrefixes["880"].key, published.NM.states.NM.key]);
 });
 
 test("publishing a state writes its polygon separately and cold metadata reads leave polygon bytes unopened", async () => {
   const input = constructedState("AZ", "04", 1);
   const square = { type: "Polygon" as const, coordinates: [[[0, 0], [2, 0], [2, 2], [0, 2], [0, 0]]] };
   const polygonDataset = { ...input, scopes: input.scopes.map(scope => ({ ...scope, groupings: scope.groupings.map(group => ({ ...group, geometry: square })) })) };
-  const published = await buildCensusDistrictEdge(polygonDataset, "separate-boundary-fixture", store);
+  const published = await buildCensusDistrictEdge(structuredClone(polygonDataset), "separate-boundary-fixture", store);
   const { observed, reads } = observedStore();
   const state = await createCensusDistrictReaderEdge(published, observed).loadState("AZ");
   assert.equal(state.kind, "HELD");
@@ -165,7 +184,7 @@ test("a proven empty source scope survives state reconstruction for the next con
   const input = constructedState("AZ", "04", 1);
   const empty = { ...input.scopes[0], type: "state_leg_upper" as const, version: "sldu:proven-empty", instanceCount: 0, zctaEdgeCount: 0, groupings: [],
     versionMeta: { ...input.scopes[0].versionMeta, type: "state_leg_upper" as const, key: "sldu:proven-empty", retrievalComplete: true } };
-  const published = await buildCensusDistrictEdge({ ...input, scopes: [...input.scopes, empty] }, "empty-scope-reuse", store);
+  const published = await buildCensusDistrictEdge(structuredClone({ ...input, scopes: [...input.scopes, empty] }), "empty-scope-reuse", store);
   assert.ok(published.scopes.every(scope => scope.instanceCount > 0));
   const state = await readCensusDistrictState(published, "AZ", store);
   assert.ok(state);

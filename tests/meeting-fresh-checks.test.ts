@@ -232,7 +232,7 @@ test("controlled clock, the composing reader: a receipt-only period advances Las
   assert.deepEqual(collectedOf(changed.value, PIMA), [checkedAt], "Pima keeps its receipt's check");
 });
 
-const EXTRAS: PublishReaderExtras = { commentAccess: [], everydayRouting: null };
+const EXTRAS: PublishReaderExtras = { everydayRouting: null };
 const VALUES: PublishAuthority = Object.fromEntries(AUTHORITY_FAMILIES.map((family) => [family, { value: { family }, versionId: `${family}-v1` }]));
 const CARRIED: PublishAuthority = Object.fromEntries(AUTHORITY_FAMILIES.map((family) => [family, { versionId: `${family}-v1`, carried: true as const }]));
 const REGISTRATIONS: PublishRegistrations = { az: { value: { state: "az" }, versionId: "reg-az-v1" } };

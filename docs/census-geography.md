@@ -260,10 +260,12 @@ serves real Arizona data before production promotion.
 ## Build, publish, refresh
 
 The installed production runner invokes the registered
-`scripts/census-geography-refresh.mts` adapter. It reads the promoted reference index,
+`scripts/census-geography-refresh.mts` adapter. It reads each state’s promoted reference index,
 checks release listings and source validators, and acquires changed source files.
 National tab20 rows are partitioned on disk before state datasets are parsed.
-The national record and reader artifact contain state and ZIP-prefix references.
+Each state promotes and updates its reader reference before the next state is acquired.
+The reader manifest holds state references; each state index holds its own district
+and ZIP-prefix references. The refresh clock holds only a completion time and count.
 Each state artifact holds metadata and ZIP edges; district artifacts hold detailed
 six-decimal boundaries and simplified display polygons. `DEFAULT_SCOPES` includes
 the primary groupings, the three 2026 district plans, AIANNH and official overlays. The adapter uses the existing
@@ -278,13 +280,13 @@ is an official `.gov` source that auto-qualifies (`routineAutoPromotion: true`)
 under the shared `isOfficialSource` rule in
 `lib/civic-data/source-authority.ts` — not a Census-specific exception. The
 standing runner executes `scripts/census-geography-refresh.mts` on its cadence:
-`acquireStateDatasets({ previousStateDataset, discoverPlans: true })` →
-`publishCensusDistrictStates` → `censusGeographyCandidate(index)` → civic-data
-validation → atomic promotion of the production version pointer.
+`acquireStatePublications({ previousStateDataset, discoverPlans: true }, publishState, reportStateFailure)`
+awaits `promoteCensusState` for each state: boundary artifacts, state artifacts,
+civic-data validation, atomic promotion and the selected state’s reader reference.
 
 Promotion runs **only from the installed, certified runtime whose HEAD equals
 the currently-served SHA** — it happens after this code merges and deploys, and
-no separate production writer is ever created. A failed or partial refresh never
-advances the pointer; the last good version keeps serving. Until the first
+no separate production writer is ever created. A failed state keeps its last good
+version while other states publish. A partial refresh never advances the completion clock. Until the first
 promotion, `activePublishedVersion()` reports `NOT_YET_PUBLISHED` for unpublished
 scopes. The AZ bootstrap is used only by explicit fixture helpers.

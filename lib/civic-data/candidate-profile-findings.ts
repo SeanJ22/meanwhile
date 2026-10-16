@@ -1,14 +1,12 @@
 import { candidatePortraitFromCommonsFile, type CandidatePortraitPatch, type CommonsPortraitRuntime } from "../ballot/candidate-portraits.ts";
 import type { CandidateCardData } from "../ballot/candidate-cards.ts";
 import type { CampaignSiteIdentity } from "../candidates/campaign-site-verifier.ts";
-import { findingFact, finishBoxFinding, takeBoxFinding, type BoxFinding } from "../control-plane/box.ts";
+import { findingFact, finishBoxFinding, holdBoxFinding, takeBoxFinding, type BoxFinding, type BoxRepository } from "../control-plane/box.ts";
 import { readHeldBytes, type HeldVaultArtifact } from "../control-plane/evidence/read-only-vault.ts";
 import { section3Page } from "../control-plane/promotion/section3.ts";
 import { manualClassForKind } from "../control-plane/promotion/source-kinds.ts";
-import type { AggregateRepository, AppendOnlyRepository } from "../control-plane/repository/types.ts";
-import type { ScoutResult } from "../control-plane/scheduler/scout-result.ts";
 import { checkFact, hostOf, linkQuote, type FieldKind, type Provenance } from "../facts/check.ts";
-import { CANDIDATE_PROFILE_LEAD, candidateChecklistId } from "../facts/finding-slots.ts";
+import { CANDIDATE_PROFILE_LEAD, candidateChecklistId, FINDING_SLOTS_VERSION } from "../facts/finding-slots.ts";
 import type { Clocks } from "../facts/publish.ts";
 import { pageCopy } from "../facts/source-copy.ts";
 import type { PortraitVerification } from "../photos/binding.ts";
@@ -53,10 +51,11 @@ function portraitSources(verification: PortraitVerification, sourceClass: Manual
     review(verification.imageUrl, verification.sourceImageHash, verification.imageRetrievedAt ?? verification.checkedAt, sourceClass)];
 }
 
+const CANDIDATE_FINDINGS_PER_PASS = 500;
+
 /** Hunters' bios, campaign contacts and portraits for candidates, each held to checkFact on its saved page, published on the candidate's profile card. */
 export async function publishCandidateFindings(input: {
-  readonly boxFindings: AggregateRepository<BoxFinding>;
-  readonly scoutResults: Pick<AppendOnlyRepository<ScoutResult>, "readWhere">;
+  readonly boxFindings: BoxRepository;
   readonly held: (artifactId: string) => Promise<HeldVaultArtifact | null>;
   readonly store: RoutineDataStore;
   readonly subjects: readonly CandidateFindingSubject[];
@@ -70,11 +69,13 @@ export async function publishCandidateFindings(input: {
   const report = { published: {} as Record<string, number>, refused: {} as Record<string, number>, waiting: 0 };
   const now = new Date(input.now);
   const settled: { row: BoxFinding; field: string; outcome: Outcome; subject: CandidateFindingSubject | null }[] = [];
-  for (const { value: row } of await input.boxFindings.listWhere(["state"], "waiting")) {
-    if (row.waitingFor?.reason !== CANDIDATE_PROFILE_LEAD) continue;
+  for (const row of await input.boxFindings.waitingFor(CANDIDATE_PROFILE_LEAD, CANDIDATE_FINDINGS_PER_PASS)) {
     const subject = input.subjects.find(s => s.candidacyId === row.subjectId || s.readerKeys.includes(row.subjectId));
-    if (!subject) { report.waiting++; continue; }
-    const fact = await findingFact(input.scoutResults, row);
+    if (!subject) {
+      await holdBoxFinding(input.boxFindings, row.id, { class: "candidates", reason: "CANDIDACY_ON_NO_BALLOT", slots: FINDING_SLOTS_VERSION }, input.now);
+      report.waiting++; continue;
+    }
+    const fact = findingFact(row);
     if (!fact || row.exactQuote === null) { settled.push({ row, field: "", outcome: { refused: "FINDING_HAS_NO_FIELD_VALUE_OR_QUOTE" }, subject }); continue; }
     const field = candidateChecklistId(fact.field, fact.value) ?? fact.field;
     settled.push({ row, field, subject,

@@ -22,6 +22,14 @@ import { readPlacePointerSlice } from "../lib/civic-data/held-place-slices.ts";
 import { neonConfig } from "@neondatabase/serverless";
 import { candidateDescriptionQualityIssue } from "../lib/candidates/blurbs.ts";
 
+import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { buildCensusDistrictEdge } from "../lib/census-geography/state-publication.ts";
+import { censusGeographyScope } from "../lib/census-geography/publication.ts";
+import type { BuiltDataset } from "../lib/census-geography/dataset.ts";
+import { LocalFileArtifactStore } from "../lib/meetings/edge-store-local.ts";
+
 const county = "ocd-division/country:us/state:az/county:cochise";
 const neighbour = "ocd-division/country:us/state:az/county:pima";
 const at = "2026-09-30T06:00:00.000Z";
@@ -294,23 +302,36 @@ test("held boundary provenance maps source, semantic version and effective use w
   assert.equal(projectHeldGeography(["unrelated"], divisions, [countyRow]).held.length, 0);
 });
 
-test("geography quiet reads fetch only the pointer, and a changed or racing version cannot serve the old field", async () => {
-  let version = "held-v1", payloadReads = 0, racing = false;
-  const query = async (statements: readonly { text: string }[]) => {
-    if (statements[0].text.startsWith("SELECT current_version_id")) return [[{ current_version_id: version }]];
-    payloadReads++;
-    return [[{ meta: {}, grouping: { $version: racing ? "raced" : version } }]];
-  };
-  const ids = ["ocd-division/country:us/state:az/cd:6"];
-  await readHeldPlaceGeography(ids, [], query);
-  await readHeldPlaceGeography(ids, [], query);
-  assert.equal(payloadReads, 1);
-  version = "held-v2";
-  await readHeldPlaceGeography(ids, [], query);
-  assert.equal(payloadReads, 2);
-  version = "held-v3";
-  racing = true;
-  await assert.rejects(readHeldPlaceGeography(ids, [], query), /CIVIC_POINTER_CHANGED_DURING_READ/);
+test("geography quiet reads check only selected state pointers, and a racing version cannot serve the old field", async () => {
+  const directory = mkdtempSync(join(tmpdir(), "held-geography-state-"));
+  try {
+    const store = new LocalFileArtifactStore(directory);
+    const source = JSON.parse(readFileSync("lib/census-geography/bootstrap-az.json", "utf8")) as BuiltDataset;
+    const index = await buildCensusDistrictEdge(source, "held-state-fixture", store);
+    let version = "held-v1", payloadReads = 0, racing = false;
+    const query: ReadOnlyQuery = async statements => {
+      const statement = statements[0];
+      if (statement.text.startsWith("SELECT scope,current_version_id")) {
+        assert.deepEqual(statement.params, ["CENSUS_GEOGRAPHY", [censusGeographyScope("AZ")]]);
+        return [[{ scope: censusGeographyScope("AZ"), current_version_id: version }]];
+      }
+      assert.deepEqual(statement.params, ["CENSUS_GEOGRAPHY", censusGeographyScope("AZ")]);
+      assert.doesNotMatch(statement.text, /RECURSIVE|civic_data_payload_parts|jsonb_array_elements/);
+      payloadReads++;
+      return [[{ version_id: racing ? "raced" : version, payload: index }]];
+    };
+    const ids = ["ocd-division/country:us/state:az/cd:6"];
+    const first = await readHeldPlaceGeography(ids, [], query, store);
+    assert.ok(first.held.some(row => row.subjectId === ids[0]), "held state artifacts supply actual boundary provenance");
+    await readHeldPlaceGeography(ids, [], query, store);
+    assert.equal(payloadReads, 1);
+    version = "held-v2";
+    await readHeldPlaceGeography(ids, [], query, store);
+    assert.equal(payloadReads, 2);
+    version = "held-v3";
+    racing = true;
+    await assert.rejects(readHeldPlaceGeography(ids, [], query, store), /CIVIC_POINTER_CHANGED_DURING_READ/);
+  } finally { rmSync(directory, { recursive: true, force: true }); }
 });
 
 test("held Census status survives complementary projections without inventing governments for statistical areas", () => {

@@ -1,4 +1,4 @@
-import type { BoxFinding } from "../box.ts";
+import { listedBoxRepository, type BoxFinding } from "../box.ts";
 import type { WorkerResultRecord } from "../workers/types.ts";
 import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
@@ -633,7 +633,7 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
     spendWindow: fileAggregateRepository<SpendWindow>(resolved, "SpendWindow", "spend-window"),
     methodCandidates: fileAggregateRepository<CandidateStore>(resolved, "MethodCandidateStore", "method-candidates"),
     researchIntents: fileAppendOnlyRepository<ResearchIntent>(resolved, "research-intents"),
-    boxFindings: fileAggregateRepository<BoxFinding>(resolved, "BoxFinding", "box-findings"),
+    boxFindings: listedBoxRepository(fileAggregateRepository<BoxFinding>(resolved, "BoxFinding", "box-findings")),
     scoutResults: fileAppendOnlyRepository<ScoutResult>(resolved, "scout-results"),
     workerResults: fileAppendOnlyRepository<WorkerResultRecord>(resolved, "worker-results"),
     promotionPipeline: fileAppendOnlyRepository<PromotionPipelineRecord>(resolved, "promotion-pipeline"),

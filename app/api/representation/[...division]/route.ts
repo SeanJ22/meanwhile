@@ -1,3 +1,4 @@
+import { readerRoute } from "@/lib/api/reader-route";
 import { stageTimer } from "@/lib/api/server-timing";
 import {
   ensureReaderAuthorityEdge,
@@ -9,13 +10,7 @@ import { rosterGapsForDivision } from "@/lib/registry/body-rosters";
 import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
 import { divisionsByOcdIds, prefetchReaderGeography, seatHoldersForDivision } from "@/lib/registry/server";
 
-/**
- * GET /api/representation/ocd-division/country:us/state:<st>/sldl:<n>
- *
- * Who holds a division's seats, keyed by the division, with its `label`, `divisionType` and `tier` (`null`
- * where the registry does not hold it). The division is the path, so every cache keys on it; the answer is
- * public and CDN-held on the same terms as `/api/meetings`, and the refused shape stays `no-store`.
- */
+
 
 export const runtime = "nodejs";
 
@@ -28,7 +23,7 @@ const CDN_HELD = {
 /** The identifier shape, refused rather than guessed at. */
 const OCD_ID = /^ocd-division\/country:us(\/[a-z_]+:[A-Za-z0-9~._-]+)+$/;
 
-export async function GET(
+export const GET = readerRoute("/api/representation/[division]", async function GET(
   _request: Request,
   context: { params: Promise<{ division: string[] }> },
 ) {
@@ -57,9 +52,6 @@ export async function GET(
     if (edge) enterReaderAuthorityEdge(edge);
   }
 
-  // Both stores, the same two the shared resolver reads: legislative seats
-  // off the officeholder index, local governing bodies off the curated
-  // rosters. Asked by division key, so neither depends on where the reader is.
   const seats = await timing.time("holders", () => seatHoldersForDivision(ocdId));
 
   // Division labels and roster gaps are separate from a sourced person's identity. A registry
@@ -94,4 +86,4 @@ export async function GET(
       headers: { ...(metadata.available ? CDN_HELD : { "Cache-Control": "no-store" }), "Server-Timing": timing.header() },
     },
   );
-}
+});

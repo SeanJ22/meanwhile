@@ -1,26 +1,17 @@
 import { readerQuery } from "../civic-data/promoted-reader-query.ts";
 import { readCensusGeographyIndex } from "../control-plane/admin-view/promoted-slices.ts";
-import { readPromotedCivicData, type CivicDataReadResult, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
+import type { PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 import { resolveReaderArtifactStore, type ReaderArtifactReadStore } from "../meetings/edge-store.ts";
-import { FIPS_TO_STATE } from "../ocd/fips.ts";
 import type { CensusGeographyLookup, GeographyKey, GeographyType } from "./contract.ts";
 import { censusStateDataset, createCensusDistrictReaderEdge, readCensusDistrictState, type CensusDistrictEdge } from "./district-edge.ts";
 import { createLookup, notYetPublishedLookup } from "./lookup.ts";
-import { CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } from "./publication.ts";
+import { readCensusGeographyProjection } from "./publication.ts";
 
 export { CENSUS_GEO_SCOPE } from "./publication.ts";
 
-const CENSUS_GEO_MAX_AGE_MS = 100 * 365 * 24 * 60 * 60 * 1000;
-
 export interface CensusGeographyReadOptions extends PromotedCivicDataReadOptions {
   readonly artifactStore?: ReaderArtifactReadStore | null;
-}
-
-export async function readCensusGeographyProjection(
-  options: PromotedCivicDataReadOptions = {},
-): Promise<CivicDataReadResult<CensusDistrictEdge>> {
-  return readPromotedCivicData<CensusDistrictEdge>(CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE,
-    { ...options, maxAgeMs: options.maxAgeMs ?? CENSUS_GEO_MAX_AGE_MS });
+  readonly state?: string;
 }
 
 export type PublishedLookupSource = "published" | "unavailable";
@@ -32,18 +23,13 @@ export interface PublishedLookupState {
 }
 
 export function createPublishedIndexLookup(index: CensusDistrictEdge, versionId: string, store: ReaderArtifactReadStore | null): CensusGeographyLookup {
+  if (Object.keys(index.states).length !== 1) throw new Error("A Census lookup requires exactly one state publication");
   const empty = notYetPublishedLookup(versionId);
   const edge = store ? createCensusDistrictReaderEdge(index, store, versionId) : null;
-  const states = new Map<string, Promise<CensusGeographyLookup | null>>();
-  function stateLookup(state: string): Promise<CensusGeographyLookup | null> {
-    let read = states.get(state);
-    if (!read) {
-      read = store && Object.hasOwn(index.states, state) ? readCensusDistrictState(index, state, store)
-        .then(value => value ? createLookup(censusStateDataset(value), versionId) : null) : Promise.resolve(null);
-      states.set(state, read);
-    }
-    return read;
-  }
+  const state = Object.keys(index.states)[0];
+  let held: Promise<CensusGeographyLookup | null> | undefined;
+  const stateLookup = () => held ??= store ? readCensusDistrictState(index, state, store)
+    .then(value => value ? createLookup(censusStateDataset(value), versionId) : null) : Promise.resolve(null);
   const unknown = (note: string) => ({ kind: "UNKNOWN" as const, note });
   return {
     async activePublishedVersion() { return versionId; },
@@ -52,15 +38,14 @@ export function createPublishedIndexLookup(index: CensusDistrictEdge, versionId:
       versions: index.scopes.map(scope => scope.versionMeta) }; },
     async listVersions() { return index.scopes.map(scope => scope.versionMeta); },
     async enumerateGroupings(type: GeographyType, version?: string) {
-      const value = await empty.enumerateGroupings(type, version);
-      const scope = index.scopes.find(scope => scope.type === type && (!version || scope.version === version));
-      return { ...value, ...(scope ? { version: scope.versionMeta } : {}), status: unknown("A state or place is required to enumerate Census geography.") };
+      const lookup = await stateLookup();
+      return lookup ? lookup.enumerateGroupings(type, version) : { ...await empty.enumerateGroupings(type, version),
+        status: unknown("The selected Census state artifact is unavailable.") };
     },
     async zctasForGrouping(key: GeographyKey) {
-      const state = key.type !== "cbsa" && key.type !== "aiannh" ? FIPS_TO_STATE[key.geoid.slice(0, 2)]?.postal : undefined;
-      const lookup = state ? await stateLookup(state) : null;
-      if (lookup) return lookup.zctasForGrouping(key);
-      return { ...await empty.zctasForGrouping(key), status: unknown("The selected Census geography state artifact is unavailable or requires a state.") };
+      const lookup = await stateLookup();
+      return lookup ? lookup.zctasForGrouping(key) : { ...await empty.zctasForGrouping(key),
+        status: unknown("The selected Census state artifact is unavailable.") };
     },
     async groupingsForZcta(zip: string, version?: string) {
       const slice = await edge?.loadZip(zip);
@@ -85,17 +70,26 @@ export function createPublishedIndexLookup(index: CensusDistrictEdge, versionId:
 }
 
 export async function loadPublishedLookupState(options: CensusGeographyReadOptions = {}): Promise<PublishedLookupState> {
+  const state = options.state?.toUpperCase();
+  if (!state || !/^[A-Z]{2}$/.test(state)) {
+    const empty = notYetPublishedLookup("STATE_REQUIRED");
+    const status = { kind: "UNKNOWN" as const, note: "A state or place is required to read Census geography." };
+    return { source: "unavailable", versionId: "STATE_REQUIRED", lookup: { ...empty,
+      async enumerateGroupings(type, version) { return { ...await empty.enumerateGroupings(type, version), status }; },
+      async zctasForGrouping(key) { return { ...await empty.zctasForGrouping(key), status }; },
+      async groupingsForZcta(zip, version) { return { ...await empty.groupingsForZcta(zip, version), status }; } } };
+  }
   const store = options.artifactStore === undefined ? resolveReaderArtifactStore() : options.artifactStore;
   if (!options.store && !options.edge) {
-    const index = await readCensusGeographyIndex(readerQuery());
+    const index = await readCensusGeographyIndex(readerQuery(), state);
     return index.kind === "HELD" ? { lookup: createPublishedIndexLookup(index.value, index.versionId, store), source: "published", versionId: index.versionId }
       : { lookup: notYetPublishedLookup(index.kind), source: "unavailable", versionId: index.kind };
   }
-  const result = await readCensusGeographyProjection(options);
+  const result = await readCensusGeographyProjection(state, options);
   if (result.kind === "PROMOTED") {
     const versionId = result.metadata.versionId ?? "PROMOTED";
     const index = result.value;
-    if (index.formatVersion === 2 && Array.isArray(index.scopes) && index.states && index.zipPrefixes) {
+    if (index.formatVersion === 2 && Array.isArray(index.scopes) && index.states && index.zipPrefixes && Object.keys(index.states).length === 1 && Object.hasOwn(index.states, state)) {
       return { lookup: createPublishedIndexLookup(index, versionId, store), source: "published", versionId };
     }
     return { lookup: notYetPublishedLookup("INVALID_INDEX"), source: "unavailable", versionId: "INVALID_INDEX" };

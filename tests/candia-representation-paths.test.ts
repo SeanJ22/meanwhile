@@ -7,10 +7,9 @@ import type { Map as MapLibreMap } from "maplibre-gl";
 import { POST as resolveAddress } from "../app/api/address/resolve/route.ts";
 import { GET as boundaryAreas } from "../app/api/boundaries/representation/route.ts";
 import { GET as representatives } from "../app/api/representation/[...division]/route.ts";
-import { buildCensusDistrictEdge } from "../lib/census-geography/district-edge.ts";
+import { publishCensusDistrictState } from "../lib/census-geography/state-publication.ts";
 import { censusWorkDivision } from "../lib/census-geography/division-id.ts";
 import { CENSUS_GEOGRAPHIES_URL } from "../lib/geo/census-geocoder.ts";
-import { publishScopeBoundaries } from "../lib/census-geography/boundary-artifacts.ts";
 import { publishedZipDistricts, withCensusDistricts } from "../lib/geo/zip-census-districts.ts";
 import { districtsAt, fillLayerId } from "../lib/map/districts.ts";
 import { publishReaderEdgeArtifacts, readReaderManifest, readerAuthorityEdge } from "../lib/meetings/edge-serving.ts";
@@ -31,12 +30,11 @@ const point = { lat: 43.065050167418754, lng: -71.31029493560274 };
 const source = JSON.parse(readFileSync(new URL("./fixtures/geography/openstates-candia.json", import.meta.url), "utf8")) as {
   sourceUrl: string; people: Pick<PluralPerson, "id" | "name" | "current_district" | "current_chamber" | "current_party">[];
 };
-const originalScopes = [realBaseScope(), await realOverlayScope()];
+const scopes = [realBaseScope(), await realOverlayScope()];
 const directory = mkdtempSync(join(tmpdir(), "sl02-candia-reader-"));
 const store = new LocalFileArtifactStore(directory);
-const scopes = await Promise.all(originalScopes.map(scope => publishScopeBoundaries(scope, store)));
-const census = await buildCensusDistrictEdge({ formatVersion: 1, builtAt: SOURCE_FIXTURE_NOW, coverage: "Original source fixtures",
-  scopes, zctaUniverse: [...new Set(scopes.flatMap(scope => scope.groupings.flatMap(group => group.overlaps.map(edge => edge.zcta5))))] }, "real-candia-sources", store);
+const census = await publishCensusDistrictState({ state: "NH", dataset: structuredClone({ formatVersion: 1, builtAt: SOURCE_FIXTURE_NOW, coverage: "Original source fixtures",
+  scopes, zctaUniverse: [...new Set(scopes.flatMap(scope => scope.groupings.flatMap(group => group.overlaps.map(edge => edge.zcta5))))] } as const) }, "real-candia-sources", store);
 const divisions = scopes.flatMap(scope => scope.groupings.map(group => ({
   ocdId: censusWorkDivision({ ...group, type: scope.type, version: scope.version })!, label: group.label, divisionType: "sldl",
 })));
@@ -50,9 +48,9 @@ const previousDirectory = process.env.WTP_READER_EDGE_DIR;
 for (const key of ["DATABASE_URL", "DATABASE_URL_UNPOOLED", "NEON_DATABASE_URL"]) delete process.env[key];
 const result = await publishReaderEdgeArtifacts(null, { sourceThrough: null, retrievedAt: SOURCE_FIXTURE_NOW, promotedThrough: SOURCE_FIXTURE_NOW }, {
   store, now: SOURCE_FIXTURE_NOW,
+  censusDistricts: { NH: { value: census, versionId: census.versionId } },
   authority: {
     "registry-runtime": { value: registryTransferImport().projection.payload, versionId: "candia-recorded-registry" },
-    "census-districts": { value: census, versionId: census.versionId },
   },
   stateLegislators: { "US-NH": { versionId: "candia-source-roster", value: { formatVersion: 1, sourceId: "plural-openstates",
     jurisdiction: "US-NH", term: "Current source memberships", generatedAt: SOURCE_FIXTURE_NOW, roster } } },

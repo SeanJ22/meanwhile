@@ -6,10 +6,10 @@ import test, { after } from "node:test";
 
 import type { GeographyType } from "../lib/census-geography/contract.ts";
 import type { BuiltDataset } from "../lib/census-geography/dataset.ts";
-import { buildCensusDistrictEdge } from "../lib/census-geography/district-edge.ts";
+import { buildCensusDistrictEdge } from "../lib/census-geography/state-publication.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store-local.ts";
 import { createLookup } from "../lib/census-geography/lookup.ts";
-import { CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } from "../lib/census-geography/publication.ts";
+import { CENSUS_GEO_RECORD_CLASS, censusGeographyScope } from "../lib/census-geography/publication.ts";
 import {
   containersOfCode,
   oneContainer,
@@ -25,7 +25,7 @@ const TYPES: readonly GeographyType[] = ["county", "congressional_district", "cb
 
 const directory = mkdtempSync(join(tmpdir(), "admin-census-artifacts-"));
 const store = new LocalFileArtifactStore(directory);
-const index = await buildCensusDistrictEdge(dataset, "fixture", store);
+const index = await buildCensusDistrictEdge(structuredClone(dataset), "fixture", store);
 after(() => rmSync(directory, { recursive: true, force: true }));
 
 function postgresOver(ds: BuiltDataset | null, seen: Statement[] = []): ReadOnlyQuery {
@@ -73,7 +73,7 @@ test("one container carries the lookup's own codes and plan", async () => {
 });
 
 test("a code's memberships match the lookup's reverse index, and a code outside the universe says so", async () => {
-  const zcta = dataset.zctaUniverse[0]!;
+  const zcta = "85701";
   const slice = await containersOfCode(zcta, TYPES, postgresOver(dataset), store);
   assert.equal(slice.kind, "HELD");
   if (slice.kind !== "HELD") return;
@@ -87,7 +87,7 @@ test("a code's memberships match the lookup's reverse index, and a code outside 
   assert.ok(slice.value.containers.every((c) => c.overlaps!.length === 1 && c.overlaps![0]!.zcta5 === zcta), "each carries that code's overlap alone");
 
   const outside = await containersOfCode("00000", TYPES, postgresOver(dataset), store);
-  assert.equal(outside.kind === "HELD" && outside.value.known, false);
+  assert.equal(outside.kind, "UNREAD", "a ZIP missing from the held state graph cannot establish coverage");
 });
 
 test("no pointer is 'not published', never an empty list", async () => {
@@ -120,7 +120,7 @@ test("every geography statement reads only the compact promoted index", async ()
   await containersOfCode("85701", TYPES, postgresOver(dataset, seen), store);
   for (const s of seen) {
     assert.equal(s.params[0], CENSUS_GEO_RECORD_CLASS);
-    assert.equal(s.params[1], CENSUS_GEO_SCOPE);
+    assert.equal(s.params[1], censusGeographyScope("AZ"));
     assert.match(s.text, /^(SELECT|WITH) /, "reads only");
   }
   assert.equal(seen.length, 3);

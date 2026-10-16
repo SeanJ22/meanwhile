@@ -418,8 +418,21 @@ export async function verifyRoutineReaderProjection(
         return verifyExactVersion(verifierId, await readEverydayRoutingProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, contract.id);
       }
       case "census-geography-overlaps": {
-        const { readCensusGeographyProjection } = await import("../census-geography/reader.ts");
-        return verifyExactVersion(verifierId, await readCensusGeographyProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "census-geography");
+        const { readCensusGeographyProjection } = await import("../census-geography/publication.ts");
+        const { censusGeographyState, CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } = await import("../census-geography/publication.ts");
+        const scope = options.scope ?? contract.scope;
+        const state = censusGeographyState(scope);
+        const readOptions = { store: options.store, now: options.now, bypassCache: true };
+        if (state) return verifyExactVersion(verifierId, await readCensusGeographyProjection(state, readOptions), options.expectedVersionId, `${state} Census geography`);
+        if (scope !== CENSUS_GEO_SCOPE) return fail(verifierId, "A Census geography readback must name one state or the completion clock.");
+        const { readPromotedCivicData } = await import("./read-model.ts");
+        const result = await readPromotedCivicData<{ formatVersion: number; completedStates: number; completedAt: string }>(
+          CENSUS_GEO_RECORD_CLASS, scope, readOptions);
+        if (result.kind === "PROMOTED" && (result.value.formatVersion !== 3 || !Number.isSafeInteger(result.value.completedStates)
+          || result.value.completedStates <= 0 || !Number.isFinite(Date.parse(result.value.completedAt)))) {
+          return fail(verifierId, "The Census completion clock is invalid.");
+        }
+        return verifyExactVersion(verifierId, result, options.expectedVersionId, "Census completion clock");
       }
       default: {
         if (contract.recordClass === "REGISTRATION") {

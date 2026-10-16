@@ -6,13 +6,17 @@ import {
   CENSUS_GEO_PARSER_VERSION,
   CENSUS_GEO_RECORD_CLASS,
   CENSUS_GEO_SCHEMA_VERSION,
-  CENSUS_GEO_SCOPE,
   CENSUS_GEO_SOURCE_ID,
   CENSUS_GEO_SOURCE_ROUTE,
+  CENSUS_GEO_SCOPE,
+  censusGeographyScope,
 } from "./publication.ts";
 
 export function censusGeographyCandidate(input: CensusDistrictEdge): RoutineCandidate {
-  const dataset = JSON.parse(JSON.stringify(input)) as CensusDistrictEdge;
+  const dataset = input;
+  const states = Object.keys(dataset.states);
+  if (states.length !== 1) throw new Error("A Census candidate publishes exactly one state");
+  const scope = censusGeographyScope(states[0]);
   const edges = dataset.scopes.reduce((n, s) => n + s.zctaEdgeCount, 0);
   const groupings = dataset.scopes.reduce((n, s) => n + s.instanceCount, 0);
 
@@ -36,7 +40,7 @@ export function censusGeographyCandidate(input: CensusDistrictEdge): RoutineCand
     ambiguous: false,
   }));
 
-  const id = `cv-${sha256(`${CENSUS_GEO_SOURCE_ID}${CENSUS_GEO_SCOPE}${rawHash}${retrievedAt}`).slice(0, 32)}`;
+  const id = `cv-${sha256(`${CENSUS_GEO_SOURCE_ID}${scope}${rawHash}${retrievedAt}`).slice(0, 32)}`;
 
   const readModelHash = sha256(canonicalCivicDataJson(dataset));
   const normalizedPayload = {
@@ -60,8 +64,8 @@ export function censusGeographyCandidate(input: CensusDistrictEdge): RoutineCand
     id,
     sourceId: CENSUS_GEO_SOURCE_ID,
     recordClass: CENSUS_GEO_RECORD_CLASS,
-    scope: CENSUS_GEO_SCOPE,
-    sourceProjectionEvidence: sourceProjectionEvidence(CENSUS_GEO_SOURCE_ID, CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE),
+    scope,
+    sourceProjectionEvidence: sourceProjectionEvidence(CENSUS_GEO_SOURCE_ID, CENSUS_GEO_RECORD_CLASS, scope),
     retrieval: {
       succeeded: true,
       requestedUrl: CENSUS_GEO_SOURCE_ROUTE,
@@ -105,5 +109,28 @@ export function censusGeographyCandidate(input: CensusDistrictEdge): RoutineCand
     ],
     normalizedPayload,
     readModel: dataset,
+  };
+}
+
+export function censusGeographyCompletionCandidate(input: { readonly completedAt: string; readonly completedStates: number }): RoutineCandidate {
+  const readModel = { formatVersion: 3, ...input };
+  const hash = sha256(canonicalCivicDataJson(readModel));
+  const valid = Number.isSafeInteger(input.completedStates) && input.completedStates > 0 && Number.isFinite(Date.parse(input.completedAt));
+  return {
+    id: `cv-${sha256(`${CENSUS_GEO_SOURCE_ID}\u001f${CENSUS_GEO_SCOPE}\u001f${hash}`).slice(0, 32)}`,
+    sourceId: CENSUS_GEO_SOURCE_ID, recordClass: CENSUS_GEO_RECORD_CLASS, scope: CENSUS_GEO_SCOPE,
+    sourceProjectionEvidence: sourceProjectionEvidence(CENSUS_GEO_SOURCE_ID, CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE),
+    retrieval: { succeeded: true, requestedUrl: CENSUS_GEO_SOURCE_ROUTE, finalUrl: CENSUS_GEO_SOURCE_ROUTE,
+      httpStatus: 200, retrievedAt: input.completedAt, rawHash: hash },
+    normalization: { succeeded: true, parserVersion: CENSUS_GEO_PARSER_VERSION, schemaVersion: CENSUS_GEO_SCHEMA_VERSION,
+      normalizedHash: hash, normalizedPayloadHash: hash, inputRecords: 1, outputRecords: 1, droppedRecords: 0, missingRequiredFields: [] },
+    identities: [{ subjectId: "census-refresh", jurisdiction: "US", identifiers: { type: "refresh", geoid: "US", version: input.completedAt },
+      matchBasis: "OFFICIAL_ID", ambiguous: false }],
+    temporal: { version: input.completedAt, expectedVersion: input.completedAt, sourceThrough: input.completedAt, staleAtRetrieval: false },
+    semantics: { factKind: "Completion time and count of independently published Census state datasets", violations: valid ? [] : ["Invalid Census refresh completion."] },
+    horizon: { kind: "BOUNDED", query: "Completion of this Census refresh", returnedRecords: 1, declaredTotal: 1, paginationComplete: true, claimsComplete: true },
+    absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
+    dependentChecks: [{ consumer: "census-geography-overlaps", passed: valid, detail: `${input.completedStates} states published independently.` }],
+    normalizedPayload: readModel, readModel,
   };
 }

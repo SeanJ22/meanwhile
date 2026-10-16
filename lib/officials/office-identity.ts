@@ -106,3 +106,22 @@ export function unclassifiedOfficeTitles(titles: readonly (string | null | undef
 export function knownOfficeKeys(): OfficeKey[] {
   return [...new Set(RULES.map(rule => rule.key))].sort();
 }
+
+export function designationKey(value: string): string {
+  return value
+    .trim()
+    .toUpperCase()
+    .replace(/\s+/g, " ")
+    .replace(/\b0+(\d)/g, "$1")
+    .replace(/\bAND\b/g, "")
+    .replace(/[^A-Z0-9]/g, "");
+}
+
+const LABEL_PREFIX = /^(?:State (?:Senate|House|Representative|Legislative(?: Sub)?) ?District|Assembly District|Senate District|Delegate District|Legislative \((?:House|Senate)\) District|Senatorial District|Representative District)\s*/i;
+const LABEL_SUFFIX = /(?: State House District| Senatorial District| District)$/i;
+
+export function designationFromLabel(label: string): string {
+  return designationKey(
+    label.replace(/^[A-Z]{2} /, "").replace(/\s*\(\d{4} plan\)$/, "").replace(LABEL_PREFIX, "").replace(LABEL_SUFFIX, ""),
+  );
+}

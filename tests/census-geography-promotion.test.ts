@@ -5,12 +5,11 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import { SOURCE_AUTHORITIES, isOfficialSource } from "../lib/civic-data/source-authority.ts";
-import { censusGeographyCandidate } from "../lib/census-geography/candidate.ts";
-import { buildCensusDistrictEdge, createCensusDistrictReaderEdge, type CensusDistrictEdge } from "../lib/census-geography/district-edge.ts";
+import { createCensusDistrictReaderEdge, type CensusDistrictEdge } from "../lib/census-geography/district-edge.ts";
+import { promoteCensusState } from "../lib/census-geography/state-publication.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store-local.ts";
 import {
   CENSUS_GEO_CONTRACT_ID,
@@ -18,6 +17,7 @@ import {
   CENSUS_GEO_RECORD_CLASS,
   CENSUS_GEO_SCOPE,
   CENSUS_GEO_SOURCE_ID,
+  censusGeographyScope,
 } from "../lib/census-geography/publication.ts";
 import type { BuiltDataset } from "../lib/census-geography/dataset.ts";
 import { overlaySourceRows } from "../lib/overlay-geography/reference.ts";
@@ -49,15 +49,13 @@ test("the routine contract auto-publishes and matches the publication identity",
   assert.equal(c.autoPromotable, true);
 });
 
-test("a valid dataset auto-promotes through the routine door and the pointer serves the ZIP artifacts", async () => {
+test("a valid state dataset auto-promotes through the routine door and the pointer serves the ZIP artifacts", async () => {
   const store = new MemoryRoutineDataStore();
   const dataset = azDataset();
-  const index = await buildCensusDistrictEdge(dataset, "promotion-fixture", artifactStore);
-  const outcome = await processRegisteredRoutineCandidate(
-    store,
-    CENSUS_GEO_CONTRACT_ID,
-    censusGeographyCandidate(index),
-    dataset.builtAt,
+  const expected = dataset.scopes.find(scope => scope.version === "cd:119")!.groupings.find(group => group.geoid === "0406")!.overlaps;
+  const outcome = await promoteCensusState(
+    { state: "AZ", dataset, sourceVersion: "promotion-fixture" },
+    { store, artifactStore, now: dataset.builtAt },
   );
   assert.ok(
     outcome.promoted,
@@ -65,7 +63,7 @@ test("a valid dataset auto-promotes through the routine door and the pointer ser
   );
   assert.equal(outcome.candidate.state, "PROMOTED");
 
-  const read = await readPromotedCivicData<CensusDistrictEdge>(CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE, {
+  const read = await readPromotedCivicData<CensusDistrictEdge>(CENSUS_GEO_RECORD_CLASS, censusGeographyScope("AZ"), {
     store,
     now: NOW,
     bypassCache: true,
@@ -74,7 +72,6 @@ test("a valid dataset auto-promotes through the routine door and the pointer ser
   if (read.kind !== "PROMOTED") return;
 
   const reader = createCensusDistrictReaderEdge(read.value, artifactStore);
-  const expected = dataset.scopes.find(scope => scope.version === "cd:119")!.groupings.find(group => group.geoid === "0406")!.overlaps;
   assert.equal(expected.length, 79);
   for (const overlap of expected) {
     const slice = await reader.loadZip(overlap.zcta5);
@@ -90,12 +87,9 @@ test("a valid dataset auto-promotes through the routine door and the pointer ser
 test("an empty dataset is refused and never promotes (fail closed)", async () => {
   const store = new MemoryRoutineDataStore();
   const empty: BuiltDataset = { formatVersion: 1, builtAt: NOW, coverage: "empty", scopes: [], zctaUniverse: [] };
-  const index = await buildCensusDistrictEdge(empty, "empty-fixture", artifactStore);
-  const outcome = await processRegisteredRoutineCandidate(
-    store,
-    CENSUS_GEO_CONTRACT_ID,
-    censusGeographyCandidate(index),
-    NOW,
+  const outcome = await promoteCensusState(
+    { state: "AZ", dataset: empty, sourceVersion: "empty-fixture" },
+    { store, artifactStore, now: NOW },
   );
   assert.equal(outcome.promoted, null);
 });

@@ -161,7 +161,6 @@ test("BL-20: Ohio and Michigan national ballots render the same incumbent record
   const authority: PublishAuthority = {
     "registry-runtime": { value: linkedRegistry, versionId: "BL-20:registry" },
     "federal-directory": { value: federal, versionId: "BL-20:federal" },
-    "census-districts": { value: districts, versionId: districts.versionId },
     "ballot-contests": promotedFamily([manualEdgeEntry("ballot-contests", generic, "BL-20:ballots")], "BL-20:ballots"),
     "ballot-az": promotedFamily([manualEdgeEntry("az-sos-ballot", { ...syntheticAzBallot(), ballot: azBallot }, "BL-20:az")], "BL-20:az"),
     "candidate-profiles": promotedFamily([manualEdgeEntry("candidate-profiles", profiles, "BL-20:profiles"), provenEdgeEntry({ recordClass: DERIVED_CAMPAIGN_SITES_RECORD_CLASS, scope: DERIVED_CAMPAIGN_SITES_SCOPE, sourceId: DERIVED_CAMPAIGN_SITES_SOURCE_ID, value: derived, versionId: "BL-20:derived-portraits" })], "BL-20:profiles"),
@@ -174,7 +173,7 @@ test("BL-20: Ohio and Michigan national ballots render the same incumbent record
     "officeholder-statements": promotedFamily([manualEdgeEntry("officeholder-statements", syntheticOfficeholderStatements(cases.map(item => item.incumbent)), "BL-20:statements")], "BL-20:statements"),
     "prl-archives": promotedFamily([provenEdgeEntry({ recordClass: PRL_CONTRACT.recordClass, scope: PRL_CONTRACT.scope, sourceId: PRL_CONTRACT.sourceId, versionId: "BL-20:prl", value: prl })], "BL-20:prl"),
   };
-  const published = await publishReaderEdgeArtifacts({ formatVersion: 1, generatedAt: checkedAt, counts: { fresh: 0, carried: 0, total: 0, duplicatesCollapsed: 0 }, sources: [], meetings: [], agendaDocuments: [] }, { sourceThrough: null, retrievedAt: null, promotedThrough: null }, { store, authority, registrations: {}, stateLegislators: {} });
+  const published = await publishReaderEdgeArtifacts({ formatVersion: 1, generatedAt: checkedAt, counts: { fresh: 0, carried: 0, total: 0, duplicatesCollapsed: 0 }, sources: [], meetings: [], agendaDocuments: [] }, { sourceThrough: null, retrievedAt: null, promotedThrough: null }, { store, authority, censusDistricts: { AZ: { value: districts, versionId: districts.versionId } }, registrations: {}, stateLegislators: {} });
   assert.equal(published.status, "PUBLISHED");
   process.env.WTP_READER_EDGE_DIR = dir;
   const manifest = (await store.readManifest())!.manifest;

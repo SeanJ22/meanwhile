@@ -9,7 +9,8 @@ import { censusWorkDivision } from "../lib/census-geography/division-id.ts";
 import { indexByDivision } from "../lib/officials/lookup.ts";
 import { representationDivisionsAt } from "../lib/geo/representation-geography.ts";
 import { stateContainers, type ReadOnlyQuery } from "../lib/control-plane/admin-view/promoted-slices.ts";
-import { buildCensusDistrictEdge } from "../lib/census-geography/district-edge.ts";
+import { publishCensusDistrictState } from "../lib/census-geography/state-publication.ts";
+import { censusGeographyScope } from "../lib/census-geography/publication.ts";
 import { hydrateBoundaryGeometries } from "../lib/census-geography/boundary-artifacts.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store-local.ts";
 import type { BuiltScope } from "../lib/census-geography/dataset.ts";
@@ -25,9 +26,13 @@ after(() => {
   else process.env.WTP_READER_EDGE_DIR = previousDirectory;
 });
 async function sourceQuery(scope: BuiltScope, version: string): Promise<ReadOnlyQuery> {
-  const index = await buildCensusDistrictEdge({ formatVersion: 1, builtAt: SOURCE_FIXTURE_NOW, coverage: "official overlay and tribal source fixture",
-    scopes: [scope], zctaUniverse: [...new Set(scope.groupings.flatMap(group => group.overlaps.map(overlap => overlap.zcta5)))] }, version, artifactStore);
-  return async () => [[{ version_id: version, payload: index }]];
+  const state = scope.groupings[0].stateAbbr;
+  const index = await publishCensusDistrictState({ state, dataset: { formatVersion: 1, builtAt: SOURCE_FIXTURE_NOW, coverage: "official overlay and tribal source fixture",
+    scopes: [structuredClone(scope)], zctaUniverse: [...new Set(scope.groupings.flatMap(group => group.overlaps.map(overlap => overlap.zcta5)))] } }, version, artifactStore);
+  return async statements => {
+    assert.equal(statements[0].params[1], censusGeographyScope(state));
+    return [[{ version_id: version, payload: index }]];
+  };
 }
 
 function sourcePerson(row: Record<string,string>): PluralPerson {

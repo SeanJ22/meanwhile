@@ -3,6 +3,8 @@ import test from "node:test";
 import { divisionsForZip, heldDivisionsForZip, type PlaceDivision } from "../lib/control-plane/expansion/national-geography.ts";
 import { loadPublishedAreaLookupState } from "../lib/census-geography/area-lookup.ts";
 import type { PublishedLookupState } from "../lib/census-geography/reader.ts";
+import { censusGeographyScope } from "../lib/census-geography/publication.ts";
+import type { ReaderArtifactReadStore } from "../lib/meetings/edge-store.ts";
 
 test("held county display prefixes do not become division identities or lose split memberships", async () => {
   const counties = [
@@ -57,10 +59,15 @@ test("a place reuses all held serving districts and county before acquiring miss
 });
 
 test("an unavailable promoted place has typed absence rather than a bootstrap or country payload", async () => {
+  let reads = 0;
+  const artifacts: ReaderArtifactReadStore = { kind: "local-file", readManifest: async () => null, readArtifact: async () => null,
+    readBytes: async () => assert.fail("an unpublished state must not read artifacts") };
   const state = await loadPublishedAreaLookupState(["85635"], async statements => {
-    assert.deepEqual(statements[0].params, ["CENSUS_GEOGRAPHY", "US:zcta-geography-overlaps"]);
+    reads++;
+    assert.deepEqual(statements[0].params, ["CENSUS_GEOGRAPHY", censusGeographyScope("AZ")]);
     return [[]];
-  });
+  }, artifacts);
+  assert.equal(reads, 1);
   assert.equal(state.source, "unavailable");
   assert.notEqual((await state.lookup.groupingsForZcta("85635")).status.kind, "OK");
 });

@@ -1,3 +1,6 @@
+import { publishAuthorityRecords, readAuthorityRecords, type RecordIndex } from "./authority-records.ts";
+import { currentReaderSelection } from "../db/reader-route.ts";
+import { heldZipStates } from "../geo/zip-division-shards.ts";
 import { gzipSync, gunzipSync } from "node:zlib";
 
 import {
@@ -17,7 +20,13 @@ import {
   type ReaderManifest,
   type ReaderManifestScope,
 } from "./edge-artifacts.ts";
-import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
+import type { RegistryRuntimeCarton, RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
+import type { CommentAccessProjection } from "../registry/comment-access.ts";
+import { withStateFacts, type BodyFacts } from "../facts/registry-overlay.ts";
+import { factReader } from "../facts/db.ts";
+import { readSittingFacts, withSittingFacts } from "../facts/meeting-read.ts";
+import type { Meeting } from "../sources/types.ts";
+import type { StateFactsIndex } from "../facts/state-facts-publication.ts";
 import type { FederalDirectoryReadModel } from "../officials/federal-directory-data-plane.ts";
 import type { CuratedReaderProjection } from "../civic-data/manual-projections.ts";
 import type { OfficialStateLegislatorReadModel } from "../civic-data/candidate-builders.ts";
@@ -41,6 +50,7 @@ import {
   MEETINGS_SCOPE,
   MEETINGS_SOURCE_ID,
   snapshotCounts,
+  snapshotClientMeta,
   type MeetingsProjectionReadResult,
   type MeetingsSnapshot,
 } from "./snapshot.ts";
@@ -141,7 +151,6 @@ export async function publishReaderEdgeChecks(
 }
 
 export interface PublishReaderExtras {
-  readonly commentAccess?: readonly unknown[];
   readonly everydayRouting?: unknown;
   readonly versionIds?: ReaderManifest["extrasVersionIds"];
 }
@@ -154,7 +163,7 @@ export interface PublishAuthorityCarried {
   readonly versionId: string;
   readonly carried: true;
 }
-export type PublishAuthority = Partial<Record<AuthorityFamily, PublishAuthorityValue | PublishAuthorityCarried>>;
+export type PublishAuthority = Partial<Record<Exclude<AuthorityFamily, "census-districts">, PublishAuthorityValue | PublishAuthorityCarried>>;
 /** Complete: one entry per promoted registration pointer, since the reader reads an unnamed state as having none. */
 export type PublishRegistrations = Readonly<Record<string, PublishAuthorityValue | PublishAuthorityCarried>>;
 
@@ -165,6 +174,25 @@ interface RegistrationArtifactEnvelope {
   readonly versionId: string;
   readonly generatedAt: string;
   readonly value: unknown;
+}
+
+interface StateFactsArtifactEnvelope {
+  readonly formatVersion: typeof READER_ARTIFACT_FORMAT_VERSION;
+  readonly family: "state-facts";
+  readonly state: string;
+  readonly versionId: string;
+  readonly generatedAt: string;
+  readonly value: StateFactsIndex;
+}
+
+interface FactBucketArtifactEnvelope {
+  readonly formatVersion: typeof READER_ARTIFACT_FORMAT_VERSION;
+  readonly family: "fact-bucket";
+  readonly state: string;
+  readonly bucket: number;
+  readonly versionId: string;
+  readonly generatedAt: string;
+  readonly value: RecordIndex;
 }
 
 interface StateLegislatorsArtifactEnvelope {
@@ -180,7 +208,9 @@ export function servedAuthorityVersion(
   manifest: Pick<ReaderManifest, "authorityArtifacts"> | null | undefined,
   family: AuthorityFamily,
 ): string | null {
-  return manifest?.authorityArtifacts?.[family]?.version ?? null;
+  if (family === "census-districts") return null;
+  const ref = manifest?.authorityArtifacts?.[family];
+  return ref?.layout === "records" ? ref.version : null;
 }
 
 interface AuthorityArtifactEnvelope {
@@ -193,7 +223,6 @@ interface AuthorityArtifactEnvelope {
 
 function extrasFingerprint(extras: PublishReaderExtras | undefined): string {
   return sha256OfJson({
-    commentAccess: extras?.commentAccess ?? null,
     everydayRouting: extras?.everydayRouting ?? null,
     versionIds: extras?.versionIds ?? null,
   });
@@ -248,6 +277,8 @@ export const READER_FUNDING_AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
 ];
 
 const ASK_ONLY_AUTHORITY_FAMILIES: ReadonlySet<AuthorityFamily> = new Set<AuthorityFamily>([
+  "state-votes",
+  "prl-profiles",
   "pima-finance",
   "federal-votes",
   "federal-key-votes",
@@ -260,7 +291,8 @@ export const READER_BALLOT_AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
   ...PROMOTED_AUTHORITY_FAMILIES.filter((family) => !ASK_ONLY_AUTHORITY_FAMILIES.has(family)),
 ];
 
-const authorityEdgeCache = new Map<AuthorityFamily, { version: string; value: Promise<unknown | null> }>();
+const authorityValueCache = new Map<string, { version: string; value: Promise<unknown | null> }>();
+const authorityEdgeCache = new Map<string, { version: string; value: Promise<unknown | null> }>();
 
 function heldFetch<K, V>(
   cache: Map<K, { version: string; value: Promise<V | null> }>,
@@ -279,13 +311,24 @@ function heldFetch<K, V>(
   return entry.value;
 }
 
+async function publishedRecords(ref: AuthorityArtifactRef | undefined, store: ReaderArtifactStore): Promise<RecordIndex | undefined> {
+  if (ref?.layout !== "records") return undefined;
+  try {
+    const bytes = await store.readBytes(ref.key);
+    if (!bytes) return undefined;
+    const { value } = JSON.parse(gunzipSync(bytes).toString("utf8")) as { value: RecordIndex };
+    return value.kind === "READER_RECORDS" && sha256OfJson(value) === ref.sha ? value : undefined;
+  } catch { return undefined; }
+}
+
 export async function readAuthorityArtifactValue(
   family: AuthorityFamily,
   ref: AuthorityArtifactRef | undefined,
   store: ReaderArtifactReadStore,
 ): Promise<unknown | null> {
-  if (!ref?.key || !ref.version) return null;
-  return heldFetch(authorityEdgeCache, family, `${ref.version}:${ref.key}`, async () => {
+  if (family === "census-districts" || !ref?.key || !ref.version || ref.layout !== "records") return null;
+  const selection = currentReaderSelection();
+  const index = await heldFetch(authorityEdgeCache, family, `${ref.version}:${ref.key}`, async () => {
     try {
       const bytes = await store.readBytes(ref.key);
       if (!bytes) return null;
@@ -297,6 +340,11 @@ export async function readAuthorityArtifactValue(
       return null;
     }
   });
+  const read = async () => {
+    try { return index === null ? null : await readAuthorityRecords(index as RecordIndex, store, selection); }
+    catch { return null; }
+  };
+  return selection ? read() : heldFetch(authorityValueCache, family, `${ref.version}:${ref.key}`, read);
 }
 
 export async function readServedPromotedFamily(family: PromotedAuthorityFamily, ref: AuthorityArtifactRef | undefined,
@@ -311,10 +359,13 @@ function fetchScopeArtifact(
   scope: ReaderManifestScope,
   store: ReaderArtifactReadStore,
 ): Promise<ReaderGeoArtifact | null> {
-  return heldFetch(scopeArtifactCache, scope.scope, scope.sha256, () => store.readArtifact(scope.key));
+  return heldFetch(scopeArtifactCache, scope.scope, scope.sha256, async () => {
+    const artifact = await store.readArtifact(scope.key);
+    return artifact && Array.isArray(artifact.meetingOrder) && artifact.meetingOrder.length === artifact.meetings.length ? artifact : null;
+  });
 }
 
-const registrationEdgeCache = new Map<string, { version: string; value: Promise<RegistrationReadModel | null> }>();
+const registrationEdgeCache = new Map<string, { version: string; value: Promise<RecordIndex | null> }>();
 
 async function fetchRegistrationArtifact(
   state: string,
@@ -323,34 +374,38 @@ async function fetchRegistrationArtifact(
 ): Promise<{ value: RegistrationReadModel; versionId: string } | null> {
   if (!ref?.key || !ref.version) return null;
   const version = ref.version;
-  const value = await heldFetch(registrationEdgeCache, state, `${version}:${ref.key}`, async () => {
+  const selection = currentReaderSelection();
+  const index = await heldFetch(registrationEdgeCache, state, `${version}:${ref.key}`, async () => {
     try {
       const bytes = await store.readBytes(ref.key);
       if (!bytes) return null;
       const envelope = JSON.parse(gunzipSync(bytes).toString("utf8")) as RegistrationArtifactEnvelope;
       if (envelope.family !== "registration" || envelope.state !== state || envelope.versionId !== version || sha256OfJson(envelope.value) !== ref.sha) return null;
-      return envelope.value as RegistrationReadModel;
+      return envelope.value as unknown as RecordIndex;
     } catch {
       return null;
     }
   });
-  return value === null ? null : { value, versionId: version };
+  try { return index === null ? null : { value: await readAuthorityRecords(index, store, selection) as RegistrationReadModel, versionId: version }; }
+  catch { return null; }
 }
 
-const stateLegislatorsEdgeCache = new Map<string, { version: string; value: Promise<OfficialStateLegislatorReadModel | null> }>();
+const stateLegislatorsEdgeCache = new Map<string, { version: string; value: Promise<RecordIndex | null> }>();
 
 async function fetchStateLegislatorsArtifact(jurisdiction: string, ref: AuthorityArtifactRef | undefined, store: ReaderArtifactReadStore) {
   if (!ref?.key || !ref.version) return null;
-  const value = await heldFetch(stateLegislatorsEdgeCache, jurisdiction, `${ref.version}:${ref.key}`, async () => {
+  const selection = currentReaderSelection();
+  const index = await heldFetch(stateLegislatorsEdgeCache, jurisdiction, `${ref.version}:${ref.key}`, async () => {
     try {
       const bytes = await store.readBytes(ref.key);
       if (!bytes) return null;
       const envelope = JSON.parse(gunzipSync(bytes).toString("utf8")) as StateLegislatorsArtifactEnvelope;
       if (envelope.family !== "state-legislators" || envelope.jurisdiction !== jurisdiction || envelope.versionId !== ref.version || sha256OfJson(envelope.value) !== ref.sha) return null;
-      return envelope.value;
+      return envelope.value as unknown as RecordIndex;
     } catch { return null; }
   });
-  return value === null ? null : { value, versionId: ref.version };
+  try { return index === null ? null : { value: await readAuthorityRecords(index, store, selection) as OfficialStateLegislatorReadModel, versionId: ref.version }; }
+  catch { return null; }
 }
 
 export function prefetchReaderEdgeStates(
@@ -367,8 +422,119 @@ export function prefetchReaderEdgeStates(
   }
 }
 
+interface CensusStateArtifactEnvelope {
+  readonly formatVersion: typeof READER_ARTIFACT_FORMAT_VERSION;
+  readonly family: "census-districts";
+  readonly state: string;
+  readonly versionId: string;
+  readonly generatedAt: string;
+  readonly value: CensusDistrictEdge;
+}
+
+function manifestCensusDistrictReader(refs: Readonly<Record<string, AuthorityArtifactRef>>, store: ReaderArtifactReadStore): CensusDistrictReaderEdge {
+  const versionId = "census-districts:" + sha256OfJson(Object.entries(refs).map(([state, ref]) => [state, ref.version]).sort()).slice(0, 16);
+  const states = new Map<string, Promise<CensusDistrictReaderEdge | null>>();
+  const readState = (state: string): Promise<CensusDistrictReaderEdge | null> => {
+    let read = states.get(state);
+    if (!read) {
+      read = (async () => {
+        const ref = refs[state];
+        if (!ref) return null;
+        try {
+          const bytes = await store.readBytes(ref.key);
+          if (!bytes) return null;
+          const envelope = JSON.parse(gunzipSync(bytes).toString("utf8")) as CensusStateArtifactEnvelope;
+          const value = envelope.value;
+          if (envelope.formatVersion !== READER_ARTIFACT_FORMAT_VERSION || envelope.family !== "census-districts" || envelope.state !== state ||
+            envelope.versionId !== ref.version || sha256OfJson(value) !== ref.sha || value?.formatVersion !== 2 ||
+            Object.keys(value.states ?? {}).length !== 1 || !Object.hasOwn(value.states, state)) return null;
+          return createCensusDistrictReaderEdge(value, store, ref.version);
+        } catch { return null; }
+      })();
+      states.set(state, read);
+    }
+    return read;
+  };
+  return { versionId,
+    async loadState(input) {
+      const state = input.toUpperCase();
+      if (!Object.hasOwn(refs, state)) return { kind: "NOT_PUBLISHED" };
+      const read = await readState(state);
+      return read ? read.loadState(state) : { kind: "UNREAD", detail: "Census state reference is unavailable" };
+    },
+    async loadZip(zip) {
+      const touching = await heldZipStates(zip);
+      if (!touching) return { kind: "UNREAD", detail: "ZIP state evidence is unavailable" };
+      const slices = await Promise.all(touching.map(async state => {
+        const read = await readState(state);
+        return read ? read.loadZip(zip) : { kind: "UNREAD" as const, detail: "Census ZIP state reference is unavailable" };
+      }));
+      if (slices.some(slice => slice.kind !== "HELD")) return { kind: "UNREAD", detail: "Census ZIP state metadata is unavailable" };
+      const scopes = new Map<string, import("../control-plane/admin-view/promoted-slices.ts").ScopeSlice>();
+      const containers = new Map<string, import("../control-plane/admin-view/promoted-slices.ts").ContainerSlice>();
+      for (const slice of slices) if (slice.kind === "HELD") {
+        for (const scope of slice.value.scopes) scopes.set(`${scope.type}|${scope.version}|${scope.stateFips ?? ""}|${scope.chamber ?? ""}`, scope);
+        for (const row of slice.value.containers) containers.set(`${row.ref.type}|${row.ref.version}|${row.ref.geoid}`, row);
+      }
+      return { kind: "HELD", versionId, value: { known: slices.some(slice => slice.kind === "HELD" && slice.value.known), scopes: [...scopes.values()], containers: [...containers.values()] } };
+    },
+  };
+}
+
+const stateFactsEdgeCache = new Map<string, { version: string; value: Promise<StateFactsIndex | null> }>();
+const factBucketEdgeCache = new Map<string, { version: string; value: Promise<RecordIndex | null> }>();
+const mergedRegistryCache = new Map<string, { version: string; value: Promise<RegistryRuntimeReadModel | null> }>();
+
+async function readEnvelope<T extends { readonly value: unknown; readonly versionId: string }>(ref: AuthorityArtifactRef, store: ReaderArtifactReadStore,
+  belongs: (envelope: T) => boolean): Promise<T["value"] | null> {
+  try {
+    const bytes = await store.readBytes(ref.key);
+    if (!bytes) return null;
+    const envelope = JSON.parse(gunzipSync(bytes).toString("utf8")) as T;
+    return belongs(envelope) && envelope.versionId === ref.version && sha256OfJson(envelope.value) === ref.sha ? envelope.value : null;
+  } catch { return null; }
+}
+
+/** One state's served bucket list, read once per version per process. */
+export async function readServedStateFactsIndex(state: string, ref: AuthorityArtifactRef | undefined, store: ReaderArtifactReadStore): Promise<StateFactsIndex | null> {
+  if (!ref?.key || !ref.version) return null;
+  return heldFetch(stateFactsEdgeCache, state, `${ref.version}:${ref.key}`,
+    () => readEnvelope<StateFactsArtifactEnvelope>(ref, store, envelope => envelope.family === "state-facts" && envelope.state === state));
+}
+
+/** One bucket's record index, read once per version per process; its records are fetched only as a selection needs them. */
+export async function readServedFactBucket(state: string, bucket: number, ref: AuthorityArtifactRef, store: ReaderArtifactReadStore): Promise<RecordIndex | null> {
+  return heldFetch(factBucketEdgeCache, `${state}/${bucket}`, `${ref.version}:${ref.key}`,
+    () => readEnvelope<FactBucketArtifactEnvelope>(ref, store, envelope => envelope.family === "fact-bucket" && envelope.state === state && envelope.bucket === bucket));
+}
+
+/** One body's facts as an immutable record, ahead of the bucket index that will name it. */
+export async function writeFactRecord(store: ReaderArtifactStore, value: BodyFacts): Promise<{ readonly key: string; readonly sha: string }> {
+  return { key: await store.putImmutable(gzipSync(Buffer.from(JSON.stringify(value), "utf8")), "json.gz"), sha: sha256OfJson(value) };
+}
+
+export async function writeFactBucket(store: ReaderArtifactStore, state: string, bucket: number, versionId: string, index: RecordIndex, now: string): Promise<AuthorityArtifactRef> {
+  const envelope: FactBucketArtifactEnvelope = { formatVersion: READER_ARTIFACT_FORMAT_VERSION, family: "fact-bucket", state, bucket, versionId, generatedAt: now, value: index };
+  return { key: await store.putImmutable(gzipSync(Buffer.from(JSON.stringify(envelope), "utf8")), "json.gz"), version: versionId, sha: sha256OfJson(index) };
+}
+
+/** The facts of every body a reader's selection names, from the states it touches; every body when there is no selection. */
+async function readStateFacts(refs: readonly (readonly [string, AuthorityArtifactRef])[], store: ReaderArtifactReadStore,
+  selection: ReturnType<typeof currentReaderSelection>): Promise<BodyFacts[] | null> {
+  const states = selection ? new Set([...selection.keys].flatMap(key => /^ocd-division\/country:us\/state:([a-z]{2})/.exec(key)?.[1]?.toUpperCase() ?? [])) : null;
+  const read = await Promise.all(refs.filter(([state]) => states === null || states.has(state)).map(async ([state, ref]) => {
+    const index = await readServedStateFactsIndex(state, ref, store);
+    if (!index) return null;
+    const buckets = await Promise.all(index.buckets.map((bucket, n) => bucket ? readServedFactBucket(state, n, bucket, store) : null));
+    if (index.buckets.some((bucket, n) => bucket !== null && buckets[n] === null)) return null;
+    const bodies = await Promise.all(buckets.flatMap(bucket => bucket ? [readAuthorityRecords(bucket, store, selection) as Promise<{ bodies: BodyFacts[] }>] : []));
+    return bodies.flatMap(row => row.bodies);
+  }).map(state => state.catch(() => null)));
+  return read.some(state => state === null) ? null : read.flat() as BodyFacts[];
+}
+
 export async function ensureReaderAuthorityEdge(
-  manifest: Pick<ReaderManifest, "authorityArtifacts" | "registrations" | "stateLegislators">,
+  manifest: Pick<ReaderManifest, "authorityArtifacts" | "registrations" | "stateLegislators" | "meetingPlaces" | "stateFacts" | "censusDistricts">,
   store: ReaderArtifactReadStore | null = resolveReaderArtifactStore(),
   families: readonly AuthorityFamily[] = AUTHORITY_FAMILIES,
 ): Promise<ReaderAuthorityEdgeBundle> {
@@ -382,11 +548,11 @@ export async function ensureReaderAuthorityEdge(
 
 /** Load only requested authority families; callers without meetings do not need meeting doors. */
 export async function readerAuthorityEdge(
-  manifest: Pick<ReaderManifest, "authorityArtifacts" | "registrations" | "stateLegislators">,
+  manifest: Pick<ReaderManifest, "authorityArtifacts" | "registrations" | "stateLegislators" | "meetingPlaces" | "stateFacts" | "censusDistricts">,
   store: ReaderArtifactReadStore | null = resolveReaderArtifactStore(),
   families: readonly AuthorityFamily[] = AUTHORITY_FAMILIES,
 ): Promise<ReaderAuthorityEdgeBundle> {
-  const refs = manifest.authorityArtifacts;
+  const refs = manifest.authorityArtifacts ?? {};
   const registrationRefs = manifest.registrations;
   const registrations = registrationRefs && store
     ? { registrations: { states: new Set(Object.keys(registrationRefs)), load: (state: string) => fetchRegistrationArtifact(state, registrationRefs[state], store) } }
@@ -397,57 +563,63 @@ export async function readerAuthorityEdge(
     if (stateLegislatorRefs) {
       stateLegislators.stateLegislators = { jurisdictions: new Set(Object.keys(stateLegislatorRefs)),
         load: (jurisdiction: string) => fetchStateLegislatorsArtifact(jurisdiction, stateLegislatorRefs[jurisdiction], store) };
-    } else if (refs?.["state-legislators"]) {
-      // Reader code may arrive before the ordinary publisher splits the accepted old bundle.
-      // Discover its jurisdictions from the manifest; open its bytes only for a requested state.
-      const ref = refs["state-legislators"];
-      const versions = new Map(ref.version.split("|").map(entry => {
-        const separator = entry.indexOf("=");
-        return [entry.slice(0, separator), entry.slice(separator + 1)] as const;
-      }));
-      if ([...versions].every(([jurisdiction, version]) => /^US-[A-Z]{2}$/.test(jurisdiction) && version.length > 0)) {
-        stateLegislators.stateLegislators = { jurisdictions: new Set(versions.keys()), load: async jurisdiction => {
-          const versionId = versions.get(jurisdiction);
-          if (!versionId) return null;
-          const held = await readAuthorityArtifactValue("state-legislators", ref, store) as Record<string, OfficialStateLegislatorReadModel> | null;
-          const value = held?.[jurisdiction];
-          return value?.jurisdiction === jurisdiction ? { value, versionId } : null;
-        } };
-      }
     }
   }
-  if (!refs || !store) return { ...registrations, ...stateLegislators };
+  if (!store) return { ...registrations, ...stateLegislators };
   const bundle: {
     censusDistricts?: CensusDistrictReaderEdge;
     registryRuntime?: { value: RegistryRuntimeReadModel; versionId: string };
     federalDirectory?: { value: FederalDirectoryReadModel; versionId: string };
     campaignSites?: { value: CuratedReaderProjection; versionId: string };
     meetingOutcomes?: { value: OutcomeSnapshot; versionId: string };
-    commentAccess?: { value: import("../registry/comment-access.ts").CommentAccessProjection; versionId: string };
+    commentAccess?: { value: CommentAccessProjection; versionId: string };
   } = {};
   const wanted = new Set(families);
   const fetchWanted = (family: AuthorityFamily) =>
     wanted.has(family) ? readAuthorityArtifactValue(family, refs[family], store) : Promise.resolve(null);
-  const promotedFetch = Promise.all(PROMOTED_AUTHORITY_FAMILIES.map(fetchWanted));
-  const [registry, federal, campaign, outcomes, commentAccess, censusDistricts] = await Promise.all([
+  const censusReader = wanted.has("census-districts") && manifest.censusDistricts
+    ? manifestCensusDistrictReader(manifest.censusDistricts, store) : null;
+  const selected = currentReaderSelection();
+  if (selected && censusReader) {
+    const { censusWorkDivision } = await import("../census-geography/division-id.ts");
+    for (const zip of [...selected.keys].filter(key => /^\d{5}$/.test(key))) {
+      const slice = await censusReader.loadZip(zip);
+      if (slice.kind === "HELD") for (const container of slice.value.containers) {
+        const id = censusWorkDivision(container.ref);
+        if (id) selected.keys.add(id);
+      }
+    }
+  }
+  // Each body's facts lay on the partition; comment rules come from the same records.
+  const stateFactRefs = Object.entries(manifest.stateFacts ?? {}).sort(([a], [b]) => a.localeCompare(b));
+  const factsVersion = sha256OfJson(stateFactRefs.map(([state, ref]) => [state, ref.version])).slice(0, 16);
+  const [registry, federal, campaign, outcomes, bodies] = await Promise.all([
     fetchWanted("registry-runtime"),
     fetchWanted("federal-directory"),
     fetchWanted("campaign-sites"),
     fetchWanted("meeting-outcomes"),
-    fetchWanted("comment-access"),
-    fetchWanted("census-districts"),
+    wanted.has("registry-runtime") ? readStateFacts(stateFactRefs, store, selected) : Promise.resolve([]),
   ]);
-  if (registry !== null) bundle.registryRuntime = { value: registry as RegistryRuntimeReadModel, versionId: refs["registry-runtime"]!.version };
+  if (registry !== null && bodies !== null) {
+    const versionId = stateFactRefs.length ? `${refs["registry-runtime"]!.version}+${factsVersion}` : refs["registry-runtime"]!.version;
+    const value = selected ? withStateFacts(registry as RegistryRuntimeCarton, bodies)
+      : await heldFetch(mergedRegistryCache, "registry-runtime", versionId, async () => withStateFacts(registry as RegistryRuntimeCarton, bodies));
+    if (value) bundle.registryRuntime = { value, versionId };
+    if (stateFactRefs.length) bundle.commentAccess = { versionId: factsVersion, value: { kind: "comment-access",
+      records: bodies.flatMap(body => body.comment ? [{ id: `comment-access:${body.id}`, ...body.comment }] : []) } };
+  }
   if (federal !== null) bundle.federalDirectory = { value: federal as FederalDirectoryReadModel, versionId: refs["federal-directory"]!.version };
   if (campaign !== null) bundle.campaignSites = { value: campaign as CuratedReaderProjection, versionId: refs["campaign-sites"]!.version };
   if (outcomes !== null) bundle.meetingOutcomes = { value: outcomes as OutcomeSnapshot, versionId: refs["meeting-outcomes"]!.version };
-  if (commentAccess !== null) bundle.commentAccess = { value: commentAccess as import("../registry/comment-access.ts").CommentAccessProjection, versionId: refs["comment-access"]!.version };
-  if (censusDistricts !== null) bundle.censusDistricts = createCensusDistrictReaderEdge(censusDistricts as CensusDistrictEdge, store, refs["census-districts"]!.version);
+  if (censusReader !== null) bundle.censusDistricts = censusReader;
   const promoted = new Map<string, PromotedEdgeEntry>();
   const promotedFamilies = new Set<string>();
-  const promotedValues = await promotedFetch;
-  PROMOTED_AUTHORITY_FAMILIES.forEach((family, index) => {
-    const artifact = promotedValues[index] as Partial<PromotedFamilyArtifactValue> | null;
+  const promotedValues = new Map<PromotedAuthorityFamily, unknown>();
+  const load = async (family: PromotedAuthorityFamily) => promotedValues.set(family, await fetchWanted(family));
+  await Promise.all(PROMOTED_AUTHORITY_FAMILIES.filter(family => family.startsWith("ballot-")).map(load));
+  await Promise.all(PROMOTED_AUTHORITY_FAMILIES.filter(family => !family.startsWith("ballot-")).map(load));
+  PROMOTED_AUTHORITY_FAMILIES.forEach(family => {
+    const artifact = promotedValues.get(family) as Partial<PromotedFamilyArtifactValue> | null;
     if (artifact?.kind !== "PROMOTED_POINTERS" || !Array.isArray(artifact.entries)) return;
     promotedFamilies.add(family);
     for (const entry of artifact.entries) {
@@ -455,11 +627,25 @@ export async function readerAuthorityEdge(
       if (typeof pointer === "string") promoted.set(pointer, entry);
     }
   });
-  return { ...bundle, ...registrations, ...stateLegislators, ...(promoted.size > 0 ? { promoted, promotedFamilies } : {}) };
+  const loadPromoted: NonNullable<ReaderAuthorityEdgeBundle["loadPromoted"]> = async (recordClass, scope) => {
+    const family: PromotedAuthorityFamily = recordClass === "STATE_ROLL_CALL" || recordClass === "STATE_LEGISLATOR_VOTES" ? "state-votes"
+      : recordClass === "PRL_PROFILE" ? "prl-profiles" : recordClass === "PRL_ARCHIVE" ? "prl-archives" : "other-reader-data";
+    const artifact = await readServedPromotedFamily(family, refs[family], store);
+    if (!artifact) return null;
+    promotedFamilies.add(family);
+    for (const entry of artifact.entries) {
+      const key = entry.kind === "PROMOTED" ? entry.projection.key : `${entry.recordClass}:${entry.scope}`;
+      promoted.set(key, entry);
+    }
+    return promoted.get(`${recordClass}:${scope}`) ?? null;
+  };
+  return { ...bundle, ...registrations, ...stateLegislators, promoted, promotedFamilies, loadPromoted,
+    ...(manifest.meetingPlaces ? { meetingPlaces: new Map(Object.entries(manifest.meetingPlaces)) } : {}),
+    ...(selected ? { selection: selected } : {}) };
 }
 
 function scopeDataSha(artifact: ReaderGeoArtifact): string {
-  return sha256OfJson({ meetings: artifact.meetings, agendaDocuments: artifact.agendaDocuments });
+  return sha256OfJson({ meetings: artifact.meetings, order: artifact.meetingOrder, agendaDocuments: artifact.agendaDocuments });
 }
 
 export async function publishReaderEdgeArtifacts(
@@ -472,8 +658,12 @@ export async function publishReaderEdgeArtifacts(
     readonly authority?: PublishAuthority;
     readonly registrations?: PublishRegistrations;
     readonly stateLegislators?: PublishRegistrations;
+    readonly censusDistricts?: PublishRegistrations;
+    /** Complete: one entry per state with live facts. */
+    readonly stateFacts?: PublishRegistrations;
     readonly meetingBodies?: Parameters<typeof partitionSnapshotByScope>[2];
     readonly meetingRegistryVersion?: string | null;
+    readonly meetingPlaces?: Readonly<Record<string, readonly string[]>>;
     readonly checks?: PublishReaderChecks;
   } = {},
 ): Promise<PublishReaderEdgeResult> {
@@ -489,9 +679,10 @@ export async function publishReaderEdgeArtifacts(
   }
   const shaByScope = new Map(artifacts.map((a) => [a.scope, scopeDataSha(a)]));
   const extrasSha = extrasFingerprint(options.extras);
+  const authorityFamilies = AUTHORITY_FAMILIES.filter(family => family !== "census-districts");
   const authorityVersions = (m: Pick<ReaderManifest, "authorityArtifacts"> | undefined) =>
-    AUTHORITY_FAMILIES.map((f) => `${f}=${m?.authorityArtifacts?.[f]?.version ?? ""}`).join("|");
-  const newAuthorityVersions = AUTHORITY_FAMILIES
+    authorityFamilies.map((f) => `${f}=${m?.authorityArtifacts?.[f]?.version ?? ""}`).join("|");
+  const newAuthorityVersions = authorityFamilies
     .map((f) => `${f}=${options.authority?.[f]?.versionId ?? ""}`)
     .join("|");
   const registrationVersions = (entries: readonly (readonly [string, string])[] | null) =>
@@ -500,6 +691,8 @@ export async function publishReaderEdgeArtifacts(
     options.registrations === undefined ? null : Object.entries(options.registrations).map(([state, entry]) => [state, entry.versionId] as const),
   );
   const newLegislatorVersions = registrationVersions(options.stateLegislators === undefined ? null : Object.entries(options.stateLegislators).map(([scope, entry]) => [scope, entry.versionId] as const));
+  const newStateFactVersions = registrationVersions(options.stateFacts === undefined ? null : Object.entries(options.stateFacts).map(([state, entry]) => [state, entry.versionId] as const));
+  const carriedSummary = snapshot ? snapshotClientMeta(snapshot).carried : undefined;
 
   let current;
   try {
@@ -513,18 +706,23 @@ export async function publishReaderEdgeArtifacts(
     const sameSet = snapshot === null || (currentShas.size === shaByScope.size &&
       [...shaByScope].every(([scope, sha]) => currentShas.get(scope) === sha));
     const sameExtras = options.extras === undefined || extrasFingerprint({
-      commentAccess: current.manifest.commentAccess,
       everydayRouting: current.manifest.everydayRouting,
       versionIds: current.manifest.extrasVersionIds,
     }) === extrasSha;
-    const sameAuthority = options.authority === undefined || authorityVersions(current.manifest) === newAuthorityVersions;
+    const sameAuthority = !current.manifest.authorityArtifacts?.["census-districts"] && (options.authority === undefined || (authorityVersions(current.manifest) === newAuthorityVersions &&
+      Object.values(current.manifest.authorityArtifacts ?? {}).every(ref => ref.layout === "records")));
     const sameRegistrations = options.registrations === undefined || registrationVersions(
       current.manifest.registrations === undefined ? null : Object.entries(current.manifest.registrations).map(([state, ref]) => [state, ref.version] as const),
     ) === newRegistrationVersions;
     const sameMeetingAreas = snapshot === null || options.meetingRegistryVersion === undefined ||
       current.manifest.meetingRegistryVersion === options.meetingRegistryVersion;
     const sameLegislators = options.stateLegislators === undefined || registrationVersions(current.manifest.stateLegislators === undefined ? null : Object.entries(current.manifest.stateLegislators).map(([scope, ref]) => [scope, ref.version] as const)) === newLegislatorVersions;
-    if (sameSet && sameExtras && sameAuthority && sameRegistrations && sameLegislators && sameMeetingAreas) {
+    const sameCensus = Object.entries(options.censusDistricts ?? {}).every(([state, entry]) => current.manifest.censusDistricts?.[state]?.version === entry.versionId);
+    const samePlaces = options.meetingPlaces === undefined || JSON.stringify(options.meetingPlaces) === JSON.stringify(current.manifest.meetingPlaces);
+    const sameSummary = snapshot === null || JSON.stringify(carriedSummary) === JSON.stringify(current.manifest.carriedSummary);
+    const sameStateFacts = options.stateFacts === undefined || registrationVersions(current.manifest.stateFacts === undefined ? null
+      : Object.entries(current.manifest.stateFacts).map(([state, ref]) => [state, ref.version] as const)) === newStateFactVersions;
+    if (sameSet && sameExtras && sameAuthority && sameRegistrations && sameLegislators && sameCensus && sameStateFacts && sameMeetingAreas && samePlaces && sameSummary) {
       const generatedAt = snapshot?.generatedAt || (options.checks ? laterCheck(current.manifest.generatedAt, metadata.retrievedAt) : null) || current.manifest.generatedAt;
       const checks = options.checks ?? (snapshot === null && current.manifest.composition !== undefined
         ? { composition: current.manifest.composition, freshChecks: current.manifest.freshChecks ?? {} } : undefined);
@@ -549,9 +747,12 @@ export async function publishReaderEdgeArtifacts(
 
   const sequence = (current?.manifest.sequence ?? 0) + 1;
   const manifestScopes: ReaderManifestScope[] = snapshot === null ? [...(current?.manifest.scopes ?? [])] : [];
-  const authorityArtifacts: Partial<Record<AuthorityFamily, AuthorityArtifactRef>> = options.authority === undefined ? { ...current?.manifest.authorityArtifacts } : {};
+  const authorityArtifacts: Partial<Record<AuthorityFamily, AuthorityArtifactRef>> = options.authority === undefined
+    ? Object.fromEntries(Object.entries(current?.manifest.authorityArtifacts ?? {}).filter(([family]) => family !== "census-districts")) : {};
   const registrations: Record<string, AuthorityArtifactRef> = options.registrations === undefined ? { ...current?.manifest.registrations } : {};
   const stateLegislators: Record<string, AuthorityArtifactRef> = options.stateLegislators === undefined ? { ...current?.manifest.stateLegislators } : {};
+  const censusDistricts: Record<string, AuthorityArtifactRef> = { ...current?.manifest.censusDistricts };
+  const stateFacts: Record<string, AuthorityArtifactRef> = options.stateFacts === undefined ? { ...current?.manifest.stateFacts } : {};
   try {
     for (const artifact of artifacts) {
       const unchanged = current?.manifest.scopes.find(scope => scope.scope === artifact.scope && scope.sha256 === shaByScope.get(artifact.scope));
@@ -572,7 +773,7 @@ export async function publishReaderEdgeArtifacts(
         generatedAt: artifact.generatedAt,
       });
     }
-    for (const family of AUTHORITY_FAMILIES) {
+    for (const family of authorityFamilies) {
       const entry = options.authority?.[family];
       if (!entry) continue;
       if ("carried" in entry) {
@@ -581,15 +782,33 @@ export async function publishReaderEdgeArtifacts(
         authorityArtifacts[family] = served;
         continue;
       }
+      const indexed = await publishAuthorityRecords(entry.value, store, await publishedRecords(current?.manifest.authorityArtifacts?.[family], store));
       const envelope: AuthorityArtifactEnvelope = {
         formatVersion: READER_ARTIFACT_FORMAT_VERSION,
         family,
         versionId: entry.versionId,
         generatedAt: now,
-        value: entry.value,
+        value: indexed,
       };
       const key = await store.putImmutable(gzipSync(Buffer.from(JSON.stringify(envelope), "utf8")), "json.gz");
-      authorityArtifacts[family] = { key, version: entry.versionId, sha: sha256OfJson(entry.value) };
+      authorityArtifacts[family] = { key, version: entry.versionId, sha: sha256OfJson(indexed), layout: "records" };
+    }
+    for (const [state, entry] of Object.entries(options.censusDistricts ?? {})) {
+      if (!/^[A-Z]{2}$/.test(state)) throw new Error("Census publication state is invalid");
+      if ("carried" in entry) {
+        const served = current?.manifest.censusDistricts?.[state];
+        if (!served || served.version !== entry.versionId) return { status: "RACED", sequence };
+        censusDistricts[state] = served;
+        continue;
+      }
+      const value = entry.value as CensusDistrictEdge;
+      if (value?.formatVersion !== 2 || Object.keys(value.states ?? {}).length !== 1 || !Object.hasOwn(value.states, state)) {
+        throw new Error("Census publication must contain exactly its selected state");
+      }
+      const envelope: CensusStateArtifactEnvelope = { formatVersion: READER_ARTIFACT_FORMAT_VERSION, family: "census-districts", state,
+        versionId: entry.versionId, generatedAt: now, value };
+      const key = await store.putImmutable(gzipSync(Buffer.from(JSON.stringify(envelope), "utf8")), "json.gz");
+      censusDistricts[state] = { key, version: entry.versionId, sha: sha256OfJson(value) };
     }
     for (const [state, entry] of Object.entries(options.registrations ?? {})) {
       if ("carried" in entry) {
@@ -598,16 +817,17 @@ export async function publishReaderEdgeArtifacts(
         registrations[state] = served;
         continue;
       }
+      const indexed = await publishAuthorityRecords(entry.value, store, await publishedRecords(current?.manifest.registrations?.[state], store));
       const envelope: RegistrationArtifactEnvelope = {
         formatVersion: READER_ARTIFACT_FORMAT_VERSION,
         family: "registration",
         state,
         versionId: entry.versionId,
         generatedAt: now,
-        value: entry.value,
+        value: indexed as unknown as RegistrationReadModel,
       };
       const key = await store.putImmutable(gzipSync(Buffer.from(JSON.stringify(envelope), "utf8")), "json.gz");
-      registrations[state] = { key, version: entry.versionId, sha: sha256OfJson(entry.value) };
+      registrations[state] = { key, version: entry.versionId, sha: sha256OfJson(indexed), layout: "records" };
     }
     for (const [jurisdiction, entry] of Object.entries(options.stateLegislators ?? {})) {
       if ("carried" in entry) {
@@ -616,16 +836,31 @@ export async function publishReaderEdgeArtifacts(
         stateLegislators[jurisdiction] = served;
         continue;
       }
-      const envelope: StateLegislatorsArtifactEnvelope = { formatVersion: READER_ARTIFACT_FORMAT_VERSION, family: "state-legislators", jurisdiction, versionId: entry.versionId, generatedAt: now, value: entry.value as OfficialStateLegislatorReadModel };
+      const indexed = await publishAuthorityRecords(entry.value, store, await publishedRecords(current?.manifest.stateLegislators?.[jurisdiction], store));
+      const envelope: StateLegislatorsArtifactEnvelope = { formatVersion: READER_ARTIFACT_FORMAT_VERSION, family: "state-legislators", jurisdiction, versionId: entry.versionId, generatedAt: now, value: indexed as unknown as OfficialStateLegislatorReadModel };
       const key = await store.putImmutable(gzipSync(Buffer.from(JSON.stringify(envelope), "utf8")), "json.gz");
-      stateLegislators[jurisdiction] = { key, version: entry.versionId, sha: sha256OfJson(entry.value) };
+      stateLegislators[jurisdiction] = { key, version: entry.versionId, sha: sha256OfJson(indexed), layout: "records" };
+    }
+    for (const [state, entry] of Object.entries(options.stateFacts ?? {})) {
+      if ("carried" in entry) {
+        const served = current?.manifest.stateFacts?.[state];
+        if (!served || served.version !== entry.versionId) return { status: "RACED", sequence };
+        stateFacts[state] = served;
+        continue;
+      }
+      const envelope: StateFactsArtifactEnvelope = { formatVersion: READER_ARTIFACT_FORMAT_VERSION, family: "state-facts", state, versionId: entry.versionId, generatedAt: now, value: entry.value as StateFactsIndex };
+      const key = await store.putImmutable(gzipSync(Buffer.from(JSON.stringify(envelope), "utf8")), "json.gz");
+      stateFacts[state] = { key, version: entry.versionId, sha: sha256OfJson(entry.value) };
     }
   } catch (error) {
     // Complete immutable bytes precede CAS; partial writes cannot change a served artifact.
     return { status: "FAILED", error: error instanceof Error ? error.message : String(error) };
   }
 
+  const summary = snapshot ? carriedSummary : current?.manifest.carriedSummary;
   const manifest: ReaderManifest = {
+    ...(summary ? { carriedSummary: summary } : {}),
+    ...(options.meetingPlaces ?? current?.manifest.meetingPlaces ? { meetingPlaces: options.meetingPlaces ?? current?.manifest.meetingPlaces } : {}),
     formatVersion: READER_ARTIFACT_FORMAT_VERSION,
     sequence,
     ...(snapshot !== null ? { meetingLayout: "governing-area" as const } : current?.manifest.meetingLayout ? { meetingLayout: current.manifest.meetingLayout } : {}),
@@ -640,17 +875,17 @@ export async function publishReaderEdgeArtifacts(
     sources: snapshot?.sources ?? current?.manifest.sources ?? [],
     scopes: manifestScopes,
     ...(options.extras === undefined ? {
-      ...(current?.manifest.commentAccess !== undefined ? { commentAccess: current.manifest.commentAccess } : {}),
       ...(current?.manifest.everydayRouting !== undefined ? { everydayRouting: current.manifest.everydayRouting } : {}),
       ...(current?.manifest.extrasVersionIds !== undefined ? { extrasVersionIds: current.manifest.extrasVersionIds } : {}),
     } : {
-      ...(options.extras.commentAccess !== undefined ? { commentAccess: options.extras.commentAccess } : {}),
       ...(options.extras.everydayRouting !== undefined ? { everydayRouting: options.extras.everydayRouting } : {}),
       ...(options.extras.versionIds !== undefined ? { extrasVersionIds: options.extras.versionIds } : {}),
     }),
     ...(Object.keys(authorityArtifacts).length > 0 ? { authorityArtifacts } : {}),
+    ...(Object.keys(censusDistricts).length ? { censusDistricts } : {}),
     ...(options.registrations !== undefined || current?.manifest.registrations !== undefined ? { registrations } : {}),
     ...(options.stateLegislators !== undefined || current?.manifest.stateLegislators !== undefined ? { stateLegislators } : {}),
+    ...(options.stateFacts !== undefined || current?.manifest.stateFacts !== undefined ? { stateFacts } : {}),
     ...((options.checks?.freshChecks ?? (snapshot === null ? current?.manifest.freshChecks : undefined)) !== undefined
       ? { freshChecks: options.checks?.freshChecks ?? current!.manifest.freshChecks } : {}),
     ...((options.checks?.composition ?? (snapshot === null ? current?.manifest.composition : undefined)) !== undefined
@@ -743,7 +978,7 @@ async function readReaderEdgeMeetingsHeld(
   options: ReaderEdgeMeetingsOptions,
 ): Promise<MeetingsProjectionReadResult> {
   // The fallback takes only the clock, never the artifact store, which is a different store from the data store.
-  const fallback = options.fallback ?? (() => readPreparedMeetingsProjection(options.now ? { now: options.now } : {}));
+  const fallback = async () => withStoredSittingFacts(await (options.fallback ?? (() => readPreparedMeetingsProjection(options.now ? { now: options.now } : {})))());
   const store = options.store ?? resolveReaderArtifactStore();
   if (!store) return fallback();
 
@@ -772,10 +1007,13 @@ async function readReaderEdgeMeetingsHeld(
   } catch {
     return fallback();
   }
-  if (needed.length > 0 && artifacts.length === 0) return fallback();
+  if (artifacts.length !== needed.length) return fallback();
 
-  const value = applyMeetingFreshChecks(mergeScopeArtifacts(artifacts, manifest), { checkedAt: null, routes: manifest.freshChecks ?? {} });
-  const complete = artifacts.length === needed.length;
+  const merged = applyMeetingFreshChecks(mergeScopeArtifacts(artifacts, manifest), { checkedAt: null, routes: manifest.freshChecks ?? {} });
+  // Each served sitting takes its body's live facts from that body's record.
+  const bodies = await readStateFacts(Object.entries(manifest.stateFacts ?? {}), store, { keys: new Set(sittingBodies(merged.meetings)) });
+  const value = { ...merged, meetings: withSittingFacts(merged.meetings, bodies?.flatMap(body => body.sittings) ?? []) };
+  const complete = artifacts.length === needed.length && bodies !== null;
   const read: MeetingsProjectionReadResult = {
     kind: "PROMOTED",
     value,
@@ -801,6 +1039,16 @@ async function readReaderEdgeMeetingsHeld(
     areaReads.set(areaKey, read);
   }
   return read;
+}
+
+const sittingBodies = (meetings: readonly Meeting[]) => [...new Set(meetings.flatMap(meeting => meeting.bodyId ?? []))];
+
+/** Off the edge, sittings take their live facts from the fact store; without one, or while it fails, the partition rows stand. */
+async function withStoredSittingFacts(read: MeetingsProjectionReadResult): Promise<MeetingsProjectionReadResult> {
+  const query = factReader();
+  if (read.kind !== "PROMOTED" || query === null) return read;
+  const facts = await readSittingFacts(query, sittingBodies(read.value.meetings)).catch(() => null);
+  return facts?.size ? { ...read, value: { ...read.value, meetings: withSittingFacts(read.value.meetings, [...facts.values()].flat()) } } : read;
 }
 
 export function servedWholeFromReaderEdge(read: MeetingsProjectionReadResult): boolean {

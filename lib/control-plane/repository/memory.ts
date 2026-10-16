@@ -1,4 +1,4 @@
-import type { BoxFinding } from "../box.ts";
+import { listedBoxRepository, type BoxFinding } from "../box.ts";
 import type { WorkerResultRecord } from "../workers/types.ts";
 import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
@@ -369,7 +369,7 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     spendWindow: memoryAggregateRepository<SpendWindow>("SpendWindow"),
     methodCandidates: memoryAggregateRepository<CandidateStore>("MethodCandidateStore"),
     researchIntents: memoryAppendOnlyRepository<ResearchIntent>("research_intents"),
-    boxFindings: memoryAggregateRepository<BoxFinding>("BoxFinding"),
+    boxFindings: listedBoxRepository(memoryAggregateRepository<BoxFinding>("BoxFinding")),
     scoutResults: memoryAppendOnlyRepository<ScoutResult>("scout_results"),
     workerResults: memoryAppendOnlyRepository<WorkerResultRecord>("worker_results"),
     promotionPipeline: memoryAppendOnlyRepository<PromotionPipelineRecord>("promotion_pipeline"),

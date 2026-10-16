@@ -20,7 +20,7 @@ import {
   type NationalDeps, type NationalHuntSources,
 } from "../lib/control-plane/admin-view/v6-national-read.ts";
 import { buildPlaceOwedList } from "../lib/coverage/place-owed.ts";
-import { buildCensusDistrictEdge } from "../lib/census-geography/district-edge.ts";
+import { buildCensusDistrictEdge } from "../lib/census-geography/state-publication.ts";
 import type { BuiltDataset, BuiltGrouping, BuiltScope } from "../lib/census-geography/dataset.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store-local.ts";
 import { CENSUS_GEO_RECORD_CLASS } from "../lib/census-geography/publication.ts";

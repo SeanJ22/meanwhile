@@ -79,7 +79,6 @@ export interface AcquireOptions extends CensusSourceOptions {
 }
 
 export interface AcquireStatesOptions extends Omit<AcquireOptions, "previousDataset"> {
-  readonly previousScopes?: readonly Omit<BuiltScope, "groupings">[];
   readonly previousStateDataset?: (state: string) => Promise<BuiltDataset | undefined>;
 }
 
@@ -95,6 +94,7 @@ interface AcquisitionContext {
   readonly grfRelease?: GrfRelease;
   readonly partition: (source: Source) => Promise<PartitionedSource>;
   readonly unchanged: ReadonlySet<string>;
+  readonly sourceChecks: Map<string, Promise<boolean>>;
   readonly cbsa?: { readonly read: (state: string) => Promise<CbsaDelineation>; readonly url: string; readonly sha256: string; readonly validator: ReturnType<typeof sourceValidator> };
 }
 
@@ -266,12 +266,6 @@ async function acquisitionContext(options: AcquireStatesOptions, files: Temporar
   if (keys.includes("cbsa")) sources.set(CENSUS_GEO_SOURCES.county.version, CENSUS_GEO_SOURCES.county);
   const tigerFiles = discover ? await discoverTigerDistrictFiles(options, options.states) : [];
   if (discover) for (const source of await discoverDistrictSources(options)) sources.set(source.version, source);
-  const unchanged = new Set<string>();
-  for (const src of sources.values()) {
-    const held = options.previousScopes?.find(scope => scope.version === src.version && scope.type === src.type && scope.versionMeta.retrievalComplete !== false &&
-      scope.versionMeta.provenance.sourceDataset === "CENSUS_TAB20_REL2020" && scope.versionMeta.provenance.sourceUrls.includes(src.url));
-    if (held && await heldSourcesUnchanged(held.versionMeta.provenance, [src.url], options)) unchanged.add(src.version);
-  }
   const partitions = new Map<string, Promise<PartitionedSource>>();
   const partition = (src: Source): Promise<PartitionedSource> => {
     let found = partitions.get(src.version);
@@ -299,7 +293,7 @@ async function acquisitionContext(options: AcquireStatesOptions, files: Temporar
   }
   const wantsGrf = keys.some(key => key in GRF_SCOPES) || discover;
   const grfRelease = wantsGrf ? (await discoverGrfReleases(options))[0] : undefined;
-  return { sources, tigerFiles, partition, unchanged, cbsa, grfRelease };
+  return { sources, tigerFiles, partition, unchanged: new Set(), sourceChecks: new Map(), cbsa, grfRelease };
 }
 
 async function stateCbsa(county: BuiltScope, state: string, context: AcquisitionContext): Promise<BuiltScope> {
@@ -393,30 +387,68 @@ async function acquireStateDataset(options: AcquireOptions, context: Acquisition
   return { formatVersion: 1, builtAt: new Date().toISOString(), coverage, scopes: selected, ...(overlays ? {sourceDiscrepancies:overlays.reports} : {}), ...(sourceFailures.length ? {sourceFailures} : {}), zctaUniverse: [...zctaUniverse].sort() };
 }
 
+async function previousSourceContext(options: AcquireOptions, context: AcquisitionContext): Promise<AcquisitionContext> {
+  const unchanged = new Set<string>();
+  for (const src of context.sources.values()) {
+    const held = options.previousDataset?.scopes.find(scope => scope.version === src.version && scope.type === src.type &&
+      scope.versionMeta.retrievalComplete !== false && scope.versionMeta.provenance.sourceDataset === "CENSUS_TAB20_REL2020" &&
+      scope.versionMeta.provenance.sourceUrls.includes(src.url));
+    if (!held) continue;
+    const provenance = held.versionMeta.provenance;
+    const key = JSON.stringify([src.url, provenance.parserVersion, provenance.sourceValidators?.find(row => row.url === src.url)]);
+    let check = context.sourceChecks.get(key);
+    if (!check) {
+      check = heldSourcesUnchanged(provenance, [src.url], options);
+      context.sourceChecks.set(key, check);
+    }
+    if (await check) unchanged.add(src.version);
+  }
+  return { ...context, unchanged };
+}
+
 export async function acquireDataset(options: AcquireOptions = {}): Promise<BuiltDataset> {
   if (options.states?.size !== 1) throw new Error("Census geography acquisition requires exactly one state");
   const files: TemporarySourceFile[] = [];
   try {
-    return await acquireStateDataset(options, await acquisitionContext({ ...options, previousScopes: options.previousDataset?.scopes }, files));
+    const context = await acquisitionContext(options, files);
+    return await acquireStateDataset(options, await previousSourceContext(options, context));
   } finally { for (const file of files) await file.dispose(); }
 }
 
-export async function* acquireStateDatasets(options: AcquireStatesOptions = {}): AsyncGenerator<CensusDistrictStateInput> {
+async function acquirePublicationDataset(stateFips: string, options: AcquireStatesOptions, context: AcquisitionContext): Promise<BuiltDataset> {
+  const state = FIPS_TO_STATE[stateFips].postal;
+  const previousDataset = await options.previousStateDataset?.(state);
+  const hasGrf = context.grfRelease?.files.some(url => new RegExp(`public_grfc_cur\\d{2}_${stateFips}\\.txt$`).test(url));
+  const only = options.only ?? DEFAULT_SCOPES;
+  const stateOptions: AcquireOptions = { ...options, states: new Set([stateFips]), previousDataset,
+    ...(!hasGrf && FIPS_TO_STATE[stateFips].prefix === "territory" ? { only: only.filter(key => !(key in GRF_SCOPES)) } : {}) };
+  const sourceContext = await previousSourceContext(stateOptions, context);
+  return acquireStateDataset(stateOptions, !hasGrf && FIPS_TO_STATE[stateFips].prefix === "territory"
+    ? { ...sourceContext, grfRelease: undefined } : sourceContext);
+}
+
+async function publishAcquiredState(stateFips: string, options: AcquireStatesOptions, context: AcquisitionContext,
+  publishState: (input: CensusDistrictStateInput) => Promise<void>): Promise<void> {
+  await publishState({ state: FIPS_TO_STATE[stateFips].postal, dataset: await acquirePublicationDataset(stateFips, options, context) });
+}
+
+export async function acquireStatePublications(options: AcquireStatesOptions,
+  publishState: (input: CensusDistrictStateInput) => Promise<void>,
+  reportStateFailure: (state: string, error: unknown) => Promise<void>): Promise<void> {
   const files: TemporarySourceFile[] = [];
   try {
     const context = await acquisitionContext(options, files);
     for (const stateFips of [...options.states ?? Object.keys(FIPS_TO_STATE)].sort()) {
       options.signal?.throwIfAborted();
-      const state = FIPS_TO_STATE[stateFips]?.postal;
-      if (!state) throw new Error(`Unknown Census state ${stateFips}`);
-      const previousDataset = await options.previousStateDataset?.(state);
-      const stateOptions = { ...options, states: new Set([stateFips]), previousDataset };
-      const hasGrf = context.grfRelease?.files.some(url => new RegExp(`public_grfc_cur\\d{2}_${stateFips}\\.txt$`).test(url));
-      const only = options.only ?? DEFAULT_SCOPES;
-      const dataset = await acquireStateDataset({ ...stateOptions,
-        ...(!hasGrf && FIPS_TO_STATE[stateFips].prefix === "territory" ? { only: only.filter(key => !(key in GRF_SCOPES)) } : {}) },
-        !hasGrf && FIPS_TO_STATE[stateFips].prefix === "territory" ? { ...context, grfRelease: undefined } : context);
-      yield { state, dataset };
+      if (!FIPS_TO_STATE[stateFips]) throw new Error(`Unknown Census state ${stateFips}`);
+      try {
+        await publishAcquiredState(stateFips, options, context, publishState);
+        options.signal?.throwIfAborted();
+      } catch (error) {
+        options.signal?.throwIfAborted();
+        await reportStateFailure(FIPS_TO_STATE[stateFips].postal, error);
+        options.signal?.throwIfAborted();
+      }
     }
   } finally { for (const file of files) await file.dispose(); }
 }

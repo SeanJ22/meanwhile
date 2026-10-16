@@ -6,6 +6,7 @@ import {
 } from "../../registry/source-wiring.ts";
 import { makeApptegySource } from "../apptegy/index.ts";
 import { makeBoardBookSource } from "../boardbook/index.ts";
+import { makeMunicodeSource } from "../municode/index.ts";
 import { makeGranicusSource } from "../granicus/index.ts";
 import { makeNovusAgendaSource } from "../novusagenda/index.ts";
 import { makeEscribeSource } from "../escribe/index.ts";
@@ -96,6 +97,10 @@ export const CAPABILITIES: Array<{
     types: ["CIVICCLERK"],
     make: (rows, fetchImpl) =>
       makeCivicClerkSource(rows, fetchImpl) as ReportingMeetingSource<unknown>,
+  },
+  {
+    name: "municode", types: ["MUNICODE"],
+    make: (rows, fetchImpl) => makeMunicodeSource(rows, fetchImpl) as ReportingMeetingSource<unknown>,
   },
   {
     name: "escribe", types: ["ESCRIBE"],

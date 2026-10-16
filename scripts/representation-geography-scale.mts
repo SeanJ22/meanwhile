@@ -2,17 +2,19 @@ import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { createHash } from "node:crypto";
 import { appendFileSync, createReadStream, existsSync, readFileSync } from "node:fs";
-import { appendFile, mkdir, readFile, writeFile } from "node:fs/promises";
+import { appendFile, mkdir, readFile, stat, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { createInterface } from "node:readline";
 import { Readable } from "node:stream";
 import { parseCsv } from "../lib/reference/csv.ts";
 import { FIPS_TO_STATE } from "../lib/ocd/fips.ts";
-import { ScopeAccumulator, parseTab20Header, resolveTab20Columns, type Tab20Spec } from "../lib/census-geography/build.ts";
+import type { Tab20Spec } from "../lib/census-geography/build.ts";
 import type { BuiltDataset, BuiltGrouping, BuiltOverlap, BuiltScope } from "../lib/census-geography/dataset.ts";
 import type { GeographyGeometry, GeographyVersion } from "../lib/census-geography/contract.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store-local.ts";
 import { contains, type GeoFeature } from "../lib/registry/resolve.ts";
+import type { DatabaseMeasurement } from "./lib/representation-scale-database.mts";
+import type { EvidenceStore, ObjectMeta } from "../lib/control-plane/evidence/store.ts";
 
 const root = resolve(import.meta.dirname, "..");
 const argument = (name: string) => process.argv.find(value => value.startsWith(`--${name}=`))?.slice(name.length + 3);
@@ -31,16 +33,22 @@ interface Government {
 }
 interface ZipWork { zip: string; edges: number }
 interface Workload { stateFips: string; state: string; governments: Government[]; zips: ZipWork[] }
+interface PreparationResult {
+  uniqueZips: number; sourceEvidence: { url: string; bytes: number; sha256: string }[]; largestState: string;
+  peakRssBytes: number; runtimeMs: number; largestSourceUnit: { state: string; bytes: number; districts: number; edges: number };
+}
 interface WorkerResult {
   state: string; governments: number; dependentSchools: number; districts: number; zips: number; localEdges: number;
   censusGovernments: number; stateGovernments: number; territorialGovernments: number; tribalNations: number;
   aiannhAreas: number; aiannhComponents: number; polygons: number; pointRequests: number;
-  peakRssBytes: number; runtimeMs: number; rawGeometryBytes: number; artifactBytesWritten: number;
-  metadataBytesWritten: number;
+  peakRssBytes: number; runtimeMs: number; vertices: number; artifactBytesWritten: number;
+  baselineRssBytes: number; sourcePeakRssBytes: number; publicationPeakRssBytes: number; sourceMetadataBytes: number;
+  database: Omit<DatabaseMeasurement, "index">;
   readerDatabaseBytes: number; pointArtifactBytes: number; largestPointArtifactBytes: number; largestPointArtifactReads: number;
-  stateIndex: unknown;
 }
 interface ReaderResult { state: string; peakRssBytes: number; runtimeMs: number; artifactBytesRead: number; readKeys: string[]; polygons: number; databaseBytesRead: number; databaseBytesWritten: number }
+type StateReadResult = Awaited<ReturnType<typeof import("./lib/representation-scale-database.mts").measureCensusStateIndex>>;
+type CompletionMeasurement = Awaited<ReturnType<typeof import("./lib/representation-scale-database.mts").measureCensusCompletion>>;
 
 function peakRssBytes(): number {
   return Number(/^VmHWM:\s+(\d+)/m.exec(readFileSync("/proc/self/status", "utf8"))?.[1] ?? 0) * 1024;
@@ -48,13 +56,44 @@ function peakRssBytes(): number {
 
 async function child<T>(task: string, stateFips: string): Promise<T> {
   const output = await new Promise<string>((accept, reject) => {
-    const process = spawn(globalThis.process.execPath, [...globalThis.process.execArgv, import.meta.filename, `--${task}=${stateFips}`, `--dir=${directory}`], { cwd: root, env: globalThis.process.env, stdio: ["ignore", "pipe", "inherit"] });
+    const endpoint = argument("database-endpoint");
+    const process = spawn(globalThis.process.execPath, [...globalThis.process.execArgv, import.meta.filename, `--${task}=${stateFips}`, `--dir=${directory}`,
+      `--states=${[...selected].join(",")}`,
+      ...(endpoint ? [`--database-endpoint=${endpoint}`] : [])], { cwd: root, env: { ...globalThis.process.env,
+        DATABASE_URL: "postgresql://scale:scale@ep-scale-fixture.us-east-2.aws.neon.tech/neondb" }, stdio: ["ignore", "pipe", "inherit"] });
     let stdout = "";
     process.stdout.on("data", chunk => { stdout += chunk; });
     process.once("error", reject);
     process.once("exit", code => code === 0 ? accept(stdout) : reject(new Error(`${stateFips} ${task} failed: ${code}`)));
   });
-  return JSON.parse(output) as T;
+  return JSON.parse(output.trim().split(/\r?\n/).at(-1)!) as T;
+}
+
+async function databaseServer() {
+  const server = spawn(process.execPath, [...process.execArgv, import.meta.filename, "--database-server=1", `--dir=${directory}`], {
+    cwd: root, env: process.env, stdio: ["ignore", "pipe", "inherit"],
+  });
+  const exited = new Promise<void>((accept, reject) => {
+    server.once("error", reject);
+    server.once("exit", code => code === 0 ? accept() : reject(new Error(`Database engine failed: ${code}`)));
+  });
+  const { endpoint, method } = await new Promise<{ endpoint: string; method: string }>((accept, reject) => {
+    let output = "";
+    server.stdout.on("data", chunk => {
+      output += chunk;
+      if (output.includes("\n")) accept(JSON.parse(output.split("\n")[0]) as { endpoint: string; method: string });
+    });
+    server.once("error", reject);
+    server.once("exit", code => reject(new Error(`Database engine stopped before startup: ${code}`)));
+  });
+  process.argv.push(`--database-endpoint=${endpoint}`);
+  return { endpoint, method, async close() {
+    const response = await fetch(`${endpoint}/close`, { method: "POST" });
+    assert.ok(response.ok);
+    const metrics = await response.json() as { peakRssBytes: number; bytesRead: number; bytesWritten: number; requests: number; statements: number };
+    await exited;
+    return metrics;
+  } };
 }
 
 async function* lines(file: string) {
@@ -62,11 +101,16 @@ async function* lines(file: string) {
   try { for await (const line of input) yield line; } finally { input.close(); }
 }
 
-async function prepare() {
+async function prepare(): Promise<PreparationResult> {
+  const started = performance.now();
   await mkdir(join(directory, "work"), { recursive: true });
   for (const stateFips of selected) await writeFile(join(directory, "work", `${stateFips}.jsonl`), "");
+  const governmentCounts: Record<string, number> = {};
   const government = (stateFips: string, value: Government) => {
-    if (selected.has(stateFips)) appendFileSync(join(directory, "work", `${stateFips}.jsonl`), `${JSON.stringify({ government: value })}\n`);
+    if (selected.has(stateFips)) {
+      governmentCounts[stateFips] = (governmentCounts[stateFips] ?? 0) + 1;
+      appendFileSync(join(directory, "work", `${stateFips}.jsonl`), `${JSON.stringify({ government: value })}\n`);
+    }
   };
   for (const name of ["census_govt_units_2022.csv", "census_govt_units_2022_dependent_school_systems.csv"]) {
     let header: string[] | undefined;
@@ -129,7 +173,46 @@ async function prepare() {
     for await (const chunk of createReadStream(target)) { digest.update(chunk); bytes += chunk.byteLength; }
     sourceEvidence.push({ url: source.url, bytes, sha256: digest.digest("hex") });
   }
-  return { uniqueZips, sourceEvidence };
+  const { acquireStatePublications } = await import("../lib/census-geography/acquire.ts");
+  const { createMemoryRepositories } = await import("../lib/control-plane/repository/memory.ts");
+  const vault = join(directory, "source-vault");
+  await mkdir(vault, { recursive: true });
+  const sourceKeys = new Map<string, { path: string; meta: ObjectMeta }>();
+  const store: EvidenceStore = {
+    async put(key, bytes, meta) {
+      const path = join(vault, createHash("sha256").update(key).digest("hex"));
+      await writeFile(path, bytes);
+      sourceKeys.set(key, { path, meta });
+    },
+    async get(key) {
+      const held = sourceKeys.get(key);
+      return held ? { key, bytes: await readFile(held.path), meta: held.meta } : null;
+    },
+    async head(key) { return sourceKeys.get(key)?.meta ?? null; },
+    async list(prefix) { return [...sourceKeys.keys()].filter(key => key.startsWith(prefix)).sort(); },
+  };
+  const fetchImpl = (async (input, init) => {
+    assert.notEqual(init?.method, "HEAD");
+    const source = sources.find(source => source.url === String(input));
+    assert.ok(source, `Unexpected source ${String(input)}`);
+    const path = join(directory, "sources", source.file);
+    return new Response(Readable.toWeb(createReadStream(path)) as ReadableStream, {
+      headers: { "content-type": "text/plain", "content-length": String((await stat(path)).size), etag: '"real-national-source"' },
+    });
+  }) as typeof fetch;
+  let largestSourceUnit = { state: "", bytes: 0, districts: 0, edges: 0 };
+  await acquireStatePublications({ only: ["cd119", "sldu", "sldl"], discoverPlans: false, states: selected,
+    fetchImpl, cache: { store, locks: createMemoryRepositories().locks } }, async ({ state, dataset }) => {
+    const fips = [...selected].find(fips => FIPS_TO_STATE[fips].postal === state);
+    assert.ok(fips);
+    const encoded = JSON.stringify(dataset), bytes = Buffer.byteLength(encoded);
+    if (bytes > largestSourceUnit.bytes) largestSourceUnit = { state, bytes,
+      districts: dataset.scopes.reduce((sum, scope) => sum + scope.instanceCount, 0),
+      edges: dataset.scopes.reduce((sum, scope) => sum + scope.zctaEdgeCount, 0) };
+    await writeFile(join(directory, "work", `${fips}-source.json`), encoded);
+  }, async (_state, error) => { throw error; });
+  return { uniqueZips, sourceEvidence, largestState: Object.keys(governmentCounts).sort((a, b) => governmentCounts[b] - governmentCounts[a])[0],
+    peakRssBytes: peakRssBytes(), runtimeMs: performance.now() - started, largestSourceUnit };
 }
 
 async function loadWorkload(stateFips: string): Promise<Workload> {
@@ -174,8 +257,13 @@ function geometryAt(template: GeographyGeometry, origin: [number, number], index
 
 async function worker(stateFips: string): Promise<WorkerResult> {
   const started = performance.now();
-  const { publishScopeBoundaries, hydrateBoundaryGeometries } = await import("../lib/census-geography/boundary-artifacts.ts");
-  const { buildCensusDistrictEdge, createCensusDistrictReaderEdge } = await import("../lib/census-geography/district-edge.ts");
+  const { hydrateBoundaryGeometries } = await import("../lib/census-geography/boundary-artifacts.ts");
+  const { createCensusDistrictReaderEdge } = await import("../lib/census-geography/district-edge.ts");
+  const { promoteCensusState } = await import("../lib/census-geography/state-publication.ts");
+  const { measureCensusPromotion } = await import("./lib/representation-scale-database.mts");
+  const endpoint = argument("database-endpoint");
+  assert.ok(endpoint);
+  const baselineRssBytes = process.memoryUsage().rss;
   const workload = await loadWorkload(stateFips);
   const originals = templates(), origins = originals.map(sourcePoint);
   const store = new LocalFileArtifactStore(join(directory, "artifacts"));
@@ -187,13 +275,14 @@ async function worker(stateFips: string): Promise<WorkerResult> {
     return put(bytes, suffix);
   };
   store.readBytes = async key => { const bytes = await get(key); artifactBytesRead += bytes?.byteLength ?? 0; artifactReads++; return bytes; };
-  let ordinal = 0, rawGeometryBytes = 0, districts = 0;
+  let ordinal = 0, vertices = 0, districts = 0;
   const points: [number, number][] = [];
   const jobs: { name: string; type: "overlay_district" | "aiannh"; targets: { geoid: string; point: [number, number] }[] }[] = [];
   const grouping = (identity: Omit<BuiltGrouping, "geometry">): BuiltGrouping => {
     const generated = geometryAt(originals[ordinal % originals.length], origins[ordinal % origins.length], ordinal++);
     points.push(generated.point);
-    rawGeometryBytes += Buffer.byteLength(JSON.stringify(generated.geometry));
+    const polygons = generated.geometry.type === "Polygon" ? [generated.geometry.coordinates] : generated.geometry.coordinates;
+    for (const polygon of polygons) for (const ring of polygon) vertices += ring.length;
     return { ...identity, geometry: generated.geometry };
   };
   const governments = workload.governments;
@@ -230,43 +319,32 @@ async function worker(stateFips: string): Promise<WorkerResult> {
   const aiannhAreas = areaGroups.length;
   if (aiannhAreas) scopes.push({ type: "aiannh", version: "aiannh:2020", versionMeta: metadata("aiannh", "aiannh:2020", stateFips),
     fractionBasis: "area", groupings: areaGroups, instanceCount: aiannhAreas, zctaEdgeCount: aiannhAreas });
-  for (const source of sources) {
-    let accumulator: ScopeAccumulator | undefined;
-    let column = 0;
-    for await (const line of lines(join(directory, "sources", source.file))) {
-      if (!accumulator) {
-        const columns = resolveTab20Columns(parseTab20Header(line), source.geoTag);
-        column = columns.geoGeoid;
-        accumulator = new ScopeAccumulator(source, columns);
-      } else {
-        const row = line.split("|");
-        if (row[column]?.startsWith(stateFips)) accumulator.add(row);
-      }
-    }
-    assert.ok(accumulator);
-    const scope = accumulator.finish(metadata(source.type, source.version, stateFips));
+  const native = JSON.parse(await readFile(join(directory, "work", `${stateFips}-source.json`), "utf8")) as BuiltDataset;
+  for (const scope of native.scopes) {
     if (!scope.groupings.length) continue;
     districts += scope.groupings.length * 2;
     scopes.push({ ...scope, groupings: scope.groupings.map(grouping) });
-    const successor = source.type === "congressional_district" ? "cd:120" : source.version.replace("2024", "2026");
-    scopes.push({ ...scope, version: successor, versionMeta: metadata(source.type, successor, stateFips), groupings: scope.groupings.map(grouping) });
+    const successor = scope.type === "congressional_district" ? "cd:120" : scope.version.replace("2024", "2026");
+    scopes.push({ ...scope, version: successor, versionMeta: metadata(scope.type, successor, stateFips), groupings: scope.groupings.map(grouping) });
   }
-  const dataset: BuiltDataset = { formatVersion: 1, builtAt: now, coverage: `${workload.state} generated polygon volume`, scopes: [], zctaUniverse: workload.zips.map(zip => zip.zip) };
-  const published: BuiltScope[] = [];
-  for (const scope of scopes) published.push(await publishScopeBoundaries(scope, store));
+  const dataset: BuiltDataset = { formatVersion: 1, builtAt: now, coverage: `${workload.state} generated polygon volume`, scopes, zctaUniverse: workload.zips.map(zip => zip.zip) };
+  const sourcePeakRssBytes = peakRssBytes();
+  const measured = await measureCensusPromotion(endpoint, routineStore => promoteCensusState({ state: workload.state, dataset, sourceVersion: version }, {
+    store: routineStore, artifactStore: store, now,
+  }));
+  const publicationPeakRssBytes = peakRssBytes();
+  for (const scope of scopes) assert.ok(scope.groupings.every(group => !group.geometry), "publication must consume the owned source geometry");
   scopes.length = 0;
   governmentGroups.length = 0;
   areaGroups.length = 0;
-  const clean = { ...dataset, scopes: published };
-  const metadataBytesWritten = Buffer.byteLength(JSON.stringify(clean));
-  assert.ok(!JSON.stringify(clean).includes('"coordinates"'), "database metadata must contain no polygons");
-  await writeFile(join(directory, "work", `${stateFips}-dataset.json`), JSON.stringify(clean));
-  const index = await buildCensusDistrictEdge(clean, version, store);
+  const { index, ...database } = measured;
+  assert.deepEqual(Object.keys(index.states), [workload.state]);
+  await writeFile(join(directory, "work", `${stateFips}-index.json`), JSON.stringify(index));
   const edge = createCensusDistrictReaderEdge(index, store);
   const slice = await edge.loadState(workload.state);
   assert.equal(slice.kind, "HELD");
   if (slice.kind !== "HELD") throw new Error("State publication unread");
-  assert.equal(slice.value.containers.length, published.reduce((sum, scope) => sum + scope.groupings.length, 0));
+  assert.equal(slice.value.containers.length, ordinal);
   let largestPointArtifactBytes = 0, largestPointArtifactReads = 0;
   artifactBytesRead = 0;
   for (const job of jobs) for (const { geoid, point } of job.targets) {
@@ -289,18 +367,19 @@ async function worker(stateFips: string): Promise<WorkerResult> {
     aiannhAreas, aiannhComponents: governments.reduce((sum, government) => sum + (government.componentIds?.length ?? 0), 0),
     polygons: ordinal, pointRequests: jobs.reduce((sum, job) => sum + job.targets.length, 0),
     districts, zips: workload.zips.length, localEdges: workload.zips.reduce((sum, zip) => sum + zip.edges, 0),
-    peakRssBytes: peakRssBytes(), runtimeMs: performance.now() - started, rawGeometryBytes, artifactBytesWritten,
-    metadataBytesWritten, readerDatabaseBytes: 0, pointArtifactBytes,
-    largestPointArtifactBytes, largestPointArtifactReads, stateIndex: index };
+    peakRssBytes: peakRssBytes(), runtimeMs: performance.now() - started, vertices, artifactBytesWritten,
+    baselineRssBytes, sourcePeakRssBytes, publicationPeakRssBytes,
+    sourceMetadataBytes: (await stat(join(directory, "work", `${stateFips}-source.json`))).size,
+    database, readerDatabaseBytes: 0, pointArtifactBytes,
+    largestPointArtifactBytes, largestPointArtifactReads };
 }
 
-async function reader(stateFips: string, national = false): Promise<ReaderResult> {
+async function reader(stateFips: string): Promise<ReaderResult> {
   const started = performance.now();
   const { hydrateBoundaryGeometries } = await import("../lib/census-geography/boundary-artifacts.ts");
   const { createCensusDistrictReaderEdge } = await import("../lib/census-geography/district-edge.ts");
   const state = FIPS_TO_STATE[stateFips].postal;
-  const single = JSON.parse(await readFile(join(directory, "work", `${stateFips}-result.json`), "utf8")) as WorkerResult;
-  const index = national ? JSON.parse(await readFile(join(directory, "catalog.json"), "utf8")) : single.stateIndex;
+  const index = JSON.parse(await readFile(join(directory, "work", `${stateFips}-index.json`), "utf8"));
   const store = new LocalFileArtifactStore(join(directory, "artifacts"));
   const read = store.readBytes.bind(store), readKeys: string[] = [];
   let artifactBytesRead = 0;
@@ -321,82 +400,72 @@ async function reader(stateFips: string, national = false): Promise<ReaderResult
 
 async function main() {
   const started = performance.now();
-  const previous = argument("reuse-boundaries") ? JSON.parse(await readFile(join(directory, "report.json"), "utf8")) : null;
-  const input = await prepare();
-  const workers: WorkerResult[] = [];
-  const readers: ReaderResult[] = [];
-  for (const stateFips of selected) {
-    const result = previous ? JSON.parse(await readFile(join(directory, "work", `${stateFips}-result.json`), "utf8")) as WorkerResult
-      : await child<WorkerResult>("worker", stateFips);
-    workers.push(result);
-    await writeFile(join(directory, "work", `${stateFips}-result.json`), JSON.stringify(result));
-    if (!previous) readers.push(await child<ReaderResult>("reader", stateFips));
-    process.stdout.write(`${result.state}: ${result.governments + result.dependentSchools} governments, ${result.districts} districts, ${Math.ceil(result.peakRssBytes / 1024 ** 2)} MiB peak\n`);
+  const input = await child<PreparationResult>("prepare", "1");
+  const database = await databaseServer();
+  const workers: WorkerResult[] = [], readers: ReaderResult[] = [];
+  let nationalReader: ReaderResult;
+  let firstStateRead: StateReadResult | undefined, nationalStateRead: StateReadResult;
+  let completion: CompletionMeasurement;
+  let databaseTotals: Awaited<ReturnType<typeof database.close>>;
+  try {
+    for (const stateFips of [input.largestState, ...[...selected].filter(state => state !== input.largestState)]) {
+      const result = await child<WorkerResult>("worker", stateFips);
+      workers.push(result);
+      await writeFile(join(directory, "work", `${stateFips}-result.json`), JSON.stringify(result));
+      readers.push(await child<ReaderResult>("reader", stateFips));
+      if (!firstStateRead) firstStateRead = await child<StateReadResult>("database-read", stateFips);
+      process.stdout.write(`${result.state}: ${result.governments + result.dependentSchools} jobs, ${result.districts} districts, ${Math.ceil(result.peakRssBytes / 1024 ** 2)} MiB peak, promoted before next state\n`);
+    }
+    completion = await child<CompletionMeasurement>("completion", String(workers.length));
+    nationalReader = await child<ReaderResult>("reader", input.largestState);
+    nationalStateRead = await child<StateReadResult>("database-read", input.largestState);
+  } finally {
+    databaseTotals = await database.close();
   }
-  const peak = Math.max(...workers.map(worker => worker.peakRssBytes));
+  const largest = workers[0], oneReader = readers[0];
+  assert.equal(largest.state, FIPS_TO_STATE[input.largestState].postal);
+  assert.deepEqual(nationalReader.readKeys, oneReader.readKeys, "adding the country must not add local artifact reads");
+  assert.equal(nationalReader.artifactBytesRead, oneReader.artifactBytesRead, "adding the country must not add local artifact bytes");
+  assert.ok(firstStateRead);
+  assert.equal(nationalStateRead.bytesRead, firstStateRead.bytesRead, "adding the country must not add state SQL response bytes");
+  assert.equal(nationalStateRead.bytesWritten, firstStateRead.bytesWritten, "adding the country must not add state SQL request bytes");
+  assert.deepEqual(nationalStateRead.stateKeys, [largest.state]);
   const total = (key: keyof WorkerResult) => workers.reduce((sum, worker) => sum + Number(worker[key]), 0);
-  const { buildCensusDistrictEdge, publishCensusDistrictStates, createCensusDistrictReaderEdge } = await import("../lib/census-geography/district-edge.ts");
-  async function* stateDatasets() {
-    for (const stateFips of selected) {
-      const dataset = JSON.parse(await readFile(join(directory, "work", `${stateFips}-dataset.json`), "utf8")) as BuiltDataset;
-      yield { state: FIPS_TO_STATE[stateFips].postal, dataset: { ...dataset, scopes: dataset.scopes.filter(scope => scope.instanceCount > 0) } };
-    }
-  }
-  const store = new LocalFileArtifactStore(join(directory, "artifacts"));
-  let catalogArtifactBytes = 0;
-  const put = store.putImmutable.bind(store);
-  store.putImmutable = async (bytes, suffix) => {
-    const key = `reader/artifacts/${createHash("sha256").update(bytes).digest("hex")}.${suffix}`;
-    if (!existsSync(join(directory, "artifacts", key))) catalogArtifactBytes += bytes.byteLength;
-    return put(bytes, suffix);
-  };
-  const national = await publishCensusDistrictStates(stateDatasets(), version, store);
-  await writeFile(join(directory, "catalog.json"), JSON.stringify(national));
-  assert.equal(Object.keys(national.states).length, selected.size);
+  const sumDatabase = (run: "firstRun" | "unchangedRun", key: keyof DatabaseMeasurement["firstRun"]) => workers.reduce((sum, worker) => sum + worker.database[run][key], 0);
+  const peak = Math.max(...workers.map(worker => worker.peakRssBytes));
   const coordinatorPeakRssBytes = peakRssBytes();
-  assert.ok(!JSON.stringify(national).includes('"coordinates"'));
-  if (previous) {
-    for await (const input of stateDatasets()) {
-      const worker = workers.find(worker => worker.state === input.state)!;
-      worker.stateIndex = await buildCensusDistrictEdge(input.dataset, version, store);
-      const fips = [...selected].find(fips => FIPS_TO_STATE[fips].postal === input.state)!;
-      await writeFile(join(directory, "work", `${fips}-result.json`), JSON.stringify(worker));
-      readers.push(await child<ReaderResult>("reader", fips));
-    }
-  }
-  const largest = [...workers].sort((a, b) => b.governments + b.dependentSchools - a.governments - a.dependentSchools)[0];
-  const requested = [...selected].find(fips => FIPS_TO_STATE[fips].postal === largest.state)!, state = largest.state;
-  const oneState = (await readFile(join(directory, "work", `${requested}-result.json`), "utf8"));
-  const oneIndex = (JSON.parse(oneState) as WorkerResult).stateIndex as typeof national;
-  let readKeys: string[] = [];
-  const read = store.readBytes.bind(store);
-  store.readBytes = async key => { readKeys.push(key); return read(key); };
-  const single = await createCensusDistrictReaderEdge(oneIndex, store).loadState(state);
-  const onePlaceKeys = [...readKeys];
-  readKeys = [];
-  const nationalPlace = await createCensusDistrictReaderEdge(national, store).loadState(state);
-  assert.deepEqual(nationalPlace, single, "a place must not change when the rest of the country is added");
-  assert.deepEqual(readKeys, onePlaceKeys, "country growth must not add artifact reads to a place");
-  const nationalReader = await child<ReaderResult>("national-reader", requested);
-  const oneReader = readers.find(reader => reader.state === state)!;
-  assert.deepEqual(nationalReader.readKeys, oneReader.readKeys, "cold place must read the same keys under a national catalog");
-  assert.equal(nationalReader.artifactBytesRead, oneReader.artifactBytesRead, "cold place transfer must be independent of country size");
-  const database = await child<Awaited<ReturnType<typeof import("./lib/representation-scale-database.mts").measureCensusPromotion>> & { peakRssBytes: number }>("database", "1");
-  const databaseBytesRead = database.firstRun.bytesRead, databaseBytesWritten = database.firstRun.bytesWritten;
+  const databaseBytesRead = sumDatabase("firstRun", "bytesRead") + completion.firstRun.bytesRead;
+  const databaseBytesWritten = sumDatabase("firstRun", "bytesWritten") + completion.firstRun.bytesWritten;
   const report = { measuredAt: new Date().toISOString(), runtimeMs: performance.now() - started, coordinatorPeakRssBytes,
-    ...(previous ? { boundaryRunRuntimeMs: previous.boundaryRunRuntimeMs ?? previous.runtimeMs } : {}),
-    localDatabaseMeasurementPeakRssBytes: database.peakRssBytes, database,
+    sourceAcquisition: { peakRssBytes: input.peakRssBytes, runtimeMs: input.runtimeMs, largestSourceUnit: input.largestSourceUnit },
+    localDatabaseMeasurementPeakRssBytes: databaseTotals.peakRssBytes,
     nationalInputs: { sourceEvidence: input.sourceEvidence, uniqueZips: input.uniqueZips, jurisdictions: workers.length,
       governments: total("governments"), censusGovernments: total("censusGovernments"), stateGovernments: total("stateGovernments"),
       territorialGovernments: total("territorialGovernments"), tribalNations: total("tribalNations"), dependentSchools: total("dependentSchools"),
-      aiannhAreas: total("aiannhAreas"), aiannhComponents: total("aiannhComponents"), polygons: total("polygons"), pointRequests: total("pointRequests"),
+      aiannhAreas: total("aiannhAreas"), aiannhComponents: total("aiannhComponents"), polygons: total("polygons"), vertices: total("vertices"), pointRequests: total("pointRequests"),
       localEdges: total("localEdges"), districts: total("districts") },
     databaseMeasurement: database.method,
+    database: { firstRun: { requests: sumDatabase("firstRun", "requests") + completion.firstRun.requests,
+      statements: sumDatabase("firstRun", "statements") + completion.firstRun.statements, bytesRead: databaseBytesRead,
+      bytesWritten: databaseBytesWritten, runtimeMs: sumDatabase("firstRun", "runtimeMs") + completion.firstRun.runtimeMs },
+      unchangedRun: { requests: sumDatabase("unchangedRun", "requests") + completion.unchangedRun.requests,
+        statements: sumDatabase("unchangedRun", "statements") + completion.unchangedRun.statements,
+        bytesRead: sumDatabase("unchangedRun", "bytesRead") + completion.unchangedRun.bytesRead,
+        bytesWritten: sumDatabase("unchangedRun", "bytesWritten") + completion.unchangedRun.bytesWritten,
+        runtimeMs: sumDatabase("unchangedRun", "runtimeMs") + completion.unchangedRun.runtimeMs },
+      largestState: largest.database, completion, engineTotals: databaseTotals },
     geometryMeasurement: "Synthetic polygons from three retained real floterials for Census governments, all statewide and governing territorial identities, and five typed AIANNH areas for three nations; real 2024/119th district identities and ZIP memberships duplicated for 2026/120th plans.",
-    countryGrowthCheck: { requestedState: state, catalogStates: Object.keys(national.states).length, localArtifactReads: onePlaceKeys.length, identicalReadKeys: true },
-    perRun: { databaseBytesRead, databaseBytesWritten, artifactBytesWritten: total("artifactBytesWritten") + catalogArtifactBytes, rawGeometryBytes: total("rawGeometryBytes") },
-    perDayAtMonthlyCadence: { databaseBytesRead: databaseBytesRead / 30, databaseBytesWritten: databaseBytesWritten / 30, artifactBytesWritten: (total("artifactBytesWritten") + catalogArtifactBytes) / 30 },
-    peakWorkerRssBytes: peak, peakReaderRssBytes: Math.max(...readers.map(reader => reader.peakRssBytes)), productionHostBytes: 8 * 1024 ** 3, marginBytes: 768 * 1024 ** 2,
+    largestInput: { state: largest.state, jobs: largest.governments + largest.dependentSchools, polygons: largest.polygons,
+      vertices: largest.vertices, sourceMetadataBytes: largest.sourceMetadataBytes, sourcePeakRssBytes: largest.sourcePeakRssBytes,
+      publicationPeakRssBytes: largest.publicationPeakRssBytes, baselineRssBytes: largest.baselineRssBytes },
+    publication: { unit: "one state", statesPromotedBeforeNextGeometryInput: workers.length, nationalCatalogs: 0, metadataReplays: 0, rawGeometrySerializationsForMeasurement: 0 },
+    countryGrowthCheck: { requestedState: largest.state, publishedStates: workers.length, localArtifactReads: oneReader.readKeys.length,
+      identicalReadKeys: true, firstStateRead, nationalStateRead },
+    perRun: { databaseBytesRead, databaseBytesWritten, artifactBytesWritten: total("artifactBytesWritten") },
+    perDayAtMonthlyCadence: { databaseBytesRead: databaseBytesRead / 30, databaseBytesWritten: databaseBytesWritten / 30, artifactBytesWritten: total("artifactBytesWritten") / 30 },
+    peakWorkerRssBytes: peak, peakSourceRssBytes: Math.max(...workers.map(worker => worker.sourcePeakRssBytes)),
+    peakPublicationRssBytes: Math.max(...workers.map(worker => worker.publicationPeakRssBytes)),
+    peakReaderRssBytes: Math.max(...readers.map(reader => reader.peakRssBytes)), productionHostBytes: 8 * 1024 ** 3, marginBytes: 768 * 1024 ** 2,
     copiesAtMargin: Math.floor((8 * 1024 ** 3 - 768 * 1024 ** 2 - coordinatorPeakRssBytes) / peak),
     copiesWithResearchParent: Math.floor((8 * 1024 ** 3 - (768 + 2928) * 1024 ** 2 - coordinatorPeakRssBytes) / peak),
     configuredCensusReservationBytes: 1258 * 1024 ** 2,
@@ -406,11 +475,21 @@ async function main() {
   process.stdout.write(`${JSON.stringify({ ...report, workers: undefined, readers: undefined })}\n`);
 }
 
-if (argument("database")) {
-  const { measureCensusPromotion } = await import("./lib/representation-scale-database.mts");
-  const result = await measureCensusPromotion(JSON.parse(await readFile(join(directory, "catalog.json"), "utf8")));
-  process.stdout.write(`${JSON.stringify({ ...result, peakRssBytes: peakRssBytes() })}\n`);
-} else if (argument("national-reader")) process.stdout.write(`${JSON.stringify(await reader(argument("national-reader")!, true))}\n`);
-else if (argument("reader")) process.stdout.write(`${JSON.stringify(await reader(argument("reader")!))}\n`);
+if (argument("prepare")) process.stdout.write(`${JSON.stringify(await prepare())}\n`);
+else if (argument("database-server")) {
+  const { serveCensusPromotionDatabase } = await import("./lib/representation-scale-database.mts");
+  await serveCensusPromotionDatabase(peakRssBytes);
+} else if (argument("completion")) {
+  const { measureCensusCompletion } = await import("./lib/representation-scale-database.mts");
+  const endpoint = argument("database-endpoint");
+  assert.ok(endpoint);
+  process.stdout.write(`${JSON.stringify(await measureCensusCompletion(endpoint, now, Number(argument("completion"))))}\n`);
+} else if (argument("database-read")) {
+  const { measureCensusStateIndex } = await import("./lib/representation-scale-database.mts");
+  const endpoint = argument("database-endpoint");
+  assert.ok(endpoint);
+  const result = await measureCensusStateIndex(endpoint, FIPS_TO_STATE[argument("database-read")!].postal);
+  process.stdout.write(`${JSON.stringify(result)}\n`);
+} else if (argument("reader")) process.stdout.write(`${JSON.stringify(await reader(argument("reader")!))}\n`);
 else if (argument("worker")) process.stdout.write(`${JSON.stringify(await worker(argument("worker")!))}\n`);
 else await main();

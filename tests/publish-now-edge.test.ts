@@ -4,9 +4,9 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
+import { processRegisteredRoutineCandidate, processRegisteredFanOutCandidate } from "../lib/civic-data/promotion.ts";
 import { censusGeographyCandidate } from "../lib/census-geography/candidate.ts";
-import { buildCensusDistrictEdge } from "../lib/census-geography/district-edge.ts";
+import { buildCensusDistrictEdge } from "../lib/census-geography/state-publication.ts";
 import { CENSUS_GEO_CONTRACT_ID } from "../lib/census-geography/publication.ts";
 import { publishStatePeople } from "../lib/civic-data/state-people-publication.ts";
 import { publishRoutineReaderEdgeOutcome } from "../lib/civic-data/reader-edge-publication.ts";
@@ -31,10 +31,12 @@ test("publish-now copies real baseline pointers during an unresolved finance pas
   // The routine sweep also checks these existing canonical families. Seed them through their real promotion doors.
   const dataset = JSON.parse(readFileSync("lib/census-geography/bootstrap-az.json", "utf8"));
   const census = censusGeographyCandidate(await buildCensusDistrictEdge(dataset, "publish-now-fixture", artifacts));
-  assert.ok((await processRegisteredRoutineCandidate(memory, CENSUS_GEO_CONTRACT_ID, census, NOW)).promoted);
+  assert.ok((await processRegisteredFanOutCandidate(memory, CENSUS_GEO_CONTRACT_ID, census, NOW)).promoted);
+  assert.equal((await publishRoutineReaderEdgeOutcome(memory, NOW,
+    [{ recordClass: "CENSUS_GEOGRAPHY", scope: census.scope }], { artifactStore: artifacts })).ok, true);
   await memory.writePreparedReaderProjection({ recordClass: "MEETING", scope: MEETINGS_PREPARED_SCOPE,
     payload: { formatVersion: 1, generatedAt: NOW, counts: { fresh: 0, carried: 0, total: 0, duplicatesCollapsed: 0 },
-      meetings: [], agendaDocuments: [], sources: [] }, composedFrom: [{ contractId: "meeting-facts", versionId: "facts:none" }], factSha256: "a".repeat(64),
+      meetings: [], agendaDocuments: [], sources: [] }, composedFrom: [], factSha256: "a".repeat(64),
     generatedAt: NOW, composedAt: NOW, sourceThrough: null, retrievedAt: null, promotedThrough: null,
   }, null);
   assert.equal((await publishRoutineReaderEdgeOutcome(memory, NOW, null, { artifactStore: artifacts })).readerEdge, "PUBLISHED");

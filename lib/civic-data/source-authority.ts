@@ -429,7 +429,7 @@ export const SOURCE_AUTHORITIES = {
     expectedIdentifierKeys: ["type", "geoid", "version"],
     expectedTemporalFields: ["version", "source_through"],
     horizonSemantics: "Complete for the exact built scopes: each geography's every wholly-or-partly overlapping ZCTA. Overlay districts publish independently when their polygon town membership agrees with the election authority district document, with both sources attributed; differences remain reported. Every source has exact bytes checksums and an explicit plan. It never claims a wider geography universe or substitutes a different Census vintage.",
-    parserVersion: "census-geography-overlaps/2",
+    parserVersion: "census-geography-overlaps/3",
     freshnessExpectation: "Owner-invoked version promotion on a new Census relationship-file vintage; never a silent vintage substitution.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: true,

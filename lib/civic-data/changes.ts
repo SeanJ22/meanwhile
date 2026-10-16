@@ -330,6 +330,7 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
         }),
       ];
     case "CENSUS_GEOGRAPHY":
+      if (root.formatVersion === 3) return [{ key: "geography:refresh", record: root }];
       return Object.entries(object(root.states) ?? {}).sort(([left], [right]) => left.localeCompare(right))
         .map(([state, record]) => ({ key: `geography:state:${state}`, record }));
     case "REGISTRATION": {

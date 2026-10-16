@@ -1,7 +1,13 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { acquireDataset, acquireStateDatasets, DEFAULT_SCOPES } from "../lib/census-geography/acquire.ts";
+import { censusGeographyCompletionCandidate } from "../lib/census-geography/candidate.ts";
+import { CENSUS_GEO_CONTRACT_ID, CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } from "../lib/census-geography/publication.ts";
+import { civicRecordsFor } from "../lib/civic-data/changes.ts";
+import { processRegisteredFanOutCandidate } from "../lib/civic-data/promotion.ts";
+import { parseReaderProjectionReadback } from "../lib/civic-data/reader-readback.ts";
+import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { acquireDataset, acquireStatePublications, DEFAULT_SCOPES } from "../lib/census-geography/acquire.ts";
 import { acquireGrfScopes, GRF_2026_TARGETS, GRF_ROOT, grfTargetsFromNames } from "../lib/census-geography/grf.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
@@ -14,6 +20,7 @@ const HEADER = "TABBLKST|TABBLKCOU|ZCTA5CE|CDDECFP|CDCURFP|SLDUST|SLDLST|AREALAN
 const BLOCKS = `${HEADER}\n04|019|85701|03|07|020|020|100\n04|019|85641|02|06|017|017|60\n04|019|85641|02|06|019|019|40\n`;
 const NAMES = "TABBLKST|CDSESSN|LSY\n04|120|2026\n";
 const GRF_KEYS = ["cd120", "sldu2026", "sldl2026"];
+async function throwStateFailure(_state: string, error: unknown): Promise<void> { throw error; }
 function cache() { return { store: new MemoryEvidenceStore(), locks: createMemoryRepositories().locks }; }
 function listing(names: readonly string[]): string { return names.map(name => `<a href="${name}">${name}</a>`).join("\n"); }
 function harness(year = 2026, session = 120, legislativeYear = 2026) {
@@ -162,8 +169,8 @@ test("national source rows are partitioned once before each state's overlaps are
     assert.equal(String(input), url);
     return new Response(body, { headers: { etag: '"unchanged"', "content-length": String(Buffer.byteLength(body)) } });
   }) as typeof fetch;
-  const states = [];
-  for await (const input of acquireStateDatasets({ only: ["county"], states: new Set(["23", "33"]), fetchImpl, cache: cache() })) states.push(input);
+  const states: CensusDistrictStateInput[] = [];
+  await acquireStatePublications({ only: ["county"], states: new Set(["23", "33"]), fetchImpl, cache: cache() }, async input => { states.push(input); }, throwStateFailure);
   assert.deepEqual(calls, [`GET ${url}`]);
   assert.deepEqual(states.map(input => input.state), ["ME", "NH"]);
   assert.deepEqual(states.map(input => input.dataset.scopes[0].groupings.map(group => group.geoid)), [["23001"], ["33001"]]);
@@ -186,11 +193,11 @@ test("unchanged national source checks once and loads held state artifacts lazil
   }) as typeof fetch;
   const options = { only: ["county"], states: new Set(["23", "33"]), fetchImpl, cache: sourceCache };
   const first: CensusDistrictStateInput[] = [];
-  for await (const input of acquireStateDatasets(options)) first.push(input);
+  await acquireStatePublications(options, async input => { first.push(input); }, throwStateFailure);
   const loaded: string[] = [];
-  for await (const input of acquireStateDatasets({ ...options, previousScopes: first[0].dataset.scopes,
+  await acquireStatePublications({ ...options,
     previousStateDataset: async state => { loaded.push(state); return first.find(value => value.state === state)?.dataset; },
-  })) assert.equal(input.dataset.scopes[0], first.find(value => value.state === input.state)?.dataset.scopes[0]);
+  }, async input => { assert.equal(input.dataset.scopes[0], first.find(value => value.state === input.state)?.dataset.scopes[0]); }, throwStateFailure);
   assert.deepEqual(calls, ["GET", "HEAD"]);
   assert.deepEqual(loaded, ["ME", "NH"]);
 });
@@ -207,8 +214,8 @@ test("a state keeps exact cross-state metro shares without retaining foreign ZIP
     const url = String(input); gets.push(url);
     return new Response(url.endsWith(".xlsx") ? Uint8Array.from(xlsx) : county);
   }) as typeof fetch;
-  const states = [];
-  for await (const input of acquireStateDatasets({ only: ["county", "cbsa"], states: new Set(["23", "33"]), fetchImpl, cache: cache() })) states.push(input);
+  const states: CensusDistrictStateInput[] = [];
+  await acquireStatePublications({ only: ["county", "cbsa"], states: new Set(["23", "33"]), fetchImpl, cache: cache() }, async input => { states.push(input); }, throwStateFailure);
   assert.equal(gets.length, 2);
   const first = states[0].dataset, second = states[1].dataset;
   assert.deepEqual(first.zctaUniverse, ["00001"]);
@@ -217,4 +224,111 @@ test("a state keeps exact cross-state metro shares without retaining foreign ZIP
     [{ zcta5: "00001", fraction: 1, whole: true }]);
   assert.deepEqual(second.scopes.find(scope => scope.type === "cbsa")!.groupings[0].overlaps,
     [{ zcta5: "00001", fraction: 1, whole: true }, { zcta5: "00002", fraction: 1, whole: true }]);
+});
+
+test("a completed state publishes before the next state loads, and survives a later acquisition failure", async () => {
+  const body = "GEOID_COUNTY_20|NAMELSAD_COUNTY_20|AREALAND_COUNTY_20|GEOID_ZCTA5_20|AREALAND_ZCTA5_20|AREALAND_PART\n23001|First County|60|00001|100|60\n33001|Second County|40|00001|100|40\n";
+  const loaded: string[] = [], published: string[] = [];
+  let publicationEntered!: () => void, finishPublication!: () => void;
+  const entered = new Promise<void>(resolve => { publicationEntered = resolve; });
+  const publication = new Promise<void>(resolve => { finishPublication = resolve; });
+  const work = acquireStatePublications({ only: ["county"], states: new Set(["23", "33"]), cache: cache(),
+    fetchImpl: (async () => new Response(body)) as typeof fetch,
+    previousStateDataset: async state => {
+      loaded.push(state);
+      if (state === "NH") throw new Error("Later state source unavailable");
+      return undefined;
+    },
+  }, async input => {
+    published.push(input.state);
+    publicationEntered();
+    await publication;
+  }, throwStateFailure);
+  await entered;
+  assert.deepEqual(loaded, ["ME"]);
+  assert.deepEqual(published, ["ME"]);
+  finishPublication();
+  await assert.rejects(work, /Later state source unavailable/);
+  assert.deepEqual(loaded, ["ME", "NH"]);
+  assert.deepEqual(published, ["ME"]);
+});
+
+test("the registered Census completion clock promotes one scalar record with a durable typed readback", async () => {
+  const store = new MemoryRoutineDataStore(), completedAt = "2026-10-16T00:00:00.000Z";
+  const candidate = censusGeographyCompletionCandidate({ completedAt, completedStates: 1 });
+  const outcome = await processRegisteredFanOutCandidate(store, CENSUS_GEO_CONTRACT_ID, candidate, completedAt);
+  assert.ok(outcome.promoted, outcome.candidate.failureDetail ?? JSON.stringify(outcome.candidate.receipt));
+  assert.equal(outcome.readerReadback?.status, "PASS", outcome.readerReadback?.detail);
+  assert.equal(outcome.readerReadback?.scope, CENSUS_GEO_SCOPE);
+  assert.equal(outcome.readerReadback?.versionId, candidate.id);
+  const expected = { formatVersion: 3, completedAt, completedStates: 1 };
+  assert.deepEqual(outcome.promoted.payload, expected);
+  assert.deepEqual(candidate.normalizedPayload, expected);
+  assert.equal(candidate.normalization.inputRecords, 1);
+  assert.equal(candidate.normalization.outputRecords, 1);
+  const members = civicRecordsFor(CENSUS_GEO_RECORD_CLASS, outcome.promoted.payload);
+  assert.deepEqual(members, [{ key: "geography:refresh", record: expected }]);
+  const held = await store.readPromotion(CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE);
+  assert.deepEqual(held?.payload, expected);
+  const receipts = (await store.events(candidate.id)).flatMap(event => {
+    const receipt = parseReaderProjectionReadback(event.detail);
+    return receipt ? [receipt] : [];
+  });
+  assert.deepEqual(receipts, [outcome.readerReadback]);
+});
+
+test("invalid completion counts cannot replace the last successful refresh clock", async () => {
+  const store = new MemoryRoutineDataStore(), completedAt = "2026-10-16T00:00:00.000Z";
+  const good = censusGeographyCompletionCandidate({ completedAt, completedStates: 56 });
+  assert.ok((await processRegisteredFanOutCandidate(store, CENSUS_GEO_CONTRACT_ID, good, completedAt)).promoted);
+  for (const completedStates of [0, -1, 1.5, Number.MAX_SAFE_INTEGER + 1]) {
+    const later = "2026-10-16T01:00:00.000Z";
+    const candidate = censusGeographyCompletionCandidate({ completedAt: later, completedStates });
+    const outcome = await processRegisteredFanOutCandidate(store, CENSUS_GEO_CONTRACT_ID, candidate, later);
+    assert.equal(outcome.promoted, null, `Invalid completion count ${completedStates} published`);
+    assert.equal(outcome.readerReadback, null);
+    assert.equal((await store.readPromotionIdentity(CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE))?.versionId, good.id);
+  }
+});
+
+test("a failed state's reader publication is reported before the next state publishes", async () => {
+  const body = "GEOID_COUNTY_20|NAMELSAD_COUNTY_20|AREALAND_COUNTY_20|GEOID_ZCTA5_20|AREALAND_ZCTA5_20|AREALAND_PART\n23001|First County|60|00001|100|60\n33001|Second County|40|00001|100|40\n";
+  const sequence: string[] = [], published: string[] = [];
+  const failure = new Error("Constructed reader publication failure");
+  await acquireStatePublications({ only: ["county"], states: new Set(["23", "33"]), cache: cache(),
+    fetchImpl: (async () => new Response(body)) as typeof fetch,
+    previousStateDataset: async state => { sequence.push(`load:${state}`); return undefined; },
+  }, async input => {
+    sequence.push(`publish:${input.state}`);
+    if (input.state === "ME") throw failure;
+    published.push(input.state);
+  }, async (state, error) => {
+    assert.equal(error, failure);
+    sequence.push(`failed:${state}`);
+  });
+  assert.deepEqual(sequence, ["load:ME", "publish:ME", "failed:ME", "load:NH", "publish:NH"]);
+  assert.deepEqual(published, ["NH"]);
+});
+
+test("cancellation and an invalid state stop the refresh without becoming state-local failures", async () => {
+  const body = "GEOID_COUNTY_20|NAMELSAD_COUNTY_20|AREALAND_COUNTY_20|GEOID_ZCTA5_20|AREALAND_ZCTA5_20|AREALAND_PART\n23001|First County|60|00001|100|60\n33001|Second County|40|00001|100|40\n";
+  const controller = new AbortController(), published: string[] = [], failures: string[] = [];
+  await assert.rejects(acquireStatePublications({ only: ["county"], states: new Set(["23", "33"]), cache: cache(), signal: controller.signal,
+    fetchImpl: (async () => new Response(body)) as typeof fetch,
+  }, async input => {
+    published.push(input.state);
+    controller.abort(new Error("Constructed refresh cancellation"));
+  }, async state => { failures.push(state); }), /refresh cancellation/);
+  assert.deepEqual(published, ["ME"]);
+  assert.deepEqual(failures, []);
+  const reporting = new AbortController();
+  await assert.rejects(acquireStatePublications({ only: ["county"], states: new Set(["23"]), cache: cache(), signal: reporting.signal,
+    fetchImpl: (async () => new Response(body)) as typeof fetch,
+  }, async () => { throw new Error("Constructed state failure"); }, async () => {
+    reporting.abort(new Error("Constructed reporting cancellation"));
+  }), /reporting cancellation/);
+  await assert.rejects(acquireStatePublications({ only: ["county"], states: new Set(["00"]), cache: cache(),
+    fetchImpl: (async () => { throw new Error("An invalid state must not acquire a source"); }) as typeof fetch,
+  }, async input => { published.push(input.state); }, async state => { failures.push(state); }), /Unknown Census state 00/);
+  assert.deepEqual(failures, []);
 });

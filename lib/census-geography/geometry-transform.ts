@@ -11,19 +11,22 @@ interface Edge { a: Point; b: Point; ring: number; index: number; count: number;
 function samePoint(a: Point, b: Point): boolean { return a[0] === b[0] && a[1] === b[1]; }
 
 export function roundBoundaryGeometry(geometry: GeographyGeometry): GeographyGeometry {
-  const coordinates = geometryPolygons(geometry).map((polygon) => polygon.map((ring) => {
-    const rounded: Ring = [];
-    for (const [longitude, latitude] of ring) {
+  const polygons = geometryPolygons(geometry);
+  if (!polygons.length || polygons.some(polygon => !polygon.length)) throw new Error("Boundary has no polygon rings");
+  for (const polygon of polygons) for (const ring of polygon) {
+    let kept = 0;
+    for (let index = 0; index < ring.length; index++) {
+      const point = ring[index], [longitude, latitude] = point;
       if (!Number.isFinite(longitude) || !Number.isFinite(latitude) || Math.abs(longitude) > 180 || Math.abs(latitude) > 90) throw new Error("Invalid WGS84 boundary coordinate");
-      const point: Point = [Math.round(longitude * PRECISION) / PRECISION || 0, Math.round(latitude * PRECISION) / PRECISION || 0];
-      if (!rounded.length || !samePoint(point, rounded.at(-1)!)) rounded.push(point);
+      point[0] = Math.round(longitude * PRECISION) / PRECISION || 0;
+      point[1] = Math.round(latitude * PRECISION) / PRECISION || 0;
+      if (!kept || !samePoint(point, ring[kept - 1])) ring[kept++] = point;
     }
-    if (rounded.length && !samePoint(rounded[0], rounded.at(-1)!)) rounded.push([...rounded[0]]);
-    if (rounded.length < 4 || ringArea(rounded) === 0) throw new Error("Boundary ring collapses at six-decimal precision");
-    return rounded;
-  }));
-  if (!coordinates.length || coordinates.some((polygon) => !polygon.length)) throw new Error("Boundary has no polygon rings");
-  return geometry.type === "Polygon" ? { type: "Polygon", coordinates: coordinates[0] } : { type: "MultiPolygon", coordinates };
+    ring.length = kept;
+    if (kept && !samePoint(ring[0], ring[kept - 1])) ring.push([ring[0][0], ring[0][1]]);
+    if (ring.length < 4 || ringArea(ring) === 0) throw new Error("Boundary ring collapses at six-decimal precision");
+  }
+  return geometry;
 }
 
 function segmentDistanceSquared(point: Point, a: Point, b: Point): number {

@@ -6,8 +6,9 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import type { MapLibreMap } from "maplibre-gl";
 import type { BuiltDataset, BuiltScope } from "../lib/census-geography/dataset.ts";
-import { buildCensusDistrictEdge, createCensusDistrictReaderEdge } from "../lib/census-geography/district-edge.ts";
-import { publishScopeBoundaries, hydrateBoundaryGeometries } from "../lib/census-geography/boundary-artifacts.ts";
+import { createCensusDistrictReaderEdge } from "../lib/census-geography/district-edge.ts";
+import { buildCensusDistrictEdge } from "../lib/census-geography/state-publication.ts";
+import { hydrateBoundaryGeometries } from "../lib/census-geography/boundary-artifacts.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store-local.ts";
 import { representationDivisionsAt, excludedRepresentationAtPoints, requestRepresentationGeographyReader, supplementPointDivisions } from "../lib/geo/representation-geography.ts";
 import { withCensusDistricts } from "../lib/geo/zip-census-districts.ts";
@@ -31,8 +32,7 @@ after(() => {
 });
 
 async function publishedReader(dataset: BuiltDataset, version: string) {
-  const scopes = await Promise.all(dataset.scopes.map(scope => publishScopeBoundaries(scope, store)));
-  return createCensusDistrictReaderEdge(await buildCensusDistrictEdge({ ...dataset, scopes }, version, store), store);
+  return createCensusDistrictReaderEdge(await buildCensusDistrictEdge(structuredClone(dataset), version, store), store);
 }
 
 function scope(type: BuiltScope["type"], version: string, geoid: string, label: string): BuiltScope {

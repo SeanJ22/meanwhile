@@ -55,7 +55,7 @@ import {
   provenEdgeEntry,
   servedValue,
 } from "./helpers/promoted-edge-entry.ts";
-import { azBallot as committedAzBallot, azDistrictDataset, publishDistrictFixture } from "./helpers/ballot-district-fixtures.ts";
+import { azBallot as committedAzBallot, azDistrictDataset, publishDistrictStatesFixture } from "./helpers/ballot-district-fixtures.ts";
 
 for (const key of ["DATABASE_URL", "DATABASE_URL_UNPOOLED", "NEON_DATABASE_URL", "NETLIFY", "NETLIFY_BLOBS_CONTEXT", "NETLIFY_SITE_ID"]) delete process.env[key];
 
@@ -133,11 +133,10 @@ async function publishEdge(withPromoted: boolean, authorityOverrides: PublishAut
   const dir = mkdtempSync(join(tmpdir(), "wtp-ballot-edge-"));
   after(() => rmSync(dir, { recursive: true, force: true }));
   const artifactStore = new LocalFileArtifactStore(dir);
-  const districts = await publishDistrictFixture(artifactStore, fixture.version, fixture.dataset);
+  const districts = await publishDistrictStatesFixture(artifactStore, fixture.version, fixture.dataset);
   const authority: PublishAuthority = {
     "registry-runtime": { value: registryTransferImport().projection.payload, versionId: REGISTRY_VERSION },
     "federal-directory": { value: federal, versionId: FEDERAL_VERSION },
-    "census-districts": { value: districts, versionId: districts.versionId },
     ...(withPromoted ? PROMOTED_BALLOT_FAMILIES : {}),
     ...authorityOverrides,
   };
@@ -148,7 +147,7 @@ async function publishEdge(withPromoted: boolean, authorityOverrides: PublishAut
     sources: [],
     meetings: [],
     agendaDocuments: [],
-  }, { sourceThrough: null, retrievedAt: null, promotedThrough: null }, { store: artifactStore, authority,
+  }, { sourceThrough: null, retrievedAt: null, promotedThrough: null }, { store: artifactStore, authority, censusDistricts: districts,
     registrations: {},
     stateLegislators: {
       "US-AZ": { versionId: "edge-test:ballot:az-people", value: {

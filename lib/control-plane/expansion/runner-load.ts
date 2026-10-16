@@ -1,14 +1,6 @@
-/**
- * The runner's reads for the expansion scopes: the published Census geography
- * lookup (one load per cycle; anything but a "published" source resolves
- * nothing) and the Census unit territories from data/derived/place-reference/.
- * The territory index is returned with the plan so it is read once per cycle.
- *
- * Server-only.
- */
-
 import type { CensusGeographyLookup, GeographyType } from "../../census-geography/contract.ts";
-import { loadPublishedLookupState, type PublishedLookupSource } from "../../census-geography/reader.ts";
+import type { PublishedLookupSource } from "../../census-geography/reader.ts";
+import { loadPublishedScopeLookupState } from "../../census-geography/scope-lookup.ts";
 import { installedOperationalReferenceRegistries } from "../../civic-data/operational-references.ts";
 import { ADMIN_CONFIG_ID, isAdminConfig } from "../gateway/admin-config.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
@@ -300,7 +292,7 @@ export async function loadExpansionPlan(input: {
   let unreadable: string | null = null;
   if (decisions.length > 0) {
     try {
-      state = await (input.loadLookup ?? (() => loadPublishedLookupState({ bypassCache: true })))();
+      state = await (input.loadLookup ?? (() => loadPublishedScopeLookupState(decisions.map(decision => decision.geography))))();
     } catch (error) {
       unreadable = error instanceof Error ? error.message : String(error);
       conditions.push(`the published Census geography lookup could not be read (${unreadable}); ZIPs try the national Census source`);

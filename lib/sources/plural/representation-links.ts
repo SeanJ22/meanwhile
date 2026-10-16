@@ -1,5 +1,5 @@
 import type { PersonMembership } from "../../officials/types.ts";
-import { designationKey } from "../../officials/legislative-designation.ts";
+import { designationKey } from "../../officials/office-identity.ts";
 import { tribalSeatReferenceFor } from "../../officials/tribal-seats.ts";
 import { FIPS_TO_STATE } from "../../ocd/fips.ts";
 import { overlayDistrictCode, overlayDistrictIdentity, overlaySourceRows } from "../../overlay-geography/reference.ts";

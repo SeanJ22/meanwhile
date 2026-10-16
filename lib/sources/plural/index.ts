@@ -1,5 +1,5 @@
-import { designationKey, designationFromLabel } from "../../officials/legislative-designation.ts";
-export { designationKey, designationFromLabel } from "../../officials/legislative-designation.ts";
+import { designationKey, designationFromLabel } from "../../officials/office-identity.ts";
+export { designationKey, designationFromLabel } from "../../officials/office-identity.ts";
 import { indexOverlayDesignation, representationSeatLinks, type RepresentationLinks } from "./representation-links.ts";
 import type {
   OfficeholderDivision,

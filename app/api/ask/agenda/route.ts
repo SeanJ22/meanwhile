@@ -1,4 +1,5 @@
-import { readMeetingsProjection } from "@/lib/meetings/snapshot";
+import { readerRoute } from "@/lib/api/reader-route";
+import { readReaderEdgeMeetings } from "@/lib/meetings/edge-serving";
 import type { CivicDataReadMetadata } from "@/lib/civic-data/read-model";
 import { readMeetingTranslation } from "@/lib/translate/reader";
 import { classifyAgendaPublication, type AgendaPublicationReading } from "@/lib/ask/agenda-publication";
@@ -7,10 +8,7 @@ import { ripcordPulled } from "@/lib/ripcords";
 import { SlidingWindowLimiter } from "@/lib/signal/rate-limit";
 import { meetingListingKnowledgeFor } from "@/lib/ask/meeting-knowledge";
 
-/**
- * POST /api/ask/agenda: one meeting's own item list, keyed on a meeting id. It stores nothing and calls no
- * model; every item is the clerk's own text. Zero documents held and zero items extracted are different facts.
- */
+
 
 export const runtime = "nodejs";
 
@@ -48,7 +46,7 @@ function getIpLimiter() {
   return ipLimiter;
 }
 
-export async function POST(request: Request) {
+export const POST = readerRoute("/api/ask/agenda", async function POST(request: Request) {
   const raw = await request.text();
   if (raw.length > MAX_BODY_BYTES) {
     return Response.json({ error: "payload too large" }, { status: 413 });
@@ -59,6 +57,9 @@ export async function POST(request: Request) {
     body = JSON.parse(raw);
   } catch {
     return Response.json({ error: "body must be JSON" }, { status: 400 });
+  }
+  if (typeof body.meetingId !== "string" || !body.meetingId) {
+    return Response.json({ error: "this route answers one meeting's agenda; pass meetingId" }, { status: 400 });
   }
 
   if (!ripcordPulled("ripcord.rateLimits")) {
@@ -72,12 +73,12 @@ export async function POST(request: Request) {
     }
   }
 
-  // No corpus is a STATE, and it is reported as one — never as an answer
-  // of "nothing is scheduled", which is the same absence-as-assertion the
-  // render rule forbids one layer up.
   let read;
   try {
-    read = await readMeetingsProjection();
+    read = await readReaderEdgeMeetings({
+      meetingId: typeof body.meetingId === "string" ? body.meetingId.slice(0, 200) : undefined,
+      window: "HELD",
+    });
   } catch (error) {
     return Response.json(
       {
@@ -117,10 +118,7 @@ export async function POST(request: Request) {
       a.retrievedAt < b.retrievedAt ? 1 : -1,
     )[0];
 
-    /*
-     * A document attached to meetings of more than one government is not this one's agenda: its items are
-     * withheld and the link is returned without attribution.
-     */
+
     const publication = classifyAgendaPublication({ meetingId, bodyName: meeting.bodyName,
       documentsForMeeting: forMeeting, documentsAcrossCorpus: documents, meetingsAcrossCorpus: snapshot.meetings,
       discoveredDocumentUrl: meeting.agendaUrl, now: Date.now() });
@@ -164,4 +162,4 @@ export async function POST(request: Request) {
     { error: "this route answers one meeting's agenda; pass meetingId" },
     { status: 400 },
   );
-}
+});

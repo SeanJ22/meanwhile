@@ -218,7 +218,7 @@ export async function applyManualSourceGaps(
 
 /** Where the datasets a blocked reason names live, in the words a receipt prints. */
 export const DATASET = {
-  lookup: "the published Census geography lookup (CENSUS_GEOGRAPHY / US:zcta-geography-overlaps)",
+  lookup: "the selected state's published Census geography (CENSUS_GEOGRAPHY / census-geography-relationships:state:<postal code>)",
   territory: "native state government references and published Census intersections",
   registry: (state: string) =>
     `the promoted ${state.toUpperCase()} jurisdiction registry (OPERATIONAL_REFERENCE / US:covered-jurisdiction-routing:v1), ` +

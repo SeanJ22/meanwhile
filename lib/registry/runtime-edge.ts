@@ -9,6 +9,7 @@ import type { OutcomeSnapshot } from "../outcomes/types.ts";
 import type { PromotedCivicDataReadOptions, PromotedEdgeEntry } from "../civic-data/read-model.ts";
 import type { RoutineRecordClass } from "../civic-data/types.ts";
 import type { CensusDistrictReaderEdge } from "../census-geography/district-edge.ts";
+import { withReaderSelection, type ReaderSelection } from "../db/reader-route.ts";
 
 export interface RegistryRuntimeEdgeValue {
   readonly value: RegistryRuntimeReadModel;
@@ -44,6 +45,9 @@ export interface RegistrationsEdge {
 }
 
 export interface ReaderAuthorityEdgeBundle {
+  readonly meetingPlaces?: ReadonlyMap<string, readonly string[]>;
+  readonly selection?: ReaderSelection;
+  readonly loadPromoted?: (recordClass: RoutineRecordClass, scope: string) => Promise<PromotedEdgeEntry | null>;
   readonly censusDistricts?: CensusDistrictReaderEdge;
   readonly registryRuntime?: RegistryRuntimeEdgeValue;
   readonly federalDirectory?: FederalDirectoryEdgeValue;
@@ -122,11 +126,15 @@ export function enterReaderAuthorityEdge(bundle: ReaderAuthorityEdgeBundle): voi
 }
 
 export function withReaderAuthorityEdge<T>(bundle: ReaderAuthorityEdgeBundle | null, read: () => T): T {
-  return bundle ? edgeStore.run(bundle, read) : read();
+  return bundle ? edgeStore.run(bundle, () => bundle.selection ? withReaderSelection(bundle.selection, read) : read()) : read();
 }
 
 export function currentReaderAuthorityEdge(): ReaderAuthorityEdgeBundle | null {
   return edgeStore.getStore() ?? null;
+}
+
+export async function loadCurrentPromotedEdge(recordClass: RoutineRecordClass, scope: string): Promise<PromotedEdgeEntry | null> {
+  return await edgeStore.getStore()?.loadPromoted?.(recordClass, scope) ?? null;
 }
 
 export function currentRegistryRuntimeEdge(): RegistryRuntimeEdgeValue | null {

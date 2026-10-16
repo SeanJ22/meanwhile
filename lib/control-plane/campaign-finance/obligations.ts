@@ -25,7 +25,7 @@ export const PIMA_BODY_ID = "ocd-division/country:us/state:az/county:pima#govern
 
 export const AZ_PIMA_ELECTION_ID = "az-2026-11-03";
 export const AZ_PIMA_ELECTION_DATE = "2026-11-03";
-export const BALLOT_CITATION = "data/ballot/2026-general/az.json";
+const BALLOT_CITATION = "data/ballot/2026-general/az.json";
 
 export const US_HOUSE_6_CANDIDACIES: readonly { candidacyId: string; displayName: string }[] = [
   { candidacyId: "ballot-az-pima:us-house-6:mendoza-joanna", displayName: "JoAnna Mendoza" },
@@ -186,7 +186,7 @@ export function federalPerCandidateCoverage(deps?: {
   });
 }
 
-export function federalObligation(
+function federalObligation(
   now: string,
   deps?: { fundingForTarget?: (targetKey: string) => FundingCandidate | null },
 ): CampaignFinanceObligation {
@@ -369,7 +369,7 @@ export const AZ_LOCAL_ROUTES: readonly PlannedRoute[] = [
   }),
 ];
 
-export function arizonaLocalObligation(now: string): CampaignFinanceObligation {
+function arizonaLocalObligation(now: string): CampaignFinanceObligation {
   const contestId = "ballot-az-pima:prop-423";
 
     const resolution = resolveFilingAuthority({

@@ -1,11 +1,10 @@
-import { AsyncLocalStorage } from "node:async_hooks";
-import { currentReaderSelection } from "../db/reader-route.ts";
-import { requireBallotState, stateBallotScope } from "./state-scopes.ts";
 import { jurisdictionFromOcdId } from "../coverage/states.ts";
-import { currentReaderAuthorityEdge, readPromotedEdgeFirst } from "../registry/runtime-edge.ts";
+import { readPromotedEdgeFirst } from "../registry/runtime-edge.ts";
 import type { BallotSet } from "./types.ts";
 import { measureRecordIssue } from "./measure-record-contract.ts";
-import { readPromotedCivicData, type CivicDataReadResult, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
+import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
+
+export const GENERIC_BALLOT_SCOPE = "US:state-election-ballots";
 
 export interface GenericBallotProjection {
   readonly kind: "ballot-contests";
@@ -70,44 +69,17 @@ export function genericBallotProblems(value: GenericBallotProjection, expectedSt
         ballot.measureRecords.some(row => measureRecordIssue(row) || contestById.get(row.contestId)?.type !== "MEASURE" ||
           !measureContestIds.has(row.contestId) && (analysisByContest.get(row.contestId)?.analysisUrl !== row.sourceUrl || analysisByContest.get(row.contestId)?.contentHash !== row.sourceHash)))) problems.push("A measure record lacks its stable source-bound identity.");
   }
-  if (states.size !== 1) problems.push("A ballot projection must contain exactly one state.");
+  if (expectedState && states.size !== 1) problems.push("A ballot projection must contain exactly one state.");
   return problems;
 }
 
-type BallotReads = Map<string, CivicDataReadResult<GenericBallotProjection>>;
-const requestReads = new WeakMap<object, BallotReads>();
-const localReads = new AsyncLocalStorage<BallotReads>();
-
-function ballotReads(): BallotReads {
-  const request = currentReaderAuthorityEdge() ?? currentReaderSelection();
-  if (request) {
-    let reads = requestReads.get(request);
-    if (!reads) { reads = new Map(); requestReads.set(request, reads); }
-    return reads;
+export async function readGenericBallotProjection(options: PromotedCivicDataReadOptions = {}) {
+  const read = (readOptions: PromotedCivicDataReadOptions) => readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", GENERIC_BALLOT_SCOPE, readOptions);
+  const result = Object.keys(options).length ? await read(options)
+    : await readPromotedEdgeFirst("BALLOT_CANDIDACY", GENERIC_BALLOT_SCOPE, read, "General ballot");
+  if (result.kind === "PROMOTED") {
+    const problems = genericBallotProblems(result.value);
+    if (problems.length) throw new Error(`GENERIC_BALLOT_INVALID:${problems.join(" ")}`);
   }
-  let reads = localReads.getStore();
-  if (!reads) { reads = new Map(); localReads.enterWith(reads); }
-  return reads;
-}
-
-export function currentGenericBallotProjection(state: string): GenericBallotProjection {
-  const read = ballotReads().get(requireBallotState(state));
-  if (read?.kind === "PROMOTED" || read?.kind === "BOOTSTRAP") return read.value;
-  throw new Error(`Ballot for ${state} is ${read?.kind ?? "UNREAD"}; read its authority before using the projection.`);
-}
-
-export async function readGenericBallotProjection(state: string, options: PromotedCivicDataReadOptions = {}) {
-  const normalized = requireBallotState(state), scope = stateBallotScope("ballot-contests", normalized);
-  const reads = ballotReads();
-  const read = (readOptions: PromotedCivicDataReadOptions) => readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", scope, readOptions);
-  try {
-    const result = Object.keys(options).length ? await read(options)
-      : await readPromotedEdgeFirst("BALLOT_CANDIDACY", scope, read, `${normalized} ballot`);
-    reads.set(normalized, result);
-    while (reads.size > 4) reads.delete(reads.keys().next().value!);
-    return result;
-  } catch (error) {
-    reads.delete(normalized);
-    throw error;
-  }
+  return result;
 }

@@ -102,12 +102,8 @@ export interface ReaderManifest {
   readonly freshChecks?: Readonly<Record<string, string>>;
 
   readonly composition?: string;
-}
-
-export interface ReaderAuthorityManifest {
-  readonly formatVersion: typeof READER_ARTIFACT_FORMAT_VERSION;
-  readonly sequence: number;
-  readonly generatedAt: string;
+  readonly everydayRouting?: unknown;
+  readonly extrasVersionIds?: Readonly<Partial<Record<"everyday-routing", string | null>>>;
   readonly authorityArtifacts?: Partial<Record<GlobalAuthorityFamily, AuthorityArtifactRef>>;
   readonly stateFacts?: Readonly<Record<string, AuthorityArtifactRef>>;
   readonly stateAuthorities?: Partial<Record<StateAuthorityFamily, Readonly<Record<string, AuthorityArtifactRef>>>>;
@@ -115,10 +111,10 @@ export interface ReaderAuthorityManifest {
   readonly stateLegislators?: Readonly<Record<string, AuthorityArtifactRef>>;
 }
 
-export const STATE_AUTHORITY_FAMILIES = ["ballot-contests", "candidate-profiles", "candidate-publications", "voting-sites", "candidate-campaign-sites-derived"] as const;
+export const STATE_AUTHORITY_FAMILIES = ["registry-runtime", "ballot-contests", "candidate-profiles", "candidate-publications", "voting-sites", "candidate-campaign-sites-derived"] as const;
 export type StateAuthorityFamily = typeof STATE_AUTHORITY_FAMILIES[number];
-export type GlobalAuthorityFamily = Exclude<AuthorityFamily, StateAuthorityFamily | "state-legislators">;
-export type GlobalPromotedAuthorityFamily = Exclude<PromotedAuthorityFamily, StateAuthorityFamily>;
+export type GlobalAuthorityFamily = AuthorityFamily;
+export type GlobalPromotedAuthorityFamily = Exclude<PromotedAuthorityFamily, "candidate-campaign-sites-derived">;
 export function isStateAuthorityFamily(family: string): family is StateAuthorityFamily {
   return (STATE_AUTHORITY_FAMILIES as readonly string[]).includes(family);
 }
@@ -129,6 +125,8 @@ export type PromotedAuthorityFamily =
   | "state-votes"
   | "candidate-campaign-sites-derived"
   | "ballot-contests"
+  | "ballot-az"
+  | "ballot-nh"
   | "candidate-profiles"
   | "candidate-publications"
   | "ballot-navigation"
@@ -152,6 +150,8 @@ export const PROMOTED_AUTHORITY_FAMILIES: readonly PromotedAuthorityFamily[] = [
   "state-votes",
   "candidate-campaign-sites-derived",
   "ballot-contests",
+  "ballot-az",
+  "ballot-nh",
   "candidate-profiles",
   "candidate-publications",
   "ballot-navigation",

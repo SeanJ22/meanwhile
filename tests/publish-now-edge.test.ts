@@ -36,8 +36,8 @@ test("publish-now copies real baseline pointers during an unresolved finance pas
   }, null);
   const artifacts = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "publish-now-baseline-")));
   assert.equal((await publishReaderEdgeOutcomeForTest(memory, NOW, null, { artifactStore: artifacts })).readerEdge, "PUBLISHED");
-  const before = (await artifacts.readAuthorityManifest())!.manifest;
-  const meetingsBefore = await artifacts.readManifest();
+  const before = (await artifacts.readManifest())!.manifest;
+  const meetingScopesBefore = (await artifacts.readManifest())!.manifest.scopes;
 
   let finishFinance!: () => void;
   let financeSettled = false;
@@ -89,12 +89,12 @@ test("publish-now copies real baseline pointers during an unresolved finance pas
   try {
     assert.equal((await checks.run()).readerEdge, "SKIPPED_OWNER_PAUSE");
     assert.equal(sweeps, 0, "a pause at start performs no pointer or payload sweep");
-    assert.deepEqual((await artifacts.readAuthorityManifest())!.manifest, before);
+    assert.deepEqual((await artifacts.readManifest())!.manifest, before);
 
     paused = false;
     tick();
     assert.equal((await checks.run()).readerEdge, "FAILED", "one failed family keeps publication owed");
-    const partial = (await artifacts.readAuthorityManifest())!.manifest;
+    const partial = (await artifacts.readManifest())!.manifest;
     assert.equal(partial.stateLegislators!["US-AZ"].version, people.outcome.promoted!.versionId,
       "independent people publish while registration is unavailable");
     assert.equal(partial.registrations?.nh, undefined);
@@ -104,7 +104,7 @@ test("publish-now copies real baseline pointers during an unresolved finance pas
     failRegistration = false;
     tick();
     assert.equal((await checks.run()).readerEdge, "SKIPPED_OWNER_PAUSE");
-    assert.deepEqual((await artifacts.readAuthorityManifest())!.manifest, partial, "pausing during the long pass preserves every artifact reference");
+    assert.deepEqual((await artifacts.readManifest())!.manifest, partial, "pausing during the long pass preserves every artifact reference");
 
     paused = false;
     let releaseSweep!: () => void;
@@ -117,7 +117,7 @@ test("publish-now copies real baseline pointers during an unresolved finance pas
     releaseSweep();
     assert.equal((await running).readerEdge, "PUBLISHED");
     gate = null;
-    const published = (await artifacts.readAuthorityManifest())!.manifest;
+    const published = (await artifacts.readManifest())!.manifest;
     assert.equal(published.registrations!.nh.version, registration.id);
     assert.equal(published.stateLegislators!["US-AZ"].version, people.outcome.promoted!.versionId);
     const edge = await ensureReaderAuthorityEdge(published, artifacts, ["state-legislators"]);
@@ -142,14 +142,14 @@ test("publish-now copies real baseline pointers during an unresolved finance pas
     paused = true;
     assert.equal((await checks.run()).readerEdge, "SKIPPED_OWNER_PAUSE", "the explicit final sweep checks the pause again after stopping ticks");
     assert.equal(sweeps, 3);
-    assert.deepEqual((await artifacts.readAuthorityManifest())!.manifest, published);
-    assert.deepEqual(await artifacts.readManifest(), meetingsBefore, "authority updates leave the meetings manifest and ETag unchanged");
+    assert.deepEqual((await artifacts.readManifest())!.manifest, published);
+    assert.deepEqual((await artifacts.readManifest())!.manifest.scopes, meetingScopesBefore, "authority updates preserve meeting artifact references");
     pauseReadFailure = new Error("owner control temporarily unreadable");
     assert.equal((await checks.run()).readerEdge, "FAILED", "an unreadable owner control remains a durable failure, never permission to publish");
     assert.deepEqual(errors, [pauseReadFailure]);
     assert.equal((await checks.stop())?.readerEdge, "FAILED");
     assert.equal(sweeps, 3);
-    assert.deepEqual((await artifacts.readAuthorityManifest())!.manifest, published);
+    assert.deepEqual((await artifacts.readManifest())!.manifest, published);
   } finally {
     await checks.stop();
     finishFinance();

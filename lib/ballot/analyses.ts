@@ -1,4 +1,4 @@
-import { currentGenericBallotProjection } from "./generic-projection.ts";
+import { currentAzBallotProjection } from "../civic-data/manual-read-models.ts";
 
 export interface MeasureAnalysis {
   contestId: string;
@@ -18,15 +18,15 @@ export interface AnalysesFile {
   readonly analyses: readonly MeasureAnalysis[];
 }
 
-export function getMeasureAnalyses(state: string): AnalysesFile | null {
-  return Object.values(currentGenericBallotProjection(state).ballots).find(ballot => ballot.measureAnalyses)?.measureAnalyses ?? null;
+export function getMeasureAnalyses(): AnalysesFile | null {
+  return currentAzBallotProjection().measureAnalyses;
 }
 
 /** Null when the ballot projection holding it cannot be read in this process. */
-export function analysisForContest(state: string, contestId: string): MeasureAnalysis | null {
+export function analysisForContest(contestId: string): MeasureAnalysis | null {
   let records: readonly MeasureAnalysis[] | undefined;
   try {
-    records = getMeasureAnalyses(state)?.analyses;
+    records = getMeasureAnalyses()?.analyses;
   } catch {
     return null;
   }

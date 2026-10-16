@@ -1,11 +1,8 @@
 import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
 import { mergeBallotFixture } from "./helpers/ballot-merge.ts";
 import { stateBallotContractId, stateBallotScope } from "../lib/ballot/state-scopes.ts";
-import { composeBallotOnlyAnswer } from "../lib/ask/ballot-only-answer.ts";
-import { promotedEdgeEntryOf } from "../lib/civic-data/read-model.ts";
-import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
-import { loadBallotForDivisions } from "../lib/ask/server-sources.ts";
-import { readerBallotSourceForTargetId, genericSourcesForDivisions } from "../lib/ballot/reader-sources.ts";
+import { readPromotedCivicData, promotedEdgeEntryOf } from "../lib/civic-data/read-model.ts";
+import { genericSourcesForDivisions } from "../lib/ballot/reader-sources.ts";
 import { ballotQuestionShape, composeOfficeField } from "../lib/ask/ballot-summary.ts";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
@@ -20,7 +17,7 @@ import { verifiedWorkerRecords } from "../lib/civic-data/worker-publication-evid
 import { manualProjectionCandidate } from "../lib/civic-data/manual-projections.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import { ballotElectionKey, readGenericBallotProjection, type GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
+import { ballotElectionKey, type GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
 
 const now = "2026-10-04T07:00:00.000Z";
 function fixture(names = ["Alice Adams", "Bob Baker", "Casey Clark"], pdf = false, state = "NH") {
@@ -57,7 +54,7 @@ test("a saved CSV or PDF text candidate list publishes whole contests into the g
     const published = await processRegisteredManualCandidate(store, stateBallotContractId("ballot-contests", Object.values((candidate.readModel as GenericBallotProjection).ballots)[0].election.state), candidate, now, null);
     assert.ok(published.promoted, JSON.stringify(published.candidate));
     assert.equal(published.readerReadback?.status, "PASS", JSON.stringify(published.readerReadback));
-    const read = await readGenericBallotProjection("NH", { store, now, bypassCache: true });
+    const read = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", "NH"), { store, now, bypassCache: true });
     assert.equal(read.kind, "PROMOTED"); if (read.kind === "PROMOTED") assert.deepEqual(read.value, payload);
   }
 });
@@ -71,10 +68,12 @@ test("DC ballots use their registered OCD prefixes through promotion and the rea
     const store = new MemoryRoutineDataStore();
     const promoted = await processRegisteredManualCandidate(store, checked.contractId, manualProjectionCandidate(checked), now, null);
     assert.ok(promoted.promoted, JSON.stringify(promoted.candidate));
-    const read = await loadBallotForDivisions([ocdId], { store, now, bypassCache: true });
-    assert.equal(read.set?.election.state, state);
-    assert.equal(read.contests.length, 2);
-    assert.deepEqual(read.loaderFailures, []);
+    const read = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", state), { store, now, bypassCache: true });
+    assert.equal(read.kind, "PROMOTED");
+    if (read.kind !== "PROMOTED") throw new Error("State ballot was not published");
+    const ballot = Object.values(read.value.ballots)[0];
+    assert.equal(ballot.election.state, state);
+    assert.equal(ballot.contests.length, 2);
   }
 });
 
@@ -124,67 +123,46 @@ test("complete successors replace a contest together and retain unrelated contes
 });
 
 
-test("a newly published jurisdiction is readable in Ask, the ballot source loop and exact-target intake without a state allowlist", async () => {
-  const input = fixture(undefined, false, "TX");
-  const checked = workerBallotContestsPackage(input).package;
-  const store = new MemoryRoutineDataStore();
-  const candidate = manualProjectionCandidate(checked);
-  const published = await processRegisteredManualCandidate(store, stateBallotContractId("ballot-contests", Object.values((candidate.readModel as GenericBallotProjection).ballots)[0].election.state), candidate, now, null);
-  assert.ok(published.promoted);
-  const options = { store, now, bypassCache: true };
-  const divisions = ["ocd-division/country:us/state:tx/county:alder"];
-  const read = await loadBallotForDivisions(divisions, options);
-  assert.equal(read.set?.election.state, "TX");
-  assert.equal(read.contests.length, 2);
-  assert.deepEqual(read.loaderFailures, []);
-  const shape = ballotQuestionShape("Who is running for School Board?", read.contests);
-  assert.equal(shape?.kind, "OFFICE");
-  if (shape?.kind === "OFFICE") {
-    const answer = composeOfficeField({ key: shape.key, phrase: shape.phrase, election: read.set!.election, candidacies: read.set!.candidacies, contests: read.contests, nominees: read.nominees, removedCandidacyIds: new Set() });
-    assert.ok(answer?.answer.includes("Alice Adams"));
-    assert.ok(answer?.answer.includes("Bob Baker"));
-    assert.ok(!answer?.answer.includes("Casey Clark"));
-  }
-  const target = read.set!.candidacies[0].id;
-  const source = await readerBallotSourceForTargetId(target, divisions, options);
-  assert.ok(source);
-  const pageBallot = source.source.normalize(await source.source.fetch());
-  assert.deepEqual(pageBallot, read.set);
-  assert.deepEqual(genericSourcesForDivisions(checked.payload as GenericBallotProjection,
-    ["ocd-division/country:us/state:tx/county:neighbor"]), [], "a nearby county never inherits the contest");
-  assert.equal(await readerBallotSourceForTargetId("invented:person", divisions, options), null);
-});
-
-
-test("a direct ballot request serves from its proven edge without unrelated source reads", async () => {
+test("a state publication retains usable ballot sources and office answers for its exact divisions", async () => {
   const checked = workerBallotContestsPackage(fixture(undefined, false, "TX")).package;
   const store = new MemoryRoutineDataStore();
   const published = await processRegisteredManualCandidate(store, checked.contractId, manualProjectionCandidate(checked), now, null);
   assert.ok(published.promoted);
-  const read = await readGenericBallotProjection("TX", { store, now });
-  const edge = promotedEdgeEntryOf(read, "BALLOT_CANDIDACY", stateBallotScope("ballot-contests", "TX"), store);
-  assert.ok(edge);
-  const bundle = { promoted: new Map([[`BALLOT_CANDIDACY:${stateBallotScope("ballot-contests", "TX")}`, edge]]),
-    promotedFamilies: new Set(["ballot-contests"]), edgeOnly: true as const };
-  const { POST } = await import("../app/api/ask/grounded/route.ts");
-  const response = await withReaderAuthorityEdge(bundle, () => POST(new Request("https://wtp.test/api/ask/grounded", {
-    method: "POST", headers: { "content-type": "application/json", origin: "https://wtp.test", "x-forwarded-for": "ballot-direct-fixture" },
-    body: JSON.stringify({ question: "Who is running for School Board?", ocdIds: ["ocd-division/country:us/state:tx/county:alder"], today: "2026-10-04", surface: "BALLOT" }),
-  })));
-  assert.equal(response.status, 200);
-  const answer = await response.json();
-  assert.ok(answer.answer.includes("Alice Adams"));
-  assert.ok(answer.answer.includes("Bob Baker"));
-  assert.equal(answer.trace.validation.passed, true);
-  assert.equal(answer.trace.synthesis.ran, false);
-  assert.equal(answer.trace.sourcesLoaded, "ESSENTIAL");
-  for (const name of ["funding", "stateMoney", "outcomes", "candidateProfiles", "candidateCorpus", "azPimaFinance", "federalVotes", "meetings"]) {
-    assert.equal(answer.trace.preloads[name], undefined, name);
+  const read = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", "TX"), { store, now, bypassCache: true });
+  assert.equal(read.kind, "PROMOTED");
+  if (read.kind !== "PROMOTED") throw new Error("State ballot was not published");
+  const sources = genericSourcesForDivisions(read.value, ["ocd-division/country:us/state:tx/county:alder"]);
+  assert.equal(sources.length, 1);
+  const ballot = sources[0].source.normalize(await sources[0].source.fetch());
+  const shape = ballotQuestionShape("Who is running for School Board?", ballot.contests);
+  assert.equal(shape?.kind, "OFFICE");
+  if (shape?.kind === "OFFICE") {
+    const answer = composeOfficeField({ key: shape.key, phrase: shape.phrase, election: ballot.election, candidacies: ballot.candidacies,
+      contests: ballot.contests, nominees: () => [], removedCandidacyIds: new Set() });
+    assert.ok(answer?.answer.includes("Alice Adams"));
+    assert.ok(answer?.answer.includes("Bob Baker"));
+    assert.ok(!answer?.answer.includes("Casey Clark"));
   }
-  assert.equal(answer.records.filter((row: { kind: string }) => row.kind === "CANDIDACY").length, 2);
-  const ballot = await loadBallotForDivisions(["ocd-division/country:us/state:tx/county:alder"], { store, now, bypassCache: true });
-  assert.equal(composeBallotOnlyAnswer(ballot, "Who is running for Unknown Office?", "2026-10-04"), null);
+  assert.deepEqual(genericSourcesForDivisions(read.value, ["ocd-division/country:us/state:tx/county:neighbor"]), []);
+  assert.equal(await store.readPromotion("BALLOT_CANDIDACY", "US:state-election-ballots"), null, "state publication never changes the retained national pointer");
 });
+
+test("a proven state ballot artifact reads back without a database or a national alias", async () => {
+  const checked = workerBallotContestsPackage(fixture(undefined, false, "TX")).package;
+  const store = new MemoryRoutineDataStore();
+  const published = await processRegisteredManualCandidate(store, checked.contractId, manualProjectionCandidate(checked), now, null);
+  assert.ok(published.promoted);
+  const scope = stateBallotScope("ballot-contests", "TX");
+  const read = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", scope, { store, now, bypassCache: true });
+  const edge = promotedEdgeEntryOf(read, "BALLOT_CANDIDACY", scope, store);
+  assert.ok(edge);
+  const unreachable = { readPromotion: async () => { throw new Error("Unexpected database read"); },
+    readCandidate: async () => { throw new Error("Unexpected candidate read"); } };
+  const cached = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", scope, { store: unreachable, edge, now });
+  assert.equal(cached.kind, "PROMOTED");
+  assert.deepEqual(cached.value, checked.payload);
+});
+
 
 test("an incomplete successor keeps independently held candidates from the same contest", () => {
   const first = workerBallotContestsPackage(fixture()).package;
@@ -210,9 +188,11 @@ test("a source's contests update the single working state and capture prior fact
     payload: original.payload, sourceReceipt: original.sourceReceipt } });
   const ballot = Object.values((updated.package.payload as GenericBallotProjection).ballots)[0];
   assert.equal(ballot, before);
-  assert.equal(ballot.candidacies.find(row => row.id === oldCandidate.id), oldCandidate);
-  assert.equal(ballot.contests.find(row => row.id === oldContest.id), oldContest);
-  assert.equal(oldContest.scopeNote, null);
+  assert.deepEqual(ballot.candidacies.find(row => row.id === oldCandidate.id), oldCandidate);
+  const changedContest = ballot.contests.find(row => row.id === oldContest.id)!;
+  assert.notEqual(changedContest, oldContest);
+  assert.equal(changedContest.scopeNote, null);
+  assert.equal(oldContest.scopeNote, "Previously held description");
   assert.deepEqual(updated.changes.records, { added: 0, changed: 1, reused: 1 });
   const change = updated.changes.recordChanges.find(row => row.recordId === oldContest.id)!;
   assert.equal(change.change, "UPDATED");
@@ -230,8 +210,8 @@ test("partial national updates retain every state attachment and remove contacts
     const candidacies = ballot.candidacies.filter(row => row.contestId === contest.id);
     const update = { ...ballot, contests: [contest], candidacies, measures: [], absences: [],
       measureRecords: undefined, generalLineup: undefined, measureAnalyses: undefined, filingCandidacies: undefined,
-      lineupReconciliation: undefined, contacts: undefined, removals: undefined };
-    const fields = ["absences", "removals", "measureRecords", "generalLineup", "measureAnalyses", "filingCandidacies", "lineupReconciliation", "contacts"] as const;
+      lineupReconciliation: undefined, contacts: undefined, removals: undefined, sourceAggregates: undefined };
+    const fields = ["absences", "removals", "measureRecords", "generalLineup", "measureAnalyses", "filingCandidacies", "lineupReconciliation", "contacts", "sourceAggregates"] as const;
     const expected = new Map(fields.map(key => [key, canonicalCivicDataHash(ballot[key] ?? null)]));
     const input = { contractId: stateBallotContractId("ballot-contests", state), version: "partial", sourceThrough: now,
       sourceReceipt: held.sourceReceipt, payload: { kind: "ballot-contests" as const, ballots: { [ballotElectionKey(ballot)]: update } } };
@@ -254,6 +234,29 @@ test("partial national updates retain every state attachment and remove contacts
   assert.deepEqual(manualProjectionCandidate(merged).semantics.violations, []);
 });
 
+
+test("successors preserve immutable prior records while replacing changed facts and removing absent candidates", () => {
+  const prior = workerBallotContestsPackage(fixture()).package;
+  const ballot = Object.values((prior.payload as GenericBallotProjection).ballots)[0];
+  ballot.candidacies[0].filing = { id: "held-filing", provenance: ballot.candidacies[0].provenance };
+  const previousContest = ballot.contests[0], previousCandidate = ballot.candidacies[0], removedCandidate = ballot.candidacies[1];
+  const expectedContest = canonicalCivicDataHash(previousContest), expectedCandidate = canonicalCivicDataHash(previousCandidate);
+  for (const row of [...ballot.contests, ...ballot.candidacies]) Object.freeze(row);
+  const input = workerBallotContestsPackage(fixture()).package;
+  const incoming = Object.values((input.payload as GenericBallotProjection).ballots)[0];
+  incoming.contests[0].title = "Corrected School Board";
+  incoming.candidacies[0].familyName = "Alicia Adams";
+  incoming.candidacies.splice(1, 1);
+  const merged = mergeBallotFixture(input, { versionId: "prior", payload: prior.payload, sourceReceipt: prior.sourceReceipt });
+  const next = Object.values((merged.payload as GenericBallotProjection).ballots)[0];
+  assert.equal(canonicalCivicDataHash(previousContest), expectedContest);
+  assert.equal(canonicalCivicDataHash(previousCandidate), expectedCandidate);
+  assert.notEqual(next.contests.find(row => row.id === previousContest.id), previousContest);
+  const changed = next.candidacies.find(row => row.id === previousCandidate.id)!;
+  assert.equal(changed.familyName, "Alicia Adams");
+  assert.equal(changed.filing?.id, "held-filing", "unmentioned optional facts remain held");
+  assert.equal(next.candidacies.some(row => row.id === removedCandidate.id), false);
+});
 
 test("an older worker capture cannot replace a newer complete candidate list", () => {
   const prior = workerBallotContestsPackage(fixture()).package;

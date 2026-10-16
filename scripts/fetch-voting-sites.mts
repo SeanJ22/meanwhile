@@ -1,3 +1,4 @@
+import { rememberStatePublicationPrior } from "../lib/civic-data/state-publication-prior.ts";
 /* @freshness-reads-here */
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
@@ -13,7 +14,8 @@ import type { Division, Registry } from "../lib/registry/types.ts";
 import { CENSUS_BENCHMARK, CENSUS_GEOCODER_URL, parseCensusPoint } from "../lib/geo/census-geocoder.ts";
 import { OUTBOUND_USER_AGENT } from "../lib/geo/outbound-agent.ts";
 import { votingSitesCandidate, votingSitesContract, type VotingRawCapture } from "../lib/ballot/voting-sites-data-plane.ts";
-import { readVotingSitesProjection } from "../lib/ballot/voting-sites-server.ts";
+import type { VotingSitesFile } from "../lib/ballot/voting-sites.ts";
+import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import { readVotingSource } from "../lib/ballot/voting-source-readers.ts";
 import { recordSourceObservation } from "../lib/doors/source-capture.ts";
 import { cycleVault, VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
@@ -25,14 +27,14 @@ import { persistVotingSourceBlanks, planVotingSourceBlanks, votingSourcePlaces }
 import { votingSourcePopulations } from "../lib/ballot/voting-source-population.ts";
 import type { VotingDoorScope, VotingSourceDoor, VotingSourceRead, VotingSourceRuntime } from "../lib/ballot/voting-source-types.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
-import { partitionHeldStateAuthority } from "../lib/civic-data/state-authority-cutover.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { rawCaptureVault } from "../lib/civic-data/raw-capture-remote.ts";
 import type { EvidenceStore } from "../lib/control-plane/evidence/store.ts";
-import { processRegisteredManualCandidate, type PromotionOutcome } from "../lib/civic-data/promotion.ts";
+import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { failedAcquisitionCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { isOfficialSource } from "../lib/civic-data/source-authority.ts";
-import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
+import { routineReceiptFields, type RoutineRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
+import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 import { workerPublicationContext } from "../lib/civic-data/worker-publication-context.ts";
 import { publishWorkerReaderResults } from "../lib/civic-data/worker-reader-publication.ts";
 import { printWorkerPublicationReceipt } from "../lib/civic-data/worker-publication-tasks.ts";
@@ -166,12 +168,11 @@ async function main() {
   const state = requireBallotState(assignment(process.argv, "state") ?? "");
   const contract = votingSitesContract(state);
   prepareProductionCivicDataWrite();
-  await partitionHeldStateAuthority("voting-sites", state);
   const now = () => new Date().toISOString(), store = new PostgresRoutineDataStore(), rawVault = rawCaptureVault();
   const seeds = ["voting-source-doors.json", "voting-legacy-doors.json"].flatMap(name =>
     JSON.parse(readFileSync(join(REFERENCE_DIR, name), "utf8")) as VotingSourceDoor[]).filter(door => door.scope.state === state);
   const election = JSON.parse(readFileSync(join(REFERENCE_DIR, "voting-election.json"), "utf8")) as { electionDate: string };
-  let terminal: { candidate: { id: string }; outcome: PromotionOutcome } | null = null;
+  let terminal: RoutineRunnerReceipt | null = null;
   try {
     const context = await workerPublicationContext(now());
     const workerResults = assignment(process.argv, "worker-results");
@@ -181,10 +182,13 @@ async function main() {
       if (!await printWorkerPublicationReceipt(store, contract.id, report, null, at)) throw new Error("No registered polling worker result reached the reader.");
       return;
     }
-    const priorRead = await readVotingSitesProjection(state, { store, bypassCache: true });
+    let priorRead: Awaited<ReturnType<typeof readPromotedCivicData<VotingSitesFile>>> | null = await readPromotedCivicData<VotingSitesFile>(contract.recordClass, contract.scope, { store, bypassCache: true });
     if (priorRead.kind !== "PROMOTED" && priorRead.kind !== "NOT_RECORDED") throw new Error("Voting-source holding is unavailable; preserve its last verified facts.");
+    if (priorRead.kind === "PROMOTED" && priorRead.metadata.sourceId !== contract.sourceId) throw new Error("Voting-source holding names a different publisher.");
+    if (priorRead.kind === "PROMOTED") rememberStatePublicationPrior(store, priorRead.projection);
     let held = priorRead.kind === "PROMOTED" ? priorRead.value : null;
     let version = priorRead.kind === "PROMOTED" ? priorRead.metadata.versionId : null;
+    priorRead = null;
     const registration = await readRegistrationProjection(state, { store, bypassCache: true });
     const savedDoors = await registeredVotingSourceDoors(context.repos.doors, state);
     const registered = [...new Map([...seeds, ...savedDoors].map(source => [source.id, source])).values()];
@@ -229,7 +233,7 @@ async function main() {
         if (persistent && (read.rawBodies.length || read.blanks.length)) await recordVotingSourceRead(context.repos.doors, door, read, at);
         const observed = read.rawBodies.filter(isVotingSourceContent);
         if (!votingReadHasFacts(door, read)) return;
-        const before = held;
+        let before = held;
         const jurisdiction = mergeVotingSourceRead(held?.jurisdictions.find(row => row.ocdId === door.scope.ocdId), door, read, at);
         let current = replaceVotingJurisdiction(held, jurisdiction, at);
         // A statewide clerk directory contributes each office to its registered county or town.
@@ -245,12 +249,20 @@ async function main() {
         const candidate = votingSitesCandidate({ state, current, prior: before, failures: [], acquisition: await votingSourceEvidence(rawVault, door, read, captures),
           successfulAuthorityReads: observed.length, requestedUrl: door.url, finalUrl: observed.at(-1)?.url ?? door.url,
           retrievedAt: at, carriedFromVersionId: version });
+        before = null; held = null;
         const outcome = await processRegisteredManualCandidate(store, contract.id, candidate, at, version);
-        if (outcome.promoted || outcome.confirmed) {
-          held = current; version = outcome.promoted?.versionId ?? outcome.candidate.candidate.id;
-          terminal = { candidate, outcome }; publications++;
+        if (outcome.promoted) {
+          held = outcome.promoted.payload as VotingSitesFile; version = outcome.promoted.versionId;
+          rememberStatePublicationPrior(store, outcome.promoted);
+          terminal = { source: contract.id, ...routineReceiptFields(candidate, outcome), structuralReleaseContract: ZERO_RELEASE_EVENTS }; publications++;
         } else {
-          if (!terminal) terminal = { candidate, outcome };
+          if (!terminal) terminal = { source: contract.id, ...routineReceiptFields(candidate, outcome), structuralReleaseContract: ZERO_RELEASE_EVENTS };
+          const retained = await readPromotedCivicData<VotingSitesFile>(contract.recordClass, contract.scope, { store, now: at, bypassCache: true });
+          if (retained.kind !== "PROMOTED" && retained.kind !== "NOT_RECORDED") throw new Error("Voting-source holding is unavailable after a held update.");
+          if (retained.kind === "PROMOTED") {
+            rememberStatePublicationPrior(store, retained.projection);
+            held = retained.value; version = retained.metadata.versionId;
+          }
           console.error(`${door.publisher}: voting-source publication held as ${outcome.candidate.state}; prior facts retained.`);
         }
       };
@@ -320,11 +332,11 @@ async function main() {
       scope: contract.scope, requestedUrl: seeds[0]?.url ?? "", attemptedAt: at,
       failureDetail: error instanceof Error ? error.message : String(error), parserVersion: contract.parserVersion });
     const outcome = await processRegisteredManualCandidate(store, contract.id, candidate, at);
-    terminal = { candidate, outcome };
+    terminal = { source: contract.id, ...routineReceiptFields(candidate, outcome), structuralReleaseContract: ZERO_RELEASE_EVENTS };
     throw error;
   } finally {
     // Source publications are already durable. The supervisor requires exactly one terminal receipt.
-    if (terminal) printSourceRunnerReceipt(contract.id, terminal.candidate, terminal.outcome);
+    if (terminal) console.log("RCD_RECEIPT=" + JSON.stringify(terminal));
   }
 }
 

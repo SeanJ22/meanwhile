@@ -6,7 +6,7 @@ import { writeReaction } from "@/lib/db/reactions";
 import { raiseWriteAlarm } from "@/lib/db/write-alarm";
 import { noteSubmission } from "@/lib/db/intake-limiter";
 import { markerFromRequest } from "@/lib/db/run-marker";
-import { ballotPlaceDivisions } from "@/lib/ballot/reader-place";
+import { coverageAt } from "@/lib/registry/server";
 import { ripcordPulled } from "@/lib/ripcords";
 import {
   classifySubmission,
@@ -37,13 +37,17 @@ import type { StateCampaignFinanceJurisdiction } from "@/lib/funding/data-plane"
 import { settleStateMoneyRead, stateMoneyForTarget } from "@/lib/funding/state-snapshot";
 import { FEDERAL_CONTEST, directFundingTargetPlan } from "@/lib/funding/target-authorities";
 
+
+
 export const runtime = "nodejs";
+
+
 
 const MAX_BODY_BYTES = 4096;
 
 interface ReactionAuthorityReaders {
-  readonly candidateTargets: (divisions: readonly string[], targetId: string) => Promise<Set<string>>;
-  readonly provisionTargets: (divisions: readonly string[], targetId: string) => Set<string> | Promise<Set<string>>;
+  readonly candidateTargets: (targetId: string) => Promise<Set<string>>;
+  readonly provisionTargets: (targetId: string) => Set<string> | Promise<Set<string>>;
   readonly refreshFunding: () => Promise<unknown>;
   readonly fundingTargets: () => Set<string>;
   readonly refreshStateMoney: (state: StateCampaignFinanceJurisdiction) => Promise<unknown>;
@@ -55,8 +59,8 @@ interface ReactionAuthorityReaders {
 
 const reactionAuthorityReaders: ReactionAuthorityReaders = {
   candidateTargets: getCandidateTargetIds,
-  provisionTargets: async (divisions, targetId) => {
-    const authority = await readerBallotSourceForTargetId(targetId, divisions);
+  provisionTargets: async (targetId) => {
+    const authority = await readerBallotSourceForTargetId(targetId);
     if (!authority) return new Set();
     const ballot = authority.source.normalize(await authority.source.fetch());
     return getProvisionTargetIds(measureRecordsForBallot(ballot));
@@ -75,17 +79,17 @@ const reactionAuthorityReaders: ReactionAuthorityReaders = {
   voteTargets: getVoteIds,
 };
 
+
 export async function validReactionTargetsFor(
   targetType: ReactionTargetType,
   targetId: string,
   readers: ReactionAuthorityReaders = reactionAuthorityReaders,
-  divisions: readonly string[] = [],
 ): Promise<Set<string>> {
   switch (targetType) {
     case "CANDIDATE":
-      return readers.candidateTargets(divisions, targetId);
+      return readers.candidateTargets(targetId);
     case "MEASURE_PROVISION":
-      return readers.provisionTargets(divisions, targetId);
+      return readers.provisionTargets(targetId);
     case "FUNDING_TOTAL_REACTION": {
       const state = directFundingTargetPlan(targetId).state;
       if (state !== null && !FEDERAL_CONTEST.test(targetId)) {
@@ -131,7 +135,6 @@ async function postWithSettings(request: Request) {
     zip?: unknown;
     lat?: unknown;
     lng?: unknown;
-    divisions?: string[];
   };
 
   if (!isValidTargetType(submission.targetType)) {
@@ -151,14 +154,10 @@ async function postWithSettings(request: Request) {
   }
 
   let validTargets: Set<string>;
-  let ocdIds: string[];
   try {
-    ocdIds = await ballotPlaceDivisions(submission);
     validTargets = await validReactionTargetsFor(
       submission.targetType,
       submission.targetId,
-      undefined,
-      ocdIds,
     );
   } catch {
     return Response.json({ error: "target data unavailable" }, { status: 503 });
@@ -183,7 +182,7 @@ async function postWithSettings(request: Request) {
     }
     let uncontested: Set<string>;
     try {
-      uncontested = await getSingleCandidateTargetIds(ocdIds, submission.targetId);
+      uncontested = await getSingleCandidateTargetIds(submission.targetId);
     } catch {
       return Response.json({ error: "target data unavailable" }, { status: 503 });
     }
@@ -237,6 +236,22 @@ async function postWithSettings(request: Request) {
       if (disposition.kind === "QUARANTINE") {
         suspectReason = disposition.reason;
       }
+    }
+  }
+
+  /* The guard requires an actual number on the wire: `Number(null)` is 0, so a null is absent, not the equator. */
+  const lat = typeof submission.lat === "number" ? submission.lat : Number.NaN;
+  const lng = typeof submission.lng === "number" ? submission.lng : Number.NaN;
+  let ocdIds: string[] = [];
+  if (Number.isFinite(lat) && lat >= -90 && lat <= 90 && Number.isFinite(lng) && lng >= -180 && lng <= 180) {
+    try {
+      const coverage = await coverageAt(lat, lng, 0);
+      ocdIds = [
+        ...coverage.bodies.flatMap((b) => (b.ocdId ? [b.ocdId] : [])),
+        ...coverage.seats.map((s) => s.ocdId),
+      ];
+    } catch {
+      // A failed resolution is an empty list, never a fabricated one.
     }
   }
 

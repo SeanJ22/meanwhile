@@ -35,7 +35,7 @@ import {
 } from "./coverage.ts";
 import { divisionsAt as resolveDivisionsAt, type GeoFeature } from "./resolve.ts";
 import type { Body, Division, Registry } from "./types.ts";
-import { currentRegistryPlaceRead, getRegistryRuntimeReadModel, primeRegistryRuntimeFromValue, refreshRegistryRuntimeFromPromoted, registryRuntimeReadState } from "./runtime-read-model.ts";
+import { getRegistryRuntimeReadModel, primeRegistryRuntimeFromValue, refreshRegistryRuntimeFromPromoted, registryRuntimeReadState } from "./runtime-read-model.ts";
 import { currentCampaignSitesEdge, currentCommentAccessEdge, currentFederalDirectoryEdge, currentReaderAuthorityEdge, currentRegistrationsEdge, currentRegistryRuntimeEdge, currentStateLegislatorsEdge, ReaderEdgeOnlyRefusal, refuseDatabaseInEdgeOnlyContext, settleEdgeFirst } from "./runtime-edge.ts";
 import { currentReaderSelection } from "../db/reader-route.ts";
 import { divisionIdsAt } from "./resolve.ts";
@@ -117,7 +117,7 @@ export function prefetchReaderGeography(): void {
 
 async function loadRegistry(): Promise<RegistryLoaded> {
   const runtimeRegistry = getRegistryRuntimeReadModel();
-  const features = currentRegistryPlaceRead() ? [] : await resolverGeometry();
+  const features = await resolverGeometry();
   const registry: Registry = runtimeRegistry.registry;
 
   return {
@@ -194,8 +194,7 @@ async function load(base: RegistryLoaded, federalAvailable: boolean): Promise<Lo
   let territory: BodyTerritoryFile | null = null;
   try {
     // Read once per process (`bodyTerritories`), possibly already started by the route.
-    const place = currentRegistryPlaceRead();
-    if (!place || place.value.registry.divisions.some(row => row.ocdId.includes("/state:az"))) territory = await bodyTerritories();
+    territory = await bodyTerritories();
   } catch (error) {
     throw new RegistryHoldingReadError(BODY_TERRITORY_FILE, error);
   }
@@ -223,13 +222,14 @@ export interface RegistryAuthorityReaders {
   readonly federal: () => Promise<void>;
 }
 
+
 /** The federal directory, edge first. */
 export const settleFederalDirectoryRead = (): Promise<void> =>
   settleEdgeFirst(currentFederalDirectoryEdge, primeFederalDirectoryFromValue, refreshFederalDirectoryFromPromoted, "The federal directory");
 
 /** The registry runtime (divisions, bodies, rosters), edge first. */
 const settleRegistryRuntimeRead = (): Promise<void> =>
-  currentRegistryPlaceRead() ? Promise.resolve() : settleEdgeFirst(currentRegistryRuntimeEdge, primeRegistryRuntimeFromValue, refreshRegistryRuntimeFromPromoted, "The registry runtime");
+  settleEdgeFirst(currentRegistryRuntimeEdge, primeRegistryRuntimeFromValue, refreshRegistryRuntimeFromPromoted, "The registry runtime");
 
 /** Geometry/division reads never acquire the unrelated federal roster. */
 export async function settleRegistryAuthorityReads(
@@ -258,7 +258,7 @@ export function authorityVersionKey(state: { readonly kind: string; readonly met
 
 async function currentRegistryAuthorityKey(): Promise<string> {
   await settleRegistryAuthorityReads("REGISTRY");
-  return `registry:${authorityVersionKey(registryRuntimeReadState())}:${currentRegistryPlaceRead()?.selectorKey ?? "all"}`;
+  return `registry:${authorityVersionKey(registryRuntimeReadState())}`;
 }
 
 async function currentAuthorityKey(registryKey: string): Promise<{ key: string; federalAvailable: boolean }> {

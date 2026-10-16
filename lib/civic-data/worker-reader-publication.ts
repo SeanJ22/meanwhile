@@ -46,8 +46,8 @@ import { linkingPageFrom, section3Page } from "../control-plane/promotion/sectio
 const text = (value: FieldValue | undefined) => typeof value === "string" ? value : "";
 const words = (value: string) => value.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 const hostOf = (url: string) => { try { return new URL(url).hostname.toLowerCase().replace(/^www\./, ""); } catch { return null; } };
-function ownSiteHostsFromHeld(state: string, personId: string): readonly string[] {
-  const urls = [campaignSiteFor(personId)?.url, ...currentDerivedCampaignSiteRecords(state).filter(r => r.id === personId || r.candidacyId === personId).map(r => r.campaign.url)];
+function ownSiteHostsFromHeld(personId: string): readonly string[] {
+  const urls = [campaignSiteFor(personId)?.url, ...currentDerivedCampaignSiteRecords().filter(r => r.id === personId || r.candidacyId === personId).map(r => r.campaign.url)];
   return urls.flatMap(url => url ? [hostOf(url)].filter((h): h is string => h !== null) : []);
 }
 export interface StancesInput {
@@ -60,7 +60,7 @@ export function workerReaderPackage(input: StancesInput & Parameters<typeof veri
   return workerReaderPackageWithPulls(input).package;
 }
 
-export function workerReaderPackageWithPulls(input: StancesInput & Parameters<typeof verifiedWorkerRecords>[0] & { registry: RegistryRuntimePrior | null }):
+function workerReaderPackageWithPulls(input: StancesInput & Parameters<typeof verifiedWorkerRecords>[0] & { registry: RegistryRuntimePrior | null }):
   { readonly package: ManualProjectionPackage; readonly pulledMemberIds: ReadonlySet<string> } {
   if (parseStateBallotContractId(input.plan.publication?.contractId ?? "")?.family === "ballot-contests") return { package: workerBallotContestsPackage(input).package, pulledMemberIds: new Set() };
   const target = input.plan.publication;
@@ -77,7 +77,7 @@ export function workerReaderPackageWithPulls(input: StancesInput & Parameters<ty
     const f = record.fields;
     if (contractId === "stances") {
       return stanceRowFrom({ fields: f, pageUrl: checked.primary.evidence.canonicalUrl, collectedAt: checked.primary.observedAt, now: input.now,
-        topicIds: input.stanceTopicIds ?? DEFAULT_STANCE_TOPICS.map(topic => topic.id), ownSiteHosts: input.ownSiteHosts ?? (personId => ownSiteHostsFromHeld(input.plan.contract.schemaVersion === 2 ? input.plan.contract.jurisdiction.state : input.plan.jurisdiction, personId)) });
+        topicIds: input.stanceTopicIds ?? DEFAULT_STANCE_TOPICS.map(topic => topic.id), ownSiteHosts: input.ownSiteHosts ?? ownSiteHostsFromHeld });
     }
     requirePublication(words(text(f.bodyName)) === words(body?.name ?? place!.label), "CANONICAL_BODY_MISMATCH");
     if (contractId === "public-records") {

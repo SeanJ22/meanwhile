@@ -1,4 +1,3 @@
-import { BALLOT_STATES } from "../lib/ballot/state-scopes.ts";
 
 import { collectPlaceHistory } from "../lib/control-plane/admin-view/place-history-collect.ts";
 import { readPlaceOwed } from "../lib/control-plane/admin-view/place-owed-read.ts";
@@ -445,17 +444,7 @@ async function main(): Promise<void> {
   stepDone("provider bills collected");
   const scopeMembers = reads?.assignmentSources.ok && reads.billingScopes ? exactScopeMembers(reads.billingScopes, reads.assignmentSources.value) : undefined;
   const billingAttribution = reads && providerBilling ? providerBillingAttribution({ now: NOW_ISO, costs: reads.costs, attempts: reads.attempts, scopes: reads.billingScopes, holds: reads.billingHolds, scopeMembers, readings: providerBilling.readings }) : null;
-  const collectStateCampaignReadbacks = async () => {
-    const witnesses: NonNullable<OwnerSnapshot["servedReaderReadback"]>["witnesses"][number][] = [];
-    const errors: string[] = [];
-    for (const state of BALLOT_STATES) {
-      const read = await collectPublishedCampaignReadback(state, NOW_ISO);
-      witnesses.push(...read.witnesses);
-      errors.push(...read.errors);
-    }
-    return { checkedAt: NOW_ISO, witnesses, errors };
-  };
-  let servedReader = DRY_RUN ? existing?.value.servedReaderReadback ?? null : await collectStateCampaignReadbacks().catch(() => ({ checkedAt: NOW_ISO, witnesses: existing?.value.servedReaderReadback?.witnesses ?? [], errors: ["Public readback collection failed; earlier witnesses retain their original time and expire after three hours."] }));
+  let servedReader = DRY_RUN ? existing?.value.servedReaderReadback ?? null : await collectPublishedCampaignReadback(NOW_ISO).catch(() => ({ checkedAt: NOW_ISO, witnesses: existing?.value.servedReaderReadback?.witnesses ?? [], errors: ["Public readback collection failed; earlier witnesses retain their original time and expire after three hours."] }));
   stepDone("campaign page readback collected");
   if (!DRY_RUN && reads?.assignmentSources.ok) {
     const [workerReadback, manualReadback] = await Promise.all([

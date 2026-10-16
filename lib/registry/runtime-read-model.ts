@@ -1,4 +1,3 @@
-import { AsyncLocalStorage } from "node:async_hooks";
 import {
   CivicDataStoreUnavailableError,
   civicDataReadNotInitialized,
@@ -19,23 +18,7 @@ import { withFactRegistry } from "../facts/registry-overlay.ts";
 import type { BodyRoster } from "./body-rosters.ts";
 import { CENSUS_PLACEHOLDER_BODY_ISSUE } from "./census-placeholders.ts";
 import { currentReaderRoute, currentReaderSelection } from "../db/reader-route.ts";
-import { currentRegistryRuntimeEdge, currentReaderAuthorityEdge, type CommentAccessEdgeValue } from "./runtime-edge.ts";
-
-export interface RegistryPlaceRead {
-  readonly source: "EDGE" | "DATABASE";
-  readonly commentAccess?: CommentAccessEdgeValue;
-  readonly value: RegistryRuntimeReadModel;
-  readonly versionId: string;
-  readonly selectorKey: string;
-}
-const placeReads = new AsyncLocalStorage<RegistryPlaceRead | Error>();
-export const enterRegistryPlaceRead = (read: RegistryPlaceRead | Error): void => placeReads.enterWith(read);
-export const withRegistryPlaceRead = <T>(read: RegistryPlaceRead | Error, work: () => T): T => placeReads.run(read, work);
-export function currentRegistryPlaceRead(): RegistryPlaceRead | null {
-  const read = placeReads.getStore();
-  if (read instanceof Error) throw read;
-  return read ?? null;
-}
+import { currentRegistryRuntimeEdge, currentReaderAuthorityEdge } from "./runtime-edge.ts";
 
 const selectedStates = new WeakMap<object, CivicDataReadResult<RegistryRuntimeReadModel>>();
 let cache: RegistryRuntimeReadModel | null = null;
@@ -77,13 +60,12 @@ export async function readRegistryRuntimeProjection(
 }
 
 export async function refreshRegistryRuntimeFromPromoted(options: PromotedCivicDataReadOptions = {}): Promise<string | null> {
-  const place = currentRegistryPlaceRead();
-  if (place && Object.keys(options).length === 0) return place.versionId;
   const result = await readRegistryRuntimeProjection(options);
   if (result.kind === "STORE_UNREACHABLE") throw new CivicDataStoreUnavailableError(result);
   if (result.kind === "NOT_RECORDED") throw new Error(result.detail);
   return result.kind === "PROMOTED" ? result.metadata.versionId : null;
 }
+
 
 export function primeRegistryRuntimeFromValue(value: RegistryRuntimeReadModel, versionId: string): void {
   validateOnce("registry-runtime", value, versionId, () => validate(value, versionId));
@@ -111,17 +93,11 @@ export function primeRegistryRuntimeFromValue(value: RegistryRuntimeReadModel, v
 }
 
 export function registryRuntimeReadState(): CivicDataReadResult<RegistryRuntimeReadModel> {
-  const place = currentRegistryPlaceRead();
-  if (place) return { kind: "BOOTSTRAP", value: place.value, metadata: { recordClass: "REGISTRY_RUNTIME_BINDING", scope: REGISTRY_RUNTIME_SCOPE, sourceId: REGISTRY_RUNTIME_SOURCE_ID,
-    version: null, versionId: place.versionId, lastKnownGoodVersionId: place.versionId, sourceThrough: null,
-    retrievedAt: null, promotedAt: null, stale: "CURRENT", staleAt: null }, detail: "Selected divisions from the accepted registry version." };
   const selection = currentReaderSelection();
   return selection ? selectedStates.get(selection) ?? readState : readState;
 }
 
 export function getRegistryRuntimeReadModel(): RegistryRuntimeReadModel {
-  const place = currentRegistryPlaceRead();
-  if (place) return place.value;
   const selection = currentReaderSelection();
   if (selection) {
     const edge = currentRegistryRuntimeEdge();

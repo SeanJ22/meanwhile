@@ -593,9 +593,7 @@ AFTER INSERT ON cp_log_admin_receipts DEFERRABLE INITIALLY DEFERRED
 FOR EACH ROW EXECUTE FUNCTION cp_admin_action_history_invalidate_readiness();
   END IF;
 END $$;`,
-  // Bootstrap executes one standalone statement per query, outside a transaction.
-  // CONCURRENTLY lets the standing runner keep appending while this index is built.
-  // URLs can exceed the btree row limit; the query also checks exact equality.
+  // Concurrent creation keeps writes running; exact URL comparison guards against hash collisions.
   ARTIFACT_SOURCE_INDEX_DDL,
   `CREATE INDEX IF NOT EXISTS cp_attempts_lease_id ON cp_attempts ((value->>'leaseId'));`,
   `CREATE INDEX IF NOT EXISTS cp_log_owner_digests_cycle_kind_position

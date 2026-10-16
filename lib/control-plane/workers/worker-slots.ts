@@ -12,21 +12,7 @@ export const WORKER_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = { route: 
 export const RESEARCH_PARENT_PEAK_MIB = 2928;
 /** Promoter peak 1,923 MiB plus the held national-worker peak; both may still grow. */
 export const NATIONAL_PLACE_PEAK_MIB = 1923 + WORKER_ENTRY_PEAK_MIB.national!;
-// Full-state publication and successor peaks include all 6,934 Illinois governments and school systems.
-const STATE_BALLOT_PEAK_MIB: Readonly<Record<string, number>> = {
-  "ballot-contests": 4096,
-  "candidate-profiles": 4096,
-  "candidate-corpus": 2048,
-  "voting-sites": 1536,
-  "candidate-campaign-sites-derived": 5120,
-};
-const STATE_ARTIFACT_PEAK_MIB: Readonly<Record<string, number>> = {
-  "ballot-contests": 896,
-  "candidate-profiles": 1024,
-  "candidate-corpus": 512,
-  "voting-sites": 384,
-  "candidate-campaign-sites-derived": 768,
-};
+const STATE_PUBLICATION_PEAK_MIB = 512;
 /** Bulk data families use the retained data-worker bound until their own runs are measured on this host. */
 const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   // A complete 113 MiB Illinois session peaked at 3,013 MiB.
@@ -43,9 +29,11 @@ const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   "national-people-refresh.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "people-portraits-refresh.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "campaign-finance-az-pima-transactions.mts": 368,
-  "assemble-ballot-package.mts": STATE_BALLOT_PEAK_MIB["ballot-contests"]!,
-  "fetch-voting-sites.mts": STATE_BALLOT_PEAK_MIB["voting-sites"]!,
-  "derive-candidate-campaign-sites.mts": STATE_BALLOT_PEAK_MIB["candidate-campaign-sites-derived"]!,
+  "assemble-ballot-package.mts": STATE_PUBLICATION_PEAK_MIB,
+  "fetch-voting-sites.mts": STATE_PUBLICATION_PEAK_MIB,
+  "derive-candidate-campaign-sites.mts": STATE_PUBLICATION_PEAK_MIB,
+  "restore-state-buckets.mts": STATE_PUBLICATION_PEAK_MIB,
+  "publish-state-authority.mts": STATE_PUBLICATION_PEAK_MIB,
 };
 export const REGISTRY_ROSTER_PUBLICATION_PEAK_MIB = 4012;
 export const WORKER_MEMORY_HEADROOM_MIB = 768;
@@ -177,7 +165,7 @@ export function workerMemoryHost(input: { readonly shared?: boolean; readonly pr
 }
 const sharedHost = workerMemoryHost({ shared: true });
 
-export interface WorkerMemoryLimit {
+interface WorkerMemoryLimit {
   readonly admissionsOpen?: () => boolean;
   readonly availableBytes?: () => number;
   readonly headroomBytes?: number;
@@ -200,17 +188,17 @@ export interface WorkerProcessSlots {
 const rosterPublication = (entry: string): boolean => entry === "registry-runtime-bindings" ||
   entry.startsWith("registry-runtime-bindings/") || entry.startsWith("worker-publication:registry-runtime-bindings:");
 
-function stateBallotPeakBytes(entry: string): number {
+function statePublicationPeakBytes(entry: string): number {
   const script = entry.split(/[\\/]/).at(-1)!;
-  const family = /^(?:worker-publication:|candidate-findings:)?(ballot-contests|candidate-profiles|candidate-corpus|voting-sites|candidate-campaign-sites-derived):[A-Z]{2}(?=[:/]|$)/.exec(entry)?.[1];
-  if (family) return (script === "publish-state-authority.mts" ? STATE_ARTIFACT_PEAK_MIB : STATE_BALLOT_PEAK_MIB)[family]! * MIB;
-  return ["assemble-ballot-package.mts", "fetch-voting-sites.mts", "derive-candidate-campaign-sites.mts"].includes(script) ? ROUTINE_ENTRY_PEAK_MIB[script]! * MIB : 0;
+  const family = /^(?:worker-publication:|candidate-findings:)?(ballot-contests|candidate-profiles|candidate-corpus|voting-sites|candidate-campaign-sites-derived|registry-runtime):[A-Z]{2}(?=[:/]|$)/.exec(entry)?.[1];
+  if (family) return STATE_PUBLICATION_PEAK_MIB * MIB;
+  return ["assemble-ballot-package.mts", "fetch-voting-sites.mts", "derive-candidate-campaign-sites.mts", "restore-state-buckets.mts", "publish-state-authority.mts"].includes(script) ? ROUTINE_ENTRY_PEAK_MIB[script]! * MIB : 0;
 }
 
 export function routineProcessSlots(memory: WorkerMemoryLimit = {}): WorkerProcessSlots {
   return workerProcessSlots(() => Number.MAX_SAFE_INTEGER, { ...memory,
     // Recent small-state runs cannot lower the full-state publication reservation.
-    minimumPeakBytes: memory.minimumPeakBytes ?? stateBallotPeakBytes,
+    minimumPeakBytes: memory.minimumPeakBytes ?? statePublicationPeakBytes,
     peakBytes: memory.peakBytes ?? (entry => entry.startsWith("national-place:") ? NATIONAL_PLACE_PEAK_MIB * MIB :
       rosterPublication(entry) ? REGISTRY_ROSTER_PUBLICATION_PEAK_MIB * MIB : (/^state-money-.+[.]mts$/.test(entry.split(/[\\/]/).at(-1)!)
           ? WORKER_ENTRY_PEAK_MIB.national! : ROUTINE_ENTRY_PEAK_MIB[entry.split(/[\\/]/).at(-1)!] ?? WORKER_ENTRY_PEAK_MIB.lease!) * MIB) });

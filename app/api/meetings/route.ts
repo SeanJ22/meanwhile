@@ -1,5 +1,4 @@
 import { readerRoute } from "@/lib/api/reader-route";
-import { currentReaderSelection } from "@/lib/db/reader-route";
 import { readerMeetingScope } from "@/lib/meetings/reader-scope";
 import { haversineKm } from "@/lib/geo/distance";
 import { canonicalBodyIdentity } from "@/lib/ask/body-identity";
@@ -22,8 +21,6 @@ import {
   prefetchReaderEdgeStates,
   readReaderEdgeMeetings,
   readReaderManifest,
-  readReaderAuthorityManifest,
-  readReaderExtras,
   READER_MANIFEST_CACHE_TAG,
   READER_MAP_AUTHORITY_FAMILIES,
   servedWholeFromReaderEdge,
@@ -46,8 +43,11 @@ import {
 } from "@/lib/routing/everyday-data-plane";
 import type { EverydayRoutingProjection } from "@/lib/routing/everyday";
 
+
+
 // The registry reads its geometry off the filesystem, which needs Node.
 export const runtime = "nodejs";
+
 
 const CDN_HELD = {
   "Netlify-CDN-Cache-Control": "public, durable, s-maxage=300, stale-while-revalidate=3600",
@@ -103,36 +103,27 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
   prefetchReaderGeography();
   const nearZipRead = zipRead.value ? Promise.resolve(zipRead.value) : nearestZipWithin60Km(lat, lng).catch(() => null);
 
-  const [edgeManifest, authorityManifest] = await timing.time("manifest", () => Promise.all([
-    readReaderManifest().catch(() => null), readReaderAuthorityManifest().catch(() => null),
-  ]));
+  const edgeManifest = await timing.time("manifest", () => readReaderManifest().catch(() => null));
 
   let authorityEdge: Awaited<ReturnType<typeof ensureReaderAuthorityEdge>> | null = null;
-  if (authorityManifest) {
+  if (edgeManifest?.authorityArtifacts) {
     const entering = timing.time("authority", () =>
-      ensureReaderAuthorityEdge({ ...authorityManifest, meetingPlaces: edgeManifest?.meetingPlaces }, undefined, READER_MAP_AUTHORITY_FAMILIES).catch(() => null),
+      ensureReaderAuthorityEdge(edgeManifest, undefined, READER_MAP_AUTHORITY_FAMILIES).catch(() => null),
     );
     authorityEdge = await entering;
     if (authorityEdge) enterReaderAuthorityEdge(authorityEdge);
   }
   if (edgeManifest) prefetchReaderEdgeStates(edgeManifest, await nearZipRead.then(hintedStates));
 
-  const nearZip: string | null = await nearZipRead;
-  if (nearZip) currentReaderSelection()?.keys.add(nearZip);
-  const extras = authorityManifest ? await readReaderExtras(authorityManifest).catch(error => {
-    const failure = error instanceof Error ? error : new Error(String(error));
-    return { everydayRouting: failure };
-  }) : {};
   let commentAccess: readonly CommentAccess[] = [];
   let commentAccessDataState: "PROMOTED" | "FIRST_SEED" | "STORE_UNREACHABLE" = "FIRST_SEED";
   let commentAccessDataDetail: string | null = null;
   try {
     if (authorityEdge?.commentAccess) {
-      commentAccess = authorityEdge.commentAccess.value.records.map(({ id: _id, ...record }) => record);
+      commentAccess = authorityEdge.commentAccess.value.records;
       commentAccessDataState = "PROMOTED";
-      commentAccessDataDetail = `Comment-access served from the reader edge's body facts (sequence ${authorityManifest!.sequence}).`;
+      commentAccessDataDetail = `Comment-access served from the reader edge's state facts (sequence ${edgeManifest!.sequence}).`;
     } else {
-      if (Object.keys(authorityManifest?.stateFacts ?? {}).length) throw new Error("The selected body facts could not be read.");
       if (process.env.NODE_ENV === "production") {
         const { versionId } = await readCommentAccessFacts();
         commentAccessDataState = "PROMOTED";
@@ -150,11 +141,10 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
   let everydayRoutingDataState: "PROMOTED" | "FIRST_SEED" | "NOT_RECORDED" | "STORE_UNREACHABLE" | "INVALID" = "FIRST_SEED";
   let everydayRoutingDataDetail: string | null = null;
   try {
-    if (extras.everydayRouting instanceof Error) throw extras.everydayRouting;
-    if (extras.everydayRouting !== undefined) {
-      everydayRouting = (extras.everydayRouting as EverydayRoutingProjection | null) ?? null;
+    if (edgeManifest?.everydayRouting !== undefined) {
+      everydayRouting = (edgeManifest.everydayRouting as EverydayRoutingProjection | null) ?? null;
       everydayRoutingDataState = everydayRouting ? "PROMOTED" : "NOT_RECORDED";
-      everydayRoutingDataDetail = `Everyday-routing served from its published reader artifact (sequence ${authorityManifest!.sequence}).`;
+      everydayRoutingDataDetail = `Everyday-routing served from the reader edge manifest (sequence ${edgeManifest.sequence}).`;
     } else if (process.env.NODE_ENV === "production") {
       const read = await readEverydayRoutingProjection();
       if (read.kind === "PROMOTED") {
@@ -191,6 +181,7 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
   } catch (error) {
     console.error("division lookup failed", error);
   }
+
 
   /* The divisions the point itself resolved, kept apart from the widened set (see `widenedInBodies`). */
   const pointOwnDivisionIds = new Set(divisionsAtPoint);
@@ -356,6 +347,7 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
       }
     : null;
 
+  const nearZip: string | null = await nearZipRead;
   /* The search log is written by the client's `sendBeacon` to `/api/log`, never on the response path. */
 
   /* The division ids the point resolved into; `null` when the resolution failed, which is not an empty list. */
@@ -373,20 +365,17 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
     commentAccessDataState !== "STORE_UNREACHABLE" &&
     everydayRoutingDataState !== "STORE_UNREACHABLE" &&
     everydayRoutingDataState !== "INVALID";
-  const resolveListingBody: typeof canonicalBodyIdentity = bodyId => {
-    try { return canonicalBodyIdentity(bodyId); } catch { return null; }
-  };
 
   return Response.json({
     ...result,
-    readerScope: readerMeetingScope({ heldMeetings: heldMeetings ?? result.meetings, shownMeetings: result.meetings, bodies: coverage?.bodies ?? [], ownDivisionIds: resolvedDivisions ? pointOwnDivisionIds : null, radiusKm: result.radiusKm, requestedRadiusKm: result.requestedRadiusKm, now: new Date(), listingIdentity: meetingListingIdentity(heldMeetings ?? result.meetings, resolveListingBody) }),
+    readerScope: readerMeetingScope({ heldMeetings: heldMeetings, bodies: coverage?.bodies ?? [], ownDivisionIds: resolvedDivisions ? divisionsAtPoint : null, now: new Date(), listingIdentity: meetingListingIdentity(heldMeetings, canonicalBodyIdentity) }),
     commentAccess,
     commentAccessDataState,
     commentAccessDataDetail,
     everydayRouting,
     everydayRoutingDataState,
     everydayRoutingDataDetail,
-    listingIdentity: meetingListingIdentity(result.meetings, resolveListingBody),
+    listingIdentity: meetingListingIdentity(result.meetings, canonicalBodyIdentity),
     coverage,
     snapshot,
     nearZip,

@@ -1,3 +1,5 @@
+import { stateBallotScope } from "../lib/ballot/state-scopes.ts";
+import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
@@ -8,11 +10,6 @@ import {
   votingSitesContract,
   votingSitesCandidate,
 } from "../lib/ballot/voting-sites-data-plane.ts";
-import {
-  loadVotingSites,
-  readVotingSitesProjection,
-  resetVotingSitesCache,
-} from "../lib/ballot/voting-sites-server.ts";
 import type { VotingSitesFile } from "../lib/ballot/voting-sites.ts";
 import { failedAcquisitionCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
@@ -102,7 +99,6 @@ function votingCandidate(file: VotingSitesFile, at: string, raw: string, failure
 }
 
 test("voting sites promote with exact source/class/scope evidence and the Reader follows only the pointer", async () => {
-  resetVotingSitesCache();
   const store = new MemoryRoutineDataStore();
   const candidate = votingCandidate(votingFixture(), T0, "official voting-site bytes v1");
   assert.deepEqual(candidate.sourceProjectionEvidence, {
@@ -118,9 +114,9 @@ test("voting sites promote with exact source/class/scope evidence and the Reader
   const fixture = votingFixture();
   assert.equal(outcome.candidate.candidate.changeSet?.added.length,
     fixture.jurisdictions.length + fixture.jurisdictions.reduce((sum, row) => sum + row.sites.length, 0));
-  const read = await readVotingSitesProjection("AZ", { store, bypassCache: true, now: T0 });
+  const read = await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", "AZ"), { store, bypassCache: true, now: T0 });
   assert.equal(read.kind, "PROMOTED");
-  assert.equal(loadVotingSites("AZ").jurisdictions.length, votingFixture().jurisdictions.length);
+  assert.equal(read.kind === "PROMOTED" && read.value.jurisdictions.length, votingFixture().jurisdictions.length);
 });
 
 test("a first voting-site holding publishes without requiring other states", async () => {
@@ -237,7 +233,6 @@ test("one failed voting authority retains only its prior scope while healthy aut
 });
 
 test("a globally empty voting candidate is refused and store failure never opens the tracked fixture", async () => {
-  resetVotingSitesCache();
   const store = new MemoryRoutineDataStore();
   const good = votingCandidate(votingFixture(), T0, "official voting-site bytes v1");
   await processRegisteredManualCandidate(store, "voting-sites:AZ", good, T0);
@@ -259,9 +254,9 @@ test("a globally empty voting candidate is refused and store failure never opens
     async readPromotion() { throw new Error("database unavailable"); },
     async readCandidate() { throw new Error("must not follow an absent pointer"); },
   };
-  const unavailable = await readVotingSitesProjection("AZ", { store: brokenStore, bypassCache: true, now: T1 });
+  const unavailable = await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", "AZ"), { store: brokenStore, bypassCache: true, now: T1 });
   assert.equal(unavailable.kind, "STORE_UNREACHABLE");
-  assert.throws(() => loadVotingSites("AZ"), /holding is STORE_UNREACHABLE/);
+  assert.equal(unavailable.value, null);
 });
 
 test("PRL promotes only its attributed allowlisted measurement and Reader joins by exact Bioguide", async () => {

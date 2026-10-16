@@ -4,6 +4,8 @@ import { statementEvidenceFor } from "../ask/statements.ts";
 import { DEFAULT_STANCE_TOPICS, type StanceTopic } from "../stances/topics.ts";
 import type { StatementCorpus } from "./types.ts";
 
+
+
 export interface TopicAnswerPerson {
   /** Roster officeholder id or ballot candidacy id, as the corpus keys it. */
   readonly subjectId: string;
@@ -37,7 +39,7 @@ export function chipQuestion(name: string, topic: string): string {
 export function buildTopicAnswer(person: TopicAnswerPerson, topic: StanceTopic, corpus: StatementCorpus): StoredTopicAnswer | null {
   const subject = { kind: "PERSON" as const, id: person.subjectId, name: person.name };
   const question = chipQuestion(person.name, topic.label);
-  const found = statementEvidenceFor([], subject, question, [], () => corpus, person.identityKeys ?? [person.subjectId]);
+  const found = statementEvidenceFor(subject, question, [], () => corpus, person.identityKeys ?? [person.subjectId]);
   // A read that failed is not an answer: the chip keeps asking Ask.
   if (found.denominators.statementLoaderFailures || found.denominators.statementIdentityUnresolved) return null;
   const composed = composeOwnWordsAnswer({ subject, question, records: found.records });

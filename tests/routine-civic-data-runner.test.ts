@@ -57,7 +57,7 @@ import {
 } from "../lib/control-plane/freshness-cycle-outcome.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { HUNT_SOURCE_PROGRESS_LOG_KEY, OWNER_SURFACE_FORMAT_VERSION, assertAggregateOnly } from "../lib/control-plane/owner-surface.ts";
-import { routineProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
+import { routineProcessSlots, workerMemoryHost } from "../lib/control-plane/workers/worker-slots.ts";
 import { ROUTINE_SUPERVISOR_HISTORY_FIELDS } from "../lib/civic-data/supervisor-history.ts";
 import { projectRecord } from "../lib/control-plane/repository/types.ts";
 
@@ -318,9 +318,7 @@ test("the standing parent durably accounts for a routine child killed outside so
 
   const pilot = readFileSync("scripts/pilot-runner.mts", "utf8");
   assert.match(pilot, /persistOuterRoutineChildFailure\(cycleId, startedAt, run/);
-  // The duplicate-incident guard keys on cycleId: it fetches the owner-digest
-  // records carrying that exact digestId (a targeted content query, not a scan
-  // of the whole log) and then confirms the supervisor kind.
+  // Match the exact digest ID before checking the supervisor kind.
   assert.match(pilot, /readRecentWhere\(DIGEST_LOG_KEY, \["digestId"\], cycleId, 20,\s*\{ runtimeOutcome: \["kind"\] \}, startedAt\)/);
   assert.match(pilot, /appendRoutineCivicDataSupervisorDigest/);
 });
@@ -408,6 +406,7 @@ test("the standing portfolio invokes data-plane scripts only", () => {
     "socrata-discovery",
     "epa-echo",
     "congress-api", "govinfo", "regulations-gov", "federal-register", "senate-lda",
+    "candidate-campaign-sites-derived", "nj-morris-filing",
   ]);
   assert.deepEqual(nonMeetingTasks.map((task) => task.id), ROUTINE_SOURCE_CONTRACTS.map((contract) => contract.id));
   assert.deepEqual(
@@ -2205,4 +2204,22 @@ test("scoped source passes repair only matching reader pointers, including narro
   assert.equal(domains.length, 1);
   assert.deepEqual(domains[0].contracts.map(contract => contract.id), meetings.map(contract => contract.id));
   assert.equal(selectedReaderRepairContracts(all, null), all);
+});
+
+
+test("state restore and artifact children retain the measured state reservation across small runs", async () => {
+  const mib = 1024 * 1024;
+  const slots = routineProcessSlots({ availableBytes: () => (1024 + 768) * mib, headroomBytes: 768 * mib, parentPeakBytes: 0,
+    peakBytes: () => mib, host: workerMemoryHost({ processes: () => [] }) });
+  const first = await slots.acquire("ballot-contests:CA/assemble-ballot-package.mts");
+  const second = await slots.acquire("registry-runtime:AZ:state-restore/restore-state-buckets.mts");
+  let admitted = false;
+  const queued = slots.acquire("registry-runtime:AZ:reader-artifact/publish-state-authority.mts").then(release => {
+    admitted = true; return release;
+  });
+  await new Promise<void>(resolve => setImmediate(resolve));
+  assert.equal(admitted, false);
+  first();
+  (await queued)();
+  second();
 });

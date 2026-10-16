@@ -7,9 +7,9 @@ export function readerRoute<A extends unknown[], R>(path: string, read: (...args
     const selection = await selectionForReader(args);
     return withReaderSelection(selection, async () => {
       if (!families.length) return read(...args);
-      const { readReaderAuthorityManifest, ensureReaderAuthorityEdge } = await import("../meetings/edge-serving.ts");
+      const { readReaderManifest, ensureReaderAuthorityEdge } = await import("../meetings/edge-serving.ts");
       const { withReaderAuthorityEdge } = await import("../registry/runtime-edge.ts");
-      const manifest = await readReaderAuthorityManifest();
+      const manifest = await readReaderManifest();
       const edge = manifest ? await ensureReaderAuthorityEdge(manifest, undefined, families) : null;
       return withReaderAuthorityEdge(edge, () => read(...args));
     });

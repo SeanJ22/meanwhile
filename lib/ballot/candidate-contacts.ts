@@ -1,4 +1,4 @@
-import { currentGenericBallotProjection } from "./generic-projection.ts";
+import { currentNjMorrisReadModel, validateBallotFile } from "../sources/ballot-nj-morris/index.ts";
 
 export interface CandidateContact {
   candidacyId: string;
@@ -16,17 +16,18 @@ export interface CandidateContactCensus {
 let cachedModel: object | null = null;
 let cache: CandidateContactCensus | null = null;
 
-export function candidateContactCensus(state: string): CandidateContactCensus {
-  const projection = currentGenericBallotProjection(state);
+export function candidateContactCensus(): CandidateContactCensus {
+  const projection = currentNjMorrisReadModel();
   if (cache && cachedModel === projection) return cache;
-  const ballots = Object.values(projection.ballots);
-  const current = new Set(ballots.flatMap(ballot => ballot.candidacies.map(candidate => candidate.id)));
-  const source = ballots.flatMap(ballot => ballot.contacts ?? []);
+  const ballot: unknown = projection.ballot;
+  validateBallotFile(ballot);
+  const current = new Set(ballot.candidacies.map((candidate) => candidate.id));
+  const source = projection.contacts;
   const contacts: CandidateContact[] = [];
   const withheld: CandidateContactCensus["withheld"] = [];
   const counts = new Map<string, number>();
-  for (const row of source) counts.set(row.candidacyId, (counts.get(row.candidacyId) ?? 0) + 1);
-  for (const row of source) {
+  for (const row of source.contacts) counts.set(row.candidacyId, (counts.get(row.candidacyId) ?? 0) + 1);
+  for (const row of source.contacts) {
     const reason = !current.has(row.candidacyId) ? "The contact does not identify a current canonical candidacy."
       : counts.get(row.candidacyId) !== 1 ? "More than one contact record claims this candidacy; the current contact identity is unresolved."
       : !row.sourceUrl?.startsWith("https://") || !row.sourceOrg || !row.collectedAt ? "The contact lacks its published source or read date."
@@ -40,6 +41,7 @@ export function candidateContactCensus(state: string): CandidateContactCensus {
   return cache;
 }
 
-export function candidateContactForCandidacy(state: string, candidacyId: string): CandidateContact | null {
-  return candidateContactCensus(state).contacts.find((contact) => contact.candidacyId === candidacyId) ?? null;
+export function candidateContactForCandidacy(candidacyId: string): CandidateContact | null {
+  if (!candidacyId.startsWith("ballot-nj-morris:")) return null;
+  return candidateContactCensus().contacts.find((contact) => contact.candidacyId === candidacyId) ?? null;
 }

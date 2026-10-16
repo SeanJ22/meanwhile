@@ -10,7 +10,7 @@ export const azDistricts = buildCensusDistrictEdge(
   JSON.parse(readFileSync(join(import.meta.dirname, "../../lib/census-geography/bootstrap-az.json"), "utf8")) as BuiltDataset,
   "ballot-production-district-fixture",
 );
-export const azBallot = Object.values(JSON.parse(readFileSync(join(import.meta.dirname, "../../data/ballot/2026-general/az.json"), "utf8")).ballots)[0] as BallotSet;
+export const azBallot = JSON.parse(readFileSync(join(import.meta.dirname, "../../data/states/az/ballot/az-pima-2026.json"), "utf8")) as BallotSet;
 export const electionSelection = { purpose: "election" as const, asOf: "2026-10-12", electionDate: azBallot.election.date };
 
 export function azDistrictSlice(zip: string): Slice<CodeSlice> & { kind: "HELD" } {

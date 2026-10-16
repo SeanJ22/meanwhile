@@ -94,7 +94,7 @@ for (const provider of ["memory", "file", "postgres"] as const) {
         assert.deepEqual(exposed, [[`ballot-publication:${state}`, expected]]);
         if (provider === "postgres") assert.deepEqual(transferred, [{ log_key: `ballot-publication:${state}`, record: expected }]);
         assert.ok(JSON.stringify(exposed).length < 512, "scheduler reads no named-contest arrays");
-        assert.equal(ballotPublicationDue(`ballot-contests:${state}`, summary!.inputStamp!, summary), false);
+        assert.equal(ballotPublicationDue(`ballot-contests:${state}`, summary!.inputStamp!, summary, { lastSucceededAt: now }), false);
       }
       const outcome = routineCivicDataSupervisorOutcome({ ballotPublications: summaries, cycleId: "state-cycle",
         startedAt: now, finishedAt: now, testedSha: context.testedSha, host: "runner", provider, durable: true,
@@ -120,7 +120,19 @@ test("an unwritten state publication rejects and remains due for history retry",
   await assert.rejects(() => recordBallotPublication(unavailable, report, { cycleId: "failed", testedSha: null }), /history unavailable/);
   const prior = await readLatestBallotPublicationSummary(repos, "TX");
   assert.equal(prior, null);
-  assert.equal(ballotPublicationDue("ballot-contests:TX", report.inputStamp!, prior), true);
+  assert.equal(ballotPublicationDue("ballot-contests:TX", report.inputStamp!, prior, undefined), true);
+});
+
+test("all missing state publications run in the first cycle even when old report stamps match", () => {
+  for (const state of BALLOT_STATES) {
+    const task = `ballot-contests:${state}`, stamp = `git:${state}`;
+    const prior = { state, inputStamp: stamp, status: "PUBLISHED" as const };
+    assert.equal(ballotPublicationDue(task, stamp, null, undefined), true);
+    assert.equal(ballotPublicationDue(task, stamp, prior, {}), true, "a report cannot stand in for a missing state pointer");
+    assert.equal(ballotPublicationDue(task, stamp, prior, { lastSucceededAt: now }), false);
+    assert.equal(ballotPublicationDue(task, `${stamp}-changed`, prior, { lastSucceededAt: now }), true);
+    assert.equal(ballotPublicationDue(task, stamp, { ...prior, status: "HELD" }, {}), false, "unchanged held work follows the normal retry clock");
+  }
 });
 
 test("fresh runtime checkouts retain ballot input stamps and only a changed state's blob becomes due", async () => {
@@ -155,7 +167,7 @@ test("fresh runtime checkouts retain ballot input stamps and only a changed stat
     for (const state of ["AZ", "TX"] as const) {
       const report = { kind: "BALLOT_PUBLICATION", state, inputHash: "a".repeat(64), inputStamp: initial[state], at: now,
         status: "PUBLISHED", versionId: "fixture", merged: [`${state.toLowerCase()}.json`], skipped: [], reason: null } as const;
-      assert.equal(ballotPublicationDue(`ballot-contests:${state}`, await ballotInputStamp(freshInputs, state), report), state === "AZ");
+      assert.equal(ballotPublicationDue(`ballot-contests:${state}`, await ballotInputStamp(freshInputs, state), report, { lastSucceededAt: now }), state === "AZ");
     }
   } finally { await rm(directory, { recursive: true, force: true }); }
 });
@@ -190,11 +202,11 @@ test("the runner's ballot child publishes only its state under exact authority a
     assert.deepEqual(report.heldContests?.map(row => [row.state, row.contestId, row.title]), [["TX", "fixture-tx-governor", "Governor"]]);
     assert.equal(report.heldContests![0].reason, "The official candidate list hasn't been fully checked.");
     assert.equal(parseRoutineRunnerReceipt(run.stdout).ok, true);
-    assert.equal(ballotPublicationDue(ballotTask.id, report.inputStamp!, report), false);
+    assert.equal(ballotPublicationDue(ballotTask.id, report.inputStamp!, report, { lastSucceededAt: now }), false);
     await writeFile(resolve(directory, "ak.json"), "{}");
-    assert.equal(ballotPublicationDue(ballotTask.id, await ballotInputStamp(directory, "TX"), report), false);
+    assert.equal(ballotPublicationDue(ballotTask.id, await ballotInputStamp(directory, "TX"), report, { lastSucceededAt: now }), false);
     await writeFile(resolve(directory, "tx.json"), "{");
-    assert.equal(ballotPublicationDue(ballotTask.id, await ballotInputStamp(directory, "TX"), report), true);
+    assert.equal(ballotPublicationDue(ballotTask.id, await ballotInputStamp(directory, "TX"), report, { lastSucceededAt: now }), true);
     const held = spawnSync(command.executable, ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs",
       "tests/fixtures/ballot-national/publish-child.mts", directory], { env: command.env, encoding: "utf8", timeout: 60_000 });
     assert.equal(held.status, 2, held.stderr + held.stdout);
@@ -229,9 +241,9 @@ test("Admin's ballot control queues the normal runner task even before its next 
   assert.deepEqual(await readLatestBallotPublication(repos, "TX"), { ...report, heldContestCount: 1 });
   assert.deepEqual(await readLatestBallotPublication(repos, "AZ"), { ...newer, heldContestCount: 0 });
   assert.equal(await readLatestBallotPublication(repos, "AK"), null);
-  assert.equal(ballotPublicationDue("ballot-contests:AZ", report.inputHash, report), true);
-  assert.equal(ballotPublicationDue("voting-sites:TX", report.inputHash, null), false);
-  assert.equal(ballotPublicationDue("ballot-contests", report.inputHash, null), false);
+  assert.equal(ballotPublicationDue("ballot-contests:AZ", report.inputHash, report, { lastSucceededAt: now }), true);
+  assert.equal(ballotPublicationDue("voting-sites:TX", report.inputHash, null, undefined), false);
+  assert.equal(ballotPublicationDue("ballot-contests", report.inputHash, null, undefined), false);
 });
 
 test("publication reports reject files and held contests from a different state", () => {

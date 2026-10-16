@@ -1,3 +1,4 @@
+import { statePublicationPriorOf } from "./state-publication-prior.ts";
 import { readerQuery } from "./promoted-reader-query.ts";
 import { currentReaderRoute, currentReaderSelection, type ReaderSelection } from "../db/reader-route.ts";
 import { createHash } from "node:crypto";
@@ -13,6 +14,7 @@ import type {
 } from "./types.ts";
 import { canonicalCivicDataJson } from "./changes.ts";
 import { canonicalCivicDataHash } from "./canonical-hash.ts";
+import { durableStateHash, statePublicationScope } from "./state-publication.ts";
 import { parseValidationReceipt } from "./receipt.ts";
 import { promotedPayloadSha256, type AttestedPromotion } from "./attested-promotion.ts";
 import {
@@ -114,7 +116,7 @@ export type CivicDataReadStore = Pick<
   "readPromotion" | "readCandidate"
 > & Partial<Pick<RoutineDataStore, "readPromotions" | "readCandidates" | "readPromotionIdentity" | "readPromotionIdentities" | "readPublishedCandidateMetadata">>;
 
-export type CivicDataBatchReadStore = Pick<
+type CivicDataBatchReadStore = Pick<
   RoutineDataStore,
   "readPromotion" | "readCandidate" | "readPromotions" | "readCandidates"
 > & Partial<Pick<RoutineDataStore, "readPromotionIdentities" | "readCandidateProof" | "readCandidateProofs" | "readPublishedCandidateMetadata">>;
@@ -338,15 +340,15 @@ const provenByVersion = new Map<string, ProvenPair>();
 const DEFAULT_STORE: object = {};
 let inflight = new WeakMap<object, Map<string, Promise<ProvenPair | null>>>();
 let provenPointers = new WeakMap<object, Map<string, ProvenPair>>();
-let stateRequests = new WeakMap<object, WeakMap<object, {
+const stateRequests = new WeakMap<object, WeakMap<object, {
   pointers: Map<string, ProvenPair>;
   flights: Map<string, Promise<ProvenPair | null>>;
 }>>();
-let stateProofs = new WeakMap<PromotedProjection, { candidate: ProvenCandidate; attested: AttestedPromotion }>();
-let stateAttestations = new WeakMap<object, Map<string, AttestedPromotion>>();
+const stateProofs = new WeakMap<PromotedProjection, { candidate: ProvenCandidate; attested: AttestedPromotion }>();
+const stateAttestations = new WeakMap<object, Map<string, AttestedPromotion>>();
 
 function isStateAuthorityScope(scope: string): boolean {
-  return /^US-[A-Z]{2}:(?:state-election-ballots|candidate-profiles|candidate-publications|voting-sites|candidate-campaign-sites-derived)$/.test(scope);
+  return statePublicationScope(scope);
 }
 
 function stateRequest(store: CivicDataReadStore | undefined) {
@@ -1186,14 +1188,17 @@ export function promotionProofIssue<T>(
   if (projection.lastKnownGoodVersionId !== projection.versionId) return "the current pointer and last-known-good pointer diverge";
   if (row.state !== "PROMOTED" || row.acquisitionSucceeded !== true) return "the pointed candidate is not a successfully acquired PROMOTED row";
   if (row.promotedVersion !== projection.versionId || row.lastKnownGoodVersion !== projection.lastKnownGoodVersionId) return "the candidate's durable promotion fields do not match the pointer";
-  const readModelHash = durableProjectionHash(candidate.readModel);
+  const scoped = statePublicationScope(scope);
+  const indexedPrior = scoped ? statePublicationPriorOf(candidate) : undefined;
+  const readModelHash = indexedPrior?.payloadHash ?? (scoped ? durableStateHash(candidate.readModel) : durableProjectionHash(candidate.readModel));
   if (
     readModelHash === null ||
     !candidate.normalization?.normalizedHash ||
     !SHA256.test(candidate.normalization.normalizedHash) ||
     candidate.normalization.normalizedHash !== readModelHash
   ) return "the candidate Reader projection does not match its durable normalized hash";
-  const normalizedPayloadHash = durableProjectionHash(candidate.normalizedPayload);
+  const normalizedPayloadHash = indexedPrior ? candidate.normalization.normalizedPayloadHash : candidate.normalizedPayload === candidate.readModel ? readModelHash :
+    scoped ? durableStateHash(candidate.normalizedPayload) : durableProjectionHash(candidate.normalizedPayload);
   if (
     normalizedPayloadHash === null ||
     !candidate.normalization.normalizedPayloadHash ||
@@ -1203,7 +1208,9 @@ export function promotionProofIssue<T>(
   if (!projectionReceipt || !candidateReceipt) return "the pointer or candidate receipt is malformed";
   if (projectionReceipt.decision !== "GOOD" || candidateReceipt.decision !== "GOOD") return "the pointer is not backed by a GOOD receipt";
   const sourceCheck = candidateReceipt.checks.find((check) => check.check === "SOURCE_AUTHENTICITY");
-  if (candidate.bootstrapImport) {
+  if (indexedPrior) {
+    if (indexedPrior.versionId !== candidate.id) return "the consumed prior index names a different immutable version";
+  } else if (candidate.bootstrapImport) {
     const importIssue = trustedLkgImportEvidenceIssue(candidate, predecessor);
     if (importIssue !== null) return `the trusted-LKG import evidence is invalid: ${importIssue}`;
     const expectedSourceCode = candidate.bootstrapImport.kind === "TRUSTED_LKG_REATTESTATION"
@@ -1225,7 +1232,8 @@ export function promotionProofIssue<T>(
     projectionReceipt.scope !== scope
   ) return "the GOOD receipt does not identify the pointed candidate";
   if (canonicalCivicDataJson(projectionReceipt) !== canonicalCivicDataJson(candidateReceipt)) return "the candidate and pointer receipts differ";
-  if (canonicalCivicDataJson(projection.payload) !== canonicalCivicDataJson(candidate.readModel)) return "the pointer payload differs from the validated candidate read model";
+  if (!indexedPrior && (scoped ? projection.payload !== candidate.readModel && durableStateHash(projection.payload) !== readModelHash :
+    canonicalCivicDataJson(projection.payload) !== canonicalCivicDataJson(candidate.readModel))) return "the pointer payload differs from the validated candidate read model";
   const retrievedAt = Date.parse(candidate.retrieval?.retrievedAt ?? "");
   const validatedAt = Date.parse(projectionReceipt.validatedAt);
   const promotedAt = Date.parse(projection.promotedAt);
@@ -1349,9 +1357,6 @@ export function clearPromotedReadModelCache(): void {
   provenByVersion.clear();
   provenPointers = new WeakMap();
   inflight = new WeakMap();
-  stateRequests = new WeakMap();
-  stateProofs = new WeakMap();
-  stateAttestations = new WeakMap();
 }
 
 const readerProjectionReads = new WeakMap<ReaderSelection, Map<string, Promise<PromotedEdgeEntry>>>();

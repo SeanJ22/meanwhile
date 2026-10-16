@@ -2,14 +2,12 @@ import assert from "node:assert/strict";
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { gunzipSync } from "node:zlib";
 import { after, test } from "./helpers/playbooks.ts";
 
 import { publishReaderEdgeArtifacts, type PublishAuthority } from "../lib/meetings/edge-serving.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
-import { enterReaderAuthorityEdge, currentRegistryRuntimeEdge, withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
-import { readRegistryPlace } from "../lib/registry/reader-place.ts";
-import type { RecordIndex } from "../lib/meetings/authority-records.ts";
+import { enterReaderAuthorityEdge, currentRegistryRuntimeEdge } from "../lib/registry/runtime-edge.ts";
+import { registryRuntimeReadState } from "../lib/registry/runtime-read-model.ts";
 import { federalDirectoryReadState } from "../lib/officials/federal-directory-read-model.ts";
 import { getOutcomeSnapshot, loadedFrom, outcomeProjectionReadState, refreshOutcomeSnapshotFromPromoted } from "../lib/outcomes/store.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
@@ -19,37 +17,20 @@ import { currentCommentAccess, type CommentAccessProjection } from "../lib/regis
 import { settleCommentAccessRead } from "../lib/registry/server.ts";
 import { COMMENT_ACCESS } from "./fixtures/comment-access.ts";
 import { factDb } from "./helpers/fact-db.ts";
-import { installRegistryAuthority, registryTransferImport, syntheticAzBallot, syntheticFederalDirectory } from "./helpers/promoted-fixtures.ts";
+import { installRegistryAuthority, registryTransferImport, syntheticFederalDirectory } from "./helpers/promoted-fixtures.ts";
 import { installPimaOutcomes, pimaOutcomeFixture, recordedMeetingsSnapshot } from "./helpers/reader-fixtures.ts";
-import { registryPlaceFixtureResult, type FixtureStatement } from "./helpers/registry-place-fetch.ts";
-import { ballotElectionKey } from "../lib/ballot/generic-projection.ts";
-import { manualEdgeEntry, promotedFamily } from "./helpers/promoted-edge-entry.ts";
 import { september22Sitting } from "./helpers/pima-september-22-sitting.ts";
 
-
+/**
+ * `enterReaderAuthorityEdge` is `AsyncLocalStorage.enterWith`: on Node 24 a store entered inside an async
+ * helper never reaches promise reactions created from the caller. These tests publish a real local edge
+ * store (`WTP_READER_EDGE_DIR`) and ask the real routes, so the reads must come from it.
+ */
 
 delete process.env.ANTHROPIC_API_KEY;
 for (const key of ["DATABASE_URL", "DATABASE_URL_UNPOOLED", "NEON_DATABASE_URL"]) delete process.env[key];
 process.env.WTP_LIMIT_LOG_IP_PER_MINUTE = "10000";
 await installRegistryAuthority();
-const registry = registryTransferImport().projection.payload;
-let registryVersion = "";
-const placeReads: string[] = [];
-process.env.DATABASE_URL = "postgres://test:test@ep-reader-context.reader-context.invalid/test?sslmode=require";
-const originalFetch = globalThis.fetch;
-after(() => { globalThis.fetch = originalFetch; delete process.env.DATABASE_URL; });
-globalThis.fetch = (async (input, init) => {
-  const url = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
-  if (!url.includes("reader-context.invalid/")) return originalFetch(input, init);
-  const request = JSON.parse(String(init?.body)) as { queries?: FixtureStatement[] } & FixtureStatement;
-  const empty = { command: "SELECT", rowCount: 0, rowAsArray: true, fields: [], rows: [] };
-  const results = (request.queries ?? [request]).map(statement => {
-    const result = registryPlaceFixtureResult(statement, registry, registryVersion);
-    if (result) placeReads.push(registryVersion);
-    return result ?? empty;
-  });
-  return Response.json(request.queries ? { results } : results[0]);
-}) as typeof fetch;
 
 const edgeDir = mkdtempSync(join(tmpdir(), "wtp-reader-edge-"));
 const previousEdgeDir = process.env.WTP_READER_EDGE_DIR;
@@ -75,6 +56,7 @@ interface EdgeVersions {
   readonly registry: string;
   readonly federal: string;
   readonly outcomes?: string;
+  readonly commentAccess?: string;
 }
 
 async function publishEdge(versions: EdgeVersions): Promise<void> {
@@ -86,6 +68,7 @@ async function publishEdge(versions: EdgeVersions): Promise<void> {
     ...(versions.outcomes && (outcomesValue.kind === "BOOTSTRAP" || outcomesValue.kind === "PROMOTED")
       ? { "meeting-outcomes": { value: getOutcomeSnapshot(), versionId: versions.outcomes } }
       : {}),
+    ...(versions.commentAccess ? { "comment-access": { value: commentAccessProjection, versionId: versions.commentAccess } } : {}),
   };
   const result = await publishReaderEdgeArtifacts(snapshot, {
     sourceThrough: snapshot.generatedAt,
@@ -98,24 +81,6 @@ async function publishEdge(versions: EdgeVersions): Promise<void> {
   });
   assert.equal(result.status, "PUBLISHED", JSON.stringify(result));
   process.env.WTP_READER_EDGE_DIR = edgeDir;
-  registryVersion = versions.registry;
-  placeReads.length = 0;
-}
-
-async function withoutMeetingManifest<T>(run: () => Promise<T>): Promise<T> {
-  const original = LocalFileArtifactStore.prototype.readManifest;
-  let reads = 0;
-  LocalFileArtifactStore.prototype.readManifest = async function () {
-    reads += 1;
-    return original.call(this);
-  };
-  try {
-    const result = await run();
-    assert.equal(reads, 0, "this request must not read the country's meeting manifest");
-    return result;
-  } finally {
-    LocalFileArtifactStore.prototype.readManifest = original;
-  }
 }
 
 const AZ = "ocd-division/country:us/state:az";
@@ -150,11 +115,11 @@ test("Node 24: an edge entered inside a helper never reaches the reads chained o
   assert.equal(await byCaller(), "als-probe");
 });
 
-test("Ask reads the selected registry at the accepted edge version and the published directory and outcomes", async () => {
-  await publishEdge({ registry: "edge-test:registry:1", federal: "edge-test:federal:1", outcomes: "edge-test:outcomes:1" });
+test("Ask reads the registry, the federal directory and the recorded outcomes from the edge it entered", async () => {
+  await publishEdge({ registry: "edge-test:registry:1", federal: "edge-test:federal:1", outcomes: "edge-test:outcomes:1", commentAccess: "edge-test:comment-access:1" });
   const payload = await askPima();
   assert.ok(Number.isFinite(payload.trace.preloads?.authorityEdge), "the edge was not fetched");
-  assert.deepEqual(placeReads, [], "the selected registry records are read from the edge without a database query");
+  assert.equal(registryRuntimeReadState().metadata?.versionId, "edge-test:registry:1", "the registry was read from the database, not the edge");
   assert.equal(federalDirectoryReadState().metadata?.versionId, "edge-test:federal:1", "the federal directory was read from the database, not the edge");
   assert.match(outcomeProjectionReadState().detail ?? "", /edge artifact \(version edge-test:outcomes:1\)/, "the recorded outcomes were read from the database, not the edge");
   assert.equal(loadedFrom(), "DATA_PLANE", "an edge-served outcome projection is the data plane's own value, never a test fixture");
@@ -172,31 +137,6 @@ test("a manifest without the outcomes family reads them from the database, and t
   assert.equal(payload.trace.preloadSources?.outcomes, "DATABASE");
   assert.doesNotMatch(outcomeProjectionReadState().detail ?? "", /edge-test:outcomes:1/);
   assert.ok(["PROMOTED", "BOOTSTRAP"].includes(outcomeProjectionReadState().kind), "the database fallback read the outcomes");
-});
-
-test("a place registry reads only its published records and an exact named body at the accepted version", async () => {
-  await publishEdge({ registry: "edge-test:registry:selected", federal: "edge-test:federal:selected" });
-  const store = new LocalFileArtifactStore(edgeDir);
-  const manifest = (await store.readAuthorityManifest())!.manifest;
-  const ref = manifest.authorityArtifacts!["registry-runtime"]!;
-  const index = JSON.parse(gunzipSync((await store.readBytes(ref.key))!).toString("utf8")).value as RecordIndex;
-  const wanted = `${AZ}/school_district:sunnyside_unified_district`;
-  const named = `${AZ}/school_district:vail_unified_district#board`;
-  const foreign = index.records.filter(row => row.path[0] === "registry" && row.path[1] === "bodies" &&
-    row.tags.some(tag => tag.includes("/state:nh/")));
-  assert.ok(foreign.length > 0);
-  const opened = new Set<string>();
-  const original = LocalFileArtifactStore.prototype.readBytes;
-  LocalFileArtifactStore.prototype.readBytes = async function (key) { opened.add(key); return original.call(this, key); };
-  try {
-    const read = await withReaderAuthorityEdge({}, () => readRegistryPlace([wanted], [named], manifest));
-    assert.equal(read.source, "EDGE");
-    assert.equal(read.versionId, "edge-test:registry:selected");
-    assert.ok(read.value.registry.bodies.some(row => row.id === named));
-    assert.ok(read.value.registry.bodies.every(row => row.id === named || row.ocdId === wanted || row.ocdId === AZ || row.alsoServesOcdIds?.includes(wanted)));
-    assert.ok(foreign.every(row => !opened.has(row.key)), "another state's body bytes are never fetched");
-    assert.deepEqual(placeReads, [], "accepted edge records do not reopen registry SQL");
-  } finally { LocalFileArtifactStore.prototype.readBytes = original; }
 });
 
 test("comment rules are primed from the edge the caller entered, and read from live facts without one", async () => {
@@ -229,39 +169,16 @@ test("comment rules are primed from the edge the caller entered, and read from l
   }
 });
 
-test("Campaign money reads the selected registry at the accepted edge version and names every read's time", async () => {
+test("Campaign money reads the registry from the edge it entered, and names every read's time", async () => {
   await publishEdge({ registry: "edge-test:registry:3", federal: "edge-test:federal:3" });
   const { GET } = await import("../app/api/funding/[target]/route.ts");
-  const response = await withoutMeetingManifest(() => GET(new Request("https://wtp.test/api/funding/congress%3AC001133?division=ocd-division%2Fcountry%3Aus%2Fstate%3Aaz"), {
+  const response = await GET(new Request("https://wtp.test/api/funding/congress%3AC001133"), {
     params: Promise.resolve({ target: "congress%3AC001133" }),
-  }));
+  });
   assert.ok([200, 503].includes(response.status));
-  assert.deepEqual(placeReads, [], "funding uses the selected registry records without a database query");
+  assert.equal(registryRuntimeReadState().metadata?.versionId, "edge-test:registry:3", "the registry was read from the database, not the edge");
   const timing = response.headers.get("server-timing") ?? "";
   for (const name of ["edgeManifest", "authorityEdge", "registry", "fec", "total"]) {
     assert.match(timing, new RegExp(`(?:^|, )${name};dur=\\d+`), `${name} is not timed: ${timing}`);
   }
-});
-
-test("a ballot Ask reads its state authority without opening the meeting manifest", async () => {
-  await publishEdge({ registry: "edge-test:registry:ballot", federal: "edge-test:federal:ballot" });
-  const ballot = syntheticAzBallot();
-  const version = "edge-test:ballot:AZ";
-  await publishReaderEdgeArtifacts(null, { sourceThrough: null, retrievedAt: null, promotedThrough: null }, {
-    store: new LocalFileArtifactStore(edgeDir),
-    stateAuthorities: { "ballot-contests": { AZ: promotedFamily([
-      manualEdgeEntry("ballot-contests:AZ", { kind: "ballot-contests", ballots: { [ballotElectionKey(ballot)]: ballot } }, version),
-    ], version) } },
-  });
-  const { POST } = await import("../app/api/ask/grounded/route.ts");
-  const response = await withoutMeetingManifest(() => POST(new Request("https://wtp.test/api/ask/grounded", {
-    method: "POST",
-    headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "reader-edge-context-ballot" },
-    body: JSON.stringify({ question: "Who is running for Synthetic Office?", approximateLocation: "85701", surface: "BALLOT", ocdIds: [AZ], today: "2026-10-15" }),
-  })));
-  assert.equal(response.status, 200);
-  const payload = await response.json();
-  assert.equal(payload.trace.resolution.basis, "HELD_BALLOT");
-  assert.deepEqual(placeReads, [], "a ballot-only answer performs no registry lookup");
-  assert.match(payload.answer, /Alex Candidate/);
 });

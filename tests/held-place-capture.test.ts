@@ -16,7 +16,7 @@ import { projectHeldPlaceFamilies } from "../lib/civic-data/held-place-families.
 import { canonicalContestId, canonicalCandidacyId } from "../lib/hunt/candidate-universe.ts";
 import { derivedCampaignSitesProjectionIssue, derivedCandidateRevisionId, derivedCandidateDocumentId,
   type DerivedCampaignSiteRecord } from "../lib/civic-data/derived-campaign-sites.ts";
-import { partitionCivicPayload } from "../lib/civic-data/payload-parts.ts";
+import { partitionCivicPayload } from "../lib/civic-data/payload-codec.ts";
 import { readPlacePayloadParts } from "../lib/civic-data/place-payload-slices.ts";
 import { readPlacePointerSlice } from "../lib/civic-data/held-place-slices.ts";
 import { neonConfig } from "@neondatabase/serverless";

@@ -3,9 +3,15 @@ import test from "node:test";
 
 import { stateMoneyForCard } from "../lib/funding/nominee-money.ts";
 import { isRenderable } from "../lib/funding/state-money.ts";
-import { installBallots, installStateMoney, syntheticAzBallot } from "./helpers/promoted-fixtures.ts";
+import { installAzBallot, installStateMoney, syntheticAzBallot } from "./helpers/promoted-fixtures.ts";
 
-await installBallots(syntheticAzBallot([
+/*
+ * The held state-money fixture (tests/fixtures/state-money-2026.json) carries one FILED Attorney General
+ * record and one OURS-gap Mine Inspector record. The ballot projection is synthetic: those two contests
+ * with their certified-lineup cards bridged to the fixture's candidacies, and a synthetic contest whose
+ * two nominees the bridge could not resolve.
+ */
+await installAzBallot(syntheticAzBallot([
   {
     id: "ballot-az-pima:attorney-general",
     title: "Attorney General",

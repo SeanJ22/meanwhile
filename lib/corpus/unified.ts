@@ -6,18 +6,18 @@ import type { SourceSnapshot, StatementCorpus } from "./types.ts";
 import { sweepPeople } from "./statement-sweep.ts";
 import type { SweepPerson, SweepRecord } from "./statement-sweep.ts";
 
-function candidates(states: readonly string[]): CandidateCorpus {
-  const corpora = [...new Set(states)].map(state => getCandidateCorpus(state));
-  const first = corpora[0];
-  if (!first) throw new Error("Candidate corpus requires named states.");
-  return { ...first, documents: corpora.flatMap(corpus => corpus.documents), failures: corpora.flatMap(corpus => corpus.failures),
-    attempted: corpora.reduce((sum, corpus) => sum + corpus.attempted, 0) };
+
+
+/** The candidate-keyed canonical promoted projection. */
+function candidates(): CandidateCorpus {
+  return getCandidateCorpus();
 }
 
 /** The officeholder-keyed canonical promoted projection. */
 function readerStatementSnapshots(): readonly SourceSnapshot[] {
   return currentOfficeholderStatements().snapshots;
 }
+
 
 export function snapshotFromCandidateDocument(doc: CandidateDocument): SourceSnapshot {
   return {
@@ -50,18 +50,18 @@ export function unifiedCorpusFromHoldings(input: {
 }
 
 /** Both corpora, one snapshot list. */
-export function unifiedCorpus(states: readonly string[]): StatementCorpus {
+export function unifiedCorpus(): StatementCorpus {
   return unifiedCorpusFromHoldings({
-    candidateCorpus: candidates(states),
+    candidateCorpus: candidates(),
     officeholderStatements: { snapshots: [...readerStatementSnapshots()] },
   });
 }
 
 /** Counts per half of the union. */
-export function unifiedCorpusCounts(states: readonly string[]) {
+export function unifiedCorpusCounts() {
   const fromStatements = readerStatementSnapshots();
-  const current = currentExtraction(candidates(states).documents);
-  const all = unifiedCorpus(states).snapshots;
+  const current = currentExtraction(candidates().documents);
+  const all = unifiedCorpus().snapshots;
   return {
     statements: fromStatements.length,
     statementSubjects: new Set(fromStatements.map((s) => s.subjectId)).size,
@@ -73,10 +73,10 @@ export function unifiedCorpusCounts(states: readonly string[]) {
   };
 }
 
+
 export function unifiedStatementSweep(
-  states: readonly string[],
   people: readonly SweepPerson[],
   topics?: readonly string[],
 ): SweepRecord[] {
-  return sweepPeople(people, unifiedCorpus(states), topics);
+  return sweepPeople(people, unifiedCorpus(), topics);
 }

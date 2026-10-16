@@ -1,12 +1,13 @@
 import { ReaderPersonIdentityError } from "./reader-person.ts";
 
+
 export interface PositionIdentityReaders {
   /** The registry bridge and rosters; the one projection every subject needs. */
   readonly refreshRegistry: () => Promise<unknown>;
   readonly refreshFederal: () => Promise<unknown>;
-  readonly refreshBallot: () => Promise<unknown>;
+  readonly refreshAz: () => Promise<unknown>;
   /** Registry rows tying this subject to a holder or candidacy, after the refresh. */
-  readonly relatedAuthorities: (subject: string) => { readonly federal: boolean; readonly ballot: boolean };
+  readonly relatedAuthorities: (subject: string) => { readonly federal: boolean; readonly az: boolean };
   readonly personKeys: (subject: string) => string[];
 }
 
@@ -16,17 +17,17 @@ export async function positionIdentityKeys(subject: string, readers: PositionIde
   } catch {
     return [subject];
   }
-  let related: { federal: boolean; ballot: boolean };
+  let related: { federal: boolean; az: boolean };
   try {
     related = readers.relatedAuthorities(subject);
   } catch {
     return [subject];
   }
   const federal = subject.startsWith("congress:") || related.federal;
-  const ballot = related.ballot;
+  const az = subject.startsWith("ballot-az-") || subject.startsWith("statewide:az/") || related.az;
   const refreshes = await Promise.allSettled([
     federal ? readers.refreshFederal() : Promise.resolve(),
-    ballot ? readers.refreshBallot() : Promise.resolve(),
+    az ? readers.refreshAz() : Promise.resolve(),
   ]);
   const incomplete = refreshes.some((result) => result.status === "rejected");
   try {

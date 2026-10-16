@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createHash } from "node:crypto";
-import { CivicPayloadParts, partitionCivicPayload, type CivicPayloadPartIO } from "../lib/civic-data/payload-parts.ts";
+import { CivicPayloadParts, type CivicPayloadPartIO } from "../lib/civic-data/payload-parts.ts";
+import { partitionCivicPayload } from "../lib/civic-data/payload-codec.ts";
 
 const inline = ["id", "sourceId", "recordClass", "scope", "retrieval", "normalization", "temporal"];
 const row = (state: string, index: number) => ({ id: `ocd-division/country:us/state:${state}/place:${index}`,

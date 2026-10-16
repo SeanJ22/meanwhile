@@ -19,13 +19,13 @@ await installOfficeholderStatements();
 const ROOT = join(import.meta.dirname, "..");
 
 test("13: the search index is the UNION of both statement corpora", () => {
-  const c = unifiedCorpusCounts(["AZ"]);
-  const corpus = unifiedCorpus(["AZ"]);
+  const c = unifiedCorpusCounts();
+  const corpus = unifiedCorpus();
   const statementSubjects = new Set(
     currentOfficeholderStatements().snapshots.map(({ subjectId }) => subjectId),
   );
   const candidateSubjects = new Set(
-    currentExtraction(getCandidateCorpus("AZ").documents).map(({ candidateKey }) => candidateKey),
+    currentExtraction(getCandidateCorpus().documents).map(({ candidateKey }) => candidateKey),
   );
 
   // Denominators stated: a union that quietly became one corpus again would answer with a sentence, not an error.
@@ -65,8 +65,8 @@ test("13: the search index is the UNION of both statement corpora", () => {
 
 /** A term drawn from each candidate's own held text must find that candidate. */
 test("13: every candidate with held text is findable by a term from that text", () => {
-  const corpus = unifiedCorpus(["AZ"]);
-  const docs = currentExtraction(getCandidateCorpus("AZ").documents).filter(
+  const corpus = unifiedCorpus();
+  const docs = currentExtraction(getCandidateCorpus().documents).filter(
     (d) => d.extraction === "html" && d.text && d.text.length > 400,
   );
 
@@ -110,8 +110,12 @@ test("13: failed and empty searches keep the card gap open", () => {
     "a search without an equal-effort record keeps the open hunt state");
 });
 
+/**
+ * A term held only inside an over-long passage (e.g. a headline rail) is skipped as unquotable, and the reader must
+ * not be told the person's pages do not mention it.
+ */
 test("13: a term we hold but will not quote is not reported as their silence", () => {
-  const corpus = unifiedCorpus(["AZ"]);
+  const corpus = unifiedCorpus();
   const answer = positionsFor(UNQUOTABLE_CANDIDATE_KEY, UNQUOTABLE_TERM, corpus);
 
   assert.equal(answer.kind, "SEARCHED_NOTHING_MATCHED");

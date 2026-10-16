@@ -1,10 +1,22 @@
+import { consumeStatePublicationRecord } from "../civic-data/state-publication-prior.ts";
 import { requireBallotState, stateBallotContractId, stateBallotScope } from "./state-scopes.ts";
-import { normalizedHash, sha256 } from "../civic-data/candidate-builders.ts";
+import { sha256 } from "../civic-data/candidate-builders.ts";
+import { canonicalCivicDataHash } from "../civic-data/canonical-hash.ts";
 import type { CivicRecordMember, IdentityEvidence, RoutineCandidate } from "../civic-data/types.ts";
 import { sourceProjectionEvidence } from "../civic-data/types.ts";
 import { isOfficialSource } from "../civic-data/source-authority.ts";
 import type { RawCaptureRef } from "../civic-data/raw-capture-vault.ts";
 import type { VotingJurisdiction, VotingSitesFile } from "./voting-sites.ts";
+
+const normalizedHash = (value: unknown) => canonicalCivicDataHash(value, { durable: true });
+
+export const VOTING_SITES_CONTRACT = {
+  id: "voting-sites",
+  sourceId: "voting-sites",
+  recordClass: "VOTING_SITE",
+  scope: "US-AZ+US-NH+US-NJ:2026-general:supported-jurisdictions",
+  parserVersion: "official-voting-sites/4",
+} as const;
 
 export const VOTING_SITES_SOURCE_ID = "voting-sites" as const;
 export const votingSitesContract = (state: string) => ({
@@ -37,7 +49,7 @@ export function votingSiteMembers(file: VotingSitesFile): readonly CivicRecordMe
   ]).sort((left, right) => left.key.localeCompare(right.key));
 }
 
-export function retainFailedVotingSiteScopes(
+function retainFailedVotingSiteScopes(
   current: VotingSitesFile,
   prior: VotingSitesFile | null,
   failures: readonly VotingSiteAcquisitionFailure[],
@@ -159,6 +171,12 @@ export function votingSitesCandidate(input: {
     const next = currentJurisdictions.get(row.ocdId);
     return next === row || next && normalizedHash(next) === normalizedHash(row);
   }).map(row => row.ocdId).sort() ?? [];
+  for (const previous of input.prior?.jurisdictions ?? []) {
+    const next = currentJurisdictions.get(previous.ocdId);
+    consumeStatePublicationRecord(previous, next ?? null);
+    const sites = new Map(next?.sites.map(site => [site.id, site]) ?? []);
+    for (const site of previous.sites) consumeStatePublicationRecord(site, sites.get(site.id) ?? null);
+  }
   const normalizedPayload = { projection: readModel, acquisition: input.acquisition,
     carriedFromVersionId: input.carriedFromVersionId ?? null, carriedJurisdictionIds };
   const readModelHash = normalizedHash(readModel);

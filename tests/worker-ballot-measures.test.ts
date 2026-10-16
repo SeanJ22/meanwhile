@@ -1,5 +1,5 @@
 import { mergeBallotFixture } from "./helpers/ballot-merge.ts";
-import { stateBallotContractId } from "../lib/ballot/state-scopes.ts";
+import { stateBallotContractId, stateBallotScope } from "../lib/ballot/state-scopes.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createHash } from "node:crypto";
@@ -12,8 +12,10 @@ import { workerReaderClassMatches } from "../lib/civic-data/worker-reader-contra
 import { manualProjectionCandidate } from "../lib/civic-data/manual-projections.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import { readGenericBallotProjection, type GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
-import { loadBallotForDivisions } from "../lib/ask/server-sources.ts";
+import type { GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
+import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
+import { contestsForDivisions } from "../lib/sources/ballot-nj-morris/index.ts";
+import { summaryForContest } from "../lib/ballot/measure-summary.ts";
 import { DEFAULT_SOURCE_POLICY } from "../lib/control-plane/promotion/source-kinds.ts";
 
 const now = "2026-10-05T18:00:00Z";
@@ -44,21 +46,25 @@ function fixture(state = "OH", prefix = `state:${state.toLowerCase()}/county:ald
     evidence, observedAt: now, partial: false, transport: "REACHABLE" as const, httpStatus: 200 })) };
 }
 
-test("the generic measure door publishes full official wording, source-stated numbers and explicit YES/NO through Slide and Ask", async () => {
+test("the generic measure door publishes full official wording, source-stated numbers and explicit YES/NO through Slide for the reader summary", async () => {
   assert.equal(workerReaderClassMatches("ballot-contests:OH", "BALLOT_MEASURE"), true);
   for (const [state, prefix] of [["OH", "state:oh/county:alder"], ["MI", "state:mi/county:alder"], ["DC", "district:dc/ward:1"]]) {
     const input = fixture(state, prefix), checked = workerBallotContestsPackage(input), store = new MemoryRoutineDataStore();
     assert.deepEqual(checked.heldContests, []);
     const published = await processRegisteredManualCandidate(store, checked.package.contractId, manualProjectionCandidate(checked.package), now, null);
     assert.ok(published.promoted, JSON.stringify(published.candidate)); assert.equal(published.readerReadback?.status, "PASS");
-    const read = await readGenericBallotProjection(state, { store, now, bypassCache: true }); assert.equal(read.kind, "PROMOTED");
+    const read = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", state), { store, now, bypassCache: true }); assert.equal(read.kind, "PROMOTED");
     if (read.kind !== "PROMOTED") continue;
     const ballot = Object.values(read.value.ballots)[0];
     assert.equal(ballot.measures[0].questionText, input.question); assert.equal(ballot.measures[0].officialNumber, "12");
     assert.equal(ballot.measureRecords?.[0].noMeans, "A NO vote keeps the existing levy.");
     assert.deepEqual(ballot.measureRecords?.[0].parts, []); assert.equal(ballot.contests[0].voteFor, null);
-    const loaded = await loadBallotForDivisions([input.division], { store, now, bypassCache: true });
-    assert.equal(loaded.set?.measures[0].questionText, input.question); assert.deepEqual(loaded.loaderFailures, []);
+    const [contest] = contestsForDivisions(ballot, [input.division]).contests;
+    assert.equal(contest.id, ballot.measures[0].contestId);
+    const summary = summaryForContest(contest.id, ballot.measureRecords);
+    assert.equal(summary?.yesMeans, "A YES vote adopts the levy.");
+    assert.equal(summary?.noMeans, "A NO vote keeps the existing levy.");
+    assert.equal(summary?.summarizesUrl, ballot.measureRecords?.[0].sourceUrl);
   }
 });
 

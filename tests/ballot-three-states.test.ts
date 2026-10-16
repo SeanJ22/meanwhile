@@ -6,7 +6,7 @@ import test from "node:test";
 import { BALLOT_STATES, type BallotState } from "../lib/ballot/state-scopes.ts";
 import { canonicalCivicDataJson } from "../lib/civic-data/changes.ts";
 import { completeOfficialBallotContests } from "../lib/civic-data/manual-projections.ts";
-import { assembleBallotPackage } from "../scripts/assemble-ballot-package.mts";
+import { publishBallotState } from "./helpers/publish-ballot-state.ts";
 import { genericBallotProblems, type GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -19,17 +19,17 @@ const baseline = {
 const directory = "data/ballot/2026-general";
 const stateFile = async (state: string): Promise<BallotStateFile> =>
   JSON.parse(await readFile(`${directory}/${state.toLowerCase()}.json`, "utf8"));
-const assemble = (state: BallotState) => assembleBallotPackage({ state, directory,
+const publishState = (state: BallotState) => publishBallotState({ state, directory,
   store: new MemoryRoutineDataStore(), now: "2026-10-15T23:59:00.000Z" });
 
 test("all 51 state files publish independently with complete lists or named gaps", async () => {
   const files = (await readdir(directory)).filter(file => /^[a-z]{2}\.json$/.test(file)).sort();
   assert.deepEqual(files, BALLOT_STATES.map(state => `${state.toLowerCase()}.json`).sort());
   for (const state of BALLOT_STATES) {
-    const assembled = await assemble(state);
+    const assembled = await publishState(state);
     assert.deepEqual(assembled.skipped, []);
     assert.deepEqual(assembled.merged, [`${state.toLowerCase()}.json`]);
-    const payload = assembled.package.payload as GenericBallotProjection;
+    const payload = assembled.payload as GenericBallotProjection;
     assert.deepEqual(genericBallotProblems(payload, state), [], state);
     assert.ok(Object.values(payload.ballots).every(ballot => ballot.election.state === state));
     assert.ok(Object.values(payload.ballots).every(ballot => ballot.contests.every(contest =>
@@ -42,8 +42,8 @@ for (const state of ["az", "nh", "nj"] as const) {
   test(`${state.toUpperCase()} preserves original ballot facts and their sources in its state publication`, async () => {
     const file = await stateFile(state);
     const ballot = Object.values(file.ballots)[0];
-    const assembled = await assemble(state.toUpperCase() as BallotState);
-    const payload = assembled.package.payload as GenericBallotProjection;
+    const assembled = await publishState(state.toUpperCase() as BallotState);
+    const payload = assembled.payload as GenericBallotProjection;
     for (const [key, expected] of Object.entries(file.ballots)) {
       const actual = payload.ballots[key];
       for (const field of Object.keys(expected) as (keyof BallotSet)[]) {
@@ -51,7 +51,7 @@ for (const state of ["az", "nh", "nj"] as const) {
       }
       assert.deepEqual(actual.heldContests ?? [], []);
     }
-    for (const source of assembled.package.sourceReceipt.sources) {
+    for (const source of assembled.sourceReceipt.sources) {
       assert.ok(file.sourceReceipt.sources.some(row => canonicalCivicDataJson(row) === canonicalCivicDataJson(source)),
         `full source receipt retained: ${source.requestedUrl}`);
     }
@@ -80,7 +80,7 @@ for (const state of ["az", "nh", "nj"] as const) {
     assert.deepEqual(genericBallotProblems(payload, state.toUpperCase() as BallotState), []);
     assert.deepEqual(assembled.candidate.normalization.missingRequiredFields, []);
     assert.deepEqual(assembled.candidate.semantics.violations, []);
-    assert.equal(completeOfficialBallotContests(payload, assembled.package.sourceReceipt).length,
+    assert.equal(completeOfficialBallotContests(payload, assembled.sourceReceipt).length,
       ballot.contests.filter(contest => contest.type === "CANDIDACY").length);
     if (state === "az") {
       assert.equal(ballot.measureRecords?.length, 15);
@@ -108,15 +108,23 @@ for (const state of ["az", "nh", "nj"] as const) {
     if (state === "nj") {
       assert.equal(ballot.contacts?.length, 275);
       assert.ok(ballot.contacts?.every(contact => !("filedAddress" in contact)));
+      assert.deepEqual(ballot.sourceAggregates, [{
+        id: "cv-6b34ecf034982a30594c3aca512cb61a", sourceId: "nj-morris-county-clerk", scope: "US-NJ:county:morris:2026-general",
+        rawDocumentCount: 3,
+        retrieval: { rawHash: "f4f38c7cc25b42337a6c88e716edb218b98125dca629b3720e337a02d9c04e81",
+          finalUrl: "https://www.morriscountyclerk.org/Elections/Current-Election-Candidates", succeeded: true, httpStatus: 200,
+          retrievedAt: "2026-10-15T21:30:53.825Z", requestedUrl: "https://www.morriscountyclerk.org/Elections/Current-Election-Candidates" },
+      }]);
+      assert.ok(assembled.sourceReceipt.sources.every(source => source.rawHash !== ballot.sourceAggregates![0].retrieval.rawHash));
     }
   });
 }
 
 test("Illinois, West Virginia and Wisconsin publish verified lists while Illinois names four gaps", async () => {
   for (const [state, count, held] of [["IL", 159, 4], ["WV", 122, 0], ["WI", 8, 0]] as const) {
-    const result = await assemble(state);
-    const payload = result.package.payload as GenericBallotProjection;
-    assert.equal(completeOfficialBallotContests(payload, result.package.sourceReceipt).length, count, state);
+    const result = await publishState(state);
+    const payload = result.payload as GenericBallotProjection;
+    assert.equal(completeOfficialBallotContests(payload, result.sourceReceipt).length, count, state);
     assert.equal(result.heldContests.length, held, state);
     if (state === "WV") {
       const candidates = Object.values(payload.ballots).flatMap(ballot => ballot.candidacies);

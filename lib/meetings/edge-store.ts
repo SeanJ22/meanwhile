@@ -2,11 +2,10 @@ import { createHash, randomUUID } from "node:crypto";
 import { closeSync, linkSync, mkdirSync, openSync, readFileSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 
-import type { ReaderAuthorityManifest, ReaderGeoArtifact, ReaderManifest } from "./edge-artifacts.ts";
+import type { ReaderGeoArtifact, ReaderManifest } from "./edge-artifacts.ts";
 
 export const READER_ARTIFACT_STORE_NAME = "reader-artifacts";
 export const READER_MANIFEST_KEY = "reader/manifest.json";
-const READER_AUTHORITY_MANIFEST_KEY = "reader/authority-manifest.json";
 
 export interface StoredManifest {
   readonly manifest: ReaderManifest;
@@ -14,25 +13,15 @@ export interface StoredManifest {
   readonly etag: string | null;
 }
 
-interface StoredAuthorityManifest {
-  readonly manifest: ReaderAuthorityManifest;
-  readonly etag: string | null;
-}
-
 export interface ReaderArtifactStore {
   readonly kind: "netlify-blobs" | "local-file";
   readManifest(): Promise<StoredManifest | null>;
-  readAuthorityManifest(): Promise<StoredAuthorityManifest | null>;
   readArtifact(key: string): Promise<ReaderGeoArtifact | null>;
   /** Store complete bytes once, under their digest; never overwrite a serving artifact. */
   putImmutable(bytes: Uint8Array, suffix: "json" | "json.gz"): Promise<string>;
   /** Compare-and-set against `expectedEtag` (null = expect absent); modified:false when the stored ETag moved. */
   writeManifest(
     manifest: ReaderManifest,
-    expectedEtag: string | null,
-  ): Promise<{ modified: boolean; etag: string | null }>;
-  writeAuthorityManifest(
-    manifest: ReaderAuthorityManifest,
     expectedEtag: string | null,
   ): Promise<{ modified: boolean; etag: string | null }>;
   readBytes(key: string): Promise<Uint8Array | null>;
@@ -69,18 +58,10 @@ export class NetlifyBlobsArtifactStore implements ReaderArtifactStore {
   }
 
   async readManifest(): Promise<StoredManifest | null> {
-    return this.readManifestAt<ReaderManifest>(READER_MANIFEST_KEY);
-  }
-
-  async readAuthorityManifest(): Promise<StoredAuthorityManifest | null> {
-    return this.readManifestAt<ReaderAuthorityManifest>(READER_AUTHORITY_MANIFEST_KEY);
-  }
-
-  private async readManifestAt<T>(key: string): Promise<{ manifest: T; etag: string | null } | null> {
     const store = await this.store("eventual");
-    const res = await store.getWithMetadata(key, { type: "json" });
+    const res = await store.getWithMetadata(READER_MANIFEST_KEY, { type: "json" });
     if (!res || res.data == null) return null;
-    return { manifest: res.data as T, etag: res.etag ?? null };
+    return { manifest: res.data as ReaderManifest, etag: res.etag ?? null };
   }
 
   async readArtifact(key: string): Promise<ReaderGeoArtifact | null> {
@@ -93,24 +74,9 @@ export class NetlifyBlobsArtifactStore implements ReaderArtifactStore {
     manifest: ReaderManifest,
     expectedEtag: string | null,
   ): Promise<{ modified: boolean; etag: string | null }> {
-    return this.writeManifestAt(READER_MANIFEST_KEY, manifest, expectedEtag);
-  }
-
-  async writeAuthorityManifest(
-    manifest: ReaderAuthorityManifest,
-    expectedEtag: string | null,
-  ): Promise<{ modified: boolean; etag: string | null }> {
-    return this.writeManifestAt(READER_AUTHORITY_MANIFEST_KEY, manifest, expectedEtag);
-  }
-
-  private async writeManifestAt(
-    key: string,
-    manifest: ReaderManifest | ReaderAuthorityManifest,
-    expectedEtag: string | null,
-  ): Promise<{ modified: boolean; etag: string | null }> {
     const store = await this.store("strong");
     const result = await store.setJSON(
-      key,
+      READER_MANIFEST_KEY,
       manifest,
       expectedEtag === null ? { onlyIfNew: true } : { onlyIfMatch: expectedEtag },
     );
@@ -154,18 +120,10 @@ export class LocalFileArtifactStore implements ReaderArtifactStore {
   }
 
   async readManifest(): Promise<StoredManifest | null> {
-    return this.readManifestAt<ReaderManifest>(READER_MANIFEST_KEY);
-  }
-
-  async readAuthorityManifest(): Promise<StoredAuthorityManifest | null> {
-    return this.readManifestAt<ReaderAuthorityManifest>(READER_AUTHORITY_MANIFEST_KEY);
-  }
-
-  private async readManifestAt<T>(key: string): Promise<{ manifest: T; etag: string | null } | null> {
-    const path = this.path(key);
+    const path = this.path(READER_MANIFEST_KEY);
     try {
       const bytes = readFileSync(path);
-      const manifest = JSON.parse(bytes.toString("utf8")) as T;
+      const manifest = JSON.parse(bytes.toString("utf8")) as ReaderManifest;
       return { manifest, etag: createHash("sha256").update(bytes).digest("hex").slice(0, 16) };
     } catch (error) {
       if ((error as NodeJS.ErrnoException).code === "ENOENT") return null;
@@ -185,22 +143,7 @@ export class LocalFileArtifactStore implements ReaderArtifactStore {
     manifest: ReaderManifest,
     expectedEtag: string | null,
   ): Promise<{ modified: boolean; etag: string | null }> {
-    return this.writeManifestAt(READER_MANIFEST_KEY, manifest, expectedEtag);
-  }
-
-  async writeAuthorityManifest(
-    manifest: ReaderAuthorityManifest,
-    expectedEtag: string | null,
-  ): Promise<{ modified: boolean; etag: string | null }> {
-    return this.writeManifestAt(READER_AUTHORITY_MANIFEST_KEY, manifest, expectedEtag);
-  }
-
-  private async writeManifestAt(
-    key: string,
-    manifest: ReaderManifest | ReaderAuthorityManifest,
-    expectedEtag: string | null,
-  ): Promise<{ modified: boolean; etag: string | null }> {
-    const path = this.path(key);
+    const path = this.path(READER_MANIFEST_KEY);
     mkdirSync(dirname(path), { recursive: true });
     const lock = `${path}.lock`;
     let descriptor: number | undefined;

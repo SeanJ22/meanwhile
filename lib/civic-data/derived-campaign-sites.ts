@@ -1,7 +1,4 @@
-import { AsyncLocalStorage } from "node:async_hooks";
-import { currentReaderSelection } from "../db/reader-route.ts";
-import { currentReaderAuthorityEdge } from "../registry/runtime-edge.ts";
-import { requireBallotState, stateBallotContractId, stateBallotScope, type BallotState } from "../ballot/state-scopes.ts";
+import { stateBallotContractId, stateBallotScope } from "../ballot/state-scopes.ts";
 import {
   civicDataReadNotInitialized,
   readPromotedCivicData,
@@ -28,8 +25,10 @@ export interface CandidateLinksShape {
 
 export const derivedCampaignSitesContractId = (state: string) => stateBallotContractId("candidate-campaign-sites-derived", state);
 export const derivedCampaignSitesScope = (state: string) => stateBallotScope("candidate-campaign-sites-derived", state);
+export const DERIVED_CAMPAIGN_SITES_CONTRACT_ID = "candidate-campaign-sites-derived" as const;
 export const DERIVED_CAMPAIGN_SITES_SOURCE_ID = "candidate-campaign-site-chain" as const;
 export const DERIVED_CAMPAIGN_SITES_RECORD_CLASS = "CURATED_READER_RECORD" as const;
+export const DERIVED_CAMPAIGN_SITES_SCOPE = "US:candidate-campaign-sites-derived" as const;
 
 export interface DerivedCampaignSiteEvidence {
   readonly verifierId: string;
@@ -219,64 +218,55 @@ export function derivedCampaignSitesProjectionIssue(value: unknown): string | nu
   return null;
 }
 
-type DerivedRead = CivicDataReadResult<DerivedCampaignSitesProjection>;
-type DerivedReads = { values: Map<BallotState, DerivedRead>; pending: Map<BallotState, Promise<DerivedRead>> };
-const requests = new WeakMap<object, DerivedReads>();
-const localReads = new AsyncLocalStorage<DerivedReads>();
-function reads(): DerivedReads {
-  const edge = currentReaderAuthorityEdge() ?? currentReaderSelection();
-  let held = edge ? requests.get(edge) : localReads.getStore();
-  if (!held) {
-    held = { values: new Map(), pending: new Map() };
-    if (edge) requests.set(edge, held); else localReads.enterWith(held);
+let installed: CivicDataReadResult<DerivedCampaignSitesProjection> | null = null;
+
+/** Read the promoted derived campaign sites, refusing a malformed version. A store error stays an error, never "no sites". */
+export async function readDerivedCampaignSites(
+  options: PromotedCivicDataReadOptions = {},
+): Promise<CivicDataReadResult<DerivedCampaignSitesProjection>> {
+  const result = await readPromotedCivicData<DerivedCampaignSitesProjection>(DERIVED_CAMPAIGN_SITES_RECORD_CLASS, DERIVED_CAMPAIGN_SITES_SCOPE, options);
+  if (result.kind === "PROMOTED") {
+    const issue = derivedCampaignSitesProjectionIssue(result.value);
+    if (issue !== null) {
+      installed = { kind: "STORE_UNREACHABLE", value: null, metadata: result.metadata, code: "PROMOTION_PROOF_INVALID", detail: `${DERIVED_CAMPAIGN_SITES_CONTRACT_ID} ${result.metadata.versionId}: ${issue}` };
+      return installed;
+    }
   }
-  return held;
-}
-
-function install(cache: DerivedReads["values"], state: BallotState, value: DerivedRead): void {
-  cache.delete(state);
-  cache.set(state, value);
-  if (cache.size > 8) cache.delete(cache.keys().next().value!);
-}
-
-export async function readDerivedCampaignSites(state: string, options: PromotedCivicDataReadOptions = {}): Promise<CivicDataReadResult<DerivedCampaignSitesProjection>> {
-  const key = requireBallotState(state), cache = reads().values;
-  const result = await readPromotedCivicData<DerivedCampaignSitesProjection>(DERIVED_CAMPAIGN_SITES_RECORD_CLASS, derivedCampaignSitesScope(key), options);
-  install(cache, key, result);
+  installed = result;
   return result;
 }
 
-async function refreshDerivedCampaignSitesOnce(state: BallotState, options: PromotedCivicDataReadOptions): Promise<CivicDataReadResult<DerivedCampaignSitesProjection>> {
-  const cache = reads().values;
-  try { return await readDerivedCampaignSites(state, options); }
-  catch (error) {
-    const refused: CivicDataReadResult<DerivedCampaignSitesProjection> = { kind: "STORE_UNREACHABLE", value: null,
-      metadata: civicDataReadNotInitialized(DERIVED_CAMPAIGN_SITES_RECORD_CLASS, derivedCampaignSitesScope(state), "").metadata,
-      code: "STORE_READ_FAILED", detail: `${derivedCampaignSitesContractId(state)}: ${error instanceof Error ? error.message : String(error)}` };
-    install(cache, state, refused);
-    return refused;
+async function refreshDerivedCampaignSitesOnce(options: PromotedCivicDataReadOptions): Promise<CivicDataReadResult<DerivedCampaignSitesProjection>> {
+  try {
+    return await readDerivedCampaignSites(options);
+  } catch (error) {
+    installed = {
+      kind: "STORE_UNREACHABLE", value: null,
+      metadata: civicDataReadNotInitialized(DERIVED_CAMPAIGN_SITES_RECORD_CLASS, DERIVED_CAMPAIGN_SITES_SCOPE, "").metadata,
+      code: "STORE_READ_FAILED",
+      detail: `${DERIVED_CAMPAIGN_SITES_CONTRACT_ID}: ${error instanceof Error ? error.message : String(error)}`,
+    };
+    return installed;
   }
 }
 
-export async function refreshDerivedCampaignSites(state: string, options: PromotedCivicDataReadOptions = {}): Promise<CivicDataReadResult<DerivedCampaignSitesProjection>> {
-  const key = requireBallotState(state);
-  if (Object.values(options).some(value => value !== undefined)) return refreshDerivedCampaignSitesOnce(key, options);
-  const cache = reads().pending;
-  const active = cache.get(key);
-  if (active) return active;
-  const pending = refreshDerivedCampaignSitesOnce(key, options);
-  cache.set(key, pending);
+
+let defaultRefresh: Promise<CivicDataReadResult<DerivedCampaignSitesProjection>> | null = null;
+export async function refreshDerivedCampaignSites(options: PromotedCivicDataReadOptions = {}): Promise<CivicDataReadResult<DerivedCampaignSitesProjection>> {
+  if (Object.values(options).some(value => value !== undefined)) return refreshDerivedCampaignSitesOnce(options);
+  if (defaultRefresh) return defaultRefresh;
+  const pending = refreshDerivedCampaignSitesOnce(options);
+  defaultRefresh = pending;
   try { return await pending; }
-  finally { if (cache.get(key) === pending) cache.delete(key); }
+  finally { if (defaultRefresh === pending) defaultRefresh = null; }
 }
 
-export function derivedCampaignSitesReadState(state: string): CivicDataReadResult<DerivedCampaignSitesProjection> {
-  return reads().values.get(requireBallotState(state)) ?? civicDataReadNotInitialized(DERIVED_CAMPAIGN_SITES_RECORD_CLASS,
-    derivedCampaignSitesScope(state), "The state's derived candidate campaign sites have not been read.");
+export function derivedCampaignSitesReadState(): CivicDataReadResult<DerivedCampaignSitesProjection> {
+  return installed ?? civicDataReadNotInitialized(DERIVED_CAMPAIGN_SITES_RECORD_CLASS, DERIVED_CAMPAIGN_SITES_SCOPE, "The derived candidate campaign sites have not been read for this process.");
 }
 
-export function derivedCampaignSiteHoldingPath(state: string, key: string): string {
-  return `civic-data:${DERIVED_CAMPAIGN_SITES_RECORD_CLASS}:${derivedCampaignSitesScope(state)}#/records/${key.replaceAll("~", "~0").replaceAll("/", "~1")}/campaign`;
+export function derivedCampaignSiteHoldingPath(key: string): string {
+  return `civic-data:${DERIVED_CAMPAIGN_SITES_RECORD_CLASS}:${DERIVED_CAMPAIGN_SITES_SCOPE}#/records/${key.replaceAll("~", "~0").replaceAll("/", "~1")}/campaign`;
 }
 
 export interface ComposedCandidateLinks<L extends CandidateLinksShape> {
@@ -304,21 +294,16 @@ export function composeCampaignLinks<L extends CandidateLinksShape>(
 
 const NO_RECORDS: readonly DerivedCampaignSiteRecord[] = [];
 
-export function currentDerivedCampaignSiteRecords(state: string): readonly DerivedCampaignSiteRecord[] {
-  const result = derivedCampaignSitesReadState(state);
-  return result.kind === "PROMOTED" ? result.value.records : NO_RECORDS;
+export function currentDerivedCampaignSiteRecords(): readonly DerivedCampaignSiteRecord[] {
+  const state = derivedCampaignSitesReadState();
+  return state.kind === "PROMOTED" ? state.value.records : NO_RECORDS;
 }
 
-const documentsByRecords = new WeakMap<readonly DerivedCampaignSiteRecord[], CandidateDocument[]>();
-export function currentDerivedCandidateDocuments(state: string): CandidateDocument[] {
-  const records = currentDerivedCampaignSiteRecords(state);
-  let documents = documentsByRecords.get(records);
-  if (!documents) { documents = records.flatMap(record => (record.publications ?? []).map(row => row.document)); documentsByRecords.set(records, documents); }
-  return documents;
+export function currentDerivedCandidateDocuments(): CandidateDocument[] {
+  return currentDerivedCampaignSiteRecords().flatMap(record => (record.publications ?? []).map(row => row.document));
 }
 
-const NO_PORTRAITS: readonly DerivedCandidatePortraitRecord[] = [];
-export function currentDerivedCandidatePortraits(state: string): readonly DerivedCandidatePortraitRecord[] {
-  const result = derivedCampaignSitesReadState(state);
-  return result.kind === "PROMOTED" ? result.value.portraits ?? NO_PORTRAITS : NO_PORTRAITS;
+export function currentDerivedCandidatePortraits(): readonly DerivedCandidatePortraitRecord[] {
+  const state = derivedCampaignSitesReadState();
+  return state.kind === "PROMOTED" ? state.value.portraits ?? [] : [];
 }

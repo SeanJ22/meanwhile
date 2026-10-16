@@ -204,9 +204,7 @@ test("6.1: the schema gate names the missing migration, and never rounds up", ()
   const gap = compareSchemaState(journal, [1, 3]);
   assert.deepEqual(gap.missing, ["0001_b"]);
 
-  // A database AHEAD of the code is its own problem and is reported as its
-  // own thing — folding it into `missing` would tell somebody to apply a
-  // migration that is already there.
+  // Reporting already-applied migrations as missing would recommend applying them again.
   const ahead = compareSchemaState(journal, [1, 2, 3, 99]);
   assert.deepEqual(ahead.missing, []);
   assert.deepEqual(ahead.unknownApplied, [99]);
@@ -341,10 +339,7 @@ test("NH32: the code is found under originalError", () => {
 });
 
 test("NH32: an AggregateError's real failures are reached", () => {
-  /*
-   * What a pooled driver raises when every connection in the pool fails. Its
-   * own message says nothing; each entry in `errors` is a real database error.
-   */
+  // Pool connection errors retain the useful database diagnostics in their nested errors.
   const real = Object.assign(new Error("terminating connection due to administrator command"), {
     code: "57P01",
   });

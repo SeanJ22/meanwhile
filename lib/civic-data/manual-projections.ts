@@ -1,3 +1,9 @@
+import { consumeStatePublicationRecord, rememberStatePublicationPrior } from "./state-publication-prior.ts";
+import type { BallotSet } from "../ballot/types.ts";
+import { measureRecordIssue, seedMeasureRecords, type MeasureRecord } from "../ballot/measure-records.ts";
+import type { GeneralLineup } from "../ballot/general-lineup.ts";
+import type { AnalysesFile } from "../ballot/analyses.ts";
+import type { AzIdentityRegistry, LineupReconciliation } from "../identity/types.ts";
 import { BALLOT_STATES, parseStateBallotContractId, stateBallotContractId, type BallotState, type StateBallotContractId } from "../ballot/state-scopes.ts";
 import { campaignFinanceRecordIssue } from "../funding/campaign-finance-reader.ts";
 import { createHash } from "node:crypto";
@@ -55,6 +61,11 @@ export const MANUAL_PROJECTION_CONTRACT_IDS = [
   "special-district-boundaries",
   "government-budgets",
   "campaign-finance",
+  "ballot-contests",
+  "az-sos-ballot",
+  "nh-curated-ballot",
+  "candidate-profiles",
+  "candidate-corpus",
   ...BALLOT_STATES.map(state => stateBallotContractId("ballot-contests", state)),
   ...BALLOT_STATES.map(state => stateBallotContractId("candidate-profiles", state)),
   ...BALLOT_STATES.map(state => stateBallotContractId("candidate-corpus", state)),
@@ -72,6 +83,21 @@ export type ManualProjectionContractId = (typeof MANUAL_PROJECTION_CONTRACT_IDS)
 type ManualProjectionFamily = Exclude<ManualProjectionContractId, StateBallotContractId> | "ballot-contests" | "candidate-profiles" | "candidate-corpus";
 const projectionFamily = (id: ManualProjectionContractId): ManualProjectionFamily =>
   (parseStateBallotContractId(id)?.family ?? id) as ManualProjectionFamily;
+
+export type MeasureAnalysesProjection = AnalysesFile;
+
+export interface AzBallotProjection {
+  readonly ballot: BallotSet & { readonly formatVersion?: number; readonly curatedAt?: string };
+  readonly generalLineup: GeneralLineup;
+  readonly measureAnalyses: MeasureAnalysesProjection;
+  readonly candidateFilings: unknown;
+  readonly identityRegistry: AzIdentityRegistry;
+  readonly lineupReconciliation: LineupReconciliation;
+}
+
+export interface NhBallotProjection {
+  readonly ballot: BallotSet & { readonly formatVersion?: number; readonly curatedAt?: string };
+}
 
 export interface CandidateProfilesProjection {
   readonly cards: {
@@ -99,6 +125,8 @@ export interface CuratedReaderProjection {
 export type ManualProjectionPayload =
   | TranslationProjection
   | GenericBallotProjection
+  | AzBallotProjection
+  | NhBallotProjection
   | CandidateProfilesProjection
   | CandidateCorpus
   | StatementCorpus
@@ -381,7 +409,7 @@ function sourceScopedMemberIssue(
   const state = parseStateBallotContractId(contractId)?.state;
   if (projectionFamily(contractId) === "candidate-profiles") {
     const candidateKey = member.key.replace(/^profile:/, "").replace(/:(?:card|links)$/, "");
-    if (jurisdictionForCandidateKey(candidateKey, state) !== `US-${state}`) {
+    if (state ? jurisdictionForCandidateKey(candidateKey, state) !== `US-${state}` : jurisdictionForCandidateKey(candidateKey) === "UNRESOLVED") {
       return `${member.key} has no supported exact jurisdiction prefix.`;
     }
     return object(member.record) === null ? `${member.key} is not a profile object.` : null;
@@ -399,7 +427,7 @@ function sourceScopedMemberIssue(
       ? Boolean(string(row.text).trim())
       : extraction === "failed" && row.text === null && Boolean(string(row.extractionNote).trim());
     const normalizedTextHashValid = extraction !== "html" || sha256(string(row.text)) === contentHash;
-    if (!id || !candidateKey || jurisdictionForCandidateKey(candidateKey, state) !== `US-${state}` || id !== `${candidateKey}@${contentHash}` ||
+    if (!id || !candidateKey || state && jurisdictionForCandidateKey(candidateKey, state) !== `US-${state}` || id !== `${candidateKey}@${contentHash}` ||
         !["CAMPAIGN_SITE", "OFFICIAL_SITE"].includes(string(row.sourceClass)) ||
         !["HUNTED_AND_VERIFIED", "STATED_IN_FILING"].includes(string(row.basis)) ||
         !/^https:\/\//.test(documentUrl) || !SHA256_PATTERN.test(contentHash) ||
@@ -520,13 +548,14 @@ function sourceScopedProjection(
   prior: ManualProjectionPrior | null,
 ): IsolatedManualProjection {
   const currentMembers = sourceScopedMembers(input.contractId, input.payload);
+  const priorMembers = prior ? sourceScopedMembers(input.contractId, prior.payload) : [];
   const versions = receiptVersionIndex(input.sourceReceipt);
   const reconciled = reconcileSourceScopedMembers({
     sourceUrls: member => manualRecordSourceUrls(member.record),
     current: currentMembers,
     currentReceipt: input.sourceReceipt,
     prior: prior ? {
-      members: sourceScopedMembers(input.contractId, prior.payload),
+      members: priorMembers,
       sourceReceipt: prior.sourceReceipt,
     } : null,
     memberIssue: (member) => sourceScopedMemberIssue(input.contractId, member, input.sourceReceipt, versions),
@@ -562,8 +591,15 @@ function sourceScopedProjection(
       ];
     }
   }
+  const payload = rebuildSourceScopedPayload(input.contractId, input.payload, prior?.payload ?? null, selectedMembers);
+  if (prior && parseStateBallotContractId(input.contractId)) {
+    const recordClass = requiredManualProductionContract(input.contractId).recordClass;
+    const selectedByKey = new Map(civicRecordsFor(recordClass, payload).map(member => [member.key, member.record]));
+    for (const member of civicRecordsFor(recordClass, prior.payload))
+      consumeStatePublicationRecord(member.record, selectedByKey.get(member.key) ?? null, member.key);
+  }
   return {
-    payload: rebuildSourceScopedPayload(input.contractId, input.payload, prior?.payload ?? null, selectedMembers),
+    payload,
     sourceReceipt: reconciled.promotionReceipt,
     excludedFacts: [
       ...input.sourceReceipt.sources
@@ -619,6 +655,7 @@ export async function readManualProjectionPrior(
   if (!evidence.found || !sourceReceipt || issue || sourceReceipt.sources.some((source) => source.reviewOutcome === "BLOCKED")) {
     throw new Error(`MANUAL_PROMOTION_BASE_PROOF_INVALID:${contractId}:${issue?.code ?? "SOURCE_RECEIPT_NOT_GOOD"}`);
   }
+  rememberStatePublicationPrior(store, read.projection);
   return {
     versionId: read.projection.versionId,
     temporal: evidence.temporal,
@@ -640,7 +677,7 @@ function plainEnglishProjection(payload: ManualProjectionPayload): BuiltProjecti
       detail: `${records.length} source-bound translation(s) with independent sentence checks.` }] };
 }
 
-function genericBallotProjection(payload: ManualProjectionPayload, state: string): BuiltProjection {
+function genericBallotProjection(payload: ManualProjectionPayload, state?: string): BuiltProjection {
   const value = payload as GenericBallotProjection;
   const ballots = Object.values(value?.ballots ?? {});
   const records = civicRecordsFor("BALLOT_CANDIDACY", value);
@@ -661,7 +698,110 @@ function genericBallotProjection(payload: ManualProjectionPayload, state: string
     factKind: "sourced official ballot contests and candidates" };
 }
 
-function profileProjection(payload: ManualProjectionPayload, state: BallotState): BuiltProjection {
+function ballotProjection(
+  contractId: "az-sos-ballot" | "nh-curated-ballot",
+  payload: ManualProjectionPayload,
+): BuiltProjection {
+  const original = payload as AzBallotProjection | NhBallotProjection;
+  if (original.ballot) {
+    payload = { ...original, ballot: seedMeasureRecords(original.ballot,
+      "measureAnalyses" in original ? original.measureAnalyses.analyses : []) };
+  }
+  const held = object(payload);
+  const ballot = object(held?.ballot);
+  const contests = rows(ballot, "contests");
+  const candidacies = rows(ballot, "candidacies");
+  const contestIds = contests.map((row) => string(row.id));
+  const candidacyIds = candidacies.map((row) => string(row.id));
+  const measureRecords = rows(ballot, "measureRecords");
+  const jurisdiction = contractId === "az-sos-ballot" ? "US-AZ" : "US-NH";
+  const records: CivicRecordMember[] = [
+    ...contests.map((record) => ({ key: `contest:${string(record.id)}`, record })),
+    ...candidacies.map((record) => ({ key: `candidacy:${string(record.id)}`, record })),
+    ...measureRecords.map((record) => ({ key: `measure-record:${string(record.contestId)}`, record })),
+  ];
+  const identities: IdentityEvidence[] = [
+    ...contests.map((row) => ({
+      subjectId: string(row.id),
+      jurisdiction,
+      identifiers: { contest_id: string(row.id) },
+      matchBasis: "OFFICIAL_ID" as const,
+      ambiguous: false,
+    })),
+    ...candidacies.map((row) => ({
+      subjectId: string(row.id),
+      jurisdiction,
+      identifiers: { candidacy_id: string(row.id), contest_id: string(row.contestId) },
+      matchBasis: "EXACT_SCOPED_ID" as const,
+      ambiguous: false,
+    })),
+  ];
+  const violations = [
+    ...duplicateProblems(measureRecords.map(row => string(row.contestId)), "Measure record"),
+    ...measureRecords.flatMap(row => {
+      const issue = measureRecordIssue(row as unknown as MeasureRecord);
+      const contest = contests.find(contest => contest.id === row.contestId && contest.type === "MEASURE");
+      return issue ? [issue] : contest ? [] : ["A measure record names no exact measure contest."];
+    }),
+    ...duplicateProblems(contestIds, "Contest"),
+    ...duplicateProblems(candidacyIds, "Candidacy"),
+    ...(candidacies.some((row) => !contestIds.includes(string(row.contestId)))
+      ? ["A candidacy names no exact retained contest."]
+      : []),
+  ];
+  if (contractId === "az-sos-ballot") {
+    const lineup = object(held?.generalLineup);
+    const analyses = object(held?.measureAnalyses);
+    const identity = object(held?.identityRegistry);
+    const reconciliation = object(held?.lineupReconciliation);
+    const identityCandidates = rows(identity, "candidates");
+    const identityIds = identityCandidates.map((row) => string(row.identityId));
+    const reconciliationRows = rows(reconciliation, "rows");
+    records.push(
+      ...identityCandidates.map((record) => ({ key: `identity:${string(record.identityId)}`, record })),
+      ...reconciliationRows.map((record) => ({ key: `lineup:${string(record.cardKey)}`, record })),
+    );
+    identities.push(
+      ...identityCandidates.map((row) => ({
+        subjectId: string(row.identityId),
+        jurisdiction,
+        identifiers: { identity_id: string(row.identityId) },
+        matchBasis: "OFFICIAL_ID_CROSSWALK" as const,
+        ambiguous: false,
+      })),
+      ...reconciliationRows.map((row) => ({
+        subjectId: string(row.cardKey),
+        jurisdiction,
+        identifiers: { candidacy_id: string(row.canonicalCandidacyId), contest_id: string(row.contestId) },
+        matchBasis: "OFFICIAL_ID_CROSSWALK" as const,
+        ambiguous: string(row.outcome) === "AMBIGUOUS",
+      })),
+    );
+    violations.push(
+      ...duplicateProblems(identityIds, "Arizona identity"),
+      ...(rows(lineup, "contests").length === 0 ? ["The Arizona package has no certified-lineup records."] : []),
+      ...(rows(analyses, "analyses").length === 0 ? ["The Arizona package has no retained measure-analysis records."] : []),
+      ...(identityCandidates.length === 0 ? ["The Arizona package has no exact candidate identity registry."] : []),
+      ...(reconciliationRows.length === 0 ? ["The Arizona package has no exact certified-lineup reconciliation."] : []),
+      ...(object(held?.candidateFilings) === null ? ["The Arizona package has no Secretary of State filing corpus."] : []),
+    );
+  }
+  return {
+    payload,
+    records,
+    identities,
+    missingRequiredFields: contests.length && candidacies.length ? [] : ["ballot.contests/candidacies"],
+    violations,
+    schemaVersion: `${contractId}:1`,
+    consumerChecks: [
+      { consumer: "/ballot and /api/ballot/scope", passed: contests.length > 0 && candidacies.length > 0, detail: `${contests.length} contests and ${candidacies.length} candidacies.` },
+      { consumer: "Ask ballot inventory", passed: candidacies.every((row) => contestIds.includes(string(row.contestId))), detail: "Every candidacy resolves to one retained contest." },
+    ],
+    factKind: contractId === "az-sos-ballot" ? "reviewed Arizona ballot, filing, analysis, and identity projection" : "reviewed New Hampshire ballot candidacy projection",
+  };
+}
+
+function profileProjection(payload: ManualProjectionPayload, state?: BallotState): BuiltProjection {
   payload = readerCandidateProfiles(payload as CandidateProfilesProjection);
   const held = object(payload);
   const cards = object(object(held?.cards)?.cards) ?? {};
@@ -692,7 +832,7 @@ function profileProjection(payload: ManualProjectionPayload, state: BallotState)
   };
 }
 
-function corpusProjection(payload: ManualProjectionPayload, receipt: ManualSourceSetReceipt, state: BallotState): BuiltProjection {
+function corpusProjection(payload: ManualProjectionPayload, receipt: ManualSourceSetReceipt, state?: BallotState): BuiltProjection {
   const held = object(payload);
   const documents = rows(held, "documents");
   const documentIds = documents.map((row) => string(row.id));
@@ -910,11 +1050,13 @@ export function manualProjectionCandidate(
   const built = family === "plain-english-translations"
     ? plainEnglishProjection(payload)
     : family === "ballot-contests"
-    ? genericBallotProjection(payload, partition!.state)
+    ? genericBallotProjection(payload, partition?.state)
+    : family === "az-sos-ballot" || family === "nh-curated-ballot"
+      ? ballotProjection(family, payload)
     : family === "candidate-profiles"
-      ? profileProjection(payload, partition!.state)
+      ? profileProjection(payload, partition?.state)
       : family === "candidate-corpus"
-        ? corpusProjection(payload, promotionReceipt, partition!.state)
+        ? corpusProjection(payload, promotionReceipt, partition?.state)
         : family === "officeholder-statements"
           ? officeholderStatementProjection(payload, promotionReceipt)
           : curatedReaderProjection(family, payload, promotionReceipt);

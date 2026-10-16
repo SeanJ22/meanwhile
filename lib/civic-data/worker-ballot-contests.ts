@@ -1,3 +1,4 @@
+import { consumeStatePublicationRecord } from "./state-publication-prior.ts";
 import { parseStateBallotContractId, requireBallotState, stateBallotContractId } from "../ballot/state-scopes.ts";
 import { recordPublicationFlow } from "./publication-flow.ts";
 import { publicationRecordChanges } from "./publication-record-changes.ts";
@@ -306,15 +307,19 @@ export class BallotContestMerge {
         this.currentAuthorities.get(contest.provenance.sourceUrl ?? "")) throw new Error("Contest authority conflicts with the published ballot.");
       if (held) {
         const holds = state.rows.get("heldContests") ?? new Map();
-        holds.set(id, field === "heldContests" ? value : { id: contest.id, electionId: contest.electionId,
-          ocdId: contest.ocdId, title: contest.title, provenance: contest.provenance, reason: "The official candidate list hasn't been fully checked." });
+        const next = field === "heldContests" ? value : { id: contest.id, electionId: contest.electionId,
+          ocdId: contest.ocdId, title: contest.title, provenance: contest.provenance, reason: "The official candidate list hasn't been fully checked." };
+        consumeStatePublicationRecord(previous, next);
+        holds.set(id, next);
         state.rows.set("heldContests", holds); state.rows.get("contests")?.delete(id); state.holds.add(id);
       } else {
         const change = publicationRecordChanges({ previousVersionId: this.priorVersionId,
           accepted: [{ recordId: id, readerId: id, value, previous: old }] });
         this.changes.recordChanges.push(...change.recordChanges);
         for (const kind of ["added", "changed", "reused"] as const) this.changes.records[kind] += change.records[kind];
-        rows.set(id, old ? Object.assign(old, row) : row); state.incoming.add(id);
+        const next = old ? { ...old, ...row } : row;
+        consumeStatePublicationRecord(previous, next);
+        rows.set(id, next); state.incoming.add(id);
         if (complete) state.complete.add(id);
         state.rows.get("heldContests")?.delete(id);
       }
@@ -334,7 +339,9 @@ export class BallotContestMerge {
     const parent = field.split(".")[0];
     if (old && (observedAt(value) || state.incomingTimes.get(parent) || 0) < (observedAt(old) || state.beforeTimes.get(parent) || 0)) return;
     if (field === "measures") state.measures.add(contestId);
-    rows.set(id, field === "candidacies" && old ? Object.assign(old as object, row) : value);
+    const next = field === "candidacies" && old ? { ...old as object, ...row } : value;
+    consumeStatePublicationRecord(old, next);
+    rows.set(id, next);
   }
 
   finish(sourceReceipt = this.input.sourceReceipt, sourceThrough = this.input.sourceThrough): ManualProjectionPackage {
@@ -343,18 +350,24 @@ export class BallotContestMerge {
       const candidates = state.rows.get("candidacies") ?? new Map();
       for (const [id, value] of candidates) {
         const row = value as Candidacy;
-        if (state.holds.has(row.contestId) || state.complete.has(row.contestId) && !state.candidates.has(id)) candidates.delete(id);
+        if (state.holds.has(row.contestId) || state.complete.has(row.contestId) && !state.candidates.has(id)) {
+          consumeStatePublicationRecord(value, null); candidates.delete(id);
+        }
       }
       for (const field of ["contacts", "filingCandidacies"]) for (const [id, row] of state.rows.get(field) ?? []) {
         if (field === "contacts" && state.seen.get(field)?.has(id)) requirePublication(candidates.has(id) || state.seen.get("candidacies")?.has(id), "BALLOT_INPUT_CONTACT_CANDIDATE_MISSING");
-        if (field === "contacts" ? !candidates.has(String((row as MutableRow).candidacyId)) : candidates.has(id)) state.rows.get(field)!.delete(id);
+        if (field === "contacts" ? !candidates.has(String((row as MutableRow).candidacyId)) : candidates.has(id)) {
+          consumeStatePublicationRecord(row, null); state.rows.get(field)!.delete(id);
+        }
       }
       for (const field of ["measures", "measureRecords"]) for (const [id, value] of state.rows.get(field) ?? []) {
         const row = value as MutableRow, contestId = String(row.contestId);
         const contest = state.rows.get("contests")?.get(contestId) as Contest | undefined;
         const url = field === "measures" ? (row.provenance as MutableRow).sourceUrl : row.sourceUrl;
         if (!state.seen.get(field)?.has(id) && state.incoming.has(contestId) &&
-          (state.measures.has(contestId) || contest?.measureTextUrl !== url)) state.rows.get(field)!.delete(id);
+          (state.measures.has(contestId) || contest?.measureTextUrl !== url)) {
+          consumeStatePublicationRecord(value, null); state.rows.get(field)!.delete(id);
+        }
       }
       for (const field of ["contests", "candidacies", "measures", "absences"]) if (!state.rows.has(field)) state.rows.set(field, new Map());
       for (const [field, rows] of state.rows) { this.setField(state.ballot, field, [...rows.values()]); rows.clear(); }
@@ -395,15 +408,17 @@ export async function publishWorkerBallotContestsResults(input: {
           .map(row => readCapture(row.artifactId, results).catch(() => null)));
         captures.push(...fetched.filter((capture): capture is WorkerPublicationCapture => capture !== null));
       }
-      const prior = await readManualProjectionPrior(plan.publication!.contractId as ManualProjectionPackage["contractId"], input.store, input.now);
+      let prior = await readManualProjectionPrior(plan.publication!.contractId as ManualProjectionPackage["contractId"], input.store, input.now);
+      const priorVersionId = prior?.versionId ?? null;
       const checked = workerBallotContestsPackage({ plan, parser, captures, now: input.now, results, prior,
         registry: { payload: { registry: { divisions: await input.store.readRegistryDivisions(
           parseStateBallotContractId(plan.publication!.contractId)!.state, parser.result.records.map(row => text(row.fields.jurisdictionName))) } } } });
+      prior = null;
       const merged = checked.package, changes = checked.changes;
       const contestIds = changes.recordChanges.map(row => row.recordId);
       const candidate = manualProjectionCandidate(merged);
       candidateId = candidate.id; verified = true;
-      const published = await processRegisteredManualCandidate(input.store, checked.package.contractId, candidate, input.now, prior?.versionId ?? null);
+      const published = await processRegisteredManualCandidate(input.store, checked.package.contractId, candidate, input.now, priorVersionId);
       if (published.candidate.receipt?.decision === "GOOD") await recordPublicationFlow(input.repos, published.candidate.candidate.id,
         { workerResultId: parser.id, stage: "CHECKED", records: contestIds.length, changedRecords: changes.records.added + changes.records.changed, versionId: null }, input.now);
       requirePublication(published.promoted && published.readerReadback?.status === "PASS", `BALLOT_READER_HELD:${published.candidate.failureDetail ?? published.candidate.state}`);

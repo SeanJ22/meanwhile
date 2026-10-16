@@ -1,7 +1,8 @@
 import { resolve } from "node:path";
+import { stateRegistryRuntimeContractId } from "../registry/state-scopes.ts";
 import { stateBallotContractId, type StateBallotFamily } from "../ballot/state-scopes.ts";
 import { routineProcessSlots, type WorkerProcessSlots, type WorkerMemoryRelease } from "../control-plane/workers/worker-slots.ts";
-import type { ReaderAuthorityManifest, StateAuthorityFamily } from "../meetings/edge-artifacts.ts";
+import type { ReaderManifest, StateAuthorityFamily } from "../meetings/edge-artifacts.ts";
 import type { ReaderArtifactStore } from "../meetings/edge-store.ts";
 import type { PublishedStateAuthority, PublishStateAuthorities } from "../meetings/edge-serving.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
@@ -9,7 +10,6 @@ import { runBoundedChildPass, ROUTINE_CHILD_TIMEOUT_MS, type BoundedChildLaunche
 import { admittedRuntimeChildEnvironment } from "./runtime-authority.ts";
 import { promotedFamilyVersion, promotedPointerVersion, readPromotedStateEdgeFamilies, selectedStateEdgePointers } from "./promoted-edge-publication.ts";
 import type { RoutineDataStore } from "./store.ts";
-import { pendingStateAuthorityRetirements, retireRepartitionedAuthorities } from "./state-authority-cutover.ts";
 
 type StateUnit = ReturnType<typeof selectedStateEdgePointers>[number];
 type StateStore = Pick<RoutineDataStore, "readPromotionIdentities">;
@@ -19,10 +19,10 @@ const slots = routineProcessSlots();
 export interface StateArtifactChildren {
   readonly launch?: BoundedChildLauncher;
   readonly slots?: WorkerProcessSlots;
-  readonly pendingRetirements?: typeof pendingStateAuthorityRetirements;
 }
 
 function contractId(unit: Pick<StateUnit, "family" | "state">) {
+  if (unit.family === "registry-runtime") return stateRegistryRuntimeContractId(unit.state);
   return stateBallotContractId((unit.family === "candidate-publications" ? "candidate-corpus" : unit.family) as StateBallotFamily, unit.state);
 }
 
@@ -69,7 +69,7 @@ function childResult(output: string, unit: StateUnit, version: string): Publishe
 export async function dispatchStateArtifacts(input: {
   readonly store: StateStore;
   readonly currentStore: StateStore;
-  readonly servedManifest: Pick<ReaderAuthorityManifest, "stateAuthorities"> | null;
+  readonly servedManifest: Pick<ReaderManifest, "stateAuthorities"> | null;
   readonly selected: readonly StateUnit[];
   readonly now: string;
   readonly env: Readonly<Record<string, string | undefined>>;
@@ -115,81 +115,4 @@ export async function dispatchStateArtifacts(input: {
   }, input.children?.launch); }
   finally { for (const release of releases.values()) release(); releases.clear(); }
   return { stateAuthorities, skipped };
-}
-
-type PendingRetirement = Awaited<ReturnType<typeof pendingStateAuthorityRetirements>>[number];
-function retirementFamily(row: PendingRetirement): StateAuthorityFamily {
-  switch (row.recordClass) {
-    case "BALLOT_CANDIDACY": case "BALLOT_FILING": return "ballot-contests";
-    case "CANDIDATE_PROFILE": return "candidate-profiles";
-    case "CANDIDATE_PUBLICATION": return "candidate-publications";
-    case "VOTING_SITE": return "voting-sites";
-    case "CURATED_READER_RECORD": return "candidate-campaign-sites-derived";
-    default: throw new Error(`STATE_ARTIFACT_RETIREMENT_CLASS_INVALID:${row.recordClass}`);
-  }
-}
-
-async function retirementReady(store: StateStore, manifest: ReaderAuthorityManifest | null, pending: readonly PendingRetirement[]): Promise<boolean> {
-  const units = selectedStateEdgePointers(null);
-  for (const row of pending) {
-    if (!row.states.length) return false;
-    const family = retirementFamily(row);
-    for (const state of row.states) {
-      const unit = units.find(value => value.state === state && value.family === family);
-      if (!unit) return false;
-      const identity = await identityVersion(store, unit);
-      if (!identity.present || manifest?.stateAuthorities?.[family]?.[state]?.version !== identity.version) return false;
-    }
-  }
-  return true;
-}
-
-export async function retireStateArtifactChild(store: StateStore, artifacts: ReaderArtifactStore, state: string): Promise<number> {
-  const pending = await pendingStateAuthorityRetirements();
-  if (!pending.length) return 0;
-  if (!await retirementReady(store, (await artifacts.readAuthorityManifest())?.manifest ?? null, pending)) {
-    throw new Error("STATE_ARTIFACT_RETIREMENT_NOT_CURRENT");
-  }
-  return retireRepartitionedAuthorities(state);
-}
-
-export async function dispatchStateArtifactRetirements(input: {
-  readonly store: StateStore;
-  readonly artifacts: ReaderArtifactStore;
-  readonly env: Readonly<Record<string, string | undefined>>;
-  readonly children?: StateArtifactChildren;
-}): Promise<void> {
-  const pending = await (input.children?.pendingRetirements ?? pendingStateAuthorityRetirements)();
-  if (!pending.length || !await retirementReady(input.store, (await input.artifacts.readAuthorityManifest())?.manifest ?? null, pending)) return;
-  const states = [...new Set(pending.map(row => row.states[0]))];
-  const cwd = input.env.WTP_RUNTIME_AUTHORITY_REPO ?? process.cwd();
-  const env = childEnvironment(input.env);
-  const releases = new Map<string, WorkerMemoryRelease>(), failures: string[] = [];
-  const commands = states.map(state => ({ id: `ballot-contests:${state}:reader-retirement`, executable: process.execPath,
-    args: ["--experimental-strip-types", resolve(cwd, "scripts/publish-state-authority.mts"), `--retire-state=${state}`],
-    env: admittedRuntimeChildEnvironment({ parentEnv: env, capability: "MANUAL_CONTRACT",
-      contract: stateBallotContractId("ballot-contests", state), parentPid: process.pid }),
-  }));
-  try { await runBoundedChildPass(commands, {
-    cwd, env, concurrency: 1, maxBufferBytes: 64 * 1024, discardOutputAfterSettlement: true,
-    onStarting: async command => {
-      const release = await (input.children?.slots ?? slots).acquire(`${command.id}/publish-state-authority.mts`, Date.now() + ROUTINE_CHILD_TIMEOUT_MS);
-      releases.set(command.id, release);
-      (command as { onStarted?: (pid: number) => void }).onStarted = pid => release.observe?.(pid);
-    },
-    onSettled: (run, index) => {
-      try {
-        const lines = run.stdout.split(/\r?\n/).filter(line => line.startsWith("STATE_AUTHORITY_RETIRED="));
-        const result = lines.length === 1 ? JSON.parse(lines[0].slice("STATE_AUTHORITY_RETIRED=".length)) as { state?: unknown; retired?: unknown } : null;
-        if (run.status !== 0 || run.termination !== "EXITED" || result?.state !== states[index] ||
-          typeof result.retired !== "number" || !Number.isSafeInteger(result.retired) || result.retired < 0) {
-          throw new Error(run.errorMessage ?? "STATE_ARTIFACT_RETIREMENT_FAILED");
-        }
-      } catch (error) { failures.push(sanitizedErrorDiagnostic(error)); }
-      finally { releases.get(run.id)?.(); releases.delete(run.id); }
-    },
-  }, input.children?.launch); }
-  finally { for (const release of releases.values()) release(); releases.clear(); }
-  if (failures.length) throw new Error(failures.join(" | "));
-  if ((await (input.children?.pendingRetirements ?? pendingStateAuthorityRetirements)()).length) throw new Error("STATE_ARTIFACT_RETIREMENT_INCOMPLETE");
 }

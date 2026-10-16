@@ -4,6 +4,7 @@ import type { CandidateContact } from "./candidate-contacts.ts";
 import type { AzCandidateIdentity, AzContestIdentity, LineupReconciliation } from "../identity/types.ts";
 import type { MeasureRecord } from "./measure-records.ts";
 import type { OcdId, Provenance } from "../sources/types.ts";
+import type { RetrievalEvidence } from "../civic-data/types.ts";
 
 export interface Election {
   id: string;
@@ -94,6 +95,13 @@ export interface CandidacyRemoval {
 }
 
 export interface BallotSet {
+  sourceAggregates?: readonly {
+    id: string;
+    sourceId: string;
+    scope: string;
+    rawDocumentCount: number;
+    retrieval: RetrievalEvidence;
+  }[];
   generalLineup?: GeneralLineup;
   measureAnalyses?: AnalysesFile;
   filingCandidacies?: Candidacy[];

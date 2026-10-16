@@ -9,7 +9,7 @@ import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import { readerRoute } from "../lib/api/reader-route.ts";
 import { currentReaderRoute } from "../lib/db/reader-route.ts";
 import { currentReaderSelection, withReaderSelection } from "../lib/db/reader-route.ts";
-import { publishReaderEdgeArtifacts, readAuthorityArtifactValue } from "../lib/meetings/edge-serving.ts";
+import { publishReaderEdgeArtifacts, ensureReaderAuthorityEdge, writeFactBucket } from "../lib/meetings/edge-serving.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { getRegistryRuntimeReadModel, readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
@@ -150,12 +150,16 @@ test("warm authority reads retain the identifiers needed to load a shown person'
     const value = { registry: { bodies: [{ id: bodyId }] }, bodyRosters: [{ bodyId, members: [{ id: "roster:one", name: "One" }] }] };
     await publishReaderEdgeArtifacts(null, { sourceThrough: null, retrievedAt: null, promotedThrough: null }, {
       store, authority: { "registry-runtime": { value, versionId: "warm-version" } },
+      stateFacts: { AZ: { versionId: "warm-facts", value: { buckets: [await writeFactBucket(store, "AZ", 0, "warm-facts",
+        await publishAuthorityRecords({ bodies: [{ id: bodyId, division: bodyId.split("#")[0], fields: {},
+          roster: value.bodyRosters[0], dispositions: [], comment: null, sittings: [] }] }, store), "2026-10-16T12:00:00.000Z")] } } },
     });
-    const ref = (await store.readAuthorityManifest())!.manifest.authorityArtifacts!["registry-runtime"];
+    const manifest = (await store.readManifest())!.manifest;
     for (let visit = 0; visit < 2; visit++) {
       const selection = { keys: new Set([bodyId]) };
       await withReaderSelection(selection, async () => {
-        assert.deepEqual(await readAuthorityArtifactValue("registry-runtime", ref, store), value);
+        const edge = await ensureReaderAuthorityEdge(manifest, store, ["registry-runtime"]);
+        assert.deepEqual(edge.registryRuntime?.value, { ...value, rosterReaderDispositions: [] });
         assert.ok(selection.keys.has("roster:one"));
       });
     }

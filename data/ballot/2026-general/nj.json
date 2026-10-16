@@ -8236,6 +8236,22 @@
           "sourceOrg": "Morris County Clerk",
           "collectedAt": "2026-10-15"
         }
+      ],
+      "sourceAggregates": [
+        {
+          "id": "cv-6b34ecf034982a30594c3aca512cb61a",
+          "sourceId": "nj-morris-county-clerk",
+          "scope": "US-NJ:county:morris:2026-general",
+          "rawDocumentCount": 3,
+          "retrieval": {
+            "rawHash": "f4f38c7cc25b42337a6c88e716edb218b98125dca629b3720e337a02d9c04e81",
+            "finalUrl": "https://www.morriscountyclerk.org/Elections/Current-Election-Candidates",
+            "succeeded": true,
+            "httpStatus": 200,
+            "retrievedAt": "2026-10-15T21:30:53.825Z",
+            "requestedUrl": "https://www.morriscountyclerk.org/Elections/Current-Election-Candidates"
+          }
+        }
       ]
     }
   },

@@ -118,11 +118,7 @@ ${field}`)));
     sourceInventory: contract.recordClass === "BALLOT_CONTEST" ? sourceInventory : null };
 }
 
-/**
- * A publication job's worker results: those of its own work items, and, for a saved page another item captured,
- * that item's own (its Acquirer's walk dates the page). Nothing else is read. `readCapture` hands each page the
- * results of the items that captured it.
- */
+// Saved pages retain the worker results of the items that captured them.
 export async function jobWorkerResults<C>(repos: ControlPlaneRepositories, workItemIds: readonly string[],
   readCapture: (id: string, results: readonly WorkerResultRecord[]) => Promise<C>) {
   const byItem = new Map<string, readonly WorkerResultRecord[]>();

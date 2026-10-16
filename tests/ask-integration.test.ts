@@ -1,5 +1,4 @@
 import assert from "node:assert/strict";
-import { azBallot } from "./helpers/ballot-district-fixtures.ts";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "./helpers/playbooks.ts";
@@ -22,7 +21,8 @@ import {
   type AskInteractionRow,
 } from "../lib/db/ask-signal.ts";
 import type { BindableEntity } from "../lib/routing/named-entity.ts";
-import { installBallots, installRegistryAuthority, syntheticAzBallot } from "./helpers/promoted-fixtures.ts";
+import type { BallotSet } from "../lib/ballot/types.ts";
+import { installAzBallot, installRegistryAuthority, syntheticAzBallot } from "./helpers/promoted-fixtures.ts";
 
 await installRegistryAuthority();
 
@@ -364,7 +364,9 @@ test("readSubjectRefs refuses anything that is neither a name nor an id", () => 
   assert.equal(refs[1].focused, true);
 });
 
-const AZ_BALLOT = azBallot;
+const AZ_BALLOT = JSON.parse(
+  readFileSync(join(ROOT, "data", "states", "az", "ballot", "az-pima-2026.json"), "utf8"),
+) as BallotSet;
 
 const GOVERNOR_NOMINEES = [
   { name: "Katie Hobbs", partyLabel: "Democratic" },
@@ -376,7 +378,7 @@ const nominees = (contestId: string) => (contestId === "ballot-az-pima:governor"
 
 /* The committed ballot file as the promoted ballot rows, with the certified governor lineup bridged: the two
    nominees who filed under the same name reconcile to their filings, the other two are left unresolved. */
-await installBallots({
+await installAzBallot({
   ...syntheticAzBallot([{
     id: "ballot-az-pima:governor",
     title: "Governor",
@@ -391,7 +393,7 @@ await installBallots({
       ...(nominee.name === "Andy Biggs" ? { candidacyId: "ballot-az-pima:governor:biggs-andy" } : {}),
     })),
   }]),
-  ...AZ_BALLOT,
+  ballot: AZ_BALLOT,
 });
 
 test("BLOCKER 4: a non-statewide CHALLENGER on the reader's ballot is a resolvable entity", () => {

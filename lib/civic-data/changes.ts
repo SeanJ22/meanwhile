@@ -1,4 +1,7 @@
+import type { StatePublicationPrior } from "./state-publication-prior.ts";
 import { createHash } from "node:crypto";
+import { canonicalCivicDataHash } from "./canonical-hash.ts";
+import { statePublicationScope } from "./state-publication.ts";
 
 import { agendaContentGroups, type AgendaContentRow } from "../meetings/agenda-content.ts";
 import { stateMoneyRecordKey } from "../funding/state-money.ts";
@@ -364,7 +367,50 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
         ...keyed("meeting", array(root.meetings), ["id"]),
         ...agendaDocumentMembers(array(root.agendaDocuments)),
       ];
+    case "BALLOT_FILING": {
+      const ballot = object(root.ballot) ?? root;
+      const contacts = object(root.contacts);
+      return [
+        ...keyed("contest", array(ballot.contests), ["id"]),
+        ...keyed("candidacy", array(ballot.candidacies), ["id"]),
+        ...keyed("measure", array(ballot.measures), ["id"]),
+        ...keyed("removal", array(ballot.removals), ["id"]),
+        ...array(ballot.absences).map((record, index) => {
+          const row = object(record) ?? {};
+          const identity = [textKey(row, ["ocdId"]), textKey(row, ["statement"])].filter(Boolean).join(":");
+          return { key: `absence:${identity || `row-${index}`}`, record };
+        }),
+        ...keyed("contact", array(contacts?.contacts ?? root.contacts), ["id", "candidacyId", "candidateId"]),
+      ];
+    }
     case "BALLOT_CANDIDACY": {
+      if (root.kind !== "ballot-contests") {
+        const ballot = object(root.ballot) ?? root;
+        const lineup = object(root.generalLineup);
+        const analyses = object(root.measureAnalyses);
+        const filings = object(root.candidateFilings);
+        const identities = object(root.identityRegistry);
+        const reconciliation = object(root.lineupReconciliation);
+        return [
+          ...keyed("contest", array(ballot.contests), ["id"]),
+          ...keyed("contest", array(ballot.heldContests), ["id"]),
+          ...keyed("candidacy", array(ballot.candidacies), ["id"]),
+          ...keyed("measure", array(ballot.measures), ["id", "contestId"]),
+          ...keyed("measure-record", array(ballot.measureRecords), ["contestId"]),
+          ...array(ballot.absences).map((record, index) => {
+            const row = object(record) ?? {};
+            const identity = [textKey(row, ["ocdId"]), textKey(row, ["statement"])].filter(Boolean).join(":");
+            return { key: `absence:${identity || `row-${index}`}`, record };
+          }),
+          ...keyed("certified-lineup", array(lineup?.contests), ["contestId"]),
+          ...keyed("measure-analysis", array(analyses?.analyses), ["contestId"]),
+          ...keyed("filing-contest", array(filings?.contests), ["id"]),
+          ...keyed("filing-candidacy", array(filings?.candidacies), ["id"]),
+          ...keyed("identity-contest", array(identities?.contests), ["identityId"]),
+          ...keyed("identity-candidate", array(identities?.candidates), ["identityId"]),
+          ...keyed("lineup-reconciliation", array(reconciliation?.rows), ["cardKey", "canonicalCandidacyId"]),
+        ];
+      }
       return Object.values(object(root.ballots) ?? {}).flatMap(value => {
         const ballot = object(value) ?? {};
         const lineup = object(ballot.generalLineup);
@@ -540,23 +586,34 @@ export function candidateChangeSet(
   candidate: RoutineCandidate,
   previousPayload: unknown | null,
   contract: CivicChangeContract = CIVIC_CHANGE_CONTRACT,
+  priorIndex?: StatePublicationPrior,
 ): RoutineChangeSet {
   // Derive deltas from the Reader projection; caller-supplied members remain evidence to validate.
   const next = contract.members(candidate.recordClass, candidate.readModel);
-  const prior = previousPayload === null ? [] : contract.members(candidate.recordClass, previousPayload);
+  const prior = priorIndex ? [...priorIndex.members.values()].map(member => ({ key: member.key, record: member.record })) : previousPayload === null ? [] : contract.members(candidate.recordClass, previousPayload);
   const priorByKey = new Map(prior.map((member) => [member.key, member]));
   const nextByKey = new Map(next.map((member) => [member.key, member.record]));
-  const facts = (member: CivicRecordMember) => canonicalCivicDataJson(contract.facts(candidate.recordClass, member));
+  const scoped = statePublicationScope(candidate.scope);
+  const facts = (member: CivicRecordMember) => scoped ? canonicalCivicDataHash(contract.facts(candidate.recordClass, member)) :
+    canonicalCivicDataJson(contract.facts(candidate.recordClass, member));
   const added = next
     .filter((member) => !priorByKey.has(member.key))
     .map((member) => ({ key: member.key, before: null, after: member.record }));
   // The persisted before/after stay the exact records; only facts decide.
   const changed = next
-    .filter((member) => priorByKey.has(member.key) && facts(priorByKey.get(member.key)!) !== facts(member))
+    .filter((member) => priorByKey.has(member.key) && (priorIndex?.members.get(member.key)?.factsHash ?? facts(priorByKey.get(member.key)!)) !== facts(member))
     .map((member) => ({ key: member.key, before: priorByKey.get(member.key)?.record ?? null, after: member.record }));
   const removed = prior
     .filter((member) => !nextByKey.has(member.key))
     .map((member) => ({ key: member.key, before: member.record, after: null }));
+  if (priorIndex) {
+    for (const delta of [...changed, ...removed]) {
+      const original = priorIndex.members.get(delta.key)!;
+      if (!Object.hasOwn(original, "record")) throw new Error(`STATE_PRIOR_RECORD_RELEASED:${delta.key}`);
+      if (canonicalCivicDataHash(delta.before) !== original.sha256) throw new Error(`STATE_PRIOR_RECORD_MUTATED:${delta.key}`);
+    }
+    for (const member of priorIndex.members.values()) delete member.record;
+  }
   const held = (candidate.excludedFacts ?? []).map((fact) => ({
     key: fact.key ?? null,
     code: fact.code,

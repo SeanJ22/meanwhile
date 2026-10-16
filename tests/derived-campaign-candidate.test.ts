@@ -4,7 +4,7 @@ import test from "node:test";
 import { canonicalCivicDataJson } from "../lib/civic-data/changes.ts";
 import { promotedInputRef, type DerivedInputRef } from "../lib/civic-data/derived-authority.ts";
 import { derivedAuthorityFor } from "../lib/civic-data/derived-door.ts";
-import { derivedCampaignSitesCandidate, derivedCampaignSitesProjection, type DerivedCampaignSitesPlan } from "../lib/civic-data/derived-campaign-site-writer.ts";
+import { derivedCampaignSitesCandidate, deriveCampaignSitesFromCaptures, derivedCampaignSitesProjection, type DerivedCampaignSitesPlan } from "../lib/civic-data/derived-campaign-site-writer.ts";
 import type { DerivedCampaignSiteRecord, DerivedCampaignSitesProjection } from "../lib/civic-data/derived-campaign-sites.ts";
 
 const NOW = "2026-10-16T12:00:00.000Z";
@@ -62,14 +62,18 @@ test("derived state candidates retain hashes and evidence without serializing or
   assert.equal(proof?.kind === "PROMOTED_VERSION" ? proof.readModelSha256 : null, normalizedHash);
 });
 
-test("inherited campaign evidence keeps one payload and still rejects altered facts or a forged prior", () => {
+test("inherited campaign evidence keeps one payload and still rejects altered facts or a forged prior", async () => {
   const original = plan(), projection = derivedCampaignSitesProjection(original);
   const input = promotedInputRef("CURATED_READER_RECORD", "US-IL:candidate-campaign-sites-derived", "prior-version", projection, NOW)!;
   assert.ok(input.kind === "PROMOTED_VERSION");
-  const inherited: DerivedCampaignSitesPlan = { ...original, inputs: [input], published: [], prior: { input, projection } };
+  const pass = await deriveCampaignSitesFromCaptures({ state: "IL", approvals: [], prior: { input, projection }, profiles: null, now: NOW,
+    readCaptures: async () => assert.fail("an unchanged prior needs no new captures") });
+  assert.ok(pass.plan);
+  const inherited = pass.plan;
+  assert.deepEqual(Object.keys(inherited.prior!), ["input"], "the plan keeps compact prior evidence, not an old payload");
   const candidate = derivedCampaignSitesCandidate("IL", inherited, NOW);
   assert.deepEqual(candidate.semantics.violations, []);
-  assert.equal((candidate.readModel as DerivedCampaignSitesProjection).records, projection.records);
+  assert.ok((candidate.readModel as DerivedCampaignSitesProjection).records.every(record => projection.records.includes(record)));
   const copied: DerivedCampaignSitesPlan = { ...inherited, records: structuredClone(original.records) };
   assert.deepEqual(derivedCampaignSitesCandidate("IL", copied, NOW).semantics.violations, []);
   const changed = { ...inherited, records: original.records.map((row, index) => index ? row : {
@@ -79,6 +83,6 @@ test("inherited campaign evidence keeps one payload and still rejects altered fa
   const violations = derivedCampaignSitesCandidate("IL", changed, NOW).semantics.violations;
   assert.ok(violations.some(row => row.includes("does not name as an input")));
   assert.ok(violations.some(row => row.includes("lack their exact approved capture input")));
-  const forged = { ...inherited, prior: { input: { ...input, readModelSha256: "0".repeat(64) }, projection } };
+  const forged = { ...inherited, prior: { input: { ...input, readModelSha256: "0".repeat(64) } } };
   assert.ok(derivedCampaignSitesCandidate("IL", forged, NOW).semantics.violations.some(row => row.includes("referenced promoted version")));
 });

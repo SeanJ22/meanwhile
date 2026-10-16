@@ -8,11 +8,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
-/**
- * A ceiling is AT MOST the measured baseline plus HEADROOM, rounded DOWN to a
- * readable unit. Tighter is always allowed; a ceiling moves only when its
- * baseline is re-measured, never on its own.
- */
+// Ceilings remain tied to measured baselines; rounding must never increase the allowed headroom.
 export const HEADROOM = 0.15;
 
 /** The largest ceiling the rule permits for a baseline, rounded down to `unit`. */
@@ -36,11 +32,7 @@ const VALUE_SHAPES = [
   { name: "PEM private key", re: /-----BEGIN [A-Z ]*PRIVATE KEY-----/g },
 ];
 
-/**
- * Documentation placeholders: `@neondatabase/serverless` ships a usage example
- * whose userinfo is a literal placeholder. The skipped count is printed on every
- * run so this list cannot quietly become a mask.
- */
+// The dependency’s literal example credentials are placeholders; report every excluded occurrence.
 const PLACEHOLDER_USERINFO = new Set([
   "user:password",
   "username:password",
@@ -71,10 +63,7 @@ function manifestKey(next, m) {
   return relative(next, m).replace(/\\/g, "/").replace(/^standalone\/\.next\//, "");
 }
 
-/**
- * The reader's initial JavaScript for `/`, read off the emitted HTML. Null when
- * the page was not prerendered; unmeasured is a refusal, not a pass.
- */
+// A non-prerendered page has no measured initial JavaScript and cannot pass this check.
 function clientCost(next) {
   const html = join(next, "server", "app", "index.html");
   if (!existsSync(html)) return null;
@@ -120,10 +109,6 @@ function clientCost(next) {
   };
 }
 
-/**
- * Reads a build output and says what is wrong with it. No process exit, no
- * environment read, nothing printed: `lines` is reported, `failures` refuse.
- */
 export function evaluate({ root, budget }) {
   const next = join(root, ".next");
   const lines = [];
@@ -202,13 +187,7 @@ export function evaluate({ root, budget }) {
 
   /* -- 3: budgets --------------------------------------------------------- */
 
-  /*
-   * Budget 1 is two numbers. 1a is the largest APP route trace (a file count);
-   * 1b is Next's own server runtime trace, which holds no file of ours and
-   * differs between default and standalone mode, so it is budgeted per mode.
-   * Standalone copies under `standalone/.next/` are folded onto their originals.
-   * The mode is read off the output, not the environment.
-   */
+  // Next’s own server trace varies by output mode; fold standalone duplicates into their original traces.
   const mode = existsSync(join(next, "standalone")) ? "standalone" : "default";
 
   const appManifests = [];

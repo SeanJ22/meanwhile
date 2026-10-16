@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { createHash } from "node:crypto";
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { copyFile, mkdir, readFile, writeFile } from "node:fs/promises";
 import { createServer } from "node:http";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -17,11 +17,11 @@ const size = (value: unknown) => Buffer.byteLength(JSON.stringify(value));
 type Statement = { query: string; params: unknown[] };
 type Transfer = { requests: number; receivedBytes: number; sentBytes: number; mutationRequestBytes: number };
 const zero = (): Transfer => ({ requests: 0, receivedBytes: 0, sentBytes: 0, mutationRequestBytes: 0 });
-type StageMarker = { id: number; label: string; phase: "start" | "end"; at: number; rssBytes: number; heapBytes: number; externalBytes: number; highWaterBytes: number };
+type StageMarker = { id: number; label: string; phase: "start" | "end"; at: number; rssBytes: number; heapBytes: number; externalBytes: number; highWaterBytes: number; transfer?: Transfer };
 type StageMeasurement = { id: number; label: string; wallMs: number; peakRssBytes: number; startRssBytes: number; endRssBytes: number;
-  startHeapBytes: number; endHeapBytes: number; startExternalBytes: number; endExternalBytes: number };
+  startHeapBytes: number; endHeapBytes: number; startExternalBytes: number; endExternalBytes: number; transfer?: Transfer };
 
-function stageMarkers() {
+function stageMarkers(transfer?: () => Transfer) {
   let nextId = 0;
   const active = new Map<string, number[]>();
   return (label: string, phase: "start" | "end", observedId?: number) => {
@@ -33,7 +33,8 @@ function stageMarkers() {
     active.set(label, stack);
     const memory = process.memoryUsage();
     const marker: StageMarker = { id, label, phase, at: performance.now(), rssBytes: memory.rss,
-      heapBytes: memory.heapUsed, externalBytes: memory.external, highWaterBytes: process.resourceUsage().maxRSS * 1024 };
+      heapBytes: memory.heapUsed, externalBytes: memory.external, highWaterBytes: process.resourceUsage().maxRSS * 1024,
+      ...(transfer ? { transfer: transfer() } : {}) };
     process.stdout.write(`SCALE_STAGE=${JSON.stringify(marker)}\n`);
     return id;
   };
@@ -56,21 +57,24 @@ async function database() {
   if (!initialized) for (const file of ["0025_typical_fixer", "0028_wise_ikaris", "0031_civic_payload_parts", "0035_r1_fact_store"]) {
     await pg.query(await readFile(resolve(root, `lib/db/migrations/${file}.sql`), "utf8"));
   }
+  if (!(await pg.query("SELECT to_regclass('civic_data_candidates_identity_idx') AS name")).rows[0].name) {
+    for (const file of ["0026_lame_sunset_bain", "0027_pdc_candidate_history_shape", "0029_unchanged_confirmation_receipts"]) {
+      const ddl = await readFile(resolve(root, `lib/db/migrations/${file}.sql`), "utf8");
+      await pg.query(ddl.replaceAll('"public".', `"${schema}".`));
+    }
+  }
   if (!(await pg.query("SELECT to_regclass('database_transfer_daily') AS name")).rows[0].name) {
     await pg.query(await readFile(resolve(root, "lib/db/migrations/0030_database_transfer_daily.sql"), "utf8"));
   }
   if (!(await pg.query("SELECT to_regprocedure('reader_payload_node(jsonb)') AS name")).rows[0].name) {
     await pg.query(await readFile(resolve(root, "lib/db/migrations/0036_ne01.sql"), "utf8"));
   }
-  if (!(await pg.query("SELECT to_regprocedure('civic_authority_origin(text)') AS name")).rows[0].name) {
-    await pg.query(await readFile(resolve(root, "lib/db/migrations/BL-30_candidate_scopes.sql"), "utf8"));
-  }
   const execute = async (statement: Statement) => {
     const result = await pg.query({ text: statement.query, values: statement.params, rowMode: "array" });
     return { command: statement.query.trim().split(/\s+/)[0].toUpperCase(), rowCount: result.rowCount,
       rowAsArray: true, fields: result.fields,
       rows: result.rows.map(row => row.map((value, index) => {
-        return value === null ? null : [114, 3802].includes(result.fields[index].dataTypeID) ? JSON.stringify(value) : value instanceof Date ? value.toISOString() :
+        return value === null ? null : [114, 3802].includes(result.fields[index].dataTypeID) ? JSON.stringify(value) : value instanceof Date ? value.toISOString().replace("T", " ").replace("Z", "+00") :
           typeof value === "object" ? JSON.stringify(value) : typeof value === "boolean" ? value ? "t" : "f" : String(value);
       })) };
   };
@@ -335,7 +339,7 @@ async function isolationSnapshot() {
   const { ballotPublicationDue } = await import("../lib/civic-data/ballot-publication.ts");
   const { BALLOT_STATES, requireBallotState } = await import("../lib/ballot/state-scopes.ts");
   const { LocalFileArtifactStore } = await import("../lib/meetings/edge-store.ts");
-  const authority = (await new LocalFileArtifactStore(edgeDirectory).readAuthorityManifest())!.manifest.stateAuthorities!;
+  const authority = (await new LocalFileArtifactStore(edgeDirectory).readManifest())!.manifest.stateAuthorities!;
   assert.equal(Object.keys(authority["ballot-contests"]!).length, 51);
   const hashes: Record<string, string> = {};
   for (const state of BALLOT_STATES) hashes[state] = await ballotInputHash(directory, state);
@@ -358,7 +362,9 @@ async function isolationSnapshot() {
   const latest = results.results.findLast((row: { state: string; family: string; phase: string }) =>
     row.state === state && row.family === "ballot-contests" && row.phase === "publish").result.report;
   assert.equal(latest.inputHash, hashes[state]);
-  assert.equal(ballotPublicationDue(`ballot-contests:${state}`, await ballotInputStamp(directory, state), latest), false);
+  assert.equal(latest.status, "PUBLISHED");
+  assert.equal(ballotPublicationDue(`ballot-contests:${state}`, await ballotInputStamp(directory, state), latest,
+    { lastSucceededAt: latest.at }), false);
   console.log(JSON.stringify({ states: 51, changedFiles, changedAuthorities,
     unchangedNextPoll: { publicationDue: false, workerLaunches: 0, workerDatabaseBytes: 0 } }));
 }
@@ -368,7 +374,8 @@ async function worker() {
   const phase = arg("phase") ?? "publish";
   const family = arg("family") ?? "ballot-contests";
   const databasePort = arg("port");
-  const markStage = stageMarkers();
+  const transfer = zero();
+  const markStage = stageMarkers(() => ({ ...transfer }));
   async function stage<T>(label: string, work: () => Promise<T>): Promise<T> {
     const id = markStage(label, "start");
     try { return await work(); } finally { markStage(label, "end", id); }
@@ -378,7 +385,6 @@ async function worker() {
     try { return work(); } finally { markStage(label, "end", id); }
   }
   const { neonConfig } = await import("@neondatabase/serverless");
-  const transfer = zero();
   const largestDatabaseRequest = { sentBytes: 0, receivedBytes: 0, mutationRequestBytes: 0 };
   const statements = new Map<string, Transfer>();
   const stateScopes = new Set<string>();
@@ -386,11 +392,11 @@ async function worker() {
   function requestDetails(body: string) {
     const queries = [...body.matchAll(/"query"\s*:\s*("(?:[^"\\]|\\.)*")/g)].map(match => JSON.parse(match[1]) as string);
     assert.ok(queries.length, "The measured request must contain SQL.");
-    for (const match of body.matchAll(/"(US-[A-Z]{2}:(?:state-election-ballots|candidate-profiles|candidate-publications|voting-sites|candidate-campaign-sites-derived))"/g)) {
-      assert.ok(phase === "unchanged" || match[1].startsWith(`US-${state}:`), `Another state's scope crossed this worker: ${match[1]}`);
+    for (const match of body.matchAll(/"(US-[A-Z]{2}:(?:state-election-ballots|candidate-profiles|candidate-publications|voting-sites|candidate-campaign-sites-derived|reader-registry-runtime))"/g)) {
+      assert.ok(["unchanged", "bootstrap-prepare", "bootstrap-coordinator"].includes(phase) || match[1].startsWith(`US-${state}:`), `Another state's scope crossed this worker: ${match[1]}`);
       stateScopes.add(match[1]);
     }
-    return { mutation: queries.some(query => /\b(?:insert|update|delete)\b|\bcivic_authority_(?:partition_publish|retire)\s*\(/i.test(query)),
+    return { mutation: queries.some(query => /\b(?:insert|update|delete)\b/i.test(query)),
       key: queries.map(query => (query.match(/(?:from|into|update)\s+"?(\w+)/i)?.[1] ?? "other")).join(",") };
   }
   neonConfig.fetchFunction = async (_url: Parameters<typeof fetch>[0], init: Parameters<typeof fetch>[1]) => {
@@ -413,36 +419,29 @@ async function worker() {
     }, flush() { largestDatabaseRequest.receivedBytes = Math.max(largestDatabaseRequest.receivedBytes, count.receivedBytes); } }));
     return new Response(counted, { status: response.status, headers: response.headers });
   };
+  if (arg("production") === "1") {
+    const { installDatabaseTransferCounter } = await import("../lib/db/transfer.ts");
+    installDatabaseTransferCounter();
+  }
   const started = performance.now();
   markStage("module-load", "start");
-  const { BALLOT_STATES, requireBallotState, stateBallotScope, stateBallotContractId } = await import("../lib/ballot/state-scopes.ts");
+  const { requireBallotState, stateBallotScope, stateBallotContractId } = await import("../lib/ballot/state-scopes.ts");
   const { LocalFileArtifactStore } = await import("../lib/meetings/edge-store.ts");
   const heldArtifactStore = new LocalFileArtifactStore(edgeDirectory);
   const artifactTransfer = { manifestReads: 0, manifestReadBytes: 0, manifestWrites: 0, manifestWriteBytes: 0,
-    meetingManifestReads: 0, meetingManifestReadBytes: 0, meetingManifestWrites: 0,
     reads: [] as { key: string; bytes: number }[], writes: [] as { key: string; bytes: number }[] };
   const artifactStore: import("../lib/meetings/edge-store.ts").ReaderArtifactStore = {
     kind: heldArtifactStore.kind,
     async readManifest() {
       const held = await heldArtifactStore.readManifest();
-      artifactTransfer.meetingManifestReads++;
-      artifactTransfer.meetingManifestReadBytes += held ? size(held.manifest) : 0;
-      return held;
-    },
-    async readAuthorityManifest() {
-      const held = await heldArtifactStore.readAuthorityManifest();
       artifactTransfer.manifestReads++;
       artifactTransfer.manifestReadBytes += held ? size(held.manifest) : 0;
       return held;
     },
     async writeManifest(manifest, etag) {
-      artifactTransfer.meetingManifestWrites++;
-      return heldArtifactStore.writeManifest(manifest, etag);
-    },
-    async writeAuthorityManifest(manifest, etag) {
       artifactTransfer.manifestWrites++;
       artifactTransfer.manifestWriteBytes += size(manifest);
-      return heldArtifactStore.writeAuthorityManifest(manifest, etag);
+      return heldArtifactStore.writeManifest(manifest, etag);
     },
     async readBytes(key) {
       const bytes = await heldArtifactStore.readBytes(key);
@@ -461,19 +460,92 @@ async function worker() {
     },
   };
   const authorityFamily = family === "candidate-corpus" ? "candidate-publications" : family;
-  const beforeManifest = (await heldArtifactStore.readAuthorityManifest())?.manifest;
+  const beforeManifest = (await heldArtifactStore.readManifest())?.manifest;
   const allowedArtifactKeys = new Set([beforeManifest?.stateAuthorities?.[authorityFamily as "ballot-contests"]?.[state]?.key]);
   const recordClassFor = { "ballot-contests": "BALLOT_CANDIDACY", "candidate-profiles": "CANDIDATE_PROFILE",
-    "candidate-corpus": "CANDIDATE_PUBLICATION", "voting-sites": "VOTING_SITE", "candidate-campaign-sites-derived": "CURATED_READER_RECORD" } as const;
+    "candidate-corpus": "CANDIDATE_PUBLICATION", "voting-sites": "VOTING_SITE", "candidate-campaign-sites-derived": "CURATED_READER_RECORD",
+    "registry-runtime": "REGISTRY_RUNTIME_BINDING" } as const;
   const recordClass = recordClassFor[family as keyof typeof recordClassFor];
-  const scope = stateBallotScope(family as "ballot-contests", state);
-  const division = arg("division")!;
+  const { stateRegistryRuntimeScope } = await import("../lib/registry/state-scopes.ts");
+  const scope = family === "registry-runtime" ? stateRegistryRuntimeScope(state) : stateBallotScope(family as "ballot-contests", state);
+  const division = arg("division") ?? `ocd-division/country:us/state:${state.toLowerCase()}`;
   const ids = [division.split("/place:")[0], division];
   const government = division.split("/place:")[1];
-  const targets = Array.from({ length: 10 }, (_, index) => `ballot-${state.toLowerCase()}-${government}-candidate-${index}`);
   markStage("module-load", "end");
   let result: unknown;
-  if (phase === "derive-captures") {
+  if (phase === "baseline") {
+    await stage("module-load:bootstrap", () => import("../lib/civic-data/state-bucket-publication.ts"));
+    result = { loadedStatePayloads: 0 };
+  } else if (phase === "baseline-artifact") {
+    await stage("module-load:artifact", () => import("../lib/civic-data/state-artifact-dispatch.ts"));
+    result = { loadedStatePayloads: 0 };
+  } else if (phase === "bootstrap-prepare") {
+    const { prepareStateAuthorityBootstrap } = await import("../lib/civic-data/state-bucket-bootstrap.ts");
+    const { withStateBucketCursor } = await import("../lib/civic-data/state-bucket-cursor.ts");
+    const { neon } = await import("@neondatabase/serverless");
+    const sql = neon(process.env.DATABASE_URL!);
+    const prepareDirectory = arg("prepare-directory") ?? resolve(directory, "bootstrap");
+    const plan = await stage("bootstrap:prepare", () => withStateBucketCursor({
+      query: async (text, params = []) => ({ rows: await sql.query(text, params) }),
+    }, source => prepareStateAuthorityBootstrap({ directory: prepareDirectory, ...source })));
+    const manifestPath = resolve(prepareDirectory, "manifest.json");
+    await writeFile(manifestPath, JSON.stringify(plan), { mode: 0o600 });
+    assert.deepEqual(plan.unassigned, []);
+    result = { manifestPath, units: plan.units.length, missingOrigins: plan.missingOrigins };
+  } else if (phase === "bootstrap-coordinator") {
+    const { restoreStateBuckets } = await import("../lib/civic-data/state-bucket-dispatch.ts");
+    const { CONTROL_PLANE_READS_DIR_ENV, databaseIdentity } = await import("../lib/control-plane/repository/incremental-reads.ts");
+    const { neon } = await import("@neondatabase/serverless");
+    const sql = neon(process.env.DATABASE_URL!);
+    const plan = JSON.parse(await readFile(arg("plan")!, "utf8")) as { units: { inputFile: string }[] };
+    const heldDirectory = resolve(directory, "held"), prepareDirectory = resolve(heldDirectory, databaseIdentity(process.env.DATABASE_URL!), "state-buckets");
+    const token = /\/([a-f0-9]{64})-/.exec(plan.units[0].inputFile)?.[1];
+    assert.ok(token);
+    await mkdir(prepareDirectory, { recursive: true });
+    await copyFile(resolve(plan.units[0].inputFile, "..", `${token}.plan.json`), resolve(prepareDirectory, `${token}.plan.json`));
+    const children: unknown[] = [];
+    const restored = await stage("bootstrap:unchanged-coordinator", () => restoreStateBuckets({
+      query: (text, params) => sql.query(text, [...params]), env: { ...process.env, [CONTROL_PLANE_READS_DIR_ENV]: heldDirectory },
+      launch: async command => {
+        assert.ok(command.args.includes(`--prepare=${prepareDirectory}`), "An unchanged restore must launch no state publication child.");
+        const measured = await child(["--mode=worker", "--production=1", `--directory=${directory}`, `--edge-directory=${edgeDirectory}`,
+          `--state=${state}`, `--family=${family}`, "--phase=bootstrap-prepare", `--port=${databasePort}`, `--prepare-directory=${prepareDirectory}`], command.env);
+        const line = measured.output.split("\n").find(row => row.startsWith("SCALE_RESULT="));
+        assert.ok(line, measured.output);
+        const value = JSON.parse(line.slice("SCALE_RESULT=".length));
+        children.push({ ...value, stages: measured.stages, sampledPeakRssBytes: measured.sampledPeakRssBytes });
+        return { id: command.id, status: 0, signal: null, stdout: "STATE_BUCKET_PREPARED=" + JSON.stringify({ manifestPath: value.result.manifestPath }),
+          stderr: "", termination: "EXITED", errorMessage: null };
+      },
+    }));
+    assert.deepEqual(restored, { published: 0, unchanged: plan.units.length, failures: [] });
+    assert.equal(transfer.mutationRequestBytes, 0);
+    result = { restored, children };
+  } else if (phase === "bootstrap-publish") {
+    const { publishStateBucket } = await stage("module-load:bootstrap", () => import("../lib/civic-data/state-bucket-publication.ts"));
+    const { readJsonFile } = await import("../lib/ops/json-file.ts");
+    const { CivicPayloadParts } = await import("../lib/civic-data/payload-parts.ts");
+    const originalStore = CivicPayloadParts.prototype.store;
+    let rekeyStage: number | undefined;
+    CivicPayloadParts.prototype.store = function(...args) {
+      if (rekeyStage !== undefined) { markStage("bootstrap:rekey", "end", rekeyStage); rekeyStage = undefined; }
+      return stage("bootstrap:encode", () => originalStore.apply(this, args));
+    };
+    const hash = createHash("sha256");
+    const source = await stage("bootstrap:parse-state", () => readJsonFile(arg("unit")!, { onChunk: chunk => { hash.update(chunk); } }));
+    assert.equal(hash.digest("hex"), arg("sha256"));
+    const { neon } = await import("@neondatabase/serverless");
+    const sql = neon(process.env.DATABASE_URL!);
+    try {
+      result = await stage("bootstrap:publish", () => publishStateBucket(source as import("../lib/civic-data/state-bucket-publication.ts").StateBucketSource,
+        async (query, params) => {
+          const rows = await stage(`bootstrap:query:${/STATE_BUCKET_[A-Z_]+/.exec(query)?.[0] ?? (/\b(?:INSERT|UPDATE|DELETE)\b/i.test(query) ? "write-parts" : "read-parts")}`,
+            () => sql.query(query, [...params]));
+          if (query.includes("STATE_BUCKET_CURRENT")) rekeyStage = markStage("bootstrap:rekey", "start");
+          return rows;
+        }));
+    } finally { if (rekeyStage !== undefined) markStage("bootstrap:rekey", "end", rekeyStage); }
+  } else if (phase === "derive-captures") {
     assert.equal(family, "candidate-campaign-sites-derived");
     const { deriveCampaignSitesFromCaptures } = await import("../lib/civic-data/derived-campaign-site-writer.ts");
     type Approval = import("../lib/civic-data/derived-campaign-site-writer.ts").PublishableCampaignSiteApproval;
@@ -533,9 +605,6 @@ async function worker() {
     result = { records: count, capturesRead, captureBytes, maxHeldCaptures, portraitCaptures, portraitCaptureBytes, commonsReads,
       portraitFixture: "Generated HTML has no portrait; Commons responses are generated empty results.",
       outputRecords: derived.candidate.normalization.outputRecords };
-  } else if (phase === "cutover") {
-    const { partitionHeldStateAuthority } = await import("../lib/civic-data/state-authority-cutover.ts");
-    result = await stage("cutover:state-partition", () => partitionHeldStateAuthority(family as import("../lib/ballot/state-scopes.ts").StateBallotFamily, state));
   } else if (phase === "artifact-child") {
     const { PostgresRoutineDataStore } = await import("../lib/civic-data/store.ts");
     for (const method of ["readPromotion", "readCandidateProof", "readPromotionIdentities", "readPublishedCandidateMetadata"] as const) {
@@ -550,8 +619,8 @@ async function worker() {
       artifactTransfer.writes.push({ key, bytes: bytes.byteLength });
       return key;
     };
-    LocalFileArtifactStore.prototype.readManifest = async () => { throw new Error("STATE_CHILD_READ_MEETING_MANIFEST"); };
-    LocalFileArtifactStore.prototype.writeManifest = async () => { throw new Error("STATE_CHILD_WRITE_MEETING_MANIFEST"); };
+    LocalFileArtifactStore.prototype.readManifest = async () => { throw new Error("STATE_CHILD_READ_MANIFEST"); };
+    LocalFileArtifactStore.prototype.writeManifest = async () => { throw new Error("STATE_CHILD_WRITE_MANIFEST"); };
     const args = process.argv;
     process.argv = [args[0], resolve(root, "scripts/publish-state-authority.mts"), `--state=${state}`, `--family=${authorityFamily}`,
       `--version=${arg("version")!}`, `--observed-at=${now}`];
@@ -563,8 +632,8 @@ async function worker() {
     const { publishSupervisorReaderEdge } = await import("../lib/civic-data/reader-edge-publication.ts");
     const { PostgresRoutineDataStore } = await import("../lib/civic-data/store.ts");
     const children: unknown[] = [];
-    const selected = phase === "unchanged" ? BALLOT_STATES.flatMap(state => Object.entries(recordClassFor).map(([family, recordClass]) =>
-      ({ recordClass, scope: stateBallotScope(family as "ballot-contests", state) }))) : [{ recordClass, scope }];
+    const { selectedStateEdgePointers } = await import("../lib/civic-data/promoted-edge-publication.ts");
+    const selected = phase === "unchanged" ? selectedStateEdgePointers(null).flatMap(unit => unit.pointers) : [{ recordClass, scope }];
     const published = await stage("edge:metadata-coordinator", () => publishSupervisorReaderEdge(new PostgresRoutineDataStore(), now,
       selected, { artifactStore, stateArtifactChildren: { launch: async command => {
         assert.notEqual(phase, "unchanged", "An unchanged national poll must launch no artifact child.");
@@ -572,7 +641,8 @@ async function worker() {
         const authority = command.args.find(value => value.startsWith("--family="))!.slice("--family=".length);
         const childFamily = authority === "candidate-publications" ? "candidate-corpus" : authority;
         const measured = await child(["--mode=worker", `--directory=${directory}`, `--edge-directory=${edgeDirectory}`, `--state=${state}`,
-          `--family=${childFamily}`, "--phase=artifact-child", `--port=${databasePort}`, `--division=${division}`, version], command.env);
+          `--family=${childFamily}`, "--phase=artifact-child", `--port=${databasePort}`, `--division=${division}`, version,
+          ...(arg("production") === "1" ? ["--production=1"] : [])], command.env);
         const line = measured.output.split("\n").find(row => row.startsWith("SCALE_RESULT="));
         assert.ok(line, measured.output);
         children.push({ ...JSON.parse(line.slice("SCALE_RESULT=".length)), stages: measured.stages, sampledPeakRssBytes: measured.sampledPeakRssBytes });
@@ -584,7 +654,7 @@ async function worker() {
       assert.equal(artifactTransfer.reads.length, 0);
       assert.equal(artifactTransfer.manifestWrites, 0);
     }
-    const after = (await heldArtifactStore.readAuthorityManifest())!.manifest.stateAuthorities!;
+    const after = (await heldArtifactStore.readManifest())!.manifest.stateAuthorities!;
     const changed: string[] = [], concurrentChanges: string[] = [];
     for (const [kind, states] of Object.entries(after)) for (const [key, ref] of Object.entries(states)) {
       if (JSON.stringify(beforeManifest?.stateAuthorities?.[kind as keyof typeof after]?.[key]) === JSON.stringify(ref)) continue;
@@ -598,36 +668,37 @@ async function worker() {
     assert.ok([...statements.keys()].every(key => !/(?:^|,)(?:fact|source_copy|civic_data_candidates|civic_data_payload_parts)(?:,|$)/.test(key)),
       "The artifact coordinator must read pointer metadata only.");
     result = { edge: published, children, changedAuthorities: changed, concurrentChanges };
-  } else if (phase === "read") {
+  } else if (phase === "read" || phase === "state-read") {
     markStage("edge:read", "start");
     const { ensureReaderAuthorityEdge } = await import("../lib/meetings/edge-serving.ts");
     const { withReaderAuthorityEdge, readPromotedEdgeFirst } = await import("../lib/registry/runtime-edge.ts");
     const { readerBallotSourcesForDivisions } = await import("../lib/ballot/reader-sources.ts");
-    const manifest = (await artifactStore.readAuthorityManifest())!.manifest;
+    const manifest = (await artifactStore.readManifest())!.manifest;
     const bundle = await ensureReaderAuthorityEdge(manifest, artifactStore, [authorityFamily as "ballot-contests"]);
-    if (family === "ballot-contests") {
+    if (family === "ballot-contests" && phase === "read") {
       const sources = await withReaderAuthorityEdge(bundle, () => readerBallotSourcesForDivisions(ids));
       const ballots = await Promise.all(sources.map(async row => row.source.normalize(await row.source.fetch())));
       assert.ok(ballots.some(ballot => ballot.contests.some(row => row.id === government)), "The exact requested government must reach the reader.");
       result = { sources: sources.length, placeBytes: size(ballots), contests: ballots.reduce((sum, ballot) => sum + ballot.contests.length, 0) };
     } else {
       const { readPromotedCivicData } = await import("../lib/civic-data/read-model.ts");
-      const read = await withReaderAuthorityEdge(bundle, () => readPromotedEdgeFirst(recordClass, scope,
-        options => readPromotedCivicData(recordClass, scope, options), "Benchmark state's auxiliary records"));
+      const read = await withReaderAuthorityEdge(bundle, async () => {
+        if (phase !== "state-read") return readPromotedEdgeFirst(recordClass, scope,
+          options => readPromotedCivicData(recordClass, scope, options), "Benchmark state's auxiliary records");
+        const artifact = await bundle.stateAuthorities?.load(authorityFamily as "ballot-contests", state);
+        const entry = artifact?.entries.find(row => row.kind === "PROMOTED" && row.projection.scope === scope);
+        assert.ok(entry?.kind === "PROMOTED");
+        return readPromotedCivicData(recordClass, scope, { edge: entry });
+      });
       assert.equal(read.kind, "PROMOTED");
-      const value = read.value as { cards?: { cards: Record<string, unknown> }; documents?: unknown[]; records?: unknown[]; jurisdictions?: { sites: unknown[] }[] };
-      result = { records: value.cards ? Object.keys(value.cards.cards).length : value.documents?.length ?? value.records?.length ?? value.jurisdictions?.reduce((sum, row) => sum + row.sites.length, 0) };
+      const value = read.value as { cards?: { cards: Record<string, unknown> }; documents?: unknown[]; records?: unknown[];
+        jurisdictions?: { sites: unknown[] }[]; registry?: { bodies: unknown[]; divisions: unknown[] }; ballots?: Record<string, { contests: unknown[] }> };
+      result = { records: value.cards ? Object.keys(value.cards.cards).length : value.documents?.length ?? value.records?.length ??
+        value.jurisdictions?.reduce((sum, row) => sum + row.sites.length, 0) ?? value.registry?.bodies.length ??
+        Object.values(value.ballots ?? {}).reduce((sum, row) => sum + row.contests.length, 0) };
     }
     assert.equal(transfer.requests, 0, "Published edge readers must not contact the database.");
     markStage("edge:read", "end");
-  } else if (phase === "slice") {
-    markStage("database:place-slice", "start");
-    const { readPlacePointerSlice } = await import("../lib/civic-data/held-place-slices.ts");
-    const read = await readPlacePointerSlice(recordClass, scope, ids, [], targets);
-    assert.equal(read.kind, "PROMOTED");
-    assert.ok(read.value);
-    result = { placeBytes: size(read.value) };
-    markStage("database:place-slice", "end");
   } else {
     const { PostgresRoutineDataStore } = await stage("module-load:publication", () => import("../lib/civic-data/store.ts"));
     const store = new Proxy(new PostgresRoutineDataStore(), {
@@ -640,7 +711,7 @@ async function worker() {
     let publication: unknown;
     if (family === "candidate-profiles" && phase === "profile-findings") {
       const { neon } = await import("@neondatabase/serverless");
-      const { runCandidateProfileFindingsJob } = await import("../lib/civic-data/candidate-profile-findings.ts");
+      const { runCandidateProfileFindingsJob } = await import("../lib/civic-data/candidate-profile-findings-job.ts");
       const { pgAggregateRepository } = await import("../lib/control-plane/repository/pg-store.ts");
       const { listedBoxRepository } = await import("../lib/control-plane/box.ts");
       const sql = neon(process.env.WTP_CONTROL_PLANE_DATABASE_URL!);
@@ -753,8 +824,6 @@ async function worker() {
     }
     result = { report: publication };
   }
-  assert.equal(artifactTransfer.meetingManifestReads, 0, "A state ballot worker must not read the national meeting manifest.");
-  assert.equal(artifactTransfer.meetingManifestWrites, 0, "A state ballot worker must not write the national meeting manifest.");
   for (const read of artifactTransfer.reads) assert.ok(allowedArtifactKeys.has(read.key), `Unrelated artifact crossed this state worker: ${read.key}`);
   console.log("SCALE_RESULT=" + JSON.stringify({ state, family, phase, wallMs: performance.now() - started, peakRssBytes: process.resourceUsage().maxRSS * 1024,
     transfer, largestDatabaseRequest, artifactTransfer, stateScopes: [...stateScopes], byTable: Object.fromEntries(statements), result }));
@@ -795,7 +864,9 @@ async function child(args: string[], env: NodeJS.ProcessEnv = process.env) {
             peakRssBytes: Math.max(held.peakRssBytes, marker.rssBytes, marker.highWaterBytes > held.start.highWaterBytes ? marker.highWaterBytes : 0),
             startRssBytes: held.start.rssBytes, endRssBytes: marker.rssBytes,
             startHeapBytes: held.start.heapBytes, endHeapBytes: marker.heapBytes,
-            startExternalBytes: held.start.externalBytes, endExternalBytes: marker.externalBytes });
+            startExternalBytes: held.start.externalBytes, endExternalBytes: marker.externalBytes,
+            ...(marker.transfer && held.start.transfer ? { transfer: Object.fromEntries(Object.keys(marker.transfer).map(key =>
+              [key, marker.transfer![key as keyof Transfer] - held.start.transfer![key as keyof Transfer]])) as Transfer } : {}) });
           active.delete(marker.id);
         }
       }
@@ -835,7 +906,7 @@ async function run() {
         parentEnv: { ...process.env, NODE_ENV: "development", WTP_RUNTIME_MODE: "staging", WTP_DB_ROLE: "local",
           NODE_USE_ENV_PROXY: "0", WTP_READER_EDGE_DIR: edgeDirectory, WTP_READER_EDGE_LOCAL_OK: "1",
           DATABASE_URL: "postgresql://scale:scale@localhost/scale", WTP_CONTROL_PLANE_DATABASE_URL: "postgresql://scale:scale@localhost/scale" } });
-      for (const phase of (arg("phases") ?? "publish,artifact,read,slice").split(",")) {
+      for (const phase of (arg("phases") ?? "publish,artifact,read").split(",")) {
         if (results.some(row => row.state === state && row.family === family && row.phase === phase)) continue;
         const measured = await child(["--mode=worker", `--directory=${directory}`, `--edge-directory=${edgeDirectory}`, `--state=${state}`, `--family=${family}`, `--phase=${phase}`, `--port=${port}`,
           ...(arg("concurrent-coverage") === "1" ? ["--concurrent-coverage=1"] : []),
@@ -854,6 +925,54 @@ async function run() {
   }
 }
 
+async function production() {
+  const { admittedRuntimeChildEnvironment } = await import("../lib/civic-data/runtime-authority.ts");
+  type Unit = import("../lib/civic-data/state-bucket-bootstrap.ts").StateBootstrapUnit & { fileSha256: string };
+  assert.ok(arg("port"), "Production-copy measurements require an isolated local database bridge.");
+  await mkdir(directory, { recursive: true });
+  const phases = (arg("phases") ?? "bootstrap-publish,artifact,state-read").split(",");
+  const results: unknown[] = arg("resume") === "1"
+    ? JSON.parse(await readFile(resolve(directory, arg("result-file") ?? "production-results.json"), "utf8")).results : [];
+  const saved = new Set(results.map(value => {
+    const row = value as { state: string; family: string; phase: string };
+    return `${row.family}:${row.state}:${row.phase}`;
+  }));
+  const units: Unit[] = phases.includes("bootstrap-prepare") ? [{ family: "registry-runtime", state: "AZ", contractId: "registry-runtime-bindings",
+    inputFile: "", fileSha256: "", recordClass: "REGISTRY_RUNTIME_BINDING", scope: "US:reader-registry-runtime-bindings", originVersionId: "", inputHash: "" }]
+    : JSON.parse(await readFile(arg("plan") ?? resolve(directory, "bootstrap/manifest.json"), "utf8")).units;
+  const concurrency = Number(arg("concurrency") ?? 1);
+  assert.ok(Number.isSafeInteger(concurrency) && concurrency >= 1 && concurrency <= 4);
+  assert.ok(!phases.includes("bootstrap-prepare") || concurrency === 1, "Preparation owns the bridge's pinned cursor connection.");
+  let save = Promise.resolve();
+  async function runUnit(unit: Unit) {
+    if (arg("states") && !arg("states")!.split(",").includes(unit.state)) return;
+    if (arg("families") && !arg("families")!.split(",").includes(unit.family)) return;
+    const env = admittedRuntimeChildEnvironment({ capability: unit.family === "candidate-campaign-sites-derived" ? "ROUTINE_CONTRACT" : "MANUAL_CONTRACT",
+      contract: unit.contractId, parentEnv: { ...process.env, NODE_ENV: "development", WTP_RUNTIME_MODE: "staging", WTP_DB_ROLE: "local",
+        NODE_USE_ENV_PROXY: "0", WTP_READER_EDGE_DIR: edgeDirectory, WTP_READER_EDGE_LOCAL_OK: "1", WTP_VITAL_SIGNS_REPORT: "1",
+        DATABASE_URL: "postgresql://scale:scale@localhost/scale", WTP_CONTROL_PLANE_DATABASE_URL: "postgresql://scale:scale@localhost/scale" } });
+    for (const phase of phases) {
+      if (saved.has(`${unit.family}:${unit.state}:${phase}`)) continue;
+      const measured = await child(["--mode=worker", "--production=1", `--directory=${directory}`, `--edge-directory=${edgeDirectory}`, `--state=${unit.state}`,
+        `--family=${unit.family}`, `--phase=${phase}`, `--port=${arg("port")}`, `--unit=${unit.inputFile}`, `--sha256=${unit.fileSha256}`,
+        ...(arg("plan") ? [`--plan=${arg("plan")}`] : []),
+        ...(concurrency > 1 ? ["--concurrent-coverage=1"] : [])], env);
+      const line = measured.output.split("\n").find(row => row.startsWith("SCALE_RESULT="));
+      assert.ok(line, measured.output);
+      const result = { ...JSON.parse(line.slice("SCALE_RESULT=".length)), stages: measured.stages, sampledPeakRssBytes: measured.sampledPeakRssBytes };
+      results.push(result);
+      console.log(JSON.stringify({ state: unit.state, family: unit.family, phase, wallMs: result.wallMs, peakRssBytes: result.peakRssBytes, transfer: result.transfer }));
+      save = save.then(() => writeFile(resolve(directory, arg("result-file") ?? "production-results.json"),
+        JSON.stringify({ plan: arg("plan") ?? null, concurrency, results }, null, 2)));
+      await save;
+    }
+  }
+  let next = 0;
+  await Promise.all(Array.from({ length: concurrency }, async () => {
+    while (next < units.length) await runUnit(units[next++]);
+  }));
+}
+
 if (mode === "database") await database();
 else if (mode === "generate") await generate();
 else if (mode === "generate-auxiliary") await generateAuxiliary();
@@ -863,4 +982,5 @@ else if (mode === "change") await changeInput();
 else if (mode === "snapshot" || mode === "verify-isolation") await isolationSnapshot();
 else if (mode === "worker") await worker();
 else if (mode === "run") await run();
+else if (mode === "production") await production();
 else throw new Error(`Unknown mode: ${mode}`);

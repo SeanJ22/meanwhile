@@ -1,7 +1,9 @@
+import { stateBallotScope } from "../../../lib/ballot/state-scopes.ts";
+import { readPromotedCivicData } from "../../../lib/civic-data/read-model.ts";
 import assert from "node:assert/strict";
 import { runBallotPublication } from "../../../scripts/assemble-ballot-package.mts";
 import { MemoryRoutineDataStore, assertRoutineDataStoreMutationAuthority } from "../../../lib/civic-data/store.ts";
-import { readGenericBallotProjection } from "../../../lib/ballot/generic-projection.ts";
+import { type GenericBallotProjection } from "../../../lib/ballot/generic-projection.ts";
 import { genericSourcesForDivisions } from "../../../lib/ballot/reader-sources.ts";
 import { AUTOMATIC_REFRESH_TASKS } from "../../../lib/civic-data/automatic-refresh.ts";
 import { durableRoutineRunnerReceiptIssue } from "../../../lib/civic-data/runner-receipt.ts";
@@ -17,7 +19,7 @@ if (result.receipt) {
   assert.equal(await durableRoutineRunnerReceiptIssue(result.receipt,
     AUTOMATIC_REFRESH_TASKS.find(task => task.id === "ballot-contests:TX")!, store, "SUCCESS"), null);
   console.log("RCD_RECEIPT=" + JSON.stringify(result.receipt));
-  const read = await readGenericBallotProjection("TX", { store, now, bypassCache: true });
+  const read = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", "TX"), { store, now, bypassCache: true });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind === "PROMOTED") {
     assert.equal(genericSourcesForDivisions(read.value, ["ocd-division/country:us/state:tx"]).length, 1);

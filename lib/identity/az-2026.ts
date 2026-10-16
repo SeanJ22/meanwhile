@@ -1,26 +1,26 @@
-import { currentGenericBallotProjection } from "../ballot/generic-projection.ts";
+
+
+import { currentAzBallotProjection } from "../civic-data/manual-read-models.ts";
 
 import type {
+  AzIdentityRegistry,
   LineupReconciliation,
   LineupReconciliationRow,
 } from "./types.ts";
 
+let registryCache: AzIdentityRegistry | null | undefined;
 let bridgeCache: LineupReconciliation | null | undefined;
 let rowIndex: Map<string, LineupReconciliationRow> | null = null;
 let coveredContests: Set<string> | null = null;
 
-export function azContestIdentity(contestId: string) {
-  for (const ballot of Object.values(currentGenericBallotProjection("AZ").ballots)) {
-    const contest = ballot.contests.find(row => row.id === contestId);
-    if (contest) return contest.identity ?? null;
-  }
-  return null;
+export function azIdentityRegistry(): AzIdentityRegistry | null {
+  if (registryCache === undefined) registryCache = currentAzBallotProjection().identityRegistry;
+  return registryCache;
 }
 
 export function azLineupReconciliation(): LineupReconciliation | null {
-  const next = Object.values(currentGenericBallotProjection("AZ").ballots).find(ballot => ballot.lineupReconciliation)?.lineupReconciliation ?? null;
-  if (next !== bridgeCache) {
-    bridgeCache = next;
+  if (bridgeCache === undefined) {
+    bridgeCache = currentAzBallotProjection().lineupReconciliation;
     rowIndex = null;
     coveredContests = null;
   }
@@ -28,16 +28,17 @@ export function azLineupReconciliation(): LineupReconciliation | null {
 }
 
 function index(): Map<string, LineupReconciliationRow> {
-  const bridge = azLineupReconciliation();
   if (rowIndex) return rowIndex;
+  const bridge = azLineupReconciliation();
   rowIndex = new Map((bridge?.rows ?? []).map((r) => [r.cardKey, r]));
   return rowIndex;
 }
 
+
 export function lineupBridgeCovers(contestId: string): boolean {
   if (!contestId.startsWith("ballot-az-")) return false;
-  const bridge = azLineupReconciliation();
   if (!coveredContests) {
+    const bridge = azLineupReconciliation();
     coveredContests = new Set((bridge?.rows ?? []).map((r) => r.contestId));
   }
   return coveredContests.has(contestId);
@@ -49,11 +50,13 @@ export function lineupRowForCard(cardKey: string): LineupReconciliationRow | nul
   return index().get(cardKey) ?? null;
 }
 
+
 export function reconciledCandidacyIdForCard(cardKey: string): string | null {
   const row = lineupRowForCard(cardKey);
   if (!row || row.outcome !== "RECONCILED") return null;
   return row.canonicalCandidacyId;
 }
+
 
 export interface PartyConflictFiling {
   readonly cardKey: string;
@@ -71,19 +74,18 @@ export interface PartyConflictFiling {
 export function partyConflictFilingForCard(cardKey: string): PartyConflictFiling | null {
   const row = lineupRowForCard(cardKey);
   if (!row || row.outcome !== "PARTY_CONFLICT" || row.sourceValues.registryCandidateIds.length !== 1) return null;
-  const candidate = Object.values(currentGenericBallotProjection("AZ").ballots)
-    .flatMap(ballot => [...ballot.candidacies, ...(ballot.filingCandidacies ?? [])]).find(candidate => candidate.identity?.identityId === row.sourceValues.registryCandidateIds[0]);
-  if (!candidate) return null;
+  const identity = azIdentityRegistry()?.candidates.find((candidate) => candidate.identityId === row.sourceValues.registryCandidateIds[0]);
+  if (!identity?.canonicalCandidacyId) return null;
   const canvass = azLineupReconciliation()?.sources.find((source) => source.url && /canvass/i.test(source.name));
   return {
     cardKey,
     contestId: row.contestId,
-    filingCandidacyId: candidate.id,
+    filingCandidacyId: identity.canonicalCandidacyId,
     name: row.nomineeName,
     canvassParty: row.sourceValues.canvassParty,
     canvassSourceUrl: canvass?.url ?? null,
     filingParty: row.sourceValues.registryParty,
-    filingSourceUrl: candidate.identity?.candidacySourceUrl ?? candidate.provenance.sourceUrl,
+    filingSourceUrl: identity.candidacySourceUrl,
     readerGapSentence: row.readerGapSentence,
   };
 }
@@ -100,6 +102,7 @@ export function partyConflictCardForFiling(candidacyId: string): PartyConflictFi
 
 /** Test seam. Never called by a render path. */
 export function resetAzIdentityCache(): void {
+  registryCache = undefined;
   bridgeCache = undefined;
   rowIndex = null;
   coveredContests = null;

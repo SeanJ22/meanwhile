@@ -1,4 +1,3 @@
-/** Which side of its deploy a migration is safe on. */
 export type MigrationPhase = "expand" | "contract";
 
 export const PRODUCTION_MIGRATION_HEADLINE = "Production migrations";
@@ -164,7 +163,6 @@ export function phaseFromSql(sql: string): { phase: MigrationPhase; signals: Con
 
 /** Hand-written, one entry per committed migration; the suite checks each against phaseFromSql. */
 export const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
-  "BL-30_candidate_scopes": { phase: "expand", why: "Adds state-scoped partition and guarded retirement operations; only registered state publication children move held data." },
   "0000_square_stryfe": {
     phase: "expand",
     why: "Creates meetings, agenda_documents and search_log with their indexes. Nothing existed before it.",

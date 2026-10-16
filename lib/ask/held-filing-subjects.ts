@@ -1,29 +1,32 @@
-import type { BallotSet } from "../ballot/types.ts";
+import { currentAzBallotProjection } from "../civic-data/manual-read-models.ts";
 import { bindNamedEntity, type BindableEntity } from "../routing/named-entity.ts";
 import type { EvidenceRecord } from "./evidence.ts";
+
 
 export interface HeldFilingSubject {
   readonly entity: BindableEntity;
   readonly ocdId: string;
   readonly heldCandidacyId: string | null;
-  readonly candidacyId: string;
   readonly record: EvidenceRecord;
 }
 
-export function heldFilingSubjects(ballot: BallotSet | null): HeldFilingSubject[] {
-  if (!ballot) return [];
-  const contests = new Map(ballot.contests.map(contest => [contest.id, contest]));
-  const current = new Set(ballot.candidacies.map(candidate => candidate.id));
-  return [...ballot.candidacies, ...ballot.filingCandidacies ?? []].flatMap(candidate => {
-    const filing = candidate.filing;
-    const contest = contests.get(candidate.contestId);
-    if (!filing || !contest) return [];
-    const name = `${candidate.givenName} ${candidate.familyName}`;
-    return [{ entity: { id: filing.id, name, nameClass: "person" as const, divisionType: "person" }, ocdId: contest.ocdId,
-      candidacyId: candidate.id, heldCandidacyId: current.has(candidate.id) ? candidate.id : null,
-      record: { kind: "CANDIDACY" as const, id: `held-filing:${filing.id}`, subjectId: filing.id,
+export function azHeldFilingSubjects(value: unknown = currentAzBallotProjection().candidateFilings): HeldFilingSubject[] {
+  const doc = value as { contests?: unknown[]; candidacies?: unknown[] } | null;
+  if (!Array.isArray(doc?.contests) || !Array.isArray(doc?.candidacies)) throw new Error("The promoted Arizona filing identity corpus is unreadable.");
+  const contests = new Map(doc.contests.map(value => {
+    const c = value as { id: string; title: string; ocdId: string };
+    return [c.id, c];
+  }));
+  return doc.candidacies.map(value => {
+    const c = value as { id: string; contestId: string; givenName: string; familyName: string; heldIdentityJoin?: { heldCandidacyId?: string } | null; provenance?: { sourceUrl?: string; sourceOrg?: string; collectedAt?: string } };
+    const contest = contests.get(c.contestId);
+    if (!c.id?.startsWith("az-sos-") || !c.givenName || !c.familyName || !contest?.ocdId || !contest.title || !c.provenance?.sourceUrl) throw new Error("A promoted Arizona filing lacks its identity or source.");
+    const name = `${c.givenName} ${c.familyName}`;
+    return { entity: { id: c.id, name, nameClass: "person", divisionType: "person" }, ocdId: contest.ocdId,
+      heldCandidacyId: c.heldIdentityJoin?.heldCandidacyId ?? null,
+      record: { kind: "CANDIDACY", id: `held-filing:${c.id}`, subjectId: c.id,
         text: `${name} is recorded in the source filing for ${contest.title}. This filing alone does not establish a current general-election ballot position.`,
-        sourceUrl: filing.provenance.sourceUrl, sourceOrg: filing.provenance.sourceOrg, retrievedAt: filing.provenance.collectedAt } }];
+        sourceUrl: c.provenance.sourceUrl, sourceOrg: c.provenance.sourceOrg ?? null, retrievedAt: c.provenance.collectedAt ?? null } };
   });
 }
 
@@ -33,8 +36,5 @@ export function requestedHeldFilings(rows: readonly HeldFilingSubject[], questio
   const explicit = new Set(explicitIds);
   const binding = bindNamedEntity(question, rows.map(row => row.entity));
   const named = new Set(binding.kind === "BOUND" ? [binding.entity.id] : binding.kind === "AMBIGUOUS" ? binding.candidates.map(c => c.id) : []);
-  return rows.filter(row => explicit.has(row.entity.id) || explicit.has(row.candidacyId) ||
-    (named.has(row.entity.id) && !(row.heldCandidacyId && representedIds.has(row.heldCandidacyId))))
-    .map(row => explicit.has(row.candidacyId) && row.candidacyId !== row.entity.id ? { ...row, entity: { ...row.entity, id: row.candidacyId },
-      record: { ...row.record, subjectId: row.candidacyId, canonicalSubjectId: row.candidacyId } } : row);
+  return rows.filter(row => explicit.has(row.entity.id) || (named.has(row.entity.id) && !(row.heldCandidacyId && representedIds.has(row.heldCandidacyId))));
 }

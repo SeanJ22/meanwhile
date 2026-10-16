@@ -10,8 +10,7 @@ import {
   meetingPartitionId,
   type MeetingPartitionContract,
 } from "../lib/civic-data/meeting-partitions.ts";
-import { processRoutineCandidate } from "../lib/civic-data/promotion.ts";
-import { clearPromotedReadModelCache } from "../lib/civic-data/read-model.ts";
+import { processRoutineCandidate } from "../lib/civic-data/candidate-lifecycle.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { RoutineRecordClass } from "../lib/civic-data/types.ts";
 import {
@@ -28,11 +27,6 @@ import type { ChildRunReport } from "../lib/sources/composite/index.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import { candidateForMeetingPartition, promoteMeetingPartitions } from "../scripts/ingest.ts";
 
-/*
- * A retired route hands its body to a successor partition. Until the successor's first promotion the retired
- * partition's last promoted version is HELD, composed in the successor's place and named on its readback; the
- * first promotion supersedes it. Never two authorities for one body, never none.
- */
 
 const BEFORE_CUTOVER = "2026-09-20T12:00:00.000Z";
 const FIRST_SUCCESSOR_RUN = "2026-09-20T14:00:00.000Z";

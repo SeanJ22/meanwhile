@@ -267,13 +267,6 @@
       "when": 1790889600003,
       "tag": "0037_r1_fact_scale",
       "breakpoints": true
-    },
-    {
-      "idx": 38,
-      "version": "7",
-      "when": 1790889600004,
-      "tag": "BL-30_candidate_scopes",
-      "breakpoints": true
     }
   ]
 }

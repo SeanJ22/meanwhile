@@ -1,3 +1,4 @@
+import { stateFromRegistryRuntimeContractId, type StateRegistryContractId } from "../registry/state-scopes.ts";
 import { parseStateBallotContractId, type StateBallotContractId, type StateBallotFamily } from "../ballot/state-scopes.ts";
 import type { ResolvedScope } from "../control-plane/expansion/membership.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS, type ManualProductionContractId } from "./manual-contracts.ts";
@@ -5,6 +6,8 @@ import { MANUAL_PRODUCTION_SOURCE_CONTRACTS, type ManualProductionContractId } f
 type ManualProducerMode = "DIRECT_SOURCE" | "VERIFIED_WORKER_RESULT" | "EXISTING_DERIVED" | "SCOPED_ADAPTER_OWED";
 interface Rule { readonly mode: ManualProducerMode; readonly state?: string; readonly reason: string }
 const RULES = {
+  "az-sos-ballot": { mode: "SCOPED_ADAPTER_OWED", state: "AZ", reason: "The reviewed Arizona ballot is retained while state publication is prepared." },
+  "nh-curated-ballot": { mode: "SCOPED_ADAPTER_OWED", state: "NH", reason: "The reviewed New Hampshire ballot is retained while state publication is prepared." },
   "candidate-campaign-sites-derived": { mode: "EXISTING_DERIVED", reason: "Verified campaign sources publish to their state through the standing derived-source child." },
   "campaign-finance": { mode: "VERIFIED_WORKER_RESULT", reason: "Complete saved door bytes and filed candidate/office/cycle/jurisdiction identities publish through normal Slide; unmatched rows remain work." },
   "government-budgets": { mode: "VERIFIED_WORKER_RESULT", reason: "Official adopted budgets, amendments and government-specific legal responsibility use the normal saved-evidence worker and Slide." },
@@ -37,7 +40,7 @@ const RULES = {
   "venue-resolutions": { mode: "EXISTING_DERIVED", reason: "Each meeting pass matches a newly published address to one exact Census street point and promotes the pin through this pointer itself (lib/meetings/venue-publication.ts); no person reviews it." },
   "meeting-body-crosswalk": { mode: "EXISTING_DERIVED", reason: "The existing meeting source-wiring session owns the normal held meeting/body binding and publication path." },
   "everyday-routing": { mode: "VERIFIED_WORKER_RESULT", reason: "Normal worker output publishes once it meets the section 3 standard; audits run afterward and repair what they find." },
-} as const satisfies Record<Exclude<ManualProductionContractId, StateBallotContractId> | StateBallotFamily, Rule>;
+} as const satisfies Record<Exclude<ManualProductionContractId, StateBallotContractId | StateRegistryContractId> | StateBallotFamily, Rule>;
 
 export interface ManualProducerInvocation {
   readonly id: ManualProductionContractId;
@@ -57,8 +60,9 @@ export function manualProducerInvocationMatrix(scopes: readonly ResolvedScope[],
     Number.isFinite(Date.parse(scope.decision.decidedAt)) && Date.parse(scope.decision.decidedAt) <= nowMs);
   return MANUAL_PRODUCTION_SOURCE_CONTRACTS.map(contract => {
     const stateContract = parseStateBallotContractId(contract.id);
-    const rule = RULES[stateContract?.family ?? contract.id as keyof typeof RULES];
-    const state = stateContract?.state ?? ("state" in rule ? rule.state : null);
+    const registryState = stateFromRegistryRuntimeContractId(contract.id);
+    const rule = RULES[registryState ? "registry-runtime-bindings" : stateContract?.family ?? contract.id as keyof typeof RULES];
+    const state = registryState ?? stateContract?.state ?? ("state" in rule ? rule.state : null);
     const applicable = sends.filter(scope => !state || scope.states.includes(state));
     return { id: contract.id, mode: rule.mode,
       instructionIds: [...new Set(applicable.map(scope => scope.decision.receiptId))],

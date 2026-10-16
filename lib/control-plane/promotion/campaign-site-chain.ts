@@ -335,7 +335,7 @@ export function marginaliaLeads(held: HeldMarginaliaResponse, subject: CampaignS
 }
 
 /** The five checks, computed from the vaulted read and the identity universe. FAIL names what failed. */
-export function campaignSiteChecks(input: {
+function campaignSiteChecks(input: {
   readonly subject: CampaignSiteSubject;
   readonly verdict: CampaignSiteVerdict;
   /** The vaulted read the verdict was made from. */

@@ -20,7 +20,7 @@ import {
   type PublishStateAuthorities,
 } from "../meetings/edge-serving.ts";
 import { resolveReaderArtifactWriteStore, type ReaderArtifactStore } from "../meetings/edge-store.ts";
-import { isStateAuthorityFamily, type AuthorityFamily } from "../meetings/edge-artifacts.ts";
+import { type AuthorityFamily } from "../meetings/edge-artifacts.ts";
 import type { RoutineRecordClass, PromotedPointerIdentity } from "./types.ts";
 import { readCuratedReaderProjection } from "./curated-reader-read-model.ts";
 import { readPromotedCivicData } from "./read-model.ts";
@@ -43,7 +43,7 @@ import type { RoutineDataStore } from "./store.ts";
 import { readPromotedEdgeFamilies, promotedEdgePointers, selectedStateEdgePointers } from "./promoted-edge-publication.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { censusEdgePublication } from "../../scripts/lib/census-edge-publication.ts";
-import { dispatchStateArtifacts, dispatchStateArtifactRetirements, type StateArtifactChildren } from "./state-artifact-dispatch.ts";
+import { dispatchStateArtifacts, type StateArtifactChildren } from "./state-artifact-dispatch.ts";
 
 function safeFailure(value: string): string {
   return value
@@ -92,7 +92,7 @@ export async function publishSupervisorReaderEdge(store: RoutineDataStore, obser
     "meeting-outcomes": [PIMA_LEGISTAR_OUTCOMES_CONTRACT, MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT, ...DOOR_OUTCOME_POINTERS],
   };
   const refreshes = (family: keyof typeof specialPointers) => specialPointers[family].some(pointer => owns(pointer.recordClass, pointer.scope));
-  const preparesMeetings = selected === null || selected.some(pointer => pointer.recordClass === "MEETING" || pointer.recordClass === "REGISTRY_RUNTIME_BINDING");
+  const preparesMeetings = selected === null || selected.some(pointer => pointer.recordClass === "MEETING" || pointer.recordClass === "REGISTRY_RUNTIME_BINDING" && pointer.scope === REGISTRY_RUNTIME_SCOPE);
   const statePointerFamilies = selectedStateEdgePointers(selected);
   const pointerFamilies = Object.fromEntries(Object.entries(promotedEdgePointers()).filter(([, pointers]) => pointers.some(pointer => owns(pointer.recordClass, pointer.scope)))) as ReturnType<typeof promotedEdgePointers>;
   if (selected === null || selected.some(pointer => ["STATE_ROLL_CALL", "STATE_LEGISLATOR_VOTES"].includes(pointer.recordClass))) {
@@ -116,8 +116,8 @@ export async function publishSupervisorReaderEdge(store: RoutineDataStore, obser
     } else {
       // A failed read cannot establish that no serving copy exists. Let the
       // outer publication error handler retain it and report a retryable error.
-      const servedManifest = (await artifactStore.readAuthorityManifest())?.manifest ?? null;
-      const servedMeetings = preparesMeetings ? (await artifactStore.readManifest())?.manifest ?? null : null;
+      const servedManifest = (await artifactStore.readManifest())?.manifest ?? null;
+      const servedMeetings = preparesMeetings ? servedManifest : null;
       sequence = servedManifest?.sequence ?? null;
       if (env.WTP_READER_EDGE_LOCAL_OK !== "1" && artifactStore.kind === "local-file") {
         throw new Error("Reader pages would be saved to a folder on the runner. Readers are still seeing the older copy.");
@@ -173,7 +173,7 @@ export async function publishSupervisorReaderEdge(store: RoutineDataStore, obser
         return contract ? pointerVersion(contract.recordClass, contract.scope) : async () => null;
       };
       const authority: PublishAuthority = Object.fromEntries(Object.entries(servedManifest?.authorityArtifacts ?? {}).filter(([family]) =>
-        family !== "state-legislators" && !isStateAuthorityFamily(family)).map(([family, ref]) => [family, { versionId: ref.version, carried: true }]));
+        family !== "state-legislators").map(([family, ref]) => [family, { versionId: ref.version, carried: true }]));
       const routingContract = manual("everyday-routing");
       if (owns(routingContract.recordClass, routingContract.scope)) try {
         const versionId = (await store.readPromotionIdentity(routingContract.recordClass, routingContract.scope))?.versionId ?? "not-recorded";
@@ -401,7 +401,6 @@ export async function publishSupervisorReaderEdge(store: RoutineDataStore, obser
       if (edge.status === "NOT_COMPOSABLE") throw new Error("Reader pages could not be assembled. " + edge.detail);
       const purge = edge.status === "PUBLISHED" && artifactStore.kind === "netlify-blobs" ? await purgeReaderCacheTags([READER_MANIFEST_CACHE_TAG]) : null;
       if (purge) console.log(JSON.stringify({ readerEdgePurge: purge.purged, store: destination, sequence }));
-      await dispatchStateArtifactRetirements({ store: currentStore, artifacts: artifactStore, env, children: options.stateArtifactChildren });
 
     }
   } catch (error) {

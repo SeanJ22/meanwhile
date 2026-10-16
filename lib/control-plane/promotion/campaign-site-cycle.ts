@@ -14,7 +14,7 @@ import {
   type LeadReadResult,
 } from "./campaign-site-chain.ts";
 import { campaignSiteReadRecorder } from "./campaign-site-reads.ts";
-import { campaignSiteSubjects, type FilingChannels } from "../../candidates/campaign-site-subjects.ts";
+import { campaignSiteSubjects, type FilingChannels, type LineupContest } from "../../candidates/campaign-site-subjects.ts";
 import { readCampaignSiteLead } from "../../candidates/campaign-site-verifier.ts";
 import { memoryInProcess, type ResearchGet, type ResearchRuntime } from "../../hunt/robots-first-fetch.ts";
 
@@ -38,7 +38,7 @@ export async function withinWallTime<T>(work: Promise<T>, ms: number): Promise<{
   }
 }
 
-export interface CampaignSiteCycleInput {
+interface CampaignSiteCycleInput {
   readonly repos: ControlPlaneRepositories;
   readonly subjects: ReadonlyMap<string, CampaignSiteSubject>;
   /** Candidacies whose promoted profile already carries a campaign link: their leads are read after every other candidacy's. */
@@ -203,10 +203,11 @@ export function campaignSiteSubjectsFromHoldings(
   nowIso: string,
 ): { readonly subjects: Map<string, CampaignSiteSubject>; readonly failures: readonly string[]; readonly linked: ReadonlySet<string> } {
   const { universes, failures } = candidateEnrichmentUniversesFromHoldings(holdings, nowIso);
-  const ballots = Object.values(holdings.general?.ballots ?? {});
-  const lineups = ballots.flatMap(ballot => ballot.generalLineup?.contests ?? []);
-  const filings: FilingChannels[] = ballots.flatMap(ballot => ballot.contacts ?? []);
-  for (const ballot of ballots) {
+  const lineups = ((holdings.az?.generalLineup as { contests?: unknown } | undefined)?.contests ?? []) as LineupContest[];
+  const contacts = (holdings.nj?.contacts as { contacts?: unknown } | undefined)?.contacts;
+  const filings: FilingChannels[] = (Array.isArray(contacts) ? contacts : contacts !== null && typeof contacts === "object" ? Object.values(contacts) : [])
+    .filter((row): row is FilingChannels => row !== null && typeof row === "object" && typeof (row as { candidacyId?: unknown }).candidacyId === "string");
+  for (const ballot of [...Object.values(holdings.general?.ballots ?? {}), holdings.az?.ballot, holdings.nh?.ballot, holdings.nj?.ballot]) {
     const candidacies = (ballot as { candidacies?: unknown } | undefined)?.candidacies;
     if (!Array.isArray(candidacies)) continue;
     for (const c of candidacies as { id?: unknown; websiteUrl?: unknown; provenance?: { sourceUrl?: string | null } }[]) {

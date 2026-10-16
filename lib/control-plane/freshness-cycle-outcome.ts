@@ -72,7 +72,7 @@ export interface RoutineCivicDataReaderReadbackOutcomeInput {
   readonly references: readonly RoutineCivicDataReaderReadbackReference[];
 }
 
-export interface RoutineCivicDataSupervisorOutcomeInput {
+interface RoutineCivicDataSupervisorOutcomeInput {
   readonly ballotPublications?: import("../civic-data/ballot-publication.ts").BallotPublicationSummaries;
   readonly lane?: "routine-civic-data" | "publish-now";
   readonly readerEdge?: import("../civic-data/reader-edge-outcome.ts").ReaderEdgePublicationOutcome;

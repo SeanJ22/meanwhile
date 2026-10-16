@@ -76,7 +76,7 @@ test("a standing-clock contract cannot regain an owner manual-promotion door und
 test("production executables cannot bypass source-scoped evidence through the generic transition driver", () => {
   const files = minimalFiles();
   files["scripts/renamed-generic-promoter.mts"] = [
-    'import { processRoutineCandidate as promoteAnything } from "../lib/civic-data/promotion.ts";',
+    'import { processRoutineCandidate as promoteAnything } from "../lib/civic-data/candidate-lifecycle.ts";',
     "await promoteAnything(store, candidate);",
   ].join("\n");
   assert.deepEqual(

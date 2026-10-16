@@ -6,8 +6,8 @@ import { ReaderPersonIdentityError } from "../lib/identity/reader-person.ts";
 
 const ok = async () => undefined;
 const readers = (over: Partial<PositionIdentityReaders> = {}): PositionIdentityReaders => ({
-  refreshRegistry: ok, refreshFederal: ok, refreshBallot: ok,
-  relatedAuthorities: () => ({ federal: false, ballot: false }),
+  refreshRegistry: ok, refreshFederal: ok, refreshAz: ok,
+  relatedAuthorities: () => ({ federal: false, az: false }),
   personKeys: (subject) => [subject],
   ...over,
 });
@@ -17,13 +17,13 @@ test("a registry that cannot be read resolves to the subject's own key", async (
   assert.deepEqual(keys, ["official-1"]);
 });
 
-test("the federal and selected state ballot projections refresh before identity resolves, only when the chain needs them", async () => {
+test("the federal and Arizona projections refresh before identity resolves, only when the chain needs them", async () => {
   const calls: string[] = [];
-  const base = { refreshFederal: async () => { calls.push("federal"); }, refreshBallot: async () => { calls.push("ballot"); } };
+  const base = { refreshFederal: async () => { calls.push("federal"); }, refreshAz: async () => { calls.push("az"); } };
   await positionIdentityKeys("congress:A1", readers(base));
   await positionIdentityKeys("local-1", readers(base));
-  await positionIdentityKeys("local-2", readers({ ...base, relatedAuthorities: () => ({ federal: false, ballot: true }) }));
-  assert.deepEqual(calls, ["federal", "ballot"]);
+  await positionIdentityKeys("local-2", readers({ ...base, relatedAuthorities: () => ({ federal: false, az: true }) }));
+  assert.deepEqual(calls, ["federal", "az"]);
 });
 
 test("a needed projection that failed to load never turns into a refusal", async () => {

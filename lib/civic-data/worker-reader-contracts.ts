@@ -14,7 +14,7 @@ const WORKER_READER_FAMILIES = {
 type WorkerReaderFamily = keyof typeof WORKER_READER_FAMILIES;
 export type WorkerReaderContract = Exclude<WorkerReaderFamily, "ballot-contests" | "voting-sites"> |
   StateBallotContractId<"ballot-contests" | "voting-sites">;
-export const WORKER_READER_CLASSES = Object.fromEntries(Object.entries(WORKER_READER_FAMILIES).flatMap(([family, recordClass]) =>
+const WORKER_READER_CLASSES = Object.fromEntries(Object.entries(WORKER_READER_FAMILIES).flatMap(([family, recordClass]) =>
   family === "ballot-contests" || family === "voting-sites"
     ? BALLOT_STATES.map(state => [stateBallotContractId(family, state), recordClass])
     : [[family, recordClass]])) as Readonly<Record<WorkerReaderContract, string>>;
@@ -30,7 +30,7 @@ export function isWorkerReaderContract(id: string): id is WorkerReaderContract {
 export const COMMENT_RULE_PUBLICATION = "comment-access" as const;
 export const WORKER_PUBLICATION_TASK_IDS: readonly string[] = ["registry-runtime-bindings", COMMENT_RULE_PUBLICATION, ...Object.keys(WORKER_READER_CLASSES)];
 
-export const CHECKLIST_PUBLICATION_DOORS = checklist.publicationDoors as readonly {
+const CHECKLIST_PUBLICATION_DOORS = checklist.publicationDoors as readonly {
   readonly family: string; readonly fields: readonly string[]; readonly recordClasses: readonly string[];
   readonly contractId: "registry-runtime-bindings" | typeof COMMENT_RULE_PUBLICATION | WorkerReaderFamily;
 }[];

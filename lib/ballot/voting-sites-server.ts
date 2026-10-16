@@ -1,50 +1,81 @@
-import { AsyncLocalStorage } from "node:async_hooks";
-import { currentReaderSelection } from "../db/reader-route.ts";
-import { currentReaderAuthorityEdge } from "../registry/runtime-edge.ts";
-import { requireBallotState, type BallotState } from "./state-scopes.ts";
-import { civicDataReadNotInitialized, promotedVersionOrThrow, readPromotedCivicData,
-  type CivicDataReadResult, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
-import { votingSitesContract } from "./voting-sites-data-plane.ts";
+import {
+  civicDataReadNotInitialized,
+  promotedVersionOrThrow,
+  readPromotedCivicData,
+  type CivicDataReadResult,
+  type PromotedCivicDataReadOptions,
+} from "../civic-data/read-model.ts";
+import { VOTING_SITES_CONTRACT } from "./voting-sites-data-plane.ts";
 import type { VotingSitesFile } from "./voting-sites.ts";
 
-type VotingReads = Map<BallotState, CivicDataReadResult<VotingSitesFile>>;
-const requests = new WeakMap<object, VotingReads>();
-const localReads = new AsyncLocalStorage<VotingReads>();
-function states(): VotingReads {
-  const edge = currentReaderAuthorityEdge() ?? currentReaderSelection();
-  let held = edge ? requests.get(edge) : localReads.getStore();
-  if (!held) {
-    held = new Map();
-    if (edge) requests.set(edge, held); else localReads.enterWith(held);
+let cache: VotingSitesFile | null = null;
+let readState: CivicDataReadResult<VotingSitesFile> = civicDataReadNotInitialized(
+  VOTING_SITES_CONTRACT.recordClass,
+  VOTING_SITES_CONTRACT.scope,
+  "The voting-sites canonical pointer has not been read for this process.",
+);
+
+function validateVotingSites(value: VotingSitesFile, version: string): void {
+  if (
+    !/^\d{4}-\d{2}-\d{2}$/.test(value.generatedAt) ||
+    !Array.isArray(value.jurisdictions) ||
+    value.jurisdictions.length === 0 ||
+    value.jurisdictions.some((jurisdiction) =>
+      !jurisdiction.ocdId ||
+      !jurisdiction.sourceUrl ||
+      !Array.isArray(jurisdiction.sites) ||
+      (jurisdiction.sites.length === 0 && jurisdiction.refusal === null && !jurisdiction.publication && !jurisdiction.office && !jurisdiction.rules?.length && !jurisdiction.addressLookups?.length)
+    )
+  ) {
+    throw new Error(`Voting-sites projection ${version} does not satisfy VotingSitesFile.`);
   }
-  return held;
 }
 
-export async function readVotingSitesProjection(state: string, options: PromotedCivicDataReadOptions = {}): Promise<CivicDataReadResult<VotingSitesFile>> {
-  const key = requireBallotState(state), contract = votingSitesContract(key), cache = states();
-  const result = await readPromotedCivicData<VotingSitesFile>(contract.recordClass, contract.scope, options);
-  if (result.kind === "PROMOTED" && result.metadata.sourceId !== contract.sourceId) {
-    throw new Error(`Voting-sites pointer names ${result.metadata.sourceId}, not ${contract.sourceId}.`);
+export async function readVotingSitesProjection(
+  options: PromotedCivicDataReadOptions = {},
+): Promise<CivicDataReadResult<VotingSitesFile>> {
+  const result = await readPromotedCivicData<VotingSitesFile>(
+    VOTING_SITES_CONTRACT.recordClass,
+    VOTING_SITES_CONTRACT.scope,
+    options,
+  );
+  if (result.kind === "PROMOTED") {
+    if (result.metadata.sourceId !== VOTING_SITES_CONTRACT.sourceId) {
+      throw new Error(
+        `Voting-sites pointer names ${result.metadata.sourceId}, not ${VOTING_SITES_CONTRACT.sourceId}.`,
+      );
+    }
+    validateVotingSites(result.value, result.metadata.versionId ?? "unknown");
+    cache = result.value;
+  } else {
+    cache = null;
   }
-  cache.delete(key);
-  cache.set(key, result);
-  if (cache.size > 8) cache.delete(cache.keys().next().value!);
+  readState = result;
   return result;
 }
 
-export async function refreshVotingSitesFromPromoted(state: string, options: PromotedCivicDataReadOptions = {}): Promise<string | null> {
-  return promotedVersionOrThrow(await readVotingSitesProjection(state, options));
+export async function refreshVotingSitesFromPromoted(
+  options: PromotedCivicDataReadOptions = {},
+): Promise<string | null> {
+  return promotedVersionOrThrow(await readVotingSitesProjection(options));
 }
 
-export function votingSitesReadState(state: string): CivicDataReadResult<VotingSitesFile> {
-  const contract = votingSitesContract(state);
-  return states().get(requireBallotState(state)) ?? civicDataReadNotInitialized(contract.recordClass, contract.scope, "The state's voting sites have not been read.");
+export function votingSitesReadState(): CivicDataReadResult<VotingSitesFile> {
+  return readState;
 }
 
-export function loadVotingSites(state: string): VotingSitesFile {
-  const result = votingSitesReadState(state);
-  if (result.kind === "PROMOTED") return result.value;
-  throw new Error(`Voting-sites holding is ${result.kind}; refresh the state's projection before reading it.`);
+export function loadVotingSites(): VotingSitesFile {
+  if (cache) return cache;
+  throw new Error(
+    `Voting-sites holding is ${readState.kind}; call refreshVotingSitesFromPromoted before reading the projection.`,
+  );
 }
 
-export function resetVotingSitesCache(): void { states().clear(); }
+export function resetVotingSitesCache(): void {
+  cache = null;
+  readState = civicDataReadNotInitialized(
+    VOTING_SITES_CONTRACT.recordClass,
+    VOTING_SITES_CONTRACT.scope,
+    "The voting-sites canonical pointer has not been read for this process.",
+  );
+}

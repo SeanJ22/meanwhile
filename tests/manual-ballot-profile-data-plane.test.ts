@@ -1,3 +1,4 @@
+import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import { stateBallotScope } from "../lib/ballot/state-scopes.ts";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
@@ -8,17 +9,14 @@ import test from "node:test";
 import type { CandidateCorpus, CandidateDocument } from "../lib/candidates/corpus.ts";
 import { measureRecordsForBallot, type MeasureRecord } from "../lib/ballot/measure-records.ts";
 import { summaryForContest } from "../lib/ballot/measure-summary.ts";
-import { readGenericBallotProjection, type GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
+import { type GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
 import {
   manualProjectionCandidate,
   type ManualProjectionContractId,
   type ManualProjectionPackage,
+  type CandidateProfilesProjection,
 } from "../lib/civic-data/manual-projections.ts";
-import {
-  readCandidateCorpusProjection,
-  readCandidateProfilesProjection,
-} from "../lib/civic-data/manual-read-models.ts";
 import { projectRoutineDataObservability } from "../lib/civic-data/observability.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -206,9 +204,9 @@ test("national ballot and candidate authorities promote through the canonical ca
   }
 
   const reads = await Promise.all([
-    readGenericBallotProjection("NH", { store, bypassCache: true, now: T0 }),
-    readCandidateProfilesProjection("AZ", { store, bypassCache: true, now: T0 }),
-    readCandidateCorpusProjection("AZ", { store, bypassCache: true, now: T0 }),
+    readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", "NH"), { store, bypassCache: true, now: T0 }),
+    readPromotedCivicData<CandidateProfilesProjection>("CANDIDATE_PROFILE", stateBallotScope("candidate-profiles", "AZ"), { store, bypassCache: true, now: T0 }),
+    readPromotedCivicData<CandidateCorpus>("CANDIDATE_PUBLICATION", stateBallotScope("candidate-corpus", "AZ"), { store, bypassCache: true, now: T0 }),
   ]);
   assert.deepEqual(reads.map((read) => read.kind), ["PROMOTED", "PROMOTED", "PROMOTED"]);
 });
@@ -228,7 +226,7 @@ test("measure records survive civic-data promotion and change without a software
     const candidate = manualProjectionCandidate(input);
     const published = await processRegisteredManualCandidate(store, "ballot-contests:NH", candidate, at);
     assert.equal(published.candidate.state, "PROMOTED");
-    const read = await readGenericBallotProjection("NH", { store, now: at, bypassCache: true });
+    const read = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", "NH"), { store, now: at, bypassCache: true });
     assert.equal(read.kind, "PROMOTED");
     assert.ok(read.value);
     assert.equal(summaryForContest(contest.id, measureRecordsForBallot(read.value.ballots["NH:nh-2026"]))?.summary, whatItDoes);
@@ -346,9 +344,9 @@ test("store failure never opens a bundled ballot/profile/corpus seed", async () 
     async readCandidate() { candidateReads += 1; return null; },
   };
   const reads = await Promise.all([
-    readGenericBallotProjection("NH", { store: brokenStore, bypassCache: true }),
-    readCandidateProfilesProjection("AZ", { store: brokenStore, bypassCache: true }),
-    readCandidateCorpusProjection("AZ", { store: brokenStore, bypassCache: true }),
+    readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", "NH"), { store: brokenStore, bypassCache: true }),
+    readPromotedCivicData<CandidateProfilesProjection>("CANDIDATE_PROFILE", stateBallotScope("candidate-profiles", "AZ"), { store: brokenStore, bypassCache: true }),
+    readPromotedCivicData<CandidateCorpus>("CANDIDATE_PUBLICATION", stateBallotScope("candidate-corpus", "AZ"), { store: brokenStore, bypassCache: true }),
   ]);
   assert.ok(reads.every((read) => read.kind === "STORE_UNREACHABLE"));
   assert.equal(candidateReads, 0);

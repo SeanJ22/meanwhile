@@ -477,19 +477,17 @@ test("the funding surfaces ask the author's question, and offer only its scale",
 
 
 test("every provision is a valid reaction target, and reactions attach to the PART", async () => {
-  const { provisionsForContest, getProvisionTargetIds } = await import(
+  const { MEASURE_PROVISIONS, getProvisionTargetIds } = await import(
     "../lib/ballot/measure-provisions.ts"
   );
-  const { azBallot } = await import("./helpers/ballot-district-fixtures.ts");
-  const records = azBallot.measureRecords ?? [];
-  const provisions = records.flatMap(record => provisionsForContest(record.contestId, records));
-  const ids = getProvisionTargetIds(records);
+  const { MEASURE_RECORD_FIRST_SEED } = await import("../lib/ballot/measure-records.ts");
+  const ids = getProvisionTargetIds(MEASURE_RECORD_FIRST_SEED);
 
-  assert.ok(provisions.length > 0, "no provisions to react to");
-  assert.equal(ids.size, provisions.length, "a provision lost its target id");
+  assert.ok(MEASURE_PROVISIONS.length > 0, "no provisions to react to");
+  assert.equal(ids.size, MEASURE_PROVISIONS.length, "a provision lost its target id");
 
   // The id names both the measure and the part answered.
-  for (const provision of provisions) {
+  for (const provision of MEASURE_PROVISIONS) {
     assert.ok(
       provision.id.startsWith(provision.contestId + "#"),
       `${provision.id} does not name its contest`,
@@ -497,7 +495,7 @@ test("every provision is a valid reaction target, and reactions attach to the PA
     assert.ok(provision.id.length > provision.contestId.length + 1);
   }
 
-  const kinds = new Set(provisions.map((provision) => provision.kind));
+  const kinds = new Set(MEASURE_PROVISIONS.map((provision) => provision.kind));
   for (const kind of ["FUNDING", "PROGRAM", "OVERSIGHT", "SUNSET", "START"] as const) {
     assert.ok(kinds.has(kind), `no provision of kind ${kind} exists to react to`);
   }

@@ -3,7 +3,7 @@ import test from "node:test";
 import { PGlite } from "@electric-sql/pglite";
 import { drizzle } from "drizzle-orm/pglite";
 import { MemoryRoutineDataStore, PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
-import { partitionCivicPayload } from "../lib/civic-data/payload-parts.ts";
+import { partitionCivicPayload } from "../lib/civic-data/payload-codec.ts";
 import { readFile } from "node:fs/promises";
 
 test("ballot workers read only matching state divisions from inline and encoded registry pointers", async () => {

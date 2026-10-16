@@ -1,4 +1,5 @@
-import { BALLOT_STATES, stateBallotContractId, stateBallotScope } from "../ballot/state-scopes.ts";
+import { BALLOT_STATES, stateBallotScope, type BallotState } from "../ballot/state-scopes.ts";
+import { REGISTRY_STATES, stateRegistryRuntimeScope } from "../registry/state-scopes.ts";
 import { DOTGOV_SCOPE, readDotGovProjection } from "./dotgov.ts";
 import { readGenericBallotProjection } from "../ballot/generic-projection.ts";
 import { createHash } from "node:crypto";
@@ -14,14 +15,18 @@ import type { PromotedPointerIdentity, RoutineRecordClass } from "./types.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import { requiredRoutineContract } from "./contracts.ts";
 import {
+  readAzBallotProjection,
+  readNhBallotProjection,
   readCandidateCorpusProjection,
   readCandidateProfilesProjection,
 } from "./manual-read-models.ts";
 import {
   DERIVED_CAMPAIGN_SITES_RECORD_CLASS,
+  DERIVED_CAMPAIGN_SITES_SCOPE,
   readDerivedCampaignSites,
 } from "./derived-campaign-sites.ts";
 import { readCuratedReaderProjection } from "./curated-reader-read-model.ts";
+import { VOTING_SITES_CONTRACT } from "../ballot/voting-sites-data-plane.ts";
 import { readVotingSitesProjection } from "../ballot/voting-sites-server.ts";
 import { readNhMembers } from "./state-members.ts";
 import { readFundingSnapshot } from "../funding/snapshot.ts";
@@ -34,7 +39,7 @@ import { FEDERAL_KEY_VOTE_SCOPE, FEDERAL_ROLLCALL_SCOPE } from "../votes/data-pl
 import { readOfficeholderStatementsProjection } from "../corpus/data-plane.ts";
 import { readExecutiveActionsProjection } from "../officials/executive-actions.ts";
 import { AZ_OFFICIAL_ACTIONS_CONTRACT } from "../outcomes/data-plane.ts";
-import { STATE_AUTHORITY_FAMILIES, type StateAuthorityFamily, type GlobalPromotedAuthorityFamily, type PromotedFamilyArtifactValue, type ReaderAuthorityManifest } from "../meetings/edge-artifacts.ts";
+import { STATE_AUTHORITY_FAMILIES, type StateAuthorityFamily, type GlobalPromotedAuthorityFamily, type PromotedFamilyArtifactValue, type ReaderManifest } from "../meetings/edge-artifacts.ts";
 import { prepareStateAuthorityArtifact, servedAuthorityVersion, type PublishAuthorityCarried, type PublishAuthorityValue, type PublishStateAuthorities, type PublishedStateAuthority } from "../meetings/edge-serving.ts";
 import type { ReaderArtifactStore } from "../meetings/edge-store.ts";
 import { PRL_ARCHIVE_SCOPE, readPrlArchiveProjection } from "../sources/prl/archive-publication.ts";
@@ -67,6 +72,14 @@ export function promotedEdgePointers(): Readonly<Record<GlobalPromotedAuthorityF
     "other-reader-data": [],
     "state-votes": [],
     "government-domains": [{ recordClass: "DOTGOV_REFERENCE", scope: DOTGOV_SCOPE, reader: readDotGovProjection }],
+    "ballot-contests": [manual("ballot-contests", readGenericBallotProjection)],
+    "ballot-az": [manual("az-sos-ballot", readAzBallotProjection)],
+    "ballot-nh": [manual("nh-curated-ballot", readNhBallotProjection)],
+    "candidate-profiles": [manual("candidate-profiles", readCandidateProfilesProjection),
+      { recordClass: DERIVED_CAMPAIGN_SITES_RECORD_CLASS, scope: DERIVED_CAMPAIGN_SITES_SCOPE, reader: readDerivedCampaignSites }],
+    "candidate-publications": [manual("candidate-corpus", readCandidateCorpusProjection),
+      { recordClass: DERIVED_CAMPAIGN_SITES_RECORD_CLASS, scope: DERIVED_CAMPAIGN_SITES_SCOPE, reader: readDerivedCampaignSites }],
+    "voting-sites": [{ ...VOTING_SITES_CONTRACT, reader: readVotingSitesProjection }],
     "ballot-navigation": [manual("ballot-navigation", (options) => readCuratedReaderProjection("ballot-navigation", options))],
     "official-filings": [manual("official-filings", (options) => readCuratedReaderProjection("official-filings", options))],
     "member-offices": [manual("member-offices", (options) => readCuratedReaderProjection("member-offices", options))],
@@ -91,14 +104,19 @@ export function promotedEdgePointers(): Readonly<Record<GlobalPromotedAuthorityF
   };
 }
 
-function statePromotedEdgePointers(state: string): Readonly<Record<StateAuthorityFamily, readonly PromotedEdgePointer[]>> {
+function statePromotedEdgePointers(state: string): Readonly<Partial<Record<StateAuthorityFamily, readonly PromotedEdgePointer[]>>> {
+  const pointer = (recordClass: RoutineRecordClass, scope: string): PromotedEdgePointer => ({
+    recordClass, scope, reader: options => readPromotedCivicData(recordClass, scope, options),
+  });
+  const registry = { "registry-runtime": [pointer("REGISTRY_RUNTIME_BINDING", stateRegistryRuntimeScope(state))] };
+  if (!BALLOT_STATES.includes(state as BallotState)) return registry;
   return {
-    "ballot-contests": [manual(stateBallotContractId("ballot-contests", state), options => readGenericBallotProjection(state, options))],
-    "candidate-profiles": [manual(stateBallotContractId("candidate-profiles", state), options => readCandidateProfilesProjection(state, options))],
-    "candidate-publications": [manual(stateBallotContractId("candidate-corpus", state), options => readCandidateCorpusProjection(state, options))],
-    "voting-sites": [{ recordClass: "VOTING_SITE", scope: stateBallotScope("voting-sites", state), reader: options => readVotingSitesProjection(state, options) }],
-    "candidate-campaign-sites-derived": [{ recordClass: DERIVED_CAMPAIGN_SITES_RECORD_CLASS,
-      scope: stateBallotScope("candidate-campaign-sites-derived", state), reader: options => readDerivedCampaignSites(state, options) }],
+    ...registry,
+    "ballot-contests": [pointer("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", state))],
+    "candidate-profiles": [pointer("CANDIDATE_PROFILE", stateBallotScope("candidate-profiles", state))],
+    "candidate-publications": [pointer("CANDIDATE_PUBLICATION", stateBallotScope("candidate-corpus", state))],
+    "voting-sites": [pointer("VOTING_SITE", stateBallotScope("voting-sites", state))],
+    "candidate-campaign-sites-derived": [pointer(DERIVED_CAMPAIGN_SITES_RECORD_CLASS, stateBallotScope("candidate-campaign-sites-derived", state))],
   };
 }
 
@@ -116,7 +134,7 @@ export function promotedFamilyVersion(versions: readonly string[]): string {
   return [...versions].sort().join("|");
 }
 
-export interface PromotedEdgeFamiliesRead {
+interface PromotedEdgeFamiliesRead {
   readonly authority: Partial<Record<GlobalPromotedAuthorityFamily, PublishAuthorityValue | PublishAuthorityCarried>>;
   readonly skipped: readonly string[];
 }
@@ -165,7 +183,7 @@ async function readFamily(input: {
 
 export async function readPromotedEdgeFamilies(input: {
   readonly store: CivicDataReadStore & Pick<RoutineDataStore, "listPromotionScopes"> & { readonly readPromotionIdentity: NonNullable<CivicDataReadStore["readPromotionIdentity"]> };
-  readonly servedManifest: Pick<ReaderAuthorityManifest, "authorityArtifacts"> | null;
+  readonly servedManifest: Pick<ReaderManifest, "authorityArtifacts"> | null;
   readonly now: string;
   readonly families?: Readonly<Partial<Record<GlobalPromotedAuthorityFamily, readonly PromotedEdgePointer[]>>>;
   readonly readServedFamily?: (family: GlobalPromotedAuthorityFamily) => Promise<PromotedFamilyArtifactValue | null>;
@@ -194,15 +212,18 @@ export async function readPromotedEdgeFamilies(input: {
 
 export function selectedStateEdgePointers(selected: readonly Pick<PromotedPointerIdentity, "recordClass" | "scope">[] | null) {
   const owns = (pointer: PromotedEdgePointer) => selected === null || selected.some(row => row.recordClass === pointer.recordClass && row.scope === pointer.scope);
-  return BALLOT_STATES.flatMap(state => {
+  return REGISTRY_STATES.flatMap(state => {
     const families = statePromotedEdgePointers(state);
-    return STATE_AUTHORITY_FAMILIES.flatMap(family => families[family].some(owns) ? [{ state, family, pointers: families[family] }] : []);
+    return STATE_AUTHORITY_FAMILIES.flatMap(family => {
+      const pointers = families[family];
+      return pointers?.some(owns) ? [{ state, family, pointers }] : [];
+    });
   });
 }
 
 export async function readPromotedStateEdgeFamilies(input: {
   readonly store: CivicDataReadStore & { readonly readPromotionIdentity: NonNullable<CivicDataReadStore["readPromotionIdentity"]> };
-  readonly servedManifest: Pick<ReaderAuthorityManifest, "stateAuthorities"> | null;
+  readonly servedManifest: Pick<ReaderManifest, "stateAuthorities"> | null;
   readonly now: string;
   readonly selected: ReturnType<typeof selectedStateEdgePointers>;
   readonly artifactStore: ReaderArtifactStore;

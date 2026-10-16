@@ -104,9 +104,7 @@ function htmlRows(text: string, tableIndex: number): RawCell[][] {
   return rows;
 }
 
-/** Fields visibly available on every row of a selected ordinary roster table.
- * This is a repair obligation, not extracted civic data: the mapped parser
- * still has to prove each value against its own source span. */
+// Visible fields create repair obligations; the parser must still prove each value against its source.
 export function rosterTableFieldOmissions(evidence: WorkerEvidence, shape: RecordExtractionShape): readonly string[] {
   if (shape.format !== "HTML_TABLE" || shape.headerRows < 1) return [];
   const rows = htmlRows(evidence.text, shape.tableIndex);
@@ -119,9 +117,7 @@ export function rosterTableFieldOmissions(evidence: WorkerEvidence, shape: Recor
     !Object.entries(shape.fields).some(([name, field]) => name === "phone" && field.source === phoneColumn && field.attribute === undefined)) {
     omissions.push("phone");
   }
-  // Only an address visible in every selected row is mappable by the current
-  // tabular parser. A JavaScript "Email" button is not an email address, and
-  // a differently named field would be dropped by the roster publisher.
+  // Only literal addresses present in every selected row are mappable by the tabular publisher.
   const emailColumn = headers.findIndex(cell => /^(?:e-?mail|(?:office|official) e-?mail)$/i.test(cell.value));
   if (emailColumn >= 0 && members.every(row => /^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(row[emailColumn]?.value.trim() ?? "")) &&
     !Object.entries(shape.fields).some(([name, field]) => name === "email" && field.source === emailColumn && field.attribute === undefined)) {
@@ -204,9 +200,7 @@ export function inventoryRecordEvidence(evidence: WorkerEvidence, shape: RecordE
     (shape.format !== "HTML_TABLE" || mapping.attribute !== "href" || typeof mapping.source !== "number")))
     refuse("FIELD_MAPPING_INVALID", "A link attribute is supported only on an HTML table column.");
   if (shape.format === "HTML_PROFILE") {
-    // CivicPlus individual staff pages expose one detail heading and a
-    // label/value list. Mask active/template content without shifting UTF-16
-    // offsets; a script's document.title or an image alt is never a person row.
+    // Mask active content without shifting UTF-16 offsets used to prove each value against its source.
     const inert = evidence.text.replace(/<(script|style|template)\b[^>]*>[\s\S]*?<\/\1\s*>/gi, match => " ".repeat(match.length));
     const hasClass = (attrs: string, wanted: string): boolean => {
       const declared = /\bclass\s*=\s*(["'])(.*?)\1/i.exec(attrs)?.[2];

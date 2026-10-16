@@ -13,7 +13,6 @@ import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { routineReceiptFields, type RoutineRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
-import { partitionHeldStateAuthorities } from "../lib/civic-data/state-authority-cutover.ts";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const stateDirectory = resolve(root, "data/ballot/2026-general");
@@ -21,7 +20,7 @@ const stateDirectory = resolve(root, "data/ballot/2026-general");
 type PublicationStage = "input-metadata" | "prior-state" | "state-contests" | "state-records" | "candidate-build" | "promotion";
 type StageObserver = (stage: PublicationStage, phase: "start" | "end") => void;
 
-export async function assembleBallotPackage(options: {
+async function assembleBallotPackage(options: {
   state: BallotState; directory?: string; store: CivicDataReadStore; now?: string; onStage?: StageObserver;
 }) {
   const state = requireBallotState(options.state), now = options.now ?? new Date().toISOString();
@@ -32,7 +31,7 @@ export async function assembleBallotPackage(options: {
   if (!input.ballots || !Object.keys(input.ballots).length || !input.sourceReceipt) throw new Error("A state file needs ballots and sourceReceipt.");
   options.onStage?.("input-metadata", "end");
   options.onStage?.("prior-state", "start");
-  const prior = await readManualProjectionPrior(contractId, options.store, now);
+  let prior = await readManualProjectionPrior(contractId, options.store, now);
   const priorVersionId = prior?.versionId ?? null;
   options.onStage?.("prior-state", "end");
   let sourceThrough = prior?.temporal?.sourceThrough ?? input.sourceReceipt.reviewedAt;
@@ -40,6 +39,7 @@ export async function assembleBallotPackage(options: {
   const merge = new BallotContestMerge({ contractId, version: prior?.temporal?.version ?? "2026-general", sourceThrough,
     sourceReceipt: { ...input.sourceReceipt, reviewedAt: now, reviewedBy: "assemble-ballot-package" },
     payload: { kind: "ballot-contests", ballots: input.ballots } }, prior, true);
+  prior = null;
   options.onStage?.("state-contests", "start");
   await readBallotStateFile(path, (parts, row) => {
     if (parts.length === 3 && ["contests", "heldContests"].includes(parts[2])) merge.add(parts[1], parts[2], row);
@@ -94,7 +94,6 @@ if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1]
   const state = requireBallotState(process.argv.find(arg => arg.startsWith("--state="))?.slice(8) ?? "");
   const now = new Date().toISOString();
   prepareProductionCivicDataWrite();
-  await partitionHeldStateAuthorities(state);
   const result = await runBallotPublication({ state, now });
   console.log("BALLOT_PUBLICATION_RESULT=" + JSON.stringify(result.report));
   if (result.receipt) console.log("RCD_RECEIPT=" + JSON.stringify(result.receipt));

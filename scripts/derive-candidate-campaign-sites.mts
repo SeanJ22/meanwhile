@@ -1,6 +1,6 @@
 import { requireBallotState, stateBallotScope, stateBallotContractId } from "../lib/ballot/state-scopes.ts";
 import { assignment } from "./cli-args.mts";
-import { readGenericBallotProjection } from "../lib/ballot/generic-projection.ts";
+import type { GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
 import { deriveCandidateUniverse } from "../lib/hunt/candidate-universe.ts";
 import { campaignSiteSubjects } from "../lib/candidates/campaign-site-subjects.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
@@ -11,7 +11,7 @@ import { neon } from "@neondatabase/serverless";
 
 import { promotedInputRef } from "../lib/civic-data/derived-authority.ts";
 import { derivedCampaignSitesContractId, DERIVED_CAMPAIGN_SITES_RECORD_CLASS, derivedCampaignSitesScope,
-  readDerivedCampaignSites, type CandidateLinksShape } from "../lib/civic-data/derived-campaign-sites.ts";
+  type DerivedCampaignSitesProjection, type CandidateLinksShape } from "../lib/civic-data/derived-campaign-sites.ts";
 import {
   deriveCampaignSitesFromCaptures,
   derivedCampaignSitesCandidate,
@@ -31,9 +31,9 @@ import { findHeldCapture, heldVaultIndex } from "../lib/control-plane/evidence/r
 import { candidatePublicationLinks, candidatePublicationCaptureUrls,
   heldCandidatePublicationRead } from "../lib/control-plane/promotion/campaign-publication-links.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
-import { partitionHeldStateAuthority } from "../lib/civic-data/state-authority-cutover.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { heldArtifactCaptures } from "../lib/civic-data/held-artifact-captures.ts";
+import { rememberStatePublicationPrior } from "../lib/civic-data/state-publication-prior.ts";
 
 if (!process.argv.includes("--promote")) {
   throw new Error("usage: scripts/derive-candidate-campaign-sites.mts --promote (the standing runner's child; there is no dry mode against production)");
@@ -44,7 +44,6 @@ prepareProductionCivicDataWrite();
 const store = new PostgresRoutineDataStore();
 const now = new Date().toISOString();
 const state = requireBallotState(assignment(process.argv, "state") ?? "");
-for (const family of ["candidate-profiles", "candidate-corpus", "candidate-campaign-sites-derived"] as const) await partitionHeldStateAuthority(family, state);
 const PROFILES = requiredManualProductionContract(stateBallotContractId("candidate-profiles", state));
 
 async function finish(candidate: RoutineCandidate): Promise<void> {
@@ -127,7 +126,8 @@ async function linkedPublicationReads(vaultRoot: string, approvals: readonly Pub
 }
 
 async function readPrior() {
-  const priorRead = await readDerivedCampaignSites(state, { store, bypassCache: true, now });
+  const priorRead = await readPromotedCivicData<DerivedCampaignSitesProjection>(DERIVED_CAMPAIGN_SITES_RECORD_CLASS, derivedCampaignSitesScope(state), { store, bypassCache: true, now });
+  if (priorRead.kind === "PROMOTED") rememberStatePublicationPrior(store, priorRead.projection);
   const priorInput = priorRead.kind === "PROMOTED" ? promotedInputRef(DERIVED_CAMPAIGN_SITES_RECORD_CLASS,
     derivedCampaignSitesScope(state), priorRead.metadata.versionId, priorRead.value, priorRead.metadata.promotedAt) : null;
   return priorRead.kind === "PROMOTED" && priorInput?.kind === "PROMOTED_VERSION"
@@ -171,37 +171,36 @@ async function readCaptures(approvals: readonly PublishableCampaignSiteApproval[
 
 async function main(): Promise<void> {
   const profiles = await readProfiles();
-  const prior = await readPrior();
+  let prior = await readPrior();
   const approvals = await readApprovals();
   const pass = await deriveCampaignSitesFromCaptures({ state, approvals, prior, profiles, now, readCaptures });
   for (const p of pass.plan?.published ?? []) console.log(`  published ${p.key}: ${p.url} (${p.approvalRecordId})`);
   for (const h of pass.plan?.held ?? []) console.log(`  held ${h.key}: ${h.code}: ${h.detail}`);
+  let plan: DerivedCampaignSitesPlan | null = pass.plan;
+  if (!plan && !(prior && "unreadable" in prior)) plan = (await deriveCampaignSitesFromCaptures({
+    state, approvals: [], prior, profiles: null, now, readCaptures,
+  })).plan;
+  prior = null;
   await finish(pass.candidate);
-  const readablePrior = prior && !("unreadable" in prior) ? prior : null;
-  let plan: DerivedCampaignSitesPlan | null = pass.plan ?? (prior && "unreadable" in prior ? null : {
-      records: readablePrior?.projection.records ?? [], portraits: readablePrior?.projection.portraits ?? [],
-      inputs: readablePrior ? [readablePrior.input] : [], published: [], held: [],
-      ...(readablePrior ? { prior: readablePrior } : {}),
-    });
   let subjects: ReturnType<typeof campaignSiteSubjects> = new Map();
   try {
-    const national = await readGenericBallotProjection(state, { store, bypassCache: true, now });
-    if (national.kind === "PROMOTED") {
+    const ballotRead = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", state), { store, bypassCache: true, now });
+    if (ballotRead.kind === "PROMOTED") {
       const groups = new Map<string, BallotSet[]>();
-      for (const ballot of Object.values(national.value.ballots)) {
+      for (const ballot of Object.values(ballotRead.value.ballots)) {
         const key = `${ballot.election.state}:${ballot.election.date.slice(0, 4)}`;
         groups.set(key, [...(groups.get(key) ?? []), ballot]);
       }
       subjects = campaignSiteSubjects({ universes: [...groups.values()].map(ballots => deriveCandidateUniverse({
         stateCode: ballots[0].election.state, cycle: Number(ballots[0].election.date.slice(0, 4)),
-        generatedBy: "published national ballots", generatedOn: now.slice(0, 10),
+        generatedBy: "published state ballots", generatedOn: now.slice(0, 10),
         documents: ballots.map(ballot => ({ path: ballot.election.id, contests: ballot.contests, candidacies: ballot.candidacies })),
         stores: { huntState: {}, cards: {}, links: {}, linkHunts: [] } })) });
-      const reference = promotedInputRef("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", state), national.metadata.versionId,
-        national.value, national.metadata.promotedAt);
+      const reference = promotedInputRef("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", state), ballotRead.metadata.versionId,
+        ballotRead.value, ballotRead.metadata.promotedAt);
       if (reference && plan) plan = { ...plan, inputs: [...plan.inputs, reference] };
     }
-  } catch (error) { console.error(`National candidate portrait subjects could not be read: ${error instanceof Error ? error.message : String(error)}`); }
+  } catch (error) { console.error(`State candidate portrait subjects could not be read: ${error instanceof Error ? error.message : String(error)}`); }
   if (plan) await publishCampaignSitePortraits({
     plan, approvals: "unreadable" in approvals ? [] : approvals, subjects: [...subjects.values()], now,
     held: async record => {

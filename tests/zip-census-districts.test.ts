@@ -6,7 +6,7 @@ import type { CensusDistrictEdge } from "../lib/census-geography/district-edge.t
 import { selectGeographyVersion } from "../lib/census-geography/selection.ts";
 import { withCensusDistricts } from "../lib/geo/zip-census-districts.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
-import { contestsForDivisions } from "../lib/ballot/contests.ts";
+import { contestsForDivisions } from "../lib/sources/ballot-nj-morris/index.ts";
 import { azBallot, azDistricts, azDistrictSlice, electionSelection } from "./helpers/ballot-district-fixtures.ts";
 
 const districtIds = (ids: readonly string[]) => ids.filter(id => /\/(?:cd|sldu|sldl):/.test(id)).sort();

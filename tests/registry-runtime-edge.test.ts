@@ -39,7 +39,7 @@ test("the runner publishes registry-runtime as a compressed artifact the reader 
   const published = await publishReaderEdgeArtifacts(emptySnapshot(), META, { store, authority: { "registry-runtime": { value, versionId } } });
   assert.equal(published.status, "PUBLISHED");
 
-  const manifest = (await store.readAuthorityManifest())!.manifest;
+  const manifest = (await store.readManifest())!.manifest;
   const ref = manifest.authorityArtifacts?.["registry-runtime"];
   assert.ok(ref?.key?.endsWith(".json.gz"), "manifest points at a gzip artifact");
   assert.equal(ref?.version, versionId);
@@ -103,7 +103,7 @@ test("an unchanged authority version carries its served artifact forward; the ru
   const value = registryTransferImport().projection.payload;
   const first = await publishReaderEdgeArtifacts(emptySnapshot(), META, { store, authority: { "registry-runtime": { value, versionId: "rt-v1" } } });
   assert.equal(first.status, "PUBLISHED");
-  const servedManifest = (await store.readAuthorityManifest())!.manifest;
+  const servedManifest = (await store.readManifest())!.manifest;
   const servedRef = servedManifest.authorityArtifacts?.["registry-runtime"];
   assert.equal(servedAuthorityVersion(servedManifest, "registry-runtime"), "rt-v1");
   assert.equal(servedAuthorityVersion(servedManifest, "federal-directory"), null);
@@ -121,7 +121,7 @@ test("an unchanged authority version carries its served artifact forward; the ru
     },
   });
   assert.equal(advanced.status, "PUBLISHED");
-  const manifest = (await store.readAuthorityManifest())!.manifest;
+  const manifest = (await store.readManifest())!.manifest;
   assert.deepEqual(manifest.authorityArtifacts?.["registry-runtime"], servedRef, "the served artifact is carried, never rewritten");
   assert.equal(manifest.authorityArtifacts?.["campaign-sites"]?.version, "cs-v1");
   const edge = await ensureReaderAuthorityEdge(manifest, store);
@@ -138,7 +138,7 @@ test("an unchanged authority version carries its served artifact forward; the ru
     },
   });
   assert.equal(moved.status, "RACED");
-  assert.deepEqual((await store.readAuthorityManifest())!.manifest, manifest, "a stale carry leaves every winning artifact unchanged");
+  assert.deepEqual((await store.readManifest())!.manifest, manifest, "a stale carry leaves every winning artifact unchanged");
 
   // The runner asks the served manifest first and reads a family's value only
   // when its pointer has moved past the served version.

@@ -1,8 +1,13 @@
 import { jurisdictionFromOcdId } from "../lib/coverage/states.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
-import { publishPollingDoor } from "../lib/civic-data/worker-polling-publication.ts";
+import { publishWorkerReaderResults } from "../lib/civic-data/worker-reader-publication.ts";
+import { autonomousHarness, FIXTURE_URL } from "./helpers/autonomous-fleet.ts";
+import { nextAutonomousOperation } from "../lib/control-plane/workers/coordinator.ts";
+import { dispatchWorkerTask, evidenceProjection } from "../lib/control-plane/workers/runtime.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import { readVotingSitesProjection } from "../lib/ballot/voting-sites-server.ts";
+import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
+import type { VotingSitesFile } from "../lib/ballot/voting-sites.ts";
+import { stateBallotScope, stateBallotContractId } from "../lib/ballot/state-scopes.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createHash } from "node:crypto";
@@ -87,7 +92,33 @@ test("incomplete, empty, repeated, cross-jurisdiction or contradictory site capt
 });
 
 
-test("registered polling doors publish through the normal Slide and typed ballot reader while retaining other jurisdictions", async () => {
+async function pollingWorker(input: ReturnType<typeof fixture>, store: MemoryRoutineDataStore, vault: MemoryEvidenceStore) {
+  const ocdId = input.door.ocdId!, state = jurisdictionFromOcdId(ocdId)!.usps;
+  const contractId = stateBallotContractId("voting-sites", state);
+  const extraction = JSON.parse(String(input.door.config.extraction)) as RecordExtractionShape;
+  const h = await autonomousHarness({ clock: at, response: { text: input.capture.evidence.text }, plan: plan => ({ ...plan,
+    publication: { contractId, bodyId: ocdId }, sourceRegistryReferences: [input.door.doorId],
+    contract: { ...plan.contract, schemaVersion: 2, recordClass: "VOTING_SITE",
+      jurisdiction: { country: "US", state, canonicalId: ocdId }, identity: { namespace: ocdId, keyFields: ["name", "address"] },
+      requiredFields: ["jurisdictionName", "name", "address"], extraction,
+      verification: { required: false, authorities: [] } } as never }) });
+  await h.repos.doors.put(input.door.doorId, { ...input.door, hosts: [new URL(FIXTURE_URL).hostname] }, at);
+  for (const role of ["ACQUIRER", "PARSER"]) {
+    const next = await nextAutonomousOperation(h.runtime, h.item.id);
+    assert.equal(next.task?.workerTask?.role, role, JSON.stringify(next));
+    assert.equal((await dispatchWorkerTask(h.runtime, next.task!)).outcome, "WORKED");
+  }
+  const readCapture = async (id: string) => ({ ...input.capture,
+    evidence: { ...evidenceProjection(await h.runtime.readEvidence(id)),
+      ...(input.capture.evidence.sourceDocument ? { sourceDocument: input.capture.evidence.sourceDocument } : {}) } });
+  const report = await publishWorkerReaderResults({ repos: h.repos, store, vault, contractId, workItemIds: [h.item.id], now: h.now(), readCapture,
+    readRegistrySlice: async () => ({ divisions: [{ ocdId, state, label: input.jurisdictionName }], bodies: [] }) as never });
+  assert.equal(report.length, 1);
+  assert.deepEqual((await h.repos.workItems.mustRead(h.item.id)).value.publicationOutcome, report[0].outcome);
+  return { outcome: report[0].outcome, now: h.now() };
+}
+
+test("registered polling workers publish all source formats and retain every jurisdiction when a later capture fails", async () => {
   const store = new MemoryRoutineDataStore(), vault = new MemoryEvidenceStore();
   for (const [kind, ocdId] of [
     ["polling-places-csv", division], ["polling-places-json", "ocd-division/country:us/state:mi/place:alder"],
@@ -96,23 +127,25 @@ test("registered polling doors publish through the normal Slide and typed ballot
   ] as const) {
     const input = fixture(kind, rows, ocdId);
     const state = jurisdictionFromOcdId(ocdId)!.usps;
-    const published = await publishPollingDoor({ ...input, store, now: at, vault });
-    assert.ok(published.promoted);
-    const read = await readVotingSitesProjection(state, { store, now: at, bypassCache: true });
+    const published = await pollingWorker(input, store, vault);
+    assert.equal(published.outcome.status, "PUBLISHED", published.outcome.detail);
+    const read = await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", state), { store, now: published.now, bypassCache: true });
     assert.equal(read.kind, "PROMOTED");
     if (read.kind !== "PROMOTED") throw new Error("Polling sites absent");
     const current = read.value.jurisdictions.find(j => j.ocdId === ocdId)!;
     assert.equal(current.sites.length, 2); assert.equal(current.sites[0].lat, 0);
     assert.equal(current.sites[1].serves, null); assert.equal(current.sites[0].election, null);
     if (kind === "polling-places-pdf-text") assert.equal(current.sourceRawSha256, hash("%PDF-1.4 fixture bytes").slice(7));
-    await assert.rejects(publishPollingDoor({ ...input, capture: { ...input.capture, partial: true }, store, now: at, vault }));
-    assert.equal((await readVotingSitesProjection(state, { store, now: at, bypassCache: true })).metadata.versionId, published.promoted.versionId);
+    const failed = await pollingWorker({ ...input, capture: { ...input.capture, partial: true } }, store, vault);
+    assert.equal(failed.outcome.status, "HELD");
+    assert.match(failed.outcome.detail, /INCOMPLETE/);
+    assert.equal((await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", state), { store, now: failed.now, bypassCache: true })).metadata.versionId, published.outcome.versionId);
   }
-  const final = await readVotingSitesProjection("OH", { store, now: at, bypassCache: true });
+  const final = await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", "OH"), { store, now: at, bypassCache: true });
   assert.equal(final.kind, "PROMOTED");
   if (final.kind === "PROMOTED") assert.equal(final.value.jurisdictions.length, 2);
   for (const state of ["MI", "DC"]) {
-    const separate = await readVotingSitesProjection(state, { store, now: at, bypassCache: true });
+    const separate = await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", state), { store, now: at, bypassCache: true });
     assert.equal(separate.kind, "PROMOTED");
     if (separate.kind === "PROMOTED") assert.equal(separate.value.jurisdictions.length, 1);
   }

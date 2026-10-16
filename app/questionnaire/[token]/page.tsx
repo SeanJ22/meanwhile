@@ -1,6 +1,6 @@
 import { AnswerForm } from "@/components/questionnaire/answer-form";
 import { findInvitation, findToken } from "@/lib/db/questionnaire";
-import { displayFor, invitationBallotState } from "@/lib/questionnaire/candidacy-display";
+import { displayFor } from "@/lib/questionnaire/candidacy-display";
 import { digestToken, tokenRefusalLine, verifyToken } from "@/lib/questionnaire/auth";
 import {
   OFFICE_CLASSES,
@@ -8,6 +8,7 @@ import {
   questionsFor,
   type OfficeClass,
 } from "@/lib/questionnaire/instrument";
+
 
 export const dynamic = "force-dynamic";
 
@@ -101,8 +102,8 @@ export default async function QuestionnairePage({
 
   const questions = questionsFor(officeClass);
 
-  const state = invitationBallotState(invitation.contestId);
-  const display = state ? await displayFor(state, verdict.candidacyId) : null;
+
+  const display = await displayFor(verdict.candidacyId);
 
   return (
     <Shell>

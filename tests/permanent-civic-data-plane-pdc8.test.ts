@@ -5,7 +5,8 @@ import {
   dotGovCandidate,
   meetingsCandidate,
 } from "../lib/civic-data/candidate-builders.ts";
-import { processRoutineCandidate, type PromotionOutcome } from "../lib/civic-data/promotion.ts";
+import { type PromotionOutcome } from "../lib/civic-data/promotion.ts";
+import { processRoutineCandidate } from "../lib/civic-data/candidate-lifecycle.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { RoutineCandidate, RoutineChangeSet } from "../lib/civic-data/types.ts";
 import {

@@ -8,7 +8,7 @@ type Inputs = Parameters<typeof publishSupervisorReaderEdge>;
 export function publishReaderEdgeOutcomeForTest(store: Inputs[0], now: Inputs[1], selected: Inputs[2] = null, options: Inputs[3] = {}) {
   const artifactStore = options.artifactStore === undefined ? resolveReaderArtifactWriteStore() : options.artifactStore;
   return publishSupervisorReaderEdge(store, now, selected, { ...options, stateArtifactChildren: {
-    slots: { acquire: async () => () => {} }, pendingRetirements: async () => [],
+    slots: { acquire: async () => () => {} },
     launch: async command => {
       const arg = (name: string) => command.args.find(value => value.startsWith(`--${name}=`))!.slice(name.length + 3);
       const state = arg("state"), family = arg("family");

@@ -5,8 +5,9 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, test } from "node:test";
 
+import { sourceProjectionEvidence } from "../lib/civic-data/types.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
-import { publishReaderEdgeForTest } from "./helpers/publish-reader-edge.ts";
+import { publishSupervisorReaderEdge } from "../lib/civic-data/reader-edge-publication.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import {
   readPromotedCivicData,
@@ -15,28 +16,24 @@ import {
 } from "../lib/civic-data/read-model.ts";
 import {
   promotedEdgePointers,
-  selectedStateEdgePointers,
-  readPromotedStateEdgeFamilies,
   readPromotedEdgeFamilies,
   type PromotedEdgePointer,
 } from "../lib/civic-data/promoted-edge-publication.ts";
 import { STATE_CAMPAIGN_FINANCE_SOURCES, stateCampaignFinanceCandidate } from "../lib/funding/data-plane.ts";
 import { computeSplit, type StateMoneySnapshot } from "../lib/funding/state-money.ts";
 import { readStateMoneyProjection, settleStateMoneyRead } from "../lib/funding/state-snapshot.ts";
-import { ensureReaderAuthorityEdge, publishReaderEdgeArtifacts, readStateAuthorityArtifact, type PublishAuthority } from "../lib/meetings/edge-serving.ts";
+import { ensureReaderAuthorityEdge, publishReaderEdgeArtifacts, type PublishAuthority } from "../lib/meetings/edge-serving.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import type { PromotedFamilyArtifactValue } from "../lib/meetings/edge-artifacts.ts";
 import { readPromotedEdgeFirst, ReaderEdgeOnlyRefusal, withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
-import { votingSitesContract, votingSitesCandidate } from "../lib/ballot/voting-sites-data-plane.ts";
+import { VOTING_SITES_CONTRACT, votingSitesCandidate } from "../lib/ballot/voting-sites-data-plane.ts";
 import { readVotingSitesProjection } from "../lib/ballot/voting-sites-server.ts";
 import type { VotingSitesFile } from "../lib/ballot/voting-sites.ts";
-import { manualEdgeEntry, absentEdgeEntry, promotedFamily } from "./helpers/promoted-edge-entry.ts";
 
 // A proven pointer on the reader edge reads exactly as the database read of it: kind, value, metadata, staleness.
 
 for (const key of ["DATABASE_URL", "DATABASE_URL_UNPOOLED", "NEON_DATABASE_URL", "NETLIFY", "NETLIFY_BLOBS_CONTEXT", "NETLIFY_SITE_ID", "WTP_READER_EDGE_DIR"]) delete process.env[key];
 
-const VOTING_SITES_CONTRACT = votingSitesContract("AZ");
 const T0 = "2026-09-08T12:00:00.000Z";
 const T1 = "2026-09-25T15:00:00.000Z";
 const PIMA_CAPTURE = [{ url: "https://www.pima.gov/3199/Pima-Votes", contentType: "text/html", vaultKey: "test/pima-votes",
@@ -155,32 +152,34 @@ const comparable = <T,>(read: CivicDataReadResult<T> | { kind: string }) => {
   return { kind, value, metadata, projection };
 };
 
-test("published voting sites serve the same jurisdictions and sites from the request edge without a database", async () => {
+function nationalVotingFixture() {
+  const candidate = votingSitesCandidate({ state: "AZ", current: structuredClone(VOTING_SITES), prior: null,
+    failures: [], acquisition: PIMA_CAPTURE, successfulAuthorityReads: 1,
+    requestedUrl: "https://www.pima.gov/3199/Pima-Votes", finalUrl: "https://www.pima.gov/3199/Pima-Votes", retrievedAt: T0 });
+  const { sourceId, recordClass, scope } = VOTING_SITES_CONTRACT;
+  return { ...candidate, scope, sourceProjectionEvidence: sourceProjectionEvidence(sourceId, recordClass, scope),
+    id: `cv-${createHash("sha256").update([sourceId, scope, candidate.retrieval.rawHash, T0,
+      candidate.retrieval.finalUrl, candidate.normalization.normalizedHash].join("\u001f")).digest("hex").slice(0, 32)}` };
+}
+
+test("previously published national voting sites retain their jurisdictions and sites on the request edge", async () => {
   const store = new MemoryRoutineDataStore();
-  const current = structuredClone(VOTING_SITES);
-  const candidate = votingSitesCandidate({
-    state: "AZ", current, prior: null, failures: [], acquisition: PIMA_CAPTURE,
-    successfulAuthorityReads: 1, requestedUrl: "https://www.pima.gov/3199/Pima-Votes",
-    finalUrl: "https://www.pima.gov/3199/Pima-Votes", retrievedAt: T0,
-  });
-  assert.equal((await processRegisteredManualCandidate(store, "voting-sites:AZ", candidate, T0)).candidate.state, "PROMOTED");
-  const database = await readVotingSitesProjection("AZ", { store, bypassCache: true, now: T1 });
-  const dir = mkdtempSync(join(tmpdir(), "wtp-state-edge-"));
-  after(() => rmSync(dir, { recursive: true, force: true }));
-  const artifacts = new LocalFileArtifactStore(dir);
-  const published = await readPromotedStateEdgeFamilies({
-    store, servedManifest: null, now: T1, artifactStore: artifacts,
-    selected: selectedStateEdgePointers([VOTING_SITES_CONTRACT]), readServedFamily: async () => null,
+  const candidate = nationalVotingFixture();
+  assert.equal((await processRegisteredManualCandidate(store, "voting-sites", candidate, T0)).candidate.state, "PROMOTED");
+  const database = await readVotingSitesProjection({ store, bypassCache: true, now: T1 });
+  const published = await readPromotedEdgeFamilies({
+    store, servedManifest: null, now: T1,
+    families: { "voting-sites": promotedEdgePointers()["voting-sites"] },
   });
   assert.deepEqual(published.skipped, []);
-  const family = published.stateAuthorities["voting-sites"]?.AZ;
-  assert.ok(family && "artifact" in family);
-  const loaded = await readStateAuthorityArtifact("voting-sites", "AZ", family.artifact, artifacts);
-  assert.equal(loaded?.entries.length, 1);
+  const family = published.authority["voting-sites"];
+  assert.ok(family && "value" in family);
+  const entries = (family.value as PromotedFamilyArtifactValue).entries;
+  assert.equal(entries.length, 1);
   const edge = await withReaderAuthorityEdge({
     edgeOnly: true,
-    stateAuthorities: { states: { "voting-sites": new Set(["AZ"]) }, load: async () => loaded },
-  }, () => readVotingSitesProjection("AZ", { now: T1 }));
+    promoted: new Map([[`${VOTING_SITES_CONTRACT.recordClass}:${VOTING_SITES_CONTRACT.scope}`, entries[0]!]]),
+  }, () => readVotingSitesProjection({ now: T1 }));
   assert.deepEqual(comparable(edge), comparable(database));
 });
 
@@ -236,7 +235,7 @@ test("the runner carries a family whose pointers have not moved, re-reads it whe
       formatVersion: 1, generatedAt: T1, counts: { fresh: 0, carried: 0, total: 0, duplicatesCollapsed: 0 }, sources: [], meetings: [], agendaDocuments: [],
     }, { sourceThrough: null, retrievedAt: null, promotedThrough: null }, { store: artifacts, now: T1, authority });
     assert.ok(result.status === "PUBLISHED" || result.status === "CURRENT", JSON.stringify(result));
-    return (await artifacts.readAuthorityManifest())!.manifest;
+    return (await artifacts.readManifest())!.manifest;
   };
 
   const first = await readPromotedEdgeFamilies({ store, servedManifest: null, now: T1, families });
@@ -288,10 +287,10 @@ test("published, fetched and entered: a reader request reads the family from the
     formatVersion: 1, generatedAt: T1, counts: { fresh: 0, carried: 0, total: 0, duplicatesCollapsed: 0 }, sources: [], meetings: [], agendaDocuments: [],
   }, { sourceThrough: null, retrievedAt: null, promotedThrough: null }, { store: artifacts, now: T1, authority });
   assert.equal(published.status, "PUBLISHED");
-  const manifest = (await artifacts.readAuthorityManifest())!.manifest;
+  const manifest = (await artifacts.readManifest())!.manifest;
 
   // A caller that does not ask for the family never fetches it.
-  assert.equal((await ensureReaderAuthorityEdge(manifest, artifacts, ["registry-runtime"])).promoted?.size ?? 0, 0);
+  assert.equal((await ensureReaderAuthorityEdge(manifest, artifacts, ["registry-runtime"])).promoted?.size, 0);
   const bundle = await ensureReaderAuthorityEdge(manifest, artifacts, ["state-money"]);
   assert.ok(bundle.promoted?.has(`STATE_CAMPAIGN_FINANCE:${AZ.scope}`));
 
@@ -310,12 +309,11 @@ test("published, fetched and entered: a reader request reads the family from the
   assert.equal(called, 0, "an edge-only context read the database");
 });
 
-test("scoped supervisor publication skips unrelated contracts and every unchanged payload", async () => {
+
+test("direct scoped runner publication skips unrelated contracts and every unchanged payload", async () => {
   const store = new MemoryRoutineDataStore();
-  const current = structuredClone(VOTING_SITES);
-  const candidate = votingSitesCandidate({ state: "AZ", current, prior: null, failures: [], acquisition: PIMA_CAPTURE,
-    successfulAuthorityReads: 1, requestedUrl: "https://www.pima.gov/3199/Pima-Votes", finalUrl: "https://www.pima.gov/3199/Pima-Votes", retrievedAt: T0 });
-  assert.ok((await processRegisteredManualCandidate(store, "voting-sites:AZ", candidate, T0)).promoted);
+  const candidate = nationalVotingFixture();
+  assert.ok((await processRegisteredManualCandidate(store, "voting-sites", candidate, T0)).promoted);
   let payloadReads = 0;
   const scoped = new Proxy(store, { get(target, key) {
     const value = Reflect.get(target, key);
@@ -329,65 +327,12 @@ test("scoped supervisor publication skips unrelated contracts and every unchange
     return typeof value === "function" ? value.bind(target) : value;
   } });
   const artifacts = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "runner-scoped-edge-")));
-  assert.equal(await publishReaderEdgeForTest(scoped, T1, [VOTING_SITES_CONTRACT], { artifactStore: artifacts }), true);
-  assert.ok((await artifacts.readAuthorityManifest())!.manifest.stateAuthorities?.["voting-sites"]?.AZ);
+  assert.equal((await publishSupervisorReaderEdge(scoped, T1, [VOTING_SITES_CONTRACT], { artifactStore: artifacts }, { WTP_READER_EDGE_LOCAL_OK: "1" })).ok, true);
+  assert.ok((await artifacts.readManifest())!.manifest.authorityArtifacts?.["voting-sites"]);
   const initialReads = payloadReads;
   assert.ok(initialReads > 0);
-  const initialSequence = (await artifacts.readAuthorityManifest())!.manifest.sequence;
-  assert.equal(await publishReaderEdgeForTest(scoped, T1, [VOTING_SITES_CONTRACT], { artifactStore: artifacts }), true);
+  const initialSequence = (await artifacts.readManifest())!.manifest.sequence;
+  assert.equal((await publishSupervisorReaderEdge(scoped, T1, [VOTING_SITES_CONTRACT], { artifactStore: artifacts }, { WTP_READER_EDGE_LOCAL_OK: "1" })).ok, true);
   assert.equal(payloadReads, initialReads);
-  assert.equal((await artifacts.readAuthorityManifest())!.manifest.sequence, initialSequence);
-});
-
-test("state artifacts load only on demand, reject altered bytes and retain unchanged sibling references", async () => {
-  const directory = mkdtempSync(join(tmpdir(), "wtp-lazy-state-edge-"));
-  after(() => rmSync(directory, { recursive: true, force: true }));
-  const artifacts = new LocalFileArtifactStore(directory);
-  const az = promotedFamily([manualEdgeEntry("voting-sites:AZ", VOTING_SITES, "lazy-az-v1")], "lazy-az-v1");
-  const nh = promotedFamily([absentEdgeEntry("VOTING_SITE", votingSitesContract("NH").scope)], "lazy-nh-v1");
-  const metadata = { sourceThrough: null, retrievedAt: null, promotedThrough: null };
-  const first = await publishReaderEdgeArtifacts(null, metadata, { store: artifacts, now: T1,
-    stateAuthorities: { "voting-sites": { AZ: az, NH: nh } } });
-  assert.equal(first.status, "PUBLISHED");
-  const manifest = (await artifacts.readAuthorityManifest())!.manifest;
-  const refs = manifest.stateAuthorities!["voting-sites"]!;
-  assert.equal(manifest.authorityArtifacts, undefined);
-  const readKeys: string[] = [];
-  const readBytes = artifacts.readBytes.bind(artifacts);
-  artifacts.readBytes = async key => { readKeys.push(key); return readBytes(key); };
-  const bundle = await ensureReaderAuthorityEdge(manifest, artifacts, ["voting-sites"]);
-  assert.deepEqual(readKeys, [], "constructing the bundle must not fetch any state payload");
-  const requestBundle = { ...bundle, edgeOnly: true as const };
-  const [read] = await withReaderAuthorityEdge(requestBundle, () => Promise.all([
-    readVotingSitesProjection("AZ"), readVotingSitesProjection("AZ"),
-  ]));
-  assert.equal(read.kind, "PROMOTED");
-  if (read.kind === "PROMOTED") assert.deepEqual(read.value, VOTING_SITES);
-  assert.deepEqual(readKeys, [refs.AZ.key], "an Arizona request reads only Arizona bytes");
-  const secondBundle = await ensureReaderAuthorityEdge(manifest, artifacts, ["voting-sites"]);
-  await withReaderAuthorityEdge({ ...secondBundle, edgeOnly: true }, () => readVotingSitesProjection("AZ"));
-  assert.deepEqual(readKeys, [refs.AZ.key, refs.AZ.key], "a new request loads its own state; prior request payloads are not held process-wide");
-  assert.equal(await readStateAuthorityArtifact("voting-sites", "AZ", { ...refs.AZ, sha: "0".repeat(64) }, artifacts), null,
-    "a changed integrity digest must not reuse the previously checked version");
-  const absent = await withReaderAuthorityEdge({ ...bundle, edgeOnly: true }, () => readVotingSitesProjection("NH"));
-  assert.equal(absent.kind, "NOT_RECORDED", "only a published absent pointer proves absence");
-  await assert.rejects(withReaderAuthorityEdge({ ...bundle, edgeOnly: true }, () => readVotingSitesProjection("NJ")), ReaderEdgeOnlyRefusal,
-    "a partial state manifest cannot claim an unpublished sibling is absent");
-  const corruptKey = await artifacts.putImmutable(Buffer.from("altered state bytes"), "json.gz");
-  assert.equal(await readStateAuthorityArtifact("voting-sites", "AZ", { ...refs.AZ, key: corruptKey }, artifacts), null);
-  const changed = structuredClone(VOTING_SITES);
-  changed.jurisdictions[0].sites[0].name = "Updated Example Event Center";
-  const successor = promotedFamily([manualEdgeEntry("voting-sites:AZ", changed, "lazy-az-v2")], "lazy-az-v2");
-  readKeys.length = 0;
-  const updated = await publishReaderEdgeArtifacts(null, metadata, { store: artifacts, now: T1,
-    stateAuthorities: { "voting-sites": { AZ: successor } } });
-  assert.equal(updated.status, "PUBLISHED");
-  const afterUpdate = (await artifacts.readAuthorityManifest())!.manifest;
-  assert.deepEqual(afterUpdate.stateAuthorities!["voting-sites"]!.NH, refs.NH);
-  assert.notEqual(afterUpdate.stateAuthorities!["voting-sites"]!.AZ.key, refs.AZ.key);
-  assert.deepEqual(readKeys, [], "publishing Arizona never reads sibling payloads");
-  const empty = await publishReaderEdgeArtifacts(null, metadata, { store: artifacts, now: T1,
-    stateAuthorities: { "candidate-profiles": {} } });
-  assert.equal(empty.status, "PUBLISHED", "complete empty families must be recorded even with an existing manifest");
-  assert.deepEqual((await artifacts.readAuthorityManifest())!.manifest.stateAuthorities!["candidate-profiles"], {});
+  assert.equal((await artifacts.readManifest())!.manifest.sequence, initialSequence);
 });

@@ -6,7 +6,9 @@ import { mergeVotingSourceRead, recordVotingSourceRead, registeredVotingSourceDo
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import type { RawCaptureRef } from "../lib/civic-data/raw-capture-vault.ts";
 import { votingSitesCandidate } from "../lib/ballot/voting-sites-data-plane.ts";
-import { readVotingSitesProjection } from "../lib/ballot/voting-sites-server.ts";
+import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
+import type { VotingSitesFile } from "../lib/ballot/voting-sites.ts";
+import { stateBallotScope } from "../lib/ballot/state-scopes.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import type { VotingSourceDoor } from "../lib/ballot/voting-source-types.ts";
@@ -37,7 +39,7 @@ test("saved official tables reach the existing public read model with hours, loc
   const outcome = await processRegisteredManualCandidate(store, "voting-sites:ND", candidate, at);
   assert.ok(outcome.promoted, outcome.candidate.failureDetail ?? "the saved official table should publish");
   assert.equal(outcome.readerReadback?.status, "PASS");
-  const projection = await readVotingSitesProjection("ND", { store, now: at, bypassCache: true });
+  const projection = await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", "ND"), { store, now: at, bypassCache: true });
   assert.equal(projection.kind, "PROMOTED");
   if (projection.kind === "PROMOTED") assert.deepEqual(projection.value, JSON.parse(JSON.stringify(current)));
   const saved = (await store.readCandidate(candidate.id))!.candidate;

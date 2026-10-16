@@ -6,7 +6,6 @@ import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { manualProjectionCandidate, type CandidateProfilesProjection, type ManualProjectionPackage } from "../lib/civic-data/manual-projections.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { refreshCandidateProfilesFromPromoted } from "../lib/civic-data/manual-read-models.ts";
-import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 
 const AT = "2026-09-20T12:00:00.000Z";
 
@@ -28,21 +27,22 @@ const payload: CandidateProfilesProjection = {
 async function promoteFixture(): Promise<void> {
   const store = new MemoryRoutineDataStore();
   const pkg: ManualProjectionPackage = {
-    contractId: "candidate-profiles:NJ", version: AT, sourceThrough: AT,
+    contractId: "candidate-profiles", version: AT, sourceThrough: AT,
     sourceReceipt: { contractVersion: 1, reviewedAt: AT, reviewedBy: "owner-test", sources: [{
       requestedUrl: "https://www.janedoe.example", finalUrl: "https://www.janedoe.example", publisher: "www.janedoe.example", sourceClass: "CANDIDATE_CONTROLLED",
       retrievedAt: AT, httpStatus: 200, rawHash: "a".repeat(64), reviewedEvidence: "Exact response bytes reviewed by the owner.",
     }] },
     payload,
   };
-  const outcome = await processRegisteredManualCandidate(store, "candidate-profiles:NJ", manualProjectionCandidate(pkg), AT, null);
+  const outcome = await processRegisteredManualCandidate(store, "candidate-profiles", manualProjectionCandidate(pkg), AT, null);
   assert.equal(outcome.candidate.state, "PROMOTED", outcome.candidate.failureDetail ?? undefined);
-  await refreshCandidateProfilesFromPromoted("NJ", { store, bypassCache: true, now: AT });
+  await refreshCandidateProfilesFromPromoted({ store, bypassCache: true, now: AT });
 }
 
-test("every link was fetch-verified: url, verification sentence, and date present", () => withReaderAuthorityEdge({}, async () => {
-  await promoteFixture();
-  const { links, hunts } = allCandidateLinks("NJ");
+await promoteFixture();
+
+test("every link was fetch-verified: url, verification sentence, and date present", () => {
+  const { links, hunts } = allCandidateLinks();
   assert.ok(Object.keys(links).length > 0);
   for (const [key, entry] of Object.entries(links)) {
     for (const side of ["official", "campaign"] as const) {
@@ -66,12 +66,11 @@ test("every link was fetch-verified: url, verification sentence, and date presen
   for (const hunt of hunts) {
     assert.match(hunt.note, /^(MISS|NOT_ATTEMPTED)/, `${hunt.key}: hunt note must state which kind of absence it is`);
   }
-}));
+});
 
-test("no ranking vocabulary anywhere in the links file", () => withReaderAuthorityEdge({}, async () => {
-  await promoteFixture();
-  const raw = JSON.stringify(allCandidateLinks("NJ")).toLowerCase();
+test("no ranking vocabulary anywhere in the links file", () => {
+  const raw = JSON.stringify(allCandidateLinks()).toLowerCase();
   for (const banned of ['"score"', '"rank"', '"rating"', '"match"', '"fit"', '"grade"', '"alignment"', '"recommendation"']) {
     assert.ok(!raw.includes(banned), `banned key ${banned} in candidate-links`);
   }
-}));
+});

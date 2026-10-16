@@ -1,0 +1,1506 @@
+{
+  "formatVersion": 1,
+  "curatedAt": "2026-08-27",
+  "curatorNote": "Transcribed from the Arizona Secretary of State's partisan candidate filing for the 2026 primary and the Legislative Council's 2026 ballot-measure analyses, then extended on 2026-08-27 from three documents the earlier curation did not have: the Pima County Official Candidate List for the July 21 primary (the county's own record of what was PRINTED, which unlike the canvass includes uncontested races), the certified Pima County primary canvass of 2026-07-30 (which names the winners and is the only document carrying party), and the Pima County School Superintendent's 2026 School District Special Elections page (which numbers the local propositions). Added: State Senate and House District 17, which were missing although 44 of 96 sampled points in ZIP 85641 sit in LD 17; Corporation Commissioner, whose seat count the Official Candidate List states as two; and Propositions 425, 423, 428 and 429. The statewide contests below still list every primary FILER and narrow to nominees when the Secretary of State publishes the general-election list; the contests added on 2026-08-27 carry nominees, sourced per contest in scopeNote.",
+  "election": {
+    "id": "az-2026-11-03",
+    "date": "2026-11-03",
+    "name": "2026 General Election",
+    "state": "AZ"
+  },
+  "contests": [
+    {
+      "id": "ballot-az-pima:governor",
+      "electionId": "az-2026-11-03",
+      "ocdId": "ocd-division/country:us/state:az",
+      "divisionVintage": "TIGER_GENZ2025",
+      "title": "Governor",
+      "type": "CANDIDACY",
+      "voteFor": 1,
+      "termYears": 4,
+      "scopeNote": "Candidates shown are everyone who filed for the July 21, 2026 primary, as listed by the Secretary of State. The primary was canvassed August 6; the Secretary of State has not yet published the general-election candidate list. When it publishes, this list narrows to the nominees.",
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:secretary-of-state",
+      "electionId": "az-2026-11-03",
+      "ocdId": "ocd-division/country:us/state:az",
+      "divisionVintage": "TIGER_GENZ2025",
+      "title": "Secretary of State",
+      "type": "CANDIDACY",
+      "voteFor": 1,
+      "termYears": 4,
+      "scopeNote": "Candidates shown are everyone who filed for the July 21, 2026 primary, as listed by the Secretary of State. The primary was canvassed August 6; the Secretary of State has not yet published the general-election candidate list. When it publishes, this list narrows to the nominees.",
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:attorney-general",
+      "electionId": "az-2026-11-03",
+      "ocdId": "ocd-division/country:us/state:az",
+      "divisionVintage": "TIGER_GENZ2025",
+      "title": "Attorney General",
+      "type": "CANDIDACY",
+      "voteFor": 1,
+      "termYears": 4,
+      "scopeNote": "Candidates shown are everyone who filed for the July 21, 2026 primary, as listed by the Secretary of State. The primary was canvassed August 6; the Secretary of State has not yet published the general-election candidate list. When it publishes, this list narrows to the nominees.",
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:state-treasurer",
+      "electionId": "az-2026-11-03",
+      "ocdId": "ocd-division/country:us/state:az",
+      "divisionVintage": "TIGER_GENZ2025",
+      "title": "State Treasurer",
+      "type": "CANDIDACY",
+      "voteFor": 1,
+      "termYears": 4,
+      "scopeNote": "Candidates shown are everyone who filed for the July 21, 2026 primary, as listed by the Secretary of State. The primary was canvassed August 6; the Secretary of State has not yet published the general-election candidate list. When it publishes, this list narrows to the nominees.",
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:superintendent",
+      "electionId": "az-2026-11-03",
+      "ocdId": "ocd-division/country:us/state:az",
+      "divisionVintage": "TIGER_GENZ2025",
+      "title": "Superintendent of Public Instruction",
+      "type": "CANDIDACY",
+      "voteFor": 1,
+      "termYears": 4,
+      "scopeNote": "Candidates shown are everyone who filed for the July 21, 2026 primary, as listed by the Secretary of State. The primary was canvassed August 6; the Secretary of State has not yet published the general-election candidate list. When it publishes, this list narrows to the nominees.",
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:mine-inspector",
+      "electionId": "az-2026-11-03",
+      "ocdId": "ocd-division/country:us/state:az",
+      "divisionVintage": "TIGER_GENZ2025",
+      "title": "State Mine Inspector",
+      "type": "CANDIDACY",
+      "voteFor": 1,
+      "termYears": 4,
+      "scopeNote": "Candidates shown are everyone who filed for the July 21, 2026 primary, as listed by the Secretary of State, plus the Republican nominee named in the certified Pima primary canvass. The March 30 filing list this contest was first built from did not carry him; the canvass does, and each name here says which record it came from. The Secretary of State has not yet published the general-election candidate list.",
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:us-house-6",
+      "electionId": "az-2026-11-03",
+      "ocdId": "ocd-division/country:us/state:az/cd:6",
+      "divisionVintage": "TIGER_GENZ2025",
+      "title": "U.S. Representative, District 6",
+      "type": "CANDIDACY",
+      "voteFor": 1,
+      "termYears": 2,
+      "scopeNote": "Candidates shown are everyone who filed for the July 21, 2026 primary, as listed by the Secretary of State. The primary was canvassed August 6; the Secretary of State has not yet published the general-election candidate list. When it publishes, this list narrows to the nominees.",
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:us-house-7",
+      "electionId": "az-2026-11-03",
+      "ocdId": "ocd-division/country:us/state:az/cd:7",
+      "divisionVintage": "TIGER_GENZ2025",
+      "title": "U.S. Representative, District 7",
+      "type": "CANDIDACY",
+      "voteFor": 1,
+      "termYears": 2,
+      "scopeNote": "Candidates shown are everyone who filed for the July 21, 2026 primary, as listed by the Secretary of State. The primary was canvassed August 6; the Secretary of State has not yet published the general-election candidate list. When it publishes, this list narrows to the nominees.",
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:state-senate-19",
+      "electionId": "az-2026-11-03",
+      "ocdId": "ocd-division/country:us/state:az/sldu:19",
+      "divisionVintage": "TIGER_GENZ2025",
+      "title": "State Senator, District 19",
+      "type": "CANDIDACY",
+      "voteFor": 1,
+      "termYears": 2,
+      "scopeNote": "Candidates shown are everyone who filed for the July 21, 2026 primary, as listed by the Secretary of State. The primary was canvassed August 6; the Secretary of State has not yet published the general-election candidate list. When it publishes, this list narrows to the nominees.",
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:state-senate-20",
+      "electionId": "az-2026-11-03",
+      "ocdId": "ocd-division/country:us/state:az/sldu:20",
+      "divisionVintage": "TIGER_GENZ2025",
+      "title": "State Senator, District 20",
+      "type": "CANDIDACY",
+      "voteFor": 1,
+      "termYears": 2,
+      "scopeNote": "Only Democratic candidates filed for this seat. Candidates shown are everyone who filed for the July 21, 2026 primary, as listed by the Secretary of State. The primary was canvassed August 6; the Secretary of State has not yet published the general-election candidate list. When it publishes, this list narrows to the nominees.",
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:state-house-19",
+      "electionId": "az-2026-11-03",
+      "ocdId": "ocd-division/country:us/state:az/sldl:19",
+      "divisionVintage": "TIGER_GENZ2025",
+      "title": "State Representative, District 19",
+      "type": "CANDIDACY",
+      "voteFor": 2,
+      "termYears": 2,
+      "scopeNote": "Arizona elects two representatives per legislative district. Candidates shown are everyone who filed for the July 21, 2026 primary, as listed by the Secretary of State. The primary was canvassed August 6; the Secretary of State has not yet published the general-election candidate list. When it publishes, this list narrows to the nominees.",
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:state-house-20",
+      "electionId": "az-2026-11-03",
+      "ocdId": "ocd-division/country:us/state:az/sldl:20",
+      "divisionVintage": "TIGER_GENZ2025",
+      "title": "State Representative, District 20",
+      "type": "CANDIDACY",
+      "voteFor": 2,
+      "termYears": 2,
+      "scopeNote": "Arizona elects two representatives per legislative district. Only Democratic candidates filed for these seats. Candidates shown are everyone who filed for the July 21, 2026 primary, as listed by the Secretary of State. The primary was canvassed August 6; the Secretary of State has not yet published the general-election candidate list. When it publishes, this list narrows to the nominees.",
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:prop-141",
+      "electionId": "az-2026-11-03",
+      "ocdId": "ocd-division/country:us/state:az",
+      "divisionVintage": "TIGER_GENZ2025",
+      "title": "Proposition 141: Prohibit tax; monitoring; vehicle mileage",
+      "type": "MEASURE",
+      "voteFor": 1,
+      "termYears": null,
+      "scopeNote": "The Secretary of State has not yet published the final ballot wording (the 2026 publicity pamphlet is pending), so the exact yes/no question is not known yet. The name above is the Legislative Council's short title; the Council's official analysis of what the measure would do is below.",
+      "provenance": {
+        "sourceUrl": "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/adopted%20analysis%20SCR1004%20-%202025.pdf",
+        "sourceOrg": "Arizona Legislative Council (adopted impartial analysis)",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:prop-142",
+      "electionId": "az-2026-11-03",
+      "ocdId": "ocd-division/country:us/state:az",
+      "divisionVintage": "TIGER_GENZ2025",
+      "title": "Proposition 142: Preferential treatment; discrimination; prohibited acts",
+      "type": "MEASURE",
+      "voteFor": 1,
+      "termYears": null,
+      "scopeNote": "The Secretary of State has not yet published the final ballot wording (the 2026 publicity pamphlet is pending), so the exact yes/no question is not known yet. The name above is the Legislative Council's short title; the Council's official analysis of what the measure would do is below.",
+      "provenance": {
+        "sourceUrl": "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20HCR%202044%20-%202026.pdf",
+        "sourceOrg": "Arizona Legislative Council (adopted impartial analysis)",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:prop-143",
+      "electionId": "az-2026-11-03",
+      "ocdId": "ocd-division/country:us/state:az",
+      "divisionVintage": "TIGER_GENZ2025",
+      "title": "Proposition 143: School districts; labor organizations; resources",
+      "type": "MEASURE",
+      "voteFor": 1,
+      "termYears": null,
+      "scopeNote": "The Secretary of State has not yet published the final ballot wording (the 2026 publicity pamphlet is pending), so the exact yes/no question is not known yet. The name above is the Legislative Council's short title; the Council's official analysis of what the measure would do is below.",
+      "provenance": {
+        "sourceUrl": "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20HCR2040%20-%202026.pdf",
+        "sourceOrg": "Arizona Legislative Council (adopted impartial analysis)",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:prop-144",
+      "electionId": "az-2026-11-03",
+      "ocdId": "ocd-division/country:us/state:az",
+      "divisionVintage": "TIGER_GENZ2025",
+      "title": "Proposition 144: Citizenship; identification; contributions; early voting",
+      "type": "MEASURE",
+      "voteFor": 1,
+      "termYears": null,
+      "scopeNote": "The Secretary of State has not yet published the final ballot wording (the 2026 publicity pamphlet is pending), so the exact yes/no question is not known yet. The name above is the Legislative Council's short title; the Council's official analysis of what the measure would do is below.",
+      "provenance": {
+        "sourceUrl": "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20HCR%202001%20-%202026.pdf",
+        "sourceOrg": "Arizona Legislative Council (adopted impartial analysis)",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:prop-145",
+      "electionId": "az-2026-11-03",
+      "ocdId": "ocd-division/country:us/state:az",
+      "divisionVintage": "TIGER_GENZ2025",
+      "title": "Proposition 145: Military families; scholarship accounts",
+      "type": "MEASURE",
+      "voteFor": 1,
+      "termYears": null,
+      "scopeNote": "The Secretary of State has not yet published the final ballot wording (the 2026 publicity pamphlet is pending), so the exact yes/no question is not known yet. The name above is the Legislative Council's short title; the Council's official analysis of what the measure would do is below.",
+      "provenance": {
+        "sourceUrl": "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20HCR2048%20-%202026.pdf",
+        "sourceOrg": "Arizona Legislative Council (adopted impartial analysis)",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:prop-212",
+      "electionId": "az-2026-11-03",
+      "ocdId": "ocd-division/country:us/state:az",
+      "divisionVintage": "TIGER_GENZ2025",
+      "title": "Proposition 212: Protect Education Act",
+      "type": "MEASURE",
+      "voteFor": 1,
+      "termYears": null,
+      "scopeNote": "The Secretary of State has not yet published the final ballot wording (the 2026 publicity pamphlet is pending), so the exact yes/no question is not known yet. The name above is the Legislative Council's short title; the Council's official analysis of what the measure would do is below.",
+      "provenance": {
+        "sourceUrl": "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20I-09-2026.pdf",
+        "sourceOrg": "Arizona Legislative Council (adopted impartial analysis)",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:prop-316",
+      "electionId": "az-2026-11-03",
+      "ocdId": "ocd-division/country:us/state:az",
+      "divisionVintage": "TIGER_GENZ2025",
+      "title": "Proposition 316: Food; municipal tax; exemption",
+      "type": "MEASURE",
+      "voteFor": 1,
+      "termYears": null,
+      "scopeNote": "The Secretary of State has not yet published the final ballot wording (the 2026 publicity pamphlet is pending), so the exact yes/no question is not known yet. The name above is the Legislative Council's short title; the Council's official analysis of what the measure would do is below.",
+      "provenance": {
+        "sourceUrl": "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20HCR2021%20-%202025.pdf",
+        "sourceOrg": "Arizona Legislative Council (adopted impartial analysis)",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:prop-317",
+      "electionId": "az-2026-11-03",
+      "ocdId": "ocd-division/country:us/state:az",
+      "divisionVintage": "TIGER_GENZ2025",
+      "title": "Proposition 317: Drug cartels; terrorist organizations",
+      "type": "MEASURE",
+      "voteFor": 1,
+      "termYears": null,
+      "scopeNote": "The Secretary of State has not yet published the final ballot wording (the 2026 publicity pamphlet is pending), so the exact yes/no question is not known yet. The name above is the Legislative Council's short title; the Council's official analysis of what the measure would do is below.",
+      "provenance": {
+        "sourceUrl": "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20HCR%202055%20-%202025.pdf",
+        "sourceOrg": "Arizona Legislative Council (adopted impartial analysis)",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:prop-318",
+      "electionId": "az-2026-11-03",
+      "ocdId": "ocd-division/country:us/state:az",
+      "divisionVintage": "TIGER_GENZ2025",
+      "title": "Proposition 318: Interscholastic; intramural athletics; biological sex",
+      "type": "MEASURE",
+      "voteFor": 1,
+      "termYears": null,
+      "scopeNote": "The Secretary of State has not yet published the final ballot wording (the 2026 publicity pamphlet is pending), so the exact yes/no question is not known yet. The name above is the Legislative Council's short title; the Council's official analysis of what the measure would do is below.",
+      "provenance": {
+        "sourceUrl": "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20HCR2003%20-%202026.pdf",
+        "sourceOrg": "Arizona Legislative Council (adopted impartial analysis)",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:prop-319",
+      "electionId": "az-2026-11-03",
+      "ocdId": "ocd-division/country:us/state:az",
+      "divisionVintage": "TIGER_GENZ2025",
+      "title": "Proposition 319: Photo enforcement systems; voter approval",
+      "type": "MEASURE",
+      "voteFor": 1,
+      "termYears": null,
+      "scopeNote": "The Secretary of State has not yet published the final ballot wording (the 2026 publicity pamphlet is pending), so the exact yes/no question is not known yet. The name above is the Legislative Council's short title; the Council's official analysis of what the measure would do is below.",
+      "provenance": {
+        "sourceUrl": "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/adopted%20analysis%20SCR1004%20-%202026.pdf",
+        "sourceOrg": "Arizona Legislative Council (adopted impartial analysis)",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:prop-320",
+      "electionId": "az-2026-11-03",
+      "ocdId": "ocd-division/country:us/state:az",
+      "divisionVintage": "TIGER_GENZ2025",
+      "title": "Proposition 320: Instructional expenses; operational spending; enforcement",
+      "type": "MEASURE",
+      "voteFor": 1,
+      "termYears": null,
+      "scopeNote": "The Secretary of State has not yet published the final ballot wording (the 2026 publicity pamphlet is pending), so the exact yes/no question is not known yet. The name above is the Legislative Council's short title; the Council's official analysis of what the measure would do is below.",
+      "provenance": {
+        "sourceUrl": "https://www.azleg.gov/alispdfs/Council/2026BallotMeasures/Adopted%20analysis%20SCR1032%20-%202026.pdf",
+        "sourceOrg": "Arizona Legislative Council (adopted impartial analysis)",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:state-senate-17",
+      "electionId": "az-2026-11-03",
+      "ocdId": "ocd-division/country:us/state:az/sldu:17",
+      "divisionVintage": "TIGER_GENZ2025",
+      "title": "State Senator, District 17",
+      "type": "CANDIDACY",
+      "voteFor": 1,
+      "termYears": 2,
+      "scopeNote": "Christopher King won the Republican primary 17,498 to Anthony Dunham's 10,576; Edgar Soto was the only Democrat to file and is the party's nominee without a contest.",
+      "provenance": {
+        "sourceUrl": "https://apps.azsos.gov/election/2026/canvass/2026_Primary_Canvass_Pima.pdf",
+        "sourceOrg": "Pima County Elections Department, Official Canvass of the July 21, 2026 Primary Election, certified 2026-07-30",
+        "collectedAt": "2026-08-27",
+        "verifiedAt": "2026-08-27"
+      }
+    },
+    {
+      "id": "ballot-az-pima:state-house-17",
+      "electionId": "az-2026-11-03",
+      "ocdId": "ocd-division/country:us/state:az/sldl:17",
+      "divisionVintage": "TIGER_GENZ2025",
+      "title": "State Representative, District 17",
+      "type": "CANDIDACY",
+      "voteFor": 2,
+      "termYears": 2,
+      "scopeNote": "Arizona legislative districts elect two representatives. Two Democrats and two Republicans filed for two nominations each, so all four are their parties' nominees without a contest.",
+      "provenance": {
+        "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/e3efef88-46d4-421c-817b-50200031aef3",
+        "sourceOrg": "Pima County Elections Department, 2026 Primary Election Official Candidate List (updated 2026-05-21)",
+        "collectedAt": "2026-08-27",
+        "verifiedAt": "2026-08-27"
+      }
+    },
+    {
+      "id": "ballot-az-pima:corporation-commissioner",
+      "electionId": "az-2026-11-03",
+      "ocdId": "ocd-division/country:us/state:az",
+      "divisionVintage": "TIGER_GENZ2025",
+      "title": "Corporation Commissioner",
+      "type": "CANDIDACY",
+      "voteFor": 2,
+      "termYears": 4,
+      "scopeNote": "Two seats are scheduled this cycle. The Pima County Official Candidate List states the seat count — 'Vote for not more than 2' — which is the document the earlier omission was waiting on. Kevin Thompson (39,906) and Nicholas Myers (35,108) won the Republican primary ahead of Ralph Heap (31,857); Clara Pratte and Jonathon Hill were the only Democrats to file for two nominations.",
+      "provenance": {
+        "sourceUrl": "https://apps.azsos.gov/election/2026/canvass/2026_Primary_Canvass_Pima.pdf",
+        "sourceOrg": "Pima County Elections Department, Official Canvass of the July 21, 2026 Primary Election, certified 2026-07-30",
+        "collectedAt": "2026-08-27",
+        "verifiedAt": "2026-08-27"
+      }
+    },
+    {
+      "id": "ballot-az-pima:prop-425",
+      "electionId": "az-2026-11-03",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "divisionVintage": "TIGER_GENZ2025",
+      "title": "Proposition 425: Permanent Base Adjustment",
+      "type": "MEASURE",
+      "voteFor": 1,
+      "termYears": null,
+      "scopeNote": "Every Pima County voter. Voting runs October 7 to November 3, 2026.",
+      "provenance": {
+        "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/55aa379c-bc22-47fe-8b7c-d10dab0ade8c/permanent-base-adjustment-proposition-pdf.pdf",
+        "sourceOrg": "Pima County, Permanent Base Adjustment — Ballot Language",
+        "collectedAt": "2026-08-27",
+        "verifiedAt": "2026-08-27"
+      }
+    },
+    {
+      "id": "ballot-az-pima:prop-423",
+      "electionId": "az-2026-11-03",
+      "ocdId": "ocd-division/country:us/state:az/school_district:vail_unified_district",
+      "divisionVintage": "TIGER_GENZ2025",
+      "title": "Proposition 423: Vail Unified School District budget override continuation",
+      "type": "MEASURE",
+      "voteFor": 1,
+      "termYears": null,
+      "scopeNote": "Voters of Vail Unified School District No. 20. The proposition number is the Pima County School Superintendent’s; the fiscal terms are the district’s own Notice of Election.",
+      "provenance": {
+        "sourceUrl": "https://www.schools.pima.gov/",
+        "sourceOrg": "Pima County School Superintendent, 2026 School District Special Elections (proposition number); Vail Unified School District No. 20 Notice of Election (question and fiscal terms)",
+        "collectedAt": "2026-08-27",
+        "verifiedAt": "2026-08-27"
+      }
+    },
+    {
+      "id": "ballot-az-pima:prop-428",
+      "electionId": "az-2026-11-03",
+      "ocdId": "ocd-division/country:us/state:az/school_district:sahuarita_unified_district",
+      "divisionVintage": "TIGER_GENZ2025",
+      "title": "Proposition 428: Sahuarita Unified School District budget override continuation",
+      "type": "MEASURE",
+      "voteFor": 1,
+      "termYears": null,
+      "scopeNote": "Voters of Sahuarita Unified School District No. 30. The question as titled by the Pima County School Superintendent, who is the filing officer for school-district ballot measures in this county. The district’s own Notice of Election has not been read, so the fiscal terms are not stated here rather than estimated.",
+      "provenance": {
+        "sourceUrl": "https://www.schools.pima.gov/",
+        "sourceOrg": "Pima County School Superintendent, 2026 School District Special Elections",
+        "collectedAt": "2026-08-27",
+        "verifiedAt": "2026-08-27"
+      }
+    },
+    {
+      "id": "ballot-az-pima:prop-429",
+      "electionId": "az-2026-11-03",
+      "ocdId": "ocd-division/country:us/state:az/school_district:tanque_verde_unified_district",
+      "divisionVintage": "TIGER_GENZ2025",
+      "title": "Proposition 429: Tanque Verde Unified School District budget override continuation",
+      "type": "MEASURE",
+      "voteFor": 1,
+      "termYears": null,
+      "scopeNote": "Voters of Tanque Verde Unified School District No. 13. The question as titled by the Pima County School Superintendent, who is the filing officer for school-district ballot measures in this county. The district’s own Notice of Election has not been read, so the fiscal terms are not stated here rather than estimated.",
+      "provenance": {
+        "sourceUrl": "https://www.schools.pima.gov/",
+        "sourceOrg": "Pima County School Superintendent, 2026 School District Special Elections",
+        "collectedAt": "2026-08-27",
+        "verifiedAt": "2026-08-27"
+      }
+    }
+  ],
+  "candidacies": [
+    {
+      "id": "ballot-az-pima:governor:hobbs-katie",
+      "contestId": "ballot-az-pima:governor",
+      "familyName": "Hobbs",
+      "givenName": "Katie",
+      "partyLabel": "Democratic",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:governor:hourihan-teri-ann",
+      "contestId": "ballot-az-pima:governor",
+      "familyName": "Hourihan",
+      "givenName": "Teri Ann",
+      "partyLabel": "Arizona Independent Party",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:governor:lombardo-risa",
+      "contestId": "ballot-az-pima:governor",
+      "familyName": "Lombardo",
+      "givenName": "Risa",
+      "partyLabel": "Green",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:governor:lytle-hugh",
+      "contestId": "ballot-az-pima:governor",
+      "familyName": "Lytle",
+      "givenName": "Hugh",
+      "partyLabel": "Arizona Independent Party",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:governor:biggs-andy",
+      "contestId": "ballot-az-pima:governor",
+      "familyName": "Biggs",
+      "givenName": "Andy",
+      "partyLabel": "Republican",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:governor:miceli-ken",
+      "contestId": "ballot-az-pima:governor",
+      "familyName": "Miceli",
+      "givenName": "Ken",
+      "partyLabel": "Republican",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:governor:neely-scott",
+      "contestId": "ballot-az-pima:governor",
+      "familyName": "Neely",
+      "givenName": "Scott",
+      "partyLabel": "Republican",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:governor:schweikert-david",
+      "contestId": "ballot-az-pima:governor",
+      "familyName": "Schweikert",
+      "givenName": "David",
+      "partyLabel": "Republican",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:secretary-of-state:fontes-adrian",
+      "contestId": "ballot-az-pima:secretary-of-state",
+      "familyName": "Fontes",
+      "givenName": "Adrian",
+      "partyLabel": "Democratic",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:secretary-of-state:collier-duwayne",
+      "contestId": "ballot-az-pima:secretary-of-state",
+      "familyName": "Collier",
+      "givenName": "Duwayne",
+      "partyLabel": "Green",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:secretary-of-state:kolodin-alexander",
+      "contestId": "ballot-az-pima:secretary-of-state",
+      "familyName": "Kolodin",
+      "givenName": "Alexander",
+      "partyLabel": "Republican",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:secretary-of-state:swoboda-gina",
+      "contestId": "ballot-az-pima:secretary-of-state",
+      "familyName": "Swoboda",
+      "givenName": "Gina",
+      "partyLabel": "Republican",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:attorney-general:mayes-kris",
+      "contestId": "ballot-az-pima:attorney-general",
+      "familyName": "Mayes",
+      "givenName": "Kris",
+      "partyLabel": "Democratic",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:attorney-general:glassman-rodney",
+      "contestId": "ballot-az-pima:attorney-general",
+      "familyName": "Glassman",
+      "givenName": "Rodney",
+      "partyLabel": "Republican",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:attorney-general:petersen-warren",
+      "contestId": "ballot-az-pima:attorney-general",
+      "familyName": "Petersen",
+      "givenName": "Warren",
+      "partyLabel": "Republican",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:state-treasurer:mansour-nick",
+      "contestId": "ballot-az-pima:state-treasurer",
+      "familyName": "Mansour",
+      "givenName": "Nick",
+      "partyLabel": "Democratic",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:state-treasurer:zepeda-michael",
+      "contestId": "ballot-az-pima:state-treasurer",
+      "familyName": "Zepeda",
+      "givenName": "Michael",
+      "partyLabel": "Arizona Independent Party",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:state-treasurer:haley-katherine",
+      "contestId": "ballot-az-pima:state-treasurer",
+      "familyName": "Haley",
+      "givenName": "Katherine",
+      "partyLabel": "Republican",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:state-treasurer:norton-elijah",
+      "contestId": "ballot-az-pima:state-treasurer",
+      "familyName": "Norton",
+      "givenName": "Elijah",
+      "partyLabel": "Republican",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:superintendent:butts-michael-d-",
+      "contestId": "ballot-az-pima:superintendent",
+      "familyName": "Butts",
+      "givenName": "Michael D.",
+      "partyLabel": "Democratic",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:superintendent:leyba-ruiz-teresa",
+      "contestId": "ballot-az-pima:superintendent",
+      "familyName": "Leyba Ruiz",
+      "givenName": "Teresa",
+      "partyLabel": "Democratic",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:superintendent:newby-brett-matthew",
+      "contestId": "ballot-az-pima:superintendent",
+      "familyName": "Newby",
+      "givenName": "Brett Matthew",
+      "partyLabel": "Democratic",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:superintendent:horne-tom",
+      "contestId": "ballot-az-pima:superintendent",
+      "familyName": "Horne",
+      "givenName": "Tom",
+      "partyLabel": "Republican",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:superintendent:yee-kimberly",
+      "contestId": "ballot-az-pima:superintendent",
+      "familyName": "Yee",
+      "givenName": "Kimberly",
+      "partyLabel": "Republican",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:mine-inspector:matlock-brian",
+      "contestId": "ballot-az-pima:mine-inspector",
+      "familyName": "Matlock",
+      "givenName": "Brian",
+      "partyLabel": "Democratic",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:mine-inspector:presmyk-walter",
+      "contestId": "ballot-az-pima:mine-inspector",
+      "familyName": "Presmyk",
+      "givenName": "Walter \"Les\"",
+      "partyLabel": "Republican",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://apps.azsos.gov/election/2026/canvass/2026_Primary_Canvass_Pima.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-28",
+        "verifiedAt": "2026-08-28"
+      }
+    },
+    {
+      "id": "ballot-az-pima:us-house-6:mendoza-joanna",
+      "contestId": "ballot-az-pima:us-house-6",
+      "familyName": "Mendoza",
+      "givenName": "JoAnna",
+      "partyLabel": "Democratic",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:us-house-6:bah-iman",
+      "contestId": "ballot-az-pima:us-house-6",
+      "familyName": "Bah",
+      "givenName": "Iman",
+      "partyLabel": "Arizona Independent Party",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:us-house-6:peters-jereme-lance",
+      "contestId": "ballot-az-pima:us-house-6",
+      "familyName": "Peters",
+      "givenName": "Jereme Lance",
+      "partyLabel": "Libertarian",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:us-house-6:ciscomani-juan",
+      "contestId": "ballot-az-pima:us-house-6",
+      "familyName": "Ciscomani",
+      "givenName": "Juan",
+      "partyLabel": "Republican",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:us-house-7:grijalva-adelita",
+      "contestId": "ballot-az-pima:us-house-7",
+      "familyName": "Grijalva",
+      "givenName": "Adelita",
+      "partyLabel": "Democratic",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:us-house-7:butierez-sr--daniel-francis",
+      "contestId": "ballot-az-pima:us-house-7",
+      "familyName": "Butierez Sr.",
+      "givenName": "Daniel Francis",
+      "partyLabel": "Republican",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:state-senate-19:slawson-ryan",
+      "contestId": "ballot-az-pima:state-senate-19",
+      "familyName": "Slawson",
+      "givenName": "Ryan",
+      "partyLabel": "Democratic",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:state-senate-19:griffin-gail",
+      "contestId": "ballot-az-pima:state-senate-19",
+      "familyName": "Griffin",
+      "givenName": "Gail",
+      "partyLabel": "Republican",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:state-senate-20:hernandez-alma",
+      "contestId": "ballot-az-pima:state-senate-20",
+      "familyName": "Hernandez",
+      "givenName": "Alma",
+      "partyLabel": "Democratic",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:state-senate-20:perez-rocque",
+      "contestId": "ballot-az-pima:state-senate-20",
+      "familyName": "Perez",
+      "givenName": "Rocque",
+      "partyLabel": "Democratic",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:state-house-19:anderson-jackie-o-donnell",
+      "contestId": "ballot-az-pima:state-house-19",
+      "familyName": "Anderson",
+      "givenName": "Jackie O'Donnell",
+      "partyLabel": "Democratic",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:state-house-19:swallow-aiden-nicholette",
+      "contestId": "ballot-az-pima:state-house-19",
+      "familyName": "Swallow",
+      "givenName": "Aiden Nicholette",
+      "partyLabel": "Democratic",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:state-house-19:caswell-cheryl",
+      "contestId": "ballot-az-pima:state-house-19",
+      "familyName": "Caswell",
+      "givenName": "Cheryl",
+      "partyLabel": "Republican",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:state-house-19:diaz-lupe",
+      "contestId": "ballot-az-pima:state-house-19",
+      "familyName": "Diaz",
+      "givenName": "Lupe",
+      "partyLabel": "Republican",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:state-house-19:gowan-david",
+      "contestId": "ballot-az-pima:state-house-19",
+      "familyName": "Gowan",
+      "givenName": "David",
+      "partyLabel": "Republican",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:state-house-20:diaz-genoveva",
+      "contestId": "ballot-az-pima:state-house-20",
+      "familyName": "Diaz",
+      "givenName": "Genoveva",
+      "partyLabel": "Democratic",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:state-house-20:gonzales-sally-ann",
+      "contestId": "ballot-az-pima:state-house-20",
+      "familyName": "Gonzales",
+      "givenName": "Sally Ann",
+      "partyLabel": "Democratic",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:state-house-20:koehler-ben",
+      "contestId": "ballot-az-pima:state-house-20",
+      "familyName": "Koehler",
+      "givenName": "Ben",
+      "partyLabel": "Democratic",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:state-house-20:villegas-betty",
+      "contestId": "ballot-az-pima:state-house-20",
+      "familyName": "Villegas",
+      "givenName": "Betty",
+      "partyLabel": "Democratic",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "id": "ballot-az-pima:state-senate-17:king",
+      "contestId": "ballot-az-pima:state-senate-17",
+      "familyName": "King",
+      "givenName": "Christopher",
+      "partyLabel": "Republican",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://apps.azsos.gov/election/2026/canvass/2026_Primary_Canvass_Pima.pdf",
+        "sourceOrg": "Pima County Elections Department, Official Canvass of the July 21, 2026 Primary Election, certified 2026-07-30",
+        "collectedAt": "2026-08-27",
+        "verifiedAt": "2026-08-27"
+      }
+    },
+    {
+      "id": "ballot-az-pima:state-senate-17:soto",
+      "contestId": "ballot-az-pima:state-senate-17",
+      "familyName": "Soto",
+      "givenName": "Edgar",
+      "partyLabel": "Democratic",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://apps.azsos.gov/election/2026/canvass/2026_Primary_Canvass_Pima.pdf",
+        "sourceOrg": "Pima County Elections Department, Official Canvass of the July 21, 2026 Primary Election, certified 2026-07-30",
+        "collectedAt": "2026-08-27",
+        "verifiedAt": "2026-08-27"
+      }
+    },
+    {
+      "id": "ballot-az-pima:state-house-17:keshel",
+      "contestId": "ballot-az-pima:state-house-17",
+      "familyName": "Keshel",
+      "givenName": "Rachel \"Jones\"",
+      "partyLabel": "Republican",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/e3efef88-46d4-421c-817b-50200031aef3",
+        "sourceOrg": "Pima County Elections Department, 2026 Primary Election Official Candidate List (updated 2026-05-21)",
+        "collectedAt": "2026-08-27",
+        "verifiedAt": "2026-08-27"
+      }
+    },
+    {
+      "id": "ballot-az-pima:state-house-17:winchester",
+      "contestId": "ballot-az-pima:state-house-17",
+      "familyName": "Winchester",
+      "givenName": "John",
+      "partyLabel": "Republican",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/e3efef88-46d4-421c-817b-50200031aef3",
+        "sourceOrg": "Pima County Elections Department, 2026 Primary Election Official Candidate List (updated 2026-05-21)",
+        "collectedAt": "2026-08-27",
+        "verifiedAt": "2026-08-27"
+      }
+    },
+    {
+      "id": "ballot-az-pima:state-house-17:lyon",
+      "contestId": "ballot-az-pima:state-house-17",
+      "familyName": "Lyon",
+      "givenName": "Hollace \"Holly\"",
+      "partyLabel": "Democratic",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/e3efef88-46d4-421c-817b-50200031aef3",
+        "sourceOrg": "Pima County Elections Department, 2026 Primary Election Official Candidate List (updated 2026-05-21)",
+        "collectedAt": "2026-08-27",
+        "verifiedAt": "2026-08-27"
+      }
+    },
+    {
+      "id": "ballot-az-pima:state-house-17:volk",
+      "contestId": "ballot-az-pima:state-house-17",
+      "familyName": "Volk",
+      "givenName": "Kevin",
+      "partyLabel": "Democratic",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/e3efef88-46d4-421c-817b-50200031aef3",
+        "sourceOrg": "Pima County Elections Department, 2026 Primary Election Official Candidate List (updated 2026-05-21)",
+        "collectedAt": "2026-08-27",
+        "verifiedAt": "2026-08-27"
+      }
+    },
+    {
+      "id": "ballot-az-pima:corporation-commissioner:thompson",
+      "contestId": "ballot-az-pima:corporation-commissioner",
+      "familyName": "Thompson",
+      "givenName": "Kevin",
+      "partyLabel": "Republican",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://apps.azsos.gov/election/2026/canvass/2026_Primary_Canvass_Pima.pdf",
+        "sourceOrg": "Pima County Elections Department, Official Canvass of the July 21, 2026 Primary Election, certified 2026-07-30",
+        "collectedAt": "2026-08-27",
+        "verifiedAt": "2026-08-27"
+      }
+    },
+    {
+      "id": "ballot-az-pima:corporation-commissioner:myers",
+      "contestId": "ballot-az-pima:corporation-commissioner",
+      "familyName": "Myers",
+      "givenName": "Nicholas \"Nick\"",
+      "partyLabel": "Republican",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://apps.azsos.gov/election/2026/canvass/2026_Primary_Canvass_Pima.pdf",
+        "sourceOrg": "Pima County Elections Department, Official Canvass of the July 21, 2026 Primary Election, certified 2026-07-30",
+        "collectedAt": "2026-08-27",
+        "verifiedAt": "2026-08-27"
+      }
+    },
+    {
+      "id": "ballot-az-pima:corporation-commissioner:pratte",
+      "contestId": "ballot-az-pima:corporation-commissioner",
+      "familyName": "Pratte",
+      "givenName": "Clara",
+      "partyLabel": "Democratic",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://apps.azsos.gov/election/2026/canvass/2026_Primary_Canvass_Pima.pdf",
+        "sourceOrg": "Pima County Elections Department, Official Canvass of the July 21, 2026 Primary Election, certified 2026-07-30",
+        "collectedAt": "2026-08-27",
+        "verifiedAt": "2026-08-27"
+      }
+    },
+    {
+      "id": "ballot-az-pima:corporation-commissioner:hill",
+      "contestId": "ballot-az-pima:corporation-commissioner",
+      "familyName": "Hill",
+      "givenName": "Jonathon",
+      "partyLabel": "Democratic",
+      "slogan": null,
+      "incumbent": null,
+      "websiteUrl": null,
+      "provenance": {
+        "sourceUrl": "https://apps.azsos.gov/election/2026/canvass/2026_Primary_Canvass_Pima.pdf",
+        "sourceOrg": "Pima County Elections Department, Official Canvass of the July 21, 2026 Primary Election, certified 2026-07-30",
+        "collectedAt": "2026-08-27",
+        "verifiedAt": "2026-08-27"
+      }
+    }
+  ],
+  "measures": [
+    {
+      "id": "ballot-az-pima:prop-425:question",
+      "contestId": "ballot-az-pima:prop-425",
+      "questionText": "Pursuant to the Arizona State Constitution, Pima County seeks voter approval to permanently adjust the expenditure base of the County as determined by the Economic Estimates Commission. The County seeks an adjustment of $70,000,000. A “YES” vote shall have the effect of allowing Pima County to adjust its 1979-80 base expenditure limit. A “NO” vote shall have the effect of not allowing Pima County to adjust its 1979-80 base expenditure limit.",
+      "officialStatement": "Official Title: A resolution proposing a permanent adjustment to the state-imposed 1979-80 expenditure base for Pima County. Summary analysis: if approved, the County’s 1979-80 base expenditure limitation will be increased by $70,000,000 adjusted each future year for population and inflation growth since 1979-80. With voter approval, in fiscal year 2027-2028 the County’s expenditure limitation will increase by $610,086,481, from $817,131,286 to $1,427,217,767. Referred to the people by the Pima County Board of Supervisors by resolution 2026-23, passed 2026-04-21.",
+      "provenance": {
+        "sourceUrl": "https://content.civicplus.com/api/assets/az-pimacounty/55aa379c-bc22-47fe-8b7c-d10dab0ade8c/permanent-base-adjustment-proposition-pdf.pdf",
+        "sourceOrg": "Pima County, Permanent Base Adjustment — Ballot Language",
+        "collectedAt": "2026-08-27",
+        "verifiedAt": "2026-08-27"
+      }
+    },
+    {
+      "id": "ballot-az-pima:prop-423:question",
+      "contestId": "ballot-az-pima:prop-423",
+      "questionText": "BUDGET OVERRIDE CONTINUATION, YES / NO — whether Vail Unified School District No. 20 of Pima County, Arizona may continue to exceed the revenue control limit by not more than 12.5% per fiscal year, for fiscal years 2027/2028 and the next six fiscal years.",
+      "officialStatement": "From the district’s statutory Notice of Election: a special election consolidated with the General Election of November 3, 2026, under A.R.S. § 15-481(P). The budget effect is approximately $5,102,762 above the alternate budget for 2027/2028, at an estimated continuation of $1.61 per $100 of secondary assessed valuation. The governing board adopted the calling resolution on 2026-06-02. Arguments were due to the Pima County School Superintendent by 5:00 p.m. on 2026-08-07.",
+      "provenance": {
+        "sourceUrl": "https://www.schools.pima.gov/",
+        "sourceOrg": "Pima County School Superintendent, 2026 School District Special Elections (proposition number); Vail Unified School District No. 20 Notice of Election (question and fiscal terms)",
+        "collectedAt": "2026-08-27",
+        "verifiedAt": "2026-08-27"
+      }
+    },
+    {
+      "id": "ballot-az-pima:prop-428:question",
+      "contestId": "ballot-az-pima:prop-428",
+      "questionText": "A 15% Maintenance and Operations Budget Override Continuation for Sahuarita Unified School District, to be considered by the voters of the district at the election of November 3, 2026.",
+      "officialStatement": null,
+      "provenance": {
+        "sourceUrl": "https://www.schools.pima.gov/",
+        "sourceOrg": "Pima County School Superintendent, 2026 School District Special Elections",
+        "collectedAt": "2026-08-27",
+        "verifiedAt": "2026-08-27"
+      }
+    },
+    {
+      "id": "ballot-az-pima:prop-429:question",
+      "contestId": "ballot-az-pima:prop-429",
+      "questionText": "A 15% Maintenance and Operations Budget Override Continuation for Tanque Verde Unified School District, to be considered by the voters of the district at the election of November 3, 2026.",
+      "officialStatement": null,
+      "provenance": {
+        "sourceUrl": "https://www.schools.pima.gov/",
+        "sourceOrg": "Pima County School Superintendent, 2026 School District Special Elections",
+        "collectedAt": "2026-08-27",
+        "verifiedAt": "2026-08-27"
+      }
+    }
+  ],
+  "absences": [
+    {
+      "ocdId": "ocd-division/country:us/state:az",
+      "divisionVintage": "TIGER_GENZ2025",
+      "statement": "No U.S. Senate seat is on Arizona's 2026 ballot — the Secretary of State's 2026 candidate filing lists no U.S. Senate contest; neither Arizona seat is scheduled this cycle.",
+      "provenance": {
+        "sourceUrl": "https://azsos.gov/sites/default/files/docs/2026-Candidate-Nominations-and-Petitions-Filed-0330.pdf",
+        "sourceOrg": "Arizona Secretary of State",
+        "collectedAt": "2026-08-14",
+        "verifiedAt": "2026-08-14"
+      }
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:az/school_district:vail_unified_district",
+      "divisionVintage": "TIGER_GENZ2025",
+      "statement": "There is no Vail Unified School District governing board race on the November 3, 2026 ballot. Two positions were up and only two people filed, so the Board of Supervisors cancelled the election as uncontested on 2026-08-11 and appointed Andrea Black and Edward Buster to the seats.",
+      "provenance": {
+        "sourceUrl": "https://pima.legistar.com/LegislationDetail.aspx?ID=21690",
+        "sourceOrg": "Pima County Board of Supervisors, agenda item 25 of 2026-08-11 (File ID 20624, matter 21690), “2026 General Election — School District Cancellations”, requested by the School Superintendent and APPROVED 2026-08-11",
+        "collectedAt": "2026-08-27",
+        "verifiedAt": "2026-08-27"
+      }
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:az/school_district:empire_elementary_district",
+      "divisionVintage": "TIGER_GENZ2025",
+      "statement": "There is no Empire Elementary School District No. 37 governing board race on the November 3, 2026 ballot. Three positions were up and nobody filed, so the Board of Supervisors cancelled the election on 2026-08-11 and recorded THREE (3) VACANCIES on the district’s governing board.",
+      "provenance": {
+        "sourceUrl": "https://pima.legistar.com/LegislationDetail.aspx?ID=21690",
+        "sourceOrg": "Pima County Board of Supervisors, agenda item 25 of 2026-08-11 (File ID 20624, matter 21690), “2026 General Election — School District Cancellations”, requested by the School Superintendent and APPROVED 2026-08-11",
+        "collectedAt": "2026-08-27",
+        "verifiedAt": "2026-08-27"
+      }
+    },
+    {
+      "ocdId": "ocd-division/country:us/state:az/school_district:sahuarita_unified_district",
+      "divisionVintage": "TIGER_GENZ2025",
+      "statement": "Sahuarita Unified School District No. 30 has a governing board race on the November 3, 2026 ballot: two positions, with John Sparks and Raul Rodriguez having filed. It is not among the districts whose election the Board of Supervisors cancelled as uncontested on 2026-08-11.",
+      "provenance": {
+        "sourceUrl": "https://pima.legistar.com/LegislationDetail.aspx?ID=21690",
+        "sourceOrg": "Pima County Board of Supervisors, agenda item 25 of 2026-08-11 (File ID 20624, matter 21690), “2026 General Election — School District Cancellations”, requested by the School Superintendent and APPROVED 2026-08-11",
+        "collectedAt": "2026-08-27",
+        "verifiedAt": "2026-08-27"
+      }
+    }
+  ],
+  "coverageNotes": [
+    "Proposition 427, a $250,000,000 bond for Pima County Joint Technical Education District No. 11, is on the ballot of every voter in that district — which includes all of ZIP 85641 — and is not shown as a contest because no division in this registry matches the district's territory. Measured 2026-08-27 against the county's own JTED layer: the district covers about 73% of Pima County AND contains sampled points in Pinal County, so attaching it to the county would both show it to voters who do not vote on it and hide it from voters who do. Its estimated average tax rate is $0.14 per $100 of net assessed limited property value; its question text is not published — the district's Request for Arguments says the text is available by request from the district at 2855 West Master Pieces Drive, Tucson.",
+    "Justice of the Peace and Constable are elected by justice precinct, and this registry has no justice-precinct division. ZIP 85641 spans Precincts 7 and 8. On the November 3, 2026 ballot, Precinct 7 elects a Justice of the Peace (Raymond Carroll won the Republican primary 7,077 to Kara Egbert's 4,773; no Democrat filed) and Precinct 8 elects a Justice of the Peace (Kristel Ann Foster, Democratic, and William Parven, Republican). Neither precinct has a Constable race this cycle: the only Constable contests on the county's official candidate list are Precincts 2, 3 and 9.",
+    "Pima County's elected county offices — Sheriff, Assessor, Recorder, Treasurer, County Attorney, School Superintendent — and Board of Supervisors Districts 2 and 4 are NOT on the November 3, 2026 ballot. This is read from the county's Official Candidate List, which prints uncontested races and lists only Board of Supervisors District 5 among supervisor seats; it is not a gap in this file."
+  ]
+}

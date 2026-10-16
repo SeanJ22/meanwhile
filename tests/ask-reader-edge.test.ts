@@ -2,18 +2,15 @@ import assert from "node:assert/strict";
 import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { gunzipSync } from "node:zlib";
 import { after, test } from "./helpers/playbooks.ts";
 
-import { publishReaderEdgeArtifacts, type PublishAuthority, type PublishStateAuthorities } from "../lib/meetings/edge-serving.ts";
+import { publishReaderEdgeArtifacts, type PublishAuthority } from "../lib/meetings/edge-serving.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
-import type { GlobalPromotedAuthorityFamily, PromotedFamilyArtifactValue } from "../lib/meetings/edge-artifacts.ts";
-import type { RecordIndex } from "../lib/meetings/authority-records.ts";
-import { registryPlaceFixtureResult } from "./helpers/registry-place-fetch.ts";
-import { ballotElectionKey } from "../lib/ballot/generic-projection.ts";
+import type { PromotedAuthorityFamily, PromotedFamilyArtifactValue } from "../lib/meetings/edge-artifacts.ts";
 import { clearPromotedReadModelCache } from "../lib/civic-data/read-model.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
+import { DERIVED_CAMPAIGN_SITES_RECORD_CLASS, DERIVED_CAMPAIGN_SITES_SCOPE } from "../lib/civic-data/derived-campaign-sites.ts";
 import { fundingReadState, readFundingSnapshot } from "../lib/funding/snapshot.ts";
 import { PIMA_LOCAL_FINANCE_CONTRACT, STATE_CAMPAIGN_FINANCE_SOURCES, type StateCampaignFinanceJurisdiction } from "../lib/funding/data-plane.ts";
 import { federalRollCallsReadState } from "../lib/votes/snapshot.ts";
@@ -41,6 +38,8 @@ import {
 } from "./helpers/promoted-fixtures.ts";
 import { recordedMeetingsSnapshot, syntheticExecutiveActions } from "./helpers/reader-fixtures.ts";
 
+/** The real Ask route is asked with no database: every Neon HTTP request is answered here with no rows and counted by record class. */
+
 delete process.env.ANTHROPIC_API_KEY;
 for (const key of ["DATABASE_URL", "DATABASE_URL_UNPOOLED", "NEON_DATABASE_URL", "NETLIFY", "NETLIFY_BLOBS_CONTEXT", "NETLIFY_SITE_ID"]) delete process.env[key];
 process.env.WTP_LIMIT_LOG_IP_PER_MINUTE = "10000";
@@ -57,8 +56,14 @@ const federalVotes = { sourceId: FEDERAL_VOTES_SOURCE_ID };
 const EDGE = { funding: "edge-test:ask:fec", federalVotes: "edge-test:ask:federal-votes" };
 const stateMoneyEntries = (version: (state: string) => string) => (Object.keys(STATE_CAMPAIGN_FINANCE_SOURCES) as StateCampaignFinanceJurisdiction[]).map((state) =>
   provenEdgeEntry({ recordClass: "STATE_CAMPAIGN_FINANCE", scope: STATE_CAMPAIGN_FINANCE_SOURCES[state].scope, sourceId: STATE_CAMPAIGN_FINANCE_SOURCES[state].sourceId, versionId: version(state), value: stateMoneyFixture(state) }));
-const ballot = syntheticAzBallot();
-const PROMOTED: Partial<Record<GlobalPromotedAuthorityFamily, { value: PromotedFamilyArtifactValue; versionId: string }>> = {
+const PROMOTED: Partial<Record<PromotedAuthorityFamily, { value: PromotedFamilyArtifactValue; versionId: string }>> = {
+  "ballot-contests": family([absentEdgeEntry("BALLOT_CANDIDACY", "US:state-election-ballots")], "edge-test:general-ballot-absent"),
+  "ballot-az": family([manual("az-sos-ballot", syntheticAzBallot(), "edge-test:ask:az")], "edge-test:ask:az"),
+  "candidate-profiles": family([
+    manual("candidate-profiles", syntheticCandidateProfiles(), "edge-test:ask:profiles"),
+    absentEdgeEntry(DERIVED_CAMPAIGN_SITES_RECORD_CLASS, DERIVED_CAMPAIGN_SITES_SCOPE),
+  ], "edge-test:ask:profiles"),
+  "candidate-publications": family([manual("candidate-corpus", syntheticCandidateCorpus(), "edge-test:ask:corpus")], "edge-test:ask:corpus"),
   "federal-funding": family([provenEdgeEntry({ recordClass: "FEC_FUNDING", scope: fec.scope, sourceId: fec.sourceId, versionId: EDGE.funding, value: served(await readFundingSnapshot({ store: seedStore, bypassCache: true })) })], EDGE.funding),
   "state-money": family(stateMoneyEntries((state) => `edge-test:ask:money:${state}`), "edge-test:ask:money"),
   "pima-finance": family([provenEdgeEntry({ recordClass: "LOCAL_CAMPAIGN_FINANCE", scope: PIMA_LOCAL_FINANCE_CONTRACT.scope, sourceId: PIMA_LOCAL_FINANCE_CONTRACT.sourceId, versionId: "edge-test:ask:pima-finance", value: syntheticPimaLocalFinance() })], "edge-test:ask:pima-finance"),
@@ -72,14 +77,6 @@ const PROMOTED: Partial<Record<GlobalPromotedAuthorityFamily, { value: PromotedF
     versionId: "edge-test:ask:actions",
     value: syntheticExecutiveActions("Katie Hobbs"),
   })], "edge-test:ask:actions"),
-};
-
-const STATE_PROMOTED: PublishStateAuthorities = {
-  "ballot-contests": { AZ: family([manual("ballot-contests:AZ", { kind: "ballot-contests", ballots: { [ballotElectionKey(ballot)]: ballot } }, "edge-test:ask:ballots")], "edge-test:ask:ballots") },
-  "candidate-profiles": { AZ: family([manual("candidate-profiles:AZ", syntheticCandidateProfiles(), "edge-test:ask:profiles")], "edge-test:ask:profiles") },
-  "candidate-publications": { AZ: family([manual("candidate-corpus:AZ", syntheticCandidateCorpus(), "edge-test:ask:corpus")], "edge-test:ask:corpus") },
-  "candidate-campaign-sites-derived": { AZ: family([absentEdgeEntry("CURATED_READER_RECORD", "US-AZ:candidate-campaign-sites-derived")], "absent:derived:AZ") },
-  "voting-sites": { AZ: family([absentEdgeEntry("VOTING_SITE", "US-AZ:voting-sites")], "absent:voting:AZ") },
 };
 
 /** `overrides` replaces some proven-pointer families with values published under other versions. */
@@ -99,7 +96,6 @@ async function publishEdge(withPromoted: boolean, overrides: typeof PROMOTED = {
     retrievedAt: snapshot.generatedAt,
     promotedThrough: snapshot.generatedAt,
   }, { store: new LocalFileArtifactStore(dir), now: new Date().toISOString(), authority,
-    ...(withPromoted ? { stateAuthorities: STATE_PROMOTED } : {}),
     registrations: {},
     stateLegislators: { "US-AZ": { versionId: "edge-test:ask:az-people", value: {
       formatVersion: 1, sourceId: "plural-openstates", jurisdiction: "US-AZ", term: "2025-2026",
@@ -115,10 +111,8 @@ const c20EdgeDir = await publishEdge(false);
 /** And with every deferrable source on it. */
 const fullEdgeDir = await publishEdge(true);
 
-// Non-registry database holdings are absent in this fixture.
+// Every database request, by record class, answered with no rows.
 const databaseReads: string[] = [];
-const placeReads: string[] = [];
-const registry = registryTransferImport().projection.payload;
 process.env.DATABASE_URL = "postgresql://edge-test:edge-test@ep-ask-edge-test.ask-edge-test.invalid/none?sslmode=require";
 const realFetch = globalThis.fetch;
 after(() => { globalThis.fetch = realFetch; });
@@ -127,18 +121,15 @@ globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
   if (!url.includes("ask-edge-test.invalid/")) throw new Error(`the Ask request fetched ${url}`);
   const body = JSON.parse(String(init?.body ?? "{}")) as { query?: string; params?: unknown[]; queries?: { query?: string; params?: unknown[] }[] };
   const queries = body.queries ?? [body];
-  const empty = { command: "SELECT", rowCount: 0, rows: [], fields: [] };
-  const results = queries.map(query => {
-    if (/^\s*INSERT INTO database_transfer_daily\b/.test(query.query ?? "")) return empty;
-    const place = registryPlaceFixtureResult(query, registry, "edge-test:ask:registry");
-    if (place) { placeReads.push("edge-test:ask:registry"); return place; }
-    if (query.query?.includes("FROM fact f JOIN source_copy") || query.query?.includes("WITH people AS")) return empty;
+  for (const query of queries) {
+    // The daily byte counter writes an aggregate, not a civic pointer read.
+    if (/^\s*INSERT INTO database_transfer_daily\b/.test(query.query ?? "")) continue;
     const recordClass = (query.params ?? []).find((p): p is string => typeof p === "string" && /^[A-Z][A-Z_]+$/.test(p) && p !== "UNCHANGED_CONFIRMATION_V1");
     const scope = (query.params ?? []).find((p): p is string => typeof p === "string" && p !== recordClass && /[:+-]/.test(p));
     databaseReads.push(`${recordClass ?? "UNKNOWN"}${scope ? `:${scope}` : ""}`);
-    return empty;
-  });
-  return new Response(JSON.stringify(body.queries ? { results } : results[0]), { status: 200, headers: { "content-type": "application/json" } });
+  }
+  const empty = { command: "SELECT", rowCount: 0, rows: [], fields: [] };
+  return new Response(JSON.stringify(body.queries ? { results: queries.map(() => empty) } : empty), { status: 200, headers: { "content-type": "application/json" } });
 }) as typeof fetch;
 
 const AZ = "ocd-division/country:us/state:az";
@@ -147,32 +138,16 @@ const AZ = "ocd-division/country:us/state:az";
 async function askMesa(question = "When does the Mesa City Council meet next?"): Promise<{ trace: { preloads?: Record<string, number>; preloadSources?: Record<string, string>; sourcesLoaded?: string } }> {
   clearPromotedReadModelCache();
   databaseReads.length = 0;
-  placeReads.length = 0;
   const { POST } = await import("../app/api/ask/grounded/route.ts");
   const { resetGroundedState } = await import("../lib/ask/grounded-state.ts");
   resetGroundedState();
-  const store = new LocalFileArtifactStore(process.env.WTP_READER_EDGE_DIR!);
-  const manifest = (await store.readAuthorityManifest())!.manifest;
-  const bytes = (await store.readBytes(manifest.authorityArtifacts!["registry-runtime"]!.key))!;
-  const index = JSON.parse(gunzipSync(bytes).toString("utf8")).value as RecordIndex;
-  assert.equal(index.kind, "READER_RECORDS");
-  assert.deepEqual((index.base as { registry: { bodies: unknown[] } }).registry.bodies, [], "the registry index contains no country body payload");
-  const foreign = index.records.filter(row => row.path[0] === "registry" && row.path[1] === "bodies" && row.tags.some(tag => tag.includes("/state:nh/")));
-  assert.ok(foreign.length > 0);
-  const opened = new Set<string>(), original = LocalFileArtifactStore.prototype.readBytes;
-  LocalFileArtifactStore.prototype.readBytes = async function (key) { opened.add(key); return original.call(this, key); };
-  let response: Response;
-  try { response = await POST(new Request("https://wtp.test/api/ask/grounded", {
+  const response = await POST(new Request("https://wtp.test/api/ask/grounded", {
     method: "POST",
     headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "ask-reader-edge-test" },
     body: JSON.stringify({ question, approximateLocation: "85201", surface: "MAP", ocdIds: [AZ, `${AZ}/county:maricopa`, `${AZ}/place:mesa`], today: "2026-09-25" }),
-  })); } finally { LocalFileArtifactStore.prototype.readBytes = original; }
+  }));
   assert.equal(response.status, 200);
-  assert.deepEqual(placeReads, [], "the accepted registry edge does not reopen place SQL");
-  assert.ok(foreign.every(row => !opened.has(row.key)), "a Mesa question never fetches New Hampshire registry records");
-  const payload = await response.json() as { trace: { preloads?: Record<string, number>; preloadSources?: Record<string, string>; sourcesLoaded?: string } };
-  assert.equal(payload.trace.preloadSources?.registry, "EDGE");
-  return payload;
+  return await response.json() as { trace: { preloads?: Record<string, number>; preloadSources?: Record<string, string>; sourcesLoaded?: string } };
 }
 
 /** What a cold Ask reads from the database when only identity is on the edge. */
@@ -191,26 +166,29 @@ const DEFERRABLE_FROM_DATABASE = [
 ];
 const classOf = (read: string) => read.split(":")[0]!;
 
-const DEFERRABLE_TRACE = ["funding", "stateMoney", "azPimaFinance", "federalVotes", "federalKeyVotes", "ballots", "candidateProfiles", "candidateCorpus", "officeholderStatements", "executiveActions"];
+const DEFERRABLE_TRACE = ["funding", "stateMoney", "azPimaFinance", "federalVotes", "federalKeyVotes", "azBallot", "candidateProfiles", "candidateCorpus", "officeholderStatements", "executiveActions"];
 const UNRELATED_TRACE = new Set(["azPimaFinance", "federalVotes", "federalKeyVotes", "officeholderStatements", "executiveActions"]);
 
-test("with an identity-only edge, a cold Mesa question reads its place identity inventory but skips unrelated evidence", async () => {
+test("with the C20 edge, a cold Mesa question reads the complete identity inventory but skips unrelated evidence", async () => {
   process.env.WTP_READER_EDGE_DIR = c20EdgeDir;
   const payload = await askMesa();
   assert.equal(payload.trace.sourcesLoaded, "IDENTITY_AND_MEETINGS");
   assert.deepEqual([...databaseReads].sort(), [
-    "BALLOT_CANDIDACY:US-AZ:state-election-ballots",
-    "CANDIDATE_PROFILE:US-AZ:candidate-profiles",
-    "CANDIDATE_PUBLICATION:US-AZ:candidate-publications",
-    "CURATED_READER_RECORD:US-AZ:candidate-campaign-sites-derived",
+    "BALLOT_CANDIDACY:US-AZ:2026-general:supported-ballot",
+    "BALLOT_CANDIDACY:US:state-election-ballots",
+    "CANDIDATE_PROFILE:US-AZ+US-NH+US-NJ:2026-supported-candidates",
+    "CANDIDATE_PUBLICATION:US-AZ+US-NH+US-NJ:2026-supported-candidates",
+    "CURATED_READER_RECORD:US:candidate-campaign-sites-derived",
     "FEC_FUNDING:federal-supported",
     "STATE_CAMPAIGN_FINANCE:US-AZ:campaign-finance:2026",
+    "STATE_CAMPAIGN_FINANCE:US-NH:campaign-finance:2026",
+    "STATE_CAMPAIGN_FINANCE:US-NJ:campaign-finance:2026",
   ]);
   // No STATE_ROLL_CALL: a body question never waits for a state legislature's roll calls.
   for (const source of DEFERRABLE_TRACE) assert.equal(payload.trace.preloadSources?.[source], UNRELATED_TRACE.has(source) ? undefined : "DATABASE", `the trace misnames ${source}`);
 });
 
-test("with every deferrable source on the edge, a cold Mesa question reads its registry place and evidence without the database", async () => {
+test("with every deferrable source on the edge, a cold Mesa question reads none of them from the database: no pointer read left", async () => {
   process.env.WTP_READER_EDGE_DIR = fullEdgeDir;
   const payload = await askMesa();
   assert.equal(payload.trace.sourcesLoaded, "IDENTITY_AND_MEETINGS");
@@ -222,7 +200,7 @@ test("with every deferrable source on the edge, a cold Mesa question reads its r
   for (const source of DEFERRABLE_TRACE) assert.equal(payload.trace.preloadSources?.[source], UNRELATED_TRACE.has(source) ? undefined : "EDGE", `the trace misnames ${source}`);
 });
 
-test("an unsettled meeting-shaped question restores deferred edge evidence without additional database holdings", async () => {
+test("an unsettled meeting-shaped question restores deferred edge evidence without falling through to the database", async () => {
   process.env.WTP_READER_EDGE_DIR = fullEdgeDir;
   const payload = await askMesa("When does the Unheld Example City Council meet next?");
   assert.equal(payload.trace.sourcesLoaded, "ALL");
@@ -280,7 +258,7 @@ test("an unmarked warm call loads nothing for the Ask, and the warm route never 
   assert.doesNotMatch(source, /\bPOST\b|captureAskInteraction|recordAskGapObservations|afterResponse|interpretQuestion|synthesize|anthropic|getDb/i);
 });
 
-test("the warm call settles only unscoped Ask sources and never preloads every state", async () => {
+test("the warm call settles exactly the sources the Ask preloads, by the names its trace times them under", async () => {
   const { ASK_SOURCE_PRELOADS } = await import("../app/api/warm/route.ts");
   const ask = readFileSync("app/api/ask/grounded/route.ts", "utf8");
   const start = ask.indexOf("const essentialPreloads = [");
@@ -289,9 +267,5 @@ test("the warm call settles only unscoped Ask sources and never preloads every s
   const named = new Set([...ask.slice(start, end).matchAll(/timed\("([A-Za-z]+)"/g)].map((match) => match[1]));
   // The per-state roll calls (`stateVotes:${scope}`) are read from the database for that state only, never warmed.
   assert.match(ask.slice(start, end), /timed\(`stateVotes:\$\{scope\}`/);
-  for (const stateSource of ["registry", "candidateCorpus", "candidateProfiles", "ballots", "stateMoney"]) {
-    assert.equal(stateSource in ASK_SOURCE_PRELOADS, false, `${stateSource} requires an explicit place`);
-    named.delete(stateSource);
-  }
   assert.deepEqual(Object.keys(ASK_SOURCE_PRELOADS).sort(), [...named].sort());
 });

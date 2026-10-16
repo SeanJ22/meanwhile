@@ -48,11 +48,6 @@ import {
 import type { Meeting } from "../lib/sources/types.ts";
 import { promoteMeetingPartitions } from "../scripts/ingest.ts";
 
-/*
- * A fresh check that finds nothing new writes an UNCHANGED_CONFIRMATION receipt instead of a new version. Readers
- * see the time of the last successful fresh check, new version or receipt; a failed request or a stale cache never
- * counts; receipts fire no failed-refresh disclosure; changed information publishes as before.
- */
 
 const ACQUIRED_URL = "https://www.pima.edu/about-pima/leadership-policies/governing-board/board-meetings/documents.html";
 const HOUR = 3_600_000;

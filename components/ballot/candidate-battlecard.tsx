@@ -31,7 +31,6 @@ export function CandidateBattlecard({
   incumbencyGap = null,
   speakContext = null,
   subjectId,
-  divisionIds = [],
   sections,
   contactHolder = null,
   contact,
@@ -57,7 +56,6 @@ export function CandidateBattlecard({
   partyLine?: React.ReactNode;
 
   subjectId: string;
-  divisionIds?: readonly string[];
 
   sections?: Partial<Record<BattlecardSectionId, React.ReactNode>>;
 
@@ -140,12 +138,12 @@ export function CandidateBattlecard({
 
             )}
             contact={contact ?? (contactHolder ? <div data-ballot-contact-row><ContactPills holder={contactHolder} scope="primary" /><OfficialTermNote holder={contactHolder} /></div> : <CardGapContribution id={`contact:${subjectId}`} label="contact details" subject={{ type: "CANDIDATE", id: subjectId }} />)}
-            sections={{ ...sections, positions: <>{sections?.positions}<PositionsSection context={speakContext} divisionIds={divisionIds} subjectId={contactHolder?.id ?? subjectId} subjectName={name} contentOnly /></> }}
+            sections={{ ...sections, positions: <>{sections?.positions}<PositionsSection subjectId={contactHolder?.id ?? subjectId} subjectName={name} contentOnly /></> }}
             afterSections={<>
               <FederalMemberRecords key={contactHolder?.id ?? subjectId} memberId={contactHolder?.id ?? subjectId} />
               {(contactHolder?.id ?? subjectId).startsWith("congress:") && <FederalCommentRules />}
               <PublicStatementsProfile subjectId={contactHolder?.id ?? subjectId} />
-              <OfficialActions context={speakContext} divisionIds={divisionIds} subjectId={contactHolder?.id ?? subjectId} />
+              <OfficialActions subjectId={contactHolder?.id ?? subjectId} />
               <div className="mt-5"><SpeakYourMind subjectType="CANDIDATE" subjectId={subjectId} subject={name} context={speakContext ?? undefined} /></div>
             </>}
           />

@@ -4,7 +4,7 @@ export interface FundingTargetPlan {
   readonly contestId: string | null;
   readonly federal: boolean;
   readonly state: StateCampaignFinanceJurisdiction | null;
-  readonly ballotIdentity: boolean;
+  readonly azIdentity: boolean;
 }
 
 export const FEDERAL_CONTEST = /:(?:us-house(?:-[^:|]+)?|us-senate|president)(?=[:|]|$)/;
@@ -31,6 +31,6 @@ export function directFundingTargetPlan(target: string): FundingTargetPlan {
     contestId,
     federal: target.startsWith("congress:") || /^fec:[HS]\d[A-Z]{2}\d{5}$/.test(target) || (contestId !== null && FEDERAL_CONTEST.test(contestId)),
     state,
-    ballotIdentity: target.includes("|"),
+    azIdentity: state === "AZ" && target.includes("|"),
   };
 }

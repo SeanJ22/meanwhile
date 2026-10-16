@@ -1,9 +1,14 @@
 import { createHash } from "node:crypto";
+import SEED from "../../data/ballot/measure-records-first-seed.json" with { type: "json" };
+import { currentAzBallotProjection } from "../civic-data/manual-read-models.ts";
 import type { BallotSet } from "./types.ts";
 
 import { measureRecordIssue, type MeasureRecord } from "./measure-record-contract.ts";
 export { measureRecordIssue } from "./measure-record-contract.ts";
 export type { MeasureRecord, ProvisionKind } from "./measure-record-contract.ts";
+
+/** Immutable migration evidence; production records override it, including []. */
+export const MEASURE_RECORD_FIRST_SEED = SEED as readonly MeasureRecord[];
 
 export function explicitVoteMeanings(text: string): { yesMeans: string | null; noMeans: string | null } {
   text = text.trim();
@@ -34,4 +39,25 @@ export function measureRecordsForBallot(ballot: BallotSet): readonly MeasureReco
     const meanings = explicitVoteMeanings(measure.questionText);
     return { ...record, yesMeans: record.yesMeans ?? meanings.yesMeans, noMeans: record.noMeans ?? meanings.noMeans };
   });
+}
+
+export function seedMeasureRecords(ballot: BallotSet, analyses: readonly {
+  readonly contestId: string; readonly analysisUrl: string; readonly contentHash: string;
+}[] = []): BallotSet {
+  if (ballot.measureRecords !== undefined) return ballot;
+  const measureRecords = MEASURE_RECORD_FIRST_SEED.filter(record => {
+    if (record.sourceHashKind !== "HELD_TEXT") {
+      return analyses.some(a => a.contestId === record.contestId &&
+        a.analysisUrl === record.sourceUrl && a.contentHash === record.sourceHash);
+    }
+    const measure = ballot.measures.find(m => m.contestId === record.contestId);
+    return measure?.provenance.sourceUrl === record.sourceUrl &&
+      createHash("sha256").update(`${measure.questionText}\n${measure.officialStatement ?? ""}`).digest("hex") === record.sourceHash;
+  });
+  return { ...ballot, measureRecords };
+}
+
+export function currentMeasureRecords(): readonly MeasureRecord[] {
+  const projection = currentAzBallotProjection();
+  return measureRecordsForBallot(seedMeasureRecords(projection.ballot, projection.measureAnalyses.analyses));
 }

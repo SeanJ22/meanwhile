@@ -1,4 +1,5 @@
-import { parseStateBallotContractId } from "../ballot/state-scopes.ts";
+import { parseStateBallotContractId, stateBallotScope } from "../ballot/state-scopes.ts";
+import { stateFromRegistryRuntimeContractId } from "../registry/state-scopes.ts";
 import { readLatestReaderReadbacks, routineEventObservedAt, type RoutineDataStore } from "./store.ts";
 import type { RoutineSourceContract } from "./contracts.ts";
 import type { ManualProductionSourceContract } from "./manual-contracts.ts";
@@ -64,13 +65,15 @@ function verifyExactVersion(
 }
 
 function verifierIdFor(contract: ReaderContract): string {
+  if (parseStateBallotContractId(contract.id)) return "lib/civic-data/read-model.ts#readPromotedCivicData";
+  if (stateFromRegistryRuntimeContractId(contract.id)) return "lib/registry/state-runtime.ts#readStateRegistryRuntimeProjection";
   // Congress.gov and GovInfo also publish federal civic records under the same source ids; only people records read back as people.
   if (isPeopleSource(contract.sourceId) && contract.recordClass !== "FEDERAL_CIVIC_RECORD") return "lib/civic-data/people-source-publication.ts#readPeopleSourceProjection";
   if (contract.recordClass === "FEDERAL_CIVIC_RECORD") return "lib/sources/congress/publication.ts#readFederalSourceProjection";
   if (contract.sourceId === "plural-openstates" && contract.recordClass === "STATE_LEGISLATOR") return "lib/state-rollcalls/legislators.ts#readOpenStatesPeopleProjection";
   if (contract.sourceId === "plural-openstates-votes") return "lib/sources/plural/votes.ts#readPluralVotesProjection";
   if (contract.sourceId === "legiscan" && contract.recordClass === "STATE_ROLL_CALL") return "lib/sources/legiscan/votes.ts#readLegiscanVotesProjection";
-  switch (parseStateBallotContractId(contract.id)?.family ?? contract.id) {
+  switch (contract.id) {
     case "legiscan-bulk": return "lib/sources/legiscan/reader.ts#readBulkProjection";
     case "google-civic-voterinfo": return "lib/sources/google-civic/reader.ts#readCivicProjection";
     case "socrata-discovery":
@@ -89,6 +92,9 @@ function verifierIdFor(contract: ReaderContract): string {
     case "congress-rollcalls": return "lib/votes/snapshot.ts#readFederalRollCallsProjection";
     case "federal-key-votes": return "lib/votes/key-votes-projection.ts#readFederalKeyVotesProjection";
     case "ballot-contests": return "lib/ballot/generic-projection.ts#readGenericBallotProjection";
+    case "az-sos-ballot": return "lib/civic-data/manual-read-models.ts#readAzBallotProjection";
+    case "nh-curated-ballot": return "lib/civic-data/manual-read-models.ts#readNhBallotProjection";
+    case "nj-morris-filing": return "lib/sources/ballot-nj-morris/index.ts#readNjMorrisFiling";
     case "plain-english-translations": return "lib/translate/projection-reader.ts#readTranslationProjection";
     case "special-district-boundaries": return "lib/registry/special-district-boundary-reader.ts#readSpecialDistrictBoundaries";
     case "public-records": return "lib/civic-data/public-records.ts#readPublicRecords";
@@ -137,6 +143,15 @@ export async function verifyRoutineReaderProjection(
 ): Promise<RoutineReaderVerification> {
   const verifierId = verifierIdFor(contract);
   try {
+    const state = parseStateBallotContractId(contract.id);
+    if (state) {
+      const scope = stateBallotScope(state.family, state.state);
+      if (contract.scope !== scope || options.scope !== undefined && options.scope !== scope) return fail(verifierId, "State publication readback requires its exact state scope.");
+      const { readPromotedCivicData } = await import("./read-model.ts");
+      const read = await readPromotedCivicData(contract.recordClass, scope, { store: options.store, now: options.now, bypassCache: true });
+      if (read.kind === "PROMOTED" && read.metadata.sourceId !== contract.sourceId) return fail(verifierId, "State publication readback names a different publisher.");
+      return verifyExactVersion(verifierId, read, options.expectedVersionId, contract.id);
+    }
     if (isPeopleSource(contract.sourceId) && contract.recordClass !== "FEDERAL_CIVIC_RECORD") {
       const { readPeopleSourceProjection } = await import("./people-source-read.ts");
       const jurisdiction = /^(US(?:-[A-Z]{2})?):/.exec(contract.scope)?.[1] as "US" | `US-${string}` | undefined;
@@ -165,7 +180,14 @@ export async function verifyRoutineReaderProjection(
         : await (await import("../sources/legiscan/votes.ts")).readLegiscanVotesProjection(state, {store: options.store, now: options.now, bypassCache: true});
       return verifyExactVersion(verifierId, read, options.expectedVersionId, `${state} attributed votes`);
     }
-    const family = parseStateBallotContractId(contract.id)?.family ?? contract.id;
+    const registryState = stateFromRegistryRuntimeContractId(contract.id);
+    if (registryState) {
+      const { readStateRegistryRuntimeProjection } = await import("../registry/state-runtime.ts");
+      return verifyExactVersion(verifierId, await readStateRegistryRuntimeProjection(registryState, {
+        store: options.store, now: options.now, bypassCache: true,
+      }), options.expectedVersionId, `${registryState} registry-runtime`);
+    }
+    const family = contract.id;
     switch (family) {
       case "legiscan-bulk": {
         const { readBulkProjection } = await import("../sources/legiscan/reader.ts");
@@ -282,9 +304,13 @@ export async function verifyRoutineReaderProjection(
         const { readFederalKeyVotesProjection } = await import("../votes/key-votes-projection.ts");
         return verifyExactVersion(verifierId, await readFederalKeyVotesProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "federal-key-vote");
       }
+      case "nj-morris-filing": {
+        const { readNjMorrisFiling } = await import("../sources/ballot-nj-morris/index.ts");
+        return verifyExactVersion(verifierId, await readNjMorrisFiling({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "NJ Morris ballot");
+      }
       case "ballot-contests": {
         const { readGenericBallotProjection } = await import("../ballot/generic-projection.ts");
-        return verifyExactVersion(verifierId, await readGenericBallotProjection(parseStateBallotContractId(contract.id)!.state, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "state-election-ballots");
+        return verifyExactVersion(verifierId, await readGenericBallotProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "state-election-ballots");
       }
       case "plain-english-translations": {
         const { readTranslationProjection } = await import("../translate/projection-reader.ts");
@@ -314,12 +340,18 @@ export async function verifyRoutineReaderProjection(
         if (!options.scope?.startsWith(prefix)) return fail(verifierId, "Budget readback requires its exact jurisdiction.");
         return verifyExactVersion(verifierId, await readGovernmentBudgets(options.scope.slice(prefix.length), { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, contract.id);
       }
+      case "az-sos-ballot":
+      case "nh-curated-ballot":
       case "candidate-profiles":
       case "candidate-corpus": {
         const readers = await import("./manual-read-models.ts");
-        const result = parseStateBallotContractId(contract.id)?.family === "candidate-profiles"
-          ? await readers.readCandidateProfilesProjection(parseStateBallotContractId(contract.id)!.state, { store: options.store, now: options.now, bypassCache: true })
-          : await readers.readCandidateCorpusProjection(parseStateBallotContractId(contract.id)!.state, { store: options.store, now: options.now, bypassCache: true });
+        const result = contract.id === "az-sos-ballot"
+          ? await readers.readAzBallotProjection({ store: options.store, now: options.now, bypassCache: true })
+          : contract.id === "nh-curated-ballot"
+            ? await readers.readNhBallotProjection({ store: options.store, now: options.now, bypassCache: true })
+            : contract.id === "candidate-profiles"
+              ? await readers.readCandidateProfilesProjection({ store: options.store, now: options.now, bypassCache: true })
+              : await readers.readCandidateCorpusProjection({ store: options.store, now: options.now, bypassCache: true });
         return verifyExactVersion(verifierId, result, options.expectedVersionId, contract.readerProjection?.id ?? contract.id);
       }
       case "officeholder-statements": {
@@ -353,7 +385,7 @@ export async function verifyRoutineReaderProjection(
       }
       case "voting-sites": {
         const { readVotingSitesProjection } = await import("../ballot/voting-sites-server.ts");
-        return verifyExactVersion(verifierId, await readVotingSitesProjection(parseStateBallotContractId(contract.id)!.state, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "voting-sites");
+        return verifyExactVersion(verifierId, await readVotingSitesProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "voting-sites");
       }
       case "prl": {
         const { readPrlProjection } = await import("../sources/prl/snapshot.ts");
@@ -399,7 +431,7 @@ export async function verifyRoutineReaderProjection(
       }
       case "candidate-campaign-sites-derived": {
         const { readDerivedCampaignSites } = await import("./derived-campaign-sites.ts");
-        return verifyExactVersion(verifierId, await readDerivedCampaignSites(parseStateBallotContractId(contract.id)!.state, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, contract.id);
+        return verifyExactVersion(verifierId, await readDerivedCampaignSites({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, contract.id);
       }
       case "everyday-routing": {
         const { readEverydayRoutingProjection } = await import("../routing/everyday-data-plane.ts");

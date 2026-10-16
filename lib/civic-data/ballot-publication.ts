@@ -1,3 +1,4 @@
+import type { RoutineTaskClock } from "./runner.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import { OWNER_SURFACE_FORMAT_VERSION } from "../control-plane/owner-surface.ts";
 import { parseStateBallotContractId, requireBallotState, type BallotState } from "../ballot/state-scopes.ts";
@@ -86,8 +87,10 @@ export async function readLatestBallotPublicationSummary(repos: ControlPlaneRepo
     (report.reason === null || typeof report.reason === "string") ? report : null;
 }
 
-export function ballotPublicationDue(taskId: string, inputStamp: string | null, prior: Pick<BallotPublicationResult, "state" | "inputStamp"> | null): boolean {
+export function ballotPublicationDue(taskId: string, inputStamp: string | null,
+  prior: Pick<BallotPublicationResult, "state" | "inputStamp" | "status"> | null,
+  clock: Pick<RoutineTaskClock, "lastSucceededAt"> | undefined): boolean {
   const task = parseStateBallotContractId(taskId);
   return task?.family === "ballot-contests" && inputStamp !== null &&
-    (prior?.state !== task.state || inputStamp !== prior.inputStamp);
+    (prior?.state !== task.state || inputStamp !== prior.inputStamp || prior.status === "PUBLISHED" && !clock?.lastSucceededAt);
 }

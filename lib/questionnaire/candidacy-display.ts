@@ -1,28 +1,37 @@
+
 import { surnameDisplayCase } from "../ballot/name-case.ts";
-import { readGenericBallotProjection } from "../ballot/generic-projection.ts";
-import { requireBallotState } from "../ballot/state-scopes.ts";
+import { readerBallotSourceForTargetId } from "../ballot/reader-sources.ts";
+
+interface BallotFile {
+  contests: { id: string; title: string }[];
+  candidacies: { id: string; contestId: string; givenName: string; familyName: string }[];
+}
 
 export interface CandidacyDisplay {
+  /** What the person is called, cased for reading. */
   name: string;
+  /** What the seat is called. */
   officeTitle: string;
 }
 
-export function invitationBallotState(contestId: string): string | null {
-  const namespace = /^(?:ballot-)?([a-z]{2})[-:]/i.exec(contestId)?.[1];
-  if (!namespace) return null;
-  try { return requireBallotState(namespace); } catch { return null; }
+async function load(candidacyId: string): Promise<Map<string, CandidacyDisplay>> {
+  const out = new Map<string, CandidacyDisplay>();
+  const entry = await readerBallotSourceForTargetId(candidacyId);
+  if (!entry) return out;
+  const raw = entry.source.normalize(await entry.source.fetch()) as BallotFile;
+  const titles = new Map(raw.contests.map((c) => [c.id, c.title]));
+  for (const c of raw.candidacies) {
+    out.set(c.id, {
+      name: `${c.givenName} ${surnameDisplayCase(c.familyName)}`.replace(/\s+/g, " ").trim(),
+      officeTitle: titles.get(c.contestId) ?? "",
+    });
+  }
+  return out;
 }
 
-export async function displayFor(state: string, candidacyId: string): Promise<CandidacyDisplay | null> {
-  const read = await readGenericBallotProjection(state);
-  if (read.kind !== "PROMOTED") return null;
-  for (const ballot of Object.values(read.value.ballots)) {
-    const candidate = [...ballot.candidacies, ...ballot.filingCandidacies ?? []].find(row => row.id === candidacyId);
-    if (!candidate) continue;
-    const contest = ballot.contests.find(row => row.id === candidate.contestId);
-    if (!contest) return null;
-    const name = `${candidate.givenName} ${surnameDisplayCase(candidate.familyName)}`.replace(/\s+/g, " ").trim();
-    return name && contest.title ? { name, officeTitle: contest.title } : null;
-  }
-  return null;
+/** The person and the seat behind a candidacy id, or `null` if it resolves to neither. */
+export async function displayFor(candidacyId: string): Promise<CandidacyDisplay | null> {
+  const hit = (await load(candidacyId)).get(candidacyId);
+  if (!hit || hit.name.length === 0 || hit.officeTitle.length === 0) return null;
+  return hit;
 }

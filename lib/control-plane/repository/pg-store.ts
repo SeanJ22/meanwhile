@@ -938,7 +938,7 @@ export async function pgEnsureArtifactSourceIndex(
 }
 
 /** Build one index online: an existing valid index is kept, an interrupted one is rebuilt, another builder is left alone. */
-export async function pgEnsureOnlineIndex(
+async function pgEnsureOnlineIndex(
   sql: Sql,
   index: OnlineIndex,
   bounds: ControlPlaneRequestBounds = CONTROL_PLANE_REQUEST_BOUNDS_MS,
@@ -1267,9 +1267,7 @@ export async function createPgRepositories(
   const sharedBudget = budgetRepositoryFrom(
     pgAggregateRepository<BudgetLedger>(sql, "BudgetLedger", "cp_budget", bounded), locks, "ATOMIC_COMPARE_AND_SET",
   );
-  // One process need not contend with its own read/modify/write requests on
-  // this large aggregate. Other processes still contend through the same CAS.
-  // This queues accounting writes only; workers and their leases run in parallel.
+  // Serialize this process’s aggregate accounting writes; other processes still use CAS.
   let budgetWrite: Promise<unknown> = Promise.resolve();
   const budget: ControlPlaneRepositories["budget"] = { ...sharedBudget, mutate: (mutator, now) => {
     const write = budgetWrite.then(() => sharedBudget.mutate(mutator, now));

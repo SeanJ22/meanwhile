@@ -452,9 +452,7 @@ test("source parsers brand publisher evidence while a missing credential remains
 });
 
 test("dotgov refuses a registry CSV cut short of its declared length", async () => {
-  // acquireDotGov reads the pinned SHA then the raw CSV through the global
-  // fetch, so the completeness check is exercised by standing in a truncated
-  // transfer whose row count would otherwise still have to clear the floor.
+  // Truncate the pinned CSV transfer to exercise acquisition’s completeness check.
   const realFetch = globalThis.fetch;
   globalThis.fetch = (async (input: RequestInfo | URL) => {
     const url = String(input);

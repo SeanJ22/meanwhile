@@ -1,9 +1,11 @@
 import { readerRoute } from "@/lib/api/reader-route";
-import { ensureReaderAuthorityEdge, readReaderAuthorityManifest } from "@/lib/meetings/edge-serving";
+import { ensureReaderAuthorityEdge, readReaderManifest } from "@/lib/meetings/edge-serving";
 import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
 import { settleOutcomeRead, sittingsForBody } from "@/lib/outcomes/store";
 import { linkLocalVotes, localVotesForMember, type LocalVoteRosterFor } from "@/lib/outcomes/local-votes";
 import { rosterForBody } from "@/lib/registry/body-rosters";
+
+
 
 export const runtime = "nodejs";
 
@@ -15,7 +17,7 @@ export const GET = readerRoute("/api/votes/local", async function GET(request: R
   const bodyId = ROSTER_ID.exec(personId)?.[1];
   if (!bodyId || personId.length > 300) return Response.json({ error: "personId required" }, { status: 400 });
   try {
-    const manifest = await readReaderAuthorityManifest().catch(() => null);
+    const manifest = await readReaderManifest().catch(() => null);
     const authority = manifest ? await ensureReaderAuthorityEdge(manifest, undefined, ["registry-runtime", "meeting-outcomes"]).catch(() => null) : null;
     if (authority) enterReaderAuthorityEdge(authority);
     await settleOutcomeRead();

@@ -13,6 +13,7 @@ type PointPlans = Partial<Readonly<Record<DistrictFamily, string>>>;
 const TYPES: Record<DistrictFamily, GeographyType> = { cd: "congressional_district", sldu: "state_leg_upper", sldl: "state_leg_lower" };
 const OFFICES: Record<DistrictFamily, string> = { cd: "U.S. House", sldu: "State Senate", sldl: "State House" };
 
+
 export async function divisionIdsForZipArea(
   zip: string | null,
   pointDivisionIds: readonly string[],
@@ -41,11 +42,11 @@ export async function divisionIdsForZipArea(
 }
 
 export function unestablishedDistrictOffices(set: Pick<BallotSet, "contests" | "heldContests">, electionIds: readonly string[]): string[] {
-  return unestablishedDistrictOfficesForFamilies(
-    [...set.contests, ...set.heldContests ?? []].flatMap(contest => districtFamilyKey(contest.ocdId) ?? []), electionIds);
-}
-
-export function unestablishedDistrictOfficesForFamilies(families: readonly string[], electionIds: readonly string[]): string[] {
   const established = new Set(electionIds.map(districtFamilyKey).filter(key => key !== null));
-  return [...new Set(families.filter(key => !established.has(key)).map(key => OFFICES[key.split("/")[1] as DistrictFamily]))];
+  const offices = new Set<string>();
+  for (const contest of [...set.contests, ...set.heldContests ?? []]) {
+    const key = districtFamilyKey(contest.ocdId);
+    if (key && !established.has(key)) offices.add(OFFICES[key.split("/")[1] as DistrictFamily]);
+  }
+  return [...offices];
 }

@@ -4,7 +4,7 @@ import { isAbsolute, relative, resolve, join } from "node:path";
 import { neon } from "@neondatabase/serverless";
 import { createPgRepositories, controlPlaneUrlFromEnv } from "../lib/control-plane/repository/pg-store.ts";
 import { heldArtifactCaptures } from "../lib/civic-data/held-artifact-captures.ts";
-import { runCandidateProfileFindingsJob } from "../lib/civic-data/candidate-profile-findings.ts";
+import { runCandidateProfileFindingsJob } from "../lib/civic-data/candidate-profile-findings-job.ts";
 
 import {
   MANUAL_PROJECTION_CONTRACT_IDS,
@@ -14,7 +14,6 @@ import {
 import { prepareManualProjectionSuccessor } from "../lib/civic-data/manual-successor.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
-import { partitionHeldStateAuthority, partitionHeldStateAuthorities } from "../lib/civic-data/state-authority-cutover.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 import { assignment } from "./cli-args.mts";
@@ -29,7 +28,6 @@ if (process.argv.includes("--candidate-findings")) {
   const target = parseStateBallotContractId(contractId ?? "");
   if (target?.family !== "candidate-profiles" || packageArgument || workerResults) throw new Error("CANDIDATE_FINDINGS_CONTRACT_ARGUMENT_INVALID");
   prepareProductionCivicDataWrite();
-  await partitionHeldStateAuthority("candidate-profiles", target.state);
   const connection = controlPlaneUrlFromEnv();
   if (!connection) throw new Error("CANDIDATE_FINDINGS_CONTROL_PLANE_UNCONFIGURED");
   const now = new Date().toISOString(), store = new PostgresRoutineDataStore();
@@ -44,9 +42,6 @@ if (process.argv.includes("--candidate-findings")) {
   if (!contractId || !isWorkerReaderContract(contractId) || packageArgument) throw new Error("WORKER_PUBLICATION_CONTRACT_ARGUMENT_INVALID");
   prepareProductionCivicDataWrite();
   const now = new Date().toISOString();
-  const stateContract = parseStateBallotContractId(contractId);
-  if (stateContract?.family === "ballot-contests") await partitionHeldStateAuthorities(stateContract.state);
-  else if (stateContract) await partitionHeldStateAuthority(stateContract.family, stateContract.state);
   const context = await workerPublicationContext(now);
   const store = new PostgresRoutineDataStore();
   const { report, receipt, exitCode } = await runWorkerPublicationJob({ repos: context.repos, context, store, contractId,
@@ -79,8 +74,6 @@ if (input.contractId !== contractId) {
 }
 
 prepareProductionCivicDataWrite();
-const stateContract = parseStateBallotContractId(contractId);
-if (stateContract) await partitionHeldStateAuthority(stateContract.family, stateContract.state);
 
 const store = new PostgresRoutineDataStore();
 const { candidate, expectedBaseVersionId } = await prepareManualProjectionSuccessor(input, store, input.sourceReceipt.reviewedAt);

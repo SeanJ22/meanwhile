@@ -13,6 +13,10 @@ import {
 } from "./funding-section";
 import { StateMoneySection } from "./state-money-section";
 
+
+
+
+
 export function FundingBlock(props: {
   holder: SeatHolder;
   reactionContext: ReactionViewContext | null;
@@ -34,11 +38,6 @@ function FundingBlockInner({
 }) {
   const [answer, setAnswer] = useState<CampaignMoneyApiResponse | null>(null);
   const [loadFailed, setLoadFailed] = useState(false);
-  const query = new URLSearchParams([
-    ...(holder.officeJurisdictionOcdId ? [["division", holder.officeJurisdictionOcdId]] : []),
-    ...(reactionContext?.zip ? [["zip", reactionContext.zip]] : []),
-    ...(reactionContext ? [["lat", String(reactionContext.lat)], ["lng", String(reactionContext.lng)]] : []),
-  ]).toString();
 
   useEffect(() => {
     const controller = new AbortController();
@@ -46,7 +45,7 @@ function FundingBlockInner({
       try {
         // The target rides in the path, never a query string, so shared caches key on it.
         const response = await fetch(
-          `/api/funding/${encodeURIComponent(holder.id)}?${query}`,
+          `/api/funding/${encodeURIComponent(holder.id)}`,
           { signal: controller.signal },
         );
         if (!response.ok) throw new Error(String(response.status));
@@ -56,7 +55,7 @@ function FundingBlockInner({
       }
     })();
     return () => controller.abort();
-  }, [holder.id, query]);
+  }, [holder.id]);
 
   if (loadFailed) return <CardGapContribution id={`funding:${holder.id}`} label="campaign money" subject={{ type: "CANDIDATE", id: holder.id }} />;
   if (!answer) return <p className="mw-loading-inline" role="status">Loading campaign money…</p>;

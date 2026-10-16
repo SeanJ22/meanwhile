@@ -5,17 +5,16 @@ import sharp from "sharp";
 import { candidatePortraitFromOwnSite, candidatePortraitFromCommons } from "../lib/ballot/candidate-portraits.ts";
 import { readerCandidateProfiles } from "../lib/ballot/candidate-reader-privacy.ts";
 import type { CandidateProfilesProjection } from "../lib/civic-data/manual-projections.ts";
-import { cardForCandidacy } from "../lib/ballot/candidate-cards.ts";
-import { candidateProfilesReadState } from "../lib/civic-data/manual-read-models.ts";
 import { publishCampaignSitePortraits } from "../lib/control-plane/promotion/campaign-site-portraits.ts";
-import { derivedCampaignSitesCandidate, type PublishableCampaignSiteApproval } from "../lib/civic-data/derived-campaign-site-writer.ts";
-import { readDerivedCampaignSites } from "../lib/civic-data/derived-campaign-sites.ts";
+import { derivedCampaignSitesCandidate } from "../lib/civic-data/derived-campaign-site-writer.ts";
+import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
+import type { DerivedCampaignSitesProjection } from "../lib/civic-data/derived-campaign-sites.ts";
+import { stateBallotScope, stateBallotContractId } from "../lib/ballot/state-scopes.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { portraitBindingMatches } from "../lib/photos/binding.ts";
 import type { KnownRelease } from "../lib/sources/known-release.ts";
 import type { CampaignSiteIdentity } from "../lib/candidates/campaign-site-verifier.ts";
-import { heldPageRead, verifyCampaignSitePage } from "../lib/candidates/campaign-site-verifier.ts";
 import type { WorkerPublicationCapture } from "../lib/civic-data/worker-roster-publication.ts";
 
 const NOW = "2026-10-01T00:00:00Z", NAME = "Jane Doe", SITE = "https://janedoeforcouncil.com/";
@@ -49,38 +48,6 @@ test("a named portrait on the campaign's own page is stored under candidates/ an
   assert.equal(unbound.photoUrl, null); assert.equal(unbound.photoSource, null);
   const swapped = readerCandidateProfiles(projection({ ...patch, photoUrl: patch.photoUrl!.replace(/[a-f0-9]{8}\./, "00000000.") })).cards.cards.k;
   assert.equal(swapped.photoUrl, null);
-});
-
-test("portrait publication loads one approved page asynchronously and finishes it before the next", async () => {
-  const source = page(`<img alt="Jane Doe" src="${IMAGE}">`), body = source.capture.evidence.text;
-  const sha256 = createHash("sha256").update(body).digest("hex");
-  const approvals: PublishableCampaignSiteApproval[] = Array.from({ length: 3 }, (_, index) => {
-    const identity = { ...source.identity, candidacyId: `candidate:${index}` };
-    const verdict = verifyCampaignSitePage(identity, { url: SITE, origin: "RECORDED_SITE", ref: "fixture" },
-      heldPageRead({ requestedUrl: SITE, httpStatus: 200, contentType: "text/html", body, retrievedAt: NOW }));
-    assert.equal(verdict.verdict, "VERIFIED");
-    return { itemId: `item:${index}`, recordId: `approval:${index}`, at: NOW, stage: "APPROVED_FOR_PROMOTION", campaignSite: {
-      candidacyId: identity.candidacyId, candidateName: NAME, identity, readerKeys: [`reader:${index}`], url: SITE,
-      host: new URL(SITE).hostname, verification: verdict.verdict === "VERIFIED" ? verdict.verification : "",
-      evidence: { verifierId: "campaign-site-verifier/1", artifactId: `capture:${index}`, attemptId: `attempt:${index}`,
-        sha256, requestedUrl: SITE, finalUrl: SITE, httpStatus: 200, contentType: "text/html", readAt: NOW },
-      publicationDoor: "CANDIDATE_CAMPAIGN_SITES_DERIVED_CONTRACT",
-    } };
-  });
-  let loaded = 0, completed = 0;
-  const result = await publishCampaignSitePortraits({ plan: { records: [], inputs: [], held: [], published: [] }, approvals,
-    now: NOW, portraitRuntime: runtime().io, commonsRuntime: { capture: async () => assert.fail("the approved own-page portrait must publish") },
-    held: async () => {
-      assert.equal(loaded, completed, "the prior page must finish before another raw capture loads");
-      loaded++;
-      await Promise.resolve();
-      return { body, sha256, tier: "RAW", permission: "ALLOWED" };
-    },
-    onPublished: async current => { completed++; assert.equal(current.portraits?.length, completed); },
-  });
-  assert.equal(loaded, 3);
-  assert.equal(completed, 3);
-  assert.deepEqual(result.portraits?.map(row => row.id), ["reader:0", "reader:1", "reader:2"]);
 });
 
 test("an image that does not carry the candidate's name is never offered, and committed portraits stay visible", async () => {
@@ -160,10 +127,10 @@ test("a Commons portrait publishes through the existing derived door without a c
   const candidate = derivedCampaignSitesCandidate("OH", plan, NOW);
   assert.deepEqual(candidate.semantics.violations, []);
   const store = new MemoryRoutineDataStore();
-  const outcome = await processRegisteredRoutineCandidate(store, "candidate-campaign-sites-derived:OH", candidate, NOW);
+  const outcome = await processRegisteredRoutineCandidate(store, stateBallotContractId("candidate-campaign-sites-derived", "OH"), candidate, NOW);
   assert.equal(outcome.candidate.state, "PROMOTED", outcome.candidate.failureDetail ?? undefined);
   assert.equal(outcome.readerReadback?.status, "PASS", JSON.stringify(outcome.readerReadback));
-  assert.equal((await readDerivedCampaignSites("OH", { store, now: NOW, bypassCache: true })).kind, "PROMOTED");
-  assert.notEqual(candidateProfilesReadState("OH").kind, "PROMOTED");
-  assert.equal(cardForCandidacy("OH", "national-oh-house-3:jane-doe")?.photoUrl, plan.portraits![0].portrait.photoUrl);
+  const read = await readPromotedCivicData<DerivedCampaignSitesProjection>("CURATED_READER_RECORD", stateBallotScope("candidate-campaign-sites-derived", "OH"), { store, now: NOW, bypassCache: true });
+  assert.equal(read.kind, "PROMOTED");
+  if (read.kind === "PROMOTED") assert.deepEqual(read.value.portraits, plan.portraits);
 });

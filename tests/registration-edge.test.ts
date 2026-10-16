@@ -71,7 +71,7 @@ test("each state's registration is its own compressed artifact, read back lossle
     registrations: { oh: { value: oh, versionId: "reg-oh-1" }, nh: { value: nh, versionId: "reg-nh-1" } },
   });
   assert.equal(published.status, "PUBLISHED");
-  const manifest = (await store.readAuthorityManifest())!.manifest;
+  const manifest = (await store.readManifest())!.manifest;
   assert.deepEqual(Object.keys(manifest.registrations ?? {}).sort(), ["nh", "oh"]);
   assert.match(manifest.registrations!.oh.key, /^reader\/artifacts\/[a-f0-9]{64}\.json\.gz$/);
 
@@ -88,7 +88,7 @@ test("unchanged states carry forward, a moved state re-publishes alone, and a st
   const oh = model("OH");
   const nh = model("NH");
   await publishReaderEdgeArtifacts(emptySnapshot(), META, { store, registrations: { oh: { value: oh, versionId: "reg-oh-1" }, nh: { value: nh, versionId: "reg-nh-1" } } });
-  const first = (await store.readAuthorityManifest())!.manifest;
+  const first = (await store.readManifest())!.manifest;
 
   const same = await publishReaderEdgeArtifacts(emptySnapshot(), META, {
     store,
@@ -101,7 +101,7 @@ test("unchanged states carry forward, a moved state re-publishes alone, and a st
     registrations: { oh: { value: oh, versionId: "reg-oh-2" }, nh: { versionId: "reg-nh-1", carried: true } },
   });
   assert.equal(moved.status, "PUBLISHED");
-  const second = (await store.readAuthorityManifest())!.manifest;
+  const second = (await store.readManifest())!.manifest;
   assert.equal(second.registrations!.nh.key, first.registrations!.nh.key, "the unchanged state keeps its artifact");
   assert.notEqual(second.registrations!.oh.key, first.registrations!.oh.key);
   assert.equal(second.registrations!.oh.version, "reg-oh-2");
@@ -111,7 +111,7 @@ test("unchanged states carry forward, a moved state re-publishes alone, and a st
     registrations: { oh: { versionId: "reg-oh-2", carried: true }, nh: { versionId: "reg-nh-9", carried: true } },
   });
   assert.equal(stale.status, "RACED");
-  assert.deepEqual((await store.readAuthorityManifest())!.manifest, second, "a failed carry never removes valid state references");
+  assert.deepEqual((await store.readManifest())!.manifest, second, "a failed carry never removes valid state references");
 });
 
 test("the reader composes a state's registration from the edge, and a state the complete section omits costs no read at all", async () => {

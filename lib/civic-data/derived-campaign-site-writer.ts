@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 
 import { canonicalCivicDataJson } from "./changes.ts";
 import { canonicalCivicDataHash } from "./canonical-hash.ts";
+import { consumeStatePublicationRecord } from "./state-publication-prior.ts";
 import { derivedRetrieval, type DerivedInputRef } from "./derived-authority.ts";
 import { derivedRequestedUrl } from "./derived-door.ts";
 import {
@@ -183,12 +184,29 @@ export interface DerivedCampaignSitesPlan {
   readonly published: readonly { readonly key: string; readonly candidacyId: string; readonly url: string; readonly approvalRecordId: string }[];
   readonly held: readonly { readonly key: string; readonly code: DerivedCampaignSiteHoldCode; readonly detail: string }[];
   readonly inputs: readonly DerivedInputRef[];
-  readonly prior?: PromotedCampaignSites;
+  readonly prior?: { readonly input: PromotedCampaignSites["input"] };
 }
 
 export interface PromotedCampaignSites {
   readonly input: DerivedInputRef & { readonly kind: "PROMOTED_VERSION" };
   readonly projection: DerivedCampaignSitesProjection;
+}
+
+const priorProofs = new WeakMap<NonNullable<DerivedCampaignSitesPlan["prior"]>, {
+  readonly inputHash: string; readonly payloadHash: string;
+  readonly records: ReadonlyMap<string, { readonly candidacyId: string; readonly candidateName: string;
+    readonly campaignHash: string; readonly publications: ReadonlyMap<string, string> }>;
+  readonly portraits: ReadonlyMap<string, string>;
+}>();
+
+function priorProof(prior: PromotedCampaignSites): NonNullable<DerivedCampaignSitesPlan["prior"]> {
+  const proof = Object.freeze({ input: prior.input });
+  priorProofs.set(proof, { inputHash: canonicalCivicDataHash(prior.input), payloadHash: canonicalCivicDataHash(prior.projection),
+    records: new Map(prior.projection.records.map(record => [record.id, { candidacyId: record.candidacyId,
+      candidateName: record.candidateName, campaignHash: canonicalCivicDataHash(record.campaign),
+      publications: new Map((record.publications ?? []).map(publication => [publication.document.id, canonicalCivicDataHash(publication)])) }])),
+    portraits: new Map((prior.projection.portraits ?? []).map(record => [record.id, canonicalCivicDataHash(record)])) });
+  return proof;
 }
 
 const inputKey = (input: DerivedInputRef): string => canonicalCivicDataJson(input);
@@ -224,17 +242,15 @@ export function reverifyApprovedSite(record: PublishableCampaignSiteApproval, he
     : { ok: false, detail: verdict.refusals.map((r) => `${r.code}: ${r.detail}`).join("; ") };
 }
 
-export function planDerivedCampaignSites(input: {
+type CampaignSitePlanInput = {
   readonly approvals: readonly PublishableCampaignSiteApproval[];
   readonly held: (record: PublishableCampaignSiteApproval) => HeldVerifyingRead | null;
   readonly profiles: { readonly input: DerivedInputRef & { readonly kind: "PROMOTED_VERSION" }; readonly links: Readonly<Record<string, CandidateLinksShape>> } | null;
   readonly linkedPublications?: readonly HeldLinkedPublicationRead[];
   readonly prior?: PromotedCampaignSites | null;
-}): DerivedCampaignSitesPlan {
-  return planCampaignSiteRecords(input, input.prior?.projection.records ?? []);
-}
+};
 
-function planCampaignSiteRecords(input: Parameters<typeof planDerivedCampaignSites>[0], initial: readonly DerivedCampaignSiteRecord[]): DerivedCampaignSitesPlan {
+function planCampaignSiteRecords(input: CampaignSitePlanInput, initial: readonly DerivedCampaignSiteRecord[]): DerivedCampaignSitesPlan {
   const inputs = new Map<string, DerivedInputRef>();
   const add = (i: DerivedInputRef) => inputs.set(inputKey(i), i);
   if (input.profiles !== null) add(input.profiles.input);
@@ -442,14 +458,11 @@ function planCampaignSiteRecords(input: Parameters<typeof planDerivedCampaignSit
     published: published.sort((a, b) => a.key.localeCompare(b.key)),
     held: held.sort((a, b) => `${a.key}\n${a.code}`.localeCompare(`${b.key}\n${b.code}`)),
     inputs: [...inputs.entries()].sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)).map(([, i]) => i),
-    ...(input.prior ? { prior: input.prior } : {}),
   };
 }
 
 const DERIVED_CAMPAIGN_SITES_PARSER = "candidate-campaign-site-chain/1" as const;
 const sha256Hex = (value: string): string => createHash("sha256").update(value).digest("hex");
-const sameDerivedFact = (left: unknown, right: unknown): boolean => left === right ||
-  (left !== undefined && right !== undefined && canonicalCivicDataHash(left) === canonicalCivicDataHash(right));
 const FACT_KIND = "2026 candidates' campaign sites, each read robots-first by our own Attempt, verified on vaulted bytes and approved by the campaign-site chain";
 
 export function derivedCampaignSitesProjection(plan: DerivedCampaignSitesPlan): DerivedCampaignSitesProjection {
@@ -470,24 +483,24 @@ export function derivedCampaignSitesCandidate(state: string, plan: DerivedCampai
     } else if (input.kind === "PIPELINE_APPROVAL") cited.add(input.recordId);
   }
   const priorInputKey = plan.prior ? inputKey(plan.prior.input) : null;
-  const priorValid = plan.prior !== undefined && plan.prior.input.recordClass === DERIVED_CAMPAIGN_SITES_RECORD_CLASS &&
+  const proof = plan.prior ? priorProofs.get(plan.prior) : undefined;
+  const priorValid = plan.prior !== undefined && proof !== undefined &&
+    canonicalCivicDataHash(plan.prior.input) === proof.inputHash && plan.prior.input.recordClass === DERIVED_CAMPAIGN_SITES_RECORD_CLASS &&
     plan.prior.input.scope === derivedCampaignSitesScope(state) &&
-    canonicalCivicDataHash(plan.prior.projection) === plan.prior.input.readModelSha256 &&
+    proof.payloadHash === plan.prior.input.readModelSha256 &&
     plan.inputs.some(input => input === plan.prior!.input || inputKey(input) === priorInputKey);
-  const inherited = new Map((priorValid ? plan.prior!.projection.records : []).map(record => [record.id, record]));
   const inheritedIdentity = (record: DerivedCampaignSiteRecord) => {
-    const prior = inherited.get(record.id);
+    const prior = priorValid ? proof?.records.get(record.id) : undefined;
     return prior?.candidacyId === record.candidacyId && prior?.candidateName === record.candidateName ? prior : undefined;
   };
   const uncited = readModel.records.filter(r =>
     (!cited.has(r.campaign.evidence.artifactId) || !cited.has(r.campaign.evidence.approvalRecordId)) &&
-    !sameDerivedFact(r.campaign, inheritedIdentity(r)?.campaign)).map(r => r.id);
+    canonicalCivicDataHash(r.campaign) !== inheritedIdentity(r)?.campaignHash).map(r => r.id);
   const uncitedPublications = readModel.records.flatMap(r => (r.publications ?? []).filter(p => !cited.has(p.evidence.artifactId) ||
     !cited.has(p.evidence.approvalRecordId) || ("kind" in p.evidence && p.evidence.kind === "LINKED_PAGE" && !cited.has(p.evidence.sourceArtifactId)))
-    .filter(p => !(inheritedIdentity(r)?.publications ?? []).some(prior => sameDerivedFact(prior, p))).map(p => p.document.id));
-  const inheritedPortraits = new Map((priorValid ? plan.prior!.projection.portraits ?? [] : []).map(record => [record.id, record]));
+    .filter(p => inheritedIdentity(r)?.publications.get(p.document.id) !== canonicalCivicDataHash(p)).map(p => p.document.id));
   const uncitedPortraits = (readModel.portraits ?? []).filter(record =>
-    !sameDerivedFact(record, inheritedPortraits.get(record.id)) &&
+    (!priorValid || proof?.portraits.get(record.id) !== canonicalCivicDataHash(record)) &&
     record.portrait.photoVerification?.sources.some(source => !imageSourceInputs.has(`${source.contentHash}|${source.retrievedAt}`))).map(record => record.id);
   const violations = [
     ...(shapeIssue === null ? [] : [`the version is not a derived campaign-sites version: ${shapeIssue}`]),
@@ -562,7 +575,7 @@ export function derivedCampaignSitesCandidate(state: string, plan: DerivedCampai
   };
 }
 
-export function derivedCampaignSitesFailedCandidate(state: string, attemptedAt: string, failureDetail: string): RoutineCandidate {
+function derivedCampaignSitesFailedCandidate(state: string, attemptedAt: string, failureDetail: string): RoutineCandidate {
   return {
     id: `cv-${sha256Hex(`${derivedCampaignSitesContractId(state)}\u001f${derivedCampaignSitesScope(state)}\u001ffailed\u001f${attemptedAt}`).slice(0, 32)}`,
     sourceId: DERIVED_CAMPAIGN_SITES_SOURCE_ID,
@@ -585,30 +598,6 @@ export function derivedCampaignSitesFailedCandidate(state: string, attemptedAt: 
   };
 }
 
-export function derivedCampaignSitesPass(input: {
-  readonly state: string;
-  readonly approvals: readonly PublishableCampaignSiteApproval[] | { readonly unreadable: string };
-  readonly held: (record: PublishableCampaignSiteApproval) => HeldVerifyingRead | null;
-  readonly linkedPublications?: readonly HeldLinkedPublicationRead[];
-  readonly prior?: PromotedCampaignSites | null | { readonly unreadable: string };
-  readonly profiles: Parameters<typeof planDerivedCampaignSites>[0]["profiles"] | { readonly unreadable: string };
-  readonly gateOpen?: boolean;
-  readonly now: string;
-}): { readonly candidate: RoutineCandidate; readonly plan: DerivedCampaignSitesPlan | null } {
-  if ("unreadable" in input.approvals) {
-    return { candidate: derivedCampaignSitesFailedCandidate(input.state, input.now, `The pipeline's campaign-site approvals could not be read: ${input.approvals.unreadable}`), plan: null };
-  }
-  if (input.profiles !== null && "unreadable" in input.profiles) {
-    return { candidate: derivedCampaignSitesFailedCandidate(input.state, input.now, `The promoted candidate-profiles version could not be read: ${input.profiles.unreadable}`), plan: null };
-  }
-  if (input.prior && "unreadable" in input.prior) {
-    return { candidate: derivedCampaignSitesFailedCandidate(input.state, input.now, `The prior GOOD campaign-sites version could not be read: ${input.prior.unreadable}`), plan: null };
-  }
-  const plan = planDerivedCampaignSites({ approvals: input.approvals, held: input.held, profiles: input.profiles, prior: input.prior,
-    linkedPublications: input.linkedPublications });
-  return campaignSitesPlanResult(input.state, input.approvals.length, plan, input.now);
-}
-
 function campaignSitesPlanResult(state: string, approvals: number, plan: DerivedCampaignSitesPlan, now: string) {
   if (plan.records.length === 0 && !plan.portraits?.length) {
     const why = approvals === 0
@@ -619,14 +608,25 @@ function campaignSitesPlanResult(state: string, approvals: number, plan: Derived
   return { candidate: derivedCampaignSitesCandidate(state, plan, now), plan };
 }
 
-export async function deriveCampaignSitesFromCaptures(input: Omit<Parameters<typeof derivedCampaignSitesPass>[0], "held" | "linkedPublications" | "gateOpen"> & {
+export async function deriveCampaignSitesFromCaptures(input: {
+  readonly state: string;
+  readonly approvals: readonly PublishableCampaignSiteApproval[] | { readonly unreadable: string };
+  readonly prior?: PromotedCampaignSites | null | { readonly unreadable: string };
+  readonly profiles: CampaignSitePlanInput["profiles"] | { readonly unreadable: string };
+  readonly now: string;
   readonly readCaptures: (approvals: readonly PublishableCampaignSiteApproval[]) => Promise<{
     readonly held: Map<string, HeldVerifyingRead>;
     readonly linkedPublications: HeldLinkedPublicationRead[];
   }>;
-}): Promise<ReturnType<typeof derivedCampaignSitesPass>> {
-  if ("unreadable" in input.approvals || input.profiles && "unreadable" in input.profiles || input.prior && "unreadable" in input.prior) {
-    return derivedCampaignSitesPass({ ...input, held: () => null });
+}): Promise<{ readonly candidate: RoutineCandidate; readonly plan: DerivedCampaignSitesPlan | null }> {
+  if ("unreadable" in input.approvals) {
+    return { candidate: derivedCampaignSitesFailedCandidate(input.state, input.now, `The pipeline's campaign-site approvals could not be read: ${input.approvals.unreadable}`), plan: null };
+  }
+  if (input.profiles !== null && "unreadable" in input.profiles) {
+    return { candidate: derivedCampaignSitesFailedCandidate(input.state, input.now, `The promoted candidate-profiles version could not be read: ${input.profiles.unreadable}`), plan: null };
+  }
+  if (input.prior && "unreadable" in input.prior) {
+    return { candidate: derivedCampaignSitesFailedCandidate(input.state, input.now, `The prior GOOD campaign-sites version could not be read: ${input.prior.unreadable}`), plan: null };
   }
   const byCandidacy = new Map<string, PublishableCampaignSiteApproval[]>();
   for (const approval of input.approvals) {
@@ -648,7 +648,10 @@ export async function deriveCampaignSitesFromCaptures(input: Omit<Parameters<typ
       const selected = [...keys].flatMap(key => records.get(key) ?? []);
       const group = planCampaignSiteRecords({ approvals, profiles: input.profiles, prior: input.prior,
         held: approval => captures!.held.get(approval.recordId) ?? null, linkedPublications: captures.linkedPublications }, selected);
-      for (const record of group.records) records.set(record.id, record);
+      for (const record of group.records) {
+        consumeStatePublicationRecord(records.get(record.id), record, `curated-reader:${record.id}`);
+        records.set(record.id, record);
+      }
       for (const source of group.inputs) sources.set(inputKey(source), source);
       published.push(...group.published); held.push(...group.held);
     } catch (error) {
@@ -664,8 +667,9 @@ export async function deriveCampaignSitesFromCaptures(input: Omit<Parameters<typ
     published: published.sort((a, b) => a.key.localeCompare(b.key)),
     held: held.sort((a, b) => `${a.key}\n${a.code}`.localeCompare(`${b.key}\n${b.code}`)),
     inputs: [...sources].sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0).map(([, source]) => source),
-    ...(input.prior ? { prior: input.prior } : {}),
+    ...(input.prior ? { prior: priorProof(input.prior) } : {}),
   };
+  for (const record of input.prior?.projection.records ?? []) consumeStatePublicationRecord(record, records.get(record.id) ?? null, `curated-reader:${record.id}`);
   records.clear(); sources.clear(); byCandidacy.clear();
   return campaignSitesPlanResult(input.state, input.approvals.length, plan, input.now);
 }

@@ -2,7 +2,7 @@ import { withReaderFeatures } from "@/lib/civic-data/reader-feature-context.ts";
 import { writeDemandSignal } from "@/lib/db/demand-signal";
 import { raiseWriteAlarm } from "@/lib/db/write-alarm";
 import { markerFromRequest } from "@/lib/db/run-marker";
-import { ballotPlaceDivisions } from "@/lib/ballot/reader-place";
+import { coverageAt } from "@/lib/registry/server";
 import { ripcordPulled } from "@/lib/ripcords";
 import { isSameOriginSubmission } from "@/lib/signal/intake-limits";
 import { intakeWindows } from "@/lib/db/intake-windows";
@@ -14,6 +14,8 @@ import {
 } from "@/lib/db/demand-signal";
 import { getCandidateTargetIds } from "@/lib/ballot/candidate-targets";
 import { knownBodySubjectIds } from "@/lib/registry/server";
+
+
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -37,6 +39,7 @@ function isPlausibleSubjectId(value: unknown): value is string {
 }
 
 async function postWithSettings(request: Request) {
+
   if (ripcordPulled("ripcord.reactionIntake")) {
     return Response.json({ error: "intake is closed" }, { status: 503 });
   }
@@ -59,8 +62,6 @@ async function postWithSettings(request: Request) {
     signal?: unknown;
     lat?: unknown;
     lng?: unknown;
-    divisions?: string[];
-    zip?: unknown;
   };
 
   if (!isSubjectType(submission.subjectType)) {
@@ -73,13 +74,12 @@ async function postWithSettings(request: Request) {
     return Response.json({ error: "malformed subjectId" }, { status: 400 });
   }
 
+
   let known: Set<string>;
-  let ocdIds: string[];
   try {
-    ocdIds = await ballotPlaceDivisions(submission);
     known =
       submission.subjectType === "CANDIDATE"
-        ? await getCandidateTargetIds(ocdIds, submission.subjectId)
+        ? await getCandidateTargetIds(submission.subjectId)
         : await knownBodySubjectIds(submission.subjectId);
   } catch {
     return Response.json({ error: "subject data unavailable" }, { status: 503 });
@@ -103,6 +103,29 @@ async function postWithSettings(request: Request) {
     }
   }
 
+
+  const lat = typeof submission.lat === "number" ? submission.lat : Number.NaN;
+  const lng = typeof submission.lng === "number" ? submission.lng : Number.NaN;
+  let ocdIds: string[] = [];
+  if (
+    Number.isFinite(lat) &&
+    lat >= -90 &&
+    lat <= 90 &&
+    Number.isFinite(lng) &&
+    lng >= -180 &&
+    lng <= 180
+  ) {
+    try {
+      const coverage = await coverageAt(lat, lng, 0);
+      ocdIds = [
+        ...coverage.bodies.flatMap((b) => (b.ocdId ? [b.ocdId] : [])),
+        ...coverage.seats.map((s) => s.ocdId),
+      ];
+    } catch {
+      // A failed resolution is an empty list, never a fabricated one.
+    }
+  }
+
   try {
     const stored = await writeDemandSignal({
       subjectType: submission.subjectType,
@@ -111,6 +134,7 @@ async function postWithSettings(request: Request) {
       ocdIds,
       marker: markerFromRequest(request),
     });
+
     return new Response(null, { status: stored ? 204 : 202 });
   } catch (error) {
     console.error("demand signal write failed", error);

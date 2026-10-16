@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import test from "node:test";
-import { parseSwagitMeetings, makeSwagitSource } from "../lib/sources/swagit/index.ts";
+import { parseSwagitMeetings, makeSwagitSource, SWAGIT_MAX_PAGES_PER_TENANT } from "../lib/sources/swagit/index.ts";
 import { buildCompositeSource } from "../lib/sources/composite/wiring.ts";
 import { bodySourceWiringFor } from "../lib/civic-data/derived-meeting-wiring.ts";
 import { buildDerivedFamily } from "../lib/civic-data/derived-meeting-family.ts";
@@ -15,6 +15,8 @@ import { firstLook, probeUrlFor } from "../lib/doors/probe.ts";
 import { fixtureDoorRecords } from "./helpers/meeting-doors-fixture.ts";
 import { meetingFetchPass } from "../lib/meetings/shared-fetch.ts";
 import { recordedDiscoveryOpen, type RecordedReply } from "./helpers/recorded-discovery-open.ts";
+import { meetingHeldWindowAt } from "../lib/meetings/constants.ts";
+import { meetingFetchedWindowFor } from "../lib/meetings/fetch-window.ts";
 import type { BodySourceWiring } from "../lib/registry/source-wiring.ts";
 
 const fixture = (name: string) => readFileSync(new URL(`./fixtures/swagit/${name}.html`, import.meta.url), "utf8");
@@ -31,6 +33,17 @@ function wiring(tenant: typeof TENANTS[number], bodyMatch: string = tenant.bodyM
   return { bodyId: `${ocdId}#governing`, ocdId, agendaSourceType: "SWAGIT", timeZone: tenant.timeZone,
     jurisdiction: `${tenant.name}, ${tenant.state}`, publishingOrg: `City of ${tenant.name}`, verifiedAt: tenant.at,
     config: { portalUrl: `https://${tenant.host}/views/${tenant.view}`, bodyMatch, bodyName: tenant.body, slug: tenant.name } };
+}
+
+function query(at = TENANTS[0].at as string) {
+  const window = meetingHeldWindowAt(at)!;
+  return { lat: 33, lng: -111, radiusKm: 20, startsAfter: window.lowerBound, startsBefore: window.upperBound };
+}
+
+function captured(own: BodySourceWiring, text: string, at: string) {
+  const bounds = query(at);
+  return { wiring: own, rows: parseSwagitMeetings(text, own.config.portalUrl).map(row => ({ ...row, sourceUrl: own.config.portalUrl })),
+    from: bounds.startsAfter, to: bounds.startsBefore, collectedAt: at };
 }
 
 async function reviewCalendar(tenant: typeof TENANTS[number], calendar: string, names: readonly string[] = [tenant.body]) {
@@ -72,7 +85,7 @@ for (const tenant of TENANTS) test(`${tenant.state} real Swagit list binds its g
   assert.equal(row.timeZone, tenant.timeZone);
   const source = buildCompositeSource({ sourceNames: ["swagit"], derivedRows: [bodySourceWiringFor(row)], captureAcquisitionEvidence: true,
     fetchImpl: meetingFetchPass({ fetchImpl: (async () => new Response(calendar, { headers: { "content-type": "text/html" } })) as typeof fetch }) });
-  const raw = await source.fetch({ lat: 39, lng: -98, radiusKm: 5000 });
+  const raw = await source.fetch(query(tenant.at));
   const meetings = source.normalize(raw, new Date(tenant.at));
   assert.equal(meetings.length, tenant.expected);
   assert.ok(meetings.every(meeting => meeting.bodyId === row.bodyId && meeting.provenance.sourceUrl === route));
@@ -104,7 +117,7 @@ test("a real commission inside Chandler's council section binds and publishes se
   let reads = 0;
   const source = buildCompositeSource({ sourceNames: ["swagit"], derivedRows: rows.map(bodySourceWiringFor), captureAcquisitionEvidence: true,
     fetchImpl: meetingFetchPass({ fetchImpl: (async () => { reads++; return new Response(calendar); }) as typeof fetch }) });
-  const meetings = source.normalize(await source.fetch({ lat: 33, lng: -111, radiusKm: 20 }), new Date(tenant.at));
+  const meetings = source.normalize(await source.fetch(query()), new Date(tenant.at));
   assert.equal(reads, 1);
   assert.equal(meetings.filter(meeting => meeting.bodyId === council.row.bodyId).length, 8);
   assert.deepEqual(meetings.filter(meeting => meeting.bodyId === commission.row.bodyId).map(meeting => meeting.id.split("/").at(-1)).sort(),
@@ -126,7 +139,7 @@ test("Swagit preserves the publisher's date column and minute precision only whe
   assert.equal(houston[0].date, "2022-05-17");
   const own = wiring(TENANTS[0]);
   const source = makeSwagitSource([own]);
-  const output = source.normalizeWithDrops([{ wiring: own, pages: [{ url: own.config.portalUrl, text: fixture("chandler") }], collectedAt: TENANTS[0].at }], new Date(TENANTS[0].at));
+  const output = source.normalizeWithDrops([captured(own, fixture("chandler"), TENANTS[0].at)], new Date(TENANTS[0].at));
   const future = output.meetings.find(meeting => meeting.id.endsWith("events/5754"))!;
   assert.equal(future.startsAt, "2020-11-02T18:00:00-07:00");
   assert.equal(future.startPrecision, "MINUTE");
@@ -145,7 +158,7 @@ test("one Swagit portal read serves multiple bodies and the standing probe recog
   const second = { ...first, bodyId: `${first.ocdId}#planning`, config: { ...first.config, bodyName: "Planning Board", bodyMatch: "Planning Board" } };
   let reads = 0;
   const source = makeSwagitSource([first, second], (async () => { reads++; return new Response(fixture("tamarac")); }) as typeof fetch);
-  const raw = await source.fetch({ lat: 26, lng: -80, radiusKm: 20 });
+  const raw = await source.fetch(query(TENANTS[1].at));
   const output = source.normalizeWithDrops(raw, new Date(TENANTS[1].at));
   assert.equal(reads, 1);
   assert.equal(output.meetings.filter(meeting => meeting.bodyId === second.bodyId).length, 1);
@@ -160,7 +173,7 @@ test("one Swagit portal read serves multiple bodies and the standing probe recog
   assert.equal(unchanged.verdict, "UNCHANGED");
 });
 
-test("Swagit traverses every published next page and retains useful rows when a later page fails", async () => {
+test("Swagit retains useful parsed rows when a later in-window page fails", async () => {
   const own = wiring(TENANTS[0]);
   const html = fixture("chandler");
   const calls: string[] = [];
@@ -170,7 +183,7 @@ test("Swagit traverses every published next page and retains useful rows when a 
     if (page === "3") return new Response("not found", { status: 404 });
     return new Response(`${html}<a rel="next" href="?page=${page ? 3 : 2}">Next</a>`);
   }) as typeof fetch);
-  const output = source.normalizeWithDrops(await source.fetch({ lat: 33, lng: -111, radiusKm: 20 }), new Date(TENANTS[0].at));
+  const output = source.normalizeWithDrops(await source.fetch(query()), new Date(TENANTS[0].at));
   assert.equal(calls.length, 3);
   assert.equal(output.meetings.length, 8);
   assert.equal(output.accounting.duplicates, 8);
@@ -178,12 +191,96 @@ test("Swagit traverses every published next page and retains useful rows when a 
   assert.match(output.partialScopes?.[0].cause ?? "", /404/);
 });
 
+test("Swagit stops at the first page without an in-window meeting and keeps parsed rows with their provenance", async () => {
+  const own = wiring(TENANTS[0]);
+  const calls: string[] = [];
+  const source = makeSwagitSource([own], (async url => {
+    calls.push(String(url));
+    const page = new URL(String(url)).searchParams.get("page");
+    const html = page ? fixture("chandler").replaceAll("2020", "2010").replace(/\/(videos|events)\/(\d+)/g, "/$1/old-$2") : fixture("chandler");
+    return new Response(`${html}<script>${"unused payload".repeat(10000)}</script><a rel="next" href="?page=${page ? 3 : 2}">Next</a>`);
+  }) as typeof fetch);
+  const raw = await source.fetch(query());
+  assert.equal(calls.length, 2);
+  assert.ok(raw[0].rows.every(row => !Object.hasOwn(row, "text")));
+  assert.equal(Object.hasOwn(raw[0], "pages"), false);
+  assert.ok(JSON.stringify(raw).length < 30000);
+  const output = source.normalizeWithDrops(raw, new Date(TENANTS[0].at));
+  assert.equal(output.meetings.length, 8);
+  assert.equal(output.accounting.outOfWindow, 8);
+  assert.equal(output.accounting.outcome, "CONSERVED");
+  assert.equal(output.partialScopes, undefined);
+  assert.ok(output.meetings.every(meeting => meeting.provenance.sourceUrl === own.config.portalUrl));
+});
+
+test("a tenant-wide window check continues when only another body's meeting is in range", async () => {
+  const own = wiring(TENANTS[0]);
+  let reads = 0;
+  const source = makeSwagitSource([own], (async () => {
+    reads++;
+    return new Response(reads === 1
+      ? '<h4>Planning Board</h4><table id="video-table"><tr><td><a href="/videos/planning">Planning Board Meeting</a></td><td>Oct 15, 2020</td></tr></table><a rel="next" href="?page=2">Next</a>'
+      : fixture("chandler"));
+  }) as typeof fetch);
+  const output = source.normalizeWithDrops(await source.fetch(query()), new Date(TENANTS[0].at));
+  assert.equal(reads, 2);
+  assert.equal(output.meetings.length, 8);
+  assert.ok(output.meetings.every(meeting => meeting.provenance.sourceUrl?.endsWith("?page=2")));
+});
+
+test("Swagit caps a tenant with perpetually in-window next pages and reports the incomplete archive for every body", async () => {
+  const own = wiring(TENANTS[0]);
+  const second = { ...own, bodyId: `${own.ocdId}#housing`, config: { ...own.config, bodyName: "Housing Authority Commission" } };
+  let reads = 0;
+  const source = makeSwagitSource([own, second], (async () => {
+    reads++;
+    return new Response(`${fixture("chandler")}<a rel="next" href="?page=${reads + 1}">Next</a>`);
+  }) as typeof fetch);
+  const raw = await source.fetch(query());
+  assert.equal(reads, SWAGIT_MAX_PAGES_PER_TENANT);
+  assert.equal(raw[0].rows, raw[1].rows);
+  const output = source.normalizeWithDrops(raw, new Date(TENANTS[0].at));
+  assert.equal(output.meetings.length, 12);
+  assert.equal(output.partialScopes?.length, 2);
+  assert.ok(output.partialScopes?.every(scope => scope.scope === "ARCHIVE" && scope.cause.includes("SWAGIT_PAGE_LIMIT:50")));
+});
+
+test("Swagit uses the default held window and honors inclusive explicit bounds in the body's time zone", async t => {
+  t.mock.timers.enable({ apis: ["Date"], now: Date.parse(TENANTS[0].at) });
+  const own = wiring(TENANTS[0]);
+  let reads = 0;
+  const source = makeSwagitSource([own], (async () => { reads++; return new Response(fixture("chandler")); }) as typeof fetch);
+  const raw = await source.fetch({ lat: 33, lng: -111, radiusKm: 20 });
+  assert.deepEqual({ lowerBound: raw[0].from, upperBound: raw[0].to }, meetingFetchedWindowFor("swagit", TENANTS[0].at));
+  assert.equal(source.publishedLookbackDays, 120);
+  assert.equal(source.normalize(raw).length, 8);
+  const at = "2020-11-02T18:00:00-07:00";
+  const bounded = await source.fetch({ ...query(), startsAfter: at, startsBefore: at });
+  assert.deepEqual(source.normalize(bounded).map(meeting => meeting.id.split("/").at(-1)), ["5754"]);
+  await assert.rejects(source.fetch({ ...query(), startsAfter: "invalid" }), /SWAGIT_WINDOW_INVALID/);
+  assert.equal(reads, 2);
+});
+
+test("an entirely old first page stops normally without fetching its next archive page", async () => {
+  const own = wiring(TENANTS[0]);
+  let reads = 0;
+  const source = makeSwagitSource([own], (async () => {
+    reads++;
+    return new Response(`${fixture("chandler")}<a rel="next" href="?page=2">Next</a>`);
+  }) as typeof fetch);
+  const output = source.normalizeWithDrops(await source.fetch(query("2026-10-15T00:00:00Z")));
+  assert.equal(reads, 1);
+  assert.equal(output.meetings.length, 0);
+  assert.equal(output.accounting.outOfWindow, 8);
+  assert.equal(output.partialScopes, undefined);
+});
+
 test("cancellations, documents and bad dates retain independent publisher facts", () => {
   const own = wiring(TENANTS[0]);
   const text = fixture("chandler").replace("City Council Meeting - 10/15/2020", "City Council Meeting CANCELLED - 10/15/2020")
     .replace('href="/videos/87288/agenda">Agenda</a>', 'href="/videos/87288/agenda">Agenda</a><a href="/documents/minutes.pdf">Minutes</a>')
     .replace("Oct 12, 2020", "Feb 31, 2020");
-  const result = makeSwagitSource([own]).normalizeWithDrops([{ wiring: own, pages: [{ url: own.config.portalUrl, text }], collectedAt: TENANTS[0].at }], new Date(TENANTS[0].at));
+  const result = makeSwagitSource([own]).normalizeWithDrops([captured(own, text, TENANTS[0].at)], new Date(TENANTS[0].at));
   const canceled = result.meetings.find(meeting => meeting.id.endsWith("videos/87288"))!;
   assert.equal(canceled.status, "CANCELED");
   assert.ok(canceled.publishedLinks?.some(link => link.label === "Minutes" && link.href.endsWith("/documents/minutes.pdf")));
@@ -201,7 +298,7 @@ test("every published Swagit body binds past ten while City Council stays distin
   const council = review.accepted.find(entry => entry.row.bodyRole === "GOVERNING")!;
   assert.equal(council.row.filter.bodyMatch, "City Council Meetings");
   const own = bodySourceWiringFor(wiringRowFor(council.row));
-  const result = makeSwagitSource([own]).normalizeWithDrops([{ wiring: own, pages: [{ url: own.config.portalUrl, text: calendar }], collectedAt: tenant.at }], new Date(tenant.at));
+  const result = makeSwagitSource([own]).normalizeWithDrops([captured(own, calendar, tenant.at)], new Date(tenant.at));
   assert.equal(result.meetings.length, 1);
   assert.equal(result.meetings[0].title, "City Council Meeting");
   const youth = review.accepted.find(entry => entry.row.bodyName === "Youth City Council");
@@ -212,7 +309,7 @@ test("every published Swagit body binds past ten while City Council stays distin
 test("a Swagit pagination cycle records a partial archive and a refused first read cannot become an empty calendar", async () => {
   const own = wiring(TENANTS[0]);
   const source = makeSwagitSource([own], (async () => new Response(`${fixture("chandler")}<a rel="next" href="${own.config.portalUrl}">Next</a>`)) as typeof fetch);
-  const output = source.normalizeWithDrops(await source.fetch({ lat: 33, lng: -111, radiusKm: 20 }), new Date(TENANTS[0].at));
+  const output = source.normalizeWithDrops(await source.fetch(query()), new Date(TENANTS[0].at));
   assert.equal(output.meetings.length, 8);
   assert.match(output.partialScopes?.[0].cause ?? "", /SWAGIT_PAGING_CYCLE/);
   const refused = buildCompositeSource({ sourceNames: ["swagit"], derivedRows: [own], fetchImpl: (async () => new Response("forbidden", { status: 403 })) as typeof fetch });

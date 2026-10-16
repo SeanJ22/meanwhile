@@ -222,6 +222,7 @@ const OUTCOME_RANK: Readonly<Record<FieldManualOutcome, number>> = {
 };
 
 export interface FieldManualQuery {
+  readonly withinState?: string;
   /** Exact research subject for saved exhausted walks; they are never portable failures. */
   readonly subjectId?: string;
   /** The reading worker's role; SHARED entries always match. Omit to match every role. */
@@ -301,6 +302,7 @@ function reachOfStored(entry: FieldManualEntry): FieldManualReach {
 
 /** Whether a stored row is one the job could use: the read's exact rule (the stores may return more). */
 export function entryInSlice(entry: FieldManualEntry, query: FieldManualQuery): boolean {
+  if (query.withinState !== undefined && !entry.states.includes(query.withinState.toLowerCase())) return false;
   if (query.role !== undefined && entry.role !== "SHARED" && entry.role !== query.role) return false;
   if (query.kinds !== undefined && !query.kinds.includes(entry.kind)) return false;
   if (query.recordClass !== undefined && entry.recordClasses.length > 0 && !entry.recordClasses.includes(query.recordClass.toLowerCase())) return false;

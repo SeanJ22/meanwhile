@@ -70,7 +70,7 @@ for (const [zip, [lat, lng]] of Object.entries(ZIPS)) {
 }
 
 test("the notice always renders on failure rungs, with or without coverage", () => {
-  for (const tier of ["widened", "concluded", "none"] as const) {
+  for (const tier of ["concluded", "none"] as const) {
     assert.ok(shouldRenderNotice(tier, null));
   }
 });

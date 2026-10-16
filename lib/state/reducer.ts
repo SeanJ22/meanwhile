@@ -1,4 +1,4 @@
-import { RADIUS_LADDER_KM } from "../meetings/constants.ts";
+import { DEFAULT_RADIUS_KM } from "../meetings/constants.ts";
 import { TIERS } from "../ocd/tiers.ts";
 
 import {
@@ -30,9 +30,6 @@ function toggle<T>(list: T[], value: T, order?: readonly T[]): T[] {
   return order ? order.filter((v) => next.includes(v)) : next;
 }
 
-/** Clearing a group means "no constraint", which is not always an empty list:
- *  district types and the date window are constraints whose neutral value is
- *  their full range. */
 function clearedGroup(group: keyof FilterState, filters: FilterState): FilterState {
   switch (group) {
     case "bodyTypes":
@@ -167,11 +164,6 @@ export function uiReducer(state: UiState, action: UiAction): UiState {
     case "search/clear":
       return { ...state, search: { query: "", open: false, highlighted: -1 } };
 
-    /*
-     * One small card at a time, most recent click wins. Enforced here so every
-     * path that opens a card follows it. Selecting NOTHING (`key: null`,
-     * `ocdId: null`) is a close and must not clear the other card.
-     */
     case "select/venue":
       return {
         ...state,
@@ -201,7 +193,7 @@ export function uiReducer(state: UiState, action: UiAction): UiState {
     case "radius/clear":
       return {
         ...state,
-        radiusKm: RADIUS_LADDER_KM[0],
+        radiusKm: DEFAULT_RADIUS_KM,
         radiusOverridden: false,
       };
 

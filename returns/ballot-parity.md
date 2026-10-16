@@ -3,18 +3,18 @@
 lane: ballot-parity
 owner: ballot-parity
 writer: the ballot-parity lane
-check: fold-conflict
+check: at-scale
 ready: no step ids unknown
-river: 493311674ed4c1f3d15c14f70e19e7be9b9f58aa
-at: 2026-10-15T23:04:34Z
+river: 965bf002ea7ba2dd209f8d07852708e5e1fa1a8d
+at: 2026-10-16T02:26:06Z
 state: returned
-fix_subject: fix:4d5a349c
-fix: River · stream/ballot-parity — fold-conflict failed for ballot-parity: BL-20 (97b0b7a3b) conflicts with river 3282584e2 (release 43: R3-MUNICODE and NE-01 folded) in: lib/civic-data/curated-reader-read-model.ts, lib/civic-data/promoted-edge-publication.ts, lib/civic-data/reader-edge-publication.ts, lib/meeting
+fix_subject: fix:f852a3a6
+fix: River · stream/ballot-parity — at-scale failed for ballot-parity: BL-20 (3f3afee0a) merges clean and carries AT SCALE numbers, but the peak comes from a whole state: Illinois (6,924 units, 55,392 fields) peaks at about 1.1 GB after the change (candidate:snapshot 1108 MiB, publish:prior-read 1126 MiB, publ
 
 ## Failure
 
 ```
-BL-20 (97b0b7a3b) conflicts with river 3282584e2 (release 43: R3-MUNICODE and NE-01 folded) in: lib/civic-data/curated-reader-read-model.ts, lib/civic-data/promoted-edge-publication.ts, lib/civic-data/reader-edge-publication.ts, lib/meetings/edge-artifacts.ts, lib/meetings/edge-serving.ts. Merge origin/river into stream/ballot-parity, settle those files so both sides' behavior is kept (NE-01's reader-edge reads and request accounting, municode's bounded portal reads), run the focused tests, push a new READY with AT SCALE numbers in the message.
+BL-20 (3f3afee0a) merges clean and carries AT SCALE numbers, but the peak comes from a whole state: Illinois (6,924 units, 55,392 fields) peaks at about 1.1 GB after the change (candidate:snapshot 1108 MiB, publish:prior-read 1126 MiB, publish:validate 1081 MiB, candidate:published 1080 MiB in the unchanged run), while the single-document stages (source:acquire-verify, normalize:*) sit near 700-770 MiB. A job's peak must come from the largest single item handled at once (one document, one place), never a whole state. Name those stages (the state-wide candidate snapshot, prior-read and validate) and make them work one document or one place at a time, then report the peak at the largest single item. Database totals (2.18 GB read initial, 2.80 GB read per unchanged run, 67 GB read per day at 24 refreshes) are also state-sized per run; show the unchanged run reads one state's changed documents only.
 ```
 
 ## Repair

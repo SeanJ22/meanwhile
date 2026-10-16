@@ -37,11 +37,7 @@ import { PositionsSection } from "@/components/officials/positions-section";
 import { OfficeBlurb, RecentVotes } from "./official-popup";
 import { LegislatorBills } from "@/components/officials/legislator-bills";
 
-/**
- * The officeholder's large card: identity, contact, the roll-call record with
- * reaction capture, and what the office does. The parent keeps one large
- * surface open at a time.
- */
+
 
 interface OfficialModalProps {
   holder: SeatHolder;
@@ -75,11 +71,7 @@ export function OfficialModal({
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose, embedded]);
 
-  /*
-   * Directory facts (accounts, committee seats, offices) cite their project
-   * once on the Sources section; money, votes and PRL keep per-section
-   * citations. A state legislator's offices come from Open States.
-   */
+
   const [prlProfile, setPrlProfile] = useState<PrlReaderProfile | null>(null);
   const { directory } = useMemberDirectory(holder.id,holder.state);
   const officeSource = directory?.officeDetails?.[0];
@@ -93,10 +85,7 @@ export function OfficialModal({
     ],
   );
 
-  /*
-   * No pushed history entry: it makes the App Router remount the island
-   * holding this modal's state. ×, Escape and backdrop click close.
-   */
+
   return (
     <div
       ref={cardRef}

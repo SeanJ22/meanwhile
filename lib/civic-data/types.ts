@@ -40,6 +40,7 @@ export const ROUTINE_RECORD_CLASSES = [
   "DOTGOV_REFERENCE",
   "OPERATIONAL_REFERENCE",
   "REGISTRATION",
+  "FEDERAL_MONEY",
 ] as const;
 export type RoutineRecordClass = (typeof ROUTINE_RECORD_CLASSES)[number];
 
@@ -209,6 +210,10 @@ export interface NormalizationEvidence {
   readonly normalizedHash: string | null;
     /** Required by every promotable production candidate; only fixtures that cannot reach a production door may omit it. */
   readonly normalizedPayloadHash?: string | null;
+  readonly stateRecordHashes?: {
+    readonly readModelHash: string;
+    readonly members: readonly { readonly key: string; readonly factsHash: string; readonly sha256: string }[];
+  };
   readonly inputRecords: number;
   readonly outputRecords: number;
   readonly droppedRecords: number;
@@ -314,7 +319,15 @@ export type RoutineRemovalEvidence =
   | RosterDepartureRemovalEvidence
   | AuditPullRemovalEvidence
   | MovedToHistoryRemovalEvidence
-  | MovedToFactStoreRemovalEvidence;
+  | MovedToFactStoreRemovalEvidence
+  | FederalRepartitionRemovalEvidence;
+
+export interface FederalRepartitionRemovalEvidence {
+  readonly key: string;
+  readonly code: "FEDERAL_RECORD_REPARTITIONED";
+  readonly targetScope: string;
+  readonly targetVersionId: string;
+}
 
 /** A roster row removed from the registry partition: its members publish as facts. */
 export interface MovedToFactStoreRemovalEvidence {

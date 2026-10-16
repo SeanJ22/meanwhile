@@ -22,7 +22,7 @@ test("missing source capabilities persist as idempotent, non-executable work und
     !row.autonomousPlan && row.manualSourceGap?.instructionReceipt === ORIGINAL_LIFETIME_HUNT.receiptId &&
     row.manualSourceGap.assignmentKey === ORIGINAL_LIFETIME_HUNT.key));
   assert.ok(rows.some(row => row.manualSourceGap?.contractId === "jurisdiction-operational-reference"));
-  assert.ok(!rows.some(row => row.manualSourceGap?.contractId === "voting-sites"), "the voting-site pass runs for the Send (CH-11); it is no owed capability");
+  assert.ok(!rows.some(row => row.manualSourceGap?.contractId.startsWith("voting-sites:")), "the voting-site pass runs for the Send (CH-11); it is no owed capability");
   assert.ok(rows.some(row => row.manualSourceGap?.contractId === "az-pima-local-finance" &&
     row.manualSourceGap.mode === "SCOPED_ADAPTER_OWED" && row.manualSourceGap.reason.includes("alone")),
     "A county adapter gap stays non-executable until its place is bound");
@@ -46,7 +46,7 @@ test("an owed state adapter is owed only by Sends that reach its state, and neve
   const nj = { ...scope, decision: { ...scope.decision, receiptId: "nj-send", key: "nj-send" }, states: ["NJ"] };
   await applyManualSourceGaps(repos, [scope, nj] as never, { now });
   const gaps = (await repos.workItems.list()).map(row => row.value.manualSourceGap!);
-  const ballot = gaps.filter(gap => gap.contractId === "az-sos-ballot");
+  const ballot = gaps.filter(gap => gap.contractId === "az-official-actions");
   assert.deepEqual(ballot.map(gap => [gap.instructionReceipt, gap.mode]), [[ORIGINAL_LIFETIME_HUNT.receiptId, "SCOPED_ADAPTER_OWED"]]);
   assert.ok(gaps.every(gap => gap.mode === "SCOPED_ADAPTER_OWED"));
   assert.ok(gaps.some(gap => gap.contractId === "jurisdiction-operational-reference" && gap.instructionReceipt === "nj-send"),

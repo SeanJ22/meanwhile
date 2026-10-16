@@ -3,6 +3,7 @@ import { FIPS_TO_STATE } from "../ocd/fips.ts";
 import { FEDERAL_SOURCE_AUTHORITIES } from "../sources/congress/authority.ts";
 import { REGISTRATION_PARSER_VERSION, REGISTRATION_SOURCE_ROUTE_PREFIX, REGISTRATION_TARGETS } from "../registration/publication.ts";
 import { extractedMemberUrl } from "./manual-source-urls.ts";
+import { FEDERAL_MONEY_AUTHORITIES } from "../federal-money/authority.ts";
 import {
   MANUAL_SOURCE_CLASSES,
   type ManualSourceSetReceipt,
@@ -84,6 +85,60 @@ function sharedAuthority(people: SourceAuthorityContract, federal: SourceAuthori
 }
 
 export const SOURCE_AUTHORITIES = {
+  "nj-morris-county-clerk": {
+    id: "nj-morris-county-clerk",
+    publisher: "Morris County Clerk",
+    trust: "T2_AUTHORITATIVE_DOCUMENT",
+    sourceClass: "OFFICIAL_PLATFORM",
+    routePrefixes: ["https://www.morriscountyclerk.org/"],
+    jurisdictions: ["US-NJ"],
+    recordClasses: ["BALLOT_FILING"],
+    competentFacts: ["filed candidacy", "contest", "party", "slogan", "term", "seat count", "filed contact", "filing removal"],
+    expectedIdentifierKeys: ["contest_id", "candidacy_id", "division_id"],
+    expectedTemporalFields: ["election_date", "filing_revision", "source_through"],
+    horizonSemantics: "The clerk page's newest current general-election candidate and school-candidate PDFs jointly bound the county filing horizon; every input row is built or explicitly refused.",
+    parserVersion: "nj-morris-filing/2",
+    freshnessExpectation: "Daily through the general election, then weekly while post-certification corrections remain possible.",
+    absencePolicy: { kind: "BOUNDED_QUERY_OR_EXPLICIT_STATEMENT", requiredKeys: ["contest_id", "candidacy_id", "division_id"] },
+    routineAutoPromotion: true,
+  },
+  "nh-election-authorities": {
+    id: "nh-election-authorities",
+    publisher: "New Hampshire Secretary of State and exact named New Hampshire election authorities",
+    trust: "T2_AUTHORITATIVE_DOCUMENT",
+    sourceClass: "MULTI_PUBLISHER_PRIMARY",
+    routePrefixes: [],
+    jurisdictions: ["US-NH"],
+    recordClasses: ["BALLOT_CANDIDACY"],
+    competentFacts: ["filed candidacy", "contest", "party", "term", "seat count", "election date"],
+    expectedIdentifierKeys: ["contest_id", "candidacy_id"],
+    expectedTemporalFields: ["election_date", "source_through"],
+    horizonSemantics: "The explicit owner-reviewed source set bounds the exact New Hampshire filing documents and supported county projection; it does not claim an unobserved statewide ballot universe.",
+    parserVersion: "nh-election-manual/1",
+    freshnessExpectation: "Explicit owner invocation after a reviewed filing or certification revision; no standing clock.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" },
+    routineAutoPromotion: false,
+    manualReceiptPromotion: { allowedSourceClasses: ["ELECTION_AUTHORITY", "OFFICIAL_PUBLISHER"] },
+  },
+  "az-election-authorities": {
+    id: "az-election-authorities",
+    publisher: "Arizona Secretary of State and exact named Arizona filing/canvass authorities",
+    trust: "T2_AUTHORITATIVE_DOCUMENT",
+    sourceClass: "MULTI_PUBLISHER_PRIMARY",
+    routePrefixes: [],
+    jurisdictions: ["US-AZ"],
+    recordClasses: ["BALLOT_CANDIDACY"],
+    competentFacts: ["filed candidacy", "certified nominee", "contest", "party", "measure", "candidate identity crosswalk"],
+    expectedIdentifierKeys: ["contest_id", "candidacy_id", "identity_id"],
+    expectedTemporalFields: ["election_date", "source_through"],
+    horizonSemantics: "The explicit owner-reviewed source set names the exact Arizona filing, canvass, and local ballot documents represented by one projection; omissions remain stated and never become statewide absence claims.",
+    parserVersion: "az-election-manual/1",
+    freshnessExpectation: "Explicit owner invocation when a named election authority publishes a revision; no standing clock.",
+    absencePolicy: { kind: "NEVER_FROM_ZERO" },
+    routineAutoPromotion: false,
+    manualReceiptPromotion: { allowedSourceClasses: ["ELECTION_AUTHORITY", "OFFICIAL_PUBLISHER"] },
+  },
+  ...FEDERAL_MONEY_AUTHORITIES,
   "google-civic-voterinfo": {
     id: "google-civic-voterinfo", publisher: "Google Civic Information; upstream publishers and official flags retained per fact",
     trust: "T3_ATTRIBUTED_PRIMARY", sourceClass: "INTERMEDIARY",
@@ -665,23 +720,7 @@ export const SOURCE_AUTHORITIES = {
       authorization: "Sean, 2026-09-21: \"You may enable automatic promotion for qualifying results. Fix the gap, recover value already paid for.\"",
     },
   },
-  "nj-morris-county-clerk": {
-    id: "nj-morris-county-clerk",
-    publisher: "Morris County Clerk",
-    trust: "T2_AUTHORITATIVE_DOCUMENT",
-    sourceClass: "OFFICIAL_PLATFORM",
-    routePrefixes: ["https://www.morriscountyclerk.org/"],
-    jurisdictions: ["US-NJ"],
-    recordClasses: ["BALLOT_FILING"],
-    competentFacts: ["filed candidacy", "contest", "party", "slogan", "term", "seat count", "filed contact", "filing removal"],
-    expectedIdentifierKeys: ["contest_id", "candidacy_id", "division_id"],
-    expectedTemporalFields: ["election_date", "filing_revision", "source_through"],
-    horizonSemantics: "The clerk page's newest current general-election candidate and school-candidate PDFs jointly bound the county filing horizon; every input row is built or explicitly refused.",
-    parserVersion: "nj-morris-filing/2",
-    freshnessExpectation: "Daily through the general election, then weekly while post-certification corrections remain possible.",
-    absencePolicy: { kind: "BOUNDED_QUERY_OR_EXPLICIT_STATEMENT", requiredKeys: ["contest_id", "candidacy_id", "division_id"] },
-    routineAutoPromotion: true,
-  },
+
   "cisa-dotgov-registry": {
     id: "cisa-dotgov-registry",
     publisher: "Cybersecurity and Infrastructure Security Agency",
@@ -703,42 +742,8 @@ export const SOURCE_AUTHORITIES = {
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: true,
   },
-  "az-election-authorities": {
-    id: "az-election-authorities",
-    publisher: "Arizona Secretary of State and exact named Arizona filing/canvass authorities",
-    trust: "T2_AUTHORITATIVE_DOCUMENT",
-    sourceClass: "MULTI_PUBLISHER_PRIMARY",
-    routePrefixes: [],
-    jurisdictions: ["US-AZ"],
-    recordClasses: ["BALLOT_CANDIDACY"],
-    competentFacts: ["filed candidacy", "certified nominee", "contest", "party", "measure", "candidate identity crosswalk"],
-    expectedIdentifierKeys: ["contest_id", "candidacy_id", "identity_id"],
-    expectedTemporalFields: ["election_date", "source_through"],
-    horizonSemantics: "The explicit owner-reviewed source set names the exact Arizona filing, canvass, and local ballot documents represented by one projection; omissions remain stated and never become statewide absence claims.",
-    parserVersion: "az-election-manual/1",
-    freshnessExpectation: "Explicit owner invocation when a named election authority publishes a revision; no standing clock.",
-    absencePolicy: { kind: "NEVER_FROM_ZERO" },
-    routineAutoPromotion: false,
-    manualReceiptPromotion: { allowedSourceClasses: ["ELECTION_AUTHORITY", "OFFICIAL_PUBLISHER"] },
-  },
-  "nh-election-authorities": {
-    id: "nh-election-authorities",
-    publisher: "New Hampshire Secretary of State and exact named New Hampshire election authorities",
-    trust: "T2_AUTHORITATIVE_DOCUMENT",
-    sourceClass: "MULTI_PUBLISHER_PRIMARY",
-    routePrefixes: [],
-    jurisdictions: ["US-NH"],
-    recordClasses: ["BALLOT_CANDIDACY"],
-    competentFacts: ["filed candidacy", "contest", "party", "term", "seat count", "election date"],
-    expectedIdentifierKeys: ["contest_id", "candidacy_id"],
-    expectedTemporalFields: ["election_date", "source_through"],
-    horizonSemantics: "The explicit owner-reviewed source set bounds the exact New Hampshire filing documents and supported county projection; it does not claim an unobserved statewide ballot universe.",
-    parserVersion: "nh-election-manual/1",
-    freshnessExpectation: "Explicit owner invocation after a reviewed filing or certification revision; no standing clock.",
-    absencePolicy: { kind: "NEVER_FROM_ZERO" },
-    routineAutoPromotion: false,
-    manualReceiptPromotion: { allowedSourceClasses: ["ELECTION_AUTHORITY", "OFFICIAL_PUBLISHER"] },
-  },
+
+
   "candidate-primary-publications": {
     id: "candidate-primary-publications",
     publisher: "Exact candidate-controlled, filing-authority, and official-publisher pages named in each reviewed receipt",
@@ -1082,7 +1087,7 @@ export function authorityForManualReceipt(
     if (!SHA256.test(source.rawHash) || !source.publisher.trim() || !source.reviewedEvidence.trim()) {
       return { ok: false, code: "MANUAL_SOURCE_PROOF_INCOMPLETE", detail: `${source.finalUrl} lacks exact bytes, publisher identity, or reviewed evidence.` };
     }
-    const identity = `${final.href}\n${source.rawHash}`;
+    const identity = `${requested.href}\n${final.href}\n${source.rawHash}`;
     if (seen.has(identity)) return { ok: false, code: "MANUAL_SOURCE_PROOF_DUPLICATED", detail: `${source.finalUrl} repeats the same reviewed bytes.` };
     seen.add(identity);
   }

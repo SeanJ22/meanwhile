@@ -1,4 +1,6 @@
+import { statePublicationPriorOf } from "./state-publication.ts";
 import { createHash } from "node:crypto";
+import { durableStateHash, statePublicationScope } from "./state-publication.ts";
 import { sourceCheckIssue } from "./source-check.ts";
 import { completeOfficialBallotContests } from "./manual-projections.ts";
 import type { GenericBallotProjection } from "../ballot/generic-projection.ts";
@@ -31,6 +33,7 @@ import type {
   CandidateVersionRecord,
   AuditPullRemovalEvidence,
   MovedToFactStoreRemovalEvidence,
+  FederalRepartitionRemovalEvidence,
   CensusPlaceholderBodyRemovalEvidence,
   DependentCheck,
   RoutineCandidate,
@@ -52,7 +55,11 @@ export function notModifiedIssue(candidate: RoutineCandidate): string | null {
   return `HTTP 304 carries no bytes for ${candidate.recordClass}; replay the identified held response with its original status and observation date.`;
 }
 
-function durableCanonicalJson(value: unknown): { readonly canonical: string | null; readonly issue: string | null } {
+function durableCanonicalJson(value: unknown, scoped = false): { readonly canonical: string | null; readonly issue: string | null } {
+  if (scoped) {
+    const canonical = durableStateHash(value);
+    return { canonical, issue: canonical === null ? "The value changes when persisted through the canonical JSONB representation." : null };
+  }
   try {
     const encoded = JSON.stringify(value);
     if (encoded === undefined) return { canonical: null, issue: "The value is not representable as durable JSON." };
@@ -71,8 +78,8 @@ function durableCanonicalJson(value: unknown): { readonly canonical: string | nu
   }
 }
 
-function canonicalMembers(value: readonly { readonly key: string; readonly record: unknown }[]): string | null {
-  const durable = durableCanonicalJson([...value].sort((left, right) => left.key.localeCompare(right.key)));
+function canonicalMembers(value: readonly { readonly key: string; readonly record: unknown }[], scoped = false): string | null {
+  const durable = durableCanonicalJson([...value].sort((left, right) => left.key.localeCompare(right.key)), scoped);
   return durable.canonical;
 }
 
@@ -215,25 +222,44 @@ function completeBallotRemovalCheck(candidate: RoutineCandidate, prior: Candidat
       !candidate.retrieval.manualSourceReceipt || prior.candidate.sourceId !== candidate.sourceId ||
       prior.candidate.scope !== candidate.scope || (candidate.removalEvidence?.length ?? 0) > 0) return null;
   const next = candidate.readModel as GenericBallotProjection;
-  const before = prior.candidate.readModel as GenericBallotProjection;
-  if (next.kind !== "ballot-contests" || before.kind !== "ballot-contests") return null;
-  const complete = completeOfficialBallotContests(next, candidate.retrieval.manualSourceReceipt);
-  const old = Object.values(before.ballots).flatMap(ballot => ballot.candidacies.map(candidacy => ({ ballot, candidacy })));
+  const indexedPrior = statePublicationPriorOf(prior.candidate);
+  const before = prior.candidate.readModel as GenericBallotProjection | null;
+  if (next.kind !== "ballot-contests" || !indexedPrior && before?.kind !== "ballot-contests") return null;
+  const complete = new Map(completeOfficialBallotContests(next, candidate.retrieval.manualSourceReceipt)
+    .map(row => [`${row.ballot.election.id}:${row.contest.id}`, row]));
+  const old = new Map<string, { ballot: GenericBallotProjection["ballots"][string]; candidacy: GenericBallotProjection["ballots"][string]["candidacies"][number]; contest: GenericBallotProjection["ballots"][string]["contests"][number] | undefined }>();
+  for (const ballot of Object.values(before?.ballots ?? {})) {
+    const contests = new Map(ballot.contests.map(row => [row.id, row]));
+    const contacts = new Set(ballot.contacts?.map(row => row.candidacyId));
+    for (const candidacy of ballot.candidacies) {
+      const held = { ballot, candidacy, contest: contests.get(candidacy.contestId) };
+      old.set(`candidacy:${candidacy.id}`, held);
+      if (contacts.has(candidacy.id)) old.set(`contact:${candidacy.id}`, held);
+    }
+  }
+  const holds = new Map(Object.values(next.ballots).flatMap(ballot => (ballot.heldContests ?? []).map(row => [`${ballot.election.id}:${row.id}`, row] as const)));
   if (!(candidate.changeSet?.removed ?? []).every(delta => {
-    const held = old.find(row => delta.key === `candidacy:${row.candidacy.id}`);
-    if (!held) return false;
-    const oldContest = held.ballot.contests.find(contest => contest.id === held.candidacy.contestId);
-    const hold = next.ballots[`${held.ballot.election.state}:${held.ballot.election.id}`]?.heldContests?.find(row => row.id === oldContest?.id);
-    if (oldContest?.candidateListComplete !== true && hold && hold.ocdId === oldContest?.ocdId &&
-      hold.provenance.sourceUrl === oldContest.provenance.sourceUrl &&
+    const indexed = indexedPrior?.ballotCandidates.get(delta.key);
+    if (indexed) {
+      const key = `${indexed.electionId}:${indexed.contestId}` as const, hold = holds.get(key);
+      if (!indexed.candidateListComplete && hold && hold.ocdId === indexed.ocdId &&
+        hold.provenance.sourceUrl === indexed.sourceUrl && Date.parse(hold.provenance.collectedAt) >= Date.parse(indexed.candidacyCollectedAt)) return true;
+      const match = complete.get(key);
+      return match !== undefined && match.ballot.election.date === indexed.electionDate && match.contest.ocdId === indexed.ocdId &&
+        Date.parse(match.contest.provenance.collectedAt) >= Date.parse(indexed.candidacyCollectedAt);
+    }
+    const held = old.get(delta.key);
+    if (!held?.contest) return false;
+    const key = `${held.ballot.election.id}:${held.candidacy.contestId}` as const, hold = holds.get(key);
+    if (held.contest.candidateListComplete !== true && hold && hold.ocdId === held.contest.ocdId &&
+      hold.provenance.sourceUrl === held.contest.provenance.sourceUrl &&
       Date.parse(hold.provenance.collectedAt) >= Date.parse(held.candidacy.provenance.collectedAt)) return true;
-    const matches = complete.filter(row => row.contest.id === held.candidacy.contestId &&
-      row.ballot.election.id === held.ballot.election.id && row.ballot.election.date === held.ballot.election.date &&
-      row.contest.ocdId === held.ballot.contests.find(contest => contest.id === held.candidacy.contestId)?.ocdId);
-    return matches.length === 1 && Date.parse(matches[0].contest.provenance.collectedAt) >= Date.parse(held.candidacy.provenance.collectedAt);
+    const match = complete.get(key);
+    return match !== undefined && match.ballot.election.date === held.ballot.election.date &&
+      match.contest.ocdId === held.contest.ocdId && Date.parse(match.contest.provenance.collectedAt) >= Date.parse(held.candidacy.provenance.collectedAt);
   })) return null;
   return result("COMPLETENESS_HORIZON_VALIDITY", "PASS", "COMPLETE_OFFICIAL_CONTEST_REMOVAL",
-    "Each removed candidacy belongs to a newer complete official list or an explicitly held incomplete contest; no hold claims absence.");
+    "Removed candidacies and their contacts belong to a newer complete official list or a source-bound incomplete contest named as held.");
 }
 
 function incompleteHorizonRemovalCheck(candidate: RoutineCandidate, prior: CandidateVersionRecord | null, validatedAt: string, sourceChecks:readonly DependentCheck[]): ValidationCheck | null {
@@ -277,6 +303,16 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate, prior: Candi
   const statePeopleRetirement=statePeopleRetirementCheck(candidate,prior,validatedAt,sourceChecks);
   if (statePeopleRetirement !== null) return statePeopleRetirement;
 
+  if (candidate.recordClass === "FEDERAL_MONEY") {
+    const checked = sourceChecks.some(check => check.passed && check.consumer === "lib/federal-money/verify.ts#readFederalMoneyPartition (source-scoped pre-promotion)");
+    const keys = new Set(evidence.map(row => row.key));
+    const valid = checked && keys.size === removed.length && evidence.length === removed.length && removed.every(delta =>
+      delta.key.startsWith("federal-money:") && evidence.some(row => row.key === delta.key && row.code === "FEDERAL_RECORD_REPARTITIONED" &&
+        row.targetScope !== candidate.scope && row.targetScope.startsWith(`${candidate.sourceId}:`) && Boolean(row.targetVersionId)));
+    return result("COMPLETENESS_HORIZON_VALIDITY", valid ? "PASS" : "FAIL", valid ? "FEDERAL_RECORD_REPARTITIONED" : "FEDERAL_REPARTITION_UNPROVEN",
+      valid ? "Every moved federal record is already held in its verified destination partition." : "Federal record removal has no verified destination partition.");
+  }
+
   if (candidate.recordClass !== "MEETING" && candidate.recordClass !== "REGISTRY_RUNTIME_BINDING") {
     return result(
       "COMPLETENESS_HORIZON_VALIDITY",
@@ -310,7 +346,7 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate, prior: Candi
   if (candidate.recordClass === "REGISTRY_RUNTIME_BINDING") return registryPlaceholderRemovalCheck(candidate, removed, evidenceByKey);
 
   // A meeting removal is proven only by a meeting's authority; the registry's placeholder code never proves one.
-  const validMeetingEvidence = new Map<string, Exclude<RoutineRemovalEvidence, CensusPlaceholderBodyRemovalEvidence | AuditPullRemovalEvidence | MovedToFactStoreRemovalEvidence>>();
+  const validMeetingEvidence = new Map<string, Exclude<RoutineRemovalEvidence, CensusPlaceholderBodyRemovalEvidence | AuditPullRemovalEvidence | MovedToFactStoreRemovalEvidence | FederalRepartitionRemovalEvidence>>();
   const registeredWindow = meetingReaderServingWindowAt(candidate.retrieval.retrievedAt);
     // A `V1` row (the old shown window) is still accepted.
   const legacyWindow = meetingLegacyServingWindowAt(candidate.retrieval.retrievedAt);
@@ -326,7 +362,7 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate, prior: Candi
     if (row.code === "REMOVED_BY_AUDIT_PULL") {
       return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} is a meeting; an audit pull removes only curated Reader members.`);
     }
-    if (row.code === "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT" || row.code === "MOVED_TO_FACT_STORE") {
+    if (row.code === "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT" || row.code === "MOVED_TO_FACT_STORE" || row.code === "FEDERAL_RECORD_REPARTITIONED") {
       return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} is a meeting; a registry removal cannot prove it.`);
     }
     const before = object(delta.before);
@@ -441,7 +477,7 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate, prior: Candi
 
   for (const delta of removed.filter(({ key }) => key.startsWith("agenda-document:"))) {
     const row = evidenceByKey.get(delta.key)!;
-    if (row.code === "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT" || row.code === "REMOVED_BY_AUDIT_PULL" || row.code === "OFFICIAL_ROSTER_NO_LONGER_LISTS" || row.code === "MOVED_TO_FACT_STORE") {
+    if (row.code === "CENSUS_PLACEHOLDER_NOT_A_GOVERNMENT" || row.code === "REMOVED_BY_AUDIT_PULL" || row.code === "OFFICIAL_ROSTER_NO_LONGER_LISTS" || row.code === "MOVED_TO_FACT_STORE" || row.code === "FEDERAL_RECORD_REPARTITIONED") {
       return result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "REMOVAL_EVIDENCE_MISMATCH", `${delta.key} does not inherit authority from its exact removed meeting.`);
     }
     const before = object(delta.before);
@@ -555,10 +591,12 @@ export function validateRoutineCandidate(
   const derivedCivicRecordKeys = derivedCivicRecords.map((member) => member.key);
   const invalidDerivedCivicRecordKey = derivedCivicRecordKeys.find((key) => typeof key !== "string" || key.trim().length === 0);
   const duplicateDerivedCivicRecordKeys = derivedCivicRecordKeys.length - new Set(derivedCivicRecordKeys).size;
-  const normalizedPayload = durableCanonicalJson(candidate.normalizedPayload);
-  const readModel = durableCanonicalJson(candidate.readModel);
-  const suppliedCivicRecords = candidate.civicRecords === undefined ? null : canonicalMembers(candidate.civicRecords);
-  const canonicalDerivedCivicRecords = canonicalMembers(derivedCivicRecords);
+  const scoped = statePublicationScope(candidate.scope);
+  const digest = (canonical: string) => scoped ? canonical : sha256(canonical);
+  const readModel = durableCanonicalJson(candidate.readModel, scoped);
+  const normalizedPayload = candidate.normalizedPayload === candidate.readModel ? readModel : durableCanonicalJson(candidate.normalizedPayload, scoped);
+  const suppliedCivicRecords = candidate.civicRecords === undefined ? null : canonicalMembers(candidate.civicRecords, scoped);
+  const canonicalDerivedCivicRecords = canonicalMembers(derivedCivicRecords, scoped);
   const authority = candidate.retrieval.derived
     ? derivedAuthorityFor(candidate)
     : candidate.retrieval.manualSourceReceipt
@@ -649,7 +687,7 @@ export function validateRoutineCandidate(
     checks.push(result("SCHEMA_PARSE_VALIDITY", "FAIL", "NORMALIZED_HASH_INVALID", "Normalized payload does not carry a lowercase SHA-256 hash."));
   } else if (readModel.issue !== null || readModel.canonical === null) {
     checks.push(result("SCHEMA_PARSE_VALIDITY", "FAIL", "READ_MODEL_NOT_DURABLE_JSON", readModel.issue ?? "Reader projection is not durable JSON."));
-  } else if (sha256(readModel.canonical) !== candidate.normalization.normalizedHash) {
+  } else if (digest(readModel.canonical) !== candidate.normalization.normalizedHash) {
     checks.push(result(
       "SCHEMA_PARSE_VALIDITY",
       "FAIL",
@@ -675,7 +713,7 @@ export function validateRoutineCandidate(
   } else if (
     candidate.normalization.normalizedPayloadHash !== undefined &&
     normalizedPayload.canonical !== null &&
-    sha256(normalizedPayload.canonical) !== candidate.normalization.normalizedPayloadHash
+    digest(normalizedPayload.canonical) !== candidate.normalization.normalizedPayloadHash
   ) {
     checks.push(result(
       "SCHEMA_PARSE_VALIDITY",

@@ -1,8 +1,3 @@
-/**
- * Publishes the one owner snapshot Admin reads, from canonical control-plane
- * state. Mutable civic and operational truth never arrives through a tracked
- * file. Every panel that cannot be computed publishes a named gap, never a zero.
- */
 
 import { collectPlaceHistory } from "../lib/control-plane/admin-view/place-history-collect.ts";
 import { readPlaceOwed } from "../lib/control-plane/admin-view/place-owed-read.ts";
@@ -138,7 +133,6 @@ function zipRows(): Held<readonly OwnerZipRow[]> {
       "republish them. A canonical exact-release certification projection is not wired here.",
   );
 }
-
 
 function intake(): {
   folder: Held<string>;

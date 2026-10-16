@@ -99,27 +99,31 @@ export interface ReaderManifest {
   readonly sources: SnapshotSourceReport[];
   readonly scopes: readonly ReaderManifestScope[];
 
-  readonly everydayRouting?: unknown;
-  /** Pointer identities for the embedded serving copies; old manifests refresh once. */
-  readonly extrasVersionIds?: Readonly<Partial<Record<"everyday-routing", string | null>>>;
-
-  readonly authorityArtifacts?: Partial<Record<AuthorityFamily, AuthorityArtifactRef>>;
-
-  readonly registrations?: Readonly<Record<string, AuthorityArtifactRef>>;
-  /** Legislative people loaded separately for each requested jurisdiction. */
-  readonly stateLegislators?: Readonly<Record<string, AuthorityArtifactRef>>;
-  /** Each state's live facts, in buckets, each republished only when its facts move. */
-  readonly stateFacts?: Readonly<Record<string, AuthorityArtifactRef>>;
-
   readonly freshChecks?: Readonly<Record<string, string>>;
 
   readonly composition?: string;
+  readonly everydayRouting?: unknown;
+  readonly extrasVersionIds?: Readonly<Partial<Record<"everyday-routing", string | null>>>;
+  readonly authorityArtifacts?: Partial<Record<GlobalAuthorityFamily, AuthorityArtifactRef>>;
+  readonly stateFacts?: Readonly<Record<string, AuthorityArtifactRef>>;
+  readonly stateAuthorities?: Partial<Record<StateAuthorityFamily, Readonly<Record<string, AuthorityArtifactRef>>>>;
+  readonly registrations?: Readonly<Record<string, AuthorityArtifactRef>>;
+  readonly stateLegislators?: Readonly<Record<string, AuthorityArtifactRef>>;
+}
+
+export const STATE_AUTHORITY_FAMILIES = ["registry-runtime", "ballot-contests", "candidate-profiles", "candidate-publications", "voting-sites", "candidate-campaign-sites-derived"] as const;
+export type StateAuthorityFamily = typeof STATE_AUTHORITY_FAMILIES[number];
+export type GlobalAuthorityFamily = AuthorityFamily;
+export type GlobalPromotedAuthorityFamily = Exclude<PromotedAuthorityFamily, "candidate-campaign-sites-derived">;
+export function isStateAuthorityFamily(family: string): family is StateAuthorityFamily {
+  return (STATE_AUTHORITY_FAMILIES as readonly string[]).includes(family);
 }
 
 /** Each artifact carries one or more proven pointers whole, read through each pointer's own typed Reader. */
 export type PromotedAuthorityFamily =
   | "other-reader-data"
   | "state-votes"
+  | "candidate-campaign-sites-derived"
   | "ballot-contests"
   | "ballot-az"
   | "ballot-nh"
@@ -144,6 +148,7 @@ export type PromotedAuthorityFamily =
 export const PROMOTED_AUTHORITY_FAMILIES: readonly PromotedAuthorityFamily[] = [
   "other-reader-data",
   "state-votes",
+  "candidate-campaign-sites-derived",
   "ballot-contests",
   "ballot-az",
   "ballot-nh",
@@ -183,6 +188,7 @@ export type AuthorityFamily =
   | "campaign-sites"
   | "state-legislators"
   | "meeting-outcomes"
+  | "everyday-routing"
   | PromotedAuthorityFamily;
 
 export const AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
@@ -192,6 +198,7 @@ export const AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
   "campaign-sites",
   "state-legislators",
   "meeting-outcomes",
+  "everyday-routing",
   ...PROMOTED_AUTHORITY_FAMILIES,
 ];
 

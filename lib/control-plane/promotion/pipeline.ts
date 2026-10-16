@@ -1,5 +1,3 @@
-/** The pipeline's rules: pure over records, with `appendTransition` as the one append path. No clock or disk. */
-
 import type { WorkerRole } from "../attempt.ts";
 import { fingerprint } from "../ids.ts";
 import { canonicalJson, readByKeys, type ArtifactRecord, type ControlPlaneRepositories } from "../repository/types.ts";
@@ -236,26 +234,27 @@ export async function readPipelineStatesWhere(repos: ControlPlaneRepositories,
   return out;
 }
 
-export async function contextFromRepositories(repos: ControlPlaneRepositories): Promise<PipelineContext> {
-  const artifacts = new Map<string, ArtifactRecord>();
-  for (const a of await repos.artifacts.readAll()) artifacts.set(a.artifactId, a);
-  const roles = new Map<string, WorkerRole>();
-  /* One listing serves both maps; each was a whole read of the Attempts. */
-  const attemptRows = await repos.attempts.list();
-  for (const a of attemptRows) roles.set(a.id, a.value.worker.role);
-  const results = await repos.workerResults.readAll();
-  const attempts = new Map(attemptRows.map(a => [a.id, a.value]));
+export function contextFromRecords(artifactRows: readonly ArtifactRecord[], attemptRows: readonly import("../attempt.ts").Attempt[],
+  resultRows: readonly import("../workers/types.ts").WorkerResultRecord[]): PipelineContext {
+  const artifacts = new Map(artifactRows.map(row => [row.artifactId, row]));
+  const attempts = new Map(attemptRows.map(row => [row.id, row]));
+  const results = new Map(resultRows.map(row => [row.id, row]));
   return {
-    artifactById: (id) => artifacts.get(id) ?? null,
-    attemptRoleById: (id) => roles.get(id) ?? null,
-    workerResultById: (id) => {
-      const result = results.find(r => r.id === id);
+    artifactById: id => artifacts.get(id) ?? null,
+    attemptRoleById: id => attempts.get(id)?.worker.role ?? null,
+    workerResultById: id => {
+      const result = results.get(id);
       if (!result || attempts.get(result.attemptId)?.outcome !== "COMPLETED" ||
           canonicalJson(attempts.get(result.attemptId)) !== canonicalJson(result.completion.closedAttempt)) return null;
       try { assertFleetResult(result.result, result.completion.completedTask.workerTask!.role, result.attemptId); return result; }
       catch { return null; }
     },
   };
+}
+
+export async function contextFromRepositories(repos: ControlPlaneRepositories): Promise<PipelineContext> {
+  const [artifacts, attempts, results] = await Promise.all([repos.artifacts.readAll(), repos.attempts.list(), repos.workerResults.readAll()]);
+  return contextFromRecords(artifacts, attempts.map(row => row.value), results);
 }
 
 export const SCOUTED_OUTCOMES = ["ROUTE_CANDIDATE", "EVIDENCE_FOUND"] as const;
@@ -273,11 +272,6 @@ function scoutActor(result: ScoutResult): PipelineActor {
   return { role: "SCOUT", lane: "BOUNDED_MODEL_WORKER", instance: result.attemptId };
 }
 
-/**
- * SCOUTED items from one persisted Scout result: one per candidate for a
- * ROUTE_CANDIDATE, one for the findings of an EVIDENCE_FOUND. A refused
- * result maps to nothing — its outcome was never a finding.
- */
 export function scoutedFromScoutResult(result: ScoutResult): ScoutedRecord[] {
   if (result.refusal !== null) return [];
   if (!(SCOUTED_OUTCOMES as readonly string[]).includes(result.outcome)) return [];

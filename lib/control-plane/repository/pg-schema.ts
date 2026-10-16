@@ -4,11 +4,6 @@ import { WEBSITE_PACING_DDL } from "../website-pacing.ts";
 /** Moves whenever `BOOTSTRAP_DDL` moves. The gate compares against it. */
 export const BOOTSTRAP_VERSION = 33;
 
-/**
- *   AGGREGATE     id, revision, updated_at, value   (CAS on revision)
- *   APPEND_ONLY   key, record_id, position, record  (unique on log and record_id)
- * Values are `jsonb`: the domain types own their fields.
- */
 export const AGGREGATE_KINDS = [
   "work_items",
   "route_tasks",
@@ -274,11 +269,6 @@ export function spendHoldJsonSql(alias: string): string {
     `ELSE jsonb_build_object('usd', ${alias}.settled_usd, 'costRecordedAt', ${iso("cost_recorded_at")}) END)`;
 }
 
-/**
- * A hold that still counts (`liveSpendHolds`), as SQL over `alias`, given the
- * three instants it is measured from: the 24-hour window's start, the stale
- * line for unsettled holds, and the retention line for settled ones.
- */
 export function spendHoldLiveSql(alias: string, windowStart: string, staleBefore: string, keptSince: string): string {
   return `((cardinality(${alias}.lifetime_keys) > 0 OR ${alias}.held_at >= ${windowStart}) AND ` +
     `CASE WHEN ${alias}.cost_recorded_at IS NULL THEN ${alias}.held_at >= ${staleBefore} ELSE ${alias}.cost_recorded_at >= ${keptSince} END)`;
@@ -294,11 +284,7 @@ export function spendHoldDeadSql(alias: string, windowStart: string, staleBefore
 /** The marker the bootstrap looks for in the installed body; move it whenever the function's body moves. */
 export const ADMIT_SPEND_HOLD_MARKER = "cp_admit_spend_hold body v1";
 
-/**
- * One line's left, as `leftUsd` computes it: budget − (history + every live
- * hold on it in its window unsettled + settled spend recorded after the
- * line's history read), normalized at nanodollar precision.
- */
+// Round to nanodollars so SQL and the budget reader make identical decisions.
 const LINE_LEFT_SQL = `(SELECT round(((l->>'budgetUsd')::numeric - ((l->>'historicalUsd')::numeric + coalesce(sum(
         CASE WHEN h.cost_recorded_at IS NULL THEN h.usd
              WHEN h.cost_recorded_at > (l->>'historyReadAt')::timestamptz THEN h.settled_usd
@@ -307,10 +293,7 @@ const LINE_LEFT_SQL = `(SELECT round(((l->>'budgetUsd')::numeric - ((l->>'histor
       WHERE h.keys @> ARRAY[l->>'key'] AND ${spendHoldLiveSql("h", "win", "stale", "kept")}
         AND (coalesce((l->>'lifetime')::boolean, false) OR h.held_at >= win))`;
 
-/**
- * `decideHold`, in the database. Returns `{admit: true, hold}` or `{admit: false, refusal, left, position}`.
- * Unlike `decideHold`, a line whose left cannot be computed refuses rather than comparing NaN.
- */
+// Missing amounts must refuse admission rather than compare as NaN.
 export const ADMIT_SPEND_HOLD_FUNCTION_DDL = `DO $do$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_proc WHERE proname = 'cp_admit_spend_hold'
       AND pronamespace = current_schema()::regnamespace AND prosrc LIKE '%${ADMIT_SPEND_HOLD_MARKER}%') THEN
@@ -426,10 +409,7 @@ export const BOOTSTRAP_DDL: readonly string[] = [
      version     integer NOT NULL,
      applied_at  timestamptz NOT NULL
    );`,
-  /*
-   * A position-allocator table rather than an advisory lock: the HTTP driver has no stable session.
-   * `INSERT ... ON CONFLICT DO UPDATE ... RETURNING` row-locks the head row, so allocations serialize.
-   */
+  // Row locks serialize allocations without relying on HTTP connection sessions.
   `CREATE TABLE IF NOT EXISTS cp_log_heads (
      log_table     text NOT NULL,
      log_key       text NOT NULL,
@@ -614,9 +594,7 @@ AFTER INSERT ON cp_log_admin_receipts DEFERRABLE INITIALLY DEFERRED
 FOR EACH ROW EXECUTE FUNCTION cp_admin_action_history_invalidate_readiness();
   END IF;
 END $$;`,
-  // Bootstrap executes one standalone statement per query, outside a transaction.
-  // CONCURRENTLY lets the standing runner keep appending while this index is built.
-  // URLs can exceed the btree row limit; the query also checks exact equality.
+  // Concurrent creation keeps writes running; exact URL comparison guards against hash collisions.
   ARTIFACT_SOURCE_INDEX_DDL,
   `CREATE INDEX IF NOT EXISTS cp_attempts_lease_id ON cp_attempts ((value->>'leaseId'));`,
   `CREATE INDEX IF NOT EXISTS cp_log_owner_digests_cycle_kind_position

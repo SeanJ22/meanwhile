@@ -6,12 +6,7 @@ import type { SourceSnapshot, StatementCorpus } from "./types.ts";
 import { sweepPeople } from "./statement-sweep.ts";
 import type { SweepPerson, SweepRecord } from "./statement-sweep.ts";
 
-/**
- * The positions search index: the union of the officeholder statement
- * projection and the candidate document projection, in one snapshot shape.
- * Only the current extraction of each candidate document is included, so no
- * passage the current extractor no longer produces is quoted.
- */
+
 
 /** The candidate-keyed canonical promoted projection. */
 function candidates(): CandidateCorpus {
@@ -23,10 +18,7 @@ function readerStatementSnapshots(): readonly SourceSnapshot[] {
   return currentOfficeholderStatements().snapshots;
 }
 
-/**
- * One candidate document in the snapshot shape. The subject name is the
- * candidate key: display only, never a join key, and never a guessed name.
- */
+
 export function snapshotFromCandidateDocument(doc: CandidateDocument): SourceSnapshot {
   return {
     id: doc.id,
@@ -81,10 +73,7 @@ export function unifiedCorpusCounts() {
   };
 }
 
-/**
- * One sweep record per person and topic, listing the sources searched. People
- * with no held page still get a record, reading "not yet collected".
- */
+
 export function unifiedStatementSweep(
   people: readonly SweepPerson[],
   topics?: readonly string[],

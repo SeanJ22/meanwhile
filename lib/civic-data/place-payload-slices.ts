@@ -1,3 +1,4 @@
+import { stateFromBallotScope } from "./state-scopes.ts";
 import type { ReadOnlyQuery } from "../control-plane/admin-view/promoted-slices.ts";
 import { CivicPayloadParts } from "./payload-parts.ts";
 
@@ -20,8 +21,10 @@ function collections(recordClass: string): Record<string, string> {
   }
   if (recordClass === "REGISTRY_RUNTIME_BINDING") return {
     "registry.divisions": division, "registry.bodies": serves,
-    statewideExecutives: "x->>'stateOcdId'=ANY($3::text[])",
-    "officialCandidacies.rows": "x->'holder'->'divisions' ?| $3::text[]",
+    statewideExecutives: "x->>'stateOcdId'=ANY($3::text[]) OR x->'holder'->>'id'=ANY($5::text[])",
+    "officialCandidacies.rows": "x->'holder'->'divisions' ?| $3::text[] OR x->'holder'->>'id'=ANY($5::text[])",
+    "officialPhotos.photos": "x->>'officeholderId'=ANY($5::text[]) OR x->>'officeholderId' IN (SELECT b.x->'holder'->>'id' FROM records b WHERE b.scope=records.scope AND (b.field='officialCandidacies.rows' AND b.x->'holder'->'divisions' ?| $3::text[] OR b.field='statewideExecutives' AND b.x->>'stateOcdId'=ANY($3::text[])))",
+    rosterPhotos: "member_key=ANY($5::text[]) OR member_key IN (SELECT b.x->'holder'->>'id' FROM records b WHERE b.scope=records.scope AND (b.field='officialCandidacies.rows' AND b.x->'holder'->'divisions' ?| $3::text[] OR b.field='statewideExecutives' AND b.x->>'stateOcdId'=ANY($3::text[])))",
   };
   if (recordClass === "MEETING") return { meetings: `(${division}) OR x->>'bodyId'=ANY($4::text[])` };
   if (recordClass === "MEETING_OUTCOME") return { sittings: `(${division}) OR x->>'bodyId'=ANY($4::text[])` };
@@ -29,14 +32,8 @@ function collections(recordClass: string): Record<string, string> {
     "roster.divisions": division,
     "roster.officeholders": `x->>'id' IN (SELECT b.x->>'officeholderId' FROM records b WHERE b.scope=records.scope AND b.field='roster.divisions' AND (${division.replaceAll("x->", "b.x->")}))`,
   };
-  if (recordClass === "BALLOT_CANDIDACY" || recordClass === "BALLOT_FILING") return {
-    "ballot.election": "TRUE",
-    "ballot.contests": division,
-    "ballot.candidacies": `x->>'contestId' IN (SELECT b.x->>'id' FROM records b WHERE b.scope=records.scope AND b.field='ballot.contests' AND (${division.replaceAll("x->", "b.x->")}))`,
-    "ballot.measures": `x->>'contestId' IN (SELECT b.x->>'id' FROM records b WHERE b.scope=records.scope AND b.field='ballot.contests' AND (${division.replaceAll("x->", "b.x->")}))`,
-    "generalLineup.contests": `x->>'contestId' IN (SELECT b.x->>'id' FROM records b WHERE b.scope=records.scope AND b.field='ballot.contests' AND (${division.replaceAll("x->", "b.x->")}))`,
-  };
-  if (recordClass === "CANDIDATE_PROFILE") return { "cards.cards": "member_key=ANY($5::text[])", "links.links": "member_key=ANY($5::text[])" };
+  if (recordClass === "CANDIDATE_PROFILE") return { "cards.cards": "member_key=ANY($5::text[])", "links.links": "member_key=ANY($5::text[])",
+    "cards.hunts": "x->>'key'=ANY($5::text[])", "links.hunts": "x->>'key'=ANY($5::text[])" };
   if (recordClass === "CANDIDATE_PUBLICATION") return { documents: "x->>'candidateKey'=ANY($5::text[])" };
   if (recordClass === "FEC_FUNDING") return { candidates: "x->'targetKeys' ?| $5::text[]" };
   if (recordClass === "STATE_CAMPAIGN_FINANCE") return { records: "x->'targetKeys' ?| $5::text[]" };
@@ -47,12 +44,66 @@ function collections(recordClass: string): Record<string, string> {
 export async function readPlacePayloadParts(query: ReadOnlyQuery, recordClass: string, scopes: readonly string[],
   ids: readonly string[], bodies: readonly string[], targets: readonly string[], versions: ReadonlyMap<string, string> = new Map(),
   acceptedVersions?: ReadonlyMap<string, string>): Promise<Map<string, unknown>> {
-  const derived = recordClass === "CURATED_READER_RECORD" && scopes.every(scope => scope === "US:candidate-campaign-sites-derived");
-  const fields = derived ? { records: "x->>'id'=ANY($5::text[]) OR x->>'candidacyId'=ANY($5::text[])", portraits: "x->>'id'=ANY($5::text[]) OR x->>'candidacyId'=ANY($5::text[])", kind: "TRUE", formatVersion: "TRUE" } : collections(recordClass);
-  const maps = recordClass === "CANDIDATE_PROFILE" ? ["cards.cards", "links.links"] : [];
-  const single = ["ballot.election", ...(derived ? ["kind", "formatVersion"] : [])];
+  const derived = recordClass === "CURATED_READER_RECORD" && scopes.every(scope => stateFromBallotScope(scope, "candidate-campaign-sites-derived") !== null);
+  let fields: Record<string, string> = derived ? { records: "x->>'id'=ANY($5::text[]) OR x->>'candidacyId'=ANY($5::text[])", portraits: "x->>'id'=ANY($5::text[]) OR x->>'candidacyId'=ANY($5::text[])", kind: "TRUE", formatVersion: "TRUE" } : collections(recordClass);
+  const maps = recordClass === "CANDIDATE_PROFILE" ? ["cards.cards", "links.links"] : recordClass === "REGISTRY_RUNTIME_BINDING" ? ["rosterPhotos"] : [];
+  const single = derived ? ["kind", "formatVersion"] : [];
+  const fieldScopes = new Map<string, Set<string>>();
+  const ballotFields = new Map<string, string>();
+  if (recordClass === "BALLOT_CANDIDACY") {
+    const [keys] = await query([{ text: `WITH RECURSIVE projections AS (${placeProjectionSourceSql(acceptedVersions === undefined ? undefined : 4)}),
+      ballot_maps(scope,step,node) AS (
+        SELECT scope,0,payload FROM projections WHERE record_class=$1 AND scope=ANY($2::text[])
+        UNION ALL
+        SELECT w.scope,CASE WHEN p.hash IS NULL THEN w.step+1 ELSE w.step END,
+          CASE WHEN p.hash IS NULL THEN w.node->'ballots' ELSE p.payload->'value' END
+        FROM ballot_maps w LEFT JOIN civic_data_payload_parts p ON p.hash=w.node->>'$civicPayloadPart'
+        WHERE p.hash IS NOT NULL OR w.step=0 AND jsonb_typeof(w.node)='object' AND NOT w.node ? '$civicPayloadPart'
+      )
+      SELECT DISTINCT w.scope,e.key FROM ballot_maps w CROSS JOIN LATERAL jsonb_object_keys(
+        CASE WHEN w.step=1 AND NOT w.node ? '$civicPayloadPart' THEN w.node ELSE '{}'::jsonb END) e(key)
+      WHERE EXISTS (SELECT 1 FROM unnest($3::text[]) d(id)
+        WHERE lower(split_part(e.key, ':', 1))=substring(d.id from '/(?:state|district):([a-z]{2})(?:/|$)'))
+      UNION ALL SELECT w.scope,'$missing' FROM ballot_maps w WHERE w.node ? '$civicPayloadPart'
+        AND NOT EXISTS (SELECT 1 FROM civic_data_payload_parts p WHERE p.hash=w.node->>'$civicPayloadPart')`,
+      params: [recordClass, [...scopes], [...ids],
+        ...(acceptedVersions === undefined ? [] : [JSON.stringify(Object.fromEntries(acceptedVersions))])] }]);
+    if (keys.some(row => row.key === "$missing")) throw new Error("CIVIC_PAYLOAD_PART_MISSING");
+    fields = { kind: "TRUE" };
+    single.push("kind");
+    for (const { scope, key } of keys) {
+      const prefix = `ballots.${key}`;
+      const add = (field: string, where: string, scalar = false) => {
+        const path = `${prefix}.${field}`;
+        fields[path] = where;
+        const owners = fieldScopes.get(path) ?? new Set<string>();
+        owners.add(scope as string); fieldScopes.set(path, owners);
+        if (scalar && !single.includes(path)) single.push(path);
+      };
+      const contestField = `${prefix}.contests`.replaceAll("'", "''");
+      const candidacyField = `${prefix}.candidacies`.replaceAll("'", "''");
+      ballotFields.set(contestField, candidacyField);
+      const inContest = `(scope,'${contestField}',x->>'contestId') IN (SELECT scope,field,id FROM selected_ballot_contests)`;
+      add("contests", division);
+      for (const field of ["candidacies", "filingCandidacies", "measures", "measureRecords", "removals", "generalLineup.contests", "measureAnalyses.analyses", "lineupReconciliation.rows"]) add(field, inContest);
+      add("contacts", `(scope,'${candidacyField}',x->>'candidacyId') IN (SELECT scope,field,id FROM selected_ballot_candidacies)`);
+      for (const field of ["absences", "heldContests"]) add(field, division);
+      for (const field of ["coverageNotes", "scopedCoverageNotes", "lineupReconciliation.sources"]) add(field, "TRUE");
+      for (const field of ["election", "generalLineup.curatedAt", "generalLineup.canvass", "generalLineup.note",
+        "measureAnalyses.generatedAt", "measureAnalyses.counts", "lineupReconciliation.formatVersion", "lineupReconciliation.state",
+        "lineupReconciliation.cycle", "lineupReconciliation.generatedAt", "lineupReconciliation.generatedBy",
+        "lineupReconciliation.proof", "lineupReconciliation.agencyNextFilingDue"]) add(field, "TRUE", true);
+    }
+  }
   const paths = Object.keys(fields);
-  const predicate = Object.entries(fields).map(([field, where]) => `(field='${field}' AND (${where}))`).join(" OR ");
+  const predicate = Object.entries(fields).map(([field, where]) => `(field='${field.replaceAll("'", "''")}' AND (${where}))`).join(" OR ");
+  const ballotKeys = ballotFields.size ? `, ballot_fields(contests,candidacies) AS (VALUES ${[...ballotFields].map(([contests, candidacies]) => `('${contests}','${candidacies}')`).join(",")}),
+    selected_ballot_contests AS MATERIALIZED (
+      SELECT scope,field,x->>'id' id FROM records WHERE field IN (SELECT contests FROM ballot_fields) AND (${division})
+    ), selected_ballot_candidacies AS MATERIALIZED (
+      SELECT r.scope,r.field,r.x->>'id' id FROM records r JOIN ballot_fields f ON f.candidacies=r.field
+        JOIN selected_ballot_contests b ON b.scope=r.scope AND b.field=f.contests AND b.id=r.x->>'contestId'
+    )` : "";
   const [rows] = await query([{ text: `WITH RECURSIVE selected AS (SELECT $3::text[] ids,$4::text[] bodies,$5::text[] targets),
   projections AS (${placeProjectionSourceSql(acceptedVersions === undefined ? undefined : 8)}),
   walk(scope,path,step,node,member_key) AS (
@@ -77,14 +128,14 @@ export async function readPlacePayloadParts(query: ReadOnlyQuery, recordClass: s
         UNION ALL
         SELECT w.step,e.value,e.key FROM jsonb_each(CASE WHEN jsonb_typeof(r.node)='object' THEN r.node ELSE '{}'::jsonb END) e
           WHERE w.step=cardinality(w.path) AND array_to_string(w.path,'.')=ANY($7::text[])
-            AND w.member_key IS NULL AND e.key=ANY($5::text[])
+            AND w.member_key IS NULL AND (e.key=ANY($5::text[]) OR array_to_string(w.path,'.')='rosterPhotos')
       ) n WHERE n.node IS NOT NULL
   ), records AS (
     SELECT DISTINCT scope,array_to_string(path,'.') field,node x,member_key FROM walk
       WHERE step=cardinality(path) AND NOT node ? '$civicPayloadPart'
-        AND (jsonb_typeof(node)='object' OR array_to_string(path,'.') IN ('kind','formatVersion'))
+        AND jsonb_typeof(node)<>'array'
         AND (NOT array_to_string(path,'.')=ANY($7::text[]) OR member_key IS NOT NULL)
-  )
+  )${ballotKeys}
   SELECT scope,field,jsonb_agg(CASE WHEN member_key IS NULL THEN x ELSE jsonb_build_object('key',member_key,'value',x) END) rows FROM records WHERE ${predicate} GROUP BY scope,field
   UNION ALL
   SELECT scope,'$missing',jsonb_agg(node) FROM walk WHERE node ? '$civicPayloadPart'
@@ -102,14 +153,16 @@ export async function readPlacePayloadParts(query: ReadOnlyQuery, recordClass: s
       const [found] = await query([{ text: "SELECT hash,payload FROM civic_data_payload_parts WHERE hash=ANY($1::text[])", params: [[...hashes]] }]);
       return found as unknown as { hash: string; payload: unknown }[];
     } });
-  const values = new Map<string, Record<string, unknown>>(scopes.map(scope => [scope, {}]));
+  const values = new Map<string, Record<string, unknown>>(scopes.map(scope => [scope, recordClass === "BALLOT_CANDIDACY" ? { ballots: {} } : {}]));
   const set = (scope: string, field: string, value: unknown) => {
     let object = values.get(scope)!;
     const keys = field.split(".");
     for (const key of keys.slice(0, -1)) object = (object[key] ??= {}) as Record<string, unknown>;
     object[keys.at(-1)!] = value;
   };
-  for (const scope of scopes) for (const field of paths) set(scope, field, maps.includes(field) ? {} : []);
+  for (const scope of scopes) for (const field of paths) if (!fieldScopes.has(field) || fieldScopes.get(field)!.has(scope)) {
+    set(scope, field, maps.includes(field) ? {} : []);
+  }
   for (const row of rows) if (row.field !== "$version") {
     const decoded = await parts.load(row.rows);
     set(row.scope as string, row.field as string, maps.includes(row.field as string)

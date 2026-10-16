@@ -1,19 +1,5 @@
-/**
- * A deploy may not cross its own migrations. Pure: takes the committed
- * journal, the phase declarations, the `created_at` values production has
- * applied and the tags this change introduces, and names every migration on
- * the wrong side of the deploy.
- *
- *   - an EXPAND migration must precede its serving code; still pending after
- *     the deploy fails;
- *   - a CONTRACT migration may not precede its code; one introduced by this
- *     change and already applied fails.
- *
- * Only changes to the schema contract need the database; an unreadable
- * changed-path list counts as involved.
- */
-
 import { compareSchemaState, type JournalEntry, type SchemaState } from "./schema-state.ts";
+import { MIGRATION_SQL_PATH } from "./migration-immutability.ts";
 import {
   declaredPhase,
   PHASE_ORDERING,
@@ -24,10 +10,6 @@ import {
 /** When the gate is being asked. */
 export type ShipMoment = "pre-deploy" | "post-deploy";
 
-/**
- * Paths whose change means the schema contract itself moved: the generated
- * migrations and journal, and the schema they are generated from.
- */
 export const SCHEMA_CONTRACT_PATHS: readonly { readonly prefix: string; readonly why: string }[] = [
   {
     prefix: "lib/db/migrations/",
@@ -52,10 +34,7 @@ export interface SchemaInvolvement {
 
 const normalisePath = (p: string) => p.replace(/\\/g, "/").replace(/^\.\//, "");
 
-/**
- * Whether a change touches the schema contract. `null` means the list could
- * not be computed, not that nothing changed, and returns involved.
- */
+// An unavailable changed-path list cannot establish that the schema contract is unchanged.
 export function schemaInvolvement(changed: readonly string[] | null): SchemaInvolvement {
   if (changed === null) {
     return {
@@ -90,7 +69,7 @@ export function schemaInvolvement(changed: readonly string[] | null): SchemaInvo
 export function migrationTagsIn(changed: readonly string[]): string[] {
   const tags = changed
     .map(normalisePath)
-    .map((p) => /^lib\/db\/migrations\/([0-9]{4}_[A-Za-z0-9_]+)\.sql$/.exec(p)?.[1])
+    .map((p) => MIGRATION_SQL_PATH.exec(p)?.[1])
     .filter((t): t is string => typeof t === "string");
   return [...new Set(tags)].sort();
 }
@@ -136,10 +115,7 @@ export interface ShippingInvariantVerdict {
   readonly summary: string;
 }
 
-/**
- * The whole verdict, from the four inputs. No I/O. A migration with no
- * declaration is never given a phase by default; it fails on its own.
- */
+// Missing phase declarations fail rather than acquiring a default migration phase.
 export function evaluateShippingInvariant(
   input: ShippingInvariantInput,
 ): ShippingInvariantVerdict {

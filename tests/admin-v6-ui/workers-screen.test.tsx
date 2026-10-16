@@ -20,6 +20,7 @@ import { readV6WorkersSources, v6WorkersSection } from "../../lib/control-plane/
 import { createMemoryRepositories } from "../../lib/control-plane/repository/memory.ts";
 import { liveCycleHeartbeat } from "../../lib/control-plane/runner-standing.ts";
 import { runDbApply } from "../../scripts/db-apply.mts";
+import { ballotPublicationSummary, type BallotPublicationResult } from "../../lib/civic-data/ballot-publication.ts";
 import { CandidateCard } from "../../components/ballot/candidate-card.tsx";
 
 const READ_AT = "2026-09-28T22:12:27.388Z";
@@ -120,27 +121,61 @@ async function livePage(scopeKey: string) {
   return { b, sync };
 }
 
-test("Workers displays the runner's merged states and every skipped state's reason beside the ballot publication control", async () => {
-  const sync = new LiveSync({ scope: "us", schedule: () => () => {}, fetch: async () => ({ status: 200, json: async () => ({
-    contract: "admin-v6/publication@1", scope: "us", revision: "fixture-ballots", asOf: READ_AT, missingParts: [],
-    data: { total: 1, counts: [], latestAttemptFailing: 0, notVisible: [], notVisibleHidden: 0,
-      ballotPublication: { kind: "BALLOT_PUBLICATION", inputHash: "a".repeat(64), at: READ_AT, status: "PUBLISHED", versionId: "fixture",
-        merged: ["ak.json", "tx.json"], skipped: [{ file: "ca.json", reason: "The source receipt is missing." },
-          { file: "nd.json", reason: "The source records a blocked response." }],
-        heldContests: [{ state: "TX", contestId: "fixture-governor", title: "Governor", reason: "The official candidate list hasn't been fully checked." },
-          { state: "TX", contestId: "fixture-house", title: "State Representative, District 7", reason: "The complete candidate list lacks matching official source evidence." },
-          { state: "AK", contestId: "fixture-ak", title: "U.S. Representative", reason: "The official candidate list hasn't been fully checked." }], reason: null } },
+const BALLOT_REPORTS: Record<string, BallotPublicationResult> = Object.fromEntries(([
+  { state: "TX", titles: ["Governor", "State Representative, District 7"], reason: null },
+  { state: "AK", titles: ["U.S. Representative"], reason: null },
+  { state: "CA", titles: [], reason: "The source receipt is missing." },
+  { state: "ND", titles: [], reason: "The source records a blocked response." },
+] as const).map(({ state, titles, reason }): [string, BallotPublicationResult] => [state, {
+  kind: "BALLOT_PUBLICATION", state, inputHash: "a".repeat(64), at: READ_AT,
+  status: reason ? "HELD" : "PUBLISHED", versionId: reason ? null : `fixture:${state}`,
+  merged: reason ? [] : [`${state.toLowerCase()}.json`],
+  skipped: reason ? [{ file: `${state.toLowerCase()}.json`, reason }] : [],
+  heldContests: titles.map((title, index) => ({ state, contestId: `fixture:${state}:${index}`, title,
+    reason: "No candidates have been verified for this contest yet." })), reason,
+}]));
+
+async function ballotPublicationPage(state?: string) {
+  const scopeKey = state ? `st:${state.toLowerCase()}` : "us";
+  const reports = state ? { [state]: BALLOT_REPORTS[state] }
+    : Object.fromEntries(Object.entries(BALLOT_REPORTS).map(([key, report]) => [key, ballotPublicationSummary(report)]));
+  const sync = new LiveSync({ scope: scopeKey, schedule: () => () => {}, fetch: async () => ({ status: 200, json: async () => ({
+    contract: "admin-v6/publication@1", scope: scopeKey, revision: "fixture-ballots", asOf: READ_AT, missingParts: [],
+    data: { total: Object.keys(reports).length, counts: [], latestAttemptFailing: 0, notVisible: [], notVisibleHidden: 0,
+      ballotPublications: reports },
   }) }) });
   const p = pulse(null);
   sync.onPulse({ ...p, v6: { ...p.v6, sections: { publication: { contract: "admin-v6/publication@1", href: "/api/admin/v6/publication", revision: "fixture-ballots" } } } });
   await settle(sync);
-  const html = page(sync, { kind: "all" }, "us", "workers");
-  assert.match(text(html), /Merged: AK, TX/);
-  assert.match(text(html), /Skipped CA: The source receipt is missing\./);
-  assert.match(text(html), /Skipped ND: The source records a blocked response\./);
-  assert.match(text(html), /Publish ballots/);
-  assert.match(text(html), /Held contests in TX \(2\).*Governor: The official candidate list hasn't been fully checked\..*State Representative, District 7: The complete candidate list lacks matching official source evidence\./);
-  assert.match(text(html), /Held contests in AK \(1\).*U\.S\. Representative: The official candidate list hasn't been fully checked\./);
+  assert.equal(sync.snapshot().publication.phase, "live");
+  return page(sync, state ? { kind: "state", state: state.toLowerCase() } : { kind: "all" }, scopeKey, "workers");
+}
+
+test("national Workers shows ballot publication status, held counts and state controls without loading contest names", async () => {
+  const html = await ballotPublicationPage();
+  const rendered = text(html);
+  assert.match(rendered, /TX: Published.*2 incomplete contests\. View TX contests/);
+  assert.match(rendered, /AK: Published.*1 incomplete contests\. View AK contests/);
+  assert.match(html, /<button[^>]*>View TX contests<\/button>/);
+  assert.match(html, /<button[^>]*>View AK contests<\/button>/);
+  assert.match(rendered, /CA: Held.*The source receipt is missing\./);
+  assert.match(rendered, /ND: Held.*The source records a blocked response\./);
+  assert.match(rendered, /Publish ballots/);
+  assert.doesNotMatch(rendered, /Governor:|State Representative, District 7:|U\.S\. Representative:/);
+});
+
+test("selected-state Workers lists every held contest and preserves each skipped source reason", async () => {
+  for (const state of Object.keys(BALLOT_REPORTS)) {
+    const report = BALLOT_REPORTS[state];
+    const rendered = text(await ballotPublicationPage(state));
+    assert.match(rendered, /Publish ballots/);
+    for (const held of report.heldContests ?? []) assert.ok(rendered.includes(`${held.title}: ${held.reason}`), `${state}: ${held.title}`);
+    for (const skipped of report.skipped) assert.ok(rendered.includes(skipped.reason), `${state}: ${skipped.file}`);
+    assert.ok(!rendered.includes(`View ${state} contests`), "the selected state's complete details are already shown");
+    for (const other of Object.values(BALLOT_REPORTS).filter(row => row.state !== state)) {
+      for (const held of other.heldContests ?? []) assert.ok(!rendered.includes(`${held.title}:`), `${state} must not load ${other.state} contests`);
+    }
+  }
 });
 
 test("a candidate website's displayed host is lowercase while its filed link is preserved", () => {

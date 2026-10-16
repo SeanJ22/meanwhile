@@ -1,4 +1,3 @@
-/** Which side of its deploy a migration is safe on. */
 export type MigrationPhase = "expand" | "contract";
 
 export const PRODUCTION_MIGRATION_HEADLINE = "Production migrations";
@@ -125,11 +124,6 @@ const CONTRACT_RULES: readonly {
   },
 ];
 
-/**
- * The statements in a migration file, with SQL comments removed so prose that
- * quotes SQL is not classified. The breakpoint marker is split off before
- * stripping, because it begins with `--`.
- */
 export function statementsIn(sql: string): string[] {
   return sql
     .split("--> statement-breakpoint")
@@ -169,6 +163,7 @@ export function phaseFromSql(sql: string): { phase: MigrationPhase; signals: Con
 
 /** Hand-written, one entry per committed migration; the suite checks each against phaseFromSql. */
 export const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
+  "0038_src_mn_federal_money_lookup": { phase: "expand", why: "Indexes exact federal native IDs without indexing source descriptions or loading state inventories." },
   "0000_square_stryfe": {
     phase: "expand",
     why: "Creates meetings, agenda_documents and search_log with their indexes. Nothing existed before it.",

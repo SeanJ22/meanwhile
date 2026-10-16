@@ -6,6 +6,7 @@ import test from "node:test";
 
 import { compareSchemaState, describeSchemaState } from "../lib/db/schema-state.ts";
 import { errorCodeOf, errorMessageOf } from "../lib/db/write-alarm.ts";
+import { migrationTagsIn } from "../lib/db/shipping-invariant.ts";
 
 import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
 
@@ -203,9 +204,7 @@ test("6.1: the schema gate names the missing migration, and never rounds up", ()
   const gap = compareSchemaState(journal, [1, 3]);
   assert.deepEqual(gap.missing, ["0001_b"]);
 
-  // A database AHEAD of the code is its own problem and is reported as its
-  // own thing — folding it into `missing` would tell somebody to apply a
-  // migration that is already there.
+  // Applied migrations ahead of the code must not be recommended for reapplication.
   const ahead = compareSchemaState(journal, [1, 2, 3, 99]);
   assert.deepEqual(ahead.missing, []);
   assert.deepEqual(ahead.unknownApplied, [99]);
@@ -214,22 +213,26 @@ test("6.1: the schema gate names the missing migration, and never rounds up", ()
   // An empty journal has no head, and "unknown" is the named gap rather than
   // a plausible tag.
   assert.equal(compareSchemaState([], []).codeHead, "unknown");
+
+  const pendingSteps = [...journal,
+    { idx: 3, when: 4, tag: "ZZ-02_pending_expand" },
+    { idx: 4, when: 5, tag: "AA-01_pending_contract" },
+  ];
+  const pending = compareSchemaState(pendingSteps, [1, 2, 3]);
+  assert.equal(pending.codeHead, "AA-01_pending_contract", "the journal defines the head, regardless of filename sorting");
+  assert.deepEqual(pending.missing, ["ZZ-02_pending_expand", "AA-01_pending_contract"]);
 });
 
-test("6.1: the committed journal head matches the newest migration file", () => {
+test("6.1: the committed journal names every migration file exactly once", () => {
   const journal = JSON.parse(
     readFileSync(join(ROOT, "lib", "db", "migrations", "meta", "_journal.json"), "utf8"),
   ) as { entries: { tag: string }[] };
-  const files = filesThatWouldBeCommitted({ cwd: ROOT, paths: ["lib/db/migrations"] })
-    .map((f) => f.trim())
-    .filter((f) => /\/\d{4}_[^/]+\.sql$/.test(f))
-    .map((f) => f.replace(/^lib\/db\/migrations\//, "").replace(/\.sql$/, ""))
-    .sort();
+  const files = migrationTagsIn(filesThatWouldBeCommitted({ cwd: ROOT, paths: ["lib/db/migrations"] }));
   const tags = journal.entries.map((e) => e.tag).sort();
   assert.deepEqual(
     tags,
     files,
-    "every numbered migration is journalled; River numbers step-named lane migrations",
+    "every migration is journalled, including step-named lane migrations",
   );
 });
 
@@ -336,10 +339,7 @@ test("NH32: the code is found under originalError", () => {
 });
 
 test("NH32: an AggregateError's real failures are reached", () => {
-  /*
-   * What a pooled driver raises when every connection in the pool fails. Its
-   * own message says nothing; each entry in `errors` is a real database error.
-   */
+  // Pool connection errors retain the useful database diagnostics in their nested errors.
   const real = Object.assign(new Error("terminating connection due to administrator command"), {
     code: "57P01",
   });

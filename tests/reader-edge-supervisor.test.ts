@@ -38,6 +38,7 @@ for (const [kind, env, expectedOk] of [
     if (expectedOk) {
       assert.equal(outcome.readerEdge, "PUBLISHED");
       assert.equal(outcome.sequence, (await local.readManifest())!.manifest.sequence);
+      assert.deepEqual((await local.readManifest())!.manifest.scopes, [], "an authority-only selection publishes no meeting artifacts");
       assert.equal(readerEdgeSupervisorFailure(outcome), null);
     } else {
       assert.equal(await local.readManifest(), null, "a refused local destination is never mutated");

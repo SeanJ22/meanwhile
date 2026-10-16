@@ -1,9 +1,4 @@
-/**
- * The one sentence a stored ballot says about its own age, in a reader's words:
- * when the election authorities' filings were last read and whether a fresh
- * read is due, never how the copy is stored. Shared by every ballot source so
- * the wording cannot drift between them.
- */
+
 export type BallotReadStateLike =
   | { readonly kind: "BOOTSTRAP" }
   | {

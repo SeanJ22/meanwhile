@@ -6,10 +6,15 @@ import { join } from "node:path";
 import test from "node:test";
 import sharp from "sharp";
 import { publishCandidateFindings, type CandidateFindingSubject } from "../lib/civic-data/candidate-profile-findings.ts";
+import { runCandidateProfileFindingsJob } from "../lib/civic-data/candidate-profile-findings-job.ts";
 import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
-import type { CandidateProfilesProjection } from "../lib/civic-data/manual-projections.ts";
+import { manualProjectionCandidate, type CandidateProfilesProjection } from "../lib/civic-data/manual-projections.ts";
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
-import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { MemoryRoutineDataStore, PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
+import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
+import { admittedRuntimeChildEnvironment, RUNTIME_AUTHORITY_ENV } from "../lib/civic-data/runtime-authority.ts";
+import type { BallotSet } from "../lib/ballot/types.ts";
+import { ballotElectionKey } from "../lib/ballot/generic-projection.ts";
 import { holdBoxFinding, indexReportedFinding, indexScoutFindings } from "../lib/control-plane/box.ts";
 import type { ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
 import type { HeldVaultArtifact } from "../lib/control-plane/evidence/read-only-vault.ts";
@@ -25,7 +30,7 @@ const IMAGE = "https://janedoeforcouncil.com/img/jane-doe.jpg";
 const JANE: CandidateFindingSubject = { candidacyId: "ballot-oh-2026:columbus-council:doe-jane", givenName: "Jane", familyName: "Doe",
   officeTitle: "City Council", ocdId: "ocd-division/country:us/state:oh/place:columbus", stateCode: "OH", cycle: 2026,
   readerKeys: ["ballot-oh-2026:columbus-council:doe-jane"] };
-const PROFILES = requiredManualProductionContract("candidate-profiles");
+const PROFILES = requiredManualProductionContract("candidate-profiles:OH");
 const png = () => sharp({ create: { width: 200, height: 240, channels: 3, background: "#335577" } }).png().toBuffer();
 
 /** A vault of the pages hunters cited, a Box holding their findings as the Box pass hands them on, and the store readers read. */
@@ -56,7 +61,7 @@ async function setup(pages: Readonly<Record<string, string>>) {
     const read = await readPromotedCivicData<CandidateProfilesProjection>(PROFILES.recordClass, PROFILES.scope, { store, now: NOW, bypassCache: true });
     return read.kind === "PROMOTED" ? read.value.cards.cards[JANE.candidacyId] : undefined;
   };
-  return { repos, report, run, card, stored, artifacts };
+  return { repos, report, run, card, stored, artifacts, store };
 }
 
 test("a hunter's bio, campaign phone and campaign-site portrait publish on the candidate's card once each holds on its saved page", async () => {
@@ -72,7 +77,7 @@ test("a hunter's bio, campaign phone and campaign-site portrait publish on the c
   await s.report("ballot-oh-2026:columbus-council:roe-richard", "CAN-16", "x", "x", SITE);
 
   const report = await s.run();
-  assert.deepEqual(report, { published: { "CAN-16": 1, "CAN-06": 1, "CAN-17": 1 }, refused: { CONTACT_NOT_ON_THE_CAMPAIGN_SITE: 1 }, waiting: 1 }, JSON.stringify(report));
+  assert.deepEqual(report, { published: { "CAN-16": 1, "CAN-06": 1, "CAN-17": 1 }, refused: { CONTACT_NOT_ON_THE_CAMPAIGN_SITE: 1 }, waiting: 0 }, JSON.stringify(report));
   const card = (await s.card())!;
   assert.equal(card.bio, "Jane Doe is a nurse who has lived in Columbus for twenty years.");
   assert.equal(card.bioSourceUrl, SITE);
@@ -128,4 +133,95 @@ test("a Scout's saved candidate finding, named in its own words, publishes the s
   await holdBoxFinding(s.repos.boxFindings, row!.id, { class: "candidates", reason: CANDIDATE_PROFILE_LEAD, slots: FINDING_SLOTS_VERSION }, NOW);
   assert.deepEqual((await s.run()).published, { "CAN-16": 1 });
   assert.equal((await s.card())!.bio, "Jane Doe has taught in Columbus schools since 2004.");
+});
+
+test("the state profile job publishes waiting findings through its exact manual contract and keeps other states waiting", async () => {
+  const bio = "Jane Doe has taught in Columbus schools since 2004.";
+  const s = await setup({ [SITE]: `<html><body><h1>Jane Doe for City Council 2026</h1><p>${bio}</p></body></html>` });
+  await s.report(JANE.candidacyId, "CAN-16", bio, bio, SITE);
+  await s.report("ballot-il:another-candidate", "CAN-16", "Another biography.", "Another biography.", SITE);
+  const official = "https://elections.ohio.gov/candidates", provenance = { sourceUrl: official, sourceOrg: "Ohio election office", collectedAt: SAVED, verifiedAt: SAVED };
+  const ballot: BallotSet = { election: { id: "oh-general", state: "OH", date: "2026-11-03", name: "General election" },
+    contests: [{ id: "oh-council", electionId: "oh-general", ocdId: JANE.ocdId, title: "City Council", type: "CANDIDACY", divisionVintage: "2026", voteFor: 1, termYears: 4, scopeNote: null, provenance }],
+    candidacies: [{ id: JANE.candidacyId, contestId: "oh-council", givenName: "Jane", familyName: "Doe", partyLabel: null, slogan: null, incumbent: null, websiteUrl: null, provenance }],
+    measures: [], absences: [] };
+  const candidate = manualProjectionCandidate({ contractId: "ballot-contests:OH", version: NOW, sourceThrough: SAVED,
+    sourceReceipt: { contractVersion: 1, reviewedAt: NOW, reviewedBy: "fixture", sources: [{ requestedUrl: official, finalUrl: official,
+      httpStatus: 200, retrievedAt: SAVED, rawHash: "a".repeat(64), sourceClass: "ELECTION_AUTHORITY", publisher: "Ohio election office", reviewedEvidence: "Jane Doe is listed for City Council." }] },
+    payload: { kind: "ballot-contests", ballots: { [ballotElectionKey(ballot)]: ballot } } });
+  const published = await processRegisteredManualCandidate(s.store, "ballot-contests:OH", candidate, NOW);
+  assert.ok(published.promoted, published.candidate.failureDetail ?? "fixture ballot must publish");
+  const earlierUrl = "https://www.ohiosos.gov/previous-profiles";
+  const earlierCards = Object.fromEntries(Array.from({ length: 40 }, (_, index) => [`ballot-oh-2026:earlier-${index}`, {
+    photoUrl: null, photoSource: null, bio: `Earlier candidate ${index}.`, bioSourceUrl: earlierUrl, bioSourceLabel: "Earlier saved source",
+    email: null, phone: null, phoneLabel: null, filedAddress: null, filedAddressSource: null,
+  }]));
+  const earlierLinks = { "ballot-oh-2026:earlier-0": { official: { url: earlierUrl, verification: "Named official page", attemptedAt: SAVED }, campaign: null } };
+  const prior = manualProjectionCandidate({ contractId: "candidate-profiles:OH", version: SAVED, sourceThrough: SAVED,
+    sourceReceipt: { contractVersion: 1, reviewedAt: SAVED, reviewedBy: "fixture", sources: [{ requestedUrl: earlierUrl, finalUrl: earlierUrl,
+      httpStatus: 200, retrievedAt: SAVED, rawHash: "b".repeat(64), sourceClass: "OFFICIAL_PUBLISHER", publisher: "Ohio election office", reviewedEvidence: "Earlier candidates' saved official profiles." }] },
+    payload: { cards: { curatedAt: SAVED, note: "", cards: earlierCards, hunts: [] }, links: { curatedAt: SAVED, note: "", links: earlierLinks, hunts: [] } } });
+  const priorPublication = await processRegisteredManualCandidate(s.store, "candidate-profiles:OH", prior, SAVED);
+  assert.ok(priorPublication.promoted, priorPublication.candidate.failureDetail ?? "fixture profiles must publish");
+  const own = (await s.repos.boxFindings.list()).find(row => row.value.subjectId === JANE.candidacyId)!.value;
+  const args = { state: "OH", store: s.store, repos: s.repos, now: NOW,
+    query: async (sql: string) => sql.includes("FROM bound") ? [{ id: own.id, subject: own.subjectId }]
+      : sql.includes("SELECT value") ? [{ value: own }]
+        : [{ candidacy_id: "oh:2026:state-oh-place-columbus:city-council:doe-jane", host: "janedoeforcouncil.com" }],
+    readHeld: async () => async (id: string) => [...s.artifacts.values()].find(row => row.id === id) ?? null };
+  const result = await runCandidateProfileFindingsJob(args);
+  assert.deepEqual(result.report.published, { "CAN-16": 1 });
+  assert.equal(result.receipt?.source, "candidate-profiles:OH");
+  assert.equal(result.receipt?.state, "PROMOTED");
+  assert.equal((await s.card())?.bio, bio);
+  const successor = (await s.store.readCandidate(result.receipt!.candidateId))!.candidate;
+  const profiles = successor.readModel as CandidateProfilesProjection;
+  assert.equal(profiles.cards.cards["oh:2026:state-oh-place-columbus:city-council:doe-jane"].bio, bio);
+  for (const [key, card] of Object.entries(earlierCards)) assert.deepEqual(profiles.cards.cards[key], card);
+  assert.deepEqual(profiles.links.links, earlierLinks);
+  assert.deepEqual(successor.retrieval.manualSourceReceipt!.sources.find(source => source.finalUrl === earlierUrl), prior.retrieval.manualSourceReceipt!.sources[0]);
+  assert.deepEqual(successor.excludedFacts, [], "unchanged cards and links are present, never repeated as rejected removals");
+  assert.equal(successor.normalization.droppedRecords, 0, "canonical and ballot reader aliases both bind to their own state");
+  assert.equal((await s.repos.boxFindings.list()).find(row => row.value.subjectId.startsWith("ballot-il"))?.value.state, "waiting");
+});
+
+test("canonical profile identities must agree with the declared state and their OCD state", () => {
+  const source = { requestedUrl: SITE, finalUrl: SITE, httpStatus: 200, retrievedAt: SAVED, rawHash: "a".repeat(64),
+    sourceClass: "CANDIDATE_CONTROLLED" as const, publisher: "Jane Doe campaign", reviewedEvidence: "The saved page names Jane Doe." };
+  const card = { photoUrl: null, photoSource: null, bio: "Jane Doe is a teacher.", bioSourceUrl: SITE, bioSourceLabel: "Campaign page",
+    email: null, phone: null, phoneLabel: null, filedAddress: null, filedAddressSource: null };
+  const keys = ["oh:2026:state-oh-place-columbus:city-council:doe-jane", "il:2026:state-il-place-chicago:city-council:doe-jane",
+    "oh:2026:state-il-place-chicago:city-council:doe-jane"];
+  const candidate = manualProjectionCandidate({ contractId: "candidate-profiles:OH", version: NOW, sourceThrough: SAVED,
+    sourceReceipt: { contractVersion: 1, reviewedAt: NOW, reviewedBy: "fixture", sources: [source] },
+    payload: { cards: { curatedAt: NOW, note: "", cards: Object.fromEntries(keys.map(key => [key, card])), hunts: [] },
+      links: { curatedAt: NOW, note: "", links: {}, hunts: [] } } });
+  assert.deepEqual(Object.keys((candidate.readModel as CandidateProfilesProjection).cards.cards), [keys[0]]);
+  assert.equal(candidate.excludedFacts!.filter(fact => fact.code === "MANUAL_MEMBER_INVALID").length, 2);
+});
+
+test("a derived child cannot enter the profile job, and read failures never refuse waiting findings", async () => {
+  const s = await setup({ [SITE]: "<html><body>Jane Doe is a teacher.</body></html>" });
+  await s.report(JANE.candidacyId, "CAN-16", "Jane Doe is a teacher.", "Jane Doe is a teacher.", SITE);
+  const base: NodeJS.ProcessEnv = { NODE_ENV: "test", WTP_RUNTIME_MODE: "staging", WTP_DB_ROLE: "local", DATABASE_URL: "postgresql://local:local@staging.invalid/reader",
+    WTP_CONTROL_PLANE_DATABASE_URL: "postgresql://local:local@staging.invalid/control" };
+  const env = admittedRuntimeChildEnvironment({ parentEnv: base, capability: "ROUTINE_CONTRACT", contract: "candidate-campaign-sites-derived:OH" });
+  const keys = [...Object.keys(base), ...Object.values(RUNTIME_AUTHORITY_ENV)], before = keys.map(key => [key, process.env[key]] as const);
+  try {
+    for (const key of keys) if (env[key] === undefined) delete process.env[key]; else process.env[key] = env[key];
+    let reads = 0;
+    const args = { state: "OH", store: Object.create(PostgresRoutineDataStore.prototype) as PostgresRoutineDataStore, repos: s.repos, now: NOW,
+      query: async () => { reads++; return []; }, readHeld: async () => async () => null };
+    await assert.rejects(runCandidateProfileFindingsJob(args), /capability or contract does not match/);
+    assert.equal(reads, 0);
+    process.env.WTP_RUNTIME_AUTHORITY_CAPABILITY = "MANUAL_CONTRACT";
+    process.env.WTP_RUNTIME_AUTHORITY_CONTRACT = "candidate-profiles:OH";
+    assert.equal((await runCandidateProfileFindingsJob(args)).receipt, null);
+    assert.equal(reads, 1);
+    await assert.rejects(s.run({ store: new Proxy(s.store, { get(target, key) {
+      if (key === "readPromotion") return async () => { throw new Error("profile database unavailable"); };
+      const value = Reflect.get(target, key); return typeof value === "function" ? value.bind(target) : value;
+    } }) }), /BASE_UNAVAILABLE/);
+    assert.ok((await s.repos.boxFindings.list()).every(row => row.value.state === "waiting"));
+  } finally { for (const [key, value] of before) if (value === undefined) delete process.env[key]; else process.env[key] = value; }
 });

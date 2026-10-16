@@ -4,11 +4,7 @@ import { statementEvidenceFor } from "../ask/statements.ts";
 import { DEFAULT_STANCE_TOPICS, type StanceTopic } from "../stances/topics.ts";
 import type { StatementCorpus } from "./types.ts";
 
-/**
- * Builds each stance topic's answer once, with the same statement search and
- * exact-words composer Ask uses, so a chip and a typed question cannot drift
- * apart. Pure: the corpus and the people are arguments.
- */
+
 
 export interface TopicAnswerPerson {
   /** Roster officeholder id or ballot candidacy id, as the corpus keys it. */

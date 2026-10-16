@@ -2,6 +2,8 @@ import { readerRoute } from "@/lib/api/reader-route";
 import { composePopulationAnswer, populationQuestion, populationEvidenceIds, readPopulationEvidence } from "@/lib/ask/population";
 import { withPublishedAskSettings, askPlaybookVersion } from "@/lib/ask/runtime-settings.ts";
 import { governmentFinanceEvidence, governmentFinanceQuestion, composeGovernmentFinanceAnswer } from "@/lib/ask/government-finance";
+import { federalMoneyEvidence, federalMoneyQuestion, federalMoneyPlaceQuestion, federalMoneyPlaceDivisions, composeFederalMoneyAnswer } from "@/lib/ask/federal-money";
+import { federalMoneyStateDivision } from "@/lib/federal-money/view";
 import { isBillQuestion,legiscanBillEvidence } from "@/lib/ask/legiscan-bills";
 import { openDataQuestion, openDataEvidenceFor } from "@/lib/ask/open-data";
 import { governmentListingEntity, governmentListingEvidenceRecords, readerGovernmentListings } from "@/lib/ask/government-listings";
@@ -706,9 +708,7 @@ async function answerWithSettings(request: Request) {
   const preferredOfficialIds = [...readSubjectRefs(body.activeSubjects), ...readSubjectRefs(body.priorSubjects, 8)].flatMap((ref) => ref.id ? [ref.id] : []);
   const officialAliases = canonicalOfficialAliases(people.map((person) => person.id), preferredOfficialIds);
 
-  /* Loaded from the reader's divisions, not from what the client says is on screen; the same set `app/ballot/page.tsx` renders from. */
-  // A topic question bound lexically to a body is not a ballot question; its
-  // ballot is not read (loadBallotForDivisions([]) is the empty holding).
+
   const ballot = await loadBallotForDivisions(deterministicTopicRoute || areaTopicRoute || namedBodyTopicRoute || leanAsk ? [] : ocdIds, {}, ballotZip);
   const ballotLoadGaps: EvidenceGap[] = ballot.loaderFailures.length ? [{ whose: "OURS", statement: "We couldn't load the ballot for your area. Please try again in a moment." }] : [];
   const meetingLoadGaps: EvidenceGap[] = meetingDataState === "STORE_UNREACHABLE"
@@ -868,7 +868,8 @@ async function answerWithSettings(request: Request) {
     activeSubjects: activeSubjects.map((s) => s.name).slice(0, 6),
   };
   const unheldBody = !topicRoute && !leanAsk && !ballotAsk ? unheldNamedBodyQuestion(question, namedBodies) : null;
-  const modelFreeTopicRoute = deterministicTopicRoute || areaTopicRoute || namedBodyTopicRoute || leanAsk || Boolean(ballotAsk) || Boolean(unheldBody);
+  const federalPlaceAsk = !topicRoute && !leanAsk && !ballotAsk && ocdIds.length > 0 && activeSubjects.every(ref => !ref.focused) && federalMoneyPlaceQuestion(question);
+  const modelFreeTopicRoute = deterministicTopicRoute || areaTopicRoute || namedBodyTopicRoute || leanAsk || Boolean(ballotAsk) || Boolean(unheldBody) || federalPlaceAsk;
   /* A question in a canonical shape whose name binds one body identically in every binder is read in code (`lib/ask/lexical-reading.ts`); anything else goes to the model. */
   const readerVoteReading: LexicalReading | null = readerVoteAsk && readerVoteChoices.length ? { shape: "PERSON_VOTES" as const,
     interpretation: { ...unavailableInterpretation(), intent: "PERSON_RECORD" as const, temporal: { kind: "NONE" as const } },
@@ -914,10 +915,10 @@ async function answerWithSettings(request: Request) {
   if (outcome === null && unheldBody) {
     interpretation = interpretWithoutModel(question);
     trace.interpretation = { ran: false, why: "unheld-body-shape", ms: Date.now() - interpretationStarted, intent: interpretation.intent, temporal: interpretation.temporal, fellBackToDeterministic: true };
-  } else if (outcome === null && (leanAsk || ballotAsk)) {
+  } else if (outcome === null && (leanAsk || ballotAsk || federalPlaceAsk)) {
     /* The reader's own officials, the meetings held for their area, or their ballot: read from the words, answered from what is held. */
-    interpretation = { ...unavailableInterpretation(), intent: officialsAsk ? "PERSON_RECORD" : areaMeetingsAsk ? "MEETING_TIME" : "UNKNOWN", temporal: areaMeetingsAsk ? { kind: "NEXT" } : { kind: "NONE" } };
-    trace.interpretation = { ran: false, why: officialsAsk ? "reader-officials-shape" : areaMeetingsAsk ? "area-meetings-shape" : "ballot-shape", ms: Date.now() - interpretationStarted, intent: interpretation.intent, temporal: interpretation.temporal, fellBackToDeterministic: true };
+    interpretation = { ...unavailableInterpretation(), intent: officialsAsk ? "PERSON_RECORD" : areaMeetingsAsk ? "MEETING_TIME" : federalPlaceAsk ? "CIVICS" : "UNKNOWN", temporal: areaMeetingsAsk ? { kind: "NEXT" } : { kind: "NONE" } };
+    trace.interpretation = { ran: false, why: officialsAsk ? "reader-officials-shape" : areaMeetingsAsk ? "area-meetings-shape" : federalPlaceAsk ? "federal-place-shape" : "ballot-shape", ms: Date.now() - interpretationStarted, intent: interpretation.intent, temporal: interpretation.temporal, fellBackToDeterministic: true };
   } else if (outcome === null && lexical) {
     interpretation = structuredClone(lexical.interpretation);
     trace.interpretation = {
@@ -1320,6 +1321,13 @@ async function answerWithSettings(request: Request) {
       }
       const identity = canonicalBodyIdentity(subject.id);
       const financeDivision = bound?.ocdId ?? identity?.ocdId;
+      const federalDivision = financeDivision ?? (listing ? federalMoneyStateDivision(listing.state) : null);
+      if (federalDivision) {
+        const federal = await federalMoneyEvidence([{ divisionId: federalDivision, ...(bound?.level === "BODY" ? { bodyId: subject.id } : {}) }], subject.id, { year: question.match(/\b((?:19|20)\d{2})\b/)?.[1] });
+        records.push(...federal.records);
+        Object.assign(denominators, federal.denominators);
+        if (federalMoneyQuestion(question)) gaps.push(...federal.gaps);
+      }
       if (financeDivision && governmentFinanceQuestion(question)) {
         const finance = await governmentFinanceEvidence(subject.id, financeDivision).catch(() => []);
         records.push(...finance);
@@ -1770,6 +1778,12 @@ async function answerWithSettings(request: Request) {
     }
 
     /* A ballot measure drops the reader-representative fallback (`lib/ask/relevance.ts`); gated before contacts become records so the pack and the panel agree. */
+    if (!subject && federalMoneyQuestion(question)) {
+      const federal = await federalMoneyEvidence(federalMoneyPlaceDivisions(question, ocdIds).map(divisionId => ({ divisionId })), undefined, { year: question.match(/\b((?:19|20)\d{2})\b/)?.[1] });
+      records.push(...federal.records);
+      gaps.push(...federal.gaps);
+      Object.assign(denominators, federal.denominators);
+    }
     const shownContacts = gateContactsToSubject(subject, contacts).contacts;
     const rosterGaps = rosterGapEvidenceFor(subject, shownContacts, canonicalSubjectKeys);
     records.push(...rosterGaps.records);
@@ -2076,10 +2090,13 @@ async function answerWithSettings(request: Request) {
       (text, urls) => validateAnswer(text, urls, pack, bodies));
     const governmentFinanceSettled = settleSittingComposition(composeGovernmentFinanceAnswer({ subject, question, records: packRecords }),
       (text, urls) => validateAnswer(text, urls, pack, bodies));
+    const federalMoneySettled = settleSittingComposition(composeFederalMoneyAnswer({ subject, question, records: packRecords }),
+      (text, urls) => validateAnswer(text, urls, pack, bodies));
     const populationSettled = settleSittingComposition(composePopulationAnswer(question, packRecords),
       (text, urls) => validateAnswer(text, urls, pack, bodies));
-    const composed = populationSettled.composed ?? governmentFinanceSettled.composed ?? ownWordsSettled.composed ?? preferredBallot ?? measureSettled.composed ?? topicComposed ?? sittingSettled.composed ?? moneySettled.composed ?? groupSettled.composed ?? officialsSettled.composed ?? rosterSettled.composed ?? votesSettled.composed ?? calendarSettled.composed ?? ballotSettled.composed;
-    const composedWhy = populationSettled.composed ? "composed-from-census-population" : governmentFinanceSettled.composed ? "composed-from-government-finance" : ownWordsSettled.composed ? "composed-from-own-words" : preferredBallot || measureSettled.composed ? "composed-from-ballot-records" : topicComposed ? "composed-from-structured-evidence"
+    const composed = federalMoneySettled.composed ?? populationSettled.composed ?? governmentFinanceSettled.composed ?? ownWordsSettled.composed ?? preferredBallot ?? measureSettled.composed ?? topicComposed ?? sittingSettled.composed ?? moneySettled.composed ?? groupSettled.composed ?? officialsSettled.composed ?? rosterSettled.composed ?? votesSettled.composed ?? calendarSettled.composed ?? ballotSettled.composed;
+    const composedWhy = federalMoneySettled.composed ? "composed-from-federal-money" : populationSettled.composed ? "composed-from-census-population" : governmentFinanceSettled.composed ? "composed-from-government-finance" : ownWordsSettled.composed ? "composed-from-own-words" : preferredBallot || measureSettled.composed ? "composed-from-ballot-records" : topicComposed ? "composed-from-structured-evidence"
+
       : sittingSettled.composed ? "composed-from-sitting-records"
         : moneySettled.composed ?? groupSettled.composed ? "composed-from-money-records"
           : officialsSettled.composed ? "composed-from-officeholder-records"

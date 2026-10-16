@@ -1,3 +1,5 @@
+import { STATE_BALLOT_FAMILIES, stateFromBallotScope } from "../civic-data/state-scopes.ts";
+import type { StateAuthorityFamily, PromotedFamilyArtifactValue } from "../meetings/edge-artifacts.ts";
 import { AsyncLocalStorage } from "node:async_hooks";
 
 import type { RegistryRuntimeReadModel } from "./runtime-data-plane.ts";
@@ -40,16 +42,21 @@ export interface StateLegislatorsEdgeValue {
   readonly load: (jurisdiction: string) => Promise<EdgeServedValue<OfficialStateLegislatorReadModel> | null>;
 }
 
-
 export interface RegistrationsEdge {
   readonly states: ReadonlySet<string>;
   readonly load: (state: string) => Promise<{ readonly value: RegistrationReadModel; readonly versionId: string } | null>;
+}
+
+interface StateAuthoritiesEdge {
+  readonly states: Readonly<Partial<Record<StateAuthorityFamily, ReadonlySet<string>>>>;
+  readonly load: (family: StateAuthorityFamily, state: string) => Promise<PromotedFamilyArtifactValue | null>;
 }
 
 export interface ReaderAuthorityEdgeBundle {
   readonly meetingPlaces?: ReadonlyMap<string, readonly string[]>;
   readonly selection?: ReaderSelection;
   readonly loadPromoted?: (recordClass: RoutineRecordClass, scope: string) => Promise<PromotedEdgeEntry | null>;
+  readonly stateAuthorities?: StateAuthoritiesEdge;
   readonly censusDistricts?: { readonly value: CensusDistrictEdge; readonly versionId: string };
   readonly registryRuntime?: RegistryRuntimeEdgeValue;
   readonly federalDirectory?: FederalDirectoryEdgeValue;
@@ -85,7 +92,6 @@ export interface EdgeServedValue<T> {
   readonly versionId: string;
 }
 
-
 export async function settleEdgeFirst<T>(
   edge: () => EdgeServedValue<T> | null,
   prime: (value: NoInfer<T>, versionId: string) => void | Promise<unknown>,
@@ -103,11 +109,34 @@ export async function settleEdgeFirst<T>(
 
 /** The edge's copy of one pointer for this request, or null when it carries none. */
 export function currentPromotedEdge(recordClass: RoutineRecordClass, scope: string): EdgeServedValue<PromotedEdgeEntry> | null {
-  const entry = edgeStore.getStore()?.promoted?.get(`${recordClass}:${scope}`);
+  const bundle = edgeStore.getStore();
+  const entry = bundle?.promoted?.get(`${recordClass}:${scope}`) ?? (bundle ? loadedStateEntries.get(bundle)?.get(`${recordClass}:${scope}`) : null);
   if (!entry) return null;
   return { value: entry, versionId: entry.kind === "PROMOTED" ? entry.projection.versionId : "NOT_RECORDED" };
 }
 
+const loadedStateEntries = new WeakMap<ReaderAuthorityEdgeBundle, Map<string, PromotedEdgeEntry>>();
+
+export async function ensurePromotedEdge(recordClass: RoutineRecordClass, scope: string): Promise<EdgeServedValue<PromotedEdgeEntry> | null> {
+  const current = currentPromotedEdge(recordClass, scope);
+  if (current) return current;
+  const bundle = edgeStore.getStore(), stateEdge = bundle?.stateAuthorities;
+  if (!bundle) return null;
+  if (!stateEdge) return loadCurrentPromotedEdge(recordClass, scope).then(value => value ? { value, versionId: value.kind === "PROMOTED" ? value.projection.versionId : "NOT_RECORDED" } : null);
+  for (const scopedFamily of STATE_BALLOT_FAMILIES) {
+    const state = stateFromBallotScope(scope, scopedFamily);
+    const family: StateAuthorityFamily = scopedFamily === "candidate-corpus" ? "candidate-publications" : scopedFamily;
+    if (!state || !stateEdge.states[family]) continue;
+    if (!stateEdge.states[family]!.has(state)) return null;
+    let entries = loadedStateEntries.get(bundle);
+    if (!entries) { entries = new Map(); loadedStateEntries.set(bundle, entries); }
+    const loaded = await stateEdge.load(family, state);
+    for (const entry of loaded?.entries ?? []) entries.set(entry.kind === "PROMOTED" ? entry.projection.key : `${entry.recordClass}:${entry.scope}`, entry);
+    return currentPromotedEdge(recordClass, scope);
+  }
+  const value = await loadCurrentPromotedEdge(recordClass, scope);
+  return value ? { value, versionId: value.kind === "PROMOTED" ? value.projection.versionId : "NOT_RECORDED" } : null;
+}
 
 export async function readPromotedEdgeFirst<R>(
   recordClass: RoutineRecordClass,
@@ -115,6 +144,7 @@ export async function readPromotedEdgeFirst<R>(
   read: (options: PromotedCivicDataReadOptions) => Promise<R>,
   what: string,
 ): Promise<R> {
+  await ensurePromotedEdge(recordClass, scope);
   let result: { readonly value: R } | null = null;
   await settleEdgeFirst(
     () => currentPromotedEdge(recordClass, scope),
@@ -127,11 +157,9 @@ export async function readPromotedEdgeFirst<R>(
 
 const edgeStore = new AsyncLocalStorage<ReaderAuthorityEdgeBundle>();
 
-
 export function enterReaderAuthorityEdge(bundle: ReaderAuthorityEdgeBundle): void {
   edgeStore.enterWith(bundle);
 }
-
 
 export function withReaderAuthorityEdge<T>(bundle: ReaderAuthorityEdgeBundle | null, read: () => T): T {
   return bundle ? edgeStore.run(bundle, () => bundle.selection ? withReaderSelection(bundle.selection, read) : read()) : read();
@@ -141,7 +169,7 @@ export function currentReaderAuthorityEdge(): ReaderAuthorityEdgeBundle | null {
   return edgeStore.getStore() ?? null;
 }
 
-export async function loadCurrentPromotedEdge(recordClass: RoutineRecordClass, scope: string): Promise<PromotedEdgeEntry | null> {
+async function loadCurrentPromotedEdge(recordClass: RoutineRecordClass, scope: string): Promise<PromotedEdgeEntry | null> {
   return await edgeStore.getStore()?.loadPromoted?.(recordClass, scope) ?? null;
 }
 

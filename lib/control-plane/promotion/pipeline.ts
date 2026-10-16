@@ -2,7 +2,7 @@
 
 import type { WorkerRole } from "../attempt.ts";
 import { fingerprint } from "../ids.ts";
-import { canonicalJson, jsonTextAtPath, readByKeys, type ArtifactRecord, type ControlPlaneRepositories } from "../repository/types.ts";
+import { canonicalJson, readByKeys, type ArtifactRecord, type ControlPlaneRepositories } from "../repository/types.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type { MethodCandidate } from "../../method/candidate.ts";
 import { assertFleetResult } from "../workers/types.ts";
@@ -225,10 +225,6 @@ export async function readPipelineStates(repos: ControlPlaneRepositories): Promi
 export async function readPipelineStatesWhere(repos: ControlPlaneRepositories,
   matches: readonly { readonly path: readonly string[]; readonly value: string }[]): Promise<PipelineItemState[]> {
   const log = repos.promotionPipeline;
-  if (!log.keysWhere) {
-    return (await readPipelineStates(repos)).filter(state => state.records.some(record =>
-      matches.some(match => jsonTextAtPath(record, match.path) === match.value)));
-  }
   const keys = new Set<string>();
   for (const match of matches) for (const key of await log.keysWhere(match.path, match.value)) keys.add(key);
   const held = await readByKeys(log, [...keys].sort());

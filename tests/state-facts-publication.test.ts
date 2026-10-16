@@ -13,7 +13,7 @@ import type { Meeting } from "../lib/sources/types.ts";
 import type { BodyFacts } from "../lib/facts/registry-overlay.ts";
 import type { RecordIndex } from "../lib/meetings/authority-records.ts";
 import { publishBodyFacts, publishRosterFacts } from "../lib/facts/roster-facts.ts";
-import { planStateFacts, type StateFactsIndex, type StateFactsStore } from "../lib/facts/state-facts-publication.ts";
+import { planStateFacts, type StateFactsIndex } from "../lib/facts/state-facts-publication.ts";
 import { factDb } from "./helpers/fact-db.ts";
 
 const ROOT = join(import.meta.dirname, "..");
@@ -40,7 +40,7 @@ test("a fact going live moves only its state's version and queues the places of 
 
   const blobs = new Map<string, unknown>();
   const refs: Record<string, AuthorityArtifactRef> = {};
-  const store: StateFactsStore = {
+  const store: Parameters<typeof planStateFacts>[2] = {
     readIndex: async (_state, ref) => blobs.get(ref.key) as StateFactsIndex ?? null,
     readBucket: async (_state, _bucket, ref) => blobs.get(ref.key) as RecordIndex ?? null,
     writeRecord: async value => { const key = `record/${blobs.size}`; blobs.set(key, value); return { key, sha: "" }; },

@@ -8,7 +8,7 @@ import { compareCandidateWithSource } from "../control-plane/workers/record-veri
 import { linkingPageFrom, pageLinksTo, SECTION3_MINIMUMS, section3Page, section3Record } from "../control-plane/promotion/section3.ts";
 import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
 import type { ManualSourceSetReceipt } from "./types.ts";
-import { keysWhere, type ArtifactRecord, type ControlPlaneRepositories } from "../control-plane/repository/types.ts";
+import type { ArtifactRecord, ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import { readCompletedWorkerResultsOf } from "../control-plane/repository/worker-completion.ts";
 import { isOfficialSource } from "./source-authority.ts";
 import { hostOfUrl, type ValidatorObservation } from "../control-plane/promotion/validator-manual.ts";
@@ -126,10 +126,7 @@ export async function jobWorkerResults<C>(repos: ControlPlaneRepositories, workI
   };
   return {
     results: await resultsOf(workItemIds),
-    readCapture: async (id: string, own: readonly WorkerResultRecord[]): Promise<C> => {
-      const owners = await keysWhere(repos.artifacts, ["artifactId"], id);
-      return readCapture(id, owners === null ? own : await resultsOf(owners));
-    },
+    readCapture: async (id: string): Promise<C> => readCapture(id, await resultsOf(await repos.artifacts.keysWhere(["artifactId"], id))),
   };
 }
 

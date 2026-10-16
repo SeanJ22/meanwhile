@@ -147,7 +147,7 @@ export async function publishWorkerBallotContestsResults(input: {
         const held = (await input.repos.artifacts.read(id)).filter(row => urls.has(row.canonicalUrl) && !row.partial)
           .sort((a, b) => b.recordedAt.localeCompare(a.recordedAt));
         const fetched = await Promise.all(held.filter(row => !captures.some(capture => capture.evidence.artifactId === row.artifactId))
-          .map(row => readCapture(row.artifactId, results).catch(() => null)));
+          .map(row => readCapture(row.artifactId).catch(() => null)));
         captures.push(...fetched.filter((capture): capture is WorkerPublicationCapture => capture !== null));
       }
       const checked = workerBallotContestsPackage({ plan, parser, captures, now: input.now, results,

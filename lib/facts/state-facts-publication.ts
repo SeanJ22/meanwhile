@@ -23,7 +23,7 @@ const factBucket = (bodyId: string, count: number) =>
 const tagsOf = (body: BodyFacts) => [...new Set([body.id, body.division, ...(body.roster?.members.flatMap(member => member.personId ? [member.id, member.personId] : [member.id]) ?? [])])];
 
 /** Where the served indexes and records are read and new ones written. */
-export interface StateFactsStore {
+interface StateFactsStore {
   readonly readIndex: (state: string, ref: AuthorityArtifactRef) => Promise<StateFactsIndex | null>;
   readonly readBucket: (state: string, bucket: number, ref: AuthorityArtifactRef) => Promise<RecordIndex | null>;
   readonly writeRecord: (value: BodyFacts) => Promise<{ readonly key: string; readonly sha: string }>;

@@ -320,7 +320,7 @@ test("cancellation and an invalid state stop the refresh without becoming state-
     controller.abort(new Error("Constructed refresh cancellation"));
   }, async state => { failures.push(state); }), /refresh cancellation/);
   assert.deepEqual(published, ["ME"]);
-  assert.deepEqual(failures, []);
+  assert.equal(failures.length, 0);
   const reporting = new AbortController();
   await assert.rejects(acquireStatePublications({ only: ["county"], states: new Set(["23"]), cache: cache(), signal: reporting.signal,
     fetchImpl: (async () => new Response(body)) as typeof fetch,

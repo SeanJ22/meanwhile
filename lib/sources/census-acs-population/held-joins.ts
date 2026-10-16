@@ -1,11 +1,12 @@
 import { readerQuery } from "../../civic-data/promoted-reader-query.ts";
 import { REGISTRY_RUNTIME_SCOPE } from "../../registry/runtime-data-plane.ts";
 import { registrationTarget } from "../../registration/publication.ts";
-import { CENSUS_GEO_SCOPE, CENSUS_GEO_RECORD_CLASS } from "../../census-geography/publication.ts";
 import { censusWorkDivision } from "../../census-geography/division-id.ts";
 import type { GeographyRef } from "../../census-geography/contract.ts";
 import { FIPS_TO_STATE } from "../../ocd/fips.ts";
-import type { ReadOnlyQuery } from "../../control-plane/admin-view/promoted-slices.ts";
+import { readCensusGeographyIndex, type ReadOnlyQuery } from "../../control-plane/admin-view/promoted-slices.ts";
+import { censusDistrictEdgeSlice, readCensusDistrictState } from "../../census-geography/district-edge.ts";
+import { resolveReaderArtifactStore, type ReaderArtifactReadStore } from "../../meetings/edge-store.ts";
 import type { AcsJoinTarget } from "./national.ts";
 import type { AcsScope, AcsPopulationRow } from "./index.ts";
 import { loadRegistrationReference } from "../../registration/reference.ts";
@@ -17,17 +18,15 @@ const TYPES: Readonly<Record<string, AcsScope>> = { county: "county", place: "pl
   unsd: "school_unified", elsd: "school_elementary", scsd: "school_secondary" };
 
 /** Read only the state's official geography keys from held pointers. Missing bindings leave ACS rows unjoined. */
-export async function heldAcsJoinTargets(stateFips: string, rows: readonly AcsPopulationRow[] = [], query: ReadOnlyQuery | null = readerQuery()): Promise<AcsJoinTarget[]> {
+export async function heldAcsJoinTargets(stateFips: string, rows: readonly AcsPopulationRow[] = [], query: ReadOnlyQuery | null = readerQuery(),
+  artifactStore: ReaderArtifactReadStore | null = resolveReaderArtifactStore()): Promise<AcsJoinTarget[]> {
   if (!query) throw new Error("The held Census joins have no reader database connection.");
   const state = FIPS_TO_STATE[stateFips]?.postal;
   if (!state) throw new Error("The ACS state has no held FIPS identity.");
-  const [divisions, containers] = await query([
+  const [divisions] = await query([
     { text: "SELECT d AS division FROM civic_data_promotions p CROSS JOIN LATERAL jsonb_array_elements(p.payload->'divisions') d" +
       " WHERE ((p.record_class = 'REGISTRATION' AND p.scope = $1) OR (p.record_class = 'REGISTRY_RUNTIME_BINDING' AND p.scope = $2))" +
       " AND upper(d->>'state') = $3", params: [registrationTarget(state).scope, REGISTRY_RUNTIME_SCOPE, state] },
-    { text: "SELECT s->>'type' AS type, s->>'version' AS version, g AS geography FROM civic_data_promotions p" +
-      " CROSS JOIN LATERAL jsonb_array_elements(p.payload->'scopes') s CROSS JOIN LATERAL jsonb_array_elements(s->'groupings') g" +
-      " WHERE p.record_class = $1 AND p.scope = $2 AND g->>'stateFips' = $3", params: [CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE, stateFips] },
   ]);
   const targets: AcsJoinTarget[] = loadRegistrationReference(process.cwd(), state).reference.divisions.flatMap(([divisionId, layer, geoid]) => {
     const geography = TYPES[layer];
@@ -52,12 +51,25 @@ export async function heldAcsJoinTargets(stateFips: string, rows: readonly AcsPo
     const type = TYPES[d.divisionType ?? ""] ?? (d.divisionType === "school_district" ? TYPES[String(d.sourceDataset).split(/[:/-]/).at(-1) ?? ""] : undefined);
     if (type && d.geoid && d.ocdId) targets.push({ geography: type, geoid: d.geoid, divisionId: d.ocdId });
   }
-  for (const row of containers) {
-    const g = row.geography as GeographyRef & { overlaps?: readonly { zcta5: string }[] };
-    const geography = TYPES[String(row.type)];
-    const divisionId = censusWorkDivision({ ...g, type: String(row.type) as GeographyRef["type"], version: String(row.version) });
-    if (geography && divisionId) targets.push({ geography, geoid: g.geoid, divisionId });
-    for (const zip of g.overlaps ?? []) targets.push({ geography: "zcta", geoid: zip.zcta5, divisionId: `zcta:${zip.zcta5}` });
+  const index = await readCensusGeographyIndex(query, state);
+  if (index.kind === "UNREAD") throw new Error("The held Census state index could not be read.");
+  if (index.kind === "HELD") {
+    if (!artifactStore) throw new Error("The held Census state artifact store is unavailable.");
+    const artifact = await readCensusDistrictState(index.value, state, artifactStore);
+    if (!artifact) throw new Error("The held Census state artifact is unavailable or invalid.");
+    for (const { ref } of artifact.containers) {
+      if (ref.stateFips !== stateFips) continue;
+      const geography = TYPES[ref.type], divisionId = censusWorkDivision(ref);
+      if (geography && divisionId) targets.push({ geography, geoid: ref.geoid, divisionId });
+    }
+    for (const zip of Object.keys(artifact.codes)) {
+      if (!/^\d{5}$/.test(zip)) throw new Error("The held Census state ZIP is invalid.");
+      const slice = censusDistrictEdgeSlice(artifact, index.value.versionId, zip);
+      if (slice.kind !== "HELD") throw new Error("The held Census state ZIP membership is invalid.");
+      if (slice.value.containers.some(row => row.ref.stateFips === stateFips)) {
+        targets.push({ geography: "zcta", geoid: zip, divisionId: `zcta:${zip}` });
+      }
+    }
   }
   return targets;
 }

@@ -7,8 +7,6 @@ import { censusStateDataset, createCensusDistrictReaderEdge, readCensusDistrictS
 import { createLookup, notYetPublishedLookup } from "./lookup.ts";
 import { readCensusGeographyProjection } from "./publication.ts";
 
-export { CENSUS_GEO_SCOPE } from "./publication.ts";
-
 export interface CensusGeographyReadOptions extends PromotedCivicDataReadOptions {
   readonly artifactStore?: ReaderArtifactReadStore | null;
   readonly state?: string;

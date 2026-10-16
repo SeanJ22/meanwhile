@@ -92,7 +92,11 @@ const dataset: BuiltDataset = { formatVersion: 1, builtAt: NOW, coverage: "held 
   }) };
 const indexes = new Map<string, CensusDistrictEdge>();
 for (const state of states) {
-  const scopes = dataset.scopes.map(scope => ({ ...scope, groupings: scope.groupings.filter(group => group.stateAbbr === state) }));
+  const scopes = dataset.scopes.map(scope => {
+    const groupings = scope.groupings.filter(group => group.stateAbbr === state);
+    return { ...scope, groupings, instanceCount: groupings.length,
+      zctaEdgeCount: groupings.reduce((sum, group) => sum + group.overlaps.length, 0) };
+  });
   const index = await publishCensusDistrictState({ state, dataset: structuredClone({ ...dataset, scopes }) }, fixture.sources.census.versionId, artifactStore);
   indexes.set(censusGeographyScope(state), index);
 }

@@ -1,5 +1,9 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { createHash } from "node:crypto";
+import { gzipSync, gunzipSync } from "node:zlib";
 import test from "node:test";
 import { parseCsv } from "../lib/reference/csv.ts";
 import { normalize, fetch as fetchAcs, ACS_GEOGRAPHIES, type AcsFetch } from "../lib/sources/census-acs-population/index.ts";
@@ -13,6 +17,12 @@ import { populationKeys } from "../lib/control-plane/data-business/population.ts
 import { readRecipe, type Sources } from "../lib/control-plane/data-business/read.ts";
 import { keyRefFor } from "../lib/doors/seed-feeds.ts";
 import { heldAcsJoinTargets } from "../lib/sources/census-acs-population/held-joins.ts";
+
+import { buildCensusDistrictEdge } from "../lib/census-geography/state-publication.ts";
+import { censusGeographyScope } from "../lib/census-geography/publication.ts";
+import type { BuiltDataset } from "../lib/census-geography/dataset.ts";
+import type { ReadOnlyQuery } from "../lib/control-plane/admin-view/promoted-slices.ts";
+import { LocalFileArtifactStore } from "../lib/meetings/edge-store-local.ts";
 
 const CAPTURED_AT = "2026-09-06T00:00:00.000Z";
 function saved(scope: "state" | "zcta"): AcsFetch {
@@ -164,4 +174,49 @@ test("the sold read carries the source population alongside aggregates and leave
   assert.equal(read.population?.[0].fact?.population, 5498);
   assert.equal(read.body.shape === "totals" && read.body.rows[0].value, 20);
   assert.deepEqual(populationKeys({ grain: "day", from: "2026-10-01", to: "2026-10-01", place: { kind: "state", id: "AZ" } }, read.body, "events-by-type"), ["state:04"]);
+});
+test("ACS joins read only the selected Census state metadata and its real ZIP memberships", async () => {
+  const directory = mkdtempSync(join(tmpdir(), "acs-held-state-"));
+  try {
+    const artifacts = new LocalFileArtifactStore(directory);
+    const dataset = JSON.parse(readFileSync("lib/census-geography/bootstrap-az.json", "utf8")) as BuiltDataset;
+    const expectedZips = [...new Set(dataset.scopes.flatMap(scope => scope.groupings.filter(group => group.stateFips === "04")
+      .flatMap(group => group.overlaps.map(overlap => overlap.zcta5))))].sort();
+    const index = await buildCensusDistrictEdge(dataset, "acs-held-state", artifacts);
+    let servedIndex = index;
+    const reads: string[] = [];
+    const readonly = { kind: artifacts.kind, readManifest: () => artifacts.readManifest(), readArtifact: (key: string) => artifacts.readArtifact(key),
+      readBytes: (key: string) => { reads.push(key); return artifacts.readBytes(key); } };
+    let censusReads = 0;
+    const query: ReadOnlyQuery = async statements => {
+      assert.equal(statements.length, 1);
+      const statement = statements[0];
+      if (statement.text.startsWith("SELECT d AS division")) return [[]];
+      censusReads++;
+      assert.deepEqual(statement.params, ["CENSUS_GEOGRAPHY", censusGeographyScope("AZ")]);
+      assert.doesNotMatch(statement.text, /jsonb_array_elements|groupings|RECURSIVE/);
+      return [[{ version_id: "held-acs-state", payload: servedIndex }]];
+    };
+    const targets = await heldAcsJoinTargets("04", [], query, readonly);
+    assert.equal(censusReads, 1);
+    assert.deepEqual(reads, [index.states.AZ.key], "ZIP joins come from that state's code table, without prefix, polygon or foreign-state reads");
+    assert.deepEqual(targets.filter(target => target.geography === "zcta").map(target => target.geoid).sort(), expectedZips);
+    assert.ok(targets.some(target => target.geography === "congressional_district" && target.geoid === "0406"
+      && target.divisionId === "ocd-division/country:us/state:az/cd:6"));
+    assert.ok(targets.every(target => target.geography === "zcta" || !/^ocd-division\/country:us\/(?:state|territory|district):/.test(target.divisionId)
+      || target.divisionId.startsWith("ocd-division/country:us/state:az/")));
+    const absent = await heldAcsJoinTargets("04", [], async () => [[]], { ...readonly, readBytes: async () => assert.fail("an absent state must not read artifacts") });
+    assert.equal(absent.some(target => target.geography === "zcta"), false, "a missing state index supplies no Census ZIP joins");
+    assert.ok(absent.some(target => target.geography === "school_unified"), "native registration joins remain available");
+    const malformed: ReadOnlyQuery = async statements => statements[0].text.startsWith("SELECT d AS division") ? [[]]
+      : [[{ version_id: "invalid", payload: { ...index, states: { ...index.states, CA: index.states.AZ } } }]];
+    await assert.rejects(heldAcsJoinTargets("04", [], malformed, readonly), /state index could not be read/);
+    await assert.rejects(heldAcsJoinTargets("04", [], query, { ...readonly, readBytes: async () => null }), /state artifact is unavailable or invalid/);
+    const invalid = JSON.parse(gunzipSync((await artifacts.readBytes(index.states.AZ.key))!).toString("utf8"));
+    invalid.codes[expectedZips[0]][0][0] = invalid.containers.length;
+    const bytes = gzipSync(JSON.stringify(invalid));
+    const key = await artifacts.putImmutable(bytes, "json.gz");
+    servedIndex = { ...index, states: { AZ: { key, sha256: createHash("sha256").update(bytes).digest("hex"), bytes: bytes.byteLength } } };
+    await assert.rejects(heldAcsJoinTargets("04", [], query, { ...readonly, readBytes: key => artifacts.readBytes(key) }), /ZIP membership is invalid/);
+  } finally { rmSync(directory, { recursive: true, force: true }); }
 });

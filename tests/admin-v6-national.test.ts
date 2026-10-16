@@ -23,7 +23,7 @@ import { buildPlaceOwedList } from "../lib/coverage/place-owed.ts";
 import { buildCensusDistrictEdge } from "../lib/census-geography/state-publication.ts";
 import type { BuiltDataset, BuiltGrouping, BuiltScope } from "../lib/census-geography/dataset.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store-local.ts";
-import { CENSUS_GEO_RECORD_CLASS } from "../lib/census-geography/publication.ts";
+import { CENSUS_GEO_RECORD_CLASS, censusGeographyScope } from "../lib/census-geography/publication.ts";
 
 const NOW = "2026-10-01T18:00:00.000Z";
 const AZ = "ocd-division/country:us/state:az";
@@ -153,22 +153,25 @@ after(() => {
 const fixtureDataset = JSON.parse(readFileSync("lib/census-geography/bootstrap-az.json", "utf8")) as BuiltDataset;
 const fixtureScope = fixtureDataset.scopes.find(scope => scope.type === "congressional_district")!;
 
-function censusQuery(opts: { plans?: string[]; published?: boolean; containers?: BuiltGrouping[] } = {}): { query: ReadOnlyQuery; calls: () => number } {
-  let calls = 0;
+function censusDataset(opts: { plans?: string[]; containers?: BuiltGrouping[] } = {}): BuiltDataset {
   const grouping = (geoid: string, zips: string[], extra: Partial<BuiltGrouping> = {}): BuiltGrouping => ({ geoid,
     ocdId: null, label: `AZ Congressional District ${Number(geoid.slice(2))} (119th Congress)`, stateFips: "04", stateAbbr: "AZ", memberStates: ["AZ"],
     overlaps: zips.map(zcta5 => ({ zcta5, whole: true, fraction: 1 })), ...extra });
-  const groups = opts.containers ?? [grouping("0406", ["85635", "85122", "85635"]), grouping("0405", ["85201"]), grouping("04ZZ", ["85000"]),
-    grouping("0201", ["99501"], { stateFips: "02", stateAbbr: "AK", memberStates: ["AK"] })];
+  const groups = opts.containers ?? [grouping("0406", ["85635", "85122", "85635"]), grouping("0405", ["85201"]), grouping("04ZZ", ["85000"])];
   const scopes: BuiltScope[] = (opts.plans ?? ["cd:119"]).map(version => ({ ...fixtureScope, version,
-    versionMeta: { ...fixtureScope.versionMeta, key: version }, groupings: groups, instanceCount: groups.length,
+    versionMeta: { ...fixtureScope.versionMeta, key: version }, groupings: structuredClone(groups), instanceCount: groups.length,
     zctaEdgeCount: groups.reduce((sum, group) => sum + group.overlaps.length, 0) }));
-  const index = buildCensusDistrictEdge({ ...fixtureDataset, scopes,
-    zctaUniverse: [...new Set(groups.flatMap(group => group.overlaps.map(overlap => overlap.zcta5)))] }, "national-fixture", artifactStore);
+  return { ...fixtureDataset, scopes, zctaUniverse: [...new Set(groups.flatMap(group => group.overlaps.map(overlap => overlap.zcta5)))] };
+}
+
+function censusQuery(opts: { plans?: string[]; published?: boolean } = {}): { query: ReadOnlyQuery; calls: () => number } {
+  let calls = 0;
+  const index = buildCensusDistrictEdge(censusDataset(opts), "national-fixture", artifactStore);
   return { calls: () => calls, query: async statements => {
     calls += 1;
     assert.equal(statements.length, 1, "only the compact index is read from the canonical store");
     assert.equal(statements[0].params[0], CENSUS_GEO_RECORD_CLASS);
+    assert.equal(statements[0].params[1], censusGeographyScope("AZ"));
     assert.match(statements[0].text, /^SELECT current_version_id AS version_id, payload FROM/);
     assert.match(statements[0].text, /payload->>'formatVersion' = '2'/);
     assert.doesNotMatch(statements[0].text, /jsonb_array_elements/);
@@ -178,6 +181,10 @@ function censusQuery(opts: { plans?: string[]; published?: boolean; containers?:
 
 test("a state's districts come from one read of the published Census lookup: ZIPs deduplicated, water and other states dropped", async () => {
   forgetNationalGeography();
+  const mixed = censusDataset();
+  const foreign = { ...structuredClone(mixed.scopes[0].groupings[0]), geoid: "0201", stateFips: "02", stateAbbr: "AK", memberStates: ["AK"] };
+  await assert.rejects(buildCensusDistrictEdge(censusDataset({ containers: [...mixed.scopes[0].groupings, foreign] }), "mixed-state-fixture", artifactStore),
+    /A Census publication contains exactly one state/);
   const { query, calls } = censusQuery();
   const read = await readStateDistricts("az", query);
   assert.ok(read.ok);

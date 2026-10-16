@@ -15,7 +15,7 @@ import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 for (const key of ["DATABASE_URL", "DATABASE_URL_UNPOOLED", "NEON_DATABASE_URL"]) delete process.env[key];
 await installRegistryAuthority();
 
-import { searchMeetings } from "../lib/meetings/query.ts";
+import { meetingBodyIds, searchMeetings } from "../lib/meetings/query.ts";
 import { snapshotSourceFor } from "../lib/meetings/registry.ts";
 import type { MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
 import type { Meeting } from "../lib/sources/types.ts";
@@ -67,16 +67,16 @@ const SNAPSHOT: MeetingsSnapshot = {
 const search = (at: { lat: number; lng: number }) =>
   searchMeetings(at.lat, at.lng, 25, NOW, new Set(at === TOWN ? ["ocd-division/country:us/state:ks/place:example"] : at === REMOTE ? ["ocd-division/country:us/state:ks/place:remote"] : []), snapshotSourceFor(SNAPSHOT));
 
-test("meeting searches reuse the body index and replace it when the registry bodies change", async () => {
+test("only a place's body identities can admit meetings, including a misleading local division", async () => {
   const division = "ocd-division/country:us/state:ks/place:example";
-  let scans = 0;
-  const bodies = [{ get id() { scans++; return "council"; }, ocdId: division }];
-  const snapshot = { ...SNAPSHOT, meetings: [{ ...MEETINGS[0], bodyId: "council" }] };
-  const query = (rows: typeof bodies) => searchMeetings(TOWN.lat, TOWN.lng, 25, NOW, new Set([division]), snapshotSourceFor(snapshot), undefined, rows);
-  assert.equal((await query(bodies)).meetings.length, 1);
-  assert.equal((await query(bodies)).meetings.length, 1);
-  assert.equal(scans, 1);
-  assert.equal((await query([{ id: "council", ocdId: "ocd-division/country:us/state:az/place:elsewhere" }])).meetings.length, 0);
+  const scope = new Set([division]);
+  const bodies = [{ id: "council", ocdId: division },
+    { get id(): string { throw new Error("foreign identity read"); }, ocdId: "ocd-division/country:us/state:az/place:elsewhere" }];
+  const snapshot = { ...SNAPSHOT, meetings: [{ ...MEETINGS[0], bodyId: "council" }, { ...MEETINGS[1], bodyId: "foreign" }] };
+  const query = (ids: ReadonlySet<string>) => searchMeetings(TOWN.lat, TOWN.lng, 25, NOW, scope, snapshotSourceFor(snapshot), undefined, ids);
+  assert.deepEqual((await query(meetingBodyIds(bodies, scope))).meetings.map(row => row.bodyId), ["council"]);
+  assert.equal((await query(new Set())).meetings.length, 0);
+  assert.equal((await query(meetingBodyIds([{ id: "council", ocdId: "ocd-division/country:us/state:az/place:elsewhere" }], scope))).meetings.length, 0);
 });
 
 test("a place with meetings keeps its upcoming and recent calendar", async () => {
@@ -226,7 +226,7 @@ for (const zip of ["85643", "85122", "85701"]) {
         const result = await publishReaderEdgeArtifacts({ ...SNAPSHOT, meetings,
           counts: { fresh: meetings.length, carried: 0, total: meetings.length } },
           { sourceThrough: SNAPSHOT.generatedAt, retrievedAt: SNAPSHOT.generatedAt, promotedThrough: SNAPSHOT.generatedAt },
-          { store, now: NOW.toISOString(), extras: { commentAccess: [], everydayRouting: null } });
+          { store, now: NOW.toISOString(), extras: { everydayRouting: null } });
         assert.equal(result.status, "PUBLISHED");
       };
       await publish(rows);

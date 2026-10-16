@@ -278,6 +278,8 @@ test("the reason survives its writer, the Reader composition, the edge artifacts
     new Date(NO_LONGER_HELD),
     new Set([ROCKAWAY.ocdId!]),
     snapshotSourceFor(merged),
+    undefined,
+    new Set([ROCKAWAY.bodyId!]),
   );
   const wire = JSON.parse(JSON.stringify(result)) as { meetings: Meeting[] };
   const served = wire.meetings.find((row) => row.id === "civicplus:rockaway_township:1824");

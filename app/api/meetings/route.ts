@@ -5,7 +5,7 @@ import { canonicalBodyIdentity } from "@/lib/ask/body-identity";
 import { meetingListingIdentity } from "@/lib/meetings/listing-identity";
 import { nearestZctaAsync } from "@/lib/geo/zcta-table";
 import { zipDivisionEntry } from "@/lib/geo/zip-division-index";
-import { searchMeetings } from "@/lib/meetings/query";
+import { meetingBodyIds, searchMeetings } from "@/lib/meetings/query";
 import { DEFAULT_RADIUS_KM, MAX_RADIUS_KM } from "@/lib/meetings/constants";
 import { getRegistryRuntimeReadModel } from "@/lib/registry/runtime-read-model";
 import { snapshotSourceFor } from "@/lib/meetings/registry";
@@ -103,7 +103,6 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
   const edgeManifest = await timing.time("manifest", () => readReaderManifest().catch(() => null));
 
   let authorityEdge: Awaited<ReturnType<typeof ensureReaderAuthorityEdge>> | null = null;
-  let authorityEdge: Awaited<ReturnType<typeof ensureReaderAuthorityEdge>> | null = null;
   if (edgeManifest?.authorityArtifacts) {
     const entering = timing.time("authority", () =>
       ensureReaderAuthorityEdge(edgeManifest, undefined, READER_MAP_AUTHORITY_FAMILIES).catch(() => null),
@@ -180,7 +179,6 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
     console.error("division lookup failed", error);
   }
 
-  /* The divisions the point itself resolved, kept apart from the widened set (see `widenedInBodies`). */
   const pointOwnDivisionIds = new Set(divisionsAtPoint);
   if (zipRead.value && resolvedDivisions) {
     const zipArea = timing.start("zipArea");
@@ -228,7 +226,7 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
         divisionsAtPoint,
         snapshotSourceFor(snapshot),
         undefined,
-        resolvedDivisions ? getRegistryRuntimeReadModel().registry.bodies : [],
+        resolvedDivisions ? meetingBodyIds(getRegistryRuntimeReadModel().registry.bodies, divisionsAtPoint) : new Set(),
       ));
       snapshotMeta =
         read.kind === "PROMOTED" || read.kind === "BOOTSTRAP"
@@ -239,7 +237,7 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
       }
     } else {
       result = await searchMeetings(lat, lng, radiusKm, new Date(), divisionsAtPoint, undefined, undefined,
-        resolvedDivisions ? getRegistryRuntimeReadModel().registry.bodies : []);
+        resolvedDivisions ? meetingBodyIds(getRegistryRuntimeReadModel().registry.bodies, divisionsAtPoint) : new Set());
       heldMeetings = result.meetings;
       snapshotMeta = await getActiveSnapshotMeta();
     }
@@ -281,7 +279,6 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
   }
 
   /* On a typed zip, each body carries whether its territory covers the whole zip. Absent means not applicable, never certain. */
-  /* A body arriving only through the widening must be `GOVERNING`; bodies on the point's own divisions are untouched. */
   if (coverage && zipRead.value) {
     const before = coverage.bodies.length;
     const kept = coverage.bodies.filter(
@@ -289,8 +286,6 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
         !body.ocdId || pointOwnDivisionIds.has(body.ocdId) || body.bodyClass === "GOVERNING",
     );
     if (kept.length !== before) {
-      /* The counts are recomputed from the kept array, never carried over. */
-      /* `WIRED_STATUSES` is imported, never retyped. */
       const governingKept = kept.filter((b) => b.bodyClass === "GOVERNING");
       coverage = {
         ...coverage,

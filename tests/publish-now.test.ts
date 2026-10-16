@@ -46,6 +46,7 @@ test("BX-03: all unacknowledged parser results stay owed across restart; an ackn
   const tasks = publishNowWorkerTasks([item, sibling], [parser, siblingParser], NOW);
   assert.equal(tasks.length, 2);
   assert.ok(tasks.every(task => task.ownerInvocation?.publicationPending));
+  assert.deepEqual(tasks.map(task => task.ownerInvocation?.workItemIds), [["work-a"], ["work-b"]], "a deferred task names the items it leaves owed");
   assert.equal(tasks[0].ownerInvocation?.requestedAt, parser.endedAt, "a request older than the due-request lifetime is still owed");
   const restored = JSON.parse(JSON.stringify({ items: [item, sibling], results: [parser, siblingParser] }));
   assert.deepEqual(publishNowWorkerTasks(restored.items, restored.results, NOW), tasks);

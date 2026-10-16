@@ -442,9 +442,16 @@ async function readRoutineDueRequests(): Promise<{ readonly requests: readonly R
 /** The publish-now outbox's cursor, and where this pass started reading; a process failure keeps it, so that window is read again. */
 const PUBLISH_NOW_CURSOR = "publish-now";
 let publishNowPassStartedAt: string | null = null;
-async function settlePublishNowCursor(failures: number): Promise<void> {
-  if (publishNowPassStartedAt === null || failures > 0) return;
-  try { await writePassCursor(readerFactDb().query, PUBLISH_NOW_CURSOR, publishNowPassStartedAt); }
+/** The cursor moves to the pass start, or back to the oldest item whose publication this pass left owed, so that item is read again. */
+async function settlePublishNowCursor(tasks: readonly RoutineSourceTask[], failures: readonly SupervisorFailure[]): Promise<void> {
+  if (publishNowPassStartedAt === null || failures.some(failure => failure.taskId === "fact-publication")) return;
+  const owed = tasks.filter(task => !ranThisPass.has(task.id) || failures.some(failure => failure.taskId === task.id))
+    .flatMap(task => task.ownerInvocation?.workItemIds ?? []);
+  try {
+    const [oldest] = owed.length ? await neon(controlPlaneUrlFromEnv()!).query("SELECT min(changed_at) AS at FROM cp_work_items WHERE id = ANY($1::text[])", [owed]) : [];
+    const position = oldest?.at ? [publishNowPassStartedAt, new Date(Date.parse(String(oldest.at)) - 1).toISOString()].sort()[0]! : publishNowPassStartedAt;
+    await writePassCursor(readerFactDb().query, PUBLISH_NOW_CURSOR, position);
+  }
   catch (error) { console.log(`RCD_PUBLISH_NOW_CURSOR not saved — ${safeFailure(sanitizedErrorDiagnostic(error))}; the next pass reads the same window again`); }
 }
 
@@ -798,7 +805,7 @@ const selectedTasks = [...STANDING_SOURCE_TASKS, ...candidateFindingTasks, ...hu
   .filter((task) => !ONLY || ONLY.has(task.id) || (task.registeredContractId !== undefined && ONLY.has(task.registeredContractId)));
 if (PUBLISH_NOW && selectedTasks.length === 0) {
   const readerEdge = (await publishNowEdgeChecks!.stop())!;
-  await settlePublishNowCursor(supervisorFailures.length);
+  await settlePublishNowCursor(selectedTasks, supervisorFailures);
   if (publishNowHasNothingOwed(PUBLISH_NOW, selectedTasks.length, supervisorFailures.length, readerEdge)) {
     console.log("publish-now: nothing owed this minute");
   } else {
@@ -1654,7 +1661,7 @@ console.log("RCD_RUN=" + JSON.stringify({
 // A source refusal is a durable data-plane event, not a failed supervisor
 // process. Only a process/protocol failure makes the runner nonzero.
 if (supervisorFailures.length > 0) process.exitCode = 2;
-await settlePublishNowCursor(supervisorFailures.length);
+await settlePublishNowCursor(selectedTasks, supervisorFailures);
 step = "saving the daily database byte counter";
 if (!await flushDatabaseTransfer()) console.warn("RCD_TRANSFER daily byte counter could not be saved; data results are unchanged.");
 step = "releasing the host-local singleton";

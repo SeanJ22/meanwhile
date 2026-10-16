@@ -63,6 +63,8 @@ export interface RoutineSourceTask {
     readonly publicationPending?: true;
     readonly requestedAt: string;
     readonly instructions: readonly string[];
+    /** The work items a publication serves. */
+    readonly workItemIds?: readonly string[];
   };
 }
 

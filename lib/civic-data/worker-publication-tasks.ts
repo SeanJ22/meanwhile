@@ -136,7 +136,7 @@ export function workerPublicationTasksFor(owed: readonly OwedWorkerPublication[]
         command: [...command, `--${id === "registry-runtime-bindings" ? "worker-directories" : "worker-results"}=${ids.join(",")}`],
         cadenceMs: Number.POSITIVE_INFINITY, retryMs: 15 * 60_000,
         contract: { readerProjection: contract.readerProjection, cadence: { description: "Publish owed work that now meets §3", defaultEveryMs: Number.POSITIVE_INFINITY } },
-        ownerInvocation: { publicationPending: true, requestedAt, instructions: ["section3-publication"] } };
+        ownerInvocation: { publicationPending: true, requestedAt, instructions: ["section3-publication"], workItemIds: ids } };
     });
 }
 

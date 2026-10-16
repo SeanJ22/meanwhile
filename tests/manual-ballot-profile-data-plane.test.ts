@@ -1,3 +1,9 @@
+import { manualPriorAuthorityIssue } from "../lib/civic-data/manual-prior-authority.ts";
+import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
+import { candidateChangeSet, civicRecordsFor, rowKeyedCivicRecordsFor, ROW_KEYED_CIVIC_CHANGE_CONTRACT } from "../lib/civic-data/changes.ts";
+import { withStateRecordHashes } from "../lib/civic-data/state-publication-prior.ts";
+import { trustedLkgCandidateEnvelopeSha256, trustedLkgCandidateId, trustedLkgImportEvidenceIssue, trustedLkgImportUrl, trustedLkgValidatorIds } from "../lib/civic-data/trusted-lkg-import.ts";
+import type { CandidateVersionRecord, PromotedProjection, RoutineCandidate } from "../lib/civic-data/types.ts";
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import { stateBallotScope } from "../lib/ballot/state-scopes.ts";
 import assert from "node:assert/strict";
@@ -13,6 +19,7 @@ import { type GenericBallotProjection } from "../lib/ballot/generic-projection.t
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
 import {
   manualProjectionCandidate,
+  readManualProjectionPrior,
   type ManualProjectionContractId,
   type ManualProjectionPackage,
   type CandidateProfilesProjection,
@@ -406,4 +413,112 @@ test("state candidate publications bind generated worker IDs and reject another 
   assert.ok(candidate.identities.every(row => row.jurisdiction === "US-AZ"));
   const otherState = manualProjectionCandidate(candidateCorpusPackage([candidateDocument("ballot-nh-test:jane-doe", URL, HASH_A, T0)], T0));
   assert.ok(otherState.semantics.violations.length > 0);
+});
+
+function importedManualProjection(input: ManualProjectionPackage) {
+  const payload = input.payload;
+  const original = JSON.parse(readFileSync(new globalThis.URL("./fixtures/retained-venue-import.json", import.meta.url), "utf8")) as {
+    record: CandidateVersionRecord; projection: PromotedProjection;
+  };
+  const built = manualProjectionCandidate(input);
+  const civicRecords = rowKeyedCivicRecordsFor(built.recordClass, payload);
+  const digest = canonicalCivicDataHash(payload);
+  let candidate: RoutineCandidate = withStateRecordHashes({ ...built, readModel: payload, normalizedPayload: payload, civicRecords,
+    retrieval: { ...original.record.candidate.retrieval, requestedUrl: trustedLkgImportUrl(input.contractId) },
+    temporal: { ...original.record.candidate.temporal },
+    normalization: { ...built.normalization, normalizedHash: digest, normalizedPayloadHash: digest,
+      inputRecords: civicRecords.length, outputRecords: civicRecords.length, droppedRecords: 0 },
+    semantics: { ...built.semantics, violations: [] }, excludedFacts: [],
+    horizon: { ...built.horizon, returnedRecords: civicRecords.length },
+  });
+  const evidence = { ...original.record.candidate.bootstrapImport!, contractId: input.contractId,
+    sourceId: candidate.sourceId, recordClass: candidate.recordClass, scope: candidate.scope,
+    parserVersion: candidate.normalization.parserVersion, normalizedPayloadSha256: digest, readModelSha256: digest,
+    candidateEnvelopeSha256: trustedLkgCandidateEnvelopeSha256(candidate), validatorIds: trustedLkgValidatorIds(candidate) };
+  candidate = { ...candidate, bootstrapImport: evidence, id: trustedLkgCandidateId(evidence),
+    changeSet: candidateChangeSet(candidate, null, ROW_KEYED_CIVIC_CHANGE_CONTRACT) };
+  assert.equal(trustedLkgImportEvidenceIssue(candidate, null), null);
+  const proof = { ...original.record.receipt!, candidateId: candidate.id, sourceId: candidate.sourceId,
+    recordClass: candidate.recordClass, scope: candidate.scope };
+  const record = { ...original.record, candidate, receipt: proof, promotedVersion: candidate.id, lastKnownGoodVersion: candidate.id };
+  const projection = { ...original.projection, key: `${candidate.recordClass}:${candidate.scope}`, recordClass: candidate.recordClass,
+    sourceId: candidate.sourceId, scope: candidate.scope, versionId: candidate.id, lastKnownGoodVersionId: candidate.id, payload, receipt: proof };
+  const store = new MemoryRoutineDataStore();
+  Object.assign(store, { candidates: new Map([[candidate.id, record]]), promotions: new Map([[projection.key, projection]]) });
+  return { store, record };
+}
+
+test("partial profile publications preserve every imported member and its original authority", async () => {
+  const oldUrl = "https://previous.example.gov/candidate";
+  const first = packageFor("candidate-profiles:AZ").payload as CandidateProfilesProjection;
+  const payload: CandidateProfilesProjection = { cards: { ...first.cards, note: "Original held search notes",
+    cards: Object.fromEntries(Array.from({ length: 47 }, (_, index) => [`ballot-az-test:held-${index}`, {
+      photoUrl: index === 0 ? "/api/portraits/candidates/held-unbound" : null, photoSource: null, bio: `Held biography ${index}`, bioSourceUrl: oldUrl, bioSourceLabel: "Old official page",
+      email: null, phone: null, phoneLabel: null, filedAddress: index === 0 ? "Private filing evidence" : null, filedAddressSource: null,
+    }])), hunts: [{ key: "ballot-az-test:held-hunt", name: "Held person", note: "Official biography still unpublished", attemptedAt: T0 }] },
+    links: { ...first.links, note: "Original link notes", links: {
+      "ballot-az-test:held-0": { official: { url: oldUrl, verification: "Original verification", attemptedAt: T0 }, campaign: null },
+    }, hunts: [{ key: "ballot-az-test:held-link-hunt", name: "Held person", note: "Campaign site not found", attemptedAt: T0 }] } };
+  const { store, record } = importedManualProjection({ ...packageFor("candidate-profiles:AZ"), payload });
+  const memberHashes = new Map(civicRecordsFor("CANDIDATE_PROFILE", payload).map(member => [member.key, canonicalCivicDataHash(member.record)]));
+  for (const [index, at] of ["2026-09-10T12:01:00.000Z", "2026-09-10T12:02:00.000Z"].entries()) {
+    const key = `ballot-az-test:verified-${index}`;
+    const html = `<html><body>Verified biography ${index}</body></html>`;
+    const input: ManualProjectionPackage = { ...packageFor("candidate-profiles:AZ", at),
+      sourceReceipt: receipt(at, "CANDIDATE_CONTROLLED", createHash("sha256").update(html).digest("hex")),
+      payload: { cards: { curatedAt: at, note: "", cards: { [key]: { ...payload.cards.cards["ballot-az-test:held-0"],
+        bio: `Verified biography ${index}`, bioSourceUrl: URL } }, hunts: [] },
+        links: { curatedAt: at, note: "", links: {}, hunts: [] } } };
+    const prior = await readManualProjectionPrior("candidate-profiles:AZ", store, at);
+    assert.ok(prior);
+    if (index === 0) {
+      assert.equal(prior.versionId, record.candidate.id);
+      assert.equal(prior.sourceReceipt, undefined);
+    }
+    const candidate = manualProjectionCandidate(input, { prior });
+    const held = candidate.readModel as CandidateProfilesProjection;
+    assert.equal(Object.keys(held.cards.cards).length, 48 + index);
+    const heldMembers = new Map(civicRecordsFor("CANDIDATE_PROFILE", held).map(member => [member.key, canonicalCivicDataHash(member.record)]));
+    for (const [key, digest] of memberHashes) assert.equal(heldMembers.get(key), digest, key);
+    assert.equal(held.cards.note, payload.cards.note);
+    assert.equal(held.links.note, payload.links.note);
+    assert.deepEqual(held.cards.hunts, payload.cards.hunts);
+    assert.deepEqual(held.links.hunts, payload.links.hunts);
+    assert.ok(!candidate.retrieval.manualSourceReceipt!.sources.some(source => source.finalUrl === oldUrl));
+    assert.deepEqual(candidate.semantics.violations, []);
+    if (index === 0) {
+      const changed = { ...candidate, readModel: { ...held, cards: { ...held.cards, cards: { ...held.cards.cards,
+        "ballot-az-test:held-1": { ...held.cards.cards["ballot-az-test:held-1"], bio: "Unverified replacement" },
+      } } } };
+      assert.match(manualPriorAuthorityIssue(changed, record) ?? "", /changed, duplicated, invented, or omitted/);
+      assert.match(manualPriorAuthorityIssue(candidate, null) ?? "", /exact GOOD current base/);
+    }
+    const outcome = await processRegisteredManualCandidate(store, input.contractId, candidate, at, prior.versionId);
+    assert.ok(outcome.promoted, JSON.stringify(outcome.candidate.receipt));
+    assert.equal(outcome.readerReadback?.status, "PASS", JSON.stringify(outcome.readerReadback));
+    assert.equal(outcome.candidate.candidate.changeSet?.removed.length, 0);
+    assert.equal(outcome.candidate.receipt?.checks.find(check => check.check === "SOURCE_AUTHENTICITY")?.code,
+      "CURRENT_SOURCES_AND_EXACT_PRIOR_AUTHORITY_VALID");
+  }
+});
+
+
+test("a partial corpus publication keeps imported documents without inventing HTTP receipts", async () => {
+  const old = candidateDocument("ballot-az-test:held-author", "https://previous.example.gov/publication", HASH_A, T0);
+  const heldInput = candidateCorpusPackage([old], T0);
+  const { store, record } = importedManualProjection(heldInput);
+  const at = "2026-09-10T12:01:00.000Z";
+  const fresh = candidateDocument("ballot-az-test:new-author", URL, HASH_B, at);
+  const prior = await readManualProjectionPrior("candidate-corpus:AZ", store, at);
+  assert.equal(prior?.versionId, record.candidate.id);
+  const candidate = manualProjectionCandidate(candidateCorpusPackage([fresh], at), { prior });
+  assert.deepEqual((candidate.readModel as CandidateCorpus).documents.find(row => row.id === old.id), old);
+  assert.equal(candidate.retrieval.manualSourceReceipt?.sources.length, 1);
+  assert.equal(candidate.retrieval.manualSourceReceipt?.sources[0]?.finalUrl, URL);
+  assert.deepEqual(candidate.normalization.missingRequiredFields, []);
+  assert.deepEqual(candidate.semantics.violations, []);
+  const outcome = await processRegisteredManualCandidate(store, "candidate-corpus:AZ", candidate, at, prior!.versionId);
+  assert.ok(outcome.promoted, JSON.stringify(outcome.candidate.receipt));
+  assert.equal(outcome.candidate.candidate.changeSet?.removed.length, 0);
+  assert.equal(outcome.readerReadback?.status, "PASS", JSON.stringify(outcome.readerReadback));
 });

@@ -1,4 +1,4 @@
-import { rememberStatePublicationPrior } from "../lib/civic-data/state-publication-prior.ts";
+import { rememberStatePublicationHashes, rememberStatePublicationPrior, withStateRecordHashes } from "../lib/civic-data/state-publication-prior.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
@@ -835,6 +835,7 @@ async function withCannedNeon<T>(
     const body = JSON.parse(init.body) as { query?: string; params?: unknown[]; queries?: NeonStatement[] };
     const statements = body.queries ?? [{ query: body.query ?? "", params: body.params ?? [] }];
     const results = statements.map((statement) => {
+      if (statement.query.startsWith("INSERT INTO database_transfer_daily")) return { command: "INSERT", rowCount: 0, rowAsArray: true, fields: [], rows: [] };
       sent.push(statement);
       const { columns, rows } = answer(statement);
       return {
@@ -1429,9 +1430,9 @@ test("state readback reuses only the exact durable pointer inside its publicatio
 
 test("state publication reads its pointer and candidate together and rejects a divergent durable payload", async () => {
   const payload = { rows: [{ id: "AZ-original", source: "https://az.gov/ballot" }] };
-  const value = { ...candidate("state-publication-base"), recordClass: "BALLOT_CANDIDACY" as const, scope: "US-AZ:state-election-ballots",
+  const value = withStateRecordHashes({ ...candidate("state-publication-base"), recordClass: "BALLOT_CANDIDACY" as const, scope: "US-AZ:state-election-ballots",
     readModel: payload, normalizedPayload: payload, normalization: { ...candidate("metadata").normalization,
-      normalizedHash: normalizedHash(payload), normalizedPayloadHash: normalizedHash(payload) } };
+      normalizedHash: normalizedHash(payload), normalizedPayloadHash: normalizedHash(payload) } });
   const receipt = receiptFor(value), key = `${value.recordClass}:${value.scope}`;
   let divergent = false;
   await withCannedNeon(({ query, params }) => {
@@ -1461,6 +1462,7 @@ test("state publication reads its pointer and candidate together and rejects a d
     assert.equal(base.current?.payload, base.lkg?.candidate.readModel);
     assert.equal(base.lkg?.candidate.normalizedPayload, base.lkg?.candidate.readModel);
     assert.deepEqual(base.current?.payload, payload);
+    rememberStatePublicationHashes(base.current!, base.lkg!.candidate.normalization);
     rememberStatePublicationPrior(store, base.current!);
     const indexed = await store.readStatePublicationBase(value.recordClass, value.scope);
     assert.equal(indexed.current?.payload, null, "the old graph is absent from the validation base");
@@ -1471,3 +1473,39 @@ test("state publication reads its pointer and candidate together and rejects a d
     await assert.rejects(() => store.readStatePublicationBase(value.recordClass, value.scope), /POINTER_PAYLOAD_MISMATCH/);
   });
 });
+
+
+for (const family of ["candidate-profiles", "candidate-corpus", "candidate-campaign-sites-derived"] as const) {
+  for (const rows of [[], [{ id: "one-official-record", text: "Small exact source fact" }]]) test(`${family} persists an empty or small state payload only once (${rows.length} rows)`, async () => {
+    const id = stateBallotContractId(family, "AZ"), manual = MANUAL_PRODUCTION_SOURCE_CONTRACTS.find(row => row.id === id);
+    const contract = manual ?? ROUTINE_SOURCE_CONTRACTS.find(row => row.id === id)!;
+    const payload = { rows }, base = candidate(`small-${id}-${rows.length}`, "2026-09-08T12:00:00.000Z", contract.sourceId);
+    const value = immutableStateCandidate({ ...base, recordClass: contract.recordClass, scope: contract.scope,
+      readModel: payload, normalizedPayload: payload, normalization: { ...base.normalization,
+        normalizedHash: normalizedHash(payload), normalizedPayloadHash: normalizedHash(payload) } });
+    const parts = new Map<string, unknown>();
+    let envelope: RoutineCandidate | undefined;
+    await withCannedNeon(({ query, params }) => {
+      if (query.startsWith('insert into "civic_data_payload_parts"'))
+        for (let at = 0; at < params.length; at += 2) parts.set(String(params[at]), JSON.parse(String(params[at + 1])));
+      if (query.startsWith('insert into "civic_data_candidates"')) envelope = params.flatMap(value => {
+        if (typeof value !== "string") return [];
+        try { const parsed = JSON.parse(value); return parsed?.id === base.id ? [parsed] : []; } catch { return []; }
+      })[0];
+      return { columns: [], rows: [] };
+    }, async store => {
+      Object.assign(store, { writeAuthority: { repo: ROOT, sha: "1".repeat(40), capability: manual ? "MANUAL_CONTRACT" : "ROUTINE_CONTRACT",
+        contract: id, parentPid: 123, nonce: "2".repeat(64) } satisfies RuntimeAuthorityEnvelope });
+      await store.create({ candidate: value, state: "FETCHED", acquisitionSucceeded: true, receipt: null, promotedVersion: null,
+        lastKnownGoodVersion: null, failureCode: null, failureDetail: null },
+      { candidateId: value.id, sequence: 1, state: "FETCHED", at: value.retrieval.retrievedAt, detail: "Source payload acquired" });
+    });
+    assert.ok(envelope);
+    assert.deepEqual(Object.keys(envelope.readModel as object), ["$civicPayloadPart"]);
+    assert.equal(parts.size, 1);
+    const codec = new CivicPayloadParts({ existing: async () => [], write: async () => assert.fail("readback cannot write"),
+      read: async hashes => hashes.map(hash => ({ hash, payload: parts.get(hash) })) });
+    assert.deepEqual(decodeStateCandidate(await codec.load(envelope)), value);
+    assert.deepEqual(await codec.load(envelope.readModel), payload, "the promotion's exact stored reference resolves to the same payload");
+  });
+}

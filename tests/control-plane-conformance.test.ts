@@ -1,3 +1,4 @@
+import { openFixturePgRepositories } from "./helpers/pg-repositories.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { randomUUID } from "node:crypto";
@@ -539,7 +540,6 @@ test("createPgRepositories refuses an empty connection string", async () => {
 
 test("BL-30 migrates existing voting doors to exact state and canonical URL queries without changing held evidence", async () => {
   const { PGlite } = await import("@electric-sql/pglite");
-  const { bootstrap } = await import("../lib/control-plane/repository/pg-store.ts");
   const db = new PGlite();
   try {
     await db.exec("CREATE TABLE cp_doors(id text PRIMARY KEY,revision bigint,updated_at timestamptz,value jsonb)");
@@ -558,7 +558,7 @@ test("BL-30 migrates existing voting doors to exact state and canonical URL quer
         return (await db.query(text, params ? [...params] : [])).rows;
       return [];
     } };
-    await bootstrap(sql, LATER);
+    await openFixturePgRepositories(sql, LATER);
     const read = async () => (await db.query<{ revision: number; value: typeof original & { config: Record<string, unknown> } }>("SELECT revision,value FROM cp_doors WHERE id='held'")).rows[0]!;
     const migrated = await read();
     assert.equal(Number(migrated.revision), 8);
@@ -568,7 +568,7 @@ test("BL-30 migrates existing voting doors to exact state and canonical URL quer
     assert.deepEqual(migrated.value.validators, original.validators);
     assert.equal(migrated.value.config.votingSource, original.config.votingSource);
     assert.equal(migrated.value.config.votingMappings, original.config.votingMappings);
-    await bootstrap(sql, LATER);
+    await openFixturePgRepositories(sql, LATER);
     assert.equal(scans, 1, "recorded schema version skips the completed door data move");
     assert.deepEqual(await read(), migrated, "replayed bootstrap does not rewrite migrated rows");
     assert.equal((await db.query("SELECT id FROM cp_doors WHERE value#>>'{config,votingState_NH}'='true'")).rows.length, 1);

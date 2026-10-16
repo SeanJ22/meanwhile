@@ -35,11 +35,20 @@ export function workerBallotContestsPackage(input: {
   requirePublication(parseStateBallotContractId(input.plan.publication?.contractId ?? "")?.family === "ballot-contests" && input.plan.contract.schemaVersion === 2, "BALLOT_CONTRACT_UNRESOLVED");
   const checked = verifiedWorkerRecords(input), state = requireBallotState(checked.contract.jurisdiction.state);
   requirePublication(input.plan.publication?.contractId === stateBallotContractId("ballot-contests", state), "BALLOT_STATE_SCOPE_MISMATCH");
+  const previousVersionId = input.prior?.versionId ?? null;
+  const changes: ReturnType<typeof publicationRecordChanges> = { recordChanges: [], records: { added: 0, changed: 0, reused: 0 } };
   const merge = new BallotContestMerge({ contractId: stateBallotContractId("ballot-contests", state), version: `worker:${input.parser.id}`,
-    sourceThrough: input.now, sourceReceipt: checked.sourceReceipt, payload: { kind: "ballot-contests", ballots: {} } }, input.prior ?? null);
+    sourceThrough: input.now, sourceReceipt: checked.sourceReceipt, payload: { kind: "ballot-contests", ballots: {} } }, input.prior ?? null, {
+    onContest: (id, value, previous) => {
+      const change = publicationRecordChanges({ previousVersionId,
+        accepted: [{ recordId: id, readerId: id, value, previous }] });
+      changes.recordChanges.push(...change.recordChanges);
+      for (const kind of ["added", "changed", "reused"] as const) changes.records[kind] += change.records[kind];
+    },
+  });
   if (input.plan.contract.recordClass === "BALLOT_MEASURE") {
     const measured = mergeWorkerBallotMeasures({ ...input, checked }, merge);
-    return { package: merge.finish(measured.sourceReceipt, measured.sourceThrough), heldContests: measured.heldContests, changes: merge.changes };
+    return { package: merge.finish(measured.sourceReceipt, measured.sourceThrough), heldContests: measured.heldContests, changes };
   }
   requirePublication(input.plan.contract.recordClass === "BALLOT_CONTEST", "BALLOT_CLASS_MISMATCH");
   const inventory = checked.sourceInventory;
@@ -115,7 +124,7 @@ export function workerBallotContestsPackage(input: {
     accepted++;
   }
   requirePublication(accepted, "NO_VERIFIED_BALLOT_CANDIDATE");
-  return { package: merge.finish(), heldContests, changes: merge.changes };
+  return { package: merge.finish(), heldContests, changes };
 }
 
 const observedAt = (value: unknown): number => {
@@ -203,20 +212,21 @@ const rowKey = (field: string, value: unknown): string => {
 
 export class BallotContestMerge {
   private readonly input: ManualProjectionPackage;
-  private readonly priorVersionId: string | null;
-  readonly changes: ReturnType<typeof publicationRecordChanges> = { recordChanges: [], records: { added: 0, changed: 0, reused: 0 } };
   private readonly checkAuthority: boolean;
+  private readonly onContest?: (id: string, value: unknown, previous: Contest | undefined) => void;
   private readonly states = new Map<string, BallotRows>();
   private readonly official = new Set<string>();
   private readonly priorSources: ManualProjectionPackage["sourceReceipt"]["sources"];
   private readonly currentAuthorities = new Map<string, string>();
   private readonly priorAuthorities = new Map<string, string>();
 
-  constructor(input: ManualProjectionPackage, prior: ManualProjectionPrior | null, checkAuthority = false) {
-    this.input = input; this.checkAuthority = checkAuthority; this.priorVersionId = prior?.versionId ?? null;
+  constructor(input: ManualProjectionPackage, prior: ManualProjectionPrior | null, options: {
+    checkAuthority?: boolean; onContest?: (id: string, value: unknown, previous: Contest | undefined) => void;
+  } = {}) {
+    this.input = input; this.checkAuthority = options.checkAuthority === true; this.onContest = options.onContest;
     const partition = parseStateBallotContractId(input.contractId);
     requirePublication(partition?.family === "ballot-contests", "BALLOT_STATE_CONTRACT_REQUIRED");
-    this.priorSources = prior?.sourceReceipt.sources ?? [];
+    this.priorSources = prior?.sourceReceipt?.sources ?? [];
     for (const [sources, target] of [[this.priorSources, this.priorAuthorities], [input.sourceReceipt.sources, this.currentAuthorities]] as const) {
       for (const source of sources) if (source.reviewOutcome !== "BLOCKED" &&
         ["ELECTION_AUTHORITY", "OFFICIAL_PUBLISHER"].includes(source.sourceClass)) {
@@ -313,10 +323,7 @@ export class BallotContestMerge {
         holds.set(id, next);
         state.rows.set("heldContests", holds); state.rows.get("contests")?.delete(id); state.holds.add(id);
       } else {
-        const change = publicationRecordChanges({ previousVersionId: this.priorVersionId,
-          accepted: [{ recordId: id, readerId: id, value, previous: old }] });
-        this.changes.recordChanges.push(...change.recordChanges);
-        for (const kind of ["added", "changed", "reused"] as const) this.changes.records[kind] += change.records[kind];
+        this.onContest?.(id, value, old);
         const next = old ? { ...old, ...row } : row;
         consumeStatePublicationRecord(previous, next);
         rows.set(id, next); state.incoming.add(id);

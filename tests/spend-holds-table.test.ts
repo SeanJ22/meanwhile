@@ -1,15 +1,5 @@
-/**
- * The spend holds are one row each in `cp_spend_holds`, never one jsonb
- * document on the budget ledger row.
- *
- * These tests pin: concurrent admissions on one line admit exactly what fits;
- * the database admission is called as one statement and its refusals are
- * worded exactly as `decideHold` words them; settled and stale holds are
- * deleted, so the table does not grow across many rounds; the one-time move
- * off the ledger row is guarded, locked and idempotent, and is skipped behind
- * the switch; `WTP_SPEND_HOLDS_TABLE=0` keeps the ledger row path; and the
- * readers read live holds from the table.
- */
+import { openFixturePgRepositories } from "./helpers/pg-repositories.ts";
+
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -42,7 +32,7 @@ import {
   spendHoldDeadSql,
   spendHoldLiveSql,
 } from "../lib/control-plane/repository/pg-schema.ts";
-import { bootstrap, pgSpendHoldRepository, type Sql } from "../lib/control-plane/repository/pg-store.ts";
+import { pgSpendHoldRepository, type Sql } from "../lib/control-plane/repository/pg-store.ts";
 
 const NOW = "2026-10-06T12:00:00.000Z";
 const at = (ms: number): string => new Date(Date.parse(NOW) + ms).toISOString();
@@ -229,13 +219,17 @@ test("the bootstrap runs the move by default and skips it behind WTP_SPEND_HOLDS
   try {
     delete process.env.WTP_SPEND_HOLDS_TABLE;
     const on = recordingSql();
-    await bootstrap(on.sql, NOW);
+    await openFixturePgRepositories(on.sql, NOW);
     assert.ok(on.statements.includes(SPEND_HOLDS_MOVE_DDL));
     assert.ok(on.statements.includes(ADMIT_SPEND_HOLD_FUNCTION_DDL));
-    assert.match(on.statements.at(-1)!, new RegExp(`VALUES \\(true, ${BOOTSTRAP_VERSION},`), "the version is recorded after every statement");
+    const versionAt = on.statements.findIndex(text => text.startsWith("INSERT INTO cp_schema_version"));
+    assert.ok(versionAt >= 0);
+    assert.match(on.statements[versionAt]!, new RegExp(`VALUES \\(true, ${BOOTSTRAP_VERSION},`));
+    assert.ok(on.statements.every((text, index) => !BOOTSTRAP_DDL.includes(text) || index < versionAt),
+      "the schema version is recorded only after every bootstrap statement");
     process.env.WTP_SPEND_HOLDS_TABLE = "0";
     const off = recordingSql();
-    await bootstrap(off.sql, NOW);
+    await openFixturePgRepositories(off.sql, NOW);
     assert.ok(!off.statements.includes(SPEND_HOLDS_MOVE_DDL), "the way back leaves the holds on the row");
     assert.ok(off.statements.includes(SPEND_HOLDS_TABLE_DDL), "the table still exists, so switching on later needs no other step");
   } finally {

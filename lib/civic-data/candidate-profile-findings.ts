@@ -99,7 +99,7 @@ export async function publishCandidateFindings(input: {
       cards[key] = next;
     }
     const sources = new Map<string, ManualSourceReview>();
-    for (const source of [...prior?.sourceReceipt.sources ?? [], ...stateReady.flatMap(entry => entry.outcome.sources)]) {
+    for (const source of [...prior?.sourceReceipt?.sources ?? [], ...stateReady.flatMap(entry => entry.outcome.sources)]) {
       const key = `${source.finalUrl}\n${source.rawHash}`;
       sources.set(key, mergeManualSourceCopies(sources.get(key), source));
     }

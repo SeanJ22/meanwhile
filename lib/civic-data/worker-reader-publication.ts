@@ -247,7 +247,7 @@ export async function publishWorkerReaderResults(input: {
       const requested = (checked.payload as CuratedReaderProjection).records;
       const delivered = requested.map(record => {
         const old = before.find(row => row.id === record.id);
-        return old && prior ? resolveRecordConflicts(record, old, checked.sourceReceipt, prior.sourceReceipt).record : record;
+        return old && prior?.sourceReceipt ? resolveRecordConflicts(record, old, checked.sourceReceipt, prior.sourceReceipt).record : record;
       });
       const { candidate, expectedBaseVersionId } = await prepareManualProjectionSuccessor(checked, input.store, input.now, built.pulledMemberIds);
       const composed = candidate.readModel as CuratedReaderProjection;

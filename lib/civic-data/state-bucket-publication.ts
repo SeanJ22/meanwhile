@@ -1,3 +1,4 @@
+import { withStateRecordHashes } from "./state-publication-prior.ts";
 import { createHash } from "node:crypto";
 import { requireBallotState, stateBallotContractId, stateBallotScope, type StateBallotFamily } from "../ballot/state-scopes.ts";
 import { requireRegistryState, stateRegistryRuntimeContractId, stateRegistryRuntimeScope } from "../registry/state-scopes.ts";
@@ -63,6 +64,7 @@ function rekey(source: StateBucketSource, family: StateBucketFamily, state: stri
     normalizedHash, normalizedPayloadHash: candidate.normalizedPayload === candidate.readModel ? normalizedHash : canonicalCivicDataHash(candidate.normalizedPayload) },
   horizon: { ...candidate.horizon, returnedRecords: count } };
   candidate = { ...candidate, changeSet: candidateChangeSet(candidate, null, candidate.bootstrapImport ? ROW_KEYED_CIVIC_CHANGE_CONTRACT : undefined) };
+  candidate = withStateRecordHashes(immutableStateCandidate(candidate));
   if (candidate.bootstrapImport) {
     candidate = { ...candidate, bootstrapImport: { ...candidate.bootstrapImport, scope,
       readModelSha256: candidate.normalization.normalizedHash!, normalizedPayloadSha256: candidate.normalization.normalizedPayloadHash! } };
@@ -171,7 +173,7 @@ export async function publishStateBucket(source: StateBucketSource, query: Query
   });
   const encoded = await parts.store({ ...encodeStateCandidate(candidate), retrieval: await parts.store(candidate.retrieval,
     ["succeeded", "requestedUrl", "finalUrl", "httpStatus", "retrievedAt", "rawHash", "sourceCheck", "failureDetail"]) },
-  ["id", "sourceId", "recordClass", "scope", "retrieval", "normalization", "temporal", "bootstrapImport"]);
+  ["id", "sourceId", "recordClass", "scope", "retrieval", "normalization", "temporal", "bootstrapImport"], ["readModel"]);
   const rows = await query(`WITH origin AS MATERIALIZED (${ORIGIN_GUARD} FOR SHARE OF p,c), eligible AS MATERIALIZED (
       SELECT 1 FROM origin WHERE NOT EXISTS (SELECT 1 FROM civic_data_promotions WHERE key=$7 AND current_version_id IS DISTINCT FROM $8::text)
         AND ($8::text IS NULL OR EXISTS (SELECT 1 FROM civic_data_promotions WHERE key=$7 AND current_version_id=$8))

@@ -976,7 +976,7 @@ async function pgEnsureOnlineIndex(
 }
 
 // Record the schema version only after all changes succeed.
-export async function bootstrap(
+async function bootstrap(
   sql: Sql,
   nowIso: string,
   bounds: ControlPlaneRequestBounds = CONTROL_PLANE_REQUEST_BOUNDS_MS,

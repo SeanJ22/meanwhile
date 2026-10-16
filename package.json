@@ -37,6 +37,8 @@
     "lint": "eslint",
     "map:worker": "node scripts/build-map-worker.mjs",
     "office:audit": "tsx scripts/top-office-audit.mts",
+    "reader:restore-state-buckets": "node --experimental-strip-types scripts/restore-state-buckets.mts",
+    "reader:state-authority": "node --experimental-strip-types scripts/publish-state-authority.mts",
     "pdf:read": "tsx scripts/read-pdf.mts",
     "pills": "tsx scripts/pill-census.mts",
     "postbuild": "node scripts/check-build-output.mjs && node --experimental-strip-types scripts/reader-trace-check.mts",

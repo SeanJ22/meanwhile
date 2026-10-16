@@ -67,7 +67,7 @@ export type CandidateVersionSummary = Omit<CandidateVersionRecord, "candidate"> 
 
 export type PublishedCandidateMetadata = Omit<CandidateVersionRecord, "candidate"> & {
   readonly candidate: Pick<RoutineCandidate, "id" | "sourceId" | "recordClass" | "scope" | "retrieval" | "temporal"> & {
-    readonly normalization: Pick<RoutineCandidate["normalization"], "succeeded" | "normalizedHash" | "normalizedPayloadHash">;
+    readonly normalization: Pick<RoutineCandidate["normalization"], "succeeded" | "normalizedHash" | "normalizedPayloadHash" | "stateRecordHashes">;
   };
 };
 
@@ -77,7 +77,7 @@ export function publishedCandidateMetadata(row: CandidateVersionRecord): Publish
   delete publishedRetrieval.derived;
   return { ...row, candidate: { id, sourceId, recordClass, scope, retrieval: publishedRetrieval, temporal,
     normalization: { succeeded: normalization.succeeded, normalizedHash: normalization.normalizedHash,
-      normalizedPayloadHash: normalization.normalizedPayloadHash } } };
+      normalizedPayloadHash: normalization.normalizedPayloadHash, stateRecordHashes: normalization.stateRecordHashes } } };
 }
 
 /** Preserve the SQL row identity even when its untrusted JSON body is corrupt. */
@@ -1725,7 +1725,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     } : record.candidate;
     const stored = stateAuthority || ["REGISTRY_RUNTIME_BINDING", "STATE_ROLL_CALL", "CENSUS_REFERENCE"].includes(record.candidate.recordClass)
       ? await this.payloadParts.store(candidate,
-        ["id", "sourceId", "recordClass", "scope", "retrieval", "normalization", "temporal", "bootstrapImport"]) as RoutineCandidate
+        ["id", "sourceId", "recordClass", "scope", "retrieval", "normalization", "temporal", "bootstrapImport"], stateAuthority ? ["readModel"] : undefined) as RoutineCandidate
       : record.candidate;
     await this.db.batch([
       this.db.insert(civicDataCandidates).values({
@@ -2010,7 +2010,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
         'normalization', case when ${column}->'normalization' ? '$civicPayloadPart' then ${column}->'normalization'
           else jsonb_build_object('succeeded', ${column}->'normalization'->'succeeded',
             'normalizedHash', ${column}->'normalization'->'normalizedHash',
-            'normalizedPayloadHash', ${column}->'normalization'->'normalizedPayloadHash') end)`,
+            'normalizedPayloadHash', ${column}->'normalization'->'normalizedPayloadHash',
+            'stateRecordHashes', ${column}->'normalization'->'stateRecordHashes') end)`,
       state: civicDataCandidates.state,
       acquisitionSucceeded: civicDataCandidates.acquisitionSucceeded,
       receipt: civicDataCandidates.validationReceipt,

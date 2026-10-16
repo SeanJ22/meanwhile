@@ -210,6 +210,10 @@ export interface NormalizationEvidence {
   readonly normalizedHash: string | null;
     /** Required by every promotable production candidate; only fixtures that cannot reach a production door may omit it. */
   readonly normalizedPayloadHash?: string | null;
+  readonly stateRecordHashes?: {
+    readonly readModelHash: string;
+    readonly members: readonly { readonly key: string; readonly factsHash: string; readonly sha256: string }[];
+  };
   readonly inputRecords: number;
   readonly outputRecords: number;
   readonly droppedRecords: number;

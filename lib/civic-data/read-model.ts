@@ -1,4 +1,4 @@
-import { statePublicationPriorOf } from "./state-publication-prior.ts";
+import { statePublicationPriorOf, rememberStatePublicationHashes } from "./state-publication-prior.ts";
 import { readerQuery } from "./promoted-reader-query.ts";
 import { currentReaderRoute, currentReaderSelection, type ReaderSelection } from "../db/reader-route.ts";
 import { createHash } from "node:crypto";
@@ -613,6 +613,7 @@ async function loadPromotedCivicData<T>(
       };
       const issue = publishedStateProofIssue(recordClass, scope, projection, candidate);
       if (issue) return promotionProofInvalidResult(recordClass, scope, projection, issue);
+      if (candidate.candidate.normalization.stateRecordHashes) rememberStatePublicationHashes(projection, candidate.candidate.normalization);
       const proven = rememberStateProof(projection, candidate, options.store, candidate.candidate.normalization.normalizedHash!, !options.bypassCache);
       if (!options.bypassCache) provenPointersOf(options.store, scope).set(key, proven);
       return promotedResult(projection, proven.candidate, now, options.maxAgeMs);

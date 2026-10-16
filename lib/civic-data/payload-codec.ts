@@ -134,7 +134,7 @@ function territory(value: unknown): string {
 }
 
 /** Storage encoding only. Readers reconstruct the exact JSON they already verify. */
-export function partitionCivicPayload(input: unknown, inlineFields?: readonly string[]): { readonly value: unknown; readonly parts: readonly Part[] } {
+export function partitionCivicPayload(input: unknown, inlineFields?: readonly string[], referencedFields?: readonly string[]): { readonly value: unknown; readonly parts: readonly Part[] } {
   const parts = new Map<string, Part>();
   const put = (payload: unknown): Ref => {
     const hash = digest(payload);
@@ -191,11 +191,13 @@ export function partitionCivicPayload(input: unknown, inlineFields?: readonly st
   };
   const root = jsonNode(input, "");
   if (root.value === OMIT) throw new TypeError("A civic payload needs a JSON value.");
-  const keys = inlineFields && Array.isArray(root.value) ? Array.from({ length: root.value.length }, (_, index) => String(index)) : null;
-  const value = inlineFields ? Object.fromEntries((keys ?? Object.keys(root.value as object)).flatMap(key => {
+  const keys = (inlineFields || referencedFields) && Array.isArray(root.value) ? Array.from({ length: root.value.length }, (_, index) => String(index)) : null;
+  const value = inlineFields || referencedFields ? Object.fromEntries((keys ?? Object.keys(root.value as object)).flatMap(key => {
     const child = childNode(root, key);
     if (keys && child.value === OMIT) child.value = null;
-    return child.value === OMIT ? [] : [[key, encode(child, inlineFields.includes(key))]];
+    if (child.value === OMIT) return [];
+    const encoded = encode(child, inlineFields?.includes(key));
+    return [[key, referencedFields?.includes(key) && !isCivicPayloadPart(encoded) ? put({ kind: "object", value: encoded }) : encoded]];
   })) : encode(root);
   return { value, parts: [...parts.values()] };
 }

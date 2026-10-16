@@ -38,7 +38,7 @@ async function assembleBallotPackage(options: {
   for (const row of input.sourceReceipt.sources) if (Date.parse(row.retrievedAt) > Date.parse(sourceThrough)) sourceThrough = row.retrievedAt;
   const merge = new BallotContestMerge({ contractId, version: prior?.temporal?.version ?? "2026-general", sourceThrough,
     sourceReceipt: { ...input.sourceReceipt, reviewedAt: now, reviewedBy: "assemble-ballot-package" },
-    payload: { kind: "ballot-contests", ballots: input.ballots } }, prior, true);
+    payload: { kind: "ballot-contests", ballots: input.ballots } }, prior, { checkAuthority: true });
   prior = null;
   options.onStage?.("state-contests", "start");
   await readBallotStateFile(path, (parts, row) => {

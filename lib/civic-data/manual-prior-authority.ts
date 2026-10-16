@@ -11,10 +11,10 @@ import type { CandidateVersionRecord, RoutineCandidate } from "./types.ts";
 const hash = canonicalCivicDataHash;
 
 /** Classes whose successor may inherit unchanged members from its exact GOOD base. */
-const INHERITING_CLASSES: ReadonlySet<string> = new Set(["CURATED_READER_RECORD", "REGISTRY_RUNTIME_BINDING"]);
+const INHERITING_CLASSES: ReadonlySet<string> = new Set(["CURATED_READER_RECORD", "REGISTRY_RUNTIME_BINDING", "CANDIDATE_PROFILE", "CANDIDATE_PUBLICATION"]);
 
 function memberIdentity(recordClass: string, member: { readonly key: string; readonly record: unknown }): string {
-  return recordClass === "REGISTRY_RUNTIME_BINDING" ? member.key : (member.record as { readonly id: string }).id;
+  return recordClass === "CURATED_READER_RECORD" ? (member.record as { readonly id: string }).id : member.key;
 }
 function assertedSources(recordClass: string, key: string, record: unknown): Iterable<string> {
   return recordClass === "REGISTRY_RUNTIME_BINDING" ? registryMemberCitedUrls(key, record) : directPositiveSourceUrls(record);
@@ -37,7 +37,7 @@ export function manualPriorAuthorityIssue(candidate: RoutineCandidate, base: Can
   if (prior.kind !== "VALIDATED_PRIOR_PROJECTION" || !INHERITING_CLASSES.has(candidate.recordClass) ||
       candidate.bootstrapImport || !candidate.retrieval.manualSourceReceipt ||
       !Array.isArray(prior.retainedMembers) || prior.retainedMembers.length === 0) {
-    return "Inherited authority is valid only for unchanged members of a source-reviewed curated Reader or registry successor.";
+    return "Inherited authority is valid only for unchanged members of a source-reviewed successor.";
   }
   const receipt = base ? parseValidationReceipt(base.receipt) : null;
   const indexedPrior = base ? statePublicationPriorOf(base.candidate) : undefined;
@@ -63,7 +63,7 @@ export function manualPriorAuthorityIssue(candidate: RoutineCandidate, base: Can
   const members = (value: RoutineCandidate) => new Map(civicRecordsFor(value.recordClass, value.readModel)
     .map((row) => [memberIdentity(value.recordClass, row), row.record]));
   const before = indexedPrior ? new Map([...indexedPrior.members].map(([key, member]) =>
-    [candidate.recordClass === "REGISTRY_RUNTIME_BINDING" ? key : key.replace(/^curated-reader:/, ""), member.sha256])) : members(base.candidate);
+    [candidate.recordClass === "CURATED_READER_RECORD" ? key.replace(/^curated-reader:/, "") : key, member.sha256])) : members(base.candidate);
   const after = members(candidate);
   const retained = new Set<string>();
   for (const member of prior.retainedMembers) {

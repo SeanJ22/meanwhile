@@ -8,14 +8,6 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
-// Ceilings remain tied to measured baselines; rounding must never increase the allowed headroom.
-export const HEADROOM = 0.15;
-
-/** The largest ceiling the rule permits for a baseline, rounded down to `unit`. */
-export function ceilingCap(baseline, unit) {
-  return Math.floor((baseline * (1 + HEADROOM)) / unit) * unit;
-}
-
 /** Credential VALUE shapes. */
 const VALUE_SHAPES = [
   { name: "Anthropic-style key", re: /\bsk-ant-[A-Za-z0-9_-]{8,}/g },
@@ -109,7 +101,7 @@ function clientCost(next) {
   };
 }
 
-export function evaluate({ root, budget }) {
+function evaluate({ root, budget }) {
   const next = join(root, ".next");
   const lines = [];
   const failures = [];
@@ -294,7 +286,7 @@ export function evaluate({ root, budget }) {
         "  files joined; fix the read at the source with the\n" +
         "  explicit source paths, or re-measure and\n" +
         "  re-commit the BASELINE in scripts/bundle-budget.json with the file list as its\n" +
-        "  reason — the ceiling is then re-derived from it by the HEADROOM rule, never\n" +
+        "  reason — the ceiling is then re-derived from it by the 15% headroom rule, never\n" +
         "  raised on its own.",
     );
   }
@@ -331,7 +323,7 @@ export function evaluate({ root, budget }) {
         `initial JS for / is ${client.raw} bytes, over the committed ceiling of ` +
           `${budget.client.initialJsCeiling} (baseline ${budget.client.initialJsBytes}).\n` +
           "  Re-measure and re-commit the baseline with what joined recorded as its reason;\n" +
-          "  the ceiling follows from it by the HEADROOM rule and is never raised on its own.",
+          "  the ceiling follows from it by the 15% headroom rule and is never raised on its own.",
       );
     }
     if (client.transfer > budget.client.transferCeiling) {
@@ -357,8 +349,7 @@ export function evaluate({ root, budget }) {
   };
 }
 
-/** Read the committed budget. Separate from `evaluate` so a test can pass its own. */
-export function committedBudget(root = ROOT) {
+function committedBudget(root = ROOT) {
   return JSON.parse(readFileSync(join(root, "scripts", "bundle-budget.json"), "utf8"));
 }
 

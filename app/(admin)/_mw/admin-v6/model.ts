@@ -510,7 +510,7 @@ export interface PublicationRow {
   readonly readback: { readonly status: "PASS" | "FAIL"; readonly at: string } | null;
   readonly attempt: { readonly state: string; readonly at: string; readonly failureCode: string | null } | null;
 }
-export interface PublicationView {
+interface PublicationView {
   readonly ballotPublications?: Readonly<Record<string, import("@/lib/civic-data/ballot-publication").BallotPublicationResult |
     import("@/lib/civic-data/ballot-publication").BallotPublicationSummary>>;
   readonly total: number;

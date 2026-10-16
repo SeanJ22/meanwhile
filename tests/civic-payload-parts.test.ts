@@ -49,6 +49,7 @@ test("identical evidence and reader payloads share parts, and unchanged values w
   const parts = new CivicPayloadParts(memory.io);
   const payload = { divisions: Array.from({ length: 50 }, (_, index) => row("az", index)) };
   const single = partitionCivicPayload({ readModel: payload }, inline);
+  assert.deepEqual(partitionCivicPayload({ readModel: payload }, inline, ["readModel"]), single, "large roots retain their existing parts and hashes");
   const duplicate = partitionCivicPayload({ readModel: payload, normalizedPayload: payload }, inline);
   assert.equal(single.parts.length, duplicate.parts.length);
   await parts.store(payload);
@@ -201,4 +202,22 @@ test("owned hydration roundtrips the production codec with ordered rows and shar
   assert.equal(loaded.readModel, loaded.normalizedPayload, "shared codec roots become the same owned projection");
   assert.deepEqual(loaded.readModel.rows.map(value => value.id), payload.rows.map(value => value.id));
   assert.deepEqual(await reader.load(structuredClone(plan.value)), candidate, "owned hydration did not mutate persisted parts");
+});
+
+
+test("required state roots share one immutable part even when empty or below the inline threshold", async () => {
+  for (const payload of [{}, { cards: {} }, { documents: [] }, { records: [{ id: "official-one", text: "Published fact" }] }]) {
+    const memory = memoryParts(), parts = new CivicPayloadParts(memory.io);
+    const candidate = { id: "state-candidate", readModel: payload };
+    const stored = await parts.store(candidate, ["id"], ["readModel"]) as typeof candidate;
+    const promotion = { payload: stored.readModel };
+    assert.deepEqual(Object.keys(stored.readModel), ["$civicPayloadPart"]);
+    assert.equal(memory.saved.size, 1);
+    assert.deepEqual(await parts.load(promotion.payload), payload);
+    assert.deepEqual(await parts.load(stored), candidate);
+    const writes = memory.writes.length;
+    await parts.store(candidate, ["id"], ["readModel"]);
+    assert.equal(memory.writes.length, writes, "an unchanged small state writes no duplicate part");
+    assert.deepEqual(partitionCivicPayload(candidate, ["id"]), { value: candidate, parts: [] }, "other families retain inline storage");
+  }
 });

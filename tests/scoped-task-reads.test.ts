@@ -1,3 +1,4 @@
+import { openFixturePgRepositories } from "./helpers/pg-repositories.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
@@ -7,7 +8,7 @@ import { readAuditHistory, readScoutResultsForSubjects } from "../lib/control-pl
 import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
 import { BOOTSTRAP_DDL, BOOTSTRAP_VERSION, SCOPED_HISTORY_INDEXES } from "../lib/control-plane/repository/pg-schema.ts";
-import { bootstrap, type Sql } from "../lib/control-plane/repository/pg-store.ts";
+import { type Sql } from "../lib/control-plane/repository/pg-store.ts";
 import type { ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
 import { autonomousHarness } from "./helpers/autonomous-fleet.ts";
 import { readLineageHistory } from "../lib/control-plane/workers/scoped-history.ts";
@@ -182,7 +183,7 @@ test("CH-26: schema version 20 builds the scoped indexes online, on the exact ex
     if (text.includes("pg_try_advisory_lock")) return [{ locked: true }];
     return [];
   } };
-  await bootstrap(sql, "2026-10-16T12:00:00.000Z");
+  await openFixturePgRepositories(sql, "2026-10-16T12:00:00.000Z");
   assert.ok(calls.some(text => text.includes("to_regclass('cp_attempts_work_item')")));
   assert.equal(calls.filter(text => text === SCOPED_HISTORY_INDEXES[0]!.ddl).length, 1);
   assert.ok(!calls.some(text => /^\s*(?:BEGIN|START\s+TRANSACTION|COMMIT|ROLLBACK)\s*(?:;|$)/i.test(text)), "online indexes never run inside a transaction");

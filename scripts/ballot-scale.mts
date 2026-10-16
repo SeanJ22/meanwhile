@@ -393,7 +393,7 @@ async function worker() {
     const queries = [...body.matchAll(/"query"\s*:\s*("(?:[^"\\]|\\.)*")/g)].map(match => JSON.parse(match[1]) as string);
     assert.ok(queries.length, "The measured request must contain SQL.");
     for (const match of body.matchAll(/"(US-[A-Z]{2}:(?:state-election-ballots|candidate-profiles|candidate-publications|voting-sites|candidate-campaign-sites-derived|reader-registry-runtime))"/g)) {
-      assert.ok(["unchanged", "bootstrap-prepare", "bootstrap-coordinator"].includes(phase) || match[1].startsWith(`US-${state}:`), `Another state's scope crossed this worker: ${match[1]}`);
+      assert.ok(["unchanged", "artifact-all", "bootstrap-prepare", "bootstrap-coordinator"].includes(phase) || match[1].startsWith(`US-${state}:`), `Another state's scope crossed this worker: ${match[1]}`);
       stateScopes.add(match[1]);
     }
     return { mutation: queries.some(query => /\b(?:insert|update|delete)\b/i.test(query)),
@@ -639,19 +639,20 @@ async function worker() {
     process.argv = args;
     assert.ok(!process.exitCode, "The actual state artifact CLI must succeed.");
     result = { entry: "scripts/publish-state-authority.mts" };
-  } else if (phase === "artifact" || phase === "unchanged") {
+  } else if (phase === "artifact" || phase === "artifact-all" || phase === "unchanged") {
     const { publishSupervisorReaderEdge } = await import("../lib/civic-data/reader-edge-publication.ts");
     const { PostgresRoutineDataStore } = await import("../lib/civic-data/store.ts");
     const children: unknown[] = [];
     const { selectedStateEdgePointers } = await import("../lib/civic-data/promoted-edge-publication.ts");
-    const selected = phase === "unchanged" ? selectedStateEdgePointers(null).flatMap(unit => unit.pointers) : [{ recordClass, scope }];
+    const selected = phase === "artifact" ? [{ recordClass, scope }] : selectedStateEdgePointers(null).flatMap(unit => unit.pointers);
     const published = await stage("edge:metadata-coordinator", () => publishSupervisorReaderEdge(new PostgresRoutineDataStore(), now,
       selected, { artifactStore, stateArtifactChildren: { launch: async command => {
         assert.notEqual(phase, "unchanged", "An unchanged national poll must launch no artifact child.");
         const version = command.args.find(value => value.startsWith("--version="))!;
         const authority = command.args.find(value => value.startsWith("--family="))!.slice("--family=".length);
         const childFamily = authority === "candidate-publications" ? "candidate-corpus" : authority;
-        const measured = await child(["--mode=worker", `--directory=${directory}`, `--edge-directory=${edgeDirectory}`, `--state=${state}`,
+        const childState = command.args.find(value => value.startsWith("--state="))!.slice("--state=".length);
+        const measured = await child(["--mode=worker", `--directory=${directory}`, `--edge-directory=${edgeDirectory}`, `--state=${childState}`,
           `--family=${childFamily}`, "--phase=artifact-child", `--port=${databasePort}`, `--division=${division}`, version,
           ...(arg("production") === "1" ? ["--production=1"] : [])], command.env);
         const line = measured.output.split("\n").find(row => row.startsWith("SCALE_RESULT="));
@@ -669,7 +670,7 @@ async function worker() {
     const changed: string[] = [], concurrentChanges: string[] = [];
     for (const [kind, states] of Object.entries(after)) for (const [key, ref] of Object.entries(states)) {
       if (JSON.stringify(beforeManifest?.stateAuthorities?.[kind as keyof typeof after]?.[key]) === JSON.stringify(ref)) continue;
-      if (key !== state) {
+      if (key !== state && phase !== "artifact-all") {
         assert.equal(arg("concurrent-coverage"), "1", "Only the selected state's artifacts may change in an isolated run.");
         concurrentChanges.push(`${kind}:${key}`);
         continue;
@@ -752,7 +753,7 @@ async function worker() {
       const built = await (async () => {
         const prior = await stage("worker:prior-state", () => readManualProjectionPrior(stateBallotContractId("ballot-contests", state), store, now));
         const priorVersionId = prior?.versionId ?? null;
-        const earlierReceipts = prior?.sourceReceipt.sources.map(row => `${row.finalUrl}@${row.rawHash}`) ?? [];
+        const earlierReceipts = prior?.sourceReceipt?.sources.map(row => `${row.finalUrl}@${row.rawHash}`) ?? [];
         let source = await stage("worker:source-read", () => readFile(resolve(directory, `${state.toLowerCase()}.worker${phase === "worker-one" ? "-one" : ""}.csv`), "utf8"));
         if (phase !== "worker-seed") source = source.replaceAll("Avery", "Taylor");
         const sourceBytes = Buffer.byteLength(source);

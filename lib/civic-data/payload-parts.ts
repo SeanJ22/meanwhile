@@ -51,8 +51,8 @@ export class CivicPayloadParts {
     return [...hit, ...read];
   }
 
-  async store(input: unknown, inlineFields?: readonly string[]): Promise<unknown> {
-    const plan = partitionCivicPayload(input, inlineFields);
+  async store(input: unknown, inlineFields?: readonly string[], referencedFields?: readonly string[]): Promise<unknown> {
+    const plan = partitionCivicPayload(input, inlineFields, referencedFields);
     const known = new Set<string>();
     for (let offset = 0; offset < plan.parts.length; offset += 512) {
       for (const hash of await this.io.existing(plan.parts.slice(offset, offset + 512).map(part => part.hash))) known.add(hash);

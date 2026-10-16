@@ -1,3 +1,4 @@
+import { statePublicationScope } from "./state-publication.ts";
 import { consumeStatePublicationRecord, rememberStatePublicationPrior } from "./state-publication-prior.ts";
 import type { BallotSet } from "../ballot/types.ts";
 import { measureRecordIssue, seedMeasureRecords, type MeasureRecord } from "../ballot/measure-records.ts";
@@ -30,6 +31,7 @@ import {
 } from "../routing/everyday.ts";
 import { canonicalCivicDataJson, civicRecordsFor } from "./changes.ts";
 import { canonicalCivicDataHash } from "./canonical-hash.ts";
+import type { ManualPriorAuthority } from "./manual-prior-authority.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import {
   directPositiveSourceUrls,
@@ -144,7 +146,8 @@ export interface ManualProjectionPrior {
   readonly versionId: string;
   readonly temporal?: RoutineCandidate["temporal"];
   readonly payload: ManualProjectionPayload;
-  readonly sourceReceipt: ManualSourceSetReceipt;
+  readonly sourceReceipt?: ManualSourceSetReceipt;
+  readonly readModelSha256?: string;
 }
 
 export function completeOfficialBallotContests(payload: GenericBallotProjection, receipt: ManualSourceSetReceipt) {
@@ -626,12 +629,13 @@ export async function readManualProjectionPrior(
 ): Promise<ManualProjectionPrior | null> {
   const contract = requiredManualProductionContract(contractId);
   const proofStore = store as CivicDataReadStore & Partial<Pick<import("./store.ts").RoutineDataStore, "readCandidateProof">>;
-  const evidence: { found: boolean; sourceReceipt?: ManualSourceSetReceipt; temporal?: RoutineCandidate["temporal"] } = { found: false };
-  const remember = <T extends { candidate: Pick<RoutineCandidate, "retrieval" | "temporal"> }>(candidate: T | null): T | null => {
+  const evidence: { found: boolean; sourceReceipt?: ManualSourceSetReceipt; temporal?: RoutineCandidate["temporal"]; readModelSha256?: string } = { found: false };
+  const remember = <T extends { candidate: Pick<RoutineCandidate, "retrieval" | "temporal"> & { normalization: Pick<RoutineCandidate["normalization"], "normalizedHash"> } }>(candidate: T | null): T | null => {
     if (!evidence.found && candidate) {
       evidence.found = true;
       evidence.sourceReceipt = candidate.candidate.retrieval.manualSourceReceipt;
       evidence.temporal = candidate.candidate.temporal;
+      evidence.readModelSha256 = candidate.candidate.normalization.normalizedHash ?? undefined;
     }
     return candidate;
   };
@@ -650,14 +654,17 @@ export async function readManualProjectionPrior(
     throw new Error(`MANUAL_PROMOTION_BASE_UNAVAILABLE:${contractId}:${code}:${read.detail}`);
   }
   const sourceReceipt = evidence.sourceReceipt;
-  if (evidence.found && !sourceReceipt) return null;
-  const issue = manualSourceReceiptStructureIssue(sourceReceipt);
-  if (!evidence.found || !sourceReceipt || issue || sourceReceipt.sources.some((source) => source.reviewOutcome === "BLOCKED")) {
+  if (!sourceReceipt && !statePublicationScope(read.projection.scope)) return null;
+  const trustedImport = read.projection.receipt.checks.some(check => check.check === "SOURCE_AUTHENTICITY" && check.verdict === "PASS" &&
+    ["TRUSTED_LKG_IMPORT_PROVENANCE_VALID", "TRUSTED_LKG_REATTESTATION_PROVENANCE_VALID"].includes(check.code));
+  const issue = sourceReceipt ? manualSourceReceiptStructureIssue(sourceReceipt) : null;
+  if (!evidence.found || (!sourceReceipt && !trustedImport) || issue || sourceReceipt?.sources.some((source) => source.reviewOutcome === "BLOCKED")) {
     throw new Error(`MANUAL_PROMOTION_BASE_PROOF_INVALID:${contractId}:${issue?.code ?? "SOURCE_RECEIPT_NOT_GOOD"}`);
   }
   rememberStatePublicationPrior(store, read.projection);
   return {
     versionId: read.projection.versionId,
+    readModelSha256: evidence.readModelSha256,
     temporal: evidence.temporal,
     payload: read.value,
     sourceReceipt,
@@ -801,8 +808,12 @@ function ballotProjection(
   };
 }
 
-function profileProjection(payload: ManualProjectionPayload, state?: BallotState): BuiltProjection {
-  payload = readerCandidateProfiles(payload as CandidateProfilesProjection);
+function profileProjection(payload: ManualProjectionPayload, state?: BallotState, inherited = new Map<string, string>()): BuiltProjection {
+  const profiles = payload as CandidateProfilesProjection;
+  const safe = readerCandidateProfiles(profiles);
+  payload = { ...safe, cards: { ...safe.cards, note: profiles.cards.note, hunts: profiles.cards.hunts,
+    cards: Object.fromEntries(Object.entries(safe.cards.cards).map(([key, card]) =>
+      [key, inherited.has(`card:${key}`) ? profiles.cards.cards[key] : card])) } };
   const held = object(payload);
   const cards = object(object(held?.cards)?.cards) ?? {};
   const links = object(object(held?.links)?.links) ?? {};
@@ -832,7 +843,7 @@ function profileProjection(payload: ManualProjectionPayload, state?: BallotState
   };
 }
 
-function corpusProjection(payload: ManualProjectionPayload, receipt: ManualSourceSetReceipt, state?: BallotState): BuiltProjection {
+function corpusProjection(payload: ManualProjectionPayload, receipt: ManualSourceSetReceipt, state?: BallotState, inherited = new Map<string, string>()): BuiltProjection {
   const held = object(payload);
   const documents = rows(held, "documents");
   const documentIds = documents.map((row) => string(row.id));
@@ -845,7 +856,8 @@ function corpusProjection(payload: ManualProjectionPayload, receipt: ManualSourc
     ambiguous: false,
   }));
   const versions = receiptVersionIndex(receipt);
-  const complete = documents.every(row => versions.has(`${string(row.documentUrl)}\n${string(row.contentHash)}\n${string(row.retrievedAt)}`));
+  const complete = documents.every(row => inherited.get(`document:${string(row.id)}`) === canonicalCivicDataHash(row) ||
+    versions.has(`${string(row.documentUrl)}\n${string(row.contentHash)}\n${string(row.retrievedAt)}`));
   return {
     payload,
     records,
@@ -1047,6 +1059,15 @@ export function manualProjectionCandidate(
   const promotionReceipt = isolated?.sourceReceipt ?? input.sourceReceipt;
   const family = projectionFamily(input.contractId);
   const partition = parseStateBallotContractId(input.contractId);
+  const inherited = new Map<string, string>();
+  if (options.prior && (family === "candidate-profiles" || family === "candidate-corpus")) {
+    const before = new Map(civicRecordsFor(contract.recordClass, options.prior.payload)
+      .map(member => [member.key, canonicalCivicDataHash(member.record)]));
+    for (const member of civicRecordsFor(contract.recordClass, payload)) {
+      const digest = before.get(member.key);
+      if (digest && digest === canonicalCivicDataHash(member.record)) inherited.set(member.key, digest);
+    }
+  }
   const built = family === "plain-english-translations"
     ? plainEnglishProjection(payload)
     : family === "ballot-contests"
@@ -1054,9 +1075,9 @@ export function manualProjectionCandidate(
     : family === "az-sos-ballot" || family === "nh-curated-ballot"
       ? ballotProjection(family, payload)
     : family === "candidate-profiles"
-      ? profileProjection(payload, partition?.state)
+      ? profileProjection(payload, partition?.state, inherited)
       : family === "candidate-corpus"
-        ? corpusProjection(payload, promotionReceipt, partition?.state)
+        ? corpusProjection(payload, promotionReceipt, partition?.state, inherited)
         : family === "officeholder-statements"
           ? officeholderStatementProjection(payload, promotionReceipt)
           : curatedReaderProjection(family, payload, promotionReceipt);
@@ -1073,14 +1094,23 @@ export function manualProjectionCandidate(
   const acquired = isolated
     ? isolated.supportedCurrentSources > 0 && Boolean(primary)
     : Boolean(primary) && blockedSources.length === 0;
+  const civicRecords = family === "ballot-contests" ? built.records : civicRecordsFor(contract.recordClass, built.payload);
+  const retainedMembers = civicRecords.flatMap(member => {
+    const digest = inherited.get(member.key);
+    return digest && digest === canonicalCivicDataHash(member.record) ? [{ key: member.key, sha256: digest }] : [];
+  });
+  const priorAuthority: ManualPriorAuthority | undefined = options.prior && retainedMembers.length ? {
+    kind: "VALIDATED_PRIOR_PROJECTION", versionId: options.prior.versionId,
+    readModelSha256: options.prior.readModelSha256 ?? canonicalCivicDataHash(options.prior.payload), retainedMembers,
+  } : undefined;
+  const retained = new Set(retainedMembers.map(member => member.key));
   const violations = [
-    ...receiptCoverageProblems(built.payload, promotionReceipt),
+    ...receiptCoverageProblems(priorAuthority ? civicRecords.filter(member => !retained.has(member.key)).map(member => member.record) : built.payload, promotionReceipt),
     ...built.violations,
     ...(isolated && isolated.supportedCurrentSources > 0 && isolated.acceptedCurrentMembers === 0
       ? ["The current review supplied no valid member-scoped fact; retained LKG alone cannot turn a failed package into a successful refresh."]
       : []),
   ];
-  const civicRecords = family === "ballot-contests" ? built.records : civicRecordsFor(contract.recordClass, built.payload);
   const droppedRecords = isolated?.rejectedCurrentMembers ?? 0;
   return {
     // Profiles and publications share a source and scope; their contract keeps version ids distinct.
@@ -1136,5 +1166,6 @@ export function manualProjectionCandidate(
     readModel: built.payload,
     civicRecords,
     excludedFacts: isolated?.excludedFacts ?? [],
+    ...(priorAuthority ? { manualPriorAuthority: priorAuthority } : {}),
   };
 }

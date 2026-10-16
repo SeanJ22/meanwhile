@@ -1,11 +1,12 @@
-import { consumeStatePublicationRecord, rememberStatePublicationPrior, takeStatePublicationPrior } from "../lib/civic-data/state-publication-prior.ts";
+import { bindStatePublicationPrior, consumeStatePublicationRecord, rememberStatePublicationHashes, rememberStatePublicationPrior, takeStatePublicationPrior, withStateRecordHashes } from "../lib/civic-data/state-publication-prior.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createHash } from "node:crypto";
 import { votingSitesCandidate } from "../lib/ballot/voting-sites-data-plane.ts";
-import { canonicalCivicDataJson, candidateChangeSet } from "../lib/civic-data/changes.ts";
+import { canonicalCivicDataJson, candidateChangeSet, civicRecordFacts, civicRecordsFor } from "../lib/civic-data/changes.ts";
 import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
 import { CivicPayloadParts } from "../lib/civic-data/payload-parts.ts";
+import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { decodeStateCandidate, durableStateHash, encodeStateCandidate, immutableStateCandidate } from "../lib/civic-data/state-publication.ts";
@@ -93,9 +94,11 @@ test("state merge releases reused prior facts immediately and preserves exact ch
   updated.sites[1].address = "Verified replacement address";
   updated.sites.pop();
   const expected = candidateChangeSet(next, prior.readModel);
-  rememberStatePublicationPrior(store, { key: `${prior.recordClass}:${prior.scope}`, versionId: prior.id,
+  const projection = { key: `${prior.recordClass}:${prior.scope}`, versionId: prior.id,
     lastKnownGoodVersionId: prior.id, sourceId: prior.sourceId, recordClass: prior.recordClass, scope: prior.scope,
-    payload: prior.readModel, promotedAt: NOW, receipt: null as never });
+    payload: prior.readModel, promotedAt: NOW, receipt: null as never };
+  rememberStatePublicationHashes(projection, withStateRecordHashes(prior).normalization);
+  rememberStatePublicationPrior(store, projection);
   consumeStatePublicationRecord(original, updated);
   for (const old of original.sites) consumeStatePublicationRecord(old, updated.sites.find(row => row.id === old.id) ?? null);
   const indexed = takeStatePublicationPrior(store, prior.recordClass, prior.scope)!;
@@ -116,8 +119,11 @@ test("a shared profile object is consumed separately for each civic key", () => 
   const prior = { kind: "candidate-profiles", cards: { cards: { first: shared, alias: shared } } };
   const next = { kind: "candidate-profiles", cards: { cards: { first: shared, alias: changed } } };
   const input = { ...candidate(), recordClass: "CANDIDATE_PROFILE" as const, scope: "US-AZ:candidate-profiles", readModel: next }, store = {};
-  rememberStatePublicationPrior(store, { key: `${input.recordClass}:${input.scope}`, sourceId: input.sourceId, recordClass: input.recordClass,
-    scope: input.scope, versionId: "prior", lastKnownGoodVersionId: "prior", payload: prior, promotedAt: NOW, receipt: null as never });
+  const projection = { key: `${input.recordClass}:${input.scope}`, sourceId: input.sourceId, recordClass: input.recordClass,
+    scope: input.scope, versionId: "prior", lastKnownGoodVersionId: "prior", payload: prior, promotedAt: NOW, receipt: null as never };
+  rememberStatePublicationHashes(projection, withStateRecordHashes({ ...input, readModel: prior,
+    normalization: { ...input.normalization, normalizedHash: canonicalCivicDataHash(prior) } }).normalization);
+  rememberStatePublicationPrior(store, projection);
   consumeStatePublicationRecord(shared, shared, "card:first");
   consumeStatePublicationRecord(shared, changed, "card:alias");
   const index = takeStatePublicationPrior(store, input.recordClass, input.scope)!;
@@ -139,7 +145,7 @@ test("a stale state merge is refused without reading its superseded payload", as
     lkg: { ...second.candidate, candidate: { ...second.candidate.candidate, readModel: null, normalizedPayload: null } },
   }) });
   const readCandidate = store.readCandidate.bind(store);
-  t.mock.method(store, "readCandidate", async id => {
+  t.mock.method(store, "readCandidate", async (id: string) => {
     assert.notEqual(id, first.candidate.candidate.id, "lost CAS must not hydrate the superseded state");
     return readCandidate(id);
   });
@@ -148,4 +154,34 @@ test("a stale state merge is refused without reading its superseded payload", as
   assert.equal(result.candidate.failureCode, "PROMOTION_BASE_CHANGED");
   assert.equal(result.promoted, null);
   assert.equal((await store.readPromotion("VOTING_SITE", "US-AZ:voting-sites"))?.versionId, second.promoted!.versionId);
+});
+
+
+test("state publication derives persisted member hashes and refuses a forged prior index", async t => {
+  t.mock.method(Date, "now", () => Date.parse("2026-10-16T14:00:00.000Z"));
+  const store = new MemoryRoutineDataStore(), input = candidate();
+  const supplied = { ...input, normalization: { ...input.normalization, stateRecordHashes: {
+    readModelHash: input.normalization.normalizedHash!, members: [{ key: "invented", factsHash: "f".repeat(64), sha256: "f".repeat(64) }],
+  } } };
+  const outcome = await processRegisteredManualCandidate(store, "voting-sites:AZ", supplied, NOW);
+  assert.equal(outcome.candidate.state, "PROMOTED", outcome.candidate.failureDetail ?? "");
+  const hashes = outcome.candidate.candidate.normalization.stateRecordHashes!;
+  assert.equal(hashes.readModelHash, input.normalization.normalizedHash);
+  assert.deepEqual(hashes.members, civicRecordsFor(input.recordClass, input.readModel).map(member => ({
+    key: member.key, sha256: canonicalCivicDataHash(member.record), factsHash: canonicalCivicDataHash(civicRecordFacts(input.recordClass, member)),
+  })));
+  const read = await readPromotedCivicData(input.recordClass, input.scope, { store, now: NOW, bypassCache: true });
+  assert.equal(read.kind, "PROMOTED");
+  if (read.kind !== "PROMOTED") return;
+  const firstSite = (read.value as { jurisdictions: { sites: object[] }[] }).jurisdictions[0].sites[0];
+  Object.defineProperty(firstSite, "address", { get() { assert.fail("prior registration must reuse stored hashes without visiting old facts"); }, enumerable: true });
+  rememberStatePublicationPrior(store, read.projection);
+  const prior = takeStatePublicationPrior(store, input.recordClass, input.scope)!;
+  assert.equal(prior.members.size, hashes.members.length);
+  const tampered = { ...outcome.candidate.candidate, normalization: { ...outcome.candidate.candidate.normalization,
+    stateRecordHashes: { ...hashes, members: hashes.members.map((member, index) => index ? member : { ...member, factsHash: "f".repeat(64) }) } } };
+  assert.throws(() => bindStatePublicationPrior(tampered, prior), /STATE_PRIOR_RECORD_HASHES_MISMATCH/);
+  assert.throws(() => rememberStatePublicationHashes(read.projection, { ...input.normalization,
+    stateRecordHashes: { ...hashes, readModelHash: "f".repeat(64) } }), /STATE_RECORD_HASHES_PAYLOAD_MISMATCH/);
+  assert.throws(() => rememberStatePublicationPrior({}, { ...read.projection }), /STATE_RECORD_HASHES_NOT_VERIFIED/);
 });

@@ -673,10 +673,8 @@ async function recordHuntSourceProgress(task: RoutineSourceTask, stage: HuntSour
     testedSha: RUNNING_CODE_SHA, huntSourceProgress: progress }, at);
 }
 
-// Source pointers may settle in the other routine process while publication has a large outbox.
-// Copy them before admission, then once per existing publication minute without overlapping sweeps.
-// Federal backfills publish state pages while their child is still running.
-// The existing minute sweep brings those facts to readers before the national pass ends.
+// The minute sweep picks up independently published state pages while national backfills are still running.
+// Sweep once before admission and prevent overlapping copies.
 const periodicFederalTasks = STANDING_SOURCE_TASKS.filter(task => task.recordClass === "FEDERAL_MONEY" &&
   (!ONLY || ONLY.has(task.id) || (task.registeredContractId !== undefined && ONLY.has(task.registeredContractId))));
 const periodicSourceEdge = PUBLISH_NOW || periodicFederalTasks.length > 0;

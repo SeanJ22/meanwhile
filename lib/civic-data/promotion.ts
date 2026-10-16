@@ -1,3 +1,4 @@
+import { rememberStatePublicationHashes, withStateRecordHashes } from "./state-publication-prior.ts";
 import { processRoutineCandidate } from "./candidate-lifecycle.ts";
 import type { CandidateVersionRecord, PromotedProjection, RoutineCandidate } from "./types.ts";
 import { PostgresRoutineDataStore, type RoutineDataStore } from "./store.ts";
@@ -43,7 +44,7 @@ function sourceProjectionObservedAt(store: RoutineDataStore, requested: string):
 /** One frozen JSON value, so an adapter holding references cannot swap payload and digest between async steps. */
 function durableCandidateSnapshot(candidate: RoutineCandidate): RoutineCandidate {
   try {
-    if (statePublicationScope(candidate.scope)) return immutableStateCandidate(candidate);
+    if (statePublicationScope(candidate.scope)) return withStateRecordHashes(immutableStateCandidate(candidate));
     const encoded = JSON.stringify(candidate);
     if (encoded === undefined) throw new Error("candidate is not JSON-representable");
     return JSON.parse(encoded) as RoutineCandidate;
@@ -72,6 +73,8 @@ async function appendTypedReaderProjectionReadback(
   outcome: PromotionOutcome,
   requestedAt: string,
 ): Promise<PromotionOutcome> {
+  if (outcome.promoted && statePublicationScope(outcome.promoted.scope))
+    rememberStatePublicationHashes(outcome.promoted, outcome.candidate.candidate.normalization);
   if (outcome.promoted === null || outcome.confirmed || contract.readerProjection === null) return outcome;
   const read = () => recordRoutineReaderProjectionReadback(store, contract, outcome.promoted!, requestedAt);
   const receipt = await (statePublicationScope(outcome.promoted.scope) ? withStatePublicationRead(outcome.promoted, read) : read());

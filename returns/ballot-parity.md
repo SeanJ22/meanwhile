@@ -5,16 +5,20 @@ owner: ballot-parity
 writer: the ballot-parity lane
 check: at-scale
 ready: no step ids unknown
-river: 965bf002ea7ba2dd209f8d07852708e5e1fa1a8d
-at: 2026-10-16T02:26:06Z
+river: 1d3d303d70dc9d14aab69d61ea9b0d76d76b6e6f
+at: 2026-10-16T05:13:58Z
 state: returned
-fix_subject: fix:f852a3a6
-fix: River · stream/ballot-parity — at-scale failed for ballot-parity: BL-20 (3f3afee0a) merges clean and carries AT SCALE numbers, but the peak comes from a whole state: Illinois (6,924 units, 55,392 fields) peaks at about 1.1 GB after the change (candidate:snapshot 1108 MiB, publish:prior-read 1126 MiB, publ
+fix_subject: fix:15bea633
+fix: River · stream/ballot-parity — at-scale failed for ballot-parity: Not folded: BL-20 f3558fa8c fails the memory check on one path.
 
 ## Failure
 
 ```
-BL-20 (3f3afee0a) merges clean and carries AT SCALE numbers, but the peak comes from a whole state: Illinois (6,924 units, 55,392 fields) peaks at about 1.1 GB after the change (candidate:snapshot 1108 MiB, publish:prior-read 1126 MiB, publish:validate 1081 MiB, candidate:published 1080 MiB in the unchanged run), while the single-document stages (source:acquire-verify, normalize:*) sit near 700-770 MiB. A job's peak must come from the largest single item handled at once (one document, one place), never a whole state. Name those stages (the state-wide candidate snapshot, prior-read and validate) and make them work one document or one place at a time, then report the peak at the largest single item. Database totals (2.18 GB read initial, 2.80 GB read per unchanged run, 67 GB read per day at 24 refreshes) are also state-sized per run; show the unchanged run reads one state's changed documents only.
+Not folded: BL-20 f3558fa8c fails the memory check on one path.
+Unit = one state's own publication (Illinois: 55,392 fields).
+Passes: unchanged sweep (788 MiB, prior payload no longer read) and the initial publish.
+Fails: the changed publication (20,772 deadlines revised, losing values kept) peaks 1.427 GiB, about 1.8x the unchanged run on the same Illinois publication, with 397 MB read from the database. That is the prior version held alongside the new one while losing values are carried over. The READY gives stage peaks only for the unchanged case, so the holding stage is not named.
+Needed in the next READY: per-stage peaks for the changed case on Illinois; carry losing values forward by streaming (one field or one government at a time) so the prior version is not held alongside the new one; peak for the changed case no higher than the initial publish. Everything else in this READY stands and merges clean against river e1a1071a9.
 ```
 
 ## Repair

@@ -20,7 +20,7 @@ for (const [tenant, state, zone] of [["pima", "AZ", "America/Phoenix"], ["seattl
   test(`${state}: ${tenant}'s real office records retain exact people, bodies and term dates`, () => {
     const raw = rawFor(tenant), rows = wiring(raw, state, zone);
     assert.equal(JSON.parse(fixture(tenant, "bodies.meta.json")).state, state);
-    const rosters = legistarMemberRosters(raw, rows, NOW);
+    const rosters = [...legistarMemberRosters(raw, rows, NOW)];
     assert.equal(rosters.length, raw.bodies.length);
     const members = rosters.flatMap(roster => roster.members);
     assert.ok(members.length > 0);
@@ -39,9 +39,9 @@ test("terms advance on the body's date without dropping open-ended or future mem
   const raw = rawFor("pima"), rows = wiring(raw, "AZ", "America/Phoenix");
   const office = raw.offices.find(office => office.OfficeRecordBodyId === 138)!;
   const control = { ...raw, offices: [{ ...office, OfficeRecordStartDate: "2026-10-14T00:00:00", OfficeRecordEndDate: null }] };
-  assert.equal(legistarMemberRosters(control, rows, NOW).flatMap(row => row.members).length, 0);
-  assert.equal(legistarMemberRosters(control, rows, "2026-10-14T12:00:00Z").flatMap(row => row.members).length, 1);
-  assert.throws(() => legistarMemberRosters({ ...control, offices: [{ ...office, OfficeRecordStartDate: "2026-02-30T00:00:00" }] }, rows, NOW), /TERM_INVALID/);
+  assert.equal([...legistarMemberRosters(control, rows, NOW)].flatMap(row => row.members).length, 0);
+  assert.equal([...legistarMemberRosters(control, rows, "2026-10-14T12:00:00Z")].flatMap(row => row.members).length, 1);
+  assert.throws(() => [...legistarMemberRosters({ ...control, offices: [{ ...office, OfficeRecordStartDate: "2026-02-30T00:00:00" }] }, rows, NOW)], /TERM_INVALID/);
 });
 
 
@@ -67,6 +67,30 @@ test("member probes exclude ended offices and historic people, and detect a low-
   assert.notEqual((await read("pima")).signature, first.signature);
   raw = { ...raw, offices: raw.offices.slice(1) };
   assert.ok(!(await read("pima")).offices.some(row => row.OfficeRecordId === current.OfficeRecordId));
+});
+
+test("a changed source never opens the prior full roster, and an unchanged probe opens it only afterward", async t => {
+  t.mock.timers.enable({ apis: ["Date"], now: Date.parse(NOW) });
+  const { recordedMemberFetch } = await import("./helpers/legistar-member-fixtures.ts");
+  const { legistarMemberSignature } = await import("../lib/sources/legistar/members.ts");
+  const source = rawFor("pima"), vault = new MemoryEvidenceStore();
+  const raw = await makeLegistarMembersReader(recordedMemberFetch(() => source, []))("pima");
+  await saveLegistarMembers(vault, raw, NOW);
+  const cached = (await loadLegistarMembers(vault, "pima"))!;
+  let loads = 0;
+  const calls: URL[] = [];
+  const prior = { ...cached, read: async () => {
+    loads++;
+    assert.ok(calls.length > 0 && calls.every(url => url.searchParams.has("$select")));
+    return cached.read();
+  } };
+  const current = await makeLegistarMembersReader(recordedMemberFetch(() => raw, calls), prior)("pima");
+  assert.equal(loads, 1);
+  assert.equal(current.signature, legistarMemberSignature(raw));
+  const changed = { ...raw, offices: raw.offices.map((office, i) => i ? office : { ...office, OfficeRecordRowVersion: "changed" }) };
+  await makeLegistarMembersReader(recordedMemberFetch(() => changed, []), { ...cached, read: async () => {
+    throw new Error("Prior payload must stay unopened when the source changes");
+  } })("pima");
 });
 
 test("tenant facts retain dates, leave an unchanged roster intact, and remove every departed member", async t => {
@@ -109,25 +133,45 @@ test("tenant facts retain dates, leave an unchanged roster intact, and remove ev
   assert.ok(legistarMemberTasks(["pima"])[0].command.includes("--legistar-client=pima"));
 });
 
+test("publication streams source pages across bodies without losing members from another page", async t => {
+  const db = await factDb(); t.after(() => db.pg.close());
+  const raw = rawFor("pima"), original = raw.readings.find(read => new URL(read.url).pathname.endsWith("/officerecords"))!;
+  raw.readings = raw.readings.filter(read => read !== original);
+  for (let start = 0; start < raw.offices.length; start += 2) {
+    const url = new URL(original.url); url.searchParams.set("$skip", String(start));
+    raw.readings.push({ ...original, url: url.href, text: JSON.stringify(raw.offices.slice(start, start + 2)) });
+  }
+  const rows = wiring(raw, "AZ", "America/Phoenix");
+  const report = await publishLegistarMembers({ facts: db, vault: new MemoryEvidenceStore(), raw, rows, clocks: factClocks(null), now: NOW });
+  assert.equal(report.members, 15);
+  const live = await readFactRosters(db.query, rows.map(row => row.bodyId));
+  assert.equal(live.rosters.reduce((total, roster) => total + roster.members.length, 0), report.members);
+});
+
 test("latest-manifest reads never list vault history and still reject corrupt source bytes", async () => {
   const vault = new MemoryEvidenceStore(), raw = rawFor("pima");
   vault.list = async () => { throw new Error("History enumeration is forbidden"); };
   await saveLegistarMembers(vault, raw, NOW);
-  const held = await loadLegistarMembers(vault, "pima");
-  assert.deepEqual(held!.offices, raw.offices);
+  const held = await (await loadLegistarMembers(vault, "pima"))!.read();
+  assert.deepEqual(held.offices, raw.offices);
+  const changed = { ...raw, collectedAt: "2026-10-14T08:00:00.000Z", offices: raw.offices.map((office, i) => i ? office : { ...office, OfficeRecordRowVersion: "changed" }) };
+  changed.readings = raw.readings.map(reading => new URL(reading.url).pathname.endsWith("/officerecords")
+    ? { ...reading, text: JSON.stringify(changed.offices) } : reading);
+  await saveLegistarMembers(vault, changed, changed.collectedAt);
+  assert.deepEqual((await (await loadLegistarMembers(vault, "pima"))!.read()).offices, changed.offices);
   const get = vault.get.bind(vault);
   vault.get = async key => {
     const held = await get(key);
     return held && key.endsWith(".json") && !key.endsWith("manifest.json") && !key.endsWith("latest.json") ? { ...held, bytes: Buffer.from("[]") } : held;
   };
-  await assert.rejects(loadLegistarMembers(vault, "pima"), /HASH_INVALID|hash/);
+  await assert.rejects(async () => (await loadLegistarMembers(vault, "pima"))!.read(), /HASH_INVALID|hash/);
 });
 
 test("a shared tenant binds only the exact governments named by its own doors", () => {
   const raw = rawFor("pima"), rows = wiring(raw, "AZ", "America/Phoenix").slice(0, 2);
   rows[1] = { ...rows[1], ocdId: "ocd-division/country:us/state:az/place:other" };
   const prepared = legistarMembersPackage(raw, rows, NOW);
-  assert.deepEqual(prepared.rosters.map(row => row.bodyId), rows.map(row => row.bodyId));
+  assert.deepEqual(prepared.bound.map(row => row.bodyId), rows.map(row => row.bodyId));
   assert.equal(prepared.unbound.length, raw.bodies.length - rows.length);
 });
 

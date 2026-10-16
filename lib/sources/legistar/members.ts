@@ -16,28 +16,35 @@ export interface LegistarMembers {
   signature: string; collectedAt: string;
   readings: { url: string; text: string; retrievedAt: string }[];
 }
-const hash = (value: unknown) => createHash("sha256").update(JSON.stringify(value)).digest("hex");
-
-export function legistarMemberSignature(raw: Pick<LegistarMembers, "bodies" | "persons" | "offices">): string {
-  const versions = [raw.bodies.map(row => [row.BodyId, row.BodyRowVersion]), raw.persons.map(row => [row.PersonId, row.PersonRowVersion]),
-    raw.offices.map(row => [row.OfficeRecordId, row.OfficeRecordRowVersion])];
-  if (versions.flat().some(([, version]) => typeof version !== "string" || !version)) throw new Error("LEGISTAR_MEMBERS_VERSION_MISSING");
-  return hash(versions);
+export interface CachedLegistarMembers {
+  readonly signature: string;
+  readonly collectedAt: string;
+  read(): Promise<LegistarMembers>;
 }
 
-export function makeLegistarMembersReader(fetchImpl?: typeof fetch, initial: LegistarMembers | null = null) {
-  let held: LegistarMembers | null = initial;
+export function legistarMemberSignature(raw: Pick<LegistarMembers, "bodies" | "persons" | "offices">): string {
+  const hash = createHash("sha256");
+  for (const [rows, idKey, versionKey] of [[raw.bodies, "BodyId", "BodyRowVersion"], [raw.persons, "PersonId", "PersonRowVersion"],
+    [raw.offices, "OfficeRecordId", "OfficeRecordRowVersion"]] as const) {
+    hash.update("[");
+    for (const row of rows) {
+      const fields = row as unknown as Record<string, unknown>, version = fields[versionKey];
+      if (typeof version !== "string" || !version) throw new Error("LEGISTAR_MEMBERS_VERSION_MISSING");
+      hash.update(JSON.stringify([fields[idKey], version]));
+    }
+    hash.update("]");
+  }
+  return hash.digest("hex");
+}
+
+export function makeLegistarMembersReader(fetchImpl?: typeof fetch, initial: CachedLegistarMembers | null = null) {
+  let held = initial;
   return async (slug: string, signal?: AbortSignal): Promise<LegistarMembers> => {
     const readings: LegistarMembers["readings"] = [];
     const options = { fetchImpl, signal, onRead: (reading: LegistarMembers["readings"][number]) => readings.push(reading) };
     const day = new Date(Date.now() - 86_400_000).toISOString().slice(0, 10);
     const officeFilter = `(OfficeRecordEndDate eq null or OfficeRecordEndDate ge datetime'${day}T00:00:00')`;
-    const bodies = await fetchBodies<MemberBody>(slug, { ...options, select: ["BodyId", "BodyRowVersion"] });
-    const offices = await fetchOfficeRecords<MemberOffice>(slug, { ...options, filter: officeFilter,
-      select: ["OfficeRecordId", "OfficeRecordPersonId", "OfficeRecordRowVersion"] });
-    const personIds = [...new Set(offices.map(office => office.OfficeRecordPersonId))].sort((a, b) => a - b);
-    if (personIds.some(id => !Number.isSafeInteger(id) || id <= 0)) throw new Error("LEGISTAR_MEMBERS_PERSON_ID_MISSING");
-    const people = async (select?: readonly string[]) => {
+    const people = async (personIds: readonly number[], select?: readonly string[]) => {
       const persons: MemberPerson[] = [];
       for (let offset = 0; offset < Math.max(1, personIds.length); offset += 100) {
         const ids = personIds.slice(offset, offset + 100);
@@ -46,21 +53,32 @@ export function makeLegistarMembersReader(fetchImpl?: typeof fetch, initial: Leg
       }
       return persons.sort((a, b) => a.PersonId - b.PersonId);
     };
-    const persons = await people(["PersonId", "PersonRowVersion"]);
-    const signature = legistarMemberSignature({ bodies, persons, offices });
-    const previous = held?.slug === slug ? held : null;
-    const collectedAt = new Date().toISOString();
-    if (previous?.signature === signature) {
-      held = { ...previous, readings: [...previous.readings.filter(reading => !new URL(reading.url).searchParams.has("$select")), ...readings] };
-      return held;
+    const probe = async () => {
+      const bodies = await fetchBodies<MemberBody>(slug, { ...options, select: ["BodyId", "BodyRowVersion"] });
+      const offices = await fetchOfficeRecords<MemberOffice>(slug, { ...options, filter: officeFilter,
+        select: ["OfficeRecordId", "OfficeRecordPersonId", "OfficeRecordRowVersion"] });
+      const personIds = [...new Set(offices.map(office => office.OfficeRecordPersonId))].sort((a, b) => a - b);
+      if (personIds.some(id => !Number.isSafeInteger(id) || id <= 0)) throw new Error("LEGISTAR_MEMBERS_PERSON_ID_MISSING");
+      const persons = await people(personIds, ["PersonId", "PersonRowVersion"]);
+      return { signature: legistarMemberSignature({ bodies, persons, offices }), personIds };
+    };
+    const { signature, personIds } = await probe();
+    if (held?.signature === signature) {
+      const previous = await held.read();
+      if (previous.slug !== slug) throw new Error("LEGISTAR_MEMBERS_CACHE_TENANT_INVALID");
+      previous.readings = previous.readings.filter(reading => !new URL(reading.url).searchParams.has("$select"));
+      previous.readings.push(...readings);
+      return previous;
     }
-    const result = { slug, signature, collectedAt, readings,
+    held = null;
+    readings.length = 0;
+    const result = { slug, signature, collectedAt: new Date().toISOString(), readings,
       bodies: await fetchBodies<MemberBody>(slug, options),
-      persons: await people(),
+      persons: await people(personIds),
       offices: await fetchOfficeRecords<MemberOffice>(slug, { ...options, filter: officeFilter }) };
     validateLegistarMembers(result);
     if (legistarMemberSignature(result) !== signature) throw new Error("LEGISTAR_MEMBERS_CHANGED_DURING_READ");
-    held = result;
+    held = { signature, collectedAt: result.collectedAt, read: async () => result };
     return result;
   };
 }
@@ -105,10 +123,9 @@ export function memberSourceUrl(raw: LegistarMembers, collection: string, key: s
   return url;
 }
 
-export function legistarMemberRosters(raw: LegistarMembers, rows: readonly BodySourceWiring[], now: string): BodyRoster[] {
+export function* legistarMemberRosters(raw: LegistarMembers, rows: readonly BodySourceWiring[], now: string, pageUrl?: string): Generator<BodyRoster> {
   validateLegistarMembers(raw);
   const persons = new Map(raw.persons.map(person => [person.PersonId, person]));
-  const rosters: BodyRoster[] = [];
   for (const wiring of rows.filter(row => row.config.slug === raw.slug)) {
     const today = new Intl.DateTimeFormat("en-CA", { timeZone: wiring.timeZone, year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(now));
     const nativeId = Number(wiring.config.eventBodyId);
@@ -116,7 +133,8 @@ export function legistarMemberRosters(raw: LegistarMembers, rows: readonly BodyS
     if (!body) throw new Error(`LEGISTAR_MEMBERS_BODY_UNBOUND:${wiring.bodyId}`);
     const sourceUrl = memberSourceUrl(raw, "officerecords", "OfficeRecordId");
     const members: RosterMember[] = [];
-    for (const office of raw.offices.filter(office => office.OfficeRecordBodyId === nativeId)) {
+    for (const office of raw.offices) {
+      if (office.OfficeRecordBodyId !== nativeId || pageUrl && memberSourceUrl(raw, "officerecords", "OfficeRecordId", office.OfficeRecordId) !== pageUrl) continue;
       const termStart = termDate(office.OfficeRecordStartDate), termEnd = termDate(office.OfficeRecordEndDate);
       if ((termStart && termStart > today) || (termEnd && termEnd < today)) continue;
       const person = persons.get(office.OfficeRecordPersonId);
@@ -134,8 +152,7 @@ export function legistarMemberRosters(raw: LegistarMembers, rows: readonly BodyS
           officeTitle: { ...source, quote: officeTitle }, ...(termStart ? { termStart: { ...source, quote: office.OfficeRecordStartDate! } } : {}),
           ...(termEnd ? { termEnd: { ...source, quote: office.OfficeRecordEndDate! } } : {}) } });
     }
-    rosters.push({ bodyId: wiring.bodyId, bodyName: body.BodyName, members, sourceUrl,
-      sourceOrg: wiring.publishingOrg, collectedAt: raw.collectedAt, kind: "OFFICIAL", partisanship: "UNDETERMINED" });
+    yield { bodyId: wiring.bodyId, bodyName: body.BodyName, members, sourceUrl,
+      sourceOrg: wiring.publishingOrg, collectedAt: raw.collectedAt, kind: "OFFICIAL", partisanship: "UNDETERMINED" };
   }
-  return rosters;
 }

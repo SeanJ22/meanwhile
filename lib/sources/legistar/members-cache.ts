@@ -2,15 +2,21 @@ import { createHash } from "node:crypto";
 import { recordAcquisition, type Artifact } from "../../control-plane/evidence/artifact.ts";
 import { putArtifact, putManifest, buildManifest, readArtifact, type EvidenceStore, type EvidenceManifest, manifestKey } from "../../control-plane/evidence/store.ts";
 import { FRESHNESS_PROJECT } from "../../control-plane/scheduler/durable.ts";
-import { legistarMemberSignature, validateLegistarMembers, type LegistarMembers } from "./members.ts";
+import { legistarMemberSignature, validateLegistarMembers, type LegistarMembers, type CachedLegistarMembers } from "./members.ts";
 
-export async function loadLegistarMembers(vault: EvidenceStore, slug: string): Promise<LegistarMembers | null> {
+export async function loadLegistarMembers(vault: EvidenceStore, slug: string): Promise<CachedLegistarMembers | null> {
   const workItemId = `legistar-members:${slug}`;
   const pointer = await vault.get(latestKey(slug));
   if (!pointer) return null;
-  const key: unknown = JSON.parse(new TextDecoder().decode(pointer.bytes)).manifest;
+  const { manifest: key, signature, collectedAt } = JSON.parse(new TextDecoder().decode(pointer.bytes));
+  if (typeof signature !== "string" || !/^[a-f0-9]{64}$/.test(signature) || !Number.isFinite(Date.parse(collectedAt))) throw new Error("LEGISTAR_MEMBERS_CACHE_POINTER_INVALID");
   if (typeof key !== "string" || !key.startsWith(`project/${FRESHNESS_PROJECT}/source/legistar:${slug}/`) ||
     !key.endsWith(`/${workItemId}/manifest.json`) || key.includes("..")) throw new Error("LEGISTAR_MEMBERS_CACHE_POINTER_INVALID");
+  return { signature, collectedAt, read: () => readLegistarMembers(vault, slug, key, signature) };
+}
+
+async function readLegistarMembers(vault: EvidenceStore, slug: string, key: string, signature: string): Promise<LegistarMembers> {
+  const workItemId = `legistar-members:${slug}`;
   const stored = await vault.get(key);
   if (!stored) throw new Error("LEGISTAR_MEMBERS_CACHE_MANIFEST_MISSING");
   const manifest: EvidenceManifest = JSON.parse(new TextDecoder().decode(stored.bytes));
@@ -36,6 +42,7 @@ export async function loadLegistarMembers(vault: EvidenceStore, slug: string): P
   raw.bodies.sort((a, b) => a.BodyId - b.BodyId); raw.persons.sort((a, b) => a.PersonId - b.PersonId); raw.offices.sort((a, b) => a.OfficeRecordId - b.OfficeRecordId);
   validateLegistarMembers(raw);
   raw.signature = legistarMemberSignature(raw);
+  if (raw.signature !== signature) throw new Error("LEGISTAR_MEMBERS_CACHE_SIGNATURE_INVALID");
   raw.collectedAt = readings.map(reading => reading.retrievedAt).sort((a, b) => Date.parse(a) - Date.parse(b)).at(-1)!;
   return raw;
 }
@@ -52,9 +59,9 @@ export async function saveLegistarMembers(vault: EvidenceStore, raw: LegistarMem
   if (!artifacts.length) throw new Error("LEGISTAR_MEMBERS_CACHE_NO_SOURCE_READS");
   const latest = [...artifacts].sort((a, b) => Date.parse(a.retrievedAt) - Date.parse(b.retrievedAt)).at(-1)!;
   await putManifest(vault, FRESHNESS_PROJECT, latest, buildManifest(FRESHNESS_PROJECT, latest.workItemId, artifacts, now));
-  const pointer = Buffer.from(JSON.stringify({ manifest: manifestKey(FRESHNESS_PROJECT, latest) }));
+  const pointer = Buffer.from(JSON.stringify({ manifest: manifestKey(FRESHNESS_PROJECT, latest), signature: legistarMemberSignature(raw), collectedAt: raw.collectedAt }));
   await vault.put(latestKey(raw.slug), pointer, { contentType: "application/json", byteLength: pointer.byteLength,
-    contentHash: `sha256-${createHash("sha256").update(pointer).digest("hex")}`, objectClass: "MUTABLE_INDEX" });
+    contentHash: `manifest:legistar-members:${raw.slug}:latest`, objectClass: "MUTABLE_INDEX" });
 }
 
 function latestKey(slug: string): string {

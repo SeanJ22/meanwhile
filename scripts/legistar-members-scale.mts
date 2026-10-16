@@ -2,6 +2,7 @@ import { fork } from "node:child_process";
 import { readFileSync, mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir, totalmem } from "node:os";
+import { rm } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { performance } from "node:perf_hooks";
 import { parseCsv } from "../lib/reference/csv.ts";
@@ -26,8 +27,23 @@ if (process.argv.includes("--worker")) {
   const request = (kind: string, payload: unknown) => new Promise<unknown>((resolve, reject) => {
     const id = ++sequence; pending.set(id, { resolve, reject }); process.send!({ id, kind, payload });
   });
-  const query: Query = async (text, params = []) => await request("sql", { text, params }) as Record<string, unknown>[];
-  const fetchImpl = (async (url: string | URL | Request) => Response.json(await request("source", String(url)))) as typeof fetch;
+  let stage = "startup";
+  const stages: Record<string, { rssBytes: number; heapBytes: number }> = {};
+  const sample = () => {
+    const memory = process.memoryUsage(), prior = stages[stage];
+    stages[stage] = { rssBytes: Math.max(prior?.rssBytes ?? 0, memory.rss), heapBytes: Math.max(prior?.heapBytes ?? 0, memory.heapUsed) };
+  };
+  const query: Query = async (text, params = []) => {
+    sample();
+    stage = text.startsWith("SELECT value FROM cp_doors") ? "tenant-doors" : text.startsWith("SELECT sha256 FROM fact_store_load") ? "roster-signature"
+      : text.startsWith("INSERT INTO fact_store_load") ? "checkpoint" : "fact-publication";
+    return await request("sql", { text, params }) as Record<string, unknown>[];
+  };
+  const fetchImpl = (async (url: string | URL | Request) => {
+    sample(); stage = new URL(String(url)).searchParams.has("$select") ? "source-probe" : "source-read-and-save";
+    return Response.json(await request("source", String(url)));
+  }) as typeof fetch;
+  const timer = setInterval(sample, 20);
   const start = performance.now();
   const result = await refreshLegistarMembers({ facts: { query, transaction: async work => {
     await query("BEGIN");
@@ -35,7 +51,8 @@ if (process.argv.includes("--worker")) {
     catch (error) { await query("ROLLBACK"); throw error; }
   } }, doors: query, clocks: factClocks(null), vault: new DurableEvidenceStore(join(directory, "vault"), { remote: null }),
     now: new Date().toISOString(), slug: "pima", fetchImpl });
-  process.send!({ kind: "done", result, peakMemoryBytes: process.resourceUsage().maxRSS * 1024, runMs: performance.now() - start });
+  clearInterval(timer); sample();
+  process.send!({ kind: "done", result, stages, peakMemoryBytes: process.resourceUsage().maxRSS * 1024, runMs: performance.now() - start });
   process.disconnect();
 } else {
   const { default: postgres } = await import("postgres");
@@ -53,7 +70,9 @@ if (process.argv.includes("--worker")) {
   } });
   const pg = { query: async <T extends Record<string, unknown> = Record<string, unknown>>(text: string, params: readonly unknown[] = []) =>
     ({ rows: await sql.unsafe(text, params as never[]) as unknown as T[] }), exec: (text: string) => sql.unsafe(text), close: () => sql.end() };
-  for (const statement of readFileSync(join(root, "lib/db/migrations/0035_r1_fact_store.sql"), "utf8").split("--> statement-breakpoint")) await pg.exec(statement);
+  for (const migration of ["0035_r1_fact_store.sql", "0037_r1_fact_scale.sql", "R3-LEGISTAR-MEMBERS.sql"]) {
+    for (const statement of readFileSync(join(root, "lib/db/migrations", migration), "utf8").split("--> statement-breakpoint")) await pg.exec(statement);
+  }
   await pg.exec(`CREATE TABLE cp_doors (id text PRIMARY KEY, value jsonb NOT NULL);
     CREATE INDEX tenant_idx ON cp_doors ((${LEGISTAR_TENANT_SQL}));
     CREATE TABLE source_rows (collection text, id int, person_id int, end_date text, data jsonb, PRIMARY KEY (collection, id));
@@ -83,12 +102,12 @@ if (process.argv.includes("--worker")) {
       execArgv: ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs"], stdio: ["ignore", "inherit", "inherit", "ipc"],
       env: { ...process.env, DATABASE_URL: "", WTP_CONTROL_PLANE_DATABASE_URL: "" } });
     let done = false;
-    child.on("message", async (message: { id: number; kind: string; payload: { text: string; params: unknown[] } | string; result?: unknown; peakMemoryBytes?: number; runMs?: number }) => {
+    child.on("message", async (message: { id: number; kind: string; payload: { text: string; params: unknown[] } | string; result?: unknown; peakMemoryBytes?: number; runMs?: number; stages?: unknown }) => {
       if (message.kind === "done") {
         done = true;
         console.log(JSON.stringify({ phase: label, runMs: message.runMs, peakMemoryBytes: message.peakMemoryBytes, queries, readBytes, writtenBytes }));
         resolve({ label, ...message.result as object, peakMemoryBytes: message.peakMemoryBytes, runMs: message.runMs,
-          databaseReadBytes: readBytes, databaseWrittenBytes: writtenBytes, queries, sourceReads, sourceBytes }); return;
+          databaseReadBytes: readBytes, databaseRequestBytes: writtenBytes, queries, sourceReads, sourceBytes, stages: message.stages }); return;
       }
       try {
         let result;
@@ -125,8 +144,16 @@ if (process.argv.includes("--worker")) {
     return { ...measured, databaseWalBytes: Number(wal.bytes) };
   };
   const measurements: Record<string, unknown>[] = [];
+  const changeOffice = () => pg.query("UPDATE source_rows SET data=jsonb_set(jsonb_set(data,'{OfficeRecordTitle}','\"Changed Office Title\"'),'{OfficeRecordRowVersion}','\"changed\"') WHERE collection='officerecords' AND id=1");
   measurements.push(await run("one-government-cold"));
+  await changeOffice();
+  measurements.push(await run("one-government-changed"));
   measurements.push(await run("one-government-unchanged"));
+  const tables = (await pg.query<{ tablename: string }>("SELECT tablename FROM pg_tables WHERE schemaname='public' AND tablename NOT IN ('cp_doors','source_rows','governments')")).rows;
+  await pg.exec(`TRUNCATE ${tables.map(row => `"${row.tablename}"`).join(",")} RESTART IDENTITY CASCADE`);
+  await rm(join(directory, "vault"), { recursive: true });
+  await pg.query("UPDATE source_rows SET data=jsonb_set(jsonb_set(data,'{OfficeRecordTitle}',$1::jsonb),'{OfficeRecordRowVersion}',$2::jsonb) WHERE collection='officerecords' AND id=1",
+    [JSON.stringify(raw.offices[0].OfficeRecordTitle), JSON.stringify(raw.offices[0].OfficeRecordRowVersion)]);
   const csv = parseCsv(readFileSync(join(root, "data/reference/census_govt_units_2022.csv"), "utf8"));
   const columns = csv.shift()!, idAt = columns.indexOf("census_id_pid6"), stateAt = columns.indexOf("state");
   const governments = csv.filter(row => row[idAt] && row[stateAt]).map(row => ({ id: row[idAt], state: row[stateAt] }));
@@ -148,17 +175,17 @@ if (process.argv.includes("--worker")) {
   await pg.exec("ANALYZE");
   const sizes = (await pg.query("SELECT (SELECT count(*) FROM cp_doors) AS doors,(SELECT count(*) FROM fact) AS facts,(SELECT count(*) FROM governments) AS governments")).rows[0];
   console.log(JSON.stringify({ seeded: sizes, states: [...new Set(governments.map(row => row.state))].sort() }));
-  measurements.push(await run("national-unchanged"));
-  await pg.query("UPDATE source_rows SET data=jsonb_set(jsonb_set(data,'{OfficeRecordTitle}','\"Changed Office Title\"'),'{OfficeRecordRowVersion}','\"changed\"') WHERE collection='officerecords' AND id=1");
+  measurements.push(await run("national-cold"));
+  await changeOffice();
   measurements.push(await run("national-changed"));
-  measurements.push(await run("national-unchanged-after-change"));
+  measurements.push(await run("national-unchanged"));
   const margin = 0.75 * 2**30;
   let runnerBytes = totalmem();
   try { const limit = Number(readFileSync('/sys/fs/cgroup/memory.max', 'utf8')); if (Number.isFinite(limit)) runnerBytes = Math.min(runnerBytes, limit); } catch {}
   const peak = Math.max(...measurements.map(row => Number(row.peakMemoryBytes)));
   const before = measurements.find(row => row.label === "one-government-unchanged")!;
   const after = measurements.find(row => row.label === "national-unchanged")!;
-  if (before.databaseReadBytes !== after.databaseReadBytes || before.databaseWrittenBytes !== after.databaseWrittenBytes || after.records !== 0) throw new Error("COUNTRY_SIZE_CHANGED_TENANT_IO");
+  if (before.databaseReadBytes !== after.databaseReadBytes || before.databaseRequestBytes !== after.databaseRequestBytes || after.records !== 0) throw new Error("COUNTRY_SIZE_CHANGED_TENANT_IO");
   const report = { sizes, bodies, members, historyPersons: history, historyOffices: history, states: [...new Set(governments.map(row => row.state))].sort(),
     runnerBytes, marginBytes: margin, copies: Math.floor((runnerBytes-margin)/peak), measurements,
     byteDefinition: "UTF-8 SQL request JSON and result-row JSON excluding protocol/TLS; native PostgreSQL WAL bytes and source API bytes reported separately",

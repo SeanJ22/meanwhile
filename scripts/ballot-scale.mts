@@ -886,7 +886,7 @@ async function child(args: string[], env: NodeJS.ProcessEnv = process.env) {
     });
     workerProcess.stderr.on("data", bytes => { errors += String(bytes); });
     workerProcess.once("error", error => { clearInterval(sampler); reject(error); });
-    workerProcess.once("exit", (code, signal) => {
+    workerProcess.once("close", (code, signal) => {
       clearInterval(sampler);
       if (code === 0) resolveResult({ output, stages: stages.sort((a, b) => a.id - b.id), sampledPeakRssBytes });
       else {

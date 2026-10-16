@@ -226,7 +226,7 @@ function National() {
             {shown.map((r) => (
               <tr key={r.placeKey} className={cx(linked === r.code && s.rowLinked)} onMouseEnter={() => setLinked(r.code)} onMouseLeave={() => setLinked(null)} onFocus={() => setLinked(r.code)} onBlur={() => setLinked(null)}>
                 <td><button type="button" className={s.btnLink} onClick={() => v.setScope(r.placeKey)}>{r.name}</button></td>
-                <td className={s.num} title={r.population ? `ACS ${r.population.attribution.period}, 90% margin of error` : undefined}>{r.population ? `${count(r.population.population)}${r.population.marginOfError === null ? "" : ` ± ${count(r.population.marginOfError)}`}` : "—"}</td>
+                <td className={cx(s.num, s.popCell)} title={r.population ? `ACS ${r.population.attribution.period}, 90% margin of error` : undefined}>{r.population ? <>{count(r.population.population)}{r.population.marginOfError === null ? "" : <> <span className={s.moe}>± {count(r.population.marginOfError)}</span></>}</> : "—"}</td>
                 <td className={cx(s.num, r.score == null && s.dim)}>{dash(r.score, (n) => `${n.toFixed(1)}%`)}</td>
                 <td className={s.num}>{r.zipsWorked == null && r.zipsTotal == null ? "—" : `${dash(r.zipsWorked)} / ${dash(r.zipsTotal)}`}</td>
                 <td className={s.num}>{dash(r.hunts)}</td>

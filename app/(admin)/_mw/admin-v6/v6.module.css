@@ -734,7 +734,7 @@
 }
 .mapColumn {
   position: sticky;
-  top: 144px; /* 24px below the sticky app header, which is about 120px tall */
+  top: 184px; /* 24px below the sticky app header, which is 120px to 160px tall depending on the window */
   display: flex;
   flex-direction: column;
   gap: 28px;
@@ -833,6 +833,13 @@
 }
 .countryTable td {
   padding: var(--country-row-pad) 12px;
+}
+/* The margin of error drops under the estimate when the column is tight, so the table never scrolls sideways. */
+.countryTable td.popCell {
+  white-space: normal;
+}
+.moe {
+  white-space: nowrap;
 }
 .countryTable tbody tr.rowLinked {
   background: rgba(79, 201, 232, 0.07);

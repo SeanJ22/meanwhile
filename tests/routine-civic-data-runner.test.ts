@@ -1390,7 +1390,7 @@ test("each admitted meeting source/body contract is its own concurrent child bou
   assert.doesNotMatch(runner, /task\.id === "meetings"|ONLY\.has\("meetings"\)/);
 });
 
-test("ordinary final publication still serves all selected sources when federal minute checks are active", async () => {
+test("an ordinary pass publishes the sources it ran when federal minute checks are active; publish-now finishes its checks", async () => {
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   const start = runner.indexOf("await publishNowEdgeChecks?.stop();\nconst finalReaderEdge");
   const end = runner.indexOf("\nfor (const run of readerRuns)", start);
@@ -1401,16 +1401,16 @@ test("ordinary final publication still serves all selected sources when federal 
     const final = { status: "PUBLISHED", families: "all-selected" };
     const periodic = { status: "PUBLISHED", families: "periodic" };
     const context = {
-      PUBLISH_NOW: publishNow, ONLY: new Set(selected.map(task => task.id)), selectedTasks: selected, store: {},
+      PUBLISH_NOW: publishNow, selectedTasks: selected, ranThisPass: new Set(["openfema"]),
       publishNowEdgeChecks: { stop: async () => periodic, run: async () => { calls.push("periodic"); return periodic; } },
-      publishSupervisorReaderEdge: async (_store: unknown, _at: string, tasks: unknown) => { calls.push(tasks); return final; },
+      publishChangedReaderEdge: async (tasks: unknown) => { calls.push(tasks); return final; },
       readerEdgeSupervisorFailure: () => null, supervisorFailures: [],
     };
     const complete = runInNewContext(transpileModule(`async function complete() {\n${runner.slice(start, end)}\nreturn readerEdge;\n}\ncomplete;`, {
       compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.CommonJS },
     }).outputText, context) as () => Promise<unknown>;
     const result = await complete();
-    assert.deepEqual(calls, publishNow ? ["periodic"] : [selected]);
+    assert.deepEqual(calls, publishNow ? ["periodic"] : [[{ id: "openfema" }]]);
     assert.equal(result, publishNow ? periodic : final);
   }
 });
@@ -1433,11 +1433,11 @@ test("Reader readback repair covers the observable registry independently of sou
   assert.match(child, /const attestor = readerVerifierClosureAttestor\(\);/);
   assert.match(child, /repairRoutineReaderProjectionReadback\(store, contract, observedAt, undefined, \{ attestor \}\)/);
   assert.doesNotMatch(child, /preparePublishedMeetingSnapshot|publishReaderEdgeArtifacts/);
-  assert.match(runner, /await publishNowEdgeChecks\?\.stop\(\);\s*const finalReaderEdge = PUBLISH_NOW && publishNowEdgeChecks \? await publishNowEdgeChecks\.run\(\)\s*:\s*await publishSupervisorReaderEdge\(store, new Date\(\)\.toISOString\(\), ONLY === null \? null : selectedTasks\)/,
-    "publish-now completes its serialized pointer sweep while ordinary repair keeps the selected source scope");
+  assert.match(runner, /await publishNowEdgeChecks\?\.stop\(\);\s*const finalReaderEdge = PUBLISH_NOW && publishNowEdgeChecks \? await publishNowEdgeChecks\.run\(\)\s*:\s*await publishChangedReaderEdge\(selectedTasks\.filter\(task => ranThisPass\.has\(task\.id\)\)\)/,
+    "publish-now completes its pointer sweep while an ordinary pass publishes what it ran");
   const publicationChecks = runner.slice(runner.indexOf("const publishNowEdgeChecks ="), runner.indexOf("const admissionNowMs ="));
-  assert.match(publicationChecks, /publishSupervisorReaderEdge\(store, new Date\(\)\.toISOString\(\), PUBLISH_NOW \? null\s*:\s*periodicFederalTasks\)/,
-    "publish-now checks all promoted families while ordinary minute checks publish the selected federal sources");
+  assert.match(publicationChecks, /const outcome = await publishChangedReaderEdge\(\[\]\)/,
+    "minute checks publish only what was promoted since the edge last published");
   assert.equal(child.match(/readMeetingsProjection\(/g)?.length, 1, "the child composes in one place");
   assert.match(child, /serializeRoutineReaderRepairRecord/);
   assert.doesNotMatch(child, /processRegisteredRoutineCandidate|promoteMeetingPartitions|\.promote\(/);

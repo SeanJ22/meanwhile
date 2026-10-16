@@ -161,6 +161,7 @@ import { placeSourceLaunchOrder, withNationalPlaceTasks } from "../lib/hunt/plac
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { flushDatabaseTransfer } from "../lib/db/transfer.ts";
 import { publishSupervisorReaderEdge, readerEdgeSupervisorFailure, type ReaderEdgePublicationOutcome } from "../lib/civic-data/reader-edge-publication.ts";
+import { readReaderEdgeChanges, type EdgePointer } from "../lib/civic-data/reader-edge-changes.ts";
 import { resolveReaderArtifactWriteStore } from "../lib/meetings/edge-store.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
@@ -294,12 +295,15 @@ const workerToolsHost = ROUTINE_DATA_PROCESS_LEASE && controlPlaneUrlFromEnv()
 const routineMemorySlots = routineProcessSlots();
 const childMemoryReleases = new Map<string, () => void>();
 const startedSourceChildren = new Set<string>();
+/** Every child this pass started: what it ran is what its edge publish carries. */
+const ranThisPass = new Set<string>();
 async function acquireChildMemory(command: BoundedChildCommand): Promise<void> {
   const script = command.args.find(arg => /[.](?:mts|ts)$/.test(arg))?.split(/[\\/]/).at(-1) ?? "";
   const release = await routineMemorySlots.acquire(`${command.id}/${script}`, Math.min(Date.now() + ROUTINE_CHILD_TIMEOUT_MS, PASS_LAUNCH_DEADLINE_MS));
   childMemoryReleases.set(command.id, release);
   (command as { onStarted?: (pid: number) => void }).onStarted = pid => {
     startedSourceChildren.add(command.id);
+    ranThisPass.add(command.id);
     release.observe?.(pid);
   };
 }
@@ -682,9 +686,23 @@ async function recordHuntSourceProgress(task: RoutineSourceTask, stage: HuntSour
 const periodicFederalTasks = STANDING_SOURCE_TASKS.filter(task => task.recordClass === "FEDERAL_MONEY" &&
   (!ONLY || ONLY.has(task.id) || (task.registeredContractId !== undefined && ONLY.has(task.registeredContractId))));
 const periodicSourceEdge = PUBLISH_NOW || periodicFederalTasks.length > 0;
-const publishNowEdgeStore = periodicSourceEdge ? resolveReaderArtifactWriteStore() : null;
+const edgeStore = resolveReaderArtifactWriteStore();
+const edgeStoreName = edgeStore?.kind === "local-file" ? "local folder" : edgeStore?.kind === "netlify-blobs" ? "Netlify Blobs" : "not configured";
+/** Publishes what moved since the edge last published, with what this pass ran; an unchanged edge is neither read nor written. */
+async function publishChangedReaderEdge(ran: readonly EdgePointer[]): Promise<ReaderEdgePublicationOutcome> {
+  const changes = await readReaderEdgeChanges(readerFactDb().query);
+  const selected = [...changes.pointers, ...ran];
+  if (selected.length === 0) {
+    const unchanged: ReaderEdgePublicationOutcome = { ok: true, readerEdge: "CURRENT", store: edgeStoreName, sequence: null, detail: null };
+    console.log(JSON.stringify(unchanged));
+    return unchanged;
+  }
+  const outcome = await publishSupervisorReaderEdge(store, new Date().toISOString(), selected);
+  if (outcome.ok) await changes.save();
+  return outcome;
+}
 const publishNowEdgeChecks = periodicSourceEdge ? startPublishNowEdgeChecks({
-  store: publishNowEdgeStore?.kind === "local-file" ? "local folder" : publishNowEdgeStore?.kind === "netlify-blobs" ? "Netlify Blobs" : "not configured",
+  store: edgeStoreName,
   readPaused: async () => {
     const connection = controlPlaneUrlFromEnv();
     if (!connection) throw new Error("control-plane reporting connection is unavailable");
@@ -692,8 +710,7 @@ const publishNowEdgeChecks = periodicSourceEdge ? startPublishNowEdgeChecks({
     return readIntents([...(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY))]).runnerPause.paused;
   },
   check: async () => {
-    const outcome = await publishSupervisorReaderEdge(store, new Date().toISOString(), PUBLISH_NOW ? null
-      : periodicFederalTasks);
+    const outcome = await publishChangedReaderEdge([]);
     const failure = readerEdgeSupervisorFailure(outcome);
     if (failure) supervisorFailures.push(failure);
     return outcome;
@@ -1507,7 +1524,7 @@ const readerRuns = pass.repair;
 step = "publishing changed reader edge copies";
 await publishNowEdgeChecks?.stop();
 const finalReaderEdge = PUBLISH_NOW && publishNowEdgeChecks ? await publishNowEdgeChecks.run()
-  : await publishSupervisorReaderEdge(store, new Date().toISOString(), ONLY === null ? null : selectedTasks);
+  : await publishChangedReaderEdge(selectedTasks.filter(task => ranThisPass.has(task.id)));
 const readerEdge = PUBLISH_NOW && publishNowEdgeChecks ? (await publishNowEdgeChecks.stop())! : finalReaderEdge;
 const readerEdgeFailure = readerEdgeSupervisorFailure(finalReaderEdge);
 if (readerEdgeFailure && !(PUBLISH_NOW && publishNowEdgeChecks)) supervisorFailures.push(readerEdgeFailure);

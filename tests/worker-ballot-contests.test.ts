@@ -1,4 +1,5 @@
 import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
+import { immutableStateValue } from "../lib/civic-data/state-publication.ts";
 import { stateBallotContractId, stateBallotScope } from "../lib/civic-data/state-scopes.ts";
 import { readPromotedCivicData, promotedEdgeEntryOf } from "../lib/civic-data/read-model.ts";
 import { genericSourcesForDivisions } from "../lib/ballot/reader-sources.ts";
@@ -198,15 +199,16 @@ test("an incomplete successor keeps independently held candidates from the same 
   assert.equal(ballot.contests.find(row => row.title === "School Board")?.candidateListComplete, true);
 });
 
-test("a source's contests update the single working state and capture prior facts before replacing each record", () => {
+test("a source's contests keep immutable prior records while capturing changed facts", () => {
   const original = structuredClone(workerBallotContestsPackage(fixture()).package);
   const before = Object.values((original.payload as GenericBallotProjection).ballots)[0];
   const oldCandidate = before.candidacies[0], oldContest = before.contests[0];
   oldContest.scopeNote = "Previously held description";
+  immutableStateValue(original.payload);
   const updated = workerBallotContestsPackage({ ...fixture(), prior: { versionId: "prior",
     payload: original.payload, sourceReceipt: original.sourceReceipt } });
   const ballot = Object.values((updated.package.payload as GenericBallotProjection).ballots)[0];
-  assert.equal(ballot, before);
+  assert.notEqual(ballot, before);
   assert.deepEqual(ballot.candidacies.find(row => row.id === oldCandidate.id), oldCandidate);
   const changedContest = ballot.contests.find(row => row.id === oldContest.id)!;
   assert.notEqual(changedContest, oldContest);

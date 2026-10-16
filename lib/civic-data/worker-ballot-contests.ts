@@ -239,7 +239,10 @@ export class BallotContestMerge {
     }
     for (const [key, ballot] of Object.entries((prior?.payload as GenericBallotProjection | undefined)?.ballots ?? {})) {
       requirePublication(ballot.election.state === partition.state && key === ballotElectionKey(ballot), "BALLOT_STATE_SCOPE_MISMATCH");
-      const state: BallotRows = { ballot, rows: new Map(), incoming: new Set(), complete: new Set(), candidates: new Set(), measures: new Set(), holds: new Set(), seen: new Map(), declared: new Map(), beforeTimes: new Map(), incomingTimes: new Map() };
+      const mutable = { ...ballot };
+      for (const field of ["generalLineup", "measureAnalyses", "lineupReconciliation"] as const)
+        if (ballot[field]) (mutable as unknown as MutableRow)[field] = { ...ballot[field] };
+      const state: BallotRows = { ballot: mutable, rows: new Map(), incoming: new Set(), complete: new Set(), candidates: new Set(), measures: new Set(), holds: new Set(), seen: new Map(), declared: new Map(), beforeTimes: new Map(), incomingTimes: new Map() };
       for (const [field, value] of Object.entries(ballot)) {
         if (Array.isArray(value)) this.takeRows(state, field, value);
         else if (["generalLineup", "measureAnalyses", "lineupReconciliation"].includes(field) && value) {

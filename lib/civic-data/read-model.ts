@@ -16,7 +16,7 @@ import type {
 } from "./types.ts";
 import { canonicalCivicDataJson } from "./changes.ts";
 import { canonicalCivicDataHash } from "./canonical-hash.ts";
-import { durableStateHash, statePublicationScope } from "./state-publication.ts";
+import { durableStateHash, immutableStateHash, immutableStateValue, statePublicationScope } from "./state-publication.ts";
 import { parseValidationReceipt } from "./receipt.ts";
 import { promotedPayloadSha256, type AttestedPromotion } from "./attested-promotion.ts";
 import {
@@ -1169,7 +1169,10 @@ function publishedStateProofIssue(
     return "the published candidate lacks temporal metadata";
   const hash = candidate.normalization.normalizedHash;
   if (typeof hash !== "string" || !SHA256.test(hash)) return "the published candidate lacks its validated payload hash";
-  try { if (canonicalCivicDataHash(projection.payload) !== hash) return "the state payload does not match its validated published hash"; }
+  try {
+    const owned = immutableStateValue(projection.payload);
+    if (owned !== projection.payload || immutableStateHash(owned) !== hash) return "the state payload does not match its validated published hash";
+  }
   catch { return "the state payload cannot be hashed"; }
   return null;
 }

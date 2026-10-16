@@ -1,4 +1,4 @@
-import { rememberStatePublicationHashes, rememberStatePublicationPrior, withStateRecordHashes } from "../lib/civic-data/state-publication.ts";
+import { immutableStateHash, immutableStateValue, rememberStatePublicationHashes, rememberStatePublicationPrior, withStateRecordHashes } from "../lib/civic-data/state-publication.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
@@ -1540,6 +1540,7 @@ test("state publication reads its pointer and candidate together and rejects a d
     assert.equal(base.current?.payload, base.lkg?.candidate.readModel);
     assert.equal(base.lkg?.candidate.normalizedPayload, base.lkg?.candidate.readModel);
     assert.deepEqual(base.current?.payload, payload);
+    assert.equal(immutableStateHash(immutableStateValue(base.current!.payload)), base.lkg!.candidate.normalization.normalizedHash);
     rememberStatePublicationHashes(base.current!, base.lkg!.candidate.normalization);
     rememberStatePublicationPrior(store, base.current!);
     const indexed = await store.readStatePublicationBase(value.recordClass, value.scope);

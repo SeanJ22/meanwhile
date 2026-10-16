@@ -186,7 +186,7 @@ export function rememberStatePublicationHashes(projection: Pick<PromotedProjecti
   if (!statePublicationScope(projection.scope)) return;
   const issue = stateRecordHashesIssue(normalization.stateRecordHashes, normalization.normalizedHash);
   if (issue) throw new Error(issue);
-  provenHashes.set(projection, normalization.stateRecordHashes!);
+  provenHashes.set(projection, immutableStateValue(normalization.stateRecordHashes!));
 }
 
 export function heldStatePublicationHashes(projection: PromotedProjection): RecordHashes | undefined {
@@ -203,6 +203,9 @@ export function rememberStatePublicationPrior(store: object, projection: Pick<Pr
   if (!statePublicationScope(projection.scope)) return;
   const hashes = provenHashes.get(projection);
   if (!hashes) throw new Error("STATE_RECORD_HASHES_NOT_VERIFIED");
+  const payload = object(projection.payload);
+  if (!payload || !immutableValues.has(payload) || immutableHashes.get(payload) !== hashes.readModelHash)
+    throw new Error("STATE_PRIOR_PAYLOAD_NOT_VERIFIED");
   const prior: StatePublicationPrior = { versionId: projection.versionId, payloadHash: hashes.readModelHash, recordHashes: hashes,
     members: new Map(), ballotCandidates: new Map(), officialIdentityAuthority: object(projection.payload)?.officialIdentityAuthority ?? null };
   const index = (value: unknown, member: StatePublicationPrior["members"] extends Map<string, infer T> ? T : never,
@@ -217,9 +220,15 @@ export function rememberStatePublicationPrior(store: object, projection: Pick<Pr
     const hashes = stored.get(member.key);
     if (!hashes) throw new Error(`STATE_RECORD_HASHES_MEMBER_MISSING:${member.key}`);
     stored.delete(member.key);
-    const entry = { ...member, factsHash: hashes.factsHash, sha256: hashes.sha256 };
+    const record = immutableStateValue(member.record);
+    if (object(record)) {
+      const existing = immutableHashes.get(record as object);
+      if (existing && existing !== hashes.sha256) throw new Error("STATE_PRIOR_RECORD_HASHES_MISMATCH");
+      immutableHashes.set(record as object, hashes.sha256);
+    }
+    const entry = { ...member, record, factsHash: hashes.factsHash, sha256: hashes.sha256 };
     prior.members.set(member.key, entry);
-    index(member.record, entry);
+    index(record, entry);
   }
   if (stored.size) throw new Error("STATE_RECORD_HASHES_MEMBER_EXTRA");
   if (projection.recordClass === "VOTING_SITE") for (const jurisdiction of (object(projection.payload)?.jurisdictions ?? []) as Record<string, unknown>[]) {
@@ -249,9 +258,19 @@ export function rememberStatePublicationPrior(store: object, projection: Pick<Pr
 export function reuseStatePublicationRecord(previous: unknown, incoming: unknown): unknown | null {
   if (!object(previous)) return null;
   const entry = replacements.get(previous as object)?.find(entry => !entry.project && entry.member.record === previous);
-  if (!entry || immutableStateHash(immutableStateValue(incoming)) !== entry.member.sha256) return null;
-  const shared = immutableStateValue(previous);
-  return shared === previous && immutableStateHash(shared) === entry.member.sha256 ? shared : null;
+  if (!entry || !immutableValues.has(previous as object)) return null;
+  return sameStateValue(previous, immutableStateValue(incoming)) ? previous : null;
+}
+
+function sameStateValue(left: unknown, right: unknown): boolean {
+  if (Object.is(left, right)) return true;
+  if (left === null || right === null || typeof left !== "object" || typeof right !== "object") return false;
+  if (Array.isArray(left)) return Array.isArray(right) && left.length === right.length &&
+    left.every((value, index) => sameStateValue(value, right[index]));
+  if (Array.isArray(right)) return false;
+  const keys = Object.keys(left), other = right as Record<string, unknown>;
+  return keys.length === Object.keys(right).length && keys.every(key => Object.hasOwn(other, key) &&
+    sameStateValue((left as Record<string, unknown>)[key], other[key]));
 }
 
 export function consumeStatePublicationRecord(previous: unknown, next: unknown | null, key?: string): void {

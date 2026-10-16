@@ -91,6 +91,7 @@ test("identical state rows share their owned prior while any durable field chang
   const payload = input.readModel as { jurisdictions: { sites: { id: string; address: string }[] }[] };
   const original = payload.jurisdictions[0].sites[0];
   const projection = { scope: input.scope, recordClass: input.recordClass, versionId: input.id, payload };
+  immutableStateHash(immutableStateValue(payload));
   rememberStatePublicationHashes(projection, indexed.normalization);
   rememberStatePublicationPrior(store, projection);
   assert.equal(reuseStatePublicationRecord(original, structuredClone(original)), original);
@@ -99,8 +100,8 @@ test("identical state rows share their owned prior while any durable field chang
   assert.equal(reuseStatePublicationRecord(original, { ...original, checkedAt: "2026-10-16T14:00:00.000Z" }), null);
   assert.throws(() => reuseStatePublicationRecord(original, { ...original, address: BigInt(1) }), /BigInt/);
   const altered = payload.jurisdictions[0].sites[1], captured = structuredClone(altered);
-  altered.address = "Changed after index verification";
-  assert.equal(reuseStatePublicationRecord(altered, captured), null);
+  assert.throws(() => { altered.address = "Changed after index verification"; }, TypeError);
+  assert.equal(reuseStatePublicationRecord(altered, captured), altered);
   consumeStatePublicationRecord(original, original);
   const prior = takeStatePublicationPrior(store, input.recordClass, input.scope)!;
   assert.equal(prior.recordHashes, indexed.normalization.stateRecordHashes);
@@ -121,6 +122,7 @@ test("state merge releases reused prior facts immediately and preserves exact ch
     lastKnownGoodVersionId: prior.id, sourceId: prior.sourceId, recordClass: prior.recordClass, scope: prior.scope,
     payload: prior.readModel, promotedAt: NOW, receipt: null as never };
   rememberStatePublicationHashes(projection, withStateRecordHashes(prior).normalization);
+  immutableStateHash(immutableStateValue(projection.payload));
   rememberStatePublicationPrior(store, projection);
   consumeStatePublicationRecord(original, updated);
   for (const old of original.sites) consumeStatePublicationRecord(old, updated.sites.find(row => row.id === old.id) ?? null);
@@ -146,6 +148,7 @@ test("a shared profile object is consumed separately for each civic key", () => 
     scope: input.scope, versionId: "prior", lastKnownGoodVersionId: "prior", payload: prior, promotedAt: NOW, receipt: null as never };
   rememberStatePublicationHashes(projection, withStateRecordHashes({ ...input, readModel: prior,
     normalization: { ...input.normalization, normalizedHash: canonicalCivicDataHash(prior) } }).normalization);
+  immutableStateHash(immutableStateValue(projection.payload));
   rememberStatePublicationPrior(store, projection);
   consumeStatePublicationRecord(shared, shared, "card:first");
   consumeStatePublicationRecord(shared, changed, "card:alias");
@@ -197,7 +200,8 @@ test("state publication derives persisted member hashes and refuses a forged pri
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;
   const firstSite = (read.value as { jurisdictions: { sites: object[] }[] }).jurisdictions[0].sites[0];
-  Object.defineProperty(firstSite, "address", { get() { assert.fail("prior registration must reuse stored hashes without visiting old facts"); }, enumerable: true });
+  assert.ok(Object.isFrozen(firstSite));
+  assert.throws(() => Object.defineProperty(firstSite, "address", { value: "Changed after verification" }), TypeError);
   rememberStatePublicationPrior(store, read.projection);
   const prior = takeStatePublicationPrior(store, input.recordClass, input.scope)!;
   assert.equal(prior.members.size, hashes.members.length);
@@ -218,4 +222,40 @@ test("state digest reuse never trusts a caller's shallow freeze", () => {
   assert.equal(immutableStateValue(owned), owned);
   assert.equal(immutableStateHash(owned), canonicalCivicDataHash(owned));
   assert.throws(() => { nested.title = "Changed after ownership"; }, TypeError);
+});
+
+test("indexed immutable state records compare durable structure without serializing or rehashing rows", t => {
+  const record = { name: "An official candidate", details: { party: "Independent", incumbent: false },
+    aliases: ["Official name", null], position: 0 };
+  const payload = { kind: "candidate-profiles", cards: { cards: { candidate: record } } };
+  const input = { ...candidate(), recordClass: "CANDIDATE_PROFILE" as const, scope: "US-AZ:candidate-profiles",
+    readModel: structuredClone(payload), normalization: { ...candidate().normalization, normalizedHash: canonicalCivicDataHash(payload) } };
+  const indexed = withStateRecordHashes(input), store = {};
+  const projection = { scope: input.scope, recordClass: input.recordClass, versionId: input.id,
+    payload: immutableStateValue(payload) };
+  assert.equal(immutableStateHash(projection.payload), indexed.normalization.normalizedHash);
+  rememberStatePublicationHashes(projection, indexed.normalization);
+  const equivalent = { position: -0, aliases: ["Official name", undefined], details: { incumbent: false, party: "Independent" },
+    name: "An official candidate", omitted: undefined };
+  t.mock.method(JSON, "stringify", () => assert.fail("verified state members do not need another serialization"));
+  rememberStatePublicationPrior(store, projection);
+  assert.equal(immutableStateHash(record), indexed.normalization.stateRecordHashes!.members[0].sha256);
+  assert.equal(reuseStatePublicationRecord(record, equivalent), record);
+  assert.equal(reuseStatePublicationRecord(record, { ...record, aliases: [null, "Official name"] }), null);
+  assert.equal(reuseStatePublicationRecord(record, { ...record, details: { ...record.details, incumbent: true } }), null);
+  assert.equal(reuseStatePublicationRecord(record, { ...record, checkedAt: NOW }), null);
+  assert.throws(() => { record.details.party = "Mutated"; }, TypeError);
+  assert.throws(() => Object.assign(indexed.normalization.stateRecordHashes!.members[0], { sha256: "f".repeat(64) }), TypeError);
+});
+
+test("a prior index cannot seed member digests without the exact privately owned verified payload", () => {
+  const input = candidate(), indexed = withStateRecordHashes(input), store = {};
+  const projection = { scope: input.scope, recordClass: input.recordClass, versionId: input.id, payload: input.readModel };
+  rememberStatePublicationHashes(projection, indexed.normalization);
+  assert.throws(() => rememberStatePublicationPrior(store, projection), /STATE_PRIOR_PAYLOAD_NOT_VERIFIED/);
+  immutableStateValue(projection.payload);
+  assert.throws(() => rememberStatePublicationPrior(store, projection), /STATE_PRIOR_PAYLOAD_NOT_VERIFIED/);
+  assert.equal(immutableStateHash(projection.payload), indexed.normalization.normalizedHash);
+  rememberStatePublicationPrior(store, projection);
+  assert.equal(takeStatePublicationPrior(store, input.recordClass, input.scope)!.recordHashes, indexed.normalization.stateRecordHashes);
 });

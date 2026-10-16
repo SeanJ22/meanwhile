@@ -5,8 +5,6 @@ import test from "node:test";
 import { MEETING_HELD_LOOKBACK_DAYS } from "../lib/meetings/constants.ts";
 import { HELD_WINDOW_FETCH_SOURCES, meetingFetchedWindowFor } from "../lib/meetings/fetch-window.ts";
 
-/** Every adapter that fetches the held window derives it from the held constants, never the shown ones. */
-
 const ANCHOR = "2026-09-23T16:00:00.000Z";
 const DAY = 86_400_000;
 
@@ -18,8 +16,10 @@ test("DB-03 to DB-05: an adapter in the held-window set takes its window from th
     const code = readFileSync(new URL(`../lib/sources/${name}/index.ts`, import.meta.url), "utf8")
       .replace(/\/\*[\s\S]*?\*\//g, "")
       .replace(/^\s*\/\/.*$/gm, "");
-    assert.match(code, /MEETING_HELD_LOOKBACK_DAYS/, `${name} reads its back edge from the held window`);
-    assert.match(code, /MEETING_HELD_HORIZON_DAYS/, `${name} reads its forward edge from the held window`);
+    if (!/\bmeetingHeldWindowAt\(/.test(code)) {
+      assert.match(code, /MEETING_HELD_LOOKBACK_DAYS/, `${name} reads its back edge from the held window`);
+      assert.match(code, /MEETING_HELD_HORIZON_DAYS/, `${name} reads its forward edge from the held window`);
+    }
     assert.doesNotMatch(code, /CONCLUDED_LOOKBACK_DAYS|UPCOMING_HORIZON_DAYS/, `${name} no longer clips at the shown window`);
   }
 });

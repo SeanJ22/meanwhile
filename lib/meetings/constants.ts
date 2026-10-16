@@ -1,40 +1,14 @@
-/**
- * The cascade's shared constants and result vocabulary, client-safe: split
- * from query.ts, whose import graph reaches node:fs, which the dev bundler
- * refuses in a browser chunk.
- */
-
-/** Miles: 15, 40, 95. Roughly a city, a metro, a region. */
-export const RADIUS_LADDER_KM = [25, 60, 150] as const;
+export const DEFAULT_RADIUS_KM = 25;
+export const MAX_RADIUS_KM = 150;
 
 /** Rolling upcoming window. */
 export const UPCOMING_HORIZON_DAYS = 90;
 
-/**
- * How far back the served window reaches: bounds the concluded fallback tier
- * and the recent-past meetings that ride along for the date slider's backward
- * range.
- */
 export const CONCLUDED_LOOKBACK_DAYS = 90;
 
-/**
- * How far the held window reaches each way. Meetings are held 120 days back
- * and 120 ahead and shown 90 each way (`UPCOMING_HORIZON_DAYS`,
- * `CONCLUDED_LOOKBACK_DAYS`).
- */
 export const MEETING_HELD_LOOKBACK_DAYS = 120;
 export const MEETING_HELD_HORIZON_DAYS = 120;
 
-/**
- * Versioned authority for the only incomplete-horizon meeting removal rule.
- * Evidence must name one of these exact contracts and its bounds must be
- * recomputed from the candidate retrieval instant; caller-supplied dates are
- * never an independent removal authority.
- *
- * `V2` is the held window. `V1` was the shown (90/90) window; the validator
- * accepts a `V1` row for one pass after the change so each partition's first
- * candidate is not refused (`meetingLegacyServingWindowAt`).
- */
 export const MEETING_READER_SERVING_WINDOW_CONTRACT =
   "MEETING_READER_SERVING_WINDOW_V2" as const;
 export const MEETING_READER_SERVING_WINDOW_CONTRACT_V1 =
@@ -86,13 +60,4 @@ export function meetingFetchedWindowAt(anchor: string): { readonly lowerBound: s
   return legacy === null ? null : { lowerBound: legacy.lowerBound, upperBound: legacy.upperBound };
 }
 
-/**
- * Which rung of the cascade produced the result.
- *
- * `exact`     — upcoming meetings inside the radius we first asked for.
- * `widened`   — nothing nearby, so the search stepped out. Say so.
- * `concluded` — no upcoming meetings at any radius; showing what was recently
- *               decided instead, styled distinctly.
- * `none`      — nothing either way. The last honest fallback.
- */
-export type CoverageTier = "exact" | "widened" | "concluded" | "none";
+export type CoverageTier = "exact" | "concluded" | "none";

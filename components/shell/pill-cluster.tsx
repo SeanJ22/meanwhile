@@ -3,7 +3,6 @@
 import { useReaderCopy } from "@/hooks/use-reader-copy";
 import Link from "next/link";
 
-import type { CoverageSummary } from "@/lib/registry/coverage";
 import { ASK_PILL_LABELS } from "@/lib/routing/ask-pill-labels";
 import type { AskPillPlacement } from "@/lib/map/cluster-placement";
 import pearlStyles from "./ask-pearl.module.css";
@@ -11,11 +10,6 @@ import pearlStyles from "./ask-pearl.module.css";
 /** Which small popup is open. At most one. */
 export type ReaderPop = "zip" | "vote" | "ask" | null;
 
-/**
- * The compound nav (Ballot, ZIP, Who governs here?, Where can I vote?) with
- * the Ask pill below it. Each segment asks `map-entry` to open its view, so
- * opening one closes every other. `map-entry` renders exactly one instance.
- */
 export function PillCluster({
   placement,
   zip,
@@ -28,7 +22,6 @@ export function PillCluster({
   placement: AskPillPlacement;
   /** The zip the viewport currently resolves to. Null shows a ZIP chooser. */
   zip: string | null;
-  coverage: CoverageSummary | null;
   pop: ReaderPop;
   /** The Who governs here? card is the view on screen. */
   governsOpen: boolean;
@@ -48,6 +41,7 @@ export function PillCluster({
       <nav className="mw-compound-nav" aria-label="Main">
         <Link
           href={validZip ? `/ballot?zip=${validZip}` : "/ballot"}
+          prefetch={false}
           className="mw-nav-seg mw-nav-ballot"
           onClick={onOpenBallot}
           title={`What's on the ballot${validZip ? ` near ${validZip}` : ""}`}

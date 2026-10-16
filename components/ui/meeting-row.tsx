@@ -19,7 +19,6 @@ interface RowOptions {
   title?: string;
   bodyShown?: boolean;
   jurisdiction?: ReactNode;
-  nearby?: boolean;
   distance?: string | null;
   onOpen?: (meeting: Meeting) => void;
   children?: ReactNode;
@@ -41,7 +40,7 @@ export function MeetingRow(props: RowProps) {
       {children}
     </div>;
   }
-  const { meeting, title = meetingEntryTitle(meeting, { bodyShown: props.bodyShown ?? false }), jurisdiction, nearby, distance, onOpen } = props;
+  const { meeting, title = meetingEntryTitle(meeting, { bodyShown: props.bodyShown ?? false }), jurisdiction, distance, onOpen } = props;
   const access = onlineAccessFor(meeting);
   const gap = venueGapOf(meeting);
   const statedPlace = gap ? statedVenueText(gap) : null;
@@ -59,7 +58,6 @@ export function MeetingRow(props: RowProps) {
     <p className="mt-2 flex flex-wrap items-baseline gap-2 font-mono tabular-nums">
       {meeting.status === "CANCELED" && <MeetingStatusPill status="canceled" />}
       {meeting.status === "CONCLUDED" && <MeetingStatusPill status="concluded" />}
-      {nearby && <span data-meeting-nearby className="text-muted">Nearby</span>}
       <span>{formatMeetingDate(meeting)}</span><span>{formatMeetingTime(meeting)}</span>
       {distance && <span className="text-muted">{distance}</span>}
     </p>

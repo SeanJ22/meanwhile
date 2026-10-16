@@ -3,6 +3,7 @@ import { contentHash } from "./ids.ts";
 import { canonicalJson, ConcurrentModification, IdentityCollision, type AggregateRepository, type AppendOnlyRepository, type ArtifactRecord,
   type ControlPlaneRepositories } from "./repository/types.ts";
 import { completedWorkerResults } from "./repository/worker-completion.ts";
+import type { WorkerResultRecord } from "./workers/types.ts";
 import type { ScoutResult } from "./scheduler/scout-result.ts";
 import type { DetectiveResult } from "./workers/research-types.ts";
 
@@ -241,17 +242,26 @@ const BACKFILL_CURSOR = "box-backfill";
 // A result stamped just before the last pass read the clock may commit after it; each pass looks a minute further back.
 const BACKFILL_OVERLAP_MS = 60_000;
 
-/** Indexes the Scout and Detective results recorded since the last pass; the first pass reads them all, once. */
-export async function backfillBox(repos: Pick<ControlPlaneRepositories, "boxFindings" | "scoutResults" | "workerResults" | "artifacts" | "attempts" | "passCursors">,
-  now: string): Promise<number> {
-  const cursor = await repos.passCursors.read(BACKFILL_CURSOR);
-  const since = cursor ? new Date(Date.parse(cursor.value.through) - BACKFILL_OVERLAP_MS).toISOString() : null;
-  const [scouts, workers] = await Promise.all([repos.scoutResults.readChangedSince(since), repos.workerResults.readChangedSince(since)]);
+type BackfillRepositories = Pick<ControlPlaneRepositories, "boxFindings" | "scoutResults" | "workerResults" | "artifacts" | "attempts" | "passCursors">;
+
+async function indexResults(repos: BackfillRepositories, scouts: readonly ScoutResult[], workers: readonly WorkerResultRecord[], now: string): Promise<number> {
   let indexed = 0;
-  for (const { record } of scouts.records) indexed += (await indexScoutFindings(repos.boxFindings, record, now)).length;
-  const detectives = workers.records.map(({ record }) => record).filter(record => record.result.role === "DETECTIVE");
-  for (const record of await completedWorkerResults(repos, detectives)) {
+  for (const result of scouts) indexed += (await indexScoutFindings(repos.boxFindings, result, now)).length;
+  for (const record of await completedWorkerResults(repos, workers.filter(record => record.result.role === "DETECTIVE"))) {
     indexed += (await indexDetectiveFindings(repos.boxFindings, record as BoxDetectiveRecord, repos.artifacts, now)).length;
+  }
+  return indexed;
+}
+
+/** Indexes the Scout and Detective results recorded since the last pass. The first pass replays every result once, one log key at a time. */
+export async function backfillBox(repos: BackfillRepositories, now: string): Promise<number> {
+  const cursor = await repos.passCursors.read(BACKFILL_CURSOR);
+  const since = cursor ? new Date(Date.parse(cursor.value.through) - BACKFILL_OVERLAP_MS).toISOString() : now;
+  const [scouts, workers] = await Promise.all([repos.scoutResults.readChangedSince(since), repos.workerResults.readChangedSince(since)]);
+  let indexed = await indexResults(repos, scouts.records.map(({ record }) => record), workers.records.map(({ record }) => record), now);
+  if (!cursor) {
+    for (const key of await repos.scoutResults.keys()) indexed += await indexResults(repos, await repos.scoutResults.read(key), [], now);
+    for (const key of await repos.workerResults.keys()) indexed += await indexResults(repos, [], await repos.workerResults.read(key), now);
   }
   const through = [scouts.through, workers.through].flatMap(at => at ?? []).sort()[0];
   if (through) {

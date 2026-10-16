@@ -1617,24 +1617,25 @@ function postgresCandidateEventRowToEvent(row: PostgresCandidateEventRow): Candi
 export class PostgresRoutineDataStore implements RoutineDataStore {
   private readonly db = getDb();
   private readonly readCache = runtimeCivicReadCache();
+  private async readPayloadParts(hashes: readonly string[]) {
+    return this.db.select().from(civicDataPayloadParts).where(inArray(civicDataPayloadParts.hash, [...hashes]));
+  }
   private readonly payloadPartIO: CivicPayloadPartIO = {
     existing: async hashes => (await this.db.select({ hash: civicDataPayloadParts.hash }).from(civicDataPayloadParts)
       .where(inArray(civicDataPayloadParts.hash, [...hashes]))).map(row => row.hash),
     write: async parts => { await this.db.insert(civicDataPayloadParts).values([...parts]).onConflictDoNothing(); },
     read: async hashes => {
-      const values = async (keys: readonly string[]) => this.db.select().from(civicDataPayloadParts)
-        .where(inArray(civicDataPayloadParts.hash, [...keys]));
+      const values = (keys: readonly string[]) => this.readPayloadParts(keys);
       return this.readCache ? this.readCache.rows({ namespace: "payload-part", keys: hashes,
         versions: async keys => keys.map(key => ({ key, etag: key })), values, keyOf: row => row.hash,
       }) : values(hashes);
     },
   };
   private readonly payloadParts = new CivicPayloadParts(this.payloadPartIO);
+  private readonly ownedPayloadParts = new CivicPayloadParts({ ...this.payloadPartIO, read: hashes => this.readPayloadParts(hashes) });
   private async loadPayload(value: unknown, scope: string): Promise<unknown> {
-    const scoped = statePublicationScope(scope);
-    const parts = scoped ? new CivicPayloadParts(this.payloadPartIO) : this.payloadParts;
-    const loaded = await parts.load(value);
-    return scoped ? decodeStateCandidate(loaded) : loaded;
+    if (statePublicationScope(scope)) return decodeStateCandidate(await this.ownedPayloadParts.loadOwned(value));
+    return this.payloadParts.load(value);
   }
 
   async readRegistryDivisions(state: string, labels: readonly string[]): Promise<readonly RegistryDivisionMatch[]> {
@@ -1661,7 +1662,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       .from(civicDataPromotions).where(and(eq(civicDataPromotions.recordClass, recordClass),
         inArray(civicDataPromotions.scope, keys.map(key => key.slice(recordClass.length + 1)))));
     const keys = scopes.map(scope => projectionKey(recordClass, scope));
-    if (!this.readCache || keys.length === 0) return keys.length ? values(keys) : [];
+    if (!this.readCache || keys.length === 0 || scopes.some(scope => statePublicationScope(scope))) return keys.length ? values(keys) : [];
     return this.readCache.rows({ namespace: "promotion", keys, values, keyOf: row => row.key,
       versions: async selected => this.db.select({ key: civicDataPromotions.key,
         etag: sql<string>`concat(${civicDataPromotions}.xmin::text, '/', ${civicDataPromotions}.ctid::text)`,

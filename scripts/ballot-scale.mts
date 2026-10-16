@@ -429,6 +429,7 @@ async function worker() {
   const { LocalFileArtifactStore } = await import("../lib/meetings/edge-store.ts");
   const heldArtifactStore = new LocalFileArtifactStore(edgeDirectory);
   const artifactTransfer = { manifestReads: 0, manifestReadBytes: 0, manifestWrites: 0, manifestWriteBytes: 0,
+    pointerReads: [] as { key: string; bytes: number }[], pointerWrites: [] as { key: string; bytes: number; modified: boolean }[],
     reads: [] as { key: string; bytes: number }[], writes: [] as { key: string; bytes: number }[] };
   const artifactStore: import("../lib/meetings/edge-store.ts").ReaderArtifactStore = {
     kind: heldArtifactStore.kind,
@@ -442,6 +443,16 @@ async function worker() {
       artifactTransfer.manifestWrites++;
       artifactTransfer.manifestWriteBytes += size(manifest);
       return heldArtifactStore.writeManifest(manifest, etag);
+    },
+    async readJsonPointer<T>(key: string) {
+      const held = await heldArtifactStore.readJsonPointer<T>(key);
+      artifactTransfer.pointerReads.push({ key, bytes: held ? size(held.value) : 0 });
+      return held;
+    },
+    async writeJsonPointer<T>(key: string, value: T, expectedEtag: string | null) {
+      const written = await heldArtifactStore.writeJsonPointer(key, value, expectedEtag);
+      artifactTransfer.pointerWrites.push({ key, bytes: size(value), modified: written.modified });
+      return written;
     },
     async readBytes(key) {
       const bytes = await heldArtifactStore.readBytes(key);
@@ -701,13 +712,14 @@ async function worker() {
     markStage("edge:read", "end");
   } else {
     const { PostgresRoutineDataStore } = await stage("module-load:publication", () => import("../lib/civic-data/store.ts"));
-    const store = new Proxy(new PostgresRoutineDataStore(), {
-      get(target, property, receiver) {
-        const value = Reflect.get(target, property, receiver);
-        return typeof value === "function" && property !== "constructor"
-          ? (...args: unknown[]) => stage(`store:${String(property)}`, async () => Reflect.apply(value, target, args)) : value;
-      },
-    });
+    const store = new PostgresRoutineDataStore();
+    for (const property of ["readPromotion", "readPromotions", "readStatePublicationBase", "readCandidate", "readCandidateSummary",
+      "readCandidateProof", "readCandidateProofs", "readCandidates", "readPublishedCandidateMetadata", "readPromotionIdentity",
+      "readPromotionIdentities", "eventObservedAt", "create", "transition", "promote", "appendEvidence", "confirmUnchanged"] as const) {
+      const method = store[property];
+      Object.defineProperty(store, property, { configurable: true,
+        value: (...args: unknown[]) => stage(`store:${property}`, async () => Reflect.apply(method, store, args)) });
+    }
     let publication: unknown;
     if (family === "candidate-profiles" && phase === "profile-findings") {
       const { neon } = await import("@neondatabase/serverless");

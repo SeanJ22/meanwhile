@@ -69,6 +69,71 @@ export class CivicPayloadParts {
     return plan.value;
   }
 
+  // Owned database rows can become the result without retaining a second encoded graph.
+  async loadOwned(input: unknown): Promise<unknown> {
+    const pending = new Map<string, unknown>(), decoded = new Map<string, unknown>(), visiting = new Set<string>();
+    const build = (value: unknown): unknown => {
+      if (isCivicPayloadPart(value)) {
+        if (!decoded.has(value.$civicPayloadPart)) throw new Error("CIVIC_PAYLOAD_PART_MISSING");
+        return decoded.get(value.$civicPayloadPart);
+      }
+      if (Array.isArray(value)) {
+        for (let index = 0; index < value.length; index++) value[index] = build(value[index]);
+      } else if (value && typeof value === "object") {
+        const row = value as Record<string, unknown>;
+        for (const key of Object.keys(row)) row[key] = build(row[key]);
+      }
+      return value;
+    };
+    const assemble = (payload: unknown): unknown => {
+      if (payload === null || typeof payload !== "object" || Array.isArray(payload)) return build(payload);
+      const node = payload as Node;
+      if (node.kind === "string") {
+        let value = "";
+        for (const chunk of node.chunks!) value += build(chunk) as string;
+        return value;
+      }
+      if (node.kind === "object") return build(node.value);
+      if (node.kind === "array") {
+        const groups = node.groups!.map(group => build(group) as unknown[]), positions = groups.map(() => 0);
+        const order = JSON.parse(build(node.order) as string) as number[];
+        for (let index = 0; index < order.length; index++) {
+          const group = order[index];
+          if (!Number.isInteger(group) || !groups[group] || positions[group] >= groups[group].length)
+            throw new Error("CIVIC_PAYLOAD_PART_ORDER_INVALID");
+          (order as unknown[])[index] = groups[group][positions[group]++];
+        }
+        return order;
+      }
+      return build(payload);
+    };
+    const resolvePart = async (hash: string): Promise<void> => {
+      if (decoded.has(hash)) return;
+      if (visiting.has(hash)) throw new Error("CIVIC_PAYLOAD_PART_CYCLE");
+      if (!pending.has(hash)) throw new Error("CIVIC_PAYLOAD_PART_MISSING");
+      visiting.add(hash);
+      const payload = pending.get(hash);
+      await resolve([payload]);
+      decoded.set(hash, assemble(payload));
+      pending.delete(hash);
+      visiting.delete(hash);
+    };
+    const resolve = async (values: readonly unknown[]): Promise<void> => {
+      const hashes = [...values.reduce<Set<string>>((into, value) => refsIn(value, into), new Set())];
+      for (let at = 0; at < hashes.length; at += 8) {
+        const wanted = hashes.slice(at, at + 8), missing = wanted.filter(hash => !decoded.has(hash) && !pending.has(hash));
+        if (missing.length) {
+          const parts = await this.io.read(missing);
+          for (const part of parts) pending.set(part.hash, part.payload);
+          if (missing.some(hash => !pending.has(hash))) throw new Error("CIVIC_PAYLOAD_PART_MISSING");
+        }
+        for (const hash of wanted) await resolvePart(hash);
+      }
+    };
+    try { await resolve([input]); return build(input); }
+    finally { pending.clear(); decoded.clear(); visiting.clear(); }
+  }
+
   /** Reads parts eight at a time and assembles each as soon as its children are in. */
   async load(input: unknown): Promise<unknown> {
     const decoded = new Map<string, unknown>();

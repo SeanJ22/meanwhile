@@ -139,3 +139,66 @@ test("a load assembles parts as they arrive, writing caches nothing, and recent 
   assert.equal(memory.reads.flat().length, firstReads, "parts just read are served from the bounded cache");
   assert.ok(memory.reads.every(batch => batch.length <= 8));
 });
+
+test("owned hydration reuses decoded rows across a part DAG without caching or serializing them", async t => {
+  const ref = (hash: string) => ({ $civicPayloadPart: hash });
+  const encoded = new Map<string, unknown>([
+    ["parent", { kind: "object", value: { id: "parent", shared: ref("leaf") } }],
+    ["leaf", { id: "leaf", evidence: { source: "https://example.gov/official" } }],
+    ["array", { kind: "array", groups: [ref("group")], order: "[0,0]" }],
+    ["group", [ref("leaf"), { id: "inline", shared: ref("leaf") }]],
+  ]);
+  const received = new Map<string, unknown>(), reads: string[][] = [];
+  const parts = new CivicPayloadParts({ existing: async () => [], write: async () => {}, read: async hashes => {
+    reads.push([...hashes]);
+    return hashes.map(hash => {
+      const payload = structuredClone(encoded.get(hash));
+      received.set(hash, payload);
+      return { hash, payload };
+    });
+  } });
+  const source = () => ({ head: ref("parent"), shared: ref("leaf"), rows: ref("array"), inline: { held: true } });
+  const input = source(), originalInline = input.inline;
+  t.mock.method(JSON, "stringify", () => assert.fail("owned hydration must not serialize decoded or encoded parts"));
+  const output = await parts.loadOwned(input) as { head: { shared: unknown }; shared: { evidence: object }; rows: unknown[]; inline: object };
+  assert.equal(output, input);
+  assert.equal(output.inline, originalInline);
+  assert.equal(output.head, (received.get("parent") as { value: unknown }).value);
+  assert.equal(output.shared, received.get("leaf"));
+  assert.equal(output.head.shared, output.shared);
+  assert.equal(output.rows[0], output.shared);
+  assert.equal(output.rows[1], (received.get("group") as unknown[])[1]);
+  assert.equal((output.rows[1] as { shared: unknown }).shared, output.shared);
+  assert.deepEqual(reads.flat().sort(), [...encoded.keys()].sort(), "each DAG part is read exactly once");
+  const next = await parts.loadOwned(source()) as typeof output;
+  assert.notEqual(next.shared, output.shared, "a later load owns fresh database rows");
+  assert.equal(reads.flat().length, encoded.size * 2, "owned hydration retains no parts between loads");
+  assert.ok(reads.every(batch => batch.length <= 8));
+});
+
+test("owned hydration refuses cycles and missing parts without retaining failed reads", async () => {
+  const ref = (hash: string) => ({ $civicPayloadPart: hash });
+  const saved = new Map<string, unknown>([["parent", { child: ref("child") }], ["child", { parent: ref("parent") }]]);
+  const parts = new CivicPayloadParts({ existing: async () => [], write: async () => {},
+    read: async hashes => hashes.flatMap(hash => saved.has(hash) ? [{ hash, payload: structuredClone(saved.get(hash)) }] : []) });
+  await assert.rejects(() => parts.loadOwned(ref("parent")), /CIVIC_PAYLOAD_PART_CYCLE/);
+  saved.delete("child");
+  await assert.rejects(() => parts.loadOwned(ref("parent")), /CIVIC_PAYLOAD_PART_MISSING/);
+  saved.set("child", { id: "verified" });
+  assert.deepEqual(await parts.loadOwned(ref("parent")), { child: { id: "verified" } });
+});
+
+test("owned hydration roundtrips the production codec with ordered rows and shared projection roots", async () => {
+  const payload = { rows: Array.from({ length: 80 }, (_, index) => row(index % 2 ? "az" : "nh", index)), text: "official text ".repeat(12_000) };
+  const candidate = { id: "owned", normalizedPayload: payload, readModel: payload };
+  const plan = partitionCivicPayload(candidate, ["id"]), saved = new Map(plan.parts.map(part => [part.hash, part.payload]));
+  const reader = new CivicPayloadParts({ existing: async () => [], write: async () => {}, read: async hashes =>
+    hashes.map(hash => ({ hash, payload: structuredClone(saved.get(hash)) })) });
+  const root = structuredClone(plan.value);
+  const loaded = await reader.loadOwned(root) as typeof candidate;
+  assert.equal(loaded, root);
+  assert.deepEqual(loaded, candidate);
+  assert.equal(loaded.readModel, loaded.normalizedPayload, "shared codec roots become the same owned projection");
+  assert.deepEqual(loaded.readModel.rows.map(value => value.id), payload.rows.map(value => value.id));
+  assert.deepEqual(await reader.load(structuredClone(plan.value)), candidate, "owned hydration did not mutate persisted parts");
+});

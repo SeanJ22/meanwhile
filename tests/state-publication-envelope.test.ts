@@ -98,7 +98,9 @@ test("identical state rows share their owned prior while any durable field chang
   assert.ok(Object.isFrozen(original));
   assert.equal(reuseStatePublicationRecord(original, { ...original, address: "Changed official address" }), null);
   assert.equal(reuseStatePublicationRecord(original, { ...original, checkedAt: "2026-10-16T14:00:00.000Z" }), null);
-  assert.throws(() => reuseStatePublicationRecord(original, { ...original, address: BigInt(1) }), /BigInt/);
+  const invalid = { ...original, address: BigInt(1) };
+  assert.equal(reuseStatePublicationRecord(original, invalid), null);
+  assert.throws(() => immutableStateValue(invalid), /BigInt/);
   const altered = payload.jurisdictions[0].sites[1], captured = structuredClone(altered);
   assert.throws(() => { altered.address = "Changed after index verification"; }, TypeError);
   assert.equal(reuseStatePublicationRecord(altered, captured), altered);
@@ -241,6 +243,21 @@ test("indexed immutable state records compare durable structure without serializ
   rememberStatePublicationPrior(store, projection);
   assert.equal(immutableStateHash(record), indexed.normalization.stateRecordHashes!.members[0].sha256);
   assert.equal(reuseStatePublicationRecord(record, equivalent), record);
+  assert.equal(Object.isFrozen(equivalent), false);
+  assert.equal(Object.isFrozen(equivalent.details), false);
+  equivalent.details.party = "Discarded incoming value";
+  assert.equal(record.details.party, "Independent");
+  assert.equal(reuseStatePublicationRecord(record, { ...record, aliases: ["Official name", NaN] }), record);
+  let invoked = 0;
+  const accessor = { ...record, get name() { invoked++; return record.name; } };
+  const customJson = { ...record };
+  Object.defineProperty(customJson, "toJSON", { value() { invoked++; return record; } });
+  assert.equal(reuseStatePublicationRecord(record, accessor), null);
+  assert.equal(reuseStatePublicationRecord(record, customJson), null);
+  assert.equal(reuseStatePublicationRecord(record, new Proxy({ ...record }, {
+    getPrototypeOf() { assert.fail("a proxy must be declined before invoking its traps"); },
+  })), null);
+  assert.equal(invoked, 0);
   assert.equal(reuseStatePublicationRecord(record, { ...record, aliases: [null, "Official name"] }), null);
   assert.equal(reuseStatePublicationRecord(record, { ...record, details: { ...record.details, incumbent: true } }), null);
   assert.equal(reuseStatePublicationRecord(record, { ...record, checkedAt: NOW }), null);

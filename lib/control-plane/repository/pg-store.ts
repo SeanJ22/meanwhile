@@ -452,9 +452,8 @@ export function pgAggregateRepository<T>(
     },
 
     async compareAndSet(id, expectedRevision, next, now) {
-      /* The WHERE clause is the compare-and-set: zero rows affected is the refusal, decided by the database. */
-      // Keep the exact submitted JSON: the caller may mutate next while the
-      // request is pending, and JSON normalizes undefined, dates and numbers.
+      // The database refuses a stale revision; snapshot the submitted JSON before awaiting it.
+      // The caller can mutate next while the request is pending.
       const submitted = JSON.stringify(next);
       const updated = (await run(
         "compareAndSet",

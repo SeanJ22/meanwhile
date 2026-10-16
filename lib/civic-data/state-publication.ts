@@ -278,18 +278,36 @@ export function reuseStatePublicationRecord(previous: unknown, incoming: unknown
   if (!object(previous)) return null;
   const entry = replacements.get(previous as object)?.find(entry => !entry.project && entry.member.record === previous);
   if (!entry || !immutableValues.has(previous as object)) return null;
-  return sameStateValue(previous, immutableStateValue(incoming)) ? previous : null;
+  return sameStateValue(previous, incoming) ? previous : null;
 }
 
 function sameStateValue(left: unknown, right: unknown): boolean {
+  if (typeof right === "number") right = Number.isFinite(right) ? right === 0 ? 0 : right : null;
   if (Object.is(left, right)) return true;
-  if (left === null || right === null || typeof left !== "object" || typeof right !== "object") return false;
-  if (Array.isArray(left)) return Array.isArray(right) && left.length === right.length &&
-    left.every((value, index) => sameStateValue(value, right[index]));
-  if (Array.isArray(right)) return false;
-  const keys = Object.keys(left), other = right as Record<string, unknown>;
-  return keys.length === Object.keys(right).length && keys.every(key => Object.hasOwn(other, key) &&
-    sameStateValue((left as Record<string, unknown>)[key], other[key]));
+  if (left === null || right === null || typeof left !== "object" || typeof right !== "object" || types.isProxy(right)) return false;
+  const array = Array.isArray(left);
+  if (array !== Array.isArray(right) || Object.getPrototypeOf(right) !== (array ? Array.prototype : Object.prototype) || "toJSON" in right) return false;
+  if (array) {
+    if ((left as unknown[]).length !== (right as unknown[]).length) return false;
+    for (let index = 0; index < (left as unknown[]).length; index++) {
+      const descriptor = Object.getOwnPropertyDescriptor(right, String(index));
+      if (descriptor && !("value" in descriptor)) return false;
+      const value = descriptor?.value, kind = typeof value;
+      if (!sameStateValue((left as unknown[])[index], value === undefined || kind === "function" || kind === "symbol" ? null : value)) return false;
+    }
+    return true;
+  }
+  const previous = left as Record<string, unknown>;
+  let count = 0;
+  for (const key of Object.keys(right)) {
+    const descriptor = Object.getOwnPropertyDescriptor(right, key);
+    if (!descriptor || !("value" in descriptor)) return false;
+    const value = descriptor.value, kind = typeof value;
+    if (value === undefined || kind === "function" || kind === "symbol") continue;
+    if (!Object.hasOwn(previous, key) || !sameStateValue(previous[key], value)) return false;
+    count++;
+  }
+  return count === Object.keys(left).length;
 }
 
 export function consumeStatePublicationRecord(previous: unknown, next: unknown | null, key?: string): void {

@@ -200,6 +200,7 @@ export async function processRoutineCandidate(
     }
   }
   const missingLkg = lkg === null;
+  const lastKnownGoodVersionId = current?.lastKnownGoodVersionId ?? null;
   if (scoped) {
     indexedPrior = undefined;
     base = null;
@@ -208,12 +209,12 @@ export async function processRoutineCandidate(
     declaredBase = null;
     exactDeclaredBase = null;
     validationLkg = null;
-    if (current) current = { ...current, payload: null };
+    current = null;
   }
   // A re-read refused for the same reason with the same extracted values as the newest candidate writes no new one.
   const refusal = candidate.retrieval.succeeded && validated.state !== "VALIDATED" ? failureOf(validated.receipt) : null;
   const latest = refusal ? await store.latestCandidate(candidate.sourceId, candidate.recordClass, candidate.scope) : null;
-  if (refusal && latest && latest.id !== current?.versionId && latest.failureCode === refusal.code &&
+  if (refusal && latest && latest.id !== observedBaseVersionId && latest.failureCode === refusal.code &&
     latest.normalizedHash === candidate.normalization.normalizedHash && latest.parserVersion === candidate.normalization.parserVersion) {
     await store.recordRecheck(latest.id, transitionAt, `RECHECKED_UNCHANGED: read ${candidate.retrieval.retrievedAt} (${candidate.id}); the same values meet the same refusal, ${refusal.code}.`);
     return { candidate: (await store.readCandidate(latest.id))!, promoted: null, readerReadback: null };
@@ -225,7 +226,7 @@ export async function processRoutineCandidate(
     acquisitionSucceeded: candidate.retrieval.succeeded,
     receipt: candidate.retrieval.succeeded ? null : validated.receipt,
     promotedVersion: null,
-    lastKnownGoodVersion: current?.lastKnownGoodVersionId ?? null,
+    lastKnownGoodVersion: lastKnownGoodVersionId,
     failureCode: acquisitionFailure?.code ?? null,
     failureDetail: acquisitionFailure?.detail ?? null,
   }, {
@@ -264,7 +265,7 @@ export async function processRoutineCandidate(
     const record = await store.transition(candidate.id, "CANNOT_TELL", transitionAt, detail, receipt, { code, detail }, held);
     return { candidate: record, promoted: null, readerReadback: null };
   }
-  if (current !== null && lkgProofIssue !== null && !continuingExactLkg) {
+  if (observedBaseVersionId !== null && lkgProofIssue !== null && !continuingExactLkg) {
     const code = missingLkg ? "LKG_CANDIDATE_MISSING" : "LKG_PROMOTION_PROOF_INVALID";
     const detail = `The existing canonical pointer is not a valid last-known-good proof (${lkgProofIssue}); promotion is held until the durable chain is repaired.`;
     const receipt = invalidLkgReceipt(validated.receipt, code, detail);

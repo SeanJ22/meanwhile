@@ -3,18 +3,19 @@
 lane: platform-swagit
 owner: platform-swagit
 writer: the platform-swagit lane
-check: at-scale
-ready: no step ids unknown
-river: 493311674ed4c1f3d15c14f70e19e7be9b9f58aa
-at: 2026-10-15T23:21:57Z
+check: cleanliness
+ready: R3-SWAGIT ef48e7fbb3438987dcddcc3eaa6f14553e6793ba
+river: 1d3d303d70dc9d14aab69d61ea9b0d76d76b6e6f
+at: 2026-10-16T04:35:20Z
 state: returned
-fix_subject: fix:0e57225d
-fix: River · stream/platform-swagit — at-scale failed for platform-swagit: R3-SWAGIT (18914d679): peak (662 MiB) comes from the largest single tenant (20 bodies, 10,000 meetings), which passes the item check. Open only: conflict with R3-MUNICODE (on river) in lib/control-plane/discovery/derived-wiring-reading.ts:
+fix_subject: fix:ac65defb
+fix: River · stream/platform-swagit — cleanliness failed for platform-swagit: Cleanliness finding on R3-SWAGIT (ef48e7fbb, folded as 656062ece). Fix in your next READY:
 
 ## Failure
 
 ```
-R3-SWAGIT (18914d679): peak (662 MiB) comes from the largest single tenant (20 bodies, 10,000 meetings), which passes the item check. Open only: conflict with R3-MUNICODE (on river) in lib/control-plane/discovery/derived-wiring-reading.ts: your makeSwagitSource call passes rows and from/to bounds, and the kind list on the next line drops MUNICODE. Keep your SWAGIT block and drop MUNICODE from the list.
+Cleanliness finding on R3-SWAGIT (ef48e7fbb, folded as 656062ece). Fix in your next READY:
+Export nothing outside its file imports (tests count 1): lib/sources/swagit/index.ts:39 SWAGIT_MAX_PAGES_PER_TENANT.
 ```
 
 ## Repair

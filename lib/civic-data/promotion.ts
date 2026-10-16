@@ -23,6 +23,7 @@ import { officialStateRollIdentityAuthorityIssue } from "../state-rollcalls/prom
 import { derivedInputAuthorityIssue } from "./derived-door.ts";
 import { isScopedManualContractScope, manualPayloadScope } from "./scoped-manual-contracts.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
+import { freezeDurableJson } from "./durable-json.ts";
 
 /** Only the exact registered contract doors in this module possess this token. */
 const REGISTERED_PRODUCTION_DOOR = Symbol("REGISTERED_PRODUCTION_DOOR");
@@ -39,12 +40,10 @@ function sourceProjectionObservedAt(store: RoutineDataStore, requested: string):
   return store instanceof PostgresRoutineDataStore ? new Date().toISOString() : requested;
 }
 
-/** One frozen JSON value, so an adapter holding references cannot swap payload and digest between async steps. */
-function durableCandidateSnapshot(candidate: RoutineCandidate): RoutineCandidate {
+/** The candidate becomes its own JSON form and is frozen in place, so no adapter can swap payload and digest between async steps. */
+function durableCandidate(candidate: RoutineCandidate): RoutineCandidate {
   try {
-    const encoded = JSON.stringify(candidate);
-    if (encoded === undefined) throw new Error("candidate is not JSON-representable");
-    return JSON.parse(encoded) as RoutineCandidate;
+    return freezeDurableJson(candidate);
   } catch (error) {
     throw new Error(
       `ROUTINE_CANDIDATE_NOT_DURABLE_JSON:${error instanceof Error ? error.message : String(error)}`,
@@ -136,7 +135,7 @@ export async function processRegisteredRoutineCandidate(
   options: { readonly confirmUnchanged?: boolean; readonly vault?: EvidenceStore } = {},
 ): Promise<PromotionOutcome> {
   if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(contractId, "routine");
-  let boundedCandidate = durableCandidateSnapshot(candidate);
+  let boundedCandidate = durableCandidate(candidate);
   const contract = requiredRoutineContract(contractId);
   if (Object.prototype.hasOwnProperty.call(boundedCandidate, "bootstrapImport") && boundedCandidate.bootstrapImport !== undefined) {
     throw new Error("TRUSTED_LKG_ADMISSION_RETIRED");
@@ -210,7 +209,7 @@ export async function processRegisteredFanOutCandidate(
   expectedBaseVersionId: string | null | undefined = undefined,
 ): Promise<PromotionOutcome> {
   if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(contractId, "routine");
-  const boundedCandidate = durableCandidateSnapshot(candidate);
+  const boundedCandidate = durableCandidate(candidate);
   const contract = requiredRoutineContract(contractId);
   if (contract.fanOut !== true) throw new Error(`FANOUT_CONTRACT_NOT_DECLARED:${contractId}`);
   if (Object.prototype.hasOwnProperty.call(boundedCandidate, "bootstrapImport") && boundedCandidate.bootstrapImport !== undefined) {
@@ -249,7 +248,7 @@ export async function processRegisteredMeetingPartitionCandidate(
   options: { readonly confirmUnchanged?: boolean } = {},
 ): Promise<PromotionOutcome> {
   if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(partitionId, "routine");
-  const boundedCandidate = durableCandidateSnapshot(candidate);
+  const boundedCandidate = durableCandidate(candidate);
   const contract = requiredMeetingPartitionContract(partitionId);
   const issue = routineCandidateContractIssueFor(contract, boundedCandidate);
   if (issue !== null) {
@@ -284,7 +283,7 @@ export async function processRegisteredMeetingHistoryCandidate(
   options: { readonly confirmUnchanged?: boolean } = {},
 ): Promise<PromotionOutcome> {
   if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(partitionId, "routine");
-  const boundedCandidate = durableCandidateSnapshot(candidate);
+  const boundedCandidate = durableCandidate(candidate);
   const contract = meetingHistoryContract(requiredMeetingPartitionContract(partitionId));
   const issue = routineCandidateContractIssueFor(contract, boundedCandidate);
   if (issue !== null) {
@@ -388,7 +387,7 @@ export async function processRegisteredManualCandidate(
   options: { readonly confirmUnchanged?: boolean } = {},
 ): Promise<PromotionOutcome> {
   if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(contractId, "manual");
-  const boundedCandidate = durableCandidateSnapshot(candidate);
+  const boundedCandidate = durableCandidate(candidate);
   const contract = requiredManualProductionContract(contractId);
   const issue = manualCandidateContractIssue(contractId, boundedCandidate);
   if (issue !== null) throw new Error(`MANUAL_CANDIDATE_CONTRACT_MISMATCH:${contractId}:${issue}`);

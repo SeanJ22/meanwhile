@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "../../civic-data/read-model.ts";
 import { sourceProjectionEvidence, type RoutineCandidate, type SourceCheckEvidence } from "../../civic-data/types.ts";
-import { canonicalCivicDataJson } from "../../civic-data/changes.ts";
+import { canonicalCivicDataHash } from "../../civic-data/changes.ts";
 import { holdRawCapture, type RawCaptureRef } from "../../civic-data/raw-capture-vault.ts";
 import type { EvidenceStore } from "../../control-plane/evidence/store.ts";
 
@@ -21,7 +21,7 @@ const id = (value: unknown, kind: string) => typeof value === "string" && new Re
 const text = (value: unknown) => typeof value === "string" ? value.trim() : "";
 const object = (value: unknown): Record<string, unknown> => value !== null && typeof value === "object" && !Array.isArray(value) ? value as Record<string, unknown> : {};
 const sessionId = (value: unknown) => text(value) || text(object(value).identifier);
-const hash = (value: unknown) => createHash("sha256").update(typeof value === "string" ? value : canonicalCivicDataJson(value)).digest("hex");
+const hash = (value: unknown) => typeof value === "string" ? createHash("sha256").update(value).digest("hex") : canonicalCivicDataHash(value);
 const url = (value: unknown) => {
   try { const parsed = new URL(text(value)); return parsed.protocol === "https:" && !parsed.username && !parsed.password ? parsed.href : null; } catch { return null; }
 };
@@ -169,7 +169,6 @@ export function pluralVotesCandidate(input: { projection: PluralVotesProjection;
       declaredTotal: null, paginationComplete: false, claimsComplete: false },
     absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
     dependentChecks: [{ consumer: "native state person vote reader", passed: !issue, detail: "Only exact OpenStates person IDs join. A partial acquisition never removes held votes." }],
-    civicRecords: projection.rollCalls.map(record => ({ key: `roll:${record.id}`, record })),
     excludedFacts: input.held.map(row => ({ ...row, code: "PLURAL_VOTE_UNRESOLVED" })), normalizedPayload: payload, readModel: projection };
 }
 

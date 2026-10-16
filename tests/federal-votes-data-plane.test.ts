@@ -187,7 +187,7 @@ test("bill summaries and pending reviews are stable exact Admin members without 
     createHash("sha256").update(canonicalCivicDataJson(next.readModel)).digest("hex"),
     "Admin membership is additive evidence; the canonical Reader payload/hash contract remains exact",
   );
-  assert.deepEqual(next.civicRecords, civicRecordsFor("FEDERAL_ROLL_CALL", next.readModel));
+  assert.equal(next.civicRecords, undefined, "the read model is the one copy of each roll call; validation derives its members");
   const changeSet = candidateChangeSet(next, prior.readModel);
   assert.deepEqual(changeSet.added.map(({ key }) => key), [`bill-summary:${addedUrl}`]);
   assert.deepEqual(changeSet.changed.map(({ key }) => key), [
@@ -338,7 +338,7 @@ test("key-vote coverage misses, law misses, and coverage semantics are exact Adm
     false,
     "coverage-only facts cannot falsely report a selected question or official position map change",
   );
-  assert.deepEqual(prior.civicRecords, civicRecordsFor("FEDERAL_KEY_VOTE", prior.readModel));
+  assert.equal(prior.civicRecords, undefined, "the read model is the one copy of each key vote; validation derives its members");
 });
 
 test("duplicate key-vote coverage-miss identities fail closed before promotion", async () => {

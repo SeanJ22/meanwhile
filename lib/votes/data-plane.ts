@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 
 import { authorityFor } from "../civic-data/source-authority.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "../civic-data/types.ts";
-import { canonicalCivicDataJson, civicRecordsFor } from "../civic-data/changes.ts";
+import { canonicalCivicDataHash, canonicalCivicDataJson } from "../civic-data/changes.ts";
 import type { BillSummariesFile } from "./bill-summaries.ts";
 import type { KeyVoteEntry } from "./key-votes.ts";
 import { federalKeyVoteSelectionV1Issue } from "./key-vote-selection-v1.ts";
@@ -132,7 +132,6 @@ export function federalRollCallsCandidate(input: {
     congress: snapshot.congress,
     session: snapshot.session,
   };
-  const records = civicRecordsFor("FEDERAL_ROLL_CALL", readModel);
   const rawHash = acquisitionRawHash(input.acquisitions);
   return {
     id: candidateId(FEDERAL_ROLLCALL_SCOPE, input.acquisitions, input.retrievedAt),
@@ -152,8 +151,8 @@ export function federalRollCallsCandidate(input: {
       succeeded: true,
       parserVersion: FEDERAL_VOTES_PARSER_VERSION,
       schemaVersion: `federal-rollcalls:${snapshot.congress}-${snapshot.session}`,
-      normalizedHash: sha256(canonicalCivicDataJson(readModel)),
-      normalizedPayloadHash: sha256(canonicalCivicDataJson(normalizedPayload)),
+      normalizedHash: canonicalCivicDataHash(readModel),
+      normalizedPayloadHash: canonicalCivicDataHash(normalizedPayload),
       inputRecords: snapshot.votes.length,
       outputRecords: snapshot.votes.length,
       droppedRecords: 0,
@@ -192,7 +191,6 @@ export function federalRollCallsCandidate(input: {
     ],
     normalizedPayload,
     readModel,
-    civicRecords: records,
   };
 }
 
@@ -260,8 +258,8 @@ export function federalKeyVotesCandidate(input: {
       succeeded: true,
       parserVersion: FEDERAL_VOTES_PARSER_VERSION,
       schemaVersion: "federal-key-votes:selection-v1",
-      normalizedHash: sha256(canonicalCivicDataJson(readModel)),
-      normalizedPayloadHash: sha256(canonicalCivicDataJson(normalizedPayload)),
+      normalizedHash: canonicalCivicDataHash(readModel),
+      normalizedPayloadHash: canonicalCivicDataHash(normalizedPayload),
       inputRecords: refs.length,
       outputRecords: refs.length,
       droppedRecords: 0,
@@ -300,6 +298,5 @@ export function federalKeyVotesCandidate(input: {
     ],
     normalizedPayload,
     readModel,
-    civicRecords: civicRecordsFor("FEDERAL_KEY_VOTE", readModel),
   };
 }

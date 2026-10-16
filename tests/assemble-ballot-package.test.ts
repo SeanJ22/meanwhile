@@ -90,8 +90,9 @@ test("candidate websites and measure links are values on the cited official reco
   const input = packageFor(state);
   assert.deepEqual(manualProjectionCandidate(input).semantics.violations, []);
   await publish(new MemoryRoutineDataStore(), input);
-  ballotOf(state).candidacies[0].provenance.sourceUrl = "https://unreceipted.example.gov/candidates";
-  assert.ok(manualProjectionCandidate(input).semantics.violations.some(problem => problem.includes("unreceipted.example.gov")));
+  const later = structuredClone(state);
+  ballotOf(later).candidacies[0].provenance.sourceUrl = "https://unreceipted.example.gov/candidates";
+  assert.ok(manualProjectionCandidate(packageFor(later)).semantics.violations.some(problem => problem.includes("unreceipted.example.gov")));
 });
 
 test("only a newer complete list from the same authority replaces candidates and keeps unrelated contests", async () => {

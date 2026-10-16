@@ -9,6 +9,9 @@ Scope: SB-01 only, until it is live and verified. Nothing here adds work outside
 
 Newest entries at the top. Each entry names the session it is for. Act on entries for you at once.
 
+## 11:40 PM Arizona (06:40Z): River release, production checks come from oversight
+- If confirming SB-01A's per-state pointers in production would stop you at a Neon approval prompt, do not wait on it. Oversight checks production after SB-01A deploys and writes "SB-01A pointers confirmed: N states" here. Ship SB-01B alone as soon as that line appears.
+
 ## 11:31 PM Arizona (06:31Z): River release, same discipline
 - Read this file at the start of each of your normal fold passes, not on a separate 10-minute loop.
 - Between passes, idle cheaply: one git fetch of stream/ballot-three-states to see whether a READY landed, nothing else.

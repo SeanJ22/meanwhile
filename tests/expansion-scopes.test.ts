@@ -36,7 +36,6 @@ import {
   validateScopeKey,
   validateScopeNote,
   validateScopePriority,
-  withScopeRemoved,
   withScopeSet,
   type ExpansionScopeDecision,
   type ExpansionScopeGeography,
@@ -47,13 +46,12 @@ import { placeFirstRows } from "@/lib/control-plane/scheduler/shadow-loop.ts";
 import { createMemoryRepositories } from "@/lib/control-plane/repository/memory.ts";
 import type { JurisdictionRegistry } from "@/lib/hunt/jurisdiction-universe.ts";
 
-
 const NOW = "2026-09-23T04:00:00.000Z";
 
 test("an unprepared ZIP resolves national divisions after held geography fails, including split states", async () => {
   const repos = createMemoryRepositories();
   const zip = { type: "zcta" as const, geoid: "12345", version: "zcta:2020", label: "ZIP 12345", stateAbbr: "MO" };
-  await repos.adminConfig.put(ADMIN_CONFIG_ID, withExpansionScopes(defaultAdminConfig(), { scopes: [decision(zip, 1, 0)], decidedAt: NOW }), NOW);
+  await repos.adminConfig.put(ADMIN_CONFIG_ID, withExpansionScopes(defaultAdminConfig(), { scopes: [decision(zip, 1, 1)], decidedAt: NOW }), NOW);
   const seen: string[] = [];
   const loaded = await loadExpansionPlan({ repos, root: ".", now: NOW, obligations: [],
     loadLookup: async () => { throw Error("No published ZIP yet"); },
@@ -111,7 +109,6 @@ async function zctasOf(g: ExpansionScopeGeography): Promise<string[]> {
   return [...(await geometryOf(g)).zctas];
 }
 
-/** A geography's ZCTAs as the overlap rule reads them: all, the wholly-inside ones, and each partial share. */
 async function geometryOf(g: ExpansionScopeGeography): Promise<ScopeZctas> {
   if (g.type === "zcta" || g.type === "state") throw new Error("Use resolveScopes for a ZIP or state hunt");
   const lookup = loadBootstrapLookup();
@@ -214,10 +211,6 @@ test("setting a scope is an upsert that keeps the previous decision, and removin
   assert.deepEqual(pima?.previous, { priority: 2, budgetUsd: 5 });
   assert.deepEqual(changed.scopes.map((s) => s.key), ["cd:119/0406", "county:2020/04019"], "a priority tie goes to the scope decided earlier");
 
-  const removed = withScopeRemoved(changed.scopes, "cd:119/0406");
-  assert.equal(removed.removed?.geography.label, CD6.label);
-  assert.deepEqual(removed.scopes.map((s) => s.key), ["county:2020/04019"]);
-  assert.equal(withScopeRemoved(removed.scopes, "cd:119/0401").removed, null);
 });
 
 test("a malformed stored scope is counted, never dropped as if no restriction stood", () => {

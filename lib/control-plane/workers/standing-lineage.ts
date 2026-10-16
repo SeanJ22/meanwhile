@@ -7,7 +7,6 @@ import type { AutonomousWorkPlan } from "./autonomous-plan.ts";
 import { readLineageHistory } from "./scoped-history.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 
-/** A standing source's period and instruction, independent of method-version or repaired extraction details. */
 export function standingLineageKeyFor(input: { readonly obligationId: string; readonly dueAt: string; readonly project: string;
   readonly subject: string; readonly plan: AutonomousWorkPlan | undefined;
   readonly instructionReceipts: readonly string[] }): string | null {
@@ -31,14 +30,13 @@ export interface StandingLineage {
   readonly dueAt: string;
   readonly rootWorkItemId: string;
   readonly siblingRootIds: readonly string[];
-  /** Actual source observation behind accepted published facts; remaining gaps stay open. */
+
   readonly publishedAt: string | null;
 }
 
 export type LineageArtifact = Pick<ArtifactRecord, "artifactId" | "workItemId" | "attemptId" | "partial" | "canonicalUrl">;
 export type LineageAttempt = Pick<Attempt, "id" | "workItemId" | "outcome"> & { readonly worker: Pick<Attempt["worker"], "role"> };
 
-/** Every sibling remains durable; this selects only which one may spend the next work slice. */
 export function selectStandingLineages(input: {
   readonly occurrences: readonly FreshnessOccurrence[];
   readonly workItems: readonly WorkItem[];
@@ -66,8 +64,7 @@ export function selectStandingLineages(input: {
       !outcome.sourceArtifactId || !outcome.sourceObservedAt || !outcome.workerResultId || outcome.workerResultId === "none" ||
       !Number.isFinite(Date.parse(outcome.at)) || !Number.isFinite(Date.parse(outcome.sourceObservedAt)) ||
       Date.parse(outcome.sourceObservedAt) > Date.parse(outcome.at)) return null;
-    // A publication of zero accepted rows is not evidence that the source was
-    // refreshed; both roster records and directory body records count here.
+
     const acceptedCount=(outcome.acceptedMembers?.length??0)+(outcome.bodyIds?.length??0)+(outcome.acceptedRecordIds?.length??0)+
       (outcome.records?.added??0)+(outcome.records?.changed??0)+(outcome.records?.reused??0);
     return acceptedCount>0?outcome.sourceObservedAt:null;
@@ -113,8 +110,7 @@ export function selectStandingLineages(input: {
       const at=verifiedPublicationAt(item); return at?[at]:[];
     }).sort().at(-1)??null;
     const lastPublishedAt = rows.map(publicationAt).filter((at): at is string => at !== null).sort().at(-1);
-    // A newly opened round after a verified publication is a later reading,
-    // even when a legacy standing row still carries its original due anchor.
+
     const renewed = lastPublishedAt ? rows.filter(row => row.occurrence.openedAt > lastPublishedAt) : [];
     const eligible = renewed.length ? renewed : rows;
 
@@ -136,7 +132,6 @@ export function selectStandingLineages(input: {
   });
 }
 
-/** True means this exact due period already has source work worth continuing. */
 export function standingLineageCoversDue(input: {
   readonly lineages: readonly StandingLineage[];
   readonly key: string;
@@ -212,30 +207,32 @@ export function brokeredSiblingCaptures(input: { readonly lineage: StandingLinea
   return [...out.values()];
 }
 
-export async function readStandingLineages(repos: ControlPlaneRepositories,
-  obligations: readonly StandingObligation[], now: string): Promise<readonly StandingLineage[]> {
-  const lineages = new Map<string, StandingLineage>();
-  for (const obligation of obligations) {
-    if (!obligation.autonomousPlan || !obligation.active) continue;
-    const held = await repos.dispatchState.lineages(obligation.id, async () => {
-      const occurrences = await repos.occurrences.listWhere(["obligationId"], obligation.id);
-      if (!occurrences.length) return [];
-      const history = await readLineageHistory(repos, occurrences[0].value.workItemId);
-      if (!history) throw new Error("STANDING_LINEAGE_SCOPED_READ_UNAVAILABLE");
-      return selectStandingLineages(history);
-    });
-    const matching = held.filter(lineage => standingLineageKeyFor({ obligationId: obligation.id,
-      dueAt: lineage.dueAt, project: FRESHNESS_PROJECT, subject: obligation.subjectId, plan: obligation.autonomousPlan,
-      instructionReceipts: (obligation.assignments ?? []).map(mark => mark.ref) }) === lineage.key);
-    const published = matching.filter(lineage => lineage.publishedAt && Date.parse(lineage.publishedAt) <= Date.parse(now))
-      .sort((a, b) => b.publishedAt!.localeCompare(a.publishedAt!))[0];
-    if (published) lineages.set(published.key, published);
-    const observedAt = published?.publishedAt;
-    const anchored = observedAt && obligation.openOccurrenceId === null &&
-      (!obligation.lastWorkedAt || Date.parse(obligation.lastWorkedAt) < Date.parse(observedAt))
-      ? { ...obligation, lastWorkedAt: observedAt, absentUntil: null, absenceUnlock: null } : obligation;
-    const scheduled = scheduleObligation(anchored, Date.parse(now));
-    if (isScheduled(scheduled)) for (const lineage of matching) if (lineage.dueAt === scheduled.nextDueAt) lineages.set(lineage.key, lineage);
+function relevantLineages(obligation:StandingObligation,held:readonly StandingLineage[],now:string):readonly StandingLineage[] {
+  const matching=held.filter(lineage=>standingLineageKeyFor({obligationId:obligation.id,dueAt:lineage.dueAt,project:FRESHNESS_PROJECT,
+    subject:obligation.subjectId,plan:obligation.autonomousPlan,instructionReceipts:(obligation.assignments??[]).map(mark=>mark.ref)})===lineage.key);
+  const published=matching.filter(lineage=>lineage.publishedAt && Date.parse(lineage.publishedAt)<=Date.parse(now))
+    .sort((a,b)=>b.publishedAt!.localeCompare(a.publishedAt!))[0];
+  const observedAt=published?.publishedAt;
+  const anchored=observedAt && obligation.openOccurrenceId===null && (!obligation.lastWorkedAt || Date.parse(obligation.lastWorkedAt)<Date.parse(observedAt))
+    ? {...obligation,lastWorkedAt:observedAt,absentUntil:null,absenceUnlock:null}:obligation;
+  const scheduled=scheduleObligation(anchored,Date.parse(now));
+  return [...new Map([...(published?[published]:[]),...matching.filter(lineage=>isScheduled(scheduled) && lineage.dueAt===scheduled.nextDueAt)].map(lineage=>[lineage.key,lineage])).values()];
+}
+
+export async function readStandingLineages(repos:ControlPlaneRepositories,obligations:readonly StandingObligation[],now:string):Promise<readonly StandingLineage[]> {
+  const selected=obligations.filter(obligation=>obligation.autonomousPlan && obligation.active);
+  await repos.dispatchState.prepareLineages(selected.map(obligation=>obligation.id));
+  const lineages=new Map<string,StandingLineage>();
+  for(const obligation of selected) {
+    const scheduled=scheduleObligation(obligation,Date.parse(now));
+    const held=await repos.dispatchState.lineages(obligation.id,async()=>{
+      const occurrences=await repos.occurrences.listWhere(["obligationId"],obligation.id);
+      if(!occurrences.length)return [];
+      const history=await readLineageHistory(repos,occurrences[0].value.workItemId);
+      if(!history)throw new Error("STANDING_LINEAGE_SCOPED_READ_UNAVAILABLE");
+      return relevantLineages(obligation,selectStandingLineages(history),now);
+    },JSON.stringify([obligation.updatedAt,isScheduled(scheduled)?scheduled.nextDueAt:null]));
+    for(const lineage of relevantLineages(obligation,held,now))lineages.set(lineage.key,lineage);
   }
   return [...lineages.values()];
 }

@@ -16,11 +16,10 @@ import { ADMIN_CONFIG_ID, isAdminConfig } from "../gateway/admin-config.ts";
 
 export const FRESHNESS_PROJECT = "freshness";
 
-/** A standing obligation as the control plane holds it. `nextDueAt` is stored (and indexed) so the due query runs in the database. */
 export interface StandingObligation extends FreshnessObligation {
-  /** The derived next-due, as of the last cycle that scheduled it. */
+
   readonly nextDueAt: string | null;
-  /** How many occurrences this obligation has opened. Monotonic. */
+
   readonly occurrenceCount: number;
   readonly openOccurrenceId: string | null;
 
@@ -29,13 +28,12 @@ export interface StandingObligation extends FreshnessObligation {
   readonly updatedAt: string;
 }
 
-/** One due occurrence: owns exactly one WorkItem and one RouteTask; closes on a terminal disposition or unresolved. */
 export interface FreshnessOccurrence {
   readonly id: string;
   readonly obligationId: string;
-  /** Monotonic per obligation, starting at 1. Part of the derived identity. */
+
   readonly sequence: number;
-  /** The due time this occurrence answers. Not the time it opened. */
+
   readonly dueAt: string;
   readonly workItemId: string;
   readonly routeTaskId: string;
@@ -49,12 +47,10 @@ export function occurrenceId(obligationId: string, sequence: number): string {
   return `occ-${obligationId}-${String(sequence).padStart(6, "0")}`;
 }
 
-/** The occurrence's WorkItem obligation clause. The sequence number in it makes each occurrence's WorkItem and RouteTask ids distinct. */
 export function occurrenceObligationClause(obligationId: string, sequence: number): string {
   return `${obligationId}#${sequence}`;
 }
 
-/** Lift a plain obligation into a standing row. Never invents a next-due. */
 export function standing(
   obligation: FreshnessObligation,
   now: string,
@@ -69,26 +65,24 @@ export function standing(
   };
 }
 
-/** Runtime fields the durable row owns; a registration pass never resets them. */
 const RUNTIME_OWNED = [
   "nextDueAt",
   "occurrenceCount",
   "openOccurrenceId",
   "lastWorkedAt",
-  /* A recorded expiring absence is runtime state; a registration pass must never reset it. */
+
   "absentUntil",
   "absenceUnlock",
   "absenceReopened",
-  /* The owner's dispatch materialized this row; a provider re-emitting it must not erase the mark. */
+
   "materializedBy",
-  /* The owner's Sends that reached this row; no provider emits them, and a registration pass must never drop them. */
+
   "assignments",
-  /* Which registry the dispatch materialized it from, kept with the mark. */
+
   "materializedFrom",
   "autonomousPlan",
 ] as const;
 
-/** Register what is new and refresh provider-derived signals on what is not, without touching runtime state. `refreshed` names every row whose signals moved. */
 export async function syncObligations(
   repos: ControlPlaneRepositories,
   corpus: readonly FreshnessObligation[],
@@ -98,9 +92,9 @@ export async function syncObligations(
   readonly all: readonly StandingObligation[];
   readonly registered: readonly string[];
   readonly alreadyDurable: readonly string[];
-  /** Durable rows whose provider-derived signals changed this pass. */
+
   readonly refreshed: readonly { readonly id: string; readonly changed: readonly string[] }[];
-  /** Durable rows read that the corpus did not name (input to `planSupersededRetirement`). Null under `exactReads`. */
+
   readonly outside: readonly StandingObligation[] | null;
 }> {
   const registered: string[] = [];
@@ -108,7 +102,6 @@ export async function syncObligations(
   const refreshed: { id: string; changed: string[] }[] = [];
   const all: StandingObligation[] = [];
 
-  /* One read of the whole table, not one per obligation. */
   const existingById = new Map<string, { id: string; revision: number; value: StandingObligation }>();
   if (options.exactReads) {
     for (const obligation of corpus) {
@@ -119,6 +112,12 @@ export async function syncObligations(
     for (const row of await repos.obligations.list()) {
       existingById.set(row.id, { id: row.id, revision: row.revision, value: row.value });
     }
+  }
+
+  if(repos.planningState) {
+    if(!repos.obligations.readMany)throw new Error("Planning requires indexed batch reads");
+    const missing=corpus.filter(row=>!existingById.has(row.id)).map(row=>row.id);
+    for(const row of await repos.obligations.readMany(missing))existingById.set(row.id,row);
   }
 
   for (const o of corpus) {
@@ -133,7 +132,7 @@ export async function syncObligations(
 
     alreadyDurable.push(o.id);
     const held = existing.value;
-    /* A provider can connect a plan (or a reader door) to a row that lacks one; the held plan is never replaced. */
+
     const plan = inheritPublicationConnection(held.autonomousPlan, o.autonomousPlan);
     const { autonomousPlan: _provided, ...signals } = o;
     const next: StandingObligation = {
@@ -158,8 +157,7 @@ export async function syncObligations(
       if (key === "scopeDivisions") {
         if (canonicalJson(held.scopeDivisions ?? []) !== canonicalJson(o.scopeDivisions ?? [])) changed.push(key);
       } else {
-        // Providers reconstruct arrays/objects each pass. Compare their saved
-        // facts, not their references, so an idle registry does not revise rows.
+
         const structured = (held[key] !== null && typeof held[key] === "object") ||
           (o[key] !== null && typeof o[key] === "object");
         if (structured ? canonicalJson(held[key]) !== canonicalJson(o[key]) : held[key] !== o[key]) changed.push(key);
@@ -186,7 +184,6 @@ export async function syncObligations(
   return { all, registered, alreadyDurable, refreshed, outside };
 }
 
-/** Permanently stop clocks whose provider was retired: inactive, no next due, with a reason. Idempotent; nothing is deleted. */
 export async function retireObligationsByPrefix(
   repos: ControlPlaneRepositories,
   prefixes: readonly string[],
@@ -231,7 +228,6 @@ export async function retireObligationsByPrefix(
 
 export const SUPERSEDED_RETIREMENT_BOUND = 0.25;
 
-/** `freshness:<namespace>:`, the part of a standing obligation id its provider owns. Null for any other id. */
 export function obligationNamespace(id: string): string | null {
   const head = "freshness:";
   if (!id.startsWith(head)) return null;
@@ -239,7 +235,6 @@ export function obligationNamespace(id: string): string | null {
   return end <= head.length ? null : id.slice(0, end + 1);
 }
 
-/** One provider's reading this cycle, as `RegistryPass.byProvider` reports it. */
 export interface ProviderReading {
   readonly providerId: string;
   readonly units: number;
@@ -267,7 +262,6 @@ export interface SupersededRetirementPlan {
   }[];
 }
 
-/** Why an obligation was retired as superseded, in the words its row, occurrence and debt carry. */
 export function supersededRetirementReason(providerId: string): string {
   return (
     `SUPERSEDED: provider '${providerId}' read its input cleanly and no longer emits this ` +
@@ -371,14 +365,12 @@ export function planSupersededRetirement(input: {
 
 const JURISDICTION_MEETINGS_OBLIGATION = /^freshness:jurisdiction:([^#]+)#meetings-\d+$/;
 
-/** The jurisdiction a `freshness:jurisdiction:<id>#meetings-N` row was owed for; null for any other id. */
 export function jurisdictionMeetingsSubject(id: string): string | null {
   return JURISDICTION_MEETINGS_OBLIGATION.exec(id)?.[1] ?? null;
 }
 
 export type HeldRouteHold = SupersededHold | "ROUTES_UNREAD" | "NO_EXACT_BODY" | "NO_HELD_CALENDAR_ROUTE";
 
-/** Why a jurisdiction meetings row was retired, naming the body whose calendar route is held. */
 export function heldCalendarRouteReason(jurisdictionId: string, bodyId: string): string {
   return (
     `CALENDAR ROUTE HELD: ${jurisdictionId}'s body ${bodyId} has a held calendar route on the mission map ` +
@@ -390,12 +382,12 @@ export function planHeldRouteRetirement(input: {
   readonly outside: readonly StandingObligation[];
   readonly corpus: readonly { readonly providerId: string; readonly obligationId: string }[];
   readonly providers: readonly ProviderReading[];
-  /** The exact government/body join, and the bodies whose calendar route the owed rows hold, or why they were not read. */
+
   readonly routes:
     | { readonly bodyIdFor: (jurisdictionId: string) => string | null; readonly held: ReadonlySet<string> }
     | { readonly unreadable: string };
 }): {
-  /** Every row this planner owns. None of them is given to `planSupersededRetirement`. */
+
   readonly owned: ReadonlySet<string>;
   readonly retire: readonly RetirementItem[];
   readonly heldBack: readonly { readonly obligationId: string; readonly code: HeldRouteHold; readonly why: string }[];
@@ -446,7 +438,6 @@ export function planHeldRouteRetirement(input: {
   return { owned, retire, heldBack };
 }
 
-/** A retired row holds no open occurrence: any inactive row still pointing at one is settled under its retirement reason. */
 export function planRetiredResidue(outside: readonly StandingObligation[]): readonly RetirementItem[] {
   return outside
     .filter((row) => !row.active && row.openOccurrenceId !== null)
@@ -480,7 +471,6 @@ export async function settleRetirements(
       const held = await repos.obligations.read(obligationId);
       if (held === null) continue;
 
-      /* Every open occurrence the row owns, not only the one it points at. */
       let closedAny = false;
       for (const occurrence of await repos.occurrences.listWhere(["obligationId"], obligationId)) {
         if (occurrence.value.closedAt !== null) continue;
@@ -494,7 +484,6 @@ export async function settleRetirements(
         closedAny = true;
       }
 
-      /* Closing an occurrence rewrote the row; otherwise the first read is still current. */
       const row = closedAny ? await repos.obligations.mustRead(obligationId) : held;
       if (row.value.active) {
         await repos.obligations.compareAndSet(
@@ -527,7 +516,6 @@ export async function settleRetirements(
   return { retired, occurrencesClosed, failed, deferred };
 }
 
-/** Resume the cycle's open occurrence; a committed disposition is recovered without another dispatch. */
 export async function resumeOpenOccurrence(
   repos: ControlPlaneRepositories,
   obligation: StandingObligation,
@@ -538,7 +526,7 @@ export async function resumeOpenOccurrence(
   if (held === null) return null;
 
   if (held.value.closedAt !== null) return null;
-  // A new Send can connect an already-open occurrence without a second discovery; existing or repaired instructions stay immutable.
+
   if (obligation.autonomousPlan) {
     const item = snapshot.workItems.get(held.value.workItemId);
     if (!item) throw new Error(`open occurrence ${held.id} has no work item ${held.value.workItemId}`);
@@ -550,7 +538,7 @@ export async function resumeOpenOccurrence(
     }
   }
   const task = snapshot.routeTasks.get(held.value.routeTaskId) ?? null;
-  /* `disposition !== null`, not `state`, decides settledness: a later claim can overwrite the state. */
+
   if (task !== null && task.value.disposition !== null) {
     return {
       kind: "SETTLED",
@@ -571,17 +559,16 @@ export interface SettledOccurrence {
   readonly obligationId: string;
   readonly routeTaskId: string;
   readonly workItemId: string;
-  /** The disposition the RouteTask carries, verbatim. Never re-derived and never replaced. */
+
   readonly disposition: RouteDisposition;
 }
 
 export type ResumedOccurrence =
-  /** Owed work: the RouteTask carries no disposition yet, so the occurrence is dispatched. */
+
   | { readonly kind: "OPEN"; readonly id: string; readonly routeTaskId: string }
-  /** The route was already settled by the cycle that walked it. */
+
   | { readonly kind: "SETTLED"; readonly settled: SettledOccurrence };
 
-/** Every settled open occurrence, found before any lane runs (recovery spends nothing, so it never waits on dispatch capacity). Each candidate is confirmed by `resumeOpenOccurrence`. */
 export async function findSettledOccurrences(
   repos: ControlPlaneRepositories,
   input: {
@@ -597,7 +584,7 @@ export interface AbandonedOccurrence {
   readonly occurrenceId: string;
   readonly obligationId: string;
   readonly sequence: number;
-  /** The obligation's own count: the occurrence it has moved on to. */
+
   readonly movedOnTo: number;
 }
 
@@ -643,7 +630,6 @@ export async function scanOccurrences(
   return { settled, abandoned };
 }
 
-/** Recheck ownership and route state before closing an abandoned occurrence unresolved. */
 export async function closeAbandonedOccurrences(
   repos: ControlPlaneRepositories,
   input: { readonly abandoned: readonly AbandonedOccurrence[]; readonly now: string },
@@ -699,14 +685,12 @@ export async function closeAbandonedOccurrences(
   return { closed, skipped, failed };
 }
 
-/** The ids of the RouteTasks that carry a disposition: the settledness `resumeOpenOccurrence` reads. */
 export function settledRouteTaskIds(
   routeTasks: readonly { readonly id: string; readonly value: RouteTask }[],
 ): ReadonlySet<string> {
   return new Set(routeTasks.filter((t) => t.value.disposition !== null).map((t) => t.id));
 }
 
-/** Raised when an obligation is asked to open past an occurrence it still holds open. */
 export class OccurrenceStillOpen extends Error {
   readonly obligationId: string;
   readonly occurrenceId: string;
@@ -721,7 +705,6 @@ export class OccurrenceStillOpen extends Error {
   }
 }
 
-/** Open the next occurrence of a due obligation, with its own WorkItem and RouteTask. Null when the obligation names no route. */
 export async function openOccurrence(
   repos: ControlPlaneRepositories,
   input: {
@@ -737,14 +720,13 @@ export async function openOccurrence(
   const o = input.obligation;
   if (o.routeId === null) return null;
 
-  /* Never open past an occurrence that is still open, checked against the row as it is now. */
   const current = await repos.obligations.mustRead(o.id);
   if (current.value.openOccurrenceId !== null) {
     const held = await repos.occurrences.read(current.value.openOccurrenceId);
     if (held !== null && held.value.closedAt === null) throw new OccurrenceStillOpen(o.id, held.id);
   }
   const sequence = current.value.occurrenceCount + 1;
-  /* The round names its question from the row as it is now, and none when that is not on the row. */
+
   const question = questionOfObligation(current.value);
   const workItem: WorkItem = { ...createWorkItem({
     project: FRESHNESS_PROJECT,
@@ -830,7 +812,7 @@ export async function closeOccurrence(
     {
       ...obligationRow.value,
       openOccurrenceId: null,
-      /* A productive disposition also clears any standing absence. */
+
       ...(input.disposition !== null
         ? { lastWorkedAt: input.workedAt ?? input.now, absentUntil: null, absenceUnlock: null }
         : {}),
@@ -842,7 +824,6 @@ export async function closeOccurrence(
   return closed;
 }
 
-/** Recover the committed reading's original time; an unproductive disposition leaves the obligation due. */
 export async function closeSettledOccurrence(
   repos: ControlPlaneRepositories,
   input: { readonly settled: SettledOccurrence; readonly now: string },
@@ -858,7 +839,6 @@ export async function closeSettledOccurrence(
   });
 }
 
-/** Why a settled occurrence closed without discharge, in the words its debt row carries. */
 export function settledUnresolvedReason(disposition: RouteDisposition): string {
   return (
     `the route was already disposed ${disposition.disposition} (committed ${disposition.at} by ` +
@@ -868,7 +848,6 @@ export function settledUnresolvedReason(disposition: RouteDisposition): string {
   );
 }
 
-/** Record the derived next-due against the durable row, so a query can use it. */
 export async function recordNextDue(
   repos: ControlPlaneRepositories,
   input: { readonly obligationId: string; readonly nextDueAt: string; readonly now: string },
@@ -883,18 +862,17 @@ export async function recordNextDue(
   );
 }
 
-/** Record an expiring absence on the durable row; `scheduleObligation` owes the next reading at its expiry. Not a debt. */
 export async function recordArguedAbsence(
   repos: ControlPlaneRepositories,
   input: { readonly obligationId: string; readonly absentUntil: string; readonly now: string; readonly unlockWhen?: import("./absence.ts").AbsenceUnlock },
 ): Promise<void> {
   const row = await repos.obligations.mustRead(input.obligationId);
-  /* The hold is the owner's setting tied to the source's pace, never longer than the caller's own expiry. */
+
   const configRow = await repos.adminConfig.read(ADMIN_CONFIG_ID).catch(() => null);
   const hold = absenceHold(row.value, input.now, configRow && isAdminConfig(configRow.value) ? configRow.value : null);
   const absentUntil = hold.until < input.absentUntil ? hold.until : input.absentUntil;
   if (row.value.absentUntil === absentUntil && row.value.nextDueAt === absentUntil) return;
-  /* The unlock keeps when the absence was argued and its recheck date. */
+
   const unlock = input.unlockWhen === undefined ? undefined : { ...input.unlockWhen, recordedAt: input.now,
     triggers: input.unlockWhen.triggers.map((t) => (t.kind === "DATE" ? { ...t, at: absentUntil } : t)) };
   await repos.obligations.compareAndSet(
@@ -906,7 +884,6 @@ export async function recordArguedAbsence(
   );
 }
 
-/** Every debt row this control plane holds. */
 export async function loadDebts(
   repos: ControlPlaneRepositories,
 ): Promise<readonly FreshnessDebt[]> {
@@ -914,15 +891,14 @@ export async function loadDebts(
   return rows.map((r) => r.value);
 }
 
-/** Persist this cycle's debt set: write what is owed, clear what is discharged. */
 export async function persistDebts(
   repos: ControlPlaneRepositories,
   next: readonly FreshnessDebt[],
   now: string,
   scope: readonly string[] | null = null,
-  /** Retired obligations, id to reason: their debt is kept out of `next` and tombstoned naming the retirement, never as a discharge. */
+
   retired: ReadonlyMap<string, string> = new Map(),
-  /** Independent stored debt IDs can share the caller's repository concurrency. */
+
   concurrency = 1,
 ): Promise<{
   readonly written: number;
@@ -958,7 +934,7 @@ export async function persistDebts(
       ) });
       continue;
     }
-    /* A cleared debt is a tombstone, not a delete: the store has no delete. `retryable` ignores a zero-failure row. */
+
     if (row.value.consecutiveFailures === 0) continue;
     operations.push({ id: row.id, obligationId: row.value.obligationId, kind: "CLEARED", run: () => repos.debts.compareAndSet(
       row.id,
@@ -991,7 +967,7 @@ export async function persistDebts(
       try {
         await operation.run();
       } catch (error) {
-        // A failed write is not retried by a later operation on the same row.
+
         failures.push({ index: operation.index, error });
         break;
       }
@@ -1005,7 +981,6 @@ export async function persistDebts(
   };
 }
 
-/** The obligations whose stored next-due has passed. */
 export async function dueByStoredTime(
   repos: ControlPlaneRepositories,
   nowIso: string,

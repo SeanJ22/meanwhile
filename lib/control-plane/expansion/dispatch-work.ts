@@ -32,8 +32,8 @@ import { placePercent } from "../../coverage/place-measures.ts";
 import { readHeldPlaceCapture } from "../../civic-data/held-place-capture.ts";
 import { ADMIN_CONFIG_ID, isAdminConfig } from "../gateway/admin-config.ts";
 import { setActiveOwedOverlay } from "../../coverage/owed-overlay.ts";
-import { expansionScopesOf, VERSION_PREFIX, type ExpansionScopeDecision } from "./scopes.ts";
-import { resolveScopes } from "./runner-load.ts";
+import { VERSION_PREFIX, type ExpansionScopeDecision } from "./scopes.ts";
+import { readExpansionScopesForZips, resolveScopes } from "./runner-load.ts";
 import { loadPublishedAreaLookupState } from "../../census-geography/area-lookup.ts";
 import { declaredWorkMembers } from "./declared-work-scope.ts";
 import { censusWorkDivision } from "../../census-geography/division-id.ts";
@@ -46,7 +46,6 @@ export interface PlaceWorkReading {
   readonly items: readonly Pick<PlaceOwedItem, "state" | "checklistId">[];
 }
 
-/** Order the existing place capture rows; this creates no score or policy store. */
 export function placeWorkReadings(config: unknown, places: readonly PlaceWorkReading[]) {
   const placeKey = (key: string): string => {
     const parsed = parseV6PlaceKey(key);
@@ -67,7 +66,7 @@ export function placeWorkReadings(config: unknown, places: readonly PlaceWorkRea
     if (!previous || Date.parse(target.setAt) >= Date.parse(previous.setAt)) targets.set(key, target as { goalPercent: number; setAt: string });
   }
   const readings = places.map(place => {
-    // The same percent Admin and the national list show, so the runner's order matches what the owner reads.
+
     const percent = placePercent(place.items) ?? 0;
     const target = targets.get(placeKey(place.key));
     return { ...place, percent, target: target && percent < target.goalPercent ? target : null };
@@ -81,13 +80,10 @@ export function orderPlaceWork(config: unknown, places: readonly PlaceWorkReadin
   return placeWorkReadings(config, places).map(place => place.receiptId);
 }
 
-/** National source workers use the same current capture denominator as the live hunt queue.
- * The published lookup and declared standing divisions place shared facts; ranking never fetches geography. */
 export async function orderNationalPlaceWork(repos: ControlPlaneRepositories, zips: readonly string[], now: string): Promise<string[]> {
   return (await nationalPlaceWorkReading(repos, zips, now)).ordered;
 }
 
-// Reuse each mission's owed list until its decision changes or the reading expires.
 const READING_MEMO_MS = 5 * 60_000;
 const READING_MEMO_MAX = 32;
 const readingMemo = new Map<string, { readonly at: number; readonly items: PlaceOwedItem[] }>();
@@ -97,12 +93,11 @@ export function clearPlaceReadingMemo(): void { readingMemo.clear(); }
 
 async function nationalPlaceContext(repos: ControlPlaneRepositories, zips: readonly string[]) {
   const row = await repos.adminConfig.read(ADMIN_CONFIG_ID);
-  // What the owner added to, or declined from, what places are owed counts in the order the runner works in.
+
   setActiveOwedOverlay(row !== null && isAdminConfig(row.value) ? row.value.owedOverlay : null);
-  const decisions = expansionScopesOf(row?.value ?? null);
-  if (decisions.malformed) throw new Error("The owner's place scopes contain unreadable decisions");
+  const decisions = await readExpansionScopesForZips(repos,zips);
   if (!decisions.scopes.length) return { lookup: null, scopes: [], targets: null };
-  const lookup = await loadPublishedAreaLookupState(zips);
+  const lookup = decisions.lookup;
   const resolved = await resolveScopes(decisions.scopes, lookup, null);
   const scopes = resolved.scopes.filter(scope => scope.kind === "RESOLVED" && zips.some(zip => scope.zctas.has(zip)) ||
     scope.kind === "UNRESOLVED" && scope.decision.geography.type === "zcta" && zips.includes(scope.decision.geography.geoid));
@@ -133,11 +128,10 @@ async function placeReading(repos: ControlPlaneRepositories, zips: readonly stri
     const hit = readingMemo.get(memoKeyOf(scope.decision));
     return hit !== undefined && nowMs - hit.at >= 0 && nowMs - hit.at < READING_MEMO_MS ? hit : null;
   };
-  // Only scopes without a fresh owed list are read again; a changed decision has a new key and so rebuilds alone.
+
   const rebuilt = scopes.filter(scope => remembered(scope) === null);
   const scopeZips = [...new Set([...zips, ...rebuilt.flatMap(scope => scope.kind === "RESOLVED" ? [...scope.zctas] : [])])];
-  // A selected ZIP can name a whole district. Keep that district's denominator
-  // and read its actual ZIPs before resolving shared standing work and facts.
+
   if (scopeZips.some(zip => !selectedZips.has(zip))) lookup = await loadPublishedAreaLookupState(scopeZips);
   const wanted = new Set<string>(["ocd-division/country:us"]);
   for (const zip of scopeZips) {
@@ -188,7 +182,7 @@ async function placeReading(repos: ControlPlaneRepositories, zips: readonly stri
     return items;
   };
   const readings = placeWorkReadings(targets?.value, scopes.map(scope => ({
-    // A whole-state mission is ordered and targeted under the state's own place key.
+
     key: scope.decision.geography.type === "state" ? `st:${scope.decision.geography.stateAbbr.toLowerCase()}`
       : `${scope.decision.geography.stateAbbr.toLowerCase()}.${VERSION_PREFIX[scope.decision.geography.type]}.${scope.decision.geography.geoid.toLowerCase()}`,
     receiptId: scope.decision.receiptId,
@@ -199,10 +193,8 @@ async function placeReading(repos: ControlPlaneRepositories, zips: readonly stri
     belowTarget: new Set(zips.filter(zip => readings.some(place => place.target && inScope.get(place.receiptId)?.has(zip)))) };
 }
 
-/** A Send creates every missing requirement; shared governments keep one row. */
 export const DISPATCH_WORK_FORMAT_VERSION = 1;
 
-/** Persist an owed source capability without inventing an executable route. */
 export async function applyManualSourceGaps(
   repos: ControlPlaneRepositories,
   scopes: readonly ResolvedScope[],
@@ -233,7 +225,6 @@ export async function applyManualSourceGaps(
   return { created, carried, deferred };
 }
 
-/** Where the datasets a blocked reason names live, in the words a receipt prints. */
 export const DATASET = {
   lookup: "the published Census geography lookup (CENSUS_GEOGRAPHY / US:zcta-geography-overlaps)",
   territory: "native state government references and published Census intersections",
@@ -248,75 +239,65 @@ export const DATASET = {
     "registries, and every other state's registration, read by lib/registration/jurisdictions.ts)",
 } as const;
 
-/* ----------------------------------------------------------------- targets */
-
-/** One thing the owner sent the fleet to. */
 export type DispatchWorkTarget =
   | {
       readonly kind: "SCOPE";
-      /** The scope key, `county:2020/04019`. */
+
       readonly key: string;
       readonly label: string;
       readonly requestedAt: string;
-      /** The gateway receipt that carries the owner's decision. */
+
       readonly ref: string;
       readonly budgetUsd: number;
       readonly scope: PlannedScope;
-      /** The questions the owner asked of this Send; recorded on every obligation it reaches. */
+
       readonly questions?: readonly WorkQuestion[];
     }
   | {
       readonly kind: "DISPATCH";
-      /** `dispatch:<intent id>`. */
+
       readonly key: string;
       readonly label: string;
       readonly requestedAt: string;
-      /** The DISPATCH intent id. */
+
       readonly ref: string;
       readonly target: DispatchTarget;
     };
 
-/* ------------------------------------------------------------------- world */
-
-/** A durable obligation row, as much of it as the classification reads. */
 export interface DurableRowFacts {
   readonly active: boolean;
   readonly materializedBy?: string;
-  /** The Sends already recorded on the row, so a Send is recorded on it once. */
+
   readonly assignments?: readonly ObligationAssignment[];
 }
 
-/** Everything the planner reads, loaded once by the runner. */
 export interface DispatchWorkWorld {
-  /** Every promoted jurisdiction registry, keyed by lower-case state code. */
+
   readonly registries: ReadonlyMap<string, JurisdictionRegistry>;
-  /** The territory index the expansion plan placed with; null when not built. */
+
   readonly territory: TerritoryIndex | null;
   readonly territoryDetail: string | null;
-  /** This cycle's registry corpus: every obligation any provider emitted. */
+
   readonly corpus: readonly { readonly id: string; readonly subjectId: string }[];
-  /** Every durable obligation row, in the corpus or outside it, active or retired. */
+
   readonly durable: ReadonlyMap<string, DurableRowFacts>;
   readonly meetingPartitions: MeetingPartitionOwnership;
-  /** Census units by state (upper), for a DISPATCH to a state with no registry. Null when not read. */
+
   readonly censusUnitsByState?: ReadonlyMap<string, number> | null;
-  /** Registries the promoted bundle carries that the runtime's reader refuses, by lower-case state, with the reason. */
+
   readonly refusedRegistries?: ReadonlyMap<string, string>;
-  /** Every division each target's place touches, by target key: one hunt packet each. Absent means not read. */
+
   readonly packetDivisions?: ReadonlyMap<string, readonly string[]>;
 }
 
-/* ---------------------------------------------------------- requirements */
-
 export type RequirementKind = "MEETINGS_DISCOVERY" | "REGISTRY_ROUTE" | "HUNT_PACKET";
 
-/** One requirement instance the registry defines for one government. */
 export interface RequirementInstance {
-  /** The exact row a creation writes: `standing()` of this, marked OWNER_DISPATCH. */
+
   readonly obligation: FreshnessObligation;
   readonly kind: RequirementKind;
   readonly executor: ExecutorKind;
-  /** How it is carried when no clock exists yet. HELD never becomes a row. */
+
   readonly carriage: "OWED" | "MEETING_PARTITION" | "HELD_UNREAD_WIRING";
   readonly heldReason?: string;
 }
@@ -365,13 +346,10 @@ export function requirementsFor(
   return out.sort((a, b) => (a.obligation.id < b.obligation.id ? -1 : a.obligation.id > b.obligation.id ? 1 : 0));
 }
 
-/** One hunt packet per division: the government's open blanks, hunted as one job. */
 function packetRequirements(divisions: readonly string[]): RequirementInstance[] {
   return [...new Set(divisions)].sort().map(id => ({ obligation: huntPacketObligation(id), kind: "HUNT_PACKET" as const,
     executor: "BOUNDED_MODEL_WORKER" as const, carriage: "OWED" as const }));
 }
-
-/* ------------------------------------------------------------------- units */
 
 export type BlockedCode =
   | "GEOGRAPHY_UNRESOLVED"
@@ -382,13 +360,12 @@ export type BlockedCode =
   | "NO_GOVERNMENT_PLACED"
   | "NO_STATE_NAMED";
 
-/** Governments a target holds that no dataset can give requirements to, and the dataset that is missing. */
 export interface BlockedUnits {
   readonly code: BlockedCode;
-  /** The missing dataset, by name. */
+
   readonly dataset: string;
   readonly why: string;
-  /** How many governments it blocks; null when the count itself cannot be taken. */
+
   readonly units: number | null;
   readonly states: readonly string[];
   readonly sample: readonly string[];
@@ -402,7 +379,7 @@ interface PlacedUnit {
 interface TargetUnits {
   readonly placed: readonly PlacedUnit[];
   readonly blocked: readonly BlockedUnits[];
-  /** Governments of the target's states no territory can place in or out: registry rows the join cannot place, and Census units with no ZCTA territory. */
+
   readonly unplaced: number;
 }
 
@@ -437,8 +414,7 @@ function scopeUnits(scope: PlannedScope, world: DispatchWorkWorld): TargetUnits 
   const rowsByState = new Map<string, ReadonlyMap<string, Jurisdiction>>();
   for (const state of scope.states) {
     const reg = world.registries.get(state.toLowerCase());
-    // A bare state row is an ancestor, not an identified meeting body. Include its declared shared sources;
-    // do not invent a find-own-site meeting obligation for a synthetic registration ancestor.
+
     if (reg) for (const jurisdiction of reg.jurisdictions) if (index.statewide.has(jurisdiction.id) && jurisdiction.sourceIds.length > 0) placed.push({ reg, jurisdiction });
   }
   for (const territory of index.bySubject.values()) {
@@ -499,7 +475,7 @@ function scopeUnits(scope: PlannedScope, world: DispatchWorkWorld): TargetUnits 
       });
     }
   }
-  /* Governments of the scope's states no territory can place in or out: registry rows the join could not place, and Census units with no ZCTA territory. */
+
   const scopeStates = new Set(scope.states.map((s) => s.toLowerCase()));
   const unplacedRegistered = [...index.unplaced.keys()].filter((id) => scopeStates.has(id.split(":")[0] ?? "")).length;
   const unplacedCensus = scope.states.reduce(
@@ -507,7 +483,7 @@ function scopeUnits(scope: PlannedScope, world: DispatchWorkWorld): TargetUnits 
     0,
   );
   const unplaced = unplacedRegistered + unplacedCensus;
-  /* A zero where the territory should have named governments is a gap in the data, never an empty geography. */
+
   if (placed.length === 0 && blocked.length === 0) {
     blocked.push({
       code: "NO_GOVERNMENT_PLACED",
@@ -583,14 +559,12 @@ function dispatchUnits(target: DispatchTarget, world: DispatchWorkWorld): Target
   return { placed, blocked, unplaced: 0 };
 }
 
-/* -------------------------------------------------------------------- plan */
-
 export type InstanceState = "CARRIED" | "CREATED" | "MISSING" | "HELD";
 
 export interface PlannedInstance {
   readonly instance: RequirementInstance;
   readonly state: InstanceState;
-  /** For a MISSING instance whose row already exists durably (retired, or live outside the corpus): it is marked, not put. */
+
   readonly existsUnmarked: boolean;
 }
 
@@ -598,11 +572,10 @@ export interface TargetPlan {
   readonly target: DispatchWorkTarget;
   readonly units: TargetUnits;
   readonly instances: readonly PlannedInstance[];
-  /** Obligations in this cycle's corpus about the target (not materialized): the work a Send reorders. */
+
   readonly reordered: number;
 }
 
-/** A MISSING instance queued for writing, with the Send it is written under (the first that reached it). */
 export type PlannedWrite = PlannedInstance & { readonly target: DispatchWorkTarget };
 
 export interface PlannedMark {
@@ -612,14 +585,13 @@ export interface PlannedMark {
 
 export interface DispatchWorkPlan {
   readonly targets: readonly TargetPlan[];
-  /** Every MISSING instance, in write order, each once. */
+
   readonly writes: readonly PlannedWrite[];
 
   readonly marks: readonly PlannedMark[];
   readonly corpusSize: number;
 }
 
-/** The entry a Send leaves on an obligation it reached, with its questions when it asked any. */
 export function assignmentEntry(target: DispatchWorkTarget, relation: ObligationAssignment["relation"], at: string): ObligationAssignment {
   const questions = target.kind === "SCOPE" ? (target.questions ?? []) : [];
   return {
@@ -666,7 +638,7 @@ export function planDispatchWork(input: {
     const packetDivisions = world.packetDivisions?.get(target.key) ??
       (target.kind === "DISPATCH" ? units.placed.flatMap(({ jurisdiction }) => jurisdiction.ocdId ? [jurisdiction.ocdId] : []) : []);
     instances.push(...packetRequirements(packetDivisions));
-    /* Does the row already record this Send, in any relation? */
+
     const recorded = (row: DurableRowFacts | undefined): boolean => (row?.assignments ?? []).some((a) => a.assignmentKey === target.key && a.ref === target.ref);
 
     const planned: PlannedInstance[] = [];
@@ -678,13 +650,13 @@ export function planDispatchWork(input: {
         continue;
       }
       if (instance.carriage === "MEETING_PARTITION") {
-        /* A production meeting partition carries it: there is no obligation row to record the Send on. */
+
         planned.push({ instance, state: "CARRIED", existsUnmarked: false });
         continue;
       }
       if (row?.materializedBy === OWNER_DISPATCH) {
         planned.push({ instance, state: "CREATED", existsUnmarked: false });
-        /* Another Send created it: this one found it on a clock. A creator not on record is never guessed. */
+
         if (!recorded(row) && (row.assignments ?? []).some((a) => a.relation === "CREATED")) marks.push({ obligationId: id, target });
         continue;
       }
@@ -720,20 +692,18 @@ export function planDispatchWork(input: {
   return { targets, writes, marks, corpusSize: world.corpus.length };
 }
 
-/* ------------------------------------------------------------------- apply */
-
 export interface DispatchWorkApplied {
   readonly written: readonly string[];
   readonly failed: readonly { readonly obligationId: string; readonly why: string }[];
-  /** Planned writes not reached this cycle: the budget or the wall ran out first. */
+
   readonly deferred: readonly string[];
   readonly stoppedBy: "DONE";
-  /** REORDERED records written this cycle. */
+
   readonly marked?: readonly { readonly obligationId: string; readonly assignmentKey: string }[];
   readonly markFailed?: readonly { readonly obligationId: string; readonly assignmentKey: string; readonly why: string }[];
 
   readonly marksDeferred?: readonly { readonly obligationId: string; readonly assignmentKey: string }[];
-  /** Every Send recorded on a row this cycle — created or reordered — for the runner's assignment budgets. */
+
   readonly recorded?: readonly { readonly obligationId: string; readonly subjectId: string; readonly entry: ObligationAssignment }[];
 }
 
@@ -754,7 +724,7 @@ export async function applyDispatchWork(
     const id = entry.instance.obligation.id;
     const created = assignmentEntry(entry.target, "CREATED", input.now);
     try {
-      /* The Send is recorded only where this write is what made the row this Send's. */
+
       let recordedHere = true;
       if (!entry.existsUnmarked) {
         await repos.obligations.put(id, standing({ ...entry.instance.obligation, assignments: [created] }, input.now), input.now);
@@ -787,8 +757,7 @@ export async function applyDispatchWork(
       failed.push({ obligationId: id, why: error instanceof Error ? error.message : String(error) });
     }
   }
-  // Existing Sends share one held read; CAS still arbitrates every actual change.
-  // Keep each successful revision so overlapping hunts update the same row in order.
+
   const heldMarks = new Map((plan.marks.length ? await repos.obligations.list() : []).map(row => [row.id, row]));
   for (const mark of plan.marks) {
     const key = { obligationId: mark.obligationId, assignmentKey: mark.target.key };
@@ -811,29 +780,26 @@ export async function applyDispatchWork(
   return { written, failed, deferred, stoppedBy, marked, markFailed, marksDeferred, recorded };
 }
 
-/* ----------------------------------------------------------------- reading */
-
 export interface DispatchWorkRequirementCounts {
-  /** Requirement instances the registry defines for the governments placed in the target: the denominator. */
+
   readonly defined: number;
-  /** Already on a standing clock (or a meeting partition): put first, not created. */
+
   readonly carried: number;
-  /** Materialized by the owner's dispatch, cumulative, this cycle's included. */
+
   readonly created: number;
   readonly createdThisCycle: number;
 
   readonly deferred: number;
 
-  /** Written this cycle and refused by the store; retried next cycle. */
   readonly failed: number;
-  /** Machine-openable meetings routes held because the partition wiring could not be read. */
+
   readonly held: number;
-  /** Of `created`, how many run on the plain-code lane and how many need a model. */
+
   readonly createdDeterministic: number;
   readonly createdModel: number;
-  /** Of `created`, how many are meetings discovery: the free discovery walk takes them first. */
+
   readonly createdMeetingsDiscovery: number;
-  /** Of `created`, how many belong to a government read from its state's registration. Absent on an older reading. */
+
   readonly createdFromRegistration?: number;
 }
 
@@ -844,48 +810,47 @@ export interface DispatchWorkTargetReading {
   readonly requestedAt: string;
   readonly ref: string;
   readonly units: {
-    /** Governments placed in the target that the registry gives requirements to. */
+
     readonly placed: number;
-    /** Of `placed`, how many were read from their state's registration (no reviewed registry). Absent on older readings. */
+
     readonly fromRegistration?: number;
-    /** Governments the target holds that a missing dataset blocks; null when that count cannot be taken. */
+
     readonly blocked: number | null;
-    /** Governments of the target's states that no territory can place in or out (registry rows and Census-only units alike). */
+
     readonly unplaced: number;
     readonly placedSample: readonly string[];
   };
   readonly blocked: readonly BlockedUnits[];
   readonly requirements: DispatchWorkRequirementCounts;
-  /** Standing obligations about the target's governments, of every standing obligation this cycle. */
+
   readonly reordered: { readonly obligations: number; readonly of: number };
 
   readonly assignment?: { readonly recordedThisCycle: number; readonly marksDeferred: number; readonly marksFailed: number };
-  /** Plain sentences: why created work waits, which budgets bind, what is not built. */
+
   readonly says: readonly string[];
 }
 
 export interface DispatchWorkReading {
   readonly formatVersion: 1;
   readonly at: string;
-  /** PLAN_ONLY on a cycle that may not write (dry, canary, filtered, blackout, runner paused), with why. */
+
   readonly writes: "APPLIED" | "PLAN_ONLY";
   readonly planOnlyWhy: string | null;
   readonly written: number;
   readonly deferred: number;
   readonly failed: readonly { readonly obligationId: string; readonly why: string }[];
   readonly stoppedBy: DispatchWorkApplied["stoppedBy"] | null;
-  /** REORDERED records written this cycle, and those left for the next. Absent on older readings. */
+
   readonly marked?: number;
   readonly marksDeferred?: number;
   readonly targets: readonly DispatchWorkTargetReading[];
 }
 
-/** What binds the created work, from the cycle's own readings. */
 export interface DispatchWorkContext {
   readonly at: string;
-  /** Why the paid lane is closed this cycle, verbatim from `modelLaneClosure`; null when it is open. */
+
   readonly modelLaneClosed: string | null;
-  /** The rolling 24-hour ceiling in force, and whether it is the owner's dial or the fallback. */
+
   readonly ceilingUsd: number;
   readonly ceilingSource: "OVERRIDE" | "FALLBACK";
   readonly writes: "APPLIED" | "PLAN_ONLY";
@@ -894,7 +859,6 @@ export interface DispatchWorkContext {
 
 const usd = (n: number): string => `$${n.toFixed(2)}`;
 
-/** The reading the runner writes onto the research state, and the HONORED detail reads. */
 export function dispatchWorkReading(
   plan: DispatchWorkPlan,
   applied: DispatchWorkApplied | null,
@@ -933,7 +897,7 @@ export function dispatchWorkReading(
     const blocked = blockedCounts.some((n) => n === null) ? null : blockedCounts.reduce<number>((a, n) => a + (n ?? 0), 0);
     const says: string[] = [];
     if (context.writes === "PLAN_ONLY") says.push(`Planned only, nothing written this cycle: ${context.planOnlyWhy ?? "this cycle may not write"}.`);
-    /* Where the governments came from: the reviewed registries, or a state's registration. */
+
     const fromRegistration = t.units.placed.filter((u) => registrySourceOf(u.reg) === "REGISTRATION");
     if (fromRegistration.length > 0) {
       const versions = [...new Map(fromRegistration.map((u) => [u.reg.stateCode, u.reg.registration?.versionId ?? ""])).entries()]
@@ -1046,7 +1010,6 @@ export function dispatchWorkReading(
   };
 }
 
-/** The receipt for one target in a sentence: created, reordered and blocked, each with its denominator. */
 export function dispatchWorkSentence(t: DispatchWorkTargetReading): string {
   const r = t.requirements;
   const blocked =
@@ -1061,21 +1024,20 @@ export function dispatchWorkSentence(t: DispatchWorkTargetReading): string {
 }
 
 export interface OwnerDispatchWork {
-  /** `dispatch:<intent id>`: the target reading's key. */
+
   readonly key: string;
   readonly defined: number;
   readonly created: number;
   readonly createdThisCycle: number;
-  /** Already on a standing clock: reordered, not created. */
+
   readonly carried: number;
   readonly deferred: number;
-  /** Governments no dataset can give requirements to; null when that count cannot be taken. */
+
   readonly blockedUnits: number | null;
-  /** Each blocked reason: its code, and the plain sentence naming the missing dataset. */
+
   readonly blocked: readonly { readonly code: BlockedCode; readonly says: string }[];
 }
 
-/** The DISPATCH record's counts for one intent, or null when the cycle planned nothing for it. */
 export function ownerDispatchWorkOf(reading: DispatchWorkReading | null, intentId: string): OwnerDispatchWork | null {
   const key = `dispatch:${intentId}`;
   const t = reading?.targets.find((x) => x.key === key) ?? null;
@@ -1092,15 +1054,11 @@ export function ownerDispatchWorkOf(reading: DispatchWorkReading | null, intentI
   };
 }
 
-/* ---------------------------------------------------------- the targets */
-
-/** A DISPATCH target from the owner's words (`fleet.deployHere`). */
 export function dispatchWorkTarget(input: { readonly intentId: string; readonly note: string; readonly requestedAt: string }): DispatchWorkTarget {
   const target = parseDispatchTarget(input.note);
   return { kind: "DISPATCH", key: `dispatch:${input.intentId}`, label: target.text, requestedAt: input.requestedAt, ref: input.intentId, target };
 }
 
-/** A SCOPE target from a selected scope as the cycle planned it. */
 export function scopeWorkTarget(scope: PlannedScope): DispatchWorkTarget {
   const d = scope.decision;
   return {
@@ -1115,24 +1073,23 @@ export function scopeWorkTarget(scope: PlannedScope): DispatchWorkTarget {
   };
 }
 
-export function carriedDispatchTargets(prior: unknown, cancelled: ReadonlySet<string> = new Set()): DispatchWorkTarget[] {
+export function carriedDispatchTargets(prior: unknown, activeRefs: ReadonlySet<string>): DispatchWorkTarget[] {
   if (!isDispatchWorkReading(prior)) return [];
   return prior.targets
     .filter(
       (t) =>
         t.kind === "DISPATCH" &&
-        /* The owner took this Send back (CANCEL_DISPATCH): it is no longer carried. */
-        !cancelled.has(t.ref) &&
+
+        activeRefs.has(t.ref) &&
         (t.requirements.deferred > 0 ||
           t.requirements.failed > 0 ||
-          /* A Send is carried until every row it reached records it. */
+
           (t.assignment?.marksDeferred ?? 0) > 0 ||
           (t.assignment?.marksFailed ?? 0) > 0),
     )
     .map((t) => dispatchWorkTarget({ intentId: t.ref, note: t.label, requestedAt: t.requestedAt }));
 }
 
-/** A value on the research state that is not a reading reads as none, never as an empty list. */
 export function isDispatchWorkReading(value: unknown): value is DispatchWorkReading {
   return isVersionedCycleReading(value, DISPATCH_WORK_FORMAT_VERSION, "targets");
 }

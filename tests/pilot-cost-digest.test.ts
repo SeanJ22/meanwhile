@@ -1,5 +1,3 @@
-// The digest's cost section reads the ledger's cache rows.
-
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -35,7 +33,7 @@ test("PC-11: a record with ledger cache rows prints the rate with its three coun
 
 test("PC-11: an older record says why the cache lines are not there, and a cycle that admitted no Scout says nothing was warmed", () => {
   const old = costSection({ digest: [], research: { scouts: [] } }).lines.join("\n");
-  assert.match(old, /CACHE HIT RATE — NOT MEASURED: this record was written before the cycle computed cache rows/);
+  assert.match(old, /CACHE HIT RATE — NOT MEASURED: the cycle did not record cache rows/);
   assert.match(old, /PRE-WARM — not recorded on this record/);
   const quiet = costSection({ digest: [], research: { cacheThisCycle: [], lanes: { model: { prewarm: null } }, scouts: [] } }).lines.join("\n");
   assert.match(quiet, /no model request left a cost-ledger row this cycle/);

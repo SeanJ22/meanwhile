@@ -66,7 +66,7 @@ import { ics, localStart, reviewedIds } from "./helpers/expansion-fixtures.ts";
 import { recordedDiscoveryOpen, type RecordedReply } from "./helpers/recorded-discovery-open.ts";
 
 const ROOT = join(import.meta.dirname, "..");
-/* Anchored to the real clock: the engine refuses an event dated in the future. */
+
 const HOUR = 3_600_000;
 const BASE = Date.now();
 const at = (hoursFromNow: number): string => new Date(BASE + hoursFromNow * HOUR).toISOString();
@@ -86,7 +86,6 @@ const COLUMBUS_HOST = "www.columbus.gov";
 const COLUMBUS_ROUTE = `https://${COLUMBUS_HOST}/calendar/city-council.ics`;
 const ALLOW: RecordedReply = { status: 200, body: "User-agent: *\nAllow: /\n", contentType: "text/plain" };
 
-/* The reviewed registries as the runner holds them, from the jurisdiction registry fixture. */
 installOperationalReferenceBundle(operationalReferenceBundle(
   JSON.parse(readFileSync(join(ROOT, "tests/fixtures/jurisdiction-registries.json"), "utf8")) as Record<"az" | "nh" | "nj", JurisdictionRegistry>,
 ));
@@ -101,7 +100,6 @@ const COLUMBUS_FEED = ics([
 const COLUMBUS_HOME = `<html><body><h1>City of Columbus, Ohio</h1><p>Columbus City Council meets Mondays at 5 p.m.</p>
 <a href="/calendar/city-council.ics">City Council meetings (iCal)</a></body></html>`;
 
-/** One state's registration, through its own routine door (the Census source, pinned). */
 async function promoteRegistration(store: MemoryRoutineDataStore, state: string): Promise<void> {
   const candidate = registrationCandidate({
     target: registrationTarget(state),
@@ -113,8 +111,6 @@ async function promoteRegistration(store: MemoryRoutineDataStore, state: string)
   assert.equal(outcome.candidate.state, "PROMOTED", outcome.candidate.failureDetail ?? "");
 }
 
-/** Synthetic geometry observations exercise held forward and reverse lookup together.
- * These explicit area fractions are fixture inputs, never reconstructed from sampled ZIP hits. */
 const GEOGRAPHY: readonly (BuiltGrouping & { readonly type: "county" | "place" })[] = [
   { type: "county", geoid: "39049", ocdId: "ocd-division/country:us/state:oh/county:franklin", label: "Franklin County, Ohio",
     stateFips: "39", stateAbbr: "OH", memberStates: ["OH"], overlaps: [{ zcta5: "43215", whole: true, fraction: 1 }] },
@@ -124,7 +120,6 @@ const GEOGRAPHY: readonly (BuiltGrouping & { readonly type: "county" | "place" }
     stateFips: "72", stateAbbr: "PR", memberStates: ["PR"], overlaps: [{ zcta5: "00601", whole: false, fraction: 0.8 }] },
 ];
 
-/** The real immutable lookup implements both directions over the published fixture. */
 function lookupOf(counties: Readonly<Record<string, { readonly label: string; readonly stateAbbr: string }>>): () => Promise<PublishedLookupState> {
   const states = new Set(Object.values(counties).map(c => c.stateAbbr));
   const scopes: BuiltScope[] = (["county", "place"] as const).map(type => {
@@ -143,13 +138,12 @@ function lookupOf(counties: Readonly<Record<string, { readonly label: string; re
   return async () => ({ source: "published", versionId, lookup });
 }
 
-/** The owner's Send, through the gateway's one door, exactly as the composer posts it. */
 async function send(repos: ControlPlaneRepositories, geography: Record<string, string>, key: string): Promise<void> {
   let ms = Date.parse(T_SEND);
   const request: ActionRequest = {
     type: "expansion.scope.set",
     subject: geography.label!,
-    input: { geography, priority: "1", budgetUsd: "0", note: "Every government here." },
+    input: { geography, priority: "1", budgetUsd: "1", note: "Every government here." },
     stateVersion: null,
     idempotencyKey: key,
     caller: "OWNER_SESSION",
@@ -159,7 +153,6 @@ async function send(repos: ControlPlaneRepositories, geography: Record<string, s
   assert.equal(outcome.ok, true, outcome.receipt.says);
 }
 
-/** What Postgres answers for the preview's registration slice, from the promoted pointer. */
 function postgresOverRegistration(versionId: string, model: RegistrationReadModel): ReadOnlyQuery {
   return async (statements) =>
     statements.map((s): Row[] => {
@@ -172,7 +165,6 @@ function postgresOverRegistration(versionId: string, model: RegistrationReadMode
     });
 }
 
-/** Preview and dispatch use the same held geography, including partial memberships. */
 async function previewCodes(geoid: string): Promise<PreviewCode[]> {
   const county = GEOGRAPHY.find(g => g.type === "county" && g.geoid === geoid)!;
   const { lookup } = await lookupOf({ [geoid]: county })();
@@ -231,7 +223,6 @@ async function runnerCycle(
   return { reading, scope };
 }
 
-/** A promoted venue-resolutions version: every adapter reading resolves through it (derived-wiring-reading.ts). */
 async function promoteVenues(store: MemoryRoutineDataStore): Promise<void> {
   const urls = ["https://public.example.gov/venue", "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=90+W+Broad+St&benchmark=Public_AR_Current&format=json"];
   const pkg: ManualProjectionPackage = {
@@ -273,7 +264,6 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   const versionId = reg.metadata.versionId!;
   assert.throws(() => requiredJurisdictionRegistry("oh"), /JURISDICTION_REGISTRY_NOT_READ:oh/, "nothing has read Ohio's registration yet");
 
-  /* 1. Admin's preview, before anything is sent: the promoted registration's slice, placed by the runner's rule. */
   const FRANKLIN = { "39049": { label: "Franklin County, Ohio", stateAbbr: "OH" } };
   const codes = await previewCodes("39049");
   const slice = await registrationGovernments("OH", [...new Set(codes.flatMap((c) => c.divisions))], postgresOverRegistration(versionId, model));
@@ -287,7 +277,6 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   assert.match(sentence, new RegExp(`creates work for ${preview.certain.length} governments here`));
   assert.match(sentence, /from registration \(the 2022 Census of Governments, promoted version .+\) — no reviewed registry exists for OH/);
 
-  /* 2. The owner's Send; the runner's own preview (a cycle that may not write); then its next cycle. */
   await send(repos, { type: "county", geoid: "39049", version: "county:2020", label: "Franklin County, Ohio", stateAbbr: "OH" }, "scope-franklin-0001");
   const dry = (await runnerCycle(repos, store, FRANKLIN, T_CYCLE, "PLAN_ONLY")).reading.targets[0]!;
   assert.equal(dry.requirements.created, 0, "a cycle that may not write creates nothing");
@@ -316,7 +305,7 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
 
   const created = (await repos.obligations.list()).map((row) => row.value).filter((o) => o.materializedBy === OWNER_DISPATCH);
   assert.equal(created.length, n, "the store holds exactly what the runner counted");
-  // The real gateway/runner marks survive the publisher's bounded list: the same exact-reference filter Admin reads.
+
   const assignmentSources = await readAllAssignmentSources(repos, { nowIso: T_CYCLE, activation: null, pilotZips: [] });
   const publishedWork = buildAssignmentView(assignmentSources, { perGroup: 1 });
   const instruction = created[0]!.assignments![0]!.assignmentKey;
@@ -324,7 +313,7 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   assert.ok(publishedWork.selection.omitted > 0);
   assert.ok(publishedWork.rows.every(row => row.assignmentKeys?.includes(instruction)));
   const placed = [...new Set(created.map((o) => o.subjectId))].sort();
-  /* Admin's preview: every government it counts as certain is created, and nothing outside its edge is. */
+
   for (const id of preview.certain) assert.ok(placed.includes(id), `${id}: counted certain, and created`);
   for (const id of placed) assert.ok(preview.certain.includes(id) || preview.edge.includes(id), `${id}: created, and inside the preview's edge`);
   assert.ok(n >= preview.certain.length && n <= preview.certain.length + preview.edge.length);
@@ -335,12 +324,10 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   for (const o of findOwnSite) assert.equal(ohio.jurisdictions.find((j) => j.id === o.subjectId)?.ownWebAddress, null, `${o.subjectId}: no address is invented`);
   assert.ok(created.some((o) => o.id === `${MEETINGS_DISCOVERY_NAMESPACE}${COLUMBUS}#own-site-meetings`));
 
-  /* A second Send of the same geography creates nothing new. */
   const again = await runnerCycle(repos, store, FRANKLIN, T_WALK);
   assert.equal(again.reading.targets[0]!.requirements.createdThisCycle, 0);
   assert.equal(again.reading.targets[0]!.requirements.created, created.length);
 
-  /* 3. The next cycle's providers keep the created work: the same accessor reads Ohio's registration. */
   const ids = new Set(created.map((o) => o.id));
   const pass = buildRegistry([meetingsDiscoveryProvider({ registered: () => ({ registries: new Map(), refused: new Map() }), materialized: () => ({ ids }) }), localJurisdictionsProvider({
     trackedStates: { read: () => ({ states: [], source: "fixture: no standing state work" }) }, materialized: () => ({ ids }),
@@ -348,7 +335,6 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   assert.deepEqual(pass.byProvider.map((p) => p.readFailure), [null, null]);
   assert.deepEqual(pass.units.map((u) => u.obligation.id).sort(), [...ids].sort(), "every created row stays in the corpus");
 
-  /* 4. Use the free walk at the recorded address; paid work remains subject to the separate owner pause and budget. */
   const dispatched = materializedDiscoveryNeeds([...ids]);
   assert.deepEqual(dispatched.failures, []);
   const needs = dispatched.entries.map((e) => ({ ...e.need, addressSource: dispatchedAddressSource(e.reg, null) }));
@@ -387,13 +373,11 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   assert.ok(vault.has(attempt!.site!.address!.versionId!), "the host is attested by its saved source copy");
   assert.equal((await readFreeDiscoveryWalks(repos, subjects)).latestFor(COLUMBUS), "FOUND");
 
-  /* 5. The automatic crosswalk, the wiring, Ohio's family and the Reader. */
   const regInput: DerivedInputRef = { kind: "PROMOTED_VERSION", recordClass: "REGISTRATION", scope: reg.metadata.scope, versionId, readModelSha256: sha(reg.value), promotedAt: reg.metadata.promotedAt! };
   const columbusDivision = "ocd-division/country:us/state:oh/place:columbus";
   assert.equal(model.bodies.length, 0, "native government registration supplies no unreviewed councils");
   assert.equal(ohio.jurisdictions.find(j => j.id === COLUMBUS)?.bodyId, null);
-  // A separate review binds this council to the native government. The captured official page
-  // establishes its existence and name; neither a division nor a roster supplies a body.
+
   const bodyPage = [...vault.values()].find(held => held.text === COLUMBUS_HOME)!;
   assert.ok(bodyPage.text.includes("Columbus City Council meets"));
   const reviewedBody = { id: COLUMBUS_BODY, ocdId: columbusDivision, bodyClass: "GOVERNING", censusId: "209050" };

@@ -46,7 +46,7 @@ async function lane(options: { arming?: ReturnType<typeof reading> | "missing" |
   ceilingUsd?: number; runnerPaused?: boolean; intentsUnreadable?: boolean; measured?: boolean } = {}) {
   const repos = createMemoryRepositories();
   const dir = mkdtempSync(join(tmpdir(), "hunter-lane-"));
-  const path = hunterLaneArmingPath(dir, {});
+  const path = hunterLaneArmingPath(dir,"nh", {});
   if (options.arming !== "missing" && options.arming !== "garbage") writeLaneArming(path, options.arming ?? reading());
   if (options.arming === "garbage") { writeLaneArming(path, reading()); writeFileSync(path, "{\"format\":1}"); }
   await repos.adminConfig.put(ADMIN_CONFIG_ID, withFleetSpendCeiling(defaultAdminConfig(NOW),
@@ -72,7 +72,7 @@ async function lane(options: { arming?: ReturnType<typeof reading> | "missing" |
   };
   const ownSpend = new LaneOwnSpend();
   const conditions: string[] = [];
-  const arm = () => armHunterLane({ repos, now: () => NOW, armingPath: path, messages, batch: backgroundBatchTransport({ apiKey: "" }),
+  const arm = () => armHunterLane({ repos,state:"nh", now: () => NOW, armingPath: path, messages, batch: backgroundBatchTransport({ apiKey: "" }),
     credentialConfigured: true, credentialVar: "WTP_TEST_KEY",
     providerQueue: new ModelProviderQueue(), ownSpend, circuits: null, onCondition: sentence => { conditions.push(sentence); } });
   let armed: ArmedHunterLane = await arm();
@@ -86,7 +86,7 @@ const spent = (usd: number, routeTaskId: string | null = "other-task"): CostEntr
 
 test("CH-24 lane: the round's reading round-trips, and a missing, malformed or stale one holds paid work by name", () => {
   const dir = mkdtempSync(join(tmpdir(), "hunter-lane-read-"));
-  const path = hunterLaneArmingPath(dir, {});
+  const path = hunterLaneArmingPath(dir,"nh", {});
   assert.match((readLaneArming(path, NOW) as { held: string }).held, /no research round has written its budget reading yet/);
   writeLaneArming(path, reading());
   assert.deepEqual((readLaneArming(path, NOW) as { arming: unknown }).arming, reading());
@@ -95,7 +95,7 @@ test("CH-24 lane: the round's reading round-trips, and a missing, malformed or s
   const old = new Date(Date.parse(NOW) - HUNTER_LANE_ARMING_MAX_AGE_MS - 60_000).toISOString();
   writeLaneArming(path, reading({ readAt: old }));
   assert.match((readLaneArming(path, NOW) as { held: string }).held, /61 minutes old/);
-  assert.equal(hunterLaneArmingPath(dir, { WTP_HUNTER_LANE_ARMING: "/srv/x.json" }), "/srv/x.json", "the parent names one path for every staged checkout");
+  assert.equal(hunterLaneArmingPath(dir,"nh", { WTP_HUNTER_LANE_ARMING: "/srv/x.json" }), "/srv/nh/arming.json", "the parent names one path for every staged checkout");
 });
 
 test("CH-24 lane: open with room, a request is held on its Send from the task's own marks, sent once and settled", async () => {
@@ -145,7 +145,7 @@ test("CH-24 lane: the lane's own spend is counted once across refreshes, the led
   await h.send(request);
   const own = h.ownSpend.usd();
   assert.ok(own > 0);
-  /* The worker writes its cost row for the same task: the next controller must not count it twice. */
+
   await recordCost(h.repos, { ...spent(own, h.task.id), attemptId: "lane-row", recordedAt: NOW }, NOW);
   const armed = await h.rearm();
   assert.equal(armed.closed, null);
@@ -187,5 +187,5 @@ test("CH-24 lane: the round writes its Send and area reading once its gates are 
   const round = readFileSync(new URL("../scripts/freshness-shadow.mts", import.meta.url), "utf8");
   assert.match(round, /const writeHunterLaneReading = \(\): void => \{\n  if \(dry \|\| canary\) return;/);
   assert.ok(round.indexOf("writeHunterLaneReading();") > round.indexOf("const guards = paidWorkGuards({"), "written after the guards are armed");
-  assert.match(round, /writeLaneArming\(hunterLaneArmingPath\(ROOT\), laneArmingOf\(\{ readAt: NOW,/);
+  assert.match(round, /writeLaneArming\(hunterLaneArmingPath\(ROOT,PLANNING_STATE\), laneArmingOf\(\{ readAt: NOW,/);
 });

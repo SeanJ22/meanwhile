@@ -14,10 +14,10 @@ import { nationalPlaceBelowTarget } from "../control-plane/expansion/dispatch-wo
 import { readHeldPlaceCapture } from "../civic-data/held-place-capture.ts";
 import { buildPlaceOwedList, type PlaceOwedItem } from "../coverage/place-owed.ts";
 import { canonicalJson } from "../control-plane/repository/types.ts";
-import { ADMIN_CONFIG_ID } from "../control-plane/gateway/admin-config.ts";
 import { heldDivisionsForZip } from "../control-plane/expansion/national-geography.ts";
 import { expansionScopesOf } from "../control-plane/expansion/scopes.ts";
 import type { ResolvedScope } from "../control-plane/expansion/membership.ts";
+import { readExpansionScopesForZips } from "../control-plane/expansion/runner-load.ts";
 import { admittedHuntSourceScopes } from "../civic-data/hunt-source-tasks.ts";
 
 export interface NationalPlaceSendRequest {
@@ -25,7 +25,6 @@ export interface NationalPlaceSendRequest {
   readonly instructions: readonly string[];
 }
 
-/** A saved Send applies only to the ZIPs it actually resolved. Edits retain the hunt's request time. */
 export function nationalPlaceSendRequests(scopes: readonly ResolvedScope[], zips: readonly string[], now: string): Map<string, NationalPlaceSendRequest> {
   const requests = new Map<string, NationalPlaceSendRequest>();
   const selected = new Set(zips);
@@ -47,10 +46,9 @@ export function nationalPlaceSendRequests(scopes: readonly ResolvedScope[], zips
   return requests;
 }
 
-/** Workers re-read the same saved instruction; CLI invocation time never creates a Send. */
 export async function readNationalPlaceSendRequests(repos: ControlPlaneRepositories, zips: readonly string[], now: string, config?: unknown) {
-  const value = config === undefined ? (await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value : config;
-  const decisions = expansionScopesOf(value ?? null);
+  if (!zips.length) return new Map<string, NationalPlaceSendRequest>();
+  const decisions = config === undefined ? {scopes:(await readExpansionScopesForZips(repos,zips)).scopes,malformed:0} : expansionScopesOf(config ?? null);
   if (decisions.malformed) throw new Error("The owner's place scopes contain unreadable decisions");
   const sends = decisions.scopes.filter(scope => scope.sourceWorkVersion === 1);
   if (!sends.length || !zips.length) return new Map<string, NationalPlaceSendRequest>();
@@ -58,12 +56,10 @@ export async function readNationalPlaceSendRequests(repos: ControlPlaneRepositor
   return nationalPlaceSendRequests(await resolveNationalPlaceSendScopes(sends, zips), zips, now);
 }
 
-/** The national source families this pass left unread because nothing in them was open. */
 export function skippedFamilies(families: { readonly officials: boolean; readonly elections: boolean } | null | undefined): string[] {
   return families ? (Object.keys(families) as (keyof typeof families)[]).filter(family => !families[family]) : [];
 }
 
-/** Compare reader facts, excluding observation times and publication versions. */
 export function placeMadeProgress(before: readonly PlaceOwedItem[], after: readonly PlaceOwedItem[]): boolean {
   const facts = (items: readonly PlaceOwedItem[]) => new Map(items.filter(item => item.state === "published" || item.state === "unpublished")
     .map(item => [item.id, canonicalJson({ state: item.state, values: [...new Set(item.held.filter(field => field.state === item.state)
@@ -72,7 +68,6 @@ export function placeMadeProgress(before: readonly PlaceOwedItem[], after: reado
   return [...facts(after)].some(([id, value]) => prior.get(id) !== value);
 }
 
-/** A target continues until its latest settled hunt explicitly reports no progress. */
 export async function scheduleNationalPlace(repos: ControlPlaneRepositories, row: StandingObligation, now: string, belowTarget: boolean, send?: NationalPlaceSendRequest) {
   const scheduled = scheduleObligation(row, Date.parse(now));
   if (!("cadenceHours" in scheduled)) return scheduled;
@@ -96,7 +91,6 @@ export async function scheduleNationalPlace(repos: ControlPlaneRepositories, row
   return { ...scheduled, nextDueAt: now, basis: "The place is below its owner target and its last hunt has not reported no progress." };
 }
 
-/** Read the existing clocks before assigning processes; untouched places lead. */
 export async function dueNationalPlaceZips(repos: ControlPlaneRepositories, zips: readonly string[], now: string, sendRequests?: ReadonlyMap<string, NationalPlaceSendRequest>): Promise<string[]> {
   const unique = [...new Set(zips)];
   if (unique.some(zip => !/^\d{5}$/.test(zip))) throw new Error("A five-digit ZIP is required");
@@ -123,7 +117,7 @@ export async function runNationalPlaceTask(input: {
   publish: (input: NationalPlacePublicationInput) => Promise<unknown>;
   publishElection?: Parameters<typeof runPlaceSource>[0]["publishElection"];
   acquire?: typeof runPlaceSource;
-  /** Reuse an already scoped geography read when the caller has one. */
+
   readPublished?: typeof heldDivisionsForZip;
 }) {
   const reports: (Awaited<ReturnType<typeof runPlaceSource>> | { zip: string; deferred: string })[] = [];
@@ -140,8 +134,7 @@ export async function runNationalPlaceTask(input: {
       await closeSettledOccurrence(tools.repos, { settled: prior.settled, now });
       prior = null;
     }
-    // Settlement can advance the clock, and another worker may have worked it
-    // since admission. Always schedule the durable row, never a fresh null anchor.
+
     const durable = (await tools.repos.obligations.mustRead(definition.id)).value;
     const requests = await readNationalPlaceSendRequests(tools.repos, [zip], now);
     const belowTarget = (await nationalPlaceBelowTarget(tools.repos, [zip], now)).has(zip);
@@ -155,7 +148,7 @@ export async function runNationalPlaceTask(input: {
     if (!opened) throw new Error("National source occurrence could not open");
     const routeTaskId = "routeTaskId" in opened ? opened.routeTaskId : opened.routeTask.id;
     const occurrenceId = "id" in opened ? opened.id : opened.occurrence.id;
-    // A renewable ownership lease, independent of how long acquisition takes.
+
     const ttlMs = 120_000;
     let report: Awaited<ReturnType<typeof runPlaceSource>> | undefined;
     let before: PlaceOwedItem[] | undefined;
@@ -170,8 +163,7 @@ export async function runNationalPlaceTask(input: {
             cost: ZERO_COST, detail: `ZIP ${zip}: ${deferred}` };
           const saved = await placeSourceReader({ tools, project: "freshness", context: {
             obligation: scheduled, route: null, providerId: null, attemptId, workItemId, routeTaskId, holder, now: tools.now,
-            // Plain-code national APIs finish their walk; qualified small
-            // sites keep the shared size-based request limit.
+
             bound: RESEARCH_BOUNDS.perDispatch,
           } });
           try {
@@ -191,8 +183,7 @@ export async function runNationalPlaceTask(input: {
             if (!(error instanceof PlaceSourceDeferred)) throw error;
             deferred = error.message;
           }
-          // Collectors retain ordinary source gaps, so also observe a bound
-          // they caught while publishing already verified fields.
+
           deferred ??= saved.deferred?.message ?? null;
           assertLeaseHealthy?.();
           if (deferred) return { kind: "DISPOSED", ranAs: "DETERMINISTIC", artifacts: [...saved.artifacts.values()],
@@ -207,7 +198,7 @@ export async function runNationalPlaceTask(input: {
                 routeOnlyCount: null, earliest: null, latest: null },
               note: "Saved national sources acquired; published fields come only from canonical readback; remaining fields stay owed. " +
                 JSON.stringify({ placeProgress: placeMadeProgress(before ?? [], report.items), inherited: report.inherited,
-                  // The families with nothing open were not read; the count is of saved pages this pass actually read.
+
                   families: report.families, skippedFamilies: skippedFamilies(report.families), sourcesRead: report.sources?.documents.length ?? 0, sourceGaps: report.sources?.gaps ?? [], publications: report.publications,
                   electionPublications: report.electionPublications }) },
             cost: { ...ZERO_COST, ...saved.cost, durationMs: Date.now() - started },

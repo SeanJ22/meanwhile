@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import { childCrash } from "../lib/ops/fatal-line.ts";
 import { runInNewContext } from "node:vm";
-import { transpileModule, ScriptTarget, ModuleKind } from "typescript";
+import { transpileModule, ScriptTarget, ModuleKind, createSourceFile, isFunctionDeclaration } from "typescript";
 
 import { failedAcquisitionCandidate, fecFundingCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { processRegisteredRoutineCandidate, processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
@@ -60,12 +60,22 @@ import { routineProcessSlots } from "../lib/control-plane/workers/worker-slots.t
 import { ROUTINE_SUPERVISOR_HISTORY_FIELDS } from "../lib/civic-data/supervisor-history.ts";
 import { projectRecord } from "../lib/control-plane/repository/types.ts";
 
+function functionSource(source:string,name:string):string {
+  const tree=createSourceFile("runner.mts",source,ScriptTarget.ESNext,true);
+  let declaration:import("typescript").FunctionDeclaration|undefined;
+  const visit=(node:import("typescript").Node):void=>{
+    if(isFunctionDeclaration(node) && node.name?.text===name)declaration=node;
+    else node.forEachChild(visit);
+  };
+  visit(tree);
+  assert.ok(declaration,`Missing function ${name}`);
+  return declaration.getText(tree);
+}
+
 test("a pre-spawn memory deadline leaves source work queued without a missing-receipt failure or a rewritten progress row", async t => {
   const source = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   const progressStart = source.indexOf("let sourceProgressRepos");
   const progressEnd = source.indexOf("\n}\n", progressStart) + 3;
-  const start = source.indexOf("async function settlePendingRunResult(");
-  const end = source.indexOf("\n// Reader delivery", start);
   const repos = createMemoryRepositories();
   const failures: unknown[] = [];
   const lines: string[] = [];
@@ -81,7 +91,7 @@ test("a pre-spawn memory deadline leaves source work queued without a missing-re
     RUN_STARTED_AT: "2026-10-13T12:00:00.000Z", SUPERVISOR_CYCLE_ID: "publish-now-supervisor:host:2026-10-13T12:00:00.000Z",
     RUNNING_CODE_SHA: "a".repeat(40), HUNT_SOURCE_PROGRESS_LOG_KEY, OWNER_SURFACE_FORMAT_VERSION, assertAggregateOnly, Date,
   };
-  const { recordHuntSourceProgress, settle } = runInNewContext(transpileModule(source.slice(progressStart, progressEnd) + source.slice(start, end), {
+  const { recordHuntSourceProgress, settle } = runInNewContext(transpileModule(source.slice(progressStart, progressEnd) + functionSource(source,"settlePendingRunResult"), {
     compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.CommonJS },
   }).outputText + "\n({ recordHuntSourceProgress, settle: settlePendingRunResult });", context) as {
     recordHuntSourceProgress: (task: unknown, stage: string, detail: string) => Promise<void>;
@@ -148,8 +158,6 @@ test("a crashed source child is logged by name, leaves its work owed and does no
   const source = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   const progressStart = source.indexOf("let sourceProgressRepos");
   const progressEnd = source.indexOf("\n}\n", progressStart) + 3;
-  const start = source.indexOf("async function settlePendingRunResult(");
-  const end = source.indexOf("\n// Reader delivery", start);
   const repos = createMemoryRepositories();
   const failures: unknown[] = [];
   const lines: string[] = [];
@@ -166,7 +174,7 @@ test("a crashed source child is logged by name, leaves its work owed and does no
     RUN_STARTED_AT: "2026-10-14T13:00:00.000Z", SUPERVISOR_CYCLE_ID: "routine-civic-data-supervisor:host:2026-10-14T13:00:00.000Z",
     RUNNING_CODE_SHA: "a".repeat(40), HUNT_SOURCE_PROGRESS_LOG_KEY, OWNER_SURFACE_FORMAT_VERSION, assertAggregateOnly, Date,
   };
-  const { settle } = runInNewContext(transpileModule(source.slice(progressStart, progressEnd) + source.slice(start, end), {
+  const { settle } = runInNewContext(transpileModule(source.slice(progressStart, progressEnd) + functionSource(source,"settlePendingRunResult"), {
     compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.CommonJS },
   }).outputText + "\n({ settle: settlePendingRunResult });", context) as { settle: (pending: unknown, run: unknown) => Promise<void> };
   const task = { id, sourceId: "wikidata-people", scope: "US-CA", acquisitionFailureDomain: "routine-source:wikidata-people:ca", contract: {},
@@ -317,9 +325,7 @@ test("the standing parent durably accounts for a routine child killed outside so
 
   const pilot = readFileSync("scripts/pilot-runner.mts", "utf8");
   assert.match(pilot, /persistOuterRoutineChildFailure\(cycleId, startedAt, run/);
-  // The duplicate-incident guard keys on cycleId: it fetches the owner-digest
-  // records carrying that exact digestId (a targeted content query, not a scan
-  // of the whole log) and then confirms the supervisor kind.
+
   assert.match(pilot, /readRecentWhere\(DIGEST_LOG_KEY, \["digestId"\], cycleId, 20,\s*\{ runtimeOutcome: \["kind"\] \}, startedAt\)/);
   assert.match(pilot, /appendRoutineCivicDataSupervisorDigest/);
 });
@@ -396,7 +402,7 @@ test("the standing portfolio invokes data-plane scripts only", () => {
     "pima-legistar-outcomes",
     "mesa-legistar-minutes-outcomes",
     "dotgov",
-    // One registration per FIPS state, DC and territory, each its own data-plane script invocation.
+
     ...REGISTRATION_TARGETS.map(({ contractId }) => contractId),
     "meeting-body-crosswalk-derived",
     "meeting-doors",
@@ -489,7 +495,7 @@ test("one canonical registry owns every supported authority and refuses arbitrar
   assert.equal(arbitrary.ok, false);
   if (!arbitrary.ok) assert.equal(arbitrary.code, "FINAL_ROUTE_NOT_REGISTERED");
   const intermediary = authorityFor("legiscan", "STATE_ROLL_CALL", "https://api.legiscan.com/?op=getRollCall&id=1");
-  // Bill datasets are their own source and are not competent for roll calls.
+
   const billIntermediary = authorityFor("legiscan-bills", "STATE_ROLL_CALL", "https://api.legiscan.com/?op=getRollCall&id=1");
   assert.equal(billIntermediary.ok, false);
   if (!billIntermediary.ok) assert.equal(billIntermediary.code, "SOURCE_NOT_COMPETENT_FOR_RECORD_CLASS");
@@ -1025,7 +1031,7 @@ test("the real child boundary enforces both timeout and per-stream output limits
   ], {
     cwd: process.cwd(),
     env: process.env,
-    // Allow loaded CI hosts to start Node; seven facts still outlive this idle allowance.
+
     timeoutMs: 5_000,
     maxBufferBytes: 1_024,
   });
@@ -1232,7 +1238,7 @@ test("the pilot outer bound contains the frontier (one a pass, two on a meeting 
     ROUTINE_CHILD_CONCURRENCY,
     largestDomain,
   );
-  // A meeting lane's two reads run one after the other; the pass bound covers that chain.
+
   assert.ok(boundedPassMs >= Math.ceil(admittedCommands / ROUTINE_CHILD_CONCURRENCY) * ROUTINE_CHILD_TIMEOUT_MS);
   assert.ok(boundedPassMs >= largestDomain * ROUTINE_CHILD_TIMEOUT_MS);
   assert.ok(admittedCommands < ROUTINE_SOURCE_TASKS.length, "shared-provider tails are outside one pass");
@@ -1365,7 +1371,7 @@ test("each admitted meeting source/body contract is its own concurrent child bou
   assert.match(runner, /MEETING_PARTITION_TASK_IDS\.has\(task\.id\) \? "MEETING_PARTITION" : "SINGLE"/);
   assert.match(runner, /command:\s*task\.command/);
   assert.match(runner, /dueCandidates\.push\(\{[\s\S]*?id:\s*task\.id,[\s\S]*?task,/);
-  // Every admitted task, and only those, is launched, owed-soonest first (routinePassLaunchOrder).
+
   assert.match(runner, /for \(const \{ task \} of placeSourceLaunchOrder\(routinePassLaunchOrder\(admitted, admissionNowMs\)\)\) pendingRuns\.push\(pendingByTaskId\.get\(task\.id\)!\)/);
   assert.match(runner, /parsed\.receipts\.length !== 1/);
   assert.match(runner, /parsed\.receipts\[0\]\?\.source !== pending\.task\.id/);
@@ -1387,7 +1393,7 @@ test("Reader readback repair covers the observable registry independently of sou
   assert.match(runner, /READER_REPAIR_DENOMINATOR_MISMATCH/);
   assert.match(child, /repairRoutineReaderProjectionReadback\(store, contract/);
   assert.match(child, /repairMeetingReaderProjectionReadbacks\(/);
-  // Repair composes once when needed; serving-copy publication runs independently.
+
   assert.match(child, /repairMeetingReaderProjectionReadbacks\([^;]*\{ aggregate, attestor \},?\s*\)/);
   assert.match(child, /const attestor = readerVerifierClosureAttestor\(\);/);
   assert.match(child, /repairRoutineReaderProjectionReadback\(store, contract, observedAt, undefined, \{ attestor \}\)/);
@@ -1473,8 +1479,7 @@ test("the routine runner derives its clock from durable candidate history", () =
   assert.match(source, /readRoutineTaskClocks\([\s\S]*store\.clock\(task\.sourceId, task\.recordClass, task\.scope, task\.parserVersion\)/);
   const frozenAdmission = source.indexOf("const admissionNowMs = Date.now()");
   const clockReads = source.indexOf("const clockReads = FORCE");
-  // Sitting windows are decided once, at the frozen instant, from the same reads
-  // and the publisher-stated ends read in the same pass.
+
   const statedEnds = source.indexOf("statedSittingEndsRead(getDb())");
   const sittingSignals = source.indexOf("sittingWindowSignals(clockReads, admissionNowMs, statedEndsByTask)");
   const dueDecision = source.indexOf("routineTaskDue(task, durableClock, admissionNowMs, sittingHot, observedEveryMs)");
@@ -1911,8 +1916,6 @@ test("the durable receipt check proves a Reader-projected pointer by identity an
       return super.readCandidate(candidateId);
     }
 
-    // The proof's own narrowed read: the read model and normalized payload it
-    // checks, never the change set, records or identities (candidateProofView).
     override async readCandidateProof(candidateId: string) {
       this.whole.push(`candidate-proof:${candidateId}`);
       return super.readCandidateProof(candidateId);
@@ -1952,13 +1955,11 @@ test("the durable receipt check proves a Reader-projected pointer by identity an
     /does not match registered task/);
   assert.deepEqual(store.whole, [], "success: identity only; the Reader repair reads the new version in full");
 
-  // A contract no Reader readback ever proves keeps the full proven read on
-  // success, and that proof still refuses a payload its candidate does not back.
   const unprojected = { ...task, contract: { ...task.contract, readerProjection: null } };
   store.whole.length = 0;
   assert.equal(await durableRoutineRunnerReceiptIssue(success, unprojected, store, "SUCCESS"), null);
   assert.deepEqual(store.whole, [pointer, `candidate-proof:${good.id}`], "no Reader projection: the new pointer's proof, once, narrowed");
-  // A caller that does not name the contract keeps the full proof as well.
+
   const { contract: _contract, ...anonymous } = task;
   store.whole.length = 0;
   assert.equal(await durableRoutineRunnerReceiptIssue(success, anonymous, store, "SUCCESS"), null);
@@ -1991,8 +1992,6 @@ test("the durable receipt check proves a Reader-projected pointer by identity an
     assert.deepEqual(store.whole, [], "held: the unchanged LKG by identity; never the refused envelope or the LKG payload");
   }
 
-  // The no-projection proof is still whole: a pointer whose payload no longer
-  // matches its candidate's read model is refused.
   class TamperedStore extends CountingStore {
     override async readPromotion<T>(recordClass: RoutineCandidate["recordClass"], scope: string) {
       const row = await super.readPromotion<T>(recordClass, scope);
@@ -2041,7 +2040,7 @@ test("the durable receipt check refuses invalid current identities and keeps exa
     lastKnownGoodVersion: good.id,
     structuralReleaseContract: ZERO_RELEASE_EVENTS,
   };
-  // Every dataset door fails the test: a mismatch is refused from identity alone.
+
   const pointing = (identity: typeof real | null): DurableReceiptStore => Object.assign(Object.create(store), {
     readPromotionIdentity: async () => identity,
     readPromotion: async () => { throw new Error("the payload was read"); },

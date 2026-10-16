@@ -44,7 +44,7 @@ test("committed runner acknowledgments are visible during unchanged hint polls",
     readWakeEtag: async () => etag,
     query: async (_sql, params) => {
       calls++;
-      positions = params[4] as string;
+      positions = params[3] as string;
       const research = rows.filter(row => !contains(row.position));
       if (finishQuery !== null) await new Promise<void>(resolve => { finishQuery = resolve; });
       return [{ research, windows: [], config: "same", state: "same" }];
@@ -118,9 +118,9 @@ test("runner control reads coalesce polls and retain later-committed lower posit
     query: async (sql, params) => {
       calls++;
       if (fail) throw new Error("unreachable");
+      assert.match(sql, /position <@ \$4::int8multirange/);
       assert.match(sql, /position <@ \$5::int8multirange/);
-      assert.match(sql, /position <@ \$6::int8multirange/);
-      lastPositions = params[4] as string;
+      lastPositions = params[3] as string;
       return [{ research: rows.filter(row => !contained(row.position, lastPositions)), windows: [], config: revision, state: "same relevant fields" }];
     },
   });
@@ -135,11 +135,11 @@ test("runner control reads coalesce polls and retain later-committed lower posit
   const late = await reader.read();
   assert.deepEqual(late.research, [low, high]);
   assert.equal(configReads, 1);
-  assert.equal(stateReads, 1);
+  assert.equal(stateReads, 0);
   revision = "2";
   await reader.read(true);
   assert.equal(configReads, 2);
-  assert.equal(stateReads, 1, "heartbeat-only revisions do not transfer assignments again");
+  assert.equal(stateReads, 0, "wake checks read state revision metadata without transferring any national assignments");
   now += 60_000;
   fail = true;
   await assert.rejects(reader.read(), /unreachable/);
@@ -149,8 +149,6 @@ test("runner control reads coalesce polls and retain later-committed lower posit
   assert.equal(calls, 5, "failed reads are retried without waiting for the cache period");
   assert.equal(lastPositions, "{[1,3)}");
 
-  // History length does not put every old intent ID back on the wire. A gap
-  // (including a burned allocation) stays open until its row actually arrives.
   rows = Array.from({ length: 10_000 }, (_, i) => ({ id: `history-${i}`, position: String(i + 4), record: high }));
   await reader.read(true);
   await reader.read(true);

@@ -566,6 +566,8 @@ export interface SpendView {
   /** Ledger rows with no price. Counted beside the dollars, never as $0. */
   readonly unpricedRows: number;
   readonly neon: { readonly kind: "recorded" | "not-recorded"; readonly detail: string | null;
+    readonly readerReads?: readonly { readonly day: string; readonly route: string; readonly read: string;
+      readonly requests: number; readonly requestBytes: number; readonly responseBytes: number }[];
     readonly days: readonly { readonly day: string; readonly responseBytes: number; readonly requestBytes: number; readonly requests: number }[] };
   /** Paid model money settled in the last 24 hours, from the cost ledger; null when that read failed. */
   readonly last24h?: { readonly modelUsd: number; readonly unpricedRows: number } | null;

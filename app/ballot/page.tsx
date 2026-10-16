@@ -1,3 +1,4 @@
+import { readerRoute } from "@/lib/api/reader-route";
 import { ocdStateCode } from "@/lib/ocd/state-of";
 import { readRegistryPlace } from "@/lib/registry/reader-place";
 import { enterRegistryPlaceRead, withRegistryPlaceRead, type RegistryPlaceRead } from "@/lib/registry/runtime-read-model";
@@ -492,7 +493,7 @@ async function readBallotReaderEdge() {
   return { manifest, edge };
 }
 
-export default async function BallotPage({
+export default readerRoute("/ballot", async function BallotPage({
   searchParams,
 }: {
   searchParams: Promise<{ zip?: string }>;
@@ -1824,4 +1825,4 @@ export default async function BallotPage({
       </p>
     </main>
   );
-}
+});

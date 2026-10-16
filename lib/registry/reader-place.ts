@@ -1,7 +1,9 @@
 import { factReader } from "../facts/db.ts";
+import { currentReaderSelection, withReaderSelection } from "../db/reader-route.ts";
 import { readPlacePointerSlice, readPlaceVersionSlice } from "../civic-data/held-place-slices.ts";
 import type { ReaderAuthorityManifest } from "../meetings/edge-artifacts.ts";
-import { currentRegistryRuntimeEdge, refuseDatabaseInEdgeOnlyContext } from "./runtime-edge.ts";
+import { ensureReaderAuthorityEdge } from "../meetings/edge-serving.ts";
+import { currentRegistryRuntimeEdge, currentCommentAccessEdge, refuseDatabaseInEdgeOnlyContext } from "./runtime-edge.ts";
 import { REGISTRY_RUNTIME_SCOPE, type RegistryRuntimeReadModel } from "./runtime-data-plane.ts";
 import { currentRegistryPlaceRead, type RegistryPlaceRead } from "./runtime-read-model.ts";
 
@@ -33,10 +35,20 @@ export async function readRegistryPlace(divisions: readonly string[], targets: r
   const selectorKey = JSON.stringify([ids, requested]);
   const version = manifest?.authorityArtifacts?.["registry-runtime"]?.version.split("+")[0];
   const existing = currentRegistryPlaceRead();
-  if (existing?.selectorKey === selectorKey && (!version || existing.versionId === version)) return existing;
+  if (existing?.selectorKey === selectorKey && (!version || existing.versionId.split("+")[0] === version)) return existing;
   const edge = currentRegistryRuntimeEdge();
   if (edge && (!version || edge.versionId.split("+")[0] === version))
-    return { value: selectedRegistry(edge.value, ids, requested), versionId: edge.versionId.split("+")[0]!, selectorKey };
+    return { source: "EDGE", commentAccess: currentCommentAccessEdge() ?? undefined,
+      value: selectedRegistry(edge.value, ids, requested), versionId: edge.versionId, selectorKey };
+  if (manifest?.authorityArtifacts?.["registry-runtime"]) {
+    const selection = { keys: new Set([...ids, ...requested]) };
+    const selected = await withReaderSelection(selection, () => ensureReaderAuthorityEdge(manifest, undefined, ["registry-runtime"])).catch(() => null);
+    if (selected?.registryRuntime) {
+      for (const key of selection.keys) currentReaderSelection()?.keys.add(key);
+      return { source: "EDGE", commentAccess: selected.commentAccess,
+        value: selectedRegistry(selected.registryRuntime.value, ids, requested), versionId: selected.registryRuntime.versionId, selectorKey };
+    }
+  }
   refuseDatabaseInEdgeOnlyContext("The selected registry place");
   const bodyIds = new Set(requested);
   for (const target of requested) {
@@ -56,7 +68,7 @@ export async function readRegistryPlace(divisions: readonly string[], targets: r
     : await readPlacePointerSlice<RegistryRuntimeReadModel>("REGISTRY_RUNTIME_BINDING", REGISTRY_RUNTIME_SCOPE, ids, [...bodyIds], requested);
   if (read.kind !== "PROMOTED" || !read.value || !read.metadata.versionId) throw new Error(`Registry place holding is ${read.kind}`);
   const value = read.value;
-  return { versionId: read.metadata.versionId, selectorKey, value: { ...value, formatVersion: 1,
+  return { source: "DATABASE", versionId: read.metadata.versionId, selectorKey, value: { ...value, formatVersion: 1,
     officialCandidacies: { formatVersion: 1, rule: "EXACT_SEAT_CONSERVATIVE_NAME_OFFLINE_UNIQUE", rows: value.officialCandidacies?.rows ?? [] },
     officialPhotos: value.officialPhotos ?? { photos: [] }, rosterPhotos: value.rosterPhotos ?? {},
     bodyRosters: value.bodyRosters ?? [], rosterReaderDispositions: value.rosterReaderDispositions ?? [] } };

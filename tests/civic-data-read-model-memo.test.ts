@@ -1,14 +1,17 @@
 import assert from "node:assert/strict";
 import { beforeEach, test } from "node:test";
 
+import { withReaderSelection } from "../lib/db/reader-route.ts";
 import { normalizedHash } from "../lib/civic-data/candidate-builders.ts";
 import {
+  attestPromotedVersion,
   clearPromotedReadModelCache,
+  promotedEdgeEntryOf,
   readPromotedCivicData,
   readPromotedCivicDataBatch,
   type CivicDataReadStore,
 } from "../lib/civic-data/read-model.ts";
-import { promotedPointerIdentity, type CandidateVersionReadback } from "../lib/civic-data/store.ts";
+import { publishedCandidateMetadata, promotedPointerIdentity, type CandidateVersionReadback } from "../lib/civic-data/store.ts";
 import type {
   CandidateVersionRecord,
   PromotedProjection,
@@ -23,14 +26,14 @@ interface Version {
   candidate: CandidateVersionRecord;
 }
 
-function version(scope: string, versionId: string, payload: unknown): Version {
+function version(scope: string, versionId: string, payload: unknown, recordClass: RoutineRecordClass = CLASS): Version {
   const payloadHash = normalizedHash(payload);
   const receipt: ValidationReceipt = {
     contractVersion: 2,
     decision: "GOOD",
     candidateId: versionId,
     sourceId: "fec-open-api",
-    recordClass: CLASS,
+    recordClass,
     scope,
     validatedAt: "2026-09-01T00:01:00.000Z",
     checks: VALIDATION_CHECKS.map((check) => ({
@@ -42,9 +45,9 @@ function version(scope: string, versionId: string, payload: unknown): Version {
     excludedFacts: [],
   };
   const projection = {
-    key: `${CLASS}:${scope}`,
+    key: `${recordClass}:${scope}`,
     sourceId: "fec-open-api",
-    recordClass: CLASS,
+    recordClass,
     scope,
     versionId,
     lastKnownGoodVersionId: versionId,
@@ -56,9 +59,9 @@ function version(scope: string, versionId: string, payload: unknown): Version {
     candidate: {
       id: versionId,
       sourceId: "fec-open-api",
-      recordClass: CLASS,
+      recordClass,
       scope,
-      sourceProjectionEvidence: sourceProjectionEvidence("fec-open-api", CLASS, scope),
+      sourceProjectionEvidence: sourceProjectionEvidence("fec-open-api", recordClass, scope),
       retrieval: {
         succeeded: true,
         requestedUrl: "https://api.open.fec.gov/v1/candidates/search/",
@@ -101,6 +104,7 @@ function version(scope: string, versionId: string, payload: unknown): Version {
 interface SpyCounts {
   readPromotion: number;
   readCandidate: number;
+  readMetadata: number;
   readPromotions: number;
   readPromotionScopes: string[][];
   readCandidates: string[][];
@@ -120,6 +124,7 @@ function spyStore(
   const counts: SpyCounts = {
     readPromotion: 0,
     readCandidate: 0,
+    readMetadata: 0,
     readPromotions: 0,
     readPromotionScopes: [],
     readCandidates: [],
@@ -130,6 +135,11 @@ function spyStore(
   const record = (v: Version) => byVersion.set(v.projection.versionId, v.candidate);
   for (const v of pointers.values()) record(v);
   const store = {
+    readPublishedCandidateMetadata: async (candidateId: string) => {
+      counts.readMetadata++;
+      const row = byVersion.get(candidateId);
+      return row ? publishedCandidateMetadata(row) : null;
+    },
     readPromotion: async <R>(_recordClass: RoutineRecordClass, scope: string) => {
       counts.readPromotion += 1;
       const attempt = counts.readPromotion;
@@ -458,4 +468,137 @@ test("readers of different stores never share a read", async () => {
 
   assert.equal(a.counts.readPromotion, 1);
   assert.equal(b.counts.readPromotion, 1);
+});
+
+const STATE_SCOPE = "US-AZ:state-election-ballots";
+const STATE_CLASS = "BALLOT_CANDIDACY";
+
+test("state store reads share only the active load and retain a compact edge attestation", async () => {
+  let release!: () => void;
+  const gate = new Promise<void>(resolve => { release = resolve; });
+  const { store, counts } = spyStore(new Map([[STATE_SCOPE, version(STATE_SCOPE, "az-a", { answer: 1 }, STATE_CLASS)]]), { gate, identity: true });
+  const first = readPromotedCivicData(STATE_CLASS, STATE_SCOPE, { store });
+  const second = readPromotedCivicData(STATE_CLASS, STATE_SCOPE, { store });
+  release();
+  const [one, two] = await Promise.all([first, second]);
+  assert.equal(one.kind, "PROMOTED");
+  assert.deepEqual(two, one);
+  assert.equal(counts.readPromotion, 1);
+  assert.equal(counts.readMetadata, 1);
+  assert.equal(counts.readCandidate, 0, "published state reads never fetch a candidate payload");
+  const entry = promotedEdgeEntryOf(one, STATE_CLASS, STATE_SCOPE, store);
+  assert.equal(entry?.kind, "PROMOTED");
+  assert.equal(attestPromotedVersion(STATE_CLASS, STATE_SCOPE, store)?.payloadSha256, normalizedHash({ answer: 1 }));
+
+  await readPromotedCivicData(STATE_CLASS, STATE_SCOPE, { store });
+  assert.equal(counts.readPromotion, 2, "the next explicit operation reads its own state unit");
+  assert.equal(counts.readMetadata, 2, "no completed state proof keeps the prior candidate alive");
+  assert.equal(counts.readPromotionIdentity, 0);
+});
+
+test("state pointer reuse belongs to one reader selection", async () => {
+  const { store, counts } = spyStore(new Map([[STATE_SCOPE, version(STATE_SCOPE, "az-a", { answer: 1 }, STATE_CLASS)]]), { identity: true });
+  await withReaderSelection({ keys: new Set(["US-AZ"]) }, async () => {
+    await readPromotedCivicData(STATE_CLASS, STATE_SCOPE, { store });
+    const reused = await readPromotedCivicData(STATE_CLASS, STATE_SCOPE, { store });
+    assert.equal(reused.kind, "PROMOTED");
+    assert.equal(promotedEdgeEntryOf(reused, STATE_CLASS, STATE_SCOPE, store)?.kind, "PROMOTED");
+  });
+  assert.equal(counts.readPromotion, 1);
+  assert.equal(counts.readMetadata, 1);
+  assert.equal(counts.readPromotionIdentity, 1);
+  await withReaderSelection({ keys: new Set(["US-AZ"]) }, () => readPromotedCivicData(STATE_CLASS, STATE_SCOPE, { store }));
+  assert.equal(counts.readPromotion, 2);
+  assert.equal(counts.readMetadata, 2);
+});
+
+test("state batch and verification reads leave no persistent payload proof", async () => {
+  const { store, counts } = spyStore(new Map([[STATE_SCOPE, version(STATE_SCOPE, "az-a", { answer: 1 }, STATE_CLASS)]]), { identity: true });
+  await readPromotedCivicData(STATE_CLASS, STATE_SCOPE, { store, bypassCache: true });
+  assert.equal(attestPromotedVersion(STATE_CLASS, STATE_SCOPE, store), null);
+  await readPromotedCivicDataBatch(STATE_CLASS, [STATE_SCOPE, STATE_SCOPE], { store });
+  await readPromotedCivicDataBatch(STATE_CLASS, [STATE_SCOPE], { store });
+  assert.equal(counts.readPromotion, 3);
+  assert.equal(counts.readMetadata, 3);
+  assert.equal(counts.readPromotions, 0);
+});
+
+test("state publication metadata and the one loaded payload must still agree", async () => {
+  const source = version(STATE_SCOPE, "az-a", { answer: 1 }, STATE_CLASS);
+  const metadata = publishedCandidateMetadata(source.candidate);
+  for (const [name, projection, proof] of [
+    ["changed payload", { ...source.projection, payload: { answer: 2 } }, metadata],
+    ["wrong scope", source.projection, { ...metadata, candidate: { ...metadata.candidate, scope: "US-NH:state-election-ballots" } }],
+    ["wrong version", source.projection, { ...metadata, promotedVersion: "other" }],
+    ["nonpromoted candidate", source.projection, { ...metadata, state: "VALIDATED" }],
+    ["missing candidate", source.projection, null],
+    ["wrong hash", source.projection, { ...metadata, candidate: { ...metadata.candidate, normalization: { ...metadata.candidate.normalization, normalizedHash: "f".repeat(64) } } }],
+    ["mismatched receipt", source.projection, { ...metadata, receipt: { ...metadata.receipt!, candidateId: "other" } }],
+  ] as const) {
+    const read = await readPromotedCivicData(STATE_CLASS, STATE_SCOPE, { bypassCache: true, store: {
+      readPromotion: async <T>() => projection as PromotedProjection<T>,
+      readPublishedCandidateMetadata: async () => proof as typeof metadata | null,
+      readCandidate: async () => { throw new Error("No candidate payload read is allowed."); },
+    } });
+    assert.equal(read.kind, "STORE_UNREACHABLE", name);
+    if (read.kind === "STORE_UNREACHABLE") assert.equal(read.code,
+      proof === null ? "PROMOTION_CANDIDATE_MISSING" : "PROMOTION_PROOF_INVALID", name);
+  }
+  const { store } = spyStore(new Map([[STATE_SCOPE, source]]));
+  const read = await readPromotedCivicData(STATE_CLASS, STATE_SCOPE, { store, bypassCache: true });
+  const edge = promotedEdgeEntryOf(read, STATE_CLASS, STATE_SCOPE, store);
+  assert.equal(edge?.kind, "PROMOTED");
+  if (edge?.kind !== "PROMOTED") return;
+  assert.equal((await readPromotedCivicData(STATE_CLASS, STATE_SCOPE, { edge })).kind, "PROMOTED");
+  const altered = await readPromotedCivicData(STATE_CLASS, STATE_SCOPE, { edge: {
+    ...edge, projection: { ...edge.projection, payload: { answer: 99 } },
+  } });
+  assert.equal(altered.kind, "STORE_UNREACHABLE");
+});
+
+test("Postgres published metadata reads only metadata and resolves encoded evidence fields", async () => {
+  const { neonConfig } = await import("@neondatabase/serverless");
+  const { PostgresRoutineDataStore } = await import("../lib/civic-data/store.ts");
+  const metadata = publishedCandidateMetadata(version(STATE_SCOPE, "az-a", { answer: 1 }, STATE_CLASS).candidate);
+  const oldFetch = neonConfig.fetchFunction, oldUrl = process.env.DATABASE_URL;
+  const queries: string[] = [];
+  let encoded = false;
+  const fields = ["retrieval", "temporal", "normalization"] as const;
+  const parts = new Map(fields.map((field, index) => [String(index + 1).repeat(64), { kind: "object", value: metadata.candidate[field] }]));
+  const result = (columns: readonly (readonly [string, number])[], rows: readonly unknown[][]) => ({
+    command: "SELECT", rowCount: rows.length, rowAsArray: true,
+    fields: columns.map(([name, dataTypeID]) => ({ name, dataTypeID })),
+    rows: rows.map(row => row.map(value => value === null ? null : typeof value === "object" ? JSON.stringify(value) : value)),
+  });
+  neonConfig.fetchFunction = (async (_url: unknown, init: { body: string }) => {
+    const body = JSON.parse(init.body) as { query?: string; queries?: unknown[] };
+    if (body.queries) return new Response(JSON.stringify({ results: body.queries.map(() => result([], [])) }));
+    const query = body.query!;
+    queries.push(query);
+    if (query.includes('from "civic_data_payload_parts"')) return new Response(JSON.stringify(result(
+      [["hash", 25], ["payload", 3802]], [...parts].map(([hash, payload]) => [hash, payload]),
+    )));
+    const candidate = encoded ? { ...metadata.candidate, ...Object.fromEntries(fields.map((field, index) =>
+      [field, { $civicPayloadPart: String(index + 1).repeat(64) }])) } : metadata.candidate;
+    return new Response(JSON.stringify(result(
+      [["id", 25], ["candidate", 3802], ["state", 25], ["acquisition_succeeded", 16], ["receipt", 3802],
+        ["promoted_version_id", 25], ["last_known_good_version_id", 25], ["failure_code", 25], ["failure_detail", 25]],
+      [["az-a", candidate, "PROMOTED", "t", metadata.receipt, "az-a", "az-a", null, null]],
+    )));
+  }) as typeof neonConfig.fetchFunction;
+  process.env.DATABASE_URL = "postgresql://fixture:fixture@ep-state-metadata.us-east-2.aws.neon.tech/neondb";
+  try {
+    for (encoded of [false, true]) {
+      queries.length = 0;
+      const read = await new PostgresRoutineDataStore().readPublishedCandidateMetadata("az-a");
+      assert.deepEqual(read, metadata);
+      assert.equal(queries.length, encoded ? 2 : 1);
+      assert.match(queries[0], /jsonb_build_object/);
+      assert.doesNotMatch(queries[0], /->\s*'(?:readModel|normalizedPayload|identities|civicRecords|changeSet)'/);
+      assert.deepEqual(Object.keys(read!.candidate).sort(), ["id", "normalization", "recordClass", "retrieval", "scope", "sourceId", "temporal"]);
+    }
+  } finally {
+    neonConfig.fetchFunction = oldFetch;
+    if (oldUrl === undefined) delete process.env.DATABASE_URL; else process.env.DATABASE_URL = oldUrl;
+  }
 });

@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { createHash } from "node:crypto";
 import { CivicPayloadParts, partitionCivicPayload, type CivicPayloadPartIO } from "../lib/civic-data/payload-parts.ts";
 
 const inline = ["id", "sourceId", "recordClass", "scope", "retrieval", "normalization", "temporal"];
@@ -53,6 +54,55 @@ test("identical evidence and reader payloads share parts, and unchanged values w
   const count = memory.writes.length;
   await parts.store(payload);
   assert.equal(memory.writes.length, count);
+});
+
+test("durable JSON normalization preserves encoded part bytes, hashes and property order", async () => {
+  const input = { integerKeys: { 10: "ten", 2: "two", z: undefined, a: "first" }, checkedAt: new Date("2026-10-16T12:00:00Z"),
+    values: [undefined, NaN, Infinity, -0, , "🙂\ud800"],
+    rows: Array.from({ length: 160 }, (_, index) => ({ id: `US-${index % 2 ? "NH" : "AZ"}:district:${index}`,
+      text: 'Unicode🙂 "\\\n'.repeat(100), missing: undefined })), text: '"🙂\\'.repeat(12_000),
+    custom: { toJSON(key: string) { return { key, when: "2026-10-16" }; } } };
+  const plan = partitionCivicPayload(input);
+  assert.equal(plan.parts.length, 7);
+  assert.deepEqual(plan.value, { $civicPayloadPart: "5c931e1c8a6677bd51390607c57ada33885dc14529db2462e9cdf61a8a5afb19" });
+  assert.equal(createHash("sha256").update(JSON.stringify(plan)).digest("hex"), "535217574b4394f0e28600f7663d85a3db6f59ab08ea6d658b340961caf37856");
+  const held = new Map(plan.parts.map(part => [part.hash, part.payload]));
+  const reader = new CivicPayloadParts({ existing: async () => [], write: async () => {},
+    read: async hashes => hashes.map(hash => ({ hash, payload: held.get(hash) })) });
+  assert.deepEqual(await reader.load(plan.value), JSON.parse(JSON.stringify(input)));
+});
+
+test("a large state unit shares unchanged records and never serializes an input container or giant scalar", async t => {
+  const input = { rows: Array.from({ length: 300 }, (_, id) => ({ id, state: "IL", text: "Published fact ".repeat(80) })),
+    text: '🗳️"\\\n'.repeat(150_000), optional: undefined };
+  const stringify = JSON.stringify;
+  t.mock.method(JSON, "stringify", (value: unknown) => {
+    assert.ok(value === null || typeof value !== "object", "partitioning cannot stringify a whole input container");
+    assert.ok(typeof value !== "string" || value.length <= 32 * 1024, "string probes and hashes stay bounded");
+    return stringify(value);
+  });
+  const plan = partitionCivicPayload(input);
+  assert.ok(plan.parts.some(part => Array.isArray(part.payload) && part.payload.includes(input.rows[0])), "unchanged records share their original object");
+  t.mock.restoreAll();
+  const held = new Map(plan.parts.map(part => [part.hash, part.payload]));
+  const reader = new CivicPayloadParts({ existing: async () => [], write: async () => {},
+    read: async hashes => hashes.map(hash => ({ hash, payload: held.get(hash) })) });
+  assert.deepEqual(await reader.load(plan.value), { rows: input.rows, text: input.text });
+});
+
+test("durable normalization calls key-sensitive toJSON once and refuses non-JSON roots and cycles", () => {
+  const calls: string[] = [], custom = { toJSON(key: string) { calls.push(key); return { key }; } };
+  const value = { before: custom, after: custom, boxed: new Number(4), boolean: new Boolean(false), string: new String("held") };
+  assert.deepEqual(partitionCivicPayload(value).value, { before: { key: "before" }, after: { key: "after" }, boxed: 4, boolean: false, string: "held" });
+  assert.deepEqual(calls, ["before", "after"]);
+  let conversions = 0;
+  const selfReturning = Object.defineProperty({ value: "held" }, "toJSON", { value() { conversions++; return this; } });
+  const durable = partitionCivicPayload(selfReturning).value;
+  assert.equal(JSON.stringify(durable), '{"value":"held"}');
+  assert.equal(conversions, 1, "encoding strips a non-enumerable toJSON hook before persistence");
+  const cyclic: Record<string, unknown> = { text: "long".repeat(20_000) }; cyclic.self = cyclic;
+  assert.throws(() => partitionCivicPayload(cyclic), /circular/);
+  for (const invalid of [undefined, Symbol("invalid"), BigInt(1)]) assert.throws(() => partitionCivicPayload(invalid), TypeError);
 });
 
 test("a payload over Neon's request limit is lossless and every part write remains bounded", async () => {

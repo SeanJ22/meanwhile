@@ -38,6 +38,10 @@ import { STATE_AUTHORITY_FAMILIES, type StateAuthorityFamily, type GlobalPromote
 import { prepareStateAuthorityArtifact, servedAuthorityVersion, type PublishAuthorityCarried, type PublishAuthorityValue, type PublishStateAuthorities, type PublishedStateAuthority } from "../meetings/edge-serving.ts";
 import type { ReaderArtifactStore } from "../meetings/edge-store.ts";
 import { PRL_ARCHIVE_SCOPE, readPrlArchiveProjection } from "../sources/prl/archive-publication.ts";
+import { PRL_CONTRACT } from "../sources/prl/data-plane.ts";
+import { readPrlProjection } from "../sources/prl/snapshot.ts";
+import type { RoutineDataStore } from "./store.ts";
+
 
 
 interface ReaderAnswer {
@@ -60,6 +64,8 @@ const manual = (id: Parameters<typeof requiredManualProductionContract>[0], read
 export function promotedEdgePointers(): Readonly<Record<GlobalPromotedAuthorityFamily, readonly PromotedEdgePointer[]>> {
   const nhMembers = requiredRoutineContract("nh-members");
   return {
+    "other-reader-data": [],
+    "state-votes": [],
     "government-domains": [{ recordClass: "DOTGOV_REFERENCE", scope: DOTGOV_SCOPE, reader: readDotGovProjection }],
     "ballot-navigation": [manual("ballot-navigation", (options) => readCuratedReaderProjection("ballot-navigation", options))],
     "official-filings": [manual("official-filings", (options) => readCuratedReaderProjection("official-filings", options))],
@@ -80,11 +86,12 @@ export function promotedEdgePointers(): Readonly<Record<GlobalPromotedAuthorityF
     "federal-key-votes": [{ recordClass: "FEDERAL_KEY_VOTE", scope: FEDERAL_KEY_VOTE_SCOPE, reader: readFederalKeyVotesProjection }],
     "officeholder-statements": [manual("officeholder-statements", readOfficeholderStatementsProjection)],
     "prl-archives": [{ recordClass: "PRL_ARCHIVE", scope: PRL_ARCHIVE_SCOPE, reader: readPrlArchiveProjection }],
+    "prl-profiles": [{ ...PRL_CONTRACT, reader: readPrlProjection }],
     "executive-actions": [{ recordClass: AZ_OFFICIAL_ACTIONS_CONTRACT.recordClass, scope: AZ_OFFICIAL_ACTIONS_CONTRACT.scope, reader: readExecutiveActionsProjection }],
   };
 }
 
-export function statePromotedEdgePointers(state: string): Readonly<Record<StateAuthorityFamily, readonly PromotedEdgePointer[]>> {
+function statePromotedEdgePointers(state: string): Readonly<Record<StateAuthorityFamily, readonly PromotedEdgePointer[]>> {
   return {
     "ballot-contests": [manual(stateBallotContractId("ballot-contests", state), options => readGenericBallotProjection(state, options))],
     "candidate-profiles": [manual(stateBallotContractId("candidate-profiles", state), options => readCandidateProfilesProjection(state, options))],
@@ -157,15 +164,24 @@ async function readFamily(input: {
 }
 
 export async function readPromotedEdgeFamilies(input: {
-  readonly store: CivicDataReadStore & { readonly readPromotionIdentity: NonNullable<CivicDataReadStore["readPromotionIdentity"]> };
+  readonly store: CivicDataReadStore & Pick<RoutineDataStore, "listPromotionScopes"> & { readonly readPromotionIdentity: NonNullable<CivicDataReadStore["readPromotionIdentity"]> };
   readonly servedManifest: Pick<ReaderAuthorityManifest, "authorityArtifacts"> | null;
   readonly now: string;
   readonly families?: Readonly<Partial<Record<GlobalPromotedAuthorityFamily, readonly PromotedEdgePointer[]>>>;
   readonly readServedFamily?: (family: GlobalPromotedAuthorityFamily) => Promise<PromotedFamilyArtifactValue | null>;
 }): Promise<PromotedEdgeFamiliesRead> {
+  const families = { ...input.families ?? promotedEdgePointers() };
+  if (families["other-reader-data"]?.length === 0) {
+    const known = new Set([...Object.values(promotedEdgePointers()).flat(), ...selectedStateEdgePointers(null).flatMap(row => row.pointers)].map(pointer => `${pointer.recordClass}:${pointer.scope}`));
+    families["other-reader-data"] = (await input.store.listPromotionScopes?.(["CURATED_READER_RECORD", "OPERATIONAL_REFERENCE", "STATE_LEGISLATOR"]) ?? [])
+      .filter(pointer => !known.has(`${pointer.recordClass}:${pointer.scope}`))
+      .map(pointer => ({ ...pointer, reader: options => readPromotedCivicData(pointer.recordClass, pointer.scope, options) }));
+  }
+  if (families["state-votes"]?.length === 0) families["state-votes"] = (await input.store.listPromotionScopes?.(["STATE_ROLL_CALL", "STATE_LEGISLATOR_VOTES"]) ?? [])
+    .map(pointer => ({ ...pointer, reader: options => readPromotedCivicData(pointer.recordClass, pointer.scope, options) }));
   const authority: PromotedEdgeFamiliesRead["authority"] = {};
   const skipped: string[] = [];
-  for (const [family, pointers] of Object.entries(input.families ?? promotedEdgePointers()) as [GlobalPromotedAuthorityFamily, readonly PromotedEdgePointer[]][]) {
+  for (const [family, pointers] of Object.entries(families) as [GlobalPromotedAuthorityFamily, readonly PromotedEdgePointer[]][]) {
     try {
       const result = await readFamily({ ...input, pointers, served: servedAuthorityVersion(input.servedManifest, family),
         readPrior: () => input.readServedFamily?.(family) ?? Promise.resolve(null) });

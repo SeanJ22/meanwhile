@@ -1,5 +1,3 @@
-import { factReader } from "../facts/db.ts";
-import { withMeetingFacts } from "../facts/meeting-read.ts";
 import { carriedFromAnswer } from "./carry-forward.ts";
 import type { AgendaDocument } from "./agenda-documents.ts";
 import type { Meeting, NormalizeDropCounts } from "../sources/types.ts";
@@ -80,6 +78,7 @@ export interface SnapshotCounts {
 }
 
 export interface MeetingsSnapshot {
+  readonly carriedSummary?: SnapshotCarriedMeta;
   formatVersion: 1;
   /** When the refresh that produced this file ran. Rendered to the reader. */
   generatedAt: string;
@@ -128,10 +127,7 @@ export function snapshotCounts(
   };
 }
 
-/**
- * A dropped carried row moves from its own report's `carriedForward` to `carriedCollapsed`, so every carried-row check
- * still reconciles. Reports are restated as copies; the partitions' own reports are never changed.
- */
+
 export function accountCarriedCollapses(
   partitions: readonly Pick<MeetingsSnapshot, "meetings" | "sources">[],
   sources: readonly SnapshotSourceReport[],
@@ -570,9 +566,6 @@ export async function readMeetingsProjection(
     ),
   );
 
-  // A duplicate id across authority partitions is ambiguous evidence. Reject
-  // every partition claiming that id, not whichever happened to be iterated
-  // second; unrelated partitions remain eligible for composition.
   const meetingOwners = new Map<string, string[]>();
   const documentOwners = new Map<string, string[]>();
   for (const { partition, result } of rawPromoted) {
@@ -694,7 +687,7 @@ export async function readMeetingsProjection(
       counts: snapshotCounts(collapsed.rows, accounted.freshCollapsed +
         promoted.reduce((sum, { value }) => sum + (value.counts.duplicatesCollapsed ?? 0), 0)),
       sources,
-      meetings: await withMeetingFacts(collapsed.rows, factReader()),
+      meetings: collapsed.rows,
       agendaDocuments: retainedDocuments,
     };
     validateSnapshot(value, {
@@ -834,7 +827,7 @@ export function snapshotClientMeta(
           ...(read.partitions ? { partitions: read.partitions } : {}),
         }
       : {}),
-    ...(stamps.length > 0
+    ...(snapshot.carriedSummary ? { carried: snapshot.carriedSummary } : stamps.length > 0
       ? {
           carried: {
             count: stamps.length,

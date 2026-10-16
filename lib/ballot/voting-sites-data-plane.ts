@@ -42,7 +42,7 @@ export function retainFailedVotingSiteScopes(
   prior: VotingSitesFile | null,
   failures: readonly VotingSiteAcquisitionFailure[],
 ): VotingSitesFile {
-  if (!prior || failures.length === 0) return structuredClone(current);
+  if (!prior || failures.length === 0) return current;
   const failedStates = new Set(failures.flatMap(row => row.state ? [row.state] : []));
   const failedJurisdictions = new Set(failures.flatMap(row => row.jurisdictionId ? [row.jurisdictionId] : []));
   const affected = (row: VotingJurisdiction) => failedStates.has(row.state) || failedJurisdictions.has(row.ocdId);
@@ -147,7 +147,7 @@ export function votingSitesCandidate(input: {
 }): RoutineCandidate {
   const state = requireBallotState(input.state);
   const contract = votingSitesContract(state);
-  if ([...input.current.jurisdictions, ...input.prior?.jurisdictions ?? []].some(row => row.state !== state)) {
+  if (input.current.jurisdictions.some(row => row.state !== state) || input.prior?.jurisdictions.some(row => row.state !== state)) {
     throw new Error(`Voting-site publication ${state} contains another state's jurisdiction.`);
   }
   const readModel = retainFailedVotingSiteScopes(input.current, input.prior, input.failures);
@@ -157,12 +157,13 @@ export function votingSitesCandidate(input: {
   const currentJurisdictions = new Map(readModel.jurisdictions.map(row => [row.ocdId, row]));
   const carriedJurisdictionIds = input.prior?.jurisdictions.filter(row => {
     const next = currentJurisdictions.get(row.ocdId);
-    return next && normalizedHash(next) === normalizedHash(row);
+    return next === row || next && normalizedHash(next) === normalizedHash(row);
   }).map(row => row.ocdId).sort() ?? [];
   const normalizedPayload = { projection: readModel, acquisition: input.acquisition,
     carriedFromVersionId: input.carriedFromVersionId ?? null, carriedJurisdictionIds };
+  const readModelHash = normalizedHash(readModel);
   return {
-    id: `cv-${sha256(`${contract.sourceId}\u001f${contract.scope}\u001f${rawHash}\u001f${input.retrievedAt}\u001f${input.finalUrl}\u001f${normalizedHash(readModel)}`).slice(0, 32)}`,
+    id: `cv-${sha256(`${contract.sourceId}\u001f${contract.scope}\u001f${rawHash}\u001f${input.retrievedAt}\u001f${input.finalUrl}\u001f${readModelHash}`).slice(0, 32)}`,
     sourceId: contract.sourceId,
     recordClass: contract.recordClass,
     scope: contract.scope,
@@ -180,7 +181,7 @@ export function votingSitesCandidate(input: {
       succeeded: semanticViolations.length === 0,
       parserVersion: contract.parserVersion,
       schemaVersion: "voting-sites/2",
-      normalizedHash: normalizedHash(readModel),
+      normalizedHash: readModelHash,
       normalizedPayloadHash: normalizedHash(normalizedPayload),
       inputRecords: civicRecords.length,
       outputRecords: civicRecords.length,

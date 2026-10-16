@@ -6,7 +6,7 @@ import { join } from "node:path";
 import { after, test } from "node:test";
 
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
-import { publishRoutineReaderEdge } from "../lib/civic-data/reader-edge-publication.ts";
+import { publishReaderEdgeForTest } from "./helpers/publish-reader-edge.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import {
   readPromotedCivicData,
@@ -310,7 +310,7 @@ test("published, fetched and entered: a reader request reads the family from the
   assert.equal(called, 0, "an edge-only context read the database");
 });
 
-test("direct scoped runner publication skips unrelated contracts and every unchanged payload", async () => {
+test("scoped supervisor publication skips unrelated contracts and every unchanged payload", async () => {
   const store = new MemoryRoutineDataStore();
   const current = structuredClone(VOTING_SITES);
   const candidate = votingSitesCandidate({ state: "AZ", current, prior: null, failures: [], acquisition: PIMA_CAPTURE,
@@ -329,12 +329,12 @@ test("direct scoped runner publication skips unrelated contracts and every uncha
     return typeof value === "function" ? value.bind(target) : value;
   } });
   const artifacts = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "runner-scoped-edge-")));
-  assert.equal(await publishRoutineReaderEdge(scoped, T1, [VOTING_SITES_CONTRACT], { artifactStore: artifacts }), true);
+  assert.equal(await publishReaderEdgeForTest(scoped, T1, [VOTING_SITES_CONTRACT], { artifactStore: artifacts }), true);
   assert.ok((await artifacts.readAuthorityManifest())!.manifest.stateAuthorities?.["voting-sites"]?.AZ);
   const initialReads = payloadReads;
   assert.ok(initialReads > 0);
   const initialSequence = (await artifacts.readAuthorityManifest())!.manifest.sequence;
-  assert.equal(await publishRoutineReaderEdge(scoped, T1, [VOTING_SITES_CONTRACT], { artifactStore: artifacts }), true);
+  assert.equal(await publishReaderEdgeForTest(scoped, T1, [VOTING_SITES_CONTRACT], { artifactStore: artifacts }), true);
   assert.equal(payloadReads, initialReads);
   assert.equal((await artifacts.readAuthorityManifest())!.manifest.sequence, initialSequence);
 });
@@ -357,13 +357,16 @@ test("state artifacts load only on demand, reject altered bytes and retain uncha
   artifacts.readBytes = async key => { readKeys.push(key); return readBytes(key); };
   const bundle = await ensureReaderAuthorityEdge(manifest, artifacts, ["voting-sites"]);
   assert.deepEqual(readKeys, [], "constructing the bundle must not fetch any state payload");
-  const read = await withReaderAuthorityEdge({ ...bundle, edgeOnly: true }, () => readVotingSitesProjection("AZ"));
+  const requestBundle = { ...bundle, edgeOnly: true as const };
+  const [read] = await withReaderAuthorityEdge(requestBundle, () => Promise.all([
+    readVotingSitesProjection("AZ"), readVotingSitesProjection("AZ"),
+  ]));
   assert.equal(read.kind, "PROMOTED");
   if (read.kind === "PROMOTED") assert.deepEqual(read.value, VOTING_SITES);
   assert.deepEqual(readKeys, [refs.AZ.key], "an Arizona request reads only Arizona bytes");
   const secondBundle = await ensureReaderAuthorityEdge(manifest, artifacts, ["voting-sites"]);
   await withReaderAuthorityEdge({ ...secondBundle, edgeOnly: true }, () => readVotingSitesProjection("AZ"));
-  assert.deepEqual(readKeys, [refs.AZ.key], "immutable state bytes are checked once per cached version");
+  assert.deepEqual(readKeys, [refs.AZ.key, refs.AZ.key], "a new request loads its own state; prior request payloads are not held process-wide");
   assert.equal(await readStateAuthorityArtifact("voting-sites", "AZ", { ...refs.AZ, sha: "0".repeat(64) }, artifacts), null,
     "a changed integrity digest must not reuse the previously checked version");
   const absent = await withReaderAuthorityEdge({ ...bundle, edgeOnly: true }, () => readVotingSitesProjection("NH"));

@@ -226,10 +226,22 @@ for (const encoded of [false, true]) test(`${encoded ? "encoded" : "inline"} sta
   for (const part of plan.parts) await pg.query("INSERT INTO civic_data_payload_parts VALUES ($1,$2)", [part.hash, JSON.stringify(part.payload)]);
   const transferred: string[] = [];
   let partReads = 0;
+  let checkedPlan = false;
   const query: ReadOnlyQuery = async statements => {
     const results = [];
     for (const statement of statements) {
       if (statement.text.startsWith("SELECT hash,payload")) partReads++;
+      if (encoded && !checkedPlan && statement.text.includes("), records AS (")) {
+        const { rows } = await pg.query<{ "QUERY PLAN": { Plan: Record<string, unknown> }[] }>(
+          `EXPLAIN (ANALYZE, FORMAT JSON) ${statement.text}`, [...statement.params]);
+        const visit = (node: Record<string, unknown>) => {
+          if (String(node["Subplan Name"]).startsWith("SubPlan")) assert.ok(Number(node["Actual Loops"]) <= 1,
+            "selected contest/candidate keys are computed once instead of scanning the state per dependent record");
+          for (const child of (node.Plans ?? []) as Record<string, unknown>[]) visit(child);
+        };
+        visit(rows[0]["QUERY PLAN"][0].Plan);
+        checkedPlan = true;
+      }
       const { rows } = await pg.query<Record<string, unknown>>(statement.text, [...statement.params]);
       transferred.push(JSON.stringify(rows));
       results.push(rows);
@@ -261,10 +273,21 @@ for (const encoded of [false, true]) test(`${encoded ? "encoded" : "inline"} sta
   assert.deepEqual(selected.heldContests, ballot.heldContests);
   assert.doesNotMatch(transferred.join("\n"), /OTHER_STATE|OTHER_DISTRICT|NH:2026-general/);
   assert.equal(partReads > 0, encoded, "large selected facts are decoded from immutable parts only for encoded payloads");
+  const selectPlace = async (ids: string[]) => (await readPlacePayloadParts(query, "BALLOT_CANDIDACY", [scope], ids, [], []))
+    .get(scope) as typeof payload;
+  const empty = (await selectPlace([`${state}/cd:999`])).ballots["AZ:2026-general"];
+  assert.deepEqual(empty.election, ballot.election);
+  for (const field of ["contests", "candidacies", "filingCandidacies", "measures", "measureRecords", "contacts"] as const) {
+    assert.deepEqual(empty[field], [], `no selected contest yields no ${field}`);
+  }
+  const measureOnly = (await selectPlace([county])).ballots["AZ:2026-general"];
+  assert.deepEqual(measureOnly.measures, [ballot.measures[0]]);
+  assert.deepEqual(measureOnly.candidacies, []);
+  assert.deepEqual(measureOnly.contacts, []);
   const nhScope = "US-NH:state-election-ballots", nhDivision = "ocd-division/country:us/state:nh";
   const nh = { election: { ...ballot.election, state: "NH" },
-    contests: [{ id: "nh-governor", ocdId: nhDivision, title: "NH Governor", provenance }],
-    candidacies: [{ id: "nh-candidate", contestId: "nh-governor", givenName: "New", familyName: "Hampshire", provenance,
+    contests: [{ id: "az-cd2", ocdId: nhDivision, title: "NH Governor", provenance }],
+    candidacies: [{ id: "nh-candidate", contestId: "az-cd2", givenName: "New", familyName: "Hampshire", provenance,
       biography: details("NH_CANDIDATE") }], measures: [], absences: [] };
   const nhPayload = { kind: "ballot-contests", ballots: { "NH:2026-general": nh } };
   const nhPlan = encoded ? partitionCivicPayload(nhPayload) : { value: nhPayload, parts: [] };
@@ -274,6 +297,9 @@ for (const encoded of [false, true]) test(`${encoded ? "encoded" : "inline"} sta
     [state, district, county, nhDivision], [], [], async statements => query(statements));
   assert.deepEqual(both.map(row => Object.keys(row.value!.ballots)), [["AZ:2026-general"], ["NH:2026-general"]],
     "each promoted scope contains only its own election keys");
+  assert.doesNotMatch(JSON.stringify(both[0].value), /OTHER_DISTRICT|nh-candidate/,
+    "the same contest id selected in another scope cannot select this scope's outside district");
+  if (encoded) assert.equal(checkedPlan, true);
   const outside = await readPlacePointerSlices<{ ballots: Record<string, unknown> }>("BALLOT_CANDIDACY", [scope, nhScope],
     [state, district, county], [], [], async statements => query(statements));
   assert.deepEqual(outside[1].value, { kind: "ballot-contests", ballots: {} }, "an unrequested state contributes no empty election shell");

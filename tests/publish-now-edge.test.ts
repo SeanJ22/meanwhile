@@ -8,7 +8,7 @@ import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.t
 import { censusGeographyCandidate } from "../lib/census-geography/candidate.ts";
 import { CENSUS_GEO_CONTRACT_ID } from "../lib/census-geography/publication.ts";
 import { publishStatePeople } from "../lib/civic-data/state-people-publication.ts";
-import { publishRoutineReaderEdgeOutcome } from "../lib/civic-data/reader-edge-publication.ts";
+import { publishReaderEdgeOutcomeForTest } from "./helpers/publish-reader-edge.ts";
 import { PUBLISH_NOW_INTERVAL_MS, publishNowHasNothingOwed, startPublishNowEdgeChecks } from "../lib/civic-data/publish-now.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import { ensureReaderAuthorityEdge } from "../lib/meetings/edge-serving.ts";
@@ -31,11 +31,11 @@ test("publish-now copies real baseline pointers during an unresolved finance pas
   assert.ok((await processRegisteredRoutineCandidate(memory, CENSUS_GEO_CONTRACT_ID, census, NOW)).promoted);
   await memory.writePreparedReaderProjection({ recordClass: "MEETING", scope: MEETINGS_PREPARED_SCOPE,
     payload: { formatVersion: 1, generatedAt: NOW, counts: { fresh: 0, carried: 0, total: 0, duplicatesCollapsed: 0 },
-      meetings: [], agendaDocuments: [], sources: [] }, composedFrom: [{ contractId: "meeting-facts", versionId: "facts:none" }], factSha256: "a".repeat(64),
+      meetings: [], agendaDocuments: [], sources: [] }, composedFrom: [], factSha256: "a".repeat(64),
     generatedAt: NOW, composedAt: NOW, sourceThrough: null, retrievedAt: null, promotedThrough: null,
   }, null);
   const artifacts = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "publish-now-baseline-")));
-  assert.equal((await publishRoutineReaderEdgeOutcome(memory, NOW, null, { artifactStore: artifacts })).readerEdge, "PUBLISHED");
+  assert.equal((await publishReaderEdgeOutcomeForTest(memory, NOW, null, { artifactStore: artifacts })).readerEdge, "PUBLISHED");
   const before = (await artifacts.readAuthorityManifest())!.manifest;
   const meetingsBefore = await artifacts.readManifest();
 
@@ -81,7 +81,7 @@ test("publish-now copies real baseline pointers during an unresolved finance pas
     check: async () => {
       sweeps++;
       if (gate) await gate;
-      const outcome = await publishRoutineReaderEdgeOutcome(store, NOW, null, { artifactStore: artifacts });
+      const outcome = await publishReaderEdgeOutcomeForTest(store, NOW, null, { artifactStore: artifacts });
       outcomes.push(outcome.readerEdge);
       return outcome;
     },

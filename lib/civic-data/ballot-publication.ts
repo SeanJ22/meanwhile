@@ -23,7 +23,6 @@ export interface BallotContestHold {
   readonly reason: string;
 }
 
-export type BallotPublicationResults = Partial<Record<BallotState, BallotPublicationResult>>;
 export type BallotPublicationSummary = Pick<BallotPublicationResult,
   "kind" | "state" | "inputHash" | "inputStamp" | "at" | "status" | "versionId" | "reason"> & { readonly heldContestCount: number };
 export type BallotPublicationSummaries = Partial<Record<BallotState, BallotPublicationSummary>>;

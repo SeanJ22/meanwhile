@@ -1,3 +1,4 @@
+import { readerRoute } from "@/lib/api/reader-route";
 import { readRegistryPlace } from "@/lib/registry/reader-place";
 import { enterRegistryPlaceRead } from "@/lib/registry/runtime-read-model";
 import { composePopulationAnswer, populationQuestion, populationEvidenceIds, readPopulationEvidence } from "@/lib/ask/population";
@@ -9,7 +10,7 @@ import { governmentListingEntity, governmentListingEvidenceRecords, readerGovern
 import { prlStatementEvidence, readPrlForSubject } from "@/lib/sources/prl/person";
 import { federalAskEvidence } from "@/lib/sources/congress/reader";
 import { type MeetingsSnapshot } from "@/lib/meetings/snapshot";
-import { ensureReaderAuthorityEdge, readReaderEdgeMeetings, readReaderAuthorityManifest } from "@/lib/meetings/edge-serving";
+import { ensureReaderAuthorityEdge, readReaderEdgeMeetings, readReaderAuthorityManifest, readReaderManifest } from "@/lib/meetings/edge-serving";
 import { enterReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "@/lib/registry/runtime-edge";
 import { AUTHORITY_FAMILIES, type AuthorityFamily, type GlobalAuthorityFamily, type PromotedAuthorityFamily } from "@/lib/meetings/edge-artifacts";
 import { READER_MAP_AUTHORITY_FAMILIES } from "@/lib/meetings/edge-serving";
@@ -357,12 +358,12 @@ function personEntities(seats: readonly SeatHolder[]): BindableEntity[] {
   return out;
 }
 
-export async function POST(request: Request) {
+export const POST = readerRoute("/api/ask/grounded", async function POST(request: Request) {
   return withPublishedAskSettings(() => {
     console.log(askModelStartupLine());
     return answerWithSettings(request);
   });
-}
+});
 
 async function answerWithSettings(request: Request) {
   const started = Date.now();
@@ -473,7 +474,7 @@ async function answerWithSettings(request: Request) {
   // fetched is never an unhandled rejection; the settle below still records it.
   const outcomesFromDatabase = leanAsk || ballotOnlyHint || onEdge("meeting-outcomes") ? null : timed("outcomes", refreshOutcomeSnapshotFromPromoted)();
   outcomesFromDatabase?.catch(() => undefined);
-  const commentAccessFromDatabase = production && !leanAsk && !ballotOnlyHint && !onEdge("comment-access")
+  const commentAccessFromDatabase = production && !leanAsk && !ballotOnlyHint && edgeManifest?.stateFacts === undefined
     ? timed("commentAccess", () => readCommentAccessFacts().catch(() => undefined))()
     : null;
   let authorityEdge: ReaderAuthorityEdgeBundle | null = null;
@@ -548,18 +549,31 @@ async function answerWithSettings(request: Request) {
       if (authorityEdge) enterReaderAuthorityEdge(authorityEdge);
     }
   }
-// Area questions share governing pieces with every ZIP in those divisions.
+  // Area questions share governing pieces with every ZIP in those divisions.
   // Questions naming a body elsewhere retain their wider subject inventory.
+  let registrySource: "EDGE" | "DATABASE" = "DATABASE";
   try {
     const targets = [...readSubjectRefs(body.activeSubjects), ...readSubjectRefs(body.priorSubjects, 8)].flatMap(ref => ref.id ? [ref.id] : []);
-    enterRegistryPlaceRead(await readRegistryPlace(ocdIds, targets, edgeManifest));
+    const registry = await readRegistryPlace(ocdIds, targets, edgeManifest);
+    registrySource = registry.source;
+    enterRegistryPlaceRead(registry);
+    if (registry.commentAccess) {
+      authorityEdge = { ...authorityEdge, commentAccess: registry.commentAccess };
+      enterReaderAuthorityEdge(authorityEdge);
+    }
   } catch (error) {
     enterRegistryPlaceRead(error instanceof Error ? error : new Error(String(error)));
   }
   const questionShape = lexicalQuestionShape(question);
   const needsMeetings = Boolean(topicRoute || areaMeetingsAsk || (!officialsAsk && !ballotQuestionHint(question) &&
     !deferPersonRecords && (!questionShape || sittingShapes.has(questionShape.shape))));
+  const meetingManifest = needsMeetings ? await readReaderManifest().catch(() => null) : null;
+  if (meetingManifest?.meetingPlaces) {
+    authorityEdge = { ...authorityEdge, meetingPlaces: new Map(Object.entries(meetingManifest.meetingPlaces)) };
+    enterReaderAuthorityEdge(authorityEdge);
+  }
   const meetingsRead = needsMeetings ? readReaderEdgeMeetings({
+    manifest: meetingManifest,
     window: "HELD",
     ...(ocdIds.length && (topicRoute || areaMeetingsAsk) ? { states: statesOf(ocdIds), ocdIds } : {}),
   }) : null;
@@ -577,7 +591,7 @@ async function answerWithSettings(request: Request) {
     authorityEdge?.promotedFamilies?.has(family) || ballotStatesForDivisions(ocdIds).some(state =>
       edgeManifest?.stateAuthorities?.[family as "ballot-contests" | "candidate-profiles" | "candidate-publications" | "voting-sites"]?.[state]) ? "EDGE" : "DATABASE";
   trace.preloadSources = {
-    registry: authorityEdge?.registryRuntime ? "EDGE" : "DATABASE",
+    registry: registrySource,
     federalDirectory: authorityEdge?.federalDirectory ? "EDGE" : "DATABASE",
     outcomes: authorityEdge?.meetingOutcomes ? "EDGE" : "DATABASE",
     ...(production ? { commentAccess: authorityEdge?.commentAccess ? "EDGE" as const : "DATABASE" as const } : {}),
@@ -620,7 +634,9 @@ async function answerWithSettings(request: Request) {
     ...unrelatedPreloads.filter((preload) => !skippedPreloads.includes(preload)),
   ];
   /* The registry and the federal directory are the first two; an officials lookup needs no other source. */
-  await settleGroundedSourcePreloads(topicRoute ? essentialPreloads : leanAsk ? essentialPreloads.slice(0, 2) : [...essentialPreloads, ...deferrablePreloads]);
+  const identityReady = settleGroundedSourcePreloads(essentialPreloads.slice(0, 2));
+  await settleGroundedSourcePreloads(topicRoute ? [() => identityReady, ...essentialPreloads.slice(2)] : leanAsk ? [() => identityReady]
+    : [() => identityReady, ...essentialPreloads.slice(2), ...deferrablePreloads.map(preload => async () => { await identityReady; return preload(); })]);
   if (topicRoute && !["PROMOTED", "BOOTSTRAP"].includes(outcomeProjectionReadState().kind)) {
     await timed("outcomesRetry", () => refreshOutcomeSnapshotFromPromoted().catch(() => undefined))();
     if (["PROMOTED", "BOOTSTRAP"].includes(outcomeProjectionReadState().kind)) {
@@ -665,7 +681,12 @@ async function answerWithSettings(request: Request) {
       // Meeting names and division slugs select a lookup only; canonical records decide identity and confirmation.
       try {
         const targets = [...readSubjectRefs(body.activeSubjects), ...readSubjectRefs(body.priorSubjects, 8)].flatMap(ref => ref.id ? [ref.id] : []);
-        enterRegistryPlaceRead(await readRegistryPlace([...ocdIds, meetingLead.ocdId], [...targets, meetingLead.id], edgeManifest));
+        const registry = await readRegistryPlace([...ocdIds, meetingLead.ocdId], [...targets, meetingLead.id], edgeManifest);
+        enterRegistryPlaceRead(registry);
+        if (registry.commentAccess) {
+          authorityEdge = { ...authorityEdge, commentAccess: registry.commentAccess };
+          enterReaderAuthorityEdge(authorityEdge);
+        }
       } catch { /* An unavailable canonical body remains unresolved. */ }
     }
   }

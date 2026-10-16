@@ -1,3 +1,4 @@
+type BallotStateFile = Awaited<ReturnType<typeof import("../lib/ballot/state-file.ts").readBallotStateFile>>;
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFile, readdir } from "node:fs/promises";
@@ -5,7 +6,7 @@ import test from "node:test";
 import { BALLOT_STATES, type BallotState } from "../lib/ballot/state-scopes.ts";
 import { canonicalCivicDataJson } from "../lib/civic-data/changes.ts";
 import { completeOfficialBallotContests } from "../lib/civic-data/manual-projections.ts";
-import { assembleBallotPackage, type BallotStateFile } from "../scripts/assemble-ballot-package.mts";
+import { assembleBallotPackage } from "../scripts/assemble-ballot-package.mts";
 import { genericBallotProblems, type GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";

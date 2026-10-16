@@ -23,6 +23,7 @@ import {
   type EverydayRoutingRecord,
 } from "../routing/everyday.ts";
 import { canonicalCivicDataJson, civicRecordsFor } from "./changes.ts";
+import { canonicalCivicDataHash } from "./canonical-hash.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import {
   directPositiveSourceUrls,
@@ -113,6 +114,7 @@ export interface ManualProjectionPackage {
 
 export interface ManualProjectionPrior {
   readonly versionId: string;
+  readonly temporal?: RoutineCandidate["temporal"];
   readonly payload: ManualProjectionPayload;
   readonly sourceReceipt: ManualSourceSetReceipt;
 }
@@ -155,7 +157,8 @@ function string(value: unknown): string {
 }
 
 function jurisdictionForCandidateKey(key: string, stateContext?: BallotState): string {
-  const slug = /^(?:ballot-)?([a-z]{2})-/.exec(key)?.[1];
+  const slug = /^(?:ballot-)?([a-z]{2})-/.exec(key)?.[1] ??
+    /^([a-z]{2}):\d{4}:state-\1(?:-[a-z0-9]+)*:[a-z0-9-]+:[a-z0-9-]+$/.exec(key)?.[1];
   const state = US_JURISDICTIONS.find((row) => row.slug === slug);
   return state ? `US-${state.usps}` : stateContext && /^ballot-candidacy:[a-f0-9]{24}$/.test(key) ? `US-${stateContext}` : "UNRESOLVED";
 }
@@ -170,7 +173,7 @@ function receiptCoverageProblems(payload: unknown, receipt: ManualSourceSetRecei
   return missing.map((url) => `The projection cites ${url} without exact-byte evidence in the reviewed source set.`);
 }
 
-export function ballotProvenanceUrls(value: unknown): Set<string> {
+function ballotProvenanceUrls(value: unknown): Set<string> {
   const urls = new Set<string>(), pending: unknown[] = [value];
   const add = (url: unknown) => { if (typeof url === "string" && url) urls.add(url); };
   while (pending.length) {
@@ -586,8 +589,22 @@ export async function readManualProjectionPrior(
   scope?: string,
 ): Promise<ManualProjectionPrior | null> {
   const contract = requiredManualProductionContract(contractId);
+  const proofStore = store as CivicDataReadStore & Partial<Pick<import("./store.ts").RoutineDataStore, "readCandidateProof">>;
+  const evidence: { found: boolean; sourceReceipt?: ManualSourceSetReceipt; temporal?: RoutineCandidate["temporal"] } = { found: false };
+  const remember = <T extends { candidate: Pick<RoutineCandidate, "retrieval" | "temporal"> }>(candidate: T | null): T | null => {
+    if (!evidence.found && candidate) {
+      evidence.found = true;
+      evidence.sourceReceipt = candidate.candidate.retrieval.manualSourceReceipt;
+      evidence.temporal = candidate.candidate.temporal;
+    }
+    return candidate;
+  };
+  const readStore = { readPromotion: store.readPromotion.bind(store),
+    readCandidate: async (id: string) => remember(await store.readCandidate(id)),
+    ...(store.readPublishedCandidateMetadata ? { readPublishedCandidateMetadata: async (id: string) => remember(await store.readPublishedCandidateMetadata!(id)) } : {}),
+    ...(proofStore.readCandidateProof ? { readCandidateProof: async (id: string) => remember(await proofStore.readCandidateProof!(id)) } : {}) };
   const read = await readPromotedCivicData<ManualProjectionPayload>(contract.recordClass, scope ?? contract.scope, {
-    store,
+    store: readStore,
     now,
     bypassCache: true,
   });
@@ -596,15 +613,15 @@ export async function readManualProjectionPrior(
     const code = read.kind === "STORE_UNREACHABLE" ? read.code : "BOOTSTRAP_NOT_PERMITTED";
     throw new Error(`MANUAL_PROMOTION_BASE_UNAVAILABLE:${contractId}:${code}:${read.detail}`);
   }
-  const candidate = await store.readCandidate(read.projection.versionId);
-  const sourceReceipt = candidate?.candidate.retrieval.manualSourceReceipt;
-  if (candidate && !sourceReceipt) return null;
+  const sourceReceipt = evidence.sourceReceipt;
+  if (evidence.found && !sourceReceipt) return null;
   const issue = manualSourceReceiptStructureIssue(sourceReceipt);
-  if (!candidate || !sourceReceipt || issue || sourceReceipt.sources.some((source) => source.reviewOutcome === "BLOCKED")) {
+  if (!evidence.found || !sourceReceipt || issue || sourceReceipt.sources.some((source) => source.reviewOutcome === "BLOCKED")) {
     throw new Error(`MANUAL_PROMOTION_BASE_PROOF_INVALID:${contractId}:${issue?.code ?? "SOURCE_RECEIPT_NOT_GOOD"}`);
   }
   return {
     versionId: read.projection.versionId,
+    temporal: evidence.temporal,
     payload: read.value,
     sourceReceipt,
   };
@@ -907,7 +924,7 @@ export function manualProjectionCandidate(
   const attemptHash = sha256(sources.map((source) =>
     `${source.requestedUrl}\n${source.finalUrl}\n${source.httpStatus}\n${source.rawHash}\n${source.reviewOutcome ?? "SUPPORTED"}\n${source.failureDetail ?? ""}${source.extractedMembers?.length ? `\n${canonicalCivicDataJson(source.extractedMembers)}` : ""}`
   ).join("\n"));
-  const normalizedHash = sha256(canonicalCivicDataJson(built.payload));
+  const normalizedHash = canonicalCivicDataHash(built.payload);
   const reviewedAt = input.sourceReceipt.reviewedAt;
   const primary = promotionReceipt.sources[0];
   const blockedSources = input.sourceReceipt.sources.filter((source) => source.reviewOutcome === "BLOCKED");

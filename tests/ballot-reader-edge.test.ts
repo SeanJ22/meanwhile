@@ -1,3 +1,4 @@
+type BallotStateFile = Awaited<ReturnType<typeof import("../lib/ballot/state-file.ts").readBallotStateFile>>;
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
@@ -5,18 +6,20 @@ import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
+import { gunzipSync } from "node:zlib";
 import { after, test } from "node:test";
 
 import { ensureReaderAuthorityEdge, publishReaderEdgeArtifacts, type PublishAuthority, type PublishStateAuthorities } from "../lib/meetings/edge-serving.ts";
 import { withReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "../lib/registry/runtime-edge.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import type { GlobalPromotedAuthorityFamily, PromotedFamilyArtifactValue } from "../lib/meetings/edge-artifacts.ts";
+import type { RecordIndex } from "../lib/meetings/authority-records.ts";
 import type { CensusDistrictEdge } from "../lib/census-geography/district-edge.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
 import { stateBallotContractId, stateBallotScope, type StateBallotFamily } from "../lib/ballot/state-scopes.ts";
 import { ballotElectionKey, currentGenericBallotProjection, genericBallotProblems, type GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
 import { clearPromotedReadModelCache } from "../lib/civic-data/read-model.ts";
-import { assembleBallotPackage, type BallotStateFile } from "../scripts/assemble-ballot-package.mts";
+import { assembleBallotPackage } from "../scripts/assemble-ballot-package.mts";
 import { manualProjectionCandidate } from "../lib/civic-data/manual-projections.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { readGenericBallotProjection } from "../lib/ballot/generic-projection.ts";
@@ -363,8 +366,11 @@ test("a cold /ballot?zip=85701 reads one exact registry place and all ballot fam
   assert.ok((components.get("CandidateFunding") ?? 0) >= 1, `the render reached the funding cards: ${JSON.stringify([...components])}`);
 
   assert.deepEqual(databaseReads, [], "a cold /ballot with the whole edge read the database");
-  assert.deepEqual(placeDatabaseReads, ["page"], "deferred cards reuse the page's exact registry slice");
+  assert.deepEqual(placeDatabaseReads, [], "the page and deferred cards use the exact registry edge slice without SQL");
+  assert.equal(registryPlace?.source, "EDGE");
   assert.equal(registryPlace?.versionId, REGISTRY_VERSION, "the registry slice uses the accepted edge version");
+  const [divisions] = JSON.parse(registryPlace!.selectorKey) as [string[], string[]];
+  assert.ok(registryPlace!.value.registry.divisions.every(row => divisions.includes(row.ocdId)), "only the selected place's division records reach cards");
   assert.equal(readerEdge?.registryRuntime, undefined, "the ballot page never loads the country registry artifact");
   assert.equal(federalDirectoryReadState().metadata?.versionId, FEDERAL_VERSION, "the federal directory was not served from the edge");
   // Each family is the edge's proven copy, read as PROMOTED through its own Reader.
@@ -484,15 +490,24 @@ test("BL-10: assembly through promotion and the reader edge shows complete conte
 test("a cold New Hampshire ballot loads its state ballot and General Court edge while selecting only its registry place", async () => {
   process.env.WTP_READER_EDGE_DIR = ballotEdgeDir;
   const manifest = (await new LocalFileArtifactStore(ballotEdgeDir).readAuthorityManifest())!.manifest;
+  const registryBytes = (await new LocalFileArtifactStore(ballotEdgeDir).readBytes(manifest.authorityArtifacts!["registry-runtime"]!.key))!;
+  const registryIndex = JSON.parse(gunzipSync(registryBytes).toString("utf8")).value as RecordIndex;
+  assert.equal(registryIndex.kind, "READER_RECORDS", "registry authority stores record references, not the country payload");
+  assert.deepEqual((registryIndex.base as { registry: { bodies: unknown[] } }).registry.bodies, []);
+  const foreign = registryIndex.records.filter(row => row.path[0] === "registry" && row.path[1] === "bodies" && row.tags.some(tag => tag.includes("/state:nj/")));
+  assert.ok(foreign.length > 0);
   const keys: string[] = [];
   const originalRead = LocalFileArtifactStore.prototype.readBytes;
   LocalFileArtifactStore.prototype.readBytes = async function (key) { keys.push(key); return originalRead.call(this, key); };
   try {
-    await renderBallot("03255");
+    const rendered = await renderBallot("03255");
+    assert.equal(rendered.registryPlace?.source, "EDGE");
+    assert.equal(rendered.registryPlace?.versionId, REGISTRY_VERSION);
   } finally {
     LocalFileArtifactStore.prototype.readBytes = originalRead;
   }
   assert.deepEqual(databaseReads, [], "a cold NH /ballot with the whole edge read the database");
+  assert.deepEqual(placeDatabaseReads, []);
   const bundle = await ensureReaderAuthorityEdge(manifest, new LocalFileArtifactStore(ballotEdgeDir));
   await withReaderAuthorityEdge(bundle, async () => {
     await readGenericBallotProjection("NH");
@@ -502,7 +517,7 @@ test("a cold New Hampshire ballot loads its state ballot and General Court edge 
   assert.ok(keys.includes(manifest.stateLegislators!["US-NH"].key), "the requested NH roster came from its jurisdiction edge artifact");
   assert.equal(keys.includes(manifest.stateAuthorities!["ballot-contests"]!.AZ.key), false, "an NH ballot never fetches Arizona ballot bytes");
   assert.equal(keys.includes(manifest.stateLegislators!["US-AZ"].key), false, "an NH ballot does not load another state's people");
-  assert.equal(keys.includes(manifest.authorityArtifacts!["registry-runtime"]!.key), false, "an NH ballot does not load country registry bytes");
+  assert.ok(foreign.every(row => !keys.includes(row.key)), "an NH ballot never fetches New Jersey registry record bytes");
 });
 
 const nationalReaderCases = [

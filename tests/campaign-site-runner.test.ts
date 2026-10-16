@@ -22,7 +22,7 @@ import {
   withinWallTime,
   type CampaignSiteCycleInput,
 } from "../lib/control-plane/promotion/campaign-site-cycle.ts";
-import { indexVault, readHeldBytes } from "../lib/control-plane/evidence/read-only-vault.ts";
+import { findHeldCapture, heldVaultIndex, indexVault, readHeldBytes } from "../lib/control-plane/evidence/read-only-vault.ts";
 import { runCandidatePublicationCycle } from "../lib/control-plane/promotion/campaign-publication-cycle.ts";
 import { candidatePublicationLinks, candidatePublicationCaptureIssue, candidatePublicationCaptureUrls,
   heldCandidatePublicationRead } from "../lib/control-plane/promotion/campaign-publication-links.ts";
@@ -54,6 +54,8 @@ import {
 } from "../lib/civic-data/derived-campaign-sites.ts";
 import {
   derivedCampaignSitesCandidate,
+  deriveCampaignSitesFromCaptures,
+  derivedCampaignSitesProjection,
   derivedCampaignSitesPass,
   isPublishableCampaignSiteApproval,
   reverifyApprovedSite,
@@ -486,8 +488,13 @@ test("a bounded linked publication capture reaches the existing derived corpus w
     vaultWorkItemId: held.workItemId, vaultAttemptId: held.attemptId, vaultHttpStatus: held.httpStatus,
     vaultContentType: held.contentType, vaultMethodRouteId: held.methodRouteId, vaultPermission: held.permission };
   const inputs = await doorInputs(p), { store, profiles } = await profilesStore();
-  const pass = derivedCampaignSitesPass({ state: "NH", approvals: inputs.approvals, held: inputs.held,
+  const expected = derivedCampaignSitesPass({ state: "NH", approvals: inputs.approvals, held: inputs.held,
     linkedPublications: [linked], profiles, gateOpen: true, now: new Date(clock.ms + 1000).toISOString() });
+  const pass = await deriveCampaignSitesFromCaptures({ state: "NH", approvals: inputs.approvals, profiles,
+    now: new Date(clock.ms + 1000).toISOString(), readCaptures: async approvals => ({
+      held: await heldCampaignSiteReads(vault, approvals), linkedPublications: [linked],
+    }) });
+  assert.deepEqual(pass, expected, "grouped production derivation preserves linked captures and publication proofs");
   const key = subject(TANG_WILLIAMS).readerKeys[0]!;
   const published = pass.plan?.records.find(row => row.id === key)?.publications?.find(row => row.document.documentUrl === articleUrl);
   assert.equal(published?.evidence && "kind" in published.evidence ? published.evidence.kind : null, "LINKED_PAGE");
@@ -605,6 +612,10 @@ test("already captured linked pages from another job reach the corpus without a 
   const captures: HeldLinkedPublicationRead[] = [];
   for (const record of records) captures.push((await heldCandidatePublicationRead(record,
     (await p.repos.attempts.mustRead(record.attemptId)).value, vault))!);
+  const located = heldVaultIndex((await Promise.all(records.map(record => findHeldCapture(p.vaultRoot, record, null)))).map(row => row!));
+  assert.deepEqual(candidatePublicationCaptureUrls(links, located), candidatePublicationCaptureUrls(links, vault), "captures found one record at a time alias the same addresses");
+  for (const [index, record] of records.entries()) assert.deepEqual(await heldCandidatePublicationRead(record,
+    (await p.repos.attempts.mustRead(record.attemptId)).value, located), captures[index]);
   const { store, profiles } = await profilesStore();
   const pass = derivedCampaignSitesPass({ state: "NH", approvals: inputs.approvals, held: inputs.held,
     linkedPublications: captures, profiles, gateOpen: true, now: PUBLISH });
@@ -1043,6 +1054,52 @@ function approvalFor(url: string, body: string, readAt: string, candidacyId = TA
     },
   };
 }
+
+test("production derivation releases every candidacy's raw captures before loading the next group", async () => {
+  const page = fixture("lilytangwilliams-endorsements.live.html");
+  const bodies = new Map<string, string>();
+  const approval = (id: string, url = LILY, suffix = "", at = T2): PublishableCampaignSiteApproval => {
+    const body = `${page}<script>${"raw source padding ".repeat(1_000)}</script>${suffix}`;
+    const row = approvalFor(url, body, at);
+    const recordId = `${id}:${row.recordId}:${url}`;
+    bodies.set(recordId, body);
+    return { ...row, itemId: id, recordId, campaignSite: { ...row.campaignSite, candidacyId: id,
+      identity: { ...row.campaignSite.identity, candidacyId: id }, readerKeys: [`reader:${id}`] } };
+  };
+  const old = approval("candidate:0", LILY, "", T1), untouched = approval("untouched", LILY, "", T1);
+  const held = (row: PublishableCampaignSiteApproval): HeldVerifyingRead | null => bodies.has(row.recordId)
+    ? { body: bodies.get(row.recordId)!, sha256: row.campaignSite.evidence.sha256, tier: "RAW", permission: "ALLOWED" } : null;
+  const oldPlan = planDerivedCampaignSites({ approvals: [old, untouched], profiles: null, held });
+  const projection = derivedCampaignSitesProjection(oldPlan);
+  const reference = promotedInputRef("CURATED_READER_RECORD", stateBallotScope("candidate-campaign-sites-derived", "NH"), "prior", projection, T1)!;
+  assert.ok(reference.kind === "PROMOTED_VERSION");
+  const prior = { input: reference, projection };
+  const approvals = Array.from({ length: 20 }, (_, index) => approval(`candidate:${index}`));
+  approvals.push(approval("candidate:0", LILY, "<main>A second sourced revision.</main>", PUBLISH));
+  approvals.push(approval("conflict"), approval("conflict", "https://lilytangwilliamsforcongress.example/"));
+  const missing = approval("missing"); approvals.push(missing); bodies.delete(missing.recordId);
+  const profiles = { input: { ...reference, recordClass: "CANDIDATE_PROFILE", scope: stateBallotScope("candidate-profiles", "NH") },
+    links: { "reader:candidate:1": { official: null, campaign: { url: "https://reviewed.example/", verification: "Reviewed source", attemptedAt: T1.slice(0, 10) } } } };
+  const expected = derivedCampaignSitesPass({ state: "NH", approvals, held, prior, profiles, now: PUBLISH });
+  let previous: { held: Map<string, HeldVerifyingRead>; linkedPublications: HeldLinkedPublicationRead[] } | undefined;
+  let groups = 0;
+  const actual = await deriveCampaignSitesFromCaptures({ state: "NH", approvals, prior, profiles, now: PUBLISH,
+    readCaptures: async group => {
+      assert.equal(previous?.held.size ?? 0, 0, "source HTML from the preceding group must be released");
+      assert.equal(previous?.linkedPublications.length ?? 0, 0, "linked capture HTML must be released too");
+      assert.equal(new Set(group.map(row => row.campaignSite.candidacyId)).size, 1);
+      groups++;
+      previous = { held: new Map(group.flatMap(row => { const bytes = held(row); return bytes ? [[row.recordId, bytes] as const] : []; })), linkedPublications: [] };
+      return previous;
+    } });
+  assert.equal(groups, 22);
+  assert.equal(previous?.held.size, 0);
+  assert.deepEqual(actual, expected, "grouping preserves holds, source proofs, all revisions and unrelated prior facts");
+  assert.equal(actual.plan?.records.find(row => row.id === "reader:untouched"), projection.records.find(row => row.id === "reader:untouched"));
+  assert.ok(actual.plan?.held.some(row => row.code === "MULTIPLE_VERIFIED_SITES"));
+  assert.ok(actual.plan?.held.some(row => row.code === "EVIDENCE_NOT_HELD"));
+  assert.ok(actual.plan?.held.some(row => row.code === "PRIOR_CAMPAIGN_LINK_HELD"));
+});
 
 test("the door verifies the vault again and holds by name what it cannot prove; a reviewed link always wins", () => {
   const body = fixture("lilytangwilliams-endorsements.live.html");

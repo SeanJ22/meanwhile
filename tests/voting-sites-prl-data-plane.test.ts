@@ -132,6 +132,20 @@ test("a first voting-site holding publishes without requiring other states", asy
   assert.deepEqual((outcome.promoted!.payload as VotingSitesFile).jurisdictions, file.jurisdictions);
 });
 
+test("voting publication shares unchanged source rows and distinguishes equal and changed prior jurisdictions", () => {
+  const prior = votingFixture();
+  const current = { ...prior, jurisdictions: [prior.jurisdictions[0], structuredClone(prior.jurisdictions[1]),
+    { ...prior.jurisdictions[2], name: "Renamed Borough" }] };
+  const before = JSON.stringify({ current, prior });
+  const candidate = votingSitesCandidate({ state: "AZ", current, prior, failures: [], acquisition: capture("official update"),
+    successfulAuthorityReads: 1, requestedUrl: SOURCE_URL, finalUrl: SOURCE_URL, retrievedAt: T1 });
+  assert.equal(candidate.readModel, current, "a successful refresh does not deep-copy the state's sites");
+  const payload = candidate.normalizedPayload as { projection: VotingSitesFile; carriedJurisdictionIds: string[] };
+  assert.equal(payload.projection, current);
+  assert.deepEqual(payload.carriedJurisdictionIds, prior.jurisdictions.slice(0, 2).map(row => row.ocdId).sort());
+  assert.equal(JSON.stringify({ current, prior }), before);
+});
+
 test("voting-site coordinates admit Alaska and Hawaii while rejecting invalid points", () => {
   const file = votingFixture();
   const site = file.jurisdictions.find(row => row.sites.length > 0)!.sites[0];

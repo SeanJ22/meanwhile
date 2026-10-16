@@ -3,26 +3,47 @@ import type { Query } from "./publish.ts";
 
 export const meetingEntityId = (meetingId: string) => `meeting:${meetingId}`;
 
-const MEETING_FACTS_SQL = `SELECT f.entity_id, f.field, f.value, f.quote, f.checked_at, s.url FROM fact f JOIN source_copy s ON s.id = f.source_copy_id
-  WHERE f.status = 'live' AND f.entity_id = ANY($1::text[]) AND f.field IN ('title', 'starts_at', 'location', 'agenda_url', 'video_url')`;
+const SITTING_FACTS_SQL = `SELECT m.parent_id AS body_id, m.id AS entity_id, f.field, f.value, f.quote, f.checked_at,
+  (SELECT s.url FROM source_copy s WHERE s.id = f.source_copy_id) AS url
+  FROM entity m JOIN fact f ON f.entity_id = m.id
+  WHERE m.parent_id = ANY($1::text[]) AND m.kind = 'meeting' AND f.status = 'live'`;
 
 const FIELD = { title: "title", starts_at: "startsAt", location: "location", agenda_url: "agendaUrl", video_url: "videoUrl" } as const;
 
-/** Each sitting with its live facts in place of what its partition carried, every one citing its saved page. */
-export async function withMeetingFacts(meetings: readonly Meeting[], query: Query | null): Promise<Meeting[]> {
-  if (query === null || !meetings.length) return [...meetings];
-  const owner = new Map<string, number>();
-  meetings.forEach((meeting, index) => { for (const id of [meeting.id, ...meeting.mergedMeetingIds ?? []]) owner.set(meetingEntityId(id), index); });
-  const rows = await query(MEETING_FACTS_SQL, [[...owner.keys()]]);
-  const out = [...meetings];
-  for (const row of rows) {
-    const index = owner.get(String(row.entity_id));
+/** One live fact about a sitting, citing the saved page it was found on. */
+export interface SittingFact {
+  readonly meetingId: string;
+  readonly field: (typeof FIELD)[keyof typeof FIELD];
+  readonly value: unknown;
+  readonly source: Provenance;
+}
+
+/** The live facts of each given body's sittings, by body. */
+export async function readSittingFacts(query: Query, bodyIds: readonly string[]): Promise<Map<string, SittingFact[]>> {
+  const byBody = new Map<string, SittingFact[]>();
+  for (const row of bodyIds.length ? await query(SITTING_FACTS_SQL, [bodyIds]) : []) {
     const field = FIELD[String(row.field) as keyof typeof FIELD];
-    if (index === undefined || !field) continue;
-    const meeting = out[index]!;
+    if (!field) continue;
     const at = new Date(row.checked_at as string).toISOString();
-    const source: Provenance = { sourceUrl: String(row.url), sourceOrg: new URL(String(row.url)).hostname, collectedAt: at, verifiedAt: at, quote: String(row.quote) };
-    const value = row.value as unknown;
+    const fact: SittingFact = { meetingId: String(row.entity_id).slice("meeting:".length), field, value: row.value,
+      source: { sourceUrl: String(row.url), sourceOrg: new URL(String(row.url)).hostname, collectedAt: at, verifiedAt: at, quote: String(row.quote) } };
+    const held = byBody.get(String(row.body_id));
+    if (held) held.push(fact);
+    else byBody.set(String(row.body_id), [fact]);
+  }
+  return byBody;
+}
+
+/** Each sitting with its live facts in place of what its partition carried, every one citing its saved page. */
+export function withSittingFacts(meetings: readonly Meeting[], facts: readonly SittingFact[]): Meeting[] {
+  const out = [...meetings];
+  if (!facts.length) return out;
+  const owner = new Map<string, number>();
+  meetings.forEach((meeting, index) => { for (const id of [meeting.id, ...meeting.mergedMeetingIds ?? []]) owner.set(id, index); });
+  for (const { meetingId, field, value, source } of facts) {
+    const index = owner.get(meetingId);
+    if (index === undefined) continue;
+    const meeting = out[index]!;
     const patch: Partial<Meeting> = field === "startsAt" ? { startsAt: (value as { startsAt: string }).startsAt }
       : field === "location" ? (meeting.location ? { location: { ...meeting.location, ...(value as { name: string; address: string | null }) } } : {})
       : { [field]: value as string };

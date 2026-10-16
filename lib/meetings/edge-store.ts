@@ -6,7 +6,7 @@ import type { ReaderAuthorityManifest, ReaderGeoArtifact, ReaderManifest } from 
 
 export const READER_ARTIFACT_STORE_NAME = "reader-artifacts";
 export const READER_MANIFEST_KEY = "reader/manifest.json";
-export const READER_AUTHORITY_MANIFEST_KEY = "reader/authority-manifest.json";
+const READER_AUTHORITY_MANIFEST_KEY = "reader/authority-manifest.json";
 
 export interface StoredManifest {
   readonly manifest: ReaderManifest;
@@ -14,7 +14,7 @@ export interface StoredManifest {
   readonly etag: string | null;
 }
 
-export interface StoredAuthorityManifest {
+interface StoredAuthorityManifest {
   readonly manifest: ReaderAuthorityManifest;
   readonly etag: string | null;
 }

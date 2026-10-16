@@ -1,4 +1,5 @@
 import { AsyncLocalStorage } from "node:async_hooks";
+import { currentReaderSelection } from "../db/reader-route.ts";
 import { requireBallotState, stateBallotScope } from "./state-scopes.ts";
 import { jurisdictionFromOcdId } from "../coverage/states.ts";
 import { currentReaderAuthorityEdge, readPromotedEdgeFirst } from "../registry/runtime-edge.ts";
@@ -78,7 +79,7 @@ const requestReads = new WeakMap<object, BallotReads>();
 const localReads = new AsyncLocalStorage<BallotReads>();
 
 function ballotReads(): BallotReads {
-  const request = currentReaderAuthorityEdge();
+  const request = currentReaderAuthorityEdge() ?? currentReaderSelection();
   if (request) {
     let reads = requestReads.get(request);
     if (!reads) { reads = new Map(); requestReads.set(request, reads); }

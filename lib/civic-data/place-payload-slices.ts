@@ -49,6 +49,7 @@ export async function readPlacePayloadParts(query: ReadOnlyQuery, recordClass: s
   const maps = recordClass === "CANDIDATE_PROFILE" ? ["cards.cards", "links.links"] : recordClass === "REGISTRY_RUNTIME_BINDING" ? ["rosterPhotos"] : [];
   const single = derived ? ["kind", "formatVersion"] : [];
   const fieldScopes = new Map<string, Set<string>>();
+  const ballotFields = new Map<string, string>();
   if (recordClass === "BALLOT_CANDIDACY") {
     const [keys] = await query([{ text: `WITH RECURSIVE projections AS (${placeProjectionSourceSql(acceptedVersions === undefined ? undefined : 4)}),
       ballot_maps(scope,step,node) AS (
@@ -81,10 +82,11 @@ export async function readPlacePayloadParts(query: ReadOnlyQuery, recordClass: s
       };
       const contestField = `${prefix}.contests`.replaceAll("'", "''");
       const candidacyField = `${prefix}.candidacies`.replaceAll("'", "''");
-      const inContest = `x->>'contestId' IN (SELECT b.x->>'id' FROM records b WHERE b.scope=records.scope AND b.field='${contestField}' AND (${division.replaceAll("x->", "b.x->")}))`;
+      ballotFields.set(contestField, candidacyField);
+      const inContest = `(scope,'${contestField}',x->>'contestId') IN (SELECT scope,field,id FROM selected_ballot_contests)`;
       add("contests", division);
       for (const field of ["candidacies", "filingCandidacies", "measures", "measureRecords", "removals", "generalLineup.contests", "measureAnalyses.analyses", "lineupReconciliation.rows"]) add(field, inContest);
-      add("contacts", `x->>'candidacyId' IN (SELECT c.x->>'id' FROM records c WHERE c.scope=records.scope AND c.field='${candidacyField}' AND (c.x->>'contestId' IN (SELECT b.x->>'id' FROM records b WHERE b.scope=records.scope AND b.field='${contestField}' AND (${division.replaceAll("x->", "b.x->")}))))`);
+      add("contacts", `(scope,'${candidacyField}',x->>'candidacyId') IN (SELECT scope,field,id FROM selected_ballot_candidacies)`);
       for (const field of ["absences", "heldContests"]) add(field, division);
       for (const field of ["coverageNotes", "scopedCoverageNotes", "lineupReconciliation.sources"]) add(field, "TRUE");
       for (const field of ["election", "generalLineup.curatedAt", "generalLineup.canvass", "generalLineup.note",
@@ -95,6 +97,13 @@ export async function readPlacePayloadParts(query: ReadOnlyQuery, recordClass: s
   }
   const paths = Object.keys(fields);
   const predicate = Object.entries(fields).map(([field, where]) => `(field='${field.replaceAll("'", "''")}' AND (${where}))`).join(" OR ");
+  const ballotKeys = ballotFields.size ? `, ballot_fields(contests,candidacies) AS (VALUES ${[...ballotFields].map(([contests, candidacies]) => `('${contests}','${candidacies}')`).join(",")}),
+    selected_ballot_contests AS MATERIALIZED (
+      SELECT scope,field,x->>'id' id FROM records WHERE field IN (SELECT contests FROM ballot_fields) AND (${division})
+    ), selected_ballot_candidacies AS MATERIALIZED (
+      SELECT r.scope,r.field,r.x->>'id' id FROM records r JOIN ballot_fields f ON f.candidacies=r.field
+        JOIN selected_ballot_contests b ON b.scope=r.scope AND b.field=f.contests AND b.id=r.x->>'contestId'
+    )` : "";
   const [rows] = await query([{ text: `WITH RECURSIVE selected AS (SELECT $3::text[] ids,$4::text[] bodies,$5::text[] targets),
   projections AS (${placeProjectionSourceSql(acceptedVersions === undefined ? undefined : 8)}),
   walk(scope,path,step,node,member_key) AS (
@@ -126,7 +135,7 @@ export async function readPlacePayloadParts(query: ReadOnlyQuery, recordClass: s
       WHERE step=cardinality(path) AND NOT node ? '$civicPayloadPart'
         AND jsonb_typeof(node)<>'array'
         AND (NOT array_to_string(path,'.')=ANY($7::text[]) OR member_key IS NOT NULL)
-  )
+  )${ballotKeys}
   SELECT scope,field,jsonb_agg(CASE WHEN member_key IS NULL THEN x ELSE jsonb_build_object('key',member_key,'value',x) END) rows FROM records WHERE ${predicate} GROUP BY scope,field
   UNION ALL
   SELECT scope,'$missing',jsonb_agg(node) FROM walk WHERE node ? '$civicPayloadPart'

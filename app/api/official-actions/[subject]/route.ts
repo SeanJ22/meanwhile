@@ -1,3 +1,4 @@
+import { readerRoute } from "@/lib/api/reader-route";
 import { readRegistryPlace } from "@/lib/registry/reader-place";
 import { withRegistryPlaceRead, type RegistryPlaceRead } from "@/lib/registry/runtime-read-model";
 import type { ReaderAuthorityManifest } from "@/lib/meetings/edge-artifacts";
@@ -116,7 +117,7 @@ export async function settleOfficialActionHoldingAnswer(
   }
 }
 
-export async function GET(request: Request, context: { params: Promise<{ subject: string }> }) {
+export const GET = readerRoute("/api/official-actions/[subject]", async function GET(request: Request, context: { params: Promise<{ subject: string }> }) {
   const { subject } = await context.params;
   if (!subject || subject.length > 512) return Response.json({ error: "subject required" }, { status: 400 });
   const manifest = await readReaderAuthorityManifest().catch(() => null);
@@ -134,4 +135,4 @@ export async function GET(request: Request, context: { params: Promise<{ subject
     }, { status: 503 });
   }
   return Response.json(settled.answer);
-}
+});

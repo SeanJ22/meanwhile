@@ -139,7 +139,7 @@ test("ASK-27 an unavailable agenda remains an OURS holding gap, never an empty d
   assert.ok(!answer.records.some(record => /nothing is on the agenda|no agenda items exist/i.test(record.text)));
 });
 
-test("named Vail lookup reads only its exact canonical body and requested divisions at the accepted registry version", async () => {
+test("without the registry edge, named Vail lookup reads only its exact canonical body and requested divisions at the accepted version", async () => {
   const directory = mkdtempSync(join(tmpdir(), "vail-identity-"));
   const originalFetch = globalThis.fetch;
   const originalNeonFetch = neonConfig.fetchFunction;
@@ -155,6 +155,8 @@ test("named Vail lookup reads only its exact canonical body and requested divisi
     }, { store: new LocalFileArtifactStore(directory),
       authority: { "registry-runtime": { value: registry, versionId: version } } });
     assert.equal(published.status, "PUBLISHED");
+    const manifest = (await new LocalFileArtifactStore(directory).readAuthorityManifest())!.manifest;
+    rmSync(join(directory, manifest.authorityArtifacts!["registry-runtime"]!.key));
     process.env.WTP_READER_EDGE_DIR = directory;
     process.env.DATABASE_URL = "postgresql://fixture:fixture@ep-vail-fixture.vail-fixture.invalid/test?sslmode=require";
     globalThis.fetch = (async (input, init) => {

@@ -1,3 +1,4 @@
+import { readerRoute } from "@/lib/api/reader-route";
 import { ensureReaderAuthorityEdge, readReaderAuthorityManifest } from "@/lib/meetings/edge-serving";
 import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
 import { settleOutcomeRead, sittingsForBody } from "@/lib/outcomes/store";
@@ -9,7 +10,7 @@ export const runtime = "nodejs";
 const ROSTER_ID = /^roster:(.+)#\d+$/;
 const rosterMembers: LocalVoteRosterFor = (bodyId) => rosterForBody(bodyId)?.members ?? [];
 
-export async function GET(request: Request) {
+export const GET = readerRoute("/api/votes/local", async function GET(request: Request) {
   const personId = new URL(request.url).searchParams.get("personId") ?? "";
   const bodyId = ROSTER_ID.exec(personId)?.[1];
   if (!bodyId || personId.length > 300) return Response.json({ error: "personId required" }, { status: 400 });
@@ -24,4 +25,4 @@ export async function GET(request: Request) {
   const linking = linkLocalVotes(sittingsForBody(bodyId), rosterMembers);
   const votes = localVotesForMember(linking.records, personId);
   return Response.json({ personId, bodyId, votes, count: votes.length, holdingStatus: votes.length > 0 ? "HELD" : "HELD_NO_RECORD" });
-}
+});

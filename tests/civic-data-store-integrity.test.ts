@@ -8,6 +8,10 @@ import { drizzle } from "drizzle-orm/neon-http";
 
 import * as schema from "../lib/db/schema.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
+import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
+import { STATE_BALLOT_FAMILIES, stateBallotContractId } from "../lib/ballot/state-scopes.ts";
+import { CivicPayloadParts } from "../lib/civic-data/payload-parts.ts";
+import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import { processRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import {
   assertRoutineDataStoreMutationAuthority,
@@ -20,6 +24,7 @@ import {
   promotedPointerIdentityRead,
   readerEvidenceCandidateRead,
   readerEvidenceRowToRecord,
+  publishedCandidateMetadata,
   routineDataStoreCandidateAuthorityIssue,
 } from "../lib/civic-data/store.ts";
 import type { RuntimeAuthorityEnvelope } from "../lib/civic-data/runtime-authority.ts";
@@ -836,8 +841,9 @@ async function withCannedNeon<T>(
         rowCount: rows.length,
         rowAsArray: true,
         fields: columns.map(([name, type]) => ({ name, dataTypeID: NEON_TYPE[type] })),
-        rows: rows.map((row) => row.map((value) =>
+        rows: rows.map((row) => row.map((value, index) =>
           value === null ? null
+            : columns[index]?.[1] === "jsonb" ? JSON.stringify(value)
             : typeof value === "boolean" ? (value ? "t" : "f")
               : typeof value === "string" ? value
                 : JSON.stringify(value))),
@@ -1228,5 +1234,114 @@ test("every jurisdiction roll-call candidate uses bounded immutable parts before
     assert.ok(Buffer.byteLength(JSON.stringify(envelope)) < 32 * 1024);
     assert.deepEqual(envelope.retrieval, value.retrieval);
     assert.deepEqual(envelope.normalization, value.normalization);
+  });
+});
+
+for (const family of STATE_BALLOT_FAMILIES) test(`${family} stores bounded state parts and reads one published payload with source metadata`, async () => {
+  const id = stateBallotContractId(family, "AZ");
+  const manual = MANUAL_PRODUCTION_SOURCE_CONTRACTS.find(row => row.id === id);
+  const contract = manual ?? ROUTINE_SOURCE_CONTRACTS.find(row => row.id === id)!;
+  const base = candidate(`bounded-${id}`, "2026-09-08T12:00:00.000Z", contract.sourceId);
+  const payload = { rows: Array.from({ length: 80 }, (_, index) => ({ id: `US-AZ:${index}`, text: "published ".repeat(1000) })) };
+  const value: RoutineCandidate = { ...base, recordClass: contract.recordClass, scope: contract.scope,
+    normalizedPayload: payload, readModel: payload,
+    retrieval: { ...base.retrieval,
+      manualSourceReceipt: { contractVersion: 1, reviewedAt: base.retrieval.retrievedAt, reviewedBy: "source publisher",
+        sources: [{ requestedUrl: "https://az.gov/ballot", finalUrl: "https://az.gov/ballot", publisher: "Arizona",
+          sourceClass: "ELECTION_AUTHORITY", retrievedAt: base.retrieval.retrievedAt, httpStatus: 200,
+          rawHash: HASH, reviewedEvidence: "Official source contents ".repeat(3000) }] },
+      derived: { inputs: Array.from({ length: 400 }, (_, index) => ({ kind: "VAULTED_EVIDENCE" as const,
+        artifactId: `evidence-${index}`, contentHash: `sha256-${HASH}`, tier: "RAW" as const, retrievedAt: base.retrieval.retrievedAt })) },
+    },
+    normalization: { ...base.normalization, normalizedHash: normalizedHash(payload), normalizedPayloadHash: normalizedHash(payload) },
+  };
+  const receipt = receiptFor(value);
+  const parts = new Map<string, unknown>();
+  let envelope: RoutineCandidate;
+  const none: NeonAnswer = { columns: [], rows: [] };
+  await withCannedNeon(({ query, params }) => {
+    if (query.startsWith('insert into "civic_data_payload_parts"')) {
+      for (let at = 0; at < params.length; at += 2) parts.set(String(params[at]), JSON.parse(String(params[at + 1])));
+      return none;
+    }
+    if (query.includes('from "civic_data_payload_parts"')) {
+      const hashes = params.filter((hash): hash is string => typeof hash === "string" && parts.has(hash));
+      return query.startsWith('select "hash" from')
+        ? { columns: [["hash", "text"]], rows: hashes.map(hash => [hash]) }
+        : { columns: [["hash", "text"], ["payload", "jsonb"]], rows: hashes.map(hash => [hash, parts.get(hash)]) };
+    }
+    if (query.startsWith('insert into "civic_data_candidates"')) {
+      envelope = params.filter((row): row is string => typeof row === "string").flatMap(row => {
+        try { const parsed = JSON.parse(row); return parsed?.id === value.id ? [parsed] : []; } catch { return []; }
+      })[0];
+      return none;
+    }
+    if (query.includes('from "civic_data_promotions"')) return {
+      columns: [["key", "text"], ["source_id", "text"], ["record_class", "text"], ["scope", "text"],
+        ["current_version_id", "text"], ["last_known_good_version_id", "text"], ["promoted_at", "timestamptz"],
+        ["payload", "jsonb"], ["validation_receipt", "jsonb"], ["latestConfirmation", "text"]],
+      rows: [[`${value.recordClass}:${value.scope}`, value.sourceId, value.recordClass, value.scope, value.id, value.id,
+        "2026-09-08T12:01:00.000Z", envelope.readModel, receipt, null]],
+    };
+    if (query.includes('from "civic_data_candidates"')) {
+      const isMetadata = /'retrieval'\) - 'derived'/.test(query);
+      assert.ok(isMetadata || query.includes("case when"), "only published metadata and candidate proof projections are read");
+      const metadata = publishedCandidateMetadata({ candidate: envelope, state: "PROMOTED", acquisitionSucceeded: true,
+        receipt, promotedVersion: value.id, lastKnownGoodVersion: value.id, failureCode: null, failureDetail: null });
+      return { columns: [["id", "text"], ["candidate", "jsonb"], ["state", "text"], ["acquisition_succeeded", "bool"],
+        ["receipt", "jsonb"], ["promoted_version_id", "text"], ["last_known_good_version_id", "text"], ["failure_code", "text"], ["failure_detail", "text"]],
+      rows: [[value.id, isMetadata ? metadata.candidate : envelope, "PROMOTED", true, receipt, value.id, value.id, null, null]] };
+    }
+    return none;
+  }, async (store, sent) => {
+    Object.assign(store as unknown as Record<string, unknown>, { writeAuthority: {
+      repo: ROOT, sha: "1".repeat(40), capability: manual ? "MANUAL_CONTRACT" : "ROUTINE_CONTRACT", contract: id,
+      parentPid: 123, nonce: "2".repeat(64),
+    } satisfies RuntimeAuthorityEnvelope });
+    await store.create({ candidate: value, state: "FETCHED", acquisitionSucceeded: true,
+      receipt: null, promotedVersion: null, lastKnownGoodVersion: null, failureCode: null, failureDetail: null },
+      { candidateId: value.id, sequence: 1, state: "FETCHED", at: value.retrieval.retrievedAt, detail: "Publisher read held" });
+    const writes = sent.filter(row => row.query.startsWith("insert into"));
+    assert.ok(parts.size > 0);
+    assert.ok(writes.every(row => Buffer.byteLength(JSON.stringify(row.params)) < 3 * 1024 * 1024));
+    assert.ok(Buffer.byteLength(JSON.stringify(envelope!)) < 32 * 1024);
+    assert.equal(envelope!.retrieval.retrievedAt, value.retrieval.retrievedAt);
+    assert.deepEqual(envelope!.normalization, value.normalization);
+    const decoded = await new CivicPayloadParts({ existing: async () => [], write: async () => {},
+      read: async hashes => hashes.map(hash => ({ hash, payload: parts.get(hash) })),
+    }).load(envelope!);
+    assert.deepEqual(decoded, value, "source evidence, identities, and reader values survive the encoding exactly");
+    const readAt = sent.length;
+    const lineageRef = (envelope!.retrieval.derived as unknown as { $civicPayloadPart: string }).$civicPayloadPart;
+    assert.equal(typeof lineageRef, "string");
+    const metadata = await store.readPublishedCandidateMetadata(value.id);
+    assert.deepEqual(metadata?.candidate.retrieval.manualSourceReceipt, value.retrieval.manualSourceReceipt);
+    assert.equal(metadata?.candidate.retrieval.derived, undefined);
+    const read = await readPromotedCivicData(value.recordClass, value.scope, { store, bypassCache: true });
+    assert.equal(read.kind, "PROMOTED", JSON.stringify(read.kind === "PROMOTED" ? {} : read));
+    if (read.kind === "PROMOTED") assert.deepEqual(read.value, payload);
+    assert.ok(sent.slice(readAt).every(row => !row.params.includes(lineageRef)), "metadata and published reads leave lineage parts unopened");
+    const partReads = () => sent.filter(row => row.query.includes('from "civic_data_payload_parts"') && !row.query.startsWith('select "hash" from')).length;
+    let readCount = partReads();
+    const repeatedMetadata = await store.readPublishedCandidateMetadata(value.id);
+    assert.ok(partReads() > readCount, "state metadata does not retain decoded source parts between reads");
+    assert.deepEqual(repeatedMetadata?.candidate.retrieval.manualSourceReceipt, value.retrieval.manualSourceReceipt);
+    for (const batch of [false, true]) {
+      readCount = partReads();
+      const prior = batch ? (await store.readPromotions<typeof payload>(value.recordClass, [value.scope]))[0]
+        : await store.readPromotion<typeof payload>(value.recordClass, value.scope);
+      assert.ok(prior);
+      assert.ok(partReads() > readCount, "every state pointer read releases the preceding raw-part cache");
+      prior.payload.rows[0].text = "Updated in the working state";
+      prior.payload.rows.splice(1, 1);
+    }
+    const unchanged = await store.readPromotion<typeof payload>(value.recordClass, value.scope);
+    assert.deepEqual(unchanged?.payload, payload, "mutable state assembly cannot alter a later published read");
+    for (const batch of [false, true]) {
+      readCount = partReads();
+      const proof = batch ? (await store.readCandidateProofs([value.id]))[0]?.record : await store.readCandidateProof(value.id);
+      assert.ok(partReads() > readCount, "state proof reads cannot populate the store's persistent part cache");
+      assert.deepEqual(proof?.candidate.readModel, payload);
+    }
   });
 });

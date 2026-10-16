@@ -2,13 +2,12 @@ import { parseStateBallotContractId, requireBallotState, stateBallotContractId }
 import { createHash } from "node:crypto";
 import type { AutonomousWorkPlan } from "../control-plane/workers/autonomous-plan.ts";
 import type { WorkerResultRecord } from "../control-plane/workers/types.ts";
-import type { RegistryRuntimePrior } from "../registry/runtime-data-plane.ts";
+import type { RegistryDivisionMatch } from "./registry-divisions.ts";
 import { linkingPageFrom, section3Page } from "../control-plane/promotion/section3.ts";
 import { jurisdictionFromOcdId } from "../coverage/states.ts";
 import type { BallotSet, Measure } from "../ballot/types.ts";
 import { type MeasureRecord, explicitVoteMeanings } from "../ballot/measure-records.ts";
-import type { GenericBallotProjection } from "../ballot/generic-projection.ts";
-import type { ManualProjectionPackage } from "./manual-projections.ts";
+import type { BallotContestMerge } from "./worker-ballot-contests.ts";
 import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
 import { captureIntact, requirePublication, verifiedWorkerRecords, section3SourceReceipt } from "./worker-publication-evidence.ts";
 import { canonicalCivicDataJson } from "./changes.ts";
@@ -17,15 +16,16 @@ const text = (value: unknown) => typeof value === "string" ? value : "";
 const words = (value: string) => value.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 const idHash = (parts: readonly string[]) => createHash("sha256").update(canonicalCivicDataJson(parts)).digest("hex").slice(0, 24);
 
-export function workerBallotMeasuresPackage(input: {
+export function mergeWorkerBallotMeasures(input: {
   plan: AutonomousWorkPlan; parser: WorkerResultRecord; captures: readonly WorkerPublicationCapture[];
-  registry: RegistryRuntimePrior | null; now: string; results?: readonly WorkerResultRecord[];
-}): { package: ManualProjectionPackage; heldContests: readonly string[] } {
+  registry: { payload: { registry: { divisions: readonly RegistryDivisionMatch[] } } } | null; now: string; results?: readonly WorkerResultRecord[]; checked: ReturnType<typeof verifiedWorkerRecords>;
+}, merge: BallotContestMerge) {
   requirePublication(parseStateBallotContractId(input.plan.publication?.contractId ?? "")?.family === "ballot-contests" && input.plan.contract.schemaVersion === 2 &&
     input.plan.contract.recordClass === "BALLOT_MEASURE", "MEASURE_CONTRACT_UNRESOLVED");
-  const checked = verifiedWorkerRecords(input), state = requireBallotState(checked.contract.jurisdiction.state);
+  const checked = input.checked, state = requireBallotState(checked.contract.jurisdiction.state);
   requirePublication(input.plan.publication?.contractId === stateBallotContractId("ballot-contests", state), "BALLOT_STATE_SCOPE_MISMATCH");
-  const ballots: Record<string, BallotSet & { measureRecords: MeasureRecord[] }> = {}, heldContests: string[] = checked.heldRecordIds.map(id => `Unverified source row ${id}`), acceptedCaptures = new Set<WorkerPublicationCapture>();
+  const heldContests: string[] = checked.heldRecordIds.map(id => `Unverified source row ${id}`), acceptedCaptures = new Set<WorkerPublicationCapture>();
+  let accepted = 0;
   const pages = input.captures.filter(captureIntact);
   const evidence = pages.map(row => row.evidence);
   const pagesByUrl = new Map<string, WorkerPublicationCapture[]>();
@@ -68,10 +68,8 @@ export function workerBallotMeasuresPackage(input: {
     const provenance = { sourceUrl: checked.primary.evidence.canonicalUrl, sourceOrg: checked.primary.evidence.sourceId,
       collectedAt: checked.primary.observedAt, verifiedAt: input.now };
     const key = `${state}:${electionId}`;
-    const ballot = ballots[key] ?? { election: { id: electionId, state, name: electionName, date: text(fields.electionDate) },
+    const ballot: BallotSet & { measureRecords: MeasureRecord[] } = { election: { id: electionId, state, name: electionName, date: text(fields.electionDate) },
       contests: [], candidacies: [], measures: [], measureRecords: [], absences: [] };
-    requirePublication(!text(fields.electionDate) || !ballot.election.date || text(fields.electionDate) === ballot.election.date, "MEASURE_ELECTION_DATE_CONFLICT");
-    ballot.election.date ||= text(fields.electionDate);
     ballot.contests.push({ id: contestId, electionId, ocdId: divisions[0].ocdId, divisionVintage: divisions[0].sourceDataset,
       title, type: "MEASURE", measureTextUrl: documentUrl, voteFor: null, termYears: null, scopeNote: text(fields.scopeNote) || null, provenance });
     const fullText = questionText && source && !documents.some(row => Date.parse(row.observedAt) === Date.parse(document.observedAt) && row.evidence.contentHash !== source.contentHash) &&
@@ -80,7 +78,7 @@ export function workerBallotMeasuresPackage(input: {
         linkingPage: linkingPageFrom(documentUrl, evidence), sourcePolicy: document.sourcePolicy }, "BALLOT_MEASURE", input.now).ok;
     if (!fullText || !document || !source) {
       heldContests.push(`${electionName} / ${title} / full official text remains owed`);
-      ballots[key] = ballot; continue;
+      merge.addBallot(ballot); merge.add(key, "contests", ballot.contests[0]); accepted++; continue;
     }
     acceptedCaptures.add(document);
     const measure: Measure = { id: `${contestId}#question`, contestId, ...(number ? { officialNumber: number } : {}), questionText, officialStatement,
@@ -90,15 +88,14 @@ export function workerBallotMeasuresPackage(input: {
       ...explicitVoteMeanings(`${questionText}\n${officialStatement ?? ""}`), parts: [], sourceUrl: documentUrl,
       sourceHash: (source.sourceDocument?.contentHash ?? source.contentHash).replace(/^sha256-/, ""),
       sourceHashKind: "CAPTURE_BYTES", writtenAt: document.observedAt });
-    ballots[key] = ballot;
+    merge.addBallot(ballot); merge.add(key, "contests", ballot.contests[0]);
+    merge.add(key, "measures", measure); merge.add(key, "measureRecords", ballot.measureRecords[0]); accepted++;
   }
-  requirePublication(Object.keys(ballots).length > 0, "NO_SOURCE_BOUND_BALLOT_MEASURE");
+  requirePublication(accepted > 0, "NO_SOURCE_BOUND_BALLOT_MEASURE");
   for (const document of acceptedCaptures) {
     const linking = linkingPageFrom(document.evidence.canonicalUrl, evidence);
     if (linking) for (const page of pagesByUrl.get(linking.url) ?? []) acceptedCaptures.add(page);
   }
-  return { heldContests, package: { contractId: stateBallotContractId("ballot-contests", state), version: `worker:${input.parser.id}`,
-    sourceThrough: new Date(Math.max(...[checked.primary, ...acceptedCaptures].map(row => Date.parse(row.observedAt)))).toISOString(), sourceReceipt: section3SourceReceipt([...new Set([checked.primary, ...acceptedCaptures])], input.now,
-      "Official ballot measure reader", "Code replayed the exact registered election/jurisdiction/number and held official full text; no paraphrase or inferred vote meaning."),
-    payload: { kind: "ballot-contests", ballots } satisfies GenericBallotProjection } };
+  return { heldContests, sourceThrough: new Date(Math.max(...[checked.primary, ...acceptedCaptures].map(row => Date.parse(row.observedAt)))).toISOString(), sourceReceipt: section3SourceReceipt([...new Set([checked.primary, ...acceptedCaptures])], input.now,
+    "Official ballot measure reader", "Code replayed the exact registered election/jurisdiction/number and held official full text; no paraphrase or inferred vote meaning.") };
 }

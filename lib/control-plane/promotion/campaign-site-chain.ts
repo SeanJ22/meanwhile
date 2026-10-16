@@ -4,12 +4,12 @@ import { canonicalJson, readByKeys, type AppendOnlyRepository, type ArtifactReco
 import type { Attempt, WorkerRole } from "../attempt.ts";
 import type { AuditEvidenceBase } from "../audit.ts";
 import { appendTransition, contextFromRecords, readPipelineStatesWhere, scoutedFromScoutResult, type PipelineContext } from "./pipeline.ts";
-import { findingFact, finishBoxFinding, takeBoxFinding, type BoxFinding } from "../box.ts";
+import { findingFact, finishBoxFinding, holdBoxFinding, takeBoxFinding, type BoxFinding } from "../box.ts";
 import { checkFact, linkQuote } from "../../facts/check.ts";
 import { factClocks } from "../../facts/clocks.ts";
 import type { Clocks } from "../../facts/publish.ts";
 import { ADMIN_CONFIG_ID } from "../gateway/admin-config.ts";
-import { CAMPAIGN_SITE_LEAD } from "../../facts/finding-slots.ts";
+import { CAMPAIGN_SITE_LEAD, FINDING_SLOTS_VERSION } from "../../facts/finding-slots.ts";
 import { pageCopy } from "../../facts/source-copy.ts";
 import {
   PROMOTION_PIPELINE_FORMAT_VERSION,
@@ -172,10 +172,12 @@ export function discoveryPointerItemId(subjectId: string, url: string): string {
 
 const displayName = candidateDisplayName;
 
+const BOX_LEADS_PER_PASS = 500;
+
 /** A hunter's reported campaign site, held to checkFact on the page it cited, as a SCOUTED lead; or why it is refused. */
 async function boxLead(repos: ControlPlaneRepositories, finding: BoxFinding, subject: CampaignSiteSubject,
   options: Pick<CampaignSiteChainOptions, "heldPage" | "now">, windowHours: Clocks["windowHours"]): Promise<ScoutedRecord | { readonly refused: string }> {
-  const fact = await findingFact(repos.scoutResults, finding);
+  const fact = findingFact(finding);
   if (!fact || finding.exactQuote === null) return { refused: "FINDING_HAS_NO_FIELD_VALUE_OR_QUOTE" };
   const { origin } = fact, url = String(fact.value);
   const artifact = (await repos.artifacts.read(origin.workItemId)).find(row => origin.artifactIds.includes(row.artifactId));
@@ -431,15 +433,11 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
   const subjectIds = [...new Set([...options.subjects.values()].flatMap(subject => [subject.candidacyId, ...subject.readerKeys]))];
   const scouts = await scopedMatches(repos.scoutResults, ["subjectId"], subjectIds);
   const workIds = new Set(scouts.map(row => row.workItemId));
-  const leads: { value: BoxFinding }[] = [];
+  const leads = await repos.boxFindings.waitingFor(CAMPAIGN_SITE_LEAD, BOX_LEADS_PER_PASS, subjectIds);
   for (let offset = 0; offset < subjectIds.length; offset += 16) {
     const ids = subjectIds.slice(offset, offset + 16);
-    const [work, findings] = await Promise.all([
-      Promise.all(ids.flatMap(id => [id, `campaign-site:${id}`]).map(id => repos.workItems.listWhere(["subject"], id))),
-      Promise.all(ids.map(id => repos.boxFindings.listWhere(["subjectId"], id))),
-    ]);
+    const work = await Promise.all(ids.flatMap(id => [id, `campaign-site:${id}`]).map(id => repos.workItems.listWhere(["subject"], id)));
     for (const row of work.flat()) workIds.add(row.id);
-    leads.push(...findings.flat().filter(row => row.value.state === "waiting" && row.value.waitingFor?.reason === CAMPAIGN_SITE_LEAD));
   }
   if (!repos.promotionPipeline.keysWhere) throw new Error("CAMPAIGN_STATE_FILTER_UNAVAILABLE");
   const readCampaignStates = async () => new Map((await readPipelineStatesWhere(repos, subjectIds.flatMap(value => [
@@ -514,9 +512,12 @@ export async function projectCampaignSiteChains(repos: ControlPlaneRepositories,
 
   // A hunter's campaign-site finding becomes a lead once checkFact holds it on its own saved page; one for a candidacy no ballot holds waits.
   const windowHours = leads.length ? factClocks((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value ?? null).windowHours : () => 0;
-  for (const { value: finding } of leads) {
+  for (const finding of leads) {
     const subject = options.subjects.get(finding.subjectId) ?? [...options.subjects.values()].find(row => row.readerKeys.includes(finding.subjectId));
-    if (subject === undefined) continue;
+    if (subject === undefined) {
+      await holdBoxFinding(repos.boxFindings, finding.id, { class: "campaign sites", reason: "CANDIDACY_ON_NO_BALLOT", slots: FINDING_SLOTS_VERSION }, options.now);
+      continue;
+    }
     const scouted = await boxLead(repos, finding, subject, options, windowHours);
     const claim = await takeBoxFinding(repos.boxFindings, finding.id, "campaign-site-chain", options.now, new Date(Date.parse(options.now) + 120_000).toISOString());
     if (claim === null) continue;

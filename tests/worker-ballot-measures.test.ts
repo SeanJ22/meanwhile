@@ -1,3 +1,4 @@
+import { mergeBallotFixture } from "./helpers/ballot-merge.ts";
 import { stateBallotContractId } from "../lib/ballot/state-scopes.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -6,7 +7,7 @@ import { parseCivicRecords } from "../lib/control-plane/workers/parser.ts";
 import type { GeneralizedCivicExtractionContract, WorkerEvidence, WorkerResultRecord } from "../lib/control-plane/workers/types.ts";
 import type { AutonomousWorkPlan } from "../lib/control-plane/workers/autonomous-plan.ts";
 import type { RegistryRuntimePrior } from "../lib/registry/runtime-data-plane.ts";
-import { workerBallotContestsPackage, mergeBallotContests } from "../lib/civic-data/worker-ballot-contests.ts";
+import { workerBallotContestsPackage } from "../lib/civic-data/worker-ballot-contests.ts";
 import { workerReaderClassMatches } from "../lib/civic-data/worker-reader-contracts.ts";
 import { manualProjectionCandidate } from "../lib/civic-data/manual-projections.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
@@ -90,8 +91,22 @@ test("a measure rewrite retains unrelated contests and known election dates, and
     measures: [...ballot.measures, { ...ballot.measures[0], id: "another-measure#question", contestId: other.id }],
     measureRecords: [...ballot.measureRecords!, { ...ballot.measureRecords![0], contestId: other.id }] };
   const prior = { versionId: "prior", sourceReceipt: first.sourceReceipt, payload: { ...payload, ballots: { [Object.keys(payload.ballots)[0]]: priorBallot } } };
-  const merged = mergeBallotContests({ ...first, payload: { ...payload, ballots: { [Object.keys(payload.ballots)[0]]: { ...ballot, election: { ...ballot.election, date: "" } } } } }, prior);
+  const merged = mergeBallotFixture({ ...first, payload: { ...payload, ballots: { [Object.keys(payload.ballots)[0]]: { ...ballot, election: { ...ballot.election, date: "" } } } } }, prior);
   const result = Object.values((merged.payload as GenericBallotProjection).ballots)[0];
   assert.equal(result.election.date, "2026-11-03"); assert.equal(result.measures.length, 2); assert.equal(result.measureRecords?.length, 2);
-  assert.throws(() => mergeBallotContests({ ...first, payload: { ...payload, ballots: { [Object.keys(payload.ballots)[0]]: { ...ballot, election: { ...ballot.election, date: "2026-12-01" } } } } }, prior), /DATE_CONFLICT/);
+  assert.throws(() => mergeBallotFixture({ ...first, payload: { ...payload, ballots: { [Object.keys(payload.ballots)[0]]: { ...ballot, election: { ...ballot.election, date: "2026-12-01" } } } } }, prior), /DATE_CONFLICT/);
+});
+
+test("an older incoming text cannot discard the record describing the newer held official text", () => {
+  const first = workerBallotContestsPackage(fixture()).package;
+  const ballot = Object.values((first.payload as GenericBallotProjection).ballots)[0];
+  const expected = JSON.stringify(ballot.measureRecords), expectedText = ballot.measures[0].questionText;
+  const incoming = { ...ballot, measures: [{ ...ballot.measures[0], questionText: "Earlier official wording",
+    provenance: { ...ballot.measures[0].provenance, collectedAt: "2020-01-01T00:00:00Z" } }], measureRecords: undefined };
+  const merged = mergeBallotFixture({ ...first, payload: { kind: "ballot-contests",
+    ballots: { [Object.keys((first.payload as GenericBallotProjection).ballots)[0]]: incoming } } },
+    { versionId: "prior", payload: first.payload, sourceReceipt: first.sourceReceipt });
+  const result = Object.values((merged.payload as GenericBallotProjection).ballots)[0];
+  assert.equal(result.measures[0].questionText, expectedText);
+  assert.equal(JSON.stringify(result.measureRecords), expected);
 });

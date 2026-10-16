@@ -216,17 +216,42 @@ test("state publishers retain full-state headroom after small-state measurements
     ["candidate-profiles", "promote-manual-civic-projection.mts", 3_705_548_800],
     ["candidate-corpus", "promote-manual-civic-projection.mts", 1_934_823_424],
     ["voting-sites", "fetch-voting-sites.mts", 1_432_571_904],
+    ["candidate-campaign-sites-derived", "derive-candidate-campaign-sites.mts", 3_810_279_424],
   ] as const) {
     const host = workerMemoryHost({ processes: () => [] });
     host.transact(state => { state.peaks = { [script]: Array(5).fill(200 * mib) }; }, false);
     const slots = routineProcessSlots({ host, availableBytes: () => 2 * measured + 768 * mib - 1 });
-    const first = await slots.acquire(`${family}:IL/${script}`, Date.now() + 500);
+    const task = family === "candidate-profiles" ? `candidate-findings:${family}` : family;
+    const first = await slots.acquire(`${task}:IL/${script}`, Date.now() + 500);
     host.transact(state => assert.ok(state.reservations[0]!.peak >= measured), false);
     await assert.rejects(slots.acquire(`worker-publication:${family}:TX:next/${script}`, Date.now() + 25), /WORKER_MEMORY_DEADLINE/);
     first();
     const next = await slots.acquire(`worker-publication:${family}:TX:next/${script}`, Date.now() + 500);
     next();
   }
+});
+
+test("state artifact children reserve their own measured unit and fit together below source publication memory", async () => {
+  const mib = 1024 * 1024;
+  const script = "publish-state-authority.mts";
+  for (const [family, measured] of [
+    ["ballot-contests", 738_279_424], ["candidate-profiles", 802_652_160], ["candidate-corpus", 403_283_968],
+    ["voting-sites", 309_972_992], ["candidate-campaign-sites-derived", 598_245_376],
+  ] as const) {
+    const host = workerMemoryHost({ processes: () => [] });
+    host.transact(state => { state.peaks = { [script]: Array(5).fill(200 * mib) }; }, false);
+    const slots = routineProcessSlots({ host, availableBytes: () => 2 * measured + 768 * mib - 1 });
+    const first = await slots.acquire(`${family}:IL:reader-artifact/${script}`, Date.now() + 500);
+    host.transact(state => assert.ok(state.reservations[0]!.peak >= measured), false);
+    await assert.rejects(slots.acquire(`${family}:TX:reader-artifact/${script}`, Date.now() + 25), /WORKER_MEMORY_DEADLINE/);
+    first();
+  }
+  const host = workerMemoryHost({ processes: () => [] });
+  const slots = routineProcessSlots({ host, availableBytes: () => 3 * 1024 * mib });
+  const first = await slots.acquire(`candidate-profiles:IL:reader-artifact/${script}`, Date.now() + 500);
+  const second = await slots.acquire(`candidate-profiles:TX:reader-artifact/${script}`, Date.now() + 500);
+  await assert.rejects(slots.acquire("candidate-profiles:CA/promote-manual-civic-projection.mts", Date.now() + 25), /WORKER_MEMORY_DEADLINE/);
+  first(); second();
 });
 
 test("OS-free memory reserves only unreached child peaks and the research parent's growth", async () => {

@@ -1,3 +1,5 @@
+import { AsyncLocalStorage } from "node:async_hooks";
+import { currentReaderSelection } from "../db/reader-route.ts";
 import { currentReaderAuthorityEdge } from "../registry/runtime-edge.ts";
 import { requireBallotState, type BallotState } from "./state-scopes.ts";
 import { civicDataReadNotInitialized, promotedVersionOrThrow, readPromotedCivicData,
@@ -5,25 +7,28 @@ import { civicDataReadNotInitialized, promotedVersionOrThrow, readPromotedCivicD
 import { votingSitesContract } from "./voting-sites-data-plane.ts";
 import type { VotingSitesFile } from "./voting-sites.ts";
 
-const fallback = new Map<BallotState, CivicDataReadResult<VotingSitesFile>>();
-const requests = new WeakMap<object, typeof fallback>();
-function states(): typeof fallback {
-  const edge = currentReaderAuthorityEdge();
-  if (!edge) return fallback;
-  let held = requests.get(edge);
-  if (!held) { held = new Map(); requests.set(edge, held); }
+type VotingReads = Map<BallotState, CivicDataReadResult<VotingSitesFile>>;
+const requests = new WeakMap<object, VotingReads>();
+const localReads = new AsyncLocalStorage<VotingReads>();
+function states(): VotingReads {
+  const edge = currentReaderAuthorityEdge() ?? currentReaderSelection();
+  let held = edge ? requests.get(edge) : localReads.getStore();
+  if (!held) {
+    held = new Map();
+    if (edge) requests.set(edge, held); else localReads.enterWith(held);
+  }
   return held;
 }
 
 export async function readVotingSitesProjection(state: string, options: PromotedCivicDataReadOptions = {}): Promise<CivicDataReadResult<VotingSitesFile>> {
-  const key = requireBallotState(state), contract = votingSitesContract(key);
+  const key = requireBallotState(state), contract = votingSitesContract(key), cache = states();
   const result = await readPromotedCivicData<VotingSitesFile>(contract.recordClass, contract.scope, options);
   if (result.kind === "PROMOTED" && result.metadata.sourceId !== contract.sourceId) {
     throw new Error(`Voting-sites pointer names ${result.metadata.sourceId}, not ${contract.sourceId}.`);
   }
-  states().delete(key);
-  states().set(key, result);
-  if (states().size > 8) states().delete(states().keys().next().value!);
+  cache.delete(key);
+  cache.set(key, result);
+  if (cache.size > 8) cache.delete(cache.keys().next().value!);
   return result;
 }
 

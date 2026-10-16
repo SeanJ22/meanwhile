@@ -63,7 +63,7 @@ test("ballot leaves empty funding fields out and contributes partial holdings to
   const make = new Function("React", "fundingAnswerForTarget", "settleFundingHoldingAnswer", "unavailableHolding", "FundingAbsence", "FundingDisplay", "withReaderAuthorityEdge", "withRegistryPlaceRead", "CardGapContribution", compile(`${context.getText()}; ${fn.getText()}; return CandidateFunding;`));
   const unexpected = () => { throw new Error("none must not fabricate funding records"); };
   const divisions = ["ocd-division/country:us/state:az/cd:1"];
-  const registryPlace = { value: {} as never, versionId: "test:registry", selectorKey: JSON.stringify(divisions) };
+  const registryPlace = { source: "EDGE" as const, value: {} as never, versionId: "test:registry", selectorKey: JSON.stringify(divisions) };
   const readerEdge = {};
   const props = { targetKey: "congress:test", context: null, available: true, readerEdge, registryPlace, divisions };
   const assertContext = () => {

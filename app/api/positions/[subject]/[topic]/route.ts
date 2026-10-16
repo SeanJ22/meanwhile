@@ -1,3 +1,4 @@
+import { readerRoute } from "@/lib/api/reader-route";
 import { readRegistryPlace } from "@/lib/registry/reader-place";
 import { withRegistryPlaceRead } from "@/lib/registry/runtime-read-model";
 import type { ReaderAuthorityManifest } from "@/lib/meetings/edge-artifacts";
@@ -16,8 +17,8 @@ import { ballotStatesForDivisions, readerBallotSourcesForDivisions } from "@/lib
 import { ballotPlaceFromRequest } from "@/lib/ballot/reader-place";
 import { refreshOfficeholderStatementsFromPromoted } from "@/lib/corpus/data-plane";
 import { currentOfficeholderStatements } from "@/lib/corpus/data-plane";
-import { refreshFederalDirectoryFromPromoted } from "@/lib/officials/federal-directory-read-model";
-import { refreshRegistryRuntimeFromPromoted } from "@/lib/registry/runtime-read-model";
+import { settleFederalDirectoryRead, settleRegistryAuthorityReads } from "@/lib/registry/server";
+import { getRegistryRuntimeReadModel } from "@/lib/registry/runtime-read-model";
 
 export const runtime = "nodejs";
 
@@ -37,12 +38,16 @@ export type PositionHoldingSettlement =
 
 function currentPositionIdentityKeys(subject: string, divisions: readonly string[]): Promise<string[]> {
   return positionIdentityKeys(subject, {
-    refreshRegistry: () => refreshRegistryRuntimeFromPromoted(),
-    refreshFederal: () => refreshFederalDirectoryFromPromoted(),
+    refreshRegistry: () => settleRegistryAuthorityReads("REGISTRY"),
+    refreshFederal: settleFederalDirectoryRead,
     refreshBallot: async () => {
       for (const { source } of await readerBallotSourcesForDivisions(divisions)) source.normalize(await source.fetch());
     },
-    relatedAuthorities: (id) => ({ federal: id.startsWith("congress:"), ballot: divisions.length > 0 }),
+    relatedAuthorities: (id) => ({
+      federal: getRegistryRuntimeReadModel().officialCandidacies.rows.some(row =>
+        (row.holder.id === id || row.candidacy?.candidacyId === id) && row.holder.authority === "FEDERAL_DIRECTORY"),
+      ballot: divisions.length > 0,
+    }),
     personKeys: verifiedReaderPersonKeys,
   });
 }
@@ -118,7 +123,7 @@ export async function settlePositionHoldingAnswer(
   };
 }
 
-export async function GET(
+export const GET = readerRoute("/api/positions/[subject]/[topic]", async function GET(
   request: Request,
   { params }: { params: Promise<{ subject: string; topic: string }> },
 ) {
@@ -162,4 +167,4 @@ export async function GET(
       },
     },
   );
-}
+});

@@ -8,6 +8,7 @@ import { readMeetingPartitionProjection } from "../meetings/snapshot.ts";
 import { verifyRoutineReaderProjection, type RoutineReaderVerification } from "./reader-verification.ts";
 import {
   candidateVersionSummary,
+  publishedCandidateMetadata,
   projectionKey,
   promotedPointerIdentity,
   type CandidateVersionReadback,
@@ -117,6 +118,10 @@ function candidateReadOnlyStore(
     readCandidate: async (candidateId) => candidateId === candidate.id
       ? record
       : predecessor?.candidate.id === candidateId ? predecessor : null,
+    readRegistryDivisions: async () => [],
+    readPublishedCandidateMetadata: async (candidateId) => candidateId === candidate.id
+      ? publishedCandidateMetadata(record)
+      : predecessor?.candidate.id === candidateId ? publishedCandidateMetadata(predecessor) : null,
     readCandidateSummary: async (candidateId) => candidateId === candidate.id
       ? candidateVersionSummary(record)
       : predecessor?.candidate.id === candidateId ? candidateVersionSummary(predecessor) : null,

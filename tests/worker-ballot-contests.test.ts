@@ -1,3 +1,5 @@
+import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
+import { mergeBallotFixture } from "./helpers/ballot-merge.ts";
 import { stateBallotContractId, stateBallotScope } from "../lib/ballot/state-scopes.ts";
 import { composeBallotOnlyAnswer } from "../lib/ask/ballot-only-answer.ts";
 import { promotedEdgeEntryOf } from "../lib/civic-data/read-model.ts";
@@ -13,7 +15,8 @@ import { parseCivicRecords } from "../lib/control-plane/workers/parser.ts";
 import type { GeneralizedCivicExtractionContract, WorkerEvidence, WorkerResultRecord } from "../lib/control-plane/workers/types.ts";
 import type { AutonomousWorkPlan } from "../lib/control-plane/workers/autonomous-plan.ts";
 import type { RegistryRuntimePrior } from "../lib/registry/runtime-data-plane.ts";
-import { mergeBallotContests, workerBallotContestsPackage } from "../lib/civic-data/worker-ballot-contests.ts";
+import { workerBallotContestsPackage } from "../lib/civic-data/worker-ballot-contests.ts";
+import { verifiedWorkerRecords } from "../lib/civic-data/worker-publication-evidence.ts";
 import { manualProjectionCandidate } from "../lib/civic-data/manual-projections.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -90,6 +93,21 @@ test("an omitted or contradicted candidate leaves its contest named while comple
   }
 });
 
+test("structured ballot verification retains the full official receipt and rejects a quote from another source row", () => {
+  const input = fixture();
+  if (input.parser.result.role !== "PARSER") throw new Error("Expected parser fixture");
+  const extraction = input.parser.result, first = extraction.records[0], second = extraction.records[1];
+  const other = extraction.spans.find(span => span.recordId === second.id && span.field === "election")!;
+  input.parser = { ...input.parser, result: { ...extraction, spans: extraction.spans.map(span =>
+    span.recordId === first.id && span.field === "election" ? { ...span, start: other.start, end: other.end } : span) } };
+  const checked = verifiedWorkerRecords(input);
+  assert.deepEqual(checked.heldRecordIds, [first.id]);
+  assert.deepEqual(checked.extraction.records.map(record => record.id), extraction.records.slice(1).map(record => record.id));
+  assert.equal(checked.sourceReceipt.sources[0].rawHash, input.captures[0].evidence.contentHash.slice(7));
+  assert.equal(checked.sourceReceipt.sources[0].finalUrl, input.captures[0].evidence.canonicalUrl);
+  assert.equal(checked.sourceReceipt.sources[0].sourceClass, "OFFICIAL_PUBLISHER");
+});
+
 test("complete successors replace a contest together and retain unrelated contests with their source receipts", () => {
   const first = workerBallotContestsPackage(fixture()).package;
   const nextInput = fixture(["New Candidate", "Another Candidate", "Casey Clark"]);
@@ -98,7 +116,7 @@ test("complete successors replace a contest together and retain unrelated contes
   nextInput.parser = { ...nextInput.parser, result: { ...nextInput.parser.result, records: nextInput.parser.result.records.filter((_, at) => at < 2),
     spans: nextInput.parser.result.spans.filter(span => span.recordId !== omitted) } };
   const next = workerBallotContestsPackage(nextInput).package;
-  const merged = mergeBallotContests(next, { versionId: "prior", payload: first.payload, sourceReceipt: first.sourceReceipt });
+  const merged = mergeBallotFixture(next, { versionId: "prior", payload: first.payload, sourceReceipt: first.sourceReceipt });
   const ballot = Object.values((merged.payload as GenericBallotProjection).ballots)[0];
   assert.equal(ballot.contests.length, 2);
   assert.deepEqual(ballot.candidacies.map(row => row.familyName).sort(), ["Another Candidate", "Casey Clark", "New Candidate"]);
@@ -177,10 +195,29 @@ test("an incomplete successor keeps independently held candidates from the same 
     records: next.parser.result.records.filter(row => row.id !== omitted),
     spans: next.parser.result.spans.filter(row => row.recordId !== omitted) } };
   const successor = workerBallotContestsPackage(next).package;
-  const merged = mergeBallotContests(successor, { versionId: "prior", payload: first.payload, sourceReceipt: first.sourceReceipt });
+  const merged = mergeBallotFixture(successor, { versionId: "prior", payload: first.payload, sourceReceipt: first.sourceReceipt });
   const ballot = Object.values((merged.payload as GenericBallotProjection).ballots)[0];
   assert.deepEqual(ballot.candidacies.map(row => row.familyName).sort(), ["Alice Adams", "Bob Baker", "Casey Clark"]);
   assert.equal(ballot.contests.find(row => row.title === "School Board")?.candidateListComplete, true);
+});
+
+test("a source's contests update the single working state and capture prior facts before replacing each record", () => {
+  const original = workerBallotContestsPackage(fixture()).package;
+  const before = Object.values((original.payload as GenericBallotProjection).ballots)[0];
+  const oldCandidate = before.candidacies[0], oldContest = before.contests[0];
+  oldContest.scopeNote = "Previously held description";
+  const updated = workerBallotContestsPackage({ ...fixture(), prior: { versionId: "prior",
+    payload: original.payload, sourceReceipt: original.sourceReceipt } });
+  const ballot = Object.values((updated.package.payload as GenericBallotProjection).ballots)[0];
+  assert.equal(ballot, before);
+  assert.equal(ballot.candidacies.find(row => row.id === oldCandidate.id), oldCandidate);
+  assert.equal(ballot.contests.find(row => row.id === oldContest.id), oldContest);
+  assert.equal(oldContest.scopeNote, null);
+  assert.deepEqual(updated.changes.records, { added: 0, changed: 1, reused: 1 });
+  const change = updated.changes.recordChanges.find(row => row.recordId === oldContest.id)!;
+  assert.equal(change.change, "UPDATED");
+  assert.notEqual(change.previousFactsHash, change.factsHash);
+  assert.equal(ballot.contests.length, 2); assert.equal(ballot.candidacies.length, 3);
 });
 
 
@@ -194,13 +231,13 @@ test("partial national updates retain every state attachment and remove contacts
     const update = { ...ballot, contests: [contest], candidacies, measures: [], absences: [],
       measureRecords: undefined, generalLineup: undefined, measureAnalyses: undefined, filingCandidacies: undefined,
       lineupReconciliation: undefined, contacts: undefined, removals: undefined };
+    const fields = ["absences", "removals", "measureRecords", "generalLineup", "measureAnalyses", "filingCandidacies", "lineupReconciliation", "contacts"] as const;
+    const expected = new Map(fields.map(key => [key, canonicalCivicDataHash(ballot[key] ?? null)]));
     const input = { contractId: stateBallotContractId("ballot-contests", state), version: "partial", sourceThrough: now,
       sourceReceipt: held.sourceReceipt, payload: { kind: "ballot-contests" as const, ballots: { [ballotElectionKey(ballot)]: update } } };
-    const merged = mergeBallotContests(input, { versionId: "held", payload: prior, sourceReceipt: held.sourceReceipt });
+    const merged = mergeBallotFixture(input, { versionId: "held", payload: prior, sourceReceipt: held.sourceReceipt });
     const result = (merged.payload as GenericBallotProjection).ballots[ballotElectionKey(ballot)];
-    for (const key of ["absences", "removals", "measureRecords", "generalLineup", "measureAnalyses", "filingCandidacies", "lineupReconciliation", "contacts"] as const) {
-      assert.deepEqual(result[key], ballot[key], `${state}:${key}`);
-    }
+    for (const key of fields) assert.equal(canonicalCivicDataHash(result[key] ?? null), expected.get(key), `${state}:${key}`);
     assert.ok(merged.sourceReceipt.sources.length <= held.sourceReceipt.sources.length);
     assert.deepEqual(manualProjectionCandidate(merged).semantics.violations, []);
   }
@@ -208,11 +245,12 @@ test("partial national updates retain every state attachment and remove contacts
   const previous = Object.values((first.payload as GenericBallotProjection).ballots)[0];
   previous.contacts = previous.candidacies.map(row => ({ candidacyId: row.id, email: "candidate@example.test",
     sourceUrl: row.provenance.sourceUrl!, sourceOrg: "Election authority", collectedAt: now }));
+  const retainedContactIds = previous.contacts.filter(contact => previous.candidacies.find(candidate => candidate.id === contact.candidacyId)?.familyName === "Casey Clark")
+    .map(row => row.candidacyId);
   const next = workerBallotContestsPackage(fixture(["New Candidate", "Another Candidate", "Casey Clark"])).package;
-  const merged = mergeBallotContests(next, { versionId: "held", payload: first.payload, sourceReceipt: first.sourceReceipt });
+  const merged = mergeBallotFixture(next, { versionId: "held", payload: first.payload, sourceReceipt: first.sourceReceipt });
   const result = Object.values((merged.payload as GenericBallotProjection).ballots)[0];
-  assert.deepEqual(result.contacts?.map(row => row.candidacyId), previous.contacts.filter(contact =>
-    previous.candidacies.find(candidate => candidate.id === contact.candidacyId)?.familyName === "Casey Clark").map(row => row.candidacyId));
+  assert.deepEqual(result.contacts?.map(row => row.candidacyId), retainedContactIds);
   assert.deepEqual(manualProjectionCandidate(merged).semantics.violations, []);
 });
 
@@ -223,8 +261,29 @@ test("an older worker capture cannot replace a newer complete candidate list", (
   for (const ballot of Object.values((incoming.payload as GenericBallotProjection).ballots)) {
     for (const row of [...ballot.contests, ...ballot.candidacies]) row.provenance.collectedAt = "2026-09-01T00:00:00.000Z";
   }
-  const merged = mergeBallotContests(incoming, { versionId: "prior", payload: prior.payload, sourceReceipt: prior.sourceReceipt });
-  assert.deepEqual(merged.payload, prior.payload);
+  const expected = canonicalCivicDataHash(prior.payload);
+  const merged = mergeBallotFixture(incoming, { versionId: "prior", payload: prior.payload, sourceReceipt: prior.sourceReceipt });
+  assert.equal(canonicalCivicDataHash(merged.payload), expected);
+});
+
+test("supplement rows without their own timestamp follow the exact container's chronology", () => {
+  const held = JSON.parse(readFileSync("data/ballot/2026-general/az.json", "utf8"));
+  const payload: GenericBallotProjection = { kind: "ballot-contests", ballots: held.ballots };
+  const ballot = Object.values(payload.ballots)[0], original = ballot.generalLineup!;
+  const expected = canonicalCivicDataHash(original);
+  const next = { ...ballot, contests: [], candidacies: [], measures: [], absences: [], generalLineup: {
+    ...original, curatedAt: "2020-01-01", contests: [{ ...original.contests[0], nominees: [{ name: "Earlier Nominee", partyLabel: "X", note: null }] }] },
+    measureRecords: undefined, filingCandidacies: undefined, contacts: undefined, measureAnalyses: undefined, lineupReconciliation: undefined };
+  const input = { contractId: stateBallotContractId("ballot-contests", "AZ"), version: "supplement", sourceThrough: now,
+    sourceReceipt: held.sourceReceipt, payload: { kind: "ballot-contests" as const, ballots: { [ballotElectionKey(ballot)]: next } } };
+  const older = mergeBallotFixture(input, { versionId: "prior", payload, sourceReceipt: held.sourceReceipt });
+  assert.equal(canonicalCivicDataHash(Object.values((older.payload as GenericBallotProjection).ballots)[0].generalLineup), expected);
+  next.generalLineup.curatedAt = "2027-01-01";
+  next.generalLineup.contests[0].nominees[0].name = "Newer Nominee";
+  const newer = mergeBallotFixture(input, { versionId: "older", payload: older.payload, sourceReceipt: older.sourceReceipt });
+  const lineup = Object.values((newer.payload as GenericBallotProjection).ballots)[0].generalLineup!;
+  assert.equal(lineup.curatedAt, "2027-01-01");
+  assert.equal(lineup.contests[0].nominees[0].name, "Newer Nominee");
 });
 
 test("successive captures retain only receipt versions cited by current core or supplemental facts", () => {
@@ -239,14 +298,14 @@ test("successive captures retain only receipt versions cited by current core or 
   for (const row of [...updatedBallot.contests, ...updatedBallot.candidacies]) row.provenance.collectedAt = firstAt;
   updatedBallot.contacts = undefined;
   const firstHash = "b".repeat(64), secondHash = "c".repeat(64);
-  const first = mergeBallotContests({ ...update, sourceThrough: firstAt, sourceReceipt: { ...update.sourceReceipt,
+  const first = mergeBallotFixture({ ...update, sourceThrough: firstAt, sourceReceipt: { ...update.sourceReceipt,
     reviewedAt: firstAt, sources: update.sourceReceipt.sources.map(row => ({ ...row, retrievedAt: firstAt, rawHash: firstHash })) } },
     { versionId: "original", payload: original.payload, sourceReceipt: original.sourceReceipt });
   assert.deepEqual(new Set(first.sourceReceipt.sources.map(row => row.rawHash)), new Set([original.sourceReceipt.sources[0].rawHash, firstHash]),
     "the older contact still cites its original capture after every contest and candidacy advances");
   const contactOnly = { ...updatedBallot, contests: [], candidacies: [],
     contacts: [{ ...firstBallot.contacts[0], email: "current@example.gov", collectedAt: secondAt }] };
-  const second = mergeBallotContests({ ...update, sourceThrough: secondAt, payload: { kind: "ballot-contests",
+  const second = mergeBallotFixture({ ...update, sourceThrough: secondAt, payload: { kind: "ballot-contests",
     ballots: { [ballotElectionKey(contactOnly)]: contactOnly } }, sourceReceipt: { ...update.sourceReceipt,
       reviewedAt: secondAt, sources: update.sourceReceipt.sources.map(row => ({ ...row, retrievedAt: secondAt, rawHash: secondHash })) } },
     { versionId: "first", payload: first.payload, sourceReceipt: first.sourceReceipt });

@@ -1,3 +1,4 @@
+import { readerRoute } from "@/lib/api/reader-route";
 import { readerBallotSourcesForDivisions } from "@/lib/ballot/reader-sources";
 import { ballotPlaceDivisions } from "@/lib/ballot/reader-place";
 
@@ -8,7 +9,7 @@ const NO_STORE = {
   "cache-control": "no-store, no-cache, must-revalidate",
 } as const;
 
-export async function POST(request: Request) {
+export const POST = readerRoute("/api/ballot/scope", async function POST(request: Request) {
   let lat: number;
   let lng: number;
   let place: { zip?: unknown; divisions?: readonly string[] } = {};
@@ -45,4 +46,4 @@ export async function POST(request: Request) {
   }
   if (failed) return Response.json({ ok: false }, { status: 503, headers: NO_STORE });
   return Response.json({ ok: true, contestIds: [...contestIds] }, { headers: NO_STORE });
-}
+}, ["census-districts", "ballot-contests"]);

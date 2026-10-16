@@ -27,7 +27,7 @@ export function registrationEdgePlan(
   for (const pointer of pointers) {
     const state = STATE_OF_SCOPE.get(pointer.scope);
     if (state === undefined) continue;
-    if (served?.[state]?.version === pointer.versionId) carried[state] = pointer.versionId;
+    if (served?.[state]?.layout === "records" && served[state].version === pointer.versionId) carried[state] = pointer.versionId;
     else publish[state] = pointer.versionId;
   }
   return { carried, publish };

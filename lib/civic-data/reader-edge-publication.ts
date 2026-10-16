@@ -1,13 +1,18 @@
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "./manual-contracts.ts";
-import { factReader, factsVersion } from "../facts/db.ts";
-import { preparePublishedMeetingSnapshot, readPreparedMeetingsProjection } from "../meetings/prepared-snapshot.ts";
+import { factReader } from "../facts/db.ts";
+import { withStateFacts } from "../facts/registry-overlay.ts";
+import { planStateFacts, type StateFactsPlan } from "../facts/state-facts-publication.ts";
+import { preparePublishedMeetingSnapshot, readPreparedMeetingsProjection, readComposedSourcePlaces } from "../meetings/prepared-snapshot.ts";
 import {
   publishReaderEdgeArtifacts,
   purgeReaderCacheTags,
   READER_MANIFEST_CACHE_TAG,
   servedAuthorityVersion,
   readServedPromotedFamily,
-  readStateAuthorityArtifact,
+  readServedFactBucket,
+  readServedStateFactsIndex,
+  writeFactBucket,
+  writeFactRecord,
   type PublishAuthority,
   type PublishAuthorityCarried,
   type PublishAuthorityValue,
@@ -18,10 +23,9 @@ import { resolveReaderArtifactWriteStore, type ReaderArtifactStore } from "../me
 import { isStateAuthorityFamily, type AuthorityFamily } from "../meetings/edge-artifacts.ts";
 import type { RoutineRecordClass, PromotedPointerIdentity } from "./types.ts";
 import { readCuratedReaderProjection } from "./curated-reader-read-model.ts";
-import { readCommentAccessFacts } from "../registry/comment-access.ts";
+import { readPromotedCivicData } from "./read-model.ts";
 import { readEverydayRoutingProjection } from "../routing/everyday-data-plane.ts";
-import { readRegistryRuntimeProjection } from "../registry/runtime-read-model.ts";
-import { REGISTRY_RUNTIME_SCOPE, type RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
+import { REGISTRY_RUNTIME_SCOPE, type RegistryRuntimeCarton, type RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
 import { readPlaceVersionSlice, type PlaceCaptureRead } from "./held-place-slices.ts";
 import { readCensusGeographyProjection } from "../census-geography/reader.ts";
 import { CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } from "../census-geography/publication.ts";
@@ -36,9 +40,10 @@ import { DOOR_OUTCOME_POINTERS } from "../outcomes/door-outcome-pointers.ts";
 import { outcomePartitionsAreCurrent } from "./outcome-partitions.ts";
 import { MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT, PIMA_LEGISTAR_OUTCOMES_CONTRACT } from "../outcomes/data-plane.ts";
 import type { RoutineDataStore } from "./store.ts";
-import { readPromotedEdgeFamilies, promotedEdgePointers, readPromotedStateEdgeFamilies, selectedStateEdgePointers } from "./promoted-edge-publication.ts";
+import { readPromotedEdgeFamilies, promotedEdgePointers, selectedStateEdgePointers } from "./promoted-edge-publication.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { censusEdgePublication } from "../../scripts/lib/census-edge-publication.ts";
+import { dispatchStateArtifacts, dispatchStateArtifactRetirements, type StateArtifactChildren } from "./state-artifact-dispatch.ts";
 
 function safeFailure(value: string): string {
   return value
@@ -52,17 +57,24 @@ function safeFailure(value: string): string {
 }
 
 import type { ReaderEdgePublicationOutcome } from "./reader-edge-outcome.ts";
-/** The registry partition a registry-runtime edge version was composed on; the rest names the facts read beside it. */
-const registryPartitionVersion = (version: string) => version.split("+")[0]!;
 
 export type { ReaderEdgePublicationOutcome } from "./reader-edge-outcome.ts";
 
-export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, observedAt: string,
+interface ReaderEdgePublishOptions {
+  readonly artifactStore?: ReaderArtifactStore | null;
+  readonly stateArtifactChildren?: StateArtifactChildren;
+  readonly readMeetingRegistry?: (divisions: readonly string[], bodies: readonly string[], versionId: string) => Promise<PlaceCaptureRead<RegistryRuntimeReadModel>>;
+}
+
+export async function publishSupervisorReaderEdge(store: RoutineDataStore, observedAt: string,
   selected: readonly Pick<PromotedPointerIdentity, "recordClass" | "scope">[] | null = null,
-  options: { readonly artifactStore?: ReaderArtifactStore | null;
-    readonly requireLiveStore?: boolean;
-    readonly readMeetingRegistry?: (divisions: readonly string[], bodies: readonly string[], versionId: string) => Promise<PlaceCaptureRead<RegistryRuntimeReadModel>> } = {},
+  options: ReaderEdgePublishOptions = {},
+  env: Readonly<Record<string, string | undefined>> = process.env,
 ): Promise<ReaderEdgePublicationOutcome> {
+  const currentStore = store;
+  const states = new Set(selectedStateEdgePointers(selected ?? []).filter(unit => unit.family === "ballot-contests").map(unit => unit.state));
+  selected = selected === null ? null : [...selected, ...selectedStateEdgePointers(null)
+    .filter(unit => states.has(unit.state)).flatMap(unit => unit.pointers)];
   let failed = false;
   let destination: ReaderEdgePublicationOutcome["store"] = "not configured";
   let sequence: number | null = null;
@@ -83,6 +95,14 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
   const preparesMeetings = selected === null || selected.some(pointer => pointer.recordClass === "MEETING" || pointer.recordClass === "REGISTRY_RUNTIME_BINDING");
   const statePointerFamilies = selectedStateEdgePointers(selected);
   const pointerFamilies = Object.fromEntries(Object.entries(promotedEdgePointers()).filter(([, pointers]) => pointers.some(pointer => owns(pointer.recordClass, pointer.scope)))) as ReturnType<typeof promotedEdgePointers>;
+  if (selected === null || selected.some(pointer => ["STATE_ROLL_CALL", "STATE_LEGISLATOR_VOTES"].includes(pointer.recordClass))) {
+    (pointerFamilies as Record<string, unknown>)["state-votes"] = [];
+  }
+  const statePointerKeys = new Set(statePointerFamilies.flatMap(row => row.pointers.map(pointer => `${pointer.recordClass}:${pointer.scope}`)));
+  if (selected === null || selected.some(pointer => ["CURATED_READER_RECORD", "OPERATIONAL_REFERENCE", "STATE_LEGISLATOR"].includes(pointer.recordClass) &&
+    !statePointerKeys.has(`${pointer.recordClass}:${pointer.scope}`))) {
+    (pointerFamilies as Record<string, unknown>)["other-reader-data"] = [];
+  }
 
     // The served manifest is read first; the prepared row is read only when the publish could change something.
     // A failure leaves the previous manifest serving.
@@ -99,7 +119,7 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
       const servedManifest = (await artifactStore.readAuthorityManifest())?.manifest ?? null;
       const servedMeetings = preparesMeetings ? (await artifactStore.readManifest())?.manifest ?? null : null;
       sequence = servedManifest?.sequence ?? null;
-      if (options.requireLiveStore && artifactStore.kind === "local-file") {
+      if (env.WTP_READER_EDGE_LOCAL_OK !== "1" && artifactStore.kind === "local-file") {
         throw new Error("Reader pages would be saved to a folder on the runner. Readers are still seeing the older copy.");
       }
       const grouped = new Map<RoutineRecordClass, Set<string>>();
@@ -137,14 +157,6 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
       }
       if (prepared?.status === "RACED") { failed = true; detail = "A newer meeting composition won publication; retry remains owed."; }
 
-      let facts: string | null = null;
-      if (refreshes("registry-runtime")) try {
-        facts = await factsVersion(factReader());
-      } catch (error) {
-        failed = true;
-        console.error("READER_EDGE_EXTRAS_SKIPPED: " + safeFailure(sanitizedErrorDiagnostic(error)));
-      }
-            // A family whose pointer is still the version the edge serves carries its artifact forward unread.
       const servedIfCurrent = async (family: AuthorityFamily, currentVersion: () => Promise<string | null>): Promise<string | null> => {
         const served = servedAuthorityVersion(servedManifest, family);
         if (served === null) return null;
@@ -183,16 +195,23 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
           process.stderr.write(`READER_EDGE_AUTHORITY_REFRESH_FAILED: census-districts ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
         },
       });
-      if (refreshes("registry-runtime") && facts !== null) try {
-        // Members are facts, so the family changes when the partition or any fact does.
-        const pointer = manualPointer("registry-runtime-bindings");
-        const carried = await servedIfCurrent("registry-runtime", async () => { const at = await pointer(); return at && `${at}+${facts}`; });
+      let stateFacts: StateFactsPlan | null = null;
+      if (refreshes("registry-runtime")) try {
+        // The partition alone; each state's facts ride in their own artifact and move only with that state.
+        const carried = await servedIfCurrent("registry-runtime", manualPointer("registry-runtime-bindings"));
         if (carried !== null) authority["registry-runtime"] = { versionId: carried, carried: true };
         else {
-          const rt = await readRegistryRuntimeProjection({ store, now: observedAt, bypassCache: true });
-          if (rt.kind === "PROMOTED" && rt.metadata.versionId) authority["registry-runtime"] = { value: rt.value, versionId: `${rt.metadata.versionId}+${facts}` };
+          const rt = await readPromotedCivicData<RegistryRuntimeCarton>("REGISTRY_RUNTIME_BINDING", REGISTRY_RUNTIME_SCOPE, { store, now: observedAt, bypassCache: true });
+          if (rt.kind === "PROMOTED" && rt.metadata.versionId) authority["registry-runtime"] = { value: withStateFacts(rt.value, []), versionId: rt.metadata.versionId };
           else if (rt.kind !== "NOT_RECORDED") throw new Error(`registry-runtime read ${rt.kind}`);
         }
+        const facts = factReader();
+        if (facts) stateFacts = await planStateFacts(facts, servedManifest?.stateFacts, {
+          readIndex: (state, ref) => readServedStateFactsIndex(state, ref, artifactStore),
+          readBucket: (state, bucket, ref) => readServedFactBucket(state, bucket, ref, artifactStore),
+          writeRecord: value => writeFactRecord(artifactStore, value),
+          writeBucket: (state, bucket, versionId, index) => writeFactBucket(artifactStore, state, bucket, versionId, index, observedAt),
+        });
       } catch (error) {
         failed = true;
         process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: registry-runtime ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
@@ -235,7 +254,7 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
             store.readPromotionIdentities(recordClass,sourcePointers.filter(pointer=>pointer.recordClass === recordClass).map(pointer=>pointer.scope))))).flat();
           if (pointers.length === 0) continue;
           const versionId = statePeopleVersion(jurisdiction, pointers.map(pointer => ({ scope: pointer.scope, versionId: pointer.versionId })));
-          if (servedManifest?.stateLegislators?.[jurisdiction]?.version === versionId) continue;
+          if (servedManifest?.stateLegislators?.[jurisdiction]?.layout === "records" && servedManifest.stateLegislators[jurisdiction].version === versionId) continue;
           const read = await readStatePeopleProjection(jurisdiction, { store, now: observedAt, bypassCache: true });
           if (read.kind === "PROMOTED" && read.metadata.versionId) {
             if (read.metadata.versionId !== versionId) throw new Error(`state people ${jurisdiction} did not read every accepted source version`);
@@ -283,17 +302,6 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
         failed = true;
         process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: meeting-outcomes ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
       }
-      if (facts !== null) try {
-        const carried = await servedIfCurrent("comment-access", async () => facts);
-        if (carried !== null) authority["comment-access"] = { versionId: carried, carried: true };
-        else {
-          const read = await readCommentAccessFacts();
-          authority["comment-access"] = { value: read.value, versionId: read.versionId };
-        }
-      } catch (error) {
-        failed = true;
-        process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: comment-access ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
-      }
       try {
         const promoted = await readPromotedEdgeFamilies({ store, servedManifest, now: observedAt, families: pointerFamilies,
           readServedFamily: family => readServedPromotedFamily(family, servedManifest?.authorityArtifacts?.[family], artifactStore) });
@@ -306,9 +314,8 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
       }
       let stateAuthorities: PublishStateAuthorities = {};
       try {
-        const promoted = await readPromotedStateEdgeFamilies({ store, servedManifest, now: observedAt,
-          selected: statePointerFamilies, artifactStore,
-          readServedFamily: (family, state) => readStateAuthorityArtifact(family, state, servedManifest?.stateAuthorities?.[family]?.[state], artifactStore) });
+        const promoted = await dispatchStateArtifacts({ store, currentStore, servedManifest, now: observedAt,
+          selected: statePointerFamilies, env, children: options.stateArtifactChildren });
         stateAuthorities = promoted.stateAuthorities;
         if (promoted.skipped.length) failed = true;
         for (const line of promoted.skipped) process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: ${safeFailure(line)}\n`);
@@ -360,8 +367,8 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
             const divisions = [...new Set(meetingRead.value.meetings.flatMap(meeting => meeting.ocdId ? [meeting.ocdId.split("#")[0]] : []))];
             const bodyIds = [...new Set(meetingRead.value.meetings.flatMap(meeting => meeting.bodyId ? [meeting.bodyId] : []))];
             const read = await (options.readMeetingRegistry ?? ((ids, bodies, versionId) =>
-              readPlaceVersionSlice<RegistryRuntimeReadModel>("REGISTRY_RUNTIME_BINDING", REGISTRY_RUNTIME_SCOPE, versionId, ids, bodies)))(divisions, bodyIds, registryPartitionVersion(meetingRegistryVersion));
-            if (read.kind !== "PROMOTED" || read.metadata.versionId !== registryPartitionVersion(meetingRegistryVersion)) throw new Error(`Meeting territories read ${read.kind} at a different registry version`);
+              readPlaceVersionSlice<RegistryRuntimeReadModel>("REGISTRY_RUNTIME_BINDING", REGISTRY_RUNTIME_SCOPE, versionId, ids, bodies)))(divisions, bodyIds, meetingRegistryVersion);
+            if (read.kind !== "PROMOTED" || read.metadata.versionId !== meetingRegistryVersion) throw new Error(`Meeting territories read ${read.kind} at a different registry version`);
             meetingBodies = read.value?.registry.bodies;
             if (!meetingBodies) throw new Error("The accepted registry version has no readable meeting territories");
           }
@@ -380,7 +387,13 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
         meetingRead?.kind === "PROMOTED" ? { sourceThrough: meetingRead.metadata.sourceThrough, retrievedAt: meetingRead.metadata.retrievedAt, promotedThrough: meetingRead.metadata.promotedAt }
           : { sourceThrough: servedMeetings?.sourceThrough ?? null, retrievedAt: prepared?.status === "CURRENT" ? prepared.checkedAt : servedMeetings?.retrievedAt ?? null, promotedThrough: servedMeetings?.promotedThrough ?? null },
         { store: artifactStore, now: observedAt, authority, stateAuthorities, registrations, meetingBodies, meetingRegistryVersion,
-          ...(servedManifest?.stateLegislators !== undefined || refreshes("state-legislators") ? { stateLegislators } : {}), ...(checks ? { checks } : {}) });
+          ...(servedManifest?.stateLegislators !== undefined || refreshes("state-legislators") ? { stateLegislators } : {}),
+          ...(preparesMeetings ? { meetingPlaces: Object.fromEntries(await readComposedSourcePlaces({ store }) ?? []) } : {}),
+          ...(stateFacts ? { stateFacts: stateFacts.entries } : {}), ...(checks ? { checks } : {}) });
+      if (stateFacts && (edge.status === "PUBLISHED" || edge.status === "CURRENT")) {
+        await stateFacts.settle();
+        console.log(JSON.stringify({ readerEdgeStateFacts: { rebuilt: stateFacts.rebuilt, patched: stateFacts.patched, bodiesRead: stateFacts.bodiesRead } }));
+      }
       status = edge.status;
       if ("sequence" in edge) sequence = edge.sequence;
       if (edge.status === "FAILED") throw new Error(edge.error);
@@ -388,6 +401,7 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
       if (edge.status === "NOT_COMPOSABLE") throw new Error("Reader pages could not be assembled. " + edge.detail);
       const purge = edge.status === "PUBLISHED" && artifactStore.kind === "netlify-blobs" ? await purgeReaderCacheTags([READER_MANIFEST_CACHE_TAG]) : null;
       if (purge) console.log(JSON.stringify({ readerEdgePurge: purge.purged, store: destination, sequence }));
+      await dispatchStateArtifactRetirements({ store: currentStore, artifacts: artifactStore, env, children: options.stateArtifactChildren });
 
     }
   } catch (error) {
@@ -399,20 +413,6 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
     store: destination, sequence, ...(supersededMeetingFields !== undefined ? { supersededMeetingFields } : {}), detail: failed ? detail ?? "Reader pages could not be fully updated. The earlier serving copies remain available." : null };
   console.log(JSON.stringify(outcome));
   return outcome;
-}
-
-export async function publishRoutineReaderEdge(...args: Parameters<typeof publishRoutineReaderEdgeOutcome>): Promise<boolean> {
-  return (await publishRoutineReaderEdgeOutcome(...args)).ok;
-}
-
-export async function publishSupervisorReaderEdge(
-  store: RoutineDataStore, observedAt: string,
-  selected: Parameters<typeof publishRoutineReaderEdgeOutcome>[2] = null,
-  options: Parameters<typeof publishRoutineReaderEdgeOutcome>[3] = {},
-  env: Readonly<Record<string, string | undefined>> = process.env,
-): Promise<ReaderEdgePublicationOutcome> {
-  return publishRoutineReaderEdgeOutcome(store, observedAt, selected,
-    { ...options, requireLiveStore: env.WTP_READER_EDGE_LOCAL_OK !== "1" });
 }
 
 export function readerEdgeSupervisorFailure(outcome: ReaderEdgePublicationOutcome) {

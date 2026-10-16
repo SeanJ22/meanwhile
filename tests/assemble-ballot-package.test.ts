@@ -1,10 +1,11 @@
+type BallotStateFile = Awaited<ReturnType<typeof import("../lib/ballot/state-file.ts").readBallotStateFile>>;
 import { stateBallotContractId } from "../lib/ballot/state-scopes.ts";
 import assert from "node:assert/strict";
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { resolve } from "node:path";
 import test from "node:test";
-import { assembleBallotPackage, type BallotStateFile } from "../scripts/assemble-ballot-package.mts";
+import { assembleBallotPackage } from "../scripts/assemble-ballot-package.mts";
 import { ballotElectionKey, readGenericBallotProjection, type GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
 import { genericSourcesForDivisions } from "../lib/ballot/reader-sources.ts";
 import { manualProjectionCandidate, type ManualProjectionPackage } from "../lib/civic-data/manual-projections.ts";
@@ -63,6 +64,59 @@ test("assembles only the named state and never opens another state's malformed f
     await rm(resolve(directory, "tx.json"));
     await assert.rejects(assembleBallotPackage({ state: "TX", directory, store, now }), /ENOENT/);
     assert.ok(await readPromotion("BALLOT_CANDIDACY", "US-NH:state-election-ballots"));
+  } finally { await rm(directory, { recursive: true, force: true }); }
+});
+
+test("a successor streams candidates before contests, uses prior proof metadata, and releases the prior envelope", async () => {
+  const directory = await mkdtemp(resolve(tmpdir(), "ballot-state-stream-"));
+  try {
+    const store = new MemoryRoutineDataStore(), state = await fixture();
+    await publish(store, packageFor(state));
+    const ballot = ballotOf(state), { candidacies, ...rest } = ballot;
+    candidacies[0].familyName = "Corrected";
+    await writeFile(resolve(directory, "tx.json"), JSON.stringify({ sourceReceipt: state.sourceReceipt,
+      ballots: { [ballotElectionKey(ballot)]: { candidacies, ...rest } } }));
+    store.readCandidate = async () => { throw new Error("A full candidate reread duplicates the state payload."); };
+    store.readCandidateProof = async () => { throw new Error("A full proof reread duplicates the state payload."); };
+    const readProof = store.readPublishedCandidateMetadata.bind(store);
+    let proofReads = 0;
+    store.readPublishedCandidateMetadata = async id => { proofReads++; return readProof(id); };
+    const stages: string[] = [];
+    const result = await assembleBallotPackage({ state: "TX", directory, store, now,
+      onStage: (stage, phase) => stages.push(`${stage}:${phase}`) });
+    assert.equal(Object.values(payloadOf(result.package).ballots)[0].candidacies[0].familyName, "Corrected");
+    assert.equal("prior" in result, false);
+    assert.ok(result.priorVersionId);
+    assert.equal(proofReads, 1);
+    assert.deepEqual(stages, ["input-metadata", "prior-state", "state-contests", "state-records", "candidate-build"]
+      .flatMap(stage => [`${stage}:start`, `${stage}:end`]));
+  } finally { await rm(directory, { recursive: true, force: true }); }
+});
+
+test("streaming input refuses repeated contest and candidate identities instead of silently collapsing them", async () => {
+  const directory = await mkdtemp(resolve(tmpdir(), "ballot-state-duplicates-"));
+  try {
+    for (const field of ["contests", "candidacies"] as const) {
+      const state = await fixture(), ballot = ballotOf(state);
+      if (field === "contests") ballot.contests.push({ ...ballot.contests[0] });
+      else ballot.candidacies.push({ ...ballot.candidacies[0], familyName: "Contradiction" });
+      await writeFile(resolve(directory, "tx.json"), JSON.stringify(state));
+      await assert.rejects(assembleBallotPackage({ state: "TX", directory, store: new MemoryRoutineDataStore(), now }), /INPUT_IDENTITY_DUPLICATED/);
+    }
+  } finally { await rm(directory, { recursive: true, force: true }); }
+});
+
+test("streaming input refuses orphan candidacies and duplicated current/filing identities before filtering", async () => {
+  const directory = await mkdtemp(resolve(tmpdir(), "ballot-state-joins-"));
+  try {
+    for (const issue of ["orphan", "filing"] as const) {
+      const state = await fixture(), ballot = ballotOf(state);
+      if (issue === "orphan") ballot.candidacies.push({ ...ballot.candidacies[0], id: "orphan", contestId: "missing" });
+      else ballot.filingCandidacies = [{ ...ballot.candidacies[0] }];
+      await writeFile(resolve(directory, "tx.json"), JSON.stringify(state));
+      await assert.rejects(assembleBallotPackage({ state: "TX", directory, store: new MemoryRoutineDataStore(), now }),
+        issue === "orphan" ? /INPUT_CONTEST_MISSING/ : /INPUT_IDENTITY_DUPLICATED/);
+    }
   } finally { await rm(directory, { recursive: true, force: true }); }
 });
 

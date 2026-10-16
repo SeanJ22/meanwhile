@@ -1,3 +1,4 @@
+import { readerRoute } from "@/lib/api/reader-route";
 import { stageTimer } from "@/lib/api/server-timing";
 import {
   ensureReaderAuthorityEdge,
@@ -20,7 +21,7 @@ const CDN_HELD = {
 /** The identifier shape, refused rather than guessed at. */
 const OCD_ID = /^ocd-division\/country:us(\/[a-z_]+:[A-Za-z0-9~._-]+)+$/;
 
-export async function GET(
+export const GET = readerRoute("/api/representation/[division]", async function GET(
   _request: Request,
   context: { params: Promise<{ division: string[] }> },
 ) {
@@ -78,4 +79,4 @@ export async function GET(
       headers: { ...(metadata.available ? CDN_HELD : { "Cache-Control": "no-store" }), "Server-Timing": timing.header() },
     },
   );
-}
+});

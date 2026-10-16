@@ -6,6 +6,7 @@ import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { manualProjectionCandidate, type CandidateProfilesProjection, type ManualProjectionPackage } from "../lib/civic-data/manual-projections.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { refreshCandidateProfilesFromPromoted } from "../lib/civic-data/manual-read-models.ts";
+import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 
 const AT = "2026-09-20T12:00:00.000Z";
 
@@ -39,9 +40,8 @@ async function promoteFixture(): Promise<void> {
   await refreshCandidateProfilesFromPromoted("NJ", { store, bypassCache: true, now: AT });
 }
 
-await promoteFixture();
-
-test("every link was fetch-verified: url, verification sentence, and date present", () => {
+test("every link was fetch-verified: url, verification sentence, and date present", () => withReaderAuthorityEdge({}, async () => {
+  await promoteFixture();
   const { links, hunts } = allCandidateLinks("NJ");
   assert.ok(Object.keys(links).length > 0);
   for (const [key, entry] of Object.entries(links)) {
@@ -66,11 +66,12 @@ test("every link was fetch-verified: url, verification sentence, and date presen
   for (const hunt of hunts) {
     assert.match(hunt.note, /^(MISS|NOT_ATTEMPTED)/, `${hunt.key}: hunt note must state which kind of absence it is`);
   }
-});
+}));
 
-test("no ranking vocabulary anywhere in the links file", () => {
+test("no ranking vocabulary anywhere in the links file", () => withReaderAuthorityEdge({}, async () => {
+  await promoteFixture();
   const raw = JSON.stringify(allCandidateLinks("NJ")).toLowerCase();
   for (const banned of ['"score"', '"rank"', '"rating"', '"match"', '"fit"', '"grade"', '"alignment"', '"recommendation"']) {
     assert.ok(!raw.includes(banned), `banned key ${banned} in candidate-links`);
   }
-});
+}));

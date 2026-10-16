@@ -25,6 +25,7 @@ import { persistVotingSourceBlanks, planVotingSourceBlanks, votingSourcePlaces }
 import { votingSourcePopulations } from "../lib/ballot/voting-source-population.ts";
 import type { VotingDoorScope, VotingSourceDoor, VotingSourceRead, VotingSourceRuntime } from "../lib/ballot/voting-source-types.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
+import { partitionHeldStateAuthority } from "../lib/civic-data/state-authority-cutover.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { rawCaptureVault } from "../lib/civic-data/raw-capture-remote.ts";
 import type { EvidenceStore } from "../lib/control-plane/evidence/store.ts";
@@ -165,6 +166,7 @@ async function main() {
   const state = requireBallotState(assignment(process.argv, "state") ?? "");
   const contract = votingSitesContract(state);
   prepareProductionCivicDataWrite();
+  await partitionHeldStateAuthority("voting-sites", state);
   const now = () => new Date().toISOString(), store = new PostgresRoutineDataStore(), rawVault = rawCaptureVault();
   const seeds = ["voting-source-doors.json", "voting-legacy-doors.json"].flatMap(name =>
     JSON.parse(readFileSync(join(REFERENCE_DIR, name), "utf8")) as VotingSourceDoor[]).filter(door => door.scope.state === state);

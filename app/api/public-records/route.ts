@@ -1,3 +1,4 @@
+import { readerRoute } from "@/lib/api/reader-route";
 import { NextResponse } from "next/server";
 import { readPublicRecords } from "@/lib/civic-data/public-records";
 import { isScopedManualContractScope, scopedManualContractScope } from "@/lib/civic-data/scoped-manual-contracts";
@@ -6,7 +7,7 @@ import { ensureReaderAuthorityEdge, readReaderAuthorityManifest } from "@/lib/me
 import { withReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
 import { FIPS_TO_STATE } from "@/lib/ocd/fips";
 
-export async function GET(request: Request) {
+export const GET = readerRoute("/api/public-records", async function GET(request: Request) {
   const params = new URL(request.url).searchParams;
   if (params.get("kind") === "governments") {
     const state = (params.get("state") ?? "").toUpperCase();
@@ -37,4 +38,4 @@ export async function GET(request: Request) {
   } catch {
     return NextResponse.json({ status: "UNAVAILABLE", records: [] }, { status: 503 });
   }
-}
+}, ["government-domains","other-reader-data"]);

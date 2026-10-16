@@ -18,6 +18,14 @@ const STATE_BALLOT_PEAK_MIB: Readonly<Record<string, number>> = {
   "candidate-profiles": 4096,
   "candidate-corpus": 2048,
   "voting-sites": 1536,
+  "candidate-campaign-sites-derived": 5120,
+};
+const STATE_ARTIFACT_PEAK_MIB: Readonly<Record<string, number>> = {
+  "ballot-contests": 896,
+  "candidate-profiles": 1024,
+  "candidate-corpus": 512,
+  "voting-sites": 384,
+  "candidate-campaign-sites-derived": 768,
 };
 /** Bulk data families use the retained data-worker bound until their own runs are measured on this host. */
 const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
@@ -37,6 +45,7 @@ const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   "campaign-finance-az-pima-transactions.mts": 368,
   "assemble-ballot-package.mts": STATE_BALLOT_PEAK_MIB["ballot-contests"]!,
   "fetch-voting-sites.mts": STATE_BALLOT_PEAK_MIB["voting-sites"]!,
+  "derive-candidate-campaign-sites.mts": STATE_BALLOT_PEAK_MIB["candidate-campaign-sites-derived"]!,
 };
 export const REGISTRY_ROSTER_PUBLICATION_PEAK_MIB = 4012;
 export const WORKER_MEMORY_HEADROOM_MIB = 768;
@@ -192,10 +201,10 @@ const rosterPublication = (entry: string): boolean => entry === "registry-runtim
   entry.startsWith("registry-runtime-bindings/") || entry.startsWith("worker-publication:registry-runtime-bindings:");
 
 function stateBallotPeakBytes(entry: string): number {
-  const family = /^(?:worker-publication:)?(ballot-contests|candidate-profiles|candidate-corpus|voting-sites):[A-Z]{2}(?=[:/]|$)/.exec(entry)?.[1];
-  if (family) return STATE_BALLOT_PEAK_MIB[family]! * MIB;
   const script = entry.split(/[\\/]/).at(-1)!;
-  return ["assemble-ballot-package.mts", "fetch-voting-sites.mts"].includes(script) ? ROUTINE_ENTRY_PEAK_MIB[script]! * MIB : 0;
+  const family = /^(?:worker-publication:|candidate-findings:)?(ballot-contests|candidate-profiles|candidate-corpus|voting-sites|candidate-campaign-sites-derived):[A-Z]{2}(?=[:/]|$)/.exec(entry)?.[1];
+  if (family) return (script === "publish-state-authority.mts" ? STATE_ARTIFACT_PEAK_MIB : STATE_BALLOT_PEAK_MIB)[family]! * MIB;
+  return ["assemble-ballot-package.mts", "fetch-voting-sites.mts", "derive-candidate-campaign-sites.mts"].includes(script) ? ROUTINE_ENTRY_PEAK_MIB[script]! * MIB : 0;
 }
 
 export function routineProcessSlots(memory: WorkerMemoryLimit = {}): WorkerProcessSlots {

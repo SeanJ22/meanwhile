@@ -9,6 +9,7 @@ import { LocalFileArtifactStore, type ReaderArtifactStore } from "../lib/meeting
 import { routineCivicDataSupervisorOutcome } from "../lib/control-plane/freshness-cycle-outcome.ts";
 import { ownerDigestAttention } from "../lib/control-plane/owner-surface.ts";
 
+const stateArtifactChildren = { pendingRetirements: async () => [] };
 const NOW = "2026-10-05T18:00:00.000Z";
 // All transports here are temporary files; the Netlify-kind case tests the
 // production decision without sending a write or purge to any real site.
@@ -31,7 +32,7 @@ for (const [kind, env, expectedOk] of [
     } });
     const logs: string[] = [];
     t.mock.method(console, "log", (value: string) => logs.push(value));
-    const outcome = await publishSupervisorReaderEdge(new MemoryRoutineDataStore(), NOW, [], { artifactStore }, env);
+    const outcome = await publishSupervisorReaderEdge(new MemoryRoutineDataStore(), NOW, [], { artifactStore, stateArtifactChildren }, env);
     assert.equal(outcome.ok, expectedOk);
     assert.equal(outcome.store, kind === "local-file" ? "local folder" : "Netlify Blobs");
     assert.deepEqual(JSON.parse(logs.at(-1)!), outcome);
@@ -59,7 +60,7 @@ for (const [kind, env, expectedOk] of [
 
 test("no configured publication store fails without reading data", async () => {
   const store = new Proxy(new MemoryRoutineDataStore(), { get() { throw new Error("unexpected data read"); } });
-  const outcome = await publishSupervisorReaderEdge(store, NOW, [], { artifactStore: null }, {});
+  const outcome = await publishSupervisorReaderEdge(store, NOW, [], { artifactStore: null, stateArtifactChildren }, {});
   assert.equal(outcome.ok, false);
   assert.equal(outcome.readerEdge, "SKIPPED_NO_STORE");
   assert.equal(outcome.store, "not configured");
@@ -71,7 +72,7 @@ test("uncomposable meetings fail even with the development opt-in", async (t) =>
   const directory = mkdtempSync(join(tmpdir(), "slide-uncomposable-"));
   t.after(() => rmSync(directory, { recursive: true, force: true }));
   const outcome = await publishSupervisorReaderEdge(new MemoryRoutineDataStore(), NOW,
-    [{ recordClass: "MEETING", scope: "unprepared" }], { artifactStore: new LocalFileArtifactStore(directory) }, { WTP_READER_EDGE_LOCAL_OK: "1" });
+    [{ recordClass: "MEETING", scope: "unprepared" }], { artifactStore: new LocalFileArtifactStore(directory), stateArtifactChildren }, { WTP_READER_EDGE_LOCAL_OK: "1" });
   assert.equal(outcome.ok, false);
   assert.match(outcome.detail!, /could not be assembled/);
 });

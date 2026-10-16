@@ -2,11 +2,14 @@ import assert from "node:assert/strict";
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { gunzipSync } from "node:zlib";
 import { after, test } from "./helpers/playbooks.ts";
 
 import { publishReaderEdgeArtifacts, type PublishAuthority } from "../lib/meetings/edge-serving.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
-import { enterReaderAuthorityEdge, currentRegistryRuntimeEdge } from "../lib/registry/runtime-edge.ts";
+import { enterReaderAuthorityEdge, currentRegistryRuntimeEdge, withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
+import { readRegistryPlace } from "../lib/registry/reader-place.ts";
+import type { RecordIndex } from "../lib/meetings/authority-records.ts";
 import { federalDirectoryReadState } from "../lib/officials/federal-directory-read-model.ts";
 import { getOutcomeSnapshot, loadedFrom, outcomeProjectionReadState, refreshOutcomeSnapshotFromPromoted } from "../lib/outcomes/store.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
@@ -72,7 +75,6 @@ interface EdgeVersions {
   readonly registry: string;
   readonly federal: string;
   readonly outcomes?: string;
-  readonly commentAccess?: string;
 }
 
 async function publishEdge(versions: EdgeVersions): Promise<void> {
@@ -84,7 +86,6 @@ async function publishEdge(versions: EdgeVersions): Promise<void> {
     ...(versions.outcomes && (outcomesValue.kind === "BOOTSTRAP" || outcomesValue.kind === "PROMOTED")
       ? { "meeting-outcomes": { value: getOutcomeSnapshot(), versionId: versions.outcomes } }
       : {}),
-    ...(versions.commentAccess ? { "comment-access": { value: commentAccessProjection, versionId: versions.commentAccess } } : {}),
   };
   const result = await publishReaderEdgeArtifacts(snapshot, {
     sourceThrough: snapshot.generatedAt,
@@ -150,16 +151,16 @@ test("Node 24: an edge entered inside a helper never reaches the reads chained o
 });
 
 test("Ask reads the selected registry at the accepted edge version and the published directory and outcomes", async () => {
-  await publishEdge({ registry: "edge-test:registry:1", federal: "edge-test:federal:1", outcomes: "edge-test:outcomes:1", commentAccess: "edge-test:comment-access:1" });
+  await publishEdge({ registry: "edge-test:registry:1", federal: "edge-test:federal:1", outcomes: "edge-test:outcomes:1" });
   const payload = await askPima();
   assert.ok(Number.isFinite(payload.trace.preloads?.authorityEdge), "the edge was not fetched");
-  assert.deepEqual(placeReads, ["edge-test:registry:1"], "the registry query selects only this place from the accepted version");
+  assert.deepEqual(placeReads, [], "the selected registry records are read from the edge without a database query");
   assert.equal(federalDirectoryReadState().metadata?.versionId, "edge-test:federal:1", "the federal directory was read from the database, not the edge");
   assert.match(outcomeProjectionReadState().detail ?? "", /edge artifact \(version edge-test:outcomes:1\)/, "the recorded outcomes were read from the database, not the edge");
   assert.equal(loadedFrom(), "DATA_PLANE", "an edge-served outcome projection is the data plane's own value, never a test fixture");
   assert.deepEqual(
     { registry: payload.trace.preloadSources?.registry, federalDirectory: payload.trace.preloadSources?.federalDirectory, outcomes: payload.trace.preloadSources?.outcomes },
-    { registry: "DATABASE", federalDirectory: "EDGE", outcomes: "EDGE" },
+    { registry: "EDGE", federalDirectory: "EDGE", outcomes: "EDGE" },
     "the trace names where each essential source was read",
   );
   assert.match(payload.answer ?? "", /September 22nd, 2026/, "the edge-served outcomes still answer the Pima question");
@@ -171,6 +172,31 @@ test("a manifest without the outcomes family reads them from the database, and t
   assert.equal(payload.trace.preloadSources?.outcomes, "DATABASE");
   assert.doesNotMatch(outcomeProjectionReadState().detail ?? "", /edge-test:outcomes:1/);
   assert.ok(["PROMOTED", "BOOTSTRAP"].includes(outcomeProjectionReadState().kind), "the database fallback read the outcomes");
+});
+
+test("a place registry reads only its published records and an exact named body at the accepted version", async () => {
+  await publishEdge({ registry: "edge-test:registry:selected", federal: "edge-test:federal:selected" });
+  const store = new LocalFileArtifactStore(edgeDir);
+  const manifest = (await store.readAuthorityManifest())!.manifest;
+  const ref = manifest.authorityArtifacts!["registry-runtime"]!;
+  const index = JSON.parse(gunzipSync((await store.readBytes(ref.key))!).toString("utf8")).value as RecordIndex;
+  const wanted = `${AZ}/school_district:sunnyside_unified_district`;
+  const named = `${AZ}/school_district:vail_unified_district#board`;
+  const foreign = index.records.filter(row => row.path[0] === "registry" && row.path[1] === "bodies" &&
+    row.tags.some(tag => tag.includes("/state:nh/")));
+  assert.ok(foreign.length > 0);
+  const opened = new Set<string>();
+  const original = LocalFileArtifactStore.prototype.readBytes;
+  LocalFileArtifactStore.prototype.readBytes = async function (key) { opened.add(key); return original.call(this, key); };
+  try {
+    const read = await withReaderAuthorityEdge({}, () => readRegistryPlace([wanted], [named], manifest));
+    assert.equal(read.source, "EDGE");
+    assert.equal(read.versionId, "edge-test:registry:selected");
+    assert.ok(read.value.registry.bodies.some(row => row.id === named));
+    assert.ok(read.value.registry.bodies.every(row => row.id === named || row.ocdId === wanted || row.ocdId === AZ || row.alsoServesOcdIds?.includes(wanted)));
+    assert.ok(foreign.every(row => !opened.has(row.key)), "another state's body bytes are never fetched");
+    assert.deepEqual(placeReads, [], "accepted edge records do not reopen registry SQL");
+  } finally { LocalFileArtifactStore.prototype.readBytes = original; }
 });
 
 test("comment rules are primed from the edge the caller entered, and read from live facts without one", async () => {
@@ -210,7 +236,7 @@ test("Campaign money reads the selected registry at the accepted edge version an
     params: Promise.resolve({ target: "congress%3AC001133" }),
   }));
   assert.ok([200, 503].includes(response.status));
-  assert.deepEqual(placeReads, ["edge-test:registry:3"], "funding selects only this place from the accepted registry version");
+  assert.deepEqual(placeReads, [], "funding uses the selected registry records without a database query");
   const timing = response.headers.get("server-timing") ?? "";
   for (const name of ["edgeManifest", "authorityEdge", "registry", "fec", "total"]) {
     assert.match(timing, new RegExp(`(?:^|, )${name};dur=\\d+`), `${name} is not timed: ${timing}`);

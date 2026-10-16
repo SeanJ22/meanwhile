@@ -1,3 +1,4 @@
+import { readerRoute } from "@/lib/api/reader-route";
 import { withReaderFeatures } from "@/lib/civic-data/reader-feature-context.ts";
 import { measureRecordsForBallot } from "@/lib/ballot/measure-records";
 import { readerBallotSourceForTargetId } from "@/lib/ballot/reader-sources";
@@ -263,6 +264,6 @@ async function postWithSettings(request: Request) {
   }
 }
 
-export async function POST(request: Request) {
+export const POST = readerRoute("/api/reactions", async function POST(request: Request) {
   return withReaderFeatures(() => postWithSettings(request));
-}
+}, ["state-money"]);

@@ -1,3 +1,4 @@
+import { mergeBallotFixture } from "./helpers/ballot-merge.ts";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
@@ -17,7 +18,6 @@ import { stateCampaignFinanceCandidate, STATE_CAMPAIGN_FINANCE_SOURCES } from ".
 import type { FundingSnapshot, SecondHopCommittee } from "../lib/funding/types.ts";
 import type { StateMoneySnapshot } from "../lib/funding/state-money.ts";
 import { manualProjectionCandidate, type ManualProjectionPackage } from "../lib/civic-data/manual-projections.ts";
-import { mergeBallotContests } from "../lib/civic-data/worker-ballot-contests.ts";
 import type { GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
 import { acquireStatePeople } from "../lib/sources/plural/acquisition.ts";
 import { PLURAL_REVISION_URL } from "../lib/sources/plural/targets.ts";
@@ -95,9 +95,9 @@ test("R2B candidates: only a newer complete official list removes a withdrawn ca
   const first = await processRegisteredManualCandidate(store, "ballot-contests:NJ", manualProjectionCandidate(initial), at);
   assert.ok(first.promoted);
   const prior = { versionId: first.promoted.versionId, payload: initial.payload, sourceReceipt: initial.sourceReceipt };
-  const partial = mergeBallotContests(make(3, "2026-10-13T13:00:00.000Z", false), prior);
+  const partial = mergeBallotFixture(make(3, "2026-10-13T13:00:00.000Z", false), prior);
   assert.equal(Object.values((partial.payload as GenericBallotProjection).ballots)[0].candidacies.length, 4);
-  const successor = mergeBallotContests(make(3, "2026-10-13T14:00:00.000Z", true), prior);
+  const successor = mergeBallotFixture(make(3, "2026-10-13T14:00:00.000Z", true), prior);
   const published = await processRegisteredManualCandidate(store, "ballot-contests:NJ", manualProjectionCandidate(successor), "2026-10-13T14:00:00.000Z");
   assert.ok(published.promoted, JSON.stringify(published.candidate.receipt));
   assert.equal(published.candidate.candidate.changeSet?.removed.length, 1);

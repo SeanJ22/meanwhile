@@ -1,3 +1,5 @@
+import { readerRoute } from "@/lib/api/reader-route";
+import { currentReaderSelection } from "@/lib/db/reader-route";
 import { readerMeetingScope } from "@/lib/meetings/reader-scope";
 import { haversineKm } from "@/lib/geo/distance";
 import { canonicalBodyIdentity } from "@/lib/ask/body-identity";
@@ -65,7 +67,7 @@ async function nearestZipWithin60Km(lat: number, lng: number): Promise<string | 
   return near && haversineKm(lat, lng, near.lat, near.lng) <= 60 ? near.zip : null;
 }
 
-export async function GET(request: Request) {
+export const GET = readerRoute("/api/meetings", async function GET(request: Request) {
   const timing = stageTimer();
   const params = new URL(request.url).searchParams;
 
@@ -99,37 +101,37 @@ export async function GET(request: Request) {
   /* Everything that reads neither the database nor the request's edge context starts here, before the authority families arrive. */
   prefetchReaderGeography();
   const nearZipRead = zipRead.value ? Promise.resolve(zipRead.value) : nearestZipWithin60Km(lat, lng).catch(() => null);
-  const statesHinted = nearZipRead.then(hintedStates);
 
   const [edgeManifest, authorityManifest] = await timing.time("manifest", () => Promise.all([
     readReaderManifest().catch(() => null), readReaderAuthorityManifest().catch(() => null),
   ]));
 
+  let authorityEdge: Awaited<ReturnType<typeof ensureReaderAuthorityEdge>> | null = null;
   if (authorityManifest) {
     const entering = timing.time("authority", () =>
-      ensureReaderAuthorityEdge(authorityManifest, undefined, READER_MAP_AUTHORITY_FAMILIES).catch(() => null),
+      ensureReaderAuthorityEdge({ ...authorityManifest, meetingPlaces: edgeManifest?.meetingPlaces }, undefined, READER_MAP_AUTHORITY_FAMILIES).catch(() => null),
     );
-    if (edgeManifest) prefetchReaderEdgeStates(edgeManifest, await statesHinted);
-    const authorityEdge = await entering;
+    authorityEdge = await entering;
     if (authorityEdge) enterReaderAuthorityEdge(authorityEdge);
-  } else if (edgeManifest) {
-    prefetchReaderEdgeStates(edgeManifest, await statesHinted);
   }
+  if (edgeManifest) prefetchReaderEdgeStates(edgeManifest, await nearZipRead.then(hintedStates));
 
+  const nearZip: string | null = await nearZipRead;
+  if (nearZip) currentReaderSelection()?.keys.add(nearZip);
   const extras = authorityManifest ? await readReaderExtras(authorityManifest).catch(error => {
     const failure = error instanceof Error ? error : new Error(String(error));
-    return { commentAccess: failure, everydayRouting: failure };
+    return { everydayRouting: failure };
   }) : {};
   let commentAccess: readonly CommentAccess[] = [];
   let commentAccessDataState: "PROMOTED" | "FIRST_SEED" | "STORE_UNREACHABLE" = "FIRST_SEED";
   let commentAccessDataDetail: string | null = null;
   try {
-    if (extras.commentAccess instanceof Error) throw extras.commentAccess;
-    if (extras.commentAccess !== undefined) {
-      commentAccess = extras.commentAccess as readonly CommentAccess[];
+    if (authorityEdge?.commentAccess) {
+      commentAccess = authorityEdge.commentAccess.value.records.map(({ id: _id, ...record }) => record);
       commentAccessDataState = "PROMOTED";
-      commentAccessDataDetail = `Comment-access served from its published reader artifact (sequence ${authorityManifest!.sequence}).`;
+      commentAccessDataDetail = `Comment-access served from the reader edge's body facts (sequence ${authorityManifest!.sequence}).`;
     } else {
+      if (Object.keys(authorityManifest?.stateFacts ?? {}).length) throw new Error("The selected body facts could not be read.");
       if (process.env.NODE_ENV === "production") {
         const { versionId } = await readCommentAccessFacts();
         commentAccessDataState = "PROMOTED";
@@ -242,6 +244,9 @@ export async function GET(request: Request) {
         read.kind === "PROMOTED" || read.kind === "BOOTSTRAP"
           ? snapshotClientMeta(read.value, read)
           : null;
+      if (snapshotMeta && meetingsWholeFromEdge && edgeManifest?.carriedSummary) {
+        snapshotMeta.carried = edgeManifest.carriedSummary;
+      }
     } else {
       result = await searchMeetings(lat, lng, radiusKm, new Date(), divisionsAtPoint);
       snapshotMeta = await getActiveSnapshotMeta();
@@ -347,7 +352,6 @@ export async function GET(request: Request) {
       }
     : null;
 
-  const nearZip: string | null = await nearZipRead;
   /* The search log is written by the client's `sendBeacon` to `/api/log`, never on the response path. */
 
   /* The division ids the point resolved into; `null` when the resolution failed, which is not an empty list. */
@@ -365,17 +369,20 @@ export async function GET(request: Request) {
     commentAccessDataState !== "STORE_UNREACHABLE" &&
     everydayRoutingDataState !== "STORE_UNREACHABLE" &&
     everydayRoutingDataState !== "INVALID";
+  const resolveListingBody: typeof canonicalBodyIdentity = bodyId => {
+    try { return canonicalBodyIdentity(bodyId); } catch { return null; }
+  };
 
   return Response.json({
     ...result,
-    readerScope: readerMeetingScope({ heldMeetings: heldMeetings ?? result.meetings, shownMeetings: result.meetings, bodies: coverage?.bodies ?? [], ownDivisionIds: resolvedDivisions ? pointOwnDivisionIds : null, radiusKm: result.radiusKm, requestedRadiusKm: result.requestedRadiusKm, now: new Date(), listingIdentity: meetingListingIdentity(heldMeetings ?? result.meetings, canonicalBodyIdentity) }),
+    readerScope: readerMeetingScope({ heldMeetings: heldMeetings ?? result.meetings, shownMeetings: result.meetings, bodies: coverage?.bodies ?? [], ownDivisionIds: resolvedDivisions ? pointOwnDivisionIds : null, radiusKm: result.radiusKm, requestedRadiusKm: result.requestedRadiusKm, now: new Date(), listingIdentity: meetingListingIdentity(heldMeetings ?? result.meetings, resolveListingBody) }),
     commentAccess,
     commentAccessDataState,
     commentAccessDataDetail,
     everydayRouting,
     everydayRoutingDataState,
     everydayRoutingDataDetail,
-    listingIdentity: meetingListingIdentity(result.meetings, canonicalBodyIdentity),
+    listingIdentity: meetingListingIdentity(result.meetings, resolveListingBody),
     coverage,
     snapshot,
     nearZip,
@@ -384,4 +391,4 @@ export async function GET(request: Request) {
   }, {
     headers: { ...(held ? CDN_HELD : NOT_HELD), "Server-Timing": timing.header() },
   });
-}
+});

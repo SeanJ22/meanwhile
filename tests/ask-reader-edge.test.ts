@@ -2,11 +2,13 @@ import assert from "node:assert/strict";
 import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { gunzipSync } from "node:zlib";
 import { after, test } from "./helpers/playbooks.ts";
 
 import { publishReaderEdgeArtifacts, type PublishAuthority, type PublishStateAuthorities } from "../lib/meetings/edge-serving.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import type { GlobalPromotedAuthorityFamily, PromotedFamilyArtifactValue } from "../lib/meetings/edge-artifacts.ts";
+import type { RecordIndex } from "../lib/meetings/authority-records.ts";
 import { registryPlaceFixtureResult } from "./helpers/registry-place-fetch.ts";
 import { ballotElectionKey } from "../lib/ballot/generic-projection.ts";
 import { clearPromotedReadModelCache } from "../lib/civic-data/read-model.ts";
@@ -149,14 +151,28 @@ async function askMesa(question = "When does the Mesa City Council meet next?"):
   const { POST } = await import("../app/api/ask/grounded/route.ts");
   const { resetGroundedState } = await import("../lib/ask/grounded-state.ts");
   resetGroundedState();
-  const response = await POST(new Request("https://wtp.test/api/ask/grounded", {
+  const store = new LocalFileArtifactStore(process.env.WTP_READER_EDGE_DIR!);
+  const manifest = (await store.readAuthorityManifest())!.manifest;
+  const bytes = (await store.readBytes(manifest.authorityArtifacts!["registry-runtime"]!.key))!;
+  const index = JSON.parse(gunzipSync(bytes).toString("utf8")).value as RecordIndex;
+  assert.equal(index.kind, "READER_RECORDS");
+  assert.deepEqual((index.base as { registry: { bodies: unknown[] } }).registry.bodies, [], "the registry index contains no country body payload");
+  const foreign = index.records.filter(row => row.path[0] === "registry" && row.path[1] === "bodies" && row.tags.some(tag => tag.includes("/state:nh/")));
+  assert.ok(foreign.length > 0);
+  const opened = new Set<string>(), original = LocalFileArtifactStore.prototype.readBytes;
+  LocalFileArtifactStore.prototype.readBytes = async function (key) { opened.add(key); return original.call(this, key); };
+  let response: Response;
+  try { response = await POST(new Request("https://wtp.test/api/ask/grounded", {
     method: "POST",
     headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "ask-reader-edge-test" },
     body: JSON.stringify({ question, approximateLocation: "85201", surface: "MAP", ocdIds: [AZ, `${AZ}/county:maricopa`, `${AZ}/place:mesa`], today: "2026-09-25" }),
-  }));
+  })); } finally { LocalFileArtifactStore.prototype.readBytes = original; }
   assert.equal(response.status, 200);
-  assert.deepEqual(placeReads, ["edge-test:ask:registry"], "the identity query selects only the requested place at the accepted version");
-  return await response.json() as { trace: { preloads?: Record<string, number>; preloadSources?: Record<string, string>; sourcesLoaded?: string } };
+  assert.deepEqual(placeReads, [], "the accepted registry edge does not reopen place SQL");
+  assert.ok(foreign.every(row => !opened.has(row.key)), "a Mesa question never fetches New Hampshire registry records");
+  const payload = await response.json() as { trace: { preloads?: Record<string, number>; preloadSources?: Record<string, string>; sourcesLoaded?: string } };
+  assert.equal(payload.trace.preloadSources?.registry, "EDGE");
+  return payload;
 }
 
 /** What a cold Ask reads from the database when only identity is on the edge. */
@@ -194,7 +210,7 @@ test("with an identity-only edge, a cold Mesa question reads its place identity 
   for (const source of DEFERRABLE_TRACE) assert.equal(payload.trace.preloadSources?.[source], UNRELATED_TRACE.has(source) ? undefined : "DATABASE", `the trace misnames ${source}`);
 });
 
-test("with every deferrable source on the edge, a cold Mesa question reads only its registry place from the database", async () => {
+test("with every deferrable source on the edge, a cold Mesa question reads its registry place and evidence without the database", async () => {
   process.env.WTP_READER_EDGE_DIR = fullEdgeDir;
   const payload = await askMesa();
   assert.equal(payload.trace.sourcesLoaded, "IDENTITY_AND_MEETINGS");

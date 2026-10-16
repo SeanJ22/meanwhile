@@ -1,3 +1,5 @@
+import { AsyncLocalStorage } from "node:async_hooks";
+import { currentReaderSelection } from "../db/reader-route.ts";
 import { requireBallotState, stateBallotContractId, stateBallotScope, type BallotState } from "../ballot/state-scopes.ts";
 import { readerCandidateProfiles } from "../ballot/candidate-reader-privacy.ts";
 
@@ -20,14 +22,17 @@ import type {
   CandidateProfilesProjection,
 } from "./manual-projections.ts";
 
-const fallbackProfiles = new Map<BallotState, CivicDataReadResult<CandidateProfilesProjection>>();
-const fallbackCorpora = new Map<BallotState, CivicDataReadResult<CandidateCorpus>>();
-const requests = new WeakMap<object, { profiles: typeof fallbackProfiles; corpora: typeof fallbackCorpora }>();
+type ManualReads = { profiles: Map<BallotState, CivicDataReadResult<CandidateProfilesProjection>>;
+  corpora: Map<BallotState, CivicDataReadResult<CandidateCorpus>> };
+const requests = new WeakMap<object, ManualReads>();
+const localReads = new AsyncLocalStorage<ManualReads>();
 function caches() {
-  const edge = currentReaderAuthorityEdge();
-  if (!edge) return { profiles: fallbackProfiles, corpora: fallbackCorpora };
-  let held = requests.get(edge);
-  if (!held) { held = { profiles: new Map(), corpora: new Map() }; requests.set(edge, held); }
+  const edge = currentReaderAuthorityEdge() ?? currentReaderSelection();
+  let held = edge ? requests.get(edge) : localReads.getStore();
+  if (!held) {
+    held = { profiles: new Map(), corpora: new Map() };
+    if (edge) requests.set(edge, held); else localReads.enterWith(held);
+  }
   return held;
 }
 
@@ -42,16 +47,16 @@ async function readManual<T>(contract: ReturnType<typeof requiredManualProductio
 }
 
 export async function readCandidateProfilesProjection(state: string, options: PromotedCivicDataReadOptions = {}): Promise<CivicDataReadResult<CandidateProfilesProjection>> {
-  const key = requireBallotState(state);
+  const key = requireBallotState(state), cache = caches().profiles;
   const result = await readManual<CandidateProfilesProjection>(requiredManualProductionContract(stateBallotContractId("candidate-profiles", key)), options);
-  install(caches().profiles, key, result);
+  install(cache, key, result);
   return result;
 }
 
 export async function readCandidateCorpusProjection(state: string, options: PromotedCivicDataReadOptions = {}): Promise<CivicDataReadResult<CandidateCorpus>> {
-  const key = requireBallotState(state);
+  const key = requireBallotState(state), cache = caches().corpora;
   const result = await readManual<CandidateCorpus>(requiredManualProductionContract(stateBallotContractId("candidate-corpus", key)), options);
-  install(caches().corpora, key, result);
+  install(cache, key, result);
   return result;
 }
 

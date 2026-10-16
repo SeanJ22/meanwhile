@@ -1,3 +1,4 @@
+import { readerRoute } from "@/lib/api/reader-route";
 import { ensureReaderAuthorityEdge, readReaderAuthorityManifest, readReaderEdgeMeetings, readReaderManifest } from "@/lib/meetings/edge-serving";
 import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
 import { settleAgendaSupportingHoldings } from "@/lib/civic-data/agenda-support";
@@ -9,7 +10,7 @@ import { settleRegistryAuthorityReads } from "@/lib/registry/server";
 
 export const runtime = "nodejs";
 
-export async function GET(request: Request) {
+export const GET = readerRoute("/api/agenda", async function GET(request: Request) {
   const meetingId = new URL(request.url).searchParams.get("meetingId");
   if (!meetingId || meetingId.length > 200) {
     return Response.json({ error: "meetingId required" }, { status: 400 });
@@ -20,7 +21,7 @@ export async function GET(request: Request) {
     const [manifest, authorityManifest] = await Promise.all([
       readReaderManifest().catch(() => null), readReaderAuthorityManifest().catch(() => null),
     ]);
-    const authority = authorityManifest ? await ensureReaderAuthorityEdge(authorityManifest, undefined, ["registry-runtime", "meeting-outcomes"]).catch(() => null) : null;
+    const authority = authorityManifest ? await ensureReaderAuthorityEdge({ ...authorityManifest, meetingPlaces: manifest?.meetingPlaces }, undefined, ["registry-runtime", "meeting-outcomes"]).catch(() => null) : null;
     if (authority) enterReaderAuthorityEdge(authority);
     read = await readReaderEdgeMeetings({ meetingId, manifest, window: "HELD" });
   } catch (error) {
@@ -101,4 +102,4 @@ export async function GET(request: Request) {
     unavailableAuthorities: support.unavailableAuthorities,
     records: support.records, publication,
     listingIdentity: support.listingIdentity });
-}
+});

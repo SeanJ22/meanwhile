@@ -178,12 +178,14 @@ function delimitedRows(text: string, delimiter: string): RawCell[][] {
     if (text[i] === '"') {
       i++; let closed = false;
       while (i < text.length) {
-        if (text[i] === '"') { if (text[i + 1] === '"') { value += '"'; i += 2; } else { i++; closed = true; break; } }
-        else value += text[i++];
+        if (text[i] === '"') { if (text[i + 1] === '"') i += 2; else { i++; closed = true; break; } }
+        else i++;
       }
       if (!closed || (i < text.length && ![delimiter, "\r", "\n"].includes(text[i]))) refuse("DELIMITED_TEXT_MALFORMED", "A quoted source cell is incomplete or has trailing characters.");
+      value = text.slice(start + 1, i - 1).replace(/""/g, '"');
     } else {
-      while (i < text.length && ![delimiter, "\r", "\n"].includes(text[i])) { if (text[i] === '"') refuse("DELIMITED_TEXT_MALFORMED", "Unexpected quote in an unquoted source cell."); value += text[i++]; }
+      while (i < text.length && ![delimiter, "\r", "\n"].includes(text[i])) { if (text[i] === '"') refuse("DELIMITED_TEXT_MALFORMED", "Unexpected quote in an unquoted source cell."); i++; }
+      value = text.slice(start, i);
     }
     row.push({ value, start, end: i });
     if (text[i] === delimiter) { i++; if (i === text.length) row.push({ value: "", start: i, end: i }); continue; }

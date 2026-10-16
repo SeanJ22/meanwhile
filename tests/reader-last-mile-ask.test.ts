@@ -22,6 +22,7 @@ import {
   withAzMeasures,
 } from "./helpers/reader-fixtures.ts";
 
+delete process.env.DATABASE_URL;
 await installRegistryAuthority();
 
 import { campaignMoneyForTarget, resolvedCandidacyForOfficial } from "../lib/funding/campaign-money.ts";

@@ -54,7 +54,7 @@ test("the runner reads a state only when its pointer moved; every other promoted
     ],
     {
       oh: { key: "reader/v1/registration-oh.json.gz", version: "reg-oh-1", sha: "a" },
-      nh: { key: "reader/v1/registration-nh.json.gz", version: "reg-nh-1", sha: "b" },
+      nh: { key: "reader/v1/registration-nh.json.gz", version: "reg-nh-1", sha: "b", layout: "records" },
     },
   );
   assert.deepEqual(plan.carried, { nh: "reg-nh-1" });

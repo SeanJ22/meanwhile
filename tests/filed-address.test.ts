@@ -71,3 +71,20 @@ test("reader publication redacts fields and acquisition notes without changing t
   assert.equal(projected.cards.cards.example.email, "campaign@example.test");
   assert.equal(JSON.stringify(held), before);
 });
+
+test("profile privacy reuses safe records and copies only records needing redaction", () => {
+  const safe = Object.freeze({ email: "campaign@example.test", bio: "Source-backed biography", filedAddress: null, filedAddressSource: null });
+  const held = { cards: { curatedAt: "2026-10-01", note: "", hunts: [], cards: { safe } },
+    links: { curatedAt: "2026-10-01", note: "", hunts: [], links: {} } } as unknown as CandidateProfilesProjection;
+  assert.equal(readerCandidateProfiles(held), held, "already safe state profiles require no second object graph");
+  const privateCard = Object.freeze({ email: "public@example.test", filedAddress: "123 Private Lane", filedAddressSource: "Filing" });
+  const mixed = { ...held, cards: { ...held.cards, cards: { ...held.cards.cards, private: privateCard } } } as unknown as CandidateProfilesProjection;
+  const projected = readerCandidateProfiles(mixed);
+  assert.equal(projected.cards.cards.safe, safe);
+  assert.notEqual(projected.cards.cards.private, privateCard);
+  assert.equal(projected.cards.cards.private.filedAddress, null);
+  assert.equal(projected.cards.cards.private.filedAddressSource, null);
+  assert.equal(projected.cards.cards.private.email, privateCard.email);
+  assert.equal(privateCard.filedAddress, "123 Private Lane");
+  assert.equal(readerCandidateProfiles(projected), projected);
+});

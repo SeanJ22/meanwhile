@@ -539,7 +539,7 @@ test("createPgRepositories refuses an empty connection string", async () => {
 
 test("BL-30 migrates existing voting doors to exact state and canonical URL queries without changing held evidence", async () => {
   const { PGlite } = await import("@electric-sql/pglite");
-  const { migrateVotingDoorScopes } = await import("../lib/control-plane/repository/pg-store.ts");
+  const { bootstrap } = await import("../lib/control-plane/repository/pg-store.ts");
   const db = new PGlite();
   try {
     await db.exec("CREATE TABLE cp_doors(id text PRIMARY KEY,revision bigint,updated_at timestamptz,value jsonb)");
@@ -547,8 +547,18 @@ test("BL-30 migrates existing voting doors to exact state and canonical URL quer
     const original = { kind: "official-voting-source", updatedAt: NOW, validators: { checkedAt: NOW },
       config: { votingSource: JSON.stringify(source), votingMappings: JSON.stringify([{ ...source, scope: { state: "NH" } }]) } };
     await db.query("INSERT INTO cp_doors VALUES('held',7,$1,$2)", [NOW, original]);
-    const sql = { query: async (text: string, params?: readonly unknown[]) => (await db.query(text, params ? [...params] : [])).rows };
-    await migrateVotingDoorScopes(sql, LATER);
+    await db.exec("CREATE TABLE cp_schema_version(singleton boolean PRIMARY KEY,version integer,applied_at timestamptz)");
+    await db.query("INSERT INTO cp_schema_version VALUES(true,32,$1)", [NOW]);
+    let scans = 0;
+    const sql = { query: async (text: string, params?: readonly unknown[]) => {
+      if (text.includes("indisvalid")) return [{ valid: true, building: false }];
+      if (text.startsWith("SELECT id, revision, value->'config'")) scans++;
+      if (text.startsWith("SELECT id, revision, value->'config'") || text.startsWith("UPDATE cp_doors SET") ||
+          text.startsWith("SELECT version FROM cp_schema_version") || text.startsWith("INSERT INTO cp_schema_version"))
+        return (await db.query(text, params ? [...params] : [])).rows;
+      return [];
+    } };
+    await bootstrap(sql, LATER);
     const read = async () => (await db.query<{ revision: number; value: typeof original & { config: Record<string, unknown> } }>("SELECT revision,value FROM cp_doors WHERE id='held'")).rows[0]!;
     const migrated = await read();
     assert.equal(Number(migrated.revision), 8);
@@ -558,7 +568,8 @@ test("BL-30 migrates existing voting doors to exact state and canonical URL quer
     assert.deepEqual(migrated.value.validators, original.validators);
     assert.equal(migrated.value.config.votingSource, original.config.votingSource);
     assert.equal(migrated.value.config.votingMappings, original.config.votingMappings);
-    await migrateVotingDoorScopes(sql, LATER);
+    await bootstrap(sql, LATER);
+    assert.equal(scans, 1, "recorded schema version skips the completed door data move");
     assert.deepEqual(await read(), migrated, "replayed bootstrap does not rewrite migrated rows");
     assert.equal((await db.query("SELECT id FROM cp_doors WHERE value#>>'{config,votingState_NH}'='true'")).rows.length, 1);
     assert.equal((await db.query("SELECT id FROM cp_doors WHERE value#>>'{config,votingState_NJ}'='true'")).rows.length, 0);

@@ -1,3 +1,4 @@
+import { readerRoute } from "@/lib/api/reader-route";
 import { readRegistryPlace } from "@/lib/registry/reader-place";
 import { currentRegistryPlaceRead, withRegistryPlaceRead, type RegistryPlaceRead } from "@/lib/registry/runtime-read-model";
 import type { ReaderAuthorityManifest } from "@/lib/meetings/edge-artifacts";
@@ -203,7 +204,7 @@ export async function settleFundingHoldingAnswer(
   }
 }
 
-export async function GET(
+export const GET = readerRoute("/api/funding/[target]", async function GET(
   request: Request,
   { params }: { params: Promise<{ target: string }> },
 ) {
@@ -262,4 +263,4 @@ export async function GET(
         : "private, no-store",
     },
   });
-}
+});

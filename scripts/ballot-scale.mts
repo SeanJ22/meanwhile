@@ -10,12 +10,34 @@ const root = resolve(import.meta.dirname, "..");
 const entry = fileURLToPath(import.meta.url);
 const arg = (name: string) => process.argv.find(value => value.startsWith(`--${name}=`))?.slice(name.length + 3);
 const directory = resolve(arg("directory") ?? "/tmp/ballot-scale");
+const edgeDirectory = resolve(arg("edge-directory") ?? resolve(directory, "edge"));
 const mode = arg("mode") ?? "run";
 const now = new Date().toISOString();
 const size = (value: unknown) => Buffer.byteLength(JSON.stringify(value));
 type Statement = { query: string; params: unknown[] };
 type Transfer = { requests: number; receivedBytes: number; sentBytes: number; mutationRequestBytes: number };
 const zero = (): Transfer => ({ requests: 0, receivedBytes: 0, sentBytes: 0, mutationRequestBytes: 0 });
+type StageMarker = { id: number; label: string; phase: "start" | "end"; at: number; rssBytes: number; heapBytes: number; externalBytes: number; highWaterBytes: number };
+type StageMeasurement = { id: number; label: string; wallMs: number; peakRssBytes: number; startRssBytes: number; endRssBytes: number;
+  startHeapBytes: number; endHeapBytes: number; startExternalBytes: number; endExternalBytes: number };
+
+function stageMarkers() {
+  let nextId = 0;
+  const active = new Map<string, number[]>();
+  return (label: string, phase: "start" | "end", observedId?: number) => {
+    const stack = active.get(label) ?? [];
+    const id = phase === "start" ? ++nextId : observedId ?? stack.pop();
+    assert.ok(id, `No matching stage start: ${label}`);
+    if (phase === "start") stack.push(id);
+    else if (observedId !== undefined) stack.splice(stack.indexOf(observedId), 1);
+    active.set(label, stack);
+    const memory = process.memoryUsage();
+    const marker: StageMarker = { id, label, phase, at: performance.now(), rssBytes: memory.rss,
+      heapBytes: memory.heapUsed, externalBytes: memory.external, highWaterBytes: process.resourceUsage().maxRSS * 1024 };
+    process.stdout.write(`SCALE_STAGE=${JSON.stringify(marker)}\n`);
+    return id;
+  };
+}
 interface SqlConnection {
   connect(): Promise<void>;
   query(text: string, params?: unknown[]): Promise<{ rows: Record<string, unknown>[]; fields: { name: string; dataTypeID: number }[]; rowCount: number }>;
@@ -37,12 +59,18 @@ async function database() {
   if (!(await pg.query("SELECT to_regclass('database_transfer_daily') AS name")).rows[0].name) {
     await pg.query(await readFile(resolve(root, "lib/db/migrations/0030_database_transfer_daily.sql"), "utf8"));
   }
+  if (!(await pg.query("SELECT to_regprocedure('reader_payload_node(jsonb)') AS name")).rows[0].name) {
+    await pg.query(await readFile(resolve(root, "lib/db/migrations/0036_ne01.sql"), "utf8"));
+  }
+  if (!(await pg.query("SELECT to_regprocedure('civic_authority_origin(text)') AS name")).rows[0].name) {
+    await pg.query(await readFile(resolve(root, "lib/db/migrations/BL-30_candidate_scopes.sql"), "utf8"));
+  }
   const execute = async (statement: Statement) => {
     const result = await pg.query({ text: statement.query, values: statement.params, rowMode: "array" });
     return { command: statement.query.trim().split(/\s+/)[0].toUpperCase(), rowCount: result.rowCount,
       rowAsArray: true, fields: result.fields,
-      rows: result.rows.map(row => row.map(value => {
-        return value === null ? null : value instanceof Date ? value.toISOString() :
+      rows: result.rows.map(row => row.map((value, index) => {
+        return value === null ? null : [114, 3802].includes(result.fields[index].dataTypeID) ? JSON.stringify(value) : value instanceof Date ? value.toISOString() :
           typeof value === "object" ? JSON.stringify(value) : typeof value === "boolean" ? value ? "t" : "f" : String(value);
       })) };
   };
@@ -162,8 +190,8 @@ async function generateAuxiliary() {
       sites: [0, 1].map(index => ({ id: `${row.id}-site-${index}`, name: `${row.title} Location ${index}`, address: `${index + 1} Public Plaza`,
         room: null, lat: null, lng: null, kind: "ELECTION_DAY", election: "2026 General Election", serves: row.title, hours: "7 a.m.–7 p.m." })) })) };
     const packages = {
-      "candidate-profiles": { contractId: `candidate-profiles:${state}`, version: "2026-general", sourceThrough: now, sourceReceipt: profileReceipt, payload: profiles },
-      "candidate-corpus": { contractId: `candidate-corpus:${state}`, version: "2026-general", sourceThrough: now, sourceReceipt: corpusReceipt,
+      "candidate-profiles": { contractId: `candidate-profiles:${state}`, version: now, sourceThrough: now, sourceReceipt: profileReceipt, payload: profiles },
+      "candidate-corpus": { contractId: `candidate-corpus:${state}`, version: now, sourceThrough: now, sourceReceipt: corpusReceipt,
         payload: { formatVersion: 1, fetchedAt: now, attempted: documents.length, documents, failures: [] } },
       "voting-sites": voting,
     };
@@ -178,6 +206,59 @@ async function generateAuxiliary() {
     console.log(JSON.stringify(row));
   }
   await writeFile(resolve(directory, "auxiliary-counts.json"), JSON.stringify(totals, null, 2));
+}
+
+async function generateWorkerFixture() {
+  const state = arg("state")!;
+  const sourceDirectory = resolve(arg("source-directory") ?? directory);
+  const input = JSON.parse(await readFile(resolve(sourceDirectory, `${state.toLowerCase()}.json`), "utf8"));
+  const ballot = Object.values(input.ballots)[0] as import("../lib/ballot/types.ts").BallotSet;
+  const contests = ballot.contests.filter(row => row.id.startsWith("scale-") && row.type === "CANDIDACY");
+  const divisions = contests.map(row => ({ state, label: `${row.title} ${row.id}`, ocdId: row.ocdId, sourceDataset: "2022 Census benchmark" }));
+  const fields = ["election", "electionDate", "office", "jurisdictionName", "candidateName", "givenName", "familyName"];
+  const names = ["Avery", "Blake", "Casey", "Drew", "Emery", "Finley", "Gray", "Harper", "Indigo", "Jordan"];
+  const quote = (value: string) => `"${value.replaceAll('"', '""')}"`;
+  const rows = contests.flatMap((contest, at) => names.map(name => ["2026 General Election", "2026-11-03", contest.title,
+    divisions[at].label, `${name} Benchmark`, name, "Benchmark"].map(quote).join(",")));
+  const source = `${fields.join(",")}\n${rows.join("\n")}\n`;
+  ballot.contests = ballot.contests.filter(row => !row.id.startsWith("scale-") || row.type !== "CANDIDACY");
+  ballot.candidacies = ballot.candidacies.filter(row => !row.id.startsWith("scale-"));
+  await mkdir(directory, { recursive: true });
+  await writeFile(resolve(directory, `${state.toLowerCase()}.json`), JSON.stringify(input));
+  await writeFile(resolve(directory, `${state.toLowerCase()}.worker.csv`), source);
+  await writeFile(resolve(directory, `${state.toLowerCase()}.worker-one.csv`), `${fields.join(",")}\n${rows.slice(0, 10).join("\n")}\n`);
+  await writeFile(resolve(directory, `${state.toLowerCase()}.worker-divisions.json`), JSON.stringify(divisions));
+  await writeFile(resolve(directory, "input-counts.json"), await readFile(resolve(sourceDirectory, "input-counts.json")));
+  console.log(JSON.stringify({ state, workerContests: contests.length, workerCandidates: rows.length, sourceBytes: Buffer.byteLength(source) }));
+}
+
+async function generateDerived() {
+  const inputs = JSON.parse(await readFile(resolve(directory, "input-counts.json"), "utf8"));
+  const counts = [];
+  for (const { state } of inputs.states as { state: string }[]) {
+    const input = JSON.parse(await readFile(resolve(directory, `${state.toLowerCase()}.json`), "utf8"));
+    const ballot = Object.values(input.ballots)[0] as import("../lib/ballot/types.ts").BallotSet;
+    const candidates = ballot.candidacies.filter(row => row.id.startsWith("scale-") && (state === arg("all-candidates") || row.id.endsWith("-candidate-0")));
+    const references: import("../lib/civic-data/derived-authority.ts").DerivedInputRef[] = [];
+    const records = candidates.map(row => {
+      const key = `ballot-${state.toLowerCase()}-${row.id}`, url = `https://scale.example.gov/campaign/${key}`;
+      const name = `${row.givenName} ${row.familyName}`;
+      const sha256 = createHash("sha256").update(key).digest("hex"), artifactId = `${key}:page`, approvalRecordId = `${key}:approval`;
+      references.push({ kind: "VAULTED_EVIDENCE", artifactId, contentHash: `sha256-${sha256}`, tier: "RAW", retrievedAt: now },
+        { kind: "PIPELINE_APPROVAL", itemId: key, recordId: approvalRecordId, approvedAt: now });
+      return { id: key, candidacyId: row.id, candidateName: name, campaign: { url, attemptedAt: now.slice(0, 10),
+        verification: `Fetched ${now.slice(0, 10)} (campaign-site-verifier/1): 'Synthetic benchmark' — names ${name}, the office ("Governing Board"), and the 2026 election.`,
+        evidence: { verifierId: "campaign-site-verifier/1", artifactId, attemptId: `${key}:attempt`, sha256,
+          requestedUrl: url, finalUrl: url, httpStatus: 200, readAt: now, approvalItemId: key, approvalRecordId, approvedAt: now } } };
+    });
+    const plan = { records, published: records.map(row => ({ key: row.id, candidacyId: row.candidacyId, url: row.campaign.url,
+      approvalRecordId: row.campaign.evidence.approvalRecordId })), held: [], inputs: references };
+    const encoded = JSON.stringify(plan);
+    await writeFile(resolve(directory, `${state.toLowerCase()}.candidate-campaign-sites-derived.json`), encoded);
+    counts.push({ state, records: records.length, bytes: Buffer.byteLength(encoded) });
+  }
+  await writeFile(resolve(directory, "derived-counts.json"), JSON.stringify(counts, null, 2));
+  console.log(JSON.stringify({ states: counts.length, records: counts.reduce((sum, row) => sum + row.records, 0), largest: counts.sort((a, b) => b.bytes - a.bytes)[0] }));
 }
 
 async function changeInput() {
@@ -205,6 +286,27 @@ async function changeInput() {
       source.retrievedAt = now;
       input.sourceThrough = now;
       input.sourceReceipt.reviewedAt = now;
+    } else if (family === "candidate-campaign-sites-derived") {
+      const record = input.records[0];
+      const evidence = record.campaign.evidence;
+      const priorArtifactId = evidence.artifactId;
+      const priorApprovalId = evidence.approvalRecordId;
+      evidence.artifactId = `${record.id}:page:${now}`;
+      evidence.approvalRecordId = `${record.id}:approval:${now}`;
+      evidence.readAt = evidence.approvedAt = now;
+      evidence.sha256 = createHash("sha256").update(`${record.id}:${now}`).digest("hex");
+      record.campaign.attemptedAt = now.slice(0, 10);
+      input.published[0].approvalRecordId = evidence.approvalRecordId;
+      for (const reference of input.inputs) {
+        if (reference.kind === "VAULTED_EVIDENCE" && reference.artifactId === priorArtifactId) {
+          reference.artifactId = evidence.artifactId;
+          reference.contentHash = `sha256-${evidence.sha256}`;
+          reference.retrievedAt = now;
+        } else if (reference.kind === "PIPELINE_APPROVAL" && reference.recordId === priorApprovalId) {
+          reference.recordId = evidence.approvalRecordId;
+          reference.approvedAt = now;
+        }
+      }
     } else {
       assert.equal(family, "voting-sites");
       input.jurisdictions[0].sites[0].room = `Updated ${now}`;
@@ -233,7 +335,7 @@ async function isolationSnapshot() {
   const { ballotPublicationDue } = await import("../lib/civic-data/ballot-publication.ts");
   const { BALLOT_STATES, requireBallotState } = await import("../lib/ballot/state-scopes.ts");
   const { LocalFileArtifactStore } = await import("../lib/meetings/edge-store.ts");
-  const authority = (await new LocalFileArtifactStore(resolve(directory, "edge")).readAuthorityManifest())!.manifest.stateAuthorities!;
+  const authority = (await new LocalFileArtifactStore(edgeDirectory).readAuthorityManifest())!.manifest.stateAuthorities!;
   assert.equal(Object.keys(authority["ballot-contests"]!).length, 51);
   const hashes: Record<string, string> = {};
   for (const state of BALLOT_STATES) hashes[state] = await ballotInputHash(directory, state);
@@ -265,36 +367,57 @@ async function worker() {
   const state = arg("state")!;
   const phase = arg("phase") ?? "publish";
   const family = arg("family") ?? "ballot-contests";
+  const databasePort = arg("port");
+  const markStage = stageMarkers();
+  async function stage<T>(label: string, work: () => Promise<T>): Promise<T> {
+    const id = markStage(label, "start");
+    try { return await work(); } finally { markStage(label, "end", id); }
+  }
+  function synchronousStage<T>(label: string, work: () => T): T {
+    const id = markStage(label, "start");
+    try { return work(); } finally { markStage(label, "end", id); }
+  }
   const { neonConfig } = await import("@neondatabase/serverless");
   const transfer = zero();
+  const largestDatabaseRequest = { sentBytes: 0, receivedBytes: 0, mutationRequestBytes: 0 };
   const statements = new Map<string, Transfer>();
   const stateScopes = new Set<string>();
   const originalFetch = globalThis.fetch;
-  neonConfig.fetchFunction = async (_url: Parameters<typeof fetch>[0], init: Parameters<typeof fetch>[1]) => {
-    assert.ok(arg("port"));
-    const body = String(init?.body);
-    const parsed = JSON.parse(body) as Statement & { queries?: Statement[] };
-    const queries = parsed.queries ?? [parsed];
-    for (const statement of queries) for (const param of statement.params) if (typeof param === "string" &&
-      /^US-[A-Z]{2}:(?:state-election-ballots|candidate-profiles|candidate-publications|voting-sites)$/.test(param)) {
-      assert.ok(param.startsWith(`US-${state}:`), `Another state's scope crossed this worker: ${param}`);
-      stateScopes.add(param);
+  function requestDetails(body: string) {
+    const queries = [...body.matchAll(/"query"\s*:\s*("(?:[^"\\]|\\.)*")/g)].map(match => JSON.parse(match[1]) as string);
+    assert.ok(queries.length, "The measured request must contain SQL.");
+    for (const match of body.matchAll(/"(US-[A-Z]{2}:(?:state-election-ballots|candidate-profiles|candidate-publications|voting-sites|candidate-campaign-sites-derived))"/g)) {
+      assert.ok(phase === "unchanged" || match[1].startsWith(`US-${state}:`), `Another state's scope crossed this worker: ${match[1]}`);
+      stateScopes.add(match[1]);
     }
-    const response = await originalFetch(`http://127.0.0.1:${arg("port")}`, { method: "POST", body });
-    const bytes = new Uint8Array(await response.arrayBuffer());
-    const mutation = queries.some(row => /\b(?:insert|update|delete)\b/i.test(row.query));
-    const key = queries.map(row => (row.query.match(/(?:from|into|update)\s+"?(\w+)/i)?.[1] ?? "other")).join(",");
-    const count = { requests: 1, receivedBytes: bytes.byteLength, sentBytes: Buffer.byteLength(body), mutationRequestBytes: mutation ? Buffer.byteLength(body) : 0 };
+    return { mutation: queries.some(query => /\b(?:insert|update|delete)\b|\bcivic_authority_(?:partition_publish|retire)\s*\(/i.test(query)),
+      key: queries.map(query => (query.match(/(?:from|into|update)\s+"?(\w+)/i)?.[1] ?? "other")).join(",") };
+  }
+  neonConfig.fetchFunction = async (_url: Parameters<typeof fetch>[0], init: Parameters<typeof fetch>[1]) => {
+    assert.ok(databasePort);
+    const body = String(init?.body);
+    const { mutation, key } = requestDetails(body);
+    const count = { requests: 1, receivedBytes: 0, sentBytes: Buffer.byteLength(body), mutationRequestBytes: mutation ? Buffer.byteLength(body) : 0 };
+    largestDatabaseRequest.sentBytes = Math.max(largestDatabaseRequest.sentBytes, count.sentBytes);
+    largestDatabaseRequest.mutationRequestBytes = Math.max(largestDatabaseRequest.mutationRequestBytes, count.mutationRequestBytes);
     for (const field of Object.keys(count) as (keyof Transfer)[]) transfer[field] += count[field];
     const held = statements.get(key) ?? zero();
     for (const field of Object.keys(count) as (keyof Transfer)[]) held[field] += count[field];
     statements.set(key, held);
-    return new Response(bytes, { status: response.status, headers: { "content-type": "application/json" } });
+    const response = await originalFetch(`http://127.0.0.1:${databasePort}`, { method: "POST", body });
+    const counted = response.body?.pipeThrough(new TransformStream<Uint8Array, Uint8Array>({ transform(bytes, controller) {
+      transfer.receivedBytes += bytes.byteLength;
+      held.receivedBytes += bytes.byteLength;
+      count.receivedBytes += bytes.byteLength;
+      controller.enqueue(bytes);
+    }, flush() { largestDatabaseRequest.receivedBytes = Math.max(largestDatabaseRequest.receivedBytes, count.receivedBytes); } }));
+    return new Response(counted, { status: response.status, headers: response.headers });
   };
   const started = performance.now();
-  const { requireBallotState, stateBallotScope, stateBallotContractId } = await import("../lib/ballot/state-scopes.ts");
+  markStage("module-load", "start");
+  const { BALLOT_STATES, requireBallotState, stateBallotScope, stateBallotContractId } = await import("../lib/ballot/state-scopes.ts");
   const { LocalFileArtifactStore } = await import("../lib/meetings/edge-store.ts");
-  const heldArtifactStore = new LocalFileArtifactStore(resolve(directory, "edge"));
+  const heldArtifactStore = new LocalFileArtifactStore(edgeDirectory);
   const artifactTransfer = { manifestReads: 0, manifestReadBytes: 0, manifestWrites: 0, manifestWriteBytes: 0,
     meetingManifestReads: 0, meetingManifestReadBytes: 0, meetingManifestWrites: 0,
     reads: [] as { key: string; bytes: number }[], writes: [] as { key: string; bytes: number }[] };
@@ -341,15 +464,142 @@ async function worker() {
   const beforeManifest = (await heldArtifactStore.readAuthorityManifest())?.manifest;
   const allowedArtifactKeys = new Set([beforeManifest?.stateAuthorities?.[authorityFamily as "ballot-contests"]?.[state]?.key]);
   const recordClassFor = { "ballot-contests": "BALLOT_CANDIDACY", "candidate-profiles": "CANDIDATE_PROFILE",
-    "candidate-corpus": "CANDIDATE_PUBLICATION", "voting-sites": "VOTING_SITE" } as const;
+    "candidate-corpus": "CANDIDATE_PUBLICATION", "voting-sites": "VOTING_SITE", "candidate-campaign-sites-derived": "CURATED_READER_RECORD" } as const;
   const recordClass = recordClassFor[family as keyof typeof recordClassFor];
   const scope = stateBallotScope(family as "ballot-contests", state);
   const division = arg("division")!;
   const ids = [division.split("/place:")[0], division];
   const government = division.split("/place:")[1];
   const targets = Array.from({ length: 10 }, (_, index) => `ballot-${state.toLowerCase()}-${government}-candidate-${index}`);
+  markStage("module-load", "end");
   let result: unknown;
-  if (phase === "read") {
+  if (phase === "derive-captures") {
+    assert.equal(family, "candidate-campaign-sites-derived");
+    const { deriveCampaignSitesFromCaptures } = await import("../lib/civic-data/derived-campaign-site-writer.ts");
+    type Approval = import("../lib/civic-data/derived-campaign-site-writer.ts").PublishableCampaignSiteApproval;
+    type HeldRead = import("../lib/civic-data/derived-campaign-site-writer.ts").HeldVerifyingRead;
+    const counts = JSON.parse(await readFile(resolve(directory, "derived-counts.json"), "utf8")) as { state: string; records: number }[];
+    const count = counts.find(row => row.state === state)!.records;
+    const padding = "x".repeat(64 * 1024);
+    const bodyFor = (id: string) => `<html><head><title>Alex Example for State Representative 2026</title></head><body><h1>Alex Example for State Representative 2026</h1><p>Alex Example is running for State Representative in the 2026 election. We will improve schools, protect drinking water, support local businesses and make government accountable to residents.</p><!--${id}:${padding}--></body></html>`;
+    const approvals = synchronousStage("derived:approval-metadata", () => Array.from({ length: count }, (_, index): Approval => {
+      const id = `ballot-${state.toLowerCase()}:scale-${index}`, url = `https://alexexample-${index}.example/`;
+      return { itemId: `${id}:item`, recordId: `${id}:approval`, at: now, stage: "APPROVED_FOR_PROMOTION", campaignSite: {
+        candidacyId: id, candidateName: "Alex Example", identity: { candidacyId: id, givenName: "Alex", familyName: "Example",
+          officeTitle: "State Representative", ocdId: division, stateCode: state, cycle: 2026 }, readerKeys: [id], url,
+        host: new URL(url).hostname, verification: "Saved generated capture", publicationDoor: "CANDIDATE_CAMPAIGN_SITES_DERIVED_CONTRACT",
+        evidence: { verifierId: "campaign-site-verifier/1", artifactId: `${id}:capture`, attemptId: `${id}:attempt`,
+          sha256: createHash("sha256").update(bodyFor(id)).digest("hex"), requestedUrl: url, finalUrl: url,
+          httpStatus: 200, contentType: "text/html", readAt: now },
+      } };
+    }));
+    let previous: Map<string, HeldRead> | undefined, captureBytes = 0, capturesRead = 0, maxHeldCaptures = 0;
+    const derived = await stage("derived:read-captures-and-plan", () => deriveCampaignSitesFromCaptures({ state, now, approvals, profiles: null,
+      async readCaptures(group) {
+        assert.equal(previous?.size ?? 0, 0, "The prior candidacy's raw captures must be released before reading another.");
+        const held = new Map<string, HeldRead>();
+        for (const approval of group) {
+          const body = bodyFor(approval.campaignSite.candidacyId);
+          captureBytes += Buffer.byteLength(body); capturesRead++;
+          held.set(approval.recordId, { body, sha256: approval.campaignSite.evidence.sha256, tier: "RAW", permission: "ALLOWED" });
+        }
+        maxHeldCaptures = Math.max(maxHeldCaptures, held.size); previous = held;
+        return { held, linkedPublications: [] };
+      },
+    }));
+    assert.equal(derived.plan?.held.length, 0, JSON.stringify(derived.plan?.held.slice(0, 2)));
+    assert.equal(derived.plan?.records.length, count);
+    assert.equal(previous?.size, 0);
+    assert.deepEqual(derived.candidate.semantics.violations, []);
+    const { publishCampaignSitePortraits } = await import("../lib/control-plane/promotion/campaign-site-portraits.ts");
+    let portraitCaptures = 0, portraitCaptureBytes = 0, commonsReads = 0;
+    const emptyCommons = new TextEncoder().encode('{"results":{"bindings":[]}}');
+    const portraitPlan = await stage("derived:portrait-captures", () => publishCampaignSitePortraits({ plan: derived.plan!, approvals, now,
+      async held(approval) {
+        const body = bodyFor(approval.campaignSite.candidacyId);
+        portraitCaptures++; portraitCaptureBytes += Buffer.byteLength(body);
+        return { body, sha256: approval.campaignSite.evidence.sha256, tier: "RAW", permission: "ALLOWED" };
+      },
+      commonsRuntime: { async capture(url) {
+        commonsReads++;
+        return { sourceId: "scale-commons", releaseId: url, bytes: emptyCommons,
+          sha256: createHash("sha256").update(emptyCommons).digest("hex"), requestedUrl: url, finalUrl: url,
+          httpStatus: 200, retrievedAt: now, sourceObservedAt: now, checkedAt: now, lastCheckStatus: 200, etag: null,
+          lastModified: null, contentType: "application/json", reused: false, vaultKey: "scale/commons-empty" };
+      } },
+    }));
+    assert.equal(portraitPlan.portraits?.length ?? 0, 0);
+    assert.equal(portraitCaptures, count);
+    result = { records: count, capturesRead, captureBytes, maxHeldCaptures, portraitCaptures, portraitCaptureBytes, commonsReads,
+      portraitFixture: "Generated HTML has no portrait; Commons responses are generated empty results.",
+      outputRecords: derived.candidate.normalization.outputRecords };
+  } else if (phase === "cutover") {
+    const { partitionHeldStateAuthority } = await import("../lib/civic-data/state-authority-cutover.ts");
+    result = await stage("cutover:state-partition", () => partitionHeldStateAuthority(family as import("../lib/ballot/state-scopes.ts").StateBallotFamily, state));
+  } else if (phase === "artifact-child") {
+    const { PostgresRoutineDataStore } = await import("../lib/civic-data/store.ts");
+    for (const method of ["readPromotion", "readCandidateProof", "readPromotionIdentities", "readPublishedCandidateMetadata"] as const) {
+      const original = PostgresRoutineDataStore.prototype[method];
+      Object.defineProperty(PostgresRoutineDataStore.prototype, method, { value: function(...args: unknown[]) {
+        return stage(`artifact:${method}`, async () => Reflect.apply(original, this, args));
+      }, configurable: true, writable: true });
+    }
+    const originalPut = LocalFileArtifactStore.prototype.putImmutable;
+    LocalFileArtifactStore.prototype.putImmutable = async function(bytes, suffix) {
+      const key = await originalPut.call(this, bytes, suffix);
+      artifactTransfer.writes.push({ key, bytes: bytes.byteLength });
+      return key;
+    };
+    LocalFileArtifactStore.prototype.readManifest = async () => { throw new Error("STATE_CHILD_READ_MEETING_MANIFEST"); };
+    LocalFileArtifactStore.prototype.writeManifest = async () => { throw new Error("STATE_CHILD_WRITE_MEETING_MANIFEST"); };
+    const args = process.argv;
+    process.argv = [args[0], resolve(root, "scripts/publish-state-authority.mts"), `--state=${state}`, `--family=${authorityFamily}`,
+      `--version=${arg("version")!}`, `--observed-at=${now}`];
+    await stage("edge:artifact-child", () => import("./publish-state-authority.mts"));
+    process.argv = args;
+    assert.ok(!process.exitCode, "The actual state artifact CLI must succeed.");
+    result = { entry: "scripts/publish-state-authority.mts" };
+  } else if (phase === "artifact" || phase === "unchanged") {
+    const { publishSupervisorReaderEdge } = await import("../lib/civic-data/reader-edge-publication.ts");
+    const { PostgresRoutineDataStore } = await import("../lib/civic-data/store.ts");
+    const children: unknown[] = [];
+    const selected = phase === "unchanged" ? BALLOT_STATES.flatMap(state => Object.entries(recordClassFor).map(([family, recordClass]) =>
+      ({ recordClass, scope: stateBallotScope(family as "ballot-contests", state) }))) : [{ recordClass, scope }];
+    const published = await stage("edge:metadata-coordinator", () => publishSupervisorReaderEdge(new PostgresRoutineDataStore(), now,
+      selected, { artifactStore, stateArtifactChildren: { launch: async command => {
+        assert.notEqual(phase, "unchanged", "An unchanged national poll must launch no artifact child.");
+        const version = command.args.find(value => value.startsWith("--version="))!;
+        const authority = command.args.find(value => value.startsWith("--family="))!.slice("--family=".length);
+        const childFamily = authority === "candidate-publications" ? "candidate-corpus" : authority;
+        const measured = await child(["--mode=worker", `--directory=${directory}`, `--edge-directory=${edgeDirectory}`, `--state=${state}`,
+          `--family=${childFamily}`, "--phase=artifact-child", `--port=${databasePort}`, `--division=${division}`, version], command.env);
+        const line = measured.output.split("\n").find(row => row.startsWith("SCALE_RESULT="));
+        assert.ok(line, measured.output);
+        children.push({ ...JSON.parse(line.slice("SCALE_RESULT=".length)), stages: measured.stages, sampledPeakRssBytes: measured.sampledPeakRssBytes });
+        return { id: command.id, status: 0, signal: null, stdout: measured.output, stderr: "", termination: "EXITED", errorMessage: null };
+      } } }));
+    assert.ok(published.ok, JSON.stringify(published));
+    if (phase === "unchanged") {
+      assert.equal(artifactTransfer.writes.length, 0);
+      assert.equal(artifactTransfer.reads.length, 0);
+      assert.equal(artifactTransfer.manifestWrites, 0);
+    }
+    const after = (await heldArtifactStore.readAuthorityManifest())!.manifest.stateAuthorities!;
+    const changed: string[] = [], concurrentChanges: string[] = [];
+    for (const [kind, states] of Object.entries(after)) for (const [key, ref] of Object.entries(states)) {
+      if (JSON.stringify(beforeManifest?.stateAuthorities?.[kind as keyof typeof after]?.[key]) === JSON.stringify(ref)) continue;
+      if (key !== state) {
+        assert.equal(arg("concurrent-coverage"), "1", "Only the selected state's artifacts may change in an isolated run.");
+        concurrentChanges.push(`${kind}:${key}`);
+        continue;
+      }
+      changed.push(`${kind}:${key}`);
+    }
+    assert.ok([...statements.keys()].every(key => !/(?:^|,)(?:fact|source_copy|civic_data_candidates|civic_data_payload_parts)(?:,|$)/.test(key)),
+      "The artifact coordinator must read pointer metadata only.");
+    result = { edge: published, children, changedAuthorities: changed, concurrentChanges };
+  } else if (phase === "read") {
+    markStage("edge:read", "start");
     const { ensureReaderAuthorityEdge } = await import("../lib/meetings/edge-serving.ts");
     const { withReaderAuthorityEdge, readPromotedEdgeFirst } = await import("../lib/registry/runtime-edge.ts");
     const { readerBallotSourcesForDivisions } = await import("../lib/ballot/reader-sources.ts");
@@ -365,77 +615,202 @@ async function worker() {
       const read = await withReaderAuthorityEdge(bundle, () => readPromotedEdgeFirst(recordClass, scope,
         options => readPromotedCivicData(recordClass, scope, options), "Benchmark state's auxiliary records"));
       assert.equal(read.kind, "PROMOTED");
-      result = { statePayloadBytes: read.kind === "PROMOTED" ? size(read.value) : 0 };
+      const value = read.value as { cards?: { cards: Record<string, unknown> }; documents?: unknown[]; records?: unknown[]; jurisdictions?: { sites: unknown[] }[] };
+      result = { records: value.cards ? Object.keys(value.cards.cards).length : value.documents?.length ?? value.records?.length ?? value.jurisdictions?.reduce((sum, row) => sum + row.sites.length, 0) };
     }
     assert.equal(transfer.requests, 0, "Published edge readers must not contact the database.");
+    markStage("edge:read", "end");
   } else if (phase === "slice") {
+    markStage("database:place-slice", "start");
     const { readPlacePointerSlice } = await import("../lib/civic-data/held-place-slices.ts");
     const read = await readPlacePointerSlice(recordClass, scope, ids, [], targets);
     assert.equal(read.kind, "PROMOTED");
     assert.ok(read.value);
     result = { placeBytes: size(read.value) };
+    markStage("database:place-slice", "end");
   } else {
-    const before = beforeManifest?.stateAuthorities ?? {};
-    const { PostgresRoutineDataStore } = await import("../lib/civic-data/store.ts");
-    const store = new PostgresRoutineDataStore();
+    const { PostgresRoutineDataStore } = await stage("module-load:publication", () => import("../lib/civic-data/store.ts"));
+    const store = new Proxy(new PostgresRoutineDataStore(), {
+      get(target, property, receiver) {
+        const value = Reflect.get(target, property, receiver);
+        return typeof value === "function" && property !== "constructor"
+          ? (...args: unknown[]) => stage(`store:${String(property)}`, async () => Reflect.apply(value, target, args)) : value;
+      },
+    });
     let publication: unknown;
-    if (family === "ballot-contests") {
-      const { runBallotPublication } = await import("./assemble-ballot-package.mts");
-      const published = await runBallotPublication({ state: requireBallotState(state), directory, store, now });
+    if (family === "candidate-profiles" && phase === "profile-findings") {
+      const { neon } = await import("@neondatabase/serverless");
+      const { runCandidateProfileFindingsJob } = await import("../lib/civic-data/candidate-profile-findings.ts");
+      const { pgAggregateRepository } = await import("../lib/control-plane/repository/pg-store.ts");
+      const { listedBoxRepository } = await import("../lib/control-plane/box.ts");
+      const sql = neon(process.env.WTP_CONTROL_PLANE_DATABASE_URL!);
+      type Repositories = import("../lib/control-plane/repository/types.ts").ControlPlaneRepositories;
+      const repos: Pick<Repositories, "boxFindings" | "adminConfig"> = {
+        boxFindings: listedBoxRepository(pgAggregateRepository(sql, "BoxFinding", "cp_box_findings")),
+        adminConfig: pgAggregateRepository(sql, "AdminConfig", "cp_admin_config"),
+      };
+      const held = new Map((JSON.parse(await readFile(resolve(directory, "profile-findings-artifacts.json"), "utf8")) as
+        import("../lib/control-plane/evidence/read-only-vault.ts").HeldVaultArtifact[]).map(row => [row.id, row]));
+      const published = await stage("profiles:findings-job", () => runCandidateProfileFindingsJob({ state, store, repos,
+        query: (query, params) => sql.query(query, params), now,
+        readHeld: async ids => {
+          assert.equal(new Set(ids).size, 500);
+          return async id => held.get(id) ?? null;
+        },
+      }));
+      assert.deepEqual(published.report, { published: { "CAN-16": 500 }, refused: {}, waiting: 0 });
+      assert.equal(published.receipt?.state, "PROMOTED");
+      publication = published;
+    } else if (family === "ballot-contests" && phase.startsWith("worker-")) {
+      const { parseCivicRecords } = await import("../lib/control-plane/workers/parser.ts");
+      const { workerBallotContestsPackage } = await import("../lib/civic-data/worker-ballot-contests.ts");
+      const { readManualProjectionPrior, manualProjectionCandidate } = await import("../lib/civic-data/manual-projections.ts");
+      const { processRegisteredManualCandidate } = await import("../lib/civic-data/promotion.ts");
+      const built = await (async () => {
+        const prior = await stage("worker:prior-state", () => readManualProjectionPrior(stateBallotContractId("ballot-contests", state), store, now));
+        const priorVersionId = prior?.versionId ?? null;
+        const earlierReceipts = prior?.sourceReceipt.sources.map(row => `${row.finalUrl}@${row.rawHash}`) ?? [];
+        let source = await stage("worker:source-read", () => readFile(resolve(directory, `${state.toLowerCase()}.worker${phase === "worker-one" ? "-one" : ""}.csv`), "utf8"));
+        if (phase !== "worker-seed") source = source.replaceAll("Avery", "Taylor");
+        const sourceBytes = Buffer.byteLength(source);
+        const artifactId = `${now}:${phase}`;
+        const evidence: import("../lib/control-plane/workers/types.ts").WorkerEvidence = {
+          artifactId, contentHash: `sha256-${createHash("sha256").update(source).digest("hex")}`, text: source,
+          acquiredByAttemptId: artifactId, canonicalUrl: `https://scale.example.gov/${state.toLowerCase()}/${phase === "worker-one" ? "single-contest" : "full-candidate-list"}.csv`,
+          retrievedAt: now, sourceId: "Synthetic state election authority", methodRouteId: "list" };
+        const fields = ["election", "electionDate", "office", "jurisdictionName", "candidateName", "givenName", "familyName"];
+        const contract: import("../lib/control-plane/workers/types.ts").GeneralizedCivicExtractionContract = {
+          schemaVersion: 2, recordClass: "BALLOT_CONTEST", subjectId: `scale:${state}`, jurisdiction: { country: "US", state, canonicalId: `scale:${state}` },
+          identity: { namespace: "scale-ballot", keyFields: ["election", "office", "jurisdictionName", "candidateName"] },
+          sourceScope: { sourceId: evidence.sourceId, publisher: evidence.sourceId, routeIds: ["list"], canonicalUrls: [evidence.canonicalUrl], observationArtifactIds: [artifactId] },
+          methodVersion: 1, requiredFields: ["election", "office", "candidateName"], completenessScope: "Every candidate row on this saved source", expectedSourceDate: null,
+          extraction: { format: "DELIMITED_TEXT", delimiter: ",", headerRows: 1, fields: Object.fromEntries(fields.map((field, index) => [field, { source: index, type: "STRING" as const }])) },
+          verification: { required: false, authorities: [] } };
+        const parsed = synchronousStage("worker:parse", () => parseCivicRecords({ attemptId: artifactId,
+          worker: { role: "PARSER", instance: "scale", provider: "deterministic", version: "2" }, evidence, contract }));
+        assert.equal(parsed.verdict, "EXTRACTED", JSON.stringify(parsed.warnings));
+        const divisions = JSON.parse(await readFile(resolve(directory, `${state.toLowerCase()}.worker-divisions.json`), "utf8"));
+        const checked = synchronousStage("worker:verify-merge", () => workerBallotContestsPackage({ now, prior,
+          plan: { contract, publication: { contractId: stateBallotContractId("ballot-contests", state), bodyId: `scale:${state}` } } as import("../lib/control-plane/workers/autonomous-plan.ts").AutonomousWorkPlan,
+          parser: { id: artifactId, workItemId: "ballot", endedAt: now, result: parsed } as import("../lib/control-plane/workers/types.ts").WorkerResultRecord,
+          registry: { payload: { registry: { divisions } } } as import("../lib/registry/runtime-data-plane.ts").RegistryRuntimePrior,
+          captures: [{ evidence, observedAt: now, transport: "REACHABLE", partial: false, httpStatus: 200 }] }));
+        assert.equal(checked.heldContests.length, 0, JSON.stringify(checked.heldContests));
+        const candidate = synchronousStage("worker:candidate-build", () => manualProjectionCandidate(checked.package));
+        const ballots = Object.values((checked.package.payload as import("../lib/ballot/generic-projection.ts").GenericBallotProjection).ballots);
+        const receipts = checked.package.sourceReceipt.sources.map(row => `${row.finalUrl}@${row.rawHash}`);
+        const superseded = earlierReceipts.filter(row => row.includes("scale.example.gov") && /\/(?:full-candidate-list|single-contest)\.csv@/.test(row) && !receipts.includes(row));
+        if (phase === "worker-full") assert.equal(superseded.length, 2, "The replaced full list and single-contest receipt must both be pruned.");
+        return { candidate, contractId: checked.package.contractId, priorVersionId, report: { sourceBytes, inputRecords: parsed.records.length,
+          contests: ballots.reduce((sum, ballot) => sum + ballot.contests.length, 0), candidates: ballots.reduce((sum, ballot) => sum + ballot.candidacies.length, 0),
+          sourceReceiptRows: receipts.length, supersededReceiptRowsRemoved: superseded.length, changes: checked.changes.records } };
+      })();
+      const published = await stage("generic:promotion", () => processRegisteredManualCandidate(store, built.contractId, built.candidate, now, built.priorVersionId));
+      assert.ok(published.promoted, JSON.stringify({ state: published.candidate.state, reason: published.candidate.failureDetail }));
+      publication = { versionId: published.promoted!.versionId, ...built.report };
+    } else if (family === "ballot-contests") {
+      const { runBallotPublication } = await stage("module-load:assembler", () => import("./assemble-ballot-package.mts"));
+      const published = await stage("ballot-publication", () => runBallotPublication({ state: requireBallotState(state), directory, store, now, onStage: markStage }));
       assert.equal(published.report.status, "PUBLISHED", JSON.stringify(published.report));
       assert.equal(published.report.heldContests?.filter(row => row.contestId.startsWith("scale-")).length ?? 0, 0,
         "Every generated government must publish its complete contest.");
       publication = published.report;
     } else {
       const { prepareManualProjectionSuccessor } = await import("../lib/civic-data/manual-successor.ts");
-      const { processRegisteredManualCandidate } = await import("../lib/civic-data/promotion.ts");
-      const input = JSON.parse(await readFile(resolve(directory, `${state.toLowerCase()}.${family}.json`), "utf8"));
+      const { processRegisteredManualCandidate, processRegisteredRoutineCandidate } = await import("../lib/civic-data/promotion.ts");
+      let encoded = await stage("auxiliary:read-file", () => readFile(resolve(directory, `${state.toLowerCase()}.${family}.json`), "utf8"));
+      const rawInputBytes = Buffer.byteLength(encoded);
+      const rawInputHash = family === "voting-sites" ? synchronousStage("voting:input-hash", () => createHash("sha256").update(encoded).digest("hex")) : null;
+      let input = synchronousStage("auxiliary:parse", () => JSON.parse(encoded));
+      encoded = "";
       let candidate: import("../lib/civic-data/types.ts").RoutineCandidate;
       let expectedBaseVersionId: string | null;
-      if (family === "voting-sites") {
+      if (family === "candidate-campaign-sites-derived") {
+        const { derivedCampaignSitesCandidate } = await import("../lib/civic-data/derived-campaign-site-writer.ts");
+        expectedBaseVersionId = (await store.readPromotionIdentity(recordClass, scope))?.versionId ?? null;
+        candidate = synchronousStage("derived:candidate-build", () => derivedCampaignSitesCandidate(state, input, now));
+      } else if (family === "voting-sites") {
         const { votingSitesCandidate } = await import("../lib/ballot/voting-sites-data-plane.ts");
         const prior = await store.readPromotion<import("../lib/ballot/voting-sites.ts").VotingSitesFile>(recordClass, scope);
         expectedBaseVersionId = prior?.versionId ?? null;
-        const rawHash = createHash("sha256").update(JSON.stringify(input)).digest("hex");
+        const rawHash = rawInputHash!;
         const url = input.jurisdictions[0].sourceUrl;
-        candidate = votingSitesCandidate({ state, current: input, prior: prior?.payload ?? null, failures: [], successfulAuthorityReads: 1,
+        candidate = synchronousStage("voting:candidate-build", () => votingSitesCandidate({ state, current: input, prior: prior?.payload ?? null, failures: [], successfulAuthorityReads: 1,
           carriedFromVersionId: expectedBaseVersionId,
           requestedUrl: url, finalUrl: url, retrievedAt: now,
-          acquisition: [{ vaultKey: `scale/${rawHash}`, rawHash, byteLength: size(input), url, contentType: "application/json" }] });
-      } else ({ candidate, expectedBaseVersionId } = await prepareManualProjectionSuccessor(input, store, now));
+          acquisition: [{ vaultKey: `scale/${rawHash}`, rawHash, byteLength: rawInputBytes, url, contentType: "application/json" }] }));
+      } else ({ candidate, expectedBaseVersionId } = await stage("auxiliary:prepare-successor", () => prepareManualProjectionSuccessor(input, store, now)));
+      input = null;
       assert.equal(recordClass, candidate.recordClass);
-      const outcome = await processRegisteredManualCandidate(store, stateBallotContractId(family as "candidate-profiles" | "candidate-corpus" | "voting-sites", state), candidate, now, expectedBaseVersionId);
-      assert.ok(outcome.promoted, JSON.stringify({ state: outcome.candidate.state, reason: outcome.candidate.failureDetail }));
-      publication = { versionId: outcome.promoted.versionId, recordClass, records: candidate.civicRecords?.length };
+      if (phase === "construct") publication = { constructed: true, recordClass, records: candidate.normalization.outputRecords };
+      else {
+        const outcome = await stage("generic:promotion", () => family === "candidate-campaign-sites-derived"
+          ? processRegisteredRoutineCandidate(store, stateBallotContractId("candidate-campaign-sites-derived", state), candidate, now, expectedBaseVersionId)
+          : processRegisteredManualCandidate(store, stateBallotContractId(family as "candidate-profiles" | "candidate-corpus" | "voting-sites", state), candidate, now, expectedBaseVersionId));
+        assert.ok(outcome.promoted, JSON.stringify({ state: outcome.candidate.state, reason: outcome.candidate.failureDetail }));
+        publication = { versionId: outcome.promoted.versionId, recordClass, records: candidate.normalization.outputRecords };
+      }
     }
-    const { publishRoutineReaderEdgeOutcome } = await import("../lib/civic-data/reader-edge-publication.ts");
-    const published = await publishRoutineReaderEdgeOutcome(store, now, [{ recordClass, scope: stateBallotScope(family as "ballot-contests", state) }], { artifactStore });
-    assert.ok(published.ok, JSON.stringify(published));
-    const after = (await heldArtifactStore.readAuthorityManifest())!.manifest.stateAuthorities!;
-    allowedArtifactKeys.add(after[authorityFamily as "ballot-contests"]?.[state]?.key);
-    const changed: string[] = [];
-    for (const [kind, states] of Object.entries(after)) for (const [key, ref] of Object.entries(states)) {
-      if (JSON.stringify(before[kind as keyof typeof before]?.[key]) === JSON.stringify(ref)) continue;
-      assert.equal(`${kind}:${key}`, `${authorityFamily}:${state}`, "Only the selected state's artifact may change.");
-      changed.push(`${kind}:${key}`);
-    }
-    result = { report: publication, edge: published, changedAuthorities: changed };
+    result = { report: publication };
   }
   assert.equal(artifactTransfer.meetingManifestReads, 0, "A state ballot worker must not read the national meeting manifest.");
   assert.equal(artifactTransfer.meetingManifestWrites, 0, "A state ballot worker must not write the national meeting manifest.");
   for (const read of artifactTransfer.reads) assert.ok(allowedArtifactKeys.has(read.key), `Unrelated artifact crossed this state worker: ${read.key}`);
   console.log("SCALE_RESULT=" + JSON.stringify({ state, family, phase, wallMs: performance.now() - started, peakRssBytes: process.resourceUsage().maxRSS * 1024,
-    transfer, artifactTransfer, stateScopes: [...stateScopes], byTable: Object.fromEntries(statements), result }));
+    transfer, largestDatabaseRequest, artifactTransfer, stateScopes: [...stateScopes], byTable: Object.fromEntries(statements), result }));
 }
 
 async function child(args: string[], env: NodeJS.ProcessEnv = process.env) {
-  return new Promise<string>((resolveResult, reject) => {
-    const process = spawn(globalThis.process.execPath, ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs", entry, ...args], { cwd: root, env, stdio: ["ignore", "pipe", "pipe"] });
-    let output = "", errors = "";
-    process.stdout.on("data", bytes => { output += String(bytes); });
-    process.stderr.on("data", bytes => { errors += String(bytes); });
-    process.once("error", reject);
-    process.once("exit", (code, signal) => code === 0 ? resolveResult(output) : reject(new Error(`${args.join(" ")}: ${code ?? signal}\n${errors}\n${output}`)));
+  return new Promise<{ output: string; stages: StageMeasurement[]; sampledPeakRssBytes: number }>((resolveResult, reject) => {
+    const workerProcess = spawn(process.execPath, ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs", entry, ...args], { cwd: root, env, stdio: ["ignore", "pipe", "pipe"] });
+    let output = "", errors = "", pendingLine = "", sampling = false, sampledPeakRssBytes = 0;
+    const active = new Map<number, { start: StageMarker; peakRssBytes: number }>();
+    const stages: StageMeasurement[] = [];
+    const sampler = setInterval(async () => {
+      if (sampling) return;
+      sampling = true;
+      try {
+        const status = await readFile(`/proc/${workerProcess.pid}/status`, "utf8");
+        const rss = Number(/^VmRSS:\s+(\d+)/m.exec(status)?.[1] ?? 0) * 1024;
+        sampledPeakRssBytes = Math.max(sampledPeakRssBytes, rss);
+        for (const stage of active.values()) stage.peakRssBytes = Math.max(stage.peakRssBytes, rss);
+      } catch { /* The worker can exit between samples. */ }
+      finally { sampling = false; }
+    }, 10);
+    workerProcess.stdout.on("data", bytes => {
+      const text = String(bytes);
+      output += text;
+      pendingLine += text;
+      let end: number;
+      while ((end = pendingLine.indexOf("\n")) !== -1) {
+        const line = pendingLine.slice(0, end);
+        pendingLine = pendingLine.slice(end + 1);
+        if (!line.startsWith("SCALE_STAGE=")) continue;
+        const marker = JSON.parse(line.slice("SCALE_STAGE=".length)) as StageMarker;
+        if (marker.phase === "start") active.set(marker.id, { start: marker, peakRssBytes: marker.rssBytes });
+        else {
+          const held = active.get(marker.id);
+          assert.ok(held, `No starting measurement for ${marker.label}`);
+          stages.push({ id: marker.id, label: marker.label, wallMs: marker.at - held.start.at,
+            peakRssBytes: Math.max(held.peakRssBytes, marker.rssBytes, marker.highWaterBytes > held.start.highWaterBytes ? marker.highWaterBytes : 0),
+            startRssBytes: held.start.rssBytes, endRssBytes: marker.rssBytes,
+            startHeapBytes: held.start.heapBytes, endHeapBytes: marker.heapBytes,
+            startExternalBytes: held.start.externalBytes, endExternalBytes: marker.externalBytes });
+          active.delete(marker.id);
+        }
+      }
+    });
+    workerProcess.stderr.on("data", bytes => { errors += String(bytes); });
+    workerProcess.once("error", error => { clearInterval(sampler); reject(error); });
+    workerProcess.once("exit", (code, signal) => {
+      clearInterval(sampler);
+      if (code === 0) resolveResult({ output, stages: stages.sort((a, b) => a.id - b.id), sampledPeakRssBytes });
+      else {
+        console.error("SCALE_FAILURE=" + JSON.stringify({ args, code, signal, sampledPeakRssBytes, stages,
+          incompleteStages: [...active.values()].map(row => ({ label: row.start.label, peakRssBytes: row.peakRssBytes })) }));
+        reject(new Error(`${args.join(" ")}: ${code ?? signal}\n${errors}\n${output}`));
+      }
+    });
   });
 }
 
@@ -443,7 +818,8 @@ async function run() {
   const { admittedRuntimeChildEnvironment } = await import("../lib/civic-data/runtime-authority.ts");
   const inputs = JSON.parse(await readFile(resolve(directory, "input-counts.json"), "utf8")) as { states: { state: string; division: string; bytes: number }[] };
   const states = arg("states")?.split(",") ?? inputs.states.map(row => row.state);
-  const results = [];
+  const results = arg("resume") === "1"
+    ? JSON.parse(await readFile(resolve(directory, arg("result-file") ?? "results.json"), "utf8")).results as { state: string; family: string; phase: string }[] : [];
   for (const state of states) {
     const server = spawn(process.execPath, ["--experimental-strip-types", entry, "--mode=database",
       ...process.argv.slice(2).filter(value => /^--(?:pg-module|postgres-port|database-key)=/.test(value))], { cwd: root, stdio: ["ignore", "pipe", "pipe"] });
@@ -455,15 +831,20 @@ async function run() {
     });
     try {
       for (const family of (arg("families") ?? "ballot-contests").split(",")) {
-      const env = admittedRuntimeChildEnvironment({ capability: "MANUAL_CONTRACT", contract: `${family}:${state}`,
+      const env = admittedRuntimeChildEnvironment({ capability: family === "candidate-campaign-sites-derived" ? "ROUTINE_CONTRACT" : "MANUAL_CONTRACT", contract: `${family}:${state}`,
         parentEnv: { ...process.env, NODE_ENV: "development", WTP_RUNTIME_MODE: "staging", WTP_DB_ROLE: "local",
-          NODE_USE_ENV_PROXY: "0", DATABASE_URL: "postgresql://scale:scale@localhost/scale", WTP_CONTROL_PLANE_DATABASE_URL: "postgresql://scale:scale@localhost/scale" } });
-      for (const phase of (arg("phases") ?? "publish,read,slice").split(",")) {
-        const output = await child(["--mode=worker", `--directory=${directory}`, `--state=${state}`, `--family=${family}`, `--phase=${phase}`, `--port=${port}`,
+          NODE_USE_ENV_PROXY: "0", WTP_READER_EDGE_DIR: edgeDirectory, WTP_READER_EDGE_LOCAL_OK: "1",
+          DATABASE_URL: "postgresql://scale:scale@localhost/scale", WTP_CONTROL_PLANE_DATABASE_URL: "postgresql://scale:scale@localhost/scale" } });
+      for (const phase of (arg("phases") ?? "publish,artifact,read,slice").split(",")) {
+        if (results.some(row => row.state === state && row.family === family && row.phase === phase)) continue;
+        const measured = await child(["--mode=worker", `--directory=${directory}`, `--edge-directory=${edgeDirectory}`, `--state=${state}`, `--family=${family}`, `--phase=${phase}`, `--port=${port}`,
+          ...(arg("concurrent-coverage") === "1" ? ["--concurrent-coverage=1"] : []),
           `--division=${inputs.states.find(row => row.state === state)!.division}`], env);
-        const line = output.split("\n").find(row => row.startsWith("SCALE_RESULT="));
-        assert.ok(line, output);
+        const line = measured.output.split("\n").find(row => row.startsWith("SCALE_RESULT="));
+        assert.ok(line, measured.output);
         const result = JSON.parse(line.slice("SCALE_RESULT=".length));
+        result.stages = measured.stages;
+        result.sampledPeakRssBytes = measured.sampledPeakRssBytes;
         results.push(result);
         console.log(JSON.stringify({ state, family, phase, wallMs: result.wallMs, peakRssBytes: result.peakRssBytes, transfer: result.transfer }));
         await writeFile(resolve(directory, arg("result-file") ?? "results.json"), JSON.stringify({ input: inputs, results }, null, 2));
@@ -476,6 +857,8 @@ async function run() {
 if (mode === "database") await database();
 else if (mode === "generate") await generate();
 else if (mode === "generate-auxiliary") await generateAuxiliary();
+else if (mode === "generate-worker-fixture") await generateWorkerFixture();
+else if (mode === "generate-derived") await generateDerived();
 else if (mode === "change") await changeInput();
 else if (mode === "snapshot" || mode === "verify-isolation") await isolationSnapshot();
 else if (mode === "worker") await worker();

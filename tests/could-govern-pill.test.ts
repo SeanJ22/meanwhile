@@ -244,7 +244,7 @@ test("3.3: a statewide office is CERTAIN — every reader at this zip votes in i
 
 test("3.3: a congressional district is NOT statewide and keeps the pill", async () => {
 
-  const c = await zipCertainty("07866");
+  const c = await withReaderAuthorityEdge({}, () => zipCertainty("07866"));
   assert.ok(c);
   assert.notEqual(
     c.certaintyOf("ocd-division/country:us/state:nj/cd:11"),

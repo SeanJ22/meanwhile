@@ -1,12 +1,12 @@
 import { CAPTURE_CONVERSION_LOG_KEY, captureConversionRecord, captureConversionRecorded } from "../lib/civic-data/capture-conversion.ts";
 import { readMeetingDiscoveryInputs, meetingDiscoveryInputsDue, runMeetingDiscoveryChain, type MeetingDiscoveryInputs } from "../lib/civic-data/meeting-discovery-due.ts";
-import { readerFactDb } from "../lib/facts/db.ts";
+import { readerFactDb, readPassCursor, writePassCursor } from "../lib/facts/db.ts";
 import { ensureFactEntities, registeredStates } from "../lib/facts/entities.ts";
 import { cartonComments, cartonOffices, cartonRosters, importCartonComments, importCartonOffices, importCartonRosters } from "../lib/facts/carton-import.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 import { publishBoxFindings } from "../lib/facts/box-publication.ts";
 import { workerPublicationContext } from "../lib/civic-data/worker-publication-context.ts";
-import { readHeldBallotInputs } from "../lib/civic-data/worker-held-elections.ts";
+import { readHeldInputs, readHeldPointerTimes } from "../lib/civic-data/worker-held-elections.ts";
 /* @freshness-reads-here */
 import { hostname } from "node:os";
 import { resolve } from "node:path";
@@ -430,6 +430,15 @@ async function readRoutineDueRequests(): Promise<{ readonly requests: readonly R
   return parseRoutineDueRequests(row?.value.routineDueRequests);
 }
 
+/** The publish-now outbox's cursor, and where this pass started reading; a process failure keeps it, so that window is read again. */
+const PUBLISH_NOW_CURSOR = "publish-now";
+let publishNowPassStartedAt: string | null = null;
+async function settlePublishNowCursor(failures: number): Promise<void> {
+  if (publishNowPassStartedAt === null || failures > 0) return;
+  try { await writePassCursor(readerFactDb().query, PUBLISH_NOW_CURSOR, publishNowPassStartedAt); }
+  catch (error) { console.log(`RCD_PUBLISH_NOW_CURSOR not saved — ${safeFailure(sanitizedErrorDiagnostic(error))}; the next pass reads the same window again`); }
+}
+
 /** Box findings carried to facts each minute; a backlog drains over the next passes. */
 const BOX_FINDINGS_PER_PASS = 300;
 
@@ -447,20 +456,34 @@ async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: Su
   // Standing source acquisition never loads the entire worker history before its first source read.
   if (PUBLISH_NOW || (ONLY && WORKER_PUBLICATION_TASK_IDS.some(id => ONLY.has(id)))) {
     const sql = neon(connection);
+    const query = (text: string, params: readonly unknown[]) => sql.query(text, [...params]) as Promise<Record<string, unknown>[]>;
+    const facts = readerFactDb();
     const selected = ONLY ? WORKER_PUBLICATION_TASK_IDS.filter(id => ONLY.has(id)) : WORKER_PUBLICATION_TASK_IDS;
-    const items = await readWorkerPublicationItems((query, params) => sql.query(query, [...params]), selected);
+    // Each minute reads only the work that changed since the last clean pass, with a minute's overlap for slow writers.
+    const startedAt = new Date(String((await query("SELECT now() AS at", []))[0]!.at)).toISOString();
+    const cursor = PUBLISH_NOW ? await readPassCursor(facts.query, PUBLISH_NOW_CURSOR) : null;
+    const since = cursor === null ? null : new Date(Date.parse(cursor) - 60_000).toISOString();
+    const pointers = new PostgresRoutineDataStore();
+    const shared = await readHeldPointerTimes(query, async (recordClass, scope) => (await pointers.readPromotionIdentity(recordClass, scope))?.promotedAt ?? null)
+      .catch((error: unknown) => { console.log(`RCD_HELD_INPUTS CANNOT_TELL — ${safeFailure(sanitizedErrorDiagnostic(error))}; held routes are read again hourly`); return null; });
+    const items = await readWorkerPublicationItems(query, selected, since === null ? null
+      : { at: since, sharedInputsMoved: shared === null || [shared.nationalAt, shared.registryAt, shared.routesAt].some(at => at !== null && at > since) });
+    const heldInputs = shared === null ? null : await readHeldInputs(query, shared, items).catch((error: unknown) => {
+      console.log(`RCD_HELD_INPUTS CANNOT_TELL — ${safeFailure(sanitizedErrorDiagnostic(error))}; held routes are read again hourly`);
+      return null;
+    });
+    if (PUBLISH_NOW) publishNowPassStartedAt = startedAt;
     try {
-      const box = await publishBoxFindings({ repos, store, facts: readerFactDb(), vault: new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)),
+      const box = await publishBoxFindings({ repos, store, facts, vault: new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)),
         fetch: pacedProbeFetch({ pacing: repos.websitePacing }), clocks: factClocks((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value ?? null),
         now: new Date().toISOString(), limit: BOX_FINDINGS_PER_PASS });
       if (box.looked) console.log(`RCD_BOX_FACTS=${JSON.stringify(box)}`);
     } catch (error) {
       failures.push({ taskId: "box-facts", code: "BOX_FACT_PUBLICATION_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
     }
-    const owed = await readOwedFactItems(items, ids => readCompletedWorkerResultsOf(repos, ids), RUN_STARTED_AT);
+    const owed = await readOwedFactItems(items, ids => readCompletedWorkerResultsOf(repos, ids), RUN_STARTED_AT, heldInputs);
     if (owed.rosters.length || owed.comments.length) try {
       const context = await workerPublicationContext(RUN_STARTED_AT, repos);
-      const facts = readerFactDb();
       for (const [label, publish, ids] of [["rosters", publishOwedRosterFacts, owed.rosters], ["comment rules", publishOwedCommentFacts, owed.comments]] as const) {
         if (!ids.length) continue;
         const report = await publish({ repos, store, facts, workItemIds: ids, now: RUN_STARTED_AT, readCapture: context.readCapture });
@@ -469,12 +492,6 @@ async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: Su
     } catch (error) {
       failures.push({ taskId: "fact-publication", code: "FACT_PUBLICATION_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
     }
-    const pointers = new PostgresRoutineDataStore();
-    const heldInputs = await readHeldBallotInputs((query, params) => sql.query(query, [...params]),
-      async (recordClass, scope) => (await pointers.readPromotionIdentity(recordClass, scope))?.promotedAt ?? null, items).catch((error: unknown) => {
-      console.log(`RCD_HELD_INPUTS CANNOT_TELL — ${safeFailure(sanitizedErrorDiagnostic(error))}; held ballot routes are read again hourly`);
-      return null;
-    });
     const publication = await readPublishNowWorkerTasks(items, ids => readCompletedWorkerResultsOf(repos, ids), RUN_STARTED_AT, heldInputs);
     if (!PUBLISH_NOW) return publication;
     // The hourly first look: each hot door's page or feed is looked at once an hour; a change is stored on
@@ -742,6 +759,7 @@ const selectedTasks = [...STANDING_SOURCE_TASKS, ...huntTasks.filter(task => !ST
   .filter((task) => !ONLY || ONLY.has(task.id) || (task.registeredContractId !== undefined && ONLY.has(task.registeredContractId)));
 if (PUBLISH_NOW && selectedTasks.length === 0) {
   const readerEdge = (await publishNowEdgeChecks!.stop())!;
+  await settlePublishNowCursor(supervisorFailures.length);
   if (publishNowHasNothingOwed(PUBLISH_NOW, selectedTasks.length, supervisorFailures.length, readerEdge)) {
     console.log("publish-now: nothing owed this minute");
   } else {
@@ -1558,6 +1576,7 @@ console.log("RCD_RUN=" + JSON.stringify({
 // A source refusal is a durable data-plane event, not a failed supervisor
 // process. Only a process/protocol failure makes the runner nonzero.
 if (supervisorFailures.length > 0) process.exitCode = 2;
+await settlePublishNowCursor(supervisorFailures.length);
 step = "saving the daily database byte counter";
 if (!await flushDatabaseTransfer()) console.warn("RCD_TRANSFER daily byte counter could not be saved; data results are unchanged.");
 step = "releasing the host-local singleton";

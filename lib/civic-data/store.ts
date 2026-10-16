@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { currentReaderSelection } from "../db/reader-route.ts";
 import { sourceCheckedAt } from "./source-check.ts";
 import { isScopedManualContractScope } from "./scoped-manual-contracts.ts";
 
@@ -132,6 +133,7 @@ export interface RoutineDataStore {
   readonly readPromotions: <T = unknown>(recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly PromotedProjection<T>[]>;
   readonly readPromotionIdentity: (recordClass: RoutineRecordClass, scope: string) => Promise<PromotedPointerIdentity | null>;
   readonly readPromotionIdentities: (recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly PromotedPointerIdentity[]>;
+  readonly listPromotionScopes?: (recordClasses: readonly RoutineRecordClass[]) => Promise<readonly { recordClass: RoutineRecordClass; scope: string }[]>;
   readonly readPreparedReaderProjection: (recordClass: RoutineRecordClass, scope: string) => Promise<PreparedReaderProjectionRow | null>;
   readonly readPreparedReaderProjectionCoupling: (recordClass: RoutineRecordClass, scope: string) => Promise<PreparedReaderProjectionCoupling | null>;
     /** Lands only if the row is still at `expectedSequence` (null = expect absent); a stale pass gets `published:false`. */
@@ -838,6 +840,11 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
       const row = this.pointerRead(recordClass, scope);
       return row ? [structuredClone(row) as PromotedProjection<T>] : [];
     });
+  }
+
+  async listPromotionScopes(recordClasses: readonly RoutineRecordClass[]) {
+    return [...this.promotions.values()].filter(row => recordClasses.includes(row.recordClass))
+      .map(({ recordClass, scope }) => ({ recordClass, scope }));
   }
 
   async readPromotionIdentity(recordClass: RoutineRecordClass, scope: string): Promise<PromotedPointerIdentity | null> {
@@ -1642,10 +1649,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     if (issue !== null) throw new RuntimeAuthorityRefused(issue);
   }
 
-    /**
-     * Neon HTTP batches are not interactive, so every sequence allocator takes a transaction-scoped advisory lock as the
-     * batch's first statement; a lock inside the INSERT would be too late for its snapshot.
-     */
+
   private candidateEventLock(candidateId: string) {
     return this.db.execute(sql`
       select pg_advisory_xact_lock(hashtextextended(${candidateId}, 0))
@@ -1802,6 +1806,12 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     return Promise.all(rows.map(async row => ({ ...postgresPromotionRowToProjection<T>(row), payload: await this.payloadParts.load(row.payload) as T })));
   }
 
+  async listPromotionScopes(recordClasses: readonly RoutineRecordClass[]) {
+    const rows = await this.db.select({ recordClass: civicDataPromotions.recordClass, scope: civicDataPromotions.scope })
+      .from(civicDataPromotions).where(inArray(civicDataPromotions.recordClass, [...recordClasses]));
+    return rows as { recordClass: RoutineRecordClass; scope: string }[];
+  }
+
   async readPromotionIdentity(recordClass: RoutineRecordClass, scope: string): Promise<PromotedPointerIdentity | null> {
     // (record_class, scope) is unique, so this names at most one pointer.
     const [identity] = await this.readPromotionIdentities(recordClass, [scope]);
@@ -1824,7 +1834,11 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   }
 
   async readPreparedReaderProjection(recordClass: RoutineRecordClass, scope: string): Promise<PreparedReaderProjectionRow | null> {
-    const [row] = await this.db.select().from(civicDataReaderProjections).where(and(
+    const selected = currentReaderSelection();
+    const columns = { ...getTableColumns(civicDataReaderProjections), ...(selected ? {
+      payload: sql<unknown>`reader_place_payload(${civicDataReaderProjections.payload}, ${sql.param([...selected.keys])}::text[], ${sql.param(selected.point ? JSON.stringify(selected.point) : null)}::jsonb)`,
+    } : {}) };
+    const [row] = await this.db.select(columns).from(civicDataReaderProjections).where(and(
       eq(civicDataReaderProjections.recordClass, recordClass),
       eq(civicDataReaderProjections.scope, scope),
     )).limit(1);

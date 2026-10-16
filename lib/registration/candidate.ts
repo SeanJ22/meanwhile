@@ -1,10 +1,4 @@
-/**
- * One state's Census-backed registration, independent of reviewed-registry editions.
- * Keep every sourced division and government body. Reader composition gives
- * reviewed records precedence and resolves the exact primary/alternate pairing.
- * An unpaired government gets no invented division; territory bodies require
- * governing functional status. Records carry the source reference's build date.
- */
+
 import { sha256 } from "../civic-data/candidate-builders.ts";
 import { canonicalCivicDataJson } from "../civic-data/changes.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "../civic-data/types.ts";
@@ -22,11 +16,7 @@ import type { LoadedReference, ReferenceLayer } from "./reference.ts";
 import { referenceGovernmentListings, type RegistrationGovernmentListing } from "./listings.ts";
 import type { Body, Division, DivisionType } from "../registry/types.ts";
 
-/**
- * A registered division, in the registry's own shape (`lib/registry/types.ts`), so the reader
- * composes it beside the reviewed registry without translation. Its geography is the 2023 Census
- * cartographic boundary layer it came from; no canonical OCD match was attempted.
- */
+
 export type RegistrationDivision = Division & {
   readonly geoid: string;
   readonly sourceDataset: "TIGER_CB2023";
@@ -35,11 +25,7 @@ export type RegistrationDivision = Division & {
   readonly canonicalGap: "UNDETERMINED";
 };
 
-/**
- * A registered body, in the registry's own shape: a government the Census lists (or a school district
- * no listed government claimed, or a territory division TIGER/Line records as governing), on its Census
- * division, with nothing sourced beyond that. Its name is null until sourced, as the registry requires.
- */
+
 export type RegistrationBody = Body & {
   readonly ocdId: string;
   readonly name: null;
@@ -53,6 +39,7 @@ export type RegistrationBody = Body & {
 };
 
 export interface RegistrationReadModel {
+  readonly governmentCount?: number;
   readonly formatVersion: 1;
   readonly state: string;
   readonly scope: string;
@@ -74,11 +61,7 @@ export interface RegistrationReadModel {
     /** Governments whose body id another government already took (the committed geometry's one shared id: New Jersey's Union Township districts). The first keeps the body. */
     readonly sharedBodyClaims: number;
   };
-  /**
-   * A territory only: the TIGER/Line functional status its governments were read from. `noLocalGovernment` is the
-   * evidenced statement for a territory whose every county, county-subdivision and place division carries a
-   * non-governing status, and null wherever one governs.
-   */
+
   readonly functionalStatus?: {
     readonly source: string;
     readonly sourceSha256: string;
@@ -116,13 +99,7 @@ function boundaryUrl(layer: Exclude<ReferenceLayer, "state">): string {
   return `https://www2.census.gov/geo/tiger/GENZ2023/shp/cb_2023_us_${layer}_500k.zip`;
 }
 
-/**
- * A county subdivision's parent is the county its GEOID names (its first five digits, state and county FIPS), read
- * off the code rather than off the id. The id's county segment is slugged from the subdivision layer's own county
- * name, which in Puerto Rico, the other territories, Connecticut's planning regions and the independent cities is not
- * the county layer's (`county:adjuntas_municipio/place:…` beside `county:adjuntas`), and the id is committed (the ZIP
- * index names it), so it never moves to match. Any other division nests as its id says, or under the state.
- */
+
 function parentOf(ocdId: string, layer: ReferenceLayer, geoid: string, stateOcdId: string, countyByGeoid: ReadonlyMap<string, string>): string | null {
   if (ocdId === stateOcdId) return null;
   const county = layer === "cousub" ? countyByGeoid.get(geoid.slice(0, 5)) : undefined;
@@ -208,11 +185,7 @@ export function registrationCandidate(input: {
     }
   }
 
-  /*
-   * A territory's evidence, counted from its own divisions. Every county, county-subdivision and place division must
-   * carry a status, and every one whose status governs must be a government row (and only those): then a territory with
-   * none is the Census's affirmative record, stated, rather than a failed extraction.
-   */
+
   let functionalStatus: RegistrationReadModel["functionalStatus"];
   if (territory) {
     const byStatus: Record<string, number> = {};

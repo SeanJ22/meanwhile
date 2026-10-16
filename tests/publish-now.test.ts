@@ -177,3 +177,20 @@ test("the two lanes started in one millisecond never share an outcome's identity
   assert.equal(routineSupervisorCycleId("host", NOW), `routine-civic-data-supervisor:host:${NOW}`);
   assert.equal(routineSupervisorCycleId("host", NOW, "publish-now"), `publish-now-supervisor:host:${NOW}`);
 });
+
+test("a held roster or board is read again only once a page for its body is saved after its last outcome; a later pass reads only what changed", async () => {
+  const held: WorkerPublicationItem[] = ["roster", "board"].map((id, n) => ({ id, autonomousPlan: {
+    contract: { recordClass: n === 0 ? "OFFICIAL_ROSTER" : "OFFICIAL_BOARD_DIRECTORY" }, publication: { contractId: "registry-runtime-bindings", bodyId: `body-${id}` } },
+    publicationOutcome: { workerResultId: "none", status: "HELD", at: NOW, recovery: "WORKER" } }));
+  const later = "2026-10-06T00:00:00.000Z";
+  const inputs = { pagesAt: new Map<string, string>(), nationalAt: null, registryAt: null, routesAt: null,
+    bodyPagesAt: new Map([["body-roster", "2026-10-05T17:00:00.000Z"], ["body-board", "2026-10-05T18:30:00.000Z"]]) };
+  assert.deepEqual(owedFactItems(held, [], later, inputs).rosters, [], "six hours on, but no page saved since: not read");
+  assert.deepEqual((await readPublishNowWorkerTasks(held, async () => [], later, inputs)).map(task => task.id.split(":").at(-1)), ["board"]);
+
+  const seen: { query: string; values: readonly unknown[] }[] = [];
+  await readWorkerPublicationItems(async (query, values) => { seen.push({ query, values }); return []; }, ["registry-runtime-bindings"], { at: NOW, sharedInputsMoved: false });
+  assert.match(seen[0]!.query, /^WITH due\(id\) AS/);
+  assert.match(seen[0]!.query, /AND id IN \(SELECT id FROM due\)/);
+  assert.deepEqual(seen[0]!.values, [["registry-runtime-bindings"], NOW, false]);
+});

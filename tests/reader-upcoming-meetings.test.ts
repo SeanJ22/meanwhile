@@ -130,7 +130,7 @@ test("every reader surface renders the upcoming sittings with held fields and ma
       const venues = venuesModule.groupByVenue(meetings, fixture.listingIdentity);
       return {
         data: { allMeetings: all, meetings, venues, listingIdentity: fixture.listingIdentity,
-          result: { meetings: all, listingIdentity: fixture.listingIdentity, coverage: fixture.coverage, tier: 'exact', radiusKm: 25, requestedRadiusKm: 25, center: { lat: 32.2217, lng: -110.9695 } },
+          result: { meetings: all, listingIdentity: fixture.listingIdentity, coverage: fixture.coverage, tier: 'exact', radiusKm: 25, center: { lat: 32.2217, lng: -110.9695 } },
           location: null, drawnDistricts: [], dropped: 0, searchFailed: false, atAddress: false, governing: null, zipPartial: null, basis: 'ZIP' },
         meetings, venues,
       };

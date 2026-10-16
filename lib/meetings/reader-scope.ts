@@ -11,27 +11,19 @@ export interface PlaceGovernmentMeetings {
   readonly agendasLinked: number;
 }
 export interface ReaderMeetingScope {
-  readonly widened: boolean;
-  readonly nearbyMeetingIds: readonly string[];
   readonly governments: readonly PlaceGovernmentMeetings[] | null;
 }
 
-/** Counts the held calendar, apart from the radius search and agenda availability. */
+/** Counts each government’s held calendar and linked agendas. */
 export function readerMeetingScope(input: {
   heldMeetings: readonly Meeting[];
-  shownMeetings: readonly Meeting[];
   bodies: readonly CoveredBody[];
   ownDivisionIds: ReadonlySet<string> | null;
-  radiusKm: number;
-  requestedRadiusKm: number;
   now: Date;
   listingIdentity?: MeetingListingIdentityReadback;
 }): ReaderMeetingScope {
-  const widened = input.radiusKm > input.requestedRadiusKm;
   const own = input.ownDivisionIds;
   return {
-    widened,
-    nearbyMeetingIds: widened ? input.shownMeetings.filter(meeting => !own || !meeting.ocdId || !own.has(meeting.ocdId)).map(meeting => meeting.id) : [],
     governments: own ? input.bodies.filter(body => body.ocdId !== null && own.has(body.ocdId)).map(body => {
       const upcoming = input.heldMeetings.filter(meeting => meeting.bodyId === body.bodyId && meeting.status === "SCHEDULED" && Date.parse(meeting.startsAt) >= input.now.getTime());
       return { bodyId: body.bodyId, name: bodyDisplayName(body),

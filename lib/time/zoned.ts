@@ -1,21 +1,23 @@
-/**
- * Local government meets in local time, and half of it observes DST while
- * Arizona doesn't. Rather than take a date library dependency for this, resolve
- * zone offsets through Intl.
- */
+const zoneFormatters = new Map<string, Intl.DateTimeFormat>();
 
 /** Milliseconds `tz` is ahead of UTC at the given instant. */
 function zoneOffsetMs(instant: Date, timeZone: string): number {
-  const parts = new Intl.DateTimeFormat("en-US", {
-    timeZone,
-    hour12: false,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-  }).formatToParts(instant);
+  let formatter = zoneFormatters.get(timeZone);
+  if (!formatter) {
+    formatter = new Intl.DateTimeFormat("en-US", {
+      timeZone,
+      hour12: false,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    });
+    if (zoneFormatters.size >= 32) zoneFormatters.delete(zoneFormatters.keys().next().value!);
+    zoneFormatters.set(timeZone, formatter);
+  }
+  const parts = formatter.formatToParts(instant);
 
   const get = (type: Intl.DateTimeFormatPartTypes) =>
     Number(parts.find((p) => p.type === type)?.value);
@@ -45,15 +47,7 @@ function formatOffset(offsetMs: number): string {
   return `${sign}${hh}:${mm}`;
 }
 
-/**
- * Build an ISO 8601 string with offset from a wall-clock time in a zone.
- *
- * `toZonedIso(2026, 8, 18, 17, 30, "America/Phoenix")` — 5:30 pm on August
- * 18th, as the agenda prints it — becomes `2026-08-18T17:30:00-07:00`.
- *
- * Resolved in two passes: guess that local equals UTC, correct by the offset at
- * that guess, then re-check in case the correction crossed a DST boundary.
- */
+// Correct the guessed offset twice because the correction can cross a DST boundary.
 export function toZonedIso(
   year: number,
   month: number,
@@ -81,12 +75,6 @@ export function toZonedIso(
   );
 }
 
-/**
- * Wall-clock date `dayOffset` days from now in `timeZone`, at `hour:minute`.
- *
- * Used by the mock source so fixtures stay perpetually plausible instead of
- * aging into the past.
- */
 export function isoDaysFromNow(
   dayOffset: number,
   hour: number,

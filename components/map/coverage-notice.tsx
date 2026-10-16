@@ -17,8 +17,6 @@ import Image from "next/image";
 import { useDismissOnOutside } from "@/hooks/use-dismiss-on-outside";
 import { useNarrowing } from "@/hooks/use-narrowing";
 import { useResolvedLocation } from "@/hooks/use-resolved-location";
-import { formatMiles } from "@/lib/map/format";
-
 
 import type { StreetPoint } from "@/lib/geo/census-geocoder";
 import type { CoverageTier } from "@/lib/meetings/query";
@@ -59,28 +57,14 @@ import { groupBySeatLabel } from "@/lib/officials/seat-grouping";
 import { GovernmentListings } from "./government-listings";
 import { StateOfficeContacts } from "../state-office-contacts";
 
-/**
- * Says which rung of the cascade produced what's on screen, and, when nothing
- * is on screen, who governs here anyway. Division labels come from Census
- * boundary files; the copy claims only that a division of each type exists
- * here and has a governing body.
- */
-
 interface CoverageNoticeProps {
   tier: CoverageTier;
   zip: string;
-  radiusKm: number;
-  requestedRadiusKm: number;
-  count: number;
   listingCount?: ReturnType<typeof readerMeetingCount>;
   coverage: CoverageSummary | null;
   /** Divisions whose calendar source failed at the last refresh: "couldn't reach", never "nothing scheduled". */
   failedSourceOcdIds?: string[];
-  /**
-   * Which of those bodies still have meetings on screen (carried forward). For
-   * them the note says the calendar could not be refreshed; for the rest, that
-   * meetings may be missing.
-   */
+
   ocdIdsWithMeetings?: string[];
   /** When the meetings snapshot was last refreshed (ISO instant); null states the fact without a date. */
   lastCheckedAt?: string | null;
@@ -109,11 +93,6 @@ interface CoverageNoticeProps {
   clusterElsewhere?: boolean;
 }
 
-/**
- * Opens the rep popup. The seat's division id rides along for the
- * OFFICIAL_OPENED log event (null where the holder has no single seat
- * division, e.g. senators).
- */
 export type OpenOfficial = (
   holder: SeatHolder,
   seatLabel: string | null,
@@ -162,11 +141,6 @@ function SubjectLine({
   );
 }
 
-/**
- * Marks a row at an overlapping level (`school_district`, `place`) where the
- * reader's address named a different division. The row is never removed:
- * overlapping levels can hold both.
- */
 function OverlapMark({ zip }: { zip: string }) {
   return (
     <span
@@ -333,11 +307,6 @@ function CoverageBody({
     stateLegislatorAuthorities = [],
   } = coverage;
 
-  /*
-   * The card's subject: the address the reader gave (device-local, see
-   * `lib/state/resolved-location.ts`), else the zip. Every list below reasons
-   * from it.
-   */
   const resolvedLocation = useResolvedLocation(zip);
   const subject = homeSubject(resolvedLocation);
 
@@ -353,11 +322,6 @@ function CoverageBody({
     FEDERAL_SEAT_TYPES,
   );
 
-  /*
-   * Officials group Local, State, Federal, split by division type. Without an
-   * address `panelSeatsFor` returns the whole zip as one list; rows the
-   * address ruled out are returned separately and never rendered.
-   */
   const statePanel = panelSeatsFor(
     coverage,
     subject.location,
@@ -385,11 +349,6 @@ function CoverageBody({
    */
   const bodiesHere = scopedToAddress(bodies, subject.location);
 
-  /*
-   * Every number below derives from one array, after narrowing, so prose N,
-   * disclosure N and rendered rows always agree. Governments and advisory
-   * boards are stated separately.
-   */
   const derived = deriveWhoGoverns(bodiesHere, selected);
   const shown = derived.rows;
   // "" when unknown, so the sentence stands without a date.
@@ -412,7 +371,7 @@ function CoverageBody({
   ].filter(Boolean);
 
   const lead = kind === "unmapped" ? null : kind === "none-scheduled" ? (
-    <>Nothing is scheduled for the {counts.total === 1 ? "body" : `${counts.total} bodies`} covering {zip}.</>
+    <>We don&apos;t have upcoming meetings for the {counts.total === 1 ? "body" : `${counts.total} bodies`} covering {zip} yet.</>
   ) : g.total > 0 ? (
     <>
       {g.total === 1 ? "One body governs" : `${g.total} bodies govern`} the area around {zip}.
@@ -627,13 +586,6 @@ function CoverageBody({
         onCleared={onAddressCleared}
       />
 
-      {/*
-        NH bodies: the statutory no-agenda sentence renders for every body; the
-        diligence sentence only for a hunt recorded as exhausted. A failed
-        calendar read is dated and split: listings on screen are older ones;
-        no listings means meetings may be missing. Neither reads as "nothing
-        is scheduled".
-      */}
       {collapseFootnotes(
         shown.filter(
           (body) =>
@@ -832,8 +784,6 @@ function CoverageBody({
 export function CoverageNotice({
   tier,
   zip,
-  radiusKm,
-  count,
   listingCount,
   coverage,
   failedSourceOcdIds,
@@ -859,12 +809,10 @@ export function CoverageNotice({
   // The gate lives in lib/registry/representation.ts.
   if (!shouldRenderNotice(tier, coverage)) return null;
 
-  const wide = formatMiles(radiusKm);
-
   const isEmpty = tier === "none";
   const label = noticeLabel(tier, coverage);
 
-  // Amber marks rungs that need explaining; the exact rung stays quiet.
+  // Amber marks missing meeting coverage.
   const accent =
     tier === "concluded"
       ? "text-concluded"
@@ -932,12 +880,7 @@ export function CoverageNotice({
       <div className="coverage-notice-body">
       <MeetingListingNotice groups={listingCount?.groups ?? []} />
       <StateOfficeContacts offices={coverage?.stateOffices ?? []} />
-      {tier === "widened" && (
-        <p className="mt-1.5 t-body leading-relaxed text-paper-dim">
-          Nearby results: {listingCount?.unresolved ? `${count} ${listingCount.unit}` : count === 1 ? "one meeting" : `${count} meetings`} within {wide} miles of {zip}.
-
-        </p>
-      )}
+      {isEmpty && <p className="mt-1.5 t-body leading-relaxed text-paper-dim">We don&apos;t have this place&apos;s meetings yet.</p>}
 
       {result?.readerScope?.governments && result.readerScope.governments.length > 0 && (
         <section className="mt-3" aria-label="Upcoming meetings of the place’s governments" data-place-government-meetings>
@@ -952,9 +895,8 @@ export function CoverageNotice({
           </ul>
         </section>
       )}
-      {tier === "concluded" && <p className="mt-2 t-body text-paper-dim">Concluded meetings within {wide} miles of {zip}.</p>}
+      {tier === "concluded" && <p className="mt-2 t-body text-paper-dim">Recent meetings for this place.</p>}
 
-      {/* Shown alongside the cascade's explanation; it matters most on a widened rung. */}
       {coverage && hasRepresentation(coverage) ? (
         <CoverageBody
           zip={zip}
@@ -968,16 +910,7 @@ export function CoverageNotice({
           onAddressResolved={onAddressResolved}
           onAddressCleared={onAddressCleared}
         />
-      ) : (
-        !coverage &&
-        isEmpty && (
-          // The registry could not be read: say only what the cascade knows.
-          <p className="mt-1.5 t-body leading-relaxed text-paper-dim">
-            No meetings on file near {zip} yet. We&apos;re still checking
-            local calendars. A meeting may be listed before its agenda is posted.
-          </p>
-        )
-      )}
+      ) : null}
       </div>
     </div>
   );

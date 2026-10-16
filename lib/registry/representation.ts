@@ -10,11 +10,6 @@ import type { CoverageSummary } from "./coverage.ts";
  * empty (or not at all) while the store behind it is populated.
  */
 
-/**
- * Who represents a division: the one resolver every officials surface reads. Legislative seats come
- * off the coverage summary's `seats`; local governing bodies come off the curated body rosters (ids
- * suffixed `#governing` or `#board`). Both stores, always, so no two surfaces disagree.
- */
 export function representationForDivision(
   coverage: CoverageSummary | null | undefined,
   ocdId: string | null,
@@ -25,11 +20,6 @@ export function representationForDivision(
   return projectedGoverningHoldersForDivision(coverage, ocdId);
 }
 
-/**
- * What to say when the resolver comes back empty, sayable without knowing which store was asked. A
- * lookup in flight, a failed lookup and an absence of record are three different sentences, each about
- * our gap, never a claim about a government.
- */
 export function representationNoteFor(
   tier: string,
   state: "gap" | "looking" | "unavailable" = "gap",
@@ -119,7 +109,6 @@ export function noticeLabel(
   tier: CoverageTier,
   coverage: CoverageSummary | null,
 ): string {
-  if (tier === "widened") return "Radius widened";
   if (tier === "concluded") return "Recently concluded";
   if (tier === "none") {
     if (!coverage) return "No coverage yet";

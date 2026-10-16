@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { RADIUS_LADDER_KM } from "../lib/meetings/constants.ts";
+import { DEFAULT_RADIUS_KM, MAX_RADIUS_KM } from "../lib/meetings/constants.ts";
 import {
   requestRadiusKm,
   shouldRequery,
@@ -10,33 +10,33 @@ import {
 
 test("the requested radius covers what the reader can see", () => {
   // Roughly a US-state-sized view. Whatever the exact figure, it must be far
-  // wider than the default rung, or the extra viewport stays empty.
+  // wider than the default radius, or the extra viewport stays empty.
   const wide = viewportRadiusKm({ north: 36, south: 31, east: -108, west: -115 });
-  assert.ok(wide > RADIUS_LADDER_KM[0], `${wide} km did not exceed the default rung`);
-  assert.equal(requestRadiusKm(wide), Math.min(RADIUS_LADDER_KM[2], Math.ceil(wide)));
+  assert.ok(wide > DEFAULT_RADIUS_KM, `${wide} km did not exceed the default radius`);
+  assert.equal(requestRadiusKm(wide), Math.min(MAX_RADIUS_KM, Math.ceil(wide)));
 });
 
-test("zooming in never asks for less than the default rung", () => {
-  // Shrinking the circle below the default rung would drop pins in the other direction.
+test("zooming in never asks for less than the default radius", () => {
+  // Shrinking the circle below the default radius would drop pins in the other direction.
   const tight = viewportRadiusKm({
     north: 32.23,
     south: 32.21,
     east: -110.96,
     west: -110.98,
   });
-  assert.ok(tight < RADIUS_LADDER_KM[0]);
-  assert.equal(requestRadiusKm(tight), RADIUS_LADDER_KM[0]);
+  assert.ok(tight < DEFAULT_RADIUS_KM);
+  assert.equal(requestRadiusKm(tight), DEFAULT_RADIUS_KM);
 });
 
-test("the request is capped at the ladder's top rung, which the server clamps to anyway", () => {
-  assert.equal(requestRadiusKm(100_000), RADIUS_LADDER_KM[RADIUS_LADDER_KM.length - 1]);
+test("the request is capped at the maximum radius, which the server clamps to anyway", () => {
+  assert.equal(requestRadiusKm(100_000), MAX_RADIUS_KM);
 });
 
 test("a degenerate viewport falls back to the default rather than to zero", () => {
   // A zero or NaN radius would ask the server for nothing.
-  assert.equal(requestRadiusKm(0), RADIUS_LADDER_KM[0]);
-  assert.equal(requestRadiusKm(Number.NaN), RADIUS_LADDER_KM[0]);
-  assert.equal(requestRadiusKm(-5), RADIUS_LADDER_KM[0]);
+  assert.equal(requestRadiusKm(0), DEFAULT_RADIUS_KM);
+  assert.equal(requestRadiusKm(Number.NaN), DEFAULT_RADIUS_KM);
+  assert.equal(requestRadiusKm(-5), DEFAULT_RADIUS_KM);
 });
 
 test("zooming out in place re-asks, even though the centre never moved", () => {

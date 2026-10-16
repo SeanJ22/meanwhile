@@ -2,6 +2,7 @@ import type { BodySourceWiring } from "../../registry/source-wiring.ts";
 import { soleVenueForBody, unplacedVenueGap } from "../../meetings/venue-cache.ts";
 import { toZonedIso } from "../../time/zoned.ts";
 import { printedNames, tokenize } from "../../meetings/printed-body-names.ts";
+import { MEETING_HELD_LOOKBACK_DAYS, meetingHeldWindowAt } from "../../meetings/constants.ts";
 import { decodeEntities, politeGetText, REQUEST_SPACING_MS, SourceHttpError } from "../http.ts";
 import { sourceAcquisitionSleep } from "../acquisition-deadline.ts";
 import { accountedNormalize } from "../normalize-account.ts";
@@ -22,7 +23,9 @@ interface SwagitMeeting {
 
 interface SwagitRaw {
   wiring: BodySourceWiring;
-  pages: { url: string; text: string }[];
+  rows: (SwagitMeeting & { sourceUrl: string })[];
+  from: string;
+  to: string;
   collectedAt: string;
   partialScopes?: PartialScopeFailure[];
   refused?: true;
@@ -33,6 +36,13 @@ interface SwagitRaw {
 
 const plain = (html: string) => decodeEntities(html.replace(/<[^>]*>/g, " ")).replace(/\s+/g, " ").trim();
 const MONTHS = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+export const SWAGIT_MAX_PAGES_PER_TENANT = 50;
+
+function startsAt(row: SwagitMeeting, timeZone: string): string | null {
+  if (!row.date) return null;
+  const [year, month, day] = row.date.split("-").map(Number);
+  return toZonedIso(year, month, day, row.hour ?? 0, row.minute ?? 0, timeZone);
+}
 
 function clock(text: string): { date: string; hour: number | null; minute: number | null } | null {
   const found = /\b([A-Za-z]{3,9})\s+(\d{1,2}),\s+(\d{4})(?:\s+(\d{1,2}):(\d{2})\s*([AP])M)?\b/i.exec(text);
@@ -112,63 +122,77 @@ export function makeSwagitSource(rows: BodySourceWiring[], fetchImpl?: typeof fe
     let duplicates = 0;
     let countedButProduced = 0;
     let unretrieved = 0;
+    let outOfWindow = 0;
     for (const rawRow of raw) {
       const { wiring, collectedAt } = rawRow;
       if (rawRow.refused) { unretrieved++; if (wiring.ocdId) unreachableOcdIds.push(wiring.ocdId); continue; }
       const seen = new Set<string>();
-      for (const page of rawRow.pages) for (const row of parseSwagitMeetings(page.text, page.url)) {
+      const lower = Date.parse(rawRow.from), upper = Date.parse(rawRow.to);
+      for (const row of rawRow.rows) {
         logicalInput++;
         if (!swagitMatchesBody(row, wiring.config.bodyMatch, wiring.config.bodyName)) { drops.notConfigured++; continue; }
         if (seen.has(row.id)) { duplicates++; continue; }
         seen.add(row.id);
-        if (!row.date) { drops.unplaceableInTime++; continue; }
-        const [year, month, day] = row.date.split("-").map(Number);
-        const startsAt = toZonedIso(year, month, day, row.hour ?? 0, row.minute ?? 0, wiring.timeZone);
-        const at = Date.parse(startsAt);
+        const start = startsAt(row, wiring.timeZone);
+        if (!start) { drops.unplaceableInTime++; continue; }
+        const at = Date.parse(start);
+        if (at < lower || at > upper) { outOfWindow++; continue; }
         const venue = soleVenueForBody("swagit", wiring.ocdId);
         if (!venue) { drops.unknownVenue++; countedButProduced++; }
         meetings.push({ id: `swagit:${wiring.config.slug}:${row.id}`, ocdId: wiring.ocdId, bodyId: wiring.bodyId,
-          bodyName: wiring.config.bodyName ?? wiring.publishingOrg, title: row.title, startsAt,
+          bodyName: wiring.config.bodyName ?? wiring.publishingOrg, title: row.title, startsAt: start,
           startPrecision: row.hour === null ? "DAY" : "MINUTE", timeZone: wiring.timeZone,
           location: venue ? { name: venue.name, address: venue.address, lat: venue.lat, lng: venue.lng } : null,
           ...(!venue ? { venueGap: unplacedVenueGap(null, wiring.publishingOrg) } : {}), agendaUrl: row.agendaUrl,
           ...(row.id.startsWith("videos/") || row.id.startsWith("play/") ? { videoUrl: row.url } : {}),
           publishedLinks: [{ label: "Video", href: row.url }, ...row.links], jurisdiction: wiring.jurisdiction,
           status: /\bcancell?ed\b/i.test(row.title) ? "CANCELED" : at < now.getTime() ? "CONCLUDED" : "SCHEDULED",
-          provenance: { sourceUrl: page.url, sourceOrg: wiring.publishingOrg, collectedAt, verifiedAt: null, evidenceExcerpt: row.excerpt } });
+          provenance: { sourceUrl: row.sourceUrl, sourceOrg: wiring.publishingOrg, collectedAt, verifiedAt: null, evidenceExcerpt: row.excerpt } });
       }
     }
     return accountedNormalize("swagit", raw, { meetings, drops, unreachableOcdIds,
       ...(raw.some(row => row.partialScopes?.length) ? { partialScopes: raw.flatMap(row => row.partialScopes ?? []) } : {}),
-    }, { logicalInput: logicalInput, duplicates, countedButProduced, unretrieved });
+    }, { logicalInput: logicalInput, duplicates, countedButProduced, unretrieved, outOfWindow });
   };
   return {
-    name: "swagit", publishedLookbackDays: null,
+    name: "swagit", publishedLookbackDays: MEETING_HELD_LOOKBACK_DAYS,
     async fetch(query?: MeetingQuery) {
+      const window = meetingHeldWindowAt(new Date().toISOString())!;
+      const from = query?.startsAfter ?? window.lowerBound;
+      const to = query?.startsBefore ?? window.upperBound;
+      const lower = Date.parse(from), upper = Date.parse(to);
+      if (!Number.isFinite(lower) || !Number.isFinite(upper) || lower > upper) throw new Error("SWAGIT_WINDOW_INVALID");
       const held = new Map<string, Promise<Omit<SwagitRaw, "wiring">>>();
       const read = async (wiring: BodySourceWiring): Promise<Omit<SwagitRaw, "wiring">> => {
-        const pages: SwagitRaw["pages"] = [];
+        const parsed: SwagitRaw["rows"] = [];
         const partialScopes: PartialScopeFailure[] = [];
         const visited = new Set<string>();
         let url: string | null = wiring.config.portalUrl;
+        let pagesRead = 0;
         try {
           while (url !== null) {
             if (visited.has(url)) throw new Error(`SWAGIT_PAGING_CYCLE:${url}`);
             visited.add(url);
             const response = await politeGetText(url, { fetchImpl, signal: query?.signal, accept: "text/html" });
-            parseSwagitMeetings(response.text, url);
-            pages.push({ url, text: response.text });
+            const pageRows = parseSwagitMeetings(response.text, url);
+            for (const row of pageRows) parsed.push({ ...row, sourceUrl: url });
+            pagesRead++;
+            if (!pageRows.some(row => {
+              const start = startsAt(row, wiring.timeZone);
+              return start !== null && Date.parse(start) >= lower && Date.parse(start) <= upper;
+            })) break;
             url = nextPage(response.text, url);
+            if (url !== null && pagesRead >= SWAGIT_MAX_PAGES_PER_TENANT) throw new Error(`SWAGIT_PAGE_LIMIT:${SWAGIT_MAX_PAGES_PER_TENANT}`);
             if (url !== null) await sourceAcquisitionSleep(REQUEST_SPACING_MS, query?.signal);
           }
         } catch (error) {
           query?.signal?.throwIfAborted();
-          if (!pages.length) return { pages, collectedAt: new Date().toISOString(), refused: true,
+          if (!pagesRead) return { rows: parsed, from, to, collectedAt: new Date().toISOString(), refused: true,
             refusedKind: error instanceof SourceHttpError ? "WALL" : "JOB", refusedReason: String(error),
             ...(error instanceof SourceHttpError ? { refusedRung: error.rung } : {}) };
           partialScopes.push({ scope: "ARCHIVE", ocdIds: [wiring.ocdId], cause: String(error) });
         }
-        return { pages, collectedAt: new Date().toISOString(), ...(partialScopes.length ? { partialScopes } : {}) };
+        return { rows: parsed, from, to, collectedAt: new Date().toISOString(), ...(partialScopes.length ? { partialScopes } : {}) };
       };
       const result: SwagitRaw[] = [];
       for (const wiring of rows) {

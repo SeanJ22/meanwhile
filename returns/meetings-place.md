@@ -5,16 +5,16 @@ owner: meetings-place
 writer: the meetings-place lane
 check: at-scale
 ready: no step ids unknown
-river: 493311674ed4c1f3d15c14f70e19e7be9b9f58aa
-at: 2026-10-15T23:21:32Z
+river: 965bf002ea7ba2dd209f8d07852708e5e1fa1a8d
+at: 2026-10-16T03:31:40Z
 state: returned
-fix_subject: fix:5d7efe35
-fix: River · stream/meetings-place — at-scale failed for meetings-place: MT-01 (a22bfdfb4): AT SCALE peak comes from a whole state. 'Peak state worker RSS 447.23 MiB, largest state worker IL' and a national body index (554,292 identities, shared index heap 29 MB) held by the reader; a job's peak must come from o
+fix_subject: fix:3cd0fdeb
+fix: River · stream/meetings-place — at-scale failed for meetings-place: MT-01 (a22bfdfb4): memory finding withdrawn after re-review under the corrected rule. The state worker's 447 MiB peak at Illinois is one state's own run on a roughly 250 MiB process baseline, and the cached canonical body index (29 MB, buil
 
 ## Failure
 
 ```
-MT-01 (a22bfdfb4): AT SCALE peak comes from a whole state. 'Peak state worker RSS 447.23 MiB, largest state worker IL' and a national body index (554,292 identities, shared index heap 29 MB) held by the reader; a job's peak must come from one place or one body. Name the stage (the state worker's due-work and index pass; the reader's national body-identity index) and bound it to one place. Behavior conflict with CP-01 (folded in the batch): both lanes implement the field-manual slice query. lib/control-plane/repository/pg-store.ts FIELD_MANUAL_SLICE_SQL differs (- with an eligible/candidates CTE in CP-01; your version adds a state parameter at /), plus pg-schema.ts, scripts/platform-census-runner.mts imports and tests/field-manual-schema.test.ts. One query must serve both: drop your own slicing and extend CP-01's. Also reads removed ScoutResult.sourceDeadEnds in route-hints.ts if H-01 is in river.
+MT-01 (a22bfdfb4): memory finding withdrawn after re-review under the corrected rule. The state worker's 447 MiB peak at Illinois is one state's own run on a roughly 250 MiB process baseline, and the cached canonical body index (29 MB, built once per registry model) is the registry's own structure, which MT-01 stops rebuilding per request; neither is a multiple of the unit it works on. Remaining item is only the fold conflict with river 1d3d303d7 in app/api/meetings/route.ts and lib/meetings/edge-artifacts.ts (NE-01), which River settles in river-next.
 ```
 
 ## Repair

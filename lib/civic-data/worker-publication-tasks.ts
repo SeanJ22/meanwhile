@@ -18,7 +18,7 @@ export type WorkerPublicationItem = Pick<WorkItem, "id"> & {
   readonly publicationOutcome?: Pick<NonNullable<WorkItem["publicationOutcome"]>, "workerResultId" | "status" | "at" | "recovery" | "sourceObservedAt"> &
     Partial<Pick<NonNullable<WorkItem["publicationOutcome"]>, "code">>;
   readonly autonomousPlan?: {
-    readonly publication?: Pick<NonNullable<NonNullable<WorkItem["autonomousPlan"]>["publication"]>, "contractId">;
+    readonly publication?: Pick<NonNullable<NonNullable<WorkItem["autonomousPlan"]>["publication"]>, "contractId"> & { readonly bodyId?: string };
     readonly contract: Pick<NonNullable<WorkItem["autonomousPlan"]>["contract"], "recordClass">;
   };
 };
@@ -28,9 +28,10 @@ const factClass = (item: WorkerPublicationItem): "rosters" | "comments" | null =
   item.autonomousPlan?.publication?.contractId === "registry-runtime-bindings" && item.autonomousPlan.contract.recordClass === "OFFICIAL_ROSTER" ? "rosters"
     : item.autonomousPlan?.publication?.contractId === COMMENT_RULE_PUBLICATION ? "comments" : null;
 
-/** When each input a held ballot route is read from last changed: its place's saved pages, the national office list, the registry and the published routes. */
-export interface HeldBallotInputs {
+/** When each input a held publication is read from last changed: its place's or body's saved pages, the national office list, the registry and the published routes. */
+export interface HeldInputs {
   readonly pagesAt: ReadonlyMap<string, string>;
+  readonly bodyPagesAt: ReadonlyMap<string, string>;
   readonly nationalAt: string | null;
   readonly registryAt: string | null;
   readonly routesAt: string | null;
@@ -40,7 +41,7 @@ export interface HeldBallotInputs {
 const CONTENT_CODES = new Set(["ELECTION_OFFICE_NOT_ON_SAVED_PAGES", "ELECTION_OFFICES_PUBLISHED", "VERIFIED_RESULT_REUSED"]);
 
 /* A held route is read again only when something it was read from changed after its last outcome. */
-function heldBallotInputsChanged(item: WorkerPublicationItem, inputs: HeldBallotInputs): boolean {
+function heldBallotInputsChanged(item: WorkerPublicationItem, inputs: HeldInputs): boolean {
   const outcome = item.publicationOutcome;
   if (!outcome || item.subject === undefined) return true;
   const content = CONTENT_CODES.has(outcome.code ?? "");
@@ -51,7 +52,7 @@ function heldBallotInputsChanged(item: WorkerPublicationItem, inputs: HeldBallot
 }
 
 export function workerPublicationTasks(items: readonly WorkerPublicationItem[], results: readonly WorkerResultRecord[], now: string,
-  heldInputs: HeldBallotInputs | null = null): RoutineSourceTask[] {
+  heldInputs: HeldInputs | null = null): RoutineSourceTask[] {
   return workerPublicationTasksFor(owedWorkerPublications(items, results, now, heldInputs), now);
 }
 
@@ -65,12 +66,12 @@ export interface OwedWorkerPublication {
 
 /** Owed publications that run through a contract's command; rosters and comment rules publish as facts instead. */
 export function owedWorkerPublications(items: readonly WorkerPublicationItem[], results: readonly WorkerResultRecord[], now: string,
-  heldInputs: HeldBallotInputs | null = null): OwedWorkerPublication[] {
+  heldInputs: HeldInputs | null = null): OwedWorkerPublication[] {
   return owedPublications(items.filter(item => factClass(item) === null), results, now, heldInputs);
 }
 
 function owedPublications(items: readonly WorkerPublicationItem[], results: readonly WorkerResultRecord[], now: string,
-  heldInputs: HeldBallotInputs | null = null): OwedWorkerPublication[] {
+  heldInputs: HeldInputs | null = null): OwedWorkerPublication[] {
   const byItem = new Map<string, WorkerResultRecord[]>();
   for (const result of results) {
     const own = byItem.get(result.workItemId) ?? [];
@@ -103,15 +104,17 @@ function owedPublications(items: readonly WorkerPublicationItem[], results: read
     if (target === "ballot-navigation" && heldInputs !== null) {
       return heldBallotInputsChanged(item, heldInputs) ? [{ id: item.id, contractId: target, requestedAt: hour, batch: true }] : [];
     }
-    if (outcome && nowMs - Date.parse(outcome.at) < HOUR) return [];
+    // A held roster or directory is read again only once a page for its body was saved after its last outcome.
+    if (outcome && (heldInputs === null ? nowMs - Date.parse(outcome.at) < HOUR : !((heldInputs.bodyPagesAt.get(plan.publication?.bodyId ?? "") ?? "") > outcome.at))) return [];
     return [{ id: item.id, contractId: target, requestedAt: hour, batch: false }];
   });
 }
 
-export function owedFactItems(items: readonly WorkerPublicationItem[], results: readonly WorkerResultRecord[], now: string): { rosters: string[]; comments: string[] } {
+export function owedFactItems(items: readonly WorkerPublicationItem[], results: readonly WorkerResultRecord[], now: string,
+  heldInputs: HeldInputs | null = null): { rosters: string[]; comments: string[] } {
   const owed = { rosters: [] as string[], comments: [] as string[] };
   const facts = items.filter(item => factClass(item) !== null), byId = new Map(facts.map(item => [item.id, item]));
-  for (const row of owedPublications(facts, results, now)) owed[factClass(byId.get(row.id)!)!].push(row.id);
+  for (const row of owedPublications(facts, results, now, heldInputs)) owed[factClass(byId.get(row.id)!)!].push(row.id);
   return owed;
 }
 

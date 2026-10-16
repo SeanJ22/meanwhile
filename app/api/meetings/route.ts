@@ -104,11 +104,12 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
 
   const edgeManifest = await timing.time("manifest", () => readReaderManifest().catch(() => null));
 
+  let authorityEdge: Awaited<ReturnType<typeof ensureReaderAuthorityEdge>> | null = null;
   if (edgeManifest?.authorityArtifacts) {
     const entering = timing.time("authority", () =>
       ensureReaderAuthorityEdge(edgeManifest, undefined, READER_MAP_AUTHORITY_FAMILIES).catch(() => null),
     );
-    const authorityEdge = await entering;
+    authorityEdge = await entering;
     if (authorityEdge) enterReaderAuthorityEdge(authorityEdge);
   }
   if (edgeManifest) prefetchReaderEdgeStates(edgeManifest, await nearZipRead.then(hintedStates));
@@ -117,10 +118,10 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
   let commentAccessDataState: "PROMOTED" | "FIRST_SEED" | "STORE_UNREACHABLE" = "FIRST_SEED";
   let commentAccessDataDetail: string | null = null;
   try {
-    if (edgeManifest?.commentAccess !== undefined) {
-      commentAccess = edgeManifest.commentAccess as readonly CommentAccess[];
+    if (authorityEdge?.commentAccess) {
+      commentAccess = authorityEdge.commentAccess.value.records;
       commentAccessDataState = "PROMOTED";
-      commentAccessDataDetail = `Comment-access served from the reader edge manifest (sequence ${edgeManifest.sequence}).`;
+      commentAccessDataDetail = `Comment-access served from the reader edge's state facts (sequence ${edgeManifest!.sequence}).`;
     } else {
       if (process.env.NODE_ENV === "production") {
         const { versionId } = await readCommentAccessFacts();

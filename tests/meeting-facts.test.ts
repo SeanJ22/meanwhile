@@ -7,7 +7,7 @@ import type { WorkerPublicationCapture } from "../lib/civic-data/worker-roster-p
 import { factClocks } from "../lib/facts/clocks.ts";
 import { ensureFactEntities } from "../lib/facts/entities.ts";
 import { publishMeetingFacts } from "../lib/facts/meeting-facts.ts";
-import { meetingEntityId, withMeetingFacts } from "../lib/facts/meeting-read.ts";
+import { meetingEntityId, readSittingFacts, withSittingFacts } from "../lib/facts/meeting-read.ts";
 import { normalizeWithDrops } from "../lib/sources/legistar/index.ts";
 import type { LegistarEvent } from "../lib/sources/legistar/types.ts";
 import { factDb } from "./helpers/fact-db.ts";
@@ -78,8 +78,9 @@ test("readers see each sitting with its live facts and the saved page every one 
   const { meetings } = normalizeWithDrops(events.map(event => ({ event, slug: "pima", collectedAt: NOW.toISOString(), items: null })), NOW);
   const first = meetings[0]!;
   await publishMeetingFacts(db, { meeting: first, capture: capture(bytes, FEED), producedBy: "door:legistar:pima" }, factClocks(null), NOW);
-  const [seen] = await withMeetingFacts([{ ...first, title: "A stale partition title" }], db.query);
+  const facts = (await readSittingFacts(db.query, [first.bodyId!])).get(first.bodyId!)!;
+  const [seen] = withSittingFacts([{ ...first, title: "A stale partition title" }], facts);
   assert.equal(seen!.title, "Study Session", "the live fact wins over the partition row");
   assert.deepEqual([seen!.fieldSources?.title?.sourceUrl, seen!.fieldSources?.startsAt?.quote], [FEED, "2026-05-12T00:00:00 1:00 PM"]);
-  assert.deepEqual(await withMeetingFacts([first], null), [first], "with no fact store the partition row stands");
+  assert.deepEqual(withSittingFacts([first], []), [first], "with no facts the partition row stands");
 });

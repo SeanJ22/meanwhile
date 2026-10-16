@@ -153,8 +153,7 @@ test("preparing over an unchanged promoted set is idempotent and never recompose
     payload: {},
     receipt: {} as never,
   }));
-  const composedFrom = [...contracts.map((contract) => ({ contractId: contract.id, versionId: `ver-${contract.id}` })),
-    { contractId: "meeting-facts", versionId: "facts:none" }];
+  const composedFrom = contracts.map((contract) => ({ contractId: contract.id, versionId: `ver-${contract.id}` }));
   // The idempotent pass decides from identities and the serving copy's coupling alone: no partition or composed
   // payload is read to learn that nothing changed.
   const store = fakeStore({
@@ -307,8 +306,7 @@ test("prepare composes through the pass's shared composition, and only when the 
     recordClass: "MEETING",
     scope: MEETINGS_PREPARED_SCOPE,
     sequence: 1,
-    composedFrom: [...contracts.map((contract) => ({ contractId: contract.id, versionId: `ver-${contract.id}` })),
-      { contractId: "meeting-facts", versionId: "facts:none" }],
+    composedFrom: contracts.map((contract) => ({ contractId: contract.id, versionId: `ver-${contract.id}` })),
     generatedAt: snapshot.generatedAt,
   };
   const current = await preparePublishedMeetingSnapshot(store, "2026-09-06T00:10:00.000Z", { aggregate });

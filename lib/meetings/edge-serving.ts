@@ -1053,7 +1053,6 @@ type ReaderEdgeMeetingsOptions = {
     readonly ocdIds?: readonly string[];
     readonly meetingId?: string;
     readonly includeAgenda?: boolean;
-    readonly nearby?: { readonly lat: number; readonly lng: number; readonly radiusKm: number };
     readonly now?: string;
     readonly manifest?: ReaderManifest | null;
     readonly fallback?: () => Promise<MeetingsProjectionReadResult>;

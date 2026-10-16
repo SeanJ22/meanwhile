@@ -6,7 +6,9 @@ import { canonicalBodyIdentity } from "@/lib/ask/body-identity";
 import { meetingListingIdentity } from "@/lib/meetings/listing-identity";
 import { nearestZctaAsync } from "@/lib/geo/zcta-table";
 import { zipDivisionEntry } from "@/lib/geo/zip-division-index";
-import { RADIUS_LADDER_KM, searchMeetings } from "@/lib/meetings/query";
+import { searchMeetings } from "@/lib/meetings/query";
+import { DEFAULT_RADIUS_KM, MAX_RADIUS_KM } from "@/lib/meetings/constants";
+import { getRegistryRuntimeReadModel } from "@/lib/registry/runtime-read-model";
 import { snapshotSourceFor } from "@/lib/meetings/registry";
 import type { Meeting } from "@/lib/sources/types";
 import {
@@ -83,15 +85,14 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
   const lat = latRead.value;
   const lng = lngRead.value;
 
-  /* An absent `radiusKm` starts at the ladder's first rung; a present but unparseable one refuses. */
-  const radiusRead = numeric(params, "radiusKm", { default: RADIUS_LADDER_KM[0] });
+  const radiusRead = numeric(params, "radiusKm", { default: DEFAULT_RADIUS_KM });
   if (!radiusRead.ok) return refuse(radiusRead.error);
   if (radiusRead.value <= 0) {
     return refuse(`radiusKm must be greater than 0, received ${radiusRead.value}`);
   }
   const radiusKm = Math.min(
     radiusRead.value,
-    RADIUS_LADDER_KM[RADIUS_LADDER_KM.length - 1],
+    MAX_RADIUS_KM,
   );
 
   /* A malformed zip refuses rather than becoming null; an absent one means the reader panned. Read at the door so a refused request never runs the search. */
@@ -188,22 +189,22 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
     resolvedDivisions = await timing.time("divisions", () => divisionsAt(lat, lng));
     divisionsAtPoint = new Set(resolvedDivisions.map((d) => d.ocdId));
   } catch (error) {
-    console.error("division lookup failed; online meetings fall back to body-in-view", error);
+    console.error("division lookup failed", error);
   }
 
   /* The divisions the point itself resolved, kept apart from the widened set (see `widenedInBodies`). */
   const pointOwnDivisionIds = new Set(divisionsAtPoint);
   if (zipRead.value && resolvedDivisions) {
-    const widening = timing.start("widen");
+    const zipArea = timing.start("zipArea");
     const areaIds = await divisionIdsForZipArea(
       zipRead.value,
       resolvedDivisions.map((d) => d.ocdId),
       undefined, POINT_GEOMETRY_PLANS,
     );
-    const widened = await divisionsByOcdIds(areaIds, { zip: zipRead.value });
-    widening();
-    resolvedDivisions = widened;
-    divisionsAtPoint = new Set(widened.map((d) => d.ocdId));
+    const zipDivisions = await divisionsByOcdIds(areaIds, { zip: zipRead.value });
+    zipArea();
+    resolvedDivisions = zipDivisions;
+    divisionsAtPoint = new Set(zipDivisions.map((d) => d.ocdId));
   }
 
   const meetingSourceName = process.env.WTP_MEETING_SOURCE?.trim() || "snapshot";
@@ -226,8 +227,7 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
         manifest: edgeManifest,
         includeAgenda: false,
         ...(readerStates.length > 0 ? { states: readerStates } : {}),
-        ...(resolvedDivisions?.length ? { ocdIds: resolvedDivisions.map(division => division.ocdId) } : {}),
-        nearby: { lat, lng, radiusKm: Math.max(radiusKm, ...RADIUS_LADDER_KM) },
+        ocdIds: resolvedDivisions?.map(division => division.ocdId) ?? [],
       }));
       meetingsWholeFromEdge = servedWholeFromReaderEdge(read);
       const snapshot = requireMeetingsProjection(read);
@@ -239,6 +239,8 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
         new Date(),
         divisionsAtPoint,
         snapshotSourceFor(snapshot),
+        undefined,
+        resolvedDivisions ? getRegistryRuntimeReadModel().registry.bodies : [],
       ));
       snapshotMeta =
         read.kind === "PROMOTED" || read.kind === "BOOTSTRAP"
@@ -248,7 +250,9 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
         snapshotMeta.carried = edgeManifest.carriedSummary;
       }
     } else {
-      result = await searchMeetings(lat, lng, radiusKm, new Date(), divisionsAtPoint);
+      result = await searchMeetings(lat, lng, radiusKm, new Date(), divisionsAtPoint, undefined, undefined,
+        resolvedDivisions ? getRegistryRuntimeReadModel().registry.bodies : []);
+      heldMeetings = result.meetings;
       snapshotMeta = await getActiveSnapshotMeta();
     }
   } catch (error) {

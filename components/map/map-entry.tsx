@@ -1,6 +1,5 @@
 "use client";
 
-
 import { useOfficePins } from "@/hooks/use-office-pins";
 import { groupOfficePins, officeOwners, type MapBounds, type OfficePin } from "@/lib/map/office-pins";
 import { useBodyOfficeLocations } from "@/hooks/use-body-office-locations";
@@ -25,7 +24,7 @@ import { venueLink } from "@/lib/registry/links";
 import { DataProvider, type ShellData } from "@/lib/state/data";
 import { applyFilters, noticeShouldExpand } from "@/lib/state/derive";
 import { deriveActiveDistrictTypes } from "@/lib/state/district-intent";
-import { RADIUS_LADDER_KM } from "@/lib/meetings/constants";
+import { DEFAULT_RADIUS_KM } from "@/lib/meetings/constants";
 import { carryPins } from "@/lib/map/carry-pins";
 import { captureEvent } from "@/lib/events/client";
 import { useActiveScroll } from "@/hooks/use-active-scroll";
@@ -86,17 +85,15 @@ import { jurisdictionClaim, representationNoteForClaim } from "@/lib/meetings/ju
 import { CoverageNotice } from "./coverage-notice";
 import { GoverningSkeleton } from "./governing-skeleton";
 import { DistrictPicker } from "./district-picker";
-import { MapCanvas, type CameraTarget, type MapFocus } from "./map-canvas";
+import type { CameraTarget, MapFocus } from "./map-canvas";
 import { MeetingPanel } from "./meeting-panel";
 import { DoorOverlay } from "./door-overlay";
 import type { ModalSubject } from "./popup/entity-modal";
 
-/*
- * Surfaces that render nothing on the server and are absent from first
- * paint, loaded behind async boundaries. `ssr: false` states a fact: each is
- * gated on click state or on `restored`, which only becomes true on the
- * client. The map is not here.
- */
+const MapCanvas = dynamic(
+  () => import("./map-canvas").then(m => m.MapCanvas),
+  { ssr: false },
+);
 const OfficialModal = dynamic(
   () => import("./popup/official-modal").then((m) => m.OfficialModal),
   { ssr: false },
@@ -144,11 +141,7 @@ interface ViewTarget {
   zip: string | null;
   lat: number;
   lng: number;
-  /**
-   * The radius to ask for. Absent means the ladder's first rung (a typed zip);
-   * a settled view carries what the reader can see, so zooming out returns a
-   * superset.
-   */
+
   radiusKm?: number;
 }
 
@@ -169,11 +162,6 @@ function MapEntryInner() {
   const ui = useUi();
   const dispatch = useUiDispatch();
 
-  /**
-   * Where can I vote?, Ask and Change Zip take the foreground: they dismiss the
-   * open venue or district card. Never runs on an area click, and nothing
-   * closes Ask.
-   */
   const takeForeground = useCallback(() => {
     dispatch({ type: "select/venue", key: null });
     dispatch({ type: "select/district", ocdId: null, districtType: null });
@@ -222,11 +210,7 @@ function MapEntryInner() {
    * before the handlers that clear them.
    */
   const [popupMeeting, setPopupMeeting] = useState<Meeting | null>(null);
-  /*
-   * The large surface is a stack. Opened from outside any large surface,
-   * `openLarge` replaces it; from inside one, `pushLarge` appends and closing
-   * pops back. The depth cap guards cycles by dropping the oldest frame.
-   */
+
   type LargeSurface =
     | { kind: "entity"; subject: ModalSubject }
     | {
@@ -295,7 +279,7 @@ function MapEntryInner() {
       try {
         // Orientation only. A settled viewport has none; the server resolves the nearest ZCTA.
         const zipParam = zip ? `&zip=${zip}` : "";
-        // Always stated: without it the server used the first rung at every zoom.
+        // Always stated: the requested radius follows the viewport.
         const radiusParam = radiusKm ? `&radiusKm=${radiusKm}` : "";
         const response = await fetch(
           `/api/meetings?lat=${lat}&lng=${lng}${zipParam}${radiusParam}`,
@@ -328,7 +312,6 @@ function MapEntryInner() {
         // Sent by the fire-and-forget beacon, never on the response path.
         {
           const extra = payload as {
-            requestedRadiusKm?: number;
             governingOcdIds?: readonly string[] | null;
           };
           logEvent(
@@ -337,7 +320,6 @@ function MapEntryInner() {
             {
               tier: payload.tier,
               radiusKm: payload.radiusKm,
-              ...(typeof extra.requestedRadiusKm === "number" ? { requestedRadiusKm: extra.requestedRadiusKm } : {}),
               meetingCount: payload.meetings.length,
             },
             zip ?? payload.nearZip ?? null,
@@ -410,11 +392,6 @@ function MapEntryInner() {
 
   const current = result && view && result.viewKey === view.key ? result : null;
 
-  /*
-   * `held` keeps the last answer on screen between a settle and its answer;
-   * the card carries `data-refreshing` meanwhile. Adjust-during-render, since
-   * a ref would be read during render.
-   */
   const [held, setHeld] = useState<{
     result: TaggedResult;
     /* The zip the held answer belongs to. */
@@ -467,11 +444,6 @@ function MapEntryInner() {
     [pinned?.coverage],
   );
 
-  /*
-   * The map gets every venue in the held result plus the visible keys, so a
-   * filter changes visibility and never rebuilds markers. `venues` above is
-   * the filtered list.
-   */
   const allVenues = useMemo<Venue[]>(
     () => (pinned ? groupByVenue(pinned.meetings, pinned.listingIdentity, officeLocations) : []),
     [pinned, officeLocations],
@@ -491,11 +463,6 @@ function MapEntryInner() {
     [selectedVenue, meetings],
   );
 
-  /*
-   * One surface open at a time: sidebar, who-governs card and large card each
-   * close the others. Every opener goes through here. Ask is not one of them
-   * and closes nothing.
-   */
   const openSurface = useCallback(
     (surface: "sidebar" | "wgh" | "large") => {
       // The sidebar stays put (dimmed under the scrim) while the card is open.
@@ -589,11 +556,6 @@ function MapEntryInner() {
     }
   }
 
-  /*
-   * Interaction events carry the divisions touched and scalar detail only, and
-   * fire on state changes. `openMeetingCard` is filled in once `bodyForMeeting`
-   * exists below.
-   */
   const openMeetingCard = useRef<(meeting: Meeting) => void>(() => {});
   const openMeeting = useCallback((meeting: Meeting) => {
     // A meeting opens its full card inside the one card.
@@ -651,8 +613,8 @@ function MapEntryInner() {
             ? {
                 lat: view.lat,
                 lng: view.lng,
-                // A zip view got the ladder's first rung; compare against that.
-                radiusKm: view.radiusKm ?? RADIUS_LADDER_KM[0],
+                // Compare a ZIP view against the default radius.
+                radiusKm: view.radiusKm ?? DEFAULT_RADIUS_KM,
               }
             : null,
           { lat: center.lat, lng: center.lng, radiusKm },
@@ -693,20 +655,11 @@ function MapEntryInner() {
     const viewKind = current.viewKey.startsWith("zip:") ? "zip" : "settled";
     if (noticeShouldExpand(viewKind, current.zip, shownAreaKey.current)) {
       shownAreaKey.current = current.zip;
-      /*
-       * Arrival shows the rail with the card collapsed. `noticeShouldExpand`
-       * still runs so `shownAreaKey` records which area the card answered for;
-       * the district effect below relies on it.
-       */
+
       setNoticeCollapsed(true);
     }
   }, [current]);
 
-  /**
-   * One small card at a time: a change of venue or district selection clears
-   * the popups. Adjust-during-render on a composed key, so venue→district
-   * counts as a change; selecting nothing clears nothing.
-   */
   const selectionKey = `${ui.selectedVenueKey ?? ""}\u0000${ui.selectedDistrictOcdId ?? ""}`;
   const [prevSelectionKey, setPrevSelectionKey] = useState(selectionKey);
   if (selectionKey !== prevSelectionKey) {
@@ -774,11 +727,7 @@ function MapEntryInner() {
   }, [current, dispatch]);
 
   const data = useMemo<ShellData>(() => {
-    /*
-     * `current` is null between a settle and its reply; `shown` bridges that
-     * gap so surfaces dim instead of blanking. A completed answer, even an
-     * unavailable one, always wins.
-     */
+
     const answer = current ?? shown;
     return {
       allMeetings: answer?.meetings ?? [],
@@ -805,11 +754,6 @@ function MapEntryInner() {
     };
   }, [current, shown, meetings, pinned?.listingIdentity, venues, officePins.pins.length, location, drawnDistricts, failure, view]);
 
-  /*
-   * Every autocomplete row opens something. A meeting row with no venue opens
-   * the large meeting card; a body row opens that body's battlecard (built by
-   * `bodySubject`) and flies where it can. Place rows fly.
-   */
   const onSearchPick = useCallback((item: SearchItem) => {
     if (item.venueKey) dispatch({ type: "select/venue", key: item.venueKey });
     if (item.lat !== null && item.lng !== null) {
@@ -828,11 +772,7 @@ function MapEntryInner() {
           });
         }
       } else if (item.kind === "body") {
-        /*
-         * `resolveBodyRow` (lib/search/body-row.ts) normalises two spellings of
-         * the same name and refuses anything less certain; on refusal the card
-         * is built from the row, which names the clicked body and its meetings.
-         */
+
         const resolved = resolveBodyRow(item, current?.coverage?.bodies ?? []);
         const body =
           resolved?.body ??
@@ -889,11 +829,6 @@ function MapEntryInner() {
     [openMeeting],
   );
 
-  /*
-   * Reset clears the controls and re-runs the current zip through `search`,
-   * the same path a typed zip takes. With no zip yet it opens the welcome
-   * prompt.
-   */
   const onReset = useCallback(() => {
     dispatch({ type: "reset" });
     setFocus(null);
@@ -935,11 +870,7 @@ function MapEntryInner() {
   const noticeZip =
     result && /^\d{5}$/.test(result.zip) ? result.zip : (location?.zip ?? "");
   const narrowing = useNarrowing(noticeZip);
-  /*
-   * An OCD id says `school_district:` without unified/elementary/secondary.
-   * The Census gives each district exactly one, so all three sources are
-   * asked; the other two calls are no-ops.
-   */
+
   const narrowedDistricts = useMemo(
     () =>
       narrowing.divisions.flatMap((ocdId) =>
@@ -967,11 +898,6 @@ function MapEntryInner() {
     });
   }, [setShowDistricts, dispatch, ui.filters.districtTypes]);
 
-  /*
-   * A narrowed street becomes the query point: the camera flies and the point
-   * goes through the same `settled` override a panned viewport uses, so a new
-   * zip makes it stale. Nothing persists.
-   */
   const onStreetPoint = useCallback(
     (point: { lat: number; lng: number; street: string }) => {
       if (!location) return;
@@ -1040,15 +966,7 @@ function MapEntryInner() {
   /** The basemap notice clears when the basemap draws again. */
   const onTilesRecovered = useCallback(() => setTilesFailed(false), []);
   const onDistrictError = useCallback(() => setDistrictsFailed(true), []);
-  /*
-   * The one-view model: small popups anchored to their control (ZIP, Where
-   * can I vote?, Ask; `pop` holds which) and one large card over a scrim, whose
-   * view is derived from the state existing openers write, in fixed priority.
-   * Opening either closes the other; the sidebar closes both. Going deeper
-   * records the left view and scroll on `backStack`; browser Back matches.
-   *
-   * Voting pins live here because the map draws them; the popup clears them on close.
-   */
+
   const [votingPins, setVotingPins] = useState<VotingSitePin[]>([]);
   /** The point the reader's address resolved to, for the ten-mile ring. */
   const [votingAddressPoint, setVotingAddressPoint] = useState<{ lat: number; lng: number } | null>(
@@ -1276,11 +1194,6 @@ function MapEntryInner() {
     applySnapshot(snap);
   }, [backStack, applySnapshot, closeCard, cardKey]);
 
-  /*
-   * Browser Back steps back through the card, exactly like "← Back to …",
-   * and from the first view closes it. One history entry per level, pushed
-   * with the same URL so no route is re-rendered and no deep link changes.
-   */
   const backRef = useRef(backCard);
   const closeRef = useRef(closeCard);
   useEffect(() => {
@@ -1403,11 +1316,6 @@ function MapEntryInner() {
     });
   }, [ui.selectedDistrictOcdId, districtPopup, openLarge, current, districtRepresentations, lastHits]);
 
-  /**
-   * Fit a drawn district's whole boundary and park its card behind the
-   * selection pill (Districts list, and the sidebar's Jurisdiction select).
-   * Only districts the map is drawing can be fitted; others are left alone.
-   */
   const showDistrictOnMap = useCallback(
     (ocdId: string) => {
       const drawn = drawnDistricts.find((d) => d.ocdId === ocdId);
@@ -1440,7 +1348,6 @@ function MapEntryInner() {
     <PillCluster
       placement={sidebarUp ? "sidebar" : "map"}
       zip={clusterZip}
-      coverage={clusterCoverage}
       pop={pop}
       governsOpen={cardView?.kind === "governs"}
       onOpenPop={openPopup}
@@ -1464,9 +1371,6 @@ function MapEntryInner() {
             embedded
             tier={shown.tier}
             zip={shown.zip}
-            radiusKm={shown.radiusKm}
-            requestedRadiusKm={shown.requestedRadiusKm}
-            count={shown.meetings.length}
             listingCount={readerMeetingCount(shown.meetings, shown.listingIdentity)}
             coverage={shown.coverage}
             refreshing={refreshing}
@@ -1673,7 +1577,7 @@ function MapEntryInner() {
         }
       >
         <div className="mw-map-layer absolute inset-0">
-          {districtsRestored && <MapCanvas
+          {districtsRestored && (result !== null || failure !== null || (restored && !location)) && <MapCanvas
             onPresentationReadyChange={onMapPresentationReady}
             venues={allVenues}
             visibleVenueKeys={visibleVenueKeys}
@@ -2000,11 +1904,6 @@ function unwindCardHistory(depth: { current: number }): void {
   }
 }
 
-/**
- * The address with a Directions link built from coordinates we hold: a
- * convenience, never a citation. A named function because the server/client
- * boundary test reads an inline `value: (…) =>` as a function prop.
- */
 function locationWithDirections(location: NonNullable<Meeting["location"]>): React.ReactNode {
   const line = locationLine(location.name, location.address);
   const directions = venueLink(location);
@@ -2222,11 +2121,6 @@ function bodyContactRows(
   return rows;
 }
 
-/**
- * A place's card: the place, its type, and every body we hold in it, each
- * opening its own battlecard. It elects no body to stand for the place. No
- * bodies renders the stated absence.
- */
 function placeSubject(
   ocdId: string,
   label: string,
@@ -2312,7 +2206,6 @@ function BODY_TYPE_LABEL(body: CoveredBody): string {
     ? DIVISION[body.divisionType]
     : CLASS(body.bodyClass);
 }
-
 
 const STATUS_LABEL: Record<Meeting["status"], string> = {
   SCHEDULED: "Scheduled",

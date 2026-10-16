@@ -3,11 +3,6 @@ import { test } from "node:test";
 
 import { isoDaysFromNow, toZonedIso } from "../lib/time/zoned.ts";
 
-/**
- * Meeting times are the product. A council session listed an hour off because
- * of a DST assumption sends someone to a locked building.
- */
-
 test("Arizona stays on -07:00 through what would be DST elsewhere", () => {
   const january = toZonedIso(2026, 1, 14, 17, 30, "America/Phoenix");
   const july = toZonedIso(2026, 7, 14, 17, 30, "America/Phoenix");
@@ -22,6 +17,14 @@ test("Eastern time switches offset across the DST boundary", () => {
 
   assert.equal(winter, "2026-01-14T10:00:00-05:00");
   assert.equal(summer, "2026-07-14T10:00:00-04:00");
+});
+
+test("many intervening zones and a refused zone do not change a body's local time", () => {
+  for (const zone of Intl.supportedValuesOf("timeZone").slice(0, 100)) toZonedIso(2026, 7, 14, 10, 0, zone);
+  assert.throws(() => toZonedIso(2026, 7, 14, 10, 0, "not-a-zone"), RangeError);
+  assert.equal(toZonedIso(2026, 7, 14, 10, 0, "America/New_York"), "2026-07-14T10:00:00-04:00");
+  assert.equal(toZonedIso(2026, 1, 14, 10, 0, "America/New_York"), "2026-01-14T10:00:00-05:00");
+  assert.equal(toZonedIso(2026, 7, 14, 10, 0, "America/Phoenix"), "2026-07-14T10:00:00-07:00");
 });
 
 test("the same wall clock in two zones is two different instants", () => {

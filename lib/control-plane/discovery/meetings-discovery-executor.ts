@@ -476,6 +476,8 @@ export async function walkMeetingsDiscoveryNeed(
             : got.transportError !== null ? `transport failure: ${got.transportError}` : `HTTP ${got.status ?? "none"}`,
       });
       /* What the walk reads of a body is what it may keep: a credential-bearing page is read as its sanitized derivative. */
+      const hintUrl = hintSources.get(start);
+      if (hintUrl) hintSources.set(url.toString(), hintUrl);
       return ok ? { finalUrl: url.toString(), status: got.status!, body: kept?.readable ?? got.body, bytes: got.bytes, contentType: got.contentType, artifactId, redirects } : null;
     }
     skipped(purpose, current, "ALLOWED", `not requested: more than ${MAX_REDIRECT_HOPS} redirects`);
@@ -485,6 +487,7 @@ export async function walkMeetingsDiscoveryNeed(
   let candidates: readonly EndpointCandidate[] = [];
   /** A tenant page names its committees; each public form lookup keeps that naming page in its attestation. */
   async function readBoardDocs(candidate: EndpointCandidate, got: NonNullable<Awaited<ReturnType<typeof get>>>, via: Via): Promise<void> {
+    const hintUrl = hintSource(candidate, via);
     const committees = parseBoardDocsCommittees(got.body);
     const lastRead = new Map<string, string>();
     for (const prior of runtime.priorAttempts ?? []) for (const step of prior.steps) {
@@ -499,13 +502,14 @@ export async function walkMeetingsDiscoveryNeed(
       const check = list === null ? { verdict: "NOT_CONFIRMED", count: null, detail: "the committee list could not be read this walk" }
         : verifyEndpointBody({ vendor: "boarddocs", url: route }, { status: list.status, body: list.body, finalUrl: list.finalUrl });
       const base = { vendor: "boarddocs", url: route, basis: "LINKED" as const, evidence: `BoardDocs committee "${committee.name}" (${committee.id}) on ${got.finalUrl}`,
-        detail: check.detail, via: { page: candidate.url, artifactId: got.artifactId } };
+        detail: check.detail, via: { page: candidate.url, artifactId: got.artifactId }, bodyName: committee.name, ...(hintUrl ? { hintUrl } : {}) };
       if (check.verdict === "YIELDED" || check.verdict === "EMPTY") found.push({ ...base, count: check.count, artifactId: list?.artifactId ?? null });
       else leads.push(base);
     }
   }
   const enumeratedTenants = new Set<string>();
   async function readLegistarBodies(candidate: EndpointCandidate, via: Via): Promise<void> {
+    const hintUrl = hintSource(candidate, via);
     const parsed = new URL(candidate.url);
     const client = /^\/v1\/([^/]+)\/events$/.exec(parsed.pathname)?.[1];
     if (!client || parsed.hostname !== "webapi.legistar.com" || enumeratedTenants.has(client)) return;
@@ -527,12 +531,13 @@ export async function walkMeetingsDiscoveryNeed(
         : { verdict: "NOT_CONFIRMED", count: null, detail: "the body's calendar could not be read" };
       const result = { vendor: "legistar-api", url: route.href, basis: "LINKED" as const,
         evidence: `Legistar body ${body.BodyId}: ${body.BodyName}`, detail: check.detail,
-        via: { page: listUrl, artifactId: list?.artifactId ?? null } };
+        via: { page: listUrl, artifactId: list?.artifactId ?? null }, bodyName: body.BodyName, ...(hintUrl ? { hintUrl } : {}) };
       if (check.verdict === "YIELDED" || check.verdict === "EMPTY") found.push({ ...result, count: check.count, artifactId: calendar?.artifactId ?? null });
       else leads.push(result);
     }
   }
   async function readCivicClerkBodies(candidate: EndpointCandidate, via: Via): Promise<void> {
+    const hintUrl = hintSource(candidate, via);
     const parsed = new URL(candidate.url);
     if (!parsed.hostname.endsWith(".api.civicclerk.com") || enumeratedTenants.has(parsed.hostname)) return;
     enumeratedTenants.add(parsed.hostname);
@@ -585,7 +590,7 @@ export async function walkMeetingsDiscoveryNeed(
           const check = verifyEndpointBody(candidate, { status: calendar.status, body: calendar.body, finalUrl: calendar.finalUrl });
           const result = { vendor: "civicclerk-api", url, basis: "LINKED" as const,
             evidence: `CivicClerk category ${category.id}: ${name}`, detail: check.detail,
-            via: { page: naming.url, artifactId: naming.artifactId } };
+            via: { page: naming.url, artifactId: naming.artifactId }, bodyName: name, ...(hintUrl ? { hintUrl } : {}) };
           if (check.verdict === "YIELDED" || check.verdict === "EMPTY") found.push({ ...result, count: check.count, artifactId: calendar.artifactId });
           else leads.push(result);
           return page;
@@ -599,6 +604,7 @@ export async function walkMeetingsDiscoveryNeed(
   let proposals: readonly RecipeCandidate[] = [];
   const primeGovSelectors = new Map<string, NonNullable<Awaited<ReturnType<typeof get>>> | null>();
   async function readPrimeGov(candidate: EndpointCandidate, got: NonNullable<Awaited<ReturnType<typeof get>>>, via: Via): Promise<void> {
+    const hintUrl = hintSource(candidate, via);
     const selectorUrl = `${primeGovBase(got.finalUrl)}/api/committee/GetCommitteeesListByShowInPublicPortal`;
     if (!primeGovSelectors.has(selectorUrl)) {
       const selector = await get(selectorUrl, "endpoint", "application/json");
@@ -611,7 +617,7 @@ export async function walkMeetingsDiscoveryNeed(
       parsePrimeGovCommittees(selector.body);
       const check = verifyEndpointBody(candidate, { status: got.status, body: got.body, finalUrl: got.finalUrl });
       const base = { vendor: "primegov", url: candidate.url, basis: candidate.basis, evidence: candidate.evidence, detail: check.detail,
-        via: { page: selectorUrl, artifactId: selector.artifactId } };
+        via: { page: selectorUrl, artifactId: selector.artifactId }, ...(hintUrl ? { hintUrl } : {}) };
       if (check.verdict === "YIELDED") found.push({ ...base, count: check.count, artifactId: got.artifactId });
       else leads.push(base);
     } catch (error) {
@@ -623,6 +629,13 @@ export async function walkMeetingsDiscoveryNeed(
   const recipeSkips: { recipeId: string; why: string }[] = [];
 
   const hints = routeHintsFor(need.jurisdictionId, runtime.routeHints ?? []);
+  const hintSources = new Map((hints?.routes ?? []).map(route => [route.url, route.url]));
+  if (hints?.officialSite) hintSources.set(`${hints.officialSite.origin}/`, hints.officialSite.origin);
+  function hintSource(candidate: EndpointCandidate, via: Via): string | undefined {
+    const source = candidate.basis === "HINT" ? candidate.url : hintSources.get(candidate.url) ?? (via ? hintSources.get(via.page) : undefined);
+    if (source) hintSources.set(candidate.url, source);
+    return source;
+  }
   const hintedSite = hints?.officialSite ?? null;
   const hintedOrigins = new Set(hintedSite === null ? [] : siteOrigins(hintedSite.origin));
   const origins = [...new Set([...hintedOrigins, ...siteOrigins(need.ownWebAddress)])];
@@ -665,6 +678,51 @@ export async function walkMeetingsDiscoveryNeed(
   const queryTrail: MeetingsDiscoveryAttempt["search"][number][] = [];
   const learned: MeetingsRecipe[] = [];
   let checked = 0;
+  const checks = new Map<string, { check: ReturnType<typeof verifyEndpointBody> | null; read: boolean }>();
+  async function checkCandidate({ candidate, recipeIds, label, via }: typeof planned[number]) {
+    const previous = checks.get(candidate.url);
+    if (previous) {
+      if (previous.check) for (const recipeId of recipeIds) recipeApplied.push({ recipeId, url: candidate.url,
+        verdict: previous.read ? previous.check.verdict : "NOT_READ", detail: previous.check.detail });
+      return;
+    }
+    const hintUrl = hintSource(candidate, via);
+    const got = await get(candidate.url, "endpoint", ACCEPT_PAGE);
+    checked += 1;
+    if (got !== null && /html/i.test(got.contentType)) readPages.push({ url: candidate.url, body: got.body, finalUrl: got.finalUrl, artifactId: got.artifactId });
+    if (candidate.verifiable && candidate.vendor === "boarddocs" && got !== null) {
+      await readBoardDocs(candidate, got, via);
+      checks.set(candidate.url, { check: null, read: true });
+      return;
+    }
+    if (candidate.verifiable && candidate.vendor === "primegov" && got !== null) {
+      await readPrimeGov(candidate, got, via);
+      checks.set(candidate.url, { check: null, read: true });
+      return;
+    }
+    const hint = candidate.basis === "HINT" && !candidate.verifiable ? hints?.routes.find((r) => r.url === candidate.url) : undefined;
+    const check = got === null
+      ? { verdict: "NOT_CONFIRMED" as const, count: null, detail: "the route could not be read this walk" }
+      : hint !== undefined
+        ? {
+            verdict: "NOT_CONFIRMED" as const,
+            count: null,
+            detail: `answered HTTP ${got.status} with ${got.bytes} bytes of ${got.contentType || "an unnamed type"}; ` +
+              (hint.kind === "WITNESS"
+                ? "a witness corroborates a sitting and is never one on its own"
+                : `no content check covers a ${hint.kind.toLowerCase()} yet: a lead, not a route`),
+          }
+        : verifyEndpointBody(candidate, { status: got.status, body: got.body, finalUrl: got.finalUrl }, await pageIdentity(label, got.finalUrl));
+    const base = { vendor: candidate.vendor, url: candidate.url, basis: candidate.basis, evidence: candidate.evidence, detail: check.detail, via, ...(hintUrl ? { hintUrl } : {}) };
+    if (check.verdict === "YIELDED") found.push({ ...base, count: check.count, artifactId: got?.artifactId ?? null });
+    else if (candidate.basis !== "RECIPE") leads.push(base);
+    checks.set(candidate.url, { check, read: got !== null });
+    if (candidate.verifiable && candidate.vendor === "legistar-api") await readLegistarBodies(candidate, via);
+    if (candidate.verifiable && candidate.vendor === "civicclerk-api") await readCivicClerkBodies(candidate, via);
+    for (const recipeId of recipeIds) {
+      recipeApplied.push({ recipeId, url: candidate.url, verdict: got === null ? "NOT_READ" : check.verdict, detail: check.detail });
+    }
+  }
   try {
     /* 1–2. The homepage, on each origin in turn (a hinted current site first), until one is read. */
     for (const origin of origins) {
@@ -703,6 +761,16 @@ export async function walkMeetingsDiscoveryNeed(
         break;
       }
     }
+
+    for (const h of hints?.routes ?? []) {
+      planned.push({
+        candidate: { vendor: h.verifyAs ?? h.platform, url: h.url, basis: "HINT", evidence: `route hint (${h.kind.toLowerCase()}, observed ${h.observed.at} by ${h.observed.by}): ${h.evidence}`, verifiable: h.kind !== "WITNESS" && h.verifyAs !== null },
+        recipeIds: [],
+        label: h.body,
+        via: null,
+      });
+    }
+    for (const candidate of planned) await checkCandidate(candidate);
 
     if (homeOrigin !== null) {
       const observed = new Map(platformCensus?.matches.map(match => [`${match.platform}|${match.tenant}`, match]));
@@ -776,14 +844,6 @@ export async function walkMeetingsDiscoveryNeed(
       }
     }
 
-    for (const h of hints?.routes ?? []) {
-      planned.push({
-        candidate: { vendor: h.verifyAs ?? h.platform, url: h.url, basis: "HINT", evidence: `route hint (${h.kind.toLowerCase()}, observed ${h.observed.at} by ${h.observed.by}): ${h.evidence}`, verifiable: h.verifyAs !== null },
-        recipeIds: [],
-        label: h.body,
-        via: null,
-      });
-    }
     /* The category feeds a CivicPlus index proposed, after the hints and before the homepage's own links. */
     for (const { candidate, via } of civicPlusFeeds.filter((f) => !planned.some((p) => p.candidate.url === f.candidate.url))) {
       planned.push({ candidate, recipeIds: [], label: null, via });
@@ -812,41 +872,10 @@ export async function walkMeetingsDiscoveryNeed(
       if (step.purpose !== "endpoint" || step.status === null) continue;
       if ((lastRead.get(step.url) ?? "") < prior.finishedAt) lastRead.set(step.url, prior.finishedAt);
     }
-    planned.sort((a, b) => (lastRead.get(a.candidate.url) ?? "").localeCompare(lastRead.get(b.candidate.url) ?? ""));
-    for (const { candidate, recipeIds, label, via } of planned) {
-      const got = await get(candidate.url, "endpoint", ACCEPT_PAGE);
-      if (candidate.vendor === "legistar-api") await readLegistarBodies(candidate, via);
-      if (candidate.vendor === "civicclerk-api") await readCivicClerkBodies(candidate, via);
-      checked += 1;
-      if (got !== null && /html/i.test(got.contentType)) readPages.push({ url: candidate.url, body: got.body, finalUrl: got.finalUrl, artifactId: got.artifactId });
-      if (candidate.vendor === "boarddocs" && got !== null) {
-        await readBoardDocs(candidate, got, via);
-        continue;
-      }
-      if (candidate.vendor === "primegov" && got !== null) {
-        await readPrimeGov(candidate, got, via);
-        continue;
-      }
-      const hint = candidate.basis === "HINT" && !candidate.verifiable ? hints?.routes.find((r) => r.url === candidate.url) : undefined;
-      const check = got === null
-        ? { verdict: "NOT_CONFIRMED" as const, count: null, detail: "the route could not be read this walk" }
-        : hint !== undefined
-          ? {
-              verdict: "NOT_CONFIRMED" as const,
-              count: null,
-              detail: `answered HTTP ${got.status} with ${got.bytes} bytes of ${got.contentType || "an unnamed type"}; ` +
-                (hint.kind === "WITNESS"
-                  ? "a witness corroborates a sitting and is never one on its own"
-                  : `no content check covers a ${hint.kind.toLowerCase()} yet: a lead, not a route`),
-            }
-          : verifyEndpointBody(candidate, { status: got.status, body: got.body, finalUrl: got.finalUrl }, await pageIdentity(label, got.finalUrl));
-      const base = { vendor: candidate.vendor, url: candidate.url, basis: candidate.basis, evidence: candidate.evidence, detail: check.detail, via };
-      if (check.verdict === "YIELDED") found.push({ ...base, count: check.count, artifactId: got?.artifactId ?? null });
-      else if (candidate.basis !== "RECIPE") leads.push(base);
-      for (const recipeId of recipeIds) {
-        recipeApplied.push({ recipeId, url: candidate.url, verdict: got === null ? "NOT_READ" : check.verdict, detail: check.detail });
-      }
-    }
+    planned.sort((a, b) => Number(b.candidate.basis === "HINT") - Number(a.candidate.basis === "HINT") ||
+      (lastRead.get(a.candidate.url) ?? "").localeCompare(lastRead.get(b.candidate.url) ?? ""));
+    for (const candidate of planned) await checkCandidate(candidate);
+
 
     {
       const tried = new Set([...planned.map((p) => p.candidate.url), ...candidates.map((c) => c.url), ...(civicPlusIndex === null ? [] : [civicPlusIndex])]);
@@ -862,20 +891,21 @@ export async function walkMeetingsDiscoveryNeed(
         }
       }
       for (const { candidate, via } of nextHop) {
+        const hintUrl = hintSource(candidate, via);
         const got = await get(candidate.url, "endpoint", ACCEPT_PAGE);
         checked += 1;
         if (candidate.vendor === "boarddocs" && got !== null) {
           await readBoardDocs(candidate, got, via);
           continue;
         }
-        if (candidate.vendor === "primegov" && got !== null) {
+        if (candidate.verifiable && candidate.vendor === "primegov" && got !== null) {
           await readPrimeGov(candidate, got, via);
           continue;
         }
         const check = got === null
           ? { verdict: "NOT_CONFIRMED" as const, count: null, detail: "the route could not be read this walk" }
           : verifyEndpointBody(candidate, { status: got.status, body: got.body, finalUrl: got.finalUrl }, await pageIdentity(null, got.finalUrl));
-        const base = { vendor: candidate.vendor, url: candidate.url, basis: candidate.basis, evidence: candidate.evidence, detail: check.detail, via };
+        const base = { vendor: candidate.vendor, url: candidate.url, basis: candidate.basis, evidence: candidate.evidence, detail: check.detail, via, ...(hintUrl ? { hintUrl } : {}) };
         if (check.verdict === "YIELDED") found.push({ ...base, count: check.count, artifactId: got?.artifactId ?? null });
         else leads.push(base);
       }
@@ -978,7 +1008,7 @@ export async function walkMeetingsDiscoveryNeed(
   }
 
   const finishedAt = runtime.now();
-  const outcome: DiscoveryOutcome = origins.length === 0 ? "COULD_NOT_READ" : decideOutcome({ found, leads, steps });
+  const outcome: DiscoveryOutcome = decideOutcome({ found, leads, steps });
   return {
     formatVersion: 1,
     attemptId,

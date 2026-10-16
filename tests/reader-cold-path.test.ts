@@ -267,7 +267,7 @@ test("a whole /api/meetings answer from the edge is held by the CDN, keyed on ev
   assert.equal(response.headers.get("netlify-vary"), "query", "every query parameter is in the CDN key");
   assert.equal(response.headers.get("cache-control"), "public, max-age=0, must-revalidate", "the browser revalidates, so a purge reaches it");
   const timing = response.headers.get("server-timing") ?? "";
-  for (const stage of ["manifest", "authority", "divisions", "widen", "meetings", "search", "coverage", "total"]) {
+  for (const stage of ["manifest", "authority", "divisions", "zipArea", "meetings", "search", "coverage", "total"]) {
     assert.match(timing, new RegExp(`(?:^|, )${stage};dur=\\d+`), `${stage} is not timed: ${timing}`);
   }
   assert.match(registryRuntimeReadState().metadata.versionId ?? "", /^c21-route:registry\+/, "the registry was not read from the edge the route entered");

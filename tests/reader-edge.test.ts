@@ -613,7 +613,7 @@ test("a changed meeting rewrites only its area; unchanged references survive pub
   }
 });
 
-test("area reads preserve split ZIP divisions, nearby bodies across a state line, and empty held areas", async () => {
+test("area reads preserve split ZIP divisions and empty held areas without nearby bodies", async () => {
   const store = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reader-area-")));
   const county = "ocd-division/country:us/state:az/county:pima";
   const split = "ocd-division/country:us/state:az/county:cochise";
@@ -623,9 +623,9 @@ test("area reads preserve split ZIP divisions, nearby bodies across a state line
     meeting("area-near", "ocd-division/country:us/state:nm/place:near", { location: { lat: 32.2, lng: -110.9 } as never }),
     meeting("area-far", "ocd-division/country:us/state:az/place:far", { location: { lat: 35, lng: -112 } as never }),
   ]), META, { store });
-  const read = await readReaderEdgeMeetings({ store, states: ["az"], ocdIds: [county, split], nearby: { lat: 32.2, lng: -110.9, radiusKm: 25 } });
+  const read = await readReaderEdgeMeetings({ store, states: ["az"], ocdIds: [county, split] });
   assert.equal(read.kind, "PROMOTED");
-  if (read.kind === "PROMOTED") assert.deepEqual(read.value.meetings.map(row => row.id).sort(), ["area-governing", "area-near", "area-split"]);
+  if (read.kind === "PROMOTED") assert.deepEqual(read.value.meetings.map(row => row.id).sort(), ["area-governing", "area-split"]);
   const empty = await readReaderEdgeMeetings({ store, states: ["az"], ocdIds: ["ocd-division/country:us/state:az/county:unheld"], fallback: async () => { throw new Error("must not read nationally"); } });
   assert.equal(empty.kind, "PROMOTED");
   if (empty.kind === "PROMOTED") assert.deepEqual(empty.value.meetings, []);

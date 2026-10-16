@@ -103,9 +103,10 @@ test("the backfill indexes Scout and committed Detective findings recorded since
   assert.equal(counts["send-2"].waiting, 2);
 });
 
-test("an uncommitted Detective result is never indexed", async () => {
+test("an uncommitted Detective result, or a malformed one, is never indexed", async () => {
   const repos = createMemoryRepositories();
   await committedDetective(repos, false);
+  await repos.workerResults.append("send-3", "malformed", { id: "malformed" } as unknown as WorkerResultRecord, NOW);
   assert.equal(await backfillBox(repos, NOW), 0);
   assert.deepEqual(await repos.boxFindings.list(), []);
 });

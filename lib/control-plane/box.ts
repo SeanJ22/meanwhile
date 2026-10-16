@@ -247,7 +247,7 @@ type BackfillRepositories = Pick<ControlPlaneRepositories, "boxFindings" | "scou
 async function indexResults(repos: BackfillRepositories, scouts: readonly ScoutResult[], workers: readonly WorkerResultRecord[], now: string): Promise<number> {
   let indexed = 0;
   for (const result of scouts) indexed += (await indexScoutFindings(repos.boxFindings, result, now)).length;
-  for (const record of await completedWorkerResults(repos, workers.filter(record => record.result.role === "DETECTIVE"))) {
+  for (const record of (await completedWorkerResults(repos, workers)).filter(record => record.result.role === "DETECTIVE")) {
     indexed += (await indexDetectiveFindings(repos.boxFindings, record as BoxDetectiveRecord, repos.artifacts, now)).length;
   }
   return indexed;

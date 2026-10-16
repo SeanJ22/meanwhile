@@ -45,12 +45,13 @@ export async function readPlacePointerSlices<T>(recordClass: CivicDataReadMetada
   const query = injected ?? readerQuery();
   if (!query) throw new Error(`HELD_PLACE_READ_FAILED:${recordClass}:${scopes.join(",")}:STORE_UNCONFIGURED`);
   const keys = [...new Set([...ids.map(id => `d:${id}`), ...bodies.map(id => `b:${id}`), ...targets.map(id => `t:${id}`)])];
+  /* Keys carry class and scope, so the key index alone finds the rows; a class filter would scan the scope's whole primary key. */
   const [rows] = await query([{ text: `WITH p AS (SELECT scope, current_version_id v FROM civic_data_promotions WHERE record_class=$1 AND scope=ANY($2::text[])),
       k AS (SELECT COALESCE(array_agg($1 || '|' || p.scope || '|' || x), '{}') keys FROM p CROSS JOIN unnest($3::text[]) x)
     SELECT p.scope, p.v, r.version_id, r.collection, r.members FROM p
       LEFT JOIN civic_data_place_rows r ON r.record_class=$1 AND r.scope=p.scope AND r.collection='' AND r.group_key=''
     UNION ALL
-    SELECT p.scope, p.v, r.version_id, r.collection, r.members FROM p JOIN civic_data_place_rows r ON r.record_class=$1 AND r.scope=p.scope
+    SELECT p.scope, p.v, r.version_id, r.collection, r.members FROM civic_data_place_rows r JOIN p ON p.scope=r.scope
       WHERE r.keys && (SELECT keys FROM k)`, params: [recordClass, [...new Set(scopes)], keys] }]);
   const result = scopes.map((scope): PlaceCaptureRead<T> => {
     const own = rows.filter(row => row.scope === scope);

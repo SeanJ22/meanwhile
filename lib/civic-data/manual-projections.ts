@@ -26,7 +26,7 @@ import {
   type EverydayRoutingProjection,
   type EverydayRoutingRecord,
 } from "../routing/everyday.ts";
-import { canonicalCivicDataJson, civicRecordsFor } from "./changes.ts";
+import { canonicalCivicDataHash, canonicalCivicDataJson, civicRecordsFor } from "./changes.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import {
   directPositiveSourceUrls,
@@ -1020,7 +1020,7 @@ export function manualProjectionCandidate(
   const attemptHash = sha256(sources.map((source) =>
     `${source.requestedUrl}\n${source.finalUrl}\n${source.httpStatus}\n${source.rawHash}\n${source.reviewOutcome ?? "SUPPORTED"}\n${source.failureDetail ?? ""}${source.extractedMembers?.length ? `\n${canonicalCivicDataJson(source.extractedMembers)}` : ""}`
   ).join("\n"));
-  const normalizedHash = sha256(canonicalCivicDataJson(built.payload));
+  const normalizedHash = canonicalCivicDataHash(built.payload);
   const reviewedAt = input.sourceReceipt.reviewedAt;
   const primary = promotionReceipt.sources[0];
   const blockedSources = input.sourceReceipt.sources.filter((source) => source.reviewOutcome === "BLOCKED");

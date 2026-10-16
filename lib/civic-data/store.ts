@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { currentReaderSelection } from "../db/reader-route.ts";
 import { sourceCheckedAt } from "./source-check.ts";
 import { isScopedManualContractScope } from "./scoped-manual-contracts.ts";
 
@@ -18,7 +19,7 @@ import {
   type RoutineRecordClass,
   type ValidationReceipt,
 } from "./types.ts";
-import { canonicalCivicDataJson } from "./changes.ts";
+import { canonicalCivicDataHash, canonicalCivicDataJson } from "./changes.ts";
 import {
   UNCHANGED_CONFIRMATION_PREFIX,
   buildUnchangedConfirmation,
@@ -132,6 +133,7 @@ export interface RoutineDataStore {
   readonly readPromotions: <T = unknown>(recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly PromotedProjection<T>[]>;
   readonly readPromotionIdentity: (recordClass: RoutineRecordClass, scope: string) => Promise<PromotedPointerIdentity | null>;
   readonly readPromotionIdentities: (recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly PromotedPointerIdentity[]>;
+  readonly listPromotionScopes?: (recordClasses: readonly RoutineRecordClass[]) => Promise<readonly { recordClass: RoutineRecordClass; scope: string }[]>;
   readonly readPreparedReaderProjection: (recordClass: RoutineRecordClass, scope: string) => Promise<PreparedReaderProjectionRow | null>;
   readonly readPreparedReaderProjectionCoupling: (recordClass: RoutineRecordClass, scope: string) => Promise<PreparedReaderProjectionCoupling | null>;
     /** Lands only if the row is still at `expectedSequence` (null = expect absent); a stale pass gets `published:false`. */
@@ -321,7 +323,7 @@ function receiptNamesCandidate(receipt: ValidationReceipt, candidate: RoutineCan
 }
 
 function receiptsEqual(left: ValidationReceipt, right: ValidationReceipt): boolean {
-  return canonicalCivicDataJson(left) === canonicalCivicDataJson(right);
+  return canonicalCivicDataHash(left) === canonicalCivicDataHash(right);
 }
 
 function receiptIsGoodForCandidate(receipt: ValidationReceipt, candidate: RoutineCandidateName): boolean {
@@ -837,6 +839,11 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
       const row = this.pointerRead(recordClass, scope);
       return row ? [structuredClone(row) as PromotedProjection<T>] : [];
     });
+  }
+
+  async listPromotionScopes(recordClasses: readonly RoutineRecordClass[]) {
+    return [...this.promotions.values()].filter(row => recordClasses.includes(row.recordClass))
+      .map(({ recordClass, scope }) => ({ recordClass, scope }));
   }
 
   async readPromotionIdentity(recordClass: RoutineRecordClass, scope: string): Promise<PromotedPointerIdentity | null> {
@@ -1563,6 +1570,16 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     },
   });
 
+  private async storeReceipt(receipt: ValidationReceipt | null): Promise<unknown> {
+    return receipt === null ? null : this.payloadParts.store(receipt, Object.keys(receipt).filter(key => key !== "excludedFacts"));
+  }
+
+  private async jsonRow<T extends { readonly validationReceipt: unknown }>(row: T): Promise<T> {
+    const json = Object.fromEntries(["candidate", "payload", "validationReceipt"].filter(key => key in row)
+      .map(key => [key, (row as Record<string, unknown>)[key]]));
+    return { ...row, ...await this.payloadParts.load(json) as object };
+  }
+
   private async candidateRows<T extends { readonly id: string }>(
     ids: readonly string[], namespace: string, values: (keys: readonly string[]) => Promise<readonly T[]>,
   ): Promise<readonly T[]> {
@@ -1618,10 +1635,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     if (issue !== null) throw new RuntimeAuthorityRefused(issue);
   }
 
-    /**
-     * Neon HTTP batches are not interactive, so every sequence allocator takes a transaction-scoped advisory lock as the
-     * batch's first statement; a lock inside the INSERT would be too late for its snapshot.
-     */
+
   private candidateEventLock(candidateId: string) {
     return this.db.execute(sql`
       select pg_advisory_xact_lock(hashtextextended(${candidateId}, 0))
@@ -1658,7 +1672,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
         parserVersion: record.candidate.normalization.parserVersion,
         identity: stored.identities,
         candidate: stored,
-        validationReceipt: record.receipt,
+        validationReceipt: await this.storeReceipt(record.receipt),
         promotedVersionId: record.promotedVersion,
         lastKnownGoodVersionId: record.lastKnownGoodVersion,
         failureCode: record.failureCode,
@@ -1682,6 +1696,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       state, at, detail, receipt, failure,
     );
     const allowed = allowedPriorStates(state);
+    const storedReceipt = receipt ? await this.storeReceipt(receipt) : undefined;
     const priorStateEligible = and(
       eq(civicDataCandidates.id, candidateId),
       inArray(civicDataCandidates.state, [...allowed]),
@@ -1691,7 +1706,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     const updatedCandidate = this.db.$with("updated_candidate").as(
       this.db.update(civicDataCandidates).set({
         state,
-        ...(receipt ? { validationReceipt: receipt } : {}),
+        ...(receipt ? { validationReceipt: storedReceipt } : {}),
         ...(failure ? { failureCode: failure.code, failureDetail: failure.detail } : {}),
       }).where(priorStateEligible).returning({ candidateId: civicDataCandidates.id }),
     );
@@ -1716,7 +1731,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       if (!current) throw new Error(`CANDIDATE_NOT_FOUND:${candidateId}`);
       throw new Error(`CANDIDATE_TRANSITION_INVALID:${candidateId}:${current.state}:${state}`);
     }
-    const { candidate: _sameRow, ...columns } = postgresCandidateSummary(updatedRows[0]);
+    const { candidate: _sameRow, ...columns } = postgresCandidateSummary(await this.jsonRow(updatedRows[0]));
     return { ...columns, candidate: options.candidate ?? await this.readCandidateEnvelope(candidateId) };
   }
 
@@ -1732,12 +1747,12 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   async readCandidate(candidateId: string): Promise<CandidateVersionRecord | null> {
     const [row] = await this.candidateRows([candidateId], "candidate", async ids =>
       this.db.select().from(civicDataCandidates).where(inArray(civicDataCandidates.id, [...ids])));
-    return row ? { ...rowToCandidate(row), candidate: await this.payloadParts.load(row.candidate) as RoutineCandidate } : null;
+    return row ? rowToCandidate(await this.jsonRow(row)) : null;
   }
 
   async readCandidateSummary(candidateId: string): Promise<CandidateVersionSummary | null> {
     const [row] = await candidateSummaryRead(this.db, candidateId);
-    return row ? postgresCandidateSummary(row) : null;
+    return row ? postgresCandidateSummary(await this.jsonRow(row)) : null;
   }
 
   async latestCandidate(sourceId: string, recordClass: RoutineRecordClass, scope: string): Promise<LatestCandidate | null> {
@@ -1766,7 +1781,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
 
   async readPromotion<T = unknown>(recordClass: RoutineRecordClass, scope: string): Promise<PromotedProjection<T> | null> {
     const [row] = await this.promotionRows(recordClass, [scope]);
-    return row ? { ...postgresPromotionRowToProjection<T>(row), payload: await this.payloadParts.load(row.payload) as T } : null;
+    return row ? postgresPromotionRowToProjection<T>(await this.jsonRow(row)) : null;
   }
 
   async readPromotions<T = unknown>(
@@ -1775,7 +1790,13 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   ): Promise<readonly PromotedProjection<T>[]> {
     if (scopes.length === 0) return [];
     const rows = await this.promotionRows(recordClass, scopes);
-    return Promise.all(rows.map(async row => ({ ...postgresPromotionRowToProjection<T>(row), payload: await this.payloadParts.load(row.payload) as T })));
+    return Promise.all(rows.map(async row => postgresPromotionRowToProjection<T>(await this.jsonRow(row))));
+  }
+
+  async listPromotionScopes(recordClasses: readonly RoutineRecordClass[]) {
+    const rows = await this.db.select({ recordClass: civicDataPromotions.recordClass, scope: civicDataPromotions.scope })
+      .from(civicDataPromotions).where(inArray(civicDataPromotions.recordClass, [...recordClasses]));
+    return rows as { recordClass: RoutineRecordClass; scope: string }[];
   }
 
   async readPromotionIdentity(recordClass: RoutineRecordClass, scope: string): Promise<PromotedPointerIdentity | null> {
@@ -1800,7 +1821,11 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   }
 
   async readPreparedReaderProjection(recordClass: RoutineRecordClass, scope: string): Promise<PreparedReaderProjectionRow | null> {
-    const [row] = await this.db.select().from(civicDataReaderProjections).where(and(
+    const selected = currentReaderSelection();
+    const columns = { ...getTableColumns(civicDataReaderProjections), ...(selected ? {
+      payload: sql<unknown>`reader_place_payload(${civicDataReaderProjections.payload}, ${sql.param([...selected.keys])}::text[], ${sql.param(selected.point ? JSON.stringify(selected.point) : null)}::jsonb)`,
+    } : {}) };
+    const [row] = await this.db.select(columns).from(civicDataReaderProjections).where(and(
       eq(civicDataReaderProjections.recordClass, recordClass),
       eq(civicDataReaderProjections.scope, scope),
     )).limit(1);
@@ -1868,18 +1893,18 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     if (candidateIds.length === 0) return [];
     const rows = await this.candidateRows(candidateIds, "candidate", async ids =>
       this.db.select().from(civicDataCandidates).where(inArray(civicDataCandidates.id, [...ids])));
-    return Promise.all(rows.map(async row => ({ candidateId: row.id, record: { ...rowToCandidate(row), candidate: await this.payloadParts.load(row.candidate) as RoutineCandidate } })));
+    return Promise.all(rows.map(async row => ({ candidateId: row.id, record: rowToCandidate(await this.jsonRow(row)) })));
   }
 
   async readCandidateProof(candidateId: string): Promise<CandidateVersionRecord | null> {
     const [row] = await this.candidateRows([candidateId], "candidate-proof", async ids => candidateProofRead(this.db, ids));
-    return row ? { ...candidateProofRowToRecord(row), candidate: await this.payloadParts.load(row.candidate) as RoutineCandidate } : null;
+    return row ? candidateProofRowToRecord(await this.jsonRow(row)) : null;
   }
 
   async readCandidateProofs(candidateIds: readonly string[]): Promise<readonly CandidateVersionReadback[]> {
     if (candidateIds.length === 0) return [];
     const rows = await this.candidateRows(candidateIds, "candidate-proof", async ids => candidateProofRead(this.db, ids));
-    return Promise.all(rows.map(async row => ({ candidateId: row.id, record: { ...candidateProofRowToRecord(row), candidate: await this.payloadParts.load(row.candidate) as RoutineCandidate } })));
+    return Promise.all(rows.map(async row => ({ candidateId: row.id, record: candidateProofRowToRecord(await this.jsonRow(row)) })));
   }
 
   async appendEvidence(candidateId: string, state: CandidateState, at: string, detail: string): Promise<CandidateEvent> {
@@ -2025,7 +2050,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   async promote(candidateId: string, receipt: ValidationReceipt, at: string): Promise<PromotedProjection> {
     this.assertMutationAuthority();
     const [row] = await this.db.select().from(civicDataCandidates).where(eq(civicDataCandidates.id, candidateId)).limit(1);
-    const record = row ? { ...rowToCandidate(row), candidate: await this.payloadParts.load(row.candidate) as RoutineCandidate } : null;
+    const record = row ? rowToCandidate(await this.jsonRow(row)) : null;
     const persistedReceipt = persistedPromotionReceipt(record, receipt);
     if (!record || !persistedReceipt) throw new Error(`CANDIDATE_NOT_PROMOTABLE:${candidateId}`);
     assertPromotionTime(record, persistedReceipt, at);
@@ -2037,7 +2062,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       .where(eq(civicDataPromotions.key, key))
       .limit(1);
     const expectedVersionId = record.lastKnownGoodVersion;
-    const receiptJson = JSON.stringify(persistedReceipt);
+    const storedReceipt = row!.validationReceipt;
+    const receiptJson = JSON.stringify(storedReceipt);
     const eligibility = sql`
       ${civicDataCandidates.id} = ${candidateId}
       and ${civicDataCandidates.state} = 'VALIDATED'
@@ -2094,7 +2120,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     `);
     const candidateWrite = this.db.update(civicDataCandidates).set({
       state: "PROMOTED",
-      validationReceipt: persistedReceipt,
+      validationReceipt: storedReceipt,
       promotedVersionId: candidateId,
       lastKnownGoodVersionId: candidateId,
     }).where(sql`${eligibility} and ${pointerOwnsCandidate}`).returning({ candidateId: civicDataCandidates.id });
@@ -2117,7 +2143,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     return {
       ...postgresPromotedPointerIdentity(promotedRows[0]),
       payload: candidate.readModel,
-      receipt: promotedRows[0].validationReceipt as ValidationReceipt,
+      receipt: persistedReceipt,
     };
   }
 
@@ -2193,7 +2219,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     const [pointedRow] = pointer && pointer.sourceId === sourceId
       ? await routineClockCandidateRead(this.db, pointer.currentVersionId)
       : [];
-    const pointedRecord = pointedRow ? routineClockRowToRecord(pointedRow) : null;
+    const pointedRecord = pointedRow ? routineClockRowToRecord(await this.jsonRow(pointedRow)) : null;
     const sittings = pointer && sittingRows !== null
       ? { sittingStarts: sittingStartsFromRow(sittingRows[0]?.starts) }
       : {};
@@ -2212,7 +2238,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       scope: pointer.scope,
       versionId: pointer.currentVersionId,
       lastKnownGoodVersionId: pointer.lastKnownGoodVersionId,
-      receipt: pointer.validationReceipt as ValidationReceipt,
+      receipt: (await this.jsonRow(pointer)).validationReceipt as ValidationReceipt,
     } : null;
     const lastSucceededAt = proofConsistentSuccess(pointedRecord, pointerProof);
     const canonicalLastSucceededAt = lastSucceededAt === undefined

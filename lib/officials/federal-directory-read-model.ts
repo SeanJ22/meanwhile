@@ -1,3 +1,5 @@
+import { currentReaderRoute, currentReaderSelection } from "../db/reader-route.ts";
+import { currentFederalDirectoryEdge, currentReaderAuthorityEdge } from "../registry/runtime-edge.ts";
 import {
   CivicDataStoreUnavailableError,
   civicDataReadNotInitialized,
@@ -17,6 +19,7 @@ import { peopleSourceScope } from "./people-sources.ts";
 import { federalDirectoryVersion } from "./people-version.ts";
 import type { OfficeholderSet } from "./types.ts";
 
+const selectedStates = new WeakMap<object, CivicDataReadResult<FederalDirectoryReadModel>>();
 let cache: FederalDirectoryReadModel | null = null;
 let readState: CivicDataReadResult<FederalDirectoryReadModel> = civicDataReadNotInitialized(
   "FEDERAL_DIRECTORY",
@@ -61,13 +64,20 @@ async function readFederalDirectoryWithPortraits(options: PromotedCivicDataReadO
 export async function readFederalDirectoryProjection(
   options: PromotedCivicDataReadOptions = {},
 ): Promise<CivicDataReadResult<FederalDirectoryReadModel>> {
+  const edge = currentFederalDirectoryEdge();
+  if (!options.store && edge && (!options.bypassCache || currentReaderSelection() || currentReaderRoute() !== "unattributed" || currentReaderAuthorityEdge()?.edgeOnly)) {
+    primeFederalDirectoryFromValue(edge.value, edge.versionId);
+    return readState;
+  }
   const result = await readFederalDirectoryWithPortraits(options);
   readState = result;
+  const selection = currentReaderSelection();
+  if (selection) selectedStates.set(selection, result);
   if (result.kind === "PROMOTED" || result.kind === "BOOTSTRAP") {
     validate(result.value, result.metadata.versionId ?? result.kind);
-    cache = result.value;
+    if (!selection) cache = result.value;
   } else {
-    cache = null;
+    if (!selection) cache = null;
   }
   return result;
 }
@@ -82,7 +92,11 @@ export async function refreshFederalDirectoryFromPromoted(options: PromotedCivic
 /** Prime the cache from a validated edge serving artifact, with no database read; validated once per edge object and version. */
 export function primeFederalDirectoryFromValue(value: FederalDirectoryReadModel, versionId: string): void {
   validateOnce("federal-directory", value, versionId, () => validate(value, versionId));
-  cache = value;
+  const selection = currentReaderSelection();
+  if (!selection) cache = value;
+  if (selection) for (const division of value.roster.divisions) {
+    if (selection.keys.has(division.ocdId)) selection.keys.add(division.officeholderId);
+  }
   readState = {
     kind: "BOOTSTRAP",
     value,
@@ -101,13 +115,23 @@ export function primeFederalDirectoryFromValue(value: FederalDirectoryReadModel,
     },
     detail: `Served from the federal-directory edge artifact (version ${versionId}); the promotion receipt stays on the authoritative database path.`,
   };
+  if (selection) selectedStates.set(selection, readState);
 }
 
 export function federalDirectoryReadState(): CivicDataReadResult<FederalDirectoryReadModel> {
-  return readState;
+  const selection = currentReaderSelection();
+  return selection ? selectedStates.get(selection) ?? readState : readState;
 }
 
 export function getFederalDirectoryReadModel(): FederalDirectoryReadModel {
+  const selection = currentReaderSelection();
+  if (selection) {
+    const edge = currentFederalDirectoryEdge();
+    if (edge) return edge.value;
+    const state = selectedStates.get(selection);
+    if (state?.kind === "PROMOTED" || state?.kind === "BOOTSTRAP") return state.value;
+    if (state) throw new Error("The requested authority could not be read for this request.");
+  }
   if (!cache) throw new Error(`Federal directory is ${readState.kind}; call readFederalDirectoryProjection before using the synchronous projection.`);
   return cache;
 }

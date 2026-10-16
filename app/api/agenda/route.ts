@@ -1,3 +1,4 @@
+import { readerRoute } from "@/lib/api/reader-route";
 import { ensureReaderAuthorityEdge, readReaderEdgeMeetings, readReaderManifest } from "@/lib/meetings/edge-serving";
 import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
 import { settleAgendaSupportingHoldings } from "@/lib/civic-data/agenda-support";
@@ -7,17 +8,11 @@ import { meetingListingKnowledgeFor } from "@/lib/ask/meeting-knowledge";
 import { settleOutcomeRead } from "@/lib/outcomes/store";
 import { settleRegistryAuthorityReads } from "@/lib/registry/server";
 
-/**
- * GET /api/agenda?meetingId=<source-namespaced id>
- *
- * The stored agenda documents for one meeting, newest version first. `documents` is exactly what the reader
- * is shown, one row per distinct content; the rows not shown are stated in `documentAccounting`. A document
- * whose extraction failed is returned with its note and null text.
- */
+
 
 export const runtime = "nodejs";
 
-export async function GET(request: Request) {
+export const GET = readerRoute("/api/agenda", async function GET(request: Request) {
   const meetingId = new URL(request.url).searchParams.get("meetingId");
   if (!meetingId || meetingId.length > 200) {
     return Response.json({ error: "meetingId required" }, { status: 400 });
@@ -107,4 +102,4 @@ export async function GET(request: Request) {
     unavailableAuthorities: support.unavailableAuthorities,
     records: support.records, publication,
     listingIdentity: support.listingIdentity });
-}
+});

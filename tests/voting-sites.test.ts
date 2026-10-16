@@ -201,11 +201,11 @@ test("B19: the route writes nothing — a source scan for every write primitive"
   }
   assert.ok(source.includes("no-store"), "the response must never be cached");
   assert.ok(
-    source.includes("export async function POST"),
+    /export (?:async function|const) POST\b/.test(source),
     "a GET would put a home address in a URL",
   );
   assert.ok(
-    !source.includes("export async function GET"),
+    !/export (?:async function|const) GET\b/.test(source),
     "no GET on this route",
   );
 });

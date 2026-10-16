@@ -1,3 +1,4 @@
+import { jsonSnapshot } from "./json-snapshot.ts";
 import { createHash } from "node:crypto";
 
 const INLINE_BYTES = 32 * 1024;
@@ -35,8 +36,31 @@ export function partitionCivicPayload(input: unknown, inlineFields?: readonly st
     parts.set(hash, { hash, payload });
     return { [REF]: hash };
   };
+  const encodedObjects = new WeakMap<object, unknown>();
+  const exceedsInline = (value: unknown): boolean => {
+    let size = 0;
+    const count = (child: unknown): void => {
+      if (size > INLINE_BYTES) return;
+      if (typeof child === "string" && child.length > INLINE_BYTES) { size = INLINE_BYTES + 1; return; }
+      if (child === null || typeof child !== "object") { size += bytes(child); return; }
+      size += 2;
+      if (Array.isArray(child)) for (let index = 0; index < child.length; index++) { if (index) size++; count(child[index]); if (size > INLINE_BYTES) break; }
+      else {
+        let first = true;
+        for (const [key, row] of Object.entries(child)) { size += bytes(key) + (first ? 1 : 2); first = false; count(row); if (size > INLINE_BYTES) break; }
+      }
+    };
+    count(value);
+    return size > INLINE_BYTES;
+  };
   const encode = (value: unknown): unknown => {
-    if (value === null || typeof value !== "object" && typeof value !== "string" || bytes(value) <= INLINE_BYTES) return value;
+    if (value === null || typeof value !== "object" && typeof value !== "string" || !exceedsInline(value)) return value;
+    if (typeof value === "object" && encodedObjects.has(value)) return encodedObjects.get(value);
+    const encoded = encodeLarge(value);
+    if (typeof value === "object") encodedObjects.set(value, encoded);
+    return encoded;
+  };
+  const encodeLarge = (value: unknown): unknown => {
     if (typeof value === "string") {
       const chunks: string[] = [];
       for (let index = 0; index < value.length; index += INLINE_BYTES / 4) chunks.push(value.slice(index, index + INLINE_BYTES / 4));
@@ -57,15 +81,15 @@ export function partitionCivicPayload(input: unknown, inlineFields?: readonly st
         }
         group.rows.push(encoded); group.size += size; order.push(group.index);
       }
-            // Ordering stays outside state partitions, so adding one state never rewrites another state's rows.
+      // Ordering stays outside state partitions, so adding one state never rewrites another state's rows.
       return put({ kind: "array", groups: all.map(rows => put(rows)), order: encode(JSON.stringify(order)) });
     }
     const encoded = Object.fromEntries(Object.entries(value as Record<string, unknown>).map(([key, child]) => [key, encode(child)]));
     return put({ kind: "object", value: encoded });
   };
-    // Omits optional undefined properties exactly as the jsonb driver does, so hashes stay unchanged.
-  const durable = JSON.parse(JSON.stringify(input));
-  const value = inlineFields ? Object.fromEntries(Object.entries(durable).map(([key, child]) => [key,
+  // Omits optional undefined properties exactly as the jsonb driver does, so hashes stay unchanged.
+  const durable = jsonSnapshot(input);
+  const value = inlineFields ? Object.fromEntries(Object.entries(durable as Record<string, unknown>).map(([key, child]) => [key,
     inlineFields.includes(key) ? child : encode(child),
   ])) : encode(durable);
   return { value, parts: [...parts.values()] };
@@ -92,14 +116,15 @@ const CACHED_PART_BYTES = 64 * 1024 * 1024;
 
 export class CivicPayloadParts {
   private readonly io: CivicPayloadPartIO;
-  private readonly cached = new Map<string, { readonly payload: unknown; readonly size: number }>();
+  private readonly cached = new Map<string, { readonly json: string; readonly size: number }>();
   private cachedBytes = 0;
   constructor(io: CivicPayloadPartIO) { this.io = io; }
 
   private remember(part: Part): void {
-    const size = bytes(part.payload);
+    const json = JSON.stringify(part.payload);
+    const size = Buffer.byteLength(json);
     if (size > CACHED_PART_BYTES / 8 || this.cached.has(part.hash)) return;
-    this.cached.set(part.hash, { payload: part.payload, size });
+    this.cached.set(part.hash, { json, size });
     this.cachedBytes += size;
     for (const [hash, held] of this.cached) {
       if (this.cachedBytes <= CACHED_PART_BYTES) break;
@@ -112,7 +137,7 @@ export class CivicPayloadParts {
       const held = this.cached.get(hash);
       if (!held) return [];
       this.cached.delete(hash); this.cached.set(hash, held);
-      return [{ hash, payload: held.payload }];
+      return [{ hash, payload: JSON.parse(held.json) }];
     });
     const missing = hashes.filter(hash => !this.cached.has(hash));
     const read = missing.length ? await this.io.read(missing) : [];
@@ -147,7 +172,7 @@ export class CivicPayloadParts {
         return decoded.get(value[REF]);
       }
       if (Array.isArray(value)) return value.map(build);
-      if (value && typeof value === "object") return Object.fromEntries(Object.entries(value).map(([key, child]) => [key, build(child)]));
+      if (value && typeof value === "object") return Object.fromEntries(Object.entries(value as Record<string, unknown>).map(([key, child]) => [key, build(child)]));
       return value;
     };
     const assemble = (payload: unknown): unknown => {

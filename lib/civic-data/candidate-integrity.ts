@@ -1,6 +1,4 @@
-import { createHash } from "node:crypto";
-
-import { candidateChangeSet, canonicalCivicDataJson } from "./changes.ts";
+import { candidateChangeSet, durableCivicDataHash } from "./changes.ts";
 import type { RoutineSourceContract } from "./contracts.ts";
 import type { ManualProductionSourceContract } from "./manual-contracts.ts";
 import type { MeetingPartitionContract } from "./meeting-partitions.ts";
@@ -25,10 +23,6 @@ import {
 
 type CandidateContract = RoutineSourceContract | ManualProductionSourceContract;
 const SHA256 = /^[a-f0-9]{64}$/;
-
-function sha256(value: string): string {
-  return createHash("sha256").update(value).digest("hex");
-}
 
 function pass(verifierId: string, detail: string): RoutineReaderVerification {
   return { verifierId, status: "PASS", detail };
@@ -173,26 +167,12 @@ export async function verifySourceScopedCandidateProjection(
   // JSONB is the durable authority. Reject values whose in-memory meaning
   // would change or disappear when persisted before any typed Reader sees it.
   try {
-    const readModelRoundTrip = JSON.parse(JSON.stringify(candidate.readModel)) as unknown;
-    const normalizedPayloadRoundTrip = JSON.parse(JSON.stringify(candidate.normalizedPayload)) as unknown;
-    const readModelCanonical = canonicalCivicDataJson(candidate.readModel);
-    const normalizedPayloadCanonical = canonicalCivicDataJson(candidate.normalizedPayload);
-    if (canonicalCivicDataJson(readModelRoundTrip) !== readModelCanonical) {
-      return fail(
-        "lib/civic-data/candidate-integrity.ts#durableJsonRoundTrip",
-        "The proposed Reader projection changes under the canonical JSONB round trip.",
-      );
-    }
-    if (canonicalCivicDataJson(normalizedPayloadRoundTrip) !== normalizedPayloadCanonical) {
-      return fail(
-        "lib/civic-data/candidate-integrity.ts#durableJsonRoundTrip",
-        "The normalized evidence changes under the canonical JSONB round trip.",
-      );
-    }
+    const readModelCanonical = durableCivicDataHash(candidate.readModel);
+    const normalizedPayloadCanonical = candidate.normalizedPayload === candidate.readModel ? readModelCanonical : durableCivicDataHash(candidate.normalizedPayload);
     if (
       !candidate.normalization.normalizedHash ||
       !SHA256.test(candidate.normalization.normalizedHash) ||
-      candidate.normalization.normalizedHash !== sha256(readModelCanonical)
+      candidate.normalization.normalizedHash !== readModelCanonical
     ) {
       return fail(
         "lib/civic-data/candidate-integrity.ts#readModelDigest",
@@ -202,7 +182,7 @@ export async function verifySourceScopedCandidateProjection(
     if (
       !candidate.normalization.normalizedPayloadHash ||
       !SHA256.test(candidate.normalization.normalizedPayloadHash) ||
-      candidate.normalization.normalizedPayloadHash !== sha256(normalizedPayloadCanonical)
+      candidate.normalization.normalizedPayloadHash !== normalizedPayloadCanonical
     ) {
       return fail(
         "lib/civic-data/candidate-integrity.ts#normalizedEvidenceDigest",

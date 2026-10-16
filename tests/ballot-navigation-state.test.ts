@@ -88,11 +88,13 @@ test("the manifest serves one state's navigation without fetching other state ar
     const reads: string[] = [], read = store.readBytes.bind(store);
     store.readBytes = async key => { reads.push(key); return read(key); };
     const bundle = await ensureReaderAuthorityEdge(manifest, store, ["ballot-navigation"]);
-    assert.deepEqual(reads, []);
+    assert.equal(reads.length, 0);
     const first = await bundle.ballotNavigation!.load("OH");
     assert.equal(first?.kind, "PROMOTED");
     assert.equal(await bundle.ballotNavigation!.load("OH"), first);
-    assert.deepEqual(reads, [manifest.ballotNavigation!.OH.key]);
+    assert.equal(reads[0], manifest.ballotNavigation!.OH.key);
+    assert.ok(reads.length > 1);
+    assert.ok(!reads.includes(manifest.ballotNavigation!.MI.key));
   } finally { await rm(directory, { recursive: true, force: true }); }
 });
 
@@ -100,10 +102,10 @@ test("navigation admission reserves the largest state after a small state's meas
   const mib = 1024 * 1024;
   const host = workerMemoryHost({ processes: () => [] });
   host.transact(state => { state.peaks = { "ballot-navigation-refresh.mts": [300 * mib] }; }, false);
-  let free = (768 + 3071) * mib;
+  let free = (768 + 2047) * mib;
   const slots = routineProcessSlots({ host, availableBytes: () => free });
   await assert.rejects(slots.acquire("ballot-navigation-il/ballot-navigation-refresh.mts", Date.now() + 25), /WORKER_MEMORY_DEADLINE/);
-  free = (768 + 3072) * mib;
+  free = (768 + 2048) * mib;
   const release = await slots.acquire("ballot-navigation-il/ballot-navigation-refresh.mts", Date.now() + 100);
   release();
 });

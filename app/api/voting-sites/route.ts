@@ -1,3 +1,4 @@
+import { readerRoute } from "@/lib/api/reader-route";
 import { divisionsAt, divisionsByOcdIds } from "@/lib/registry/server";
 import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
 import { readReaderManifest, ensureReaderAuthorityEdge } from "@/lib/meetings/edge-serving";
@@ -15,7 +16,7 @@ export const dynamic = "force-dynamic";
 const NO_STORE = { "cache-control": "no-store, no-cache, must-revalidate" } as const;
 const empty = (status = 200) => Response.json({ match: false, point: null, jurisdictions: [], outsideCoverage: false, pollingPlaceLinks: [] }, { status, headers: NO_STORE });
 
-export async function POST(request: Request) {
+export const POST = readerRoute("/api/voting-sites", async function POST(request: Request) {
   const deadline = Date.now() + 2800;
   const requestFetch: typeof fetch = (input, init) => fetch(input, { ...init, cache: "no-store",
     signal: AbortSignal.any([AbortSignal.timeout(Math.max(1, deadline - Date.now())), ...(init?.signal ? [init.signal] : [])]) });
@@ -69,4 +70,4 @@ export async function POST(request: Request) {
   } catch {
     return Response.json({ error: "Voting-location data is temporarily unavailable. The source work remains open." }, { status: 503, headers: NO_STORE });
   }
-}
+});

@@ -1,6 +1,5 @@
 import { resolveRecordConflicts } from "./source-conflicts.ts";
-import { createHash } from "node:crypto";
-import { canonicalCivicDataJson, civicRecordsFor } from "./changes.ts";
+import { canonicalCivicDataHash, civicRecordsFor } from "./changes.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import { manualProjectionCandidate, readManualProjectionPrior, type CuratedReaderProjection, type ManualProjectionPackage } from "./manual-projections.ts";
 import { readPromotedCivicData, type CivicDataReadStore } from "./read-model.ts";
@@ -8,7 +7,7 @@ import type { AuditPullRemovalEvidence } from "./types.ts";
 import { manualPriorAuthorityIssue, type ManualSuccessorCandidate } from "./manual-prior-authority.ts";
 import { everydayRoutingProjectionFromRecords, type EverydayRoutingRecord } from "../routing/everyday.ts";
 
-const hash = (value: unknown) => createHash("sha256").update(canonicalCivicDataJson(value)).digest("hex");
+const hash = canonicalCivicDataHash;
 
 function exactMembers(payload: CuratedReaderProjection): Map<string, CuratedReaderProjection["records"][number]> {
   if (!payload || !Array.isArray(payload.records)) throw new Error("MANUAL_SUCCESSOR_BASE_RECORDS_INVALID");
@@ -58,8 +57,14 @@ export async function prepareManualProjectionSuccessor(
     // The current review wins receipt deduplication for identical bytes; losing
     // facts retain their actual earlier date in the conflict provenance.
     const sources = [...priorReceipt.sources.filter(source => source.reviewOutcome !== "BLOCKED"), ...input.sourceReceipt.sources];
+    const seenSources = new Set<string>();
     const merged = { ...input, sourceReceipt: { ...input.sourceReceipt,
-      sources: sources.filter((source, index) => sources.findIndex(other => canonicalCivicDataJson(other) === canonicalCivicDataJson(source)) === index) },
+      sources: sources.filter(source => {
+        const key = hash(source);
+        if (seenSources.has(key)) return false;
+        seenSources.add(key);
+        return true;
+      }) },
       payload: { ...(input.payload as CuratedReaderProjection), records: resolved.map(result => result.record) } };
     fresh = manualProjectionCandidate(merged);
     fresh = { ...fresh, excludedFacts: [...(fresh.excludedFacts ?? []), ...conflicts] };

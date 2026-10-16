@@ -14,6 +14,7 @@ import { electionFieldState, type PublishedElectionField } from "./election-fiel
 
 import { ballotNavigationScope } from "./ballot-navigation-scope.ts";
 import { ballotNavigationFor } from "../ballot/navigation.ts";
+import { currentReaderSelection } from "../db/reader-route.ts";
 
 export const CURATED_READER_CONTRACT_IDS = [
   "official-filings",
@@ -40,6 +41,15 @@ export interface CampaignSiteProjectionRecord {
 }
 
 const states = new Map<GlobalCuratedReaderId, CivicDataReadResult<CuratedReaderProjection>>();
+const selectedStates = new WeakMap<object, Map<GlobalCuratedReaderId, CivicDataReadResult<CuratedReaderProjection>>>();
+function readerStates() {
+  const selection = currentReaderSelection();
+  if (!selection) return states;
+  let held = selectedStates.get(selection);
+  if (!held) { held = new Map(); selectedStates.set(selection, held); }
+  return held;
+}
+
 
 function initial(id: GlobalCuratedReaderId): CivicDataReadResult<CuratedReaderProjection> {
   const contract = requiredManualProductionContract(id);
@@ -72,7 +82,7 @@ export async function readCuratedReaderProjection(
     if (id === "ballot-navigation") ballotNavigationFor(state!, result.value, result.metadata.versionId!, []);
     else validate(id, result.value, result.metadata.versionId ?? "unknown");
   }
-  if (id !== "ballot-navigation") states.set(id, result);
+  if (id !== "ballot-navigation") readerStates().set(id, result);
   return result;
 }
 
@@ -103,7 +113,7 @@ export function primeCuratedReaderProjection(
 ): void {
   validateOnce(id, value, versionId, () => validate(id, value, versionId));
   const contract = requiredManualProductionContract(id);
-  states.set(id, {
+  readerStates().set(id, {
     kind: "BOOTSTRAP",
     value,
     metadata: {
@@ -143,7 +153,7 @@ export const refreshVenueResolutionsFromPromoted = (options: PromotedCivicDataRe
   refreshCuratedReaderProjection("venue-resolutions", options);
 
 export function curatedReaderReadState(id: GlobalCuratedReaderId): CivicDataReadResult<CuratedReaderProjection> {
-  return states.get(id) ?? initial(id);
+  return readerStates().get(id) ?? initial(id);
 }
 
 /** Only after the canonical pointer was read. A BOOTSTRAP state is a validated edge copy of a promoted version and is served; the seed is test evidence, never a production fallback. */
@@ -151,7 +161,7 @@ export function currentCuratedReaderRecords<T>(
   id: GlobalCuratedReaderId,
   testSeed: readonly T[],
 ): readonly T[] {
-  const state = states.get(id) ?? initial(id);
+  const state = readerStates().get(id) ?? initial(id);
   if (state.kind === "PROMOTED" || state.kind === "BOOTSTRAP") return state.value.records as readonly T[];
   if (mayUseTestFixture()) return testSeed;
   throw new Error(`${id} projection is ${state.kind}; initialize its canonical read before using the synchronous Reader projection.`);

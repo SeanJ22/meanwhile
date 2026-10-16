@@ -1,4 +1,4 @@
-import { section3Page } from "../control-plane/promotion/section3.ts";
+import { section3Page, type Section3Page } from "../control-plane/promotion/section3.ts";
 import { manualClassForKind } from "../control-plane/promotion/source-kinds.ts";
 import { preferCurrentSource, receiptSourceKind } from "./source-conflicts.ts";
 import { createHash } from "node:crypto";
@@ -89,6 +89,7 @@ export async function publishElectionFields(input: {
   readonly verify: ElectionFieldVerifier;
 }): Promise<{ candidateId: string | null; promotedVersionId: string | null; fields: string[]; gaps: { divisionId: string; kind: string; detail: string }[] }> {
   const records = new Map<string, PublishedElectionField>();
+  let heldCapture: ElectionFieldInput["document"]["capture"], heldPage: Section3Page | undefined;
   const conflicts: NonNullable<import("./types.ts").RoutineCandidate["excludedFacts"]>[number][] = [];
   const sources = new Map<string, ManualSourceReview>();
   const gaps: { divisionId: string; kind: string; detail: string }[] = [];
@@ -120,8 +121,10 @@ export async function publishElectionFields(input: {
       gap("Saved complete source capture is missing or does not match these bytes."); continue;
     }
     if (currentState !== state) { await publish(); currentState = state; }
-    const page = { url: field.sourceUrl, text: capture.evidence.text, retrievedAt: capture.observedAt, linkingPage: field.linkingPage,
-      websiteDelegation: field.websiteDelegation, sourcePolicy: capture.sourcePolicy, campaign: capture.campaign };
+    const page = Object.assign(heldCapture === capture ? heldPage ?? {} : {}, { url: field.sourceUrl, text: capture.evidence.text,
+      retrievedAt: capture.observedAt, linkingPage: field.linkingPage, websiteDelegation: field.websiteDelegation,
+      sourcePolicy: capture.sourcePolicy, campaign: capture.campaign });
+    heldCapture = capture; heldPage = page;
     // An election office's phone line is a fact too: it must be on the saved page.
     const office = field.kind === "election_office";
     if (office && !field.phone?.trim()) { gap("Election office has no phone line on the saved page."); continue; }

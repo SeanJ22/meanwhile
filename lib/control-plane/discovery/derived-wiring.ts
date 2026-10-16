@@ -31,6 +31,7 @@ const CONFIRMING_VENDORS: Readonly<Record<DerivedWiringKind, readonly string[]>>
   CIVICPLUS: ["civicplus-agendacenter"],
   BOARDBOOK: ["boardbook"],
   BOARDDOCS: ["boarddocs"],
+  MUNICODE: ["municode-meetings"],
   GRANICUS: ["granicus"],
   NOVUSAGENDA: ["novusagenda"],
   SWAGIT: ["swagit"],
@@ -59,6 +60,7 @@ export function wiringShapeFor(find: Pick<DiscoveryFind, "vendor" | "url">): Wir
   } catch {
     return { held: "ADAPTER_CONFIG_INCOMPLETE", detail: `the route ${find.url} is not a URL` };
   }
+  if (find.vendor === "municode-meetings") return { kind: "MUNICODE", endpoint: { portalUrl: url.toString() } };
   if (find.vendor === "granicus" && /\.granicus\.com$/i.test(url.hostname) && /^\/ViewPublisher\.php$/i.test(url.pathname) && /^\d+$/.test(url.searchParams.get("view_id") ?? "")) return { kind: "GRANICUS", endpoint: { publisherUrl: url.toString() } };
   if (find.vendor === "escribe" && /^pub-[a-z0-9-]+\.escribemeetings\.com$/i.test(url.hostname)) return { kind: "ESCRIBE", endpoint: { portalUrl: url.origin } };
   if (find.vendor === "ical") return { kind: "ICAL", endpoint: { feedUrl: url.toString() } };

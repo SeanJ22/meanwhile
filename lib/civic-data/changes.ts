@@ -1,3 +1,4 @@
+import { jsonSnapshot } from "./json-snapshot.ts";
 import { createHash } from "node:crypto";
 
 import { agendaContentGroups, type AgendaContentRow } from "../meetings/agenda-content.ts";
@@ -521,13 +522,68 @@ export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknow
   }
 }
 
+function writeCanonical(value: unknown, write: (chunk: string) => void, context = "root"): void {
+  if (value === null || typeof value !== "object") {
+    const encoded = JSON.stringify(value);
+    if (encoded !== undefined) write(encoded);
+    else if (context === "object") write("undefined");
+    else if (context === "root") throw new TypeError("The value has no canonical JSON representation");
+    return;
+  }
+  if (Array.isArray(value)) {
+    write("[");
+    for (let index = 0; index < value.length; index++) { if (index) write(","); writeCanonical(value[index], write, "array"); }
+    write("]");
+  } else {
+    write("{");
+    const keys = Object.keys(value).sort((a, b) => a.localeCompare(b));
+    for (let index = 0; index < keys.length; index++) {
+      if (index) write(",");
+      const key = keys[index]; write(JSON.stringify(key)); write(":");
+      writeCanonical((value as Record<string, unknown>)[key], write, "object");
+    }
+    write("}");
+  }
+}
+
 export function canonicalCivicDataJson(value: unknown): string {
   if (value === null || typeof value !== "object") return JSON.stringify(value);
-  if (Array.isArray(value)) return `[${value.map(canonicalCivicDataJson).join(",")}]`;
-  return `{${Object.entries(value as Record<string, unknown>)
-    .sort(([a], [b]) => a.localeCompare(b))
-    .map(([key, child]) => `${JSON.stringify(key)}:${canonicalCivicDataJson(child)}`)
-    .join(",")}}`;
+  const chunks: string[] = [];
+  let buffer = "";
+  writeCanonical(value, chunk => { buffer += chunk; if (buffer.length >= 8192) { chunks.push(buffer); buffer = ""; } });
+  if (buffer) chunks.push(buffer);
+  return chunks.join("");
+}
+
+export function canonicalCivicDataHash(value: unknown): string {
+  const hash = createHash("sha256");
+  let buffer = "";
+  writeCanonical(value, chunk => {
+    buffer += chunk;
+    if (buffer.length >= 8192) { hash.update(buffer); buffer = ""; }
+  });
+  if (buffer) hash.update(buffer);
+  return hash.digest("hex");
+}
+
+export function durableCivicDataHash(value: unknown): string {
+  const seen = new WeakSet<object>(), active = new WeakSet<object>();
+  const check = (row: unknown): void => {
+    if (["undefined", "function", "symbol"].includes(typeof row)) throw new TypeError("The value changes when persisted through the canonical JSONB representation.");
+    if (typeof row === "bigint" || row instanceof BigInt) throw new TypeError("BigInt is not JSON-representable");
+    if (row === null || typeof row !== "object") return;
+    if (active.has(row)) throw new TypeError("Circular value is not JSON-representable");
+    if (seen.has(row)) return;
+    if (typeof (row as { toJSON?: unknown }).toJSON === "function" || row instanceof Number || row instanceof Boolean || row instanceof String) {
+      if (canonicalCivicDataHash(row) !== canonicalCivicDataHash(jsonSnapshot(row))) throw new TypeError("The value changes when persisted through the canonical JSONB representation.");
+    }
+    active.add(row);
+    if (Array.isArray(row)) for (let index = 0; index < row.length; index++) check(row[index]);
+    else for (const child of Object.values(row)) check(child);
+    active.delete(row); seen.add(row);
+  };
+  check(value);
+  return canonicalCivicDataHash(value);
 }
 
 export interface CivicChangeContract {

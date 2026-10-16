@@ -1,3 +1,4 @@
+import { partitionCivicPayload } from "../lib/civic-data/payload-parts.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
@@ -774,7 +775,7 @@ test("the Postgres promotion transaction is selected from the exact persisted pr
   assert.match(promote, /civicDataPromotions\.currentVersionId, expectedVersionId/);
   assert.match(promote, /pointerOwnsCandidate/);
   assert.match(promote, /where \$\{eligibility\} and \$\{pointerOwnsCandidate\}/);
-  assert.match(promote, /validationReceipt: persistedReceipt/);
+  assert.match(promote, /validationReceipt: storedReceipt/);
   assert.doesNotMatch(promote, /validationReceipt: receipt[,\n]/);
   assert.doesNotMatch(promote, /\.returning\(\)/, "a bare RETURNING ships the whole payload or envelope back");
   assert.match(promote, /\.onConflictDoUpdate\(\{[\s\S]*\}\)\.returning\(PROMOTED_POINTER_COLUMNS\)/);
@@ -874,9 +875,12 @@ function returningList(query: string): string | null {
   return at < 0 ? null : query.slice(at + " returning ".length);
 }
 
-test("Postgres promotion ships no dataset back and returns the pointer with the read model it copied", async () => {
+for (const heldCount of [0, 1200]) test(`Postgres promotion ships no dataset back and preserves ${heldCount} held facts`, async () => {
   const value = candidate("postgres-promotion-returning", "2026-09-08T12:00:00.000Z", "fec-open-api");
-  const persisted = receiptFor(value);
+  const persisted = { ...receiptFor(value), excludedFacts: Array.from({ length: heldCount }, (_, index) => ({
+    key: `held:${index}`, code: "CONFLICT_SUPERSEDED", detail: "Prior official value retained for audit", record: { text: "Archived losing value ".repeat(200) } })) };
+  const receiptPlan = partitionCivicPayload(persisted, Object.keys(persisted).filter(key => key !== "excludedFacts"));
+  const receiptParts = new Map(receiptPlan.parts.map(part => [part.hash, part.payload]));
   const promotedAt = "2026-09-08T12:01:00.000Z";
   const candidateRow: readonly (readonly [NeonColumn, unknown])[] = [
     [["id", "text"], value.id],
@@ -892,7 +896,7 @@ test("Postgres promotion ships no dataset back and returns the pointer with the 
     [["parser_version", "text"], value.normalization.parserVersion],
     [["identity", "jsonb"], value.identities],
     [["candidate", "jsonb"], value],
-    [["validation_receipt", "jsonb"], persisted],
+    [["validation_receipt", "jsonb"], receiptPlan.value],
     [["promoted_version_id", "text"], null],
     [["last_known_good_version_id", "text"], null],
     [["failure_code", "text"], null],
@@ -906,7 +910,7 @@ test("Postgres promotion ships no dataset back and returns the pointer with the 
     [["current_version_id", "text"], value.id],
     [["last_known_good_version_id", "text"], value.id],
     [["promoted_at", "timestamptz"], "2026-09-08 12:01:00+00"],
-    [["validation_receipt", "jsonb"], persisted],
+    [["validation_receipt", "jsonb"], receiptPlan.value],
   ];
   const answer = (cells: readonly (readonly [NeonColumn, unknown])[]): NeonAnswer => ({
     columns: cells.map(([column]) => column),
@@ -916,6 +920,10 @@ test("Postgres promotion ships no dataset back and returns the pointer with the 
 
   const promoted = await withCannedNeon((statement) => {
     const text = statement.query;
+    if (text.startsWith("select") && text.includes(`from "civic_data_payload_parts"`)) return {
+      columns: [["hash", "text"], ["payload", "jsonb"]],
+      rows: statement.params.flatMap(key => typeof key === "string" && receiptParts.has(key) ? [[key, receiptParts.get(key)]] : []),
+    };
     if (/^select pg_advisory_xact_lock/.test(text.trim())) return { columns: [["pg_advisory_xact_lock", "void"]], rows: [[""]] };
     if (text.startsWith("select") && text.includes(`from "civic_data_candidates"`)) return answer(candidateRow);
     if (text.startsWith("select") && text.includes(`from "civic_data_promotions"`)) return none;
@@ -938,6 +946,8 @@ test("Postgres promotion ships no dataset back and returns the pointer with the 
     assert.doesNotMatch(pointerReturning ?? "", /"payload"/, "the promoted payload is not shipped back");
     const candidateWrite = sent.find(({ query }) => query.startsWith(`update "civic_data_candidates"`));
     assert.equal(returningList(candidateWrite?.query ?? ""), `"id"`, "the candidate write returns its id, never the envelope");
+    if (heldCount) assert.ok(sent.filter(({ query }) => /^(?:insert|update)/.test(query)).every(statement =>
+      Buffer.byteLength(JSON.stringify(statement.params)) < 32 * 1024), "promotion sends receipt references, never the archived losing values");
     if ("error" in settled) throw settled.error;
     return settled.result;
   });

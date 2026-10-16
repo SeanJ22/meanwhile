@@ -3,6 +3,24 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import { applyVotingChangeNotices, arcgisVotingRows, fingerprintVotingPlatform, parseVotingCapture, readVotingSource, votingRowsToSites } from "../lib/ballot/voting-source-readers.ts";
 import { votingFetchSession } from "../lib/ballot/voting-source-fetch.ts";
+
+test("election reads reuse recent robots evidence and release old hosts", async () => {
+  const reads: string[] = [];
+  const session = votingFetchSession({ fetch: async input => {
+    const url = String(input);
+    if (url.endsWith("/robots.txt")) reads.push(url);
+    return new Response(url.endsWith("/robots.txt") ? "User-agent: *\nAllow: /" : "Official election page");
+  } });
+  for (let index = 0; index < 17; index++) {
+    await session.get(`https://elections-${index}.gov/voting`);
+    session.rawBodies.length = 0;
+  }
+  await session.get("https://elections-16.gov/registration");
+  assert.equal(reads.length, 17);
+  await session.get("https://elections-0.gov/registration");
+  assert.equal(reads.length, 18);
+  assert.equal(reads.at(-1), "https://elections-0.gov/robots.txt");
+});
 import type { VotingSourceDoor } from "../lib/ballot/voting-source-types.ts";
 const fixture = (name: string) => new Uint8Array(readFileSync(`tests/fixtures/voting-sources/${name}`));
 const NC: VotingSourceDoor = { id: "nc-early", publisher: "North Carolina State Board of Elections", url: "https://vt.ncsbe.gov/OSSite?handler=StatewideList", shape: "file", covers: ["EARLY_VOTING"], scope: { state: "NC", ocdId: "ocd-division/country:us/state:nc", name: "North Carolina" }, electionDate: "2026-11-03", electionPageUrl: "https://vt.ncsbe.gov/EVSite/", extraction: { format: "tsv", headers: ["election", "county", "flag", "name", "street", "cityStateZip", "day", "hours"], columns: { name: "name", address: ["street", "cityStateZip"], days: "day", hours: "hours", election: "election" } } };

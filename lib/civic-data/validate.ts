@@ -1,4 +1,3 @@
-import { createHash } from "node:crypto";
 import { sourceCheckIssue } from "./source-check.ts";
 import { completeOfficialBallotContests } from "./manual-projections.ts";
 import type { GenericBallotProjection } from "../ballot/generic-projection.ts";
@@ -16,7 +15,7 @@ import {
 } from "../meetings/constants.ts";
 import { trustedLkgImportEvidenceIssue } from "./trusted-lkg-import.ts";
 import { manualPriorAuthorityIssue, manualPriorAuthorityOf } from "./manual-prior-authority.ts";
-import { canonicalCivicDataJson, civicRecordsFor } from "./changes.ts";
+import { durableCivicDataHash, canonicalCivicDataJson, civicRecordsFor } from "./changes.ts";
 import {
   occurrenceStampFromInstant,
   reissuesSitting,
@@ -43,26 +42,14 @@ import type {
 
 const SHA256 = /^[a-f0-9]{64}$/;
 
-function sha256(value: string): string {
-  return createHash("sha256").update(value).digest("hex");
-}
-
 /** A conditional check must cite its previously captured 200 bytes. */
 export function notModifiedIssue(candidate: RoutineCandidate): string | null {
   return `HTTP 304 carries no bytes for ${candidate.recordClass}; replay the identified held response with its original status and observation date.`;
 }
 
-function durableCanonicalJson(value: unknown): { readonly canonical: string | null; readonly issue: string | null } {
+function durableCanonicalHash(value: unknown): { readonly canonical: string | null; readonly issue: string | null } {
   try {
-    const encoded = JSON.stringify(value);
-    if (encoded === undefined) return { canonical: null, issue: "The value is not representable as durable JSON." };
-    const roundTrip = JSON.parse(encoded) as unknown;
-    const before = canonicalCivicDataJson(value);
-    const after = canonicalCivicDataJson(roundTrip);
-    if (before !== after) {
-      return { canonical: null, issue: "The value changes when persisted through the canonical JSONB representation." };
-    }
-    return { canonical: before, issue: null };
+    return { canonical: durableCivicDataHash(value), issue: null };
   } catch (error) {
     return {
       canonical: null,
@@ -72,7 +59,7 @@ function durableCanonicalJson(value: unknown): { readonly canonical: string | nu
 }
 
 function canonicalMembers(value: readonly { readonly key: string; readonly record: unknown }[]): string | null {
-  const durable = durableCanonicalJson([...value].sort((left, right) => left.key.localeCompare(right.key)));
+  const durable = durableCanonicalHash([...value].sort((left, right) => left.key.localeCompare(right.key)));
   return durable.canonical;
 }
 
@@ -556,8 +543,8 @@ export function validateRoutineCandidate(
   const derivedCivicRecordKeys = derivedCivicRecords.map((member) => member.key);
   const invalidDerivedCivicRecordKey = derivedCivicRecordKeys.find((key) => typeof key !== "string" || key.trim().length === 0);
   const duplicateDerivedCivicRecordKeys = derivedCivicRecordKeys.length - new Set(derivedCivicRecordKeys).size;
-  const normalizedPayload = durableCanonicalJson(candidate.normalizedPayload);
-  const readModel = durableCanonicalJson(candidate.readModel);
+  const normalizedPayload = durableCanonicalHash(candidate.normalizedPayload);
+  const readModel = durableCanonicalHash(candidate.readModel);
   const suppliedCivicRecords = candidate.civicRecords === undefined ? null : canonicalMembers(candidate.civicRecords);
   const canonicalDerivedCivicRecords = canonicalMembers(derivedCivicRecords);
   const authority = candidate.retrieval.derived
@@ -650,7 +637,7 @@ export function validateRoutineCandidate(
     checks.push(result("SCHEMA_PARSE_VALIDITY", "FAIL", "NORMALIZED_HASH_INVALID", "Normalized payload does not carry a lowercase SHA-256 hash."));
   } else if (readModel.issue !== null || readModel.canonical === null) {
     checks.push(result("SCHEMA_PARSE_VALIDITY", "FAIL", "READ_MODEL_NOT_DURABLE_JSON", readModel.issue ?? "Reader projection is not durable JSON."));
-  } else if (sha256(readModel.canonical) !== candidate.normalization.normalizedHash) {
+  } else if (readModel.canonical !== candidate.normalization.normalizedHash) {
     checks.push(result(
       "SCHEMA_PARSE_VALIDITY",
       "FAIL",
@@ -676,7 +663,7 @@ export function validateRoutineCandidate(
   } else if (
     candidate.normalization.normalizedPayloadHash !== undefined &&
     normalizedPayload.canonical !== null &&
-    sha256(normalizedPayload.canonical) !== candidate.normalization.normalizedPayloadHash
+    normalizedPayload.canonical !== candidate.normalization.normalizedPayloadHash
   ) {
     checks.push(result(
       "SCHEMA_PARSE_VALIDITY",

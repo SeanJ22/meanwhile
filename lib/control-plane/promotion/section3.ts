@@ -92,6 +92,14 @@ export function pageWords(text: string): string {
     .trim();
 }
 
+let normalizedPage: { page: WeakRef<Section3Page>; text: string; words: string } | null = null;
+function wordsOf(page: Section3Page): string {
+  if (normalizedPage?.page.deref() === page && normalizedPage.text === page.text) return normalizedPage.words;
+  const words = pageWords(page.text);
+  normalizedPage = { page: new WeakRef(page), text: page.text, words };
+  return words;
+}
+
 /** Code confirms the value is on the page: its visible text, or an attribute such as an href or tel: link. */
 export function valueOnPage(value: unknown, text: string, words: string = pageWords(text), pageUrl?: string): boolean {
   if (typeof value === "number" || typeof value === "boolean") return words.includes(String(value));
@@ -228,7 +236,7 @@ export function section3Record(input: {
     // is one record twice, not permission to combine differing rows.
     .map(block => [input.page.text.slice(block.start, block.end), block])).values()];
   const recordText = nameField ? (matching.length === 1 ? input.page.text.slice(matching[0].start, matching[0].end) : "") : input.page.text;
-  const words = pageWords(recordText);
+  const words = recordText === input.page.text ? wordsOf(input.page) : pageWords(recordText);
   const verified = new Set<string>();
   for (const field of present) {
     if (SECOND_SOURCE_FIELDS.includes(field) || STANCE_SUMMARY_FIELDS.includes(field) || input.derived?.[field]) continue;

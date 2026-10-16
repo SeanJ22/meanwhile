@@ -1,5 +1,4 @@
-import { createHash } from "node:crypto";
-import { canonicalCivicDataJson, civicRecordsFor } from "./changes.ts";
+import { canonicalCivicDataHash, civicRecordsFor } from "./changes.ts";
 import { manualRecordSourceUrls } from "./manual-source-isolation.ts";
 import { authorityForManualReceipt } from "./source-authority.ts";
 import { trustedLkgImportEvidenceIssue } from "./trusted-lkg-import.ts";
@@ -7,7 +6,7 @@ import { parseValidationReceipt } from "./receipt.ts";
 import { registryMemberCitedUrls } from "../registry/cited-urls.ts";
 import type { CandidateVersionRecord, RoutineCandidate } from "./types.ts";
 
-const hash = (value: unknown) => createHash("sha256").update(canonicalCivicDataJson(value)).digest("hex");
+const hash = canonicalCivicDataHash;
 
 /** Classes whose successor may inherit unchanged members from its exact GOOD base. */
 const INHERITING_CLASSES: ReadonlySet<string> = new Set(["CURATED_READER_RECORD", "REGISTRY_RUNTIME_BINDING"]);

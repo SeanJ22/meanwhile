@@ -1,6 +1,5 @@
-import { createHash } from "node:crypto";
 
-import { canonicalCivicDataJson } from "./changes.ts";
+import { canonicalCivicDataHash } from "./changes.ts";
 import type { RoutineRecordClass } from "./types.ts";
 
 /** The supervisor proves a pointer once per pass. A child skips the proof only when the pointer still names the attested version and its payload hashes to the proven payload. */
@@ -21,7 +20,7 @@ export const ATTESTED_PROMOTIONS_ENV = "WTP_ROUTINE_ATTESTED_PROMOTIONS";
 const SHA256 = /^[a-f0-9]{64}$/;
 
 export function promotedPayloadSha256(payload: unknown): string {
-  return createHash("sha256").update(canonicalCivicDataJson(payload)).digest("hex");
+  return canonicalCivicDataHash(payload);
 }
 
 export function serializeAttestedPromotions(attestations: readonly AttestedPromotion[]): string {

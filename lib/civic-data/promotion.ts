@@ -1,3 +1,4 @@
+import { jsonSnapshot } from "./json-snapshot.ts";
 import type { CandidateState, CandidateVersionRecord, PromotedProjection, RoutineCandidate, ValidationReceipt } from "./types.ts";
 import { PostgresRoutineDataStore, PromotionBaseChangedError, routineEventObservedAt, type RoutineDataStore } from "./store.ts";
 import { validateRoutineCandidate } from "./validate.ts";
@@ -43,9 +44,7 @@ function sourceProjectionObservedAt(store: RoutineDataStore, requested: string):
 /** One frozen JSON value, so an adapter holding references cannot swap payload and digest between async steps. */
 function durableCandidateSnapshot(candidate: RoutineCandidate): RoutineCandidate {
   try {
-    const encoded = JSON.stringify(candidate);
-    if (encoded === undefined) throw new Error("candidate is not JSON-representable");
-    return JSON.parse(encoded) as RoutineCandidate;
+    return jsonSnapshot(candidate);
   } catch (error) {
     throw new Error(
       `ROUTINE_CANDIDATE_NOT_DURABLE_JSON:${error instanceof Error ? error.message : String(error)}`,

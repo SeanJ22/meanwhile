@@ -3,11 +3,12 @@ import type { BodySourceWiring } from "../../registry/source-wiring.ts";
 import { subBodyId } from "../../civic-data/meeting-body-crosswalk.ts";
 import { ensureEntity, learnDoorChannel } from "../../facts/entities.ts";
 import { nameKey, publishRosterFacts } from "../../facts/roster-facts.ts";
-import { vaultCapture } from "../../facts/capture.ts";
 import { jsonValues } from "../../facts/source-copy.ts";
 import type { Clocks, FactDb, Query } from "../../facts/publish.ts";
 import type { EvidenceStore } from "../../control-plane/evidence/store.ts";
-import { legistarMemberRosters, type LegistarMembers } from "./members.ts";
+import { legistarMemberRosters } from "./members.ts";
+import { memberProbe, type LegistarMembers } from "./members-model.ts";
+import { legistarMemberCapture } from "./members-cache.ts";
 
 export function legistarMembersPackage(raw: LegistarMembers, rows: readonly BodySourceWiring[], now: string) {
   const own = rows.filter(row => row.config.slug === raw.slug);
@@ -61,16 +62,14 @@ export async function publishLegistarMembers(input: {
       await learnDoorChannel(input.facts.query, body.id, `https://webapi.legistar.com/v1/${input.raw.slug}/officerecords`);
     }
     for (const reading of input.raw.readings) {
-      const url = new URL(reading.url);
-      if (!url.pathname.endsWith("/officerecords") || url.searchParams.has("$select")) continue;
-      const read = await vaultCapture({ vault: input.vault, url: reading.url, bytes: Buffer.from(reading.text),
-        httpStatus: 200, contentType: "application/json", retrievedAt: reading.retrievedAt });
-      if ("error" in read) throw new Error(`LEGISTAR_MEMBERS_EVIDENCE:${read.error}`);
-      for (const roster of legistarMemberRosters(input.raw, prepared.bound, input.now, reading.url)) {
+      const url = new URL(reading.artifact.canonicalUrl);
+      if (!url.pathname.endsWith("/officerecords") || memberProbe(url)) continue;
+      const capture = await legistarMemberCapture(input.vault, reading.artifact);
+      for (const roster of legistarMemberRosters(input.raw, prepared.bound, input.now, reading.artifact.canonicalUrl)) {
         const members = roster.members;
         if (!members.length) continue;
         const owner = prepared.bound.find(row => row.bodyId === roster.bodyId)!;
-        const report = await publishRosterFacts(input.facts, { body: bodyFor(owner), capture: read.capture, complete: false, producedBy: source,
+        const report = await publishRosterFacts(input.facts, { body: bodyFor(owner), capture, complete: false, producedBy: source,
           shownMemberIds: new Map(members.map(member => [nameKey(member.name), member.id])),
           members: members.map(member => {
             const office = offices.get(Number(member.id.split(":office:").at(-1)))!;

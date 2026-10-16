@@ -4,20 +4,21 @@ import { durableRoutineRunnerReceiptIssue, type DurableReceiptStore } from "../l
 import { installFactReader } from "../lib/facts/db.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 import { legistarMemberRosters, makeLegistarMembersReader } from "../lib/sources/legistar/members.ts";
+import { memberProbe } from "../lib/sources/legistar/members-model.ts";
 import { legistarMembersPackage, publishLegistarMembers } from "../lib/sources/legistar/members-publication.ts";
 import { legistarMemberTasks, legistarMemberClocks, legistarMemberReceiptIssue } from "../lib/sources/legistar/members-tasks.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
-import { loadLegistarMembers, saveLegistarMembers } from "../lib/sources/legistar/members-cache.ts";
+import { loadLegistarMembers, saveLegistarMembers, saveLegistarReading } from "../lib/sources/legistar/members-cache.ts";
 import { readFactRosters } from "../lib/facts/roster-read.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 import { factDb } from "./helpers/fact-db.ts";
-import { NOW, rawFor, wiring } from "./helpers/legistar-member-fixtures.ts";
+import { NOW, rawFor, wiring, storeMemberFixtures } from "./helpers/legistar-member-fixtures.ts";
 import { readFileSync } from "node:fs";
 
 const fixture = (tenant: string, file: string) => readFileSync(new URL(`./fixtures/legistar-members/${tenant}/${file}`, import.meta.url), "utf8");
 
-const officePage = (reading: { url: string }) => {
-  const url = new URL(reading.url);
+const officePage = (reading: { artifact: { canonicalUrl: string } }) => {
+  const url = new URL(reading.artifact.canonicalUrl);
   return url.pathname.endsWith("/officerecords");
 };
 
@@ -58,7 +59,7 @@ test("member probes exclude ended offices and historic people, and detect a low-
   raw = { ...raw, offices: [...raw.offices, { ...current, OfficeRecordId: 999999, OfficeRecordEndDate: "2000-01-01T00:00:00", OfficeRecordPersonId: 999999 }],
     persons: [...raw.persons, { PersonId: 999999, PersonFullName: "Historic Member", PersonRowVersion: "old" }] };
   const calls: URL[] = [];
-  const read = makeLegistarMembersReader(recordedMemberFetch(() => raw, calls));
+  const read = makeLegistarMembersReader(new MemoryEvidenceStore(), recordedMemberFetch(() => raw, calls));
   const first = await read("pima");
   assert.ok(!first.offices.some(row => row.OfficeRecordId === 999999));
   assert.ok(!first.persons.some(row => row.PersonId === 999999));
@@ -67,7 +68,7 @@ test("member probes exclude ended offices and historic people, and detect a low-
   assert.ok(calls.filter(url => url.pathname.endsWith("persons")).every(url => url.searchParams.get("$filter")!.includes("PersonId eq")));
   calls.length = 0;
   assert.equal((await read("pima")).signature, first.signature);
-  assert.ok(calls.every(url => url.searchParams.has("$select")));
+  assert.ok(calls.every(memberProbe));
   raw = { ...raw, offices: raw.offices.map((row, i) => i === 0 ? { ...row, OfficeRecordRowVersion: "changed" } : row) };
   assert.notEqual((await read("pima")).signature, first.signature);
   raw = { ...raw, offices: raw.offices.slice(1) };
@@ -77,23 +78,23 @@ test("member probes exclude ended offices and historic people, and detect a low-
 test("a changed source never opens the prior full roster, and an unchanged probe opens it only afterward", async t => {
   t.mock.timers.enable({ apis: ["Date"], now: Date.parse(NOW) });
   const { recordedMemberFetch } = await import("./helpers/legistar-member-fixtures.ts");
-  const { legistarMemberSignature } = await import("../lib/sources/legistar/members.ts");
+  const { legistarMemberSignature } = await import("../lib/sources/legistar/members-model.ts");
   const source = rawFor("pima"), vault = new MemoryEvidenceStore();
-  const raw = await makeLegistarMembersReader(recordedMemberFetch(() => source, []))("pima");
+  const raw = await makeLegistarMembersReader(vault, recordedMemberFetch(() => source, []))("pima");
   await saveLegistarMembers(vault, raw, NOW);
   const cached = (await loadLegistarMembers(vault, "pima"))!;
   let loads = 0;
   const calls: URL[] = [];
   const prior = { ...cached, read: async () => {
     loads++;
-    assert.ok(calls.length > 0 && calls.every(url => url.searchParams.has("$select")));
+    assert.ok(calls.length > 0 && calls.every(memberProbe));
     return cached.read();
   } };
-  const current = await makeLegistarMembersReader(recordedMemberFetch(() => raw, calls), prior)("pima");
+  const current = await makeLegistarMembersReader(vault, recordedMemberFetch(() => raw, calls), prior)("pima");
   assert.equal(loads, 1);
   assert.equal(current.signature, legistarMemberSignature(raw));
   const changed = { ...raw, offices: raw.offices.map((office, i) => i ? office : { ...office, OfficeRecordRowVersion: "changed" }) };
-  await makeLegistarMembersReader(recordedMemberFetch(() => changed, []), { ...cached, read: async () => {
+  await makeLegistarMembersReader(vault, recordedMemberFetch(() => changed, []), { ...cached, read: async () => {
     throw new Error("Prior payload must stay unopened when the source changes");
   } })("pima");
 });
@@ -107,11 +108,13 @@ test("tenant facts retain dates, leave an unchanged roster intact, and remove ev
     if (text.startsWith("INSERT INTO source_copy")) copies++;
     return query(text, params);
   })) };
+  await storeMemberFixtures(vault, raw);
   const input = { facts, raw, rows, vault, clocks, now: NOW };
   const first = await publishLegistarMembers(input);
   assert.equal(first.members, 15);
   assert.equal(first.unchanged, false);
   assert.equal(copies, 1);
+  assert.equal((await db.query("SELECT blob_key FROM source_copy"))[0]!.blob_key, `artifact:${raw.readings.find(officePage)!.artifact.id}`);
   const before = await db.query("SELECT id, checked_at FROM fact ORDER BY id");
   const live = await readFactRosters(db.query, rows.map(row => row.bodyId));
   const rex = live.rosters.flatMap(row => row.members).find(row => row.name === "Rex Scott")!;
@@ -141,13 +144,16 @@ test("tenant facts retain dates, leave an unchanged roster intact, and remove ev
 test("publication streams source pages across bodies without losing members from another page", async t => {
   const db = await factDb(); t.after(() => db.pg.close());
   const raw = rawFor("pima"), original = raw.readings.find(officePage)!;
+  const vault = new MemoryEvidenceStore();
+  await storeMemberFixtures(vault, raw);
   raw.readings = raw.readings.filter(read => read !== original);
   for (let start = 0; start < raw.offices.length; start += 2) {
-    const url = new URL(original.url); url.searchParams.set("$skip", String(start));
-    raw.readings.push({ ...original, url: url.href, text: JSON.stringify(raw.offices.slice(start, start + 2)) });
+    const url = new URL(original.artifact.canonicalUrl); url.searchParams.set("$skip", String(start));
+    const body = raw.offices.slice(start, start + 2);
+    raw.readings.push(await saveLegistarReading(vault, raw.slug, { url: url.href, text: JSON.stringify(body), body, retrievedAt: original.artifact.retrievedAt }));
   }
   const rows = wiring(raw, "AZ", "America/Phoenix");
-  const report = await publishLegistarMembers({ facts: db, vault: new MemoryEvidenceStore(), raw, rows, clocks: factClocks(null), now: NOW });
+  const report = await publishLegistarMembers({ facts: db, vault, raw, rows, clocks: factClocks(null), now: NOW });
   assert.equal(report.members, 15);
   const live = await readFactRosters(db.query, rows.map(row => row.bodyId));
   assert.equal(live.rosters.reduce((total, roster) => total + roster.members.length, 0), report.members);
@@ -156,12 +162,14 @@ test("publication streams source pages across bodies without losing members from
 test("latest-manifest reads never list vault history and still reject corrupt source bytes", async () => {
   const vault = new MemoryEvidenceStore(), raw = rawFor("pima");
   vault.list = async () => { throw new Error("History enumeration is forbidden"); };
+  await storeMemberFixtures(vault, raw);
   await saveLegistarMembers(vault, raw, NOW);
   const held = await (await loadLegistarMembers(vault, "pima"))!.read();
   assert.deepEqual(held.offices, raw.offices);
   const changed = { ...raw, collectedAt: "2026-10-14T08:00:00.000Z", offices: raw.offices.map((office, i) => i ? office : { ...office, OfficeRecordRowVersion: "changed" }) };
-  changed.readings = raw.readings.map(reading => officePage(reading)
-    ? { ...reading, text: JSON.stringify(changed.offices) } : reading);
+  changed.readings = await Promise.all(raw.readings.map(reading => officePage(reading)
+    ? saveLegistarReading(vault, raw.slug, { url: reading.artifact.canonicalUrl, text: JSON.stringify(changed.offices), body: changed.offices, retrievedAt: changed.collectedAt })
+    : reading));
   await saveLegistarMembers(vault, changed, changed.collectedAt);
   assert.deepEqual((await (await loadLegistarMembers(vault, "pima"))!.read()).offices, changed.offices);
   const get = vault.get.bind(vault);

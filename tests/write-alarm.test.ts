@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import test from "node:test";
 
 import { compareSchemaState, describeSchemaState } from "../lib/db/schema-state.ts";
+import { MIGRATION_SQL_PATH } from "../lib/db/migration-immutability.ts";
 import { errorCodeOf, errorMessageOf } from "../lib/db/write-alarm.ts";
 
 import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
@@ -216,20 +217,19 @@ test("6.1: the schema gate names the missing migration, and never rounds up", ()
   assert.equal(compareSchemaState([], []).codeHead, "unknown");
 });
 
-test("6.1: the committed journal head matches the newest migration file", () => {
+test("6.1: the committed journal matches the executable migration files", () => {
   const journal = JSON.parse(
     readFileSync(join(ROOT, "lib", "db", "migrations", "meta", "_journal.json"), "utf8"),
   ) as { entries: { tag: string }[] };
   const files = filesThatWouldBeCommitted({ cwd: ROOT, paths: ["lib/db/migrations"] })
     .map((f) => f.trim())
-    .filter((f) => /\/\d{4}_[^/]+\.sql$/.test(f))
-    .map((f) => f.replace(/^lib\/db\/migrations\//, "").replace(/\.sql$/, ""))
+    .flatMap((f) => { const tag = MIGRATION_SQL_PATH.exec(f)?.[1]; return tag ? [tag] : []; })
     .sort();
   const tags = journal.entries.map((e) => e.tag).sort();
   assert.deepEqual(
     tags,
     files,
-    "every numbered migration is journalled; River numbers step-named lane migrations",
+    "every executable migration is journalled",
   );
 });
 

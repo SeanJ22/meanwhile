@@ -15,6 +15,7 @@ const directory = assignment(process.argv, "directory") ?? join(tmpdir(), `legis
 
 if (process.argv.includes("--worker")) {
   const { refreshLegistarMembers } = await import("../lib/sources/legistar/members-refresh.ts");
+  const { memberProbe } = await import("../lib/sources/legistar/members-model.ts");
   const { factClocks } = await import("../lib/facts/clocks.ts");
   const { DurableEvidenceStore } = await import("../lib/control-plane/evidence/durable-store.ts");
   let sequence = 0;
@@ -40,8 +41,8 @@ if (process.argv.includes("--worker")) {
     return await request("sql", { text, params }) as Record<string, unknown>[];
   };
   const fetchImpl = (async (url: string | URL | Request) => {
-    sample(); stage = new URL(String(url)).searchParams.has("$select") ? "source-probe" : "source-read-and-save";
-    return Response.json(await request("source", String(url)));
+    sample(); stage = memberProbe(new URL(String(url))) ? "source-probe" : "source-read-and-save";
+    return new Response(await request("source", String(url)) as string, { headers: { "content-type": "application/json" } });
   }) as typeof fetch;
   const timer = setInterval(sample, 20);
   const start = performance.now();
@@ -132,8 +133,8 @@ if (process.argv.includes("--worker")) {
           if (collection === "persons") { params.push(ids); clauses.push(`id=ANY($${params.length}::int[])`); }
           const rows = (await pg.query<{ data: Record<string, unknown> }>(`SELECT data FROM source_rows WHERE ${clauses.join(" AND ")} ORDER BY id LIMIT 1000`, params)).rows;
           const selected = url.searchParams.get("$select")?.split(",");
-          result = rows.map(row => selected ? Object.fromEntries(selected.map(key => [key, row.data[key]])) : row.data);
-          sourceBytes += Buffer.byteLength(JSON.stringify(result));
+          result = JSON.stringify(rows.map(row => selected ? Object.fromEntries(selected.map(key => [key, row.data[key]])) : row.data));
+          sourceBytes += Buffer.byteLength(result);
         }
         child.send({ id: message.id, result });
       } catch (error) { child.send({ id: message.id, error: String(error) }); }

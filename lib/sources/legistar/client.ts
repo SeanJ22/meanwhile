@@ -45,7 +45,7 @@ interface RequestOptions {
   signal?: AbortSignal;
   select?: readonly string[];
   filter?: string;
-  onRead?: (reading: { url: string; text: string; retrievedAt: string }) => void;
+  onRead?: (reading: { url: string; text: string; retrievedAt: string; body: unknown }) => void | Promise<void>;
 }
 
 // Tenants share a vendor hostname, not a connection slot. Keep paging,
@@ -105,7 +105,7 @@ async function getJsonInSlot<T>(path: string, options: RequestOptions): Promise<
     if (response.ok) {
       const text = await response.text();
       const body = JSON.parse(text) as T;
-      options.onRead?.({ url, text, retrievedAt: new Date().toISOString() });
+      await options.onRead?.({ url, text, retrievedAt: new Date().toISOString(), body });
       options.signal?.throwIfAborted();
       return body;
     }

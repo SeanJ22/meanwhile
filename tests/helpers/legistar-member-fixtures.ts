@@ -2,19 +2,35 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { createHash } from "node:crypto";
 import type { BodySourceWiring } from "../../lib/registry/source-wiring.ts";
-import type { LegistarMembers } from "../../lib/sources/legistar/members.ts";
+import { legistarMemberSignature, memberReading, type LegistarMembers } from "../../lib/sources/legistar/members-model.ts";
+import { recordAcquisition } from "../../lib/control-plane/evidence/artifact.ts";
+import { putArtifact, type EvidenceStore } from "../../lib/control-plane/evidence/store.ts";
+import { FRESHNESS_PROJECT } from "../../lib/control-plane/scheduler/durable.ts";
 
 export const NOW = "2026-10-13T20:00:00.000Z";
 const fixture = (tenant: string, file: string) => readFileSync(new URL(`../fixtures/legistar-members/${tenant}/${file}`, import.meta.url), "utf8");
 export const rawFor = (slug: string): LegistarMembers => {
-  const readings = ["bodies", "persons", "officerecords"].map(collection => {
+  const pages = ["bodies", "persons", "officerecords"].map(collection => {
     const text = fixture(slug, `${collection}.json`), meta = JSON.parse(fixture(slug, `${collection}.meta.json`));
     assert.equal(createHash("sha256").update(text).digest("hex"), meta.sha256);
-    return { url: meta.sourceUrl, text, retrievedAt: meta.retrievedAt };
+    const { artifact } = recordAcquisition({ canonicalUrl: meta.sourceUrl, retrievedAt: meta.retrievedAt, httpStatus: 200, contentType: "application/json",
+      sourceId: `legistar:${slug}`, methodRouteId: "legistar-members", workItemId: `legistar-members:${slug}`, attemptId: meta.retrievedAt,
+      permission: "ALLOWED", transport: "REACHABLE" }, text);
+    return { artifact, rows: JSON.parse(text) };
   });
-  return { slug, bodies: JSON.parse(readings[0].text), persons: JSON.parse(readings[1].text), offices: JSON.parse(readings[2].text),
-    signature: createHash("sha256").update(readings.map(reading => reading.text).join("\n")).digest("hex"), collectedAt: readings[2].retrievedAt, readings };
+  const raw = { slug, bodies: pages[0].rows, persons: pages[1].rows, offices: pages[2].rows,
+    signature: "", collectedAt: pages[2].artifact.retrievedAt, readings: pages.map(page => memberReading(page.artifact, page.rows)) };
+  raw.signature = legistarMemberSignature(raw);
+  return raw;
 };
+
+export async function storeMemberFixtures(vault: EvidenceStore, raw: LegistarMembers): Promise<void> {
+  for (const { artifact } of raw.readings) {
+    const url = new URL(artifact.canonicalUrl), collection = url.pathname.split("/").at(-1)!;
+    await putArtifact(vault, FRESHNESS_PROJECT, artifact, Buffer.from(fixture(raw.slug, `${collection}.json`)));
+  }
+}
+
 export const wiring = (raw: LegistarMembers, state: string, zone: string): BodySourceWiring[] => raw.bodies.map(body => ({
   bodyId: `ocd-division/country:us/state:${state.toLowerCase()}/place:${raw.slug}#body:${body.BodyId}`,
   ocdId: `ocd-division/country:us/state:${state.toLowerCase()}/place:${raw.slug}`, agendaSourceType: "LEGISTAR",

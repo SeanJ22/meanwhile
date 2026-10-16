@@ -1,0 +1,19 @@
+{
+  "n": 48,
+  "branch": "release/48",
+  "river_sha": "8b6a9150ed7b0fb2cfd5b6eb83e70a322831ab4e",
+  "tested_sha": "8b6a9150ed7b0fb2cfd5b6eb83e70a322831ab4e",
+  "steps": [
+    "NEON-ALLOW"
+  ],
+  "lanes": [
+    "neon-allow"
+  ],
+  "integration_from": 230,
+  "integration_count": 231,
+  "pr": {
+    "number": 757,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/757"
+  },
+  "at": "2026-10-16T07:34:48Z"
+}

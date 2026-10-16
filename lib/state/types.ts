@@ -5,13 +5,6 @@ import type { MeetingStatus, OcdId } from "@/lib/sources/types";
 
 import type { BodyScopeKey } from "./body-scope.ts";
 
-/**
- * The shared UI state: one typed store, so the legend, count badge, list
- * overlay and map all read the same filters. What belongs here: anything two
- * surfaces both need. Not: anything one component owns alone, or anything the
- * server owns.
- */
-
 /** Which district overlays can be drawn. An empty layer is honest; a missing
  *  one is a gap you cannot see. */
 export type DistrictType =
@@ -19,11 +12,7 @@ export type DistrictType =
   | "state-senate"
   | "state-house"
   | "county"
-  /**
-   * Three school types, not one: an elementary and a secondary district can
-   * cover the same point and are different governments, so they draw and
-   * filter separately.
-   */
+
   | "school-unified"
   | "school-elementary"
   | "school-secondary"
@@ -57,7 +46,7 @@ export interface FilterState {
   districtTypes: DistrictType[];
   /**
    * Date window, in days relative to now. The defaults and controls use the
-   * cascade's shared serving horizons.
+   * shared serving horizons.
    */
   daysAhead: number;
   daysBack: number;
@@ -88,14 +77,9 @@ export interface DistrictPick {
 }
 
 export interface UiState {
-  /** Multi-select. Empty means nothing is shown, which is a real state a
-   *  reader can reach by turning all three off — and it says so rather than
-   *  silently falling back to everything. */
+
   tiers: Tier[];
 
-  /** Cascading scope. Body is scoped to jurisdiction; changing jurisdiction
-   *  clears it. Jurisdiction is an OCD-ID. Body is NOT one: it is the
-   *  `<ocdId>|<bodyName>` key only `bodyScopeKey` can make. */
   jurisdiction: OcdId | null;
   body: BodyScopeKey | null;
 
@@ -111,7 +95,7 @@ export interface UiState {
   /** Open disambiguation prompt, when a click hit more than one district. */
   districtPick: DistrictPick | null;
 
-  /** Meeting radius, in km. The cascade rungs are the snap points. */
+  /** Reader-selected distance limit, in km. */
   radiusKm: number;
   radiusOverridden: boolean;
 
@@ -125,19 +109,10 @@ export interface UiState {
    *  and follow the one-large-popup rule. */
   door: "bodies" | "districts" | "officials" | null;
   filtersPanelOpen: boolean;
-  /**
-   * The subject an answer opened the list for. Not in `filters`, so it never
-   * persists into later views; cleared when the overlay closes, and named in a
-   * dismissible chip while on.
-   */
+
   listFocusBodyId: string | null;
   listFocusBodyName: string | null;
-  /**
-   * The division a count opened the list for (the district card's "Upcoming N"
-   * door). Same lifetime and visibility as the answer focus above; narrows to
-   * exactly the rows the card counted (`divisionUpcoming` in
-   * `lib/state/list-focus.ts`).
-   */
+
   listFocusDivision: { ocdId: OcdId; name: string } | null;
 
   listSort: ListSort;
@@ -149,8 +124,7 @@ export interface UiState {
    */
   expandedGroups: string[];
 
-  /** Reported by the last search, shown persistently: a silently widened
-   *  search is a wrong answer. */
+  /** Meeting availability reported by the last search. */
   coverage: CoverageTier | null;
   /** Meetings the adapter dropped for unresolvable coordinates. Visible, not
    *  silent. */

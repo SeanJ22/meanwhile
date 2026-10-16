@@ -1,27 +1,24 @@
 import { readReaderMeetingSettings } from "./reader-settings.ts";
-import { haversineKm } from "../geo/distance.ts";
+import type { Body } from "../registry/types.ts";
 import type { CoverageSummary } from "../registry/coverage.ts";
 import type { Meeting } from "../sources/types.ts";
 import type { MeetingListingIdentityReadback } from "./listing-identity.ts";
 
 import {
-  RADIUS_LADDER_KM,
+  DEFAULT_RADIUS_KM,
   type CoverageTier,
 } from "./constants.ts";
 import { getMeetingSource, type ResolvedMeetingSource } from "./registry.ts";
 
-/** The empty-state cascade: widen the radius, then reach into the recent past, always saying which rung it landed on. */
-
 // Re-exported from ./constants.ts so client code can import the values without this module's server-only graph.
 export {
   CONCLUDED_LOOKBACK_DAYS,
-  RADIUS_LADDER_KM,
   UPCOMING_HORIZON_DAYS,
 } from "./constants.ts";
 export type { CoverageTier } from "./constants.ts";
 
 export interface MeetingSearchResult {
-  /** Held meetings of the place’s governments, apart from widened nearby results. */
+  /** Held meetings of the place’s governments. */
   readerScope?: import("./reader-scope.ts").ReaderMeetingScope;
   meetings: Meeting[];
   /** Canonical public-comment rules hydrated by the server data plane. */
@@ -33,10 +30,8 @@ export interface MeetingSearchResult {
   /** Route readback of exact canonical body/listing identity, before UI filters. */
   listingIdentity?: MeetingListingIdentityReadback;
   tier: CoverageTier;
-  /** Radius the returned meetings were found in. */
+  /** Radius requested by the map. */
   radiusKm: number;
-  /** Radius originally asked for — differs from `radiusKm` when widened. */
-  requestedRadiusKm: number;
   center: { lat: number; lng: number };
   /** Who governs this point and how much of their calendar we hold; null when the registry could not be read. */
   coverage: CoverageSummary | null;
@@ -92,178 +87,65 @@ function byStartDescending(a: Meeting, b: Meeting) {
   return Date.parse(b.startsAt) - Date.parse(a.startsAt);
 }
 
-/**
- * The key for "these sittings belong to the same government": `ocdId`, else the id's source-and-tenant prefix. Never
- * `bodyName`, which some publishers set per sitting.
- */
-function bodyKey(m: Meeting): string {
-  return m.ocdId ?? m.id.split(":").slice(0, 2).join(":");
+type MeetingBody = Pick<Body, "id" | "ocdId" | "alsoServesOcdIds">;
+const bodyIndexes = new WeakMap<readonly MeetingBody[], ReadonlyMap<string, MeetingBody>>();
+
+function meetingBodyIndex(bodies: readonly MeetingBody[]): ReadonlyMap<string, MeetingBody> {
+  const cached = bodyIndexes.get(bodies);
+  if (cached) return cached;
+  const index = new Map<string, MeetingBody>();
+  for (const body of bodies) index.set(body.id, body);
+  bodyIndexes.set(bodies, index);
+  return index;
 }
 
-/**
- * Which meetings are in view, including online ones with no distance to a centre. An online meeting is in view when
- * its division contains the centre, or when one of its body's physical sittings (upcoming or concluded) is in radius.
- */
-function within(
-  meetings: Meeting[],
-  lat: number,
-  lng: number,
-  radiusKm: number,
-  bodiesInView: ReadonlySet<string>,
-  divisionsAtPoint: ReadonlySet<string> = new Set(),
-) {
-  const physical = meetings.filter((m) => m.location !== null);
-  const inRadius = physical.filter(
-    (m) => haversineKm(lat, lng, m.location!.lat, m.location!.lng) <= radiusKm,
-  );
-
-  const online = meetings.filter(
-    (m) =>
-      m.location === null &&
-      ((m.ocdId !== null && divisionsAtPoint.has(m.ocdId)) || bodiesInView.has(bodyKey(m))),
-  );
-
-  // Ordering is applied by the caller; concatenating keeps this a filter.
-  return [...inRadius, ...online];
-}
-
-/** Bodies (by `bodyKey`) with a physical sitting within `radiusKm`, answered once for every list at that radius. */
-function bodiesSittingWithin(
-  sittings: readonly Meeting[],
-  lat: number,
-  lng: number,
-  radiusKm: number,
-): Set<string> {
-  return new Set(
-    sittings
-      .filter(
-        (m) =>
-          m.location !== null &&
-          haversineKm(lat, lng, m.location.lat, m.location.lng) <= radiusKm,
-      )
-      .map(bodyKey),
-  );
-}
-
-/**
- * Find meetings to render for a map centered on `lat`/`lng`.
- *
- * Walks the radius ladder from `startRadiusKm` outward looking for upcoming
- * meetings, then falls back to recently concluded ones at the widest radius.
- */
 export async function searchMeetings(
   lat: number,
   lng: number,
-  startRadiusKm: number = RADIUS_LADDER_KM[0],
+  radiusKm: number = DEFAULT_RADIUS_KM,
   now: Date = new Date(),
-  /** Divisions whose boundary contains the centre, supplied by the caller so this module stays geometry-free. */
   divisionsAtPoint: ReadonlySet<string> = new Set(),
-  /** The resolved meeting source, injected so one request composes the projection once. */
   injectedSource?: ResolvedMeetingSource,
   shownSettings?: Pick<import("./settings.ts").MeetingSettings, "shownBackDays" | "shownAheadDays">,
+  bodies: readonly MeetingBody[] = [],
 ): Promise<MeetingSearchResult> {
   const source = injectedSource ?? getMeetingSource();
-  const center = { lat, lng };
-
-  const ladder = RADIUS_LADDER_KM.filter((r) => r >= startRadiusKm);
-  // A caller asking for something wider than the whole ladder still gets one
-  // pass at exactly what they asked for.
-  const rungs = ladder.length > 0 ? ladder : [startRadiusKm];
-  const widest = rungs[rungs.length - 1];
-
-  // One fetch at the widest radius; the rungs are filters over it. Saves the
-  // real adapter from three round trips to the same upstream.
   const shown = shownSettings ?? await readReaderMeetingSettings();
   const horizonMs = shown.shownAheadDays * 86_400_000;
   const lookbackMs = shown.shownBackDays * 86_400_000;
-
-  const all = (
-    await source.load(
-      {
-        lat,
-        lng,
-        radiusKm: widest,
-        startsAfter: new Date(now.getTime() - lookbackMs).toISOString(),
-        startsBefore: new Date(now.getTime() + horizonMs).toISOString(),
-      },
-      now,
-    )
-  ).map((m) => {
-    const jurisdiction = readerJurisdictionLabel(m.jurisdiction);
-    return jurisdiction === m.jurisdiction ? m : { ...m, jurisdiction };
-  });
-
-  const upcoming = all
-    .filter((m) => m.status === "SCHEDULED")
-    .filter((m) => {
-      const t = Date.parse(m.startsAt);
-      return t >= now.getTime() && t <= now.getTime() + horizonMs;
-    });
-
-  // Recent concluded and canceled sittings ride along with a successful rung but never decide the tier, and canceled
-  // sittings never fill the fallback tier.
-  const recentPast = all.filter((m) => {
-    if (m.status !== "CONCLUDED" && m.status !== "CANCELED") return false;
-    const t = Date.parse(m.startsAt);
-    return t >= now.getTime() - lookbackMs && t < now.getTime() + horizonMs;
-  });
-
-  // Bodies placed from both lists: a building listed only among upcoming sittings keeps the body's online concluded
-  // sittings in view, and the reverse.
-  const servedAtRung = [...upcoming, ...recentPast];
-
-  for (const radiusKm of rungs) {
-    const bodiesInView = bodiesSittingWithin(servedAtRung, lat, lng, radiusKm);
-    const hits = within(upcoming, lat, lng, radiusKm, bodiesInView, divisionsAtPoint);
-    if (hits.length > 0) {
-      return {
-        meetings: [
-          ...hits,
-          ...within(recentPast, lat, lng, radiusKm, bodiesInView, divisionsAtPoint),
-        ].sort(byStartAscending),
-        tier: radiusKm === rungs[0] ? "exact" : "widened",
-        radiusKm,
-        requestedRadiusKm: startRadiusKm,
-        center,
-        coverage: null,
-      };
-    }
-  }
-
-  // No future anywhere on the ladder: show what was recently decided rather than an empty map.
-  const recentlyConcluded = all.filter((m) => {
-    if (m.status !== "CONCLUDED") return false;
-    const t = Date.parse(m.startsAt);
-    return t >= now.getTime() - lookbackMs && t < now.getTime();
-  });
-  // Upcoming or recently concluded, never canceled.
-  const concluded = within(
-    recentlyConcluded,
+  const byBody = meetingBodyIndex(bodies);
+  const all = (await source.load({
     lat,
     lng,
-    widest,
-    bodiesSittingWithin([...upcoming, ...recentlyConcluded], lat, lng, widest),
-    divisionsAtPoint,
-  );
+    radiusKm,
+    startsAfter: new Date(now.getTime() - lookbackMs).toISOString(),
+    startsBefore: new Date(now.getTime() + horizonMs).toISOString(),
+  }, now)).filter(meeting => {
+    const body = meeting.bodyId ? byBody.get(meeting.bodyId) : undefined;
+    const divisions = [body?.ocdId ?? meeting.ocdId, ...(body?.alsoServesOcdIds ?? [])];
+    return divisions.some(id => id != null && divisionsAtPoint.has(id.split("#")[0]));
+  }).map(meeting => {
+    const jurisdiction = readerJurisdictionLabel(meeting.jurisdiction);
+    return jurisdiction === meeting.jurisdiction ? meeting : { ...meeting, jurisdiction };
+  });
 
-  if (concluded.length > 0) {
-    return {
-      meetings: concluded.sort(byStartDescending),
-      tier: "concluded",
-      radiusKm: widest,
-      requestedRadiusKm: startRadiusKm,
-      center,
-      coverage: null,
-    };
-  }
+  const upcoming = all.filter(meeting => meeting.status === "SCHEDULED" &&
+    Date.parse(meeting.startsAt) >= now.getTime() &&
+    Date.parse(meeting.startsAt) <= now.getTime() + horizonMs);
+  const recentPast = all.filter(meeting =>
+    (meeting.status === "CONCLUDED" || meeting.status === "CANCELED") &&
+    Date.parse(meeting.startsAt) >= now.getTime() - lookbackMs &&
+    Date.parse(meeting.startsAt) < now.getTime() + horizonMs);
+  const concluded = recentPast.filter(meeting => meeting.status === "CONCLUDED" &&
+    Date.parse(meeting.startsAt) < now.getTime());
 
-  // Nothing either way; say so plainly.
   return {
-    meetings: [],
-    tier: "none",
-    radiusKm: widest,
-    requestedRadiusKm: startRadiusKm,
-    center,
+    meetings: upcoming.length > 0
+      ? [...upcoming, ...recentPast].sort(byStartAscending)
+      : concluded.sort(byStartDescending),
+    tier: upcoming.length > 0 ? "exact" : concluded.length > 0 ? "concluded" : "none",
+    radiusKm,
+    center: { lat, lng },
     coverage: null,
   };
 }

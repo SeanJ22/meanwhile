@@ -27,7 +27,7 @@ const recorded = JSON.parse(readFileSync("tests/fixtures/reader-upcoming-meeting
   recordedAt: string; listingIdentity: unknown; coverage: { bodies: unknown[] }; meetings: unknown[];
 };
 const meetings = {
-  meetings: recorded.meetings, listingIdentity: recorded.listingIdentity, tier: "exact", radiusKm: 8, requestedRadiusKm: 8,
+  meetings: recorded.meetings, listingIdentity: recorded.listingIdentity, tier: "exact", radiusKm: 8,
   center: { lat: 32.21696, lng: -110.971 }, governingOcdIds: null, partialOcdIds: null,
   coverage: { state: "MEETINGS", bodies: recorded.coverage.bodies, seats: [], senators: [], statewideExecutives: [], stateLegislatorAuthorities: [],
     divisions: [], unincorporated: false, counts: { total: 0, withSource: 0, withoutSource: 0, lookedAt: 0, governing: { total: 0, withSource: 0 } },

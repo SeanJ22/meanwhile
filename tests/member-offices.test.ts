@@ -9,7 +9,7 @@ import { requiredManualProductionContract } from "../lib/civic-data/manual-contr
 import { AUTOMATIC_REFRESH_TASKS } from "../lib/civic-data/automatic-refresh.ts";
 import { routineTaskSelection } from "../lib/civic-data/runner.ts";
 import { promotedEdgePointers } from "../lib/civic-data/promoted-edge-publication.ts";
-import { READER_BALLOT_AUTHORITY_FAMILIES } from "../lib/meetings/edge-serving.ts";
+import { promotedFamilyOf } from "../lib/meetings/edge-artifacts.ts";
 import type { Officeholder, OfficeholderDivision } from "../lib/officials/types.ts";
 import { officeRecordsForHolder, openStatesUrl, OPEN_STATES_ORG, type MemberOfficeRecord } from "../lib/officials/member-offices.ts";
 import { publishMemberOffices } from "../lib/officials/member-offices-publication.ts";
@@ -64,5 +64,5 @@ test("the runner refreshes member offices daily with no owner step, and the read
   assert.equal(routineTaskSelection(["--only=member-offices"], AUTOMATIC_REFRESH_TASKS).ok, true);
   const contract = requiredManualProductionContract("member-offices");
   assert.deepEqual(promotedEdgePointers()["member-offices"].map(row => [row.recordClass, row.scope]), [[contract.recordClass, contract.scope]]);
-  assert.ok(READER_BALLOT_AUTHORITY_FAMILIES.includes("member-offices"));
+  assert.equal(promotedFamilyOf(contract.recordClass, contract.scope), "member-offices");
 });

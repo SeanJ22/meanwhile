@@ -1,9 +1,3 @@
-/**
- * A deploy may not cross its own migrations. The reasoning lives in `lib/db/shipping-invariant.ts` and
- * `lib/db/migration-phases.ts`. Fixture-driven and hermetic; the fixtures use real migration tags so they exercise
- * the real phase declaration.
- */
-
 import assert from "node:assert/strict";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
@@ -362,6 +356,7 @@ test("THE PLANT: each narrowing shape is caught, and an additive one is not", ()
   const contracts: Record<string, string> = {
     "drop-column": 'ALTER TABLE "feedback" DROP COLUMN "reply_to";',
     "drop-table": 'DROP TABLE "reactions";',
+    "drop-function": 'DROP FUNCTION reader_place_payload(jsonb,text[],jsonb);',
     "drop-default": 'ALTER TABLE "reactions" ALTER COLUMN "coverage_tier" DROP DEFAULT;',
     "set-not-null": 'ALTER TABLE "reactions" ALTER COLUMN "free_text" SET NOT NULL;',
     "add-constraint": 'ALTER TABLE "meetings" ADD CONSTRAINT "pairing" CHECK (true);',

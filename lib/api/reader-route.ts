@@ -6,7 +6,7 @@ export function readerRoute<A extends unknown[], R>(path: string, read: (...args
   return (...args) => withReaderRoute(path, async () => {
     const selection = await selectionForReader(args);
     return withReaderSelection(selection, async () => {
-      if (!families.length) return read(...args);
+      if (!families.length || !selection) return read(...args);
       const { readReaderManifest, ensureReaderAuthorityEdge } = await import("../meetings/edge-serving.ts");
       const { withReaderAuthorityEdge } = await import("../registry/runtime-edge.ts");
       const manifest = await readReaderManifest();
@@ -21,7 +21,7 @@ async function selectionForReader(args: readonly unknown[]): Promise<ReaderSelec
   let governmentWindow: readonly [number, number] | undefined;
   const collect = (value: unknown, field = "") => {
     if (typeof value === "string") {
-      if (/^(?:ocd-|congress:|statewide:|roster:|fec:|ballot-|legiscan:|plural:)/.test(value) ||
+      if (/^(?:ocd-|government:|congress:|statewide:|roster:|fec:|ballot-|legiscan:|plural:)/.test(value) ||
         ["subject", "target", "member", "meetingId", "candidate"].includes(field)) keys.add(value);
       if (field === "zip" && /^\d{5}$/.test(value)) { zip = value; keys.add(value); }
       if (field === "state" && /^[A-Za-z]{2}$/.test(value)) keys.add(`state:${value.toUpperCase()}`);

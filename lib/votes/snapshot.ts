@@ -10,7 +10,8 @@ import {
   FEDERAL_ROLLCALL_SCOPE,
   type FederalRollCallsReadModel,
 } from "./data-plane.ts";
-import type { VotesSnapshot } from "./types.ts";
+import { partyVotersByVote, type PartyVoters } from "./party-breakdown.ts";
+import type { RollCallVote, VotesSnapshot } from "./types.ts";
 import { readPromotedEdgeFirst } from "../registry/runtime-edge.ts";
 
 let cache: FederalRollCallsReadModel | null = null;
@@ -82,8 +83,12 @@ export function getFederalVotesReadModel(): FederalRollCallsReadModel {
   return cache;
 }
 
-export function getVotesSnapshot(): VotesSnapshot {
-  return getFederalVotesReadModel().snapshot;
+export function getVotesSnapshot(): Omit<VotesSnapshot,"votes"> & {votes: (RollCallVote & {readerPartyVoters: PartyVoters})[]} {
+  const snapshot = getFederalVotesReadModel().snapshot;
+  const groups = partyVotersByVote(snapshot.positions);
+  return {...snapshot,votes:snapshot.votes.map(vote => ({...vote,
+    readerPartyVoters:(vote as RollCallVote & {readerPartyVoters?: PartyVoters}).readerPartyVoters ?? groups.get(vote.id) ?? {yes:[],no:[]},
+  }))};
 }
 
 export function getVoteIds(): Set<string> {

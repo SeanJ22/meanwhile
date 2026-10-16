@@ -16,11 +16,7 @@ export interface Contest {
   /** Stable within a source, namespaced by the source. */
   id: string;
   electionId: string;
-  /**
-   * The division whose voters see this contest. State-level contests carry
-   * the bare state identifier, which resolution derives from any division
-   * at the point — the same hierarchy walk the senators use.
-   */
+
   ocdId: OcdId;
   divisionVintage: string;
   title: string;
@@ -84,6 +80,7 @@ export interface CandidacyRemoval {
 }
 
 export interface BallotSet {
+  districtFamilies?: readonly string[];
   heldContests?: readonly HeldBallotContest[];
   measureRecords?: readonly MeasureRecord[];
   election: Election;

@@ -31,7 +31,7 @@ test("publish-now copies real baseline pointers during an unresolved finance pas
   assert.ok((await processRegisteredRoutineCandidate(memory, CENSUS_GEO_CONTRACT_ID, census, NOW)).promoted);
   await memory.writePreparedReaderProjection({ recordClass: "MEETING", scope: MEETINGS_PREPARED_SCOPE,
     payload: { formatVersion: 1, generatedAt: NOW, counts: { fresh: 0, carried: 0, total: 0, duplicatesCollapsed: 0 },
-      meetings: [], agendaDocuments: [], sources: [] }, composedFrom: [{ contractId: "meeting-facts", versionId: "facts:none" }], factSha256: "a".repeat(64),
+      meetings: [], agendaDocuments: [], sources: [] }, composedFrom: [{ contractId: "meeting-facts", versionId: "facts:none" }, { contractId: "reader-state-sources", versionId: "1" }], factSha256: "a".repeat(64),
     generatedAt: NOW, composedAt: NOW, sourceThrough: null, retrievedAt: null, promotedThrough: null,
   }, null);
   const artifacts = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "publish-now-baseline-")));

@@ -20,11 +20,11 @@ import {
   readReaderEdgeMeetings,
   readReaderManifest,
   READER_MANIFEST_CACHE_TAG,
-  READER_MAP_AUTHORITY_FAMILIES,
+  READER_MEETING_AUTHORITY_FAMILIES,
   servedWholeFromReaderEdge,
 } from "@/lib/meetings/edge-serving";
 import { stateOfOcdId } from "@/lib/meetings/edge-artifacts";
-import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
+import { enterReaderAuthorityEdge, currentCommentAccessEdge } from "@/lib/registry/runtime-edge";
 import { CivicDataStoreUnavailableError } from "@/lib/civic-data/read-model";
 import { readComposedSourcePlaces } from "@/lib/meetings/prepared-snapshot";
 import { divisionIdsForZipArea, POINT_GEOMETRY_PLANS } from "@/lib/ballot/zip-divisions";
@@ -34,18 +34,16 @@ import { coverageAt, divisionsAt, divisionsByOcdIds, prefetchReaderGeography, pr
 import type { Division } from "@/lib/registry/types";
 import { matching, numeric, numericInRange, refuse, rejectUnknown } from "@/lib/api/params";
 import { stageTimer } from "@/lib/api/server-timing";
-import { currentCommentAccess, readCommentAccessFacts, type CommentAccess } from "@/lib/registry/comment-access";
+import { settleCommentAccessRead } from "@/lib/registry/server";
+import { currentCommentAccess, type CommentAccess } from "@/lib/registry/comment-access";
 import {
   currentEverydayRoutingProjection,
   readEverydayRoutingProjection,
 } from "@/lib/routing/everyday-data-plane";
 import type { EverydayRoutingProjection } from "@/lib/routing/everyday";
 
-
-
 // The registry reads its geometry off the filesystem, which needs Node.
 export const runtime = "nodejs";
-
 
 const CDN_HELD = {
   "Netlify-CDN-Cache-Control": "public, durable, s-maxage=300, stale-while-revalidate=3600",
@@ -106,7 +104,7 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
 
   if (edgeManifest?.authorityArtifacts) {
     const entering = timing.time("authority", () =>
-      ensureReaderAuthorityEdge(edgeManifest, undefined, READER_MAP_AUTHORITY_FAMILIES).catch(() => null),
+      ensureReaderAuthorityEdge(edgeManifest, undefined, READER_MEETING_AUTHORITY_FAMILIES).catch(() => null),
     );
     const authorityEdge = await entering;
     if (authorityEdge) enterReaderAuthorityEdge(authorityEdge);
@@ -117,18 +115,17 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
   let commentAccessDataState: "PROMOTED" | "FIRST_SEED" | "STORE_UNREACHABLE" = "FIRST_SEED";
   let commentAccessDataDetail: string | null = null;
   try {
-    if (edgeManifest?.commentAccess !== undefined) {
-      commentAccess = edgeManifest.commentAccess as readonly CommentAccess[];
+    const held = currentCommentAccessEdge();
+    if (held) {
+      commentAccess = held.value.records.map(({ id: _id, ...record }) => record);
       commentAccessDataState = "PROMOTED";
-      commentAccessDataDetail = `Comment-access served from the reader edge manifest (sequence ${edgeManifest.sequence}).`;
-    } else {
-      if (process.env.NODE_ENV === "production") {
-        const { versionId } = await readCommentAccessFacts();
-        commentAccessDataState = "PROMOTED";
-        commentAccessDataDetail = `Comment rules read from live facts (${versionId}).`;
-      }
+      commentAccessDataDetail = `Comment rules served from the reader edge (${held.versionId}).`;
+    } else if (process.env.NODE_ENV === "production") {
+      await settleCommentAccessRead();
       commentAccess = currentCommentAccess();
-    }
+      commentAccessDataState = "PROMOTED";
+      commentAccessDataDetail = "Comment rules read from live facts.";
+    } else commentAccess = currentCommentAccess();
   } catch (error) {
     // Comment rules are independent of meeting acquisition. Withhold only
     // this optional family and let the canonical meetings projection answer.
@@ -170,7 +167,6 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
 
   const coverageReady = timing.time("coverageGraph", () => prepareCoverage()).catch(() => undefined);
 
-
   let divisionsAtPoint = new Set<string>();
   /* Null when the lookup failed, never empty: `coverageAt` must not read a failed resolution as "no body governs here". */
   let resolvedDivisions: Division[] | null = null;
@@ -180,7 +176,6 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
   } catch (error) {
     console.error("division lookup failed; online meetings fall back to body-in-view", error);
   }
-
 
   /* The divisions the point itself resolved, kept apart from the widened set (see `widenedInBodies`). */
   const pointOwnDivisionIds = new Set(divisionsAtPoint);
@@ -213,31 +208,25 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
               .filter((s): s is string => s !== null),
           )]
         : [];
-      const read = await timing.time("meetings", () => readReaderEdgeMeetings({
-        manifest: edgeManifest,
-        includeAgenda: false,
-        ...(readerStates.length > 0 ? { states: readerStates } : {}),
-        ...(resolvedDivisions?.length ? { ocdIds: resolvedDivisions.map(division => division.ocdId) } : {}),
-        nearby: { lat, lng, radiusKm: Math.max(radiusKm, ...RADIUS_LADDER_KM) },
+      meetingsWholeFromEdge = true;
+      result = await timing.time("search", () => searchMeetings(lat, lng, radiusKm, new Date(), divisionsAtPoint, {
+        name: "reader-edge",
+        async load(query, now) {
+          const read = await timing.time("meetings", () => readReaderEdgeMeetings({
+            manifest: edgeManifest,
+            includeAgenda: false,
+            ...(readerStates.length > 0 ? { states: readerStates } : {}),
+            ...(resolvedDivisions?.length ? { ocdIds: resolvedDivisions.map(division => division.ocdId) } : {}),
+            nearby: { lat, lng, radiusKm: query.radiusKm },
+          }));
+          meetingsWholeFromEdge &&= servedWholeFromReaderEdge(read);
+          const snapshot = requireMeetingsProjection(read);
+          heldMeetings = snapshot.meetings;
+          snapshotMeta = read.kind === "PROMOTED" || read.kind === "BOOTSTRAP" ? snapshotClientMeta(read.value, read) : null;
+          if (snapshotMeta && meetingsWholeFromEdge && edgeManifest?.carriedSummary) snapshotMeta.carried = edgeManifest.carriedSummary;
+          return snapshotSourceFor(snapshot).load(query, now);
+        },
       }));
-      meetingsWholeFromEdge = servedWholeFromReaderEdge(read);
-      const snapshot = requireMeetingsProjection(read);
-      heldMeetings = snapshot.meetings;
-      result = await timing.time("search", () => searchMeetings(
-        lat,
-        lng,
-        radiusKm,
-        new Date(),
-        divisionsAtPoint,
-        snapshotSourceFor(snapshot),
-      ));
-      snapshotMeta =
-        read.kind === "PROMOTED" || read.kind === "BOOTSTRAP"
-          ? snapshotClientMeta(read.value, read)
-          : null;
-      if (snapshotMeta && meetingsWholeFromEdge && edgeManifest?.carriedSummary) {
-        snapshotMeta.carried = edgeManifest.carriedSummary;
-      }
     } else {
       result = await searchMeetings(lat, lng, radiusKm, new Date(), divisionsAtPoint);
       snapshotMeta = await getActiveSnapshotMeta();

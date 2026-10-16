@@ -15,8 +15,6 @@ import { loadRegistrationReference } from "../lib/registration/reference.ts";
 import { enterReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { installRegistryAuthority, promotedFixtureBundle } from "./helpers/promoted-fixtures.ts";
 
-
-
 const ROOT = join(import.meta.dirname, "..");
 const META = { sourceThrough: null, retrievedAt: null, promotedThrough: null };
 const RECEIPT: RegistrationSourceReceipt = {
@@ -56,7 +54,7 @@ test("the runner reads a state only when its pointer moved; every other promoted
     ],
     {
       oh: { key: "reader/v1/registration-oh.json.gz", version: "reg-oh-1", sha: "a" },
-      nh: { key: "reader/v1/registration-nh.json.gz", version: "reg-nh-1", sha: "b", layout: "records" },
+      nh: { key: "reader/v1/registration-nh.json.gz", version: "reg-nh-1", sha: "b", layout: "places" },
     },
   );
   assert.deepEqual(plan.carried, { nh: "reg-nh-1" });

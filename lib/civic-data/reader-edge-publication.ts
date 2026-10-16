@@ -1,5 +1,6 @@
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "./manual-contracts.ts";
-import { factReader, factsVersion } from "../facts/db.ts";
+import { factReader } from "../facts/db.ts";
+import { publishRegistryStateAuthority, publishCommentStateAuthority } from "./state-authority-publication.ts";
 import { preparePublishedMeetingSnapshot, readPreparedMeetingsProjection, readComposedSourcePlaces } from "../meetings/prepared-snapshot.ts";
 import {
   publishReaderEdgeArtifacts,
@@ -16,9 +17,7 @@ import { resolveReaderArtifactWriteStore, type ReaderArtifactStore } from "../me
 import type { AuthorityFamily } from "../meetings/edge-artifacts.ts";
 import type { RoutineRecordClass, PromotedPointerIdentity } from "./types.ts";
 import { readCuratedReaderProjection } from "./curated-reader-read-model.ts";
-import { currentCommentAccess, readCommentAccessFacts } from "../registry/comment-access.ts";
 import { readEverydayRoutingProjection } from "../routing/everyday-data-plane.ts";
-import { readRegistryRuntimeProjection } from "../registry/runtime-read-model.ts";
 import { REGISTRY_RUNTIME_SCOPE, type RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
 import { readPlaceVersionSlice, type PlaceCaptureRead } from "./held-place-slices.ts";
 import { readCensusGeographyProjection } from "../census-geography/reader.ts";
@@ -48,7 +47,6 @@ function safeFailure(value: string): string {
     .join(" | ")
     .slice(0, 4_000) || "Reader repair failed without a diagnostic.";
 }
-
 
 import type { ReaderEdgePublicationOutcome } from "./reader-edge-outcome.ts";
 /** The registry partition a registry-runtime edge version was composed on; the rest names the facts read beside it. */
@@ -131,7 +129,10 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
         };
         const value = Reflect.get(target, key); return typeof value === "function" ? value.bind(target) : value;
       } });
-      const preparesMeetings = selected === null || selected.some(pointer => pointer.recordClass === "MEETING" || pointer.recordClass === "REGISTRY_RUNTIME_BINDING");
+      const registryIdentity = identities.get(`REGISTRY_RUNTIME_BINDING:${REGISTRY_RUNTIME_SCOPE}`)?.versionId ?? null;
+      const registryTerritoriesChanged = registryPartitionVersion(servedManifest?.meetingRegistryVersion ?? "") !== registryIdentity;
+      const preparesMeetings = selected === null || selected.some(pointer => pointer.recordClass === "MEETING" ||
+        pointer.recordClass === "REGISTRY_RUNTIME_BINDING" && registryTerritoriesChanged);
       const prepared = preparesMeetings ? await preparePublishedMeetingSnapshot(store, observedAt) : null;
       if (prepared?.status === "FAILED" || prepared?.status === "NOT_COMPOSABLE") {
         failed = true;
@@ -141,22 +142,10 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
       if (prepared?.status === "RACED") { failed = true; detail = "A newer meeting composition won publication; retry remains owed."; }
 
       // Each failed refresh keeps its accepted reference while independent replacements publish.
-      const extras: { commentAccess?: readonly unknown[]; everydayRouting?: unknown; versionIds: Partial<Record<"comment-access" | "everyday-routing", string | null>> } = {
-        commentAccess: servedManifest?.commentAccess, everydayRouting: servedManifest?.everydayRouting, versionIds: { ...servedManifest?.extrasVersionIds },
+      const extras: { everydayRouting?: unknown; versionIds: Partial<Record<"everyday-routing", string | null>> } = {
+        everydayRouting: servedManifest?.everydayRouting,
+        versionIds: { "everyday-routing": servedManifest?.extrasVersionIds?.["everyday-routing"] },
       };
-      let facts: string | null = null;
-      let comments: Awaited<ReturnType<typeof readCommentAccessFacts>> | null = null;
-      try {
-        facts = await factsVersion(factReader());
-        if (facts !== null && servedManifest?.extrasVersionIds?.["comment-access"] !== facts) {
-          comments = await readCommentAccessFacts();
-          extras.commentAccess = currentCommentAccess();
-          extras.versionIds["comment-access"] = comments.versionId;
-        }
-      } catch (error) {
-        failed = true;
-        console.error("READER_EDGE_EXTRAS_SKIPPED: " + safeFailure(sanitizedErrorDiagnostic(error)));
-      }
       const routingContract = manual("everyday-routing");
       if (owns(routingContract.recordClass, routingContract.scope)) try {
         const versionId = (await store.readPromotionIdentity(routingContract.recordClass, routingContract.scope))?.versionId ?? null;
@@ -196,16 +185,13 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
           process.stderr.write(`READER_EDGE_AUTHORITY_REFRESH_FAILED: census-districts ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
         },
       });
-      if (refreshes("registry-runtime") && facts !== null) try {
-        // Members are facts, so the family changes when the partition or any fact does.
-        const pointer = manualPointer("registry-runtime-bindings");
-        const carried = await servedIfCurrent("registry-runtime", async () => { const at = await pointer(); return at && `${at}+${facts}`; });
-        if (carried !== null) authority["registry-runtime"] = { versionId: carried, carried: true };
-        else {
-          const rt = await readRegistryRuntimeProjection({ store, now: observedAt, bypassCache: true });
-          if (rt.kind === "PROMOTED" && rt.metadata.versionId) authority["registry-runtime"] = { value: rt.value, versionId: `${rt.metadata.versionId}+${facts}` };
-          else if (rt.kind !== "NOT_RECORDED") throw new Error(`registry-runtime read ${rt.kind}`);
-        }
+      if (refreshes("registry-runtime")) try {
+        const published = await publishRegistryStateAuthority({ store, artifacts: artifactStore,
+          served: servedManifest?.authorityArtifacts?.["registry-runtime"], query: factReader(), onFailure: (state, error) => {
+            failed = true;
+            process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: registry-runtime/${state} ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
+          } });
+        if (published) authority["registry-runtime"] = published;
       } catch (error) {
         failed = true;
         process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: registry-runtime ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
@@ -248,11 +234,11 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
             store.readPromotionIdentities(recordClass,sourcePointers.filter(pointer=>pointer.recordClass === recordClass).map(pointer=>pointer.scope))))).flat();
           if (pointers.length === 0) continue;
           const versionId = statePeopleVersion(jurisdiction, pointers.map(pointer => ({ scope: pointer.scope, versionId: pointer.versionId })));
-          if (servedManifest?.stateLegislators?.[jurisdiction]?.layout === "records" && servedManifest.stateLegislators[jurisdiction].version === versionId) continue;
+          if (servedManifest?.stateLegislators?.[jurisdiction]?.layout === "places" && servedManifest.stateLegislators[jurisdiction].version === versionId) continue;
           const read = await readStatePeopleProjection(jurisdiction, { store, now: observedAt, bypassCache: true });
           if (read.kind === "PROMOTED" && read.metadata.versionId) {
             if (read.metadata.versionId !== versionId) throw new Error(`state people ${jurisdiction} did not read every accepted source version`);
-            stateLegislators[jurisdiction] = servedManifest?.stateLegislators?.[jurisdiction]?.version === read.metadata.versionId
+            stateLegislators[jurisdiction] = servedManifest?.stateLegislators?.[jurisdiction]?.layout === "places" && servedManifest.stateLegislators[jurisdiction].version === read.metadata.versionId
               ? { versionId: read.metadata.versionId, carried: true }
               : { value: read.value, versionId: read.metadata.versionId };
           } else if (read.kind !== "NOT_RECORDED") throw new Error(`state people ${jurisdiction} read ${read.kind}`);
@@ -296,19 +282,18 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
         failed = true;
         process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: meeting-outcomes ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
       }
-      if (facts !== null) try {
-        const carried = await servedIfCurrent("comment-access", async () => facts);
-        if (carried !== null) authority["comment-access"] = { versionId: carried, carried: true };
-        else {
-          const read = comments ?? await readCommentAccessFacts();
-          authority["comment-access"] = { value: read.value, versionId: read.versionId };
-        }
+      try {
+        authority["comment-access"] = await publishCommentStateAuthority({ artifacts: artifactStore,
+          served: servedManifest?.authorityArtifacts?.["comment-access"], query: factReader(), onFailure: (state, error) => {
+            failed = true;
+            process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: comment-access/${state} ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
+          } });
       } catch (error) {
         failed = true;
         process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: comment-access ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
       }
       try {
-        const promoted = await readPromotedEdgeFamilies({ store, servedManifest, now: observedAt, families: pointerFamilies,
+        const promoted = await readPromotedEdgeFamilies({ store, artifacts: artifactStore, servedManifest, now: observedAt, families: pointerFamilies,
           readServedFamily: family => readServedPromotedFamily(family, servedManifest?.authorityArtifacts?.[family], artifactStore) });
         Object.assign(authority, promoted.authority);
         if (promoted.skipped.length > 0) failed = true;
@@ -337,7 +322,7 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
         failed = true;
         process.stderr.write(`READER_EDGE_REGISTRATIONS_SKIPPED: ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
       }
-      const meetingRegistryVersion = authority["registry-runtime"]?.versionId ?? null;
+      const meetingRegistryVersion = authority["registry-runtime"]?.versionId ? registryPartitionVersion(authority["registry-runtime"]!.versionId) : null;
       const sameComposition = prepared?.status === "CURRENT" && servedManifest?.meetingLayout === "governing-area" &&
         servedManifest.meetingRegistryVersion !== undefined && servedManifest.meetingRegistryVersion === meetingRegistryVersion &&
         (servedManifest.composition !== undefined ? servedManifest.composition === prepared.composition : servedManifest.generatedAt === prepared.generatedAt);
@@ -381,7 +366,7 @@ export async function publishRoutineReaderEdgeOutcome(store: RoutineDataStore, o
         meetingRead?.kind === "PROMOTED" ? { sourceThrough: meetingRead.metadata.sourceThrough, retrievedAt: meetingRead.metadata.retrievedAt, promotedThrough: meetingRead.metadata.promotedAt }
           : { sourceThrough: servedManifest?.sourceThrough ?? null, retrievedAt: prepared?.status === "CURRENT" ? prepared.checkedAt : servedManifest?.retrievedAt ?? null, promotedThrough: servedManifest?.promotedThrough ?? null },
         { store: artifactStore, now: observedAt, extras, authority, registrations, stateLegislators, meetingBodies, meetingRegistryVersion,
-          meetingPlaces: preparesMeetings || !servedManifest?.meetingPlaces ? Object.fromEntries(await readComposedSourcePlaces({ store }) ?? []) : servedManifest.meetingPlaces,
+          meetingPlaces: preparesMeetings || !servedManifest?.meetingPlacesSha ? Object.fromEntries(await readComposedSourcePlaces({ store }) ?? []) : undefined,
           ...(checks ? { checks } : {}) });
       status = edge.status;
       if ("sequence" in edge) sequence = edge.sequence;

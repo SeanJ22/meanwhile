@@ -1,3 +1,4 @@
+import { currentReaderSelection } from "../db/reader-route.ts";
 import { requiredManualProductionContract } from "../civic-data/manual-contracts.ts";
 import {
   civicDataReadNotInitialized,
@@ -14,7 +15,7 @@ export const OFFICEHOLDER_STATEMENT_SCOPE = CONTRACT.scope;
 const SHA256 = /^[a-f0-9]{64}$/;
 
 function validate(value: StatementCorpus, version: string): void {
-  if (!value || !Array.isArray(value.snapshots) || value.snapshots.length === 0) {
+  if (!value || !Array.isArray(value.snapshots) || value.snapshots.length === 0 && !currentReaderSelection()) {
     throw new Error(`Officeholder statement projection ${version} has no snapshots.`);
   }
   const ids = new Set<string>();

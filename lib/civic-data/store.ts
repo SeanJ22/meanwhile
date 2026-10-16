@@ -1,4 +1,8 @@
 import { createHash } from "node:crypto";
+import type { RegistryRuntimeCarton } from "../registry/runtime-data-plane.ts";
+import { assembleAuthorityRecords, authorityRecordSource, authorityRecordOwner, statesOfAuthorityRecord, type AuthorityPatch } from "../meetings/authority-records.ts";
+import { promotedPayloadSha256 } from "./attested-promotion.ts";
+import type { PromotedEdgeEntry } from "./read-model.ts";
 import { currentReaderSelection } from "../db/reader-route.ts";
 import { sourceCheckedAt } from "./source-check.ts";
 import { isScopedManualContractScope } from "./scoped-manual-contracts.ts";
@@ -107,7 +111,16 @@ export interface CandidateTransitionOptions {
   readonly candidate?: RoutineCandidate;
 }
 
+interface PromotionPlace { readonly owner: string; readonly version: string }
+export interface PromotionPlaceRecords { readonly base: unknown; readonly records: readonly AuthorityPatch[] }
+
 export interface RoutineDataStore {
+  readonly listPromotionStates: (recordClass: RoutineRecordClass, scope: string, versionId: string) => Promise<readonly string[]>;
+  readonly readPromotionHeader: (recordClass: RoutineRecordClass, scope: string, versionId: string) => Promise<PromotedEdgeEntry | null>;
+  readonly readPromotionBase: (recordClass: RoutineRecordClass, scope: string, versionId: string) => Promise<unknown | null>;
+  readonly listPromotionPlaces: (recordClass: RoutineRecordClass, scope: string, versionId: string, state: string, after: string) => Promise<readonly PromotionPlace[]>;
+  readonly readPromotionPlace: (recordClass: RoutineRecordClass, scope: string, versionId: string, owner: string) => Promise<PromotionPlaceRecords | null>;
+  readonly readRegistryPhotos: (scope: string, keys: readonly string[]) => Promise<Pick<RegistryRuntimeCarton, "officialPhotos" | "rosterPhotos"> | null>;
   readonly eventObservedAt?: (recordClass: RoutineRecordClass, scope: string, requestedAt: string) => Promise<string>;
   readonly create: (record: CandidateVersionRecord, firstEvent: CandidateEvent) => Promise<void>;
   readonly transition: (
@@ -733,6 +746,26 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
   private readonly history = new Map<string, CandidateEvent[]>();
   private readonly promotions = new Map<string, PromotedProjection>();
   private readonly preparedProjections = new Map<string, PreparedReaderProjectionRow>();
+  private readonly authorityIndexes = new WeakMap<object, ReturnType<typeof authorityRecordSource> & { groups: Map<string, AuthorityPatch[]> }>();
+
+  private authorityIndex(payload: unknown) {
+    const held = this.authorityIndexes.get(payload as object);
+    if (held) return held;
+    const source = authorityRecordSource(payload);
+    const identities = new Map<string, string>();
+    for (const row of source.records) {
+      const owner = authorityRecordOwner(row);
+      if (owner.startsWith("ocd-division/")) for (const tag of row.tags) identities.set(tag, owner);
+    }
+    const groups = Map.groupBy(source.records, row => {
+      const owner = authorityRecordOwner(row);
+      return owner.startsWith("ocd-division/") || row.initialize ? owner : row.tags.map(tag => identities.get(tag)).find(Boolean) ?? owner;
+    });
+    const index = { ...source, groups };
+    this.authorityIndexes.set(payload as object, index);
+    return index;
+  }
+
 
   async eventObservedAt(recordClass: RoutineRecordClass, scope: string, requestedAt: string): Promise<string> {
     let latest = Date.parse(requestedAt);
@@ -829,6 +862,52 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
   async readPromotion<T = unknown>(recordClass: RoutineRecordClass, scope: string): Promise<PromotedProjection<T> | null> {
     const row = this.pointerRead(recordClass, scope);
     return row ? structuredClone(row) as PromotedProjection<T> : null;
+  }
+
+  async listPromotionStates(recordClass: RoutineRecordClass, scope: string, versionId: string): Promise<readonly string[]> {
+    const row = this.pointerRead(recordClass, scope);
+    if (!row || row.versionId !== versionId) return [];
+    return [...new Set([...this.authorityIndex(row.payload).groups].flatMap(([owner, records]) => records.flatMap(record => statesOfAuthorityRecord({ ...record, tags: [...record.tags, owner] }))))].sort();
+  }
+
+  async readPromotionHeader(recordClass: RoutineRecordClass, scope: string, versionId: string): Promise<PromotedEdgeEntry | null> {
+    const row = this.pointerRead(recordClass, scope);
+    const candidate = this.candidates.get(versionId)?.candidate;
+    if (!row || row.versionId !== versionId || !candidate) return null;
+    const payload = this.authorityIndex(row.payload).base;
+    return { kind: "PROMOTED", projection: { ...row, payload, receipt: { ...row.receipt, excludedFacts: [] } },
+      attested: { recordClass, scope, versionId, payloadSha256: promotedPayloadSha256(payload),
+        retrievedAt: row.latestConfirmation?.retrieval.retrievedAt ?? candidate.retrieval.retrievedAt, staleAtRetrieval: candidate.temporal.staleAtRetrieval,
+        version: candidate.temporal.version ?? null, sourceThrough: candidate.temporal.sourceThrough ?? null } };
+  }
+
+  async readPromotionBase(recordClass: RoutineRecordClass, scope: string, versionId: string): Promise<unknown | null> {
+    const row = this.pointerRead(recordClass, scope);
+    return row?.versionId === versionId ? this.authorityIndex(row.payload).base : null;
+  }
+
+  async listPromotionPlaces(recordClass: RoutineRecordClass, scope: string, versionId: string, state: string, after: string): Promise<readonly PromotionPlace[]> {
+    const row = this.pointerRead(recordClass, scope);
+    if (!row || row.versionId !== versionId) return [];
+    const groups = this.authorityIndex(row.payload).groups;
+    return [...groups].filter(([owner, records]) => owner > after && records.some(record => statesOfAuthorityRecord({ ...record, tags: [...record.tags, owner] }).includes(state))).sort(([a], [b]) => a.localeCompare(b)).slice(0, 128)
+      .map(([owner, records]) => ({ owner, version: createHash("sha256").update(JSON.stringify(records)).digest("hex") }));
+  }
+
+  async readPromotionPlace(recordClass: RoutineRecordClass, scope: string, versionId: string, owner: string): Promise<PromotionPlaceRecords | null> {
+    const row = this.pointerRead(recordClass, scope);
+    if (!row || row.versionId !== versionId) return null;
+    const source = this.authorityIndex(row.payload);
+    return { base: source.base, records: (source.groups.get(owner) ?? []).filter(record =>
+      !(recordClass === "REGISTRY_RUNTIME_BINDING" && ["bodyRosters", "rosterReaderDispositions", "officialPhotos", "rosterPhotos"].includes(String(record.path[0])))) };
+  }
+
+  async readRegistryPhotos(scope: string, keys: readonly string[]): Promise<Pick<RegistryRuntimeCarton, "officialPhotos" | "rosterPhotos"> | null> {
+    const row = this.pointerRead("REGISTRY_RUNTIME_BINDING", scope);
+    if (!row) return null;
+    const records = this.authorityIndex(row.payload).records, selected = new Set(keys);
+    return assembleAuthorityRecords({ officialPhotos: { photos: [] }, rosterPhotos: {} }, records.filter(record =>
+      ["officialPhotos", "rosterPhotos"].includes(String(record.path[0])) && record.tags.some(tag => selected.has(tag))), { keys: selected }) as Pick<RegistryRuntimeCarton, "officialPhotos" | "rosterPhotos">;
   }
 
   async readPromotions<T = unknown>(
@@ -1624,7 +1703,6 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     if (issue !== null) throw new RuntimeAuthorityRefused(issue);
   }
 
-
   private candidateEventLock(candidateId: string) {
     return this.db.execute(sql`
       select pg_advisory_xact_lock(hashtextextended(${candidateId}, 0))
@@ -1772,6 +1850,72 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     return row ? { ...postgresPromotionRowToProjection<T>(row), payload: await this.payloadParts.load(row.payload) as T } : null;
   }
 
+  async listPromotionStates(recordClass: RoutineRecordClass, scope: string, versionId: string): Promise<readonly string[]> {
+    const result = await this.db.execute(sql`SELECT DISTINCT v.state FROM reader_place_versions v JOIN civic_data_promotions p ON p.key=v.pointer_key
+      JOIN reader_place_roots root ON root.pointer_key=p.key AND root.version_id=p.current_version_id
+      WHERE p.record_class=${recordClass} AND p.scope=${scope} AND p.current_version_id=${versionId}`);
+    return result.rows.map(row => String(row.state)).sort();
+  }
+
+  async readPromotionHeader(recordClass: RoutineRecordClass, scope: string, versionId: string): Promise<PromotedEdgeEntry | null> {
+    const result = await this.db.execute(sql`WITH p AS (SELECT *,${LATEST_CONFIRMATION_DETAIL} AS latest_confirmation FROM civic_data_promotions
+      WHERE record_class=${recordClass} AND scope=${scope} AND current_version_id=${versionId})
+      SELECT p.key,p.source_id,p.record_class,p.scope,p.current_version_id,p.last_known_good_version_id,p.promoted_at,
+      (p.validation_receipt-'excludedFacts')||jsonb_build_object('excludedFacts','[]'::jsonb) receipt,root.base,root.retrieved_at,root.temporal,p.latest_confirmation
+      FROM p JOIN reader_place_roots root ON root.pointer_key=p.key AND root.version_id=p.current_version_id
+      WHERE p.record_class=${recordClass} AND p.scope=${scope} AND p.current_version_id=${versionId}`);
+    const row = result.rows[0];
+    if (!row) return null;
+    const confirmation = parseUnchangedConfirmation(row.latest_confirmation as string);
+    const temporal = row.temporal as { staleAtRetrieval?: boolean; version?: string; sourceThrough?: string } | null;
+    return { kind: "PROMOTED", projection: { key: String(row.key), sourceId: String(row.source_id), recordClass, scope,
+      versionId, lastKnownGoodVersionId: String(row.last_known_good_version_id), promotedAt: new Date(String(row.promoted_at)).toISOString(),
+      payload: row.base, receipt: row.receipt as ValidationReceipt,
+      ...(confirmation?.versionId === versionId ? { latestConfirmation: confirmation } : {}) }, attested: { recordClass, scope, versionId,
+      payloadSha256: promotedPayloadSha256(row.base), retrievedAt: parseUnchangedConfirmation(row.latest_confirmation as string)?.retrieval.retrievedAt ?? new Date(String(row.retrieved_at)).toISOString(),
+      staleAtRetrieval: temporal?.staleAtRetrieval === true, version: temporal?.version ?? null, sourceThrough: temporal?.sourceThrough ?? null } };
+  }
+
+  async readPromotionBase(recordClass: RoutineRecordClass, scope: string, versionId: string): Promise<unknown | null> {
+    const result = await this.db.execute(sql`SELECT root.base FROM civic_data_promotions p
+      JOIN reader_place_roots root ON root.pointer_key=p.key AND root.version_id=p.current_version_id
+      WHERE p.record_class=${recordClass} AND p.scope=${scope} AND p.current_version_id=${versionId}`);
+    return result.rows[0]?.base ?? null;
+  }
+
+  async listPromotionPlaces(recordClass: RoutineRecordClass, scope: string, versionId: string, state: string, after: string): Promise<readonly PromotionPlace[]> {
+    const result = await this.db.execute(sql`SELECT v.owner_key,v.version FROM reader_place_versions v
+      JOIN civic_data_promotions p ON p.key=v.pointer_key JOIN reader_place_roots root ON root.pointer_key=p.key AND root.version_id=p.current_version_id
+      WHERE p.record_class=${recordClass} AND p.scope=${scope} AND p.current_version_id=${versionId}
+        AND v.state=${state} AND v.owner_key>${after} ORDER BY v.owner_key LIMIT 128`);
+    return result.rows.map(row => ({ owner: String(row.owner_key), version: String(row.version) }));
+  }
+
+  async readPromotionPlace(recordClass: RoutineRecordClass, scope: string, versionId: string, owner: string): Promise<PromotionPlaceRecords | null> {
+    const result = await this.db.execute(sql`SELECT root.base,(SELECT coalesce(jsonb_agg(jsonb_build_object(
+        'path',r.path,'value',r.payload,'tags',r.selectors,'initialize',r.initialize,
+        'metadata',ARRAY(SELECT tag FROM unnest(r.follows) tag WHERE tag LIKE 'frame:%')) ORDER BY r.path),'[]') FROM reader_place_records r
+        WHERE r.pointer_key=p.key AND r.owner_key=${owner}
+          AND (${recordClass}<>'REGISTRY_RUNTIME_BINDING' OR NOT r.path->>0=ANY(ARRAY['bodyRosters','rosterReaderDispositions','officialPhotos','rosterPhotos']))) AS records
+      FROM civic_data_promotions p JOIN reader_place_roots root ON root.pointer_key=p.key AND root.version_id=p.current_version_id
+      WHERE p.record_class=${recordClass} AND p.scope=${scope} AND p.current_version_id=${versionId}`);
+    const row = result.rows[0];
+    return row ? { base: row.base, records: row.records as AuthorityPatch[] } : null;
+  }
+
+  async readRegistryPhotos(scope: string, keys: readonly string[]): Promise<Pick<RegistryRuntimeCarton, "officialPhotos" | "rosterPhotos"> | null> {
+    const result = await this.db.execute(sql`SELECT photos.* FROM civic_data_promotions p
+      JOIN reader_place_roots root ON root.pointer_key=p.key AND root.version_id=p.current_version_id
+      CROSS JOIN LATERAL (SELECT coalesce(jsonb_agg(r.payload ORDER BY r.path) FILTER (WHERE r.path->>0='officialPhotos'),'[]') AS photos,
+        coalesce(jsonb_object_agg(r.path->>1,r.payload) FILTER (WHERE r.path->>0='rosterPhotos'),'{}') AS roster_photos
+        FROM reader_place_records r WHERE r.pointer_key=p.key AND r.selectors && ${sql.param([...keys])}::text[]
+          AND r.path->>0=ANY(ARRAY['officialPhotos','rosterPhotos'])) photos
+      WHERE p.record_class='REGISTRY_RUNTIME_BINDING' AND p.scope=${scope}`);
+    const row = result.rows[0];
+    return row ? { officialPhotos: { photos: row.photos as RegistryRuntimeCarton["officialPhotos"]["photos"] },
+      rosterPhotos: row.roster_photos as RegistryRuntimeCarton["rosterPhotos"] } : null;
+  }
+
   async readPromotions<T = unknown>(
     recordClass: RoutineRecordClass,
     scopes: readonly string[],
@@ -1811,17 +1955,30 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   async readPreparedReaderProjection(recordClass: RoutineRecordClass, scope: string): Promise<PreparedReaderProjectionRow | null> {
     const selected = currentReaderSelection();
     const columns = { ...getTableColumns(civicDataReaderProjections), ...(selected ? {
-      payload: sql<unknown>`reader_place_payload(${civicDataReaderProjections.payload}, ${sql.param([...selected.keys])}::text[], ${sql.param(selected.point ? JSON.stringify(selected.point) : null)}::jsonb)`,
+      composedFrom: sql<PreparedProjectionCoupling[]>`reader_selected_couplings('prepared:'||${civicDataReaderProjections.key},${sql.param([...selected.keys])}::text[])`,
+      payload: sql<unknown>`(SELECT jsonb_build_object('base',r.base,'patches',reader_selected_records(r.pointer_key,${sql.param([...selected.keys])}::text[],${sql.param(selected.point ? JSON.stringify(selected.point) : null)}::jsonb,${selected.includeAgenda !== false}::boolean,${selected.meetingId ?? null}::text,${selected.radiusKm ?? 150}::float8))
+        FROM reader_place_roots r WHERE r.pointer_key='prepared:'||${civicDataReaderProjections.key} AND r.version_id=${civicDataReaderProjections.sequence}::text)`,
     } : {}) };
     const [row] = await this.db.select(columns).from(civicDataReaderProjections).where(and(
       eq(civicDataReaderProjections.recordClass, recordClass),
       eq(civicDataReaderProjections.scope, scope),
     )).limit(1);
+    if (selected && row) {
+      const indexed = row.payload as { base: unknown; patches: AuthorityPatch[] } | null;
+      if (!indexed) throw new Error("READER_PLACE_INDEX_MISSING");
+      row.payload = assembleAuthorityRecords(indexed.base, indexed.patches, selected);
+    }
     return row ? preparedRowToProjection(row) : null;
   }
 
   async readPreparedReaderProjectionCoupling(recordClass: RoutineRecordClass, scope: string): Promise<PreparedReaderProjectionCoupling | null> {
-    const [row] = await preparedProjectionCouplingRead(this.db, recordClass, scope);
+    const selection = currentReaderSelection();
+    const [row] = selection ? await this.db.select({ recordClass: civicDataReaderProjections.recordClass,
+      scope: civicDataReaderProjections.scope, sequence: civicDataReaderProjections.sequence,
+      composedFrom: sql<PreparedProjectionCoupling[]>`reader_selected_couplings('prepared:'||${civicDataReaderProjections.key},${sql.param([...selection.keys])}::text[])`,
+      generatedAt: civicDataReaderProjections.generatedAt,
+    }).from(civicDataReaderProjections).where(and(eq(civicDataReaderProjections.recordClass, recordClass),eq(civicDataReaderProjections.scope, scope))).limit(1)
+      : await preparedProjectionCouplingRead(this.db, recordClass, scope);
     return row
       ? {
           recordClass: row.recordClass as RoutineRecordClass,

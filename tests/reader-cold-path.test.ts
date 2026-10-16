@@ -85,10 +85,7 @@ const stateLegislators = Object.fromEntries(OFFICIAL_STATE_LEGISLATOR_TARGETS.ma
   roster: { scope: target.state.toLowerCase(), generatedAt: "2026-09-25", officeholders: [], divisions: [], unmatched: [] },
 }]));
 
-/**
- * The recorded 85701 meetings plus one synthetic sitting each for a New Jersey and a New Hampshire county
- * government, so the edge publishes meeting scopes for three states.
- */
+
 function multiStateSnapshot() {
   const recorded = recordedMeetingsSnapshot().meetings;
   const template = recorded.find((row) => row.id.startsWith("legistar:") && row.location)!;
@@ -124,7 +121,7 @@ async function publishEdge(tag: string, options: { readonly legislators?: boolea
   }, {
     store,
     now: new Date().toISOString(),
-    extras: { commentAccess: COMMENT_ACCESS, everydayRouting: currentEverydayRoutingProjection() },
+    extras: { everydayRouting: currentEverydayRoutingProjection() },
     authority,
     ...(options.legislators ? { stateLegislators: Object.fromEntries(Object.entries(stateLegislators).map(([scope, value]) => [scope, { value, versionId: `${tag}:legislators:${scope}` }])) } : {}),
     registrations: {},
@@ -243,7 +240,8 @@ test("a whole /api/meetings answer from the edge is held by the CDN, keyed on ev
     assert.match(timing, new RegExp(`(?:^|, )${stage};dur=\\d+`), `${stage} is not timed: ${timing}`);
   }
   assert.equal(registryRuntimeReadState().metadata.versionId, "c21-route:registry", "the registry was not read from the edge the route entered");
-  assert.deepEqual(keys.filter((key) => [manifest.authorityArtifacts?.["meeting-outcomes"]?.key, manifest.authorityArtifacts?.["comment-access"]?.key].includes(key)), [], "the route fetched families it never reads");
+  assert.deepEqual(keys.filter(key => key === manifest.authorityArtifacts?.["meeting-outcomes"]?.key), [], "the route fetched outcomes it never reads");
+  assert.ok(keys.includes(manifest.authorityArtifacts!["comment-access"]!.key));
   const body = await response.json();
   assert.ok(Array.isArray(body.governingOcdIds) && body.governingOcdIds.length > 0);
   assert.ok(body.coverage && body.coverage.bodies.length > 0);

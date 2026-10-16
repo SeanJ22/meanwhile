@@ -1,13 +1,4 @@
-/**
- * `scripts/river.mjs` — the streams → river → main path.
- *
- * The decisions are pure and tested directly: status parsing, READY detection,
- * fold order, lock ownership, release contents, post-deploy reuse and migration
- * numbering. The git paths are driven end to end against a scratch repository
- * with a local bare `origin`, so fold, migrations, promote and the lock protocol
- * are exercised with real merges and real fast-forward pushes, and nothing here
- * reaches GitHub.
- */
+
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
@@ -33,10 +24,6 @@ import {
 const SCRIPT = join(import.meta.dirname, "..", "scripts", "river.mjs");
 const NOW = Date.parse("2026-10-04T12:00:00Z");
 const minutesAgo = (minutes: number) => new Date(NOW - minutes * 60_000).toISOString();
-
-/* -------------------------------------------------------------------------- */
-/* Pure decisions                                                             */
-/* -------------------------------------------------------------------------- */
 
 const STATUS = [
   "# River status",
@@ -192,10 +179,6 @@ test("arguments: --k v, --k=v and bare boolean flags", () => {
   });
 });
 
-/* -------------------------------------------------------------------------- */
-/* The git paths, against a scratch repository                                */
-/* -------------------------------------------------------------------------- */
-
 const IDENTITY = {
   GIT_AUTHOR_NAME: "River Test", GIT_AUTHOR_EMAIL: "river@example.invalid",
   GIT_COMMITTER_NAME: "River Test", GIT_COMMITTER_EMAIL: "river@example.invalid",
@@ -250,7 +233,8 @@ test("fold, migrations, promote and the lock protocol work end to end against a 
     sh(work, ["add", "-A"]);
     sh(work, ["commit", "--quiet", "-m", "stream/measures: seed"]);
     put(work, "lib/db/migrations/DB-09_place_owed.sql", "CREATE TABLE owed (id int);\n");
-    put(work, "lib/db/migration-phases.ts", 'export const MIGRATION_PHASES = {\n  "0000_first": "expand",\n  "DB-09_place_owed": "expand",\n};\n');
+    put(work, "lib/db/migration-phases.ts", 'export const MIGRATION_PHASES = {\n  "0000_first": "expand",\n  "DB-09_place_owed": "expand",\n  "DB-09_place_owed_extra": "expand",\n};\n');
+    put(work, "lib/db/migrations/DB-09_place_owed_extra.sql", "CREATE TABLE extra (id int);\n");
     put(work, "measures.txt", "ready\n");
     sh(work, ["add", "-A"]);
     sh(work, ["commit", "--quiet", "-m", "READY: DB-09"]);
@@ -294,9 +278,10 @@ test("fold, migrations, promote and the lock protocol work end to end against a 
     assert.ok(!existsSync(join(riverCheckout, "lib/db/migrations/DB-09_place_owed.sql")));
     const newJournal = JSON.parse(readFileSync(join(riverCheckout, "lib/db/migrations/meta/_journal.json"), "utf8"));
     assert.deepEqual(newJournal.entries.map((e: { idx: number; tag: string; when: number }) => [e.idx, e.tag, e.when]), [
-      [0, "0000_first", 1000], [1, "0001_db09_place_owed", 1001],
+      [0, "0000_first", 1000], [1, "0001_db09_place_owed", 1001], [2, "0002_db09_place_owed_extra", 1002],
     ]);
     assert.match(readFileSync(join(riverCheckout, "lib/db/migration-phases.ts"), "utf8"), /"0001_db09_place_owed": "expand"/);
+    assert.match(readFileSync(join(riverCheckout, "lib/db/migration-phases.ts"), "utf8"), /"0002_db09_place_owed_extra": "expand"/);
     assert.equal(river(riverCheckout, "migrations").code, 0, "a second run finds nothing left to number");
 
     // Promote refuses without a passing test of this exact SHA.
@@ -313,9 +298,6 @@ test("fold, migrations, promote and the lock protocol work end to end against a 
     assert.doesNotMatch(sh(riverCheckout, ["show", "origin/board/river:integration.md"]), /none yet/);
     assert.deepEqual(JSON.parse(river(riverCheckout, "scan").out).ready_lanes, [], "integrated work is not folded twice");
 
-    // A lane's second READY after catching up: its status file was deleted on
-    // river and modified on the stream. That modify/delete is not an application
-    // conflict, so the fold drops .factory and goes on.
     sh(work, ["checkout", "--quiet", "-f", "measures"]);
     sh(work, ["fetch", "--quiet", "origin", "+refs/heads/river:refs/remotes/origin/river"]);
     sh(work, ["merge", "--quiet", "--no-edit", "-X", "theirs", "origin/river"]);

@@ -1,37 +1,4 @@
 #!/usr/bin/env node
-/**
- * River: the one path code takes from the build streams to `main`.
- *
- * Builders push `stream/<lane>` and mark finished work with a `READY: <step ids>`
- * commit. River folds those exact commits into `river-next`, numbers any
- * step-named migrations, runs `pnpm gates` once on the combination, fast-forwards
- * `river` to the tested SHA, and ships `river` to `main` through one
- * `release/<n>` pull request. Every decision a fresh session needs to resume is
- * kept on `board/river` (`integration.json`, `releases/<n>.json`) or in
- * `.scratch/river/`, so the same inputs always give the same fold.
- *
- *   node scripts/river.mjs scan                          what is ready, as JSON
- *   node scripts/river.mjs fold [--lanes a,b] [--order dep|a,b,...]
- *   node scripts/river.mjs migrations                    number step-named migrations on river-next
- *   node scripts/river.mjs test [--heartbeat --token T]  pnpm gates on river-next
- *   node scripts/river.mjs promote                       fast-forward river to the tested SHA
- *   node scripts/river.mjs return <lane> --check C [--output-file F]   send a failure back (returns/<lane>.md)
- *   node scripts/river.mjs release <n> [--dry-run]       one release/<n> PR to main
- *   node scripts/river.mjs release --check-main          did main move after river was tested?
- *   node scripts/river.mjs lock claim|heartbeat|release --branch B --file F --token T [--worker W --run-id R]
- *   node scripts/river.mjs observe <sha> [--dry-run]     one post-deploy reading per deployed SHA
- *
- * GitHub API calls use GITHUB_TOKEN or GH_TOKEN over REST. Without a token, or
- * when the call fails, the command prints `ACTION NEEDED:` with the exact request
- * so the session can make it with its own GitHub tool, and exits 0.
- *
- * Pushes are always normal fast-forwards. A rejected push refetches and decides
- * again; nothing here force-pushes. Lock and board writes are built with git
- * plumbing on a temporary index, so they never touch the caller's checkout.
- *
- * Exit codes: 0 done (or ACTION NEEDED), 1 refused or failed, 2 usage,
- * 3 lock held by a live owner, 4 lock ownership changed.
- */
 
 import { execFileSync, spawn, spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
@@ -39,24 +6,12 @@ import { tmpdir } from "node:os";
 import { join, posix, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-/* -------------------------------------------------------------------------- */
-/* Constants                                                                  */
-/* -------------------------------------------------------------------------- */
-
-/** A heartbeat younger than this keeps a lock (briefs/common.md, startup step 4). */
 export const STALE_LOCK_MS = 45 * 60 * 1000;
 
-/** Variables cloud sessions set that CI does not; `test` removes them. */
 export const CI_ABSENT_ENV = ["DATABASE_URL", "WTP_ASSET_STORE"];
 
-/** How often `test --heartbeat` refreshes River's lock while gates run. */
 const HEARTBEAT_EVERY_MS = 10 * 60 * 1000;
 
-/**
- * Default fold order: lanes that others build on go first (measures owns what a
- * place is owed, registry owns the doors), the screens last. Adapter streams
- * follow, sorted by name, then any lane this list does not know.
- */
 export const LANE_ORDER = Object.freeze([
   "measures", "registry", "hunters", "meetings", "auditors", "people",
   "admin", "slide", "ballot", "bank", "frontend",
@@ -70,23 +25,10 @@ const JOURNAL = `${MIGRATIONS_DIR}/meta/_journal.json`;
 const OBSERVE_WORKFLOW = "post-deploy-integrity.yml";
 const STEP_ID = /\b(?:R\d-[A-Z]+(?:-[A-Z]+)*|[A-Z]{2,4}-\d{1,3}|[A-Z]{2,}-[A-Z]{2,}|R\d[A-Z]?)\b/g;
 
-/**
- * The adapter implementation path. An adapter stream that reaches outside it is
- * flagged in `scan` so River reviews it like any other lane.
- */
 export const adapterPath = (path) => path.startsWith("lib/sources/platform-adapters/")
   && /\.[cm]?[jt]sx?$/.test(path) && !/(?:^|\/)(?:evidence|fixtures)(?:\/|$)/.test(path);
 
-/* -------------------------------------------------------------------------- */
-/* Pure decisions                                                             */
-/* -------------------------------------------------------------------------- */
-
-/**
- * The `key: value` lines at the top of a status file, up to its first `## `
- * section. Values are kept verbatim; a key appearing twice keeps the first.
- * @param {string} text
- * @returns {Record<string, string>}
- */
+/** @param {string} text @returns {Record<string, string>} */
 export function parseStatus(text) {
   /** @type {Record<string, string>} */
   const fields = {};
@@ -98,13 +40,7 @@ export function parseStatus(text) {
   return fields;
 }
 
-/**
- * The same file with `updates` written into its field block: existing lines are
- * replaced in place, new keys are added after the last field line (or after a
- * leading `# ` title). Everything else is preserved byte for byte.
- * @param {string} text
- * @param {Record<string, string>} updates
- */
+/** @param {string} text @param {Record<string, string>} updates */
 export function setStatusFields(text, updates) {
   const eol = text.includes("\r\n") ? "\r\n" : "\n";
   const lines = text.length ? text.split(/\r?\n/) : [];
@@ -131,26 +67,17 @@ export function setStatusFields(text, updates) {
   return lines.join(eol) + (lines.length && !text.length ? eol : "");
 }
 
-/** Step ids named in a `READY:` subject, in order, without repeats. */
 export function stepIds(subject) {
   return [...new Set(subject.match(STEP_ID) ?? [])];
 }
 
-/** Milliseconds since an ISO heartbeat, or null when there is none to read. */
 export function heartbeatAge(heartbeat, now) {
   if (!heartbeat || heartbeat === "none") return null;
   const at = Date.parse(heartbeat);
   return Number.isFinite(at) ? now - at : null;
 }
 
-/**
- * What a lane has ready that River has not integrated.
- *
- * `commits` are the stream's commits not on `river`, newest first. The newest
- * `READY:` commit is the one to fold; it carries every READY before it, back to
- * the last one River recorded. Commits after it are WIP and stay behind.
- * @param {{ commits: { sha: string, subject: string }[], integrated: Set<string> }} input
- */
+/** @param {{ commits: { sha: string, subject: string }[], integrated: Set<string> }} input */
 export function pendingReady({ commits, integrated }) {
   const ready = [];
   for (const commit of commits) {
@@ -167,12 +94,7 @@ export function pendingReady({ commits, integrated }) {
   };
 }
 
-/**
- * The order lanes fold in. `order` is `dep`/`default`/undefined for
- * {@link LANE_ORDER}, or a comma list of lanes that go first.
- * @param {string[]} lanes
- * @param {string} [order]
- */
+/** @param {string[]} lanes @param {string} [order] */
 export function foldOrder(lanes, order) {
   const first = !order || order === "dep" || order === "default"
     ? [] : order.split(",").map((lane) => lane.trim()).filter(Boolean);
@@ -189,14 +111,7 @@ export function foldOrder(lanes, order) {
   });
 }
 
-/**
- * Whether a lock change may be written, from the remote file's fields.
- * claim: refuse (3) while a different token has a heartbeat under 45 minutes,
- * or one whose age cannot be read. heartbeat: refuse (4) unless the token still
- * owns it. release: write `none` when owned; nothing to do when already free.
- * @param {{ mode: "claim" | "heartbeat" | "release", fields: Record<string, string>, token: string, now: number }} input
- * @returns {{ write: boolean, exit: number, reason: string, takeover?: string }}
- */
+/** @param {{ mode: "claim" | "heartbeat" | "release", fields: Record<string, string>, token: string, now: number }} input @returns {{ write: boolean, exit: number, reason: string, takeover?: string }} */
 export function decideLock({ mode, fields, token, now }) {
   const held = fields.lock && fields.lock !== "none" ? fields.lock : null;
   const age = heartbeatAge(fields.heartbeat, now);
@@ -218,12 +133,7 @@ export function decideLock({ mode, fields, token, now }) {
     : { write: false, exit: 4, reason: `lock is ${held}, not ours; left alone` };
 }
 
-/**
- * The integration entries a new release carries: everything recorded after the
- * previous release's `integration_count`, and their step ids in order.
- * @param {{ lane: string, steps: string[] }[]} integration
- * @param {{ n: number, integration_count: number }[]} releases
- */
+/** @param {{ lane: string, steps: string[] }[]} integration @param {{ n: number, integration_count: number }[]} releases */
 export function releaseContents(integration, releases) {
   const previous = releases.reduce((last, release) => (release.n > (last?.n ?? -Infinity) ? release : last), null);
   const from = previous ? previous.integration_count : 0;
@@ -238,16 +148,7 @@ export function releaseContents(integration, releases) {
 
 const ACTIVE_RUN = new Set(["queued", "in_progress", "waiting", "pending", "requested"]);
 
-/**
- * Reuse a post-deploy run for exactly this SHA, or say what to do instead.
- * The workflow's concurrency group cancels an older run when a newer one starts,
- * so a cancelled run covers nothing. A run that finished red is retried, not
- * duplicated.
- * @typedef {{ id: number, head_sha: string, status: string, conclusion: string | null, html_url?: string }} WorkflowRun
- * @param {WorkflowRun[]} runs
- * @param {string} sha
- * @returns {{ action: "reuse" | "rerun" | "dispatch", run?: WorkflowRun, reason: string }}
- */
+/** @typedef {{ id: number, head_sha: string, status: string, conclusion: string | null, html_url?: string }} WorkflowRun @param {WorkflowRun[]} runs @param {string} sha @returns {{ action: "reuse" | "rerun" | "dispatch", run?: WorkflowRun, reason: string }} */
 export function decideObserve(runs, sha) {
   const mine = runs.filter((run) => run.head_sha === sha).sort((a, b) => b.id - a.id);
   const active = mine.find((run) => ACTIVE_RUN.has(run.status));
@@ -259,32 +160,16 @@ export function decideObserve(runs, sha) {
   return { action: "dispatch", reason: mine.length ? `only cancelled or skipped runs cover ${sha}` : `no run covers ${sha}` };
 }
 
-/* -------------------------------------------------------------------------- */
-/* Migrations                                                                 */
-/* -------------------------------------------------------------------------- */
-
 const NUMBERED = /^\d{4}_[a-z0-9_]+\.sql$/;
 
-/** A migration file named by step rather than number, e.g. `DB-09_place_owed.sql`. */
 export const isStepNamed = (name) => name.endsWith(".sql") && !/^\d{4}_/.test(name);
 
-/** `DB-09_place_owed` → `db09_place_owed`: the step id stays readable in the tag. */
 export function slugOf(tag) {
   return tag.toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "")
     .replace(/^([a-z]{2,4})_(\d)/, "$1$2");
 }
 
-/**
- * Number step-named migrations after the journal's last entry, in the order
- * given (fold order). Returns the renames and the new journal entries, or the
- * reasons it cannot be done safely.
- *
- * Matches the repository's journal: version "7", `breakpoints: true`, `idx` in
- * sequence, `when` strictly increasing (it is the key `db:apply` joins on). A
- * stream that already wrote a journal entry for its step-named tag keeps its
- * `when` when that still sorts last; otherwise the next millisecond is used.
- * @param {{ added: string[], journal: { idx: number, version: string, when: number, tag: string, breakpoints: boolean }[], baseCount: number }} input
- */
+/** @param {{ added: string[], journal: { idx: number, version: string, when: number, tag: string, breakpoints: boolean }[], baseCount: number }} input */
 export function planMigrationNumbers({ added, journal, baseCount }) {
   const problems = [];
   const stepNamed = added.filter(isStepNamed);
@@ -321,10 +206,6 @@ export function planMigrationNumbers({ added, journal, baseCount }) {
   return { ok: true, problems, renames, journal: entries };
 }
 
-/* -------------------------------------------------------------------------- */
-/* Git and GitHub                                                             */
-/* -------------------------------------------------------------------------- */
-
 const ROOT = process.cwd();
 const SCRATCH = join(ROOT, ".scratch", "river");
 
@@ -350,14 +231,12 @@ function git(args, { env, input, allowFail = false } = {}) {
 
 const ok = (args) => git(args, { allowFail: true }) !== null;
 
-/** Run git and keep what it printed either way, for a return record. */
 function gitTry(args) {
   const run = spawnSync("git", args, { cwd: ROOT, encoding: "utf8", maxBuffer: 256 * 1024 * 1024, windowsHide: true });
   return { ok: run.status === 0, output: `${run.stdout ?? ""}${run.stderr ?? ""}`.trim() };
 }
 const remoteRef = (branch) => `refs/remotes/origin/${branch}`;
 
-/** Fetch branches into explicit remote-tracking refs. Missing branches are skipped. */
 function fetchBranches(branches) {
   const listed = git(["ls-remote", "--heads", "origin", ...branches.map((b) => `refs/heads/${b}`)]);
   const present = new Set(listed.split("\n").filter(Boolean).map((line) => line.split("\t")[1].replace("refs/heads/", "")));
@@ -380,13 +259,7 @@ function readJson(ref, path, fallback) {
   return text === null ? fallback : JSON.parse(text);
 }
 
-/**
- * Commit `change(tip)`'s files onto a remote branch without touching the
- * checkout, and push by fast-forward. On rejection, refetch and call `change`
- * again with the new tip. `change` returns null to stop without writing.
- * @param {string} branch
- * @param {(tip: string) => ({ files: Record<string, string>, message: string } | null)} change
- */
+/** @param {string} branch @param {(tip: string) => ({ files: Record<string, string>, message: string } | null)} change */
 function commitToBranch(branch, change, attempts = 5) {
   for (let attempt = 1; attempt <= attempts; attempt++) {
     fetchBranches([branch]);
@@ -420,10 +293,6 @@ function repoSlug() {
   return match[1];
 }
 
-/**
- * One GitHub REST/GraphQL request. Returns `{ ok, status, body }`, or
- * `{ ok: false, status: 0 }` with no token so the caller can print it instead.
- */
 async function github(method, path, body) {
   const token = process.env.GITHUB_TOKEN || process.env.GH_TOKEN;
   if (!token) return { ok: false, status: 0, body: "no GITHUB_TOKEN or GH_TOKEN" };
@@ -448,7 +317,6 @@ async function github(method, path, body) {
   }
 }
 
-/** Print a request the session must make itself. */
 function actionNeeded(what, method, path, body, why) {
   console.log(`ACTION NEEDED: ${what}`);
   if (why) console.log(`  because: ${why}`);
@@ -474,10 +342,6 @@ function requireClean() {
 
 const short = (sha) => sha.slice(0, 12);
 const nowIso = () => new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
-
-/* -------------------------------------------------------------------------- */
-/* scan                                                                       */
-/* -------------------------------------------------------------------------- */
 
 function integratedShas(integration) {
   const byLane = new Map();
@@ -546,10 +410,6 @@ export function scan({ now = Date.now() } = {}) {
   };
 }
 
-/* -------------------------------------------------------------------------- */
-/* fold                                                                       */
-/* -------------------------------------------------------------------------- */
-
 async function fold(flags) {
   requireClean();
   const plan = scan();
@@ -574,9 +434,6 @@ async function fold(flags) {
     const message = `River: fold ${name} READY ${short(sha)} (${steps.join(", ") || "no step ids"})`;
     let merged = gitTry(["merge", "--no-ff", "--no-edit", "-m", message, sha]);
     if (!merged.ok) {
-      // A lane's own status file conflicts with river's deletion of it on every
-      // fold after the first (modify/delete). That is not an application
-      // conflict: drop .factory and finish the merge if nothing else is unmerged.
       git(["rm", "-r", "-q", "-f", "--ignore-unmatch", ".factory"], { allowFail: true });
       rmSync(join(ROOT, ".factory"), { recursive: true, force: true });
       const unmerged = git(["diff", "--name-only", "--diff-filter=U"], { allowFail: true });
@@ -609,10 +466,6 @@ async function fold(flags) {
   console.log(`river fold: river-next ${short(record.head)} from river ${short(plan.river)}; next: migrations, then test`);
 }
 
-/* -------------------------------------------------------------------------- */
-/* migrations                                                                 */
-/* -------------------------------------------------------------------------- */
-
 function migrations() {
   requireClean();
   const folded = readScratch("fold.json");
@@ -638,7 +491,8 @@ function migrations() {
     console.log(`river migrations: no step-named migrations among ${added.length} added; nothing to number.`);
     return;
   }
-  for (const rename of plan.renames) {
+  // Replace longer tags first so a step tag cannot rewrite a sibling migration name.
+  for (const rename of [...plan.renames].sort((a, b) => b.oldTag.length - a.oldTag.length)) {
     git(["mv", `${MIGRATIONS_DIR}/${rename.from}`, `${MIGRATIONS_DIR}/${rename.to}`]);
     const snapshot = `${MIGRATIONS_DIR}/meta/${rename.oldTag}_snapshot.json`;
     if (existsSync(join(ROOT, snapshot))) git(["mv", snapshot, `${MIGRATIONS_DIR}/meta/${String(rename.idx).padStart(4, "0")}_snapshot.json`]);
@@ -659,11 +513,6 @@ function migrations() {
   console.log(`river migrations: committed ${short(git(["rev-parse", "HEAD"]))}; run test next.`);
 }
 
-/* -------------------------------------------------------------------------- */
-/* lock                                                                       */
-/* -------------------------------------------------------------------------- */
-
-/** Apply one lock decision to `<branch>:<file>`. Returns the decision. */
 export function lock(mode, { branch, file, token, worker, runId }) {
   if (!branch || !file || !token) throw new Refusal("lock needs --branch, --file and --token", 2);
   let decision = null;
@@ -682,10 +531,6 @@ export function lock(mode, { branch, file, token, worker, runId }) {
   return decision;
 }
 
-/* -------------------------------------------------------------------------- */
-/* test                                                                       */
-/* -------------------------------------------------------------------------- */
-
 async function test(flags) {
   requireClean();
   if (git(["rev-parse", "--abbrev-ref", "HEAD"]) !== NEXT) throw new Refusal(`check out ${NEXT} first`);
@@ -696,12 +541,6 @@ async function test(flags) {
   const [command, ...args] = whichPnpm() ? ["pnpm", "gates"] : ["corepack", "pnpm", "gates"];
   const startedAt = nowIso();
   console.log(`river test: ${command} ${args.join(" ")} on ${short(sha)}`);
-  // Output is passed through as it runs and its tail kept, so a failure can be
-  // returned to the lane that wrote it with the lines that show it.
-  // Gates run as CI runs them. Cloud sessions export a real DATABASE_URL and
-  // asset store that CI does not have; with them set, store-reading tests try
-  // the network and fail as STORE_UNREACHABLE. The postinstall projection is
-  // ignored by git, so a fresh worktree needs it rebuilt before tests read it.
   const env = { ...process.env };
   for (const name of CI_ABSENT_ENV) delete env[name];
   // A previous gates run leaves its untracked run record behind, and the
@@ -773,10 +612,6 @@ function whichPnpm() {
   }
 }
 
-/* -------------------------------------------------------------------------- */
-/* promote                                                                    */
-/* -------------------------------------------------------------------------- */
-
 function promote() {
   const folded = readScratch("fold.json");
   const tested = readScratch("test.json");
@@ -824,16 +659,6 @@ function promote() {
   console.log(`river promote: recorded ${entries.length} lane(s) on ${BOARD}`);
 }
 
-/* -------------------------------------------------------------------------- */
-/* return                                                                     */
-/* -------------------------------------------------------------------------- */
-
-/**
- * Send a stream's failed check back to the lane that wrote it: print the
- * record, keep it in `.scratch/river/`, and write `returns/<lane>.md` on
- * `board/river`. The record carries the fix-list entry shape from
- * `lib/control-plane/river-returns.ts`.
- */
 async function recordReturn({ lane, check, output, readySha = null, steps = [], riverSha = null }) {
   const { riverReturn, riverReturnMarkdown } = await import("../lib/control-plane/river-returns.ts");
   const record = riverReturn({ lane, check, output, readySha, steps, riverSha, at: nowIso() });
@@ -869,16 +694,11 @@ async function returnCommand(lane, flags) {
   });
 }
 
-/* -------------------------------------------------------------------------- */
-/* release                                                                    */
-/* -------------------------------------------------------------------------- */
-
 function releaseRecords(ref) {
   const names = git(["ls-tree", "--name-only", `${ref}:releases`], { allowFail: true }) ?? "";
   return names.split("\n").filter((name) => /^\d+\.json$/.test(name)).map((name) => readJson(ref, `releases/${name}`, null)).filter(Boolean);
 }
 
-/** Main must be inside the river that was tested, or the river is tested again first. */
 function checkMain() {
   fetchBranches(["main", RIVER, BOARD]);
   const main = git(["rev-parse", "--verify", remoteRef("main")]);
@@ -978,10 +798,6 @@ async function release(n, flags) {
   console.log(`river release: recorded releases/${n}.json on ${BOARD}`);
 }
 
-/* -------------------------------------------------------------------------- */
-/* observe                                                                    */
-/* -------------------------------------------------------------------------- */
-
 async function observe(sha, flags) {
   if (!/^[0-9a-f]{40}$/.test(sha ?? "")) throw new Refusal("usage: river.mjs observe <full 40-character sha>", 2);
   const repo = repoSlug();
@@ -1007,11 +823,6 @@ async function observe(sha, flags) {
   else actionNeeded(what, "POST", path, body, `${sent.status}: ${sent.body?.message ?? sent.body}`);
 }
 
-/* -------------------------------------------------------------------------- */
-/* CLI                                                                        */
-/* -------------------------------------------------------------------------- */
-
-/** `--key value`, `--key=value` and bare `--flag` into an object; the rest positional. */
 export function parseArgs(argv) {
   const flags = {};
   const positional = [];

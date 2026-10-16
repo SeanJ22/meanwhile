@@ -378,9 +378,7 @@ test("meeting Reader repair composes the shared aggregate once and correlates ex
     "f".repeat(40),
   );
   assert.equal(store.readPromotionIdentitiesCalls, 1, "one identity-only pointer batch names every partition version");
-  // The payloads cross once, in the actual aggregate Reader read, plus one
-  // batch for the held pointers of successors with none yet
-  // (HELD_MEETING_PARTITIONS) — the college's successor has none in this store.
+  // A successor without its own pointer also needs its held predecessor.
   assert.equal(
     store.readPromotionsCalls,
     1 + (HELD_MEETING_PARTITIONS.length > 0 ? 1 : 0),
@@ -512,7 +510,7 @@ test("a pass that records readbacks and republishes the prepared snapshot compos
   const row = await store.readPreparedReaderProjection("MEETING", MEETINGS_PREPARED_SCOPE);
   assert.deepEqual(
     new Set(row?.composedFrom.map(({ contractId }) => contractId)),
-    new Set([legistar.id, insite.id, "meeting-facts"]),
+    new Set([legistar.id, insite.id, "meeting-facts", "reader-state-sources"]),
     "the published row is coupled to the versions and the meeting facts that composition read",
   );
 });
@@ -620,9 +618,7 @@ test("the batched Reader bounds database calls and isolates a corrupt partition"
   }
   assert.equal(scalarPromotionReads, 0);
   assert.equal(scalarCandidateReads, 0);
-  // One batch for every registered partition and its durable history,
-  // and one more only for the held pointers of successors that have none yet
-  // (HELD_MEETING_PARTITIONS) — the college's successor has none in this store.
+  // A successor without its own pointer also needs its held predecessor.
   assert.equal(promotionBatchReads, 2);
   assert.equal(candidateBatchReads, 1);
   assert.deepEqual(requestedScopeBatches, [

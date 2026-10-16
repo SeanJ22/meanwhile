@@ -15,6 +15,8 @@ import {
 } from "./runtime-data-plane.ts";
 import { factReader } from "../facts/db.ts";
 import { withFactRegistry } from "../facts/registry-overlay.ts";
+import type { Query } from "../facts/publish.ts";
+import { PostgresRoutineDataStore } from "../civic-data/store.ts";
 import type { BodyRoster } from "./body-rosters.ts";
 import { CENSUS_PLACEHOLDER_BODY_ISSUE } from "./census-placeholders.ts";
 import { currentReaderRoute, currentReaderSelection } from "../db/reader-route.ts";
@@ -27,6 +29,21 @@ let readState: CivicDataReadResult<RegistryRuntimeReadModel> = civicDataReadNotI
   REGISTRY_RUNTIME_SCOPE,
   "The Reader registry runtime pointer has not been read for this process.",
 );
+
+export async function registryWithFactFields(carton: RegistryRuntimeCarton, query: Query | null,
+  photos?: (keys: readonly string[]) => Promise<Pick<RegistryRuntimeCarton, "officialPhotos" | "rosterPhotos"> | null>): Promise<RegistryRuntimeReadModel> {
+  const value = await withFactRegistry(carton, carton.registry.bodies.length ? query : null);
+  if (!photos) return value;
+  const keys = [...new Set([
+    ...value.bodyRosters.flatMap(roster => roster.members.flatMap(member => member.personId ? [member.id, member.personId] : [member.id])),
+    ...(value.statewideExecutives ?? []).map(row => row.holder.id), ...(value.officialCandidacies?.rows ?? []).map(row => row.holder.id),
+  ])];
+  if (!keys.length) return value;
+  // Exact person IDs let a newer accepted portrait advance beside the place's held fields.
+  const held = await photos(keys);
+  if (!held) throw new Error("REGISTRY_PHOTO_STORE_UNAVAILABLE");
+  return { ...value, ...held };
+}
 
 function validate(value: RegistryRuntimeCarton, versionId: string): void {
   const sliced = currentReaderSelection() !== undefined;
@@ -46,7 +63,9 @@ export async function readRegistryRuntimeProjection(
   }
   const read = await readPromotedCivicData<RegistryRuntimeCarton>("REGISTRY_RUNTIME_BINDING", REGISTRY_RUNTIME_SCOPE, options);
   const result = (read.kind === "PROMOTED" || read.kind === "BOOTSTRAP"
-    ? { ...read, value: await withFactRegistry(read.value, factReader()) } : read) as CivicDataReadResult<RegistryRuntimeReadModel>;
+    ? { ...read, value: await registryWithFactFields(read.value, factReader(), !options.store && currentReaderSelection() && read.metadata.versionId
+      ? keys => new PostgresRoutineDataStore().readRegistryPhotos(REGISTRY_RUNTIME_SCOPE, keys)
+      : undefined) } : read) as CivicDataReadResult<RegistryRuntimeReadModel>;
   readState = result;
   const selection = currentReaderSelection();
   if (selection) selectedStates.set(selection, result);

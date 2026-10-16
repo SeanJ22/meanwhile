@@ -56,7 +56,7 @@ test("minutes paraphrases never attach to another body or supply a member roll c
 });
 
 test("standing comment rules require the exact body and division and never inherit a sibling policy", () => {
-  primeCommentAccess({ kind: "comment-access", records: COMMENT_ACCESS.map(record => ({ id: `comment-access:${record.bodyId}`, ...record })) }, "fixture");
+  primeCommentAccess({ kind: "comment-access", records: COMMENT_ACCESS.map(record => ({ id: `comment-access:${record.bodyId}`, ...record })) });
   const division = "ocd-division/country:us/state:az/place:tucson";
   assert.ok(commentAccessEvidenceFor(`${division}#planning-commission`, division, "Planning Commission").records.length > 0);
   assert.equal(commentAccessEvidenceFor(`${division}#unheld-advisory-body`, division, "Planning Commission").records.length, 0);

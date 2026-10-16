@@ -5,8 +5,7 @@ import { commentAccessFor, primeCommentAccess } from "../lib/registry/comment-ac
 import { COMMENT_ACCESS } from "./fixtures/comment-access.ts";
 import registry from "../lib/registry/registry.json" with { type: "json" };
 
-// Held as the reader edge serves them, so lookups read the process's current comment rules.
-primeCommentAccess({ kind: "comment-access", records: COMMENT_ACCESS.map((row) => ({ id: `comment-access:${row.bodyId}`, ...row })) }, "fixture");
+primeCommentAccess({ kind: "comment-access", records: COMMENT_ACCESS.map((row) => ({ id: `comment-access:${row.bodyId}`, ...row })) });
 
 test("every comment-access row names a real registry body and cites a source", () => {
   const bodyIds = new Set(registry.bodies.map((b) => b.id));

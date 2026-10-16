@@ -85,6 +85,11 @@ const CONTRACT_RULES: readonly {
     test: (s) => /\bDROP\s+TABLE\b/i.test(s),
   },
   {
+    rule: "drop-function",
+    why: "A database function used by the live build stops existing.",
+    test: (s) => /\bDROP\s+FUNCTION\b/i.test(s),
+  },
+  {
     rule: "drop-default",
     why: "A write that omits the column stops landing and starts failing. This is the 0011/0014 shape.",
     test: (s) => /\bDROP\s+DEFAULT\b/i.test(s),
@@ -125,11 +130,6 @@ const CONTRACT_RULES: readonly {
   },
 ];
 
-/**
- * The statements in a migration file, with SQL comments removed so prose that
- * quotes SQL is not classified. The breakpoint marker is split off before
- * stripping, because it begins with `--`.
- */
 export function statementsIn(sql: string): string[] {
   return sql
     .split("--> statement-breakpoint")
@@ -368,6 +368,25 @@ export const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
   },
   "0034_reader_events": { phase: "expand", why: "New aggregate and anonymous membership tables; existing capture stores are unaffected." },
   "0035_r1_fact_store": { phase: "expand", why: "Creates the fact store tables. Nothing reads or writes them before the build that ships with it." },
+  "NE-01_index": { phase: "expand", why: "Adds indexed place records and materializes current pointers before their readers ship." },
+  "NE-01_index_00": { phase: "expand", why: "Backfills one bounded bucket of accepted pointers into the new reader index." },
+  "NE-01_index_01": { phase: "expand", why: "Backfills one bounded bucket of accepted pointers into the new reader index." },
+  "NE-01_index_02": { phase: "expand", why: "Backfills one bounded bucket of accepted pointers into the new reader index." },
+  "NE-01_index_03": { phase: "expand", why: "Backfills one bounded bucket of accepted pointers into the new reader index." },
+  "NE-01_index_04": { phase: "expand", why: "Backfills one bounded bucket of accepted pointers into the new reader index." },
+  "NE-01_index_05": { phase: "expand", why: "Backfills one bounded bucket of accepted pointers into the new reader index." },
+  "NE-01_index_06": { phase: "expand", why: "Backfills one bounded bucket of accepted pointers into the new reader index." },
+  "NE-01_index_07": { phase: "expand", why: "Backfills one bounded bucket of accepted pointers into the new reader index." },
+  "NE-01_index_08": { phase: "expand", why: "Backfills one bounded bucket of accepted pointers into the new reader index." },
+  "NE-01_index_09": { phase: "expand", why: "Backfills one bounded bucket of accepted pointers into the new reader index." },
+  "NE-01_index_10": { phase: "expand", why: "Backfills one bounded bucket of accepted pointers into the new reader index." },
+  "NE-01_index_11": { phase: "expand", why: "Backfills one bounded bucket of accepted pointers into the new reader index." },
+  "NE-01_index_12": { phase: "expand", why: "Backfills one bounded bucket of accepted pointers into the new reader index." },
+  "NE-01_index_13": { phase: "expand", why: "Backfills one bounded bucket of accepted pointers into the new reader index." },
+  "NE-01_index_14": { phase: "expand", why: "Backfills one bounded bucket of accepted pointers into the new reader index." },
+  "NE-01_index_15": { phase: "expand", why: "Backfills one bounded bucket of accepted pointers into the new reader index." },
+  "NE-01_index_versions": { phase: "expand", why: "Initializes place fact clocks after canonical owners have been indexed." },
+  "NE-01_retire": { phase: "contract", why: "Removes payload sweep functions after indexed readers are serving." },
   "0036_ne01": { phase: "expand", why: "Adds defaulted read counters and reader selection functions; existing readers and writers keep working." },
   "0033_feedback_context": {
     phase: "expand",

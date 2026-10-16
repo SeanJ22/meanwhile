@@ -112,9 +112,6 @@ test("an unchanged authority version carries its served artifact forward; the ru
   const same = await publishReaderEdgeArtifacts(emptySnapshot(), META, { store, authority: { "registry-runtime": { versionId: "rt-v1", carried: true } } });
   assert.equal(same.status, "CURRENT");
 
-  // Another family changed, so a new manifest is written: the carried family
-  // keeps pointing at the exact artifact already served, and the Reader reads
-  // the same value back from it.
   const campaignSites = { records: [{ id: "site-1" }] };
   const advanced = await publishReaderEdgeArtifacts(emptySnapshot(), META, {
     store,
@@ -146,7 +143,7 @@ test("an unchanged authority version carries its served artifact forward; the ru
   // The runner asks the served manifest first and reads a family's value only
   // when its pointer has moved past the served version.
   const script = readFileSync("lib/civic-data/reader-edge-publication.ts", "utf8");
-  for (const family of ["registry-runtime", "federal-directory", "campaign-sites", "meeting-outcomes", "comment-access"]) {
+  for (const family of ["federal-directory", "campaign-sites", "meeting-outcomes"]) {
     assert.match(script, new RegExp(`servedIfCurrent\\("${family}"`), `${family} is checked against the served manifest`);
     assert.match(script, new RegExp(`authority\\["${family}"\\] = \\{ versionId: carried, carried: true \\}`), `${family} carries forward`);
   }

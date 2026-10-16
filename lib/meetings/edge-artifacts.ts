@@ -12,7 +12,6 @@ import {
   type SnapshotCarriedMeta,
 } from "./snapshot.ts";
 
-
 export const READER_ARTIFACT_FORMAT_VERSION = 1 as const;
 
 /** The scope for meetings whose OCD division names no state (online/unresolved). */
@@ -102,10 +101,17 @@ export function readerScopeApplies(
     [-360, 0, 360].some(shift => bounds.east + shift >= point.lng - lngDelta && bounds.west + shift <= point.lng + lngDelta);
 }
 
+export interface ReaderStateArtifact {
+  readonly sources: readonly SnapshotSourceReport[];
+  readonly freshChecks: Readonly<Record<string, string>>;
+  readonly scopes: readonly ReaderManifestScope[];
+  readonly meetingPlaces: Readonly<Record<string, readonly string[]>>;
+}
 
 export interface ReaderManifest {
+  readonly scopeLayout?: "states";
+  readonly meetingPlacesSha?: string;
   readonly carriedSummary?: SnapshotCarriedMeta;
-  readonly meetingPlaces?: Readonly<Record<string, readonly string[]>>;
   /** Missing on the former state layout; the normal publisher replaces it once. */
   readonly meetingLayout?: "governing-area";
   /** Registry version used for canonical body areas; absent on single-area copies. */
@@ -116,14 +122,11 @@ export interface ReaderManifest {
   readonly sourceThrough: string | null;
   readonly retrievedAt: string | null;
   readonly promotedThrough: string | null;
-  /** National per-source accounting the footer reads (shared across scopes). */
-  readonly sources: SnapshotSourceReport[];
   readonly scopes: readonly ReaderManifestScope[];
 
-  readonly commentAccess?: readonly unknown[];
   readonly everydayRouting?: unknown;
   /** Pointer identities for the embedded serving copies; old manifests refresh once. */
-  readonly extrasVersionIds?: Readonly<Partial<Record<"comment-access" | "everyday-routing", string | null>>>;
+  readonly extrasVersionIds?: Readonly<Partial<Record<"everyday-routing", string | null>>>;
 
   readonly authorityArtifacts?: Partial<Record<AuthorityFamily, AuthorityArtifactRef>>;
 
@@ -131,7 +134,7 @@ export interface ReaderManifest {
   /** Legislative people loaded separately for each requested jurisdiction. */
   readonly stateLegislators?: Readonly<Record<string, AuthorityArtifactRef>>;
 
-  readonly freshChecks?: Readonly<Record<string, string>>;
+  readonly checksSha?: string;
 
   readonly composition?: string;
 }
@@ -218,7 +221,7 @@ export const AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
 ];
 
 export interface AuthorityArtifactRef {
-  readonly layout?: "records";
+  readonly layout?: "places";
   readonly key: string;
   readonly version: string;
   readonly sha: string;
@@ -232,7 +235,6 @@ function countsFor(meetings: readonly Meeting[]): ReaderArtifactCounts {
   const base = snapshotCounts(meetings, 0);
   return { fresh: base.fresh, carried: base.carried, total: base.total, duplicatesCollapsed: 0 };
 }
-
 
 export function partitionSnapshotByScope(
   snapshot: MeetingsSnapshot,
@@ -300,10 +302,9 @@ export function scopesForStates(states: Iterable<string>): string[] {
   return [...set].sort();
 }
 
-
 export function mergeScopeArtifacts(
   artifacts: readonly ReaderGeoArtifact[],
-  manifest: Pick<ReaderManifest, "generatedAt" | "sources">,
+  manifest: { readonly generatedAt: string; readonly sources: readonly SnapshotSourceReport[] },
 ): MeetingsSnapshot {
   const meetingsById = new Map<string, Meeting>();
   const order = new Map<string, number>();
@@ -325,4 +326,22 @@ export function mergeScopeArtifacts(
     meetings,
     agendaDocuments: [...agendaById.values()].map(document => ({ ...document, meetingId: merged.aliases.get(document.meetingId) ?? document.meetingId })),
   };
+}
+
+const promotedRecordFamilies: Readonly<Record<string, PromotedAuthorityFamily>> = {
+  DOTGOV_REFERENCE: "government-domains", CANDIDATE_PROFILE: "candidate-profiles",
+  CANDIDATE_PUBLICATION: "candidate-publications", VOTING_SITE: "voting-sites",
+  FEC_FUNDING: "federal-funding", STATE_CAMPAIGN_FINANCE: "state-money",
+  LOCAL_CAMPAIGN_FINANCE: "pima-finance", FEDERAL_ROLL_CALL: "federal-votes", FEDERAL_KEY_VOTE: "federal-key-votes",
+  OFFICEHOLDER_STATEMENT: "officeholder-statements", PRL_ARCHIVE: "prl-archives", PRL_PROFILE: "prl-profiles",
+  STATE_EXECUTIVE_ACTION: "executive-actions", STATE_ROLL_CALL: "state-votes", STATE_LEGISLATOR_VOTES: "state-votes",
+};
+const promotedScopeFamilies: Readonly<Record<string, PromotedAuthorityFamily>> = {
+  "STATE_LEGISLATOR:US-NH": "nh-members",
+  "CURATED_READER_RECORD:US:candidate-campaign-sites-derived": "candidate-profiles", "CURATED_READER_RECORD:US:official-ballot-navigation": "ballot-navigation",
+  "CURATED_READER_RECORD:US:independently-verified-official-filings": "official-filings", "CURATED_READER_RECORD:US:state-legislator-member-offices": "member-offices",
+  "BALLOT_CANDIDACY:US-AZ:2026-general:supported-ballot": "ballot-az", "BALLOT_CANDIDACY:US-NH:merrimack:2026-general": "ballot-nh",
+};
+export function promotedFamilyOf(recordClass: string, scope: string): PromotedAuthorityFamily {
+  return promotedScopeFamilies[`${recordClass}:${scope}`] ?? promotedRecordFamilies[recordClass] ?? (recordClass === "BALLOT_CANDIDACY" ? "ballot-contests" : "other-reader-data");
 }

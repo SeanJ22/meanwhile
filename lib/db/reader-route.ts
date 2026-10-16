@@ -25,11 +25,13 @@ export function transferRead(body: string | undefined): string {
   } catch { return "query"; }
 }
 
-
 export interface ReaderSelection {
   readonly keys: Set<string>;
   readonly point?: readonly [number, number];
+  readonly radiusKm?: number;
   readonly divisions?: readonly string[];
+  readonly includeAgenda?: boolean;
+  readonly meetingId?: string;
   readonly governmentWindow?: readonly [number, number];
 }
 

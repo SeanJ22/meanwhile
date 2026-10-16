@@ -10,8 +10,6 @@ import {
 } from "./constants.ts";
 import { getMeetingSource, type ResolvedMeetingSource } from "./registry.ts";
 
-/** The empty-state cascade: widen the radius, then reach into the recent past, always saying which rung it landed on. */
-
 // Re-exported from ./constants.ts so client code can import the values without this module's server-only graph.
 export {
   CONCLUDED_LOOKBACK_DAYS,
@@ -92,18 +90,12 @@ function byStartDescending(a: Meeting, b: Meeting) {
   return Date.parse(b.startsAt) - Date.parse(a.startsAt);
 }
 
-/**
- * The key for "these sittings belong to the same government": `ocdId`, else the id's source-and-tenant prefix. Never
- * `bodyName`, which some publishers set per sitting.
- */
+// Publishers can change a body name between sittings; division and source identities remain stable.
 function bodyKey(m: Meeting): string {
   return m.ocdId ?? m.id.split(":").slice(0, 2).join(":");
 }
 
-/**
- * Which meetings are in view, including online ones with no distance to a centre. An online meeting is in view when
- * its division contains the centre, or when one of its body's physical sittings (upcoming or concluded) is in radius.
- */
+
 function within(
   meetings: Meeting[],
   lat: number,
@@ -145,12 +137,6 @@ function bodiesSittingWithin(
   );
 }
 
-/**
- * Find meetings to render for a map centered on `lat`/`lng`.
- *
- * Walks the radius ladder from `startRadiusKm` outward looking for upcoming
- * meetings, then falls back to recently concluded ones at the widest radius.
- */
 export async function searchMeetings(
   lat: number,
   lng: number,
@@ -171,48 +157,46 @@ export async function searchMeetings(
   const rungs = ladder.length > 0 ? ladder : [startRadiusKm];
   const widest = rungs[rungs.length - 1];
 
-  // One fetch at the widest radius; the rungs are filters over it. Saves the
-  // real adapter from three round trips to the same upstream.
   const shown = shownSettings ?? await readReaderMeetingSettings();
   const horizonMs = shown.shownAheadDays * 86_400_000;
   const lookbackMs = shown.shownBackDays * 86_400_000;
-
-  const all = (
-    await source.load(
-      {
-        lat,
-        lng,
-        radiusKm: widest,
-        startsAfter: new Date(now.getTime() - lookbackMs).toISOString(),
-        startsBefore: new Date(now.getTime() + horizonMs).toISOString(),
-      },
-      now,
-    )
-  ).map((m) => {
-    const jurisdiction = readerJurisdictionLabel(m.jurisdiction);
-    return jurisdiction === m.jurisdiction ? m : { ...m, jurisdiction };
-  });
-
-  const upcoming = all
-    .filter((m) => m.status === "SCHEDULED")
-    .filter((m) => {
-      const t = Date.parse(m.startsAt);
-      return t >= now.getTime() && t <= now.getTime() + horizonMs;
+  let all: Meeting[] = [], upcoming: Meeting[] = [];
+  for (const radiusKm of rungs) {
+    all = (
+      await source.load(
+        {
+          lat,
+          lng,
+          radiusKm,
+          startsAfter: new Date(now.getTime() - lookbackMs).toISOString(),
+          startsBefore: new Date(now.getTime() + horizonMs).toISOString(),
+        },
+        now,
+      )
+    ).map((m) => {
+      const jurisdiction = readerJurisdictionLabel(m.jurisdiction);
+      return jurisdiction === m.jurisdiction ? m : { ...m, jurisdiction };
     });
 
-  // Recent concluded and canceled sittings ride along with a successful rung but never decide the tier, and canceled
-  // sittings never fill the fallback tier.
-  const recentPast = all.filter((m) => {
-    if (m.status !== "CONCLUDED" && m.status !== "CANCELED") return false;
-    const t = Date.parse(m.startsAt);
-    return t >= now.getTime() - lookbackMs && t < now.getTime() + horizonMs;
-  });
+    upcoming = all
+      .filter((m) => m.status === "SCHEDULED")
+      .filter((m) => {
+        const t = Date.parse(m.startsAt);
+        return t >= now.getTime() && t <= now.getTime() + horizonMs;
+      });
 
-  // Bodies placed from both lists: a building listed only among upcoming sittings keeps the body's online concluded
-  // sittings in view, and the reverse.
-  const servedAtRung = [...upcoming, ...recentPast];
+    // Recent concluded and canceled sittings ride along with a successful rung but never decide the tier, and canceled
+    // sittings never fill the fallback tier.
+    const recentPast = all.filter((m) => {
+      if (m.status !== "CONCLUDED" && m.status !== "CANCELED") return false;
+      const t = Date.parse(m.startsAt);
+      return t >= now.getTime() - lookbackMs && t < now.getTime() + horizonMs;
+    });
 
-  for (const radiusKm of rungs) {
+    // Bodies placed from both lists: a building listed only among upcoming sittings keeps the body's online concluded
+    // sittings in view, and the reverse.
+    const servedAtRung = [...upcoming, ...recentPast];
+
     const bodiesInView = bodiesSittingWithin(servedAtRung, lat, lng, radiusKm);
     const hits = within(upcoming, lat, lng, radiusKm, bodiesInView, divisionsAtPoint);
     if (hits.length > 0) {

@@ -15,7 +15,7 @@ export function placeProjectionSourceSql(acceptedVersionsParameter?: number): st
 
 function collections(recordClass: string): Record<string, string> {
   if (recordClass === "CENSUS_REFERENCE") {
-    const population = "(x->>'geography' || ':' || x->>'code')=ANY($3::text[]) OR x->'divisionIds' ?| $3::text[]";
+    const population = "((x->>'geography') || ':' || (x->>'code'))=ANY($3::text[]) OR x->'divisionIds' ?| $3::text[]";
     return { state: population, zcta: population, geographies: population };
   }
   if (recordClass === "REGISTRY_RUNTIME_BINDING") return {

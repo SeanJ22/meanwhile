@@ -1,3 +1,4 @@
+import { withReaderSelection } from "../lib/db/reader-route.ts";
 import assert from "node:assert/strict";
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -20,12 +21,6 @@ import { factDb } from "./helpers/fact-db.ts";
 import { installRegistryAuthority, registryTransferImport, syntheticFederalDirectory } from "./helpers/promoted-fixtures.ts";
 import { installPimaOutcomes, pimaOutcomeFixture, recordedMeetingsSnapshot } from "./helpers/reader-fixtures.ts";
 import { september22Sitting } from "./helpers/pima-september-22-sitting.ts";
-
-/**
- * `enterReaderAuthorityEdge` is `AsyncLocalStorage.enterWith`: on Node 24 a store entered inside an async
- * helper never reaches promise reactions created from the caller. These tests publish a real local edge
- * store (`WTP_READER_EDGE_DIR`) and ask the real routes, so the reads must come from it.
- */
 
 delete process.env.ANTHROPIC_API_KEY;
 for (const key of ["DATABASE_URL", "DATABASE_URL_UNPOOLED", "NEON_DATABASE_URL"]) delete process.env[key];
@@ -160,9 +155,11 @@ test("comment rules are primed from the edge the caller entered, and read from l
   try {
     await (async () => {
       enterReaderAuthorityEdge({});
-      await settleCommentAccessRead();
-      assert.deepEqual(currentCommentAccess().map((rule) => [rule.bodyId, rule.commentPeriod, rule.signup]),
-        [["ocd-division/country:us/state:az/place:tucson#edge-test-commission", "YES", "speakers sign up at the clerk's table before the meeting begins"]]);
+      await withReaderSelection({ keys: new Set(["ocd-division/country:us/state:az/place:tucson#edge-test-commission"]) }, async () => {
+        await settleCommentAccessRead();
+        assert.deepEqual(currentCommentAccess().map((rule) => [rule.bodyId, rule.commentPeriod, rule.signup]),
+          [["ocd-division/country:us/state:az/place:tucson#edge-test-commission", "YES", "speakers sign up at the clerk's table before the meeting begins"]]);
+      });
     })();
   } finally {
     installFactReader(undefined);

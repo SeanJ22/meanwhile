@@ -16,7 +16,6 @@ import type { Meeting } from "@/lib/sources/types";
 import type { AskSitting } from "@/lib/ask/answer";
 import { type AgendaDocumentLike } from "@/lib/routing/agenda-search";
 import { seatHolderById, settleCommentAccessRead, settleFederalDirectoryRead, settleRegistryAuthorityReads } from "@/lib/registry/server";
-import { readCommentAccessFacts } from "@/lib/registry/comment-access";
 import { officialIdsForCandidacy } from "@/lib/funding/campaign-money";
 import { canonicalOfficialAliases } from "@/lib/ask/official-identity";
 import {
@@ -172,8 +171,6 @@ import {
 } from "@/lib/ask/local-finance";
 import { statesOf, voteEvidenceForIncludingHistory, voteEvidenceReadsStateRollCalls } from "@/lib/ask/votes";
 
-
-
 export const runtime = "nodejs";
 
 /** Logs the resolved model and effort once at startup, so an override is visible in the deployment log. Configuration only, never request content. */
@@ -218,7 +215,6 @@ interface MeetingLike {
   /** Present exactly when the row came from a previous snapshot. */
   carried?: unknown;
 }
-
 
 function meetingsForBody(
   meetings: readonly MeetingLike[],
@@ -325,7 +321,6 @@ function officeholderActionEvidence(
       });
     }
   }
-
 
   const undated = undatedFor(seatId);
   denominators.actionRecordsWithNoDate = undated.length;
@@ -434,7 +429,6 @@ async function answerWithSettings(request: Request) {
   let stageMark = Date.now();
   const lap = (name: string) => { const now = Date.now(); stageMs[name] = now - stageMark; stageMark = now; };
 
-
   const readerVoteAsk = readerPersonVotesQuestion(question);
   const topicRoute = readerVoteAsk || personVotesQuestionShape(question) ? null : topicFocusedQuestion(question);
   /* "Who is my state senator?": a lookup in the officeholders held for the reader's divisions (lib/ask/reader-officials.ts). It reads the registry and the federal directory and nothing else. */
@@ -479,9 +473,6 @@ async function answerWithSettings(request: Request) {
   // fetched is never an unhandled rejection; the settle below still records it.
   const outcomesFromDatabase = leanAsk || ballotOnlyHint || onEdge("meeting-outcomes") ? null : timed("outcomes", refreshOutcomeSnapshotFromPromoted)();
   outcomesFromDatabase?.catch(() => undefined);
-  const commentAccessFromDatabase = production && !leanAsk && !ballotOnlyHint && !onEdge("comment-access")
-    ? timed("commentAccess", () => readCommentAccessFacts().catch(() => undefined))()
-    : null;
   let authorityEdge: ReaderAuthorityEdgeBundle | null = null;
   if (edgeManifest?.authorityArtifacts) {
     authorityEdge = await timed("authorityEdge", () => ensureReaderAuthorityEdge(edgeManifest, undefined,
@@ -567,9 +558,7 @@ async function answerWithSettings(request: Request) {
     timed("registry", () => settleRegistryAuthorityReads("REGISTRY")),
     timed("federalDirectory", settleFederalDirectoryRead),
     outcomesFromDatabase ? () => outcomesFromDatabase : timed("outcomes", settleOutcomeRead),
-    ...(commentAccessFromDatabase
-      ? [() => commentAccessFromDatabase]
-      : production ? [timed("commentAccess", () => settleCommentAccessRead().catch(() => undefined))] : []),
+    ...(production ? [timed("commentAccess", () => settleCommentAccessRead().catch(() => undefined))] : []),
   ];
   // Where each deferrable source is read from, when it is read: its proven-pointer family on the edge, or the database.
   const promotedSource = (family: PromotedAuthorityFamily): "EDGE" | "DATABASE" =>
@@ -779,7 +768,6 @@ async function answerWithSettings(request: Request) {
   /* The office a held candidate is on the ballot for: a race the reader names ("for her state senate race") must be it. */
   const officeOf = (id: string) => ballotInventory.subjects.get(id)?.contestTitle ?? null;
 
-
   const suppliedToday =
     typeof body.today === "string" && /^\d{4}-\d{2}-\d{2}$/.test(body.today);
   const today = suppliedToday
@@ -789,7 +777,6 @@ async function answerWithSettings(request: Request) {
   const selectionNow = suppliedToday
     ? Date.parse(`${today}T12:00:00.000Z`)
     : Date.now();
-
 
   const canonicalReference = (ref: AskSubjectRef): AskSubjectRef => ({ ...ref, id: ref.id ? filingToBallot.get(ref.id) ?? officialToBallot.get(ref.id) ?? officialAliases.get(ref.id) ?? ref.id : ref.id });
   const activeSubjects: AskSubjectRef[] = readSubjectRefs(body.activeSubjects).map(canonicalReference);
@@ -968,7 +955,6 @@ async function answerWithSettings(request: Request) {
 
   lap("interpretation");
 
-
   async function answerPath(interpretation: AskInterpretation, trace: AskTrace) {
     // A literal reader date outranks inferred tense, including a model's reading.
     if (requestedMeetingDate) {
@@ -1114,7 +1100,6 @@ async function answerWithSettings(request: Request) {
         return Response.json(answer);
       } };
     }
-
 
     const topicFocus = topicRoute && !requestedMeetingDate && resolution.binding.kind === "BOUND" && resolution.binding.entity.level === "BODY"
       ? topicRoute : null;
@@ -1296,8 +1281,6 @@ async function answerWithSettings(request: Request) {
       /* The body name is the division, unslugged from its id, never the contest title. */
 
       contacts.push(...contactsForDivision(ballotRecord.ocdId, divisionNameOf(ballotRecord.ocdId)));
-
-
 
       /* Candidacy → officeholder uses the committed person relationship; officeholder → votes uses the publisher's stable key. An unresolved relationship produces an identity gap, never a name search. The office on every record is the one held. */
       if (ballotRecord.kind === "PERSON" && !moneyOnly) {
@@ -1621,7 +1604,6 @@ async function answerWithSettings(request: Request) {
         denominators.archivedStatementsReturned = archived.statements.length;
       }
     }
-
 
     /* Every money question carries all three regime statements; one regime's absence never stands for all. */
     if (subject?.kind === "PERSON" && !moneyOnly) {
@@ -2093,7 +2075,6 @@ async function answerWithSettings(request: Request) {
       composedWhy,
     };
   }
-
 
   const settleSpeculation = (model: ReadingOutcome | "MODEL_READING_UNAVAILABLE" | "MODEL_READING_NEEDS_NO_WRITER"): boolean => {
     if (!speculation) return false;

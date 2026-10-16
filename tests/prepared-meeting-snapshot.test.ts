@@ -35,6 +35,12 @@ function preparedInput(overrides: Partial<PreparedReaderProjectionInput> = {}): 
 function fakeStore(overrides: Partial<RoutineDataStore>): RoutineDataStore {
   const notImplemented = async (): Promise<never> => { throw new Error("FAKE_STORE_METHOD_NOT_IMPLEMENTED"); };
   return {
+    listPromotionStates: notImplemented,
+    readPromotionBase: notImplemented,
+    readPromotionHeader: notImplemented,
+    listPromotionPlaces: notImplemented,
+    readPromotionPlace: notImplemented,
+    readRegistryPhotos: notImplemented,
     create: notImplemented,
     transition: notImplemented,
     promote: notImplemented,
@@ -137,10 +143,6 @@ test("the reader fast-path falls back to the composing reader only when no prepa
 });
 
 test("preparing over an unchanged promoted set is idempotent and never recomposes", async () => {
-  // The prepared row's coupling already matches the current promoted partitions,
-  // so prepare must return CURRENT without touching the expensive compose. We
-  // prove the compose was skipped by making any candidate read throw: if the
-  // orchestration composed, it would surface as FAILED/NOT_COMPOSABLE, not CURRENT.
   const contracts = MEETING_PARTITION_CONTRACTS;
   const promotions: PromotedProjection[] = contracts.map((contract) => ({
     key: `MEETING:${contract.scope}`,
@@ -154,7 +156,7 @@ test("preparing over an unchanged promoted set is idempotent and never recompose
     receipt: {} as never,
   }));
   const composedFrom = [...contracts.map((contract) => ({ contractId: contract.id, versionId: `ver-${contract.id}` })),
-    { contractId: "meeting-facts", versionId: "facts:none" }];
+    { contractId: "meeting-facts", versionId: "facts:none" }, { contractId: "reader-state-sources", versionId: "1" }];
   // The idempotent pass decides from identities and the serving copy's coupling alone: no partition or composed
   // payload is read to learn that nothing changed.
   const store = fakeStore({
@@ -308,7 +310,7 @@ test("prepare composes through the pass's shared composition, and only when the 
     scope: MEETINGS_PREPARED_SCOPE,
     sequence: 1,
     composedFrom: [...contracts.map((contract) => ({ contractId: contract.id, versionId: `ver-${contract.id}` })),
-      { contractId: "meeting-facts", versionId: "facts:none" }],
+      { contractId: "meeting-facts", versionId: "facts:none" }, { contractId: "reader-state-sources", versionId: "1" }],
     generatedAt: snapshot.generatedAt,
   };
   const current = await preparePublishedMeetingSnapshot(store, "2026-09-06T00:10:00.000Z", { aggregate });

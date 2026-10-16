@@ -107,7 +107,14 @@ function candidateReadOnlyStore(
   const readOnly = async (): Promise<never> => {
     throw new Error("SOURCE_SCOPED_PREFLIGHT_STORE_IS_READ_ONLY");
   };
+  const unpublished = async (): Promise<never> => { throw new Error("SOURCE_SCOPED_PREFLIGHT_HAS_NO_PUBLISHED_INDEX"); };
   return {
+    listPromotionStates: unpublished,
+    readPromotionBase: unpublished,
+    readPromotionHeader: unpublished,
+    listPromotionPlaces: unpublished,
+    readPromotionPlace: unpublished,
+    readRegistryPhotos: unpublished,
     create: readOnly,
     transition: readOnly,
     promote: readOnly,

@@ -1,5 +1,4 @@
 import { readerRoute } from "@/lib/api/reader-route";
-import type { VotesSnapshot } from "@/lib/votes/types";
 import { getVotesSnapshot, readFederalRollCallsProjection } from "@/lib/votes/snapshot";
 import { partyBreakdownFor } from "@/lib/votes/party-breakdown";
 import { pickedKeyVotesFor } from "@/lib/votes/key-vote-picks";
@@ -21,8 +20,6 @@ import { readHistoricalFederalVotesForMember } from "@/lib/votes/history";
 import { mayUseTestFixture } from "@/lib/civic-data/fixture-policy";
 import { readNativeMemberVotes } from "@/lib/state-rollcalls/reader-votes";
 import { stateVoteStateForMember } from "@/lib/state-rollcalls/reader-vote-visibility";
-
-
 
 export const runtime = "nodejs";
 
@@ -93,7 +90,6 @@ async function readCanonicalStateVoteScope(scope: OfficialStateVoteScope): Promi
   };
 }
 
-
 export async function settleStateVoteMemberHolding(
   member: string,
   scope: OfficialStateVoteScope,
@@ -128,7 +124,6 @@ function researchFixtureScopeForMember(member: string): OfficialStateVoteScope |
   );
   return matches.length === 1 ? matches[0]! : null;
 }
-
 
 export async function settleFederalVoteSupportingHoldings(
   member: string,
@@ -252,7 +247,7 @@ export const GET = readerRoute("/api/votes", async function GET(request: Request
     return stateVotes(member, holding.holding, holding.unavailableScopes);
   }
 
-  let snap: VotesSnapshot;
+  let snap: ReturnType<typeof getVotesSnapshot>;
   let federalRead: Awaited<ReturnType<typeof readFederalRollCallsProjection>>;
   try {
     federalRead = await readFederalRollCallsProjection();
@@ -293,14 +288,16 @@ export const GET = readerRoute("/api/votes", async function GET(request: Request
   const votes = snap.votes
     .filter((v) => positions.has(v.id))
     .sort((a, b) => b.rollNumber - a.rollNumber)
-    .map((v) => ({
+    .map(({readerPartyVoters,...v}) => ({
       ...v,
       position: positions.get(v.id),
-      partyBreakdown: partyBreakdownFor(v.id, v.result, snap.positions, supporting.parties),
+      partyBreakdown: partyBreakdownFor(v.id,v.result,([
+        ...readerPartyVoters.yes.map(officeholderId => ({officeholderId,voteId:v.id,position:"YES" as const})),
+        ...readerPartyVoters.no.map(officeholderId => ({officeholderId,voteId:v.id,position:"NO" as const})),
+      ]),supporting.parties),
       billSummary: summaryForBill(v.billUrl),
       billSummaryPending: summaryPendingForBill(v.billUrl),
     }));
-
 
   const { chamber, rows: keyVotes } = supporting.curated;
 
@@ -315,6 +312,6 @@ export const GET = readerRoute("/api/votes", async function GET(request: Request
     keyVotes,
     keyVotesHoldingStatus: supporting.keyVotesHoldingStatus,
     keyVotesCriteria: keyVotes.length > 0 ? KEY_VOTES_CRITERIA : null,
-    pickedKeyVotes: pickedKeyVotesFor(await readKeyVotePicks(), chamber, snap.votes, snap.positions, member),
+    pickedKeyVotes: pickedKeyVotesFor(await readKeyVotePicks(), chamber, snap.votes.map(({readerPartyVoters: _voters,...vote}) => vote), snap.positions, member),
   });
 }, ["registry-runtime","federal-directory","state-legislators","state-votes","federal-votes","federal-key-votes"]);

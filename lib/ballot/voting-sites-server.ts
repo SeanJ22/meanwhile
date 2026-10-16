@@ -1,3 +1,4 @@
+import { currentReaderSelection } from "../db/reader-route.ts";
 import {
   civicDataReadNotInitialized,
   promotedVersionOrThrow,
@@ -19,7 +20,7 @@ function validateVotingSites(value: VotingSitesFile, version: string): void {
   if (
     !/^\d{4}-\d{2}-\d{2}$/.test(value.generatedAt) ||
     !Array.isArray(value.jurisdictions) ||
-    value.jurisdictions.length === 0 ||
+    (value.jurisdictions.length === 0 && !currentReaderSelection()) ||
     value.jurisdictions.some((jurisdiction) =>
       !jurisdiction.ocdId ||
       !jurisdiction.sourceUrl ||

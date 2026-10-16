@@ -1,3 +1,5 @@
+import { publishIndexedPromotedFamily } from "./state-authority-publication.ts";
+import type { ReaderArtifactStore } from "../meetings/edge-store.ts";
 import { DOTGOV_SCOPE, readDotGovProjection } from "./dotgov.ts";
 import { readGenericBallotProjection } from "../ballot/generic-projection.ts";
 import { createHash } from "node:crypto";
@@ -5,7 +7,6 @@ import { createHash } from "node:crypto";
 import {
   promotedEdgeEntryOf,
   readPromotedCivicData,
-  type CivicDataReadStore,
   type PromotedCivicDataReadOptions,
   type PromotedEdgeEntry,
 } from "./read-model.ts";
@@ -38,13 +39,11 @@ import { readOfficeholderStatementsProjection } from "../corpus/data-plane.ts";
 import { readExecutiveActionsProjection } from "../officials/executive-actions.ts";
 import { AZ_OFFICIAL_ACTIONS_CONTRACT } from "../outcomes/data-plane.ts";
 import type { PromotedAuthorityFamily, PromotedFamilyArtifactValue, ReaderManifest } from "../meetings/edge-artifacts.ts";
-import { servedAuthorityVersion, type PublishAuthorityCarried, type PublishAuthorityValue } from "../meetings/edge-serving.ts";
+import { servedAuthorityVersion, type PublishAuthorityCarried, type PublishAuthorityValue, type PublishAuthorityIndex } from "../meetings/edge-serving.ts";
 import { PRL_ARCHIVE_SCOPE, readPrlArchiveProjection } from "../sources/prl/archive-publication.ts";
 import { PRL_CONTRACT } from "../sources/prl/data-plane.ts";
 import { readPrlProjection } from "../sources/prl/snapshot.ts";
 import type { RoutineDataStore } from "./store.ts";
-
-
 
 interface ReaderAnswer {
   readonly kind: string;
@@ -105,7 +104,7 @@ export function promotedEdgePointers(): Readonly<Record<PromotedAuthorityFamily,
 
 type PointerState = Pick<PromotedPointerIdentity, "versionId" | "latestConfirmation"> | null;
 
-export function promotedPointerVersion(recordClass: RoutineRecordClass, scope: string, pointer: PointerState): string {
+function promotedPointerVersion(recordClass: RoutineRecordClass, scope: string, pointer: PointerState): string {
   if (pointer === null) return `${recordClass}:${scope}=none`;
   const confirmation = pointer.latestConfirmation
     ? `~${createHash("sha256").update(JSON.stringify(pointer.latestConfirmation)).digest("hex").slice(0, 16)}`
@@ -113,17 +112,18 @@ export function promotedPointerVersion(recordClass: RoutineRecordClass, scope: s
   return `${recordClass}:${scope}=${pointer.versionId}${confirmation}`;
 }
 
-export function promotedFamilyVersion(versions: readonly string[]): string {
-  return [...versions].sort().join("|");
+function promotedFamilyVersion(versions: readonly string[]): string {
+  return createHash("sha256").update(JSON.stringify([...versions].sort())).digest("hex");
 }
 
-export interface PromotedEdgeFamiliesRead {
-  readonly authority: Partial<Record<PromotedAuthorityFamily, PublishAuthorityValue | PublishAuthorityCarried>>;
+interface PromotedEdgeFamiliesRead {
+  readonly authority: Partial<Record<PromotedAuthorityFamily, PublishAuthorityValue | PublishAuthorityCarried | PublishAuthorityIndex>>;
   readonly skipped: readonly string[];
 }
 
 export async function readPromotedEdgeFamilies(input: {
-  readonly store: CivicDataReadStore & Pick<RoutineDataStore, "listPromotionScopes"> & { readonly readPromotionIdentity: NonNullable<CivicDataReadStore["readPromotionIdentity"]> };
+  readonly store: RoutineDataStore;
+  readonly artifacts: ReaderArtifactStore;
   readonly servedManifest: Pick<ReaderManifest, "authorityArtifacts"> | null;
   readonly now: string;
   readonly families?: Readonly<Partial<Record<PromotedAuthorityFamily, readonly PromotedEdgePointer[]>>>;
@@ -138,7 +138,7 @@ export async function readPromotedEdgeFamilies(input: {
   }
   if (families["state-votes"]?.length === 0) families["state-votes"] = (await input.store.listPromotionScopes?.(["STATE_ROLL_CALL", "STATE_LEGISLATOR_VOTES"]) ?? [])
     .map(pointer => ({ ...pointer, reader: options => readPromotedCivicData(pointer.recordClass, pointer.scope, options) }));
-  const authority: Partial<Record<PromotedAuthorityFamily, PublishAuthorityValue | PublishAuthorityCarried>> = {};
+  const authority: Partial<Record<PromotedAuthorityFamily, PublishAuthorityValue | PublishAuthorityCarried | PublishAuthorityIndex>> = {};
   const skipped: string[] = [];
   for (const [family, pointers] of Object.entries(families) as [PromotedAuthorityFamily, readonly PromotedEdgePointer[]][]) {
     try {
@@ -150,6 +150,14 @@ export async function readPromotedEdgeFamilies(input: {
           authority[family] = { versionId: served, carried: true };
           continue;
         }
+      }
+      if (["ballot-contests", "candidate-profiles", "candidate-publications", "voting-sites", "government-domains"].includes(family)) {
+        const versionId = promotedFamilyVersion(await Promise.all(pointers.map(async ({ recordClass, scope }) =>
+          promotedPointerVersion(recordClass, scope, await input.store.readPromotionIdentity(recordClass, scope)))));
+        authority[family] = await publishIndexedPromotedFamily({ store: input.store, artifacts: input.artifacts,
+          served: input.servedManifest?.authorityArtifacts?.[family], pointers, versionId,
+          onFailure: (_state, error) => { throw error; } });
+        continue;
       }
       const entries: PromotedEdgeEntry[] = [];
       const versions: string[] = [];

@@ -43,6 +43,7 @@ export const MEETINGS_SNAPSHOT_STAMPS = {
 } as const;
 
 export interface SnapshotSourceReport {
+  bodyId?: string;
   source: string;
   ok: boolean;
   /** Why the source contributed nothing, when it didn't. */
@@ -128,7 +129,6 @@ export function snapshotCounts(
     total: rows.length,
   };
 }
-
 
 export function accountCarriedCollapses(
   partitions: readonly Pick<MeetingsSnapshot, "meetings" | "sources">[],
@@ -596,12 +596,13 @@ export async function readMeetingsProjection(
       const checkedAt = confirmationCheckedAt(read.result.projection?.latestConfirmation, read.result.metadata.versionId, readsASource);
       const routes = meetingVersionRoutes(read.result.value);
       const history = historyByPartition.get(read.partition.id);
+      const value = stampMeetingDoor(read.partition, mergeMeetingHistory(
+        applyPartitionFreshCheck(read.result.value, checkedAt),
+        history !== undefined && "value" in history ? history.value : null,
+      ));
       return {
         ...read,
-        value: stampMeetingDoor(read.partition, mergeMeetingHistory(
-          applyPartitionFreshCheck(read.result.value, checkedAt),
-          history !== undefined && "value" in history ? history.value : null,
-        )),
+        value: { ...value, sources: value.sources.map(source => ({ ...source, bodyId: read.partition.bodyId })) },
         freshCheck: routes === null ? undefined : { routes, checkedAt } satisfies MeetingPartitionFreshCheck,
       };
     });
@@ -648,6 +649,7 @@ export async function readMeetingsProjection(
       if (partition.derivedFamily !== null && readback.kind === "NOT_RECORDED") continue;
       sources.push({
         source: partition.meetingSource,
+        bodyId: partition.bodyId,
         ok: false,
         error: `${partition.bodyId}: ${readback.detail ?? "partition unavailable"}`,
         failure: "WALL",

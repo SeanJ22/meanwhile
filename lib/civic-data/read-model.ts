@@ -1,3 +1,4 @@
+import { assembleAuthorityRecords, type AuthorityPatch } from "../meetings/authority-records.ts";
 import { readerQuery } from "./promoted-reader-query.ts";
 import { currentReaderRoute, currentReaderSelection, type ReaderSelection } from "../db/reader-route.ts";
 import { createHash } from "node:crypto";
@@ -200,7 +201,6 @@ function attestationOf(
   };
 }
 
-
 export type PromotedEdgeEntry<T = unknown> =
   | {
       readonly kind: "PROMOTED";
@@ -316,7 +316,6 @@ interface CachedPromotion {
 }
 
 const cache = new Map<string, CachedPromotion | { readonly expiresAt: number; readonly projection: null }>();
-
 
 const provenByVersion = new Map<string, { projection: PromotedProjection; candidate: CandidateVersionRecord }>();
 
@@ -1269,22 +1268,25 @@ async function readReaderProjection(recordClass: RoutineRecordClass, scope: stri
 async function loadReaderProjection(recordClass: RoutineRecordClass, scope: string, selection: ReaderSelection): Promise<PromotedEdgeEntry> {
   const query = readerQuery(1800);
   if (!query) throw new Error("READER_STORE_UNCONFIGURED");
+  const keys = [...selection.keys];
   const window = selection.governmentWindow;
-  const payload = window ? `reader_inventory_payload(p.payload,$4::int,$5::int)` : `reader_place_payload(p.payload,$3::text[],$4::jsonb)`;
+  if (window) for (let i = window[0]; i < window[0] + window[1]; i++) keys.push(`inventory:${Math.floor(i / 50)}`);
   const [rows] = await query([{ text: `SELECT p.key, p.source_id, p.record_class, p.scope, p.current_version_id, p.last_known_good_version_id,
     p.promoted_at, (p.validation_receipt - 'excludedFacts') || jsonb_build_object('excludedFacts','[]'::jsonb) validation_receipt,
-    ${payload} payload,
-    c.retrieved_at, reader_payload_node(c.candidate)->'temporal' temporal FROM civic_data_promotions p
-    JOIN civic_data_candidates c ON c.id=p.current_version_id
-    WHERE p.record_class=$1 AND p.scope=$2 AND c.state='PROMOTED' AND $3::text[] IS NOT NULL`, params: [recordClass, scope, [...selection.keys], ...(window ?? [selection.point ? JSON.stringify(selection.point) : null])] }]);
+    r.base, r.version_id indexed_version_id, reader_selected_records(p.key,$3::text[],$4::jsonb,$5::boolean,$6::text,$7::float8) patches,
+    r.retrieved_at, r.temporal FROM civic_data_promotions p
+    LEFT JOIN reader_place_roots r ON r.pointer_key=p.key AND r.version_id=p.current_version_id
+    WHERE p.record_class=$1 AND p.scope=$2`, params: [recordClass, scope, keys, selection.point ? JSON.stringify(selection.point) : null, selection.includeAgenda !== false, selection.meetingId ?? null, selection.radiusKm ?? 150] }]);
   const row = rows[0];
   if (!row) return { kind: "NOT_RECORDED", recordClass, scope };
+  if (row.indexed_version_id !== row.current_version_id) throw new Error("READER_PLACE_INDEX_MISSING");
+  const payload = assembleAuthorityRecords(row.base, row.patches as AuthorityPatch[], selection);
   const temporal = row.temporal as { staleAtRetrieval?: boolean; version?: string; sourceThrough?: string } | null;
   return { kind: "PROMOTED", projection: { key: row.key as string, sourceId: row.source_id as string, recordClass, scope,
     versionId: row.current_version_id as string, lastKnownGoodVersionId: row.last_known_good_version_id as string,
-    promotedAt: new Date(row.promoted_at as string).toISOString(), payload: row.payload,
+    promotedAt: new Date(row.promoted_at as string).toISOString(), payload,
     receipt: row.validation_receipt as Extract<PromotedEdgeEntry, {kind:"PROMOTED"}>["projection"]["receipt"] },
-    attested: { recordClass, scope, versionId: row.current_version_id as string, payloadSha256: promotedPayloadSha256(row.payload),
+    attested: { recordClass, scope, versionId: row.current_version_id as string, payloadSha256: promotedPayloadSha256(payload),
       retrievedAt: new Date(row.retrieved_at as string).toISOString(), staleAtRetrieval: temporal?.staleAtRetrieval === true,
       version: temporal?.version ?? null, sourceThrough: temporal?.sourceThrough ?? null } };
 }

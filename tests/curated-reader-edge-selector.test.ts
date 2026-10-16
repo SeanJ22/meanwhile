@@ -51,8 +51,10 @@ test("edge-served comment rules answer in production, with no database", async (
     versionId: "edge-test:comment-access",
   };
   await asProduction(async () => {
-    await withReaderAuthorityEdge({ commentAccess }, () => settleCommentAccessRead());
-    assert.deepEqual(currentCommentAccess().map((rule) => rule.bodyId), ["edge-test-body"]);
+    await withReaderAuthorityEdge({ commentAccess }, async () => {
+      await settleCommentAccessRead();
+      assert.deepEqual(currentCommentAccess().map((rule) => rule.bodyId), ["edge-test-body"]);
+    });
   });
 });
 

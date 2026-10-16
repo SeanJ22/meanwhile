@@ -22,16 +22,19 @@ import { STATE_CAMPAIGN_FINANCE_SOURCES, stateCampaignFinanceCandidate } from ".
 import { computeSplit, type StateMoneySnapshot } from "../lib/funding/state-money.ts";
 import { readStateMoneyProjection, settleStateMoneyRead } from "../lib/funding/state-snapshot.ts";
 import { ensureReaderAuthorityEdge, publishReaderEdgeArtifacts, type PublishAuthority } from "../lib/meetings/edge-serving.ts";
+import { readAuthorityRecords } from "../lib/meetings/authority-records.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
-import type { PromotedFamilyArtifactValue } from "../lib/meetings/edge-artifacts.ts";
+import { promotedFamilyOf, type PromotedFamilyArtifactValue } from "../lib/meetings/edge-artifacts.ts";
 import { readPromotedEdgeFirst, ReaderEdgeOnlyRefusal, withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { VOTING_SITES_CONTRACT, votingSitesCandidate } from "../lib/ballot/voting-sites-data-plane.ts";
 import { readVotingSitesProjection } from "../lib/ballot/voting-sites-server.ts";
 import type { VotingSitesFile } from "../lib/ballot/voting-sites.ts";
 
-// A proven pointer on the reader edge reads exactly as the database read of it: kind, value, metadata, staleness.
-
 for (const key of ["DATABASE_URL", "DATABASE_URL_UNPOOLED", "NEON_DATABASE_URL", "NETLIFY", "NETLIFY_BLOBS_CONTEXT", "NETLIFY_SITE_ID", "WTP_READER_EDGE_DIR"]) delete process.env[key];
+
+const familyArtifactDir = mkdtempSync(join(tmpdir(), "promoted-family-"));
+after(() => rmSync(familyArtifactDir, { recursive: true, force: true }));
+const familyArtifacts = new LocalFileArtifactStore(familyArtifactDir);
 
 const T0 = "2026-09-08T12:00:00.000Z";
 const T1 = "2026-09-25T15:00:00.000Z";
@@ -111,7 +114,7 @@ test("default rechecks keep one candidate and advance freshness; explicit false 
 
 test("one state refresh retains its accepted evidence while a sibling state publishes new facts", async () => {
   const { store } = await promotedAzStore();
-  const first = await readPromotedEdgeFamilies({ store, servedManifest: null, now: T1, families: { "state-money": stateMoneyPointers(["AZ", "NH"]) } });
+  const first = await readPromotedEdgeFamilies({ artifacts: familyArtifacts, store, servedManifest: null, now: T1, families: { "state-money": stateMoneyPointers(["AZ", "NH"]) } });
   const prior = first.authority["state-money"]!;
   assert.ok("value" in prior);
   const record = { ...structuredClone(AZ_RECORD), jurisdiction: "NH", committeeId: "nh-001", targetKeys: [],
@@ -126,7 +129,7 @@ test("one state refresh retains its accepted evidence while a sibling state publ
   assert.equal(promotion.candidate.state, "PROMOTED", JSON.stringify(promotion.candidate.receipt));
   const pointers = stateMoneyPointers(["AZ", "NH"]).map(pointer => pointer.scope === AZ.scope
     ? { ...pointer, reader: async () => ({ kind: "STORE_UNREACHABLE" }) } : pointer);
-  const refreshed = await readPromotedEdgeFamilies({ store, now: T1, families: { "state-money": pointers },
+  const refreshed = await readPromotedEdgeFamilies({ artifacts: familyArtifacts, store, now: T1, families: { "state-money": pointers },
     servedManifest: { authorityArtifacts: { "state-money": { key: "held", sha: "held", version: prior.versionId } } },
     readServedFamily: async () => prior.value as PromotedFamilyArtifactValue });
   const entries = entriesOf(refreshed, "state-money");
@@ -161,14 +164,14 @@ test("published voting sites serve the same jurisdictions and sites from the req
   });
   assert.equal((await processRegisteredManualCandidate(store, "voting-sites", candidate, T0)).candidate.state, "PROMOTED");
   const database = await readVotingSitesProjection({ store, bypassCache: true, now: T1 });
-  const published = await readPromotedEdgeFamilies({
+  const published = await readPromotedEdgeFamilies({ artifacts: familyArtifacts,
     store, servedManifest: null, now: T1,
     families: { "voting-sites": promotedEdgePointers()["voting-sites"] },
   });
   assert.deepEqual(published.skipped, []);
   const family = published.authority["voting-sites"];
-  assert.ok(family && "value" in family);
-  const entries = (family.value as PromotedFamilyArtifactValue).entries;
+  assert.ok(family && "index" in family);
+  const entries = (await readAuthorityRecords(family.index, familyArtifacts, { keys: new Set([VOTING_SITES.jurisdictions[0].ocdId]) }) as PromotedFamilyArtifactValue).entries;
   assert.equal(entries.length, 1);
   const edge = await withReaderAuthorityEdge({
     edgeOnly: true,
@@ -179,7 +182,7 @@ test("published voting sites serve the same jurisdictions and sites from the req
 
 test("the edge copy of a proven pointer reads exactly as the database read of it, through the family's own Reader", async () => {
   const { store } = await promotedAzStore();
-  const read = await readPromotedEdgeFamilies({ store, servedManifest: null, now: T1, families: { "state-money": stateMoneyPointers(["AZ", "NH"]) } });
+  const read = await readPromotedEdgeFamilies({ artifacts: familyArtifacts, store, servedManifest: null, now: T1, families: { "state-money": stateMoneyPointers(["AZ", "NH"]) } });
   assert.deepEqual(read.skipped, []);
   const [az, nh] = entriesOf(read, "state-money");
   assert.equal(az?.kind, "PROMOTED");
@@ -201,7 +204,7 @@ test("the edge copy of a proven pointer reads exactly as the database read of it
 
 test("an edge copy the database proof would refuse is refused as PROMOTION_PROOF_INVALID, never served", async () => {
   const { store } = await promotedAzStore();
-  const [az] = entriesOf(await readPromotedEdgeFamilies({ store, servedManifest: null, now: T1, families: { "state-money": stateMoneyPointers(["AZ"]) } }), "state-money");
+  const [az] = entriesOf(await readPromotedEdgeFamilies({ artifacts: familyArtifacts, store, servedManifest: null, now: T1, families: { "state-money": stateMoneyPointers(["AZ"]) } }), "state-money");
   assert.ok(az?.kind === "PROMOTED");
   const refused = async (entry: PromotedEdgeEntry, scope: string = AZ.scope) => {
     const result = await readPromotedCivicData("STATE_CAMPAIGN_FINANCE", scope, { edge: entry, now: T1 });
@@ -232,7 +235,7 @@ test("the runner carries a family whose pointers have not moved, re-reads it whe
     return (await artifacts.readManifest())!.manifest;
   };
 
-  const first = await readPromotedEdgeFamilies({ store, servedManifest: null, now: T1, families });
+  const first = await readPromotedEdgeFamilies({ artifacts: familyArtifacts, store, servedManifest: null, now: T1, families });
   const served = await publish(first.authority);
   const servedRef = served.authorityArtifacts?.["state-money"];
   assert.ok(servedRef, "the family was published");
@@ -243,7 +246,7 @@ test("the runner carries a family whose pointers have not moved, re-reads it whe
     if (key === "readPromotion" || key === "readCandidateProof" || key === "readCandidate") payloadReads += 1;
     return Reflect.get(target, key, receiver);
   } });
-  const again = await readPromotedEdgeFamilies({ store: counting, servedManifest: served, now: T1, families });
+  const again = await readPromotedEdgeFamilies({ artifacts: familyArtifacts, store: counting, servedManifest: served, now: T1, families });
   assert.deepEqual(again.authority["state-money"], { versionId: servedRef.version, carried: true });
   assert.equal(payloadReads, 0, "an unmoved family read its payload");
 
@@ -259,14 +262,14 @@ test("the runner carries a family whose pointers have not moved, re-reads it whe
     retrieval: { requestedUrl: AZ_URL, finalUrl: AZ_URL, httpStatus: 200, rawHash: "e".repeat(64), retrievedAt: "2026-09-20T00:00:00.000Z" },
   }, "2026-09-20T00:00:03.000Z");
   assert.equal(confirmed.kind, "CONFIRMED");
-  const moved = await readPromotedEdgeFamilies({ store, servedManifest: served, now: T1, families });
+  const moved = await readPromotedEdgeFamilies({ artifacts: familyArtifacts, store, servedManifest: served, now: T1, families });
   const [entry] = entriesOf(moved, "state-money");
   assert.notEqual((moved.authority["state-money"] as { versionId: string }).versionId, servedRef.version, "a confirmation did not move the family's version");
   assert.equal((await readStateMoneyProjection("AZ", { edge: entry!, now: T1 })).metadata.retrievedAt, "2026-09-20T00:00:00.000Z", "the edge read lost the confirmation");
 
   // A family whose own Reader refuses the entry is left out whole.
   const refusing: PromotedEdgePointer = { ...families["state-money"][0]!, reader: async () => ({ kind: "PROJECTION_INVALID", metadata: { versionId: null } }) };
-  const left = await readPromotedEdgeFamilies({ store, servedManifest: null, now: T1, families: { "state-money": [refusing] } });
+  const left = await readPromotedEdgeFamilies({ artifacts: familyArtifacts, store, servedManifest: null, now: T1, families: { "state-money": [refusing] } });
   assert.equal(left.authority["state-money"], undefined);
   assert.match(left.skipped.join("\n"), /state-money .*its Reader answered the edge entry PROJECTION_INVALID/);
 });
@@ -276,7 +279,7 @@ test("published, fetched and entered: a reader request reads the family from the
   const dir = mkdtempSync(join(tmpdir(), "wtp-promoted-edge-"));
   after(() => rmSync(dir, { recursive: true, force: true }));
   const artifacts = new LocalFileArtifactStore(dir);
-  const { authority } = await readPromotedEdgeFamilies({ store, servedManifest: null, now: T1, families: { "state-money": stateMoneyPointers(["AZ"]) } });
+  const { authority } = await readPromotedEdgeFamilies({ artifacts: familyArtifacts, store, servedManifest: null, now: T1, families: { "state-money": stateMoneyPointers(["AZ"]) } });
   const published = await publishReaderEdgeArtifacts({
     formatVersion: 1, generatedAt: T1, counts: { fresh: 0, carried: 0, total: 0, duplicatesCollapsed: 0 }, sources: [], meetings: [], agendaDocuments: [],
   }, { sourceThrough: null, retrievedAt: null, promotedThrough: null }, { store: artifacts, now: T1, authority });
@@ -319,7 +322,7 @@ test("direct scoped runner publication skips unrelated contracts and every uncha
       return target.readPromotionIdentities(recordClass as never, scopes);
     };
     if (String(key).startsWith("readPrepared")) return () => { throw new Error("scoped voting must not read meetings"); };
-    if (["readPromotion", "readCandidate", "readCandidateProof"].includes(String(key))) return (...args: unknown[]) => { payloadReads++; return value.apply(target, args); };
+    if (["readPromotionPlace"].includes(String(key))) return (...args: unknown[]) => { payloadReads++; return value.apply(target, args); };
     return typeof value === "function" ? value.bind(target) : value;
   } });
   const artifacts = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "runner-scoped-edge-")));
@@ -331,4 +334,20 @@ test("direct scoped runner publication skips unrelated contracts and every uncha
   assert.equal(await publishRoutineReaderEdge(scoped, T1, [VOTING_SITES_CONTRACT], { artifactStore: artifacts }), true);
   assert.equal(payloadReads, initialReads);
   assert.equal((await artifacts.readManifest())!.manifest.sequence, initialSequence);
+  const stored = (await artifacts.readManifest())!;
+  const outdated = JSON.parse(JSON.stringify(stored.manifest));
+  outdated.authorityArtifacts["voting-sites"].layout = "divisions";
+  assert.ok((await artifacts.writeManifest(outdated, stored.etag)).modified);
+  assert.equal(await publishRoutineReaderEdge(scoped, T1, [VOTING_SITES_CONTRACT], { artifactStore: artifacts }), true);
+  assert.ok(payloadReads > initialReads);
+  assert.equal((await artifacts.readManifest())!.manifest.authorityArtifacts?.["voting-sites"]?.layout, "places");
+});
+
+test("reader pointer routing agrees with the publisher without loading its readers", () => {
+  const first = new Map<string, string>();
+  for (const [family, pointers] of Object.entries(promotedEdgePointers())) for (const {recordClass,scope} of pointers) {
+    const key = `${recordClass}:${scope}`;
+    if (!first.has(key)) first.set(key,family);
+    assert.equal(promotedFamilyOf(recordClass,scope), first.get(key));
+  }
 });

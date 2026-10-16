@@ -1,6 +1,10 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
-import test from "node:test";
+import { mkdtempSync, rmSync, readFileSync } from "node:fs";
+import test, { after } from "node:test";
+import { join } from "node:path";
+import { tmpdir } from "node:os";
+import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
+import { readAuthorityRecords } from "../lib/meetings/authority-records.ts";
 import { acquireDotGov } from "../scripts/fetch-dotgov.mts";
 import { dotGovCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { attachGovernmentDomains, DOTGOV_BOUNDARY, DOTGOV_SCOPE, dotGovSnapshotIssues, parseDotGovRegistry, readDotGovProjection, type DotGovSnapshot } from "../lib/civic-data/dotgov.ts";
@@ -96,12 +100,15 @@ test("a full CISA candidate promotes through the typed Reader and reaches geogra
   const read = await readDotGovProjection({ store, now: NOW, bypassCache: true });
   assert.equal(read.kind, "PROMOTED");
   assert.equal(read.value?.domains.length, source.domains);
-  const published = await readPromotedEdgeFamilies({ store, servedManifest: null, now: NOW,
+  const directory = mkdtempSync(join(tmpdir(), "dotgov-edge-"));
+  after(() => rmSync(directory, { recursive: true, force: true }));
+  const artifacts = new LocalFileArtifactStore(directory);
+  const published = await readPromotedEdgeFamilies({ store, artifacts, servedManifest: null, now: NOW,
     families: { "government-domains": promotedEdgePointers()["government-domains"] } });
   assert.deepEqual(published.skipped, []);
   const family = published.authority["government-domains"];
-  assert.ok(family && "value" in family);
-  const edge = (family.value as PromotedFamilyArtifactValue).entries[0]!;
+  assert.ok(family && "index" in family);
+  const edge = (await readAuthorityRecords(family.index, artifacts, { keys: new Set([`government:CA:CITY OF TWENTYNINE PALMS`]) }) as PromotedFamilyArtifactValue).entries[0]!;
   assert.ok(edge);
   const model = { state: "CA", governments: [city], divisions: [], bodies: [] } as unknown as RegistrationReadModel;
   const listings = await withReaderAuthorityEdge({

@@ -1,3 +1,4 @@
+import { currentReaderSelection } from "../db/reader-route.ts";
 import { factReader, factsVersion } from "../facts/db.ts";
 import { createHash } from "node:crypto";
 
@@ -43,6 +44,7 @@ export const MEETINGS_PREPARED_SCOPE = "composed-reader-snapshot";
 
 /** The live meeting facts a composition read; any change to them recomposes it. */
 const MEETING_FACTS_COUPLING = "meeting-facts";
+const sourceLayout = { contractId: "reader-state-sources", versionId: "1" };
 
 function couplingFingerprint(coupling: readonly PreparedProjectionCoupling[]): string {
   return [...coupling]
@@ -131,7 +133,7 @@ export async function preparePublishedMeetingSnapshot(
     if (versionId) currentCoupling.push({ contractId: contract.id, versionId });
   }
   const facts = { contractId: MEETING_FACTS_COUPLING, versionId: await factsVersion(factReader(), "meeting:") };
-  const currentFingerprint = couplingFingerprint([...currentCoupling, facts]);
+  const currentFingerprint = couplingFingerprint([...currentCoupling, facts, sourceLayout]);
 
   const prepared = await store.readPreparedReaderProjectionCoupling(MEETINGS_RECORD_CLASS, MEETINGS_PREPARED_SCOPE);
   if (prepared && couplingFingerprint(prepared.composedFrom) === currentFingerprint) {
@@ -202,7 +204,7 @@ export async function preparePublishedMeetingSnapshot(
     recordClass: MEETINGS_RECORD_CLASS,
     scope: MEETINGS_PREPARED_SCOPE,
     payload: value,
-    composedFrom: [...composedFrom, facts],
+    composedFrom: [...composedFrom, facts, sourceLayout],
     factSha256,
     generatedAt: aggregate.value.generatedAt,
     composedAt: now,
@@ -217,12 +219,17 @@ export async function preparePublishedMeetingSnapshot(
         sequence: result.sequence,
         coupledPartitions: composedFrom.length,
         generatedAt: aggregate.value.generatedAt,
-        ...preparedChecks(aggregate.value.generatedAt, withCurrentChecks([...composedFrom, facts], identityByScope)),
+        ...preparedChecks(aggregate.value.generatedAt, withCurrentChecks([...composedFrom, facts, sourceLayout], identityByScope)),
       }
     : { status: "RACED", sequence: result.sequence, coupledPartitions: composedFrom.length };
 }
 
 function partitionsFromCoupling(composedFrom: readonly PreparedProjectionCoupling[]): MeetingPartitionReadback[] {
+  if (currentReaderSelection()) return composedFrom.flatMap(entry => {
+    const partition = meetingPartitionOfId(entry.contractId);
+    return partition && entry.versionId ? [{ contractId: entry.contractId, source: partition.source,
+      bodyId: partition.bodyId, scope: partition.scope, kind: "PROMOTED" as const, versionId: entry.versionId, detail: null }] : [];
+  });
   const versionByContract = new Map(composedFrom.map((entry) => [entry.contractId, entry.versionId]));
   return MEETING_PARTITION_CONTRACTS.map((partition) => {
     const versionId = versionByContract.get(partition.id);
@@ -295,7 +302,6 @@ async function readPreparedRowOnceUnchanged(
 /** How long a process keeps the composition's places before it reads them again. */
 export const COMPOSED_PLACES_TTL_MS = 60_000;
 let composedPlaces: { readonly at: number; readonly places: ReadonlyMap<string, readonly string[]> } | null = null;
-
 
 export async function readComposedSourcePlaces(options: { readonly store?: RoutineDataStore; readonly clock?: () => number } = {}):
   Promise<ReadonlyMap<string, readonly string[]> | null> {
@@ -370,7 +376,6 @@ export async function readPreparedMeetingsProjection(
     // Constructed inside the try: the Postgres store throws when DATABASE_URL is unset, which must fall through to
     // the composing reader rather than escape.
     store = options.store ?? new PostgresRoutineDataStore();
-    const { currentReaderSelection } = await import("../db/reader-route.ts");
     prepared = await readPreparedRowOnceUnchanged(store, options.store ?? currentReaderSelection() ?? DEFAULT_PREPARED_STORE);
   } catch {
     prepared = null;
@@ -383,7 +388,7 @@ export async function readPreparedMeetingsProjection(
   }
   const partitions = partitionsFromCoupling(prepared.composedFrom);
   const ownComposed = new Set(prepared.composedFrom.map((entry) => entry.contractId));
-  const allComposed = MEETING_PARTITION_CONTRACTS.every((partition) => ownComposed.has(partition.id));
+  const allComposed = currentReaderSelection() ? partitions.every(partition => partition.kind === "PROMOTED") : MEETING_PARTITION_CONTRACTS.every((partition) => ownComposed.has(partition.id));
   const nowMs = options.now !== undefined && Number.isFinite(Date.parse(options.now)) ? Date.parse(options.now) : Date.now();
   const checks = meetingFreshChecks(await servedPreparedChecks(store, options.store ?? DEFAULT_PREPARED_STORE, prepared, nowMs));
   return {

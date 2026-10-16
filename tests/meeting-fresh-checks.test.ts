@@ -1,3 +1,4 @@
+import { readReaderStates } from "../lib/meetings/edge-serving.ts";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { mkdtempSync } from "node:fs";
@@ -48,12 +49,6 @@ import {
 } from "../lib/meetings/snapshot.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import { promoteMeetingPartitions } from "../scripts/ingest.ts";
-
-/*
- * A fresh check that finds nothing new writes an UNCHANGED_CONFIRMATION receipt instead of a new version. Readers
- * see the time of the last successful fresh check, new version or receipt; a failed request or a stale cache never
- * counts; receipts fire no failed-refresh disclosure; changed information publishes as before.
- */
 
 const ACQUIRED_URL = "https://www.pima.edu/about-pima/leadership-policies/governing-board/board-meetings/documents.html";
 const HOUR = 3_600_000;
@@ -232,7 +227,7 @@ test("controlled clock, the composing reader: a receipt-only period advances Las
   assert.deepEqual(collectedOf(changed.value, PIMA), [checkedAt], "Pima keeps its receipt's check");
 });
 
-const EXTRAS: PublishReaderExtras = { commentAccess: [], everydayRouting: null };
+const EXTRAS: PublishReaderExtras = { everydayRouting: null };
 const VALUES: PublishAuthority = Object.fromEntries(AUTHORITY_FAMILIES.map((family) => [family, { value: { family }, versionId: `${family}-v1` }]));
 const CARRIED: PublishAuthority = Object.fromEntries(AUTHORITY_FAMILIES.map((family) => [family, { versionId: `${family}-v1`, carried: true as const }]));
 const REGISTRATIONS: PublishRegistrations = { az: { value: { state: "az" }, versionId: "reg-az-v1" } };
@@ -293,9 +288,11 @@ test("controlled clock, the prepared serving copy and the edge: a receipt republ
   assert.equal(republished.status, "PUBLISHED");
   const manifestAfter = (await edge.readManifest())!.manifest;
   assert.equal(manifestAfter.generatedAt, checkedAt);
-  assert.deepEqual(manifestAfter.scopes, manifestBefore.scopes, "the same immutable artifacts: none rewritten");
+  assert.deepEqual((await readReaderStates(manifestAfter.scopes, edge, false)).flatMap(state => state.scopes),
+    (await readReaderStates(manifestBefore.scopes, edge, false)).flatMap(state => state.scopes), "a freshness update preserves every meeting artifact");
   assert.equal(manifestAfter.sequence, manifestBefore.sequence + 1);
-  assert.deepEqual(manifestAfter.sources, manifestBefore.sources);
+  assert.deepEqual((await readReaderStates(manifestAfter.scopes, edge, false)).flatMap(state => state.sources),
+    (await readReaderStates(manifestBefore.scopes, edge, false)).flatMap(state => state.sources));
 
   // The reader, from the edge: Last checked, the re-read listings, and no false disclosure.
   const fromEdge = await readReaderEdgeMeetings({ store: edge, fallback: async () => { throw new Error("the edge answers"); } });

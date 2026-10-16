@@ -1,14 +1,6 @@
 import type { MemberVote } from "./types.ts";
 
-/**
- * Party breakdown on every rendered roll call: pure arithmetic over the
- * snapshot's member positions joined to the federal roster's `partyLabel`. No
- * characterization ("party-line", "crossed the aisle").
- *
- * A breakdown renders only when its per-party totals sum exactly to the
- * chamber's own recorded tally; otherwise it returns null and the surface says
- * the breakdown is unavailable.
- */
+
 
 export interface PartyTally {
   /** The roster's own label, pluralized mechanically ("Democrats"). */
@@ -70,4 +62,17 @@ export function formatPartyBreakdown(tallies: PartyTally[]): string {
   return tallies
     .map((t) => `${t.party} ${t.yes} for, ${t.no} against`)
     .join(" · ");
+}
+
+export interface PartyVoters { readonly yes: readonly string[]; readonly no: readonly string[] }
+
+export function partyVotersByVote(positions: readonly MemberVote[]): Map<string, PartyVoters> {
+  const groups = new Map<string, {yes:string[];no:string[]}>();
+  for (const row of positions) {
+    if (row.position !== "YES" && row.position !== "NO") continue;
+    const group = groups.get(row.voteId) ?? {yes:[],no:[]};
+    group[row.position === "YES" ? "yes" : "no"].push(row.officeholderId);
+    groups.set(row.voteId,group);
+  }
+  return groups;
 }

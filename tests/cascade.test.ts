@@ -146,3 +146,14 @@ test("every returned meeting carries its provenance", async () => {
     );
   }
 });
+
+test("the first successful radius never loads the wider area", async () => {
+  const calls: number[] = [];
+  const source = snapshotSourceFor(SNAPSHOT);
+  const result = await searchMeetings(TOWN.lat, TOWN.lng, 25, NOW, new Set(), {
+    name: "bounded-area",
+    load: async (query, now) => { calls.push(query.radiusKm); return source.load(query, now); },
+  });
+  assert.deepEqual(calls, [25]);
+  assert.deepEqual(result, await search(TOWN));
+});

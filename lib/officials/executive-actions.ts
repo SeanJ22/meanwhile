@@ -1,3 +1,4 @@
+import { currentReaderSelection } from "../db/reader-route.ts";
 import {
   civicDataReadNotInitialized,
   promotedVersionOrThrow,
@@ -8,17 +9,6 @@ import {
 import { AZ_OFFICIAL_ACTIONS_CONTRACT } from "../outcomes/data-plane.ts";
 import { readPromotedEdgeFirst } from "../registry/runtime-edge.ts";
 
-/**
- * What an officeholder has done, from the office's own publication: each row a governmental action with a date and a
- * signed primary document, in the office's own words. Not a record of everything a governor does. The denominator
- * travels with the store, so an answer can say "the actions we hold" and never "everything".
- */
-
-/**
- * What kind of act the row records; every value is something read. `BILL_ENACTED` proves enactment, not a signature;
- * `BILL_SIGNED` and `VETO` come only from the Governor's own letter. `BILL_LETTER_UNREAD` is a letter we hold and have
- * not read.
- */
 export type ExecutiveActionKind =
   | "EXECUTIVE_ORDER"
   /** Chaptered as session law. Enactment — NEVER read as a signature. */
@@ -121,7 +111,7 @@ let actionReadState: CivicDataReadResult<ExecutiveActionStore> = civicDataReadNo
 );
 
 function validateActionProjection(value: ExecutiveActionStore, version: string): void {
-  if (!Array.isArray(value.actions) || value.actions.length === 0) {
+  if (!Array.isArray(value.actions) || (value.actions.length === 0 && !currentReaderSelection())) {
     throw new Error(`Arizona official-action projection ${version} contains no action records.`);
   }
   if (new Set(value.actions.map((action) => action.id)).size !== value.actions.length) {
@@ -230,10 +220,6 @@ export function monthsBefore(today: string, months: number): string {
   return `${String(targetYear).padStart(4, "0")}-${String(targetMonth).padStart(2, "0")}-${String(targetDay).padStart(2, "0")}`;
 }
 
-/**
- * One action as a sentence, from the office's own facts. The sentence branches on kind: no branch asserts a signature
- * that was not read, invents a date, or phrases an unread document as anything but ours.
- */
 export function actionText(action: ExecutiveAction): string {
   const title = action.title ? ` "${action.title}",` : "";
   const on = action.occurredAt ? ` on ${action.occurredAt}` : "";

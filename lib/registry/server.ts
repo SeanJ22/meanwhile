@@ -1,3 +1,5 @@
+import { factReader } from "../facts/db.ts";
+import { readFactCommentAccess } from "../facts/comment-read.ts";
 import { sha256OfJson } from "../meetings/edge-artifacts.ts";
 import { FIPS_TO_STATE } from "../ocd/fips.ts";
 import type { Meeting } from "../sources/types.ts";
@@ -40,7 +42,7 @@ import { currentCampaignSitesEdge, currentCommentAccessEdge, currentFederalDirec
 import { currentReaderSelection } from "../db/reader-route.ts";
 import { divisionIdsAt } from "./resolve.ts";
 import { curatedReaderReadState, primeCuratedReaderProjection, refreshCampaignSitesFromPromoted } from "../civic-data/curated-reader-read-model.ts";
-import { primeCommentAccess, readCommentAccessFacts } from "./comment-access.ts";
+import { primeCommentAccess } from "./comment-access.ts";
 import { CivicDataStoreUnavailableError } from "../civic-data/read-model.ts";
 import { composeRegistration, type RegistrationLayer } from "../registration/compose.ts";
 import { REGISTRATION_TARGETS } from "../registration/publication.ts";
@@ -222,7 +224,6 @@ export interface RegistryAuthorityReaders {
   readonly federal: () => Promise<void>;
 }
 
-
 /** The federal directory, edge first. */
 export const settleFederalDirectoryRead = (): Promise<void> =>
   settleEdgeFirst(currentFederalDirectoryEdge, primeFederalDirectoryFromValue, refreshFederalDirectoryFromPromoted, "The federal directory");
@@ -245,7 +246,15 @@ export async function settleRegistryAuthorityReads(
 
 /** The comment-access rules, edge first. */
 export const settleCommentAccessRead = (): Promise<void> =>
-  settleEdgeFirst(currentCommentAccessEdge, primeCommentAccess, () => readCommentAccessFacts(), "The comment-access rules");
+  settleEdgeFirst(currentCommentAccessEdge, primeCommentAccess, async () => {
+    const selection = currentReaderSelection();
+    const namedBodies = [...selection?.keys ?? []].filter(key => key.startsWith("ocd-division/") && key.includes("#"));
+    if (selection && namedBodies.length === 0) await settleRegistryAuthorityReads("REGISTRY");
+    const query = factReader();
+    const bodyIds = namedBodies.length ? namedBodies : selection ? getRegistryRuntimeReadModel().registry.bodies.map(body => body.id) : [];
+    const records = query ? await readFactCommentAccess(query, bodyIds) : [];
+    primeCommentAccess({ kind: "comment-access", records: records.map(row => ({ id: `comment-access:${row.bodyId}`, ...row })) });
+  }, "The comment-access rules");
 
 /** The campaign-site URLs, edge first. */
 const settleCampaignSitesRead = (): Promise<void> =>

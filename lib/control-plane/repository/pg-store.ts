@@ -1,4 +1,4 @@
-import type { BoxFinding } from "../box.ts";
+import type { BoxFinding, BoxRepository } from "../box.ts";
 import type { WorkerResultRecord } from "../workers/types.ts";
 import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts";
 import { installDatabaseTransferCounter } from "../../db/transfer.ts";
@@ -844,6 +844,24 @@ export function pgAppendOnlyRepository<T>(
   });
 }
 
+// One index range per branch, unsorted, so the scan stops at the limit however many rows a new slot map makes due.
+const BOX_DUE_SQL = `SELECT id, value FROM cp_box_findings WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,slots}') IS NULL AND value->>'lastRecordedAt' >= $3
+  UNION ALL SELECT id, value FROM cp_box_findings WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,slots}') < $1 AND value->>'lastRecordedAt' >= $3
+  UNION ALL SELECT id, value FROM cp_box_findings WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,slots}') > $1 AND value->>'lastRecordedAt' >= $3
+  UNION ALL SELECT id, value FROM cp_box_findings WHERE value->>'state' = 'taken' AND (value #>> '{claim,expiresAt}') <= $2 AND value->>'lastRecordedAt' >= $3
+  LIMIT $4`;
+const BOX_WAITING_SQL = `SELECT id, value FROM cp_box_findings WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,reason}') = $1 ORDER BY id LIMIT $2`;
+
+/** The Box with its builder queue answered by the partial indexes on state, slot map, lease and reason. */
+function pgBoxRepository(sql: Sql, options: PgRepositoryBounds = {}): BoxRepository {
+  const run = boundedRunner(sql, "cp_box_findings", options.bounds ?? CONTROL_PLANE_REQUEST_BOUNDS_MS);
+  const rows = (found: readonly Record<string, unknown>[]) => found.map(row => parseValue<BoxFinding>(row.value, `cp_box_findings id ${String(row.id)}`));
+  return { ...pgAggregateRepository<BoxFinding>(sql, "BoxFinding", "cp_box_findings", options),
+    due: async ({ slots, now, since, limit }) => rows(await run("boxDue", "PAGE", BOX_DUE_SQL, [slots, now, since, Math.max(0, Math.trunc(limit))]) as Record<string, unknown>[]),
+    waitingFor: async (reason, limit) => rows(await run("boxWaitingFor", "PAGE", BOX_WAITING_SQL, [reason, Math.max(0, Math.trunc(limit))]) as Record<string, unknown>[]),
+  };
+}
+
 /** Bounded source lookup; the canonical URL and newest-capture order use the artifact index. */
 export async function pgArtifactsByCanonicalUrl(sql: Sql, url: string, limit: number, options: PgRepositoryBounds = {}): Promise<readonly ArtifactRecord[]> {
   const run = boundedRunner(sql, "cp_log_artifacts", options.bounds ?? CONTROL_PLANE_REQUEST_BOUNDS_MS);
@@ -1323,7 +1341,7 @@ export async function createPgRepositories(
     spendWindow: pgAggregateRepository<SpendWindow>(sql, "SpendWindow", "cp_spend_window", bounded),
     methodCandidates: pgAggregateRepository<CandidateStore>(sql, "MethodCandidateStore", "cp_method_candidates", bounded),
     researchIntents: pgAppendOnlyRepository<ResearchIntent>(sql, "research_intents", bounded),
-    boxFindings: pgAggregateRepository<BoxFinding>(sql, "BoxFinding", "cp_box_findings", bounded),
+    boxFindings: pgBoxRepository(sql, bounded),
     scoutResults: pgAppendOnlyRepository<ScoutResult>(sql, "scout_results", bounded),
     workerResults: pgAppendOnlyRepository<WorkerResultRecord>(sql, "worker_results", bounded),
     promotionPipeline: pgAppendOnlyRepository<PromotionPipelineRecord>(sql, "promotion_pipeline", bounded),

@@ -5,6 +5,7 @@ import type { FieldManualEntry } from "../control-plane/field-manual.ts";
 import { detectTenancy } from "./platform-tenancy.ts";
 import { MEETING_HELD_HORIZON_DAYS, MEETING_HELD_LOOKBACK_DAYS } from "../meetings/constants.ts";
 import { parseDiligentMeetings } from "../sources/diligent/index.ts";
+import { parseMunicodeMeetings, municodePortalUrl } from "../sources/municode/index.ts";
 import { granicusPublisherUrl, parseGranicusPublisher } from "../sources/granicus/index.ts";
 import { novusPortalUrl, parseNovusMeetings } from "../sources/novusagenda/index.ts";
 import { escribeCalendarUrl, parseEscribeMeetings } from "../sources/escribe/index.ts";
@@ -27,6 +28,7 @@ export const VERIFIABLE_VENDORS = [
   "iqm2",
   "boardbook",
   "boarddocs",
+  "municode-meetings",
   "granicus",
   "novusagenda",
   "swagit",
@@ -40,7 +42,6 @@ export type VerifiableVendor = (typeof VERIFIABLE_VENDORS)[number];
 
 /** Vendors recognised by host or markup that no content check covers yet: always a LEAD. */
 export const LEAD_ONLY_VENDORS: readonly { readonly vendor: string; readonly host: RegExp }[] = [
-  { vendor: "municode-meetings", host: /(^|\.)municodemeetings\.com$/i },
   { vendor: "diligent", host: /(^|\.)(diligentoneplatform\.com|highbond\.com|civicweb\.net)$/i },
   /* Destiny Agenda (public.destinyhosted.com/agenda_publish.cfm?id=…). */
   { vendor: "destiny-agenda", host: /(^|\.)destinyhosted\.com$/i },
@@ -130,6 +131,9 @@ export function meetingEndpointCandidates(html: string, pageUrl: string, now?: s
     if (isIcalLink(url)) {
       add({ vendor: "ical", url: href, basis: "LINKED", evidence: href, verifiable: true });
       continue;
+    }
+    if (/^[a-z0-9-]+\.municodemeetings\.com$/i.test(host) || host === "meetings.municode.com" && /^\/PublishPage(?:\/index)?\/?$/i.test(url.pathname)) {
+      try { add({ vendor: "municode-meetings", url: municodePortalUrl(href), basis: "LINKED", evidence: href, verifiable: true }); } catch { /* A document link is not a meeting listing. */ }
     }
     if (/^pub-[a-z0-9-]+\.escribemeetings\.com$/i.test(host)) {
       add({ vendor: "escribe", url: escribeCalendarUrl(href), basis: "LINKED", evidence: href, verifiable: true });
@@ -455,6 +459,14 @@ export function verifyEndpointBody(
       return rows > 0
         ? { verdict: "YIELDED", count: rows, detail: `${rows} BoardBook meeting link(s)` }
         : { verdict: "NOT_CONFIRMED", count: null, detail: "no BoardBook meeting links" };
+    }
+    case "municode-meetings": {
+      try {
+        const rows = parseMunicodeMeetings(body, candidate.url);
+        return { verdict: rows.length ? "YIELDED" : "EMPTY", count: rows.length, detail: `${rows.length} public Municode meeting record(s)` };
+      } catch {
+        return { verdict: "NOT_CONFIRMED", count: null, detail: "not a public Municode meeting listing" };
+      }
     }
     case "granicus": {
       try {

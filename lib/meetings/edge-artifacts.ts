@@ -1,14 +1,15 @@
-import { mergeReaderSittings } from "./sitting-merge.ts";
 import { createHash } from "node:crypto";
 
 import { ocdStateCode } from "../ocd/state-of.ts";
 import type { Meeting } from "../sources/types.ts";
 import type { AgendaDocument } from "./agenda-documents.ts";
 import type { PromotedEdgeEntry } from "../civic-data/read-model.ts";
+import { mergeReaderSittings } from "./sitting-merge.ts";
 import {
   snapshotCounts,
   type MeetingsSnapshot,
   type SnapshotSourceReport,
+  type SnapshotCarriedMeta,
 } from "./snapshot.ts";
 
 export const READER_ARTIFACT_FORMAT_VERSION = 1 as const;
@@ -35,6 +36,7 @@ export interface ReaderArtifactCounts {
 
 /** One geographic serving artifact — a state's (or the `us` bucket's) meetings. */
 export interface ReaderGeoArtifact {
+  readonly meetingOrder: readonly number[];
   readonly formatVersion: typeof READER_ARTIFACT_FORMAT_VERSION;
   readonly scope: string;
   readonly ocdId?: string;
@@ -81,6 +83,8 @@ export function readerScopeApplies(
 }
 
 export interface ReaderManifest {
+  readonly carriedSummary?: SnapshotCarriedMeta;
+  readonly meetingPlaces?: Readonly<Record<string, readonly string[]>>;
   /** Missing on the former state layout; the normal publisher replaces it once. */
   readonly meetingLayout?: "governing-area";
   /** Registry version used for canonical body areas; absent on single-area copies. */
@@ -95,16 +99,17 @@ export interface ReaderManifest {
   readonly sources: SnapshotSourceReport[];
   readonly scopes: readonly ReaderManifestScope[];
 
-  readonly commentAccess?: readonly unknown[];
   readonly everydayRouting?: unknown;
   /** Pointer identities for the embedded serving copies; old manifests refresh once. */
-  readonly extrasVersionIds?: Readonly<Partial<Record<"comment-access" | "everyday-routing", string | null>>>;
+  readonly extrasVersionIds?: Readonly<Partial<Record<"everyday-routing", string | null>>>;
 
   readonly authorityArtifacts?: Partial<Record<AuthorityFamily, AuthorityArtifactRef>>;
 
   readonly registrations?: Readonly<Record<string, AuthorityArtifactRef>>;
   /** Legislative people loaded separately for each requested jurisdiction. */
   readonly stateLegislators?: Readonly<Record<string, AuthorityArtifactRef>>;
+  /** Each state's live facts, in buckets, each republished only when its facts move. */
+  readonly stateFacts?: Readonly<Record<string, AuthorityArtifactRef>>;
 
   readonly freshChecks?: Readonly<Record<string, string>>;
 
@@ -113,6 +118,8 @@ export interface ReaderManifest {
 
 /** Each artifact carries one or more proven pointers whole, read through each pointer's own typed Reader. */
 export type PromotedAuthorityFamily =
+  | "other-reader-data"
+  | "state-votes"
   | "ballot-contests"
   | "ballot-az"
   | "ballot-nh"
@@ -130,10 +137,13 @@ export type PromotedAuthorityFamily =
   | "federal-key-votes"
   | "officeholder-statements"
   | "prl-archives"
+  | "prl-profiles"
   | "executive-actions"
   | "government-domains";
 
 export const PROMOTED_AUTHORITY_FAMILIES: readonly PromotedAuthorityFamily[] = [
+  "other-reader-data",
+  "state-votes",
   "ballot-contests",
   "ballot-az",
   "ballot-nh",
@@ -151,6 +161,7 @@ export const PROMOTED_AUTHORITY_FAMILIES: readonly PromotedAuthorityFamily[] = [
   "federal-key-votes",
   "officeholder-statements",
   "prl-archives",
+  "prl-profiles",
   "executive-actions",
   "government-domains",
 ];
@@ -172,7 +183,6 @@ export type AuthorityFamily =
   | "campaign-sites"
   | "state-legislators"
   | "meeting-outcomes"
-  | "comment-access"
   | PromotedAuthorityFamily;
 
 export const AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
@@ -182,11 +192,11 @@ export const AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
   "campaign-sites",
   "state-legislators",
   "meeting-outcomes",
-  "comment-access",
   ...PROMOTED_AUTHORITY_FAMILIES,
 ];
 
 export interface AuthorityArtifactRef {
+  readonly layout?: "records";
   readonly key: string;
   readonly version: string;
   readonly sha: string;
@@ -206,6 +216,7 @@ export function partitionSnapshotByScope(
   now: string = new Date().toISOString(),
   bodies: readonly { readonly id: string; readonly ocdId: string | null; readonly alsoServesOcdIds?: readonly string[] }[] = [],
 ): ReaderGeoArtifact[] {
+  const order = new Map(snapshot.meetings.map((meeting, index) => [meeting.id, index]));
   const byBody = new Map(bodies.map(body => [body.id, body]));
   const meetingScope = new Map<string, readonly { scope: string; ocdId?: string }[]>();
   const byScope = new Map<string, { meetings: Meeting[]; agenda: AgendaDocument[]; ocdId?: string }>();
@@ -238,12 +249,13 @@ export function partitionSnapshotByScope(
       generatedAt: snapshot.generatedAt || now,
       counts: countsFor(meetings),
       meetings,
+      meetingOrder: meetings.map(meeting => order.get(meeting.id)!),
       agendaDocuments: [],
     };
     return [
       ...(meetings.length ? [artifact] : []),
       ...(agenda.length ? [{ ...artifact, scope: `${scope}-agenda`, agendaOnly: true,
-        meetings: [], counts: countsFor([]), agendaDocuments: agenda }] : []),
+        meetings: [], meetingOrder: [], counts: countsFor([]), agendaDocuments: agenda }] : []),
     ];
   });
 }
@@ -264,12 +276,16 @@ export function mergeScopeArtifacts(
   manifest: Pick<ReaderManifest, "generatedAt" | "sources">,
 ): MeetingsSnapshot {
   const meetingsById = new Map<string, Meeting>();
+  const order = new Map<string, number>();
   const agendaById = new Map<string, AgendaDocument>();
   for (const artifact of artifacts) {
-    for (const meeting of artifact.meetings) if (!meetingsById.has(meeting.id)) meetingsById.set(meeting.id, meeting);
+    for (const [index, meeting] of artifact.meetings.entries()) if (!meetingsById.has(meeting.id)) {
+      meetingsById.set(meeting.id, meeting);
+      order.set(meeting.id, artifact.meetingOrder[index]);
+    }
     for (const doc of artifact.agendaDocuments) if (!agendaById.has(doc.id)) agendaById.set(doc.id, doc);
   }
-  const merged = mergeReaderSittings([...meetingsById.values()]);
+  const merged = mergeReaderSittings([...meetingsById.values()].sort((left, right) => order.get(left.id)! - order.get(right.id)!));
   const meetings = merged.rows;
   return {
     formatVersion: 1,

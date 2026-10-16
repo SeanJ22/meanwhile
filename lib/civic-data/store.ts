@@ -53,6 +53,7 @@ import {
   sourceScopedReaderReadbackProjectionId,
 } from "./reader-readback.ts";
 import { canonicalAgendaDocument, type AgendaDocument } from "../meetings/agenda-documents.ts";
+import { freezeDurableJson } from "./durable-json.ts";
 
 export function projectionKey(recordClass: RoutineRecordClass, scope: string): string {
   return `${recordClass}:${scope}`;
@@ -729,6 +730,14 @@ export async function routineEventObservedAt(
   return store.eventObservedAt ? store.eventObservedAt(recordClass, scope, requestedAt) : requestedAt;
 }
 
+/* A held candidate and read model are frozen JSON, so every row shares them; the small fields around them are copied. */
+function heldRecord(row: CandidateVersionRecord): CandidateVersionRecord {
+  return { ...structuredClone({ ...row, candidate: null }), candidate: freezeDurableJson(row.candidate) };
+}
+function heldProjection(row: PromotedProjection): PromotedProjection {
+  return { ...structuredClone({ ...row, payload: null }), payload: freezeDurableJson(row.payload) };
+}
+
 export class MemoryRoutineDataStore implements RoutineDataStore {
   private readonly candidates = new Map<string, CandidateVersionRecord>();
   private readonly history = new Map<string, CandidateEvent[]>();
@@ -764,7 +773,7 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
   async create(record: CandidateVersionRecord, firstEvent: CandidateEvent): Promise<void> {
     assertInitialRecord(record, firstEvent);
     if (this.candidates.has(record.candidate.id)) throw new Error(`CANDIDATE_ALREADY_EXISTS:${record.candidate.id}`);
-    this.candidates.set(record.candidate.id, structuredClone(record));
+    this.candidates.set(record.candidate.id, heldRecord(record));
     this.history.set(record.candidate.id, [structuredClone(firstEvent)]);
   }
 
@@ -788,20 +797,20 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
       failureCode: failure?.code ?? prior.failureCode,
       failureDetail: failure?.detail ?? prior.failureDetail,
     };
-    this.candidates.set(candidateId, structuredClone(next));
+    this.candidates.set(candidateId, heldRecord(next));
     history.push(event);
     this.history.set(candidateId, history);
-    return structuredClone(next);
+    return heldRecord(next);
   }
 
   async readCandidate(candidateId: string): Promise<CandidateVersionRecord | null> {
     const row = this.candidates.get(candidateId);
-    return row ? structuredClone(row) : null;
+    return row ? heldRecord(row) : null;
   }
 
   async readCandidateSummary(candidateId: string): Promise<CandidateVersionSummary | null> {
     const row = this.candidates.get(candidateId);
-    return row ? candidateVersionSummary(structuredClone(row)) : null;
+    return row ? candidateVersionSummary(heldRecord(row)) : null;
   }
 
   async latestCandidate(sourceId: string, recordClass: RoutineRecordClass, scope: string): Promise<LatestCandidate | null> {
@@ -829,7 +838,7 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
 
   async readPromotion<T = unknown>(recordClass: RoutineRecordClass, scope: string): Promise<PromotedProjection<T> | null> {
     const row = this.pointerRead(recordClass, scope);
-    return row ? structuredClone(row) as PromotedProjection<T> : null;
+    return row ? heldProjection(row) as PromotedProjection<T> : null;
   }
 
   async readPromotions<T = unknown>(
@@ -838,7 +847,7 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
   ): Promise<readonly PromotedProjection<T>[]> {
     return scopes.flatMap((scope) => {
       const row = this.pointerRead(recordClass, scope);
-      return row ? [structuredClone(row) as PromotedProjection<T>] : [];
+      return row ? [heldProjection(row) as PromotedProjection<T>] : [];
     });
   }
 
@@ -905,19 +914,19 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
   async readCandidates(candidateIds: readonly string[]): Promise<readonly CandidateVersionReadback[]> {
     return candidateIds.flatMap((candidateId) => {
       const row = this.candidates.get(candidateId);
-      return row ? [{ candidateId, record: structuredClone(row) }] : [];
+      return row ? [{ candidateId, record: heldRecord(row) }] : [];
     });
   }
 
   async readCandidateProof(candidateId: string): Promise<CandidateVersionRecord | null> {
     const row = this.candidates.get(candidateId);
-    return row ? { ...structuredClone(row), candidate: candidateProofView(structuredClone(row.candidate)) } : null;
+    return row ? { ...heldRecord(row), candidate: candidateProofView(row.candidate) } : null;
   }
 
   async readCandidateProofs(candidateIds: readonly string[]): Promise<readonly CandidateVersionReadback[]> {
     return candidateIds.flatMap((candidateId) => {
       const row = this.candidates.get(candidateId);
-      return row ? [{ candidateId, record: { ...structuredClone(row), candidate: candidateProofView(structuredClone(row.candidate)) } }] : [];
+      return row ? [{ candidateId, record: { ...heldRecord(row), candidate: candidateProofView(row.candidate) } }] : [];
     });
   }
 
@@ -1002,7 +1011,7 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
       versionId: candidateId,
       lastKnownGoodVersionId: candidateId,
       promotedAt: at,
-      payload: structuredClone(record.candidate.readModel),
+      payload: record.candidate.readModel,
       receipt: structuredClone(persistedReceipt),
     };
     const { history, event } = this.nextEvent(
@@ -1021,7 +1030,7 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
       promotedVersion: candidateId,
       lastKnownGoodVersion: candidateId,
     });
-    return structuredClone(projection);
+    return heldProjection(projection);
   }
 
   async events(candidateId: string): Promise<readonly CandidateEvent[]> {

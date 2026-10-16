@@ -544,6 +544,37 @@ export function canonicalCivicDataJson(value: unknown): string {
     .join(",")}}`;
 }
 
+/** sha256 of canonicalCivicDataJson(value), fed as it walks so no whole string is built. */
+export function canonicalCivicDataHash(value: unknown): string {
+  const hash = createHash("sha256");
+  let pending = "";
+  const out = (text: string) => { pending += text; if (pending.length > 1 << 20) { hash.update(pending); pending = ""; } };
+  const walk = (node: unknown): string | undefined => {
+    if (node === null || typeof node !== "object") return JSON.stringify(node);
+    if (Array.isArray(node)) {
+      out("[");
+      for (let index = 0; index < node.length; index++) {
+        if (index) out(",");
+        const text = index in node ? walk(node[index]) : undefined;
+        if (text !== undefined) out(text);
+      }
+      out("]");
+      return "";
+    }
+    out("{");
+    Object.entries(node as Record<string, unknown>).sort(([a], [b]) => a.localeCompare(b)).forEach(([key, child], index) => {
+      out(`${index ? "," : ""}${JSON.stringify(key)}:`);
+      const text = walk(child);
+      out(text === undefined ? "undefined" : text);
+    });
+    out("}");
+    return "";
+  };
+  const top = walk(value);
+  if (top) out(top);
+  return hash.update(pending).digest("hex");
+}
+
 export interface CivicChangeContract {
   readonly members: (recordClass: RoutineRecordClass, payload: unknown) => readonly CivicRecordMember[];
   readonly facts: (recordClass: RoutineRecordClass, member: CivicRecordMember) => unknown;

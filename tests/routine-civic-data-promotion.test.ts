@@ -343,17 +343,20 @@ test("production event time uses its own write clock and the latest durable scop
   assert.equal(await productionStore.eventObservedAt("REGISTRY_RUNTIME_BINDING", "registry", "2099-01-01T00:00:00.000Z"), "2026-09-07T12:00:00.011Z");
 });
 
-test("registered promotion snapshots one durable candidate before any async store step", async () => {
+test("registered promotion freezes the candidate in place, so no async store step can swap its payload", async () => {
   class MutatingStore extends MemoryRoutineDataStore {
     target: RoutineCandidate | null = null;
     mutated = false;
+    refused = false;
 
     override async readPromotion<T>(recordClass: RoutineRecordClass, scope: string) {
       if (!this.mutated && this.target !== null) {
         this.mutated = true;
         const tampered = { formatVersion: 1, candidates: "not-an-array", absences: [] };
-        Object.assign(this.target, { readModel: tampered });
-        Object.assign(this.target.normalization, { normalizedHash: normalizedHash(tampered) });
+        try {
+          Object.assign(this.target, { readModel: tampered });
+          Object.assign(this.target.normalization, { normalizedHash: normalizedHash(tampered) });
+        } catch (error) { this.refused = error instanceof TypeError; }
       }
       return super.readPromotion<T>(recordClass, scope);
     }
@@ -369,9 +372,10 @@ test("registered promotion snapshots one durable candidate before any async stor
   const outcome = await processRegisteredRoutineCandidate(store, "fec-funding", exact, NOW);
 
   assert.equal(store.mutated, true);
+  assert.equal(store.refused, true, "the frozen candidate refuses the swap");
   assert.equal(outcome.candidate.state, "PROMOTED");
   assert.ok(Array.isArray((outcome.promoted?.payload as { candidates?: unknown }).candidates));
-  assert.equal(typeof (exact.readModel as { candidates?: unknown }).candidates, "string");
+  assert.ok(Array.isArray((exact.readModel as { candidates?: unknown }).candidates));
 });
 
 test("a malformed typed Reader projection is refused before it can replace LKG", async () => {

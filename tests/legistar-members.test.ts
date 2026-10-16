@@ -16,6 +16,11 @@ import { readFileSync } from "node:fs";
 
 const fixture = (tenant: string, file: string) => readFileSync(new URL(`./fixtures/legistar-members/${tenant}/${file}`, import.meta.url), "utf8");
 
+const officePage = (reading: { url: string }) => {
+  const url = new URL(reading.url);
+  return url.pathname.endsWith("/officerecords");
+};
+
 for (const [tenant, state, zone] of [["pima", "AZ", "America/Phoenix"], ["seattle", "WA", "America/Los_Angeles"], ["madison", "WI", "America/Chicago"]]) {
   test(`${state}: ${tenant}'s real office records retain exact people, bodies and term dates`, () => {
     const raw = rawFor(tenant), rows = wiring(raw, state, zone);
@@ -135,7 +140,7 @@ test("tenant facts retain dates, leave an unchanged roster intact, and remove ev
 
 test("publication streams source pages across bodies without losing members from another page", async t => {
   const db = await factDb(); t.after(() => db.pg.close());
-  const raw = rawFor("pima"), original = raw.readings.find(read => new URL(read.url).pathname.endsWith("/officerecords"))!;
+  const raw = rawFor("pima"), original = raw.readings.find(officePage)!;
   raw.readings = raw.readings.filter(read => read !== original);
   for (let start = 0; start < raw.offices.length; start += 2) {
     const url = new URL(original.url); url.searchParams.set("$skip", String(start));
@@ -155,7 +160,7 @@ test("latest-manifest reads never list vault history and still reject corrupt so
   const held = await (await loadLegistarMembers(vault, "pima"))!.read();
   assert.deepEqual(held.offices, raw.offices);
   const changed = { ...raw, collectedAt: "2026-10-14T08:00:00.000Z", offices: raw.offices.map((office, i) => i ? office : { ...office, OfficeRecordRowVersion: "changed" }) };
-  changed.readings = raw.readings.map(reading => new URL(reading.url).pathname.endsWith("/officerecords")
+  changed.readings = raw.readings.map(reading => officePage(reading)
     ? { ...reading, text: JSON.stringify(changed.offices) } : reading);
   await saveLegistarMembers(vault, changed, changed.collectedAt);
   assert.deepEqual((await (await loadLegistarMembers(vault, "pima"))!.read()).offices, changed.offices);

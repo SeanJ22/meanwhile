@@ -91,6 +91,13 @@ function populateIndex(index: VaultIndex, captures: ReadonlyMap<string,HeldVault
   }
 }
 
+/** An index of only the captures already located, so a reader that knows its records never lists the vault. */
+export function heldVaultIndex(held: readonly HeldVaultArtifact[]): VaultIndex {
+  const index={byId:new Map(),byHash:new Map(),byWorkItem:new Map()},captures=new Map(held.map(row=>[row.bodyPath,row] as const));
+  capturesByIndex.set(index,captures);populateIndex(index,captures);
+  return index;
+}
+
 /** Add a successfully vaulted capture without listing the vault again. */
 export function includeVaultCapture(index: VaultIndex, artifact: Artifact, key: string, root: string): void {
   const bodyPath=process.env.WTP_VAULT_PROVIDER==="netlify"?`netlify:${key}`:join(root,...key.split("/"));

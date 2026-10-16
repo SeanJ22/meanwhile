@@ -9,8 +9,8 @@ import type { WorkItem } from "../lib/control-plane/work-item.ts";
 import type { CandidateVersionRecord, PromotedProjection } from "../lib/civic-data/types.ts";
 import { readRegistryRuntimePrior } from "../lib/registry/runtime-data-plane.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import { publishHeldElectionOffices, readHeldBallotInputs } from "../lib/civic-data/worker-held-elections.ts";
-import { HELD_BALLOT_BATCH, workerPublicationTasks, type HeldBallotInputs, type WorkerPublicationItem } from "../lib/civic-data/worker-publication-tasks.ts";
+import { publishHeldElectionOffices, readHeldInputs, readHeldPointerTimes } from "../lib/civic-data/worker-held-elections.ts";
+import { HELD_BALLOT_BATCH, workerPublicationTasks, type HeldInputs, type WorkerPublicationItem } from "../lib/civic-data/worker-publication-tasks.ts";
 import { readPublishNowWorkerTasks } from "../lib/civic-data/publish-now.ts";
 import type { WorkerPublicationCapture } from "../lib/civic-data/worker-roster-publication.ts";
 
@@ -26,7 +26,7 @@ const route = (n: number, code = "ELECTION_OFFICE_NOT_ON_SAVED_PAGES"): WorkerPu
   publicationOutcome: { workerResultId: "held:election-offices", status: "HELD", at: CHECKED, recovery: "WORKER", code },
 });
 const sweep = Array.from({ length: 1809 }, (_, n) => route(n));
-const unchanged: HeldBallotInputs = { pagesAt: new Map(Array.from({ length: 603 }, (_, n) => [`place-${n}`, BEFORE])), nationalAt: BEFORE, registryAt: BEFORE, routesAt: BEFORE };
+const unchanged: HeldInputs = { pagesAt: new Map(Array.from({ length: 603 }, (_, n) => [`place-${n}`, BEFORE])), bodyPagesAt: new Map(), nationalAt: BEFORE, registryAt: BEFORE, routesAt: BEFORE };
 const ids = (tasks: ReturnType<typeof workerPublicationTasks>) => tasks.flatMap(task => task.command.at(-1)!.replace(/^--worker-results=/, "").split(","));
 
 test("a held ballot route is read again only when its saved pages or inputs changed since its last outcome, in batches", () => {
@@ -62,11 +62,12 @@ test("routes read in pages still share batches across pages", async () => {
 
 test("the inputs are two grouped reads and two pointers, never a work item's value", async () => {
   const statements: string[] = [];
-  const inputs = await readHeldBallotInputs(async (sql, params) => {
+  const query = async (sql: string, params: readonly unknown[]) => {
     statements.push(sql);
-    if (/GROUP BY/.test(sql)) return (params[0] as string[]).slice(0, 2).map(subject => ({ subject, at: new Date(AFTER) }));
+    if (/GROUP BY/.test(sql)) return (params[0] as string[]).slice(0, 2).map(key => ({ key, at: new Date(AFTER) }));
     return [{ at: BEFORE }];
-  }, async recordClass => recordClass === "REGISTRY_RUNTIME_BINDING" ? BEFORE : null, sweep);
+  };
+  const inputs = await readHeldInputs(query, await readHeldPointerTimes(query, async recordClass => recordClass === "REGISTRY_RUNTIME_BINDING" ? BEFORE : null), sweep);
   assert.equal(statements.length, 3, "603 places in two pages of the grouped read, and the national list");
   assert.ok(statements.every(sql => !/SELECT\s+(?:\*|[\w.]*value\s*(?:,|FROM))/i.test(sql)));
   assert.equal(inputs.pagesAt.get("place-0"), AFTER);

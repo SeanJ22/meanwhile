@@ -1,3 +1,4 @@
+import { readerRoute } from "@/lib/api/reader-route";
 import { officialActionsForTarget, type ReaderOfficialActions } from "@/lib/officials/reader-actions";
 import { refreshExecutiveActionsFromPromoted } from "@/lib/officials/executive-actions";
 import { refreshAzBallotFromPromoted } from "@/lib/civic-data/manual-read-models";
@@ -105,7 +106,7 @@ export async function settleOfficialActionHoldingAnswer(
   }
 }
 
-export async function GET(_request: Request, context: { params: Promise<{ subject: string }> }) {
+export const GET = readerRoute("/api/official-actions/[subject]", async function GET(_request: Request, context: { params: Promise<{ subject: string }> }) {
   const { subject } = await context.params;
   if (!subject || subject.length > 512) return Response.json({ error: "subject required" }, { status: 400 });
   const settled = await settleOfficialActionHoldingAnswer(subject);
@@ -117,4 +118,4 @@ export async function GET(_request: Request, context: { params: Promise<{ subjec
     }, { status: 503 });
   }
   return Response.json(settled.answer);
-}
+}, ["registry-runtime","federal-directory","ballot-az","executive-actions"]);

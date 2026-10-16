@@ -230,7 +230,7 @@ test("a Send mark made after the Scout started, or with a different receipt, doe
 
 test("an unbound place refuses 409 instead of guessing from a breadcrumb or prefix", async () => {
   const repos = await world();
-  for (const key of ["body:hereford-nrcd", "geo:az.county.04003"]) {
+  for (const key of ["body:hereford-nrcd", "geo:az.tribal.04003"]) {
     const r = refused(await section(key, repos));
     assert.equal(r.status, 409, key);
     assert.equal(r.code, "SCOPE_BINDING_NOT_CONNECTED");

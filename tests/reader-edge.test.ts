@@ -91,7 +91,7 @@ test("a losing publisher cannot overwrite any bytes selected by the winning mani
   assert.equal((await store.readArtifact(manifest.scopes[0].key))!.meetings[0].id, "winner");
   for (const ref of [manifest.authorityArtifacts!["federal-directory"]!, manifest.registrations!.az]) {
     const envelope = JSON.parse(gunzipSync((await store.readBytes(ref.key))!).toString("utf8"));
-    assert.equal(envelope.value.winner, true);
+    assert.equal(envelope.value.base.winner, true);
   }
 });
 
@@ -123,49 +123,6 @@ test("state people load only the requested jurisdiction and failed replacements 
   assert.equal(next.stateLegislators!["US-AZ"].version, "az-2");
   assert.equal((await publishReaderEdgeArtifacts(snapshot([meeting("new-meeting", "ocd-division/country:us/state:az")]), META, { store })).status, "PUBLISHED");
   assert.deepEqual((await store.readManifest())!.manifest.stateLegislators, next.stateLegislators, "a meetings-only pass keeps the state references");
-});
-
-test("new readers lazily serve the accepted old state bundle until its publication cutover", async () => {
-  const artifacts = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reader-state-before-cutover-")));
-  const oldValue = {
-    "US-AZ": { jurisdiction: "US-AZ", generatedAt: "2026-08-01", sourceId: "az-legislature" },
-    "US-NH": { jurisdiction: "US-NH", generatedAt: "2026-08-02", sourceId: "nh-general-court" },
-  };
-  await publishReaderEdgeArtifacts(null, META, { store: artifacts, authority: { "state-legislators": {
-    versionId: "US-AZ=az-readable-before-cutover|US-NH=nh-readable-before-cutover", value: oldValue,
-  } } });
-  const manifest = (await artifacts.readManifest())!.manifest;
-  let reads = 0;
-  const counting = new Proxy(artifacts, { get(target, key) {
-    if (key === "readBytes") return async (path: string) => { reads++; return target.readBytes(path); };
-    const value = Reflect.get(target, key); return typeof value === "function" ? value.bind(target) : value;
-  } });
-  assert.equal((await ensureReaderAuthorityEdge(manifest, counting, ["federal-directory"])).stateLegislators, undefined);
-  const edge = (await ensureReaderAuthorityEdge(manifest, counting, ["state-legislators"])).stateLegislators!;
-  assert.deepEqual([...edge.jurisdictions].sort(), ["US-AZ", "US-NH"]);
-  assert.equal(reads, 0, "installing the old manifest does not load its national payload");
-  assert.equal(await edge.load("US-NJ"), null);
-  assert.equal(reads, 0, "an unheld state never opens the old payload");
-  assert.deepEqual(await edge.load("US-NH"), { value: oldValue["US-NH"], versionId: "nh-readable-before-cutover" });
-  assert.equal(reads, 1);
-  assert.deepEqual(await edge.load("US-AZ"), { value: oldValue["US-AZ"], versionId: "az-readable-before-cutover" });
-  assert.equal(reads, 1, "the accepted bundle is read once without changing its evidence dates");
-});
-
-test("the first scoped publication converts the accepted state bundle without losing unselected states", async () => {
-  const artifacts = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reader-state-cutover-")));
-  await publishReaderEdgeArtifacts(null, META, { store: artifacts, authority: { "state-legislators": {
-    versionId: "US-AZ=az-prior|US-NH=nh-prior", value: {
-      "US-AZ": { jurisdiction: "US-AZ", generatedAt: "2026-08-01" },
-      "US-NH": { jurisdiction: "US-NH", generatedAt: "2026-08-02" },
-    },
-  } } });
-  assert.equal(await publishRoutineReaderEdge(new MemoryRoutineDataStore(), "2026-09-06T00:00:00Z", [], { artifactStore: artifacts }), true);
-  const manifest = (await artifacts.readManifest())!.manifest;
-  assert.equal(manifest.authorityArtifacts?.["state-legislators"], undefined);
-  assert.equal(manifest.stateLegislators!["US-NH"].version, "nh-prior");
-  const held = await ensureReaderAuthorityEdge(manifest, artifacts, ["state-legislators"]);
-  assert.equal((await held.stateLegislators!.load("US-NH"))!.value.generatedAt, "2026-08-02");
 });
 
 test("a lost manifest CAS remains a retryable supervisor publication failure", async () => {
@@ -221,7 +178,7 @@ test("ordinary publication repairs old area copies once, carries quiet data, and
   assert.equal((await artifacts.readManifest())!.manifest.meetingRegistryVersion, undefined);
   const memory = new MemoryRoutineDataStore();
   await memory.writePreparedReaderProjection({ recordClass: "MEETING", scope: MEETINGS_PREPARED_SCOPE,
-    payload: snap, composedFrom: [{ contractId: "meeting-facts", versionId: "facts:none" }], factSha256: "a".repeat(64), generatedAt: snap.generatedAt,
+    payload: snap, composedFrom: [], factSha256: "a".repeat(64), generatedAt: snap.generatedAt,
     composedAt: snap.generatedAt, ...META }, null);
   let payloadReads = 0, registryReads = 0, registryVersion = "registry-v1";
   let otherAreas: string[] = [secondary];
@@ -285,8 +242,7 @@ test("a racing prepared meeting copy keeps its exact LKG while an independent re
   Object.assign(memory, { candidates: new Map([[imported.record.candidate.id, imported.record]]), promotions: new Map([[imported.projection.key, imported.projection]]) });
   const partition = MEETING_PARTITION_CONTRACTS[0];
   const preparedInput = { recordClass: "MEETING" as const, scope: MEETINGS_PREPARED_SCOPE, payload: newer,
-    composedFrom: [{ contractId: partition.id, versionId: "meeting-v1", routes: [`az-portal|${body.id}`], checkedAt: newer.generatedAt },
-      { contractId: "meeting-facts", versionId: "facts:none" }],
+    composedFrom: [{ contractId: partition.id, versionId: "meeting-v1", routes: [`az-portal|${body.id}`], checkedAt: newer.generatedAt }],
     factSha256: "a".repeat(64), generatedAt: newer.generatedAt, composedAt: newer.generatedAt, ...META };
   await memory.writePreparedReaderProjection(preparedInput, null);
   let race = true;
@@ -313,7 +269,7 @@ test("a racing prepared meeting copy keeps its exact LKG while an independent re
   if (prepared.status === "CURRENT") assert.equal(prepared.checkedAt, newer.generatedAt, "the failed read has a newer check it must not apply to the held copy");
   assert.equal(await publishRoutineReaderEdge(store, newer.generatedAt, selected, options), false, "the raced meeting composition remains owed");
   const independent = (await artifacts.readManifest())!.manifest;
-  assert.equal(independent.authorityArtifacts!["registry-runtime"]!.version, `${imported.projection.versionId}+facts:none`, "verified registry facts publish during meeting recovery");
+  assert.equal(independent.authorityArtifacts!["registry-runtime"]!.version, imported.projection.versionId, "the verified registry publishes during meeting recovery");
   assert.deepEqual(independent.scopes, before.scopes);
   assert.equal(independent.meetingRegistryVersion, before.meetingRegistryVersion);
   assert.equal(independent.composition, before.composition);
@@ -324,7 +280,7 @@ test("a racing prepared meeting copy keeps its exact LKG while an independent re
   assert.deepEqual(independent.freshChecks, before.freshChecks);
   assert.equal(await publishRoutineReaderEdge(store, newer.generatedAt, [{ recordClass: "MEETING", scope: "changed-meetings" }], options), true);
   const recovered = (await artifacts.readManifest())!.manifest;
-  assert.equal(recovered.meetingRegistryVersion, `${imported.projection.versionId}+facts:none`);
+  assert.equal(recovered.meetingRegistryVersion, imported.projection.versionId);
   assert.equal(recovered.generatedAt, newer.generatedAt);
   assert.ok(recovered.scopes.some(scope => scope.meetingIds?.includes("new-meeting")));
   assert.ok(recovered.scopes.every(scope => !scope.meetingIds?.includes("held-meeting")));
@@ -408,9 +364,6 @@ test("a stale publisher that read an older manifest cannot regress the pointer (
   const a = snapshot([meeting("az1", "ocd-division/country:us/state:az/place:tucson#governing")]);
   await publishReaderEdgeArtifacts(a, META, { store });
 
-  // Two overlapping publishers both saw sequence 1; simulate by having one write
-  // through a store whose manifest is pinned to the sequence-1 ETag while another
-  // advanced it. The second write must land against the CURRENT etag only.
   const staleExpected = (await store.readManifest())!.etag;
   // First writer advances 1 -> 2.
   const changed = snapshot([

@@ -4,6 +4,7 @@ export const DATA_DOOR_KINDS = [
   "CIVICPLUS",
   "BOARDBOOK",
   "BOARDDOCS",
+  "MUNICODE",
   "GRANICUS",
   "NOVUSAGENDA",
   "SWAGIT",
@@ -45,6 +46,11 @@ export const DOOR_KIND_SPECS: Readonly<Record<DataDoorKind, DoorKindSpec>> = {
     // The organization's own page ends in its id; one organization is one body, so the route alone selects.
     route: { key: "orgId", as: "lastPathSegment" },
     allowed: [], required: [],
+  },
+  MUNICODE: {
+    sourceName: "municode", agendaSourceType: "MUNICODE", entry: "lib/sources/municode/index.ts",
+    route: { key: "portalUrl", as: "url" },
+    allowed: ["nameTerms"], required: ["nameTerms"],
   },
   GRANICUS: {
     sourceName: "granicus", agendaSourceType: "GRANICUS", entry: "lib/sources/granicus/index.ts",

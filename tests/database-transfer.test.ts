@@ -90,7 +90,9 @@ test("answered control-plane reads finish while accounting is held, and a failed
     assert.equal(await flushDatabaseTransfer(), true);
     assert.equal(writes.length, 2);
     assert.match(writes[1]![0]!.query, /INSERT INTO database_transfer_daily/);
-    assert.deepEqual(writes[1]![0]!.params.slice(3).map(Number), [2, requestBytes, 2 * Buffer.byteLength(response)]);
+    assert.deepEqual(writes[1]![0]!.params.slice(3, 6).map(Number), [2, requestBytes, 2 * Buffer.byteLength(response)]);
+    const detail = JSON.parse(writes[1]![0]!.params[6] as string) as Record<string, number[]>;
+    assert.equal(Object.values(detail).reduce((sum, counts) => sum + counts[2], 0), 2 * Buffer.byteLength(response));
     assert.deepEqual(pendingDatabaseTransfer(), [], "the successful accounting write is not itself counted");
   } finally {
     failWriter();

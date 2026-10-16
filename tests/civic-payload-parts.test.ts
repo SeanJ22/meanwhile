@@ -19,6 +19,26 @@ function memoryParts() {
   return { saved, writes, reads, io };
 }
 
+test("owned preloaded parts hydrate shared rows without IO and release their input map", async () => {
+  const payload = { rows: Array.from({ length: 40 }, (_, index) => row("az", index)) };
+  const plan = partitionCivicPayload({ first: payload, second: payload });
+  const preloaded = Object.fromEntries(plan.parts.map(part => [part.hash, part.payload]));
+  const loader = new CivicPayloadParts({ existing: async () => [], write: async () => {}, read: async () => { throw new Error("unexpected IO"); } });
+  const decoded = await loader.loadOwned(plan.value, preloaded) as { first: typeof payload; second: typeof payload };
+  assert.deepEqual(decoded.first, payload);
+  assert.equal(decoded.first, decoded.second);
+  assert.deepEqual(preloaded, {});
+  for (const [parts, error] of [
+    [{}, /PART_MISSING/],
+    [{ bad: { $civicPayloadPart: "bad" } }, /PART_CYCLE/],
+    [{ bad: { kind: "array", groups: [[]], order: "[1]" } }, /PART_ORDER_INVALID/],
+  ] as const) {
+    const input = structuredClone(parts);
+    await assert.rejects(() => loader.loadOwned({ $civicPayloadPart: "bad" }, input), error);
+    assert.deepEqual(input, {});
+  }
+});
+
 test("a large registry plus one new state writes only new state records and small reference metadata", async () => {
   const memory = memoryParts();
   const parts = new CivicPayloadParts(memory.io);

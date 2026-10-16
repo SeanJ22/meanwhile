@@ -534,6 +534,7 @@ test("state publication metadata and the one loaded payload must still agree", a
     ["missing candidate", source.projection, null],
     ["wrong hash", source.projection, { ...metadata, candidate: { ...metadata.candidate, normalization: { ...metadata.candidate.normalization, normalizedHash: "f".repeat(64) } } }],
     ["mismatched receipt", source.projection, { ...metadata, receipt: { ...metadata.receipt!, candidateId: "other" } }],
+    ["different receipt facts", source.projection, { ...metadata, receipt: { ...metadata.receipt!, excludedFacts: [{ code: "HELD", detail: "An additional held fact." }] } }],
   ] as const) {
     const read = await readPromotedCivicData(STATE_CLASS, STATE_SCOPE, { bypassCache: true, store: {
       readPromotion: async <T>() => projection as PromotedProjection<T>,
@@ -545,6 +546,7 @@ test("state publication metadata and the one loaded payload must still agree", a
       proof === null ? "PROMOTION_CANDIDATE_MISSING" : "PROMOTION_PROOF_INVALID", name);
   }
   const { store } = spyStore(new Map([[STATE_SCOPE, source]]));
+  store.readPublishedCandidateMetadata = async () => ({ ...metadata, receipt: structuredClone(metadata.receipt) });
   const read = await readPromotedCivicData(STATE_CLASS, STATE_SCOPE, { store, bypassCache: true });
   const edge = promotedEdgeEntryOf(read, STATE_CLASS, STATE_SCOPE, store);
   assert.equal(edge?.kind, "PROMOTED");

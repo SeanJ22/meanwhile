@@ -825,7 +825,7 @@ interface NeonStatement {
 
 // Drives the real PostgresRoutineDataStore through the Neon driver's fetch seam, answered from canned rows; no network.
 async function withCannedNeon<T>(
-  answer: (statement: NeonStatement) => NeonAnswer,
+  answer: (statement: NeonStatement) => NeonAnswer | Promise<NeonAnswer>,
   run: (store: PostgresRoutineDataStore, sent: NeonStatement[]) => Promise<T>,
 ): Promise<T> {
   const originalFetch = neonConfig.fetchFunction;
@@ -834,10 +834,10 @@ async function withCannedNeon<T>(
   neonConfig.fetchFunction = (async (_endpoint: unknown, init: { readonly body: string }) => {
     const body = JSON.parse(init.body) as { query?: string; params?: unknown[]; queries?: NeonStatement[] };
     const statements = body.queries ?? [{ query: body.query ?? "", params: body.params ?? [] }];
-    const results = statements.map((statement) => {
+    const results = await Promise.all(statements.map(async (statement) => {
       if (statement.query.startsWith("INSERT INTO database_transfer_daily")) return { command: "INSERT", rowCount: 0, rowAsArray: true, fields: [], rows: [] };
       sent.push(statement);
-      const { columns, rows } = answer(statement);
+      const { columns, rows } = await answer(statement);
       return {
         command: "SELECT",
         rowCount: rows.length,
@@ -850,7 +850,7 @@ async function withCannedNeon<T>(
               : typeof value === "string" ? value
                 : JSON.stringify(value))),
       };
-    });
+    }));
     return new Response(JSON.stringify(body.queries ? { results } : results[0]), {
       status: 200,
       headers: { "content-type": "application/json" },
@@ -1278,6 +1278,14 @@ for (const family of STATE_BALLOT_FAMILIES) test(`${family} stores bounded state
       })[0];
       return none;
     }
+    if (query.includes("WITH RECURSIVE state_promotion")) {
+      const { receipt: _receipt, ...metadata } = publishedCandidateMetadata({ candidate: envelope, state: "PROMOTED", acquisitionSucceeded: true,
+        receipt, promotedVersion: value.id, lastKnownGoodVersion: value.id, failureCode: null, failureDetail: null });
+      return { columns: [["value", "jsonb"], ["coupled", "bool"], ["reuse", "bool"], ["confirmation", "text"], ["parts", "jsonb"]],
+        rows: [[{ projection: { key: `${value.recordClass}:${value.scope}`, sourceId: value.sourceId, recordClass: value.recordClass,
+          scope: value.scope, versionId: value.id, lastKnownGoodVersionId: value.id, promotedAt: "2026-09-08T12:01:00.000Z",
+          payload: envelope.readModel, receipt }, candidate: metadata }, true, false, null, Object.fromEntries(parts)]] };
+    }
     if (query.includes('from "civic_data_promotions"')) return {
       columns: [["key", "text"], ["source_id", "text"], ["record_class", "text"], ["scope", "text"],
         ["current_version_id", "text"], ["last_known_good_version_id", "text"], ["promoted_at", "timestamptz"],
@@ -1323,7 +1331,8 @@ for (const family of STATE_BALLOT_FAMILIES) test(`${family} stores bounded state
     assert.equal(read.kind, "PROMOTED", JSON.stringify(read.kind === "PROMOTED" ? {} : read));
     if (read.kind === "PROMOTED") assert.deepEqual(read.value, payload);
     assert.ok(sent.slice(readAt).every(row => !row.params.includes(lineageRef)), "metadata and published reads leave lineage parts unopened");
-    const partReads = () => sent.filter(row => row.query.includes('from "civic_data_payload_parts"') && !row.query.startsWith('select "hash" from')).length;
+    const partReads = () => sent.filter(row => row.query.includes("WITH RECURSIVE state_promotion") ||
+      row.query.includes('from "civic_data_payload_parts"') && !row.query.startsWith('select "hash" from')).length;
     let readCount = partReads();
     const repeatedMetadata = await store.readPublishedCandidateMetadata(value.id);
     assert.ok(partReads() > readCount, "state metadata does not retain decoded source parts between reads");
@@ -1387,44 +1396,113 @@ test("state promotion reuses its validated payload and reads only persisted enve
   });
 });
 
-test("state readback reuses only the exact durable pointer inside its publication job", async () => {
-  const value = { ...candidate("state-readback-held"), recordClass: "BALLOT_CANDIDACY" as const, scope: "US-AZ:state-election-ballots" };
+test("state readback reuses only a proven index and consumes its coupled metadata once", async () => {
+  const value = withStateRecordHashes({ ...candidate("state-readback-held"), recordClass: "BALLOT_CANDIDACY" as const, scope: "US-AZ:state-election-ballots" });
   const receipt = receiptFor(value), key = `${value.recordClass}:${value.scope}`, at = "2026-09-08T12:01:00.000Z";
   const projection = { key, sourceId: value.sourceId, recordClass: value.recordClass, scope: value.scope,
     versionId: value.id, lastKnownGoodVersionId: value.id, promotedAt: at, payload: value.readModel, receipt };
-  let moved = false, payloadMatches = true;
-  await withCannedNeon(({ query }) => {
-    assert.ok(query.includes('from "civic_data_promotions"'));
-    const hasPayload = /, "payload",/.test(query);
-    const columns: NeonColumn[] = [["key", "text"], ["source_id", "text"], ["record_class", "text"], ["scope", "text"],
-      ["current_version_id", "text"], ["last_known_good_version_id", "text"], ["promoted_at", "timestamptz"]];
-    const row: unknown[] = [key, value.sourceId, value.recordClass, value.scope, moved ? "new-version" : value.id, moved ? "new-version" : value.id, at];
-    if (hasPayload) { columns.push(["payload", "jsonb"]); row.push({ current: "new payload" }); }
-    columns.push(["validation_receipt", "jsonb"]); row.push(receipt);
-    if (hasPayload) { columns.push(["latestConfirmation", "text"]); row.push(null); }
-    else { columns.push(["payloadMatchesCandidate", "bool"]); row.push(payloadMatches); }
-    return { columns, rows: [row] };
+  rememberStatePublicationHashes(projection, value.normalization);
+  let moved = false, coupled = true;
+  await withCannedNeon(({ query, params }) => {
+    if (!query.includes("WITH RECURSIVE state_promotion")) return { columns: [], rows: [] };
+    const reuse = params.includes(value.id) && !moved;
+    const metadata = publishedCandidateMetadata({ candidate: value, state: "PROMOTED", acquisitionSucceeded: true,
+      receipt: null, promotedVersion: value.id, lastKnownGoodVersion: value.id, failureCode: null, failureDetail: null });
+    const normalization = { ...metadata.candidate.normalization };
+    if (reuse) delete normalization.stateRecordHashes;
+    return { columns: [["value", "jsonb"], ["coupled", "bool"], ["reuse", "bool"], ["confirmation", "text"], ["parts", "jsonb"]],
+      rows: [[{ projection: { ...projection, versionId: moved ? "new-version" : value.id,
+        payload: reuse ? null : { current: "new payload" } },
+        candidate: { ...metadata, candidate: { ...metadata.candidate, normalization } } }, coupled, reuse, null, {}]] };
   }, async (store, sent) => {
     await withStatePublicationRead(projection, async () => {
       const same = await store.readPromotion(value.recordClass, value.scope);
       assert.equal(same?.payload, projection.payload);
+      const metadata = await store.readPublishedCandidateMetadata(value.id);
       assert.equal(sent.length, 1);
-      assert.doesNotMatch(sent[0].query, /, "payload",/);
-      assert.match(sent[0].query, /payload" = \(/);
-      payloadMatches = false;
-      const divergent = await store.readPromotion(value.recordClass, value.scope);
-      assert.deepEqual(divergent?.payload, { current: "new payload" });
-      assert.notEqual(divergent?.payload, projection.payload);
-      payloadMatches = true;
-      moved = true;
+      assert.equal(metadata?.candidate.normalization.stateRecordHashes, value.normalization.stateRecordHashes);
+      assert.equal(metadata?.receipt, same?.receipt, "the one durable GOOD receipt is shared");
+      assert.match(sent[0].query, /p.payload = c.candidate->'readModel'/);
+      assert.match(sent[0].query, /p.validation_receipt = c.validation_receipt/);
+      assert.equal(await store.readPublishedCandidateMetadata(value.id), null);
+      assert.equal(sent.length, 2, "the coupled metadata is consumed once");
+      await store.readPromotion(value.recordClass, value.scope);
+      assert.equal(await store.readPublishedCandidateMetadata("another-state-version"), null);
+      assert.equal(await store.readPublishedCandidateMetadata(value.id), null, "another version clears the slot");
+      coupled = false;
+      await assert.rejects(() => store.readPromotion(value.recordClass, value.scope), /POINTER_PROOF_INVALID/);
+      assert.equal(await store.readPublishedCandidateMetadata(value.id), null);
+      coupled = true; moved = true;
       const changed = await store.readPromotion(value.recordClass, value.scope);
       assert.deepEqual(changed?.payload, { current: "new payload" });
       assert.notEqual(changed?.payload, projection.payload);
     });
     const outside = await store.readPromotion(value.recordClass, value.scope);
     assert.deepEqual(outside?.payload, { current: "new payload" });
-    assert.match(sent.at(-1)!.query, /"payload"/);
   });
+});
+
+test("the keyed state read executes recursive parts and rejects forged durable coupling", async () => {
+  const { PGlite } = await import("@electric-sql/pglite");
+  const pg = new PGlite();
+  await pg.exec(`CREATE TABLE civic_data_promotions(key text PRIMARY KEY, source_id text, record_class text, scope text,
+    current_version_id text, last_known_good_version_id text, promoted_at timestamptz, payload jsonb, validation_receipt jsonb);
+    CREATE TABLE civic_data_candidates(id text PRIMARY KEY, source_id text, record_class text, scope text, candidate jsonb,
+      state text, acquisition_succeeded boolean, promoted_version_id text, last_known_good_version_id text,
+      normalized_hash text, validation_receipt jsonb, failure_code text, failure_detail text);
+    CREATE TABLE civic_data_candidate_events(candidate_id text, sequence integer, detail text);
+    CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY, payload jsonb);`);
+  const payload = { temporal: candidate("joined-state").temporal,
+    rows: Array.from({ length: 40 }, (_, id) => ({ id, source: "https://az.gov/official", text: "Official source ".repeat(1000) })) };
+  const value = withStateRecordHashes({ ...candidate("joined-state"), recordClass: "BALLOT_CANDIDACY" as const, scope: "US-AZ:state-election-ballots",
+    temporal: payload.temporal, readModel: payload, normalizedPayload: payload, normalization: { ...candidate("metadata").normalization,
+      normalizedHash: normalizedHash(payload), normalizedPayloadHash: normalizedHash(payload) } });
+  const receipt = receiptFor(value), key = `${value.recordClass}:${value.scope}`;
+  const parts = new CivicPayloadParts({ existing: async () => [], write: async rows => {
+    for (const row of rows) await pg.query("INSERT INTO civic_data_payload_parts VALUES($1,$2)", [row.hash, row.payload]);
+  }, read: async () => { throw new Error("No separate part reads"); } });
+  const encoded = await parts.store(encodeStateCandidate(value), ["id", "sourceId", "recordClass", "scope", "retrieval", "normalization", "temporal"], ["readModel"]) as RoutineCandidate;
+  await pg.query("INSERT INTO civic_data_candidates VALUES($1,$2,$3,$4,$5,'PROMOTED',true,$1,$1,$6,$7,NULL,NULL)",
+    [value.id, value.sourceId, value.recordClass, value.scope, encoded, value.normalization.normalizedHash, receipt]);
+  await pg.query("INSERT INTO civic_data_promotions VALUES($1,$2,$3,$4,$5,$5,$6,$7,$8)",
+    [key, value.sourceId, value.recordClass, value.scope, value.id, "2026-09-08T12:01:00Z", encoded.readModel, receipt]);
+  try {
+    await withCannedNeon(async ({ query, params }) => {
+      const result = await pg.query<Record<string, unknown>>(query, [...params]);
+      return { columns: result.fields.map(field => [field.name, Object.entries(NEON_TYPE).find(([, oid]) => oid === field.dataTypeID)![0] as keyof typeof NEON_TYPE]),
+        rows: result.rows.map(row => result.fields.map(field => row[field.name])) };
+    }, async (store, sent) => {
+      const read = await readPromotedCivicData<typeof payload>(value.recordClass, value.scope, { store, bypassCache: true });
+      assert.equal(read.kind, "PROMOTED");
+      assert.equal(sent.length, 1);
+      if (read.kind !== "PROMOTED") throw new Error(JSON.stringify(read));
+      assert.deepEqual(read.value, payload);
+      rememberStatePublicationHashes(read.projection, value.normalization);
+      await withStatePublicationRead(read.projection, async () => {
+        const same = await store.readPromotion(value.recordClass, value.scope);
+        const metadata = await store.readPublishedCandidateMetadata(value.id);
+        assert.equal(sent.length, 2);
+        assert.equal(same?.payload, read.value);
+        assert.equal(metadata?.candidate.normalization.stateRecordHashes, value.normalization.stateRecordHashes);
+        assert.equal(metadata?.receipt, same?.receipt);
+        assert.equal(metadata?.candidate.temporal, read.value.temporal, "candidate paths reuse the one decoded payload");
+        assert.equal(Object.hasOwn(metadata!.candidate, "readModel"), false);
+      });
+      const forged = { ...read.projection, payload: { rows: [] } };
+      rememberStatePublicationHashes(forged, value.normalization);
+      await withStatePublicationRead(forged, async () => {
+        const result = await readPromotedCivicData(value.recordClass, value.scope, { store, bypassCache: true });
+        assert.equal(result.kind, "STORE_UNREACHABLE");
+      });
+      await pg.query("UPDATE civic_data_promotions SET payload='{}'");
+      await assert.rejects(() => store.readPromotion(value.recordClass, value.scope), /POINTER_PROOF_INVALID/);
+      await pg.query("UPDATE civic_data_promotions SET payload=$1, validation_receipt='{}'", [encoded.readModel]);
+      await assert.rejects(() => store.readPromotion(value.recordClass, value.scope), /POINTER_PROOF_INVALID/);
+      await pg.query("UPDATE civic_data_promotions SET validation_receipt=$1", [receipt]);
+      await pg.query("DELETE FROM civic_data_payload_parts");
+      await assert.rejects(() => store.readPromotion(value.recordClass, value.scope), /PART_MISSING/);
+    });
+  } finally { await pg.close(); }
 });
 
 

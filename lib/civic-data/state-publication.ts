@@ -189,6 +189,10 @@ export function rememberStatePublicationHashes(projection: Pick<PromotedProjecti
   provenHashes.set(projection, normalization.stateRecordHashes!);
 }
 
+export function heldStatePublicationHashes(projection: PromotedProjection): RecordHashes | undefined {
+  return provenHashes.get(projection);
+}
+
 const priors = new WeakMap<object, Map<string, StatePublicationPrior>>();
 const replacements = new WeakMap<object, { member: StatePublicationPrior["members"] extends Map<string, infer T> ? T : never;
   recordClass: RoutineCandidate["recordClass"]; project?: (value: unknown) => unknown }[]>();

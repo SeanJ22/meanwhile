@@ -70,7 +70,7 @@ export class CivicPayloadParts {
   }
 
   // Owned database rows can become the result without retaining a second encoded graph.
-  async loadOwned(input: unknown): Promise<unknown> {
+  async loadOwned(input: unknown, preloaded?: Record<string, unknown>): Promise<unknown> {
     const pending = new Map<string, unknown>(), decoded = new Map<string, unknown>(), visiting = new Set<string>();
     const build = (value: unknown): unknown => {
       if (isCivicPayloadPart(value)) {
@@ -123,7 +123,12 @@ export class CivicPayloadParts {
       for (let at = 0; at < hashes.length; at += 8) {
         const wanted = hashes.slice(at, at + 8), missing = wanted.filter(hash => !decoded.has(hash) && !pending.has(hash));
         if (missing.length) {
-          const parts = await this.io.read(missing);
+          const parts = preloaded === undefined ? await this.io.read(missing) : missing.flatMap(hash => {
+            if (!Object.hasOwn(preloaded, hash)) return [];
+            const payload = preloaded[hash];
+            delete preloaded[hash];
+            return [{ hash, payload }];
+          });
           for (const part of parts) pending.set(part.hash, part.payload);
           if (missing.some(hash => !pending.has(hash))) throw new Error("CIVIC_PAYLOAD_PART_MISSING");
         }
@@ -131,7 +136,10 @@ export class CivicPayloadParts {
       }
     };
     try { await resolve([input]); return build(input); }
-    finally { pending.clear(); decoded.clear(); visiting.clear(); }
+    finally {
+      pending.clear(); decoded.clear(); visiting.clear();
+      if (preloaded) for (const hash of Object.keys(preloaded)) delete preloaded[hash];
+    }
   }
 
   /** Reads parts eight at a time and assembles each as soon as its children are in. */

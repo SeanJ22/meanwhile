@@ -1162,7 +1162,7 @@ function publishedStateProofIssue(
   const receipt = parseValidationReceipt(projection.receipt), candidateReceipt = parseValidationReceipt(row.receipt);
   if (!receipt || !candidateReceipt || receipt.decision !== "GOOD" || candidateReceipt.decision !== "GOOD" ||
       receipt.candidateId !== candidate.id || receipt.sourceId !== candidate.sourceId || receipt.recordClass !== recordClass || receipt.scope !== scope ||
-      canonicalCivicDataJson(receipt) !== canonicalCivicDataJson(candidateReceipt)) return "the GOOD receipts do not identify the published candidate";
+      receipt !== candidateReceipt && canonicalCivicDataHash(receipt) !== canonicalCivicDataHash(candidateReceipt)) return "the GOOD receipts do not identify the published candidate";
   const times = [candidate.retrieval.retrievedAt, receipt.validatedAt, projection.promotedAt].map(Date.parse);
   if (!times.every(Number.isFinite) || times[0] > times[1] || times[1] > times[2]) return "retrieval, validation, and promotion times are invalid or out of order";
   if (!candidate.temporal || typeof candidate.temporal.version !== "string" || typeof candidate.temporal.sourceThrough !== "string")

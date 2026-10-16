@@ -683,7 +683,6 @@ export async function publishReaderEdgeArtifacts(
       manifestScopes.push({
         scope: artifact.scope,
         ...(artifact.ocdId ? { ocdId: artifact.ocdId } : {}),
-        ...(artifact.bounds ? { bounds: artifact.bounds } : {}),
         ...(artifact.meetingIds ? { meetingIds: artifact.meetingIds } : {}),
         ...(artifact.agendaOnly ? { agendaOnly: true } : {}),
         key,
@@ -867,7 +866,6 @@ type ReaderEdgeMeetingsOptions = {
     readonly ocdIds?: readonly string[];
     readonly meetingId?: string;
     readonly includeAgenda?: boolean;
-    readonly nearby?: { readonly lat: number; readonly lng: number; readonly radiusKm: number };
     readonly now?: string;
     readonly manifest?: ReaderManifest | null;
     readonly fallback?: () => Promise<MeetingsProjectionReadResult>;

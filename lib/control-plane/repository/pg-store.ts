@@ -10,8 +10,6 @@ import { createWebsitePacing } from "../website-pacing.ts";
 import type { LiveAuditLogRow } from "../live-audit-log.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 import { pgActiveWorkClaimReader } from "./active-work-claims.ts";
-/** The Postgres control-plane provider, implementing the same `ControlPlaneRepositories` interfaces as the file store. */
-
 import { createHash } from "node:crypto";
 import { neon, Pool, neonConfig } from "@neondatabase/serverless";
 import type {
@@ -1011,7 +1009,8 @@ export const FIELD_MANUAL_SLICE_SQL = `SELECT id, revision, updated_at, value FR
         OR coalesce(value->'reach'->'places', '[]'::jsonb) ?| $6::text[]
         OR (jsonb_array_length(coalesce(value->'reach'->'platforms', '[]'::jsonb)) > 0 AND ($7::text IS NULL OR value->'reach'->'platforms' ? $7::text))
         OR ($8::text IS NOT NULL AND coalesce(value->'reach'->'states', '[]'::jsonb) ? $8::text))))
-    AND ($9::text IS NULL OR id > $9::text)
+    AND ($9::text IS NULL OR value->'states' ? $9::text)
+    AND ($10::text IS NULL OR id > $10::text)
   ORDER BY id ASC LIMIT ${AGGREGATE_LIST_READ_PAGE}`;
 
 /** The slice's parameters, in `FIELD_MANUAL_SLICE_SQL`'s order (without the page cursor). */
@@ -1025,6 +1024,7 @@ export function fieldManualSliceParams(query: FieldManualQuery): unknown[] {
     coveringPlaces(query),
     query.platform?.toLowerCase() ?? null,
     queryState(query) ?? null,
+    query.withinState?.toLowerCase() ?? null,
   ];
 }
 
@@ -1055,7 +1055,7 @@ export function pgFieldManualRepository(sql: Sql, options: PgRepositoryBounds = 
       return inserted;
     },
     async slice(query) {
-      if (copies !== null) {
+      if (copies !== null && query.withinState === undefined) {
         const rows = await copies.aggregateList("cp_field_manual_entries", base.listChangedSince!,
           (row) => (entryInSlice(row.value, query) ? row : null));
         return rows.filter((row): row is Persisted<FieldManualEntry> => row !== null);

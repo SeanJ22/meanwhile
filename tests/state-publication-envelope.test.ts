@@ -1,3 +1,4 @@
+import { immutableStateHash, immutableStateValue } from "../lib/civic-data/state-publication.ts";
 import { bindStatePublicationPrior, consumeStatePublicationRecord, rememberStatePublicationHashes, rememberStatePublicationPrior, takeStatePublicationPrior, withStateRecordHashes } from "../lib/civic-data/state-publication-prior.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -184,4 +185,15 @@ test("state publication derives persisted member hashes and refuses a forged pri
   assert.throws(() => rememberStatePublicationHashes(read.projection, { ...input.normalization,
     stateRecordHashes: { ...hashes, readModelHash: "f".repeat(64) } }), /STATE_RECORD_HASHES_PAYLOAD_MISMATCH/);
   assert.throws(() => rememberStatePublicationPrior({}, { ...read.projection }), /STATE_RECORD_HASHES_NOT_VERIFIED/);
+});
+
+test("state digest reuse never trusts a caller's shallow freeze", () => {
+  const nested = { title: "Before" }, shallow = Object.freeze({ nested });
+  const before = immutableStateHash(shallow);
+  nested.title = "After";
+  assert.notEqual(immutableStateHash(shallow), before);
+  const owned = immutableStateValue(shallow);
+  assert.equal(immutableStateValue(owned), owned);
+  assert.equal(immutableStateHash(owned), canonicalCivicDataHash(owned));
+  assert.throws(() => { nested.title = "Changed after ownership"; }, TypeError);
 });

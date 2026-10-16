@@ -1,4 +1,3 @@
-import { openFixturePgRepositories } from "./helpers/pg-repositories.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { mkdtemp, rm } from "node:fs/promises";
@@ -131,11 +130,4 @@ test("a replacement that became valid before the session lock is never dropped",
   await pgEnsureArtifactSourceIndex(mock.sql);
   assert.equal(statusReads, 2);
   assert.ok(!mock.calls.some(text => /CREATE INDEX|DROP INDEX/.test(text)));
-});
-
-test("an interrupted source index build fails bootstrap before its version is recorded", async () => {
-  const { sql, calls } = indexSql([{ valid: false, building: false }], /^CREATE INDEX CONCURRENTLY/);
-  await assert.rejects(openFixturePgRepositories(sql, "2026-10-02T03:00:00Z"), /source index build interrupted/);
-  assert.ok(calls.some(text => text.includes("pg_advisory_unlock")));
-  assert.ok(!calls.some(text => text.includes("INSERT INTO cp_schema_version")));
 });

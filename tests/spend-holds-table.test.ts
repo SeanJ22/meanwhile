@@ -1,4 +1,3 @@
-import { openFixturePgRepositories } from "./helpers/pg-repositories.ts";
 
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -201,40 +200,6 @@ test("the v24 move: the ledger row is locked, its holds copied (an id already mo
   assert.match(ddl, /UPDATE cp_budget SET value = jsonb_set\(value, '\{spendHolds\}', '\{\}'::jsonb\), revision = revision \+ 1, changed_at = now\(\)/);
   assert.ok(ddl.indexOf("INSERT INTO cp_spend_holds") < ddl.indexOf("UPDATE cp_budget"), "copied before the row is emptied");
   assert.doesNotMatch(ddl, /'\{hosts|vendors|credentials/, "the ledger row's other fields are untouched");
-});
-
-function recordingSql() {
-  const statements: string[] = [];
-  const sql: Sql = {
-    query: async (text) => {
-      statements.push(text);
-      return text.includes("indisvalid") ? [{ valid: true, building: false }] : [];
-    },
-  };
-  return { sql, statements };
-}
-
-test("the bootstrap runs the move by default and skips it behind WTP_SPEND_HOLDS_TABLE=0", async () => {
-  const before = process.env.WTP_SPEND_HOLDS_TABLE;
-  try {
-    delete process.env.WTP_SPEND_HOLDS_TABLE;
-    const on = recordingSql();
-    await openFixturePgRepositories(on.sql, NOW);
-    assert.ok(on.statements.includes(SPEND_HOLDS_MOVE_DDL));
-    assert.ok(on.statements.includes(ADMIT_SPEND_HOLD_FUNCTION_DDL));
-    const versionAt = on.statements.findIndex(text => text.startsWith("INSERT INTO cp_schema_version"));
-    assert.ok(versionAt >= 0);
-    assert.match(on.statements[versionAt]!, new RegExp(`VALUES \\(true, ${BOOTSTRAP_VERSION},`));
-    assert.ok(on.statements.every((text, index) => !BOOTSTRAP_DDL.includes(text) || index < versionAt),
-      "the schema version is recorded only after every bootstrap statement");
-    process.env.WTP_SPEND_HOLDS_TABLE = "0";
-    const off = recordingSql();
-    await openFixturePgRepositories(off.sql, NOW);
-    assert.ok(!off.statements.includes(SPEND_HOLDS_MOVE_DDL), "the way back leaves the holds on the row");
-    assert.ok(off.statements.includes(SPEND_HOLDS_TABLE_DDL), "the table still exists, so switching on later needs no other step");
-  } finally {
-    if (before === undefined) delete process.env.WTP_SPEND_HOLDS_TABLE; else process.env.WTP_SPEND_HOLDS_TABLE = before;
-  }
 });
 
 /* ------------------------------------------------------------ (d) the switch */

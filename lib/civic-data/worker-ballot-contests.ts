@@ -1,3 +1,4 @@
+import { immutableStateValue } from "./state-publication.ts";
 import { consumeStatePublicationRecord } from "./state-publication-prior.ts";
 import { parseStateBallotContractId, requireBallotState, stateBallotContractId } from "../ballot/state-scopes.ts";
 import { recordPublicationFlow } from "./publication-flow.ts";
@@ -317,14 +318,14 @@ export class BallotContestMerge {
         this.currentAuthorities.get(contest.provenance.sourceUrl ?? "")) throw new Error("Contest authority conflicts with the published ballot.");
       if (held) {
         const holds = state.rows.get("heldContests") ?? new Map();
-        const next = field === "heldContests" ? value : { id: contest.id, electionId: contest.electionId,
-          ocdId: contest.ocdId, title: contest.title, provenance: contest.provenance, reason: "The official candidate list hasn't been fully checked." };
+        const next = immutableStateValue(field === "heldContests" ? value : { id: contest.id, electionId: contest.electionId,
+          ocdId: contest.ocdId, title: contest.title, provenance: contest.provenance, reason: "The official candidate list hasn't been fully checked." });
         consumeStatePublicationRecord(previous, next);
         holds.set(id, next);
         state.rows.set("heldContests", holds); state.rows.get("contests")?.delete(id); state.holds.add(id);
       } else {
         this.onContest?.(id, value, old);
-        const next = old ? { ...old, ...row } : row;
+        const next = immutableStateValue(old ? { ...old, ...row } : row);
         consumeStatePublicationRecord(previous, next);
         rows.set(id, next); state.incoming.add(id);
         if (complete) state.complete.add(id);
@@ -346,7 +347,7 @@ export class BallotContestMerge {
     const parent = field.split(".")[0];
     if (old && (observedAt(value) || state.incomingTimes.get(parent) || 0) < (observedAt(old) || state.beforeTimes.get(parent) || 0)) return;
     if (field === "measures") state.measures.add(contestId);
-    const next = field === "candidacies" && old ? { ...old as object, ...row } : value;
+    const next = immutableStateValue(field === "candidacies" && old ? { ...old as object, ...row } : value);
     consumeStatePublicationRecord(old, next);
     rows.set(id, next);
   }

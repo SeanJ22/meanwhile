@@ -1,6 +1,7 @@
-import { openFixturePgRepositories } from "./helpers/pg-repositories.ts";
+import { ADMIT_SPEND_HOLD_FUNCTION_DDL, BOOTSTRAP_DDL, BOOTSTRAP_VERSION, SCOPED_HISTORY_INDEXES, SPEND_HOLDS_MOVE_DDL, SPEND_HOLDS_TABLE_DDL } from "../lib/control-plane/repository/pg-schema.ts";
 import assert from "node:assert/strict";
-import test from "node:test";
+import test, { mock } from "node:test";
+import { neonConfig, Pool, type PoolClient } from "@neondatabase/serverless";
 import { randomUUID } from "node:crypto";
 import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -16,6 +17,7 @@ import {
   controlPlaneTestUrlFromEnv,
   controlPlaneUrlFromEnv,
   createPgRepositories,
+  type Sql,
 } from "../lib/control-plane/repository/pg-store.ts";
 import {
   ConcurrentModification,
@@ -574,4 +576,94 @@ test("BL-30 migrates existing voting doors to exact state and canonical URL quer
     assert.equal((await db.query("SELECT id FROM cp_doors WHERE value#>>'{config,votingState_NH}'='true'")).rows.length, 1);
     assert.equal((await db.query("SELECT id FROM cp_doors WHERE value#>>'{config,votingState_NJ}'='true'")).rows.length, 0);
   } finally { await db.close(); }
+});
+
+async function openFixturePgRepositories(sql: Sql, now: string) {
+  const originalFetch = neonConfig.fetchFunction;
+  const client = { query: async (text: string, params: readonly unknown[] = []) => ({ rows: await sql.query(text, params) }), release: () => {} };
+  const connect = mock.method(Pool.prototype, "connect", async () => client as unknown as PoolClient);
+  try {
+    neonConfig.fetchFunction = (async (_input: unknown, init?: { body?: string }) => {
+      const request = JSON.parse(init?.body ?? "{}") as { query: string; params?: readonly unknown[] };
+      const rows = await sql.query(request.query, request.params) as Record<string, unknown>[];
+      const names = Object.keys(rows[0] ?? {});
+      const fields = names.map(name => ({ name, dataTypeID: 114 }));
+      return Response.json({ fields, rows: rows.map(row => names.map(name => JSON.stringify(row[name]))),
+        rowCount: rows.length, command: "SELECT", rowAsArray: true });
+    }) as typeof neonConfig.fetchFunction;
+    return await createPgRepositories("postgresql://fixture:fixture@ep-bootstrap-fixture.us-east-2.aws.neon.tech/test", now);
+  } finally { neonConfig.fetchFunction = originalFetch; connect.mock.restore(); }
+}
+
+function recordingSql() {
+  const statements: string[] = [];
+  const sql: Sql = {
+    query: async (text) => {
+      statements.push(text);
+      return text.includes("indisvalid") ? [{ valid: true, building: false }] : [];
+    },
+  };
+  return { sql, statements };
+}
+
+test("the bootstrap runs the move by default and skips it behind WTP_SPEND_HOLDS_TABLE=0", async () => {
+  const before = process.env.WTP_SPEND_HOLDS_TABLE;
+  try {
+    delete process.env.WTP_SPEND_HOLDS_TABLE;
+    const on = recordingSql();
+    await openFixturePgRepositories(on.sql, "2026-10-06T12:00:00.000Z");
+    assert.ok(on.statements.includes(SPEND_HOLDS_MOVE_DDL));
+    assert.ok(on.statements.includes(ADMIT_SPEND_HOLD_FUNCTION_DDL));
+    const versionAt = on.statements.findIndex(text => text.startsWith("INSERT INTO cp_schema_version"));
+    assert.ok(versionAt >= 0);
+    assert.match(on.statements[versionAt]!, new RegExp(`VALUES \\(true, ${BOOTSTRAP_VERSION},`));
+    assert.ok(on.statements.every((text, index) => !BOOTSTRAP_DDL.includes(text) || index < versionAt),
+      "the schema version is recorded only after every bootstrap statement");
+    process.env.WTP_SPEND_HOLDS_TABLE = "0";
+    const off = recordingSql();
+    await openFixturePgRepositories(off.sql, "2026-10-06T12:00:00.000Z");
+    assert.ok(!off.statements.includes(SPEND_HOLDS_MOVE_DDL), "the way back leaves the holds on the row");
+    assert.ok(off.statements.includes(SPEND_HOLDS_TABLE_DDL), "the table still exists, so switching on later needs no other step");
+  } finally {
+    if (before === undefined) delete process.env.WTP_SPEND_HOLDS_TABLE; else process.env.WTP_SPEND_HOLDS_TABLE = before;
+  }
+});
+
+test("CH-26: schema version 20 builds the scoped indexes online, on the exact expressions the reads send", async () => {
+  assert.ok(BOOTSTRAP_VERSION >= 20, "v20 added the scoped indexes; later versions (v21 live audits) keep them");
+  for (const index of SCOPED_HISTORY_INDEXES) {
+    assert.match(index.ddl, /^CREATE INDEX CONCURRENTLY IF NOT EXISTS /);
+    assert.ok(BOOTSTRAP_DDL.includes(index.ddl));
+  }
+  const ddl = SCOPED_HISTORY_INDEXES.map(index => index.ddl).join("\n");
+  assert.match(ddl, /cp_attempts \(\(value #>> '\{workItemId\}'\)\)/);
+  assert.match(ddl, /cp_route_tasks \(\(value #>> '\{workItemId\}'\)\)/);
+  assert.match(ddl, /cp_occurrences \(\(value #>> '\{workItemId\}'\)\)/);
+  assert.match(ddl, /cp_work_items \(\(value #>> '\{planRepair,parentWorkItemId\}'\)\)/, "the lineage index");
+  assert.match(ddl, /cp_log_scout_results \(\(record #>> '\{subjectId\}'\)\)/);
+  assert.match(ddl, /cp_log_costs \(recorded_at\)/);
+
+  const calls: string[] = [];
+  const sql: Sql = { query: async text => {
+    calls.push(text);
+    if (text.includes("pg_try_advisory_lock")) return [{ locked: true }];
+    return [];
+  } };
+  await openFixturePgRepositories(sql, "2026-10-16T12:00:00.000Z");
+  assert.ok(calls.some(text => text.includes("to_regclass('cp_attempts_work_item')")));
+  assert.equal(calls.filter(text => text === SCOPED_HISTORY_INDEXES[0]!.ddl).length, 1);
+  assert.ok(!calls.some(text => /^\s*(?:BEGIN|START\s+TRANSACTION|COMMIT|ROLLBACK)\s*(?:;|$)/i.test(text)), "online indexes never run inside a transaction");
+});
+
+test("an interrupted source index build fails bootstrap before its version is recorded", async () => {
+  const calls: string[] = [];
+  const sql: Sql = { query: async text => {
+    calls.push(text);
+    if (/^CREATE INDEX CONCURRENTLY/.test(text)) throw new Error("source index build interrupted");
+    if (text.includes("pg_try_advisory_lock")) return [{ locked: true }];
+    return text.includes("FROM pg_index i") ? [{ valid: false, building: false }] : [];
+  } };
+  await assert.rejects(openFixturePgRepositories(sql, "2026-10-02T03:00:00Z"), /source index build interrupted/);
+  assert.ok(calls.some(text => text.includes("pg_advisory_unlock")));
+  assert.ok(!calls.some(text => text.includes("INSERT INTO cp_schema_version")));
 });

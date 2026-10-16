@@ -1,6 +1,5 @@
-import { canonicalCivicDataHash } from "./canonical-hash.ts";
 import { civicRecordFacts, civicRecordsFor } from "./changes.ts";
-import { statePublicationScope } from "./state-publication.ts";
+import { immutableStateHash, statePublicationScope } from "./state-publication.ts";
 import type { GenericBallotProjection } from "../ballot/generic-projection.ts";
 import type { NormalizationEvidence, PromotedProjection, RoutineCandidate } from "./types.ts";
 
@@ -20,8 +19,8 @@ const SHA256 = /^[a-f0-9]{64}$/;
 export function withStateRecordHashes(candidate: RoutineCandidate): RoutineCandidate {
   if (!statePublicationScope(candidate.scope) || !candidate.normalization.normalizedHash) return candidate;
   const members = civicRecordsFor(candidate.recordClass, candidate.readModel).map(member => {
-    const facts = civicRecordFacts(candidate.recordClass, member), sha256 = canonicalCivicDataHash(member.record);
-    return Object.freeze({ key: member.key, sha256, factsHash: facts === member.record ? sha256 : canonicalCivicDataHash(facts) });
+    const facts = civicRecordFacts(candidate.recordClass, member), sha256 = immutableStateHash(member.record);
+    return Object.freeze({ key: member.key, sha256, factsHash: facts === member.record ? sha256 : immutableStateHash(facts) });
   });
   const stateRecordHashes = Object.freeze({ readModelHash: candidate.normalization.normalizedHash, members: Object.freeze(members) });
   return Object.freeze({ ...candidate, normalization: Object.freeze({ ...candidate.normalization, stateRecordHashes }) });
@@ -106,7 +105,7 @@ export function consumeStatePublicationRecord(previous: unknown, next: unknown |
   for (const entry of entries) {
     if (key !== undefined && entry.member.key !== key) continue;
     const record = next === null ? null : entry.project ? entry.project(next) : next;
-    if (next !== null && canonicalCivicDataHash(civicRecordFacts(entry.recordClass, { key: entry.member.key, record })) === entry.member.factsHash)
+    if (next !== null && immutableStateHash(civicRecordFacts(entry.recordClass, { key: entry.member.key, record })) === entry.member.factsHash)
       delete entry.member.record;
   }
   const remaining = key === undefined ? [] : entries.filter(entry => entry.member.key !== key);

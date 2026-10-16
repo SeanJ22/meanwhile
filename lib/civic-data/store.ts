@@ -1850,7 +1850,16 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
 
   async readStatePublicationBase(recordClass: RoutineRecordClass, scope: string): Promise<{ current: PromotedProjection | null; lkg: CandidateVersionRecord | null }> {
     if (!statePublicationScope(scope)) throw new Error(`STATE_PUBLICATION_SCOPE_INVALID:${scope}`);
-    const [row] = await this.db.select({ promotion: civicDataPromotions, candidate: civicDataCandidates })
+    const prior = takeStatePublicationPrior(this, recordClass, scope);
+    const column = civicDataCandidates.candidate;
+    const candidateColumns = prior ? { ...getTableColumns(civicDataCandidates),
+      identity: sql<unknown>`'[]'::jsonb`,
+      candidate: sql<unknown>`jsonb_build_object(
+        'id', ${column}->'id', 'sourceId', ${column}->'sourceId', 'recordClass', ${column}->'recordClass',
+        'scope', ${column}->'scope', 'normalization', ${column}->'normalization', 'temporal', ${column}->'temporal',
+        'retrieval', (${column}->'retrieval') - 'derived', 'readModel', ${column}->'readModel')`,
+    } : getTableColumns(civicDataCandidates);
+    const [row] = await this.db.select({ promotion: civicDataPromotions, candidate: candidateColumns })
       .from(civicDataPromotions).leftJoin(civicDataCandidates, eq(civicDataCandidates.id, civicDataPromotions.lastKnownGoodVersionId))
       .where(eq(civicDataPromotions.key, projectionKey(recordClass, scope))).limit(1);
     if (!row) return { current: null, lkg: null };
@@ -1859,11 +1868,11 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     const encodedHash = durableStateHash(row.promotion.payload);
     if (encodedHash !== durableStateHash(encoded.readModel))
       throw new Error(`STATE_PUBLICATION_POINTER_PAYLOAD_MISMATCH:${row.promotion.key}`);
-    const prior = takeStatePublicationPrior(this, recordClass, scope);
     const indexed = prior?.versionId === row.promotion.currentVersionId && prior.payloadHash === row.candidate.normalizedHash;
+    if (prior && !indexed) throw new Error(`STATE_PUBLICATION_BASE_CHANGED:${row.promotion.key}`);
     const metadata = { id: encoded.id, sourceId: encoded.sourceId, recordClass: encoded.recordClass, scope: encoded.scope,
       normalization: encoded.normalization, temporal: encoded.temporal, readModel: null, normalizedPayload: null, civicRecords: [], identities: [],
-      excludedFacts: (row.candidate.validationReceipt as ValidationReceipt | null)?.excludedFacts?.map(({ key, code, detail }) => ({ key, code, detail })) ?? [],
+      excludedFacts: (row.candidate.validationReceipt as ValidationReceipt | null)?.excludedFacts ?? [],
       retrieval: { ...encoded.retrieval, derived: undefined } };
     const candidate = await this.loadPayload(prior ? metadata : encoded, scope) as RoutineCandidate;
     if (indexed) bindStatePublicationPrior(candidate, prior);

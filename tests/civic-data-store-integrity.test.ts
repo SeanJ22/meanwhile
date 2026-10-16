@@ -1465,6 +1465,8 @@ test("state publication reads its pointer and candidate together and rejects a d
     rememberStatePublicationHashes(base.current!, base.lkg!.candidate.normalization);
     rememberStatePublicationPrior(store, base.current!);
     const indexed = await store.readStatePublicationBase(value.recordClass, value.scope);
+    assert.match(sent.at(-1)!.query, /jsonb_build_object/);
+    assert.doesNotMatch(sent.at(-1)!.query, /"civic_data_candidates"\."identity"/);
     assert.equal(indexed.current?.payload, null, "the old graph is absent from the validation base");
     assert.equal(indexed.lkg?.candidate.readModel, null);
     assert.equal(indexed.lkg?.candidate.normalizedPayload, null);

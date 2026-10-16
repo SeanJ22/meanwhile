@@ -21,14 +21,31 @@ export function statePublicationScope(scope: string): boolean {
     stateFromRegistryRuntimeScope(scope) !== null;
 }
 
+const immutableValues = new WeakSet<object>();
+const immutableHashes = new WeakMap<object, string>();
+
+export function immutableStateHash(value: unknown): string {
+  const owned = value !== null && typeof value === "object" && immutableValues.has(value);
+  const saved = owned ? immutableHashes.get(value) : undefined;
+  if (saved) return saved;
+  const hash = canonicalCivicDataHash(value);
+  if (owned) immutableHashes.set(value, hash);
+  return hash;
+}
+
 export function durableStateHash(value: unknown): string | null {
   try {
-    const hash = canonicalCivicDataHash(value);
+    const hash = immutableStateHash(value);
+    if (value !== null && typeof value === "object" && immutableValues.has(value)) return hash;
     return hash === canonicalCivicDataHash(value, { durable: true }) ? hash : null;
   } catch { return null; }
 }
 
 export function immutableStateCandidate(candidate: RoutineCandidate): RoutineCandidate {
+  return immutableStateValue(candidate);
+}
+
+export function immutableStateValue<T>(candidate: T): T {
   const omitted = Symbol("omitted"), normalized = new WeakMap<object, unknown>(), parents = new Set<object>();
   const visit = (original: unknown, key: string): unknown => {
     let value = original;
@@ -44,6 +61,7 @@ export function immutableStateCandidate(candidate: RoutineCandidate): RoutineCan
     if (value === undefined || typeof value === "function" || typeof value === "symbol") return omitted;
     if (typeof value === "number") return Number.isFinite(value) ? value === 0 ? 0 : value : null;
     if (value === null || typeof value !== "object") return value;
+    if (immutableValues.has(value)) return value;
     if (parents.has(value)) throw new TypeError("A state candidate cannot contain a circular value.");
     if (normalized.has(value)) return normalized.get(value);
     parents.add(value);
@@ -61,10 +79,11 @@ export function immutableStateCandidate(candidate: RoutineCandidate): RoutineCan
     }
     parents.delete(value);
     const result = Object.freeze(copy ?? value);
+    immutableValues.add(result);
     normalized.set(value, result);
     return result;
   };
-  return visit(candidate, "") as RoutineCandidate;
+  return visit(candidate, "") as T;
 }
 
 const PATH = "$civicCandidatePath";

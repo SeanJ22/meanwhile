@@ -1,6 +1,4 @@
-import { mergeBallotFixture } from "./helpers/ballot-merge.ts";
 import assert from "node:assert/strict";
-import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -17,8 +15,6 @@ import { projectFecDiscovery } from "../lib/funding/fec-collector.ts";
 import { stateCampaignFinanceCandidate, STATE_CAMPAIGN_FINANCE_SOURCES } from "../lib/funding/data-plane.ts";
 import type { FundingSnapshot, SecondHopCommittee } from "../lib/funding/types.ts";
 import type { StateMoneySnapshot } from "../lib/funding/state-money.ts";
-import { manualProjectionCandidate, type ManualProjectionPackage } from "../lib/civic-data/manual-projections.ts";
-import type { GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
 import { acquireStatePeople } from "../lib/sources/plural/acquisition.ts";
 import { PLURAL_REVISION_URL } from "../lib/sources/plural/targets.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
@@ -32,7 +28,6 @@ import { withFetch } from "./helpers/with-fetch.ts";
 
 const fixture = (path: string) => readFileSync(new URL(`./fixtures/${path}`, import.meta.url), "utf8");
 const at = "2026-10-13T12:00:00.000Z";
-const sha = (text: string) => createHash("sha256").update(text).digest("hex");
 
 test("R2B money: second-hop facts and cursor-only progress survive the unchanged confirmation path", async () => {
   await installRegistryAuthority();
@@ -67,42 +62,6 @@ test("R2B money: second-hop facts and cursor-only progress survive the unchanged
   assert.ok(moved.promoted && !moved.confirmed, JSON.stringify(moved.candidate.receipt));
   assert.equal(moved.candidate.candidate.changeSet?.outcome, "UNCHANGED");
   assert.deepEqual((moved.promoted.payload as StateMoneySnapshot).acquisitionCursors, cursor.acquisitionCursors);
-});
-
-test("R2B candidates: only a newer complete official list removes a withdrawn candidacy from its contest", async () => {
-  const raw = fixture("nj-filing/morris-clerk-2026-general-candidates-082126.txt");
-  const state = JSON.parse(readFileSync("data/ballot/2026-general/nj.json", "utf8")) as GenericBallotProjection;
-  const names = Object.values(state.ballots).flatMap(ballot => ballot.candidacies)
-    .filter(row => row.contestId === "ballot-nj-morris:rockaway-borough-member-of-the-borough-council-place-rockaway");
-  assert.equal(names.length, 4);
-  const sourceUrl = "https://www.morriscountynj.gov/files/sharedassets/public/v/1/departments/county-clerk/2026-general-candidates.pdf";
-  const make = (count: number, time: string, complete: boolean): ManualProjectionPackage => {
-    const provenance = { sourceUrl, sourceOrg: "Morris County Clerk", collectedAt: time, verifiedAt: time };
-    return { contractId: "ballot-contests:NJ", version: time, sourceThrough: time,
-      sourceReceipt: { contractVersion: 1, reviewedAt: time, reviewedBy: "fixture replay", sources: [{ requestedUrl: sourceUrl,
-        finalUrl: sourceUrl, publisher: "Morris County Clerk", sourceClass: "ELECTION_AUTHORITY", httpStatus: 200,
-        rawHash: sha(raw), retrievedAt: time, reviewedEvidence: "Candidate names retained from the saved clerk list in the national state ballot" }] },
-      payload: { kind: "ballot-contests", ballots: { "NJ:general": {
-        election: { id: "general", state: "NJ", name: "General Election", date: "2026-11-03" },
-        contests: [{ id: "council", electionId: "general", ocdId: "ocd-division/country:us/state:nj/place:rockaway",
-          divisionVintage: "TIGER_CB2023", title: "Borough Council", type: "CANDIDACY", voteFor: 2, termYears: 3,
-          candidateListComplete: complete, scopeNote: null, provenance }],
-        candidacies: names.slice(0, count).map((row, index) => ({ id: `candidate:${index}`, contestId: "council", givenName: row.givenName,
-          familyName: row.familyName, partyLabel: null, slogan: null, incumbent: null, websiteUrl: null, provenance })),
-        measures: [], absences: [] } } } };
-  };
-  const initial = make(4, at, true), store = new MemoryRoutineDataStore();
-  const first = await processRegisteredManualCandidate(store, "ballot-contests:NJ", manualProjectionCandidate(initial), at);
-  assert.ok(first.promoted);
-  const prior = { versionId: first.promoted.versionId, payload: initial.payload, sourceReceipt: initial.sourceReceipt };
-  const partial = mergeBallotFixture(make(3, "2026-10-13T13:00:00.000Z", false), prior);
-  assert.equal(Object.values((partial.payload as GenericBallotProjection).ballots)[0].candidacies.length, 4);
-  const successor = mergeBallotFixture(make(3, "2026-10-13T14:00:00.000Z", true), prior);
-  const published = await processRegisteredManualCandidate(store, "ballot-contests:NJ", manualProjectionCandidate(successor), "2026-10-13T14:00:00.000Z");
-  assert.ok(published.promoted, JSON.stringify(published.candidate.receipt));
-  assert.equal(published.candidate.candidate.changeSet?.removed.length, 1);
-  const unsafe = manualProjectionCandidate(make(2, "2026-10-13T15:00:00.000Z", false));
-  assert.equal((await processRegisteredManualCandidate(store, "ballot-contests:NJ", unsafe, "2026-10-13T15:00:00.000Z")).promoted, null);
 });
 
 test("R2B address: three real redrawn-state addresses use their representation and election vintages", async () => {

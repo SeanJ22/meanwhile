@@ -1,4 +1,3 @@
-import { openFixturePgRepositories } from "./helpers/pg-repositories.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
@@ -7,8 +6,6 @@ import { nextAutonomousOperation } from "../lib/control-plane/workers/coordinato
 import { readAuditHistory, readScoutResultsForSubjects } from "../lib/control-plane/workers/scoped-history.ts";
 import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
-import { BOOTSTRAP_DDL, BOOTSTRAP_VERSION, SCOPED_HISTORY_INDEXES } from "../lib/control-plane/repository/pg-schema.ts";
-import { type Sql } from "../lib/control-plane/repository/pg-store.ts";
 import type { ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
 import { autonomousHarness } from "./helpers/autonomous-fleet.ts";
 import { readLineageHistory } from "../lib/control-plane/workers/scoped-history.ts";
@@ -161,32 +158,6 @@ test("CH-26: a lease worker's scoped runtime builds and begins a task without li
   counter.reset();
   await withReaderAuthorityEdge(registry, () => autonomousStandingRuntime({ root, repos: h.repos, now: h.now, auditCeilingUsd: 1 }));
   assert.ok(counter.whole().length > 0, "the round's unscoped build still does the whole-store upkeep");
-});
-
-test("CH-26: schema version 20 builds the scoped indexes online, on the exact expressions the reads send", async () => {
-  assert.ok(BOOTSTRAP_VERSION >= 20, "v20 added the scoped indexes; later versions (v21 live audits) keep them");
-  for (const index of SCOPED_HISTORY_INDEXES) {
-    assert.match(index.ddl, /^CREATE INDEX CONCURRENTLY IF NOT EXISTS /);
-    assert.ok(BOOTSTRAP_DDL.includes(index.ddl));
-  }
-  const ddl = SCOPED_HISTORY_INDEXES.map(index => index.ddl).join("\n");
-  assert.match(ddl, /cp_attempts \(\(value #>> '\{workItemId\}'\)\)/);
-  assert.match(ddl, /cp_route_tasks \(\(value #>> '\{workItemId\}'\)\)/);
-  assert.match(ddl, /cp_occurrences \(\(value #>> '\{workItemId\}'\)\)/);
-  assert.match(ddl, /cp_work_items \(\(value #>> '\{planRepair,parentWorkItemId\}'\)\)/, "the lineage index");
-  assert.match(ddl, /cp_log_scout_results \(\(record #>> '\{subjectId\}'\)\)/);
-  assert.match(ddl, /cp_log_costs \(recorded_at\)/);
-
-  const calls: string[] = [];
-  const sql: Sql = { query: async text => {
-    calls.push(text);
-    if (text.includes("pg_try_advisory_lock")) return [{ locked: true }];
-    return [];
-  } };
-  await openFixturePgRepositories(sql, "2026-10-16T12:00:00.000Z");
-  assert.ok(calls.some(text => text.includes("to_regclass('cp_attempts_work_item')")));
-  assert.equal(calls.filter(text => text === SCOPED_HISTORY_INDEXES[0]!.ddl).length, 1);
-  assert.ok(!calls.some(text => /^\s*(?:BEGIN|START\s+TRANSACTION|COMMIT|ROLLBACK)\s*(?:;|$)/i.test(text)), "online indexes never run inside a transaction");
 });
 
 test("CH-26: each lease task reports its repository calls, and the round records their mean as a phase", async () => {

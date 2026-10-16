@@ -178,7 +178,7 @@ test("ordinary publication repairs old area copies once, carries quiet data, and
   assert.equal((await artifacts.readManifest())!.manifest.meetingRegistryVersion, undefined);
   const memory = new MemoryRoutineDataStore();
   await memory.writePreparedReaderProjection({ recordClass: "MEETING", scope: MEETINGS_PREPARED_SCOPE,
-    payload: snap, composedFrom: [{ contractId: "meeting-facts", versionId: "facts:none" }], factSha256: "a".repeat(64), generatedAt: snap.generatedAt,
+    payload: snap, composedFrom: [], factSha256: "a".repeat(64), generatedAt: snap.generatedAt,
     composedAt: snap.generatedAt, ...META }, null);
   let payloadReads = 0, registryReads = 0, registryVersion = "registry-v1";
   let otherAreas: string[] = [secondary];
@@ -242,8 +242,7 @@ test("a racing prepared meeting copy keeps its exact LKG while an independent re
   Object.assign(memory, { candidates: new Map([[imported.record.candidate.id, imported.record]]), promotions: new Map([[imported.projection.key, imported.projection]]) });
   const partition = MEETING_PARTITION_CONTRACTS[0];
   const preparedInput = { recordClass: "MEETING" as const, scope: MEETINGS_PREPARED_SCOPE, payload: newer,
-    composedFrom: [{ contractId: partition.id, versionId: "meeting-v1", routes: [`az-portal|${body.id}`], checkedAt: newer.generatedAt },
-      { contractId: "meeting-facts", versionId: "facts:none" }],
+    composedFrom: [{ contractId: partition.id, versionId: "meeting-v1", routes: [`az-portal|${body.id}`], checkedAt: newer.generatedAt }],
     factSha256: "a".repeat(64), generatedAt: newer.generatedAt, composedAt: newer.generatedAt, ...META };
   await memory.writePreparedReaderProjection(preparedInput, null);
   let race = true;

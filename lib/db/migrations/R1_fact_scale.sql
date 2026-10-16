@@ -14,14 +14,14 @@ CREATE OR REPLACE FUNCTION fact_changed() RETURNS trigger LANGUAGE plpgsql AS $$
 BEGIN
   IF NEW.status <> 'live' AND (TG_OP = 'INSERT' OR OLD.status <> 'live') THEN RETURN NULL; END IF;
   INSERT INTO fact_watermark (scope, version)
-    SELECT scope, 1 FROM unnest(ARRAY[(SELECT state FROM entity WHERE id = NEW.entity_id),
-      CASE WHEN NEW.entity_id LIKE 'meeting:%' THEN 'meeting' END, CASE WHEN NEW.field LIKE 'comment:%' THEN 'comment' END]) AS scope
+    SELECT scope, 1 FROM unnest(ARRAY[(SELECT state FROM entity WHERE id = NEW.entity_id), CASE WHEN NEW.field LIKE 'comment:%' THEN 'comment' END]) AS scope
     WHERE scope IS NOT NULL
     ON CONFLICT (scope) DO UPDATE SET version = fact_watermark.version + 1;
-  -- A body's change queues its places and its own division; a person's queues those of each body they sit on.
+  -- A body's change queues its places and its own division; a sitting's, its body's; a person's, those of each body they sit on.
   INSERT INTO rebuild_queue (place_id, queued_at)
     SELECT DISTINCT place, clock_timestamp() FROM (
       SELECT b.id FROM entity b WHERE b.id = NEW.entity_id AND b.kind = 'body'
+      UNION SELECT s.parent_id FROM entity s WHERE s.id = NEW.entity_id AND s.kind = 'meeting' AND s.parent_id IS NOT NULL
       UNION SELECT m.entity_id FROM fact m WHERE m.status = 'live' AND m.field LIKE 'member:%' AND substr(m.field, 8) = NEW.entity_id
     ) bodies(id)
     CROSS JOIN LATERAL (SELECT p.place_id FROM entity_place p WHERE p.entity_id = bodies.id

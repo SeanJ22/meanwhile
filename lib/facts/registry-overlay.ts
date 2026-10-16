@@ -3,13 +3,14 @@ import type { BodyRoster, RosterReaderDisposition } from "../registry/body-roste
 import type { CommentAccess } from "../registry/comment-access-client.ts";
 import type { RegistryRuntimeCarton, RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
 import { readFactCommentAccess } from "./comment-read.ts";
+import { readSittingFacts, type SittingFact } from "./meeting-read.ts";
 import type { Query } from "./publish.ts";
 import { readFactRosters } from "./roster-read.ts";
 
 const SCHEDULE_SQL = `SELECT f.entity_id, f.field, f.value, f.checked_at, (SELECT s.url FROM source_copy s WHERE s.id = f.source_copy_id) AS url FROM fact f
   WHERE f.status = 'live' AND f.field IN ('name', 'homepage', 'meeting_cadence', 'agenda_url', 'office_address', 'office_phone') AND f.entity_id = ANY($1::text[])`;
 
-/** One body's live facts as readers see them: its own fields, its members and its comment rules. */
+/** One body's live facts as readers see them: its own fields, its members, its comment rules and its sittings. */
 export interface BodyFacts {
   readonly id: string;
   readonly division: string;
@@ -17,6 +18,7 @@ export interface BodyFacts {
   readonly roster: BodyRoster | null;
   readonly dispositions: readonly RosterReaderDisposition[];
   readonly comment: CommentAccess | null;
+  readonly sittings: readonly SittingFact[];
 }
 
 async function bodyFields(query: Query, bodyIds: readonly string[]): Promise<Record<string, Partial<Body>>> {
@@ -36,14 +38,14 @@ async function bodyFields(query: Query, bodyIds: readonly string[]): Promise<Rec
 }
 
 /** The given bodies' live facts, one entry for each body that has any. */
-export async function readBodyFacts(query: Query, bodyIds: readonly string[], withComments = true): Promise<BodyFacts[]> {
-  const [{ rosters, dispositions }, fields, comments] = await Promise.all([readFactRosters(query, bodyIds), bodyFields(query, bodyIds),
-    withComments ? readFactCommentAccess(query, bodyIds) : []]);
+export async function readBodyFacts(query: Query, bodyIds: readonly string[], registryOnly = false): Promise<BodyFacts[]> {
+  const [{ rosters, dispositions }, fields, comments, sittings] = await Promise.all([readFactRosters(query, bodyIds), bodyFields(query, bodyIds),
+    registryOnly ? [] : readFactCommentAccess(query, bodyIds), registryOnly ? new Map<string, SittingFact[]>() : readSittingFacts(query, bodyIds)]);
   const roster = new Map(rosters.map(row => [row.bodyId, row])), comment = new Map(comments.map(row => [row.bodyId, row]));
   const disposition = new Map(dispositions.map(row => [row.sourceId, row]));
-  return [...new Set([...roster.keys(), ...Object.keys(fields), ...comment.keys()])].sort().map(id => ({
+  return [...new Set([...roster.keys(), ...Object.keys(fields), ...comment.keys(), ...sittings.keys()])].sort().map(id => ({
     id, division: id.split("#")[0]!, fields: fields[id] ?? {}, roster: roster.get(id) ?? null, comment: comment.get(id) ?? null,
-    dispositions: (roster.get(id)?.members ?? []).flatMap(member => disposition.get(member.id) ?? []),
+    dispositions: (roster.get(id)?.members ?? []).flatMap(member => disposition.get(member.id) ?? []), sittings: sittings.get(id) ?? [],
   }));
 }
 
@@ -62,5 +64,5 @@ export function withStateFacts(carton: RegistryRuntimeCarton, bodies: readonly B
 
 /** The registry with every body's facts read from the database: the runner's and workers' path. */
 export async function withFactRegistry(carton: RegistryRuntimeCarton, query: Query | null): Promise<RegistryRuntimeReadModel> {
-  return withStateFacts(carton, query === null ? [] : await readBodyFacts(query, carton.registry.bodies.map(body => body.id), false));
+  return withStateFacts(carton, query === null ? [] : await readBodyFacts(query, carton.registry.bodies.map(body => body.id), true));
 }

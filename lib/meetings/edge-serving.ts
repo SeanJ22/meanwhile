@@ -22,6 +22,9 @@ import {
 import type { RegistryRuntimeCarton, RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
 import type { CommentAccessProjection } from "../registry/comment-access.ts";
 import { withStateFacts, type BodyFacts } from "../facts/registry-overlay.ts";
+import { factReader } from "../facts/db.ts";
+import { readSittingFacts, withSittingFacts } from "../facts/meeting-read.ts";
+import type { Meeting } from "../sources/types.ts";
 import type { StateFactsIndex } from "../facts/state-facts-publication.ts";
 import type { FederalDirectoryReadModel } from "../officials/federal-directory-data-plane.ts";
 import type { CuratedReaderProjection } from "../civic-data/manual-projections.ts";
@@ -876,7 +879,7 @@ async function readReaderEdgeMeetingsHeld(
   options: ReaderEdgeMeetingsOptions,
 ): Promise<MeetingsProjectionReadResult> {
   // The fallback takes only the clock, never the artifact store, which is a different store from the data store.
-  const fallback = options.fallback ?? (() => readPreparedMeetingsProjection(options.now ? { now: options.now } : {}));
+  const fallback = async () => withStoredSittingFacts(await (options.fallback ?? (() => readPreparedMeetingsProjection(options.now ? { now: options.now } : {})))());
   const store = options.store ?? resolveReaderArtifactStore();
   if (!store) return fallback();
 
@@ -907,8 +910,11 @@ async function readReaderEdgeMeetingsHeld(
   }
   if (artifacts.length !== needed.length) return fallback();
 
-  const value = applyMeetingFreshChecks(mergeScopeArtifacts(artifacts, manifest), { checkedAt: null, routes: manifest.freshChecks ?? {} });
-  const complete = artifacts.length === needed.length;
+  const merged = applyMeetingFreshChecks(mergeScopeArtifacts(artifacts, manifest), { checkedAt: null, routes: manifest.freshChecks ?? {} });
+  // Each served sitting takes its body's live facts from that body's record.
+  const bodies = await readStateFacts(Object.entries(manifest.stateFacts ?? {}), store, { keys: new Set(sittingBodies(merged.meetings)) });
+  const value = { ...merged, meetings: withSittingFacts(merged.meetings, bodies?.flatMap(body => body.sittings) ?? []) };
+  const complete = artifacts.length === needed.length && bodies !== null;
   const read: MeetingsProjectionReadResult = {
     kind: "PROMOTED",
     value,
@@ -934,6 +940,16 @@ async function readReaderEdgeMeetingsHeld(
     areaReads.set(areaKey, read);
   }
   return read;
+}
+
+const sittingBodies = (meetings: readonly Meeting[]) => [...new Set(meetings.flatMap(meeting => meeting.bodyId ?? []))];
+
+/** Off the edge, sittings take their live facts from the fact store; without one, or while it fails, the partition rows stand. */
+async function withStoredSittingFacts(read: MeetingsProjectionReadResult): Promise<MeetingsProjectionReadResult> {
+  const query = factReader();
+  if (read.kind !== "PROMOTED" || query === null) return read;
+  const facts = await readSittingFacts(query, sittingBodies(read.value.meetings)).catch(() => null);
+  return facts?.size ? { ...read, value: { ...read.value, meetings: withSittingFacts(read.value.meetings, [...facts.values()].flat()) } } : read;
 }
 
 export function servedWholeFromReaderEdge(read: MeetingsProjectionReadResult): boolean {

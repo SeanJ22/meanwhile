@@ -15,6 +15,8 @@ import {
   READER_MANIFEST_CACHE_TAG,
   READER_MANIFEST_MEMO_MS,
   READER_MAP_AUTHORITY_FAMILIES,
+  readReaderEdgeMeetings,
+  servedWholeFromReaderEdge,
   writeFactBucket,
   writeFactRecord,
   type PublishAuthority,
@@ -109,14 +111,18 @@ function multiStateSnapshot() {
   return recordedMeetingsSnapshot([...recorded, elsewhere("nj", "morris", 40.7968, -74.4815), elsewhere("nh", "merrimack", 43.2081, -71.5376)]);
 }
 
-/** The fixture's rosters and comment rules as one record per body, as the publisher writes them. */
+const SITTING = recordedMeetingsSnapshot().meetings.find(row => row.bodyId && stateOfOcdId(row.ocdId) === "az")!;
+const SITTING_TITLE = { meetingId: SITTING.id, field: "title" as const, value: "Title as its saved page states it",
+  source: { sourceUrl: "https://example.gov/calendar", sourceOrg: "example.gov", collectedAt: SITTING.startsAt, verifiedAt: SITTING.startsAt, quote: "Title as its saved page states it" } };
+
+/** The fixture's rosters, comment rules and one sitting's title as one record per body, as the publisher writes them. */
 async function factRecords(store: LocalFileArtifactStore, registry: ReturnType<typeof registryTransferImport>["projection"]["payload"]): Promise<RecordIndex> {
-  const ids = [...new Set([...(registry.bodyRosters ?? []).map(roster => roster.bodyId), ...COMMENT_ACCESS.map(row => row.bodyId)])].sort();
+  const ids = [...new Set([...(registry.bodyRosters ?? []).map(roster => roster.bodyId), ...COMMENT_ACCESS.map(row => row.bodyId), SITTING.bodyId!])].sort();
   const records = await Promise.all(ids.map(async (id, n) => {
     const roster = registry.bodyRosters?.find(row => row.bodyId === id) ?? null;
     const memberIds = new Set(roster?.members.map(member => member.id));
     const body: BodyFacts = { id, division: id.split("#")[0]!, fields: {}, roster, comment: COMMENT_ACCESS.find(row => row.bodyId === id) ?? null,
-      dispositions: (registry.rosterReaderDispositions ?? []).filter(row => memberIds.has(row.sourceId)) };
+      sittings: id === SITTING.bodyId ? [SITTING_TITLE] : [], dispositions: (registry.rosterReaderDispositions ?? []).filter(row => memberIds.has(row.sourceId)) };
     return { path: ["bodies", n], ...await writeFactRecord(store, body), tags: [id, body.division, ...memberIds] };
   }));
   return { kind: "READER_RECORDS", base: { bodies: [] }, records };
@@ -186,6 +192,15 @@ test("the map's routes fetch only the authority families they read, never Ask's 
   const everything = await ensureReaderAuthorityEdge(manifest, store);
   assert.equal(everything.meetingOutcomes?.versionId, "c21-families:outcomes", "omitted, every family is fetched, as Ask needs");
   assert.equal(everything.commentAccess?.versionId, bundle.commentAccess?.versionId);
+});
+
+test("each served sitting carries its body's live facts from that body's record", async () => {
+  const { dir, manifest } = await publishEdge("c21-sittings");
+  const read = await readReaderEdgeMeetings({ store: new LocalFileArtifactStore(dir), manifest, ocdIds: [SITTING.ocdId!], window: "HELD", now: SITTING.startsAt });
+  assert.equal(read.kind, "PROMOTED");
+  const served = read.value.meetings.find(row => row.id === SITTING.id);
+  assert.deepEqual([served?.title, served?.fieldSources?.title?.sourceUrl], [SITTING_TITLE.value, SITTING_TITLE.source.sourceUrl]);
+  assert.ok(servedWholeFromReaderEdge(read));
 });
 
 test("concurrent reads on one instance share one fetch and one parse of an authority family", async () => {

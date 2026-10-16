@@ -47,7 +47,7 @@ export function installFactReader(query: Query | null | undefined): void {
 export const statementQuery = (run: (statements: readonly { readonly text: string; readonly params: readonly unknown[] }[]) => Promise<readonly (readonly Record<string, unknown>[])[]>): Query =>
   async (text, params = []) => (await run([{ text, params }]))[0] ?? [];
 
-/** A scope's version (a state's code, `meeting` or `comment`), moved by the database whenever a fact there enters or leaves the live set. */
+/** A scope's version (a state's code or `comment`), moved by the database whenever a fact there enters or leaves the live set. */
 export async function factsVersion(query: Query | null, scope: string): Promise<string> {
   if (query === null) return "facts:none";
   const [row] = await query("SELECT version FROM fact_watermark WHERE scope = $1", [scope]);

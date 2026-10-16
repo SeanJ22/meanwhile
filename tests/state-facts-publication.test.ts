@@ -8,6 +8,8 @@ import type { AuthorityArtifactRef } from "../lib/meetings/edge-artifacts.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 import { factsVersion } from "../lib/facts/db.ts";
 import { ensureEntity, ensureFactEntities } from "../lib/facts/entities.ts";
+import { publishMeetingFacts } from "../lib/facts/meeting-facts.ts";
+import type { Meeting } from "../lib/sources/types.ts";
 import type { BodyFacts } from "../lib/facts/registry-overlay.ts";
 import type { RecordIndex } from "../lib/meetings/authority-records.ts";
 import { publishBodyFacts, publishRosterFacts } from "../lib/facts/roster-facts.ts";
@@ -80,4 +82,15 @@ test("a fact going live moves only its state's version and queues the places of 
   assert.ok(Number(place) < Number(state), `and not Arizona's ${state}`);
   assert.equal(body("AZ", council)?.fields.meetingCadence, "the first Tuesday");
   assert.equal(body("AZ", TCCC)!.roster!.members.length, 4, "the rest of the state is carried from the served copy");
+
+  // A sitting's fact queues its body's places and rides on that body's record.
+  const meeting = { id: "civicplus:tccc:1", ocdId: TUCSON, bodyId: TCCC, bodyName: BODY.name, title: "Regular Commission Meeting",
+    startsAt: "2026-09-10T17:00:00.000Z", timeZone: "America/Phoenix", location: null, agendaUrl: null, status: "SCHEDULED" } as unknown as Meeting;
+  await publishMeetingFacts(db, { meeting, capture: capture("<h1>Regular Commission Meeting</h1><p>September 10, 2026 10:00 AM</p>", "a3", "https://www.tucsonaz.gov/tccc"),
+    producedBy: "test" }, clocks, NOW);
+  assert.deepEqual(await db.query("SELECT place_id FROM rebuild_queue"), [{ place_id: TUCSON }]);
+  const sitting = await publish();
+  assert.equal(sitting.bodiesRead, Number(place), "only Tucson's bodies were read again");
+  assert.deepEqual(body("AZ", TCCC)!.sittings.map(fact => [fact.meetingId, fact.field, fact.value]).sort(),
+    [[meeting.id, "startsAt", { startsAt: meeting.startsAt, timeZone: meeting.timeZone, precision: "MINUTE" }], [meeting.id, "title", meeting.title]]);
 });

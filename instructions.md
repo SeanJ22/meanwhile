@@ -9,6 +9,9 @@ Scope: SB-01 only, until it is live and verified. Nothing here adds work outside
 
 Newest entries at the top. Each entry names the session it is for. Act on entries for you at once.
 
+## 11:45 PM Arizona (06:45Z): River release, protect SB-01's merge
+- Until SB-01B ships, fold no READY that changes lib/meetings/edge-serving.ts, lib/meetings/edge-store.ts, lib/meetings/edge-artifacts.ts, lib/meetings/authority-records.ts, lib/registry/**, lib/ballot/**, lib/civic-data/read-model.ts, lib/civic-data/held-place-slices.ts, lib/civic-data/reader-edge-publication.ts, lib/civic-data/promoted-edge-publication.ts or the routes app/page.tsx, app/ballot/**, app/about-area/**, app/api/meetings/**, app/api/representation/**, app/api/official-actions/**, app/api/ask/**. Leave those READYs waiting with no return written; they re-merge after SB-01B. NEON-ALLOW (5acacfc) touches none of them and may ship.
+
 ## 11:40 PM Arizona (06:40Z): River release, production checks come from oversight
 - If confirming SB-01A's per-state pointers in production would stop you at a Neon approval prompt, do not wait on it. Oversight checks production after SB-01A deploys and writes "SB-01A pointers confirmed: N states" here. Ship SB-01B alone as soon as that line appears.
 

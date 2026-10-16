@@ -1,5 +1,6 @@
 import { temporaryPath } from "../civic-data/temporary-path.ts";
 import { createHash, randomUUID } from "node:crypto";
+import { channel } from "node:diagnostics_channel";
 import { createReadStream } from "node:fs";
 import { mkdir, open, readFile, rename, rm, stat, writeFile } from "node:fs/promises";
 import { basename, join } from "node:path";
@@ -13,6 +14,7 @@ import { saveFederalMoneyCapture } from "./vault.ts";
 import { federalCsvRecords, federalJsonRecords, FEDERAL_MONEY_CHUNK_ROWS, type FederalJsonEnvelope } from "./streams.ts";
 
 export interface FederalBulkContext { readonly root: string; readonly vault: EvidenceStore; readonly signal?: AbortSignal }
+export const federalBulkMemory = channel("federal-money:memory");
 export interface FederalBulkMetadata { readonly count: number; readonly archiveId: string; readonly total: number | null }
 export const federalBulkId = (value: unknown) => createHash("sha256").update(JSON.stringify(value)).digest("hex");
 const indexKey = (id: string, suffix: string) => {
@@ -28,7 +30,7 @@ async function readIndex<T>(ctx: FederalBulkContext, id: string, suffix: string)
   const value = await ctx.vault.get(indexKey(id, suffix));
   if (!value) return null;
   if (value.bytes.length > 64 * 1024) throw new Error("The saved federal bulk index exceeds its size limit.");
-  return JSON.parse(Buffer.from(value.bytes).toString("utf8")) as T;
+  return JSON.parse(new TextDecoder().decode(value.bytes)) as T;
 }
 const workId = (directory: string) => basename(directory).replace(/\.work$/, "");
 const immutable = async (vault: EvidenceStore, bytes: Uint8Array, type: string) => {
@@ -91,7 +93,7 @@ export async function stageFederalBulkBytes(ctx: FederalBulkContext, response: R
   const file = await open(temporaryPath(path), append ? "a" : "w");
   const state = { complete: false, etag: response.headers.get("etag") };
   await writeFile(temporaryPath(checkpoint), JSON.stringify(state));
-  try { for await (const input of Readable.fromWeb(response.body as never)) { ctx.signal?.throwIfAborted(); await file.write(input as Buffer); } }
+  try { for await (const input of Readable.fromWeb(response.body as never)) { ctx.signal?.throwIfAborted(); if (federalBulkMemory.hasSubscribers) federalBulkMemory.publish({ stage: "download", item: path, itemBytes: (input as Buffer).length, liveItems: 1 }); await file.write(input as Buffer); } }
   finally { await file.close(); }
   await writeFile(temporaryPath(checkpoint), JSON.stringify({ ...state, complete: true }));
   return path;
@@ -102,13 +104,15 @@ export async function completedFederalBulkPath(directory: string): Promise<strin
 }
 export async function vaultFederalBulkBytes(ctx: FederalBulkContext, path: string, sourceUrl: string): Promise<string> {
   const capacity = 4 * 1024 * 1024;
-  let buffer = Buffer.allocUnsafe(capacity), used = 0, offset = 0, previous: string | null = null;
+  const buffer = Buffer.allocUnsafe(capacity);
+  let used = 0, offset = 0, previous: string | null = null;
   const progressPath = `${path}.vault`;
   try { const saved = JSON.parse(await readFile(progressPath, "utf8")) as { offset: number; previous: string }; offset = saved.offset; previous = saved.previous; } catch (error) { if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error; }
   async function flush() {
+    if (federalBulkMemory.hasSubscribers) federalBulkMemory.publish({ stage: "archive-vault", item: `${sourceUrl}@${offset}`, itemBytes: used, liveItems: 1 });
     const bytes = buffer.subarray(0, used), vaultKey = await immutable(ctx.vault, bytes, "application/octet-stream");
     const descriptor = Buffer.from(JSON.stringify({ sourceUrl, offset, byteLength: used, vaultKey, previous }));
-    previous = await immutable(ctx.vault, descriptor, "application/json"); offset += used; used = 0; buffer = Buffer.allocUnsafe(capacity);
+    previous = await immutable(ctx.vault, descriptor, "application/json"); offset += used; used = 0;
     await writeFile(temporaryPath(progressPath), JSON.stringify({ offset, previous }));
   }
     for await (const input of createReadStream(path, { start: offset, highWaterMark: 64 * 1024 })) {
@@ -123,7 +127,7 @@ export async function spoolFederalBytes(ctx: FederalBulkContext, path: string, i
   try { if ((await stat(path)).isFile()) return; } catch (error) { if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error; }
   try { if ((await stat(`${path}.ordered`)).isFile()) return; } catch (error) { if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error; }
   const temporary = `${path}.partial`, file = await open(temporaryPath(temporary), "w");
-  try { for await (const bytes of input) { ctx.signal?.throwIfAborted(); await file.write(bytes); } }
+  try { for await (const bytes of input) { ctx.signal?.throwIfAborted(); if (federalBulkMemory.hasSubscribers) federalBulkMemory.publish({ stage: "archive-expand", item: path, itemBytes: bytes.length, liveItems: 1 }); await file.write(bytes); } }
   finally { await file.close(); }
   await rename(temporaryPath(temporary), temporaryPath(path));
 }
@@ -133,16 +137,27 @@ export async function saveFederalBulkBytes(ctx: FederalBulkContext, request: () 
 }
 
 export function federalChunkWriter(ctx: FederalBulkContext, directory: string, state: string, metadata: Omit<FederalMoneyCapture, "vaultKey" | "rawHash" | "byteLength">, start = 0) {
-  let count = start, rows: string[] = [], length = 0;
-  async function flush(header = "") {
-    if (!rows.length) return;
-    const body = metadata.format === "csv" ? header + rows.join("") : `[${rows.join(",")}]`;
-    const capture = await saveFederalMoneyCapture({ ...metadata, body }, ctx.vault);
-    await writeIndex(ctx, workId(directory), `${state}/${count++}`, capture); rows = []; length = 0;
+  let count = start, rows = 0, length = 0, buffer: Buffer | null = null;
+  const capacity = 2 * 1024 * 1024;
+  async function flush() {
+    if (!rows || !buffer) return;
+    if (metadata.format === "json") buffer[length++] = 93;
+    if (federalBulkMemory.hasSubscribers) federalBulkMemory.publish({ stage: "capture-vault", item: `${metadata.url}:${state}:${count}`, itemBytes: length, liveItems: 1, retainedRows: rows, bufferBytes: buffer.length });
+    const capture = await saveFederalMoneyCapture({ ...metadata, body: buffer.subarray(0, length) }, ctx.vault);
+    await writeIndex(ctx, workId(directory), `${state}/${count++}`, capture); rows = 0; length = 0;
   }
   return {
-    async add(row: string, header = "") { if (rows.length && (rows.length >= FEDERAL_MONEY_CHUNK_ROWS || length + row.length > 2 * 1024 * 1024)) await flush(header); rows.push(row); length += row.length; },
-    async finish(header = "") { await flush(header); return count; },
+    async add(row: string, header = "") {
+      const rowBytes = Buffer.byteLength(row), json = metadata.format === "json";
+      if (rows && (rows >= FEDERAL_MONEY_CHUNK_ROWS || length + rowBytes + (json ? 2 : 0) > capacity)) await flush();
+      if (!rows) {
+        const prefix = json ? "[" : header, required = Buffer.byteLength(prefix) + rowBytes + (json ? 1 : 0);
+        if (!buffer || buffer.length < required) buffer = Buffer.allocUnsafe(Math.max(capacity, required));
+        length = buffer.write(prefix);
+      } else if (json) buffer![length++] = 44;
+      length += buffer!.write(row, length); rows++;
+    },
+    async finish() { await flush(); return count; },
   };
 }
 export async function chunkFederalCsvFile(ctx: FederalBulkContext, directory: string, state: string, source: FederalMoneySource, path: string, metadata: Omit<FederalMoneyCapture, "vaultKey" | "rawHash" | "byteLength">, start = 0): Promise<number> {
@@ -152,7 +167,7 @@ export async function chunkFederalCsvFile(ctx: FederalBulkContext, directory: st
   try { progress = JSON.parse(await readFile(progressPath, "utf8")) as typeof progress; } catch (error) { if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error; }
   if (progress.complete) return progress.count;
   const writer = federalChunkWriter(ctx, directory, state, metadata, progress.count); let rows = 0;
-  const checkpoint = async (complete = false) => { progress.count = await writer.finish(progress.header); progress.complete = complete; await writeFile(temporaryPath(temporary), JSON.stringify(progress)); await rename(temporaryPath(temporary), temporaryPath(progressPath)); rows = 0; };
+  const checkpoint = async (complete = false) => { progress.count = await writer.finish(); progress.complete = complete; await writeFile(temporaryPath(temporary), JSON.stringify(progress)); await rename(temporaryPath(temporary), temporaryPath(progressPath)); rows = 0; };
   for await (const row of federalCsvRecords(createReadStream(path, { start: progress.offset }))) {
     ctx.signal?.throwIfAborted(); progress.offset += Buffer.byteLength(row);
     if (!progress.header) { progress.header = row; continue; }

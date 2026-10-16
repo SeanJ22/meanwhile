@@ -7,6 +7,8 @@ import { runBoundedWorkPool } from "../ops/bounded-work-pool.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { isScopedManualContractScope } from "./scoped-manual-contracts.ts";
 import { isPeopleSource } from "../officials/people-sources.ts";
+import { FEDERAL_MONEY_SOURCES, federalMoneyScope } from "../federal-money/model.ts";
+import { readFederalMoneyPartition, readFederalMoneyNationalProjection, readFederalMoneyCheckpoint } from "../federal-money/verify.ts";
 import {
   normalizeReaderCodeSha,
   parseReaderProjectionReadback,
@@ -63,7 +65,7 @@ function verifyExactVersion(
 }
 
 function verifierIdFor(contract: ReaderContract): string {
-  if (contract.recordClass === "FEDERAL_MONEY") return "lib/federal-money/reader.ts#readFederalMoneyPartition";
+  if (contract.recordClass === "FEDERAL_MONEY") return "lib/federal-money/verify.ts#readFederalMoneyPartition";
   // Congress.gov and GovInfo also publish federal civic records under the same source ids; only people records read back as people.
   if (isPeopleSource(contract.sourceId) && contract.recordClass !== "FEDERAL_CIVIC_RECORD") return "lib/civic-data/people-source-publication.ts#readPeopleSourceProjection";
   if (contract.recordClass === "FEDERAL_CIVIC_RECORD") return "lib/sources/congress/publication.ts#readFederalSourceProjection";
@@ -141,19 +143,15 @@ export async function verifyRoutineReaderProjection(
   const verifierId = verifierIdFor(contract);
   try {
     if (contract.recordClass === "FEDERAL_MONEY") {
-      const { FEDERAL_MONEY_SOURCES, federalMoneyScope } = await import("../federal-money/model.ts");
-      const { readFederalMoneyPartition } = await import("../federal-money/reader.ts");
       const source = FEDERAL_MONEY_SOURCES.find(source => source === contract.sourceId);
       if (!source) return fail(verifierId, "The federal source is not registered.");
       const scope = options.scope ?? contract.scope;
       if (scope === `${source}:US`) {
-        const { readFederalMoneyNationalProjection } = await import("../federal-money/progress.ts");
         return verifyExactVersion(verifierId, await readFederalMoneyNationalProjection(source, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "national federal acquisition progress");
       }
       const state = scope.slice(source.length + 1).split(":")[0];
       if (!/^[A-Z]{2}$/.test(state)) return fail(verifierId, "The federal state scope is invalid.");
       if (scope === federalMoneyScope(source, state)) {
-        const { readFederalMoneyCheckpoint } = await import("../federal-money/progress.ts");
         return verifyExactVersion(verifierId, await readFederalMoneyCheckpoint(source, state, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "federal source checkpoint");
       }
       return verifyExactVersion(verifierId, await readFederalMoneyPartition(source, scope, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "federal government records");

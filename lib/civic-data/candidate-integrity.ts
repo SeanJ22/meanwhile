@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { federalMoneySavedSourceIssue } from "../federal-money/verify.ts";
 
 import { candidateChangeSet, canonicalCivicDataJson } from "./changes.ts";
 import type { RoutineSourceContract } from "./contracts.ts";
@@ -221,7 +222,6 @@ export async function verifySourceScopedCandidateProjection(
 
   if (candidate.recordClass === "FEDERAL_MONEY") {
     const { FEDERAL_MONEY_SOURCES } = await import("../federal-money/model.ts");
-    const { federalMoneySavedSourceIssue } = await import("../federal-money/verify.ts");
     const source = FEDERAL_MONEY_SOURCES.find((source) => source === contract.sourceId);
     const verifierId = "lib/federal-money/verify.ts#federalMoneySavedSourceIssue";
     if (!source) return fail(verifierId, "The federal source is not registered.");

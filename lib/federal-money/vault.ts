@@ -14,14 +14,14 @@ export function withFederalMoneyVault<T>(vault: EvidenceStore, work: () => Promi
   return context.run(vault, work);
 }
 export async function saveFederalMoneyCapture(input: {
-  url: string; body: string; retrievedAt: string; publicationDate: string | null;
+  url: string; body: string | Uint8Array; retrievedAt: string; publicationDate: string | null;
   format?: "csv" | "json"; archiveId?: string;
 }, vault = federalMoneyVault()): Promise<FederalMoneyCapture> {
-  const bytes = Buffer.from(input.body);
+  const bytes = typeof input.body === "string" ? Buffer.from(input.body) : input.body;
   if (bytes.length > FEDERAL_MONEY_CAPTURE_BYTES) throw new Error("Federal source evidence chunk exceeds the bounded capture size.");
   const rawHash = createHash("sha256").update(bytes).digest("hex");
   const vaultKey = `project/meanwhile/source/federal-money/${rawHash}`;
-  const format = input.format ?? (/^[\s\uFEFF]*[\[{]/.test(input.body) ? "json" : "csv");
+  const format = input.format ?? (/^[\s\uFEFF]*[\[{]/.test(typeof input.body === "string" ? input.body : new TextDecoder().decode(bytes)) ? "json" : "csv");
   await vault.put(vaultKey, bytes, { contentType: format === "json" ? "application/json" : "text/csv",
     contentHash: `sha256-${rawHash}`, byteLength: bytes.length });
   return { url: input.url, rawHash, vaultKey, byteLength: bytes.length, format,
@@ -35,5 +35,5 @@ export async function readFederalMoneyCapture(capture: FederalMoneyCapture, vaul
   const stored = await vault.get(capture.vaultKey);
   if (!stored || stored.bytes.length !== capture.byteLength || createHash("sha256").update(stored.bytes).digest("hex") !== capture.rawHash)
     throw new Error("Federal source evidence is missing or differs from its content hash.");
-  return Buffer.from(stored.bytes).toString("utf8");
+  return new TextDecoder("utf-8", { ignoreBOM: true }).decode(stored.bytes);
 }

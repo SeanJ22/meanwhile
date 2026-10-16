@@ -1,10 +1,12 @@
 import { AsyncLocalStorage } from "node:async_hooks";
+import { readPromotedCivicData, type CivicDataReadResult, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
+import { federalMoneySourceStates } from "./sources.ts";
 import { canonicalCivicDataJson } from "../civic-data/changes.ts";
 import { sha256 } from "../civic-data/candidate-builders.ts";
 import type { RoutineDataStore } from "../civic-data/store.ts";
 import type { RoutineCandidate } from "../civic-data/types.ts";
-import { federalMoneyPartitionWithinBounds, type FederalMoneyCapture, type FederalMoneyFact, type FederalMoneyProjection, type FederalMoneySource } from "./model.ts";
-import type { FederalMoneyEvidence } from "./candidate.ts";
+import { federalMoneyProjectionIssue, FEDERAL_MONEY_RECORD_CLASS, federalMoneyPartitionWithinBounds, type FederalMoneyCheckpoint, type FederalMoneyCapture, type FederalMoneyFact, type FederalMoneyProjection, type FederalMoneySource } from "./model.ts";
+import type { FederalMoneyEvidence, FederalMoneyNationalProjection } from "./candidate.ts";
 import { parseFederalMoney } from "./parse.ts";
 import { readFederalMoneyCapture } from "./vault.ts";
 
@@ -85,4 +87,37 @@ export async function federalMoneySavedSourceIssue(candidate: RoutineCandidate, 
     }
   }
   return null;
+}
+
+export async function readFederalMoneyNationalProjection(source: FederalMoneySource, options: PromotedCivicDataReadOptions = {}) {
+  const result = await readPromotedCivicData<FederalMoneyNationalProjection>("FEDERAL_MONEY", `${source}:US`, options);
+  if (result.kind === "PROMOTED") {
+    const value = result.value;
+    if (value.formatVersion !== 2 || value.source !== source || value.state !== "US" || !Array.isArray(value.states) ||
+      new Set(value.states.map(row => row.state)).size !== value.states.length ||
+      value.states.some(row => !federalMoneySourceStates(source).includes(row.state) || !["COMPLETE", "BACKFILL", "OUTAGE"].includes(row.status) ||
+        row.counts.loaded !== row.counts.joined + row.counts.unjoined) ||
+      value.counts.loaded !== value.states.reduce((n, row) => n + row.counts.loaded, 0) ||
+      value.counts.joined !== value.states.reduce((n, row) => n + row.counts.joined, 0) ||
+      value.counts.unjoined !== value.states.reduce((n, row) => n + row.counts.unjoined, 0)) throw new Error("Federal national acquisition progress is invalid.");
+  }
+  return result;
+}
+
+export async function readFederalMoneyCheckpoint(source: FederalMoneySource, state: string, options: PromotedCivicDataReadOptions = {}) {
+  const result = await readPromotedCivicData<FederalMoneyCheckpoint>("FEDERAL_MONEY", `${source}:${state}`, options);
+  if (result.kind === "PROMOTED") {
+    const value = result.value;
+    if (value.formatVersion !== 2 || value.source !== source || value.state !== state || !value.checkpoint ||
+      value.counts.loaded !== value.counts.joined + value.counts.unjoined || "records" in value)
+      throw new Error("Federal state checkpoint is invalid.");
+  }
+  return result;
+}
+
+export async function readFederalMoneyPartition(source: FederalMoneySource, scope: string, options: PromotedCivicDataReadOptions): Promise<CivicDataReadResult<FederalMoneyProjection>> {
+  const state = scope.split(":")[1];
+  const read = await readPromotedCivicData<FederalMoneyProjection>(FEDERAL_MONEY_RECORD_CLASS, scope, options);
+  if (read.kind === "PROMOTED") { const issue = federalMoneyProjectionIssue(read.value, source, state); if (issue) throw new Error(issue); }
+  return read;
 }

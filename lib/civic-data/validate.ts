@@ -279,7 +279,7 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate, prior: Candi
   if (statePeopleRetirement !== null) return statePeopleRetirement;
 
   if (candidate.recordClass === "FEDERAL_MONEY") {
-    const checked = sourceChecks.some(check => check.passed && check.consumer === "lib/federal-money/reader.ts#readFederalMoneyPartition (source-scoped pre-promotion)");
+    const checked = sourceChecks.some(check => check.passed && check.consumer === "lib/federal-money/verify.ts#readFederalMoneyPartition (source-scoped pre-promotion)");
     const keys = new Set(evidence.map(row => row.key));
     const valid = checked && keys.size === removed.length && evidence.length === removed.length && removed.every(delta =>
       delta.key.startsWith("federal-money:") && evidence.some(row => row.key === delta.key && row.code === "FEDERAL_RECORD_REPARTITIONED" &&

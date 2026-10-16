@@ -36,7 +36,6 @@ async function run(input: FederalMoneyRefreshOptions): Promise<{ projection: Fed
   const progress = new Map<string, FederalMoneyStateProgress>();
   const finished = new Set<string>();
   const maxRunMs = input.maxRunMs ?? 25 * 60_000;
-  let latestPage: FederalMoneyPage = { facts: [], captures: [], complete: false, declaredTotal: null };
   for (let round = 0; round < (input.maxRounds ?? Infinity) && Date.now() - started < maxRunMs && finished.size < states.length; round++) {
     for (const state of states) {
       if (finished.has(state) || Date.now() - started >= maxRunMs) continue;
@@ -117,7 +116,6 @@ async function run(input: FederalMoneyRefreshOptions): Promise<{ projection: Fed
       progress.set(state, row); input.onState?.(row);
       await input.onProgress?.(row, at);
       await input.doorRead?.({ state, at, rows: page.facts.length, reason: null });
-      latestPage = page;
       if (page.complete) finished.add(state);
     }
   }
@@ -139,7 +137,7 @@ async function run(input: FederalMoneyRefreshOptions): Promise<{ projection: Fed
       failure: sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE", outages.map(row => `${row.state}: ${row.reason}`).join("; ")) });
     return { projection, outcome: failed.outcome, candidate: null };
   }
-  const candidate = federalMoneyCandidate({ projection, page: { ...latestPage, facts: [], captures: [], complete: rows.every(row => row.status === "COMPLETE") }, now: at });
+  const candidate = federalMoneyCandidate({ projection, page: { facts: [], captures: [], declaredTotal: null, complete: rows.every(row => row.status === "COMPLETE") }, now: at });
   const outcome = await processRegisteredRoutineCandidate(input.store, input.source, candidate, at);
   return { projection, outcome, candidate };
 }

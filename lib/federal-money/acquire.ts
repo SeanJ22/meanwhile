@@ -10,7 +10,7 @@ import { DurableEvidenceStore } from "../control-plane/evidence/durable-store.ts
 import { FEDERAL_MONEY_STATES } from "./sources.ts";
 import { parseFederalMoney } from "./parse.ts";
 import { readFederalMoneyCapture, saveFederalMoneyCapture } from "./vault.ts";
-import { buildFederalBulk, chunkFederalCsvFile, chunkFederalJson, federalBulkCapture, federalBulkId, federalBulkMetadata, saveFederalBulkBytes, stageFederalBulkBytes, vaultFederalBulkBytes, scanFederalJson, federalBulkRangeHeaders, spoolFederalBytes, completedFederalBulkPath, completeFederalBulkState, type FederalBulkContext } from "./bulk.ts";
+import { buildFederalBulk, chunkFederalCsvFile, chunkFederalJson, federalBulkCapture, federalBulkId, federalBulkMetadata, saveFederalBulkBytes, stageFederalBulkBytes, vaultFederalBulkBytes, scanFederalJson, federalBulkRangeHeaders, spoolFederalBytes, completedFederalBulkPath, completeFederalBulkState, federalBulkMemory, type FederalBulkContext } from "./bulk.ts";
 import { federalCsvRecords, federalZipBytes, federalZipEntries, FEDERAL_MONEY_CHUNK_ROWS, type FederalZipEntry } from "./streams.ts";
 import type { FederalMoneyCursor, FederalMoneyPage, FederalMoneySource } from "./model.ts";
 
@@ -79,6 +79,7 @@ async function bulkPage(ctx: Context, state: string, cursor: FederalMoneyCursor,
   const index = cursor.chunkIndex ?? 0;
   if (index >= metadata.count) return emptyPage(next, metadata.total);
   const capture = await federalBulkCapture(bulk, cursor.bulkId!, state, index), body = await readFederalMoneyCapture(capture, ctx.evidenceStore);
+  if (federalBulkMemory.hasSubscribers) federalBulkMemory.publish({ stage: "capture-parse", item: `${capture.url}:${state}:${index}`, itemBytes: capture.byteLength, liveItems: 1 });
   const continuation = index + 1 < metadata.count ? { ...cursor, chunkIndex: index + 1 } : next;
   return { facts: parseFederalMoney(cursor.source, capture, state, body), captures: [capture], complete: continuation === null, declaredTotal: metadata.total, continuation };
 }
@@ -123,11 +124,14 @@ async function splitHistoricalEntry(bulk: FederalBulkContext, directory: string,
   if (progress.complete) return;
   const name = encodeURIComponent(entry.name);
   for (const target of await readdir(split)) { const path = join(split, target, name); try { await truncate(temporaryPath(path), progress.sizes[target] ?? 0); } catch (error) { if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error; } }
-  let header = progress.headerText ? parseCsv(progress.headerText)[0]!.map(value => value.replace(/^\uFEFF/, "")) : null, rows = 0;
+  let header = progress.headerText ? parseCsv(progress.headerText)[0]!.map(value => value.replace(/^\uFEFF/, "")) : null, rows = 0, largestRow = 0;
   const handles = new Map<string, Awaited<ReturnType<typeof open>>>();
   const save = async (complete = false) => { progress.complete = complete; await writeFile(temporaryPath(`${checkpoint}.next`), JSON.stringify(progress)); await rename(temporaryPath(`${checkpoint}.next`), temporaryPath(checkpoint)); rows = 0; };
   try {
     for await (const record of federalCsvRecords(createReadStream(spool, { start: progress.offset }))) {
+      const recordBytes = Buffer.byteLength(record);
+      if (federalBulkMemory.hasSubscribers && (rows === 0 || recordBytes > largestRow)) federalBulkMemory.publish({ stage: "state-split", item: `${year}/${entry.name}`, itemBytes: recordBytes, liveItems: 1 });
+      largestRow = Math.max(largestRow, recordBytes);
       bulk.signal?.throwIfAborted(); progress.offset += Buffer.byteLength(record); const values = parseCsv(record)[0]; if (!values || !values.some(Boolean)) continue;
       if (!header) { header = values.map(value => value.replace(/^\uFEFF/, "")); progress.headerText = record; continue; }
       const row = Object.fromEntries(header.map((field, index) => [field, values[index] ?? ""])), report = federalBulkId([row.AUDITYEAR ?? year, row.DBKEY ?? ""]);

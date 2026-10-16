@@ -1,5 +1,6 @@
 import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
 import { once } from "node:events";
+import { channel } from "node:diagnostics_channel";
 import { resolve } from "node:path";
 import { createInterface } from "node:readline";
 import { neon, neonConfig } from "@neondatabase/serverless";
@@ -61,11 +62,15 @@ export class FederalMoneyBenchmarkStore extends PostgresRoutineDataStore {
     });
     const request = async (body: string) => {
       const payload = JSON.parse(body) as { queries?: unknown[] };
+      const outgoing = Buffer.byteLength(body);
+      const memory = channel("federal-money:memory");
+      if (memory.hasSubscribers) memory.publish({ stage: "database-request", item: source, itemBytes: outgoing, liveItems: 1 });
       const started = performance.now();
       const answer = await send({ body });
       const elapsed = performance.now() - started;
       bytes.databaseElapsedMs += elapsed; bytes.largestLatencyMs = Math.max(bytes.largestLatencyMs, elapsed);
-      const outgoing = Buffer.byteLength(body), incoming = Buffer.byteLength(answer.body!);
+      const incoming = Buffer.byteLength(answer.body!);
+      if (memory.hasSubscribers) memory.publish({ stage: "database-response", item: source, itemBytes: incoming, liveItems: 1 });
       bytes.written += outgoing; bytes.read += incoming; bytes.requests++; bytes.statements += payload.queries?.length ?? 1;
       bytes.largestWrite = Math.max(bytes.largestWrite, outgoing); bytes.largestRead = Math.max(bytes.largestRead, incoming);
       return answer;

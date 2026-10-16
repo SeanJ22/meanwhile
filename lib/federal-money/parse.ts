@@ -1,4 +1,4 @@
-import { parseCsv } from "../reference/csv.ts";
+import { csvRows } from "../reference/csv.ts";
 import { FIPS_TO_STATE } from "../ocd/fips.ts";
 import { sourceAcquisitionFailure } from "../civic-data/source-acquisition-error.ts";
 import type { FederalMoneyCapture, FederalMoneyFact, FederalMoneySource } from "./model.ts";
@@ -12,12 +12,13 @@ function pick(row: Row, ...keys: string[]): string | null { for (const key of ke
 function number(value: unknown): number | null { const text = string(value); if (text === null) return null; const n = Number(text.replace(/,/g, "")); return Number.isFinite(n) ? n : null; }
 function date(value: unknown): string | null { const text = string(value); if (!text) return null; const n = Date.parse(text); return Number.isFinite(n) ? new Date(n).toISOString() : null; }
 function truth(value: unknown): boolean | null { return value === true || ["Y", "Yes", "true", "1"].includes(String(value)) ? true : value === false || ["N", "No", "false", "0"].includes(String(value)) ? false : null; }
-function rows(body: string, source: FederalMoneySource): Row[] {
+function* rows(body: string, source: FederalMoneySource): Generator<Row> {
   const text = body.replace(/^\uFEFF/, "").trim();
   if (!text.startsWith("{") && !text.startsWith("[")) {
-    const [header, ...values] = parseCsv(body.replace(/^\uFEFF/, ""));
+    const values = csvRows(body.replace(/^\uFEFF/, "")), first = values.next(), header = first.done ? undefined : first.value;
     if (!header || header.length < 2) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", `${source}: the response is neither source JSON nor CSV.`);
-    return values.filter(value => value.some(Boolean)).map(value => Object.fromEntries(header.map((name, i) => [name, value[i] ?? ""])));
+    for (const value of values) if (value.some(Boolean)) { const row: Row = {}; for (let index = 0; index < header.length; index++) row[header[index]!] = value[index] ?? ""; yield row; }
+    return;
   }
   let parsed: unknown;
   try { parsed = JSON.parse(text); } catch { throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", `${source}: the source JSON could not be decoded.`); }
@@ -25,7 +26,7 @@ function rows(body: string, source: FederalMoneySource): Row[] {
   const values = Array.isArray(parsed) ? parsed : source === "openfema" ? root.DisasterDeclarationsSummaries : source === "sam-gov-entities" ? root.entityData ?? (root.entityRegistration ? [root] : undefined) : root.results;
   if (!Array.isArray(values)) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", `${source}: the expected record array is missing.`);
   if (values.some(value => !value || typeof value !== "object" || Array.isArray(value))) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", `${source}: a source record is not an object.`);
-  return values as Row[];
+  for (let index = 0; index < values.length; index++) { const row = values[index] as Row; values[index] = null; yield row; }
 }
 function identifiers(row: Row): Record<string, string> {
   const result: Record<string, string> = {};
@@ -120,6 +121,9 @@ function disaster(capture: FederalMoneyCapture, state: string, row: Row): Federa
 }
 
 export function parseFederalMoney(source: FederalMoneySource, capture: FederalMoneyCapture, state: string, body: string): FederalMoneyFact[] {
+  return Array.from(rows(body, source), row => parseFederalMoneyRow(source, capture, state, row));
+}
+export function parseFederalMoneyRow(source: FederalMoneySource, capture: FederalMoneyCapture, state: string, row: Row): FederalMoneyFact {
   const parse = source === "usaspending" ? spending : source === "federal-audit-clearinghouse" ? audit : source === "sam-gov-entities" ? entity : disaster;
-  return rows(body, source).map(row => parse(capture, state.toUpperCase(), row));
+  return parse(capture, state.toUpperCase(), row);
 }

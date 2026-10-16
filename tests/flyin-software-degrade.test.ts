@@ -61,11 +61,7 @@ test("the motion hold is scoped to a software rasteriser, not every renderer", (
     CANVAS.indexOf("const onPresentationIdle"),
   );
   assert.match(enter, /if \(!degradeInMotion\) return;/, "enterMotionDegrade must no-op off a software rasteriser");
-  /*
-   * The mount-time hold and its first-idle reveal stay UNCONDITIONAL, so every
-   * renderer still reveals its overlays once the first style has drawn — the
-   * scoping is on the motion re-hold, never on the one-time reveal.
-   */
+
   assert.match(CANVAS, /map\.on\("idle", onPresentationIdle\);/);
   const idle = CANVAS.slice(CANVAS.indexOf("const onPresentationIdle"), CANVAS.indexOf('map.on("idle", onPresentationIdle)'));
   assert.match(idle, /map\.isMoving\(\) \|\| !mapPresentationHeld\(map\)/);
@@ -89,7 +85,7 @@ test("holding keeps sources cached, hides application layers, and removes the DO
   assert.match(PRESENTATION, /setLayoutProperty\(layer.id, "visibility", visible \? "visible" : "none"\)/);
   assert.ok(!PRESENTATION.includes("removeLayer") && !PRESENTATION.includes("removeSource"));
   assert.ok(!CANVAS.includes("<StateFocusOverlay"));
-  assert.match(CANVAS, /if \(!map \|\| mapPresentationHeld\(map\)/);
+  assert.match(CANVAS, /if \(mapPresentationHeld\(map\)\) return;/);
   assert.match(CANVAS, /shellRef\.current\?\.setAttribute\("data-camera-moving", "1"\)/);
   assert.match(CANVAS, /shellRef\.current\?\.removeAttribute\("data-camera-moving"\)/);
 });

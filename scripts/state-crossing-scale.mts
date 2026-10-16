@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { appendFileSync, createReadStream, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { createInterface } from "node:readline";
 import { fileURLToPath } from "node:url";
 
 import { US_JURISDICTIONS } from "../lib/coverage/states.ts";
@@ -18,30 +19,45 @@ type Measurement = {
   databaseReadBytes: number; databaseWriteBytes: number; readerDatabaseMeasured: boolean;
 };
 
+async function* sourceRows(file: string): AsyncGenerator<string[]> {
+  let record = "";
+  let quoted = false;
+  for await (const line of createInterface({ input: createReadStream(file), crlfDelay: Infinity })) {
+    record += line + "\n";
+    for (const char of line) if (char === '"') quoted = !quoted;
+    if (quoted) continue;
+    yield* csvRows(record);
+    record = "";
+  }
+  assert.equal(record, "", "Unclosed CSV record");
+}
+
 if (!state) {
   mkdirSync(directory, { recursive: true });
-  const groups = new Map(US_JURISDICTIONS.map(identity => [identity.usps, [] as Government[]]));
+  for (const identity of US_JURISDICTIONS) writeFileSync(`${directory}/${identity.usps}.jsonl`, "");
+  const append = (code: string, government: Government) => {
+    assert.ok(US_JURISDICTIONS.some(identity => identity.usps === code), code);
+    appendFileSync(`${directory}/${code}.jsonl`, JSON.stringify(government) + "\n");
+  };
   for (const file of ["census_govt_units_2022", "census_govt_units_2022_dependent_school_systems"]) {
-    const rows = csvRows(readFileSync(`${root}/data/reference/${file}.csv`, "utf8"));
-    const header: string[] = rows.next().value!;
-    for (const row of rows) {
+    let header: string[] | null = null;
+    for await (const row of sourceRows(`${root}/data/reference/${file}.csv`)) {
+      if (!header) { header = row; continue; }
       const values = Object.fromEntries(header.map((key, index) => [key, row[index]]));
       const code = values.state || (values.fips_state === "48" ? "TX" : "");
-      assert.ok(groups.has(code), code);
-      groups.get(code)!.push({ id: values.census_id_pid6, name: values.unit_name, zip: values.zip });
+      append(code, { id: values.census_id_pid6, name: values.unit_name, zip: values.zip });
     }
   }
-  const territory = csvRows(readFileSync(`${root}/data/reference/census_tiger_2023_territory_functional_status.csv`, "utf8"));
-  const header: string[] = territory.next().value!;
-  for (const row of territory) {
+  let header: string[] | null = null;
+  for await (const row of sourceRows(`${root}/data/reference/census_tiger_2023_territory_functional_status.csv`)) {
+    if (!header) { header = row; continue; }
     const values = Object.fromEntries(header.map((key, index) => [key, row[index]]));
     if (!["A", "B", "C", "G"].includes(values.funcstat)) continue;
     const code = US_JURISDICTIONS.find(identity => identity.fips === values.statefp)!.usps;
-    groups.get(code)!.push({ id: values.geoid, name: values.name, zip: null });
+    append(code, { id: values.geoid, name: values.name, zip: null });
   }
   const results: Measurement[] = [];
-  for (const [code, governments] of groups) {
-    writeFileSync(`${directory}/${code}.json`, JSON.stringify(governments));
+  for (const { usps: code } of US_JURISDICTIONS) {
     const child = spawnSync(process.execPath, ["--experimental-strip-types", import.meta.filename, code], {
       encoding: "utf8", maxBuffer: 2 ** 20,
     });
@@ -67,7 +83,8 @@ if (!state) {
   const id = `ocd-division/country:us/${identity.prefix}:${identity.slug}`;
   const feature = outlineFor(outlines, id);
   assert.ok(feature);
-  const governments = JSON.parse(readFileSync(`${directory}/${state}.json`, "utf8")) as Government[];
+  const governments = readFileSync(`${directory}/${state}.jsonl`, "utf8").split("\n").filter(Boolean)
+    .map(row => JSON.parse(row) as Government);
   let point: [number, number] | null = null;
   for (const [x, y] of feature.geometry.coordinates.flat()) {
     for (const delta of [0.1, -0.1, 0.01, -0.01]) {

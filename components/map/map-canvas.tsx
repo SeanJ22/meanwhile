@@ -18,7 +18,7 @@ import {
 } from "maplibre-gl";
 import { Protocol } from "pmtiles";
 import { startMap } from "@/lib/map/start-map";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 import { holdMapPresentation, releaseMapPresentation, mapPresentationHeld, setPresentationVisible } from "@/lib/map/flight-presentation";
 import { detectRaster } from "@/components/map/raster-capability";
@@ -113,6 +113,7 @@ interface MapCanvasProps {
   /** The keys the current filters leave visible, a subset of `venues`. `null` shows every venue. */
   visibleVenueKeys?: ReadonlySet<string> | null;
   camera: CameraTarget | null;
+  here: CameraTarget | null;
   focus: MapFocus | null;
   /** The districts drawn; the stats card counts this list and the districts door renders it. */
   onDrawnDistricts: (districts: DrawnDistrict[]) => void;
@@ -194,6 +195,7 @@ export function MapCanvas({
   venues,
   visibleVenueKeys = null,
   camera,
+  here,
   focus,
   selectedVenueKey,
   frameAllVenues,
@@ -618,29 +620,35 @@ export function MapCanvas({
   }, []);
 
   // Mark the zip's centroid.
-  useEffect(() => {
+  useLayoutEffect(() => {
     const map = mapRef.current;
-    if (!map || !camera || !presentationReady) return;
+    if (!map) return;
+    if (!here) {
+      hereRef.current?.remove();
+      hereRef.current = null;
+      return;
+    }
+    if (!presentationReady) return;
 
     if (!hereRef.current) {
       hereRef.current = new Marker({
-        element: createHereElement(camera.zip),
+        element: createHereElement(here.zip),
         anchor: "center",
       })
-        .setLngLat([camera.lng, camera.lat])
+        .setLngLat([here.lng, here.lat])
         .addTo(map);
       return;
     }
 
-    hereRef.current.setLngLat([camera.lng, camera.lat]);
+    hereRef.current.setLngLat([here.lng, here.lat]);
     hereRef.current
       .getElement()
-      .setAttribute("aria-label", `Center of zip code ${camera.zip}`);
-  }, [camera, presentationReady]);
+      .setAttribute("aria-label", `Center of zip code ${here.zip}`);
+  }, [here, presentationReady]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const map = mapRef.current;
-    if (!map || mapPresentationHeld(map)) return;
+    if (!map) return;
     const pins = votePinsRef.current;
     const wanted = new Map((votingSites ?? []).map((s) => [s.id, s]));
 
@@ -649,6 +657,8 @@ export function MapCanvas({
       marker.remove();
       pins.delete(id);
     }
+
+    if (mapPresentationHeld(map)) return;
 
     for (const [id, site] of wanted) {
       const existing = pins.get(id);
@@ -675,13 +685,12 @@ export function MapCanvas({
     }
   }, [votingSites, presentationReady]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const map = mapRef.current;
     if (!map) return;
     const SOURCE = "voting-address-ring";
     const FILL = "voting-address-ring-fill";
     const LINE = "voting-address-ring-line";
-    if (mapPresentationHeld(map)) return;
 
     const clear = () => {
       if (map.getLayer(LINE)) map.removeLayer(LINE);
@@ -694,6 +703,7 @@ export function MapCanvas({
       return;
     }
 
+    if (mapPresentationHeld(map)) return;
     const { lat, lng } = votingAddressPoint;
     const STEPS = 96;
     const milesPerDegLat = 69.0;
@@ -785,10 +795,14 @@ export function MapCanvas({
     cameraMapRef.current = map;
   }, [camera]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const map = mapRef.current;
     if (!map) return;
 
+    if (!venues.length) {
+      destroyMarkerPool(poolRef.current);
+      return;
+    }
     if (mapPresentationHeld(map)) return;
     rebuildMarkerPool(poolRef.current, map, venues, (venue) => {
       const pool = poolRef.current;

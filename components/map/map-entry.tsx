@@ -1007,7 +1007,6 @@ function MapEntryInner() {
     [clusterCoverage],
   );
 
-  /* ── The large card: which view, and its label ── */
   type CardView =
     | { kind: "large"; surface: LargeSurface }
     | { kind: "venue"; venue: Venue }
@@ -1249,7 +1248,6 @@ function MapEntryInner() {
     setSidebarState("closed");
   }, []);
 
-  /* ── The map's selection pill (district boundary or venue focus) ── */
   const selectedDistrictHit = districtPopup;
   const pillVenue = !cardView || parked ? selectedVenue : null;
   const pillDistrict =
@@ -1553,6 +1551,7 @@ function MapEntryInner() {
             venues={allVenues}
             visibleVenueKeys={visibleVenueKeys}
             camera={camera}
+            here={location && contains(location.lat, location.lng) ? location : null}
             focus={focus}
             selectedVenueKey={ui.selectedVenueKey}
             frameAllVenues={

@@ -3,18 +3,19 @@
 lane: fact-store
 owner: fact-store
 writer: the fact-store lane
-check: at-scale
-ready: no step ids unknown
-river: 493311674ed4c1f3d15c14f70e19e7be9b9f58aa
-at: 2026-10-15T23:05:06Z
+check: cleanliness
+ready: R1 efd3b12c5115f6c3e51129867323038a20ae3778
+river: 965bf002ea7ba2dd209f8d07852708e5e1fa1a8d
+at: 2026-10-16T02:27:13Z
 state: returned
-fix_subject: fix:8d2fa768
-fix: River · stream/fact-store — at-scale failed for fact-store: R1 (77bddad74) merges clean with river 3282584e2 and fixes a production stall (the hourly candidate job timed out every run since Oct 14), but the READY message has no AT SCALE numbers: peak memory per worker, database bytes read and writte
+fix_subject: fix:97e16309
+fix: River · stream/fact-store — cleanliness failed for fact-store: Cleanliness finding on R1 (efd3b12c5, folded as 36375e5db). Fix in your next READY:
 
 ## Failure
 
 ```
-R1 (77bddad74) merges clean with river 3282584e2 and fixes a production stall (the hourly candidate job timed out every run since Oct 14), but the READY message has no AT SCALE numbers: peak memory per worker, database bytes read and written per run and per day, run time, copies that fit at the 0.75 GiB margin, largest input tested (name anything not tested at full size). Add them and push a new READY; as a production-stall fix it ships alone in its own release ahead of anything else.
+Cleanliness finding on R1 (efd3b12c5, folded as 36375e5db). Fix in your next READY:
+Export nothing outside its file imports (tests count 1): lib/facts/state-facts-publication.ts:26 StateFactsStore.
 ```
 
 ## Repair

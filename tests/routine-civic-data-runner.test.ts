@@ -1383,7 +1383,7 @@ test("ordinary final publication still serves all selected sources when federal 
   assert.ok(start > 0 && end > start);
   for (const publishNow of [false, true]) {
     const calls: unknown[] = [];
-    const selected = [{ id: "openfema" }, { id: "congress-bulk-roster" }];
+    const selected = [{ id: "openfema" }, { id: "congress-bulk-roster:AZ" }];
     const final = { status: "PUBLISHED", families: "all-selected" };
     const periodic = { status: "PUBLISHED", families: "periodic" };
     const context = {

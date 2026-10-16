@@ -14,9 +14,13 @@ import {
   FEDERAL_VOTES_PARSER_VERSION,
   FEDERAL_VOTES_SOURCE_ID,
   federalKeyVotesCandidate,
+  federalMemberVotesCandidate,
   federalRollCallsCandidate,
+  heldAcquisitions,
   type FederalKeyVotePositions,
   type FederalKeyVotesSnapshot,
+  type FederalRollCallWindow,
+  type HeldAcquisition,
   type OfficialAcquisition,
 } from "../lib/votes/data-plane.ts";
 import {
@@ -26,10 +30,11 @@ import {
 import { readFederalKeyVotesProjection } from "../lib/votes/key-votes-projection.ts";
 import {
   billSummariesForRollCallAcquisition,
+  readFederalMemberVotes,
   readFederalRollCallsProjection,
 } from "../lib/votes/snapshot.ts";
 import type { BillSummariesFile } from "../lib/votes/bill-summaries.ts";
-import type { RollCallVote, VotesSnapshot } from "../lib/votes/types.ts";
+import type { MemberVote, RollCallVote } from "../lib/votes/types.ts";
 
 const T0 = "2026-09-08T12:00:00.000Z";
 const T1 = "2026-09-08T12:01:00.000Z";
@@ -42,11 +47,11 @@ function rollUrl(chamber: "house" | "senate", congress: number, session: number,
   return `https://www.senate.gov/legislative/LIS/roll_call_votes/vote${congress}${session}/vote_${congress}_${session}_${String(rollNumber).padStart(5, "0")}.xml`;
 }
 
-function acquisitionsForRollCalls(snapshot: VotesSnapshot, suffix = "good"): OfficialAcquisition[] {
-  return snapshot.votes.map((vote) => {
+function acquisitionsForRollCalls(snapshot: FederalRollCallWindow, suffix = "good"): HeldAcquisition[] {
+  return heldAcquisitions(snapshot.votes.map((vote) => {
     const url = rollUrl(vote.chamber, vote.congress, vote.session, vote.rollNumber);
     return { requestedUrl: url, finalUrl: url, httpStatus: 200, body: `${suffix}:${vote.id}` };
-  });
+  }));
 }
 
 function acquisitionsForKeyVotes(snapshot: FederalKeyVotesSnapshot, suffix = "good"): OfficialAcquisition[] {
@@ -56,8 +61,8 @@ function acquisitionsForKeyVotes(snapshot: FederalKeyVotesSnapshot, suffix = "go
   ]);
 }
 
-/** A small synthetic roll-call window: two House rolls, one Senate roll, two summaries and one pending review. */
-async function rollCallSeed(): Promise<{ snapshot: VotesSnapshot; billSummaries: BillSummariesFile }> {
+/** A small synthetic roll-call window: two House rolls, one Senate roll, two members' positions, two summaries and one pending review. */
+async function rollCallSeed(): Promise<{ snapshot: FederalRollCallWindow; positions: MemberVote[]; billSummaries: BillSummariesFile }> {
   const congress = 119;
   const session = 2;
   const bill = (n: number) => `https://www.congress.gov/bill/119th-congress/house-bill/${n}`;
@@ -72,11 +77,12 @@ async function rollCallSeed(): Promise<{ snapshot: VotesSnapshot; billSummaries:
       window: { houseRolls: [1, 2], senateRolls: [3] },
       identifierMatch: { houseMatched: 1, houseTotal: 1, senateMatched: 1, senateTotal: 1 },
       votes: [vote("house", 1, bill(1)), vote("house", 2, bill(2)), vote("senate", 3, bill(3))],
-      positions: [
-        { officeholderId: "congress:A000001", voteId: `house:${congress}-${session}:1`, position: "YES" },
-        { officeholderId: "congress:B000002", voteId: `senate:${congress}-${session}:3`, position: "NO" },
-      ],
     },
+    positions: [
+      { officeholderId: "congress:A000001", voteId: `house:${congress}-${session}:1`, position: "YES" },
+      { officeholderId: "congress:A000001", voteId: `house:${congress}-${session}:2`, position: "NOT_VOTING" },
+      { officeholderId: "congress:B000002", voteId: `senate:${congress}-${session}:3`, position: "NO" },
+    ],
     billSummaries: {
       curatedAt: T0,
       summaries: {
@@ -119,6 +125,7 @@ test("congress-rollcalls promotes to the canonical plane and its Reader follows 
     expectedCongress: seed.snapshot.congress,
     expectedSession: seed.snapshot.session,
     snapshot: structuredClone(seed.snapshot),
+    partyBreakdowns: {},
     billSummaries: structuredClone(seed.billSummaries),
   });
   const outcome = await processRegisteredManualCandidate(store, "congress-rollcalls", candidate, T0);
@@ -143,6 +150,7 @@ test("bill summaries and pending reviews are stable exact Admin members without 
     expectedCongress: seed.snapshot.congress,
     expectedSession: seed.snapshot.session,
     snapshot: structuredClone(seed.snapshot),
+    partyBreakdowns: {},
     billSummaries: structuredClone(seed.billSummaries),
   });
   const summaryUrls = Object.keys(seed.billSummaries.summaries).sort();
@@ -178,10 +186,11 @@ test("bill summaries and pending reviews are stable exact Admin members without 
     expectedCongress: seed.snapshot.congress,
     expectedSession: seed.snapshot.session,
     snapshot: structuredClone(seed.snapshot),
+    partyBreakdowns: {},
     billSummaries,
   });
 
-  assert.deepEqual(next.readModel, { formatVersion: 1, snapshot: seed.snapshot, billSummaries });
+  assert.deepEqual(next.readModel, { formatVersion: 1, snapshot: seed.snapshot, partyBreakdowns: {}, billSummaries });
   assert.equal(
     next.normalization.normalizedHash,
     createHash("sha256").update(canonicalCivicDataJson(next.readModel)).digest("hex"),
@@ -216,6 +225,7 @@ test("duplicate pending bill-summary identities fail closed before promotion", a
     expectedCongress: seed.snapshot.congress,
     expectedSession: seed.snapshot.session,
     snapshot: structuredClone(seed.snapshot),
+    partyBreakdowns: {},
     billSummaries,
   });
   const outcome = await processRegisteredManualCandidate(new MemoryRoutineDataStore(), "congress-rollcalls", candidate, T0);
@@ -230,13 +240,13 @@ test("one missing official roll receipt refuses the candidate and preserves roll
   const good = federalRollCallsCandidate({
     acquisitions: acquisitionsForRollCalls(seed.snapshot), retrievedAt: T0,
     expectedCongress: seed.snapshot.congress, expectedSession: seed.snapshot.session,
-    snapshot: structuredClone(seed.snapshot), billSummaries: structuredClone(seed.billSummaries),
+    snapshot: structuredClone(seed.snapshot), partyBreakdowns: {}, billSummaries: structuredClone(seed.billSummaries),
   });
   await processRegisteredManualCandidate(store, "congress-rollcalls", good, T0);
   const incomplete = federalRollCallsCandidate({
     acquisitions: acquisitionsForRollCalls(seed.snapshot, "incomplete").slice(1), retrievedAt: T1,
     expectedCongress: seed.snapshot.congress, expectedSession: seed.snapshot.session,
-    snapshot: structuredClone(seed.snapshot), billSummaries: structuredClone(seed.billSummaries),
+    snapshot: structuredClone(seed.snapshot), partyBreakdowns: {}, billSummaries: structuredClone(seed.billSummaries),
   });
   const refused = await processRegisteredManualCandidate(store, "congress-rollcalls", incomplete, T1);
   assert.equal(refused.candidate.state, "SEMANTIC_INVALID");
@@ -249,7 +259,7 @@ test("federal validation refuses dependent evidence from any other source projec
   const candidate = federalRollCallsCandidate({
     acquisitions: acquisitionsForRollCalls(seed.snapshot), retrievedAt: T0,
     expectedCongress: seed.snapshot.congress, expectedSession: seed.snapshot.session,
-    snapshot: structuredClone(seed.snapshot), billSummaries: structuredClone(seed.billSummaries),
+    snapshot: structuredClone(seed.snapshot), partyBreakdowns: {}, billSummaries: structuredClone(seed.billSummaries),
   });
   const mismatched = {
     ...candidate,
@@ -260,6 +270,31 @@ test("federal validation refuses dependent evidence from any other source projec
   assert.equal(outcome.candidate.state, "DEPENDENT_CONSUMER_INVALID");
   assert.equal(outcome.candidate.receipt?.checks.find(({ check }) => check === "DEPENDENT_READ_MODEL_VALIDITY")?.code, "DEPENDENT_EVIDENCE_SCOPE_MISMATCH");
   assert.equal(outcome.promoted, null);
+});
+
+test("each member's positions publish under that member alone, carrying only the roll calls that record them", async () => {
+  const seed = await rollCallSeed();
+  const store = new MemoryRoutineDataStore();
+  const common = { acquisitions: acquisitionsForRollCalls(seed.snapshot), retrievedAt: T0, expectedCongress: 119, expectedSession: 2, snapshot: seed.snapshot };
+  const mine = seed.positions.filter((row) => row.officeholderId === "congress:A000001");
+  const candidate = federalMemberVotesCandidate({ ...common, officeholderId: "congress:A000001", positions: mine });
+  assert.equal(candidate.scope, `${FEDERAL_ROLLCALL_SCOPE}:congress:A000001`);
+  assert.deepEqual((candidate.normalizedPayload as { acquisitions: HeldAcquisition[] }).acquisitions.map((row) => row.finalUrl),
+    [rollUrl("house", 119, 2, 1), rollUrl("house", 119, 2, 2)], "only the rolls that record this member are its evidence");
+  const outcome = await processRegisteredManualCandidate(store, "congress-rollcalls", candidate, T0);
+  assert.equal(outcome.candidate.state, "PROMOTED", outcome.candidate.failureDetail ?? "");
+  assert.equal(outcome.readerReadback?.status, "PASS");
+  const read = await readFederalMemberVotes("congress:A000001", { store, bypassCache: true, now: T0 });
+  assert.equal(read.kind, "PROMOTED");
+  if (read.kind === "PROMOTED") {
+    assert.deepEqual(read.value.positions, mine);
+    assert.deepEqual(read.value.votes.map((vote) => vote.id), ["house:119-2:1", "house:119-2:2"]);
+  }
+  assert.equal((await readFederalMemberVotes("congress:B000002", { store, bypassCache: true, now: T0 })).kind, "NOT_RECORDED", "another member publishes only its own record");
+  assert.ok(federalMemberVotesCandidate({ ...common, officeholderId: "congress:A000001", positions: seed.positions }).semantics.violations.includes("POSITION_UNDER_ANOTHER_MEMBER"));
+  assert.ok(federalMemberVotesCandidate({ ...common, officeholderId: "congress:C000003", positions: [] }).semantics.violations.includes("MEMBER_HAS_NO_RECORDED_POSITION"));
+  assert.ok(federalMemberVotesCandidate({ ...common, officeholderId: "congress:A000001", positions: [...mine, { officeholderId: "congress:A000001", voteId: "house:119-2:9", position: "YES" }] })
+    .semantics.violations.includes("POSITION_POINTS_OUTSIDE_ROLL_WINDOW"));
 });
 
 test("federal-key-votes binds mutable official facts to the exact reviewed v1 selection", async () => {
@@ -397,7 +432,7 @@ test("source failure is a durable data-plane outcome and never erases roll-call 
   const good = federalRollCallsCandidate({
     acquisitions: acquisitionsForRollCalls(seed.snapshot), retrievedAt: T0,
     expectedCongress: seed.snapshot.congress, expectedSession: seed.snapshot.session,
-    snapshot: structuredClone(seed.snapshot), billSummaries: structuredClone(seed.billSummaries),
+    snapshot: structuredClone(seed.snapshot), partyBreakdowns: {}, billSummaries: structuredClone(seed.billSummaries),
   });
   await processRegisteredManualCandidate(store, "congress-rollcalls", good, T0);
   const failed = failedAcquisitionCandidate({

@@ -230,25 +230,27 @@ test("the real Git reads of a clean detached worktree answer on the first attemp
   assert.equal(inspectRuntimeCheckout(runtime).clean, false, "an untracked file is still a dirty runtime");
 });
 
-test("the capture conversion child writes held people, vote and directory versions under its own admission, and nothing else", async () => {
+test("the federal people split child writes place directories and member positions under its own admission, and nothing else", async () => {
   const { assertRoutineDataStoreMutationAuthority, routineDataStoreCandidateAuthorityIssue } = await import("../lib/civic-data/store.ts");
   const parentEnv: NodeJS.ProcessEnv = { NODE_ENV: "development", WTP_RUNTIME_MODE: "staging", WTP_DB_ROLE: "local",
     DATABASE_URL: "postgresql://local:local@staging.invalid/reader",
     WTP_CONTROL_PLANE_DATABASE_URL: "postgresql://local:local@staging.invalid/control",
     WTP_SANCTIONED_WRITE: "routine-civic-data-promotion" };
-  const authority = assertRoutineDataStoreMutationAuthority(admittedRuntimeChildEnvironment({ parentEnv, capability: "CAPTURE_CONVERSION" }));
-  assert.equal(authority.capability, "CAPTURE_CONVERSION");
+  const authority = assertRoutineDataStoreMutationAuthority(admittedRuntimeChildEnvironment({ parentEnv, capability: "FEDERAL_PEOPLE_SPLIT" }));
+  assert.equal(authority.capability, "FEDERAL_PEOPLE_SPLIT");
+  for (const [sourceId, recordClass, scope] of [
+    ["congress-directory-project", "FEDERAL_DIRECTORY", "US-WA:current-congress-directory"],
+    ["congress-directory-project", "FEDERAL_DIRECTORY", "US-PR:current-congress-directory"],
+    ["federal-legislative-records", "FEDERAL_ROLL_CALL", "US:recent-federal-rollcalls:congress:C000127"],
+    ["federal-legislative-records", "FEDERAL_ROLL_CALL", "US:recent-federal-rollcalls"],
+  ] as const) assert.equal(routineDataStoreCandidateAuthorityIssue({ id: "split", sourceId, recordClass, scope }, authority, "candidate"), null, scope);
   for (const [sourceId, recordClass, scope] of [
     ["official-state-people", "STATE_LEGISLATOR", "US-NJ:people:official-state-people:v1"],
-    ["plural-openstates", "STATE_LEGISLATOR", "US-NJ:openstates-people:v1"],
-    ["plural-openstates-votes", "STATE_ROLL_CALL", "US-NJ:openstates-votes:v1"],
-    ["congress-directory-project", "FEDERAL_DIRECTORY", "US:current-congress-directory"],
-  ] as const) assert.equal(routineDataStoreCandidateAuthorityIssue({ id: "conversion", sourceId, recordClass, scope }, authority, "candidate"), null, sourceId);
-  assert.match(routineDataStoreCandidateAuthorityIssue({ id: "conversion", sourceId: "fec-open-api", recordClass: "FEC_FUNDING", scope: "federal-supported" }, authority, "candidate") ?? "",
-    /capture conversion cannot mutate fec-funding/);
-  const conversion = (contract: string | null) => runtimeAuthorityIssue({ envelope: { ...envelope(), capability: "CAPTURE_CONVERSION", contract },
-    expectation: { capabilities: ["CAPTURE_CONVERSION"], immediateParentPid: PID }, checkout: checkout(), cwd: ROOT });
-  assert.equal(conversion(null), null);
-  assert.match(conversion("fec-funding") ?? "", /may not carry a source contract/);
-  assert.match(issue({ ...envelope(), capability: "CAPTURE_CONVERSION", contract: null }) ?? "", /not one of/, "it never satisfies a source child's expectation");
+    ["fec-open-api", "FEC_FUNDING", "federal-supported"],
+  ] as const) assert.match(routineDataStoreCandidateAuthorityIssue({ id: "split", sourceId, recordClass, scope }, authority, "candidate") ?? "", /the federal people split cannot mutate/);
+  const split = (contract: string | null) => runtimeAuthorityIssue({ envelope: { ...envelope(), capability: "FEDERAL_PEOPLE_SPLIT", contract },
+    expectation: { capabilities: ["FEDERAL_PEOPLE_SPLIT"], immediateParentPid: PID }, checkout: checkout(), cwd: ROOT });
+  assert.equal(split(null), null);
+  assert.match(split("fec-funding") ?? "", /may not carry a source contract/);
+  assert.match(issue({ ...envelope(), capability: "FEDERAL_PEOPLE_SPLIT", contract: null }) ?? "", /not one of/, "it never satisfies a source child's expectation");
 });

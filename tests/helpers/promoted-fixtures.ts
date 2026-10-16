@@ -25,7 +25,6 @@ import { enterReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "../../
 import { primeRegistryRuntimeFromValue, readRegistryRuntimeProjection } from "../../lib/registry/runtime-read-model.ts";
 import type { RegistryRuntimeReadModel } from "../../lib/registry/runtime-data-plane.ts";
 import {
-  FEDERAL_DIRECTORY_SCOPE,
   FEDERAL_DIRECTORY_SOURCE_ID,
   type FederalDirectoryReadModel,
 } from "../../lib/officials/federal-directory-data-plane.ts";
@@ -56,6 +55,7 @@ import type { MemberVote, RollCallVote, VotePosition } from "../../lib/votes/typ
 import { provenEdgeEntry } from "./promoted-edge-entry.ts";
 import { rosterFactReader } from "./roster-fact-reader.ts";
 import { installFactReader } from "../../lib/facts/db.ts";
+const FEDERAL_DIRECTORY_SCOPE = "US:current-congress-directory";
 
 const ROOT = join(import.meta.dirname, "..", "..");
 const REGISTRY_FIXTURE = join(ROOT, "tests/fixtures/registry-transfer-import.json.gz");

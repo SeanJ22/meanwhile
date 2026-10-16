@@ -3,18 +3,21 @@
 lane: control-reads
 owner: control-reads
 writer: the control-reads lane
-check: fold-conflict
+check: at-scale
 ready: no step ids unknown
-river: 965bf002ea7ba2dd209f8d07852708e5e1fa1a8d
-at: 2026-10-16T03:36:24Z
+river: 1d3d303d70dc9d14aab69d61ea9b0d76d76b6e6f
+at: 2026-10-16T05:56:23Z
 state: returned
-fix_subject: fix:196137f7
-fix: River · stream/control-reads — fold-conflict failed for control-reads: CP-01 (deec70931) conflicts with river 1d3d303d7 (R1 follow-up on river) in a way that changes what its code does, so River did not settle it. Behavior: both redesign the same control-plane read paths. (1) Box: river's backfillBox indexes o
+fix_subject: fix:db041872
+fix: River · stream/control-reads — at-scale failed for control-reads: Not folded: CP-01 edb5a08f3 carries data in a migration.
 
 ## Failure
 
 ```
-CP-01 (deec70931) conflicts with river 1d3d303d7 (R1 follow-up on river) in a way that changes what its code does, so River did not settle it. Behavior: both redesign the same control-plane read paths. (1) Box: river's backfillBox indexes only results the Box does not hold, with one Box read per call and findings stored on the Box row (lib/control-plane/box.ts); CP-01 replaces that read path. (2) Held-election inputs: river's worker-held-elections returns Pick<HeldInputs,'nationalAt'|'registryAt'|'routesAt'>; CP-01 returns HeldBallotInputs and pages subjects through cp_work_items_history. (3) Storage: CP-01's admin-section, model-charge and dispatch-state DDL and pg-schema imports vs river's schema (pg-schema.ts, pg-store.ts, file-store.ts, memory.ts). (4) app/api/ask/grounded/route.ts (comment hunks and the identityReady ordering, both settled by River before, now in conflict again) and scripts/derive-candidate-campaign-sites.mts reading cp_work_items_history. Merge origin/river into stream/control-reads, make CP-01's reads go through river's per-pass cursors instead of beside them, delete whichever backfill/read path CP-01 replaces, run the focused tests, and push a new READY.
+Not folded: CP-01 edb5a08f3 carries data in a migration.
+New rule (Sean, SB-01 order): return any READY that adds or keeps a stored record or reader read covering more than one state, or a migration that carries data.
+lib/control-plane/repository/migrations/CP-01.ts moves existing rows: INSERT INTO cp_route_tasks_archive / cp_work_items_archive SELECT * FROM the live tables, backfillAdminSections for Admin settings, and backfillModelCharges. Those copy production rows across every state's work in one migration.
+Needed: ship the schema change as expand-only DDL with no row copying, and move the archive, Admin-section and model-charge backfills into code the runner runs per place or per state under its own job. Also 174 files changed in one READY; split if it can be.
 ```
 
 ## Repair

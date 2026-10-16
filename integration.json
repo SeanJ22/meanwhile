@@ -3083,5 +3083,17 @@
     "tested_sha": "229ea25863f7aa7960c89d635117c886e5e96dfa",
     "gates": "pass",
     "at": "2026-10-16T06:34:29Z"
+  },
+  {
+    "lane": "neon-allow",
+    "steps": [
+      "NEON-ALLOW"
+    ],
+    "ready_sha": "5acacfc74ddf54a30b2b68563fde9debd7d64acb",
+    "merge_sha": "472ce09bb9324defd13127ca7f679aaeab9b18ba",
+    "river_sha": "8b6a9150ed7b0fb2cfd5b6eb83e70a322831ab4e",
+    "tested_sha": "8b6a9150ed7b0fb2cfd5b6eb83e70a322831ab4e",
+    "gates": "pass",
+    "at": "2026-10-16T07:34:39Z"
   }
 ]

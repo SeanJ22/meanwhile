@@ -288,3 +288,4 @@ One line per batch folded into river.
 - 2026-10-16T03:03:04Z · fact-store · R1 · ready efd3b12c5115 · river 1d3d303d70dc · pnpm gates pass on 1d3d303d70dc
 - 2026-10-16T05:11:25Z · platform-swagit · R3-SWAGIT · ready ef48e7fbb343 · river e1a1071a9c22 · pnpm gates pass on e1a1071a9c22
 - 2026-10-16T06:34:29Z · src-money · SRC-MN · ready 3b61add5f2e1 · river 229ea25863f7 · pnpm gates pass on 229ea25863f7
+- 2026-10-16T07:34:39Z · neon-allow · NEON-ALLOW · ready 5acacfc74ddf · river 8b6a9150ed7b · pnpm gates pass on 8b6a9150ed7b

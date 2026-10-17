@@ -20,7 +20,7 @@ test("national retirement requires every exact GOOD state replacement and keeps 
       last_known_good_version_id text, validation_receipt jsonb, promoted_at timestamptz DEFAULT now());
       CREATE TABLE civic_data_candidates (id text PRIMARY KEY, source_id text, record_class text, scope text,
       state text, promoted_version_id text, last_known_good_version_id text, validation_receipt jsonb);`);
-    await db.exec(await readFile(new URL("../lib/db/migrations/SB-01B_state_pointer_retirement.sql", import.meta.url), "utf8"));
+    await db.exec(await readFile(new URL("../lib/db/migrations/0039_sb01b_state_pointer_retirement.sql", import.meta.url), "utf8"));
     await db.exec(`CREATE TRIGGER civic_data_promotions_no_delete_or_rewrite BEFORE UPDATE OR DELETE
       ON civic_data_promotions FOR EACH ROW EXECUTE FUNCTION enforce_civic_data_promotion_mutation();`);
     const add = async (recordClass: string, scope: string, source: string) => {

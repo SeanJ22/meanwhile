@@ -369,7 +369,7 @@ const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
     phase: "expand",
     why: "Adds nullable report context columns. Older feedback writers keep working and existing reports retain unknown context.",
   },
-  "SB-01B_state_pointer_retirement": { phase: "expand", why: "Permits retiring replaced national pointers only after every exact state replacement is GOOD; existing writers retain their mutation rules." },
+  "0039_sb01b_state_pointer_retirement": { phase: "expand", why: "Permits retiring replaced national pointers only after every exact state replacement is GOOD; existing writers retain their mutation rules." },
 };
 
 /** The declaration for a tag, or null when there is none. Never a default. */

@@ -1,4 +1,5 @@
 import type { BoxRepository } from "../box.ts";
+import type { FieldManualSourceHint,FieldManualSourceScope } from "../field-manual-sources.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 import type { ActiveWorkClaimReader } from "./active-work-claims.ts";
 import type { WorkerResultRecord } from "../workers/types.ts";
@@ -236,6 +237,7 @@ export interface FieldManualRepository extends AggregateRepository<FieldManualEn
   readMany(ids: readonly string[]): Promise<readonly Persisted<FieldManualEntry>[]>;
 
   select(query: FieldManualQuery): Promise<FieldManualRead>;
+  sourceHints(scope:FieldManualSourceScope,url:string):Promise<readonly FieldManualSourceHint[]>;
 
   insertNew(entries: readonly FieldManualEntry[], now: string): Promise<ReadonlySet<string>>;
 

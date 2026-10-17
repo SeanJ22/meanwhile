@@ -3180,5 +3180,45 @@
     "tested_sha": "3663b15a376c7f576838393b38dac90190f80e5e",
     "gates": "pass",
     "at": "2026-10-17T08:42:11Z"
+  },
+  {
+    "lane": "meetings-per-body",
+    "steps": [
+      "MT-02"
+    ],
+    "ready_sha": "0142ab8e47fc",
+    "merge_sha": "2db157b2e8c39b0f4b13ccc4279a80b31f057d79",
+    "river_sha": "2db157b2e8c39b0f4b13ccc4279a80b31f057d79",
+    "tested_sha": "2db157b2e8c39b0f4b13ccc4279a80b31f057d79",
+    "gates": "pass",
+    "at": "2026-10-17T16:49:57Z",
+    "note": "folded by hand after the road fold conflicted with MT-02 in tests/reader-edge-context.test.ts (resolved: kept MT-02 meeting publish call and R0 federal-directory state pointers); gates run once on the combined river-next"
+  },
+  {
+    "lane": "road",
+    "steps": [
+      "R0",
+      "RD-01"
+    ],
+    "ready_sha": "c566e13d60c9",
+    "merge_sha": "2db157b2e8c39b0f4b13ccc4279a80b31f057d79",
+    "river_sha": "2db157b2e8c39b0f4b13ccc4279a80b31f057d79",
+    "tested_sha": "2db157b2e8c39b0f4b13ccc4279a80b31f057d79",
+    "gates": "pass",
+    "at": "2026-10-17T16:49:57Z",
+    "note": "folded by hand after the road fold conflicted with MT-02 in tests/reader-edge-context.test.ts (resolved: kept MT-02 meeting publish call and R0 federal-directory state pointers); gates run once on the combined river-next"
+  },
+  {
+    "lane": "state-crossing",
+    "steps": [
+      "XS-02"
+    ],
+    "ready_sha": "785889f58",
+    "merge_sha": "2db157b2e8c39b0f4b13ccc4279a80b31f057d79",
+    "river_sha": "2db157b2e8c39b0f4b13ccc4279a80b31f057d79",
+    "tested_sha": "2db157b2e8c39b0f4b13ccc4279a80b31f057d79",
+    "gates": "pass",
+    "at": "2026-10-17T16:49:57Z",
+    "note": "folded by hand after the road fold conflicted with MT-02 in tests/reader-edge-context.test.ts (resolved: kept MT-02 meeting publish call and R0 federal-directory state pointers); gates run once on the combined river-next"
   }
 ]

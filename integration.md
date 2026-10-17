@@ -296,3 +296,6 @@ One line per batch folded into river.
 - 2026-10-17T07:28:55Z · river · main merge (release 50, no file changes) · river 5d6a5797f01b · pnpm gates pass on 5d6a5797f01b (DR-01, R1 folded at 42bb436bc; XS-02 dropped, returned to state-crossing)
 - 2026-10-17T08:42:11Z · edge-publish · EP-01 · ready c1d9394f2e2d · river 3663b15a376c · pnpm gates pass on 3663b15a376c
 - 2026-10-17T08:42:11Z · admin-country · ADMIN-COUNTRY · ready 86fbd855afc9 · river 3663b15a376c · pnpm gates pass on 3663b15a376c
+- 2026-10-17T16:49:57Z · meetings-per-body · MT-02 · ready 0142ab8e47fc · river 2db157b2e8c3 · pnpm gates pass on 2db157b2e8c3
+- 2026-10-17T16:49:57Z · road · R0, RD-01 · ready c566e13d60c9 · river 2db157b2e8c3 · pnpm gates pass on 2db157b2e8c3
+- 2026-10-17T16:49:57Z · state-crossing · XS-02 · ready 785889f58 · river 2db157b2e8c3 · pnpm gates pass on 2db157b2e8c3

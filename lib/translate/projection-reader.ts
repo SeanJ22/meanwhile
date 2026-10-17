@@ -1,7 +1,7 @@
 import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 import { TRANSLATION_SCOPE, translationScope, translationRecordIssue, type TranslationRecord } from "./records.ts";
 import { translationProjectionProblems, type TranslationProjection } from "./projection-contract.ts";
-import { currentReaderAuthorityEdge, currentPromotedEdge } from "../registry/runtime-edge.ts";
+import { currentReaderAuthorityEdge, ensurePromotedEdge } from "../registry/runtime-edge.ts";
 import type { BallotSet } from "../ballot/types.ts";
 
 export async function readTranslationProjection(options: PromotedCivicDataReadOptions & { scope?: string } = {}) {
@@ -17,12 +17,12 @@ export async function readTranslations(divisions: readonly string[], options: Pr
   const edgeContext = options.store === undefined && currentReaderAuthorityEdge() !== null;
   // Request bundles that do not name this family keep their held ballot records
   // without adding optional database reads on every cold visit.
-  const results = await Promise.all(divisionsToRead.flatMap(division => {
-    const scope = translationScope(division), served = edgeContext ? currentPromotedEdge("CURATED_READER_RECORD", scope) : null;
-    if (edgeContext && !served) return [];
-    return [readTranslationProjection({ ...options, ...(served ? { edge: served.value } : {}), scope })];
+  const results = await Promise.all(divisionsToRead.map(async division => {
+    const scope = translationScope(division), served = edgeContext ? await ensurePromotedEdge("CURATED_READER_RECORD", scope) : null;
+    if (edgeContext && !served) return null;
+    return readTranslationProjection({ ...options, ...(served ? { edge: served.value } : {}), scope });
   }));
-  return results.flatMap(result => result.kind === "PROMOTED" ? result.value.records : []);
+  return results.flatMap(result => result?.kind === "PROMOTED" ? result.value.records : []);
 }
 
 /** Only the loaded ballot's exact subjects and currently held source hashes attach. */

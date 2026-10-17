@@ -1,6 +1,6 @@
 import { settlePositionHoldingAnswer, type PositionHoldingReaders } from "@/lib/candidates/position-holding";
 import { readerRoute } from "@/lib/api/reader-route";
-import { holdReaderAuthorityEdge, ensureReaderAuthorityEdge, readReaderManifest } from "@/lib/meetings/edge-serving";
+import { holdReaderAuthorityEdge, ensureReaderAuthorityEdge } from "@/lib/meetings/edge-serving";
 import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
 import { verifiedReaderPersonKeys } from "@/lib/identity/reader-person";
 import { positionIdentityKeys } from "@/lib/identity/position-identity-keys";
@@ -70,9 +70,8 @@ export const GET = readerRoute("/api/positions/[subject]/[topic]", async functio
     return Response.json({ error: "subject and topic are required" }, { status: 400 });
   }
 
-  const manifest = await readReaderManifest().catch(holdReaderAuthorityEdge);
-  if (manifest) {
-    const edge = await ensureReaderAuthorityEdge(manifest, undefined, ["federal-directory", "ballot-contests", "candidate-publications", "officeholder-statements"]).catch(error => holdReaderAuthorityEdge(error, manifest, ["federal-directory", "ballot-contests", "candidate-publications", "officeholder-statements"]));
+  {
+    const edge = await ensureReaderAuthorityEdge(null, undefined, ["federal-directory", "ballot-contests", "candidate-publications", "officeholder-statements"]).catch(error => holdReaderAuthorityEdge(error, ["federal-directory", "ballot-contests", "candidate-publications", "officeholder-statements"]));
     if (edge) enterReaderAuthorityEdge(edge);
   }
   const divisions = await ballotPlaceFromRequest(request);

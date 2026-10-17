@@ -1,9 +1,10 @@
+import { createHash } from "node:crypto";
 import type { BuiltDataset } from "./dataset.ts";
 import type { GeographyType } from "./contract.ts";
 import type { CodeSlice, ContainerSlice, ScopeSlice, Slice } from "../control-plane/admin-view/promoted-slices.ts";
 
 const TYPES: readonly GeographyType[] = ["congressional_district", "state_leg_upper", "state_leg_lower"];
-export const censusDistrictEdgeVersion = (sourceVersion: string): string => `census-districts/v2:${sourceVersion}`;
+const censusDistrictEdgeVersion = (sourceVersion: string): string => `census-districts/v2:${sourceVersion}`;
 
 export interface CensusDistrictEdge {
   readonly formatVersion: 1;
@@ -34,6 +35,24 @@ export function buildCensusDistrictEdge(dataset: BuiltDataset, sourceVersion: st
 }
 
 /** A failed or malformed serving copy never establishes new certainty. */
+/** One edge per state: its ZIPs and only the containers they touch, its version naming its own content. */
+export function censusDistrictEdgeByState(edge: CensusDistrictEdge, stateOf: (zip: string) => string): Map<string, CensusDistrictEdge> {
+  const byState = new Map<string, string[]>();
+  for (const zip of Object.keys(edge.codes)) {
+    const state = stateOf(zip), zips = byState.get(state);
+    if (zips) zips.push(zip); else byState.set(state, [zip]);
+  }
+  return new Map([...byState].map(([state, zips]) => {
+    const at = new Map<number, number>(), containers: CensusDistrictEdge["containers"][number][] = [];
+    const codes = Object.fromEntries(zips.map(zip => [zip, edge.codes[zip]!.map(([index, whole, fraction]) => {
+      if (!at.has(index)) { at.set(index, containers.length); containers.push(edge.containers[index]!); }
+      return [at.get(index)!, whole, fraction] as const;
+    })]));
+    const body = { formatVersion: 1 as const, scopes: edge.scopes, containers, codes };
+    return [state, { ...body, versionId: censusDistrictEdgeVersion(createHash("sha256").update(JSON.stringify(body)).digest("hex").slice(0, 32)) }];
+  }));
+}
+
 export function censusDistrictEdgeSlice(value: CensusDistrictEdge, versionId: string, zip: string): Slice<CodeSlice> {
   if (value?.formatVersion !== 1 || value.versionId !== versionId || !Array.isArray(value.scopes) || !Array.isArray(value.containers) || !value.codes) {
     return { kind: "UNREAD", detail: "Census district edge version or shape is invalid" };

@@ -316,11 +316,11 @@ export interface AppendOnlyRepository<T> {
   /** The keys this log holds. */
   keys(): Promise<readonly string[]>;
   /** Exactly `keys()` narrowed to keys holding a matching record, sorted. */
-  keysWhere?(path: readonly string[], value: string): Promise<readonly string[]>;
+  keysWhere(path: readonly string[], value: string): Promise<readonly string[]>;
   /** Exactly `read(key)` for each key, in one batched read; a key with no record is absent. */
   readKeys?(keys: readonly string[]): Promise<ReadonlyMap<string, readonly T[]>>;
   /** Records whose `changed_at` is at or after `since` (all when null), less any `held` names, in `readAll()` order, with coordinates. */
-  readChangedSince?(since: string | null, held?: HeldSlots): Promise<ChangedRecords<T>>;
+  readChangedSince(since: string | null, held?: HeldSlots): Promise<ChangedRecords<T>>;
 }
 
 /** `log.readKeys(keys)`, or `read` per key where the provider has no batched read. */
@@ -334,11 +334,6 @@ export async function readByKeys<T>(log: AppendOnlyRepository<T>, keys: readonly
     if (records.length > 0) out.set(key, records);
   }
   return out;
-}
-
-/** The keys of a log holding a record whose value at `path` equals `value`, or null when the provider has no filtered read (the caller then reads as before). */
-export async function keysWhere<T>(log: AppendOnlyRepository<T>, path: readonly string[], value: string): Promise<readonly string[] | null> {
-  return log.keysWhere ? log.keysWhere(path, value) : null;
 }
 
 /** `true` keeps a top-level key whole; an object keeps only its named keys. Every other key is dropped. */
@@ -507,6 +502,8 @@ export interface ControlPlaneRepositories {
   readonly researchIntents: AppendOnlyRepository<ResearchIntent>;
   readonly scoutResults: AppendOnlyRepository<ScoutResult>;
   readonly boxFindings: BoxRepository;
+  /** Where each incremental pass last read up to, by pass name. */
+  readonly passCursors: AggregateRepository<PassCursor>;
   readonly workerResults: AppendOnlyRepository<WorkerResultRecord>;
   readonly promotionPipeline: AppendOnlyRepository<PromotionPipelineRecord>;
   readonly windowRuns: AppendOnlyRepository<WindowRunRecord>;
@@ -535,6 +532,9 @@ export interface ControlPlaneRepositories {
   /** True only for a store whose contents survive this process. */
   readonly durable: boolean;
 }
+
+/** The store's clock as of a pass's last read; the next pass reads what changed since. */
+export interface PassCursor { readonly through: string }
 
 /** Refuse a store that cannot outlive the process, where durability is the point. */
 export function assertDurableRepositories(

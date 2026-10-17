@@ -8,6 +8,7 @@ import { stateRegistryRuntimeContractId } from "./state-scopes.ts";
 import { CONTROL_PLANE_READS_DIR_ENV, databaseIdentity } from "../control-plane/repository/incremental-reads.ts";
 import { routineProcessSlots, type WorkerMemoryRelease, type WorkerProcessSlots } from "../control-plane/workers/worker-slots.ts";
 import type { ReaderArtifactStore } from "../meetings/edge-store.ts";
+import { authorityPointerKey, readServedPointer } from "../meetings/edge-serving.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { runBoundedChildPass, ROUTINE_CHILD_TIMEOUT_MS, type BoundedChildLauncher } from "./bounded-child-pass.ts";
 import { admittedRuntimeChildEnvironment } from "./runtime-authority.ts";
@@ -113,8 +114,7 @@ export async function reconcileNationalStatePointers(input: {
 
 export async function retireNationalStatePointers(query: Query, store: ReaderArtifactStore | null, origins: readonly StateRetirementOrigin[]): Promise<number> {
   if (!origins.length) return 0;
-  const manifest = (await store?.readManifest())?.manifest;
-  if (!manifest) throw new Error("STATE_RETIREMENT_MANIFEST_MISSING");
+  if (!store) throw new Error("STATE_RETIREMENT_STORE_MISSING");
   for (const state of REGISTRY_STATES) {
     const descriptors = [
       { family: "registry-runtime" as const, contract: requiredManualProductionContract(stateRegistryRuntimeContractId(state)) },
@@ -131,7 +131,7 @@ export async function retireNationalStatePointers(query: Query, store: ReaderArt
     const byKey = new Map(rows.map(row => [row.key, row]));
     for (const { family, contract } of descriptors) {
       const key = `${contract.recordClass}:${contract.scope}`, row = byKey.get(key);
-      const ref = manifest.stateAuthorities?.[family]?.[state];
+      const ref = (await readServedPointer(store, authorityPointerKey(family, state)))?.ref;
       if (!row || row.source_id !== contract.sourceId || row.decision !== "GOOD"
         || row.current_version_id !== row.last_known_good_version_id || !ref?.key || !ref.sha
         || ref.version !== `${key}=${row.current_version_id}` &&

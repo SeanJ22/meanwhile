@@ -111,7 +111,6 @@ import { settleFundingHoldingAnswer } from "@/lib/funding/holding-answer";
 import {
   holdReaderAuthorityEdge, ensureReaderAuthorityEdge,
   READER_BALLOT_AUTHORITY_FAMILIES,
-  readReaderManifest,
 } from "@/lib/meetings/edge-serving";
 import {
   enterReaderAuthorityEdge,
@@ -481,9 +480,8 @@ export const metadata: Metadata = {
 };
 
 async function readBallotReaderEdge() {
-  const manifest = await readReaderManifest().catch(holdReaderAuthorityEdge);
-  const edge = manifest ? await ensureReaderAuthorityEdge(manifest, undefined, READER_BALLOT_AUTHORITY_FAMILIES).catch(error => holdReaderAuthorityEdge(error, manifest, READER_BALLOT_AUTHORITY_FAMILIES)) : null;
-  return { manifest, edge };
+  const edge = await ensureReaderAuthorityEdge(null, undefined, READER_BALLOT_AUTHORITY_FAMILIES).catch(error => holdReaderAuthorityEdge(error, READER_BALLOT_AUTHORITY_FAMILIES));
+  return { edge };
 }
 
 export default readerRoute("/ballot", async function BallotPage({
@@ -505,7 +503,7 @@ export default readerRoute("/ballot", async function BallotPage({
   const ballotLoaderFailures: string[] = [];
 
   let askOcdIds: string[] = [];
-  const readerEdgeRead = centroid ? readBallotReaderEdge() : Promise.resolve({ manifest: null, edge: null });
+  const readerEdgeRead = centroid ? readBallotReaderEdge() : Promise.resolve({ edge: null });
   const { edge } = await readerEdgeRead;
   let certainty = await withReaderAuthorityEdge(edge, () => zipCertainty(zip));
   const readerSelection = currentReaderSelection();

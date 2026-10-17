@@ -18,7 +18,7 @@ import { lexicalReading } from "../lib/ask/lexical-reading.ts";
 import { gateRecordsToSubject } from "../lib/ask/relevance.ts";
 import { validateAnswer } from "../lib/ask/validate.ts";
 import { publishFederalMoneyPartition, publishFederalMoneyProgress } from "../lib/federal-money/edge-publication.ts";
-import { publishReaderEdgeArtifacts } from "../lib/meetings/edge-serving.ts";
+import { publishPointers } from "./helpers/edge-pointers.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import { GET } from "../app/api/federal-money/route.ts";
 import { provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
@@ -162,12 +162,10 @@ test("the public federal-money route serves the real place artifact on its first
   try {
     const store = new LocalFileArtifactStore(directory);
     await publish(store);
-    const published = await publishReaderEdgeArtifacts(null, { sourceThrough: NOW, retrievedAt: NOW, promotedThrough: NOW }, {
-      store, now: NOW,
+    assert.deepEqual(await publishPointers(store, {
       authority: { "federal-directory": { value: syntheticFederalDirectory(), versionId: "reader-api:federal-directory" } },
       stateAuthorities: { "registry-runtime": stateRegistryArtifacts("reader-api:registry", ["AR"]) },
-    });
-    assert.equal(published.status, "PUBLISHED");
+    }, NOW), ["federal-directory", "registry-runtime/AR"]);
     process.env.WTP_READER_EDGE_DIR = directory;
     process.env.DATABASE_URL = "postgresql://do-not-open.invalid/federal-money-test";
     const started = performance.now();

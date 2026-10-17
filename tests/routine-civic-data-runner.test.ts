@@ -27,11 +27,10 @@ import {
   routineTaskDue,
   routineTaskFromContract,
   routineTaskSelection,
-  routinePreSpawnDeferral,
+  routineDeferral,
   routineSerialLane,
   routineFailureDomainFrontier,
   routineAdmissionClock,
-  ROUTINE_SERIAL_LANE_LAUNCH_MS,
 } from "../lib/civic-data/runner.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
 import { PEOPLE_SOURCE_CONTRACTS } from "../lib/civic-data/people-source-contracts.ts";
@@ -77,7 +76,7 @@ test("a pre-spawn memory deadline leaves source work queued without a missing-re
     console: { log: (line: string) => lines.push(line), error: (line: string) => lines.push(line) },
     safeFailure: (message: string) => message,
     boundedExecutionFailure: () => ({ taskId: "deferred", code: "CHILD_SPAWN_FAILED", detail: "WORKER_MEMORY_DEADLINE: work remains owed" }),
-    parseRoutineRunnerReceipt, classifyRoutineChildOutcome, routinePreSpawnDeferral,
+    parseRoutineRunnerReceipt, classifyRoutineChildOutcome, routineDeferral,
     controlPlaneUrlFromEnv: () => "postgres://memory", createPgRepositories: async () => repos,
     RUN_STARTED_AT: "2026-10-13T12:00:00.000Z", SUPERVISOR_CYCLE_ID: "publish-now-supervisor:host:2026-10-13T12:00:00.000Z",
     RUNNING_CODE_SHA: "a".repeat(40), HUNT_SOURCE_PROGRESS_LOG_KEY, OWNER_SURFACE_FORMAT_VERSION, assertAggregateOnly, Date,
@@ -109,19 +108,22 @@ test("a pre-spawn memory deadline leaves source work queued without a missing-re
   }
 });
 
-test("only an unstarted empty-output memory deadline or spent pass budget is an unsent deferral", () => {
+test("an unstarted empty-output memory deadline or spent pass budget, or a child ended at the pass deadline, is a deferral", () => {
   const run = { id: "held", termination: "SPAWN_FAILED" as const, status: null, signal: null,
     stdout: "", stderr: "", errorMessage: "WORKER_MEMORY_DEADLINE: work remains owed" };
-  assert.equal(routinePreSpawnDeferral(run, false), run.errorMessage);
+  assert.equal(routineDeferral(run, false), run.errorMessage);
   const budget = { ...run, errorMessage: "PASS_TIME_BUDGET: this pass's time is spent" };
-  assert.equal(routinePreSpawnDeferral(budget, false), budget.errorMessage, "a pass out of time leaves the rest owed for the next pass");
-  assert.equal(routinePreSpawnDeferral(run, true), null, "a child that started retains process/receipt failure semantics");
+  assert.equal(routineDeferral(budget, false), budget.errorMessage, "a pass out of time leaves the rest owed for the next pass");
+  assert.equal(routineDeferral(run, true), null, "a child that started retains process/receipt failure semantics");
+  const cut = { ...run, termination: "TIMED_OUT" as const, signal: "SIGTERM" as const, stdout: "partial", errorMessage: "PASS_TIME_BUDGET: the pass reached its deadline; the next pass continues this work" };
+  assert.equal(routineDeferral(cut, true), cut.errorMessage, "a child the pass deadline ended leaves its work owed");
+  assert.equal(routineDeferral({ ...cut, errorMessage: "NO_PROGRESS_PAUSED: no new publication" }, true), null);
   for (const changed of [
     { ...run, termination: "EXITED" as const }, { ...run, termination: "TIMED_OUT" as const },
     { ...run, stdout: "RCD_RECEIPT={}" }, { ...run, stderr: "child emitted output" },
     { ...run, status: 0 }, { ...run, signal: "SIGTERM" as const },
     { ...run, errorMessage: "HTTP status 429" }, { ...run, errorMessage: "child mentioned WORKER_MEMORY_DEADLINE: later" },
-  ]) assert.equal(routinePreSpawnDeferral(changed, false), null);
+  ]) assert.equal(routineDeferral(changed, false), null);
 });
 
 const HEAP_OOM_STDERR = [
@@ -161,7 +163,7 @@ test("a crashed source child is logged by name, leaves its work owed and does no
     laneLastEndedMs: new Map(), unsettledSourceRuns: new Set([id]), startedSourceChildren: new Set([id]), attempted: 1,
     supervisorFailures: failures, crashedTasks,
     console: { log: (line: string) => lines.push(line), error: (line: string) => lines.push(line) },
-    safeFailure: (message: string) => message, routinePreSpawnDeferral, childCrash,
+    safeFailure: (message: string) => message, routineDeferral, childCrash,
     recordTaskDoorOutcome: async (...args: unknown[]) => { doorOutcomes.push(args); },
     controlPlaneUrlFromEnv: () => "postgres://memory", createPgRepositories: async () => repos,
     RUN_STARTED_AT: "2026-10-14T13:00:00.000Z", SUPERVISOR_CYCLE_ID: "routine-civic-data-supervisor:host:2026-10-14T13:00:00.000Z",
@@ -621,6 +623,16 @@ test("one unresolved child cannot suppress sibling launch or classification", as
   }).kind, "VERIFIED_SOURCE_SUCCESS", "the sibling remains independently classifiable after another timeout");
 });
 
+test("a source child that keeps publishing ends at the pass deadline and its work stays owed", async () => {
+  const started = Date.now();
+  const [result] = await runBoundedChildPass([{ id: "national-place:85001", executable: process.execPath,
+    args: ["-e", "let n = 0; setInterval(() => console.log('RCD_PROGRESS=' + JSON.stringify({ key: 'k' + n++, records: 1 })), 50)"] }],
+  { cwd: process.cwd(), env: process.env, deadlineMs: Date.now() + 600 });
+  assert.equal(result!.termination, "TIMED_OUT");
+  assert.ok(Date.now() - started < 5_000, "new publications renew the quiet timer, never the deadline");
+  assert.equal(routineDeferral(result!, true), result!.errorMessage);
+});
+
 test("a launcher exception is contained as one result after every sibling starts", async () => {
   const launched: string[] = [];
   const results = await runBoundedChildPass([
@@ -932,6 +944,7 @@ test("the standing scheduler advances a free lane on a later tick without overla
     {
       id: "routine",
       everyMs: 10,
+      budgetMs: 10,
       run: async () => {
         routineStarts += 1;
         await routinePending;
@@ -940,6 +953,7 @@ test("the standing scheduler advances a free lane on a later tick without overla
     {
       id: "intake",
       everyMs: 10,
+      budgetMs: 10,
       run: async () => {
         intakeStarts += 1;
         intakeActive += 1;
@@ -1377,7 +1391,7 @@ test("each admitted meeting source/body contract is its own concurrent child bou
   assert.doesNotMatch(runner, /task\.id === "meetings"|ONLY\.has\("meetings"\)/);
 });
 
-test("ordinary final publication still serves all selected sources when federal minute checks are active", async () => {
+test("an ordinary pass publishes the sources it ran when federal minute checks are active; publish-now finishes its checks", async () => {
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   const start = runner.indexOf("const finalReaderEdge =");
   const end = runner.indexOf("\nif (retirementOrigins !== null", start);
@@ -1388,16 +1402,16 @@ test("ordinary final publication still serves all selected sources when federal 
     const final = { status: "PUBLISHED", families: "all-selected" };
     const periodic = { status: "PUBLISHED", families: "periodic" };
     const context = {
-      PUBLISH_NOW: publishNow, ONLY: new Set(selected.map(task => task.id)), selectedTasks: selected, store: {},
+      PUBLISH_NOW: publishNow, selectedTasks: selected, ranThisPass: new Set(["openfema"]),
       publishNowEdgeChecks: { stop: async () => periodic, run: async () => { calls.push("periodic"); return periodic; } },
-      publishSupervisorReaderEdge: async (_store: unknown, _at: string, tasks: unknown) => { calls.push(tasks); return final; },
+      publishChangedReaderEdge: async (tasks: unknown) => { calls.push(tasks); return final; },
       readerEdgeSupervisorFailure: () => null, supervisorFailures: [],
     };
     const complete = runInNewContext(transpileModule(`async function complete() {\n${runner.slice(start, end)}\nreturn readerEdge;\n}\ncomplete;`, {
       compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.CommonJS },
     }).outputText, context) as () => Promise<unknown>;
     const result = await complete();
-    assert.deepEqual(calls, publishNow ? ["periodic"] : [selected]);
+    assert.deepEqual(calls, publishNow ? ["periodic"] : [[{ id: "openfema" }]]);
     assert.equal(result, publishNow ? periodic : final);
   }
 });
@@ -1419,12 +1433,12 @@ test("Reader readback repair covers the observable registry independently of sou
   assert.match(child, /repairMeetingReaderProjectionReadbacks\([^;]*\{ aggregate, attestor \},?\s*\)/);
   assert.match(child, /const attestor = readerVerifierClosureAttestor\(\);/);
   assert.match(child, /repairRoutineReaderProjectionReadback\(store, contract, observedAt, undefined, \{ attestor \}\)/);
-  assert.doesNotMatch(child, /preparePublishedMeetingSnapshot|publishReaderEdgeArtifacts/);
-  assert.match(runner, /await publishNowEdgeChecks\?\.stop\(\);[\s\S]*?const finalReaderEdge = PUBLISH_NOW && publishNowEdgeChecks \? await publishNowEdgeChecks\.run\(\)\s*:\s*await publishSupervisorReaderEdge\(store, new Date\(\)\.toISOString\(\), ONLY === null \? null : selectedTasks\)/,
-    "publish-now completes its serialized pointer sweep while ordinary repair keeps the selected source scope");
+  assert.doesNotMatch(child, /preparePublishedMeetingSnapshot|publishReaderMeetings/);
+  assert.match(runner, /await publishNowEdgeChecks\?\.stop\(\);[\s\S]*?const finalReaderEdge = PUBLISH_NOW && publishNowEdgeChecks \? await publishNowEdgeChecks\.run\(\)\s*:\s*await publishChangedReaderEdge\(selectedTasks\.filter\(task => ranThisPass\.has\(task\.id\)\)\)/,
+    "publish-now completes its pointer sweep while an ordinary pass publishes what it ran");
   const publicationChecks = runner.slice(runner.indexOf("const publishNowEdgeChecks ="), runner.indexOf("const admissionNowMs ="));
-  assert.match(publicationChecks, /publishSupervisorReaderEdge\(store, new Date\(\)\.toISOString\(\), PUBLISH_NOW \? null\s*:\s*periodicFederalTasks\)/,
-    "publish-now checks all promoted families while ordinary minute checks publish the selected federal sources");
+  assert.match(publicationChecks, /const outcome = await publishChangedReaderEdge\(\[\]\)/,
+    "minute checks publish only what was promoted since the edge last published");
   assert.equal(child.match(/readMeetingsProjection\(/g)?.length, 1, "the child composes in one place");
   assert.match(child, /serializeRoutineReaderRepairRecord/);
   assert.doesNotMatch(child, /processRegisteredRoutineCandidate|promoteMeetingPartitions|\.promote\(/);
@@ -1456,8 +1470,8 @@ test("the pilot surfaces Reader failures without converting them into source or 
 
 test("the pilot awaits independently bounded routine and intake children without overlapping ticks", () => {
   const pilot = readFileSync("scripts/pilot-runner.mts", "utf8");
-  assert.match(pilot, /async function runRoutineCivicData\(\): Promise<void>/);
-  assert.match(pilot, /async function runIntakeRuntime\(\): Promise<void>/);
+  assert.match(pilot, /async function runRoutineCivicData\(deadlineMs: number\): Promise<void>/);
+  assert.match(pilot, /async function runIntakeRuntime\(deadlineMs: number\): Promise<void>/);
   assert.match(pilot, /runRuntimeChildren\(\[\{\s*id:\s*"routine-civic-data"/);
   assert.match(pilot, /runRuntimeChildren\(\[\{\s*id:\s*"intake-runtime"/);
   assert.doesNotMatch(pilot, /ROUTINE_DATA_TIMEOUT_MS|PUBLISH_TIMEOUT_MS/);
@@ -2203,11 +2217,6 @@ test("national people children share one serial lane: one at a time, back to bac
 
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   assert.match(runner, /serialLane: routineSerialLane\(pending\.command\)/);
-  assert.match(runner, /command\.serialLane !== undefined && Date\.now\(\) >= Date\.parse\(RUN_STARTED_AT\) \+ ROUTINE_SERIAL_LANE_LAUNCH_MS[\s\S]{0,40}throw new Error\(`PASS_TIME_BUDGET: /);
-  assert.ok(routinePreSpawnDeferral({ id: first.id, termination: "SPAWN_FAILED", status: null, signal: null, stdout: "", stderr: "",
-    errorMessage: "PASS_TIME_BUDGET: serial:scripts/national-people-refresh.mts has had this pass's turn; the next pass continues it" }, false),
-    "a lane past its turn leaves the rest owed for the next pass");
-  assert.equal(ROUTINE_SERIAL_LANE_LAUNCH_MS, 30 * 60_000);
 });
 
 test("scoped source passes repair only matching reader pointers, including narrow meeting domains", () => {

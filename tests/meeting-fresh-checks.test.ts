@@ -15,13 +15,11 @@ import {
 import { clearPromotedReadModelCache } from "../lib/civic-data/read-model.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { VALIDATION_CHECKS, type RoutineCandidate, type ValidationReceipt } from "../lib/civic-data/types.ts";
-import { AUTHORITY_FAMILIES, type ReaderManifest } from "../lib/meetings/edge-artifacts.ts";
+import type { ReaderManifest } from "../lib/meetings/edge-artifacts.ts";
 import {
-  publishReaderEdgeArtifacts,
+  publishReaderMeetings,
   publishReaderEdgeChecks,
   readReaderEdgeMeetings,
-  type PublishAuthority,
-  type PublishRegistrations,
 } from "../lib/meetings/edge-serving.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import {
@@ -226,11 +224,6 @@ test("controlled clock, the composing reader: a receipt-only period advances Las
   assert.deepEqual(collectedOf(changed.value, PIMA), [checkedAt], "Pima keeps its receipt's check");
 });
 
-const VALUES: PublishAuthority = Object.fromEntries(AUTHORITY_FAMILIES.map((family) => [family, { value: { family }, versionId: `${family}-v1` }]));
-const CARRIED: PublishAuthority = Object.fromEntries(AUTHORITY_FAMILIES.map((family) => [family, { versionId: `${family}-v1`, carried: true as const }]));
-const REGISTRATIONS: PublishRegistrations = { az: { value: { state: "az" }, versionId: "reg-az-v1" } };
-const REGISTRATIONS_CARRIED: PublishRegistrations = { az: { versionId: "reg-az-v1", carried: true } };
-
 test("controlled clock, the prepared serving copy and the edge: a receipt republishes the manifest alone, reads no row, and every reader path says when it was checked", async () => {
   clearPreparedMeetingsProjectionCache();
   const store = new MemoryRoutineDataStore();
@@ -246,8 +239,8 @@ test("controlled clock, the prepared serving copy and the edge: a receipt republ
   const served = await readPreparedMeetingsProjection({ store, now: at(T1, 60_000) });
   assert.equal(served.kind, "PROMOTED");
   if (served.kind !== "PROMOTED") return;
-  const full = await publishReaderEdgeArtifacts(served.value, { sourceThrough: null, retrievedAt: served.metadata.retrievedAt, promotedThrough: null }, {
-    store: edge, now: at(T1, 60_000), authority: VALUES, registrations: REGISTRATIONS,
+  const full = await publishReaderMeetings(served.value, { sourceThrough: null, retrievedAt: served.metadata.retrievedAt, promotedThrough: null }, {
+    store: edge, now: at(T1, 60_000),
     checks: { composition: first.composition, freshChecks: first.freshChecks },
   });
   assert.equal(full.status, "PUBLISHED");
@@ -328,8 +321,8 @@ test("controlled clock, the prepared serving copy and the edge: a receipt republ
   const readBack = await readPreparedMeetingsProjection({ store, now: at(T4, 2 * 60_000) });
   assert.equal(readBack.kind, "PROMOTED");
   if (readBack.kind !== "PROMOTED") return;
-  const published = await publishReaderEdgeArtifacts(readBack.value, { sourceThrough: null, retrievedAt: readBack.metadata.retrievedAt, promotedThrough: null }, {
-    store: edge, now: at(T4, 60_000), authority: CARRIED, registrations: REGISTRATIONS_CARRIED,
+  const published = await publishReaderMeetings(readBack.value, { sourceThrough: null, retrievedAt: readBack.metadata.retrievedAt, promotedThrough: null }, {
+    store: edge, now: at(T4, 60_000),
     checks: { composition: changed.composition, freshChecks: changed.freshChecks },
   });
   assert.equal(published.status, "PUBLISHED");

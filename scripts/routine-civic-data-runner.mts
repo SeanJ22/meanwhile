@@ -50,9 +50,9 @@ import {
   routineAdmissionClock,
   unchangedRoutineProtocolFailure,
   routineTaskSelection,
-  routinePreSpawnDeferral,
+  routineDeferral,
   routineSerialLane,
-  ROUTINE_SERIAL_LANE_LAUNCH_MS,
+  ROUTINE_PASS_BUDGET_MS,
   sittingWindowSignals,
   routineUnreceiptedSupervisorAttemptHistory,
   type RoutineSupervisorAttemptHistory,
@@ -110,6 +110,7 @@ import { loadPublishedScopeLookupState } from "../lib/census-geography/scope-loo
 import { readIntents, RESEARCH_INTENT_LOG_KEY } from "../lib/control-plane/scheduler/research-policy.ts";
 import { admittedHuntSourceScopes, huntSourceTasks } from "../lib/civic-data/hunt-source-tasks.ts";
 import { PUBLISH_NOW_PASS_BUDGET_MS, PUBLISH_NOW_SINGLETON_PORT, publishNowDoorTasks, publishNowHasNothingOwed, readOwedFactItems, readPublishNowWorkerTasks, readWorkerPublicationItems, startPublishNowEdgeChecks } from "../lib/civic-data/publish-now.ts";
+import { passDeadlineFromEnv } from "../lib/ops/independent-runtime-pass.ts";
 import { publishOwedRosterFacts } from "../lib/civic-data/worker-roster-publication.ts";
 import { publishOwedCommentFacts } from "../lib/civic-data/worker-comment-facts.ts";
 import { runHourlyProbes } from "../lib/doors/hourly-check.ts";
@@ -158,7 +159,8 @@ import { startCivicReadCacheHost } from "../lib/db/civic-read-cache-host.ts";
 import { placeSourceLaunchOrder, withNationalPlaceTasks } from "../lib/hunt/place-source-admission.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { flushDatabaseTransfer } from "../lib/db/transfer.ts";
-import { publishSupervisorReaderEdge, readerEdgeSupervisorFailure, type ReaderEdgePublicationOutcome } from "../lib/civic-data/reader-edge-publication.ts";
+import { publishReaderStateFacts, publishSupervisorReaderEdge, readerEdgeSupervisorFailure, type ReaderEdgePublicationOutcome } from "../lib/civic-data/reader-edge-publication.ts";
+import { readReaderEdgeChanges, type EdgePointer } from "../lib/civic-data/reader-edge-changes.ts";
 import { resolveReaderArtifactWriteStore } from "../lib/meetings/edge-store.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
@@ -184,8 +186,11 @@ const ROOT = process.cwd();
 // Admit the supervisor before opening hosts or changing durable source state.
 const FORCE = process.argv.includes("--force");
 const PUBLISH_NOW = process.argv.includes("--publish-now");
-/* A publish-now pass launches no child after its budget, so the runner can hand off a release between passes; what was not started stays owed. */
-const PASS_LAUNCH_DEADLINE_MS = PUBLISH_NOW ? Date.now() + PUBLISH_NOW_PASS_BUDGET_MS : Number.POSITIVE_INFINITY;
+/* The pass ends by its deadline: sources launch and run in the first two thirds of its budget, repairs until the last sixth,
+   which settles and publishes what ran. Whatever did not finish stays owed to the next pass. */
+const PASS_DEADLINE_MS = Math.min(passDeadlineFromEnv(), Date.now() + (PUBLISH_NOW ? PUBLISH_NOW_PASS_BUDGET_MS : ROUTINE_PASS_BUDGET_MS));
+const PASS_LAUNCH_DEADLINE_MS = PASS_DEADLINE_MS - Math.floor((PASS_DEADLINE_MS - Date.now()) / 3);
+const PASS_REPAIR_DEADLINE_MS = PASS_DEADLINE_MS - Math.floor((PASS_DEADLINE_MS - Date.now()) / 6);
 if (PUBLISH_NOW && FORCE) throw new Error("Publish-now cannot force unrelated source work.");
 const ADMITTED_CODE_SHA = assertRuntimeAuthority({ capabilities: ["ROUTINE_SUPERVISOR"] }).sha;
 
@@ -293,12 +298,15 @@ const workerToolsHost = ROUTINE_DATA_PROCESS_LEASE && controlPlaneUrlFromEnv()
 const routineMemorySlots = routineProcessSlots();
 const childMemoryReleases = new Map<string, () => void>();
 const startedSourceChildren = new Set<string>();
+/** Every child this pass started: what it ran is what its edge publish carries. */
+const ranThisPass = new Set<string>();
 async function acquireChildMemory(command: BoundedChildCommand): Promise<void> {
   const script = command.args.find(arg => /[.](?:mts|ts)$/.test(arg))?.split(/[\\/]/).at(-1) ?? "";
   const release = await routineMemorySlots.acquire(`${command.id}/${script}`, Math.min(Date.now() + ROUTINE_CHILD_TIMEOUT_MS, PASS_LAUNCH_DEADLINE_MS));
   childMemoryReleases.set(command.id, release);
   (command as { onStarted?: (pid: number) => void }).onStarted = pid => {
     startedSourceChildren.add(command.id);
+    ranThisPass.add(command.id);
     release.observe?.(pid);
   };
 }
@@ -437,9 +445,16 @@ async function readRoutineDueRequests(): Promise<{ readonly requests: readonly R
 /** The publish-now outbox's cursor, and where this pass started reading; a process failure keeps it, so that window is read again. */
 const PUBLISH_NOW_CURSOR = "publish-now";
 let publishNowPassStartedAt: string | null = null;
-async function settlePublishNowCursor(failures: number): Promise<void> {
-  if (publishNowPassStartedAt === null || failures > 0) return;
-  try { await writePassCursor(readerFactDb().query, PUBLISH_NOW_CURSOR, publishNowPassStartedAt); }
+/** The cursor moves to the pass start, or back to the oldest item whose publication this pass left owed, so that item is read again. */
+async function settlePublishNowCursor(tasks: readonly RoutineSourceTask[], failures: readonly SupervisorFailure[]): Promise<void> {
+  if (publishNowPassStartedAt === null || failures.some(failure => failure.taskId === "fact-publication")) return;
+  const owed = tasks.filter(task => !ranThisPass.has(task.id) || failures.some(failure => failure.taskId === task.id))
+    .flatMap(task => task.ownerInvocation?.workItemIds ?? []);
+  try {
+    const [oldest] = owed.length ? await neon(controlPlaneUrlFromEnv()!).query("SELECT min(changed_at) AS at FROM cp_work_items WHERE id = ANY($1::text[])", [owed]) : [];
+    const position = oldest?.at ? [publishNowPassStartedAt, new Date(Date.parse(String(oldest.at)) - 1).toISOString()].sort()[0]! : publishNowPassStartedAt;
+    await writePassCursor(readerFactDb().query, PUBLISH_NOW_CURSOR, position);
+  }
   catch (error) { console.log(`RCD_PUBLISH_NOW_CURSOR not saved — ${safeFailure(sanitizedErrorDiagnostic(error))}; the next pass reads the same window again`); }
 }
 
@@ -674,9 +689,29 @@ async function recordHuntSourceProgress(task: RoutineSourceTask, stage: HuntSour
 const periodicFederalTasks = STANDING_SOURCE_TASKS.filter(task => task.recordClass === "FEDERAL_MONEY" &&
   (!ONLY || ONLY.has(task.id) || (task.registeredContractId !== undefined && ONLY.has(task.registeredContractId))));
 const periodicSourceEdge = PUBLISH_NOW || periodicFederalTasks.length > 0;
-const publishNowEdgeStore = periodicSourceEdge ? resolveReaderArtifactWriteStore() : null;
+const edgeStore = resolveReaderArtifactWriteStore();
+const edgeStoreName = edgeStore?.kind === "local-file" ? "local folder" : edgeStore?.kind === "netlify-blobs" ? "Netlify Blobs" : "not configured";
+/** Publishes what moved since the edge last published, with what this pass ran; an unchanged edge is neither read nor written. */
+async function publishChangedReaderEdge(ran: readonly EdgePointer[]): Promise<ReaderEdgePublicationOutcome> {
+  if (edgeStore) try {
+    const facts = await publishReaderStateFacts(readerFactDb().query, edgeStore, new Date().toISOString());
+    if (facts.published.length || facts.raced.length) console.log(JSON.stringify({ readerEdgeStateFacts: facts }));
+  } catch (error) {
+    supervisorFailures.push({ taskId: "state-facts-publication", code: "STATE_FACTS_PUBLISH_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
+  }
+  const changes = await readReaderEdgeChanges(readerFactDb().query);
+  const selected = [...changes.pointers, ...ran];
+  if (selected.length === 0) {
+    const unchanged: ReaderEdgePublicationOutcome = { ok: true, readerEdge: "CURRENT", store: edgeStoreName, sequence: null, detail: null };
+    console.log(JSON.stringify(unchanged));
+    return unchanged;
+  }
+  const outcome = await publishSupervisorReaderEdge(store, new Date().toISOString(), selected);
+  if (outcome.ok) await changes.save();
+  return outcome;
+}
 const publishNowEdgeChecks = periodicSourceEdge ? startPublishNowEdgeChecks({
-  store: publishNowEdgeStore?.kind === "local-file" ? "local folder" : publishNowEdgeStore?.kind === "netlify-blobs" ? "Netlify Blobs" : "not configured",
+  store: edgeStoreName,
   readPaused: async () => {
     const connection = controlPlaneUrlFromEnv();
     if (!connection) throw new Error("control-plane reporting connection is unavailable");
@@ -684,8 +719,7 @@ const publishNowEdgeChecks = periodicSourceEdge ? startPublishNowEdgeChecks({
     return readIntents([...(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY))]).runnerPause.paused;
   },
   check: async () => {
-    const outcome = await publishSupervisorReaderEdge(store, new Date().toISOString(), PUBLISH_NOW ? null
-      : periodicFederalTasks);
+    const outcome = await publishChangedReaderEdge([]);
     const failure = readerEdgeSupervisorFailure(outcome);
     if (failure) supervisorFailures.push(failure);
     return outcome;
@@ -778,7 +812,7 @@ const selectedTasks = [...STANDING_SOURCE_TASKS, ...candidateFindingTasks, ...hu
   .filter((task) => !ONLY || ONLY.has(task.id) || (task.registeredContractId !== undefined && ONLY.has(task.registeredContractId)));
 if (PUBLISH_NOW && selectedTasks.length === 0) {
   const readerEdge = (await publishNowEdgeChecks!.stop())!;
-  await settlePublishNowCursor(supervisorFailures.length);
+  await settlePublishNowCursor(selectedTasks, supervisorFailures);
   if (publishNowHasNothingOwed(PUBLISH_NOW, selectedTasks.length, supervisorFailures.length, readerEdge)) {
     console.log("publish-now: nothing owed this minute");
   } else {
@@ -1086,15 +1120,13 @@ const sourcePass = runMeetingDiscoveryChain(pendingRuns, runs => runBoundedChild
     cwd: ROOT,
     env: process.env,
     timeoutMs: ROUTINE_CHILD_TIMEOUT_MS,
+    deadlineMs: PASS_LAUNCH_DEADLINE_MS,
     maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES,
     concurrency: sourceConcurrency,
     // Two reads of one host in this pass start at least a minute apart.
     sameDomainGapMs: ROUTINE_SAME_DOMAIN_CHILD_GAP_MS,
     onStarting: async (command, index) => {
       if (Date.now() >= PASS_LAUNCH_DEADLINE_MS) throw new Error("PASS_TIME_BUDGET: this pass's time is spent, so release handoff can run before the next one");
-      if (command.serialLane !== undefined && Date.now() >= Date.parse(RUN_STARTED_AT) + ROUTINE_SERIAL_LANE_LAUNCH_MS) {
-        throw new Error(`PASS_TIME_BUDGET: ${command.serialLane} has had this pass's turn; the next pass continues it`);
-      }
       await acquireChildMemory(command);
       await recordHuntSourceProgress(runs[index]!.task, "COLLECTING_AND_VERIFYING", "The source command has a worker slot. Collecting current source records and running the existing identity, content, freshness and reader checks. No model call is used.");
     },
@@ -1119,12 +1151,12 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
     console.error(`RCD_TASK ${pending.id}: SUPERVISOR_FAILURE (CANNOT_TELL) — ${detail}`);
     return;
   }
-  const deferral = routinePreSpawnDeferral(run, startedSourceChildren.has(run.id));
+  const deferral = routineDeferral(run, startedSourceChildren.has(run.id));
   if (deferral !== null) {
     attempted -= 1;
     // Admission already wrote this pass's QUEUED progress row, and append-only history refuses a second one.
     const detail = safeFailure(deferral);
-    console.log(`RCD_DEFER ${pending.task.id}: ${detail}; no child spawned; source work remains owed`);
+    console.log(`RCD_DEFER ${pending.task.id}: ${detail}; source work remains owed`);
     return;
   }
   const crash = childCrash(run);
@@ -1322,6 +1354,11 @@ function settleReaderDomain(domain: RoutineReaderRepairDomain, run: BoundedChild
     supervisorFailures.push(...reconciled.failures);
     return;
   }
+  const deferral = routineDeferral(run, run.termination !== "SPAWN_FAILED");
+  if (deferral !== null) {
+    console.log(`RCD_DEFER ${domain.id}: ${safeFailure(deferral)}; the reader repair remains owed`);
+    return;
+  }
   const executionFailure = readerDomainExecutionFailure(domain, run);
   const reconciled = reconcileRoutineReaderRepairDomain(
     domain,
@@ -1376,9 +1413,13 @@ function startReaderRepair(
       cwd: ROOT,
       env: process.env,
       timeoutMs: ROUTINE_READER_SINGLE_TIMEOUT_MS,
+      deadlineMs: PASS_REPAIR_DEADLINE_MS,
       maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES,
       concurrency: ROUTINE_READER_CHILD_CONCURRENCY,
-      onStarting: acquireChildMemory,
+      onStarting: async (command) => {
+        if (Date.now() >= PASS_REPAIR_DEADLINE_MS) throw new Error("PASS_TIME_BUDGET: this pass's time is spent; the next pass repairs this reader");
+        await acquireChildMemory(command);
+      },
       onSettled: (run, index) => {
         const domain = readerLaunch[index]!;
         try {
@@ -1397,8 +1438,8 @@ function startReaderRepair(
 const hotReadClocks = new Map(clockReads.flatMap((read) => read.ok ? [[read.task.id, read.clock] as const] : []));
 const launchedTaskIds = new Set(pendingRuns.map(({ id }) => id));
 const hotReadLimitsMs = {
-  SOURCE: routinePassSourceCatchUpDeadlineMs(Date.parse(RUN_STARTED_AT), readerDomains),
-  REPAIR: routinePassWorkDeadlineMs(Date.parse(RUN_STARTED_AT), readerDomains),
+  SOURCE: Math.min(PASS_LAUNCH_DEADLINE_MS, routinePassSourceCatchUpDeadlineMs(Date.parse(RUN_STARTED_AT), readerDomains)),
+  REPAIR: Math.min(PASS_REPAIR_DEADLINE_MS, routinePassWorkDeadlineMs(Date.parse(RUN_STARTED_AT), readerDomains)),
 } as const;
 const hotReadsPastLimit = new Set<string>();
 
@@ -1449,6 +1490,7 @@ async function runHotRead(task: RoutineSourceTask, atMs: number): Promise<void> 
     cwd: ROOT,
     env: process.env,
     timeoutMs: ROUTINE_CHILD_TIMEOUT_MS,
+    deadlineMs: hotReadLimitsMs.REPAIR,
     maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES,
     concurrency: 1,
     onStarting: acquireChildMemory,
@@ -1486,7 +1528,7 @@ if (!PUBLISH_NOW && ONLY === null) {
   }
 }
 const finalReaderEdge = PUBLISH_NOW && publishNowEdgeChecks ? await publishNowEdgeChecks.run()
-  : await publishSupervisorReaderEdge(store, new Date().toISOString(), ONLY === null ? null : selectedTasks);
+  : await publishChangedReaderEdge(selectedTasks.filter(task => ranThisPass.has(task.id)));
 const readerEdge = PUBLISH_NOW && publishNowEdgeChecks ? (await publishNowEdgeChecks.stop())! : finalReaderEdge;
 const readerEdgeFailure = readerEdgeSupervisorFailure(finalReaderEdge);
 if (readerEdgeFailure && !(PUBLISH_NOW && publishNowEdgeChecks)) supervisorFailures.push(readerEdgeFailure);
@@ -1626,7 +1668,7 @@ console.log("RCD_RUN=" + JSON.stringify({
 // A source refusal is a durable data-plane event, not a failed supervisor
 // process. Only a process/protocol failure makes the runner nonzero.
 if (supervisorFailures.length > 0) process.exitCode = 2;
-await settlePublishNowCursor(supervisorFailures.length);
+await settlePublishNowCursor(selectedTasks, supervisorFailures);
 step = "saving the daily database byte counter";
 if (!await flushDatabaseTransfer()) console.warn("RCD_TRANSFER daily byte counter could not be saved; data results are unchanged.");
 step = "releasing the host-local singleton";

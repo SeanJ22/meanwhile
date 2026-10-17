@@ -63,7 +63,7 @@ test("a state executive remains readable when the federal directory is unavailab
   const state = executive.stateOcdId.split(":").at(-1)!.toUpperCase();
   const artifacts = stateRegistryArtifacts(projection.versionId, [state]);
   await withReaderAuthorityEdge({ edgeOnly: true, selection: { states: [state], keys: new Set([executive.stateOcdId, executive.holder.id]) }, stateAuthorities: {
-    states: { "registry-runtime": new Set([state]) },
+    families: new Set(["registry-runtime"] as const),
     load: async (family, selectedState) => family === "registry-runtime" && selectedState === state ? artifacts[state].value : null,
   } }, async () => {
     assert.equal((await seatHolderById(executive.holder.id))?.name, executive.holder.name);
@@ -77,7 +77,7 @@ test("a state executive remains readable when the federal directory is unavailab
 test("a direct state person reaches a ballot card without opening the registry bridge", async () => {
   const value = syntheticStateLegislators("US-NJ");
   const person = value.roster.officeholders[0];
-  await withReaderAuthorityEdge({ edgeOnly: true, stateLegislators: { jurisdictions: new Set(["US-NJ"]), load: async jurisdiction => {
+  await withReaderAuthorityEdge({ edgeOnly: true, stateLegislators: { load: async jurisdiction => {
     assert.equal(jurisdiction, "US-NJ");
     return { value, versionId: "test:state-only" };
   } } }, async () => {

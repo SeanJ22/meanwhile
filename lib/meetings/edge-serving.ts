@@ -55,6 +55,7 @@ import {
   MEETING_BODY_FORMAT_VERSION,
   type MeetingBodyRecord,
   type MeetingBodyChecks,
+  type MeetingBodyRow,
   type MeetingBodyPointer,
   type MeetingStateIndex,
 } from "./body-records.ts";
@@ -966,6 +967,10 @@ const NOT_A_PLACE: MeetingsProjectionReadResult = {
     sourceThrough: null, retrievedAt: null, promotedAt: null, stale: "UNKNOWN", staleAt: null },
 };
 
+function meetingsUnreachable(detail: string): MeetingsProjectionReadResult {
+  return { kind: "STORE_UNREACHABLE", value: null, metadata: NOT_A_PLACE.metadata, code: "STORE_READ_FAILED", detail };
+}
+
 /** A place whose government could not be resolved holds no meetings; the answer says so rather than naming a stand-in. */
 export function emptyMeetingsRead(now: string = new Date().toISOString()): MeetingsProjectionReadResult {
   return { kind: "PROMOTED", detail: "The place resolved to no government.", metadata: { ...NOT_A_PLACE.metadata, stale: "UNKNOWN" },
@@ -1006,29 +1011,46 @@ async function loadBody(
     const history = !wantHistory || record.history === null ? null : await readMeetingBlob<MeetingsSnapshot>(record.history, store, state, "meeting-history");
     if (agenda !== null && (history !== null || !wantHistory || record.history === null)) return { key: pointer.record, checks: pointer.checks, record, agenda, history, fromEdge: true };
   }
-  const row = await readMeetingBodyRow(state, bodyId, options.dataStore);
+  let row: MeetingBodyRow | null;
+  let history: MeetingsSnapshot | null = null;
+  try {
+    row = await readMeetingBodyRow(state, bodyId, options.dataStore);
+    if (row !== null && wantHistory) history = await readMeetingBodyHistory(row, options.dataStore);
+  } catch {
+    return null;
+  }
   if (row === null) return null;
   return {
     key: null, checks: { checkedAt: null, routes: {} }, fromEdge: false, agenda: wantAgenda ? row.snapshot.agendaDocuments : [],
     record: { formatVersion: MEETING_BODY_FORMAT_VERSION, bodyId, snapshot: { ...row.snapshot, agendaDocuments: [] }, agenda: null, history: null,
       sourceThrough: row.sourceThrough, retrievedAt: row.retrievedAt, promotedThrough: row.promotedThrough },
-    history: wantHistory ? await readMeetingBodyHistory(row, options.dataStore) : null,
+    history,
   };
 }
 
-/** One state's index: the edge's when it supplies one, else the database row, else none. */
+interface StateIndexRead {
+  readonly index: MeetingStateIndex | null;
+  /** The index exists but could not be read from the edge or the database, which is not the same as having none. */
+  readonly failed: boolean;
+}
+
+/** One state's index: the edge's when it supplies one, else the database row. A state a published manifest does not list has none. */
 async function loadStateIndex(
   state: string,
   manifest: ReaderManifest | null,
   store: ReaderArtifactStore | null,
   dataStore: ReaderEdgeMeetingsOptions["dataStore"],
-): Promise<MeetingStateIndex | null> {
+): Promise<StateIndexRead> {
   const ref = manifest?.meetingStates?.[state];
   if (store && ref) {
     const served = await readServedMeetingIndex(state, ref, store);
-    if (served) return served;
-  } else if (manifest?.meetingStates !== undefined) return null;
-  return readMeetingIndexRow(state, dataStore);
+    if (served) return { index: served, failed: false };
+  } else if (manifest?.meetingStates !== undefined) return { index: null, failed: false };
+  try {
+    return { index: await readMeetingIndexRow(state, dataStore), failed: false };
+  } catch {
+    return { index: null, failed: true };
+  }
 }
 
 export interface StateMeetingBody {
@@ -1050,7 +1072,8 @@ export async function* readMeetingBodies(options: Pick<ReaderEdgeMeetingsOptions
   const states = (options.states ?? Object.keys(manifest?.meetingStates ?? {})).map((state) => state.toUpperCase());
   const settings = options.settings ?? await readReaderMeetingSettings();
   for (const state of states) {
-    const index = await loadStateIndex(state, manifest, store, options.dataStore);
+    const { index, failed } = await loadStateIndex(state, manifest, store, options.dataStore);
+    if (failed) throw new Error(`MEETING_INDEX_UNREADABLE:${state}`);
     const ids = index?.bodies ?? [];
     for (let at = 0; at < ids.length; at += WALK_BATCH) {
       const batch = ids.slice(at, at + WALK_BATCH);
@@ -1067,6 +1090,14 @@ export async function* readMeetingBodies(options: Pick<ReaderEdgeMeetingsOptions
       }
     }
   }
+}
+
+/** The ids of the bodies these states' indexes list, for questions that name a body of the reader's state. */
+export async function readHeldBodyIds(options: Pick<ReaderEdgeMeetingsOptions, "manifest" | "store"> & { readonly states: readonly string[] }): Promise<ReadonlySet<string>> {
+  const store = options.store === undefined ? resolveReaderArtifactStore() : options.store;
+  const manifest = options.manifest !== undefined ? options.manifest : store ? await store.readManifest().then((stored) => stored?.manifest ?? null, () => null) : null;
+  const read = await Promise.all([...new Set(options.states.map((state) => state.toUpperCase()))].map((state) => loadStateIndex(state, manifest, store, undefined)));
+  return new Set(read.flatMap(({ index }) => index?.bodies ?? []));
 }
 
 const divisionsOfBodies = new WeakMap<MeetingStateIndex, ReadonlyMap<string, readonly string[]>>();
@@ -1102,7 +1133,9 @@ async function readReaderEdgeMeetingsHeld(
   if (options.manifest !== undefined) manifest = options.manifest;
   else if (store) manifest = await store.readManifest().then((stored) => stored?.manifest ?? null, () => null);
 
-  const indexes = await Promise.all(states.map(async (state) => ({ state, index: await loadStateIndex(state, manifest, store, options.dataStore) })));
+  const indexes = await Promise.all(states.map(async (state) => ({ state, ...await loadStateIndex(state, manifest, store, options.dataStore) })));
+  const unreadable = indexes.filter(({ failed }) => failed).map(({ state }) => state);
+  if (unreadable.length > 0) return meetingsUnreachable(`The meeting index of ${unreadable.join(", ")} could not be read.`);
   const chosen = new Map<string, string>();
   for (const { state, index } of indexes) {
     if (index === null) continue;
@@ -1115,10 +1148,11 @@ async function readReaderEdgeMeetingsHeld(
 
   const loaded = await Promise.all([...chosen].map(([bodyId, state]) => loadBody({ state, bodyId }, store, options)));
   const bodies = loaded.filter((body): body is LoadedBody => body !== null);
+  if (bodies.length < loaded.length) return meetingsUnreachable(`${loaded.length - bodies.length} of ${loaded.length} bodies of this place could not be read.`);
 
   const areaKey = sha256OfJson({ agenda: options.includeAgenda !== false, history: options.window === "HELD", bodies: bodies.map(({ key, record, checks }) => [key ?? record.bodyId, checks]) });
   const cachedArea = areaReads.get(areaKey);
-  if (cachedArea && loaded.length === bodies.length) return cachedArea;
+  if (cachedArea) return cachedArea;
 
   const merged = mergeMeetingBodies(bodies);
   // Each served sitting takes its body's live facts from that body's record.
@@ -1132,7 +1166,7 @@ async function readReaderEdgeMeetingsHeld(
     const stored = await withStoredSittingFacts({ kind: "PROMOTED", value, metadata: NOT_A_PLACE.metadata, detail: "" });
     if (stored.kind === "PROMOTED") value = stored.value;
   }
-  const complete = bodies.length === loaded.length && bodies.every((body) => body.fromEdge) && factsRead && store !== null && manifest?.meetingStates !== undefined;
+  const complete = bodies.every((body) => body.fromEdge) && factsRead && store !== null && manifest?.meetingStates !== undefined;
   const read: MeetingsProjectionReadResult = {
     kind: "PROMOTED",
     value: bodies.length === 0 ? { ...value, generatedAt: options.now ?? new Date().toISOString() } : value,
@@ -1149,7 +1183,7 @@ async function readReaderEdgeMeetingsHeld(
       stale: complete ? "CURRENT" : "UNKNOWN",
       staleAt: null,
     },
-    detail: `Served from ${bodies.length}/${loaded.length} body record(s) in ${indexes.filter(({ index }) => index !== null).map(({ state }) => state).join(", ") || "no state"}.`,
+    detail: `Served from ${bodies.length} body record(s) in ${indexes.filter(({ index }) => index !== null).map(({ state }) => state).join(", ") || "no state"}.`,
   };
   if (complete) {
     completeEdgeReads.add(read);

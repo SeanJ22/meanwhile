@@ -13,7 +13,7 @@ import { governmentListingEntity, governmentListingEvidenceRecords, readerGovern
 import { prlStatementEvidence, readPrlForSubject } from "@/lib/sources/prl/person";
 import { federalAskEvidence } from "@/lib/sources/congress/reader";
 import { type MeetingsSnapshot } from "@/lib/meetings/snapshot";
-import { holdReaderAuthorityEdge, ensureReaderAuthorityEdge, readReaderEdgeMeetings, readReaderManifest } from "@/lib/meetings/edge-serving";
+import { holdReaderAuthorityEdge, ensureReaderAuthorityEdge, readHeldBodyIds, readReaderEdgeMeetings, readReaderManifest } from "@/lib/meetings/edge-serving";
 import { enterReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "@/lib/registry/runtime-edge";
 import { AUTHORITY_FAMILIES, type AuthorityFamily, type GlobalAuthorityFamily, type PromotedAuthorityFamily } from "@/lib/meetings/edge-artifacts";
 import { READER_MAP_AUTHORITY_FAMILIES } from "@/lib/meetings/edge-serving";
@@ -672,8 +672,8 @@ async function answerWithSettings(request: Request) {
   }
   lap("meetingsProjection");
   // A failed meeting read must not withhold an unrelated eligible ballot or money record.
-  const meetings = (snapshot?.meetings ?? []) as MeetingLike[];
-  const documents = (snapshot?.agendaDocuments ?? []) as AgendaDocumentLike[];
+  let meetings = (snapshot?.meetings ?? []) as MeetingLike[];
+  let documents = (snapshot?.agendaDocuments ?? []) as AgendaDocumentLike[];
   if (needsMeetings && snapshot) {
     const requestedStates = new Set(statesOf(ocdIds));
     const meetingLeads = [...new Map((snapshot?.meetings ?? []).flatMap(meeting => {
@@ -705,8 +705,10 @@ async function answerWithSettings(request: Request) {
   const governmentListings = officialsAsk?.unresolvedPlace ? { records: [], unavailableStates: [] }
     : await readerGovernmentListings(question, ocdIds, [...explicitBodyIds]).catch(() => ({ records: [], unavailableStates: [] }));
   const listedGovernments = governmentListings.records.map(governmentListingEntity);
+  /* A body named in the reader's state may be guessed from a typo; the state's index says which bodies hold meetings. */
+  const heldBodyIds = needsMeetings ? await readHeldBodyIds({ manifest: edgeManifest, states: statesOf(ocdIds) }).catch(() => new Set<string>()) : new Set<string>();
   const scopedBodies = [...bodyIdentityIndex().values()].filter((entry) =>
-    (entry.ocdId && ocdIds.includes(entry.ocdId)) || explicitBodyIds.has(entry.bodyId));
+    (entry.ocdId && ocdIds.includes(entry.ocdId)) || explicitBodyIds.has(entry.bodyId) || heldBodyIds.has(entry.bodyId));
   const bodies = [...snapshotEntities([...meetings, ...scopedBodies], (bodyId) => canonicalBodyIdentity(bodyId)), ...listedGovernments];
   let deterministicTopicRoute = false;
   /* A topic question naming no government, pronoun or earlier turn, with no body open, is answered from the timelines of the bodies governing the reader's divisions, with no model. */
@@ -1194,6 +1196,19 @@ async function answerWithSettings(request: Request) {
         if (bound?.ocdId) selected.keys.add(bound.ocdId);
         await readRegistryRuntimeProjection([...new Set([...statesOf(ocdIds), ...statesOf(bound?.ocdId ? [bound.ocdId] : [])])], { bypassCache: true });
       }
+    }
+    /* A body named from elsewhere is not in the reader's place read; its own meetings are read by its id. */
+    if (needsMeetings && subject?.kind === "BODY" && !meetings.some((meeting) => meeting.bodyId === subject.id)) {
+      const own = await readReaderEdgeMeetings({ manifest: edgeManifest, window: "HELD", bodyIds: [subject.id] }).catch(() => null);
+      if (own?.kind === "PROMOTED" || own?.kind === "BOOTSTRAP") {
+        const heldIds = new Set((snapshot?.meetings ?? []).map((meeting) => meeting.id));
+        const heldDocuments = new Set((snapshot?.agendaDocuments ?? []).map((document) => document.id));
+        snapshot = { ...(snapshot ?? own.value), meetings: [...snapshot?.meetings ?? [], ...own.value.meetings.filter((meeting) => !heldIds.has(meeting.id))],
+          agendaDocuments: [...snapshot?.agendaDocuments ?? [], ...own.value.agendaDocuments.filter((document) => !heldDocuments.has(document.id))] };
+        meetings = snapshot.meetings as MeetingLike[];
+        documents = snapshot.agendaDocuments as AgendaDocumentLike[];
+        if (meetingDataState === "STORE_UNREACHABLE") meetingDataState = own.kind;
+      } else meetingDataState = "STORE_UNREACHABLE";
     }
     const records: EvidenceRecord[] = [];
     if (populationQuestion(question)) {

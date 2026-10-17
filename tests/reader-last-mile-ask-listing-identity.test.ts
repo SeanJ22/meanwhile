@@ -11,21 +11,12 @@ import { MINUTES_SUMMARIES } from "../lib/meetings/minutes-summaries.ts";
 import { NOTICE_SUMMARIES } from "../lib/meetings/notice-summary.ts";
 import type { AskAnswerPayload } from "../lib/ask/answer.ts";
 import type { Meeting } from "../lib/sources/types.ts";
-import { installRegistryAuthority, registryTransferImport } from "./helpers/promoted-fixtures.ts";
-import { provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
-import { stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
+import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 import { ambiguousListingPairs, dateOnlyListings, recordedMeetingsSnapshot } from "./helpers/reader-fixtures.ts";
 import { localDate } from "../lib/ask/meeting-time.ts";
-import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import { planMeetingBodies } from "../lib/meetings/body-publication.ts";
-import { publishReaderEdgeArtifacts } from "../lib/meetings/edge-serving.ts";
-import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import { requireMeetingsProjection } from "../lib/meetings/snapshot.ts";
-import { promoteRecorded } from "./helpers/reader-edge-meetings.ts";
+import { publishRecordedEdge } from "./helpers/reader-edge-meetings.ts";
 import { readEveryBody } from "./helpers/meeting-body-national.ts";
-import { mkdtempSync, rmSync } from "node:fs";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
 import { isAnotherBodysNoticePage } from "../lib/meetings/notice-pages.ts";
 
 delete process.env.ANTHROPIC_API_KEY;
@@ -39,22 +30,7 @@ const ownRows = (rows: readonly Meeting[]) => rows.map(({ actingBodies: _acting,
 const installed = recordedMeetingsSnapshot(ownRows([...listed, ...dateOnlyListings(3)]));
 // Each recorded sitting is promoted through the partition that owns it, then published as its body's record on the edge the routes read.
 const PUBLISHED_AT = "2026-09-25T12:00:00.000Z";
-const meetingStore = new MemoryRoutineDataStore();
-const { promoted } = await promoteRecorded(meetingStore, installed.meetings, installed.agendaDocuments, PUBLISHED_AT);
-const edgeDir = mkdtempSync(join(tmpdir(), "wtp-listing-identity-"));
-process.env.WTP_READER_EDGE_DIR = edgeDir;
-process.once("exit", () => rmSync(edgeDir, { recursive: true, force: true }));
-const edge = new LocalFileArtifactStore(edgeDir);
-const plan = await planMeetingBodies({ store: meetingStore, artifacts: edge, now: PUBLISHED_AT, served: undefined, registryVersion: () => null, registry: async () => null });
-assert.deepEqual(plan.stats.failed, []);
-// The routes enter the edge's registry, so the edge carries Arizona's recorded one beside the bodies.
-const registryVersion = "listing-identity:registry:AZ";
-const registry = { AZ: { versionId: registryVersion, value: { kind: "PROMOTED_POINTERS" as const, entries: [provenEdgeEntry({
-  recordClass: "REGISTRY_RUNTIME_BINDING", scope: stateRegistryRuntimeScope("AZ"), sourceId: "registry-reviewed-bindings",
-  versionId: registryVersion, value: registryTransferImport().projection.payload })] } } };
-assert.equal((await publishReaderEdgeArtifacts({ store: edge, now: PUBLISHED_AT, meetingStates: plan.entries, extras: { everydayRouting: null },
-  stateAuthorities: { "registry-runtime": registry } })).status, "PUBLISHED");
-await plan.settle();
+const { store: meetingStore, edge, promoted } = await publishRecordedEdge(installed.meetings, installed.agendaDocuments, PUBLISHED_AT);
 // What a reader is served from those published bodies (each row stamped with its door).
 const snapshot = requireMeetingsProjection((await readEveryBody(meetingStore, PUBLISHED_AT, { edge })).read);
 assert.ok(promoted.length >= 6, "the Tucson Unified calendar and its listings are held by a partition");

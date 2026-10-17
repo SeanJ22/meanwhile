@@ -433,7 +433,7 @@ test("publish → read round-trips through the file store and a place reads only
   assert.equal(azRead.kind, "PROMOTED");
   if (azRead.kind !== "PROMOTED") return;
   assert.deepEqual(azRead.value.meetings.map((m) => m.id.split(":")[2]).sort(), ["az1", "az2"]);
-  assert.match(azRead.detail, /Served from 1\/1 body record\(s\) in/);
+  assert.match(azRead.detail, /Served from 1 body record\(s\) in/);
   assert.equal(servedWholeFromReaderEdge(azRead), true);
 });
 

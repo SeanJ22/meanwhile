@@ -13,7 +13,7 @@ import { MEETINGS_RECORD_CLASS, type MeetingsSnapshot } from "./snapshot.ts";
 
 type RowStore = Pick<RoutineDataStore, "readPreparedReaderProjection" | "readPromotions">;
 
-/** A state's meeting index, read by key from the database after the edge could not supply it. */
+/** A state's meeting index, read by key from the database after the edge could not supply it; null when none is recorded, a throw when the database cannot be read. */
 export async function readMeetingIndexRow(state: string, store?: RowStore): Promise<MeetingStateIndex | null> {
   const scope = meetingIndexRowScope(state);
   refuseDatabaseInEdgeOnlyContext(`${MEETINGS_RECORD_CLASS}:${scope}`);
@@ -22,7 +22,7 @@ export async function readMeetingIndexRow(state: string, store?: RowStore): Prom
     return row === null ? null : readerIndexOf(row.payload as MeetingIndexRow);
   } catch (error) {
     reportReaderStateFailure("meeting-index", state, scope, error, "DATABASE");
-    return null;
+    throw error;
   }
 }
 
@@ -35,7 +35,7 @@ export async function readMeetingBodyRow(state: string, bodyId: string, store?: 
     return row === null ? null : row.payload as MeetingBodyRow;
   } catch (error) {
     reportReaderStateFailure("meeting-body", state, scope, error, "DATABASE");
-    return null;
+    throw error;
   }
 }
 
@@ -48,6 +48,6 @@ export async function readMeetingBodyHistory(row: MeetingBodyRow, store?: RowSto
     return composeMeetingBodyHistory(row.bodyId, held.map((pointer) => ({ contractId: pointer.scope, scope: pointer.scope, versionId: pointer.versionId, value: pointer.payload })), row.snapshot.generatedAt);
   } catch (error) {
     reportReaderStateFailure("meeting-history", null, row.historyScopes[0] ?? null, error, "DATABASE");
-    return null;
+    throw error;
   }
 }

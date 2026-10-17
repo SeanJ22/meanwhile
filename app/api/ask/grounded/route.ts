@@ -493,7 +493,7 @@ async function answerWithSettings(request: Request) {
   // fetched is never an unhandled rejection; the settle below still records it.
   const outcomesFromDatabase = leanAsk || ballotOnlyHint || onEdge("meeting-outcomes") ? null : timed("outcomes", refreshOutcomeSnapshotFromPromoted)();
   outcomesFromDatabase?.catch(() => undefined);
-  const commentAccessFromDatabase = production && !leanAsk && !ballotOnlyHint && edgeManifest?.stateFacts === undefined
+  const commentAccessFromDatabase = production && !leanAsk && !ballotOnlyHint && !edgeManifest
     ? timed("commentAccess", () => readCommentAccessFacts().catch(() => undefined))()
     : null;
   let authorityEdge: ReaderAuthorityEdgeBundle | null = null;

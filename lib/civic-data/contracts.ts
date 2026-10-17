@@ -65,6 +65,8 @@ export function meetingSittingWindow(follows?: SittingWindowSchedule["follows"])
 export const MEETING_SITTING_WINDOW = meetingSittingWindow();
 
 export const ROUTINE_DATA_ADMISSION_MS = 5 * 60_000;
+/** A routine pass ends within this; a source read it could not finish stays due for the next pass. */
+export const ROUTINE_PASS_BUDGET_MS = 30 * 60_000;
 
 export const PLAIN_ENGLISH_TRANSLATION_ROUTINE = {
   id: "plain-english-translations",

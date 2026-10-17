@@ -3,7 +3,11 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
-import { backfillBox, boxCounts, boxCountsByWorkItem, boxFindingId, finishBoxFinding, indexBoxFinding, takeBoxFinding, type BoxInput } from "../lib/control-plane/box.ts";
+import { backfillBox, boxCounts, boxCountsByWorkItem, boxFindingId, finishBoxFinding, indexBoxFinding, indexScoutFindings, takeBoxFinding, type BoxInput } from "../lib/control-plane/box.ts";
+import type { Attempt } from "../lib/control-plane/attempt.ts";
+import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
+import type { ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
+import type { WorkerResultRecord } from "../lib/control-plane/workers/types.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 
@@ -59,45 +63,68 @@ test("legacy findings without a quote stay distinct, and a broken read never rep
   await assert.rejects(() => boxCounts({ ...repo, list: async () => { throw new Error("store unavailable"); } }), /store unavailable/);
 });
 
-test("historical Scout and detective findings share the index, including missing old quotes and another target", async () => {
-  const repo = createMemoryRepositories().boxFindings;
-  const history = {
-    scouts: [{ subjectId: "place:start", attemptId: "scout-1", workItemId: "send-1", recordedAt: NOW, findings: [
-      { subjectId: "person:alice", missionPart: "roster", kind: "RECORD" as const, summary: "Clerk", exactQuote: input.exactQuote!, sourceUrl: input.sourceUrl!, artifactIds: ["artifact-1"] },
-      { kind: "POINTER" as const, summary: "Older result without a copied quote", artifactIds: ["artifact-2"] },
-    ] }],
-    detectives: [{ id: "detective-1", workItemId: "send-2", endedAt: NOW, result: { role: "DETECTIVE" as const, question: { subjectId: "person:alice" },
-      spans: [{ artifactId: "artifact-1", contentHash: "held-hash", quote: input.exactQuote!, start: 0, end: input.exactQuote!.length, offsetUnit: "UTF16_CODE_UNITS" as const }],
-      artifactIds: ["artifact-1"], findings: [{ code: "EXPLANATION", severity: "INFO" as const, detail: "Inspect the existing result." }],
-    } }],
-    artifacts: new Map([["artifact-1", { canonicalUrl: input.sourceUrl! }]]),
-  };
-  await backfillBox(repo, history, NOW);
-  await backfillBox(repo, history, LATER);
-  assert.equal((await repo.list()).length, 3, "shared quote deduplicates; old pointer and detective finding are both retained");
-  const shared = (await repo.mustRead(boxFindingId(input))).value;
-  assert.equal(shared.origins.length, 2);
+const scoutResult = (findings: readonly Record<string, unknown>[], recordClass?: string) => ({ subjectId: "place:start", attemptId: "scout-1", workItemId: "send-1",
+  obligationId: "ob-1", recordedAt: NOW, ...(recordClass ? { recordClass } : {}), findings }) as unknown as ScoutResult;
+
+/** A Detective result as completion commits it: its Attempt closed COMPLETED and the record carrying that same Attempt. */
+async function committedDetective(repos: ReturnType<typeof createMemoryRepositories>, committed: boolean) {
+  const attempt = { id: "detective-attempt", outcome: "COMPLETED" } as unknown as Attempt;
+  if (committed) await repos.attempts.put(attempt.id, attempt, NOW);
+  const result = { role: "DETECTIVE", attemptId: attempt.id, verdict: "UNRESOLVED", question: { text: "Who is Clerk?", subjectId: "person:alice", alternatives: [] },
+    artifactIds: ["artifact-1"], spans: [{ artifactId: "artifact-1", contentHash: "held-hash", quote: input.exactQuote!, start: 0, end: input.exactQuote!.length, offsetUnit: "UTF16_CODE_UNITS" }],
+    alternativesTested: [], findings: [{ code: "EXPLANATION", severity: "INFO", detail: "Inspect the existing result." }], blockers: [], walk: [],
+    walkState: { state: "OPEN", nextRouteIds: [] }, falsificationCondition: "Another roster", nextAction: "Ask the clerk", burden: "UNRESOLVED", denominator: { state: "UNKNOWN", populationDefinition: null } };
+  const record = { id: "detective-1", workItemId: "send-2", attemptId: attempt.id, endedAt: NOW, result,
+    completion: { closedAttempt: attempt, completedTask: { workerTask: { role: "DETECTIVE" } } } } as unknown as WorkerResultRecord;
+  await repos.workerResults.append(record.workItemId, record.id, record, NOW);
+}
+
+test("the backfill indexes Scout and committed Detective findings recorded since its last pass, reading each span's page by its id", async () => {
+  const repos = createMemoryRepositories();
+  await repos.scoutResults.append("ob-1", "scout-1", scoutResult([
+    { subjectId: "person:alice", missionPart: "roster", kind: "RECORD", summary: "Clerk", exactQuote: input.exactQuote!, sourceUrl: input.sourceUrl!, artifactIds: ["artifact-1"] },
+    { kind: "POINTER", summary: "Older result without a copied quote", artifactIds: ["artifact-2"] }]), NOW);
+  await repos.artifacts.append("send-0", "artifact-1", { artifactId: "artifact-1", workItemId: "send-0", canonicalUrl: input.sourceUrl! } as unknown as ArtifactRecord, NOW);
+  await committedDetective(repos, true);
+  await backfillBox(repos, NOW);
+  const cursor = (await repos.passCursors.mustRead("box-backfill")).value.through;
+  const asked: (string | null)[] = [];
+  const watched = { ...repos, scoutResults: { ...repos.scoutResults, readChangedSince: (since: string | null) => { asked.push(since); return repos.scoutResults.readChangedSince(since); } } };
+  await backfillBox(watched, LATER);
+  assert.deepEqual(asked, [new Date(Date.parse(cursor) - 60_000).toISOString()], "the next pass reads only what changed since the last, a minute back");
+  const rows = await repos.boxFindings.list();
+  assert.equal(rows.length, 3, "shared quote deduplicates; old pointer and detective finding are both retained");
+  const shared = (await repos.boxFindings.mustRead(boxFindingId(input))).value;
+  assert.equal(shared.origins.length, 2, "the span's page was found under another item's log by its id");
   assert.equal(shared.subjectId, "person:alice", "the target overrides the starting subject");
   assert.equal(shared.origins.find(o => o.kind === "SCOUT")?.missionPart, "roster");
-  const counts = await boxCountsByWorkItem(repo);
+  const counts = await boxCountsByWorkItem(repos.boxFindings);
   assert.equal(counts["send-1"].waiting, 2);
   assert.equal(counts["send-2"].waiting, 2);
 });
 
-test("a Box row keeps its finding's field and value; a row from before that gains them on one re-index, and the queue hands builders only due rows", async () => {
-  const repo = createMemoryRepositories().boxFindings;
-  const scout = { subjectId: "place:start", attemptId: "scout-9", workItemId: "send-9", recordedAt: NOW, recordClass: "roster", findings: [
-    { subjectId: "person:alice", field: "officeholder.name", value: "Alice Adams", kind: "RECORD" as const, summary: "Clerk",
-      exactQuote: input.exactQuote!, sourceUrl: input.sourceUrl!, artifactIds: ["artifact-1"] }] };
+test("an uncommitted Detective result, or a malformed one, is never indexed", async () => {
+  const repos = createMemoryRepositories();
+  await committedDetective(repos, false);
+  await repos.workerResults.append("send-3", "malformed", { id: "malformed" } as unknown as WorkerResultRecord, NOW);
+  assert.equal(await backfillBox(repos, NOW), 0);
+  assert.deepEqual(await repos.boxFindings.list(), []);
+});
+
+test("a Box row keeps its finding's field and value; a row from before that gains them on the first pass, and the queue hands builders only due rows", async () => {
+  const repos = createMemoryRepositories();
+  const scout = scoutResult([{ subjectId: "person:alice", field: "officeholder.name", value: "Alice Adams", kind: "RECORD", summary: "Clerk",
+    exactQuote: input.exactQuote!, sourceUrl: input.sourceUrl!, artifactIds: ["artifact-1"] }], "roster");
   const id = boxFindingId(input);
-  await backfillBox(repo, { scouts: [scout], detectives: [], artifacts: new Map() }, NOW);
-  const held = await repo.mustRead(id);
+  await indexScoutFindings(repos.boxFindings, scout, NOW);
+  const held = await repos.boxFindings.mustRead(id);
   const { fact: _fact, lastRecordedAt: _at, ...older } = held.value;
-  await repo.compareAndSet(id, held.revision, older, NOW);
-  await backfillBox(repo, { scouts: [scout], detectives: [], artifacts: new Map() }, LATER);
-  const row = (await repo.mustRead(id)).value;
+  await repos.boxFindings.compareAndSet(id, held.revision, older, NOW);
+  await repos.scoutResults.append("ob-1", "scout-1", scout, NOW);
+  await backfillBox(repos, LATER);
+  const row = (await repos.boxFindings.mustRead(id)).value;
   assert.deepEqual([row.fact, row.lastRecordedAt], [{ field: "officeholder.name", value: "Alice Adams", recordClass: "roster" }, NOW]);
-  assert.deepEqual((await repo.due({ slots: "5", now: LATER, since: NOW, limit: 10 })).map(due => due.id), [id], "never looked at under this slot map");
-  assert.deepEqual(await repo.due({ slots: "5", now: LATER, since: LATER, limit: 10 }), [], "recorded before the window");
-  assert.deepEqual(await repo.waitingFor("ANY_REASON", 10), []);
+  assert.deepEqual((await repos.boxFindings.due({ slots: "5", now: LATER, since: NOW, limit: 10 })).map(due => due.id), [id], "never looked at under this slot map");
+  assert.deepEqual(await repos.boxFindings.due({ slots: "5", now: LATER, since: LATER, limit: 10 }), [], "recorded before the window");
+  assert.deepEqual(await repos.boxFindings.waitingFor("ANY_REASON", 10), []);
 });

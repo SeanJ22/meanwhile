@@ -18,7 +18,6 @@ export interface ReaderManifest {
   readonly everydayRouting?: unknown;
   readonly extrasVersionIds?: Readonly<Partial<Record<"everyday-routing", string | null>>>;
   readonly authorityArtifacts?: Partial<Record<GlobalAuthorityFamily, AuthorityArtifactRef>>;
-  readonly stateFacts?: Readonly<Record<string, AuthorityArtifactRef>>;
   readonly stateAuthorities?: Partial<Record<StateAuthorityFamily, Readonly<Record<string, AuthorityArtifactRef>>>>;
   readonly registrations?: Readonly<Record<string, AuthorityArtifactRef>>;
   readonly stateLegislators?: Readonly<Record<string, AuthorityArtifactRef>>;

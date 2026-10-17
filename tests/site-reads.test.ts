@@ -8,7 +8,7 @@ import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import { readerRoute } from "../lib/api/reader-route.ts";
 import { currentReaderRoute } from "../lib/db/reader-route.ts";
 import { currentReaderSelection, withReaderSelection } from "../lib/db/reader-route.ts";
-import { publishReaderEdgeArtifacts, ensureReaderAuthorityEdge, writeFactBucket } from "../lib/meetings/edge-serving.ts";
+import { publishReaderEdgeArtifacts, ensureReaderAuthorityEdge, stateFactsPointerKey, writeFactBucket } from "../lib/meetings/edge-serving.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { getRegistryRuntimeReadModel, readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
 import { installFactReader } from "../lib/facts/db.ts";
@@ -182,10 +182,10 @@ test("warm authority reads retain the identifiers needed to load a shown person'
       store, stateAuthorities: { "registry-runtime": stateRegistryArtifacts("warm-version", ["AZ"], {
         ...registryFixtureForState("AZ"), registry: { ...registryFixtureForState("AZ").registry, bodies: value.registry.bodies }, bodyRosters: value.bodyRosters,
       }) },
-      stateFacts: { AZ: { versionId: "warm-facts", value: { buckets: [await writeFactBucket(store, "AZ", 0, "warm-facts",
-        await publishAuthorityRecords({ bodies: [{ id: bodyId, division: bodyId.split("#")[0], fields: {},
-          roster: value.bodyRosters[0], dispositions: [], comment: null, sittings: [] }] }, store), "2026-10-16T12:00:00.000Z")] } } },
     });
+    await store.writeJsonPointer(stateFactsPointerKey("AZ"), { state: "AZ", versionId: "warm-facts", buckets: [await writeFactBucket(store, "AZ", 0, "warm-facts",
+      await publishAuthorityRecords({ bodies: [{ id: bodyId, division: bodyId.split("#")[0], fields: {},
+        roster: value.bodyRosters[0], dispositions: [], comment: null, sittings: [] }] }, store), "2026-10-16T12:00:00.000Z")] }, null);
     const manifest = (await store.readManifest())!.manifest;
     for (let visit = 0; visit < 2; visit++) {
       const selection = { keys: new Set([bodyId]) };
@@ -215,8 +215,9 @@ test("a later named body loads its live facts without reopening the state regist
     const payload = { ...registryFixtureForState("AZ"), bodyRosters: [] };
     await publishReaderEdgeArtifacts({ store,
       stateAuthorities: { "registry-runtime": stateRegistryArtifacts("named-body", ["AZ"], payload) },
-      stateFacts: { AZ: { versionId: "named-facts", value: { buckets: [await writeFactBucket(store, "AZ", 0, "named-facts", index, "2026-10-16T12:00:00.000Z")] } } },
     });
+    await store.writeJsonPointer(stateFactsPointerKey("AZ"), { state: "AZ", versionId: "named-facts",
+      buckets: [await writeFactBucket(store, "AZ", 0, "named-facts", index, "2026-10-16T12:00:00.000Z")] }, null);
     const manifest = (await store.readManifest())!.manifest, reads: string[] = [];
     const counting = new Proxy(store, { get(target, key) {
       if (key === "readBytes") return async (path: string) => { reads.push(path); return target.readBytes(path); };

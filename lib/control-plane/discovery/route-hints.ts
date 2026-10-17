@@ -68,10 +68,9 @@ export async function readDiscoveryRouteHints(repos: HintRepos, need: MeetingsDi
       artifactIds: payload?.evidenceArtifactIds ?? [], at: entry.observedAt, by: entry.id });
     if (route) routes.push(route);
   }
-  if (!repos.scoutResults.keysWhere) throw new Error("Scoped hunter results cannot be read");
   const results = new Map<string, ScoutResult>();
   const slices = await Promise.all([...subjects].map(async subject => {
-    const [keys, boxed] = await Promise.all([repos.scoutResults.keysWhere!(["subjectId"], subject),
+    const [keys, boxed] = await Promise.all([repos.scoutResults.keysWhere(["subjectId"], subject),
       repos.boxFindings.listWhere(["subjectId"], subject)]);
     const direct = await Promise.all(keys.map(key => repos.scoutResults.readWhere(key, ["subjectId"], subject)));
     return { direct: direct.flat(), boxed };

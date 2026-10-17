@@ -137,8 +137,7 @@ test("an unchanged sweep of every state and territory ballot launches no child a
   const sweep = () => publishSupervisorReaderEdge(f.store, NOW, units.flatMap(unit => unit.pointers), { artifactStore: f.boundedArtifacts,
     stateArtifactChildren: { slots: f.slots, launch: async () => assert.fail("unchanged sweep must not launch") } }, ENV);
   assert.equal((await sweep()).ok, true, "the first sweep answers every unpromoted family absent without a child");
-  const written = f.artifacts.writeJsonPointer.bind(f.artifacts);
-  t.mock.method(f.artifacts, "writeJsonPointer", (...args: Parameters<typeof written>) => assert.fail(`unchanged sweep wrote ${args[0]}`));
+  t.mock.method(f.artifacts, "writeJsonPointer", (key: string) => assert.fail(`unchanged sweep wrote ${key}`));
   const outcome = await sweep();
   assert.equal(outcome.ok, true);
   assert.equal(outcome.readerEdge, "CURRENT");

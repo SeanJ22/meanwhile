@@ -308,7 +308,7 @@ export async function publishSupervisorReaderEdge(store: RoutineDataStore, obser
             : { sourceThrough: servedMeetings?.sourceThrough ?? null, retrievedAt: prepared.status === "CURRENT" ? prepared.checkedAt : servedMeetings?.retrievedAt ?? null, promotedThrough: servedMeetings?.promotedThrough ?? null },
           { store: artifactStore, now: observedAt, meetingBodies, meetingRegistryVersion,
             meetingPlaces: Object.fromEntries(await readComposedSourcePlaces({ store }) ?? []), ...(checks ? { checks } : {}) });
-        status = edge.status;
+        status = edge.status === "CURRENT" && published.length ? "PUBLISHED" : edge.status;
         if ("sequence" in edge) sequence = edge.sequence;
         if (edge.status === "FAILED") throw new Error(edge.error);
         if (edge.status === "RACED") throw new Error("A concurrent reader publication moved the manifest; retry remains owed.");

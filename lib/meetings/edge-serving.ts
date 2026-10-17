@@ -15,7 +15,6 @@ import {
   scopesForStates,
   sha256OfJson,
   AUTHORITY_FAMILIES,
-  GLOBAL_AUTHORITY_FAMILIES,
   STATE_AUTHORITY_FAMILIES,
   type StateAuthorityFamily,
   type GlobalAuthorityFamily,

@@ -18,6 +18,7 @@ import { readDiscoveryRouteHints, routeHintEntriesBySubject } from "./route-hint
 import { printedNames } from "./auto-crosswalk.ts";
 
 export const CENSUS_LANE_INTERVAL_MS = 5 * 60_000;
+export const CENSUS_LANE_BUDGET_MS = 10 * 60_000;
 const CHECK_MS = 12 * 3_600_000;
 const hash = (value: unknown) => createHash("sha256").update(JSON.stringify(value)).digest("hex");
 type CensusPage = Awaited<ReturnType<DiscoveryOpen>> & { url: string; artifactId: string };

@@ -5,7 +5,6 @@
  * WTP_SCOPED_TASK_READS=1); otherwise every read is the whole-table one.
  */
 import type { ArtifactRecord, ControlPlaneRepositories } from "../repository/types.ts";
-import { keysWhere } from "../repository/types.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type { WorkItem } from "../work-item.ts";
 import type { Attempt } from "../attempt.ts";
@@ -13,24 +12,19 @@ import type { FreshnessOccurrence } from "../scheduler/durable.ts";
 import { readCompletedWorkerResults } from "../repository/worker-completion.ts";
 import type { WorkerResultRecord } from "./types.ts";
 
-/** The Scout logs that ever held a record about one of these subjects, or null when the store cannot say without a full read. */
-async function scoutKeysFor(repos: ControlPlaneRepositories, subjectIds: readonly string[]): Promise<readonly string[] | null> {
+/** The Scout logs that ever held a record about one of these subjects. */
+async function scoutKeysFor(repos: ControlPlaneRepositories, subjectIds: readonly string[]): Promise<readonly string[]> {
   const keys = new Set<string>();
-  for (const subject of new Set(subjectIds)) {
-    const held = await keysWhere(repos.scoutResults, ["subjectId"], subject);
-    if (held === null) return null;
-    for (const key of held) keys.add(key);
-  }
+  for (const subject of new Set(subjectIds)) for (const key of await repos.scoutResults.keysWhere(["subjectId"], subject)) keys.add(key);
   return [...keys].sort();
 }
 
 /** Every Scout result in the logs that hold these subjects, in the whole log's key-then-append order; the whole log when not scoped. */
 export async function readScoutResultsForSubjects(repos: ControlPlaneRepositories, subjectIds: readonly string[],
   scoped: boolean): Promise<readonly ScoutResult[]> {
-  const keys = scoped ? await scoutKeysFor(repos, subjectIds) : null;
-  if (keys === null) return repos.scoutResults.readAll();
+  if (!scoped) return repos.scoutResults.readAll();
   const out: ScoutResult[] = [];
-  for (const key of keys) out.push(...await repos.scoutResults.read(key));
+  for (const key of await scoutKeysFor(repos, subjectIds)) out.push(...await repos.scoutResults.read(key));
   return out;
 }
 
@@ -38,12 +32,10 @@ export async function readScoutResultsForSubjects(repos: ControlPlaneRepositorie
  * An audit's work items and captures (`generalizedIndependentContext`): the owner and every item about the
  * contract's subject, and every capture recorded for one of them, for a work item the owner's plan says it
  * inherited from, or under one of the audit's required artifact IDs. That is every row the audit reads; the
- * logs are read in the whole log's key order so "the first capture of an ID" is the same capture. Null when the
- * store cannot answer the filtered reads (the caller then reads every row as before).
+ * logs are read in the whole log's key order so "the first capture of an ID" is the same capture.
  */
 export async function readAuditHistory(repos: ControlPlaneRepositories, input: { readonly workItemId?: string;
-  readonly subjectId: string; readonly requiredArtifactIds: readonly string[] }): Promise<{ readonly artifacts: readonly ArtifactRecord[]; readonly items: readonly WorkItem[] } | null> {
-  if (!repos.artifacts.keysWhere) return null;
+  readonly subjectId: string; readonly requiredArtifactIds: readonly string[] }): Promise<{ readonly artifacts: readonly ArtifactRecord[]; readonly items: readonly WorkItem[] }> {
   const byId = new Map<string, WorkItem>();
   const owner = input.workItemId === undefined ? null : await repos.workItems.read(input.workItemId);
   if (owner) byId.set(owner.id, owner.value);
@@ -67,10 +59,8 @@ type LinkedWorkItem = WorkItem & { readonly planRepair?: { readonly parentWorkIt
  * occurrences opened and their repair families (found through the version-20 lineage index), and those items'
  * captures, attempts, completed worker results and their subjects' Scout results. A lineage is one obligation's
  * occurrences, so its group, ranking and brokered captures come out as the whole-table computation gives them.
- * Null when the store cannot answer the filtered reads.
  */
 export async function readLineageHistory(repos: ControlPlaneRepositories, workItemId: string) {
-  if (!repos.artifacts.keysWhere || !repos.scoutResults.keysWhere) return null;
   const items = new Map<string, WorkItem>();
   const readItem = async (id: string) => {
     if (!items.has(id)) { const row = await repos.workItems.read(id); if (row) items.set(id, row.value); }

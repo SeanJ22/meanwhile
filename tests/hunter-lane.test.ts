@@ -127,7 +127,7 @@ test("CH-24 lane: the runner starts the lane only under the switch, names one re
   const runner = readFileSync(new URL("../scripts/pilot-runner.mts", import.meta.url), "utf8");
   assert.match(runner, /if \(!CONTINUOUS_HUNTERS \|\| canary \|\| runtimeAdmissionsHeld\) return;/);
   assert.match(runner, /process\.env\.WTP_HUNTER_LANE_ARMING = hunterLaneArmingPath\(ROOT\)/);
-  assert.match(runner, /\{ id: "hunter-lane", everyMs: 60_000, run: runHunterLane \}/);
+  assert.match(runner, /\{ id: "hunter-lane", everyMs: 60_000, budgetMs: HUNTER_LANE_LIFE_MS \+ HUNTER_WORKER_WALL_MS, run: runHunterLane \}/);
   assert.match(runner, /noProgressMs: RUNTIME_NO_PROGRESS_MS,\n    onStdout: \(_id, output\) => process\.stdout\.write\(output\),\n    onStderr: \(_id, output\) => process\.stderr\.write\(output\),\n    onStarted: \(_id, child\) => \{ hunterLaneChild = child; \},/);
   assert.equal(runner.match(/drainHunterLane\(\);/g)?.length, 2, "both release paths drain the lane");
   const lane = readFileSync(new URL("../scripts/hunter-lane.mts", import.meta.url), "utf8");

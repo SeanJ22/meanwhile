@@ -32,6 +32,7 @@ export const AGGREGATE_KINDS = [
   /** The owner's research-lead uploads, one row per order. */
   "lead_orders",
   "box_findings",
+  "pass_cursors",
 ] as const;
 
 export const APPEND_ONLY_LOGS = [

@@ -139,7 +139,7 @@ test("Box findings publish on their own page with no model turn: a held copy ins
   await repos.scoutResults.append(candidates.obligationId, candidates.attemptId, candidates, NOW);
   await indexScoutFindings(repos.boxFindings, candidates, NOW);
   await indexDetectiveFindings(repos.boxFindings, { id: "dr-1", workItemId: "wi-hunt", endedAt: NOW, result: { role: "DETECTIVE", findings: [], artifactIds: [tccc],
-    spans: [{ artifactId: tccc, contentHash: "h", start: 0, end: 9, quote: "Ned Beman", offsetUnit: "UTF16_CODE_UNITS" }], question: { subjectId: TCCC } } }, new Map(), NOW);
+    spans: [{ artifactId: tccc, contentHash: "h", start: 0, end: 9, quote: "Ned Beman", offsetUnit: "UTF16_CODE_UNITS" }], question: { subjectId: TCCC } } }, repos.artifacts, NOW);
 
   const input = { repos, facts, vault, fetch, store: new MemoryRoutineDataStore(), clocks: factClocks(null), now: NOW, limit: 100 };
   const report = await publishBoxFindings(input);

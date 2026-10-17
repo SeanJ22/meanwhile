@@ -18,6 +18,7 @@ import {
   encodeMeetingBlob,
   meetingBodyPointerKey,
   meetingBodyRowScope,
+  meetingFamilyRowScope,
   meetingCompositionOf,
   meetingIndexRowScope,
   meetingStateOf,
@@ -144,6 +145,8 @@ interface Pass extends MeetingBodyPublicationInput {
   readonly identities: Map<string, PromotedPointerIdentity | null>;
   /** Body pointers already read this pass, by key; null is a body with none. */
   readonly pointers: Map<string, { readonly value: MeetingBodyPointer; readonly etag: string | null } | null>;
+  /** States whose family members were listed this pass, from which version. */
+  readonly listed: Map<string, { readonly version: string; readonly sequence: number | null }>;
 }
 
 const IDENTITY_BATCH = 500;
@@ -382,6 +385,29 @@ interface StateOutcome {
   readonly removals: ReadonlyMap<string, Set<string>>;
 }
 
+/**
+ * The family's members when its version is not the one they were last listed from; none when it only confirmed.
+ * What was listed is marked on the pass and recorded once the state's bodies are filed.
+ */
+async function newMembers(pass: Pass, state: string, family: MeetingPartitionContract): Promise<ReadonlySet<string>> {
+  const version = (await identitiesOf(pass, [family.scope])).get(family.scope)?.versionId ?? null;
+  const seen = await pass.store.readPreparedReaderProjectionCoupling(MEETINGS_RECORD_CLASS, meetingFamilyRowScope(state));
+  if (version === null || seen?.composedFrom[0]?.versionId === version) return new Set();
+  pass.listed.set(state, { version, sequence: seen?.sequence ?? null });
+  return (await familyOf(pass, family)).members;
+}
+
+async function recordListedFamily(pass: Pass, state: string): Promise<void> {
+  const listed = pass.listed.get(state);
+  if (listed === undefined) return;
+  const scope = meetingFamilyRowScope(state);
+  const result = await pass.store.writePreparedReaderProjection({
+    recordClass: MEETINGS_RECORD_CLASS, scope, payload: {}, composedFrom: [{ contractId: "meetings-family", versionId: listed.version }], factSha256: listed.version,
+    generatedAt: pass.now, composedAt: pass.now, sourceThrough: null, retrievedAt: null, promotedThrough: null,
+  }, listed.sequence);
+  if (!result.published) throw new Error(`MEETING_FAMILY_RACED:${scope}`);
+}
+
 async function processState(pass: Pass, state: string, dirty: ReadonlySet<string>, round: StateRound | null): Promise<StateOutcome | null> {
   const { store, layout } = pass;
   const indexScope = meetingIndexRowScope(state);
@@ -405,7 +431,7 @@ async function processState(pass: Pass, state: string, dirty: ReadonlySet<string
   const family = layout.familyByState.get(state) ?? null;
   if (prior === null) {
     for (const bodyId of layout.bodiesByState.get(state) ?? []) add(bodyId);
-    if (family !== null) for (const bodyId of (await familyOf(pass, family)).members) add(bodyId, true);
+    if (family !== null) for (const bodyId of await newMembers(pass, state, family)) add(bodyId, true);
   } else {
     for (const scope of dirty) {
       const hit = layout.scopes.get(scope);
@@ -413,7 +439,7 @@ async function processState(pass: Pass, state: string, dirty: ReadonlySet<string
       const contract = hit.contract;
       if (contract.derivedFamily !== null) {
         for (const [bodyId, entry] of Object.entries(bodies)) if (entry.family) add(bodyId, !hit.history);
-        if (!hit.history) for (const bodyId of (await familyOf(pass, contract)).members) add(bodyId, true);
+        if (!hit.history) for (const bodyId of await newMembers(pass, state, contract)) add(bodyId, true);
       } else add(contract.bodyId);
     }
     if (territoryChanged) {
@@ -472,6 +498,8 @@ async function processState(pass: Pass, state: string, dirty: ReadonlySet<string
   }
   for (const bodyId of round?.removals ?? []) if (bodies[bodyId] !== undefined) { delete bodies[bodyId]; changed = true; }
 
+  if (!failed) await recordListedFamily(pass, state);
+
   const sorted = Object.fromEntries(Object.entries(bodies).sort(([a], [b]) => (a < b ? -1 : 1)));
   const index: MeetingIndexRow = { ...(prior ?? emptyMeetingIndexRow(state, registryVersion)), registryVersion, bodies: sorted, places: placesOf(sorted) };
   const reader = readerIndexOf(index);
@@ -506,7 +534,7 @@ export async function planMeetingBodies(input: MeetingBodyPublicationInput): Pro
     covered.push({ ...row, state });
     if (state !== null) dirty.set(state, (dirty.get(state) ?? new Set()).add(row.scope));
   }
-  const pass: Pass = { ...input, layout, families: new Map(), registries: new Map(), identities: new Map(), pointers: new Map(),
+  const pass: Pass = { ...input, layout, families: new Map(), registries: new Map(), identities: new Map(), pointers: new Map(), listed: new Map(),
     stats: { states: [], composed: 0, unchanged: 0, checkedOnly: 0, superseded: 0, recordsWritten: 0, rowsWritten: 0, pointersWritten: 0, indexesWritten: 0, bytesWritten: 0, failed: [] } };
   const entries: Record<string, MeetingStateEntry> = Object.fromEntries(Object.entries(input.served ?? {}).map(([state, ref]) => [state, { versionId: ref.version, carried: true as const }]));
   const failedStates = new Set<string>();

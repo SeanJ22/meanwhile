@@ -42,6 +42,8 @@ export function meetingStateOf(id: string | null | undefined): string {
 
 export const meetingBodyRowScope = (state: string, bodyId: string): string => `US-${state}:meetings-body:${encodeURIComponent(bodyId)}`;
 export const meetingIndexRowScope = (state: string): string => `US-${state}:meetings-index`;
+/** Which version of a state's family partition its member list was last read from. */
+export const meetingFamilyRowScope = (state: string): string => `US-${state}:meetings-family`;
 
 /** A division without its body slot: what a place resolves to. */
 export const divisionOf = (id: string): string => id.split("#")[0]!;

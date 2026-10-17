@@ -53,6 +53,7 @@ import type { Meeting } from "../lib/sources/types.ts";
 import { reconcileSuccessfulMeetingPartition } from "../scripts/ingest.ts";
 import { meetingReaderServingWindowAt } from "../lib/meetings/constants.ts";
 import { coupledContracts, readBody, readEveryBody, stateIndexOf } from "./helpers/meeting-body-national.ts";
+import { publishPass } from "./helpers/meeting-body-fixtures.ts";
 
 const sha256 = (text: string): string => createHash("sha256").update(text).digest("hex");
 const OCD = "ocd-division/country:us/state:az/place:testville";
@@ -451,6 +452,31 @@ test("R23: an unchanged derived pass is receipted on the pointed version, not re
   const changed = await promoteFamily(store, "2026-09-24T23:30:00.000Z", next, HOST, { confirmUnchanged: true });
   assert.equal(changed.outcome.confirmed, undefined);
   assert.equal(changed.outcome.candidate.state, "PROMOTED", changed.outcome.candidate.failureDetail ?? "");
+});
+
+test("a receipt on the family's partition re-checks its bodies without opening the partition", async () => {
+  const store = new MemoryRoutineDataStore();
+  const names = [BODY_NAME, OTHER_NAME];
+  const crosswalk = await promoteCrosswalk(store, names);
+  await deriveWiring(store, crosswalk, FEED, T_WIRING, 200, {}, names);
+  await promoteFamily(store, T_FAMILY, FEED);
+  const first = await readEveryBody(store, T_FAMILY);
+  assert.deepEqual(first.plan.stats.failed, []);
+
+  const again = await promoteFamily(store, T_SECOND, FEED, HOST, { confirmUnchanged: true });
+  assert.ok(again.outcome.confirmed, "the same feed is a receipt on the same version");
+  const family = requiredMeetingPartitionContract(derivedMeetingFamilyId("US-AZ"));
+  const opened: string[] = [];
+  const many = store.readPromotions.bind(store);
+  const one = store.readPromotion.bind(store);
+  store.readPromotions = (async (recordClass: Parameters<typeof many>[0], scopes: readonly string[]) => { opened.push(...scopes); return many(recordClass, scopes); }) as typeof many;
+  store.readPromotion = (async (recordClass: Parameters<typeof one>[0], scope: string) => { opened.push(scope); return one(recordClass, scope); }) as typeof one;
+  const pass = await publishPass(store, first.edge, T_SECOND);
+  store.readPromotions = many;
+  store.readPromotion = one;
+  assert.equal(pass.plan.stats.composed, 0, "the same version: nothing is recomposed");
+  assert.equal(pass.plan.stats.checkedOnly, 2, "each body's check moves");
+  assert.equal(opened.includes(family.scope), false, "the partition's rows are not opened for a receipt");
 });
 
 test("a family's one partition publishes as one record per body; a held member is attributed to its own body only", async () => {

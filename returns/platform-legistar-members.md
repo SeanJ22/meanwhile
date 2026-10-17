@@ -3,18 +3,20 @@
 lane: platform-legistar-members
 owner: platform-legistar-members
 writer: the platform-legistar-members lane
-check: at-scale
+check: fold: conflicts with river-next
 ready: no step ids unknown
-river: 493311674ed4c1f3d15c14f70e19e7be9b9f58aa
-at: 2026-10-15T23:21:42Z
+river: 5d6a5797f01b55cfabd1636beb28432fe6bbd1e2
+at: 2026-10-17T08:11:19Z
 state: returned
-fix_subject: fix:181958c0
-fix: River · stream/platform-legistar-members — at-scale failed for platform-legistar-members: R3-LEGISTAR-MEMBERS (bdc50ebab): AT SCALE peak grows with the country: one-government-cold 425.90 MiB vs national-changed 464.54 MiB, so about 39 MiB comes from holding the changed national set. Name the stage that holds it and stream one g
+fix_subject: fix:fe82ca3f
+fix: River · stream/platform-legistar-members — fold: conflicts with river-next failed for platform-legistar-members: fold: stream/platform-legistar-members READY 835fec562 (R3-LEGISTAR-MEMBERS) conflicts with river-next (EP-01 + ADMIN-COUNTRY + BL-21).
 
 ## Failure
 
 ```
-R3-LEGISTAR-MEMBERS (bdc50ebab): AT SCALE peak grows with the country: one-government-cold 425.90 MiB vs national-changed 464.54 MiB, so about 39 MiB comes from holding the changed national set. Name the stage that holds it and stream one government at a time so the national peak equals the single-government peak. Conflicts with CP-01 (in the batch): lib/control-plane/repository/pg-schema.ts imports and tests/door-kinds-data-rows.test.ts.
+fold: stream/platform-legistar-members READY 835fec562 (R3-LEGISTAR-MEMBERS) conflicts with river-next (EP-01 + ADMIN-COUNTRY + BL-21).
+Conflicts: lib/civic-data/automatic-refresh.ts, lib/civic-data/runner-receipt.ts, lib/db/migration-immutability.ts, lib/db/migrations/meta/_journal.json, lib/db/shipping-invariant.ts, scripts/promote-registry-runtime.mts, scripts/routine-civic-data-runner.mts, tests/write-alarm.test.ts.
+The branch is about 17 commits behind river. Next: merge river into stream/platform-legistar-members after release 52, resolve, run focused checks, send a new READY. Name any new migration by step id; River numbers it.
 ```
 
 ## Repair

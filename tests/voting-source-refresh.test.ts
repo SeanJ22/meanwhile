@@ -6,6 +6,8 @@ import { cadenceMsAt } from "../lib/civic-data/contracts.ts";
 import { routineTaskDue } from "../lib/civic-data/runner.ts";
 import { planVotingSourceBlanks, persistVotingSourceBlanks, votingSourcePlaces } from "../lib/ballot/voting-source-blanks.ts";
 import { votingSourcePopulations } from "../lib/ballot/voting-source-population.ts";
+import { ensurePublisherSizes } from "../lib/sources/publisher-size-load.ts";
+import { factDb } from "./helpers/fact-db.ts";
 import { votingRowsToSites } from "../lib/ballot/voting-source-readers.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { fairAutonomousWorkIds } from "../lib/control-plane/workers/coordinator.ts";
@@ -135,8 +137,10 @@ test("open blanks persist in the existing hunter queue idempotently, most populo
   assert.ok(plan.seedUrls.every(url => !/google|bing|search\?/i.test(url)));
 });
 
-test("population order uses existing sourced Census holdings with exact registered government joins", async () => {
-  const populations = await votingSourcePopulations({ state: "FL", bodies: [
+test("population order uses the loaded sourced Census holdings with exact registered government joins", async () => {
+  const db = await factDb();
+  assert.deepEqual(await ensurePublisherSizes(db, ["fl"]), ["fl"]);
+  const populations = await votingSourcePopulations({ query: db.query, state: "FL", bodies: [
     { ocdId: okaloosa.ocdId, censusId: "204174", homepageUrl: "https://www.okaloosafl.com/" },
     { ocdId: bradford.ocdId, censusId: "184704", homepageUrl: "https://www.bradfordcountyfl.gov/" },
     { ocdId: `${root.ocdId}/county:unresolved`, homepageUrl: "https://www.voterfocus.com/" },

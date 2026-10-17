@@ -4,7 +4,6 @@ import { SYNTHETIC_RUN_BODY_KEY } from "@/lib/db/run-marker";
 import { getOrCreateBrowserKey } from "@/lib/state/browser-key";
 
 import {
-  MAX_BATCH_BYTES,
   MAX_EVENTS_PER_BATCH,
   type ClientEvent,
   type ClientEventType,
@@ -16,8 +15,8 @@ import {
  * The browser half of behavior capture. Surfaces record through `captureEvent`;
  * this batches events and sends them to `/api/events` after a short quiet
  * period, at twenty events, or when the page is hidden or closed (`sendBeacon`).
- * A batch keeps one id across retries, so a retry never double-counts; after
- * three failures it is dropped. Nothing here throws into the page.
+ * A batch keeps one id across retries, so a retry never double-counts, and
+ * keeps waiting until the server accepts it. Nothing here throws into the page.
  *
  * Sent: the returning-reader ID (random, on the device, digested by the
  * server) and the events. No name, address or cookie.
@@ -27,14 +26,10 @@ const ENDPOINT = "/api/events";
 const KEY_SLOT = "wtp.ask_key";
 const QUIET_MS = 3_000;
 const FLUSH_AT = 20;
-const MAX_ATTEMPTS = 3;
-/** The events a page holds before it starts dropping the oldest: a runaway page may not grow without limit. */
-const MAX_QUEUED = 512;
 
 interface Pending {
   batchId: string;
   events: ClientEvent[];
-  attempts: number;
 }
 
 let queue: ClientEvent[] = [];
@@ -84,10 +79,9 @@ export function captureEvent(event: Omit<ClientEvent, "id" | "occurredAt"> & { t
   try {
     if (typeof window === "undefined") return;
     hookLifecycle();
-    // The same alphabet and length the store enforces, so a card title with a space in it can never get a whole batch refused.
-    const capped = event.cardId !== undefined ? { ...event, cardId: storeSafeId(event.cardId) } : event;
-    queue.push({ ...capped, id: randomId(), occurredAt: new Date().toISOString() });
-    if (queue.length > MAX_QUEUED) queue = queue.slice(queue.length - MAX_QUEUED);
+    // The store's identifier alphabet: a title with spaces must remain storable.
+    const storable = event.cardId !== undefined ? { ...event, cardId: storeSafeId(event.cardId) } : event;
+    queue.push({ ...storable, id: randomId(), occurredAt: new Date().toISOString() });
     if (queue.length >= FLUSH_AT) {
       flushEvents();
       return;
@@ -102,7 +96,7 @@ function buildBatch(): Pending | null {
   if (pending !== null) return pending;
   if (queue.length === 0) return null;
   const events = queue.splice(0, MAX_EVENTS_PER_BATCH);
-  pending = { batchId: randomId(), events, attempts: 0 };
+  pending = { batchId: randomId(), events };
   return pending;
 }
 
@@ -125,19 +119,12 @@ export function flushEvents(options: { closing?: boolean } = {}): void {
     const declared = syntheticDeclaration();
     if (declared !== undefined) body[SYNTHETIC_RUN_BODY_KEY] = declared;
     const json = JSON.stringify(body);
-    if (json.length > MAX_BATCH_BYTES) {
-      // Cannot happen at 128 events of this shape; drop rather than send what the server will refuse.
-      pending = null;
-      return;
-    }
-
     if (options.closing && typeof navigator !== "undefined" && navigator.sendBeacon) {
       // A beacon has no response to read; the batch id makes a later resend harmless.
       if (navigator.sendBeacon(ENDPOINT, new Blob([json], { type: "application/json" }))) pending = null;
       return;
     }
 
-    batch.attempts += 1;
     sending = true;
     void fetch(ENDPOINT, {
       method: "POST",
@@ -146,12 +133,11 @@ export function flushEvents(options: { closing?: boolean } = {}): void {
       keepalive: true,
     })
       .then((response) => {
-        // 2xx counted it; 4xx will never be accepted, so it is dropped too.
-        if (response.ok || (response.status >= 400 && response.status < 500)) pending = null;
-        else if (batch.attempts >= MAX_ATTEMPTS) pending = null;
+        // A refusal that will not change on retry would hold every later event behind it.
+        if (response.ok || (response.status >= 400 && response.status < 500 && response.status !== 429)) pending = null;
       })
       .catch(() => {
-        if (batch.attempts >= MAX_ATTEMPTS) pending = null;
+        /* Keep the same batch for the next send. */
       })
       .finally(() => {
         sending = false;

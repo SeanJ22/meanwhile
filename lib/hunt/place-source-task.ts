@@ -157,6 +157,7 @@ export async function runNationalPlaceTask(input: {
   publish: (input: NationalPlacePublicationInput) => Promise<unknown>;
   publishElection?: Parameters<typeof runPlaceSource>[0]["publishElection"];
   acquire?: typeof runPlaceSource;
+  geographyFetch?: typeof fetch;
   /** Reuse an already scoped geography read when the caller has one. */
   readPublished?: typeof heldDivisionsForZip;
 }) {
@@ -207,7 +208,7 @@ export async function runNationalPlaceTask(input: {
             disposition: { disposition: "BLOCKED_CURRENTLY", permission: "ALLOWED", transport: "OTHER_NAMED_FAILURE", observation: null,
               note: deferred + " " + JSON.stringify({ placeProgress: report ? placeMadeProgress(before ?? [], report.items) : false }) },
             cost: ZERO_COST, detail: `ZIP ${zip}: ${deferred}` };
-          const saved = await placeSourceReader({ tools, project: "freshness", context: {
+          const saved = await placeSourceReader({ tools, project: "freshness", geographyFetch: input.geographyFetch, context: {
             obligation: scheduled, route: null, providerId: null, attemptId, workItemId, routeTaskId, holder, now: tools.now,
             // Plain-code national APIs finish their walk; qualified small
             // sites keep the shared size-based request limit.

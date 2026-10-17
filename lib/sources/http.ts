@@ -181,6 +181,7 @@ export async function curlGetText(
   headers: Record<string, string>,
   signal?: AbortSignal,
   runProcess: CurlProcessRunner = nativeCurlProcess,
+  lookup?: import("../hunt/egress.ts").PublicLookup,
   form?: Readonly<Record<string, string>>,
 ): Promise<{
   status: number;
@@ -189,41 +190,36 @@ export async function curlGetText(
   bytes: Uint8Array;
   finalUrl: string;
 }> {
-  const args = ["-s", "-S", "-L", "--compressed", "-w", "\n%{http_code}\t%{content_type}\t%{url_effective}"];
-  if (form) args.push("--data", new URLSearchParams(form).toString());
-  const remainingSeconds = sourceAcquisitionSecondsRemaining(signal);
-  if (remainingSeconds !== null) args.push("--max-time", String(remainingSeconds));
-  for (const [key, value] of Object.entries(headers)) {
-    args.push("-H", `${key}: ${value}`);
+  const { checkedCurlArguments, parseCurlIncluded } = await import("../hunt/public-curl.ts");
+  const { MAX_PUBLIC_REDIRECTS, publicRedirectHeaders } = await import("../hunt/egress.ts");
+  const deadline = signal ?? AbortSignal.timeout(30_000);
+  let current = url;
+  let currentHeaders = new Headers(headers);
+  let sendForm = form !== undefined;
+  for (let hop = 0; ; hop++) {
+    const args = await checkedCurlArguments(current, { signal: deadline, lookup });
+    const remainingSeconds = sourceAcquisitionSecondsRemaining(deadline);
+    args.push("--max-time", String(remainingSeconds ?? 30));
+    for (const [key, value] of currentHeaders) args.push("-H", `${key}: ${value}`);
+    if (sendForm) args.push("--data", new URLSearchParams(form).toString());
+    args.push(current);
+    const stdout = await runProcess(args, { maxBuffer: 32 * 1024 * 1024, signal: deadline });
+    deadline.throwIfAborted();
+    const response = parseCurlIncluded(stdout);
+    if (response.status === null) throw new SourceHttpError(`curl returned no status for ${current}`, 0, current, 4);
+    if ([301, 302, 303, 307, 308].includes(response.status) && response.location !== null) {
+      if (hop >= MAX_PUBLIC_REDIRECTS) throw new SourceHttpError("too many source redirects", response.status, current, 4);
+      const next = new URL(response.location, current).toString();
+      currentHeaders = publicRedirectHeaders(currentHeaders, current, next);
+      current = next;
+      // A form is sent again only where the redirect keeps the method.
+      sendForm = sendForm && (response.status === 307 || response.status === 308);
+      continue;
+    }
+    if (response.status < 200 || response.status >= 300) throw new SourceHttpError(`HTTP ${response.status} for ${current}`, response.status, current, 4);
+    return { status: response.status, contentType: response.contentType,
+      text: Buffer.from(response.body).toString("utf8"), bytes: response.body, finalUrl: current };
   }
-  args.push(url);
-
-  const stdout = await runProcess(args, {
-    maxBuffer: 32 * 1024 * 1024,
-    signal,
-  });
-  signal?.throwIfAborted();
-
-  const cut = stdout.lastIndexOf(0x0a);
-  if (cut < 0) {
-    throw new SourceHttpError(`curl returned no response trailer for ${url}`, 0, url, 4);
-  }
-  const [code, contentType = "", finalUrl = url] = stdout.subarray(cut + 1).toString("utf8").split("\t");
-  const status = Number(code);
-  if (!Number.isFinite(status)) {
-    throw new SourceHttpError(`curl returned no status for ${url}`, 0, url, 4);
-  }
-  if (status < 200 || status >= 300) {
-    throw new SourceHttpError(`HTTP ${status} for ${url}`, status, url);
-  }
-  const body = stdout.subarray(0, cut);
-  return {
-    status,
-    contentType,
-    text: body.toString("utf8"),
-    bytes: new Uint8Array(body),
-    finalUrl,
-  };
 }
 
 /**
@@ -277,6 +273,7 @@ export function readValidatedResponse(
       finalUrl: response.finalUrl || url,
       httpStatus: response.status,
       bytes: response.bytes,
+      contentType: response.contentType,
     });
   }
   return {
@@ -330,11 +327,11 @@ export async function politeGetText(
   url: string,
   options: HttpOptions = {},
 ): Promise<{ status: number; contentType: string; text: string }> {
-  const impl = options.fetchImpl ?? fetch;
+  const impl = options.fetchImpl ?? (await import("../hunt/egress.ts")).publicFetch;
   // Whether rung 4 is walked, decided once: true in production (nothing injected) and for a test that
   // supplies the `curl` double.
   const escalates = !options.fetchImpl || options.ladder !== undefined;
-  const curl = options.ladder?.curl ?? ((url, headers, signal, form) => curlGetText(url, headers, signal, nativeCurlProcess, form));
+  const curl = options.ladder?.curl ?? ((url, headers, signal, form) => curlGetText(url, headers, signal, nativeCurlProcess, undefined, form));
   const headers = sourceRequestHeaders(options.accept);
   let lastStatus = 0;
 
@@ -347,12 +344,15 @@ export async function politeGetText(
     lastStatus = response.status;
 
     if (response.ok) {
-      const text = await response.text();
+      const bytes = new Uint8Array(await response.arrayBuffer());
+      const text = new TextDecoder().decode(bytes);
       options.signal?.throwIfAborted();
       const here = {
         status: response.status,
         contentType: response.headers.get("content-type") ?? "",
         text,
+        bytes,
+        finalUrl: response.url || url,
       };
       // A challenge served at 200 to Node's client: the same identity asks once through `curl`.
       if (challengeIn(text) !== null && escalates) {
@@ -421,7 +421,7 @@ export async function politeGetBytes(
   url: string,
   options: HttpOptions = {},
 ): Promise<{ status: number; contentType: string; bytes: Uint8Array; rung: number }> {
-  const impl = options.fetchImpl ?? fetch;
+  const impl = options.fetchImpl ?? (await import("../hunt/egress.ts")).publicFetch;
   const response = await impl(url, { headers: sourceRequestHeaders(options.accept), signal: options.signal });
   if (!response.ok) {
     throw new SourceHttpError(
@@ -444,6 +444,7 @@ export async function politeGetBytes(
       2,
     );
   }
+  recordAcquiredResponse({ requestedUrl: url, finalUrl: response.url || url, httpStatus: response.status, bytes, contentType: response.headers.get("content-type") ?? "" });
   return {
     status: response.status,
     contentType: response.headers.get("content-type") ?? "",

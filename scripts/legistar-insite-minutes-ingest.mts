@@ -144,6 +144,7 @@ export interface MinutesIngestInput {
   readonly log?: (line: string) => void;
   /** Pacing between portal requests. The vendor's `Crawl-delay: 2` in production. */
   readonly spacingMs?: number;
+  readonly fetchImpl?: typeof fetch;
 }
 
 export interface MinutesIngestResult {
@@ -201,8 +202,7 @@ export async function runInSiteMinutesOutcomeIngest(input: MinutesIngestInput): 
   const log = input.log ?? ((line: string) => console.log(line));
   const writes = args.promote && !args.dryRun;
   const spacingMs = input.spacingMs ?? INSITE_SPACING_MS;
-  // Late-bound, so every read goes through the acquisition trace installed for it.
-  const session = new InSiteSession({ fetchImpl: (url, init) => globalThis.fetch(url, init), spacingMs });
+  const session = new InSiteSession({ spacingMs, fetchImpl: input.fetchImpl });
   const calendarUrl = `https://${tenant.host}/Calendar.aspx`;
   const refusedSittings: string[] = [];
   let promotedSittings = 0;

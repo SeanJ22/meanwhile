@@ -6,7 +6,7 @@ import { readClientSource, type ClientTool } from './scout-clients.ts';
 import { accessControlIn } from "../../hunt/access-control.ts";
 import { runOcr } from "../../extract/ocr.ts";
 import { rowsFromItems, cellsFromRow, tablesFromRows, type ExtractedTable } from "../../extract/tables.ts";
-import { assertPublicUrl } from "../../hunt/egress.ts";
+import { assertPublicUrl, publicFetch } from "../../hunt/egress.ts";
 import type { PermissionState, TransportState } from "../../workstate/types.ts";
 import {
   artifactId,
@@ -19,7 +19,7 @@ import { contentHash } from "../ids.ts";
 
 import type { WorkArtifact } from "./dispatch.ts";
 import { DEFAULT_FETCH_TIMEOUT_MS, WALL_STATUSES } from "./http-executor.ts";
-import { websiteRequestLimit, websiteSizeForObligation } from "./host-supervision.ts";
+import { websiteRequestLimit, websiteSizeForObligation, type WebsiteSizeForUrl } from "./host-supervision.ts";
 import { evaluatePermission, DEFAULT_ROBOTS_TOKEN, type PermissionReading } from "./robots.ts";
 import { DEFAULT_USER_AGENT, realOpen, type OpenOne } from "./route-executor.ts";
 import {
@@ -174,7 +174,7 @@ export const realOpenBytes: OpenBytes = async ({ url, headers, timeoutMs }) => {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
-    const response = await fetch(url, { method: "GET", signal: controller.signal, redirect: "follow", headers });
+    const response = await publicFetch(url, { method: "GET", signal: controller.signal, redirect: "follow", headers });
     const bytes = new Uint8Array(await response.arrayBuffer());
     return {
       status: response.status,
@@ -443,7 +443,8 @@ function permissionState(verdict: PermissionReading["verdict"]): PermissionState
 }
 
 export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
-  const websiteSize = ctx.websiteSize ?? websiteSizeForObligation(ctx.obligation.obligation, ctx.root);
+  let websiteSize: WebsiteSizeForUrl = ctx.websiteSize ?? (() => null);
+  let websiteSizeRead = ctx.websiteSize !== undefined;
   const openOne: OpenOne = ctx.openOne ?? realOpen;
   /* An injected string opener never falls through to the real network. */
   const openBytes: OpenBytes | null =
@@ -1253,6 +1254,7 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
       return refusal(`${JSON.stringify(name)} is not a tool; the tools are ${SCOUT_RESEARCH_TOOLS.join(", ")} and finish.`);
     }
     toolCalls += 1;
+    if (!websiteSizeRead) { websiteSize = await websiteSizeForObligation(ctx.obligation.obligation); websiteSizeRead = true; }
     if (name === "report_finding") return await reportFinding(input);
     if ((SOURCE_API_TOOLS as readonly string[]).includes(name) || name === "legistar_events") return sourceApi(name as SourceApiTool | ClientTool, input);
     switch (name) {

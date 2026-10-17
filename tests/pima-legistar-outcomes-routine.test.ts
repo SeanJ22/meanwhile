@@ -36,7 +36,6 @@ import {
   runPimaLegistarOutcomeIngest,
   type PimaOutcomeIngestArgs,
 } from "../scripts/legistar-outcomes-ingest.mts";
-import { withFetch } from "./helpers/with-fetch.ts";
 
 // Events, items and votes are recorded responses under tests/fixtures. Native body fixtures are explicit;
 // the stub refuses any route it was not given.
@@ -218,14 +217,15 @@ async function routinePass(
   const client = unresolvedClient ?? findClient("pima");
   assert.ok(client);
   const lines: string[] = [];
-  const result = await withFetch(stub.fetchImpl, () => runPimaLegistarOutcomeIngest({
+  const result = await runPimaLegistarOutcomeIngest({
+    fetchImpl: stub.fetchImpl,
     store,
     client,
     args: ROUTINE_ARGS,
     window: { from: "2026-05-24", to: "2026-09-21" },
     now: steppedClock(clockStart),
     log: (line) => lines.push(line),
-  }));
+  });
   return { result, lines };
 }
 
@@ -418,11 +418,12 @@ test("a requested Pima body that disagrees with the native body is durably held 
   assert.ok(heldClient);
   const event = recordedEvent(1825);
   const stub = recordedLegistar({ bodies: [{ BodyId: event.EventBodyId, BodyName: event.EventBodyName }], events: [event] });
-  const result = await withFetch(stub.fetchImpl, () => runPimaLegistarOutcomeIngest({
+  const result = await runPimaLegistarOutcomeIngest({
+    fetchImpl: stub.fetchImpl,
     store, client: { ...heldClient, eventBodyId: undefined, eventBodyName: event.EventBodyName },
     args: { ...ROUTINE_ARGS, bodyId: 999 }, window: { from: "2026-05-24", to: "2026-09-21" },
     now: steppedClock("2026-09-21T00:00:00.000Z"), log: () => {},
-  }));
+  });
   assert.equal(result.exitCode, 2);
   assert.deepEqual(stub.requests.map(requestPath), ["/v1/pima/bodies"]);
   const verdict = await supervisorVerdict(store, result.receiptLine, result.exitCode);
@@ -576,14 +577,15 @@ test("a dry run reads the events route and writes nothing", async () => {
   assert.ok(client);
   const stub = recordedLegistar({ events: [recordedEvent(1825, "2026-09-20T18:00:00.12")] });
   const lines: string[] = [];
-  const result = await withFetch(stub.fetchImpl, () => runPimaLegistarOutcomeIngest({
+  const result = await runPimaLegistarOutcomeIngest({
+    fetchImpl: stub.fetchImpl,
     store,
     client,
     args: parsePimaOutcomeIngestArgs(["--dry-run", "--slug", "pima"]),
     window: { from: "2026-05-24", to: "2026-09-21" },
     now: steppedClock("2026-09-21T00:00:00.000Z"),
     log: (line) => lines.push(line),
-  }));
+  });
   assert.equal(result.receiptLine, null);
   assert.equal(result.exitCode, 0);
   assert.equal(stub.requests.length, 1);
@@ -602,14 +604,15 @@ test("DB-07: outcomes older than the routine window stay published; a narrower w
   const stub = recordedLegistar({ events: [recordedEvent(1825, "2026-09-20T18:00:00.12")] });
   const client = findClient("pima");
   assert.ok(client);
-  const result = await withFetch(stub.fetchImpl, () => runPimaLegistarOutcomeIngest({
+  const result = await runPimaLegistarOutcomeIngest({
+    fetchImpl: stub.fetchImpl,
     store,
     client,
     args: ROUTINE_ARGS,
     window: { from, to: "2026-09-21" },
     now: steppedClock("2026-09-21T00:00:00.000Z"),
     log: () => {},
-  }));
+  });
   assert.equal(result.exitCode, 0);
   const read = await readDoorOutcomeProjection(SCOPE, { store, bypassCache: true });
   assert.equal(read.kind, "PROMOTED");

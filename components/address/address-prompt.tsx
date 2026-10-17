@@ -1,6 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRememberedAddress } from "@/hooks/use-session-address";
+import { RememberedAddress } from "@/components/address/remembered-address";
+import { logAddressEntered, readerPageForPath, type ReaderPage } from "@/lib/log/address-events";
 import type { GeographySelection } from "@/lib/census-geography/selection";
 
 import {
@@ -9,17 +12,22 @@ import {
   type AddressResolution,
   type LevelKey,
 } from "@/lib/geo/address-resolution";
-import {
-  clearSessionAddress,
-  sessionAddressFor,
-  writeSessionAddress,
-} from "@/lib/geo/session-address";
+import { writeSessionAddress } from "@/lib/geo/session-address";
+
+/**
+ * The one address prompt. A street can orient the map; a house number is
+ * needed to confirm districts. Missing source coverage stays unresolved.
+ * The reader's full address and resolved scope stay on this device until
+ * they press "Forget this address".
+ */
 
 export interface AddressPromptProps {
   zip: string;
   selection?: GeographySelection;
+  /** The Ask prompt records Ask even when it is opened from the map or ballot. */
+  page?: ReaderPage;
   /** Fires whenever the jurisdiction picture changes; callers re-read the session scope. */
-  onResolved?: (scope: { divisionIds: string[]; contestIds: string[]; splitLevels: LevelKey[] }) => void;
+  onResolved?: (scope: { divisionIds: string[]; contestIds: string[]; excludedContestIds: string[]; splitLevels: LevelKey[] }) => void;
   /** Fires only on an unambiguous street; an ambiguous one has no single point. */
   onPoint?: (point: { lat: number; lng: number }) => void;
   /** The reader accepted the offer to view the ZIP the address resolves in. */
@@ -42,6 +50,7 @@ type Phase = "IDLE" | "ASKING" | "WORKING" | "NEEDS_NUMBER" | "SETTLED" | "FAILE
 
 export function AddressPrompt({
   zip,
+  page,
   selection,
   onResolved,
   onPoint,
@@ -55,8 +64,9 @@ export function AddressPrompt({
 }: AddressPromptProps) {
   const [phase, setPhase] = useState<Phase>(startOpen ? "ASKING" : "IDLE");
   const [street, setStreet] = useState("");
-  /** Cleared in the `finally`, whatever the request returned. */
   const [houseNumber, setHouseNumber] = useState("");
+  const remembered = useRememberedAddress();
+  const [hadRememberedAddress, setHadRememberedAddress] = useState(remembered !== null);
   const [resolution, setResolution] = useState<AddressResolution | null>(null);
   const [error, setError] = useState<string | null>(null);
   /** The ZIP this address does resolve in, when it resolves elsewhere. */
@@ -69,31 +79,20 @@ export function AddressPrompt({
     if (phase === "NEEDS_NUMBER") numberRef.current?.focus();
   }, [phase]);
 
-  /* An address already given this session for this zip is reused, never asked again. */
-  useEffect(() => {
-    const held = sessionAddressFor(zip, selection);
-    if (!held) return;
-    const id = window.setTimeout(() => {
-      setStreet(held.streetLabel);
-      setPhase("SETTLED");
-      onResolved?.({
-        divisionIds: held.divisionIds,
-        contestIds: held.contestIds,
-        splitLevels: held.splitLevels as LevelKey[],
-      });
-    }, 0);
-    return () => window.clearTimeout(id);
-    // Deliberately keyed on the zip alone: this is a mount-time read of a store
-    // some other surface may have written, not a subscription to a prop.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [zip]);
-
   const send = async (withNumber: string) => {
     setPhase("WORKING");
     setError(null);
+    setElsewhere(null);
+    let entryLogged = false;
+    const logEntry = (divisionIds: string[], resolvedZip = zip) => {
+      if (entryLogged) return;
+      entryLogged = true;
+      logAddressEntered({ zip: resolvedZip, divisionIds }, page ?? readerPageForPath(window.location.pathname));
+    };
     try {
       const response = await fetch("/api/address/resolve", {
         method: "POST",
+        cache: "no-store",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           zip,
@@ -104,6 +103,7 @@ export function AddressPrompt({
         }),
       });
       if (!response.ok) {
+        logEntry([]);
         setError("We couldn't check that just now. Nothing has changed.");
         setPhase(withNumber ? "NEEDS_NUMBER" : "ASKING");
         return;
@@ -112,9 +112,12 @@ export function AddressPrompt({
         ok?: boolean;
         resolution?: AddressResolution;
         contestIds?: unknown;
+        excludedContestIds?: unknown;
+        basis?: "EXACT_ADDRESS" | "STREET_SAMPLE";
         point?: { lat?: unknown; lng?: unknown } | null;
       };
       if (body.ok !== true || !body.resolution) {
+        logEntry([]);
         setError("We couldn't check that just now. Nothing has changed.");
         setPhase(withNumber ? "NEEDS_NUMBER" : "ASKING");
         return;
@@ -123,18 +126,19 @@ export function AddressPrompt({
       const result = body.resolution;
       setResolution(result);
 
+      if (body.basis === "STREET_SAMPLE") {
+        logEntry([]);
+        if (body.point && typeof body.point.lat === "number" && typeof body.point.lng === "number") onPoint?.({ lat: body.point.lat, lng: body.point.lng });
+        setPhase("NEEDS_NUMBER");
+        return;
+      }
       if (result.status === "FAILED") {
-
-        if (!withNumber && !result.resolvesInZip) {
-          setError(null);
-          setPhase("NEEDS_NUMBER");
-          return;
-        }
+        logEntry([], result.resolvesInZip ?? zip);
         setError(
           result.resolvesInZip
-            ? `${street.trim()} doesn't resolve in ${zip} — it resolves in ` +
+            ? `That address doesn't resolve in ${zip} — it resolves in ` +
               `${result.resolvesInZip}. Everything here stays listed.`
-            : `We couldn't place ${street.trim()} in ${zip}. Everything stays listed.`,
+            : `We couldn't place that address in ${zip}. Everything stays listed.`,
         );
         setElsewhere(result.resolvesInZip ?? null);
         setPhase("FAILED");
@@ -144,34 +148,30 @@ export function AddressPrompt({
       const contestIds = Array.isArray(body.contestIds)
         ? body.contestIds.filter((id): id is string => typeof id === "string")
         : [];
+      const excludedContestIds = Array.isArray(body.excludedContestIds)
+        ? body.excludedContestIds.filter((id): id is string => typeof id === "string") : [];
       const divisionIds = result.levels.filter((l) => l.certain).flatMap((l) => l.divisionIds);
+      const divisionLabels = result.levels.filter((l) => l.certain).flatMap((l) => l.divisionLabels);
       const splitLevels = result.status === "AMBIGUOUS" ? result.split : [];
 
+      logEntry(divisionIds);
 
       writeSessionAddress({
         zip,
         contestIds,
+        excludedContestIds,
         divisionIds,
+        divisionLabels,
         splitLevels,
-        streetLabel: street.trim(),
+        streetLabel: withNumber ? `${withNumber} ${street}` : street,
         ...(selection ? { selection } : {}),
       });
-      onResolved?.({ divisionIds, contestIds, splitLevels });
-      if (
-        body.point &&
-        typeof body.point.lat === "number" &&
-        typeof body.point.lng === "number"
-      ) {
-        onPoint?.({ lat: body.point.lat, lng: body.point.lng });
-      }
-
+      onResolved?.({ divisionIds, contestIds, excludedContestIds, splitLevels });
       setPhase(result.status === "AMBIGUOUS" ? "NEEDS_NUMBER" : "SETTLED");
     } catch {
+      logEntry([]);
       setError("We couldn't check that just now. Nothing has changed.");
       setPhase(withNumber ? "NEEDS_NUMBER" : "ASKING");
-    } finally {
-      // The number is done with the moment the request is. Nothing keeps it.
-      setHouseNumber("");
     }
   };
 
@@ -184,43 +184,50 @@ export function AddressPrompt({
   };
 
   const reset = () => {
-    clearSessionAddress();
     setStreet("");
     setHouseNumber("");
     setResolution(null);
     setError(null);
+    setElsewhere(null);
     setPhase("IDLE");
     onCleared?.();
   };
 
+  // A Forget control on another surface clears this form's input state too.
+  if (hadRememberedAddress !== (remembered !== null)) {
+    setHadRememberedAddress(remembered !== null);
+    if (!remembered) {
+      setStreet("");
+      setHouseNumber("");
+      setResolution(null);
+      setError(null);
+      setElsewhere(null);
+      setPhase("IDLE");
+    }
+  }
+
+  if (remembered) {
+    return (
+      <>
+        <RememberedAddress scope={remembered} className={className} onForget={reset} />
+        {resolution && resolution.status !== "FAILED" && resolution.unheld.length > 0 && (
+          <p className="address-prompt-error">
+            We could not check {resolution.unheld.map(level => LEVEL_LABEL[level]).join(", ")}.
+            Those choices remain listed.
+          </p>
+        )}
+      </>
+    );
+  }
+
   /* ------------------------------------------------------------- idle --- */
-  if (phase === "IDLE") {
+  if (phase === "IDLE" || phase === "SETTLED") {
     return (
       <p className={triggerClassName}>
         <button type="button" className="address-prompt-trigger" onClick={() => setPhase("ASKING")}>
           {trigger} <span aria-hidden="true">→</span>
         </button>
       </p>
-    );
-  }
-
-  /* ---------------------------------------------------------- settled --- */
-  if (phase === "SETTLED") {
-    const confirmed = resolution && resolution.status !== "FAILED" ? resolution.levels.filter((l) => l.certain) : [];
-    return (
-      <div className={`address-prompt address-prompt-settled ${className ?? ""}`}>
-        <p className="address-prompt-confirmed">
-          {confirmed.length > 0
-            ? `Set to ${confirmed.flatMap((l) => l.divisionLabels).join(", ")}.`
-            : street.trim().length > 0
-              ? `Set to ${street.trim()}.`
-              : "Set to your address."}{" "}
-          <span className="address-prompt-kept">Kept on this device for this visit only.</span>
-        </p>
-        <button type="button" className="address-prompt-undo" onClick={reset}>
-          Show the whole area again
-        </button>
-      </div>
     );
   }
 
@@ -239,12 +246,9 @@ export function AddressPrompt({
           </p>
         )}
         <label htmlFor={`wtp-house-${zip}`} className="address-prompt-ask">
-          {split.length > 0
+          {resolution?.status === "AMBIGUOUS" && resolution.basis === "EXACT_ADDRESS"
             ? houseNumberReason(split)
-            : resolution?.status === "FAILED"
-              ? `We couldn't place ${street.trim()} from the street name on its own. ` +
-                "A house number will settle it."
-              : "Your street crosses a boundary. A house number settles it."}
+            : "A street name shows the area. Add a house number to check your districts."}
         </label>
         <div className="address-prompt-fields">
           <input
@@ -297,8 +301,7 @@ export function AddressPrompt({
         </button>
       )}
         <p className="address-prompt-promise">
-          The number is used to find {split.length === 1 ? LEVEL_LABEL[split[0]] : "your districts"} and
-          is not kept.
+          Your address and districts stay on this device until you press Forget this address.
         </p>
       </div>
     );
@@ -340,10 +343,8 @@ export function AddressPrompt({
         </button>
       )}
       <p className="address-prompt-promise">
-        We ask for your street, and for a house number when the street crosses a boundary or when
-        we can&apos;t place it from the name on its own. It passes through our server to the U.S.
-        Census Bureau&apos;s free address lookup and is not tied to an account. What comes back
-        stays on this device for this visit.{" "}
+        A street name shows the area. A house number lets us check your districts through the U.S.
+        Census Bureau. Your address and districts stay on this device until you press Forget this address.{" "}
         <button type="button" className="address-prompt-skip" onClick={() => setPhase("IDLE")}>
           No thanks
         </button>

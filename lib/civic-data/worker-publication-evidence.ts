@@ -78,7 +78,7 @@ export function verifiedWorkerRecords(input: {
   const minimums = SECTION3_MINIMUMS[contract.recordClass] ?? contract.requiredFields;
   const quoted = isQuotedExtraction(contract, extraction);
   const sourceInventory = !quoted || contract.recordClass === "BALLOT_CONTEST"
-    ? inventoryRecordEvidence(primary.evidence, contract.extraction) : null;
+    ? inventoryRecordEvidence(primary.evidence, contract.extraction, contract) : null;
   const replay = quoted
     ? quotedSourceFindings(extraction, { ...contract, requiredFields: SECTION3_MINIMUMS[contract.recordClass] ?? contract.requiredFields }, primary.evidence)
     : compareCandidateWithSource(extraction, contract, primary.evidence, sourceInventory!);

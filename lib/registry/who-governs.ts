@@ -5,7 +5,7 @@ import { WIRED_STATUSES } from "./coverage-client.ts";
 
 /**
  * One denominator for the Who Governs Here card. Every number the card states is derived from one
- * array, after the reader's device-local narrowing: `governingCount` is `rows.length`, the same expression
+ * array, after the address scope is applied: `governingCount` is `rows.length`, the same expression
  * twice, so the prose and the rows cannot disagree. Governing bodies and other boards are both stated in
  * plain language, so advisory committees never read as governments.
  *
@@ -40,11 +40,6 @@ export interface WhoGoverns<T extends CoveredBody = CoveredBody> {
 }
 
 /**
- * @param bodies every body coverage returned for this point
- * @param selectedOcdIds the reader's device-local narrowing choices; empty when they have not narrowed,
- *        which is the default
- */
-/**
  * The order of the governing list: county, then city or town, then school district, then every other
  * district. A neutral structural criterion (what kind of government each is), stated on screen in the
  * "Why these N?" disclosure. Within a kind the incoming order is preserved; there is no neutral way to
@@ -74,28 +69,14 @@ export function orderByGovernmentKind<T extends { divisionType: string | null }>
 
 export function deriveWhoGoverns<T extends CoveredBody & { standing?: BodyStanding }>(
   bodies: readonly T[],
-  selectedOcdIds: ReadonlySet<string>,
 ): WhoGoverns<T> {
-  // Where the reader picked a municipality or school district, bodies of that type narrow to the choice;
-  // every other type stays fully listed.
-  const narrowedTypes = new Set(
-    bodies
-      .filter((b) => b.ocdId !== null && selectedOcdIds.has(b.ocdId))
-      .map((b) => b.divisionType),
-  );
-  const narrowed = bodies.filter(
-    (b) =>
-      !narrowedTypes.has(b.divisionType) ||
-      (b.ocdId !== null && selectedOcdIds.has(b.ocdId)),
-  );
-
   const rows = orderByGovernmentKind(
-    narrowed.filter((b) => b.bodyClass === "GOVERNING"),
+    bodies.filter((b) => b.bodyClass === "GOVERNING"),
   );
   const wired = (list: readonly CoveredBody[]) =>
     list.filter((b) => WIRED_STATUSES.has(b.coverageStatus)).length;
 
-  const otherRows = narrowed.filter((b) => b.bodyClass !== "GOVERNING");
+  const otherRows = bodies.filter((b) => b.bodyClass !== "GOVERNING");
 
   return {
     rows,
@@ -106,7 +87,7 @@ export function deriveWhoGoverns<T extends CoveredBody & { standing?: BodyStandi
     otherRows,
     // The same array's length, for the same reason `governingCount` is `rows.length`.
     others: otherRows.length,
-    othersWithSource: wired(narrowed) - wired(rows),
+    othersWithSource: wired(bodies) - wired(rows),
     // Counted off `rows`, the same array the card renders. Only an explicit `ELSEWHERE_IN_ZIP`, which only
     // the reader's own address can produce, counts.
     elsewhere: rows.filter((b) => b.standing === "ELSEWHERE_IN_ZIP").length,

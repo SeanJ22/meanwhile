@@ -128,7 +128,7 @@ export type MinutesRefreshReason =
   | "PUBLISHER_RELABELED"
   /** A failed request or a failure with no document identity held: read again. */
   | "PRIOR_EXTRACTION_FAILED"
-  /** Held with unread "It was moved" passages under an older parser revision: read again. Under the same revision it is not. */
+  /** Held with unread "It was moved" passages under an older parser revision: read again. */
   | "UNREAD_PASSAGES_HELD"
   /** The link serves a document whose extraction failed: the caller checks whether it changed before downloading again. */
   | "FAILED_DOCUMENT_CHECK"

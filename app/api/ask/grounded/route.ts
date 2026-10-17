@@ -18,7 +18,7 @@ import { enterReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "@/lib/
 import { AUTHORITY_FAMILIES, type AuthorityFamily, type GlobalAuthorityFamily, type PromotedAuthorityFamily } from "@/lib/meetings/edge-artifacts";
 import { READER_MAP_AUTHORITY_FAMILIES } from "@/lib/meetings/edge-serving";
 import type { Meeting } from "@/lib/sources/types";
-import type { AskSitting } from "@/lib/ask/answer";
+import { askResponseText, type AskSitting } from "@/lib/ask/answer";
 import { type AgendaDocumentLike } from "@/lib/routing/agenda-search";
 import { seatHolderById, settleCommentAccessRead, settleFederalDirectoryRead, settleRegistryAuthorityReads } from "@/lib/registry/server";
 import { readCommentAccessFacts } from "@/lib/registry/comment-access";
@@ -122,7 +122,12 @@ import {
   type BallotSubjectRecord,
 } from "@/lib/ask/ballot-inventory";
 import { readLocationOrigin, stampResidency } from "@/lib/ask/residency";
+import { classifyReaderEventTopic } from "@/lib/db/reader-event-topics";
+import { logSearchEvent } from "@/lib/db/search-log";
 import { captureAskInteraction } from "@/lib/db/ask-signal";
+import { raiseWriteAlarm } from "@/lib/db/write-alarm";
+import { ASK_SAVE_STATUS_HEADER, type AskSaveStatus } from "@/lib/ask/save-status";
+import { withReaderFeatures } from "@/lib/civic-data/reader-feature-context.ts";
 import { askCallerKey, cacheCallLine } from "@/lib/ask/prompt-cache";
 import { askModelStartupLine, resolveAskRoleModel } from "@/lib/ask/model";
 import { askUnsourced, shouldFallBack } from "@/lib/routing/unsourced-fallback";
@@ -184,6 +189,20 @@ export const runtime = "nodejs";
 
 const MAX_BODY_BYTES = 16384;
 const MAX_QUESTION_CHARS = 400;
+const MAX_OCD_IDS = 40;
+const MAX_PRIOR_SUBJECTS = 8;
+const MAX_PRIOR_TURNS = 4;
+const MAX_ACTIVE_SUBJECTS = 6;
+
+/** The request text, or null when it is larger than any real question needs. */
+async function readBoundedBody(request: Request): Promise<string | null> {
+  if (Number(request.headers.get("content-length")) > MAX_BODY_BYTES) return null;
+  const raw = await request.text();
+  return raw.length > MAX_BODY_BYTES ? null : raw;
+}
+
+const readOcdIds = (raw: unknown): string[] =>
+  Array.isArray(raw) ? raw.filter((v): v is string => typeof v === "string").slice(0, MAX_OCD_IDS) : [];
 
 let ipLimiter: SlidingWindowLimiter | null = null;
 function getIpLimiter() {
@@ -362,13 +381,50 @@ function personEntities(seats: readonly SeatHolder[]): BindableEntity[] {
 }
 
 export const POST = readerRoute("/api/ask/grounded", async function POST(request: Request) {
-  return withPublishedAskSettings(() => {
-    console.log(askModelStartupLine());
-    return answerWithSettings(request);
+  // Keep a copy for failures before the answer path has prepared its capture.
+  const unansweredRequest = request.clone();
+  return withReaderFeatures(async () => {
+    let delivered: AskDeliveredInput | null = null;
+    let response: Response;
+    try {
+      response = await postGrounded(request, (input) => { delivered = input; });
+    } catch (error) {
+      if (delivered) await captureDelivered({ ...(delivered as AskDeliveredInput),
+        mode: "TRANSPORT_FAILED", answer: null, validationPassed: null });
+      else await captureUnanswered(unansweredRequest);
+      throw error;
+    }
+    // Schedule the single save only after the complete response exists. An
+    // exception while composing it keeps the question and marks it unanswered.
+    const saveStatus = delivered ? await captureDelivered(delivered) : await captureUnanswered(unansweredRequest);
+    if (saveStatus !== null) response.headers.set(ASK_SAVE_STATUS_HEADER, saveStatus);
+    return response;
   });
 });
 
-async function answerWithSettings(request: Request) {
+/** A valid question remains demand even when answering fails before capture. */
+async function captureUnanswered(request: Request): Promise<AskSaveStatus | null> {
+  let body: Record<string, unknown>;
+  try { body = JSON.parse(await readBoundedBody(request) ?? ""); } catch { return null; }
+  if (typeof body.question !== "string" || !body.question.trim()) return null;
+  return captureDelivered({ request, question: body.question.slice(0, MAX_QUESTION_CHARS), interpretation: unavailableInterpretation(),
+    resolutionState: "NONE", mode: "TRANSPORT_FAILED", subjectIds: [], answer: null,
+    answerModel: null, validationPassed: null, records: [], gaps: [],
+    surface: body.surface === "MAP" || body.surface === "BALLOT" ? body.surface : "UNKNOWN",
+    approximateLocation: typeof body.approximateLocation === "string" ? body.approximateLocation : null,
+    ocdIds: readOcdIds(body.ocdIds),
+    residency: stampResidency(readLocationOrigin(body.locationOrigin)),
+    continuityKey: typeof body.continuityKey === "string" ? body.continuityKey : "" });
+}
+
+async function postGrounded(request: Request, setDelivered: (input: AskDeliveredInput) => void) {
+  return withPublishedAskSettings(() => {
+    console.log(askModelStartupLine());
+    return answerWithSettings(request, setDelivered);
+  });
+}
+
+async function answerWithSettings(request: Request, setDelivered: (input: AskDeliveredInput) => void) {
   const started = Date.now();
   const trace: AskTrace = emptyTrace();
 
@@ -377,10 +433,8 @@ async function answerWithSettings(request: Request) {
     return Response.json(offAnswer("ripcord"), { status: 200 });
   }
 
-  const raw = await request.text();
-  if (raw.length > MAX_BODY_BYTES) {
-    return Response.json({ error: "payload too large" }, { status: 413 });
-  }
+  const raw = await readBoundedBody(request);
+  if (raw === null) return Response.json({ error: "payload too large" }, { status: 413 });
 
   if (!ripcordPulled("ripcord.rateLimits")) {
     if (!isSameOriginSubmission(request)) {
@@ -417,8 +471,8 @@ async function answerWithSettings(request: Request) {
   const namedStates = statesNamedInQuestion(question);
   const ballotZip = !namedStates.length && typeof body.approximateLocation === "string" && /^\d{5}$/.test(body.approximateLocation) ? body.approximateLocation : undefined;
   const namedStateDivisions = namedStates.map(state => `ocd-division/country:us/${state === "DC" ? "district" : "state"}:${state.toLowerCase()}`);
-  let ocdIds = namedStates.length ? namedStateDivisions : await ballotPlaceDivisions({ divisions: Array.isArray(body.ocdIds)
-    ? body.ocdIds.filter((v): v is string => typeof v === "string").slice(0, 40) : [], zip: ballotZip });
+  let ocdIds = namedStates.length ? namedStateDivisions : await ballotPlaceDivisions({ divisions: readOcdIds(body.ocdIds), zip: ballotZip });
+  const priorSubjectRefs = readSubjectRefs(body.priorSubjects, MAX_PRIOR_SUBJECTS);
   const earlyManifest = namedStates.length ? await readReaderManifest().catch(holdReaderAuthorityEdge) : null;
   if (namedStates.length) {
     if (earlyManifest) enterReaderAuthorityEdge(await ensureReaderAuthorityEdge(earlyManifest, undefined, []));
@@ -439,7 +493,7 @@ async function answerWithSettings(request: Request) {
     const target = officialStateRollCallTargetByScope(`US-${state.toUpperCase()}`);
     if (target && !isRetiredStateRollCallScope(target.jurisdiction)) stateVoteScopes.add(target.jurisdiction);
   }
-  for (const ref of [...readSubjectRefs(body.activeSubjects), ...readSubjectRefs(body.priorSubjects, 8)]) {
+  for (const ref of [...readSubjectRefs(body.activeSubjects), ...priorSubjectRefs]) {
     if (!ref.id) continue;
     const scope = officialStateVoteScopeForOfficeholderId(ref.id);
     if (scope && !isRetiredStateRollCallScope(scope)) stateVoteScopes.add(scope);
@@ -463,7 +517,7 @@ async function answerWithSettings(request: Request) {
   const leanAsk = Boolean(officialsAsk || areaMeetingsAsk);
   const ballotOnlyHint = !topicRoute && !leanAsk && ocdIds.length > 0 && ballotQuestionHint(question) &&
     readSubjectRefs(body.activeSubjects).every(ref => !ref.focused) &&
-    readSubjectRefs(body.priorSubjects, 8).length === 0 &&
+    priorSubjectRefs.length === 0 &&
     (!Array.isArray(body.priorTurns) || body.priorTurns.length === 0);
   const sittingShapes = new Set(["MEETING_TIME", "BODY_AGENDA", "MEETING_OUTCOME", "PUBLIC_COMMENT"]);
   /* Shapes whose subject is never a person: their answer reads no vote, statement or action record, and no county finance
@@ -522,7 +576,7 @@ async function answerWithSettings(request: Request) {
         trace.validation = { ran: true, passed: true, checked: verdict.checked };
         trace.synthesis = { ran: false, why: "composed-from-fec-records" };
         trace.sourcesLoaded = "ESSENTIAL"; trace.preloads = preloadMs; trace.answerMode = "STRUCTURED_GROUNDED"; trace.totalMs = Date.now() - started;
-        await captureDelivered({ request, question, interpretation, resolutionState: "NONE", mode: "STRUCTURED_GROUNDED",
+        setDelivered({ request, question, interpretation, resolutionState: "NONE", mode: "STRUCTURED_GROUNDED",
           subjectIds: [...new Set(direct.pack.records.flatMap(row => row.subjectId ? [row.subjectId] : []))], answer: direct.answer,
           answerModel: null, validationPassed: true, records: direct.pack.records, gaps: direct.pack.gaps,
           surface: body.surface === "MAP" || body.surface === "BALLOT" ? body.surface : "UNKNOWN",
@@ -554,7 +608,7 @@ async function answerWithSettings(request: Request) {
       trace.preloads = preloadMs;
       trace.answerMode = "STRUCTURED_GROUNDED";
       trace.totalMs = Date.now() - started;
-      await captureDelivered({ request, question, interpretation, resolutionState: "NONE",
+      setDelivered({ request, question, interpretation, resolutionState: "NONE",
         mode: "STRUCTURED_GROUNDED", subjectIds: [], answer: composed.answer, answerModel: null,
         validationPassed: true, records: [...pack.records], gaps: [...pack.gaps],
         surface: body.surface === "MAP" || body.surface === "BALLOT" ? body.surface : "UNKNOWN",
@@ -704,7 +758,7 @@ async function answerWithSettings(request: Request) {
     body.surface === "BALLOT" || body.surface === "MAP" ? body.surface : "UNKNOWN";
 
   /* Bodies resolve through the canonical registry, so a reader binds to one government rather than a shared geography. */
-  const explicitBodyIds = new Set([...readSubjectRefs(body.activeSubjects), ...readSubjectRefs(body.priorSubjects, 8)]
+  const explicitBodyIds = new Set([...readSubjectRefs(body.activeSubjects), ...priorSubjectRefs]
     .filter((ref) => ref.kind === "BODY").flatMap((ref) => ref.id ? [ref.id] : []));
   const governmentListings = officialsAsk?.unresolvedPlace ? { records: [], unavailableStates: [] }
     : await readerGovernmentListings(question, ocdIds, [...explicitBodyIds]).catch(() => ({ records: [], unavailableStates: [] }));
@@ -725,7 +779,7 @@ async function answerWithSettings(request: Request) {
       (probe.basis === "WHOLE_QUESTION" || probe.basis === "READER_WORDS");
     areaTopicRoute = !deterministicTopicRoute && probe.binding.kind === "NONE" && ocdIds.length > 0 &&
       readSubjectRefs(body.activeSubjects).every((ref) => !ref.focused) &&
-      readSubjectRefs(body.priorSubjects, 8).length === 0 &&
+      priorSubjectRefs.length === 0 &&
       (!Array.isArray(body.priorTurns) || body.priorTurns.length === 0) &&
       !/\b(?:they|them|their|it|its|he|she|his|her|this|that|those)\b/i.test(question);
     // The reader's own words match several bodies (a township's
@@ -741,7 +795,7 @@ async function answerWithSettings(request: Request) {
     ? { seats: [], loaderFailures: 0, held: [] } : await readerOfficeholders(ocdIds, scopedBodies.map((body) => body.bodyId));
   let namedPeople = 0;
   if (!officialsAsk?.unresolvedPlace) try {
-    const explicitIds = [...readSubjectRefs(body.activeSubjects), ...readSubjectRefs(body.priorSubjects, 8)]
+    const explicitIds = [...readSubjectRefs(body.activeSubjects), ...priorSubjectRefs]
       .flatMap((ref) => ref.id ? [ref.id] : []);
     const named = await namedOfficeholders(question, explicitIds, ocdIds);
     namedPeople = named.length;
@@ -757,7 +811,7 @@ async function answerWithSettings(request: Request) {
     trace.sourcesLoaded = "ALL";
   }
   const people = personEntities(officeholders.seats);
-  const preferredOfficialIds = [...readSubjectRefs(body.activeSubjects), ...readSubjectRefs(body.priorSubjects, 8)].flatMap((ref) => ref.id ? [ref.id] : []);
+  const preferredOfficialIds = [...readSubjectRefs(body.activeSubjects), ...priorSubjectRefs].flatMap((ref) => ref.id ? [ref.id] : []);
   const officialAliases = canonicalOfficialAliases(people.map((person) => person.id), preferredOfficialIds);
 
 
@@ -842,7 +896,7 @@ async function answerWithSettings(request: Request) {
 
   const canonicalReference = (ref: AskSubjectRef): AskSubjectRef => ({ ...ref, id: ref.id ? filingToBallot.get(ref.id) ?? officialToBallot.get(ref.id) ?? officialAliases.get(ref.id) ?? ref.id : ref.id });
   const activeSubjects: AskSubjectRef[] = readSubjectRefs(body.activeSubjects).map(canonicalReference);
-  const priorSubjects: AskSubjectRef[] = readSubjectRefs(body.priorSubjects, 8).map(canonicalReference);
+  const priorSubjects: AskSubjectRef[] = priorSubjectRefs.map(canonicalReference);
 
   const ballotShape = !topicRoute && !leanAsk && ballot.set ? ballotQuestionShape(question, ballot.contests) : null;
   const ballotComposed = !ballotShape || ballotShape.kind === "OFFICE" &&
@@ -906,9 +960,9 @@ async function answerWithSettings(request: Request) {
       typeof body.approximateLocation === "string" ? body.approximateLocation : null,
     surface,
     priorTurns: Array.isArray(body.priorTurns)
-      ? (body.priorTurns as { question: string; resolvedSubject: string | null }[]).slice(-4)
+      ? (body.priorTurns as { question: string; resolvedSubject: string | null }[]).slice(-MAX_PRIOR_TURNS)
       : [],
-    activeSubjects: activeSubjects.map((s) => s.name).slice(0, 6),
+    activeSubjects: activeSubjects.map((s) => s.name).slice(0, MAX_ACTIVE_SUBJECTS),
   };
   const unheldBody = !topicRoute && !leanAsk && !ballotAsk ? unheldNamedBodyQuestion(question, namedBodies) : null;
   const federalPlaceAsk = !topicRoute && !leanAsk && !ballotAsk && ocdIds.length > 0 && activeSubjects.every(ref => !ref.focused) && federalMoneyPlaceQuestion(question);
@@ -1059,7 +1113,7 @@ async function answerWithSettings(request: Request) {
       validationPassed: boolean | null,
       records: EvidenceRecord[],
       gaps: EvidenceGap[],
-    ) => captureDelivered({
+    ) => setDelivered({
       request,
       question,
       interpretation,
@@ -1108,7 +1162,8 @@ async function answerWithSettings(request: Request) {
           bodyId: decision.candidate.id, name: titleCaseName(decision.candidate.name), question,
         };
         else answer.clarification = "Which government do you mean? A city or state can help me identify it.";
-        await capture("CLARIFY", [], null, null, null, [], []);
+        answer.answer = askResponseText(answer);
+        await capture("CLARIFY", [], answer.answer, null, null, [], []);
         return Response.json(answer);
       } };
     }
@@ -1119,15 +1174,6 @@ async function answerWithSettings(request: Request) {
       return { kind: "RESPONSE" as const, respond: async () => {
         trace.answerMode = "CLARIFY";
         trace.totalMs = Date.now() - started;
-        await capture(
-          "CLARIFY",
-          binding.candidates.map((c) => c.id),
-          null,
-          null,
-          null,
-          [],
-          holdingLoadGaps,
-        );
         const answer = clarifyAnswer(
             binding.mention,
             binding.candidates.map((c) => titleCaseName(c.name)),
@@ -1136,6 +1182,7 @@ async function answerWithSettings(request: Request) {
         answer.gaps.push(...holdingLoadGaps);
         answer.denominators.ballotLoaderFailures = ballot.loaderFailures.length;
         answer.denominators.officeholderLoaderFailures = officeholders.loaderFailures;
+        await capture("CLARIFY", binding.candidates.map((c) => c.id), answer.answer, null, null, [], holdingLoadGaps);
         return Response.json(answer);
       } };
     }
@@ -1144,7 +1191,6 @@ async function answerWithSettings(request: Request) {
       return { kind: "RESPONSE" as const, respond: async () => {
         trace.answerMode = "UNRESOLVED";
         trace.totalMs = Date.now() - started;
-        await capture("UNRESOLVED", [], null, null, null, [], holdingLoadGaps);
         const answer = unresolvedAnswer(binding.mention, trace);
         if (resolution.unresolvedCanonicalId) {
           answer.denominators.identityUnresolved = 1;
@@ -1153,6 +1199,8 @@ async function answerWithSettings(request: Request) {
         answer.gaps.push(...holdingLoadGaps);
         answer.denominators.ballotLoaderFailures = ballot.loaderFailures.length;
         answer.denominators.officeholderLoaderFailures = officeholders.loaderFailures;
+        answer.answer = askResponseText(answer);
+        await capture("UNRESOLVED", [], answer.answer, null, null, [], holdingLoadGaps);
         return Response.json(answer);
       } };
     }
@@ -2332,8 +2380,8 @@ async function answerWithSettings(request: Request) {
   return Response.json(payload);
 }
 
-/** Wrapped so a capture failure never withholds an answer. */
-async function captureDelivered(input: {
+/** Capture and tagging share the response lifetime; neither can delay the answer. */
+type AskDeliveredInput = {
   request: Request;
   question: string;
   interpretation: AskInterpretation;
@@ -2350,38 +2398,63 @@ async function captureDelivered(input: {
   ocdIds: string[];
   residency: ReturnType<typeof stampResidency>;
   continuityKey: string;
-}): Promise<void> {
-  try {
+};
+
+async function captureDelivered(input: AskDeliveredInput): Promise<AskSaveStatus> {
+  if (ripcordPulled("ripcord.reactionIntake")) return "PAUSED";
+  let status: AskSaveStatus = "QUEUED";
+  const occurredAt = new Date().toISOString();
+  await afterResponse(async () => {
     const marker = markerFromRequest(input.request);
-    await captureAskInteraction({
-      question: input.question,
-      intent: input.interpretation.intent,
-      temporalKind: input.interpretation.temporal.kind,
-      subjectIds: input.subjectIds,
-      resolutionState: input.resolutionState,
-      answerMode: input.mode,
-      answerText: input.answer,
-      answerModel: input.answerModel,
-      validationPassed: input.validationPassed,
-      evidenceRecordCount: input.records.length,
-      evidenceSourceCount: new Set(
-        input.records.map((r) => r.sourceUrl).filter(Boolean),
-      ).size,
-      namedGapCount: input.gaps.length,
-      evidenceProvenance: evidenceProvenance(input.records),
-      surface: input.surface,
-      approximateLocation: input.approximateLocation,
-      ocdIds: input.ocdIds,
-      divisionVintage: DIVISION_VINTAGE,
-      residencyRelation: input.residency.relation,
-      locationConfidence: input.residency.confidence,
-      /* The coverage stamp is derived by `captureAskInteraction`, never put in the reader's tree. */
-      continuityKey: input.continuityKey,
-      runClass: marker.runClass,
-      runId: marker.runId,
-      occurredAt: new Date().toISOString(),
-    });
-  } catch (error) {
-    console.error("ask signal capture failed", error);
-  }
+    const save = async () => {
+    try {
+      const saved = await captureAskInteraction({
+        question: input.question,
+        intent: input.interpretation.intent,
+        temporalKind: input.interpretation.temporal.kind,
+        subjectIds: input.subjectIds,
+        resolutionState: input.resolutionState,
+        answerMode: input.mode,
+        answerText: input.answer,
+        answerModel: input.answerModel,
+        validationPassed: input.validationPassed,
+        evidenceRecordCount: input.records.length,
+        evidenceSourceCount: new Set(
+          input.records.map((r) => r.sourceUrl).filter(Boolean),
+        ).size,
+        namedGapCount: input.gaps.length,
+        evidenceProvenance: evidenceProvenance(input.records),
+        surface: input.surface,
+        approximateLocation: input.approximateLocation,
+        ocdIds: input.ocdIds,
+        divisionVintage: DIVISION_VINTAGE,
+        residencyRelation: input.residency.relation,
+        locationConfidence: input.residency.confidence,
+        /* The coverage stamp is derived by `captureAskInteraction`, never put in the reader's tree. */
+        continuityKey: input.continuityKey,
+        runClass: marker.runClass,
+        runId: marker.runId,
+        occurredAt,
+      });
+      if (saved.kind === "WROTE") { status = "SAVED"; return; }
+      await raiseWriteAlarm("ask_interactions", saved.error ?? new Error(saved.why));
+      status = "FAILED";
+    } catch (error) {
+      await raiseWriteAlarm("ask_interactions", error);
+      status = "FAILED";
+    }
+    };
+    const topicAndEvent = async () => {
+      try {
+        const topic = await classifyReaderEventTopic(input.question);
+        const stored = await logSearchEvent({ eventType: "QUESTION_ASKED", ocdIds: input.ocdIds,
+          approximateLocation: input.approximateLocation && /^\d{5}$/.test(input.approximateLocation) ? input.approximateLocation : null,
+          continuityKey: input.continuityKey, marker,
+          detail: { question: input.question, topic, page: input.surface === "BALLOT" ? "BALLOT" : "ASK", answered: input.answer !== null } });
+        if (!stored) await raiseWriteAlarm("search_log", new Error("Question event store is unavailable"));
+      } catch (error) { await raiseWriteAlarm("search_log", error); }
+    };
+    await Promise.all([save(), topicAndEvent()]);
+  });
+  return status;
 }

@@ -114,6 +114,8 @@ import { publishOwedCommentFacts } from "../lib/civic-data/worker-comment-facts.
 import { runHourlyProbes } from "../lib/doors/hourly-check.ts";
 import { stateOfPlace } from "../lib/method/fix-map.ts";
 import { websiteSizeFromHoldings } from "../lib/control-plane/scheduler/host-supervision.ts";
+import { US_JURISDICTIONS } from "../lib/coverage/states.ts";
+import { ensurePublisherSizes } from "../lib/sources/publisher-size-load.ts";
 import { hotMeetingPartitions } from "../lib/doors/hot-partitions.ts";
 import { pacedProbeFetch } from "../lib/doors/probe-fetch.ts";
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
@@ -502,7 +504,7 @@ async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: Su
     try {
       const listed = (await listDoors(repos.doors)).doors;
       const clockStore = new PostgresRoutineDataStore();
-      const sizeFor = websiteSizeFromHoldings([...new Set(listed.flatMap((door) => stateOfPlace(door.ocdId ?? "") ?? []))]);
+      const sizeFor = await websiteSizeFromHoldings([...new Set(listed.flatMap((door) => stateOfPlace(door.ocdId ?? "") ?? []))]);
       const report = await runHourlyProbes(repos.doors, listed, await hotMeetingPartitions({ readClock: (task) => clockStore.clock(task.sourceId, task.recordClass, task.scope), db: getDb() }, Date.now()),
         pacedProbeFetch({ pacing: repos.websitePacing, sizeFor }), new Date().toISOString());
       if (report.looked > 0 || report.deferred > 0 || report.waiting > 0) {
@@ -702,6 +704,13 @@ if (!PUBLISH_NOW) {
     if (loaded.length) console.log(`fact store entities: loaded ${loaded.join(", ")}`);
   } catch (error) {
     supervisorFailures.push({ taskId: "fact-store-entities", code: "FACT_ENTITIES_LOAD_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
+  }
+  step = "loading publisher sizes";
+  try {
+    const loaded = await ensurePublisherSizes(readerFactDb(), US_JURISDICTIONS.map(state => state.slug));
+    if (loaded.length) console.log(`publisher sizes: loaded ${loaded.join(", ")}`);
+  } catch (error) {
+    supervisorFailures.push({ taskId: "publisher-sizes", code: "PUBLISHER_SIZES_LOAD_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
   }
   if (controlPlaneUrlFromEnv()) {
     step = "converting held versions that embed source pages, once";

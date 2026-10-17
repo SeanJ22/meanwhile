@@ -30,7 +30,7 @@ import { accessControlIn, RATE_LIMIT_BACKOFF_MS, type AccessControl } from "./ac
 import { RECORDED_WALLS } from "./recorded-walls.ts";
 import { DEFAULT_ROBOTS_TOKEN, evaluatePermission, type PermissionVerdict } from "../control-plane/scheduler/robots.ts";
 import { DEFAULT_USER_AGENT } from "../control-plane/scheduler/user-agent.ts";
-import { assertPublicUrl } from "./egress.ts";
+import { assertPublicUrl, publicFetch } from "./egress.ts";
 
 /** Hosts whose use waits on a pending owner decision. Nothing is requested from them, robots.txt included. */
 export const OWNER_DECISION_HOSTS: readonly { readonly host: RegExp; readonly why: string }[] = [];
@@ -270,7 +270,7 @@ export async function researchFetch(start: string, runtime: ResearchRuntime): Pr
 /** The one HTTP request this module sends from Node: never follows a redirect, never throws for a site. */
 export const nodeResearchGet: ResearchGet = async ({ url, headers, timeoutMs }) => {
   try {
-    const response = await fetch(url, { headers, redirect: "manual", signal: AbortSignal.timeout(timeoutMs) });
+    const response = await publicFetch(url, { headers, redirect: "manual", signal: AbortSignal.timeout(timeoutMs) });
     return {
       status: response.status,
       body: new Uint8Array(await response.arrayBuffer()),

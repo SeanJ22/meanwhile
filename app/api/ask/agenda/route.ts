@@ -108,7 +108,7 @@ export const POST = readerRoute("/api/ask/agenda", async function POST(request: 
   const documents = snapshot.agendaDocuments ?? [];
 
   if (typeof body.meetingId === "string" && body.meetingId.length > 0) {
-    const meetingId = body.meetingId.slice(0, 200);
+    const meetingId = body.meetingId;
     const meeting = snapshot.meetings.find((m) => m.id === meetingId);
     if (!meeting) {
       return Response.json({ error: "unknown meeting" }, { status: 400 });

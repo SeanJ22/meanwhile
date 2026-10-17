@@ -30,7 +30,9 @@ export async function refreshCongressDirectory(input: {
     const priorRead = await readFederalDirectoryProjection({store,now,bypassCache:true});
     if (priorRead.kind === "STORE_UNREACHABLE") throw Error("CONGRESS_PRIOR_UNAVAILABLE");
     const prior = priorRead.kind === "PROMOTED" || priorRead.kind === "BOOTSTRAP" ? priorRead.value : null;
-    const {sha:sourceSha,sourceCheck} = await (input.revision ?? acquireCongressSourceRevision)();
+    const {sha:sourceSha,sourceCheck,failedSourceCheck} = await (input.revision ?? acquireCongressSourceRevision)({ consumerParserVersion: FEDERAL_DIRECTORY_PARSER_VERSION });
+    const sourceGaps = failedSourceCheck ? [{ key: "congress:source-check", code: "CONGRESS_SOURCE_CHECK_FAILED",
+      detail: `Fresh source check failed at ${failedSourceCheck.at}: ${failedSourceCheck.detail}; saved evidence retained.` }] : [];
     const raw: Record<string,unknown> = {}, dates: Record<string,string> = {}, acquisitions: FederalDirectoryAcquisition[] = [];
     for (const name of FILES) {
       const url = `https://raw.githubusercontent.com/unitedstates/congress-legislators/${sourceSha}/${name}.yaml`;
@@ -54,7 +56,7 @@ export async function refreshCongressDirectory(input: {
       // The core becomes readable immediately; optional files each enrich that same pointer.
       if (!raw["legislators-current"]) continue;
       const projection = normalizeCongressDirectory(raw,sourceSha,dates["legislators-current"]!,prior,dates,now);
-      const candidate = await federalDirectoryCandidate({acquisitions,vault,retrievedAt:dates["legislators-current"]!,projection});
+      const candidate = await federalDirectoryCandidate({acquisitions,vault,retrievedAt:dates["legislators-current"]!,projection,excludedFacts:sourceGaps});
       const outcome = await processRegisteredManualCandidate(store,"congress-bulk-roster",candidate,clock());
       finalReceipt = {candidate,outcome};
       if (!outcome.promoted && !outcome.confirmed) throw Error(`Federal directory held as ${outcome.candidate.state}: ${outcome.candidate.failureDetail ?? "validation refused"}`);

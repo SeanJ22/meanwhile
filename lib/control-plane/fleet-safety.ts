@@ -1,3 +1,4 @@
+import { publicFetch, MAX_PUBLIC_REDIRECTS, publicRedirectHeaders, EgressRefusal } from "../hunt/egress.ts";
 /**
  * Aggregate unattended-Fleet safety.
  *
@@ -827,7 +828,7 @@ export class FleetSafetyController {
   }
 
   /** A fetch seam that hard-caps application payload consumption by streaming. */
-  guardedOpenOne(_provider: string, work: string, fetchImpl: typeof fetch = fetch): OpenOne {
+  guardedOpenOne(_provider: string, work: string, fetchImpl: typeof fetch = publicFetch): OpenOne {
     return async ({ url, method, headers, body, timeoutMs }) => {
       // Worker processes broker requests through this shared parent, so every
       // caller waits at one gate per provider.
@@ -841,6 +842,9 @@ export class FleetSafetyController {
       try {
         let currentMethod = method;
         let currentBody = body;
+        let currentHeaders = new Headers(headers);
+        const signal = AbortSignal.timeout(timeoutMs);
+        let redirects = 0;
         let response: Response;
         let merged: Uint8Array;
         while (true) {
@@ -862,8 +866,8 @@ export class FleetSafetyController {
               redirect: "manual",
               // Do not ask JSON APIs for a byte range. The streaming reader
               // enforces the download limit without altering response semantics.
-              headers,
-              signal: AbortSignal.timeout(timeoutMs),
+              headers: currentHeaders,
+              signal,
               ...(currentBody === undefined ? {} : { body: currentBody }),
             });
             // The bounded reader can reject a partial body before decoding it.
@@ -882,7 +886,9 @@ export class FleetSafetyController {
           }
           const location = response.headers.get("location");
           if (![301, 302, 303, 307, 308].includes(response.status) || location === null) break;
+          if (++redirects > MAX_PUBLIC_REDIRECTS) throw new EgressRefusal("too many source redirects");
           const nextUrl = new URL(location, currentUrl).toString();
+          currentHeaders = publicRedirectHeaders(currentHeaders, currentUrl, nextUrl);
           if (sourceReliabilityKey(nextUrl) !== provider) {
             const index = recoveries.findIndex(([key]) => key === provider);
             if (index !== -1) recoveries.splice(index, 1)[0][1]();
@@ -891,6 +897,7 @@ export class FleetSafetyController {
           if (response.status === 303 || ((response.status === 301 || response.status === 302) && currentMethod === "POST")) {
             currentMethod = "GET";
             currentBody = undefined;
+            for (const name of ["content-type", "content-length", "content-encoding"]) currentHeaders.delete(name);
           }
         }
         const outcome: FetchOutcome = {
@@ -929,11 +936,11 @@ export class FleetSafetyController {
   guardedOpenBytes(
     _provider: string,
     work: string,
-    fetchImpl: typeof fetch = fetch,
+    fetchImpl: typeof fetch = publicFetch,
     options: { readonly followRedirects?: boolean } = {},
   ): OpenBytes {
     const follow = options.followRedirects !== false;
-    return async ({ url, headers }) => {
+    return async ({ url, headers, timeoutMs }) => {
       const started = Date.now();
       const recoveries: [string, () => void][] = [];
       let provider = sourceReliabilityKey(url);
@@ -946,6 +953,9 @@ export class FleetSafetyController {
         let response: Response;
         let merged: Uint8Array;
         let location: string | null = null;
+        let currentHeaders = new Headers(headers);
+        const signal = AbortSignal.timeout(timeoutMs);
+        let redirects = 0;
         while (true) {
           provider = sourceReliabilityKey(currentUrl);
           if (!recoveries.some(([key]) => key === provider)) {
@@ -963,7 +973,8 @@ export class FleetSafetyController {
             response = await fetchImpl(currentUrl, {
               method: "GET",
               redirect: "manual",
-              headers,
+              headers: currentHeaders,
+              signal,
             });
             // The bounded reader may refuse a partial response before it can
             // be classified below. Record this actual failed recovery once;
@@ -981,7 +992,9 @@ export class FleetSafetyController {
           }
           location = response.headers.get("location");
           if (![301, 302, 303, 307, 308].includes(response.status) || location === null || !follow) break;
+          if (++redirects > MAX_PUBLIC_REDIRECTS) throw new EgressRefusal("too many source redirects");
           const nextUrl = new URL(location, currentUrl).toString();
+          currentHeaders = publicRedirectHeaders(currentHeaders, currentUrl, nextUrl);
           if (sourceReliabilityKey(nextUrl) !== provider) {
             const index = recoveries.findIndex(([key]) => key === provider);
             if (index !== -1) recoveries.splice(index, 1)[0][1]();

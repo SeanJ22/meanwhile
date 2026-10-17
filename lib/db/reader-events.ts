@@ -4,7 +4,6 @@ import { gzipSync } from "node:zlib";
 import { getStore } from "@netlify/blobs";
 import { neon } from "@neondatabase/serverless";
 import { assertWriteAllowed } from "./write-guard.ts";
-import { redactSelfDisclosure } from "../speak/self-disclosure.ts";
 import { classifyReaderEventTopic, readerTopicInCode } from "./reader-event-topics.ts";
 
 export const READER_EVENT_TYPES = ["ASK", "ZIP_VIEW", "CARD_OPEN", "CARD_VISIBLE", "ACTIVE_SCROLL", "AGENDA_VIEW", "REACTION", "BALLOT_PICK"] as const;
@@ -49,7 +48,7 @@ export function eventWeek(day: string): string {
   return date.toISOString().slice(0, 10);
 }
 
-/** Whitelist fields and scrub typed text before either storage destination. */
+/** Whitelist fields and preserve Ask words exactly as captured. */
 export function prepareReaderEventBatch(input: ReaderEventBatchInput) {
   stableId(input.batchId, "BATCH_ID");
   if (!input.continuityKey || input.continuityKey.length > 200 || input.events.length === 0 || input.events.length > 128) throw new Error("READER_EVENT_INVALID_BATCH");
@@ -62,7 +61,7 @@ export function prepareReaderEventBatch(input: ReaderEventBatchInput) {
     if (!READER_EVENT_TYPES.includes(event.type) || !Number.isFinite(Date.parse(event.occurredAt))) throw new Error("READER_EVENT_INVALID_TIME_OR_TYPE");
     const zip = event.zip == null ? null : /^\d{5}$/.test(event.zip) ? event.zip : (() => { throw new Error("READER_EVENT_INVALID_ZIP"); })();
     const district = event.district == null ? null : stableId(event.district, "DISTRICT");
-    const text = event.question == null ? null : redactSelfDisclosure(event.question.slice(0, 4000));
+    const question = event.question == null ? null : event.question.slice(0, 4000);
     const pick = event.ballotPick == null ? null : {
       contestId: stableId(event.ballotPick.contestId, "CONTEST"),
       candidateIds: event.ballotPick.candidateIds.map(id => stableId(id, "CANDIDATE")),
@@ -76,8 +75,8 @@ export function prepareReaderEventBatch(input: ReaderEventBatchInput) {
       cardId: event.cardId == null ? null : stableId(event.cardId, "CARD"),
       cardKind: event.cardKind == null ? null : stableId(event.cardKind, "CARD_KIND"),
       durationMs: event.durationMs ?? null,
-      question: text?.text ?? null, selfDisclosureFlags: text?.flags ?? [],
-      topic: event.topic == null ? readerTopicInCode(text?.text ?? "") ?? "free-form" : stableId(event.topic, "TOPIC"),
+      question,
+      topic: event.topic == null ? readerTopicInCode(question ?? "") ?? "free-form" : stableId(event.topic, "TOPIC"),
       reaction: event.reaction == null ? null : stableId(event.reaction, "REACTION"), ballotPick: pick,
     };
   });

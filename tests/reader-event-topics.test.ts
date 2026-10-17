@@ -36,3 +36,29 @@ test("a question plain code cannot place goes to the cheapest tier as a quick jo
     else process.env.ANTHROPIC_API_KEY = previous;
   }
 });
+
+
+test("a stalled topic model completes with its real topic and no cancellation signal", async () => {
+  const previous = process.env.ANTHROPIC_API_KEY;
+  process.env.ANTHROPIC_API_KEY = "sk-test";
+  try {
+    let release!: () => void;
+    let began!: () => void;
+    const started = new Promise<void>(resolve => { began = resolve; });
+    const stalled = new Promise<void>(resolve => { release = resolve; });
+    const question = "q".repeat(900) + " Can I bring my dog to the city pool?";
+    const pending = classifyReaderEventTopic(question, { cache: memoryCache(), recordCost: async () => {},
+      fetchImpl: (async (_url, init) => {
+        assert.equal(init?.signal, undefined);
+        assert.equal(JSON.parse(String(init?.body)).messages[0].content, question);
+        began(); await stalled;
+        return Response.json({ model: MODELS.haiku.model, content: [{ type: "text", text: '{"topic":"elections-voting"}' }] });
+      }) as typeof fetch });
+    await started;
+    release();
+    assert.equal(await pending, "elections-voting");
+  } finally {
+    if (previous === undefined) delete process.env.ANTHROPIC_API_KEY;
+    else process.env.ANTHROPIC_API_KEY = previous;
+  }
+});

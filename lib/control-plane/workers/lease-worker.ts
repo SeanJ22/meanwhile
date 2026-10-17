@@ -66,7 +66,7 @@ async function work(config: LeaseWorkerConfig): Promise<void> {
         const task = (await repos.routeTasks.read(id))?.value;
         if (!task || !["PENDING", "RECLAIMABLE"].includes(task.state)) continue;
         const item = (await repos.workItems.mustRead(task.workItemId)).value;
-        websiteSize = websiteSizeForObligation({ id: item.id, subjectId: item.subject, autonomousPlan: item.autonomousPlan }, config.root);
+        websiteSize = await websiteSizeForObligation({ id: item.id, subjectId: item.subject, autonomousPlan: item.autonomousPlan });
         broker.assignment(id, { subjectId: item.subject, state: item.autonomousPlan?.jurisdiction ?? null });
         current = id;
         // The lane's per-job clock: which task this worker is on (process-pool.ts StandingPoolOptions).

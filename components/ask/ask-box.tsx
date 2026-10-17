@@ -13,7 +13,6 @@ import {
   answerQuestion,
   askWasAnswered,
   showGroundedAnswer,
-  REFUSAL_LOG_MAX_CHARS,
   type AskAnswer,
 } from "@/lib/routing/ask";
 import { buildDigest, type Digest } from "@/lib/routing/digest";
@@ -23,14 +22,14 @@ import type { NameableEntity } from "@/lib/routing/exact-name";
 import { ASK_BEAT_POOL, beatStem, drawAskBeat } from "@/lib/routing/ask-beat-pool";
 import type { CoverageSummary, CoveredBody } from "@/lib/registry/coverage";
 import type { SeatHolder } from "@/lib/officials/lookup";
-import { logEvent } from "@/lib/log/client";
 import { getOrCreateBrowserKey } from "@/lib/state/browser-key";
+import { askSaveNotice } from "@/lib/ask/save-status";
 import { readLocationOriginFor } from "@/lib/state/location-origin";
 import { subjectKindOf, type AskSubjectRef } from "@/lib/ask/subject";
 import {
   readAskAnswer,
   answerSaysSomething,
-  unresolvedReadLine,
+  askResponseText,
   transportFailure,
   type AskAnswerPayload,
   type AskClassifyReply,
@@ -54,6 +53,8 @@ import { isOnlineOnly } from "@/lib/meetings/online";
 import { MeetingStatusPill } from "@/components/map/meeting-status-pill";
 import { CalendarLinks } from "@/components/map/popup/calendar-links";
 import { useResolvedLocation } from "@/hooks/use-resolved-location";
+import { useRememberedAddress } from "@/hooks/use-session-address";
+import { AddressPrompt } from "@/components/address/address-prompt";
 import { tierVars } from "@/components/shell/tier-style";
 import { bodyDisplayName } from "@/lib/text/reader-names";
 import { gapsNotInAnswer } from "@/lib/text/say-once";
@@ -62,7 +63,7 @@ import { gapsNotInAnswer } from "@/lib/text/say-once";
  * The Ask panel: one input, two jobs. An autocomplete pick or an exact name is
  * a search and navigates without writing a question row; anything else goes to
  * `/api/ask/grounded`, awaited on every ask. `askWasAnswered` is the single
- * definition of "answered", shared by the render and the log.
+ * definition of "answered" for the refusal surface. The server captures every question.
  */
 
 const DEBOUNCE_MS = 120;
@@ -166,7 +167,10 @@ export function AskBox({
   const { venues, meetings, allMeetings, everydayRouting } = useShellData();
   const ui = useUi();
   /* The reader's home, so an Ask subject is not browse-scoped only. */
-  const home = useResolvedLocation(zip);
+  const remembered = useRememberedAddress();
+  const readerZip = remembered?.zip ?? zip;
+  const readerOcdIds = remembered?.divisionIds ?? ocdIds;
+  const home = useResolvedLocation(readerZip);
   const dispatch = useUiDispatch();
 
   const [text, setText] = useState("");
@@ -175,7 +179,8 @@ export function AskBox({
   // Presentation only: the beat words come from a fixed pool, never generated.
   const [working, setWorking] = useState(false);
   const [grounded, setGrounded] = useState<AskAnswerPayload | null>(null);
-  /* Follow-up context: the last few resolved subjects, in memory for this mount only. */
+  const [saveNotice, setSaveNotice] = useState<string | null>(null);
+  /* Follow-up context: the resolved subjects, in memory for this mount only. */
   const [priorSubjects, setPriorSubjects] = useState<AskSubjectRef[]>([]);
   const [priorTurns, setPriorTurns] = useState<
     { question: string; resolvedSubject: string | null }[]
@@ -305,18 +310,19 @@ export function AskBox({
         body: JSON.stringify({
           question,
           confirmation,
-          ocdIds,
-          approximateLocation: zip,
+          ocdIds: readerOcdIds,
+          approximateLocation: readerZip,
           surface: "MAP",
           activeSubjects: active,
           priorSubjects,
           priorTurns,
-          locationOrigin: readLocationOriginFor(zip),
+          locationOrigin: readLocationOriginFor(readerZip),
           /* Anonymous per-browser key in its own storage slot; the server stores only a hash. */
           continuityKey: getOrCreateBrowserKey("wtp.ask_key"),
         }),
       });
       if (!response.ok) return transportFailure();
+      setSaveNotice(askSaveNotice(response.headers));
       /* Parsed through the contract; an unknown mode is a transport failure. */
       return readAskAnswer(await response.json()) ?? transportFailure();
     } catch {
@@ -325,13 +331,14 @@ export function AskBox({
   };
 
   const ask = (confirmation?: BodyConfirmation) => {
-    const question = confirmation?.question ?? text.trim();
-    if (!question) return;
+    const question = confirmation?.question ?? text;
+    if (!question.trim()) return;
     if (confirmation) setText(question);
 
     setAsked(null);
     setDigest(null);
     setGrounded(null);
+    setSaveNotice(null);
     setBeat(drawAskBeat());
     setWorking(true);
     // Submitting an ask releases the map filter and closes the autocomplete.
@@ -378,32 +385,6 @@ export function AskBox({
             everydayRouting,
           });
         }
-      }
-
-      if (groundedAnswer.mode === "TRANSPORT_FAILED") {
-        /* A request that never reached the engine is not logged. */
-      } else if (askWasAnswered(result, groundedAnswer)) {
-        logEvent("QUESTION_ASKED", ocdIds, {
-          topic:
-            result.match?.topicId ??
-            (result.digest
-              ? "DIGEST"
-              : result.destination
-                ? "DESTINATION_ONLY"
-                : "GROUNDED"),
-          routed: true,
-          ...(result.match?.via ? { via: result.match.via } : {}),
-          ...(result.destination
-            ? { destination: result.destination.destination.id }
-            : {}),
-        });
-      } else {
-        // The question rides along capped and identifier-free.
-        logEvent("QUESTION_ASKED", ocdIds, {
-          topic: "NO_ROUTE",
-          routed: false,
-          question: question.slice(0, REFUSAL_LOG_MAX_CHARS),
-        });
       }
 
       // Built from `allMeetings`, before the UI's filters.
@@ -481,6 +462,7 @@ export function AskBox({
       >
         Ask, or find a thing by name
       </label>
+      {readerZip && <AddressPrompt zip={readerZip} page="ASK" trigger="Add your address to use your districts" />}
       {/* Categories are read from `ROUTABLE_CATEGORIES`, so the copy promises only what routes. */}
       <p className="mt-0.5 t-caption leading-relaxed text-voice">
         Your kid&apos;s school, the library, a pothole in the road —
@@ -662,6 +644,8 @@ export function AskBox({
         </div>
       )}
 
+      {grounded && saveNotice && <p role="status" data-ask-save-notice className="mt-2 t-detail text-muted">{saveNotice}</p>}
+
       {grounded && showGroundedAnswer(asked, grounded) && (
         <div
           data-ask-grounded
@@ -704,9 +688,7 @@ export function AskBox({
               data-ask-grounded-state="CLARIFY"
               className="t-body leading-relaxed text-voice"
             >
-              More than one goes by &ldquo;{grounded.mention}&rdquo;
-              {grounded.candidates?.length ? `: ${grounded.candidates.join(", ")}` : ""}.
-              Which did you mean?
+              {askResponseText(grounded)}
             </p>
           )}
 
@@ -715,7 +697,7 @@ export function AskBox({
               data-ask-grounded-state="UNRESOLVED"
               className="t-body leading-relaxed text-voice"
             >
-              {unresolvedReadLine(grounded)}
+              {askResponseText(grounded)}
             </p>
           )}
 
@@ -732,7 +714,7 @@ export function AskBox({
             </p>
           )}
 
-          {grounded.answer && !grounded.agendaLead && (
+          {grounded.answer && grounded.mode !== "CLARIFY" && grounded.mode !== "UNRESOLVED" && !grounded.agendaLead && (
             <p className="mt-1.5 t-body leading-relaxed text-paper-dim">
               {grounded.answer}
             </p>

@@ -13,7 +13,7 @@ export function auditGeneralizedExtraction(input: AuditorWorkerInput, contract: 
   // A record type with no parsing rule has no row inventory to build; its quotes are re-proved against the artifact itself below.
   const quoted = isQuotedExtraction(contract, input.candidate.extraction);
   const independent = context.evidence.map(evidence => {
-    try { assertGeneralizedScope(contract, evidence); return { evidence, inventory: quoted ? null : inventoryRecordEvidence(evidence, contract.extraction), error: null }; }
+    try { assertGeneralizedScope(contract, evidence); return { evidence, inventory: quoted ? null : inventoryRecordEvidence(evidence, contract.extraction, contract), error: null }; }
     catch (error) { if (!(error instanceof RecordEvidenceRefusal)) throw error; return { evidence, inventory: null, error }; }
   });
   const candidate = input.candidate; const extraction = candidate.extraction;

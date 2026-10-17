@@ -5,8 +5,8 @@ import type { SearchLogEventType } from "@/lib/db/search-log";
 
 /**
  * Fire-and-forget client half of the search log: an event type, the divisions
- * the event touched, and scalar detail; nothing that could identify the
- * reader. `sendBeacon` where available so a closing page still delivers; any
+ * the event touched, scalar detail, and an optional random continuity key.
+ * The server hashes the key before storage. `sendBeacon` lets a closing page deliver; any
  * failure is dropped. Unlike reactions, no outcome is promised to the reader.
  */
 export function logEvent(
@@ -15,6 +15,8 @@ export function logEvent(
   detail?: Record<string, string | number | boolean>,
   /** Orientation-only zip for a SEARCH; never coordinates, never identity. */
   approximateLocation?: string | null,
+  /** Shared with Ask solely to count distinct browsers in district aggregates. */
+  continuityKey?: string | null,
 ): void {
   try {
     /*
@@ -29,14 +31,15 @@ export function logEvent(
         : undefined;
     const base: Record<string, unknown> = { eventType, ocdIds, detail };
     if (approximateLocation !== undefined) base.approximateLocation = approximateLocation;
+    if (continuityKey !== undefined) base.continuityKey = continuityKey;
     if (declared !== undefined) base[SYNTHETIC_RUN_BODY_KEY] = declared;
     const body = JSON.stringify(base);
     if (typeof navigator !== "undefined" && navigator.sendBeacon) {
-      navigator.sendBeacon(
+      const queued = navigator.sendBeacon(
         "/api/log",
         new Blob([body], { type: "application/json" }),
       );
-      return;
+      if (queued) return;
     }
     void fetch("/api/log", {
       method: "POST",

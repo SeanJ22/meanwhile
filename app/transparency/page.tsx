@@ -17,8 +17,15 @@ export default function TransparencyPage() {
 
         <p className="mt-4 text-[0.9375rem] leading-relaxed text-paper-dim">
           We collect how people use this site: what they look at, search, type and react to.
-          It&apos;s anonymized. We never store or share anything that identifies you personally.
+          Ask questions and answers are saved exactly as written, with the ZIP and districts used for the question.
+          We count where readers are and how many distinct readers use the site.
           What people tell us may be shared in summarized or anonymous form.
+        </p>
+
+        <p className="mt-4 text-[0.9375rem] leading-relaxed text-paper-dim">
+          An address entry goes to the Census geocoder to find your districts. The address stays on your device
+          until you press “Forget this address.” Address-entry records contain the ZIP, districts and an anonymous
+          browser hash for counting distinct readers.
         </p>
 
         <h2 className="mt-8 text-lg font-semibold text-paper">ZIP locations</h2>

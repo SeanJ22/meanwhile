@@ -13,11 +13,9 @@ export type SoldStore =
   | "search_log"
   | "reactions"
   | "speak_your_mind"
+  | "ask_interactions"
   /* Not sold; here so its failed writes are visible. */
   | "demand_signals";
-
-/** The database's own words are useful; a parameter echo is not. Capped. */
-const MESSAGE_CAP = 400;
 
 interface PgLikeError {
   code?: unknown;
@@ -25,13 +23,10 @@ interface PgLikeError {
   cause?: unknown;
 }
 
-/** How far down the error chain to look; a cyclic chain must not hang the alarm. */
-const CAUSE_DEPTH = 5;
-
 /**
  * Drivers nest the underlying error under different names (`cause`,
  * `sourceError`, `originalError`, `error`, and `errors` on an AggregateError).
- * Walked breadth-first and depth-capped.
+ * Walked breadth-first, visiting each link once so cycles cannot hang the alarm.
  */
 const LINK_NAMES = ["cause", "sourceError", "originalError", "error"] as const;
 
@@ -39,7 +34,7 @@ function chainOf(error: unknown): PgLikeError[] {
   const out: PgLikeError[] = [];
   const seen = new Set<unknown>();
   const queue: unknown[] = [error];
-  while (queue.length > 0 && out.length < CAUSE_DEPTH) {
+  while (queue.length > 0) {
     const node = queue.shift();
     if (node === null || node === undefined) continue;
     if (seen.has(node)) continue;
@@ -51,7 +46,7 @@ function chainOf(error: unknown): PgLikeError[] {
     }
     // An AggregateError carries its real failures in `errors`.
     const aggregated = record.errors;
-    if (Array.isArray(aggregated)) for (const one of aggregated.slice(0, CAUSE_DEPTH)) queue.push(one);
+    if (Array.isArray(aggregated)) for (const one of aggregated) queue.push(one);
   }
   return out;
 }
@@ -103,25 +98,33 @@ export function errorMessageOf(error: unknown): string | null {
 
   // The deepest cause reads first; `←` points at what wrapped what.
   const flat = parts.reverse().join(" ← ");
-  return flat.length <= MESSAGE_CAP ? flat : `${flat.slice(0, MESSAGE_CAP)}… [truncated]`;
+  return flat;
 }
 
-export async function raiseWriteAlarm(store: SoldStore, error: unknown): Promise<boolean> {
+export async function raiseWriteAlarm(store: SoldStore, error: unknown, signal?: AbortSignal): Promise<boolean> {
   try {
     // The alarm is a write and passes the guard like any other; a refusal is caught below.
     assertWriteAllowed("a write alarm");
-    await getDb().insert(writeAlarm).values({
+    signal?.throwIfAborted();
+    const db = getDb();
+    const write = db.insert(writeAlarm).values({
       raisedAt: new Date().toISOString(),
       store,
       errorCode: errorCodeOf(error),
       errorMessage: errorMessageOf(error),
     });
+    if (signal) {
+      const query = write.toSQL();
+      await db.$client.query(query.sql, query.params, { fetchOptions: { signal } });
+    } else await write;
     return true;
   } catch (alarmError) {
-    // Deliberately swallowed; the console line is the last resort.
+    // The operational log remains usable even when both writes fail. Never
+    // log raw driver errors: they can contain the failed insert's values.
     console.error(
-      `write alarm could not be raised for ${store} (the original failure is above)`,
-      alarmError,
+      "reader store write failed; write alarm unavailable",
+      { store, errorCode: errorCodeOf(error), errorMessage: errorMessageOf(error),
+        alarmErrorCode: errorCodeOf(alarmError), alarmErrorMessage: errorMessageOf(alarmError) },
     );
     return false;
   }

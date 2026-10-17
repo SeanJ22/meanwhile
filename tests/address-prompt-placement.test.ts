@@ -44,7 +44,7 @@ test("BAL-23: no open-form wrapper takes the trigger's class", () => {
 
 test("BAL-23: no OTHER wrapper takes the form's class either", () => {
   const src = prompt();
-  const idle = /if \(phase === "IDLE"\) \{([\s\S]*?)\n  \}/.exec(src);
+  const idle = /if \(phase === "IDLE"(?: \|\| phase === "SETTLED")?\) \{([\s\S]*?)\n  \}/.exec(src);
   assert.ok(idle, "the IDLE branch is no longer recognisable — this guard cannot read it");
   assert.doesNotMatch(
     idle[1],

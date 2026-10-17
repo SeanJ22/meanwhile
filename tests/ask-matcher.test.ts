@@ -237,14 +237,14 @@ test("askWasAnswered is the single definition, and the surface reads it rather t
     join(process.cwd(), "components", "ask", "ask-box.tsx"),
     "utf8",
   );
-  // The call may carry extra evidence; it may not decide "answered" itself.
+  // Capture belongs to the server; the refusal surface uses the shared definition.
   assert.match(
     source,
-    /if \(askWasAnswered\(result[,)]/,
-    "the log branch must read the shared definition of answered",
+    /!askWasAnswered\(asked,\s*grounded\)\s*&&/,
+    "the refusal surface must read the shared definition of answered",
   );
   assert.ok(
-    !/askWasAnswered\(result\)\s*\|\|/.test(source),
+    !/askWasAnswered\([^)]*\)\s*\|\|/.test(source),
     "the component is ORing something onto the shared definition — extend the function instead",
   );
   assert.ok(

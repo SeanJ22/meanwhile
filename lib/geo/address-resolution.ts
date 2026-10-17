@@ -1,17 +1,6 @@
 import type { Division, DivisionType } from "@/lib/registry/types";
 
-/**
- * The address standard for the whole product. Pure: geometry answers come in
- * as arguments.
- *
- * Ambiguity is measured per level on whether the sampled points land in the
- * same divisions, not on how far apart they are. A street split only at the
- * congressional level confirms county and municipal at once and hedges only
- * that row, and the follow-up question names the boundary it crosses.
- *
- * A level no sampled point reached is unheld (our gap), reported separately
- * from a level the street genuinely crosses.
- */
+/** Purpose-qualified exact-address divisions can confirm a level. */
 
 /** The levels a reader can be resolved at. These are `DivisionType` verbatim. */
 export type LevelKey = DivisionType;
@@ -65,12 +54,14 @@ export interface LevelResolution {
 export type AddressResolution =
   | {
       status: "RESOLVED";
+      basis?: "EXACT_ADDRESS";
       levels: LevelResolution[];
       /** Levels no sampled point produced. OUR gap, stated as ours. */
       unheld: LevelKey[];
     }
   | {
       status: "AMBIGUOUS";
+      basis?: "EXACT_ADDRESS";
       levels: LevelResolution[];
       unheld: LevelKey[];
       /** The levels the street actually crosses. Never empty in this branch. */
@@ -135,18 +126,20 @@ export function resolveLevels(samples: readonly Sample[]): {
 }
 
 /**
- * The whole answer, from the sampled points' division sets. Zero samples is
- * `FAILED`, never an absence of jurisdictions. One sample (an exact house
- * number) makes every level certain.
+ * Empty evidence is our unresolved lookup. Only an exact address can confirm
+ * the levels present in its purpose-qualified source response.
  */
 export function resolveAddress(samples: readonly Sample[]): AddressResolution {
   if (samples.length === 0) return { status: "FAILED", reason: "NOT_FOUND" };
 
-  const { levels, unheld } = resolveLevels(samples);
+  const resolved = resolveLevels(samples);
+  const unheld = resolved.unheld;
+  const levels = resolved.levels;
+  if (!levels.length) return { status: "FAILED", reason: "NOT_FOUND" };
   const split = levels.filter((l) => !l.certain).map((l) => l.level);
 
-  if (split.length === 0) return { status: "RESOLVED", levels, unheld };
-  return { status: "AMBIGUOUS", levels, unheld, split };
+  if (split.length === 0) return { status: "RESOLVED", basis: "EXACT_ADDRESS", levels, unheld };
+  return { status: "AMBIGUOUS", basis: "EXACT_ADDRESS", levels, unheld, split };
 }
 
 /** Every division id the reader is CONFIRMED to be in, across all certain levels. */

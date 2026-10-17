@@ -379,7 +379,8 @@ test("a national API completes its geography walk beyond ten requests and reuses
     `${Math.floor((year - 1) / 2) * 2} State Legislative Districts - Upper`,
     `${Math.floor((year - 1) / 2) * 2} State Legislative Districts - Lower`, "States", "Counties", "Incorporated Places",
     "County Subdivisions", "Unified School Districts", "Elementary School Districts", "Secondary School Districts"];
-  t.mock.method(globalThis, "fetch", async (url: string) => {
+  const geographyFetch: typeof fetch = async input => {
+    const url = input instanceof Request ? input.url : String(input);
     requests++;
     // Siblings still in flight when another request is refused must be vaulted.
     await new Promise(resolve => setTimeout(resolve, 5));
@@ -388,9 +389,10 @@ test("a national API completes its geography walk beyond ten requests and reuses
         ? [{ attributes: {}, geometry: { rings: [[[0, 0], [1, 0], [1, 1], [0, 0]]] } }]
         : url.includes("State_County/MapServer/4/query") ? [{ attributes: { STATE: "33", GEOID: "33", NAME: "New Hampshire" } }] : [] }
       : { url, layers: names.map((name, id) => ({ id, name, type: "Feature Layer" })) });
-  });
+  };
   const tools = { repos, store, now: () => "2026-09-30T00:00:00.000Z", spaceOut: async () => {} };
   const input = { tools, store: new MemoryRoutineDataStore(), places: placeTasks(["03060", "03101", "03301"]),
+    geographyFetch,
     readPublished: async () => [],
     publish: async () => { assert.fail("incomplete geography cannot publish"); } };
   // The injected store holds no promoted registry, so the walk ends at the first held-family read it refuses.

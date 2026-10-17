@@ -135,18 +135,16 @@ test("6.2: the alarm table holds no column that could join to a store", () => {
   }
 });
 
-test("6.2: the alarm records the database's own words, capped", () => {
+test("6.2: the alarm records the database's own full sanitized words", () => {
   const err = Object.assign(new Error('column "coverage_tier" does not exist'), {
     code: "42703",
   });
   assert.equal(errorCodeOf(err), "42703");
   assert.equal(errorMessageOf(err), 'column "coverage_tier" does not exist');
 
-  // A truncated message states its truncation.
+  // The full sanitized message is retained, regardless of length.
   const long = Object.assign(new Error("x".repeat(900)), { code: "42703" });
-  const capped = errorMessageOf(long)!;
-  assert.ok(capped.length < 900, "capped");
-  assert.match(capped, /\[truncated\]$/, "the clip says it is a clip");
+  assert.equal(errorMessageOf(long), long.message);
 
   // A driver with no code, and an error that is not an Error at all, are both
   // absence — named, never a plausible value.

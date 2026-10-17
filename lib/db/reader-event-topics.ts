@@ -2,7 +2,6 @@ import { createHash } from "node:crypto";
 import { getStore } from "@netlify/blobs";
 import { matchTopic } from "../routing/match.ts";
 import { TOPIC_ROUTES } from "../routing/topics.ts";
-import { redactSelfDisclosure } from "../speak/self-disclosure.ts";
 import { meteredAskFetch, type AskCostWriter } from "../ask/cost.ts";
 import { MODELS, activeModelTierFor, modelRequestFields, servedModelOf } from "../models.ts";
 import { ripcordPulled } from "../ripcords.ts";
@@ -50,13 +49,15 @@ function blobTopicCache(): ReaderTopicCache {
 export async function classifyReaderEventTopic(question: string, options: {
   cache?: ReaderTopicCache; fetchImpl?: typeof fetch; recordCost?: AskCostWriter;
 } = {}): Promise<string> {
-  const text = redactSelfDisclosure(question.slice(0, 4000)).text.trim();
+  const text = question.slice(0, 4000).trim();
   if (!text) return "free-form";
   const direct = readerTopicInCode(text);
   if (direct) return direct;
   const key = createHash("sha256").update(JSON.stringify(READER_EVENT_TOPICS)).update(text.toLowerCase()).digest("hex");
-  const cache = options.cache ?? blobTopicCache();
-  const held = await cache.read(key);
+  // A missing cache cannot drop a saved question or prevent its classification.
+  let cache: ReaderTopicCache | null = null;
+  let held: string | null = null;
+  try { cache = options.cache ?? blobTopicCache(); held = await cache.read(key); } catch { cache = null; }
   if (held) return held;
   if (ripcordPulled("ripcord.askClassifier")) return "free-form";
   const apiKey = process.env.ANTHROPIC_API_KEY;
@@ -65,7 +66,7 @@ export async function classifyReaderEventTopic(question: string, options: {
   let response: Response;
   try { response = await meteredAskFetch(options.fetchImpl ?? fetch, "reader-event-topic", options.recordCost)(
     "https://api.anthropic.com/v1/messages", {
-      method: "POST", signal: AbortSignal.timeout(1500),
+      method: "POST",
       headers: { "content-type": "application/json", "x-api-key": apiKey, "anthropic-version": "2023-06-01" },
       body: JSON.stringify({ model: MODELS.haiku.model, max_tokens: Math.max(64, fields.minMaxTokens),
         ...(fields.thinking ? { thinking: fields.thinking } : {}),
@@ -81,5 +82,6 @@ export async function classifyReaderEventTopic(question: string, options: {
   let topic: unknown;
   try { topic = JSON.parse(body.content?.find(block => block.type === "text")?.text ?? "{}").topic; }
   catch { return "free-form"; }
-  return typeof topic === "string" && ids.has(topic) ? cache.remember(key, topic) : "free-form";
+  if (typeof topic !== "string" || !ids.has(topic)) return "free-form";
+  try { return cache ? await cache.remember(key, topic) : topic; } catch { return topic; }
 }

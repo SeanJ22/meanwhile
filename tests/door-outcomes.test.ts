@@ -34,7 +34,6 @@ import { legistarClientsFromWiring } from "../lib/sources/legistar/client-regist
 import type { LegistarEvent } from "../lib/sources/legistar/types.ts";
 import { wiringRowsFromDoors } from "../lib/doors/rows.ts";
 import { runPimaLegistarOutcomeIngest, parsePimaOutcomeIngestArgs } from "../scripts/legistar-outcomes-ingest.mts";
-import { withFetch } from "./helpers/with-fetch.ts";
 
 /**
  * A Legistar door that holds `outcomes` collects the body's decisions and roll calls in its own scope, for any
@@ -203,7 +202,8 @@ describe("DB-22: a door's outcomes are collected, promoted and read back beside 
     const client = legistarClientsFromWiring(wiringRowsFromDoors([DEMO]))[0];
     let tick = Date.now() - 60_000;
     const lines: string[] = [];
-    const run = await withFetch(demoLegistar(), () => runPimaLegistarOutcomeIngest({
+    const run = await runPimaLegistarOutcomeIngest({
+      fetchImpl: demoLegistar(),
       store,
       client,
       tenant: partition.tenant,
@@ -211,7 +211,7 @@ describe("DB-22: a door's outcomes are collected, promoted and read back beside 
       window: { from: "2026-08-01", to: "2026-09-30" },
       now: () => new Date((tick += 1_000)).toISOString(),
       log: (line) => lines.push(line),
-    }));
+    });
     assert.equal(run.exitCode, 0, lines.join("\n"));
     assert.equal(run.promotedSittings, 1);
     assert.match(run.receiptLine ?? "", new RegExp(`"source":"${partition.id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}"`));

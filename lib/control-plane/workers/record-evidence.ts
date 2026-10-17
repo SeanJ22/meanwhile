@@ -14,6 +14,7 @@ export interface RecordEvidenceCell {
 export interface RecordEvidenceInventory {
   readonly rows: readonly Readonly<Record<string, RecordEvidenceCell>>[];
   readonly declaredCount: number | null;
+  readonly omittedFields?: readonly { rowIndex: number; field: string; code: string; detail: string }[];
 }
 const refuse = (code: string, detail: string): never => { throw new RecordEvidenceRefusal(code, detail); };
 export const escapePointer = (key: string) => key.replace(/~/g, "~0").replace(/\//g, "~1");
@@ -96,7 +97,6 @@ function htmlRows(text: string, tableIndex: number): RawCell[][] {
       if (/\b(?:rowspan|colspan)\s*=/i.test(cell[2])) refuse("HTML_MERGED_CELL_UNSUPPORTED", "Merged cells require an explicit extraction method; positional values would be ambiguous.");
       const start = table.index! + row.index! + cell.index! + cell[0].indexOf(">") + 1;
       const end = start + cell[3].length;
-      if (end === start) refuse("EMPTY_SOURCE_CELL", "An empty table cell cannot supply a nonempty evidence span.");
       cells.push({ value: htmlText(cell[3]), start, end, raw: cell[3] });
     }
     if (cells.length) rows.push(cells);
@@ -193,7 +193,31 @@ function delimitedRows(text: string, delimiter: string): RawCell[][] {
 }
 
 /** A source decoder shared as grammar, with no producer result accepted as input. */
-export function inventoryRecordEvidence(evidence: WorkerEvidence, shape: RecordExtractionShape): RecordEvidenceInventory {
+export function inventoryRecordEvidence(evidence: WorkerEvidence, shape: RecordExtractionShape,
+  contract?: Pick<GeneralizedCivicExtractionContract, "requiredFields" | "identity" | "dateFields" | "recordClass">): RecordEvidenceInventory {
+  const required = new Set([...(contract?.requiredFields ?? []), ...(contract?.identity.keyFields ?? []), ...(contract?.dateFields ?? [])]);
+  const omittedFields: { rowIndex: number; field: string; code: string; detail: string }[] = [];
+  const optional = (field: string) => contract !== undefined && !required.has(field);
+  const absent = (rowIndex: number, field: string, code: string, detail: string) => {
+    if (!optional(field)) refuse(code, detail);
+    omittedFields.push({ rowIndex, field, code, detail });
+  };
+  const assignCell = (fields: Record<string, RecordEvidenceCell>, rowIndex: number, field: string, read: () => RecordEvidenceCell) => {
+    try {
+      const cell = read();
+      if (contract?.recordClass === "OFFICIAL_ROSTER" && field === "email" && cell.value !== null && cell.value !== "" &&
+        (typeof cell.value !== "string" || !/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(cell.value.trim()))) {
+        refuse("OFFICIAL_EMAIL_NOT_VISIBLE_ADDRESS", `Record ${rowIndex} maps an Email cell without a literal address.`);
+      }
+      fields[field] = cell;
+    } catch (error) {
+      if (!(error instanceof RecordEvidenceRefusal) || !optional(field) || ![
+        "FIELD_TYPE_MISMATCH", "SOURCE_FIELD_MISSING", "EMPTY_SOURCE_CELL", "HTML_PROFILE_FIELD_MISSING",
+        "HTML_LINK_AMBIGUOUS", "HTML_LINK_MISSING", "HTML_LINK_INVALID", "XML_FIELD_AMBIGUOUS", "OFFICIAL_EMAIL_NOT_VISIBLE_ADDRESS",
+      ].includes(error.code)) throw error;
+      absent(rowIndex, field, error.code, error.message);
+    }
+  };
   if (shape?.format === "UNSUPPORTED") refuse("SOURCE_SHAPE_UNSUPPORTED", `${shape.mediaType}: ${shape.reason}`);
   if (!shape || !shape.fields || Object.keys(shape.fields).length === 0) refuse("EXTRACTION_MAPPING_MISSING", "An explicit nonempty source field mapping is required.");
   if (Object.values(shape.fields).some(mapping => mapping.attribute !== undefined &&
@@ -240,12 +264,14 @@ export function inventoryRecordEvidence(evidence: WorkerEvidence, shape: RecordE
       if (typeof source !== "string" || !/^(?:heading:detail-title|detail:[A-Za-z][A-Za-z ]{0,79})$/.test(source)) {
         throw new RecordEvidenceRefusal("HTML_PROFILE_MAPPING_INVALID", "Profile fields need an exact heading:detail-title or detail:Label source selector.");
       }
-      const scalar = values.get(source);
-      if (!scalar?.value) throw new RecordEvidenceRefusal("HTML_PROFILE_FIELD_MISSING", `The visible profile has no ${source} value.`);
-      fields[field] = { value: convert(scalar.value, mapping), locator: `/profile/${escapePointer(source)}`,
-        start: scalar.start, end: scalar.end };
+      assignCell(fields, 0, field, () => {
+        const scalar = values.get(source);
+        if (!scalar?.value) throw new RecordEvidenceRefusal("HTML_PROFILE_FIELD_MISSING", `The visible profile has no ${source} value.`);
+        return { value: convert(scalar.value, mapping), locator: `/profile/${escapePointer(source)}`,
+          start: scalar.start, end: scalar.end };
+      });
     }
-    return { rows: [fields], declaredCount: null };
+    return { rows: [fields], declaredCount: null, omittedFields };
   }
   if (shape.format === "TEXT_BLOCKS") {
     const labels = Object.values(shape.fields).map(mapping => mapping.source);
@@ -256,19 +282,20 @@ export function inventoryRecordEvidence(evidence: WorkerEvidence, shape: RecordE
     }
     const starts: number[] = [];
     for (let at = evidence.text.indexOf(shape.recordStart); at !== -1; at = evidence.text.indexOf(shape.recordStart, at + shape.recordStart.length)) starts.push(at);
-    return { declaredCount: null, rows: starts.map((start, index) => {
+    return { declaredCount: null, omittedFields, rows: starts.map((start, index) => {
       let end = starts[index + 1] ?? evidence.text.length;
       if (shape.recordEnd !== undefined) {
         const found = evidence.text.indexOf(shape.recordEnd, start + shape.recordStart.length);
         if (found < 0 || found >= end) refuse("TEXT_BLOCK_END_MISSING", `Record ${index} lacks its contracted ending.`);
         end = found;
       }
-      const positions = Object.entries(shape.fields).map(([field, mapping]) => {
+      const positions = Object.entries(shape.fields).flatMap(([field, mapping]) => {
         const label = mapping.source as string;
         const found = evidence.text.indexOf(label, start);
         const again = found < 0 ? -1 : evidence.text.indexOf(label, found + label.length);
-        if (found < start || found >= end || (again >= 0 && again < end)) refuse("TEXT_FIELD_AMBIGUOUS", `Record ${index} needs exactly one label for ${field}.`);
-        return { field, mapping, found, valueStart: found + label.length };
+        if (found < start || found >= end) { absent(index, field, "SOURCE_FIELD_MISSING", `Record ${index} lacks a label for ${field}.`); return []; }
+        if (again >= 0 && again < end) refuse("TEXT_FIELD_AMBIGUOUS", `Record ${index} needs exactly one label for ${field}.`);
+        return [{ field, mapping, found, valueStart: found + label.length }];
       }).sort((a, b) => a.found - b.found);
       const fields: Record<string, RecordEvidenceCell> = Object.create(null);
       for (let i = 0; i < positions.length; i++) {
@@ -276,8 +303,10 @@ export function inventoryRecordEvidence(evidence: WorkerEvidence, shape: RecordE
         let valueStart = cell.valueStart, valueEnd = positions[i + 1]?.found ?? end;
         while (valueStart < valueEnd && /\s/.test(evidence.text[valueStart])) valueStart++;
         while (valueEnd > valueStart && /\s/.test(evidence.text[valueEnd - 1])) valueEnd--;
-        if (valueStart >= valueEnd) refuse("EMPTY_SOURCE_CELL", `Record ${index} has no source value for ${cell.field}.`);
-        fields[cell.field] = { value: convert(evidence.text.slice(valueStart, valueEnd), cell.mapping), locator: `/blocks/${index}/${escapePointer(cell.field)}`, start: valueStart, end: valueEnd };
+        assignCell(fields, index, cell.field, () => {
+          if (valueStart >= valueEnd) refuse("EMPTY_SOURCE_CELL", `Record ${index} has no source value for ${cell.field}.`);
+          return { value: convert(evidence.text.slice(valueStart, valueEnd), cell.mapping), locator: `/blocks/${index}/${escapePointer(cell.field)}`, start: valueStart, end: valueEnd };
+        });
       }
       return fields;
     }) };
@@ -290,14 +319,16 @@ export function inventoryRecordEvidence(evidence: WorkerEvidence, shape: RecordE
     if (!Number.isSafeInteger(headerRows) || headerRows < 0 || headerRows > rows.length) return refuse("TABLE_SCOPE_INVALID", "JSON table header rows must be explicitly bounded by the retained array.");
     const count = shape.countPointer === undefined ? null : valueAt(root, shape.countPointer);
     if (count !== null && (!Number.isSafeInteger(count) || Number(count) < 0)) refuse("DECLARED_COUNT_INVALID", "The declared source count is not a nonnegative safe integer.");
-    return { declaredCount: count as number | null, rows: rows.slice(headerRows).map((row, bodyIndex) => {
+    return { declaredCount: count as number | null, omittedFields, rows: rows.slice(headerRows).map((row, bodyIndex) => {
       const index = bodyIndex + headerRows;
       const fields: Record<string, RecordEvidenceCell> = Object.create(null);
       for (const [field, mapping] of Object.entries(shape.fields)) {
         if (typeof mapping.source !== "string" || !mapping.source.startsWith("/")) refuse("FIELD_MAPPING_INVALID", "JSON field mappings require a relative member pointer.");
-        const locator = `${shape.rowsPointer}/${index}${mapping.source}`; const token = tokens.get(locator);
-        if (!token) refuse("SOURCE_FIELD_MISSING", `Row ${index} lacks mapped field ${field}.`);
-        fields[field] = { value: convert(valueAt(row, mapping.source as string), mapping), locator, ...token! };
+        assignCell(fields, bodyIndex, field, () => {
+          const locator = `${shape.rowsPointer}/${index}${mapping.source}`; const token = tokens.get(locator);
+          if (!token) refuse("SOURCE_FIELD_MISSING", `Row ${index} lacks mapped field ${field}.`);
+          return { value: convert(valueAt(row, mapping.source as string), mapping), locator, ...token! };
+        });
       }
       return fields;
     }) };
@@ -309,42 +340,46 @@ export function inventoryRecordEvidence(evidence: WorkerEvidence, shape: RecordE
       const fields: Record<string, RecordEvidenceCell> = Object.create(null);
       for (const [field, mapping] of Object.entries(shape.fields)) {
         if (typeof mapping.source !== "string" || !/^[A-Za-z_][\w.-]*$/.test(mapping.source)) refuse("FIELD_MAPPING_INVALID", "XML mappings name a direct text child of the contracted record element.");
-        const tag = mapping.source as string;
-        const matches = elements.filter(element => element.parent === row && element.name === tag);
-        if (matches.length !== 1 || elements.some(element => element.parent === matches[0])) refuse("XML_FIELD_AMBIGUOUS", `Record ${index} needs exactly one direct text child for ${field}.`);
-        const start = matches[0].contentStart; const end = matches[0].contentEnd;
-        if (start === end) refuse("EMPTY_SOURCE_CELL", "An empty XML element cannot support an extracted scalar.");
-        fields[field] = { value: convert(htmlText(evidence.text.slice(start, end)), mapping), locator: `/${shape.rowTag}/${index}/${tag}`, start, end };
+        assignCell(fields, index, field, () => {
+          const tag = mapping.source as string;
+          const matches = elements.filter(element => element.parent === row && element.name === tag);
+          if (matches.length !== 1 || elements.some(element => element.parent === matches[0])) refuse("XML_FIELD_AMBIGUOUS", `Record ${index} needs exactly one direct text child for ${field}.`);
+          const start = matches[0].contentStart; const end = matches[0].contentEnd;
+          if (start === end) refuse("EMPTY_SOURCE_CELL", "An empty XML element cannot support an extracted scalar.");
+          return { value: convert(htmlText(evidence.text.slice(start, end)), mapping), locator: `/${shape.rowTag}/${index}/${tag}`, start, end };
+        });
       }
       return fields;
     });
-    return { rows, declaredCount: null };
+    return { rows, declaredCount: null, omittedFields };
   }
   if (shape.format !== "HTML_TABLE" && shape.format !== "DELIMITED_TEXT") return refuse("SOURCE_SHAPE_UNSUPPORTED", "This source format has no deterministic extraction method.");
   if (!Number.isSafeInteger(shape.headerRows) || shape.headerRows < 0 || (shape.format === "HTML_TABLE" && (!Number.isSafeInteger(shape.tableIndex) || shape.tableIndex < 0))) refuse("TABLE_SCOPE_INVALID", "Table selection and header row count must be explicit nonnegative integers.");
   const rows = shape.format === "HTML_TABLE" ? htmlRows(evidence.text, shape.tableIndex) : delimitedRows(evidence.text, shape.delimiter);
-  return { declaredCount: null, rows: rows.slice(shape.headerRows).map((row, index) => {
+  return { declaredCount: null, omittedFields, rows: rows.slice(shape.headerRows).map((row, index) => {
     const fields: Record<string, RecordEvidenceCell> = Object.create(null);
     for (const [field, mapping] of Object.entries(shape.fields)) {
       if (typeof mapping.source !== "number" || !Number.isSafeInteger(mapping.source) || mapping.source < 0) refuse("FIELD_MAPPING_INVALID", "Tabular mappings require a zero-based column index.");
-      const cell = row[Number(mapping.source)];
-      if (!cell || cell.end <= cell.start) refuse("SOURCE_FIELD_MISSING", `Row ${index} lacks mapped field ${field}.`);
-      let value = cell.value;
-      if (mapping.attribute !== undefined) {
-        if (shape.format !== "HTML_TABLE" || mapping.attribute !== "href" || !cell.raw) refuse("FIELD_MAPPING_INVALID", "Link attributes require an HTML table cell.");
-        const links = [...cell.raw!.matchAll(/<a\b([^>]*)>/gi)];
-        if (links.length !== 1) refuse("HTML_LINK_AMBIGUOUS", `Row ${index} needs exactly one source link for ${field}.`);
-        const href = /\bhref\s*=\s*(["'])(.*?)\1/i.exec(links[0][1]);
-        const hrefValue = href?.[2];
-        if (!hrefValue) refuse("HTML_LINK_MISSING", `Row ${index} lacks a source link for ${field}.`);
-        const decoded = htmlText(hrefValue!);
-        let url: URL;
-        try { url = new URL(decoded, evidence.canonicalUrl); } catch { return refuse("HTML_LINK_INVALID", `Row ${index} has an invalid source link for ${field}.`); }
-        if (url.protocol !== "https:" || url.username || url.password) refuse("HTML_LINK_INVALID", `Row ${index} has a non-public source link for ${field}.`);
-        value = url.href;
-      }
-      fields[field] = { value: convert(value, mapping), start: cell.start, end: cell.end,
-        locator: `/${shape.format === "HTML_TABLE" ? `tables/${shape.tableIndex}/` : ""}rows/${index + shape.headerRows}/cells/${mapping.source}${mapping.attribute ? `/@${mapping.attribute}` : ""}` };
+      assignCell(fields, index, field, () => {
+        const cell = row[Number(mapping.source)];
+        if (!cell || cell.end <= cell.start) refuse("SOURCE_FIELD_MISSING", `Row ${index} lacks mapped field ${field}.`);
+        let value = cell.value;
+        if (mapping.attribute !== undefined) {
+          if (shape.format !== "HTML_TABLE" || mapping.attribute !== "href" || !cell.raw) refuse("FIELD_MAPPING_INVALID", "Link attributes require an HTML table cell.");
+          const links = [...cell.raw!.matchAll(/<a\b([^>]*)>/gi)];
+          if (links.length !== 1) refuse("HTML_LINK_AMBIGUOUS", `Row ${index} needs exactly one source link for ${field}.`);
+          const href = /\bhref\s*=\s*(["'])(.*?)\1/i.exec(links[0][1]);
+          const hrefValue = href?.[2];
+          if (!hrefValue) refuse("HTML_LINK_MISSING", `Row ${index} lacks a source link for ${field}.`);
+          const decoded = htmlText(hrefValue!);
+          let url: URL;
+          try { url = new URL(decoded, evidence.canonicalUrl); } catch { return refuse("HTML_LINK_INVALID", `Row ${index} has an invalid source link for ${field}.`); }
+          if (url.protocol !== "https:" || url.username || url.password) refuse("HTML_LINK_INVALID", `Row ${index} has a non-public source link for ${field}.`);
+          value = url.href;
+        }
+        return { value: convert(value, mapping), start: cell.start, end: cell.end,
+          locator: `/${shape.format === "HTML_TABLE" ? `tables/${shape.tableIndex}/` : ""}rows/${index + shape.headerRows}/cells/${mapping.source}${mapping.attribute ? `/@${mapping.attribute}` : ""}` };
+      });
     }
     return fields;
   }) };

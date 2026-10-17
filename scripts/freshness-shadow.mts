@@ -1307,7 +1307,7 @@ try {
 }
 /* The ceiling in force and the paid-search switch were read above the lane closure. */
 
-const websiteSize = websiteSizeFromHoldings(trackedStateCodes, ROOT);
+const websiteSize = await websiteSizeFromHoldings(trackedStateCodes);
 const sizeForDiscovery = websiteSize;
 let hostConcurrency = readSetting(config, HOST_CONCURRENCY_SETTING, HOST_CONCURRENCY_DEFAULT);
 const fleetSafety = new FleetSafetyController({
@@ -2294,7 +2294,7 @@ const runCampaignSitesPass = async (): Promise<void> => {
     try {
       const bounded = await withinWallTime((async () => {
         const methodVersion = await step("the method version", roundMethodVersion);
-        const openCampaignSite = fleetSafety.guardedOpenBytes("discovery-web", "campaign-site-chain", fetch, { followRedirects: false });
+        const openCampaignSite = fleetSafety.guardedOpenBytes("discovery-web", "campaign-site-chain", undefined, { followRedirects: false });
         const report: CampaignSitesSummary = { readsUsed: 0, rereadsUsed: 0, judgedFromVault: 0, elapsedMs: 0,
           verdicts: { read: 0, vault: 0, verified: 0, refused: 0, deferred: 0 }, byCode: {}, byStage: {},
           offers: { accepted: 0, refused: 0 }, approved: 0, unjoined: 0 };
@@ -2386,7 +2386,7 @@ const runCandidatePublicationsPass = async (): Promise<void> => {
         clock: () => Date.now(), sleep: ms => new Promise(done => setTimeout(done, ms)), spaceOut: spacer,
         deadlineMs: dispatchDeadlineMs,
         openFor: candidacyId => {
-          const opened = fleetSafety.guardedOpenBytes("public-web", candidacyId, fetch, { followRedirects: false });
+          const opened = fleetSafety.guardedOpenBytes("public-web", candidacyId, undefined, { followRedirects: false });
           return async ({ url, headers, timeoutMs }) => {
             const got = await opened({ url, headers, timeoutMs });
             return { status: got.status, body: got.bytes, contentType: got.contentType,

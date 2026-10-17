@@ -195,6 +195,7 @@ async function currentProjection(store: RoutineDataStore, tenant: OutcomeTenant)
 
 export interface PimaOutcomeIngestInput {
   readonly store: RoutineDataStore;
+  readonly fetchImpl?: typeof fetch;
   readonly client: LegistarClient;
   readonly args: PimaOutcomeIngestArgs;
   readonly window: OutcomeWindow;
@@ -256,9 +257,9 @@ export async function runPimaLegistarOutcomeIngest(input: PimaOutcomeIngestInput
   try {
     const captured = await captureSourceAcquisitions((runForSource) =>
       runForSource(tenant.sourceId, async () => {
-        const bodyId = await resolveNativeBody(client);
+        const bodyId = await resolveNativeBody(client, { fetchImpl: input.fetchImpl });
         if (client.slug !== args.slug || (args.bodyId !== null && args.bodyId !== bodyId)) throw new Error("LEGISTAR_OUTCOME_BODY_IDENTITY_MISMATCH");
-        return fetchEvents<LegistarEvent>(args.slug, { from: eventsWindow.from, to: eventsWindow.to, bodyId });
+        return fetchEvents<LegistarEvent>(args.slug, { from: eventsWindow.from, to: eventsWindow.to, bodyId }, { fetchImpl: input.fetchImpl });
       }),
     );
     events = captured.value;
@@ -326,8 +327,8 @@ export async function runPimaLegistarOutcomeIngest(input: PimaOutcomeIngestInput
         try {
           const collected = await collectEventOutcomes(args.slug, event.EventId, {
             sourceOrg: client.publishingOrg,
-            fetchItems: (slug, id) => fetchEventItems<LegistarEventItem>(slug, id),
-            fetchVotes: (slug, id) => fetchEventItemVotes<LegistarVote>(slug, id),
+            fetchItems: (slug, id) => fetchEventItems<LegistarEventItem>(slug, id, { fetchImpl: input.fetchImpl }),
+            fetchVotes: (slug, id) => fetchEventItemVotes<LegistarVote>(slug, id, { fetchImpl: input.fetchImpl }),
             now: () => new Date(now()),
           });
           return { collected, error: null as string | null };

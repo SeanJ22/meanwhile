@@ -165,7 +165,7 @@ export function makeCivicPlusSource(
           }, accept === "text/calendar" ? { label: "iCalendar feed", marker: "BEGIN:VCALENDAR" }
             : accept === "application/rss+xml" ? { label: "AgendaCenter RSS", marker: "<rss" } : { label: "AgendaCenter", marker: "cat" }); },
         });
-        recordAcquiredResponse({ requestedUrl: release.requestedUrl, finalUrl: release.finalUrl, httpStatus: release.httpStatus, bytes: release.bytes });
+        recordAcquiredResponse({ requestedUrl: release.requestedUrl, finalUrl: release.finalUrl, httpStatus: release.httpStatus, bytes: release.bytes, contentType: release.contentType });
         const response = { text: new TextDecoder().decode(release.bytes), collectedAt: release.checkedAt };
         responses.set(url, response); return response;
       };

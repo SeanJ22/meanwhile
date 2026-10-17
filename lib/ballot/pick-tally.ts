@@ -27,7 +27,9 @@ export function resolveWithSuppression(
   yesChoiceIds: readonly string[],
   voteFor: number,
   suppressedDerived: readonly string[] | undefined,
+  unsure = false,
 ): PickResolution {
+  if (unsure) return { chosen: [], basis: "NONE", conflicting: [], asks: true };
   const resolution = resolvePick(explicit, yesChoiceIds, voteFor);
   if (resolution.basis !== "DERIVED") return resolution;
   if (!suppressedDerived || suppressedDerived.length === 0) return resolution;
@@ -43,6 +45,7 @@ export function tallyPicks(
   explicitPicks: readonly StoredPick[],
   yesTargetIds: ReadonlySet<string>,
   suppressedDerived: Readonly<Record<string, string[]>>,
+  unsure: Readonly<Record<string, true>> = {},
 ): PickTally {
   const byId = new Map(explicitPicks.map((p) => [p.contestId, p]));
   const onThisBallot = new Set(pickable.map((c) => c.contestId));
@@ -57,6 +60,7 @@ export function tallyPicks(
       yes,
       contest.voteFor,
       suppressedDerived[contest.contestId],
+      unsure[contest.contestId] === true,
     );
     if (resolution.basis === "NONE" || resolution.chosen.length === 0) continue;
     const explicit = byId.get(contest.contestId);

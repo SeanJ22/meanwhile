@@ -358,6 +358,13 @@ test("the governing mode counts what contains the reader, and its door lists it"
   );
   assert.equal(outlinesOff.districts, coverage.divisions.length);
   assert.equal(outlinesOff.districtsSecondary, "District outlines are off");
+
+  const addressDivisionIds = new Set([coverage.divisions[0].ocdId]);
+  const scopedStats = computeStats({ meetings: [], coverage, drawnDistricts: drawn, atAddress: true, addressDivisionIds });
+  const scopedRows = governingDoorRows(coverage, id => representationForDivision(coverage, id), addressDivisionIds);
+  assert.equal(scopedStats.governingDistricts, 1, "the saved address cannot count every district touching the ZIP");
+  assert.deepEqual(scopedRows.map(row => row.ocdId), [...addressDivisionIds]);
+  assert.equal(scopedStats.governingDistricts, scopedRows.length);
 });
 
 test("3h: free scrolling never re-expands the who-governs card; a typed zip does", async () => {

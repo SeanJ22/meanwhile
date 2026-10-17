@@ -177,7 +177,7 @@ export function makePrimeGovSource(rows: BodySourceWiring[], fetchImpl?: typeof 
               fetchImpl, store: options.store, locks: options.locks, now: options.now, headers: { Accept: "application/json" },
               validate: bytes => { parsePrimeGovMeetings(new TextDecoder().decode(bytes)); } });
             const text = new TextDecoder().decode(release.bytes);
-            recordAcquiredResponse({ requestedUrl: url, finalUrl: release.finalUrl, httpStatus: release.httpStatus, bytes: release.bytes });
+            recordAcquiredResponse({ requestedUrl: url, finalUrl: release.finalUrl, httpStatus: release.httpStatus, bytes: release.bytes, contentType: release.contentType });
             for (const wiring of tenantRows) collected.push({ wiring, text, sourceUrl: release.finalUrl, collectedAt: release.retrievedAt,
               sourceCheck: knownReleaseSourceCheck(release), from, to });
           } catch (error) {

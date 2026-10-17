@@ -10,6 +10,13 @@ import { researchVaultResolver } from "../control-plane/workers/vault-object.ts"
 import { SourceAcquisitionFailure, isSourceAcquisitionFailure, readPublisherBody, requestPublisher, sourceAcquisitionFailure } from "../civic-data/source-acquisition-error.ts";
 import { readCompleteResponse } from "./source-bytes.ts";
 import { sourceUserAgent } from "./http.ts";
+import { publicFetch } from "../hunt/egress.ts";
+
+export interface FailedSourceCheck {
+  readonly at: string;
+  readonly code: string;
+  readonly detail: string;
+}
 
 export interface KnownRelease {
   readonly sourceId: string;
@@ -30,6 +37,8 @@ export interface KnownRelease {
   readonly reused: boolean;
   /** Exact immutable vault object, when this source has entered the shared store. */
   readonly vaultKey?: string;
+  /** A failed new check never replaces the successful held observation. */
+  readonly failedSourceCheck?: FailedSourceCheck;
   readonly outage?: string;
 }
 
@@ -63,6 +72,8 @@ export interface KnownReleaseOptions {
   readonly maxBytes: number;
   readonly checkAfterMs: number;
   readonly refresh?: boolean;
+  /** A known source may remain usable when a fresh provider check fails. */
+  readonly reuseOnSourceFailure?: boolean;
   readonly fetchImpl?: typeof fetch;
   readonly headers?: HeadersInit;
   readonly allowedHosts?: readonly string[];
@@ -253,7 +264,7 @@ export async function acquireKnownRelease(options: KnownReleaseOptions): Promise
     else if (heldBytes && prior?.lastModified) headers.set("if-modified-since", prior.lastModified);
     await checkKnownSourceRetry(store, options.sourceId, options.url, now);
     const response = await requestPublisher(options.sourceId, () =>
-      (options.fetchImpl ?? fetch)(options.url, { headers, signal: options.signal, redirect: "follow" }));
+      (options.fetchImpl ?? publicFetch)(options.url, { headers, signal: options.signal, redirect: "follow" }));
     const finalUrl = response.url || options.url;
     let final: URL;
     try { final = publicUrl(finalUrl); }
@@ -269,7 +280,7 @@ export async function acquireKnownRelease(options: KnownReleaseOptions): Promise
     if (response.status === 304) {
       await response.body?.cancel().catch(() => {});
       if (!prior || !heldBytes) throw sourceAcquisitionFailure("PUBLISHER_RESPONSE_REFUSED", "KNOWN_SOURCE_304_WITHOUT_BYTES");
-      const confirmed = { ...prior, checkedAt, lastCheckStatus: 304, parsers: [...new Set([...prior.parsers, options.parserVersion])] };
+      const confirmed = { ...prior, failedSourceCheck: undefined, checkedAt, lastCheckStatus: 304, parsers: [...new Set([...prior.parsers, options.parserVersion])] };
       const release = { ...confirmed, bytes: heldBytes, reused: true };
       if (!prior.parsers.includes(options.parserVersion)) await options.validate?.(heldBytes, release);
       await writeIndex(confirmed); return release;
@@ -299,15 +310,18 @@ export async function acquireKnownRelease(options: KnownReleaseOptions): Promise
       contentType: response.headers.get("content-type") ?? "application/octet-stream", reused: !!unchanged };
     await options.validate?.(bytes, release);
     if (unchanged && prior) {
-      await writeIndex({ ...prior, checkedAt, lastCheckStatus: 200, etag: release.etag, lastModified: release.lastModified,
+      await writeIndex({ ...prior, failedSourceCheck: undefined, checkedAt, lastCheckStatus: 200, etag: release.etag, lastModified: release.lastModified,
         parsers: [...new Set([...prior.parsers, options.parserVersion])] });
       return { ...release, finalUrl: prior.finalUrl, contentType: prior.contentType, vaultKey: prior.key };
     }
     return await save(release, [options.parserVersion]);
     } catch (error) {
-      if (!isSourceAcquisitionFailure(error) || !prior || !heldBytes || options.signal.aborted) throw error;
-      const release = { ...prior, bytes: heldBytes, reused: true, outage: error.message };
+      if (!isSourceAcquisitionFailure(error) || !prior || !heldBytes || options.signal?.aborted) throw error;
+      const failedSourceCheck = { at: options.now?.() ?? new Date().toISOString(), code: error.code, detail: error.message };
+      const release = { ...prior, bytes: heldBytes, reused: true, outage: error.message, failedSourceCheck };
       await options.validate?.(heldBytes, release);
+      // A caller that replays saved evidence takes it directly; others receive it with the failure.
+      if (options.reuseOnSourceFailure) { await writeIndex({ ...prior, failedSourceCheck }); return release; }
       throw new KnownReleaseUnavailable(error, release);
     }
   });

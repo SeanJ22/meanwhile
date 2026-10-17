@@ -29,7 +29,7 @@ export const POST = readerRoute("/api/voting-sites", async function POST(request
     address = typeof body.address === "string" ? body.address.trim() : "";
     googleRequested = body.googleFallback === true;
   } catch { return empty(400); }
-  if (address.length < 3 || address.length > 200) return empty(400);
+  if (address.length < 3) return empty(400);
 
   const isZip = /^\d{5}$/.test(address);
   const geocoded = isZip ? Promise.resolve(null) : censusVotingAddress(address, requestFetch);

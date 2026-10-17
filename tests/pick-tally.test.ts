@@ -203,3 +203,12 @@ test("a v1 picks file still reads — an upgrade never discards a stored ballot"
     "the reader must accept v1 as well as v2",
   );
 });
+
+
+test("Not sure overrides both a reaction-derived pick and the shared My picks tally", () => {
+  assert.deepEqual(resolveWithSuppression(null, ["candidate"], 1, [], true), { chosen: [], basis: "NONE", conflicting: [], asks: true });
+  const tally = tallyPicks([{ contestId: "race", contestTitle: "A race", voteFor: 1,
+    options: [{ id: "candidate", label: "Candidate", reactionTargetId: "candidate" }] }], [], new Set(["candidate"]), {}, { race: true });
+  assert.equal(tally.picked, 0);
+  assert.deepEqual(tally.rows, []);
+});

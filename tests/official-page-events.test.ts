@@ -116,6 +116,36 @@ test("lazy linking preserves original capture HTML, duplicate editions and late 
   }
 });
 
+test("both linking indexes exclude assets and keep shared accounts and documents within their official links", async () => {
+  const pages = [
+    { canonicalUrl: "https://first.gov/", text: '<img src="https://assets.example.org/seal.png"><!-- <a href="https://inactive.example.org/">old</a> --><a href="https://facebook.com/TownCouncil">Council</a><a href="https://docs.google.com/document/d/one/edit">Document</a><iframe src="https://town.legistar.com/Calendar.aspx"></iframe>' },
+    { canonicalUrl: "https://facebook.com/OtherTown", text: '<a href="https://unendorsed.example.org/">Unrelated calendar</a>' },
+    { canonicalUrl: "https://second.gov/", text: '<a href="https://docs.google.com/document/d/two/edit">Second document</a>' },
+  ];
+  const lazy = pages.map(page => ({ canonicalUrl: page.canonicalUrl, readText: async () => page.text }));
+  for (const url of ["https://assets.example.org/events", "https://inactive.example.org/", "https://facebook.com/OtherTown",
+    "https://facebook.com/TownCouncil/%2e%2e/OtherTown", "https://unendorsed.example.org/", "https://docs.google.com/document/d/three/edit"]) {
+    assert.equal(officialLinkingPageFrom(url, pages), null, url);
+    assert.equal(await officialLinkingPageFromAsync(url, lazy), null, url);
+  }
+  for (const [url, root] of [["https://facebook.com/TownCouncil/posts/123", "https://first.gov/"],
+    ["https://town.legistar.com/View.ashx?ID=123", "https://first.gov/"],
+    ["https://docs.google.com/document/d/two/edit", "https://second.gov/"]]) {
+    const sync = officialLinkingPageFrom(url, pages);
+    const async = await officialLinkingPageFromAsync(url, lazy);
+    assert.equal(sync?.url, root);
+    assert.deepEqual(async, sync);
+    assert.equal(isOfficialSource(url, sync), true);
+  }
+  const root = { canonicalUrl: "https://third.gov/", text: '<a href="https://facebook.com/OtherTown">Other town</a>' };
+  pages.push(root);
+  lazy.push({ canonicalUrl: root.canonicalUrl, readText: async () => root.text });
+  const sync = officialLinkingPageFrom("https://unendorsed.example.org/", pages);
+  assert.equal(sync?.url, "https://facebook.com/OtherTown");
+  assert.equal(sync?.linkingPage?.url, root.canonicalUrl);
+  assert.deepEqual(await officialLinkingPageFromAsync("https://unendorsed.example.org/", lazy), sync);
+});
+
 test("lazy linking shares ingestion and reloads only selected chain captures, including appended pages", async () => {
   const reads = [0, 0, 0, 0];
   const captures = [

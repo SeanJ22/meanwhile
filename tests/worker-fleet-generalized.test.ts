@@ -48,7 +48,9 @@ test("v2 office rows in HTML and tabular election records preserve exact markup 
     request('ID,Name\r\n1,"District, East"\r\n2,"District ""West"""\r\n', { format: "DELIMITED_TEXT", delimiter: ",", headerRows: 1, fields: { id: { source: 0, type: "STRING" }, name: { source: 1, type: "STRING" } } }, "ELECTION_DISTRICT")
   ]) {
     const parsed = parseCivicRecords(input); assert.equal(parsed.verdict, "EXTRACTED", JSON.stringify(parsed.warnings));
-    assert.equal(validateExtraction(validator(input)).verdict, "PASS");
+    const validated = validateExtraction(validator(input));
+    assert.equal(validated.extractionVerdict, "PASS", JSON.stringify(validated.findings));
+    if (input.contract.extraction.format !== "XML_RECORDS") assert.equal(validated.verdict, "PASS", `${input.contract.extraction.format}: ${JSON.stringify(validated.findings)}`);
     const audited = auditExtraction(auditor(input)); assert.equal(audited.verdict, "SURVIVED", JSON.stringify(audited.findings));
     for (const span of parsed.spans) assert.equal(input.evidence.text.slice(span.start, span.end), span.quote);
   }
@@ -154,4 +156,43 @@ test("generalized parser, validator, and auditor execute through the scrubbed di
     const result = await runIsolatedSource(await bundleProcedure(role), value, 2000); assertFleetResult(result, role, value.attemptId);
     assert.equal(result.verdict, role === "PARSER" ? "EXTRACTED" : role === "VALIDATOR" ? "PASS" : "SURVIVED");
   }
+});
+
+test("optional mapped fields fail independently and replay consistently through parser, validator and auditor", () => {
+  const inputs = [
+    request('{"records":[{"id":"1","name":"Member A","email":"a@town.gov"},{"id":"2","name":"Member B"}]}',
+      { ...shape, fields: { ...shape.fields, email: { source: "/email", type: "STRING" } } }),
+    request('<table><tr><td>1</td><td>Member A</td><td>a@town.gov</td></tr><tr><td>2</td><td>Member B</td><td></td></tr><tr><td>3</td><td>Member C</td><td>Email</td></tr></table>',
+      { format: "HTML_TABLE", tableIndex: 0, headerRows: 0, fields: { id: { source: 0, type: "STRING" }, name: { source: 1, type: "STRING" }, email: { source: 2, type: "STRING" } } }),
+    request('1,Member A,7\n2,Member B,unknown\n', { format: "DELIMITED_TEXT", delimiter: ",", headerRows: 0,
+      fields: { id: { source: 0, type: "STRING" }, name: { source: 1, type: "STRING" }, district: { source: 2, type: "NUMBER" } } }),
+    request('<members><member><id>1</id><name>Member A</name><email>a@town.gov</email></member><member><id>2</id><name>Member B</name></member></members>',
+      { format: "XML_RECORDS", rowTag: "member", fields: { id: { source: "id", type: "STRING" }, name: { source: "name", type: "STRING" }, email: { source: "email", type: "STRING" } } }),
+    request('ID: 1 Name: Member A Email: a@town.gov End\nID: 2 Name: Member B End',
+      { format: "TEXT_BLOCKS", recordStart: "ID:", recordEnd: "End", fields: { id: { source: "ID:", type: "STRING" }, name: { source: "Name:", type: "STRING" }, email: { source: "Email:", type: "STRING" } } }),
+  ];
+  for (const input of inputs) {
+    const parsed = parseCivicRecords(input);
+    assert.equal(parsed.verdict, "EXTRACTED", JSON.stringify(parsed.warnings));
+    assert.ok(parsed.records.length >= 2);
+    assert.ok(parsed.warnings.length > 0 && parsed.warnings.every(row => row.severity === "INFO"));
+    const validated = validateExtraction(validator(input));
+    assert.equal(validated.extractionVerdict, "PASS", JSON.stringify(validated.findings));
+    if (input.contract.extraction.format !== "XML_RECORDS") assert.equal(validated.verdict, "PASS", `${input.contract.extraction.format}: ${JSON.stringify(validated.findings)}`);
+    const audited = auditExtraction(auditor(input));
+    assert.equal(audited.verdict, "SURVIVED", JSON.stringify(audited.findings));
+    assert.equal(parsed.records[1].fields.email ?? parsed.records[1].fields.district, undefined);
+    const required = { ...input, contract: { ...input.contract, requiredFields: Object.keys(input.contract.extraction.fields) } };
+    assert.equal(parseCivicRecords(required).verdict, "FAILED", "the actual required fields remain required");
+  }
+});
+
+test("an absent optional profile detail does not suppress the visible person", () => {
+  const input = request('<h2 class="detail-title">Member A</h2><ul class="detail-list"><li><span class="detail-list-label">ID:</span><span class="detail-list-value">1</span></li></ul>',
+    { format: "HTML_PROFILE", fields: { id: { source: "detail:ID", type: "STRING" }, name: { source: "heading:detail-title", type: "STRING" }, email: { source: "detail:Email", type: "STRING" } } });
+  const parsed = parseCivicRecords(input);
+  assert.equal(parsed.verdict, "EXTRACTED");
+  assert.deepEqual(parsed.records.map(row => ({ ...row.fields })), [{ id: "1", name: "Member A" }]);
+  assert.equal(validateExtraction(validator(input)).extractionVerdict, "PASS");
+  assert.equal(auditExtraction(auditor(input)).verdict, "SURVIVED");
 });

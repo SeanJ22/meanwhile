@@ -204,7 +204,7 @@ export function makeGranicusSource(rows: BodySourceWiring[], fetchImpl?: typeof 
           validate: bytes => { const text = new TextDecoder().decode(bytes); readValidatedResponse(url, 2, { status: 200, contentType: format, text });
             if (format === "rss") parseGranicusFeed(text, url); else parseGranicusPublisher(text, url); },
         });
-        recordAcquiredResponse({ requestedUrl: release.requestedUrl, finalUrl: release.finalUrl, httpStatus: release.httpStatus, bytes: release.bytes });
+        recordAcquiredResponse({ requestedUrl: release.requestedUrl, finalUrl: release.finalUrl, httpStatus: release.httpStatus, bytes: release.bytes, contentType: release.contentType });
         return { text: new TextDecoder().decode(release.bytes), collectedAt: release.retrievedAt, sourceCheck: knownReleaseSourceCheck(release) };
       };
       for (const wiring of rows) {

@@ -79,6 +79,7 @@ function reactionRequest(overrides: {
 function logRequest(overrides: {
   origin?: string | null;
   ip?: string;
+  ocdIds?: string[];
   detail?: Record<string, unknown>;
   body?: string;
 }): Request {
@@ -96,7 +97,7 @@ function logRequest(overrides: {
       overrides.body ??
       JSON.stringify({
         eventType: "SEARCH",
-        ocdIds: [],
+        ocdIds: overrides.ocdIds ?? [],
         detail: overrides.detail,
       }),
   });
@@ -354,6 +355,13 @@ test("log intake: an oversized body is refused outright", async () => {
     logRequest({ ip: "203.0.113.31", body: "x".repeat(5000) }),
   );
   assert.equal(response.status, 413);
+});
+
+test("log intake: too many divisions or detail keys are refused", async () => {
+  const ocdIds = Array.from({ length: 41 }, (_, index) => `ocd-division/country:us/state:az/place:p${index}`);
+  assert.equal((await postLog(logRequest({ ip: "203.0.113.34", ocdIds }))).status, 400);
+  const detail = Object.fromEntries(Array.from({ length: 21 }, (_, index) => [`key${index}`, "v"]));
+  assert.equal((await postLog(logRequest({ ip: "203.0.113.35", detail }))).status, 400);
 });
 
 test("log intake: cross-origin submission is refused — text cannot be pumped in from scripts that never loaded the site", async () => {

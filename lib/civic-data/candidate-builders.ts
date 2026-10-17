@@ -1158,7 +1158,7 @@ export function nhMembersCandidate(input: {
     scope: "US-NH",
     sourceProjectionEvidence: sourceProjectionEvidence("nh-general-court", "STATE_LEGISLATOR", "US-NH"),
     retrieval: { succeeded: input.httpStatus === 200 && input.identityHttpStatus === 200, requestedUrl: "https://gc.nh.gov/downloads/Members.txt", finalUrl: input.finalUrl, httpStatus: input.httpStatus === 200 && input.identityHttpStatus === 200 ? 200 : null, retrievedAt: input.retrievedAt, rawHash,...(input.sourceCheck ? {sourceCheck:input.sourceCheck} : {}) },
-    normalization: { succeeded: true, parserVersion: "nh-general-court/3", schemaVersion: `Members.txt+legislators.txt+RollCallHistory.txt:${NH_MEMBERS_SUPPORTED_TERM}:official-person-id`, normalizedHash: normalizedHash(readModel), normalizedPayloadHash: normalizedHash(normalizedPayload), inputRecords: input.extraction.counts.logicalInput, outputRecords: input.extraction.counts.produced, droppedRecords: input.extraction.counts.dropped, missingRequiredFields },
+    normalization: { succeeded: true, parserVersion: "nh-general-court/3", schemaVersion: `Members.txt+legislators.txt+RollCallHistory.txt:${NH_MEMBERS_SUPPORTED_TERM}:official-person-id`, normalizedHash: normalizedHash(readModel), normalizedPayloadHash: normalizedHash(normalizedPayload), inputRecords: input.extraction.counts.logicalInput, outputRecords: current.length, droppedRecords: input.extraction.counts.logicalInput - current.length, missingRequiredFields },
     identities,
     temporal: { version: NH_MEMBERS_SUPPORTED_TERM, expectedVersion: expectedTerm, sourceThrough: input.retrievedAt, staleAtRetrieval: expectedTerm !== NH_MEMBERS_SUPPORTED_TERM },
     semantics: { factKind: "current legislative membership as stated by electedStatus", violations },

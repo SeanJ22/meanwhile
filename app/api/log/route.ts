@@ -6,15 +6,20 @@ import {
   isValidEventType,
   logSearchEvent,
 } from "@/lib/db/search-log";
+import { ASK_QUESTION_MAX_CHARS } from "@/lib/db/ask-signal";
 import { ripcordPulled } from "@/lib/ripcords";
 import {
   intakeLimits,
   isSameOriginSubmission,
 } from "@/lib/signal/intake-limits";
 import { SlidingWindowLimiter } from "@/lib/signal/rate-limit";
+import { divisionIdsForZipArea } from "@/lib/ballot/zip-divisions";
+import { resolveZip } from "@/lib/geo/zcta";
+import { divisionsAt } from "@/lib/registry/server";
 
 /**
- * POST /api/log: accepts exactly the event shape `lib/db/search-log.ts` defines. No identifier is accepted;
+ * POST /api/log accepts the event shape `lib/db/search-log.ts` defines. The browser's random continuity
+ * key is digested at the writer and never stored raw;
  * the IP lives only in this instance's memory for the rate-limit window. A malformed event is a 400; a
  * missing database is a 202 so the client stays fire-and-forget.
  */
@@ -22,6 +27,9 @@ import { SlidingWindowLimiter } from "@/lib/signal/rate-limit";
 export const runtime = "nodejs";
 
 const MAX_BODY_BYTES = 4096;
+const MAX_OCD_IDS = 40;
+const MAX_DETAIL_KEYS = 20;
+const MAX_DETAIL_KEY_CHARS = 64;
 
 let ipLimiter: SlidingWindowLimiter | null = null;
 function getIpLimiter() {
@@ -38,6 +46,9 @@ async function postWithSettings(request: Request) {
     return Response.json({ error: "intake is closed" }, { status: 503 });
   }
 
+  if (Number(request.headers.get("content-length")) > MAX_BODY_BYTES) {
+    return Response.json({ error: "payload too large" }, { status: 413 });
+  }
   const raw = await request.text();
   if (raw.length > MAX_BODY_BYTES) {
     return Response.json({ error: "payload too large" }, { status: 413 });
@@ -59,8 +70,7 @@ async function postWithSettings(request: Request) {
         { status: 403 },
       );
     }
-    // Per-IP window only — the log deliberately has no device key to
-    // limit on. The IP is read here and discarded.
+    // The IP is used only for this limiter and discarded.
     const ip =
       request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
     if (!getIpLimiter().allow(`ip:${ip}`)) {
@@ -73,6 +83,7 @@ async function postWithSettings(request: Request) {
     approximateLocation?: unknown;
     ocdIds?: unknown;
     detail?: unknown;
+    continuityKey?: unknown;
   };
 
   if (!isValidEventType(event.eventType)) {
@@ -80,7 +91,7 @@ async function postWithSettings(request: Request) {
   }
   if (
     !Array.isArray(event.ocdIds) ||
-    event.ocdIds.length > 40 ||
+    event.ocdIds.length > MAX_OCD_IDS ||
     event.ocdIds.some((v) => typeof v !== "string" || v.length > 200)
   ) {
     return Response.json({ error: "ocdIds must be a short array of strings" }, { status: 400 });
@@ -95,17 +106,19 @@ async function postWithSettings(request: Request) {
   if (event.detail !== undefined && (typeof event.detail !== "object" || event.detail === null)) {
     return Response.json({ error: "detail must be an object" }, { status: 400 });
   }
+  if (event.continuityKey !== undefined && event.continuityKey !== null && typeof event.continuityKey !== "string") {
+    return Response.json({ error: "continuityKey must be a string" }, { status: 400 });
+  }
   if (event.detail) {
-    // Server-enforced caps on the detail bag: the client caps the
-    // refusal-question text, and the server does not take its word for
-    // it. Validity, so never behind a flag.
+    // Ask questions keep their words up to the Ask limit; other values use the configured detail limit.
     const entries = Object.entries(event.detail as Record<string, unknown>);
     const maxChars = intakeLimits().logDetailValueMaxChars;
-    if (entries.length > 20) {
+    if (entries.length > MAX_DETAIL_KEYS) {
       return Response.json({ error: "detail carries too many keys" }, { status: 400 });
     }
     for (const [key, value] of entries) {
-      if (key.length > 64 || (typeof value === "string" && value.length > maxChars)) {
+      const cap = event.eventType === "QUESTION_ASKED" && key === "question" ? ASK_QUESTION_MAX_CHARS : maxChars;
+      if (key.length > MAX_DETAIL_KEY_CHARS || (typeof value === "string" && value.length > cap)) {
         return Response.json(
           { error: "detail strings exceed the server cap" },
           { status: 400 },
@@ -118,10 +131,21 @@ async function postWithSettings(request: Request) {
     if (event.detail) {
       assertDetailIsAnonymous(event.detail as Record<string, string | number | boolean>);
     }
+    let districtIds = event.ocdIds as string[];
+    // A ZIP entry has no point-resolved scope. Resolve all districts touching
+    // its area here; an address entry supplies its exact resolved district set.
+    if (event.eventType === "ADDRESS_ENTERED" && districtIds.length === 0 && typeof event.approximateLocation === "string" && /^\d{5}$/.test(event.approximateLocation)) {
+      const resolution = resolveZip(event.approximateLocation);
+      const pointIds = resolution.ok
+        ? await divisionsAt(resolution.centroid.lat, resolution.centroid.lng).then(rows => rows.map(row => row.ocdId)).catch(() => [])
+        : [];
+      districtIds = await divisionIdsForZipArea(event.approximateLocation, pointIds);
+    }
     const stored = await logSearchEvent({
       eventType: event.eventType,
       approximateLocation: (event.approximateLocation as string | null | undefined) ?? null,
-      ocdIds: event.ocdIds as string[],
+      ocdIds: districtIds,
+      continuityKey: (event.continuityKey as string | null | undefined) ?? null,
       detail: event.detail as Record<string, string | number | boolean> | undefined,
       // Whose traffic this is, declared by the caller at write time.
       // The body is read here as well as the header, because

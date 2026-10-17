@@ -138,7 +138,7 @@ export function SpeakYourMind({
               ? "This isn't connected to a store right now, so that wasn't kept."
               : result === "REFUSED"
                 ? "We're not taking submissions at the moment. Nothing was kept."
-                : "That didn't go through. Nothing was kept."}
+                : "We couldn't confirm that this was saved. Your draft is still here."}
         </p>
       )}
       </>

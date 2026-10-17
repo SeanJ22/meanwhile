@@ -47,8 +47,8 @@ function sameAcquisitionProgress(candidate: RoutineCandidate, pointed: RoutineCa
   }
   if (!["FEC_FUNDING", "STATE_CAMPAIGN_FINANCE"].includes(candidate.recordClass)) return true;
   const progress = (value: RoutineCandidate) => {
-    const payload = value.readModel as { refreshAttempts?: unknown; acquisitionCursors?: unknown };
-    return canonicalCivicDataJson([payload.refreshAttempts ?? null, payload.acquisitionCursors ?? null]);
+    const payload = value.readModel as { refreshAttempts?: unknown; acquisitionCursors?: unknown; secondHop?: unknown };
+    return canonicalCivicDataJson([payload.refreshAttempts ?? null, payload.acquisitionCursors ?? null, payload.secondHop ?? null]);
   };
   return progress(candidate) === progress(pointed);
 }

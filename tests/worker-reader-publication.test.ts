@@ -25,8 +25,11 @@ import { recordAcquisition } from "../lib/control-plane/evidence/artifact.ts";
 import { putArtifact } from "../lib/control-plane/evidence/store.ts";
 import { dispatchWorkerTask, evidenceProjection, FLEET_POLICY_VERSION } from "../lib/control-plane/workers/runtime.ts";
 import { nextAutonomousOperation } from "../lib/control-plane/workers/coordinator.ts";
-import { readRegistryRuntimePrior, type RegistryRuntimePrior } from "../lib/registry/runtime-data-plane.ts";
+import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { readRegistryRuntimePrior, registryRuntimeCandidate, type RegistryRuntimePrior } from "../lib/registry/runtime-data-plane.ts";
 import { publishWorkerReaderResults } from "../lib/civic-data/worker-reader-publication.ts";
+import { readManualProjectionPrior, type CuratedReaderProjection } from "../lib/civic-data/manual-projections.ts";
+import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { workerPublicationTasks } from "../lib/civic-data/worker-publication-tasks.ts";
 import { verifiedWorkerRecords } from "../lib/civic-data/worker-publication-evidence.ts";
 import { readCuratedReaderProjection } from "../lib/civic-data/curated-reader-read-model.ts";
@@ -39,7 +42,6 @@ import { workerBodyDirectoryPackage } from "../lib/civic-data/worker-body-direct
 import { filingsForDivisions, officialFilingIssue, type OfficialFiling } from "../lib/civic-data/official-filings.ts";
 import { renderCardWithSources } from "./helpers/render-card.ts";
 import { collectWorkerRosterReadback } from "../lib/control-plane/worker-reader-readback.ts";
-import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { registryTransferImport } from "./helpers/promoted-fixtures.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 import { registryJurisdictions } from "../lib/civic-data/state-scopes.ts";
@@ -427,6 +429,26 @@ test("a service record without a usable channel returns to automatic repair inst
   assert.notEqual((await nextAutonomousOperation(runtime, h.item.id)).action, "STAGED");
 });
 
+test("a later service read retains a missing optional contact with its original source", async () => {
+  const facts = { topicId: "trash-recycling", serviceZip: "99999", service: "Trash pickup",
+    serviceAreaEvidence: "Trash pickup serves ZIP 99999", phone: "520-555-0100", email: "pickup@example.gov" };
+  const first = await workerFixture("everyday-routing", facts);
+  const published = (await publishWorkerReaderResults(first.input))[0].outcome;
+  assert.equal(published.status, "PUBLISHED", JSON.stringify(published));
+  const { email: _email, ...withoutEmail } = facts;
+  const next = await workerFixture("everyday-routing", { ...withoutEmail, phone: "520-555-0199" });
+  const refreshed = (await publishWorkerReaderResults({ ...next.input, store: first.store }))[0].outcome;
+  assert.equal(refreshed.status, "PUBLISHED", JSON.stringify(refreshed));
+  const read = await readEverydayRoutingProjection({ store: first.store, now: next.h.now(), bypassCache: true });
+  assert.equal(read.kind, "PROMOTED");
+  if (read.kind !== "PROMOTED") throw new Error("Service record missing");
+  const contact = read.value.records.find(row => row.kind === "CONTACT")!.contact as { phone: string; email: string };
+  assert.equal(contact.phone, "520-555-0199");
+  assert.equal(contact.email, facts.email);
+  const held = (await readManualProjectionPrior("everyday-routing", first.store, next.h.now()))!.payload as CuratedReaderProjection;
+  assert.ok(held.records.some(row => (row.fieldSources as Record<string, { quote?: string }> | undefined)?.["contact.email"]?.quote?.includes(facts.email)));
+});
+
 test("normal voter-access workers publish the independently verified statewide route through the existing navigation reader", async () => {
   const { input, store, h } = await workerFixture("ballot-navigation", { state: "AZ", kind: "REGISTRATION_LINK", url: FIXTURE_URL,
     coverage: "STATEWIDE", coverageEvidence: "The election authority identifies this lookup as serving the entire state." });
@@ -590,4 +612,21 @@ test("registry publication job uses the same saved directory evidence and typed 
   assert.ok(result.receipt?.delivered.records);
   const read = await readRegistryRuntimePrior(f.store, f.h.now(), "AZ");
   assert.ok(read?.payload.registry.bodies.some(body => body.name === "Fixture Shared Job Commission"));
+});
+
+test("a reader-specific failure holds its own row while a supported public record publishes and remains readable", async () => {
+  const f = await workerFixture("public-records", [
+    { title: "Watershed notice", kindLabel: "watershed notice", sourceSentence: "The Watershed notice is a watershed notice." },
+    { bodyName: "A different government", title: "Other notice", kindLabel: "watershed notice", sourceSentence: "The Other notice is a watershed notice." },
+  ]);
+  const outcome = (await publishWorkerReaderResults(f.input))[0].outcome;
+  assert.equal(outcome.status, "PARTIALLY_PUBLISHED", JSON.stringify(outcome));
+  assert.equal(outcome.recovery, "WORKER");
+  assert.match(outcome.detail, /CANONICAL_BODY_MISMATCH/);
+  assert.equal(outcome.acceptedRecordIds?.length, 1);
+  const read = await readPublicRecords(f.body.ocdId!, { store: f.store, now: f.h.now(), bypassCache: true });
+  assert.equal(read.kind, "PROMOTED");
+  if (read.kind !== "PROMOTED") throw new Error("Public record missing");
+  assert.deepEqual(read.value.records.map(row => row.title), ["Watershed notice"]);
+  assert.deepEqual((await publishWorkerReaderResults(f.input))[0].outcome, outcome, "a replay keeps the source gap visible without replacing the valid fact");
 });

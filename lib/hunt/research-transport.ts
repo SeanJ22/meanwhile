@@ -1,3 +1,6 @@
+import { checkedCurlArguments, parseCurlIncluded } from "./public-curl.ts";
+import type { PublicLookup } from "./egress.ts";
+export { parseCurlIncluded } from "./public-curl.ts";
 /**
  * A research read refused as a client is asked again as who we are, through
  * another client. Some bot filters challenge Node's own `fetch` whatever it
@@ -28,31 +31,21 @@ async function nativeCurl(args: readonly string[], timeoutMs: number): Promise<B
   });
 }
 
-/** One `curl -i` response: the first header block, then the body bytes. Never follows a redirect. */
-export function parseCurlIncluded(out: Buffer): { status: number | null; contentType: string; location: string | null; body: Uint8Array } {
-  const cut = out.indexOf("\r\n\r\n");
-  const headEnd = cut < 0 ? out.length : cut;
-  const head = out.subarray(0, headEnd).toString("latin1");
-  const body = cut < 0 ? new Uint8Array(0) : new Uint8Array(out.subarray(cut + 4));
-  const status = /^HTTP\/[\d.]+\s+(\d{3})/.exec(head)?.[1];
-  const header = (name: string) => new RegExp(`^${name}:\\s*(.*)$`, "im").exec(head)?.[1]?.trim() ?? null;
-  return { status: status ? Number(status) : null, contentType: header("content-type") ?? "", location: header("location"), body };
-}
-
 /**
  * The research transport: Node's `fetch` first, and on a 403 the same request once more through `curl` with
  * the project's identification in the fields built for it.
  */
-export function identifiedResearchGet(options: { readonly first?: ResearchGet; readonly curl?: ResearchCurlRunner } = {}): ResearchGet {
+export function identifiedResearchGet(options: { readonly first?: ResearchGet; readonly curl?: ResearchCurlRunner; readonly lookup?: PublicLookup } = {}): ResearchGet {
   const first = options.first ?? nodeResearchGet;
   const runCurl = options.curl ?? nativeCurl;
   return async (request) => {
     const got = await first(request);
     if (got.status !== 403) return got;
-    const args = ["-s", "-S", "-i", "--compressed", "--max-time", String(Math.max(1, Math.ceil(request.timeoutMs / 1000)))];
-    for (const [key, value] of Object.entries({ ...request.headers, ...IDENTIFICATION })) args.push("-H", `${key}: ${value}`);
-    args.push(request.url);
     try {
+      const args = await checkedCurlArguments(request.url, { signal: AbortSignal.timeout(request.timeoutMs), lookup: options.lookup });
+      args.push("--max-time", String(Math.max(1, Math.ceil(request.timeoutMs / 1000))));
+      for (const [key, value] of Object.entries({ ...request.headers, ...IDENTIFICATION })) args.push("-H", `${key}: ${value}`);
+      args.push(request.url);
       const again = parseCurlIncluded(await runCurl(args, request.timeoutMs));
       if (again.status === null) return got;
       return { status: again.status, body: again.body, contentType: again.contentType, location: again.location, transportError: null };

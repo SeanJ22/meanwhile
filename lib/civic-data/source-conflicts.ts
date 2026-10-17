@@ -39,9 +39,21 @@ export function resolveRecordConflicts(current: Record<string, unknown> & { id: 
   const conflicts: SourceScopedHeldFact[] = [];
   const walk = (incomingRow: Record<string, unknown>, oldRow: Record<string, unknown>, prefix = ""): Record<string, unknown> => {
     const result = { ...incomingRow };
-    for (const [key, incoming] of Object.entries(incomingRow)) {
-      if (META.has(key) || incoming === null || incoming === undefined) continue;
+    for (const key of new Set([...Object.keys(incomingRow), ...Object.keys(oldRow)])) {
+      if (META.has(key)) continue;
+      const incoming = incomingRow[key];
       const old = oldRow[key], field = prefix + key;
+      if (incoming === null || incoming === undefined) {
+        if (old !== null && old !== undefined && current.kind === prior.kind) {
+          result[key] = old;
+          const source = sourceFor(prior, field, priorReceipt);
+          fieldSources[field] = source;
+          conflicts.push({ key: `${current.id}:${field}`, code: "SOURCE_FIELD_HELD_LKG",
+            detail: `${field}: the latest source supplies no verified replacement; the earlier verified value remains.`,
+            record: { memberId: current.id, field, value: old, source } });
+        }
+        continue;
+      }
       if (old === undefined || old === null || canonicalCivicDataJson(old) === canonicalCivicDataJson(incoming)) continue;
       if (typeof incoming === "object" && !Array.isArray(incoming) && typeof old === "object" && !Array.isArray(old)) {
         result[key] = walk(row(incoming), row(old), field + "."); continue;

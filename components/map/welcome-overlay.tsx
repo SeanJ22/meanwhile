@@ -1,4 +1,5 @@
 "use client";
+import { logAddressEntered, readerPageForPath } from "@/lib/log/address-events";
 
 import { useEffect, useState } from "react";
 import { ZIP_AREA_MISSING } from "@/lib/geo/postal-core";
@@ -58,6 +59,9 @@ export function WelcomeOverlay({
    * card knows the act; `stampResidency` on the server decides what it proves.
    */
   async function submit(value: string = zip, origin: LocationOrigin = "TYPED_ZIP") {
+    if (/^\d{5}$/.test(value.trim())) {
+      logAddressEntered({ zip: value.trim(), divisionIds: [] }, readerPageForPath(window.location.pathname));
+    }
     const result = await resolveZipAsync(value).catch(() => ({ ok: false, reason: "uncovered" } as const));
 
     if (!result.ok) {

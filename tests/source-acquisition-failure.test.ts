@@ -307,6 +307,7 @@ test("the curl rung receives both a native deadline and an abortable process sig
           if (signal.aborted) abort();
           else signal.addEventListener("abort", abort, { once: true });
         }),
+        async () => [{address:"93.184.216.34",family:4}],
       ),
     ),
     /acquisition deadline/,
@@ -344,9 +345,9 @@ test("the shared meeting client cancels hung request/body work and its real retr
         ok: true,
         status: 200,
         headers: new Headers({ "content-type": "text/plain" }),
-        text: () => {
+        arrayBuffer: () => {
           active += 1;
-          return new Promise<string>((_resolve, reject) => {
+          return new Promise<ArrayBuffer>((_resolve, reject) => {
             const abort = () => { active -= 1; reject(signal.reason); };
             if (signal.aborted) abort();
             else signal.addEventListener("abort", abort, { once: true });

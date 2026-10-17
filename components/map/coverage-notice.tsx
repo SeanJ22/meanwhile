@@ -15,10 +15,8 @@ import { useRef, type ReactNode } from "react";
 import Image from "next/image";
 
 import { useDismissOnOutside } from "@/hooks/use-dismiss-on-outside";
-import { useNarrowing } from "@/hooks/use-narrowing";
 import { useResolvedLocation } from "@/hooks/use-resolved-location";
 
-import type { StreetPoint } from "@/lib/geo/census-geocoder";
 import type { CoverageTier } from "@/lib/meetings/query";
 import {
   type CoverageSummary,
@@ -79,8 +77,6 @@ interface CoverageNoticeProps {
   onMinimize?: () => void;
   /** Fires when the reader applies a narrowing, never on decline or undo. */
   onNarrowApplied?: () => void;
-  /** The narrowed street resolved to a point. */
-  onStreetPoint?: (point: StreetPoint) => void;
   /** The reader settled their address on any surface. */
   onAddressResolved?: (scope: { divisionIds: string[]; contestIds: string[] }) => void;
   /** They asked for the whole area back. */
@@ -339,17 +335,13 @@ function CoverageBody({
   const federalSeats = federalPanel.yours;
   const stateLegislatorGaps = stateLegislatorAuthorities.filter(authority => authority.kind === "NOT_RECORDED" || authority.kind === "STORE_UNREACHABLE");
 
-  /* Device-local narrowing: bodies of the picked type narrow to the choice. */
-  const narrowing = useNarrowing(zip);
-  const selected = new Set(narrowing.divisions);
-
   /*
    * Drops only `ELSEWHERE_IN_ZIP`; overlapping levels are untouched. Every
    * count on this card derives from this array.
    */
   const bodiesHere = scopedToAddress(bodies, subject.location);
 
-  const derived = deriveWhoGoverns(bodiesHere, selected);
+  const derived = deriveWhoGoverns(bodiesHere);
   const shown = derived.rows;
   // "" when unknown, so the sentence stands without a date.
   const lastCheckedLong = formatDateLong(lastCheckedAt);

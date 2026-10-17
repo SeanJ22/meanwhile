@@ -328,7 +328,7 @@ test("a supporting ballot authority failure cannot suppress the ballot or anothe
 test("all production ballot entry points use state-scoped selection", () => {
   for (const path of [
     "app/ballot/page.tsx",
-    "app/api/address/resolve/route.ts",
+    "lib/geo/address-resolve.ts",
     "app/api/ballot/scope/route.ts",
     "lib/ask/server-sources.ts",
   ]) {

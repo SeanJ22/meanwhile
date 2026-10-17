@@ -82,6 +82,7 @@ import {
   type SpendHoldStore,
 } from "../expansion/spend-holds.ts";
 import type { HeldCopies } from "./incremental-reads.ts";
+import { statementWritesRows } from "../../db/sql-mutation.ts";
 import {
   CONTROL_PLANE_CONNECT_MAX_ATTEMPTS,
   withControlPlaneConnectRetry,
@@ -197,7 +198,7 @@ function boundedRunner(sql: Sql, prefix: string, bounds: ControlPlaneRequestBoun
         const admit = () => { if (timer) clearTimeout(timer); resolve(); };
         queryWaiters.push(admit);
         const budget = currentStoreBudget();
-        if (budget) timer = setTimeout(() => {
+        if (budget && !statementWritesRows(text)) timer = setTimeout(() => {
           const index = queryWaiters.indexOf(admit);
           if (index < 0) return;
           queryWaiters.splice(index, 1);

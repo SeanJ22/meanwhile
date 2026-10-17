@@ -1,4 +1,4 @@
-import { assertPublicUrl } from "../hunt/egress.ts";
+import { assertPublicUrl, publicFetch } from "../hunt/egress.ts";
 import { acquireKnownRelease } from "../sources/known-release.ts";
 import { normalizePortrait, PORTRAIT_ACCEPT, MAX_PORTRAIT_BYTES, PORTRAIT_DECODER_VERSION } from "./decode.ts";
 import { portraitHash, verifyPortraitSources, type PortraitSources } from "./evidence.ts";
@@ -18,7 +18,7 @@ export function createPortraitRuntime(acquire:typeof acquireKnownRelease = acqui
     if(requested.protocol === "http:") requested.protocol = "https:";
     const host=requested.hostname.replace(/^www\./,"");
     const held = await acquire({sourceId:"person-portrait",releaseId:url,url:requested.href,allowedHosts:[host,`www.${host}`],
-      parserVersion:PORTRAIT_DECODER_VERSION,maxBytes:MAX_PORTRAIT_BYTES,checkAfterMs:7*86_400_000,
+      fetchImpl:publicFetch,parserVersion:PORTRAIT_DECODER_VERSION,maxBytes:MAX_PORTRAIT_BYTES,checkAfterMs:7*86_400_000,
       signal:signal ? AbortSignal.any([signal,AbortSignal.timeout(30_000)]) : AbortSignal.timeout(30_000),
       headers:{accept:PORTRAIT_ACCEPT},validate:async (bytes,release)=>{const decoded=await normalizePortrait(bytes);if(!decoded.verdict.ok)throw Error(`PORTRAIT_${decoded.verdict.reason}`);
         const declared=release.contentType.split(";")[0].trim().toLowerCase().replace(/^image\/(?:jpg|pjpeg)$/,"image/jpeg").replace(/^image\/x-png$/,"image/png");

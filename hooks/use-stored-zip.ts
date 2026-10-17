@@ -3,7 +3,10 @@
 import { useCallback, useEffect, useSyncExternalStore } from "react";
 
 import { recordRecentZip } from "@/hooks/use-recent-zips";
-import type { ZctaCentroid } from "@/lib/geo/zcta-core";
+import { lookupIn, type CentroidTable, type ZctaCentroid } from "@/lib/geo/zcta-core";
+import { postalAreaIn, type PostalTable } from "@/lib/geo/postal-core";
+import { loadZctaTable } from "@/lib/geo/zcta-table";
+import { readSessionAddress, subscribeToSessionAddress } from "@/lib/geo/session-address";
 import {
   commitStorageWrite,
   publishToListeners,
@@ -40,7 +43,19 @@ export function readZipChoice(): string | null {
   // A link names the place to open, even in a tab with a previous selection.
   if (linkZip !== null) return JSON.stringify({ zip: linkZip });
   try {
-    return window.localStorage.getItem(STORAGE_KEY);
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    const address = readSessionAddress();
+    if (!address) return raw;
+    if (raw) {
+      try {
+        const choice = JSON.parse(raw) as Partial<StoredPayload>;
+        // The latest reader choice wins; this compares choices without expiring either.
+        if (typeof choice.savedAt === "string" && choice.savedAt > address.resolvedAt) return raw;
+      } catch {
+        // The remembered address remains usable when an older ZIP choice is malformed.
+      }
+    }
+    return JSON.stringify({ zip: address.zip });
   } catch {
     // Private mode or storage disabled: the entry notice shows.
     return null;
@@ -73,9 +88,11 @@ export async function resolveStoredZip(raw: string | null): Promise<StoredLocati
 
 const subscribe = (onStoreChange: () => void) => {
   const unsubscribe = subscribeToStorage(listeners, onStoreChange);
+  const unsubscribeAddress = subscribeToSessionAddress(onStoreChange);
   window.addEventListener("popstate", onStoreChange);
   return () => {
     unsubscribe();
+    unsubscribeAddress();
     window.removeEventListener("popstate", onStoreChange);
   };
 };

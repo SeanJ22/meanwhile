@@ -1,3 +1,4 @@
+import { publicFetch } from "../../hunt/egress.ts";
 /**
  * The runner's pass over open research-leads orders: each queued link is read
  * once by plain code (`researchFetch`: robots.txt read and recorded first,
@@ -69,7 +70,7 @@ export function insideSentPlace(place: string | null, sent: ReadonlySet<string>)
 const hostOf = (url: string): string => new URL(url).host.toLowerCase();
 
 /** The runner's guarded fetch as the research reader takes it: every request, robots.txt included, is paced with every other reader's. */
-export function guardedLeadGet(safety: Pick<FleetSafetyController, "guardedOpenBytes">, fetchImpl: typeof fetch = fetch): ResearchGet {
+export function guardedLeadGet(safety: Pick<FleetSafetyController, "guardedOpenBytes">, fetchImpl: typeof fetch = publicFetch): ResearchGet {
   const opened = safety.guardedOpenBytes("public-web", "research-leads", fetchImpl, { followRedirects: false });
   return async ({ url, headers, timeoutMs }) => {
     const got = await opened({ url, headers, timeoutMs });

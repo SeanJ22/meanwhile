@@ -408,7 +408,7 @@ test("minutes that record no motion and do not say no action was taken stay a fa
   assert.equal(sitting.extraction, "ZERO_ROWS_FAILED", "the fail-closed rule holds for genuinely motion-free text");
 });
 
-test("a held sitting whose note names unread passages is read again once a newer parser is in force, and never again under the same one", () => {
+test("a held sitting uses a new parser immediately and still checks its source on later scheduled passes", () => {
   const printed = printedRow("1343172", "8/13/2026", "Study Session", "DABA0407-10BF-4893-B11D-B037EB724A63");
   const link = minutesLinkFor(printed, tenant.host)!;
   const now = printedSitting("1343172", printed);

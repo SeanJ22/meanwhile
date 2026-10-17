@@ -1,11 +1,14 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { createHash } from "node:crypto";
+import { captureSourceAcquisitions } from "../lib/sources/acquisition-trace.ts";
 
 import {
   REQUEST_SPACING_MS,
   SourceHttpError,
   decodeEntities,
   politeGetJson,
+  politeGetBytes,
   politeGetText,
   sourceRequestHeaders,
   sourceUserAgent,
@@ -27,14 +30,10 @@ function fakeFetch(
     const spec = responses[Math.min(i, responses.length - 1)];
     i += 1;
     calls.push({ url, headers: (init?.headers ?? {}) as Record<string, string> });
-    return {
-      ok: spec.status >= 200 && spec.status < 300,
+    return new Response(new TextEncoder().encode(spec.body ?? ""), {
       status: spec.status,
-      headers: {
-        get: (name: string) => spec.headers?.[name.toLowerCase()] ?? null,
-      },
-      text: async () => spec.body ?? "",
-    };
+      headers: spec.headers,
+    });
   }) as unknown as typeof fetch;
 }
 
@@ -200,6 +199,22 @@ test("http: entity decoding covers decimal AND hex, which is how ’ reached a r
   assert.equal(decodeEntities("Andr&#233; Jacque"), "André Jacque");
   assert.equal(decodeEntities("Andr&#xe9; Jacque"), "André Jacque");
   assert.equal(decodeEntities("&#1114112; &#xD800;"), "&#1114112; &#xD800;");
+});
+
+test("text and binary reads preserve exact acquired bytes and redirect evidence", async () => {
+  const bytes = new Uint8Array([0xef, 0xbb, 0xbf, 0x41, 0xff]);
+  const requestedUrl = "https://county.gov/document";
+  const finalUrl = "https://county.gov/current";
+  const fetchImpl: typeof fetch = async () => {
+    const response = new Response(bytes);
+    Object.defineProperty(response, "url", { value: finalUrl });
+    return response;
+  };
+  for (const read of [politeGetText, politeGetBytes]) {
+    const captured = await captureSourceAcquisitions(run => run("county", async () => { await read(requestedUrl, { fetchImpl }); }));
+    assert.deepEqual(captured.evidence, [{ source: "county", requestedUrl, finalUrl, httpStatus: 200,
+      rawHash: createHash("sha256").update(bytes).digest("hex"), byteCount: bytes.byteLength }]);
+  }
 });
 
 test("http: &amp; is decoded LAST, so &amp;lt; does not become a tag", () => {

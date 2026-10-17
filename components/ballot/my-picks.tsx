@@ -4,6 +4,7 @@ import { useCallback, useSyncExternalStore } from "react";
 
 import {
   getAllPicks,
+  getUnsure,
   getSuppressedDerived,
   subscribePicks,
   type StoredPick,
@@ -18,6 +19,7 @@ import {
   pickJurisdictionLabel,
 } from "@/lib/ballot/pick-jurisdiction";
 import { getStoredReaction, subscribeReactions } from "@/lib/reactions/client";
+import { useSessionAddressScope } from "@/hooks/use-session-address";
 import { PicksCardControls } from "@/components/ballot/picks-card";
 
 /**
@@ -29,20 +31,26 @@ import { PicksCardControls } from "@/components/ballot/picks-card";
 export function MyPicks({
   currentJurisdictionKey = null,
   pickable = [],
+  zip = null,
 }: {
+  zip?: string | null;
   /** The ballot on screen's jurisdiction; null labels nothing. */
   currentJurisdictionKey?: string | null;
   /** Every contest on this page with a pick control; the tally's denominator. */
   pickable?: PickableContest[];
 }) {
+  const scope = useSessionAddressScope(zip);
+  const excluded = new Set(scope?.excludedContestIds ?? []);
+  pickable = pickable.filter(contest => !excluded.has(contest.contestId));
   const raw = useSyncExternalStore(
     subscribePicks,
-    () => JSON.stringify({ picks: getAllPicks(), cleared: getSuppressedDerived() }),
-    () => JSON.stringify({ picks: [], cleared: {} }),
+    () => JSON.stringify({ picks: getAllPicks(), cleared: getSuppressedDerived(), unsure: getUnsure() }),
+    () => JSON.stringify({ picks: [], cleared: {}, unsure: {} }),
   );
-  const { picks, cleared } = JSON.parse(raw) as {
+  const { picks, cleared, unsure } = JSON.parse(raw) as {
     picks: StoredPick[];
     cleared: Record<string, string[]>;
+    unsure: Record<string, true>;
   };
 
   /*
@@ -71,7 +79,7 @@ export function MyPicks({
   );
   const yesTargets = new Set(JSON.parse(yesKey) as string[]);
 
-  const tally = tallyPicks(pickable, picks, yesTargets, cleared);
+  const tally = tallyPicks(pickable, picks.filter(pick => !excluded.has(pick.contestId)), yesTargets, cleared, unsure);
 
   if (tally.rows.length === 0 && tally.foreign.length === 0) return null;
 

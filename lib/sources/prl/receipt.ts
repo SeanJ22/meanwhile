@@ -15,6 +15,7 @@ export interface PrlIngestReceipt {
   readonly formatVersion: 1;
   readonly parserVersion?: string;
   readonly sourceBytes?: number;
+  readonly failedSourceCheck?: import("../known-release.ts").FailedSourceCheck;
   readonly objectRoot?: string;
   readonly subjectCount?: number;
   readonly datasetId: string;

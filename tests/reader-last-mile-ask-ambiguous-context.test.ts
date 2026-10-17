@@ -4,7 +4,7 @@ import { resolveInterpretation } from "../lib/ask/resolve.ts";
 import { unavailableInterpretation } from "../lib/ask/intent.ts";
 import { readerPersonKeys } from "../lib/identity/reader-person.ts";
 import { lineupRowForCard } from "../lib/identity/az-2026.ts";
-import type { AskAnswerPayload } from "../lib/ask/answer.ts";
+import { askResponseText, type AskAnswerPayload } from "../lib/ask/answer.ts";
 import { bindNamedEntity } from "../lib/routing/named-entity.ts";
 import { createHash } from "node:crypto";
 import { installOfficeholderStatements, installRegistryAuthority, syntheticCandidateCorpus } from "./helpers/promoted-fixtures.ts";
@@ -146,12 +146,14 @@ test("focused candidate contact questions retrieve the same held profile and rej
     const response = await POST(new Request("https://wtp.test/api/ask/grounded", { method: "POST", headers: { "content-type": "application/json", origin: "https://wtp.test" }, body: JSON.stringify({ question, surface: "BALLOT", ocdIds: ["ocd-division/country:us/state:az"], activeSubjects: [{ id, name: "Katie Hobbs", kind: "PERSON", focused: true }] }) }));
     const payload = await response.json() as AskAnswerPayload;
     assert.equal(response.status, 200);
-    assert.equal(payload.answer, null);
     if (id.endsWith("wrong-id")) {
       assert.equal(payload.mode, "UNRESOLVED");
       assert.equal(payload.denominators.identityUnresolved, 1);
+      assert.equal(payload.answer, askResponseText(payload));
+      assert.match(payload.answer!, /could not resolve the supplied identity/);
       assert.equal(payload.records.length, 0);
     } else {
+      assert.equal(payload.answer, null);
       assert.equal(payload.subject?.id, id);
       assert.ok(payload.records.some((record) => record.candidateProfile?.holdingKey === id));
       assert.equal(payload.trace.retrieval.recordCount, payload.records.length);

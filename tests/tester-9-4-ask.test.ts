@@ -63,11 +63,12 @@ test("ASK-26 Vail and its clean canonical name bind outside the reader's nearby 
   }
 });
 
-test("ASK-26 typo and mechanical acronym offer ONE guess, no answer, then bind the original question", async () => {
+test("ASK-26 typo and mechanical acronym offer ONE clarification, then bind the original question", async () => {
   for (const question of ["What's on the Vial school district agenda?", "What's on the Vial agenda?", "What's on the VUSD agenda?"]) {
     const pending = await ask(question);
     assert.equal(pending.mode, "CLARIFY");
-    assert.equal(pending.subject, null); assert.equal(pending.answer, null);
+    assert.equal(pending.subject, null);
+    assert.equal(pending.answer, "Did you mean Vail Unified School District Governing Board?");
     assert.deepEqual(pending.records, []); assert.deepEqual(pending.meetings, []);
     assert.equal(pending.candidates, undefined);
     assert.equal(pending.confirmation?.bodyId, VAIL);

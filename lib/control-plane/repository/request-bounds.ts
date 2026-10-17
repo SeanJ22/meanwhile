@@ -1,15 +1,17 @@
 /**
- * Every control-plane store call is bounded by its class, and a timeout has a name.
- *   POINT     one small row or write, a log head, a lock, a DDL statement    10 s
- *   DOCUMENT  one row that is a large document, or a large-record append      20 s
+ * Control-plane reads are bounded by their class, and a timeout has a name.
+ *   POINT     one small row read, a log head, a lock, a DDL statement       10 s
+ *   DOCUMENT  one row read that is a large document                         20 s
  *   PAGE      one keyset page of at most 100 rows                            25 s
  * Each bound is about 30x the slowest measured request in its class; PAGE stays under the 30 s process-wide
  * transport deadline. `withStoreBudget` caps a group of calls. A REQUEST timeout may succeed on retry;
  * a DEADLINE timeout (budget spent) is never retried. The request is cancelled through the fetch signal
  * and also settles from its own timer.
+ * Row writes finish without a timeout or an enclosing read budget.
  */
 import { AsyncLocalStorage } from "node:async_hooks";
 import { withQueryCaller } from "../../db/transfer-by-caller.ts";
+import { statementWritesRows } from "../../db/sql-mutation.ts";
 
 export const CONTROL_PLANE_CALL_CLASSES = ["POINT", "DOCUMENT", "PAGE"] as const;
 export type ControlPlaneCallClass = (typeof CONTROL_PLANE_CALL_CLASSES)[number];
@@ -146,6 +148,9 @@ export async function boundedQuery(
   params?: readonly unknown[],
   options: { readonly bounds?: ControlPlaneRequestBounds; readonly now?: () => number } = {},
 ): Promise<unknown> {
+  if (statementWritesRows(text)) {
+    return await withQueryCaller(call.operation, () => Promise.resolve(sql.query(text, params)));
+  }
   const now = options.now ?? Date.now;
   const bound = (options.bounds ?? CONTROL_PLANE_REQUEST_BOUNDS_MS)[call.callClass];
   const budget = ambientBudget.getStore();

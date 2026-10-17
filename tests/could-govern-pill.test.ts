@@ -173,24 +173,19 @@ test("the pill never gates — the page renders every contest regardless", () =>
   );
 });
 
-test("the session store keeps the OUTCOME, never the address", () => {
+test("the address and scope stay on the device until Forget", () => {
   const mod = codeOf("lib", "geo", "session-address.ts");
-  // The shape is the guarantee. A field for a house number or a coordinate
-  // would make this a location record, which is the one thing it must not be.
   assert.doesNotMatch(
     mod,
     /\b(houseNumber|house_number|lat\??:|lng\??:|latitude|longitude)\b/,
-    "no coordinate and no house number may enter the session payload",
+    "coordinates are not part of the address payload",
   );
-  assert.match(mod, /sessionStorage/, "the lifetime is the tab, not the device");
-  assert.doesNotMatch(
-    mod,
-    /localStorage|document\.cookie/,
-    "localStorage survives the session and a cookie reaches the server's access logs",
-  );
+  assert.match(mod, /localStorage/, "the reader's address survives closing the browser");
+  assert.doesNotMatch(mod, /sessionStorage|document\.cookie/, "the address stays in device storage");
+  assert.match(mod, /streetLabel: scope\.streetLabel/, "the full address is remembered");
 });
 
-test("nothing about the address reaches the server or a store", () => {
+test("the address store makes no server request", () => {
   const mod = codeOf("lib", "geo", "session-address.ts");
   assert.doesNotMatch(
     mod,
@@ -202,9 +197,9 @@ test("nothing about the address reaches the server or a store", () => {
 test("an address scope stays inside its ZIP and selected election date", async () => {
   let saved: string | null = null;
   const previous = Reflect.get(globalThis, "window");
-  Reflect.set(globalThis, "window", { sessionStorage: {
-    getItem: () => saved, setItem: (_key: string, value: string) => { saved = value; },
-  } });
+  const storage = { getItem: () => saved, setItem: (_key: string, value: string) => { saved = value; }, removeItem: () => { saved = null; } };
+  // The remembered address lives on the device until the reader forgets it.
+  Reflect.set(globalThis, "window", { sessionStorage: storage, localStorage: storage });
   try {
     const { writeSessionAddress, sessionAddressFor } = await import("../lib/geo/session-address.ts");
     const scope = { zip: "85641", contestIds: [], divisionIds: ["ocd-division/country:us/state:az/sldl:17"],
@@ -226,10 +221,10 @@ test("an address scope stays inside its ZIP and selected election date", async (
 test("the narrowing surface reads the session before it prompts", () => {
   /* There is one address form across surfaces, and the session read lives in it. */
   const narrowing = codeOf("components", "address", "address-prompt.tsx");
-  assert.match(narrowing, /sessionAddressFor\(zip,\s*selection\)/, "it reads the session for this ZIP and selection");
+  assert.match(narrowing, /useRememberedAddress\(\)/, "it reads the address already remembered on the device");
   assert.match(narrowing, /writeSessionAddress\(/, "and it records its own answer for the others");
   assert.match(
-    narrowing,
+    codeOf("components", "address", "remembered-address.tsx"),
     /clearSessionAddress\(\)/,
     "undo forgets it everywhere, not only here — a reader asking for the whole zip back is asking us to forget",
   );

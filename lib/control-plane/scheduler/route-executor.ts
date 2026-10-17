@@ -5,7 +5,7 @@
  * REQUIRES_NEW_ADAPTER, which keeps the record owed. No credential value is read or recorded.
  */
 
-import { assertPublicUrl } from "../../hunt/egress.ts";
+import { assertPublicUrl, publicFetch } from "../../hunt/egress.ts";
 import { ZERO_COST, type AttemptCost } from "../attempt.ts";
 import { deriveSanitized, recordAcquisition, type Artifact } from "../evidence/artifact.ts";
 import { sanitizedErrorDiagnostic } from "../../ops/error-diagnostic.ts";
@@ -40,7 +40,7 @@ export const realOpen: OpenOne = async ({ url, method, headers, body, timeoutMs 
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
-    const response = await fetch(url, {
+    const response = await publicFetch(url, {
       method,
       signal: controller.signal,
       redirect: "follow",
@@ -194,7 +194,6 @@ export function routeExecutor(input: {
   /** Injected so tests do not sleep. Returns immediately when omitted. */
   readonly spaceOut?: (hostKey: string) => Promise<void>;
   readonly websiteSize?: WebsiteSizeForUrl;
-  readonly root?: string;
   /** Where retrieved bytes are persisted. A missing store leaves acquisition owed. */
   readonly vault?: VaultPut;
   readonly now?: () => string;
@@ -285,7 +284,7 @@ export function routeExecutor(input: {
       ...(route.open.headers ?? {}),
     };
 
-    const websiteSize = input.websiteSize ?? websiteSizeForObligation(obligation.obligation, input.root);
+    const websiteSize = input.websiteSize ?? await websiteSizeForObligation(obligation.obligation);
     if (input.spaceOut && websiteRequestLimit(websiteSize(url.toString())) !== null) await input.spaceOut(url.host);
     const got = await openOne({
       url: url.toString(),

@@ -5,15 +5,17 @@ import { join } from "node:path";
 import test from "./helpers/playbooks.ts";
 
 import { coverageAt } from "../lib/registry/server.ts";
-import { answerQuestion, REFUSAL_LOG_MAX_CHARS } from "../lib/routing/ask.ts";
+import { answerQuestion } from "../lib/routing/ask.ts";
 import { matchTopic } from "../lib/routing/match.ts";
 import { resolveAskRoleModel } from "../lib/ask/model.ts";
+import { buildEverydayRoutingProjection } from "../lib/routing/everyday.ts";
 import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 
 await installRegistryAuthority();
 
 const TUCSON: [number, number] = [32.21696, -110.971];
 const ROOT = join(import.meta.dirname, "..");
+const EVERYDAY_ROUTING = buildEverydayRoutingProjection();
 
 test("golden, live at 85701: the library question routes to Tucson and Pima", async () => {
   const coverage = await coverageAt(...TUCSON, 1);
@@ -74,7 +76,7 @@ test("golden, live at 85701: the pothole question returns Tucson's street-mainte
     "There's a pothole in front of my house — who do I call?",
     coverage,
     "85701",
-    "roads-local",
+    { classified: "roads-local", everydayRouting: EVERYDAY_ROUTING },
   );
   assert.equal(match?.topicId, "roads-local");
   assert.equal(match?.via, "classifier");
@@ -165,16 +167,16 @@ test("the everyday grid is fully accounted: every topic × zip cell is a contact
 
 test("the everyday contacts ride only their own zip — a Tucson number never answers in Rockaway", async () => {
   const { everydayContactsFor } = await import("../lib/routing/everyday.ts");
-  const tucson = everydayContactsFor("roads-local", "85701");
-  const rockaway = everydayContactsFor("roads-local", "07866");
+  const tucson = everydayContactsFor("roads-local", "85701", EVERYDAY_ROUTING);
+  const rockaway = everydayContactsFor("roads-local", "07866", EVERYDAY_ROUTING);
   assert.ok(tucson.length > 0 && rockaway.length > 0);
   assert.notDeepEqual(
     tucson.map((c) => c.phone),
     rockaway.map((c) => c.phone),
     "distinct zips must resolve distinct contacts (the uniqueness invariant)",
   );
-  assert.deepEqual(everydayContactsFor("roads-local", null), []);
-  assert.deepEqual(everydayContactsFor("roads-local", "99999"), []);
+  assert.deepEqual(everydayContactsFor("roads-local", null, EVERYDAY_ROUTING), []);
+  assert.deepEqual(everydayContactsFor("roads-local", "99999", EVERYDAY_ROUTING), []);
 });
 
 test("the acknowledgment beat draws from the author's fixed pool — and code never adds an entry", async () => {
@@ -206,7 +208,7 @@ test("the acknowledgment beat draws from the author's fixed pool — and code ne
   assert.equal(beatStem("no dots"), "no dots");
 });
 
-test("the hang-tight beat is presentation only — routed and logged before the timer, and never labeled AI", () => {
+test("the hang-tight beat is presentation only and never labeled AI", () => {
   const source = readFileSync(
     join(ROOT, "components", "ask", "ask-box.tsx"),
     "utf8",
@@ -221,12 +223,10 @@ test("the hang-tight beat is presentation only — routed and logged before the 
   );
   assert.ok(!/BEAT_(MIN|MAX|STEP)_MS|drawBeatMs|beatTimer/.test(source), "an artificial hold on a ready answer is back");
   assert.ok(!/Thinking|thinking\.\.\.|AI is/.test(source));
-  // The answer is routed and logged BEFORE it is shown, and showing it logs nothing.
+  // Routing resolves before display; the answer route owns capture after its response.
   const answerAt = source.indexOf("answerQuestion(question");
-  const logAt = source.indexOf("logEvent(");
   const shownAt = source.indexOf("setAsked(result);");
-  assert.ok(answerAt > 0 && logAt > answerAt && shownAt > logAt,
-    "route → log → show, in that order");
+  assert.ok(answerAt > 0 && shownAt > answerAt, "route → show, in that order");
 });
 
 const NON_GENERATING_ROUTING_MODULES = [
@@ -252,23 +252,12 @@ test("no generation: the ask pipeline touches no LLM, no network, no API key", (
   }
 });
 
-test("log discipline: routed asks log the topic only; refusals carry capped text", () => {
+test("Ask submits the whole question and capture belongs to the server", () => {
   const source = readFileSync(join(ROOT, "components", "ask", "ask-box.tsx"), "utf8");
-  const routedCall = /logEvent\("QUESTION_ASKED", ocdIds, \{[\s\S]*?routed: true,([\s\S]*?)\}\);/.exec(
-    source,
-  );
-  assert.ok(routedCall, "the routed log call is missing");
-  assert.ok(
-    !/question/.test(routedCall[1]),
-    "the routed log call must carry no question text",
-  );
-  assert.match(
-    source,
-    /question: question\.slice\(0, REFUSAL_LOG_MAX_CHARS\)/,
-    "the refusal log call must cap the text",
-  );
+  assert.match(source, /body: JSON\.stringify\(\{\s*question,/);
+  assert.ok(!source.includes("REFUSAL_LOG_MAX_CHARS"));
+  assert.ok(!source.includes('logEvent("QUESTION_ASKED"'), "the server records each answer once");
   assert.ok(!/localStorage/.test(source), "the ask box reaches storage only through getOrCreateBrowserKey");
-  assert.equal(REFUSAL_LOG_MAX_CHARS, 200);
 });
 
 test("scrub: phone-, email-, and address-shaped text becomes [#] before storage", async () => {
@@ -307,12 +296,9 @@ test("scrub: ordinary questions pass through untouched", async () => {
   assert.equal(scrubFreeText("trash pickup in 85701"), "trash pickup in 85701");
 });
 
-test("scrub: the write path runs it before the insert — nothing unscrubbed reaches the store", () => {
+test("Ask questions bypass the search log scrub", () => {
   const source = readFileSync(join(ROOT, "lib", "db", "search-log.ts"), "utf8");
-  const scrubAt = source.indexOf("scrubFreeText(");
-  const insertAt = source.indexOf(".insert(searchLog)");
-  assert.ok(scrubAt > 0, "the write path must scrub");
-  assert.ok(insertAt > scrubAt, "the scrub must run BEFORE the insert");
+  assert.match(source, /event\.eventType === "QUESTION_ASKED" && k === "question"/);
 });
 
 test("QUESTION_ASKED is a registered identifier-free event type", async () => {

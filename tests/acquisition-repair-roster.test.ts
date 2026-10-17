@@ -58,8 +58,6 @@ test("saved Sierra Vista roster replays from the original hash-verified bytes wh
 });
 
 test("href extraction cannot be silently requested from non-HTML source shapes", () => {
-  const result = replay(`<table><tr><th>Name</th><th>Office</th></tr><tr><td>Ada</td><td>Mayor</td></tr></table>`);
-  assert.equal(result.verdict, "FAILED", "the prescribed four-column table is incomplete");
   const text = JSON.stringify({ records: [{ name: "Ada", office: "Mayor" }] });
   const evidence: WorkerEvidence = { artifactId: "ar-json", contentHash: `sha256-${createHash("sha256").update(text).digest("hex")}`,
     text, acquiredByAttemptId: "at-json", canonicalUrl: sourceUrl, retrievedAt: "2026-09-28T06:27:49.882Z",
@@ -73,4 +71,14 @@ test("href extraction cannot be silently requested from non-HTML source shapes",
   const parsed = parseGeneralizedRecords({ attemptId: "at-json-parser", worker: { role: "PARSER", instance: "test", provider: "deterministic", version: "2" }, evidence, contract }, contract);
   assert.equal(parsed.verdict, "FAILED");
   assert.equal(parsed.warnings[0]?.code, "FIELD_MAPPING_INVALID");
+});
+
+test("missing optional roster columns preserve the required person and exact source spans", () => {
+  const text = `<table><tr><th>Name</th><th>Office</th></tr><tr><td>Ada</td><td>Mayor</td></tr></table>`;
+  const result = replay(text);
+  assert.equal(result.verdict, "EXTRACTED");
+  assert.deepEqual(result.records.map(row => ({ ...row.fields })), [{ name: "Ada", office: "Mayor" }]);
+  assert.deepEqual(result.warnings.map(row => [row.field, row.severity]).sort(), [["phone", "INFO"], ["websiteUrl", "INFO"]]);
+  for (const span of result.spans) assert.equal(text.slice(span.start, span.end), span.quote);
+  assert.equal(replay(`<table><tr><th>Name</th></tr><tr><td>Ada</td></tr></table>`).verdict, "FAILED");
 });

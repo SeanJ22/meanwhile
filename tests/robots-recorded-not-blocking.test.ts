@@ -247,7 +247,7 @@ test("THE SHARED SOURCE CLIENT IS ONE HONEST IDENTITY: a 403 or a challenge is a
 
 test("THE RESEARCH TRANSPORT'S SECOND ASK IS WHO WE ARE: a 403 is asked once more through curl with the same User-Agent, and a refusal there stands", async () => {
   const args: string[][] = [];
-  const get = identifiedResearchGet({
+  const get = identifiedResearchGet({ lookup: async () => [{address:"93.184.216.34",family:4}],
     first: async () => ({ status: 403, body: new Uint8Array(0), contentType: "text/html", location: null, transportError: null }),
     curl: async (a) => {
       args.push([...a]);

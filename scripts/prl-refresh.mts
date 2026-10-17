@@ -32,7 +32,8 @@ export async function refreshPrl(input: { archives: boolean; store: RoutineDataS
       const receipt = await ingestDataset({ dataset, archive: input.archive, now: Date.now(), priorReceipt: prior,
         open: async () => {
           const source = await openPrlSource(dataset, input.fetchImpl, input.archive,
-            prior?.parserVersion === PRL_INGEST_PARSER_VERSION ? prior.sourceSha256 : undefined);
+            prior?.parserVersion === PRL_INGEST_PARSER_VERSION ? prior.sourceSha256 : undefined,
+            { replayHeld: prior?.parserVersion !== PRL_INGEST_PARSER_VERSION });
           if (source.outage) failures.push(`${dataset.id}: ${source.outage}`);
           return source;
         } });
@@ -52,6 +53,7 @@ export async function refreshPrl(input: { archives: boolean; store: RoutineDataS
       if (!last.promoted) throw new Error(last.candidate.failureCode ?? "PRL_PUBLICATION_REFUSED");
       projection = next;
       await writeReceipt(input.archive, receipt);
+      if (receipt.failedSourceCheck) failures.push(`${dataset.id}: ${receipt.failedSourceCheck.at}: ${receipt.failedSourceCheck.detail}`);
     } catch (error) {
       failures.push(`${dataset.id}: ${error instanceof Error ? error.message : String(error)}`);
     }

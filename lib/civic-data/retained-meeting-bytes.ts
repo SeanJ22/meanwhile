@@ -2,6 +2,7 @@
 import { createHash } from "node:crypto";
 import type { RoutineCandidate } from "./types.ts";
 import type { MeetingsSnapshot } from "../meetings/snapshot.ts";
+import { observeAcquiredResponses } from "../sources/acquisition-trace.ts";
 
 export interface RetainedSourceResponse {
   readonly source: string; readonly requestedUrl: string; readonly finalUrl: string;
@@ -13,33 +14,42 @@ export type RetainedMeetingCandidate = RoutineCandidate & {
   readonly retainedSourceResponses?: readonly (Omit<RetainedSourceResponse, "bytes"> & { readonly base64: string })[];
 };
 
-/** A fetch that keeps every successful HTTPS response it makes, so the facts a read yields cite the exact bytes. */
-export function retainingFetch(base: typeof fetch) {
+const RETAINED_BYTES_LIMIT = 16 * 1024 * 1024;
+
+function responseRetainer() {
   const responses: RetainedSourceResponse[] = [], refusals: string[] = [];
   let retainedBytes = 0;
+  const keep = (requestedUrl: string, finalUrl: string, httpStatus: number, bytes: Uint8Array, contentType: string) => {
+    if (httpStatus < 200 || httpStatus > 299 || !finalUrl.startsWith("https://")) return;
+    const rawHash = createHash("sha256").update(bytes).digest("hex");
+    if (responses.some(row => row.requestedUrl === requestedUrl && row.finalUrl === finalUrl && row.rawHash === rawHash)) return;
+    if (retainedBytes + bytes.length > RETAINED_BYTES_LIMIT) { refusals.push(`RESEARCH_CAPTURE_BOUND_EXCEEDED:${finalUrl}`); return; }
+    responses.push({ source: "", requestedUrl, finalUrl, httpStatus, rawHash, byteCount: bytes.length,
+      bytes, retrievedAt: new Date().toISOString(), contentType });
+    retainedBytes += bytes.length;
+  };
+  return { responses, refusals, keep };
+}
+
+/** A fetch that keeps every successful HTTPS response it makes, so the facts a read yields cite the exact bytes. */
+export function retainingFetch(base: typeof fetch) {
+  const { responses, refusals, keep } = responseRetainer();
   const fetch = (async (input, init) => {
     const requestedUrl = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
     const response = await base(input, init);
-    const finalUrl = response.url || requestedUrl;
-    if (response.ok && finalUrl.startsWith("https://")) {
-      const bytes = new Uint8Array(await response.clone().arrayBuffer());
-      if (retainedBytes + bytes.length <= 16 * 1024 * 1024) {
-        responses.push({ source: "", requestedUrl, finalUrl, httpStatus: response.status,
-          rawHash: createHash("sha256").update(bytes).digest("hex"), byteCount: bytes.length,
-          bytes, retrievedAt: new Date().toISOString(), contentType: response.headers.get("content-type") ?? "" });
-        retainedBytes += bytes.length;
-      } else refusals.push(`RESEARCH_CAPTURE_BOUND_EXCEEDED:${finalUrl}`);
-    }
+    if (response.ok) keep(requestedUrl, response.url || requestedUrl, response.status,
+      new Uint8Array(await response.clone().arrayBuffer()), response.headers.get("content-type") ?? "");
     return response;
   }) as typeof globalThis.fetch;
   return { fetch, responses, refusals };
 }
 
+/** Keeps the bytes every source read acquires while the operation runs, whichever transport carried them. */
 export async function retainMeetingFetchBytes<T>(operation: () => Promise<T>) {
-  const originalFetch = globalThis.fetch, retaining = retainingFetch(originalFetch);
-  globalThis.fetch = retaining.fetch;
-  try { return { value: await operation(), responses: retaining.responses, refusals: retaining.refusals }; }
-  finally { globalThis.fetch = originalFetch; }
+  const { responses, refusals, keep } = responseRetainer();
+  const value = await observeAcquiredResponses(({ requestedUrl, finalUrl, httpStatus, bytes, contentType }) =>
+    keep(requestedUrl, finalUrl, httpStatus, bytes, contentType ?? ""), operation);
+  return { value, responses, refusals };
 }
 
 /** The retained responses one source's read traced, named for that source. */

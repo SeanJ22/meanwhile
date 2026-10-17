@@ -22,7 +22,7 @@ export function validateGeneralizedExtraction(input: ValidatorWorkerInput, contr
     assertGeneralizedScope(contract, input.evidence);
     // A record type with no parsing rule is checked from the quotes the Parser took; every other from its source rows.
     const replay = isQuotedExtraction(contract, input.candidate) ? quotedSourceFindings(input.candidate, contract, input.evidence)
-      : compareCandidateWithSource(input.candidate, contract, input.evidence, inventoryRecordEvidence(input.evidence, contract.extraction));
+      : compareCandidateWithSource(input.candidate, contract, input.evidence, inventoryRecordEvidence(input.evidence, contract.extraction, contract));
     for (const finding of replay) {
       // A field beyond the minimums that fails stays open as work; it never holds its record.
       const open = COVERAGE_CODES.has(finding.code) || (finding.recordId && finding.field && !minimums.includes(finding.field));

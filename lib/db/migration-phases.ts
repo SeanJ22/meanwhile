@@ -140,8 +140,16 @@ export function statementsIn(sql: string): string[] {
 
 /** Every narrowing statement in a migration's SQL, with the rule that saw it. */
 export function contractSignalsIn(sql: string): ContractSignal[] {
+  // This exact replacement accepts every value the established check accepts,
+  // plus three existing reader stores. Do not exempt other CHECK replacements.
+  const statements = statementsIn(sql);
+  if (statements.length === 2 &&
+      statements[0] === 'ALTER TABLE "write_alarm" DROP CONSTRAINT "write_alarm_store_known";' &&
+      statements[1] === 'ALTER TABLE "write_alarm" ADD CONSTRAINT "write_alarm_store_known" CHECK ("store" IN (\'search_log\', \'reactions\', \'speak_your_mind\', \'demand_signals\', \'ask_interactions\'));') {
+    return [];
+  }
   const found: ContractSignal[] = [];
-  for (const statement of statementsIn(sql)) {
+  for (const statement of statements) {
     for (const rule of CONTRACT_RULES) {
       if (rule.test(statement)) {
         found.push({
@@ -164,6 +172,18 @@ export function phaseFromSql(sql: string): { phase: MigrationPhase; signals: Con
 /** Hand-written, one entry per committed migration; the suite checks each against phaseFromSql. */
 const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
   "0038_src_mn_federal_money_lookup": { phase: "expand", why: "Indexes exact federal native IDs without indexing source descriptions or loading state inventories." },
+  "PL-01_publisher_size": {
+    phase: "expand",
+    why: "Creates the per-state Census publisher-size table the pacing and voting-population readers use. Nothing reads it until the runner loads it.",
+  },
+  "STEP-7_reader_location_capture": {
+    phase: "contract",
+    why: "Renames Ask's stored question after the schema-compatible writers are serving. Adds continuity_hash and moves the bridge's retained digests into it; both writers keep complete rows across this contract.",
+  },
+  "STEP3_write_alarm_stores": {
+    phase: "expand",
+    why: "Widens only write_alarm's allowed store names. Existing rows and writers remain valid; apply before the repaired reader writes ship.",
+  },
   "0000_square_stryfe": {
     phase: "expand",
     why: "Creates meetings, agenda_documents and search_log with their indexes. Nothing existed before it.",

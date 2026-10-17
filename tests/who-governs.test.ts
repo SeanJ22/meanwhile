@@ -31,7 +31,7 @@ test("the stated count and the rendered rows are the same expression, at any siz
       ...Array.from({ length: governing }, () => body("GOVERNING")),
       ...Array.from({ length: 48 }, () => body("COMMISSION")),
     ];
-    const d = deriveWhoGoverns(bodies, new Set());
+    const d = deriveWhoGoverns(bodies);
     assert.equal(
       d.rows.length,
       d.governingCount,
@@ -54,7 +54,7 @@ test("the 85701 shape: the Board of Adjustment is the row that moved, not the PH
   const tusd = body("GOVERNING", { name: "Tucson Unified District" });
   const baj = body("COMMISSION", { name: "Board of Adjustment (BAJ)" });
 
-  const d = deriveWhoGoverns([pima, tucson, pha, tusd, baj], new Set());
+  const d = deriveWhoGoverns([pima, tucson, pha, tusd, baj]);
 
   assert.equal(d.governingCount, 4, "four governments, as the prose always said");
   assert.equal(d.rows.length, 4, "and four rows, which is what changed");
@@ -69,29 +69,6 @@ test("the 85701 shape: the Board of Adjustment is the row that moved, not the PH
   assert.equal(d.others, 1);
 });
 
-test("narrowing cannot re-open the gap — the count follows the reader's own list", () => {
-  const county = body("GOVERNING", { divisionType: "county" });
-  const districtA = body("GOVERNING", { divisionType: "school_district" });
-  const districtB = body("GOVERNING", { divisionType: "school_district" });
-  const districtC = body("GOVERNING", { divisionType: "school_district" });
-
-  const wide = deriveWhoGoverns([county, districtA, districtB, districtC], new Set());
-  assert.equal(wide.governingCount, 4);
-  assert.equal(wide.rows.length, 4);
-
-  const narrowed = deriveWhoGoverns(
-    [county, districtA, districtB, districtC],
-    new Set([districtB.ocdId as string]),
-  );
-  assert.equal(narrowed.rows.length, 2, "the county plus the chosen district");
-  assert.equal(
-    narrowed.governingCount,
-    narrowed.rows.length,
-    "the stated number followed the narrowing — this is the assertion that fails on the old code",
-  );
-  assert.equal(narrowed.others, 0);
-});
-
 test("wired counts are partitioned, never double-counted across the two sets", () => {
   const bodies = [
     body("GOVERNING", { coverageStatus: "LIVE" }),
@@ -100,7 +77,7 @@ test("wired counts are partitioned, never double-counted across the two sets", (
     body("COMMISSION", { coverageStatus: "KNOWN_UNCOVERED" }),
     body("ADVISORY", { coverageStatus: "KNOWN_UNCOVERED" }),
   ];
-  const d = deriveWhoGoverns(bodies, new Set());
+  const d = deriveWhoGoverns(bodies);
   assert.equal(d.governingCount, 2);
   assert.equal(d.governingWithSource, 1);
   assert.equal(d.others, 3);

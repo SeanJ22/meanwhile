@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { test } from "node:test";
@@ -7,7 +8,11 @@ import {
   assertDetailIsAnonymous,
   isValidEventType,
   logSearchEvent,
+  prepareSearchLogEvent,
 } from "../lib/db/search-log.ts";
+import { askKeyHash } from "../lib/db/ask-signal.ts";
+import { getTableConfig, PgDialect } from "drizzle-orm/pg-core";
+import { searchLog } from "../lib/db/schema.ts";
 
 test("the transparency page is linked from the welcome overlay and from the map shell", () => {
   const overlay = readFileSync(
@@ -61,9 +66,53 @@ test("event types are a closed set", () => {
   assert.ok(isValidEventType("SEARCH"));
   assert.ok(isValidEventType("MEETING_OPENED"));
   assert.ok(isValidEventType("OFFICIAL_OPENED"));
+  assert.ok(isValidEventType("ADDRESS_ENTERED"));
+  assert.ok(isValidEventType("BALLOT_VIEWED"));
   assert.ok(!isValidEventType("PAGE_VIEW"));
   assert.ok(!isValidEventType(""));
   assert.ok(!isValidEventType(undefined));
+});
+
+test("location entries and ballot views retain every district and count readers independently of Ask", () => {
+  const districts = ["cd:7", "sldu:20", "sldl:20", "county:pima", "place:tucson", "school_district:unified:tucson", "special:water"]
+    .map(id => `ocd-division/country:us/state:az/${id}`);
+  const key = "a-reader-browser-key-128-bits";
+  for (const eventType of ["ADDRESS_ENTERED", "BALLOT_VIEWED"] as const) {
+    const row = prepareSearchLogEvent({ eventType, approximateLocation: "85701", ocdIds: districts,
+      continuityKey: key, detail: { page: "BALLOT" } });
+    assert.deepEqual(row.ocdIds, districts);
+    assert.equal(row.approximateLocation, "85701");
+    assert.equal(row.continuityHash, createHash("sha256").update(`search-log:${key}`).digest("hex"));
+    assert.notEqual(row.continuityHash, askKeyHash(key));
+    assert.notEqual(row.continuityHash, key);
+    assert.equal(row.detail?.page, "BALLOT");
+    assert.ok(Number.isFinite(Date.parse(row.occurredAt as string)));
+    assert.equal(JSON.stringify(row).includes(key), false);
+  }
+  assert.equal(prepareSearchLogEvent({ eventType: "SEARCH", ocdIds: [] }).continuityHash, null);
+});
+
+test("search log Ask questions retain addresses, dates, spaces and long text character for character", () => {
+  for (const question of ["Who represents 412 elm st phoenix?", "What happened at the 2026 Budget Hearing?", `  ${"q".repeat(900)}\n`]) {
+    const row = prepareSearchLogEvent({ eventType: "QUESTION_ASKED", approximateLocation: "85701",
+      ocdIds: [], detail: { page: "ASK", question } });
+    assert.equal(row.detail?.question, question);
+  }
+});
+
+test("search log rejects address and coordinate fields and schema permits both location event types", () => {
+  const privateDetails: Record<string, string | number>[] = [{ street: "412 elm st" }, { houseNumber: 412 }, { lat: 32.222 }, { lng: -110.974 }];
+  for (const detail of privateDetails) {
+    assert.throws(() => prepareSearchLogEvent({ eventType: "ADDRESS_ENTERED", ocdIds: [], detail }), /private address|forbidden fragment/);
+  }
+  const config = getTableConfig(searchLog);
+  const hashColumn = config.columns.find(column => column.name === "continuity_hash")!;
+  assert.ok(hashColumn);
+  assert.equal(hashColumn.notNull, false);
+  const eventCheck = config.checks.find(check => check.name === "search_log_event_type_known")!;
+  const checkSql = new PgDialect().sqlToQuery(eventCheck.value).sql;
+  assert.match(checkSql, /'ADDRESS_ENTERED'/);
+  assert.match(checkSql, /'BALLOT_VIEWED'/);
 });
 
 test("a malformed event throws; a missing database is a quiet false", async () => {

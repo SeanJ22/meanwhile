@@ -169,6 +169,8 @@ export function netlifyEvidenceStoreFromEnv(env: NodeJS.ProcessEnv = process.env
   if (!siteID || !token) throw new EvidenceStoreRefusal("Netlify vault requires WTP_BLOBS_SITE_ID and WTP_BLOBS_TOKEN from the host");
   const signals = new AsyncLocalStorage<AbortSignal>();
   const boundedFetch: typeof fetch = async (input, init) => {
+    const method = (init?.method ?? (input instanceof Request ? input.method : "GET")).toUpperCase();
+    if (method !== "GET" && method !== "HEAD") return fetch(input, init);
     const deadline = signals.getStore() ?? AbortSignal.timeout(VAULT_READ_TIMEOUT_MS);
     const inherited = init?.signal ?? (input instanceof Request ? input.signal : null);
     const signal = inherited ? AbortSignal.any([inherited, deadline]) : deadline;

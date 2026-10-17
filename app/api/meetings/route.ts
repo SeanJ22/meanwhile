@@ -55,7 +55,7 @@ const CDN_HELD = {
   "Netlify-Vary": "query",
   "Cache-Control": "public, max-age=0, must-revalidate",
 } as const;
-const NOT_HELD = { "Cache-Control": "no-store" } as const;
+const NOT_HELD = { "Cache-Control": "no-store", "Netlify-CDN-Cache-Control": "no-store" } as const;
 
 /** The states a request will most likely read, known before its divisions are. Only a prefetch hint. */
 async function hintedStates(zip: string | null): Promise<string[]> {
@@ -70,8 +70,28 @@ async function nearestZipWithin60Km(lat: number, lng: number): Promise<string | 
 }
 
 export const GET = readerRoute("/api/meetings", async function GET(request: Request) {
+  return meetingsResponse(new URL(request.url).searchParams, false);
+});
+
+/** Browser/device location stays in a private request body, never a URL or shared response cache. */
+export const POST = readerRoute("/api/meetings", async function POST(request: Request) {
+  let input: unknown;
+  try { input = await request.json(); } catch { return Response.json({ error: "Invalid location" }, { status: 400, headers: NOT_HELD }); }
+  if (!input || typeof input !== "object" || Array.isArray(input)) return Response.json({ error: "Invalid location" }, { status: 400, headers: NOT_HELD });
+  const row = input as Record<string, unknown>;
+  if (Object.keys(row).some(key => !["lat", "lng", "radiusKm"].includes(key)) ||
+    typeof row.lat !== "number" || typeof row.lng !== "number" ||
+    !Number.isFinite(row.lat) || !Number.isFinite(row.lng) || Math.abs(row.lat) > 90 || Math.abs(row.lng) > 180 ||
+    (row.radiusKm !== undefined && (typeof row.radiusKm !== "number" || !Number.isFinite(row.radiusKm) || row.radiusKm <= 0))) {
+    return Response.json({ error: "Invalid location" }, { status: 400, headers: NOT_HELD });
+  }
+  const params = new URLSearchParams({ lat: String(Math.round(row.lat * 1000) / 1000), lng: String(Math.round(row.lng * 1000) / 1000),
+    ...(row.radiusKm === undefined ? {} : { radiusKm: String(row.radiusKm) }) });
+  return meetingsResponse(params, true);
+});
+
+async function meetingsResponse(params: URLSearchParams, privatePoint: boolean) {
   const timing = stageTimer();
-  const params = new URL(request.url).searchParams;
 
   /* `Number(null)` is 0, not NaN: absent or malformed coordinates refuse with a stated reason (`lib/api/params.ts`), and an unknown parameter is named back. */
   const KNOWN = ["lat", "lng", "radiusKm", "zip"] as const;
@@ -362,6 +382,7 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
   const partialOcdIds = (await zipCertainty(nearZip))?.partial ?? null;
 
   const held =
+    !privatePoint &&
     meetingsWholeFromEdge &&
     resolvedDivisions !== null &&
     coverage !== null &&
@@ -387,4 +408,4 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
   }, {
     headers: { ...(held ? CDN_HELD : NOT_HELD), "Server-Timing": timing.header() },
   });
-});
+}

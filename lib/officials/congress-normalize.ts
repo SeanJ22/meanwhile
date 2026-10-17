@@ -1,5 +1,6 @@
 /** Source-native Congress people and independent directory facts at an explicit as-of date. */
 import type { OfficeholderSet } from "./types.ts";
+import type { Provenance } from "../sources/types.ts";
 import type { DirectoryFile } from "./directory.ts";
 import type { FederalDirectoryReadModel } from "./federal-directory-data-plane.ts";
 import { FIPS_TO_STATE } from "../ocd/fips.ts";
@@ -304,11 +305,18 @@ export function normalizeCongressDirectory(raw: Readonly<Record<string,unknown>>
   for (const holder of officeholders) {
     const held = prior?.roster.officeholders.find(row => row.id === holder.id);
     if (held?.photo) holder.photo = held.photo;
+    const fieldSources: Record<string, Provenance> = { ...held?.fieldSources };
     if (held) {
       holder.nativeIds={...held.nativeIds,...holder.nativeIds};
       if(!holder.fecCandidateIds?.length)holder.fecCandidateIds=held.fecCandidateIds;
       for(const field of ["birthDate","partyLabel","websiteUrl","contactFormUrl","phone","email","campaignUrl"] as const) {
-        if(!holder[field] && held[field]) {holder[field]=held[field];holder.fieldSources={...holder.fieldSources,[field]:held.fieldSources?.[field] ?? held.provenance};}
+        if (holder[field]) {
+          // The current core file supplies this value; its own provenance now applies.
+          delete fieldSources[field];
+        } else if (held[field]) {
+          holder[field] = held[field];
+          fieldSources[field] = held.fieldSources?.[field] ?? held.provenance;
+        }
       }
     }
     const entry = directory.byMember[holder.id.slice(9)];
@@ -317,8 +325,7 @@ export function normalizeCongressDirectory(raw: Readonly<Record<string,unknown>>
     if (old && !entry.districtOffices.length) entry.districtOffices = old.districtOffices;
     if ((!raw["committees-current"] || !raw["committee-membership-current"]) && old) entry.committees = old.committees;
     holder.fieldSources = {
-      ...held?.fieldSources,
-      ...holder.fieldSources,
+      ...fieldSources,
       ...Object.fromEntries(["social","districtOffices","committees"].flatMap(field => {
         const filename = field === "social" ? "legislators-social-media" : field === "districtOffices" ? "legislators-district-offices" : "committee-membership-current";
         const id=holder.id.slice(9);

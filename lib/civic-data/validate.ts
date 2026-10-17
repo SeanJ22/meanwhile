@@ -1,9 +1,9 @@
+import type { GenericBallotProjection } from "../ballot/generic-projection.ts";
 import { statePublicationPriorOf } from "./state-publication.ts";
 import { createHash } from "node:crypto";
 import { durableStateHash, statePublicationScope } from "./state-publication.ts";
 import { sourceCheckIssue } from "./source-check.ts";
 import { completeOfficialBallotContests } from "./manual-projections.ts";
-import type { GenericBallotProjection } from "../ballot/generic-projection.ts";
 import { pluralRetirementCheckConsumer } from "../sources/plural/targets.ts";
 import { sameOffice } from "../officials/office-identity.ts";
 

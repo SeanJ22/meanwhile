@@ -5,7 +5,7 @@ import { createContext, useContext, type ReactNode } from "react";
 /**
  * Handlers the map provides once so any jurisdiction pill can settle the
  * reader's address without threading callbacks. Without a provider the pill
- * still opens the prompt and writes the answer to `sessionStorage`.
+ * still opens the prompt and keeps the address and scope in `localStorage`.
  */
 export interface AddressResolutionHandlers {
   /** The street resolved to a point. Fires only on an unambiguous street. */

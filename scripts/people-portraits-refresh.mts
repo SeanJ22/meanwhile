@@ -75,7 +75,7 @@ function portraitInputs(person:Officeholder,facts:readonly PortraitAttempt[]):De
 
 export async function refreshPeoplePortraits(input:{store:RoutineDataStore;vault:EvidenceStore;state:string;options?:StandingPortraitOptions}) {
   const {store,vault,state}=input,options=input.options ?? {},clock=options.now ?? (()=>new Date().toISOString());
-  const pacing={sizeFor:websiteSizeFromHoldings(state === "US" ? [] : [state])};
+  const pacing={sizeFor:await websiteSizeFromHoldings(state === "US" ? [] : [state])};
   const acquire=options.acquire ?? ((request:Parameters<typeof pacedPortraitAcquire>[0])=>pacedPortraitAcquire(request,pacing));
   const portraitOptions={...options,acquire,storePortrait:options.storePortrait ?? ((...args:Parameters<typeof storeStandingPortrait>)=>storeStandingPortrait(args[0],args[1],args[2],args[3],pacing))};
   const jurisdiction=(state === "US" ? "US" : `US-${state.toUpperCase()}`) as "US" | `US-${string}`;

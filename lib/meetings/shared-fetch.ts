@@ -1,3 +1,4 @@
+import { publicFetch } from "../hunt/egress.ts";
 import { websiteRequestLimit, type WebsiteSizeForUrl } from "../control-plane/scheduler/host-supervision.ts";
 import { recordAcquiredResponse } from "../sources/acquisition-trace.ts";
 import { challengeIn, curlGetText, curlRequestHeaders } from "../sources/http.ts";
@@ -32,7 +33,7 @@ export function meetingFetchPass(options: {
     if (!pending) {
       pending = (async () => {
         take(url);
-        let response = await (options.fetchImpl ?? globalThis.fetch)(input, init);
+        let response = await (options.fetchImpl ?? publicFetch)(input, init);
         // Retain the adapter's existing identified curl fallback. Both
         // transports spend from the same website allowance.
         if (response.status === 403 || (response.ok && challengeIn(await response.clone().text()) !== null)) {
@@ -53,7 +54,8 @@ export function meetingFetchPass(options: {
     if (saved.url !== response.url) Object.defineProperty(response, "url", { value: saved.url });
     signal?.throwIfAborted();
     if (response.ok) recordAcquiredResponse({ requestedUrl: url, finalUrl: response.url || url,
-      httpStatus: response.status, bytes: new Uint8Array(await response.clone().arrayBuffer()) });
+      httpStatus: response.status, bytes: new Uint8Array(await response.clone().arrayBuffer()),
+      contentType: response.headers.get("content-type") ?? "" });
     return response;
   };
   return Object.assign(fetchPass, { forgetGet: (urls: readonly string[]) => {

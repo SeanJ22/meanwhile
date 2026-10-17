@@ -1,3 +1,4 @@
+import { publicFetch } from "../../hunt/egress.ts";
 /**
  * The HTTP half of the Legistar adapter: paging, pacing and backoff. Kept apart from normalize() so the
  * transform stays pure, and so the retrieval discipline lives in one place: identify yourself, go at a
@@ -8,6 +9,8 @@
 // spacing and retry budget were measured against Legistar.
 import { sourceUserAgent } from "../http.ts";
 import { sourceAcquisitionSleep } from "../acquisition-deadline.ts";
+import { readCompleteResponse } from "../source-bytes.ts";
+import { recordAcquiredResponse } from "../acquisition-trace.ts";
 
 const API_ROOT = "https://webapi.legistar.com/v1";
 
@@ -89,7 +92,7 @@ async function requestOnce(
   url: string,
   options: RequestOptions,
 ): Promise<Response> {
-  const impl = options.fetchImpl ?? fetch;
+  const impl = options.fetchImpl ?? publicFetch;
   return impl(url, {
     headers: {
       "User-Agent": sourceUserAgent(),
@@ -119,8 +122,11 @@ async function getJsonInSlot<T>(path: string, options: RequestOptions): Promise<
     lastStatus = response.status;
 
     if (response.ok) {
-      const body = (await response.json()) as T;
+      const bytes = await readCompleteResponse(response, 32 * 1024 * 1024);
       options.signal?.throwIfAborted();
+      recordAcquiredResponse({ requestedUrl: url, finalUrl: response.url || url, httpStatus: response.status, bytes,
+        contentType: response.headers.get("content-type") ?? "" });
+      const body = JSON.parse(new TextDecoder().decode(bytes)) as T;
       return body;
     }
 

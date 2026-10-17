@@ -306,6 +306,7 @@ test("an unresolved supplied canonical ID never becomes a same-name candidate th
     assert.notEqual(answer.subject?.id, canonical.id);
     assert.ok(answer.records.every((record) => record.canonicalSubjectId !== canonical.id && !record.id.includes(canonical.id)));
     assert.equal(answer.mode, "UNRESOLVED");
+    assert.equal(answer.answer, `We could not resolve the supplied identity for “${answer.mention}”.`);
     assert.equal(answer.denominators.identityUnresolved, 1);
     assert.equal(answer.records.length, 0);
   }
@@ -341,11 +342,11 @@ async function ask(question: string, state: keyof typeof divisions = "AZ", extra
   }));
   assert.equal(response.status, 200);
   const body = await response.json() as AskAnswerPayload;
-  /* A named person's campaign-money question is composed in code from the held filings, never by a model. */
-  if (body.answer !== null) {
+  /* Refusals carry their displayed text too; a factual answer is composed in code from the held records, never by a model. */
+  if (body.answer !== null && body.mode !== "UNRESOLVED" && body.mode !== "CLARIFY") {
     assert.equal(body.mode, body.trace.composition?.kind === "BALLOT" && body.trace.sourcesLoaded === "ESSENTIAL" ? "STRUCTURED_GROUNDED" : "GROUNDED_COMPOSED", "the response is composed from held records");
-    assert.equal(body.trace.synthesis.ran, false, "a composed answer, never a model's");
   }
+  assert.equal(body.trace.synthesis.ran, false, "neither a held answer nor a refusal is written by a model");
   if (body.records) assert.equal(body.trace.retrieval.recordCount, body.records.length);
   return body;
 }

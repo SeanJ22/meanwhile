@@ -76,15 +76,21 @@ export function verifiedWorkerRecords(input: {
   const pageVerdict = section3Page(page, contract.recordClass, now);
   requirePublication(pageVerdict.ok, pageVerdict.reason ?? "PAGE_UNVERIFIED");
   const minimums = SECTION3_MINIMUMS[contract.recordClass] ?? contract.requiredFields;
-  const replay = isQuotedExtraction(contract, extraction)
+  const quoted = isQuotedExtraction(contract, extraction);
+  const sourceInventory = !quoted || contract.recordClass === "BALLOT_CONTEST"
+    ? inventoryRecordEvidence(primary.evidence, contract.extraction, contract) : null;
+  const replay = quoted
     ? quotedSourceFindings(extraction, { ...contract, requiredFields: SECTION3_MINIMUMS[contract.recordClass] ?? contract.requiredFields }, primary.evidence)
-    : compareCandidateWithSource(extraction, contract, primary.evidence, inventoryRecordEvidence(primary.evidence, contract.extraction, contract));
+    : compareCandidateWithSource(extraction, contract, primary.evidence, sourceInventory!);
   const global = replay.filter(f => !f.recordId && !COVERAGE_CODES.has(f.code));
   requirePublication(global.length === 0, `SOURCE_REPLAY_FAILED:${global.map(f => f.code).join(",")}`);
   const heldIds = new Set(replay.filter(f => f.recordId && !(f.field && !minimums.includes(f.field))).map(f => f.recordId!));
   // A field whose value does not replay from its source row stays open, labels included.
   const badFields = new Set(replay.filter(f => f.recordId && f.field).map(f => `${f.recordId}
 ${f.field}`));
+  const structuredBallot = !quoted && pageVerdict.kind === "OFFICIAL" &&
+    ["BALLOT_CONTEST", "BALLOT_MEASURE"].includes(contract.recordClass) &&
+    ["DELIMITED_TEXT", "JSON_RECORDS", "XML_RECORDS"].includes(contract.extraction.format);
   const heldRecordIds: string[] = [];
   const records: ParserResult["records"][number][] = [];
   const pulledRecords: ParserResult["records"][number][] = [];
@@ -92,27 +98,27 @@ ${f.field}`));
     if (input.pullRemoves && pulled && (pulled.all || pulled.recordIds.has(record.id))) { pulledRecords.push(record); heldRecordIds.push(record.id); continue; }
     const fields = Object.fromEntries(Object.entries(record.fields).filter(([field]) => !badFields.has(`${record.id}
 ${field}`)));
-    let verdict = section3Record({ recordClass: contract.recordClass, fields, page, now, pageVerdict, minimums });
+    // Exact source-row replay above already checked every retained field and its saved quotation.
+    const recordPage = structuredBallot ? { ...page, text: Object.values(fields).join("\n") } : page;
+    let verdict = section3Record({ recordClass: contract.recordClass, fields, page: recordPage, now, pageVerdict, minimums });
     if (!verdict.live && contract.recordClass === "CAMPAIGN_FINANCE_FILING") {
       verdict = section3Record({ recordClass: "CAMPAIGN_FINANCE_DOCUMENT", fields, page, now, pageVerdict });
     }
     if (heldIds.has(record.id) || pulled?.recordIds.has(record.id) || !verdict.live) { heldRecordIds.push(record.id); continue; }
     // Only verified values publish; the rest stay blank and owed.
-    records.push({ ...record, fields: Object.fromEntries(Object.entries(record.fields).filter(([field]) => verdict.verifiedFields.includes(field))) });
+    const verified = Object.entries(record.fields).filter(([field]) => verdict.verifiedFields.includes(field));
+    records.push(verified.length === Object.keys(record.fields).length ? record : { ...record, fields: Object.fromEntries(verified) });
   }
   requirePublication(records.length > 0 || pulledRecords.length > 0, `NO_RECORD_MEETS_MINIMUMS:${minimums.join(",")}`);
   const captures = [primary, ...input.captures.filter(c => c !== primary && captureIntact(c) &&
     (c.evidence.canonicalUrl === linkingPage?.url || pageLinksTo(page, c.evidence.canonicalUrl)))];
   const sourceReceipt = section3SourceReceipt(captures, now, `section3-validator:${parser.id}`,
     `Parser result ${parser.id}: ${records.length} record(s) found on the saved page inside its freshness window (§3).`, contract.recordClass);
-  return { contract, extraction: { ...extraction, records }, primary, captures, sourceReceipt, heldRecordIds, pulledRecords };
+  return { contract, extraction: { ...extraction, records }, primary, captures, sourceReceipt, heldRecordIds, pulledRecords,
+    sourceInventory: contract.recordClass === "BALLOT_CONTEST" ? sourceInventory : null };
 }
 
-/**
- * A publication job's worker results: those of its own work items, and, for a saved page another item captured,
- * that item's own (its Acquirer's walk dates the page). Nothing else is read. `readCapture` hands each page the
- * results of the items that captured it.
- */
+// Saved pages retain the worker results of the items that captured them.
 export async function jobWorkerResults<C>(repos: ControlPlaneRepositories, workItemIds: readonly string[],
   readCapture: (id: string, results: readonly WorkerResultRecord[]) => Promise<C>) {
   const byItem = new Map<string, readonly WorkerResultRecord[]>();

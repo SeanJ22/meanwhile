@@ -1,12 +1,13 @@
+import { directFundingTargetPlan, type FundingTargetPlan } from "../lib/funding/target-authorities.ts";
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import {
   settleFundingHoldingAnswer,
-  type FundingHoldingReaders,
-} from "../app/api/funding/[target]/holdings.ts";
-import { directFundingTargetPlan, type FundingTargetPlan } from "../lib/funding/target-authorities.ts";
+} from "../lib/funding/holding-answer.ts";
 import type { CivicDataReadMetadata } from "../lib/civic-data/read-model.ts";
+
+type FundingHoldingReaders = NonNullable<Parameters<typeof settleFundingHoldingAnswer>[1]>;
 
 const metadata = (recordClass: "FEC_FUNDING" | "STATE_CAMPAIGN_FINANCE", scope: string): CivicDataReadMetadata => ({
   recordClass,
@@ -29,7 +30,7 @@ function readers(plan: FundingTargetPlan, overrides: Partial<FundingHoldingReade
     identityPlan: async () => { calls.push("identity"); return plan; },
     federal: async () => { calls.push("federal"); return { kind: "PROMOTED", metadata: metadata("FEC_FUNDING", "US:2026") }; },
     state: async (state) => { calls.push(`state:${state}`); return { kind: "PROMOTED", metadata: metadata("STATE_CAMPAIGN_FINANCE", `${state}:2026`) }; },
-    azIdentity: async () => { calls.push("az-identity"); },
+    ballotIdentity: async () => { calls.push("ballot-identity"); },
     answer: (_target, _contest, selected) => { selection = selected; return { kind: "none" }; },
     ...overrides,
   };
@@ -41,18 +42,18 @@ test("direct target planning selects one exact state and never treats a state co
     contestId: "ballot-nj-morris:county-commissioner",
     federal: false,
     state: "NJ",
-    azIdentity: false,
+    ballotIdentity: false,
   });
   assert.deepEqual(directFundingTargetPlan("ballot-nh-merrimack:us-house-2:goodlander-maggie"), {
     contestId: "ballot-nh-merrimack:us-house-2",
     federal: true,
     state: null,
-    azIdentity: false,
+    ballotIdentity: false,
   });
 });
 
 test("a failed federal holding cannot erase an independently held state answer", async () => {
-  const fixture = readers({ contestId: "ballot-az-pima:governor", federal: true, state: "AZ", azIdentity: true }, {
+  const fixture = readers({ contestId: "ballot-az-pima:governor", federal: true, state: "AZ", ballotIdentity: true }, {
     federal: async () => { throw new Error("planted FEC failure"); },
   });
   const result = await settleFundingHoldingAnswer("congress:B001302", fixture.value);
@@ -64,7 +65,7 @@ test("a failed federal holding cannot erase an independently held state answer",
 });
 
 test("a failed state holding cannot erase an independently held federal answer", async () => {
-  const fixture = readers({ contestId: "ballot-az-pima:governor", federal: true, state: "AZ", azIdentity: true }, {
+  const fixture = readers({ contestId: "ballot-az-pima:governor", federal: true, state: "AZ", ballotIdentity: true }, {
     state: async () => { throw new Error("planted AZ finance failure"); },
   });
   const result = await settleFundingHoldingAnswer("congress:B001302", fixture.value);
@@ -76,7 +77,7 @@ test("a failed state holding cannot erase an independently held federal answer",
 });
 
 test("an NH target opens NH only and never touches AZ identity or another state", async () => {
-  const fixture = readers({ contestId: "ballot-nh-merrimack:governor", federal: false, state: "NH", azIdentity: false });
+  const fixture = readers({ contestId: "ballot-nh-merrimack:governor", federal: false, state: "NH", ballotIdentity: false });
   const result = await settleFundingHoldingAnswer("ballot-nh-merrimack:governor:ayotte-kelly", fixture.value);
   assert.equal(result.kind, "ANSWER");
   assert.deepEqual(fixture.calls, ["identity", "state:NH"]);
@@ -96,7 +97,7 @@ test("identity-store failure preserves a direct exact state holding but cannot a
 });
 
 test("all applicable finance authorities unavailable is explicit, never kind none", async () => {
-  const fixture = readers({ contestId: "ballot-az-pima:governor", federal: true, state: "AZ", azIdentity: true }, {
+  const fixture = readers({ contestId: "ballot-az-pima:governor", federal: true, state: "AZ", ballotIdentity: true }, {
     federal: async () => { throw new Error("planted FEC failure"); },
     state: async () => { throw new Error("planted state failure"); },
   });

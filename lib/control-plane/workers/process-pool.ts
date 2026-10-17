@@ -1,3 +1,5 @@
+import { requireRegistryState } from "../../civic-data/state-scopes.ts";
+import type { NationalPlaceTask } from "../../hunt/place-source-task.ts";
 import { fork } from "node:child_process";
 import { createHash, randomUUID } from "node:crypto";
 import { createServer } from "node:http";
@@ -72,7 +74,7 @@ export interface LeaseWorkerConfig {
   /** How long the pool lets this worker process live; set by the pool, not the caller. */
   readonly wallMs?: number;
   /** Plain-code ZIP tasks use the ordinary canonical acquisition lease. */
-  readonly nationalZips?: readonly string[];
+  readonly nationalPlaces?: readonly NationalPlaceTask[];
   readonly routeDispatch?: { readonly input: ScoutProcessDispatch; readonly route: RouteDescriptor | null };
 }
 
@@ -121,7 +123,7 @@ class WorkerAdmissionRefusal extends Error {
 
 export async function runNationalPlaceWorkerProcesses(input: {
   readonly root: string;
-  readonly zips: readonly string[];
+  readonly places: readonly NationalPlaceTask[];
   readonly capacity: () => number;
   readonly onStarted?: (pid: number) => void;
   readonly slots?: WorkerProcessSlots;
@@ -131,6 +133,7 @@ export async function runNationalPlaceWorkerProcesses(input: {
   readonly publishElection: ElectionPublisher;
   readonly onResult?: (report: NationalPlaceReport) => void | Promise<void>;
 }): Promise<NationalPlaceReport[]> {
+  if (new Set(input.places.map(place => requireRegistryState(place.state))).size > 1) throw new Error("NATIONAL_PLACE_CHILD_STATE_MISMATCH");
   const reports: NationalPlaceReport[] = [];
   let publicationTail: Promise<unknown> = Promise.resolve();
   const serialize = <T>(operation: () => Promise<T>): Promise<T> => {
@@ -139,7 +142,7 @@ export async function runNationalPlaceWorkerProcesses(input: {
     return next;
   };
   await runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/national-worker.ts", config: { root: input.root, postgres: true,
-    taskIds: [...new Set(input.zips)], nationalZips: [...new Set(input.zips)], modelEnabled: false,
+    taskIds: [...new Set(input.places.map(place => place.zip))], nationalPlaces: input.places, modelEnabled: false,
     searchEnabled: false, ceilingUsd: 0, fundedSubjects: [] }, capacity: input.capacity,
     transportFor: () => async () => { throw new Error("NATIONAL_SOURCE_MODEL_CALL_REFUSED"); },
     onStarted: input.onStarted, slots: input.slots, orderPending: input.orderPending,
@@ -201,13 +204,13 @@ export async function runLeaseWorkerProcesses(input: {
     // Acquiring host memory can wait until a sibling has drained this wave.
     if (!pending.size) return;
     const ready = [...pending].filter(id => !assigned.has(id));
-    const ordered = input.config.nationalZips && input.orderPending ? await input.orderPending(ready) : ready;
+    const ordered = input.config.nationalPlaces && input.orderPending ? await input.orderPending(ready) : ready;
     // Memory admission can queue several launches. Re-check after the asynchronous ranking read.
     const nextId = ordered.find(id => pending.has(id) && !assigned.has(id));
-    if (!pending.size || (input.config.nationalZips && nextId === undefined)) return;
+    if (!pending.size || (input.config.nationalPlaces && nextId === undefined)) return;
     if (Date.now() >= (input.deadlineMs ?? Infinity)) throw new WorkerAdmissionRefusal(new Error("WORKER_DISPATCH_SLICE: work remains owed"));
     await new Promise<void>((resolve, reject) => {
-    const ids = input.config.nationalZips ? [nextId!]
+    const ids = input.config.nationalPlaces ? [nextId!]
       : [...pending];
     for (const id of ids) assigned.add(id);
     const child = fork(join(input.config.root, input.entry), [], {
@@ -385,9 +388,7 @@ export async function runLeaseWorkerProcesses(input: {
       clearTimeout(quietTimer);
       /* Standing: workers that keep failing before their first task close admission instead of restarting every second. */
       if (standing !== null) startupFailures = code !== 0 && tasksDone === 0 && !terminationError ? startupFailures + 1 : 0;
-      /* Standing: the task a worker held when it was ended (stuck, its wall) or crashed gets its own deferral; its siblings' tasks are theirs.
-         `current` is cleared by the task's result, so it names a task with none. A sibling's "finished" list may already have
-         taken it off `pending` (it read the task before this worker announced it), so that membership is not the test. */
+
       if (standing !== null && current !== null && (terminationError || code !== 0)) {
         pending.delete(current);
         const failed = workerDispatchFailure(current, terminationError ?? new Error(`LEASE_WORKER_EXIT:${child.pid}:${code}`));
@@ -397,7 +398,7 @@ export async function runLeaseWorkerProcesses(input: {
       for (const [id, pid] of inFlight) if (pid === child.pid) inFlight.delete(id);
       if (child.pid) input.onExited?.(child.pid, terminationError ? (terminationError as Error).message : `exit ${code}`);
       const finish = () => {
-        if (input.config.nationalZips) for (const id of ids) { assigned.delete(id); pending.delete(id); }
+        if (input.config.nationalPlaces) for (const id of ids) { assigned.delete(id); pending.delete(id); }
         if (terminationError) reject(terminationError);
         else if (code === 0) resolve(); else reject(new Error(`LEASE_WORKER_EXIT:${child.pid}:${code}`));
       };
@@ -420,7 +421,7 @@ export async function runLeaseWorkerProcesses(input: {
     if (!Number.isSafeInteger(capacity) || capacity < 0) throw new Error("LEASE_WORKER_CAPACITY_INVALID");
     // Every child drains the shared task list. A finished child needs no replacement;
     // siblings may still own the remaining leases when their result is in transit.
-    while (!admissionClosed && (input.config.nationalZips
+    while (!admissionClosed && (input.config.nationalPlaces
       ? active.size < capacity && [...pending].some(id => !assigned.has(id))
       : standing !== null ? standingWants(capacity) : launched < capacity)) {
       launched++;

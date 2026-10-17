@@ -1,6 +1,9 @@
+import { STATE_BALLOT_FAMILIES, stateFromBallotScope } from "../civic-data/state-scopes.ts";
+import { stateFromRegistryRuntimeScope } from "../civic-data/state-scopes.ts";
+import type { BodyFacts } from "../facts/registry-overlay.ts";
+import type { StateAuthorityFamily, PromotedFamilyArtifactValue } from "../meetings/edge-artifacts.ts";
 import { AsyncLocalStorage } from "node:async_hooks";
 
-import type { RegistryRuntimeReadModel } from "./runtime-data-plane.ts";
 import type { FederalDirectoryReadModel } from "../officials/federal-directory-data-plane.ts";
 import type { CuratedReaderProjection } from "../civic-data/manual-projections.ts";
 import type { OfficialStateLegislatorReadModel } from "../civic-data/candidate-builders.ts";
@@ -9,24 +12,10 @@ import type { OutcomeSnapshot } from "../outcomes/types.ts";
 import type { PromotedCivicDataReadOptions, PromotedEdgeEntry } from "../civic-data/read-model.ts";
 import type { RoutineRecordClass } from "../civic-data/types.ts";
 import type { CensusDistrictEdge } from "../census-geography/district-edge.ts";
+import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
+import { currentReaderSelection, withReaderSelection, type ReaderSelection } from "../db/reader-route.ts";
 
-/**
- * Request-scoped "reader authority" edge bundle: the large families the coverage
- * graph needs — registry-runtime, the federal directory, and campaign-site URLs.
- *
- * The reader (a Netlify function) fetches the runner-published edge artifacts and
- * calls {@link enterReaderAuthorityEdge} at the top of the request.
- * `settleRegistryAuthorityReads` and `currentAuthorityKey` then prime the module
- * caches from these values INSTEAD of reading Neon — but only for the request
- * that set them. The standing runner and the workers never set them, so they
- * keep the authoritative `refresh*FromPromoted` database path unchanged. This is
- * why the edge path is request-scoped rather than a global override: the two
- * clocks stay separate.
- */
-export interface RegistryRuntimeEdgeValue {
-  readonly value: RegistryRuntimeReadModel;
-  readonly versionId: string;
-}
+
 export interface FederalDirectoryEdgeValue {
   readonly value: FederalDirectoryReadModel;
   readonly versionId: string;
@@ -51,39 +40,35 @@ export interface StateLegislatorsEdgeValue {
   readonly load: (jurisdiction: string) => Promise<EdgeServedValue<OfficialStateLegislatorReadModel> | null>;
 }
 
-/**
- * Each state's promoted registration on the edge. Not fetched with the bundle: a request loads only the
- * states its divisions name. `states` is complete (`ReaderManifest.registrations`): a state it lacks has
- * no promoted registration. `load` answers null when the artifact could not be fetched, and the caller
- * then reads that state from the database.
- */
 export interface RegistrationsEdge {
   readonly states: ReadonlySet<string>;
   readonly load: (state: string) => Promise<{ readonly value: RegistrationReadModel; readonly versionId: string } | null>;
 }
 
+interface StateAuthoritiesEdge {
+  readonly key?: (family: StateAuthorityFamily, state: string) => string | null;
+  readonly states: Readonly<Partial<Record<StateAuthorityFamily, ReadonlySet<string>>>>;
+  readonly load: (family: StateAuthorityFamily, state: string) => Promise<PromotedFamilyArtifactValue | null>;
+}
+
 export interface ReaderAuthorityEdgeBundle {
+  readonly meetingPlaces?: ReadonlyMap<string, readonly string[]>;
+  readonly selection?: ReaderSelection;
+  readonly loadPromoted?: (recordClass: RoutineRecordClass, scope: string) => Promise<PromotedEdgeEntry | null>;
+  readonly stateAuthorities?: StateAuthoritiesEdge;
+  readonly stateRegistryFacts?: { readonly key?: (state: string) => string | null; readonly load: (state: string) => Promise<{ readonly bodies: readonly BodyFacts[]; readonly versionId: string | null } | null> };
   readonly censusDistricts?: { readonly value: CensusDistrictEdge; readonly versionId: string };
-  readonly registryRuntime?: RegistryRuntimeEdgeValue;
   readonly federalDirectory?: FederalDirectoryEdgeValue;
   readonly campaignSites?: CampaignSitesEdgeValue;
   readonly stateLegislators?: StateLegislatorsEdgeValue;
   readonly meetingOutcomes?: MeetingOutcomesEdgeValue;
   readonly commentAccess?: CommentAccessEdgeValue;
   readonly registrations?: RegistrationsEdge;
-  /**
-   * The proven pointers the edge carries whole, keyed by pointer (`RECORD_CLASS:scope`). Each is read
-   * through its own typed Reader (`readPromotedEdgeFirst`), so every validation applied to a database read
-   * applies to this copy too.
-   */
+
   readonly promoted?: ReadonlyMap<string, PromotedEdgeEntry>;
   /** The proven-pointer families whose artifact this bundle loaded (a trace reports where each source came from). */
   readonly promotedFamilies?: ReadonlySet<string>;
-  /**
-   * Set only by the keep-warm call: a read this bundle cannot serve fails
-   * ({@link refuseDatabaseInEdgeOnlyContext}) instead of waking the database. Reader requests never set
-   * it; their fallback to the database is the point.
-   */
+
   readonly edgeOnly?: true;
 }
 
@@ -106,12 +91,6 @@ export interface EdgeServedValue<T> {
   readonly versionId: string;
 }
 
-/**
- * Edge first, database second: serve the request's edge value if it entered one, else refuse in an
- * edge-only context, else read the authoritative database pointer. One `T` runs through the edge
- * accessor, the prime and the read, so a family cannot be primed with another family's value. `what`
- * names the family in the edge-only refusal. A prime may itself be a typed Reader, so it is awaited.
- */
 export async function settleEdgeFirst<T>(
   edge: () => EdgeServedValue<T> | null,
   prime: (value: NoInfer<T>, versionId: string) => void | Promise<unknown>,
@@ -129,22 +108,54 @@ export async function settleEdgeFirst<T>(
 
 /** The edge's copy of one pointer for this request, or null when it carries none. */
 export function currentPromotedEdge(recordClass: RoutineRecordClass, scope: string): EdgeServedValue<PromotedEdgeEntry> | null {
-  const entry = edgeStore.getStore()?.promoted?.get(`${recordClass}:${scope}`);
+  const bundle = edgeStore.getStore();
+  const entry = bundle?.promoted?.get(`${recordClass}:${scope}`) ?? (bundle ? loadedStateEntries.get(bundle)?.get(`${recordClass}:${scope}`) : null);
   if (!entry) return null;
   return { value: entry, versionId: entry.kind === "PROMOTED" ? entry.projection.versionId : "NOT_RECORDED" };
 }
 
-/**
- * One pointer, edge first, through its own typed Reader. With the edge's copy of the pointer, `read` is
- * handed `{ edge }` and applies every validation and staleness bound it applies to a database read;
- * without one it reads the database, or refuses in an edge-only context.
- */
+const loadedStateEntries = new WeakMap<ReaderAuthorityEdgeBundle, Map<string, PromotedEdgeEntry>>();
+
+export async function ensurePromotedEdge(recordClass: RoutineRecordClass, scope: string): Promise<EdgeServedValue<PromotedEdgeEntry> | null> {
+  const current = currentPromotedEdge(recordClass, scope);
+  if (current) return current;
+  const bundle = edgeStore.getStore(), stateEdge = bundle?.stateAuthorities;
+  if (!bundle) return null;
+  if (!stateEdge) return loadCurrentPromotedEdge(recordClass, scope).then(value => value ? { value, versionId: value.kind === "PROMOTED" ? value.projection.versionId : "NOT_RECORDED" } : null);
+  const registryState = recordClass === "REGISTRY_RUNTIME_BINDING" ? stateFromRegistryRuntimeScope(scope) : null;
+  if (registryState) {
+    let entries = loadedStateEntries.get(bundle);
+    if (!entries) { entries = new Map(); loadedStateEntries.set(bundle, entries); }
+    const loaded = await stateEdge.load("registry-runtime", registryState).catch(error => {
+      reportReaderStateFailure("registry-runtime", registryState, stateEdge.key?.("registry-runtime", registryState) ?? null, error); return null;
+    });
+    for (const entry of loaded?.entries ?? []) entries.set(entry.kind === "PROMOTED" ? entry.projection.key : `${entry.recordClass}:${entry.scope}`, entry);
+    return currentPromotedEdge(recordClass, scope);
+  }
+  for (const scopedFamily of STATE_BALLOT_FAMILIES) {
+    const state = stateFromBallotScope(scope, scopedFamily);
+    const family: StateAuthorityFamily = scopedFamily === "candidate-corpus" ? "candidate-publications" : scopedFamily;
+    if (!state || !stateEdge.states[family]) continue;
+    if (!stateEdge.states[family]!.has(state)) return null;
+    let entries = loadedStateEntries.get(bundle);
+    if (!entries) { entries = new Map(); loadedStateEntries.set(bundle, entries); }
+    const loaded = await stateEdge.load(family, state).catch(error => {
+      reportReaderStateFailure(family, state, stateEdge.key?.(family, state) ?? null, error); return null;
+    });
+    for (const entry of loaded?.entries ?? []) entries.set(entry.kind === "PROMOTED" ? entry.projection.key : `${entry.recordClass}:${entry.scope}`, entry);
+    return currentPromotedEdge(recordClass, scope);
+  }
+  const value = await loadCurrentPromotedEdge(recordClass, scope);
+  return value ? { value, versionId: value.kind === "PROMOTED" ? value.projection.versionId : "NOT_RECORDED" } : null;
+}
+
 export async function readPromotedEdgeFirst<R>(
   recordClass: RoutineRecordClass,
   scope: string,
   read: (options: PromotedCivicDataReadOptions) => Promise<R>,
   what: string,
 ): Promise<R> {
+  await ensurePromotedEdge(recordClass, scope);
   let result: { readonly value: R } | null = null;
   await settleEdgeFirst(
     () => currentPromotedEdge(recordClass, scope),
@@ -156,33 +167,36 @@ export async function readPromotedEdgeFirst<R>(
 }
 
 const edgeStore = new AsyncLocalStorage<ReaderAuthorityEdgeBundle>();
+const stateReadFailures = new WeakMap<object, Set<string>>();
 
-/**
- * Bind the bundle to the current request's async context. Uses `enterWith` so
- * callers do not have to wrap the whole handler body; each request handler runs
- * in its own async context, so this never leaks across concurrent requests.
- */
+export function reportReaderStateFailure(family: string, state: string | null, key: string | null, error: unknown,
+  phase: "ARTIFACT" | "DATABASE" = "ARTIFACT"): void {
+  const diagnostic = sanitizedErrorDiagnostic(error), context = currentReaderSelection() ?? currentReaderAuthorityEdge();
+  if (context) {
+    const failures = stateReadFailures.get(context) ?? new Set<string>(), id = `${phase}:${family}:${state}:${key}:${diagnostic}`;
+    if (failures.has(id)) return;
+    failures.add(id); stateReadFailures.set(context, failures);
+  }
+  console.warn(`READER_STATE_${phase}_MISS`, { family, state, key, error: diagnostic });
+}
+
+
 export function enterReaderAuthorityEdge(bundle: ReaderAuthorityEdgeBundle): void {
   edgeStore.enterWith(bundle);
 }
 
-/**
- * Run `read` inside the bundle's context, and only it (AsyncLocalStorage.run). React calls each async
- * server component from its own render loop, so a component's reads do not see the page's
- * `enterReaderAuthorityEdge`; the page hands the bundle down and each component reads here. A null bundle
- * runs `read` unchanged: the database path.
- */
 export function withReaderAuthorityEdge<T>(bundle: ReaderAuthorityEdgeBundle | null, read: () => T): T {
-  return bundle ? edgeStore.run(bundle, read) : read();
+  return bundle ? edgeStore.run(bundle, () => bundle.selection ? withReaderSelection(bundle.selection, read) : read()) : read();
 }
 
 export function currentReaderAuthorityEdge(): ReaderAuthorityEdgeBundle | null {
   return edgeStore.getStore() ?? null;
 }
 
-export function currentRegistryRuntimeEdge(): RegistryRuntimeEdgeValue | null {
-  return edgeStore.getStore()?.registryRuntime ?? null;
+async function loadCurrentPromotedEdge(recordClass: RoutineRecordClass, scope: string): Promise<PromotedEdgeEntry | null> {
+  return await edgeStore.getStore()?.loadPromoted?.(recordClass, scope) ?? null;
 }
+
 export function currentFederalDirectoryEdge(): FederalDirectoryEdgeValue | null {
   return edgeStore.getStore()?.federalDirectory ?? null;
 }

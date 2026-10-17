@@ -47,7 +47,7 @@ test("Vermont native replay creates clocks for collections, captures single fact
   const runtime: VotingSourceRuntime = { fetch: fetcher, now: () => NOW, captureCache: new Map(), discoverySeen: new Set() };
   const vault = cycleVault(location);
   for (const source of roots) await upsertDerivedDoor(repos.doors, { doorId: source.id, kind: "official-voting-source", ocdId: source.scope.ocdId,
-    hosts: [new URL(source.url).hostname], config: { votingSource: JSON.stringify(source) }, holds: ["voting-sites"] }, NOW, NOW);
+    hosts: [new URL(source.url).hostname], config: { url: pageAddress(source.url)!.url, votingSource: JSON.stringify(source), votingState_VT: true }, holds: ["voting-sites"] }, NOW, NOW);
   assert.equal((await repos.doors.list()).filter(row => row.value.status !== "SUSPENDED").length, replay.before.doors);
   runtime.onDiscoveredDoor = async source => { await saveVotingSourceDoor(repos.doors, source, NOW); };
   runtime.onDiscoveredSource = async observation => {
@@ -68,7 +68,7 @@ test("Vermont native replay creates clocks for collections, captures single fact
     assert.deepEqual(observations.map(row => ({ url: row.source.url, after: row.disposition.kind,
       captureFile: row.capture ? byUrl.get(row.source.url)!.file : null })),
     candidates.map(({ url, after, captureFile }) => ({ url, after, captureFile })));
-    const registered = await registeredVotingSourceDoors(repos.doors);
+    const registered = await registeredVotingSourceDoors(repos.doors, "VT");
     assert.equal(registered.length, replay.after.doors);
     const active = (await repos.doors.list()).filter(row => row.value.status !== "SUSPENDED");
     assert.equal(active.length, replay.after.doors);
@@ -136,7 +136,7 @@ test("one normalized voting URL keeps every place mapping on one clock", async (
   for (const [index, source] of noticeMappings.entries()) await saveVotingSourceDoor(repos.doors,
     { ...source, url: `${source.url}${index === 0 ? "" : `?utm_source=${index}#top`}` }, NOW);
   assert.equal((await repos.doors.list()).length, 1);
-  assert.deepEqual((await registeredVotingSourceDoors(repos.doors)).map(source => source.id).sort(), noticeMappings.map(source => source.id).sort());
+  assert.deepEqual((await registeredVotingSourceDoors(repos.doors, "VT")).map(source => source.id).sort(), noticeMappings.map(source => source.id).sort());
 });
 
 test("a skipped link for another place cannot suspend that place's registered source", async () => {

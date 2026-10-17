@@ -1,3 +1,4 @@
+import { preloadCanonicalMeetingDependencies } from "../lib/meetings/ingest-dependencies.ts";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import test from "node:test";
@@ -24,7 +25,6 @@ import type { Meeting } from "../lib/sources/types.ts";
 import type { ChildRunReport } from "../lib/sources/composite/index.ts";
 import { wiringForSelectedMeetingSource } from "../lib/sources/composite/wiring.ts";
 import {
-  preloadCanonicalMeetingDependencies,
   promoteMeetingPartition,
   promoteMeetingPartitions,
   reconcileSuccessfulMeetingPartition,
@@ -378,9 +378,9 @@ test("meeting Reader repair composes the shared aggregate once and correlates ex
     "f".repeat(40),
   );
   assert.equal(store.readPromotionIdentitiesCalls, 1, "one identity-only pointer batch names every partition version");
-  // The payloads cross once, in the actual aggregate Reader read, plus one
-  // batch for the held pointers of successors with none yet
-  // (HELD_MEETING_PARTITIONS) — the college's successor has none in this store.
+
+
+
   assert.equal(
     store.readPromotionsCalls,
     1 + (HELD_MEETING_PARTITIONS.length > 0 ? 1 : 0),
@@ -512,8 +512,8 @@ test("a pass that records readbacks and republishes the prepared snapshot compos
   const row = await store.readPreparedReaderProjection("MEETING", MEETINGS_PREPARED_SCOPE);
   assert.deepEqual(
     new Set(row?.composedFrom.map(({ contractId }) => contractId)),
-    new Set([legistar.id, insite.id, "meeting-facts"]),
-    "the published row is coupled to the versions and the meeting facts that composition read",
+    new Set([legistar.id, insite.id]),
+    "the published row is coupled to the versions that composition read",
   );
 });
 
@@ -620,9 +620,9 @@ test("the batched Reader bounds database calls and isolates a corrupt partition"
   }
   assert.equal(scalarPromotionReads, 0);
   assert.equal(scalarCandidateReads, 0);
-  // One batch for every registered partition and its durable history,
-  // and one more only for the held pointers of successors that have none yet
-  // (HELD_MEETING_PARTITIONS) — the college's successor has none in this store.
+
+
+
   assert.equal(promotionBatchReads, 2);
   assert.equal(candidateBatchReads, 1);
   assert.deepEqual(requestedScopeBatches, [
@@ -743,7 +743,7 @@ test("a canonical preload outage emits no fabricated source attempt", async () =
   try {
     await assert.rejects(
       preloadCanonicalMeetingDependencies({
-        sourceName: "composite",
+        sourceName: "composite", state: "AZ",
         refreshRegistry: async () => { throw new Error("registry store unavailable"); },
         refreshVenues: async () => undefined,
       }),
@@ -774,7 +774,7 @@ test("production Reader configuration cannot reopen live composite acquisition",
 test("a meeting child takes the supervisor's registry attestation, and a malformed one leaves its own full proof", async () => {
   const attestation = {
     recordClass: "REGISTRY_RUNTIME_BINDING",
-    scope: "US:reader-registry-runtime-bindings",
+    scope: "US-AZ:reader-registry-runtime",
     versionId: "registry-reviewed-bindings:trusted-lkg:bb4500a518c9712b66e104569e74b71b",
     payloadSha256: "d".repeat(64),
     retrievedAt: "2026-09-14T04:24:35.148Z",
@@ -784,8 +784,8 @@ test("a meeting child takes the supervisor's registry attestation, and a malform
   };
   const seen: unknown[] = [];
   const run = (value: string | undefined) => preloadCanonicalMeetingDependencies({
-    sourceName: "composite",
-    refreshRegistry: async (options) => { seen.push(options); },
+    sourceName: "composite", state: "AZ",
+    refreshRegistry: async (states, options) => { assert.deepEqual(states, ["AZ"]); seen.push(options); },
     refreshVenues: async () => undefined,
     env: { WTP_ROUTINE_ATTESTED_PROMOTIONS: value },
   });

@@ -1,9 +1,7 @@
 import { readDerivedCampaignSites } from "../civic-data/derived-campaign-sites.ts";
 import { lowestZipByDivision } from "../geo/zip-division-index.ts";
-import { canonicalContestId, canonicalCandidacyId, type BallotDocument } from "../hunt/candidate-universe.ts";
-import { requiredManualProductionContract } from "../civic-data/manual-contracts.ts";
-import { requiredRoutineContract } from "../civic-data/contracts.ts";
-import { readPromotedCivicData } from "../civic-data/read-model.ts";
+import { canonicalContestId, canonicalCandidacyId } from "../hunt/candidate-universe.ts";
+import { readGenericBallotProjection } from "../ballot/generic-projection.ts";
 import { collectServedReader } from "./served-reader-collector.ts";
 import type { ServedReaderReadback } from "./served-reader.ts";
 import { observeCampaignControls } from "./campaign-reader-controls.ts";
@@ -13,20 +11,20 @@ import { PostgresRoutineDataStore } from "../civic-data/store.ts";
 import type { WorkItem } from "./work-item.ts";
 import { collectWorkerRosterReadback, collectWorkerManualReadback, observePublishedRoster, observePublishedFilings, observePublishedManual } from "./worker-reader-readback.ts";
 
-export async function collectPublishedCampaignReadback(now: string): Promise<ServedReaderReadback> {
-  const derived = await readDerivedCampaignSites();
-  if (derived.kind !== "PROMOTED") return { checkedAt: now, witnesses: [], errors: [`Campaign publication readback unavailable: ${derived.kind}.`] };
+export async function collectPublishedCampaignReadback(state: string, now: string): Promise<ServedReaderReadback> {
+  const derived = await readDerivedCampaignSites(state);
+  if (derived.kind !== "PROMOTED") return { checkedAt: now, witnesses: [],
+    errors: derived.kind === "NOT_RECORDED" ? [] : [`${state} campaign publication readback unavailable: ${derived.kind}.`] };
+  if (!derived.value.records.length) return { checkedAt: now, witnesses: [], errors: [] };
   // Use the same canonical identity functions as the workers, from proven ballot values.
   // Do not import the scheduler/Reader UI closure into this plain-Node collector.
   const subjects = new Map<string, { stateCode: string; ocdId: string }>();
-  const authorities = [requiredManualProductionContract("az-sos-ballot"), requiredManualProductionContract("nh-curated-ballot"), requiredRoutineContract("nj-morris-filing")];
-  for (const authority of authorities) {
-    const result = await readPromotedCivicData<{ ballot: BallotDocument; candidateFilings?: BallotDocument }>(authority.recordClass, authority.scope);
-    if (result.kind !== "PROMOTED") continue;
-    const stateCode = /US-([A-Z]{2}):/.exec(authority.scope)?.[1];
-    const cycle = Number(/(?:^|:)(20\d{2})(?:-|:|$)/.exec(authority.scope)?.[1]);
+  const result = await readGenericBallotProjection(state);
+  if (result.kind === "PROMOTED") for (const authority of Object.values(result.value.ballots)) {
+    const stateCode = authority.election.state;
+    const cycle = Number(authority.election.date.slice(0, 4));
     if (!stateCode || !Number.isInteger(cycle)) continue;
-    for (const ballot of [result.value.ballot, result.value.candidateFilings]) {
+    for (const ballot of [authority, { contests: authority.contests, candidacies: authority.filingCandidacies ?? [] }]) {
       if (!Array.isArray(ballot?.contests) || !Array.isArray(ballot?.candidacies)) continue;
       const contests = new Map(ballot.contests.map(c => [c.id, c]));
       for (const c of ballot.candidacies) {
@@ -36,10 +34,10 @@ export async function collectPublishedCampaignReadback(now: string): Promise<Ser
     }
   }
   const destinations = new Map<string, string>();
+  const lowest = await lowestZipByDivision(state);
   for (const record of derived.value.records) {
     const subject = subjects.get(record.candidacyId);
     if (!subject) continue;
-    const lowest = await lowestZipByDivision(subject.stateCode);
     const stateDivision = `ocd-division/country:us/state:${subject.stateCode.toLowerCase()}`;
     const zip = lowest?.get(subject.ocdId) ?? (subject.ocdId === stateDivision ? [...(lowest ?? [])].filter(([id]) => id.startsWith(`${stateDivision}/`)).map(([, z]) => z).sort()[0] : undefined);
     if (zip) destinations.set(record.candidacyId, `${PUBLIC_SITE_ORIGIN}/ballot?zip=${zip}`);

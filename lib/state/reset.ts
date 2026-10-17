@@ -1,15 +1,8 @@
 import { TIERS } from "../ocd/tiers.ts";
-import { RADIUS_LADDER_KM } from "../meetings/constants.ts";
+import { DEFAULT_RADIUS_KM } from "../meetings/constants.ts";
 
 import { INITIAL_FILTERS } from "./defaults.ts";
 import type { UiState } from "./types.ts";
-
-/**
- * The registry of resettable controls. Every reader-adjustable control
- * registers its reset and its is-active test; `resetAll` and
- * `activeControlCount` derive from the registry, and every `UiState` field
- * must either register or be declared a non-control.
- */
 
 export interface ResettableControl {
   /** Stable name, for the test's error messages. */
@@ -98,7 +91,7 @@ export const RESETTABLE_CONTROLS: ResettableControl[] = [
     owns: ["radiusKm", "radiusOverridden"],
     isActive: (s) => s.radiusOverridden,
     // The dedicated radius/clear semantics: turns the radius off and nothing else.
-    reset: () => ({ radiusKm: RADIUS_LADDER_KM[0], radiusOverridden: false }),
+    reset: () => ({ radiusKm: DEFAULT_RADIUS_KM, radiusOverridden: false }),
   },
   {
     name: "near me",
@@ -116,12 +109,6 @@ export const RESETTABLE_CONTROLS: ResettableControl[] = [
   },
 ];
 
-/**
- * UiState fields that are deliberately NOT controls, each with the reason.
- * The test requires every field to appear exactly once — here or in a
- * control's `owns` — so a new field forces this decision instead of
- * silently escaping Reset all.
- */
 export const NON_CONTROL_FIELDS: Partial<Record<keyof UiState, string>> = {
   selectedVenueKey: "a selection, not a filter — reset must not close what the reader is looking at",
   selectedDistrictOcdId: "a selection the reader clicked; cleared by its own control",

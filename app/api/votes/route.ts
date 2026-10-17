@@ -1,29 +1,210 @@
+import { readerRoute } from "@/lib/api/reader-route";
 import type { VotesSnapshot } from "@/lib/votes/types";
 import { getVotesSnapshot, readFederalRollCallsProjection } from "@/lib/votes/snapshot";
 import { partyBreakdownFor } from "@/lib/votes/party-breakdown";
 import { pickedKeyVotesFor } from "@/lib/votes/key-vote-picks";
 import { readKeyVotePicks } from "@/lib/votes/key-vote-picks-read";
+import { keyVotesForMember, type MemberKeyVotes } from "@/lib/votes/key-votes-reader";
 import { KEY_VOTES_CRITERIA } from "@/lib/votes/key-votes";
+import { partyByOfficeholderId } from "@/lib/registry/server";
+import {
+  getStateVotesSnapshot,
+  OFFICIAL_STATE_VOTE_SCOPES,
+  readOfficialStateVotesProjection,
+  type OfficialStateVoteScope,
+} from "@/lib/sources/legiscan/snapshot";
 import { officialStateVoteScopeForOfficeholderId } from "@/lib/state-rollcalls/authority";
+import type { StateVotesSnapshot } from "@/lib/sources/legiscan/types";
+import { stateRollAttribution } from "@/lib/sources/legiscan/types";
 import { summaryForBill, summaryPendingForBill } from "@/lib/votes/bill-summaries";
 import { readHistoricalFederalVotesForMember } from "@/lib/votes/history";
+import { mayUseTestFixture } from "@/lib/civic-data/fixture-policy";
 import { readNativeMemberVotes } from "@/lib/state-rollcalls/reader-votes";
-import { researchFixtureScopeForMember, settleFederalVoteSupportingHoldings, settleStateVoteMemberHolding, stateVotes } from "./holdings";
 import { stateVoteStateForMember } from "@/lib/state-rollcalls/reader-vote-visibility";
 
-/**
- * GET /api/votes?member=congress:<bioguide> — a federal member
- * GET /api/votes?member=<official-source>:<person-id> — a state legislator
- *
- * A member's recent recorded votes, newest first, from proof-validated canonical projections, never a
- * runtime fallback or a live fetch. Legacy state rows carry LegiScan's required CC BY attribution.
- */
+
 
 export const runtime = "nodejs";
 
 const FEDERAL_ID = /^congress:[A-Z]\d{6}$/;
+const RETIRED_TEST_STATE_ID = /^plural:[0-9a-f-]{36}$/i;
 
-export async function GET(request: Request) {
+export interface FederalVoteSupportingReaders {
+  readonly parties: () => Promise<ReadonlyMap<string, string | null>>;
+  readonly keyVotes: (member: string) => Promise<MemberKeyVotes>;
+}
+
+export interface FederalVoteSupportingHoldings {
+  readonly parties: ReadonlyMap<string, string | null>;
+  readonly partyBreakdownHoldingStatus: "HELD" | "HOLDING_UNAVAILABLE";
+  readonly curated: MemberKeyVotes;
+  readonly keyVotesHoldingStatus: "HELD" | "HOLDING_UNAVAILABLE";
+}
+
+export interface HeldStateVoteScope {
+  readonly scope: OfficialStateVoteScope;
+  readonly snapshot: StateVotesSnapshot;
+  readonly versionId: string | null;
+  readonly authorityKind: "PROMOTED_OFFICIAL" | "RESEARCH_TEST_FIXTURE";
+}
+
+export interface StateVoteScopeReaders {
+  readonly read: (scope: OfficialStateVoteScope) => Promise<HeldStateVoteScope>;
+}
+
+export type StateVoteMemberHolding =
+  | {
+      readonly kind: "HELD";
+      readonly holding: HeldStateVoteScope;
+      readonly unavailableScopes: readonly OfficialStateVoteScope[];
+    }
+  | {
+      readonly kind: "HELD_NO_RECORD";
+      readonly generatedAt: string;
+      readonly scopesChecked: readonly OfficialStateVoteScope[];
+    }
+  | {
+      readonly kind: "HOLDING_UNAVAILABLE";
+      readonly reason: "SCOPE_UNAVAILABLE";
+      readonly unavailableScopes: readonly OfficialStateVoteScope[];
+      readonly matchedScopes: readonly OfficialStateVoteScope[];
+    };
+
+async function readCanonicalStateVoteScope(scope: OfficialStateVoteScope): Promise<HeldStateVoteScope> {
+  // The retained LegiScan bytes are a deterministic node:test fixture only.
+  // Production always opens the exact canonical pointer below.
+  if (mayUseTestFixture() && !process.env.DATABASE_URL) {
+    return {
+      scope,
+      snapshot: getStateVotesSnapshot(scope),
+      versionId: null,
+      authorityKind: "RESEARCH_TEST_FIXTURE",
+    };
+  }
+  const result = await readOfficialStateVotesProjection(scope);
+  if (result.kind !== "PROMOTED") {
+    throw new Error(result.detail);
+  }
+  return {
+    scope,
+    snapshot: result.value,
+    versionId: result.metadata.versionId,
+    authorityKind: "PROMOTED_OFFICIAL",
+  };
+}
+
+
+export async function settleStateVoteMemberHolding(
+  member: string,
+  scope: OfficialStateVoteScope,
+  readers: StateVoteScopeReaders = { read: readCanonicalStateVoteScope },
+): Promise<StateVoteMemberHolding> {
+  let holding: HeldStateVoteScope;
+  try {
+    holding = await readers.read(scope);
+  } catch {
+    return {
+      kind: "HOLDING_UNAVAILABLE",
+      reason: "SCOPE_UNAVAILABLE",
+      unavailableScopes: [scope],
+      matchedScopes: [],
+    };
+  }
+  if (holding.snapshot.positions.some((position) => position.officeholderId === member)) {
+    return { kind: "HELD", holding, unavailableScopes: [] };
+  }
+  return {
+    kind: "HELD_NO_RECORD",
+    generatedAt: holding.snapshot.generatedAt,
+    scopesChecked: [scope],
+  };
+}
+
+/** Retained only so old vendor ids can exercise deterministic fixtures. */
+function researchFixtureScopeForMember(member: string): OfficialStateVoteScope | null {
+  if (!mayUseTestFixture() || !RETIRED_TEST_STATE_ID.test(member)) return null;
+  const matches = OFFICIAL_STATE_VOTE_SCOPES.filter((scope) =>
+    getStateVotesSnapshot(scope).positions.some((position) => position.officeholderId === member)
+  );
+  return matches.length === 1 ? matches[0]! : null;
+}
+
+
+export async function settleFederalVoteSupportingHoldings(
+  member: string,
+  readers: FederalVoteSupportingReaders = {
+    parties: partyByOfficeholderId,
+    keyVotes: keyVotesForMember,
+  },
+): Promise<FederalVoteSupportingHoldings> {
+  const [partyResult, keyVoteResult] = await Promise.allSettled([
+    Promise.resolve().then(() => readers.parties()),
+    Promise.resolve().then(() => readers.keyVotes(member)),
+  ]);
+
+  return {
+    parties: partyResult.status === "fulfilled" ? partyResult.value : new Map(),
+    partyBreakdownHoldingStatus: partyResult.status === "fulfilled" ? "HELD" : "HOLDING_UNAVAILABLE",
+    curated: keyVoteResult.status === "fulfilled"
+      ? keyVoteResult.value
+      : { member, chamber: null, rows: [], positionsReadAt: null },
+    keyVotesHoldingStatus: keyVoteResult.status === "fulfilled" ? "HELD" : "HOLDING_UNAVAILABLE",
+  };
+}
+
+/** A state legislator's recent roll calls, in the federal rows' shape. */
+export function stateVoteAttributionForHolding(
+  holding: Pick<HeldStateVoteScope, "authorityKind">,
+  rolls: Parameters<typeof stateRollAttribution>[0],
+) {
+  return holding.authorityKind === "PROMOTED_OFFICIAL" ? null : stateRollAttribution(rolls);
+}
+
+function stateVotes(member: string, holding: HeldStateVoteScope, unavailableScopes: readonly OfficialStateVoteScope[]) {
+  const snap = holding.snapshot;
+  const positions = new Map(
+    snap.positions
+      .filter((p) => p.officeholderId === member)
+      .map((p) => [p.rollCallId, p.position]),
+  );
+
+  const matchedRolls = snap.rollCalls
+    .filter((r) => positions.has(r.id))
+    .sort((a, b) => b.date.localeCompare(a.date));
+  const votes = matchedRolls
+    .map((r) => ({
+      id: r.id,
+      // The bill's official title, as the legislature published it. Never
+      // ours — the same rule the federal rows ship under.
+      title: r.billTitle,
+      titleSource: "BILL_TITLE" as const,
+      // The chamber's own description of the motion.
+      question: r.motion,
+      result: r.result,
+      legisNum: r.billNumber || null,
+      billUrl: r.billUrl,
+      rollCallUrl: r.rollCallUrl,
+      date: r.date,
+      position: positions.get(r.id),
+      partyBreakdown: null,
+      billSummary: null,
+      billSummaryPending: false,
+    }));
+
+  return Response.json({
+    member,
+    holdingStatus: "HELD",
+    authorityScope: holding.scope,
+    canonicalVersionId: holding.versionId,
+    unavailableSiblingScopes: unavailableScopes,
+    count: votes.length,
+    generatedAt: snap.generatedAt,
+    attribution: stateVoteAttributionForHolding(holding, matchedRolls),
+    votes,
+  });
+}
+
+export const GET = readerRoute("/api/votes", async function GET(request: Request) {
   const query = new URL(request.url).searchParams;
   const member = query.get("member");
   const historical = query.get("history") === "1";
@@ -105,11 +286,6 @@ export async function GET(request: Request) {
       .map((p) => [p.voteId, p.position]),
   );
 
-  // The party breakdown: pure
-  // arithmetic over the snapshot's positions joined to the roster's
-  // party labels, refused (null) unless it sums exactly to the
-  // chamber's recorded tally. The surface renders the honest
-  // unavailable state on null.
   const supporting = await settleFederalVoteSupportingHoldings(member);
 
   // A member sits in one chamber, so their votes share a chamber and the
@@ -125,10 +301,7 @@ export async function GET(request: Request) {
       billSummaryPending: summaryPendingForBill(v.billUrl),
     }));
 
-  /*
-   * The "When it mattered" rows, served beside the recent ones. `keyVoteRowsFor` is handed a chamber and
-   * never reads the other array; a member with no chamber gets an empty list.
-   */
+
   const { chamber, rows: keyVotes } = supporting.curated;
 
   return Response.json({
@@ -144,4 +317,4 @@ export async function GET(request: Request) {
     keyVotesCriteria: keyVotes.length > 0 ? KEY_VOTES_CRITERIA : null,
     pickedKeyVotes: pickedKeyVotesFor(await readKeyVotePicks(), chamber, snap.votes, snap.positions, member),
   });
-}
+}, ["registry-runtime","federal-directory","state-legislators","state-votes","federal-votes","federal-key-votes"]);

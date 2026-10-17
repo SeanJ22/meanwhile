@@ -1,0 +1,949 @@
+{
+  "retrievedAt": "2026-10-15T19:58:02Z",
+  "networkPolicy": "unrestricted/enforced; inherited proxy and CA trust retained",
+  "results": [
+    {
+      "source": "usaspending",
+      "url": "https://api.usaspending.gov/api/v2/search/spending_by_transaction/",
+      "retrievedAt": "2026-10-15T19:58:02Z",
+      "method": "POST",
+      "requestBody": {
+        "filters": {
+          "award_type_codes": [
+            "02",
+            "03",
+            "04",
+            "05"
+          ],
+          "place_of_performance_locations": [
+            {
+              "country": "USA",
+              "state": "CA"
+            }
+          ]
+        },
+        "fields": [
+          "Award ID",
+          "Recipient Name",
+          "Action Date",
+          "Transaction Amount",
+          "Award Type"
+        ],
+        "sort": "Action Date",
+        "order": "desc",
+        "page": 1,
+        "limit": 3
+      },
+      "status": 200,
+      "responseHeaders": {
+        "Date": "Thu, 15 Oct 2026 19:58:03 GMT",
+        "Content-Type": "application/json"
+      },
+      "file": "usaspending-live-2026-10-15.json",
+      "kind": "live-api-response",
+      "bytes": 1157,
+      "sha256": "28778920530cfe8ee57cd151fb1e90241d3582fe27be46bfa61f110c0b27982f",
+      "rows": 3,
+      "page_metadata": {
+        "page": 1,
+        "next": 2,
+        "previous": null,
+        "hasNext": true,
+        "hasPrevious": false
+      }
+    },
+    {
+      "source": "federal-audit-clearinghouse",
+      "url": "https://api.fac.gov/general?limit=3&order=report_id.desc&auditee_state=eq.CA&auditee_name=ilike.%2Acounty%2A",
+      "retrievedAt": "2026-10-15T19:58:02Z",
+      "method": "GET",
+      "status": 206,
+      "responseHeaders": {
+        "Date": "Thu, 15 Oct 2026 19:58:04 GMT",
+        "Content-Type": "application/json; charset=utf-8",
+        "Content-Range": "0-2/2974",
+        "X-RateLimit-Limit": "1000",
+        "X-RateLimit-Remaining": "999"
+      },
+      "file": "fac-general-live-2026-10-15.json",
+      "kind": "live-api-response",
+      "bytes": 6303,
+      "sha256": "78fe0ca22850c3908c954354f26b3f01659edc6fed41f8f417a412c47716bf62",
+      "rows": 3
+    },
+    {
+      "source": "sam-gov-entities",
+      "url": "https://api.sam.gov/entity-information/v3/entities?physicalAddressProvinceOrStateCode=CA&legalBusinessName=CITY+OF+LOS+ANGELES&includeSections=entityRegistration%2CcoreData&samRegistered=Yes&page=0&size=3",
+      "retrievedAt": "2026-10-15T19:58:02Z",
+      "method": "GET",
+      "status": 503,
+      "reason": "upstream connect error or disconnect/reset before headers. reset reason: connection timeout"
+    },
+    {
+      "source": "openfema",
+      "url": "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?%24top=3&%24orderby=lastRefresh+desc&%24inlinecount=allpages",
+      "retrievedAt": "2026-10-15T19:58:02Z",
+      "method": "GET",
+      "status": 200,
+      "responseHeaders": {
+        "Date": "Thu, 15 Oct 2026 19:58:03 GMT",
+        "Content-Type": "application/json; charset=utf-8"
+      },
+      "file": "openfema-live-2026-10-15.json",
+      "kind": "live-api-response",
+      "bytes": 3102,
+      "sha256": "0f725d2daa52927e04729780adc5fcc7746bf207b25857710fde9a08daa21d83",
+      "rows": 3,
+      "metadata": {
+        "skip": 0,
+        "select": null,
+        "rundate": "2026-10-15T19:58:02.963Z",
+        "top": 3,
+        "filter": "",
+        "format": "json",
+        "metadata": true,
+        "orderby": "lastRefresh DESC",
+        "entityname": "DisasterDeclarationsSummaries",
+        "version": "v2",
+        "url": "/api/open/v2/DisasterDeclarationsSummaries?%24top=3&%24orderby=lastRefresh+desc&%24inlinecount=allpages",
+        "count": 70567
+      }
+    },
+    {
+      "source": "federal-audit-clearinghouse",
+      "url": "https://api.fac.gov/general?limit=1&select=report_id",
+      "retrievedAt": "2026-10-15T19:58:02Z",
+      "method": "GET",
+      "status": 206,
+      "responseHeaders": {
+        "Date": "Thu, 15 Oct 2026 19:58:04 GMT",
+        "Content-Type": "application/json; charset=utf-8",
+        "Content-Range": "0-0/418706",
+        "X-RateLimit-Limit": "1000",
+        "X-RateLimit-Remaining": "998"
+      },
+      "file": "fac-count-live-2026-10-15.json",
+      "kind": "live-api-response",
+      "bytes": 43,
+      "sha256": "5543f342c9f250de2be8ae5a921578c20e75f5b4e815fd9f6575bdf01b06e6e6",
+      "rows": 1
+    },
+    {
+      "source": "usaspending",
+      "url": "https://api.usaspending.gov/api/v2/search/spending_by_transaction/count/",
+      "retrievedAt": "2026-10-15T19:59:10Z",
+      "method": "POST",
+      "requestBody": {
+        "filters": {
+          "award_type_codes": [
+            "02",
+            "03",
+            "04",
+            "05",
+            "A",
+            "B",
+            "C",
+            "D",
+            "07",
+            "08"
+          ],
+          "place_of_performance_locations": [
+            {
+              "country": "USA",
+              "state": "CA"
+            }
+          ],
+          "time_period": [
+            {
+              "start_date": "2025-01-01",
+              "end_date": "2025-12-31"
+            }
+          ]
+        }
+      },
+      "status": 422,
+      "reason": "{\"detail\":\"Missing value: 'fields' is a required field\"}"
+    },
+    {
+      "source": "usaspending",
+      "url": "https://api.usaspending.gov/api/v2/search/spending_by_transaction/count/",
+      "retrievedAt": "2026-10-15T19:59:10Z",
+      "method": "POST",
+      "requestBody": {
+        "filters": {
+          "award_type_codes": [
+            "02",
+            "03",
+            "04",
+            "05",
+            "A",
+            "B",
+            "C",
+            "D",
+            "07",
+            "08"
+          ],
+          "place_of_performance_locations": [
+            {
+              "country": "USA",
+              "state": "TX"
+            }
+          ],
+          "time_period": [
+            {
+              "start_date": "2025-01-01",
+              "end_date": "2025-12-31"
+            }
+          ]
+        }
+      },
+      "status": 422,
+      "reason": "{\"detail\":\"Missing value: 'fields' is a required field\"}"
+    },
+    {
+      "source": "usaspending",
+      "url": "https://api.usaspending.gov/api/v2/search/spending_by_transaction/count/",
+      "retrievedAt": "2026-10-15T19:59:10Z",
+      "method": "POST",
+      "requestBody": {
+        "filters": {
+          "award_type_codes": [
+            "02",
+            "03",
+            "04",
+            "05",
+            "A",
+            "B",
+            "C",
+            "D",
+            "07",
+            "08"
+          ],
+          "time_period": [
+            {
+              "start_date": "2025-01-01",
+              "end_date": "2025-12-31"
+            }
+          ]
+        }
+      },
+      "status": 422,
+      "reason": "{\"detail\":\"Missing value: 'fields' is a required field\"}"
+    },
+    {
+      "source": "usaspending",
+      "url": "https://api.usaspending.gov/api/v2/search/spending_by_transaction/count/",
+      "retrievedAt": "2026-10-15T19:59:10Z",
+      "method": "POST",
+      "requestBody": {
+        "filters": {
+          "award_type_codes": [
+            "02",
+            "03",
+            "04",
+            "05",
+            "A",
+            "B",
+            "C",
+            "D",
+            "07",
+            "08"
+          ]
+        }
+      },
+      "status": 422,
+      "reason": "{\"detail\":\"Missing value: 'fields' is a required field\"}"
+    },
+    {
+      "source": "usaspending",
+      "url": "https://api.usaspending.gov/api/v2/download/count/",
+      "retrievedAt": "2026-10-15T19:59:10Z",
+      "method": "POST",
+      "requestBody": {
+        "filters": {
+          "award_type_codes": [
+            "02",
+            "03",
+            "04",
+            "05",
+            "A",
+            "B",
+            "C",
+            "D",
+            "07",
+            "08"
+          ],
+          "place_of_performance_locations": [
+            {
+              "country": "USA",
+              "state": "CA"
+            }
+          ],
+          "time_period": [
+            {
+              "start_date": "2025-01-01",
+              "end_date": "2025-12-31"
+            }
+          ]
+        },
+        "spending_level": "transactions"
+      },
+      "status": 200,
+      "responseHeaders": {
+        "Date": "Thu, 15 Oct 2026 19:59:11 GMT",
+        "Content-Type": "application/json"
+      },
+      "file": "usaspending-count-ca-2025-download-2026-10-15.json",
+      "kind": "live-api-response",
+      "bytes": 815,
+      "sha256": "d5fcf303d58db6dcb1c9300109809b0ff9d7d10183f09862a1c3ae14ecf354af"
+    },
+    {
+      "source": "federal-audit-clearinghouse",
+      "url": "https://api.fac.gov/findings?limit=3&order=report_id.desc",
+      "retrievedAt": "2026-10-15T19:59:10Z",
+      "method": "GET",
+      "status": 206,
+      "responseHeaders": {
+        "Date": "Thu, 15 Oct 2026 19:59:19 GMT",
+        "Content-Type": "application/json; charset=utf-8",
+        "Content-Range": "0-2/687193",
+        "X-RateLimit-Limit": "1000",
+        "X-RateLimit-Remaining": "997"
+      },
+      "file": "fac-findings-live-2026-10-15.json",
+      "kind": "live-api-response",
+      "bytes": 1287,
+      "sha256": "ac995f340a014ea28627da71bbdb6a9017d262b911bf57ea2585fa3a5ff04785",
+      "rows": 3
+    },
+    {
+      "source": "federal-audit-clearinghouse",
+      "url": "https://api.fac.gov/findings_text?limit=3&order=report_id.desc",
+      "retrievedAt": "2026-10-15T19:59:10Z",
+      "method": "GET",
+      "status": 206,
+      "responseHeaders": {
+        "Date": "Thu, 15 Oct 2026 19:59:13 GMT",
+        "Content-Type": "application/json; charset=utf-8",
+        "Content-Range": "0-2/154067",
+        "X-RateLimit-Limit": "1000",
+        "X-RateLimit-Remaining": "997"
+      },
+      "file": "fac-findings-text-live-2026-10-15.json",
+      "kind": "live-api-response",
+      "bytes": 5209,
+      "sha256": "09c2d492a2217fb4900eb489c804dc640cb3dd3d18622f9b785a86941039a003",
+      "rows": 3
+    },
+    {
+      "source": "sam-gov-entities",
+      "url": "https://api.sam.gov/entity-information/v3/entities?legalBusinessName=CITY+OF+LOS+ANGELES&includeSections=entityRegistration%2CcoreData&samRegistered=Yes&page=0&size=1",
+      "retrievedAt": "2026-10-15T19:59:10Z",
+      "method": "GET",
+      "status": 503,
+      "reason": "upstream connect error or disconnect/reset before headers. reset reason: connection timeout"
+    },
+    {
+      "source": "usaspending",
+      "url": "https://api.usaspending.gov/api/v2/download/count/",
+      "retrievedAt": "2026-10-15T20:00:29Z",
+      "method": "POST",
+      "requestBody": {
+        "filters": {
+          "award_type_codes": [
+            "02",
+            "03",
+            "04",
+            "05",
+            "A",
+            "B",
+            "C",
+            "D",
+            "07",
+            "08"
+          ],
+          "place_of_performance_locations": [
+            {
+              "country": "USA",
+              "state": "TX"
+            }
+          ],
+          "time_period": [
+            {
+              "start_date": "2025-01-01",
+              "end_date": "2025-12-31"
+            }
+          ]
+        },
+        "spending_level": "transactions"
+      },
+      "status": 200,
+      "responseHeaders": {
+        "Date": "Thu, 15 Oct 2026 20:00:31 GMT",
+        "Content-Type": "application/json"
+      },
+      "file": "usaspending-count-tx-2025-2026-10-15.json",
+      "kind": "live-api-response",
+      "bytes": 817,
+      "sha256": "237132d5959855e69464c6bc9a9d3c85df2d0600e756df90c1df34f4d72496a1"
+    },
+    {
+      "source": "usaspending",
+      "url": "https://api.usaspending.gov/api/v2/download/count/",
+      "retrievedAt": "2026-10-15T20:00:29Z",
+      "method": "POST",
+      "requestBody": {
+        "filters": {
+          "award_type_codes": [
+            "02",
+            "03",
+            "04",
+            "05",
+            "A",
+            "B",
+            "C",
+            "D",
+            "07",
+            "08"
+          ],
+          "time_period": [
+            {
+              "start_date": "2025-01-01",
+              "end_date": "2025-12-31"
+            }
+          ]
+        },
+        "spending_level": "transactions"
+      },
+      "status": 200,
+      "responseHeaders": {
+        "Date": "Thu, 15 Oct 2026 20:00:32 GMT",
+        "Content-Type": "application/json"
+      },
+      "file": "usaspending-count-us-2025-2026-10-15.json",
+      "kind": "live-api-response",
+      "bytes": 817,
+      "sha256": "8f7c5bad21c3a0dc334ea53c1a2eab59bca9d32a1d9117f9b5b0d1ecc3fc03c7"
+    },
+    {
+      "source": "usaspending",
+      "url": "https://api.usaspending.gov/api/v2/download/count/",
+      "retrievedAt": "2026-10-15T20:00:29Z",
+      "method": "POST",
+      "requestBody": {
+        "filters": {
+          "award_type_codes": [
+            "02",
+            "03",
+            "04",
+            "05",
+            "A",
+            "B",
+            "C",
+            "D",
+            "07",
+            "08"
+          ]
+        },
+        "spending_level": "transactions"
+      },
+      "status": 200,
+      "responseHeaders": {
+        "Date": "Thu, 15 Oct 2026 20:00:31 GMT",
+        "Content-Type": "application/json"
+      },
+      "file": "usaspending-count-us-history-2026-10-15.json",
+      "kind": "live-api-response",
+      "bytes": 821,
+      "sha256": "8e89b4052fbcdbd42e1e07762bfb2e4390521c98ce77218da258b4d0bdfda5b9"
+    },
+    {
+      "source": "sam-gov-entities",
+      "url": "https://api.sam.gov/entity-information/v4/entities?legalBusinessName=CITY+OF+LOS+ANGELES&includeSections=entityRegistration%2CcoreData&samRegistered=Yes&page=0&size=1",
+      "retrievedAt": "2026-10-15T20:00:29Z",
+      "method": "GET",
+      "status": 503,
+      "reason": "upstream connect error or disconnect/reset before headers. reset reason: connection timeout"
+    },
+    {
+      "source": "usaspending",
+      "url": "https://api.usaspending.gov/api/v2/bulk_download/awards/",
+      "retrievedAt": "2026-10-15T20:02:02Z",
+      "method": "POST",
+      "requestBody": {
+        "filters": {
+          "agencies": [],
+          "prime_award_types": [
+            "02",
+            "03",
+            "04",
+            "05"
+          ],
+          "date_type": "action_date",
+          "date_range": {
+            "start_date": "2025-01-02",
+            "end_date": "2025-01-02"
+          },
+          "place_of_performance_locations": [
+            {
+              "country": "USA",
+              "state": "WY"
+            }
+          ]
+        },
+        "file_format": "csv"
+      },
+      "status": 422,
+      "reason": "{\"detail\":\"Field 'filters|agencies' value '[]' is below min '1' items\"}"
+    },
+    {
+      "source": "usaspending",
+      "url": "https://api.usaspending.gov/api/v2/bulk_download/awards/",
+      "retrievedAt": "2026-10-15T20:02:22Z",
+      "method": "POST",
+      "requestBody": {
+        "filters": {
+          "agencies": [
+            {
+              "type": "awarding",
+              "tier": "toptier",
+              "name": "all"
+            }
+          ],
+          "prime_award_types": [
+            "02",
+            "03",
+            "04",
+            "05"
+          ],
+          "date_type": "action_date",
+          "date_range": {
+            "start_date": "2025-01-02",
+            "end_date": "2025-01-02"
+          },
+          "place_of_performance_locations": [
+            {
+              "country": "USA",
+              "state": "WY"
+            }
+          ]
+        },
+        "file_format": "csv"
+      },
+      "status": 200,
+      "responseHeaders": {
+        "Date": "Thu, 15 Oct 2026 20:02:24 GMT",
+        "Content-Type": "application/json"
+      },
+      "file": "usaspending-bulk-request-live-2026-10-15.json",
+      "kind": "live-api-response",
+      "bytes": 664,
+      "sha256": "878ddff54dee9c87f8b217f825a9fedc35870e20609f7f16326124116a5ab74a"
+    },
+    {
+      "source": "usaspending",
+      "file": "usaspending-bulk-rows-live-2026-10-15.csv",
+      "url": "https://files.usaspending.gov/generated_downloads/All_PrimeTransactions_2026-10-15_H20M02S23899635.zip#All_Assistance_PrimeTransactions_2026-10-15_H20M02S24_1.csv",
+      "retrievedAt": "2026-10-15T20:02:34Z",
+      "kind": "live-bulk-first-three-rows",
+      "requestBody": {
+        "filters": {
+          "agencies": [
+            {
+              "type": "awarding",
+              "tier": "toptier",
+              "name": "all"
+            }
+          ],
+          "prime_award_types": [
+            "02",
+            "03",
+            "04",
+            "05"
+          ],
+          "date_type": "action_date",
+          "date_range": {
+            "start_date": "2025-01-02",
+            "end_date": "2025-01-02"
+          },
+          "place_of_performance_locations": [
+            {
+              "country": "USA",
+              "state": "WY"
+            }
+          ]
+        },
+        "file_format": "csv"
+      },
+      "rows": 3,
+      "archiveBytes": 6236,
+      "archiveSha256": "e04367e5f2f2435c958be8fb03260319a2a58c17211c2c6b9a752c8fe7874777",
+      "sha256": "2399edca6d8b8c13db1756fe884c470dbddfac0b94239d07f2f5eb098ce556ee",
+      "note": "First three complete source CSV records plus header. CSV serialization uses LF line endings; field values retained exactly."
+    },
+    {
+      "source": "federal-audit-clearinghouse",
+      "url": "https://api.fac.gov/corrective_action_plans?limit=3&order=report_id.desc",
+      "retrievedAt": "2026-10-15T20:03:02Z",
+      "method": "GET",
+      "status": 206,
+      "responseHeaders": {
+        "Date": "Thu, 15 Oct 2026 20:03:04 GMT",
+        "Content-Type": "application/json; charset=utf-8",
+        "Content-Range": "0-2/147017",
+        "X-RateLimit-Limit": "1000",
+        "X-RateLimit-Remaining": "996"
+      },
+      "file": "fac-corrective-plans-live-2026-10-15.json",
+      "kind": "live-api-response",
+      "bytes": 2562,
+      "sha256": "bb940f8924239c56b7445105324d6fd403efc8e22c37bf6265c0199ae3c3f4c2",
+      "rows": 3
+    },
+    {
+      "source": "federal-audit-clearinghouse",
+      "url": "https://api.fac.gov/additional_ueis?limit=3&order=report_id.desc",
+      "retrievedAt": "2026-10-15T20:03:02Z",
+      "method": "GET",
+      "status": 206,
+      "responseHeaders": {
+        "Date": "Thu, 15 Oct 2026 20:03:03 GMT",
+        "Content-Type": "application/json; charset=utf-8",
+        "Content-Range": "0-2/27560",
+        "X-RateLimit-Limit": "1000",
+        "X-RateLimit-Remaining": "996"
+      },
+      "file": "fac-additional-ueis-live-2026-10-15.json",
+      "kind": "live-api-response",
+      "bytes": 475,
+      "sha256": "0806f96b24a894ca63ea165b5e33639750c815d56bf39f499bea69a576fd0fe7",
+      "rows": 3
+    },
+    {
+      "source": "usaspending",
+      "file": "usaspending-bulk-contract.txt",
+      "url": "https://raw.githubusercontent.com/fedspendingtransparency/usaspending-api/master/usaspending_api/api_contracts/contracts/v2/bulk_download/awards.md",
+      "retrievedAt": "2026-10-15T20:03:02Z",
+      "kind": "official-api-contract",
+      "bytes": 7912,
+      "sha256": "6e47208eaaf130d341d78899251355740342114ac7a3d4f6bc18cf9cf1402746"
+    },
+    {
+      "source": "usaspending",
+      "url": "https://api.usaspending.gov/api/v2/bulk_download/awards/",
+      "retrievedAt": "2026-10-15T20:04:06Z",
+      "method": "POST",
+      "requestBody": {
+        "filters": {
+          "agencies": [
+            {
+              "type": "awarding",
+              "tier": "toptier",
+              "name": "all"
+            }
+          ],
+          "prime_award_types": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "date_type": "action_date",
+          "date_range": {
+            "start_date": "2025-01-01",
+            "end_date": "2025-01-31"
+          },
+          "place_of_performance_locations": [
+            {
+              "country": "USA",
+              "state": "WY"
+            }
+          ]
+        },
+        "file_format": "csv"
+      },
+      "status": 200,
+      "responseHeaders": {
+        "Date": "Thu, 15 Oct 2026 20:04:07 GMT",
+        "Content-Type": "application/json"
+      },
+      "file": "usaspending-bulk-contracts-request-live-2026-10-15.json",
+      "kind": "live-api-response",
+      "bytes": 660,
+      "sha256": "f469848981116738af8c5d29aa0c3244fc20e87ccd41aed261e74fa61cbde1a9"
+    },
+    {
+      "source": "usaspending",
+      "file": "usaspending-bulk-contracts-rows-live-2026-10-15.csv",
+      "url": "https://files.usaspending.gov/generated_downloads/All_PrimeTransactions_2026-10-15_H20M04S07292117.zip#All_Contracts_PrimeTransactions_2026-10-15_H20M04S07_1.csv",
+      "retrievedAt": "2026-10-15T20:04:17Z",
+      "kind": "live-bulk-first-row",
+      "requestBody": {
+        "filters": {
+          "agencies": [
+            {
+              "type": "awarding",
+              "tier": "toptier",
+              "name": "all"
+            }
+          ],
+          "prime_award_types": [
+            "A",
+            "B",
+            "C",
+            "D"
+          ],
+          "date_type": "action_date",
+          "date_range": {
+            "start_date": "2025-01-01",
+            "end_date": "2025-01-31"
+          },
+          "place_of_performance_locations": [
+            {
+              "country": "USA",
+              "state": "WY"
+            }
+          ]
+        },
+        "file_format": "csv"
+      },
+      "rows": 1,
+      "archiveBytes": 115130,
+      "archiveSha256": "fde73fee8cb92596a7c953d5a2bcb0c393f5c28ac93d37bbd14de232eeef7f54",
+      "sha256": "24d1570f0895dce261802a38a3c982e5e82838728355889622d0507ae8cc98e1",
+      "note": "First complete source CSV record plus header. CSV serialization uses LF line endings; field values retained exactly."
+    },
+    {
+      "source": "usaspending",
+      "url": "https://api.usaspending.gov/api/v2/bulk_download/awards/",
+      "retrievedAt": "2026-10-15T20:04:05Z",
+      "method": "POST",
+      "requestBody": {
+        "filters": {
+          "agencies": [
+            {
+              "type": "awarding",
+              "tier": "toptier",
+              "name": "all"
+            }
+          ],
+          "prime_award_types": [
+            "07",
+            "08"
+          ],
+          "date_type": "action_date",
+          "date_range": {
+            "start_date": "2025-01-01",
+            "end_date": "2025-01-31"
+          },
+          "place_of_performance_locations": [
+            {
+              "country": "USA",
+              "state": "WY"
+            }
+          ]
+        },
+        "file_format": "csv"
+      },
+      "status": 200,
+      "responseHeaders": {
+        "Date": "Thu, 15 Oct 2026 20:04:07 GMT",
+        "Content-Type": "application/json"
+      },
+      "file": "usaspending-bulk-loans-request-live-2026-10-15.json",
+      "kind": "live-api-response",
+      "bytes": 654,
+      "sha256": "e53bb7cdc9dc538dbb4db022608c2cdb22abef147ccd109baf596642e5934c70"
+    },
+    {
+      "source": "usaspending",
+      "file": "usaspending-bulk-loans-rows-live-2026-10-15.csv",
+      "url": "https://files.usaspending.gov/generated_downloads/All_PrimeTransactions_2026-10-15_H20M04S07004104.zip#All_Assistance_PrimeTransactions_2026-10-15_H20M04S07_1.csv",
+      "retrievedAt": "2026-10-15T20:04:14Z",
+      "kind": "live-bulk-first-row",
+      "requestBody": {
+        "filters": {
+          "agencies": [
+            {
+              "type": "awarding",
+              "tier": "toptier",
+              "name": "all"
+            }
+          ],
+          "prime_award_types": [
+            "07",
+            "08"
+          ],
+          "date_type": "action_date",
+          "date_range": {
+            "start_date": "2025-01-01",
+            "end_date": "2025-01-31"
+          },
+          "place_of_performance_locations": [
+            {
+              "country": "USA",
+              "state": "WY"
+            }
+          ]
+        },
+        "file_format": "csv"
+      },
+      "rows": 1,
+      "archiveBytes": 9423,
+      "archiveSha256": "d3e9fc1b633e48a756b3fed899f1f367f1c6542a92fc1d86a39a55402272ca93",
+      "sha256": "f9455cf89471d3561a1f70485fe38534e71216fbe6b3117a4ce74b7813eb0c72",
+      "note": "First complete source CSV record plus header. CSV serialization uses LF line endings; field values retained exactly."
+    },
+    {
+      "source": "federal-audit-clearinghouse",
+      "file": "fac-historic-2015-general-live-2026-10-15.csv",
+      "url": "https://app.fac.gov/dissemination/public-data/census/csv/census-2015.zip#2015%2FELECAUDITHEADER.csv",
+      "indexUrl": "https://www.fac.gov/data/download/historic/",
+      "retrievedAt": "2026-10-15T20:19:29.741083Z",
+      "kind": "live-historic-archive-selected-rows",
+      "method": "GET",
+      "status": 206,
+      "requestHeaders": {
+        "Range": "bytes=20323693-20389228"
+      },
+      "responseHeaders": {
+        "Content-Range": "bytes 20323693-20389228/28727464",
+        "Last-Modified": "Thu, 17 Apr 2025 11:35:39 GMT"
+      },
+      "archiveBytes": 28727464,
+      "memberBytes": 29311108,
+      "encoding": "UTF-8",
+      "rows": 4,
+      "nativeRowIds": [
+        "18",
+        "43",
+        "67",
+        "4894"
+      ],
+      "bytes": 3881,
+      "sha256": "f3ddee0b2b099c1f5b57d4cffc346e5b413cf19f7e58e954a8eccf2e4b1f53da",
+      "note": "Exact source header and selected complete CSV record bytes, including original quoting and line endings. Byte ranges were decompressed as member prefixes; the complete national archive was not downloaded. General contains the parent of findings row31712; findings includes distinct native rows42763/42769 sharing report, reference and award ids."
+    },
+    {
+      "source": "federal-audit-clearinghouse",
+      "file": "fac-historic-2015-findings-live-2026-10-15.csv",
+      "url": "https://app.fac.gov/dissemination/public-data/census/csv/census-2015.zip#2015%2FELECAUDITFINDINGS.csv",
+      "indexUrl": "https://www.fac.gov/data/download/historic/",
+      "retrievedAt": "2026-10-15T20:19:29.741083Z",
+      "kind": "live-historic-archive-selected-rows",
+      "method": "GET",
+      "status": 206,
+      "requestHeaders": {
+        "Range": "bytes=19571437-19636972"
+      },
+      "responseHeaders": {
+        "Content-Range": "bytes 19571437-19636972/28727464",
+        "Last-Modified": "Thu, 17 Apr 2025 11:35:39 GMT"
+      },
+      "archiveBytes": 28727464,
+      "memberBytes": 5047213,
+      "encoding": "UTF-8",
+      "rows": 6,
+      "nativeRowIds": [
+        "6683",
+        "6684",
+        "6685",
+        "31712",
+        "42763",
+        "42769"
+      ],
+      "bytes": 641,
+      "sha256": "16a0bcfa743babef85cc7e8fab36ae6138eed8500c90985b34f611e574671ed9",
+      "note": "Exact source header and selected complete CSV record bytes, including original quoting and line endings. Byte ranges were decompressed as member prefixes; the complete national archive was not downloaded. General contains the parent of findings row31712; findings includes distinct native rows42763/42769 sharing report, reference and award ids."
+    }
+  ],
+  "publishedLimits": [
+    {
+      "source": "sam-gov-entities",
+      "url": "https://open.gsa.gov/api/entity-api/",
+      "retrievedAt": "2026-10-15T20:03:02Z",
+      "pagedRowsMaximum": 10000,
+      "extractRowsMaximum": 1000000,
+      "pageSizeMaximum": 10,
+      "note": "Official GSA documentation. Limit is a provider ceiling, not the measured number of current entities."
+    },
+    {
+      "source": "usaspending",
+      "url": "https://www.usaspending.gov/federal-spending-guide",
+      "retrievedAt": "2026-10-15T20:03:02Z",
+      "note": "Official guide states full database exceeds 1.5 terabytes; this is total database size, not the federal-money fact subset or a measured current download."
+    }
+  ],
+  "bulkJobResults": [
+    {
+      "category": "contracts",
+      "source": "usaspending",
+      "kind": "parsed-live-download-status-response",
+      "response": {
+        "status": "finished",
+        "message": null,
+        "file_name": "All_PrimeTransactions_2026-10-15_H20M04S07292117.zip",
+        "file_url": "https://files.usaspending.gov/generated_downloads/All_PrimeTransactions_2026-10-15_H20M04S07292117.zip",
+        "total_size": 115.13,
+        "total_columns": 297,
+        "total_rows": 446,
+        "seconds_elapsed": "8.009751"
+      }
+    },
+    {
+      "category": "loans",
+      "source": "usaspending",
+      "kind": "parsed-live-download-status-response",
+      "response": {
+        "status": "finished",
+        "message": null,
+        "file_name": "All_PrimeTransactions_2026-10-15_H20M04S07004104.zip",
+        "file_url": "https://files.usaspending.gov/generated_downloads/All_PrimeTransactions_2026-10-15_H20M04S07004104.zip",
+        "total_size": 9.423,
+        "total_columns": 116,
+        "total_rows": 80,
+        "seconds_elapsed": "6.820833"
+      }
+    }
+  ],
+  "coverageCounts": {
+    "usaspending": {
+      "caCalendar2025": 649659,
+      "txCalendar2025": 394816,
+      "allLocationsCalendar2025": 8038344,
+      "allLocationsSearchHistory": 139474259,
+      "awardTypeCodes": [
+        "02",
+        "03",
+        "04",
+        "05",
+        "A",
+        "B",
+        "C",
+        "D",
+        "07",
+        "08"
+      ],
+      "note": "Source /download/count totals. All-locations counts include foreign places of performance. Search history begins no earlier than 2007-10-01; older custom bulk history is excluded from this count."
+    },
+    "federal-audit-clearinghouse": {
+      "general": 418706,
+      "findings": 687193,
+      "findings_text": 154067,
+      "corrective_action_plans": 147017,
+      "additional_ueis": 27560,
+      "totalSelectedTables": 1434543,
+      "note": "Exact Content-Range totals for current API tables; historic 1998\u20132015 archives are excluded."
+    },
+    "openfema": {
+      "DisasterDeclarationsSummaries": 70567
+    }
+  },
+  "sourceStatus": {
+    "usaspending": "Live search, count, custom bulk generation, status polling and archive download succeeded through the inherited proxy.",
+    "federal-audit-clearinghouse": "Configured DATA_GOV_API_KEY accepted. General and all four child table samples and national count headers retrieved through inherited proxy. Historical official index and 1998/2015 ZIP byte ranges succeeded. Real 2015 general and findings headers/selected rows are UTF-8; complete historic archives were not downloaded.",
+    "openfema": "Live source page and national metadata count retrieved through inherited proxy.",
+    "sam-gov-entities": "Public v3 entity query retried twice and documented v4 query tried once; each returned HTTP503 upstream connect error or disconnect/reset before headers, reset reason: connection timeout. The requests did not reach an authentication response. Official GSA docs remain accessible."
+  }
+}

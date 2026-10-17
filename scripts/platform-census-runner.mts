@@ -1,5 +1,4 @@
 import { publicFetch } from "../lib/hunt/egress.ts";
-import { ROUTE_HINTS } from "../lib/hunt/meetings-route-hints.ts";
 import { neon } from "@neondatabase/serverless";
 import { join } from "node:path";
 import { createPgRepositories, controlPlaneUrlFromEnv } from "../lib/control-plane/repository/pg-store.ts";
@@ -11,9 +10,9 @@ import { cycleVault, VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
 import { websiteSizeFromHoldings } from "../lib/control-plane/scheduler/host-supervision.ts";
 import { REGISTRATION_TARGETS } from "../lib/registration/publication.ts";
 import { loadRegistrationReference } from "../lib/registration/reference.ts";
-import { censusBank, censusDivisionPrefix, censusStateCoverage, runCensusState } from "../lib/control-plane/discovery/census-lane.ts";
+import { censusDivisionPrefix, censusStateNotDue, censusStateCoverage, runCensusState } from "../lib/control-plane/discovery/census-lane.ts";
 import { readPlatformCensusNeeds, refreshDotgovCensusLeads, DOTGOV_CENSUS_URL } from "../lib/control-plane/discovery/platform-census.ts";
-import { newFieldManualEntry, writeFieldManual } from "../lib/control-plane/field-manual.ts";
+import { fieldManualEntryId, newFieldManualEntry, writeFieldManual } from "../lib/control-plane/field-manual.ts";
 import { DEFAULT_SEARCH_BUDGET, durableSearchBudget, makeDiscoverySearch } from "../lib/control-plane/discovery/search-runtime.ts";
 import { acquireProcessSingleton } from "../lib/civic-data/process-singleton.ts";
 import type { DiscoveryRuntime } from "../lib/control-plane/discovery/meetings-discovery-executor.ts";
@@ -34,7 +33,7 @@ const fleet = new FleetSafetyController({ now: now(), charges: [], modelHold: "P
 const spaceOut = hostSpacer();
 let dotgov: Promise<Awaited<ReturnType<DiscoveryRuntime["open"]>>> | undefined;
 const runtime: DiscoveryRuntime = {
-  now, spaceOut, vault: vault.put, routeHints: ROUTE_HINTS, budget: { spent: () => stopped }, websiteSize: target => sizeFor(target),
+  now, spaceOut, vault: vault.put, budget: { spent: () => stopped }, websiteSize: target => sizeFor(target),
   open: input => {
     const read = async () => {
       const got = await fleet.guardedOpenBytes("discovery-web", "platform-census",
@@ -81,12 +80,16 @@ try {
         });
       } catch { console.error(`CENSUS_METRICS ${state}: coverage counts could not be read`); return null; }
     };
-    const coverageBefore = await coverage();
     const doors = await stateDoors(state);
     console.log(`CENSUS_PAGES ${state}: ${JSON.stringify(await runPageDoorChecks(repos, runtime, doors, root))}`);
+    const reference = loadRegistrationReference(root, state);
+    if (await censusStateNotDue(repos, state, reference.sha256, now())) {
+      console.log(`CENSUS_STATE ${state}: discoveries are not due`);
+      continue;
+    }
+    const coverageBefore = await coverage();
     try { await refreshDotgovCensusLeads(repos, runtime, state); }
     catch (error) { console.error(`CENSUS_SOURCE ${state}: ${error instanceof Error ? error.message : String(error)}`); }
-    const reference = loadRegistrationReference(root, state);
     const schoolSites = (reference.listings ?? []).filter(row => row.nativeIds.nces_leaid && row.website).map(row =>
       newFieldManualEntry("nces-website", row.id, { role: "SHARED", kind: "NCES_WEBSITE", title: row.name,
         summary: `${row.name} website in the NCES directory`, states: [state], outcome: "REFERENCE", url: row.website,
@@ -94,7 +97,6 @@ try {
           sourceUrl: row.provenance.sourceUrl, referenceSha256: reference.sha256 } }));
     const saved = await writeFieldManual(repos, schoolSites, now());
     if (saved.error) throw new Error(saved.error);
-    const bank = await censusBank(repos, state);
     const reading = await readPlatformCensusNeeds(state, null, { repos, root });
     for (const failure of reading.failures) console.error(`CENSUS_SOURCE ${state}: ${failure}`);
     const config = (await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value;
@@ -103,19 +105,19 @@ try {
       budget: durableSearchBudget({ repos, perCycle: DEFAULT_SEARCH_BUDGET.perCycle, perDay: DEFAULT_SEARCH_BUDGET.perDay,
         admit: () => null, now }),
     }) : null;
-    const stateRuntime = { ...runtime, fingerprints: bank.fingerprints, recipes: bank.recipes, ...(search ? { search } : {}),
+    const stateRuntime = { ...runtime, ...(search ? { search } : {}),
       recordCost: async (entry: Parameters<NonNullable<DiscoveryRuntime["recordCost"]>>[0]) => {
         await repos.costs.append(entry.workItemId, entry.attemptId, entry, now());
       } };
-    const report = await runCensusState({ repos, state, needs: reading.needs, runtime: stateRuntime, entries: bank.entries,
+    const report = await runCensusState({ repos, state, needs: reading.needs, runtime: stateRuntime,
       onProgress: report => { if (report.checked % 25 === 0) console.log(`CENSUS_PROGRESS ${state}: ${report.checked} checked, ${report.walked} walked`); } });
     console.log(`CENSUS_STATE ${JSON.stringify(report)}`);
     const coverageAfter = await coverage();
-    const priorRun = (await repos.fieldManual.readMany([newFieldManualEntry("census-lane", state, { role: "SHARED", kind: "PLATFORM_CENSUS_RUN", title: state, summary: "", outcome: "REFERENCE" }).id]))[0]?.value;
-    const baseline = (priorRun?.payload as { baseline?: unknown } | undefined)?.baseline ?? { at: now(), ...coverageBefore };
+    const priorRun = await repos.fieldManual.readNarrowed(fieldManualEntryId("census-lane", state), { payload: ["baseline"] });
+    const baseline = (priorRun?.value as { payload?: { baseline?: unknown } } | undefined)?.payload?.baseline ?? { at: now(), ...coverageBefore };
     const written = await writeFieldManual(repos, [newFieldManualEntry("census-lane", state, { role: "SHARED", kind: "PLATFORM_CENSUS_RUN",
       title: `${state.toUpperCase()} meeting platforms`, summary: `${report.walked} governments walked; ${report.failures.length} source failures`,
-      states: [state], observedAt: now(), outcome: report.failures.length ? "FAILED" : "YIELDED", payload: { ...report, baseline, current: coverageAfter } })], now());
+      states: [state], observedAt: now(), outcome: report.failures.length ? "FAILED" : "YIELDED", payload: { ...report, referenceSha256: reference.sha256, baseline, current: coverageAfter } })], now());
     if (written.error) throw new Error(written.error);
   }
 } finally { await singleton.release(); }

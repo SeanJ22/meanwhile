@@ -81,7 +81,7 @@ test("origin metadata refuses unrelated owners, incomplete attempts and partial 
 });
 
 test("only exact current publication version and body readback becomes a public link",()=>{
-  const published={...child,autonomousPlan:{...child.autonomousPlan!,publication:{contractId:"registry-runtime-bindings",bodyId:"body-one"}},
+  const published={...child,autonomousPlan:{...child.autonomousPlan!,publication:{contractId:"registry-runtime:AZ",bodyId:"body-one"}},
     publicationOutcome:{at,workerResultId:"wr-child",status:"PUBLISHED",code:"ACCEPTED",detail:"accepted",candidateId:"candidate-one",
       versionId:"version-one",acceptedRecordIds:["record-one"]}} as WorkItem;
   const reader={checkedAt:at,witnesses:[{itemId:child.id,approvalId:"wr-child",versionId:"version-one",readerKey:"body-one",

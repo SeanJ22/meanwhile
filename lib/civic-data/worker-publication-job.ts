@@ -1,3 +1,4 @@
+import { stateFromRegistryRuntimeContractId, type StateRegistryContractId } from "./state-scopes.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import type { RoutineDataStore } from "./store.ts";
 import { readerFactDb } from "../facts/db.ts";
@@ -11,7 +12,7 @@ import { workerPublicationReceipt } from "./worker-publication-tasks.ts";
 export async function runWorkerPublicationJob(input: {
   readonly repos: ControlPlaneRepositories;
   readonly store: RoutineDataStore;
-  readonly contractId: "registry-runtime-bindings" | WorkerReaderContract;
+  readonly contractId: StateRegistryContractId | WorkerReaderContract;
   readonly workItemIds: readonly string[];
   readonly now: string;
   readonly context?: Pick<Parameters<typeof publishWorkerDirectoryResults>[0], "repos" | "readCapture">;
@@ -20,9 +21,9 @@ export async function runWorkerPublicationJob(input: {
   const context = input.context ?? await workerPublicationContext(input.now, input.repos);
   if (context.repos !== input.repos) throw new Error("WORKER_PUBLICATION_REPOSITORY_MISMATCH");
   const args = { ...context, store: input.store, workItemIds: input.workItemIds, now: input.now };
-  const report = input.contractId === "registry-runtime-bindings"
+  const report = stateFromRegistryRuntimeContractId(input.contractId)
     ? await publishWorkerDirectoryResults({ ...args, facts: input.facts ?? readerFactDb() })
-    : await publishWorkerReaderResults({ ...args, contractId: input.contractId });
+    : await publishWorkerReaderResults({ ...args, contractId: input.contractId as WorkerReaderContract });
   const receipt = await workerPublicationReceipt(input.store, input.contractId, report, null, input.now);
   return { report, receipt, exitCode: receipt ? 0 : 2 } as const;
 }

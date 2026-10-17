@@ -1,21 +1,4 @@
-/**
- * Run one source adapter locally.
- *
- * @freshness-reads-here — a derived family member's retrievedAt is the instant its own read returned, minted in
- * readDerivedFamilyMember, the function that performed that read.
- *
- *   pnpm ingest composite -- --promote --only-partition=<contract-id>
- *
- * Adapters are looked up by directory name under lib/sources/. Adding a
- * source means adding a directory and wiring rows, never editing this file's
- * logic — only the map below gains an entry.
- *
- * `composite` additionally prints the per-child report (fetched, normalized,
- * drops split by reason, failures) and retrieves agenda documents for the
- * meetings that carry one — serialized, with unchanged documents
- * skipped by content hash.
- */
-
+import { preloadCanonicalMeetingDependencies } from "../lib/meetings/ingest-dependencies.ts";
 import { pathToFileURL } from "node:url";
 
 import {
@@ -83,7 +66,8 @@ import {
 import { makeDiligentSource } from "../lib/sources/diligent/index.ts";
 import { makeIqm2Source } from "../lib/sources/iqm2/index.ts";
 import { makeRevizeSource } from "../lib/sources/revize/index.ts";
-import { legistarSource } from "../lib/sources/legistar/index.ts";
+import { makeLegistarSource } from "../lib/sources/legistar/index.ts";
+import { legistarClientsFromWiring } from "../lib/sources/legistar/client-registry.ts";
 import { makeOnBaseSource } from "../lib/sources/onbase/index.ts";
 import { activeWiring, isUnreadableRetiredMeetingHost, wiringForTypes } from "../lib/registry/source-wiring.ts";
 import { ensureMeetingDoors } from "../lib/doors/meeting-doors.ts";
@@ -91,15 +75,9 @@ import { isLegistarDocumentHost } from "../lib/sources/legistar/routes.ts";
 import { isLegistarMeetingDetailUrl, isPortalAgendaLinkFor, portalAgendaLinkFrom } from "../lib/sources/legistar/portal-agenda-link.ts";
 import { sourceUserAgent } from "../lib/sources/http.ts";
 import type { Registry } from "../lib/registry/types.ts";
-import { getRegistryRuntimeReadModel, refreshRegistryRuntimeFromPromoted } from "../lib/registry/runtime-read-model.ts";
-import { REGISTRY_RUNTIME_SCOPE } from "../lib/registry/runtime-data-plane.ts";
-import {
-  ATTESTED_PROMOTIONS_ENV,
-  attestedPromotionFor,
-  parseAttestedPromotions,
-} from "../lib/civic-data/attested-promotion.ts";
-import type { PromotedCivicDataReadOptions } from "../lib/civic-data/read-model.ts";
-import { readCuratedReaderProjection, refreshVenueResolutionsFromPromoted } from "../lib/civic-data/curated-reader-read-model.ts";
+import { getRegistryRuntimeReadModel, withRegistryRuntimeStates } from "../lib/registry/runtime-read-model.ts";
+import { requireRegistryState, statesForRegistryDivisions } from "../lib/civic-data/state-scopes.ts";
+import { readCuratedReaderProjection } from "../lib/civic-data/curated-reader-read-model.ts";
 import type { ManualProjectionPackage } from "../lib/civic-data/manual-projections.ts";
 import { publishVenueResolutions } from "../lib/meetings/venue-publication.ts";
 import { normalizeFamilyMeetingCitations, placeMeetingsFromCensusVenues, placeMeetingsFromVerifiedVenues, retainPreviouslyVerifiedVenuePoints } from "../lib/meetings/automatic-venue-resolutions.ts";
@@ -108,13 +86,12 @@ import { placeUnplacedFromAgendas } from "./lib/agenda-meeting-location.ts";
 import type { Meeting, MeetingSource, PublisherExclusion, RecurrenceReport } from "../lib/sources/types.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { canonicalCivicDataJson } from "../lib/civic-data/changes.ts";
+import { derivedFamilyReadGroups, readDerivedFamilyMembers } from "../lib/civic-data/derived-meeting-acquisition.ts";
 import { DERIVED_WIRING_RECORD_CLASS, DERIVED_WIRING_SCOPE } from "../lib/civic-data/derived-door.ts";
 import {
-  bodySourceWiringFor,
   DERIVED_WIRING_SOURCE_NAMES,
   familyMembers,
   readDerivedMeetingWiring,
-  type DerivedWiringRecord,
 } from "../lib/civic-data/derived-meeting-wiring.ts";
 import {
   buildDerivedFamily,
@@ -132,35 +109,29 @@ import type { EvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
 import { join } from "node:path";
 
-/*
- * The committed registry, read the same way lib/registry/server.ts reads it:
- * a build output whose JSON widens to string where the type wants a union.
- * Cast once, here, rather than at each use.
- */
 let REGISTRY: Registry | null = null;
 
-const SOURCES: Record<string, () => MeetingSource<unknown>> = {
+function stateWiring(state: string, types: Parameters<typeof wiringForTypes>[0]) {
+  return wiringForTypes(types).filter(row => statesForRegistryDivisions([row.ocdId ?? row.bodyId]).includes(state));
+}
+
+const SOURCES: Record<string, (state: string) => MeetingSource<unknown>> = {
   // Everything below hits the network. Serialized and paced — see
   // lib/sources/http.ts and lib/sources/legistar/client.ts.
-  legistar: () => legistarSource as unknown as MeetingSource<unknown>,
-  civicplus: () =>
-    makeCivicPlusSource(wiringForTypes(["CIVICPLUS"])) as unknown as MeetingSource<unknown>,
-  onbase: () =>
-    makeOnBaseSource(wiringForTypes(["ONBASE"])) as unknown as MeetingSource<unknown>,
-  apptegy: () =>
-    makeApptegySource(wiringForTypes(["APPTEGY"])) as unknown as MeetingSource<unknown>,
-  diligent: () =>
-    makeDiligentSource(wiringForTypes(["DILIGENT", "CIVICWEB"])) as unknown as MeetingSource<unknown>,
-  iqm2: () =>
-    makeIqm2Source(wiringForTypes(["IQM2"])) as unknown as MeetingSource<unknown>,
-  revize: () =>
-    makeRevizeSource(wiringForTypes(["REVIZE"])) as unknown as MeetingSource<unknown>,
-  // The standing partition budget, not the Reader's request budget.
-  composite: () =>
-    buildCompositeSource({
-      timeoutMs: STANDING_PARTITION_ACQUISITION_TIMEOUT_MS,
-      captureAcquisitionEvidence: true,
-    }) as unknown as MeetingSource<unknown>,
+  legistar: state => makeLegistarSource(legistarClientsFromWiring(stateWiring(state, ["LEGISTAR"]))) as unknown as MeetingSource<unknown>,
+  civicplus: state =>
+    makeCivicPlusSource(stateWiring(state, ["CIVICPLUS"])) as unknown as MeetingSource<unknown>,
+  onbase: state =>
+    makeOnBaseSource(stateWiring(state, ["ONBASE"])) as unknown as MeetingSource<unknown>,
+  apptegy: state =>
+    makeApptegySource(stateWiring(state, ["APPTEGY"])) as unknown as MeetingSource<unknown>,
+  diligent: state =>
+    makeDiligentSource(stateWiring(state, ["DILIGENT", "CIVICWEB"])) as unknown as MeetingSource<unknown>,
+  iqm2: state =>
+    makeIqm2Source(stateWiring(state, ["IQM2"])) as unknown as MeetingSource<unknown>,
+  revize: state =>
+    makeRevizeSource(stateWiring(state, ["REVIZE"])) as unknown as MeetingSource<unknown>,
+
 };
 
 export function selectedMeetingPartitions(args: readonly string[]): readonly MeetingPartitionContract[] {
@@ -178,43 +149,10 @@ export function selectedMeetingPartitions(args: readonly string[]): readonly Mee
   return [partition];
 }
 
-export async function preloadCanonicalMeetingDependencies(input: {
-  readonly sourceName: string;
-  readonly refreshRegistry?: (options: PromotedCivicDataReadOptions) => Promise<unknown>;
-  readonly refreshVenues?: () => Promise<unknown>;
-  readonly env?: Readonly<Record<string, string | undefined>>;
-}): Promise<void> {
-  const refreshRegistry = input.refreshRegistry ?? refreshRegistryRuntimeFromPromoted;
-  const refreshVenues = input.refreshVenues ?? refreshVenueResolutionsFromPromoted;
-  // The supervisor proved the registry once for this pass; a malformed or
-  // absent attestation leaves this child's own full proof in place.
-  const attested = attestedPromotionFor(
-    parseAttestedPromotions((input.env ?? process.env)[ATTESTED_PROMOTIONS_ENV]),
-    "REGISTRY_RUNTIME_BINDING",
-    REGISTRY_RUNTIME_SCOPE,
-  );
-  await Promise.all([
-    refreshRegistry(attested ? { attested } : {}),
-    ...(input.sourceName === "composite" || input.sourceName === "legistar"
-      ? [refreshVenues()]
-      : []),
-  ]);
-}
-
-/**
- * A meeting's document URL: its own agenda link, or — for a scheduled
- * meeting with none — the body's curated notice page (4c). The notice a
- * board posts on its own site is the content a reader needs while the
- * vendor portal's agenda is still unpublished.
- */
 export function documentUrlFor(meeting: Meeting): string | null {
   if (meeting.agendaUrl) return meeting.agendaUrl;
   if (meeting.status !== "SCHEDULED") return null;
-  /*
-   * The notice page belongs to a body, not a division: the body is matched
-   * first; the division-wide page is used only when every notice URL on the
-   * division agrees, and nothing is returned when they disagree.
-   */
+
   const onDivision = activeWiring().filter(
     (row) => row.noticeUrl && row.ocdId !== null && row.ocdId === meeting.ocdId,
   );
@@ -222,11 +160,7 @@ export function documentUrlFor(meeting: Meeting): string | null {
   // The sitting's own body row answers first, by identity rather than name.
   const ownBody = onDivision.find((row) => row.bodyId === meeting.bodyId);
   if (ownBody) return ownBody.noticeUrl ?? null;
-  /*
-   * A division's only notice page can belong to another government, so only
-   * the sitting's own publisher's page is lent across bodies, and the body-name
-   * match reads only that publisher's rows.
-   */
+
   const publisher = meeting.provenance?.sourceOrg ?? null;
   const own = onDivision.filter((row) => publisher !== null && row.publishingOrg === publisher);
   const forBody = own.find(
@@ -237,21 +171,10 @@ export function documentUrlFor(meeting: Meeting): string | null {
   return distinct.size === 1 ? (own[0]!.noticeUrl ?? null) : null;
 }
 
-/**
- * The sitting is reached only through its body's notice page: it carries no
- * agenda link of its own, so the page is the body's, never this sitting's.
- */
 function readThroughNoticePage(meeting: Meeting): boolean {
   return !meeting.agendaUrl && documentUrlFor(meeting) !== null;
 }
 
-/**
- * A held document that is not this sitting's agenda: a notice page that is
- * neither the sitting's body's nor its publisher's, or a wiring notice page,
- * not the sitting's own link, that states no agenda item. Ownership is the one
- * rule every reader surface asks (`isAnotherBodysNoticePage`,
- * lib/meetings/notice-pages.ts).
- */
 export function heldNoticePageIsNotItsAgenda(
   meeting: Pick<Meeting, "agendaUrl" | "provenance" | "bodyId">,
   doc: Pick<AgendaDocument, "documentUrl" | "text">,
@@ -263,12 +186,6 @@ export function heldNoticePageIsNotItsAgenda(
   return agendaItems(doc.text ?? "").length === 0;
 }
 
-/**
- * Why an agenda link is held as a link and not read, or null when the document
- * may be requested. The one reason is a retired route whose host no longer
- * resolves (`isUnreadableRetiredMeetingHost`). robots.txt is never a reason; an
- * access control met on the way is a failed read, recorded, never worked around.
- */
 export type AgendaRetrievalRefusal = "RETIRED_ROUTE";
 
 export function agendaRetrievalRefusal(url: string): AgendaRetrievalRefusal | null {
@@ -289,17 +206,6 @@ export class AgendaRedirectRefused extends Error {
 
 const AGENDA_REDIRECT_LIMIT = 5;
 
-/**
- * Every redirect hop is a new request and is asked the same question, so a
- * link that redirects into a refused host is held. The base fetch is read per
- * call, so a stubbed global in a test is the one used.
- */
-/**
- * One run reads each distinct URL once, however many sittings reach it: a
- * body's notice page or a shared agenda is requested the first time and every
- * later sitting is answered from those bytes (or that failure). Each sitting
- * still judges the document for itself.
- */
 export function readOncePerRun(base: typeof fetch): typeof fetch & { readonly distinctReads: () => number } {
   type Held = { readonly status: number; readonly statusText: string; readonly headers: [string, string][]; readonly bytes: Uint8Array };
   const reads = new Map<string, Promise<Held>>();
@@ -350,31 +256,15 @@ export function refusalCheckedFetch(base?: typeof fetch): typeof fetch {
   }) as typeof fetch;
 }
 
-/**
- * The Legistar detail page a sitting's vendor-host agenda link can be read
- * through, or null when the row holds none.
- */
 function portalDetailPageFor(meeting: Meeting): string | null {
   const page = meeting.provenance?.sourceUrl ?? null;
   return isLegistarMeetingDetailUrl(page) && agendaRetrievalRefusal(page) === null ? page : null;
 }
 
-/**
- * A vendor-host agenda (`legistar.granicus.com`) is read through the sitting's
- * portal detail page first (lib/sources/legistar/portal-agenda-link.ts), since
- * earlier versions are held under the portal URL, and from the vendor file
- * when the portal page links none or cannot be read.
- */
 function readsThroughPortal(meeting: Meeting, url: string): boolean {
   return isLegistarDocumentHost(url) && portalDetailPageFor(meeting) !== null;
 }
 
-/**
- * The portal's own agenda link for a sitting, read off its detail page. A
- * portal link already held for the sitting is reused, because the portal keeps
- * one link per sitting and serves its current agenda there, so the page is
- * read once rather than on every pass.
- */
 async function portalAgendaLinkFor(meeting: Meeting, fetchImpl: typeof fetch): Promise<string | null> {
   const page = portalDetailPageFor(meeting);
   if (!page) return null;
@@ -388,11 +278,6 @@ async function portalAgendaLinkFor(meeting: Meeting, fetchImpl: typeof fetch): P
   return link && agendaRetrievalRefusal(link) === null ? link : null;
 }
 
-/**
- * Held document versions in the order they were read: `retrievedAt`, then id.
- * The store compares a read against a sitting's LAST version by position, so
- * rows must be seeded and written in read order. No row is added, dropped or changed.
- */
 export function inRetrievalOrder<T extends Pick<AgendaDocument, "id" | "retrievedAt">>(
   documents: readonly T[],
 ): T[] {
@@ -404,14 +289,6 @@ export function inRetrievalOrder<T extends Pick<AgendaDocument, "id" | "retrieve
     (readAt(left) - readAt(right)) || (left.id < right.id ? -1 : left.id > right.id ? 1 : 0));
 }
 
-/**
- * Seed the store from the previous payload's held rows, in the order they were
- * read, so append-only semantics hold across refreshes: an unchanged agenda is
- * recognized, a revised one is appended beside its prior version.
- *
- * A document held for meetings of more than one government is refused here
- * (the rule is stated where `main` calls this).
- */
 export function seedHeldAgendaDocuments(
   previous: Pick<MeetingsSnapshot, "meetings" | "agendaDocuments">,
   store: AgendaDocumentStore = agendaDocumentStore,
@@ -457,14 +334,6 @@ export function seedHeldAgendaDocuments(
   return { carried, refused, refusedUrls, noticePagesSetAside, noticePageUrlsSetAside };
 }
 
-/**
- * Which linked sittings one run reads first. The rank is the link, not the
- * sitting: first a link never read for this sitting; then a re-read of a link
- * it holds; last a link another sitting already holds (a landing page, or a
- * shared agenda). A vendor-host link read through the sitting's portal page
- * counts as read when the sitting holds the portal's agenda link or the vendor
- * file. Within a rank, the sitting nearest `nowMs` goes first.
- */
 export function agendaRetrievalOrder(
   meetings: readonly Meeting[],
   nowMs: number = Date.now(),
@@ -497,11 +366,7 @@ export function agendaRetrievalOrder(
 }
 
 export async function retrieveAgendas(meetings: Meeting[]) {
-  /*
-   * A link into a retired route's host that no longer resolves is kept on the
-   * meeting and never requested, and counted. robots.txt is never the reason
-   * (`hostsReadable`, RETIRED_MEETING_ROUTES).
-   */
+
   const heldAsLinks = meetings.filter((m) => {
     const url = documentUrlFor(m);
     return url !== null && agendaRetrievalRefusal(url) !== null;
@@ -592,12 +457,7 @@ export async function retrieveAgendas(meetings: Meeting[]) {
           `  agenda extraction failed for ${meeting.id}: ${doc.extractionNote}`,
         );
       }
-      /*
-       * A landing page is not an agenda: a document is refused when it BOTH
-       * extracts no agenda item AND is already stored against a different
-       * meeting. A genuine shared agenda yields items and is kept; the meeting
-       * keeps its own `agendaUrl` either way.
-       */
+
       const alreadyOnAnotherMeeting = agendaDocumentStore.isUrlOnAnotherMeeting(
         doc.documentUrl,
         doc.meetingId,
@@ -606,23 +466,13 @@ export async function retrieveAgendas(meetings: Meeting[]) {
         landingPages++;
         continue;
       }
-      /*
-       * A notice page that states no agenda item is not this sitting's agenda,
-       * for the first sitting to reach it as for every other. One that states
-       * items is still held.
-       */
+
       if (viaNoticePage && agendaItems(doc.text ?? "").length === 0) {
         noticePagesRefused++;
         if (url !== null) noticePageRefusedThisRun.add(url);
         continue;
       }
 
-      /*
-       * A failed read is never a new version over one we hold: the store
-       * compares a failed row by bytes alone, so a page whose bytes change per
-       * request would add a "version" every run. A sitting that holds nothing
-       * yet still records the failed read.
-       */
       if (doc.extraction === "failed" && agendaDocumentStore.latestFor(doc.meetingId)) {
         failedOverHeld++;
         continue;
@@ -657,54 +507,6 @@ export async function retrieveAgendas(meetings: Meeting[]) {
   );
 }
 
-/** Read one ACTIVE member of a derived family on its own row, through the same composite adapters a partition uses. */
-async function readDerivedFamilyMember(member: DerivedWiringRecord, fetchImpl: typeof fetch): Promise<FamilyMemberRead> {
-  const sourceName = DERIVED_WIRING_SOURCE_NAMES[member.row.kind];
-  try {
-    const source = buildCompositeSource({
-      timeoutMs: STANDING_PARTITION_ACQUISITION_TIMEOUT_MS,
-      captureAcquisitionEvidence: true,
-      sourceNames: [sourceName],
-      derivedRows: [bodySourceWiringFor(member.row)],
-      fetchImpl,
-    });
-    const now = Date.now();
-    const raw = await source.fetch({
-      lat: 39.5,
-      lng: -98.35,
-      radiusKm: 5000,
-      startsAfter: new Date(now - MEETING_HELD_LOOKBACK_DAYS * 86_400_000).toISOString(),
-      startsBefore: new Date(now + MEETING_HELD_HORIZON_DAYS * 86_400_000).toISOString(),
-    });
-    const meetings: Meeting[] = resolveAttribution((source as MeetingSource<unknown>).normalize(raw as unknown[]));
-    const report = source.lastReport?.children.find((child) => child.source === sourceName);
-    return {
-      member,
-      acquisitions: report?.acquisitions ?? [],
-      ok: report?.ok === true,
-      error: report?.ok === true ? null : report?.error ?? `the composite produced no report for ${sourceName}`,
-      freshMeetings: meetings,
-      freshAgendaDocuments: [],
-      retrievedAt: new Date().toISOString(),
-    };
-  } catch (error) {
-    return {
-      member,
-      acquisitions: [],
-      ok: false,
-      error: jobFailureDetail(error instanceof Error ? error.message : String(error)),
-      freshMeetings: [],
-      freshAgendaDocuments: [],
-      retrievedAt: new Date().toISOString(),
-    };
-  }
-}
-
-/**
- * Each member of a derived family records its own last success or failure on its own door (never the
- * family's, so one failing calendar does not mark its healthy neighbours). A registry that cannot be written never
- * changes the read's outcome.
- */
 async function recordFamilyMemberOutcomes(reads: readonly FamilyMemberRead[]): Promise<void> {
   const connection = controlPlaneUrlFromEnv();
   if (connection === null || reads.length === 0) return;
@@ -728,13 +530,6 @@ async function recordFamilyMemberOutcomes(reads: readonly FamilyMemberRead[]): P
   }
 }
 
-/**
- * **ONE STATE'S DERIVED MEETING FAMILY, ONE CANDIDATE, EVERY MEMBER ON ITS OWN EVIDENCE**.
- *
- * The members are the promoted meeting-source wiring's rows for the state. Each ACTIVE member is read on its own
- * row; a SUSPENDED or failed member keeps its last verified sittings (`lib/civic-data/derived-meeting-family.ts`).
- * An unreadable wiring store builds nothing: a refused candidate is recorded and the family's last known good stays.
- */
 export async function promoteDerivedMeetingFamily(
   store: RoutineDataStore,
   partition: MeetingPartitionContract,
@@ -766,13 +561,14 @@ export async function promoteDerivedMeetingFamily(
   await prepare();
   const previous = await readPreviousMeetingPartition(store, partition);
   const reads: FamilyMemberRead[] = [];
-  const retaining = retainingFetch(meetingFetchPass());
+  const pass = meetingFetchPass();
+  const retaining = retainingFetch(pass);
   const fetchImpl = retaining.fetch;
-  for (const member of members) {
-    if (member.status !== "ACTIVE") continue;
-    const read = await readDerivedFamilyMember(member, fetchImpl);
-    console.log(`  ${member.id}: ${read.ok ? `${read.freshMeetings.length} sitting(s) read` : `held: ${read.error}`}`);
-    reads.push(read);
+  for (const group of derivedFamilyReadGroups(members)) {
+    const acquired = await readDerivedFamilyMembers(group, fetchImpl, resolveAttribution);
+    for (const read of acquired) console.log(`  ${read.member.id}: ${read.ok ? `${read.freshMeetings.length} sitting(s) read` : `held: ${read.error}`}`);
+    reads.push(...acquired);
+    if (group[0].row.kind === "MUNICODE") pass.forgetGet(acquired.flatMap(read => read.acquisitions.map(row => row.requestedUrl)));
   }
   await recordFamilyMemberOutcomes(reads);
   const versionId = wiring.metadata.versionId;
@@ -808,9 +604,6 @@ export async function promoteDerivedMeetingFamily(
       return { meetings: reconciled.meetings, agendaDocuments: reconciled.agendaDocuments, removalEvidence: reconciled.removalEvidence };
     },
   });
-  // The clocked family uses only its registered routine door. Existing reviewed
-  // venues and exact prior points are reused; fresh Census matches become named
-  // reference acquisitions on this same derived candidate, never a manual write.
   const venueRead = await readCuratedReaderProjection("venue-resolutions", { store, now: new Date().toISOString(), bypassCache: true });
   const reviewed = venueRead.kind === "PROMOTED" ? venueRead.value.records as unknown as VenueEntry[] : [];
   if (venueRead.kind !== "PROMOTED" && venueRead.kind !== "NOT_RECORDED") {
@@ -861,9 +654,9 @@ async function main() {
   const name = process.argv[2];
   const promote = process.argv.slice(3).includes("--promote");
 
-  if (!name || !(name in SOURCES)) {
+  if (!name || (name !== "composite" && !(name in SOURCES))) {
     console.error(
-      `Usage: pnpm ingest <source>\nKnown sources: ${Object.keys(SOURCES).join(", ")}`,
+      `Usage: pnpm ingest <source>\nKnown sources: ${[...Object.keys(SOURCES), "composite"].join(", ")}`,
     );
     process.exitCode = 1;
     return;
@@ -882,25 +675,29 @@ async function main() {
     return;
   }
   // The meeting doors are the door registry's, as the runner published them for this pass. There is no other list.
+  const diagnosticState = name === "composite" ? null : requireRegistryState(
+    process.argv.find(argument => argument.startsWith("--state="))?.slice("--state=".length) ?? (() => { throw new Error("INGEST_STATE_REQUIRED"); })(),
+  );
   const doors = await ensureMeetingDoors();
   if (!doors.ready) console.error(`meeting doors: ${doors.reason}`);
   const partitions = name === "composite"
     ? selectedMeetingPartitions(process.argv.slice(3))
     : [];
+  const selectedStates = name === "composite"
+    ? statesForRegistryDivisions(partitions.flatMap(partition => [partition.derivedFamily ?? "", partition.ocdId ?? "", partition.bodyId]))
+    : [diagnosticState!];
+  if (selectedStates.length !== 1) throw new Error("INGEST_EXACT_STATE_REQUIRED");
+  const state = selectedStates[0]!;
+  return withRegistryRuntimeStates([state], async () => {
 
-  /*
-   * A derived family reads its members from the promoted wiring, never from the hand-wired doors. It reads the wiring
-   * before anything else: every registered state has a family, and one with no member yet refuses by
-   * name without the registry and venue preload (about 24 MB) a member's read needs.
-   */
   if (promote && partitions.length === 1 && partitions[0]!.derivedFamily !== null) {
     await promoteDerivedMeetingFamily(new PostgresRoutineDataStore(), partitions[0]!, async () => {
-      await preloadCanonicalMeetingDependencies({ sourceName: name });
+      await preloadCanonicalMeetingDependencies({ sourceName: name, state });
       REGISTRY = getRegistryRuntimeReadModel().registry;
     }, { db: readerFactDb(), vault: new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR)) });
     return;
   }
-  await preloadCanonicalMeetingDependencies({ sourceName: name });
+  await preloadCanonicalMeetingDependencies({ sourceName: name, state });
   REGISTRY = getRegistryRuntimeReadModel().registry;
   const promotionStore = promote ? new PostgresRoutineDataStore() : null;
 
@@ -914,7 +711,7 @@ async function main() {
           bodyId: partition.bodyId,
         })),
       })
-    : SOURCES[name]();
+    : SOURCES[name](state);
   const previous = source instanceof CompositeSource && promotionStore
     ? await readPreviousMeetingPartition(promotionStore, partitions[0]!)
     : null;
@@ -964,27 +761,8 @@ async function main() {
       );
     }
 
-    // Seed the document store from the previous snapshot before retrieving,
-    // so append-only semantics hold *across* refreshes: an unchanged agenda
-    // is recognized by hash, a revised one is appended beside its prior
-    // version rather than replacing it.
     if (previous) {
-      /*
-       * A carried-forward document is re-checked, because a wiring error would
-       * otherwise become permanent: a document attached to meetings of MORE
-       * THAN ONE GOVERNMENT is nobody's agenda and is dropped (the store is
-       * append-only, so a kept row would be re-appended every run). A page
-       * shared across sittings of one body is a landing page, left alone here.
-       *
-       * **WHAT THIS REACHES, STATED EXACTLY.** Only this run's
-       * store: the retrieval order, the landing-page test and the agenda-stated
-       * place matcher read it. The promoted payload is rebuilt from the previous
-       * partition's own documents (reconcileSuccessfulMeetingPartition), and the
-       * validator admits an agenda document's removal only with its meeting's,
-       * so a document set aside here stays held there until its sitting leaves
-       * the serving window. What a reader is shown is decided by the reader
-       * projection (lib/ask/agenda-publication.ts).
-       */
+
       const { carried, refused, refusedUrls, noticePagesSetAside, noticePageUrlsSetAside } = seedHeldAgendaDocuments(previous);
       console.log(
         `  agenda documents carried forward: ${carried} of ${previous.agendaDocuments.length}`,
@@ -1005,12 +783,7 @@ async function main() {
     }
 
     await retrieveAgendas(meetings);
-    /*
-     * An unplaced sitting whose held agenda states a street address that a
-     * promoted reviewed venue of its division carries is placed with the
-     * agenda's own words and the venue's coordinates
-     * (scripts/lib/agenda-meeting-location.ts).
-     */
+
     const agendaPlaced = placeUnplacedFromAgendas(
       source.lastPartitionRows,
       (meetingId) => {
@@ -1044,22 +817,9 @@ async function main() {
       console.warn(`  ${dropped} record(s) dropped — unplaceable in time or space`);
     }
   }
+  });
 }
 
-/**
- * Name the bodies an adapter's agenda segmentation could only describe (D19).
- *
- * The adapters are pure and the registry is a file, so segmentation happens
- * where the agenda is and NAMING happens here, once, where the registry is
- * already loaded. Every row arrives UNRESOLVED with its published heading
- * intact; this upgrades the ones the registry can account for and leaves the
- * rest exactly as they are — `bodyId: null`, `ocdId: null`, never the host's.
- *
- * The counts are printed with their denominator, because an unresolved
- * segment is a WORK ITEM: it is usually a special district reachable through
- * a county feed that this repo holds no division for, which is the whole
- * reason D19 exists, and a number nobody prints is a number nobody chases.
- */
 function resolveAttribution(meetings: Meeting[]): Meeting[] {
   const registry = REGISTRY;
   if (!registry) throw new Error("REGISTRY_RUNTIME_READ_NOT_INITIALIZED");
@@ -1104,12 +864,6 @@ function resolveAttribution(meetings: Meeting[]): Meeting[] {
   return resolved;
 }
 
-/**
- * Load carry-forward state for exactly one source/body promotion run. The
- * writer opens only that partition's pointer and candidate; global meetings
- * composition is a Reader concern. Any DB exception propagates and stops the
- * child and no bundled snapshot is consulted.
- */
 export async function readPreviousMeetingPartition(
   store: RoutineDataStore,
   partition: MeetingPartitionContract,
@@ -1127,12 +881,6 @@ export async function readPreviousMeetingPartition(
   return null;
 }
 
-/**
- * Move this partition's concluded, record-carrying sittings older than the held window into its durable history
- * BEFORE the partition's own candidate is built, so a sitting leaves the partition only once history holds it. Never
- * blocks the partition: any failure moves nothing and the partition keeps every record as DB-01 does. The way back is
- * `WTP_MEETING_HISTORY_MOVE=off`.
- */
 async function moveConcludedMeetingsForPartition(
   store: RoutineDataStore,
   partition: MeetingPartitionContract,
@@ -1157,11 +905,6 @@ async function moveConcludedMeetingsForPartition(
   }
 }
 
-/**
- * With `WTP_MEETING_HISTORY_RESTORE=on`, add back the concluded sittings with records that the old 90-day rule
- * removed (`restoreRemovedMeetingHistory`), as carried rows of this partition's own candidate. Anything that goes
- * wrong leaves the partition exactly as it was.
- */
 async function restoreRemovedHistoryForPartition(
   store: RoutineDataStore,
   partition: MeetingPartitionContract,
@@ -1191,14 +934,6 @@ export interface SuccessfulMeetingPartitionReconciliation {
   readonly upperBound: string;
 }
 
-/**
- * A carried sitting is placed by today's reviewed venues: the carry copies the
- * last fresh row, whose place was resolved against that day's venues. Only the
- * placement of its own stated words is redone, through `resolveVenue`; the
- * sitting's facts are untouched. A row whose words match no reviewed venue, a
- * row with no stated words, an online or already placed row, and a row with no
- * division are returned unchanged.
- */
 export function placeCarriedFromReviewedVenue(
   prior: Meeting,
   sourceName: string,
@@ -1215,54 +950,19 @@ export function placeCarriedFromReviewedVenue(
 
 export { meetingCarriesRecords };
 
-/**
- * Reconcile one authenticated source/body response against its exact LKG.
- *
- * A successful response is still an OPEN fact set. Omission therefore cannot
- * delete an in-window fact: the prior row remains, visibly marked as carried.
- * A prior row is removed on one of four authorities, and on nothing else: an
- * exact prior start outside the same registered serving window used for
- * acquisition and Reader delivery; a fresh occurrence record of the same
- * recurring series that now holds the prior row's exact fact
- * (`supersedesSeriesRecord`); the publisher striking that sitting out of its
- * series (`EXCLUDED_BY_PUBLISHER`); or a fresh row of this partition that is
- * the same sitting, re-issued by its publisher under a new id
- * (`reissuesSitting`). Agenda documents inherit an authority only from their
- * exact removed meeting.
- *
- * The re-issue authority is tested only where a row would otherwise be
- * carried, after every other authority. Both successor authorities are
- * recorded as `SUPERSEDED_BY_OCCURRENCE_IDENTITY` naming the successor, and
- * the promotion door re-runs both tests on the stored records.
- */
 export function reconcileSuccessfulMeetingPartition(input: {
   readonly sourceName: string;
   readonly generatedAt: string;
   readonly freshMeetings: readonly Meeting[];
   readonly freshAgendaDocuments: MeetingsSnapshot["agendaDocuments"];
   readonly previous: MeetingsSnapshot | null;
-  /**
-   * In-window sittings this read's publisher struck out of their series
-   * (`EXDATE`), for this partition's body only. A prior row that is one of
-   * them is removed under `EXCLUDED_BY_PUBLISHER`, never carried.
-   */
+
   readonly publisherExclusions?: readonly PublisherExclusion[];
-  /**
-   * The promoted reviewed venues, read only if a carried row needs them
-   * (`placeCarriedFromReviewedVenue`). Omitted, carried rows keep their place
-   * exactly as before.
-   */
+
   readonly reviewedVenues?: () => readonly VenueEntry[];
-  /**
-   * The dates this read actually fetched. Omitted, the held 120-day window each way for an adapter that fetches it
-   * (`HELD_WINDOW_FETCH_SOURCES`), else the shown 90 days.
-   */
+
   readonly fetchedWindow?: { readonly lowerBound: string; readonly upperBound: string };
-  /**
-   * Concluded sittings with a record that this partition's history now holds, by meeting id: promoted
-   * history FIRST (`moveConcludedMeetingsToHistory`), so these leave the partition under `MOVED_TO_HISTORY` and are
-   * in no way carried. Omitted, nothing leaves and every record stays exactly as DB-01 keeps it.
-   */
+
   readonly movedToHistory?: ReadonlyMap<string, MeetingHistoryMoveRecord>;
 }): SuccessfulMeetingPartitionReconciliation {
   const window = meetingHeldWindowAt(input.generatedAt);
@@ -1371,9 +1071,6 @@ export function reconcileSuccessfulMeetingPartition(input: {
       }
       continue;
     }
-    // The row would be carried. If a fresh row of this partition is the same
-    // sitting, re-issued under a new id, that row holds it now: the listing
-    // that left yields to it rather than standing beside it (`reissuesSitting`).
     const reissued = input.freshMeetings.find((fresh) => reissuesSitting(prior, fresh));
     if (reissued) {
       supersede(prior, reissued);
@@ -1384,9 +1081,6 @@ export function reconcileSuccessfulMeetingPartition(input: {
         ? prior.provenance.collectedAt
         : input.previous!.generatedAt
     );
-    // A prior row this read never asked about (outside the dates it fetched) is
-    // held as it was; only a row inside the fetched dates that the answer left
-    // out is a disappearance.
     const outsideFetch = Number.isFinite(startsAt) && (startsAt < fetchedLower || startsAt > fetchedUpper);
     meetings.push({
       ...placeCarriedFromReviewedVenue(prior, input.sourceName, input.reviewedVenues),
@@ -1439,17 +1133,6 @@ export function meetingsWiringCoverage(
   };
 }
 
-/**
- * **THE RECURRENCE RECORD ONE PARTITION CARRIES.**
- *
- * Each in-window sitting this body's publisher struck out of a series
- * (`EXDATE`), and each series of this body whose rule was not expanded with
- * the reason, held as named facts on the candidate. The held exclusion is the
- * statement the validator reads back before it accepts an
- * `EXCLUDED_BY_PUBLISHER` removal, so the audit trail and the authority are one
- * record. A series that was not expanded is never a silent success: it is
- * named here on every read that meets it.
- */
 export function recurrenceHeldFacts(
   recurrence: RecurrenceReport | undefined,
   bodyId: string,
@@ -1508,9 +1191,6 @@ export function candidateForMeetingPartition(
         .join("\n---\n"))
     : "";
   const base = meetingsCandidate({
-    // The builder's structural input predates SnapshotSourceReport's explicit
-    // `error: null` success state. Runtime data is the same validated object;
-    // keep it intact so the promoted read model does not rewrite null to absent.
     snapshot: snapshot as unknown as Parameters<typeof meetingsCandidate>[0]["snapshot"],
     partition: {
       sourceName: partition.meetingSource,
@@ -1599,9 +1279,6 @@ export function printMeetingPartitionReceipt(
     promotedVersion: outcome.promoted?.versionId ?? null,
     lastKnownGoodVersion: outcome.candidate.lastKnownGoodVersion,
     failureDetail,
-    // WALL (the publisher's side stopped the read) or JOB (our code or
-    // configuration failed first); absent on success. Additive: the durable
-    // receipt contract reads the fields above and ignores this one.
     ...(failureKind ? { failureKind } : {}),
     // A confirmation names its observed instant, so the supervisor proves it
     // from the pointer's identity and newest confirmation, not the dataset.
@@ -1648,11 +1325,6 @@ export async function promoteMeetingPartitions(input: {
   for (const partition of input.partitions) {
     const report = input.reports.find((candidate) => candidate.source === partition.meetingSource);
     if (!report || !report.ok) {
-      // Current source failure is always receipted. A historical research
-      // approval cannot relabel the failed fetch or its LKG as new progress.
-      // A JOB failure says so in the durable detail, so no surface (Admin, a
-      // report, a later session) can read our own exception as the publisher
-      // walling us — the ten-day VENUE_RESOLUTIONS_MISSING freeze did exactly that.
       const failureKind = report ? (report.failure ?? "WALL") : "JOB";
       const failureDetail = report?.error
         ? failureKind === "JOB" ? jobFailureDetail(report.error) : report.error
@@ -1778,13 +1450,6 @@ export async function promoteMeetingPartitions(input: {
   return results;
 }
 
-/**
- * Persist one candidate and outcome per selected source/body partition.
- *
- * No aggregate snapshot is promoted. Each failed partition leaves its own
- * pointer on LKG while independently valid partitions advance. Cross-source
- * sitting composition and duplicate collapse happen only in the Reader.
- */
 async function promoteSelectedMeetingPartitions(
   source: CompositeSource,
   meetings: readonly Meeting[],
@@ -1801,9 +1466,6 @@ async function promoteSelectedMeetingPartitions(
 
   const okCount = report.children.filter((c) => c.ok).length;
   const now = new Date();
-  // `lastPartitionRows` deliberately bypasses the composite's presentation
-  // merge. Removing a row here would let one route's duplicate determine the
-  // payload of another route's authority partition.
   const finalRows = [...meetings];
 
   const meetingIds = new Set(finalRows.map((m) => m.id));
@@ -1833,9 +1495,6 @@ async function promoteSelectedMeetingPartitions(
         : {}),
     })),
     meetings: finalRows,
-    // Preserve prior document versions only for meetings retrieved in this
-    // acquisition. Failed partitions keep their documents through their own
-    // unchanged LKG pointer rather than by copying rows into another payload.
     agendaDocuments: [
       ...finalRows.flatMap((m) => agendaDocumentStore.versionsFor(m.id)),
       ...(previous?.agendaDocuments ?? []),
@@ -1870,9 +1529,6 @@ async function promoteSelectedMeetingPartitions(
     `  current acquisition rows: ${snapshot.counts.total}; failed partitions copied 0 rows and retained their own LKG pointers`,
   );
 
-  // One source/body outcome is the unit of authority. These aggregate counts
-  // are diagnostic only; they never become a candidate, pointer, or exit-code
-  // verdict for the independently persisted partitions above.
   const walled = snapshot.sources.filter((s) => !s.ok && s.failure !== "JOB");
   const jobFailed = snapshot.sources.filter((s) => !s.ok && s.failure === "JOB");
   console.log(

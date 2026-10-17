@@ -1,14 +1,11 @@
+import { readerRoute } from "@/lib/api/reader-route";
 import { directoryFor } from "@/lib/officials/directory";
 import { refreshFederalDirectoryFromPromoted } from "@/lib/officials/federal-directory-read-model";
 import { matching, refuse, rejectUnknown } from "@/lib/api/params";
 import { readMemberOffices } from "@/lib/officials/member-offices-read";
 import { memberDirectoryReaches } from "@/lib/officials/member-directory-scope";
 
-/**
- * GET /api/directory?member=<source>:<id>
- *
- * One member's offices and committee seats. `private, no-store`: the response varies by `member`.
- */
+
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -17,7 +14,7 @@ const FEDERAL_ID = /^congress:[A-Z]\d{6}$/;
 /** A federal member, or a state legislator as the legislature's own roster names them (`<state>-legislature:<id>`). */
 const MEMBER_ID = /^(?:congress:[A-Z]\d{6}|[a-z]+(?:-[a-z]+)+:[A-Za-z0-9_-]+|plural:(?:[a-z]{2}:)?[a-f0-9-]+|ocd-person\/[a-f0-9-]+)$/;
 
-export async function GET(request: Request) {
+export const GET = readerRoute("/api/directory", async function GET(request: Request) {
   const params = new URL(request.url).searchParams;
 
   /* A missing or malformed `member` refuses with a stated reason; the empty answer is reserved for a real member we hold no record of. */
@@ -77,4 +74,4 @@ export async function GET(request: Request) {
     },
     { headers: { "Cache-Control": "private, no-store" } },
   );
-}
+}, ["federal-directory","member-offices","state-legislators"]);

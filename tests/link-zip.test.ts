@@ -2,10 +2,13 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { readZipChoice, resolveStoredZip } from "../hooks/use-stored-zip.ts";
 import { recallCamera } from "../lib/map/camera-memory.ts";
+import { GET } from "../app/api/location/zip/route.ts";
+import { lookupZcta } from "../lib/geo/zcta.ts";
 
-test("a link's ZIP overrides a tab's previous ZIP before the map resolves", () => {
+test("a link's ZIP overrides a tab's previous ZIP before the map resolves", async (t) => {
   const previous = Object.getOwnPropertyDescriptor(globalThis, "window");
-  const table: Record<string, [number, number]> = { "85635": [31.55, -110.30], "85701": [32.22, -110.97] };
+  t.mock.method(globalThis, "fetch", async (input: string | URL | Request) =>
+    GET(input instanceof Request ? input : new Request(new URL(input, "http://localhost"))));
   let search = "?zip=85635";
   let blocked = false;
   // The remembered ZIP is kept between visits (localStorage); the map camera stays per-tab.
@@ -20,17 +23,17 @@ test("a link's ZIP overrides a tab's previous ZIP before the map resolves", () =
     localStorage: storage,
   } });
   try {
-    assert.equal(resolveStoredZip(table, readZipChoice())?.zip, "85635");
+    assert.equal((await resolveStoredZip(readZipChoice()))?.zip, "85635");
     assert.equal(recallCamera(), null, "the linked place takes priority over the remembered map");
     blocked = true;
-    assert.equal(resolveStoredZip(table, readZipChoice())?.zip, "85635");
+    assert.equal((await resolveStoredZip(readZipChoice()))?.zip, "85635");
     blocked = false;
     search = "";
-    assert.equal(resolveStoredZip(table, readZipChoice())?.zip, "85701");
+    assert.equal((await resolveStoredZip(readZipChoice()))?.zip, "85701");
     assert.deepEqual(recallCamera(), { lat: 43.32, lng: -72.03, zoom: 10 }, "ordinary returns retain camera memory");
     for (const query of ["?zip=99999", "?zip=8563", "?zip="]) {
       search = query;
-      assert.equal(resolveStoredZip(table, readZipChoice()), null, "an unusable link must not open a different place");
+      assert.equal(await resolveStoredZip(readZipChoice()), null, "an unusable link must not open a different place");
       assert.equal(recallCamera(), null);
     }
   } finally {
@@ -66,5 +69,18 @@ test("a remembered address restores its ZIP across surfaces and a later ZIP choi
   } finally {
     if (previous) Object.defineProperty(globalThis, "window", previous);
     else Reflect.deleteProperty(globalThis, "window");
+  }
+});
+
+test("ZIP startup returns one source-resolved place, including postal ZIPs, without returning the national table", async () => {
+  for (const zip of ["85643", "85122", "85701", "85670", "99999"]) {
+    const response = await GET(new Request(`http://localhost/api/location/zip?zip=${zip}`));
+    assert.equal(response.status, 200);
+    const body = await response.text();
+    assert.deepEqual(JSON.parse(body), { location: lookupZcta(zip) });
+    assert.ok(Buffer.byteLength(body) < 2000);
+  }
+  for (const query of ["", "?zip=8564", "?zip=85643&zip=85122", "?zip=85643&radius=150"]) {
+    assert.equal((await GET(new Request(`http://localhost/api/location/zip${query}`))).status, 400);
   }
 });

@@ -1,6 +1,11 @@
+import { stateRegistryRuntimeScope } from "./state-scopes.ts";
+import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
+import { statePublicationPriorOf, rememberStatePublicationHashes } from "./state-publication.ts";
+import { readerQuery } from "./promoted-reader-query.ts";
+import { currentReaderRoute, currentReaderSelection, type ReaderSelection } from "../db/reader-route.ts";
 import { createHash } from "node:crypto";
 import { sourceCheckedAt } from "./source-check.ts";
-import { currentPromotedEdge, refuseDatabaseInEdgeOnlyContext } from "../registry/runtime-edge.ts";
+import { currentPromotedEdge, currentReaderAuthorityEdge, ensurePromotedEdge, refuseDatabaseInEdgeOnlyContext } from "../registry/runtime-edge.ts";
 
 import type {
   CandidateVersionRecord,
@@ -10,6 +15,8 @@ import type {
   ValidationReceipt,
 } from "./types.ts";
 import { canonicalCivicDataJson } from "./changes.ts";
+import { canonicalCivicDataHash } from "./canonical-hash.ts";
+import { durableStateHash, immutableStateHash, immutableStateValue, statePublicationScope } from "./state-publication.ts";
 import { parseValidationReceipt } from "./receipt.ts";
 import { promotedPayloadSha256, type AttestedPromotion } from "./attested-promotion.ts";
 import {
@@ -24,6 +31,7 @@ import {
   projectionKey,
   readPointerMoveEvents,
   type CandidateVersionReadback,
+  type PublishedCandidateMetadata,
   type RoutineDataStore,
 } from "./store.ts";
 
@@ -108,12 +116,12 @@ export type CivicDataReadResult<T> =
 export type CivicDataReadStore = Pick<
   RoutineDataStore,
   "readPromotion" | "readCandidate"
-> & Partial<Pick<RoutineDataStore, "readPromotions" | "readCandidates" | "readPromotionIdentity" | "readPromotionIdentities">>;
+> & Partial<Pick<RoutineDataStore, "readPromotions" | "readCandidates" | "readPromotionIdentity" | "readPromotionIdentities" | "readPublishedCandidateMetadata">>;
 
-export type CivicDataBatchReadStore = Pick<
+type CivicDataBatchReadStore = Pick<
   RoutineDataStore,
   "readPromotion" | "readCandidate" | "readPromotions" | "readCandidates"
-> & Partial<Pick<RoutineDataStore, "readPromotionIdentities" | "readCandidateProof" | "readCandidateProofs">>;
+> & Partial<Pick<RoutineDataStore, "readPromotionIdentities" | "readCandidateProof" | "readCandidateProofs" | "readPublishedCandidateMetadata">>;
 
 export interface PromotedCivicDataReadOptions {
   readonly store?: CivicDataReadStore;
@@ -172,7 +180,8 @@ export function attestPromotedVersion(
   scope: string,
   store: CivicDataReadStore,
 ): AttestedPromotion | null {
-  const proven = provenPointersOf(store).get(projectionKey(recordClass, scope));
+  if (isStateAuthorityScope(scope)) return stateAttestations.get(store)?.get(projectionKey(recordClass, scope)) ?? null;
+  const proven = provenPointersOf(store, scope).get(projectionKey(recordClass, scope));
   if (!proven) return null;
   return attestationOf(recordClass, scope, proven.projection, proven.candidate);
 }
@@ -181,7 +190,8 @@ function attestationOf(
   recordClass: RoutineRecordClass,
   scope: string,
   projection: PromotedProjection,
-  candidate: CandidateVersionRecord,
+  candidate: ProvenCandidate,
+  payloadSha256?: string,
 ): AttestedPromotion | null {
   const temporal = candidate.candidate.temporal;
   const retrievedAt = candidate.candidate.retrieval?.retrievedAt;
@@ -190,7 +200,7 @@ function attestationOf(
     recordClass,
     scope,
     versionId: projection.versionId,
-    payloadSha256: promotedPayloadSha256(projection.payload),
+    payloadSha256: payloadSha256 ?? promotedPayloadSha256(projection.payload),
     retrievedAt,
     staleAtRetrieval: temporal.staleAtRetrieval === true,
     version: temporal.version ?? null,
@@ -198,10 +208,6 @@ function attestationOf(
   };
 }
 
-/**
- * The pointer row plus the attestation of the candidate the runner proved it against. The read is rebuilt from both
- * exactly as `promotedResult` builds it from the database; a copy that does not match is PROMOTION_PROOF_INVALID.
- */
 export type PromotedEdgeEntry<T = unknown> =
   | {
       readonly kind: "PROMOTED";
@@ -222,13 +228,25 @@ export function promotedEdgeEntryOf<T>(
 ): PromotedEdgeEntry<T> | null {
   if (result.kind === "NOT_RECORDED") return { kind: "NOT_RECORDED", recordClass, scope };
   if (result.kind !== "PROMOTED") return null;
-  const proven = provenPointersOf(store).get(projectionKey(recordClass, scope));
+  if (isStateAuthorityScope(scope)) {
+    const proven = stateProofs.get(result.projection);
+    if (!proven || proven.attested.versionId !== result.projection.versionId || proven.attested.recordClass !== recordClass || proven.attested.scope !== scope) return null;
+    const entry: PromotedEdgeEntry<T> = { kind: "PROMOTED", projection: result.projection, attested: proven.attested };
+    verifiedEdgeEntries.add(entry);
+    return entry;
+  }
+  const proven = provenPointersOf(store, scope).get(projectionKey(recordClass, scope));
   if (!proven || proven.projection.versionId !== result.projection.versionId) return null;
   const attested = attestationOf(recordClass, scope, result.projection, proven.candidate);
   return attested === null ? null : { kind: "PROMOTED", projection: result.projection, attested };
 }
 
 const verifiedEdgeEntries = new WeakSet<object>();
+const provenEdgeEntries = new WeakSet<object>();
+
+export function registerIntegrityCheckedEdgeEntries(entries: readonly PromotedEdgeEntry[]): void {
+  for (const entry of entries) if (entry.kind === "PROMOTED") verifiedEdgeEntries.add(entry);
+}
 
 function promotedEdgeIssue(
   recordClass: RoutineRecordClass,
@@ -239,6 +257,7 @@ function promotedEdgeIssue(
   if (projection.key !== projectionKey(recordClass, scope) || projection.recordClass !== recordClass || projection.scope !== scope) {
     return "the edge copy names another class or scope";
   }
+  if (provenEdgeEntries.has(entry)) return null;
   if (projection.lastKnownGoodVersionId !== projection.versionId) return "the current pointer and last-known-good pointer diverge";
   if (attested.recordClass !== recordClass || attested.scope !== scope || attested.versionId !== projection.versionId) {
     return "the attestation does not name the pointed version";
@@ -252,6 +271,7 @@ function promotedEdgeIssue(
     if (promotedPayloadSha256(projection.payload) !== attested.payloadSha256) return "the payload does not hash to the attested payload";
     verifiedEdgeEntries.add(entry);
   }
+  provenEdgeEntries.add(entry);
   return null;
 }
 
@@ -310,46 +330,80 @@ export interface PromotedOrBootstrapOptions<T> extends PromotedCivicDataReadOpti
   readonly allowUnconfiguredBootstrap?: boolean;
 }
 
-interface CachedPromotion {
-  readonly expiresAt: number;
-  readonly projection: PromotedProjection;
-  readonly candidate: CandidateVersionRecord;
-}
+type ProvenCandidate = { readonly candidate: {
+  readonly retrieval: Pick<CandidateVersionRecord["candidate"]["retrieval"], "retrievedAt" | "sourceCheck">;
+  readonly temporal: Pick<CandidateVersionRecord["candidate"]["temporal"], "version" | "sourceThrough" | "staleAtRetrieval">;
+} };
+type ProvenPair = { readonly projection: PromotedProjection; readonly candidate: ProvenCandidate };
+interface CachedPromotion extends ProvenPair { readonly expiresAt: number }
 
 const cache = new Map<string, CachedPromotion | { readonly expiresAt: number; readonly projection: null }>();
-
-/**
- * Keyed by the immutable versionId: a version proven once stays proven for this instance. Entered only after a full
- * GOOD proof; the pointer is always re-read, and `bypassCache` skips the memo.
- */
-const provenByVersion = new Map<string, { projection: PromotedProjection; candidate: CandidateVersionRecord }>();
-
-/** Per store and scope, the version last proved, so an unmoved pointer is served without refetching. `bypassCache` never consults it. */
+const provenByVersion = new Map<string, ProvenPair>();
 const DEFAULT_STORE: object = {};
-
-/** Concurrent callers for the same cold scope and store share one in-flight read. `bypassCache` never shares. */
-type ProvenPair = { projection: PromotedProjection; candidate: CandidateVersionRecord };
 let inflight = new WeakMap<object, Map<string, Promise<ProvenPair | null>>>();
+let provenPointers = new WeakMap<object, Map<string, ProvenPair>>();
+const stateRequests = new WeakMap<object, WeakMap<object, {
+  pointers: Map<string, ProvenPair>;
+  flights: Map<string, Promise<ProvenPair | null>>;
+}>>();
+const stateProofs = new WeakMap<PromotedProjection, { candidate: ProvenCandidate; attested: AttestedPromotion }>();
+const stateAttestations = new WeakMap<object, Map<string, AttestedPromotion>>();
 
-function inflightOf(store: CivicDataReadStore | undefined): Map<string, Promise<ProvenPair | null>> {
-  const scope = store ?? DEFAULT_STORE;
-  let flights = inflight.get(scope);
-  if (flights === undefined) {
-    flights = new Map();
-    inflight.set(scope, flights);
-  }
+function isStateAuthorityScope(scope: string): boolean {
+  return statePublicationScope(scope);
+}
+
+function stateRequest(store: CivicDataReadStore | undefined) {
+  const request = currentReaderAuthorityEdge() ?? currentReaderSelection();
+  if (!request) return null;
+  let stores = stateRequests.get(request);
+  if (!stores) { stores = new WeakMap(); stateRequests.set(request, stores); }
+  const identity = store ?? DEFAULT_STORE;
+  let reads = stores.get(identity);
+  if (!reads) { reads = { pointers: new Map(), flights: new Map() }; stores.set(identity, reads); }
+  return reads;
+}
+
+function inflightOf(store: CivicDataReadStore | undefined, scope: string): Map<string, Promise<ProvenPair | null>> {
+  const request = isStateAuthorityScope(scope) ? stateRequest(store) : null;
+  if (request) return request.flights;
+  const identity = store ?? DEFAULT_STORE;
+  let flights = inflight.get(identity);
+  if (!flights) { flights = new Map(); inflight.set(identity, flights); }
   return flights;
 }
-let provenPointers = new WeakMap<object, Map<string, { projection: PromotedProjection; candidate: CandidateVersionRecord }>>();
 
-function provenPointersOf(store: CivicDataReadStore | undefined): Map<string, { projection: PromotedProjection; candidate: CandidateVersionRecord }> {
-  const scope = store ?? DEFAULT_STORE;
-  let pointers = provenPointers.get(scope);
-  if (pointers === undefined) {
-    pointers = new Map();
-    provenPointers.set(scope, pointers);
-  }
+function provenPointersOf(store: CivicDataReadStore | undefined, scope?: string): Map<string, ProvenPair> {
+  if (scope && isStateAuthorityScope(scope)) return stateRequest(store)?.pointers ?? new Map();
+  const identity = store ?? DEFAULT_STORE;
+  let pointers = provenPointers.get(identity);
+  if (!pointers) { pointers = new Map(); provenPointers.set(identity, pointers); }
   return pointers;
+}
+
+function rememberStateProof(
+  projection: PromotedProjection,
+  candidate: ProvenCandidate,
+  store: CivicDataReadStore | undefined,
+  payloadSha256: string,
+  retainAttestation: boolean,
+): ProvenPair {
+  const { retrieval, temporal } = candidate.candidate;
+  const metadata: ProvenCandidate = { candidate: {
+    retrieval: { retrievedAt: retrieval.retrievedAt, ...(retrieval.sourceCheck ? { sourceCheck: retrieval.sourceCheck } : {}) },
+    temporal: { version: temporal.version, sourceThrough: temporal.sourceThrough, staleAtRetrieval: temporal.staleAtRetrieval },
+  } };
+  const attested = attestationOf(projection.recordClass, projection.scope, projection, metadata, payloadSha256);
+  if (attested) {
+    stateProofs.set(projection, { candidate: metadata, attested });
+    if (retainAttestation) {
+      const identity = store ?? DEFAULT_STORE;
+      let attestations = stateAttestations.get(identity);
+      if (!attestations) { attestations = new Map(); stateAttestations.set(identity, attestations); }
+      attestations.set(projection.key, attested);
+    }
+  }
+  return { projection, candidate: metadata };
 }
 
 function withLatestConfirmation<T>(projection: PromotedProjection<T>, identity: PromotedPointerIdentity): PromotedProjection<T> {
@@ -438,10 +492,32 @@ export async function readPromotedCivicData<T>(
   const now = options.now ?? new Date().toISOString();
   if (options.edge !== undefined) return readPromotedFromEdge<T>(recordClass, scope, options.edge, now, options.maxAgeMs);
   const injected = options.store !== undefined;
-  if (!injected && !options.bypassCache) {
-    const edge = currentPromotedEdge(recordClass, scope);
+  if (!injected && isStateAuthorityScope(scope)) {
+    const [{ readStateAuthorityProjection }, { stateFromRegistryRuntimeScope }, { STATE_BALLOT_FAMILIES, stateFromBallotScope }] = await Promise.all([
+      import("./state-reader.ts"), import("./state-scopes.ts"), import("./state-scopes.ts"),
+    ]);
+    const registryState = recordClass === "REGISTRY_RUNTIME_BINDING" ? stateFromRegistryRuntimeScope(scope) : null;
+    if (registryState) return (await readStateAuthorityProjection<T>("registry-runtime", registryState)).result;
+    for (const family of STATE_BALLOT_FAMILIES) {
+      const state = stateFromBallotScope(scope, family);
+      const familyClass = { "ballot-contests": "BALLOT_CANDIDACY", "candidate-profiles": "CANDIDATE_PROFILE", "candidate-corpus": "CANDIDATE_PUBLICATION", "voting-sites": "VOTING_SITE", "candidate-campaign-sites-derived": "CURATED_READER_RECORD" }[family];
+      if (state && recordClass === familyClass) return (await readStateAuthorityProjection<T>(family === "candidate-corpus" ? "candidate-publications" : family, state)).result;
+    }
+    return storeReadFailedResult<T>(recordClass, scope, null, new Error(`STATE_READER_SCOPE_INVALID:${recordClass}:${scope}`));
+  }
+
+  if (!injected && (!options.bypassCache || currentReaderSelection() || currentReaderRoute() !== "unattributed" || currentReaderAuthorityEdge()?.edgeOnly)) {
+    const edge = await ensurePromotedEdge(recordClass, scope);
     if (edge !== null) return readPromotedFromEdge<T>(recordClass, scope, edge.value, now, options.maxAgeMs);
     refuseDatabaseInEdgeOnlyContext(`${recordClass}:${scope}`);
+    const selection = currentReaderSelection();
+    if (selection && process.env.DATABASE_URL) {
+      try {
+        return readPromotedFromEdge<T>(recordClass, scope, await readReaderProjection(recordClass, scope, selection), now, options.maxAgeMs);
+      } catch (error) {
+        return storeReadFailedResult<T>(recordClass, scope, null, error);
+      }
+    }
   }
   if (!injected && !process.env.DATABASE_URL) {
     return {
@@ -454,7 +530,7 @@ export async function readPromotedCivicData<T>(
   }
 
   const key = `${recordClass}:${scope}`;
-  const held = !injected && !options.bypassCache ? cache.get(key) : undefined;
+  const held = !injected && !isStateAuthorityScope(scope) && !options.bypassCache ? cache.get(key) : undefined;
   if (held && held.expiresAt > Date.now()) {
     if (held.projection === null) {
       return {
@@ -468,7 +544,7 @@ export async function readPromotedCivicData<T>(
   }
   if (options.bypassCache) return loadPromotedCivicData<T>(recordClass, scope, options, now, key);
 
-  const flights = inflightOf(options.store);
+  const flights = inflightOf(options.store, scope);
   const pending = flights.get(key);
   if (pending !== undefined) {
     const proven = await pending;
@@ -479,7 +555,9 @@ export async function readPromotedCivicData<T>(
   flights.set(key, flight);
   try {
     const result = await loadPromotedCivicData<T>(recordClass, scope, options, now, key);
-    settle(result.kind === "PROMOTED" ? provenPointersOf(options.store).get(key) ?? null : null);
+    const proof = result.kind === "PROMOTED" && isStateAuthorityScope(scope) ? stateProofs.get(result.projection) : null;
+    settle(result.kind === "PROMOTED" ? proof ? { projection: result.projection, candidate: proof.candidate }
+      : provenPointersOf(options.store, scope).get(key) ?? null : null);
     return result;
   } catch (error) {
     settle(null);
@@ -497,21 +575,27 @@ async function loadPromotedCivicData<T>(
   key: string,
 ): Promise<CivicDataReadResult<T>> {
   const injected = options.store !== undefined;
+  const stateAuthority = isStateAuthorityScope(scope);
+  const cacheable = !injected && !stateAuthority;
   let observedProjection: PromotedProjection<T> | null = null;
   try {
     const store = options.store ?? new PostgresRoutineDataStore();
-    const known = options.bypassCache ? undefined : provenPointersOf(options.store).get(key);
+    const known = options.bypassCache ? undefined : provenPointersOf(options.store, scope).get(key);
     if (known !== undefined && typeof store.readPromotionIdentity === "function") {
       const identity = await store.readPromotionIdentity(recordClass, scope);
       if (identity !== null && samePointer(identity, known.projection)) {
         const projection = withLatestConfirmation(known.projection, identity);
-        if (!injected) cache.set(key, { expiresAt: Date.now() + TTL_MS, projection, candidate: known.candidate });
+        if (cacheable) cache.set(key, { expiresAt: Date.now() + TTL_MS, projection, candidate: known.candidate });
+        if (stateAuthority) {
+          const proof = stateProofs.get(known.projection);
+          if (proof) rememberStateProof(projection, known.candidate, options.store, proof.attested.payloadSha256, true);
+        }
         return promotedResult(projection as PromotedProjection<T>, known.candidate, now, options.maxAgeMs);
       }
     }
     const projection = await store.readPromotion<T>(recordClass, scope);
     if (projection === null) {
-      if (!injected) cache.set(key, { expiresAt: Date.now() + TTL_MS, projection: null });
+      if (cacheable) cache.set(key, { expiresAt: Date.now() + TTL_MS, projection: null });
       return {
         kind: "NOT_RECORDED",
         value: null,
@@ -520,20 +604,35 @@ async function loadPromotedCivicData<T>(
       };
     }
     observedProjection = projection;
-        // The supervisor proved this exact version in this pass; the attested record never enters the proven-version memo.
+    // The supervisor already proved this exact version in this pass.
     if (!options.bypassCache && options.attested && attestationHolds(options.attested, recordClass, scope, projection)) {
       const candidate = attestedCandidate(options.attested, projection);
-      if (!injected) cache.set(key, { expiresAt: Date.now() + TTL_MS, projection, candidate });
+      if (cacheable) cache.set(key, { expiresAt: Date.now() + TTL_MS, projection, candidate });
+      if (stateAuthority) rememberStateProof(projection, candidate, options.store, options.attested.payloadSha256, true);
       return promotedResult(projection, candidate, now, options.maxAgeMs);
     }
-        // A version already proven GOOD in this instance reuses its candidate and skips the proof. `bypassCache` re-proves.
-    if (!options.bypassCache) {
+    // Immutable non-state versions reuse their proof; verification reads always re-prove.
+    if (!options.bypassCache && !stateAuthority) {
       const proven = provenByVersion.get(projection.versionId);
       if (proven) {
-        if (!injected) cache.set(key, { expiresAt: Date.now() + TTL_MS, projection, candidate: proven.candidate });
-        provenPointersOf(options.store).set(key, { projection, candidate: proven.candidate });
+        if (cacheable) cache.set(key, { expiresAt: Date.now() + TTL_MS, projection, candidate: proven.candidate });
+        provenPointersOf(options.store, scope).set(key, { projection, candidate: proven.candidate });
         return promotedResult(projection, proven.candidate, now, options.maxAgeMs);
       }
+    }
+    if (stateAuthority) {
+      if (!store.readPublishedCandidateMetadata) throw new Error("STATE_PUBLISHED_METADATA_READ_REQUIRED");
+      const candidate = await store.readPublishedCandidateMetadata(projection.versionId);
+      if (!candidate) return {
+        kind: "STORE_UNREACHABLE", value: null, metadata: observedProjectionMetadata(recordClass, scope, projection),
+        code: "PROMOTION_CANDIDATE_MISSING", detail: `Canonical pointer ${key} names ${projection.versionId}, but its candidate metadata is missing.`,
+      };
+      const issue = publishedStateProofIssue(recordClass, scope, projection, candidate);
+      if (issue) return promotionProofInvalidResult(recordClass, scope, projection, issue);
+      if (candidate.candidate.normalization.stateRecordHashes) rememberStatePublicationHashes(projection, candidate.candidate.normalization);
+      const proven = rememberStateProof(projection, candidate, options.store, candidate.candidate.normalization.normalizedHash!, !options.bypassCache);
+      if (!options.bypassCache) provenPointersOf(options.store, scope).set(key, proven);
+      return promotedResult(projection, proven.candidate, now, options.maxAgeMs);
     }
     const candidate = await readProofCandidate(store, projection.versionId);
     const predecessorVersionId = trustedLkgPredecessorVersionId(candidate);
@@ -550,10 +649,10 @@ async function loadPromotedCivicData<T>(
       options.maxAgeMs,
     );
     if (result.kind === "PROMOTED" && candidate !== null) {
-      if (!injected) cache.set(key, { expiresAt: Date.now() + TTL_MS, projection, candidate });
+      if (cacheable) cache.set(key, { expiresAt: Date.now() + TTL_MS, projection, candidate });
       if (!options.bypassCache) {
         provenByVersion.set(projection.versionId, { projection, candidate });
-        provenPointersOf(options.store).set(key, { projection, candidate });
+        provenPointersOf(options.store, scope).set(key, { projection, candidate });
       }
     }
     return result;
@@ -581,8 +680,12 @@ export async function readPromotedCivicDataBatch<T>(
 ): Promise<readonly CivicDataReadResult<T>[]> {
   if (options.edge !== undefined) throw new Error("A batch civic-data read takes no reader edge entry.");
   if (scopes.length === 0) return [];
+  if (scopes.some(isStateAuthorityScope)) {
+    return Promise.all(scopes.map(scope => readPromotedCivicData<T>(recordClass, scope, options)));
+  }
   const injected = options.store !== undefined;
-  if (!injected && !options.bypassCache) {
+  if (!injected) {
+    if (currentReaderSelection()) return Promise.all(scopes.map(scope => readPromotedCivicData<T>(recordClass, scope, options)));
     const edgeScopes = new Set(scopes.filter((scope) => currentPromotedEdge(recordClass, scope) !== null));
     if (edgeScopes.size > 0) {
       const remaining = scopes.filter((scope) => !edgeScopes.has(scope));
@@ -1058,6 +1161,36 @@ function resultFromPromotionProof<T>(
     : promotionProofInvalidResult(recordClass, scope, projection, proofIssue);
 }
 
+function publishedStateProofIssue(
+  recordClass: RoutineRecordClass, scope: string, projection: PromotedProjection, row: PublishedCandidateMetadata,
+): string | null {
+  const candidate = row.candidate;
+  if (projection.key !== projectionKey(recordClass, scope) || projection.recordClass !== recordClass || projection.scope !== scope)
+    return "the pointer does not match its requested class and scope";
+  if (!candidate || candidate.id !== projection.versionId || candidate.sourceId !== projection.sourceId ||
+      candidate.recordClass !== recordClass || candidate.scope !== scope) return "the published candidate identity differs from the pointer";
+  if (projection.lastKnownGoodVersionId !== projection.versionId || row.promotedVersion !== projection.versionId ||
+      row.lastKnownGoodVersion !== projection.versionId) return "the current and last-known-good version identities diverge";
+  if (row.state !== "PROMOTED" || row.acquisitionSucceeded !== true || candidate.retrieval?.succeeded !== true ||
+      candidate.normalization?.succeeded !== true) return "the candidate metadata does not describe a successful publication";
+  const receipt = parseValidationReceipt(projection.receipt), candidateReceipt = parseValidationReceipt(row.receipt);
+  if (!receipt || !candidateReceipt || receipt.decision !== "GOOD" || candidateReceipt.decision !== "GOOD" ||
+      receipt.candidateId !== candidate.id || receipt.sourceId !== candidate.sourceId || receipt.recordClass !== recordClass || receipt.scope !== scope ||
+      receipt !== candidateReceipt && canonicalCivicDataHash(receipt) !== canonicalCivicDataHash(candidateReceipt)) return "the GOOD receipts do not identify the published candidate";
+  const times = [candidate.retrieval.retrievedAt, receipt.validatedAt, projection.promotedAt].map(Date.parse);
+  if (!times.every(Number.isFinite) || times[0] > times[1] || times[1] > times[2]) return "retrieval, validation, and promotion times are invalid or out of order";
+  if (!candidate.temporal || typeof candidate.temporal.version !== "string" || typeof candidate.temporal.sourceThrough !== "string")
+    return "the published candidate lacks temporal metadata";
+  const hash = candidate.normalization.normalizedHash;
+  if (typeof hash !== "string" || !SHA256.test(hash)) return "the published candidate lacks its validated payload hash";
+  try {
+    const owned = immutableStateValue(projection.payload);
+    if (owned !== projection.payload || immutableStateHash(owned) !== hash) return "the state payload does not match its validated published hash";
+  }
+  catch { return "the state payload cannot be hashed"; }
+  return null;
+}
+
 export function promotionProofIssue<T>(
   recordClass: RoutineRecordClass,
   scope: string,
@@ -1075,14 +1208,17 @@ export function promotionProofIssue<T>(
   if (projection.lastKnownGoodVersionId !== projection.versionId) return "the current pointer and last-known-good pointer diverge";
   if (row.state !== "PROMOTED" || row.acquisitionSucceeded !== true) return "the pointed candidate is not a successfully acquired PROMOTED row";
   if (row.promotedVersion !== projection.versionId || row.lastKnownGoodVersion !== projection.lastKnownGoodVersionId) return "the candidate's durable promotion fields do not match the pointer";
-  const readModelHash = durableProjectionHash(candidate.readModel);
+  const scoped = statePublicationScope(scope);
+  const indexedPrior = scoped ? statePublicationPriorOf(candidate) : undefined;
+  const readModelHash = indexedPrior?.payloadHash ?? (scoped ? durableStateHash(candidate.readModel) : durableProjectionHash(candidate.readModel));
   if (
     readModelHash === null ||
     !candidate.normalization?.normalizedHash ||
     !SHA256.test(candidate.normalization.normalizedHash) ||
     candidate.normalization.normalizedHash !== readModelHash
   ) return "the candidate Reader projection does not match its durable normalized hash";
-  const normalizedPayloadHash = durableProjectionHash(candidate.normalizedPayload);
+  const normalizedPayloadHash = indexedPrior ? candidate.normalization.normalizedPayloadHash : candidate.normalizedPayload === candidate.readModel ? readModelHash :
+    scoped ? durableStateHash(candidate.normalizedPayload) : durableProjectionHash(candidate.normalizedPayload);
   if (
     normalizedPayloadHash === null ||
     !candidate.normalization.normalizedPayloadHash ||
@@ -1092,7 +1228,9 @@ export function promotionProofIssue<T>(
   if (!projectionReceipt || !candidateReceipt) return "the pointer or candidate receipt is malformed";
   if (projectionReceipt.decision !== "GOOD" || candidateReceipt.decision !== "GOOD") return "the pointer is not backed by a GOOD receipt";
   const sourceCheck = candidateReceipt.checks.find((check) => check.check === "SOURCE_AUTHENTICITY");
-  if (candidate.bootstrapImport) {
+  if (indexedPrior) {
+    if (indexedPrior.versionId !== candidate.id) return "the consumed prior index names a different immutable version";
+  } else if (candidate.bootstrapImport) {
     const importIssue = trustedLkgImportEvidenceIssue(candidate, predecessor);
     if (importIssue !== null) return `the trusted-LKG import evidence is invalid: ${importIssue}`;
     const expectedSourceCode = candidate.bootstrapImport.kind === "TRUSTED_LKG_REATTESTATION"
@@ -1114,7 +1252,8 @@ export function promotionProofIssue<T>(
     projectionReceipt.scope !== scope
   ) return "the GOOD receipt does not identify the pointed candidate";
   if (canonicalCivicDataJson(projectionReceipt) !== canonicalCivicDataJson(candidateReceipt)) return "the candidate and pointer receipts differ";
-  if (canonicalCivicDataJson(projection.payload) !== canonicalCivicDataJson(candidate.readModel)) return "the pointer payload differs from the validated candidate read model";
+  if (!indexedPrior && (scoped ? projection.payload !== candidate.readModel && durableStateHash(projection.payload) !== readModelHash :
+    canonicalCivicDataJson(projection.payload) !== canonicalCivicDataJson(candidate.readModel))) return "the pointer payload differs from the validated candidate read model";
   const retrievedAt = Date.parse(candidate.retrieval?.retrievedAt ?? "");
   const validatedAt = Date.parse(projectionReceipt.validatedAt);
   const promotedAt = Date.parse(projection.promotedAt);
@@ -1125,7 +1264,7 @@ export function promotionProofIssue<T>(
 
 function promotedResult<T>(
   projection: PromotedProjection<T>,
-  candidate: CandidateVersionRecord,
+  candidate: ProvenCandidate,
   now: string,
   maxAgeMs: number | undefined,
 ): CivicDataReadResult<T> {
@@ -1238,4 +1377,50 @@ export function clearPromotedReadModelCache(): void {
   provenByVersion.clear();
   provenPointers = new WeakMap();
   inflight = new WeakMap();
+}
+
+const readerProjectionReads = new WeakMap<ReaderSelection, Map<string, Promise<PromotedEdgeEntry>>>();
+
+async function readReaderProjection(recordClass: RoutineRecordClass, scope: string, selection: ReaderSelection): Promise<PromotedEdgeEntry> {
+  let held = readerProjectionReads.get(selection);
+  if (!held) { held = new Map(); readerProjectionReads.set(selection, held); }
+  const pointer = `${recordClass}:${scope}`;
+  const key = pointer + JSON.stringify([...selection.keys].sort());
+  const prior = held.get(pointer) ?? held.get(key);
+  if (prior) return prior;
+  const read = loadReaderProjection(recordClass, scope, selection);
+  held.set(key, read);
+  try {
+    const value = await read;
+    if (value.kind === "NOT_RECORDED") held.set(pointer, read);
+    return value;
+  } catch (error) { held.delete(key); throw error; }
+}
+
+// On an edge miss, Postgres returns the requested records and small pointer metadata; candidate payloads stay there.
+async function loadReaderProjection(recordClass: RoutineRecordClass, scope: string, selection: ReaderSelection): Promise<PromotedEdgeEntry> {
+  const query = readerQuery(1800);
+  if (!query) throw new Error("READER_STORE_UNCONFIGURED");
+  const window = selection.governmentWindow;
+  const payload = window ? `reader_inventory_payload(p.payload,$4::int,$5::int)` : `reader_place_payload(p.payload,$3::text[],$4::jsonb)`;
+  const [rows] = await query([{ text: `SELECT p.key, p.source_id, p.record_class, p.scope, p.current_version_id, p.last_known_good_version_id,
+    p.promoted_at, (p.validation_receipt - 'excludedFacts') || jsonb_build_object('excludedFacts','[]'::jsonb) validation_receipt,
+    ${payload} payload,
+    c.retrieved_at, reader_payload_node(c.candidate)->'temporal' temporal FROM civic_data_promotions p
+    JOIN civic_data_candidates c ON c.id=p.current_version_id
+    WHERE p.record_class=$1 AND p.scope=$2 AND c.state='PROMOTED' AND $3::text[] IS NOT NULL`, params: [recordClass, scope, [...selection.keys], ...(window ?? [selection.point ? JSON.stringify(selection.point) : null])] }]);
+  const row = rows[0];
+  if (!row) return { kind: "NOT_RECORDED", recordClass, scope };
+  const temporal = row.temporal as { staleAtRetrieval?: boolean; version?: string; sourceThrough?: string } | null;
+  return { kind: "PROMOTED", projection: { key: row.key as string, sourceId: row.source_id as string, recordClass, scope,
+    versionId: row.current_version_id as string, lastKnownGoodVersionId: row.last_known_good_version_id as string,
+    promotedAt: new Date(row.promoted_at as string).toISOString(), payload: row.payload,
+    receipt: row.validation_receipt as Extract<PromotedEdgeEntry, {kind:"PROMOTED"}>["projection"]["receipt"] },
+    attested: { recordClass, scope, versionId: row.current_version_id as string, payloadSha256: promotedPayloadSha256(row.payload),
+      retrievedAt: new Date(row.retrieved_at as string).toISOString(), staleAtRetrieval: temporal?.staleAtRetrieval === true,
+      version: temporal?.version ?? null, sourceThrough: temporal?.sourceThrough ?? null } };
+}
+
+export async function readStateRegistryRuntimeProjection(state: string, options: PromotedCivicDataReadOptions = {}): Promise<CivicDataReadResult<RegistryRuntimeReadModel>> {
+  return readPromotedCivicData<RegistryRuntimeReadModel>("REGISTRY_RUNTIME_BINDING", stateRegistryRuntimeScope(state), options);
 }

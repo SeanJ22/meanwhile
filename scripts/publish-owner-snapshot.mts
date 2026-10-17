@@ -1,8 +1,4 @@
-/**
- * Publishes the one owner snapshot Admin reads, from canonical control-plane
- * state. Mutable civic and operational truth never arrives through a tracked
- * file. Every panel that cannot be computed publishes a named gap, never a zero.
- */
+import { REGISTRY_STATES } from "../lib/civic-data/state-scopes.ts";
 
 import { collectPlaceHistory } from "../lib/control-plane/admin-view/place-history-collect.ts";
 import { readPlaceOwed } from "../lib/control-plane/admin-view/place-owed-read.ts";
@@ -138,7 +134,6 @@ function zipRows(): Held<readonly OwnerZipRow[]> {
       "republish them. A canonical exact-release certification projection is not wired here.",
   );
 }
-
 
 function intake(): {
   folder: Held<string>;
@@ -450,7 +445,22 @@ async function main(): Promise<void> {
   stepDone("provider bills collected");
   const scopeMembers = reads?.assignmentSources.ok && reads.billingScopes ? exactScopeMembers(reads.billingScopes, reads.assignmentSources.value) : undefined;
   const billingAttribution = reads && providerBilling ? providerBillingAttribution({ now: NOW_ISO, costs: reads.costs, attempts: reads.attempts, scopes: reads.billingScopes, holds: reads.billingHolds, scopeMembers, readings: providerBilling.readings }) : null;
-  let servedReader = DRY_RUN ? existing?.value.servedReaderReadback ?? null : await collectPublishedCampaignReadback(NOW_ISO).catch(() => ({ checkedAt: NOW_ISO, witnesses: existing?.value.servedReaderReadback?.witnesses ?? [], errors: ["Public readback collection failed; earlier witnesses retain their original time and expire after three hours."] }));
+  let servedReader = existing?.value.servedReaderReadback ?? null;
+  if (!DRY_RUN) {
+    const combined = { checkedAt: NOW_ISO, witnesses: [] as NonNullable<typeof servedReader>["witnesses"][number][], errors: [] as string[] };
+    for (const state of REGISTRY_STATES) {
+      try {
+        const read = await collectPublishedCampaignReadback(state, NOW_ISO);
+        combined.witnesses.push(...read.witnesses);
+        combined.errors.push(...read.errors);
+      } catch {
+        combined.errors.push(`${state} public readback collection failed; earlier witnesses retain their original expiry.`);
+      }
+    }
+    const observed = new Set(combined.witnesses.map(row => `${row.itemId}:${row.readerKey}`));
+    combined.witnesses.push(...(servedReader?.witnesses ?? []).filter(row => !observed.has(`${row.itemId}:${row.readerKey}`)));
+    servedReader = combined;
+  }
   stepDone("campaign page readback collected");
   if (!DRY_RUN && reads?.assignmentSources.ok) {
     const [workerReadback, manualReadback] = await Promise.all([

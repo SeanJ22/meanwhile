@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "./helpers/playbooks.ts";
@@ -20,8 +21,78 @@ import {
   type AskInteractionRow,
 } from "../lib/db/ask-signal.ts";
 import type { BindableEntity } from "../lib/routing/named-entity.ts";
+import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
-import { installAzBallot, installRegistryAuthority, syntheticAzBallot } from "./helpers/promoted-fixtures.ts";
+import type { GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
+import type { Contest } from "../lib/ballot/types.ts";
+import type { LineupOutcome } from "../lib/identity/types.ts";
+import { requireBallotState } from "../lib/civic-data/state-scopes.ts";
+import { currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
+
+import { stateBallotScope } from "../lib/civic-data/state-scopes.ts";
+import { ballotElectionKey } from "../lib/ballot/generic-projection.ts";
+import { installManualValue } from "./helpers/promoted-fixtures.ts";
+import { stateBallotContractId } from "../lib/civic-data/state-scopes.ts";
+import type { CivicDataReadResult } from "../lib/civic-data/read-model.ts";
+import { readGenericBallotProjection } from "../lib/ballot/generic-projection.ts";
+
+
+
+
+
+
+
+
+
+function served<T>(read: CivicDataReadResult<T>, what: string): T {
+  if (read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP") throw new Error(`${what} fixture did not install: ${read.kind} ${"detail" in read ? read.detail : ""}`);
+  return read.value as T;
+}
+
+
+
+interface SyntheticLineupNominee {
+  readonly name: string;
+  readonly partyLabel: string;
+  readonly outcome: LineupOutcome;
+  readonly candidacyId?: string;
+  readonly filingParty?: string;
+}
+
+interface SyntheticContest {
+  readonly id: string;
+  readonly title: string;
+  readonly ocdId?: string;
+  readonly type?: Contest["type"];
+  readonly candidacies?: readonly { readonly id: string; readonly givenName: string; readonly familyName: string; readonly partyLabel?: string | null }[];
+  readonly lineup?: readonly SyntheticLineupNominee[];
+}
+
+function syntheticAzBallot(contests?: readonly SyntheticContest[]): BallotSet {
+  const fixtures = JSON.parse(readFileSync(new URL("./fixtures/synthetic-az-ballots.json", import.meta.url), "utf8")) as Record<string, BallotSet>;
+  const ballot = fixtures[JSON.stringify(contests ?? null)];
+  if (!ballot) throw new Error("The synthetic Arizona ballot input has no recorded fixture");
+  return ballot;
+}
+
+async function installBallots(...ballots: BallotSet[]): Promise<GenericBallotProjection> {
+  const installed: GenericBallotProjection = { kind: "ballot-contests", ballots: {} };
+  for (const ballot of ballots.length ? ballots : [syntheticAzBallot()]) {
+    const state = requireBallotState(ballot.election.state);
+    const previous = currentReaderAuthorityEdge()?.promoted?.get(`BALLOT_CANDIDACY:${stateBallotScope("ballot-contests", state)}`);
+    const current = previous?.kind === "PROMOTED" ? previous.projection.payload as GenericBallotProjection : null;
+    const value: GenericBallotProjection = { kind: "ballot-contests", ballots: {
+      ...(current?.ballots ?? {}), [ballotElectionKey(ballot)]: ballot,
+    } };
+    installManualValue(stateBallotContractId("ballot-contests", state), value, `test:ballot-contests:${state}`);
+    served(await readGenericBallotProjection(state), `${state} ballot`);
+    Object.assign(installed.ballots, value.ballots);
+  }
+  return installed;
+}
+
+const azBallot = Object.values(JSON.parse(readFileSync(join(import.meta.dirname, "../data/ballot/2026-general/az.json"), "utf8")).ballots)[0] as BallotSet;
+
 
 await installRegistryAuthority();
 
@@ -363,9 +434,7 @@ test("readSubjectRefs refuses anything that is neither a name nor an id", () => 
   assert.equal(refs[1].focused, true);
 });
 
-const AZ_BALLOT = JSON.parse(
-  readFileSync(join(ROOT, "data", "states", "az", "ballot", "az-pima-2026.json"), "utf8"),
-) as BallotSet;
+const AZ_BALLOT = azBallot;
 
 const GOVERNOR_NOMINEES = [
   { name: "Katie Hobbs", partyLabel: "Democratic" },
@@ -377,7 +446,7 @@ const nominees = (contestId: string) => (contestId === "ballot-az-pima:governor"
 
 /* The committed ballot file as the promoted ballot rows, with the certified governor lineup bridged: the two
    nominees who filed under the same name reconcile to their filings, the other two are left unresolved. */
-await installAzBallot({
+await installBallots({
   ...syntheticAzBallot([{
     id: "ballot-az-pima:governor",
     title: "Governor",
@@ -392,7 +461,7 @@ await installAzBallot({
       ...(nominee.name === "Andy Biggs" ? { candidacyId: "ballot-az-pima:governor:biggs-andy" } : {}),
     })),
   }]),
-  ballot: AZ_BALLOT,
+  ...AZ_BALLOT,
 });
 
 test("BLOCKER 4: a non-statewide CHALLENGER on the reader's ballot is a resolvable entity", () => {
@@ -426,9 +495,7 @@ test("BLOCKER 4: contests and measures are resolvable, with the designations a r
   assert.ok(ids.has("ballot-az-pima:governor"), "a contest is an entity");
   assert.ok(ids.has("ballot-az-pima:prop-423"), "a measure is an entity");
 
-  /* The clerk files "Proposition 423: …". A reader types "Prop 423". The binder
-     needs every distinctive token present, so the filing title alone can never
-     be bound by a person. */
+
   assert.deepEqual(
     measureDesignations("Proposition 423: Vail Unified School District budget override continuation"),
     ["Proposition 423", "Prop 423"],

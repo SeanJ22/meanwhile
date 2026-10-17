@@ -1,3 +1,4 @@
+import { readerRoute } from "@/lib/api/reader-route";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Card } from "@/components/ui/card";
@@ -12,7 +13,7 @@ import { fecPersonId, fecPersonName } from "@/lib/ask/fec-national";
 
 export const dynamic = "force-dynamic";
 
-export default async function FecCandidateProfile({ params }: { params: Promise<{ candidate: string }> }) {
+export default readerRoute("/candidates/[candidate]", async function FecCandidateProfile({ params }: { params: Promise<{ candidate: string }> }) {
   const { candidate } = await params;
   if (!/^[HS]\d[A-Z]{2}\d{5}$/.test(candidate)) notFound();
   try { await settleFundingRead(); }
@@ -31,8 +32,8 @@ export default async function FecCandidateProfile({ params }: { params: Promise<
         contact={null}
         sources={[{ what: "FEC registration and campaign money", provenance: row.provenance }]}
         sections={{ money: money.kind === "funding" ? <FundingDisplay data={money.data} context={null} bare /> : null,
-          positions: <PositionsSection subjectId={personId} subjectName={name} contentOnly /> }}
+          positions: <PositionsSection divisionIds={[`ocd-division/country:us/state:${candidate.slice(2, 4).toLowerCase()}`]} subjectId={personId} subjectName={name} contentOnly /> }}
         afterSections={<PublicStatementsProfile subjectId={personId} />} />
     </div>
   </main>;
-}
+}, ["federal-funding","registry-runtime","federal-directory","candidate-publications","officeholder-statements","prl-archives"]);

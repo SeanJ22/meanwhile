@@ -145,7 +145,6 @@ test("all five registered adapters can persist a well-formed source-scoped failu
     ["nh-members", "NH General Court members"],
     ["census-acs-population", "Census ACS"],
     ["dotgov", "CISA dotgov"],
-    ["nj-morris-filing", "Morris County Clerk filing"],
   ] as const) {
     const store = new MemoryRoutineDataStore();
     const recorded = await recordRegisteredSourceAcquisitionFailure({
@@ -454,9 +453,7 @@ test("source parsers brand publisher evidence while a missing credential remains
 });
 
 test("dotgov refuses a registry CSV cut short of its declared length", async () => {
-  // acquireDotGov reads the pinned SHA then the raw CSV through the global
-  // fetch, so the completeness check is exercised by standing in a truncated
-  // transfer whose row count would otherwise still have to clear the floor.
+  // Truncate the pinned CSV transfer to exercise acquisition’s completeness check.
   const realFetch = globalThis.fetch;
   globalThis.fetch = (async (input: RequestInfo | URL) => {
     const url = String(input);
@@ -488,7 +485,6 @@ test("each standing source entrypoint uses the source-aware durable failure door
     "scripts/nh-gencourt-members.mts",
     "scripts/acs-population-promote.mts",
     "scripts/fetch-dotgov.mts",
-    "scripts/build-nj-morris-ballot.mts",
   ]) {
     const source = readFileSync(path, "utf8");
     assert.match(source, /recordRegisteredSourceAcquisitionFailure/, path);

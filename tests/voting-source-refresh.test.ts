@@ -10,6 +10,7 @@ import { votingRowsToSites } from "../lib/ballot/voting-source-readers.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { fairAutonomousWorkIds } from "../lib/control-plane/workers/coordinator.ts";
 import type { VotingDoorScope, VotingSourceDoor, VotingSourceRead } from "../lib/ballot/voting-source-types.ts";
+import { REGISTRY_STATES } from "../lib/civic-data/state-scopes.ts";
 
 const ELECTION = "2026-11-03";
 const NOW = "2026-10-13T12:00:00.000Z";
@@ -29,7 +30,16 @@ function capturedRead(): VotingSourceRead {
 }
 
 test("automatic voting refresh changes from daily to hourly without a Send or restart and covers Election Day in all US timezones", () => {
-  const task = AUTOMATIC_REFRESH_TASKS.find(row => row.id === "voting-sites")!;
+  const tasks = AUTOMATIC_REFRESH_TASKS.filter(row => row.id.startsWith("voting-sites:"));
+  assert.equal(tasks.length, REGISTRY_STATES.length);
+  assert.equal(new Set(tasks.map(row => row.acquisitionFailureDomain)).size, REGISTRY_STATES.length);
+  for (const state of REGISTRY_STATES) {
+    const row = tasks.find(task => task.id === `voting-sites:${state}`)!;
+    assert.equal(row.scope, `US-${state}:voting-sites`);
+    assert.equal(cadenceMsAt(row.contract, Date.parse("2026-10-27T00:00:00.000Z")), HOUR);
+    assert.ok(row.command.includes(`--state=${state}`));
+  }
+  const task = tasks.find(row => row.id === "voting-sites:FL")!;
   assert.equal(task.ownerInvocation, undefined);
   const checked = "2026-10-26T12:00:00.000Z";
   const clock = { lastAttemptedAt: checked, lastSucceededAt: checked, lastSucceededObservedAt: checked };
@@ -113,7 +123,7 @@ test("open blanks persist in the existing hunter queue idempotently, most populo
   assert.equal((await repos.obligations.list()).length, 2);
   assert.equal((await repos.occurrences.list()).length, 2);
   const items = (await repos.workItems.list()).map(row => row.value);
-  assert.ok(items.every(item => item.state === "OPEN" && item.autonomousPlan?.publication?.contractId === "voting-sites"));
+  assert.ok(items.every(item => item.state === "OPEN" && item.autonomousPlan?.publication?.contractId === "voting-sites:FL"));
   assert.equal(fairAutonomousWorkIds(items.reverse(), new Map())[0], first.workItemIds[0]);
   const plan = items.find(item => item.subject === okaloosa.ocdId)!.autonomousPlan!;
   assert.equal(plan.contract.schemaVersion, 2);

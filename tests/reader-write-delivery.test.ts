@@ -1,8 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { neonConfig } from "@neondatabase/serverless";
-import { installAzBallot, installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
-import { servableAzBallot } from "./helpers/reader-fixtures.ts";
+import { installManualValue, installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+import { ballotElectionKey } from "../lib/ballot/generic-projection.ts";
+import type { BallotSet } from "../lib/ballot/types.ts";
+import { stateBallotContractId } from "../lib/civic-data/state-scopes.ts";
 import { ASK_SAVE_STATUS_HEADER, askSaveNotice } from "../lib/ask/save-status.ts";
 import { submitDemandSignal } from "../lib/demand/client.ts";
 import { submitSpeakYourMind } from "../lib/speak/client.ts";
@@ -11,11 +13,17 @@ import { resetGroundedState } from "../lib/ask/grounded-state.ts";
 
 const candidateId = "ballot-az-pima:governor:fixture";
 await installRegistryAuthority();
-await installAzBallot(servableAzBallot([{
-  id: "ballot-az-pima:governor", title: "Governor",
-  candidacies: [{ id: candidateId, givenName: "Fixture", familyName: "Candidate" }],
-  lineup: [{ name: "Fixture Candidate", partyLabel: "Independent", outcome: "RECONCILED", candidacyId: candidateId }],
-}]));
+const provenance = { sourceUrl: "https://example.test/ballot", sourceOrg: "Synthetic test ballot", collectedAt: "2026-09-25", verifiedAt: null };
+const governor = "ballot-az-pima:governor";
+const ballot: BallotSet = {
+  election: { id: "az-2026-general-test", date: "2026-11-03", name: "2026 General Election (test)", state: "AZ" },
+  contests: [{ id: governor, electionId: "az-2026-general-test", ocdId: "ocd-division/country:us/state:az", divisionVintage: "2026",
+    title: "Governor", type: "CANDIDACY", voteFor: 1, termYears: 4, scopeNote: null, provenance }],
+  candidacies: [{ id: candidateId, contestId: governor, givenName: "Fixture", familyName: "Candidate", partyLabel: "Independent",
+    slogan: null, incumbent: null, websiteUrl: null, provenance }],
+  measures: [], absences: [],
+};
+installManualValue(stateBallotContractId("ballot-contests", "AZ"), { kind: "ballot-contests", ballots: { [ballotElectionKey(ballot)]: ballot } }, "test:ballot-contests:AZ");
 const { POST: ask } = await import("../app/api/ask/grounded/route.ts");
 const { POST: speak } = await import("../app/api/speak/route.ts");
 const { POST: demand } = await import("../app/api/demand-signal/route.ts");

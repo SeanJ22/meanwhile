@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { stateBallotContractId } from "../lib/civic-data/state-scopes.ts";
 import test from "node:test";
 import { createHash } from "node:crypto";
 import { addressDivisions, addressStateFips, lookupAddressGeographies } from "../lib/geo/address-geographies.ts";
@@ -97,7 +98,7 @@ test("real worker-ballot-contests output hides only outside contests in the addr
   const registry = { payload: { registry: { divisions: held.value.containers.map(({ ref }) => ({ state: "OH", label: ref.label,
     ocdId: ref.ocdId, sourceDataset: "TIGER_GENZ2025" })) } } } as RegistryRuntimePrior;
   const checked = workerBallotContestsPackage({
-    plan: { contract, publication: { contractId: "ballot-contests", bodyId: "fixture-body" } } as AutonomousWorkPlan,
+    plan: { contract, publication: { contractId: stateBallotContractId("ballot-contests", "OH"), bodyId: "fixture-body" } } as AutonomousWorkPlan,
     parser: { id: "parsed", workItemId: "ballot", endedAt: now, result } as WorkerResultRecord, registry, now,
     captures: [{ evidence, observedAt: now, transport: "REACHABLE", partial: false, httpStatus: 200 }],
   });

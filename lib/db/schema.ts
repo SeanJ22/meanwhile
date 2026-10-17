@@ -857,6 +857,8 @@ export const civicDataPromotions = pgTable(
   },
   (table) => [
     uniqueIndex("civic_data_promotions_record_scope_idx").on(table.recordClass, table.scope),
+    index("civic_data_promotions_federal_lookup_idx").using("gin", sql`(${table.payload}->'lookupKeys') jsonb_path_ops`)
+      .where(sql`${table.payload} ? 'lookupKeys'`),
     check(
       "civic_data_promotions_key_coherent",
       sql`${table.key} = ${table.recordClass} || ':' || ${table.scope}`,

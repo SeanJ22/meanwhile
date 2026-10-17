@@ -56,6 +56,23 @@ test("v2 office rows in HTML and tabular election records preserve exact markup 
   }
 });
 
+test("CSV range decoding preserves escaped quotes, embedded newlines, Unicode and unquoted cell offsets", () => {
+  const names = ['李 "West"\r\nDistrict 😀', "Long district ".repeat(500), '"Quoted"'];
+  const text = 'ID,Name\r\n1,"李 ""West""\r\nDistrict 😀"\r\n2,' + names[1] + '\r\n3,"""Quoted"""';
+  const input = request(text, { format: "DELIMITED_TEXT", delimiter: ",", headerRows: 1,
+    fields: { id: { source: 0, type: "STRING" }, name: { source: 1, type: "STRING" } } }, "ELECTION_DISTRICT");
+  const parsed = parseCivicRecords(input);
+  assert.equal(parsed.verdict, "EXTRACTED");
+  assert.deepEqual(parsed.records.map(row => row.fields.name), names);
+  for (const span of parsed.spans) assert.equal(text.slice(span.start, span.end), span.quote);
+  assert.equal(parsed.spans.find(span => span.recordId === parsed.records[0].id && span.field === "name")?.quote,
+    '"李 ""West""\r\nDistrict 😀"');
+  assert.equal(validateExtraction(validator(input)).verdict, "PASS");
+  for (const malformed of ['ID,Name\n1,"unterminated', 'ID,Name\n1,"closed"tail', 'ID,Name\n1,un"quoted']) {
+    assert.equal(parseCivicRecords(request(malformed, input.contract.extraction, "ELECTION_DISTRICT")).verdict, "FAILED");
+  }
+});
+
 test("external official comparison is a distinct durable receipt with exact authority and no source text", () => {
   const { parser, held } = withAuthority(); const input = { ...validator(parser), authorityEvidence: [held] }; const result = validateExtraction(input);
   assert.equal(result.verdict, "PASS", JSON.stringify(result.findings)); const receipt = result.externalVerifications![0];

@@ -1,4 +1,9 @@
+import { validReactionTargetsFor, type ReactionAuthorityReaders } from "@/lib/reactions/authority-targets";
+import { ballotPlaceFromRequest } from "@/lib/ballot/reader-place";
+import { readerRoute } from "@/lib/api/reader-route";
 import { withReaderFeatures } from "@/lib/civic-data/reader-feature-context.ts";
+import { measureRecordsForBallot } from "@/lib/ballot/measure-records";
+import { readerBallotSourceForTargetId } from "@/lib/ballot/reader-sources";
 import { writeReaction } from "@/lib/db/reactions";
 import { raiseWriteAlarm } from "@/lib/db/write-alarm";
 import { noteSubmission } from "@/lib/db/intake-limiter";
@@ -20,38 +25,49 @@ import {
   isValueOnScaleFor,
   normalizeFreeText,
 } from "@/lib/signal/reactions";
+import { getCandidateTargetIds } from "@/lib/ballot/candidate-targets";
+import { getProvisionTargetIds } from "@/lib/ballot/measure-provisions";
 import { getSingleCandidateTargetIds } from "@/lib/ballot/uncontested";
-import { validReactionTargetsFor } from "./targets";
+import {
+  getContributorReactionTargetIds,
+  getFundingTargetIds,
+  refreshFundingFromPromoted,
+} from "@/lib/funding/snapshot";
+import { getVoteIds, refreshFederalVotesFromPromoted } from "@/lib/votes/snapshot";
+import { settleStateMoneyRead, stateMoneyForTarget } from "@/lib/funding/state-snapshot";
 
-/**
- * POST /api/reactions. Validation fails closed and is never behind a flag: anything unknown, invented,
- * oversized or malformed is a 400 and nothing is stored.
- *
- * Protections, cheapest first, inside `ripcord.rateLimits`:
- *
- * 1. Same-origin.
- * 2. In-memory sliding windows per device key and per IP. The IP appears in no log, row or error message.
- * 3. The authoritative counters (lib/db/intake-limiter.ts): past the hard limit, refused; past the soft
- *    threshold, stored but quarantined; counters unavailable, stored quarantined as LIMITER_UNAVAILABLE.
- *
- * The limiter's digest cannot join the reaction store. `ripcord.reactionIntake` closes the route with a 503.
- * A missing database is a 202 (accepted, not stored).
- */
+
 
 export const runtime = "nodejs";
 
-/**
- * The instance-local first line. Limits are read from env once per
- * instance — the authoritative cross-instance numbers live in the DB
- * counters, so a stale window limit here only affects the cheap pre-check.
- */
+
 
 const MAX_BODY_BYTES = 4096;
 
+const reactionAuthorityReaders = (divisions: readonly string[]): ReactionAuthorityReaders => ({
+  candidateTargets: targetId => getCandidateTargetIds(divisions, targetId),
+  provisionTargets: async (targetId) => {
+    const authority = await readerBallotSourceForTargetId(targetId, divisions);
+    if (!authority) return new Set();
+    const ballot = authority.source.normalize(await authority.source.fetch());
+    return getProvisionTargetIds(measureRecordsForBallot(ballot));
+  },
+  refreshFunding: refreshFundingFromPromoted,
+  fundingTargets: getFundingTargetIds,
+  refreshStateMoney: (state) => settleStateMoneyRead(state),
+  stateMoneyTargets: (targetId) =>
+    stateMoneyForTarget(targetId).some(
+      (r) => r.filingState === "FILED" || r.filingState === "REGISTERED_NO_ACTIVITY_REPORTED",
+    )
+      ? new Set([targetId])
+      : new Set(),
+  contributorTargets: getContributorReactionTargetIds,
+  refreshVotes: refreshFederalVotesFromPromoted,
+  voteTargets: getVoteIds,
+});
+
+
 async function postWithSettings(request: Request) {
-  // The master ripcord: intake closed means every write refused
-  // before anything is read or counted. The reader's tap renders the
-  // honest not-counted line; nothing silently records.
   if (ripcordPulled("ripcord.reactionIntake")) {
     return Response.json({ error: "intake is closed" }, { status: 503 });
   }
@@ -92,26 +108,17 @@ async function postWithSettings(request: Request) {
   if (!isPlausibleTargetId(submission.targetId)) {
     return Response.json({ error: "malformed targetId" }, { status: 400 });
   }
-  // The verbatim's SHAPE is checked here and always — validation is never
-  // behind any flag. Whether the
-  // text is CAPTURED is the ripcord's business, further down.
   if (!isValidFreeText(submission.text)) {
     return Response.json({ error: "malformed text" }, { status: 400 });
   }
 
-  // The target must exist in the canonical data for its type — votes in
-  // the promoted vote projection, candidates in the ballot projection, funding
-  // reactions in the FEC projection. An unavailable authority fails closed —
-  // better to refuse a reaction than to store one against a target nothing
-  // can render. The CONTRIBUTOR_REACTION set is empty while
-  // ripcord.fecContributorDisplay is pulled, so the control's write path
-  // dies with its display — a ripcord that only hid pixels would not be
-  // a ripcord.
+  const divisions = await ballotPlaceFromRequest(request);
   let validTargets: Set<string>;
   try {
     validTargets = await validReactionTargetsFor(
       submission.targetType,
       submission.targetId,
+      reactionAuthorityReaders(divisions),
     );
   } catch {
     return Response.json({ error: "target data unavailable" }, { status: 503 });
@@ -120,19 +127,6 @@ async function postWithSettings(request: Request) {
     return Response.json({ error: "unknown targetId" }, { status: 400 });
   }
 
-  // The context table: a value whose meaning depends on the contest's
-  // shape is refused wherever that shape does not hold. SOMEONE_ELSE only
-  // means what it says in a race with one candidate; accepted on a contested
-  // race it would pour a different question's answers into the same bucket.
-  // Enforced here rather than trusted to the UI — the UI decides what to
-  // offer, the server decides what is true.
-  // The scale gate runs in BOTH directions: a
-  // five-point funding answer is refused on a vote, AND yes/no/unsure is
-  // refused on a funding target. The second direction is what keeps the
-  // scale break clean — a stale client writing v1 answers into a v2 column
-  // would blend two instruments, which is the whole thing scale versioning
-  // exists to stop. The server decides what question was asked; the row's
-  // scaleVersion is derived from the target type, never sent.
   if (!isValueOnScaleFor(submission.targetType, submission.reaction)) {
     return Response.json(
       { error: "that answer is not on this question's scale" },
@@ -149,7 +143,7 @@ async function postWithSettings(request: Request) {
     }
     let uncontested: Set<string>;
     try {
-      uncontested = await getSingleCandidateTargetIds(submission.targetId);
+      uncontested = await getSingleCandidateTargetIds(divisions, submission.targetId);
     } catch {
       return Response.json({ error: "target data unavailable" }, { status: 503 });
     }
@@ -163,9 +157,6 @@ async function postWithSettings(request: Request) {
 
   let suspectReason: "VELOCITY" | "LIMITER_UNAVAILABLE" | null = null;
   if (!ripcordPulled("ripcord.rateLimits")) {
-    // Same-origin: taps come from pages this site served. A browser
-    // attaches Origin to every POSTed fetch; a script pumping writes from
-    // outside either omits it or names a foreign origin.
     if (!isSameOriginSubmission(request)) {
       return Response.json(
         { error: "cross-origin submissions are not accepted" },
@@ -209,10 +200,6 @@ async function postWithSettings(request: Request) {
     }
   }
 
-  // Where the reader was looking — resolved server-side from the map view,
-  // the same approximate-location basis as the search log. Optional: a
-  // reaction with no resolvable view stores with no divisions rather than
-  // guessed ones.
   /* The guard requires an actual number on the wire: `Number(null)` is 0, so a null is absent, not the equator. */
   const lat = typeof submission.lat === "number" ? submission.lat : Number.NaN;
   const lng = typeof submission.lng === "number" ? submission.lng : Number.NaN;
@@ -242,11 +229,6 @@ async function postWithSettings(request: Request) {
       ocdIds,
       suspectReason,
       freeText,
-      // The declaration is required by `writeReaction`, and this is
-      // the one place a reaction row learns whose traffic it is. An absent
-      // header resolves to ORGANIC here — a real browser is still a reader,
-      // decided in a function that can be read rather than by a default
-      // sitting in a column definition where nobody looks.
       marker: markerFromRequest(request),
     });
     return new Response(null, { status: stored ? 204 : 202 });
@@ -258,6 +240,6 @@ async function postWithSettings(request: Request) {
   }
 }
 
-export async function POST(request: Request) {
+export const POST = readerRoute("/api/reactions", async function POST(request: Request) {
   return withReaderFeatures(() => postWithSettings(request));
-}
+}, ["state-money", "registry-runtime", "ballot-contests"]);

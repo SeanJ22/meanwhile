@@ -6,21 +6,28 @@ import { CardSourcesContribution } from "@/components/ui/card-sources-contributi
 import { CardGapContribution } from "@/components/ui/card-gap-context";
 import { CardSection } from "./card-section";
 
-export function OfficialActions({ subjectId }: { subjectId: string }) {
-  return <ActionsForIdentity key={subjectId} subjectId={subjectId} />;
+type ActionContext = { zip?: string | null; lat?: number | null; lng?: number | null } | null;
+
+export function OfficialActions({ subjectId, divisionIds = [], context }: { subjectId: string; divisionIds?: readonly string[]; context?: ActionContext }) {
+  return <ActionsForIdentity key={subjectId} subjectId={subjectId} divisionIds={divisionIds} context={context} />;
 }
 
-function ActionsForIdentity({ subjectId }: { subjectId: string }) {
+function ActionsForIdentity({ subjectId, divisionIds, context }: { subjectId: string; divisionIds: readonly string[]; context?: ActionContext }) {
+  const query = new URLSearchParams([
+    ...divisionIds.map(id => ["division", id]),
+    ...(context?.zip ? [["zip", context.zip]] : []),
+    ...(context?.lat != null && context?.lng != null ? [["lat", String(context.lat)], ["lng", String(context.lng)]] : []),
+  ]).toString();
   const [answer, setAnswer] = useState<ReaderOfficialActions | null>(null);
   const [failed, setFailed] = useState(false);
   useEffect(() => {
     const controller = new AbortController();
-    void fetch(`/api/official-actions/${encodeURIComponent(subjectId)}`, { signal: controller.signal })
+    void fetch(`/api/official-actions/${encodeURIComponent(subjectId)}?${query}`, { signal: controller.signal })
       .then(response => { if (!response.ok) throw new Error(String(response.status)); return response.json() as Promise<ReaderOfficialActions>; })
       .then(payload => { if (payload.subjectId === subjectId) setAnswer(payload); })
       .catch(() => { if (!controller.signal.aborted) setFailed(true); });
     return () => controller.abort();
-  }, [subjectId]);
+  }, [subjectId, query]);
   if (failed || (answer && !answer.count)) return <CardGapContribution id={`actions:${subjectId}`} label="official actions" subject={{ type: "CANDIDATE", id: subjectId }} />;
   if (!answer) return null;
   return <CardSection title="Official actions"><OfficialActionsContent answer={answer} /></CardSection>;

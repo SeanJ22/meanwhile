@@ -16,34 +16,54 @@ import { inventoryRecordEvidence, RecordEvidenceRefusal } from "../control-plane
 import { electionFieldState } from "./election-fields.ts";
 import type { RoutineRecordClass } from "./types.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
-import { REGISTRY_RUNTIME_SCOPE } from "../registry/runtime-data-plane.ts";
-import type { HeldBallotInputs, WorkerPublicationItem } from "./worker-publication-tasks.ts";
+import { stateRegistryRuntimeScope } from "./state-scopes.ts";
+import type { HeldInputs, WorkerPublicationItem } from "./worker-publication-tasks.ts";
 
 export const NATIONAL_ELECTION_OFFICES_URL = "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/";
 
 const SUBJECT_PAGE = 500;
 
-/** When each input of the held ballot routes last changed: one grouped read of the places' newest saved pages, one of the national office list. */
-export async function readHeldBallotInputs(
+/** When the inputs every held ballot route shares last changed: the national office list, the registry and the published routes. */
+export async function readHeldPointerTimes(
   query: (sql: string, parameters: readonly unknown[]) => Promise<readonly Record<string, unknown>[]>,
   promotedAt: (recordClass: RoutineRecordClass, scope: string) => Promise<string | null>,
-  items: readonly WorkerPublicationItem[],
-): Promise<HeldBallotInputs> {
-  const iso = (value: unknown) => value === null || value === undefined ? null : new Date(value as string).toISOString();
-  const subjects = [...new Set(items.flatMap(item => item.autonomousPlan?.publication?.contractId === "ballot-navigation" && item.subject ? [item.subject] : []))];
-  const pagesAt = new Map<string, string>();
-  for (let at = 0; at < subjects.length; at += SUBJECT_PAGE) {
-    for (const row of await query(`SELECT w.value #>> '{subject}' AS subject, max(a.recorded_at) AS at
-      FROM cp_work_items w JOIN cp_log_artifacts a ON a.log_key = w.id
-      WHERE w.value #>> '{subject}' = ANY($1::text[]) GROUP BY 1`, [subjects.slice(at, at + SUBJECT_PAGE)])) {
-      const newest = iso(row.at);
-      if (typeof row.subject === "string" && newest) pagesAt.set(row.subject, newest);
-    }
-  }
+  states: readonly string[],
+): Promise<Pick<HeldInputs, "nationalAt" | "registryAt" | "routesAt">> {
   const [national] = await query("SELECT max(recorded_at) AS at FROM cp_log_artifacts WHERE md5(record->>'canonicalUrl') = md5($1)", [NATIONAL_ELECTION_OFFICES_URL]);
   const routes = requiredManualProductionContract("ballot-navigation");
-  const [registryAt, routesAt] = await Promise.all([promotedAt("REGISTRY_RUNTIME_BINDING", REGISTRY_RUNTIME_SCOPE), promotedAt(routes.recordClass, routes.scope)]);
-  return { pagesAt, nationalAt: iso(national?.at), registryAt, routesAt };
+  let registryAt: string | null = null;
+  for (const state of new Set(states)) {
+    const at = await promotedAt("REGISTRY_RUNTIME_BINDING", stateRegistryRuntimeScope(state));
+    if (at && (!registryAt || at > registryAt)) registryAt = at;
+  }
+  const routesAt = await promotedAt(routes.recordClass, routes.scope);
+  return { nationalAt: iso(national?.at), registryAt, routesAt };
+}
+
+const iso = (value: unknown) => value === null || value === undefined ? null : new Date(value as string).toISOString();
+
+/** When each item's own saved pages last changed, in grouped reads: a ballot route's place, a roster's or directory's body. */
+export async function readHeldInputs(
+  query: (sql: string, parameters: readonly unknown[]) => Promise<readonly Record<string, unknown>[]>,
+  pointers: Pick<HeldInputs, "nationalAt" | "registryAt" | "routesAt">,
+  items: readonly WorkerPublicationItem[],
+): Promise<HeldInputs> {
+  const newest = async (path: string, keys: readonly string[]) => {
+    const at = new Map<string, string>();
+    for (let start = 0; start < keys.length; start += SUBJECT_PAGE) {
+      for (const row of await query(`SELECT w.value #>> '${path}' AS key, max(a.recorded_at) AS at
+        FROM cp_work_items w JOIN cp_log_artifacts a ON a.log_key = w.id
+        WHERE w.value #>> '${path}' = ANY($1::text[]) GROUP BY 1`, [keys.slice(start, start + SUBJECT_PAGE)])) {
+        const time = iso(row.at);
+        if (typeof row.key === "string" && time) at.set(row.key, time);
+      }
+    }
+    return at;
+  };
+  const subjects = [...new Set(items.flatMap(item => item.autonomousPlan?.publication?.contractId === "ballot-navigation" && item.subject ? [item.subject] : []))];
+  const bodies = [...new Set(items.flatMap(item => item.autonomousPlan?.publication?.bodyId ? [item.autonomousPlan.publication.bodyId] : []))];
+  const [pagesAt, bodyPagesAt] = await Promise.all([newest("{subject}", subjects), newest("{autonomousPlan,publication,bodyId}", bodies)]);
+  return { ...pointers, pagesAt, bodyPagesAt };
 }
 
 export function heldNationalElectionOfficeFields(capture: WorkerPublicationCapture): readonly ElectionFieldInput[] {
@@ -136,7 +156,6 @@ export async function publishHeldElectionOffices(input: {
   readonly readHeld: (record: ArtifactRecord) => Promise<WorkerPublicationCapture | null>;
   readonly limit?: number;
 }): Promise<readonly { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[]> {
-  const registry = await readRegistryRuntimePrior(input.store, input.now);
   const owed = (await Promise.all(input.workItemIds.map(id => input.repos.workItems.readNarrowed(id, HELD_ROUTE_FIELDS))))
     .flatMap(row => row === null ? [] : [{ ...(row.value as HeldRoute), id: row.id }]).filter(item => Boolean(item.autonomousPlan?.publication));
   const placeWork = async (subjectId: string): Promise<readonly string[]> =>
@@ -159,6 +178,8 @@ export async function publishHeldElectionOffices(input: {
   const places = new Map<string, { readonly subjectId: string; readonly ocdId: string; readonly label: string }>(), placeOf = new Map<string, string>();
   for (const item of owed) {
     const plan = item.autonomousPlan!;
+    if (plan.contract?.schemaVersion !== 2) { fieldsByItem.set(item.id, -1); continue; }
+    const registry = await readRegistryRuntimePrior(input.store, input.now, plan.contract.jurisdiction.state);
     const body = registry?.payload.registry.bodies.find(row => row.id === plan.publication!.bodyId);
     const divisionId = body?.ocdId ?? null;
     const division = divisionId ? registry!.payload.registry.divisions.find(row => row.ocdId === divisionId) : undefined;

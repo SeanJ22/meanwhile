@@ -1,23 +1,19 @@
-import { ensureReaderAuthorityEdge, readReaderEdgeMeetings, readReaderManifest } from "@/lib/meetings/edge-serving";
+import { readerRoute } from "@/lib/api/reader-route";
+import { holdReaderAuthorityEdge, ensureReaderAuthorityEdge, readReaderEdgeMeetings, readReaderManifest } from "@/lib/meetings/edge-serving";
 import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
 import { settleAgendaSupportingHoldings } from "@/lib/civic-data/agenda-support";
 import { meetingReaderRecords } from "@/lib/meetings/reader-records";
 import { classifyAgendaPublication, observationFromMeetingRecord, publisherAgendaObservationsFor, readerAgendaDocuments } from "@/lib/ask/agenda-publication";
 import { meetingListingKnowledgeFor } from "@/lib/ask/meeting-knowledge";
 import { settleOutcomeRead } from "@/lib/outcomes/store";
-import { settleRegistryAuthorityReads } from "@/lib/registry/server";
+import { readRegistryRuntimeProjection } from "@/lib/registry/runtime-read-model";
+import { statesForRegistryDivisions } from "@/lib/civic-data/state-scopes";
 
-/**
- * GET /api/agenda?meetingId=<source-namespaced id>
- *
- * The stored agenda documents for one meeting, newest version first. `documents` is exactly what the reader
- * is shown, one row per distinct content; the rows not shown are stated in `documentAccounting`. A document
- * whose extraction failed is returned with its note and null text.
- */
+
 
 export const runtime = "nodejs";
 
-export async function GET(request: Request) {
+export const GET = readerRoute("/api/agenda", async function GET(request: Request) {
   const meetingId = new URL(request.url).searchParams.get("meetingId");
   if (!meetingId || meetingId.length > 200) {
     return Response.json({ error: "meetingId required" }, { status: 400 });
@@ -25,8 +21,8 @@ export async function GET(request: Request) {
 
   let read;
   try {
-    const manifest = await readReaderManifest().catch(() => null);
-    const authority = manifest ? await ensureReaderAuthorityEdge(manifest, undefined, ["registry-runtime", "meeting-outcomes"]).catch(() => null) : null;
+    const manifest = await readReaderManifest().catch(holdReaderAuthorityEdge);
+    const authority = manifest ? await ensureReaderAuthorityEdge(manifest, undefined, ["registry-runtime", "meeting-outcomes"]).catch(error => holdReaderAuthorityEdge(error, manifest, ["registry-runtime", "meeting-outcomes"])) : null;
     if (authority) enterReaderAuthorityEdge(authority);
     read = await readReaderEdgeMeetings({ meetingId, manifest, window: "HELD" });
   } catch (error) {
@@ -59,7 +55,7 @@ export async function GET(request: Request) {
       return meetingReaderRecords(meetingId, meeting?.bodyId, meeting?.mergedMeetingIds);
     },
     listingIdentity: async () => {
-      await settleRegistryAuthorityReads("REGISTRY");
+      await readRegistryRuntimeProjection(statesForRegistryDivisions([meeting?.ocdId ?? "", meeting?.bodyId ?? ""]));
       return meetingListingKnowledgeFor(snapshot.meetings, [meetingId]).readback;
     },
   });
@@ -107,4 +103,4 @@ export async function GET(request: Request) {
     unavailableAuthorities: support.unavailableAuthorities,
     records: support.records, publication,
     listingIdentity: support.listingIdentity });
-}
+});

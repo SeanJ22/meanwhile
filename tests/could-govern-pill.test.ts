@@ -15,8 +15,12 @@ import { buildCensusDistrictEdge } from "../lib/census-geography/district-edge.t
 import type { BuiltDataset } from "../lib/census-geography/dataset.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { codeOf } from "./read-code.ts";
-import { contestsForDivisions } from "../lib/sources/ballot-nj-morris/index.ts";
-import { azBallot, electionSelection } from "./helpers/ballot-district-fixtures.ts";
+import { contestsForDivisions } from "../lib/ballot/contests.ts";
+import { electionSelection } from "./helpers/ballot-district-fixtures.ts";
+import type { BallotSet } from "../lib/ballot/types.ts";
+
+const azBallot = Object.values(JSON.parse(readFileSync(join(import.meta.dirname, "../data/ballot/2026-general/az.json"), "utf8")).ballots)[0] as BallotSet;
+
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, "..");

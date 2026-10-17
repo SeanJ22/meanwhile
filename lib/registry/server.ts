@@ -1,3 +1,4 @@
+import { sha256OfJson } from "../meetings/edge-artifacts.ts";
 import { FIPS_TO_STATE } from "../ocd/fips.ts";
 import type { Meeting } from "../sources/types.ts";
 import { readFile } from "node:fs/promises";
@@ -32,10 +33,12 @@ import {
   type CoverageSummary,
   type StateLegislatorCoverageAuthority,
 } from "./coverage.ts";
-import { divisionsAt as resolveDivisionsAt, type GeoFeature } from "./resolve.ts";
+import { divisionIdsAt, divisionsAt as resolveDivisionsAt, type GeoFeature } from "./resolve.ts";
 import type { Body, Division, Registry } from "./types.ts";
-import { getRegistryRuntimeReadModel, primeRegistryRuntimeFromValue, refreshRegistryRuntimeFromPromoted, registryRuntimeReadState } from "./runtime-read-model.ts";
-import { currentCampaignSitesEdge, currentCommentAccessEdge, currentFederalDirectoryEdge, currentReaderAuthorityEdge, currentRegistrationsEdge, currentRegistryRuntimeEdge, currentStateLegislatorsEdge, ReaderEdgeOnlyRefusal, refuseDatabaseInEdgeOnlyContext, settleEdgeFirst } from "./runtime-edge.ts";
+import { getRegistryRuntimeReadModel, refreshRegistryRuntimeFromPromoted, registryRuntimeReadState, selectedRegistryStates } from "./runtime-read-model.ts";
+import { currentCampaignSitesEdge, currentCommentAccessEdge, currentFederalDirectoryEdge, currentReaderAuthorityEdge, currentRegistrationsEdge, currentStateLegislatorsEdge, ReaderEdgeOnlyRefusal, refuseDatabaseInEdgeOnlyContext, settleEdgeFirst } from "./runtime-edge.ts";
+import { currentReaderSelection } from "../db/reader-route.ts";
+import { stateRegistryRuntimeScope, statesForRegistryDivisions } from "../civic-data/state-scopes.ts";
 import { curatedReaderReadState, primeCuratedReaderProjection, refreshCampaignSitesFromPromoted } from "../civic-data/curated-reader-read-model.ts";
 import { primeCommentAccess, readCommentAccessFacts } from "./comment-access.ts";
 import { CivicDataStoreUnavailableError } from "../civic-data/read-model.ts";
@@ -84,10 +87,8 @@ export class RegistryHoldingReadError extends Error {
   }
 }
 
-let cache: { readonly authorityKey: string; readonly value: Promise<Loaded> } | null = null;
-let registryCache: { readonly authorityKey: string; readonly value: Promise<RegistryLoaded> } | null = null;
-
-// Cache committed geography across registry versions; a failed read must remain retryable.
+const loadedCaches = new WeakMap<Registry, { authorityKey: string; value: Promise<Loaded> }>();
+const registryCaches = new WeakMap<Registry, Promise<RegistryLoaded>>();
 let geometryRead: Promise<GeoFeature[]> | null = null;
 let territoryRead: Promise<BodyTerritoryFile> | null = null;
 
@@ -108,8 +109,8 @@ function bodyTerritories(): Promise<BodyTerritoryFile> {
 }
 
 export function prefetchReaderGeography(): void {
-  void resolverGeometry().catch(() => undefined);
-  void bodyTerritories().catch(() => undefined);
+  if (registryRuntimeReadState().kind === "PROMOTED" || registryRuntimeReadState().kind === "BOOTSTRAP") void resolverGeometry().catch(() => undefined);
+  if (selectedRegistryStates().includes("AZ")) void bodyTerritories().catch(() => undefined);
 }
 
 async function loadRegistry(): Promise<RegistryLoaded> {
@@ -126,7 +127,7 @@ async function loadRegistry(): Promise<RegistryLoaded> {
 
 async function readResolverGeometry(): Promise<GeoFeature[]> {
   const root = process.cwd();
-  const stateCodes = new Set(Object.values(FIPS_TO_STATE).map((state) => state.postal.toLowerCase()));
+  const stateCodes = new Set(Object.values(FIPS_TO_STATE).map(state => state.postal.toLowerCase()));
 
   // The manifest separates resolver geometry from downloads and superseded derivatives.
   const manifest = JSON.parse(
@@ -191,7 +192,7 @@ async function load(base: RegistryLoaded, federalAvailable: boolean): Promise<Lo
   let territory: BodyTerritoryFile | null = null;
   try {
     // Read once per process (`bodyTerritories`), possibly already started by the route.
-    territory = await bodyTerritories();
+    territory = selectedRegistryStates().includes("AZ") ? await bodyTerritories() : null;
   } catch (error) {
     throw new RegistryHoldingReadError(BODY_TERRITORY_FILE, error);
   }
@@ -219,17 +220,15 @@ export interface RegistryAuthorityReaders {
   readonly federal: () => Promise<void>;
 }
 
-// Edge first, database second, each a binding of `settleEdgeFirst`. A reader request that entered the
-// reader authority edge primes the family from its edge value without reading the database; the runner
-// and workers read the authoritative database pointer; an edge-only context refuses.
 
 /** The federal directory, edge first. */
 export const settleFederalDirectoryRead = (): Promise<void> =>
   settleEdgeFirst(currentFederalDirectoryEdge, primeFederalDirectoryFromValue, refreshFederalDirectoryFromPromoted, "The federal directory");
 
 /** The registry runtime (divisions, bodies, rosters), edge first. */
-const settleRegistryRuntimeRead = (): Promise<void> =>
-  settleEdgeFirst(currentRegistryRuntimeEdge, primeRegistryRuntimeFromValue, refreshRegistryRuntimeFromPromoted, "The registry runtime");
+const settleRegistryRuntimeRead = async (states: readonly string[] = selectedRegistryStates()): Promise<void> => {
+  await refreshRegistryRuntimeFromPromoted(states);
+};
 
 /** Geometry/division reads never acquire the unrelated federal roster. */
 export async function settleRegistryAuthorityReads(
@@ -253,13 +252,9 @@ const settleCampaignSitesRead = (): Promise<void> =>
 
 export function authorityVersionKey(state: { readonly kind: string; readonly metadata: { readonly versionId: string | null } }): string {
   const served = state.kind === "PROMOTED" || state.kind === "BOOTSTRAP";
-  return `${served ? "SERVED" : state.kind}:${state.metadata.versionId ?? "none"}`;
+  return `${served ? "SERVED" : state.kind}:${state.metadata.versionId ?? "none"}:${sha256OfJson({ keys: [...currentReaderSelection()?.keys ?? []].sort(), window: currentReaderSelection()?.governmentWindow })}`;
 }
 
-async function currentRegistryAuthorityKey(): Promise<string> {
-  await settleRegistryAuthorityReads("REGISTRY");
-  return `registry:${authorityVersionKey(registryRuntimeReadState())}`;
-}
 
 async function currentAuthorityKey(registryKey: string): Promise<{ key: string; federalAvailable: boolean }> {
   let federalAvailable = false;
@@ -288,32 +283,25 @@ async function currentAuthorityKey(registryKey: string): Promise<{ key: string; 
   ].join("|") };
 }
 
-async function registryLoaded(): Promise<RegistryLoaded> {
-  const authorityKey = await currentRegistryAuthorityKey();
-  if (registryCache?.authorityKey === authorityKey) return registryCache.value;
-  const value = loadRegistry().catch((error) => {
-    if (registryCache?.value === value) registryCache = null;
-    throw error;
-  });
-  registryCache = { authorityKey, value };
+async function registryLoaded(states: readonly string[] = selectedRegistryStates()): Promise<RegistryLoaded> {
+  await settleRegistryRuntimeRead(states);
+  const registry = getRegistryRuntimeReadModel().registry;
+  let value = registryCaches.get(registry);
+  if (!value) { value = loadRegistry(); registryCaches.set(registry, value); }
   return value;
 }
 
-// Registration, composed one state at a time. A request reads only the states its own divisions name
-// and composes each beside the reviewed registry (`composeRegistration`: reviewed wins). A state with no
-// promoted registration adds nothing. A registration the store could not read is thrown, never returned
-// as emptiness: "nobody governs here" never stands in for "we could not read who does".
 const REGISTRATION_STATES = new Set(REGISTRATION_TARGETS.map((t) => t.state.toLowerCase()));
 interface ComposedRegistration {
   readonly key: string;
   readonly layer: RegistrationLayer;
   readonly divisionsById: ReadonlyMap<string, Division>;
 }
-const registrationLayers = new Map<string, ComposedRegistration>();
+const registrationLayers = new WeakMap<Registry, Map<string, ComposedRegistration>>();
 
 async function registrationFor(state: string): Promise<ComposedRegistration | null> {
   if (!REGISTRATION_STATES.has(state)) return null;
-  const base = await registryLoaded();
+  const base = await registryLoaded(selectedRegistryStates().length ? selectedRegistryStates() : [state]);
   const served = await registrationModelFor(state);
   return served ? composed(state, base, served.value, served.versionId) : null;
 }
@@ -365,9 +353,11 @@ export async function governmentListingsForState(state: string, offset = 0, limi
   const records = await governmentDomainsFor(held?.value.governments ?? []);
   const start = Math.max(0, Math.floor(offset));
   const size = Math.min(100, Math.max(1, Math.floor(limit)));
+  const window = currentReaderSelection()?.governmentWindow;
+  const total = held?.value.governmentCount ?? records.length;
   return { state: code.toUpperCase(), status: held ? "HELD" : "NOT_HELD", versionId: held?.versionId ?? null,
-    records: records.slice(start, start + size), total: records.length,
-    nextOffset: start + size < records.length ? start + size : null };
+    records: window ? records : records.slice(start, start + size), total,
+    nextOffset: start + size < total ? start + size : null };
 }
 
 /** Native lookup is scoped before a state shard is opened. */
@@ -398,12 +388,14 @@ export async function governmentListingsForDivisions(divisionIds: readonly strin
 
 /** One state's registration composed against the reviewed registry held now, cached by both versions. */
 function composed(state: string, base: RegistryLoaded, model: RegistrationReadModel, versionId: string): ComposedRegistration {
-  const key = `${registryCache?.authorityKey ?? ""}|${versionId}`;
-  const held = registrationLayers.get(state);
+  const key = versionId;
+  const entries = registrationLayers.get(base.registry) ?? new Map<string, ComposedRegistration>();
+  registrationLayers.set(base.registry, entries);
+  const held = entries.get(state);
   if (held?.key === key) return held;
   const layer = composeRegistration(base.registry, model, versionId);
   const entry: ComposedRegistration = { key, layer, divisionsById: new Map(layer.divisions.map((d) => [d.ocdId, d])) };
-  registrationLayers.set(state, entry);
+  entries.set(state, entry);
   return entry;
 }
 
@@ -418,22 +410,24 @@ async function registrationsFor(ocdIds: Iterable<string>): Promise<ComposedRegis
   return composed.filter((c): c is ComposedRegistration => c !== null);
 }
 
-async function loaded(): Promise<Loaded> {
-  const base = await registryLoaded();
-  const registryKey = registryCache!.authorityKey;
+async function loaded(states: readonly string[] = selectedRegistryStates()): Promise<Loaded> {
+  const base = await registryLoaded(states);
+  const registryKey = `registry:${authorityVersionKey(registryRuntimeReadState())}`;
   const { key: authorityKey, federalAvailable } = await currentAuthorityKey(registryKey);
-  if (cache?.authorityKey === authorityKey) return cache.value;
-  // Cache by promoted versions so a new GOOD pointer reaches warm Readers after their shared TTL.
-  const value = load(base, federalAvailable).catch((error) => {
-    if (cache?.value === value) cache = null;
-    throw error;
-  });
-  cache = { authorityKey, value };
+  const cached = loadedCaches.get(base.registry);
+  if (cached?.authorityKey === authorityKey) return cached.value;
+  const value = load(base, federalAvailable);
+  loadedCaches.set(base.registry, { authorityKey, value });
   return value;
 }
 
+function subjectRegistryStates(id: string): readonly string[] {
+  const named = statesForRegistryDivisions([id]), government = governmentStateOf(id);
+  return named.length ? named : government ? [government.toUpperCase()] : selectedRegistryStates();
+}
+
 export async function knownBodySubjectIds(forSubjectId?: string): Promise<Set<string>> {
-  const { registry, divisionsById } = await registryLoaded();
+  const { registry, divisionsById } = await registryLoaded(forSubjectId ? subjectRegistryStates(forSubjectId) : selectedRegistryStates());
   const out = new Set<string>(registry.bodies.map((b) => b.id));
   for (const ocdId of divisionsById.keys()) out.add(ocdId);
   // A registered body or division is known through its own state's registration.
@@ -448,7 +442,7 @@ export async function knownBodySubjectIds(forSubjectId?: string): Promise<Set<st
 
 /** One body by its id, from the reviewed registry or its state's registered governments; null when none is held. */
 export async function bodyById(bodyId: string): Promise<Body | null> {
-  const { registry } = await registryLoaded();
+  const { registry } = await registryLoaded(subjectRegistryStates(bodyId));
   const found = registry.bodies.find((body) => body.id === bodyId);
   if (found) return found;
   for (const r of await registrationsFor([bodyId])) {
@@ -461,7 +455,15 @@ export async function bodyById(bodyId: string): Promise<Body | null> {
 /** The divisions containing a point, from the committed geometry. */
 export async function divisionsAt(lat: number, lng: number): Promise<Division[]> {
   const { features, divisionsById } = await registryLoaded();
+  const selected = currentReaderSelection();
+  if (selected?.point?.[0] === lng && selected.point[1] === lat && selected.divisions) {
+    return selected.divisions.flatMap(id => divisionsById.has(id) ? [divisionsById.get(id)!] : []);
+  }
   return resolveDivisionsAt([lng, lat], features, divisionsById);
+}
+
+export async function readerDivisionIdsAt(lat: number, lng: number): Promise<string[]> {
+  return divisionIdsAt([lng, lat], await resolverGeometry());
 }
 
 export async function divisionsForCensusGeographies(geographies: CensusGeographies, selection: GeographySelection, vintage: string,
@@ -469,7 +471,9 @@ export async function divisionsForCensusGeographies(geographies: CensusGeographi
   const rows = divisionsFromCensusGeographies(geographies, selection,
     `https://geocoding.geo.census.gov/geocoder/geographies/onelineaddress?benchmark=Public_AR_Current&vintage=${vintage}&layers=all&format=json`, new Date().toISOString(), geographyVintages);
   if (!rows.length) return [];
-  const held = currentRegistryRuntimeEdge()?.value.registry.divisions ?? [];
+  const states = statesForRegistryDivisions(rows.map(row => row.ocdId));
+  await settleRegistryRuntimeRead(states);
+  const held = getRegistryRuntimeReadModel().registry.divisions;
   return rows.map(row => {
     const matches = held.filter(division => division.divisionType === row.divisionType && division.geoid === row.geoid);
     return matches.length === 1 ? { ...row, ocdId: matches[0].ocdId, canonicalOcdId: matches[0].canonicalOcdId,
@@ -478,7 +482,7 @@ export async function divisionsForCensusGeographies(geographies: CensusGeographi
 }
 
 export async function divisionsByOcdIds(ocdIds: readonly string[], context?: { zip: string; selection?: GeographySelection }): Promise<Division[]> {
-  const { divisionsById } = await registryLoaded();
+  const { divisionsById } = await registryLoaded(statesForRegistryDivisions(ocdIds));
   // An id the reviewed registry does not hold may be one its state registered.
   const registered = await registrationsFor(ocdIds.filter((id) => !divisionsById.has(id)));
   const published = new Map((context ? await publishedDivisionsForZip(context.zip, context.selection) : []).map(row => [row.ocdId, row]));
@@ -503,7 +507,11 @@ export async function seatHolderById(id: string, stateHint?: string): Promise<Se
     await settleFederalDirectoryRead();
     return indexByOfficeholderId([getFederalOfficeholderSet()], suppliedOfficialPhotos()).get(id) ?? null;
   }
-  await registryLoaded();
+  const states = stateHint ? [stateHint.replace(/^US-/i, "")] : subjectRegistryStates(id);
+  const current = registryRuntimeReadState();
+  const heldScopes = new Set(current.metadata.scope.split("|"));
+  if ((current.kind !== "PROMOTED" && current.kind !== "BOOTSTRAP") ||
+      states.some(state => !heldScopes.has(stateRegistryRuntimeScope(state)))) await registryLoaded(states);
   const rosterIdentity = currentRosterMemberReaderDisposition(id);
   if (rosterIdentity?.state === "IDENTITY_UNRESOLVED") return null;
   const canonicalId = rosterIdentity?.canonicalId ?? id;
@@ -521,7 +529,7 @@ export async function seatHolderById(id: string, stateHint?: string): Promise<Se
 /** Optional exact photo evidence already supplied to this request must not acquire another authority. */
 function suppliedOfficialPhotos(): PhotoIndex {
   try {
-    return new Map(currentRegistryRuntimeEdge()?.value.officialPhotos.photos.map(photo => [photo.officeholderId, photo.url]) ?? []);
+    return new Map(getRegistryRuntimeReadModel().officialPhotos.photos.map(photo => [photo.officeholderId, photo.url]) ?? []);
   } catch {
     return new Map();
   }
@@ -530,7 +538,7 @@ function suppliedOfficialPhotos(): PhotoIndex {
 /** Exact named-person answers only; this list asserts no relationship to a reader's location. */
 export async function allSeatHolders(divisionIds: readonly string[] = []): Promise<SeatHolder[]> {
   const states = [...new Set(divisionIds.map(statePeopleScopeForDivision).filter((scope): scope is StatePeopleJurisdiction => scope !== null))];
-  const [base, ...stateReads] = await Promise.allSettled([loaded().then(value => [...value.officialsById.values()]),
+  const [base, ...stateReads] = await Promise.allSettled([loaded(divisionIds.length ? statesForRegistryDivisions(divisionIds) : selectedRegistryStates()).then(value => [...value.officialsById.values()]),
     ...states.map(async scope => [...(await heldStateLegislatorsEdgeFirst(scope))?.seats ?? []].flatMap(holder => {
       const selected = seatHolderForMembership(holder, holder.memberships?.find(row => row.current === true)?.id);
       return selected ? [selected] : [];
@@ -546,6 +554,8 @@ export async function allSeatHolders(divisionIds: readonly string[] = []): Promi
 export async function partyByOfficeholderId(): Promise<
   Map<string, string | null>
 > {
+  const parties = currentFederalDirectoryEdge()?.value.partyLabels;
+  if (parties) return new Map(Object.entries(parties));
   const { officialsById } = await loaded();
   const map = new Map<string, string | null>();
   for (const holder of officialsById.values()) map.set(holder.id, holder.partyLabel);
@@ -570,7 +580,7 @@ export async function seatHoldersForDivision(
       await settleFederalDirectoryRead();
       return indexByDivision([getFederalOfficeholderSet()], suppliedOfficialPhotos());
     },
-    registry: settleRegistryRuntimeRead,
+    registry: () => settleRegistryRuntimeRead(statesForRegistryDivisions([ocdId])),
   });
 }
 

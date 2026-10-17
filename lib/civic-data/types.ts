@@ -29,7 +29,6 @@ export const ROUTINE_RECORD_CLASSES = [
   "CENSUS_REFERENCE",
   "CENSUS_GEOGRAPHY",
   "MEETING",
-  "BALLOT_FILING",
   "BALLOT_CANDIDACY",
   "CANDIDATE_PROFILE",
   "CANDIDATE_PUBLICATION",
@@ -40,6 +39,7 @@ export const ROUTINE_RECORD_CLASSES = [
   "DOTGOV_REFERENCE",
   "OPERATIONAL_REFERENCE",
   "REGISTRATION",
+  "FEDERAL_MONEY",
 ] as const;
 export type RoutineRecordClass = (typeof ROUTINE_RECORD_CLASSES)[number];
 
@@ -209,6 +209,10 @@ export interface NormalizationEvidence {
   readonly normalizedHash: string | null;
     /** Required by every promotable production candidate; only fixtures that cannot reach a production door may omit it. */
   readonly normalizedPayloadHash?: string | null;
+  readonly stateRecordHashes?: {
+    readonly readModelHash: string;
+    readonly members: readonly { readonly key: string; readonly factsHash: string; readonly sha256: string }[];
+  };
   readonly inputRecords: number;
   readonly outputRecords: number;
   readonly droppedRecords: number;
@@ -314,7 +318,15 @@ export type RoutineRemovalEvidence =
   | RosterDepartureRemovalEvidence
   | AuditPullRemovalEvidence
   | MovedToHistoryRemovalEvidence
-  | MovedToFactStoreRemovalEvidence;
+  | MovedToFactStoreRemovalEvidence
+  | FederalRepartitionRemovalEvidence;
+
+export interface FederalRepartitionRemovalEvidence {
+  readonly key: string;
+  readonly code: "FEDERAL_RECORD_REPARTITIONED";
+  readonly targetScope: string;
+  readonly targetVersionId: string;
+}
 
 /** A roster row removed from the registry partition: its members publish as facts. */
 export interface MovedToFactStoreRemovalEvidence {
@@ -506,13 +518,15 @@ export type TrustedLkgTransferEvidence =
   | TrustedLkgImportEvidence
   | TrustedLkgReattestationEvidence;
 
-/** Exact candidates replayed from one complete official contest list. */
-export interface BallotCandidateListEvidence {
-  readonly contestId: string;
-  readonly sourceUrl: string;
-  readonly rawHash: string;
-  readonly retrievedAt: string;
-  readonly candidateIds: readonly string[];
+export interface StateRetirementEvidence {
+  readonly kind: "STATE_AUTHORITY_RETIREMENT";
+  readonly contractId: string;
+  readonly state: string;
+  readonly unitSha256: string;
+  readonly origin: { readonly versionId: string; readonly recordClass: string; readonly scope: string;
+    readonly readModelHash: string; readonly sourceAuthenticity: string };
+  readonly priorVersionId: string | null;
+  readonly readModelHash: string;
 }
 
 /** `readModel` is the bounded projection Reader consumes; Reader never queries staging rows. */
@@ -535,8 +549,8 @@ export interface RoutineCandidate {
   readonly civicRecords?: readonly CivicRecordMember[];
   readonly changeSet?: RoutineChangeSet;
   readonly removalEvidence?: readonly RoutineRemovalEvidence[];
-  readonly ballotCandidateLists?: readonly BallotCandidateListEvidence[];
   readonly bootstrapImport?: TrustedLkgTransferEvidence;
+  readonly stateRetirement?: StateRetirementEvidence;
   readonly excludedFacts?: readonly {
     readonly key?: string | null;
     readonly code: string;

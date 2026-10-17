@@ -69,17 +69,13 @@ import {
 } from "@/lib/control-plane/scheduler/providers/meetings-discovery.ts";
 import {
   candidateEnrichmentProvider,
-  preloadCandidateEnrichmentAuthorities,
+  readCandidateEnrichmentAuthorities,
 } from "@/lib/control-plane/scheduler/providers/candidate-enrichment.ts";
 import { MemoryRoutineDataStore } from "@/lib/civic-data/store.ts";
 import { meetingsDiscoveryNeeds } from "@/lib/hunt/meetings-discovery.ts";
 import { sourcesOf, type Jurisdiction, type JurisdictionRegistry } from "@/lib/hunt/jurisdiction-universe.ts";
 
-/**
- * Sending the fleet to a geography creates the work it is missing. Runs on recorded data (the jurisdiction registry
- * fixture, native Census unit identities and explicit area-relationship fixtures) against in-memory repositories and
- * a fixed clock. No network, no database, no model.
- */
+
 
 const ROOT = join(import.meta.dirname, "..");
 const T0 = "2026-09-23T21:00:00.000Z";
@@ -648,8 +644,8 @@ test("explicit paid meetings discovery keeps the materialized needs in the regis
 });
 
 test("candidate enrichment enumerates the tracked states and names one with no ballot authority", async () => {
-  await preloadCandidateEnrichmentAuthorities({ store: new MemoryRoutineDataStore(), bypassCache: true, now: T0 });
-  const y = candidateEnrichmentProvider({ trackedStates: trackedStatesFrom(["az", "co"], "a test coverage set") }).enumerate({ root: ROOT, nowIso: T0 });
+  const holdings = await readCandidateEnrichmentAuthorities("AZ", { store: new MemoryRoutineDataStore(), bypassCache: true, now: T0 });
+  const y = candidateEnrichmentProvider({ holdings, trackedStates: trackedStatesFrom(["az", "co"], "a test coverage set") }).enumerate({ root: ROOT, nowIso: T0 });
   assert.match(y.readFailure ?? "", /CO is tracked \(a test coverage set\) and no canonical candidate ballot authority is registered for it/);
   assert.match(y.readFailure ?? "", /a dataset gap, never an election with no candidates/);
 });

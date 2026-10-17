@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
-import { validReactionTargetsFor } from "../app/api/reactions/targets.ts";
+import { validReactionTargetsFor } from "../lib/reactions/authority-targets.ts";
 
 const KEY = "ballot-az-pima:state-house-19|David Gowan";
 

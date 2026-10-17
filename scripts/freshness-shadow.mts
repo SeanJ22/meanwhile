@@ -1,3 +1,4 @@
+import { loadCandidateEnrichmentProvider } from "../lib/control-plane/scheduler/providers/candidate-enrichment-loader.ts";
 import { huntPacketsProvider } from "../lib/control-plane/scheduler/providers/hunt-packets.ts";
 import { ensureReaderSettingsPublished, publishAskPlaybooks } from "../lib/civic-data/reader-settings-publication.ts";
 import "../lib/ask/model.ts";
@@ -7,7 +8,8 @@ import { runLeaseWorkerProcesses, workerDispatchFailure, workerProcessSlots } fr
 import { RESEARCH_PARENT_PEAK_MIB, reportingWorkerSlots } from "../lib/control-plane/workers/worker-slots.ts";
 import { routeProcessExecutor } from "../lib/control-plane/workers/route-process.ts";
 import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
-import { legacyHeldWorkOwed, planHeldWorkerFleet } from "../lib/control-plane/workers/standing.ts";
+import { legacyHeldWorkOwed } from "../lib/control-plane/workers/standing.ts";
+import { planHeldWorkerFleet } from "../lib/control-plane/workers/standing-plan.ts";
 import { LINEAGE_ARTIFACT_FIELDS, LINEAGE_ATTEMPT_FIELDS, persistVerifiedPublicationAnchors, selectStandingLineages, standingLineageCoversDue, standingLineageKeyFor, type LineageArtifact, type LineageAttempt } from "../lib/control-plane/workers/standing-lineage.ts";
 import { sourceReliabilityKey } from "../lib/control-plane/scheduler/scout-reliability.ts";
 import { HOST_CONCURRENCY_DEFAULT, HOST_CONCURRENCY_SETTING, providerConcurrency } from "../lib/control-plane/scheduler/provider-limits.ts";
@@ -64,12 +66,9 @@ import { buildRegistry, registryLines } from "../lib/control-plane/scheduler/reg
 import { campaignFinanceProvider } from "../lib/control-plane/scheduler/providers/campaign-finance.ts";
 import { localJurisdictionsProvider } from "../lib/control-plane/scheduler/providers/local-jurisdictions.ts";
 import {
-  candidateEnrichmentHoldings,
-  candidateEnrichmentProvider,
-  preloadCandidateEnrichmentAuthorities,
+  readCandidateEnrichmentAuthorities,
 } from "../lib/control-plane/scheduler/providers/candidate-enrichment.ts";
 import {
-  campaignSiteCycleLine,
   campaignSiteSubjectsFromHoldings,
   heldMarginaliaAnswers,
   runCampaignSiteCycle,
@@ -405,15 +404,15 @@ observeControlPlaneTimeouts((timeout) => console.error(`freshness:shadow · ${ti
 let repos: ControlPlaneRepositories;
 if (wantsPostgres) {
   installNeonCircuitBreaker(ROOT, nowIso);
-  // Bound EACH Neon connect/query attempt. Without this, the
-  // bootstrap connect-retry (052b26e8) re-established a faulting TLS handshake
-  // with no per-attempt deadline, driving Node 24 into a native OpenSSL
-  // (X509) stack overflow at cycle start — the ~2-day cycle crash-loop that
-  // read as "0 providers / 0 units". connect-retry.ts's header names this as
-  // the required composition; routine-civic-data-runner already installs it,
-  // and freshness-shadow was the lone Neon caller missing it. A bounded
-  // attempt aborts a hung/faulting connect into a retryable transient, and a
-  // persistent failure then fails FAST (clean exit) instead of crashing.
+
+
+
+
+
+
+
+
+
   installNeonRequestDeadline();
   const url = controlPlaneUrlFromEnv();
   if (url === null) {
@@ -461,7 +460,6 @@ const [legacyOperationalReference, azOperationalReference] = await Promise.all([
 if (!legacyOperationalReference && !azOperationalReference) throw new Error(
   "OPERATIONAL_REFERENCE_READ_NOT_INITIALIZED: neither the scoped AZ pointer nor the legacy reviewed pointer could be read",
 );
-await preloadCandidateEnrichmentAuthorities();
 
 /* The meeting doors this cycle's meeting work, facts and Ask gaps are read against, straight from the registry. */
 {
@@ -506,7 +504,7 @@ const registryProviders = [
   huntPacketsProvider({ materialized: () => materialized }),
   campaignFinanceProvider(),
   localJurisdictionsProvider({ trackedStates, materialized: () => materialized, meetingPartitions }),
-  candidateEnrichmentProvider({ trackedStates }),
+  await loadCandidateEnrichmentProvider(trackedStates, { root: ROOT, nowIso: NOW }),
   meetingsDiscoveryProvider({ materialized: () => materialized }),
 
   (await import("../lib/control-plane/scheduler/providers/ask-gaps.ts")).askGapsProvider(
@@ -771,9 +769,9 @@ console.log(
     (debtIds.size === 0 ? "" : ` — ${[...debtIds].slice(0, 3).join(", ")}${debtIds.size > 3 ? " …" : ""}`),
 );
 
-// A completed, reader-verified publication is the source's next freshness
-// observation even when it was made by a linked repair child. Persist that
-// clock before deciding which standing source periods are due this cycle.
+
+
+
 const standingLineages = sync.all.some(o => o.autonomousPlan) ? await (async () => {
   const [occurrences, workItems, artifacts, attempts, workerResults] = await Promise.all([
     repos.occurrences.list(), repos.workItems.list(), repos.artifacts.readAllNarrowed(LINEAGE_ARTIFACT_FIELDS),
@@ -802,9 +800,9 @@ for (const o of sync.all) {
   dueThisCycle.push({ obligation: o, nextDueAt: row.nextDueAt, cadenceHours: row.cadenceHours });
 }
 
-// A discovery-only standing disposition does not settle downstream parsing,
-// verification or publication. Continue the same recorded source period instead
-// of opening another paid root every cycle while its actual work remains owed.
+
+
+
 const continuedStandingLineages: { obligationId: string; rootWorkItemId: string }[] = [];
 if (dueThisCycle.some(row => plannedForHunters(row.obligation.autonomousPlan) && row.obligation.openOccurrenceId === null)) {
   for (let i = dueThisCycle.length - 1; i >= 0; i--) {
@@ -1805,10 +1803,10 @@ function researchState(cycleFinishedAt: string | null): CycleResearchState {
       context: `standing runner child process (freshness-shadow) on ${HOST}, env via node --env-file`,
     },
     model: SCOUT_MODEL,
-    // The daily ceiling the page and `deriveLevel1` read is the value IN FORCE
-    // (the owner's override, or the fallback) — the same number the admission
-    // gates below use — never the compile-time RESEARCH_BOUNDS default, so the
-    // console can never show a ceiling that is not the one being enforced.
+
+
+
+
     bounds: { ...RESEARCH_BOUNDS, workerCapacity, dailyCeilingUsd: effectiveCeilingUsd },
     spend: {
       windowUsd: window,
@@ -2253,7 +2251,13 @@ async function runAutonomousProcesses() {
   }
   return report;
 }
-let campaignSites = null as CampaignSiteCycleReport | null;
+type CampaignSitesSummary = {
+  readsUsed: number; rereadsUsed: number; judgedFromVault: number; elapsedMs: number;
+  verdicts: CampaignSiteCycleReport["verdicts"]; byCode: Record<string, number>;
+  byStage: Record<string, number>; offers: { accepted: number; refused: number }; approved: number; unjoined: number;
+};
+let campaignSites: CampaignSitesSummary | null = null;
+const campaignSitesLine = (report: CampaignSitesSummary) => `  campaign sites     ${report.readsUsed} read(s), ${report.judgedFromVault} judged from vaulted reads, ${report.approved} approved for the derived door`;
 let campaignSitesState = "not run: the campaign-site pass has not started";
 let candidatePublications = null as CandidatePublicationCycleReport | null;
 let candidatePublicationsState = "not run: no original-scope candidacy admission";
@@ -2289,14 +2293,24 @@ const runCampaignSitesPass = async (): Promise<void> => {
     };
     try {
       const bounded = await withinWallTime((async () => {
-        const holdings = candidateEnrichmentHoldings();
-        if (holdings === null) throw new Error("the canonical ballot and profile pointers were not preloaded this cycle");
-        const { subjects, linked } = campaignSiteSubjectsFromHoldings(holdings, nowIso());
-        const vaultIndex = await step("the saved-page index", () => readRoundVault());
-        const held = await step("the held Marginalia answers", () => heldMarginaliaAnswers(repos, vaultIndex, nowIso()));
         const methodVersion = await step("the method version", roundMethodVersion);
         const openCampaignSite = fleetSafety.guardedOpenBytes("discovery-web", "campaign-site-chain", undefined, { followRedirects: false });
-        const report = await step("the campaign-site chain", () => runCampaignSiteCycle({
+        const report: CampaignSitesSummary = { readsUsed: 0, rereadsUsed: 0, judgedFromVault: 0, elapsedMs: 0,
+          verdicts: { read: 0, vault: 0, verified: 0, refused: 0, deferred: 0 }, byCode: {}, byStage: {},
+          offers: { accepted: 0, refused: 0 }, approved: 0, unjoined: 0 };
+        let responses = 0, answers = 0, unreadable = 0, statesRun = 0;
+        let subjectCount = 0;
+        let linkedCount = 0;
+        for (const state of trackedStateCodes) {
+          const holdings = await step(`${state} candidate authorities`, () => readCandidateEnrichmentAuthorities(state));
+          const { subjects, linked, failures } = campaignSiteSubjectsFromHoldings(holdings, nowIso());
+          if (failures.length) runtimeConditions.push(...failures);
+          subjectCount += subjects.size;
+          linkedCount += linked.size;
+          if (!subjects.size) continue;
+          const held = await step(`${state} held Marginalia answers`, () => heldMarginaliaAnswers(repos, join(ROOT, ...VAULT_DIR), nowIso(), subjects));
+          responses += held.responses.length; answers += held.answers; unreadable += held.unreadable;
+          const stateReport = await step(`${state} campaign-site chain`, () => runCampaignSiteCycle({
           startedAtMs: campaignStartedMs,
           repos,
           subjects,
@@ -2312,15 +2326,28 @@ const runCampaignSitesPass = async (): Promise<void> => {
           },
           spaceOut: spacer,
           vaultRoot: join(ROOT, ...VAULT_DIR),
-          heldVault: vaultIndex,
           methodVersion,
           deadlineMs: dispatchDeadlineMs,
-        }));
+          }));
+          statesRun++;
+          report.readsUsed += stateReport.chain.readsUsed;
+          report.rereadsUsed += stateReport.chain.rereadsUsed;
+          report.judgedFromVault += stateReport.chain.judgedFromVault;
+          report.approved += stateReport.chain.approved.length;
+          report.unjoined += stateReport.chain.unjoined.length;
+          for (const offer of stateReport.chain.offers) report.offers[offer.accepted ? "accepted" : "refused"]++;
+          report.verdicts = Object.fromEntries(Object.entries(report.verdicts).map(([key, value]) =>
+            [key, value + stateReport.verdicts[key as keyof typeof stateReport.verdicts]])) as CampaignSiteCycleReport["verdicts"];
+          for (const [key, value] of Object.entries(stateReport.byCode)) report.byCode[key] = (report.byCode[key] ?? 0) + value;
+          for (const [key, value] of Object.entries(stateReport.chain.byStage)) report.byStage[key] = (report.byStage[key] ?? 0) + value;
+        }
+        if (!statesRun) throw new Error("No state has a usable candidate authority for campaign-site work.");
+        report.elapsedMs = Date.now() - campaignStartedMs;
         return {
           report,
           state:
-            `ran over ${subjects.size} canonical candidacies (${linked.size} already carrying a campaign link, read last) and ${held.responses.length} newest held Marginalia answer(s) of ${held.answers} vaulted` +
-            (held.unreadable > 0 ? ` (${held.unreadable} answer(s) the vault could not produce)` : ""),
+            `ran over ${subjectCount} canonical candidacies (${linkedCount} already carrying a campaign link, read last) and ${responses} newest held Marginalia answer(s) of ${answers} vaulted` +
+            (unreadable > 0 ? ` (${unreadable} answer(s) the vault could not produce)` : ""),
         };
       })(), dispatchDeadlineMs + CAMPAIGN_SITES_SETTLE_MS - Date.now());
       if (bounded.done) {
@@ -2337,7 +2364,7 @@ const runCampaignSitesPass = async (): Promise<void> => {
       leaveCampaignSites();
     }
   }
-  console.log(campaignSites === null ? `  campaign sites     ${campaignSitesState}` : `${campaignSiteCycleLine(campaignSites)} · ${campaignSitesState}`);
+  console.log(campaignSites === null ? `  campaign sites     ${campaignSitesState}` : `${campaignSitesLine(campaignSites)} · ${campaignSitesState}`);
 };
 
 const runCandidatePublicationsPass = async (): Promise<void> => {
@@ -2349,9 +2376,9 @@ const runCandidatePublicationsPass = async (): Promise<void> => {
     const leavePublications = pending.enter("candidate-publications");
     try {
       const vaultRead = await readRoundVault();
-      // Once an ACQUIRER begins committing a captured page or a typed blocked
-      // disposition, let that repository operation settle. Racing a writer with
-      // a wall timer would leave an apparently stopped pass writing in the back.
+
+
+
       const pass = await runCandidatePublicationCycle({
         repos, eligibleCandidacyIds: lifetimeHuntSubjects,
         heldVault: vaultRead, vaultRoot: join(ROOT, ...VAULT_DIR),
@@ -2396,15 +2423,15 @@ if (DISCOVERY_SERIAL) {
   discoveryLaneIds = ["campaign-sites", "candidate-publications"];
 }
 
-// Registered autonomous plans use the same dispatcher, vault, host spacing and
-// rolling model ceiling. Discovery shares this cycle's existing Scout allowance.
-// Leave a minute after the last worker for the Admin state/heartbeat.
-// A prior cycle's late worker ended at the dispatch deadline, then its final
-// research state and heartbeat could not start before the hard wall.
-// Selection can read several complete repositories before it admits a worker.
-// Its own store budget must end before finalization starts, while a worker
-// admitted earlier still has time to finish and settle. This is a technical
-// slice boundary, not a count or spend cap: undispatched work remains owed.
+
+
+
+
+
+
+
+
+
 } finally {
 
   if (earlyOriginal !== null) {
@@ -2709,7 +2736,7 @@ const lines = [
           ((retirementApplied?.deferred.length ?? 0) > 0 ? ` · ${retirementApplied?.deferred.length} deferred to the next cycle (budget)` : "") +
           (retirementError !== null ? ` · COULD NOT RUN: ${retirementError}` : ""),
       ]),
-  campaignSites === null ? `  campaign sites     ${campaignSitesState}` : `${campaignSiteCycleLine(campaignSites)} · ${campaignSitesState}`,
+  campaignSites === null ? `  campaign sites     ${campaignSitesState}` : `${campaignSitesLine(campaignSites)} · ${campaignSitesState}`,
   ...(abandonedOccurrences.length === 0
     ? []
     : [
@@ -2805,21 +2832,7 @@ const runRecord = {
       /* The free campaign-site pass: whether it ran, each lead it read, and every verdict by code. */
       campaignSites: {
         state: campaignSitesState,
-        report: campaignSites === null
-          ? null
-          : {
-              readsUsed: campaignSites.chain.readsUsed,
-              rereadsUsed: campaignSites.chain.rereadsUsed,
-              judgedFromVault: campaignSites.chain.judgedFromVault,
-              verdicts: campaignSites.verdicts,
-              byCode: campaignSites.byCode,
-              byStage: campaignSites.chain.byStage,
-              offers: { accepted: campaignSites.chain.offers.filter((o) => o.accepted).length, refused: campaignSites.chain.offers.filter((o) => !o.accepted).length },
-              approved: campaignSites.chain.approved.map((a) => ({ itemId: a.itemId, candidacyId: a.campaignSite.candidacyId, url: a.campaignSite.url })),
-              unjoined: campaignSites.chain.unjoined.length,
-              elapsedMs: campaignSites.elapsedMs,
-              read: campaignSites.chain.leads.filter((l) => l.via === "READ").map((l) => ({ subjectId: l.subjectId, url: l.lead.url, outcome: l.outcome, codes: l.refusals.map((r) => r.code) })),
-            },
+        report: campaignSites,
       },
       candidatePublications: { state: candidatePublicationsState, report: candidatePublications },
       /* Rows outside the corpus: what was planned, held back by code, and actually written. */
@@ -2972,9 +2985,9 @@ try {
   failedStep("window-lease:release", error);
 }
 await (stallDiagnostic as CycleStallDiagnostic | null)?.stop();
-// Optional private Admin copy of verified originals. This follows the canonical
-// cycle outcome: an unavailable mirror can never rewrite acquisition/publication
-// truth, and the next ordinary cycle resumes the rotating reconciliation cursor.
+
+
+
 if (!dry && !canary && process.env.WTP_ADMIN_EVIDENCE_MIRROR_ENABLED === "1") {
   try {
     const mirror = await runAdminEvidenceMirror({ repos, vaultRoot: join(ROOT, ...VAULT_DIR),

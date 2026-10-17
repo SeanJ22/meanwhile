@@ -12,7 +12,7 @@ export function ballotScopeAtAddress(geographies: AddressGeographies, held: Slic
   for (const ballot of ballots) {
     const selection = { purpose: "election" as const, asOf, electionDate: ballot.election.date, stateFips };
     const divisions = addressDivisions(geographies, held, selection);
-    for (const contest of ballot.contests) {
+    for (const contest of [...ballot.contests, ...ballot.heldContests ?? []]) {
       if (!contest.ocdId.startsWith(`${state.base}/`)) continue;
       const level = /\/(cd|sldu|sldl):[^/]+$/.exec(contest.ocdId)?.[1];
       if (!level) continue;

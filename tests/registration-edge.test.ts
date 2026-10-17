@@ -13,15 +13,26 @@ import { REGISTRATION_SCOPES, registrationEdgePlan } from "../lib/registration/e
 import { REGISTRATION_SOURCE_BYTES, REGISTRATION_SOURCE_SHA256, REGISTRATION_SOURCE_URL, registrationTarget } from "../lib/registration/publication.ts";
 import { loadRegistrationReference } from "../lib/registration/reference.ts";
 import { enterReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
-import { installRegistryAuthority, promotedFixtureBundle } from "./helpers/promoted-fixtures.ts";
+import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+import type { ReaderAuthorityEdgeBundle } from "../lib/registry/runtime-edge.ts";
+import { currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 
-/**
- * The reader never wakes the database for registration on an ordinary visit:
- * the runner publishes each state's promoted registration as its own artifact,
- * carries unchanged states forward by reference, and the reader fetches only
- * the states a request's divisions name. The published section is complete or
- * absent, never partial, so a registered state never reads as unregistered.
- */
+
+
+
+
+
+
+
+
+function promotedFixtureBundle(extra: ReaderAuthorityEdgeBundle = {}): ReaderAuthorityEdgeBundle {
+  const current: ReaderAuthorityEdgeBundle = currentReaderAuthorityEdge() ?? {};
+  return { stateAuthorities: current.stateAuthorities,
+    ...(current.federalDirectory ? { federalDirectory: current.federalDirectory } : {}),
+    ...(current.stateLegislators ? { stateLegislators: current.stateLegislators } : {}),
+    ...extra, promoted: new Map([...(current.promoted ?? []), ...(extra.promoted ?? [])]) };
+}
+
 
 const ROOT = join(import.meta.dirname, "..");
 const META = { sourceThrough: null, retrievedAt: null, promotedThrough: null };
@@ -62,7 +73,7 @@ test("the runner reads a state only when its pointer moved; every other promoted
     ],
     {
       oh: { key: "reader/v1/registration-oh.json.gz", version: "reg-oh-1", sha: "a" },
-      nh: { key: "reader/v1/registration-nh.json.gz", version: "reg-nh-1", sha: "b" },
+      nh: { key: "reader/v1/registration-nh.json.gz", version: "reg-nh-1", sha: "b", layout: "records" },
     },
   );
   assert.deepEqual(plan.carried, { nh: "reg-nh-1" });

@@ -15,6 +15,8 @@ const MINUTE = 60_000;
 
 /** The environment key name a feed reads, where it needs one. Names only, never values. */
 const KEY_REFS: ReadonlyArray<readonly [RegExp, string]> = [
+  [/^federal-audit-clearinghouse$/, "DATA_GOV_API_KEY"],
+  [/^sam-gov-entities$/, "SAM_GOV_API_KEY"],
   [/census-acs-population|census-data-api/, "CENSUS_API_KEY"],
   [/legiscan/i, "LEGISCAN_API_KEY"],
   [/google-civic/i, "GOOGLE_CIVIC_API_KEY"],

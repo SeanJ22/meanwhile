@@ -1,5 +1,10 @@
+import type { GeneralLineup } from "./general-lineup.ts";
+import type { AnalysesFile } from "./analyses.ts";
+import type { CandidateContact } from "./candidate-contacts.ts";
+import type { AzCandidateIdentity, AzContestIdentity, LineupReconciliation } from "../identity/types.ts";
 import type { MeasureRecord } from "./measure-records.ts";
 import type { OcdId, Provenance } from "../sources/types.ts";
+import type { RetrievalEvidence } from "../civic-data/types.ts";
 
 export interface Election {
   id: string;
@@ -11,16 +16,13 @@ export interface Election {
 export type ContestType = "CANDIDACY" | "MEASURE" | "RETENTION";
 
 export interface Contest {
+  identity?: Pick<AzContestIdentity, "identityId" | "level" | "financeFilingAuthority">;
+  filing?: { id: string; publishedTitle: string; provenance: Provenance };
   /** True only when every candidate on this saved authoritative list was independently verified. */
   candidateListComplete?: boolean;
   /** Stable within a source, namespaced by the source. */
   id: string;
   electionId: string;
-  /**
-   * The division whose voters see this contest. State-level contests carry
-   * the bare state identifier, which resolution derives from any division
-   * at the point — the same hierarchy walk the senators use.
-   */
   ocdId: OcdId;
   divisionVintage: string;
   title: string;
@@ -34,6 +36,15 @@ export interface Contest {
 }
 
 export interface Candidacy {
+  identity?: Omit<AzCandidateIdentity, "displayName" | "givenName" | "familyName" | "partyLabel" | "canonicalCandidacyId" | "contestIdentityId">;
+  filing?: {
+    id: string;
+    publishedName?: string;
+    filingDate?: string;
+    signaturesFiled?: number;
+    provenance: Provenance;
+    heldIdentityJoin?: { rule: string; matchedForm: string; heldCandidacyId: string; heldPublishedName: string } | null;
+  };
   id: string;
   contestId: string;
   familyName: string;
@@ -84,6 +95,18 @@ export interface CandidacyRemoval {
 }
 
 export interface BallotSet {
+  sourceAggregates?: readonly {
+    id: string;
+    sourceId: string;
+    scope: string;
+    rawDocumentCount: number;
+    retrieval: RetrievalEvidence;
+  }[];
+  generalLineup?: GeneralLineup;
+  measureAnalyses?: AnalysesFile;
+  filingCandidacies?: Candidacy[];
+  lineupReconciliation?: LineupReconciliation;
+  contacts?: readonly CandidateContact[];
   heldContests?: readonly HeldBallotContest[];
   measureRecords?: readonly MeasureRecord[];
   election: Election;

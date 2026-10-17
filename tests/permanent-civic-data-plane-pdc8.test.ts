@@ -4,10 +4,9 @@ import test from "node:test";
 import {
   dotGovCandidate,
   meetingsCandidate,
-  njMorrisFilingCandidate,
 } from "../lib/civic-data/candidate-builders.ts";
-import { morrisCurrentFilingDocumentSet } from "../lib/hunt/nj-filing.ts";
-import { processRoutineCandidate, type PromotionOutcome } from "../lib/civic-data/promotion.ts";
+import { type PromotionOutcome } from "../lib/civic-data/promotion.ts";
+import { processRoutineCandidate } from "../lib/civic-data/candidate-lifecycle.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { RoutineCandidate, RoutineChangeSet } from "../lib/civic-data/types.ts";
 import {
@@ -20,7 +19,6 @@ const SECOND = "2026-09-08T01:00:00.000Z";
 const THIRD = "2026-09-08T02:00:00.000Z";
 
 type MeetingSnapshot = Parameters<typeof meetingsCandidate>[0]["snapshot"];
-type NjBallot = Parameters<typeof njMorrisFilingCandidate>[0]["ballot"];
 type DotGovSnapshot = Parameters<typeof dotGovCandidate>[0]["snapshot"];
 
 function changes(outcome: PromotionOutcome): RoutineChangeSet {
@@ -138,63 +136,6 @@ function meetingCandidate(version: string, changed: boolean): RoutineCandidate {
   });
 }
 
-function njBallot(changed: boolean): NjBallot {
-  const contest = {
-    id: "contest:county",
-    ocdId: "ocd-division/country:us/state:nj/county:morris",
-    provenance: { sourceUrl: "https://www.morriscountyclerk.org/Elections/Current-Election-Candidates" },
-  };
-  return {
-    formatVersion: 1,
-    election: { id: "nj-2026-11-03", date: "2026-11-03" },
-    contests: [contest],
-    candidacies: changed
-      ? [
-          { id: "candidacy:a", contestId: contest.id, familyName: "ALPHA", givenName: "Changed" },
-          { id: "candidacy:c", contestId: contest.id, familyName: "CHARLIE", givenName: "Case" },
-        ]
-      : [
-          { id: "candidacy:a", contestId: contest.id, familyName: "ALPHA", givenName: "Ann" },
-          { id: "candidacy:b", contestId: contest.id, familyName: "BRAVO", givenName: "Bob" },
-        ],
-    measures: [],
-    absences: [],
-    removals: changed ? [{ id: "candidacy:b", firstAbsentOn: "2026-09-08" }] : [],
-  };
-}
-
-function njContacts(changed: boolean) {
-  return {
-    contacts: changed
-      ? [
-          { candidacyId: "candidacy:a", email: "changed@example.test" },
-          { candidacyId: "candidacy:c", email: "c@example.test" },
-        ]
-      : [
-          { candidacyId: "candidacy:a", email: "a@example.test" },
-          { candidacyId: "candidacy:b", email: "b@example.test" },
-        ],
-  };
-}
-
-function njCandidate(version: string, changed: boolean): RoutineCandidate {
-  const ballot = njBallot(changed);
-  const refused = changed ? [{ key: "malformed-row", detail: "missing filed candidate name" }] : [];
-  return njMorrisFilingCandidate({
-    ballot,
-    contacts: njContacts(changed),
-    rawBodies: [`official clerk page ${version}`, `general PDF ${version}`, `school PDF ${version}`],
-    currentDocumentSet: {
-      generalCandidatesUrl: "https://www.morriscountyclerk.org/files/2026-general-election-candidates-090126.pdf",
-      schoolCandidatesUrl: "https://www.morriscountyclerk.org/files/2026-general-school-candidates-090126.pdf",
-    },
-    finalUrl: "https://www.morriscountyclerk.org/files/current-general-election-candidates.pdf",
-    retrievedAt: version,
-    inputRecords: (ballot.candidacies?.length ?? 0) + refused.length,
-    refused,
-  });
-}
-
 function dotGovRows(changed: boolean) {
   const initial = Array.from({ length: 500 }, (_, index) => ({
     domain: `election-${String(index).padStart(3, "0")}.gov`,
@@ -251,81 +192,6 @@ test("PDC-8 meetings: changed rows promote with exact added/changed/removed/held
     retrieval: { ...next.retrieval, finalUrl: "https://untrusted.example/meetings" },
   };
   await assertRefusalHoldsExactLkg({ store, bad, expectedState: "SOURCE_BLOCKED", expectedCode: "FINAL_ROUTE_NOT_REGISTERED" });
-});
-
-test("PDC-8 NJ filing: candidate/contact/removal changes and refused rows are exact; semantic failure holds LKG", async () => {
-  const store = new MemoryRoutineDataStore();
-  const initial = njCandidate(FIRST, false);
-  assert.equal((await processRoutineCandidate(store, initial, FIRST)).candidate.state, "PROMOTED");
-
-  const next = njCandidate(SECOND, true);
-  const promoted = await processRoutineCandidate(store, next, SECOND);
-  assert.equal(promoted.candidate.state, "PROMOTED");
-  assert.deepEqual(changeKeys(changes(promoted)), {
-    added: ["candidacy:candidacy:c", "removal:candidacy:b", "contact:candidacy:c"],
-    changed: ["candidacy:candidacy:a", "contact:candidacy:a"],
-    removed: ["candidacy:candidacy:b", "contact:candidacy:b"],
-    held: ["NJ_FILING_ROW_REFUSED"],
-  });
-  assert.equal(changes(promoted).held[0]?.key, "malformed-row");
-  assert.equal(changes(promoted).held[0]?.detail, "missing filed candidate name");
-
-  const partialBallot = njBallot(false);
-  const partial = njMorrisFilingCandidate({
-    ballot: partialBallot,
-    contacts: njContacts(false),
-    rawBodies: ["official clerk page", "general PDF without the school PDF"],
-    currentDocumentSet: {
-      generalCandidatesUrl: "https://www.morriscountyclerk.org/files/2026-general-election-candidates-090126.pdf",
-      schoolCandidatesUrl: "https://www.morriscountyclerk.org/files/2026-general-school-candidates-090126.pdf",
-    },
-    finalUrl: "https://www.morriscountyclerk.org/files/2026-general-election-candidates-090126.pdf",
-    retrievedAt: THIRD,
-    inputRecords: partialBallot.candidacies?.length ?? 0,
-    refused: [],
-  });
-  await assertRefusalHoldsExactLkg({
-    store,
-    bad: partial,
-    expectedState: "SEMANTIC_INVALID",
-    expectedCode: "SEMANTIC_CONTRACT_VIOLATION",
-  });
-
-  const bad: RoutineCandidate = {
-    ...structuredClone(next),
-    id: `${next.id}-semantic-refusal`,
-    semantics: { ...next.semantics, violations: ["fixture filing contradicts its contest"] },
-  };
-  await assertRefusalHoldsExactLkg({ store, bad, expectedState: "SEMANTIC_INVALID", expectedCode: "SEMANTIC_CONTRACT_VIOLATION" });
-});
-
-test("PDC-8 NJ filing: the clerk's unstamped 2026-09-18 revision is a current document set, to the validator as to the selector", async () => {
-  // The candidate selector and the validator share one naming rule; the URLs are the clerk page's own hrefs.
-  const CLERK = "https://www.morriscountyclerk.org/files/sharedassets/clerk";
-  const general = `${CLERK}/v/12/elections/past-results/2026-general-candidates.pdf`;
-  const school = `${CLERK}/v/14/elections/past-results/2026-general-school-candidates-082126.pdf`;
-  const ballot = njBallot(false);
-  const build = (generalCandidatesUrl: string) => njMorrisFilingCandidate({
-    ballot,
-    contacts: njContacts(false),
-    rawBodies: ["official clerk page", "general PDF", "school PDF"],
-    currentDocumentSet: { generalCandidatesUrl, schoolCandidatesUrl: school },
-    finalUrl: "https://www.morriscountyclerk.org/files/current-general-election-candidates.pdf",
-    retrievedAt: FIRST,
-    inputRecords: ballot.candidacies?.length ?? 0,
-    refused: [],
-  });
-
-  assert.deepEqual(morrisCurrentFilingDocumentSet([general, school]), { generalCandidatesUrl: general, schoolCandidatesUrl: school },
-    "the selector takes the unstamped revision");
-  const current = build(general);
-  assert.deepEqual(current.semantics.violations, [], "the validator refused what the selector chose");
-  assert.equal((await processRoutineCandidate(new MemoryRoutineDataStore(), current, FIRST)).candidate.state, "PROMOTED");
-
-  // The rule still knows the clerk's other PDFs from the candidate list.
-  const orderOfBallot = build(`${CLERK}/v/1/elections/past-results/2026-general-candidate-order-081026.pdf`);
-  assert.ok(orderOfBallot.semantics.violations.some((violation) => /not both acquired/.test(violation)),
-    "the candidate-order PDF was taken for the general candidate list");
 });
 
 test("PDC-8 dotgov: SHA-pinned domain changes are exact; dependent-consumer failure holds LKG", async () => {

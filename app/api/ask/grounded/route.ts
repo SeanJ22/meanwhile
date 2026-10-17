@@ -1,15 +1,21 @@
+import { currentReaderSelection } from "@/lib/db/reader-route";
+import { readerRoute } from "@/lib/api/reader-route";
+import { readRegistryRuntimeProjection } from "@/lib/registry/runtime-read-model";
+import { currentStateAuthorityProjection } from "@/lib/civic-data/state-reader";
 import { composePopulationAnswer, populationQuestion, populationEvidenceIds, readPopulationEvidence } from "@/lib/ask/population";
 import { withPublishedAskSettings, askPlaybookVersion } from "@/lib/ask/runtime-settings.ts";
 import { governmentFinanceEvidence, governmentFinanceQuestion, composeGovernmentFinanceAnswer } from "@/lib/ask/government-finance";
+import { federalMoneyEvidence, federalMoneyQuestion, federalMoneyPlaceQuestion, federalMoneyPlaceDivisions, composeFederalMoneyAnswer } from "@/lib/ask/federal-money";
+import { federalMoneyStateDivision } from "@/lib/federal-money/view";
 import { isBillQuestion,legiscanBillEvidence } from "@/lib/ask/legiscan-bills";
 import { openDataQuestion, openDataEvidenceFor } from "@/lib/ask/open-data";
 import { governmentListingEntity, governmentListingEvidenceRecords, readerGovernmentListings } from "@/lib/ask/government-listings";
 import { prlStatementEvidence, readPrlForSubject } from "@/lib/sources/prl/person";
 import { federalAskEvidence } from "@/lib/sources/congress/reader";
 import { type MeetingsSnapshot } from "@/lib/meetings/snapshot";
-import { ensureReaderAuthorityEdge, readReaderEdgeMeetings, readReaderManifest } from "@/lib/meetings/edge-serving";
+import { holdReaderAuthorityEdge, ensureReaderAuthorityEdge, readReaderEdgeMeetings, readReaderManifest } from "@/lib/meetings/edge-serving";
 import { enterReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "@/lib/registry/runtime-edge";
-import { AUTHORITY_FAMILIES, type AuthorityFamily, type PromotedAuthorityFamily } from "@/lib/meetings/edge-artifacts";
+import { AUTHORITY_FAMILIES, type AuthorityFamily, type GlobalAuthorityFamily, type PromotedAuthorityFamily } from "@/lib/meetings/edge-artifacts";
 import { READER_MAP_AUTHORITY_FAMILIES } from "@/lib/meetings/edge-serving";
 import type { Meeting } from "@/lib/sources/types";
 import { askResponseText, type AskSitting } from "@/lib/ask/answer";
@@ -64,10 +70,10 @@ import { asksWhatAnOfficeDoes, officeInQuestion } from "@/lib/ask/office-questio
 import { interpretQuestion, interpretWithoutModel } from "@/lib/ask/interpret";
 import { bodyNameFromQuestion, groupMoneyShapeForBoundSubject, lexicalQuestionShape, lexicalReading, moneyShapeForBoundPerson, otherNamedPerson, personVotesShapeForBoundPerson, shapeForBoundBody, unheldNamedBodyQuestion, type LexicalReading } from "@/lib/ask/lexical-reading";
 import { composePersonVotes, personVotesQuestionShape, readerPersonVotesQuestion, readerPersonVoteOfficials } from "@/lib/ask/person-votes";
-import { composeBodyRoster, composeReaderOfficials, placeNamesOf, readerOfficialsQuestion } from "@/lib/ask/reader-officials";
+import { composeBodyRoster, composeReaderOfficials, placeNamesOf, readerOfficialsQuestion, statesNamedInQuestion } from "@/lib/ask/reader-officials";
 import { areaMeetingsQuestion, composeAreaMeetings, type AreaSitting } from "@/lib/ask/area-meetings";
-import { composeBallotOnlyAnswer } from "@/lib/ask/ballot-only-answer";
-import { ballotQuestionHint, ballotQuestionShape, composeBallotSummary, composeOfficeField, contestsForBallotAsk } from "@/lib/ask/ballot-summary";
+import { composeBallotOnlyAnswer, composeSelectedBallots } from "@/lib/ask/ballot-only-answer";
+import { ballotQuestionHint, ballotQuestionShape, contestsForBallotAsk } from "@/lib/ask/ballot-summary";
 import { composeSittingAnswerWithBasis, settleSittingComposition, sittingVenue, type SittingGap, type SittingGapRole } from "@/lib/ask/sitting-answer";
 import { composeOwnWordsAnswer } from "@/lib/ask/own-words";
 import { composeMeasureMeaningAnswer, requestedMeasureVotes } from "@/lib/ask/measure-meaning";
@@ -87,7 +93,8 @@ import { contactForCandidate } from "@/lib/ask/candidate-contact";
 import { officeContactsForMember } from "@/lib/ask/office-contacts";
 import { keyVoteEvidenceFor } from "@/lib/ask/key-votes";
 import { settleFundingRead } from "@/lib/funding/snapshot";
-import { settleStateMoneyReads } from "@/lib/funding/state-snapshot";
+import { settleStateMoneyRead } from "@/lib/funding/state-snapshot";
+import { STATE_CAMPAIGN_FINANCE_SOURCES, type StateCampaignFinanceJurisdiction } from "@/lib/funding/data-plane";
 import { settleAzPimaFinanceRead } from "@/lib/control-plane/campaign-finance/held-records";
 import { isRetiredStateRollCallScope, refreshStateVotesFromPromoted } from "@/lib/sources/legiscan/snapshot";
 import {
@@ -99,11 +106,11 @@ import { settleFederalVotesRead } from "@/lib/votes/snapshot";
 import { settleFederalKeyVotesRead } from "@/lib/votes/key-votes-projection";
 
 import {
-  settleAzBallotRead,
   settleCandidateCorpusRead,
   settleCandidateProfilesRead,
 } from "@/lib/civic-data/manual-read-models";
-import { promotedVersionOrThrow } from "@/lib/civic-data/read-model";
+import { ballotPlaceDivisions } from "@/lib/ballot/reader-place";
+import { ballotStatesForDivisions } from "@/lib/ballot/reader-sources";
 import { settleOfficeholderStatementsRead } from "@/lib/corpus/data-plane";
 import {
   absencesForDivisions,
@@ -155,7 +162,7 @@ import { emptyTrace, type AnswerMode, type AskTrace } from "@/lib/ask/trace";
 import { validateAnswer } from "@/lib/ask/validate";
 import { settleRejectedModelAnswer } from "@/lib/ask/length-fallback";
 import { loadBallotForDivisions, namedOfficeholders, readerOfficeholders } from "@/lib/ask/server-sources";
-import { azHeldFilingSubjects, requestedHeldFilings, type HeldFilingSubject } from "@/lib/ask/held-filing-subjects";
+import { heldFilingSubjects, requestedHeldFilings, type HeldFilingSubject } from "@/lib/ask/held-filing-subjects";
 import {
   askAnswer,
   clarifyAnswer,
@@ -175,30 +182,6 @@ import {
   localFinanceEvidenceFor,
 } from "@/lib/ask/local-finance";
 import { statesOf, voteEvidenceForIncludingHistory, voteEvidenceReadsStateRollCalls } from "@/lib/ask/votes";
-
-/**
- * ```
- *   question
- *      ↓  the model, given the entity inventory and today's date
- *   INTERPRETATION           intent · entity mentions · tense · referent
- *      ↓  the registry's own binder
- *   CANONICAL RESOLUTION     reader words > model expansion > page context
- *      ↓  deterministic, scoped to the resolved id and the resolved tense
- *   RETRIEVAL                only records belonging to that exact subject
- *      ↓
- *   EVIDENCE PACK            records + provenance + NAMED GAPS + denominators
- *      ↓  the model, given the pack and nothing else
- *   SYNTHESIS
- *      ↓
- *   STRUCTURAL VALIDATION    invented URL · substituted subject · advice · tense
- *      ↓
- *   READER
- * ```
- *
- * Synthesis has no corpus, no tools and no network. A named body that resolves to more than one thing
- * produces `CLARIFY`, one that resolves to nothing produces `UNRESOLVED`; neither falls through to the
- * reader's own ZIP.
- */
 
 export const runtime = "nodejs";
 
@@ -259,11 +242,6 @@ interface MeetingLike {
   carried?: unknown;
 }
 
-/**
- * The meetings of one exact body, selected on `bodyId`, never on geography. An entity that is not
- * `level: "BODY"` gets no meetings at all, never its division's; the caller turns empty into a named gap.
- * Shared by the sitting selection and the agenda-topic sweep so the two cannot disagree.
- */
 function meetingsForBody(
   meetings: readonly MeetingLike[],
   bound: BindableEntity | null,
@@ -317,9 +295,6 @@ function officeholderActionEvidence(
     records.push({
       kind: "OFFICIAL_ACTION",
       id: action.id,
-      /* The office's own designation, title and date. Never a summary: a
-         summary of an executive order is a claim about what a government did,
-         made by us. */
       text: actionText(action),
       occurredAt: action.occurredAt,
       sourceUrl: action.documentUrl ?? action.sourceUrl,
@@ -372,11 +347,6 @@ function officeholderActionEvidence(
     }
   }
 
-  /*
-   * Rows we hold that no date-shaped question can reach. Surfaced rather than
-   * quietly filtered out by the window, because "we have this and cannot place
-   * it in time" is a different answer from not having it.
-   */
   const undated = undatedFor(seatId);
   denominators.actionRecordsWithNoDate = undated.length;
   if (trailingMonths && undated.length > 0) {
@@ -410,7 +380,7 @@ function personEntities(seats: readonly SeatHolder[]): BindableEntity[] {
   return out;
 }
 
-export async function POST(request: Request) {
+export const POST = readerRoute("/api/ask/grounded", async function POST(request: Request) {
   // Keep a copy for failures before the answer path has prepared its capture.
   const unansweredRequest = request.clone();
   return withReaderFeatures(async () => {
@@ -430,7 +400,7 @@ export async function POST(request: Request) {
     if (saveStatus !== null) response.headers.set(ASK_SAVE_STATUS_HEADER, saveStatus);
     return response;
   });
-}
+});
 
 /** A valid question remains demand even when answering fails before capture. */
 async function captureUnanswered(request: Request): Promise<AskSaveStatus | null> {
@@ -498,16 +468,26 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
     return Response.json({ error: "question is required" }, { status: 400 });
   }
   const question = body.question.slice(0, MAX_QUESTION_CHARS);
-  const ballotZip = typeof body.approximateLocation === "string" && /^\d{5}$/.test(body.approximateLocation) ? body.approximateLocation : undefined;
-  const ocdIds = readOcdIds(body.ocdIds);
+  const namedStates = statesNamedInQuestion(question);
+  const ballotZip = !namedStates.length && typeof body.approximateLocation === "string" && /^\d{5}$/.test(body.approximateLocation) ? body.approximateLocation : undefined;
+  const namedStateDivisions = namedStates.map(state => `ocd-division/country:us/${state === "DC" ? "district" : "state"}:${state.toLowerCase()}`);
+  let ocdIds = namedStates.length ? namedStateDivisions : await ballotPlaceDivisions({ divisions: readOcdIds(body.ocdIds), zip: ballotZip });
   const priorSubjectRefs = readSubjectRefs(body.priorSubjects, MAX_PRIOR_SUBJECTS);
+  const earlyManifest = namedStates.length ? await readReaderManifest().catch(holdReaderAuthorityEdge) : null;
+  if (namedStates.length) {
+    if (earlyManifest) enterReaderAuthorityEdge(await ensureReaderAuthorityEdge(earlyManifest, undefined, []));
+    const registry = await readRegistryRuntimeProjection(namedStates);
+    if (registry.kind === "PROMOTED" || registry.kind === "BOOTSTRAP") {
+      const words = ` ${question.toLowerCase().replace(/[^a-z0-9]+/g, " ")} `;
+      const namedDivisions = registry.value.registry.divisions.filter(division => {
+        const name = division.label.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+        const slug = division.ocdId.split("/").at(-1)?.split(":")[1]?.replaceAll("_", " ");
+        return /\/(?:place|county):/.test(division.ocdId) && (words.includes(` ${name} `) || Boolean(slug && words.includes(` ${slug} `)));
+      }).map(division => division.ocdId);
+      ocdIds = [...new Set([...namedStateDivisions, ...namedDivisions])];
+    }
+  }
 
-  // State-roll identity is established before any state pointer opens. Only
-  // the state(s) named by the reader's divisions or exact source-namespaced
-  // subject ids are eligible for this request; unrelated states are not
-  // touched and therefore cannot suppress or delay the answer. A retired
-  // STATE_ROLL_CALL scope (now per-legislator) is never opened:
-  // its pointer is a stale version nothing writes.
   const stateVoteScopes = new Set<OfficialStateVoteScope>();
   for (const state of statesOf(ocdIds)) {
     const target = officialStateRollCallTargetByScope(`US-${state.toUpperCase()}`);
@@ -524,11 +504,6 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
   let stageMark = Date.now();
   const lap = (name: string) => { const now = Date.now(); stageMs[name] = now - stageMark; stageMark = now; };
 
-  /*
-   * Sources are read only when the question needs them. The registry and federal directory come from the
-   * edge bundle when one exists, with the database as fallback. Each source owns its read state and failure
-   * gap: a missing or invalid pointer fails that source closed without failing the request.
-   */
   const readerVoteAsk = readerPersonVotesQuestion(question);
   const topicRoute = readerVoteAsk || personVotesQuestionShape(question) ? null : topicFocusedQuestion(question);
   /* "Who is my state senator?": a lookup in the officeholders held for the reader's divisions (lib/ask/reader-officials.ts). It reads the registry and the federal directory and nothing else. */
@@ -544,10 +519,6 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
     readSubjectRefs(body.activeSubjects).every(ref => !ref.focused) &&
     priorSubjectRefs.length === 0 &&
     (!Array.isArray(body.priorTurns) || body.priorTurns.length === 0);
-  // A shape is only a scheduling hint here. The complete subject inventory
-  // still loads, and lexicalReading below must prove the body binding before
-  // unrelated evidence may stay unread. A failed/ambiguous binding restores
-  // every family before the normal interpretation and retrieval path runs.
   const sittingShapes = new Set(["MEETING_TIME", "BODY_AGENDA", "MEETING_OUTCOME", "PUBLIC_COMMENT"]);
   /* Shapes whose subject is never a person: their answer reads no vote, statement or action record, and no county finance
      unless it is a money question. Deferred the same way the sitting shapes are, on the same proof. */
@@ -569,29 +540,24 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
       preloadMs[name] = Date.now() - started;
     }
   };
-  /*
-   * The edge is entered in this function's own execution: `enterReaderAuthorityEdge` is
-   * `AsyncLocalStorage.enterWith`, and a store entered inside a helper never reaches the reads chained on it.
-   */
   const production = process.env.NODE_ENV === "production";
-  const edgeManifest = await timed("edgeManifest", () => readReaderManifest().catch(() => null))();
-  const onEdge = (family: AuthorityFamily) => Boolean(edgeManifest?.authorityArtifacts?.[family]);
+  const edgeManifest = await timed("edgeManifest", () => earlyManifest ? Promise.resolve(earlyManifest) : readReaderManifest().catch(holdReaderAuthorityEdge))();
+  const onEdge = (family: GlobalAuthorityFamily) => Boolean(edgeManifest?.authorityArtifacts?.[family]);
   // Each database read is observed at once, so a failure while the edge is
   // fetched is never an unhandled rejection; the settle below still records it.
   const outcomesFromDatabase = leanAsk || ballotOnlyHint || onEdge("meeting-outcomes") ? null : timed("outcomes", refreshOutcomeSnapshotFromPromoted)();
   outcomesFromDatabase?.catch(() => undefined);
-  const commentAccessFromDatabase = production && !leanAsk && !ballotOnlyHint && !onEdge("comment-access")
-    // Public-comment rules are an independent optional family. Initialize its
-    // pointer, but do not let a store outage suppress meetings, ballots,
-    // officials, or any other source's answer.
+  const commentAccessFromDatabase = production && !leanAsk && !ballotOnlyHint && edgeManifest?.stateFacts === undefined
     ? timed("commentAccess", () => readCommentAccessFacts().catch(() => undefined))()
     : null;
   let authorityEdge: ReaderAuthorityEdgeBundle | null = null;
   if (edgeManifest?.authorityArtifacts) {
-    authorityEdge = await timed("authorityEdge", () => ensureReaderAuthorityEdge(edgeManifest, undefined,
-      ballotOnlyHint ? ["ballot-contests", "ballot-az", "ballot-nh"]
-        : leanAsk ? READER_MAP_AUTHORITY_FAMILIES
-        : deferUnrelatedEvidence ? AUTHORITY_FAMILIES.filter(family => !unrelatedFamilies.has(family)) : AUTHORITY_FAMILIES).catch(() => null))();
+    const families: readonly AuthorityFamily[] = officialsAsk?.unresolvedPlace ? [] : ballotOnlyHint ? ["ballot-contests"]
+      : leanAsk ? READER_MAP_AUTHORITY_FAMILIES.filter(family => family !== "registry-runtime")
+      : deferUnrelatedEvidence ? AUTHORITY_FAMILIES.filter(family => family !== "registry-runtime" && !unrelatedFamilies.has(family))
+      : AUTHORITY_FAMILIES.filter(family => family !== "registry-runtime");
+    authorityEdge = await timed("authorityEdge", () => ensureReaderAuthorityEdge(edgeManifest, undefined, families)
+      .catch(error => holdReaderAuthorityEdge(error, edgeManifest, families)))();
     if (authorityEdge) enterReaderAuthorityEdge(authorityEdge);
   }
   if (fecRaceMoneyQuestion(question)) {
@@ -621,8 +587,7 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
       }
     }
   }
-  // Confirm the hint from the published ballot before leaving any source
-  // unread. Legacy authorities and unmatched titles continue through the full path.
+  // Only a matching published ballot can answer without the remaining evidence sources.
   if (ballotOnlyHint) {
     const ballot = await timed("ballot", () => loadBallotForDivisions(ocdIds, {}, ballotZip))();
     const today = typeof body.today === "string" && /^\d{4}-\d{2}-\d{2}$/.test(body.today)
@@ -653,20 +618,32 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
       return Response.json(askAnswer({ mode: "STRUCTURED_GROUNDED", pack, answer: composed.answer, contacts: [], trace }));
     }
     if (edgeManifest?.authorityArtifacts) {
-      authorityEdge = await timed("remainingAuthorityEdge", () => ensureReaderAuthorityEdge(edgeManifest, undefined,
-        deferUnrelatedEvidence ? AUTHORITY_FAMILIES.filter(family => !unrelatedFamilies.has(family)) : AUTHORITY_FAMILIES).catch(() => null))();
+      const families = deferUnrelatedEvidence ? AUTHORITY_FAMILIES.filter(family => family !== "registry-runtime" && !unrelatedFamilies.has(family))
+        : AUTHORITY_FAMILIES.filter(family => family !== "registry-runtime");
+      authorityEdge = await timed("remainingAuthorityEdge", () => ensureReaderAuthorityEdge(edgeManifest, undefined, families)
+        .catch(error => holdReaderAuthorityEdge(error, edgeManifest, families)))();
       if (authorityEdge) enterReaderAuthorityEdge(authorityEdge);
     }
   }
-// Area questions share governing pieces with every ZIP in those divisions.
+  // Area questions share governing pieces with every ZIP in those divisions.
   // Questions naming a body elsewhere retain their wider subject inventory.
-  const meetingsRead = readReaderEdgeMeetings({
-    manifest: edgeManifest,
+  const registryStates = [...new Set([...statesOf(ocdIds), ...currentReaderSelection()?.states ?? []])];
+  await readRegistryRuntimeProjection(registryStates);
+  const registrySource = registryStates.every(state => currentStateAuthorityProjection("registry-runtime", state)?.source === "EDGE") ? "EDGE" : "DATABASE";
+  const questionShape = lexicalQuestionShape(question);
+  const needsMeetings = Boolean(topicRoute || areaMeetingsAsk || (!officialsAsk && !ballotQuestionHint(question) &&
+    !deferPersonRecords && (!questionShape || sittingShapes.has(questionShape.shape))));
+  const meetingManifest = needsMeetings ? edgeManifest : null;
+  if (meetingManifest?.meetingPlaces) {
+    authorityEdge = { ...authorityEdge, meetingPlaces: new Map(Object.entries(meetingManifest.meetingPlaces)) };
+    enterReaderAuthorityEdge(authorityEdge);
+  }
+  const meetingsRead = needsMeetings ? readReaderEdgeMeetings({
+    manifest: meetingManifest,
     window: "HELD",
     ...(ocdIds.length && (topicRoute || areaMeetingsAsk) ? { states: statesOf(ocdIds), ocdIds } : {}),
-
-  });
-  meetingsRead.catch(() => undefined);
+  }) : null;
+  meetingsRead?.catch(() => undefined);
   const essentialPreloads = [
     timed("registry", () => settleRegistryAuthorityReads("REGISTRY")),
     timed("federalDirectory", settleFederalDirectoryRead),
@@ -676,10 +653,11 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
       : production ? [timed("commentAccess", () => settleCommentAccessRead().catch(() => undefined))] : []),
   ];
   // Where each deferrable source is read from, when it is read: its proven-pointer family on the edge, or the database.
-  const promotedSource = (family: PromotedAuthorityFamily): "EDGE" | "DATABASE" =>
-    authorityEdge?.promotedFamilies?.has(family) ? "EDGE" : "DATABASE";
-  trace.preloadSources = {
-    registry: authorityEdge?.registryRuntime ? "EDGE" : "DATABASE",
+  const promotedSource = (family: PromotedAuthorityFamily | "ballot-contests" | "candidate-profiles" | "candidate-publications"): "EDGE" | "DATABASE" =>
+    authorityEdge?.promotedFamilies?.has(family) || ballotStatesForDivisions(ocdIds).some(state =>
+      edgeManifest?.stateAuthorities?.[family as "ballot-contests" | "candidate-profiles" | "candidate-publications" | "voting-sites"]?.[state]) ? "EDGE" : "DATABASE";
+  trace.preloadSources = officialsAsk?.unresolvedPlace ? { registry: registrySource } : {
+    registry: registrySource,
     federalDirectory: authorityEdge?.federalDirectory ? "EDGE" : "DATABASE",
     outcomes: authorityEdge?.meetingOutcomes ? "EDGE" : "DATABASE",
     ...(production ? { commentAccess: authorityEdge?.commentAccess ? "EDGE" as const : "DATABASE" as const } : {}),
@@ -688,7 +666,7 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
     azPimaFinance: promotedSource("pima-finance"),
     federalVotes: promotedSource("federal-votes"),
     federalKeyVotes: promotedSource("federal-key-votes"),
-    azBallot: promotedSource("ballot-az"),
+    ballots: promotedSource("ballot-contests"),
     candidateProfiles: promotedSource("candidate-profiles"),
     candidateCorpus: promotedSource("candidate-publications"),
     officeholderStatements: promotedSource("officeholder-statements"),
@@ -716,35 +694,36 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
   const deferrablePreloads = [
     () => { deferrableSourcesLoaded = true; return Promise.resolve(); },
     timed("funding", settleFundingRead),
-    timed("stateMoney", settleStateMoneyReads),
-    timed("azBallot", async () => promotedVersionOrThrow(await settleAzBallotRead())),
-    timed("candidateProfiles", settleCandidateProfilesRead),
-    timed("candidateCorpus", settleCandidateCorpusRead),
+    timed("stateMoney", () => Promise.all(ballotStatesForDivisions(ocdIds).filter(state => state in STATE_CAMPAIGN_FINANCE_SOURCES).map(state => settleStateMoneyRead(state as StateCampaignFinanceJurisdiction)))),
+    timed("candidateProfiles", () => Promise.all(ballotStatesForDivisions(ocdIds).map(state => settleCandidateProfilesRead(state)))),
+    timed("candidateCorpus", () => Promise.all(ballotStatesForDivisions(ocdIds).map(state => settleCandidateCorpusRead(state)))),
     ...unrelatedPreloads.filter((preload) => !skippedPreloads.includes(preload)),
   ];
   /* The registry and the federal directory are the first two; an officials lookup needs no other source. */
-  await settleGroundedSourcePreloads(topicRoute ? essentialPreloads : leanAsk ? essentialPreloads.slice(0, 2) : [...essentialPreloads, ...deferrablePreloads]);
-  // The recorded outcomes are what a topic answer leads with. A cold read that
-  // failed (a transient connect timeout on the first request) is retried once
-  // rather than silently answering from agenda lines alone. A retry that
-  // succeeds is a second-attempt success, and the trace names it.
+  const identityReady = settleGroundedSourcePreloads(essentialPreloads.slice(0, officialsAsk?.unresolvedPlace ? 1 : 2));
+  await settleGroundedSourcePreloads(topicRoute ? [() => identityReady, ...essentialPreloads.slice(2)] : leanAsk ? [() => identityReady]
+    : [() => identityReady, ...essentialPreloads.slice(2), ...deferrablePreloads.map(preload => async () => { await identityReady; return preload(); })]);
   if (topicRoute && !["PROMOTED", "BOOTSTRAP"].includes(outcomeProjectionReadState().kind)) {
     await timed("outcomesRetry", () => refreshOutcomeSnapshotFromPromoted().catch(() => undefined))();
     if (["PROMOTED", "BOOTSTRAP"].includes(outcomeProjectionReadState().kind)) {
       trace.preloadRetries = [...(trace.preloadRetries ?? []), "outcomes"];
     }
   }
+  for (const [name, family] of [["ballots", "ballot-contests"], ["candidateProfiles", "candidate-profiles"], ["candidateCorpus", "candidate-publications"]] as const) {
+    const reads = ballotStatesForDivisions(ocdIds).map(state => currentStateAuthorityProjection(family, state)).filter(read => read !== null);
+    if (reads.length) trace.preloadSources[name] = reads.every(read => read.source === "EDGE") ? "EDGE" : "DATABASE";
+  }
   lap("sourcePreloads");
   trace.preloads = preloadMs;
   let snapshot: MeetingsSnapshot | null = null;
-  let meetingDataState: "PROMOTED" | "BOOTSTRAP" | "STORE_UNREACHABLE" =
-    "STORE_UNREACHABLE";
+  let meetingDataState: "PROMOTED" | "BOOTSTRAP" | "STORE_UNREACHABLE" | "NOT_NEEDED" =
+    needsMeetings ? "STORE_UNREACHABLE" : "NOT_NEEDED";
   try {
     /* The same meetings read the map uses, so Ask and the map never describe two versions of a body's calendar. */
     const read = await meetingsRead;
-    meetingDataState = read.kind === "NOT_RECORDED" ? "STORE_UNREACHABLE" : read.kind;
-    if (read.kind === "PROMOTED" || read.kind === "BOOTSTRAP") {
-      snapshot = read.value;
+    if (read) {
+      meetingDataState = read.kind === "NOT_RECORDED" ? "STORE_UNREACHABLE" : read.kind;
+      if (read.kind === "PROMOTED" || read.kind === "BOOTSTRAP") snapshot = read.value;
     }
   } catch {
     // Keep this source unavailable; the reader receives the load-failure gap below.
@@ -753,22 +732,40 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
   // A failed meeting read must not withhold an unrelated eligible ballot or money record.
   const meetings = (snapshot?.meetings ?? []) as MeetingLike[];
   const documents = (snapshot?.agendaDocuments ?? []) as AgendaDocumentLike[];
+  if (needsMeetings && snapshot) {
+    const requestedStates = new Set(statesOf(ocdIds));
+    const meetingLeads = [...new Map((snapshot?.meetings ?? []).flatMap(meeting => {
+      if (!meeting.bodyId || !meeting.bodyName || !meeting.ocdId ||
+        !statesOf([meeting.ocdId]).some(state => requestedStates.has(state))) return [];
+      const [divisionType, slug] = meeting.ocdId.split("/").at(-1)!.split(":");
+      return [meeting.bodyName, slug?.replaceAll("_", " ")].filter((name): name is string => Boolean(name)).map(name => {
+        const lead: BindableEntity = { id: meeting.bodyId!, name, nameClass: "body", level: "BODY",
+          divisionType, ocdId: meeting.ocdId };
+        return [`${lead.id}|${name}`, lead] as const;
+      });
+    })).values()];
+    const meetingLeadDecision = decideNamedBody(question, meetingLeads);
+    const meetingLead = meetingLeadDecision.kind === "BOUND" ? meetingLeadDecision.entity
+      : meetingLeadDecision.kind === "CONFIRM" ? meetingLeadDecision.candidate : null;
+    if (meetingLead?.ocdId && !canonicalBodyIdentity(meetingLead.id)) {
+      // Meeting names and division slugs select a lookup only; canonical records decide identity and confirmation.
+      try {
+        await readRegistryRuntimeProjection([...new Set([...statesOf(ocdIds), ...statesOf([meetingLead.ocdId])])]);
+      } catch { /* An unavailable canonical body remains unresolved. */ }
+    }
+  }
   const surface: "MAP" | "BALLOT" | "UNKNOWN" =
     body.surface === "BALLOT" || body.surface === "MAP" ? body.surface : "UNKNOWN";
 
   /* Bodies resolve through the canonical registry, so a reader binds to one government rather than a shared geography. */
   const explicitBodyIds = new Set([...readSubjectRefs(body.activeSubjects), ...priorSubjectRefs]
     .filter((ref) => ref.kind === "BODY").flatMap((ref) => ref.id ? [ref.id] : []));
-  const governmentListings = await readerGovernmentListings(question, ocdIds, [...explicitBodyIds]).catch(() => ({ records: [], unavailableStates: [] }));
+  const governmentListings = officialsAsk?.unresolvedPlace ? { records: [], unavailableStates: [] }
+    : await readerGovernmentListings(question, ocdIds, [...explicitBodyIds]).catch(() => ({ records: [], unavailableStates: [] }));
   const listedGovernments = governmentListings.records.map(governmentListingEntity);
   const scopedBodies = [...bodyIdentityIndex().values()].filter((entry) =>
     (entry.ocdId && ocdIds.includes(entry.ocdId)) || explicitBodyIds.has(entry.bodyId));
   const bodies = [...snapshotEntities([...meetings, ...scopedBodies], (bodyId) => canonicalBodyIdentity(bodyId)), ...listedGovernments];
-  /*
-   * A question that names a curated topic and binds its government lexically (the reader's own words, never
-   * page context, a prior turn or a model expansion) is answered without the model. Anything else loads every
-   * source and goes to the model.
-   */
   let deterministicTopicRoute = false;
   /* A topic question naming no government, pronoun or earlier turn, with no body open, is answered from the timelines of the bodies governing the reader's divisions, with no model. */
   let areaTopicRoute = false;
@@ -794,9 +791,10 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
     if (!deterministicTopicRoute && !areaTopicRoute && !namedBodyTopicRoute) await settleGroundedSourcePreloads(deferrablePreloads);
   }
   trace.sourcesLoaded = leanAsk ? "ESSENTIAL" : !topicRoute || (!deterministicTopicRoute && !areaTopicRoute && !namedBodyTopicRoute) ? "ALL" : "ESSENTIAL";
-  const officeholders = await readerOfficeholders(ocdIds, scopedBodies.map((body) => body.bodyId));
+  const officeholders: Awaited<ReturnType<typeof readerOfficeholders>> = officialsAsk?.unresolvedPlace
+    ? { seats: [], loaderFailures: 0, held: [] } : await readerOfficeholders(ocdIds, scopedBodies.map((body) => body.bodyId));
   let namedPeople = 0;
-  try {
+  if (!officialsAsk?.unresolvedPlace) try {
     const explicitIds = [...readSubjectRefs(body.activeSubjects), ...priorSubjectRefs]
       .flatMap((ref) => ref.id ? [ref.id] : []);
     const named = await namedOfficeholders(question, explicitIds, ocdIds);
@@ -816,9 +814,7 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
   const preferredOfficialIds = [...readSubjectRefs(body.activeSubjects), ...priorSubjectRefs].flatMap((ref) => ref.id ? [ref.id] : []);
   const officialAliases = canonicalOfficialAliases(people.map((person) => person.id), preferredOfficialIds);
 
-  /* Loaded from the reader's divisions, not from what the client says is on screen; the same set `app/ballot/page.tsx` renders from. */
-  // A topic question bound lexically to a body is not a ballot question; its
-  // ballot is not read (loadBallotForDivisions([]) is the empty holding).
+
   const ballot = await loadBallotForDivisions(deterministicTopicRoute || areaTopicRoute || namedBodyTopicRoute || leanAsk ? [] : ocdIds, {}, ballotZip);
   const ballotLoadGaps: EvidenceGap[] = ballot.loaderFailures.length ? [{ whose: "OURS", statement: "We couldn't load the ballot for your area. Please try again in a moment." }] : [];
   const meetingLoadGaps: EvidenceGap[] = meetingDataState === "STORE_UNREACHABLE"
@@ -832,10 +828,10 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
   const ballotInventory = ballotAskInventory(ballot.set, ballot.contests, ballot.nominees,
     [...preferredOfficialIds, ...[question, ...comparedSlots].flatMap((text) => namedSourceFilingIds(text, ballot.set))]);
   let heldFilings: HeldFilingSubject[] = [];
-  if (ocdIds.some(id => /\/state:az(?:\/|$)/.test(id)) && !deterministicTopicRoute && !areaTopicRoute && !namedBodyTopicRoute && !leanAsk) {
+  if (ballot.set && !deterministicTopicRoute && !areaTopicRoute && !namedBodyTopicRoute && !leanAsk) {
     try {
       const represented = new Set([...ballotInventory.subjects.values()].flatMap(row => [row.id, ...(row.kind === "PERSON" && row.candidacyId ? [row.candidacyId] : [])]));
-      heldFilings = requestedHeldFilings(azHeldFilingSubjects(), question, preferredOfficialIds, represented);
+      heldFilings = requestedHeldFilings(heldFilingSubjects(ballot.set), question, preferredOfficialIds, represented);
     } catch {
       holdingLoadGaps.push({ whose: "OURS", statement: "We couldn't load the candidate filings for this answer. Please try again in a moment." });
     }
@@ -889,44 +885,24 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
   /* The office a held candidate is on the ballot for: a race the reader names ("for her state senate race") must be it. */
   const officeOf = (id: string) => ballotInventory.subjects.get(id)?.contestTitle ?? null;
 
-  /*
-   * Today is SUPPLIED, never derived from a model and never guessed. It is
-   * read from the server's clock here because this is a server; what matters
-   * is that neither model rung invents it, and both are told.
-   */
   const suppliedToday =
     typeof body.today === "string" && /^\d{4}-\d{2}-\d{2}$/.test(body.today);
   const today = suppliedToday
     ? body.today as string
     : new Date().toISOString().slice(0, 10);
-  /* A supplied date is the route's deterministic test/acceptance clock, not
-     prompt decoration. Noon UTC keeps the requested civil day stable across
-     every supported U.S. zone; ordinary production requests retain the exact
-     server instant so same-day past/future selection remains truthful. */
   const selectionNow = suppliedToday
     ? Date.parse(`${today}T12:00:00.000Z`)
     : Date.now();
 
-  /*
-   * What the reader has in front of them, as REFERENCES rather than display
-   * strings — canonical ids where the surface holds them, so a pronoun can
-   * resolve to a person the binder actually verified. See `lib/ask/subject.ts`.
-   */
   const canonicalReference = (ref: AskSubjectRef): AskSubjectRef => ({ ...ref, id: ref.id ? filingToBallot.get(ref.id) ?? officialToBallot.get(ref.id) ?? officialAliases.get(ref.id) ?? ref.id : ref.id });
   const activeSubjects: AskSubjectRef[] = readSubjectRefs(body.activeSubjects).map(canonicalReference);
   const priorSubjects: AskSubjectRef[] = priorSubjectRefs.map(canonicalReference);
 
-  /* "What is on my ballot?" and "Who is running for state senate in my district?" are answered from the contests the reader's divisions reach, only when the composition can be made (`lib/ask/ballot-summary.ts`). */
   const ballotShape = !topicRoute && !leanAsk && ballot.set ? ballotQuestionShape(question, ballot.contests) : null;
-  const ballotComposed = !ballotShape || !ballot.set ? null
-    : ballotShape.kind === "SUMMARY"
-      ? composeBallotSummary({ contests: ballot.contests, election: ballot.set.election })
-      : contestsForBallotAsk(ballot.contests, ballotShape).some((contest) => [...partyConflictFilings.keys()].some((key) => key.startsWith(`${contest.id}|`)))
-        ? null
-        : composeOfficeField({
-          key: ballotShape.key, phrase: ballotShape.phrase, contests: ballot.contests, election: ballot.set.election, nominees: ballot.nominees, candidacies: ballot.set.candidacies,
-          removedCandidacyIds: new Set((ballot.set.removals ?? []).map((removal) => removal.id)),
-        });
+  const ballotComposed = !ballotShape || ballotShape.kind === "OFFICE" &&
+    contestsForBallotAsk(ballot.contests, ballotShape).some(contest =>
+      [...partyConflictFilings.keys()].some(key => key.startsWith(`${contest.id}|`)))
+    ? null : composeSelectedBallots(ballot, ballotShape);
   const ballotAsk = ballotComposed ? ballotShape : null;
   lap("officeholdersAndBallot");
   // A literal reader date outranks inferred tense, including a model's reading (applied in `answerPath`).
@@ -989,7 +965,8 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
     activeSubjects: activeSubjects.map((s) => s.name).slice(0, MAX_ACTIVE_SUBJECTS),
   };
   const unheldBody = !topicRoute && !leanAsk && !ballotAsk ? unheldNamedBodyQuestion(question, namedBodies) : null;
-  const modelFreeTopicRoute = deterministicTopicRoute || areaTopicRoute || namedBodyTopicRoute || leanAsk || Boolean(ballotAsk) || Boolean(unheldBody);
+  const federalPlaceAsk = !topicRoute && !leanAsk && !ballotAsk && ocdIds.length > 0 && activeSubjects.every(ref => !ref.focused) && federalMoneyPlaceQuestion(question);
+  const modelFreeTopicRoute = deterministicTopicRoute || areaTopicRoute || namedBodyTopicRoute || leanAsk || Boolean(ballotAsk) || Boolean(unheldBody) || federalPlaceAsk;
   /* A question in a canonical shape whose name binds one body identically in every binder is read in code (`lib/ask/lexical-reading.ts`); anything else goes to the model. */
   const readerVoteReading: LexicalReading | null = readerVoteAsk && readerVoteChoices.length ? { shape: "PERSON_VOTES" as const,
     interpretation: { ...unavailableInterpretation(), intent: "PERSON_RECORD" as const, temporal: { kind: "NONE" as const } },
@@ -1012,7 +989,9 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
       // Enter in this async scope, not inside a preload helper: otherwise the
       // AsyncLocalStorage context would not reach the subsequent readers.
       if (edgeManifest?.authorityArtifacts) {
-        authorityEdge = await timed("remainingAuthorityEdge", () => ensureReaderAuthorityEdge(edgeManifest).catch(() => null))();
+        const families = AUTHORITY_FAMILIES.filter(family => family !== "registry-runtime");
+        authorityEdge = await timed("remainingAuthorityEdge", () => ensureReaderAuthorityEdge(edgeManifest, undefined, families)
+          .catch(error => holdReaderAuthorityEdge(error, edgeManifest, families)))();
         if (authorityEdge) enterReaderAuthorityEdge(authorityEdge);
       }
       trace.preloadSources = { ...trace.preloadSources,
@@ -1035,10 +1014,10 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
   if (outcome === null && unheldBody) {
     interpretation = interpretWithoutModel(question);
     trace.interpretation = { ran: false, why: "unheld-body-shape", ms: Date.now() - interpretationStarted, intent: interpretation.intent, temporal: interpretation.temporal, fellBackToDeterministic: true };
-  } else if (outcome === null && (leanAsk || ballotAsk)) {
+  } else if (outcome === null && (leanAsk || ballotAsk || federalPlaceAsk)) {
     /* The reader's own officials, the meetings held for their area, or their ballot: read from the words, answered from what is held. */
-    interpretation = { ...unavailableInterpretation(), intent: officialsAsk ? "PERSON_RECORD" : areaMeetingsAsk ? "MEETING_TIME" : "UNKNOWN", temporal: areaMeetingsAsk ? { kind: "NEXT" } : { kind: "NONE" } };
-    trace.interpretation = { ran: false, why: officialsAsk ? "reader-officials-shape" : areaMeetingsAsk ? "area-meetings-shape" : "ballot-shape", ms: Date.now() - interpretationStarted, intent: interpretation.intent, temporal: interpretation.temporal, fellBackToDeterministic: true };
+    interpretation = { ...unavailableInterpretation(), intent: officialsAsk ? "PERSON_RECORD" : areaMeetingsAsk ? "MEETING_TIME" : federalPlaceAsk ? "CIVICS" : "UNKNOWN", temporal: areaMeetingsAsk ? { kind: "NEXT" } : { kind: "NONE" } };
+    trace.interpretation = { ran: false, why: officialsAsk ? "reader-officials-shape" : areaMeetingsAsk ? "area-meetings-shape" : federalPlaceAsk ? "federal-place-shape" : "ballot-shape", ms: Date.now() - interpretationStarted, intent: interpretation.intent, temporal: interpretation.temporal, fellBackToDeterministic: true };
   } else if (outcome === null && lexical) {
     interpretation = structuredClone(lexical.interpretation);
     trace.interpretation = {
@@ -1050,9 +1029,6 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
       fellBackToDeterministic: true,
     };
   } else if (outcome === null) {
-    /* The deterministic topic route above: the topic is curated code and the
-       body bound on the reader's own words, so no model reading is needed and
-       no tense is imposed — a topic spans what was decided and what is next. */
     interpretation = { ...interpretWithoutModel(question), intent: "AGENDA_TOPIC", temporal: { kind: "NONE" } };
     trace.interpretation = {
       ran: false,
@@ -1073,18 +1049,10 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
       intent: interpretation.intent,
       temporal: interpretation.temporal,
       mentionCount: interpretation.entityMentions.length,
-      /* Whether the rung produced a referent at all — a COUNT-shaped fact
-         about our machinery, never the referent itself, which is a subject the
-         reader may not have typed. */
       referentProposed: Boolean(interpretation.referent),
       fellBackToDeterministic: false,
     };
   } else {
-    /*
-     * **THE FALLBACK IS NARROWER, NOT LOOSER.** It reads tense and nothing
-     * else, so an unavailable model costs the reader precision and can never
-     * cost them correctness.
-     */
     interpretation = interpretWithoutModel(question);
     trace.interpretation = {
       ran: false,
@@ -1097,11 +1065,6 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
 
   lap("interpretation");
 
-  /**
-   * Resolution, retrieval and composition for one reading of the question. It writes only to the trace it
-   * is handed, and an answer that ends here comes back as a response to send, so a speculative run never
-   * sends, captures or counts anything.
-   */
   async function answerPath(interpretation: AskInterpretation, trace: AskTrace) {
     // A literal reader date outranks inferred tense, including a model's reading.
     if (requestedMeetingDate) {
@@ -1110,13 +1073,13 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
     }
 
     /* "Who is the mayor of <city>?" names the city its answer is filtered to; the city is not a subject to bind or to ask which of. */
-    const initialResolution: ReturnType<typeof resolveInterpretation> = officialsAsk?.place
+    const initialResolution: ReturnType<typeof resolveInterpretation> = (officialsAsk?.place || officialsAsk?.unresolvedPlace)
       ? { binding: { kind: "NONE" }, basis: "NONE", boundOn: null }
       : resolveInterpretation(interpretation, question, inventory, {
         activeSubjects,
         priorSubjects,
       });
-    let bodyDecision: ReturnType<typeof decideNamedBody> = officialsAsk?.place ? { kind: "NONE" } : decideNamedBody(question, namedBodies, body.confirmation,
+    let bodyDecision: ReturnType<typeof decideNamedBody> = officialsAsk?.place || officialsAsk?.unresolvedPlace ? { kind: "NONE" } : decideNamedBody(question, namedBodies, body.confirmation,
       initialResolution.binding.kind === "BOUND" && initialResolution.binding.entity.level === "BODY"
         ? interpretation.entityMentions : []);
     if (!explicitBodyClass && initialResolution.binding.kind === "BOUND" && initialResolution.binding.entity.level !== "BODY") bodyDecision = { kind: "NONE" };
@@ -1242,11 +1205,6 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
       } };
     }
 
-    /*
-     * A topic question bound to one body is answered from that body's topic
-     * timeline (every dated mention joined to its recorded outcome), never from
-     * the one sitting a tense word would pick. See `lib/ask/topic-timeline.ts`.
-     */
     const topicFocus = topicRoute && !requestedMeetingDate && resolution.binding.kind === "BOUND" && resolution.binding.entity.level === "BODY"
       ? topicRoute : null;
     if (topicFocus) {
@@ -1281,6 +1239,14 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
           }
       : null;
 
+    if (subject?.kind === "BODY") {
+      const selected = currentReaderSelection();
+      if (selected?.keys instanceof Set && !selected.keys.has(subject.id)) {
+        selected.keys.add(subject.id);
+        if (bound?.ocdId) selected.keys.add(bound.ocdId);
+        await readRegistryRuntimeProjection([...new Set([...statesOf(ocdIds), ...statesOf(bound?.ocdId ? [bound.ocdId] : [])])], { bypassCache: true });
+      }
+    }
     const records: EvidenceRecord[] = [];
     if (populationQuestion(question)) {
       const division = bound?.ocdId ?? (subject?.kind === "BODY" ? canonicalBodyIdentity(subject.id)?.ocdId : null);
@@ -1305,9 +1271,6 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
       records.push(...data.records);
       if(data.unavailable.length || data.notHeld.length)gaps.push({whose:"OURS",statement:"We're working on getting this info from all open-data and environmental sources for this place."});
     }
-    /* The gaps attached to the chosen sitting(s), by why they were attached, for
-       an answer composed from the sitting (`lib/ask/sitting-answer.ts`). Each is
-       also in `gaps`; this only remembers which ones are about the sitting. */
     const sittingGaps: SittingGap[] = [];
     const attachSittingGaps = (role: SittingGapRole, attached: readonly EvidenceGap[], meetingId?: string) => {
       for (const gap of attached) {
@@ -1342,7 +1305,10 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
       if (canonicalId === subject.id) canonicalSubjectKeys.add(id);
     }
     if (subject?.kind === "PERSON") {
-      const profile = candidateProfileEvidenceFor(subject);
+      const profile = ballotStatesForDivisions(ocdIds).map(state => candidateProfileEvidenceFor(state, subject)).reduce((all, part) => ({
+        records: [...all.records, ...part.records], gaps: [...all.gaps, ...part.gaps],
+        denominators: Object.fromEntries([...new Set([...Object.keys(all.denominators), ...Object.keys(part.denominators)])].map(key => [key, (all.denominators[key] ?? 0) + (part.denominators[key] ?? 0)])),
+      }), { records: [] as EvidenceRecord[], gaps: [] as EvidenceGap[], denominators: {} as Record<string, number> });
       records.push(...profile.records);
       gaps.push(...profile.gaps);
       Object.assign(denominators, profile.denominators);
@@ -1356,7 +1322,7 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
       const candidacyId = reconciledCandidacyIdForCard(ballotRecord.id) ?? ballotRecord.candidacyId;
       if (candidacyId) canonicalSubjectKeys.add(candidacyId);
       try {
-        const contact = contactForCandidate(candidacyId ?? ballotRecord.id, ballotRecord.name, ballotRecord.contestTitle);
+        const contact = contactForCandidate(ballot.setForTarget(ballotRecord.id)!.election.state, candidacyId ?? ballotRecord.id, ballotRecord.name, ballotRecord.contestTitle);
         if (contact) contacts.push(contact);
       } catch {
         gaps.push({ whose: "OURS", statement: `The filed contact for ${ballotRecord.name} could not be read for this answer.` });
@@ -1370,7 +1336,7 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
       /* ── A BALLOT SUBJECT ── contest, candidate or measure, selected by its
          canonical id and nothing else. */
       const retrieved = ballotRecordsFor(ballotRecord, {
-        set: ballot.set,
+        set: ballot.setForTarget(ballotRecord.id) ?? ballot.set,
         contests: ballot.contests,
         absences: ballot.absences,
         positions: ballot.positions,
@@ -1386,7 +1352,7 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
       const conflictFiling = conflict ? ballotInventory.subjects.get(conflict.filingCandidacyId) ?? null : null;
       if (conflict && conflictFiling) {
         partyConflictFiling = conflictFiling;
-        records.push(...ballotRecordsFor(conflictFiling, { set: ballot.set, contests: ballot.contests, absences: [], nominees: ballot.nominees }).records
+        records.push(...ballotRecordsFor(conflictFiling, { set: ballot.setForTarget(conflictFiling.id) ?? ballot.set, contests: ballot.contests, absences: [], nominees: ballot.nominees }).records
           .filter((record) => record.kind === "CANDIDACY"));
         gaps.push({
           whose: "OURS",
@@ -1427,16 +1393,7 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
       }
       /* The contacts for a ballot subject come from that subject's own division, not the reader's representatives. */
       /* The body name is the division, unslugged from its id, never the contest title. */
-      /* A ballot subject is a contest, a candidate or a measure — it has an AREA
-         and no body, so this is the DIVISION question and it asks the division
-         resolver by name rather than borrowing the body one. */
       contacts.push(...contactsForDivision(ballotRecord.ocdId, divisionNameOf(ballotRecord.ocdId)));
-
-      /*
-       * A candidate with no published positions is a NAMED GAP, never silence.
-       * Silence there reads as "they have said nothing", which is a claim about
-       * a person made out of our own collection state.
-       */
 
       /* Candidacy → officeholder uses the committed person relationship; officeholder → votes uses the publisher's stable key. An unresolved relationship produces an identity gap, never a name search. The office on every record is the one held. */
       if (ballotRecord.kind === "PERSON" && !moneyOnly) {
@@ -1459,6 +1416,13 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
       }
       const identity = canonicalBodyIdentity(subject.id);
       const financeDivision = bound?.ocdId ?? identity?.ocdId;
+      const federalDivision = financeDivision ?? (listing ? federalMoneyStateDivision(listing.state) : null);
+      if (federalDivision) {
+        const federal = await federalMoneyEvidence([{ divisionId: federalDivision, ...(bound?.level === "BODY" ? { bodyId: subject.id } : {}) }], subject.id, { year: question.match(/\b((?:19|20)\d{2})\b/)?.[1] });
+        records.push(...federal.records);
+        Object.assign(denominators, federal.denominators);
+        if (federalMoneyQuestion(question)) gaps.push(...federal.gaps);
+      }
       if (financeDivision && governmentFinanceQuestion(question)) {
         const finance = await governmentFinanceEvidence(subject.id, financeDivision).catch(() => []);
         records.push(...finance);
@@ -1483,9 +1447,6 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
       const bodyListingIdentity = meetingListingKnowledgeFor(snapshot?.meetings ?? [], forBody.map(meeting => meeting.id)).readback;
       denominators.calendarListingsHeldForThisBody = forBody.length;
       if (!bodyListingIdentity.groups.length) denominators.meetingsHeldForThisBody = forBody.length;
-      /* The SAME selection the deterministic agenda route uses — one rule, two
-         callers, so the two surfaces can never disagree about which meeting a
-         tensed question meant. */
       const chosen = topicFocus ? null : selectSitting(selection, forBody, selectionNow, requestedMeetingDate?.date);
       const calendarIds = new Set(forBody.map((meeting) => meeting.id));
       const archivedOutcomes = requestedMeetingDate?.date && meetingRecordQuestionClass(question)
@@ -1500,9 +1461,6 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
       denominators.archivedOutcomeSittingsForThatDate = archivedOutcomes.length;
 
       if (topicFocus) {
-        /* Every dated mention of the topic in this body's held agendas and
-           structured agenda records, each joined to the body's recorded outcome,
-           plus the recent sittings whose agenda we have not read. */
         const bodyMeetingIds = new Set(forBody.map((meeting) => meeting.id));
         topicTimeline = buildTopicTimeline({
           topic: topicFocus,
@@ -1549,9 +1507,6 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
         records.push({
           kind: "MEETING",
           id: chosen.id,
-          /* The meeting's OWN body, carried from the corpus rather than assumed
-             from the subject — so the validator is checking the record against
-             the subject rather than checking the subject against itself. */
           bodyId: chosen.bodyId,
           text: `${listingGroupFor(chosen.id) ? "Calendar listing: " : ""}${subject.name}: ${label}, ${readableSitting(chosen)}.${sittingVenue(chosen) ? ` Listed location: ${sittingVenue(chosen)}.` : ""}`,
           meetingListingIdentity: listingGroupFor(chosen.id),
@@ -1663,9 +1618,6 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
             records.push({
               kind: "AGENDA_ITEM",
               id: `${chosen.id}#${index}`,
-              /* Read out of THAT meeting's document, so it carries THAT meeting's
-                 body. The chain is BODY -> MEETING -> DOCUMENT -> ITEM and every
-                 link is an id, not an inference from a heading. */
               bodyId: chosen.bodyId,
               meetingId: chosen.id,
               documentId: newest.id,
@@ -1758,7 +1710,7 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
     }
 
     if (subject?.kind === "PERSON" && !moneyOnly) {
-      const statements = statementEvidenceFor(subject, question, [...canonicalSubjectKeys]);
+      const statements = statementEvidenceFor(ballotStatesForDivisions(ocdIds), subject, question, [...canonicalSubjectKeys]);
       records.push(...statements.records);
       gaps.push(...statements.gaps);
       Object.assign(denominators, statements.denominators);
@@ -1769,11 +1721,6 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
       }
     }
 
-    /*
-     * Campaign money from the filings held (`lib/ask/local-finance.ts`): linkage is the filing officer's own
-     * committee→office register row, never a name match; rows are date-ordered, never ranked or totalled; the
-     * independent-expenditure class is always named as not held.
-     */
     /* Every money question carries all three regime statements; one regime's absence never stands for all. */
     if (subject?.kind === "PERSON" && !moneyOnly) {
       const keyVotes = await keyVoteEvidenceFor(subject, [...canonicalSubjectKeys]);
@@ -1803,7 +1750,7 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
         denominators.comparedPersonStateFinanceRecordsReturned = theirs.denominators.stateFinanceRecordsReturned;
         denominators.comparedPersonFederalFinanceRecordsReturned = theirs.denominators.federalFinanceRecordsReturned;
         if (otherRecord && ballot.set) {
-          const filing = ballotRecordsFor(otherRecord, { set: ballot.set, contests: ballot.contests, absences: [], nominees: ballot.nominees });
+          const filing = ballotRecordsFor(otherRecord, { set: ballot.setForTarget(otherRecord.id) ?? ballot.set, contests: ballot.contests, absences: [], nominees: ballot.nominees });
           records.push(...filing.records.filter((record) => record.kind === "CANDIDACY").map((record) => ({ ...record, subjectId: otherSubject.id })));
         }
       }
@@ -1878,7 +1825,7 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
     }
 
     /* The reader's own officials (`lib/ask/reader-officials.ts`): each one named is a record beside the composed sentence. */
-    const officials = officialsAsk && (!subject || officialsAsk.place) ? composeReaderOfficials({ ask: officialsAsk, held: officeholders.held, holdingFailed: officeholders.loaderFailures > 0, placesReached: new Set(ocdIds.filter((id) => /[/]place:[a-z_]+$/.test(id) && !id.endsWith("_ccd"))).size }) : null;
+    const officials = officialsAsk && (!subject || officialsAsk.place || officialsAsk.unresolvedPlace) ? composeReaderOfficials({ ask: officialsAsk, held: officeholders.held, holdingFailed: officeholders.loaderFailures > 0, placesReached: new Set(ocdIds.filter((id) => /[/]place:[a-z_]+$/.test(id) && !id.endsWith("_ccd"))).size }) : null;
     if (officials) {
       await Promise.all(officials.named.map(({seat})=>addMemberOfficeContacts(seat)));
       for (const { seat, bodyName } of officials.named) {
@@ -1921,6 +1868,12 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
     }
 
     /* A ballot measure drops the reader-representative fallback (`lib/ask/relevance.ts`); gated before contacts become records so the pack and the panel agree. */
+    if (!subject && federalMoneyQuestion(question)) {
+      const federal = await federalMoneyEvidence(federalMoneyPlaceDivisions(question, ocdIds).map(divisionId => ({ divisionId })), undefined, { year: question.match(/\b((?:19|20)\d{2})\b/)?.[1] });
+      records.push(...federal.records);
+      gaps.push(...federal.gaps);
+      Object.assign(denominators, federal.denominators);
+    }
     const shownContacts = gateContactsToSubject(subject, contacts).contacts;
     const rosterGaps = rosterGapEvidenceFor(subject, shownContacts, canonicalSubjectKeys);
     records.push(...rosterGaps.records);
@@ -1934,10 +1887,6 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
 
     /* The authority's own statements of absence, for the subject's division only; with no bound subject, every absence on the reader's ballot. */
     if (ballotRecord && ballotRecord.kind !== "PERSON") {
-      /* A CONTEST or a MEASURE is a question about what is on the ballot, and an
-         authority saying a race is not on it answers exactly that. A question
-         about a PERSON is not a question about the ballot lineup, so an absence
-         under it is a document the answer did not rest on. */
       records.push(...absencesForDivisions([ballotRecord.ocdId], absencesWithoutRemovals(ballot.absences, ballot.set?.removals ?? [])));
     } else if (surface === "BALLOT" && !subject) {
       records.push(...absencesForDivisions(ocdIds, absencesWithoutRemovals(ballot.absences, ballot.set?.removals ?? [])));
@@ -2230,10 +2179,13 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
       (text, urls) => validateAnswer(text, urls, pack, bodies));
     const governmentFinanceSettled = settleSittingComposition(composeGovernmentFinanceAnswer({ subject, question, records: packRecords }),
       (text, urls) => validateAnswer(text, urls, pack, bodies));
+    const federalMoneySettled = settleSittingComposition(composeFederalMoneyAnswer({ subject, question, records: packRecords }),
+      (text, urls) => validateAnswer(text, urls, pack, bodies));
     const populationSettled = settleSittingComposition(composePopulationAnswer(question, packRecords),
       (text, urls) => validateAnswer(text, urls, pack, bodies));
-    const composed = populationSettled.composed ?? governmentFinanceSettled.composed ?? ownWordsSettled.composed ?? preferredBallot ?? measureSettled.composed ?? topicComposed ?? sittingSettled.composed ?? moneySettled.composed ?? groupSettled.composed ?? officialsSettled.composed ?? rosterSettled.composed ?? votesSettled.composed ?? calendarSettled.composed ?? ballotSettled.composed;
-    const composedWhy = populationSettled.composed ? "composed-from-census-population" : governmentFinanceSettled.composed ? "composed-from-government-finance" : ownWordsSettled.composed ? "composed-from-own-words" : preferredBallot || measureSettled.composed ? "composed-from-ballot-records" : topicComposed ? "composed-from-structured-evidence"
+    const composed = federalMoneySettled.composed ?? populationSettled.composed ?? governmentFinanceSettled.composed ?? ownWordsSettled.composed ?? preferredBallot ?? measureSettled.composed ?? topicComposed ?? sittingSettled.composed ?? moneySettled.composed ?? groupSettled.composed ?? officialsSettled.composed ?? rosterSettled.composed ?? votesSettled.composed ?? calendarSettled.composed ?? ballotSettled.composed;
+    const composedWhy = federalMoneySettled.composed ? "composed-from-federal-money" : populationSettled.composed ? "composed-from-census-population" : governmentFinanceSettled.composed ? "composed-from-government-finance" : ownWordsSettled.composed ? "composed-from-own-words" : preferredBallot || measureSettled.composed ? "composed-from-ballot-records" : topicComposed ? "composed-from-structured-evidence"
+
       : sittingSettled.composed ? "composed-from-sitting-records"
         : moneySettled.composed ?? groupSettled.composed ? "composed-from-money-records"
           : officialsSettled.composed ? "composed-from-officeholder-records"
@@ -2248,13 +2200,6 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
     };
   }
 
-  /*
-   * **THE SPECULATIVE ANSWER IS KEPT ONLY WHEN THE MODEL'S READING AGREES.**
-   * Same subject, same body, same question kind and byte-identical writer
-   * input (`speculationVerdict`); otherwise it is discarded — its call aborted
-   * if still running — and the writer runs on the model's reading, as before.
-   * Either way the trace says which path delivered and why.
-   */
   const settleSpeculation = (model: ReadingOutcome | "MODEL_READING_UNAVAILABLE" | "MODEL_READING_NEEDS_NO_WRITER"): boolean => {
     if (!speculation) return false;
     const guess = speculation.codeIntent ? { codeIntent: speculation.codeIntent, codeTemporal: speculation.codeTemporal } : {};
@@ -2308,10 +2253,6 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
   let answer: string | null = null;
   let answerModel: string | null = null;
   let validationPassed: boolean | null = null;
-  /* The reader's structured answer is the GATED pack, so the mode is derived
-     from what actually reaches them: a subject whose only records were
-     off-subject and gated out is NO_EVIDENCE, honestly, not a structured answer
-     built from records the reader will never see. */
   let mode: AnswerMode = packRecords.length > 0 ? "STRUCTURED_GROUNDED" : "NO_EVIDENCE";
 
   if (missingMeasureMeaning) {
@@ -2355,9 +2296,6 @@ async function answerWithSettings(request: Request, setDelivered: (input: AskDel
       },
       ...writerTrace,
     };
-    /* And into the server console, so a collapsed hit rate is visible in the
-       deployment log rather than only in a trace somebody has to go and read.
-       Caller key and token counts only — no reader fact reaches this line. */
     if (!cachedSynthesis) console.log(cacheCallLine(synthesis.callerKey, synthesis.usage));
     /* The body inventory is the known-subject universe, so the substitution check refuses prose naming a different government we hold, and only that. */
     const verdict = validateAnswer(synthesis.answer, synthesis.citedUrls, pack, bodies);

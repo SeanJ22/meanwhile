@@ -1,4 +1,4 @@
-import { getCandidateCorpus } from "./positions.ts";
+import { getCandidateCorpus, candidateDocumentsByKey } from "./positions.ts";
 import type { CandidateDocument } from "./corpus.ts";
 
 export interface DerivedBlurb {
@@ -8,11 +8,7 @@ export interface DerivedBlurb {
   basis: CandidateDocument["basis"];
 }
 
-/** These exact captured descriptions were reviewed against their retained
- * page text. They are navigation copy, an old election appeal, or end mid-
- * sentence. Suppressing the quoted field does not suppress the source or
- * silently replace it with words chosen by us; a new capture must earn a new
- * description on its own evidence. */
+// Suppress only the exact captured description whose text is unusable.
 const UNUSABLE_CAPTURED_DESCRIPTIONS: Readonly<Record<string, string>> = {
   "73db6c3ad8e2b48990c36e7ef2e423c03f5353798308432b2685fb7fd1d14505": "The Attorney General description ends mid-sentence.",
   "dc455aac3bd696630dbf2344997e7fe1848be52fb8c46fa32cfd6fc34787e090": "The legislative description ends inside a word.",
@@ -33,9 +29,9 @@ function rank(doc: CandidateDocument): number {
   return site + basis;
 }
 
-export function derivedBlurbFor(candidateKey: string): DerivedBlurb | null {
-  const candidates = getCandidateCorpus()
-    .documents.filter((d) => d.candidateKey === candidateKey && d.metaDescription && !candidateDescriptionQualityIssue(d))
+export function derivedBlurbFor(state: string, candidateKey: string): DerivedBlurb | null {
+  const corpus = getCandidateCorpus(state);
+  const candidates = (candidateDocumentsByKey(corpus).get(candidateKey) ?? []).filter((d) => d.metaDescription && !candidateDescriptionQualityIssue(d))
     .sort((a, b) => {
       const byRank = rank(a) - rank(b);
       if (byRank !== 0) return byRank;

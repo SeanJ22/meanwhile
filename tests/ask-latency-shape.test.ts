@@ -1,15 +1,12 @@
 import assert from "node:assert/strict";
 import test from "./helpers/playbooks.ts";
-import { readFileSync } from "node:fs";
 import { withResponseLifetime } from "../lib/log/after-response.ts";
 import { ASK_SAVE_STATUS_HEADER } from "../lib/ask/save-status.ts";
-import { installAzBallot, installFederalVotes, installRegistryAuthority, installStateLegislators, syntheticAzBallot } from "./helpers/promoted-fixtures.ts";
+import { installFederalVotes, installRegistryAuthority, installStateLegislators } from "./helpers/promoted-fixtures.ts";
 
 await installRegistryAuthority();
 await installFederalVotes();
 installStateLegislators("US-AZ");
-/* The committed Arizona ballot file as the promoted ballot rows, so the reader's divisions reach a ballot. */
-await installAzBallot({ ...syntheticAzBallot(), ballot: JSON.parse(readFileSync("data/states/az/ballot/az-pima-2026.json", "utf8")) });
 
 import { bodyNameFromQuestion, lexicalQuestionShape, lexicalReading, unheldNamedBodyQuestion } from "../lib/ask/lexical-reading.ts";
 import {
@@ -27,6 +24,80 @@ import { ASK_FAST_WRITER_MODEL, ASK_SYNTHESIS_MODEL, resolveAskRoleModel } from 
 import { WRITER_MEMBER_VOTE_ROWS, writerInputProof, writerSelection } from "../lib/ask/writer-selection.ts";
 import type { EvidencePack, EvidenceRecord } from "../lib/ask/evidence.ts";
 import type { BindableEntity } from "../lib/routing/named-entity.ts";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import type { BallotSet } from "../lib/ballot/types.ts";
+import type { GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
+import type { Contest } from "../lib/ballot/types.ts";
+import type { LineupOutcome } from "../lib/identity/types.ts";
+import { requireBallotState } from "../lib/civic-data/state-scopes.ts";
+import { currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
+
+import { stateBallotScope } from "../lib/civic-data/state-scopes.ts";
+import { ballotElectionKey } from "../lib/ballot/generic-projection.ts";
+import { installManualValue } from "./helpers/promoted-fixtures.ts";
+import { stateBallotContractId } from "../lib/civic-data/state-scopes.ts";
+import type { CivicDataReadResult } from "../lib/civic-data/read-model.ts";
+import { readGenericBallotProjection } from "../lib/ballot/generic-projection.ts";
+
+
+
+
+
+
+
+
+
+function served<T>(read: CivicDataReadResult<T>, what: string): T {
+  if (read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP") throw new Error(`${what} fixture did not install: ${read.kind} ${"detail" in read ? read.detail : ""}`);
+  return read.value as T;
+}
+
+
+
+interface SyntheticLineupNominee {
+  readonly name: string;
+  readonly partyLabel: string;
+  readonly outcome: LineupOutcome;
+  readonly candidacyId?: string;
+  readonly filingParty?: string;
+}
+
+interface SyntheticContest {
+  readonly id: string;
+  readonly title: string;
+  readonly ocdId?: string;
+  readonly type?: Contest["type"];
+  readonly candidacies?: readonly { readonly id: string; readonly givenName: string; readonly familyName: string; readonly partyLabel?: string | null }[];
+  readonly lineup?: readonly SyntheticLineupNominee[];
+}
+
+function syntheticAzBallot(contests?: readonly SyntheticContest[]): BallotSet {
+  const fixtures = JSON.parse(readFileSync(new URL("./fixtures/synthetic-az-ballots.json", import.meta.url), "utf8")) as Record<string, BallotSet>;
+  const ballot = fixtures[JSON.stringify(contests ?? null)];
+  if (!ballot) throw new Error("The synthetic Arizona ballot input has no recorded fixture");
+  return ballot;
+}
+
+async function installBallots(...ballots: BallotSet[]): Promise<GenericBallotProjection> {
+  const installed: GenericBallotProjection = { kind: "ballot-contests", ballots: {} };
+  for (const ballot of ballots.length ? ballots : [syntheticAzBallot()]) {
+    const state = requireBallotState(ballot.election.state);
+    const previous = currentReaderAuthorityEdge()?.promoted?.get(`BALLOT_CANDIDACY:${stateBallotScope("ballot-contests", state)}`);
+    const current = previous?.kind === "PROMOTED" ? previous.projection.payload as GenericBallotProjection : null;
+    const value: GenericBallotProjection = { kind: "ballot-contests", ballots: {
+      ...(current?.ballots ?? {}), [ballotElectionKey(ballot)]: ballot,
+    } };
+    installManualValue(stateBallotContractId("ballot-contests", state), value, `test:ballot-contests:${state}`);
+    served(await readGenericBallotProjection(state), `${state} ballot`);
+    Object.assign(installed.ballots, value.ballots);
+  }
+  return installed;
+}
+
+const azBallot = Object.values(JSON.parse(readFileSync(join(import.meta.dirname, "../data/ballot/2026-general/az.json"), "utf8")).ballots)[0] as BallotSet;
+await installBallots(azBallot);
+
 
 const MESA = "ocd-division/country:us/state:az/place:mesa#governing";
 const MESA_SCHOOLS = "ocd-division/country:us/state:az/school_district:mesa_unified_district#board";
@@ -400,7 +471,8 @@ test("ROUTE: what is on my ballot is read from the words and composed from the c
   assert.deepEqual(made, [], "neither rung called a model");
   assert.equal(payload.trace.interpretation.why, "ballot-shape");
   assert.equal(payload.trace.synthesis.why, "composed-from-ballot-records");
-  assert.equal(payload.mode, "GROUNDED_COMPOSED");
+  assert.equal(payload.mode, "STRUCTURED_GROUNDED");
+  assert.equal(payload.trace.sourcesLoaded, "ESSENTIAL");
   assert.match(payload.answer ?? "", /^Your ballot for the .+ on .+ has \d+ races? and \d+ ballot measures?\./);
   assert.ok(payload.records.some((record) => record.kind === "CONTEST"), "each contest is a record the reader is shown");
 });

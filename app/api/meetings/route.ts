@@ -1,10 +1,13 @@
+import { readerRoute } from "@/lib/api/reader-route";
 import { readerMeetingScope } from "@/lib/meetings/reader-scope";
 import { haversineKm } from "@/lib/geo/distance";
 import { canonicalBodyIdentity } from "@/lib/ask/body-identity";
 import { meetingListingIdentity } from "@/lib/meetings/listing-identity";
 import { nearestZctaAsync } from "@/lib/geo/zcta-table";
 import { zipDivisionEntry } from "@/lib/geo/zip-division-index";
-import { RADIUS_LADDER_KM, searchMeetings } from "@/lib/meetings/query";
+import { searchMeetings } from "@/lib/meetings/query";
+import { DEFAULT_RADIUS_KM, MAX_RADIUS_KM } from "@/lib/meetings/constants";
+import { getRegistryRuntimeReadModel, readRegistryRuntimeProjection, selectedRegistryStates } from "@/lib/registry/runtime-read-model";
 import { snapshotSourceFor } from "@/lib/meetings/registry";
 import type { Meeting } from "@/lib/sources/types";
 import {
@@ -14,7 +17,7 @@ import {
   type SnapshotClientMeta,
 } from "@/lib/meetings/snapshot";
 import {
-  ensureReaderAuthorityEdge,
+  holdReaderAuthorityEdge, ensureReaderAuthorityEdge,
   prefetchReaderEdgeStates,
   readReaderEdgeMeetings,
   readReaderManifest,
@@ -40,23 +43,12 @@ import {
 } from "@/lib/routing/everyday-data-plane";
 import type { EverydayRoutingProjection } from "@/lib/routing/everyday";
 
-/**
- * GET /api/meetings?lat=&lng=&radiusKm=
- *
- * Normalized meetings plus which rung of the empty-state cascade produced them, and the coverage summary for the point.
- */
+
 
 // The registry reads its geometry off the filesystem, which needs Node.
 export const runtime = "nodejs";
 
-/**
- * Only a 200 built whole from the published edge is held by the CDN; anything else says `no-store`.
- *
- * - `s-maxage=300`, and the runner purges the `reader-manifest` tag when it publishes.
- * - `durable`: shared across Netlify's edge nodes.
- * - `Netlify-Vary: query` keys on every query parameter, because a request carrying an unknown one is refused.
- * - `max-age=0`: the browser revalidates every time, so a purge reaches it.
- */
+
 const CDN_HELD = {
   "Netlify-CDN-Cache-Control": "public, durable, s-maxage=300, stale-while-revalidate=3600",
   "Netlify-Cache-Tag": READER_MANIFEST_CACHE_TAG,
@@ -77,12 +69,12 @@ async function nearestZipWithin60Km(lat: number, lng: number): Promise<string | 
   return near && haversineKm(lat, lng, near.lat, near.lng) <= 60 ? near.zip : null;
 }
 
-export async function GET(request: Request) {
+export const GET = readerRoute("/api/meetings", async function GET(request: Request) {
   return meetingsResponse(new URL(request.url).searchParams, false);
-}
+});
 
 /** Browser/device location stays in a private request body, never a URL or shared response cache. */
-export async function POST(request: Request) {
+export const POST = readerRoute("/api/meetings", async function POST(request: Request) {
   let input: unknown;
   try { input = await request.json(); } catch { return Response.json({ error: "Invalid location" }, { status: 400, headers: NOT_HELD }); }
   if (!input || typeof input !== "object" || Array.isArray(input)) return Response.json({ error: "Invalid location" }, { status: 400, headers: NOT_HELD });
@@ -96,7 +88,7 @@ export async function POST(request: Request) {
   const params = new URLSearchParams({ lat: String(Math.round(row.lat * 1000) / 1000), lng: String(Math.round(row.lng * 1000) / 1000),
     ...(row.radiusKm === undefined ? {} : { radiusKm: String(row.radiusKm) }) });
   return meetingsResponse(params, true);
-}
+});
 
 async function meetingsResponse(params: URLSearchParams, privatePoint: boolean) {
   const timing = stageTimer();
@@ -113,15 +105,14 @@ async function meetingsResponse(params: URLSearchParams, privatePoint: boolean) 
   const lat = latRead.value;
   const lng = lngRead.value;
 
-  /* An absent `radiusKm` starts at the ladder's first rung; a present but unparseable one refuses. */
-  const radiusRead = numeric(params, "radiusKm", { default: RADIUS_LADDER_KM[0] });
+  const radiusRead = numeric(params, "radiusKm", { default: DEFAULT_RADIUS_KM });
   if (!radiusRead.ok) return refuse(radiusRead.error);
   if (radiusRead.value <= 0) {
     return refuse(`radiusKm must be greater than 0, received ${radiusRead.value}`);
   }
   const radiusKm = Math.min(
     radiusRead.value,
-    RADIUS_LADDER_KM[RADIUS_LADDER_KM.length - 1],
+    MAX_RADIUS_KM,
   );
 
   /* A malformed zip refuses rather than becoming null; an absent one means the reader panned. Read at the door so a refused request never runs the search. */
@@ -131,45 +122,30 @@ async function meetingsResponse(params: URLSearchParams, privatePoint: boolean) 
   /* Everything that reads neither the database nor the request's edge context starts here, before the authority families arrive. */
   prefetchReaderGeography();
   const nearZipRead = zipRead.value ? Promise.resolve(zipRead.value) : nearestZipWithin60Km(lat, lng).catch(() => null);
-  const statesHinted = nearZipRead.then(hintedStates);
 
-  // One edge read serves the whole ready-to-display bundle. The manifest
-  // (CDN-cached, no database) carries meetings (via its scope artifacts) AND the
-  // comment-access + everyday-routing families, so a normal visit never wakes the
-  // database. Each family below prefers the embedded edge value and falls back to
-  // its own database read only when the edge has not published it yet.
-  const edgeManifest = await timing.time("manifest", () => readReaderManifest().catch(() => null));
+  const edgeManifest = await timing.time("manifest", () => readReaderManifest().catch(holdReaderAuthorityEdge));
 
-  // Bind the reader-authority edge bundle (registry-runtime division/
-  // coverage/roster bindings, the federal directory, and campaign-site URLs)
-  // request-scoped, so divisionsAt/coverageAt below serve them from the edge and
-  // never wake Neon. Each family is fetched at most once per version per process.
-  // Any family the manifest omits (rollout) falls through to the DB reader.
-  //
-  // Only the families this route reads (`READER_MAP_AUTHORITY_FAMILIES`:
-  // not Ask's recorded outcomes, not the comment-access artifact the manifest
-  // already embeds). The edge is entered HERE, in this handler's own execution:
-  // it is AsyncLocalStorage.enterWith, which never reaches reads
-  // chained on a helper that entered it.
+  let authorityEdge: Awaited<ReturnType<typeof ensureReaderAuthorityEdge>> | null = null;
   if (edgeManifest?.authorityArtifacts) {
     const entering = timing.time("authority", () =>
-      ensureReaderAuthorityEdge(edgeManifest, undefined, READER_MAP_AUTHORITY_FAMILIES).catch(() => null),
+      ensureReaderAuthorityEdge(edgeManifest, undefined, READER_MAP_AUTHORITY_FAMILIES).catch(error => holdReaderAuthorityEdge(error, edgeManifest, READER_MAP_AUTHORITY_FAMILIES)),
     );
-    prefetchReaderEdgeStates(edgeManifest, await statesHinted);
-    const authorityEdge = await entering;
+    authorityEdge = await entering;
     if (authorityEdge) enterReaderAuthorityEdge(authorityEdge);
-  } else if (edgeManifest) {
-    prefetchReaderEdgeStates(edgeManifest, await statesHinted);
   }
+  await timing.time("registry", () => readRegistryRuntimeProjection(selectedRegistryStates())).catch(error => {
+    console.warn("READER_REGISTRY_LOAD_FAILED", { states: selectedRegistryStates(), error: error instanceof Error ? error.message : String(error) });
+  });
+  if (edgeManifest) prefetchReaderEdgeStates(edgeManifest, await nearZipRead.then(hintedStates));
 
   let commentAccess: readonly CommentAccess[] = [];
   let commentAccessDataState: "PROMOTED" | "FIRST_SEED" | "STORE_UNREACHABLE" = "FIRST_SEED";
   let commentAccessDataDetail: string | null = null;
   try {
-    if (edgeManifest?.commentAccess !== undefined) {
-      commentAccess = edgeManifest.commentAccess as readonly CommentAccess[];
+    if (authorityEdge?.commentAccess) {
+      commentAccess = authorityEdge.commentAccess.value.records;
       commentAccessDataState = "PROMOTED";
-      commentAccessDataDetail = `Comment-access served from the reader edge manifest (sequence ${edgeManifest.sequence}).`;
+      commentAccessDataDetail = `Comment-access served from the reader edge's state facts (sequence ${edgeManifest!.sequence}).`;
     } else {
       if (process.env.NODE_ENV === "production") {
         const { versionId } = await readCommentAccessFacts();
@@ -217,16 +193,8 @@ async function meetingsResponse(params: URLSearchParams, privatePoint: boolean) 
       : "The everyday-routing projection could not be read.";
   }
 
-  // The coverage graph (rosters, photos, officeholder indexes) builds from
-  // here, beside the division lookup and the meetings read, rather than after
-  // them. Started after the edge is entered, so it reads the edge; a failure is
-  // not held and `coverageAt` below meets it on its own terms.
   const coverageReady = timing.time("coverageGraph", () => prepareCoverage()).catch(() => undefined);
 
-  /*
-   * Which divisions actually contain this point. A meeting held online has no distance, so without this a
-   * virtual sitting is invisible at every radius. Degrades to an empty set rather than failing the request.
-   */
   let divisionsAtPoint = new Set<string>();
   /* Null when the lookup failed, never empty: `coverageAt` must not read a failed resolution as "no body governs here". */
   let resolvedDivisions: Division[] | null = null;
@@ -234,34 +202,25 @@ async function meetingsResponse(params: URLSearchParams, privatePoint: boolean) 
     resolvedDivisions = await timing.time("divisions", () => divisionsAt(lat, lng));
     divisionsAtPoint = new Set(resolvedDivisions.map((d) => d.ocdId));
   } catch (error) {
-    console.error("division lookup failed; online meetings fall back to body-in-view", error);
+    console.error("division lookup failed", error);
   }
 
-  /*
-   * On a typed zip, the divisions are widened to every one whose territory reaches inside it. Only when the
-   * point lookup succeeded. A selected source plan replaces its old district family atomically.
-   */
+
   /* The divisions the point itself resolved, kept apart from the widened set (see `widenedInBodies`). */
   const pointOwnDivisionIds = new Set(divisionsAtPoint);
   if (zipRead.value && resolvedDivisions) {
-    const widening = timing.start("widen");
+    const zipArea = timing.start("zipArea");
     const areaIds = await divisionIdsForZipArea(
       zipRead.value,
       resolvedDivisions.map((d) => d.ocdId),
       undefined, POINT_GEOMETRY_PLANS,
     );
-    const widened = await divisionsByOcdIds(areaIds, { zip: zipRead.value });
-    widening();
-    resolvedDivisions = widened;
-    divisionsAtPoint = new Set(widened.map((d) => d.ocdId));
+    const zipDivisions = await divisionsByOcdIds(areaIds, { zip: zipRead.value });
+    zipArea();
+    resolvedDivisions = zipDivisions;
+    divisionsAtPoint = new Set(zipDivisions.map((d) => d.ocdId));
   }
 
-  // One projection read per request. The search and the freshness meta
-  // both derive from the SAME composed snapshot, instead of each reading,
-  // validating and composing the 124-partition projection independently — two
-  // full passes for one request. The `WTP_MEETING_SOURCE` diagnostic seam
-  // (mock/composite, non-production only) does not read the canonical
-  // projection, so it keeps its own path.
   const meetingSourceName = process.env.WTP_MEETING_SOURCE?.trim() || "snapshot";
   let result;
   let snapshotMeta: SnapshotClientMeta | null = null;
@@ -271,13 +230,6 @@ async function meetingsResponse(params: URLSearchParams, privatePoint: boolean) 
   let heldMeetings: readonly Meeting[] = [];
   try {
     if (meetingSourceName === "snapshot") {
-      // Read the runner-published geographic edge artifacts for this
-      // ZIP's state(s) — one small edge fetch, no database wake, no 124-partition
-      // compose. The scopes are the states the resolved divisions name (plus the
-      // national `us` bucket); when the division lookup failed we pass none and
-      // the reader loads every published scope rather than guess. Fallback chain
-      // is edge → DB prepared row → live compose, so the result shape is
-      // identical and the freshness meta below is unchanged.
       const readerStates = resolvedDivisions
         ? [...new Set(
             resolvedDivisions
@@ -289,8 +241,7 @@ async function meetingsResponse(params: URLSearchParams, privatePoint: boolean) 
         manifest: edgeManifest,
         includeAgenda: false,
         ...(readerStates.length > 0 ? { states: readerStates } : {}),
-        ...(resolvedDivisions?.length ? { ocdIds: resolvedDivisions.map(division => division.ocdId) } : {}),
-        nearby: { lat, lng, radiusKm: Math.max(radiusKm, ...RADIUS_LADDER_KM) },
+        ocdIds: resolvedDivisions?.map(division => division.ocdId) ?? [],
       }));
       meetingsWholeFromEdge = servedWholeFromReaderEdge(read);
       const snapshot = requireMeetingsProjection(read);
@@ -302,13 +253,20 @@ async function meetingsResponse(params: URLSearchParams, privatePoint: boolean) 
         new Date(),
         divisionsAtPoint,
         snapshotSourceFor(snapshot),
+        undefined,
+        resolvedDivisions ? getRegistryRuntimeReadModel().registry.bodies : [],
       ));
       snapshotMeta =
         read.kind === "PROMOTED" || read.kind === "BOOTSTRAP"
           ? snapshotClientMeta(read.value, read)
           : null;
+      if (snapshotMeta && meetingsWholeFromEdge && edgeManifest?.carriedSummary) {
+        snapshotMeta.carried = edgeManifest.carriedSummary;
+      }
     } else {
-      result = await searchMeetings(lat, lng, radiusKm, new Date(), divisionsAtPoint);
+      result = await searchMeetings(lat, lng, radiusKm, new Date(), divisionsAtPoint, undefined, undefined,
+        resolvedDivisions ? getRegistryRuntimeReadModel().registry.bodies : []);
+      heldMeetings = result.meetings;
       snapshotMeta = await getActiveSnapshotMeta();
     }
   } catch (error) {
@@ -334,9 +292,6 @@ async function meetingsResponse(params: URLSearchParams, privatePoint: boolean) 
     );
   }
 
-  // A coverage statement we cannot stand behind is worse than none, so a
-  // registry that fails to load degrades to the cascade's own answer rather
-  // than failing the whole request or guessing.
   let coverage = null;
   try {
     await coverageReady;
@@ -395,23 +350,9 @@ async function meetingsResponse(params: URLSearchParams, privatePoint: boolean) 
     }
   }
 
-  // When the snapshot serves the answer, say how old it is and which sources
-  // it is missing — a failed source's bodies would otherwise show nothing
-  // with no hint that the gap is ours and temporary.
-  // The one projection read above already produced this; no second read.
   const meta = snapshotMeta;
   // A whole-source failure is attributed to the places the published composition says the source serves.
   const composed = meta?.sources.some((s) => !s.ok && !s.unreachableOcdIds) ? await readComposedSourcePlaces() : null;
-  // `meta.carried` rides along untouched: the footer's one age is true of
-  // the fresh rows only, and the count of rows it is NOT true of has to reach
-  // the client or the line keeps speaking for them.
-  //
-  // The wire snapshot is trimmed to exactly what a reader
-  // surface reads — the age, the carried-rows summary, and the failed sources
-  // attributed to bodies. `meta.sources` (124 rows) and `meta.partitions` (124
-  // rows) together ran ~40-50 KB of every response and no client reads either;
-  // they are used here to build `failed`, then dropped. `version` lets a later
-  // format change be detected rather than guessed from shape.
   const snapshot = meta
     ? {
         version: 2 as const,
@@ -421,11 +362,6 @@ async function meetingsResponse(params: URLSearchParams, privatePoint: boolean) 
           .filter((s) => !s.ok || (s.unreachableOcdIds?.length ?? 0) > 0)
           .map((s) => ({
             source: s.source,
-            // A PARTIAL refusal names its own divisions and nothing else.
-            // A whole-source failure still attributes to every body the
-            // source serves. A division-less body (null ocdId) has no
-            // division to attribute the failure to; its absence is visible on
-            // the body itself.
             ocdIds:
               s.ok && s.unreachableOcdIds
                 ? s.unreachableOcdIds
@@ -434,13 +370,6 @@ async function meetingsResponse(params: URLSearchParams, privatePoint: boolean) 
       }
     : null;
 
-  // The settled-viewport fetch carries no zip: the reader panned, they
-  // didn't type. Resolve the nearest ZCTA centroid so the notices and the
-  // ballot bubble can name the area, and cap it: a center more than 60 km
-  // from every centroid (open water, deep wilderness) honestly has no zip.
-  // Same orientation-only status as a typed zip — never district truth.
-  // Started at the top (`nearZipRead`), from the table loaded on demand
-  // (`lib/geo/zcta-table.ts`).
   const nearZip: string | null = await nearZipRead;
   /* The search log is written by the client's `sendBeacon` to `/api/log`, never on the response path. */
 
@@ -452,9 +381,6 @@ async function meetingsResponse(params: URLSearchParams, privatePoint: boolean) 
   /* Which of those divisions the ZIP could not settle, measured on `nearZip`; `null` where the zip is outside the committed geometry. */
   const partialOcdIds = (await zipCertainty(nearZip))?.partial ?? null;
 
-  // The CDN holds only a whole answer (see `CDN_HELD`): meetings served whole
-  // from the published edge, divisions and coverage resolved, and neither
-  // optional family withheld for a failed read.
   const held =
     !privatePoint &&
     meetingsWholeFromEdge &&
@@ -466,7 +392,7 @@ async function meetingsResponse(params: URLSearchParams, privatePoint: boolean) 
 
   return Response.json({
     ...result,
-    readerScope: readerMeetingScope({ heldMeetings: heldMeetings ?? result.meetings, shownMeetings: result.meetings, bodies: coverage?.bodies ?? [], ownDivisionIds: resolvedDivisions ? pointOwnDivisionIds : null, radiusKm: result.radiusKm, requestedRadiusKm: result.requestedRadiusKm, now: new Date(), listingIdentity: meetingListingIdentity(heldMeetings ?? result.meetings, canonicalBodyIdentity) }),
+    readerScope: readerMeetingScope({ heldMeetings: heldMeetings, bodies: coverage?.bodies ?? [], ownDivisionIds: resolvedDivisions ? divisionsAtPoint : null, now: new Date(), listingIdentity: meetingListingIdentity(heldMeetings, canonicalBodyIdentity) }),
     commentAccess,
     commentAccessDataState,
     commentAccessDataDetail,

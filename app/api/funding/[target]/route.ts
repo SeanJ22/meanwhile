@@ -1,21 +1,15 @@
+import { readerRoute } from "@/lib/api/reader-route";
 import { directFundingTargetPlan } from "@/lib/funding/target-authorities";
-import { ensureReaderAuthorityEdge, READER_FUNDING_AUTHORITY_FAMILIES, readReaderManifest } from "@/lib/meetings/edge-serving";
-import type { AuthorityFamily } from "@/lib/meetings/edge-artifacts";
+import { ballotPlaceFromRequest } from "@/lib/ballot/reader-place";
+import { holdReaderAuthorityEdge, ensureReaderAuthorityEdge, READER_FUNDING_AUTHORITY_FAMILIES, readReaderManifest } from "@/lib/meetings/edge-serving";
+import type { GlobalAuthorityFamily } from "@/lib/meetings/edge-artifacts";
 import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
-import { defaultReadersFor, settleFundingHoldingAnswer, startDirectFundingReads, timedRead, type ReadTimings } from "./holdings";
-
-/**
- * GET /api/funding/<app-side id> — the funding answer for one exact target.
- * The target is selected before a store is opened. Federal, state, and
- * identity holdings settle independently; one failed authority cannot erase
- * a source-linked answer from another and no tracked data is a runtime
- * fallback.
- */
+import { settleFundingHoldingAnswer, startDirectFundingReads, fundingHoldingReaders, timedRead } from "@/lib/funding/holding-answer";
 
 export const runtime = "nodejs";
 
-export async function GET(
-  _request: Request,
+export const GET = readerRoute("/api/funding/[target]", async function GET(
+  request: Request,
   { params }: { params: Promise<{ target: string }> },
 ) {
   let target: string;
@@ -25,31 +19,28 @@ export async function GET(
     return Response.json({ error: "target must contain 1–512 characters" }, { status: 400 });
   }
 
-  const timings: ReadTimings = {};
+  const timings: Record<string, number> = {};
   const startedAt = Date.now();
-  const readers = defaultReadersFor(timings);
-  /*
-   * The edge is entered here, before any money is read, in this handler's own execution:
-   * `AsyncLocalStorage.enterWith` never reaches reads chained on a helper that entered it.
-   */
+  const divisions = await ballotPlaceFromRequest(request);
   const direct = directFundingTargetPlan(target);
-  const manifest = await timedRead(timings, "edgeManifest", () => readReaderManifest().catch(() => null));
-  const onEdge = (family: AuthorityFamily) => Boolean(manifest?.authorityArtifacts?.[family]);
+  const manifest = await timedRead(timings, "edgeManifest", () => readReaderManifest().catch(holdReaderAuthorityEdge));
+  const readers = fundingHoldingReaders(divisions, timings);
+  const onEdge = (family: GlobalAuthorityFamily) => Boolean(manifest?.authorityArtifacts?.[family]);
   const fromDatabase = startDirectFundingReads({
     ...direct,
     federal: direct.federal && !onEdge("federal-funding"),
     state: onEdge("state-money") ? null : direct.state,
-    azIdentity: direct.azIdentity && !onEdge("ballot-az"),
+    ballotIdentity: direct.ballotIdentity && !manifest?.stateAuthorities?.["ballot-contests"],
   }, readers);
   if (manifest?.authorityArtifacts) {
-    const edge = await timedRead(timings, "authorityEdge", () => ensureReaderAuthorityEdge(manifest, undefined, READER_FUNDING_AUTHORITY_FAMILIES).catch(() => null));
+    const edge = await timedRead(timings, "authorityEdge", () => ensureReaderAuthorityEdge(manifest, undefined, READER_FUNDING_AUTHORITY_FAMILIES.filter(family => family !== "registry-runtime")).catch(error => holdReaderAuthorityEdge(error, manifest, READER_FUNDING_AUTHORITY_FAMILIES.filter(family => family !== "registry-runtime"))));
     if (edge) enterReaderAuthorityEdge(edge);
   }
   const fromEdge = startDirectFundingReads({
     ...direct,
     federal: direct.federal && fromDatabase.federal === undefined,
     state: fromDatabase.state === undefined ? direct.state : null,
-    azIdentity: direct.azIdentity && fromDatabase.azIdentity === undefined,
+    ballotIdentity: direct.ballotIdentity && fromDatabase.ballotIdentity === undefined,
   }, readers);
   const settled = await settleFundingHoldingAnswer(target, readers, { ...fromDatabase, ...fromEdge });
   timings.total = Date.now() - startedAt;
@@ -76,4 +67,4 @@ export async function GET(
         : "private, no-store",
     },
   });
-}
+});

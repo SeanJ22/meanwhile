@@ -3,9 +3,17 @@
 import { useState } from "react";
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 import type { RegistrationGovernmentListing } from "@/lib/registration/listings";
+import { governmentStateOf } from "@/lib/registration/listings";
+import { FederalMoneySection } from "@/components/funding/federal-money-section";
+import { CardSourceContext, useCardSourceRegistry } from "@/components/ui/card-source-context";
+import { CardFooter } from "@/components/ui/card-footer";
+import { federalMoneyStateDivision } from "@/lib/federal-money/view";
 
 function Listing({ row }: { row: RegistrationGovernmentListing }) {
-  return <details className="mt-2" data-government-listing={row.id}>
+  const [open, setOpen] = useState(false);
+  const divisionId = row.associations.length === 1 ? row.associations[0].divisionId : federalMoneyStateDivision(typeof row.state === "string" ? row.state : governmentStateOf(row.id));
+  const { register, sources, insideCard } = useCardSourceRegistry([{ what: `Government inventory, ${row.sourceVintage}`, provenance: { kind: "OFFICIAL", sourceOrg: row.provenance.sourceOrg, sourceUrl: row.provenance.sourceUrl, collectedAt: row.provenance.collectedAt, verifiedAt: null } }], row.id);
+  return <CardSourceContext value={register}><details className="mt-2" data-government-listing={row.id} onToggle={event => setOpen(event.currentTarget.open)}>
     <summary className="cursor-pointer t-body text-paper">{row.name}</summary>
     <div className="mt-1 space-y-1 t-detail text-voice">
       <p>{row.governmentClass}{row.status ? ` · ${row.status}` : ""}</p>
@@ -23,8 +31,10 @@ function Listing({ row }: { row: RegistrationGovernmentListing }) {
         ...(row.govDomains ?? []).map(link => ({ what: `${link.domain} · CISA .gov registry`,
           provenance: { sourceUrl: link.sourceUrl, sourceOrg: "CISA .gov registry", collectedAt: link.checkedAt, verifiedAt: null } })),
       ]} />
+      {open && divisionId && <div className="pt-3"><h4 className="t-detail font-medium text-paper">Federal money and records</h4><FederalMoneySection divisionId={divisionId} bodyId={row.id} /></div>}
+      {!insideCard && <CardFooter gaps={[]} sources={sources} />}
     </div>
-  </details>;
+  </details></CardSourceContext>;
 }
 
 function StateInventory({ state }: { state: string }) {

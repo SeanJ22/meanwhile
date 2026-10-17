@@ -3,13 +3,15 @@ import { websiteRequestLimit, type WebsiteSizeForUrl } from "../control-plane/sc
 import { recordAcquiredResponse } from "../sources/acquisition-trace.ts";
 import { challengeIn, curlGetText, curlRequestHeaders } from "../sources/http.ts";
 
+export type MeetingFetchPass = typeof fetch & { forgetGet: (urls: readonly string[]) => void };
+
 /** One family pass shares successful source bytes, including companion feeds.
  * Each adapter still attributes those bytes inside its own acquisition scope. */
 export function meetingFetchPass(options: {
   fetchImpl?: typeof fetch;
   curl?: typeof curlGetText;
   websiteSize?: WebsiteSizeForUrl;
-} = {}): typeof fetch {
+} = {}): MeetingFetchPass {
   const requests = new Map<string, number>();
   const responses = new Map<string, Promise<Response>>();
   const take = (url: string) => {
@@ -21,7 +23,7 @@ export function meetingFetchPass(options: {
     }
     requests.set(site, count + 1);
   };
-  return async (input, init) => {
+  const fetchPass: typeof fetch = async (input, init) => {
     const url = input instanceof Request ? input.url : String(input);
     const signal = init?.signal ?? (input instanceof Request ? input.signal : undefined);
     signal?.throwIfAborted();
@@ -56,4 +58,7 @@ export function meetingFetchPass(options: {
       contentType: response.headers.get("content-type") ?? "" });
     return response;
   };
+  return Object.assign(fetchPass, { forgetGet: (urls: readonly string[]) => {
+    for (const url of urls) responses.delete(`GET ${url}\n`);
+  } });
 }

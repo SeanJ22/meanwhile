@@ -1,6 +1,9 @@
-import { divisionsAt, divisionsByOcdIds } from "@/lib/registry/server";
+import { readerRoute } from "@/lib/api/reader-route";
+import { parseCensusGeographies } from "@/lib/geo/census-geocoder";
+import { currentRepresentationSelection } from "@/lib/census-geography/selection";
+import { divisionsForCensusGeographies, divisionsByOcdIds } from "@/lib/registry/server";
 import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
-import { readReaderManifest, ensureReaderAuthorityEdge } from "@/lib/meetings/edge-serving";
+import { holdReaderAuthorityEdge, readReaderManifest, ensureReaderAuthorityEdge } from "@/lib/meetings/edge-serving";
 import { loadVotingSites, readVotingSitesProjection } from "@/lib/ballot/voting-sites-server";
 import { zipDivisionEntry } from "@/lib/geo/zip-division-index";
 import { answerVotingSites, votingJurisdictionCovers, type VotingReaderPlace } from "@/lib/ballot/voting-answer";
@@ -15,7 +18,7 @@ export const dynamic = "force-dynamic";
 const NO_STORE = { "cache-control": "no-store, no-cache, must-revalidate" } as const;
 const empty = (status = 200) => Response.json({ match: false, point: null, jurisdictions: [], outsideCoverage: false, pollingPlaceLinks: [] }, { status, headers: NO_STORE });
 
-export async function POST(request: Request) {
+export const POST = readerRoute("/api/voting-sites", async function POST(request: Request) {
   const deadline = Date.now() + 2800;
   const requestFetch: typeof fetch = (input, init) => fetch(input, { ...init, cache: "no-store",
     signal: AbortSignal.any([AbortSignal.timeout(Math.max(1, deadline - Date.now())), ...(init?.signal ? [init.signal] : [])]) });
@@ -30,13 +33,12 @@ export async function POST(request: Request) {
 
   const isZip = /^\d{5}$/.test(address);
   const geocoded = isZip ? Promise.resolve(null) : censusVotingAddress(address, requestFetch);
-  const manifest = await readReaderManifest().catch(() => null);
+  const manifest = await readReaderManifest().catch(holdReaderAuthorityEdge);
   if (manifest?.authorityArtifacts) {
-    const edge = await ensureReaderAuthorityEdge(manifest, undefined, ["census-districts", "registry-runtime", "voting-sites"]).catch(() => null);
+    const edge = await ensureReaderAuthorityEdge(manifest, undefined, ["census-districts", "voting-sites"]).catch(error => holdReaderAuthorityEdge(error, manifest, ["census-districts", "voting-sites"]));
     if (edge) enterReaderAuthorityEdge(edge);
   }
   try {
-    const projection = readVotingSitesProjection().then(() => true, () => false);
     let place: VotingReaderPlace;
     let readerAddress: VotingAddressInput = { address };
     const located = await geocoded;
@@ -51,11 +53,16 @@ export async function POST(request: Request) {
     } else {
       if (!located) return empty();
       readerAddress = censusVotingAddressFields(address, located.payload);
-      const divisions = await divisionsAt(located.point.lat, located.point.lng);
+      const geographic = parseCensusGeographies(located.payload);
+      const divisions = await divisionsForCensusGeographies(geographic?.geographies ?? {}, currentRepresentationSelection(), "Current_Current", {});
       place = addCensusVotingGeographies(votingPlaceFromDivisions(divisions, "ADDRESS", located.point), located.payload);
     }
-    if (!await projection) throw new Error("Voting-location projection unavailable");
-    const file = loadVotingSites();
+    const files = await Promise.all(place.states.map(async state => {
+      await readVotingSitesProjection(state);
+      return loadVotingSites(state);
+    }));
+    const file = { generatedAt: files.map(row => row.generatedAt).sort().at(-1) ?? "",
+      jurisdictions: files.flatMap(row => row.jurisdictions).filter(row => votingJurisdictionCovers(row, place)) };
     const covering = file.jurisdictions.filter(j => votingJurisdictionCovers(j, place));
     const needsPrecinct = covering.some(j => j.sites.some(site => site.kind === "ELECTION_DAY" && site.precinct));
     if (place.point && needsPrecinct && !covering.some(j => j.boundaries?.some(b => b.kind === "OFFICIAL_PRECINCT"))) {
@@ -69,4 +76,4 @@ export async function POST(request: Request) {
   } catch {
     return Response.json({ error: "Voting-location data is temporarily unavailable. The source work remains open." }, { status: 503, headers: NO_STORE });
   }
-}
+});

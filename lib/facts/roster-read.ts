@@ -2,13 +2,15 @@ import type { BodyRoster, RosterReaderDisposition } from "../registry/body-roste
 import type { Query } from "./publish.ts";
 
 const ROSTER_FACTS_SQL = `WITH members AS (
-    SELECT f.entity_id AS body_id, substr(f.field, 8) AS person_id, f.value, f.quote, f.checked_at, f.provenance_kind, s.url
-    FROM fact f JOIN source_copy s ON s.id = f.source_copy_id
+    SELECT f.entity_id AS body_id, substr(f.field, 8) AS person_id, f.value, f.quote, f.checked_at, f.provenance_kind,
+      (SELECT s.url FROM source_copy s WHERE s.id = f.source_copy_id) AS url
+    FROM fact f
     WHERE f.status = 'live' AND f.field LIKE 'member:%' AND ($1::text[] IS NULL OR f.entity_id = ANY($1::text[])))
   SELECT m.body_id, b.name AS body_name, m.person_id, m.value, m.quote, m.checked_at, m.provenance_kind, m.url,
     coalesce((SELECT value FROM entity_external_id x WHERE x.entity_id = m.person_id AND x.scheme = 'roster-member' LIMIT 1), '') AS shown_id,
-    coalesce((SELECT jsonb_object_agg(p.field, jsonb_build_object('value', p.value, 'quote', p.quote, 'url', ps.url, 'checked', p.checked_at))
-      FROM fact p JOIN source_copy ps ON ps.id = p.source_copy_id
+    coalesce((SELECT jsonb_object_agg(p.field, jsonb_build_object('value', p.value, 'quote', p.quote,
+        'url', (SELECT ps.url FROM source_copy ps WHERE ps.id = p.source_copy_id), 'checked', p.checked_at))
+      FROM fact p
       WHERE p.entity_id = m.person_id AND p.status = 'live'
         AND (p.field IN ('name', 'email', 'phone', 'website') OR p.field LIKE '%:' || m.body_id)), '{}'::jsonb) AS person
   FROM members m JOIN entity b ON b.id = m.body_id

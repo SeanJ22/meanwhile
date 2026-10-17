@@ -7,7 +7,7 @@ import { PGlite } from "@electric-sql/pglite";
 import { applyControlPlaneMigrations, controlPlaneMigrationHash, productionControlPlaneTarget } from "../scripts/control-plane-migrations.mts";
 import { BOOTSTRAP_DDL, CONTROL_READS_EXPAND_DDL } from "../lib/control-plane/repository/pg-schema.ts";
 import { pgControlReadsBackfill } from "../lib/control-plane/repository/control-reads-backfill.ts";
-import { runControlBackfills } from "../lib/control-plane/scheduler/state-planning.ts";
+import { runStateControlBackfill,PLANNING_STATES } from "../lib/control-plane/scheduler/state-planning.ts";
 import type { Sql } from "../lib/control-plane/repository/pg-store.ts";
 import { pgSpendRepository } from "../lib/control-plane/repository/model-charges.ts";
 import { pricedModelCharge } from "../lib/control-plane/fleet-safety.ts";
@@ -98,6 +98,10 @@ test("expand copies no production rows; runner jobs backfill one state and retai
       await sql.query("INSERT INTO cp_route_tasks(id,revision,updated_at,value) VALUES($1,1,$2,$3::jsonb)",[`task-${state}`,now,JSON.stringify({workItemId:`work-${state}`,state:"DISPOSED"})]);
     }
     const config={formatVersion:1,apiFallback:{enabled:false,decidedAt:null,decidedBy:null,receiptId:null},updatedAt:now,
+      expansionScopes:[{key:"st:az",geography:{stateAbbr:"AZ"},decidedAt:"2026-10-14T12:00:00.000Z"},
+        {key:"st:nh",geography:{stateAbbr:"NH"},decidedAt:"2026-10-14T12:00:00.000Z"},
+        {key:"new-az",geography:{stateAbbr:"AZ"},decidedAt:"2026-10-16T12:00:00.000Z"},
+        {key:"cross-nh",geography:{stateAbbr:"NH"},planningStates:["AZ","NH"],decidedAt:"2026-10-14T12:00:00.000Z"}],
       placeTargets:[{key:"st:az",goalPercent:75},{key:"st:nh",goalPercent:80}],settingHistory:[{id:"old-change",key:"alerts.on",before:false,after:true,at:now}]};
     await sql.query("INSERT INTO cp_admin_config(id,revision,updated_at,value) VALUES('current',1,$1,$2::jsonb)",[now,JSON.stringify(config)]);
     await applyControlPlaneMigrations(expandArgs,{env:buildEnv,committed,withDatabase:async(_connection,operation)=>operation(sql)});
@@ -108,19 +112,24 @@ test("expand copies no production rows; runner jobs backfill one state and retai
     await sql.query("CREATE TABLE cp_field_manual(id text PRIMARY KEY,revision bigint NOT NULL,updated_at timestamptz NOT NULL,value jsonb NOT NULL)");
     await sql.query("INSERT INTO cp_field_manual(id,revision,updated_at,value) VALUES('write-errors',1,$1,$2::jsonb)",[now,JSON.stringify({entries:[{payload:{count:3}}]})]);
     await sql.query("INSERT INTO cp_field_manual_entries(id,revision,updated_at,value) VALUES($1,1,$2,$3::jsonb)",[BANK_WRITE_HEALTH_ID,now,JSON.stringify({id:BANK_WRITE_HEALTH_ID,payload:{count:2}})]);
+    await sql.query("INSERT INTO cp_hunt_orders(id,revision,updated_at,value) VALUES('stop-az',1,$1,$2::jsonb)",[now,
+      JSON.stringify({id:"stop-az",state:"az",scopeKey:null,requestedAt:now,confirmedAt:null,receiptId:"stop-az"})]);
     const manual=createMemoryRepositories();
     const jobs=pgControlReadsBackfill(sql,()=>manual);const first=await jobs.runState("az");assert.equal(first.complete,true);
     assert.deepEqual((await sql.query("SELECT id FROM cp_occurrences_archive")).map(row=>row.id),["az"]);
     assert.deepEqual((await sql.query("SELECT id FROM cp_admin_place_targets")).map(row=>row.id),["st:az"]);
     assert.equal((await pgSpendRepository(sql).aggregate({since:"2026-10-14T12:00:00Z",until:now})).usd,7);
+    assert.deepEqual((await sql.query("SELECT id FROM cp_admin_expansion_scopes ORDER BY id")).map(row=>row.id),["new-az"],"a recorded stop cannot be undone by copying an older scope; a later Send survives");
     assert.equal((await jobs.runState("az")).copied,0);
-    await runControlBackfills(jobs,()=>{});
+    for(const state of PLANNING_STATES)await runStateControlBackfill(jobs,state,()=>{});
+    await jobs.finish(PLANNING_STATES);
+    assert.deepEqual((await sql.query("SELECT id FROM cp_admin_expansion_scopes ORDER BY id")).map(row=>row.id),["new-az","st:nh"]);
     assert.equal((await sql.query("SELECT count(*)::integer AS n FROM cp_occurrences"))[0].n,0);
     assert.equal((await pgSpendRepository(sql).aggregate({since:"2026-10-14T12:00:00Z",until:now})).usd,18);
     assert.deepEqual((await sql.query("SELECT id FROM cp_migrations")).map(row=>row.id),["CP-01_expand"]);
     assert.equal((await sql.query("SELECT value ? 'placeTargets' AS embedded FROM cp_admin_config"))[0].embedded,false);
     assert.deepEqual(await sql.query("SELECT to_regclass('cp_spend_window') AS old"),[{old:null}]);
     assert.equal((await sql.query("SELECT (value #>> '{payload,count}')::integer AS n FROM cp_field_manual_entries WHERE id=$1",[BANK_WRITE_HEALTH_ID]))[0].n,5);
-    requests=0;await runControlBackfills(jobs,()=>{});assert.equal(requests,1,"completed backfills read one marker and perform no writes");
+    requests=0;assert.equal(await jobs.finished(),true);assert.equal(requests,1,"completed backfills read one marker and perform no writes");
   } finally {await db.close();}
 });

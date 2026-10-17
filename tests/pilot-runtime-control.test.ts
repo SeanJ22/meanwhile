@@ -242,5 +242,10 @@ test("independent place orders and their runner acknowledgements invalidate the 
     assert.equal((await db.query<{revision:number}>("SELECT revision FROM cp_admin_config WHERE id='current'")).rows[0].revision,1);
     await db.query("UPDATE cp_planning_controls SET applied_revision=revision,applied_at=now() WHERE state='az'");
     assert.notEqual(await signature(),ordered);
+    const control=runnerControlReader("unused",createMemoryRepositories(),{query:async(sql,params)=>(await db.query(sql,params)).rows as Record<string,unknown>[]});
+    assert.equal((await control.read(true)).planningPending,true,"unfinished state backfills wake a planning round even without paid research");
+    await db.query("INSERT INTO cp_control_backfill_jobs(state,kind,completed) VALUES('system','complete',true)");
+    assert.equal((await control.read(true)).planningPending,false);
+
   }finally{await db.close();}
 });

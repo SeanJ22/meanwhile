@@ -1,4 +1,4 @@
-import { readPlanningContinuation, runControlBackfills } from "../lib/control-plane/scheduler/state-planning.ts";
+import { readPlanningContinuation } from "../lib/control-plane/scheduler/state-planning.ts";
 import { CENSUS_LANE_INTERVAL_MS } from "../lib/control-plane/discovery/census-lane.ts";
 
 import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -1167,15 +1167,7 @@ async function runPlatformCensus(): Promise<void> {
   } finally { release(); }
 }
 
-async function runControlReadBackfills():Promise<void> {
-  if(provider!=="postgres" || canary || runtimeAdmissionsHeld)return;
-  const repos=await ownerRepositories();
-  if(repos?.controlReadsBackfill)await runControlBackfills(repos.controlReadsBackfill,
-    (state,copied,archived)=>console.log(`  control backfill ${state}: ${copied} rows copied; ${archived} archived`));
-}
-
 const standingRuntimeScheduler = new IndependentRuntimeLaneScheduler([
-  {id:"control-read-backfills",everyMs:60_000,run:runControlReadBackfills},
   { id: "platform-census", everyMs: CENSUS_LANE_INTERVAL_MS, run: runPlatformCensus },
   { id: "routine-civic-data", everyMs: ROUTINE_DATA_ADMISSION_MS, run: runRoutineCivicData },
   { id: "intake-runtime", everyMs: INTAKE_RUNTIME_TICK_MS, run: runIntakeRuntime },

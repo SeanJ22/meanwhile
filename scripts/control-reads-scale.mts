@@ -160,7 +160,8 @@ async function workload(repos: ControlPlaneRepositories, places: string[], run: 
       const query = { role: "SCOUT", state: /\/state:([a-z]{2})(?:\/|$)/.exec(place)?.[1], ocdIds: [place], limit: 12 };
       const result = await manual.readFieldManualRows(repos, query);
       if (result.error) throw new Error(result.error);
-      notes.push({ place, ids: result.store.entries.map((entry: { id: string }) => entry.id).sort() });
+      assert.ok(result.projection.entryIds.length<=query.limit);
+      notes.push({ place, ids: [...result.projection.entryIds].sort() });
     }
     return notes;
   }
@@ -479,19 +480,23 @@ async function fixtureDatabase():Promise<FixtureDatabase> {
     if(!client)throw new Error("The isolated Postgres fixture did not become ready");
   }catch(error){execFileSync("docker",["rm","--force","--volumes",name],{stdio:"ignore"});throw error;}
   const connected=client;
+  let connectionError:Error|null=null;
+  connected.on("error",error=>{connectionError=error;});
   const close=async()=>{
     process.off("SIGTERM",terminate);
     try {await connected.end();}
     finally {execFileSync("docker",["rm","--force","--volumes",name],{stdio:"ignore"});}
+    if(connectionError)throw connectionError;
   };
   const terminate=()=>{void close().finally(()=>process.exit(143));};
   process.once("SIGTERM",terminate);
   return {
     query:async<T,>(text:string,params:unknown[]=[])=>{
+      if(connectionError)throw connectionError;
       const result=await connected.query(text,params);
       return {rows:result.rows as T[],fields:result.fields,affectedRows:result.rowCount??0};
     },
-    exec:async text=>{await connected.query(text);},
+    exec:async text=>{if(connectionError)throw connectionError;await connected.query(text);},
     close,
   };
 }

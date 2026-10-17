@@ -29,18 +29,14 @@ export function planningStateArg(args:readonly string[]):string|null {
   if(!PLANNING_STATES.includes(state)) throw new Error("Planning requires one state");
   return state;
 }
-export async function runControlBackfills(jobs:ControlReadsBackfill,onProgress:(state:string,copied:number,archived:number)=>void):Promise<void> {
-  if(await jobs.finished())return;
-  for(const state of PLANNING_STATES) {
-    let copied=0,archived=0;
-    for(;;) {
-      const batch=await jobs.runState(state);copied+=batch.copied;archived+=batch.archived;
-      if(batch.complete)break;
-      onProgress(state,copied,archived);
-    }
+export async function runStateControlBackfill(jobs:ControlReadsBackfill,state:string,onProgress:(state:string,copied:number,archived:number)=>void):Promise<void> {
+  let copied=0,archived=0;
+  for(;;) {
+    const batch=await jobs.runState(state);copied+=batch.copied;archived+=batch.archived;
+    if(batch.complete)break;
     onProgress(state,copied,archived);
   }
-  await jobs.finish(PLANNING_STATES);
+  onProgress(state,copied,archived);
 }
 export async function runStatePlanningRound(run:(state:string)=>Promise<boolean>,states:readonly string[]=PLANNING_STATES):Promise<{readonly completed:number;readonly failed:readonly string[]}> {
   let completed=0;const failed:string[]=[];

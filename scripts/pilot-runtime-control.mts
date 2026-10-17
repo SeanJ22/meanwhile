@@ -59,7 +59,8 @@ export function runnerControlReader(url: string, repos: ControlPlaneRepositories
   };
   async function refresh() {
     const [row] = await query(`SELECT
-      EXISTS(SELECT 1 FROM cp_planning_controls WHERE revision>applied_revision) AS planning_pending,
+      (EXISTS(SELECT 1 FROM cp_planning_controls WHERE revision>applied_revision) OR NOT EXISTS(
+        SELECT 1 FROM cp_control_backfill_jobs WHERE state='system' AND kind='complete' AND completed)) AS planning_pending,
       (SELECT COALESCE(jsonb_agg(jsonb_build_object('id', record_id, 'position', position::text, 'record', record)), '[]'::jsonb)
        FROM cp_log_research_intents WHERE log_key = $1 AND NOT (position <@ $4::int8multirange)) AS research,
       (SELECT COALESCE(jsonb_agg(jsonb_build_object('id', record_id, 'position', position::text, 'record', record)), '[]'::jsonb)

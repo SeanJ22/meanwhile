@@ -186,9 +186,6 @@ export interface VotingSitesAnswer {
   outsideCoverage: boolean;
   precision?: "ADDRESS" | "ZIP";
   googleFallback?: { available: boolean; requested: boolean; label?: string; message?: string };
-
-  pollingPlaceLinks: readonly import("./navigation.ts").PollingPlaceLink[];
-  ballotNavigationDataState?: "PROMOTED" | "FIRST_SEED" | "STORE_UNREACHABLE";
 }
 
 export const UNPLACED_SITE_LINE =

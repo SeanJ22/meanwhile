@@ -3,24 +3,18 @@ import { electionFieldIssue, type PublishedElectionField } from "../civic-data/e
 import { ballotNavigationScope, ballotNavigationDivision } from "../civic-data/ballot-navigation-scope.ts";
 import type { ElectionDates } from "./election-dates.ts";
 
-export interface RegistrationLink {
-  state: string; label: string; url: string; sourceOrg: string; verification: string; verifiedAt: string;
-  purpose: "registration_page" | "registration_lookup"; sourceUrl?: string;
-}
-export interface PollingPlaceLink {
-  state: string; label: string; url: string; sourceOrg: string; note: string; verification: string; verifiedAt: string;
-  purpose: "polling_lookup" | "ballot_lookup"; sourceUrl?: string;
+export interface NavigationLink {
+  state: string; label: string; url: string; sourceUrl: string; sourceOrg: string; verification: string; verifiedAt: string;
+  purpose: "registration_page" | "registration_lookup" | "ballot_lookup";
 }
 export interface BallotNavigation {
   readonly offices: readonly PublishedElectionField["value"][];
-  readonly registrations: readonly RegistrationLink[];
-  readonly polling: readonly PollingPlaceLink[];
+  readonly links: readonly NavigationLink[];
   readonly dates: readonly ElectionDates[];
 }
 interface DivisionNavigation {
   offices: PublishedElectionField["value"][];
-  registrations: RegistrationLink[];
-  polling: PollingPlaceLink[];
+  links: NavigationLink[];
   dates: ElectionDates[];
 }
 const indexed = new WeakMap<object, { version: string; state: string; divisions: Map<string, DivisionNavigation> }>();
@@ -51,24 +45,20 @@ export function ballotNavigationFor(state: string, projection: CuratedReaderProj
       const value = row.value as PublishedElectionField["value"];
       if (value?.state !== state) throw new Error(`Navigation ${version} crosses a state boundary.`);
       const division = value.divisionId ?? ballotNavigationDivision(state);
-      const entry: DivisionNavigation = byDivision.get(division) ?? { offices: [], registrations: [], polling: [], dates: [] };
+      const entry: DivisionNavigation = byDivision.get(division) ?? { offices: [], links: [], dates: [] };
       byDivision.set(division, entry);
       if (row.kind === "REGISTRATION_LINK" || row.kind === "POLLING_PLACE_LINK") {
         if (!/^https:\/\//.test(value.url) || !Number.isFinite(Date.parse(value.verifiedAt))) throw new Error(`Navigation ${version} has an invalid link.`);
-        if (row.kind === "REGISTRATION_LINK") entry.registrations.push({ ...(row.value as unknown as RegistrationLink), purpose: "registration_lookup" });
-        else entry.polling.push({ ...(row.value as unknown as PollingPlaceLink), purpose: "polling_lookup" });
+        if (row.kind === "REGISTRATION_LINK") entry.links.push({ ...(row.value as unknown as NavigationLink), purpose: "registration_lookup" });
         continue;
       }
       const issue = electionFieldIssue(row);
       if (issue) throw new Error(`Navigation ${version}: ${issue}`);
       if (value.fieldKind === "election_office") entry.offices.push(value);
-      else if (value.fieldKind === "registration_page" || value.fieldKind === "registration_lookup") entry.registrations.push({
-        state, purpose: value.fieldKind, label: value.fieldKind === "registration_page" ? "Voter registration" : "Registration status",
+      else if (value.fieldKind === "registration_page" || value.fieldKind === "registration_lookup" || value.fieldKind === "ballot_lookup") entry.links.push({
+        state, purpose: value.fieldKind, label: value.fieldKind === "registration_page" ? "Voter registration"
+          : value.fieldKind === "registration_lookup" ? "Registration status" : "Look up your sample ballot",
         url: value.navigationUrl!, sourceUrl: value.url, sourceOrg: value.sourceOrg, verification: value.quote, verifiedAt: value.verifiedAt,
-      });
-      else if (value.fieldKind === "polling_lookup" || value.fieldKind === "ballot_lookup") entry.polling.push({
-        state, purpose: value.fieldKind, label: value.fieldKind === "ballot_lookup" ? "Look up your sample ballot" : "Find your polling place",
-        url: value.navigationUrl!, sourceUrl: value.url, sourceOrg: value.sourceOrg, note: value.quote, verification: value.quote, verifiedAt: value.verifiedAt,
       });
       else if (LABELS[value.fieldKind] && value.electionDate) entry.dates.push({ state, electionDay: value.electionDate,
         steps: [{ label: LABELS[value.fieldKind]!, date: value.dates.join(" – "), detail: value.quote, sourceUrl: value.url,
@@ -86,6 +76,5 @@ export function ballotNavigationFor(state: string, projection: CuratedReaderProj
     existing.steps.push(...calendar.steps); dates.set(calendar.electionDay, existing);
   }
   return { offices: latest(entries.flatMap(entry => entry.offices), office => `${office.divisionId}:${office.phone!.replace(/\D/g, "")}`),
-    registrations: latest(entries.flatMap(entry => entry.registrations), row => `${row.purpose}:${row.url}`),
-    polling: latest(entries.flatMap(entry => entry.polling), row => `${row.purpose}:${row.url}`), dates: [...dates.values()] };
+    links: latest(entries.flatMap(entry => entry.links), row => `${row.purpose}:${row.url}`), dates: [...dates.values()] };
 }

@@ -66,7 +66,6 @@ test("VS-01 ordinary reader request never invokes Google; distinct request only 
   const fallback = await answerVotingSites({ ...file, jurisdictions: [] }, place, { readerRequested: true, googleRequested: true, address: "5503 HWY 4 Baker, FL 32531" }, dependencies);
   assert.equal(requests, 1);
   assert.equal(fallback.googleFallback?.label, GOOGLE_VOTING_DATA_LABEL);
-  assert.deepEqual(fallback.pollingPlaceLinks, []);
 });
 
 test("VS-01 official address-only response stays on our page without returning private request metadata", async () => {

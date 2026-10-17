@@ -1,4 +1,5 @@
 import { REGISTRY_STATES, stateBallotScope } from "./state-scopes.ts";
+import { BALLOT_NAVIGATION_STATES, ballotNavigationScope } from "./ballot-navigation-scope.ts";
 import { stateRegistryRuntimeScope } from "./state-scopes.ts";
 import { DOTGOV_SCOPE, readDotGovProjection } from "./dotgov.ts";
 import { createHash } from "node:crypto";
@@ -59,7 +60,6 @@ export function promotedEdgePointers(): Readonly<Record<GlobalPromotedAuthorityF
     "other-reader-data": [],
     "state-votes": [],
     "government-domains": [{ recordClass: "DOTGOV_REFERENCE", scope: DOTGOV_SCOPE, reader: readDotGovProjection }],
-    "ballot-navigation": [manual("ballot-navigation", (options) => readCuratedReaderProjection("ballot-navigation", options))],
     "official-filings": [manual("official-filings", (options) => readCuratedReaderProjection("official-filings", options))],
     "member-offices": [manual("member-offices", (options) => readCuratedReaderProjection("member-offices", options))],
     "nh-members": [{ recordClass: nhMembers.recordClass, scope: nhMembers.scope, reader: readNhMembers }],
@@ -95,6 +95,7 @@ function statePromotedEdgePointers(state: string): Readonly<Partial<Record<State
     "candidate-publications": [pointer("CANDIDATE_PUBLICATION", stateBallotScope("candidate-corpus", state))],
     "voting-sites": [pointer("VOTING_SITE", stateBallotScope("voting-sites", state))],
     "candidate-campaign-sites-derived": [pointer(DERIVED_CAMPAIGN_SITES_RECORD_CLASS, stateBallotScope("candidate-campaign-sites-derived", state))],
+    ...(BALLOT_NAVIGATION_STATES.includes(state) ? { "ballot-navigation": [pointer("CURATED_READER_RECORD", ballotNavigationScope(state))] } : {}),
   };
 }
 

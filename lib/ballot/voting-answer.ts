@@ -125,6 +125,6 @@ export async function answerVotingSites(file: VotingSitesFile, place: VotingRead
   }
   return { match: place.states.length > 0, point: place.precision === "ADDRESS" ? place.point : null,
     precision: place.precision, jurisdictions: projected, outsideCoverage: projected.length === 0,
-    pollingPlaceLinks: [], googleFallback: { available: !officialLoaded, requested: googleAllowed,
+    googleFallback: { available: !officialLoaded, requested: googleAllowed,
       ...(googleAllowed ? { label: GOOGLE_VOTING_DATA_LABEL } : {}), ...(googleMessage ? { message: googleMessage } : {}) } };
 }

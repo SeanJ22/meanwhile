@@ -13,12 +13,12 @@ import type { CuratedReaderProjection } from "./manual-projections.ts";
 import { electionFieldState, type PublishedElectionField } from "./election-fields.ts";
 
 import { ballotNavigationScope } from "./ballot-navigation-scope.ts";
+import { readStateAuthorityProjection } from "./state-reader.ts";
 import { ballotNavigationFor } from "../ballot/navigation.ts";
 import { currentReaderSelection } from "../db/reader-route.ts";
 
 export const CURATED_READER_CONTRACT_IDS = [
   "official-filings",
-  "ballot-navigation",
   "stances",
   "campaign-sites",
   "member-offices",
@@ -26,7 +26,8 @@ export const CURATED_READER_CONTRACT_IDS = [
   "meeting-body-crosswalk",
 ] as const;
 export type CuratedReaderContractId = (typeof CURATED_READER_CONTRACT_IDS)[number];
-type GlobalCuratedReaderId = Exclude<CuratedReaderContractId, "ballot-navigation">;
+
+const BALLOT_NAVIGATION = requiredManualProductionContract("ballot-navigation");
 
 export interface BallotNavigationProjectionRecord {
   readonly id: string;
@@ -40,8 +41,8 @@ export interface CampaignSiteProjectionRecord {
   readonly site: Readonly<Record<string, unknown>>;
 }
 
-const states = new Map<GlobalCuratedReaderId, CivicDataReadResult<CuratedReaderProjection>>();
-const selectedStates = new WeakMap<object, Map<GlobalCuratedReaderId, CivicDataReadResult<CuratedReaderProjection>>>();
+const states = new Map<CuratedReaderContractId, CivicDataReadResult<CuratedReaderProjection>>();
+const selectedStates = new WeakMap<object, Map<CuratedReaderContractId, CivicDataReadResult<CuratedReaderProjection>>>();
 function readerStates() {
   const selection = currentReaderSelection();
   if (!selection) return states;
@@ -51,7 +52,7 @@ function readerStates() {
 }
 
 
-function initial(id: GlobalCuratedReaderId): CivicDataReadResult<CuratedReaderProjection> {
+function initial(id: CuratedReaderContractId): CivicDataReadResult<CuratedReaderProjection> {
   const contract = requiredManualProductionContract(id);
   return civicDataReadNotInitialized(
     contract.recordClass,
@@ -73,29 +74,34 @@ function validate(id: CuratedReaderContractId, value: CuratedReaderProjection, v
 export async function readCuratedReaderProjection(
   id: CuratedReaderContractId,
   options: PromotedCivicDataReadOptions = {},
-  state?: string,
 ): Promise<CivicDataReadResult<CuratedReaderProjection>> {
   const contract = requiredManualProductionContract(id);
-  const scope = id === "ballot-navigation" ? ballotNavigationScope(state ?? "") : contract.scope;
-  const result = await readPromotedCivicData<CuratedReaderProjection>(contract.recordClass, scope, id === "ballot-navigation" && !options.edge ? { ...options, bypassCache: true } : options);
-  if (result.kind === "PROMOTED") {
-    if (id === "ballot-navigation") ballotNavigationFor(state!, result.value, result.metadata.versionId!, []);
-    else validate(id, result.value, result.metadata.versionId ?? "unknown");
-  }
-  if (id !== "ballot-navigation") readerStates().set(id, result);
+  const result = await readPromotedCivicData<CuratedReaderProjection>(contract.recordClass, contract.scope, options);
+  if (result.kind === "PROMOTED") validate(id, result.value, result.metadata.versionId ?? "unknown");
+  readerStates().set(id, result);
+  return result;
+}
+
+/** One state's navigation records. A request-scoped read takes the state family's edge artifact; an injected store reads its pointer. */
+export async function readBallotNavigationProjection(state: string, options: PromotedCivicDataReadOptions = {}): Promise<CivicDataReadResult<CuratedReaderProjection>> {
+  const scope = ballotNavigationScope(state);
+  const result = Object.keys(options).length
+    ? await readPromotedCivicData<CuratedReaderProjection>(BALLOT_NAVIGATION.recordClass, scope, options)
+    : (await readStateAuthorityProjection<CuratedReaderProjection>("ballot-navigation", state)).result;
+  if (result.kind === "PROMOTED") ballotNavigationFor(state, result.value, result.metadata.versionId!, []);
   return result;
 }
 
 export async function readElectionFieldsForDivisions(divisions: readonly string[], options: PromotedCivicDataReadOptions = {}) {
   const states = [...new Set(divisions.map(electionFieldState).filter((state): state is string => state !== null))];
-  const reads = await Promise.all(states.map(state => readCuratedReaderProjection("ballot-navigation", options, state)));
+  const reads = await Promise.all(states.map(state => readBallotNavigationProjection(state, options)));
   const fields = reads.flatMap(read => read.kind === "PROMOTED" ? read.value.records.filter(row =>
     row.kind === "ELECTION_FIELD" && divisions.includes((row as unknown as PublishedElectionField).value.divisionId)) as unknown as PublishedElectionField[] : []);
   return { reads, fields };
 }
 
 export async function refreshCuratedReaderProjection(
-  id: GlobalCuratedReaderId,
+  id: CuratedReaderContractId,
   options: PromotedCivicDataReadOptions = {},
 ): Promise<string> {
   const result = await readCuratedReaderProjection(id, options);
@@ -107,7 +113,7 @@ export async function refreshCuratedReaderProjection(
 
 /** Primes from a validated edge serving copy, with no database read; its state is BOOTSTRAP. */
 export function primeCuratedReaderProjection(
-  id: GlobalCuratedReaderId,
+  id: CuratedReaderContractId,
   value: CuratedReaderProjection,
   versionId: string,
 ): void {
@@ -137,10 +143,6 @@ export const readOfficialFilingsForReader = (): Promise<CivicDataReadResult<Cura
   return readPromotedEdgeFirst(contract.recordClass, contract.scope,
     options => readCuratedReaderProjection("official-filings", options), "Official filing records");
 };
-const BALLOT_NAVIGATION = requiredManualProductionContract("ballot-navigation");
-export const settleBallotNavigationRead = (state: string): Promise<CivicDataReadResult<CuratedReaderProjection>> =>
-  readPromotedEdgeFirst(BALLOT_NAVIGATION.recordClass, ballotNavigationScope(state),
-    options => readCuratedReaderProjection("ballot-navigation", options, state), "The ballot navigation links");
 export const refreshCampaignSitesFromPromoted = (options: PromotedCivicDataReadOptions = {}) =>
   refreshCuratedReaderProjection("campaign-sites", options);
 export const refreshMemberOfficesFromPromoted = (options: PromotedCivicDataReadOptions = {}) =>
@@ -152,13 +154,13 @@ export const settleMemberOfficesRead = (): Promise<CivicDataReadResult<CuratedRe
 export const refreshVenueResolutionsFromPromoted = (options: PromotedCivicDataReadOptions = {}) =>
   refreshCuratedReaderProjection("venue-resolutions", options);
 
-export function curatedReaderReadState(id: GlobalCuratedReaderId): CivicDataReadResult<CuratedReaderProjection> {
+export function curatedReaderReadState(id: CuratedReaderContractId): CivicDataReadResult<CuratedReaderProjection> {
   return readerStates().get(id) ?? initial(id);
 }
 
 /** Only after the canonical pointer was read. A BOOTSTRAP state is a validated edge copy of a promoted version and is served; the seed is test evidence, never a production fallback. */
 export function currentCuratedReaderRecords<T>(
-  id: GlobalCuratedReaderId,
+  id: CuratedReaderContractId,
   testSeed: readonly T[],
 ): readonly T[] {
   const state = readerStates().get(id) ?? initial(id);

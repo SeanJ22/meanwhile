@@ -1,4 +1,5 @@
 import { stateBallotScope } from "./state-scopes.ts";
+import { ballotNavigationScope } from "./ballot-navigation-scope.ts";
 import { currentReaderSelection } from "../db/reader-route.ts";
 import { currentReaderAuthorityEdge, refuseDatabaseInEdgeOnlyContext, reportReaderStateFailure } from "../registry/runtime-edge.ts";
 import { stateRegistryRuntimeScope } from "./state-scopes.ts";
@@ -12,14 +13,21 @@ type StateRead<T> = { readonly result: CivicDataReadResult<T>; readonly source: 
 type Query = Parameters<typeof readStateReaderPromotion>[0];
 type Held = { pending: Promise<StateRead<unknown>>; result?: StateRead<unknown> };
 const requests = new WeakMap<object, Map<string, Held>>();
-const classes: Record<StateAuthorityFamily, RoutineRecordClass> = {
+export const STATE_AUTHORITY_RECORD_CLASSES: Record<StateAuthorityFamily, RoutineRecordClass> = {
   "registry-runtime": "REGISTRY_RUNTIME_BINDING", "ballot-contests": "BALLOT_CANDIDACY", "candidate-profiles": "CANDIDATE_PROFILE",
   "candidate-publications": "CANDIDATE_PUBLICATION", "voting-sites": "VOTING_SITE", "candidate-campaign-sites-derived": "CURATED_READER_RECORD",
+  "ballot-navigation": "CURATED_READER_RECORD",
 };
+const classes = STATE_AUTHORITY_RECORD_CLASSES;
+
+export function stateAuthorityScope(family: StateAuthorityFamily, state: string): string {
+  return family === "registry-runtime" ? stateRegistryRuntimeScope(state)
+    : family === "ballot-navigation" ? ballotNavigationScope(state.toUpperCase())
+    : stateBallotScope(family === "candidate-publications" ? "candidate-corpus" : family, state);
+}
 
 function stateKey(family: StateAuthorityFamily, state: string) {
-  const scope = family === "registry-runtime" ? stateRegistryRuntimeScope(state)
-    : stateBallotScope(family === "candidate-publications" ? "candidate-corpus" : family, state);
+  const scope = stateAuthorityScope(family, state);
   return { scope, recordClass: classes[family], key: `${classes[family]}:${scope}` };
 }
 

@@ -16,7 +16,7 @@ import type { VotingAddressInput } from "@/lib/ballot/voting-source-types";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 const NO_STORE = { "cache-control": "no-store, no-cache, must-revalidate" } as const;
-const empty = (status = 200) => Response.json({ match: false, point: null, jurisdictions: [], outsideCoverage: false, pollingPlaceLinks: [] }, { status, headers: NO_STORE });
+const empty = (status = 200) => Response.json({ match: false, point: null, jurisdictions: [], outsideCoverage: false }, { status, headers: NO_STORE });
 
 export const POST = readerRoute("/api/voting-sites", async function POST(request: Request) {
   const deadline = Date.now() + 2800;

@@ -1,11 +1,10 @@
-import { readStateAuthorityProjection } from "./state-reader.ts";
+import { readStateAuthorityProjection, stateAuthorityScope } from "./state-reader.ts";
 import type { StateAuthorityFamily } from "../meetings/edge-artifacts.ts";
-import { REGISTRY_STATES, stateBallotScope } from "./state-scopes.ts";
+import { REGISTRY_STATES } from "./state-scopes.ts";
 import { statesForRegistryDivisions } from "./state-scopes.ts";
 import type { BallotSet } from "../ballot/types.ts";
 import { type GenericBallotProjection } from "../ballot/generic-projection.ts";
 import type { VotingSitesFile } from "../ballot/voting-sites.ts";
-import { ELECTION_DATES, type ElectionDates } from "../ballot/election-dates.ts";
 import type { OfficeholderSet } from "../officials/types.ts";
 import { FEDERAL_DIRECTORY_SCOPE, type FederalDirectoryReadModel } from "../officials/federal-directory-data-plane.ts";
 import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
@@ -40,7 +39,6 @@ export interface HeldPlaceFamilies {
   readonly funding?: FundingSnapshot | null;
   readonly stateMoney?: readonly StateMoneySnapshot[];
   readonly filings?: readonly OfficialFiling[];
-  readonly electionDates?: readonly ElectionDates[];
   readonly electionFields?: readonly PublishedElectionField[];
   readonly candidateProfiles?: CandidateProfilesProjection | null;
   readonly candidatePublications?: readonly CandidateDocument[];
@@ -88,13 +86,13 @@ export async function readHeldPlaceFamilies(divisionIds: readonly string[], opti
     ? readPlacePointerSlice<T>(recordClass, scope, divisionIds, [], targets)
     : readPromotedCivicData<T>(recordClass, scope, options);
   const stateRead = async <T>(family: Exclude<StateAuthorityFamily, "registry-runtime">, recordClass: Parameters<typeof readPlacePointerSlice>[0], state: string) =>
-    options.store ? readPromotedCivicData<T>(recordClass, stateBallotScope(family === "candidate-publications" ? "candidate-corpus" : family, state), options)
+    options.store ? readPromotedCivicData<T>(recordClass, stateAuthorityScope(family, state), options)
       : (await readStateAuthorityProjection<T>(family, state)).result;
   const states = new Set(statesForRegistryDivisions(divisionIds));
   const stateTargets = OFFICIAL_STATE_LEGISLATOR_TARGETS.filter(target => states.has(target.state));
   const moneyScopes = (Object.keys(STATE_CAMPAIGN_FINANCE_SOURCES) as StateCampaignFinanceJurisdiction[])
     .filter(state => states.has(state)).map(state => STATE_CAMPAIGN_FINANCE_SOURCES[state].scope);
-  const filings = requiredManualProductionContract("official-filings"), navigation = requiredManualProductionContract("ballot-navigation");
+  const filings = requiredManualProductionContract("official-filings");
   const fec = requiredRoutineContract("fec-funding");
   const [federal, legislators] = await Promise.all([
     read<FederalDirectoryReadModel>("FEDERAL_DIRECTORY", FEDERAL_DIRECTORY_SCOPE),
@@ -102,16 +100,18 @@ export async function readHeldPlaceFamilies(divisionIds: readonly string[], opti
   ]);
   const rosters = [value(federal)?.roster, ...legislators.map(read => value(read)?.roster)].filter((row): row is OfficeholderSet => row !== undefined);
   targets.push(...rosters.flatMap(roster => roster.divisions.filter(row => divisions.has(row.ocdId)).map(row => row.officeholderId)));
-  const [funding, money, filingRead, navigationRead] = await Promise.all([
+  const [funding, money, filingRead] = await Promise.all([
     read<FundingSnapshot>(fec.recordClass, fec.scope),
     Promise.all(moneyScopes.map(scope => read<StateMoneySnapshot>("STATE_CAMPAIGN_FINANCE", scope))),
     read<CuratedReaderProjection>(filings.recordClass, filings.scope),
-    read<CuratedReaderProjection>(navigation.recordClass, navigation.scope),
   ]);
   const ballots: BallotSet[] = [], candidateLineups: LineupContest[] = [], candidatePublications: CandidateDocument[] = [], derivedCampaignSites: DerivedCampaignSiteRecord[] = [];
+  const electionFields: PublishedElectionField[] = [];
   let candidateProfiles: CandidateProfilesProjection | null = null, votingSites: VotingSitesFile | null = null;
   for (const state of states) {
     if (!(REGISTRY_STATES as readonly string[]).includes(state)) continue;
+    electionFields.push(...(value(await stateRead<CuratedReaderProjection>("ballot-navigation", "CURATED_READER_RECORD", state))?.records ?? [])
+      .filter(row => electionFieldIssue(row) === null) as unknown as PublishedElectionField[]);
     const held = value(await stateRead<GenericBallotProjection>("ballot-contests", "BALLOT_CANDIDACY", state));
     const ownBallots = Object.values(held?.ballots ?? {}).map(ballot => placeBallot(ballot, divisions));
     ballots.push(...ownBallots);
@@ -136,8 +136,7 @@ export async function readHeldPlaceFamilies(divisionIds: readonly string[], opti
   return { rosters, ballots, candidateLineups, candidateProfiles, candidatePublications, derivedCampaignSites,
     votingSites, funding: value(funding), stateMoney: money.flatMap(read => value(read) ?? []),
     filings: (value(filingRead)?.records ?? []).filter(row => officialFilingIssue(row) === null) as unknown as OfficialFiling[],
-    electionDates: ELECTION_DATES.filter(row => states.has(row.state)),
-    electionFields: (value(navigationRead)?.records ?? []).filter(row => electionFieldIssue(row) === null) as unknown as PublishedElectionField[] };
+    electionFields };
 }
 
 /** No names, state-wide money expansion, or original-job/ZIP filters participate in joins. */
@@ -290,23 +289,13 @@ export function projectHeldPlaceFamilies(divisionIds: readonly string[], registr
     if (jurisdiction.refusal || !jurisdiction.sites.length || !subject(`voting-sites:${jurisdiction.ocdId}`, "deadline", [jurisdiction.ocdId], jurisdiction.name, "voting-sites")) continue;
     field(`voting-sites:${jurisdiction.ocdId}`, "ELE-09", { model: jurisdiction.model, election: jurisdiction.election, sites: jurisdiction.sites }, jurisdiction.sourceUrl, jurisdiction.collectedAt, FRESHNESS_HOURS.daily);
   }
-  for (const calendar of families.electionDates ?? []) {
-    const division = `ocd-division/country:us/state:${calendar.state.toLowerCase()}`;
-    for (const step of calendar.steps) {
-      const id = `election-calendar:${calendar.state}:${calendar.electionDay}:${step.label}`;
-      const filing = /filing|certification/i.test(step.label);
-      if (!subject(id, "deadline", [division], step.label, filing ? "filing-deadline" : "voting-deadline")) continue;
-      // Version-adopted source facts are held on their actual date, never relabeled as a fresh canonical publication.
-      field(id, filing ? "ELE-06" : "ELE-08", step, calendar.sourceUrl, calendar.collectedAt, 24, "held");
-    }
-  }
   for (const row of families.electionFields ?? []) {
     if (electionFieldIssue(row) !== null) continue;
     const captureKind = row.value.fieldKind === "certified_outcome" ? "election-result"
-      : row.value.fieldKind.endsWith("_lookup") ? "election-navigation"
-      : ["registration_deadline", "early_voting"].includes(row.value.fieldKind) ? "voting-deadline" : undefined;
+      : (row.value.fieldKind.endsWith("_lookup") || row.value.fieldKind === "registration_page") ? "election-navigation"
+      : ["registration_deadline", "mail_ballot_request_deadline", "early_voting"].includes(row.value.fieldKind) ? "voting-deadline" : undefined;
     if (!subject(row.id, row.value.fieldKind === "certified_outcome" ? "contest" : "deadline", [row.value.divisionId], row.value.quote, captureKind)) continue;
-    field(row.id, row.value.fieldKind === "certified_outcome" ? "ELE-15" : row.value.fieldKind.endsWith("_lookup") ? "ELE-09" : "ELE-08", row.value,
+    field(row.id, row.value.fieldKind === "certified_outcome" ? "ELE-15" : (row.value.fieldKind.endsWith("_lookup") || row.value.fieldKind === "registration_page") ? "ELE-09" : "ELE-08", row.value,
       row.value.url, row.value.collectedAt, FRESHNESS_HOURS.weekly);
   }
   const moneyDivisions = (keys: readonly string[]) => [...new Set(keys.flatMap(key => targets.get(key) ?? []))];

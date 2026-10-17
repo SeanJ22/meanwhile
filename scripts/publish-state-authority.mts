@@ -16,7 +16,8 @@ try {
   if (!isStateAuthorityFamily(family)) throw new Error("STATE_ARTIFACT_FAMILY_INVALID");
   const stateValue = requiredAssignment(argv, "state", "STATE_ARTIFACT_STATE_REQUIRED");
   const state = family === "registry-runtime" ? requireRegistryState(stateValue) : requireBallotState(stateValue);
-  const contract = family === "registry-runtime" ? stateRegistryRuntimeContractId(state) : stateBallotContractId((family === "candidate-publications" ? "candidate-corpus" : family) as StateBallotFamily, state);
+  const contract = family === "registry-runtime" ? stateRegistryRuntimeContractId(state) : family === "ballot-navigation" ? family
+    : stateBallotContractId((family === "candidate-publications" ? "candidate-corpus" : family) as StateBallotFamily, state);
   assertRegisteredRuntimeContract(contract,
     family === "candidate-campaign-sites-derived" ? "routine" : "manual");
   const now = requiredAssignment(argv, "observed-at", "STATE_ARTIFACT_TIME_REQUIRED");

@@ -46,16 +46,9 @@ import { rosterFactReader } from "./roster-fact-reader.ts";
 import { installFactReader } from "../../lib/facts/db.ts";
 
 
-import { stateBallotScope } from "../../lib/civic-data/state-scopes.ts";
-
+import { STATE_AUTHORITY_RECORD_CLASSES as stateClasses, stateAuthorityScope as stateScope } from "../../lib/civic-data/state-reader.ts";
 import { registryJurisdictions, stateRegistryRuntimeScope } from "../../lib/civic-data/state-scopes.ts";
 import type { StateAuthorityFamily } from "../../lib/meetings/edge-artifacts.ts";
-const stateClasses: Record<StateAuthorityFamily, RoutineRecordClass> = {
-  "registry-runtime": "REGISTRY_RUNTIME_BINDING", "ballot-contests": "BALLOT_CANDIDACY", "candidate-profiles": "CANDIDATE_PROFILE",
-  "candidate-publications": "CANDIDATE_PUBLICATION", "voting-sites": "VOTING_SITE", "candidate-campaign-sites-derived": "CURATED_READER_RECORD",
-};
-const stateScope = (family: StateAuthorityFamily, state: string) => family === "registry-runtime" ? stateRegistryRuntimeScope(state)
-  : stateBallotScope(family === "candidate-publications" ? "candidate-corpus" : family, state);
 
 const ROOT = join(import.meta.dirname, "..", "..");
 const REGISTRY_FIXTURE = join(ROOT, "tests/fixtures/registry-transfer-import.json.gz");

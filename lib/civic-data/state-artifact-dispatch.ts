@@ -23,6 +23,7 @@ export interface StateArtifactChildren {
 
 function contractId(unit: Pick<StateUnit, "family" | "state">) {
   if (unit.family === "registry-runtime") return stateRegistryRuntimeContractId(unit.state);
+  if (unit.family === "ballot-navigation") return "ballot-navigation";
   return stateBallotContractId((unit.family === "candidate-publications" ? "candidate-corpus" : unit.family) as StateBallotFamily, unit.state);
 }
 
@@ -89,7 +90,7 @@ export async function dispatchStateArtifacts(input: {
   const cwd = input.env.WTP_RUNTIME_AUTHORITY_REPO ?? process.cwd();
   const env = childEnvironment(input.env);
   const commands = changed.map(({ unit, version }) => ({
-    id: `${contractId(unit)}:reader-artifact`, executable: process.execPath,
+    id: `${unit.family === "ballot-navigation" ? `${contractId(unit)}:${unit.state}` : contractId(unit)}:reader-artifact`, executable: process.execPath,
     args: ["--experimental-strip-types", resolve(cwd, "scripts/publish-state-authority.mts"), `--state=${unit.state}`,
       `--family=${unit.family}`, `--version=${version}`, `--observed-at=${input.now}`],
     env: admittedRuntimeChildEnvironment({ parentEnv: env,

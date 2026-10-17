@@ -1,8 +1,8 @@
 import { publishAuthorityRecords, readAuthorityRecords, type RecordIndex } from "./authority-records.ts";
 import { currentReaderSelection } from "../db/reader-route.ts";
 import { createHash } from "node:crypto";
-import { stateBallotScope } from "../civic-data/state-scopes.ts";
-import { stateRegistryRuntimeScope, statesForRegistryDivisions } from "../civic-data/state-scopes.ts";
+import { statesForRegistryDivisions } from "../civic-data/state-scopes.ts";
+import { STATE_AUTHORITY_RECORD_CLASSES, stateAuthorityScope } from "../civic-data/state-reader.ts";
 import { readPromotedCivicData, registerIntegrityCheckedEdgeEntries } from "../civic-data/read-model.ts";
 import { gzipSync, gunzipSync, createGzip } from "node:zlib";
 import { Readable } from "node:stream";
@@ -526,16 +526,13 @@ async function readStateAuthorityArtifact(family: StateAuthorityFamily, state: s
       if (!bytes) throw new Error("STATE_ARTIFACT_BYTES_MISSING");
       if (bytesHash(bytes) !== ref.sha) throw new Error("STATE_ARTIFACT_HASH_MISMATCH");
       const envelope = JSON.parse(gunzipSync(bytes).toString("utf8")) as StateAuthorityArtifactEnvelope;
-      const scope = family === "registry-runtime" ? stateRegistryRuntimeScope(state)
-        : stateBallotScope(family === "candidate-publications" ? "candidate-corpus" : family, state);
+      const scope = stateAuthorityScope(family, state);
       if (envelope.formatVersion !== READER_ARTIFACT_FORMAT_VERSION || envelope.family !== family || envelope.state !== state ||
         envelope.versionId !== ref.version || envelope.value?.kind !== "PROMOTED_POINTERS" || !Array.isArray(envelope.value.entries) || envelope.value.entries.length !== 1 ||
         envelope.value.entries.some(entry => (entry.kind === "PROMOTED" ? entry.projection.scope : entry.scope) !== scope)) throw new Error("STATE_ARTIFACT_ENVELOPE_INVALID");
       registerIntegrityCheckedEdgeEntries(envelope.value.entries);
       for (const entry of envelope.value.entries) {
-        const recordClass = ({ "registry-runtime": "REGISTRY_RUNTIME_BINDING", "ballot-contests": "BALLOT_CANDIDACY", "candidate-profiles": "CANDIDATE_PROFILE",
-          "candidate-publications": "CANDIDATE_PUBLICATION", "voting-sites": "VOTING_SITE", "candidate-campaign-sites-derived": "CURATED_READER_RECORD" } as const)[family];
-        const read = await readPromotedCivicData(recordClass, scope, { edge: entry });
+        const read = await readPromotedCivicData(STATE_AUTHORITY_RECORD_CLASSES[family], scope, { edge: entry });
         if (read.kind === "STORE_UNREACHABLE") throw new Error(`STATE_ARTIFACT_PROOF_INVALID:${read.detail}`);
       }
       return envelope.value;

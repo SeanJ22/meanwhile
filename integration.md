@@ -291,3 +291,5 @@ One line per batch folded into river.
 - 2026-10-16T07:34:39Z · neon-allow · NEON-ALLOW · ready 5acacfc74ddf · river 8b6a9150ed7b · pnpm gates pass on 8b6a9150ed7b
 - 2026-10-16T17:30:47Z · ballot-three-states · BL-30 · ready 0dbc1ab21e0d · river 05b72687f2df · pnpm gates pass on 05b72687f2df
 - 2026-10-17T02:26:56Z · ballot-three-states · BL-30 · ready 90f9be11d922 · river 2e16200945cd · pnpm gates pass on 2e16200945cd
+- 2026-10-17T06:58:52Z · door-reads · DR-01 · ready 5a8119ffa6e9 · river 42bb436bcfa3 · pnpm gates pass on 42bb436bcfa3
+- 2026-10-17T06:58:52Z · fact-store · R1 · ready 3ebc66ccb2ac · river 42bb436bcfa3 · pnpm gates pass on 42bb436bcfa3

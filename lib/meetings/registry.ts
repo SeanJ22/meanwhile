@@ -29,15 +29,12 @@ export function getMeetingSource(): ResolvedMeetingSource {
   if (process.env.NODE_ENV === "production" && name !== "snapshot") {
     throw new Error(`PRODUCTION_MEETING_SOURCE_MUST_BE_CANONICAL:${name}`);
   }
+  if (name !== "composite") throw new Error("MEETING_SNAPSHOT_SOURCE_NEEDS_A_PLACE_READ: build it with snapshotSourceFor");
 
   let source = resolved.get(name);
   if (!source) {
-    if (name === "composite") {
-      activeComposite = buildCompositeSource();
-      source = resolve(activeComposite);
-    } else {
-      source = resolve(makeSnapshotSource());
-    }
+    activeComposite = buildCompositeSource();
+    source = resolve(activeComposite);
     resolved.set(name, source);
   }
   return source;

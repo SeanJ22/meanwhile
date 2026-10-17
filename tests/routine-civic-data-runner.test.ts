@@ -1429,8 +1429,8 @@ test("Reader readback repair covers the observable registry independently of sou
   assert.match(runner, /READER_REPAIR_DENOMINATOR_MISMATCH/);
   assert.match(child, /repairRoutineReaderProjectionReadback\(store, contract/);
   assert.match(child, /repairMeetingReaderProjectionReadbacks\(/);
-  // Repair composes once when needed; serving-copy publication runs independently.
-  assert.match(child, /repairMeetingReaderProjectionReadbacks\([^;]*\{ aggregate, attestor \},?\s*\)/);
+  // Repair reads each body's own partition; serving-copy publication runs independently.
+  assert.match(child, /repairMeetingReaderProjectionReadbacks\([^;]*\{ attestor \},?\s*\)/);
   assert.match(child, /const attestor = readerVerifierClosureAttestor\(\);/);
   assert.match(child, /repairRoutineReaderProjectionReadback\(store, contract, observedAt, undefined, \{ attestor \}\)/);
   assert.doesNotMatch(child, /preparePublishedMeetingSnapshot|publishReaderMeetings/);
@@ -1439,7 +1439,7 @@ test("Reader readback repair covers the observable registry independently of sou
   const publicationChecks = runner.slice(runner.indexOf("const publishNowEdgeChecks ="), runner.indexOf("const admissionNowMs ="));
   assert.match(publicationChecks, /const outcome = await publishChangedReaderEdge\(\[\]\)/,
     "minute checks publish only what was promoted since the edge last published");
-  assert.equal(child.match(/readMeetingsProjection\(/g)?.length, 1, "the child composes in one place");
+  assert.doesNotMatch(child, /readMeetingsProjection\(/, "the child composes nothing: it reads each body's own partition");
   assert.match(child, /serializeRoutineReaderRepairRecord/);
   assert.doesNotMatch(child, /processRegisteredRoutineCandidate|promoteMeetingPartitions|\.promote\(/);
   assert.match(runner, /RCD_READER_READBACK[\s\S]*RECORDED \$\{status\}/);

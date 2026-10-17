@@ -245,7 +245,7 @@ test("BL-20: Ohio and Michigan national ballots render the same incumbent record
   const dir = mkdtempSync(join(tmpdir(), "wtp-national-ballot-parity-"));
   after(() => rmSync(dir, { recursive: true, force: true }));
   const store = new LocalFileArtifactStore(dir);
-  const published = await publishReaderMeetings({ formatVersion: 1, generatedAt: checkedAt, counts: { fresh: 0, carried: 0, total: 0, duplicatesCollapsed: 0 }, sources: [], meetings: [], agendaDocuments: [] }, { sourceThrough: null, retrievedAt: null, promotedThrough: null }, { store });
+  const published = await publishReaderMeetings({ store, meetingStates: {} });
   assert.equal(published.status, "PUBLISHED");
   const none = { value: null, versionId: "none" };
   await publishPointers(store, { authority, stateAuthorities, registrations: { az: none, oh: none, mi: none },

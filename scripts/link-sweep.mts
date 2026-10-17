@@ -26,14 +26,13 @@ if (store === null) {
   say("REFUSED — this host has no reader artifact store, so there is no published edge to read.");
   process.exit(1);
 }
-const artifacts = await readEdgeForSweep(store);
-let links = collectOutboundLinks(artifacts);
+let links = await collectOutboundLinks(readEdgeForSweep(store));
 const limit = Number(FLAGS.get("limit") ?? "");
 if (Number.isInteger(limit) && limit > 0) {
   const hosts = [...new Set(links.map((l) => new URL(l.url).hostname))].slice(0, limit);
   links = links.filter((l) => hosts.includes(new URL(l.url).hostname));
 }
-say(`${links.length} links found in ${artifacts.length} published pieces.`);
+say(`${links.length} links found in the published reader edge.`);
 // Every request counts against the website's one shared hour, so the control plane is opened before any look.
 const opened = await openControlPlane();
 if (!opened.ok) {

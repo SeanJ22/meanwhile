@@ -11,6 +11,8 @@ import { STATE_AUTHORITY_FAMILIES, type GlobalAuthorityFamily, type StateAuthori
 
 type StateValues = Partial<Record<StateAuthorityFamily, Record<string, PublishAuthorityValue>>>;
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
+import { planMeetingBodies } from "../lib/meetings/body-publication.ts";
+import { promoteRecorded } from "./helpers/reader-edge-meetings.ts";
 import type { GlobalPromotedAuthorityFamily, PromotedFamilyArtifactValue } from "../lib/meetings/edge-artifacts.ts";
 import { ballotElectionKey } from "../lib/ballot/generic-projection.ts";
 import { clearPromotedReadModelCache } from "../lib/civic-data/read-model.ts";
@@ -134,7 +136,7 @@ async function publishEdge(withPromoted: boolean, overrides: typeof PROMOTED = {
   const dir = mkdtempSync(join(tmpdir(), "wtp-ask-edge-"));
   after(() => rmSync(dir, { recursive: true, force: true }));
   const snapshot = recordedMeetingsSnapshot();
-  assert.ok(snapshot.meetings.length > 0, "the recorded meetings publish the edge's meeting scopes");
+  assert.ok(snapshot.meetings.length > 0, "the recorded meetings publish the edge's meeting indexes");
   const authority: Partial<Record<GlobalAuthorityFamily, PublishAuthorityValue>> = {
     "census-districts": { value: azDistricts, versionId: azDistricts.versionId },
     "federal-directory": { value: federal, versionId: "edge-test:ask:federal" },
@@ -142,11 +144,11 @@ async function publishEdge(withPromoted: boolean, overrides: typeof PROMOTED = {
     ...(withPromoted ? { ...PROMOTED, ...overrides } : {}),
   };
   const store = new LocalFileArtifactStore(dir);
-  const result = await publishReaderMeetings(snapshot, {
-    sourceThrough: snapshot.generatedAt,
-    retrievedAt: snapshot.generatedAt,
-    promotedThrough: snapshot.generatedAt,
-  }, { store, now: new Date().toISOString() });
+  const meetings = new MemoryRoutineDataStore();
+  await promoteRecorded(meetings, snapshot.meetings, snapshot.agendaDocuments, snapshot.generatedAt);
+  const plan = await planMeetingBodies({ store: meetings, artifacts: store, now: new Date().toISOString(), served: undefined, registryVersion: () => null, registry: async () => null });
+  assert.deepEqual(plan.stats.failed, []);
+  const result = await publishReaderMeetings({ store, now: new Date().toISOString(), meetingStates: plan.entries });
   await publishPointers(store, { authority,
     stateAuthorities: { "registry-runtime": stateRegistryArtifacts("edge-test:ask:registry", ["AZ"]), ...(withPromoted ? STATE_PROMOTED : {}), ...stateOverrides },
     stateLegislators: { "US-AZ": { versionId: "edge-test:ask:az-people", value: {
@@ -327,14 +329,10 @@ test("a named place absent from its state registry gives a specific holding with
   const registryKey = (await readServedPointer(store, authorityPointerKey("registry-runtime", "IL")))!.ref.key;
   const opened: string[] = [];
   const originalBytes = LocalFileArtifactStore.prototype.readBytes;
-  const originalArtifact = LocalFileArtifactStore.prototype.readArtifact;
   const originalFetch = globalThis.fetch;
   const requests: string[] = [];
   LocalFileArtifactStore.prototype.readBytes = async function (key) {
     opened.push(key); return originalBytes.call(this, key);
-  };
-  LocalFileArtifactStore.prototype.readArtifact = async function (key) {
-    opened.push(key); return originalArtifact.call(this, key);
   };
   globalThis.fetch = (async (input, init) => {
     requests.push(String(input)); return originalFetch(input, init);
@@ -360,7 +358,6 @@ test("a named place absent from its state registry gives a specific holding with
     assert.deepEqual(databaseReads, []);
   } finally {
     LocalFileArtifactStore.prototype.readBytes = originalBytes;
-    LocalFileArtifactStore.prototype.readArtifact = originalArtifact;
     globalThis.fetch = originalFetch;
   }
 });

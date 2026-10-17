@@ -56,7 +56,6 @@ interface StateAuthoritiesEdge {
 }
 
 export interface ReaderAuthorityEdgeBundle {
-  readonly meetingPlaces?: ReadonlyMap<string, readonly string[]>;
   readonly selection?: ReaderSelection;
   readonly loadPromoted?: (recordClass: RoutineRecordClass, scope: string) => Promise<PromotedEdgeEntry | null>;
   readonly stateAuthorities?: StateAuthoritiesEdge;

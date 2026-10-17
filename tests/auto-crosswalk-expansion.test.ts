@@ -47,7 +47,6 @@ import {
 } from "../lib/control-plane/scheduler/providers/meetings-discovery.ts";
 import type { Jurisdiction, JurisdictionRegistry } from "../lib/hunt/jurisdiction-universe.ts";
 import { meetingsDiscoveryNeeds } from "../lib/hunt/meetings-discovery.ts";
-import { readMeetingsProjection } from "../lib/meetings/snapshot.ts";
 import { registrationCandidate, type RegistrationReadModel } from "../lib/registration/candidate.ts";
 import { REGISTRATION_SOURCE_BYTES, REGISTRATION_SOURCE_SHA256, REGISTRATION_SOURCE_URL, REGISTRATION_TARGETS, registrationTarget } from "../lib/registration/publication.ts";
 import { readRegistrationProjection } from "../lib/registration/reader.ts";
@@ -55,6 +54,7 @@ import { loadRegistrationReference } from "../lib/registration/reference.ts";
 import { makeIcalSource } from "../lib/sources/ical/index.ts";
 import { curatedReaderSourceClass } from "./helpers/curated-reader-source-class.ts";
 import { ics, localStart as localStartFrom, reviewedIds } from "./helpers/expansion-fixtures.ts";
+import { freshEdge, publishPass, readPlace } from "./helpers/meeting-body-fixtures.ts";
 import { recordedDiscoveryOpen, type RecordedReply } from "./helpers/recorded-discovery-open.ts";
 
 const ROOT = join(import.meta.dirname, "..");
@@ -77,6 +77,7 @@ const CITY_HOST = "www.franklin.oh.example.gov";
 const COUNTY_ROUTE = `https://${COUNTY_HOST}/calendar/commissioners.ics`;
 const CITY_ROUTE = `https://${CITY_HOST}/events.ics`;
 const COUNTY_BODY = "ocd-division/country:us/state:oh/county:franklin#governing";
+const COUNTY_DIVISION = "ocd-division/country:us/state:oh/county:franklin";
 const ALLOW: RecordedReply = { status: 200, body: "User-agent: *\nAllow: /\n", contentType: "text/plain" };
 
 /** `DTSTART;TZID=America/New_York` a whole number of days from now, at a wall-clock hour. */
@@ -338,7 +339,9 @@ test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed b
   assert.equal(familyOutcome.candidate.state, "PROMOTED", `${familyOutcome.candidate.failureCode ?? ""} ${familyOutcome.candidate.failureDetail ?? ""}`);
 
   /* 6. The Reader. */
-  const reader = await readMeetingsProjection({ store, now: T_READER, bypassCache: true });
+  const edge = freshEdge();
+  assert.equal((await publishPass(store, edge, T_READER)).status, "PUBLISHED");
+  const reader = await readPlace(edge, store, [COUNTY_DIVISION, "ocd-division/country:us/state:oh/place:franklin"], T_READER);
   assert.equal(reader.kind, "PROMOTED");
   if (reader.kind !== "PROMOTED") return;
   const sittings = reader.value.meetings.filter((m) => m.bodyId === COUNTY_BODY);
@@ -350,7 +353,7 @@ test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed b
     assert.equal(m.timeZone, "America/New_York");
   }
   assert.equal(reader.value.meetings.some((m) => m.ocdId === "ocd-division/country:us/state:oh/place:franklin"), false, "the held city publishes nothing");
-  assert.equal(reader.partitions.find((p) => p.contractId === derivedMeetingFamilyId("US-OH"))?.kind, "PROMOTED");
+  assert.ok(await store.readPromotion("MEETING", partition.scope), "the state's derived family is promoted");
   assert.equal(
     reader.value.sources.some((s) => s.source === "derived" && !s.ok),
     false,

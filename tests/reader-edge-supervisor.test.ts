@@ -8,6 +8,7 @@ import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { LocalFileArtifactStore, type ReaderArtifactStore } from "../lib/meetings/edge-store.ts";
 import { routineCivicDataSupervisorOutcome } from "../lib/control-plane/freshness-cycle-outcome.ts";
 import { ownerDigestAttention } from "../lib/control-plane/owner-surface.ts";
+import { HOUR, PIMA, T1, at, readPartition } from "./helpers/meeting-body-fixtures.ts";
 
 const NOW = "2026-10-05T18:00:00.000Z";
 // All transports here are temporary files; the Netlify-kind case tests the
@@ -66,11 +67,21 @@ test("no configured publication store fails without reading data", async () => {
   assert.match(readerEdgeSupervisorFailure(outcome)!.detail, /not configured/);
 });
 
-test("uncomposable meetings fail even with the development opt-in", async (t) => {
+test("meetings that cannot be composed fail even with the development opt-in, and stay owed", async (t) => {
   const directory = mkdtempSync(join(tmpdir(), "slide-uncomposable-"));
   t.after(() => rmSync(directory, { recursive: true, force: true }));
-  const outcome = await publishSupervisorReaderEdge(new MemoryRoutineDataStore(), NOW,
-    [{ recordClass: "MEETING", scope: "unprepared" }], { artifactStore: new LocalFileArtifactStore(directory) }, { WTP_READER_EDGE_LOCAL_OK: "1" });
+  const memory = new MemoryRoutineDataStore();
+  await readPartition(memory, PIMA, T1, ["a"]);
+  const unreadable = new Proxy(memory, { get(target, key) {
+    if (key === "readPromotion") return async () => { throw new Error("the partition store did not answer"); };
+    const value = Reflect.get(target, key);
+    return typeof value === "function" ? value.bind(target) : value;
+  } });
+  const artifactStore = new LocalFileArtifactStore(directory);
+  const outcome = await publishSupervisorReaderEdge(unreadable, at(T1, HOUR),
+    [{ recordClass: "MEETING", scope: PIMA.scope }], { artifactStore }, { WTP_READER_EDGE_LOCAL_OK: "1" });
   assert.equal(outcome.ok, false);
-  assert.match(outcome.detail!, /could not be assembled/);
+  assert.match(outcome.detail!, /could not be composed/);
+  assert.equal(outcome.readerEdge, "FAILED");
+  assert.deepEqual((await memory.readMeetingQueue()).map((row) => row.scope), [PIMA.scope], "the unreadable body stays owed");
 });

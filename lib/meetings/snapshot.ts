@@ -4,31 +4,14 @@ import type { Meeting, NormalizeDropCounts } from "../sources/types.ts";
 import type { SourceAcquisitionEvidence } from "../sources/acquisition-trace.ts";
 import {
   CivicDataStoreUnavailableError,
-  readPromotedCivicDataBatch,
   readPromotedCivicData,
   type CivicDataReadMetadata,
   type CivicDataReadResult,
   type PromotedCivicDataReadOptions,
 } from "../civic-data/read-model.ts";
 import { meetingPartitionFreshnessMs } from "../civic-data/contracts.ts";
-import {
-  HELD_MEETING_PARTITIONS,
-  MEETING_PARTITION_CONTRACTS,
-  type HeldMeetingPartition,
-  type MeetingPartitionContract,
-} from "../civic-data/meeting-partitions.ts";
-import { DERIVED_FAMILY_SOURCE, meetingHistoryContract } from "../civic-data/meeting-partitions.ts";
-import { mergeMeetingHistory } from "../civic-data/meeting-history.ts";
-import { mergeDuplicateSittingFields, mergeReaderSittings } from "./sitting-merge.ts";
-import { collapseDuplicateSittings } from "../sources/composite/index.ts";
-import { stampMeetingDoor } from "../civic-data/fact-door.ts";
-import {
-  applyPartitionFreshCheck,
-  confirmationCheckedAt,
-  meetingVersionReadsASource,
-  meetingVersionRoutes,
-  type MeetingPartitionFreshCheck,
-} from "./fresh-checks.ts";
+import type { HeldMeetingPartition, MeetingPartitionContract } from "../civic-data/meeting-partitions.ts";
+import { DERIVED_FAMILY_SOURCE } from "../civic-data/meeting-partitions.ts";
 
 export const MEETINGS_RECORD_CLASS = "MEETING" as const;
 /** Reader composition scope; no canonical pointer is ever written at this key. */
@@ -384,36 +367,11 @@ function assertAttributionIsHonest(snap: MeetingsSnapshot): void {
 
 const validatedProjectionValues = new WeakSet<object>();
 
-export type MeetingsProjectionReadOptions = PromotedCivicDataReadOptions;
-
-export interface MeetingPartitionReadback {
-  readonly contractId: string;
-  readonly source: string;
-  readonly bodyId: string;
-  readonly scope: string;
-  readonly kind: CivicDataReadResult<MeetingsSnapshot>["kind"];
-  readonly versionId: string | null;
-  readonly detail: string | null;
-  /** Present only on a successor with no pointer of its own: the retired predecessor's version composed in its place. */
-  readonly heldFrom?: MeetingPartitionHeldFrom;
-  readonly freshCheck?: MeetingPartitionFreshCheck;
-  /** Why this partition's durable history was left out of the composition; its live rows are served regardless. */
-  readonly historyIssue?: string;
-  readonly history?: { readonly contractId: string; readonly versionId: string };
-}
-
-export interface MeetingPartitionHeldFrom {
-  readonly contractId: string;
-  readonly scope: string;
-  readonly versionId: string;
-}
-
 export type MeetingsProjectionReadResult =
   | {
       readonly kind: "PROMOTED";
       readonly value: MeetingsSnapshot;
       readonly metadata: CivicDataReadMetadata;
-      readonly partitions: readonly MeetingPartitionReadback[];
       readonly detail: string;
     }
   | Extract<CivicDataReadResult<MeetingsSnapshot>, { readonly kind: "BOOTSTRAP" | "NOT_RECORDED" | "STORE_UNREACHABLE" }>;
@@ -491,270 +449,6 @@ function validateMeetingPartitionProjection(
   }
 }
 
-export async function readMeetingsProjection(
-  options: MeetingsProjectionReadOptions = {},
-): Promise<MeetingsProjectionReadResult> {
-  // The meeting partitions read here are the published doors' partitions, installed in this module graph.
-  await (await import("../doors/meeting-doors.ts")).ensureMeetingDoors();
-  const now = options.now ?? new Date().toISOString();
-  const readOptions = {
-    ...(options.store ? { store: options.store } : {}),
-    now,
-    maxAgeMs: options.maxAgeMs ?? meetingPartitionFreshnessMs(now),
-    bypassCache: options.bypassCache,
-  };
-  const historyContracts = MEETING_PARTITION_CONTRACTS.map((partition) => meetingHistoryContract(partition));
-  const batchResults = await readPromotedCivicDataBatch<MeetingsSnapshot>(
-    MEETINGS_RECORD_CLASS,
-    [...MEETING_PARTITION_CONTRACTS.map((partition) => partition.scope), ...historyContracts.map((contract) => contract.scope)],
-    readOptions,
-  );
-  const partitionResults = batchResults.slice(0, MEETING_PARTITION_CONTRACTS.length);
-  const ownResults = MEETING_PARTITION_CONTRACTS.map((partition, index) =>
-    validateMeetingPartitionProjection(partition, partitionResults[index]!)
-  );
-  // A history that is unreadable or fails its proof is left out and named on its partition's readback; the live rows
-  // are never held back by it.
-  const historyByPartition = new Map<string, { readonly value: MeetingsSnapshot; readonly versionId: string | null } | { readonly issue: string }>();
-  historyContracts.forEach((contract, index) => {
-    const read = validateMeetingPartitionProjection(contract, batchResults[MEETING_PARTITION_CONTRACTS.length + index]!);
-    if (read.kind === "PROMOTED") {
-      historyByPartition.set(contract.historyOf!, { value: read.value, versionId: read.metadata.versionId });
-    } else if (read.kind === "STORE_UNREACHABLE") {
-      historyByPartition.set(contract.historyOf!, { issue: `${read.code}: ${read.detail}` });
-    }
-  });
-  // A retired route's held version is read only while its successor has no pointer of its own.
-  const awaiting = HELD_MEETING_PARTITIONS.filter((held) =>
-    ownResults[MEETING_PARTITION_CONTRACTS.findIndex((partition) => partition.id === held.successorId)]?.kind === "NOT_RECORDED"
-  );
-  const heldReads = await readPromotedCivicDataBatch<MeetingsSnapshot>(
-    MEETINGS_RECORD_CLASS,
-    awaiting.map((held) => held.scope),
-    readOptions,
-  );
-  const heldResults = new Map(awaiting.map((held, index) => [
-    held.successorId,
-    { held, result: validateMeetingPartitionProjection(held, heldReads[index]!) },
-  ]));
-  type PromotedRead = Extract<CivicDataReadResult<MeetingsSnapshot>, { kind: "PROMOTED" }>;
-  const reads = MEETING_PARTITION_CONTRACTS.map((partition, index) => {
-    const result = ownResults[index]!;
-    const predecessor = heldResults.get(partition.id);
-    const held = result.kind === "NOT_RECORDED" && predecessor?.result.kind === "PROMOTED"
-      ? { partition: predecessor.held, result: predecessor.result as PromotedRead }
-      : null;
-    return { partition, result, held };
-  });
-  type ComposedRead = {
-    readonly partition: MeetingPartitionContract;
-    readonly result: PromotedRead;
-    readonly held: HeldMeetingPartition | null;
-  };
-  const rawPromoted: ComposedRead[] = reads.flatMap(({ partition, result, held }): ComposedRead[] =>
-    result.kind === "PROMOTED"
-      ? [{ partition, result: result as PromotedRead, held: null }]
-      : held
-        ? [{ partition, result: held.result, held: held.partition }]
-        : [],
-  );
-  const invalid = new Map(
-    reads.flatMap(({ partition, result }) =>
-      result.kind === "STORE_UNREACHABLE" && result.code === "PROMOTION_PROOF_INVALID"
-        ? [[partition.id, result.detail] as const]
-        : [],
-    ),
-  );
-
-  const meetingOwners = new Map<string, string[]>();
-  const documentOwners = new Map<string, string[]>();
-  for (const { partition, result } of rawPromoted) {
-    if (invalid.has(partition.id)) continue;
-    for (const meeting of result.value.meetings) {
-      meetingOwners.set(meeting.id, [...(meetingOwners.get(meeting.id) ?? []), partition.id]);
-    }
-    for (const document of result.value.agendaDocuments) {
-      documentOwners.set(document.id, [...(documentOwners.get(document.id) ?? []), partition.id]);
-    }
-  }
-  for (const [id, owners] of meetingOwners) {
-    if (owners.length < 2) continue;
-    for (const owner of new Set(owners)) invalid.set(owner, `MEETING_PARTITION_ID_COLLISION:${id}`);
-  }
-  for (const [id, owners] of documentOwners) {
-    if (owners.length < 2) continue;
-    for (const owner of new Set(owners)) invalid.set(owner, `MEETING_PARTITION_DOCUMENT_COLLISION:${id}`);
-  }
-
-  // A quiet re-check is a confirmation, not a new version: it restamps the version's fresh rows and "Last checked".
-  const promoted = rawPromoted
-    .filter(({ partition }) => !invalid.has(partition.id))
-    .map((read) => {
-      const readsASource = meetingVersionReadsASource(read.result.value.sources);
-      const checkedAt = confirmationCheckedAt(read.result.projection?.latestConfirmation, read.result.metadata.versionId, readsASource);
-      const routes = meetingVersionRoutes(read.result.value);
-      const history = historyByPartition.get(read.partition.id);
-      return {
-        ...read,
-        value: stampMeetingDoor(read.partition, mergeMeetingHistory(
-          applyPartitionFreshCheck(read.result.value, checkedAt),
-          history !== undefined && "value" in history ? history.value : null,
-        )),
-        freshCheck: routes === null ? undefined : { routes, checkedAt } satisfies MeetingPartitionFreshCheck,
-      };
-    });
-  const freshChecks = new Map(promoted.flatMap(({ partition, freshCheck }) => freshCheck ? [[partition.id, freshCheck] as const] : []));
-  const partitionReadbacks: MeetingPartitionReadback[] = reads.map(({ partition, result, held }) => {
-    const heldFrom = held && !invalid.has(partition.id) && held.result.metadata.versionId
-      ? { contractId: held.partition.id, scope: held.partition.scope, versionId: held.result.metadata.versionId }
-      : null;
-    return {
-      contractId: partition.id,
-      source: partition.meetingSource,
-      bodyId: partition.bodyId,
-      scope: partition.scope,
-      kind: invalid.has(partition.id) ? "STORE_UNREACHABLE" : result.kind,
-      versionId: result.metadata.versionId,
-      detail: invalid.get(partition.id) ?? (heldFrom
-        ? `No pointer of its own yet; the retired route's last promoted version ${heldFrom.contractId}@${heldFrom.versionId} ` +
-          `(retired ${held!.partition.retiredOn}) is composed in its place until this partition's first promotion.`
-        : "detail" in result ? result.detail : null),
-      ...(heldFrom ? { heldFrom } : {}),
-      ...(freshChecks.has(partition.id) ? { freshCheck: freshChecks.get(partition.id)! } : {}),
-      ...(() => {
-        const history = historyByPartition.get(partition.id);
-        return history !== undefined && "issue" in history ? { historyIssue: history.issue }
-          : history !== undefined && "value" in history && history.versionId
-            ? { history: { contractId: meetingHistoryContract(partition).id, versionId: history.versionId } } : {};
-      })(),
-    };
-  });
-
-  if (promoted.length > 0) {
-    const meetings: Meeting[] = [];
-    const agendaDocuments: AgendaDocument[] = [];
-    const sources: SnapshotSourceReport[] = [];
-    for (const { value } of promoted) {
-      meetings.push(...value.meetings);
-      agendaDocuments.push(...value.agendaDocuments);
-      sources.push(...value.sources);
-    }
-    for (const { partition } of reads) {
-      if (promoted.some((row) => row.partition.id === partition.id)) continue;
-      const readback = partitionReadbacks.find((row) => row.contractId === partition.id)!;
-      // A derived family never promoted is a state with no connected calendar yet, not a failed source.
-      if (partition.derivedFamily !== null && readback.kind === "NOT_RECORDED") continue;
-      sources.push({
-        source: partition.meetingSource,
-        ok: false,
-        error: `${partition.bodyId}: ${readback.detail ?? "partition unavailable"}`,
-        failure: "WALL",
-        fetched: 0,
-        normalized: 0,
-        drops: { placeless: 0, unknownVenue: 0, unplaceableInTime: 0, notConfigured: 0 },
-        ...(partition.ocdId ? { unreachableOcdIds: [partition.ocdId] } : {}),
-      });
-    }
-    // Reconcile fields inside it, before a losing row (and its evidence) disappears.
-    const exact = collapseDuplicateSittings(meetings, mergeDuplicateSittingFields);
-    const merged = mergeReaderSittings(exact.rows);
-    const collapsed = { ...merged, collapsed: exact.collapsed + merged.collapsed,
-      dropped: [...exact.dropped, ...merged.dropped] };
-    const accounted = accountCarriedCollapses(
-      promoted.map(({ value }) => value),
-      sources,
-      collapsed.dropped,
-    );
-    sources.splice(0, sources.length, ...accounted.sources);
-    const retainedIds = new Set(collapsed.rows.map((meeting) => meeting.id));
-    const retainedDocuments = agendaDocuments.map(document => ({ ...document, meetingId: collapsed.aliases.get(document.meetingId) ?? document.meetingId }))
-      .filter(document => retainedIds.has(document.meetingId));
-    const generatedAt = promoted.map(({ value }) => value.generatedAt).sort().at(-1) ?? now;
-    const sourceThrough = promoted.map(({ result }) => result.metadata.sourceThrough).filter((value): value is string => value !== null).sort().at(-1) ?? null;
-    const retrievedAt = promoted.map(({ result }) => result.metadata.retrievedAt).filter((value): value is string => value !== null).sort().at(-1) ?? null;
-    const promotedAt = promoted.map(({ result }) => result.metadata.promotedAt).filter((value): value is string => value !== null).sort().at(-1) ?? null;
-    // A held version is proved, but it is not its successor's own pointer.
-    const heldCount = promoted.filter(({ held }) => held !== null).length;
-    const allPartitionsProofValid = promoted.length - heldCount === MEETING_PARTITION_CONTRACTS.length;
-    const stale = promoted.some(({ result }) => result.metadata.stale === "STALE")
-      ? "STALE" as const
-      : !allPartitionsProofValid || promoted.some(({ result }) => result.metadata.stale === "UNKNOWN")
-        ? "UNKNOWN" as const
-        : "CURRENT" as const;
-    const value: MeetingsSnapshot = {
-      formatVersion: 1,
-      generatedAt,
-      counts: snapshotCounts(collapsed.rows, accounted.freshCollapsed +
-        promoted.reduce((sum, { value }) => sum + (value.counts.duplicatesCollapsed ?? 0), 0)),
-      sources,
-      meetings: collapsed.rows,
-      agendaDocuments: retainedDocuments,
-    };
-    validateSnapshot(value, {
-      allowAllSourcesFailedForDurableTransfer: true,
-    });
-    return {
-      kind: "PROMOTED",
-      value,
-      metadata: {
-        recordClass: MEETINGS_RECORD_CLASS,
-        scope: MEETINGS_SCOPE,
-        sourceId: MEETINGS_SOURCE_ID,
-        version: null,
-        versionId: null,
-        lastKnownGoodVersionId: null,
-        sourceThrough,
-        retrievedAt,
-        promotedAt,
-        stale,
-        staleAt: null,
-      },
-      partitions: partitionReadbacks,
-      detail: `${promoted.length}/${MEETING_PARTITION_CONTRACTS.length} proof-valid source/body partitions composed; ${invalid.size} invalid partition(s) isolated; aggregate freshness is UNKNOWN until every partition is proof-valid; each version is listed in partitions.` +
-        (heldCount > 0 ? ` ${heldCount} composed from a retired route's held version until its successor's first promotion (heldFrom).` : ""),
-    };
-  }
-
-  const invalidPromoted = rawPromoted.find(({ partition }) => invalid.has(partition.id));
-  if (invalidPromoted) {
-    return {
-      kind: "STORE_UNREACHABLE",
-      value: null,
-      metadata: invalidPromoted.result.metadata,
-      code: "PROMOTION_PROOF_INVALID",
-      detail: `${invalidPromoted.partition.id} cannot be composed: ${invalid.get(invalidPromoted.partition.id)}`,
-    };
-  }
-
-  const invalidRead = reads.find(({ result }) =>
-    result.kind === "STORE_UNREACHABLE" && result.code === "PROMOTION_PROOF_INVALID"
-  );
-  if (invalidRead?.result.kind === "STORE_UNREACHABLE") return invalidRead.result;
-
-  const storeFailure = reads
-    .map(({ result }) => result)
-    .find((result): result is Extract<CivicDataReadResult<MeetingsSnapshot>, { kind: "STORE_UNREACHABLE" }> => result.kind === "STORE_UNREACHABLE");
-  if (storeFailure) return storeFailure;
-  return {
-    kind: "NOT_RECORDED",
-    value: null,
-    metadata: {
-      recordClass: MEETINGS_RECORD_CLASS,
-      scope: MEETINGS_SCOPE,
-      sourceId: null,
-      version: null,
-      versionId: null,
-      lastKnownGoodVersionId: null,
-      sourceThrough: null,
-      retrievedAt: null,
-      promotedAt: null,
-      stale: "UNKNOWN",
-      staleAt: null,
-    },
-    detail: "The store answered, but no proof-valid source/body meetings partition has been promoted.",
-  };
-}
-
 /** Convert the typed state to data or a loud serving failure. */
 export function requireMeetingsProjection(
   result: MeetingsProjectionReadResult,
@@ -785,8 +479,6 @@ export interface SnapshotClientMeta {
   promotedAt?: string | null;
   stale?: CivicDataReadMetadata["stale"];
   staleAt?: string | null;
-  /** Exact canonical versions (or explicit gaps) behind the composed Reader view. */
-  partitions?: readonly MeetingPartitionReadback[];
   /** Present only when the snapshot actually holds carried rows. */
   carried?: SnapshotCarriedMeta;
   sources: Array<{
@@ -805,7 +497,6 @@ export function snapshotClientMeta(
   read?: {
     readonly kind: "PROMOTED" | "BOOTSTRAP";
     readonly metadata: CivicDataReadMetadata;
-    readonly partitions?: readonly MeetingPartitionReadback[];
   },
 ): SnapshotClientMeta {
   const stamps = snapshot.meetings.flatMap((m) =>
@@ -824,7 +515,6 @@ export function snapshotClientMeta(
           promotedAt: read.metadata.promotedAt,
           stale: read.metadata.stale,
           staleAt: read.metadata.staleAt,
-          ...(read.partitions ? { partitions: read.partitions } : {}),
         }
       : {}),
     ...(snapshot.carriedSummary ? { carried: snapshot.carriedSummary } : stamps.length > 0
@@ -848,20 +538,4 @@ export function snapshotClientMeta(
       }),
     ),
   };
-}
-
-export async function getActiveSnapshotMeta(): Promise<SnapshotClientMeta | null> {
-  const name = process.env.WTP_MEETING_SOURCE?.trim() || "snapshot";
-  if (process.env.NODE_ENV === "production" && name !== "snapshot") {
-    throw new Error(`PRODUCTION_MEETING_SOURCE_MUST_BE_CANONICAL:${name}`);
-  }
-  if (name !== "snapshot") return null;
-  const read = await readMeetingsProjection();
-  if (read.kind === "PROMOTED" || read.kind === "BOOTSTRAP") {
-    return snapshotClientMeta(read.value, read);
-  }
-  if (read.kind === "STORE_UNREACHABLE") {
-    throw new CivicDataStoreUnavailableError(read);
-  }
-  return null;
 }

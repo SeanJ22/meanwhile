@@ -173,14 +173,7 @@ async function publishEdge(withPromoted: boolean, authorityOverrides: Partial<Re
     ...authorityOverrides,
   };
   const store = new LocalFileArtifactStore(dir);
-  const published = await publishReaderMeetings({
-    formatVersion: 1,
-    generatedAt: "2026-09-25T00:00:00.000Z",
-    counts: { fresh: 0, carried: 0, total: 0, duplicatesCollapsed: 0 },
-    sources: [],
-    meetings: [],
-    agendaDocuments: [],
-  }, { sourceThrough: null, retrievedAt: null, promotedThrough: null }, { store });
+  const published = await publishReaderMeetings({ store, meetingStates: {} });
   const none = { versionId: "none", value: null };
   await publishPointers(store, { authority,
     stateAuthorities: { "registry-runtime": stateRegistryArtifacts(REGISTRY_VERSION, ["AZ", "NH", "NJ", "TX"]),

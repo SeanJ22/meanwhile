@@ -48,7 +48,7 @@ const states = REGISTRATION_TARGETS.map(target => target.state.toLowerCase());
 const controlQuery = neon(url);
 const stateDoors = async (state: string) => {
   const ids = await controlQuery.query(`SELECT d.id FROM cp_doors d WHERE
-    d.value->>'ocdId' LIKE $1 OR d.value->'bodyIds'::text LIKE $2 OR
+    d.value->>'ocdId' LIKE $1 OR (d.value->'bodyIds')::text LIKE $2 OR
     EXISTS (SELECT 1 FROM cp_work_items w WHERE w.value #>> '{publicationOutcome,doorId}' = d.id
       AND upper(w.value #>> '{autonomousPlan,jurisdiction}') = $3)`,
     [`${censusDivisionPrefix(state)}%`, `%/${censusDivisionPrefix(state).split("/").at(-1)}%`, state.toUpperCase()]);

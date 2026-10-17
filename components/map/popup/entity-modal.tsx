@@ -163,6 +163,7 @@ export interface ModalSubject {
   /** A meeting's stored agenda content, rendered in the overview. */
   agenda?: {
     meetingId: string;
+    bodyId: string;
     agendaUrl: string | null;
     /* The publisher observation travels to the surface that renders the sentence. */
     agendaSlotObservedEmpty?: boolean;
@@ -517,6 +518,7 @@ export function EntityModal({
                     <PopupSectionLabel>What this meeting is about</PopupSectionLabel>
                     <AgendaSection
                       meetingId={subject.agenda.meetingId}
+                      bodyId={subject.agenda.bodyId}
                       agendaUrl={subject.agenda.agendaUrl}
                       agendaSlotObservedEmpty={subject.agenda.agendaSlotObservedEmpty}
                       provenance={subject.agenda.provenance}

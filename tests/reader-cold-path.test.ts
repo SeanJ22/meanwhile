@@ -56,6 +56,11 @@ import { GET as warmGET, KEEP_WARM_MARKER } from "../app/api/warm/route.ts";
 import { installRegistryAuthority, registryTransferImport, syntheticFederalDirectory } from "./helpers/promoted-fixtures.ts";
 
 import { installPimaOutcomes, recordedMeetingsSnapshot } from "./helpers/reader-fixtures.ts";
+import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
+import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { planMeetingBodies } from "../lib/meetings/body-publication.ts";
+import { promoteRecorded, promoteRows, ownPartition } from "./helpers/reader-edge-meetings.ts";
+import { row as partitionRow } from "./helpers/meeting-body-fixtures.ts";
 
 import { COMMENT_ACCESS } from "./fixtures/comment-access.ts";
 import type { BodyFacts } from "../lib/facts/registry-overlay.ts";
@@ -129,25 +134,26 @@ const stateLegislators = Object.fromEntries(OFFICIAL_STATE_LEGISLATOR_TARGETS.ma
 }]));
 
 
-function multiStateSnapshot() {
-  const recorded = recordedMeetingsSnapshot().meetings;
-  const template = recorded.find((row) => row.id.startsWith("legistar:") && row.location)!;
-  const elsewhere = (state: string, county: string, lat: number, lng: number) => ({
-    ...template,
-    id: `test-calendar:${state}-${county}`,
-    ocdId: `ocd-division/country:us/state:${state}/county:${county}`,
-    bodyId: `ocd-division/country:us/state:${state}/county:${county}#governing`,
-    bodyName: `Synthetic ${county} county board`,
-    jurisdiction: `${county} County, ${state.toUpperCase()}`,
-    location: { lat, lng, name: "Synthetic test venue", address: "Synthetic test address" },
-    actingBodies: undefined,
-  });
-  return recordedMeetingsSnapshot([...recorded, elsewhere("nj", "morris", 40.7968, -74.4815), elsewhere("nh", "merrimack", 43.2081, -71.5376)]);
-}
+const READ_AT = "2026-09-25T12:00:00.000Z";
+const PUBLISHED_AT = "2026-09-25T13:00:00.000Z";
+const countyDoor = (state: string, county: string) => MEETING_PARTITION_CONTRACTS.find((row) =>
+  row.derivedFamily === null && row.ocdId === `ocd-division/country:us/state:${state}/county:${county}` && row.bodyId.endsWith("#governing"))!;
 
-const SITTING = recordedMeetingsSnapshot().meetings.find(row => row.bodyId && stateOfOcdId(row.ocdId) === "az")!;
+const recorded = recordedMeetingsSnapshot();
+const SITTING = recorded.meetings.find(row => row.bodyId && ownPartition(row) !== null && stateOfOcdId(row.ocdId) === "az")!;
 const SITTING_TITLE = { meetingId: SITTING.id, field: "title" as const, value: "Title as its saved page states it",
   source: { sourceUrl: "https://example.gov/calendar", sourceOrg: "example.gov", collectedAt: SITTING.startsAt, verifiedAt: SITTING.startsAt, quote: "Title as its saved page states it" } };
+
+/** Arizona's recorded sittings, each promoted through the partition that owns it, and one county board in New Jersey and in New Hampshire. */
+async function recordedMeetingsStore(): Promise<MemoryRoutineDataStore> {
+  const store = new MemoryRoutineDataStore();
+  await promoteRecorded(store, recorded.meetings, recorded.agendaDocuments, READ_AT);
+  for (const [state, county] of [["nj", "morris"], ["nh", "merrimack"]] as const) {
+    const door = countyDoor(state, county);
+    await promoteRows(store, door, [partitionRow(door, "1", "2026-10-10T17:00:00.000Z", READ_AT)], [], READ_AT);
+  }
+  return store;
+}
 
 /** The fixture's rosters, comment rules and one sitting's title as one record per body, as the publisher writes them. */
 async function factRecords(store: LocalFileArtifactStore, registry: ReturnType<typeof registryTransferImport>["projection"]["payload"]): Promise<RecordIndex> {
@@ -170,22 +176,19 @@ interface PublishedKeys {
 async function publishEdge(tag: string, options: { readonly legislators?: boolean } = {}): Promise<{ dir: string; manifest: ReaderManifest; keys: PublishedKeys }> {
   const dir = mkdtempSync(join(tmpdir(), "wtp-c21-edge-"));
   dirs.push(dir);
-  const snapshot = multiStateSnapshot();
-  assert.ok(snapshot.meetings.length > 0, "the recorded meetings publish the edge's meeting scopes");
+  const store = new LocalFileArtifactStore(dir);
+  const plan = await planMeetingBodies({ store: await recordedMeetingsStore(), artifacts: store, now: PUBLISHED_AT, served: undefined, registryVersion: () => null, registry: async () => null });
+  assert.deepEqual(plan.stats.failed, []);
+  assert.ok(Object.keys(plan.entries).length > 0, "the recorded meetings publish the edge's meeting indexes");
   const registry = registryTransferImport().projection.payload;
   const authority: Partial<Record<GlobalAuthorityFamily, PublishAuthorityValue>> = {
     "federal-directory": { value: syntheticFederalDirectory(), versionId: `${tag}:federal` },
     "meeting-outcomes": { value: getOutcomeSnapshot(), versionId: `${tag}:outcomes` },
     "everyday-routing": { value: { projection: buildEverydayRoutingProjection() }, versionId: `${tag}:routing` },
   };
-  const store = new LocalFileArtifactStore(dir);
   await store.writeJsonPointer(stateFactsPointerKey("AZ"), { state: "AZ", versionId: `${tag}:facts:AZ`,
     buckets: [await writeFactBucket(store, "AZ", 0, `${tag}:facts:AZ`, await factRecords(store, registry), new Date().toISOString())] }, null);
-  const result = await publishReaderMeetings(snapshot, {
-    sourceThrough: snapshot.generatedAt,
-    retrievedAt: snapshot.generatedAt,
-    promotedThrough: snapshot.generatedAt,
-  }, { store, now: new Date().toISOString() });
+  const result = await publishReaderMeetings({ store, now: new Date().toISOString(), meetingStates: plan.entries });
   assert.equal(result.status, "PUBLISHED", JSON.stringify(result));
   const none = { value: null, versionId: "none" };
   await publishPointers(store, { authority,
@@ -438,7 +441,7 @@ test("a warm call keeps useful meeting and Ask warming without opening every sta
 
 
 test("a marked warm places request lists published counties without loading state authority artifacts", async () => {
-  const { dir } = await publishEdge("warm-published-places");
+  const { dir, manifest } = await publishEdge("warm-published-places");
   process.env.WTP_READER_EDGE_DIR = dir;
   const { value: response, keys } = await recordingBytes(() => warmGET(new Request("https://wtp.test/api/warm?places=1", {
     headers: { "x-wtp-synthetic-run": KEEP_WARM_MARKER },
@@ -450,5 +453,6 @@ test("a marked warm places request lists published counties without loading stat
   assert.equal(new Set(result.places.map(place => place.zip)).size, result.places.length);
   assert.ok(result.places.every(place => /^\d{5}$/.test(place.zip) && Number.isFinite(place.lat) && Number.isFinite(place.lng)));
   assert.ok(Number.isInteger(result.skipped) && result.skipped >= 0);
-  assert.deepEqual(keys, [], "the places route reads the manifest and geographic indexes without any state authority payload");
+  assert.deepEqual([...new Set(keys)].sort(), Object.values(manifest.meetingStates!).map(ref => ref.key).sort(),
+    "the places route opens each state's meeting index and nothing else: no body record and no state authority payload");
 });

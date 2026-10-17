@@ -24,6 +24,10 @@ import { factDb } from "./helpers/fact-db.ts";
 import { installRegistryAuthority, syntheticFederalDirectory } from "./helpers/promoted-fixtures.ts";
 import { installPimaOutcomes, pimaOutcomeFixture, recordedMeetingsSnapshot } from "./helpers/reader-fixtures.ts";
 import { september22Sitting } from "./helpers/pima-september-22-sitting.ts";
+import { at } from "./helpers/meeting-body-fixtures.ts";
+import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { planMeetingBodies } from "../lib/meetings/body-publication.ts";
+import { promoteRecorded } from "./helpers/reader-edge-meetings.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 import { registryTransferImport } from "./helpers/promoted-fixtures.ts";
 import { provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
@@ -98,7 +102,9 @@ interface EdgeVersions {
 
 async function publishEdge(versions: EdgeVersions): Promise<void> {
   const snapshot = recordedMeetingsSnapshot();
-  assert.ok(snapshot.meetings.length > 0, "the recorded meetings publish the edge's meeting scopes");
+  const meetings = new MemoryRoutineDataStore();
+  const recorded = await promoteRecorded(meetings, snapshot.meetings, snapshot.agendaDocuments, snapshot.generatedAt);
+  assert.ok(recorded.promoted.length > 0, "the recorded meetings publish the edge's meeting indexes");
   const authority: Partial<Record<GlobalAuthorityFamily, PublishAuthorityValue>> = {
     "census-districts": { value: azDistricts, versionId: azDistricts.versionId },
     "federal-directory": { value: syntheticFederalDirectory(), versionId: versions.federal },
@@ -113,14 +119,12 @@ async function publishEdge(versions: EdgeVersions): Promise<void> {
     const body: BodyFacts = { id: comment.bodyId, division: comment.bodyId.split("#")[0], fields: {}, roster: null, comment, sittings: [], dispositions: [] };
     return { path: ["bodies", index], ...await writeFactRecord(store, body), tags: [body.id, body.division] };
   }));
+  const plan = await planMeetingBodies({ store: meetings, artifacts: store, now: at(snapshot.generatedAt, 3_600_000), served: undefined, registryVersion: () => null, registry: async () => null });
+  assert.deepEqual(plan.stats.failed, []);
   if (versions.commentAccess) await store.writeJsonPointer(stateFactsPointerKey("AZ"), { state: "AZ", versionId: versions.commentAccess,
     buckets: [await writeFactBucket(store, "AZ", 0, versions.commentAccess, { kind: "READER_RECORDS", base: { bodies: [] }, records }, new Date().toISOString())] }, null);
   await publishPointers(store, { authority, stateAuthorities: { "registry-runtime": stateRegistryArtifacts(versions.registry, ["AZ"]) } });
-  const result = await publishReaderMeetings(snapshot, {
-    sourceThrough: snapshot.generatedAt,
-    retrievedAt: snapshot.generatedAt,
-    promotedThrough: snapshot.generatedAt,
-  }, { store, now: new Date().toISOString() });
+  const result = await publishReaderMeetings({ store, meetingStates: plan.entries, now: new Date().toISOString() });
   assert.ok(result.status === "PUBLISHED" || result.status === "CURRENT", JSON.stringify(result));
   process.env.WTP_READER_EDGE_DIR = edgeDir;
   registryArtifactKey = (await readServedPointer(store, authorityPointerKey("registry-runtime", "AZ")))!.ref.key;

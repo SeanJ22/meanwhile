@@ -125,7 +125,7 @@ function verifierIdFor(contract: ReaderContract): string {
       if (contract.recordClass === "REGISTRATION") return "lib/registration/reader.ts#readRegistrationProjection";
       if (contract.recordClass === "MEETING_OUTCOME" && contract.sourceId === "door-outcomes") return "lib/outcomes/store.ts#readDoorOutcomeProjection";
       return contract.recordClass === "MEETING"
-        ? "lib/meetings/snapshot.ts#readMeetingsProjection"
+        ? "lib/meetings/snapshot.ts#readMeetingPartitionProjection"
         : `unavailable:${contract.id}`;
   }
 }
@@ -424,15 +424,14 @@ export async function verifyRoutineReaderProjection(
           return verifyExactVersion(verifierId, await readRegistrationProjection(state, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, `${state} registration`);
         }
         if (contract.recordClass === "MEETING") {
-          const { readMeetingsProjection } = await import("../meetings/snapshot.ts");
-          const result = await readMeetingsProjection({ store: options.store, now: options.now, bypassCache: true });
-          const partition = result.kind === "PROMOTED"
-            ? result.partitions.find((item) => item.contractId === contract.id)
-            : undefined;
-          if (result.kind !== "PROMOTED" || partition?.kind !== "PROMOTED" || partition.versionId !== options.expectedVersionId) {
-            return fail(verifierId, `Expected meeting partition ${contract.id}:${options.expectedVersionId}; typed meetings Reader returned ${result.kind}:${partition?.kind ?? "missing"}:${partition?.versionId ?? "none"}.`);
+          const { readMeetingPartitionProjection } = await import("../meetings/snapshot.ts");
+          const { meetingPartitionContract } = await import("./meeting-partitions.ts");
+          const partition = meetingPartitionContract(contract.id);
+          const read = partition === null ? null : await readMeetingPartitionProjection(partition, { store: options.store, now: options.now, bypassCache: true });
+          if (read?.kind !== "PROMOTED" || read.metadata.versionId !== options.expectedVersionId) {
+            return fail(verifierId, `Expected meeting partition ${contract.id}:${options.expectedVersionId}; typed meetings Reader returned ${read?.kind ?? "an unregistered partition"}:${read?.metadata.versionId ?? "none"}.`);
           }
-          return pass(verifierId, `The typed meetings Reader composed partition ${contract.id} at canonical version ${options.expectedVersionId}.`);
+          return pass(verifierId, `The typed meetings Reader read partition ${contract.id} at canonical version ${options.expectedVersionId}.`);
         }
         if (contract.recordClass === "MEETING_OUTCOME" && contract.sourceId === "door-outcomes") {
                     // A door's own scope, read as the Reader reads it (its tenant and meeting-id namespace checked).
@@ -725,8 +724,6 @@ export async function repairRoutineReaderProjectionReadback(
 export const MEETING_READER_EVENT_READ_CONCURRENCY = 8;
 export const MEETING_READER_EVIDENCE_WRITE_CONCURRENCY = 4;
 
-type MeetingsAggregateRead = Awaited<ReturnType<typeof import("../meetings/snapshot.ts")["readMeetingsProjection"]>>;
-
 export type MeetingReaderReadbackRepairResult =
   | {
       readonly contractId: string;
@@ -746,10 +743,7 @@ export async function repairMeetingReaderProjectionReadbacks(
   contracts: readonly RoutineSourceContract[],
   now: string = new Date().toISOString(),
   verifierCodeSha: string | null = headSha(),
-  options: {
-    readonly aggregate?: () => Promise<MeetingsAggregateRead>;
-    readonly attestor?: ReaderVerifierClosureAttestor;
-  } = {},
+  options: { readonly attestor?: ReaderVerifierClosureAttestor } = {},
 ): Promise<readonly MeetingReaderReadbackRepairResult[]> {
   const ids = contracts.map(({ id }) => id);
   const scopes = contracts.map(({ scope }) => scope);
@@ -883,69 +877,26 @@ export async function repairMeetingReaderProjectionReadbacks(
   }
 
   if (pendingRecords.length > 0) {
-    let aggregate: MeetingsAggregateRead | null = null;
-    let aggregateError: string | null = null;
-    try {
-      if (options.aggregate) {
-        aggregate = await options.aggregate();
-      } else {
-        const { readMeetingsProjection } = await import("../meetings/snapshot.ts");
-        aggregate = await readMeetingsProjection({ store, now, bypassCache: true });
-      }
-    } catch (error) {
-      aggregateError = sanitizedErrorDiagnostic(error);
-    }
-
-    if (aggregateError !== null || aggregate === null) {
-      for (const { contract } of pendingRecords) {
-        results.set(contract.id, {
-          contractId: contract.id,
-          ok: false,
-          value: null,
-          error: aggregateError ?? "MEETING_READER_AGGREGATE_RESULT_MISSING",
-        });
-      }
-    } else {
-      const evidenceWrites = await runBoundedWorkPool(
-        pendingRecords,
-        MEETING_READER_EVIDENCE_WRITE_CONCURRENCY,
-        async ({ contract, promotion }) => {
-          const partition = aggregate.kind === "PROMOTED"
-            ? aggregate.partitions.find(({ contractId }) => contractId === contract.id)
-            : undefined;
-          const verification = aggregate.kind === "PROMOTED" &&
-              partition?.kind === "PROMOTED" &&
-              partition.versionId === promotion.versionId
-            ? pass(
-                verifierIdFor(contract),
-                `The typed meetings Reader composed partition ${contract.id} at canonical version ${promotion.versionId}.`,
-              )
-            : fail(
-                verifierIdFor(contract),
-                `Expected meeting partition ${contract.id}:${promotion.versionId}; typed meetings Reader returned ` +
-                  `${aggregate.kind}:${partition?.kind ?? "missing"}:${partition?.versionId ?? "none"}.`,
-              );
-          return appendReaderProjectionReadback(
-            store,
-            contract,
-            promotion,
-            now,
-            normalizedVerifierCodeSha,
-            verification,
-          );
-        },
-      );
-      for (const write of evidenceWrites) {
-        const { contract } = pendingRecords[write.index]!;
-        results.set(contract.id, write.ok
-          ? {
-              contractId: contract.id,
-              ok: true,
-              value: { kind: "RECORDED", receipt: write.value },
-              error: null,
-            }
-          : { contractId: contract.id, ok: false, value: null, error: write.error });
-      }
+    const { readMeetingPartitionProjection } = await import("../meetings/snapshot.ts");
+    const { meetingPartitionContract } = await import("./meeting-partitions.ts");
+    const evidenceWrites = await runBoundedWorkPool(
+      pendingRecords,
+      MEETING_READER_EVIDENCE_WRITE_CONCURRENCY,
+      async ({ contract, promotion }) => {
+        const partition = meetingPartitionContract(contract.id);
+        const read = partition === null ? null : await readMeetingPartitionProjection(partition, { store, now, bypassCache: true });
+        const verification = read?.kind === "PROMOTED" && read.metadata.versionId === promotion.versionId
+          ? pass(verifierIdFor(contract), `The typed meetings Reader read partition ${contract.id} at canonical version ${promotion.versionId}.`)
+          : fail(verifierIdFor(contract),
+            `Expected meeting partition ${contract.id}:${promotion.versionId}; typed meetings Reader returned ${read?.kind ?? "an unregistered partition"}:${read?.metadata.versionId ?? "none"}.`);
+        return appendReaderProjectionReadback(store, contract, promotion, now, normalizedVerifierCodeSha, verification);
+      },
+    );
+    for (const write of evidenceWrites) {
+      const { contract } = pendingRecords[write.index]!;
+      results.set(contract.id, write.ok
+        ? { contractId: contract.id, ok: true, value: { kind: "RECORDED", receipt: write.value }, error: null }
+        : { contractId: contract.id, ok: false, value: null, error: write.error });
     }
   }
 

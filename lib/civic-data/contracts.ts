@@ -39,12 +39,30 @@ export interface SittingWindowSchedule {
   readonly follows?: readonly { readonly meetingSource: string; readonly bodyId: string }[];
 }
 
-export const MEETING_SITTING_WINDOW = {
-  kind: "SITTING_WINDOW",
-  windowMs: 7 * DAY,
-  hotEveryMs: HOUR,
-  baseEveryMs: 12 * HOUR,
-} as const satisfies SittingWindowSchedule;
+/** The meeting check clock before Admin sets one. */
+export const MEETING_CLOCK_DEFAULTS = { windowMs: 7 * DAY, hotEveryMs: HOUR, baseEveryMs: 12 * HOUR } as const;
+export type MeetingClock = { readonly windowMs: number; readonly hotEveryMs: number; readonly baseEveryMs: number };
+let meetingClock: MeetingClock = MEETING_CLOCK_DEFAULTS;
+
+/** Installs the clock Admin's settings state; every meeting schedule reads it where it is used. */
+export function installMeetingClock(clock: MeetingClock): void {
+  meetingClock = { windowMs: clock.windowMs, hotEveryMs: clock.hotEveryMs, baseEveryMs: clock.baseEveryMs };
+}
+
+export const currentMeetingClock = (): MeetingClock => meetingClock;
+
+/** The sitting-window schedule whose intervals are always the installed clock's. */
+export function meetingSittingWindow(follows?: SittingWindowSchedule["follows"]): SittingWindowSchedule {
+  return {
+    kind: "SITTING_WINDOW",
+    get windowMs() { return meetingClock.windowMs; },
+    get hotEveryMs() { return meetingClock.hotEveryMs; },
+    get baseEveryMs() { return meetingClock.baseEveryMs; },
+    ...(follows ? { follows } : {}),
+  };
+}
+
+export const MEETING_SITTING_WINDOW = meetingSittingWindow();
 
 export const ROUTINE_DATA_ADMISSION_MS = 5 * 60_000;
 /** A routine pass ends within this; a source read it could not finish stays due for the next pass. */
@@ -390,13 +408,10 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
       defaultEveryMs: DAY,
       phases: [{ through: "2026-11-04T00:00:00.000Z", everyMs: 14 * HOUR, description: "fourteen hours through 2026-11-03" }],
     },
-    schedule: {
-      ...MEETING_SITTING_WINDOW,
-      follows: [
-        { meetingSource: "legistar", bodyId: "ocd-division/country:us/state:az/county:pima#governing" },
-        { meetingSource: "legistar-insite", bodyId: "ocd-division/country:us/state:az/county:pima#governing" },
-      ],
-    },
+    schedule: meetingSittingWindow([
+      { meetingSource: "legistar", bodyId: "ocd-division/country:us/state:az/county:pima#governing" },
+      { meetingSource: "legistar-insite", bodyId: "ocd-division/country:us/state:az/county:pima#governing" },
+    ]),
     retry: { afterMs: HOUR, description: "one hour after a failed events, items, or votes attempt" },
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "pima-legistar-outcomes" },
     validationContract: CHECKS,
@@ -424,10 +439,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
       defaultEveryMs: DAY,
       phases: [{ through: "2026-11-04T00:00:00.000Z", everyMs: 14 * HOUR, description: "fourteen hours through 2026-11-03" }],
     },
-    schedule: {
-      ...MEETING_SITTING_WINDOW,
-      follows: [{ meetingSource: "legistar-insite", bodyId: "ocd-division/country:us/state:az/place:mesa#governing" }],
-    },
+    schedule: meetingSittingWindow([{ meetingSource: "legistar-insite", bodyId: "ocd-division/country:us/state:az/place:mesa#governing" }]),
     retry: { afterMs: HOUR, description: "one hour after a failed calendar or minutes read" },
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "mesa-legistar-minutes-outcomes" },
     validationContract: CHECKS,

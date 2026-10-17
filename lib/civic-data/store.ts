@@ -27,6 +27,7 @@ import {
   type ValidationReceipt,
 } from "./types.ts";
 import { canonicalCivicDataJson } from "./changes.ts";
+import { canonicalCivicDataHash } from "./canonical-hash.ts";
 import {
   UNCHANGED_CONFIRMATION_PREFIX,
   buildUnchangedConfirmation,
@@ -360,7 +361,7 @@ function receiptNamesCandidate(receipt: ValidationReceipt, candidate: RoutineCan
 }
 
 function receiptsEqual(left: ValidationReceipt, right: ValidationReceipt): boolean {
-  return canonicalCivicDataJson(left) === canonicalCivicDataJson(right);
+  return left === right || canonicalCivicDataHash(left) === canonicalCivicDataHash(right);
 }
 
 function receiptIsGoodForCandidate(receipt: ValidationReceipt, candidate: RoutineCandidateName): boolean {

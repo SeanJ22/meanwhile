@@ -3143,5 +3143,18 @@
     "tested_sha": "42bb436bcfa3e95ef5dd143a03b7c1912b7282d9",
     "gates": "pass",
     "at": "2026-10-17T06:58:52Z"
+  },
+  {
+    "lane": "river",
+    "steps": [
+      "main-merge"
+    ],
+    "ready_sha": "5d6a5797f01b55cfabd1636beb28432fe6bbd1e2",
+    "merge_sha": "5d6a5797f01b55cfabd1636beb28432fe6bbd1e2",
+    "river_sha": "5d6a5797f01b55cfabd1636beb28432fe6bbd1e2",
+    "tested_sha": "5d6a5797f01b55cfabd1636beb28432fe6bbd1e2",
+    "gates": "pass",
+    "at": "2026-10-17T07:28:55Z",
+    "note": "merge of main (release 50 merge commit, no file changes) into the tested river; gates rerun on this exact SHA"
   }
 ]

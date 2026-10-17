@@ -2,7 +2,7 @@ import { requiredManualProductionContract, type ManualProductionContractId } fro
 import type { RoutineSourceTask } from "./runner.ts";
 import type { RoutineCadencePolicy } from "./contracts.ts";
 import election from "../../data/reference/voting-election.json" with { type: "json" };
-import { BALLOT_STATES, parseStateBallotContractId, stateBallotContractId } from "./state-scopes.ts";
+import { REGISTRY_STATES, parseStateBallotContractId, stateBallotContractId } from "./state-scopes.ts";
 
 const HOUR = 60 * 60_000;
 const DAY = 24 * HOUR;
@@ -24,7 +24,7 @@ export function votingDoorRefreshCadence(electionDate: string): RoutineCadencePo
 }
 
 export const AUTOMATIC_REFRESH_CONTRACT_IDS = [
-  ...BALLOT_STATES.flatMap(state => [stateBallotContractId("voting-sites", state), stateBallotContractId("ballot-contests", state)]),
+  ...REGISTRY_STATES.flatMap(state => [stateBallotContractId("voting-sites", state), stateBallotContractId("ballot-contests", state)]),
   "az-sos-campaign-finance", "nh-sos-campaign-finance",
   "nj-elec-campaign-finance", "az-pima-local-finance",
   "member-offices", "prl", "prl-archives",

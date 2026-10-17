@@ -1,4 +1,4 @@
-import { BALLOT_STATES, stateBallotContractId, stateBallotScope } from "./state-scopes.ts";
+import { REGISTRY_STATES, stateBallotContractId, stateBallotScope } from "./state-scopes.ts";
 import { VALIDATION_CHECKS, type RoutineDataClassification, type RoutineRecordClass } from "./types.ts";
 import type { SourceAuthorityId } from "./source-authority.ts";
 import { RUNTIME_ROUTINE_CONTRACTS } from "./runtime-routine-contracts.ts";
@@ -535,7 +535,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],
   },
-  ...BALLOT_STATES.map(state => ({
+  ...REGISTRY_STATES.map(state => ({
     id: stateBallotContractId("candidate-campaign-sites-derived", state),
     sourceId: "candidate-campaign-site-chain",
     recordClass: "CURATED_READER_RECORD",
@@ -622,47 +622,6 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     lkgBehavior: "Failed pages retain the last GOOD member, bill and national rule partitions. Every unmatched native row is kept and counted. An unchanged provider check succeeds.",
     autoPromotable: true, classification: "RUNTIME_CIVIC_DATA", bootstrapFixturePaths: [],
   })),
-  {
-    id: "candidate-campaign-sites-derived",
-    sourceId: "candidate-campaign-site-chain",
-    recordClass: "CURATED_READER_RECORD",
-    scope: "US:candidate-campaign-sites-derived",
-    acquisitionFailureDomain: "derived:candidate-campaign-sites",
-    acquisitionAdapter: { authorityMode: "DERIVED", command: ["scripts/derive-candidate-campaign-sites.mts", "--promote"] },
-    parserNormalizerVersion: "candidate-campaign-site-chain/1",
-    cadence: { description: "hourly, the research cycle's own rhythm", defaultEveryMs: HOUR },
-    retry: { afterMs: HOUR, description: "one hour after a failed attempt" },
-    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "candidate-campaign-site-chain" },
-    validationContract: CHECKS,
-    canonicalProductionStore: STORE,
-    readerProjection: { id: "candidate-verified-campaign-sites", consumers: ["/ballot", "Ask candidate profiles"] },
-    lkgBehavior: "A pass that cannot read the pipeline's approvals, the promoted candidate-profiles version or an approval's vaulted bytes records its refusal and leaves the prior GOOD sites live; an approval whose vaulted bytes no longer verify is held by name and not published.",
-    autoPromotable: true,
-    classification: "RUNTIME_CIVIC_DATA",
-    bootstrapFixturePaths: [],
-  },
-  {
-    id: "nj-morris-filing",
-    sourceId: "nj-morris-county-clerk",
-    recordClass: "BALLOT_FILING",
-    scope: "US-NJ:county:morris:2026-general",
-    acquisitionAdapter: { authorityMode: "SINGLE_ROUTE", command: ["scripts/build-nj-morris-ballot.mts", "--promote"], requestedUrl: "https://www.morriscountyclerk.org/" },
-    parserNormalizerVersion: "nj-morris-filing/2",
-    cadence: {
-      description: "daily through the 2026 general election, then weekly",
-      defaultEveryMs: 7 * DAY,
-      phases: [{ through: "2026-11-04T00:00:00.000Z", everyMs: DAY, description: "daily through 2026-11-03" }],
-    },
-    retry: { afterMs: HOUR, description: "one hour after a failed filing attempt" },
-    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "nj-morris-county-clerk" },
-    validationContract: CHECKS,
-    canonicalProductionStore: STORE,
-    readerProjection: { id: "nj-morris-ballot", consumers: ["ballot", "Ask", "candidate contact operations"] },
-    lkgBehavior: "The current ballot pointer and complete removal history remain on the last GOOD filing projection after refusal.",
-    autoPromotable: true,
-    classification: "RUNTIME_CIVIC_DATA",
-    bootstrapFixturePaths: [],
-  },
 ] as const;
 
 export function cadenceMsAt(contract: Pick<RoutineSourceContract, "cadence">, nowMs: number): number {

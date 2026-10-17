@@ -11,14 +11,17 @@ import { sourceKindLabel } from "@/lib/corpus/source-kinds";
 import { AskAnswerRecords } from "@/components/ask/answer-records";
 import type { StoredTopicAnswer } from "@/lib/corpus/topic-answers";
 
-
 export function PositionsSection({
   subjectId,
   subjectName,
   contentOnly = false,
   topicAnswers,
+  divisionIds = [],
+  context,
 }: {
   subjectId: string;
+  divisionIds?: readonly string[];
+  context?: { zip?: string | null; lat?: number | null; lng?: number | null } | null;
   /** Used only in the honest-gap sentences, so they read as English. */
   subjectName: string;
   /** The ballot already owns the Positions disclosure. */
@@ -70,7 +73,11 @@ export function PositionsSection({
     setFailed(false);
     try {
       const response = await fetch(
-        `/api/positions/${encodeURIComponent(subjectId)}/${encodeURIComponent(query)}`,
+        `/api/positions/${encodeURIComponent(subjectId)}/${encodeURIComponent(query)}?${new URLSearchParams([
+          ...divisionIds.map(id => ["division", id]),
+          ...(context?.zip ? [["zip", context.zip]] : []),
+          ...(context?.lat != null && context?.lng != null ? [["lat", String(context.lat)], ["lng", String(context.lng)]] : []),
+        ])}`,
       );
       if (!response.ok) throw new Error(String(response.status));
       const body = (await response.json()) as PositionAnswer & {

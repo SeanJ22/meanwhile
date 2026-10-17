@@ -1,3 +1,5 @@
+import { validReactionTargetsFor, type ReactionAuthorityReaders } from "@/lib/reactions/authority-targets";
+import { ballotPlaceFromRequest } from "@/lib/ballot/reader-place";
 import { readerRoute } from "@/lib/api/reader-route";
 import { withReaderFeatures } from "@/lib/civic-data/reader-feature-context.ts";
 import { measureRecordsForBallot } from "@/lib/ballot/measure-records";
@@ -22,7 +24,6 @@ import {
   isValidTargetType,
   isValueOnScaleFor,
   normalizeFreeText,
-  type ReactionTargetType,
 } from "@/lib/signal/reactions";
 import { getCandidateTargetIds } from "@/lib/ballot/candidate-targets";
 import { getProvisionTargetIds } from "@/lib/ballot/measure-provisions";
@@ -33,9 +34,7 @@ import {
   refreshFundingFromPromoted,
 } from "@/lib/funding/snapshot";
 import { getVoteIds, refreshFederalVotesFromPromoted } from "@/lib/votes/snapshot";
-import type { StateCampaignFinanceJurisdiction } from "@/lib/funding/data-plane";
 import { settleStateMoneyRead, stateMoneyForTarget } from "@/lib/funding/state-snapshot";
-import { FEDERAL_CONTEST, directFundingTargetPlan } from "@/lib/funding/target-authorities";
 
 
 
@@ -45,22 +44,10 @@ export const runtime = "nodejs";
 
 const MAX_BODY_BYTES = 4096;
 
-interface ReactionAuthorityReaders {
-  readonly candidateTargets: (targetId: string) => Promise<Set<string>>;
-  readonly provisionTargets: (targetId: string) => Set<string> | Promise<Set<string>>;
-  readonly refreshFunding: () => Promise<unknown>;
-  readonly fundingTargets: () => Set<string>;
-  readonly refreshStateMoney: (state: StateCampaignFinanceJurisdiction) => Promise<unknown>;
-  readonly stateMoneyTargets: (targetId: string) => Set<string>;
-  readonly contributorTargets: () => Set<string>;
-  readonly refreshVotes: () => Promise<unknown>;
-  readonly voteTargets: () => Set<string>;
-}
-
-const reactionAuthorityReaders: ReactionAuthorityReaders = {
-  candidateTargets: getCandidateTargetIds,
+const reactionAuthorityReaders = (divisions: readonly string[]): ReactionAuthorityReaders => ({
+  candidateTargets: targetId => getCandidateTargetIds(divisions, targetId),
   provisionTargets: async (targetId) => {
-    const authority = await readerBallotSourceForTargetId(targetId);
+    const authority = await readerBallotSourceForTargetId(targetId, divisions);
     if (!authority) return new Set();
     const ballot = authority.source.normalize(await authority.source.fetch());
     return getProvisionTargetIds(measureRecordsForBallot(ballot));
@@ -77,36 +64,8 @@ const reactionAuthorityReaders: ReactionAuthorityReaders = {
   contributorTargets: getContributorReactionTargetIds,
   refreshVotes: refreshFederalVotesFromPromoted,
   voteTargets: getVoteIds,
-};
+});
 
-
-export async function validReactionTargetsFor(
-  targetType: ReactionTargetType,
-  targetId: string,
-  readers: ReactionAuthorityReaders = reactionAuthorityReaders,
-): Promise<Set<string>> {
-  switch (targetType) {
-    case "CANDIDATE":
-      return readers.candidateTargets(targetId);
-    case "MEASURE_PROVISION":
-      return readers.provisionTargets(targetId);
-    case "FUNDING_TOTAL_REACTION": {
-      const state = directFundingTargetPlan(targetId).state;
-      if (state !== null && !FEDERAL_CONTEST.test(targetId)) {
-        await readers.refreshStateMoney(state);
-        return readers.stateMoneyTargets(targetId);
-      }
-      await readers.refreshFunding();
-      return readers.fundingTargets();
-    }
-    case "CONTRIBUTOR_REACTION":
-      await readers.refreshFunding();
-      return readers.contributorTargets();
-    case "FEDERAL_VOTE":
-      await readers.refreshVotes();
-      return readers.voteTargets();
-  }
-}
 
 async function postWithSettings(request: Request) {
   if (ripcordPulled("ripcord.reactionIntake")) {
@@ -153,11 +112,13 @@ async function postWithSettings(request: Request) {
     return Response.json({ error: "malformed text" }, { status: 400 });
   }
 
+  const divisions = await ballotPlaceFromRequest(request);
   let validTargets: Set<string>;
   try {
     validTargets = await validReactionTargetsFor(
       submission.targetType,
       submission.targetId,
+      reactionAuthorityReaders(divisions),
     );
   } catch {
     return Response.json({ error: "target data unavailable" }, { status: 503 });
@@ -182,7 +143,7 @@ async function postWithSettings(request: Request) {
     }
     let uncontested: Set<string>;
     try {
-      uncontested = await getSingleCandidateTargetIds(submission.targetId);
+      uncontested = await getSingleCandidateTargetIds(divisions, submission.targetId);
     } catch {
       return Response.json({ error: "target data unavailable" }, { status: 503 });
     }
@@ -281,4 +242,4 @@ async function postWithSettings(request: Request) {
 
 export const POST = readerRoute("/api/reactions", async function POST(request: Request) {
   return withReaderFeatures(() => postWithSettings(request));
-}, ["state-money"]);
+}, ["state-money", "registry-runtime", "ballot-contests"]);

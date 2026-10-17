@@ -7,7 +7,7 @@ import { nearestZctaAsync } from "@/lib/geo/zcta-table";
 import { zipDivisionEntry } from "@/lib/geo/zip-division-index";
 import { searchMeetings } from "@/lib/meetings/query";
 import { DEFAULT_RADIUS_KM, MAX_RADIUS_KM } from "@/lib/meetings/constants";
-import { getRegistryRuntimeReadModel } from "@/lib/registry/runtime-read-model";
+import { getRegistryRuntimeReadModel, readRegistryRuntimeProjection, selectedRegistryStates } from "@/lib/registry/runtime-read-model";
 import { snapshotSourceFor } from "@/lib/meetings/registry";
 import type { Meeting } from "@/lib/sources/types";
 import {
@@ -17,7 +17,7 @@ import {
   type SnapshotClientMeta,
 } from "@/lib/meetings/snapshot";
 import {
-  ensureReaderAuthorityEdge,
+  holdReaderAuthorityEdge, ensureReaderAuthorityEdge,
   prefetchReaderEdgeStates,
   readReaderEdgeMeetings,
   readReaderManifest,
@@ -103,16 +103,19 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
   prefetchReaderGeography();
   const nearZipRead = zipRead.value ? Promise.resolve(zipRead.value) : nearestZipWithin60Km(lat, lng).catch(() => null);
 
-  const edgeManifest = await timing.time("manifest", () => readReaderManifest().catch(() => null));
+  const edgeManifest = await timing.time("manifest", () => readReaderManifest().catch(holdReaderAuthorityEdge));
 
   let authorityEdge: Awaited<ReturnType<typeof ensureReaderAuthorityEdge>> | null = null;
   if (edgeManifest?.authorityArtifacts) {
     const entering = timing.time("authority", () =>
-      ensureReaderAuthorityEdge(edgeManifest, undefined, READER_MAP_AUTHORITY_FAMILIES).catch(() => null),
+      ensureReaderAuthorityEdge(edgeManifest, undefined, READER_MAP_AUTHORITY_FAMILIES).catch(error => holdReaderAuthorityEdge(error, edgeManifest, READER_MAP_AUTHORITY_FAMILIES)),
     );
     authorityEdge = await entering;
     if (authorityEdge) enterReaderAuthorityEdge(authorityEdge);
   }
+  await timing.time("registry", () => readRegistryRuntimeProjection(selectedRegistryStates())).catch(error => {
+    console.warn("READER_REGISTRY_LOAD_FAILED", { states: selectedRegistryStates(), error: error instanceof Error ? error.message : String(error) });
+  });
   if (edgeManifest) prefetchReaderEdgeStates(edgeManifest, await nearZipRead.then(hintedStates));
 
   let commentAccess: readonly CommentAccess[] = [];

@@ -45,6 +45,6 @@ export function readerPositionsForKeys(
 }
 
 /** One sourced passage answer, whether the caller has an official or card ID. */
-export function readerPositionsFor(subjectId: string, topic: string, corpus: StatementCorpus = unifiedCorpus()): ReaderPositionAnswer {
+export function readerPositionsFor(states: readonly string[], subjectId: string, topic: string, corpus: StatementCorpus = unifiedCorpus(states)): ReaderPositionAnswer {
   return readerPositionsForKeys(subjectId, topic, corpus, verifiedReaderPersonKeys(subjectId));
 }

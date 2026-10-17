@@ -492,6 +492,20 @@ export async function readPromotedCivicData<T>(
   const now = options.now ?? new Date().toISOString();
   if (options.edge !== undefined) return readPromotedFromEdge<T>(recordClass, scope, options.edge, now, options.maxAgeMs);
   const injected = options.store !== undefined;
+  if (!injected && isStateAuthorityScope(scope)) {
+    const [{ readStateAuthorityProjection }, { stateFromRegistryRuntimeScope }, { STATE_BALLOT_FAMILIES, stateFromBallotScope }] = await Promise.all([
+      import("./state-reader.ts"), import("./state-scopes.ts"), import("./state-scopes.ts"),
+    ]);
+    const registryState = recordClass === "REGISTRY_RUNTIME_BINDING" ? stateFromRegistryRuntimeScope(scope) : null;
+    if (registryState) return (await readStateAuthorityProjection<T>("registry-runtime", registryState)).result;
+    for (const family of STATE_BALLOT_FAMILIES) {
+      const state = stateFromBallotScope(scope, family);
+      const familyClass = { "ballot-contests": "BALLOT_CANDIDACY", "candidate-profiles": "CANDIDATE_PROFILE", "candidate-corpus": "CANDIDATE_PUBLICATION", "voting-sites": "VOTING_SITE", "candidate-campaign-sites-derived": "CURATED_READER_RECORD" }[family];
+      if (state && recordClass === familyClass) return (await readStateAuthorityProjection<T>(family === "candidate-corpus" ? "candidate-publications" : family, state)).result;
+    }
+    return storeReadFailedResult<T>(recordClass, scope, null, new Error(`STATE_READER_SCOPE_INVALID:${recordClass}:${scope}`));
+  }
+
   if (!injected && (!options.bypassCache || currentReaderSelection() || currentReaderRoute() !== "unattributed" || currentReaderAuthorityEdge()?.edgeOnly)) {
     const edge = await ensurePromotedEdge(recordClass, scope);
     if (edge !== null) return readPromotedFromEdge<T>(recordClass, scope, edge.value, now, options.maxAgeMs);

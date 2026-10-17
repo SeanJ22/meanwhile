@@ -3,7 +3,7 @@ import test from "node:test";
 import { PGlite } from "@electric-sql/pglite";
 import type { ReadOnlyQuery, Row } from "../lib/control-plane/admin-view/promoted-slices.ts";
 import { CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } from "../lib/census-geography/publication.ts";
-import { REGISTRY_RUNTIME_SCOPE } from "../lib/registry/runtime-data-plane.ts";
+import { stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
 import { readFederalMoneyJoinInput } from "../lib/federal-money/held-identities.ts";
 import { joinFederalMoneyFacts } from "../lib/federal-money/join.ts";
 import { parseFederalMoney } from "../lib/federal-money/parse.ts";
@@ -29,7 +29,8 @@ test("federal identity SQL reads only each page's exact native recipients and ge
       { ...government, id: "synthetic-school", nativeIds: { nces_leaid: "0500001" } }, { ...government, id: "synthetic-ocd", nativeIds: { ocd_id: county } }],
       bodies: [{ id: body, ocdId: county, censusId: "001" }], divisions: [{ ocdId: county, state: "AR", geoid: "05103", divisionType: "county" }] });
     await insert("REGISTRATION", "US-CA:registration:v1", { governments: [{ ...government, id: "foreign-government", state: "CA" }], bodies: [], divisions: [] });
-    await insert("REGISTRY_RUNTIME_BINDING", REGISTRY_RUNTIME_SCOPE, { registry: { bodies: [{ id: body, ocdId: county, censusId: "001" },
+    await insert("REGISTRY_RUNTIME_BINDING", stateRegistryRuntimeScope("AR"), { registry: { bodies: [{ id: body, ocdId: county, censusId: "001" }], divisions: [] } });
+    await insert("REGISTRY_RUNTIME_BINDING", stateRegistryRuntimeScope("CA"), { registry: { bodies: [
       { id: "ocd-division/country:us/state:ca/county:foreign#governing", ocdId: "ocd-division/country:us/state:ca/county:foreign", censusId: "001" }], divisions: [] } });
     await insert(CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE, { scopes: [{ type: "county", groupings: [
       { ocdId: county, geoid: "05103", stateAbbr: "AR" }, { ocdId: "unrelated-county", geoid: "05001", stateAbbr: "AR" },

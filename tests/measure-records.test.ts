@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import type { BallotSet } from "../lib/ballot/types.ts";
-import { MEASURE_RECORD_FIRST_SEED, measureRecordIssue, measureRecordsForBallot, seedMeasureRecords, type MeasureRecord } from "../lib/ballot/measure-records.ts";
+import { measureRecordIssue, measureRecordsForBallot, type MeasureRecord } from "../lib/ballot/measure-records.ts";
 import { summaryForContest } from "../lib/ballot/measure-summary.ts";
 import { getProvisionTargetIds, provisionsForContest } from "../lib/ballot/measure-provisions.ts";
 
@@ -33,14 +33,12 @@ test("records outside this ballot and malformed or repeated reaction identities 
   assert.deepEqual(measureRecordsForBallot({ ...ballot, measureRecords: [] }), []);
 });
 
-test("legacy migration preserves current text and IDs only while the published source still matches", () => {
-  const legacy = JSON.parse(readFileSync("data/states/az/ballot/az-pima-2026.json", "utf8")) as BallotSet;
-  const analyses = MEASURE_RECORD_FIRST_SEED.filter((r) => r.sourceHashKind !== "HELD_TEXT")
-    .map((r) => ({ contestId: r.contestId, analysisUrl: r.sourceUrl, contentHash: r.sourceHash }));
-  const rows = measureRecordsForBallot(seedMeasureRecords(legacy, analyses));
+test("state ballot data carries every reviewed Arizona measure record and stable reaction target", () => {
+  const state = JSON.parse(readFileSync("data/ballot/2026-general/az.json", "utf8"));
+  const ballot = Object.values(state.ballots)[0] as BallotSet;
+  const rows = measureRecordsForBallot(ballot);
   assert.equal(rows.length, 15);
   assert.equal(getProvisionTargetIds(rows).size, 52);
-  const changed = analyses.map((a) => ({ ...a, contentHash: "f".repeat(64) }));
-  assert.equal(measureRecordsForBallot(seedMeasureRecords(legacy, changed)).length, 4);
-  assert.deepEqual(seedMeasureRecords({ ...legacy, measureRecords: [] }, analyses).measureRecords, []);
+  assert.deepEqual(rows.map(row => row.contestId).sort(), ballot.measureRecords!.map(row => row.contestId).sort());
+  for (const row of rows) assert.equal(measureRecordIssue(row), null);
 });

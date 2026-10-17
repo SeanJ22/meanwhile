@@ -21,7 +21,7 @@ export interface SourceScopedHeldFact {
   readonly record?: unknown;
 }
 
-export interface SourceScopedReconciliation<T = unknown> {
+interface SourceScopedReconciliation<T = unknown> {
   readonly members: readonly SourceScopedMember<T>[];
   readonly promotionReceipt: ManualSourceSetReceipt;
   readonly excludedFacts: readonly SourceScopedHeldFact[];
@@ -136,107 +136,108 @@ function sourceDisposition<T>(
   return { ok: true };
 }
 
-// Omission from an open package does not establish that a previously published fact disappeared.
-export function reconcileSourceScopedMembers<T>(input: {
-  readonly current: readonly SourceScopedMember<T>[];
+interface ReconciliationInput<T> {
   readonly currentReceipt: ManualSourceSetReceipt;
   readonly prior?: SourceScopedPrior<T> | null;
   readonly memberIssue?: (member: SourceScopedMember<T>) => string | null;
   readonly sourceUrls?: (member: SourceScopedMember<T>) => readonly string[];
-}): SourceScopedReconciliation<T> {
-  const urlsForMember = input.sourceUrls ?? ((member: SourceScopedMember<T>) =>
-    [...directPositiveSourceUrls(member.record)]);
-  const currentGroups = new Map<string, SourceScopedMember<T>[]>();
-  const currentSourceIndex = indexSources(input.currentReceipt);
-  for (const member of input.current) {
-    const group = currentGroups.get(member.key) ?? [];
-    group.push(member);
-    currentGroups.set(member.key, group);
+  readonly onReplace?: (previous: SourceScopedMember<T>, next: SourceScopedMember<T>) => void;
+}
+
+// Omission from an open package does not establish that a previously published fact disappeared.
+export class SourceScopedReconciler<T> {
+  private readonly input: ReconciliationInput<T>;
+  private readonly selected: Map<string, SourceScopedMember<T>>;
+  private readonly pending: Map<string, SourceScopedMember<T>>;
+  private readonly seen = new Set<string>();
+  private readonly excludedFacts: SourceScopedHeldFact[] = [];
+  private readonly sourceIndex: ManualSourceReceiptIndex;
+  private readonly urlsForMember: (member: SourceScopedMember<T>) => readonly string[];
+  private inputMembers = 0;
+  private rejectedCurrentMembers = 0;
+
+  constructor(input: ReconciliationInput<T>) {
+    this.input = { currentReceipt: input.currentReceipt, memberIssue: input.memberIssue, sourceUrls: input.sourceUrls,
+      onReplace: input.onReplace, prior: input.prior ? { members: [], sourceReceipt: input.prior.sourceReceipt } : null };
+    this.selected = new Map(input.prior?.members.map(member => [member.key, member]));
+    this.pending = new Map(this.selected);
+    this.sourceIndex = indexSources(input.currentReceipt);
+    this.urlsForMember = input.sourceUrls ?? (member => [...directPositiveSourceUrls(member.record)]);
   }
-  const selected = new Map<string, SourceScopedMember<T>>();
-  const excludedFacts: SourceScopedHeldFact[] = [];
-  let rejectedCurrentMembers = 0;
-  for (const [key, group] of [...currentGroups].sort(([left], [right]) => left.localeCompare(right))) {
+
+  add(group: readonly SourceScopedMember<T>[]): void {
+    if (!group.length) return;
+    const key = group[0]!.key;
+    if (this.seen.has(key) || group.some(member => member.key !== key)) throw new Error("SOURCE_MEMBER_GROUP_REPEATED");
+    this.seen.add(key);
+    this.inputMembers += group.length;
     if (!key || group.length !== 1) {
-      rejectedCurrentMembers += group.length;
-      excludedFacts.push({
-        key,
-        code: "MANUAL_MEMBER_KEY_INVALID_OR_DUPLICATED",
+      this.rejectedCurrentMembers += group.length;
+      this.excludedFacts.push({ key, code: "MANUAL_MEMBER_KEY_INVALID_OR_DUPLICATED",
         detail: `${key || "An unnamed member"} is empty or appears ${group.length} times; no ambiguous current record was admitted.`,
-        record: group.map((member) => member.record),
-      });
-      continue;
+        record: group.map(member => member.record) });
+      return;
     }
     const member = group[0]!;
-    const issue = input.memberIssue?.(member) ?? null;
+    const issue = this.input.memberIssue?.(member) ?? null;
     if (issue !== null) {
-      rejectedCurrentMembers += 1;
-      excludedFacts.push({
-        key,
-        code: "MANUAL_MEMBER_INVALID",
-        detail: issue,
-        record: member.record,
-      });
-      continue;
+      this.rejectedCurrentMembers++;
+      this.excludedFacts.push({ key, code: "MANUAL_MEMBER_INVALID", detail: issue, record: member.record });
+      return;
     }
-    const disposition = sourceDisposition(member, input.currentReceipt, currentSourceIndex, urlsForMember);
+    const disposition = sourceDisposition(member, this.input.currentReceipt, this.sourceIndex, this.urlsForMember);
     if (!disposition.ok) {
-      rejectedCurrentMembers += 1;
-      excludedFacts.push({ key, code: disposition.code, detail: disposition.detail, record: member.record });
-      continue;
+      this.rejectedCurrentMembers++;
+      this.excludedFacts.push({ key, code: disposition.code, detail: disposition.detail, record: member.record });
+      return;
     }
-    selected.set(key, member);
+    const previous = this.pending.get(key);
+    if (previous) this.input.onReplace?.(previous, member);
+    this.pending.delete(key);
+    this.selected.set(key, member);
   }
 
-  const retainedPrior: SourceScopedMember<T>[] = [];
-  for (const prior of [...(input.prior?.members ?? [])].sort((left, right) => left.key.localeCompare(right.key))) {
-    if (selected.has(prior.key)) continue;
-    selected.set(prior.key, prior);
-    retainedPrior.push(prior);
-    const currentHeld = currentGroups.has(prior.key);
-    excludedFacts.push({
-      key: prior.key,
-      code: currentHeld ? "MANUAL_MEMBER_HELD_LKG" : "MANUAL_MEMBER_REMOVAL_EVIDENCE_MISSING",
-      detail: currentHeld
-        ? `${prior.key} retained its prior GOOD member because the current member lacked member-scoped source/shape proof.`
-        : `${prior.key} was omitted, but this open manual family supplied no validator-recognized positive removal evidence; the prior GOOD member remains live.`,
-      record: prior.record,
-    });
+  finish(): SourceScopedReconciliation<T> {
+    const retained = [...this.pending.values()];
+    for (const prior of retained) {
+      const currentHeld = this.seen.has(prior.key);
+      this.excludedFacts.push({ key: prior.key,
+        code: currentHeld ? "MANUAL_MEMBER_HELD_LKG" : "MANUAL_MEMBER_REMOVAL_EVIDENCE_MISSING",
+        detail: currentHeld
+          ? `${prior.key} retained its prior GOOD member because the current member lacked member-scoped source/shape proof.`
+          : `${prior.key} was omitted, but this open manual family supplied no validator-recognized positive removal evidence; the prior GOOD member remains live.`,
+        record: prior.record });
+      this.input.onReplace?.(prior, prior);
+    }
+    const proofSources = [...this.sourceIndex.supported,
+      ...sourcesSupportingMembers(retained, this.input.prior?.sourceReceipt ?? { ...this.input.currentReceipt, sources: [] }, this.urlsForMember)];
+    const deduplicated = new Map<string, ManualSourceReview>();
+    for (const source of proofSources) {
+      const key = sourceIdentity(source);
+      deduplicated.set(key, mergeManualSourceCopies(deduplicated.get(key), source));
+    }
+    const members = [...this.selected.values()].sort((left, right) => left.key.localeCompare(right.key));
+    this.pending.clear(); this.selected.clear(); this.seen.clear();
+    return { members,
+      promotionReceipt: { contractVersion: 1, reviewedAt: this.input.currentReceipt.reviewedAt,
+        reviewedBy: this.input.currentReceipt.reviewedBy,
+        sources: [...deduplicated.values()].sort((left, right) => sourceIdentity(left).localeCompare(sourceIdentity(right))) },
+      excludedFacts: this.excludedFacts.map(fact => ({ fact, sortKey: `${fact.key}\n${fact.code}\n${canonicalCivicDataJson(fact.record)}` }))
+        .sort((left, right) => left.sortKey.localeCompare(right.sortKey)).map(({ fact }) => fact),
+      supportedCurrentSources: this.sourceIndex.supported.length, inputMembers: this.inputMembers,
+      rejectedCurrentMembers: this.rejectedCurrentMembers, acceptedCurrentMembers: this.inputMembers - this.rejectedCurrentMembers };
   }
+}
 
-  const currentSupported = input.currentReceipt.sources.filter((source) => sourceOutcome(source) === "SUPPORTED");
-  const proofSources = [
-    ...currentSupported,
-    ...sourcesSupportingMembers(retainedPrior, input.prior?.sourceReceipt ?? {
-      contractVersion: 1,
-      reviewedAt: input.currentReceipt.reviewedAt,
-      reviewedBy: input.currentReceipt.reviewedBy,
-      sources: [],
-    }, urlsForMember),
-  ];
-  const deduplicated = new Map<string, ManualSourceReview>();
-  for (const source of proofSources) {
-    const key = sourceIdentity(source);
-    deduplicated.set(key, mergeManualSourceCopies(deduplicated.get(key), source));
+export function reconcileSourceScopedMembers<T>(input: ReconciliationInput<T> & {
+  readonly current: readonly SourceScopedMember<T>[];
+}): SourceScopedReconciliation<T> {
+  const groups = new Map<string, SourceScopedMember<T>[]>();
+  for (const member of input.current) {
+    const group = groups.get(member.key) ?? [];
+    group.push(member); groups.set(member.key, group);
   }
-
-  return {
-    members: [...selected.values()].sort((left, right) => left.key.localeCompare(right.key)),
-    promotionReceipt: {
-      contractVersion: 1,
-      reviewedAt: input.currentReceipt.reviewedAt,
-      reviewedBy: input.currentReceipt.reviewedBy,
-      sources: [...deduplicated.values()].sort((left, right) =>
-        sourceIdentity(left).localeCompare(sourceIdentity(right))
-      ),
-    },
-    excludedFacts: excludedFacts
-      .map((fact) => ({ fact, sortKey: `${fact.key}\n${fact.code}\n${canonicalCivicDataJson(fact.record)}` }))
-      .sort((left, right) => left.sortKey.localeCompare(right.sortKey))
-      .map(({ fact }) => fact),
-    supportedCurrentSources: currentSupported.length,
-    inputMembers: input.current.length,
-    rejectedCurrentMembers,
-    acceptedCurrentMembers: input.current.length - rejectedCurrentMembers,
-  };
+  const reconciler = new SourceScopedReconciler(input);
+  for (const group of groups.values()) reconciler.add(group);
+  return reconciler.finish();
 }

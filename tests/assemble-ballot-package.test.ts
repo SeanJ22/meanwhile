@@ -1,20 +1,26 @@
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
-import { stateBallotScope, stateBallotContractId, BALLOT_STATES, type BallotState } from "../lib/civic-data/state-scopes.ts";
+import { stateBallotScope, stateBallotContractId, REGISTRY_STATES, type BallotState } from "../lib/civic-data/state-scopes.ts";
 import assert from "node:assert/strict";
 import { mkdtemp, readFile, rm, writeFile, readdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { resolve } from "node:path";
 import test from "node:test";
 import { ballotElectionKey, type GenericBallotProjection, genericBallotProblems } from "../lib/ballot/generic-projection.ts";
-import { genericSourcesForDivisions } from "../lib/ballot/reader-sources.ts";
+import { readerBallotSourcesForDivisions } from "../lib/ballot/reader-sources.ts";
 import { manualProjectionCandidate, type ManualProjectionPackage, completeOfficialBallotContests } from "../lib/civic-data/manual-projections.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
-import { contestsForDivisions } from "../lib/sources/ballot-nj-morris/index.ts";
+import { contestsForDivisions } from "../lib/ballot/contests.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { createHash } from "node:crypto";
-import { canonicalCivicDataJson } from "../lib/civic-data/changes.ts";
+import { candidateChangeSet, canonicalCivicDataJson } from "../lib/civic-data/changes.ts";
 import { type BallotSet } from "../lib/ballot/types.ts";
 import { runBallotPublication } from "../scripts/assemble-ballot-package.mts";
+import { withStateRecordHashes } from "../lib/civic-data/state-publication.ts";
+import { validateRoutineCandidate } from "../lib/civic-data/validate.ts";
+import { sourceProjectionEvidence } from "../lib/civic-data/types.ts";
+import { sealStateRetirementUnit, STATE_RETIREMENT_KEY_ENV } from "../lib/civic-data/state-retirement-proof.ts";
+import { reconcileRetirementStateInput } from "../lib/civic-data/state-retirement-merge.ts";
+import { durableRoutineRunnerReceiptIssue } from "../lib/civic-data/runner-receipt.ts";
 
 async function runBallotState(options: Parameters<typeof runBallotPublication>[0]) {
   const environment = { WTP_RUNTIME_MODE: "staging", WTP_DB_ROLE: "local", DATABASE_URL: "postgresql://local:local@staging.invalid/reader",
@@ -39,7 +45,7 @@ async function publishBallotState(options: Parameters<typeof runBallotPublicatio
   return { ...result.report, heldContests: result.report.heldContests ?? [], payload: pointer.payload, candidate: saved.candidate, sourceReceipt };
 }
 
-type BallotStateFile = Awaited<ReturnType<typeof import("../lib/ballot/state-file.ts").readBallotStateFile>>;
+type BallotStateFile = Awaited<ReturnType<typeof import("../lib/civic-data/ballot-input.ts").readBallotStateFile>>;
 
 const now = "2026-10-13T12:00:00.000Z";
 
@@ -91,7 +97,14 @@ test("assembles only the named state and never opens another state's malformed f
     const rerun = await publishBallotState({ state: "TX", directory, store, now });
     assert.deepEqual(rerun.payload, result.payload);
     await rm(resolve(directory, "tx.json"));
-    await assert.rejects(publishBallotState({ state: "TX", directory, store, now }), /ENOENT/);
+    store.create = async () => assert.fail("missing input must not write a candidate");
+    store.confirmUnchanged = async () => assert.fail("missing input must not create a confirmation");
+    const missing = await runBallotState({ state: "TX", directory, store, now });
+    assert.equal(missing.report.status, "HELD");
+    assert.equal(missing.report.versionId, result.versionId);
+    assert.equal(missing.receipt, null);
+    assert.match(missing.report.reason!, /BALLOT_INPUT_MISSING_PRIOR_RETAINED:TX/);
+    assert.deepEqual((await readPromotion<GenericBallotProjection>("BALLOT_CANDIDACY", "US-TX:state-election-ballots"))?.payload, result.payload);
     assert.ok(await readPromotion("BALLOT_CANDIDACY", "US-NH:state-election-ballots"));
   } finally { await rm(directory, { recursive: true, force: true }); }
 });
@@ -125,6 +138,98 @@ test("a successor streams candidates before contests, uses prior proof metadata,
     assert.deepEqual(stages, ["input-metadata", "prior-state", "state-contests", "state-records", "candidate-build", "promotion"]
       .flatMap(stage => [`${stage}:start`, `${stage}:end`]));
   } finally { await rm(directory, { recursive: true, force: true }); }
+});
+
+test("territories without local ballot input remain named gaps until a verified state record exists", async () => {
+  const directory = await mkdtemp(resolve(tmpdir(), "ballot-empty-territories-"));
+  try {
+    const store = new MemoryRoutineDataStore();
+    await publish(store, packageFor(await fixture()));
+    store.create = async () => assert.fail("missing input cannot authenticate a new candidate");
+    store.confirmUnchanged = async () => assert.fail("a missing state record cannot be confirmed");
+    const readPromotion = store.readPromotion.bind(store);
+    const reads: string[] = [];
+    store.readPromotion = async (recordClass, scope) => { reads.push(scope); return readPromotion(recordClass, scope); };
+    for (const state of ["AS", "GU", "MP", "PR", "VI"] as const) {
+      reads.length = 0;
+      const result = await runBallotState({ state, directory, store, now });
+      assert.equal(result.exitCode, 2);
+      assert.equal(result.report.status, "HELD");
+      assert.equal(result.report.versionId, null);
+      assert.equal(result.receipt, null);
+      assert.match(result.report.reason!, new RegExp(`BALLOT_INPUT_MISSING_NO_HELD_STATE:${state}`));
+      assert.ok(reads.length > 0);
+      assert.ok(reads.every(scope => scope === stateBallotScope("ballot-contests", state)));
+      assert.deepEqual(result.report.merged, []);
+      assert.equal(result.report.skipped[0].file, `${state.toLowerCase()}.json`);
+    }
+  } finally { await rm(directory, { recursive: true, force: true }); }
+});
+
+test("signed empty territory partitions remain readable and normal missing-file runs reuse them without writes", async t => {
+  const directory = await mkdtemp(resolve(tmpdir(), "ballot-empty-reuse-"));
+  t.after(() => rm(directory, { recursive: true, force: true }));
+  const key = process.env[STATE_RETIREMENT_KEY_ENV];
+  process.env[STATE_RETIREMENT_KEY_ENV] = "7".repeat(64);
+  t.after(() => { if (key === undefined) delete process.env[STATE_RETIREMENT_KEY_ENV]; else process.env[STATE_RETIREMENT_KEY_ENV] = key; });
+  const store = new MemoryRoutineDataStore(), input = manualProjectionCandidate(packageFor(await fixture()));
+  const scope = "US:state-election-ballots";
+  const candidate = withStateRecordHashes({ ...input, scope,
+    sourceProjectionEvidence: sourceProjectionEvidence(input.sourceId, input.recordClass, scope) });
+  const validation = validateRoutineCandidate({ ...input, changeSet: candidateChangeSet(input, null) }, null, now);
+  assert.equal(validation.receipt.decision, "GOOD");
+  const receipt = { ...validation.receipt, scope };
+  await store.create({ candidate, state: "FETCHED", acquisitionSucceeded: true, receipt: null, promotedVersion: null,
+    lastKnownGoodVersion: null, failureCode: null, failureDetail: null },
+  { candidateId: candidate.id, sequence: 1, state: "FETCHED", at: now, detail: "Held national ballot source" });
+  await store.transition(candidate.id, "NORMALIZED", now, "Normalized held source");
+  await store.transition(candidate.id, "VALIDATED", now, "Held GOOD source receipt", receipt);
+  await store.promote(candidate.id, receipt, now);
+  for (const state of ["AS", "GU", "MP", "PR", "VI"] as const) {
+    const contractId = stateBallotContractId("ballot-contests", state);
+    const unit = { family: "ballot-contests", state, originId: candidate.id, originScope: scope,
+      originRecordClass: candidate.recordClass, originReadModelHash: candidate.normalization.normalizedHash!,
+      promotedAt: now, candidate, receipt, normalizedMetadata: {}, payload: { kind: "ballot-contests", ballots: {} }, members: [] };
+    const bytes = JSON.stringify(unit), file = resolve(directory, `${state}.unit.json`), sha256 = createHash("sha256").update(bytes).digest("hex");
+    await writeFile(file, bytes);
+    const seal = sealStateRetirementUnit({ fileSha256: sha256, originId: candidate.id, originScope: scope,
+      originRecordClass: candidate.recordClass, originReadModelHash: unit.originReadModelHash, state, contractId });
+    assert.equal((await reconcileRetirementStateInput({ file, sha256, seal, contractId, store, now })).status, "PUBLISHED");
+  }
+  store.create = async () => assert.fail("an existing empty state requires no new candidate");
+  store.transition = async () => assert.fail("empty-state reuse requires no transition");
+  store.promote = async () => assert.fail("empty-state reuse requires no promotion");
+  store.confirmUnchanged = async () => assert.fail("empty-state reuse requires no confirmation write");
+  for (const state of ["AS", "GU", "MP", "PR", "VI"] as const) {
+    const stateScope = stateBallotScope("ballot-contests", state), contractId = stateBallotContractId("ballot-contests", state);
+    const before = await store.readPromotion<GenericBallotProjection>("BALLOT_CANDIDACY", stateScope);
+    assert.ok(before);
+    for (let pass = 0; pass < 2; pass++) {
+      const result = await runBallotState({ state, directory, store, now: "2026-10-14T12:00:00.000Z" });
+      assert.equal(result.exitCode, 0, result.report.reason ?? "");
+      assert.equal(result.report.status, "PUBLISHED");
+      assert.equal(result.report.versionId, before.versionId);
+      assert.match(result.report.reason!, new RegExp(`BALLOT_EMPTY_PRIOR_REUSED:${state}`));
+      assert.deepEqual(result.report.merged, []);
+      assert.ok(result.receipt);
+      assert.equal(result.receipt.confirmedAt, undefined);
+      assert.equal(await durableRoutineRunnerReceiptIssue(result.receipt, { id: contractId, sourceId: before.sourceId,
+        recordClass: "BALLOT_CANDIDACY", scope: stateScope }, store, "SUCCESS"), null);
+      assert.deepEqual(await store.readPromotion("BALLOT_CANDIDACY", stateScope), before);
+      const read = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateScope, { store, now, bypassCache: true });
+      assert.equal(read.kind, "PROMOTED");
+      if (read.kind === "PROMOTED") assert.deepEqual(read.value, { kind: "ballot-contests", ballots: {} });
+    }
+  }
+  const readIdentity = store.readPromotionIdentity.bind(store);
+  store.readPromotionIdentity = async (recordClass, stateScope) => {
+    const pointer = await readIdentity(recordClass, stateScope);
+    return pointer && { ...pointer, versionId: "moved-version" };
+  };
+  const moved = await runBallotState({ state: "PR", directory, store, now });
+  assert.equal(moved.report.status, "HELD");
+  assert.equal(moved.receipt, null);
+  assert.match(moved.report.reason!, /BALLOT_INPUT_MISSING_PRIOR_UNVERIFIED:PR/);
 });
 
 test("streaming input refuses repeated contest and candidate identities instead of silently collapsing them", async () => {
@@ -262,7 +367,7 @@ test("a state with only empty contests publishes scoped gaps, then verified cand
     assert.equal(heldBallot.heldContests?.length, 2);
     assert.equal(contestsForDivisions(heldBallot, ["ocd-division/country:us/state:tx/cd:37"]).heldContests?.length, 1);
     assert.equal(contestsForDivisions(heldBallot, ["ocd-division/country:us/state:tx/cd:38"]).heldContests?.length, 2);
-    assert.equal(genericSourcesForDivisions(held.payload, ["ocd-division/country:us/state:tx"]).length, 1);
+    assert.equal((await readerBallotSourcesForDivisions(["ocd-division/country:us/state:tx"], { store, now })).length, 1);
     const complete = changeSource(await fixture(), "TX", now, state.sourceReceipt.sources[0].publisher);
     ballotOf(complete).contests[1].ocdId = ballot.contests[1].ocdId;
     await writeFile(resolve(directory, "tx.json"), JSON.stringify(complete));
@@ -311,10 +416,12 @@ test("incomplete lists remain named, same-date complete corrections publish, and
   const publishState = (state: BallotState) => publishBallotState({ state, directory,
     store: new MemoryRoutineDataStore(), now: "2026-10-15T23:59:00.000Z" });
 
-  test("all 51 state files publish independently with complete lists or named gaps", async () => {
+  test("all checked-in state ballot files publish independently with complete lists or named gaps", async () => {
     const files = (await readdir(directory)).filter(file => /^[a-z]{2}\.json$/.test(file)).sort();
-    assert.deepEqual(files, BALLOT_STATES.map(state => `${state.toLowerCase()}.json`).sort());
-    for (const state of BALLOT_STATES) {
+    const states = REGISTRY_STATES.filter(state => files.includes(`${state.toLowerCase()}.json`));
+    assert.deepEqual(files, states.map(state => `${state.toLowerCase()}.json`).sort());
+    assert.deepEqual(REGISTRY_STATES.filter(state => !states.includes(state)).sort(), ["AS", "GU", "MP", "PR", "VI"]);
+    for (const state of states) {
       const assembled = await publishState(state);
       assert.deepEqual(assembled.skipped, []);
       assert.deepEqual(assembled.merged, [`${state.toLowerCase()}.json`]);

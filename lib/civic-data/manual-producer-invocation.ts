@@ -6,8 +6,6 @@ import { MANUAL_PRODUCTION_SOURCE_CONTRACTS, type ManualProductionContractId } f
 type ManualProducerMode = "DIRECT_SOURCE" | "VERIFIED_WORKER_RESULT" | "EXISTING_DERIVED" | "SCOPED_ADAPTER_OWED";
 interface Rule { readonly mode: ManualProducerMode; readonly state?: string; readonly reason: string }
 const RULES = {
-  "az-sos-ballot": { mode: "SCOPED_ADAPTER_OWED", state: "AZ", reason: "The reviewed Arizona ballot is retained while state publication is prepared." },
-  "nh-curated-ballot": { mode: "SCOPED_ADAPTER_OWED", state: "NH", reason: "The reviewed New Hampshire ballot is retained while state publication is prepared." },
   "candidate-campaign-sites-derived": { mode: "EXISTING_DERIVED", reason: "Verified campaign sources publish to their state through the standing derived-source child." },
   "campaign-finance": { mode: "VERIFIED_WORKER_RESULT", reason: "Complete saved door bytes and filed candidate/office/cycle/jurisdiction identities publish through normal Slide; unmatched rows remain work." },
   "government-budgets": { mode: "VERIFIED_WORKER_RESULT", reason: "Official adopted budgets, amendments and government-specific legal responsibility use the normal saved-evidence worker and Slide." },
@@ -16,7 +14,7 @@ const RULES = {
   "plain-english-translations": { mode: "VERIFIED_WORKER_RESULT", reason: "Every sentence is supported by the original official text and checked independently under the existing budget dial." },
   "ballot-contests": { mode: "VERIFIED_WORKER_RESULT", reason: "Each verified candidate on the saved official list publishes with its exact contest; incomplete listings retain other held candidates." },
   "congress-bulk-roster": { mode: "DIRECT_SOURCE", reason: "National congressional directory acquired from its registered public source." },
-  "registry-runtime-bindings": { mode: "VERIFIED_WORKER_RESULT", reason: "Normal worker roster publication runs once it meets the section 3 standard; the audit follows and repairs what it finds." },
+  "registry-runtime": { mode: "VERIFIED_WORKER_RESULT", reason: "Normal worker roster publication runs once it meets the section 3 standard; the audit follows and repairs what it finds." },
   "congress-rollcalls": { mode: "DIRECT_SOURCE", reason: "National recent roll calls acquired from their registered public source." },
   "federal-key-votes": { mode: "DIRECT_SOURCE", reason: "Reviewed national key-vote selection has an executable official acquisition." },
   "candidate-profiles": { mode: "SCOPED_ADAPTER_OWED", reason: "Plain code that builds candidate profiles from their saved source records is still owed; the projection command takes a prepared input." },
@@ -40,7 +38,7 @@ const RULES = {
   "venue-resolutions": { mode: "EXISTING_DERIVED", reason: "Each meeting pass matches a newly published address to one exact Census street point and promotes the pin through this pointer itself (lib/meetings/venue-publication.ts); no person reviews it." },
   "meeting-body-crosswalk": { mode: "EXISTING_DERIVED", reason: "The existing meeting source-wiring session owns the normal held meeting/body binding and publication path." },
   "everyday-routing": { mode: "VERIFIED_WORKER_RESULT", reason: "Normal worker output publishes once it meets the section 3 standard; audits run afterward and repair what they find." },
-} as const satisfies Record<Exclude<ManualProductionContractId, StateBallotContractId | StateRegistryContractId> | StateBallotFamily, Rule>;
+} as const satisfies Record<Exclude<ManualProductionContractId, StateBallotContractId | StateRegistryContractId> | StateBallotFamily | "registry-runtime", Rule>;
 
 export interface ManualProducerInvocation {
   readonly id: ManualProductionContractId;
@@ -61,7 +59,7 @@ export function manualProducerInvocationMatrix(scopes: readonly ResolvedScope[],
   return MANUAL_PRODUCTION_SOURCE_CONTRACTS.map(contract => {
     const stateContract = parseStateBallotContractId(contract.id);
     const registryState = stateFromRegistryRuntimeContractId(contract.id);
-    const rule = RULES[registryState ? "registry-runtime-bindings" : stateContract?.family ?? contract.id as keyof typeof RULES];
+    const rule = RULES[registryState ? "registry-runtime" : stateContract?.family ?? contract.id as keyof typeof RULES];
     const state = registryState ?? stateContract?.state ?? ("state" in rule ? rule.state : null);
     const applicable = sends.filter(scope => !state || scope.states.includes(state));
     return { id: contract.id, mode: rule.mode,

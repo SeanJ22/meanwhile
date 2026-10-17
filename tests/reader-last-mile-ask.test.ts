@@ -4,8 +4,7 @@ import { readFileSync } from "node:fs";
 import test from "./helpers/playbooks.ts";
 import type { CandidateDocument } from "../lib/candidates/corpus.ts";
 import { installFederalVotes, installOfficeholderStatements, installRegistryAuthority, installStateMoney, stateMoneyFixture, syntheticCandidateCorpus, syntheticFiledStateMoneyRecord } from "./helpers/promoted-fixtures.ts";
-import { recordedMeetings85701, recordedMeetingsSnapshot } from "./helpers/reader-fixtures.ts";
-import { publishRecordedEdge } from "./helpers/reader-edge-meetings.ts";
+import { recordedMeetings85701 } from "./helpers/reader-fixtures.ts";
 
 await installRegistryAuthority();
 
@@ -277,10 +276,6 @@ await installCandidateCorpus({ ...corpus, attempted: corpus.attempted + 1, docum
 for (const [index, state] of ["AZ", "NJ", "NH"].entries()) {
   if (state === "AZ") continue;
   await installCandidateCorpus({ ...corpus, attempted: 1, documents: [controlPages[index]], failures: [] }, state);
-}
-{
-  const recorded = recordedMeetingsSnapshot();
-  await publishRecordedEdge(recorded.meetings, recorded.agendaDocuments);
 }
 
 delete process.env.ANTHROPIC_API_KEY;

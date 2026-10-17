@@ -273,6 +273,7 @@ export async function publishSupervisorReaderEdge(store: RoutineDataStore, obser
               if (registryRefs[state] === undefined) return null;
               const edge = await ensureReaderAuthorityEdge(null, artifactStore, ["registry-runtime"]);
               const read = await withReaderAuthorityEdge({ ...edge!, edgeOnly: true }, () => readStateAuthorityProjection<RegistryRuntimeReadModel>("registry-runtime", state));
+              if (read.result.kind === "NOT_RECORDED") return null;
               if (read.result.kind !== "PROMOTED") throw new Error(`Meeting territories for ${state} read ${read.result.kind}`);
               return { bodies: read.result.value.registry.bodies };
             },

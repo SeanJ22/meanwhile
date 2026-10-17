@@ -37,7 +37,6 @@ export function createMeetingPartitionOwnership(input: {
   const derivedBodies = new Set<string>();
   let wiringRead = false;
   let wiringKnown = false;
-  let reviewedBodies: ReadonlySet<string> | null = null;
   const add = (id: string, bodyId: string) => {
     const set = bodies.get(id) ?? new Set<string>();
     set.add(bodyId);
@@ -65,7 +64,7 @@ export function createMeetingPartitionOwnership(input: {
     reasonFor(jurisdictionId) {
       const ids = bodies.get(jurisdictionId);
       if (!ids?.size) {
-        const readFailure = failures.get(jurisdictionId.split(":")[0]) ?? failures.get("reviewed");
+        const readFailure = failures.get(jurisdictionId.split(":")[0]);
         return `${jurisdictionId}: no exact registered governing-body identity; ${readFailure ? `${readFailure}; recover the authority reading` : "resolve its Census/registry pairing"} before assigning its meeting clock`;
       }
       if (ids.size !== 1) return `${jurisdictionId}: conflicting exact governing-body IDs (${[...ids].sort().join(", ")}); repair the identity conflict`;
@@ -94,19 +93,21 @@ export function createMeetingPartitionOwnership(input: {
         } catch (error) {
           failures.set("wiring", `meeting source wiring unread: ${sanitizedErrorDiagnostic(error)}`);
         }
-        if (input.root) {
-          try {
-            const read = await readRegistryRuntimeProjection();
-            if (read.kind === "PROMOTED") reviewedBodies = new Set(read.value.registry.bodies.map(body => body.id));
-            else failures.set("reviewed", `reviewed body registry is ${read.kind}; unpaired governments remain UNKNOWN`);
-          } catch (error) {
-            failures.set("reviewed", `reviewed body registry unread: ${sanitizedErrorDiagnostic(error)}`);
-          }
-        }
+
       }
       for (const state of new Set([...wanted].map(s => s.toLowerCase()).filter(s => /^[a-z]{2}$/.test(s)))) {
         if (states.has(state)) continue;
         states.add(state);
+        let reviewedBodies: ReadonlySet<string> | null = null;
+        if (input.root) {
+          try {
+            const read = await readRegistryRuntimeProjection([state]);
+            if (read.kind === "PROMOTED") reviewedBodies = new Set(read.value.registry.bodies.map(body => body.id));
+            else failures.set(state, `${state.toUpperCase()} reviewed body registry is ${read.kind}; unpaired governments remain UNKNOWN`);
+          } catch (error) {
+            failures.set(state, `${state.toUpperCase()} reviewed body registry unread: ${sanitizedErrorDiagnostic(error)}`);
+          }
+        }
         try {
           const read = await (input.readRegistration ?? ((s) => readRegistrationProjection(s, { bypassCache: true })))(state);
           if (read.kind !== "PROMOTED") {

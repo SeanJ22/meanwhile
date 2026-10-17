@@ -1,11 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import {
-  processRegisteredRoutineCandidate,
-  processRoutineCandidate,
-  routineCandidateContractIssue,
-} from "../lib/civic-data/promotion.ts";
+import { processRegisteredRoutineCandidate,
+  routineCandidateContractIssue } from "../lib/civic-data/promotion.ts";
+import { processRoutineCandidate } from "../lib/civic-data/candidate-lifecycle.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
 import { ROUTINE_SOURCE_TASKS } from "../lib/civic-data/runner.ts";
 import { MemoryRoutineDataStore, PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -56,6 +54,10 @@ test("the generic transition driver cannot write a production store outside an e
   const productionStore = Object.create(PostgresRoutineDataStore.prototype) as PostgresRoutineDataStore;
   await assert.rejects(
     processRoutineCandidate(productionStore, candidate("unregistered-production-candidate"), NOW),
+    /PRODUCTION_PROMOTION_REQUIRES_REGISTERED_CONTRACT_DOOR/,
+  );
+  await assert.rejects(
+    processRoutineCandidate(productionStore, candidate("forged-admission"), NOW, undefined, Symbol("REGISTERED_PRODUCTION_DOOR")),
     /PRODUCTION_PROMOTION_REQUIRES_REGISTERED_CONTRACT_DOOR/,
   );
 });
@@ -1130,9 +1132,10 @@ test("attributed LegiScan projections require exact state-specific source and id
 test("all standing routine-source destructive classes are enumerated by the contract", () => {
   const covered = new Set<RoutineRecordClass>([
     "FEC_FUNDING", "STATE_LEGISLATOR", "CENSUS_REFERENCE", "CENSUS_GEOGRAPHY",
-    "MEETING", "BALLOT_FILING", "DOTGOV_REFERENCE", "STATE_ROLL_CALL",
+    "MEETING", "DOTGOV_REFERENCE", "STATE_ROLL_CALL",
     "STATE_LEGISLATOR_VOTES", "STATE_BILL", "REGISTRATION", "MEETING_OUTCOME", "FEDERAL_DIRECTORY",
     "GOOGLE_CIVIC_VOTERINFO",
+    "FEDERAL_MONEY",
     // The derived meeting-source wiring never removes a row (a trigger suspends it), so any removal is
     // refused by the generic incomplete-horizon rule (tests/derived-meeting-family.test.ts).
     "CURATED_READER_RECORD",

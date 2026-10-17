@@ -29,6 +29,7 @@ function tagsOf(value: unknown): Set<string> {
       visit(child, key);
     }
     if (typeof row === "string" && field === "state" && /^[A-Za-z]{2}$/.test(row)) tags.add(`state:${row.toUpperCase()}`);
+    if (typeof row === "string" && (field === "zip" || field === "zips") && /^\d{5}$/.test(row)) tags.add(row);
   };
   visit(value);
   return tags;
@@ -42,6 +43,8 @@ export async function publishAuthorityRecords(value: unknown, store: ReaderArtif
     const sha = sha256OfJson(row);
     const position = records.length;
     const tags = tagsOf(row);
+    const zip = row && typeof row === "object" ? (row as { zip?: unknown }).zip : undefined;
+    if (typeof zip === "string" && /^\d{5}$/.test(zip)) tags.add(`zip:${zip}`);
     records.push({ path, key: "", sha, tags: [] });
     const key = held.get(sha) ?? await store.putImmutable(gzipSync(Buffer.from(JSON.stringify(row))), "json.gz");
     for (const tag of extra) tags.add(tag);
@@ -88,6 +91,8 @@ export async function readAuthorityRecords(index: RecordIndex, store: ReaderArti
   while (changed) {
     changed = false;
     for (const ref of index.records) {
+      const zip = ref.tags.find((tag: string) => /^zip:\d{5}$/.test(tag));
+      if (selection && zip && !keys.has(zip.slice(4))) continue;
       const metadata = ref.path.includes("divisions") && !ref.path.includes("roster");
       const code = ref.path[0] === "codes";
       const window = selection?.governmentWindow;
@@ -96,6 +101,7 @@ export async function readAuthorityRecords(index: RecordIndex, store: ReaderArti
       if (wanted.has(ref) || window && listing && !inWindow || !inWindow && selection && ref.tags.length &&
         !(code ? keys.has(String(ref.path[1])) : ref.tags.some((tag: string) => keys.has(tag) || metadata && divisions.has(tag)))) continue;
       wanted.add(ref);
+      if (zip) continue;
       if (ref.path[0] === "containers") continue;
       if (ref.path.some((field: string | number) => ["rollCalls", "votes", "profiles", "snapshots", "statements"].includes(String(field)))) continue;
       for (const tag of ref.tags) {

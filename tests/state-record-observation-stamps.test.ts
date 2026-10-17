@@ -4,10 +4,6 @@ import test from "node:test";
 import { candidateChangeSet } from "../lib/civic-data/changes.ts";
 import type { RoutineCandidate, RoutineRecordClass } from "../lib/civic-data/types.ts";
 
-/*
- * A re-read that finds the same facts is not a change. The stamps stay on the
- * stored records; they only stop deciding.
- */
 
 function candidate(recordClass: RoutineRecordClass, readModel: unknown): RoutineCandidate {
   return { recordClass, readModel, excludedFacts: [] } as unknown as RoutineCandidate;
@@ -99,7 +95,8 @@ test("a re-check whose cited roster moved is not a no-change, even when its reco
 test("the confirmation door requires the cited authority, and a confirmation takes no second readback", async () => {
   const { readFileSync } = await import("node:fs");
   const source = readFileSync(new URL("../lib/civic-data/promotion.ts", import.meta.url), "utf8");
-  const eligibility = source.slice(source.indexOf("options.confirmUnchanged !== false &&"), source.indexOf("const retained ="));
-  assert.match(eligibility, /sameHeldRecords\(candidate, lkg\.candidate\) &&\s+sameCitedAuthority\(candidate, lkg\.candidate\)/);
+  const lifecycle = readFileSync(new URL("../lib/civic-data/candidate-lifecycle.ts", import.meta.url), "utf8");
+  const eligibility = lifecycle.slice(lifecycle.indexOf("options.confirmUnchanged !== false &&"), lifecycle.indexOf("const retained ="));
+  assert.match(eligibility, /sameHeldRecords\(candidate, lkg\.candidate\) &&\s+sameCitedAuthority\(candidate,/);
   assert.match(source, /if \(outcome\.promoted === null \|\| outcome\.confirmed \|\| contract\.readerProjection === null\) return outcome;/);
 });

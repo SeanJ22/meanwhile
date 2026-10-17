@@ -1,3 +1,4 @@
+import { planHeldWorkerFleet } from "../lib/control-plane/workers/standing-plan.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { mkdtemp, rm } from "node:fs/promises";
@@ -17,7 +18,7 @@ import { createRouteTask, denyByPolicy, type RouteTask } from "../lib/control-pl
 import { createWorkItem, type WorkItem } from "../lib/control-plane/work-item.ts";
 import { dispatchWorkerTask, drainWorkerQueue, enqueueWorkerTask, FLEET_POLICY_VERSION } from "../lib/control-plane/workers/runtime.ts";
 import { workerTaskAdmission } from "../lib/control-plane/workers/scheduling.ts";
-import { advanceHeldWorkerFleet, legacyHeldWorkOwed, planHeldWorkerFleet, heldEventContract, HELD_AUDIT_CONTEXT_MAX_BYTES, standingFleetRuntime } from "../lib/control-plane/workers/standing.ts";
+import { advanceHeldWorkerFleet, legacyHeldWorkOwed, heldEventContract, HELD_AUDIT_CONTEXT_MAX_BYTES, standingFleetRuntime } from "../lib/control-plane/workers/standing.ts";
 import {
   installOperationalReferenceBundle,
   operationalReferenceBundle,

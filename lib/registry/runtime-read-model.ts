@@ -1,113 +1,84 @@
-import {
-  CivicDataStoreUnavailableError,
-  civicDataReadNotInitialized,
-  readPromotedCivicData,
-  type CivicDataReadResult,
-  type PromotedCivicDataReadOptions,
-} from "../civic-data/read-model.ts";
-import { validateOnce } from "../civic-data/validated-once.ts";
-import {
-  REGISTRY_RUNTIME_SCOPE,
-  REGISTRY_RUNTIME_SOURCE_ID,
-  registryRuntimeProjectionIssues,
-  type RegistryRuntimeCarton,
-  type RegistryRuntimeReadModel,
-} from "./runtime-data-plane.ts";
-import { factReader } from "../facts/db.ts";
-import { withFactRegistry } from "../facts/registry-overlay.ts";
+import { AsyncLocalStorage } from "node:async_hooks";
+import { CivicDataStoreUnavailableError, civicDataReadNotInitialized, type CivicDataReadResult, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
+import { readStateAuthorityProjection } from "../civic-data/state-reader.ts";
+import { currentReaderSelection } from "../db/reader-route.ts";
 import type { BodyRoster } from "./body-rosters.ts";
-import { CENSUS_PLACEHOLDER_BODY_ISSUE } from "./census-placeholders.ts";
-import { currentReaderRoute, currentReaderSelection } from "../db/reader-route.ts";
-import { currentRegistryRuntimeEdge, currentReaderAuthorityEdge } from "./runtime-edge.ts";
+import type { RegistryRuntimeReadModel } from "./runtime-data-plane.ts";
+import { currentReaderAuthorityEdge, reportReaderStateFailure } from "./runtime-edge.ts";
+import { readStateRegistryRuntimeProjection } from "../civic-data/read-model.ts";
+import { combineStateRegistries, withStateRegistryFacts } from "./state-composition.ts";
+import { requireRegistryState, stateRegistryRuntimeScope, statesForRegistryDivisions } from "../civic-data/state-scopes.ts";
 
-const selectedStates = new WeakMap<object, CivicDataReadResult<RegistryRuntimeReadModel>>();
-let cache: RegistryRuntimeReadModel | null = null;
-let readState: CivicDataReadResult<RegistryRuntimeReadModel> = civicDataReadNotInitialized(
-  "REGISTRY_RUNTIME_BINDING",
-  REGISTRY_RUNTIME_SCOPE,
-  "The Reader registry runtime pointer has not been read for this process.",
-);
+type Context = { states: readonly string[]; read?: CivicDataReadResult<RegistryRuntimeReadModel>; pending?: Promise<CivicDataReadResult<RegistryRuntimeReadModel>> };
+const requests = new WeakMap<object, Context>(), jobs = new AsyncLocalStorage<Context>();
+const contextKey = () => currentReaderSelection() ?? currentReaderAuthorityEdge();
+const current = () => { const key = contextKey(); return key ? requests.get(key) : jobs.getStore(); };
 
-function validate(value: RegistryRuntimeCarton, versionId: string): void {
-  const sliced = currentReaderSelection() !== undefined;
-  const empty = new Set(["REGISTRY_EMPTY", "STATEWIDE_EXECUTIVES_EMPTY", "OFFICIAL_CANDIDACY_BRIDGE_EMPTY"]);
-  const issues = registryRuntimeProjectionIssues(value).filter(issue => !issue.startsWith(`${CENSUS_PLACEHOLDER_BODY_ISSUE}:`) && !(sliced && empty.has(issue)));
-  if (issues.length) throw new Error(`Registry runtime projection ${versionId} is invalid: ${issues.join(", ")}.`);
-}
-
-/** Store failures remain failures. Members and schedules come from live facts. */
-export async function readRegistryRuntimeProjection(
-  options: PromotedCivicDataReadOptions = {},
-): Promise<CivicDataReadResult<RegistryRuntimeReadModel>> {
-  const edge = currentRegistryRuntimeEdge();
-  if (!options.store && edge && (!options.bypassCache || currentReaderSelection() || currentReaderRoute() !== "unattributed" || currentReaderAuthorityEdge()?.edgeOnly)) {
-    primeRegistryRuntimeFromValue(edge.value, edge.versionId);
-    return readState;
-  }
-  const read = await readPromotedCivicData<RegistryRuntimeCarton>("REGISTRY_RUNTIME_BINDING", REGISTRY_RUNTIME_SCOPE, options);
-  const result = (read.kind === "PROMOTED" || read.kind === "BOOTSTRAP"
-    ? { ...read, value: await withFactRegistry(read.value, factReader()) } : read) as CivicDataReadResult<RegistryRuntimeReadModel>;
-  readState = result;
+export function selectedRegistryStates(): readonly string[] {
   const selection = currentReaderSelection();
-  if (selection) selectedStates.set(selection, result);
-  if (result.kind === "PROMOTED" || result.kind === "BOOTSTRAP") {
-    validate(result.value, result.metadata.versionId ?? result.kind);
-    if (!selection) cache = result.value;
-  } else {
-    if (!selection) cache = null;
-  }
-  return result;
+  if (selection?.states) return selection.states.map(requireRegistryState);
+  const named = selection ? statesForRegistryDivisions([...selection.keys, ...selection.divisions ?? []]) : [];
+  return named.length ? named : current()?.states ?? [];
 }
 
-export async function refreshRegistryRuntimeFromPromoted(options: PromotedCivicDataReadOptions = {}): Promise<string | null> {
-  const result = await readRegistryRuntimeProjection(options);
+export function withRegistryRuntimeStates<T>(states: readonly string[], read: () => T): T {
+  return jobs.run({ states: [...new Set(states.map(requireRegistryState))].sort() }, read);
+}
+
+export async function readRegistryRuntimeProjection(states: readonly string[], options: PromotedCivicDataReadOptions = {}): Promise<CivicDataReadResult<RegistryRuntimeReadModel>> {
+  const selected = [...new Set(states.map(requireRegistryState))].sort();
+  if (!selected.length) throw new Error("REGISTRY_STATES_NOT_SELECTED");
+  const key = contextKey(), existing = current();
+  const sameStates = existing && selected.join() === existing.states.join();
+  if (!options.store && !options.bypassCache && sameStates) {
+    if (existing.read) return existing.read;
+    if (existing.pending) return existing.pending;
+  }
+  const context: Context = sameStates ? existing : { states: selected };
+  if (key) requests.set(key, context); else if (context !== existing) jobs.enterWith(context);
+  const load = async (): Promise<CivicDataReadResult<RegistryRuntimeReadModel>> => {
+  const reads: CivicDataReadResult<RegistryRuntimeReadModel>[] = [];
+  for (const state of selected) {
+    const read = options.store ? await readStateRegistryRuntimeProjection(state, options)
+      : (await readStateAuthorityProjection<RegistryRuntimeReadModel>("registry-runtime", state)).result;
+    if (read.kind === "PROMOTED" || read.kind === "BOOTSTRAP") {
+      const overlay = currentReaderAuthorityEdge()?.stateRegistryFacts;
+      const facts = await overlay?.load(state).catch(error => {
+        reportReaderStateFailure("state-facts", state, overlay.key?.(state) ?? null, error); return null;
+      });
+      reads.push({ ...read, value: withStateRegistryFacts(read.value, facts?.bodies ?? []) });
+    } else reads.push(read);
+  }
+  const served = reads.filter(read => read.kind === "PROMOTED" || read.kind === "BOOTSTRAP");
+  if (!served.length) context.read = reads[0];
+  else if (selected.length === 1) context.read = served[0];
+  else context.read = { kind: "BOOTSTRAP", value: combineStateRegistries(served.map(read => read.value)),
+    metadata: { ...served[0].metadata, scope: selected.map(stateRegistryRuntimeScope).join("|"),
+      versionId: served.map(read => read.metadata.versionId).join("|"), lastKnownGoodVersionId: null },
+    detail: `The named states' published registry records.${served.length < reads.length ? " Some requested state records are unavailable." : ""}` };
+  return context.read;
+  };
+  context.pending = load();
+  return context.pending;
+}
+
+export async function refreshRegistryRuntimeFromPromoted(states: readonly string[], options: PromotedCivicDataReadOptions = {}): Promise<string | null> {
+  const result = await readRegistryRuntimeProjection(states, options);
   if (result.kind === "STORE_UNREACHABLE") throw new CivicDataStoreUnavailableError(result);
   if (result.kind === "NOT_RECORDED") throw new Error(result.detail);
-  return result.kind === "PROMOTED" ? result.metadata.versionId : null;
-}
-
-
-export function primeRegistryRuntimeFromValue(value: RegistryRuntimeReadModel, versionId: string): void {
-  validateOnce("registry-runtime", value, versionId, () => validate(value, versionId));
-  const selection = currentReaderSelection();
-  if (!selection) cache = value;
-  readState = {
-    kind: "BOOTSTRAP",
-    value,
-    metadata: {
-      recordClass: "REGISTRY_RUNTIME_BINDING",
-      scope: REGISTRY_RUNTIME_SCOPE,
-      sourceId: REGISTRY_RUNTIME_SOURCE_ID,
-      version: null,
-      versionId,
-      lastKnownGoodVersionId: versionId,
-      sourceThrough: null,
-      retrievedAt: null,
-      promotedAt: null,
-      stale: "CURRENT",
-      staleAt: null,
-    },
-    detail: `Served from the registry-runtime edge artifact (version ${versionId}); the promotion receipt stays on the authoritative database path.`,
-  };
-  if (selection) selectedStates.set(selection, readState);
+  return result.metadata.versionId;
 }
 
 export function registryRuntimeReadState(): CivicDataReadResult<RegistryRuntimeReadModel> {
-  const selection = currentReaderSelection();
-  return selection ? selectedStates.get(selection) ?? readState : readState;
+  return current()?.read ?? civicDataReadNotInitialized("REGISTRY_RUNTIME_BINDING", selectedRegistryStates().map(stateRegistryRuntimeScope).join("|"),
+    "The named states' registry records have not been read in this context.",
+  );
 }
 
 export function getRegistryRuntimeReadModel(): RegistryRuntimeReadModel {
-  const selection = currentReaderSelection();
-  if (selection) {
-    const edge = currentRegistryRuntimeEdge();
-    if (edge) return edge.value;
-    const state = selectedStates.get(selection);
-    if (state?.kind === "PROMOTED" || state?.kind === "BOOTSTRAP") return state.value;
-    if (state) throw new Error("The requested authority could not be read for this request.");
-  }
-  if (!cache) throw new Error(`Registry runtime bindings are ${readState.kind}; call readRegistryRuntimeProjection before using the synchronous projection.`);
-  return cache;
+  const state = registryRuntimeReadState();
+  if (state.kind === "PROMOTED" || state.kind === "BOOTSTRAP") return state.value;
+  throw new Error(`The requested registry records are ${state.kind}.`);
 }
 
 export function getRuntimeBodyRosters(): readonly BodyRoster[] {

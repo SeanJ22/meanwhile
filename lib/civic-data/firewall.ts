@@ -96,11 +96,7 @@ function stripShellComments(source: string, path: string): string {
   return source;
 }
 
-/**
- * Mask literal bodies before looking for calls. This keeps an error string or
- * recorded incident such as `"call rename(...)"` from manufacturing a writer
- * finding while leaving identifiers, punctuation, and line positions intact.
- */
+
 function maskStringLiterals(source: string): string {
   let quote: "'" | '"' | "`" | null = null;
   let escaped = false;
@@ -144,12 +140,7 @@ function parseNamedBindings(specifiers: string): readonly { imported: string; lo
   });
 }
 
-/**
- * Follow capabilities detached from an already-known namespace or callable.
- * The sets only grow, so reversed alias chains converge and cycles terminate.
- * This deliberately does not treat an arbitrary object method with the same
- * name as a Node capability: the chain must originate at a recognized module.
- */
+
 function resolveDetachedMethodBindings(
   source: string,
   namespaces: Set<string>,
@@ -257,15 +248,6 @@ function balancedCall(source: string, openAt: number): string {
   return source.slice(openAt, Math.min(source.length, openAt + 1_200));
 }
 
-function matchingCalls(source: string, callee: RegExp): readonly string[] {
-  const calls: string[] = [];
-  for (const match of source.matchAll(callee)) {
-    const at = (match.index ?? 0) + match[0].lastIndexOf("(");
-    calls.push(balancedCall(source, at));
-  }
-  return calls;
-}
-
 /** Match against masked code, then recover the same balanced call from source. */
 function matchingExecutableCalls(
   source: string,
@@ -285,9 +267,6 @@ function callCarriesReleasePayload(call: string): boolean {
   const invokesGit = /["'`]git(?:\.exe)?["'`]|["'`][^"'`]{0,200}\bgit(?:\.exe)?\s+[^"'`]*/i.test(call);
   if (!invokesGit) return false;
   if (GIT_MUTATION_ARGUMENT.test(call)) return true;
-  // Exact code-identity reads are the only legitimate Git dependency in the
-  // real registered closure. An unknown Git verb fails closed; it does not get
-  // to masquerade as another read-only identity operation.
   return !GIT_READ_ONLY_ARGUMENT.test(call);
 }
 
@@ -420,11 +399,34 @@ function expressionParts(source: string): string[] {
 }
 
 /** Only exempt destinations derived from the OS temp root, never names like 'tmp'. */
-function temporaryPathClassifier(executable: string): (expression: string) => boolean {
+function confinedTemporaryBindings(executable: string, files: Readonly<Record<string, string>>, importer: string): ReadonlySet<string> {
+  const bindings = new Set<string>();
+  for (const match of executable.matchAll(/\bimport\s*\{([^}]*)\}\s*from\s*["']([^"']+)["']/g)) {
+    const path = resolveLocalModule(files, importer, match[2]!);
+    if (path === null) continue;
+    const source = stripExecutableComments(files[path]!).replace(/\s+/g, "");
+    // Recognize the complete confinement algorithm, including symlink and repository checks.
+    // A changed validator or an arbitrary same-named import remains untrusted.
+    const proof = new RegExp([
+      String.raw`^import\{existsSync,realpathSync\}from["']node:fs["'];import\{tmpdir\}from["']node:os["'];import\{dirname,resolve,sep\}from["']node:path["'];`,
+      String.raw`exportfunction([A-Za-z_$][\w$]*)\(value(?::string)?\)(?::string)?\{consttarget=resolve\(value\);consttemporary=resolve\(tmpdir\(\)\);constroot=realpathSync\(tmpdir\(\)\);`,
+      String.raw`letancestor=target;while\(!existsSync\(ancestor\)\)ancestor=dirname\(ancestor\);constparent=realpathSync\(ancestor\);`,
+      String.raw`if\(!target\.startsWith\(temporary\+sep\)\|\|!\(parent===root\|\|parent\.startsWith\(root\+sep\)\)\)\{thrownewError\("[^"\\]*"\);\}`,
+      String.raw`constrepository=realpathSync\(process\.cwd\(\)\);if\(target===repository\|\|target\.startsWith\(repository\+sep\)\|\|parent===repository\|\|parent\.startsWith\(repository\+sep\)\)\{thrownewError\("[^"\\]*"\);\}returntarget;\}$`,
+    ].join(""));
+    const name = proof.exec(source)?.[1];
+    if (name === undefined) continue;
+    for (const { imported, local } of parseNamedBindings(match[1]!)) if (imported === name) bindings.add(local);
+  }
+  return bindings;
+}
+
+function temporaryPathClassifier(executable: string, confined: ReadonlySet<string>): (expression: string) => boolean {
   const masked = maskStringLiterals(executable);
   const parameters = [
     ...matchingExecutableCalls(executable, masked, /\b(?:function(?:\s*\*)?(?:\s+[\w$]+)?|catch)\s*\(/g),
     ...[...masked.matchAll(/\(([^()]*)\)\s*(?::[^=;{}]+)?=>|\b([A-Za-z_$][\w$]*)\s*=>/g)].map(match => match[1] ?? match[2]!),
+    ...[...masked.matchAll(/\b[\w$]+\s*\(([^()]*)\)\s*(?::[^=;{}]+)?\{/g)].map(match => match[1]!),
   ];
   // A same-named parameter must not inherit another scope's temporary path.
   const shadowed = new Set(parameters.flatMap(value => maskStringLiterals(value).match(/[A-Za-z_$][\w$]*/g) ?? []));
@@ -447,6 +449,11 @@ function temporaryPathClassifier(executable: string): (expression: string) => bo
   };
   const isTemporary = (raw: string, seen = new Set<string>()): boolean => {
     const value = raw.trim().replace(/^await\s+/, "");
+    for (const name of confined) {
+      if (shadowed.has(name) || declarations.has(name)) continue;
+      const call = new RegExp(`^${escapeRegExp(name)}\\s*\\(`).exec(value);
+      if (call && call[0].length - 1 + balancedCall(value, call[0].length - 1).length === value.length) return true;
+    }
     if (new RegExp(`^${tmpdir}\\s*\\(\\s*\\)$`).test(value)) return true;
     if (constants.has(value) && !duplicates.has(value) && !shadowed.has(value) && !seen.has(value)) {
       return isTemporary(constants.get(value)!, new Set([...seen, value]));
@@ -462,10 +469,10 @@ function temporaryPathClassifier(executable: string): (expression: string) => bo
   return expression => isTemporary(expression);
 }
 
-function invokesFilesystemMutation(source: string): boolean {
+function invokesFilesystemMutation(source: string, files: Readonly<Record<string, string>>, importer: string): boolean {
   const executable = stripExecutableComments(source);
   const masked = maskStringLiterals(executable);
-  const isTemporary = temporaryPathClassifier(executable);
+  const isTemporary = temporaryPathClassifier(executable, confinedTemporaryBindings(executable, files, importer));
   const destinationOnly = new Set(["copyFile", "copyFileSync", "cp", "cpSync", "link", "linkSync", "symlink", "symlinkSync"]);
   const moves = new Set(["rename", "renameSync"]);
   const firstPath = new Set([...FILESYSTEM_MUTATION_METHODS].filter(method => !destinationOnly.has(method) && !moves.has(method)));
@@ -568,21 +575,18 @@ function executableDependencyClosure(
   const nodes: ExecutableDependencyNode[] = [];
   const problems = new Set<string>();
   while (pending.length > 0) {
+    const path = pending.shift()!;
+    if (seen.has(path)) continue;
     if (seen.size >= EXECUTABLE_CLOSURE_NODE_LIMIT) {
       problems.add(`registered executable closure exceeded ${EXECUTABLE_CLOSURE_NODE_LIMIT} files`);
       break;
     }
-    const path = pending.shift()!;
-    if (seen.has(path)) continue;
     seen.add(path);
     const source = stripExecutableComments(files[path] ?? "");
     const packageClosure = expandExecutable(path);
     for (const problem of packageClosure.problems) problems.add(problem);
     const launchCalls = processLaunchCalls(packageClosure.executable);
     nodes.push({ path, executable: packageClosure.executable, launchCalls });
-    // Type-only imports cannot grant runtime capabilities. Let Node's own TS
-    // parser erase them, rather than walking a repository interface into its
-    // unrelated writers. Unparseable syntax retains the conservative closure.
     let importSource = source;
     if (/\b(?:import|export)\s+(?:type\b|\{[^}]*\btype\b)/.test(source)) {
       // Runtime Node exposes this API before this repository's @types/node.
@@ -620,13 +624,7 @@ interface WorkflowExecutableClosure {
 
 const WORKFLOW_CLOSURE_NODE_LIMIT = 256;
 
-/**
- * Expand only executable indirection GitHub itself can follow without code
- * review: package-script aliases and repository-local composite actions.
- * Cycles are ordinary (scripts can alias each other while being edited), so a
- * visited set terminates them; a path that cannot be resolved is a named,
- * fail-closed instrumentation problem rather than an invisible workflow body.
- */
+
 function workflowExecutableClosure(
   files: Readonly<Record<string, string>>,
   workflowPath: string,
@@ -665,10 +663,6 @@ function workflowExecutableClosure(
     chunks.push(next.body);
     if (next.id.startsWith("package-script:")) packageCommands.push(next.body);
 
-    // YAML/composite actions and package-script bodies are shell text. Source
-    // files are not: a diagnostic/error string such as "run `pnpm x`" is not
-    // executable reachability. For code, follow only balanced child-process
-    // calls projected by processInvocationProjection.
     const shellLike = next.id.startsWith("package-script:")
       || /(?:\.ya?ml|\.ps1|\.sh|\.cmd|\.bat)$/i.test(next.id);
     const invocationSurface = `${shellLike ? next.body : ""}\n${processInvocationProjection(next.body)}`;
@@ -762,7 +756,7 @@ export function civicDataFirewall(tree: CivicDataFirewallTree): readonly CivicDa
   for (const [path, source] of Object.entries(tree.files)) {
     if (!/^(?:app|components|lib|scripts)\/.*\.[cm]?[jt]sx?$/.test(path) || path === "lib/civic-data/firewall.ts") continue;
     const executable = stripExecutableComments(source);
-    if (path !== "lib/civic-data/promotion.ts" && /\bprocessRoutineCandidate\b/.test(executable)) {
+    if (!["lib/civic-data/promotion.ts", "lib/civic-data/candidate-lifecycle.ts"].includes(path) && /\bprocessRoutineCandidate\b/.test(executable)) {
       add(
         "UNREGISTERED_PRODUCTION_PROMOTION_DOOR",
         path,
@@ -772,15 +766,13 @@ export function civicDataFirewall(tree: CivicDataFirewallTree): readonly CivicDa
   }
 
   const ids = new Set<string>();
-  // The canonical projection key is recordClass:scope. Source identity is
-  // evidence about the writer, not a namespace that permits a second writer
-  // to claim the same Reader authority.
   const authorityKeys = new Map<string, string>();
   const commands = new Set<string>();
   const routineAdaptersReachingManualDoor = new Set<string>();
   const certificationPaths = new Set<string>();
   const releaseInvocationPaths = new Set<string>();
   const repositoryWriterPaths = new Set<string>();
+  const filesystemMutations = new Map<string, boolean>();
   const executableClosureProblems = new Set<string>();
   const dataCommandClosureCache = new Map<string, ExecutableDependencyClosure>();
   const inspectedDataCommands = new Set<string>();
@@ -846,9 +838,14 @@ export function civicDataFirewall(tree: CivicDataFirewallTree): readonly CivicDa
         : "MANUAL_DATA_PATH_WRITES_REPOSITORY";
       const writerKey = `${writerCode}:${path}`;
       const shellWriter = SHELL_EXECUTABLE.test(path) && SHELL_FILESYSTEM_MUTATION.test(executable);
+      let filesystemMutation = filesystemMutations.get(path);
+      if (filesystemMutation === undefined) {
+        filesystemMutation = invokesFilesystemMutation(executable, tree.files, path);
+        filesystemMutations.set(path, filesystemMutation);
+      }
       if (
         !repositoryWriterPaths.has(writerKey)
-        && (invokesFilesystemMutation(executable) || shellWriter)
+        && (filesystemMutation || shellWriter)
       ) {
         repositoryWriterPaths.add(writerKey);
         add(

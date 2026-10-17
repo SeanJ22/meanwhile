@@ -1,3 +1,4 @@
+import { stateFromRegistryRuntimeContractId } from "../civic-data/state-scopes.ts";
 import { createHash } from "node:crypto";
 import { factReader } from "../facts/db.ts";
 import { readFactRosters } from "../facts/roster-read.ts";
@@ -30,9 +31,7 @@ export type PublishedManualRead =
   | { readonly kind: "ballot-navigation"; readonly record: BallotNavigationProjectionRecord; readonly zip: string }
   | { readonly kind: "everyday-routing"; readonly record: EverydayRoutingContactRecord; readonly zip: string };
 
-/** A real page interaction. Ask's server requests are intercepted before they
- * leave this isolated browser; only the deterministic, public contact card is
- * assessed. A client data preload or serialized props cannot pass the check. */
+
 export async function observePublishedManual(page: Page, input: PublishedManualRead): Promise<{ confirmed: boolean; reason: string; responseSha256: string | null }> {
   try {
     if (input.kind === "ballot-navigation") {
@@ -83,9 +82,9 @@ export async function observePublishedManual(page: Page, input: PublishedManualR
       if (await card.locator(`a[href=${JSON.stringify(contact.sourceUrl)}]`).count() !== 1) throw Error("CONTACT_SOURCE_NOT_VISIBLE");
       return { confirmed: true, reason: `Public ZIP ${input.zip} Ask local route: ${input.record.topicId} contact and source visible with Ask server requests blocked.`, responseSha256: createHash("sha256").update(await card.innerHTML()).digest("hex") };
     }
-    // A comment policy is exposed in a meeting's own public card. Choose one
-    // exact unconcluded meeting from the visitor's data solely to operate the
-    // search control; the visible card below remains the publication proof.
+
+
+
     const meetings = (coverage.meetings ?? []).filter(meeting => meeting.bodyId === input.record.bodyId && meeting.status !== "CONCLUDED");
     if (meetings.length === 0) throw Error("MEETING_DESTINATION_UNAVAILABLE");
     const { formatMeetingDate } = await import("../map/format.ts");
@@ -145,10 +144,10 @@ export async function observePublishedRoster(page: Page, input: PublishedRosterR
     const response = await page.goto(PUBLIC_SITE_ORIGIN, { waitUntil: "domcontentloaded", timeout: 15_000 });
     if (response?.status() !== 200) throw Error("PUBLIC_HTTP_STATUS");
     phase = `entering ZIP ${input.zip}`;
-    // The visitor's own response supplies the display label for the exact
-    // canonical body. A roster title is not the map's division/body label.
-    // This selects a control only; visible people and citations below remain
-    // the publication evidence, never the API response by itself.
+
+
+
+
     const coverageResponse = page.waitForResponse(response => {
       const url = new URL(response.url());
       return url.pathname === "/api/meetings" && url.searchParams.get("zip") === input.zip && response.status() === 200;
@@ -201,7 +200,7 @@ export async function collectWorkerRosterReadback(input: {
   observe: (input: PublishedWorkerRead) => Promise<Awaited<ReturnType<typeof observePublishedRoster>>>;
 }): Promise<ServedReaderReadback> {
   const prior = input.previous?.witnesses ?? [];
-  const roster = (item: WorkItem) => item.autonomousPlan?.publication?.contractId === "registry-runtime-bindings" && item.autonomousPlan.contract.recordClass === "OFFICIAL_ROSTER";
+  const roster = (item: WorkItem) => stateFromRegistryRuntimeContractId(item.autonomousPlan?.publication?.contractId ?? "") !== null && item.autonomousPlan?.contract.recordClass === "OFFICIAL_ROSTER";
   const versionOf = (item: WorkItem) => item.publicationOutcome?.versionId ?? (roster(item) ? item.publicationOutcome?.workerResultId ?? null : null);
   const items = input.items.filter(item => (item.autonomousPlan?.publication?.contractId === "official-filings" || roster(item)) &&
     item.publicationOutcome?.status !== "HELD" && versionOf(item));
@@ -253,9 +252,7 @@ export async function collectWorkerRosterReadback(input: {
   return { checkedAt: input.now, witnesses: [...observations.values()], errors: due.length > 6 ? [`${due.length - 6} published roster receipt(s) await the next normal readback cycle.`] : [] };
 }
 
-/** Worker publication receipts for the three curated public-help families.
- * Exact accepted record IDs and the current promoted version are required;
- * old or merely staged records never acquire a served-reader witness. */
+
 export async function collectWorkerManualReadback(input: {
   items: readonly WorkItem[]; store: Pick<RoutineDataStore, "readCandidate">; now: string;
   previous: ServedReaderReadback | null;

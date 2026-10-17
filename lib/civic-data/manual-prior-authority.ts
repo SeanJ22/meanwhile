@@ -1,19 +1,20 @@
-import { canonicalCivicDataHash, civicRecordsFor } from "./changes.ts";
-import { manualRecordSourceUrls } from "./manual-source-isolation.ts";
+import { statePublicationPriorOf } from "./state-publication.ts";
+import { canonicalCivicDataHash } from "./canonical-hash.ts";
+import { civicRecordsFor } from "./changes.ts";
+import { directPositiveSourceUrls } from "./manual-source-isolation.ts";
 import { authorityForManualReceipt } from "./source-authority.ts";
 import { trustedLkgImportEvidenceIssue } from "./trusted-lkg-import.ts";
 import { parseValidationReceipt } from "./receipt.ts";
-import { publicationBaseHash } from "./navigation-publication-base.ts";
-import { registryMemberCitedUrls } from "../registry/cited-urls.ts";
+import { registryMemberCitedUrls } from "../registry/runtime-data-plane.ts";
 import type { CandidateVersionRecord, RoutineCandidate } from "./types.ts";
 
 const hash = canonicalCivicDataHash;
 
 /** Classes whose successor may inherit unchanged members from its exact GOOD base. */
-const INHERITING_CLASSES: ReadonlySet<string> = new Set(["CURATED_READER_RECORD", "REGISTRY_RUNTIME_BINDING"]);
+const INHERITING_CLASSES: ReadonlySet<string> = new Set(["CURATED_READER_RECORD", "REGISTRY_RUNTIME_BINDING", "CANDIDATE_PROFILE", "CANDIDATE_PUBLICATION"]);
 
 function memberIdentity(recordClass: string, member: { readonly key: string; readonly record: unknown }): string {
-  return recordClass === "REGISTRY_RUNTIME_BINDING" ? member.key : (member.record as { readonly id: string }).id;
+  return recordClass === "CURATED_READER_RECORD" ? (member.record as { readonly id: string }).id : member.key;
 }
 function assertedSources(recordClass: string, key: string, record: unknown): Iterable<string> {
   return recordClass === "REGISTRY_RUNTIME_BINDING" ? registryMemberCitedUrls(key, record) : manualRecordSourceUrls(record);
@@ -53,57 +54,42 @@ export function manualPriorAuthorityIssue(candidate: RoutineCandidate, base: Can
   const prior = manualPriorAuthorityOf(candidate);
   if (!prior) return null;
   if (prior.kind !== "VALIDATED_PRIOR_PROJECTION" || !INHERITING_CLASSES.has(candidate.recordClass) ||
-      candidate.bootstrapImport || !candidate.retrieval.manualSourceReceipt || !Array.isArray(prior.retainedMembers) ||
-      (prior.additionalProjections !== undefined && !Array.isArray(prior.additionalProjections))) {
-    return "Inherited authority is valid only for unchanged members of a source-reviewed curated Reader or registry successor.";
+      candidate.bootstrapImport || !candidate.retrieval.manualSourceReceipt ||
+      !Array.isArray(prior.retainedMembers) || prior.retainedMembers.length === 0) {
+    return "Inherited authority is valid only for unchanged members of a source-reviewed successor.";
   }
-  const authorities = [{ ...prior, scope: candidate.scope }, ...(prior.additionalProjections ?? [])];
+  const receipt = base ? parseValidationReceipt(base.receipt) : null;
+  const indexedPrior = base ? statePublicationPriorOf(base.candidate) : undefined;
+  if (!base || base.state !== "PROMOTED" || !base.acquisitionSucceeded || receipt?.decision !== "GOOD" ||
+      receipt.checks.some((check) => check.verdict !== "PASS") ||
+      base.promotedVersion !== prior.versionId || base.lastKnownGoodVersion !== prior.versionId ||
+      base.candidate.id !== prior.versionId || base.candidate.sourceId !== candidate.sourceId ||
+      base.candidate.recordClass !== candidate.recordClass || base.candidate.scope !== candidate.scope ||
+      (indexedPrior?.payloadHash ?? hash(base.candidate.readModel)) !== prior.readModelSha256) {
+    return "The inherited authority does not identify the exact GOOD current base and its payload.";
+  }
+  if (indexedPrior) {
+    if (indexedPrior.versionId !== prior.versionId) return "The inherited authority names a different indexed version.";
+  } else if (base.candidate.bootstrapImport) {
+    const importIssue = trustedLkgImportEvidenceIssue(base.candidate, null);
+    if (importIssue || receipt.checks.find((check) => check.check === "SOURCE_AUTHENTICITY")?.code !== "TRUSTED_LKG_IMPORT_PROVENANCE_VALID") {
+      return `The inherited imported base lacks intact, independently checkable transfer evidence: ${importIssue ?? "incorrect source check"}.`;
+    }
+  } else if (!authorityForManualReceipt(base.candidate.sourceId, base.candidate.recordClass,
+    base.candidate.retrieval.manualSourceReceipt, base.candidate.retrieval.finalUrl).ok) {
+    return "The ordinary manual base has no valid source authority; it cannot become inherited authority.";
+  }
   const members = (value: RoutineCandidate) => new Map(civicRecordsFor(value.recordClass, value.readModel)
-    .map(row => [memberIdentity(value.recordClass, row), row.record]));
+    .map((row) => [memberIdentity(value.recordClass, row), row.record]));
+  const before = indexedPrior ? new Map([...indexedPrior.members].map(([key, member]) =>
+    [candidate.recordClass === "CURATED_READER_RECORD" ? key.replace(/^curated-reader:/, "") : key, member.sha256])) : members(base.candidate);
   const after = members(candidate);
   const retained = new Set<string>();
-  const versions = new Set<string>();
-  for (const authority of authorities) {
-    const source = authority.scope === candidate.scope ? base : additionalBases.find(row => row.candidate.id === authority.versionId);
-    const receipt = source ? parseValidationReceipt(source.receipt) : null;
-    if (authority.kind !== "VALIDATED_PRIOR_PROJECTION" || !Array.isArray(authority.retainedMembers) ||
-        versions.has(authority.versionId) || !source || source.state !== "PROMOTED" || !source.acquisitionSucceeded ||
-        receipt?.decision !== "GOOD" || receipt.checks.some(check => check.verdict !== "PASS") ||
-        source.promotedVersion !== authority.versionId || source.lastKnownGoodVersion !== authority.versionId ||
-        source.candidate.id !== authority.versionId || source.candidate.sourceId !== candidate.sourceId ||
-        source.candidate.recordClass !== candidate.recordClass || source.candidate.scope !== authority.scope ||
-        publicationBaseHash(source) !== authority.readModelSha256) {
-      return "The inherited authority does not identify the exact GOOD base and its payload.";
-    }
-    versions.add(authority.versionId);
-    if (authority.scope !== candidate.scope) {
-      const issue = manualScopeTransferIssue(candidate, source.candidate);
-      if (issue) return issue;
-    }
-    if (source.candidate.bootstrapImport) {
-      const importIssue = trustedLkgImportEvidenceIssue(source.candidate, null);
-      if (importIssue || receipt.checks.find(check => check.check === "SOURCE_AUTHENTICITY")?.code !== "TRUSTED_LKG_IMPORT_PROVENANCE_VALID") {
-        return `The inherited imported base lacks intact transfer evidence: ${importIssue ?? "incorrect source check"}.`;
-      }
-    } else if (!authorityForManualReceipt(source.candidate.sourceId, source.candidate.recordClass,
-      source.candidate.retrieval.manualSourceReceipt, source.candidate.retrieval.finalUrl).ok) {
-      return "The ordinary manual base has no valid source authority; it cannot become inherited authority.";
-    }
-    const before = members(source.candidate);
-    for (const member of authority.retainedMembers) {
-      if (!member || typeof member.key !== "string" || !member.key || retained.has(member.key) ||
-          !before.has(member.key) || !after.has(member.key) ||
-          hash(before.get(member.key)) !== member.sha256 || hash(after.get(member.key)) !== member.sha256) {
-        return "An inherited member was changed, duplicated, invented, or omitted; prior authority cannot authorize it.";
-      }
-      if (authority.scope !== candidate.scope) {
-        const identities = (value: RoutineCandidate) => value.identities.filter(identity => identity.identifiers.record_id === member.key);
-        const original = identities(source.candidate), copied = identities(candidate);
-        if (original.length !== 1 || copied.length !== 1 || hash(original[0]) !== hash(copied[0])) {
-          return "A scope transfer changed or omitted its original exact member identity.";
-        }
-      }
-      retained.add(member.key);
+  for (const member of prior.retainedMembers) {
+    if (!member || typeof member.key !== "string" || !member.key || retained.has(member.key) ||
+        !before.has(member.key) || !after.has(member.key) ||
+        (indexedPrior ? before.get(member.key) : hash(before.get(member.key))) !== member.sha256 || hash(after.get(member.key)) !== member.sha256) {
+      return "An inherited member was changed, duplicated, invented, or omitted; prior authority cannot authorize it.";
     }
   }
   if (retained.size === 0) return "Inherited authority names no unchanged facts.";

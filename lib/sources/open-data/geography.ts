@@ -1,7 +1,7 @@
-import { RADIUS_LADDER_KM } from "../../meetings/constants.ts";
+import { DEFAULT_RADIUS_KM } from "../../meetings/constants.ts";
 import { haversineKm } from "../../geo/distance.ts";
 import type { OpenDataFact } from "./model.ts";
-export const FACILITY_RADIUS_KM=RADIUS_LADDER_KM[0];
+export const FACILITY_RADIUS_KM=DEFAULT_RADIUS_KM;
 const CELL=0.5;
 export function facilityPoint(row:OpenDataFact):{lat:number;lng:number}|null {
   if(row.fields.latitude===null || row.fields.longitude===null)return null;

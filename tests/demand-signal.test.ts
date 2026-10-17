@@ -1,18 +1,3 @@
-/**
- * The demand signal's bounds:
- *
- * ```
- *   fixed enum        one value, and no free text on any path
- *   no identity       no account, no address, and no continuity hash either
- *   no read path      the module exports no reader, so none can be called
- *   aggregate-only    nothing is ever rendered back, including in aggregate
- *   symmetric         every body and candidate card, or none
- *   never shown       the confirmation reports the ASK, never a total
- * ```
- *
- * The last two are guarded over the source, because they are claims about what a surface does.
- */
-
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFileSync } from "node:fs";
@@ -52,10 +37,6 @@ test("NO FREE TEXT anywhere on the path", () => {
 });
 
 test("NO IDENTITY COLUMN, and deliberately no continuity hash either", () => {
-  /*
-   * Asserted over the generated SQL, not the source text: the table's doc block must be able to say "never an
-   * address" without the guard reading its own explanation as the defect.
-   */
   const sql = readFileSync("lib/db/migrations/0023_tricky_sister_grimm.sql", "utf8");
   const columns = [...sql.matchAll(/^\t"([a-z_]+)"/gm)].map((m) => m[1]);
   assert.deepEqual(columns, [
@@ -93,10 +74,6 @@ test("NO IDENTITY COLUMN, and deliberately no continuity hash either", () => {
 });
 
 test("THE N-STORES RULE holds by VALUE SPACE: the run digest is its own", () => {
-  /*
-   * Proven over value spaces, never column names: `reactions` and this table both have a `run_id` column, so the same
-   * input must produce different values.
-   */
   assert.notEqual(
     hashRunId("walk-all-local-1"),
     hashReactionRunId("walk-all-local-1"),
@@ -119,7 +96,7 @@ test("NO READ PATH: the module exports a write and nothing that reads", () => {
 
 test("NO GET on the route, so a reader cannot fetch results either", () => {
   assert.ok(!/export async function GET/.test(ROUTE), "the route serves no read");
-  assert.match(ROUTE, /export async function POST/);
+  assert.match(ROUTE, /export (?:async function POST|const POST\s*=)/);
 });
 
 test("the confirmation reports the ASK and never a total", () => {
@@ -150,11 +127,6 @@ test("body and candidate cards request missing facts once through their shared f
 });
 
 test("the write REFUSES an undeclared row before it looks for a database", async () => {
-  /*
-   * The declaration must fail identically whether or not a database happens to
-   * be reachable — a refusal that only fires in production is a refusal the
-   * suite cannot see.
-   */
   const held = process.env.DATABASE_URL;
   delete process.env.DATABASE_URL;
   try {

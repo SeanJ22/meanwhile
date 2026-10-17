@@ -1,8 +1,8 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 import { neon, neonConfig } from "@neondatabase/serverless";
-import { countNeonBytes, installNeonBytesReport, socketCaller, VITAL_SIGNS_REPORT_ENV, type NeonBytesHour } from "./transfer-by-caller.ts";
+import { countNeonBytes, databaseTransferFetch, easternDay, installNeonBytesReport, runnerClient, socketCaller, VITAL_SIGNS_REPORT_ENV, type NeonBytesHour } from "./transfer-by-caller.ts";
 
-import { currentReaderRoute, transferRead } from "./reader-route.ts";
+import { currentReaderRoute } from "./reader-route.ts";
 
 type FetchLike = typeof fetch;
 export interface DatabaseTransfer {
@@ -20,40 +20,6 @@ const pending = new Map<string, DatabaseTransfer>();
 let installed = false;
 let lastFlush = 0;
 let flushing: Promise<boolean> | null = null;
-
-const easternDay = (at: Date) => new Intl.DateTimeFormat("sv-SE", { timeZone: "America/New_York" }).format(at);
-
-function runnerClient(): boolean {
-  return Boolean(process.env.WTP_RUNTIME_AUTHORITY_CAPABILITY) || process.env.WTP_SANCTIONED_WRITE === "routine-civic-data-promotion";
-}
-
-/** Decoded HTTP body bytes, before parsing. This measures our reads, not Neon's billing lag. */
-export function databaseTransferFetch(underlying: FetchLike, record: (value: DatabaseTransfer) => void | Promise<unknown>): FetchLike {
-  return async (input, init) => {
-    const response = await underlying(input, init);
-    const headers = new Headers(input instanceof Request ? input.headers : undefined);
-    new Headers(init?.headers).forEach((value, key) => headers.set(key, value));
-    const connection = headers.get("neon-connection-string");
-    if (connection === null || internal.getStore()) return response;
-    // A dedicated feedback branch is neither of these two civic databases.
-    if (connection === process.env.FEEDBACK_DATABASE_URL && connection !== process.env.DATABASE_URL &&
-        connection !== process.env.WTP_CONTROL_PLANE_DATABASE_URL) return response;
-    const bytes = await response.arrayBuffer();
-    const requestBytes = typeof init?.body === "string" ? Buffer.byteLength(init.body) : 0;
-    const read = `${currentReaderRoute()}\t${transferRead(typeof init?.body === "string" ? init.body : undefined)}`;
-    await record({
-      day: easternDay(new Date()),
-      database: connection === process.env.DATABASE_URL ? "reader" : "control-plane",
-      client: runnerClient() ? "runner" : "reader",
-      requests: 1,
-      requestBytes,
-      reads: { [read]: [1, requestBytes, bytes.byteLength] },
-      responseBytes: bytes.byteLength,
-    });
-    return new Response([204, 205, 304].includes(response.status) ? null : bytes,
-      { status: response.status, statusText: response.statusText, headers: response.headers });
-  };
-}
 
 export function pendingDatabaseTransfer(): readonly DatabaseTransfer[] { return [...pending.values()]; }
 
@@ -158,7 +124,7 @@ export function installDatabaseTransferCounter(): void {
   if (installed) return;
   installed = true;
   installNeonBytesReport();
-  neonConfig.fetchFunction = databaseTransferFetch((neonConfig.fetchFunction ?? fetch) as FetchLike, row => { counted(row); });
+  neonConfig.fetchFunction = databaseTransferFetch((neonConfig.fetchFunction ?? fetch) as FetchLike, row => { counted(row); }, () => internal.getStore() === true);
   const Socket = (neonConfig.webSocketConstructor ?? globalThis.WebSocket) as typeof WebSocket | undefined;
   if (Socket) neonConfig.webSocketConstructor = countedWebSocket(Socket);
   // Long-running processes flush once a minute. The supervisor also awaits a flush before it exits.

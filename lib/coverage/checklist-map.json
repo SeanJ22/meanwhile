@@ -645,7 +645,7 @@
   "producers": {
     "note": "The code that writes held fields for the owed list. `filledBy` on an item names the producers that can fill it; a test checks both against the source files. An item with none shows \"no squad or door covers this item yet\".",
     "capture": {
-      "file": "lib/civic-data/held-place-capture.ts",
+      "file": "lib/civic-data/held-place-projection.ts",
       "label": "Registry rosters, meetings and published outcomes"
     },
     "families": {
@@ -673,7 +673,7 @@
       "recordClasses": [
         "OFFICIAL_ROSTER"
       ],
-      "contractId": "registry-runtime-bindings"
+      "contractId": "registry-runtime"
     },
     {
       "family": "GOV",
@@ -688,7 +688,7 @@
       "recordClasses": [
         "OFFICIAL_BOARD_DIRECTORY"
       ],
-      "contractId": "registry-runtime-bindings"
+      "contractId": "registry-runtime"
     },
     {
       "family": "PAR",

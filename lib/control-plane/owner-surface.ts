@@ -302,6 +302,7 @@ export interface OwnerDigestRecord {
   readonly testedSha: string | null;
   readonly huntSourceProgress?: HuntSourceProgress;
   readonly publicationFlow?: import("../civic-data/publication-flow.ts").PublicationFlowReceipt;
+  readonly ballotPublication?: import("../civic-data/ballot-publication.ts").BallotPublicationResult & { readonly heldContestCount: number };
   readonly runtimeOutcome?:
     | FreshnessCycleOutcome
     | RoutineCivicDataSupervisorOutcome
@@ -410,12 +411,11 @@ export interface RoutineCivicDataReaderReadbackReference {
 }
 
 export interface RoutineCivicDataSupervisorOutcome {
-  readonly ballotPublication?: import("../civic-data/ballot-publication.ts").BallotPublicationResult;
-  readonly ballotNavigationPublications?: Readonly<Record<string, import("../civic-data/ballot-publication.ts").BallotPublicationResult>>;
+  readonly ballotPublications?: import("../civic-data/ballot-publication.ts").BallotPublicationSummaries;
   readonly lane?: "routine-civic-data" | "publish-now";
   readonly readerEdge?: import("../civic-data/reader-edge-outcome.ts").ReaderEdgePublicationOutcome;
   /** Committed input snapshot attempted through an exact campaign publication receipt; not a publication count. */
-  readonly campaignPublicationApprovalsAttempted?: number;
+  readonly campaignPublicationApprovalsByState?: Readonly<Record<string, number>>;
   readonly kind: "ROUTINE_CIVIC_DATA_SUPERVISOR";
   /** Source holds are contained data-plane outcomes; only supervisor faults make this FAILED. */
   readonly state: "SUCCEEDED" | "FAILED";
@@ -1023,11 +1023,6 @@ export interface OwnerZipRow {
   readonly failureClasses: readonly string[];
 }
 
-/**
- *   DECISION       a fork: pick an option or answer in your own words
- *   ACKNOWLEDGE    closes on a read
- *   BLOCKED_WHILE  a machine-verifiable wall; not a decision and carries no buttons
- */
 export type OwnerDecisionCardKind = "DECISION" | "ACKNOWLEDGE" | "BLOCKED_WHILE";
 
 export interface OwnerDecisionCard {

@@ -13,8 +13,25 @@ import { REGISTRATION_SCOPES, registrationEdgePlan } from "../lib/registration/e
 import { REGISTRATION_SOURCE_BYTES, REGISTRATION_SOURCE_SHA256, REGISTRATION_SOURCE_URL, registrationTarget } from "../lib/registration/publication.ts";
 import { loadRegistrationReference } from "../lib/registration/reference.ts";
 import { enterReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
-import { installRegistryAuthority, promotedFixtureBundle } from "./helpers/promoted-fixtures.ts";
+import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+import type { ReaderAuthorityEdgeBundle } from "../lib/registry/runtime-edge.ts";
+import { currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 
+
+
+
+
+
+
+
+
+function promotedFixtureBundle(extra: ReaderAuthorityEdgeBundle = {}): ReaderAuthorityEdgeBundle {
+  const current: ReaderAuthorityEdgeBundle = currentReaderAuthorityEdge() ?? {};
+  return { stateAuthorities: current.stateAuthorities,
+    ...(current.federalDirectory ? { federalDirectory: current.federalDirectory } : {}),
+    ...(current.stateLegislators ? { stateLegislators: current.stateLegislators } : {}),
+    ...extra, promoted: new Map([...(current.promoted ?? []), ...(extra.promoted ?? [])]) };
+}
 
 
 const ROOT = join(import.meta.dirname, "..");

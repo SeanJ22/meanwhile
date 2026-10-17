@@ -1,4 +1,8 @@
-import { candidateChangeSet, durableCivicDataHash } from "./changes.ts";
+import { createHash } from "node:crypto";
+import { durableStateHash, statePublicationScope } from "./state-publication.ts";
+import { federalMoneySavedSourceIssue } from "../federal-money/verify.ts";
+
+import { candidateChangeSet, canonicalCivicDataJson } from "./changes.ts";
 import type { RoutineSourceContract } from "./contracts.ts";
 import type { ManualProductionSourceContract } from "./manual-contracts.ts";
 import type { MeetingPartitionContract } from "./meeting-partitions.ts";
@@ -6,6 +10,7 @@ import { readMeetingPartitionProjection } from "../meetings/snapshot.ts";
 import { verifyRoutineReaderProjection, type RoutineReaderVerification } from "./reader-verification.ts";
 import {
   candidateVersionSummary,
+  publishedCandidateMetadata,
   projectionKey,
   promotedPointerIdentity,
   type CandidateVersionReadback,
@@ -111,6 +116,10 @@ function candidateReadOnlyStore(
     readCandidate: async (candidateId) => candidateId === candidate.id
       ? record
       : predecessor?.candidate.id === candidateId ? predecessor : null,
+    readRegistryDivisions: async () => [],
+    readPublishedCandidateMetadata: async (candidateId) => candidateId === candidate.id
+      ? publishedCandidateMetadata(record)
+      : predecessor?.candidate.id === candidateId ? publishedCandidateMetadata(predecessor) : null,
     readCandidateSummary: async (candidateId) => candidateId === candidate.id
       ? candidateVersionSummary(record)
       : predecessor?.candidate.id === candidateId ? candidateVersionSummary(predecessor) : null,
@@ -150,6 +159,7 @@ export async function verifySourceScopedCandidateProjection(
   candidate: RoutineCandidate,
   observedAt: string,
   predecessor: CandidateVersionRecord | null = null,
+  proofStore?: RoutineDataStore,
 ): Promise<RoutineReaderVerification> {
   if (!candidate.retrieval.succeeded || !candidate.normalization.succeeded) {
     return pass(
@@ -167,12 +177,26 @@ export async function verifySourceScopedCandidateProjection(
   // JSONB is the durable authority. Reject values whose in-memory meaning
   // would change or disappear when persisted before any typed Reader sees it.
   try {
-    const readModelCanonical = durableCivicDataHash(candidate.readModel);
-    const normalizedPayloadCanonical = candidate.normalizedPayload === candidate.readModel ? readModelCanonical : durableCivicDataHash(candidate.normalizedPayload);
+    const scoped = statePublicationScope(candidate.scope);
+    const readModelCanonical = scoped ? durableStateHash(candidate.readModel) : canonicalCivicDataJson(candidate.readModel);
+    const normalizedPayloadCanonical = candidate.normalizedPayload === candidate.readModel ? readModelCanonical :
+      scoped ? durableStateHash(candidate.normalizedPayload) : canonicalCivicDataJson(candidate.normalizedPayload);
+    if (readModelCanonical === null || !scoped && canonicalCivicDataJson(JSON.parse(JSON.stringify(candidate.readModel))) !== readModelCanonical) {
+      return fail(
+        "lib/civic-data/candidate-integrity.ts#durableJsonRoundTrip",
+        "The proposed Reader projection changes under the canonical JSONB round trip.",
+      );
+    }
+    if (normalizedPayloadCanonical === null || !scoped && canonicalCivicDataJson(JSON.parse(JSON.stringify(candidate.normalizedPayload))) !== normalizedPayloadCanonical) {
+      return fail(
+        "lib/civic-data/candidate-integrity.ts#durableJsonRoundTrip",
+        "The normalized evidence changes under the canonical JSONB round trip.",
+      );
+    }
     if (
       !candidate.normalization.normalizedHash ||
       !SHA256.test(candidate.normalization.normalizedHash) ||
-      candidate.normalization.normalizedHash !== readModelCanonical
+      candidate.normalization.normalizedHash !== (scoped ? readModelCanonical : sha256(readModelCanonical))
     ) {
       return fail(
         "lib/civic-data/candidate-integrity.ts#readModelDigest",
@@ -182,7 +206,7 @@ export async function verifySourceScopedCandidateProjection(
     if (
       !candidate.normalization.normalizedPayloadHash ||
       !SHA256.test(candidate.normalization.normalizedPayloadHash) ||
-      candidate.normalization.normalizedPayloadHash !== normalizedPayloadCanonical
+      candidate.normalization.normalizedPayloadHash !== (scoped ? normalizedPayloadCanonical : sha256(normalizedPayloadCanonical))
     ) {
       return fail(
         "lib/civic-data/candidate-integrity.ts#normalizedEvidenceDigest",
@@ -197,6 +221,15 @@ export async function verifySourceScopedCandidateProjection(
   }
 
   if (contract.readerProjection === null) return fail("lib/civic-data/candidate-integrity.ts#readerProjection", "The source contract declares no typed Reader projection.");
+
+  if (candidate.recordClass === "FEDERAL_MONEY") {
+    const { FEDERAL_MONEY_SOURCES } = await import("../federal-money/model.ts");
+    const source = FEDERAL_MONEY_SOURCES.find((source) => source === contract.sourceId);
+    const verifierId = "lib/federal-money/verify.ts#federalMoneySavedSourceIssue";
+    if (!source) return fail(verifierId, "The federal source is not registered.");
+    const sourceIssue = await federalMoneySavedSourceIssue(candidate, source, predecessor?.candidate ?? null, proofStore);
+    if (sourceIssue) return fail(verifierId, sourceIssue);
+  }
 
   const store = candidateReadOnlyStore(candidate, observedAt, predecessor);
   if (candidate.recordClass === "MEETING") {

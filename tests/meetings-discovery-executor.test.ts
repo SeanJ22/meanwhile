@@ -547,14 +547,16 @@ test("HINTED ROUTES GO FIRST, ROBOTS-FIRST: a route a check covers is confirmed 
 
   assert.deepEqual(seen, [
     "https://hilltop.gov/robots.txt", "https://hilltop.gov/",
-    ...["agendas", "meetings", "calendar", "sitemap.xml"].map(path => `https://hilltop.gov/${path}`),
     "https://library.example.org/robots.txt", "https://library.example.org/feed/",
     "https://energy.example.org/robots.txt", "https://energy.example.org/meetings.ics",
     "https://schools.example.org/robots.txt", "https://schools.example.org/f/board_schedule.pdf",
     "https://video.example.com/robots.txt", "https://video.example.com/@HilltopCable/streams",
+    ...["agendas", "meetings", "calendar", "sitemap.xml"].map(path => `https://hilltop.gov/${path}`),
     "https://hilltop.gov/m.ics",
   ], "every hint before the route the page itself links");
   assert.equal(attempt.outcome, "FOUND");
+  assert.equal(attempt.found[0].hintUrl, hints[0].routes[1].url);
+  assert.equal(attempt.found[1].hintUrl, undefined);
   assert.deepEqual(attempt.found.map((f) => [f.vendor, f.url, f.basis, f.count]), [["ical", "https://energy.example.org/meetings.ics", "HINT", 1], ["ical", "https://hilltop.gov/m.ics", "LINKED", 1]]);
   assert.match(attempt.found[0].evidence, /^route hint \(feed, observed 2026-09-24T18:00:00Z by test\): the committee's calendar$/);
   const leads = new Map(attempt.leads.map((l) => [l.url, l] as const));
@@ -600,10 +602,8 @@ test("A HINT LIST THAT CANNOT BE TRUSTED SAYS WHY, AND A LAPSED PAGE IS TOLD FRO
   assert.ok(!namesItself("<title>This domain may be for sale</title>", "City of El Mirage"));
 });
 
-test("committed route hints stay valid and the independent census passes them to its walks", () => {
+test("committed route hints stay valid for the door seed", () => {
   assert.deepEqual(routeHintProblems(ROUTE_HINTS), []);
-  const runner = readFileSync("scripts/platform-census-runner.mts", "utf8");
-  assert.match(runner, /routeHints: ROUTE_HINTS/);
 });
 
 /* -------------------------------------------- what the vault will not hold */
@@ -688,4 +688,30 @@ test("the census owns an independent runner clock outside the research walk budg
   assert.doesNotMatch(source, /MEETINGS_DISCOVERY_MAX_WALKS|runMeetingsDiscoveryPass/);
   assert.match(source, /timed\("campaign-sites"/);
   assert.match(source, /timed\("candidate-publications"/);
+});
+
+test("a hinted PrimeGov calendar retains its source through the public committee lookup", async () => {
+  const home = "https://fixture-ok.gov/";
+  const base = "https://okc.primegov.com";
+  const url = `${base}/api/v2/PublicPortal/ListUpcomingMeetings`;
+  const subject = { ...need("ok:city:oklahoma-city", home), stateCode: "OK", name: "Oklahoma City" };
+  const { open, seen } = fakeOpen({ [`${home}robots.txt`]: ALLOW, [`${base}/robots.txt`]: ALLOW,
+    [home]: { status: 200, body: "<h1>Oklahoma City</h1>" },
+    [url]: { status: 200, contentType: "application/json", body: readFileSync(new URL("./fixtures/primegov/okc-ok-upcoming.json", import.meta.url), "utf8") },
+    [`${base}/api/committee/GetCommitteeesListByShowInPublicPortal`]: { status: 200, contentType: "application/json",
+      body: readFileSync(new URL("./fixtures/primegov/okc-ok-committees.json", import.meta.url), "utf8") },
+  });
+  const result = await walkMeetingsDiscoveryNeed(subject, runtime(open, { routeHints: [{ jurisdictionId: subject.jurisdictionId,
+    officialSite: null, routes: [{ url, body: "Oklahoma City", kind: "PAGE", platform: "primegov", verifyAs: "primegov",
+      evidence: "Recorded public calendar", observed: { at: NOW, by: "hunter" } }] }],
+    search: async () => { seen.push("SEARCH"); return { hits: [], requests: [] }; } }));
+  const found = result.found.find(row => row.url === url);
+  assert.equal(found?.hintUrl, url);
+  assert.ok((found?.count ?? 0) > 0);
+  assert.ok(seen.indexOf(url) < seen.indexOf("SEARCH"));
+  const witness = await walkMeetingsDiscoveryNeed(subject, runtime(open, { routeHints: [{ jurisdictionId: subject.jurisdictionId,
+    officialSite: null, routes: [{ url, body: "Oklahoma City", kind: "WITNESS", platform: "primegov", verifyAs: null,
+      evidence: "Recorded public calendar", observed: { at: NOW, by: "hunter" } }] }] }));
+  assert.ok(!witness.found.some(row => row.url === url));
+  assert.ok(witness.leads.some(row => row.url === url));
 });

@@ -55,7 +55,12 @@ export function projectDoors(input: { readonly doors: readonly DoorRecord[]; rea
   const ordered = doors.map((d, n) => ({ d, n })).sort((a, b) => (STATE_ORDER[a.d.status] ?? 3) - (STATE_ORDER[b.d.status] ?? 3) || a.n - b.n);
   const rows = ordered.slice(0, DOORS_SHOWN).map(({ d }) => ({
     name: doorName(d), kind: kindName(d.kind), body: d.meeting?.publishingOrg || d.meeting?.jurisdiction || "—", status: status(d),
-    why: d.shutReason ?? null, since: d.shutSince ?? null, lastWorked: d.lastSuccessAt, lastFailed: d.lastFailureAt,
+    why: d.shutReason ?? (d.lastFailureReason ? /API_KEY|key.*unavailable/i.test(d.lastFailureReason)
+      ? "The source's API key is unavailable in this runtime."
+      : /PUBLISHER_DOCUMENT_INVALID|schema|parse/i.test(d.lastFailureReason)
+        ? "The publisher's response could not be read."
+        : "The latest source check could not reach the publisher." : null),
+    since: d.shutSince ?? null, lastWorked: d.lastSuccessAt, lastFailed: d.lastFailureAt,
   }));
   const changes = [...input.saves].filter((r) => r.outcome === "DONE")
     .sort((a, b) => b.startedAt.localeCompare(a.startedAt)).slice(0, DOOR_CHANGES_SHOWN)

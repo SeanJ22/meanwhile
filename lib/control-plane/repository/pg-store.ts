@@ -5,12 +5,14 @@ import { installDatabaseTransferCounter } from "../../db/transfer.ts";
 import { withCallerSite } from "../../db/transfer-by-caller.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
 import type { DoorRecord } from "../../doors/registry.ts";
+import { pageAddress } from "../../doors/page-doors.ts";
+import { requireBallotState } from "../../civic-data/state-scopes.ts";
+import type { VotingSourceDoor } from "../../ballot/voting-source-types.ts";
 import type { LeadOrder } from "../leads/order.ts";
 import { createWebsitePacing } from "../website-pacing.ts";
 import type { LiveAuditLogRow } from "../live-audit-log.ts";
 import type { SoftwareReleaseReviewRecord } from "../software-release-review.ts";
 import { pgActiveWorkClaimReader } from "./active-work-claims.ts";
-/** The Postgres control-plane provider, implementing the same `ControlPlaneRepositories` interfaces as the file store. */
 
 import { createHash } from "node:crypto";
 import { neon, Pool, neonConfig } from "@neondatabase/serverless";
@@ -450,9 +452,8 @@ export function pgAggregateRepository<T>(
     },
 
     async compareAndSet(id, expectedRevision, next, now) {
-      /* The WHERE clause is the compare-and-set: zero rows affected is the refusal, decided by the database. */
-      // Keep the exact submitted JSON: the caller may mutate next while the
-      // request is pending, and JSON normalizes undefined, dates and numbers.
+      // The database refuses a stale revision; snapshot the submitted JSON before awaiting it.
+      // The caller can mutate next while the request is pending.
       const submitted = JSON.stringify(next);
       const updated = (await run(
         "compareAndSet",
@@ -569,11 +570,7 @@ export function pgAppendOnlyRepository<T>(
 
   return callerPinned({
     async append(key, recordId, record, now): Promise<AppendOutcome<T>> {
-      /*
-       * The position is allocated by the position-allocator table, never computed as MAX+1 (which races under
-       * READ COMMITTED). The idempotency probe runs first, so a retry keeps its position. Positions may have
-       * gaps under contention: position is an order key, never a count.
-       */
+      // Allocated positions serialize concurrent appends; a retry keeps its original position.
       const already = (await run(
         "append:probe",
         recordClass,
@@ -852,7 +849,7 @@ const BOX_DUE_SQL = `SELECT id, value FROM cp_box_findings WHERE value->>'state'
   UNION ALL SELECT id, value FROM cp_box_findings WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,slots}') > $1 AND value->>'lastRecordedAt' >= $3
   UNION ALL SELECT id, value FROM cp_box_findings WHERE value->>'state' = 'taken' AND (value #>> '{claim,expiresAt}') <= $2 AND value->>'lastRecordedAt' >= $3
   LIMIT $4`;
-const BOX_WAITING_SQL = `SELECT id, value FROM cp_box_findings WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,reason}') = $1 ORDER BY id LIMIT $2`;
+const BOX_WAITING_SQL = `SELECT id, value FROM cp_box_findings WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,reason}') = $1 AND ($3::text[] IS NULL OR value->>'subjectId'=ANY($3::text[])) ORDER BY id LIMIT $2`;
 
 /** The Box with its builder queue answered by the partial indexes on state, slot map, lease and reason. */
 function pgBoxRepository(sql: Sql, options: PgRepositoryBounds = {}): BoxRepository {
@@ -860,7 +857,7 @@ function pgBoxRepository(sql: Sql, options: PgRepositoryBounds = {}): BoxReposit
   const rows = (found: readonly Record<string, unknown>[]) => found.map(row => parseValue<BoxFinding>(row.value, `cp_box_findings id ${String(row.id)}`));
   return { ...pgAggregateRepository<BoxFinding>(sql, "BoxFinding", "cp_box_findings", options),
     due: async ({ slots, now, since, limit }) => rows(await run("boxDue", "PAGE", BOX_DUE_SQL, [slots, now, since, Math.max(0, Math.trunc(limit))]) as Record<string, unknown>[]),
-    waitingFor: async (reason, limit) => rows(await run("boxWaitingFor", "PAGE", BOX_WAITING_SQL, [reason, Math.max(0, Math.trunc(limit))]) as Record<string, unknown>[]),
+    waitingFor: async (reason, limit, subjectIds) => rows(await run("boxWaitingFor", "PAGE", BOX_WAITING_SQL, [reason, Math.max(0, Math.trunc(limit)), subjectIds ?? null]) as Record<string, unknown>[]),
   };
 }
 
@@ -940,7 +937,7 @@ export async function pgEnsureArtifactSourceIndex(
 }
 
 /** Build one index online: an existing valid index is kept, an interrupted one is rebuilt, another builder is left alone. */
-export async function pgEnsureOnlineIndex(
+async function pgEnsureOnlineIndex(
   sql: Sql,
   index: OnlineIndex,
   bounds: ControlPlaneRequestBounds = CONTROL_PLANE_REQUEST_BOUNDS_MS,
@@ -971,18 +968,14 @@ export async function pgEnsureOnlineIndex(
     }
     await ddlRun("create", "POINT", index.ddl);
   } finally {
-    // A failed build retains its original error. The caller destroys the pinned
+    // Cleanup must not replace the original build error.
     await run("unlock", "POINT", "SELECT pg_advisory_unlock($1::bigint)", [key]).catch(() => {});
     await run("restoreTimeout", "POINT", `SET statement_timeout = ${bounds.POINT}`).catch(() => {});
   }
 }
 
-/**
- * Keep ordinary bootstrap on bounded HTTP and record the version only after
- * every statement succeeds. Online index creation/recovery alone needs a pinned
- * autocommit connection and a session lock, never a transaction.
- */
-export async function bootstrap(
+// Record the schema version only after all changes succeed.
+async function bootstrap(
   sql: Sql,
   nowIso: string,
   bounds: ControlPlaneRequestBounds = CONTROL_PLANE_REQUEST_BOUNDS_MS,
@@ -995,7 +988,39 @@ export async function bootstrap(
     if (online) await pgEnsureOnlineIndex(sql, online, bounds);
     else await run("bootstrap", "POINT", statement);
   }
+  const versions = await run("readVersion", "POINT", "SELECT version FROM cp_schema_version WHERE singleton") as { version: number }[];
+  if ((versions[0]?.version ?? 0) < 33) await migrateVotingDoorScopes(sql, nowIso, bounds);
   await run("recordVersion", "POINT", recordVersionStatement(BOOTSTRAP_VERSION, nowIso));
+}
+
+async function migrateVotingDoorScopes(sql: Sql, nowIso: string,
+  bounds: ControlPlaneRequestBounds = CONTROL_PLANE_REQUEST_BOUNDS_MS): Promise<void> {
+  const run = boundedRunner(sql, "cp_doors", bounds);
+  let after = "";
+  for (;;) {
+    const rows = await run("migrateVotingDoorScopes", "PAGE", `SELECT id, revision, value->'config' AS config FROM cp_doors
+      WHERE value->>'kind'='official-voting-source' AND id>$1 ORDER BY id LIMIT 250`, [after]) as
+      { id: string; revision: number; config: DoorRecord["config"] }[];
+    for (const row of rows) {
+      try {
+        const primary = JSON.parse(String(row.config.votingSource)) as VotingSourceDoor;
+        const mappings = [primary, ...JSON.parse(String(row.config.votingMappings ?? "[]")) as VotingSourceDoor[]];
+        const url = pageAddress(primary.url)?.url;
+        if (!url) throw new Error("Voting source door has no public URL.");
+        const patch = { url, ...Object.fromEntries(mappings.map(source => [`votingState_${requireBallotState(source.scope.state)}`, true])) };
+        if (Object.entries(patch).every(([key, value]) => row.config[key] === value)) continue;
+        const changed = await run("migrateVotingDoorScopes", "POINT", `UPDATE cp_doors SET
+          value=jsonb_set(value,'{config}',value->'config'||$3::jsonb)||jsonb_build_object('updatedAt',$4::text),
+          revision=revision+1,updated_at=$4::timestamptz WHERE id=$1 AND revision=$2 RETURNING id`,
+        [row.id, row.revision, JSON.stringify(patch), nowIso]) as { id: string }[];
+        if (!changed.length) throw new ConcurrentModification("Door", row.id, Number(row.revision), null);
+      } catch (error) {
+        console.error("VOTING_DOOR_SCOPE_MIGRATION_FAILED", { id: row.id, error: error instanceof Error ? error.message : String(error) });
+      }
+    }
+    if (rows.length < 250) return;
+    after = rows.at(-1)!.id;
+  }
 }
 
 /** The SQL half of `entryInSlice`: the rows one job could use, never fewer (the caller applies the exact rule). */
@@ -1010,7 +1035,8 @@ export const FIELD_MANUAL_SLICE_SQL = `SELECT id, revision, updated_at, value FR
         OR coalesce(value->'reach'->'places', '[]'::jsonb) ?| $6::text[]
         OR (jsonb_array_length(coalesce(value->'reach'->'platforms', '[]'::jsonb)) > 0 AND ($7::text IS NULL OR value->'reach'->'platforms' ? $7::text))
         OR ($8::text IS NOT NULL AND coalesce(value->'reach'->'states', '[]'::jsonb) ? $8::text))))
-    AND ($9::text IS NULL OR id > $9::text)
+    AND ($9::text IS NULL OR value->'states' ? $9::text)
+    AND ($10::text IS NULL OR id > $10::text)
   ORDER BY id ASC LIMIT ${AGGREGATE_LIST_READ_PAGE}`;
 
 /** The slice's parameters, in `FIELD_MANUAL_SLICE_SQL`'s order (without the page cursor). */
@@ -1024,14 +1050,10 @@ export function fieldManualSliceParams(query: FieldManualQuery): unknown[] {
     coveringPlaces(query),
     query.platform?.toLowerCase() ?? null,
     queryState(query) ?? null,
+    query.withinState?.toLowerCase() ?? null,
   ];
 }
 
-/**
- * The field manual's rows in `cp_field_manual_entries`. On the runner a slice is the held copy filtered by
- * `entryInSlice`, so a process pays only for rows changed since the copy's clock; without a copy (a page host or
- * a hand-run script) the slice crosses the wire one page at a time.
- */
 export function pgFieldManualRepository(sql: Sql, options: PgRepositoryBounds = {}): FieldManualRepository {
   const base = pgAggregateRepository<FieldManualEntry>(sql, "FieldManualEntry", "cp_field_manual_entries", options);
   const run = boundedRunner(sql, "cp_field_manual_entries", options.bounds ?? CONTROL_PLANE_REQUEST_BOUNDS_MS);
@@ -1054,7 +1076,7 @@ export function pgFieldManualRepository(sql: Sql, options: PgRepositoryBounds = 
       return inserted;
     },
     async slice(query) {
-      if (copies !== null) {
+      if (copies !== null && query.withinState === undefined) {
         const rows = await copies.aggregateList("cp_field_manual_entries", base.listChangedSince!,
           (row) => (entryInSlice(row.value, query) ? row : null));
         return rows.filter((row): row is Persisted<FieldManualEntry> => row !== null);
@@ -1151,10 +1173,7 @@ export function pgSpendHoldRepository(sql: Sql, bounds: ControlPlaneRequestBound
 /** The caller passes the connection string; `fromEnv` is the one place the variable is read. */
 const placeReadConnections = new WeakMap<ControlPlaneRepositories, Sql>();
 
-/** Reconcile all subjects in one place against one indexed query, rather
- * than opening a serverless connection for every field's subject. The filter is
- * the exact expression of `cp_work_items_subject` (`#>> '{subject}'`): `->>`
- * does not match that index and scanned the whole table. */
+// The JSON path must match cp_work_items_subject so place reads use its index.
 export async function readPlaceWorkItems(repos: ControlPlaneRepositories, subjects: readonly string[]): Promise<Persisted<WorkItem>[]> {
   if (!subjects.length) return [];
   const ids = [...new Set(subjects)];
@@ -1200,10 +1219,7 @@ export async function createPgRepositories(
   options: {
     /** Pages never own the schema: skip the bootstrap, and a schema that is behind reads as STORE_UNREACHABLE. */
     readonly skipBootstrap?: boolean;
-    /**
-     * Override the per-class request bounds (request-bounds.ts). Tests shrink
-     * them; production uses the measured defaults. No call is ever unbounded.
-     */
+    // Tests can reduce bounds; production uses measured defaults.
     readonly requestBounds?: Partial<ControlPlaneRequestBounds>;
   } = {},
 ): Promise<ControlPlaneRepositories> {
@@ -1254,9 +1270,7 @@ export async function createPgRepositories(
   const sharedBudget = budgetRepositoryFrom(
     pgAggregateRepository<BudgetLedger>(sql, "BudgetLedger", "cp_budget", bounded), locks, "ATOMIC_COMPARE_AND_SET",
   );
-  // One process need not contend with its own read/modify/write requests on
-  // this large aggregate. Other processes still contend through the same CAS.
-  // This queues accounting writes only; workers and their leases run in parallel.
+  // Serialize this process’s aggregate accounting writes; other processes still use CAS.
   let budgetWrite: Promise<unknown> = Promise.resolve();
   const budget: ControlPlaneRepositories["budget"] = { ...sharedBudget, mutate: (mutator, now) => {
     const write = budgetWrite.then(() => sharedBudget.mutate(mutator, now));

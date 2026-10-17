@@ -1,8 +1,11 @@
-import { ballotNavigationScope } from "./ballot-navigation-scope.ts";
+import { readStateAuthorityProjection } from "./state-reader.ts";
+import type { StateAuthorityFamily } from "../meetings/edge-artifacts.ts";
+import { REGISTRY_STATES, stateBallotScope } from "./state-scopes.ts";
+import { statesForRegistryDivisions } from "./state-scopes.ts";
 import type { BallotSet } from "../ballot/types.ts";
-import { GENERIC_BALLOT_SCOPE, type GenericBallotProjection } from "../ballot/generic-projection.ts";
+import { type GenericBallotProjection } from "../ballot/generic-projection.ts";
 import type { VotingSitesFile } from "../ballot/voting-sites.ts";
-import { VOTING_SITES_CONTRACT } from "../ballot/voting-sites-data-plane.ts";
+import { ELECTION_DATES, type ElectionDates } from "../ballot/election-dates.ts";
 import type { OfficeholderSet } from "../officials/types.ts";
 import { FEDERAL_DIRECTORY_SCOPE, type FederalDirectoryReadModel } from "../officials/federal-directory-data-plane.ts";
 import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
@@ -18,15 +21,15 @@ import type { CuratedReaderProjection } from "./manual-projections.ts";
 import { officialFilingIssue, type OfficialFiling } from "./official-filings.ts";
 import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "./read-model.ts";
 import type { HeldPlaceCapture } from "./held-place-capture.ts";
-import { electionFieldState, electionFieldIssue, type PublishedElectionField } from "./election-fields.ts";
-import { readPlacePointerSlice, type PlaceCaptureRead } from "./held-place-slices.ts";
+import { electionFieldIssue, type PublishedElectionField } from "./election-fields.ts";
+import { heldPlaceValue as value, readPlacePointerSlice } from "./held-place-slices.ts";
 import type { PlaceCaptureKind } from "../coverage/place-owed.ts";
 import type { CandidateProfilesProjection } from "./manual-projections.ts";
 import { currentExtraction, type CandidateDocument, type CandidateCorpus } from "../candidates/corpus.ts";
 import { candidateDescriptionQualityIssue } from "../candidates/blurbs.ts";
 import { deriveCandidateUniverse } from "../hunt/candidate-universe.ts";
 import { campaignSiteSubjects, type LineupContest } from "../candidates/campaign-site-subjects.ts";
-import { composeCampaignLinks, derivedCampaignSitesProjectionIssue, DERIVED_CAMPAIGN_SITES_SCOPE,
+import { composeCampaignLinks,
   type DerivedCampaignSitesProjection, type DerivedCampaignSiteRecord } from "./derived-campaign-sites.ts";
 import { FRESHNESS_HOURS } from "../coverage/checklist-map.ts";
 
@@ -58,71 +61,82 @@ function candidatePlan(divisionIds: readonly string[], ballots: readonly BallotS
   return campaignSiteSubjects({ universes, lineups });
 }
 
-function value<T>(read: PlaceCaptureRead<T>): T | null {
-  if (read.kind === "PROMOTED") return read.value;
-  if (read.kind === "NOT_RECORDED") return null;
-  throw new Error(`HELD_PLACE_READ_FAILED:${read.metadata.recordClass}:${read.metadata.scope}:${read.kind}`);
+function placeBallot(ballot: BallotSet, divisions: ReadonlySet<string>): BallotSet {
+  const contests = ballot.contests.filter(row => divisions.has(row.ocdId));
+  const ids = new Set(contests.map(row => row.id));
+  const candidacies = ballot.candidacies.filter(row => ids.has(row.contestId));
+  const candidateIds = new Set(candidacies.map(row => row.id));
+  return { ...ballot, contests, candidacies,
+    absences: ballot.absences.filter(row => divisions.has(row.ocdId)),
+    ...(ballot.removals ? { removals: ballot.removals.filter(row => ids.has(row.contestId)) } : {}),
+    ...(ballot.measureAnalyses ? { measureAnalyses: { ...ballot.measureAnalyses, analyses: ballot.measureAnalyses.analyses.filter(row => ids.has(row.contestId)) } } : {}),
+    ...(ballot.filingCandidacies ? { filingCandidacies: ballot.filingCandidacies.filter(row => ids.has(row.contestId)) } : {}),
+    ...(ballot.measures ? { measures: ballot.measures.filter(row => ids.has(row.contestId)) } : {}),
+    ...(ballot.measureRecords ? { measureRecords: ballot.measureRecords.filter(row => ids.has(row.contestId)) } : {}),
+    ...(ballot.contacts ? { contacts: ballot.contacts.filter(row => candidateIds.has(row.candidacyId)) } : {}),
+    ...(ballot.heldContests ? { heldContests: ballot.heldContests.filter(row => divisions.has(row.ocdId)) } : {}),
+    ...(ballot.generalLineup ? { generalLineup: { ...ballot.generalLineup, contests: ballot.generalLineup.contests.filter(row => ids.has(row.contestId)) } } : {}),
+  };
 }
 
 export async function readHeldPlaceFamilies(divisionIds: readonly string[], options: PromotedCivicDataReadOptions, registry?: RegistryRuntimeReadModel | null): Promise<HeldPlaceFamilies> {
-  const sliced = registry !== undefined;
+  const sliced = registry !== undefined, divisions = new Set(divisionIds);
   const targets = [...new Set([...(registry?.bodyRosters.flatMap(roster => roster.members.map(member => member.id)) ?? []),
     ...(registry?.officialCandidacies.rows.flatMap(row => row.status === "RESOLVED" && row.candidacy ? [row.candidacy.candidacyId] : []) ?? [])])];
   const read = <T>(recordClass: Parameters<typeof readPlacePointerSlice>[0], scope: string) => sliced
     ? readPlacePointerSlice<T>(recordClass, scope, divisionIds, [], targets)
     : readPromotedCivicData<T>(recordClass, scope, options);
-  const states = new Set(divisionIds.map(electionFieldState).filter((state): state is string => state !== null));
-  const ballotContracts = ["az-sos-ballot", "nh-curated-ballot"] as const;
-  const manualBallots = ballotContracts.map(id => requiredManualProductionContract(id))
-    .filter(contract => states.has(contract.scope.slice(3, 5)));
+  const stateRead = async <T>(family: Exclude<StateAuthorityFamily, "registry-runtime">, recordClass: Parameters<typeof readPlacePointerSlice>[0], state: string) =>
+    options.store ? readPromotedCivicData<T>(recordClass, stateBallotScope(family === "candidate-publications" ? "candidate-corpus" : family, state), options)
+      : (await readStateAuthorityProjection<T>(family, state)).result;
+  const states = new Set(statesForRegistryDivisions(divisionIds));
   const stateTargets = OFFICIAL_STATE_LEGISLATOR_TARGETS.filter(target => states.has(target.state));
   const moneyScopes = (Object.keys(STATE_CAMPAIGN_FINANCE_SOURCES) as StateCampaignFinanceJurisdiction[])
     .filter(state => states.has(state)).map(state => STATE_CAMPAIGN_FINANCE_SOURCES[state].scope);
-  const nj = requiredRoutineContract("nj-morris-filing");
-  const filings = requiredManualProductionContract("official-filings");
+  const filings = requiredManualProductionContract("official-filings"), navigation = requiredManualProductionContract("ballot-navigation");
   const fec = requiredRoutineContract("fec-funding");
   const [federal, legislators] = await Promise.all([
     read<FederalDirectoryReadModel>("FEDERAL_DIRECTORY", FEDERAL_DIRECTORY_SCOPE),
     Promise.all(stateTargets.map(target => readOfficialStateLegislatorsProjection(target.jurisdiction, options))),
   ]);
   const rosters = [value(federal)?.roster, ...legislators.map(read => value(read)?.roster)].filter((row): row is OfficeholderSet => row !== undefined);
-  targets.push(...rosters.flatMap(roster => roster.divisions.filter(row => divisionIds.includes(row.ocdId)).map(row => row.officeholderId)));
-  const [ballots, njBallot, nationalBallots, votingSites, funding, money, filingRead, navigationRead] = await Promise.all([
-    Promise.all(manualBallots.map(contract => read<{ ballot: BallotSet; generalLineup?: { contests: readonly LineupContest[] } }>("BALLOT_CANDIDACY", contract.scope))),
-    states.has("NJ") ? read<{ ballot: BallotSet }>(nj.recordClass, nj.scope) : null,
-    read<GenericBallotProjection>("BALLOT_CANDIDACY", GENERIC_BALLOT_SCOPE),
-    read<VotingSitesFile>(VOTING_SITES_CONTRACT.recordClass, VOTING_SITES_CONTRACT.scope),
+  targets.push(...rosters.flatMap(roster => roster.divisions.filter(row => divisions.has(row.ocdId)).map(row => row.officeholderId)));
+  const [funding, money, filingRead, navigationRead] = await Promise.all([
     read<FundingSnapshot>(fec.recordClass, fec.scope),
     Promise.all(moneyScopes.map(scope => read<StateMoneySnapshot>("STATE_CAMPAIGN_FINANCE", scope))),
     read<CuratedReaderProjection>(filings.recordClass, filings.scope),
     Promise.all([...states].map(state => read<CuratedReaderProjection>("CURATED_READER_RECORD", ballotNavigationScope(state)))),
   ]);
-  const heldBallots = [...[...ballots, ...(njBallot ? [njBallot] : [])].flatMap(read => value(read)?.ballot ?? []),
-    ...Object.values(value(nationalBallots)?.ballots ?? {}).filter(ballot => states.has(ballot.election.state))];
-  const candidateLineups = ballots.flatMap(read => value(read)?.generalLineup?.contests ?? []);
-  const plan = candidatePlan(divisionIds, heldBallots, candidateLineups);
-  const readerKeys = [...new Set([...plan.values()].flatMap(row => [row.candidacyId, ...row.readerKeys]))];
-  const profiles = requiredManualProductionContract("candidate-profiles"), corpus = requiredManualProductionContract("candidate-corpus");
-  const candidateRead = <T>(recordClass: Parameters<typeof readPlacePointerSlice>[0], scope: string) => sliced
-    ? readPlacePointerSlice<T>(recordClass, scope, divisionIds, [], readerKeys)
-    : readPromotedCivicData<T>(recordClass, scope, options);
-  const [profileRead, corpusRead, derivedRead] = readerKeys.length ? await Promise.all([
-    candidateRead<CandidateProfilesProjection>("CANDIDATE_PROFILE", profiles.scope),
-    candidateRead<CandidateCorpus>("CANDIDATE_PUBLICATION", corpus.scope),
-    candidateRead<DerivedCampaignSitesProjection>("CURATED_READER_RECORD", DERIVED_CAMPAIGN_SITES_SCOPE),
-  ]) : [null, null, null];
-  const derived = derivedRead ? value(derivedRead) : null;
-  if (derived && derivedCampaignSitesProjectionIssue(derived) !== null) throw new Error("HELD_PLACE_READ_FAILED:DERIVED_CAMPAIGN_SITES:INVALID");
-  return {
-    rosters,
-    ballots: heldBallots, candidateLineups,
-    candidateProfiles: profileRead ? value(profileRead) : null,
-    candidatePublications: corpusRead ? value(corpusRead)?.documents ?? [] : [],
-    derivedCampaignSites: derived?.records ?? [],
-    votingSites: value(votingSites), funding: value(funding), stateMoney: money.flatMap(read => value(read) ?? []),
+  const ballots: BallotSet[] = [], candidateLineups: LineupContest[] = [], candidatePublications: CandidateDocument[] = [], derivedCampaignSites: DerivedCampaignSiteRecord[] = [];
+  let candidateProfiles: CandidateProfilesProjection | null = null, votingSites: VotingSitesFile | null = null;
+  for (const state of states) {
+    if (!(REGISTRY_STATES as readonly string[]).includes(state)) continue;
+    const held = value(await stateRead<GenericBallotProjection>("ballot-contests", "BALLOT_CANDIDACY", state));
+    const ownBallots = Object.values(held?.ballots ?? {}).map(ballot => placeBallot(ballot, divisions));
+    ballots.push(...ownBallots);
+    const lineups = ownBallots.flatMap(ballot => ballot.generalLineup?.contests ?? []);
+    candidateLineups.push(...lineups);
+    const plan = candidatePlan(divisionIds, ownBallots, lineups);
+    const readerKeys = new Set([...plan.values()].flatMap(row => [row.candidacyId, ...row.readerKeys]));
+    const voting = value(await stateRead<VotingSitesFile>("voting-sites", "VOTING_SITE", state));
+    if (voting) votingSites = { ...voting, jurisdictions: [...((votingSites as VotingSitesFile | null)?.jurisdictions ?? []), ...voting.jurisdictions.filter(row => divisions.has(row.ocdId))] };
+    if (!readerKeys.size) continue;
+    const profile = value(await stateRead<CandidateProfilesProjection>("candidate-profiles", "CANDIDATE_PROFILE", state));
+    if (profile) candidateProfiles = { ...profile,
+      cards: { ...profile.cards, cards: { ...(candidateProfiles as CandidateProfilesProjection | null)?.cards.cards, ...Object.fromEntries(Object.entries(profile.cards.cards).filter(([key]) => readerKeys.has(key))) },
+        hunts: [...((candidateProfiles as CandidateProfilesProjection | null)?.cards.hunts ?? []), ...profile.cards.hunts.filter(row => readerKeys.has(row.key))] },
+      links: { ...profile.links, links: { ...(candidateProfiles as CandidateProfilesProjection | null)?.links.links, ...Object.fromEntries(Object.entries(profile.links.links).filter(([key]) => readerKeys.has(key))) },
+        hunts: [...((candidateProfiles as CandidateProfilesProjection | null)?.links.hunts ?? []), ...profile.links.hunts.filter(row => readerKeys.has(row.key))] } };
+    const corpus = value(await stateRead<CandidateCorpus>("candidate-publications", "CANDIDATE_PUBLICATION", state));
+    candidatePublications.push(...(corpus?.documents ?? []).filter(row => readerKeys.has(row.candidateKey)));
+    const derived = value(await stateRead<DerivedCampaignSitesProjection>("candidate-campaign-sites-derived", "CURATED_READER_RECORD", state));
+    derivedCampaignSites.push(...(derived?.records ?? []).filter(row => readerKeys.has(row.id) || readerKeys.has(row.candidacyId)));
+  }
+  return { rosters, ballots, candidateLineups, candidateProfiles, candidatePublications, derivedCampaignSites,
+    votingSites, funding: value(funding), stateMoney: money.flatMap(read => value(read) ?? []),
     filings: (value(filingRead)?.records ?? []).filter(row => officialFilingIssue(row) === null) as unknown as OfficialFiling[],
-    electionFields: navigationRead.flatMap(read => value(read)?.records ?? []).filter(row => electionFieldIssue(row) === null) as unknown as PublishedElectionField[],
-  };
+    electionDates: ELECTION_DATES.filter(row => states.has(row.state)),
+    electionFields: (value(navigationRead)?.records ?? []).filter(row => electionFieldIssue(row) === null) as unknown as PublishedElectionField[] };
 }
 
 /** No names, state-wide money expansion, or original-job/ZIP filters participate in joins. */

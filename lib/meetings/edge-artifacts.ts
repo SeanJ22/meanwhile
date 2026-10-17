@@ -111,7 +111,7 @@ export interface ReaderManifest {
   readonly stateLegislators?: Readonly<Record<string, AuthorityArtifactRef>>;
 }
 
-export const STATE_AUTHORITY_FAMILIES = ["registry-runtime", "ballot-contests", "candidate-profiles", "candidate-publications", "voting-sites", "candidate-campaign-sites-derived"] as const;
+export const STATE_AUTHORITY_FAMILIES = ["registry-runtime", "federal-directory", "ballot-contests", "candidate-profiles", "candidate-publications", "voting-sites", "candidate-campaign-sites-derived"] as const;
 export type StateAuthorityFamily = typeof STATE_AUTHORITY_FAMILIES[number];
 export type GlobalAuthorityFamily = Exclude<AuthorityFamily, StateAuthorityFamily>;
 export type GlobalPromotedAuthorityFamily = PromotedAuthorityFamily;
@@ -169,7 +169,6 @@ export function isPromotedAuthorityFamily(family: AuthorityFamily): family is Pr
 
 export type AuthorityFamily =
   | "census-districts"
-  | "federal-directory"
   | "campaign-sites"
   | "state-legislators"
   | "meeting-outcomes"
@@ -179,7 +178,6 @@ export type AuthorityFamily =
 
 export const GLOBAL_AUTHORITY_FAMILIES: readonly GlobalAuthorityFamily[] = [
   "census-districts",
-  "federal-directory",
   "campaign-sites",
   "state-legislators",
   "meeting-outcomes",

@@ -24,7 +24,7 @@ export { federalDirectoryAppliesToDivision } from "./representation-server.ts";
 import { membersOfBody } from "./body-membership.ts";
 import { officePhoneForBody } from "../meetings/office-phone.ts";
 import type { OfficeholderSet } from "../officials/types.ts";
-import { federalDirectoryReadState, getFederalOfficeholderSet, primeFederalDirectoryFromValue, refreshFederalDirectoryFromPromoted } from "../officials/federal-directory-read-model.ts";
+import { federalDirectoryReadState, getFederalOfficeholderSet, refreshFederalDirectoryFromPromoted } from "../officials/federal-directory-read-model.ts";
 import { personIdentityKeys, statePeopleScopeForDivision, statePeopleScopeForId, type StatePeopleJurisdiction } from "../officials/people-identity.ts";
 
 import {
@@ -36,7 +36,7 @@ import {
 import { divisionIdsAt, divisionsAt as resolveDivisionsAt, type GeoFeature } from "./resolve.ts";
 import type { Body, Division, Registry } from "./types.ts";
 import { getRegistryRuntimeReadModel, refreshRegistryRuntimeFromPromoted, registryRuntimeReadState, selectedRegistryStates } from "./runtime-read-model.ts";
-import { currentCampaignSitesEdge, currentCommentAccessEdge, currentFederalDirectoryEdge, currentReaderAuthorityEdge, currentRegistrationsEdge, currentStateLegislatorsEdge, ReaderEdgeOnlyRefusal, refuseDatabaseInEdgeOnlyContext, settleEdgeFirst } from "./runtime-edge.ts";
+import { currentCampaignSitesEdge, currentCommentAccessEdge, currentReaderAuthorityEdge, currentRegistrationsEdge, currentStateLegislatorsEdge, ReaderEdgeOnlyRefusal, refuseDatabaseInEdgeOnlyContext, settleEdgeFirst } from "./runtime-edge.ts";
 import { currentReaderSelection } from "../db/reader-route.ts";
 import { stateRegistryRuntimeScope, statesForRegistryDivisions } from "../civic-data/state-scopes.ts";
 import { curatedReaderReadState, primeCuratedReaderProjection, refreshCampaignSitesFromPromoted } from "../civic-data/curated-reader-read-model.ts";
@@ -221,9 +221,11 @@ export interface RegistryAuthorityReaders {
 }
 
 
-/** The federal directory, edge first. */
-export const settleFederalDirectoryRead = (): Promise<void> =>
-  settleEdgeFirst(currentFederalDirectoryEdge, primeFederalDirectoryFromValue, refreshFederalDirectoryFromPromoted, "The federal directory");
+/** The named places' members of Congress, each place edge first. */
+export const settleFederalDirectoryRead = async (states: readonly string[] = selectedRegistryStates()): Promise<void> => {
+  if (!states.length) throw new Error("FEDERAL_DIRECTORY_PLACES_NOT_SELECTED");
+  await refreshFederalDirectoryFromPromoted(states);
+};
 
 /** The registry runtime (divisions, bodies, rosters), edge first. */
 const settleRegistryRuntimeRead = async (states: readonly string[] = selectedRegistryStates()): Promise<void> => {
@@ -235,7 +237,7 @@ export async function settleRegistryAuthorityReads(
   scope: "REGISTRY" | "OFFICIALS",
   readers: RegistryAuthorityReaders = {
     registry: settleRegistryRuntimeRead,
-    federal: settleFederalDirectoryRead,
+    federal: () => settleFederalDirectoryRead(),
   },
 ): Promise<void> {
   await readers.registry();
@@ -256,10 +258,10 @@ export function authorityVersionKey(state: { readonly kind: string; readonly met
 }
 
 
-async function currentAuthorityKey(registryKey: string): Promise<{ key: string; federalAvailable: boolean }> {
+async function currentAuthorityKey(registryKey: string, states: readonly string[]): Promise<{ key: string; federalAvailable: boolean }> {
   let federalAvailable = false;
   try {
-    await settleFederalDirectoryRead();
+    await settleFederalDirectoryRead(states);
     getFederalOfficeholderSet();
     federalAvailable = true;
   } catch {
@@ -413,7 +415,7 @@ async function registrationsFor(ocdIds: Iterable<string>): Promise<ComposedRegis
 async function loaded(states: readonly string[] = selectedRegistryStates()): Promise<Loaded> {
   const base = await registryLoaded(states);
   const registryKey = `registry:${authorityVersionKey(registryRuntimeReadState())}`;
-  const { key: authorityKey, federalAvailable } = await currentAuthorityKey(registryKey);
+  const { key: authorityKey, federalAvailable } = await currentAuthorityKey(registryKey, states);
   const cached = loadedCaches.get(base.registry);
   if (cached?.authorityKey === authorityKey) return cached.value;
   const value = load(base, federalAvailable);
@@ -504,7 +506,10 @@ export async function seatHolderById(id: string, stateHint?: string): Promise<Se
     return matches.length === 1 ? matches[0] : null;
   }
   if (id.startsWith("congress:")) {
-    await settleFederalDirectoryRead();
+    // A member of Congress is found in the place the request names; an id alone names no place.
+    const places = stateHint ? [stateHint.replace(/^US-/i, "")] : selectedRegistryStates();
+    if (!places.length) return null;
+    await settleFederalDirectoryRead(places);
     return indexByOfficeholderId([getFederalOfficeholderSet()], suppliedOfficialPhotos()).get(id) ?? null;
   }
   const states = stateHint ? [stateHint.replace(/^US-/i, "")] : subjectRegistryStates(id);
@@ -554,8 +559,6 @@ export async function allSeatHolders(divisionIds: readonly string[] = []): Promi
 export async function partyByOfficeholderId(): Promise<
   Map<string, string | null>
 > {
-  const parties = currentFederalDirectoryEdge()?.value.partyLabels;
-  if (parties) return new Map(Object.entries(parties));
   const { officialsById } = await loaded();
   const map = new Map<string, string | null>();
   for (const holder of officialsById.values()) map.set(holder.id, holder.partyLabel);
@@ -577,7 +580,7 @@ export async function seatHoldersForDivision(
   return readDivisionRepresentatives(ocdId, {
     statePeople: heldStateLegislatorsEdgeFirst,
     federal: async () => {
-      await settleFederalDirectoryRead();
+      await settleFederalDirectoryRead(statesForRegistryDivisions([ocdId]));
       return indexByDivision([getFederalOfficeholderSet()], suppliedOfficialPhotos());
     },
     registry: () => settleRegistryRuntimeRead(statesForRegistryDivisions([ocdId])),

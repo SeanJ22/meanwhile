@@ -592,7 +592,7 @@ async function answerWithSettings(request: Request) {
   meetingsRead?.catch(() => undefined);
   const essentialPreloads = [
     timed("registry", () => settleRegistryAuthorityReads("REGISTRY")),
-    timed("federalDirectory", settleFederalDirectoryRead),
+    timed("federalDirectory", () => settleFederalDirectoryRead()),
     outcomesFromDatabase ? () => outcomesFromDatabase : timed("outcomes", settleOutcomeRead),
     ...(commentAccessFromDatabase
       ? [() => commentAccessFromDatabase]
@@ -604,7 +604,7 @@ async function answerWithSettings(request: Request) {
       edgeManifest?.stateAuthorities?.[family as "ballot-contests" | "candidate-profiles" | "candidate-publications" | "voting-sites"]?.[state]) ? "EDGE" : "DATABASE";
   trace.preloadSources = officialsAsk?.unresolvedPlace ? { registry: registrySource } : {
     registry: registrySource,
-    federalDirectory: authorityEdge?.federalDirectory ? "EDGE" : "DATABASE",
+    federalDirectory: ballotStatesForDivisions(ocdIds).some(state => edgeManifest?.stateAuthorities?.["federal-directory"]?.[state]) ? "EDGE" : "DATABASE",
     outcomes: authorityEdge?.meetingOutcomes ? "EDGE" : "DATABASE",
     ...(production ? { commentAccess: authorityEdge?.commentAccess ? "EDGE" as const : "DATABASE" as const } : {}),
     funding: promotedSource("federal-funding"),

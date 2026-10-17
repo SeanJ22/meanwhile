@@ -1,7 +1,6 @@
-import { prepareStateArtifactChild, stateArtifactResultLine } from "../lib/civic-data/state-artifact-dispatch.ts";
+import { prepareStateArtifactChild, stateArtifactResultLine, stateAuthorityContractId } from "../lib/civic-data/state-artifact-dispatch.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
-import { requireBallotState, stateBallotContractId, type StateBallotFamily } from "../lib/civic-data/state-scopes.ts";
-import { requireRegistryState, stateRegistryRuntimeContractId } from "../lib/civic-data/state-scopes.ts";
+import { requireBallotState, requireRegistryState } from "../lib/civic-data/state-scopes.ts";
 import { isStateAuthorityFamily } from "../lib/meetings/edge-artifacts.ts";
 import { resolveReaderArtifactWriteStore } from "../lib/meetings/edge-store.ts";
 import { assertRegisteredRuntimeContract } from "../lib/civic-data/runtime-authority.ts";
@@ -15,8 +14,8 @@ try {
   const family = requiredAssignment(argv, "family", "STATE_ARTIFACT_FAMILY_REQUIRED");
   if (!isStateAuthorityFamily(family)) throw new Error("STATE_ARTIFACT_FAMILY_INVALID");
   const stateValue = requiredAssignment(argv, "state", "STATE_ARTIFACT_STATE_REQUIRED");
-  const state = family === "registry-runtime" ? requireRegistryState(stateValue) : requireBallotState(stateValue);
-  const contract = family === "registry-runtime" ? stateRegistryRuntimeContractId(state) : stateBallotContractId((family === "candidate-publications" ? "candidate-corpus" : family) as StateBallotFamily, state);
+  const state = family === "registry-runtime" || family === "federal-directory" ? requireRegistryState(stateValue) : requireBallotState(stateValue);
+  const contract = stateAuthorityContractId(family, state);
   assertRegisteredRuntimeContract(contract,
     family === "candidate-campaign-sites-derived" ? "routine" : "manual");
   const now = requiredAssignment(argv, "observed-at", "STATE_ARTIFACT_TIME_REQUIRED");

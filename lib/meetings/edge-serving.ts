@@ -1,8 +1,8 @@
 import { publishAuthorityRecords, readAuthorityRecords, type RecordIndex } from "./authority-records.ts";
 import { currentReaderSelection } from "../db/reader-route.ts";
 import { createHash } from "node:crypto";
-import { stateBallotScope } from "../civic-data/state-scopes.ts";
-import { stateRegistryRuntimeScope, statesForRegistryDivisions } from "../civic-data/state-scopes.ts";
+import { statesForRegistryDivisions } from "../civic-data/state-scopes.ts";
+import { stateAuthorityPointers } from "../civic-data/state-reader.ts";
 import { readPromotedCivicData, registerIntegrityCheckedEdgeEntries } from "../civic-data/read-model.ts";
 import { gzipSync, gunzipSync, createGzip } from "node:zlib";
 import { Readable } from "node:stream";
@@ -36,7 +36,6 @@ import { factReader } from "../facts/db.ts";
 import { readSittingFacts, withSittingFacts } from "../facts/meeting-read.ts";
 import type { Meeting } from "../sources/types.ts";
 import type { StateFactsIndex } from "../facts/state-facts-publication.ts";
-import type { FederalDirectoryReadModel } from "../officials/federal-directory-data-plane.ts";
 import type { CuratedReaderProjection } from "../civic-data/manual-projections.ts";
 import type { OfficialStateLegislatorReadModel } from "../civic-data/candidate-builders.ts";
 import { currentReaderAuthorityEdge, reportReaderStateFailure, type ReaderAuthorityEdgeBundle } from "../registry/runtime-edge.ts";
@@ -301,7 +300,7 @@ const ASK_ONLY_AUTHORITY_FAMILIES: ReadonlySet<AuthorityFamily> = new Set<Author
 
 export const READER_BALLOT_AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
   ...READER_MAP_AUTHORITY_FAMILIES,
-  ...STATE_AUTHORITY_FAMILIES.filter(family => family !== "registry-runtime"),
+  ...STATE_AUTHORITY_FAMILIES.filter(family => family !== "registry-runtime" && family !== "federal-directory"),
   ...PROMOTED_AUTHORITY_FAMILIES.filter((family) => !ASK_ONLY_AUTHORITY_FAMILIES.has(family)),
 ];
 
@@ -526,16 +525,13 @@ async function readStateAuthorityArtifact(family: StateAuthorityFamily, state: s
       if (!bytes) throw new Error("STATE_ARTIFACT_BYTES_MISSING");
       if (bytesHash(bytes) !== ref.sha) throw new Error("STATE_ARTIFACT_HASH_MISMATCH");
       const envelope = JSON.parse(gunzipSync(bytes).toString("utf8")) as StateAuthorityArtifactEnvelope;
-      const scope = family === "registry-runtime" ? stateRegistryRuntimeScope(state)
-        : stateBallotScope(family === "candidate-publications" ? "candidate-corpus" : family, state);
+      const pointers = stateAuthorityPointers(family, state);
       if (envelope.formatVersion !== READER_ARTIFACT_FORMAT_VERSION || envelope.family !== family || envelope.state !== state ||
-        envelope.versionId !== ref.version || envelope.value?.kind !== "PROMOTED_POINTERS" || !Array.isArray(envelope.value.entries) || envelope.value.entries.length !== 1 ||
-        envelope.value.entries.some(entry => (entry.kind === "PROMOTED" ? entry.projection.scope : entry.scope) !== scope)) throw new Error("STATE_ARTIFACT_ENVELOPE_INVALID");
+        envelope.versionId !== ref.version || envelope.value?.kind !== "PROMOTED_POINTERS" || !Array.isArray(envelope.value.entries) || envelope.value.entries.length !== pointers.length ||
+        envelope.value.entries.some((entry, index) => (entry.kind === "PROMOTED" ? entry.projection.scope : entry.scope) !== pointers[index].scope)) throw new Error("STATE_ARTIFACT_ENVELOPE_INVALID");
       registerIntegrityCheckedEdgeEntries(envelope.value.entries);
-      for (const entry of envelope.value.entries) {
-        const recordClass = ({ "registry-runtime": "REGISTRY_RUNTIME_BINDING", "ballot-contests": "BALLOT_CANDIDACY", "candidate-profiles": "CANDIDATE_PROFILE",
-          "candidate-publications": "CANDIDATE_PUBLICATION", "voting-sites": "VOTING_SITE", "candidate-campaign-sites-derived": "CURATED_READER_RECORD" } as const)[family];
-        const read = await readPromotedCivicData(recordClass, scope, { edge: entry });
+      for (const [index, entry] of envelope.value.entries.entries()) {
+        const read = await readPromotedCivicData(pointers[index].recordClass, pointers[index].scope, { edge: entry });
         if (read.kind === "STORE_UNREACHABLE") throw new Error(`STATE_ARTIFACT_PROOF_INVALID:${read.detail}`);
       }
       return envelope.value;
@@ -621,7 +617,6 @@ export async function ensureReaderAuthorityEdge(
     const promotedFamilies = new Set<string>();
     const bundle: {
       censusDistricts?: { value: CensusDistrictEdge; versionId: string };
-      federalDirectory?: { value: FederalDirectoryReadModel; versionId: string };
       campaignSites?: { value: CuratedReaderProjection; versionId: string };
       meetingOutcomes?: { value: OutcomeSnapshot; versionId: string };
       commentAccess?: { value: CommentAccessProjection; versionId: string };
@@ -689,10 +684,7 @@ export async function ensureReaderAuthorityEdge(
         }
       }
     }
-    const [federal, campaign, outcomes] = await Promise.all([
-      fetchWanted("federal-directory"), fetchWanted("campaign-sites"), fetchWanted("meeting-outcomes"),
-    ]);
-    if (federal !== null) bundle.federalDirectory = { value: federal as FederalDirectoryReadModel, versionId: refs["federal-directory"]!.version };
+    const [campaign, outcomes] = await Promise.all([fetchWanted("campaign-sites"), fetchWanted("meeting-outcomes")]);
     if (campaign !== null) bundle.campaignSites = { value: campaign as CuratedReaderProjection, versionId: refs["campaign-sites"]!.version };
     if (outcomes !== null) bundle.meetingOutcomes = { value: outcomes as OutcomeSnapshot, versionId: refs["meeting-outcomes"]!.version };
     if (censusDistricts !== null) bundle.censusDistricts = { value: censusDistricts as CensusDistrictEdge, versionId: refs["census-districts"]!.version };

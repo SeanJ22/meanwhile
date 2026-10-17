@@ -1,5 +1,5 @@
-import { REGISTRY_STATES, stateBallotScope } from "./state-scopes.ts";
-import { stateRegistryRuntimeScope } from "./state-scopes.ts";
+import { REGISTRY_STATES } from "./state-scopes.ts";
+import { stateAuthorityPointers } from "./state-reader.ts";
 import { DOTGOV_SCOPE, readDotGovProjection } from "./dotgov.ts";
 import { createHash } from "node:crypto";
 
@@ -13,7 +13,6 @@ import {
 import type { PromotedPointerIdentity, RoutineRecordClass } from "./types.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import { requiredRoutineContract } from "./contracts.ts";
-import { DERIVED_CAMPAIGN_SITES_RECORD_CLASS } from "./derived-campaign-sites.ts";
 import { readCuratedReaderProjection } from "./curated-reader-read-model.ts";
 import { readNhMembers } from "./state-members.ts";
 import { readFundingSnapshot } from "../funding/snapshot.ts";
@@ -84,18 +83,9 @@ export function promotedEdgePointers(): Readonly<Record<GlobalPromotedAuthorityF
 }
 
 function statePromotedEdgePointers(state: string): Readonly<Partial<Record<StateAuthorityFamily, readonly PromotedEdgePointer[]>>> {
-  const pointer = (recordClass: RoutineRecordClass, scope: string): PromotedEdgePointer => ({
-    recordClass, scope, reader: options => readPromotedCivicData(recordClass, scope, options),
-  });
-  const registry = { "registry-runtime": [pointer("REGISTRY_RUNTIME_BINDING", stateRegistryRuntimeScope(state))] };
-  return {
-    ...registry,
-    "ballot-contests": [pointer("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", state))],
-    "candidate-profiles": [pointer("CANDIDATE_PROFILE", stateBallotScope("candidate-profiles", state))],
-    "candidate-publications": [pointer("CANDIDATE_PUBLICATION", stateBallotScope("candidate-corpus", state))],
-    "voting-sites": [pointer("VOTING_SITE", stateBallotScope("voting-sites", state))],
-    "candidate-campaign-sites-derived": [pointer(DERIVED_CAMPAIGN_SITES_RECORD_CLASS, stateBallotScope("candidate-campaign-sites-derived", state))],
-  };
+  return Object.fromEntries(STATE_AUTHORITY_FAMILIES.map(family => [family, stateAuthorityPointers(family, state).map(({ recordClass, scope }) => ({
+    recordClass, scope, reader: (options: PromotedCivicDataReadOptions) => readPromotedCivicData(recordClass, scope, options),
+  }))]));
 }
 
 type PointerState = Pick<PromotedPointerIdentity, "versionId" | "latestConfirmation"> | null;

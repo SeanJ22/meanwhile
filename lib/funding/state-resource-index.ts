@@ -1,3 +1,9 @@
+import { createReadStream } from "node:fs";
+import { mkdtemp, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { saveFederalBulkBytes } from "../federal-money/bulk.ts";
+import { federalJsonRecords } from "../federal-money/streams.ts";
 import { createHash } from "node:crypto";
 import { sourceAcquisitionFailure } from "../civic-data/source-acquisition-error.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
@@ -6,7 +12,6 @@ import { campaignSourceResponse } from "./state-acquisition.ts";
 
 const entities = (value: string) => value.replace(/&(?:amp|quot|apos|lt|gt|#39|#34);/g, match => ({ "&amp;": "&", "&quot;": '"', "&apos;": "'", "&lt;": "<", "&gt;": ">", "&#39;": "'", "&#34;": '"' })[match]!);
 const attributes = (tag: string) => Object.fromEntries([...tag.matchAll(/([\w-]+)\s*=\s*(["'])([\s\S]*?)\2/g)].map(match => [match[1].toLowerCase(), entities(match[3])]));
-const property = (value: unknown, path: string) => path ? path.split(".").reduce<unknown>((at, key) => at !== null && typeof at === "object" ? (at as Record<string, unknown>)[key] : undefined, value) : value;
 
 interface IndexOptions {
   readonly vault: EvidenceStore;
@@ -15,9 +20,67 @@ interface IndexOptions {
   readonly onFailure?: (resource: string, url: string, error: unknown) => Promise<void>;
 }
 
-async function* indexedResources(resource: CampaignFinanceResource, options: IndexOptions, requireFiles = true): AsyncGenerator<CampaignFinanceResource> {
+async function* jsonIndexedResources(resource: CampaignFinanceResource, options: IndexOptions, requireFiles: boolean, context: Readonly<Record<string, unknown>>): AsyncGenerator<CampaignFinanceResource> {
+  const index = resource.index!;
+  const directory = await mkdtemp(join(tmpdir(), "campaign-finance-index-"));
+  let found = false;
+  try {
+    const { path } = await saveFederalBulkBytes({ root: directory, vault: options.vault, signal: options.signal }, () => campaignSourceResponse(index.url, {
+      ...(index.method ? { method: index.method, headers: { "content-type": "application/json" }, body: JSON.stringify(index.body) } : {}),
+    }, options), directory, index.url);
+    const envelope = { rows: 0, found: false };
+    for await (const text of federalJsonRecords(createReadStream(path), index.rowPath!, envelope)) {
+      const parsed = JSON.parse(text), row = parsed !== null && typeof parsed === "object" ? parsed : { value: parsed };
+      if (index.filter && row[index.filter.field] !== index.filter.value) continue;
+      const values = index.split ? String(row[index.split.field] ?? "").split(index.split.delimiter).filter(Boolean) : [null];
+      for (const value of values) {
+        const item = { ...context, ...row, ...(index.split ? { [index.split.field]: value } : {}) };
+        const url = new URL(resource.url), body: Record<string, unknown> = { ...resource.body };
+        let route: string;
+        if (index.parameters) {
+          for (const { parameter, field } of index.parameters) {
+            const value = item[field];
+            if (typeof value !== "number" && typeof value !== "string" || value === "") throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "Campaign bulk index is missing a published request parameter.");
+            if (resource.method) body[parameter] = value; else url.searchParams.set(parameter, String(value));
+          }
+          route = url.href;
+        } else {
+          route = index.urlTemplate!.replace(/\{(\w+)\}/g, (_match, field: string) => {
+            const value = item[field === "id" ? index.idField! : field];
+            if (typeof value !== "number" && typeof value !== "string" || value === "") throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "Campaign download index is missing a native file identifier.");
+            return encodeURIComponent(value);
+          });
+        }
+        if (!new RegExp(index.pattern, "i").test(route)) continue;
+        if (!route.toLowerCase().startsWith(index.downloadPrefix.toLowerCase())) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "Campaign download index points outside its official publication directory.");
+        if (index.child) {
+          try {
+            for await (const next of indexedResources({ ...resource, index: { ...index.child, url: route } }, options, false, item)) { found = true; yield next; }
+          } catch (error) {
+            if (!options.onFailure) throw error;
+            await options.onFailure(resource.id, route, error);
+          }
+        } else {
+          found = true;
+          const identity = route.toLowerCase() + JSON.stringify(resource.method ? body : null);
+          const expectedFields = Object.fromEntries(Object.entries(index.expectedFields ?? {}).map(([field, source]) => {
+            const value = item[source];
+            if (typeof value !== "number" && typeof value !== "string") throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "The campaign index is missing its declared native identity.");
+            return [field, String(value)];
+          }));
+          yield { ...resource, id: `${resource.id}:${createHash("sha256").update(identity).digest("hex").slice(0, 16)}`, url: route,
+            ...(Object.keys(expectedFields).length ? { expectedFields } : {}), ...(resource.method ? { body } : {}) };
+        }
+      }
+    }
+    if (!envelope.found || requireFiles && !found) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "The official campaign download index contains no declared native files.");
+  } finally { await rm(directory, { recursive: true, force: true }); }
+}
+
+async function* indexedResources(resource: CampaignFinanceResource, options: IndexOptions, requireFiles = true, context: Readonly<Record<string, unknown>> = {}): AsyncGenerator<CampaignFinanceResource> {
   const index = resource.index;
   if (!index) throw new Error("The campaign resource has no download index.");
+  if (index.rowPath !== undefined) { yield* jsonIndexedResources(resource, options, requireFiles, context); return; }
   const seen = new Set<string>();
   const visited = new Set([1]);
   let form: URLSearchParams | null = null, cookie = "", found = false;
@@ -42,31 +105,7 @@ async function* indexedResources(resource: CampaignFinanceResource, options: Ind
     chunks.length = 0;
     await options.vault.put(`project/meanwhile/source/campaign-finance-index/${hash}`, bytes, { contentHash: `sha256-${hash}`, contentType: response.headers.get("content-type") ?? "text/html", byteLength: bytes.length });
     const text = bytes.toString("utf8"), base = response.url || index.url;
-    const publications: { url: string; body?: Readonly<Record<string, unknown>> }[] = index.rowPath !== undefined ? (() => {
-      const rows = property(JSON.parse(text), index.rowPath);
-      if (!Array.isArray(rows)) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "Campaign download index has no declared resource list.");
-      return rows.map(row => row !== null && typeof row === "object" ? row : { value: row })
-        .filter(row => !index.filter || row[index.filter.field] === index.filter.value).flatMap(row => {
-        const values = index.split ? String(row[index.split.field] ?? "").split(index.split.delimiter).filter(Boolean) : [null];
-        return values.map(value => {
-          const item = index.split ? { ...row, [index.split.field]: value } : row;
-          if (index.parameters) {
-            const body: Record<string, unknown> = { ...resource.body };
-            const url = new URL(resource.url);
-            for (const { parameter, field } of index.parameters) {
-              const value = item[field];
-              if (typeof value !== "number" && typeof value !== "string" || value === "") throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "Campaign bulk index is missing a published request parameter.");
-              if (resource.method) body[parameter] = value;
-              else url.searchParams.set(parameter, String(value));
-            }
-            return resource.method ? { url: url.href, body } : { url: url.href };
-          }
-          const id = item[index.idField!];
-          if (typeof id !== "number" && typeof id !== "string") throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "Campaign download index is missing a native file identifier.");
-          return { url: index.urlTemplate!.replace("{id}", encodeURIComponent(id)) };
-        });
-      });
-    })() : index.selectParameter ? [...text.matchAll(/<select\b[^>]*>[\s\S]*?<\/select>/gi)].flatMap(match => {
+    const publications: { url: string; body?: Readonly<Record<string, unknown>> }[] = index.selectParameter ? [...text.matchAll(/<select\b[^>]*>[\s\S]*?<\/select>/gi)].flatMap(match => {
       const select = attributes(match[0].slice(0, match[0].indexOf(">") + 1));
       if (select.name !== index.selectParameter!.name && select.id !== index.selectParameter!.name) return [];
       return [...match[0].matchAll(/<option\b[^>]*>/gi)].flatMap(option => {

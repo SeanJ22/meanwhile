@@ -7,13 +7,6 @@
     "transformation": "Selected public filing fields; contact and mailing fields omitted."
   },
   {
-    "file": "ma-native-excerpt.json",
-    "url": "https://api.ocpf.us/reports/log?StartIndex=0&PageSize=2",
-    "capturedAt": "2026-10-16T21:37:29.319701+00:00",
-    "sha256": "de945f27315d0b750cbd9791f7b26238d9ab65476e1f3332413158e729436fa4",
-    "transformation": "JSON whitespace only; all returned filing-log fields retained."
-  },
-  {
     "file": "ca-native-cover.tsv",
     "url": "https://campaignfinance.cdn.sos.ca.gov/dbwebexport.zip",
     "capturedAt": "2026-10-16T22:13:18.312382+00:00",
@@ -47,18 +40,6 @@
     "capturedAt": "2026-10-17T00:36:31.197757+00:00",
     "sha256": "573a31eeeed668fecb248b60e16ce161486c9931407406fda5bbe1b84d995e9b",
     "transformation": "Two complete rows selected from a bounded HTTP 206 excerpt. Public filing fields retained; individual contributor, mailing, employer and contact fields omitted."
-  },
-  {
-    "file": "vt-native-contributions.json",
-    "url": "https://api.campaignfinance.vermont.gov/api/ExportData/GetExportPublicDownloadData",
-    "request": {
-      "type": "CSV",
-      "filingYear": "2025",
-      "transactionTypeCode": "TCON"
-    },
-    "capturedAt": "2026-10-17T00:51:36.474521+00:00",
-    "sha256": "186958d504243eb049d5aa201aaebcbf815525d193b6bd7ded583c0bc65adfa5",
-    "transformation": "Two actual public rows projected to filing fields; individual donor names and all mailing/contact fields omitted. Organization name retained only for source-classified Business/Group/Organization."
   },
   {
     "file": "md-native-contributions.csv",
@@ -292,5 +273,103 @@
     "capturedAt": "2026-10-17T02:30:18.948826+00:00",
     "sha256": "94dee03a1445fd6cde1bd87afb8e071253f01f037fba75c89ae5c056091a8638",
     "transformation": "Two rows from the official public contributions API; individual donor names and locations omitted."
+  },
+  {
+    "file": "ma-native-excerpt.json",
+    "url": "https://api.ocpf.us/reports/reportList/16742?BaseReportTypeId=2&StartIndex=0&PageSize=2&withSummary=true",
+    "capturedAt": "2026-10-17T03:08:16.630970+00:00",
+    "sha256": "b408975b8d0e56af3960acda461c2c41bd07c56772f9ccce1036cc375478d320",
+    "transformation": "Selected official registration/report fields; donor names, mailing/contact data and transaction arrays omitted."
+  },
+  {
+    "file": "ma-native-principal.json",
+    "url": "https://api.ocpf.us/reports/reportList/16742?BaseReportTypeId=1&StartIndex=0&PageSize=2&withSummary=true",
+    "capturedAt": "2026-10-17T03:09:39.864799+00:00",
+    "sha256": "7204802ae2ee2e9021ac2d251198a9bebfe16ecfde9a4daa68e7dace55f0c421",
+    "transformation": "Selected official registration/report fields; donor names, mailing/contact data and transaction arrays omitted."
+  },
+  {
+    "file": "ma-native-year-end.json",
+    "url": "https://api.ocpf.us/reports/reportList/16742?BaseReportTypeId=3&StartIndex=0&PageSize=2&withSummary=true",
+    "capturedAt": "2026-10-17T03:09:39.683392+00:00",
+    "sha256": "a1d82b7e7e5fe35847ec3f3e543ff48a829f550aaa44b6ea408d50dc4d83f8bb",
+    "transformation": "Selected official registration/report fields; donor names, mailing/contact data and transaction arrays omitted."
+  },
+  {
+    "file": "ma-native-reimbursements.json",
+    "url": "https://api.ocpf.us/reports/reportList/16742?BaseReportTypeId=5&StartIndex=0&PageSize=2&withSummary=true",
+    "capturedAt": "2026-10-17T03:09:39.962543+00:00",
+    "sha256": "5097f01389fdbf0ed989ae7bdea502e732c3c784f0a1a4c8bb9cc3ee19895641",
+    "transformation": "Selected official registration/report fields; donor names, mailing/contact data and transaction arrays omitted."
+  },
+  {
+    "file": "ma-native-other-periodic.json",
+    "url": "https://api.ocpf.us/reports/reportList/16742?BaseReportTypeId=8&StartIndex=0&PageSize=2&withSummary=true",
+    "capturedAt": "2026-10-17T03:09:39.957421+00:00",
+    "sha256": "bd31ba5df3f54defb571de5974ea398775c98de50e572ad70923f56029f03692",
+    "transformation": "Selected official registration/report fields; donor names, mailing/contact data and transaction arrays omitted."
+  },
+  {
+    "file": "ma-native-filers.json",
+    "url": "https://api.ocpf.us/filers/listings/A",
+    "capturedAt": "2026-10-17T03:07:14.219441+00:00",
+    "sha256": "fdf283683300a986b3426561adfeae9fb1ae3604e6e6602e515eb98d2f0b2421",
+    "transformation": "Selected official registration/report fields; donor names, mailing/contact data and transaction arrays omitted."
+  },
+  {
+    "file": "ma-native-report-types.json",
+    "url": "https://api.ocpf.us/reports/baseReportTypes/16742",
+    "capturedAt": "2026-10-17T03:06:18.232798+00:00",
+    "sha256": "e8689b8d67826a8a88aa7f7ce1e9804fb39a5aca431372c9015dc120e0dbced1",
+    "transformation": "Selected official registration/report fields; donor names, mailing/contact data and transaction arrays omitted."
+  },
+  {
+    "file": "vt-native-contributions.json",
+    "url": "https://api.campaignfinance.vermont.gov/api/PublicTransactionDetails/GetContributionsDetails",
+    "capturedAt": "2026-10-17T03:32:22.859665+00:00",
+    "sha256": "a607fedb01d70cbcd9108401ccc6e5ba14a6272368b2a40d80e23486bdd6e58d",
+    "transformation": "First two native public API rows; only filing identity, filer, report, date and amount fields retained. Request body pageNumber=1, pageSize=2."
+  },
+  {
+    "file": "vt-native-expenditures.json",
+    "url": "https://api.campaignfinance.vermont.gov/api/PublicTransactionDetails/GetExpenditureDetails",
+    "capturedAt": "2026-10-17T03:32:22.860289+00:00",
+    "sha256": "33cd99aa0425219f6ee456eabd413356626260e94178db33a9860a3299556f2c",
+    "transformation": "First two native public API rows; only filing identity, filer, report, date and amount fields retained. Request body pageNumber=1, pageSize=2."
+  },
+  {
+    "file": "wi-native-excerpt.json",
+    "url": "https://campaignfinance.wi.gov/api/trpc/publicFrontendApi.getTransactions",
+    "capturedAt": "2026-10-17T03:34:52.722971+00:00",
+    "sha256": "2d4533b82c3077000661a42b6b14558d9070402f8dc379cf2a02c2158e0f3158",
+    "transformation": "First two official API rows requested with input.json take=2, skip=0, sortBy=date, sortDirection=asc. Filer, report and transaction fields selected; donor/payee/contact fields omitted."
+  },
+  {
+    "file": "ms-native-contributions.json",
+    "url": "https://cfportal.sos.ms.gov/Online/Services/MS/CampaignFinanceServices.asmx/ContributionSearch",
+    "capturedAt": "2026-10-17T03:37:58.345280+00:00",
+    "sha256": "5a867ca5e2b90408c98a68fdbd9bb2871d7fab9794f72cc8b7d2fa83c517bbe4",
+    "transformation": "First two rows selected from the complete unfiltered official public response. Filing, filer, date, amount and explicitly classified organization fields selected; individual donors, payees, addresses and contact fields omitted."
+  },
+  {
+    "file": "ms-native-expenditures.json",
+    "url": "https://cfportal.sos.ms.gov/Online/Services/MS/CampaignFinanceServices.asmx/ExpenditureSearch",
+    "capturedAt": "2026-10-17T03:37:58.345280+00:00",
+    "sha256": "fa35b1ca020daced985b0131e593ec48d209002e590cd4a38c16a99adbadeb2d",
+    "transformation": "First two rows selected from the complete unfiltered official public response. Filing, filer, date, amount and explicitly classified organization fields selected; individual donors, payees, addresses and contact fields omitted."
+  },
+  {
+    "file": "mo-native-summary.csv",
+    "url": "https://www.mec.mo.gov/MEC/Campaign_Finance/CF_ContrCSV.aspx",
+    "capturedAt": "2026-10-17T03:41:23.583812+00:00",
+    "sha256": "4fe5ddf8af982afdafc2ba6b0ed14a4126119b4cbec67693c54792ac1139b9df",
+    "transformation": "First two rows from the complete official 2026 CSV, requested by the normal public form. Native column positions and duplicate headers retained. Individual donors, payees and contact fields blanked."
+  },
+  {
+    "file": "mo-native-cd1-a.csv",
+    "url": "https://www.mec.mo.gov/MEC/Campaign_Finance/CF_ContrCSV.aspx",
+    "capturedAt": "2026-10-17T03:41:23.583812+00:00",
+    "sha256": "d977f9181fbfd32b6fcc32b050fbf69fe66047d112a1effb13cc3d7824e20c18",
+    "transformation": "First two rows from the complete official 2026 CSV, requested by the normal public form. Native column positions and duplicate headers retained. Individual donors, payees and contact fields blanked."
   }
 ]

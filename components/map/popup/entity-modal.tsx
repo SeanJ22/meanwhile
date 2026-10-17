@@ -135,6 +135,7 @@ export interface PlaceCardData {
 
 /** Everything the modal renders, whichever entity opened it. */
 export interface ModalSubject {
+  publicRecordsDivisionId?: string | null;
   title: string;
   subtitle: string;
   tier: Tier;
@@ -280,7 +281,7 @@ function PlaceSections({
 }
 
 function PublicRecordSection({ subject, zip }: { subject: ModalSubject; zip?: string | null }) {
-  const divisionId = subject.divisionOcdId;
+  const divisionId = subject.publicRecordsDivisionId ?? subject.divisionOcdId;
   if (subject.subjectKind === "MEETING" || !divisionId) return null;
   return <CardSection title="Public records">
     <PlacePublicRecords key={divisionId} divisionId={divisionId} bodyId={subject.bodyCard ? subject.subjectId : undefined} />
@@ -289,7 +290,7 @@ function PublicRecordSection({ subject, zip }: { subject: ModalSubject; zip?: st
 }
 
 function MoneyRecordSection({ subject }: { subject: ModalSubject }) {
-  const divisionId = subject.divisionOcdId;
+  const divisionId = subject.publicRecordsDivisionId ?? subject.divisionOcdId;
   if (subject.subjectKind === "MEETING" || !divisionId || !subject.bodyCard && !/\/(?:county|place|school_district|cd):|\/(?:state|district|territory):[a-z]{2}$/.test(divisionId)) return null;
   return <CardSection title="Money and records">
     <StateCampaignSection key={`campaign:${divisionId}`} divisionId={divisionId} />

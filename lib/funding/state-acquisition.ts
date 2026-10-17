@@ -6,7 +6,7 @@ import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import type { SourceCheckEvidence } from "../civic-data/types.ts";
 import { requestPublisher, sourceAcquisitionFailure } from "../civic-data/source-acquisition-error.ts";
 import { federalBulkMemory, saveFederalBulkBytes } from "../federal-money/bulk.ts";
-import { federalCsvRecords, federalJsonRecords, federalZipBytes, federalZipEntries, type FederalJsonEnvelope } from "../federal-money/streams.ts";
+import { federalCsvRecords, federalJsonRecords, federalJsonStringBytes, federalZipBytes, federalZipEntries, type FederalJsonEnvelope } from "../federal-money/streams.ts";
 import { csvRows } from "../reference/csv.ts";
 import { OUTBOUND_USER_AGENT } from "../geo/outbound-agent.ts";
 import { campaignSourceRecord, type CampaignSourceCapture, type CampaignSourceRecord } from "./state-source-records.ts";
@@ -44,6 +44,7 @@ function requestIdentity(url: string, body: Record<string, unknown> | null, reso
     if (stableBody) delete stableBody[resource.throughDateParameter];
     else stableUrl.searchParams.delete(resource.throughDateParameter);
   }
+  if (stableBody && resource.session?.hiddenFields) for (const name of Object.keys(stableBody)) if (name.startsWith("__")) delete stableBody[name];
   if (stableBody && resource.session?.tokenField) delete stableBody[resource.session.tokenField];
   return `${stableUrl.href}:${JSON.stringify(stableBody)}`;
 }
@@ -81,11 +82,12 @@ export async function campaignSourceResponse(url: string, init: RequestInit, opt
 async function* capturedRows(state: string, resource: CampaignFinanceResource, input: AsyncIterable<Uint8Array>, metadata: {
   url: string; retrievedAt: string; publicationDate: string | null; archiveId: string; rawHash: string; byteLength: number;
 }, options: Options, envelope: FederalJsonEnvelope = { rows: 0, found: false }): AsyncGenerator<{ records: CampaignSourceRecord[]; capture: CampaignSourceCapture }> {
-  let records: CampaignSourceRecord[] = [], bytes = 0, projectionOrdinal = 0, columns: string[] | null = null, preambleRows = resource.preambleRows ?? 0;
+  let records: CampaignSourceRecord[] = [], bytes = 0, projectionOrdinal = 0, columns: string[] | null = null, selectedColumns: readonly { field: string; index: number }[] | null = null, preambleRows = resource.preambleRows ?? 0;
   let capture: CampaignSourceCapture = { url: metadata.url, retrievedAt: metadata.retrievedAt, publicationDate: metadata.publicationDate,
     rawHash: metadata.rawHash, byteLength: metadata.byteLength, vaultKey: metadata.archiveId };
   const json = resource.kind === "JSON" || resource.kind === "SOCRATA";
-  const rows = json ? federalJsonRecords(input, resource.rowPath ?? "", envelope) : federalCsvRecords(input, resource.encoding, resource.quote);
+  const decoded = resource.jsonStringEnvelope ? federalJsonStringBytes(input, resource.jsonStringEnvelope) : input;
+  const rows = json ? federalJsonRecords(decoded, resource.rowPath ?? "", envelope) : federalCsvRecords(input, resource.encoding, resource.quote);
   for await (const raw of rows) {
     options.signal.throwIfAborted();
     if (!json && preambleRows > 0) {
@@ -95,11 +97,20 @@ async function* capturedRows(state: string, resource: CampaignFinanceResource, i
     }
     if (!json && columns === null) {
       columns = [...csvRows(raw.replace(/^\uFEFF/, ""), resource.delimiter, resource.quote)][0];
-      if (!columns?.length || new Set(columns).size !== columns.length) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "Campaign export columns are missing or repeated.");
-      if (resource.filedCondition && !columns.includes(resource.filedCondition.field)) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "Campaign export no longer contains its filing status column.");
-      if ([...resource.identity, ...(resource.filerIdentity ?? [])].some(field => !columns!.includes(field)) ||
-          resource.filer.length && !resource.filer.some(field => columns!.includes(field)) ||
-          resource.amounts.length && !resource.amounts.some(amount => columns!.includes(amount.field))) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "Campaign export no longer contains its declared native identity or amount columns.");
+      if (!columns?.length || !resource.csvColumns && new Set(columns).size !== columns.length) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "Campaign export columns are missing or repeated.");
+      if (resource.csvColumns) {
+        selectedColumns = resource.csvColumns.map(({ field, header, occurrence = 1 }) => {
+          const index = columns!.flatMap((name, index) => name === header ? [index] : [])[occurrence - 1];
+          if (index === undefined) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "Campaign export no longer contains its declared native column occurrence.");
+          return { field, index };
+        });
+        if (new Set(selectedColumns.map(column => column.field)).size !== selectedColumns.length) throw new Error("Campaign export mappings repeat a projected field.");
+      }
+      const projectedColumns = selectedColumns?.map(column => column.field) ?? columns;
+      if (resource.filedCondition && !projectedColumns.includes(resource.filedCondition.field)) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "Campaign export no longer contains its filing status column.");
+      if ([...resource.identity, ...(resource.filerIdentity ?? [])].some(field => !projectedColumns.includes(field)) ||
+          resource.filer.length && !resource.filer.some(field => projectedColumns.includes(field)) ||
+          resource.amounts.length && !resource.amounts.some(amount => projectedColumns.includes(amount.field))) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "Campaign export no longer contains its declared native identity or amount columns.");
       continue;
     }
     const length = Buffer.byteLength(raw);
@@ -113,7 +124,7 @@ async function* capturedRows(state: string, resource: CampaignFinanceResource, i
       const fields = [...csvRows(raw, resource.delimiter, resource.quote)][0];
       if (!fields || fields.length === 1 && fields[0] === "") continue;
       if (fields.length !== columns!.length) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "A campaign row differs from its source columns.");
-      value = Object.fromEntries(columns!.map((column, index) => [column, fields[index]]));
+      value = Object.fromEntries((selectedColumns ?? columns!.map((field, index) => ({ field, index }))).map(({ field, index }) => [field, fields[index]]));
     }
     records.push(campaignSourceRecord(state, resource, value, capture, projectionOrdinal++)); bytes += length;
   }
@@ -176,7 +187,7 @@ async function download(state: string, url: string, resource: CampaignFinanceRes
   if (options.runId && prior?.runId === options.runId) return prior;
   const headers = new Headers({ accept: "application/json, text/csv, application/zip, */*" });
   for (const [name, value] of Object.entries(resource.headers ?? {})) headers.set(name, value);
-  if (body && !headers.has("content-type")) headers.set("content-type", resource.requestEncoding === "FORM" ? "application/x-www-form-urlencoded; charset=UTF-8" : "application/json");
+  if (resource.method && body && !headers.has("content-type")) headers.set("content-type", resource.requestEncoding === "FORM" ? "application/x-www-form-urlencoded; charset=UTF-8" : "application/json");
   if (resource.kind === "SOCRATA" && process.env.SOCRATA_APP_TOKEN) headers.set("x-app-token", process.env.SOCRATA_APP_TOKEN);
   if (prior?.etag) headers.set("if-none-match", prior.etag);
   else if (prior?.modified) headers.set("if-modified-since", prior.modified);
@@ -229,7 +240,7 @@ export async function* acquireCampaignFinanceResource(state: string, resource: C
   }
   for (;;) {
     const url = new URL(resource.url);
-    const body: Record<string, unknown> | null = resource.method ? { ...resource.body } : null;
+    const body: Record<string, unknown> | null = resource.method || resource.jsonQuery ? { ...resource.body } : null;
     if (resource.throughDateParameter) {
       const through = (options.now ?? (() => new Date().toISOString()))().slice(0, 10);
       if (body) body[resource.throughDateParameter] = through;
@@ -244,6 +255,7 @@ export async function* acquireCampaignFinanceResource(state: string, resource: C
         if (body) body[name] = value; else url.searchParams.set(name, String(value));
       }
     }
+    if (resource.jsonQuery) url.searchParams.set(resource.jsonQuery.parameter, JSON.stringify({ [resource.jsonQuery.field]: body }));
     const directory = join(options.directory, state, resource.id);
     await mkdir(directory, { recursive: true });
     const checkpointPath = join(directory, digest(requestIdentity(url.href, body, resource)) + ".json");

@@ -22,14 +22,15 @@ export async function campaignSession(resource: CampaignFinanceResource, vault: 
   const bytes = buffer.subarray(0, size), hash = createHash("sha256").update(bytes).digest("hex");
   await vault.put(`project/meanwhile/source/campaign-finance-form/${hash}`, bytes, { contentHash: `sha256-${hash}`, contentType: "text/html", byteLength: size });
   const fields = { ...resource.body };
-  if (session.tokenField) {
+  if (session.tokenField || session.hiddenFields) {
     const inputs = [...bytes.toString("utf8").matchAll(/<input\b[^>]*>/gi)];
     const token = inputs.flatMap(([tag]) => {
       const attrs = Object.fromEntries([...tag.matchAll(/([\w-]+)\s*=\s*(["'])([\s\S]*?)\2/g)].map(match => [match[1].toLowerCase(), match[3]]));
+      if (session.hiddenFields && attrs.type?.toLowerCase() === "hidden" && attrs.name && !(attrs.name in fields)) fields[attrs.name] = attrs.value ?? "";
       return attrs.name === session.tokenField && attrs.value ? [attrs.value] : [];
     });
-    if (!token.length || new Set(token).size !== 1) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "The campaign request form has no unambiguous public form token.");
-    fields[session.tokenField] = token[0];
+    if (session.tokenField && (!token.length || new Set(token).size !== 1)) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "The campaign request form has no unambiguous public form token.");
+    if (session.tokenField) fields[session.tokenField] = token[0];
   }
   return { ...resource, body: fields, headers: { ...resource.headers,
     cookie: page.headers.getSetCookie().map(value => value.split(";")[0]).join("; "), referer: session.url } };

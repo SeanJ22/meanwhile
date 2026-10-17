@@ -1,6 +1,25 @@
 import inventory from "../../data/campaign-finance/sources.json" with { type: "json" };
 import { US_JURISDICTIONS } from "../coverage/states.ts";
 
+interface CampaignFinanceIndex {
+  readonly url: string;
+  readonly pattern: string;
+  readonly downloadPrefix: string;
+  readonly postback?: string;
+  readonly method?: "POST";
+  readonly body?: Readonly<Record<string, unknown>>;
+  readonly rowPath?: string;
+  readonly idField?: string;
+  readonly urlTemplate?: string;
+  readonly filter?: { readonly field: string; readonly value: string };
+  readonly split?: { readonly field: string; readonly delimiter: string };
+  readonly parameters?: readonly { readonly parameter: string; readonly field: string }[];
+  readonly selectParameter?: { readonly name: string; readonly parameter: string; readonly valuePattern?: string };
+  readonly childPattern?: string;
+  readonly child?: CampaignFinanceIndex;
+  readonly expectedFields?: Readonly<Record<string, string>>;
+}
+
 export interface CampaignFinanceResource {
   readonly id: string;
   readonly kind: "SOCRATA" | "JSON" | "CSV" | "ZIP";
@@ -8,11 +27,14 @@ export interface CampaignFinanceResource {
   readonly landingUrl?: string;
   readonly method?: "POST";
   readonly requestEncoding?: "FORM";
-  readonly session?: { readonly url: string; readonly tokenField?: string };
+  readonly jsonQuery?: { readonly parameter: string; readonly field: string };
+  readonly session?: { readonly url: string; readonly tokenField?: string; readonly hiddenFields?: boolean };
   readonly body?: Readonly<Record<string, unknown>>;
   readonly headers?: Readonly<Record<string, string>>;
   readonly rowPath?: string;
+  readonly jsonStringEnvelope?: string;
   readonly rowObject?: string;
+  readonly expectedFields?: Readonly<Record<string, string>>;
   readonly dateEncoding?: "EPOCH_MILLISECONDS" | "DOTNET_MILLISECONDS";
   readonly totalPath?: string;
   readonly offsetParameter?: string;
@@ -23,17 +45,14 @@ export interface CampaignFinanceResource {
   readonly throughDateParameter?: string;
   readonly firstOffset?: number;
   readonly delimiter?: string;
+  readonly csvColumns?: readonly { readonly field: string; readonly header: string; readonly occurrence?: number }[];
   readonly quote?: string | null;
   readonly encoding?: string;
   readonly preambleRows?: number;
   readonly preamblePublicationDate?: string;
   readonly emptyResponse?: string;
   readonly filePattern?: string;
-  readonly index?: { readonly url: string; readonly pattern: string; readonly downloadPrefix: string; readonly postback?: string;
-    readonly method?: "POST"; readonly body?: Readonly<Record<string, unknown>>;
-    readonly rowPath?: string; readonly idField?: string; readonly urlTemplate?: string; readonly filter?: { readonly field: string; readonly value: string };
-    readonly split?: { readonly field: string; readonly delimiter: string }; readonly parameters?: readonly { readonly parameter: string; readonly field: string }[];
-    readonly selectParameter?: { readonly name: string; readonly parameter: string; readonly valuePattern?: string }; readonly childPattern?: string };
+  readonly index?: CampaignFinanceIndex;
   readonly governmentOcdId?: string;
   readonly identity: readonly string[];
   readonly identityScope?: "PUBLICATION";
@@ -63,6 +82,7 @@ export interface CampaignFinanceResource {
   readonly lookup?: { readonly entryPattern?: string; readonly url?: string; readonly relativeUrl?: string; readonly publicationResource?: string; readonly keys: readonly string[]; readonly filingKeys?: readonly string[]; readonly fields: readonly string[];
     readonly consistentFields?: readonly { readonly filing: string; readonly cover: string }[] };
   readonly qualifiers?: readonly { readonly field: string; readonly label: string }[];
+  readonly title?: readonly string[];
   readonly summaryLine?: { readonly formField: string; readonly lineField: string; readonly labels: Readonly<Record<string, Readonly<Record<string, string>>>> };
 }
 

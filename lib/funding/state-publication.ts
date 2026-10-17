@@ -227,7 +227,7 @@ export async function publishCampaignFinanceResource(state: string, resource: Ca
       while (!previous.done && previous.value.id < row.id) { await append(previous.value); previous = await predecessor!.next(); }
       if (!previous.done && previous.value.id === row.id) {
         const old = previous.value;
-        row = { ...row, amounts: [...row.amounts, ...old.amounts.filter(amount => row.invalidAmounts.includes(amount.label)).map(amount => ({ ...amount, provenance: amount.provenance ?? old.provenance }))] };
+        row = { ...row, amounts: [...row.amounts, ...old.amounts.filter(amount => row.unavailableAmounts.includes(amount.label)).map(amount => ({ ...amount, provenance: amount.provenance ?? old.provenance }))] };
         previous = await predecessor!.next();
       }
       await append(row);

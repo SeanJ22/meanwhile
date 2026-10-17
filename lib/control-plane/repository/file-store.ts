@@ -53,6 +53,7 @@ import {
   RepositoryLockHeld,
   UnknownAggregate,
   canonicalJson,
+  heldSlotKeys,
   jsonTextAtPath,
   projectAggregate,
   projectRecord,
@@ -64,6 +65,8 @@ import {
   type ArtifactRecord,
   type ControlPlaneRepositories,
   type DispositionCommit,
+  type HeldSlots,
+  type PassCursor,
   type LockManager,
   type Persisted,
   type PutOutcome,
@@ -498,6 +501,19 @@ export function fileAppendOnlyRepository<T>(
     readSince: async (since: string): Promise<readonly T[]> =>
       (await readEveryPartition()).filter((line) => Date.parse(line.at) >= Date.parse(since)).map((line) => line.record),
 
+    readChangedSince: async (since: string | null, held?: HeldSlots) => {
+      const through = new Date().toISOString();
+      const from = since === null ? null : Date.parse(since);
+      const skip = heldSlotKeys(held);
+      const positions = new Map<string, number>();
+      return { through, records: (await readEveryPartition()).flatMap((line) => {
+        const position = positions.get(line.key) ?? 0;
+        positions.set(line.key, position + 1);
+        return (from !== null && Date.parse(line.at) < from) || skip.has(`${line.key}\n${position}`) ? []
+          : [{ key: line.key, recordId: line.recordId, position, record: line.record }];
+      }) };
+    },
+
     keys: async (): Promise<readonly string[]> => {
       const keys = new Set<string>((await readEveryPartition()).map((line) => line.key));
       return [...keys].sort();
@@ -634,6 +650,7 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
     methodCandidates: fileAggregateRepository<CandidateStore>(resolved, "MethodCandidateStore", "method-candidates"),
     researchIntents: fileAppendOnlyRepository<ResearchIntent>(resolved, "research-intents"),
     boxFindings: listedBoxRepository(fileAggregateRepository<BoxFinding>(resolved, "BoxFinding", "box-findings")),
+    passCursors: fileAggregateRepository<PassCursor>(resolved, "PassCursor", "pass-cursors"),
     scoutResults: fileAppendOnlyRepository<ScoutResult>(resolved, "scout-results"),
     workerResults: fileAppendOnlyRepository<WorkerResultRecord>(resolved, "worker-results"),
     promotionPipeline: fileAppendOnlyRepository<PromotionPipelineRecord>(resolved, "promotion-pipeline"),

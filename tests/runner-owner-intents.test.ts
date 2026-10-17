@@ -354,7 +354,7 @@ test("POSITIVE CONTROL: a runner that drops the publish call or the dispatch che
   assert.notEqual(sleepThroughPause, src);
   assert.ok(fails(() => checkRunnerHonorsOwnerIntents(sleepThroughPause)), "a runner whose sleep runs through a pause passed");
 
-  const starvedRuntime = src.replace('{ id: "intake-runtime", everyMs: INTAKE_RUNTIME_TICK_MS, run: runIntakeRuntime },\n', "");
+  const starvedRuntime = src.replace('{ id: "intake-runtime", everyMs: INTAKE_RUNTIME_TICK_MS, budgetMs: INTAKE_RUNTIME_BUDGET_MS, run: runIntakeRuntime },\n', "");
   assert.notEqual(starvedRuntime, src);
   assert.ok(fails(() => checkRunnerHonorsOwnerIntents(starvedRuntime)), "a standing clock missing an independent lane passed");
 });

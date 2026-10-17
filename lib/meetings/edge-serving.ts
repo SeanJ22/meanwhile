@@ -35,7 +35,7 @@ import { type BodyFacts } from "../facts/registry-overlay.ts";
 import { factReader } from "../facts/db.ts";
 import { readSittingFacts, withSittingFacts } from "../facts/meeting-read.ts";
 import type { Meeting } from "../sources/types.ts";
-import type { StateFactsIndex } from "../facts/state-facts-publication.ts";
+import type { StateFactsPointer } from "../facts/state-facts-publication.ts";
 import type { FederalDirectoryReadModel } from "../officials/federal-directory-data-plane.ts";
 import type { CuratedReaderProjection } from "../civic-data/manual-projections.ts";
 import type { OfficialStateLegislatorReadModel } from "../civic-data/candidate-builders.ts";
@@ -189,15 +189,6 @@ interface RegistrationArtifactEnvelope {
   readonly versionId: string;
   readonly generatedAt: string;
   readonly value: unknown;
-}
-
-interface StateFactsArtifactEnvelope {
-  readonly formatVersion: typeof READER_ARTIFACT_FORMAT_VERSION;
-  readonly family: "state-facts";
-  readonly state: string;
-  readonly versionId: string;
-  readonly generatedAt: string;
-  readonly value: StateFactsIndex;
 }
 
 interface FactBucketArtifactEnvelope {
@@ -554,7 +545,7 @@ export function prefetchReaderEdgeStates(
   for (const scope of manifest.scopes) if (wanted.has(scope.scope)) void fetchScopeArtifact(scope, store).catch(() => undefined);
 }
 
-const stateFactsEdgeCache = new Map<string, { version: string; value: Promise<StateFactsIndex | null> }>();
+const stateFactsPointerMemo = new Map<string, { readonly at: number; readonly value: Promise<StateFactsPointer | null> }>();
 const factBucketEdgeCache = new Map<string, { version: string; value: Promise<RecordIndex | null> }>();
 
 async function readEnvelope<T extends { readonly value: unknown; readonly versionId: string }>(ref: AuthorityArtifactRef, store: ReaderArtifactStore,
@@ -568,14 +559,21 @@ async function readEnvelope<T extends { readonly value: unknown; readonly versio
   } catch (error) { reportReaderStateFailure(family, state, ref.key, error); return null; }
 }
 
-/** One state's served bucket list, read once per version per process. */
-export async function readServedStateFactsIndex(state: string, ref: AuthorityArtifactRef | undefined, store: ReaderArtifactStore): Promise<StateFactsIndex | null> {
-  if (!ref?.key || !ref.version) {
-    reportReaderStateFailure("state-facts", state, ref?.key ?? null, new Error("STATE_ARTIFACT_REFERENCE_MISSING"));
-    return null;
+export const stateFactsPointerKey = (state: string) => `reader/state-facts/${state}.json`;
+
+/** One state's served bucket list from its own pointer, held as long as the manifest; null when the state has none published. */
+export function readStateFactsPointer(state: string, store: ReaderArtifactStore, now = Date.now()): Promise<StateFactsPointer | null> {
+  const held = store.kind === "netlify-blobs" ? stateFactsPointerMemo.get(state) : undefined;
+  if (held && now - held.at >= 0 && now - held.at < READER_MANIFEST_MEMO_MS) return held.value;
+  const value = store.readJsonPointer<StateFactsPointer>(stateFactsPointerKey(state)).then(read => {
+    if (read && (read.value.state !== state || !Array.isArray(read.value.buckets))) throw new Error("STATE_ARTIFACT_ENVELOPE_INVALID");
+    return read?.value ?? null;
+  });
+  if (store.kind === "netlify-blobs") {
+    stateFactsPointerMemo.set(state, { at: now, value });
+    value.catch(() => { if (stateFactsPointerMemo.get(state)?.value === value) stateFactsPointerMemo.delete(state); });
   }
-  return heldFetch(stateFactsEdgeCache, state, `${ref.version}:${ref.key}`,
-    () => readEnvelope<StateFactsArtifactEnvelope>(ref, store, "state-facts", state, envelope => envelope.family === "state-facts" && envelope.state === state));
+  return value;
 }
 
 /** One bucket's record index, read once per version per process; its records are fetched only as a selection needs them. */
@@ -594,25 +592,25 @@ export async function writeFactBucket(store: ReaderArtifactStore, state: string,
   return { key: await store.putImmutable(gzipSync(Buffer.from(JSON.stringify(envelope), "utf8")), "json.gz"), version: versionId, sha: sha256OfJson(index) };
 }
 
-/** The facts of every body a reader's selection names, from the states it touches; every body when there is no selection. */
-async function readStateFacts(refs: readonly (readonly [string, AuthorityArtifactRef])[], store: ReaderArtifactStore,
-  selection: ReturnType<typeof currentReaderSelection>): Promise<BodyFacts[] | null> {
-  const states = selection ? new Set(selection.states ?? statesForRegistryDivisions([...selection.keys, ...selection.divisions ?? []])) : null;
-  const read = await Promise.all(refs.filter(([state]) => states === null || states.has(state)).map(async ([state, ref]) => {
+/** The facts of every body a reader's selection names in the given states; every body of them when there is no selection. */
+async function readStateFacts(states: readonly string[], store: ReaderArtifactStore,
+  selection: ReturnType<typeof currentReaderSelection>): Promise<{ bodies: BodyFacts[]; versionId: string | null } | null> {
+  const read = await Promise.all(states.map(async state => {
     try {
-      const index = await readServedStateFactsIndex(state, ref, store);
-      if (!index) return null;
-      const buckets = await Promise.all(index.buckets.map((bucket, n) => bucket ? readServedFactBucket(state, n, bucket, store) : null));
-      if (index.buckets.some((bucket, n) => bucket !== null && buckets[n] === null)) return null;
+      const pointer = await readStateFactsPointer(state, store);
+      if (!pointer) return { bodies: [], versionId: null };
+      const buckets = await Promise.all(pointer.buckets.map((bucket, n) => bucket ? readServedFactBucket(state, n, bucket, store) : null));
+      if (pointer.buckets.some((bucket, n) => bucket !== null && buckets[n] === null)) return null;
       const bodies = await Promise.all(buckets.flatMap(bucket => bucket ? [readAuthorityRecords(bucket, store, selection) as Promise<{ bodies: BodyFacts[] }>] : []));
-      return bodies.flatMap(row => row.bodies);
-    } catch (error) { reportReaderStateFailure("state-facts", state, ref.key, error); return null; }
+      return { bodies: bodies.flatMap(row => row.bodies), versionId: pointer.versionId };
+    } catch (error) { reportReaderStateFailure("state-facts", state, stateFactsPointerKey(state), error); return null; }
   }));
-  return read.some(state => state === null) ? null : read.flat() as BodyFacts[];
+  if (read.some(state => state === null)) return null;
+  return { bodies: read.flatMap(state => state!.bodies), versionId: read.map(state => state!.versionId).filter(Boolean).join("|") || null };
 }
 
 export async function ensureReaderAuthorityEdge(
-  manifest: Pick<ReaderManifest, "authorityArtifacts" | "registrations" | "stateLegislators" | "stateFacts" | "stateAuthorities"> & Pick<ReaderManifest, "meetingPlaces">,
+  manifest: Pick<ReaderManifest, "authorityArtifacts" | "registrations" | "stateLegislators" | "stateAuthorities"> & Pick<ReaderManifest, "meetingPlaces">,
   store: ReaderArtifactStore | null = resolveReaderArtifactStore(),
   families: readonly AuthorityFamily[] = AUTHORITY_FAMILIES,
 ): Promise<ReaderAuthorityEdgeBundle> {
@@ -627,22 +625,22 @@ export async function ensureReaderAuthorityEdge(
       commentAccess?: { value: CommentAccessProjection; versionId: string };
     } = {};
     const factReads = new Map<string, Promise<{ bodies: readonly BodyFacts[]; versionId: string | null } | null>>();
-    const stateRegistryFacts = store ? { stateRegistryFacts: { key: (state: string) => manifest.stateFacts?.[state]?.key ?? null, load: (state: string) => {
+    const stateRegistryFacts = store ? { stateRegistryFacts: { key: stateFactsPointerKey, load: (state: string) => {
       const selectionKey = `${state}:${[...currentReaderSelection()?.keys ?? []].sort().join("|")}`;
       let read = factReads.get(selectionKey);
       if (!read) {
         read = (async () => {
-          const ref = manifest.stateFacts?.[state];
           const selected = currentReaderSelection();
           const localKeys = selected ? [...selected.keys].filter(key => statesForRegistryDivisions([key]).includes(state)) : [];
           const placeSelection = selected && localKeys.some(key => /\/(?:state|district|territory):[a-z]{2}\//i.test(key) || key.includes("#")) ? selected : undefined;
-          const bodies = ref ? await readStateFacts([[state, ref]], store, placeSelection) : [];
-          if (!bodies) return null;
+          const facts = await readStateFacts([state], store, placeSelection);
+          if (!facts) return null;
+          const { bodies, versionId } = facts;
           const prior = bundle.commentAccess;
-          bundle.commentAccess = { versionId: [...new Set([prior?.versionId, ref?.version ?? `not-recorded:${state}`].filter(Boolean))].join("|"),
+          bundle.commentAccess = { versionId: [...new Set([prior?.versionId, versionId ?? `not-recorded:${state}`].filter(Boolean))].join("|"),
             value: { kind: "comment-access", records: [...new Map([...prior?.value.records ?? [],
               ...bodies.flatMap(body => body.comment ? [{ id: `comment-access:${body.id}`, ...body.comment }] : [])].map(row => [row.id, row])).values()] } };
-          return { bodies, versionId: ref?.version ?? null };
+          return facts;
         })();
         factReads.set(selectionKey, read);
       }
@@ -746,8 +744,6 @@ export async function publishReaderEdgeArtifacts(
     readonly stateAuthorities?: PublishStateAuthorities;
     readonly registrations?: PublishRegistrations;
     readonly stateLegislators?: PublishRegistrations;
-    /** Complete: one entry per state with live facts. */
-    readonly stateFacts?: PublishRegistrations;
     readonly meetingBodies?: Parameters<typeof partitionSnapshotByScope>[2];
     readonly meetingRegistryVersion?: string | null;
     readonly meetingPlaces?: Readonly<Record<string, readonly string[]>>;
@@ -777,7 +773,6 @@ export async function publishReaderEdgeArtifacts(
     options.registrations === undefined ? null : Object.entries(options.registrations).map(([state, entry]) => [state, entry.versionId] as const),
   );
   const newLegislatorVersions = registrationVersions(options.stateLegislators === undefined ? null : Object.entries(options.stateLegislators).map(([scope, entry]) => [scope, entry.versionId] as const));
-  const newStateFactVersions = registrationVersions(options.stateFacts === undefined ? null : Object.entries(options.stateFacts).map(([state, entry]) => [state, entry.versionId] as const));
   const carriedSummary = snapshot ? snapshotClientMeta(snapshot).carried : undefined;
 
   let current;
@@ -805,12 +800,10 @@ export async function publishReaderEdgeArtifacts(
     const sameLegislators = options.stateLegislators === undefined || registrationVersions(current.manifest.stateLegislators === undefined ? null : Object.entries(current.manifest.stateLegislators).map(([scope, ref]) => [scope, ref.version] as const)) === newLegislatorVersions;
     const samePlaces = options.meetingPlaces === undefined || JSON.stringify(options.meetingPlaces) === JSON.stringify(current.manifest.meetingPlaces);
     const sameSummary = snapshot === null || JSON.stringify(carriedSummary) === JSON.stringify(current.manifest.carriedSummary);
-    const sameStateFacts = options.stateFacts === undefined || registrationVersions(current.manifest.stateFacts === undefined ? null
-      : Object.entries(current.manifest.stateFacts).map(([state, ref]) => [state, ref.version] as const)) === newStateFactVersions;
     const sameStateAuthorities = Object.entries(options.stateAuthorities ?? {}).every(([family, states]) =>
       current.manifest.stateAuthorities?.[family as StateAuthorityFamily] !== undefined &&
       Object.entries(states).every(([state, entry]) => current.manifest.stateAuthorities?.[family as StateAuthorityFamily]?.[state]?.version === entry.versionId));
-    if (sameStateAuthorities && sameSet && sameExtras && sameAuthority && sameRegistrations && sameLegislators && sameStateFacts && sameMeetingAreas && samePlaces && sameSummary) {
+    if (sameStateAuthorities && sameSet && sameExtras && sameAuthority && sameRegistrations && sameLegislators && sameMeetingAreas && samePlaces && sameSummary) {
       const generatedAt = snapshot?.generatedAt || (options.checks ? laterCheck(current.manifest.generatedAt, metadata.retrievedAt) : null) || current.manifest.generatedAt;
       const checks = options.checks ?? (snapshot === null && current.manifest.composition !== undefined
         ? { composition: current.manifest.composition, freshChecks: current.manifest.freshChecks ?? {} } : undefined);
@@ -840,7 +833,6 @@ export async function publishReaderEdgeArtifacts(
     Object.entries(current?.manifest.stateAuthorities ?? {}).map(([family, states]) => [family, { ...states }]));
   const registrations: Record<string, AuthorityArtifactRef> = options.registrations === undefined ? { ...current?.manifest.registrations } : {};
   const stateLegislators: Record<string, AuthorityArtifactRef> = options.stateLegislators === undefined ? { ...current?.manifest.stateLegislators } : {};
-  const stateFacts: Record<string, AuthorityArtifactRef> = options.stateFacts === undefined ? { ...current?.manifest.stateFacts } : {};
   try {
     for (const artifact of artifacts) {
       const unchanged = current?.manifest.scopes.find(scope => scope.scope === artifact.scope && scope.sha256 === shaByScope.get(artifact.scope));
@@ -927,17 +919,6 @@ export async function publishReaderEdgeArtifacts(
       const key = await store.putImmutable(gzipSync(Buffer.from(JSON.stringify(envelope), "utf8")), "json.gz");
       stateLegislators[jurisdiction] = { key, version: entry.versionId, sha: sha256OfJson(indexed), layout: "records" };
     }
-    for (const [state, entry] of Object.entries(options.stateFacts ?? {})) {
-      if ("carried" in entry) {
-        const served = current?.manifest.stateFacts?.[state];
-        if (!served || served.version !== entry.versionId) return { status: "RACED", sequence };
-        stateFacts[state] = served;
-        continue;
-      }
-      const envelope: StateFactsArtifactEnvelope = { formatVersion: READER_ARTIFACT_FORMAT_VERSION, family: "state-facts", state, versionId: entry.versionId, generatedAt: now, value: entry.value as StateFactsIndex };
-      const key = await store.putImmutable(gzipSync(Buffer.from(JSON.stringify(envelope), "utf8")), "json.gz");
-      stateFacts[state] = { key, version: entry.versionId, sha: sha256OfJson(entry.value) };
-    }
   } catch (error) {
     // Complete immutable bytes precede CAS; partial writes cannot change a served artifact.
     return { status: "FAILED", error: error instanceof Error ? error.message : String(error) };
@@ -971,7 +952,6 @@ export async function publishReaderEdgeArtifacts(
     ...(Object.keys(stateAuthorities).length ? { stateAuthorities } : {}),
     ...(options.registrations !== undefined || current?.manifest.registrations !== undefined ? { registrations } : {}),
     ...(options.stateLegislators !== undefined || current?.manifest.stateLegislators !== undefined ? { stateLegislators } : {}),
-    ...(options.stateFacts !== undefined || current?.manifest.stateFacts !== undefined ? { stateFacts } : {}),
     ...((options.checks?.freshChecks ?? (snapshot === null ? current?.manifest.freshChecks : undefined)) !== undefined
       ? { freshChecks: options.checks?.freshChecks ?? current!.manifest.freshChecks } : {}),
     ...((options.checks?.composition ?? (snapshot === null ? current?.manifest.composition : undefined)) !== undefined
@@ -1096,9 +1076,10 @@ async function readReaderEdgeMeetingsHeld(
 
   const merged = applyMeetingFreshChecks(mergeScopeArtifacts(artifacts, manifest), { checkedAt: null, routes: manifest.freshChecks ?? {} });
   // Each served sitting takes its body's live facts from that body's record.
-  const bodies = await readStateFacts(Object.entries(manifest.stateFacts ?? {}), store, { keys: new Set(sittingBodies(merged.meetings)) });
-  const value = { ...merged, meetings: withSittingFacts(merged.meetings, bodies?.flatMap(body => body.sittings) ?? []) };
-  const complete = artifacts.length === needed.length && bodies !== null;
+  const keys = new Set(sittingBodies(merged.meetings));
+  const facts = await readStateFacts(statesForRegistryDivisions([...keys]), store, { keys });
+  const value = { ...merged, meetings: withSittingFacts(merged.meetings, facts?.bodies.flatMap(body => body.sittings) ?? []) };
+  const complete = artifacts.length === needed.length && facts !== null;
   const read: MeetingsProjectionReadResult = {
     kind: "PROMOTED",
     value,

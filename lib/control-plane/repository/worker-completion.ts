@@ -34,8 +34,7 @@ export async function completeWorkerTask(repos: ControlPlaneRepositories, result
   await repos.workerResults.append(result.workItemId, result.id, committed, result.endedAt);
   await applyWorkerCompletion(repos, committed);
   if (committed.result.role === "DETECTIVE") {
-    await indexDetectiveFindings(repos.boxFindings, { ...committed, result: committed.result },
-      new Map((await repos.artifacts.readAll()).map(artifact => [artifact.artifactId, artifact])), committed.endedAt);
+    await indexDetectiveFindings(repos.boxFindings, { ...committed, result: committed.result }, repos.artifacts, committed.endedAt);
   }
   return committed;
 }
@@ -180,7 +179,7 @@ function assertCompletedWorkerResult(record: WorkerResultRecord, attempt: Attemp
 }
 
 /** Reads the named Attempts by id (batched where the store can); ids with no row are left out. */
-async function readAttemptsById(repos: ControlPlaneRepositories, ids: readonly string[]) {
+async function readAttemptsById(repos: Pick<ControlPlaneRepositories, "attempts">, ids: readonly string[]) {
   const unique = [...new Set(ids)];
   if (repos.attempts.readMany) return repos.attempts.readMany(unique);
   const rows: { readonly id: string; readonly value: Attempt }[] = [];
@@ -200,25 +199,26 @@ export async function readCompletedWorkerResults(repos: ControlPlaneRepositories
     workItemId === undefined ? repos.workerResults.readAll() : repos.workerResults.read(workItemId),
     workItemId === undefined ? Promise.resolve(null) : repos.attempts.listWhere(["workItemId"], workItemId),
   ]);
-  const attemptRows = scopedAttempts ?? await readAttemptsById(repos, records.map(record => record.attemptId));
+  return committedOf(records, scopedAttempts ?? await readAttemptsById(repos, records.map(record => record.attemptId)));
+}
+
+/** `readCompletedWorkerResults` for the named work items only, in one batched read of their results and of each result's own Attempt. */
+export async function readCompletedWorkerResultsOf(repos: ControlPlaneRepositories, workItemIds: readonly string[]): Promise<readonly WorkerResultRecord[]> {
+  return completedWorkerResults(repos, [...(await readByKeys(repos.workerResults, workItemIds)).values()].flat());
+}
+
+/** Those of these records their own Attempt shows committed, read by id. */
+export async function completedWorkerResults(repos: Pick<ControlPlaneRepositories, "attempts">, records: readonly WorkerResultRecord[]): Promise<readonly WorkerResultRecord[]> {
+  return committedOf(records, await readAttemptsById(repos, records.map(record => record.attemptId)));
+}
+
+function committedOf(records: readonly WorkerResultRecord[], attemptRows: readonly { readonly id: string; readonly value: Attempt }[]): WorkerResultRecord[] {
   const attempts = new Map(attemptRows.map(row => [row.id, row.value]));
   return records.filter(record => {
     const attempt = attempts.get(record.attemptId);
     if (!attempt) return false;
     try { assertCompletedWorkerResult(record, attempt); return true; }
     catch { return false; /* Uncommitted or malformed history is never inherited as evidence. */ }
-  });
-}
-
-/** `readCompletedWorkerResults` for the named work items only, in one batched read of their results and of each result's own Attempt. */
-export async function readCompletedWorkerResultsOf(repos: ControlPlaneRepositories, workItemIds: readonly string[]): Promise<readonly WorkerResultRecord[]> {
-  const records = [...(await readByKeys(repos.workerResults, workItemIds)).values()].flat();
-  const attempts = new Map((await readAttemptsById(repos, records.map(record => record.attemptId))).map(row => [row.id, row.value]));
-  return records.filter(record => {
-    const attempt = attempts.get(record.attemptId);
-    if (!attempt) return false;
-    try { assertCompletedWorkerResult(record, attempt); return true; }
-    catch { return false; }
   });
 }
 

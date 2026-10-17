@@ -72,6 +72,8 @@ export interface BoundedChildPassOptions {
   readonly sameDomainGapMs?: number;
   readonly env: NodeJS.ProcessEnv;
   readonly timeoutMs?: number;
+  /** The pass's deadline: a child still running then is ended, and its work stays owed. */
+  readonly deadlineMs?: number;
   readonly maxBufferBytes?: number;
   readonly concurrency?: number;
   readonly onStarting?: (command: BoundedChildCommand, index: number) => Promise<void> | void;
@@ -96,6 +98,7 @@ function runOneBoundedChild(
   return new Promise((resolve) => {
     let idle: ReturnType<typeof setTimeout> | undefined;
     let paused = false;
+    let late = false;
     let lines = "";
     const observed = new Set<string>();
     const renew = () => {
@@ -117,13 +120,14 @@ function runOneBoundedChild(
       },
       (error, stdout, stderr) => {
         clearTimeout(idle);
+        clearTimeout(wall);
         const code = error && "code" in error ? error.code : null;
         const signal = error && "signal" in error && error.signal
           ? error.signal as NodeJS.Signals
           : null;
         const killed = Boolean(error && "killed" in error && error.killed);
         const outputLimited = code === "ERR_CHILD_PROCESS_STDIO_MAXBUFFER";
-        const timedOut = !outputLimited && (paused || killed);
+        const timedOut = !outputLimited && (paused || late || killed);
         const termination: BoundedChildTermination = outputLimited
             ? "OUTPUT_LIMIT_EXCEEDED"
             : timedOut
@@ -138,10 +142,15 @@ function runOneBoundedChild(
           stdout,
           stderr,
           termination,
-          errorMessage: paused ? `NO_PROGRESS_PAUSED: no new publication for ${timeout}ms. ${error?.message ?? ""}` : error?.message ?? null,
+          errorMessage: late ? "PASS_TIME_BUDGET: the pass reached its deadline; the next pass continues this work"
+            : paused ? `NO_PROGRESS_PAUSED: no new publication for ${timeout}ms. ${error?.message ?? ""}` : error?.message ?? null,
         });
       },
     );
+    const wall = options.deadlineMs === undefined ? undefined : setTimeout(() => {
+      late = true;
+      child.kill("SIGTERM");
+    }, Math.max(0, options.deadlineMs - Date.now()));
     child.once("spawn", () => command.onStarted?.(child.pid!));
     child.stdout?.on("data", chunk => {
       lines += String(chunk);

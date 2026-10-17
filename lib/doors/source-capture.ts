@@ -34,7 +34,7 @@ export async function recordSourceObservation(repos: Repos, observation: SourceO
       attemptId: `source-discovery:${workItemId}:${at}`, permission: "ALLOWED", transport: "REACHABLE", retentionPolicy: defaultRetention(tier) };
     const saved = await vault.putBytes(artifact, bytes);
     if (!saved.stored) throw new Error(saved.why);
-    if (!(await repos.artifacts.read(workItemId)).some(row => row.artifactId === artifact.id)) await repos.artifacts.append(workItemId, artifact.id, { artifactId: artifact.id, workItemId, routeTaskId: null,
+    if ((await repos.artifacts.readWhere(workItemId, ["artifactId"], artifact.id)).length === 0) await repos.artifacts.append(workItemId, artifact.id, { artifactId: artifact.id, workItemId, routeTaskId: null,
       attemptId: artifact.attemptId, tier, contentHash: hash, byteLength: bytes.byteLength,
       contentType, canonicalUrl: address.url, partial: false, recordedAt: at }, at);
     copyId = artifact.id;
@@ -73,8 +73,7 @@ export async function retireSourceDoors(repo: ControlPlaneRepositories["doors"],
   observation: Pick<SourceObservation, "url" | "ocdId" | "disposition" | "capture" | "workItemId">, at: string) {
   const address = pageAddress(observation.url);
   if (!address || observation.disposition.kind === "DOOR") return;
-  const rows = [...await repo.listWhere(["config", "url"], address.url), ...await repo.listWhere(["kind"], VOTING_SOURCE_DOOR_KIND)];
-  for (const row of new Map(rows.map(row => [row.id, row])).values()) {
+  for (const row of await repo.listWhere(["config", "url"], address.url)) {
     const door = row.value;
     if (door.origin !== "DERIVED" || door.status === "SUSPENDED" || !["page", VOTING_SOURCE_DOOR_KIND].includes(door.kind)) continue;
     const url = door.kind === VOTING_SOURCE_DOOR_KIND

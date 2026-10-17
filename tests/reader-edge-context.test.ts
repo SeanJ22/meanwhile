@@ -6,7 +6,7 @@ import { after, test } from "./helpers/playbooks.ts";
 
 import { publishReaderEdgeArtifacts, type PublishAuthority } from "../lib/meetings/edge-serving.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
-import { writeFactBucket, writeFactRecord } from "../lib/meetings/edge-serving.ts";
+import { stateFactsPointerKey, writeFactBucket, writeFactRecord } from "../lib/meetings/edge-serving.ts";
 import type { BodyFacts } from "../lib/facts/registry-overlay.ts";
 import { azDistricts } from "./helpers/ballot-district-fixtures.ts";
 import { enterReaderAuthorityEdge, currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
@@ -109,6 +109,8 @@ async function publishEdge(versions: EdgeVersions): Promise<void> {
     const body: BodyFacts = { id: comment.bodyId, division: comment.bodyId.split("#")[0], fields: {}, roster: null, comment, sittings: [], dispositions: [] };
     return { path: ["bodies", index], ...await writeFactRecord(store, body), tags: [body.id, body.division] };
   }));
+  if (versions.commentAccess) await store.writeJsonPointer(stateFactsPointerKey("AZ"), { state: "AZ", versionId: versions.commentAccess,
+    buckets: [await writeFactBucket(store, "AZ", 0, versions.commentAccess, { kind: "READER_RECORDS", base: { bodies: [] }, records }, new Date().toISOString())] }, null);
   const result = await publishReaderEdgeArtifacts(snapshot, {
     sourceThrough: snapshot.generatedAt,
     retrievedAt: snapshot.generatedAt,
@@ -116,8 +118,6 @@ async function publishEdge(versions: EdgeVersions): Promise<void> {
   }, {
     store,
     stateAuthorities: { "registry-runtime": stateRegistryArtifacts(versions.registry, ["AZ"]) },
-    ...(versions.commentAccess ? { stateFacts: { AZ: { versionId: versions.commentAccess, value: { buckets: [await writeFactBucket(store, "AZ", 0, versions.commentAccess,
-      { kind: "READER_RECORDS", base: { bodies: [] }, records }, new Date().toISOString())] } } } } : {}),
     now: new Date().toISOString(),
     authority,
   });

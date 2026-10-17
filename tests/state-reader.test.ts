@@ -10,7 +10,7 @@ import { VALIDATION_CHECKS } from "../lib/civic-data/types.ts";
 import { withReaderSelection } from "../lib/db/reader-route.ts";
 import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
-import { ensureReaderAuthorityEdge,holdReaderAuthorityEdge,prepareStateAuthorityArtifact } from "../lib/meetings/edge-serving.ts";
+import { ensureReaderAuthorityEdge,holdReaderAuthorityEdge,prepareStateAuthorityArtifact,stateFactsPointerKey } from "../lib/meetings/edge-serving.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 
 const state="AZ",family="registry-runtime",scope="US-AZ:reader-registry-runtime",recordClass="REGISTRY_RUNTIME_BINDING";
@@ -96,12 +96,13 @@ test("missing same-state fact bytes log their artifact key once without opening 
   t.after(() => rmSync(directory, { recursive: true, force: true }));
   const store = new LocalFileArtifactStore(directory), warnings: unknown[][] = [], key = "reader/artifacts/az-facts-missing.json.gz";
   t.mock.method(console, "warn", (...args: unknown[]) => warnings.push(args));
-  const edge = await ensureReaderAuthorityEdge({ stateFacts: { AZ: { key, version: "facts-miss-v1", sha: "a".repeat(64) } } }, store, [family]);
+  await store.writeJsonPointer(stateFactsPointerKey("AZ"), { state: "AZ", versionId: "facts-miss-v1", buckets: [{ key, version: "facts-miss-v1", sha: "a".repeat(64) }] }, null);
+  const edge = await ensureReaderAuthorityEdge({}, store, [family]);
   await withReaderSelection({ states: ["AZ"], keys: new Set(["state:AZ"]) }, () => withReaderAuthorityEdge(edge, async () => {
     assert.equal(await edge.stateRegistryFacts!.load("AZ"), null);
     assert.equal(await edge.stateRegistryFacts!.load("AZ"), null);
   }));
-  assert.deepEqual(warnings, [["READER_STATE_ARTIFACT_MISS", { family: "state-facts", state, key, error: "STATE_ARTIFACT_BYTES_MISSING" }]]);
+  assert.deepEqual(warnings, [["READER_STATE_ARTIFACT_MISS", { family: "fact-bucket", state, key, error: "STATE_ARTIFACT_BYTES_MISSING" }]]);
 });
 
 test("an unexpected fact overlay failure preserves the verified registry and reports once per request", async t => {

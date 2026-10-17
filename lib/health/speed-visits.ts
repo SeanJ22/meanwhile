@@ -17,8 +17,8 @@ export function speedVisitsEnabled(env: Readonly<Record<string, string | undefin
 }
 
 /** Register on the runner's independent scheduler; `run` starts the speed pass as a child. */
-export function speedVisitsLane(run: () => Promise<void>): IndependentRuntimeLane {
-  return { id: "speed-visits", everyMs: SPEED_VISITS_TICK_MS, run };
+export function speedVisitsLane(run: (deadlineMs: number) => Promise<void>): IndependentRuntimeLane {
+  return { id: "speed-visits", everyMs: SPEED_VISITS_TICK_MS, budgetMs: SPEED_VISITS_TICK_MS, run };
 }
 
 /** A visit is due when none has been recorded, or the newest is at least `everyMs` old. */

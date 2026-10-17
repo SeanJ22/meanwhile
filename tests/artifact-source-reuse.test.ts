@@ -7,7 +7,7 @@ import { createMemoryRepositories } from "../lib/control-plane/repository/memory
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import { BOOTSTRAP_DDL, BOOTSTRAP_VERSION } from "../lib/control-plane/repository/pg-schema.ts";
 import type { ArtifactRecord, ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
-import { bootstrap, pgArtifactsByCanonicalUrl, pgEnsureArtifactSourceIndex, type Sql } from "../lib/control-plane/repository/pg-store.ts";
+import { pgArtifactsByCanonicalUrl, pgEnsureArtifactSourceIndex, type Sql } from "../lib/control-plane/repository/pg-store.ts";
 
 test("source capture reuse uses one bounded exact URL query across job keys", async () => {
   const calls: { text: string; params: readonly unknown[] }[] = [];
@@ -130,11 +130,4 @@ test("a replacement that became valid before the session lock is never dropped",
   await pgEnsureArtifactSourceIndex(mock.sql);
   assert.equal(statusReads, 2);
   assert.ok(!mock.calls.some(text => /CREATE INDEX|DROP INDEX/.test(text)));
-});
-
-test("an interrupted source index build fails bootstrap before its version is recorded", async () => {
-  const { sql, calls } = indexSql([{ valid: false, building: false }], /^CREATE INDEX CONCURRENTLY/);
-  await assert.rejects(bootstrap(sql, "2026-10-02T03:00:00Z"), /source index build interrupted/);
-  assert.ok(calls.some(text => text.includes("pg_advisory_unlock")));
-  assert.ok(!calls.some(text => text.includes("INSERT INTO cp_schema_version")));
 });

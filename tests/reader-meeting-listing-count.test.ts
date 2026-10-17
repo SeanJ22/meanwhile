@@ -73,7 +73,7 @@ test("actual badge, stats, overlay and venue panel render every ambiguous listin
     const snapshot=recordedMeetingsSnapshot([...ambiguousListingPairs(3).meetings, ...dateOnlyListings(3)]), identity=meetingListingIdentity(snapshot.meetings,canonicalBodyIdentity), results=[];
     for(const group of identity.groups){
       const meetings=snapshot.meetings.filter(row=>group.sourceIds.includes(row.id)),venues=groupByVenue(meetings,identity);
-      const data={allMeetings:meetings,meetings,venues,result:{meetings,listingIdentity:identity,coverage:null,tier:'exact',radiusKm:25,requestedRadiusKm:25,center:{lat:43.3,lng:-72}},location:null,drawnDistricts:[],dropped:0,searchFailed:false,atAddress:false,governing:null,zipPartial:null,basis:'ZIP'};
+      const data={allMeetings:meetings,meetings,venues,result:{meetings,listingIdentity:identity,coverage:null,tier:'exact',radiusKm:25,center:{lat:43.3,lng:-72}},location:null,drawnDistricts:[],dropped:0,searchFailed:false,atAddress:false,governing:null,zipPartial:null,basis:'ZIP'};
       const render=child=>renderToStaticMarkup(h(DataProvider,{value:data},h(UiProvider,{initial:{listOverlayOpen:true,listGroupBy:'none'}},child)));
       const renderCard=child=>render(h(Card,{title:'Calendar listings',sources:group.sources.map(source=>({what:'Unresolved calendar listing',provenance:source}))},child));
       const badge=render(h(CountBadge)),stats=render(h(StatsBar)),overlay=renderCard(h(ListOverlay)),panel=renderCard(h(MeetingPanel,{venue:venues[0],onClose:()=>{},onOpenMeeting:()=>{}}));

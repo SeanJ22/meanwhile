@@ -9,6 +9,7 @@ export interface ReaderOfficialsAsk {
   readonly phrase: string;
   readonly contact?: boolean;
   readonly place?: string;
+  readonly unresolvedPlace?: string;
 }
 
 interface OfficePhrase {
@@ -77,6 +78,19 @@ const STATE_NAMES: Readonly<Record<string, string>> = {
   ut: "utah", vt: "vermont", va: "virginia", wa: "washington", wv: "west virginia", wi: "wisconsin", wy: "wyoming",
 };
 
+export function statesNamedInQuestion(question: string): string[] {
+  let remaining = ` ${normalizeName(question)} `;
+  const states: string[] = [];
+  for (const [state, name] of Object.entries(STATE_NAMES).sort((a, b) => b[1].length - a[1].length)) {
+    const phrase = ` ${name} `;
+    if (remaining.includes(phrase)) {
+      states.push(state.toUpperCase());
+      remaining = remaining.replaceAll(phrase, " ");
+    }
+  }
+  return states;
+}
+
 const STATEWIDE_OFFICES: ReadonlySet<OfficeKey> = new Set(["governor", "attorney_general", "secretary_of_state", "state_treasurer", "superintendent_of_public_instruction", "corporation_commissioner", "us_senator"]);
 
 function statewideOffice(normalized: string, readerStates: readonly string[]): ReaderOfficialsAsk | null {
@@ -120,6 +134,16 @@ function namedPlaceOffice(normalized: string, readerPlaces: readonly string[]): 
 export function readerOfficialsQuestion(question: string, readerStates: readonly string[] = [], readerPlaces: readonly string[] = []): ReaderOfficialsAsk | null {
   const normalized = normalizeName(question);
   if (!normalized || normalized.length > 90) return null;
+  if (/^who governs /.test(normalized) && readerPlaces.some(place => normalized.includes(place))) {
+    return { keys: [...ELECTED_OFFICIALS, "mayor", "municipal_council", "county_supervisor", "county_commissioner"], phrase: "who governs this place" };
+  }
+  if (/^who governs /.test(normalized) && readerStates.some(state => {
+    const name = STATE_NAMES[state];
+    return name && normalized.endsWith(` ${name}`) && normalized.length > `who governs ${name}`.length;
+  })) {
+    return { keys: [], phrase: "who governs this place",
+      unresolvedPlace: question.trim().replace(/^who governs\s+/i, "").replace(/[?!.]+$/, "").trim() };
+  }
   const statewide = statewideOffice(normalized, readerStates);
   if (statewide) return statewide;
   const named = namedPlaceOffice(normalized, readerPlaces);
@@ -251,6 +275,10 @@ export function composeReaderOfficials(input: {
   holdingFailed: boolean;
   placesReached?: number;
 }): OfficialsComposition | null {
+  if (input.ask.unresolvedPlace) {
+    const answer = `We have not recorded local government coverage for ${input.ask.unresolvedPlace} yet, so we cannot identify who governs that place.`;
+    return { answer, citedUrls: [], gaps: [{ whose: "OURS", statement: answer }], named: [] };
+  }
   const contact = Boolean(input.ask.contact);
   const clauses: string[] = [];
   const sentences: string[] = [];

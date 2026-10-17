@@ -1,10 +1,10 @@
+import { ocdStateCode } from "../ocd/state-of.ts";
 import { cache } from "react";
 
 import type { SeatHolder } from "../officials/lookup.ts";
 import { seatHoldersForOffice, seatHolderById } from "../registry/server.ts";
 import { standingChipMayAttach } from "../officials/elected-role.ts";
 import { sameSeatDiscriminators } from "../officials/office-seat.ts";
-export { sameSeatDiscriminators } from "../officials/office-seat.ts";
 import { officeIdentity } from "../officials/office-identity.ts";
 import { readerPersonKeys } from "../identity/reader-person.ts";
 import { currentOfficialIdentity } from "../funding/campaign-money.ts";
@@ -78,17 +78,19 @@ export async function committedIncumbentHolderFor(
 
 export type FederalHolderLookup = (targetKey: string) => Promise<SeatHolder | null>;
 
-export function enumeratedSeatHolders(contest: { title: string; ocdId: string }): SeatHolderRef[] {
+function enumeratedSeatHolders(contest: { title: string; ocdId: string }): SeatHolderRef[] {
   if (!nhLegislativeRosterAppliesTo(contest)) return [];
   return nhLegislativeHolders(contest.title);
 }
 
-export function certifiedNomineesFor(contestId: string): { source: string; names: string[] } | null {
-  const entry = lineupForContest(contestId);
+function certifiedNomineesFor(state: string, contestId: string): { source: string; names: string[] } | null {
+  const entry = lineupForContest(state, contestId);
   if (entry === null) return null;
-  const canvass = getGeneralLineup()?.canvass;
+  const canvass = getGeneralLineup(state)?.canvass;
   return {
-    source: canvass ? `${canvass.title} (${canvass.issuedBy}, read ${canvass.readAt})` : "the certified canvass",
+    source: [...new Set(entry.nominees.map(nominee => nominee.provenance
+      ? `${nominee.provenance.sourceOrg} (${nominee.provenance.sourceUrl}, read ${nominee.provenance.collectedAt})`
+      : canvass ? `${canvass.title} (${canvass.issuedBy}, read ${canvass.readAt})` : "the certified canvass"))].join("; "),
     names: entry.nominees.map((n) => n.name),
   };
 }
@@ -99,7 +101,7 @@ const ENUMERATING_ROSTER_PREFIXES = [
   ...OFFICIAL_STATE_LEGISLATOR_TARGETS.map((target) => `${target.sourceId}:`),
 ];
 
-export function shapeOfRegistryHolders(holders: readonly SeatHolder[]): HolderSourceShape {
+function shapeOfRegistryHolders(holders: readonly SeatHolder[]): HolderSourceShape {
   if (holders.length === 0) return "NOTHING_READ";
   return holders.every((h) => ENUMERATING_ROSTER_PREFIXES.some((prefix) => (h.id ?? "").startsWith(prefix)))
     ? "ENUMERATES_THE_SEAT"
@@ -231,7 +233,7 @@ export async function contestIncumbency(
     seatsThisContestFills: contest.voteFor,
   });
   const certified = contest.candidateListComplete ? { source: "the state election authority’s complete candidate list",
-    names: contest.candidates.map(c => c.display) } : (universeSources.certifiedNominees ?? certifiedNomineesFor)(contest.id);
+    names: contest.candidates.map(c => c.display) } : (universeSources.certifiedNominees ? universeSources.certifiedNominees(contest.id) : certifiedNomineesFor(ocdStateCode(contest.ocdId) ?? "", contest.id));
   const candidatesUniverse = candidateUniverse({
     certified,
     rendered: contest.candidates.map((c) => c.display),

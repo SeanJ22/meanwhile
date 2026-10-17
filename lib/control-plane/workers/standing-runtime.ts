@@ -16,7 +16,6 @@ import { scoutStateHint } from "../scheduler/field-manual-scout.ts";
 import { researchRoleExecutor, type ResearchRuntimeTools } from "./research-runtime.ts";
 import { durableResearchTools } from "./durable-research-tools.ts";
 import type { AutonomousCoordinatorRuntime } from "./coordinator.ts";
-import { refreshRegistryRuntimeFromPromoted } from "../../registry/runtime-read-model.ts";
 import { refreshVenueResolutionsFromPromoted } from "../../civic-data/curated-reader-read-model.ts";
 import { mayUseTestFixture } from "../../civic-data/fixture-policy.ts";
 import { evidenceProjection } from "./runtime.ts";
@@ -27,7 +26,7 @@ import { readLineageHistory } from "./scoped-history.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
 import type { WorkItem } from "../work-item.ts";
 import { indexReportedFinding } from "../box.ts";
-import { askedAbout, hunterFor } from "../../hunt/runtime.ts";
+import { hunterFor, readAskedGaps } from "../../hunt/runtime.ts";
 import { exaAgentExecutor, EXA_AGENT_ROUTE_ID } from "../../hunt/exa-lane.ts";
 import { readGovernmentPackets } from "../../hunt/packet-read.ts";
 import { huntPacketObligationId, reportableSubjects } from "../../hunt/packet.ts";
@@ -55,7 +54,6 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   /** The transport for one jurisdiction's work, held on the area budget covering it; absent, `transport` serves all. */
   transportFor?:(jurisdiction:{readonly subjectId:string;readonly state:string|null},taskId?:string)=>ModelTransport;
   refusedBeforeSending?:(error:unknown)=>boolean}):Promise<AutonomousCoordinatorRuntime> {
-  await refreshRegistryRuntimeFromPromoted();
   if (!mayUseTestFixture()) await refreshVenueResolutionsFromPromoted();
   const now=input.now??(()=>new Date().toISOString());
   let siblingHeldRootFor: NonNullable<ResearchRuntimeTools["siblingHeldRootFor"]> = () => null;
@@ -157,7 +155,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
       };
       const exaKey=(input.environment??process.env).EXA_API_KEY?.trim();
       if (task.routeId===EXA_AGENT_ROUTE_ID) {
-        const packetNow=async()=>(await readGovernmentPackets([item.subject],now(),askedAbout(input.repos,now))).get(item.subject)??null;
+        const packetNow=async()=>(await readGovernmentPackets([item.subject],now(),await readAskedGaps(input.repos,now()))).get(item.subject)??null;
         return exaAgentExecutor({key:exaKey,now,budget:input.searchBudget,packetNow,
           ...(input.endsAt!==undefined?{endsAt:input.endsAt}:{}),...(input.progress?{progress:input.progress}:{}),
           instructions:async()=>(await readRolePlaybook(input.repos,"HUNTER")).text,

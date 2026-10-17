@@ -27,6 +27,7 @@ export function transferRead(body: string | undefined): string {
 
 
 export interface ReaderSelection {
+  readonly states?: readonly string[];
   readonly keys: Set<string>;
   readonly point?: readonly [number, number];
   readonly divisions?: readonly string[];

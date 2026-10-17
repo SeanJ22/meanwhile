@@ -1,3 +1,5 @@
+import { stateFromRegistryRuntimeContractId, type StateRegistryContractId } from "./state-scopes.ts";
+import { parseStateBallotContractId } from "./state-scopes.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import type { RoutineSourceTask } from "./runner.ts";
 import type { WorkItem } from "../control-plane/work-item.ts";
@@ -17,19 +19,20 @@ export type WorkerPublicationItem = Pick<WorkItem, "id"> & {
   readonly publicationOutcome?: Pick<NonNullable<WorkItem["publicationOutcome"]>, "workerResultId" | "status" | "at" | "recovery" | "sourceObservedAt"> &
     Partial<Pick<NonNullable<WorkItem["publicationOutcome"]>, "code">>;
   readonly autonomousPlan?: {
-    readonly publication?: Pick<NonNullable<NonNullable<WorkItem["autonomousPlan"]>["publication"]>, "contractId">;
+    readonly publication?: Pick<NonNullable<NonNullable<WorkItem["autonomousPlan"]>["publication"]>, "contractId"> & { readonly bodyId?: string };
     readonly contract: Pick<NonNullable<WorkItem["autonomousPlan"]>["contract"], "recordClass">;
   };
 };
 
 /** The classes that publish as facts in the runner's own pass rather than through a contract's command. */
 const factClass = (item: WorkerPublicationItem): "rosters" | "comments" | null =>
-  item.autonomousPlan?.publication?.contractId === "registry-runtime-bindings" && item.autonomousPlan.contract.recordClass === "OFFICIAL_ROSTER" ? "rosters"
+  stateFromRegistryRuntimeContractId(item.autonomousPlan?.publication?.contractId ?? "") && item.autonomousPlan?.contract.recordClass === "OFFICIAL_ROSTER" ? "rosters"
     : item.autonomousPlan?.publication?.contractId === COMMENT_RULE_PUBLICATION ? "comments" : null;
 
-/** When each input a held ballot route is read from last changed: its place's saved pages, the national office list, the registry and the published routes. */
-export interface HeldBallotInputs {
+/** When each input a held publication is read from last changed: its place's or body's saved pages, the national office list, the registry and the published routes. */
+export interface HeldInputs {
   readonly pagesAt: ReadonlyMap<string, string>;
+  readonly bodyPagesAt: ReadonlyMap<string, string>;
   readonly nationalAt: string | null;
   readonly registryAt: string | null;
   readonly routesAt: string | null;
@@ -39,7 +42,7 @@ export interface HeldBallotInputs {
 const CONTENT_CODES = new Set(["ELECTION_OFFICE_NOT_ON_SAVED_PAGES", "ELECTION_OFFICES_PUBLISHED", "VERIFIED_RESULT_REUSED"]);
 
 /* A held route is read again only when something it was read from changed after its last outcome. */
-function heldBallotInputsChanged(item: WorkerPublicationItem, inputs: HeldBallotInputs): boolean {
+function heldBallotInputsChanged(item: WorkerPublicationItem, inputs: HeldInputs): boolean {
   const outcome = item.publicationOutcome;
   if (!outcome || item.subject === undefined) return true;
   const content = CONTENT_CODES.has(outcome.code ?? "");
@@ -50,26 +53,26 @@ function heldBallotInputsChanged(item: WorkerPublicationItem, inputs: HeldBallot
 }
 
 export function workerPublicationTasks(items: readonly WorkerPublicationItem[], results: readonly WorkerResultRecord[], now: string,
-  heldInputs: HeldBallotInputs | null = null): RoutineSourceTask[] {
+  heldInputs: HeldInputs | null = null): RoutineSourceTask[] {
   return workerPublicationTasksFor(owedWorkerPublications(items, results, now, heldInputs), now);
 }
 
 /** One owed publication: the item, when it was asked for, and whether it is a held ballot route read in a batch. */
 export interface OwedWorkerPublication {
   readonly id: string;
-  readonly contractId: "registry-runtime-bindings" | WorkerReaderContract | typeof COMMENT_RULE_PUBLICATION;
+  readonly contractId: StateRegistryContractId | WorkerReaderContract | typeof COMMENT_RULE_PUBLICATION;
   readonly requestedAt: string;
   readonly batch: boolean;
 }
 
 /** Owed publications that run through a contract's command; rosters and comment rules publish as facts instead. */
 export function owedWorkerPublications(items: readonly WorkerPublicationItem[], results: readonly WorkerResultRecord[], now: string,
-  heldInputs: HeldBallotInputs | null = null): OwedWorkerPublication[] {
+  heldInputs: HeldInputs | null = null): OwedWorkerPublication[] {
   return owedPublications(items.filter(item => factClass(item) === null), results, now, heldInputs);
 }
 
 function owedPublications(items: readonly WorkerPublicationItem[], results: readonly WorkerResultRecord[], now: string,
-  heldInputs: HeldBallotInputs | null = null): OwedWorkerPublication[] {
+  heldInputs: HeldInputs | null = null): OwedWorkerPublication[] {
   const byItem = new Map<string, WorkerResultRecord[]>();
   for (const result of results) {
     const own = byItem.get(result.workItemId) ?? [];
@@ -81,7 +84,8 @@ function owedPublications(items: readonly WorkerPublicationItem[], results: read
   return items.flatMap((item): OwedWorkerPublication[] => {
     const plan = item.autonomousPlan;
     const target = plan?.publication?.contractId;
-    if (!plan || !target || (target !== "registry-runtime-bindings" && target !== COMMENT_RULE_PUBLICATION && !isWorkerReaderContract(target))) return [];
+    if (!plan || !target || (!stateFromRegistryRuntimeContractId(target) && target !== COMMENT_RULE_PUBLICATION && !isWorkerReaderContract(target))) return [];
+    const contractId = target as OwedWorkerPublication["contractId"];
     const outcome = item.publicationOutcome;
     const ownResults = byItem.get(item.id) ?? [];
     const parser = latestParserResult(ownResults, item.id);
@@ -94,23 +98,25 @@ function owedPublications(items: readonly WorkerPublicationItem[], results: read
         (outcome?.status === "PARTIALLY_PUBLISHED" && plan.contract.recordClass === "BALLOT_MEASURE") ||
         (outcome?.status !== "HELD" && !outcome?.sourceObservedAt);
       if (outcome && published && !publicationStillOwed && (outcome.status !== "HELD" || outcome.recovery === "WORKER") && !(pull && pull.at > outcome.at)) return [];
-      return [{ id: item.id, contractId: target, requestedAt: parser.endedAt, batch: false }];
+      return [{ id: item.id, contractId, requestedAt: parser.endedAt, batch: false }];
     }
-    const heldReadable = target === "registry-runtime-bindings" ? ["OFFICIAL_ROSTER", "OFFICIAL_BOARD_DIRECTORY"].includes(plan.contract.recordClass)
+    const heldReadable = stateFromRegistryRuntimeContractId(target) ? ["OFFICIAL_ROSTER", "OFFICIAL_BOARD_DIRECTORY"].includes(plan.contract.recordClass)
       : target === "ballot-navigation" && plan.contract.recordClass === "VOTER_ACCESS_ROUTE";
     if (!heldReadable) return [];
     if (target === "ballot-navigation" && heldInputs !== null) {
-      return heldBallotInputsChanged(item, heldInputs) ? [{ id: item.id, contractId: target, requestedAt: hour, batch: true }] : [];
+      return heldBallotInputsChanged(item, heldInputs) ? [{ id: item.id, contractId, requestedAt: hour, batch: true }] : [];
     }
-    if (outcome && nowMs - Date.parse(outcome.at) < HOUR) return [];
-    return [{ id: item.id, contractId: target, requestedAt: hour, batch: false }];
+    // A held roster or directory is read again only once a page for its body was saved after its last outcome.
+    if (outcome && (heldInputs === null ? nowMs - Date.parse(outcome.at) < HOUR : !((heldInputs.bodyPagesAt.get(plan.publication?.bodyId ?? "") ?? "") > outcome.at))) return [];
+    return [{ id: item.id, contractId, requestedAt: hour, batch: false }];
   });
 }
 
-export function owedFactItems(items: readonly WorkerPublicationItem[], results: readonly WorkerResultRecord[], now: string): { rosters: string[]; comments: string[] } {
+export function owedFactItems(items: readonly WorkerPublicationItem[], results: readonly WorkerResultRecord[], now: string,
+  heldInputs: HeldInputs | null = null): { rosters: string[]; comments: string[] } {
   const owed = { rosters: [] as string[], comments: [] as string[] };
   const facts = items.filter(item => factClass(item) !== null), byId = new Map(facts.map(item => [item.id, item]));
-  for (const row of owedPublications(facts, results, now)) owed[factClass(byId.get(row.id)!)!].push(row.id);
+  for (const row of owedPublications(facts, results, now, heldInputs)) owed[factClass(byId.get(row.id)!)!].push(row.id);
   return owed;
 }
 
@@ -124,12 +130,12 @@ export function workerPublicationTasksFor(owed: readonly OwedWorkerPublication[]
     .map(({ ids, key, requestedAt, contractId: id }) => {
       const contract = requiredManualProductionContract(id as Exclude<typeof id, typeof COMMENT_RULE_PUBLICATION>);
       const taskId = `worker-publication:${contract.id}:${key}`;
-      const command = id === "registry-runtime-bindings" || id === "voting-sites" ? contract.command
+      const command = stateFromRegistryRuntimeContractId(id) || parseStateBallotContractId(id)?.family === "voting-sites" ? contract.command
         : ["scripts/promote-manual-civic-projection.mts", `--contract=${id}`];
       return { id: taskId, registeredContractId: contract.id, sourceId: contract.sourceId, recordClass: contract.recordClass, scope: contract.scope,
         acquisitionFailureDomain: taskId, requestedUrl: "", authorityMode: "REGISTERED_SOURCE_ROUTES",
         parserVersion: contract.parserNormalizerVersion,
-        command: [...command, `--${id === "registry-runtime-bindings" ? "worker-directories" : "worker-results"}=${ids.join(",")}`],
+        command: [...command, `--${stateFromRegistryRuntimeContractId(id) ? "worker-directories" : "worker-results"}=${ids.join(",")}`],
         cadenceMs: Number.POSITIVE_INFINITY, retryMs: 15 * 60_000,
         contract: { readerProjection: contract.readerProjection, cadence: { description: "Publish owed work that now meets §3", defaultEveryMs: Number.POSITIVE_INFINITY } },
         ownerInvocation: { publicationPending: true, requestedAt, instructions: ["section3-publication"] } };

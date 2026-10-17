@@ -110,7 +110,7 @@ const PLACES: Place[] = [
 function meetingsResponse(place: Place) {
   const seats = place.seats.map(seat => ({ ...seat }));
   return {
-    meetings: place.meetings, listingIdentity: place.listingIdentity, tier: "exact", radiusKm: 8, requestedRadiusKm: 8,
+    meetings: place.meetings, listingIdentity: place.listingIdentity, tier: "exact", radiusKm: 8,
     center: place.center, governingOcdIds: null, partialOcdIds: null,
     coverage: {
       state: place.meetings.length > 0 ? "MEETINGS" : "NONE_SCHEDULED", bodies: place.bodies, seats, senators: place.senators,

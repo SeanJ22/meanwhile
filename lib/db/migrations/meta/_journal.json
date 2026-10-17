@@ -260,6 +260,27 @@
       "when": 1790889600002,
       "tag": "0036_ne01",
       "breakpoints": true
+    },
+    {
+      "idx": 37,
+      "version": "7",
+      "when": 1790889600003,
+      "tag": "0037_r1_fact_scale",
+      "breakpoints": true
+    },
+    {
+      "idx": 38,
+      "version": "7",
+      "when": 1792022400000,
+      "tag": "0038_src_mn_federal_money_lookup",
+      "breakpoints": true
+    },
+    {
+      "idx": 39,
+      "version": "7",
+      "when": 1792022400001,
+      "tag": "0039_sb01b_state_pointer_retirement",
+      "breakpoints": true
     }
   ]
 }

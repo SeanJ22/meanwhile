@@ -1,0 +1,46 @@
+{
+  "retrievedAt": "2026-10-12T23:16:11.756Z",
+  "captures": [
+    {
+      "file": "openfema-live.json",
+      "source": "openfema",
+      "kind": "live-api-response",
+      "url": "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?$top=1",
+      "retrievedAt": "2026-10-12T23:00:19.097Z",
+      "note": "Exact JSON response returned by the browser's official FEMA API route. Source-native county FIPS05103. The browser route succeeded; direct workspace fetch failed DNS. No inference of national load completion."
+    },
+    {
+      "file": "usaspending-official-example.json",
+      "source": "usaspending",
+      "kind": "official-documented-response-example",
+      "url": "https://raw.githubusercontent.com/fedspendingtransparency/usaspending-api/master/usaspending_api/api_contracts/contracts/v2/search/spending_by_transaction.md",
+      "note": "Exact ten-record Response200 body from official Treasury API contract, lines70–201, indentation removed. This is a published example, not a new live API capture. It contains contracts and modifications; it does not supply UEI or geography. Never seed it as current reader data."
+    },
+    {
+      "file": "sam-official-example.json",
+      "source": "sam-gov-entities",
+      "kind": "official-documented-response-example",
+      "url": "https://open.gsa.gov/api/entity-api/",
+      "note": "Exact first entity object of GSA Example7, lines6068–6106; documentation code fence and object separator comma removed. GSA redacted the address to XX/City/11111; these are not real location identifiers. This is a published example, not a new live API capture. Never seed it as current reader data."
+    },
+    {
+      "file": "fac-official-rollup.txt",
+      "source": "federal-audit-clearinghouse",
+      "kind": "official-documented-rollup-output",
+      "url": "https://www.fac.gov/api/rollup/#example-are-there-current-year-findings",
+      "note": "Exact five-row CYFINDINGS console output from the official tutorial. This is not a FAC general/findings JSON response and is not fed to the production API parser. API schema/flags and finding-table joins are tested with explicitly synthetic transport responses."
+    }
+  ],
+  "workspaceOutages": [
+    { "source": "usaspending", "reason": "Workspace networking is unavailable: the direct FEMA probe returned EAI_AGAIN and the shared managed network/proxy is unavailable. USAspending-specific live bulk generation and CSV transport remain unverified. Official API docs retrieved through browser." },
+    { "source": "federal-audit-clearinghouse", "reason": "Workspace networking is unavailable; no authenticated FAC workspace request was completed. Browser API requests unavailable; official bulk CSV redirect to signed S3 URL unavailable to browser. Real general/findings API fixture unavailable; official dictionary, examples, historic index and rollup output retrieved." },
+    { "source": "sam-gov-entities", "reason": "Workspace networking is unavailable; no authenticated SAM workspace request was completed. Official GSA response example and public bulk/paging documentation retrieved through browser; live state extract remains unverified." },
+    { "source": "openfema", "reason": "Direct workspace source requests cannot resolve hosts (EAI_AGAIN). Browser route retrieved the exact live source sample and catalog clock; routine workspace transport remains unverified." }
+  ],
+  "clocks": {
+    "usaspending": { "clock": "Nightly pipeline, source-specific submission delays retained", "url": "https://www.usaspending.gov/data/data-sources-download.pdf" },
+    "federal-audit-clearinghouse": { "clock": "Current audit submissions/acceptances; daily findings export; historic1998–2015 archive static", "url": "https://www.fac.gov/status/findings/" },
+    "sam-gov-entities": { "clock": "Entity lastUpdateDate; public full-state asynchronous extracts use live entity API. Published monthly PUBLIC extracts occur first Sunday after7AM Eastern; DAILY FOUO extracts are different access tier and are not requested", "url": "https://open.gsa.gov/api/sam-entity-extracts-api/" },
+    "openfema": { "clock": "R/PT20M, every20 minutes, from actual official catalog response", "url": "https://www.fema.gov/api/open/v1/OpenFemaDataSets?$filter=name%20eq%20%27DisasterDeclarationsSummaries%27" }
+  }
+}

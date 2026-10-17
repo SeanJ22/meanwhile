@@ -30,7 +30,8 @@ import {
   heldOfficialStateLegislators,
   readOfficialStateLegislatorsProjection,
 } from "../lib/state-rollcalls/legislators.ts";
-import { registryRuntimeProjectionIssues, type RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
+import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
+import { registryRuntimeProjectionIssues } from "../lib/registry/runtime-data-plane.ts";
 import { voteEvidenceFor } from "../lib/ask/votes.ts";
 import { parseStateRollCallArguments } from "../scripts/state-rollcalls.mts";
 import { parseStateLegislatorArguments } from "../scripts/state-legislators.mts";

@@ -1,6 +1,7 @@
+import { temporaryPath } from "../civic-data/temporary-path.ts";
 import { createHash, randomUUID } from "node:crypto";
 import { closeSync, linkSync, mkdirSync, openSync, readFileSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { dirname, join, sep } from "node:path";
 
 import type { ReaderGeoArtifact, ReaderManifest } from "./edge-artifacts.ts";
 
@@ -25,6 +26,8 @@ export interface ReaderArtifactStore {
     expectedEtag: string | null,
   ): Promise<{ modified: boolean; etag: string | null }>;
   readBytes(key: string): Promise<Uint8Array | null>;
+  readJsonPointer<T>(key: string): Promise<{ value: T; etag: string | null } | null>;
+  writeJsonPointer<T>(key: string, value: T, expectedEtag: string | null): Promise<{ modified: boolean; etag: string | null }>;
 }
 
 function immutableKey(bytes: Uint8Array, suffix: "json" | "json.gz"): string {
@@ -58,8 +61,6 @@ export class NetlifyBlobsArtifactStore implements ReaderArtifactStore {
   }
 
   async readManifest(): Promise<StoredManifest | null> {
-    // Eventual consistency is correct for the reader: the CDN layer, not this
-    // read, is the reader's hot path, and a <=60s-stale pointer is honest.
     const store = await this.store("eventual");
     const res = await store.getWithMetadata(READER_MANIFEST_KEY, { type: "json" });
     if (!res || res.data == null) return null;
@@ -72,18 +73,20 @@ export class NetlifyBlobsArtifactStore implements ReaderArtifactStore {
     return (data as ReaderGeoArtifact | null) ?? null;
   }
 
-  async writeManifest(
-    manifest: ReaderManifest,
-    expectedEtag: string | null,
-  ): Promise<{ modified: boolean; etag: string | null }> {
-    // Strong consistency so the read-before-write and the CAS see the truth.
+  async readJsonPointer<T>(key: string): Promise<{ value: T; etag: string | null } | null> {
     const store = await this.store("strong");
-    const result = await store.setJSON(
-      READER_MANIFEST_KEY,
-      manifest,
-      expectedEtag === null ? { onlyIfNew: true } : { onlyIfMatch: expectedEtag },
-    );
+    const result = await store.getWithMetadata(key, { type: "json" });
+    return result?.data == null ? null : { value: result.data as T, etag: result.etag ?? null };
+  }
+
+  async writeJsonPointer<T>(key: string, value: T, expectedEtag: string | null) {
+    const store = await this.store("strong");
+    const result = await store.setJSON(key, value, expectedEtag === null ? { onlyIfNew: true } : { onlyIfMatch: expectedEtag });
     return { modified: result.modified, etag: result.etag ?? null };
+  }
+
+  async writeManifest(manifest: ReaderManifest, expectedEtag: string | null) {
+    return this.writeJsonPointer(READER_MANIFEST_KEY, manifest, expectedEtag);
   }
 
   async readBytes(key: string): Promise<Uint8Array | null> {
@@ -111,11 +114,13 @@ export class LocalFileArtifactStore implements ReaderArtifactStore {
   private readonly root: string;
 
   constructor(root: string) {
-    this.root = root;
+    this.root = temporaryPath(root);
   }
 
   private path(key: string): string {
-    return join(this.root, key);
+    const path = join(this.root, key);
+    if (!path.startsWith(this.root + sep)) throw new Error("The reader artifact key escaped its store.");
+    return path;
   }
 
   private etagOf(path: string): string {
@@ -142,23 +147,34 @@ export class LocalFileArtifactStore implements ReaderArtifactStore {
     }
   }
 
-  async writeManifest(
-    manifest: ReaderManifest,
-    expectedEtag: string | null,
-  ): Promise<{ modified: boolean; etag: string | null }> {
-    const path = this.path(READER_MANIFEST_KEY);
-    mkdirSync(dirname(path), { recursive: true });
+  async readJsonPointer<T>(key: string): Promise<{ value: T; etag: string | null } | null> {
+    try {
+      const bytes = readFileSync(this.path(key));
+      return { value: JSON.parse(bytes.toString("utf8")) as T, etag: createHash("sha256").update(bytes).digest("hex").slice(0, 16) };
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code === "ENOENT") return null;
+      throw error;
+    }
+  }
+
+  async writeManifest(manifest: ReaderManifest, expectedEtag: string | null) {
+    return this.writeJsonPointer(READER_MANIFEST_KEY, manifest, expectedEtag);
+  }
+
+  async writeJsonPointer<T>(key: string, value: T, expectedEtag: string | null): Promise<{ modified: boolean; etag: string | null }> {
+    const path = this.path(key);
+    mkdirSync(temporaryPath(dirname(path)), { recursive: true });
     const lock = `${path}.lock`;
     let descriptor: number | undefined;
     for (let attempt = 0; attempt < 200; attempt++) {
-      try { descriptor = openSync(lock, "wx"); writeFileSync(descriptor, String(process.pid)); break; }
+      try { descriptor = openSync(temporaryPath(lock), "wx"); writeFileSync(temporaryPath(lock), String(process.pid), { flag: "r+" }); break; }
       catch (error) {
         if ((error as NodeJS.ErrnoException).code !== "EEXIST") throw error;
         try {
           const pid = Number(readFileSync(lock, "utf8"));
           if (Number.isSafeInteger(pid) && pid > 0) {
             try { process.kill(pid, 0); }
-            catch (held) { if ((held as NodeJS.ErrnoException).code === "ESRCH") unlinkSync(lock); }
+            catch (held) { if ((held as NodeJS.ErrnoException).code === "ESRCH") unlinkSync(temporaryPath(lock)); }
           }
         } catch { /* Another writer may already have released the lock. */ }
         await new Promise(resolve => setTimeout(resolve, 5));
@@ -171,13 +187,13 @@ export class LocalFileArtifactStore implements ReaderArtifactStore {
       try { etag = this.etagOf(path); }
       catch (error) { if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error; etag = null; }
       if (etag !== expectedEtag) return { modified: false, etag };
-      writeFileSync(temporary, JSON.stringify(manifest), { flag: "wx" });
-      renameSync(temporary, path);
+      writeFileSync(temporaryPath(temporary), JSON.stringify(value), { flag: "wx" });
+      renameSync(temporaryPath(temporary), temporaryPath(path));
       return { modified: true, etag: this.etagOf(path) };
     } finally {
       closeSync(descriptor);
-      try { unlinkSync(temporary); } catch { /* The atomic rename consumed it. */ }
-      unlinkSync(lock);
+      try { unlinkSync(temporaryPath(temporary)); } catch { /* The atomic rename consumed it. */ }
+      unlinkSync(temporaryPath(lock));
     }
   }
 
@@ -192,16 +208,16 @@ export class LocalFileArtifactStore implements ReaderArtifactStore {
   async putImmutable(bytes: Uint8Array, suffix: "json" | "json.gz"): Promise<string> {
     const key = immutableKey(bytes, suffix);
     const path = this.path(key);
-    mkdirSync(dirname(path), { recursive: true });
+    mkdirSync(temporaryPath(dirname(path)), { recursive: true });
     const temporary = `${path}.${randomUUID()}.tmp`;
-    writeFileSync(temporary, bytes, { flag: "wx" });
+    writeFileSync(temporaryPath(temporary), bytes, { flag: "wx" });
     try {
-      try { linkSync(temporary, path); }
+      try { linkSync(temporary, temporaryPath(path)); }
       catch (error) {
         if ((error as NodeJS.ErrnoException).code !== "EEXIST") throw error;
         sameBytes(new Uint8Array(readFileSync(path)), bytes);
       }
-    } finally { unlinkSync(temporary); }
+    } finally { unlinkSync(temporaryPath(temporary)); }
     return key;
   }
 }

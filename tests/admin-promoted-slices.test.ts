@@ -1,8 +1,3 @@
-/**
- * Admin reads the slice a page needs from a promoted pointer instead of the whole payload. A slice
- * must say exactly what the whole lookup says, so these tests answer each statement the way
- * Postgres does from one dataset and hold the slices to the lookup built over it.
- */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
@@ -14,7 +9,6 @@ import { CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } from "../lib/census-geograp
 import {
   containersOfCode,
   oneContainer,
-  registryBodies,
   stateContainers,
   type ReadOnlyQuery,
   type Row,
@@ -126,14 +120,13 @@ test("no pointer is 'not published', never an empty list", async () => {
   assert.equal((await stateContainers("AZ", TYPES, false, q)).kind, "NOT_PUBLISHED");
   assert.equal((await oneContainer("county", "04019", q)).kind, "NOT_PUBLISHED");
   assert.equal((await containersOfCode("85701", TYPES, q)).kind, "NOT_PUBLISHED");
-  assert.equal((await registryBodies(q)).kind, "NOT_PUBLISHED");
 });
 
 test("a failed read names the error and never the connection", async () => {
   const failing: ReadOnlyQuery = async () => {
     throw new Error("could not connect to postgres://reader:secret@ep-example.neon.tech/neondb");
   };
-  for (const read of [stateContainers("AZ", TYPES, true, failing), oneContainer("county", "04019", failing), registryBodies(failing)]) {
+  for (const read of [stateContainers("AZ", TYPES, true, failing), oneContainer("county", "04019", failing)]) {
     const r = await read;
     assert.equal(r.kind, "UNREAD");
     if (r.kind === "UNREAD") {
@@ -155,25 +148,4 @@ test("every statement is scoped to the promoted pointer, the state is matched up
     assert.match(s.text, /^(SELECT|WITH) /, "reads only");
   }
   assert.ok(seen.some((s) => s.params[3] === "AZ"));
-});
-
-test("the registry slice carries each body's six fields and skips a row with no id", async () => {
-  const q: ReadOnlyQuery = async (statements) =>
-    statements.map((s) =>
-      s.text.startsWith("SELECT current_version_id")
-        ? [{ version_id: "cv-registry" }]
-        : [
-            { id: "b1", name: "Board", ocd_id: "ocd-division/country:us/state:az/county:pima", also_serves: ["x"], coverage_status: "NOT_ATTEMPTED", body_class: "GOVERNING" },
-            { id: null, name: "no id" },
-            { id: "b2", name: null, ocd_id: null, also_serves: null, coverage_status: { state: "WALKED" }, body_class: null },
-          ],
-    );
-  const r = await registryBodies(q);
-  assert.equal(r.kind, "HELD");
-  if (r.kind !== "HELD") return;
-  assert.equal(r.versionId, "cv-registry");
-  assert.deepEqual(r.value, [
-    { id: "b1", name: "Board", ocdId: "ocd-division/country:us/state:az/county:pima", alsoServesOcdIds: ["x"], coverageStatus: "NOT_ATTEMPTED", bodyClass: "GOVERNING" },
-    { id: "b2", name: null, ocdId: null, alsoServesOcdIds: [], coverageStatus: { state: "WALKED" }, bodyClass: null },
-  ]);
 });

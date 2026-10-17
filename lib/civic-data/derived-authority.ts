@@ -1,6 +1,5 @@
-import { createHash } from "node:crypto";
-
 import { canonicalCivicDataJson } from "./changes.ts";
+import { canonicalCivicDataHash } from "./canonical-hash.ts";
 
 export type DerivedInputRef =
   | {
@@ -83,7 +82,7 @@ export type HostAttestation =
 export function promotedInputRef(recordClass: string, scope: string, versionId: string | null, value: unknown, promotedAt: string | null): DerivedInputRef | null {
   return versionId === null || promotedAt === null
     ? null
-    : { kind: "PROMOTED_VERSION", recordClass, scope, versionId, readModelSha256: createHash("sha256").update(canonicalCivicDataJson(value)).digest("hex"), promotedAt };
+    : { kind: "PROMOTED_VERSION", recordClass, scope, versionId, readModelSha256: canonicalCivicDataHash(value), promotedAt };
 }
 
 export interface AdapterBinding {
@@ -333,7 +332,7 @@ export function derivedRetrieval(inputs: readonly DerivedInputRef[]): {
   readonly rawHash: string;
   readonly retrievedAt: string | null;
 } {
-  const canonical = canonicalCivicDataJson([...inputs].map(inputKey).sort());
+  const rawHash = canonicalCivicDataHash(inputs.map(inputKey).sort());
   const times = inputs
     .map((input) =>
       input.kind === "PROMOTED_VERSION" ? input.promotedAt
@@ -345,7 +344,7 @@ export function derivedRetrieval(inputs: readonly DerivedInputRef[]): {
     .filter((time): time is string => time !== null && Number.isFinite(Date.parse(time)))
     .sort();
   return {
-    rawHash: createHash("sha256").update(canonical).digest("hex"),
+    rawHash,
     retrievedAt: times.at(-1) ?? null,
   };
 }

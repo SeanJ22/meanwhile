@@ -44,12 +44,14 @@ function fakeStore(overrides: Partial<RoutineDataStore>): RoutineDataStore {
     events: async () => [],
     clock: async () => ({}),
     readCandidate: async () => null,
+    readPublishedCandidateMetadata: async () => null,
     readCandidateSummary: async () => null,
     readCandidates: async () => [],
     readPromotion: async () => null,
     readPromotions: async () => [],
     readPromotionIdentity: async () => null,
     readPromotionIdentities: async () => [],
+    readRegistryDivisions: async () => [],
     readPreparedReaderProjection: async () => null,
     readPreparedReaderProjectionCoupling: async () => null,
     writePreparedReaderProjection: async () => ({ published: false, sequence: 0 }),
@@ -61,21 +63,16 @@ test("the prepared projection publishes monotonically — an older composition c
   const store = new MemoryRoutineDataStore();
   const scope = MEETINGS_PREPARED_SCOPE;
 
-  // First publication: expected absent (null) → lands at sequence 1.
   const first = await store.writePreparedReaderProjection(preparedInput({ generatedAt: "2026-09-01T00:00:00.000Z" }), null);
   assert.deepEqual(first, { published: true, sequence: 1 });
 
-  // A stale pass that read the row while it was still absent tries to write over
-  // sequence 1 with an older `expectedSequence`; it must NOT land.
   const stale = await store.writePreparedReaderProjection(preparedInput({ generatedAt: "2026-08-01T00:00:00.000Z" }), null);
   assert.equal(stale.published, false, "a null-expected write over an existing row is refused");
   assert.equal(stale.sequence, 1, "the newer row is untouched");
 
-  // The current holder advances from sequence 1 → 2.
   const advance = await store.writePreparedReaderProjection(preparedInput({ generatedAt: "2026-09-02T00:00:00.000Z" }), 1);
   assert.deepEqual(advance, { published: true, sequence: 2 });
 
-  // Another pass that still believes the row is at sequence 1 is refused (CAS miss).
   const casMiss = await store.writePreparedReaderProjection(preparedInput({ generatedAt: "2026-08-15T00:00:00.000Z" }), 1);
   assert.equal(casMiss.published, false, "a CAS write at a superseded sequence cannot regress the row");
   assert.equal(casMiss.sequence, 2);
@@ -88,7 +85,6 @@ test("the prepared projection publishes monotonically — an older composition c
 test("the reader fast-path serves the one prepared row and reconstructs the exact partitions shape", async () => {
   const contracts = MEETING_PARTITION_CONTRACTS;
   assert.ok(contracts.length >= 2, "fixture assumes multiple partition contracts");
-  // Compose was from the first two partitions only; the rest are NOT_RECORDED.
   const composedFrom = [
     { contractId: contracts[0]!.id, versionId: "ver-a" },
     { contractId: contracts[1]!.id, versionId: "ver-b" },
@@ -125,8 +121,6 @@ test("the reader fast-path serves the one prepared row and reconstructs the exac
 });
 
 test("the reader fast-path falls back to the composing reader only when no prepared row exists", async () => {
-  // Absent prepared row + a store with no promotions → the fallback path runs
-  // (readMeetingsProjection), never the prepared-serving detail.
   const store = fakeStore({ readPreparedReaderProjection: async () => null });
   const result = await readPreparedMeetingsProjection({ store });
   assert.doesNotMatch(
@@ -137,10 +131,6 @@ test("the reader fast-path falls back to the composing reader only when no prepa
 });
 
 test("preparing over an unchanged promoted set is idempotent and never recomposes", async () => {
-  // The prepared row's coupling already matches the current promoted partitions,
-  // so prepare must return CURRENT without touching the expensive compose. We
-  // prove the compose was skipped by making any candidate read throw: if the
-  // orchestration composed, it would surface as FAILED/NOT_COMPOSABLE, not CURRENT.
   const contracts = MEETING_PARTITION_CONTRACTS;
   const promotions: PromotedProjection[] = contracts.map((contract) => ({
     key: `MEETING:${contract.scope}`,
@@ -153,10 +143,7 @@ test("preparing over an unchanged promoted set is idempotent and never recompose
     payload: {},
     receipt: {} as never,
   }));
-  const composedFrom = [...contracts.map((contract) => ({ contractId: contract.id, versionId: `ver-${contract.id}` })),
-    { contractId: "meeting-facts", versionId: "facts:none" }];
-  // The idempotent pass decides from identities and the serving copy's coupling alone: no partition or composed
-  // payload is read to learn that nothing changed.
+  const composedFrom = contracts.map((contract) => ({ contractId: contract.id, versionId: `ver-${contract.id}` }));
   const store = fakeStore({
     readPromotions: async () => { throw new Error("PARTITION_PAYLOADS_MUST_NOT_BE_READ_ON_IDEMPOTENT_PREPARE"); },
     readPromotionIdentities: async () => promotions.map(({ payload: _payload, receipt: _receipt, ...identity }) => identity),
@@ -215,7 +202,6 @@ test("a reader that holds the current prepared row asks only its coupling before
   if (first.kind === "PROMOTED" && second.kind === "PROMOTED") assert.equal(second.value, first.value, "the held row is served");
   assert.deepEqual(reads, { row: 1, coupling: 1 }, "the 7.5 MB row is read once; the second read asks only the coupling");
 
-  // The runner republishes: the sequence advances and the new row is read.
   current = preparedRow(5, "2026-09-05T01:00:00.000Z");
   const third = await readPreparedMeetingsProjection({ store });
   assert.equal(reads.row, 2, "a new sequence is read whole");
@@ -307,8 +293,7 @@ test("prepare composes through the pass's shared composition, and only when the 
     recordClass: "MEETING",
     scope: MEETINGS_PREPARED_SCOPE,
     sequence: 1,
-    composedFrom: [...contracts.map((contract) => ({ contractId: contract.id, versionId: `ver-${contract.id}` })),
-      { contractId: "meeting-facts", versionId: "facts:none" }],
+    composedFrom: contracts.map((contract) => ({ contractId: contract.id, versionId: `ver-${contract.id}` })),
     generatedAt: snapshot.generatedAt,
   };
   const current = await preparePublishedMeetingSnapshot(store, "2026-09-06T00:10:00.000Z", { aggregate });

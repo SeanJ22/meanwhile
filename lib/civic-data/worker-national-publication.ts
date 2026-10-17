@@ -1,14 +1,15 @@
+import { registryJurisdictions, requireRegistryState, stateRegistryRuntimeContractId } from "./state-scopes.ts";
 /** A one-person profile is never a complete roster, so a partial roster reading never departs anyone. */
 import type { RoutineDataStore } from "./store.ts";
 import type { OfficialLinkingPage } from "./source-authority.ts";
 import type { Body, Division, SourceDataset } from "../registry/types.ts";
 import { bodiesFor } from "../registry/derive.ts";
-import { readRegistryRuntimePrior, registryRuntimeCandidate, type RegistryRuntimeCarton } from "../registry/runtime-data-plane.ts";
+import { readRegistryRuntimePrior, registryRuntimeCandidate, acceptedRegistryPrior } from "../registry/runtime-data-plane.ts";
 import { processRegisteredManualCandidate } from "./promotion.ts";
 import { recordRoutineReaderProjectionReadback } from "./reader-verification.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import { captureProblem, registryEdition, section3SourceReceipt } from "./worker-publication-evidence.ts";
-import { acceptedRegistryPrior, type WorkerPublicationCapture } from "./worker-roster-publication.ts";
+import { type WorkerPublicationCapture } from "./worker-roster-publication.ts";
 import type { Clocks, FactDb, Query } from "../facts/publish.ts";
 import { publishRosterFacts } from "../facts/roster-facts.ts";
 import { rosterMemberId } from "../facts/roster-read.ts";
@@ -44,8 +45,9 @@ export interface NationalOfficialInput {
   readonly portrait?: Omit<PortraitSources,"subject">;
 }
 
-export interface NationalPlacePublicationInput {
+interface NationalPlacePublicationInput {
   readonly store: RoutineDataStore;
+  readonly state: string;
   readonly facts: FactDb & { readonly query: Query };
   readonly clocks: Clocks;
   readonly now: string;
@@ -118,18 +120,24 @@ function divisionRow(input: NationalDivisionInput, captures: readonly WorkerPubl
 
 async function promote(store: RoutineDataStore, prepared: Parameters<typeof registryRuntimeCandidate>[0], prior: NonNullable<Awaited<ReturnType<typeof readRegistryRuntimePrior>>>, now: string) {
   const candidate = registryRuntimeCandidate(prepared, { prior });
-  const published = await processRegisteredManualCandidate(store, "registry-runtime-bindings", candidate, now, prior.versionId);
+  const published = await processRegisteredManualCandidate(store, prepared.contractId, candidate, now, prior.versionId);
   if (!published.promoted) throw new Error(`NATIONAL_REGISTRY_GATE_HELD:${published.candidate.failureCode ?? ""}:${published.candidate.failureDetail ?? published.candidate.state}`);
-  const readback = published.readerReadback ?? await recordRoutineReaderProjectionReadback(store,
-    requiredManualProductionContract("registry-runtime-bindings"), published.promoted, now);
-  if (readback?.status !== "PASS") throw new Error(`NATIONAL_REGISTRY_READBACK_FAILED:${readback?.detail ?? "missing typed reader receipt"}`);
+  if (!published.confirmed) {
+    const readback = published.readerReadback ?? await recordRoutineReaderProjectionReadback(store,
+      requiredManualProductionContract(prepared.contractId), published.promoted, now);
+    if (readback?.status !== "PASS") throw new Error(`NATIONAL_REGISTRY_READBACK_FAILED:${readback?.detail ?? "missing typed reader receipt"}`);
+  }
   return { candidateId: candidate.id, versionId: published.promoted.versionId,
-    readModel: published.candidate.candidate.readModel as RegistryRuntimeCarton, prior: acceptedRegistryPrior(published) };
+    prior: await acceptedRegistryPrior(store, published) };
 }
 
 export async function publishNationalPlaceSources(input: NationalPlacePublicationInput): Promise<NationalPlacePublication> {
+  const state = requireRegistryState(input.state);
+  if (input.divisions.some(row => registryJurisdictions(row.id).some(value => value !== state)) ||
+    input.sources.officials.some(row => registryJurisdictions(row.divisionId).some(value => value !== state)))
+    throw new Error(`NATIONAL_PLACE_STATE_SCOPE_MISMATCH:${state}`);
   const gaps: { key: string; detail: string }[] = [];
-  let prior = await readRegistryRuntimePrior(input.store, input.now);
+  let prior = await readRegistryRuntimePrior(input.store, input.now, state);
   if (!prior) throw new Error("NATIONAL_REGISTRY_PRIOR_MISSING");
   let candidateId: string | null = null, promotedVersionId: string | null = null;
 
@@ -165,7 +173,7 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
     const sourceReceipt = section3SourceReceipt(captures, input.now, "section3-validator:national-place",
       `${divisions.length} Census division(s) found on their saved Census responses inside the freshness window (§3); ${bodies.length} implied body row(s).`);
     const digest = createHash("sha256").update(canonicalJson({ divisions, bodies: bodies.map(b => b.id) })).digest("hex").slice(0, 16);
-    const published = await promote(input.store, { contractId: "registry-runtime-bindings", scope: "MEMBERS", version: registryEdition(`national-place:${digest}`), sourceThrough: input.now, sourceReceipt,
+    const published = await promote(input.store, { contractId: stateRegistryRuntimeContractId(state), scope: "MEMBERS", version: registryEdition(`national-place:${digest}`), sourceThrough: input.now, sourceReceipt,
       payload: { ...prior.payload, registry: { ...prior.payload.registry, divisions, bodies },
         statewideExecutives: [], officialPhotos: { photos: [] }, rosterPhotos: {},
         officialCandidacies: { ...prior.payload.officialCandidacies, rows: [] } } }, prior, input.now);
@@ -173,7 +181,7 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
     prior = published.prior;
     } catch (error) {
       const detail = error instanceof Error ? error.message : String(error);
-      if (/PROMOTION_BASE_CHANGED|READBACK_FAILED/.test(detail)) prior = (await readRegistryRuntimePrior(input.store, input.now))!;
+      if (/PROMOTION_BASE_CHANGED|READBACK_FAILED/.test(detail)) prior = (await readRegistryRuntimePrior(input.store, input.now, state))!;
       for (const division of divisions) gaps.push({ key: `division:${division.ocdId}`, detail });
       for (const body of bodies) gaps.push({ key: `body:${body.id}`, detail });
       divisions.length = 0;
@@ -200,7 +208,7 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
       const sourceReceipt = section3SourceReceipt(statewide.map(s => s.capture), input.now, "section3-validator:national-statewide",
         `${statewide.length} statewide official(s): name and office found on their own saved official page inside the freshness window (§3).`);
       const digest = createHash("sha256").update(canonicalJson(statewide.map(s => s.row))).digest("hex").slice(0, 16);
-      const published = await promote(input.store, { contractId: "registry-runtime-bindings", scope: "MEMBERS", version: registryEdition(`national-statewide:${digest}`), sourceThrough: input.now, sourceReceipt,
+      const published = await promote(input.store, { contractId: stateRegistryRuntimeContractId(state), scope: "MEMBERS", version: registryEdition(`national-statewide:${digest}`), sourceThrough: input.now, sourceReceipt,
         departures: statewide.flatMap(s=>prior!.payload.statewideExecutives.filter(old=>old.stateOcdId===s.row.stateOcdId && old.holder.officeTitle===s.row.holder.officeTitle && old.sourceUrl===s.row.sourceUrl && old.holder.id!==s.row.holder.id).map(old=>({bodyId:s.row.stateOcdId,holderId:old.holder.id,replacementHolderId:s.row.holder.id,officeTitle:s.row.holder.officeTitle,sourceUrl:s.row.sourceUrl}))),
         payload: { ...prior.payload, registry: { ...prior.payload.registry, divisions: [], bodies: [] },
           statewideExecutives: statewide.map(s => s.row), officialPhotos: { photos: [] }, rosterPhotos: {},
@@ -214,7 +222,7 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
       for (const s of statewide) statewideMembers.push({ bodyId: s.row.stateOcdId, versionId: published.versionId, discoveryIds: [s.official.discoveryId] });
     } catch (error) {
       if (/PROMOTION_BASE_CHANGED|READBACK_FAILED/.test(error instanceof Error ? error.message : String(error)))
-        prior = (await readRegistryRuntimePrior(input.store, input.now))!;
+        prior = (await readRegistryRuntimePrior(input.store, input.now, state))!;
       for (const s of statewide) gaps.push({ key: `official:${s.official.discoveryId}`, detail: error instanceof Error ? error.message : String(error) });
     }
   }
@@ -253,7 +261,7 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
             const photo = await storeVerifiedPortrait(holder.personId ?? holder.id, {...official.portrait,subject:{personId:holder.personId ?? holder.id,name:holder.name,nativeIds:holder.nativeIds,profileUrls:[official.document.url,official.officialUrl]}}, input.now, input.portraitRuntime);
             const receipt = section3SourceReceipt(official.portrait.captures,input.now,"section3:portrait",
               "The same named portrait is supported by two saved sources; its permitted use is attributed and its decoded bytes are stored on our origin.");
-            const saved = await promote(input.store, {contractId:"registry-runtime-bindings",scope:"MEMBERS",
+            const saved = await promote(input.store, {contractId:stateRegistryRuntimeContractId(state),scope:"MEMBERS",
               version:registryEdition(`portrait:${holder.id}:${photo.verification!.imageHash}`),sourceThrough:input.now,
               sourceReceipt:{...receipt,sources:[...receipt.sources.map(s=>({...s,sourceClass:isOfficialSource(s.finalUrl) ? "OFFICIAL_PUBLISHER" as const : "REFERENCE_PUBLISHER" as const})),
                 {requestedUrl:photo.sourceUrl,finalUrl:photo.sourceUrl,publisher:new URL(photo.sourceUrl).hostname,
@@ -268,7 +276,7 @@ export async function publishNationalPlaceSources(input: NationalPlacePublicatio
         }
       } catch (error) {
         if (/PROMOTION_BASE_CHANGED|READBACK_FAILED/.test(error instanceof Error ? error.message : String(error)))
-          prior = (await readRegistryRuntimePrior(input.store, input.now))!;
+          prior = (await readRegistryRuntimePrior(input.store, input.now, state))!;
         gaps.push({ key: `official:${official.discoveryId}`, detail: error instanceof Error ? error.message : String(error) });
       }
     }

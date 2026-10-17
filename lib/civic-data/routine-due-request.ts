@@ -1,3 +1,4 @@
+import { parseStateBallotContractId } from "./state-scopes.ts";
 import { randomUUID } from "node:crypto";
 
 import { ADMIN_CONFIG_ID, defaultAdminConfig } from "../control-plane/gateway/admin-config.ts";
@@ -25,7 +26,7 @@ const DEFAULT_REASON = "controlled refresh verification (owner instruction 2026-
 export const DOOR_DERIVE_CONTRACT_IDS = ["meeting-body-crosswalk-derived", "meeting-source-wiring"] as const;
 
 function requestableContract(contractId: string): boolean {
-  return contractId === "ballot-contests" || MEETING_PARTITION_CONTRACTS.some((contract) =>
+  return parseStateBallotContractId(contractId)?.family === "ballot-contests" || MEETING_PARTITION_CONTRACTS.some((contract) =>
     contract.id === contractId && contract.recordClass === "MEETING" && contract.schedule?.kind === "SITTING_WINDOW");
 }
 
@@ -130,7 +131,7 @@ export function routineDueRequestFor(
   requests: readonly RoutineDueRequest[],
 ): RoutineDueRequest | null {
   const doorDerive = (DOOR_DERIVE_CONTRACT_IDS as readonly string[]).includes(task.id);
-  if (task.id !== "ballot-contests" && !doorDerive && (task.recordClass !== "MEETING" || task.contract.schedule?.kind !== "SITTING_WINDOW")) return null;
+  if (parseStateBallotContractId(task.id)?.family !== "ballot-contests" && !doorDerive && (task.recordClass !== "MEETING" || task.contract.schedule?.kind !== "SITTING_WINDOW")) return null;
   return requests.find((request) => request.contractId === task.id && routineDueRequestState(request, clock, nowMs) === "DUE") ?? null;
 }
 
@@ -147,7 +148,7 @@ function openAt(request: RoutineDueRequest, nowMs: number): boolean {
 export async function requestRoutineDue(repos: ControlPlaneRepositories, args: readonly string[], now: string): Promise<RoutineDueRequest> {
   const command = routineDueCommand(args);
   if (command.kind !== "REQUEST") throw new Error("ROUTINE_DUE_REQUEST_EXPECTED_REQUEST");
-  if (command.contractId !== "ballot-contests") await refreshDoorsForPass(repos.doors);
+  if (parseStateBallotContractId(command.contractId)?.family !== "ballot-contests") await refreshDoorsForPass(repos.doors);
   const nowMs = Date.parse(now);
   if (!canonicalInstant(now)) throw new Error("ROUTINE_DUE_REQUEST_CLOCK_INVALID");
   const row = await repos.adminConfig.read(ADMIN_CONFIG_ID);
@@ -155,7 +156,7 @@ export async function requestRoutineDue(repos: ControlPlaneRepositories, args: r
   const prior = parseRoutineDueRequests(config.routineDueRequests);
   if (prior.issues.length > 0) throw new Error(`ROUTINE_DUE_REQUEST_HISTORY_INVALID:${prior.issues.join("; ")}`);
   const open = prior.requests.find((request) => request.contractId === command.contractId && openAt(request, nowMs));
-  if (open && command.contractId !== "ballot-contests") throw new Error(`ROUTINE_DUE_REQUEST_ALREADY_OPEN:${open.id}`);
+  if (open && parseStateBallotContractId(command.contractId)?.family !== "ballot-contests") throw new Error(`ROUTINE_DUE_REQUEST_ALREADY_OPEN:${open.id}`);
   const request: RoutineDueRequest = {
     id: `routine-due:${randomUUID()}`,
     contractId: command.contractId,
@@ -165,7 +166,11 @@ export async function requestRoutineDue(repos: ControlPlaneRepositories, args: r
     reason: command.reason,
     withdrawnAt: null,
   };
-  const next = { ...config, updatedAt: now, routineDueRequests: [...prior.requests, request].slice(-ROUTINE_DUE_REQUEST_HISTORY) };
+  const retained = prior.requests.filter(row => row.contractId !== command.contractId || !openAt(row, nowMs));
+  const next = { ...config, updatedAt: now, routineDueRequests: [
+    ...retained.filter(row => !openAt(row, nowMs)).slice(-ROUTINE_DUE_REQUEST_HISTORY),
+    ...retained.filter(row => openAt(row, nowMs)), request,
+  ] };
   if (row) await repos.adminConfig.compareAndSet(row.id, row.revision, next, now);
   else await repos.adminConfig.put(ADMIN_CONFIG_ID, next, now);
   return request;

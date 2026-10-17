@@ -12,7 +12,6 @@ import {
   type SnapshotCarriedMeta,
 } from "./snapshot.ts";
 
-
 export const READER_ARTIFACT_FORMAT_VERSION = 1 as const;
 
 /** The scope for meetings whose OCD division names no state (online/unresolved). */
@@ -41,7 +40,6 @@ export interface ReaderGeoArtifact {
   readonly formatVersion: typeof READER_ARTIFACT_FORMAT_VERSION;
   readonly scope: string;
   readonly ocdId?: string;
-  readonly bounds?: ReaderAreaBounds;
   readonly meetingIds?: readonly string[];
   readonly agendaOnly?: boolean;
   readonly generatedAt: string;
@@ -54,7 +52,6 @@ export interface ReaderGeoArtifact {
 export interface ReaderManifestScope {
   readonly scope: string;
   readonly ocdId?: string;
-  readonly bounds?: ReaderAreaBounds;
   readonly meetingIds?: readonly string[];
   readonly agendaOnly?: boolean;
   /** Immutable, content-addressed artifact key. */
@@ -62,13 +59,6 @@ export interface ReaderManifestScope {
   readonly sha256: string;
   readonly meetingCount: number;
   readonly generatedAt: string;
-}
-
-export interface ReaderAreaBounds {
-  readonly south: number;
-  readonly north: number;
-  readonly west: number;
-  readonly east: number;
 }
 
 /** A jurisdiction piece is shared by every ZIP in that division. */
@@ -80,28 +70,17 @@ export function meetingAreaScope(ocdId: string | null | undefined): string {
 }
 
 export function readerScopeApplies(
-  scope: Pick<ReaderManifestScope, "scope" | "ocdId" | "bounds" | "meetingIds" | "agendaOnly">,
+  scope: Pick<ReaderManifestScope, "scope" | "ocdId" | "meetingIds" | "agendaOnly">,
   area: { readonly states?: readonly string[]; readonly ocdIds?: readonly string[];
-    readonly meetingId?: string; readonly includeAgenda?: boolean;
-    readonly nearby?: { readonly lat: number; readonly lng: number; readonly radiusKm: number } },
+    readonly meetingId?: string; readonly includeAgenda?: boolean; },
 ): boolean {
   if (area.includeAgenda === false && scope.agendaOnly) return false;
   if (area.meetingId) return scope.meetingIds ? scope.meetingIds.includes(area.meetingId) : true;
   if (scope.scope === NATIONAL_SCOPE || scope.scope === `${NATIONAL_SCOPE}-agenda` || scope.ocdId && stateOfOcdId(scope.ocdId) === null) return true;
   if (!scope.ocdId) return !area.states || scopesForStates(area.states).includes(scope.scope);
-  if (!area.ocdIds?.length) return !area.states || area.states.some(state => state.toLowerCase() === stateOfOcdId(scope.ocdId));
-  if (area.ocdIds.some(id => id.split("#")[0] === scope.ocdId)) return true;
-  const point = area.nearby;
-  const bounds = scope.bounds;
-  if (!point || !bounds) return false;
-  const latDelta = point.radiusKm / 110;
-  const lngDelta = point.radiusKm / (110 * Math.max(0.01, Math.cos(Math.min(90, Math.abs(point.lat) + latDelta) * Math.PI / 180)));
-  // A generous enclosing box preserves every radius-ladder candidate. Account
-  // for the date line by comparing the equivalent longitudes on either side.
-  return bounds.north >= point.lat - latDelta && bounds.south <= point.lat + latDelta &&
-    [-360, 0, 360].some(shift => bounds.east + shift >= point.lng - lngDelta && bounds.west + shift <= point.lng + lngDelta);
+  if (!area.ocdIds) return !area.states || area.states.some(state => state.toLowerCase() === stateOfOcdId(scope.ocdId));
+  return area.ocdIds.some(id => id.split("#")[0] === scope.ocdId);
 }
-
 
 export interface ReaderManifest {
   readonly carriedSummary?: SnapshotCarriedMeta;
@@ -120,33 +99,31 @@ export interface ReaderManifest {
   readonly sources: SnapshotSourceReport[];
   readonly scopes: readonly ReaderManifestScope[];
 
-  readonly commentAccess?: readonly unknown[];
-  readonly everydayRouting?: unknown;
-  /** Pointer identities for the embedded serving copies; old manifests refresh once. */
-  readonly extrasVersionIds?: Readonly<Partial<Record<"comment-access" | "everyday-routing", string | null>>>;
-
-  readonly authorityArtifacts?: Partial<Record<AuthorityFamily, AuthorityArtifactRef>>;
-
-  readonly registrations?: Readonly<Record<string, AuthorityArtifactRef>>;
-  /** Legislative people loaded separately for each requested jurisdiction. */
-  readonly stateLegislators?: Readonly<Record<string, AuthorityArtifactRef>>;
-
   readonly freshChecks?: Readonly<Record<string, string>>;
 
   readonly composition?: string;
+  readonly everydayRouting?: unknown;
+  readonly extrasVersionIds?: Readonly<Partial<Record<"everyday-routing", string | null>>>;
+  readonly authorityArtifacts?: Partial<Record<GlobalAuthorityFamily, AuthorityArtifactRef>>;
+  readonly stateFacts?: Readonly<Record<string, AuthorityArtifactRef>>;
+  readonly stateAuthorities?: Partial<Record<StateAuthorityFamily, Readonly<Record<string, AuthorityArtifactRef>>>>;
+  readonly registrations?: Readonly<Record<string, AuthorityArtifactRef>>;
+  readonly stateLegislators?: Readonly<Record<string, AuthorityArtifactRef>>;
+}
+
+export const STATE_AUTHORITY_FAMILIES = ["registry-runtime", "ballot-contests", "candidate-profiles", "candidate-publications", "voting-sites", "candidate-campaign-sites-derived"] as const;
+export type StateAuthorityFamily = typeof STATE_AUTHORITY_FAMILIES[number];
+export type GlobalAuthorityFamily = Exclude<AuthorityFamily, StateAuthorityFamily>;
+export type GlobalPromotedAuthorityFamily = PromotedAuthorityFamily;
+export function isStateAuthorityFamily(family: string): family is StateAuthorityFamily {
+  return (STATE_AUTHORITY_FAMILIES as readonly string[]).includes(family);
 }
 
 /** Each artifact carries one or more proven pointers whole, read through each pointer's own typed Reader. */
 export type PromotedAuthorityFamily =
   | "other-reader-data"
   | "state-votes"
-  | "ballot-contests"
-  | "ballot-az"
-  | "ballot-nh"
-  | "candidate-profiles"
-  | "candidate-publications"
   | "ballot-navigation"
-  | "voting-sites"
   | "official-filings"
   | "member-offices"
   | "nh-members"
@@ -164,13 +141,7 @@ export type PromotedAuthorityFamily =
 export const PROMOTED_AUTHORITY_FAMILIES: readonly PromotedAuthorityFamily[] = [
   "other-reader-data",
   "state-votes",
-  "ballot-contests",
-  "ballot-az",
-  "ballot-nh",
-  "candidate-profiles",
-  "candidate-publications",
   "ballot-navigation",
-  "voting-sites",
   "official-filings",
   "member-offices",
   "nh-members",
@@ -198,24 +169,25 @@ export function isPromotedAuthorityFamily(family: AuthorityFamily): family is Pr
 
 export type AuthorityFamily =
   | "census-districts"
-  | "registry-runtime"
   | "federal-directory"
   | "campaign-sites"
   | "state-legislators"
   | "meeting-outcomes"
-  | "comment-access"
-  | PromotedAuthorityFamily;
+  | "everyday-routing"
+  | PromotedAuthorityFamily
+  | StateAuthorityFamily;
 
-export const AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
+export const GLOBAL_AUTHORITY_FAMILIES: readonly GlobalAuthorityFamily[] = [
   "census-districts",
-  "registry-runtime",
   "federal-directory",
   "campaign-sites",
   "state-legislators",
   "meeting-outcomes",
-  "comment-access",
+  "everyday-routing",
   ...PROMOTED_AUTHORITY_FAMILIES,
 ];
+
+export const AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [...GLOBAL_AUTHORITY_FAMILIES, ...STATE_AUTHORITY_FAMILIES];
 
 export interface AuthorityArtifactRef {
   readonly layout?: "records";
@@ -232,7 +204,6 @@ function countsFor(meetings: readonly Meeting[]): ReaderArtifactCounts {
   const base = snapshotCounts(meetings, 0);
   return { fresh: base.fresh, carried: base.carried, total: base.total, duplicatesCollapsed: 0 };
 }
-
 
 export function partitionSnapshotByScope(
   snapshot: MeetingsSnapshot,
@@ -264,16 +235,10 @@ export function partitionSnapshotByScope(
 
   return [...byScope.keys()].sort().flatMap((scope) => {
     const { meetings, agenda, ocdId } = byScope.get(scope)!;
-    const locations = meetings.flatMap(meeting => meeting.location && Number.isFinite(meeting.location.lat) && Number.isFinite(meeting.location.lng) ? [meeting.location] : []);
-    const bounds = locations.reduce<ReaderAreaBounds | undefined>((held, point) => ({
-      south: Math.min(held?.south ?? point.lat, point.lat), north: Math.max(held?.north ?? point.lat, point.lat),
-      west: Math.min(held?.west ?? point.lng, point.lng), east: Math.max(held?.east ?? point.lng, point.lng),
-    }), undefined);
     const artifact: ReaderGeoArtifact = {
       formatVersion: READER_ARTIFACT_FORMAT_VERSION,
       scope,
       ...(scope !== NATIONAL_SCOPE && ocdId ? { ocdId } : {}),
-      ...(bounds ? { bounds } : {}),
       meetingIds: [...new Set([...meetings.flatMap(meeting => [meeting.id, ...(meeting.mergedMeetingIds ?? [])]), ...agenda.map(doc => doc.meetingId)])].sort(),
       generatedAt: snapshot.generatedAt || now,
       counts: countsFor(meetings),
@@ -299,7 +264,6 @@ export function scopesForStates(states: Iterable<string>): string[] {
   set.add(NATIONAL_SCOPE);
   return [...set].sort();
 }
-
 
 export function mergeScopeArtifacts(
   artifacts: readonly ReaderGeoArtifact[],

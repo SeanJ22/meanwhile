@@ -1,4 +1,3 @@
-/** Which side of its deploy a migration is safe on. */
 export type MigrationPhase = "expand" | "contract";
 
 export const PRODUCTION_MIGRATION_HEADLINE = "Production migrations";
@@ -125,11 +124,6 @@ const CONTRACT_RULES: readonly {
   },
 ];
 
-/**
- * The statements in a migration file, with SQL comments removed so prose that
- * quotes SQL is not classified. The breakpoint marker is split off before
- * stripping, because it begins with `--`.
- */
 export function statementsIn(sql: string): string[] {
   return sql
     .split("--> statement-breakpoint")
@@ -168,7 +162,8 @@ export function phaseFromSql(sql: string): { phase: MigrationPhase; signals: Con
 }
 
 /** Hand-written, one entry per committed migration; the suite checks each against phaseFromSql. */
-export const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
+const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
+  "0038_src_mn_federal_money_lookup": { phase: "expand", why: "Indexes exact federal native IDs without indexing source descriptions or loading state inventories." },
   "0000_square_stryfe": {
     phase: "expand",
     why: "Creates meetings, agenda_documents and search_log with their indexes. Nothing existed before it.",
@@ -368,12 +363,13 @@ export const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
   },
   "0034_reader_events": { phase: "expand", why: "New aggregate and anonymous membership tables; existing capture stores are unaffected." },
   "0035_r1_fact_store": { phase: "expand", why: "Creates the fact store tables. Nothing reads or writes them before the build that ships with it." },
+  "0037_r1_fact_scale": { phase: "expand", why: "Adds the fact watermark, the pass cursors and the trigger that queues changed places; existing writers keep working." },
   "0036_ne01": { phase: "expand", why: "Adds defaulted read counters and reader selection functions; existing readers and writers keep working." },
-  "H-01_place_rows": { phase: "expand", why: "Creates the per-division rows of promoted payloads and their change log. Nothing reads or writes them before the build that ships with it." },
   "0033_feedback_context": {
     phase: "expand",
     why: "Adds nullable report context columns. Older feedback writers keep working and existing reports retain unknown context.",
   },
+  "0039_sb01b_state_pointer_retirement": { phase: "expand", why: "Permits retiring replaced national pointers only after every exact state replacement is GOOD; existing writers retain their mutation rules." },
 };
 
 /** The declaration for a tag, or null when there is none. Never a default. */

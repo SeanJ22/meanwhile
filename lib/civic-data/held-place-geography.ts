@@ -4,7 +4,8 @@ import type { BuiltGrouping, BuiltScope } from "../census-geography/dataset.ts";
 import { censusWorkDivision } from "../census-geography/division-id.ts";
 import { CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } from "../census-geography/publication.ts";
 import type { HeldPlaceCapture } from "./held-place-capture.ts";
-import { readPlacePointerSlices } from "./held-place-slices.ts";
+import { readerQuery } from "./promoted-reader-query.ts";
+import { CivicPayloadParts } from "./payload-parts.ts";
 import type { ReadOnlyQuery } from "../control-plane/admin-view/promoted-slices.ts";
 
 export interface HeldGeographyRow {
@@ -13,6 +14,8 @@ export interface HeldGeographyRow {
 }
 const types: Record<string, string> = { cd: "congressional_district", sldu: "state_leg_upper", sldl: "state_leg_lower",
   county: "county", place: "place", county_subdivision: "county_subdivision" };
+const cache = new Map<string, { version: string; capture: HeldPlaceCapture }>();
+const injectedCaches = new WeakMap<ReadOnlyQuery, typeof cache>();
 
 export function geographyKeys(ids: readonly string[], divisions: readonly Division[]): Map<string, string[]> {
   const wanted = new Set(ids), keys = new Map<string, string[]>();
@@ -57,11 +60,57 @@ export function projectHeldGeography(ids: readonly string[], divisions: readonly
   return { subjects: [...subjects.values()], held: [...held.values()] };
 }
 
-/** Only the selected identities and their scope provenance are read, from the census pointer's per-division rows. */
+/** Follow stored payload parts in SQL; only selected identities and their scope provenance cross the wire. */
 export async function readHeldPlaceGeography(ids: readonly string[], divisions: readonly Division[], injected?: ReadOnlyQuery): Promise<HeldPlaceCapture> {
   if (!ids.length) return { subjects: [], held: [] };
-  const [read] = await readPlacePointerSlices<{ scopes: (Omit<BuiltScope, "groupings"> & { groupings: HeldGeographyRow["grouping"][] })[] }>(
-    CENSUS_GEO_RECORD_CLASS, [CENSUS_GEO_SCOPE], ids, [], [...geographyKeys(ids, divisions).keys()], injected);
-  const rows = (read!.value?.scopes ?? []).flatMap(({ groupings, ...meta }) => groupings.map(grouping => ({ meta, grouping })));
-  return projectHeldGeography(ids, divisions, rows);
+  const query = injected ?? readerQuery();
+  if (!query) throw new Error("HELD_GEOGRAPHY_READ_FAILED:STORE_UNCONFIGURED");
+  const keys = geographyKeys(ids, divisions);
+  const selectedCache = injected ? injectedCaches.get(injected) ?? new Map<string, { version: string; capture: HeldPlaceCapture }>() : cache;
+  if (injected) injectedCaches.set(injected, selectedCache);
+  const cacheKey = JSON.stringify([injected ? "injected" : process.env.DATABASE_URL, [...ids].sort(), [...keys].sort()]);
+  const [pointer] = await query([{ text: "SELECT current_version_id FROM civic_data_promotions WHERE record_class=$1 AND scope=$2",
+    params: [CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE] }]);
+  const version = pointer[0]?.current_version_id;
+  if (typeof version !== "string") return { subjects: [], held: [] };
+  const cached = selectedCache.get(cacheKey);
+  if (cached?.version === version) return cached.capture;
+  const [rows] = await query([{ params: [CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE, [...ids], [...keys.keys()]], text: `
+    WITH RECURSIVE walk(step,node,meta) AS (
+      SELECT 0,payload,'{}'::jsonb FROM civic_data_promotions WHERE record_class=$1 AND scope=$2
+      UNION ALL
+      SELECT n.step,n.node,n.meta FROM walk w
+      LEFT JOIN civic_data_payload_parts p ON p.hash=w.node->>'$civicPayloadPart'
+      CROSS JOIN LATERAL (SELECT CASE WHEN p.hash IS NULL THEN w.node
+        WHEN p.payload->>'kind'='object' THEN p.payload->'value'
+        WHEN p.payload->>'kind'='array' THEN p.payload->'groups' ELSE p.payload END node) r
+      CROSS JOIN LATERAL (
+        SELECT w.step+1 step,r.node->(CASE w.step WHEN 0 THEN 'scopes' ELSE 'groupings' END) node,
+          CASE WHEN w.step=1 THEN r.node - 'groupings' ELSE w.meta END meta
+          WHERE w.step<2 AND jsonb_typeof(r.node)='object' AND NOT r.node ? '$civicPayloadPart'
+        UNION ALL
+        SELECT w.step,e.node,w.meta FROM jsonb_array_elements(CASE WHEN jsonb_typeof(r.node)='array' THEN r.node ELSE '[]'::jsonb END) e(node)
+        UNION ALL
+        SELECT w.step,r.node,w.meta WHERE w.step=2 AND p.hash IS NOT NULL AND jsonb_typeof(r.node)='object'
+      ) n WHERE n.node IS NOT NULL
+    ) SELECT DISTINCT meta,node - 'overlaps' grouping FROM walk WHERE step=2 AND NOT node ? '$civicPayloadPart'
+      AND (node->>'ocdId'=ANY($3::text[]) OR ((meta->>'type')||':'||(node->>'geoid'))=ANY($4::text[]))
+    UNION ALL
+    SELECT '{}'::jsonb,jsonb_build_object('$missing',true) FROM walk WHERE node ? '$civicPayloadPart'
+      AND NOT EXISTS (SELECT 1 FROM civic_data_payload_parts p WHERE p.hash=node->>'$civicPayloadPart')
+    UNION ALL
+    SELECT '{}'::jsonb,jsonb_build_object('$version',current_version_id) FROM civic_data_promotions WHERE record_class=$1 AND scope=$2` }]);
+  if ((rows.find(row => (row.grouping as { $version?: string }).$version)?.grouping as { $version?: string } | undefined)?.$version !== version) {
+    throw new Error("CIVIC_POINTER_CHANGED_DURING_READ");
+  }
+  if (rows.some(row => (row.grouping as { $missing?: boolean }).$missing)) throw new Error("CIVIC_PAYLOAD_PART_MISSING");
+  const parts = new CivicPayloadParts({ existing: async () => [], write: async () => { throw new Error("READ_ONLY"); },
+    read: async hashes => {
+      const [found] = await query([{ text: "SELECT hash,payload FROM civic_data_payload_parts WHERE hash=ANY($1::text[])", params: [[...hashes]] }]);
+      return found as unknown as { hash: string; payload: unknown }[];
+    } });
+  const capture = projectHeldGeography(ids, divisions, await parts.load(rows.filter(row => !(row.grouping as { $version?: string }).$version)) as HeldGeographyRow[]);
+  if (selectedCache.size >= 64) selectedCache.delete(selectedCache.keys().next().value!);
+  selectedCache.set(cacheKey, { version, capture });
+  return capture;
 }

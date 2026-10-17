@@ -1,3 +1,4 @@
+import { requireRegistryState, stateFromRegistryRuntimeScope } from "../civic-data/state-scopes.ts";
 import { createHash } from "node:crypto";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
@@ -24,7 +25,7 @@ const MEMBER_FIELDS = ["termNote", "termStart", "termEnd", "email", "phone", "we
 
 /** The rosters readers saw before facts, each re-proved on a saved copy of its own page; what fails stays a blank with its reason. */
 export async function importCartonRosters(input: {
-  readonly rosters: readonly BodyRoster[]; readonly versionId: string;
+  readonly rosters: readonly BodyRoster[]; readonly versionId: string; readonly state: string;
   readonly facts: FactDb & { readonly query: Query }; readonly clocks: Clocks;
   readonly repos: Pick<ControlPlaneRepositories, "artifacts" | "artifactsByCanonicalUrl">;
   readonly vault: EvidenceStore; readonly fetch: ProbeFetch; readonly now: string;
@@ -62,24 +63,24 @@ export async function importCartonRosters(input: {
     report.rosters++;
   }
   await input.facts.query(`INSERT INTO fact_store_load (source, sha256) VALUES ($1, $2)
-    ON CONFLICT (source) DO UPDATE SET sha256 = EXCLUDED.sha256, loaded_at = now()`, [CARTON_ROSTERS, createHash("sha256").update(input.versionId).digest("hex")]);
+    ON CONFLICT (source) DO UPDATE SET sha256 = EXCLUDED.sha256, loaded_at = now()`, [`${CARTON_ROSTERS}:${requireRegistryState(input.state)}`, createHash("sha256").update(input.versionId).digest("hex")]);
   return report;
 }
 
 const CARTON_ROSTERS = "carton:rosters";
 
-/** The newest promoted registry partition that still carried rosters, until they have been carried onto facts once. */
+/** Carries each state's current rosters onto facts once. */
 export async function cartonRosters(query: Query, readCandidate: (id: string) => Promise<{ readonly candidate: { readonly readModel: unknown } } | null>,
-  scope: string): Promise<{ readonly versionId: string; readonly rosters: readonly BodyRoster[] } | null> {
-  if ((await query("SELECT 1 FROM fact_store_load WHERE source = $1", [CARTON_ROSTERS])).length) return null;
-  const rows = await query(`SELECT id FROM civic_data_candidates WHERE record_class = 'REGISTRY_RUNTIME_BINDING' AND scope = $1
-    AND promoted_version_id = id ORDER BY retrieved_at DESC LIMIT 20`, [scope]);
-  for (const row of rows) {
-    const read = await readCandidate(String(row.id));
-    const rosters = (read?.candidate.readModel as { bodyRosters?: BodyRoster[] } | undefined)?.bodyRosters;
-    if (rosters?.length) return { versionId: String(row.id), rosters };
-  }
-  return null;
+  scope: string): Promise<{ readonly versionId: string; readonly rosters: readonly BodyRoster[]; readonly state: string } | null> {
+  const state = stateFromRegistryRuntimeScope(scope);
+  if (!state) throw new Error(`REGISTRY_STATE_SCOPE_INVALID:${scope}`);
+  if ((await query("SELECT 1 FROM fact_store_load WHERE source = $1", [`${CARTON_ROSTERS}:${state}`])).length) return null;
+  const [row] = await query("SELECT current_version_id AS id FROM civic_data_promotions WHERE key=$1",
+    [`REGISTRY_RUNTIME_BINDING:${scope}`]);
+  if (!row) return null;
+  const read = await readCandidate(String(row.id));
+  const rosters = (read?.candidate.readModel as { bodyRosters?: BodyRoster[] } | undefined)?.bodyRosters;
+  return rosters?.length ? { versionId: String(row.id), rosters, state } : null;
 }
 
 const CARTON_COMMENTS = "carton:comment-rules";
@@ -130,15 +131,15 @@ export async function importCartonComments(input: {
 const CARTON_OFFICES = "carton:office-contacts";
 
 /** The bodies whose office address or phone readers saw before facts, until they have been carried onto facts once. */
-export async function cartonOffices(query: Query, registry: { readonly versionId: string; readonly payload: { readonly registry: { readonly bodies: readonly Body[] } } } | null):
-  Promise<{ readonly versionId: string; readonly bodies: readonly Body[] } | null> {
-  if (!registry || (await query("SELECT 1 FROM fact_store_load WHERE source = $1", [CARTON_OFFICES])).length) return null;
-  return { versionId: registry.versionId, bodies: registry.payload.registry.bodies.filter(row => (row.officeAddress || row.officePhone) && row.provenance.sourceUrl) };
+export async function cartonOffices(query: Query, registry: { readonly versionId: string; readonly payload: { readonly registry: { readonly bodies: readonly Body[] } } } | null, state: string):
+  Promise<{ readonly versionId: string; readonly bodies: readonly Body[]; readonly state: string } | null> {
+  if (!registry || (await query("SELECT 1 FROM fact_store_load WHERE source = $1", [`${CARTON_OFFICES}:${requireRegistryState(state)}`])).length) return null;
+  return { versionId: registry.versionId, state: requireRegistryState(state), bodies: registry.payload.registry.bodies.filter(row => (row.officeAddress || row.officePhone) && row.provenance.sourceUrl) };
 }
 
 /** The office addresses and phones readers saw on bodies before facts, each re-proved on a saved copy of the body's page. */
 export async function importCartonOffices(input: {
-  readonly bodies: readonly Body[]; readonly versionId: string;
+  readonly bodies: readonly Body[]; readonly versionId: string; readonly state: string;
   readonly facts: FactDb & { readonly query: Query }; readonly clocks: Clocks;
   readonly repos: Pick<ControlPlaneRepositories, "artifacts" | "artifactsByCanonicalUrl">;
   readonly vault: EvidenceStore; readonly fetch: ProbeFetch; readonly now: string;
@@ -165,6 +166,6 @@ export async function importCartonOffices(input: {
     report.rosters++;
   }
   await input.facts.query(`INSERT INTO fact_store_load (source, sha256) VALUES ($1, $2)
-    ON CONFLICT (source) DO UPDATE SET sha256 = EXCLUDED.sha256, loaded_at = now()`, [CARTON_OFFICES, createHash("sha256").update(input.versionId).digest("hex")]);
+    ON CONFLICT (source) DO UPDATE SET sha256 = EXCLUDED.sha256, loaded_at = now()`, [`${CARTON_OFFICES}:${requireRegistryState(input.state)}`, createHash("sha256").update(input.versionId).digest("hex")]);
   return report;
 }

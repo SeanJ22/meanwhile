@@ -18,7 +18,7 @@ const SUPERSEDED = "https://authority.example.gov/superseded-404";
 
 function packageWith(key: "supersededLandingUrl" | "currentLandingUrl"): ManualProjectionPackage {
   return {
-    contractId: "candidate-profiles",
+    contractId: "candidate-profiles:AZ",
     version: NOW,
     sourceThrough: NOW,
     sourceReceipt: {
@@ -60,11 +60,11 @@ function packageWith(key: "supersededLandingUrl" | "currentLandingUrl"): ManualP
 
 test("an explicit failed/superseded URL remains recorded without demanding fabricated positive bytes", async () => {
   const candidate = manualProjectionCandidate(packageWith("supersededLandingUrl"));
-  assert.equal(manualCandidateContractIssue("candidate-profiles", candidate), null);
+  assert.equal(manualCandidateContractIssue("candidate-profiles:AZ", candidate), null);
   assert.ok(candidate.semantics.violations.every((problem) => !problem.includes(SUPERSEDED)));
   const outcome = await processRegisteredManualCandidate(
     new MemoryRoutineDataStore(),
-    "candidate-profiles",
+    "candidate-profiles:AZ",
     candidate,
     NOW,
   );
@@ -80,7 +80,7 @@ test("an unreceipted current member is held without withholding an independently
   ));
   const outcome = await processRegisteredManualCandidate(
     new MemoryRoutineDataStore(),
-    "candidate-profiles",
+    "candidate-profiles:AZ",
     candidate,
     NOW,
   );
@@ -97,7 +97,7 @@ test("an unreceipted current member is held without withholding an independently
 test("a truthfully blocked exact source set records SOURCE_RETRIEVAL_FAILED and preserves LKG", async () => {
   const store = new MemoryRoutineDataStore();
   const good = manualProjectionCandidate(packageWith("supersededLandingUrl"));
-  const promoted = await processRegisteredManualCandidate(store, "candidate-profiles", good, NOW);
+  const promoted = await processRegisteredManualCandidate(store, "candidate-profiles:AZ", good, NOW);
   assert.equal(promoted.candidate.state, "PROMOTED");
   assert.ok(promoted.promoted);
 
@@ -122,8 +122,8 @@ test("a truthfully blocked exact source set records SOURCE_RETRIEVAL_FAILED and 
 
   const blocked = manualProjectionCandidate(blockedPackage);
   assert.equal(blocked.retrieval.succeeded, false);
-  assert.equal(manualCandidateContractIssue("candidate-profiles", blocked), null);
-  const refused = await processRegisteredManualCandidate(store, "candidate-profiles", blocked, LATER);
+  assert.equal(manualCandidateContractIssue("candidate-profiles:AZ", blocked), null);
+  const refused = await processRegisteredManualCandidate(store, "candidate-profiles:AZ", blocked, LATER);
   assert.equal(refused.candidate.state, "SOURCE_BLOCKED");
   assert.equal(refused.candidate.receipt?.decision, "FAIL");
   assert.ok(refused.candidate.receipt?.checks.some((check) =>
@@ -163,10 +163,10 @@ test("an HTTP 200 challenge shell explicitly reviewed as BLOCKED cannot authoriz
   source.failureDetail = "HTTP 200 challenge shell did not contain the cited primary-source record.";
   const candidate = manualProjectionCandidate(challengePackage);
   assert.equal(candidate.retrieval.succeeded, false);
-  assert.equal(manualCandidateContractIssue("candidate-profiles", candidate), null);
+  assert.equal(manualCandidateContractIssue("candidate-profiles:AZ", candidate), null);
   const outcome = await processRegisteredManualCandidate(
     new MemoryRoutineDataStore(),
-    "candidate-profiles",
+    "candidate-profiles:AZ",
     candidate,
     NOW,
   );

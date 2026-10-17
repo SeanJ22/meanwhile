@@ -200,7 +200,8 @@ export const authorityPointerKey = (family: AuthorityPointerFamily | StateAuthor
 
 /** Families whose pointers multiply with places publish one pointer per state their scopes name, and "US" for the rest. */
 export const PLACE_SPLIT_FAMILIES: ReadonlySet<GlobalPromotedAuthorityFamily> = new Set(["state-votes", "state-money", "other-reader-data"]);
-export const authorityPlaceOfScope = (scope: string) => /^US-([A-Z]{2})(?::|$)/.exec(scope)?.[1] ?? "US";
+export const authorityPlaceOfScope = (scope: string) =>
+  /^US-([A-Z]{2})(?::|$)/.exec(scope)?.[1] ?? /\/(?:state|district|territory):([a-z]{2})(?:\/|$)/.exec(scope)?.[1]?.toUpperCase() ?? "US";
 
 export interface ServedPointer {
   readonly ref: AuthorityArtifactRef;

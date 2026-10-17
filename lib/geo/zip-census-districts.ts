@@ -71,10 +71,8 @@ export function withCensusDistricts(entry: ZipDivisionEntry, slice: Slice<CodeSl
 export async function publishedZipDistricts(zip: string): Promise<Slice<CodeSlice>> {
   const edge = currentReaderAuthorityEdge();
   if (edge?.censusDistricts) return censusDistrictEdgeSlice(edge.censusDistricts.value, edge.censusDistricts.versionId, zip);
-  // An older/unavailable serving copy retains the existing index's uncertainty.
-  // Adding Census certainty must not add a cold database dependency to an
-  // otherwise complete edge request (including the strictly edge-only warmer).
-  if (edge) return { kind: "UNREAD", detail: "Census districts are not available on this reader edge" };
+  // The strictly edge-only warmer never opens the database; any other request reads it until the pointer is published.
+  if (edge?.edgeOnly) return { kind: "UNREAD", detail: "Census districts are not available on this reader edge" };
   const query = readerQuery(1000);
   if (!query) return { kind: "UNREAD", detail: "No reader store is configured" };
   const held = cached.get(zip);

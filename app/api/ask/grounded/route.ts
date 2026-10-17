@@ -497,7 +497,7 @@ async function answerWithSettings(request: Request) {
     ? timed("commentAccess", () => readCommentAccessFacts().catch(() => undefined))()
     : null;
   let authorityEdge: ReaderAuthorityEdgeBundle | null = null;
-  if (edgeManifest?.authorityArtifacts) {
+  if (edgeManifest?.authorityArtifacts || edgeManifest?.stateAuthorities) {
     const families: readonly AuthorityFamily[] = officialsAsk?.unresolvedPlace ? [] : ballotOnlyHint ? ["ballot-contests"]
       : leanAsk ? READER_MAP_AUTHORITY_FAMILIES.filter(family => family !== "registry-runtime")
       : deferUnrelatedEvidence ? AUTHORITY_FAMILIES.filter(family => family !== "registry-runtime" && !unrelatedFamilies.has(family))
@@ -563,7 +563,7 @@ async function answerWithSettings(request: Request) {
         continuityKey: typeof body.continuityKey === "string" ? body.continuityKey : "" });
       return Response.json(askAnswer({ mode: "STRUCTURED_GROUNDED", pack, answer: composed.answer, contacts: [], trace }));
     }
-    if (edgeManifest?.authorityArtifacts) {
+    if (edgeManifest?.authorityArtifacts || edgeManifest?.stateAuthorities) {
       const families = deferUnrelatedEvidence ? AUTHORITY_FAMILIES.filter(family => family !== "registry-runtime" && !unrelatedFamilies.has(family))
         : AUTHORITY_FAMILIES.filter(family => family !== "registry-runtime");
       authorityEdge = await timed("remainingAuthorityEdge", () => ensureReaderAuthorityEdge(edgeManifest, undefined, families)
@@ -934,7 +934,7 @@ async function answerWithSettings(request: Request) {
     } else {
       // Enter in this async scope, not inside a preload helper: otherwise the
       // AsyncLocalStorage context would not reach the subsequent readers.
-      if (edgeManifest?.authorityArtifacts) {
+      if (edgeManifest?.authorityArtifacts || edgeManifest?.stateAuthorities) {
         const families = AUTHORITY_FAMILIES.filter(family => family !== "registry-runtime");
         authorityEdge = await timed("remainingAuthorityEdge", () => ensureReaderAuthorityEdge(edgeManifest, undefined, families)
           .catch(error => holdReaderAuthorityEdge(error, edgeManifest, families)))();

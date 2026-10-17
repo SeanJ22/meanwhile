@@ -72,8 +72,9 @@ export async function publishSupervisorReaderEdge(store: RoutineDataStore, obser
 ): Promise<ReaderEdgePublicationOutcome> {
   const currentStore = store;
   const states = new Set(selectedStateEdgePointers(selected ?? []).filter(unit => unit.family === "ballot-contests").map(unit => unit.state));
+  // A ballot change delivers the place's ballot and registry families together; its members of Congress move only with their own records.
   selected = selected === null ? null : [...selected, ...selectedStateEdgePointers(null)
-    .filter(unit => states.has(unit.state)).flatMap(unit => unit.pointers)];
+    .filter(unit => states.has(unit.state) && unit.family !== "federal-directory").flatMap(unit => unit.pointers)];
   let failed = false;
   let destination: ReaderEdgePublicationOutcome["store"] = "not configured";
   let sequence: number | null = null;

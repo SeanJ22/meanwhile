@@ -27,7 +27,7 @@ import { PRL_CONTRACT } from "../lib/sources/prl/data-plane.ts";
 import { PRL_RHETORIC_ATTRIBUTION, type PrlSnapshot } from "../lib/sources/prl/types.ts";
 import type { CandidateCorpus } from "../lib/candidates/corpus.ts";
 import type { FundingSnapshot } from "../lib/funding/types.ts";
-import { FEDERAL_ROLLCALL_SCOPE, FEDERAL_KEY_VOTE_SCOPE, FEDERAL_VOTES_SOURCE_ID } from "../lib/votes/data-plane.ts";
+import { FEDERAL_ROLLCALL_SCOPE, FEDERAL_KEY_VOTE_SCOPE, FEDERAL_VOTES_SOURCE_ID, federalMemberVotesScope } from "../lib/votes/data-plane.ts";
 import { absentEdgeEntry, manualEdgeEntry, promotedFamily, provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
 import { registryTransferImport, syntheticCandidateProfiles, syntheticFederalDirectory, syntheticFederalRollCalls, syntheticFederalKeyVotes, syntheticOfficeholderStatements, stateMoneyFixture, stateFederalDirectoryArtifacts } from "./helpers/promoted-fixtures.ts";
 import { azDistricts } from "./helpers/ballot-district-fixtures.ts";
@@ -158,10 +158,21 @@ test("BL-20: Ohio and Michigan national ballots render the same incumbent record
     officialPhotos: { photos: registry.officialPhotos.photos.filter(photo => !cases.some(item => item.incumbent === photo.officeholderId)) } };
   const previousFetch = neonConfig.fetchFunction, previousDatabase = process.env.DATABASE_URL;
   process.env.DATABASE_URL = "postgresql://fixture:fixture@ballot-place.invalid/fixture";
+  // A member's own vote record is read from the reader store, as production reads it.
+  const memberRecords = new Map(syntheticFederalRollCalls(federal, 2).members.map(record => [federalMemberVotesScope(record.officeholderId), record]));
   neonConfig.fetchFunction = async (_input: Parameters<typeof fetch>[0], init?: Parameters<typeof fetch>[1]) => {
     const body = JSON.parse(String(init?.body)) as FixtureStatement & { queries?: FixtureStatement[] };
     const empty = { command: "SELECT", rowCount: 0, rows: [], fields: [] };
     const results = (body.queries ?? [body]).map(statement => {
+      const record = statement.query?.includes("FROM civic_data_promotions p") ? memberRecords.get(String(statement.params?.[1])) : undefined;
+      if (record) {
+        const { projection, attested } = provenEdgeEntry({ recordClass: "FEDERAL_ROLL_CALL", scope: federalMemberVotesScope(record.officeholderId), sourceId: FEDERAL_VOTES_SOURCE_ID, versionId: `BL-20:votes:${record.officeholderId}`, value: record });
+        const row: Record<string, unknown> = { key: projection.key, source_id: projection.sourceId, record_class: projection.recordClass, scope: projection.scope,
+          current_version_id: projection.versionId, last_known_good_version_id: projection.lastKnownGoodVersionId, promoted_at: projection.promotedAt,
+          validation_receipt: projection.receipt, payload: projection.payload, retrieved_at: attested.retrievedAt, temporal: null };
+        return { command: "SELECT", rowCount: 1, rowAsArray: true, fields: Object.keys(row).map(name => ({ name, dataTypeID: 114 })),
+          rows: [Object.values(row).map(value => JSON.stringify(value))] };
+      }
       assert.ok(statement.query?.includes("FROM fact f JOIN source_copy") || statement.query?.includes("WITH people AS") ||
         statement.query?.includes("database_transfer_daily"), statement.query);
       return empty;
@@ -212,7 +223,7 @@ test("BL-20: Ohio and Michigan national ballots render the same incumbent record
     "official-filings": promotedFamily([absentEdgeEntry("CURATED_READER_RECORD", requiredManualProductionContract("official-filings").scope)], "BL-20:filings"),
     "federal-funding": promotedFamily([provenEdgeEntry({ recordClass: "FEC_FUNDING", scope: fec.scope, sourceId: fec.sourceId, versionId: "BL-20:fec", value: funding }), manualEdgeEntry("campaign-finance", { kind: "campaign-finance", records: [] }, "BL-20:generic-money")], "BL-20:money"),
     "state-money": promotedFamily((Object.keys(STATE_CAMPAIGN_FINANCE_SOURCES) as StateCampaignFinanceJurisdiction[]).map(state => provenEdgeEntry({ recordClass: "STATE_CAMPAIGN_FINANCE", ...STATE_CAMPAIGN_FINANCE_SOURCES[state], versionId: `BL-20:state-money:${state}`, value: stateMoneyFixture(state) })), "BL-20:state-money"),
-    "federal-votes": promotedFamily([provenEdgeEntry({ recordClass: "FEDERAL_ROLL_CALL", scope: FEDERAL_ROLLCALL_SCOPE, sourceId: FEDERAL_VOTES_SOURCE_ID, versionId: "BL-20:votes", value: syntheticFederalRollCalls(federal, 2) })], "BL-20:votes"),
+    "federal-votes": promotedFamily([provenEdgeEntry({ recordClass: "FEDERAL_ROLL_CALL", scope: FEDERAL_ROLLCALL_SCOPE, sourceId: FEDERAL_VOTES_SOURCE_ID, versionId: "BL-20:votes", value: syntheticFederalRollCalls(federal, 2).window })], "BL-20:votes"),
     "federal-key-votes": promotedFamily([provenEdgeEntry({ recordClass: "FEDERAL_KEY_VOTE", scope: FEDERAL_KEY_VOTE_SCOPE, sourceId: FEDERAL_VOTES_SOURCE_ID, versionId: "BL-20:key-votes", value: syntheticFederalKeyVotes(federal) })], "BL-20:key-votes"),
     "officeholder-statements": promotedFamily([manualEdgeEntry("officeholder-statements", syntheticOfficeholderStatements(cases.map(item => item.incumbent)), "BL-20:statements")], "BL-20:statements"),
     "prl-archives": promotedFamily([provenEdgeEntry({ recordClass: PRL_CONTRACT.recordClass, scope: PRL_CONTRACT.scope, sourceId: PRL_CONTRACT.sourceId, versionId: "BL-20:prl", value: prl })], "BL-20:prl"),

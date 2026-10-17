@@ -84,29 +84,30 @@ function combine(reads: readonly Read[], states: readonly string[]): Read {
     detail: `The named places' members of Congress.${served.length < reads.length ? " Some requested place records are unavailable." : ""}` };
 }
 
+/** The selection's divisions name their members, so records bound to those members are part of what the request may read. */
+function selectMembers(read: Read): Read {
+  const selection = currentReaderSelection();
+  if (selection && (read.kind === "PROMOTED" || read.kind === "BOOTSTRAP")) for (const division of read.value.roster.divisions) {
+    if (selection.keys.has(division.ocdId)) selection.keys.add(division.officeholderId);
+  }
+  return read;
+}
+
 /** The named places' members of Congress, each place read from its own record; nothing outside them is read. */
 export async function readFederalDirectoryProjection(states: readonly string[], options: PromotedCivicDataReadOptions = {}): Promise<Read> {
   const selected = [...new Set(states.map(requireRegistryState))].sort();
   if (!selected.length) throw new Error("FEDERAL_DIRECTORY_PLACES_NOT_SELECTED");
   const key = contextKey(), existing = current();
   const sameStates = existing && selected.join() === existing.states.join();
-  if (!options.store && !options.bypassCache && sameStates) {
-    if (existing.read) return existing.read;
-    if (existing.pending) return existing.pending;
-  }
+  if (!options.store && !options.bypassCache && sameStates && (existing.read || existing.pending)) return selectMembers(existing.read ?? await existing.pending!);
   const context: Context = sameStates ? existing : { states: selected };
   if (key) requests.set(key, context); else if (context !== existing) jobs.enterWith(context);
   context.pending = (async () => {
     const reads: Read[] = [];
     for (const state of selected) reads.push(await readPlace(state, options));
-    context.read = combine(reads, selected);
-    const selection = currentReaderSelection();
-    if (selection && (context.read.kind === "PROMOTED" || context.read.kind === "BOOTSTRAP")) for (const division of context.read.value.roster.divisions) {
-      if (selection.keys.has(division.ocdId)) selection.keys.add(division.officeholderId);
-    }
-    return context.read;
+    return context.read = combine(reads, selected);
   })();
-  return context.pending;
+  return selectMembers(await context.pending);
 }
 
 export async function refreshFederalDirectoryFromPromoted(states: readonly string[], options: PromotedCivicDataReadOptions = {}): Promise<string | null> {

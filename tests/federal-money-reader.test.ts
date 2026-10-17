@@ -22,7 +22,7 @@ import { publishReaderEdgeArtifacts } from "../lib/meetings/edge-serving.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import { GET } from "../app/api/federal-money/route.ts";
 import { provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
-import { syntheticFederalDirectory, stateFederalDirectoryArtifacts } from "./helpers/promoted-fixtures.ts";
+import { stateFederalDirectoryArtifacts } from "./helpers/promoted-fixtures.ts";
 import { federalMoneyProjectionIssue, federalMoneyLookupKeys, type FederalMoneyProjection } from "../lib/federal-money/model.ts";
 import type { FederalMoneyFact } from "../lib/federal-money/model.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";

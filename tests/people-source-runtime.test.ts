@@ -34,7 +34,7 @@ test("portraits are automatic and independently clocked after a fresh state rost
   const now = Date.parse("2026-10-12T00:00:00.000Z");
   const native = ROUTINE_SOURCE_TASKS.find(task => task.id === `openstates-people-${PLURAL_STATES[0]}`)!;
   const portraits = PEOPLE_SOURCE_CONTRACTS.filter(contract => contract.sourceId === "people-portraits").map(routineTaskFromContract);
-  assert.equal(portraits.length, PEOPLE_SOURCE_STATES.length + 1);
+  assert.equal(portraits.length, PEOPLE_SOURCE_STATES.length);
   assert.equal(routineTaskDue(native, { lastAttemptedAt: new Date(now).toISOString(), lastSucceededObservedAt: new Date(now).toISOString() }, now), false);
   for (const task of portraits) {
     assert.equal(routineTaskDue(task, undefined, now), true);

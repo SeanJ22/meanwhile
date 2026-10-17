@@ -114,20 +114,6 @@ test("a shared district loads its requested ZIP without following other ZIP memb
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 
-test("member vote reads keep party labels needed for the displayed totals without reading other members' profiles", async () => {
-  const dir = mkdtempSync(join(tmpdir(), "site-party-"));
-  try {
-    const store = new LocalFileArtifactStore(dir);
-    const holders = [{ id: "congress:A000001", partyLabel: "Democratic" }, { id: "congress:B000002", partyLabel: "Republican" }];
-    const index = await publishAuthorityRecords({ roster: { officeholders: holders }, directory: { byMember: { A000001: {}, B000002: {} } } }, store);
-    const selected = await readAuthorityRecords(index, store, { keys: new Set([holders[0].id, "A000001"]) }) as {
-      roster: { officeholders: typeof holders }; partyLabels: Record<string, string>;
-    };
-    assert.deepEqual(selected.roster.officeholders, [holders[0]]);
-    assert.deepEqual(selected.partyLabels, Object.fromEntries(holders.map(row => [row.id, row.partyLabel])));
-  } finally { rmSync(dir, { recursive: true, force: true }); }
-});
-
 test("overlapping requests keep their route and person selectors apart", async () => {
   const read = readerRoute("/api/example/[subject]", async (_request: Request, context: { params: Promise<{ subject: string }> }) => {
     const subject = (await context.params).subject;

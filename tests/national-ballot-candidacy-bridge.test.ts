@@ -162,6 +162,7 @@ test("published national ballot rows are written to the promoted registry bridge
   assert.equal(read.kind, "BOOTSTRAP");
   if (read.kind !== "BOOTSTRAP") return;
   await installFederalDirectory(syntheticFederalDirectory(read.value));
+  await readRegistryRuntimeProjection(["OH", "MI"], { store, now, bypassCache: true });
   assert.deepEqual(officialIdsForCandidacy("ballot-candidacy:oh-incumbent"), ["congress:H001104"]);
   assert.deepEqual(officialIdsForCandidacy("ballot-candidacy:mi-incumbent"), ["congress:S001208"]);
   const held = read.value.officialCandidacies as OfficialCandidacyBridge;

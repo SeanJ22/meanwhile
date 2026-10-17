@@ -507,9 +507,7 @@ export async function seatHolderById(id: string, stateHint?: string): Promise<Se
   }
   if (id.startsWith("congress:")) {
     // A member of Congress is found in the place the request names; an id alone names no place.
-    const places = stateHint ? [stateHint.replace(/^US-/i, "")] : selectedRegistryStates();
-    if (!places.length) return null;
-    await settleFederalDirectoryRead(places);
+    await settleFederalDirectoryRead(stateHint ? [stateHint.replace(/^US-/i, "")] : selectedRegistryStates());
     return indexByOfficeholderId([getFederalOfficeholderSet()], suppliedOfficialPhotos()).get(id) ?? null;
   }
   const states = stateHint ? [stateHint.replace(/^US-/i, "")] : subjectRegistryStates(id);

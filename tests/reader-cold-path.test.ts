@@ -48,7 +48,7 @@ import { GET as representationGET } from "../app/api/representation/[...division
 
 import { GET as warmGET, KEEP_WARM_MARKER } from "../app/api/warm/route.ts";
 
-import { installRegistryAuthority, registryTransferImport, syntheticFederalDirectory, stateFederalDirectoryArtifacts } from "./helpers/promoted-fixtures.ts";
+import { installRegistryAuthority, registryTransferImport, stateFederalDirectoryArtifacts } from "./helpers/promoted-fixtures.ts";
 
 import { installPimaOutcomes, recordedMeetingsSnapshot } from "./helpers/reader-fixtures.ts";
 

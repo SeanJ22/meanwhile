@@ -30,10 +30,9 @@ async function images(){
   return (id:string,sources:PortraitSources,at:string,signal:AbortSignal)=>storeVerifiedPortrait(id,sources,at,
     {read:async()=>({bytes,retrievedAt:NOW,contentType:"image/png"}),put:async()=>{}},"officials",signal);
 }
-test("standing portrait commands require exactly one data-backed state or the federal scope",()=>{
+test("standing portrait commands require exactly one data-backed state",()=>{
   assert.equal(parsePeoplePortraitArguments(["--promote","--state=az"]),"az");
-  assert.equal(parsePeoplePortraitArguments(["--promote","--federal"]),"US");
-  for(const args of [["--state=az"],["--promote","--state=zz"],["--promote","--federal","--state=az"]])
+  for(const args of [["--state=az"],["--promote","--state=zz"],["--promote","--federal"],["--promote","--federal","--state=az"]])
     assert.throws(()=>parsePeoplePortraitArguments(args),/PEOPLE_PORTRAITS_EXACT_SCOPE_REQUIRED/);
 });
 

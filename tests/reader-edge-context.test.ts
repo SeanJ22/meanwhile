@@ -10,7 +10,6 @@ import { writeFactBucket, writeFactRecord } from "../lib/meetings/edge-serving.t
 import type { BodyFacts } from "../lib/facts/registry-overlay.ts";
 import { azDistricts } from "./helpers/ballot-district-fixtures.ts";
 import { enterReaderAuthorityEdge, currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
-import { federalDirectoryReadState } from "../lib/officials/federal-directory-read-model.ts";
 import { getOutcomeSnapshot, loadedFrom, outcomeProjectionReadState, refreshOutcomeSnapshotFromPromoted } from "../lib/outcomes/store.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 import { publishCommentFacts } from "../lib/facts/comment-facts.ts";
@@ -19,7 +18,7 @@ import { currentCommentAccess, type CommentAccessProjection } from "../lib/regis
 import { settleCommentAccessRead } from "../lib/registry/server.ts";
 import { COMMENT_ACCESS } from "./fixtures/comment-access.ts";
 import { factDb } from "./helpers/fact-db.ts";
-import { installRegistryAuthority, syntheticFederalDirectory, stateFederalDirectoryArtifacts } from "./helpers/promoted-fixtures.ts";
+import { installRegistryAuthority, stateFederalDirectoryArtifacts } from "./helpers/promoted-fixtures.ts";
 import { installPimaOutcomes, pimaOutcomeFixture, recordedMeetingsSnapshot } from "./helpers/reader-fixtures.ts";
 import { september22Sitting } from "./helpers/pima-september-22-sitting.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
@@ -67,7 +66,7 @@ LocalFileArtifactStore.prototype.readBytes = function(key) {
   openedArtifacts.push(key);
   return readBytes.call(this, key);
 };
-let registryArtifactKey = "";
+let registryArtifactKey = "", federalArtifactKey = "";
 after(() => {
   if (previousEdgeDir === undefined) delete process.env.WTP_READER_EDGE_DIR;
   else process.env.WTP_READER_EDGE_DIR = previousEdgeDir;
@@ -123,6 +122,7 @@ async function publishEdge(versions: EdgeVersions): Promise<void> {
   assert.equal(result.status, "PUBLISHED", JSON.stringify(result));
   process.env.WTP_READER_EDGE_DIR = edgeDir;
   registryArtifactKey = (await store.readManifest())!.manifest.stateAuthorities!["registry-runtime"]!.AZ!.key;
+  federalArtifactKey = (await store.readManifest())!.manifest.stateAuthorities!["federal-directory"]!.AZ!.key;
   openedArtifacts.length = 0;
 }
 
@@ -163,7 +163,7 @@ test("Ask reads the registry, the federal directory and the recorded outcomes fr
   const payload = await askPima();
   assert.ok(Number.isFinite(payload.trace.preloads?.authorityEdge), "the edge was not fetched");
   assert.ok(openedArtifacts.includes(registryArtifactKey), "the request opens the published Arizona registry version");
-  assert.equal(federalDirectoryReadState().metadata?.versionId, "edge-test:federal:1", "the federal directory was read from the database, not the edge");
+  assert.ok(openedArtifacts.includes(federalArtifactKey), "Arizona's members of Congress were read from the database, not the edge");
   assert.match(outcomeProjectionReadState().detail ?? "", /edge artifact \(version edge-test:outcomes:1\)/, "the recorded outcomes were read from the database, not the edge");
   assert.equal(loadedFrom(), "DATA_PLANE", "an edge-served outcome projection is the data plane's own value, never a test fixture");
   assert.deepEqual(
@@ -215,7 +215,7 @@ test("comment rules are primed from the edge the caller entered, and read from l
 test("Campaign money reads the registry from the edge it entered, and names every read's time", async () => {
   await publishEdge({ registry: "edge-test:registry:3", federal: "edge-test:federal:3" });
   const { GET } = await import("../app/api/funding/[target]/route.ts");
-  const response = await GET(new Request("https://wtp.test/api/funding/congress%3AC001133"), {
+  const response = await GET(new Request(`https://wtp.test/api/funding/congress%3AC001133?division=${encodeURIComponent(`${AZ}/cd:6`)}`), {
     params: Promise.resolve({ target: "congress%3AC001133" }),
   });
   assert.ok([200, 503].includes(response.status));

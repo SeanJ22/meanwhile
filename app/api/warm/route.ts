@@ -11,10 +11,7 @@ import { holdReaderAuthorityEdge, ensureReaderAuthorityEdge, readReaderEdgeMeeti
 import { settleExecutiveActionsRead } from "@/lib/officials/executive-actions";
 import { settleOutcomeRead } from "@/lib/outcomes/store";
 import { enterReaderAuthorityEdge, ReaderEdgeOnlyRefusal } from "@/lib/registry/runtime-edge";
-import {
-  settleCommentAccessRead,
-  settleFederalDirectoryRead,
-} from "@/lib/registry/server";
+import { settleCommentAccessRead } from "@/lib/registry/server";
 import { settleFederalKeyVotesRead } from "@/lib/votes/key-votes-projection";
 import { settleFederalVotesRead } from "@/lib/votes/snapshot";
 
@@ -27,7 +24,6 @@ export const PRIME_ASK_BUDGET_MS = 4000;
 
 
 const ASK_SOURCE_PRELOADS: Readonly<Record<string, () => Promise<unknown>>> = {
-  federalDirectory: settleFederalDirectoryRead,
   outcomes: settleOutcomeRead,
   commentAccess: settleCommentAccessRead,
   funding: settleFundingRead,

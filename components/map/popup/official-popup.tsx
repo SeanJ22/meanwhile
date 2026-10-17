@@ -178,7 +178,7 @@ function RecentVotesInner({
       }
     })();
     return () => controller.abort();
-  }, [holder.id, recentLoaded]);
+  }, [holder.id, holder.state, recentLoaded]);
 
   const loadMoreHistory = async () => {
     if (!historyCursor || !historyAnchor || historyLoadingMore) return;

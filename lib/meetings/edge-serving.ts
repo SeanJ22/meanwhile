@@ -684,6 +684,14 @@ export async function ensureReaderAuthorityEdge(
         }
       }
     }
+    // Money and vote records are bound to members, so the members the selected divisions name join the selection first.
+    if (selected && wanted.has("federal-directory")) for (const state of statesForRegistryDivisions([...selected.keys])) {
+      const entry = (await readStateAuthorityArtifact("federal-directory", state, stateAuthorityRefs["federal-directory"]?.[state], store))?.entries[0];
+      const directory = entry?.kind === "PROMOTED" ? entry.projection.payload as { roster?: { divisions?: { ocdId: string; officeholderId: string }[] } } : null;
+      for (const division of directory?.roster?.divisions ?? []) {
+        if (selected.keys.has(division.ocdId)) selected.keys.add(division.officeholderId).add(division.officeholderId.replace(/^congress:/, ""));
+      }
+    }
     const [campaign, outcomes] = await Promise.all([fetchWanted("campaign-sites"), fetchWanted("meeting-outcomes")]);
     if (campaign !== null) bundle.campaignSites = { value: campaign as CuratedReaderProjection, versionId: refs["campaign-sites"]!.version };
     if (outcomes !== null) bundle.meetingOutcomes = { value: outcomes as OutcomeSnapshot, versionId: refs["meeting-outcomes"]!.version };

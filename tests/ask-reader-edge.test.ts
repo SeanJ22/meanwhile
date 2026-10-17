@@ -105,7 +105,7 @@ const PROMOTED: Partial<Record<GlobalPromotedAuthorityFamily, { value: PromotedF
   "federal-funding": family([provenEdgeEntry({ recordClass: "FEC_FUNDING", scope: fec.scope, sourceId: fec.sourceId, versionId: EDGE.funding, value: served(await readFundingSnapshot({ store: seedStore, bypassCache: true })) })], EDGE.funding),
   "state-money": family(stateMoneyEntries((state) => `edge-test:ask:money:${state}`), "edge-test:ask:money"),
   "pima-finance": family([provenEdgeEntry({ recordClass: "LOCAL_CAMPAIGN_FINANCE", scope: PIMA_LOCAL_FINANCE_CONTRACT.scope, sourceId: PIMA_LOCAL_FINANCE_CONTRACT.sourceId, versionId: "edge-test:ask:pima-finance", value: syntheticPimaLocalFinance() })], "edge-test:ask:pima-finance"),
-  "federal-votes": family([provenEdgeEntry({ recordClass: "FEDERAL_ROLL_CALL", scope: FEDERAL_ROLLCALL_SCOPE, sourceId: federalVotes.sourceId, versionId: EDGE.federalVotes, value: syntheticFederalRollCalls(federal) })], EDGE.federalVotes),
+  "federal-votes": family([provenEdgeEntry({ recordClass: "FEDERAL_ROLL_CALL", scope: FEDERAL_ROLLCALL_SCOPE, sourceId: federalVotes.sourceId, versionId: EDGE.federalVotes, value: syntheticFederalRollCalls(federal).window })], EDGE.federalVotes),
   "federal-key-votes": family([provenEdgeEntry({ recordClass: "FEDERAL_KEY_VOTE", scope: FEDERAL_KEY_VOTE_SCOPE, sourceId: federalVotes.sourceId, versionId: "edge-test:ask:key-votes", value: syntheticFederalKeyVotes(federal) })], "edge-test:ask:key-votes"),
   "officeholder-statements": family([manual("officeholder-statements", syntheticOfficeholderStatements(), "edge-test:ask:statements")], "edge-test:ask:statements"),
   "executive-actions": family([provenEdgeEntry({
@@ -286,7 +286,7 @@ test("a named New Hampshire official question from an Arizona ZIP opens only New
     const payload = await response.json();
     const governor = registryFixtureForState("NH").statewideExecutives.find(row => row.holder.id.endsWith("/governor"))!;
     assert.ok(payload.answer.includes(governor.holder.name), JSON.stringify(payload).slice(0, 2000));
-    assert.deepEqual([...new Set(opened)].sort(), ["registry-runtime:NH"]);
+    assert.deepEqual([...new Set(opened)].sort(), ["federal-directory:NH", "registry-runtime:NH"]);
     assert.deepEqual(databaseReads, []);
   } finally {
     LocalFileArtifactStore.prototype.readBytes = original;
@@ -365,7 +365,7 @@ test("a marked warm call loads the Ask's code and every Ask source from the edge
   const WARM = { funding: "edge-test:ask:warm:fec", federalVotes: "edge-test:ask:warm:federal-votes" };
   process.env.WTP_READER_EDGE_DIR = await publishEdge(true, {
     "federal-funding": family([provenEdgeEntry({ recordClass: "FEC_FUNDING", scope: fec.scope, sourceId: fec.sourceId, versionId: WARM.funding, value: served(await readFundingSnapshot({ store: seedStore, bypassCache: true })) })], WARM.funding),
-    "federal-votes": family([provenEdgeEntry({ recordClass: "FEDERAL_ROLL_CALL", scope: FEDERAL_ROLLCALL_SCOPE, sourceId: federalVotes.sourceId, versionId: WARM.federalVotes, value: syntheticFederalRollCalls(federal) })], WARM.federalVotes),
+    "federal-votes": family([provenEdgeEntry({ recordClass: "FEDERAL_ROLL_CALL", scope: FEDERAL_ROLLCALL_SCOPE, sourceId: federalVotes.sourceId, versionId: WARM.federalVotes, value: syntheticFederalRollCalls(federal).window })], WARM.federalVotes),
   });
   clearPromotedReadModelCache();
   databaseReads.length = 0;
@@ -418,7 +418,7 @@ test("the warm call settles only unscoped Ask sources and never preloads every s
   const named = new Set([...ask.slice(start, end).matchAll(/timed\("([A-Za-z]+)"/g)].map((match) => match[1]));
   // The per-state roll calls (`stateVotes:${scope}`) are read from the database for that state only, never warmed.
   assert.match(ask.slice(start, end), /timed\(`stateVotes:\$\{scope\}`/);
-  for (const stateSource of ["registry", "candidateCorpus", "candidateProfiles", "ballots"]) {
+  for (const stateSource of ["registry", "federalDirectory", "candidateCorpus", "candidateProfiles", "ballots"]) {
     assert.equal(sourceNames.includes(stateSource), false, `${stateSource} requires an explicit place`);
     named.delete(stateSource);
   }

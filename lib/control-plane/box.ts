@@ -1,6 +1,9 @@
 import { randomUUID } from "node:crypto";
 import { contentHash } from "./ids.ts";
-import { canonicalJson, ConcurrentModification, IdentityCollision, type AggregateRepository, type ArtifactRecord } from "./repository/types.ts";
+import { canonicalJson, ConcurrentModification, IdentityCollision, type AggregateRepository, type AppendOnlyRepository, type ArtifactRecord,
+  type ControlPlaneRepositories } from "./repository/types.ts";
+import { completedWorkerResults } from "./repository/worker-completion.ts";
+import type { WorkerResultRecord } from "./workers/types.ts";
 import type { ScoutResult } from "./scheduler/scout-result.ts";
 import type { DetectiveResult } from "./workers/research-types.ts";
 
@@ -204,20 +207,31 @@ export async function indexReportedFinding(repo: AggregateRepository<BoxFinding>
     fact: { field: finding.field, value: finding.value, recordClass: null } }, now);
 }
 
-export interface BoxDetectiveRecord {
+interface BoxDetectiveRecord {
   readonly id: string;
   readonly workItemId: string;
   readonly endedAt: string;
   readonly result: Pick<DetectiveResult, "role" | "spans" | "findings" | "artifactIds"> & { readonly question: Pick<DetectiveResult["question"], "subjectId"> };
 }
 
+/** The page each saved copy was taken from, read by its id alone. */
+async function capturedUrls(artifacts: AppendOnlyRepository<ArtifactRecord>, ids: readonly string[]): Promise<ReadonlyMap<string, string>> {
+  const out = new Map<string, string>();
+  for (const id of new Set(ids)) for (const key of await artifacts.keysWhere(["artifactId"], id)) {
+    const [held] = await artifacts.readWhere(key, ["artifactId"], id);
+    if (held) out.set(id, held.canonicalUrl);
+  }
+  return out;
+}
+
 /** Detective spans retain their exact quote and saved-copy identity; unquoted findings remain references. */
 export async function indexDetectiveFindings(repo: AggregateRepository<BoxFinding>, record: BoxDetectiveRecord,
-  artifacts: ReadonlyMap<string, Pick<ArtifactRecord, "canonicalUrl">>, now: string): Promise<readonly BoxFinding[]> {
+  artifacts: AppendOnlyRepository<ArtifactRecord>, now: string): Promise<readonly BoxFinding[]> {
   const indexed: BoxFinding[] = [];
   const base = { kind: "DETECTIVE" as const, resultId: record.id, workItemId: record.workItemId, recordedAt: record.endedAt };
+  const urls = await capturedUrls(artifacts, record.result.spans.map(span => span.artifactId));
   for (const [findingIndex, span] of record.result.spans.entries()) indexed.push(await indexBoxFinding(repo, {
-    subjectId: record.result.question.subjectId, exactQuote: span.quote, sourceUrl: artifacts.get(span.artifactId)?.canonicalUrl ?? null,
+    subjectId: record.result.question.subjectId, exactQuote: span.quote, sourceUrl: urls.get(span.artifactId) ?? null,
     origin: { ...base, collection: "spans", findingIndex, artifactIds: [span.artifactId] },
   }, now));
   for (const [findingIndex] of record.result.findings.entries()) indexed.push(await indexBoxFinding(repo, {
@@ -227,25 +241,35 @@ export async function indexDetectiveFindings(repo: AggregateRepository<BoxFindin
   return indexed;
 }
 
-/** Indexes only the Scout and Detective results the Box does not already hold; one read of the Box per call. */
-export async function backfillBox(repo: AggregateRepository<BoxFinding>, input: {
-  readonly scouts: readonly BoxScoutResult[];
-  readonly detectives: readonly BoxDetectiveRecord[];
-  readonly artifacts: ReadonlyMap<string, Pick<ArtifactRecord, "canonicalUrl">>;
-}, now: string): Promise<number> {
-  const held = new Map<string, number>();
-  // A row from before findings were kept on the Box is indexed once more to gain its fact.
-  for (const row of await repo.list()) for (const origin of row.value.origins) {
-    if (origin.collection === "reported" || row.value.lastRecordedAt === undefined) continue;
-    const key = `${origin.kind}:${origin.resultId}`;
-    held.set(key, (held.get(key) ?? 0) + 1);
-  }
+const BACKFILL_CURSOR = "box-backfill";
+// A result stamped just before the last pass read the clock may commit after it; each pass looks a minute further back.
+const BACKFILL_OVERLAP_MS = 60_000;
+
+type BackfillRepositories = Pick<ControlPlaneRepositories, "boxFindings" | "scoutResults" | "workerResults" | "artifacts" | "attempts" | "passCursors">;
+
+async function indexResults(repos: BackfillRepositories, scouts: readonly ScoutResult[], workers: readonly WorkerResultRecord[], now: string): Promise<number> {
   let indexed = 0;
-  for (const result of input.scouts) {
-    if ((held.get(`SCOUT:${result.attemptId}`) ?? 0) < result.findings.length) indexed += (await indexScoutFindings(repo, result, now)).length;
+  for (const result of scouts) indexed += (await indexScoutFindings(repos.boxFindings, result, now)).length;
+  for (const record of (await completedWorkerResults(repos, workers)).filter(record => record.result.role === "DETECTIVE")) {
+    indexed += (await indexDetectiveFindings(repos.boxFindings, record as BoxDetectiveRecord, repos.artifacts, now)).length;
   }
-  for (const result of input.detectives) {
-    if ((held.get(`DETECTIVE:${result.id}`) ?? 0) < result.result.spans.length + result.result.findings.length) indexed += (await indexDetectiveFindings(repo, result, input.artifacts, now)).length;
+  return indexed;
+}
+
+/** Indexes the Scout and Detective results recorded since the last pass. The first pass replays every result once, one log key at a time. */
+export async function backfillBox(repos: BackfillRepositories, now: string): Promise<number> {
+  const cursor = await repos.passCursors.read(BACKFILL_CURSOR);
+  const since = cursor ? new Date(Date.parse(cursor.value.through) - BACKFILL_OVERLAP_MS).toISOString() : now;
+  const [scouts, workers] = await Promise.all([repos.scoutResults.readChangedSince(since), repos.workerResults.readChangedSince(since)]);
+  let indexed = await indexResults(repos, scouts.records.map(({ record }) => record), workers.records.map(({ record }) => record), now);
+  if (!cursor) {
+    for (const key of await repos.scoutResults.keys()) indexed += await indexResults(repos, await repos.scoutResults.read(key), [], now);
+    for (const key of await repos.workerResults.keys()) indexed += await indexResults(repos, [], await repos.workerResults.read(key), now);
+  }
+  const through = [scouts.through, workers.through].flatMap(at => at ?? []).sort()[0];
+  if (through) {
+    if (cursor) await repos.passCursors.compareAndSet(BACKFILL_CURSOR, cursor.revision, { through }, now);
+    else await repos.passCursors.put(BACKFILL_CURSOR, { through }, now);
   }
   return indexed;
 }

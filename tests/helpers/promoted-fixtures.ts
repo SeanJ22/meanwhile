@@ -66,15 +66,7 @@ const promoted = new Map<string, PromotedEdgeEntry>();
 
 const live: ReaderAuthorityEdgeBundle = {
   stateAuthorities: {
-    get states() {
-      return Object.fromEntries(Object.keys(stateClasses).map(family => [family, new Set([...promoted.values()].flatMap(entry => {
-        const recordClass = entry.kind === "PROMOTED" ? entry.projection.recordClass : entry.recordClass;
-        if (recordClass !== stateClasses[family as StateAuthorityFamily]) return [];
-        const scope = entry.kind === "PROMOTED" ? entry.projection.scope : entry.scope;
-        const state = /^US-([A-Z]{2}):/.exec(scope)?.[1];
-        return state && scope === stateScope(family as StateAuthorityFamily, state) ? [state] : [];
-      }))]));
-    },
+    families: new Set(Object.keys(stateClasses) as StateAuthorityFamily[]),
     load: async (family, state) => {
       const entry = promoted.get(`${stateClasses[family]}:${stateScope(family, state)}`);
       return entry ? { kind: "PROMOTED_POINTERS", entries: [entry] } : null;
@@ -83,7 +75,6 @@ const live: ReaderAuthorityEdgeBundle = {
   get federalDirectory() { return federalDirectory; },
   get stateLegislators() {
     return Object.keys(stateLegislators).length ? {
-      jurisdictions: new Set(Object.keys(stateLegislators)),
       load: async (jurisdiction: string) => stateLegislators[jurisdiction]
         ? { value: stateLegislators[jurisdiction], versionId: "test:state-legislators" }
         : null,

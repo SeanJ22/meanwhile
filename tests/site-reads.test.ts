@@ -8,7 +8,8 @@ import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import { readerRoute } from "../lib/api/reader-route.ts";
 import { currentReaderRoute } from "../lib/db/reader-route.ts";
 import { currentReaderSelection, withReaderSelection } from "../lib/db/reader-route.ts";
-import { publishReaderEdgeArtifacts, ensureReaderAuthorityEdge, writeFactBucket } from "../lib/meetings/edge-serving.ts";
+import { authorityPointerKey, ensureReaderAuthorityEdge, readServedPointer, stateFactsPointerKey, writeFactBucket } from "../lib/meetings/edge-serving.ts";
+import { publishPointers } from "./helpers/edge-pointers.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { getRegistryRuntimeReadModel, readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
 import { installFactReader } from "../lib/facts/db.ts";
@@ -50,7 +51,7 @@ test("a cooked registry edge hit never rereads facts, including an explicit read
   installFactReader(async () => { queries++; throw new Error("Unexpected fact query on an edge hit"); });
   try {
     await withReaderSelection({ keys: new Set(["ocd-division/country:us/state:az/county:pima"]) }, () =>
-      withReaderAuthorityEdge({ stateAuthorities: { states: { "registry-runtime": new Set(["AZ"]) }, load: async () => ({ kind: "PROMOTED_POINTERS", entries: [
+      withReaderAuthorityEdge({ stateAuthorities: { families: new Set(["registry-runtime"] as const), load: async () => ({ kind: "PROMOTED_POINTERS", entries: [
         provenEdgeEntry({ recordClass: "REGISTRY_RUNTIME_BINDING", scope: "US-AZ:reader-registry-runtime", sourceId: "registry-reviewed-bindings", versionId: "test:fact-edge", value }),
       ] }) } }, async () => {
         const read = await readRegistryRuntimeProjection(["AZ"], { bypassCache: true });
@@ -145,7 +146,7 @@ test("overlapping requests keep their route and person selectors apart", async (
 test("concurrent authority requests retain their own bodies after another request resumes", async () => {
   const values = await Promise.all(["AZ", "NH"].map(state => withReaderSelection({ states: [state], keys: new Set() }, () => {
     const value = registryFixtureForState(state), entry = provenEdgeEntry({ recordClass: "REGISTRY_RUNTIME_BINDING", scope: `US-${state}:reader-registry-runtime`, sourceId: "registry-reviewed-bindings", versionId: "shared-version", value });
-    return withReaderAuthorityEdge({ stateAuthorities: { states: { "registry-runtime": new Set([state]) }, load: async () => ({ kind: "PROMOTED_POINTERS", entries: [entry] }) } }, async () => {
+    return withReaderAuthorityEdge({ stateAuthorities: { families: new Set(["registry-runtime"] as const), load: async () => ({ kind: "PROMOTED_POINTERS", entries: [entry] }) } }, async () => {
       await readRegistryRuntimeProjection([state]); await Promise.resolve();
       return getRegistryRuntimeReadModel().registry.bodies.map(body => body.id);
     });
@@ -178,19 +179,16 @@ test("warm authority reads retain the identifiers needed to load a shown person'
     const bodyId = "ocd-division/country:us/state:az/county:pima#board";
     const value = { registry: { bodies: [{ ...registryFixtureForState("AZ").registry.bodies[0]!, id: bodyId, ocdId: bodyId.split("#")[0] }] }, bodyRosters: [{ bodyId, bodyName: "County board", sourceUrl: "https://example.gov/board", sourceOrg: "County board", collectedAt: "2026-10-16", partisanship: "NONPARTISAN" as const,
       members: [{ id: "roster:one", name: "One", officeTitle: "Board member", termNote: null, email: null, phone: null, websiteUrl: null, fieldSources: {}, membershipSource: { sourceUrl: "https://example.gov/board", sourceOrg: "County board", collectedAt: "2026-10-16" } }] }] };
-    await publishReaderEdgeArtifacts(null, { sourceThrough: null, retrievedAt: null, promotedThrough: null }, {
-      store, stateAuthorities: { "registry-runtime": stateRegistryArtifacts("warm-version", ["AZ"], {
-        ...registryFixtureForState("AZ"), registry: { ...registryFixtureForState("AZ").registry, bodies: value.registry.bodies }, bodyRosters: value.bodyRosters,
-      }) },
-      stateFacts: { AZ: { versionId: "warm-facts", value: { buckets: [await writeFactBucket(store, "AZ", 0, "warm-facts",
-        await publishAuthorityRecords({ bodies: [{ id: bodyId, division: bodyId.split("#")[0], fields: {},
-          roster: value.bodyRosters[0], dispositions: [], comment: null, sittings: [] }] }, store), "2026-10-16T12:00:00.000Z")] } } },
-    });
-    const manifest = (await store.readManifest())!.manifest;
+    await publishPointers(store, { stateAuthorities: { "registry-runtime": stateRegistryArtifacts("warm-version", ["AZ"], {
+      ...registryFixtureForState("AZ"), registry: { ...registryFixtureForState("AZ").registry, bodies: value.registry.bodies }, bodyRosters: value.bodyRosters,
+    }) } });
+    await store.writeJsonPointer(stateFactsPointerKey("AZ"), { state: "AZ", versionId: "warm-facts", buckets: [await writeFactBucket(store, "AZ", 0, "warm-facts",
+      await publishAuthorityRecords({ bodies: [{ id: bodyId, division: bodyId.split("#")[0], fields: {},
+        roster: value.bodyRosters[0], dispositions: [], comment: null, sittings: [] }] }, store), "2026-10-16T12:00:00.000Z")] }, null);
     for (let visit = 0; visit < 2; visit++) {
       const selection = { keys: new Set([bodyId]) };
       await withReaderSelection(selection, async () => {
-        const edge = await ensureReaderAuthorityEdge(manifest, store, ["registry-runtime"]);
+        const edge = await ensureReaderAuthorityEdge(null, store, ["registry-runtime"]);
         await withReaderAuthorityEdge(edge, async () => {
           const read = await readRegistryRuntimeProjection(["AZ"]);
           assert.equal(read.kind, "PROMOTED");
@@ -213,19 +211,18 @@ test("a later named body loads its live facts without reopening the state regist
       dispositions: [], comment: null, sittings: [] }));
     const index = await publishAuthorityRecords({ bodies }, store), laterKey = index.records.find(row => row.tags.includes(bodyIds[1]))!.key;
     const payload = { ...registryFixtureForState("AZ"), bodyRosters: [] };
-    await publishReaderEdgeArtifacts(null, { sourceThrough: null, retrievedAt: null, promotedThrough: null }, { store,
-      stateAuthorities: { "registry-runtime": stateRegistryArtifacts("named-body", ["AZ"], payload) },
-      stateFacts: { AZ: { versionId: "named-facts", value: { buckets: [await writeFactBucket(store, "AZ", 0, "named-facts", index, "2026-10-16T12:00:00.000Z")] } } },
-    });
-    const manifest = (await store.readManifest())!.manifest, reads: string[] = [];
+    await publishPointers(store, { stateAuthorities: { "registry-runtime": stateRegistryArtifacts("named-body", ["AZ"], payload) } });
+    await store.writeJsonPointer(stateFactsPointerKey("AZ"), { state: "AZ", versionId: "named-facts",
+      buckets: [await writeFactBucket(store, "AZ", 0, "named-facts", index, "2026-10-16T12:00:00.000Z")] }, null);
+    const registryKey = (await readServedPointer(store, authorityPointerKey("registry-runtime", "AZ")))!.ref.key, reads: string[] = [];
     const counting = new Proxy(store, { get(target, key) {
       if (key === "readBytes") return async (path: string) => { reads.push(path); return target.readBytes(path); };
       const value = Reflect.get(target, key); return typeof value === "function" ? value.bind(target) : value;
     } });
     const selection = { states: ["AZ"], keys: new Set([division]) };
     await withReaderSelection(selection, async () => {
-      const edge = await ensureReaderAuthorityEdge(manifest, counting, ["registry-runtime"]);
-      await withReaderAuthorityEdge({ ...edge, edgeOnly: true }, async () => {
+      const edge = await ensureReaderAuthorityEdge(null, counting, ["registry-runtime"]);
+      await withReaderAuthorityEdge({ ...edge!, edgeOnly: true }, async () => {
         const first = await readRegistryRuntimeProjection(["AZ"]);
         assert.deepEqual(first.value?.bodyRosters.map(row => row.bodyId), [bodyIds[0]]);
         assert.equal(reads.includes(laterKey), false);
@@ -236,6 +233,6 @@ test("a later named body loads its live facts without reopening the state regist
         assert.equal(reads.includes(laterKey), true);
       });
     });
-    assert.equal(reads.filter(key => key === manifest.stateAuthorities!["registry-runtime"]!.AZ.key).length, 1);
+    assert.equal(reads.filter(key => key === registryKey).length, 1);
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 
 import { periodLabel } from "@/lib/control-plane/admin-view/periods.ts";
 
@@ -34,8 +34,8 @@ export function NowScreen() {
   return (
     <>
       <header>
-        <p className={s.eyebrow}>{v.place.name} · {periodLabel(v.period, new Date())}</p>
-        <h1 className={s.h1}>Now</h1>
+        <p className={cx(s.eyebrow, s.nowEyebrow)}>{v.place.name} · {periodLabel(v.period, new Date())}</p>
+        <h1 className={cx(s.h1, s.nowH1)}>Now</h1>
       </header>
       {nationalDepth(v.scopeKey) !== null && <National />}
       <DirectWork />
@@ -181,6 +181,9 @@ function National() {
   const depth = nationalDepth(v.scopeKey) ?? "states";
   const [sort, setSort] = useState<NatSort>(depth === "states" ? { key: "name", down: false } : { key: "name", down: false });
   const [all, setAll] = useState(false);
+  const [compact, setCompact] = useState(false);
+  // The state or row under the pointer or focus: its tile and its row light up together.
+  const [linked, setLinked] = useState<string | null>(null);
   // Only the rows that belong to this scope: the pre-load state list is never shown under a state or a district.
   const rows = (v.data.national.data ?? []).filter((r) => (r.parentKey ?? COUNTRY_KEY) === v.scopeKey);
   const byCode = new Map(rows.map((r) => [r.code, r]));
@@ -189,17 +192,24 @@ function National() {
   const shown = all || depth === "states" ? sorted : sorted.slice(0, NAT_TOP);
   const tracked = rows.filter((r) => r.tracked).length;
   const live = v.data.hunts.state === "not-connected" ? null : v.hunts.filter((h) => h.status !== "stopped");
-  const huntWords = live === null ? null : `${count(live.length)} ${live.length === 1 ? "hunt" : "hunts"}${live.some((h) => h.status === "paused") ? `, ${count(live.filter((h) => h.status === "paused").length)} paused` : ""}`;
+  const pausedHunts = live === null ? 0 : live.filter((h) => h.status === "paused").length;
   const noun = depth === "states" ? "states and territories" : depth === "districts" ? "districts" : "ZIPs";
   const collapsible = depth !== "states" && rows.length > NAT_TOP;
   const completeness = v.data.checklist.data?.score?.measures?.completeness ?? null;
   const progress = completeness && completeness.percent !== null
     ? `Readers in ${v.place.name} have ${Math.floor(completeness.percent)}% of what they are owed: ${count(completeness.n)} of ${count(completeness.of)} things.`
     : `What ${v.place.name} is owed has not been counted yet.`;
+  const stats: readonly { readonly n: string; readonly label: string }[] = [
+    { n: String(rows.length), label: noun },
+    ...(depth !== "states" ? [] : [
+      ...(live === null ? [] : [{ n: count(live.length), label: `${live.length === 1 ? "hunt" : "hunts"}${pausedHunts > 0 ? `, ${count(pausedHunts)} paused` : ""}` }]),
+      { n: String(tracked), label: "tracked" },
+    ]),
+  ];
   const table = (
     <div className={s.stack}>
-      <div className={s.tableWrap} style={{ maxHeight: 360, overflowY: "auto" }}>
-        <table className={s.table}>
+      <div className={s.tableWrap}>
+        <table className={cx(s.table, s.countryTable)}>
           <caption className={s.srOnly}>{depth === "states" ? "States and territories" : depth === "districts" ? `Congressional districts of ${v.place.name}` : `ZIPs in ${v.place.name}`}</caption>
           <thead>
             <tr>
@@ -214,9 +224,9 @@ function National() {
           </thead>
           <tbody>
             {shown.map((r) => (
-              <tr key={r.placeKey}>
+              <tr key={r.placeKey} className={cx(linked === r.code && s.rowLinked)} onMouseEnter={() => setLinked(r.code)} onMouseLeave={() => setLinked(null)} onFocus={() => setLinked(r.code)} onBlur={() => setLinked(null)}>
                 <td><button type="button" className={s.btnLink} onClick={() => v.setScope(r.placeKey)}>{r.name}</button></td>
-                <td className={s.num} title={r.population ? `ACS ${r.population.attribution.period}, 90% margin of error` : undefined}>{r.population ? `${count(r.population.population)}${r.population.marginOfError === null ? "" : ` ± ${count(r.population.marginOfError)}`}` : "—"}</td>
+                <td className={cx(s.num, s.popCell)} title={r.population ? `ACS ${r.population.attribution.period}, 90% margin of error` : undefined}>{r.population ? <>{count(r.population.population)}{r.population.marginOfError === null ? "" : <> <span className={s.moe}>± {count(r.population.marginOfError)}</span></>}</> : "—"}</td>
                 <td className={cx(s.num, r.score == null && s.dim)}>{dash(r.score, (n) => `${n.toFixed(1)}%`)}</td>
                 <td className={s.num}>{r.zipsWorked == null && r.zipsTotal == null ? "—" : `${dash(r.zipsWorked)} / ${dash(r.zipsTotal)}`}</td>
                 <td className={s.num}>{dash(r.hunts)}</td>
@@ -238,11 +248,27 @@ function National() {
     </div>
   );
   return (
-    <Card id="v6-national" title="The country" aside={<span className={s.meta}>{rows.length} {noun}{depth === "states" && huntWords !== null ? ` · ${huntWords}` : ""}{depth === "states" ? ` · ${tracked} tracked` : ""}</span>}>
-      <p className={cx(s.p, s.small)}>{progress} <button type="button" className={s.btnLink} onClick={() => v.go("checklist")}>Open the checklist →</button></p>
+    <section id="v6-national" aria-labelledby="v6-national-h" className={cx(s.card, s.country)} data-density={compact ? "compact" : "roomy"}>
+      <div className={s.countryHead}>
+        <div className={s.countryIntro}>
+          <h2 id="v6-national-h" className={cx(s.h2, s.countryTitle)}>The country</h2>
+          <p className={cx(s.p, s.countryLine)}>{progress} <button type="button" className={s.btnLink} onClick={() => v.go("checklist")}>Open the checklist →</button></p>
+        </div>
+        <div className={s.countryAside}>
+          <div className={s.countryStats}>
+            {stats.map((x, i) => (
+              <Fragment key={x.label}>
+                {i > 0 && <span className={s.statSep} aria-hidden="true">·</span>}
+                <span className={s.stat}><span className={s.statNum}>{x.n}</span><span className={s.statLabel}>{x.label}</span></span>
+              </Fragment>
+            ))}
+          </div>
+          <button type="button" className={s.btn} aria-pressed={compact} onClick={() => setCompact(!compact)}>Compact</button>
+        </div>
+      </div>
       {rows.length === 0 && v.data.national.load === "loading" ? <Loading what={noun} /> : depth !== "states" ? table : (
         <div className={s.nation}>
-          <div className={s.stack}>
+          <div className={s.mapColumn}>
             <div className={s.map} role="group" aria-label="Map of states and territories. Choose one to open it.">
               {TILE_LAYOUT.map(([code, r, c]) => {
                 const row = byCode.get(code);
@@ -254,24 +280,25 @@ function National() {
                 const band = holdingBand(row?.score);
                 const words = `${name}: readers have ${row?.score == null ? "an amount not counted yet" : `${row.score.toFixed(1)}%`}${hasHunt ? ", has a hunt" : ""}${row?.stuck == null ? "" : stuck ? `, ${row?.stuck} stuck` : ""}`;
                 return (
-                  <button key={code} type="button" className={cx(s.tile, hasHunt && s.tileHunt, selected && s.tileSelected)} data-band={band} style={{ gridRow: r + 1, gridColumn: c + 1 }}
-                    aria-label={words} title={words} onClick={() => v.setScope(key)}>
+                  <button key={code} type="button" className={cx(s.tile, hasHunt && s.tileHunt, selected && s.tileSelected, linked === code && s.tileLinked)} data-band={band} style={{ gridRow: r + 1, gridColumn: c + 1 }}
+                    aria-label={words} title={words} onClick={() => v.setScope(key)}
+                    onMouseEnter={() => setLinked(code)} onMouseLeave={() => setLinked(null)} onFocus={() => setLinked(code)} onBlur={() => setLinked(null)}>
                     {code}{stuck && <span className={s.stuckDot} aria-hidden="true" />}
                   </button>
                 );
               })}
             </div>
-            <div className={s.legend}>
+            <div className={s.mapLegend}>
               <span className={s.legendItem}>Readers have:</span>
               {(["most", "half", "some", "none", "unknown"] as const).map((b) => <span key={b} className={s.legendItem}><span className={s.swatch} data-band={b} />{BAND_WORDS[b]}</span>)}
               <span className={s.legendItem}><span className={s.swatch} style={{ boxShadow: "inset 0 0 0 2px var(--text)" }} />Has a hunt</span>
-              <span className={s.legendItem}><span className={s.swatch} style={{ background: "var(--pill-amber-text)", borderRadius: "50%", width: 8, height: 8 }} />Has stuck items</span>
+              <span className={s.legendItem}><span className={s.swatch} style={{ background: "var(--pill-amber-text)", borderRadius: "50%" }} />Has stuck items</span>
             </div>
           </div>
           {table}
         </div>
       )}
-    </Card>
+    </section>
   );
 }
 

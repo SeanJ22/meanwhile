@@ -5,7 +5,11 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, test } from "./helpers/playbooks.ts";
 
-import { publishReaderEdgeArtifacts, type PublishAuthority, type PublishStateAuthorities } from "../lib/meetings/edge-serving.ts";
+import { authorityPointerKey, publishReaderMeetings, readServedPointer, type PublishAuthorityValue } from "../lib/meetings/edge-serving.ts";
+import { publishPointers } from "./helpers/edge-pointers.ts";
+import { STATE_AUTHORITY_FAMILIES, type GlobalAuthorityFamily, type StateAuthorityFamily } from "../lib/meetings/edge-artifacts.ts";
+
+type StateValues = Partial<Record<StateAuthorityFamily, Record<string, PublishAuthorityValue>>>;
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import type { GlobalPromotedAuthorityFamily, PromotedFamilyArtifactValue } from "../lib/meetings/edge-artifacts.ts";
 import { ballotElectionKey } from "../lib/ballot/generic-projection.ts";
@@ -117,7 +121,7 @@ const PROMOTED: Partial<Record<GlobalPromotedAuthorityFamily, { value: PromotedF
   })], "edge-test:ask:actions"),
 };
 
-const STATE_PROMOTED: PublishStateAuthorities = {
+const STATE_PROMOTED: StateValues = {
   "ballot-contests": { AZ: family([manual("ballot-contests:AZ", { kind: "ballot-contests", ballots: { [ballotElectionKey(ballot)]: ballot } }, "edge-test:ask:ballots")], "edge-test:ask:ballots") },
   "candidate-profiles": { AZ: family([manual("candidate-profiles:AZ", syntheticCandidateProfiles(), "edge-test:ask:profiles")], "edge-test:ask:profiles") },
   "candidate-publications": { AZ: family([manual("candidate-corpus:AZ", syntheticCandidateCorpus(), "edge-test:ask:corpus")], "edge-test:ask:corpus") },
@@ -126,29 +130,31 @@ const STATE_PROMOTED: PublishStateAuthorities = {
 };
 
 /** `overrides` replaces some proven-pointer families with values published under other versions. */
-async function publishEdge(withPromoted: boolean, overrides: typeof PROMOTED = {}, stateOverrides: PublishStateAuthorities = {}): Promise<string> {
+async function publishEdge(withPromoted: boolean, overrides: typeof PROMOTED = {}, stateOverrides: StateValues = {}): Promise<string> {
   const dir = mkdtempSync(join(tmpdir(), "wtp-ask-edge-"));
   after(() => rmSync(dir, { recursive: true, force: true }));
   const snapshot = recordedMeetingsSnapshot();
   assert.ok(snapshot.meetings.length > 0, "the recorded meetings publish the edge's meeting scopes");
-  const authority: PublishAuthority = {
+  const authority: Partial<Record<GlobalAuthorityFamily, PublishAuthorityValue>> = {
     "census-districts": { value: azDistricts, versionId: azDistricts.versionId },
     "federal-directory": { value: federal, versionId: "edge-test:ask:federal" },
     "meeting-outcomes": { value: outcomes, versionId: "edge-test:ask:outcomes" },
     ...(withPromoted ? { ...PROMOTED, ...overrides } : {}),
   };
-  const result = await publishReaderEdgeArtifacts(snapshot, {
+  const store = new LocalFileArtifactStore(dir);
+  const result = await publishReaderMeetings(snapshot, {
     sourceThrough: snapshot.generatedAt,
     retrievedAt: snapshot.generatedAt,
     promotedThrough: snapshot.generatedAt,
-  }, { store: new LocalFileArtifactStore(dir), now: new Date().toISOString(), authority,
+  }, { store, now: new Date().toISOString() });
+  await publishPointers(store, { authority,
     stateAuthorities: { "registry-runtime": stateRegistryArtifacts("edge-test:ask:registry", ["AZ"]), ...(withPromoted ? STATE_PROMOTED : {}), ...stateOverrides },
-    registrations: {},
     stateLegislators: { "US-AZ": { versionId: "edge-test:ask:az-people", value: {
       formatVersion: 1, sourceId: "plural-openstates", jurisdiction: "US-AZ", term: "2025-2026",
       generatedAt: "2026-09-25T00:00:00.000Z",
       roster: { formatVersion: 1, generatedAt: "2026-09-25", source: "edge-test", officeholders: [], divisions: [] },
-    } } },
+    } }, "US-NH": { versionId: "none", value: null } },
+    registrations: { az: { versionId: "none", value: null }, nh: { versionId: "none", value: null } },
   });
   assert.equal(result.status, "PUBLISHED", JSON.stringify(result));
   return dir;
@@ -266,9 +272,8 @@ test("a named New Hampshire official question from an Arizona ZIP opens only New
   clearPromotedReadModelCache();
   databaseReads.length = 0;
   const store = new LocalFileArtifactStore(process.env.WTP_READER_EDGE_DIR);
-  const manifest = (await store.readManifest())!.manifest;
-  const scopedKeys = new Map(Object.entries(manifest.stateAuthorities ?? {}).flatMap(([family, states]) =>
-    Object.entries(states ?? {}).map(([state, ref]) => [ref.key, `${family}:${state}`] as const)));
+  const scopedKeys = new Map((await Promise.all(STATE_AUTHORITY_FAMILIES.flatMap(family => ["AZ", "NH"].map(async state =>
+    [(await readServedPointer(store, authorityPointerKey(family, state)))?.ref.key, `${family}:${state}`] as const)))).filter(([key]) => key));
   const opened: string[] = [];
   const original = LocalFileArtifactStore.prototype.readBytes;
   LocalFileArtifactStore.prototype.readBytes = async function (key) {
@@ -319,8 +324,7 @@ test("a named place absent from its state registry gives a specific holding with
   clearPromotedReadModelCache();
   databaseReads.length = 0;
   const store = new LocalFileArtifactStore(process.env.WTP_READER_EDGE_DIR);
-  const manifest = (await store.readManifest())!.manifest;
-  const registryKey = manifest.stateAuthorities!["registry-runtime"]!.IL!.key;
+  const registryKey = (await readServedPointer(store, authorityPointerKey("registry-runtime", "IL")))!.ref.key;
   const opened: string[] = [];
   const originalBytes = LocalFileArtifactStore.prototype.readBytes;
   const originalArtifact = LocalFileArtifactStore.prototype.readArtifact;

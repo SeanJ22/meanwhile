@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import { IndependentRuntimeLaneScheduler } from "../lib/ops/independent-runtime-pass.ts";
-import { publishNowHasNothingOwed, publishNowLane, publishNowDoorTasks, publishNowWorkerTasks, readPublishNowWorkerTasks, readWorkerPublicationItems } from "../lib/civic-data/publish-now.ts";
+import { PUBLISH_NOW_PASS_BUDGET_MS, publishNowHasNothingOwed, publishNowLane, publishNowDoorTasks, publishNowWorkerTasks, readPublishNowWorkerTasks, readWorkerPublicationItems } from "../lib/civic-data/publish-now.ts";
 import { AGGREGATE_LIST_READ_PAGE } from "../lib/control-plane/repository/pg-store.ts";
 import { owedFactItems, type WorkerPublicationItem } from "../lib/civic-data/worker-publication-tasks.ts";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
@@ -16,7 +16,7 @@ test("BX-12: publish-now runs each minute while a routine pass remains in flight
   let finish!: () => void;
   let count = 0;
   const scheduler = new IndependentRuntimeLaneScheduler([
-    { id: "routine", everyMs: 300_000, run: () => new Promise<void>(resolve => { finish = resolve; }) },
+    { id: "routine", everyMs: 300_000, budgetMs: 300_000, run: () => new Promise<void>(resolve => { finish = resolve; }) },
     publishNowLane(async () => { count++; }),
   ]);
   assert.deepEqual(scheduler.tick(0), ["routine", "publish-now"]);
@@ -30,6 +30,14 @@ test("BX-12: publish-now runs each minute while a routine pass remains in flight
   finish(); await scheduler.waitForIdle();
 });
 
+test("each lane run is handed its own deadline, the tick plus its budget", async () => {
+  const deadlines: number[] = [];
+  const scheduler = new IndependentRuntimeLaneScheduler([publishNowLane(async deadlineMs => { deadlines.push(deadlineMs); })]);
+  scheduler.tick(5_000);
+  await scheduler.waitForIdle();
+  assert.deepEqual(deadlines, [5_000 + PUBLISH_NOW_PASS_BUDGET_MS]);
+});
+
 test("BX-03: all unacknowledged parser results stay owed across restart; an acknowledgement removes only its result", () => {
   const item = { id: "work-a", autonomousPlan: { contract: { recordClass: "OFFICIAL_BOARD_DIRECTORY" }, publication: { contractId: "registry-runtime:AZ" } } } as WorkItem;
   const parser = { id: "parser-a", workItemId: item.id, endedAt: "2026-10-01T12:00:00.000Z", result: { role: "PARSER", verdict: "EXTRACTED" } } as WorkerResultRecord;
@@ -38,6 +46,7 @@ test("BX-03: all unacknowledged parser results stay owed across restart; an ackn
   const tasks = publishNowWorkerTasks([item, sibling], [parser, siblingParser], NOW);
   assert.equal(tasks.length, 2);
   assert.ok(tasks.every(task => task.ownerInvocation?.publicationPending));
+  assert.deepEqual(tasks.map(task => task.ownerInvocation?.workItemIds), [["work-a"], ["work-b"]], "a deferred task names the items it leaves owed");
   assert.equal(tasks[0].ownerInvocation?.requestedAt, parser.endedAt, "a request older than the due-request lifetime is still owed");
   const restored = JSON.parse(JSON.stringify({ items: [item, sibling], results: [parser, siblingParser] }));
   assert.deepEqual(publishNowWorkerTasks(restored.items, restored.results, NOW), tasks);
@@ -126,8 +135,8 @@ test("BX-12: the executable selects only publication work and never holds the ro
   assert.match(runner, /PUBLISH_NOW \? PUBLISH_NOW_SINGLETON_PORT : ROUTINE_DATA_RUNNER_SINGLETON_PORT/);
   assert.match(runner, /PUBLISH_NOW \? \[\] : await withNationalPlaceTasks/);
   assert.match(runner, /return \[\.\.\.publication, \.\.\.publishNowDoorTasks/);
-  assert.match(runner, /const finalReaderEdge = PUBLISH_NOW && publishNowEdgeChecks \? await publishNowEdgeChecks\.run\(\)\s*:\s*await publishSupervisorReaderEdge\(store, new Date\(\)\.toISOString\(\), ONLY === null \? null : selectedTasks\)/,
-    "publish-now finishes its independent sweep; an ordinary pass publishes every selected source");
+  assert.match(runner, /const finalReaderEdge = PUBLISH_NOW && publishNowEdgeChecks \? await publishNowEdgeChecks\.run\(\)\s*:\s*await publishChangedReaderEdge\(selectedTasks\.filter\(task => ranThisPass\.has\(task\.id\)\)\)/,
+    "publish-now finishes its independent sweep; an ordinary pass publishes the sources it ran and what moved since");
   assert.match(runner, /const readerEdge = PUBLISH_NOW && publishNowEdgeChecks \? \(await publishNowEdgeChecks\.stop\(\)\)! : finalReaderEdge/);
   assert.match(runner, /if \(readerEdgeFailure && !\(PUBLISH_NOW && publishNowEdgeChecks\)\) supervisorFailures\.push\(readerEdgeFailure\)/,
     "an ordinary final publication failure remains reported when a federal sweep is active");
@@ -163,8 +172,8 @@ test("a publish-now minute with nothing owed ends quietly with exit 0, before an
 test("the standing runner starts publish-now each minute on its own lane, beside the routine pass", () => {
   const pilot = readFileSync("scripts/pilot-runner.mts", "utf8");
   const lanes = pilot.slice(pilot.indexOf("const standingRuntimeScheduler = new IndependentRuntimeLaneScheduler(["));
-  assert.match(lanes.slice(0, lanes.indexOf("], (outcome) =>")), /\{ id: "routine-civic-data", everyMs: ROUTINE_DATA_ADMISSION_MS, run: runRoutineCivicData \},[\s\S]*publishNowLane\(runPublishNow\),\n$/);
-  const run = pilot.slice(pilot.indexOf("async function runPublishNow()"), pilot.indexOf("async function persistOuterRoutineChildFailure("));
+  assert.match(lanes.slice(0, lanes.indexOf("], (outcome) =>")), /\{ id: "routine-civic-data", everyMs: ROUTINE_DATA_ADMISSION_MS, budgetMs: ROUTINE_PASS_BUDGET_MS, run: runRoutineCivicData \},[\s\S]*publishNowLane\(runPublishNow\),\n$/);
+  const run = pilot.slice(pilot.indexOf("async function runPublishNow("), pilot.indexOf("async function persistOuterRoutineChildFailure("));
   assert.match(run, /if \(provider !== "postgres" \|\| canary\) return;/, "only the standing production runner publishes");
   assert.match(run, /args: \[\.\.\.TS_CHILD, "scripts\/publish-now-runner\.mts"\]/);
   assert.match(run, /standingChildEnvironment\("ROUTINE_SUPERVISOR", \{ \.\.\.process\.env, \[ROUTINE_SUPERVISOR_STARTED_AT_ENV\]: startedAt \}\)/);

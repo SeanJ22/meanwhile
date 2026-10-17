@@ -1,4 +1,4 @@
-import type { ArtifactRecord, ControlPlaneRepositories } from "../control-plane/repository/types.ts";
+import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import { researchVaultResolver } from "../control-plane/workers/vault-object.ts";
 import { workerVaultResolver } from "../control-plane/workers/vault.ts";
@@ -19,13 +19,8 @@ export function publicationVaultReaders(repos: ControlPlaneRepositories, store: 
     let reading = readers.get(id);
     if (!reading) {
       reading = (async () => {
-        let records: readonly ArtifactRecord[];
-        if (repos.artifacts.keysWhere) {
-          const keys = await repos.artifacts.keysWhere(["artifactId"], id);
-          records = (await Promise.all(keys.map(key => repos.artifacts.readWhere(key, ["artifactId"], id)))).flat();
-        } else {
-          records = (await repos.artifacts.readAll()).filter(row => row.artifactId === id);
-        }
+        const keys = await repos.artifacts.keysWhere(["artifactId"], id);
+        const records = (await Promise.all(keys.map(key => repos.artifacts.readWhere(key, ["artifactId"], id)))).flat();
         const scoped = { ...repos, artifacts: { ...repos.artifacts, readAll: async () => records } };
         return {
           readObject: researchVaultResolver(scoped, evidenceStore, project, { snapshot: true }),

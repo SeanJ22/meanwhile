@@ -8,7 +8,7 @@ import { MEETING_PARTITION_CONTRACTS, type MeetingPartitionContract } from "../.
 import { MemoryRoutineDataStore } from "../../lib/civic-data/store.ts";
 import { stateRegistryRuntimeScope } from "../../lib/civic-data/state-scopes.ts";
 import { planMeetingBodies } from "../../lib/meetings/body-publication.ts";
-import { publishReaderEdgeArtifacts } from "../../lib/meetings/edge-serving.ts";
+import { publishReaderEdgeArtifacts, type PublishReaderExtras } from "../../lib/meetings/edge-serving.ts";
 import { LocalFileArtifactStore } from "../../lib/meetings/edge-store.ts";
 import type { AgendaDocument } from "../../lib/meetings/agenda-documents.ts";
 import type { Meeting } from "../../lib/sources/types.ts";
@@ -65,7 +65,8 @@ export function agendaFor(meeting: Meeting, ocdId: string | null, readAt: string
 }
 
 /** Recorded sittings promoted through their partitions and published as per-body records on a temporary edge the routes read, with Arizona's registry beside them. */
-export async function publishRecordedEdge(meetings: readonly Meeting[], agendaDocuments: readonly AgendaDocument[] = [], publishedAt = "2026-09-25T12:00:00.000Z") {
+export async function publishRecordedEdge(meetings: readonly Meeting[], agendaDocuments: readonly AgendaDocument[] = [], publishedAt = "2026-09-25T12:00:00.000Z",
+  extras: PublishReaderExtras = { everydayRouting: null }) {
   const store = new MemoryRoutineDataStore();
   const { promoted } = await promoteRecorded(store, meetings, agendaDocuments, publishedAt);
   const dir = mkdtempSync(join(tmpdir(), "wtp-recorded-edge-"));
@@ -78,7 +79,7 @@ export async function publishRecordedEdge(meetings: readonly Meeting[], agendaDo
   const registry = { AZ: { versionId, value: { kind: "PROMOTED_POINTERS" as const, entries: [provenEdgeEntry({
     recordClass: "REGISTRY_RUNTIME_BINDING", scope: stateRegistryRuntimeScope("AZ"), sourceId: "registry-reviewed-bindings",
     versionId, value: registryTransferImport().projection.payload })] } } };
-  const published = await publishReaderEdgeArtifacts({ store: edge, now: publishedAt, meetingStates: plan.entries, extras: { everydayRouting: null }, stateAuthorities: { "registry-runtime": registry } });
+  const published = await publishReaderEdgeArtifacts({ store: edge, now: publishedAt, meetingStates: plan.entries, extras, stateAuthorities: { "registry-runtime": registry } });
   assert.equal(published.status, "PUBLISHED");
   await plan.settle();
   return { store, edge, promoted };

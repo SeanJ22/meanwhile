@@ -1,5 +1,3 @@
-/** The pipeline's rules: pure over records, with `appendTransition` as the one append path. No clock or disk. */
-
 import type { WorkerRole } from "../attempt.ts";
 import { fingerprint } from "../ids.ts";
 import { canonicalJson, jsonTextAtPath, readByKeys, type ArtifactRecord, type ControlPlaneRepositories } from "../repository/types.ts";
@@ -27,14 +25,14 @@ import {
 
 export const PROMOTION_PIPELINE_LOG = "promotion_pipeline";
 
-/** The lookups a decision needs. Absent is null, never a default. */
 export interface PipelineContext {
   readonly workerResultById?: (id: string) => import("../workers/types.ts").WorkerResultRecord | null;
   readonly artifactById: (artifactId: string) => ArtifactRecord | null;
   readonly attemptRoleById: (attemptId: string) => WorkerRole | null;
 }
 
-/** A record this module wrote, as opposed to a foreign row under the same log. */
+type TransitionContext = Partial<PipelineContext>;
+
 export function isPipelineRecord(value: unknown): value is PromotionPipelineRecord {
   if (value === null || typeof value !== "object") return false;
   const r = value as { formatVersion?: unknown; stage?: unknown; itemId?: unknown };
@@ -78,7 +76,7 @@ export function deriveItemState(itemId: string, records: readonly PromotionPipel
 }
 
 function refuse(offered: TransitionRecord, reasons: readonly PipelineRefusalReason[]): RefusedRecord {
-  /* The refusal id derives from the offer's content as well as its reason codes, so a changed re-offer is a new refusal and an identical one dedupes. */
+
   return {
     formatVersion: PROMOTION_PIPELINE_FORMAT_VERSION,
     recordId: `${offered.recordId}:refused:${fingerprint([offered.at, ...reasons.map((r) => r.code), canonicalJson(offered)])}`,
@@ -124,18 +122,17 @@ function approvalReasons(state: PipelineItemState, offered: ApprovedRecord): Pip
       });
     }
   }
-  /* The burdens the offer measured travel on the record; a FAIL refuses. */
+
   for (const burden of offered.burdens ?? []) {
     if (burden.result === "FAIL") reasons.push({ code: "APPROVAL_BURDEN_FAILED", detail: `${burden.name}: ${burden.detail}` });
   }
   return reasons;
 }
 
-/** Returns the accepted record, or a REFUSED record carrying every reason at once. */
 export function validateTransition(
   state: PipelineItemState,
   offered: TransitionRecord,
-  ctx: PipelineContext,
+  ctx: TransitionContext,
 ): { readonly ok: true; readonly record: TransitionRecord } | { readonly ok: false; readonly record: RefusedRecord } {
   const reasons: PipelineRefusalReason[] = [];
   const preceding = PRECEDING_STAGE[offered.stage];
@@ -176,22 +173,21 @@ export function validateTransition(
 
 export interface AppendTransitionOutcome {
   readonly accepted: boolean;
-  /** False when the identical record was already in the log. */
+
   readonly appended: boolean;
   readonly record: PromotionPipelineRecord;
   readonly state: PipelineItemState;
 }
 
 async function readItemRecords(repos: ControlPlaneRepositories, itemId: string): Promise<PromotionPipelineRecord[]> {
-  /* A foreign row under this log (the conformance suite writes one per run) is not a transition. */
+
   return (await repos.promotionPipeline.read(itemId)).filter(isPipelineRecord);
 }
 
-/** A refusal is appended too. An identical re-offer of a held record is a no-op success. */
 export async function appendTransition(
   repos: ControlPlaneRepositories,
   offered: TransitionRecord,
-  ctx: PipelineContext,
+  ctx: TransitionContext,
   now: string,
 ): Promise<AppendTransitionOutcome> {
   const before = deriveItemState(offered.itemId, await readItemRecords(repos, offered.itemId));
@@ -201,12 +197,11 @@ export async function appendTransition(
   return { accepted: decided.ok, appended: outcome.appended, record: decided.record, state: after };
 }
 
-/** Keys holding no pipeline record are not items. */
 export async function readPipelineStates(repos: ControlPlaneRepositories): Promise<PipelineItemState[]> {
   const [keys, records] = await Promise.all([repos.promotionPipeline.keys(), repos.promotionPipeline.readAll()]);
   const byItem = new Map<string, PromotionPipelineRecord[]>();
   for (const record of records) {
-    /* A foreign row under this log (the conformance suite writes one per run) is not a transition. */
+
     if (!isPipelineRecord(record)) continue;
     const itemRecords = byItem.get(record.itemId);
     if (itemRecords) itemRecords.push(record);
@@ -221,7 +216,6 @@ export async function readPipelineStates(repos: ControlPlaneRepositories): Promi
   return out;
 }
 
-/** The same states `readPipelineStates` derives for the matching items, read by key in batches. */
 export async function readPipelineStatesWhere(repos: ControlPlaneRepositories,
   matches: readonly { readonly path: readonly string[]; readonly value: string }[]): Promise<PipelineItemState[]> {
   const log = repos.promotionPipeline;
@@ -244,7 +238,7 @@ export async function contextFromRepositories(repos: ControlPlaneRepositories): 
   const artifacts = new Map<string, ArtifactRecord>();
   for (const a of await repos.artifacts.readAll()) artifacts.set(a.artifactId, a);
   const roles = new Map<string, WorkerRole>();
-  /* One listing serves both maps; each was a whole read of the Attempts. */
+
   const attemptRows = await repos.attempts.list();
   for (const a of attemptRows) roles.set(a.id, a.value.worker.role);
   const results = await repos.workerResults.readAll();
@@ -264,7 +258,6 @@ export async function contextFromRepositories(repos: ControlPlaneRepositories): 
 
 export const SCOUTED_OUTCOMES = ["ROUTE_CANDIDATE", "EVIDENCE_FOUND"] as const;
 
-/** The item id is derived from what the item IS, so a re-map collides instead of duplicating. */
 export function scoutResultItemId(result: Pick<ScoutResult, "attemptId">, routeId: string | null): string {
   return `pp-${fingerprint(["scout-result", result.attemptId, routeId])}`;
 }
@@ -277,11 +270,6 @@ function scoutActor(result: ScoutResult): PipelineActor {
   return { role: "SCOUT", lane: "BOUNDED_MODEL_WORKER", instance: result.attemptId };
 }
 
-/**
- * SCOUTED items from one persisted Scout result: one per candidate for a
- * ROUTE_CANDIDATE, one for the findings of an EVIDENCE_FOUND. A refused
- * result maps to nothing — its outcome was never a finding.
- */
 export function scoutedFromScoutResult(result: ScoutResult): ScoutedRecord[] {
   if (result.refusal !== null) return [];
   if (!(SCOUTED_OUTCOMES as readonly string[]).includes(result.outcome)) return [];
@@ -318,7 +306,6 @@ export function scoutedFromScoutResult(result: ScoutResult): ScoutedRecord[] {
   ];
 }
 
-/** Method-store validation checks the store's shape, which is not the pipeline's VERIFIED. */
 export function scoutedFromMethodCandidate(
   candidate: MethodCandidate,
   resultsByAttempt: ReadonlyMap<string, ScoutResult>,
@@ -352,7 +339,6 @@ export interface StageCounts {
   readonly byRecordClass: readonly { readonly recordClass: string; readonly items: number; readonly byStage: Readonly<Record<PipelineStage, number>>; readonly refused: number }[];
 }
 
-/** Counts by furthest stage reached. Every number's denominator is `items`. */
 export function stageCounts(states: readonly PipelineItemState[]): StageCounts {
   const zero = (): Record<PipelineStage, number> => ({ SCOUTED: 0, VERIFIED: 0, APPROVED_FOR_PROMOTION: 0 });
   const total = zero();

@@ -19,6 +19,7 @@ import { readCampaignFinancePage, type CampaignFinancePageRef } from "./state-pa
 import { CampaignFinanceSpool } from "./state-spool.ts";
 
 interface CampaignPage { readonly state: string; readonly records: readonly CampaignSourceRecord[] }
+interface ResourceCheck { readonly id: string; readonly checkedAt: string; readonly complete: boolean; readonly publicationId: string }
 type AcquisitionOptions = Parameters<typeof acquireCampaignFinanceResource>[2];
 interface Options extends AcquisitionOptions {
   readonly store: RoutineDataStore;
@@ -68,10 +69,15 @@ export async function publishCampaignFinanceResource(state: string, resource: Ca
     const priorDirectory = await options.artifacts.readJsonPointer<CampaignFinanceState>(campaignFinanceDirectoryKey(state));
     let directoryEtag = priorDirectory?.etag ?? null;
     let heldState: CampaignFinanceState = priorDirectory?.value ?? (priorState?.payload.kind === "campaign-finance-source-state" ? priorState.payload.records[0] : {
-      id: state, state, groups: null, places: null, filers: null, count: 0, unjoined: 0, resources: {},
+      id: state, state, groups: null, places: null, filers: null, count: 0, unjoined: 0, checks: null, checkedAt: null,
     });
     if (campaignFinancePublicationIssue({ kind: "campaign-finance-source-state", state, records: [heldState] }, state)) throw new Error("The campaign-finance directory is not valid for its state.");
-    const accepted = heldState.resources[resource.id];
+    const checks = new FederalMoneyIndex(options.artifacts, `${scope}:checks`);
+    const acceptedKey = await checks.get(heldState.checks, resource.id);
+    const accepted = acceptedKey ? await readFederalMoneyJson<ResourceCheck>(options.artifacts, acceptedKey) : null;
+    if (accepted && (accepted.id !== resource.id || !Number.isFinite(Date.parse(accepted.checkedAt)) || typeof accepted.complete !== "boolean" ||
+        typeof accepted.publicationId !== "string" || !accepted.publicationId)) throw new Error("The campaign resource check is invalid.");
+    let savedComplete: boolean | null = null;
     const output = await open(inputPath, "w");
     try {
       for await (const page of acquireCampaignFinanceResource(state, resource, { ...options, publicationId, ...(accepted?.complete ? { acceptedPublicationId: accepted.publicationId } : {}) })) {
@@ -93,7 +99,7 @@ export async function publishCampaignFinanceResource(state: string, resource: Ca
     let group: CampaignFinanceFiler | null = null, pages: FederalMoneyIndex | null = null;
     let currentGroupId: string | null = null;
     let lastNativeId: string | null = null, lastNativeHash: string | null = null;
-    let lastUnkeyedId: string | null = null, unkeyedOccurrence = 0;
+    let lastContentId: string | null = null, contentOccurrence = 0;
     let priorGroup: CampaignFinanceFiler | null = null;
     let batch: CampaignSourceRecord[] = [], batchIndex = 0;
     let evidence = createHash("sha256"), content = createHash("sha256");
@@ -111,7 +117,8 @@ export async function publishCampaignFinanceResource(state: string, resource: Ca
       evidence.update(row.provenance.rawHash).update("\n");
       if (row.provenance.lookup) evidence.update(row.provenance.lookup.rawHash).update("\n");
       content.update(campaignSourceRecordHash(row)).update("\n");
-      group = { ...group!, count: group!.count + 1, unjoined: group!.unjoined + Number(row.unjoinedReason !== null) };
+      group = { ...group!, filerName: group!.filerName === row.filerName ? group!.filerName : null,
+        count: group!.count + 1, unjoined: group!.unjoined + Number(row.unjoinedReason !== null) };
       batch.push(row);
       if (batch.length >= 100) await flush();
     }
@@ -163,7 +170,13 @@ export async function publishCampaignFinanceResource(state: string, resource: Ca
       options.onPublished?.({ state, records: group.count, unjoined: group.unjoined });
     }
     async function publishDirectory(at: string, complete: boolean) {
-      heldState = { ...heldState, resources: { ...heldState.resources, [resource.id]: { checkedAt: at, complete, publicationId } } };
+      const checkedAt = sourceCheck?.checkedAt ?? at;
+      if (savedComplete !== complete) {
+        const check: ResourceCheck = { id: resource.id, checkedAt, complete, publicationId };
+        heldState = { ...heldState, checks: await checks.set(heldState.checks, resource.id, await immutable(options.artifacts, check)) };
+        savedComplete = complete;
+      }
+      heldState = { ...heldState, checkedAt };
       const written = await options.artifacts.writeJsonPointer(campaignFinanceDirectoryKey(state), heldState, directoryEtag);
       if (!written.modified) throw new Error("The state's campaign-finance directory changed during publication.");
       directoryEtag = written.etag;
@@ -187,7 +200,7 @@ export async function publishCampaignFinanceResource(state: string, resource: Ca
         await publishGroup();
         currentGroupId = id;
         lastNativeId = null; lastNativeHash = null;
-        lastUnkeyedId = null; unkeyedOccurrence = 0;
+        lastContentId = null; contentOccurrence = 0;
         const priorKey = await groups.get(heldState.groups, id);
         priorGroup = priorKey ? await readFederalMoneyJson<CampaignFinanceFiler>(options.artifacts, priorKey) : null;
         group = { id, state, resource: resource.id, filerId: row.filerId, filerName: row.filerId ? row.filerName : null,
@@ -198,10 +211,10 @@ export async function publishCampaignFinanceResource(state: string, resource: Ca
         predecessor = previousRows(resource.identity.length && resource.identityScope !== "PUBLICATION" ? priorGroup : null)[Symbol.asyncIterator]();
         previous = await predecessor.next();
       }
-      if (row.nativeId === null) {
-        unkeyedOccurrence = row.id === lastUnkeyedId ? unkeyedOccurrence + 1 : 0;
-        lastUnkeyedId = row.id;
-        row = { ...row, id: `${row.id}:${String(unkeyedOccurrence).padStart(12, "0")}` };
+      if (row.nativeId === null || row.nativeIdScope === "PUBLICATION") {
+        contentOccurrence = row.id === lastContentId ? contentOccurrence + 1 : 0;
+        lastContentId = row.id;
+        row = { ...row, id: `${row.id}:${String(contentOccurrence).padStart(12, "0")}` };
       }
       const nativeHash = campaignSourceRecordHash(row);
       if (row.id === lastNativeId) {

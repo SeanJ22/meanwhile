@@ -33,9 +33,21 @@ const store = stage === "publish" ? await FederalMoneyBenchmarkStore.open(join(d
 const vault = new DurableEvidenceStore(join(directory, "vault"), { remote: null });
 const artifacts = new LocalFileArtifactStore(join(directory, "artifacts"));
 let artifactRead = 0, artifactWritten = 0, largestArtifactRead = 0, largestArtifactWrite = 0;
+let pointerRead = 0, pointerWritten = 0, largestPointerRead = 0, largestPointerWrite = 0;
 const read = artifacts.readBytes.bind(artifacts), put = artifacts.putImmutable.bind(artifacts);
+const readPointer = artifacts.readJsonPointer.bind(artifacts), writePointer = artifacts.writeJsonPointer.bind(artifacts);
 artifacts.readBytes = async key => { const bytes = await read(key); artifactRead += bytes?.length ?? 0; largestArtifactRead = Math.max(largestArtifactRead, bytes?.length ?? 0); return bytes; };
 artifacts.putImmutable = async (bytes, suffix) => { artifactWritten += bytes.length; largestArtifactWrite = Math.max(largestArtifactWrite, bytes.length); return put(bytes, suffix); };
+artifacts.readJsonPointer = async <T,>(key: string) => {
+  const result = await readPointer<T>(key);
+  if (result) { const bytes = (await stat(join(directory, "artifacts", key))).size; pointerRead += bytes; largestPointerRead = Math.max(largestPointerRead, bytes); }
+  return result;
+};
+artifacts.writeJsonPointer = async <T,>(key: string, value: T, etag: string | null) => {
+  const result = await writePointer(key, value, etag);
+  if (result.modified) { const bytes = (await stat(join(directory, "artifacts", key))).size; pointerWritten += bytes; largestPointerWrite = Math.max(largestPointerWrite, bytes); }
+  return result;
+};
 let sourceReads = 0;
 const sourceFetch: typeof fetch = async (request, init) => {
   if (new Headers(init?.headers).get("if-none-match") === "complete-source-replay") return new Response(null, { status: 304 });
@@ -95,7 +107,7 @@ try {
   } else {
   if (!store) throw new Error("The publication scale run has no local PostgreSQL worker.");
   for (const pass of ["initial", "unchanged"]) {
-    const before = { ...store.bytes }, oldRead = artifactRead, oldWritten = artifactWritten, started = performance.now();
+    const before = { ...store.bytes }, oldRead = artifactRead, oldWritten = artifactWritten, oldPointerRead = pointerRead, oldPointerWritten = pointerWritten, started = performance.now();
     const result = await publishCampaignFinanceResource(state, resource, { directory: join(directory, "sources"), store, vault, artifacts,
       signal: new AbortController().signal, fetch: sourceFetch, runId: randomUUID() });
     const sortPeak = await sortPeakBytes(), nodePeak = process.resourceUsage().maxRSS * 1024, peak = nodePeak + sortPeak;
@@ -105,6 +117,7 @@ try {
       databaseProtocolReadBytes: store.bytes.read - before.read, databaseProtocolWrittenBytes: store.bytes.written - before.written,
       databaseRequests: store.bytes.requests - before.requests, largestDatabaseReadBytes: store.bytes.largestRead, largestDatabaseWriteBytes: store.bytes.largestWrite,
       artifactReadBytes: artifactRead - oldRead, artifactWrittenBytes: artifactWritten - oldWritten, largestArtifactReadBytes: largestArtifactRead, largestArtifactWriteBytes: largestArtifactWrite,
+      pointerReadBytes: pointerRead - oldPointerRead, pointerWrittenBytes: pointerWritten - oldPointerWritten, largestPointerReadBytes: largestPointerRead, largestPointerWriteBytes: largestPointerWrite,
       sourceDownloads: sourceReads, dailyDatabaseProtocolReadBytes: store.bytes.read - before.read, dailyDatabaseProtocolWrittenBytes: store.bytes.written - before.written })}`);
   }
   }

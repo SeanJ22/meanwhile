@@ -24,6 +24,7 @@ export interface CampaignFinanceResource {
   readonly quote?: string | null;
   readonly encoding?: string;
   readonly preambleRows?: number;
+  readonly preamblePublicationDate?: string;
   readonly emptyResponse?: string;
   readonly filePattern?: string;
   readonly index?: { readonly url: string; readonly pattern: string; readonly downloadPrefix: string; readonly postback?: string;
@@ -35,9 +36,12 @@ export interface CampaignFinanceResource {
   readonly identity: readonly string[];
   readonly identityScope?: "PUBLICATION";
   readonly filer: readonly string[];
+  readonly filerIdentity?: readonly string[];
   readonly filerName: readonly string[];
   readonly filerNameParts?: readonly string[];
   readonly filedCondition?: { readonly field: string; readonly values: readonly string[] };
+  readonly registrationTotals?: readonly string[];
+  readonly filedStatementField?: string;
   readonly candidate: readonly string[];
   readonly candidateParts?: readonly string[];
   readonly candidateCondition?: { readonly field: string; readonly values: readonly string[] };
@@ -47,6 +51,7 @@ export interface CampaignFinanceResource {
   readonly periodQueryParameter?: string;
   readonly transactionDate: readonly string[];
   readonly publicationDate: readonly string[];
+  readonly sourcePublicationDate?: readonly string[];
   readonly government: readonly string[];
   readonly amounts: readonly { readonly field: string; readonly label: string }[];
   readonly publisher?: string;

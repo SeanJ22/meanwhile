@@ -350,9 +350,10 @@ test("D.C. native epoch dates and publication-scoped IDs reach a government arti
     assert.ok(placeKey);
     const first = campaignSourceRecord("DC", source, rows[0], { ...capture, url: source.url });
     assert.equal(first.transactionDate, new Date(rows[0].attributes.DATEOFRECEIPT).toISOString());
-    assert.equal(first.provenance.publicationDate, new Date(rows[0].attributes.GIS_LAST_MOD_DTTM).toISOString());
+    assert.equal(first.provenance.publicationDate, null);
+    assert.equal(first.provenance.sourcePublicationDate, new Date(rows[0].attributes.GIS_LAST_MOD_DTTM).toISOString());
     assert.equal(first.filerId, null);
-    assert.ok(first.unjoinedReason);
+    assert.equal(first.unjoinedReason, null);
     rows = rows.slice(0, 1);
     await publishCampaignFinanceResource("DC", source, { ...options, fetch, now: () => "2026-10-17T01:00:00.000Z" });
     const updated = await options.store.readPromotion<CampaignFinancePublication>("CURATED_READER_RECORD", scope);
@@ -507,7 +508,9 @@ test("Virginia joins separate official CSV files once per pass and a corrected c
         assert.equal(rows[0].provenance.retrievedAt, now);
         assert.equal(rows[0].provenance.lookup!.retrievedAt, at);
       }
-      for await (const _page of acquireCampaignFinanceResource("VA", { ...source, id: `${source.id}-second-consumer` }, { ...options, fetch, runId: `pass-${pass}` })) {}
+      for await (const page of acquireCampaignFinanceResource("VA", { ...source, id: `${source.id}-second-consumer` }, { ...options, fetch, runId: `pass-${pass}` })) {
+        if (page.capture) assert.ok(page.capture.lookup?.url.endsWith("Report.csv"));
+      }
       assert.equal(coverDownloads, pass);
     }
   } finally { await rm(options.directory, { recursive: true, force: true }); }
@@ -527,5 +530,64 @@ test("Virginia discovers monthly file links and records one failed index without
     assert.equal(found.length, 10);
     assert.equal(failed, 10);
     assert.ok(found.every(resource => resource.url.includes("/2026_10/") && resource.url.endsWith(".csv")));
+  } finally { await rm(options.directory, { recursive: true, force: true }); }
+});
+
+
+test("every connected state source has saved native fields for its declared identifiers and amounts", async () => {
+  for (const state of ["AL", "CO", "HI", "ID", "LA", "MN", "NE", "NH", "NY", "TX"]) {
+    const source = campaignFinanceSource(state).resources[0];
+    const rows = JSON.parse(await readFile(new URL(`./fixtures/campaign-finance/${state.toLowerCase()}-native-excerpt.json`, import.meta.url), "utf8"));
+    assert.equal(rows.length, 2, state);
+    for (const raw of rows) {
+      assert.ok(source.identity.every(field => Object.hasOwn(raw, field)), `${state} native identity fields`);
+      assert.ok(source.amounts.every(amount => Object.hasOwn(raw, amount.field)), `${state} amount fields`);
+      const row = campaignSourceRecord(state, source, raw, { ...capture, url: source.url });
+      assert.equal(row.state, state);
+      assert.equal(row.provenance.official, true);
+      assert.equal(row.provenance.url, source.url);
+      assert.equal(row.invalidAmounts.length, 0, state);
+      assert.ok(row.filerId, `${state} source-native filer`);
+      if (source.identity.length) assert.ok(row.nativeId, `${state} source-native row ID`);
+    }
+  }
+});
+
+test("NYC candidate identifiers stay inside their election cycle and unfiled registration totals stay documents", async () => {
+  const source = campaignFinanceSource("NY").resources.find(row => row.id === "nyc-cfb-analysis")!;
+  const [raw] = JSON.parse(await readFile(new URL("./fixtures/campaign-finance/nyc-native-analysis.json", import.meta.url), "utf8"));
+  const first = campaignSourceRecord("NY", source, raw, { ...capture, url: source.url });
+  const later = campaignSourceRecord("NY", source, { ...raw, el_cycle: "2025" }, { ...capture, url: source.url });
+  assert.equal(first.filerId, JSON.stringify([String(raw.el_cycle), String(raw.cand_id)]));
+  assert.notEqual(first.filerId, later.filerId);
+  const unfiled = campaignSourceRecord("NY", source, { ...raw, to_stmt: "0" }, { ...capture, url: source.url });
+  assert.equal(unfiled.filingState, "ACTIVITY_UNCONFIRMED");
+  assert.equal(unfiled.amounts.length, 0);
+  const nh = campaignFinanceSource("NH").resources[0];
+  const [filer] = JSON.parse(await readFile(new URL("./fixtures/campaign-finance/nh-native-excerpt.json", import.meta.url), "utf8"));
+  const registration = campaignSourceRecord("NH", nh, { ...filer, totalRaised: 0, totalSpent: 0 }, { ...capture, url: nh.url });
+  assert.equal(registration.filingState, "ACTIVITY_UNCONFIRMED");
+  assert.equal(registration.amounts.length, 0);
+});
+
+test("a replacement publication that changes only generated row IDs and dataset timestamps reuses accepted fact pages", async () => {
+  const options = await context();
+  const source = campaignFinanceSource("DC").resources[0];
+  const saved = JSON.parse(await readFile(new URL("./fixtures/campaign-finance/dc-native-contributions.json", import.meta.url), "utf8"));
+  let rows = saved.features, publications = 0;
+  const fetch: typeof globalThis.fetch = async () => new Response(JSON.stringify({ ...saved, features: rows }));
+  try {
+    await publishCampaignFinanceResource("DC", source, { ...options, fetch, onPublished: () => { publications++; } });
+    assert.equal(publications, 1);
+    const first = [];
+    for await (const row of heldRows(options, "DC")) first.push(row);
+    rows = rows.map((row: { attributes: Record<string, number> }) => ({ attributes: { ...row.attributes,
+      OBJECTID: row.attributes.OBJECTID + 1000, GIS_LAST_MOD_DTTM: row.attributes.GIS_LAST_MOD_DTTM + 86400000 } }));
+    await publishCampaignFinanceResource("DC", source, { ...options, fetch, now: () => "2026-10-17T01:00:00.000Z", onPublished: () => { publications++; } });
+    assert.equal(publications, 1);
+    const after = [];
+    for await (const row of heldRows(options, "DC")) after.push(row);
+    assert.deepEqual(after, first);
+    assert.ok(after.every(row => row.nativeIdScope === "PUBLICATION"));
   } finally { await rm(options.directory, { recursive: true, force: true }); }
 });

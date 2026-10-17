@@ -9,6 +9,7 @@ import { saveFederalBulkBytes } from "../federal-money/bulk.ts";
 import { federalCsvRecords, federalJsonRecords, federalZipBytes, federalZipEntries, type FederalJsonEnvelope } from "../federal-money/streams.ts";
 import { saveFederalMoneyCapture } from "../federal-money/vault.ts";
 import { csvRows } from "../reference/csv.ts";
+import { OUTBOUND_USER_AGENT } from "../geo/outbound-agent.ts";
 import { campaignSourceRecord, type CampaignSourceCapture, type CampaignSourceRecord } from "./state-source-records.ts";
 import { campaignFinanceSource, type CampaignFinanceResource } from "./state-sources.ts";
 import { joinedCampaignSourceRows } from "./state-source-join.ts";
@@ -52,9 +53,11 @@ const sleep = (milliseconds: number, signal: AbortSignal) => new Promise<void>((
 });
 
 export async function campaignSourceResponse(url: string, init: RequestInit, options: Pick<Options, "signal" | "fetch" | "sleep">): Promise<Response> {
+  const headers = new Headers(init.headers);
+  if (!headers.has("user-agent")) headers.set("user-agent", OUTBOUND_USER_AGENT);
   for (let attempt = 0; ; attempt++) {
     options.signal.throwIfAborted();
-    const result = await requestPublisher("official campaign finance", () => (options.fetch ?? fetch)(url, { ...init, signal: options.signal }));
+    const result = await requestPublisher("official campaign finance", () => (options.fetch ?? fetch)(url, { ...init, headers, signal: options.signal }));
     if (result.status !== 429 && result.status < 500 || attempt >= 3) {
       if (!result.ok && result.status !== 304) {
         await result.body?.cancel();
@@ -102,13 +105,17 @@ async function* capturedRows(state: string, resource: CampaignFinanceResource, i
   const rows = format === "json" ? federalJsonRecords(input, resource.rowPath ?? "", envelope) : federalCsvRecords(input, resource.encoding, resource.quote);
   for await (const raw of rows) {
     options.signal.throwIfAborted();
-    if (format === "csv" && preambleRows > 0) { preambleRows--; continue; }
+    if (format === "csv" && preambleRows > 0) {
+      const published = resource.preamblePublicationDate ? new RegExp(resource.preamblePublicationDate).exec(raw)?.[1]?.trim() : null;
+      if (published) metadata.publicationDate = published;
+      preambleRows--; continue;
+    }
     if (format === "csv" && header === null) {
       header = raw;
       const columns = [...csvRows(raw.replace(/^\uFEFF/, ""), resource.delimiter, resource.quote)][0];
       if (!columns?.length || new Set(columns).size !== columns.length) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "Campaign export columns are missing or repeated.");
       if (resource.filedCondition && !columns.includes(resource.filedCondition.field)) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "Campaign export no longer contains its filing status column.");
-      if (resource.identity.some(field => !columns.includes(field)) || resource.filer.length && !resource.filer.some(field => columns.includes(field)) || resource.amounts.length && !resource.amounts.some(amount => columns.includes(amount.field))) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "Campaign export no longer contains its declared native identity or amount columns.");
+      if ([...resource.identity, ...resource.filerIdentity ?? []].some(field => !columns.includes(field)) || resource.filer.length && !resource.filer.some(field => columns.includes(field)) || resource.amounts.length && !resource.amounts.some(amount => columns.includes(amount.field))) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "Campaign export no longer contains its declared native identity or amount columns.");
       continue;
     }
     const bytes = Buffer.byteLength(raw);

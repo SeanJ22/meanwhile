@@ -26,7 +26,8 @@ export interface CampaignFinanceState {
   readonly filers: string | null;
   readonly count: number;
   readonly unjoined: number;
-  readonly resources: Readonly<Record<string, { readonly checkedAt: string; readonly complete: boolean; readonly publicationId: string }>>;
+  readonly checks: string | null;
+  readonly checkedAt: string | null;
 }
 export interface CampaignFinanceGovernment {
   readonly id: string;
@@ -60,8 +61,8 @@ export function campaignFinancePublicationIssue(value: CampaignFinancePublicatio
       !Number.isSafeInteger(record.unjoined) || record.unjoined < 0 || record.unjoined > record.count) return "Campaign publication counts or state identity are invalid.";
     if (value.kind === "campaign-finance-source-state") {
       const row = record as CampaignFinanceState;
-      if ([row.groups, row.places, row.filers].some(key => key !== null && !federalMoneyArtifactKey(key)) || !row.resources ||
-          Object.values(row.resources).some(check => !Number.isFinite(Date.parse(check.checkedAt)) || typeof check.complete !== "boolean" || typeof check.publicationId !== "string" || !check.publicationId)) return "Campaign state indexes or source checks are invalid.";
+      if ([row.groups, row.places, row.filers, row.checks].some(key => key !== null && !federalMoneyArtifactKey(key)) ||
+          row.checkedAt !== null && !Number.isFinite(Date.parse(row.checkedAt))) return "Campaign state indexes or source checks are invalid.";
     } else if (value.kind === "campaign-finance-source-filer") {
       const row = record as CampaignFinanceFiler;
       if (row.pages !== null && !federalMoneyArtifactKey(row.pages) || !Number.isSafeInteger(row.pageCount) || row.pageCount < 0 || !/^[a-f0-9]{64}$/.test(row.evidenceHash) || !/^[a-f0-9]{64}$/.test(row.contentHash)) return "Campaign government publication has an invalid bounded page index.";

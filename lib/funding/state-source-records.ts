@@ -21,10 +21,11 @@ export interface CampaignSourceRecord {
   readonly state: string;
   readonly resource: string;
   readonly nativeId: string | null;
+  readonly nativeIdScope: "SOURCE" | "PUBLICATION" | null;
   readonly projectionOrdinal: number;
   readonly filerId: string | null;
   readonly filerName: string | null;
-  readonly filingState: "FILED" | "UNFILED";
+  readonly filingState: "FILED" | "UNFILED" | "ACTIVITY_UNCONFIRMED";
   readonly candidateName: string | null;
   readonly organizationName: string | null;
   readonly filingUrl: string;
@@ -55,6 +56,10 @@ function first(row: Record<string, unknown>, fields: readonly string[]): string 
   for (const field of fields) { const value = cell(row[field]); if (value) return value; }
   return null;
 }
+function identity(row: Record<string, unknown>, fields: readonly string[]): string | null {
+  const values = fields.map(field => cell(row[field]));
+  return values.length && values.every(Boolean) ? values.length === 1 ? values[0] : JSON.stringify(values) : null;
+}
 function date(row: Record<string, unknown>, fields: readonly string[], resource: CampaignFinanceResource): string | null {
   const value = first(row, fields);
   if (value === null || resource.dateEncoding !== "EPOCH_MILLISECONDS") return value;
@@ -70,20 +75,28 @@ export function campaignSourceRecord(state: string, resource: CampaignFinanceRes
     if (!nested || typeof nested !== "object" || Array.isArray(nested)) throw new Error("The source row is missing its declared native field object.");
     row = nested as Record<string, unknown>;
   }
-  const keys = resource.identity.map(field => cell(row[field]));
-  const nativeId = keys.length && keys.every(Boolean) ? keys.length === 1 ? keys[0] : JSON.stringify(keys) : null;
-  const filerId = first(row, resource.filer);
-  const provenance: Provenance = { ...capture, publicationDate: date(row, resource.publicationDate, resource), sourcePublicationDate: capture.publicationDate, publisher: resource.publisher ?? source.publisher, official: true };
+  const nativeId = identity(row, resource.identity);
+  const filerId = resource.filerIdentity ? identity(row, resource.filerIdentity) : first(row, resource.filer);
+  const provenance: Provenance = { ...capture, publicationDate: date(row, resource.publicationDate, resource),
+    sourcePublicationDate: date(row, resource.sourcePublicationDate ?? [], resource) ?? capture.publicationDate, publisher: resource.publisher ?? source.publisher, official: true };
   const amounts: CampaignSourceRecord["amounts"][number][] = [];
   const invalidAmounts: string[] = [];
   const issues: string[] = [];
+  if (!nativeId) issues.push(CAMPAIGN_FINANCE_JOIN_REASONS.missingId);
+  if (!filerId) issues.push(CAMPAIGN_FINANCE_JOIN_REASONS.missingFiler);
   if (resource.filedCondition && !(resource.filedCondition.field in row)) throw new Error("The source row is missing its filing status column.");
   const filed = !resource.filedCondition || resource.filedCondition.values.includes(cell(row[resource.filedCondition.field]));
+  const registrationOnly = !!resource.filedStatementField && !(Number(cell(row[resource.filedStatementField])) > 0) ||
+    (resource.registrationTotals?.length ?? 0) > 0 && resource.registrationTotals!.every(field => {
+    const value = cell(row[field]).replace(/^\$/, "").replaceAll(",", "");
+    return /^-?0+(?:\.0+)?$/.test(value);
+  });
   if (!filed) issues.push("The source has not marked this row as filed; its amounts remain in the saved source.");
+  if (registrationOnly) issues.push("The index does not establish a filed financial report; its registration details remain held.");
   if (typeof row.__sourceRowIssue === "string") issues.push(row.__sourceRowIssue);
   if (row.__ambiguousLookup === true) issues.push("Source cover records disagree for this filing; its native rows remain held.");
   for (const { field, label } of resource.amounts) {
-    if (!filed) continue;
+    if (!filed || registrationOnly) continue;
     const value = row[field];
     if (value === undefined || value === null || value === "") continue;
     if (!cell(value)) continue;
@@ -105,9 +118,13 @@ export function campaignSourceRecord(state: string, resource: CampaignFinanceRes
     } catch { issues.push("The filed document link is unreadable; the source extract remains linked."); }
   }
   if (governmentOcdId && campaignFinanceStateScope(governmentOcdId) !== `US-${state}:campaign-finance`) throw new Error("The campaign resource crosses its state's boundary.");
+  const publicationScoped = resource.identityScope === "PUBLICATION";
+  const contentIdentity = publicationScoped ? Object.fromEntries(Object.entries(row).filter(([field]) =>
+    !resource.identity.includes(field) && !resource.sourcePublicationDate?.includes(field))) : row;
   return {
-    id: `${state}:${resource.id}:${hash(nativeId ?? canonicalCivicDataJson(row))}`,
-    state, resource: resource.id, nativeId, projectionOrdinal, filerId, filingState: filed ? "FILED" : "UNFILED",
+    id: `${state}:${resource.id}:${hash(publicationScoped || nativeId === null ? canonicalCivicDataJson(contentIdentity) : nativeId)}`,
+    state, resource: resource.id, nativeId, nativeIdScope: nativeId === null ? null : publicationScoped ? "PUBLICATION" : "SOURCE",
+    projectionOrdinal, filerId, filingState: !filed ? "UNFILED" : registrationOnly ? "ACTIVITY_UNCONFIRMED" : "FILED",
     filerName: resource.filerNameParts?.map(field => cell(row[field])).filter(Boolean).join(" ") || first(row, resource.filerName),
     candidateName: resource.candidateCondition && !resource.candidateCondition.values.includes(cell(row[resource.candidateCondition.field])) ? null
       : resource.candidateParts?.map(field => cell(row[field])).filter(Boolean).join(" ") || first(row, resource.candidate),
@@ -121,7 +138,7 @@ export function campaignSourceRecord(state: string, resource: CampaignFinanceRes
       const value = typeof row[field] === "boolean" ? String(row[field]) : cell(row[field]);
       return value ? [{ label, value }] : [];
     }),
-    unjoinedReason: !nativeId ? CAMPAIGN_FINANCE_JOIN_REASONS.missingId
+    unjoinedReason: governmentOcdId ? null : !nativeId ? CAMPAIGN_FINANCE_JOIN_REASONS.missingId
       : row.__ambiguousLookup === true ? CAMPAIGN_FINANCE_JOIN_REASONS.conflictingCover
       : !filerId ? CAMPAIGN_FINANCE_JOIN_REASONS.missingFiler
       : !governmentOcdId ? CAMPAIGN_FINANCE_JOIN_REASONS.unboundGovernment : null,
@@ -131,6 +148,6 @@ export function campaignSourceRecord(state: string, resource: CampaignFinanceRes
 
 export function campaignSourceRecordHash(row: CampaignSourceRecord): string {
   const { provenance, amounts, projectionOrdinal: _projectionOrdinal, ...native } = row;
-  return hash(JSON.stringify({ ...native, amounts: amounts.map(({ provenance: own, ...amount }) => ({ ...amount,
+  return hash(JSON.stringify({ ...native, nativeId: row.nativeIdScope === "PUBLICATION" ? null : row.nativeId, amounts: amounts.map(({ provenance: own, ...amount }) => ({ ...amount,
     publicationDate: (own ?? provenance).publicationDate, publisher: (own ?? provenance).publisher })), publicationDate: provenance.publicationDate, publisher: provenance.publisher }));
 }

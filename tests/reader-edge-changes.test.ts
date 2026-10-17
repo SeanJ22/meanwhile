@@ -8,7 +8,7 @@ import { factDb } from "./helpers/fact-db.ts";
 async function db() {
   const facts = await factDb();
   await facts.pg.exec(`CREATE TABLE civic_data_promotions (key text PRIMARY KEY, record_class text NOT NULL, scope text NOT NULL, promoted_at timestamptz NOT NULL)`);
-  await facts.pg.exec(readFileSync(join(import.meta.dirname, "..", "lib", "db", "migrations", "R1_edge_changes.sql"), "utf8"));
+  await facts.pg.exec(readFileSync(join(import.meta.dirname, "..", "lib", "db", "migrations", "0040_r1_edge_changes.sql"), "utf8"));
   const promote = (recordClass: string, scope: string, at: string) => facts.query(`INSERT INTO civic_data_promotions VALUES ($1, $2, $3, $4)
     ON CONFLICT (key) DO UPDATE SET promoted_at = EXCLUDED.promoted_at`, [`${recordClass}:${scope}`, recordClass, scope, at]);
   return { ...facts, promote };

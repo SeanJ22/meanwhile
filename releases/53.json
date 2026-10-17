@@ -1,0 +1,24 @@
+{
+  "n": 53,
+  "branch": "release/53",
+  "river_sha": "2db157b2e8c39b0f4b13ccc4279a80b31f057d79",
+  "tested_sha": "2db157b2e8c39b0f4b13ccc4279a80b31f057d79",
+  "steps": [
+    "MT-02",
+    "R0",
+    "RD-01",
+    "XS-02"
+  ],
+  "lanes": [
+    "meetings-per-body",
+    "road",
+    "state-crossing"
+  ],
+  "integration_from": 238,
+  "integration_count": 241,
+  "pr": {
+    "number": 762,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/762"
+  },
+  "at": "2026-10-17T16:50:06Z"
+}

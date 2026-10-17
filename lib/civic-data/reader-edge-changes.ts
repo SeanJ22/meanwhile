@@ -4,6 +4,7 @@ import { UNCHANGED_CONFIRMATION_PREFIX } from "./unchanged-confirmation.ts";
 
 const CURSOR = "reader-edge";
 const PROGRESS = "reader-edge:pieces";
+const OWED = "reader-edge:owed";
 // A promotion stamped just before the last publish read the clock may commit after it.
 const OVERLAP = "1 minute";
 
@@ -16,10 +17,12 @@ const CHANGES_SQL = `WITH since AS (SELECT (SELECT position::timestamptz - inter
     JOIN civic_data_promotions p ON p.record_class = c.record_class AND p.scope = c.scope AND p.current_version_id = c.id
     WHERE left(e.detail, ${UNCHANGED_CONFIRMATION_PREFIX.length}) = '${UNCHANGED_CONFIRMATION_PREFIX}' AND e.at > (SELECT at FROM since)
   UNION ALL SELECT NULL, NULL, json_build_object('now', now(), 'cursor', (SELECT position FROM pass_cursor WHERE name = $1),
-    'progress', (SELECT position FROM pass_cursor WHERE name = $2))::text`;
+    'progress', (SELECT position FROM pass_cursor WHERE name = $2), 'owed', (SELECT position FROM pass_cursor WHERE name = $3))::text`;
 
 const PROGRESS_SQL = `INSERT INTO pass_cursor (name, position) VALUES ($1, $2) ON CONFLICT (name) DO UPDATE SET position = EXCLUDED.position`;
-const SAVE_SQL = `WITH finished AS (DELETE FROM pass_cursor WHERE name = $3)
+const SAVE_SQL = `WITH finished AS (DELETE FROM pass_cursor WHERE name = $3),
+    owed AS (INSERT INTO pass_cursor (name, position) SELECT $4, $5 WHERE $5::text IS NOT NULL ON CONFLICT (name) DO UPDATE SET position = EXCLUDED.position),
+    cleared AS (DELETE FROM pass_cursor WHERE name = $4 AND $5::text IS NULL)
   INSERT INTO pass_cursor (name, position) VALUES ($1, $2)
   ON CONFLICT (name) DO UPDATE SET position = GREATEST(pass_cursor.position::timestamptz, EXCLUDED.position::timestamptz)::text`;
 
@@ -32,16 +35,18 @@ export interface ReaderEdgeChanges {
   readonly pointers: readonly EdgePointer[];
   /** Pieces an earlier, unfinished publication of these same changes already published. */
   readonly done: ReadonlySet<string>;
+  /** Pieces that failed when last tried, with when, owed whatever moves next. */
+  readonly owed: ReadonlyMap<string, string>;
   /** Records one piece as published, so a restart resumes after it. */
   readonly saveDone: (piece: string) => Promise<void>;
-  /** Marks these changes published; run only once every piece took them. */
-  readonly save: () => Promise<void>;
+  /** Marks these changes published once every piece was tried, keeping the ones that failed owed. */
+  readonly save: (owed: ReadonlyMap<string, string>) => Promise<void>;
 }
 
 /** What moved since the reader edge last published, read by promotion and confirmation time. */
 export async function readReaderEdgeChanges(query: Query): Promise<ReaderEdgeChanges> {
-  const rows = await query(CHANGES_SQL, [CURSOR, PROGRESS]);
-  const meta = JSON.parse(String(rows.find(row => row.meta !== null)!.meta)) as { now: string; cursor: string | null; progress: string | null };
+  const rows = await query(CHANGES_SQL, [CURSOR, PROGRESS, OWED]);
+  const meta = JSON.parse(String(rows.find(row => row.meta !== null)!.meta)) as { now: string; cursor: string | null; progress: string | null; owed: string | null };
   const held = meta.progress === null ? null : JSON.parse(meta.progress) as Progress;
   const resumed = held?.since === meta.cursor ? held : null;
   const through = resumed?.through ?? meta.now;
@@ -49,11 +54,11 @@ export async function readReaderEdgeChanges(query: Query): Promise<ReaderEdgeCha
   const pointers = rows.flatMap((row): EdgePointer[] => row.meta !== null ? []
     : [{ recordClass: row.record_class as RoutineRecordClass, scope: String(row.scope) }]);
   return {
-    pointers, done,
+    pointers, done, owed: new Map(Object.entries(meta.owed === null ? {} : JSON.parse(meta.owed) as Record<string, string>)),
     saveDone: async piece => {
       done.add(piece);
       await query(PROGRESS_SQL, [PROGRESS, JSON.stringify({ since: meta.cursor, through, done: [...done] } satisfies Progress)]);
     },
-    save: async () => { await query(SAVE_SQL, [CURSOR, through, PROGRESS]); },
+    save: async owed => { await query(SAVE_SQL, [CURSOR, through, PROGRESS, OWED, owed.size ? JSON.stringify(Object.fromEntries(owed)) : null]); },
   };
 }

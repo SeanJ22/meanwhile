@@ -317,11 +317,11 @@ export async function publishReaderEdgePieces(input: {
   readonly children?: StateArtifactChildren;
   readonly published?: (piece: string) => Promise<void>;
   readonly clock?: () => string;
-}): Promise<{ readonly outcome: ReaderEdgePublicationOutcome; readonly complete: boolean }> {
+}): Promise<{ readonly outcome: ReaderEdgePublicationOutcome; readonly complete: boolean; readonly failed: readonly string[] }> {
   const env = input.env ?? process.env, artifactStore = input.artifactStore, destination = storeName(artifactStore);
   const refused = refusal(artifactStore, env);
-  if (refused !== null || artifactStore === null) { console.log(JSON.stringify(refused)); return { complete: false, outcome: refused! }; }
-  const published: string[] = [], failures: string[] = [];
+  if (refused !== null || artifactStore === null) { console.log(JSON.stringify(refused)); return { complete: false, failed: [], outcome: refused! }; }
+  const published: string[] = [], failures: string[] = [], failed: string[] = [];
   let sequence: number | null = null, supersededMeetingFields: number | undefined, left = 0;
   for (const piece of input.pieces) {
     if (Date.now() >= input.deadlineMs) { left++; continue; }
@@ -331,7 +331,7 @@ export async function publishReaderEdgePieces(input: {
       : await publishPieceInChild(piece, now, input.deadlineMs, destination, env, input.children ?? {});
     sequence = outcome.sequence ?? sequence;
     if (outcome.supersededMeetingFields !== undefined) supersededMeetingFields = (supersededMeetingFields ?? 0) + outcome.supersededMeetingFields;
-    if (!outcome.ok) { failures.push(`${key}: ${outcome.detail ?? "not published"}`); continue; }
+    if (!outcome.ok) { failed.push(key); failures.push(`${key}: ${outcome.detail ?? "not published"}`); continue; }
     if (outcome.readerEdge === "PUBLISHED") published.push(key);
     await input.published?.(key);
   }
@@ -342,19 +342,33 @@ export async function publishReaderEdgePieces(input: {
     detail: failures.length ? safeFailure(`${failures.length} of ${input.pieces.length} reader pieces were not published; the rest are live. ${failures[0]}`)
       : left ? `${left} of ${input.pieces.length} reader pieces wait for the next pass.` : null };
   console.log(JSON.stringify(outcome));
-  return { outcome, complete: failures.length === 0 && left === 0 };
+  return { outcome, complete: left === 0, failed };
 }
 
-/** Publishes what moved since the edge last published; each piece is saved as it lands, and the cursor moves once every piece took the change. */
+// A piece that failed is tried again when what it publishes moves, and otherwise once an hour.
+const OWED_RETRY_MS = 3_600_000;
+
+/**
+ * Publishes what moved since the edge last published; each piece is saved as it lands, and the cursor moves once every
+ * piece was tried. A piece that failed stays owed on its own, so it never holds back the rest.
+ */
 export async function publishReaderEdge(input: Omit<Parameters<typeof publishReaderEdgePieces>[0], "pieces" | "published"> & { readonly query: Query }): Promise<ReaderEdgePublicationOutcome> {
   const refused = refusal(input.artifactStore, input.env ?? process.env);
   if (refused !== null) { console.log(JSON.stringify(refused)); return refused; }
   const changes = await readReaderEdgeChanges(input.query);
-  const pieces = readerEdgePieces(changes.pointers).filter(piece => !changes.done.has(readerEdgePieceKey(piece)));
-  const { outcome, complete } = await publishReaderEdgePieces({ ...input, pieces, published: changes.saveDone });
-  if (complete) await changes.save();
+  const moved = readerEdgePieces(changes.pointers), keys = new Set(moved.map(readerEdgePieceKey));
+  const due = [...changes.owed].filter(([key, at]) => !keys.has(key) && Date.now() - Date.parse(at) >= OWED_RETRY_MS).map(([key]) => pieceOfKey(key));
+  const pieces = [...moved, ...due].filter(piece => !changes.done.has(readerEdgePieceKey(piece)));
+  const { outcome, complete, failed } = await publishReaderEdgePieces({ ...input, pieces, published: changes.saveDone });
+  const tried = new Set(pieces.map(readerEdgePieceKey)), now = new Date().toISOString();
+  if (complete) await changes.save(new Map([...[...changes.owed].filter(([key]) => !tried.has(key)), ...failed.map(key => [key, now] as const)]));
   return outcome;
 }
+
+const pieceOfKey = (key: string): ReaderEdgePiece => {
+  const at = key.indexOf("/");
+  return at < 0 ? { family: key, place: null } : { family: key.slice(0, at), place: key.slice(at + 1) };
+};
 
 /** Each state's facts at its own pointer on the reader edge, apart from the manifest. */
 export function publishReaderStateFacts(query: Query, artifactStore: ReaderArtifactStore, observedAt: string): Promise<StateFactsPublication> {

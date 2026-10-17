@@ -1964,6 +1964,7 @@ function meetingSubject(
     /* The whole observation, not just the link. */
     agenda: {
       meetingId: meeting.id,
+      bodyId: meeting.bodyId ?? "",
       agendaUrl: meeting.agendaUrl,
       agendaSlotObservedEmpty: meeting.agendaSlotObservedEmpty,
       provenance: meeting.provenance,

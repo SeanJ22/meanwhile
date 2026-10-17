@@ -2,9 +2,10 @@
 import { MEETING_PARTITION_CONTRACTS } from "../../civic-data/meeting-partitions.ts";
 import { readPostingToLive, type PostingToLiveRow } from "../../civic-data/posting-to-live.ts";
 import { MEETINGS_RECORD_CLASS } from "../../meetings/snapshot.ts";
-import { readPreparedMeetingsProjection } from "../../meetings/prepared-snapshot.ts";
+import { readMeetingBodies } from "../../meetings/edge-serving.ts";
+import { resolveReaderArtifactWriteStore } from "../../meetings/edge-store.ts";
 import { PostgresRoutineDataStore } from "../../civic-data/store.ts";
-import { meetingFactsByDoor, overdueDoors, type OverdueDoor } from "../../doors/overdue.ts";
+import { doorFactsAt, meetingSittingsByDoor, overdueDoors, type DoorFacts, type DoorSittings, type OverdueDoor } from "../../doors/overdue.ts";
 import { readOnSchedule, type DoorRecord } from "../../doors/registry.ts";
 import { ensureMeetingDoors } from "../../doors/meeting-doors.ts";
 import { fixItems } from "../fix-list.ts";
@@ -15,11 +16,31 @@ async function attempt<T>(read: () => Promise<T>): Promise<T | null> {
   try { return await read(); } catch { return null; }
 }
 
-/** Open doors past their check. Live facts per door come from the live meeting snapshot; when it cannot be read they are left uncounted ("—"), not zero. */
+/** What each body's record said about its doors, kept by record so a pass reads only the bodies that changed. */
+const sittingsByRecord = new Map<string, ReadonlyMap<string, DoorSittings>>();
+
+/** The live facts behind every meeting door, read one state and one body at a time. A body that cannot be read leaves the whole count unread. */
+async function meetingDoorFacts(now: string): Promise<ReadonlyMap<string, DoorFacts> | null> {
+  const facts = new Map<string, DoorFacts>();
+  for await (const body of readMeetingBodies({ store: resolveReaderArtifactWriteStore(), includeAgenda: false, now })) {
+    let held = sittingsByRecord.get(body.sha);
+    if (held === undefined) {
+      const read = await body.load();
+      if (read === null) return null;
+      held = meetingSittingsByDoor(read.snapshot);
+      if (sittingsByRecord.size >= 200_000) sittingsByRecord.delete(sittingsByRecord.keys().next().value!);
+      sittingsByRecord.set(body.sha, held);
+    }
+    for (const [key, sittings] of held) facts.set(key, doorFactsAt(sittings, now));
+  }
+  return facts;
+}
+
+/** Open doors past their check. Live facts per door come from the bodies' records; when they cannot be read they are left uncounted ("—"), not zero. */
 export async function readOverdueDoors(doors: readonly DoorRecord[], now: string): Promise<readonly OverdueDoor[]> {
-  const snapshot = await attempt(async () => { const r = await readPreparedMeetingsProjection({ now }); return r.kind === "PROMOTED" ? r.value : null; });
-  const late = overdueDoors(doors, snapshot === null ? new Map() : meetingFactsByDoor(snapshot, now), now);
-  return snapshot === null ? late.map((d) => ({ ...d, liveFacts: null })) : late;
+  const facts = await attempt(() => meetingDoorFacts(now));
+  const late = overdueDoors(doors, facts ?? new Map(), now);
+  return facts === null ? late.map((d) => ({ ...d, liveFacts: null })) : late;
 }
 
 export async function readRecentPostingToLive(): Promise<readonly PostingToLiveRow[]> {

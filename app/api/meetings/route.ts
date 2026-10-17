@@ -11,7 +11,6 @@ import { getRegistryRuntimeReadModel, readRegistryRuntimeProjection, selectedReg
 import { snapshotSourceFor } from "@/lib/meetings/registry";
 import type { Meeting } from "@/lib/sources/types";
 import {
-  getActiveSnapshotMeta,
   requireMeetingsProjection,
   snapshotClientMeta,
   type SnapshotClientMeta,
@@ -244,7 +243,6 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
       result = await searchMeetings(lat, lng, radiusKm, new Date(), divisionsAtPoint, undefined, undefined,
         resolvedDivisions ? meetingBodyIds(getRegistryRuntimeReadModel().registry.bodies, divisionsAtPoint) : new Set());
       heldMeetings = result.meetings;
-      snapshotMeta = await getActiveSnapshotMeta();
     }
   } catch (error) {
     if (error instanceof CivicDataStoreUnavailableError) {

@@ -968,7 +968,7 @@ const NOT_A_PLACE: MeetingsProjectionReadResult = {
 
 /** A place whose government could not be resolved holds no meetings; the answer says so rather than naming a stand-in. */
 export function emptyMeetingsRead(now: string = new Date().toISOString()): MeetingsProjectionReadResult {
-  return { kind: "PROMOTED", partitions: [], detail: "The place resolved to no government.", metadata: { ...NOT_A_PLACE.metadata, stale: "UNKNOWN" },
+  return { kind: "PROMOTED", detail: "The place resolved to no government.", metadata: { ...NOT_A_PLACE.metadata, stale: "UNKNOWN" },
     value: { formatVersion: 1, generatedAt: now, counts: snapshotCounts([], 0), sources: [], meetings: [], agendaDocuments: [] } };
 }
 
@@ -1018,9 +1018,18 @@ async function loadStateIndex(
   return readMeetingIndexRow(state, dataStore);
 }
 
-/** Every body of these states, one body at a time, for the jobs that read the whole of a state rather than a place. */
+export interface StateMeetingBody {
+  readonly state: string;
+  readonly bodyId: string;
+  /** The hash of its record, so a caller that kept what it read of this record can skip reading it again. */
+  readonly sha: string;
+  /** Reads this one body; null when neither the edge nor the database can supply it. */
+  readonly load: () => Promise<{ readonly snapshot: MeetingsSnapshot; readonly fromEdge: boolean } | null>;
+}
+
+/** Every body of these states, listed from each state's index and read one body at a time, for jobs that cover a state rather than a place. */
 export async function* readMeetingBodies(options: Pick<ReaderEdgeMeetingsOptions, "store" | "dataStore" | "manifest" | "states" | "includeAgenda" | "window" | "settings" | "now">):
-  AsyncGenerator<{ readonly state: string; readonly bodyId: string; readonly snapshot: MeetingsSnapshot; readonly fromEdge: boolean }> {
+  AsyncGenerator<StateMeetingBody> {
   const store = options.store === undefined ? resolveReaderArtifactStore() : options.store;
   const manifest = options.manifest !== undefined ? options.manifest : store ? await store.readManifest().then((stored) => stored?.manifest ?? null, () => null) : null;
   const states = (options.states ?? Object.keys(manifest?.meetingStates ?? {})).map((state) => state.toUpperCase());
@@ -1028,11 +1037,13 @@ export async function* readMeetingBodies(options: Pick<ReaderEdgeMeetingsOptions
   for (const state of states) {
     const index = await loadStateIndex(state, manifest, store, options.dataStore);
     for (const [bodyId, entry] of Object.entries(index?.bodies ?? {})) {
-      const body = await loadBody({ state, bodyId, entry }, store, options);
-      if (body === null) continue;
-      const read = applyServedWindow({ kind: "PROMOTED", value: mergeMeetingBodies([body]).snapshot, metadata: NOT_A_PLACE.metadata, partitions: [], detail: "" },
-        options.window ?? "SHOWN", options.now, settings);
-      if (read.kind === "PROMOTED") yield { state, bodyId, snapshot: read.value, fromEdge: body.fromEdge };
+      yield { state, bodyId, sha: entry.record.sha, load: async () => {
+        const body = await loadBody({ state, bodyId, entry }, store, options);
+        if (body === null) return null;
+        const read = applyServedWindow({ kind: "PROMOTED", value: mergeMeetingBodies([body]).snapshot, metadata: NOT_A_PLACE.metadata, detail: "" },
+          options.window ?? "SHOWN", options.now, settings);
+        return read.kind === "PROMOTED" ? { snapshot: read.value, fromEdge: body.fromEdge } : null;
+      } };
     }
   }
 }
@@ -1076,7 +1087,7 @@ async function readReaderEdgeMeetingsHeld(
     factsRead = facts !== null;
     value = { ...value, meetings: withSittingFacts(value.meetings, facts?.flatMap(body => body.sittings) ?? []) };
   } else {
-    const stored = await withStoredSittingFacts({ kind: "PROMOTED", value, metadata: NOT_A_PLACE.metadata, partitions: [], detail: "" });
+    const stored = await withStoredSittingFacts({ kind: "PROMOTED", value, metadata: NOT_A_PLACE.metadata, detail: "" });
     if (stored.kind === "PROMOTED") value = stored.value;
   }
   const complete = bodies.length === loaded.length && bodies.every((body) => body.fromEdge) && factsRead && store !== null && manifest?.meetingStates !== undefined;
@@ -1096,7 +1107,6 @@ async function readReaderEdgeMeetingsHeld(
       stale: complete ? "CURRENT" : "UNKNOWN",
       staleAt: null,
     },
-    partitions: [],
     detail: `Served from ${bodies.length}/${loaded.length} body record(s) in ${indexes.filter(({ index }) => index !== null).map(({ state }) => state).join(", ") || "no state"}.`,
   };
   if (complete) {

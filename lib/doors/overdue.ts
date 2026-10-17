@@ -30,21 +30,36 @@ export function doorFactsKey(source: string, bodyId: string): string {
   return `${source}\u0000${bodyId}`;
 }
 
-/** Live meeting facts per (adapter, body), and whether any sitting is inside the hot window of `now`. Pure. */
-export function meetingFactsByDoor(snapshot: Pick<MeetingsSnapshot, "meetings">, now: string): ReadonlyMap<string, DoorFacts> {
-  const nowMs = Date.parse(now);
-  const out = new Map<string, { liveFacts: number; hot: boolean }>();
+/** The rows behind one door: how many, and when each sits. What is hot depends on the clock, so the times are kept. */
+export interface DoorSittings {
+  readonly liveFacts: number;
+  readonly starts: readonly number[];
+}
+
+/** Live meeting rows per (adapter, body). Pure. */
+export function meetingSittingsByDoor(snapshot: Pick<MeetingsSnapshot, "meetings">): ReadonlyMap<string, DoorSittings> {
+  const out = new Map<string, { liveFacts: number; starts: number[] }>();
   for (const meeting of snapshot.meetings) {
     const source = meeting.carried?.source ?? meeting.id.split(":")[0];
     if (!source || !meeting.bodyId) continue;
     const key = doorFactsKey(source, meeting.bodyId);
-    const held = out.get(key) ?? { liveFacts: 0, hot: false };
+    const held = out.get(key) ?? { liveFacts: 0, starts: [] };
     held.liveFacts += 1;
     const startsAt = Date.parse(meeting.startsAt);
-    if (Number.isFinite(startsAt) && Math.abs(startsAt - nowMs) <= hotSittingMs()) held.hot = true;
+    if (Number.isFinite(startsAt)) held.starts.push(startsAt);
     out.set(key, held);
   }
   return out;
+}
+
+/** What those rows say about a door at `now`: how many facts sit behind it and whether a sitting is inside the hot window. */
+export function doorFactsAt(sittings: DoorSittings, now: string): DoorFacts {
+  const nowMs = Date.parse(now);
+  return { liveFacts: sittings.liveFacts, hot: sittings.starts.some((startsAt) => Math.abs(startsAt - nowMs) <= hotSittingMs()) };
+}
+
+export function meetingFactsByDoor(snapshot: Pick<MeetingsSnapshot, "meetings">, now: string): ReadonlyMap<string, DoorFacts> {
+  return new Map([...meetingSittingsByDoor(snapshot)].map(([key, sittings]) => [key, doorFactsAt(sittings, now)]));
 }
 
 export interface OverdueDoor {

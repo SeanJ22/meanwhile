@@ -37,6 +37,8 @@ interface AgendaDocumentView {
 
 interface AgendaSectionProps {
   meetingId: string;
+  /** The body the meeting belongs to; a meeting is read from its body's record. */
+  bodyId: string;
   /** The meeting's own agenda link, for the no-document and failed cases. */
   agendaUrl: string | null;
   /**
@@ -75,6 +77,7 @@ export function AgendaSection(props: AgendaSectionProps) {
 
 function AgendaForMeeting({
   meetingId,
+  bodyId,
   agendaUrl,
   agendaSlotObservedEmpty,
   provenance,
@@ -96,7 +99,7 @@ function AgendaForMeeting({
     void (async () => {
       try {
         const response = await fetch(
-          `/api/agenda?meetingId=${encodeURIComponent(meetingId)}`,
+          `/api/agenda?meetingId=${encodeURIComponent(meetingId)}&bodyId=${encodeURIComponent(bodyId)}`,
           { signal: controller.signal },
         );
         if (!response.ok) throw new Error(String(response.status));
@@ -118,7 +121,7 @@ function AgendaForMeeting({
       }
     })();
     return () => controller.abort();
-  }, [meetingId]);
+  }, [meetingId, bodyId]);
 
   if (failed) {
     return <>

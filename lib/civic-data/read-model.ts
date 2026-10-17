@@ -5,7 +5,7 @@ import { readerQuery } from "./promoted-reader-query.ts";
 import { currentReaderRoute, currentReaderSelection, type ReaderSelection } from "../db/reader-route.ts";
 import { createHash } from "node:crypto";
 import { sourceCheckedAt } from "./source-check.ts";
-import { currentPromotedEdge, currentReaderAuthorityEdge, ensurePromotedEdge, refuseDatabaseInEdgeOnlyContext } from "../registry/runtime-edge.ts";
+import { currentReaderAuthorityEdge, ensurePromotedEdge, refuseDatabaseInEdgeOnlyContext } from "../registry/runtime-edge.ts";
 
 import type {
   CandidateVersionRecord,
@@ -686,7 +686,7 @@ export async function readPromotedCivicDataBatch<T>(
   const injected = options.store !== undefined;
   if (!injected) {
     if (currentReaderSelection()) return Promise.all(scopes.map(scope => readPromotedCivicData<T>(recordClass, scope, options)));
-    const edgeScopes = new Set(scopes.filter((scope) => currentPromotedEdge(recordClass, scope) !== null));
+    const edgeScopes = new Set((await Promise.all(scopes.map(async scope => await ensurePromotedEdge(recordClass, scope) ? [scope] : []))).flat());
     if (edgeScopes.size > 0) {
       const remaining = scopes.filter((scope) => !edgeScopes.has(scope));
       const fromStore = await readPromotedCivicDataBatch<T>(recordClass, remaining, options);

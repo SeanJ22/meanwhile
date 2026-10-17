@@ -78,7 +78,7 @@ function fixture(dualRole = false): OfficialStateLegislatorReadModel {
 }
 
 function edge(value: OfficialStateLegislatorReadModel) {
-  return { edgeOnly: true as const, stateLegislators: { jurisdictions: new Set(["US-OH", "US-CA"]), load: async (scope: string) => {
+  return { edgeOnly: true as const, stateLegislators: { load: async (scope: string) => {
     assert.equal(scope, "US-OH", "a local reader loads only its state's known people");
     return { value, versionId: "fixture:native-roles" };
   } } };
@@ -168,7 +168,7 @@ test("an exact official office holder takes precedence without joining names or 
   assert.deepEqual(registryRuntimeProjectionIssues(registry), [], "the competing authority is a valid reader projection");
   const artifacts = stateRegistryArtifacts("fixture:official", ["OH"], registry);
   await withReaderAuthorityEdge({ ...edge(value), selection: { states: ["OH"], keys: new Set([STATE, PLACE]) },
-    stateAuthorities: { states: { "registry-runtime": new Set(["OH"]) }, load: async (family, state) =>
+    stateAuthorities: { families: new Set(["registry-runtime"] as const), load: async (family, state) =>
       family === "registry-runtime" && state === "OH" ? artifacts.OH.value : null } }, async () => {
     assert.deepEqual((await seatHoldersForOffice(STATE, "Governor")).map(row => row.name), ["Official Governor"]);
     const all = await allSeatHolders([PLACE]);
@@ -219,7 +219,7 @@ test("captured county mayors and district executives reach exact routes, first c
     { scope: "US-DE", id: "ocd-division/country:us/state:de", type: "state", name: "Anthony Albence", title: "Chief Election Officer", question: "Who is my chief election officer?" },
     { scope: "US-PR", id: "ocd-division/country:us/territory:pr", type: "state", name: "Francisco Rosado Colomer", title: "Chief Election Officer", question: "Who is my chief election officer?" },
   ];
-  const authority = { edgeOnly: true as const, stateLegislators: { jurisdictions: new Set(models.keys()), load: async (scope: string) => {
+  const authority = { edgeOnly: true as const, stateLegislators: { load: async (scope: string) => {
     const value = models.get(scope);
     return value ? { value, versionId: `fixture:held-native:${scope}` } : null;
   } } };

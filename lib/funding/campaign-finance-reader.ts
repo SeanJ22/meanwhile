@@ -1,7 +1,7 @@
 import { validFinanceDoorDetailSource } from "./finance-detail-source.ts";
 import { jurisdictionFromOcdId } from "../coverage/states.ts";
 import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
-import { currentReaderAuthorityEdge } from "../registry/runtime-edge.ts";
+import { currentReaderAuthorityEdge, ensurePromotedEdge } from "../registry/runtime-edge.ts";
 import type { StateMoneyRecord } from "./state-money.ts";
 import { stateMoneyFundingIssue } from "./state-money-funding.ts";
 
@@ -63,6 +63,7 @@ export async function readCampaignFinance(ocdId: string, options: PromotedCivicD
 
 const checkedEntries = new WeakMap<object, readonly CampaignFinanceRecord[]>();
 export async function settleCampaignFinanceReads(divisions?: readonly string[]): Promise<string[]> {
+  if (divisions) await Promise.all(divisions.map(division => ensurePromotedEdge("CURATED_READER_RECORD", `${CAMPAIGN_FINANCE_SCOPE}:${division}`)));
   const entries = [...currentReaderAuthorityEdge()?.promoted ?? []].filter(([key]) =>
     key.startsWith(`CURATED_READER_RECORD:${CAMPAIGN_FINANCE_SCOPE}:`) &&
     (!divisions || divisions.includes(key.slice(`CURATED_READER_RECORD:${CAMPAIGN_FINANCE_SCOPE}:`.length))));

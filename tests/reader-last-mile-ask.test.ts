@@ -535,7 +535,7 @@ test("unreadable state ballots are failed holdings, never empty civic population
   const base = promotedFixtureBundle();
   const states = ["AZ", "NJ"];
   const edge: ReaderAuthorityEdgeBundle = { ...base, promoted: new Map([...base.promoted!].filter(([key]) => !states.some(state => key === `BALLOT_CANDIDACY:${stateBallotScope("ballot-contests", state)}`))),
-    stateAuthorities: { states: base.stateAuthorities!.states, load: async (family, state) => {
+    stateAuthorities: { families: base.stateAuthorities!.families, load: async (family, state) => {
       if (family === "ballot-contests" && states.includes(state)) throw new Error("PLANTED_STATE_BALLOT_FAILURE");
       return base.stateAuthorities!.load(family, state);
     } } };

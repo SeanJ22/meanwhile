@@ -16,13 +16,13 @@ import type { BoundedChildCommand, BoundedChildLauncher } from "../lib/civic-dat
 import type { PromotedPointerIdentity, RoutineRecordClass } from "../lib/civic-data/types.ts";
 import type { WorkerMemoryRelease, WorkerProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
 import { LocalFileArtifactStore, type ReaderArtifactStore } from "../lib/meetings/edge-store.ts";
-import { publishReaderEdgeArtifacts, ensureReaderAuthorityEdge, type PublishedStateAuthority } from "../lib/meetings/edge-serving.ts";
+import { authorityPointerKey, ensureReaderAuthorityEdge, type PublishedStateAuthority } from "../lib/meetings/edge-serving.ts";
+import type { AuthorityArtifactRef } from "../lib/meetings/edge-artifacts.ts";
 import type { StateAuthorityFamily } from "../lib/meetings/edge-artifacts.ts";
 
 const NOW = "2026-10-16T12:00:00.000Z";
 const IL = { recordClass: "BALLOT_CANDIDACY" as const, scope: stateBallotScope("ballot-contests", "IL") };
 const ENV = { WTP_READER_EDGE_LOCAL_OK: "1", WTP_RUNTIME_AUTHORITY_REPO: process.cwd(), WTP_RUNTIME_AUTHORITY_SHA: "a".repeat(40) };
-const metadata = { sourceThrough: null, retrievedAt: null, promotedThrough: null };
 
 function pointer(recordClass: RoutineRecordClass, scope: string, versionId: string): PromotedPointerIdentity {
   return { key: `${recordClass}:${scope}`, recordClass, scope, versionId, lastKnownGoodVersionId: versionId,
@@ -36,6 +36,15 @@ function success(command: BoundedChildCommand) {
   const arg = (name: string) => command.args.find(value => value.startsWith(`--${name}=`))!.slice(name.length + 3);
   return { id: command.id, status: 0, signal: null, termination: "EXITED" as const, stderr: "", errorMessage: null,
     stdout: stateArtifactResultLine(arg("state"), arg("family") as StateAuthorityFamily, ref(arg("version"))) };
+}
+async function seed(store: ReaderArtifactStore, states: Readonly<Record<string, PublishedStateAuthority>>, family: StateAuthorityFamily = "ballot-contests") {
+  for (const [state, entry] of Object.entries(states)) {
+    const held = await store.readJsonPointer(authorityPointerKey(family, state));
+    await store.writeJsonPointer(authorityPointerKey(family, state), entry.artifact, held?.etag ?? null);
+  }
+}
+async function served(store: ReaderArtifactStore, state: string, family: StateAuthorityFamily = "ballot-contests") {
+  return (await store.readJsonPointer<AuthorityArtifactRef>(authorityPointerKey(family, state)))?.value;
 }
 function fixture(t: TestContext) {
   const directory = mkdtempSync(join(tmpdir(), "state-artifact-dispatch-"));
@@ -78,8 +87,7 @@ test("state dispatch uses the same states and territories for registry and ballo
 test("production state supervisor dispatches zero unchanged children and only Illinois's changed family", async t => {
   const f = fixture(t), first = f.put(IL.recordClass, IL.scope, "il-v1");
   const nh = ref("held-new-hampshire");
-  await publishReaderEdgeArtifacts(null, metadata, { store: f.artifacts, now: NOW,
-    stateAuthorities: { "ballot-contests": { IL: ref(first), NH: nh } } });
+  await seed(f.artifacts, { IL: ref(first), NH: nh });
   const launched: BoundedChildCommand[] = [];
   const launch: BoundedChildLauncher = async command => { launched.push(command); command.onStarted?.(123); return success(command); };
   const publish = () => publishSupervisorReaderEdge(f.store, NOW, [IL], {
@@ -95,10 +103,10 @@ test("production state supervisor dispatches zero unchanged children and only Il
   assert.deepEqual(f.observations, [123]);
   assert.equal(f.active.size, 0);
   assert.ok(f.reads.every(read => read.scopes.every(scope => scope.startsWith("US-IL:"))));
-  const manifest = (await f.artifacts.readManifest())!.manifest;
-  assert.equal(manifest.stateAuthorities?.["ballot-contests"]?.IL.version, next);
-  assert.deepEqual(manifest.stateAuthorities?.["ballot-contests"]?.NH, nh.artifact);
-  assert.deepEqual(Object.keys(manifest.stateAuthorities!["ballot-contests"]!.IL).sort(), ["key", "sha", "version"]);
+  assert.equal((await served(f.artifacts, "IL"))?.version, next);
+  assert.deepEqual(await served(f.artifacts, "NH"), nh.artifact);
+  assert.deepEqual(Object.keys((await served(f.artifacts, "IL"))!).sort(), ["key", "sha", "version"]);
+  assert.equal(await f.artifacts.readManifest(), null, "a state publish writes no manifest");
 });
 
 test("targeted ballot delivery includes the five other state families without reading their payloads", async t => {
@@ -114,7 +122,7 @@ test("targeted ballot delivery includes the five other state families without re
   assert.equal(outcome.ok, true);
   assert.equal(launches.length, 6);
   assert.equal(f.active.size, 0);
-  assert.equal(Object.keys((await f.artifacts.readManifest())!.manifest.stateAuthorities!).length, 6);
+  for (const unit of units) assert.equal((await served(f.artifacts, "IL", unit.family))?.version, `${unit.pointers.map(p => promotedPointerVersion(p.recordClass, p.scope, pointer(p.recordClass, p.scope, `${unit.family}-v1`))).join("|")}`);
 });
 
 test("an unchanged sweep of every state and territory ballot launches no child and reads no payload", async t => {
@@ -125,9 +133,12 @@ test("an unchanged sweep of every state and territory ballot launches no child a
     states[unit.state] = ref(f.put(p.recordClass, p.scope, `${unit.state}-v1`));
   }
   assert.equal(Object.keys(states).length, REGISTRY_STATES.length);
-  await publishReaderEdgeArtifacts(null, metadata, { store: f.artifacts, now: NOW, stateAuthorities: { "ballot-contests": states } });
-  const outcome = await publishSupervisorReaderEdge(f.store, NOW, units.flatMap(unit => unit.pointers), { artifactStore: f.boundedArtifacts,
+  await seed(f.artifacts, states);
+  const sweep = () => publishSupervisorReaderEdge(f.store, NOW, units.flatMap(unit => unit.pointers), { artifactStore: f.boundedArtifacts,
     stateArtifactChildren: { slots: f.slots, launch: async () => assert.fail("unchanged sweep must not launch") } }, ENV);
+  assert.equal((await sweep()).ok, true, "the first sweep answers every unpromoted family absent without a child");
+  t.mock.method(f.artifacts, "writeJsonPointer", (key: string) => assert.fail(`unchanged sweep wrote ${key}`));
+  const outcome = await sweep();
   assert.equal(outcome.ok, true);
   assert.equal(outcome.readerEdge, "CURRENT");
   assert.ok(f.reads.every(row => row.scopes.every(scope => /^US-[A-Z]{2}:/.test(scope))));
@@ -153,7 +164,7 @@ test("independent state children overlap while each holds its own memory admissi
 
 test("failed child launch releases admission, retains the served state, and retries", async t => {
   const f = fixture(t), first = f.put(IL.recordClass, IL.scope, "il-v1");
-  await publishReaderEdgeArtifacts(null, metadata, { store: f.artifacts, now: NOW, stateAuthorities: { "ballot-contests": { IL: ref(first) } } });
+  await seed(f.artifacts, { IL: ref(first) });
   const next = f.put(IL.recordClass, IL.scope, "il-v2");
   let attempts = 0;
   const launch: BoundedChildLauncher = async command => { if (++attempts === 1) throw new Error("spawn failed"); return success(command); };
@@ -161,11 +172,11 @@ test("failed child launch releases admission, retains the served state, and retr
     stateArtifactChildren: { slots: f.slots, launch } }, ENV);
   assert.equal((await publish()).ok, false);
   assert.equal(f.active.size, 0);
-  assert.equal((await f.artifacts.readManifest())!.manifest.stateAuthorities!["ballot-contests"]!.IL.version, first);
+  assert.equal((await served(f.artifacts, "IL"))?.version, first);
   assert.equal((await publish()).ok, true);
   assert.equal(attempts, 2);
   assert.equal(f.active.size, 0);
-  assert.equal((await f.artifacts.readManifest())!.manifest.stateAuthorities!["ballot-contests"]!.IL.version, next);
+  assert.equal((await served(f.artifacts, "IL"))?.version, next);
 });
 
 test("admission failure never launches a child or leaves a reservation", async t => {
@@ -175,23 +186,23 @@ test("admission failure never launches a child or leaves a reservation", async t
       launch: async () => assert.fail("launch must await admission") } }, ENV);
   assert.equal(outcome.ok, false);
   assert.equal(f.active.size, 0);
-  assert.equal((await f.artifacts.readManifest())!.manifest.stateAuthorities?.["ballot-contests"]?.IL, undefined);
+  assert.equal(await served(f.artifacts, "IL"), undefined);
 });
 
-for (const race of ["pointer", "manifest"] as const) test(`a concurrent ${race} change cannot be overwritten by an older child`, async t => {
+for (const race of ["promotion", "edge pointer"] as const) test(`a concurrent ${race} change cannot be overwritten by an older child`, async t => {
   const f = fixture(t), first = f.put(IL.recordClass, IL.scope, "il-v1");
-  await publishReaderEdgeArtifacts(null, metadata, { store: f.artifacts, now: NOW, stateAuthorities: { "ballot-contests": { IL: ref(first) } } });
+  await seed(f.artifacts, { IL: ref(first) });
   f.put(IL.recordClass, IL.scope, "il-v2");
   const third = promotedPointerVersion(IL.recordClass, IL.scope, pointer(IL.recordClass, IL.scope, "il-v3"));
   const outcome = await publishSupervisorReaderEdge(f.store, NOW, [IL], { artifactStore: f.boundedArtifacts,
     stateArtifactChildren: { slots: f.slots, launch: async command => {
-      if (race === "pointer") f.put(IL.recordClass, IL.scope, "il-v3");
-      else await publishReaderEdgeArtifacts(null, metadata, { store: f.artifacts, now: NOW, stateAuthorities: { "ballot-contests": { IL: ref(third) } } });
+      if (race === "promotion") f.put(IL.recordClass, IL.scope, "il-v3");
+      else await seed(f.artifacts, { IL: ref(third) });
       return success(command);
     } } }, ENV);
   assert.equal(outcome.ok, false);
   assert.equal(f.active.size, 0);
-  assert.equal((await f.artifacts.readManifest())!.manifest.stateAuthorities!["ballot-contests"]!.IL.version, race === "pointer" ? first : third);
+  assert.equal((await served(f.artifacts, "IL"))?.version, race === "promotion" ? first : third);
 });
 
 test("the actual state artifact CLI runs with the production TypeScript launcher and only exact-state SQL", async t => {
@@ -218,9 +229,10 @@ neonConfig.fetchFunction = async (_url, init) => {
   assert.ok(Buffer.byteLength(lines[0]) < 1024);
   const entry = JSON.parse(lines[0].slice("STATE_AUTHORITY_ARTIFACT=".length)) as PublishedStateAuthority;
   assert.equal(entry.versionId, version);
-  const edge = await ensureReaderAuthorityEdge({ stateAuthorities: { "ballot-contests": { IL: entry.artifact } } },
-    new LocalFileArtifactStore(parentEnv.WTP_READER_EDGE_DIR), ["ballot-contests"]);
-  const published = await edge.stateAuthorities?.load("ballot-contests", "IL");
+  const edgeStore = new LocalFileArtifactStore(parentEnv.WTP_READER_EDGE_DIR);
+  await seed(edgeStore, { IL: entry });
+  const edge = await ensureReaderAuthorityEdge(null, edgeStore, ["ballot-contests"]);
+  const published = await edge!.stateAuthorities?.load("ballot-contests", "IL");
   assert.deepEqual(published?.entries, [{ kind: "NOT_RECORDED", recordClass: IL.recordClass, scope: IL.scope }]);
   const captured = readFileSync(queries, "utf8").trim().split("\n").map(line => JSON.parse(line) as { query: string; params: string[] });
   assert.ok(captured.length >= 3);
@@ -247,9 +259,9 @@ neonConfig.fetchFunction = async (_url, init) => {
   assert.ok(registryLine);
   const registryEntry = JSON.parse(registryLine.slice("STATE_AUTHORITY_ARTIFACT=".length)) as PublishedStateAuthority;
   assert.equal(registryEntry.versionId, registryVersion);
-  const registryEdge = await ensureReaderAuthorityEdge({ stateAuthorities: { "registry-runtime": { PR: registryEntry.artifact } } },
-    new LocalFileArtifactStore(parentEnv.WTP_READER_EDGE_DIR), ["registry-runtime"]);
-  assert.deepEqual((await registryEdge.stateAuthorities?.load("registry-runtime", "PR"))?.entries,
+  await seed(edgeStore, { PR: registryEntry }, "registry-runtime");
+  const registryEdge = await ensureReaderAuthorityEdge(null, edgeStore, ["registry-runtime"]);
+  assert.deepEqual((await registryEdge!.stateAuthorities?.load("registry-runtime", "PR"))?.entries,
   [{ kind: "NOT_RECORDED", recordClass: "REGISTRY_RUNTIME_BINDING", scope: registryScope }]);
 
 });

@@ -3156,5 +3156,29 @@
     "gates": "pass",
     "at": "2026-10-17T07:28:55Z",
     "note": "merge of main (release 50 merge commit, no file changes) into the tested river; gates rerun on this exact SHA"
+  },
+  {
+    "lane": "edge-publish",
+    "steps": [
+      "EP-01"
+    ],
+    "ready_sha": "c1d9394f2e2d9aeb6caccce5db4758dcb7e11834",
+    "merge_sha": "7ce766af30ae3a4390826d471e023c73eab296d9",
+    "river_sha": "3663b15a376c7f576838393b38dac90190f80e5e",
+    "tested_sha": "3663b15a376c7f576838393b38dac90190f80e5e",
+    "gates": "pass",
+    "at": "2026-10-17T08:42:11Z"
+  },
+  {
+    "lane": "admin-country",
+    "steps": [
+      "ADMIN-COUNTRY"
+    ],
+    "ready_sha": "86fbd855afc90166cda940dc2b8563c44273b151",
+    "merge_sha": "3b9f78a650f25941a1f58783555136e52db49ddc",
+    "river_sha": "3663b15a376c7f576838393b38dac90190f80e5e",
+    "tested_sha": "3663b15a376c7f576838393b38dac90190f80e5e",
+    "gates": "pass",
+    "at": "2026-10-17T08:42:11Z"
   }
 ]

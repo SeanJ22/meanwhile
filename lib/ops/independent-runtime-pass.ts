@@ -102,7 +102,12 @@ export class IndependentRuntimeLaneScheduler {
 }
 
 /** Where a standing child learns the deadline its lane gave it. */
-export const PASS_DEADLINE_ENV = "WTP_PASS_DEADLINE_AT";
+const PASS_DEADLINE_ENV = "WTP_PASS_DEADLINE_AT";
+
+/** A standing child's environment with its lane deadline. */
+export function withPassDeadline(env: NodeJS.ProcessEnv, deadlineMs: number): NodeJS.ProcessEnv {
+  return { ...env, [PASS_DEADLINE_ENV]: new Date(deadlineMs).toISOString() };
+}
 
 /** The deadline a standing child was given; none when run by hand. */
 export function passDeadlineFromEnv(env: Readonly<Record<string, string | undefined>> = process.env): number {

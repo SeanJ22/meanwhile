@@ -2,7 +2,6 @@ import { spawn, type ChildProcess } from "node:child_process";
 import type { BoundedChildCommand, BoundedChildResult } from "../lib/civic-data/bounded-child-pass.ts";
 import { RESEARCH_STALL_PROBE, progressLines } from "../lib/control-plane/scheduler/round-progress.ts";
 import { vitalSignsLineFilter, type NeonBytesHour } from "../lib/db/transfer-by-caller.ts";
-import { PASS_DEADLINE_ENV } from "../lib/ops/independent-runtime-pass.ts";
 
 export const RUNTIME_NO_PROGRESS_MS = 10 * 60_000;
 /** How long before the no-progress limit the child is asked what it is waiting on; its answer is not progress. */
@@ -86,7 +85,7 @@ export async function runRuntimeChildren(
     readonly onStdout?: (id: string, output: string) => void;
     readonly onStderr?: (id: string, output: string) => void;
     readonly noProgressMs?: number;
-    /** The lane's deadline: the child is told it and its process tree is ended when it passes. */
+    /** The lane's deadline: the child's process tree is ended when it passes. */
     readonly deadlineMs?: number;
     readonly onStarted?: (id: string, child: ChildProcess) => void },
 ): Promise<readonly BoundedChildResult[]> {
@@ -104,10 +103,9 @@ export async function runRuntimeChildren(
     const progress = { stdout: progressLines(), stderr: progressLines() };
     const report = (part: NeonBytesHour) => vitalSignsSink?.(part);
     const reports = { stdout: vitalSignsLineFilter(report), stderr: vitalSignsLineFilter(report) };
-    const env = command.env ?? options.env;
     const child = spawn(command.executable, [...command.args], {
       cwd: options.cwd,
-      env: options.deadlineMs === undefined ? env : { ...env, [PASS_DEADLINE_ENV]: new Date(options.deadlineMs).toISOString() },
+      env: command.env ?? options.env,
       windowsHide: true,
       detached: process.platform !== "win32",
       stdio: command.executable === process.execPath ? ["ignore", "pipe", "pipe", "ipc"] : ["ignore", "pipe", "pipe"],

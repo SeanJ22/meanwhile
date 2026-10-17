@@ -79,7 +79,7 @@ import {
 import { childFatalLine, childStderrCause, nativeAbortLine } from "../lib/ops/fatal-line.ts";
 import { hunterLaneArmingPath } from "../lib/control-plane/workers/hunter-lane-arming.ts";
 import { HUNTER_LANE_LIFE_MS, HUNTER_WORKER_WALL_MS } from "../lib/control-plane/workers/hunter-lane.ts";
-import { IndependentRuntimeLaneScheduler } from "../lib/ops/independent-runtime-pass.ts";
+import { IndependentRuntimeLaneScheduler, withPassDeadline } from "../lib/ops/independent-runtime-pass.ts";
 import { boundedBeat } from "../lib/ops/bounded-beat.ts";
 import { publishNowLane } from "../lib/civic-data/publish-now.ts";
 import {
@@ -702,7 +702,7 @@ async function runRoutineCivicData(deadlineMs: number): Promise<void> {
     id: "routine-civic-data",
     executable: process.execPath,
     args: [...TS_CHILD, "scripts/routine-civic-data-runner.mts", ...(ownerRefresh?.args ?? [])],
-    env: childEnvironment,
+    env: withPassDeadline(childEnvironment, deadlineMs),
   }], {
     cwd: CODE_ROOT,
     env: process.env,
@@ -756,7 +756,7 @@ async function runPublishNow(deadlineMs: number): Promise<void> {
     id: "publish-now",
     executable: process.execPath,
     args: [...TS_CHILD, "scripts/publish-now-runner.mts"],
-    env: standingChildEnvironment("ROUTINE_SUPERVISOR", { ...process.env, [ROUTINE_SUPERVISOR_STARTED_AT_ENV]: startedAt }),
+    env: withPassDeadline(standingChildEnvironment("ROUTINE_SUPERVISOR", { ...process.env, [ROUTINE_SUPERVISOR_STARTED_AT_ENV]: startedAt }), deadlineMs),
   }], {
     cwd: CODE_ROOT,
     env: process.env,
@@ -843,7 +843,7 @@ async function runIntakeRuntime(deadlineMs: number): Promise<void> {
     id: "intake-runtime",
     executable: process.execPath,
     args: [...TS_CHILD, "scripts/intake-tripwire.mts"],
-    env: standingChildEnvironment("INTAKE_RUNTIME"),
+    env: withPassDeadline(standingChildEnvironment("INTAKE_RUNTIME"), deadlineMs),
   }], {
     cwd: CODE_ROOT,
     env: process.env,
@@ -1164,7 +1164,7 @@ async function runHunterLane(deadlineMs: number): Promise<void> {
     id: "hunter-lane",
     executable: process.execPath,
     args: [...TS_CHILD, "scripts/hunter-lane.mts", `--provider=${provider}`],
-    env: standingChildEnvironment("RESEARCH_CYCLE"),
+    env: withPassDeadline(standingChildEnvironment("RESEARCH_CYCLE"), deadlineMs),
   }], {
     cwd: CODE_ROOT,
     env: process.env,
@@ -1202,7 +1202,7 @@ async function runPlatformCensus(deadlineMs: number): Promise<void> {
     const [run] = await runRuntimeChildren([{
       id: "platform-census", executable: process.execPath,
       args: [...TS_CHILD, "scripts/platform-census-runner.mts"],
-      env: standingChildEnvironment("ROUTINE_SUPERVISOR"),
+      env: withPassDeadline(standingChildEnvironment("ROUTINE_SUPERVISOR"), deadlineMs),
     }], { cwd: CODE_ROOT, env: process.env, maxBufferBytes: 16 * 1024 * 1024, deadlineMs,
       onStarted: (_id, child) => { if (child.pid) release.observe?.(child.pid); },
       onStdout: (_id, output) => process.stdout.write(output), onStderr: (_id, output) => process.stderr.write(output) });

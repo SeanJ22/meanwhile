@@ -4,6 +4,7 @@ import { readFileSync } from "node:fs";
 import { RUNTIME_NO_PROGRESS_MS, STALL_PROBE_LEAD_MS, runRuntimeChildren } from "../scripts/pilot-runtime-child.mts";
 import { MEMORY_WAIT_REPORT_EVERY_MS, reportingWorkerSlots, workerProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
+import { withPassDeadline } from "../lib/ops/independent-runtime-pass.ts";
 import { lastChildLines, recordFailedCycle } from "../lib/control-plane/scheduler/cycle-finalization.ts";
 
 const slotsModule = JSON.stringify(new URL("../lib/control-plane/workers/worker-slots.ts", import.meta.url).href);
@@ -101,7 +102,7 @@ test("a standing child that keeps printing still ends at its lane deadline, and 
   const started = Date.now();
   const [result] = await runRuntimeChildren([{ id: "routine-civic-data", executable: process.execPath,
     args: ["-e", "console.log('deadline ' + process.env.WTP_PASS_DEADLINE_AT); setInterval(() => console.log('progress ' + Date.now()), 50)"] }], {
-    cwd: process.cwd(), env: process.env, maxBufferBytes: 1 << 20, deadlineMs });
+    cwd: process.cwd(), env: withPassDeadline(process.env, deadlineMs), maxBufferBytes: 1 << 20, deadlineMs });
   assert.equal(result!.termination, "TIMED_OUT");
   assert.match(result!.errorMessage!, /^PASS_TIME_BUDGET: routine-civic-data reached its lane deadline/);
   assert.match(result!.stdout, new RegExp(`deadline ${new Date(deadlineMs).toISOString()}`));

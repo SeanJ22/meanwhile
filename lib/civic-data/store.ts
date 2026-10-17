@@ -1852,6 +1852,19 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     )`;
   }
 
+  /** Each large section is encoded, written and released before the next, so the whole candidate is never encoded at once. */
+  private async storeNavigationCandidate(candidate: RoutineCandidate, navigationIndex: unknown): Promise<RoutineCandidate> {
+    const { readModel, normalizedPayload, civicRecords, identities, changeSet, excludedFacts, ...rest } = candidate;
+    const stored: Record<string, unknown> = await this.payloadParts.store({ ...rest, navigationIndex },
+      ["id", "sourceId", "recordClass", "scope", "retrieval", "normalization", "temporal", "bootstrapImport", "navigationIndex"]) as Record<string, unknown>;
+    stored.readModel = await this.payloadParts.store(readModel);
+    stored.normalizedPayload = normalizedPayload === readModel ? stored.readModel : await this.payloadParts.store(normalizedPayload);
+    for (const [key, value] of Object.entries({ civicRecords, identities, changeSet, excludedFacts })) {
+      if (value !== undefined) stored[key] = await this.payloadParts.store(value);
+    }
+    return stored as unknown as RoutineCandidate;
+  }
+
   async create(record: CandidateVersionRecord, firstEvent: CandidateEvent): Promise<void> {
     this.assertCandidateMutationAuthority(record.candidate);
     assertInitialRecord(record, firstEvent);
@@ -1864,10 +1877,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     const stored = stateAuthority || ["REGISTRY_RUNTIME_BINDING", "STATE_ROLL_CALL", "CENSUS_REFERENCE"].includes(record.candidate.recordClass)
       ? await this.payloadParts.store(candidate,
         ["id", "sourceId", "recordClass", "scope", "retrieval", "normalization", "temporal", "bootstrapImport"], stateAuthority ? ["readModel"] : undefined) as RoutineCandidate
-      : navigationIndex
-        ? await this.payloadParts.store({ ...record.candidate, navigationIndex },
-          ["id", "sourceId", "recordClass", "scope", "retrieval", "normalization", "temporal", "bootstrapImport", "navigationIndex"]) as RoutineCandidate
-        : record.candidate;
+      : navigationIndex ? await this.storeNavigationCandidate(record.candidate, navigationIndex) : record.candidate;
     await this.db.batch([
       this.db.insert(civicDataCandidates).values({
         id: record.candidate.id,

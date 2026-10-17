@@ -5,7 +5,7 @@ import test from "node:test";
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { prepareStateAuthorityArtifact, ensureReaderAuthorityEdge, type PublishAuthorityValue } from "../lib/meetings/edge-serving.ts";
+import { authorityPointerKey, prepareStateAuthorityArtifact, ensureReaderAuthorityEdge, type PublishAuthorityValue } from "../lib/meetings/edge-serving.ts";
 import { READER_ARTIFACT_FORMAT_VERSION } from "../lib/meetings/edge-artifacts.ts";
 import { LocalFileArtifactStore, type ReaderArtifactStore } from "../lib/meetings/edge-store.ts";
 import { stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
@@ -52,9 +52,8 @@ test("registry state artifacts retain their exact pointer and report a failed re
     scope: stateRegistryRuntimeScope("IL") }] };
   const published = await prepareStateAuthorityArtifact("registry-runtime", "IL", { value, versionId: "il-v1" }, store,
     "2026-10-16T12:00:00.000Z");
-  const edge = await ensureReaderAuthorityEdge({ stateAuthorities: {
-    "registry-runtime": { IL: published.artifact, NH: published.artifact },
-  } }, store, ["registry-runtime"]);
+  for (const state of ["IL", "NH"]) await store.writeJsonPointer(authorityPointerKey("registry-runtime", state), published.artifact, null);
+  const edge = (await ensureReaderAuthorityEdge(null, store, ["registry-runtime"]))!;
   assert.ok(edge.stateAuthorities);
   assert.deepEqual(await edge.stateAuthorities.load("registry-runtime", "IL"), value);
   const warnings: unknown[][] = [];

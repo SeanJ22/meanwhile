@@ -90,7 +90,7 @@ test("a missing state ballot pointer is NOT_RECORDED and reads only the exact st
 test("Morris ballot and contacts use one state artifact and no foreign state", async () => {
   const entry = manualEdgeEntry("ballot-contests:NJ", projection, "nj-state-ballot-1");
   const reads: string[] = [];
-  const bundle = promotedFixtureBundle({ stateAuthorities: { states: { "ballot-contests": new Set(["NJ"]) }, load: async (family, state) => {
+  const bundle = promotedFixtureBundle({ stateAuthorities: { families: new Set(["ballot-contests"] as const), load: async (family, state) => {
     reads.push(`${family}:${state}`);
     assert.equal(family, "ballot-contests"); assert.equal(state, "NJ");
     return { kind: "PROMOTED_POINTERS", entries: [entry] };
@@ -107,7 +107,7 @@ test("Morris ballot and contacts use one state artifact and no foreign state", a
 });
 
 test("a failed state read cannot reuse contacts from an earlier request", async () => {
-  await withReaderAuthorityEdge(promotedFixtureBundle({ stateAuthorities: { states: { "ballot-contests": new Set(["NJ"]) }, load: async () => ({ kind: "PROMOTED_POINTERS", entries: [
+  await withReaderAuthorityEdge(promotedFixtureBundle({ stateAuthorities: { families: new Set(["ballot-contests"] as const), load: async () => ({ kind: "PROMOTED_POINTERS", entries: [
     { kind: "NOT_RECORDED", recordClass: "BALLOT_CANDIDACY", scope: "US-NJ:state-election-ballots" },
   ] }) } }), async () => {
     assert.equal((await readGenericBallotProjection("NJ")).kind, "NOT_RECORDED");

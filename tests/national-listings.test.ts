@@ -36,7 +36,7 @@ test("real Census contact values reach the area's listing and Ask in five region
     assert.equal(listing.website, new URL(get("web_address")).href);
     assert.ok(listing.associations.length);
     const value = { state, governments: [listing], divisions: [], bodies: [] } as unknown as RegistrationReadModel;
-    await withReaderAuthorityEdge({ edgeOnly: true, registrations: { states: new Set([state.toLowerCase()]), load: async code => {
+    await withReaderAuthorityEdge({ edgeOnly: true, registrations: { load: async code => {
       assert.equal(code, state.toLowerCase()); return { value, versionId: `fixture:${state}` };
     } } }, async () => {
       const read = await governmentListingsForDivisions(listing.associations.map(link => link.divisionId));

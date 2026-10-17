@@ -7,10 +7,12 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { GET as meetingsGET } from "../app/api/meetings/route.ts";
 import { resolveZip } from "../lib/geo/zcta.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
-import { publishReaderEdgeArtifacts } from "../lib/meetings/edge-serving.ts";
+import { publishReaderMeetings } from "../lib/meetings/edge-serving.ts";
 import { CoverageNotice } from "../components/map/coverage-notice.tsx";
 import { DataProvider } from "../lib/state/data.tsx";
 import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+import { publishPointers } from "./helpers/edge-pointers.ts";
+import { currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 
 for (const key of ["DATABASE_URL", "DATABASE_URL_UNPOOLED", "NEON_DATABASE_URL"]) delete process.env[key];
 await installRegistryAuthority();
@@ -222,11 +224,13 @@ for (const zip of ["85643", "85122", "85701"]) {
       }));
       const request = () => meetingsGET(new Request(`https://example.test/api/meetings?zip=${zip}&lat=${at.lat}&lng=${at.lng}&radiusKm=25`));
       const store = new LocalFileArtifactStore(dir);
+      const registry = await currentReaderAuthorityEdge()!.stateAuthorities!.load("registry-runtime", "AZ");
+      await publishPointers(store, { stateAuthorities: { "registry-runtime": { AZ: { versionId: "fixture:AZ", value: registry } } } });
       const publish = async (meetings: Meeting[]) => {
-        const result = await publishReaderEdgeArtifacts({ ...SNAPSHOT, meetings,
+        const result = await publishReaderMeetings({ ...SNAPSHOT, meetings,
           counts: { fresh: meetings.length, carried: 0, total: meetings.length } },
           { sourceThrough: SNAPSHOT.generatedAt, retrievedAt: SNAPSHOT.generatedAt, promotedThrough: SNAPSHOT.generatedAt },
-          { store, now: NOW.toISOString(), extras: { everydayRouting: null } });
+          { store, now: NOW.toISOString() });
         assert.equal(result.status, "PUBLISHED");
       };
       await publish(rows);

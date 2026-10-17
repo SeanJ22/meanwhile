@@ -11,7 +11,7 @@ import type { RegistrationReadModel } from "../registration/candidate.ts";
 import type { OutcomeSnapshot } from "../outcomes/types.ts";
 import type { PromotedCivicDataReadOptions, PromotedEdgeEntry } from "../civic-data/read-model.ts";
 import type { RoutineRecordClass } from "../civic-data/types.ts";
-import type { CensusDistrictEdge } from "../census-geography/district-edge.ts";
+import type { CodeSlice, Slice } from "../control-plane/admin-view/promoted-slices.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { currentReaderSelection, withReaderSelection, type ReaderSelection } from "../db/reader-route.ts";
 
@@ -34,20 +34,24 @@ export interface CommentAccessEdgeValue {
   readonly value: import("./comment-access.ts").CommentAccessProjection;
   readonly versionId: string;
 }
-/** A request loads only the jurisdictions it serves. Missing bytes fall back to the typed reader. */
+/** One place's published value; null value is the published answer that nothing is promoted there. */
+interface PlaceEdgeValue<T> {
+  readonly value: T | null;
+  readonly versionId: string;
+}
+
+/** Each load reads one jurisdiction's own pointer: null when none is published yet, and a throw when its bytes can't be read. */
 export interface StateLegislatorsEdgeValue {
-  readonly jurisdictions: ReadonlySet<string>;
-  readonly load: (jurisdiction: string) => Promise<EdgeServedValue<OfficialStateLegislatorReadModel> | null>;
+  readonly load: (jurisdiction: string) => Promise<PlaceEdgeValue<OfficialStateLegislatorReadModel> | null>;
 }
 
 export interface RegistrationsEdge {
-  readonly states: ReadonlySet<string>;
-  readonly load: (state: string) => Promise<{ readonly value: RegistrationReadModel; readonly versionId: string } | null>;
+  readonly load: (state: string) => Promise<PlaceEdgeValue<RegistrationReadModel> | null>;
 }
 
 interface StateAuthoritiesEdge {
   readonly key?: (family: StateAuthorityFamily, state: string) => string | null;
-  readonly states: Readonly<Partial<Record<StateAuthorityFamily, ReadonlySet<string>>>>;
+  readonly families: ReadonlySet<StateAuthorityFamily>;
   readonly load: (family: StateAuthorityFamily, state: string) => Promise<PromotedFamilyArtifactValue | null>;
 }
 
@@ -57,11 +61,13 @@ export interface ReaderAuthorityEdgeBundle {
   readonly loadPromoted?: (recordClass: RoutineRecordClass, scope: string) => Promise<PromotedEdgeEntry | null>;
   readonly stateAuthorities?: StateAuthoritiesEdge;
   readonly stateRegistryFacts?: { readonly key?: (state: string) => string | null; readonly load: (state: string) => Promise<{ readonly bodies: readonly BodyFacts[]; readonly versionId: string | null } | null> };
-  readonly censusDistricts?: { readonly value: CensusDistrictEdge; readonly versionId: string };
+  /** A ZIP's Census districts, from its state's own pointer. */
+  readonly censusDistricts?: { readonly slice: (zip: string) => Promise<Slice<CodeSlice>> };
   readonly federalDirectory?: FederalDirectoryEdgeValue;
   readonly campaignSites?: CampaignSitesEdgeValue;
   readonly stateLegislators?: StateLegislatorsEdgeValue;
   readonly meetingOutcomes?: MeetingOutcomesEdgeValue;
+  readonly everydayRouting?: { readonly value: { readonly projection: unknown }; readonly versionId: string };
   readonly commentAccess?: CommentAccessEdgeValue;
   readonly registrations?: RegistrationsEdge;
 
@@ -135,8 +141,7 @@ export async function ensurePromotedEdge(recordClass: RoutineRecordClass, scope:
   for (const scopedFamily of STATE_BALLOT_FAMILIES) {
     const state = stateFromBallotScope(scope, scopedFamily);
     const family: StateAuthorityFamily = scopedFamily === "candidate-corpus" ? "candidate-publications" : scopedFamily;
-    if (!state || !stateEdge.states[family]) continue;
-    if (!stateEdge.states[family]!.has(state)) return null;
+    if (!state || !stateEdge.families.has(family)) continue;
     let entries = loadedStateEntries.get(bundle);
     if (!entries) { entries = new Map(); loadedStateEntries.set(bundle, entries); }
     const loaded = await stateEdge.load(family, state).catch(error => {

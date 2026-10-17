@@ -26,8 +26,9 @@ import { FEDERAL_KEY_VOTE_SCOPE, FEDERAL_ROLLCALL_SCOPE } from "../votes/data-pl
 import { readOfficeholderStatementsProjection } from "../corpus/data-plane.ts";
 import { readExecutiveActionsProjection } from "../officials/executive-actions.ts";
 import { AZ_OFFICIAL_ACTIONS_CONTRACT } from "../outcomes/data-plane.ts";
-import { STATE_AUTHORITY_FAMILIES, type StateAuthorityFamily, type GlobalPromotedAuthorityFamily, type PromotedFamilyArtifactValue, type ReaderManifest } from "../meetings/edge-artifacts.ts";
-import { prepareStateAuthorityArtifact, servedAuthorityVersion, type PublishAuthorityCarried, type PublishAuthorityValue, type PublishStateAuthorities, type PublishedStateAuthority } from "../meetings/edge-serving.ts";
+import { STATE_AUTHORITY_FAMILIES, type StateAuthorityFamily, type GlobalPromotedAuthorityFamily, type PromotedFamilyArtifactValue } from "../meetings/edge-artifacts.ts";
+import { authorityPlaceOfScope, authorityPointerKey, PLACE_SPLIT_FAMILIES, prepareStateAuthorityArtifact, readServedPointer, readServedPromotedFamily, writeAuthorityPointer,
+  type PublishAuthorityValue, type PublishedStateAuthority } from "../meetings/edge-serving.ts";
 import type { ReaderArtifactStore } from "../meetings/edge-store.ts";
 import { PRL_ARCHIVE_SCOPE, readPrlArchiveProjection } from "../sources/prl/archive-publication.ts";
 import { PRL_CONTRACT } from "../sources/prl/data-plane.ts";
@@ -112,24 +113,19 @@ export function promotedFamilyVersion(versions: readonly string[]): string {
   return [...versions].sort().join("|");
 }
 
-interface PromotedEdgeFamiliesRead {
-  readonly authority: Partial<Record<GlobalPromotedAuthorityFamily, PublishAuthorityValue | PublishAuthorityCarried>>;
-  readonly skipped: readonly string[];
-}
-
 async function readFamily(input: {
   store: CivicDataReadStore & { readonly readPromotionIdentity: NonNullable<CivicDataReadStore["readPromotionIdentity"]> };
   pointers: readonly PromotedEdgePointer[];
   served: string | null;
   now: string;
   readPrior?: () => Promise<PromotedFamilyArtifactValue | null>;
-}): Promise<{ authority: PublishAuthorityValue | PublishAuthorityCarried; skipped: string[] }> {
+}): Promise<{ authority: PublishAuthorityValue | null; skipped: string[] }> {
   const { store, pointers, served, now } = input;
   const skipped: string[] = [];
   if (served !== null) {
     const current = promotedFamilyVersion(await Promise.all(pointers.map(async ({ recordClass, scope }) =>
       promotedPointerVersion(recordClass, scope, await store.readPromotionIdentity(recordClass, scope)))));
-    if (current === served) return { authority: { versionId: served, carried: true }, skipped };
+    if (current === served) return { authority: null, skipped };
   }
   const entries: PromotedEdgeEntry[] = [], versions: string[] = [];
   let prior: PromotedFamilyArtifactValue | null | undefined;
@@ -159,13 +155,13 @@ async function readFamily(input: {
   return { authority: { value: { kind: "PROMOTED_POINTERS", entries }, versionId: promotedFamilyVersion(versions) }, skipped };
 }
 
-export async function readPromotedEdgeFamilies(input: {
+/** Each family (each place of a family that grows with places) checks its own pointer and, when it moved, writes it at once. */
+export async function publishPromotedEdgeFamilies(input: {
   readonly store: CivicDataReadStore & Pick<RoutineDataStore, "listPromotionScopes"> & { readonly readPromotionIdentity: NonNullable<CivicDataReadStore["readPromotionIdentity"]> };
-  readonly servedManifest: Pick<ReaderManifest, "authorityArtifacts"> | null;
+  readonly artifactStore: ReaderArtifactStore;
   readonly now: string;
   readonly families?: Readonly<Partial<Record<GlobalPromotedAuthorityFamily, readonly PromotedEdgePointer[]>>>;
-  readonly readServedFamily?: (family: GlobalPromotedAuthorityFamily) => Promise<PromotedFamilyArtifactValue | null>;
-}): Promise<PromotedEdgeFamiliesRead> {
+}): Promise<{ readonly published: readonly string[]; readonly skipped: readonly string[] }> {
   const families = { ...input.families ?? promotedEdgePointers() };
   if (families["other-reader-data"]?.length === 0) {
     const known = new Set([...Object.values(promotedEdgePointers()).flat(), ...selectedStateEdgePointers(null).flatMap(row => row.pointers)].map(pointer => `${pointer.recordClass}:${pointer.scope}`));
@@ -175,17 +171,28 @@ export async function readPromotedEdgeFamilies(input: {
   }
   if (families["state-votes"]?.length === 0) families["state-votes"] = (await input.store.listPromotionScopes?.(["STATE_ROLL_CALL", "STATE_LEGISLATOR_VOTES"]) ?? [])
     .map(pointer => ({ ...pointer, reader: options => readPromotedCivicData(pointer.recordClass, pointer.scope, options) }));
-  const authority: PromotedEdgeFamiliesRead["authority"] = {};
-  const skipped: string[] = [];
+  const published: string[] = [], skipped: string[] = [];
   for (const [family, pointers] of Object.entries(families) as [GlobalPromotedAuthorityFamily, readonly PromotedEdgePointer[]][]) {
-    try {
-      const result = await readFamily({ ...input, pointers, served: servedAuthorityVersion(input.servedManifest, family),
-        readPrior: () => input.readServedFamily?.(family) ?? Promise.resolve(null) });
-      authority[family] = result.authority;
-      skipped.push(...result.skipped.map(reason => `${family} ${reason}`));
-    } catch (error) { skipped.push(`${family} ${error instanceof Error ? error.message : String(error)}`); }
+    const places = new Map<string | undefined, PromotedEdgePointer[]>();
+    for (const pointer of pointers) {
+      const place = PLACE_SPLIT_FAMILIES.has(family) ? authorityPlaceOfScope(pointer.scope) : undefined;
+      places.set(place, [...places.get(place) ?? [], pointer]);
+    }
+    if (!PLACE_SPLIT_FAMILIES.has(family) && !places.size) places.set(undefined, []);
+    for (const [place, held] of places) {
+      const name = place === undefined ? family : `${family}/${place}`;
+      try {
+        const served = await readServedPointer(input.artifactStore, authorityPointerKey(family, place));
+        const result = await readFamily({ ...input, pointers: held, served: served?.ref.layout === "records" ? served.ref.version : null,
+          readPrior: () => readServedPromotedFamily(family, served?.ref, input.artifactStore, place) });
+        skipped.push(...result.skipped.map(reason => `${name} ${reason}`));
+        if (!result.authority) continue;
+        if (await writeAuthorityPointer(input.artifactStore, family, place, result.authority, served, input.now)) published.push(name);
+        else skipped.push(`${name} READER_POINTER_RACED`);
+      } catch (error) { skipped.push(`${name} ${error instanceof Error ? error.message : String(error)}`); }
+    }
   }
-  return { authority, skipped };
+  return { published, skipped };
 }
 
 export function selectedStateEdgePointers(selected: readonly Pick<PromotedPointerIdentity, "recordClass" | "scope">[] | null) {
@@ -199,24 +206,15 @@ export function selectedStateEdgePointers(selected: readonly Pick<PromotedPointe
   });
 }
 
-export async function readPromotedStateEdgeFamilies(input: {
+/** The artifact of one state family, built from its promoted pointers whether or not anything is promoted there. */
+export async function prepareStateEdgeFamily(input: {
   readonly store: CivicDataReadStore & { readonly readPromotionIdentity: NonNullable<CivicDataReadStore["readPromotionIdentity"]> };
-  readonly servedManifest: Pick<ReaderManifest, "stateAuthorities"> | null;
   readonly now: string;
-  readonly selected: ReturnType<typeof selectedStateEdgePointers>;
+  readonly unit: ReturnType<typeof selectedStateEdgePointers>[number];
   readonly artifactStore: ReaderArtifactStore;
-  readonly readServedFamily: (family: StateAuthorityFamily, state: string) => Promise<PromotedFamilyArtifactValue | null>;
-}): Promise<{ stateAuthorities: PublishStateAuthorities; skipped: string[] }> {
-  const stateAuthorities: Partial<Record<StateAuthorityFamily, Record<string, PublishedStateAuthority | PublishAuthorityCarried>>> = {};
-  const skipped: string[] = [];
-  for (const { state, family, pointers } of input.selected) {
-    try {
-      const result = await readFamily({ ...input, pointers, served: input.servedManifest?.stateAuthorities?.[family]?.[state]?.version ?? null,
-        readPrior: () => input.readServedFamily(family, state) });
-      (stateAuthorities[family] ??= {})[state] = "carried" in result.authority ? result.authority
-        : await prepareStateAuthorityArtifact(family, state, result.authority, input.artifactStore, input.now);
-      skipped.push(...result.skipped.map(reason => `${state}:${family} ${reason}`));
-    } catch (error) { skipped.push(`${state}:${family} ${error instanceof Error ? error.message : String(error)}`); }
-  }
-  return { stateAuthorities, skipped };
+}): Promise<{ entry: PublishedStateAuthority; skipped: string[] }> {
+  const { state, family, pointers } = input.unit;
+  const result = await readFamily({ store: input.store, now: input.now, pointers, served: null });
+  return { entry: await prepareStateAuthorityArtifact(family, state, result.authority!, input.artifactStore, input.now),
+    skipped: result.skipped.map(reason => `${state}:${family} ${reason}`) };
 }

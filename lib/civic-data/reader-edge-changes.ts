@@ -18,7 +18,7 @@ const SAVE_SQL = `INSERT INTO pass_cursor (name, position) VALUES ($1, $2)
 
 export interface EdgePointer { readonly recordClass: RoutineRecordClass; readonly scope: string }
 
-export interface ReaderEdgeChanges {
+interface ReaderEdgeChanges {
   /** What the edge covers that moved since it last published: promoted pointers, and the registry when facts are queued. */
   readonly pointers: readonly EdgePointer[];
   /** Marks these changes published; run only once the edge took them. */

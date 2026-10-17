@@ -6,10 +6,12 @@ const CURSOR = "reader-edge";
 // A promotion stamped just before the last publish read the clock may commit after it.
 const OVERLAP = "1 minute";
 
+// One branch for a first read and one index range after it, so a quiet minute reads no pointer rows.
 const CHANGES_SQL = `WITH since AS (SELECT (SELECT position::timestamptz - interval '${OVERLAP}' FROM pass_cursor WHERE name = $1) AS at)
-  SELECT p.record_class, p.scope, NULL::text AS through FROM civic_data_promotions p, since WHERE since.at IS NULL OR p.promoted_at > since.at
+  SELECT p.record_class, p.scope, NULL::text AS through FROM civic_data_promotions p WHERE (SELECT at FROM since) IS NULL
+  UNION ALL SELECT p.record_class, p.scope, NULL FROM civic_data_promotions p WHERE p.promoted_at > (SELECT at FROM since)
   UNION ALL SELECT NULL, NULL, now()::text
-  UNION ALL SELECT 'FACTS', NULL, NULL FROM since WHERE EXISTS (SELECT 1 FROM rebuild_queue q WHERE since.at IS NULL OR q.queued_at > since.at)`;
+  UNION ALL SELECT 'FACTS', NULL, NULL WHERE EXISTS (SELECT 1 FROM rebuild_queue q WHERE (SELECT at FROM since) IS NULL OR q.queued_at > (SELECT at FROM since))`;
 
 const SAVE_SQL = `INSERT INTO pass_cursor (name, position) VALUES ($1, $2)
   ON CONFLICT (name) DO UPDATE SET position = GREATEST(pass_cursor.position::timestamptz, EXCLUDED.position::timestamptz)::text`;

@@ -21,7 +21,6 @@ import {
   meetingIndexRowScope,
   meetingStateOf,
   MEETING_BODY_FORMAT_VERSION,
-  NATIONAL_MEETING_STATE,
   placesOf,
   readerIndexOf,
   sha256OfJson,
@@ -175,8 +174,9 @@ function divisionsOf(bodyId: string, registry: MeetingRegistryRead | null, fallb
   return [...new Set(ids.filter((id): id is string => typeof id === "string" && id.length > 0).map(divisionOf))].sort();
 }
 
-const statesOfDivisions = (divisions: readonly string[]): string[] =>
-  divisions.length === 0 ? [NATIONAL_MEETING_STATE] : [...new Set(divisions.map((division) => meetingStateOf(division)))].sort();
+/** The states a body is filed in: where its divisions lie, or the state its own id names when it serves no division. */
+const statesOfBody = (bodyId: string, divisions: readonly string[]): string[] =>
+  divisions.length === 0 ? [meetingStateOf(bodyId)] : [...new Set(divisions.map((division) => meetingStateOf(division)))].sort();
 
 async function putBlob(pass: Pass, value: unknown): Promise<string> {
   const bytes = encodeMeetingBlob(value);
@@ -316,7 +316,7 @@ async function composeBody(pass: Pass, state: string, work: BodyWork): Promise<C
   const checks = meetingFreshChecks(composed.couplings);
   const next = { checkedAt: checks.checkedAt, routes: checks.routes };
   const unchanged = held !== null && held.content === content;
-  const refiled = work.entry === undefined || !sameJson(statesOfDivisions(work.entry.divisions), statesOfDivisions(divisions));
+  const refiled = work.entry === undefined || !sameJson(statesOfBody(work.bodyId, work.entry.divisions), statesOfBody(work.bodyId, divisions));
   if (unchanged) pass.stats.unchanged += 1;
   if (unchanged && !refiled && !work.force) {
     const pointer = { ...held, composition, checks: next };
@@ -427,14 +427,14 @@ async function processState(pass: Pass, state: string, dirty: ReadonlySet<string
       if (result.kind === "SAME" || result.kind === "ABSENT") continue;
       if (result.kind === "EMPTY") {
         if (item.entry !== undefined) {
-          for (const gone of statesOfDivisions(item.entry.divisions)) if (gone !== state) remove(gone, item.bodyId);
+          for (const gone of statesOfBody(item.bodyId, item.entry.divisions)) if (gone !== state) remove(gone, item.bodyId);
           delete bodies[item.bodyId]; changed = true;
         }
         continue;
       }
       const { filed } = result;
-      const targets = statesOfDivisions(filed.divisions);
-      const moved = item.entry === undefined ? [] : statesOfDivisions(item.entry.divisions).filter((held) => !targets.includes(held));
+      const targets = statesOfBody(item.bodyId, filed.divisions);
+      const moved = item.entry === undefined ? [] : statesOfBody(item.bodyId, item.entry.divisions).filter((held) => !targets.includes(held));
       for (const gone of moved) remove(gone, item.bodyId);
       for (const target of targets) {
         if (target === state) {
@@ -452,7 +452,8 @@ async function processState(pass: Pass, state: string, dirty: ReadonlySet<string
     }
   }
   for (const [bodyId, filed] of round?.copies ?? []) {
-    await file(pass, state, bodyId, filed);
+    const held = await heldPointer(pass, state, bodyId);
+    await file(pass, state, bodyId, held?.value.content === filed.pointer.content ? { ...filed, row: null } : filed);
     keep(bodyId, { divisions: filed.divisions, family: filed.family });
   }
   for (const bodyId of round?.removals ?? []) if (bodies[bodyId] !== undefined) { delete bodies[bodyId]; changed = true; }

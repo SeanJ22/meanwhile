@@ -30,8 +30,8 @@ import {
 } from "./snapshot.ts";
 
 export const MEETING_BODY_FORMAT_VERSION = 1 as const;
-/** The state key of a body whose divisions name no state. */
-export const NATIONAL_MEETING_STATE = "US";
+/** The state key of a body that names no state. */
+const NATIONAL_MEETING_STATE = "US";
 
 export const sha256OfJson = (value: unknown): string => createHash("sha256").update(JSON.stringify(value)).digest("hex");
 

@@ -53,7 +53,6 @@ import {
   mergeMeetingBodies,
   meetingStateOf,
   MEETING_BODY_FORMAT_VERSION,
-  NATIONAL_MEETING_STATE,
   type MeetingBodyRecord,
   type MeetingBodyChecks,
   type MeetingBodyPointer,
@@ -1097,7 +1096,7 @@ async function readReaderEdgeMeetingsHeld(
   const bodyIds = [...new Set(options.bodyIds ?? [])];
   if (divisions.length === 0 && bodyIds.length === 0) return NOT_A_PLACE;
   const states = [...new Set([...(options.states ?? []).map((state) => state.toUpperCase()), ...divisions.map((id) => meetingStateOf(id)),
-    ...bodyIds.map((id) => meetingStateOf(id)), NATIONAL_MEETING_STATE])].sort();
+    ...bodyIds.map((id) => meetingStateOf(id))])].sort();
   const store = options.store === undefined ? resolveReaderArtifactStore() : options.store;
   let manifest: ReaderManifest | null = null;
   if (options.manifest !== undefined) manifest = options.manifest;

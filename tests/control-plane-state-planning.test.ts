@@ -198,3 +198,39 @@ test("state cycle details stay in their state log and the parent round is the co
   await appendFreshnessCycleDigest(repos,{outcome:{...record,cycleId:"round",workedCount:2},lines:["Every state completed"]});
   assert.deepEqual((await repos.ownerDigests.read("owner-digest")).map(row=>row.runtimeOutcome?.cycleId),["round"]);
 });
+
+test("state promotion reads retain later stages and refusals without reading other states' histories",async()=>{
+  const {pgAppendOnlyRepository}=await import("../lib/control-plane/repository/pg-store.ts");
+  const {CONTROL_READS_BACKFILL_DDL}=await import("../lib/control-plane/repository/control-reads-backfill.ts");
+  const {readPipelineStates}=await import("../lib/control-plane/promotion/pipeline.ts");
+  const db=new PGlite();
+  try {
+    await db.exec("CREATE TABLE cp_log_promotion_pipeline(log_key text,position bigint,record_id text,recorded_at timestamptz,changed_at timestamptz,record jsonb,PRIMARY KEY(log_key,position))");
+    await db.exec(CONTROL_READS_BACKFILL_DDL[0]);
+    const scout=(id:string,subjectId:string)=>({formatVersion:1,recordId:`${id}-scouted`,itemId:id,at:AT,
+      actor:{role:"SCOUT",lane:"DETERMINISTIC",instance:id},stage:"SCOUTED",source:{kind:"SCOUT_RESULT",attemptId:id,obligationId:id,outcome:"EVIDENCE_FOUND",routeId:null},
+      recordClass:"OFFICIAL_ROSTER",subjectId,canonicalUrl:null,artifactIds:[`${id}-source`],scoutAttemptId:id,summary:id});
+    const az=scout("az","government:US-AZ:123456"),ca=scout("ca","ocd-division/country:us/state:ca/place:fixture");
+    const records=[az,ca,...[az,ca].map(row=>({formatVersion:1,recordId:`${row.itemId}-verified`,itemId:row.itemId,at:STOP,
+      actor:{role:"VALIDATOR",lane:"DETERMINISTIC",instance:`${row.itemId}-validator`},stage:"VERIFIED",checks:[]})),
+      ...[az,ca].map(row=>({formatVersion:1,recordId:`${row.itemId}-refused`,itemId:`${row.itemId}-refused`,at:STOP,
+        actor:row.actor,stage:"REFUSED",offered:{...row,itemId:`${row.itemId}-refused`},reasons:[]}))];
+    for(const [position,record] of records.entries())await db.query("INSERT INTO cp_log_promotion_pipeline(log_key,position,record_id,recorded_at,changed_at,record) VALUES($1,$2,$3,$4,$4,$5::jsonb)",[record.itemId,position,record.recordId,STOP,JSON.stringify(record)]);
+    const sql={query:async(text:string,params?:readonly unknown[])=>(await db.query(text,[...params??[]])).rows};
+    const repo=pgAppendOnlyRepository<import("../lib/control-plane/promotion/types.ts").PromotionPipelineRecord>(sql,"promotion_pipeline",{state:"az"});
+    assert.deepEqual(await repo.keys(),["az","az-refused"]);
+    assert.deepEqual(await repo.keysWhere!(["stage"],"VERIFIED"),["az"]);
+    assert.deepEqual((await repo.readAll()).map(record=>record.recordId),["az-scouted","az-verified","az-refused"]);
+    const states=await readPipelineStates({...createMemoryRepositories(),promotionPipeline:repo});
+    assert.deepEqual(states.map(state=>state.itemId),["az","az-refused"]);
+    assert.equal(states[0].stage,"VERIFIED");assert.equal(states[1].refused?.recordId,"az-refused");
+    const global=pgAppendOnlyRepository(sql,"promotion_pipeline");assert.equal((await global.readAll()).length,6);
+    const more=Array.from({length:105},(_,index)=>scout(`az-extra-${index}`,`government:US-AZ:${index}`));
+    await db.query(`INSERT INTO cp_log_promotion_pipeline(log_key,position,record_id,recorded_at,changed_at,record)
+      SELECT record->>'itemId',0,record->>'recordId',$2::timestamptz,$2::timestamptz,record FROM jsonb_array_elements($1::jsonb) record`,[JSON.stringify(more),AT]);
+    const all=await repo.readAll();assert.equal(all.length,108);
+    assert.equal(new Set(all.map(record=>record.recordId)).size,108);
+    const changed=await repo.readChangedSince!(STOP);
+    assert.deepEqual(changed.records.map(row=>row.recordId),["az-scouted","az-verified","az-refused"]);
+  }finally{await db.close();}
+});

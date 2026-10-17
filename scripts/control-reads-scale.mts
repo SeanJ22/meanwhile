@@ -11,7 +11,6 @@ import { pathToFileURL } from "node:url";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import type { StandingObligation } from "../lib/control-plane/scheduler/durable.ts";
 import type { NeonBytesHour } from "../lib/db/transfer-by-caller.ts";
-import type { FixMapRow } from "../lib/method/fix-map.ts";
 
 interface RunReport {
   sourceSha:string; run: number; ms: number; responseBytes: number; requestBytes: number; databaseWalBytes:number; peakRssBytes: number;
@@ -21,7 +20,6 @@ interface RunReport {
 const arg = (name: string, fallback = "") => process.argv.find(value => value.startsWith(`--${name}=`))?.slice(name.length + 3) ?? fallback;
 const root = resolve(arg("root", process.cwd()));
 const sourceRoot = resolve(arg("source", process.cwd()));
-const legacy = arg("legacy") === "true";
 const now = "2026-10-15T12:00:00.000Z";
 const importAt = (path: string) => import(pathToFileURL(join(root, path)).href);
 const scenario = arg("scenario", "manual");
@@ -87,6 +85,15 @@ async function worker() {
 }
 
 async function workload(repos: ControlPlaneRepositories, places: string[], run: number): Promise<unknown> {
+  if(scenario==="pipeline") {
+    const {readPipelineStates}=await importAt("lib/control-plane/promotion/pipeline.ts");
+    const states=await readPipelineStates(repos);
+    assert.equal(states.length,Number(arg("expected-subjects"))*history);
+    const {planningStateOf}=await importAt("lib/control-plane/scheduler/state-planning.ts");
+    assert.ok(states.every((row:{subjectId:string})=>planningStateOf(row.subjectId)===arg("planning-state")));
+    return {state:arg("planning-state"),items:states.length,verified:states.filter((row:{stage:string})=>row.stage==="VERIFIED").length};
+  }
+
   if (scenario === "planner") {
     const state=arg("planning-state");
     const policy=await repos.adminConfig.mustRead("current",{expansionScopes:{where:{path:["geography","stateAbbr"],value:state.toUpperCase()}}});
@@ -129,24 +136,18 @@ async function workload(repos: ControlPlaneRepositories, places: string[], run: 
   }
   if (scenario === "spend") {
     const spend = await importAt("lib/control-plane/spend-window.ts");
-    const safety = await importAt("lib/control-plane/fleet-safety.ts");
     const entry = costEntry(`added-${run}`, places[0]);
     await spend.countCharge(repos, entry, now);
     const totals = [];
     for (let point = 0; point < 7; point++) {
       const held = await spend.readSpendWindow(repos, now);
-      totals.push(legacy ? safety.aggregatePricedSpend(held, "2026-10-14T12:00:00.000Z", now).usd : held.usd);
+      totals.push(held.usd);
     }
     return { admissions: totals.length, usd: totals[0] };
   }
   if (scenario === "method") {
     let works = await repos.fixMap.worksFor(["scale-method"]);
     for (let packet = 1; packet < places.length; packet++) works = await repos.fixMap.worksFor(["scale-method"]);
-    if (legacy) {
-      const prior = repos.fixMap as unknown as { forMethod(id: string, limit: number): Promise<readonly FixMapRow[]> };
-      const proof = await prior.forMethod("scale-method", 1000);
-      return { packets: places.length, works: [...works], proofCount: proof.length, triedCount: proof.filter(row => places.includes(row.placeId)).length };
-    }
     const proof = await repos.fixMap.statistics("scale-method");
     const tried = await repos.fixMap.forPlaces("scale-method", places);
     return { packets: places.length, works: [...works], proofCount: proof.total, triedCount: tried.length };
@@ -175,12 +176,6 @@ async function workload(repos: ControlPlaneRepositories, places: string[], run: 
   if (scenario === "dispatch") {
     const durable = await importAt("lib/control-plane/scheduler/durable.ts");
     const obligations = places.map((subjectId, index) => ({ id: `o-${index}`, subjectId, openOccurrenceId: `open-${index}`, occurrenceCount: history + 1, updatedAt: now } as StandingObligation));
-    if (legacy) {
-      await repos.workItems.list();
-      const tasks = await repos.routeTasks.list();
-      await durable.scanOccurrences(repos, { obligations, settledRouteTaskIds: new Set(), neverClaimedRouteTaskIds: new Set(tasks.filter(row => row.value.state === "PENDING").map(row => row.id)) });
-      return Promise.all(obligations.map(obligation => durable.resumeOpenOccurrence(repos, obligation)));
-    }
     const snapshot = await repos.dispatchState.readOpen({ since: run === 0 ? null : now });
     await durable.scanOccurrences(repos, { obligations, settledRouteTaskIds: new Set(), neverClaimedRouteTaskIds: new Set(snapshot.routeTasks.keys()), snapshot });
     return Promise.all(obligations.map(obligation => durable.resumeOpenOccurrence(repos, obligation, snapshot)));
@@ -234,15 +229,11 @@ async function parent() {
   for (let at = 0; at < places.length; at += 1000) await pg.query("INSERT INTO scale_places SELECT (e->>'ordinal')::integer, e->>'id',e->>'state' FROM jsonb_array_elements($1::jsonb) e", [JSON.stringify(places.slice(at, at + 1000).map((id, index) => ({ ordinal: at + index, id,state:/\/(?:state|district|territory):([a-z]{2})(?:\/|$)/.exec(id)?.[1]??/^government:US-([A-Z]{2}):/.exec(id)?.[1]?.toLowerCase()??"system" })))]);
   await seed(pg, places, selected.filter(place => places.includes(place)));
   await pg.exec("ANALYZE");
-  if (scenario === "manual" && arg("explain")) {
-    const previous = JSON.parse(await readFile(arg("explain"), "utf8")) as { query: string; params: unknown[] };
-    const store = await importAt("lib/control-plane/repository/pg-store.ts");
-    const current = { query: store.FIELD_MANUAL_SLICE_SQL, params: [...store.fieldManualSliceParams({ role: "SCOUT", state: "az", ocdIds: ["ocd-division/country:us/state:az"], limit: 12 }), null] };
-    for (const [version, query] of [["previous", previous], ["current", current]] as const) {
-      const plan = (await pg.query(`EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON) ${query.query}`, query.params)).rows;
-      process.stderr.write(`${JSON.stringify({ type: "plan", version, plan })}\n`);
-    }
+  if(scenario==="pipeline") {
+    const shape=(await pg.query("SELECT count(*)::text AS records,round(avg(octet_length(record::text)))::integer AS mean_bytes,max(octet_length(record::text)) AS max_bytes FROM cp_log_promotion_pipeline")).rows[0];
+    process.stderr.write(`${JSON.stringify({type:"input-shape",...shape})}\n`);
   }
+
   const fixtureSetupMs = performance.now() - setupStarted;
   process.stderr.write(`${JSON.stringify({ type: "fixture", scenario, divisions: places.length, fixtureSetupMs })}\n`);
   const directory = await mkdtemp(join(tmpdir(), "cp-01-scale-"));
@@ -260,10 +251,18 @@ async function parent() {
   child.stdout!.on("data", data => process.stderr.write(data));
   const reports = await new Promise<RunReport[]>((resolve, reject) => {
     let completed:RunReport[]|null=null;
-    child.on("error", reject);
-    child.on("exit", code => {
+    let observedPeakRssBytes=0,fixtureResponseBytes=0,fixtureRequestBytes=0;
+    const memory=setInterval(()=>{
+      try {const held=/VmHWM:\s+(\d+) kB/.exec(readFileSync(`/proc/${child.pid}/status`,"utf8"));if(held)observedPeakRssBytes=Math.max(observedPeakRssBytes,Number(held[1])*1024);}catch{}
+    },50);
+    child.on("error",error=>{clearInterval(memory);reject(error);});
+    child.on("exit", (code,signal) => {
+      clearInterval(memory);
       if(code===0 && completed!==null)resolve(completed);
-      else reject(new Error(`Scale worker exited ${code} without completing its run`));
+      else {
+        process.stderr.write(`${JSON.stringify({type:"failed-worker",scenario,state,code,signal,observedPeakRssBytes,fixtureResponseBytes,fixtureRequestBytes})}\n`);
+        reject(new Error(`Scale worker exited ${code} (${signal}) without completing its run`));
+      }
     });
     child.on("message", async (message: { type: string; id: number; body: string; results: RunReport[] }) => {
       if (message.type === "done") { completed=message.results; return; }
@@ -274,20 +273,22 @@ async function parent() {
         child.send({id:message.id,body:String((BigInt(`0x${high}`)<<BigInt(32))+BigInt(`0x${low}`))});return;
       }
       if (message.type !== "query") return;
+      fixtureRequestBytes+=Buffer.byteLength(message.body);
       try {
         const request = JSON.parse(message.body);
         const execute = async (query: { query: string; params?: unknown[] }) => {
           return wire(await pg.query<Record<string, unknown>>(query.query, query.params ?? [], { serializers: { 16: (value:unknown) => String(value) } }));
         };
         const response = request.queries ? { results: await Promise.all(request.queries.map(execute)) } : await execute(request);
-        child.send({ id: message.id, body: JSON.stringify(response) });
-      } catch (error) { child.send({ id: message.id, error: error instanceof Error ? error.message : String(error) }); }
+        const body=JSON.stringify(response);fixtureResponseBytes+=Buffer.byteLength(body);
+        if(child.connected)child.send({ id: message.id, body });
+      } catch (error) { if(child.connected)child.send({ id: message.id, error: error instanceof Error ? error.message : String(error) }); }
     });
   });
     return reports;
   };
   const results:RunReport[]=[];
-  if(scenario==="planner") {
+  if(scenario==="planner" || scenario==="pipeline") {
     const statePlanning=await importAt("lib/control-plane/scheduler/state-planning.ts");
     const started=performance.now();
     const round=await statePlanning.runStatePlanningRound(async(state:string)=>{
@@ -302,9 +303,9 @@ async function parent() {
   const documentedHost = 8 * 1024 ** 3;
   const parentReserve = 2928 * 1024 ** 2;
   const margin = 0.75 * 1024 ** 3;
-  const warmRows=scenario==="planner"?results.filter(result=>result.run===repetitions-1):[results.at(-1)!];
+  const warmRows=scenario==="planner" || scenario==="pipeline"?results.filter(result=>result.run===repetitions-1):[results.at(-1)!];
   const warm={responseBytes:warmRows.reduce((n,row)=>n+row.responseBytes,0),requestBytes:warmRows.reduce((n,row)=>n+row.requestBytes,0),databaseWalBytes:warmRows.reduce((n,row)=>n+row.databaseWalBytes,0),ms:warmRows.reduce((n,row)=>n+row.ms,0)};
-  console.log(JSON.stringify({ scenario, root, legacy,sourceSha,planningRoundWallMs, input: { subjects: places.length,nationalSubjectsAvailable:all.length,ocdDivisions: all.filter(place=>place.startsWith("ocd-division/")).length,censusGovernments:all.filter(place=>place.startsWith("government:")).length,
+  console.log(JSON.stringify({ scenario, root,sourceSha,planningRoundWallMs, input: { subjects: places.length,nationalSubjectsAvailable:all.length,ocdDivisions: all.filter(place=>place.startsWith("ocd-division/")).length,censusGovernments:all.filter(place=>place.startsWith("government:")).length,
     scopes: [...byState.keys()].sort(), selectedPlaces: selected.filter(place => places.includes(place)).length, historiesPerPlace: history },
     measurement: "Postgres 17 in an isolated local container; exact serialized fixture-adapter request/response bodies through the production Neon counter and physical WAL written per workload. Excludes real Neon framing and network latency. Database memory is separate from the measured worker.",
     assumptions: { runsPerDay, runnerAvailableBytes: Number.isFinite(runnerAvailable) ? runnerAvailable : null, reserveBytes: margin,
@@ -335,7 +336,20 @@ function wire(result: { rows: Record<string, unknown>[]; fields: { name: string;
 
 async function seed(pg: FixtureDatabase, places: string[], selected: string[]) {
   const template = (kind: string) => `INSERT INTO cp_${kind} (id, revision, updated_at, changed_at, value)`;
-  if (scenario === "manual") {
+  if(scenario==="pipeline") {
+    const {VERIFICATION_CHECKS}=await importAt("lib/control-plane/promotion/types.ts");
+    await pg.query(`INSERT INTO cp_log_promotion_pipeline(log_key,record_id,position,recorded_at,changed_at,record)
+      SELECT 'pipeline-'||p.ordinal||'-'||h.n,'pipeline-'||p.ordinal||'-'||h.n||'-'||stage.n,
+        p.ordinal::bigint*$3::bigint*2+(h.n-1)*2+stage.n,$1::timestamptz,$1::timestamptz,
+        jsonb_build_object('formatVersion',1,'recordId','pipeline-'||p.ordinal||'-'||h.n||'-'||stage.n,
+          'itemId','pipeline-'||p.ordinal||'-'||h.n,'at',$1::text,'actor',jsonb_build_object('role',CASE WHEN stage.n=0 THEN 'SCOUT' ELSE 'VALIDATOR' END,'lane','DETERMINISTIC','instance','fixture')) ||
+        CASE WHEN stage.n=0 THEN jsonb_build_object('stage','SCOUTED','subjectId',p.id,'recordClass','OFFICIAL_ROSTER',
+          'source',jsonb_build_object('kind','SCOUT_RESULT','attemptId','attempt-'||p.ordinal,'obligationId',p.id,'outcome','EVIDENCE_FOUND','routeId',NULL),
+          'canonicalUrl',NULL,'artifactIds',jsonb_build_array('artifact-'||p.ordinal||'-'||h.n),'scoutAttemptId','attempt-'||p.ordinal,'summary','Generated official source sample '||repeat(md5(p.id||h.n),32))
+        ELSE jsonb_build_object('stage','VERIFIED','checks',$2::jsonb) END
+      FROM scale_places p CROSS JOIN generate_series(1,$3::integer) h(n) CROSS JOIN generate_series(0,1) stage(n)`,
+      [now,JSON.stringify(VERIFICATION_CHECKS.map((name:string)=>({name,result:"PASS",detail:"Generated source verification"}))),history]);
+  } else if (scenario === "manual") {
     const manual = await importAt("lib/control-plane/field-manual.ts");
     const entry = manual.normalizeEntry(manual.newFieldManualEntry("scale", "template", { role: "SCOUT", kind: "SCOUT_DISCOVERY", title: "Official meeting calendar",
       summary: "The official calendar publishes meetings and links the agenda and minutes for this government.", outcome: "YIELDED", ocdIds: [places[0]], observedAt: now, payload: { route: "official-calendar", result: "agenda and minutes" } }));
@@ -346,39 +360,20 @@ async function seed(pg: FixtureDatabase, places: string[], selected: string[]) {
   } else if (scenario === "method") {
     await pg.query(`INSERT INTO cp_fix_map (method_id,place_id,state,tried_at,attempt_id,cause,updated_at)
       SELECT 'scale-method',id,'WORKS',$1::timestamptz,'attempt-' || ordinal,NULL,$1::timestamptz FROM scale_places`, [now]);
-    if (!legacy) {
-      const map = await importAt("lib/method/fix-map.ts");
-      for (const ddl of map.FIX_MAP_DDL) await pg.exec(ddl);
-    }
   } else if (scenario === "admin") {
     const admin = await importAt("lib/control-plane/gateway/admin-config.ts");
     const config = admin.defaultAdminConfig(now);
-    await pg.query(`${template("admin_config")} SELECT 'current',1,$1::timestamptz,$1::timestamptz,$2::jsonb${legacy ? ` ||
-      jsonb_build_object('settingHistory',(SELECT jsonb_agg(jsonb_build_object('id','setting-' || ordinal,'key','workers','before',1,'after',2,'at',$1::text,'actor','factory')) FROM scale_places),
-      'placeTargets',(SELECT jsonb_agg(jsonb_build_object('key','geo:'||state||'.place.'||ordinal,'goalPercent',100,'setAt',$1::text,'decidedBy','factory','receiptId','receipt-' || ordinal)) FROM scale_places))` : ""}`, [now, JSON.stringify(config)]);
-    if (!legacy) {
-      await pg.query(`INSERT INTO cp_admin_setting_history(config_id,id,updated_at,value)
-        SELECT 'current','setting-'||ordinal,$1::timestamptz,jsonb_build_object('id','setting-'||ordinal,'key','workers','before',1,'after',2,'at',$1::text,'actor','factory') FROM scale_places`,[now]);
-      await pg.exec("ALTER TABLE cp_admin_place_targets DISABLE TRIGGER cp_admin_place_targets_planning_changed");
-      await pg.query(`INSERT INTO cp_admin_place_targets(config_id,id,updated_at,value)
-        SELECT 'current','geo:'||state||'.place.'||ordinal,$1::timestamptz,jsonb_build_object('key','geo:'||state||'.place.'||ordinal,'goalPercent',100,'setAt',$1::text,'decidedBy','factory','receiptId','receipt-'||ordinal) FROM scale_places`,[now]);
-      await pg.exec("ALTER TABLE cp_admin_place_targets ENABLE TRIGGER cp_admin_place_targets_planning_changed");
-    }
+    await pg.query(`${template("admin_config")} VALUES('current',1,$1::timestamptz,$1::timestamptz,$2::jsonb)`,[now,JSON.stringify(config)]);
+    await pg.query(`INSERT INTO cp_admin_setting_history(config_id,id,updated_at,value)
+      SELECT 'current','setting-'||ordinal,$1::timestamptz,jsonb_build_object('id','setting-'||ordinal,'key','workers','before',1,'after',2,'at',$1::text,'actor','factory') FROM scale_places`,[now]);
+    await pg.exec("ALTER TABLE cp_admin_place_targets DISABLE TRIGGER cp_admin_place_targets_planning_changed");
+    await pg.query(`INSERT INTO cp_admin_place_targets(config_id,id,updated_at,value)
+      SELECT 'current','geo:'||state||'.place.'||ordinal,$1::timestamptz,jsonb_build_object('key','geo:'||state||'.place.'||ordinal,'goalPercent',100,'setAt',$1::text,'decidedBy','factory','receiptId','receipt-'||ordinal) FROM scale_places`,[now]);
+    await pg.exec("ALTER TABLE cp_admin_place_targets ENABLE TRIGGER cp_admin_place_targets_planning_changed");
   } else if (scenario === "spend") {
-    const safety = await importAt("lib/control-plane/fleet-safety.ts");
-    const spend = await importAt("lib/control-plane/spend-window.ts");
-    const charge = safety.pricedModelCharge(costEntry("template", places[0]), "template");
-    if (legacy) {
-      await pg.query(`${template("spend_window")} SELECT 'model-charges',1,$1::timestamptz,$1::timestamptz,
-        jsonb_build_object('charges', jsonb_agg($2::jsonb || jsonb_build_object('id','charge-' || ordinal,'jurisdiction',id))) FROM scale_places`, [now, JSON.stringify(charge)]);
-    } else {
-      const model = await importAt("lib/control-plane/repository/model-charges.ts");
-      for (const ddl of model.MODEL_CHARGES_DDL) await pg.exec(ddl);
-      await pg.query(`INSERT INTO cp_model_charges (id,charged_at,job_id,route_task_id,obligation_id,jurisdiction,attempt_id,usd,known_usd,measured,bounded,assignment_refs,is_scout,scout_usd,cache)
-        SELECT 'charge-' || ordinal,$1::timestamptz,'job-' || ordinal,'task-' || ordinal,NULL,id,'attempt-' || ordinal,0.01,0.01,true,false,NULL,
-          true,0.01,NULL FROM scale_places`, [now]);
-    }
-    assert.ok(spend.costRecordId);
+    await pg.query(`INSERT INTO cp_model_charges (id,charged_at,job_id,route_task_id,obligation_id,jurisdiction,attempt_id,usd,known_usd,measured,bounded,assignment_refs,is_scout,scout_usd,cache)
+      SELECT 'charge-' || ordinal,$1::timestamptz,'job-' || ordinal,'task-' || ordinal,NULL,id,'attempt-' || ordinal,0.01,0.01,true,false,NULL,
+        true,0.01,NULL FROM scale_places`, [now]);
   } else if (scenario === "dispatch" || scenario === "coordinator" || scenario === "planner") {
     let continuation: Record<string, unknown> | null = null;
     if (scenario === "coordinator") {
@@ -441,7 +436,7 @@ async function seed(pg: FixtureDatabase, places: string[], selected: string[]) {
       for(let index=0;index<selected.length;index++)await pg.query("UPDATE cp_obligations SET value=jsonb_set(value,'{openOccurrenceId}',to_jsonb($2::text)) WHERE id=$1",[`hunt:packet:${selected[index]}`,`open-${index}`]);
       await pg.query("UPDATE cp_lineage_cache SET stamp=replace(stamp,', ',','),dirty=false");
     }
-    if (!legacy && scenario!=="planner") {
+    if (scenario!=="planner") {
       const jobs=await importAt("lib/control-plane/repository/control-reads-backfill.ts");
       const statePlanning=await importAt("lib/control-plane/scheduler/state-planning.ts");
       const began=performance.now();

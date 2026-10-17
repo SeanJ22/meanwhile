@@ -17,16 +17,8 @@ export function copiedReach(entry: FieldManualEntry): CopiedReach {
 
 const named = (e: FieldManualEntry): boolean => (e.ocdIds?.length ?? 0) > 0 || (e.bodyIds?.length ?? 0) > 0;
 
-export function retagForRows(entries: readonly FieldManualEntry[]): {
-  readonly entries: FieldManualEntry[]; readonly fromRecord: number; readonly fromSameAddress: number; readonly everywhereByKind: Record<string, number>;
-} {
-  let fromRecord = 0, fromSameAddress = 0;
-  const everywhereByKind: Record<string, number> = {};
-  const read = entries.map((raw) => {
-    const entry = normalizeEntry(raw);
-    if (!named(raw) && named(entry)) fromRecord += 1;
-    return entry;
-  });
+export function retagForRows(entries: readonly FieldManualEntry[]): FieldManualEntry[] {
+  const read=entries.map(normalizeEntry);
   const placesByUrl = new Map<string, { ocdIds: Set<string>; bodyIds: Set<string> }>();
   for (const e of read) {
     if (e.url === null || !named(e)) continue;
@@ -39,20 +31,18 @@ export function retagForRows(entries: readonly FieldManualEntry[]): {
     if (copiedReach(e) !== "NOWHERE") return e;
     const same = e.url === null ? undefined : placesByUrl.get(e.url);
     if (same !== undefined) {
-      fromSameAddress += 1;
       return normalizeEntry({ ...e, reach: undefined, ...(same.ocdIds.size ? { ocdIds: [...same.ocdIds] } : {}), ...(same.bodyIds.size ? { bodyIds: [...same.bodyIds] } : {}) });
     }
     if (CLASS_WIDE_KINDS.has(e.kind)) {
-      everywhereByKind[e.kind] = (everywhereByKind[e.kind] ?? 0) + 1;
       return normalizeEntry({ ...e, reach: undefined, portable: true });
     }
     return e;
   });
-  return { entries: out, fromRecord, fromSameAddress, everywhereByKind };
+  return out;
 }
 
 export async function copyFieldManualPage(repos:FieldManualRepos,raw:readonly FieldManualEntry[],now:string):Promise<number> {
-  const entries=retagForRows(raw).entries;
+  const entries=retagForRows(raw);
   const inserted=await repos.fieldManual.insertNew(entries,now);
   const results=await recordMethodResults(repos,entries,now,false);
   if(results.failed>0)throw new Error("Method evidence remains pending in this manual page");

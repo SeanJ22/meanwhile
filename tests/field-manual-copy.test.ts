@@ -29,7 +29,7 @@ const SAMPLE = [
 
 test("re-tagging reads the place from the record, then from another entry with the same address, then class-wide kinds; the rest names no place", () => {
   const out = retagForRows(SAMPLE);
-  const byId = new Map(out.entries.map((e) => [e.id, e] as const));
+  const byId = new Map(out.map((e) => [e.id, e] as const));
   assert.deepEqual(byId.get("investigation")!.reach!.places, [PIMA]);
   assert.deepEqual(byId.get("reliability")!.reach!.places, [PIMA], "the same address as Pima's own door");
   assert.equal(byId.get("playbook")!.reach!.everywhere, true);
@@ -37,8 +37,6 @@ test("re-tagging reads the place from the record, then from another entry with t
   assert.equal(copiedReach(byId.get("tier")!), "STATE");
   assert.equal(copiedReach(byId.get("orphan")!), "NOWHERE");
   assert.equal(copiedReach(byId.get("method")!), "METHOD");
-  assert.deepEqual([out.fromRecord, out.fromSameAddress], [3, 1], "the investigation, the door's subject and the route's outcome; the reliability by address");
-  assert.deepEqual(out.everywhereByKind, { PLAYBOOK: 1 });
 });
 
 test("a scoped page copies lessons and method evidence once, and a repeated page preserves a newer row",async()=>{

@@ -528,40 +528,49 @@ export function pgAppendOnlyRepository<T>(
   options: PgRepositoryBounds = {},
 ): AppendOnlyRepository<T> {
   const table = `cp_log_${log}`;
+  if(options.state && !/^(?:[a-z]{2}|system)$/.test(options.state))throw new Error("One planning state is required");
   const run = boundedRunner(sql, table, options.bounds ?? CONTROL_PLANE_REQUEST_BOUNDS_MS);
 
   const recordClass = options.rowClass ?? (DOCUMENT_RECORD_LOGS.has(log) ? "DOCUMENT" : "POINT");
+  const pipelineState=options.state && log==="promotion_pipeline"?`log_key IN (SELECT origin.log_key FROM cp_log_promotion_pipeline origin
+    WHERE (origin.record->>'stage'='SCOUTED' OR origin.record #>> '{offered,stage}'='SCOUTED')
+      AND cp_control_state(coalesce(origin.record->'offered',origin.record))='${options.state}')`:"";
 
   async function readChangedSince(since: string | null, held?: HeldSlots): Promise<ChangedRecords<T>> {
 
     const clock = (await run("readChangedSince:clock", "POINT", "SELECT now() AS read_at")) as Record<string, unknown>[];
     const through = new Date(clock[0]?.read_at as string).toISOString();
     const out: { key: string; recordId: string; position: number; record: T }[] = [];
-    let cursor: { readonly key: string; readonly position: number } | null = null;
-    for (;;) {
-      const params: unknown[] = [];
-      const at = (value: unknown) => `$${params.push(value)}`;
-      const statePredicate=table==="cp_log_artifacts" || table==="cp_log_worker_results" || table==="cp_log_transitions"
-        ? `EXISTS(SELECT 1 FROM cp_work_items_history w WHERE w.id=coalesce(${table}.record->>'workItemId',${table}.log_key) AND cp_control_state(w.value)='${options.state}')`
-        : `cp_control_state(record)='${options.state}'`;
-      const filters = [options.state ? statePredicate : "", options.since ? `record->>'recordedAt'>=${at(options.since)}` : "", since === null ? "" : `changed_at >= ${at(since)}::timestamptz`, heldFilter(held, at, "log_key", "position"),
-        cursor === null ? "" : `(log_key, position) > (${at(cursor.key)}, ${at(cursor.position)})`].filter(Boolean);
-      const rows = (await run(
-        "readChangedSince",
-        "PAGE",
-        `SELECT log_key, record_id, position, record FROM ${table}
-         ${filters.length === 0 ? "" : `WHERE ${filters.join(" AND ")}`}
-         ORDER BY log_key ASC, position ASC
-         LIMIT ${APPEND_ONLY_LOG_READ_PAGE}`,
-        params,
-      )) as Record<string, unknown>[];
-      for (const r of rows) {
-        out.push({ key: String(r.log_key), recordId: String(r.record_id), position: Number(r.position),
-          record: parseValue<T>(r.record, `${table} ${String(r.log_key)}`) });
+    const stateKeys=pipelineState ? ((await run("readChangedSince:stateKeys","PAGE",
+      `SELECT DISTINCT log_key FROM ${table} WHERE ${pipelineState} ORDER BY log_key`)) as Record<string,unknown>[]).map(row=>String(row.log_key)) : null;
+    const batches=stateKeys===null?[null]:Array.from({length:Math.ceil(stateKeys.length/APPEND_ONLY_LOG_READ_PAGE)},(_,index)=>stateKeys.slice(index*APPEND_ONLY_LOG_READ_PAGE,(index+1)*APPEND_ONLY_LOG_READ_PAGE));
+    for(const keys of batches) {
+      let cursor: { readonly key: string; readonly position: number } | null = null;
+      for (;;) {
+        const params: unknown[] = [];
+        const at = (value: unknown) => `$${params.push(value)}`;
+        const statePredicate=keys!==null ? `log_key=ANY(${at(keys)}::text[])` : (table==="cp_log_artifacts" || table==="cp_log_worker_results" || table==="cp_log_transitions"
+          ? `EXISTS(SELECT 1 FROM cp_work_items_history w WHERE w.id=coalesce(${table}.record->>'workItemId',${table}.log_key) AND cp_control_state(w.value)='${options.state}')`
+          : `cp_control_state(record)='${options.state}'`);
+        const filters = [options.state ? statePredicate : "", options.since ? `record->>'recordedAt'>=${at(options.since)}` : "", since === null ? "" : `changed_at >= ${at(since)}::timestamptz`, heldFilter(held, at, "log_key", "position"),
+          cursor === null ? "" : `(log_key, position) > (${at(cursor.key)}, ${at(cursor.position)})`].filter(Boolean);
+        const rows = (await run(
+          "readChangedSince",
+          "PAGE",
+          `SELECT log_key, record_id, position, record FROM ${table}
+           ${filters.length === 0 ? "" : `WHERE ${filters.join(" AND ")}`}
+           ORDER BY log_key ASC, position ASC
+           LIMIT ${APPEND_ONLY_LOG_READ_PAGE}`,
+          params,
+        )) as Record<string, unknown>[];
+        for (const r of rows) {
+          out.push({ key: String(r.log_key), recordId: String(r.record_id), position: Number(r.position),
+            record: parseValue<T>(r.record, `${table} ${String(r.log_key)}`) });
+        }
+        if (rows.length < APPEND_ONLY_LOG_READ_PAGE) break;
+        const last = rows[rows.length - 1];
+        cursor = { key: String(last.log_key), position: Number(last.position) };
       }
-      if (rows.length < APPEND_ONLY_LOG_READ_PAGE) break;
-      const last = rows[rows.length - 1];
-      cursor = { key: String(last.log_key), position: Number(last.position) };
     }
     return { records: out, through };
   }
@@ -823,7 +832,7 @@ export function pgAppendOnlyRepository<T>(
       const rows = (await run(
         "keys",
         "PAGE",
-        `SELECT DISTINCT log_key FROM ${table} ORDER BY log_key ASC`,
+        `SELECT DISTINCT log_key FROM ${table}${pipelineState?` WHERE ${pipelineState}`:""} ORDER BY log_key ASC`,
       )) as Record<string, unknown>[];
       return rows.map((r) => String(r.log_key));
     },
@@ -834,7 +843,7 @@ export function pgAppendOnlyRepository<T>(
       const rows = (await run(
         "keysWhere",
         "PAGE",
-        `SELECT DISTINCT log_key FROM ${table} WHERE record #>> '${jsonPath}' = $1 ORDER BY log_key ASC`,
+        `SELECT DISTINCT log_key FROM ${table} WHERE record #>> '${jsonPath}' = $1${pipelineState?` AND ${pipelineState}`:""} ORDER BY log_key ASC`,
         [value],
       )) as Record<string, unknown>[];
       return rows.map((r) => String(r.log_key));
@@ -1546,6 +1555,7 @@ export async function createPgRepositories(
       doors: pgAggregateRepository<DoorRecord>(sql,"Door","cp_doors",scoped),
       artifacts: pgAppendOnlyRepository<ArtifactRecord>(sql,"artifacts",scoped),
       workerResults: pgAppendOnlyRepository<WorkerResultRecord>(sql,"worker_results",scoped),
+      promotionPipeline:pgAppendOnlyRepository<PromotionPipelineRecord>(sql,"promotion_pipeline",{...scoped,copies:bounded.copies}),
       transitions: pgAppendOnlyRepository<RecordedTransition>(sql,"transitions",scoped),
       costs: pgAppendOnlyRepository<CostEntry>(sql,"costs",scoped),
       discoveryAttempts: pgAppendOnlyRepository<MeetingsDiscoveryAttempt>(sql,"discovery_attempts",scoped),

@@ -424,6 +424,7 @@ export const CONTROL_READS_EXPAND_DDL: readonly string[] = [
   ...["cp_work_items", "cp_work_items_archive"].map(table => `CREATE INDEX IF NOT EXISTS ${table}_adapter_subject ON ${table}
     ((value #>> '{subject}'), (CASE WHEN value #>> '{autonomousPlan,capability}'='hunt-packet' THEN 0 ELSE 1 END),
       (value->>'createdAt') DESC, id DESC) WHERE value->'autonomousPlan' IS NOT NULL;`),
+  "CREATE INDEX IF NOT EXISTS cp_log_promotion_pipeline_state_item ON cp_log_promotion_pipeline (cp_control_state(coalesce(record->'offered',record)),log_key) WHERE record->>'stage'='SCOUTED' OR record #>> '{offered,stage}'='SCOUTED';",
   "CREATE INDEX IF NOT EXISTS cp_log_scout_results_subject_latest ON cp_log_scout_results ((record #>> '{subjectId}'), (record->>'recordClass'), (record->>'recordedAt') DESC, log_key DESC, position DESC);",
   "CREATE INDEX IF NOT EXISTS cp_log_scout_results_adapter_pending ON cp_log_scout_results ((record #>> '{subjectId}'), (record->>'recordClass'), (record->>'recordedAt') DESC, log_key DESC, position DESC) WHERE record->>'outcome'='NEEDS_ADAPTER' AND record->'refusal'='null'::jsonb;",
   "CREATE INDEX IF NOT EXISTS cp_field_manual_reach_places ON cp_field_manual_entries USING gin ((coalesce(value->'reach'->'places', '[]'::jsonb)));",

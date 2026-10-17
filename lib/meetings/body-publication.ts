@@ -5,6 +5,7 @@ import {
   HELD_MEETING_PARTITIONS,
   MEETING_PARTITION_CONTRACTS,
   meetingHistoryContract,
+  onMeetingPartitionsRefreshed,
   type HeldMeetingPartition,
   type MeetingPartitionContract,
 } from "../civic-data/meeting-partitions.ts";
@@ -104,7 +105,16 @@ interface Layout {
 const stateOfContract = (contract: MeetingPartitionContract): string =>
   contract.derivedFamily !== null ? contract.derivedFamily.slice(3) : meetingStateOf(contract.ocdId ?? contract.bodyId);
 
+let layoutHeld: Layout | null = null;
+onMeetingPartitionsRefreshed(() => { layoutHeld = null; });
+
+/** Built once per list of doors, since an hour with nothing queued must not walk every door. */
 function layoutOf(): Layout {
+  layoutHeld ??= buildLayout();
+  return layoutHeld;
+}
+
+function buildLayout(): Layout {
   const layout: Layout = { scopes: new Map(), regularByBody: new Map(), familyByState: new Map(), bodiesByState: new Map(), states: new Set(),
     heldBySuccessor: new Map(HELD_MEETING_PARTITIONS.map((held) => [held.successorId, held])) };
   for (const contract of MEETING_PARTITION_CONTRACTS) {
@@ -117,8 +127,9 @@ function layoutOf(): Layout {
     if (!layout.bodiesByState.has(state)) layout.bodiesByState.set(state, new Set());
     layout.bodiesByState.get(state)!.add(contract.bodyId);
   }
+  const byId = new Map(MEETING_PARTITION_CONTRACTS.map((contract) => [contract.id, contract] as const));
   for (const held of HELD_MEETING_PARTITIONS) {
-    const successor = MEETING_PARTITION_CONTRACTS.find((contract) => contract.id === held.successorId);
+    const successor = byId.get(held.successorId);
     if (successor) layout.scopes.set(held.scope, { contract: successor, history: false });
   }
   return layout;
@@ -128,7 +139,7 @@ interface Pass extends MeetingBodyPublicationInput {
   readonly layout: Layout;
   readonly stats: MeetingBodyPublicationStats;
   readonly families: Map<string, Promise<{ readonly read: CivicDataReadResult<MeetingsSnapshot>; readonly members: ReadonlySet<string> }>>;
-  readonly registries: Map<string, Promise<MeetingRegistryRead | null>>;
+  readonly registries: Map<string, Promise<ReadonlyMap<string, RegistryBodyLite> | null>>;
   /** Pointer identities already read this pass; null is a scope with no pointer. */
   readonly identities: Map<string, PromotedPointerIdentity | null>;
   /** Body pointers already read this pass, by key; null is a body with none. */
@@ -161,15 +172,16 @@ function familyOf(pass: Pass, contract: MeetingPartitionContract) {
   return held;
 }
 
+/** A state's registry bodies by id, so each body finds its territory without a scan. */
 function registryOf(pass: Pass, state: string) {
   let held = pass.registries.get(state);
-  if (!held) { held = pass.registry(state); pass.registries.set(state, held); }
+  if (!held) { held = pass.registry(state).then((read) => read === null ? null : new Map(read.bodies.map((body) => [body.id, body] as const))); pass.registries.set(state, held); }
   return held;
 }
 
 /** The divisions a body serves: the registry's territory for it when it names one, else the door's own. */
-function divisionsOf(bodyId: string, registry: MeetingRegistryRead | null, fallback: readonly (string | null | undefined)[]): string[] {
-  const named = registry?.bodies.find((row) => row.id === bodyId);
+function divisionsOf(bodyId: string, registry: ReadonlyMap<string, RegistryBodyLite> | null, fallback: readonly (string | null | undefined)[]): string[] {
+  const named = registry?.get(bodyId);
   const ids = named ? [named.ocdId, ...(named.alsoServesOcdIds ?? [])] : fallback;
   return [...new Set(ids.filter((id): id is string => typeof id === "string" && id.length > 0).map(divisionOf))].sort();
 }
@@ -373,14 +385,16 @@ interface StateOutcome {
 async function processState(pass: Pass, state: string, dirty: ReadonlySet<string>, round: StateRound | null): Promise<StateOutcome | null> {
   const { store, layout } = pass;
   const indexScope = meetingIndexRowScope(state);
-  const row = await store.readPreparedReaderProjection(MEETINGS_RECORD_CLASS, indexScope);
-  const prior = row === null ? null : row.payload as MeetingIndexRow;
+  const coupling = await store.readPreparedReaderProjectionCoupling(MEETINGS_RECORD_CLASS, indexScope);
   const servedVersion = pass.served?.[state]?.version ?? null;
-  const priorSha = row === null ? null : String((row.composedFrom as readonly FreshCheckCoupling[])[0]?.versionId ?? "");
+  const priorSha = coupling === null ? null : String(coupling.composedFrom[0]?.versionId ?? "");
   const registryVersion = pass.registryVersion(state);
-  const territoryChanged = prior !== null && prior.registryVersion !== registryVersion;
-  const idle = prior !== null && dirty.size === 0 && round === null && !territoryChanged;
-  if (idle) return priorSha === servedVersion ? null : { entry: { versionId: priorSha!, value: readerIndexOf(prior) }, failed: false, copies: new Map(), removals: new Map() };
+  const territoryChanged = coupling !== null && String(coupling.composedFrom[1]?.versionId ?? "") !== (registryVersion ?? "");
+  const idle = coupling !== null && dirty.size === 0 && round === null && !territoryChanged;
+  if (idle && priorSha === servedVersion) return null;
+  const row = coupling === null ? null : await store.readPreparedReaderProjection(MEETINGS_RECORD_CLASS, indexScope);
+  const prior = row === null ? null : row.payload as MeetingIndexRow;
+  if (idle) return { entry: { versionId: priorSha!, value: readerIndexOf(prior!) }, failed: false, copies: new Map(), removals: new Map() };
 
   const bodies: Record<string, MeetingIndexRowBody> = { ...prior?.bodies };
   const work = new Map<string, BodyWork>();
@@ -466,7 +480,7 @@ async function processState(pass: Pass, state: string, dirty: ReadonlySet<string
   if (row !== null && rowSha === row.factSha256) return { entry: { versionId: sha, ...(servedVersion === sha ? { carried: true as const } : { value: reader }) }, failed, copies, removals };
   if (!changed && row !== null) return { entry: { versionId: priorSha!, ...(servedVersion === priorSha ? { carried: true as const } : { value: readerIndexOf(prior!) }) }, failed, copies, removals };
   const result = await store.writePreparedReaderProjection({
-    recordClass: MEETINGS_RECORD_CLASS, scope: indexScope, payload: index, composedFrom: [{ contractId: INDEX_CONTRACT, versionId: sha }], factSha256: rowSha,
+    recordClass: MEETINGS_RECORD_CLASS, scope: indexScope, payload: index, composedFrom: [{ contractId: INDEX_CONTRACT, versionId: sha }, { contractId: "registry", versionId: registryVersion ?? "" }], factSha256: rowSha,
     generatedAt: pass.now, composedAt: pass.now, sourceThrough: null, retrievedAt: null, promotedThrough: null,
   }, row?.sequence ?? null);
   if (!result.published) throw new Error(`MEETING_INDEX_RACED:${indexScope}`);

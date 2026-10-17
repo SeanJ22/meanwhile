@@ -63,7 +63,9 @@ const bodyPageOf = (name: string) => name === BODY_NAME ? BODY_PAGE : `${BODY_PA
 const BODY_NAME = "Housing Commission";
 const BODY_ID = subBodyId(OCD, BODY_NAME);
 const OTHER_NAME = "Tourism Commission";
-const OTHER_ID = subBodyId(OCD, OTHER_NAME);
+const OTHER_OCD = "ocd-division/country:us/state:az/county:testville_county";
+const OTHER_ID = subBodyId(OTHER_OCD, OTHER_NAME);
+const ocdOf = (name: string) => name === OTHER_NAME ? OTHER_OCD : OCD;
 const pageFor = (name: string) => `<html><body><h1>${name}</h1><p>The ${name} serves as an advisory board to City Council.</p></body></html>`;
 
 function ics(events: readonly { uid: string; summary: string; start: string }[]): string {
@@ -85,11 +87,11 @@ const T_FAMILY = "2026-09-24T20:30:00.000Z";
 const T_SECOND = "2026-09-24T21:30:00.000Z";
 
 function crosswalkRow(name = BODY_NAME): MeetingBodyCrosswalkRow {
-  const bodyId = subBodyId(OCD, name);
+  const bodyId = subBodyId(ocdOf(name), name);
   return {
     id: `${bodyId}|ICAL`,
     jurisdictionId: "az:city:city-of-testville",
-    ocdId: OCD,
+    ocdId: ocdOf(name),
     bodyId,
     bodyRole: "SUB_BODY",
     bodyName: name,
@@ -197,9 +199,9 @@ async function readBodySnapshot(store: MemoryRoutineDataStore, edge: ReaderArtif
 }
 
 function readFeed(feed: string, now: string, name = BODY_NAME): Meeting[] {
-  const bodyId = subBodyId(OCD, name);
+  const bodyId = subBodyId(ocdOf(name), name);
   const wiring = bodySourceWiringFor({
-    bodyId, ocdId: OCD, bodyName: name, kind: "ICAL", route: ROUTE, officialHost: HOST, jurisdictionId: "az:city:city-of-testville",
+    bodyId, ocdId: ocdOf(name), bodyName: name, kind: "ICAL", route: ROUTE, officialHost: HOST, jurisdictionId: "az:city:city-of-testville",
     state: "US-AZ", publishingOrg: "City of Testville", timeZone: "America/Phoenix",
     config: { slug: `derived-az-place-testville-body-${name.toLowerCase().replace(/ /g, "-")}`, bodyName: name, feedUrl: ROUTE, titleMatch: name },
     crosswalkRowId: `${bodyId}|ICAL`, reviewedAt: "2026-09-24T19:20:00.000Z", verifiedAt: "2026-09-24T19:10:00.000Z",
@@ -466,7 +468,7 @@ test("a family's one partition publishes as one record per body; a held member i
   assert.equal(first.plan.stats.recordsWritten, 2, "one record for each body the partition holds");
   const index = (await stateIndexOf(store, "AZ"))!;
   assert.deepEqual(Object.keys(index.bodies).sort(), [BODY_ID, OTHER_ID].sort());
-  assert.deepEqual(index.places[OCD], [BODY_ID, OTHER_ID].sort(), "the place lists both bodies");
+  assert.deepEqual(index.places, { [OTHER_OCD]: [OTHER_ID], [OCD]: [BODY_ID] }, "each body is listed under the division its own sittings name, not the family's first");
   for (const bodyId of [BODY_ID, OTHER_ID]) {
     assert.deepEqual(await coupledContracts(store, "AZ", bodyId), [derivedMeetingFamilyId("US-AZ")]);
     const row = (await store.readPreparedReaderProjection("MEETING", meetingBodyRowScope("AZ", bodyId)))!.payload as MeetingBodyRow;
@@ -488,6 +490,6 @@ test("a family's one partition publishes as one record per body; a held member i
   assert.deepEqual(housing.sources.filter((source) => !source.ok), [], "the body whose member answered shows no wall");
   const walled = tourism.sources.filter((source) => !source.ok);
   assert.equal(walled.length, 1);
-  assert.deepEqual(walled[0]!.unreachableOcdIds, [OCD], "the failed member is attributed to the body's own division");
+  assert.deepEqual(walled[0]!.unreachableOcdIds, [OTHER_OCD], "the failed member is attributed to the body's own division");
   assert.ok(tourism.meetings.every((m) => m.carried !== undefined), "its last verified sitting is carried, not re-read as fresh");
 });

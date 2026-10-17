@@ -15,7 +15,8 @@ test("the answer in hand is what renders", () => {
   assert.equal(
     carryPins({
       current: TUCSON,
-      held: { result: NEWBURY, forZip: "03255" },
+      held: { result: NEWBURY, forZip: "03255", stateOcdId: "AZ" },
+      stateOcdId: "AZ",
       locationZip: "85701",
     }),
     TUCSON,
@@ -27,7 +28,8 @@ test("the last answer carries through the gap in the same area", () => {
   assert.equal(
     carryPins({
       current: null,
-      held: { result: TUCSON, forZip: "85701" },
+      held: { result: TUCSON, forZip: "85701", stateOcdId: "AZ" },
+      stateOcdId: "AZ",
       locationZip: "85701",
     }),
     TUCSON,
@@ -39,7 +41,8 @@ test("a held answer NEVER carries across a zip change", () => {
   assert.equal(
     carryPins({
       current: null,
-      held: { result: TUCSON, forZip: "85701" },
+      held: { result: TUCSON, forZip: "85701", stateOcdId: "AZ" },
+      stateOcdId: "AZ",
       locationZip: "03255",
     }),
     null,
@@ -49,14 +52,15 @@ test("a held answer NEVER carries across a zip change", () => {
 
 test("nothing is carried before a location resolves", () => {
   assert.equal(
-    carryPins({ current: null, held: null, locationZip: null }),
+    carryPins({ current: null, held: null, stateOcdId: null, locationZip: null }),
     null,
     "there is nothing to hold on a first load",
   );
   assert.equal(
     carryPins({
       current: null,
-      held: { result: TUCSON, forZip: "85701" },
+      held: { result: TUCSON, forZip: "85701", stateOcdId: "AZ" },
+      stateOcdId: "AZ",
       locationZip: null,
     }),
     null,
@@ -68,7 +72,8 @@ test("a held answer with no zip of its own is not carried", () => {
   assert.equal(
     carryPins({
       current: null,
-      held: { result: TUCSON, forZip: null },
+      held: { result: TUCSON, forZip: null, stateOcdId: "AZ" },
+      stateOcdId: "AZ",
       locationZip: "85701",
     }),
     null,
@@ -89,4 +94,12 @@ test("the map's pins are wired through the rule, not around it", () => {
     "the filtered meeting list no longer reads the carried answer — if it reads " +
       "`current` again, the map empties for the whole gap between a settle and its reply",
   );
+});
+
+
+test("a pan across a state line drops old pins even when the typed ZIP has not changed", () => {
+  assert.equal(carryPins({ current: null, held: { result: TUCSON, forZip: "85701", stateOcdId: "AZ" },
+    locationZip: "85701", stateOcdId: "NM" }), null);
+  assert.equal(carryPins({ current: null, held: { result: TUCSON, forZip: "85701", stateOcdId: "AZ" },
+    locationZip: "85701", stateOcdId: null }), null);
 });

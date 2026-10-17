@@ -31,7 +31,7 @@ const paint = (style: StyleSpecification, id: string) =>
 
 test("a switch to light rebuilds district labels with the light --bg halo, never the dark one", () => {
   theme = "dark";
-  const prevDark = withDistricts(basemap(true), ["state-house", "congressional"]);
+  const prevDark = withDistricts(basemap(true), ["state-house", "congressional"], "NM");
   assert.equal(paint(prevDark, labelLayerId("state-house"))?.["text-halo-color"], dark.get("--bg"));
 
   theme = "light";
@@ -48,6 +48,9 @@ test("a switch to light rebuilds district labels with the light --bg halo, never
   assert.ok(nextLight.layers.findIndex(layer => layer.id === lineLayerId("congressional")) < nextLight.layers.findIndex(layer => layer.id === "place-label"),
     "boundaries stay under the basemap's place labels");
 
+  for (const layer of nextLight.layers.filter(layer => layer.id.startsWith("district-"))) {
+    assert.match(JSON.stringify("filter" in layer ? layer.filter : null), /"state".*"NM"/);
+  }
   theme = "dark";
   const backToDark = preserveDistrictStyle(nextLight, basemap(true));
   assert.equal(paint(backToDark, labelLayerId("congressional"))?.["text-halo-color"], dark.get("--bg"), "and back again");
@@ -55,7 +58,7 @@ test("a switch to light rebuilds district labels with the light --bg halo, never
 
 test("only the district types already drawn come back, and a basemap without glyphs keeps lines but no labels", () => {
   theme = "dark";
-  const prev = withDistricts(basemap(true), ["state-senate"]);
+  const prev = withDistricts(basemap(true), ["state-senate"], "NM");
   const next = preserveDistrictStyle(prev, basemap(false));
   const ids = next.layers.map(layer => layer.id).filter(id => id.startsWith("district-"));
   assert.deepEqual(ids.sort(), [`district-state-senate-fill`, `district-state-senate-line`].sort());

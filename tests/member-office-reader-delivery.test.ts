@@ -54,16 +54,17 @@ test("a federal member's existing edge directory also supplies Ask office contac
   assert.match(contacts[0].sourceUrl ?? "",/legislators-district-offices\.yaml$/);
 });
 
-test("the shared directory fetch carries and caches the native person's state scope",async()=>{
+test("the shared directory fetch shares in-flight state reads and releases completed payloads",async()=>{
   const original=globalThis.fetch,urls:string[]=[],key="plural:00000000-0000-4000-8000-000000000012";
   globalThis.fetch=async input=>{urls.push(String(input));return Response.json({districtOffices:[],committees:[]});};
   try {
     const one=loadMemberDirectory(key,"OH"),same=loadMemberDirectory(key,"US-OH"),other=loadMemberDirectory(key,"NC");
     assert.equal(one,same);assert.notEqual(one,other);await Promise.all([one,other]);
     assert.equal(urls.length,2);assert.ok(urls[0].endsWith("&state=OH"));assert.ok(urls[1].endsWith("&state=NC"));
+    await loadMemberDirectory(key,"OH");
+    assert.equal(urls.length,3,"completed state payloads must be released");
   } finally {globalThis.fetch=original;}
 });
-
 
 test("the committed congress-legislators sample shows held office fields with no missing-field rows", () => {
   const fixture = JSON.parse(readFileSync(new URL("./fixtures/ui-01-congress-legislators-hinson.json", import.meta.url), "utf8"));

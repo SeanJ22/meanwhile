@@ -8,6 +8,7 @@ import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { after, test } from "node:test";
 
+import { resolveZip } from "../lib/geo/zcta.ts";
 import { authorityPointerKey, ensureReaderAuthorityEdge, publishReaderMeetings, readServedPointer, type PublishAuthorityValue } from "../lib/meetings/edge-serving.ts";
 import { publishPointers } from "./helpers/edge-pointers.ts";
 import { withReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "../lib/registry/runtime-edge.ts";
@@ -263,12 +264,12 @@ globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
 }) as typeof fetch;
 
 /** One cold render: the page, then every async component it returned, called from outside the page. */
-async function renderBallot(zip: string): Promise<{ components: Map<string, number>; text: string; contestIds: Set<string>; candidateIds: Set<string>; filingCandidateIds: Set<string>; sourceUrls: Set<string>; candidateSources: Map<string, string[]>; readerEdge: ReaderAuthorityEdgeBundle | null; readerSelection: ReaderSelection | undefined }> {
+async function renderBallot(place: string | Record<string, string>): Promise<{ components: Map<string, number>; text: string; contestIds: Set<string>; candidateIds: Set<string>; filingCandidateIds: Set<string>; sourceUrls: Set<string>; candidateSources: Map<string, string[]>; readerEdge: ReaderAuthorityEdgeBundle | null; readerSelection: ReaderSelection | undefined }> {
   clearPromotedReadModelCache();
   databaseReads.length = 0;
   const { default: BallotPage } = await import("../app/ballot/page.tsx");
   phase = "page";
-  const tree = await BallotPage({ searchParams: Promise.resolve({ zip }) });
+  const tree = await BallotPage({ searchParams: Promise.resolve(typeof place === "string" ? { zip: place } : place) });
   phase = "components";
   const components = new Map<string, number>();
   const text: string[] = [];
@@ -697,4 +698,59 @@ test("publication rejects retained filing collisions, broken contest joins and d
   invalid(ballot => { ballot.filingCandidacies![0].provenance.sourceUrl = null; }, /source/);
   invalid(ballot => { ballot.filingCandidacies![0].identity!.identityId = ballot.candidacies[0].identity!.identityId; }, /embedded ballot identity/);
   invalid(ballot => { ballot.contests[0].identity!.identityId = ballot.contests[1].identity!.identityId; }, /embedded ballot identity/);
+});
+
+const mapPoint = (zip: string) => {
+  const resolved = resolveZip(zip);
+  assert.ok(resolved.ok);
+  return { lat: String(resolved.centroid.lat), lng: String(resolved.centroid.lng) };
+};
+
+test("crossing the state line loads only the new state's ballot, and crossing back restores the first", async () => {
+  process.env.WTP_READER_EDGE_DIR = ballotEdgeDir;
+  const edgeStore = new LocalFileArtifactStore(ballotEdgeDir);
+  const ballotKey = async (state: string) => (await readServedPointer(edgeStore, authorityPointerKey("ballot-contests", state)))!.ref.key;
+  const keys: string[] = [];
+  const originalRead = LocalFileArtifactStore.prototype.readBytes;
+  LocalFileArtifactStore.prototype.readBytes = async function (key) { keys.push(key); return originalRead.call(this, key); };
+  const walk = [
+    { state: "AZ", zip: "85701", mine: "ballot-az", others: ["ballot-nh", "ballot-nj"] },
+    { state: "NH", zip: "03255", mine: "ballot-nh", others: ["ballot-az", "ballot-nj"] },
+    { state: "AZ", zip: "85701", mine: "ballot-az", others: ["ballot-nh", "ballot-nj"] },
+  ];
+  try {
+    const seen: string[][] = [];
+    for (const stop of walk) {
+      keys.length = 0;
+      const rendered = await renderBallot({ state: stop.state, ...mapPoint(stop.zip) });
+      const ids = [...rendered.contestIds];
+      assert.ok(ids.length > 0, `${stop.state} rendered no contests`);
+      assert.ok(ids.every(id => id.startsWith(stop.mine)), `${stop.state} showed another state's contest: ${ids.join(", ")}`);
+      assert.match(rendered.text, new RegExp(`What.s on the ballot\\s+in ${stop.state === "AZ" ? "Arizona" : "New Hampshire"}`));
+      assert.match(rendered.text, /We're working on getting the U\.S\. House district for this area/, `${stop.state} did not say its House district is pending`);
+      assert.deepEqual(databaseReads, [], `${stop.state} read the database`);
+      for (const other of ["AZ", "NH", "NJ"].filter(state => state !== stop.state)) {
+        assert.equal(keys.includes(await ballotKey(other)), false, `${stop.state} fetched ${other} ballot bytes`);
+      }
+      seen.push(ids.sort());
+    }
+    assert.deepEqual(seen[2], seen[0], "moving back restores the first state's ballot");
+  } finally {
+    LocalFileArtifactStore.prototype.readBytes = originalRead;
+  }
+});
+
+test("a ZIP across the line from the map point never names the place; the point's state does", async () => {
+  process.env.WTP_READER_EDGE_DIR = ballotEdgeDir;
+  const { contestIds, text } = await renderBallot({ state: "NH", zip: "85701", ...mapPoint("03255") });
+  assert.ok(contestIds.size > 0 && [...contestIds].every(id => id.startsWith("ballot-nh")));
+  assert.doesNotMatch(text, /near 85701/);
+});
+
+test("the ballot link a crossed map hands over, an in-state ZIP with the state and point, shows the same contests as the ZIP alone", async () => {
+  process.env.WTP_READER_EDGE_DIR = ballotEdgeDir;
+  const alone = await renderBallot("03255");
+  const linked = await renderBallot({ state: "NH", zip: "03255", ...mapPoint("03255") });
+  assert.deepEqual([...linked.contestIds].sort(), [...alone.contestIds].sort());
+  assert.match(linked.text, /near 03255/);
 });

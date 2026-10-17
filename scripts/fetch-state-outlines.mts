@@ -1,104 +1,45 @@
-/**
- * @freshness-reads-here — each freshness date is taken at the moment of the fetch it describes.
- */
-/**
- * `pnpm states:fetch` — state outlines for the state-focus map, from Census
- * TIGERweb as GeoJSON.
- *
- * The outline only decides which pixels are muted: it answers no question and
- * joins to nothing. It is generalized (see MAX_ALLOWABLE_OFFSET); anything
- * that needs to ask this geometry something needs the unsimplified file.
- */
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { HELD_GEOMETRY_FIPS, SLUG_BY_FIPS } from "../lib/coverage/artifacts.ts";
+import { US_JURISDICTIONS } from "../lib/coverage/states.ts";
 import { stamp } from "./stamp.mts";
 
-const SOURCE_ORG = "U.S. Census Bureau";
-const SERVICE =
-  "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/0/query";
-
-/** FIPS for the states the product covers. Adding a state adds a code here. */
-const STATE_FIPS = HELD_GEOMETRY_FIPS;
-
-/**
- * Degrees; about 50 metres, finer than the stroke at any zoom. Coarser
- * generalization (0.005, ~500 m) visibly cut river borders.
- */
-const MAX_ALLOWABLE_OFFSET = 0.0005;
-
-const url =
-  `${SERVICE}?where=${encodeURIComponent(
-    `STATE IN (${STATE_FIPS.map((f) => `'${f}'`).join(",")})`,
-  )}` +
-  `&outFields=STATE,NAME&returnGeometry=true&geometryPrecision=5` +
-  `&maxAllowableOffset=${MAX_ALLOWABLE_OFFSET}&outSR=4326&f=geojson`;
-
-console.log(`fetching ${url}`);
-const response = await fetch(url, {
-  headers: { "User-Agent": "we-the-people civic map (state outlines)" },
+const service = "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/State_County/MapServer/0/query";
+const offset = 0.0005;
+const params = new URLSearchParams({
+  where: `STATE IN (${US_JURISDICTIONS.map(state => `'${state.fips}'`).join(",")})`,
+  outFields: "STATE,NAME", returnGeometry: "true", geometryPrecision: "5",
+  maxAllowableOffset: String(offset), outSR: "4326", f: "geojson",
 });
-if (!response.ok) {
-  throw new Error(`TIGERweb answered ${response.status} for the state outlines`);
-}
-
-const raw = (await response.json()) as {
+const url = `${service}?${params}`;
+const response = await fetch(url);
+if (!response.ok) throw new Error(`TIGERweb answered ${response.status}`);
+const raw = await response.json() as {
   features?: Array<{
-    type: "Feature";
     properties: { STATE: string; NAME: string };
-    geometry: { type: string; coordinates: unknown };
+    geometry: { type: "Polygon"; coordinates: number[][][] } | { type: "MultiPolygon"; coordinates: number[][][][] };
   }>;
 };
-
-const features = raw.features ?? [];
-
-// TIGERweb answers 200 with an empty feature list for a `where` clause that matches nothing.
-if (features.length !== STATE_FIPS.length) {
-  throw new Error(
-    `expected ${STATE_FIPS.length} state outline(s), got ${features.length} — ` +
-      "refusing to write a partial file over a complete one",
-  );
-}
-
-const out = {
-  type: "FeatureCollection" as const,
-  source: url,
-  sourceOrg: SOURCE_ORG,
-  collectedAt: stamp(),
-  note:
-    `Generalized at maxAllowableOffset=${MAX_ALLOWABLE_OFFSET}° for the ` +
-    "state-focus shading. NOT district truth and never resolved against — " +
-    "see scripts/fetch-state-outlines.mts.",
-  features: features.map((f) => ({
-    type: "Feature" as const,
-    properties: {
-      statefp: f.properties.STATE,
-      name: f.properties.NAME,
-      // The state's own OCD-ID, so the map's focus can be keyed the way
-      // everything else in this product is keyed — never on a name string.
-      ocdId: `ocd-division/country:us/state:${stateAbbrFor(f.properties.STATE)}`,
+const features = US_JURISDICTIONS.map(state => {
+  const matches = raw.features?.filter(feature => feature.properties.STATE === state.fips) ?? [];
+  if (matches.length !== 1) throw new Error(`Expected one outline for ${state.usps}, got ${matches.length}`);
+  const feature = matches[0];
+  const coordinates = feature.geometry.type === "MultiPolygon"
+    ? feature.geometry.coordinates.flat() : feature.geometry.coordinates;
+  if (!coordinates.length || coordinates.some(ring => ring.length < 4)) throw new Error(`Invalid outline for ${state.usps}`);
+  return {
+    type: "Feature", properties: {
+      statefp: state.fips, name: feature.properties.NAME,
+      ocdId: `ocd-division/country:us/${state.prefix}:${state.slug}`,
     },
-    geometry: f.geometry,
-  })),
-};
-
-function stateAbbrFor(fips: string): string {
-  const abbr = SLUG_BY_FIPS[fips];
-  if (!abbr) throw new Error(`no abbreviation recorded for state FIPS ${fips}`);
-  return abbr;
-}
-
+    geometry: { type: "Polygon", coordinates },
+  };
+});
+const out = JSON.stringify({
+  type: "FeatureCollection", source: url, sourceOrg: "U.S. Census Bureau", collectedAt: stamp(),
+  note: `Display outlines generalized at ${offset} degrees; district membership uses the place resolver.`, features,
+}) + "\n";
 const dir = join(process.cwd(), "public", "geo");
 mkdirSync(dir, { recursive: true });
-const path = join(dir, "state-outlines.geojson");
-writeFileSync(path, JSON.stringify(out) + "\n", "utf8");
-
-const points = features.reduce((total, f) => {
-  const rings = f.geometry.coordinates as number[][][];
-  return total + rings.reduce((n, ring) => n + ring.length, 0);
-}, 0);
-console.log(
-  `wrote ${path}: ${features.length} state(s), ${points} points, ` +
-    `${Math.round(JSON.stringify(out).length / 1024)} KB`,
-);
+writeFileSync(join(dir, "state-outlines.geojson"), out);
+console.log(JSON.stringify({ states: features.length, points: features.reduce((total, feature) => total + feature.geometry.coordinates.reduce((sum, ring) => sum + ring.length, 0), 0), bytes: Buffer.byteLength(out) }));

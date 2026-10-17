@@ -62,9 +62,9 @@ async function hintedStates(zip: string | null): Promise<string[]> {
   return [...new Set((entry?.ids ?? []).map((id) => stateOfOcdId(id)).filter((s): s is string => s !== null))];
 }
 
-/** The nearest ZCTA to a point, capped at 60 km: a centre in open water or deep wilderness honestly has no zip. */
-async function nearestZipWithin60Km(lat: number, lng: number): Promise<string | null> {
-  const near = await nearestZctaAsync(lat, lng);
+/** The nearest ZCTA to a point inside its own state, capped at 60 km: open water, deep wilderness or a far state line honestly has no zip. */
+async function nearestZipWithin60Km(lat: number, lng: number, state: string | undefined): Promise<string | null> {
+  const near = await nearestZctaAsync(lat, lng, state);
   return near && haversineKm(lat, lng, near.lat, near.lng) <= 60 ? near.zip : null;
 }
 
@@ -100,7 +100,8 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
 
   /* Everything that reads neither the database nor the request's edge context starts here, before the authority families arrive. */
   prefetchReaderGeography();
-  const nearZipRead = zipRead.value ? Promise.resolve(zipRead.value) : nearestZipWithin60Km(lat, lng).catch(() => null);
+  const pointStates = selectedRegistryStates();
+  const nearZipRead = zipRead.value ? Promise.resolve(zipRead.value) : nearestZipWithin60Km(lat, lng, pointStates.length === 1 ? pointStates[0] : undefined).catch(() => null);
 
   const edgeManifest = await timing.time("manifest", () => readReaderManifest().catch(holdReaderAuthorityEdge));
 

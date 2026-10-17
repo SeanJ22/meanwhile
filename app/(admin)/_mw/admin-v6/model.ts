@@ -22,7 +22,6 @@ export interface Sourced<T> {
   readonly dependency?: Dependency;
 
   readonly missingParts?: readonly string[];
-
   readonly problem?: "waiting" | "denied" | "incompatible" | "failed";
 
   readonly page?: { readonly total: number | null; readonly nextCursor: string | null; readonly prevCursor: string | null };
@@ -503,8 +502,9 @@ export interface PublicationRow {
   readonly readback: { readonly status: "PASS" | "FAIL"; readonly at: string } | null;
   readonly attempt: { readonly state: string; readonly at: string; readonly failureCode: string | null } | null;
 }
-export interface PublicationView {
-  readonly ballotPublication?: import("@/lib/civic-data/ballot-publication").BallotPublicationResult | null;
+interface PublicationView {
+  readonly ballotPublications?: Readonly<Record<string, import("@/lib/civic-data/ballot-publication").BallotPublicationResult |
+    import("@/lib/civic-data/ballot-publication").BallotPublicationSummary>>;
   readonly total: number;
   readonly counts: readonly { readonly verdict: PublicationRow["verdict"]; readonly words: string; readonly count: number }[];
   readonly latestAttemptFailing: number;

@@ -2,7 +2,6 @@
 
 import { useMemo } from "react";
 
-import { formatMiles } from "@/lib/map/format";
 import { readerMeetingCount } from "@/lib/meetings/reader-listing-count";
 import { useShellData, useMeetingListingIdentity } from "@/lib/state/data";
 import { computeStats, deriveStatsView } from "@/lib/state/derive";
@@ -10,16 +9,10 @@ import { useUi, useUiDispatch } from "@/lib/state/provider";
 
 import { tierSetVars } from "./tier-style";
 
-/**
- * The four stat cards, plus the two things that must never be silent:
- * how many records were dropped, and which rung of the cascade answered.
- */
-
 const COVERAGE_LABEL = {
-  exact: "Showing meetings near you",
-  widened: "Nothing closer, so showing meetings from farther out",
+  exact: "Showing this place’s meetings",
   concluded: "Nothing upcoming; showing recent meetings",
-  none: "No meetings collected for this area yet",
+  none: "We don’t have this place’s meetings yet",
 } as const;
 
 export function StatsBar() {
@@ -53,11 +46,6 @@ export function StatsBar() {
   const listingCount = readerMeetingCount(meetings, useMeetingListingIdentity());
 
   const coverage = result?.tier ?? null;
-  const widened =
-    result && result.radiusKm !== result.requestedRadiusKm
-      ? `${formatMiles(result.requestedRadiusKm)} → ${formatMiles(result.radiusKm)} mi`
-      : null;
-
   return (
     <div className="stats-bar">
       {/* Each count opens the list it counts. */}
@@ -114,11 +102,9 @@ export function StatsBar() {
         </p>
       )}
 
-      {/* A widened search stays on screen as the rung that answered. */}
       {coverage && !searchFailed && (
         <p className="stat-missing" style={{ color: "var(--text-muted)" }}>
           {COVERAGE_LABEL[coverage]}
-          {widened ? ` (${widened})` : ""}
         </p>
       )}
     </div>

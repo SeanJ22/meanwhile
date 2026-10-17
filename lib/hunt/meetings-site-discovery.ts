@@ -569,6 +569,8 @@ export interface DiscoveryFind {
   readonly count: number | null;
   readonly detail: string;
   readonly artifactId: string | null;
+  readonly hintUrl?: string;
+  readonly bodyName?: string;
 
   readonly via?: { readonly page: string; readonly artifactId: string | null } | null;
 }

@@ -26,7 +26,6 @@ export async function publishOwedCommentFacts(input: {
   const captureReaders = await publicationCaptureReaders(input.repos, input.readCapture, input.readHeld);
   const { results, readCapture } = await jobWorkerResults(input.repos, input.workItemIds, captureReaders.readCapture);
   const manual = await readValidatorManual(input.repos);
-  const registry = await readRegistryRuntimePrior(input.store, input.now);
   const report: { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[] = [];
   for (const id of [...new Set(input.workItemIds)]) {
     const item = (await input.repos.workItems.mustRead(id)).value;
@@ -45,6 +44,7 @@ export async function publishOwedCommentFacts(input: {
       captures = await capturesForPublication({ repos: input.repos, workItemId: id, primaryId: extraction.artifactId, results, readCapture, officialLinks: manual.officialLinks });
       const capture = captures.find(c => c.evidence.artifactId === extraction.artifactId);
       if (!capture) throw new Error("COMMENT_PAGE_NOT_SAVED");
+      const registry = await readRegistryRuntimePrior(input.store, input.now, plan.contract.jurisdiction.state);
       const bodyId = plan.publication.bodyId;
       const body = registry?.payload.registry.bodies.find(row => row.id === bodyId) ?? null;
       let live = 0, added = 0, reused = 0, blanks = 0;

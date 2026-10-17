@@ -389,7 +389,7 @@ test("A STATE WITH NO CONNECTED CALENDAR: its family reads the wiring first and 
   const ingest = readFileSync(join(ROOT, "scripts", "ingest.ts"), "utf8");
   const main = ingest.slice(ingest.indexOf("async function main()"));
   assert.ok(
-    main.indexOf("promoteDerivedMeetingFamily(") < main.indexOf("await preloadCanonicalMeetingDependencies({ sourceName: name });"),
+    main.indexOf("promoteDerivedMeetingFamily(") < main.indexOf("await preloadCanonicalMeetingDependencies({ sourceName: name, state });"),
     "the child routes a family before the preload every source/body partition needs",
   );
 });

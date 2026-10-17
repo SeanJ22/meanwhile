@@ -1,16 +1,13 @@
+import { installFactReader } from "../lib/facts/db.ts";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
-import { gunzipSync } from "node:zlib";
 import { createHash } from "node:crypto";
 import test from "node:test";
-import type { CandidateVersionRecord, PromotedProjection } from "../lib/civic-data/types.ts";
-import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+
 import { readRegistryRuntimePrior, registryRuntimeCandidate, type RegistryRuntimeCarton, type RegistryRuntimePrior, type RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 import { readHeldDirectory } from "../lib/civic-data/worker-held-directory.ts";
 import { heldDirectoryReading, publishBodyOffice, workerBodyDirectoryPackage } from "../lib/civic-data/worker-body-directory.ts";
 import { jurisdictionDiscoveryPlan, type AutonomousWorkPlan } from "../lib/control-plane/workers/autonomous-plan.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
-import { installFactReader } from "../lib/facts/db.ts";
 import { withFactRegistry } from "../lib/facts/registry-overlay.ts";
 import { factDb } from "./helpers/fact-db.ts";
 import type { WorkerPublicationCapture } from "../lib/civic-data/worker-roster-publication.ts";
@@ -19,7 +16,67 @@ import type { Jurisdiction } from "../lib/hunt/jurisdiction-universe.ts";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
 import { workerPublicationTasks } from "../lib/civic-data/worker-publication-tasks.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
-import { CENSUS_PLACEHOLDER_LABELS } from "../lib/registry/census-placeholders.ts";
+import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { registryTransferImport } from "./helpers/promoted-fixtures.ts";
+import { registryJurisdictions } from "../lib/civic-data/state-scopes.ts";
+import { stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
+import { stateRegistryRuntimeContractId } from "../lib/civic-data/state-scopes.ts";
+import { rowKeyedCivicRecordsFor } from "../lib/civic-data/changes.ts";
+import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
+import { trustedLkgImportUrl } from "../lib/civic-data/trusted-lkg-import.ts";
+import { withStateRecordHashes } from "../lib/civic-data/state-publication.ts";
+import { candidateChangeSet } from "../lib/civic-data/changes.ts";
+import { ROW_KEYED_CIVIC_CHANGE_CONTRACT } from "../lib/civic-data/changes.ts";
+import { trustedLkgCandidateEnvelopeSha256 } from "../lib/civic-data/trusted-lkg-import.ts";
+import { trustedLkgValidatorIds } from "../lib/civic-data/trusted-lkg-import.ts";
+import { trustedLkgCandidateId } from "../lib/civic-data/trusted-lkg-import.ts";
+import type { CandidateVersionRecord } from "../lib/civic-data/types.ts";
+import type { PromotedProjection } from "../lib/civic-data/types.ts";
+
+function registryFixtureForState(state: string, value: RegistryRuntimeReadModel = registryTransferImport().projection.payload): RegistryRuntimeReadModel {
+  const own = (id: string | null) => registryJurisdictions(id).includes(state.toUpperCase());
+  const bodies = value.registry.bodies.filter(row => own(row.id) || own(row.ocdId) || row.alsoServesOcdIds?.some(own));
+  const bodyIds = new Set(bodies.map(row => row.id));
+  const bodyRosters = value.bodyRosters.filter(row => bodyIds.has(row.bodyId));
+  const statewideExecutives = value.statewideExecutives.filter(row => own(row.stateOcdId));
+  const bridge = value.officialCandidacies.rows.filter(row => row.holder.divisions.some(own));
+  const holders = new Set([...bodyRosters.flatMap(row => row.members.map(member => member.id)),
+    ...statewideExecutives.map(row => row.holder.id), ...bridge.map(row => row.holder.id)]);
+  return { ...value, registry: { ...value.registry, bodies,
+    divisions: value.registry.divisions.filter(row => row.ocdId === "ocd-division/country:us" || own(row.ocdId)) },
+    bodyRosters, statewideExecutives, officialCandidacies: { ...value.officialCandidacies, rows: bridge },
+    officialPhotos: { photos: value.officialPhotos.photos.filter(row => holders.has(row.officeholderId)) },
+    rosterPhotos: Object.fromEntries(Object.entries(value.rosterPhotos).filter(([id]) => holders.has(id) || own(id))),
+    rosterReaderDispositions: value.rosterReaderDispositions.filter(row => own(row.sourceId) || holders.has(row.sourceId) || (row.canonicalId !== null && holders.has(row.canonicalId)) ||
+      [...holders].some(id => id.startsWith("roster:") && id.split("#")[0] === row.sourceId.split("#")[0])) };
+}
+
+function stateRegistryRuntimeStore(state: string, store = new MemoryRoutineDataStore()): MemoryRoutineDataStore {
+  const original = registryTransferImport();
+  const payload = registryFixtureForState(state), scope = stateRegistryRuntimeScope(state), contractId = stateRegistryRuntimeContractId(state);
+  const civicRecords = rowKeyedCivicRecordsFor("REGISTRY_RUNTIME_BINDING", payload), digest = canonicalCivicDataHash(payload);
+  const candidate = { ...original.record.candidate, scope,
+    retrieval: { ...original.record.candidate.retrieval, requestedUrl: trustedLkgImportUrl(contractId) },
+    normalization: { ...original.record.candidate.normalization, normalizedHash: digest, normalizedPayloadHash: digest,
+      inputRecords: civicRecords.length, outputRecords: civicRecords.length, droppedRecords: 0 },
+    normalizedPayload: payload, readModel: payload, civicRecords, identities: [],
+    horizon: { ...original.record.candidate.horizon, returnedRecords: civicRecords.length },
+    sourceProjectionEvidence: { kind: "SOURCE_PROJECTION_CONTRACT" as const, sourceId: original.record.candidate.sourceId, recordClass: original.record.candidate.recordClass, scope },
+  };
+  Object.assign(candidate, { normalization: withStateRecordHashes(candidate).normalization });
+  candidate.changeSet = candidateChangeSet(candidate, null, ROW_KEYED_CIVIC_CHANGE_CONTRACT);
+  candidate.bootstrapImport = { ...original.record.candidate.bootstrapImport!, contractId, scope,
+    normalizedPayloadSha256: digest, readModelSha256: digest, candidateEnvelopeSha256: trustedLkgCandidateEnvelopeSha256(candidate), validatorIds: trustedLkgValidatorIds(candidate) };
+  candidate.id = trustedLkgCandidateId(candidate.bootstrapImport);
+  const receipt = { ...original.record.receipt!, candidateId: candidate.id, scope };
+  const record = { ...original.record, candidate, receipt, promotedVersion: candidate.id, lastKnownGoodVersion: candidate.id };
+  const projection = { ...original.projection, key: `REGISTRY_RUNTIME_BINDING:${scope}`, scope, versionId: candidate.id,
+    lastKnownGoodVersionId: candidate.id, payload, receipt };
+  const held = store as unknown as { candidates: Map<string, CandidateVersionRecord>; promotions: Map<string, PromotedProjection> };
+  held.candidates.set(candidate.id, record);
+  held.promotions.set(projection.key, projection);
+  return store;
+}
 
 const NOW = "2026-09-29T20:00:00.000Z";
 const DIVISION = "ocd-division/country:us/state:az/place:benson";
@@ -43,14 +100,11 @@ const artifact = (c: WorkerPublicationCapture) => ({ artifactId: c.evidence.arti
   partial: false, recordedAt: c.observedAt }) as ArtifactRecord;
 
 async function prior(): Promise<RegistryRuntimePrior> {
-  const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
-  const store = new MemoryRoutineDataStore();
-  Object.assign(store, { candidates: new Map([[record.candidate.id, record]]), promotions: new Map([[projection.key, projection]]) });
-  return (await readRegistryRuntimePrior(store, NOW))!;
+  return (await readRegistryRuntimePrior(await stateRegistryRuntimeStore("AZ"), NOW, "AZ"))!;
 }
 const benson: Jurisdiction = { id: "az:city:city-of-benson", stateCode: "AZ", name: "City of Benson", govClass: "CITY", countyName: "Cochise",
   enumeratedFrom: "fixture", ownWebAddress: "https://www.bensonaz.gov/", sourceIds: [], ocdId: DIVISION } as unknown as Jurisdiction;
-/** A body-directory work item's plan, in the shape such items carry. */
+
 function directoryPlan(jurisdiction: Jurisdiction, bodyId: string): AutonomousWorkPlan {
   const routeId = "coverage-discovery:body-directory";
   const base = jurisdictionDiscoveryPlan(jurisdiction, { recordClass: "OFFICEHOLDERS", authority: jurisdiction.name,
@@ -60,7 +114,7 @@ function directoryPlan(jurisdiction: Jurisdiction, bodyId: string): AutonomousWo
   if (base.contract.schemaVersion !== 2) throw new Error("DIRECTORY_TEMPLATE_INVALID");
   return { ...base, capability: "governments/body-directory",
     directorySubject: { jurisdiction, divisionId: jurisdiction.ocdId ?? null },
-    publication: { contractId: "registry-runtime-bindings", bodyId },
+    publication: { contractId: "registry-runtime:AZ", bodyId },
     contract: { ...base.contract, recordClass: "OFFICIAL_BOARD_DIRECTORY",
       requiredFields: ["bodyName", "bodyClass", "homepageUrl", "jurisdictionName", "coverage", "coverageEvidence"],
       identity: { namespace: `${jurisdiction.id}:body-directory`, keyFields: ["bodyName", "homepageUrl"] } } };
@@ -102,8 +156,8 @@ test("a directory page outside its freshness window, from another government or 
 test("the runner offers a directory with no extraction yet, hourly, so its saved pages are read in code", () => {
   const item = { id: "wi-directory", autonomousPlan: plan } as unknown as WorkItem;
   const [task] = workerPublicationTasks([item], [], NOW);
-  assert.equal(task?.id, "worker-publication:registry-runtime-bindings:wi-directory");
-  assert.equal(task?.registeredContractId, "registry-runtime-bindings");
+  assert.equal(task?.id, "worker-publication:registry-runtime:AZ:wi-directory");
+  assert.equal(task?.registeredContractId, "registry-runtime:AZ");
   assert.match(task.command.at(-1)!, /--worker-directories=wi-directory$/);
   const siblings = workerPublicationTasks([item, { ...item, id: "wi-other-body" }], [], NOW);
   assert.equal(siblings.length, 2, "independent body work cannot share one publisher command");
@@ -128,29 +182,20 @@ test("each board's own section gives its regular schedule in the page's words; a
   assert.equal(model.registry.bodies.find(body => body.name === "Tourism Commission")?.meetingCadence, null);
 });
 
-test("a board's schedule publishes through the registry door itself, not only into a candidate", async (context) => {
-  installFactReader(null);
-  context.after(() => installFactReader(undefined));
-  const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
-  const store = new MemoryRoutineDataStore();
-  Object.assign(store, { candidates: new Map([[record.candidate.id, record]]), promotions: new Map([[projection.key, projection]]) });
-  // Replay the deployed Census placeholder correction the recorded fixture predates (as the roster tests do).
-  const imported = (await readRegistryRuntimePrior(store, NOW))!;
-  const divisions = imported.payload.registry.divisions.filter(row => CENSUS_PLACEHOLDER_LABELS[row.label]).map(row => ({ ...row, label: CENSUS_PLACEHOLDER_LABELS[row.label] }));
-  const corrected = registryRuntimeCandidate({ contractId: "registry-runtime-bindings", version: "fixture-census-correction", sourceThrough: NOW,
-    sourceReceipt: { contractVersion: 1, reviewedAt: NOW, reviewedBy: "recorded-fixture-control", sources: [...new Set(divisions.map(row => row.provenance!.sourceUrl!))].map(url => ({ requestedUrl: url, finalUrl: url, publisher: "U.S. Census Bureau", sourceClass: "OFFICIAL_PUBLISHER" as const, retrievedAt: NOW, httpStatus: 200, rawHash: createHash("sha256").update(JSON.stringify(divisions)).digest("hex"), reviewedEvidence: "Offline fixture: Census LEA 99997 means no school district." })) },
-    payload: { ...imported.payload, registry: { ...imported.payload.registry, divisions, bodies: [] }, statewideExecutives: [], officialCandidacies: { ...imported.payload.officialCandidacies, rows: [] }, officialPhotos: { photos: [] }, rosterPhotos: {} } }, { prior: imported });
-  const correction = await processRegisteredManualCandidate(store, "registry-runtime-bindings", corrected, NOW, imported.versionId);
-  assert.ok(correction.promoted, correction.candidate.failureDetail ?? "fixture correction held at the door");
-  const base = (await readRegistryRuntimePrior(store, NOW))!;
+test("a board's schedule publishes through the registry door itself, not only into a candidate", async t => {
+  const facts = await factDb();
+  installFactReader(facts.query);
+  t.after(async () => { installFactReader(undefined); await facts.pg.close(); });
+  const store = await stateRegistryRuntimeStore("AZ");
+  const base = (await readRegistryRuntimePrior(store, NOW, "AZ"))!;
   const html = page("Commissions", section("Neighborhoods Commission").replace("<p>Members are appointed",
     "<p>The commission meets on the second Monday of each month at 4:30 p.m. in City Hall.</p><p>Members are appointed"));
   const saved = capture(html, URL_);
   const reading = await heldDirectoryReading({ plan, prior: base, now: NOW, artifacts: [artifact(saved)], readHeld: async () => saved });
   const candidate = registryRuntimeCandidate(workerBodyDirectoryPackage({ plan, held: reading!, prior: base, now: NOW }).prepared, { prior: base });
-  const published = await processRegisteredManualCandidate(store, "registry-runtime-bindings", candidate, NOW, base.versionId);
+  const published = await processRegisteredManualCandidate(store, "registry-runtime:AZ", candidate, NOW, base.versionId);
   assert.ok(published.promoted, published.candidate.failureDetail ?? "held at the door");
-  const after = (await readRegistryRuntimePrior(store, NOW))!;
+  const after = (await readRegistryRuntimePrior(store, NOW, "AZ"))!;
   assert.equal(after.payload.registry.bodies.find(body => body.name === "Neighborhoods Commission")?.meetingCadence,
     "The commission meets on the second Monday of each month at 4:30 p.m. in City Hall.");
 });

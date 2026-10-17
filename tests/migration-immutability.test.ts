@@ -1,10 +1,3 @@
-/**
- * An established migration is immutable. `migrationTagsIn` cannot tell which way a migration file changed, so the
- * guard is run here as the real gate (`scripts/db-shipping-gate.mts`), spawned in a throwaway git repository: a
- * rewrite, a delete and a rename must exit 1 naming the file, and an append must pass. The child's environment has
- * `WTP_PRODUCTION_DATABASE_URL_READONLY` removed, so exit codes are deterministic and no connection is opened.
- */
-
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
@@ -274,6 +267,30 @@ test("REGRESSION · a NORMAL APPEND passes — the guard does not refuse ordinar
       "a run whose only change is a new migration, with no credential in the environment and " +
         `nothing else touched, must exit 0:\n${out}`,
     );
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("step-named lane migrations append normally and remain protected against rewrites", () => {
+  const { dir, base } = scratch();
+  const tag = "SRC-EXAMPLE_lookup", path = `lib/db/migrations/${tag}.sql`;
+  try {
+    writeFileSync(join(dir, path), 'CREATE INDEX "example_idx" ON "0001_beta" ("id");\n');
+    const entries = JSON.parse(readFileSync(join(dir, JOURNAL_PATH), "utf8")).entries as JournalEntry[];
+    writeJournal(dir, [...entries, { idx: 2, when: 1_780_000_000_002, tag }]);
+    git(dir, ["add", "-A"]);
+    git(dir, ["commit", "--quiet", "-m", "append a lane migration"]);
+    const appended = runGate(dir, base);
+    assert.equal(appended.status, 0, appended.out);
+    assert.match(appended.out, /migration immutability HOLDS/);
+    const establishedHead = git(dir, ["rev-parse", "HEAD"]);
+    writeFileSync(join(dir, path), 'CREATE INDEX "different_idx" ON "0001_beta" ("id");\n');
+    git(dir, ["commit", "--quiet", "-a", "-m", "rewrite a lane migration"]);
+    const rewritten = runGate(dir, establishedHead);
+    assert.equal(rewritten.status, 1, rewritten.out);
+    assert.match(rewritten.out, /\[migration-modified\]/);
+    assert.ok(rewritten.out.includes(path));
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }

@@ -15,8 +15,11 @@ import { buildCensusDistrictEdge } from "../lib/census-geography/district-edge.t
 import type { BuiltDataset } from "../lib/census-geography/dataset.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { codeOf } from "./read-code.ts";
-import { contestsForDivisions } from "../lib/sources/ballot-nj-morris/index.ts";
-import { azBallot, electionSelection } from "./helpers/ballot-district-fixtures.ts";
+import { contestsForDivisions } from "../lib/ballot/contests.ts";
+import { electionSelection } from "./helpers/ballot-district-fixtures.ts";
+import type { BallotSet } from "../lib/ballot/types.ts";
+
+const azBallot = Object.values(JSON.parse(readFileSync(join(import.meta.dirname, "../data/ballot/2026-general/az.json"), "utf8")).ballots)[0] as BallotSet;
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, "..");
@@ -156,8 +159,7 @@ test("the pill attaches to a BODY, never to a candidate", () => {
 
 test("the pill never gates — the page renders every contest regardless", () => {
   const page = codeOf("app", "ballot", "page.tsx");
-  // `needsPill` may only decide a marker. If it ever decided a filter, a contest would vanish because of where a
-  // reader might live.
+
   assert.doesNotMatch(
     page,
     /\.filter\([^)]*needsPill/,
@@ -172,8 +174,7 @@ test("the pill never gates — the page renders every contest regardless", () =>
 
 test("the session store keeps the OUTCOME, never the address", () => {
   const mod = codeOf("lib", "geo", "session-address.ts");
-  // The shape is the guarantee. A field for a house number or a coordinate
-  // would make this a location record, which is the one thing it must not be.
+
   assert.doesNotMatch(
     mod,
     /\b(houseNumber|house_number|lat\??:|lng\??:|latitude|longitude)\b/,
@@ -221,7 +222,7 @@ test("an address scope stays inside its ZIP and selected election date", async (
 });
 
 test("the narrowing surface reads the session before it prompts", () => {
-  /* There is one address form across surfaces, and the session read lives in it. */
+
   const narrowing = codeOf("components", "address", "address-prompt.tsx");
   assert.match(narrowing, /sessionAddressFor\(zip,\s*selection\)/, "it reads the session for this ZIP and selection");
   assert.match(narrowing, /writeSessionAddress\(/, "and it records its own answer for the others");
@@ -258,7 +259,7 @@ test("3.3: a congressional district is NOT statewide and keeps the pill", async 
 test("3.3: the statewide rule matches the SHAPE exactly, not a prefix", async () => {
   const c = await sampledZipCertainty("07866");
   assert.ok(c);
-  // A county sits under `state:nj/` and must never be swept up as statewide.
+
   assert.equal(
     c.certaintyOf("ocd-division/country:us/state:nj/county:morris/place:rockaway_borough"),
     "AMBIGUOUS",
@@ -309,7 +310,7 @@ test("3.3: couldGovern is only set on a TYPED zip, never on a panned viewport", 
 });
 
 test("3.1: the class sweep — both zip-resolving surfaces widen to the AREA", () => {
-  /* Guards against a third surface being added on point-only behaviour. */
+
   const ballot = codeOf("app", "ballot", "page.tsx");
   const meetings = codeOf("app", "api", "meetings", "route.ts");
   for (const [name, src] of [["ballot page", ballot], ["meetings route", meetings]] as const) {
@@ -354,14 +355,14 @@ test("3.1: a body arriving only through the widening must be GOVERNING", () => {
 });
 
 test("3.1: filtering the body list recomputes the counts it invalidates", () => {
-  /* Stated N equals rendered rows: `counts.total` goes stale the moment the filter removes a body. */
+
   const route = codeOf("app", "api", "meetings", "route.ts");
   assert.match(route, /total: kept\.length/, "total is recounted off the kept array");
   assert.match(route, /governing: \{/, "and so is the governing pair the lead sentence reads");
 });
 
 test("3.1: the wired-status set is imported, never a second hand-typed copy", () => {
-  /* The real status set, not a hand-written copy of a closed enum. */
+
   const route = codeOf("app", "api", "meetings", "route.ts");
   assert.match(route, /import \{ WIRED_STATUSES \} from/, "imported from lib/registry/coverage");
   assert.doesNotMatch(route, /\["WIRED", "PARTIAL"\]/, "and not retyped");

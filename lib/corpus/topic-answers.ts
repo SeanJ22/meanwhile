@@ -4,12 +4,6 @@ import { statementEvidenceFor } from "../ask/statements.ts";
 import { DEFAULT_STANCE_TOPICS, type StanceTopic } from "../stances/topics.ts";
 import type { StatementCorpus } from "./types.ts";
 
-/**
- * Builds each stance topic's answer once, with the same statement search and
- * exact-words composer Ask uses, so a chip and a typed question cannot drift
- * apart. Pure: the corpus and the people are arguments.
- */
-
 export interface TopicAnswerPerson {
   /** Roster officeholder id or ballot candidacy id, as the corpus keys it. */
   readonly subjectId: string;
@@ -40,10 +34,10 @@ export function chipQuestion(name: string, topic: string): string {
 }
 
 /** One person's stored answer for one topic, or null when the corpus could not be read for them. */
-export function buildTopicAnswer(person: TopicAnswerPerson, topic: StanceTopic, corpus: StatementCorpus): StoredTopicAnswer | null {
+function buildTopicAnswer(person: TopicAnswerPerson, topic: StanceTopic, corpus: StatementCorpus): StoredTopicAnswer | null {
   const subject = { kind: "PERSON" as const, id: person.subjectId, name: person.name };
   const question = chipQuestion(person.name, topic.label);
-  const found = statementEvidenceFor(subject, question, [], () => corpus, person.identityKeys ?? [person.subjectId]);
+  const found = statementEvidenceFor([], subject, question, [], () => corpus, person.identityKeys ?? [person.subjectId]);
   // A read that failed is not an answer: the chip keeps asking Ask.
   if (found.denominators.statementLoaderFailures || found.denominators.statementIdentityUnresolved) return null;
   const composed = composeOwnWordsAnswer({ subject, question, records: found.records });

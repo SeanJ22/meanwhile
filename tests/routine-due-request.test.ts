@@ -94,7 +94,7 @@ test("one open request at a time per partition; withdrawn and expired ones stay 
   for (let index = 0; index < 23; index += 1, at += 2 * HOUR) {
     await requestRoutineDue(repos, [`--contract=${NEWBURY_ENERGY}`, "--expires-in-minutes=5"], iso(at));
   }
-  assert.equal((await repos.adminConfig.mustRead("current", { routineDueRequests: true })).value.routineDueRequests?.length, 25);
+  assert.equal((await repos.adminConfig.mustRead("current",{routineDueRequests:true})).value.routineDueRequests?.length, 25, "every closed request remains in its history table");
 });
 
 test("a stored request is durable input: malformed rows are named and ignored, never trusted", () => {
@@ -179,7 +179,8 @@ test("the runner honours a request only in its ordinary pass: the same due check
   assert.match(runner, /if \(!FORCE\) \{\s+try \{\s+const read = await readRoutineDueRequests\(\);/);
   assert.match(runner, /RCD_DUE_REQUEST CANNOT_TELL — \$\{[^}]+\}; every task keeps its normal schedule/);
   assert.match(runner, /const dueRequest = FORCE \? null : routineDueRequestFor\(task, durableClock, admissionNowMs, dueRequests\);/);
-  assert.match(runner, /!routineTaskDue\(task, durableClock, admissionNowMs, sittingHot, observedEveryMs\) && dueRequest === null/);
+  assert.match(runner, /const cadenceDue = routineTaskDue\(task, durableClock, admissionNowMs, sittingHot, observedEveryMs\);/);
+  assert.match(runner, /if \(!FORCE && !taskDue && dueRequest === null/);
   assert.match(runner, /deadlineMs: routineDueRequestDeadlineMs\(\s+routineTaskDeadlineMs\(pending\.task, clock, sittingSignals\.get\(pending\.task\.id\)\),/);
   assert.match(runner, /for \(const \{ task \} of placeSourceLaunchOrder\(routinePassLaunchOrder\(admitted, admissionNowMs\)\)\) pendingRuns\.push/);
   assert.match(runner, /\.\.\.input\.dueRequestLines,/);

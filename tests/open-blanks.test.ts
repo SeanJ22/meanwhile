@@ -56,7 +56,7 @@ test("a second pass on a place with every blank filled reads nothing and says wh
 
   const held = all.map(row => fresh(row.subject.id, row.checklistId));
   const read: string[] = [];
-  const result = await runPlaceSource({ repos: createMemoryRepositories(), store: new MemoryRoutineDataStore(), zip: "65101", now,
+  const result = await runPlaceSource({ repos: createMemoryRepositories(), store: new MemoryRoutineDataStore(), zip: "65101", state: "MO", now,
     divisions: [division], geographyCaptures: [], readHeld: async () => ({ subjects: [], held }),
     readSource: async url => { read.push(url); throw new Error("must not read"); }, publish: async () => ({}) });
   assert.deepEqual(read, []);

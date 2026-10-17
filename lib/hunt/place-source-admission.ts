@@ -7,10 +7,10 @@ import { loadPublishedScopeLookupState } from "../census-geography/scope-lookup.
 import { loadPublishedAreaLookupState } from "../census-geography/area-lookup.ts";
 import { readIntents } from "../control-plane/scheduler/research-policy.ts";
 import { admittedHuntSourceScopes } from "../civic-data/hunt-source-tasks.ts";
-import { requiredManualProductionContract } from "../civic-data/manual-contracts.ts";
+import { statesForRegistryDivisions } from "../civic-data/state-scopes.ts";
+import type { NationalPlaceTask } from "./place-source-task.ts";
 import type { RoutineSourceTask } from "../civic-data/runner.ts";
-import { DEFAULT_CADENCE_HOURS } from "../control-plane/scheduler/obligation.ts";
-import { dueNationalPlaceZips, nationalPlaceSendRequests, readNationalPlaceSendRequests, type NationalPlaceSendRequest } from "./place-source-task.ts";
+import { dueNationalPlaceZips, nationalPlaceJobs, nationalPlaceSendRequests, readNationalPlaceSendRequests, type NationalPlaceSendRequest } from "./place-source-task.ts";
 import { orderNationalPlaceWork } from "../control-plane/expansion/dispatch-work.ts";
 
 export async function resolveNationalPlaceSendScopes(sends: readonly ExpansionScopeDecision[], zips: readonly string[]) {
@@ -24,23 +24,10 @@ export function placeSourceLaunchOrder<T extends { readonly task: Pick<RoutineSo
   return [places[0]!, ...standing.slice(0, 1), ...places.slice(1), ...standing.slice(1)];
 }
 
-export function nationalPlaceJobs(zips: readonly string[], owner?: NationalPlaceSendRequest): RoutineSourceTask[] {
-  if (zips.some(zip => !/^\d{5}$/.test(zip))) throw new Error("National place acquisition needs five-digit ZIPs");
-  const contract = requiredManualProductionContract("registry-runtime-bindings");
-  return [...new Set(zips)].map(zip => ({ id: `national-place:${zip}`, registeredContractId: contract.id,
-    sourceId: contract.sourceId, recordClass: contract.recordClass, scope: contract.scope,
-    acquisitionFailureDomain: `national-place:${zip}`, requestedUrl: "", authorityMode: "REGISTERED_SOURCE_ROUTES",
-    parserVersion: contract.parserNormalizerVersion,
-    command: [...contract.command, `--national-zips=${zip}`], cadenceMs: DEFAULT_CADENCE_HOURS * 3_600_000, retryMs: 15 * 60_000,
-    contract: { readerProjection: contract.readerProjection,
-      cadence: { description: "Refresh one admitted place's national sources", defaultEveryMs: DEFAULT_CADENCE_HOURS * 3_600_000 } },
-    ...(owner ? { ownerInvocation: { publicationPending: true as const, requestedAt: owner.requestedAt, instructions: [...new Set(owner.instructions)] } } : {}) }));
-}
-
 export async function withNationalPlaceTasks(tasks: readonly RoutineSourceTask[], args: readonly string[]): Promise<RoutineSourceTask[]> {
   const explicit = args.find(arg => arg.startsWith("--national-zips="))?.slice("--national-zips=".length);
   const only = args.find(arg => arg.startsWith("--only="))?.slice("--only=".length).split(",");
-  if (only && !only.includes("registry-runtime-bindings") && !only.some(id => /^national-place:\d{5}$/.test(id))) return [...tasks];
+  if (only && !only.some(id => /^registry-runtime:[A-Z]{2}$/.test(id) || /^national-place:\d{5}(?::[A-Z]{2})?$/.test(id))) return [...tasks];
   const now = new Date().toISOString();
   let zips = explicit?.split(",") ?? [];
   let requests: ReadonlyMap<string, NationalPlaceSendRequest>;
@@ -72,11 +59,26 @@ export async function withNationalPlaceTasks(tasks: readonly RoutineSourceTask[]
 
     const held = await repos.obligations.listWhere(["routeId"], "national-place-sources");
     zips = [...new Set([...zips, ...held.filter(row => row.value.active).flatMap(row =>
-      /^national-place:\d{5}$/.test(row.value.id) ? [row.value.id.slice("national-place:".length)] : [])])];
+      /^national-place:\d{5}(?::[A-Z]{2})?$/.test(row.value.id) ? [row.value.id.split(":")[1]] : [])])];
   } else requests = await readNationalPlaceSendRequests(repos, zips, now);
   if (!zips.length) return [...tasks];
   if (zips.some(zip => !/^\d{5}$/.test(zip))) throw new Error("National place acquisition needs five-digit ZIPs");
-  zips = await dueNationalPlaceZips(repos, zips, now, requests);
-  if (!zips.length) return [...tasks];
-  return [...tasks, ...(await orderNationalPlaceWork(repos, zips, now)).flatMap(zip => nationalPlaceJobs([zip], requests.get(zip)))];
+  const groups = new Map<string, NationalPlaceTask[]>();
+  const lookup = await loadPublishedAreaLookupState(zips);
+  for (const zip of zips) {
+    const grouping = await lookup.lookup.groupingsForZcta(zip);
+    const states = grouping.status.kind === "OK" ? statesForRegistryDivisions(grouping.memberships.map(member => `US-${member.geography.stateAbbr}`)) : [];
+    if (!states.length) throw new Error(`NATIONAL_PLACE_STATE_UNRESOLVED:${zip}`);
+    for (const state of states) {
+      const id = `national-place:${zip}${states.length > 1 ? `:${state}` : ""}`;
+      if (only && !only.includes(id) && !only.includes(`national-place:${zip}`) && !only.includes(`registry-runtime:${state}`)) continue;
+      groups.set(state, [...(groups.get(state) ?? []), { id, zip, state }]);
+    }
+  }
+  const jobs: RoutineSourceTask[] = [];
+  for (const places of groups.values()) {
+    const due = await dueNationalPlaceZips(repos, places, now, requests);
+    for (const zip of await orderNationalPlaceWork(repos, due, now)) jobs.push(...nationalPlaceJobs([places.find(place => place.zip === zip)!], requests.get(zip)));
+  }
+  return [...tasks, ...jobs];
 }

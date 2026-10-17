@@ -1,3 +1,5 @@
+import { currentStateAuthorityProjection, readStateAuthorityProjection } from "./state-reader.ts";
+import { stateBallotContractId, stateBallotScope } from "./state-scopes.ts";
 import {
   civicDataReadNotInitialized,
   readPromotedCivicData,
@@ -22,10 +24,10 @@ export interface CandidateLinksShape {
   readonly campaign: VerifiedLinkShape | null;
 }
 
-export const DERIVED_CAMPAIGN_SITES_CONTRACT_ID = "candidate-campaign-sites-derived" as const;
+export const derivedCampaignSitesContractId = (state: string) => stateBallotContractId("candidate-campaign-sites-derived", state);
+export const derivedCampaignSitesScope = (state: string) => stateBallotScope("candidate-campaign-sites-derived", state);
 export const DERIVED_CAMPAIGN_SITES_SOURCE_ID = "candidate-campaign-site-chain" as const;
 export const DERIVED_CAMPAIGN_SITES_RECORD_CLASS = "CURATED_READER_RECORD" as const;
-export const DERIVED_CAMPAIGN_SITES_SCOPE = "US:candidate-campaign-sites-derived" as const;
 
 export interface DerivedCampaignSiteEvidence {
   readonly verifierId: string;
@@ -215,57 +217,21 @@ export function derivedCampaignSitesProjectionIssue(value: unknown): string | nu
   return null;
 }
 
-let installed: CivicDataReadResult<DerivedCampaignSitesProjection> | null = null;
-
-/** Read the promoted derived campaign sites, refusing a malformed version. A store error stays an error, never "no sites". */
-export async function readDerivedCampaignSites(
-  options: PromotedCivicDataReadOptions = {},
-): Promise<CivicDataReadResult<DerivedCampaignSitesProjection>> {
-  const result = await readPromotedCivicData<DerivedCampaignSitesProjection>(DERIVED_CAMPAIGN_SITES_RECORD_CLASS, DERIVED_CAMPAIGN_SITES_SCOPE, options);
-  if (result.kind === "PROMOTED") {
-    const issue = derivedCampaignSitesProjectionIssue(result.value);
-    if (issue !== null) {
-      installed = { kind: "STORE_UNREACHABLE", value: null, metadata: result.metadata, code: "PROMOTION_PROOF_INVALID", detail: `${DERIVED_CAMPAIGN_SITES_CONTRACT_ID} ${result.metadata.versionId}: ${issue}` };
-      return installed;
-    }
-  }
-  installed = result;
-  return result;
+export async function readDerivedCampaignSites(state: string, options: PromotedCivicDataReadOptions = {}): Promise<CivicDataReadResult<DerivedCampaignSitesProjection>> {
+  return Object.keys(options).length
+    ? readPromotedCivicData<DerivedCampaignSitesProjection>(DERIVED_CAMPAIGN_SITES_RECORD_CLASS, derivedCampaignSitesScope(state), options)
+    : (await readStateAuthorityProjection<DerivedCampaignSitesProjection>("candidate-campaign-sites-derived", state)).result;
 }
 
-async function refreshDerivedCampaignSitesOnce(options: PromotedCivicDataReadOptions): Promise<CivicDataReadResult<DerivedCampaignSitesProjection>> {
-  try {
-    return await readDerivedCampaignSites(options);
-  } catch (error) {
-    installed = {
-      kind: "STORE_UNREACHABLE", value: null,
-      metadata: civicDataReadNotInitialized(DERIVED_CAMPAIGN_SITES_RECORD_CLASS, DERIVED_CAMPAIGN_SITES_SCOPE, "").metadata,
-      code: "STORE_READ_FAILED",
-      detail: `${DERIVED_CAMPAIGN_SITES_CONTRACT_ID}: ${error instanceof Error ? error.message : String(error)}`,
-    };
-    return installed;
-  }
+export const refreshDerivedCampaignSites = (state: string, options: PromotedCivicDataReadOptions = {}) => readDerivedCampaignSites(state, options);
+
+function derivedCampaignSitesReadState(state: string): CivicDataReadResult<DerivedCampaignSitesProjection> {
+  return currentStateAuthorityProjection<DerivedCampaignSitesProjection>("candidate-campaign-sites-derived", state)?.result ??
+    civicDataReadNotInitialized(DERIVED_CAMPAIGN_SITES_RECORD_CLASS, derivedCampaignSitesScope(state), "The state's derived candidate campaign sites have not been read.");
 }
 
-// Profiles and publication text now load this same pointer concurrently. Share
-// only an in-flight default read, including NOT_RECORDED; no result is retained
-// here and explicit stores, clocks, cache bypasses and edge versions stay isolated.
-let defaultRefresh: Promise<CivicDataReadResult<DerivedCampaignSitesProjection>> | null = null;
-export async function refreshDerivedCampaignSites(options: PromotedCivicDataReadOptions = {}): Promise<CivicDataReadResult<DerivedCampaignSitesProjection>> {
-  if (Object.values(options).some(value => value !== undefined)) return refreshDerivedCampaignSitesOnce(options);
-  if (defaultRefresh) return defaultRefresh;
-  const pending = refreshDerivedCampaignSitesOnce(options);
-  defaultRefresh = pending;
-  try { return await pending; }
-  finally { if (defaultRefresh === pending) defaultRefresh = null; }
-}
-
-export function derivedCampaignSitesReadState(): CivicDataReadResult<DerivedCampaignSitesProjection> {
-  return installed ?? civicDataReadNotInitialized(DERIVED_CAMPAIGN_SITES_RECORD_CLASS, DERIVED_CAMPAIGN_SITES_SCOPE, "The derived candidate campaign sites have not been read for this process.");
-}
-
-export function derivedCampaignSiteHoldingPath(key: string): string {
-  return `civic-data:${DERIVED_CAMPAIGN_SITES_RECORD_CLASS}:${DERIVED_CAMPAIGN_SITES_SCOPE}#/records/${key.replaceAll("~", "~0").replaceAll("/", "~1")}/campaign`;
+export function derivedCampaignSiteHoldingPath(state: string, key: string): string {
+  return `civic-data:${DERIVED_CAMPAIGN_SITES_RECORD_CLASS}:${derivedCampaignSitesScope(state)}#/records/${key.replaceAll("~", "~0").replaceAll("/", "~1")}/campaign`;
 }
 
 export interface ComposedCandidateLinks<L extends CandidateLinksShape> {
@@ -293,16 +259,23 @@ export function composeCampaignLinks<L extends CandidateLinksShape>(
 
 const NO_RECORDS: readonly DerivedCampaignSiteRecord[] = [];
 
-export function currentDerivedCampaignSiteRecords(): readonly DerivedCampaignSiteRecord[] {
-  const state = derivedCampaignSitesReadState();
+export function currentDerivedCampaignSiteRecords(jurisdiction: string): readonly DerivedCampaignSiteRecord[] {
+  const state = derivedCampaignSitesReadState(jurisdiction);
   return state.kind === "PROMOTED" ? state.value.records : NO_RECORDS;
 }
 
-export function currentDerivedCandidateDocuments(): CandidateDocument[] {
-  return currentDerivedCampaignSiteRecords().flatMap(record => (record.publications ?? []).map(row => row.document));
+const documentsByRecords = new WeakMap<readonly DerivedCampaignSiteRecord[], CandidateDocument[]>();
+export function currentDerivedCandidateDocuments(jurisdiction: string): CandidateDocument[] {
+  const records = currentDerivedCampaignSiteRecords(jurisdiction);
+  let documents = documentsByRecords.get(records);
+  if (!documents) {
+    documents = records.flatMap(record => (record.publications ?? []).map(row => row.document));
+    documentsByRecords.set(records, documents);
+  }
+  return documents;
 }
 
-export function currentDerivedCandidatePortraits(): readonly DerivedCandidatePortraitRecord[] {
-  const state = derivedCampaignSitesReadState();
+export function currentDerivedCandidatePortraits(jurisdiction: string): readonly DerivedCandidatePortraitRecord[] {
+  const state = derivedCampaignSitesReadState(jurisdiction);
   return state.kind === "PROMOTED" ? state.value.portraits ?? [] : [];
 }

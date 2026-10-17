@@ -1,3 +1,4 @@
+import { stateFromRegistryRuntimeContractId } from "../../civic-data/state-scopes.ts";
 import { appendTransition, readPipelineStates, scoutedFromScoutResult } from "../promotion/pipeline.ts";
 import { PROMOTION_PIPELINE_FORMAT_VERSION, VERIFICATION_CHECKS, type TransitionRecord, type VerificationCheckName } from "../promotion/types.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
@@ -19,7 +20,7 @@ export async function projectFleetPipeline(repos: ControlPlaneRepositories): Pro
     const row=await repos.workItems.readNarrowed(workItemId,{autonomousPlan:["publication"]});
     const value=row?.value as {autonomousPlan?:{publication?:{contractId?:string}}}|undefined;
     const id=value?.autonomousPlan?.publication?.contractId;
-    if(id==="registry-runtime-bindings"||(id!==undefined&&isWorkerReaderContract(id)))registryWork.add(workItemId);
+    if(Boolean(stateFromRegistryRuntimeContractId(id??""))||(id!==undefined&&isWorkerReaderContract(id)))registryWork.add(workItemId);
   }
   for (const result of results) {
     if (result.result.role !== "VALIDATOR") continue;

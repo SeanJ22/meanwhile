@@ -1,3 +1,5 @@
+import { requireRegistryState } from "../../civic-data/state-scopes.ts";
+import type { NationalPlaceTask } from "../../hunt/place-source-task.ts";
 import { fork } from "node:child_process";
 import { createHash, randomUUID } from "node:crypto";
 import { createServer } from "node:http";
@@ -76,7 +78,7 @@ export interface LeaseWorkerConfig {
 
   readonly wallMs?: number;
 
-  readonly nationalZips?: readonly string[];
+  readonly nationalPlaces?: readonly NationalPlaceTask[];
   readonly routeDispatch?: { readonly input: ScoutProcessDispatch; readonly route: RouteDescriptor | null };
 }
 
@@ -120,7 +122,7 @@ class WorkerAdmissionRefusal extends Error {
 
 export async function runNationalPlaceWorkerProcesses(input: {
   readonly root: string;
-  readonly zips: readonly string[];
+  readonly places: readonly NationalPlaceTask[];
   readonly capacity: () => number;
   readonly onStarted?: (pid: number) => void;
   readonly slots?: WorkerProcessSlots;
@@ -130,6 +132,7 @@ export async function runNationalPlaceWorkerProcesses(input: {
   readonly publishElection: ElectionPublisher;
   readonly onResult?: (report: NationalPlaceReport) => void | Promise<void>;
 }): Promise<NationalPlaceReport[]> {
+  if (new Set(input.places.map(place => requireRegistryState(place.state))).size > 1) throw new Error("NATIONAL_PLACE_CHILD_STATE_MISMATCH");
   const reports: NationalPlaceReport[] = [];
   let publicationTail: Promise<unknown> = Promise.resolve();
   const serialize = <T>(operation: () => Promise<T>): Promise<T> => {
@@ -138,7 +141,7 @@ export async function runNationalPlaceWorkerProcesses(input: {
     return next;
   };
   await runLeaseWorkerProcesses({ entry: "lib/control-plane/workers/national-worker.ts", config: { root: input.root, postgres: true,
-    taskIds: [...new Set(input.zips)], nationalZips: [...new Set(input.zips)], modelEnabled: false,
+    taskIds: [...new Set(input.places.map(place => place.zip))], nationalPlaces: input.places, modelEnabled: false,
     searchEnabled: false, ceilingUsd: 0, fundedSubjects: [] }, capacity: input.capacity,
     transportFor: () => async () => { throw new Error("NATIONAL_SOURCE_MODEL_CALL_REFUSED"); },
     onStarted: input.onStarted, slots: input.slots, orderPending: input.orderPending,
@@ -199,13 +202,13 @@ export async function runLeaseWorkerProcesses(input: {
 
     if (!pending.size) return;
     const ready = [...pending].filter(id => !assigned.has(id));
-    const ordered = input.config.nationalZips && input.orderPending ? await input.orderPending(ready) : ready;
+    const ordered = input.config.nationalPlaces && input.orderPending ? await input.orderPending(ready) : ready;
 
     const nextId = ordered.find(id => pending.has(id) && !assigned.has(id));
-    if (!pending.size || (input.config.nationalZips && nextId === undefined)) return;
+    if (!pending.size || (input.config.nationalPlaces && nextId === undefined)) return;
     if (Date.now() >= (input.deadlineMs ?? Infinity)) throw new WorkerAdmissionRefusal(new Error("WORKER_DISPATCH_SLICE: work remains owed"));
     await new Promise<void>((resolve, reject) => {
-    const ids = input.config.nationalZips ? [nextId!]
+    const ids = input.config.nationalPlaces ? [nextId!]
       : [...pending];
     for (const id of ids) assigned.add(id);
     const child = fork(join(input.config.root, input.entry), [], {
@@ -392,7 +395,7 @@ export async function runLeaseWorkerProcesses(input: {
       for (const [id, pid] of inFlight) if (pid === child.pid) inFlight.delete(id);
       if (child.pid) input.onExited?.(child.pid, terminationError ? (terminationError as Error).message : `exit ${code}`);
       const finish = () => {
-        if (input.config.nationalZips) for (const id of ids) { assigned.delete(id); pending.delete(id); }
+        if (input.config.nationalPlaces) for (const id of ids) { assigned.delete(id); pending.delete(id); }
         if (terminationError) reject(terminationError);
         else if (code === 0) resolve(); else reject(new Error(`LEASE_WORKER_EXIT:${child.pid}:${code}`));
       };
@@ -414,7 +417,7 @@ export async function runLeaseWorkerProcesses(input: {
     const capacity = Math.min(pending.size, input.capacity());
     if (!Number.isSafeInteger(capacity) || capacity < 0) throw new Error("LEASE_WORKER_CAPACITY_INVALID");
 
-    while (!admissionClosed && (input.config.nationalZips
+    while (!admissionClosed && (input.config.nationalPlaces
       ? active.size < capacity && [...pending].some(id => !assigned.has(id))
       : standing !== null ? standingWants(capacity) : launched < capacity)) {
       launched++;

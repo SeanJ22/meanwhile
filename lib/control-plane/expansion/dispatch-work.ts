@@ -1,3 +1,4 @@
+import { statesForRegistryDivisions } from "../../civic-data/state-scopes.ts";
 import { OWNER_DISPATCH, withAssignment, type FreshnessObligation, type ObligationAssignment } from "../scheduler/obligation.ts";
 import type { WorkQuestion } from "../work-question.ts";
 import { standing } from "../scheduler/durable.ts";
@@ -170,17 +171,26 @@ async function placeReading(repos: ControlPlaneRepositories, zips: readonly stri
     if (divisions.size) divisions.add("ocd-division/country:us");
     divisionsByReceipt.set(receiptId, divisions);
   }
-  const divisionIds = [...new Set([...divisionsByReceipt.values()].flatMap(ids => [...ids]))];
-  const capture = divisionIds.length ? await readHeldPlaceCapture(divisionIds, { now, bypassCache: true }) : { subjects: [], held: [] };
-  const itemsOf = (scope: (typeof scopes)[number]): PlaceOwedItem[] => {
-    const hit = remembered(scope);
-    if (hit !== null) return hit.items;
-    const items = buildPlaceOwedList({ divisions: [...divisionsByReceipt.get(scope.decision.receiptId)!].map(id => ({ id, label: id })),
-      subjects: capture.subjects, held: capture.held, now, zips: [...(inScope.get(scope.decision.receiptId) ?? [])] });
-    readingMemo.set(memoKeyOf(scope.decision), { at: nowMs, items });
-    while (readingMemo.size > READING_MEMO_MAX) readingMemo.delete(readingMemo.keys().next().value as string);
-    return items;
-  };
+  const readingGroups = new Map<string, typeof scopes>();
+  for (const scope of rebuilt) {
+    const ids = [...(divisionsByReceipt.get(scope.decision.receiptId) ?? [])];
+    const key = statesForRegistryDivisions(ids).join();
+    readingGroups.set(key, [...(readingGroups.get(key) ?? []), scope]);
+  }
+  const rebuiltItems = new Map<string, PlaceOwedItem[]>();
+  for (const group of readingGroups.values()) {
+    const ids = [...new Set(group.flatMap(scope => [...(divisionsByReceipt.get(scope.decision.receiptId) ?? [])]))];
+    const capture = ids.length ? await readHeldPlaceCapture(ids, { now, bypassCache: true }) : { subjects: [], held: [] };
+    for (const scope of group) {
+      const items = buildPlaceOwedList({ divisions: [...(divisionsByReceipt.get(scope.decision.receiptId) ?? [])].map(id => ({ id, label: id })),
+        subjects: capture.subjects, held: capture.held, now, zips: [...(inScope.get(scope.decision.receiptId) ?? [])] });
+      rebuiltItems.set(scope.decision.receiptId, items);
+      readingMemo.set(memoKeyOf(scope.decision), { at: nowMs, items });
+      while (readingMemo.size > READING_MEMO_MAX) readingMemo.delete(readingMemo.keys().next().value as string);
+    }
+  }
+  const itemsOf = (scope: (typeof scopes)[number]): PlaceOwedItem[] =>
+    rebuiltItems.get(scope.decision.receiptId) ?? remembered(scope)?.items ?? [];
   const readings = placeWorkReadings(targets?.value, scopes.map(scope => ({
 
     key: scope.decision.geography.type === "state" ? `st:${scope.decision.geography.stateAbbr.toLowerCase()}`

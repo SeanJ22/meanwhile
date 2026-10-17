@@ -1,0 +1,39 @@
+{
+          "entityRegistration": {
+            "samRegistered": "No",
+            "ueiSAM": "WB23FJYKNLM1",
+            "cageCode": null,
+            "legalBusinessName": "9TH CIRCUIT COURT OF APPEALS",
+            "registrationStatus": "ID Assigned",
+            "evsSource": null,
+            "ueiStatus": "Active",
+            "ueiExpirationDate": null,
+            "ueiCreationDate": "2022-02-22",
+            "publicDisplayFlag": "Y",
+            "dnbOpenData": null
+          },
+          "coreData": {
+            "physicalAddress": {
+                "addressLine1": "Address1",
+                "addressLine2": "Address2",
+                "city": "City",
+                "stateOrProvinceCode": "XX",
+                "zipCode": "11111",
+                "zipCodePlus4": "1111",
+                "countryCode": "ABC"
+            }
+          },
+          "integrityInformation": {
+            "responsibilityInformationCount": 1,
+            "responsibilityInformationList": [
+              {
+                "recordType": "C",
+                "recordTypeDesc": "Termination for Cause",
+                "recordDate": "2022-05-09",
+                "procurementIdOrFederalAssistanceId": "BG567815C0001",
+                "referenceIdvPiid": null,
+                "attachment": "< Pre-signed URL >"
+              }
+           ]
+          }
+        }

@@ -1,6 +1,8 @@
+import {stateBallotContractId} from "../lib/civic-data/state-scopes.ts";
+import { currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import assert from "node:assert/strict";
 import test from "./helpers/playbooks.ts";
-import { installAbsent, installFederalVotes, installPimaLocalFinance, installRegistryAuthority, installStateMoney, promotedFixtureBundle } from "./helpers/promoted-fixtures.ts";
+import { installAbsent, installFederalVotes, installPimaLocalFinance, installRegistryAuthority, installStateMoney } from "./helpers/promoted-fixtures.ts";
 import { installMeetings, installPimaOutcomes } from "./helpers/reader-fixtures.ts";
 import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
 import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
@@ -10,10 +12,13 @@ import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 await installRegistryAuthority();
 await installFederalVotes();
 await installPimaOutcomes();
-for (const id of ["az-sos-ballot", "candidate-profiles", "candidate-corpus", "officeholder-statements"] as const) {
-  const contract = requiredManualProductionContract(id);
-  installAbsent(contract.recordClass, contract.scope);
+for (const state of ["AZ","NH","NJ"] as const) for(const family of ["ballot-contests","candidate-profiles","candidate-corpus"] as const) {
+  const contract=requiredManualProductionContract(stateBallotContractId(family,state));
+  installAbsent(contract.recordClass,contract.scope);
 }
+const statements=requiredManualProductionContract("officeholder-statements");
+installAbsent(statements.recordClass,statements.scope);
+
 for (const state of ["AZ", "NH", "NJ"] as const) await installStateMoney(state);
 await installPimaLocalFinance();
 installMeetings([]);
@@ -41,21 +46,21 @@ test("the code's best reading: a guess from the reader's words, the page or the 
     return reading && { intent: reading.interpretation.intent, temporal: reading.interpretation.temporal.kind, basis: reading.basis, subject: reading.subjectId, mentions: reading.interpretation.entityMentions.length, referent: reading.interpretation.referent };
   };
   assert.deepEqual(read("Who can I talk to at the Mesa City Council?"), { intent: "CONTACT", temporal: "NONE", basis: "WORDING", subject: MESA, mentions: 0, referent: null });
-  // A canonical CONTACT shape: the same guess, read off the shape.
+
   assert.deepEqual(read("How do I contact the Mesa City Council?"), { intent: "CONTACT", temporal: "NONE", basis: "SHAPE", subject: MESA, mentions: 0, referent: null });
-  // "They" proposes the earlier body as a referent; the model's own referent decides whether the guess is kept.
+
   assert.deepEqual(read("When does it meet next?", PRIOR_MESA), { intent: "MEETING_TIME", temporal: "NEXT", basis: "SHAPE", subject: MESA, mentions: 0, referent: null });
   assert.deepEqual(read("When do they meet next?", PRIOR_MESA), { intent: "MEETING_TIME", temporal: "NEXT", basis: "SHAPE", subject: MESA, mentions: 0, referent: "Mesa" });
   assert.deepEqual(read("How did they vote last time?", PRIOR_MESA), { intent: "PAST_MEETING", temporal: "LAST", basis: "SHAPE", subject: MESA, mentions: 0, referent: "Mesa" });
   assert.deepEqual(read("What's on their agenda?", PRIOR_MESA), { intent: "UPCOMING_AGENDA", temporal: "NEXT", basis: "SHAPE", subject: MESA, mentions: 0, referent: "Mesa" });
   assert.deepEqual(read("When do they meet next?", [], [{ id: MESA_SCHOOLS, name: "Mesa Unified School District Governing Board", kind: "BODY", focused: true }]), { intent: "MEETING_TIME", temporal: "NEXT", basis: "SHAPE", subject: MESA_SCHOOLS, mentions: 0, referent: "Mesa Unified School District Governing Board" }, "the focused card, when the page has one");
-  // Wording no shape anchors, still about a body's sittings.
+
   assert.deepEqual(read("What did the Mesa City Council decide on September 14, 2026?"), { intent: "PAST_MEETING", temporal: "LAST", basis: "WORDING", subject: MESA, mentions: 0, referent: null });
-  // No guess: nothing binds, nothing says what is asked, or the page holds more than one candidate.
+
   assert.equal(read("Who can I talk to?"), null, "no subject bound");
   assert.equal(read("When do they meet next?"), null, "a pronoun with no earlier turn binds nothing");
   assert.equal(read("When do they meet next?", [], [{ id: MESA, name: "Mesa", kind: "BODY" }, { id: MESA_SCHOOLS, name: "Mesa Unified School District Governing Board", kind: "BODY" }]), null, "two cards on the page, none focused: no guess");
-  // No wording rule names an intent: the guess is UNKNOWN (a label for the writer); the model's reading still decides.
+
   assert.deepEqual(read("Tell me something interesting about the Mesa City Council budget process"), { intent: "UNKNOWN", temporal: "NONE", basis: "WORDING", subject: MESA, mentions: 0, referent: null });
 });
 
@@ -65,7 +70,7 @@ test("the verdict keeps the speculative answer only on the same subject, body, q
   assert.deepEqual(speculationVerdict(AGREED, { ...AGREED, bodyIds: [MESA, MESA] }), { keep: true, why: "same-subject-body-kind-and-writer-input" });
   assert.deepEqual(speculationVerdict(AGREED, { ...AGREED, subjectId: MESA_SCHOOLS, bodyIds: [MESA_SCHOOLS], writerInput: "key-2" }), { keep: false, why: "different-subject" });
   assert.deepEqual(speculationVerdict(AGREED, { ...AGREED, bodyIds: [MESA, MESA_SCHOOLS] }), { keep: false, why: "different-body" });
-  /* The intent is a label for the writer: a reading that names another one but selects the same subject, sittings and evidence keeps the answer. */
+
   assert.deepEqual(speculationVerdict(AGREED, { ...AGREED, intent: "PERSON_RECORD" }), { keep: true, why: "same-subject-body-kind-and-writer-input" });
   assert.deepEqual(speculationVerdict(AGREED, { ...AGREED, temporal: { kind: "NEXT" } }), { keep: false, why: "different-question-kind" });
   assert.deepEqual(speculationVerdict(AGREED, { ...AGREED, selection: "NEXT" }), { keep: false, why: "different-question-kind" });
@@ -94,7 +99,6 @@ test("an abandoned writer stops, and the ladder never escalates past it", async 
   assert.equal(result.escalation, null);
 });
 
-/** Measured warm times: the frontier model reading a question, the fast writer answering. */
 const READING_MS = 1_500;
 const WRITING_MS = 1_900;
 
@@ -105,14 +109,33 @@ const QUESTION = "Who can I talk to at the Vail school board?";
 
 interface Call { kind: "INTERPRET" | "SYNTHESIZE"; model: string; startedAt: number; endedAt?: number; aborted?: boolean }
 const calls: Call[] = [];
-/** The model's reading of the next question, or a failed call. */
+
 let reading: Record<string, unknown> | "HTTP_500" = {};
-/** What each writer call answers, in call order; the default once the queue is empty. */
-let writerQueue: { answer: string; citedSources: unknown[] }[] = [];
+
+interface Reply { answer: string; citedSources: unknown[] }
+type Completion = (signal?: AbortSignal | null) => Promise<void>;
+let writerQueue: { reply: Reply; complete: Completion }[] = [];
 const PASSING = { answer: "The board's contacts are in the records below.", citedSources: [1] };
+
+function waitForAbort(signal?: AbortSignal | null): Promise<void> {
+  return new Promise((_, reject) => {
+    const stop = () => reject(Object.assign(new Error("aborted"), { name: "AbortError" }));
+    if (signal?.aborted) stop();
+    else signal?.addEventListener("abort", stop, { once: true });
+  });
+}
+
+const delay = (ms: number): Completion => signal => new Promise((resolve, reject) => {
+  const stop = () => { clearTimeout(timer); reject(Object.assign(new Error("aborted"), { name: "AbortError" })); };
+  const timer = setTimeout(() => { signal?.removeEventListener("abort", stop); resolve(); }, ms);
+  if (signal?.aborted) stop();
+  else signal?.addEventListener("abort", stop, { once: true });
+});
 
 process.env.WTP_LIMIT_LOG_IP_PER_MINUTE = "10000";
 process.env.ANTHROPIC_API_KEY = "test-stub-not-a-real-key";
+
+process.env.WTP_ASK_HEDGE_MS = "off";
 delete process.env.WTP_ASK_SPECULATION;
 globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
   const url = input instanceof Request ? input.url : String(input);
@@ -121,16 +144,15 @@ globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
   const synthesis = body.output_config?.format?.schema?.properties?.answer !== undefined;
   const call: Call = { kind: synthesis ? "SYNTHESIZE" : "INTERPRET", model: body.model, startedAt: performance.now() };
   calls.push(call);
-  const planned = synthesis ? writerQueue.shift() ?? PASSING : reading;
-  await new Promise<void>((resolve, reject) => {
-    const timer = setTimeout(resolve, synthesis ? WRITING_MS : READING_MS);
-    init?.signal?.addEventListener("abort", () => {
-      clearTimeout(timer);
-      call.aborted = true;
-      call.endedAt = performance.now();
-      reject(Object.assign(new Error("aborted"), { name: "AbortError" }));
-    }, { once: true });
-  });
+  const queued = synthesis ? writerQueue.shift() : undefined;
+  const planned = synthesis ? queued?.reply ?? PASSING : reading;
+  try {
+    await (queued?.complete ?? delay(synthesis ? WRITING_MS : READING_MS))(init?.signal);
+  } catch (error) {
+    call.aborted = init?.signal?.aborted;
+    call.endedAt = performance.now();
+    throw error;
+  }
   call.endedAt = performance.now();
   if (planned === "HTTP_500") return new Response(JSON.stringify({ error: { type: "api_error" } }), { status: 500 });
   return new Response(JSON.stringify({ content: [{ type: "text", text: JSON.stringify(planned) }], usage: { input_tokens: 10, output_tokens: 10, cache_read_input_tokens: 0, cache_creation_input_tokens: 0 } }), {
@@ -157,7 +179,7 @@ async function timedAsk(question: string, extra: Record<string, unknown> = {}): 
   resetGroundedState();
   const before = calls.length;
   const started = performance.now();
-  const response = await withReaderAuthorityEdge(promotedFixtureBundle({ edgeOnly: true }), () => POST(new Request("https://wtp.test/api/ask/grounded", {
+  const response = await withReaderAuthorityEdge({...currentReaderAuthorityEdge(),edgeOnly:true}, () => POST(new Request("https://wtp.test/api/ask/grounded", {
     method: "POST",
     headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "ask-speculative-reading-test" },
     body: JSON.stringify({ question, ocdIds: [AZ, PIMA, VAIL], today: "2026-08-28", ...extra }),
@@ -165,12 +187,16 @@ async function timedAsk(question: string, extra: Record<string, unknown> = {}): 
   const ms = performance.now() - started;
   const text = await response.text();
   assert.equal(response.status, 200, text);
-  // Anything a discarded writer would still do happens now or never.
+
   await new Promise((resolve) => setTimeout(resolve, 50));
   return { payload: JSON.parse(text) as Payload, calls: calls.slice(before), ms };
 }
 
 const CONTACT_READING = { intent: "CONTACT", entityMentions: ["Vail school board"], normalizedMentions: ["Vail Unified School District Governing Board"], temporal: { kind: "NONE" }, referent: null };
+
+function modelWindow(calls: readonly Call[]): number {
+  return Math.max(...calls.map(call => call.endedAt!)) - Math.min(...calls.map(call => call.startedAt));
+}
 
 test("ROUTE: the reading and the writing overlap — the answer arrives in about the longer call, not the sum", { concurrency: false }, async () => {
   reading = CONTACT_READING;
@@ -184,12 +210,10 @@ test("ROUTE: the reading and the writing overlap — the answer arrives in about
   assert.equal(on.payload.trace.interpretation.ran, true, "the model still read the question");
   assert.deepEqual([on.payload.trace.speculation?.ran, on.payload.trace.speculation?.delivered, on.payload.trace.speculation?.why, on.payload.trace.speculation?.codeIntent],
     [true, "SPECULATIVE_ANSWER", "same-subject-body-kind-and-writer-input", "CONTACT"]);
-  // Measured on the two model calls themselves, first start to last end; the route's own work around them slows with the machine.
-  const modelWindow = (calls: typeof on.calls) => Math.max(...calls.map((call) => call.endedAt!)) - Math.min(...calls.map((call) => call.startedAt));
+
   const onWindow = modelWindow(on.calls);
   assert.ok(onWindow >= WRITING_MS && onWindow < READING_MS + WRITING_MS, `the model calls took ${onWindow.toFixed(0)} ms together: about the longer call, under the sum`);
 
-  // The control: the same question with speculation switched off runs the two calls one after the other.
   process.env.WTP_ASK_SPECULATION = "off";
   try {
     const off = await timedAsk(QUESTION);
@@ -207,7 +231,7 @@ test("ROUTE: the reading and the writing overlap — the answer arrives in about
 });
 
 test("ROUTE: a pronoun follow-up the code cannot read overlaps too, bound to the earlier turn's body", { concurrency: false }, async () => {
-  // The body the reader asked about in the earlier turn, bound in code the way the route binds it.
+
   reading = CONTACT_READING;
   const first = await timedAsk(QUESTION);
   const vail = first.payload.subject?.id;
@@ -221,14 +245,15 @@ test("ROUTE: a pronoun follow-up the code cannot read overlaps too, bound to the
   assert.deepEqual(followUp.calls.map((call) => call.kind), ["INTERPRET", "SYNTHESIZE"]);
   assert.ok(followUp.calls[1].startedAt < followUp.calls[0].endedAt!, "the writer started while the model was still reading");
   assert.equal(followUp.payload.trace.speculation?.delivered, "SPECULATIVE_ANSWER");
-  assert.ok(followUp.ms < READING_MS + WRITING_MS, `total ${followUp.ms.toFixed(0)} ms is under the sum`);
+  const window = modelWindow(followUp.calls);
+  assert.ok(window < READING_MS + WRITING_MS, `the overlapping model calls took ${window.toFixed(0)} ms, under the sum`);
 });
 
 test("ROUTE: a model reading that disagrees discards the speculative answer — its call is stopped and the answer is written from the model's reading", { concurrency: false }, async () => {
   reading = { ...CONTACT_READING, temporal: { kind: "LAST" } };
   const SPECULATIVE = { answer: "SPECULATIVE: the board's contacts are in the records below.", citedSources: [1] };
   const MODEL = { answer: "The board's members are in the records below.", citedSources: [1] };
-  writerQueue = [SPECULATIVE, MODEL];
+  writerQueue = [{ reply: SPECULATIVE, complete: waitForAbort }, { reply: MODEL, complete: delay(WRITING_MS) }];
   try {
     const result = await timedAsk(QUESTION);
     assert.deepEqual(result.calls.map((call) => call.kind), ["INTERPRET", "SYNTHESIZE", "SYNTHESIZE"], "the speculative writer, then the writer on the model's reading — and no escalation of the stopped one");
@@ -245,10 +270,27 @@ test("ROUTE: a model reading that disagrees discards the speculative answer — 
   }
 });
 
+test("ROUTE: a completed speculative answer is discarded when the model disagrees", { concurrency: false }, async () => {
+  reading = { ...CONTACT_READING, temporal: { kind: "LAST" } };
+  const SPECULATIVE = { answer: "SPECULATIVE: the board's contacts are in the records below.", citedSources: [1] };
+  writerQueue = [{ reply: SPECULATIVE, complete: async () => {} }];
+  try {
+    const result = await timedAsk(QUESTION);
+    assert.deepEqual(result.calls.map(call => call.kind), ["INTERPRET", "SYNTHESIZE", "SYNTHESIZE"]);
+    assert.ok(result.calls[1].endedAt! <= result.calls[0].endedAt!);
+    assert.notEqual(result.payload.answer, SPECULATIVE.answer);
+    assert.equal(result.payload.trace.speculation?.delivered, "MODEL_READING");
+    assert.equal(result.payload.trace.speculation?.why, "different-question-kind");
+    assert.equal(result.payload.trace.speculation?.aborted, undefined);
+  } finally {
+    writerQueue = [];
+  }
+});
+
 test("ROUTE: a model reading that never comes discards the speculative answer too; the route falls back exactly as before", { concurrency: false }, async () => {
   reading = "HTTP_500";
   const SPECULATIVE = { answer: "SPECULATIVE: the board's contacts are in the records below.", citedSources: [1] };
-  writerQueue = [SPECULATIVE];
+  writerQueue = [{ reply: SPECULATIVE, complete: waitForAbort }];
   try {
     const result = await timedAsk(QUESTION);
     assert.equal(result.payload.trace.interpretation.ran, false, "the deterministic reading stood in");

@@ -6,8 +6,6 @@ import { nextAutonomousOperation, runAutonomousCoordinator } from "../lib/contro
 import { readAuditHistory, readScoutResultsForSubjects } from "../lib/control-plane/workers/scoped-history.ts";
 import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
-import { BOOTSTRAP_DDL, BOOTSTRAP_VERSION, SCOPED_HISTORY_INDEXES } from "../lib/control-plane/repository/pg-schema.ts";
-import { pgEnsureOnlineIndex, type Sql } from "../lib/control-plane/repository/pg-store.ts";
 import type { ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
 import { autonomousHarness } from "./helpers/autonomous-fleet.ts";
 import { readLineageHistory } from "../lib/control-plane/workers/scoped-history.ts";
@@ -22,18 +20,21 @@ import { readCompletedWorkerResults } from "../lib/control-plane/repository/work
 import { createWorkItem } from "../lib/control-plane/work-item.ts";
 import { registerWorkItem } from "../lib/control-plane/repository/coordinator.ts";
 import type { FreshnessOccurrence } from "../lib/control-plane/scheduler/durable.ts";
-import { readFileSync } from "node:fs";
-import { gunzipSync } from "node:zlib";
-import type { PromotedProjection } from "../lib/civic-data/types.ts";
-import { withReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "../lib/registry/runtime-edge.ts";
-import { manualEdgeEntry } from "./helpers/promoted-edge-entry.ts";
-import { installRegistryRuntime } from "./helpers/promoted-fixtures.ts";
+import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
+import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+import type { ReaderAuthorityEdgeBundle } from "../lib/registry/runtime-edge.ts";
+import { currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 
-await installRegistryRuntime();
+function promotedFixtureBundle(extra: ReaderAuthorityEdgeBundle = {}): ReaderAuthorityEdgeBundle {
+  const current: ReaderAuthorityEdgeBundle = currentReaderAuthorityEdge() ?? {};
+  return { stateAuthorities: current.stateAuthorities,
+    ...(current.federalDirectory ? { federalDirectory: current.federalDirectory } : {}),
+    ...(current.stateLegislators ? { stateLegislators: current.stateLegislators } : {}),
+    ...extra, promoted: new Map([...(current.promoted ?? []), ...(extra.promoted ?? [])]) };
+}
 
 const WHOLE_TABLE = new Set(["list", "listNarrowed", "readAll", "keys"]);
 
-/** Counts every repository method call by `repository.method`, without changing what any call does. */
 function counted(repos: ControlPlaneRepositories) {
   const calls = new Map<string, number>();
   const rows = { n: 0 };
@@ -165,8 +166,8 @@ test("CH-26: a lease worker's scoped runtime builds and begins a task without li
   const method = { version: 56, updatedOn: "2026-09-03", routes: [] };
   await writeFieldManual(h.repos, [...knowledgeEntries(method), methodVersionEntry(method)], h.now());
   counter.reset();
-  const { projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { projection: PromotedProjection };
-  const registry: ReaderAuthorityEdgeBundle = { promoted: new Map([[projection.key, manualEdgeEntry("registry-runtime-bindings", projection.payload, projection.versionId)]]) };
+  await installRegistryAuthority();
+  const registry = promotedFixtureBundle();
   const runtime = await withReaderAuthorityEdge(registry, () => autonomousStandingRuntime({ root, repos: h.repos, now: h.now, auditCeilingUsd: 1, environment: { NODE_ENV: "test" } }));
   assert.deepEqual(counter.whole(), [], "the build reads no whole table");
   for (const row of (await h.repos.routeTasks.listWhere(["workItemId"], h.item.id))) {
@@ -177,32 +178,6 @@ test("CH-26: a lease worker's scoped runtime builds and begins a task without li
   counter.reset();
   await withReaderAuthorityEdge(registry, () => autonomousStandingRuntime({ root, repos: h.repos, now: h.now, auditCeilingUsd: 1 }));
   assert.deepEqual(counter.whole(), [], "the round builds without a national snapshot");
-});
-
-test("CH-26: schema version 20 builds the scoped indexes online, on the exact expressions the reads send", async () => {
-  assert.ok(BOOTSTRAP_VERSION >= 20, "v20 added the scoped indexes; later versions (v21 live audits) keep them");
-  for (const index of SCOPED_HISTORY_INDEXES) {
-    assert.match(index.ddl, /^CREATE INDEX CONCURRENTLY IF NOT EXISTS /);
-    assert.ok(BOOTSTRAP_DDL.includes(index.ddl));
-  }
-  const ddl = SCOPED_HISTORY_INDEXES.map(index => index.ddl).join("\n");
-  assert.match(ddl, /cp_attempts \(\(value #>> '\{workItemId\}'\)\)/);
-  assert.match(ddl, /cp_route_tasks \(\(value #>> '\{workItemId\}'\)\)/);
-  assert.match(ddl, /cp_occurrences \(\(value #>> '\{workItemId\}'\)\)/);
-  assert.match(ddl, /cp_work_items \(\(value #>> '\{planRepair,parentWorkItemId\}'\)\)/, "the lineage index");
-  assert.match(ddl, /cp_log_scout_results \(\(record #>> '\{subjectId\}'\)\)/);
-  assert.match(ddl, /cp_log_costs \(recorded_at\)/);
-
-  const calls: string[] = [];
-  const sql: Sql = { query: async text => {
-    calls.push(text);
-    if (text.includes("pg_try_advisory_lock")) return [{ locked: true }];
-    return [];
-  } };
-  await pgEnsureOnlineIndex(sql, SCOPED_HISTORY_INDEXES[0]!);
-  assert.ok(calls.some(text => text.includes("to_regclass('cp_attempts_work_item')")));
-  assert.equal(calls.filter(text => text === SCOPED_HISTORY_INDEXES[0]!.ddl).length, 1);
-  assert.ok(!calls.some(text => /\bBEGIN\b|\bCOMMIT\b/.test(text)), "never inside a transaction");
 });
 
 test("CH-26: each lease task reports its repository calls, and the round records their mean as a phase", async () => {

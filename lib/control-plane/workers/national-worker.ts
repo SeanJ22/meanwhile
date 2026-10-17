@@ -22,7 +22,7 @@ process.on("disconnect", () => {
 });
 async function work(config: LeaseWorkerConfig): Promise<void> {
   const url = controlPlaneUrlFromEnv();
-  if (!url || !config.postgres || !config.nationalZips) throw new Error("NATIONAL_WORKER_DATABASE_UNCONFIGURED");
+  if (!url || !config.postgres || !config.nationalPlaces) throw new Error("NATIONAL_WORKER_DATABASE_UNCONFIGURED");
   const repos = await createPgRepositories(url, new Date().toISOString(), { skipBootstrap: true });
 
   const [{ runNationalPlaceTask }, { PostgresRoutineDataStore },
@@ -33,7 +33,7 @@ async function work(config: LeaseWorkerConfig): Promise<void> {
   const tools = { repos, store: new DurableEvidenceStore(join(config.root, ...VAULT_DIR)),
     spaceOut: serializeHostSpacing(hostSpacer()), browse: browseWithPlaywright, now: () => new Date().toISOString() };
   for (const zip of config.taskIds) {
-    const reports = await runNationalPlaceTask({ tools, store: new PostgresRoutineDataStore(), zips: [zip],
+    const reports = await runNationalPlaceTask({ tools, store: new PostgresRoutineDataStore(), places: [config.nationalPlaces.find(place => place.zip === zip)!],
       publish: ({ store: _store, ...input }) => call("national-publication", input),
       publishElection: (fields, now) => call("election-publication", { fields, now }) });
     for (const report of reports) await call("national-result", report);

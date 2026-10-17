@@ -1,3 +1,4 @@
+import { preloadCanonicalMeetingDependencies } from "../lib/meetings/ingest-dependencies.ts";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import test, { afterEach, beforeEach } from "node:test";
@@ -25,7 +26,6 @@ import type { Meeting } from "../lib/sources/types.ts";
 import type { ChildRunReport } from "../lib/sources/composite/index.ts";
 import { wiringForSelectedMeetingSource } from "../lib/sources/composite/wiring.ts";
 import {
-  preloadCanonicalMeetingDependencies,
   promoteMeetingPartition,
   promoteMeetingPartitions,
   reconcileSuccessfulMeetingPartition,
@@ -260,7 +260,7 @@ test("only exact out-of-window meeting evidence removes a row and its attached a
     freshAgendaDocuments: [],
     previous: priorPartition,
   });
-  // The sitting's held agenda is one record, keyed by the sitting.
+
   assert.deepEqual(reconciliation.removalEvidence.map(({ key }) => key).sort(), [
     agendaDocumentRecordKey(document),
     `meeting:${old.id}`,
@@ -351,11 +351,10 @@ test("one meeting source/body failure retains only its LKG while another partiti
   assert.equal(healthyClock.lastSucceededAt, SECOND);
   assert.equal(routineTaskDue(failedTask, failedClock, Date.parse(SECOND) + 30 * 60_000), false);
   assert.equal(routineTaskDue(failedTask, failedClock, Date.parse(SECOND) + 60 * 60_000), true);
-  // The healthy sibling keeps its own sitting-window clock: twice daily when
-  // its body has no sitting within seven days, hourly when it does.
+
   assert.equal(healthyClock.lastSucceededObservedAt, SECOND);
   assert.equal(routineTaskDue(healthyTask, healthyClock, Date.parse(SECOND) + 60 * 60_000, false), false);
-  // Hourly is owed 60 minutes after the success and admitted 25 minutes before.
+
   assert.equal(routineTaskDue(healthyTask, healthyClock, Date.parse(SECOND) + 35 * 60_000 - 1, true), false);
   assert.equal(routineTaskDue(healthyTask, healthyClock, Date.parse(SECOND) + 35 * 60_000, true), true);
 });
@@ -371,7 +370,7 @@ test("meeting Reader repair composes the shared aggregate once and correlates ex
     generatedAt: FIRST,
   });
   assert.equal(promoted.every(({ outcome }) => outcome.promoted !== null), true);
-  // A partition promotion reads no sibling partition; the repair below is the one aggregate read that records every receipt.
+
   assert.equal(store.readPromotionsCalls, 0, "a partition promotion never reads the sibling partitions' payloads");
   assert.equal(promoted.every(({ outcome }) => outcome.readerReadback === null), true);
   const before = await Promise.all(promoted.map(async ({ candidate }) => ({
@@ -424,8 +423,6 @@ test("meeting Reader repair composes the shared aggregate once and correlates ex
     assert.match(afterEvents.at(-1)?.detail ?? "", new RegExp(`^${READER_PROJECTION_READBACK_PREFIX}`));
   }
 
-  // The ordinary pass: every receipt is already current, so no partition's
-  // payload crosses the wire at all; the identity batch alone decides it.
   store.readPromotionsCalls = 0;
   store.readPromotionIdentitiesCalls = 0;
   const current = await repairMeetingReaderProjectionReadbacks(
@@ -460,7 +457,6 @@ test("R31: meeting receipts carry across a commit that changed no Reader code wi
   };
   const later = (ms: number) => new Date(Date.parse(SECOND) + ms).toISOString();
 
-  // An unchanged closure: every partition's PASS carries to the new commit; nothing is composed.
   store.readPromotionsCalls = 0;
   const attested = await repairMeetingReaderProjectionReadbacks(store, [legistar, insite], later(1), "e".repeat(40), {
     aggregate,
@@ -476,7 +472,6 @@ test("R31: meeting receipts carry across a commit that changed no Reader code wi
   assert.equal(compositions, 0, "no partition is re-read through the aggregate");
   assert.equal(store.readPromotionsCalls, 0, "no partition payload crosses the wire");
 
-  // A changed closure: the aggregate Reader re-reads every partition.
   const reread = await repairMeetingReaderProjectionReadbacks(store, [legistar, insite], later(2), "d".repeat(40), {
     aggregate,
     attestor: () => ({ identical: false, detail: "closure changed" }),
@@ -501,7 +496,6 @@ test("a pass that records readbacks and republishes the prepared snapshot compos
   assert.equal(promoted.every(({ outcome }) => outcome.promoted !== null), true);
   store.readPromotionsCalls = 0;
 
-  // Exactly the reader-repair child's provider: one composition, kept once made.
   let compositions = 0;
   let composing: ReturnType<typeof readMeetingsProjection> | null = null;
   const aggregate = () => {
@@ -754,7 +748,7 @@ test("a canonical preload outage emits no fabricated source attempt", async () =
   try {
     await assert.rejects(
       preloadCanonicalMeetingDependencies({
-        sourceName: "composite",
+        sourceName: "composite", state: "AZ",
         refreshRegistry: async () => { throw new Error("registry store unavailable"); },
         refreshVenues: async () => undefined,
       }),
@@ -785,7 +779,7 @@ test("production Reader configuration cannot reopen live composite acquisition",
 test("a meeting child takes the supervisor's registry attestation, and a malformed one leaves its own full proof", async () => {
   const attestation = {
     recordClass: "REGISTRY_RUNTIME_BINDING",
-    scope: "US:reader-registry-runtime-bindings",
+    scope: "US-AZ:reader-registry-runtime",
     versionId: "registry-reviewed-bindings:trusted-lkg:bb4500a518c9712b66e104569e74b71b",
     payloadSha256: "d".repeat(64),
     retrievedAt: "2026-09-14T04:24:35.148Z",
@@ -795,8 +789,8 @@ test("a meeting child takes the supervisor's registry attestation, and a malform
   };
   const seen: unknown[] = [];
   const run = (value: string | undefined) => preloadCanonicalMeetingDependencies({
-    sourceName: "composite",
-    refreshRegistry: async (options) => { seen.push(options); },
+    sourceName: "composite", state: "AZ",
+    refreshRegistry: async (states, options) => { assert.deepEqual(states, ["AZ"]); seen.push(options); },
     refreshVenues: async () => undefined,
     env: { WTP_ROUTINE_ATTESTED_PROMOTIONS: value },
   });
@@ -821,7 +815,6 @@ test("a meeting re-check that finds no new fact is confirmed on the pointed vers
   const pointer = await store.readPromotion("MEETING", legistar.scope);
   assert.ok(pointer);
 
-  // The same sitting read again: only its observation stamps moved.
   const [second] = await run([meeting(legistar, SECOND, "unchanged")], SECOND);
   assert.equal(second?.outcome.confirmed?.versionId, pointer.versionId);
   assert.equal(second?.outcome.confirmed?.at, SECOND);
@@ -840,15 +833,12 @@ test("a meeting re-check that finds no new fact is confirmed on the pointed vers
   assert.equal(clock.lastAttemptedAt, SECOND);
   assert.equal(clock.lastSucceededObservedAt, SECOND, "the confirmation is the source's latest success");
 
-  // A changed fact is a new version, exactly as before.
   const later = "2026-09-08T14:00:00.000Z";
   const [third] = await run([{ ...meeting(legistar, later, "unchanged"), title: "Special session" }], later);
   assert.equal(third?.outcome.confirmed, undefined);
   assert.equal(third?.outcome.candidate.state, "PROMOTED");
   assert.notEqual((await store.readPromotion("MEETING", legistar.scope))?.versionId, pointer.versionId);
 });
-
-/* ── Meeting history stops being deleted ─────────────────────────── */
 
 const HELD_READ = "2026-09-08T13:00:01.000Z";
 const HELD_LATER = "2026-09-08T14:00:01.000Z";
@@ -900,12 +890,12 @@ test("DB-01: rows outside the dates a read fetched are carried as outside the fe
   const withRecord: Meeting = { ...meeting(legistar, HELD_READ, "old-record"), startsAt: daysBefore(130), status: "CONCLUDED", agendaUrl: "https://example.gov/a" };
   const reasons = (reconciliation: ReturnType<typeof reconcileAt>) =>
     new Map(reconciliation.meetings.filter((row) => row.carried).map((row) => [row.id, row.carried?.reason]));
-  // legistar fetches the held 120 days, so a row 95 days back that its answer leaves out was asked about.
+
   const held = reasons(reconcileAt([ninetyFive, inside, withRecord]));
   assert.equal(held.get(ninetyFive.id), "UNEXPLAINED_DISAPPEARANCE");
   assert.equal(held.get(inside.id), "UNEXPLAINED_DISAPPEARANCE");
   assert.equal(held.get(withRecord.id), "OUTSIDE_FETCH_WINDOW", "130 days back was never asked about");
-  // An adapter that reads whatever its feed lists (onbase) never asked about 95 days back either.
+
   const feed = reconcileAt([ninetyFive, inside], [], "onbase");
   assert.equal(reasons(feed).get(ninetyFive.id), "OUTSIDE_FETCH_WINDOW");
   assert.equal(reasons(feed).get(inside.id), "UNEXPLAINED_DISAPPEARANCE");

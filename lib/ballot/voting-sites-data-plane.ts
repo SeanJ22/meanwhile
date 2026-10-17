@@ -1,17 +1,20 @@
-import { normalizedHash, sha256 } from "../civic-data/candidate-builders.ts";
+import { consumeStatePublicationRecord } from "../civic-data/state-publication.ts";
+import { requireBallotState, stateBallotContractId, stateBallotScope } from "../civic-data/state-scopes.ts";
+import { sha256 } from "../civic-data/candidate-builders.ts";
+import { canonicalCivicDataHash } from "../civic-data/canonical-hash.ts";
 import type { CivicRecordMember, IdentityEvidence, RoutineCandidate } from "../civic-data/types.ts";
 import { sourceProjectionEvidence } from "../civic-data/types.ts";
 import { isOfficialSource } from "../civic-data/source-authority.ts";
 import type { RawCaptureRef } from "../civic-data/raw-capture-vault.ts";
 import type { VotingJurisdiction, VotingSitesFile } from "./voting-sites.ts";
 
-export const VOTING_SITES_CONTRACT = {
-  id: "voting-sites",
-  sourceId: "voting-sites",
-  recordClass: "VOTING_SITE",
-  scope: "US-AZ+US-NH+US-NJ:2026-general:supported-jurisdictions",
-  parserVersion: "official-voting-sites/4",
-} as const;
+const normalizedHash = (value: unknown) => canonicalCivicDataHash(value, { durable: true });
+
+export const VOTING_SITES_SOURCE_ID = "voting-sites" as const;
+export const votingSitesContract = (state: string) => ({
+  id: stateBallotContractId("voting-sites", state), sourceId: VOTING_SITES_SOURCE_ID,
+  recordClass: "VOTING_SITE", scope: stateBallotScope("voting-sites", state), parserVersion: "official-voting-sites/4",
+} as const);
 
 /** One acquired source response; its bytes stay in the raw-capture vault. */
 export interface VotingRawCapture extends RawCaptureRef {
@@ -38,22 +41,19 @@ export function votingSiteMembers(file: VotingSitesFile): readonly CivicRecordMe
   ]).sort((left, right) => left.key.localeCompare(right.key));
 }
 
-function affected(jurisdiction: VotingJurisdiction, failure: VotingSiteAcquisitionFailure): boolean {
-  return failure.jurisdictionId === jurisdiction.ocdId || failure.state === jurisdiction.state;
-}
-
-export function retainFailedVotingSiteScopes(
+function retainFailedVotingSiteScopes(
   current: VotingSitesFile,
   prior: VotingSitesFile | null,
   failures: readonly VotingSiteAcquisitionFailure[],
 ): VotingSitesFile {
-  if (!prior || failures.length === 0) return structuredClone(current);
-  const retained = prior.jurisdictions.filter((jurisdiction) => failures.some((failure) => affected(jurisdiction, failure)));
-  const healthy = current.jurisdictions.filter((jurisdiction) => !failures.some((failure) => affected(jurisdiction, failure)));
-  const fallbackWithoutLkg = current.jurisdictions.filter((jurisdiction) =>
-    failures.some((failure) => affected(jurisdiction, failure)) &&
-    !retained.some((priorJurisdiction) => priorJurisdiction.ocdId === jurisdiction.ocdId)
-  );
+  if (!prior || failures.length === 0) return current;
+  const failedStates = new Set(failures.flatMap(row => row.state ? [row.state] : []));
+  const failedJurisdictions = new Set(failures.flatMap(row => row.jurisdictionId ? [row.jurisdictionId] : []));
+  const affected = (row: VotingJurisdiction) => failedStates.has(row.state) || failedJurisdictions.has(row.ocdId);
+  const retained = prior.jurisdictions.filter(affected);
+  const retainedIds = new Set(retained.map(row => row.ocdId));
+  const healthy = current.jurisdictions.filter(row => !affected(row));
+  const fallbackWithoutLkg = current.jurisdictions.filter(row => affected(row) && !retainedIds.has(row.ocdId));
   return {
     generatedAt: current.generatedAt,
     jurisdictions: [...healthy, ...retained, ...fallbackWithoutLkg]
@@ -105,7 +105,7 @@ function identities(file: VotingSitesFile): readonly IdentityEvidence[] {
   });
 }
 
-function violations(file: VotingSitesFile): string[] {
+export function votingSitesProjectionIssues(file: VotingSitesFile): string[] {
   const problems: string[] = [];
   if (!/^\d{4}-\d{2}-\d{2}$/.test(file.generatedAt)) problems.push("Voting-site projection has no exact generated date.");
   if (file.jurisdictions.length === 0) problems.push("Voting-site projection contains no jurisdictions.");
@@ -138,6 +138,7 @@ function violations(file: VotingSitesFile): string[] {
 }
 
 export function votingSitesCandidate(input: {
+  readonly state: string;
   readonly current: VotingSitesFile;
   readonly prior: VotingSitesFile | null;
   readonly failures: readonly VotingSiteAcquisitionFailure[];
@@ -148,21 +149,35 @@ export function votingSitesCandidate(input: {
   readonly retrievedAt: string;
   readonly carriedFromVersionId?: string | null;
 }): RoutineCandidate {
+  const state = requireBallotState(input.state);
+  const contract = votingSitesContract(state);
+  if (input.current.jurisdictions.some(row => row.state !== state) || input.prior?.jurisdictions.some(row => row.state !== state)) {
+    throw new Error(`Voting-site publication ${state} contains another state's jurisdiction.`);
+  }
   const readModel = retainFailedVotingSiteScopes(input.current, input.prior, input.failures);
   const civicRecords = votingSiteMembers(readModel);
-  const semanticViolations = violations(readModel);
+  const semanticViolations = votingSitesProjectionIssues(readModel);
   const rawHash = sha256(input.acquisition.map((capture) => capture.rawHash).join("\n"));
-  const carriedJurisdictionIds = input.prior?.jurisdictions.filter(row =>
-    readModel.jurisdictions.some(next => next.ocdId === row.ocdId && normalizedHash(next) === normalizedHash(row)))
-    .map(row => row.ocdId).sort() ?? [];
+  const currentJurisdictions = new Map(readModel.jurisdictions.map(row => [row.ocdId, row]));
+  const carriedJurisdictionIds = input.prior?.jurisdictions.filter(row => {
+    const next = currentJurisdictions.get(row.ocdId);
+    return next === row || next && normalizedHash(next) === normalizedHash(row);
+  }).map(row => row.ocdId).sort() ?? [];
+  for (const previous of input.prior?.jurisdictions ?? []) {
+    const next = currentJurisdictions.get(previous.ocdId);
+    consumeStatePublicationRecord(previous, next ?? null);
+    const sites = new Map(next?.sites.map(site => [site.id, site]) ?? []);
+    for (const site of previous.sites) consumeStatePublicationRecord(site, sites.get(site.id) ?? null);
+  }
   const normalizedPayload = { projection: readModel, acquisition: input.acquisition,
     carriedFromVersionId: input.carriedFromVersionId ?? null, carriedJurisdictionIds };
+  const readModelHash = normalizedHash(readModel);
   return {
-    id: `cv-${sha256(`${VOTING_SITES_CONTRACT.sourceId}\u001f${VOTING_SITES_CONTRACT.scope}\u001f${rawHash}\u001f${input.retrievedAt}\u001f${input.finalUrl}\u001f${normalizedHash(readModel)}`).slice(0, 32)}`,
-    sourceId: VOTING_SITES_CONTRACT.sourceId,
-    recordClass: VOTING_SITES_CONTRACT.recordClass,
-    scope: VOTING_SITES_CONTRACT.scope,
-    sourceProjectionEvidence: sourceProjectionEvidence(VOTING_SITES_CONTRACT.sourceId, VOTING_SITES_CONTRACT.recordClass, VOTING_SITES_CONTRACT.scope),
+    id: `cv-${sha256(`${contract.sourceId}\u001f${contract.scope}\u001f${rawHash}\u001f${input.retrievedAt}\u001f${input.finalUrl}\u001f${readModelHash}`).slice(0, 32)}`,
+    sourceId: contract.sourceId,
+    recordClass: contract.recordClass,
+    scope: contract.scope,
+    sourceProjectionEvidence: sourceProjectionEvidence(contract.sourceId, contract.recordClass, contract.scope),
     retrieval: {
       succeeded: input.acquisition.length > 0 && input.successfulAuthorityReads > 0,
       requestedUrl: input.requestedUrl,
@@ -174,9 +189,9 @@ export function votingSitesCandidate(input: {
     },
     normalization: {
       succeeded: semanticViolations.length === 0,
-      parserVersion: VOTING_SITES_CONTRACT.parserVersion,
+      parserVersion: contract.parserVersion,
       schemaVersion: "voting-sites/2",
-      normalizedHash: normalizedHash(readModel),
+      normalizedHash: readModelHash,
       normalizedPayloadHash: normalizedHash(normalizedPayload),
       inputRecords: civicRecords.length,
       outputRecords: civicRecords.length,

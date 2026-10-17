@@ -1,9 +1,5 @@
-/**
- * The wiring derive reads the venue-resolutions projection before any adapter reading; otherwise the synchronous
- * selector throws in production and the derive files the throw as a changed calendar. These tests run with the
- * fixture fallback off, as production runs it.
- */
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import { currentCuratedReaderRecords, readCuratedReaderProjection } from "../lib/civic-data/curated-reader-read-model.ts";
@@ -122,6 +118,28 @@ function crosswalkRow(patch: Partial<MeetingBodyCrosswalkRow> = {}): MeetingBody
 }
 
 const evidence = { kind: "VAULTED_EVIDENCE" as const, artifactId: "ar-calendar", contentHash: `sha256-${"e".repeat(64)}`, tier: "RAW" as const, retrievedAt: "2026-09-24T21:00:05.000Z" };
+
+for (const tenant of [
+  { kind: "MUNICODE", fixture: "municode/bremerton.html", route: "https://meetings.municode.com/PublishPage/index?cid=BREM&ppid=d33416d7-25d1-44e6-9d32-55b97fa53824", bodyName: "City Council", filter: { nameTerms: "City Council" } as Record<string, string>, now: "2026-10-13T12:00:00Z", expected: 23 },
+  { kind: "SWAGIT", fixture: "swagit/chandler.html", route: "https://chandleraz.new.swagit.com/views/155/", bodyName: "City Council", filter: { bodyMatch: "Chandler City Council Meetings" } as Record<string, string>, now: "2020-10-17T00:00:00Z", expected: 8 },
+] as const) test(`${tenant.kind} verifies its held source through the shared wiring reader`, async () => {
+  const store = await storeWithVenues();
+  const calendar = reading(crosswalkRow({ kind: tenant.kind, route: tenant.route, bodyName: tenant.bodyName, filter: tenant.filter }),
+    readFileSync(new URL(`./fixtures/${tenant.fixture}`, import.meta.url), "utf8"));
+  const read = await asProduction(() => readHeldCalendars({ options: { store, bypassCache: true, now: tenant.now },
+    now: tenant.now, adapterDigest: () => `${tenant.kind.toLowerCase()}@0123456789ab`, readings: [calendar] }));
+  assert.equal(read.kind, "READ");
+  if (read.kind !== "READ") return;
+  const verification = read.verifications.get(calendar.key)!;
+  assert.ok("verified" in verification, JSON.stringify(verification));
+  assert.equal(verification.verified.sittings, tenant.expected);
+  if (tenant.kind === "SWAGIT") {
+    const expired = await asProduction(() => readHeldCalendars({ options: { store, bypassCache: true, now: NOW },
+      now: NOW, adapterDigest: () => "swagit@0123456789ab", readings: [calendar] }));
+    assert.equal(expired.kind, "READ");
+    if (expired.kind === "READ") assert.ok("changed" in expired.verifications.get(calendar.key)!);
+  }
+});
 
 function reading(row = crosswalkRow(), text = ICS): HeldCalendarReading {
   return { key: `${row.id}\u0000ar-calendar`, row: wiringRowFor(row), held: { text, contentType: "text/calendar" }, evidence, others: [] };

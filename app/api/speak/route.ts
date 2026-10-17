@@ -1,3 +1,4 @@
+import { readerRoute } from "@/lib/api/reader-route";
 import { withReaderFeatures } from "@/lib/civic-data/reader-feature-context.ts";
 import { writeSpeakYourMind, SPEAK_MAX_CHARS } from "@/lib/db/speak";
 import { raiseWriteAlarm } from "@/lib/db/write-alarm";
@@ -13,22 +14,13 @@ import {
 import { intakeWindows } from "@/lib/db/intake-windows";
 import { isPlausibleTargetId, isValidReactionKey } from "@/lib/signal/reactions";
 
-/**
- * POST /api/speak. The same protections as the reactions route: same-origin, in-memory windows, the
- * cross-instance counters and quarantine. Its digest prefix (`"speak-your-mind:"`) keeps it from joining the
- * limiter's. Validation fails closed and is never behind a flag. A missing database is a 202.
- */
-
 export const runtime = "nodejs";
-
 
 const MAX_BODY_BYTES = 8192;
 const SUBJECT_TYPES = new Set(["OFFICIAL", "BODY", "MEETING", "CANDIDATE"]);
 
 async function postWithSettings(request: Request) {
-  // The master intake ripcord closes this surface with everything else it
-  // closes. A new collection point outside the kill switch would be a
-  // ripcord that stopped covering the product it was built for.
+
   if (ripcordPulled("ripcord.reactionIntake")) {
     return Response.json({ error: "intake is closed" }, { status: 503 });
   }
@@ -148,6 +140,6 @@ async function postWithSettings(request: Request) {
   }
 }
 
-export async function POST(request: Request) {
+export const POST = readerRoute("/api/speak", async function POST(request: Request) {
   return withReaderFeatures(() => postWithSettings(request));
-}
+}, ["registry-runtime"]);

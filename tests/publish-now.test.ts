@@ -31,7 +31,7 @@ test("BX-12: publish-now runs each minute while a routine pass remains in flight
 });
 
 test("BX-03: all unacknowledged parser results stay owed across restart; an acknowledgement removes only its result", () => {
-  const item = { id: "work-a", autonomousPlan: { contract: { recordClass: "OFFICIAL_BOARD_DIRECTORY" }, publication: { contractId: "registry-runtime-bindings" } } } as WorkItem;
+  const item = { id: "work-a", autonomousPlan: { contract: { recordClass: "OFFICIAL_BOARD_DIRECTORY" }, publication: { contractId: "registry-runtime:AZ" } } } as WorkItem;
   const parser = { id: "parser-a", workItemId: item.id, endedAt: "2026-10-01T12:00:00.000Z", result: { role: "PARSER", verdict: "EXTRACTED" } } as WorkerResultRecord;
   const sibling = { ...item, id: "work-b" };
   const siblingParser = { ...parser, id: "parser-b", workItemId: sibling.id };
@@ -63,8 +63,8 @@ test("BX-12: changed doors persist until success and unrelated or shut doors are
 
 test("the independent publication lane preserves held roster, board and ballot-route fallbacks with their existing retry clocks", () => {
   const items: WorkerPublicationItem[] = [
-    { id: "roster", autonomousPlan: { contract: { recordClass: "OFFICIAL_ROSTER" }, publication: { contractId: "registry-runtime-bindings" } } },
-    { id: "board", autonomousPlan: { contract: { recordClass: "OFFICIAL_BOARD_DIRECTORY" }, publication: { contractId: "registry-runtime-bindings" } } },
+    { id: "roster", autonomousPlan: { contract: { recordClass: "OFFICIAL_ROSTER" }, publication: { contractId: "registry-runtime:AZ" } } },
+    { id: "board", autonomousPlan: { contract: { recordClass: "OFFICIAL_BOARD_DIRECTORY" }, publication: { contractId: "registry-runtime:AZ" } } },
     { id: "ballot", autonomousPlan: { contract: { recordClass: "VOTER_ACCESS_ROUTE" }, publication: { contractId: "ballot-navigation" } } },
   ];
   const tasks = publishNowWorkerTasks(items, [], NOW);
@@ -80,7 +80,7 @@ test("the independent publication lane preserves held roster, board and ballot-r
 
 test("publication admission reads only the named result page and releases its evidence before the next page", async () => {
   const items: WorkerPublicationItem[] = Array.from({ length: AGGREGATE_LIST_READ_PAGE * 2 + 1 }, (_, index) => ({
-    id: `work-${index}`, autonomousPlan: { contract: { recordClass: "OFFICIAL_BOARD_DIRECTORY" }, publication: { contractId: "registry-runtime-bindings" } },
+    id: `work-${index}`, autonomousPlan: { contract: { recordClass: "OFFICIAL_BOARD_DIRECTORY" }, publication: { contractId: "registry-runtime:AZ" } },
   }));
   const readIds: string[][] = [];
   let reading = false;
@@ -102,23 +102,23 @@ test("publication admission reads only the named result page and releases its ev
 
 test("publication admission filters and projects work-item metadata in the database with advancing pages", async () => {
   const rows = Array.from({ length: AGGREGATE_LIST_READ_PAGE + 1 }, (_, index) => ({ id: `work-${String(index).padStart(3, "0")}`,
-    contract_id: "registry-runtime-bindings", record_class: "OFFICIAL_ROSTER", publication_outcome: null }));
+    contract_id: "registry-runtime:AZ", record_class: "OFFICIAL_ROSTER", publication_outcome: null }));
   const parameters: unknown[][] = [];
   const items = await readWorkerPublicationItems(async (query, values) => {
     assert.match(query, /WHERE value #>> '\{autonomousPlan,publication,contractId\}' = ANY\(\$1::text\[\]\)/);
     const select = query.slice(0, query.indexOf("FROM cp_work_items"));
     assert.doesNotMatch(select, /SELECT\s+\*|SELECT\s+id,\s*value\s*(?:,|FROM)|transitions|targetUrls|observationArtifactIds/i);
     assert.match(select, /sourceObservedAt/);
-    assert.deepEqual(values[0], ["registry-runtime-bindings"]);
+    assert.deepEqual(values[0], ["registry-runtime:AZ"]);
     const after = values[1];
     if (after !== undefined) assert.match(query, /AND id > \$2/);
     parameters.push([...values]);
     return rows.filter(row => after === undefined || row.id > String(after)).slice(0, AGGREGATE_LIST_READ_PAGE);
-  }, ["registry-runtime-bindings"]);
+  }, ["registry-runtime:AZ"]);
   assert.equal(items.length, rows.length);
   assert.equal(parameters.length, 2);
   assert.equal(parameters[1][1], rows[AGGREGATE_LIST_READ_PAGE - 1].id);
-  assert.deepEqual(items[0], { id: rows[0].id, autonomousPlan: { publication: { contractId: "registry-runtime-bindings" }, contract: { recordClass: "OFFICIAL_ROSTER" } } });
+  assert.deepEqual(items[0], { id: rows[0].id, autonomousPlan: { publication: { contractId: "registry-runtime:AZ" }, contract: { recordClass: "OFFICIAL_ROSTER" } } });
 });
 
 test("BX-12: the executable selects only publication work and never holds the routine singleton", () => {
@@ -126,7 +126,11 @@ test("BX-12: the executable selects only publication work and never holds the ro
   assert.match(runner, /PUBLISH_NOW \? PUBLISH_NOW_SINGLETON_PORT : ROUTINE_DATA_RUNNER_SINGLETON_PORT/);
   assert.match(runner, /PUBLISH_NOW \? \[\] : await withNationalPlaceTasks/);
   assert.match(runner, /return \[\.\.\.publication, \.\.\.publishNowDoorTasks/);
-  assert.match(runner, /const finalReaderEdge = publishNowEdgeChecks \? await publishNowEdgeChecks\.run\(\)/);
+  assert.match(runner, /const finalReaderEdge = PUBLISH_NOW && publishNowEdgeChecks \? await publishNowEdgeChecks\.run\(\)\s*:\s*await publishSupervisorReaderEdge\(store, new Date\(\)\.toISOString\(\), ONLY === null \? null : selectedTasks\)/,
+    "publish-now finishes its independent sweep; an ordinary pass publishes every selected source");
+  assert.match(runner, /const readerEdge = PUBLISH_NOW && publishNowEdgeChecks \? \(await publishNowEdgeChecks\.stop\(\)\)! : finalReaderEdge/);
+  assert.match(runner, /if \(readerEdgeFailure && !\(PUBLISH_NOW && publishNowEdgeChecks\)\) supervisorFailures\.push\(readerEdgeFailure\)/,
+    "an ordinary final publication failure remains reported when a federal sweep is active");
 });
 
 test("a publish-now minute with nothing owed ends quietly with exit 0, before any outcome or count", () => {
@@ -176,7 +180,7 @@ test("the two lanes started in one millisecond never share an outcome's identity
 
 test("a held roster or board is read again only once a page for its body is saved after its last outcome; a later pass reads only what changed", async () => {
   const held: WorkerPublicationItem[] = ["roster", "board"].map((id, n) => ({ id, autonomousPlan: {
-    contract: { recordClass: n === 0 ? "OFFICIAL_ROSTER" : "OFFICIAL_BOARD_DIRECTORY" }, publication: { contractId: "registry-runtime-bindings", bodyId: `body-${id}` } },
+    contract: { recordClass: n === 0 ? "OFFICIAL_ROSTER" : "OFFICIAL_BOARD_DIRECTORY" }, publication: { contractId: "registry-runtime:AZ", bodyId: `body-${id}` } },
     publicationOutcome: { workerResultId: "none", status: "HELD", at: NOW, recovery: "WORKER" } }));
   const later = "2026-10-06T00:00:00.000Z";
   const inputs = { pagesAt: new Map<string, string>(), nationalAt: null, registryAt: null, routesAt: null,
@@ -185,8 +189,8 @@ test("a held roster or board is read again only once a page for its body is save
   assert.deepEqual((await readPublishNowWorkerTasks(held, async () => [], later, inputs)).map(task => task.id.split(":").at(-1)), ["board"]);
 
   const seen: { query: string; values: readonly unknown[] }[] = [];
-  await readWorkerPublicationItems(async (query, values) => { seen.push({ query, values }); return []; }, ["registry-runtime-bindings"], { at: NOW, sharedInputsMoved: false });
+  await readWorkerPublicationItems(async (query, values) => { seen.push({ query, values }); return []; }, ["registry-runtime:AZ"], { at: NOW, sharedInputsMoved: false });
   assert.match(seen[0]!.query, /^WITH due\(id\) AS/);
   assert.match(seen[0]!.query, /AND id IN \(SELECT id FROM due\)/);
-  assert.deepEqual(seen[0]!.values, [["registry-runtime-bindings"], NOW, false]);
+  assert.deepEqual(seen[0]!.values, [["registry-runtime:AZ"], NOW, false]);
 });

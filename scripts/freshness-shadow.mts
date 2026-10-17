@@ -4,6 +4,7 @@ import { fork } from "node:child_process";
 import { applyHuntOrders, scopeControlKey } from "../lib/control-plane/hunt-orders.ts";
 import { readMaterializedPlanningIds, readPlanningIntents, deactivateUnfundedHunts } from "../lib/control-plane/repository/pg-store.ts";
 import { expansionScopesOf } from "../lib/control-plane/expansion/scopes.ts";
+import { loadCandidateEnrichmentProvider } from "../lib/control-plane/scheduler/providers/candidate-enrichment-loader.ts";
 import { huntPacketsProvider } from "../lib/control-plane/scheduler/providers/hunt-packets.ts";
 import { ensureReaderSettingsPublished, publishAskPlaybooks } from "../lib/civic-data/reader-settings-publication.ts";
 import "../lib/ask/model.ts";
@@ -13,8 +14,9 @@ import { runLeaseWorkerProcesses, workerDispatchFailure, workerProcessSlots } fr
 import { RESEARCH_PARENT_PEAK_MIB, reportingWorkerSlots } from "../lib/control-plane/workers/worker-slots.ts";
 import { routeProcessExecutor } from "../lib/control-plane/workers/route-process.ts";
 import { autonomousStandingRuntime } from "../lib/control-plane/workers/standing-runtime.ts";
-import { legacyHeldWorkOwed, planHeldWorkerFleet } from "../lib/control-plane/workers/standing.ts";
+import { legacyHeldWorkOwed } from "../lib/control-plane/workers/standing.ts";
 import { persistVerifiedPublicationAnchors, readStandingLineages, standingLineageCoversDue, standingLineageKeyFor } from "../lib/control-plane/workers/standing-lineage.ts";
+import { planHeldWorkerFleet } from "../lib/control-plane/workers/standing-plan.ts";
 import { sourceReliabilityKey } from "../lib/control-plane/scheduler/scout-reliability.ts";
 import { HOST_CONCURRENCY_DEFAULT, HOST_CONCURRENCY_SETTING, providerConcurrency } from "../lib/control-plane/scheduler/provider-limits.ts";
 import { browseWithPlaywright } from "./scout-browse.mts";
@@ -68,12 +70,9 @@ import { buildRegistry, registryLines } from "../lib/control-plane/scheduler/reg
 import { campaignFinanceProvider } from "../lib/control-plane/scheduler/providers/campaign-finance.ts";
 import { localJurisdictionsProvider } from "../lib/control-plane/scheduler/providers/local-jurisdictions.ts";
 import {
-  candidateEnrichmentHoldings,
-  candidateEnrichmentProvider,
-  preloadCandidateEnrichmentAuthorities,
+  readCandidateEnrichmentAuthorities,
 } from "../lib/control-plane/scheduler/providers/candidate-enrichment.ts";
 import {
-  campaignSiteCycleLine,
   campaignSiteSubjectsFromHoldings,
   heldMarginaliaAnswers,
   runCampaignSiteCycle,
@@ -558,7 +557,6 @@ if (PLANNING_STATE !== "system") {
 if (!legacyOperationalReference && !azOperationalReference) throw new Error(
   "OPERATIONAL_REFERENCE_READ_NOT_INITIALIZED: neither the scoped AZ pointer nor the legacy reviewed pointer could be read",
 );
-await preloadCandidateEnrichmentAuthorities();
 }
 
 {
@@ -599,7 +597,7 @@ await meetingPartitions.readStates([
 const registryProviders = [
   ...(PLANNING_STATE === "system" ? [campaignFinanceProvider()] : [campaignFinanceProvider(), huntPacketsProvider({ materialized: () => materialized }),
   localJurisdictionsProvider({ trackedStates, materialized: () => materialized, meetingPartitions }),
-  candidateEnrichmentProvider({ trackedStates }),
+  await loadCandidateEnrichmentProvider(trackedStates, { root: ROOT, nowIso: NOW }),
   meetingsDiscoveryProvider({ materialized: () => materialized }),
 
   (await import("../lib/control-plane/scheduler/providers/ask-gaps.ts")).askGapsProvider(
@@ -2271,7 +2269,13 @@ async function runAutonomousProcesses() {
   }
   return report;
 }
-let campaignSites = null as CampaignSiteCycleReport | null;
+type CampaignSitesSummary = {
+  readsUsed: number; rereadsUsed: number; judgedFromVault: number; elapsedMs: number;
+  verdicts: CampaignSiteCycleReport["verdicts"]; byCode: Record<string, number>;
+  byStage: Record<string, number>; offers: { accepted: number; refused: number }; approved: number; unjoined: number;
+};
+let campaignSites: CampaignSitesSummary | null = null;
+const campaignSitesLine = (report: CampaignSitesSummary) => `  campaign sites     ${report.readsUsed} read(s), ${report.judgedFromVault} judged from vaulted reads, ${report.approved} approved for the derived door`;
 let campaignSitesState = "not run: the campaign-site pass has not started";
 let candidatePublications = null as CandidatePublicationCycleReport | null;
 let candidatePublicationsState = "not run: no original-scope candidacy admission";
@@ -2307,14 +2311,24 @@ const runCampaignSitesPass = async (): Promise<void> => {
     };
     try {
       const bounded = await withinWallTime((async () => {
-        const holdings = candidateEnrichmentHoldings();
-        if (holdings === null) throw new Error("the canonical ballot and profile pointers were not preloaded this cycle");
-        const { subjects, linked } = campaignSiteSubjectsFromHoldings(holdings, nowIso());
-        const vaultIndex = await step("the saved-page index", () => readRoundVault());
-        const held = await step("the held Marginalia answers", () => heldMarginaliaAnswers(repos, vaultIndex, nowIso()));
         const methodVersion = await step("the method version", roundMethodVersion);
         const openCampaignSite = fleetSafety.guardedOpenBytes("discovery-web", "campaign-site-chain", fetch, { followRedirects: false });
-        const report = await step("the campaign-site chain", () => runCampaignSiteCycle({
+        const report: CampaignSitesSummary = { readsUsed: 0, rereadsUsed: 0, judgedFromVault: 0, elapsedMs: 0,
+          verdicts: { read: 0, vault: 0, verified: 0, refused: 0, deferred: 0 }, byCode: {}, byStage: {},
+          offers: { accepted: 0, refused: 0 }, approved: 0, unjoined: 0 };
+        let responses = 0, answers = 0, unreadable = 0, statesRun = 0;
+        let subjectCount = 0;
+        let linkedCount = 0;
+        for (const state of trackedStateCodes) {
+          const holdings = await step(`${state} candidate authorities`, () => readCandidateEnrichmentAuthorities(state));
+          const { subjects, linked, failures } = campaignSiteSubjectsFromHoldings(holdings, nowIso());
+          if (failures.length) runtimeConditions.push(...failures);
+          subjectCount += subjects.size;
+          linkedCount += linked.size;
+          if (!subjects.size) continue;
+          const held = await step(`${state} held Marginalia answers`, () => heldMarginaliaAnswers(repos, join(ROOT, ...VAULT_DIR), nowIso(), subjects));
+          responses += held.responses.length; answers += held.answers; unreadable += held.unreadable;
+          const stateReport = await step(`${state} campaign-site chain`, () => runCampaignSiteCycle({
           startedAtMs: campaignStartedMs,
           repos,
           subjects,
@@ -2330,15 +2344,28 @@ const runCampaignSitesPass = async (): Promise<void> => {
           },
           spaceOut: spacer,
           vaultRoot: join(ROOT, ...VAULT_DIR),
-          heldVault: vaultIndex,
           methodVersion,
           deadlineMs: dispatchDeadlineMs,
-        }));
+          }));
+          statesRun++;
+          report.readsUsed += stateReport.chain.readsUsed;
+          report.rereadsUsed += stateReport.chain.rereadsUsed;
+          report.judgedFromVault += stateReport.chain.judgedFromVault;
+          report.approved += stateReport.chain.approved.length;
+          report.unjoined += stateReport.chain.unjoined.length;
+          for (const offer of stateReport.chain.offers) report.offers[offer.accepted ? "accepted" : "refused"]++;
+          report.verdicts = Object.fromEntries(Object.entries(report.verdicts).map(([key, value]) =>
+            [key, value + stateReport.verdicts[key as keyof typeof stateReport.verdicts]])) as CampaignSiteCycleReport["verdicts"];
+          for (const [key, value] of Object.entries(stateReport.byCode)) report.byCode[key] = (report.byCode[key] ?? 0) + value;
+          for (const [key, value] of Object.entries(stateReport.chain.byStage)) report.byStage[key] = (report.byStage[key] ?? 0) + value;
+        }
+        if (!statesRun) throw new Error("No state has a usable candidate authority for campaign-site work.");
+        report.elapsedMs = Date.now() - campaignStartedMs;
         return {
           report,
           state:
-            `ran over ${subjects.size} canonical candidacies (${linked.size} already carrying a campaign link, read last) and ${held.responses.length} newest held Marginalia answer(s) of ${held.answers} vaulted` +
-            (held.unreadable > 0 ? ` (${held.unreadable} answer(s) the vault could not produce)` : ""),
+            `ran over ${subjectCount} canonical candidacies (${linkedCount} already carrying a campaign link, read last) and ${responses} newest held Marginalia answer(s) of ${answers} vaulted` +
+            (unreadable > 0 ? ` (${unreadable} answer(s) the vault could not produce)` : ""),
         };
       })(), dispatchDeadlineMs + CAMPAIGN_SITES_SETTLE_MS - Date.now());
       if (bounded.done) {
@@ -2355,7 +2382,7 @@ const runCampaignSitesPass = async (): Promise<void> => {
       leaveCampaignSites();
     }
   }
-  console.log(campaignSites === null ? `  campaign sites     ${campaignSitesState}` : `${campaignSiteCycleLine(campaignSites)} · ${campaignSitesState}`);
+  console.log(campaignSites === null ? `  campaign sites     ${campaignSitesState}` : `${campaignSitesLine(campaignSites)} · ${campaignSitesState}`);
 };
 
 const runCandidatePublicationsPass = async (): Promise<void> => {
@@ -2712,7 +2739,7 @@ const lines = [
           ((retirementApplied?.deferred.length ?? 0) > 0 ? ` · ${retirementApplied?.deferred.length} deferred to the next cycle (budget)` : "") +
           (retirementError !== null ? ` · COULD NOT RUN: ${retirementError}` : ""),
       ]),
-  campaignSites === null ? `  campaign sites     ${campaignSitesState}` : `${campaignSiteCycleLine(campaignSites)} · ${campaignSitesState}`,
+  campaignSites === null ? `  campaign sites     ${campaignSitesState}` : `${campaignSitesLine(campaignSites)} · ${campaignSitesState}`,
   ...(abandonedOccurrences.length === 0
     ? []
     : [
@@ -2805,21 +2832,7 @@ const runRecord = {
 
       campaignSites: {
         state: campaignSitesState,
-        report: campaignSites === null
-          ? null
-          : {
-              readsUsed: campaignSites.chain.readsUsed,
-              rereadsUsed: campaignSites.chain.rereadsUsed,
-              judgedFromVault: campaignSites.chain.judgedFromVault,
-              verdicts: campaignSites.verdicts,
-              byCode: campaignSites.byCode,
-              byStage: campaignSites.chain.byStage,
-              offers: { accepted: campaignSites.chain.offers.filter((o) => o.accepted).length, refused: campaignSites.chain.offers.filter((o) => !o.accepted).length },
-              approved: campaignSites.chain.approved.map((a) => ({ itemId: a.itemId, candidacyId: a.campaignSite.candidacyId, url: a.campaignSite.url })),
-              unjoined: campaignSites.chain.unjoined.length,
-              elapsedMs: campaignSites.elapsedMs,
-              read: campaignSites.chain.leads.filter((l) => l.via === "READ").map((l) => ({ subjectId: l.subjectId, url: l.lead.url, outcome: l.outcome, codes: l.refusals.map((r) => r.code) })),
-            },
+        report: campaignSites,
       },
       candidatePublications: { state: candidatePublicationsState, report: candidatePublications },
 

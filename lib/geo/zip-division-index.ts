@@ -1,13 +1,4 @@
-/**
- * Held ZIP orientation evidence, in one shard per two-digit ZIP prefix.
- * Selected published Census relationships supply current district membership. A request reads only its ZIP's shard
- * and keeps a few recent ones in memory. A shard that cannot be read answers
- * null and is not cached.
- *
- * Request-path reads spell the folder as literal path segments so Turbopack
- * traces only the shard files; a variable or spread path makes it trace the
- * whole project.
- */
+import { ocdStateCode } from "../ocd/state-of.ts";
 import { readFileSync, readdirSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
@@ -96,16 +87,14 @@ export async function zipDivisionEntry(zip: string | null, selection?: Geography
 
 const lowestByState = new Map<string, Promise<ReadonlyMap<string, string> | null>>();
 
-/**
- * For one state (postal code), the lowest ZIP each division reaches: a stable
- * public destination for a division's readers. Reads that state's shards once
- * per process; null when the index or a shard cannot be read (our gap, not
- * cached), an empty map for a state the index carries no ZIP for.
- */
 export function lowestZipByDivision(state: string): Promise<ReadonlyMap<string, string> | null> {
   const st = state.toUpperCase();
   const held = lowestByState.get(st);
-  if (held !== undefined) return held;
+  if (held !== undefined) {
+    lowestByState.delete(st);
+    lowestByState.set(st, held);
+    return held;
+  }
   const read = readFile(join(process.cwd(), "data", "derived", "zip-divisions", "index.json"), "utf8")
     .then(async (text) => {
       const names = (JSON.parse(text) as { statesToShards: Record<string, readonly string[]> }).statesToShards[st] ?? [];
@@ -115,7 +104,7 @@ export function lowestZipByDivision(state: string): Promise<ReadonlyMap<string, 
         for (const zip of Object.keys(shard.zips).sort()) {
           for (const i of shard.zips[zip]) {
             const division = shard.divisions[i];
-            if (!out.has(division)) out.set(division, zip);
+            if (ocdStateCode(division)?.toUpperCase() === st && !out.has(division)) out.set(division, zip);
           }
         }
       }
@@ -126,6 +115,7 @@ export function lowestZipByDivision(state: string): Promise<ReadonlyMap<string, 
       return null;
     });
   lowestByState.set(st, read);
+  while (lowestByState.size > 4) lowestByState.delete(lowestByState.keys().next().value!);
   return read;
 }
 

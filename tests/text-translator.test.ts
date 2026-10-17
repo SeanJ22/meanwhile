@@ -1,6 +1,4 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
-import { gunzipSync } from "node:zlib";
 import test from "node:test";
 import { createMemoryRepositories } from "./helpers/playbooks.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -15,19 +13,9 @@ import { translationHash, type TextTranslation } from "../lib/translate/records.
 import { DEFAULT_SOURCE_POLICY } from "../lib/control-plane/promotion/source-kinds.ts";
 import { translatedMeetingEvidenceFor } from "../lib/ask/meeting-knowledge.ts";
 import type { MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
-import type { CandidateVersionRecord, PromotedProjection } from "../lib/civic-data/types.ts";
-import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
-import { installFactReader } from "../lib/facts/db.ts";
+import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 
-const registry = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
-const registryStore = new MemoryRoutineDataStore();
-Object.assign(registryStore, { candidates: new Map([[registry.record.candidate.id, registry.record]]), promotions: new Map([[registry.projection.key, registry.projection]]) });
-installFactReader(null);
-try {
-  assert.equal((await readRegistryRuntimeProjection({ store: registryStore, bypassCache: true })).kind, "PROMOTED");
-} finally {
-  installFactReader(undefined);
-}
+await installRegistryAuthority();
 
 const now = "2026-10-05T18:00:00Z", stateDivision = "ocd-division/country:us/state:mi";
 const division = `${stateDivision}/county:birch`, bodyId = `${division}#library`;

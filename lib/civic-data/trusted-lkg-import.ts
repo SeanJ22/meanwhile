@@ -1,3 +1,4 @@
+import { canonicalCivicDataHash } from "./canonical-hash.ts";
 import { createHash } from "node:crypto";
 
 import {
@@ -82,8 +83,7 @@ export function trustedLkgCandidateEnvelopeSha256(candidate: RoutineCandidate): 
   delete envelope.id;
   delete envelope.bootstrapImport;
   delete envelope.changeSet;
-  const jsonEnvelope = JSON.parse(JSON.stringify(envelope)) as unknown;
-  return sha256(canonicalCivicDataJson(jsonEnvelope));
+  return canonicalCivicDataHash(envelope, { durable: true });
 }
 
 export function trustedLkgValidatorIds(candidate: Pick<

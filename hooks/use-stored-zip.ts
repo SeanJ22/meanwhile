@@ -3,22 +3,12 @@
 import { useCallback, useEffect, useSyncExternalStore } from "react";
 
 import { recordRecentZip } from "@/hooks/use-recent-zips";
-import { lookupIn, type CentroidTable, type ZctaCentroid } from "@/lib/geo/zcta-core";
-import { postalAreaIn, type PostalTable } from "@/lib/geo/postal-core";
-import { loadZctaTable } from "@/lib/geo/zcta-table";
+import type { ZctaCentroid } from "@/lib/geo/zcta-core";
 import {
   commitStorageWrite,
   publishToListeners,
   subscribeToStorage,
 } from "@/lib/state/subscribe-to-storage";
-
-/**
- * The zip the reader is looking at, remembered in `localStorage` as
- * `approximate_location`: orientation, never district truth. A link's `?zip=`
- * wins over what is stored. Read through `useSyncExternalStore` with the
- * server rendering `pending`, so the entry prompt never flashes past a
- * returning reader.
- */
 
 const STORAGE_KEY = "wtp.approximate_location";
 
@@ -57,41 +47,29 @@ export function readZipChoice(): string | null {
   }
 }
 
-/**
- * The centroid table loads asynchronously to keep it out of the initial
- * bundle. Until it arrives the snapshot is `PENDING` (`restored: false`), the
- * same state as before hydration. The stored payload holds only the zip.
- */
-let centroids: CentroidTable | null = null;
-let postal: PostalTable = {};
-let tableRequested = false;
-
-function ensureTable(): void {
-  if (tableRequested) return;
-  tableRequested = true;
-  void loadZctaTable().then((table) => {
-    centroids = table.centroids;
-    postal = table.postal;
-    // Invalidate the identity cache and republish so subscribers move from PENDING.
-    cachedRaw = undefined;
-    cachedSnapshot = PENDING;
-    publishToListeners(listeners);
-  });
-}
-
-export function resolveStoredZip(table: CentroidTable, raw: string | null, postal: PostalTable = {}): StoredLocation | null {
+function zipOf(raw: string | null): string | null {
   if (!raw) return null;
 
   try {
     const parsed = JSON.parse(raw) as Partial<StoredPayload>;
-    // Re-resolve rather than trusting stored coordinates: a Census vintage
-    // update moves centroids, and the zip is the only durable part.
-    return typeof parsed.zip === "string" && /^\d{5}$/.test(parsed.zip) ? lookupIn(table, parsed.zip, postal) : null;
+    return typeof parsed.zip === "string" && /^\d{5}$/.test(parsed.zip) ? parsed.zip : null;
   } catch {
     return null;
   }
 }
 
+export async function resolveStoredZip(raw: string | null): Promise<StoredLocation | null> {
+  const zip = zipOf(raw);
+  if (!zip) return null;
+  try {
+    const response = await fetch(`/api/location/zip?zip=${zip}`);
+    if (!response.ok) return null;
+    const payload = await response.json() as { location: StoredLocation | null };
+    return payload.location;
+  } catch {
+    return null;
+  }
+}
 
 const subscribe = (onStoreChange: () => void) => {
   const unsubscribe = subscribeToStorage(listeners, onStoreChange);
@@ -103,30 +81,25 @@ const subscribe = (onStoreChange: () => void) => {
 };
 
 function getSnapshot(): LocationSnapshot {
-  ensureTable();
-
-  // Nothing is restored before the table that resolves it is here.
-  if (!centroids) return PENDING;
-
   const raw = readZipChoice();
-
-  if (raw !== cachedRaw || cachedSnapshot === PENDING) {
+  if (raw !== cachedRaw) {
     cachedRaw = raw;
-    cachedSnapshot = { restored: true, location: resolveStoredZip(centroids, raw, postal) };
+    cachedSnapshot = PENDING;
+    void resolveStoredZip(raw).then(location => {
+      if (cachedRaw !== raw) return;
+      cachedSnapshot = { restored: true, location };
+      publishToListeners(listeners);
+    });
   }
 
   return cachedSnapshot;
-}
-
-function getServerSnapshot(): LocationSnapshot {
-  return PENDING;
 }
 
 export function useStoredZip() {
   const snapshot = useSyncExternalStore(
     subscribe,
     getSnapshot,
-    getServerSnapshot,
+    () => PENDING,
   );
 
   /* A zip opened from a link is recorded in recents too. */
@@ -158,9 +131,8 @@ export function useStoredZip() {
       () => {
         // Not being able to remember is survivable; failing the search is not.
         // Keep the choice for this page's life; the publish still runs.
-        cachedRaw = JSON.stringify(payload);
-        const area = postalAreaIn(postal, next.zip);
-        cachedSnapshot = { restored: true, location: { ...next, ...(area ? { postal: area } : {}) } };
+        cachedRaw = readZipChoice();
+        cachedSnapshot = { restored: true, location: next };
       },
     );
   }, []);

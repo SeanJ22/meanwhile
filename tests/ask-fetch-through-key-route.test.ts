@@ -1,14 +1,17 @@
+import {currentReaderAuthorityEdge} from "../lib/registry/runtime-edge.ts";
+import {stateBallotContractId} from "../lib/civic-data/state-scopes.ts";
 import test from "./helpers/playbooks.ts";
 import assert from "node:assert/strict";
-import { installAbsent, installFederalVotes, installPimaLocalFinance, installPromotedValue, installRegistryAuthority, installStateMoney, promotedFixtureBundle } from "./helpers/promoted-fixtures.ts";
+import { installAbsent, installFederalVotes, installPimaLocalFinance, installPromotedValue, installRegistryAuthority, installStateMoney } from "./helpers/promoted-fixtures.ts";
 import { installMeetings, installPimaOutcomes } from "./helpers/reader-fixtures.ts";
 await installRegistryAuthority();
 await installFederalVotes();
 await installPimaOutcomes();
-for (const id of ["az-sos-ballot", "candidate-profiles", "candidate-corpus"] as const) {
-  const contract = requiredManualProductionContract(id);
-  installAbsent(contract.recordClass, contract.scope);
+for (const state of ["AZ","NH","NJ"] as const) for(const family of ["ballot-contests","candidate-profiles","candidate-corpus"] as const) {
+  const contract=requiredManualProductionContract(stateBallotContractId(family,state));
+  installAbsent(contract.recordClass,contract.scope);
 }
+
 for (const state of ["AZ", "NH", "NJ"] as const) await installStateMoney(state);
 await installPimaLocalFinance();
 installMeetings([]);
@@ -47,7 +50,7 @@ test("normal Ask detail requests fetch every registered FEC page and deliver eac
   };
   try {
     resetGroundedState();
-    const response = await withReaderAuthorityEdge(promotedFixtureBundle({ edgeOnly: true }), () => POST(new Request("https://wtp.test/api/ask/grounded", { method: "POST",
+    const response = await withReaderAuthorityEdge({...currentReaderAuthorityEdge(),edgeOnly:true}, () => POST(new Request("https://wtp.test/api/ask/grounded", { method: "POST",
       headers: { "content-type": "application/json", origin: "https://wtp.test", host: "wtp.test", "x-wtp-synthetic-run": "ballot-ca36-route" },
       body: JSON.stringify({ question: "List every PAC that gave to Juan Ciscomani this year", today: "2026-10-05", ocdIds: ["ocd-division/country:us/state:az"],
         activeSubjects: [{ id: target, kind: "PERSON", name: "Juan Ciscomani", focused: true }] }) })));

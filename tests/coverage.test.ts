@@ -93,7 +93,7 @@ test("the place source reads shared holdings, publishes source data, then uses t
   let live = false;
   let clock = now;
   const acquiredAt = "2026-09-30T00:02:00Z";
-  const result = await runPlaceSource({ repos, store: new MemoryRoutineDataStore(), zip: "65101", divisions: [division], now,
+  const result = await runPlaceSource({ repos, store: new MemoryRoutineDataStore(), zip: "65101", state: "MO", divisions: [division], now,
     clock: () => clock,
     geographyCaptures: [], readSource: async (url, knowledge) => {
       events.push("source"); assert.equal(knowledge.error, undefined);
@@ -119,7 +119,7 @@ test("a registry publication failure leaves its fields open while later election
     "https://elections.example.gov/": '<p>October 5, 2026: Last day to register to vote.</p>',
   };
   let offers = 0;
-  const result = await runPlaceSource({ repos: createMemoryRepositories(), store: new MemoryRoutineDataStore(), zip: "65101", now,
+  const result = await runPlaceSource({ repos: createMemoryRepositories(), store: new MemoryRoutineDataStore(), zip: "65101", state: "MO", now,
     divisions: [division], geographyCaptures: [], readHeld: async () => ({ subjects: [], held: [] }),
     readSource: async url => { if (!(url in pages)) throw Error("Unavailable source"); return { url, text: pages[url], collectedAt: now }; },
     publish: async () => { offers++; throw Error("Registry temporarily unavailable"); },

@@ -1,3 +1,4 @@
+import { readerRoute } from "@/lib/api/reader-route";
 import {
   zipThisAddressResolvesTo,
   locateAddressInZip,
@@ -12,7 +13,6 @@ import {
 import { divisionsForCensusGeographies } from "@/lib/registry/server";
 import { censusVintageFor } from "@/lib/geo/census-geographies";
 import { currentRepresentationSelection, type GeographySelection } from "@/lib/census-geography/selection";
-import { contestsForDivisions } from "@/lib/sources/ballot-nj-morris";
 import { readerBallotSourcesForDivisions } from "@/lib/ballot/reader-sources";
 import { postalArea, zipNeedsAddress } from "@/lib/geo/postal";
 import { lookupZcta } from "@/lib/geo/zcta";
@@ -31,18 +31,16 @@ function bad(): Response {
 /** Contest ids for a confirmed division set — the ballot page's narrowing. */
 async function contestIdsFor(ocdIds: readonly string[], selection: GeographySelection): Promise<string[]> {
   if (ocdIds.length === 0 || selection.purpose !== "election") return [];
+  const ids = new Set<string>();
   for (const { source } of await readerBallotSourcesForDivisions(ocdIds)) {
     const candidate = source.normalize(await source.fetch());
     if (candidate.election.date !== selection.electionDate) continue;
-    const hit = contestsForDivisions(candidate, [...ocdIds]);
-    if (hit.contests.length > 0 || hit.absences.length > 0) {
-      return hit.contests.map((c) => c.id);
-    }
+    for (const contest of [...candidate.contests, ...candidate.heldContests ?? []]) ids.add(contest.id);
   }
-  return [];
+  return [...ids];
 }
 
-export async function POST(request: Request) {
+export const POST = readerRoute("/api/address/resolve", async function POST(request: Request) {
   let zip = "";
   let street = "";
   let houseNumber = "";
@@ -79,7 +77,6 @@ export async function POST(request: Request) {
   const queryStreet = omitZip && !street.includes(",") && area?.place && area.state
     ? `${street}, ${area.place}, ${area.state}` : street;
 
-
   const points: CensusPoint[] = [];
   const vintage = censusVintageFor(selection);
   if (houseNumber.length > 0) {
@@ -113,7 +110,6 @@ export async function POST(request: Request) {
 
   const resolution = resolveAddress(samples);
 
-
   const confirmed =
     resolution.status === "FAILED"
       ? []
@@ -132,4 +128,4 @@ export async function POST(request: Request) {
     { ok: true, resolution, contestIds: await contestIdsFor(confirmed, selection).catch(() => []), point },
     { headers: NO_STORE },
   );
-}
+}, ["census-districts", "ballot-contests"]);

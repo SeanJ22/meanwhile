@@ -3,11 +3,9 @@ import { measureRecordsForBallot } from "../ballot/measure-records.ts";
 import { divisionIdsForZipArea } from "../ballot/zip-divisions.ts";
 
 import { readerBallotSourcesForDivisions } from "../ballot/reader-sources.ts";
-import { contestsForDivisions } from "../sources/ballot-nj-morris/index.ts";
-import { getGeneralLineup } from "../ballot/general-lineup.ts";
 import { summaryForContest } from "../ballot/measure-summary.ts";
 import { provisionsForContest } from "../ballot/measure-provisions.ts";
-import { getMeasureAnalyses, type MeasureAnalysis } from "../ballot/analyses.ts";
+import { type MeasureAnalysis } from "../ballot/analyses.ts";
 import { positionsFor } from "../candidates/positions.ts";
 import { readStanceTopics } from "../stances/read.ts";
 import type { StanceTopic } from "../stances/topics.ts";
@@ -82,11 +80,12 @@ export async function readerOfficeholders(ocdIds: readonly string[], bodyIds: re
 }
 
 export interface BallotForDivisions {
-  authorityKind?: "GENERAL" | "LEGACY";
   loaderFailures: string[];
   analysisLoaderFailed: boolean;
   measureAnalysis: (contestId: string) => MeasureAnalysis | null;
   set: BallotSet | null;
+  sets: readonly BallotSet[];
+  setForTarget: (targetId: string) => BallotSet | null;
   contests: Contest[];
   absences: BallotAbsence[];
   nominees: (contestId: string) => readonly AskNominee[];
@@ -110,6 +109,8 @@ const EMPTY: BallotForDivisions = {
   analysisLoaderFailed: false,
   measureAnalysis: () => null,
   set: null,
+  sets: [],
+  setForTarget: () => null,
   contests: [],
   absences: [],
   nominees: () => [],
@@ -124,62 +125,61 @@ export async function loadBallotForDivisions(
   zip?: string,
 ): Promise<BallotForDivisions> {
   if (ocdIds.length === 0) return EMPTY;
-  const loaderFailures: string[] = [];
+  const loaderFailures: string[] = [], sets: BallotSet[] = [];
   const stanceTopics = await readStanceTopics();
-  for (const { state, source } of await readerBallotSourcesForDivisions(ocdIds, options)) {
+  const selectedStates = new Set<string>();
+  for (const { state, source } of await readerBallotSourcesForDivisions(ocdIds, options, zip && /^\d{5}$/.test(zip) ? election =>
+    divisionIdsForZipArea(zip, [...ocdIds], { purpose: "election", asOf: new Date().toISOString().slice(0, 10), electionDate: election.date }) : undefined)) {
     try {
-      const candidate = source.normalize(await source.fetch());
-      const electionIds = zip && /^\d{5}$/.test(zip) ? await divisionIdsForZipArea(zip, [...ocdIds], {
-        purpose: "election", asOf: new Date().toISOString().slice(0, 10), electionDate: candidate.election.date,
-      }) : ocdIds;
-      const hit = contestsForDivisions(candidate, electionIds);
-      if (hit.contests.length === 0 && hit.absences.length === 0) continue;
-      const analyses = heldOrUnreadable(getMeasureAnalyses);
-      const lineup = heldOrUnreadable(getGeneralLineup) ?? null;
-      const measureRecords = measureRecordsForBallot(candidate);
-      return {
-        authorityKind: source.name.startsWith("ballot-contests:") ? "GENERAL" : "LEGACY",
-        loaderFailures,
-        analysisLoaderFailed: analyses === undefined,
-        measureAnalysis: (contestId) => analyses?.analyses.find((analysis) => analysis.contestId === contestId) ?? null,
-        set: candidate,
-        contests: hit.contests,
-        absences: hit.absences,
-        nominees: (contestId) => (lineup?.contests.find((contest) => contest.contestId === contestId)?.nominees ?? []).map((nominee) => ({ ...nominee, sourceUrl: lineup!.canvass.url, sourceOrg: lineup!.canvass.issuedBy, retrievedAt: lineup!.canvass.readAt })),
-        positions: (targetKey: string) => sourcedPositions(targetKey, stanceTopics),
-        measureSummary: (contestId) => {
-          const summary = summaryForContest(contestId, measureRecords);
-          return summary
-            ? { summary: summary.summary, summarizesUrl: summary.summarizesUrl, yesMeans: summary.yesMeans, noMeans: summary.noMeans }
-            : null;
-        },
-        measureProvisions: (contestId) =>
-          provisionsForContest(contestId, measureRecords).map((p) => ({
-            id: p.id,
-            label: p.label,
-            what: p.what,
-            citesUrl: p.citesUrl,
-          })),
-      };
+      const ballot = source.normalize(await source.fetch());
+      if (selectedStates.has(state) || !ballot.contests.length && !ballot.absences.length && !ballot.heldContests?.length) continue;
+      selectedStates.add(state);
+      sets.push(ballot);
     } catch {
       loaderFailures.push(state);
     }
   }
-  return { ...EMPTY, loaderFailures };
-}
-
-/** `undefined` when the holding cannot be read; another state's ballot still loads. */
-function heldOrUnreadable<T>(read: () => T | null): T | null | undefined {
-  try {
-    return read();
-  } catch {
-    return undefined;
+  if (!sets.length) return { ...EMPTY, loaderFailures };
+  const byTarget = new Map<string, BallotSet>();
+  const analyses = new Map<string, MeasureAnalysis>();
+  const nominees = new Map<string, readonly AskNominee[]>();
+  const measures = sets.flatMap(measureRecordsForBallot);
+  for (const ballot of sets) {
+    for (const row of [...ballot.contests, ...ballot.candidacies, ...ballot.filingCandidacies ?? [], ...ballot.heldContests ?? []]) byTarget.set(row.id, ballot);
+    for (const row of ballot.measureAnalyses?.analyses ?? []) analyses.set(row.contestId, row);
+    const lineup = ballot.generalLineup;
+    for (const contest of lineup?.contests ?? []) {
+      nominees.set(contest.contestId, contest.nominees.map(nominee => ({ ...nominee,
+        sourceUrl: nominee.provenance?.sourceUrl ?? lineup!.canvass.url,
+        sourceOrg: nominee.provenance?.sourceOrg ?? lineup!.canvass.issuedBy,
+        retrievedAt: nominee.provenance?.collectedAt ?? lineup!.canvass.readAt })));
+      for (const nominee of contest.nominees) byTarget.set(`${contest.contestId}|${nominee.name}`, ballot);
+    }
   }
+  const set: BallotSet = sets.length === 1 ? sets[0] : { ...sets[0],
+    contests: sets.flatMap(row => row.contests), candidacies: sets.flatMap(row => row.candidacies),
+    filingCandidacies: sets.flatMap(row => row.filingCandidacies ?? []), measures: sets.flatMap(row => row.measures),
+    absences: sets.flatMap(row => row.absences), heldContests: sets.flatMap(row => row.heldContests ?? []),
+    removals: sets.flatMap(row => row.removals ?? []), contacts: sets.flatMap(row => row.contacts ?? []) };
+  return { loaderFailures, analysisLoaderFailed: false, set, sets,
+    setForTarget: target => byTarget.get(target) ?? null,
+    contests: set.contests, absences: set.absences,
+    measureAnalysis: contestId => analyses.get(contestId) ?? null,
+    nominees: contestId => nominees.get(contestId) ?? [],
+    positions: targetKey => {
+      const ballot = byTarget.get(targetKey);
+      return ballot ? sourcedPositions(ballot.election.state, targetKey, stanceTopics) : [];
+    },
+    measureSummary: contestId => {
+      const summary = summaryForContest(contestId, measures);
+      return summary ? { summary: summary.summary, summarizesUrl: summary.summarizesUrl, yesMeans: summary.yesMeans, noMeans: summary.noMeans } : null;
+    },
+    measureProvisions: contestId => provisionsForContest(contestId, measures).map(row => ({ id: row.id, label: row.label, what: row.what, citesUrl: row.citesUrl })) };
 }
 
-function sourcedPositions(targetKey: string, topics: readonly StanceTopic[]) {
+function sourcedPositions(state: string, targetKey: string, topics: readonly StanceTopic[]) {
   try {
-    return positionsFor(targetKey, null, topics).flatMap((position) =>
+    return positionsFor(state, targetKey, null, topics).flatMap((position) =>
       position.answer.kind === "MATCHED"
         ? position.answer.passages.map((passage) => ({
             issueLabel: position.issue.label,

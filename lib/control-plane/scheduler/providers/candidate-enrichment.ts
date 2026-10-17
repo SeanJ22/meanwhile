@@ -1,11 +1,5 @@
+import { stateBallotContractId, stateBallotScope } from "../../../civic-data/state-scopes.ts";
 import { readGenericBallotProjection, type GenericBallotProjection } from "../../../ballot/generic-projection.ts";
-/**
- * Candidate enrichment fields (campaign site, positions, bios, photos, contact) as standing obligations against
- * each tracked state's canonical promoted ballot projection, so the work is owed before a reader arrives. Every
- * route is its own scheduled unit, walls are registered so they are re-walked, nothing is registered for a
- * field already held, and positions come only from the candidate's own site.
- */
-
 import { currentExtraction, type CandidateCorpus } from "../../../candidates/corpus.ts";
 import {
   ENRICHMENT_FIELDS,
@@ -18,15 +12,11 @@ import {
 } from "../../../hunt/candidate-universe.ts";
 import type { BallotSet } from "../../../ballot/types.ts";
 import type {
-  AzBallotProjection,
   CandidateProfilesProjection,
-  NhBallotProjection,
 } from "../../../civic-data/manual-projections.ts";
 import { requiredManualProductionContract } from "../../../civic-data/manual-contracts.ts";
-import { requiredRoutineContract } from "../../../civic-data/contracts.ts";
 import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "../../../civic-data/read-model.ts";
 import { readDerivedCampaignSites, composeCampaignLinks } from "../../../civic-data/derived-campaign-sites.ts";
-import type { NjMorrisReadModel } from "../../../sources/ballot-nj-morris/index.ts";
 import type {
   ObligationProvider,
   ProvidedObligation,
@@ -38,13 +28,6 @@ import { trackedStatesFromOperationalReference, type TrackedStatesSource } from 
 
 export const CANDIDATE_ENRICHMENT_PROVIDER_ID = "candidate-enrichment";
 
-/** The states whose canonical candidate ballot authority is registered in the civic-data contracts. A tracked state outside this list is named as a dataset gap every cycle. */
-const LEGACY_BALLOT_AUTHORITY_STATES = ["az", "nh", "nj"] as const;
-/** Legacy path retained until the generic authority is checked live. */
-export const BALLOT_AUTHORITY_STATES = LEGACY_BALLOT_AUTHORITY_STATES;
-type BallotAuthorityState = (typeof BALLOT_AUTHORITY_STATES)[number];
-const hasBallotAuthority = (state: string): state is BallotAuthorityState =>
-  (BALLOT_AUTHORITY_STATES as readonly string[]).includes(state);
 export const CYCLE = 2026;
 
 /** Identification headers: a person and a purpose, never a credential. */
@@ -94,11 +77,6 @@ function siteRoute(c: CanonicalCandidacy, url: string): RouteDescriptor {
   };
 }
 
-/**
- * Wikipedia via the Wikimedia REST API (`api.wikimedia.org`, robots-permitted), a discovery route only: a
- * result may point at a candidate's own page, and the record is proved at the origin. A 429 is a wall and
- * disposes BLOCKED_CURRENTLY.
- */
 export function wikipediaRoute(c: CanonicalCandidacy): RouteDescriptor {
   return {
     routeId: "candidate-wikipedia-api",
@@ -237,30 +215,12 @@ function routesForCandidacy(
   return out;
 }
 
-export interface CandidateEnrichmentAuthorities {
-  readonly az: AzBallotProjection;
-  readonly nh: NhBallotProjection;
-  readonly nj: NjMorrisReadModel;
-  readonly profiles: CandidateProfilesProjection;
-  readonly corpus: CandidateCorpus;
-}
-
 export interface CandidateEnrichmentAuthorityHoldings {
-  readonly az: AzBallotProjection | null;
-  readonly nh: NhBallotProjection | null;
-  readonly nj: NjMorrisReadModel | null;
+  readonly general: GenericBallotProjection | null;
   readonly profiles: CandidateProfilesProjection | null;
   readonly corpus: CandidateCorpus | null;
   readonly failures: readonly string[];
-  readonly general?: GenericBallotProjection | null;
 }
-
-let loadedAuthorities: CandidateEnrichmentAuthorityHoldings | null = null;
-const AZ_BALLOT = requiredManualProductionContract("az-sos-ballot");
-const NH_BALLOT = requiredManualProductionContract("nh-curated-ballot");
-const PROFILES = requiredManualProductionContract("candidate-profiles");
-const PUBLICATIONS = requiredManualProductionContract("candidate-corpus");
-const NJ_BALLOT = requiredRoutineContract("nj-morris-filing");
 
 function requiredValue<T>(
   result: { readonly kind: string; readonly value: T | null },
@@ -272,22 +232,16 @@ function requiredValue<T>(
   throw new Error(`${name} canonical projection is ${result.kind}.`);
 }
 
-/**
- * Load every authority before the synchronous obligation registry is built.
- * This standing path deliberately bypasses every bundled first-seed helper:
- * only proof-validated promoted pointers may create a production clock.
- */
-export async function preloadCandidateEnrichmentAuthorities(
-  options: PromotedCivicDataReadOptions = {},
-): Promise<void> {
+export async function readCandidateEnrichmentAuthorities(
+  state: string, options: PromotedCivicDataReadOptions = {},
+): Promise<CandidateEnrichmentAuthorityHoldings> {
+  const profilesContract = requiredManualProductionContract(stateBallotContractId("candidate-profiles", state));
+  const publicationsContract = requiredManualProductionContract(stateBallotContractId("candidate-corpus", state));
   const results = await Promise.allSettled([
-    readPromotedCivicData<AzBallotProjection>(AZ_BALLOT.recordClass, AZ_BALLOT.scope, options),
-    readPromotedCivicData<NhBallotProjection>(NH_BALLOT.recordClass, NH_BALLOT.scope, options),
-    readPromotedCivicData<NjMorrisReadModel>(NJ_BALLOT.recordClass, NJ_BALLOT.scope, options),
-    readPromotedCivicData<CandidateProfilesProjection>(PROFILES.recordClass, PROFILES.scope, options),
-    readPromotedCivicData<CandidateCorpus>(PUBLICATIONS.recordClass, PUBLICATIONS.scope, options),
-    readDerivedCampaignSites(options),
-    readGenericBallotProjection(options),
+    readPromotedCivicData<CandidateProfilesProjection>(profilesContract.recordClass, profilesContract.scope, options),
+    readPromotedCivicData<CandidateCorpus>(publicationsContract.recordClass, publicationsContract.scope, options),
+    readDerivedCampaignSites(state, options),
+    readGenericBallotProjection(state, options),
   ]);
   const failures: string[] = [];
   const held = <T>(result: PromiseSettledResult<{ readonly kind: string; readonly value: T | null }>, name: string): T | null => {
@@ -301,21 +255,13 @@ export async function preloadCandidateEnrichmentAuthorities(
       return null;
     }
   };
-  loadedAuthorities = {
-    az: held(results[0]!, "Arizona ballot"),
-    nh: held(results[1]!, "New Hampshire ballot"),
-    nj: held(results[2]!, "New Jersey ballot"),
-    profiles: held(results[3]!, "Candidate profile"),
-    corpus: held(results[4]!, "Candidate publication"),
+  let loadedAuthorities: CandidateEnrichmentAuthorityHoldings = {
+    profiles: held(results[0]!, "Candidate profile"),
+    corpus: held(results[1]!, "Candidate publication"),
+    general: held(results[3]!, "National ballot"),
     failures,
-    general: results[6]?.status === "fulfilled" && results[6].value.kind === "PROMOTED" ? results[6].value.value : null,
   };
-  const general = results[6];
-  if (general?.status === "rejected" || general?.status === "fulfilled" && general.value.kind === "STORE_UNREACHABLE") {
-    failures.push("General ballot records could not be read; retained legacy authorities remain usable.");
-  }
-  // The worker inherits the same delivered links and page text the Reader sees.
-  const derived = results[5];
+  const derived = results[2];
   if (derived.status === "fulfilled" && derived.value.kind === "PROMOTED") {
     const records = derived.value.value.records;
     const profiles = loadedAuthorities.profiles;
@@ -332,14 +278,6 @@ export async function preloadCandidateEnrichmentAuthorities(
     // Keep usable prior holdings; failed reconciliation cannot mean no sites.
     failures.push("Automatically published candidate evidence is unavailable; retained profile/corpus evidence remains usable and reconciliation is still owed.");
   }
-}
-
-/**
- * The authorities this process preloaded, or null before the preload ran. The
- * standing runner's campaign-site pass joins its leads to the same canonical
- * candidacies this provider enumerates, from the same promoted pointers.
- */
-export function candidateEnrichmentHoldings(): CandidateEnrichmentAuthorityHoldings | null {
   return loadedAuthorities;
 }
 
@@ -370,121 +308,42 @@ function profileStores(
   };
 }
 
-/** Pure derivation used by the provider. */
-export function candidateUniversesFromPromoted(
-  authorities: CandidateEnrichmentAuthorities,
-  nowIso: string,
-): Readonly<Record<BallotAuthorityState, CandidateUniverse>> {
-  const stores = profileStores(authorities.profiles, authorities.corpus);
-  const azDocuments: BallotDocument[] = [
-    ballotDocument("civic-data:BALLOT_CANDIDACY:US-AZ:2026-general:supported-ballot", authorities.az.ballot),
-  ];
-  const filings = authorities.az.candidateFilings as Partial<BallotDocument> | null;
-  if (filings && Array.isArray(filings.contests) && Array.isArray(filings.candidacies)) {
-    azDocuments.push({
-      path: "civic-data:BALLOT_CANDIDACY:US-AZ:2026-general:official-filing-corpus",
-      contests: filings.contests,
-      candidacies: filings.candidacies,
-    });
-  }
-  const derive = (stateCode: "az" | "nh" | "nj", documents: readonly BallotDocument[]) =>
-    deriveCandidateUniverse({
-      stateCode: stateCode.toUpperCase(),
-      cycle: CYCLE,
-      generatedBy: "canonical civic-data ballot/profile projections",
-      generatedOn: nowIso.slice(0, 10),
-      documents,
-      stores,
-    });
-  return {
-    az: derive("az", azDocuments),
-    nh: derive("nh", [ballotDocument("civic-data:BALLOT_CANDIDACY:US-NH:merrimack:2026-general", authorities.nh.ballot)]),
-    nj: derive("nj", [ballotDocument("civic-data:BALLOT_FILING:US-NJ:morris:2026", authorities.nj.ballot)]),
-  };
-}
-
-/** Derive one state's universe without acquiring either sibling ballot. */
-export function candidateUniverseFromPromoted(
-  stateCode: BallotAuthorityState,
-  ballot: AzBallotProjection | NhBallotProjection | NjMorrisReadModel,
-  profiles: CandidateProfilesProjection,
-  corpus: CandidateCorpus,
-  nowIso: string,
-): CandidateUniverse {
-  const stores = profileStores(profiles, corpus);
-  const derive = (documents: readonly BallotDocument[]) => deriveCandidateUniverse({
-    stateCode: stateCode.toUpperCase(),
-    cycle: CYCLE,
-    generatedBy: "canonical civic-data ballot/profile projections",
-    generatedOn: nowIso.slice(0, 10),
-    documents,
-    stores,
-  });
-  if (stateCode === "az") {
-    const authority = ballot as AzBallotProjection;
-    const documents: BallotDocument[] = [
-      ballotDocument("civic-data:BALLOT_CANDIDACY:US-AZ:2026-general:supported-ballot", authority.ballot),
-    ];
-    const filings = authority.candidateFilings as Partial<BallotDocument> | null;
-    if (filings && Array.isArray(filings.contests) && Array.isArray(filings.candidacies)) {
-      documents.push({ path: "civic-data:BALLOT_CANDIDACY:US-AZ:2026-general:official-filing-corpus", contests: filings.contests, candidacies: filings.candidacies });
-    }
-    return derive(documents);
-  }
-  if (stateCode === "nh") {
-    return derive([ballotDocument("civic-data:BALLOT_CANDIDACY:US-NH:merrimack:2026-general", (ballot as NhBallotProjection).ballot)]);
-  }
-  return derive([ballotDocument("civic-data:BALLOT_FILING:US-NJ:morris:2026", (ballot as NjMorrisReadModel).ballot)]);
-}
-
 export function candidateEnrichmentUniversesFromHoldings(
   holdings: CandidateEnrichmentAuthorityHoldings,
   nowIso: string,
 ): { readonly universes: Record<string, CandidateUniverse>; readonly failures: string[] } {
   const universes: Record<string, CandidateUniverse> = {};
   const failures = [...holdings.failures];
-  if (!holdings.profiles || !holdings.corpus) return { universes, failures };
-  for (const stateCode of LEGACY_BALLOT_AUTHORITY_STATES) {
-    const ballot = holdings[stateCode];
-    if (!ballot) continue;
-    try {
-      universes[stateCode] = candidateUniverseFromPromoted(stateCode, ballot, holdings.profiles, holdings.corpus, nowIso);
-    } catch (error) {
-      failures.push(`${stateCode.toUpperCase()} candidate enrichment derivation failed (${error instanceof Error ? error.message : String(error)})`);
+  if (!holdings.general || !holdings.profiles || !holdings.corpus) return { universes, failures };
+  const documents = new Map<string, BallotDocument[]>();
+  for (const [key, ballot] of Object.entries(holdings.general.ballots)) {
+    if (!ballot.candidacies.length) continue;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(ballot.election.date ?? "")) {
+      failures.push(`${ballot.election.name}: the election year is not held, so candidate work cannot be placed in a cycle.`);
+      continue;
     }
+    if (Number(ballot.election.date.slice(0, 4)) !== CYCLE) continue;
+    const state = ballot.election.state.toLowerCase();
+    const path = `civic-data:BALLOT_CANDIDACY:${stateBallotScope("ballot-contests", state)}:${key}`;
+    const retained = documents.get(state) ?? [];
+    retained.push(ballotDocument(path, ballot));
+    if (ballot.filingCandidacies?.length) retained.push({ path: `${path}:filings`, contests: ballot.contests, candidacies: ballot.filingCandidacies });
+    documents.set(state, retained);
   }
-  if (holdings.general) {
-    const documents = new Map<string, BallotDocument[]>();
-    for (const [key, ballot] of Object.entries(holdings.general.ballots)) {
-      if (!ballot.candidacies.length) continue;
-      if (!/^\d{4}-\d{2}-\d{2}$/.test(ballot.election.date ?? "")) {
-        failures.push(`${ballot.election.name}: the election year is not held, so candidate work cannot be placed in a cycle.`);
-        continue;
-      }
-      if (Number(ballot.election.date.slice(0,4)) !== CYCLE) continue;
-      const state = ballot.election.state.toLowerCase();
-      documents.set(state,[...documents.get(state) ?? [],ballotDocument(`civic-data:BALLOT_CANDIDACY:general:${key}`,ballot)]);
-    }
-    for (const [state, held] of documents) {
-      try {
-        // Include a retained legacy projection only when it belongs to this
-        // state's same existing cycle. The canonical derivation joins IDs.
-        const legacy = hasBallotAuthority(state) ? holdings[state] : null;
-        const legacyDocuments = legacy ? [ballotDocument(`civic-data:legacy-ballot:${state}`,legacy.ballot)] : [];
-        if (state === "az" && holdings.az?.candidateFilings) {
-          const filings = holdings.az.candidateFilings as Partial<BallotDocument>;
-          if (Array.isArray(filings.contests) && Array.isArray(filings.candidacies)) legacyDocuments.push({path:"civic-data:legacy-ballot:az:filings",contests:filings.contests,candidacies:filings.candidacies});
-        }
-        universes[state] = deriveCandidateUniverse({stateCode:state.toUpperCase(),cycle:CYCLE,generatedBy:"canonical civic-data general ballot/profile projections",generatedOn:nowIso.slice(0,10),documents:[...held,...legacyDocuments],stores:profileStores(holdings.profiles,holdings.corpus)});
-      } catch {
-        failures.push(`${state.toUpperCase()} general candidate records could not be derived; retained legacy records remain usable.`);
-      }
+  for (const [state, held] of documents) {
+    try {
+      universes[state] = deriveCandidateUniverse({ stateCode: state.toUpperCase(), cycle: CYCLE,
+        generatedBy: "canonical civic-data national ballot/profile projections", generatedOn: nowIso.slice(0, 10),
+        documents: held, stores: profileStores(holdings.profiles, holdings.corpus) });
+    } catch (error) {
+      failures.push(`${state.toUpperCase()} candidate enrichment derivation failed (${error instanceof Error ? error.message : String(error)}).`);
     }
   }
   return { universes, failures };
 }
 
-export interface CandidateEnrichmentInput {
+interface CandidateEnrichmentInput {
+  readonly holdings?: CandidateEnrichmentAuthorityHoldings;
   /** Which states' candidate universes are enumerated. The coverage set, read as data; never a list in code. */
   readonly trackedStates?: TrackedStatesSource;
 }
@@ -506,8 +365,8 @@ export function candidateEnrichmentProvider(input: CandidateEnrichmentInput = {}
       const records: ProvidedObligation[] = [];
       const failures: string[] = [];
 
-      const settled = loadedAuthorities
-        ? candidateEnrichmentUniversesFromHoldings(loadedAuthorities, ctx.nowIso)
+      const settled = input.holdings
+        ? candidateEnrichmentUniversesFromHoldings(input.holdings, ctx.nowIso)
         : { universes: {}, failures: ["canonical ballot/profile projections were not preloaded"] };
       failures.push(...settled.failures);
 
@@ -518,7 +377,7 @@ export function candidateEnrichmentProvider(input: CandidateEnrichmentInput = {}
         failures.push(`the tracked states could not be read from ${tracked.source} (${tracked.unreadable})`);
       } else {
         for (const stateCode of tracked.states) {
-          if (settled.universes[stateCode.toLowerCase()] || hasBallotAuthority(stateCode)) enumerated.push(stateCode.toLowerCase());
+          if (settled.universes[stateCode.toLowerCase()]) enumerated.push(stateCode.toLowerCase());
           else {
             failures.push(
               `${stateCode.toUpperCase()} is tracked (${tracked.source}) and no canonical candidate ballot authority is registered ` +

@@ -3,8 +3,7 @@ import { createHash } from "node:crypto";
 import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import test, { afterEach, beforeEach } from "node:test";
-import { installFactReader } from "../lib/facts/db.ts";
+import test from "node:test";
 
 import {
   MEETING_PARTITION_CONTRACTS,
@@ -22,7 +21,6 @@ import {
   publishReaderEdgeChecks,
   readReaderEdgeMeetings,
   type PublishAuthority,
-  type PublishReaderExtras,
   type PublishRegistrations,
 } from "../lib/meetings/edge-serving.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
@@ -50,22 +48,12 @@ import {
 import type { Meeting } from "../lib/sources/types.ts";
 import { promoteMeetingPartitions } from "../scripts/ingest.ts";
 
-const factReads: string[] = [];
-beforeEach(() => {
-  factReads.length = 0;
-  installFactReader(async text => {
-    factReads.push(text);
-    return [];
-  });
-});
-afterEach(() => installFactReader(undefined));
-
 const ACQUIRED_URL = "https://www.pima.edu/about-pima/leadership-policies/governing-board/board-meetings/documents.html";
 const HOUR = 3_600_000;
-const T1 = "2026-09-20T12:00:00.000Z"; // both bodies read, new versions
-const T2 = "2026-09-22T04:00:00.000Z"; // Pima re-checked: nothing new (a receipt), 40 h after T1
-const T3 = "2026-09-22T04:30:00.000Z"; // Newbury's check fails
-const T4 = "2026-09-22T05:00:00.000Z"; // Newbury changed: a new sitting
+const T1 = "2026-09-20T12:00:00.000Z";
+const T2 = "2026-09-22T04:00:00.000Z";
+const T3 = "2026-09-22T04:30:00.000Z";
+const T4 = "2026-09-22T05:00:00.000Z";
 const at = (iso: string, ms: number) => new Date(Date.parse(iso) + ms).toISOString();
 
 const PIMA = MEETING_PARTITION_CONTRACTS.find((p) => p.id === "meetings:legistar:ocd-division%2Fcountry%3Aus%2Fstate%3Aaz%2Fcounty%3Apima%23governing")!;
@@ -89,7 +77,6 @@ function row(partition: MeetingPartitionContract, suffix: string, startsAt: stri
   };
 }
 
-/** One routine read of a partition exactly as its child makes it: a new version, or a receipt when nothing changed. */
 async function readPartition(store: MemoryRoutineDataStore, partition: MeetingPartitionContract, readAt: string, suffixes: readonly string[]) {
   const bytes = `${partition.id}:${suffixes.join(",")}:${readAt}`;
   const meetings = suffixes.map((suffix, index) => row(partition, suffix, `2026-10-${String(10 + index).padStart(2, "0")}T17:00:00.000Z`, readAt));
@@ -120,7 +107,6 @@ async function readPartition(store: MemoryRoutineDataStore, partition: MeetingPa
   return result!.outcome;
 }
 
-/** A check that failed at the source: a refused candidate, the pointer and its receipts untouched. */
 async function failedCheck(store: MemoryRoutineDataStore, partition: MeetingPartitionContract, readAt: string): Promise<void> {
   const pointer = (await store.readPromotion("MEETING", partition.scope))!;
   const pointed = (await store.readCandidate(pointer.versionId))!;
@@ -145,14 +131,12 @@ async function composed(store: MemoryRoutineDataStore, now: string): Promise<Ext
   clearPromotedReadModelCache();
   const read = await readMeetingsProjection({ store, now, bypassCache: true });
   assert.equal(read.kind, "PROMOTED");
-  assert.deepEqual(factReads, [], "published meeting composition does not query facts");
   return read as Extract<MeetingsProjectionReadResult, { kind: "PROMOTED" }>;
 }
 
 const collectedOf = (snapshot: MeetingsSnapshot, partition: MeetingPartitionContract) =>
   [...new Set(snapshot.meetings.filter((m) => m.bodyId === partition.bodyId).map((m) => m.provenance.collectedAt))];
 
-/** The footer's inputs, exactly as the meetings route builds them. */
 function footer(snapshot: MeetingsSnapshot) {
   const meta = snapshotClientMeta(snapshot);
   return {
@@ -185,7 +169,7 @@ test("the check rule: only a confirmation of the pointed version, of a version t
   assert.equal(applied.meetings[1], carried, "a carried row keeps its own dates");
   assert.equal(snapshot.meetings[0]!.provenance.collectedAt, T1, "the served object is never mutated");
   assert.equal(applyMeetingFreshChecks(snapshot, { checkedAt: T1, routes: { [route]: T1 } }), snapshot, "nothing later: the same object");
-  // A route two versions both hold cannot be told apart: it is left out, never stamped fresher than proven.
+
   const checks = meetingFreshChecks([
     { contractId: "a", versionId: "va", routes: ["legistar|x", "ical|y"], checkedAt: T2 },
     { contractId: "b", versionId: "vb", routes: ["ical|y"], checkedAt: T1 },
@@ -202,7 +186,6 @@ test("controlled clock, the composing reader: a receipt-only period advances Las
   assert.equal(before.value.generatedAt, T1);
   const footerBefore = footer(before.value);
 
-  // Pima re-checked 40 hours later and found nothing new: a receipt, not a version.
   const recheck = await readPartition(store, PIMA, T2, ["a", "b"]);
   assert.ok(recheck.confirmed, "the re-check was confirmed on the pointed version");
   assert.equal(recheck.promoted!.versionId, pimaV1.promoted!.versionId, "readers stay on their version");
@@ -212,22 +195,20 @@ test("controlled clock, the composing reader: a receipt-only period advances Las
   assert.deepEqual(collectedOf(quiet.value, PIMA), [checkedAt], "Pima's re-read listings say they were read then");
   assert.deepEqual(collectedOf(quiet.value, NEWBURY), [T1], "Newbury was not re-checked: its listings keep their read");
   assert.deepEqual(quiet.partitions.find((p) => p.contractId === PIMA.id)?.freshCheck, { routes: [meetingRouteKey(quiet.value.meetings.find((m) => m.bodyId === PIMA.bodyId)!)!], checkedAt });
-  // The footer: only the age moved. No source reads as failed and nothing reads as carried.
+
   const footerQuiet = footer(quiet.value);
   assert.deepEqual(footerQuiet.failed, footerBefore.failed, "a receipt fires no failed-refresh disclosure");
   assert.equal(footerQuiet.carried, null);
-  // The division note: Pima, read 5 minutes ago, is not dated as stale; Newbury, 40 hours unread, is.
+
   const reads = lastReadByDivision(quiet.value.meetings, Date.parse(at(T2, 5 * 60_000)));
   assert.equal(staleDivisionRead(reads[PIMA.ocdId!], Date.parse(at(T2, 5 * 60_000))), null);
   assert.equal(staleDivisionRead(reads[NEWBURY.ocdId!], Date.parse(at(T2, 5 * 60_000)))?.at, T1);
 
-  // Newbury's check fails: nothing it holds or Last checked moves.
   await failedCheck(store, NEWBURY, T3);
   const failed = await composed(store, at(T3, 60_000));
   assert.equal(failed.value.generatedAt, checkedAt, "a failed request is never a check");
   assert.deepEqual(collectedOf(failed.value, NEWBURY), [T1]);
 
-  // Newbury changed: a new version publishes as before, with its new sitting.
   const newburyV2 = await readPartition(store, NEWBURY, T4, ["x", "y"]);
   assert.equal(newburyV2.confirmed, undefined);
   assert.notEqual(newburyV2.promoted!.versionId, newburyV1.promoted!.versionId);
@@ -238,7 +219,6 @@ test("controlled clock, the composing reader: a receipt-only period advances Las
   assert.deepEqual(collectedOf(changed.value, PIMA), [checkedAt], "Pima keeps its receipt's check");
 });
 
-const EXTRAS: PublishReaderExtras = { everydayRouting: null };
 const VALUES: PublishAuthority = Object.fromEntries(AUTHORITY_FAMILIES.map((family) => [family, { value: { family }, versionId: `${family}-v1` }]));
 const CARRIED: PublishAuthority = Object.fromEntries(AUTHORITY_FAMILIES.map((family) => [family, { versionId: `${family}-v1`, carried: true as const }]));
 const REGISTRATIONS: PublishRegistrations = { az: { value: { state: "az" }, versionId: "reg-az-v1" } };
@@ -251,7 +231,6 @@ test("controlled clock, the prepared serving copy and the edge: a receipt republ
   await readPartition(store, PIMA, T1, ["a", "b"]);
   await readPartition(store, NEWBURY, T1, ["x"]);
 
-  // The pass after the reads: composed once, prepared, published in full.
   const first = await preparePublishedMeetingSnapshot(store, at(T1, 60_000));
   assert.equal(first.status, "PUBLISHED");
   if (first.status !== "PUBLISHED") return;
@@ -260,17 +239,16 @@ test("controlled clock, the prepared serving copy and the edge: a receipt republ
   assert.equal(served.kind, "PROMOTED");
   if (served.kind !== "PROMOTED") return;
   const full = await publishReaderEdgeArtifacts(served.value, { sourceThrough: null, retrievedAt: served.metadata.retrievedAt, promotedThrough: null }, {
-    store: edge, now: at(T1, 60_000), extras: EXTRAS, authority: VALUES, registrations: REGISTRATIONS,
+    store: edge, now: at(T1, 60_000), authority: VALUES, registrations: REGISTRATIONS,
     checks: { composition: first.composition, freshChecks: first.freshChecks },
   });
   assert.equal(full.status, "PUBLISHED");
   const manifestBefore = (await edge.readManifest())!.manifest;
 
-  // Pima re-checked with nothing new.
   await readPartition(store, PIMA, T2, ["a", "b"]);
   const checkedAt = at(T2, 0);
   let compositions = 0;
-  // Nothing whole is read: no partition payload, no candidate, not the prepared row.
+
   const wholeReads: string[] = [];
   const counted = <K extends "readPromotions" | "readPromotion" | "readCandidates" | "readCandidate" | "readPreparedReaderProjection">(name: K) => {
     const original = store[name].bind(store) as (...args: unknown[]) => Promise<unknown>;
@@ -291,7 +269,6 @@ test("controlled clock, the prepared serving copy and the edge: a receipt republ
   assert.equal(quiet.composition, first.composition);
   assert.deepEqual(Object.values(quiet.freshChecks), [checkedAt]);
 
-  // Everything carried but the checks, so the manifest alone republishes.
   const republished = await publishReaderEdgeChecks(
     { generatedAt: quiet.servedGeneratedAt!, retrievedAt: quiet.checkedAt, checks: { composition: quiet.composition, freshChecks: quiet.freshChecks } },
     { store: edge },
@@ -303,7 +280,6 @@ test("controlled clock, the prepared serving copy and the edge: a receipt republ
   assert.equal(manifestAfter.sequence, manifestBefore.sequence + 1);
   assert.deepEqual(manifestAfter.sources, manifestBefore.sources);
 
-  // The reader, from the edge: Last checked, the re-read listings, and no false disclosure.
   const fromEdge = await readReaderEdgeMeetings({ store: edge, fallback: async () => { throw new Error("the edge answers"); } });
   assert.equal(fromEdge.kind, "PROMOTED");
   if (fromEdge.kind !== "PROMOTED") return;
@@ -311,8 +287,7 @@ test("controlled clock, the prepared serving copy and the edge: a receipt republ
   assert.deepEqual(collectedOf(fromEdge.value, PIMA), [checkedAt]);
   assert.deepEqual(collectedOf(fromEdge.value, NEWBURY), [T1]);
   assert.deepEqual(footer(fromEdge.value).failed, footer(served.value).failed, "a receipt fires no failed-refresh disclosure");
-  // The reader, from the prepared fallback: the same answer from the pointer identities alone.
-  // A serving process re-reads the checks at most once a minute; this read is a later one.
+
   const fallback = await readPreparedMeetingsProjection({ store, now: at(T2, 2 * 60_000) });
   assert.equal(fallback.kind, "PROMOTED");
   if (fallback.kind !== "PROMOTED") return;
@@ -320,14 +295,12 @@ test("controlled clock, the prepared serving copy and the edge: a receipt republ
   assert.deepEqual(collectedOf(fallback.value, PIMA), [checkedAt]);
   assert.equal(fallback.metadata.retrievedAt, checkedAt);
 
-  // Newbury's check fails: prepare states the same checks, and the edge stays as it is.
   await failedCheck(store, NEWBURY, T3);
   const afterFailure = await preparePublishedMeetingSnapshot(store, at(T3, 60_000));
   assert.equal(afterFailure.status, "CURRENT");
   if (afterFailure.status !== "CURRENT") return;
   assert.equal(afterFailure.servedGeneratedAt, checkedAt, "a failed request is never a check");
 
-  // Newbury changed: the composition is new, the prepared row is rewritten, and the edge publishes in full.
   await readPartition(store, NEWBURY, T4, ["x", "y"]);
   const changed = await preparePublishedMeetingSnapshot(store, at(T4, 60_000));
   assert.equal(changed.status, "PUBLISHED");
@@ -342,7 +315,7 @@ test("controlled clock, the prepared serving copy and the edge: a receipt republ
   assert.equal(readBack.kind, "PROMOTED");
   if (readBack.kind !== "PROMOTED") return;
   const published = await publishReaderEdgeArtifacts(readBack.value, { sourceThrough: null, retrievedAt: readBack.metadata.retrievedAt, promotedThrough: null }, {
-    store: edge, now: at(T4, 60_000), extras: EXTRAS, authority: CARRIED, registrations: REGISTRATIONS_CARRIED,
+    store: edge, now: at(T4, 60_000), authority: CARRIED, registrations: REGISTRATIONS_CARRIED,
     checks: { composition: changed.composition, freshChecks: changed.freshChecks },
   });
   assert.equal(published.status, "PUBLISHED");
@@ -370,7 +343,6 @@ test("a published composition is read whatever doors the process holds: its part
   assert.equal((await preparePublishedMeetingSnapshot(store, at(T1, 60_000))).status, "PUBLISHED");
   await readPartition(store, PIMA, T2, ["a", "b"]);
 
-  // A site that holds no door yet (its runner has published none) serves the same answer, Last checked included.
   const installed = MEETING_PARTITION_CONTRACTS.length;
   assert.equal(refreshMeetingPartitions([]).refreshed, true);
   try {

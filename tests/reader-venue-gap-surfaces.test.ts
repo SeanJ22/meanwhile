@@ -121,7 +121,7 @@ test("the list and pin panel show stated places and omit absent place rows", () 
     const meetings = applyFilters({ meetings: all, ui: INITIAL_STATE, center: null, now: ${RECORDED_NOW} });
     const venues = groupByVenue(meetings, fixture.listingIdentity);
     const data = { allMeetings: all, meetings, venues, listingIdentity: fixture.listingIdentity,
-      result: { meetings: all, listingIdentity: fixture.listingIdentity, coverage: fixture.coverage, tier: 'exact', radiusKm: 25, requestedRadiusKm: 25, center: { lat: 32.2217, lng: -110.9695 } },
+      result: { meetings: all, listingIdentity: fixture.listingIdentity, coverage: fixture.coverage, tier: 'exact', radiusKm: 25, center: { lat: 32.2217, lng: -110.9695 } },
       location: null, drawnDistricts: [], dropped: 0, searchFailed: false, atAddress: false, governing: null, zipPartial: null, basis: 'ZIP' };
     const render = (ui, child) => renderToStaticMarkup(h(DataProvider, { value: data }, h(UiProvider, { initial: ui }, child)));
 

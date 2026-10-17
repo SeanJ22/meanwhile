@@ -209,7 +209,7 @@ export const OUTCOME_RANK: Readonly<Record<FieldManualOutcome, number>> = {
 };
 
 export interface FieldManualQuery {
-
+  readonly withinState?: string;
   readonly subjectId?: string;
 
   readonly role?: FieldManualRole;
@@ -283,6 +283,7 @@ function reachOfStored(entry: FieldManualEntry): FieldManualReach {
 }
 
 export function entryInSlice(entry: FieldManualEntry, query: FieldManualQuery): boolean {
+  if (query.withinState !== undefined && !entry.states.includes(query.withinState.toLowerCase())) return false;
   if (query.role !== undefined && entry.role !== "SHARED" && entry.role !== query.role) return false;
   if (query.kinds !== undefined && !query.kinds.includes(entry.kind)) return false;
   if (query.excludedKinds?.includes(entry.kind)) return false;

@@ -1,25 +1,20 @@
-import { createHash } from "node:crypto";
-import { canonicalCivicDataJson, civicRecordsFor } from "./changes.ts";
+import { statePublicationPriorOf } from "./state-publication.ts";
+import { canonicalCivicDataHash } from "./canonical-hash.ts";
+import { civicRecordsFor } from "./changes.ts";
 import { directPositiveSourceUrls } from "./manual-source-isolation.ts";
 import { authorityForManualReceipt } from "./source-authority.ts";
 import { trustedLkgImportEvidenceIssue } from "./trusted-lkg-import.ts";
 import { parseValidationReceipt } from "./receipt.ts";
-import { registryMemberCitedUrls } from "../registry/cited-urls.ts";
+import { registryMemberCitedUrls } from "../registry/runtime-data-plane.ts";
 import type { CandidateVersionRecord, RoutineCandidate } from "./types.ts";
 
-const hash = (value: unknown) => createHash("sha256").update(canonicalCivicDataJson(value)).digest("hex");
+const hash = canonicalCivicDataHash;
 
 /** Classes whose successor may inherit unchanged members from its exact GOOD base. */
-const INHERITING_CLASSES: ReadonlySet<string> = new Set(["CURATED_READER_RECORD", "REGISTRY_RUNTIME_BINDING"]);
+const INHERITING_CLASSES: ReadonlySet<string> = new Set(["CURATED_READER_RECORD", "REGISTRY_RUNTIME_BINDING", "CANDIDATE_PROFILE", "CANDIDATE_PUBLICATION"]);
 
-/**
- * A member's identity and the sources it asserts. A curated record is its own
- * id and cites every HTTPS value it holds. A registry member is keyed as the
- * change accounting keys it and cites its named source fields only
- * (lib/registry/cited-urls.ts, the rule its promotion also applies).
- */
 function memberIdentity(recordClass: string, member: { readonly key: string; readonly record: unknown }): string {
-  return recordClass === "REGISTRY_RUNTIME_BINDING" ? member.key : (member.record as { readonly id: string }).id;
+  return recordClass === "CURATED_READER_RECORD" ? (member.record as { readonly id: string }).id : member.key;
 }
 function assertedSources(recordClass: string, key: string, record: unknown): Iterable<string> {
   return recordClass === "REGISTRY_RUNTIME_BINDING" ? registryMemberCitedUrls(key, record) : directPositiveSourceUrls(record);
@@ -42,18 +37,21 @@ export function manualPriorAuthorityIssue(candidate: RoutineCandidate, base: Can
   if (prior.kind !== "VALIDATED_PRIOR_PROJECTION" || !INHERITING_CLASSES.has(candidate.recordClass) ||
       candidate.bootstrapImport || !candidate.retrieval.manualSourceReceipt ||
       !Array.isArray(prior.retainedMembers) || prior.retainedMembers.length === 0) {
-    return "Inherited authority is valid only for unchanged members of a source-reviewed curated Reader or registry successor.";
+    return "Inherited authority is valid only for unchanged members of a source-reviewed successor.";
   }
   const receipt = base ? parseValidationReceipt(base.receipt) : null;
+  const indexedPrior = base ? statePublicationPriorOf(base.candidate) : undefined;
   if (!base || base.state !== "PROMOTED" || !base.acquisitionSucceeded || receipt?.decision !== "GOOD" ||
       receipt.checks.some((check) => check.verdict !== "PASS") ||
       base.promotedVersion !== prior.versionId || base.lastKnownGoodVersion !== prior.versionId ||
       base.candidate.id !== prior.versionId || base.candidate.sourceId !== candidate.sourceId ||
       base.candidate.recordClass !== candidate.recordClass || base.candidate.scope !== candidate.scope ||
-      hash(base.candidate.readModel) !== prior.readModelSha256) {
+      (indexedPrior?.payloadHash ?? hash(base.candidate.readModel)) !== prior.readModelSha256) {
     return "The inherited authority does not identify the exact GOOD current base and its payload.";
   }
-  if (base.candidate.bootstrapImport) {
+  if (indexedPrior) {
+    if (indexedPrior.versionId !== prior.versionId) return "The inherited authority names a different indexed version.";
+  } else if (base.candidate.bootstrapImport) {
     const importIssue = trustedLkgImportEvidenceIssue(base.candidate, null);
     if (importIssue || receipt.checks.find((check) => check.check === "SOURCE_AUTHENTICITY")?.code !== "TRUSTED_LKG_IMPORT_PROVENANCE_VALID") {
       return `The inherited imported base lacks intact, independently checkable transfer evidence: ${importIssue ?? "incorrect source check"}.`;
@@ -62,18 +60,16 @@ export function manualPriorAuthorityIssue(candidate: RoutineCandidate, base: Can
     base.candidate.retrieval.manualSourceReceipt, base.candidate.retrieval.finalUrl).ok) {
     return "The ordinary manual base has no valid source authority; it cannot become inherited authority.";
   }
-  // A curated member is the payload's exact id; civicRecordsFor adds a
-  // record-class prefix for change accounting, which is a different key. A
-  // registry member has no one id field, so its change-accounting key is it.
   const members = (value: RoutineCandidate) => new Map(civicRecordsFor(value.recordClass, value.readModel)
     .map((row) => [memberIdentity(value.recordClass, row), row.record]));
-  const before = members(base.candidate);
+  const before = indexedPrior ? new Map([...indexedPrior.members].map(([key, member]) =>
+    [candidate.recordClass === "CURATED_READER_RECORD" ? key.replace(/^curated-reader:/, "") : key, member.sha256])) : members(base.candidate);
   const after = members(candidate);
   const retained = new Set<string>();
   for (const member of prior.retainedMembers) {
     if (!member || typeof member.key !== "string" || !member.key || retained.has(member.key) ||
         !before.has(member.key) || !after.has(member.key) ||
-        hash(before.get(member.key)) !== member.sha256 || hash(after.get(member.key)) !== member.sha256) {
+        (indexedPrior ? before.get(member.key) : hash(before.get(member.key))) !== member.sha256 || hash(after.get(member.key)) !== member.sha256) {
       return "An inherited member was changed, duplicated, invented, or omitted; prior authority cannot authorize it.";
     }
     retained.add(member.key);

@@ -10,7 +10,7 @@ import {
   meetingPartitionId,
   type MeetingPartitionContract,
 } from "../lib/civic-data/meeting-partitions.ts";
-import { processRoutineCandidate } from "../lib/civic-data/promotion.ts";
+import { processRoutineCandidate } from "../lib/civic-data/candidate-lifecycle.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { RoutineRecordClass } from "../lib/civic-data/types.ts";
 import { installFactReader } from "../lib/facts/db.ts";
@@ -45,7 +45,6 @@ function rejectMeetingFactReads(t: TestContext): string[] {
   return reads;
 }
 
-/** The retired identity as it was registered before the cutover — used only to seed its held pointer. */
 const retired = {
   ...successor,
   id: held!.id,
@@ -53,7 +52,6 @@ const retired = {
   meetingSource: held!.meetingSource,
 } as MeetingPartitionContract;
 
-// Any URL the meetings authority still admits; the retired host itself left the authority.
 const ACQUIRED_URL = "https://www.pima.edu/about-pima/leadership-policies/governing-board/board-meetings/documents.html";
 
 function row(source: string, suffix: string, startsAt: string, collectedAt: string): Meeting {
@@ -142,7 +140,7 @@ async function promoteSuccessor(store: MemoryRoutineDataStore): Promise<string> 
 }
 
 test("every retired route is a held partition whose successor is registered and whose own identity is not", () => {
-  // A route retired beside a successor already wired for the body has nothing to hold.
+
   const cutovers = RETIRED_MEETING_ROUTES.filter((route) => !route.successorAlreadyWired);
   assert.equal(HELD_MEETING_PARTITIONS.length, cutovers.length);
   const registered = new Set(MEETING_PARTITION_CONTRACTS.map((partition) => partition.id));
@@ -229,7 +227,7 @@ test("the held pointer is read only while its successor has none; a superseded r
       this.requested.push([...scopes]);
       return super.readPromotions<T>(recordClass, scopes);
     }
-    // The prepare pass asks for pointer identities only; a held pointer asked for that way is still a read of the retired route.
+
     override async readPromotionIdentities(recordClass: RoutineRecordClass, scopes: readonly string[]) {
       this.requested.push([...scopes]);
       return super.readPromotionIdentities(recordClass, scopes);

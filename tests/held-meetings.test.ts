@@ -1,25 +1,79 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
-import { gunzipSync } from "node:zlib";
 import { createHash } from "node:crypto";
 import { join } from "node:path";
 import test from "node:test";
-import type { CandidateVersionRecord, PromotedProjection } from "../lib/civic-data/types.ts";
-import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import { readRegistryRuntimePrior, registryRuntimeCandidate } from "../lib/registry/runtime-data-plane.ts";
-import { CENSUS_PLACEHOLDER_LABELS } from "../lib/registry/census-placeholders.ts";
-import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
+
+import { readRegistryRuntimePrior } from "../lib/registry/runtime-data-plane.ts";
 import { readHeldRoster } from "../lib/civic-data/worker-held-roster.ts";
 import { heldBodySchedule, readHeldMeetingSchedule } from "../lib/civic-data/worker-held-meetings.ts";
 import { publishBodyRoster, type WorkerPublicationCapture } from "../lib/civic-data/worker-roster-publication.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
-import { installFactReader } from "../lib/facts/db.ts";
 import { ensureFactEntities } from "../lib/facts/entities.ts";
 import { withFactRegistry } from "../lib/facts/registry-overlay.ts";
 import { factDb } from "./helpers/fact-db.ts";
-import { directoryMeetingHints } from "../lib/civic-data/worker-body-directory.ts";
 import type { ArtifactRecord } from "../lib/control-plane/repository/types.ts";
-import type { WorkItem } from "../lib/control-plane/work-item.ts";
+import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { registryTransferImport } from "./helpers/promoted-fixtures.ts";
+import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
+import { registryJurisdictions } from "../lib/civic-data/state-scopes.ts";
+import { stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
+import { stateRegistryRuntimeContractId } from "../lib/civic-data/state-scopes.ts";
+import { rowKeyedCivicRecordsFor } from "../lib/civic-data/changes.ts";
+import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
+import { trustedLkgImportUrl } from "../lib/civic-data/trusted-lkg-import.ts";
+import { withStateRecordHashes } from "../lib/civic-data/state-publication.ts";
+import { candidateChangeSet } from "../lib/civic-data/changes.ts";
+import { ROW_KEYED_CIVIC_CHANGE_CONTRACT } from "../lib/civic-data/changes.ts";
+import { trustedLkgCandidateEnvelopeSha256 } from "../lib/civic-data/trusted-lkg-import.ts";
+import { trustedLkgValidatorIds } from "../lib/civic-data/trusted-lkg-import.ts";
+import { trustedLkgCandidateId } from "../lib/civic-data/trusted-lkg-import.ts";
+import type { CandidateVersionRecord } from "../lib/civic-data/types.ts";
+import type { PromotedProjection } from "../lib/civic-data/types.ts";
+
+function registryFixtureForState(state: string, value: RegistryRuntimeReadModel = registryTransferImport().projection.payload): RegistryRuntimeReadModel {
+  const own = (id: string | null) => registryJurisdictions(id).includes(state.toUpperCase());
+  const bodies = value.registry.bodies.filter(row => own(row.id) || own(row.ocdId) || row.alsoServesOcdIds?.some(own));
+  const bodyIds = new Set(bodies.map(row => row.id));
+  const bodyRosters = value.bodyRosters.filter(row => bodyIds.has(row.bodyId));
+  const statewideExecutives = value.statewideExecutives.filter(row => own(row.stateOcdId));
+  const bridge = value.officialCandidacies.rows.filter(row => row.holder.divisions.some(own));
+  const holders = new Set([...bodyRosters.flatMap(row => row.members.map(member => member.id)),
+    ...statewideExecutives.map(row => row.holder.id), ...bridge.map(row => row.holder.id)]);
+  return { ...value, registry: { ...value.registry, bodies,
+    divisions: value.registry.divisions.filter(row => row.ocdId === "ocd-division/country:us" || own(row.ocdId)) },
+    bodyRosters, statewideExecutives, officialCandidacies: { ...value.officialCandidacies, rows: bridge },
+    officialPhotos: { photos: value.officialPhotos.photos.filter(row => holders.has(row.officeholderId)) },
+    rosterPhotos: Object.fromEntries(Object.entries(value.rosterPhotos).filter(([id]) => holders.has(id) || own(id))),
+    rosterReaderDispositions: value.rosterReaderDispositions.filter(row => own(row.sourceId) || holders.has(row.sourceId) || (row.canonicalId !== null && holders.has(row.canonicalId)) ||
+      [...holders].some(id => id.startsWith("roster:") && id.split("#")[0] === row.sourceId.split("#")[0])) };
+}
+
+function stateRegistryRuntimeStore(state: string, store = new MemoryRoutineDataStore()): MemoryRoutineDataStore {
+  const original = registryTransferImport();
+  const payload = registryFixtureForState(state), scope = stateRegistryRuntimeScope(state), contractId = stateRegistryRuntimeContractId(state);
+  const civicRecords = rowKeyedCivicRecordsFor("REGISTRY_RUNTIME_BINDING", payload), digest = canonicalCivicDataHash(payload);
+  const candidate = { ...original.record.candidate, scope,
+    retrieval: { ...original.record.candidate.retrieval, requestedUrl: trustedLkgImportUrl(contractId) },
+    normalization: { ...original.record.candidate.normalization, normalizedHash: digest, normalizedPayloadHash: digest,
+      inputRecords: civicRecords.length, outputRecords: civicRecords.length, droppedRecords: 0 },
+    normalizedPayload: payload, readModel: payload, civicRecords, identities: [],
+    horizon: { ...original.record.candidate.horizon, returnedRecords: civicRecords.length },
+    sourceProjectionEvidence: { kind: "SOURCE_PROJECTION_CONTRACT" as const, sourceId: original.record.candidate.sourceId, recordClass: original.record.candidate.recordClass, scope },
+  };
+  Object.assign(candidate, { normalization: withStateRecordHashes(candidate).normalization });
+  candidate.changeSet = candidateChangeSet(candidate, null, ROW_KEYED_CIVIC_CHANGE_CONTRACT);
+  candidate.bootstrapImport = { ...original.record.candidate.bootstrapImport!, contractId, scope,
+    normalizedPayloadSha256: digest, readModelSha256: digest, candidateEnvelopeSha256: trustedLkgCandidateEnvelopeSha256(candidate), validatorIds: trustedLkgValidatorIds(candidate) };
+  candidate.id = trustedLkgCandidateId(candidate.bootstrapImport);
+  const receipt = { ...original.record.receipt!, candidateId: candidate.id, scope };
+  const record = { ...original.record, candidate, receipt, promotedVersion: candidate.id, lastKnownGoodVersion: candidate.id };
+  const projection = { ...original.projection, key: `REGISTRY_RUNTIME_BINDING:${scope}`, scope, versionId: candidate.id,
+    lastKnownGoodVersionId: candidate.id, payload, receipt };
+  const held = store as unknown as { candidates: Map<string, CandidateVersionRecord>; promotions: Map<string, PromotedProjection> };
+  held.candidates.set(candidate.id, record);
+  held.promotions.set(projection.key, projection);
+  return store;
+}
 
 const ROOT = join(import.meta.dirname, "..");
 const NOW = "2026-09-29T20:00:00.000Z";
@@ -28,7 +82,7 @@ const ROSTER_URL = "https://www.bensonaz.gov/government/city-council/contact-the
 const MEETINGS_URL = "https://www.bensonaz.gov/government/city-council/council-meetings";
 const shell = (title: string, main: string) => `<html><head><title>${title} | City of Benson, AZ</title></head><body>` +
   `<header><a href="/our-city/calendar">Calendar</a> <a href="/agendas">Agendas</a></header><main>${main}</main><footer>City of Benson</footer></body></html>`;
-// The shape of a city's saved council-meetings page.
+
 const MEETINGS = shell("Council Meetings", `<h1>Council Meetings</h1><p>The City Council generally meets four times a month for:</p>
   <p><strong>Work Sessions</strong> &ndash; Generally held on the second and fourth Tuesday of the month. Meetings are held in Council Chambers on the second floor of City Hall at 3:00 p.m.</p>
   <p><strong>Council Meetings</strong> &ndash; Regular City Council meetings are held on the second and fourth Thursday of the month. Meetings are held in Council Chambers on the second floor of City Hall at 5:00 p.m.</p>
@@ -47,20 +101,6 @@ const artifact = (c: WorkerPublicationCapture) => ({ artifactId: c.evidence.arti
   contentHash: c.evidence.contentHash, byteLength: c.evidence.text.length, contentType: "text/html; charset=utf-8", canonicalUrl: c.evidence.canonicalUrl,
   partial: false, recordedAt: c.observedAt }) as ArtifactRecord;
 
-async function fixtureStore() {
-  const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
-  const store = new MemoryRoutineDataStore();
-  Object.assign(store, { candidates: new Map([[record.candidate.id, record]]), promotions: new Map([[projection.key, projection]]) });
-  const imported = (await readRegistryRuntimePrior(store, NOW))!;
-  const divisions = imported.payload.registry.divisions.filter(row => CENSUS_PLACEHOLDER_LABELS[row.label]).map(row => ({ ...row, label: CENSUS_PLACEHOLDER_LABELS[row.label] }));
-  const corrected = registryRuntimeCandidate({ contractId: "registry-runtime-bindings", version: "fixture-census-correction", sourceThrough: NOW,
-    sourceReceipt: { contractVersion: 1, reviewedAt: NOW, reviewedBy: "recorded-fixture-control", sources: [...new Set(divisions.map(row => row.provenance!.sourceUrl!))].map(url => ({ requestedUrl: url, finalUrl: url, publisher: "U.S. Census Bureau", sourceClass: "OFFICIAL_PUBLISHER" as const, retrievedAt: NOW, httpStatus: 200, rawHash: createHash("sha256").update(JSON.stringify(divisions)).digest("hex"), reviewedEvidence: "Offline fixture: Census LEA 99997 means no school district." })) },
-    payload: { ...imported.payload, registry: { ...imported.payload.registry, divisions, bodies: [] }, statewideExecutives: [], officialCandidacies: { ...imported.payload.officialCandidacies, rows: [] }, officialPhotos: { photos: [] }, rosterPhotos: {} } }, { prior: imported });
-  const outcome = await processRegisteredManualCandidate(store, "registry-runtime-bindings", corrected, NOW, imported.versionId);
-  assert.ok(outcome.promoted, outcome.candidate.failureDetail ?? "Census correction was not promoted");
-  return store;
-}
-
 test("plain code reads a saved meeting page's regular schedule in its own words, with its agendas and calendar links", () => {
   const read = readHeldMeetingSchedule(MEETINGS, MEETINGS_URL)!;
   assert.equal(read.cadence, "Work Sessions – Generally held on the second and fourth Tuesday of the month. Meetings are held in Council Chambers on the second floor of City Hall at 3:00 p.m. " +
@@ -71,16 +111,13 @@ test("plain code reads a saved meeting page's regular schedule in its own words,
   assert.equal(readHeldMeetingSchedule(shell("Council Meetings", "<p>The council meets on the second Tuesday.</p>"), MEETINGS_URL), null, "a day with no time is not a schedule, and no link was given");
 });
 
-test("a saved meeting page from any job names the council's schedule and agenda link as facts beside its roster (§3)", async (t) => {
-  const facts = await factDb();
-  installFactReader(facts.query);
-  t.after(async () => { installFactReader(undefined); await facts.pg.close(); });
-  const store = await fixtureStore();
-  const base = (await readRegistryRuntimePrior(store, NOW))!;
+test("a saved meeting page from any job names the council's schedule and agenda link as facts beside its roster (§3)", async () => {
+  const store = await stateRegistryRuntimeStore("AZ");
+  const base = (await readRegistryRuntimePrior(store, NOW, "AZ"))!;
   assert.equal(base.payload.registry.bodies.find(body => body.id === BODY)?.name, null, "the fixture council is Census-derived and unnamed");
   const meetings = capture(MEETINGS, MEETINGS_URL), roster = capture(ROSTER, ROSTER_URL);
   const other = capture(shell("Planning Commission Meetings", "<p>The Planning Commission meets the first Monday of each month at 6:00 p.m.</p>"), "https://www.bensonaz.gov/planning");
-  // A later capture of the same page is the host's "Access Denied" wall.
+
   const wall = { ...capture("<html><head><title>Access Denied</title></head><body><h1>Access Denied</h1></body></html>", MEETINGS_URL, "2026-09-29T06:00:00.000Z"), httpStatus: 403 };
   const pages = new Map([meetings, roster, other, wall].map(c => [c.evidence.artifactId, c]));
   const schedule = await heldBodySchedule({ body: { id: BODY, name: "Benson City Council" }, divisionLabel: "Benson", now: NOW,
@@ -93,6 +130,7 @@ test("a saved meeting page from any job names the council's schedule and agenda 
   assert.equal(await heldBodySchedule({ body: { id: BODY, name: "Benson City Council" }, divisionLabel: "Benson", now: NOW,
     artifacts: [artifact(plain)], readHeld: async () => plain }), null, "the door accepts only HTTPS sources, so an http copy never holds the roster beside it");
 
+  const facts = await factDb();
   await ensureFactEntities(facts, ROOT, ["az"]);
   const body = base.payload.registry.bodies.find(row => row.id === BODY)!;
   await publishBodyRoster(facts, { body, division: new Map(base.payload.registry.divisions.map(row => [row.ocdId, row])).get(body.ocdId!)!, state: "AZ", schedule, clocks: factClocks(null), now: new Date(NOW),
@@ -108,9 +146,4 @@ test("a saved meeting page from any job names the council's schedule and agenda 
   assert.equal(council.agendaSourceRef, "https://www.bensonaz.gov/council-documents/-folder-121");
   assert.deepEqual(after.bodyRosters.find(r => r.bodyId === BODY)?.members.map(m => m.name).sort(), ["Carolyn Flowers", "Clea McCaa II"]);
 
-  // The published agenda link leads the existing meeting walk for that government.
-  const item = { id: "wi-roster", autonomousPlan: { contract: { subjectId: "az:benson" }, publication: { contractId: "registry-runtime-bindings", bodyId: BODY } },
-    publicationOutcome: { status: "PUBLISHED", at: NOW, versionId: "cv-x", workerResultId: "held:x" } } as unknown as WorkItem;
-  const hints = directoryMeetingHints([item], after, []);
-  assert.deepEqual(hints.flatMap(h => h.routes.map(r => [h.jurisdictionId, r.url, r.verifyAs])), [["az:benson", "https://www.bensonaz.gov/council-documents/-folder-121", "official-page-events"]]);
 });

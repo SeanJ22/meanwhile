@@ -7,8 +7,7 @@ import { modelAuditReasoner } from "./model-audit.ts";
 import { modelParseReasoner } from "./model-parser.ts";
 import { createModelAuditSampler } from "./audit-sampling.ts";
 import { workerVaultResolver } from "./vault.ts";
-import { drainWorkerQueue, enqueueWorkerTask, evidenceProjection, reauthorizeWorkerTask, type FleetRuntime } from "./runtime.ts";
-import type { RouteTask } from "../route-task.ts";
+import { drainWorkerQueue, enqueueWorkerTask, evidenceProjection, type FleetRuntime } from "./runtime.ts";
 import type { GeneralizedCivicExtractionContract, LegacyCivicExtractionContract, IndependentAuditContext, OfficialRouteExpectation } from "./types.ts";
 import type { WorkItem } from "../work-item.ts";
 import type { MethodKnowledge } from "../../method/knowledge.ts";
@@ -17,7 +16,7 @@ import { fingerprint } from "../ids.ts";
 import { workerTaskAdmission } from "./scheduling.ts";
 import type { WorkerEvidence } from "./types.ts";
 import { requiredOperationalJurisdictionRegistry } from "../../civic-data/operational-references.ts";
-import { getRegistryRuntimeReadModel } from "../../registry/runtime-read-model.ts";
+import { readRegistryRuntimeProjection } from "../../registry/runtime-read-model.ts";
 import { registeredHeldMeetingContract } from "./held-meeting-contract.ts";
 import { authorizeInheritedHeldArtifact, type ResearchRuntimeTools } from "./research-runtime.ts";
 import { readCompletedWorkerResults } from "../repository/worker-completion.ts";
@@ -26,7 +25,7 @@ import { readAuditHistory } from "./scoped-history.ts";
 const SUBJECT = "az:city:city-of-avondale";
 const API_HOST = "avondaleaz.api.civicclerk.com";
 const PORTAL_HOST = "avondaleaz.portal.civicclerk.com";
-/** Full serialized context bytes, leaving room inside the broker's 2 MB input limit for the candidate. */
+
 export const HELD_AUDIT_CONTEXT_MAX_BYTES = 1_800_000;
 export const HELD_AUDIT_MAX_ARTIFACTS = 64;
 
@@ -62,8 +61,6 @@ function linksOfficialPortal(evidence: WorkerEvidence): boolean {
   return /(?:href|src)\s*=\s*["']https:\/\/avondaleaz\.portal\.civicclerk\.com(?::443)?(?:\/|["'])/i.test(text);
 }
 
-/** The implemented learned procedure is deliberately scoped to this existing owed/held artifact class. */
-/** The capture fields `legacyHeldWorkOwed` reads from every capture. */
 const HELD_EVENT_FIELDS = { artifactId: true, workItemId: true, partial: true, canonicalUrl: true } as const;
 type HeldEventCapture = Pick<ArtifactRecord, keyof typeof HELD_EVENT_FIELDS>;
 
@@ -90,7 +87,7 @@ interface RegistrySubject {
   readonly sourceIds: readonly string[];
 }
 
-function registryScope(root: string, contract: GeneralizedCivicExtractionContract) {
+async function registryScope(contract: GeneralizedCivicExtractionContract) {
   const state = contract.jurisdiction.state.toLowerCase();
   if (!/^[a-z]{2}$/.test(state) || contract.jurisdiction.country.toLowerCase() !== "us") throw new Error("AUDIT_CANONICAL_JURISDICTION_INVALID");
   const registry = requiredOperationalJurisdictionRegistry(state) as {
@@ -103,7 +100,9 @@ function registryScope(root: string, contract: GeneralizedCivicExtractionContrac
     const knownUrls = [subject.ownWebAddress, ...subject.sourceIds.map(id => registry.sourceCatalog[id]?.url)].filter((url): url is string => Boolean(url));
     return { subject, knownUrls };
   }
-  const bodies = getRegistryRuntimeReadModel().registry.bodies as {
+  const read = await readRegistryRuntimeProjection([state]);
+  if (read.kind !== "PROMOTED") throw new Error(`AUDIT_REGISTRY_UNAVAILABLE:${state}:${read.kind}`);
+  const bodies = read.value.registry.bodies as {
     id: string; ocdId: string | null; bodyClass: string; homepageUrl: string | null; agendaSourceRef: string | null; provenance?: { sourceUrl?: string };
   }[];
   const body = bodies.find(row => row.id === contract.subjectId);
@@ -115,12 +114,11 @@ function registryScope(root: string, contract: GeneralizedCivicExtractionContrac
   return { subject: { id: body.id, govClass: jurisdiction?.govClass ?? body.bodyClass, ownWebAddress: body.homepageUrl, sourceIds: jurisdiction?.sourceIds ?? [] }, knownUrls };
 }
 
-/** The plan is durable work scope, not permission to sweep every artifact on its host. */
-export function heldGeneralizedContract(root: string, artifact: ArtifactRecord, item: WorkItem): GeneralizedCivicExtractionContract | null {
+async function heldGeneralizedContract(artifact: ArtifactRecord, item: WorkItem): Promise<GeneralizedCivicExtractionContract | null> {
   const contract = item.autonomousPlan?.contract;
   if (!contract || contract.schemaVersion !== 2 || artifact.partial || item.subject !== contract.subjectId || artifact.workItemId !== item.id ||
       !contract.sourceScope.canonicalUrls.includes(artifact.canonicalUrl)) return null;
-  registryScope(root, contract);
+  await registryScope(contract);
   return contract;
 }
 
@@ -129,7 +127,6 @@ function hostname(value: string): string | null {
   catch { return null; }
 }
 
-/** A mentioned vendor name is not a binding; only an explicit publisher link is walked. */
 function linkedHosts(evidence: WorkerEvidence): readonly string[] {
   let text = evidence.text;
   try {
@@ -141,9 +138,9 @@ function linkedHosts(evidence: WorkerEvidence): readonly string[] {
       else if (value && typeof value === "object") Object.values(value).forEach(walk);
     };
     walk(raw); text = strings.join("\n");
-  } catch { /* HTML and recorded response-header text remain literal evidence. */ }
+  } catch {  }
   const links = [...text.matchAll(/(?:href|src)\s*=\s*["']([^"']+)["']/gi)].map(match => match[1]);
-  // Recorded redirect headers, where the acquisition's canonical URL is the known publisher.
+
   for (const match of text.matchAll(/^location:\s*(https?:\/\/\S+)\s*$/gmi)) links.push(match[1]);
   return links.flatMap(link => {
     try { const host = hostname(new URL(link.replace(/&amp;/g, "&"), evidence.canonicalUrl).href); return host ? [host] : []; }
@@ -151,7 +148,6 @@ function linkedHosts(evidence: WorkerEvidence): readonly string[] {
   });
 }
 
-/** Capability vocabulary maps to the method registry's existing singular field vocabulary. */
 export function methodFields(capability: string, contract: GeneralizedCivicExtractionContract): readonly string[] {
   const known: Record<string, readonly string[]> = {
     meetings: ["meeting", "agenda", "minutes"], meetings_agendas: ["meeting", "agenda", "minutes"],
@@ -165,7 +161,6 @@ export function methodFields(capability: string, contract: GeneralizedCivicExtra
   return [...new Set([...(known[normalized] ?? [normalized]), contract.recordClass.toLowerCase(), ...contract.requiredFields])];
 }
 
-/** A shared content hash does not transfer the old owner's work instructions. */
 export function heldAuditAttribution(input: { artifacts: readonly ArtifactRecord[]; items: readonly WorkItem[]; artifactId: string;
   contract: GeneralizedCivicExtractionContract; workItemId?: string }) {
   const matches = input.artifacts.filter(artifact => artifact.artifactId === input.artifactId && !artifact.partial &&
@@ -182,8 +177,6 @@ export function heldAuditAttribution(input: { artifacts: readonly ArtifactRecord
   return eligible[0];
 }
 
-/** A repair child can audit its completed Acquirer reuse without rewriting the
- * immutable capture's original WorkItem attribution. */
 export async function resolvedHeldAuditAttribution(input: {
   repos: ControlPlaneRepositories; artifacts: readonly ArtifactRecord[]; items: readonly WorkItem[];
   artifactId: string; contract: GeneralizedCivicExtractionContract; workItemId: string;
@@ -225,7 +218,7 @@ async function generalizedIndependentContext(input: {
   siblingHeldRootFor?: ResearchRuntimeTools["siblingHeldRootFor"];
 }): Promise<IndependentAuditContext> {
   const { contract } = input;
-  // The method only grows, so a contract planned under an earlier version is still audited, against today's floor; one from a later version is not.
+
   if (contract.methodVersion > input.methodVersion) throw new Error("AUDIT_METHOD_VERSION_MISMATCH");
   const { artifacts, items } = await readAuditHistory(input.repos, { workItemId: input.workItemId, subjectId: contract.subjectId,
     requiredArtifactIds: [input.artifactId, ...contract.sourceScope.observationArtifactIds,
@@ -233,11 +226,11 @@ async function generalizedIndependentContext(input: {
   if (!input.workItemId) throw new Error("AUDIT_WORK_ITEM_SCOPE_REQUIRED");
   const { primary, owner } = await resolvedHeldAuditAttribution({ repos: input.repos, artifacts, items,
     artifactId: input.artifactId, contract, workItemId: input.workItemId, siblingHeldRootFor: input.siblingHeldRootFor });
-  const canonical = primary.workItemId === owner.id ? heldGeneralizedContract(input.root, primary, owner)
+  const canonical = primary.workItemId === owner.id ? await heldGeneralizedContract(primary, owner)
     : owner.autonomousPlan?.contract.schemaVersion === 2 && !primary.partial && owner.subject === contract.subjectId &&
       contract.sourceScope.canonicalUrls.includes(primary.canonicalUrl) ? owner.autonomousPlan.contract : null;
   if (!canonical || canonicalJson(canonical) !== canonicalJson(contract)) throw new Error("AUDIT_CANONICAL_SCOPE_MISMATCH");
-  const { subject, knownUrls } = registryScope(input.root, contract);
+  const { subject, knownUrls } = await registryScope(contract);
   const subjectItems = items.filter(item => item.subject === subject.id);
   const subjectIds = new Set(subjectItems.map(item => item.id));
   const sameSubject = artifacts.filter(artifact => subjectIds.has(artifact.workItemId));
@@ -266,7 +259,7 @@ async function generalizedIndependentContext(input: {
   for (const artifact of relevant.filter(artifact => !artifact.partial)) readings.push(evidenceProjection(await input.readEvidence(artifact.artifactId)));
   if ([...observationIds].some(id => !readings.some(evidence => evidence.artifactId === id))) throw new Error("AUDIT_SOURCE_OBSERVATION_MISSING_OR_PARTIAL");
   const rootedHosts = new Set(knownUrls.flatMap(url => { const host = hostname(url); return host ? [host] : []; }));
-  // Each expansion needs an already-rooted publisher's captured explicit link.
+
   let changed = true;
   while (changed) {
     changed = false;
@@ -305,11 +298,10 @@ async function generalizedIndependentContext(input: {
   return context;
 }
 
-/** `auditCeilingUsd`: the rolling ceiling in force, which the auditor admits against (model-audit.ts). */
-export function standingFleetRuntime(input: { root: string; /** The method knowledge, read from the field manual (`readMethodKnowledge`). */ method: MethodKnowledge; vaultRoot?: string; repos: ControlPlaneRepositories; transport?: ModelTransport; now?: () => string; auditCeilingUsd?: number;
+export function standingFleetRuntime(input: { root: string;  method: MethodKnowledge; vaultRoot?: string; repos: ControlPlaneRepositories; transport?: ModelTransport; now?: () => string; auditCeilingUsd?: number;
   lifetimeHuntSubject?: (subjectId: string) => boolean;
   siblingHeldRootFor?: ResearchRuntimeTools["siblingHeldRootFor"];
-  /** The auditor's transport for the jurisdiction a record is about, held on the area budget covering it. */
+
   transportFor?: (jurisdiction: { readonly subjectId: string; readonly state: string | null }) => ModelTransport }): FleetRuntime {
   const now = input.now ?? (() => new Date().toISOString());
   const method = input.method;
@@ -375,7 +367,7 @@ export function standingFleetRuntime(input: { root: string; /** The method knowl
       for (const other of [...new Map(heldFeeds.map(a => [a.artifactId, a])).values()]) {
         if (other.artifactId !== feed.artifactId) feeds.push(evidenceProjection(await readEvidence(other.artifactId)));
       }
-      // Read every relevant complete held representation independently; no Scout or candidate prose enters.
+
       const surfaceEvidence: WorkerEvidence[] = [];
       for (const page of [...new Map(heldSurfaces.filter(a => !a.partial).map(a => [a.artifactId, a])).values()]) {
         surfaceEvidence.push(evidenceProjection(await readEvidence(page.artifactId)));
@@ -410,7 +402,7 @@ export function standingFleetRuntime(input: { root: string; /** The method knowl
         fields: ["meeting", "agenda"], adapterRoutes: routes.filter(r => r.applicable).map(r => ({ routeId: r.routeId, label: r.reason, target: r.canonicalUrl })) });
       for (const route of floor.routes) {
         if (routes.some(r => r.routeId === route.routeId)) continue;
-        // A method's publisher/tenant target is not an invented concrete endpoint.
+
         routes.push({ routeId: route.routeId, canonicalUrl: route.target,
           applicable: route.obligation === "REQUIRED", status: "OPEN", artifactIds: [],
           reason: `Current method projection: ${route.obligation}; ${route.proof}; ${route.label}. Applicability grade ${route.grade}; matched fields ${route.matchedFields.join(",")}; matched dimensions ${route.matchedDimensions.join(",") || "none"}. Target is the inherited publisher/tenant target, not a discovered endpoint. No inherited outcome is inferred from an unwalked route.` });
@@ -427,7 +419,6 @@ export function standingFleetRuntime(input: { root: string; /** The method knowl
   };
 }
 
-/** Enqueues existing held evidence only. It performs no civic acquisition and expands no obligation corpus. */
 export async function advanceHeldWorkerFleet(root: string, runtime: FleetRuntime, maximumArtifacts = Infinity, legacyOnly = false): Promise<void> {
   if (maximumArtifacts <= 0) return;
   const records = await runtime.repos.workerResults.readAll();
@@ -444,7 +435,7 @@ export async function advanceHeldWorkerFleet(root: string, runtime: FleetRuntime
     const acquired = successfulAcquisitions.get(`${item.id}\u0000${artifact.artifactId}`);
     const acquisitionMatches = acquired && acquired.contentHash === artifact.contentHash && acquired.canonicalUrl === artifact.canonicalUrl &&
       acquired.byteCount === artifact.byteLength && acquired.acquisitionAttemptId === artifact.attemptId;
-    const generalized = acquisitionMatches ? heldGeneralizedContract(root, artifact, item) : null;
+    const generalized = acquisitionMatches ? await heldGeneralizedContract(artifact, item) : null;
     const contract = generalized ?? heldEventContract(root, artifact);
     if (!contract) continue;
     if (item.subject !== contract.subjectId) continue;
@@ -463,8 +454,7 @@ export async function advanceHeldWorkerFleet(root: string, runtime: FleetRuntime
       }
     }
     const admission = workerTaskAdmission(task, attempts, now);
-    // The drain owns current-policy reauthorization of already queued denials.
-    // Such a task must not consume the slot for discovering later held work.
+
     if (!admission.due || admission.requiresPolicyRecheck) continue;
     if (++admitted >= maximumArtifacts) break;
   }
@@ -489,24 +479,6 @@ export async function legacyHeldWorkOwed(root: string, runtime: FleetRuntime): P
     if (!chain.some(r => r.result.role === "ADVERSARIAL_AUDITOR")) return true;
   }
   return false;
-}
-
-/** Held work joins the same lease queue as acquisition. Planning invokes no worker or model. */
-export async function planHeldWorkerFleet(root: string, runtime: FleetRuntime, legacyOnly = false): Promise<readonly RouteTask[]> {
-  await advanceHeldWorkerFleet(root, runtime, Infinity, legacyOnly);
-  const snapshot = await runtime.repos.dispatchState.readOpen();
-  const workIds = [...new Set([...snapshot.routeTasks.values()].map(row => row.value.workItemId))];
-  const attempts = (await Promise.all(workIds.map(id => runtime.repos.attempts.listWhere(["workItemId"], id)))).flat().map(row => row.value);
-  const tasks: RouteTask[] = [];
-  for (const { value: task } of snapshot.routeTasks.values()) {
-    if (!task.workerTask || (legacyOnly && task.workerTask.contract.schemaVersion !== 1)) continue;
-    const now = (runtime.now ?? (() => new Date().toISOString()))();
-    const admission = workerTaskAdmission(task, attempts, now);
-    if (!admission.due) continue;
-    const selected = admission.requiresPolicyRecheck ? await reauthorizeWorkerTask(runtime, task, now) : task;
-    if (selected) tasks.push(selected);
-  }
-  return tasks;
 }
 
 export async function runHeldWorkerFleetCycle(

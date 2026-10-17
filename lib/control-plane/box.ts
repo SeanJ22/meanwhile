@@ -61,7 +61,7 @@ interface BoxQueue {
   /** Rows a pass must look at: waiting under another slot map, or taken past their lease; recorded since `since`, at most `limit`. */
   due(input: { readonly slots: string; readonly now: string; readonly since: string; readonly limit: number }): Promise<readonly BoxFinding[]>;
   /** Waiting rows handed to one builder, by the reason it gave them. */
-  waitingFor(reason: string, limit: number): Promise<readonly BoxFinding[]>;
+  waitingFor(reason: string, limit: number, subjectIds?: readonly string[]): Promise<readonly BoxFinding[]>;
 }
 export type BoxRepository = AggregateRepository<BoxFinding> & BoxQueue;
 
@@ -71,7 +71,10 @@ export function listedBoxRepository(repo: AggregateRepository<BoxFinding>): BoxR
   return { ...repo,
     due: async ({ slots, now, since, limit }) => (await rows()).filter(row => (row.lastRecordedAt ?? "") >= since &&
       (row.state === "waiting" && row.waitingFor?.slots !== slots || row.state === "taken" && row.claim !== null && row.claim.expiresAt <= now)).slice(0, limit),
-    waitingFor: async (reason, limit) => (await rows()).filter(row => row.state === "waiting" && row.waitingFor?.reason === reason).slice(0, limit),
+    waitingFor: async (reason, limit, subjectIds) => {
+      const subjects = subjectIds ? new Set(subjectIds) : null;
+      return (await rows()).filter(row => row.state === "waiting" && row.waitingFor?.reason === reason && (!subjects || subjects.has(row.subjectId))).slice(0, limit);
+    },
   };
 }
 

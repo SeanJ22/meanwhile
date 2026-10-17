@@ -74,4 +74,4 @@ export const GET = readerRoute("/api/directory", async function GET(request: Req
     },
     { headers: { "Cache-Control": "private, no-store" } },
   );
-}, ["federal-directory","member-offices"]);
+}, ["federal-directory","member-offices","state-legislators"]);

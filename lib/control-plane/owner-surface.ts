@@ -295,6 +295,7 @@ export interface OwnerDigestRecord {
   readonly testedSha: string | null;
   readonly huntSourceProgress?: HuntSourceProgress;
   readonly publicationFlow?: import("../civic-data/publication-flow.ts").PublicationFlowReceipt;
+  readonly ballotPublication?: import("../civic-data/ballot-publication.ts").BallotPublicationResult & { readonly heldContestCount: number };
   readonly runtimeOutcome?:
     | FreshnessCycleOutcome
     | RoutineCivicDataSupervisorOutcome
@@ -400,11 +401,13 @@ export interface RoutineCivicDataReaderReadbackReference {
 }
 
 export interface RoutineCivicDataSupervisorOutcome {
-  readonly ballotPublication?: import("../civic-data/ballot-publication.ts").BallotPublicationResult;
+  readonly ballotPublications?: import("../civic-data/ballot-publication.ts").BallotPublicationSummaries;
   readonly lane?: "routine-civic-data" | "publish-now";
   readonly readerEdge?: import("../civic-data/reader-edge-outcome.ts").ReaderEdgePublicationOutcome;
 
   readonly campaignPublicationApprovalsAttempted?: number;
+
+  readonly campaignPublicationApprovalsByState?: Readonly<Record<string, number>>;
   readonly kind: "ROUTINE_CIVIC_DATA_SUPERVISOR";
 
   readonly state: "SUCCEEDED" | "FAILED";

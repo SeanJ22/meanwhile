@@ -14,6 +14,7 @@ export interface JurisdictionRegistryFile {
   readonly sourceCatalog: Readonly<Record<string, { readonly recordClass: string; readonly state: string }>>;
   readonly jurisdictions: readonly {
     readonly id: string;
+    readonly bodyId?: string | null;
     readonly stateCode: string;
     readonly name: string;
     readonly govClass: string;
@@ -33,6 +34,7 @@ export type MeetingsDiscoveryBasis =
 
 export interface MeetingsDiscoveryNeed {
   readonly jurisdictionId: string;
+  readonly bodyIds?: readonly string[];
   readonly stateCode: string;
   readonly name: string;
   readonly govClass: string;
@@ -63,6 +65,7 @@ export function meetingsDiscoveryNeeds(files: readonly JurisdictionRegistryFile[
       if (meetings.some((id) => file.sourceCatalog[id]?.state !== "DISCOVERY_OWED")) continue;
       needs.push({
         jurisdictionId: row.id,
+        ...(row.bodyId ? { bodyIds: [row.bodyId] } : {}),
         stateCode: row.stateCode,
         name: row.name,
         govClass: row.govClass,

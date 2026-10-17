@@ -25,12 +25,12 @@ test("bootstrap declares the manual rows and indexed method aggregates, one stat
 });
 
 test("a slice is asked of Postgres by role, kind, record class, platform and the job's place and state", () => {
-  const params = fieldManualSliceParams({ role: "SCOUT", recordClass: "Meetings", platform: "Legistar",
+  const params = fieldManualSliceParams({ role: "SCOUT", recordClass: "Meetings", platform: "Legistar", withinState: "AZ",
     ocdIds: ["ocd-division/country:us/state:az/county:pima/place:tucson#governing"] });
   assert.deepEqual(params, [["SCOUT", "SHARED"], null, "meetings", false,
     ["ocd-division/country:us", "ocd-division/country:us/state:az", "ocd-division/country:us/state:az/county:pima",
       "ocd-division/country:us/state:az/county:pima/place:tucson"], "legistar", "az",null,null,
-      ["ocd-division/country:us/state:az/county:pima/place:tucson"],null,null,[]]);
+      ["ocd-division/country:us/state:az/county:pima/place:tucson"],null,null,[],"az"]);
   assert.deepEqual(fieldManualSliceParams({ kinds: ["PLAYBOOK"], everywhere: true }).slice(0, 4), [null, ["PLAYBOOK"], null, true]);
 });
 
@@ -106,7 +106,7 @@ test("SQL manual slices exclude other places and source routes while preserving 
     assert.equal(projectFieldManual({ entries: actual }, query).lines.length, 12);
     assert.ok(Buffer.byteLength(JSON.stringify(actual)) < 15000);
     const selections:FieldManualQuery[]=[
-      { ...query, platform: "Legistar" }, { ...query, state: "AZ", recordClass: "Meetings" },
+      { ...query, platform: "Legistar" },{...query,withinState:"az"},{...query,withinState:"NH"}, { ...query, state: "AZ", recordClass: "Meetings" },
       { ...query, ocdIds: query.ocdIds!.map(place => place.toUpperCase()), bodyIds: ["Council"] },
       { role: "SCOUT" as const }, { kinds: [] }, { ...query, everywhere: true, platform: "legistar" }, {},
     ];

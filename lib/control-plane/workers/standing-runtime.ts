@@ -15,7 +15,6 @@ import { scoutStateHint } from "../scheduler/field-manual-scout.ts";
 import { researchRoleExecutor, type ResearchRuntimeTools } from "./research-runtime.ts";
 import { durableResearchTools } from "./durable-research-tools.ts";
 import type { AutonomousCoordinatorRuntime } from "./coordinator.ts";
-import { refreshRegistryRuntimeFromPromoted } from "../../registry/runtime-read-model.ts";
 import { refreshVenueResolutionsFromPromoted } from "../../civic-data/curated-reader-read-model.ts";
 import { mayUseTestFixture } from "../../civic-data/fixture-policy.ts";
 import { evidenceProjection } from "./runtime.ts";
@@ -50,7 +49,6 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
   /** The transport for one jurisdiction's work, held on the area budget covering it; absent, `transport` serves all. */
   transportFor?:(jurisdiction:{readonly subjectId:string;readonly state:string|null},taskId?:string)=>ModelTransport;
   refusedBeforeSending?:(error:unknown)=>boolean}):Promise<AutonomousCoordinatorRuntime> {
-  await refreshRegistryRuntimeFromPromoted();
   if (!mayUseTestFixture()) await refreshVenueResolutionsFromPromoted();
   const now=input.now??(()=>new Date().toISOString());
   const siblingHeldRootFor: NonNullable<ResearchRuntimeTools["siblingHeldRootFor"]> = async held => {

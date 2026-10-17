@@ -1,13 +1,18 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { POINT_GEOMETRY_PLANS, divisionIdsForZipArea, unestablishedDistrictOffices } from "../lib/ballot/zip-divisions.ts";
-import type { BallotSet } from "../lib/ballot/types.ts";
+import { POINT_GEOMETRY_PLANS, divisionIdsForZipArea, unestablishedDistrictOfficesForFamilies } from "../lib/ballot/zip-divisions.ts";
 import type { CensusDistrictEdge } from "../lib/census-geography/district-edge.ts";
 import { selectGeographyVersion } from "../lib/census-geography/selection.ts";
 import { withCensusDistricts } from "../lib/geo/zip-census-districts.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
-import { contestsForDivisions } from "../lib/sources/ballot-nj-morris/index.ts";
-import { azBallot, azDistricts, azDistrictSlice, electionSelection } from "./helpers/ballot-district-fixtures.ts";
+import { contestsForDivisions } from "../lib/ballot/contests.ts";
+import { azDistricts, azDistrictSlice, electionSelection } from "./helpers/ballot-district-fixtures.ts";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import type { BallotSet } from "../lib/ballot/types.ts";
+
+const azBallot = Object.values(JSON.parse(readFileSync(join(import.meta.dirname, "../data/ballot/2026-general/az.json"), "utf8")).ballots)[0] as BallotSet;
+
 
 const districtIds = (ids: readonly string[]) => ids.filter(id => /\/(?:cd|sldu|sldl):/.test(id)).sort();
 const withDistricts = <T>(edge: CensusDistrictEdge, read: () => T): T => withReaderAuthorityEdge({ censusDistricts: { value: edge, versionId: edge.versionId } }, read);
@@ -20,7 +25,7 @@ for (const [zip, expected] of [
     const ids = await withDistricts(azDistricts, () => divisionIdsForZipArea(zip, [], electionSelection, POINT_GEOMETRY_PLANS));
     const contests = contestsForDivisions(azBallot, ids).contests.filter(contest => /\/(?:cd|sldu|sldl):/.test(contest.ocdId));
     assert.deepEqual(contests.map(contest => contest.id.split(":").at(-1)).sort(), [...expected].sort());
-    assert.deepEqual(unestablishedDistrictOffices(azBallot, ids), []);
+    assert.deepEqual(unestablishedDistrictOfficesForFamilies(["az/cd", "az/sldu", "az/sldl"], ids), []);
     const future = await withDistricts(azDistricts, () => divisionIdsForZipArea(zip, [], { purpose: "representation", asOf: "2027-03-01" }, POINT_GEOMETRY_PLANS));
     assert.deepEqual(districtIds(future), districtIds(ids), "an unchanged held plan keeps serving after the next term starts");
   });
@@ -72,11 +77,11 @@ test("when Census ZIP rows are unavailable, Arizona's declared point plan answer
   const unavailable = <T>(read: () => T): T => withReaderAuthorityEdge({}, read);
   const declared = await unavailable(() => divisionIdsForZipArea("85701", point, electionSelection, POINT_GEOMETRY_PLANS));
   assert.ok(point.every(id => declared.includes(id)));
-  assert.deepEqual(unestablishedDistrictOffices(azBallot, declared), []);
+  assert.deepEqual(unestablishedDistrictOfficesForFamilies(["az/cd", "az/sldu", "az/sldl"], declared), []);
   const undeclared = await unavailable(() => divisionIdsForZipArea("85701", point, electionSelection));
   assert.ok(undeclared.includes(local));
   assert.deepEqual(districtIds(undeclared), []);
-  assert.deepEqual([...unestablishedDistrictOffices(azBallot, undeclared)].sort(), ["State House", "State Senate", "U.S. House"]);
+  assert.deepEqual([...unestablishedDistrictOfficesForFamilies(["az/cd", "az/sldu", "az/sldl"], undeclared)].sort(), ["State House", "State Senate", "U.S. House"]);
 });
 
 /** Reuse publisher-shaped rows to isolate each state's plan transition. These are policy fixtures, not geographical claims. */
@@ -87,10 +92,6 @@ function stateEdge(state: "TX" | "MI", zip: string): CensusDistrictEdge {
     ref: { ...container.ref, stateAbbr: state, stateFips, memberStates: [state], geoid: stateFips + container.ref.geoid.slice(2), label: `${state} test district` },
   })), codes: { [zip]: source.value.containers.map((_container, index) => [index, true, 1] as const) } };
 }
-function stateBallot(state: "TX" | "MI"): BallotSet {
-  return { ...azBallot, election: { ...azBallot.election, state }, contests: azBallot.contests.filter(contest => /\/(?:cd|sldu|sldl):/.test(contest.ocdId))
-    .map(contest => ({ ...contest, ocdId: contest.ocdId.replace("/state:az/", `/state:${state.toLowerCase()}/`) })) };
-}
 
 test("Texas's old House plan is excluded for its 2026 election until a complete cd:120 plan is held", async () => {
   const old = stateEdge("TX", "77002");
@@ -99,7 +100,7 @@ test("Texas's old House plan is excluded for its 2026 election until a complete 
   const point = ["ocd-division/country:us/state:tx/cd:7"];
   const ids = await withDistricts(old, () => divisionIdsForZipArea("77002", point, electionSelection, POINT_GEOMETRY_PLANS));
   assert.ok(!ids.some(id => /\/state:tx\/cd:/.test(id)));
-  assert.deepEqual(unestablishedDistrictOffices(stateBallot("TX"), ids), ["U.S. House"]);
+  assert.deepEqual(unestablishedDistrictOfficesForFamilies(["tx/cd", "tx/sldu", "tx/sldl"], ids), ["U.S. House"]);
   const scope = old.scopes.find(scope => scope.type === "congressional_district")!;
   const container = old.containers.find(container => container.ref.type === "congressional_district")!;
   const next = { ...old, scopes: [...old.scopes, { ...scope, version: "cd:120", retrievalComplete: true }],
@@ -108,7 +109,7 @@ test("Texas's old House plan is excluded for its 2026 election until a complete 
   const current = await withDistricts(next, () => divisionIdsForZipArea("77002", point, electionSelection, POINT_GEOMETRY_PLANS));
   assert.ok(current.includes("ocd-division/country:us/state:tx/cd:38"));
   assert.ok(!current.includes(point[0]));
-  assert.deepEqual(unestablishedDistrictOffices(stateBallot("TX"), current), []);
+  assert.deepEqual(unestablishedDistrictOfficesForFamilies(["tx/cd", "tx/sldu", "tx/sldl"], current), []);
 });
 
 test("Michigan's 2024 Senate plan is excluded for 2026 while its unchanged House plan answers", async () => {
@@ -116,5 +117,5 @@ test("Michigan's 2024 Senate plan is excluded for 2026 while its unchanged House
   const ids = await withDistricts(edge, () => divisionIdsForZipArea("48104", ["ocd-division/country:us/state:mi/sldu:20"], electionSelection, POINT_GEOMETRY_PLANS));
   assert.ok(!ids.some(id => /\/state:mi\/sldu:/.test(id)));
   assert.ok(ids.includes("ocd-division/country:us/state:mi/sldl:20"));
-  assert.deepEqual(unestablishedDistrictOffices(stateBallot("MI"), ids), ["State Senate"]);
+  assert.deepEqual(unestablishedDistrictOfficesForFamilies(["mi/cd", "mi/sldu", "mi/sldl"], ids), ["State Senate"]);
 });

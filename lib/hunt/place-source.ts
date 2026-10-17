@@ -1,3 +1,4 @@
+import { requireRegistryState, registryJurisdictions } from "../civic-data/state-scopes.ts";
 import { readFieldManual,readFieldManualSourceHints } from "../control-plane/field-manual.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import { divisionsForZip, type GeographyReadOptions, type PlaceDivision } from "../control-plane/expansion/national-geography.ts";
@@ -21,6 +22,7 @@ export async function runPlaceSource(input: {
   readonly repos: ControlPlaneRepositories;
   readonly store: RoutineDataStore;
   readonly zip: string;
+  readonly state: string;
   readonly now: string;
   readonly clock?: () => string;
   readonly readSource: (url: string, knowledge: Awaited<ReturnType<typeof readFieldManual>>) => Promise<HeldSourcePage>;
@@ -34,7 +36,10 @@ export async function runPlaceSource(input: {
   readonly readHeld?: (divisionIds: readonly string[]) => Promise<PlaceCapture>;
 }) {
   if (!/^\d{5}$/.test(input.zip)) throw new Error("A five-digit ZIP is required");
-  const divisions = input.divisions ?? await divisionsForZip(input.zip, input.geography);
+  const state = requireRegistryState(input.state);
+  const divisions = (input.divisions ?? await divisionsForZip(input.zip, input.geography)).filter(division => {
+    const states = registryJurisdictions(division.id); return !states.length || states.includes(state);
+  });
 
   const knowledge = input.knowledge ?? await readFieldManual(input.repos, { ocdIds: divisions.map(division => division.id),limit:40 });
   const ids = divisions.map(division => division.id);

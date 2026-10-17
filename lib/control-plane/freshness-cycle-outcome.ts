@@ -72,11 +72,11 @@ export interface RoutineCivicDataReaderReadbackOutcomeInput {
   readonly references: readonly RoutineCivicDataReaderReadbackReference[];
 }
 
-export interface RoutineCivicDataSupervisorOutcomeInput {
-  readonly ballotPublication?: import("../civic-data/ballot-publication.ts").BallotPublicationResult;
+interface RoutineCivicDataSupervisorOutcomeInput {
+  readonly ballotPublications?: import("../civic-data/ballot-publication.ts").BallotPublicationSummaries;
   readonly lane?: "routine-civic-data" | "publish-now";
   readonly readerEdge?: import("../civic-data/reader-edge-outcome.ts").ReaderEdgePublicationOutcome;
-  readonly campaignPublicationApprovalsAttempted?: number;
+  readonly campaignPublicationApprovalsByState?: Readonly<Record<string, number>>;
   readonly cycleId: string;
   readonly startedAt: string;
   readonly finishedAt: string;
@@ -256,10 +256,12 @@ export function routineCivicDataSupervisorOutcome(
     references: [],
   };
   const taskIds = taskReceipts.map(({ taskId }) => taskId);
-  if (input.campaignPublicationApprovalsAttempted !== undefined && (
-    !Number.isSafeInteger(input.campaignPublicationApprovalsAttempted) || input.campaignPublicationApprovalsAttempted < 0 ||
-    !taskReceipts.some(row => row.taskId === "candidate-campaign-sites-derived")
-  )) throw new Error("CAMPAIGN_PUBLICATION_INPUT_ACK_WITHOUT_RECEIPT");
+  for (const [state, count] of Object.entries(input.campaignPublicationApprovalsByState ?? {})) {
+    if (!/^[A-Z]{2}$/.test(state) || !Number.isSafeInteger(count) || count < 0 ||
+      !taskReceipts.some(row => row.taskId === `candidate-campaign-sites-derived:${state}`)) {
+      throw new Error("CAMPAIGN_PUBLICATION_INPUT_ACK_WITHOUT_RECEIPT");
+    }
+  }
   if (new Set([...taskIds, ...crashedTasks.map(({ taskId }) => taskId)]).size !== taskIds.length + crashedTasks.length) {
     throw new Error("ROUTINE_SUPERVISOR_TASK_RECEIPT_DUPLICATE");
   }

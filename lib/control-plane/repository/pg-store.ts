@@ -11,6 +11,9 @@ import { installDatabaseTransferCounter } from "../../db/transfer.ts";
 import { withCallerSite } from "../../db/transfer-by-caller.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
 import type { DoorRecord } from "../../doors/registry.ts";
+import { pageAddress } from "../../doors/page-doors.ts";
+import { requireBallotState } from "../../civic-data/state-scopes.ts";
+import type { VotingSourceDoor } from "../../ballot/voting-source-types.ts";
 import type { LeadOrder } from "../leads/order.ts";
 import { createWebsitePacing } from "../website-pacing.ts";
 import type { LiveAuditLogRow } from "../live-audit-log.ts";
@@ -863,14 +866,14 @@ const BOX_DUE_SQL = `SELECT id, value FROM cp_box_findings WHERE value->>'state'
   UNION ALL SELECT id, value FROM cp_box_findings WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,slots}') > $1 AND value->>'lastRecordedAt' >= $3
   UNION ALL SELECT id, value FROM cp_box_findings WHERE value->>'state' = 'taken' AND (value #>> '{claim,expiresAt}') <= $2 AND value->>'lastRecordedAt' >= $3
   LIMIT $4`;
-const BOX_WAITING_SQL = `SELECT id, value FROM cp_box_findings WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,reason}') = $1 ORDER BY id LIMIT $2`;
+const BOX_WAITING_SQL = `SELECT id, value FROM cp_box_findings WHERE value->>'state' = 'waiting' AND (value #>> '{waitingFor,reason}') = $1 AND ($3::text[] IS NULL OR value->>'subjectId'=ANY($3::text[])) ORDER BY id LIMIT $2`;
 
 function pgBoxRepository(sql: Sql, options: PgRepositoryBounds = {}): BoxRepository {
   const run = boundedRunner(sql, "cp_box_findings", options.bounds ?? CONTROL_PLANE_REQUEST_BOUNDS_MS);
   const rows = (found: readonly Record<string, unknown>[]) => found.map(row => parseValue<BoxFinding>(row.value, `cp_box_findings id ${String(row.id)}`));
   return { ...pgAggregateRepository<BoxFinding>(sql, "BoxFinding", "cp_box_findings", options),
     due: async ({ slots, now, since, limit }) => rows(await run("boxDue", "PAGE", BOX_DUE_SQL, [slots, now, since, Math.max(0, Math.trunc(limit))]) as Record<string, unknown>[]),
-    waitingFor: async (reason, limit) => rows(await run("boxWaitingFor", "PAGE", BOX_WAITING_SQL, [reason, Math.max(0, Math.trunc(limit))]) as Record<string, unknown>[]),
+    waitingFor: async (reason, limit, subjectIds) => rows(await run("boxWaitingFor", "PAGE", BOX_WAITING_SQL, [reason, Math.max(0, Math.trunc(limit)), subjectIds ?? null]) as Record<string, unknown>[]),
   };
 }
 
@@ -996,7 +999,39 @@ export async function bootstrap(
     if (online) await pgEnsureOnlineIndex(sql, online, bounds);
     else await run("bootstrap", "POINT", statement);
   }
+  const versions = await run("readVersion", "POINT", "SELECT version FROM cp_schema_version WHERE singleton") as { version: number }[];
+  if ((versions[0]?.version ?? 0) < 33) await migrateVotingDoorScopes(sql, nowIso, bounds);
   await run("recordVersion", "POINT", recordVersionStatement(BOOTSTRAP_VERSION, nowIso));
+}
+
+async function migrateVotingDoorScopes(sql: Sql, nowIso: string,
+  bounds: ControlPlaneRequestBounds = CONTROL_PLANE_REQUEST_BOUNDS_MS): Promise<void> {
+  const run = boundedRunner(sql, "cp_doors", bounds);
+  let after = "";
+  for (;;) {
+    const rows = await run("migrateVotingDoorScopes", "PAGE", `SELECT id, revision, value->'config' AS config FROM cp_doors
+      WHERE value->>'kind'='official-voting-source' AND id>$1 ORDER BY id LIMIT 250`, [after]) as
+      { id: string; revision: number; config: DoorRecord["config"] }[];
+    for (const row of rows) {
+      try {
+        const primary = JSON.parse(String(row.config.votingSource)) as VotingSourceDoor;
+        const mappings = [primary, ...JSON.parse(String(row.config.votingMappings ?? "[]")) as VotingSourceDoor[]];
+        const url = pageAddress(primary.url)?.url;
+        if (!url) throw new Error("Voting source door has no public URL.");
+        const patch = { url, ...Object.fromEntries(mappings.map(source => [`votingState_${requireBallotState(source.scope.state)}`, true])) };
+        if (Object.entries(patch).every(([key, value]) => row.config[key] === value)) continue;
+        const changed = await run("migrateVotingDoorScopes", "POINT", `UPDATE cp_doors SET
+          value=jsonb_set(value,'{config}',value->'config'||$3::jsonb)||jsonb_build_object('updatedAt',$4::text),
+          revision=revision+1,updated_at=$4::timestamptz WHERE id=$1 AND revision=$2 RETURNING id`,
+        [row.id, row.revision, JSON.stringify(patch), nowIso]) as { id: string }[];
+        if (!changed.length) throw new ConcurrentModification("Door", row.id, Number(row.revision), null);
+      } catch (error) {
+        console.error("VOTING_DOOR_SCOPE_MIGRATION_FAILED", { id: row.id, error: error instanceof Error ? error.message : String(error) });
+      }
+    }
+    if (rows.length < 250) return;
+    after = rows.at(-1)!.id;
+  }
 }
 
 const FIELD_MANUAL_MATCHES_SQL = `SELECT id,value FROM cp_field_manual_entries
@@ -1004,6 +1039,7 @@ const FIELD_MANUAL_MATCHES_SQL = `SELECT id,value FROM cp_field_manual_entries
     AND ($2::text[] IS NULL OR value->>'kind'=ANY($2::text[]))
     AND ($3::text IS NULL OR jsonb_array_length(coalesce(value->'recordClasses','[]'::jsonb))=0 OR value->'recordClasses' ? $3)
     AND NOT(value->>'kind'=ANY($8::text[])) AND ($9::text IS NULL OR id>$9)
+    AND ($10::text IS NULL OR value->'states' ? $10)
     AND (($4::boolean AND ($6::text IS NULL OR jsonb_array_length(coalesce(value->'platforms','[]'::jsonb))=0 OR value->'platforms' ? $6))
       OR (NOT $4 AND (coalesce(value->'reach'->'places','[]'::jsonb) ?| $5::text[]
         OR ($7::text IS NOT NULL AND coalesce(value->'reach'->'states','[]'::jsonb) ? $7)
@@ -1021,6 +1057,7 @@ export const FIELD_MANUAL_SLICE_SQL = `WITH eligible AS NOT MATERIALIZED (
       AND ($2::text[] IS NULL OR value->>'kind'=ANY($2::text[]))
       AND ($3::text IS NULL OR jsonb_array_length(coalesce(value->'recordClasses','[]'::jsonb))=0 OR value->'recordClasses' ? $3)
       AND NOT(value->>'kind'=ANY($13::text[]))
+      AND ($14::text IS NULL OR value->'states' ? $14)
 ), broad AS (
   SELECT picked.id FROM unnest(coalesce($1::text[],ARRAY[${FIELD_MANUAL_ROLES.map(role=>`'${role}'`).join(",")}])) r(role)
   CROSS JOIN (VALUES(false),(true)) reach(global)
@@ -1064,7 +1101,6 @@ export const FIELD_MANUAL_SLICE_SQL = `WITH eligible AS NOT MATERIALIZED (
     CASE WHEN n.kind='EXHAUSTED_RUNGS' THEN 1 ELSE 0 END AS exhausted,
     CASE n.outcome ${Object.entries(OUTCOME_RANK).map(([outcome,rank])=>`WHEN '${outcome}' THEN ${rank}`).join(" ")} ELSE 5 END AS outcome,
     coalesce(n."observedAt",'') AS observed
-  -- Keep metadata parsing behind the indexed reach lookup.
   -- Keep metadata parsing behind the indexed reach lookup.
   FROM candidates c CROSS JOIN LATERAL (SELECT id,value FROM cp_field_manual_entries WHERE id=c.id OFFSET 0) e
   CROSS JOIN LATERAL jsonb_to_record(e.value) AS n(kind text,outcome text,"observedAt" text,"recordClasses" jsonb,
@@ -1121,7 +1157,7 @@ export function fieldManualSliceParams(query: FieldManualQuery): unknown[] {
     query.platform?.toLowerCase() ?? null,
     queryState(query) ?? null,
     query.limit??null,query.subjectId??null,methodEvidencePlaces(query),query.preferredRecordClasses??null,
-    query.requiredExhaustedClasses?.length?query.requiredExhaustedClasses:null,query.excludedKinds??[],
+    query.requiredExhaustedClasses?.length?query.requiredExhaustedClasses:null,query.excludedKinds??[],query.withinState?.toLowerCase()??null,
   ];
 }
 
@@ -1151,7 +1187,7 @@ export function pgFieldManualRepository(sql:Sql,options:PgRepositoryBounds,fixMa
       let afterId:string|null=null;
       for(;;) {
         const rows=await run("select","PAGE",query.limit===undefined?FIELD_MANUAL_MATCHES_SQL:FIELD_MANUAL_SLICE_SQL,
-          query.limit===undefined?[...params.slice(0,7),params[12],afterId]:params) as Record<string,unknown>[];
+          query.limit===undefined?[...params.slice(0,7),params[12],afterId,params[13]]:params) as Record<string,unknown>[];
         for(const row of rows)if(row.id!==null)entries.push(parseValue<FieldManualEntry>(row.value,`cp_field_manual_entries ${String(row.id)}`));
         if(query.limit!==undefined || rows.length<AGGREGATE_LIST_READ_PAGE)break;
         afterId=String(rows.at(-1)!.id);

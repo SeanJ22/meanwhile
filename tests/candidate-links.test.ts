@@ -1,3 +1,4 @@
+import { installManualValue } from "./helpers/promoted-fixtures.ts";
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
@@ -5,7 +6,8 @@ import { allCandidateLinks } from "../lib/ballot/candidate-sites.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { manualProjectionCandidate, type CandidateProfilesProjection, type ManualProjectionPackage } from "../lib/civic-data/manual-projections.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
-import { refreshCandidateProfilesFromPromoted } from "../lib/civic-data/manual-read-models.ts";
+import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
+import { readStateAuthorityProjection } from "../lib/civic-data/state-reader.ts";
 
 const AT = "2026-09-20T12:00:00.000Z";
 
@@ -24,25 +26,29 @@ const payload: CandidateProfilesProjection = {
   },
 };
 
-async function promoteFixture(): Promise<void> {
+async function promoteFixture() {
   const store = new MemoryRoutineDataStore();
   const pkg: ManualProjectionPackage = {
-    contractId: "candidate-profiles", version: AT, sourceThrough: AT,
+    contractId: "candidate-profiles:NJ", version: AT, sourceThrough: AT,
     sourceReceipt: { contractVersion: 1, reviewedAt: AT, reviewedBy: "owner-test", sources: [{
       requestedUrl: "https://www.janedoe.example", finalUrl: "https://www.janedoe.example", publisher: "www.janedoe.example", sourceClass: "CANDIDATE_CONTROLLED",
       retrievedAt: AT, httpStatus: 200, rawHash: "a".repeat(64), reviewedEvidence: "Exact response bytes reviewed by the owner.",
     }] },
     payload,
   };
-  const outcome = await processRegisteredManualCandidate(store, "candidate-profiles", manualProjectionCandidate(pkg), AT, null);
+  const outcome = await processRegisteredManualCandidate(store, "candidate-profiles:NJ", manualProjectionCandidate(pkg), AT, null);
   assert.equal(outcome.candidate.state, "PROMOTED", outcome.candidate.failureDetail ?? undefined);
-  await refreshCandidateProfilesFromPromoted({ store, bypassCache: true, now: AT });
+  const read = await readPromotedCivicData<CandidateProfilesProjection>("CANDIDATE_PROFILE", "US-NJ:candidate-profiles", { store, bypassCache: true, now: AT });
+  assert.equal(read.kind, "PROMOTED");
+  return read;
 }
 
-await promoteFixture();
+const published = await promoteFixture();
+installManualValue("candidate-profiles:NJ", published.value!, published.metadata.versionId!);
+await readStateAuthorityProjection("candidate-profiles", "NJ");
 
 test("every link was fetch-verified: url, verification sentence, and date present", () => {
-  const { links, hunts } = allCandidateLinks();
+  const { links, hunts } = allCandidateLinks("NJ");
   assert.ok(Object.keys(links).length > 0);
   for (const [key, entry] of Object.entries(links)) {
     for (const side of ["official", "campaign"] as const) {
@@ -69,7 +75,7 @@ test("every link was fetch-verified: url, verification sentence, and date presen
 });
 
 test("no ranking vocabulary anywhere in the links file", () => {
-  const raw = JSON.stringify(allCandidateLinks()).toLowerCase();
+  const raw = JSON.stringify(allCandidateLinks("NJ")).toLowerCase();
   for (const banned of ['"score"', '"rank"', '"rating"', '"match"', '"fit"', '"grade"', '"alignment"', '"recommendation"']) {
     assert.ok(!raw.includes(banned), `banned key ${banned} in candidate-links`);
   }

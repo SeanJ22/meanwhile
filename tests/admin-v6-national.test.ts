@@ -1,3 +1,4 @@
+import { scoreTargets } from "../lib/control-plane/admin-view/place-target-scores.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -13,7 +14,7 @@ import {
   districtDivisions, forgetNationalGeography, labelOfDivisionId, readStateDistricts, unionDivisions, zipDivisionIds, type DistrictInfo,
 } from "../lib/control-plane/admin-view/v6-national-geography.ts";
 import {
-  ADMIN_V6_NATIONAL_CONTRACT, forgetNationalScores, nationalRows, nationalScopeOf, scoreTargets, scoresWithin, v6NationalSection,
+  ADMIN_V6_NATIONAL_CONTRACT, forgetNationalScores, nationalRows, nationalScopeOf, scoresWithin, v6NationalSection,
   type NationalDeps, type NationalHuntSources,
 } from "../lib/control-plane/admin-view/v6-national-read.ts";
 import { buildPlaceOwedList } from "../lib/coverage/place-owed.ts";
@@ -304,7 +305,7 @@ function deps(over: Partial<NationalDeps> = {}): NationalDeps & { reads: { held:
     ...over };
 }
 
-test("the country section is the contract envelope with 56 rows and one read of held data for the whole list", async () => {
+test("the country section scores 56 state buckets without a country holdings read", async () => {
   forgetNationalScores();
   const d = deps();
   const out = await v6NationalSection({ scopeKey: "us", scope: parseV6PlaceKey("us")!, sources: { hunts: huntsOf([hunt("85635", { spent: 1 })]), stuck: [stuckRow("a", "az")] }, deps: d });
@@ -314,13 +315,13 @@ test("the country section is the contract envelope with 56 rows and one read of 
   assert.equal(out.contract, "admin-v6/national@1");
   assert.equal(out.scope, "us");
   assert.equal(out.data.length, 56);
-  assert.equal(d.reads.held, 1);
+  assert.equal(d.reads.held, 56);
   assert.equal(d.reads.districts, 0, "the country needs no district list");
   assert.deepEqual(out.missingParts, []);
   assert.match(out.revision, /^national:[0-9a-f]{24}$/);
   const az = out.data.find((r) => r.placeKey === "st:az")!;
   assert.deepEqual([az.hunts, az.zipsWorked, az.zipsTotal, az.stuck], [1, 1, 420, 1]);
-  assert.ok(typeof az.score === "number", "the state has a score from the same single read");
+  assert.ok(typeof az.score === "number", "the state has a score from its own bucket");
 });
 
 test("a state section lists its districts, and scores arrive from one read for all of them", async () => {

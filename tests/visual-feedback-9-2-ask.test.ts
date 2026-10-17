@@ -7,8 +7,10 @@ test("ASK-24: structured measure answers lead with the held definition and keep 
     import { createElement } from 'react';
     import { renderToStaticMarkup } from 'react-dom/server';
     import { AskAnswerRecords } from './components/ask/answer-records.tsx';
-    import { MEASURE_SUMMARIES } from './lib/ballot/measure-summary.ts';
-    const summary = MEASURE_SUMMARIES.find(record => record.contestId === 'ballot-az-pima:prop-141');
+    import { readFileSync } from 'node:fs';
+    import { summaryForContest } from './lib/ballot/measure-summary.ts';
+    const ballots = JSON.parse(readFileSync('./data/ballot/2026-general/az.json', 'utf8')).ballots;
+    const summary = summaryForContest('ballot-az-pima:prop-141', Object.values(ballots).flatMap(ballot => ballot.measureRecords));
     const records = [
       {kind:'CONTEST', id:'procedure', text:'Procedural details.', sourceUrl:'https://authority.example/procedure'},
       {kind:'MEASURE_ANALYSIS', id:'analysis', text:'Official legal detail.', sourceUrl:'https://authority.example/analysis'},

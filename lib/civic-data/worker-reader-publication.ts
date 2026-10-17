@@ -46,8 +46,8 @@ import { linkingPageFrom, section3Page } from "../control-plane/promotion/sectio
 const text = (value: FieldValue | undefined) => typeof value === "string" ? value : "";
 const words = (value: string) => value.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 const hostOf = (url: string) => { try { return new URL(url).hostname.toLowerCase().replace(/^www\./, ""); } catch { return null; } };
-function ownSiteHostsFromHeld(personId: string): readonly string[] {
-  const urls = [campaignSiteFor(personId)?.url, ...currentDerivedCampaignSiteRecords().filter(r => r.id === personId || r.candidacyId === personId).map(r => r.campaign.url)];
+function ownSiteHostsFromHeld(state: string, personId: string): readonly string[] {
+  const urls = [campaignSiteFor(personId)?.url, ...currentDerivedCampaignSiteRecords(state).filter(r => r.id === personId || r.candidacyId === personId).map(r => r.campaign.url)];
   return urls.flatMap(url => url ? [hostOf(url)].filter((h): h is string => h !== null) : []);
 }
 export interface StancesInput {
@@ -77,7 +77,7 @@ function workerReaderPackageWithPulls(input: StancesInput & Parameters<typeof ve
     const f = record.fields;
     if (contractId === "stances") {
       return stanceRowFrom({ fields: f, pageUrl: checked.primary.evidence.canonicalUrl, collectedAt: checked.primary.observedAt, now: input.now,
-        topicIds: input.stanceTopicIds ?? DEFAULT_STANCE_TOPICS.map(topic => topic.id), ownSiteHosts: input.ownSiteHosts ?? ownSiteHostsFromHeld });
+        topicIds: input.stanceTopicIds ?? DEFAULT_STANCE_TOPICS.map(topic => topic.id), ownSiteHosts: input.ownSiteHosts ?? (personId => ownSiteHostsFromHeld(checked.contract.jurisdiction.state, personId)) });
     }
     requirePublication(words(text(f.bodyName)) === words(body?.name ?? place!.label), "CANONICAL_BODY_MISMATCH");
     if (contractId === "public-records") {
@@ -237,7 +237,7 @@ export async function publishWorkerReaderResults(input: {
     try {
       requirePublication(parser.result.role === "PARSER" && plan.contract.schemaVersion === 2, "INPUT_CHAIN_MISSING");
       captures = await capturesForPublication({ repos: input.repos, workItemId: id, primaryId: parser.result.artifactId, results, readCapture, officialLinks: manual.officialLinks });
-      const registry = await readRegistryRuntimePrior(input.store, input.now);
+      const registry = await readRegistryRuntimePrior(input.store, input.now, plan.contract.jurisdiction.state);
       const built = workerReaderPackageWithPulls({ plan, parser, captures, registry, now: input.now, results,
         ...(contractId === "stances" ? { stanceTopicIds: await readStanceTopicIds() } : {}) });
       const checked = built.package;

@@ -32,6 +32,10 @@ test("an attempt with no known family belongs to none, and a family with no atte
   const byFamily = attemptsByFamily([attempt(null, "2026-10-03T00:00:00Z", "HELD")]);
   assert.deepEqual(byFamily, {});
   assert.equal(attemptFamilyOf("unmapped-door"), null);
+  assert.equal(attemptFamilyOf("registry-runtime:AZ"), "people");
+  assert.equal(attemptFamilyOf("registry-runtime:NH"), "people");
+  assert.equal(attemptFamilyOf("registry-runtime:XX"), null);
+  assert.equal(attemptFamilyOf("registry-runtime-bindings"), null);
   assert.equal(attemptFamilyOf("ballot-navigation"), "elections");
   assert.equal(attemptFamilyOf("comment-access"), "meetings");
 });

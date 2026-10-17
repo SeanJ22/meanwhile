@@ -1,5 +1,5 @@
 import { immutableStateHash, immutableStateValue } from "../lib/civic-data/state-publication.ts";
-import { bindStatePublicationPrior, consumeStatePublicationRecord, rememberStatePublicationHashes, rememberStatePublicationPrior, reuseStatePublicationRecord, takeStatePublicationPrior, withStateRecordHashes } from "../lib/civic-data/state-publication.ts";
+import { bindStatePublicationPrior, consumeStatePublicationRecord, rememberStatePublicationHashes, rememberStatePublicationPrior, reuseStatePublicationRecord, statePublicationRecordHash, takeStatePublicationPrior, withStateRecordHashes } from "../lib/civic-data/state-publication.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createHash } from "node:crypto";
@@ -304,15 +304,14 @@ test("successor indexes share verified immutable entries only for the same recor
 
 test("member-index caching separates record classes and never trusts a caller's shallow freeze", () => {
   const row = immutableStateValue({ id: "contest-one", title: "Official contest" });
-  const payload = immutableStateValue({ contests: [row] });
+  const payload = immutableStateValue({ ballots: { AZ: { contests: [row] } } });
   const input = { ...candidate(), recordClass: "BALLOT_CANDIDACY" as const, scope: "US-AZ:state-election-ballots",
     readModel: payload, normalization: { ...candidate().normalization, normalizedHash: immutableStateHash(payload) } };
   const first = withStateRecordHashes(input).normalization.stateRecordHashes!.members[0];
-  const other = withStateRecordHashes({ ...input, recordClass: "BALLOT_FILING" }).normalization.stateRecordHashes!.members[0];
-  assert.deepEqual(other, first);
-  assert.notEqual(other, first);
+  assert.equal(statePublicationRecordHash("CANDIDATE_PROFILE", { key: first.key, record: row }), undefined);
+  assert.equal(statePublicationRecordHash("BALLOT_CANDIDACY", { key: first.key, record: row }), first);
   const nested = { title: "Before" }, shallow = Object.freeze({ id: "contest-two", nested });
-  const mutable = { ...input, readModel: { contests: [shallow] } };
+  const mutable = { ...input, readModel: { ballots: { AZ: { contests: [shallow] } } } };
   const prior = withStateRecordHashes(mutable).normalization.stateRecordHashes!.members[0];
   nested.title = "After";
   const successor = withStateRecordHashes(mutable).normalization.stateRecordHashes!.members[0];

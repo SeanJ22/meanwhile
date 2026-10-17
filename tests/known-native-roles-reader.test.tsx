@@ -21,6 +21,35 @@ import { registryTransferImport, installRegistryAuthority } from "./helpers/prom
 import type { OfficialStateLegislatorReadModel } from "../lib/civic-data/candidate-builders.ts";
 import type { Division } from "../lib/registry/types.ts";
 import type { SeatHolder } from "../lib/officials/lookup.ts";
+import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
+import { provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
+import { stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
+import { registryJurisdictions } from "../lib/civic-data/state-scopes.ts";
+
+function registryFixtureForState(state: string, value: RegistryRuntimeReadModel = registryTransferImport().projection.payload): RegistryRuntimeReadModel {
+  const own = (id: string | null) => registryJurisdictions(id).includes(state.toUpperCase());
+  const bodies = value.registry.bodies.filter(row => own(row.id) || own(row.ocdId) || row.alsoServesOcdIds?.some(own));
+  const bodyIds = new Set(bodies.map(row => row.id));
+  const bodyRosters = value.bodyRosters.filter(row => bodyIds.has(row.bodyId));
+  const statewideExecutives = value.statewideExecutives.filter(row => own(row.stateOcdId));
+  const bridge = value.officialCandidacies.rows.filter(row => row.holder.divisions.some(own));
+  const holders = new Set([...bodyRosters.flatMap(row => row.members.map(member => member.id)),
+    ...statewideExecutives.map(row => row.holder.id), ...bridge.map(row => row.holder.id)]);
+  return { ...value, registry: { ...value.registry, bodies,
+    divisions: value.registry.divisions.filter(row => row.ocdId === "ocd-division/country:us" || own(row.ocdId)) },
+    bodyRosters, statewideExecutives, officialCandidacies: { ...value.officialCandidacies, rows: bridge },
+    officialPhotos: { photos: value.officialPhotos.photos.filter(row => holders.has(row.officeholderId)) },
+    rosterPhotos: Object.fromEntries(Object.entries(value.rosterPhotos).filter(([id]) => holders.has(id) || own(id))),
+    rosterReaderDispositions: value.rosterReaderDispositions.filter(row => own(row.sourceId) || holders.has(row.sourceId) || (row.canonicalId !== null && holders.has(row.canonicalId)) ||
+      [...holders].some(id => id.startsWith("roster:") && id.split("#")[0] === row.sourceId.split("#")[0])) };
+}
+
+function stateRegistryArtifacts(versionId: string, states: readonly string[], value: RegistryRuntimeReadModel = registryTransferImport().projection.payload) {
+  return Object.fromEntries(states.map(state => [state, { versionId: `${versionId}:${state}`, value: { kind: "PROMOTED_POINTERS" as const,
+    entries: [provenEdgeEntry({ recordClass: "REGISTRY_RUNTIME_BINDING", scope: stateRegistryRuntimeScope(state), sourceId: "registry-reviewed-bindings",
+      versionId: `${versionId}:${state}`, value: registryFixtureForState(state, value) })] } }]));
+}
+
 
 const NOW = "2026-10-09T18:00:00Z";
 const STATE = "ocd-division/country:us/state:oh";
@@ -137,7 +166,10 @@ test("an exact official office holder takes precedence without joining names or 
         candidacy: null, unresolvedCandidacyIds: [] }], },
   };
   assert.deepEqual(registryRuntimeProjectionIssues(registry), [], "the competing authority is a valid reader projection");
-  await withReaderAuthorityEdge({ ...edge(value), registryRuntime: { versionId: "fixture:official", value: registry } }, async () => {
+  const artifacts = stateRegistryArtifacts("fixture:official", ["OH"], registry);
+  await withReaderAuthorityEdge({ ...edge(value), selection: { states: ["OH"], keys: new Set([STATE, PLACE]) },
+    stateAuthorities: { states: { "registry-runtime": new Set(["OH"]) }, load: async (family, state) =>
+      family === "registry-runtime" && state === "OH" ? artifacts.OH.value : null } }, async () => {
     assert.deepEqual((await seatHoldersForOffice(STATE, "Governor")).map(row => row.name), ["Official Governor"]);
     const all = await allSeatHolders([PLACE]);
     assert.ok(all.some(row => row.name === "Official Governor"));

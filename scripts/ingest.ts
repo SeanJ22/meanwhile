@@ -1,3 +1,4 @@
+import { preloadCanonicalMeetingDependencies } from "../lib/meetings/ingest-dependencies.ts";
 import { pathToFileURL } from "node:url";
 
 import {
@@ -65,7 +66,8 @@ import {
 import { makeDiligentSource } from "../lib/sources/diligent/index.ts";
 import { makeIqm2Source } from "../lib/sources/iqm2/index.ts";
 import { makeRevizeSource } from "../lib/sources/revize/index.ts";
-import { legistarSource } from "../lib/sources/legistar/index.ts";
+import { makeLegistarSource } from "../lib/sources/legistar/index.ts";
+import { legistarClientsFromWiring } from "../lib/sources/legistar/client-registry.ts";
 import { makeOnBaseSource } from "../lib/sources/onbase/index.ts";
 import { activeWiring, isUnreadableRetiredMeetingHost, wiringForTypes } from "../lib/registry/source-wiring.ts";
 import { ensureMeetingDoors } from "../lib/doors/meeting-doors.ts";
@@ -73,15 +75,9 @@ import { isLegistarDocumentHost } from "../lib/sources/legistar/routes.ts";
 import { isLegistarMeetingDetailUrl, isPortalAgendaLinkFor, portalAgendaLinkFrom } from "../lib/sources/legistar/portal-agenda-link.ts";
 import { sourceUserAgent } from "../lib/sources/http.ts";
 import type { Registry } from "../lib/registry/types.ts";
-import { getRegistryRuntimeReadModel, refreshRegistryRuntimeFromPromoted } from "../lib/registry/runtime-read-model.ts";
-import { REGISTRY_RUNTIME_SCOPE } from "../lib/registry/runtime-data-plane.ts";
-import {
-  ATTESTED_PROMOTIONS_ENV,
-  attestedPromotionFor,
-  parseAttestedPromotions,
-} from "../lib/civic-data/attested-promotion.ts";
-import type { PromotedCivicDataReadOptions } from "../lib/civic-data/read-model.ts";
-import { readCuratedReaderProjection, refreshVenueResolutionsFromPromoted } from "../lib/civic-data/curated-reader-read-model.ts";
+import { getRegistryRuntimeReadModel, withRegistryRuntimeStates } from "../lib/registry/runtime-read-model.ts";
+import { requireRegistryState, statesForRegistryDivisions } from "../lib/civic-data/state-scopes.ts";
+import { readCuratedReaderProjection } from "../lib/civic-data/curated-reader-read-model.ts";
 import type { ManualProjectionPackage } from "../lib/civic-data/manual-projections.ts";
 import { publishVenueResolutions } from "../lib/meetings/venue-publication.ts";
 import { normalizeFamilyMeetingCitations, placeMeetingsFromCensusVenues, placeMeetingsFromVerifiedVenues, retainPreviouslyVerifiedVenuePoints } from "../lib/meetings/automatic-venue-resolutions.ts";
@@ -115,28 +111,27 @@ import { join } from "node:path";
 
 let REGISTRY: Registry | null = null;
 
-const SOURCES: Record<string, () => MeetingSource<unknown>> = {
+function stateWiring(state: string, types: Parameters<typeof wiringForTypes>[0]) {
+  return wiringForTypes(types).filter(row => statesForRegistryDivisions([row.ocdId ?? row.bodyId]).includes(state));
+}
+
+const SOURCES: Record<string, (state: string) => MeetingSource<unknown>> = {
   // Everything below hits the network. Serialized and paced — see
   // lib/sources/http.ts and lib/sources/legistar/client.ts.
-  legistar: () => legistarSource as unknown as MeetingSource<unknown>,
-  civicplus: () =>
-    makeCivicPlusSource(wiringForTypes(["CIVICPLUS"])) as unknown as MeetingSource<unknown>,
-  onbase: () =>
-    makeOnBaseSource(wiringForTypes(["ONBASE"])) as unknown as MeetingSource<unknown>,
-  apptegy: () =>
-    makeApptegySource(wiringForTypes(["APPTEGY"])) as unknown as MeetingSource<unknown>,
-  diligent: () =>
-    makeDiligentSource(wiringForTypes(["DILIGENT", "CIVICWEB"])) as unknown as MeetingSource<unknown>,
-  iqm2: () =>
-    makeIqm2Source(wiringForTypes(["IQM2"])) as unknown as MeetingSource<unknown>,
-  revize: () =>
-    makeRevizeSource(wiringForTypes(["REVIZE"])) as unknown as MeetingSource<unknown>,
-  // The standing partition budget, not the Reader's request budget.
-  composite: () =>
-    buildCompositeSource({
-      timeoutMs: STANDING_PARTITION_ACQUISITION_TIMEOUT_MS,
-      captureAcquisitionEvidence: true,
-    }) as unknown as MeetingSource<unknown>,
+  legistar: state => makeLegistarSource(legistarClientsFromWiring(stateWiring(state, ["LEGISTAR"]))) as unknown as MeetingSource<unknown>,
+  civicplus: state =>
+    makeCivicPlusSource(stateWiring(state, ["CIVICPLUS"])) as unknown as MeetingSource<unknown>,
+  onbase: state =>
+    makeOnBaseSource(stateWiring(state, ["ONBASE"])) as unknown as MeetingSource<unknown>,
+  apptegy: state =>
+    makeApptegySource(stateWiring(state, ["APPTEGY"])) as unknown as MeetingSource<unknown>,
+  diligent: state =>
+    makeDiligentSource(stateWiring(state, ["DILIGENT", "CIVICWEB"])) as unknown as MeetingSource<unknown>,
+  iqm2: state =>
+    makeIqm2Source(stateWiring(state, ["IQM2"])) as unknown as MeetingSource<unknown>,
+  revize: state =>
+    makeRevizeSource(stateWiring(state, ["REVIZE"])) as unknown as MeetingSource<unknown>,
+
 };
 
 export function selectedMeetingPartitions(args: readonly string[]): readonly MeetingPartitionContract[] {
@@ -152,29 +147,6 @@ export function selectedMeetingPartitions(args: readonly string[]): readonly Mee
   const partition = meetingPartitionContract(requested[0]);
   if (!partition) throw new Error(`MEETING_PARTITION_NOT_REGISTERED:${requested[0]}`);
   return [partition];
-}
-
-export async function preloadCanonicalMeetingDependencies(input: {
-  readonly sourceName: string;
-  readonly refreshRegistry?: (options: PromotedCivicDataReadOptions) => Promise<unknown>;
-  readonly refreshVenues?: () => Promise<unknown>;
-  readonly env?: Readonly<Record<string, string | undefined>>;
-}): Promise<void> {
-  const refreshRegistry = input.refreshRegistry ?? refreshRegistryRuntimeFromPromoted;
-  const refreshVenues = input.refreshVenues ?? refreshVenueResolutionsFromPromoted;
-  // The supervisor proved the registry once for this pass; a malformed or
-  // absent attestation leaves this child's own full proof in place.
-  const attested = attestedPromotionFor(
-    parseAttestedPromotions((input.env ?? process.env)[ATTESTED_PROMOTIONS_ENV]),
-    "REGISTRY_RUNTIME_BINDING",
-    REGISTRY_RUNTIME_SCOPE,
-  );
-  await Promise.all([
-    refreshRegistry(attested ? { attested } : {}),
-    ...(input.sourceName === "composite" || input.sourceName === "legistar"
-      ? [refreshVenues()]
-      : []),
-  ]);
 }
 
 export function documentUrlFor(meeting: Meeting): string | null {
@@ -682,9 +654,9 @@ async function main() {
   const name = process.argv[2];
   const promote = process.argv.slice(3).includes("--promote");
 
-  if (!name || !(name in SOURCES)) {
+  if (!name || (name !== "composite" && !(name in SOURCES))) {
     console.error(
-      `Usage: pnpm ingest <source>\nKnown sources: ${Object.keys(SOURCES).join(", ")}`,
+      `Usage: pnpm ingest <source>\nKnown sources: ${[...Object.keys(SOURCES), "composite"].join(", ")}`,
     );
     process.exitCode = 1;
     return;
@@ -703,20 +675,29 @@ async function main() {
     return;
   }
   // The meeting doors are the door registry's, as the runner published them for this pass. There is no other list.
+  const diagnosticState = name === "composite" ? null : requireRegistryState(
+    process.argv.find(argument => argument.startsWith("--state="))?.slice("--state=".length) ?? (() => { throw new Error("INGEST_STATE_REQUIRED"); })(),
+  );
   const doors = await ensureMeetingDoors();
   if (!doors.ready) console.error(`meeting doors: ${doors.reason}`);
   const partitions = name === "composite"
     ? selectedMeetingPartitions(process.argv.slice(3))
     : [];
+  const selectedStates = name === "composite"
+    ? statesForRegistryDivisions(partitions.flatMap(partition => [partition.derivedFamily ?? "", partition.ocdId ?? "", partition.bodyId]))
+    : [diagnosticState!];
+  if (selectedStates.length !== 1) throw new Error("INGEST_EXACT_STATE_REQUIRED");
+  const state = selectedStates[0]!;
+  return withRegistryRuntimeStates([state], async () => {
 
   if (promote && partitions.length === 1 && partitions[0]!.derivedFamily !== null) {
     await promoteDerivedMeetingFamily(new PostgresRoutineDataStore(), partitions[0]!, async () => {
-      await preloadCanonicalMeetingDependencies({ sourceName: name });
+      await preloadCanonicalMeetingDependencies({ sourceName: name, state });
       REGISTRY = getRegistryRuntimeReadModel().registry;
     }, { db: readerFactDb(), vault: new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR)) });
     return;
   }
-  await preloadCanonicalMeetingDependencies({ sourceName: name });
+  await preloadCanonicalMeetingDependencies({ sourceName: name, state });
   REGISTRY = getRegistryRuntimeReadModel().registry;
   const promotionStore = promote ? new PostgresRoutineDataStore() : null;
 
@@ -730,7 +711,7 @@ async function main() {
           bodyId: partition.bodyId,
         })),
       })
-    : SOURCES[name]();
+    : SOURCES[name](state);
   const previous = source instanceof CompositeSource && promotionStore
     ? await readPreviousMeetingPartition(promotionStore, partitions[0]!)
     : null;
@@ -836,6 +817,7 @@ async function main() {
       console.warn(`  ${dropped} record(s) dropped — unplaceable in time or space`);
     }
   }
+  });
 }
 
 function resolveAttribution(meetings: Meeting[]): Meeting[] {

@@ -16,7 +16,8 @@ test("shared publication decides the meeting carry before it reads the prepared 
   assert.match(child.slice(carry, current), /servedMeetings\.composition === prepared\.composition/, "carry compares the serving copy's actual composition");
   assert.match(child.slice(carry, current), /servedMeetings\?\.meetingLayout === "governing-area"/, "old state pieces read the prepared row once to repartition");
   assert.match(child.slice(carry, current), /servedMeetings\.meetingRegistryVersion === meetingRegistryVersion/, "registry-only changes rebuild body areas");
-  assert.match(child, /pointer\.recordClass === "REGISTRY_RUNTIME_BINDING"/, "registry publication prepares the meeting dependency");
+  assert.match(child, /const preparesMeetings = selected === null \|\| selected\.some\(pointer => pointer\.recordClass === "MEETING"\)/,
+    "a state registry publication does not prepare the country meeting catalogue");
   assert.ok(carry < current && current < rowRead && rowRead < publish, "the prepared row is read only past the carry");
   assert.match(child.slice(rowRead, publish), /readPreparedMeetingsProjection\(\{ store, expectedSequence: prepared\.sequence \}\)/,
     "the payload read is bound to the exact prepared sequence used for the carry decision");

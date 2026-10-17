@@ -1,28 +1,46 @@
+import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
+import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
+import { installAbsent, installManualValue, installStateLegislators } from "./helpers/promoted-fixtures.ts";
+import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
-import { projectHeldPlaceCapture } from "../lib/civic-data/held-place-capture.ts";
+import { projectHeldPlaceCapture } from "../lib/civic-data/held-place-projection.ts";
 import type { CivicDataReadResult } from "../lib/civic-data/read-model.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 import type { MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
 import type { HeldPlaceFamilies } from "../lib/civic-data/held-place-families.ts";
 import type { OutcomeSnapshot } from "../lib/outcomes/types.ts";
 import { buildPlaceOwedList } from "../lib/coverage/place-owed.ts";
-import { readPlacePointerSlices, readPlaceVersionSlice } from "../lib/civic-data/held-place-slices.ts";
+import { readPlacePointerSlices } from "../lib/civic-data/held-place-slices.ts";
 import type { ReadOnlyQuery } from "../lib/control-plane/admin-view/promoted-slices.ts";
 import { projectHeldGeography, readHeldPlaceGeography, type HeldGeographyRow } from "../lib/civic-data/held-place-geography.ts";
 import type { Division } from "../lib/registry/types.ts";
 import { createHash } from "node:crypto";
-import { projectHeldPlaceFamilies } from "../lib/civic-data/held-place-families.ts";
+import { projectHeldPlaceFamilies, readHeldPlaceFamilies } from "../lib/civic-data/held-place-families.ts";
 import { canonicalContestId, canonicalCandidacyId } from "../lib/hunt/candidate-universe.ts";
 import { derivedCampaignSitesProjectionIssue, derivedCandidateRevisionId, derivedCandidateDocumentId,
   type DerivedCampaignSiteRecord } from "../lib/civic-data/derived-campaign-sites.ts";
-import { partitionCivicPayload } from "../lib/civic-data/payload-codec.ts";
 import { readPlacePayloadParts } from "../lib/civic-data/place-payload-slices.ts";
-import { readPlacePointerSlice } from "../lib/civic-data/held-place-slices.ts";
-import { neonConfig } from "@neondatabase/serverless";
 import { candidateDescriptionQualityIssue } from "../lib/candidates/blurbs.ts";
-import { PGlite } from "@electric-sql/pglite";
-import { factDb } from "./helpers/fact-db.ts";
+import type { ReaderAuthorityEdgeBundle } from "../lib/registry/runtime-edge.ts";
+import { currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
+
+
+
+
+
+
+
+
+
+function promotedFixtureBundle(extra: ReaderAuthorityEdgeBundle = {}): ReaderAuthorityEdgeBundle {
+  const current: ReaderAuthorityEdgeBundle = currentReaderAuthorityEdge() ?? {};
+  return { stateAuthorities: current.stateAuthorities,
+    ...(current.federalDirectory ? { federalDirectory: current.federalDirectory } : {}),
+    ...(current.stateLegislators ? { stateLegislators: current.stateLegislators } : {}),
+    ...extra, promoted: new Map([...(current.promoted ?? []), ...(extra.promoted ?? [])]) };
+}
+
 
 const county = "ocd-division/country:us/state:az/county:cochise";
 const neighbour = "ocd-division/country:us/state:az/county:pima";
@@ -126,297 +144,44 @@ test("current verified publications fill biography and readable corpus without a
     derivedCampaignSites: [record, { ...record, id: "ballot-az-pima:supervisor|Candidate One", publications: [] }] }).held.some(row => row.checkedAt === at && row.checklistId === "CAN-16"), "conflicting derived site cannot bypass the Reader composition");
 });
 
-test("legacy candidate pointer slices select only exact Reader map keys and preserve typed links", async t => {
-  const originalUrl = process.env.DATABASE_URL, originalFetch = neonConfig.fetchFunction;
-  t.after(() => { neonConfig.fetchFunction = originalFetch;
-    if (originalUrl === undefined) delete process.env.DATABASE_URL; else process.env.DATABASE_URL = originalUrl; });
-  process.env.DATABASE_URL = "postgresql://fixture:fixture@fixture.invalid/fixture";
-  const profiles = candidateFamilies().candidateProfiles!, key = "ballot-az-pima:supervisor|Candidate One";
-  neonConfig.fetchFunction = async (_endpoint: Parameters<typeof fetch>[0], init?: Parameters<typeof fetch>[1]) => {
-    const body = JSON.parse(String(init?.body)) as { queries: { query: string; params: unknown[] }[] };
-    return Response.json({ results: body.queries.map(statement => {
-      assert.ok(statement.query.includes("jsonb_each") && statement.query.includes("k=ANY($5::text[])"));
-      assert.equal(statement.params[4], `{"${key}"}`);
-      const value = { cards: { cards: { [key]: profiles.cards.cards[key] } }, links: { links: { [key]: profiles.links.links[key] } } };
-      return { command: "SELECT", rowCount: 1, rowAsArray: true,
-        fields: [{ name: "scope", dataTypeID: 25 }, { name: "current_version_id", dataTypeID: 25 },
-          { name: "value", dataTypeID: 3802 }, { name: "encoded", dataTypeID: 16 }],
-        rows: [["profiles-test", "good-v1", JSON.stringify(value), false]] };
-    }) });
-  };
-  const result = await readPlacePointerSlice<NonNullable<HeldPlaceFamilies["candidateProfiles"]>>("CANDIDATE_PROFILE", "profiles-test", [county], [], [key]);
-  assert.equal(result.kind, "PROMOTED");
-  assert.deepEqual(Object.keys(result.value!.cards.cards), [key]);
-  assert.deepEqual(result.value!.links.links[key], profiles.links.links[key]);
-});
-
-test("encoded candidate object maps decode only selected facts and refuse a racing pointer", async () => {
-  const key = "candidate-exact", other = "unrelated-exact", scope = "profiles-test";
-  const profile = { cards: { cards: { [key]: { bio: "selected biography ".repeat(7000), bioSourceLabel: "read 2026-09-29" },
-    [other]: { bio: "unselected biography ".repeat(7000) } } }, links: { links: {
-    [key]: { campaign: { url: "https://campaign.example/", attemptedAt: "2026-09-29", verification: "Verified candidate." }, official: null },
-    [other]: { campaign: { url: "https://outside.example/" }, official: null },
-  } } };
-  const plan = partitionCivicPayload(profile), saved = new Map(plan.parts.map(part => [part.hash, part.payload]));
-  const raw = (node: unknown): unknown => {
-    const ref = (node as { $civicPayloadPart?: string })?.$civicPayloadPart;
-    if (!ref) return node;
-    const part = saved.get(ref) as { kind?: string; value?: unknown };
-    return part.kind === "object" ? part.value : part;
-  };
-  const root = raw(plan.value) as { cards: unknown; links: unknown };
-  const cards = raw((raw(root.cards) as { cards: unknown }).cards) as Record<string, unknown>;
-  const links = raw((raw(root.links) as { links: unknown }).links) as Record<string, unknown>;
-  const fetched: string[] = [];
-  const query: Parameters<typeof readPlacePayloadParts>[0] = async statements => statements.map(statement => {
-    if (statement.text.startsWith("SELECT hash,payload")) {
-      const hashes = statement.params[0] as string[];
-      assert.ok(hashes.length <= 8);
-      fetched.push(...hashes);
-      return hashes.map(hash => ({ hash, payload: saved.get(hash) }));
-    }
-    assert.deepEqual(statement.params[4], [key]);
-    assert.deepEqual(statement.params[6], ["cards.cards", "links.links"]);
-    assert.ok(statement.text.includes("e.key=ANY($5::text[])") && statement.text.includes("member_key=ANY($5::text[])"), "filter object map keys before decoding selected records");
-    return [{ scope, field: "cards.cards", rows: [{ key, value: cards[key] }] },
-      { scope, field: "links.links", rows: [{ key, value: links[key] }] }, { scope, field: "$version", rows: "good-v1" }];
-  });
-  const result = (await readPlacePayloadParts(query, "CANDIDATE_PROFILE", [scope], [county], [], [key], new Map([[scope, "good-v1"]]))).get(scope);
-  assert.deepEqual(result, { cards: { cards: { [key]: profile.cards.cards[key] }, hunts: [] }, links: { links: { [key]: profile.links.links[key] }, hunts: [] } });
-  assert.ok(fetched.length > 0, "selected long biography was decoded through actual immutable parts");
-  assert.ok(!fetched.includes((cards[other] as { $civicPayloadPart: string }).$civicPayloadPart), "unselected biography never crosses the read boundary");
-  await assert.rejects(readPlacePayloadParts(query, "CANDIDATE_PROFILE", [scope], [county], [], [key], new Map([[scope, "other-version"]])), /CIVIC_POINTER_CHANGED_DURING_READ/);
-});
-
-for (const encoded of [false, true]) test(`${encoded ? "encoded" : "inline"} state ballot slices preserve all selected ballot records without transferring other places`, async t => {
-  const pg = new PGlite();
-  t.after(() => pg.close());
-  await pg.exec(`CREATE TABLE civic_data_promotions (record_class text, scope text, current_version_id text, payload jsonb);
-    CREATE TABLE civic_data_payload_parts (hash text PRIMARY KEY, payload jsonb);`);
-  const scope = "US-AZ:state-election-ballots", state = "ocd-division/country:us/state:az", district = `${state}/cd:1`;
-  const details = (label: string) => encoded ? `${label} `.repeat(7000) : label;
-  const contests = [
-    { id: "az-governor", ocdId: state, title: "Governor", provenance },
-    { id: "az-cd1", ocdId: district, title: "U.S. House District 1", provenance },
-    { id: "az-cd2", ocdId: `${state}/cd:2`, title: "OTHER_DISTRICT", provenance },
-    { id: "az-measure", ocdId: county, title: "County question", provenance },
-    { id: "az-other-measure", ocdId: neighbour, title: "OTHER_DISTRICT", provenance },
-  ];
-  const ballot = {
-    election: { id: "2026-general", state: "AZ", name: "General election", date: "2026-11-03" }, contests,
-    candidacies: contests.slice(0, 3).map(contest => ({ id: `${contest.id}:candidate`, contestId: contest.id,
-      givenName: contest.title, familyName: "Candidate", incumbent: true, provenance, biography: details(contest.title) })),
-    measures: contests.slice(3).map(contest => ({ id: `${contest.id}:measure`, contestId: contest.id,
-      questionText: details(contest.title), officialStatement: "Official analysis", provenance })),
-    measureRecords: contests.slice(3).map(contest => ({ id: `${contest.id}:record`, contestId: contest.id,
-      sourceUrl: provenance.sourceUrl, text: details(contest.title) })),
-    filingCandidacies: contests.slice(0, 3).map(contest => ({ id: `${contest.id}:earlier-filing`, contestId: contest.id, givenName: "Earlier", familyName: contest.title, provenance })),
-    contacts: contests.slice(0, 3).map(contest => ({ candidacyId: `${contest.id}:candidate`, sourceUrl: provenance.sourceUrl, collectedAt: provenance.collectedAt })),
-    absences: [{ ocdId: county, statement: "No other published question", provenance }, { ocdId: neighbour, statement: "OTHER_DISTRICT", provenance }],
-    heldContests: [{ id: "az-held", ocdId: county, title: "Named incomplete list", provenance }],
-    measureAnalyses: { generatedAt: provenance.collectedAt, counts: { measures: 2 }, analyses: contests.slice(3).map(contest => ({ contestId: contest.id, text: details(contest.title) })) },
-    lineupReconciliation: { formatVersion: 1, state: "AZ", cycle: 2026, generatedAt: provenance.collectedAt,
-      sources: [{ name: "Official list", url: provenance.sourceUrl }], rows: contests.slice(0, 3).map(contest => ({ contestId: contest.id, cardKey: `${contest.id}|Candidate`, sourceUrl: provenance.sourceUrl })) },
-    generalLineup: { curatedAt: provenance.collectedAt, canvass: { url: provenance.sourceUrl }, note: "Certified list", contests: contests.slice(0, 3).map(contest => ({ contestId: contest.id,
-      nominees: [{ name: `${contest.title} Candidate`, portraitUrl: "https://az.gov/portrait.jpg", provenance }] })) },
-  };
-  const payload = { kind: "ballot-contests", ballots: { "AZ:2026-general": ballot } };
-  const plan = encoded ? partitionCivicPayload(payload) : { value: payload, parts: [] };
-  await pg.query("INSERT INTO civic_data_promotions VALUES ($1,$2,$3,$4)", ["BALLOT_CANDIDACY", scope, "held-v1", JSON.stringify(plan.value)]);
-  for (const part of plan.parts) await pg.query("INSERT INTO civic_data_payload_parts VALUES ($1,$2)", [part.hash, JSON.stringify(part.payload)]);
-  const transferred: string[] = [];
-  let partReads = 0;
-  let checkedPlan = false;
-  const query: ReadOnlyQuery = async statements => {
-    const results = [];
-    for (const statement of statements) {
-      if (statement.text.startsWith("SELECT hash,payload")) partReads++;
-      if (encoded && !checkedPlan && statement.text.includes("), records AS (")) {
-        const { rows } = await pg.query<{ "QUERY PLAN": { Plan: Record<string, unknown> }[] }>(
-          `EXPLAIN (ANALYZE, FORMAT JSON) ${statement.text}`, [...statement.params]);
-        const visit = (node: Record<string, unknown>) => {
-          if (String(node["Subplan Name"]).startsWith("SubPlan")) assert.ok(Number(node["Actual Loops"]) <= 1,
-            "selected contest/candidate keys are computed once instead of scanning the state per dependent record");
-          for (const child of (node.Plans ?? []) as Record<string, unknown>[]) visit(child);
-        };
-        visit(rows[0]["QUERY PLAN"][0].Plan);
-        checkedPlan = true;
-      }
-      const { rows } = await pg.query<Record<string, unknown>>(statement.text, [...statement.params]);
-      transferred.push(JSON.stringify(rows));
-      results.push(rows);
-    }
-    return results;
-  };
-  const [read] = await readPlacePointerSlices<typeof payload>("BALLOT_CANDIDACY", [scope], [state, district, county], [], [], query);
-  assert.equal(read.kind, "PROMOTED");
-  assert.equal(read.metadata.versionId, "held-v1");
-  assert.equal(read.value?.kind, "ballot-contests");
-  assert.deepEqual(Object.keys(read.value!.ballots), ["AZ:2026-general"]);
-  const selected = read.value!.ballots["AZ:2026-general"];
-  assert.deepEqual(selected.election, ballot.election);
-  const chosen = new Set(["az-governor", "az-cd1", "az-measure"]);
-  const sort = (rows: readonly { id?: string; contestId?: string }[]) => [...rows].sort((a, b) => (a.id ?? a.contestId!).localeCompare(b.id ?? b.contestId!));
-  assert.deepEqual(sort(selected.contests), sort(ballot.contests.filter(row => chosen.has(row.id))));
-  for (const field of ["candidacies", "filingCandidacies", "measures", "measureRecords"] as const) {
-    assert.deepEqual(sort(selected[field]), sort(ballot[field].filter(row => chosen.has(row.contestId))));
+test("a place reads one full state ballot and its own candidate families before filtering held facts", async () => {
+  for (const contract of [...MANUAL_PRODUCTION_SOURCE_CONTRACTS, ...ROUTINE_SOURCE_CONTRACTS]) {
+    if (contract.recordClass !== "REGISTRY_RUNTIME_BINDING") installAbsent(contract.recordClass, contract.scope);
   }
-  assert.deepEqual(sort(selected.generalLineup.contests), sort(ballot.generalLineup.contests.filter(row => chosen.has(row.contestId))));
-  assert.deepEqual(selected.generalLineup.canvass, ballot.generalLineup.canvass);
-  assert.equal(selected.generalLineup.note, ballot.generalLineup.note);
-  assert.deepEqual(sort(selected.measureAnalyses.analyses), sort(ballot.measureAnalyses.analyses.filter(row => chosen.has(row.contestId))));
-  assert.deepEqual(sort(selected.lineupReconciliation.rows), sort(ballot.lineupReconciliation.rows.filter(row => chosen.has(row.contestId))));
-  assert.deepEqual(selected.lineupReconciliation.sources, ballot.lineupReconciliation.sources);
-  assert.deepEqual([...selected.contacts].sort((a, b) => a.candidacyId.localeCompare(b.candidacyId)),
-    ballot.contacts.slice(0, 2).sort((a, b) => a.candidacyId.localeCompare(b.candidacyId)));
-  assert.deepEqual(selected.absences, ballot.absences.slice(0, 1));
-  assert.deepEqual(selected.heldContests, ballot.heldContests);
-  assert.doesNotMatch(transferred.join("\n"), /OTHER_STATE|OTHER_DISTRICT|NH:2026-general/);
-  assert.equal(partReads > 0, encoded, "large selected facts are decoded from immutable parts only for encoded payloads");
-  const selectPlace = async (ids: string[]) => (await readPlacePayloadParts(query, "BALLOT_CANDIDACY", [scope], ids, [], []))
-    .get(scope) as typeof payload;
-  const empty = (await selectPlace([`${state}/cd:999`])).ballots["AZ:2026-general"];
-  assert.deepEqual(empty.election, ballot.election);
-  for (const field of ["contests", "candidacies", "filingCandidacies", "measures", "measureRecords", "contacts"] as const) {
-    assert.deepEqual(empty[field], [], `no selected contest yields no ${field}`);
+  installStateLegislators("US-AZ");
+  const source = candidateFamilies(), ballot = source.ballots![0];
+  ballot.absences = [];
+  ballot.generalLineup = { curatedAt: at, contests: source.candidateLineups! } as NonNullable<typeof ballot.generalLineup>;
+  const profiles = source.candidateProfiles!;
+  installManualValue("ballot-contests:AZ", { kind: "ballot-contests", ballots: { "az-general": ballot } });
+  installManualValue("candidate-profiles:AZ", { cards: { ...profiles.cards, hunts: [] }, links: { ...profiles.links, hunts: [] } });
+  installManualValue("voting-sites:AZ", { jurisdictions: [{ ocdId: county, name: "Selected", sites: [] }, { ocdId: neighbour, name: "Other", sites: [] }] });
+  installManualValue("candidate-corpus:AZ", { documents: [] });
+  const bundle = promotedFixtureBundle(), selected: string[] = [];
+  const families = await withReaderAuthorityEdge({ ...bundle, stateAuthorities: {
+    states: bundle.stateAuthorities!.states,
+    load: async (family, state) => { selected.push(`${family}:${state}`); return bundle.stateAuthorities!.load(family, state); },
+  } }, () => readHeldPlaceFamilies([county], { now: at }));
+  assert.deepEqual(selected.sort(), ["ballot-contests:AZ", "candidate-campaign-sites-derived:AZ", "candidate-profiles:AZ", "candidate-publications:AZ", "voting-sites:AZ"]);
+  assert.deepEqual(families.ballots![0].contests.map(row => row.id), ["ballot-az-pima:supervisor"]);
+  assert.deepEqual(families.ballots![0].candidacies.map(row => row.id), ["ballot-az-pima:supervisor:one-candidate"]);
+  assert.deepEqual(families.votingSites!.jurisdictions.map(row => row.ocdId), [county]);
+  assert.deepEqual(Object.keys(families.candidateProfiles!.cards.cards), ["ballot-az-pima:supervisor|Candidate One"]);
+  const held = projectHeldPlaceFamilies([county], null, families);
+  assert.equal(held.held.find(row => row.checklistId === "CAN-16")?.checkedAt, "2026-09-29");
+  assert.equal(ballot.contests.length, 2, "place filtering leaves the published state unit intact");
+});
+
+test("scoped state authorities cannot use database place slices", async () => {
+  const query: ReadOnlyQuery = async () => { throw new Error("DATABASE_READ_FORBIDDEN"); };
+  for (const [recordClass, scope] of [
+    ["REGISTRY_RUNTIME_BINDING", "US-AZ:reader-registry-runtime"], ["BALLOT_CANDIDACY", "US-AZ:state-election-ballots"],
+    ["CANDIDATE_PROFILE", "US-AZ:candidate-profiles"], ["CANDIDATE_PUBLICATION", "US-AZ:candidate-publications"],
+    ["VOTING_SITE", "US-AZ:voting-sites"], ["CURATED_READER_RECORD", "US-AZ:candidate-campaign-sites-derived"],
+  ] as const) {
+    await assert.rejects(readPlacePointerSlices(recordClass, [scope], [county], [], [], query), /STATE_AUTHORITY_REQUIRES_KEYED_READ/);
+    await assert.rejects(readPlacePayloadParts(query, recordClass, [scope], [county], [], []), /STATE_AUTHORITY_REQUIRES_KEYED_READ/);
   }
-  const measureOnly = (await selectPlace([county])).ballots["AZ:2026-general"];
-  assert.deepEqual(measureOnly.measures, [ballot.measures[0]]);
-  assert.deepEqual(measureOnly.candidacies, []);
-  assert.deepEqual(measureOnly.contacts, []);
-  const nhScope = "US-NH:state-election-ballots", nhDivision = "ocd-division/country:us/state:nh";
-  const nh = { election: { ...ballot.election, state: "NH" },
-    contests: [{ id: "az-cd2", ocdId: nhDivision, title: "NH Governor", provenance }],
-    candidacies: [{ id: "nh-candidate", contestId: "az-cd2", givenName: "New", familyName: "Hampshire", provenance,
-      biography: details("NH_CANDIDATE") }], measures: [], absences: [] };
-  const nhPayload = { kind: "ballot-contests", ballots: { "NH:2026-general": nh } };
-  const nhPlan = encoded ? partitionCivicPayload(nhPayload) : { value: nhPayload, parts: [] };
-  await pg.query("INSERT INTO civic_data_promotions VALUES ($1,$2,$3,$4)", ["BALLOT_CANDIDACY", nhScope, "nh-v1", JSON.stringify(nhPlan.value)]);
-  for (const part of nhPlan.parts) await pg.query("INSERT INTO civic_data_payload_parts VALUES ($1,$2) ON CONFLICT DO NOTHING", [part.hash, JSON.stringify(part.payload)]);
-  const both = await readPlacePointerSlices<{ ballots: Record<string, unknown> }>("BALLOT_CANDIDACY", [scope, nhScope],
-    [state, district, county, nhDivision], [], [], async statements => query(statements));
-  assert.deepEqual(both.map(row => Object.keys(row.value!.ballots)), [["AZ:2026-general"], ["NH:2026-general"]],
-    "each promoted scope contains only its own election keys");
-  assert.doesNotMatch(JSON.stringify(both[0].value), /OTHER_DISTRICT|nh-candidate/,
-    "the same contest id selected in another scope cannot select this scope's outside district");
-  if (encoded) assert.equal(checkedPlan, true);
-  const outside = await readPlacePointerSlices<{ ballots: Record<string, unknown> }>("BALLOT_CANDIDACY", [scope, nhScope],
-    [state, district, county], [], [], async statements => query(statements));
-  assert.deepEqual(outside[1].value, { kind: "ballot-contests", ballots: {} }, "an unrequested state contributes no empty election shell");
-  if (encoded) {
-    let advanced = false;
-    const racing: ReadOnlyQuery = async statements => {
-      const result = await query(statements);
-      if (!advanced) {
-        advanced = true;
-        await pg.query("UPDATE civic_data_promotions SET current_version_id='held-v2'");
-      }
-      return result;
-    };
-    await assert.rejects(readPlacePayloadParts(racing, "BALLOT_CANDIDACY", [scope], [state, district, county], [], [],
-      new Map([[scope, "held-v1"]])), /CIVIC_POINTER_CHANGED_DURING_READ/);
-  }
-});
-
-for (const encoded of [false, true]) test(`${encoded ? "encoded" : "inline"} registry slices retain exact and place-linked photos without foreign portraits`, async t => {
-  const { pg } = await factDb();
-  t.after(() => pg.close());
-  await pg.exec(`CREATE TABLE civic_data_promotions (record_class text, scope text, current_version_id text, payload jsonb);
-    CREATE TABLE civic_data_payload_parts (hash text PRIMARY KEY, payload jsonb);`);
-  const state = "ocd-division/country:us/state:az", otherState = "ocd-division/country:us/state:nh";
-  const ids = ["exact-holder", "local-candidate-holder", "local-executive-holder", "FOREIGN_HOLDER"];
-  const photo = (officeholderId: string) => ({ officeholderId, url: `https://photos.example.gov/${officeholderId}.jpg`,
-    sourceUrl: `https://photos.example.gov/${officeholderId}`, attribution: encoded ? `${officeholderId} `.repeat(7000) : officeholderId });
-  const payload = { registry: { divisions: [], bodies: [] },
-    statewideExecutives: [{ stateOcdId: state, holder: { id: ids[2] } }, { stateOcdId: otherState, holder: { id: ids[3] } }],
-    officialCandidacies: { rows: [{ holder: { id: ids[1], divisions: [county] } }, { holder: { id: ids[3], divisions: [neighbour] } }] },
-    officialPhotos: { photos: ids.map(photo) },
-    rosterPhotos: Object.fromEntries([...ids.map(id => [id, `https://photos.example.gov/${id}.jpg`]),
-      ...encoded ? Array.from({ length: 600 }, (_, index) => [`FOREIGN_ROSTER_${index}`, `https://photos.example.gov/FOREIGN_ROSTER_${index}.jpg`]) : []]) };
-  const plan = encoded ? partitionCivicPayload(payload) : { value: payload, parts: [] };
-  const scope = "US:reader-registry-runtime-bindings";
-  await pg.query("INSERT INTO civic_data_promotions VALUES ($1,$2,$3,$4)", ["REGISTRY_RUNTIME_BINDING", scope, "photo-v1", JSON.stringify(plan.value)]);
-  for (const part of plan.parts) await pg.query("INSERT INTO civic_data_payload_parts VALUES ($1,$2)", [part.hash, JSON.stringify(part.payload)]);
-  const transferred: string[] = [];
-  const query: ReadOnlyQuery = async statements => {
-    const output = [];
-    for (const statement of statements) {
-      const { rows } = await pg.query<Record<string, unknown>>(statement.text, [...statement.params]);
-      transferred.push(JSON.stringify(rows)); output.push(rows);
-    }
-    return output;
-  };
-  const [read] = await readPlacePointerSlices<typeof payload>("REGISTRY_RUNTIME_BINDING", [scope], [state, county], [], [ids[0]], query);
-  assert.equal(read.kind, "PROMOTED");
-  assert.deepEqual([...read.value!.officialPhotos.photos].sort((a, b) => a.officeholderId.localeCompare(b.officeholderId)),
-    ids.slice(0, 3).map(photo).sort((a, b) => a.officeholderId.localeCompare(b.officeholderId)));
-  assert.deepEqual(read.value!.rosterPhotos, Object.fromEntries(ids.slice(0, 3).map(id => [id, payload.rosterPhotos[id]])));
-  assert.doesNotMatch(transferred.join("\n"), /FOREIGN_HOLDER|FOREIGN_ROSTER/);
-});
-
-for (const encoded of [false, true]) test(`${encoded ? "encoded" : "inline"} profile slices retain selected card and link hunts without unrelated research`, async t => {
-  const pg = new PGlite();
-  t.after(() => pg.close());
-  await pg.exec(`CREATE TABLE civic_data_promotions (record_class text, scope text, current_version_id text, payload jsonb);
-    CREATE TABLE civic_data_payload_parts (hash text PRIMARY KEY, payload jsonb);`);
-  const key = "ballot-az-candidate", huntOnly = "ballot-az-open-candidate", foreign = "FOREIGN_CANDIDATE";
-  const hunt = (candidate: string) => ({ key: candidate, name: candidate, attemptedAt: at,
-    note: encoded ? `${candidate} checked source `.repeat(4000) : `${candidate} checked source` });
-  const profile = { cards: { cards: { [key]: { bio: "Selected biography" }, [foreign]: { bio: "FOREIGN_CANDIDATE" } },
-    hunts: [hunt(key), hunt(huntOnly), hunt(foreign)] },
-    links: { links: { [key]: { campaign: { url: "https://candidate.example/" } }, [foreign]: { campaign: { url: "https://FOREIGN_CANDIDATE.example/" } } },
-      hunts: [hunt(key), hunt(huntOnly), hunt(foreign)] } };
-  const plan = encoded ? partitionCivicPayload(profile) : { value: profile, parts: [] };
-  const scope = "US-AZ:candidate-profiles";
-  await pg.query("INSERT INTO civic_data_promotions VALUES ($1,$2,$3,$4)", ["CANDIDATE_PROFILE", scope, "hunts-v1", JSON.stringify(plan.value)]);
-  for (const part of plan.parts) await pg.query("INSERT INTO civic_data_payload_parts VALUES ($1,$2)", [part.hash, JSON.stringify(part.payload)]);
-  const transferred: string[] = [];
-  const query: ReadOnlyQuery = async statements => {
-    const output = [];
-    for (const statement of statements) {
-      const { rows } = await pg.query<Record<string, unknown>>(statement.text, [...statement.params]);
-      transferred.push(JSON.stringify(rows)); output.push(rows);
-    }
-    return output;
-  };
-  const [read] = await readPlacePointerSlices<typeof profile>("CANDIDATE_PROFILE", [scope], [county], [], [key, huntOnly], query);
-  assert.equal(read.kind, "PROMOTED");
-  for (const field of ["cards", "links"] as const) assert.deepEqual([...read.value![field].hunts].sort((a, b) => a.key.localeCompare(b.key)),
-    [hunt(key), hunt(huntOnly)].sort((a, b) => a.key.localeCompare(b.key)));
-  assert.deepEqual(read.value!.cards.cards, { [key]: profile.cards.cards[key] });
-  assert.deepEqual(read.value!.links.links, { [key]: profile.links.links[key] });
-  assert.doesNotMatch(transferred.join("\n"), /FOREIGN_CANDIDATE/);
-});
-
-test("accepted registry slices keep the manifest's immutable version through both payload reads after the live pointer advances", async () => {
-  const scope = "US:reader-registry-runtime-bindings", acceptedVersion = "registry-held-v1";
-  const body = { id: `${county}#governing`, ocdId: county, alsoServesOcdIds: [neighbour], name: "Held county board" };
-  let missing = false, calls = 0;
-  const query: ReadOnlyQuery = async statements => statements.map(statement => {
-    if (/\bFROM fact\b/.test(statement.text)) return [];
-    calls++;
-    assert.match(statement.text, /JOIN civic_data_candidates c ON c\.id=accepted\.version_id AND c\.scope=accepted\.scope/);
-    assert.match(statement.text, /c\.state='PROMOTED' AND c\.promoted_version_id=c\.id/);
-    assert.doesNotMatch(statement.text, /FROM civic_data_promotions/, "the newer mutable pointer cannot supply any part of this accepted version");
-    assert.deepEqual(statement.params[2], [county]);
-    assert.deepEqual(statement.params[3], [body.id]);
-    const recursive = statement.text.includes("WITH RECURSIVE");
-    assert.deepEqual(JSON.parse(statement.params[recursive ? 7 : 6] as string), { [scope]: acceptedVersion });
-    if (missing) return [];
-    if (recursive) return [{ scope, field: "registry.bodies", rows: [body] }, { scope, field: "$version", rows: acceptedVersion }];
-    const carried = JSON.parse(statement.params[5] as string)[scope] === acceptedVersion;
-    return [{ scope, current_version_id: acceptedVersion, value: null, encoded: !carried }];
-  });
-  const read = () => readPlaceVersionSlice<RegistryRuntimeReadModel>("REGISTRY_RUNTIME_BINDING", scope, acceptedVersion, [county], [body.id], [], query);
-  const held = await read();
-  assert.equal(held.kind, "PROMOTED");
-  assert.equal(held.metadata.versionId, acceptedVersion);
-  assert.deepEqual(held.value?.registry.bodies, [body]);
-  assert.equal(calls, 2, "the scoped shell and its selected encoded fields are read separately");
-  assert.deepEqual((await read()).value, held.value);
-  assert.equal(calls, 3, "the exact immutable value is reused after its identity read");
-  missing = true;
-  assert.equal((await read()).kind, "NOT_RECORDED", "an absent accepted candidate cannot fall back to a different current registry");
 });
 
 test("held slices carry only exact unchanged versions, isolate selectors, and remove missing pointers", async () => {

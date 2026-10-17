@@ -19,6 +19,7 @@ import {
   READER_MAP_AUTHORITY_FAMILIES,
   readReaderEdgeMeetings,
   servedWholeFromReaderEdge,
+  stateFactsPointerKey,
   writeFactBucket,
   writeFactRecord,
   type PublishAuthority,
@@ -175,12 +176,13 @@ async function publishEdge(tag: string, options: { readonly legislators?: boolea
     "federal-directory": { value: syntheticFederalDirectory(), versionId: `${tag}:federal` },
     "meeting-outcomes": { value: getOutcomeSnapshot(), versionId: `${tag}:outcomes` },
   };
+  await store.writeJsonPointer(stateFactsPointerKey("AZ"), { state: "AZ", versionId: `${tag}:facts:AZ`,
+    buckets: [await writeFactBucket(store, "AZ", 0, `${tag}:facts:AZ`, await factRecords(store, registry), new Date().toISOString())] }, null);
   const result = await publishReaderEdgeArtifacts({
     store,
     now: new Date().toISOString(),
     meetingStates: plan.entries,
     extras: { everydayRouting: buildEverydayRoutingProjection() },
-    stateFacts: { AZ: { versionId: `${tag}:facts:AZ`, value: { buckets: [await writeFactBucket(store, "AZ", 0, `${tag}:facts:AZ`, await factRecords(store, registry), new Date().toISOString())] } } },
     authority,
     stateAuthorities: { "registry-runtime": stateRegistryArtifacts(`${tag}:registry`, ["AZ", "NH", "NJ"], registry) },
     ...(options.legislators ? { stateLegislators: Object.fromEntries(Object.entries(stateLegislators).map(([scope, value]) => [scope, { value, versionId: `${tag}:legislators:${scope}` }])) } : {}),

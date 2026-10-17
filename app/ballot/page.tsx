@@ -546,7 +546,7 @@ export default readerRoute("/ballot", async function BallotPage({
           certainty = await zipCertainty(zip, selection);
           coverageNotes = coverageNotesForScope(candidate, zip, electionIds);
           for (const office of missingDistrictOffices.get(candidate.election.id) ?? []) {
-            coverageNotes.push(`We're working on getting the ${office} district for ZIP ${zip}. ${office} contests aren't shown until we have it.`);
+            coverageNotes.push(`We're working on getting the ${office} district for ${zip ? `ZIP ${zip}` : "this area"}. ${office} contests aren't shown until we have it.`);
           }
           break;
         }

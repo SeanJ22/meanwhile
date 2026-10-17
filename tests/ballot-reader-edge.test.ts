@@ -727,6 +727,7 @@ test("crossing the state line loads only the new state's ballot, and crossing ba
       assert.ok(ids.length > 0, `${stop.state} rendered no contests`);
       assert.ok(ids.every(id => id.startsWith(stop.mine)), `${stop.state} showed another state's contest: ${ids.join(", ")}`);
       assert.match(rendered.text, new RegExp(`What.s on the ballot\\s+in ${stop.state === "AZ" ? "Arizona" : "New Hampshire"}`));
+      assert.match(rendered.text, /We're working on getting the U\.S\. House district for this area/, `${stop.state} did not say its House district is pending`);
       assert.deepEqual(databaseReads, [], `${stop.state} read the database`);
       for (const other of ["AZ", "NH", "NJ"].filter(state => state !== stop.state)) {
         assert.equal(keys.includes(manifest.stateAuthorities!["ballot-contests"]![other].key), false, `${stop.state} fetched ${other} ballot bytes`);
@@ -744,4 +745,12 @@ test("a ZIP across the line from the map point never names the place; the point'
   const { contestIds, text } = await renderBallot({ state: "NH", zip: "85701", ...mapPoint("03255") });
   assert.ok(contestIds.size > 0 && [...contestIds].every(id => id.startsWith("ballot-nh")));
   assert.doesNotMatch(text, /near 85701/);
+});
+
+test("the ballot link a crossed map hands over, an in-state ZIP with the state and point, shows the same contests as the ZIP alone", async () => {
+  process.env.WTP_READER_EDGE_DIR = ballotEdgeDir;
+  const alone = await renderBallot("03255");
+  const linked = await renderBallot({ state: "NH", zip: "03255", ...mapPoint("03255") });
+  assert.deepEqual([...linked.contestIds].sort(), [...alone.contestIds].sort());
+  assert.match(linked.text, /near 03255/);
 });

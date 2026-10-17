@@ -10,8 +10,6 @@ import { censusVintageFor, divisionsFromCensusGeographies, type CensusGeographie
 import { currentRepresentationSelection } from "../census-geography/selection.ts";
 import { divisionIdsForZipArea, POINT_GEOMETRY_PLANS } from "./zip-divisions.ts";
 import { US_JURISDICTIONS } from "../coverage/states.ts";
-import { ocdStateCode } from "../ocd/state-of.ts";
-import { readerDivisionIdsAt } from "../registry/server.ts";
 import { stateName } from "../facts/entity-read.ts";
 import type { ZctaCentroid } from "../geo/zcta-core.ts";
 
@@ -36,11 +34,14 @@ export function ballotPlaceFromParams(params: { zip?: string; state?: string; la
   return { zip, centroid: resolution?.ok ? resolution.centroid : null, state: null };
 }
 
-/** The divisions a map point sits in, kept inside the named state. */
+/** The divisions a map point sits in, from the named state's own geometry: each hit and every division containing it. */
 export async function ballotPointStateDivisions(state: NonNullable<BallotPlace["state"]>, lat: number, lng: number): Promise<string[]> {
-  const inState = (id: string) => { const code = ocdStateCode(id); return code === null || code === state.code.toLowerCase(); };
-  return [...new Set([state.ocdId, ...(await readerDivisionIdsAt(lat, lng)).filter(inState),
-    ...await ballotPointDivisions([state.code], lat, lng)])];
+  const ids = new Set([state.ocdId]);
+  for (const hit of await ballotPointDivisions([state.code], lat, lng)) {
+    const parts = hit.split("/");
+    for (; parts.length > 2; parts.pop()) ids.add(parts.join("/"));
+  }
+  return [...ids];
 }
 
 export async function ballotPlaceDivisions(place: {

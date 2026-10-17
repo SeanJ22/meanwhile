@@ -78,11 +78,28 @@ export async function lookupZctaAsync(input: string): Promise<ZctaCentroid | nul
   return lookupIn(centroids, input, postal);
 }
 
+let zipsByState: Map<string, string[]> | null = null;
+
+/** Built on the first state-bounded search, so a nearest-ZIP lookup touches one state's ZIPs, never the country's. */
+function zipsInState(table: Loaded, state: string): string[] {
+  if (!zipsByState) {
+    zipsByState = new Map();
+    for (const zip in table.zctaCentroids) {
+      const code = table.postal[zip]?.[5];
+      if (!code) continue;
+      const zips = zipsByState.get(code);
+      if (zips) zips.push(zip);
+      else zipsByState.set(code, [zip]);
+    }
+  }
+  return zipsByState.get(state) ?? [];
+}
+
 export async function nearestZctaAsync(
   lat: number,
   lng: number,
   state?: string,
 ): Promise<ZctaCentroid | null> {
-  const { zctaCentroids, postal } = await loadZctaTable();
-  return nearestIn(zctaCentroids, lat, lng, state ? zip => postal[zip]?.[5] === state : undefined);
+  const table = await loadZctaTable();
+  return nearestIn(table.zctaCentroids, lat, lng, state ? zipsInState(table, state) : undefined);
 }

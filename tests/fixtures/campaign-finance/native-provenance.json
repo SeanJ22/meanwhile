@@ -17,28 +17,35 @@
     "file": "ca-native-cover.tsv",
     "url": "https://campaignfinance.cdn.sos.ca.gov/dbwebexport.zip",
     "capturedAt": "2026-10-16T22:13:18.312382+00:00",
-    "sha256": "a10272fff8d25fa02f848e315d24669b35c816181e59c3de26ce9579e0dcf59f",
-    "transformation": "Public fields selected from bounded byte-range excerpts of the summary and cover tables; archive was not fully downloaded for this fixture."
+    "sha256": "b94b560d50e002b93ca8f09363e9d35bbbcdf8dda53f9607fc940f3a83124890",
+    "transformation": "Public fields selected from bounded byte-range excerpts of the summary and cover tables; archive was not fully downloaded for this fixture. Line endings normalized to LF."
   },
   {
     "file": "ca-native-summary.tsv",
     "url": "https://campaignfinance.cdn.sos.ca.gov/dbwebexport.zip",
     "capturedAt": "2026-10-16T22:13:18.312382+00:00",
-    "sha256": "bf7f65c6d07b7d8980f92b318f4b65cf8f2124f32a258c3afb44ecb676791945",
-    "transformation": "Public fields selected from bounded byte-range excerpts of the summary and cover tables; archive was not fully downloaded for this fixture."
+    "sha256": "7dcacb982cfa1a8ef9345c51500cef0f65a9339ec2a6d889d504782abd454b3f",
+    "transformation": "Public fields selected from bounded byte-range excerpts of the summary and cover tables; archive was not fully downloaded for this fixture. Line endings normalized to LF; wholly empty summary columns omitted."
   },
   {
     "file": "pa-native-filer.csv",
     "url": "https://www.pa.gov/content/dam/copapwp-pagov/en/dos/resources/voting-and-elections/campaign-finance/campaign-finance-data/2026.zip",
     "capturedAt": "2026-10-16T23:30:25.333102+00:00",
-    "sha256": "9cfbc1ffd33c74626c5ad04eba0297d4ced47c50ee74166002a484ed5c4bd337",
-    "transformation": "Public filing fields selected from the complete official archive; contributor, mailing, employer and contact fields omitted."
+    "sha256": "fd7eb572961bf47958e8df59ac28a07a0aad8f1df5eab74d44de47f55dfcb78c",
+    "transformation": "Public filing fields selected from the complete official archive; contributor, mailing, employer and contact fields omitted. Line endings normalized to LF."
   },
   {
     "file": "pa-native-contributions.csv",
     "url": "https://www.pa.gov/content/dam/copapwp-pagov/en/dos/resources/voting-and-elections/campaign-finance/campaign-finance-data/2026.zip",
     "capturedAt": "2026-10-16T23:30:25.333102+00:00",
-    "sha256": "b2f3b09b0e56f34da9eb3bb73919768ff075fc079a0cc330b0052b0480831aee",
-    "transformation": "Public filing fields selected from the complete official archive; contributor, mailing, employer and contact fields omitted."
+    "sha256": "598019fa360b38b88439172f4cf63c3e00080b67c409585947777cd69fe1d269",
+    "transformation": "Public filing fields selected from the complete official archive; contributor, mailing, employer and contact fields omitted. Line endings normalized to LF."
+  },
+  {
+    "file": "ct-native-receipts.json",
+    "url": "https://seec.ct.gov/ecrisreporting/Data/eCrisDownloads/exportdatafiles/Receipts2026CalendarYearPartyPACCommittees.csv",
+    "capturedAt": "2026-10-17T00:36:31.197757+00:00",
+    "sha256": "573a31eeeed668fecb248b60e16ce161486c9931407406fda5bbe1b84d995e9b",
+    "transformation": "Two complete rows selected from a bounded HTTP 206 excerpt. Public filing fields retained; individual contributor, mailing, employer and contact fields omitted."
   }
 ]

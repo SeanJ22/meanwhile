@@ -66,6 +66,18 @@ test("the saved Massachusetts report log retains filed amounts and dates without
   assert.equal(row.filingUrl, raw.reportLink);
 });
 
+test("Connecticut periods retain both filed dates and organization names require the source's committee classification", async () => {
+  const source = campaignFinanceSource("CT").resources.find(row => row.id === "ecris-receipts-parties-pacs")!;
+  const rows = JSON.parse(await readFile(new URL("./fixtures/campaign-finance/ct-native-receipts.json", import.meta.url), "utf8"));
+  for (const raw of rows) {
+    const row = campaignSourceRecord("CT", source, { ...raw, "Street Address": "Private home", "Contributor First Name": "Private person" }, { ...capture, url: source.url });
+    assert.equal(row.period, `${raw["Period Start"]} – ${raw["Period End"]}`);
+    assert.equal(row.provenance.publicationDate, raw["File To State"]);
+    assert.equal(row.organizationName, raw["Receipt Type"] === "Contributions from Other Committees" ? raw["Contributor Name"] : null);
+    assert.doesNotMatch(JSON.stringify(row), /Private home|Private person/);
+  }
+});
+
 async function context() {
   const directory = await mkdtemp(join(tmpdir(), "campaign-finance-test-"));
   const store = new MemoryRoutineDataStore(), vault = new MemoryEvidenceStore(), artifacts = new LocalFileArtifactStore(join(directory, "artifacts"));

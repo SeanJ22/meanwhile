@@ -14,11 +14,13 @@ try {
   if (!artifacts || artifacts.kind === "local-file" && process.env.WTP_READER_EDGE_LOCAL_OK !== "1") throw new Error("READER_EDGE_STORE_UNAVAILABLE");
   const now = requiredAssignment(argv, "observed-at", "READER_EDGE_PIECE_TIME_REQUIRED");
   if (!Number.isFinite(Date.parse(now))) throw new Error("READER_EDGE_PIECE_TIME_INVALID");
-  // Meeting partitions and outcome doors are built from the door registry, as the runner builds them.
-  const connection = controlPlaneUrlFromEnv();
-  if (!connection) throw new Error("READER_EDGE_DOORS_UNAVAILABLE");
-  await refreshDoorsForPass((await createPgRepositories(connection, now, { skipBootstrap: true })).doors);
   const piece = { family: requiredAssignment(argv, "family", "READER_EDGE_PIECE_FAMILY_REQUIRED"), place: assignment(argv, "place") };
+  // Meeting partitions and outcome doors are built from the door registry, as the runner builds them.
+  if (piece.family === "meetings" || piece.family === "meeting-outcomes") {
+    const connection = controlPlaneUrlFromEnv();
+    if (!connection) throw new Error("READER_EDGE_DOORS_UNAVAILABLE");
+    await refreshDoorsForPass((await createPgRepositories(connection, now, { skipBootstrap: true })).doors);
+  }
   console.log(readerEdgePieceResultLine(await publishReaderEdgePiece(new PostgresRoutineDataStore(), now, piece, artifacts)));
 } catch (error) {
   console.error(sanitizedErrorDiagnostic(error));

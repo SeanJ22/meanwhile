@@ -1112,7 +1112,8 @@ export const FIELD_MANUAL_SLICE_SQL = `WITH eligible AS NOT MATERIALIZED (
     SELECT CASE WHEN status.here='FAILS' THEN NULL WHEN status.here='WORKS' OR flags.here THEN 1
       WHEN $7::text=ANY(coalesce(legacy.states,'{}'::text[])||coalesce(working.states,'{}'::text[])) THEN 2
       WHEN (SELECT count(DISTINCT proof.state) FROM unnest(coalesce(legacy.states,'{}'::text[])||coalesce(working.states,'{}'::text[])) proof(state))>=3 THEN 3
-      WHEN coalesce(legacy.any_place,false) OR coalesce(working.any_place,false) THEN 4 ELSE 5 END AS tier
+      WHEN cardinality(coalesce(legacy.states,'{}'::text[])||coalesce(working.states,'{}'::text[]))>0
+        OR coalesce(legacy.any_place,false) OR coalesce(working.any_place,false) THEN 4 ELSE 5 END AS tier
     FROM (SELECT 1) one
     LEFT JOIN LATERAL (SELECT state FROM cp_fix_map
       WHERE method_id=e.id AND place_id=ANY($10::text[]) ORDER BY place_id LIMIT 1) fixed ON true

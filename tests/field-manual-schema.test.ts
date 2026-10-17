@@ -176,6 +176,8 @@ test("bounded SQL notes retain producer proof, failed-here exclusions and Scout 
       make("legacy-fails","METHOD",{ocdIds:[place],placeResults:[{place:place.toLowerCase(),outcome:"FAILED",observedAt:at}]}),
       make("untried","METHOD",{ocdIds:[place],outcome:"YIELDED"}),make("state"),make("three-states"),make("two-states"),make("no-proof"),
       make("legacy-three","METHOD",{placeResults:["ca","nh","tx"].map(state=>({place:`state:${state}`,outcome:"YIELDED" as const,observedAt:at}))}),
+      ...([["legacy-one",["nh"]],["legacy-two",["nh","tx"]],["legacy-here",["az"]]] as const).map(([key,states])=>make(key,"METHOD",{
+        placeResults:states.map(state=>({place:`state:${state}`,outcome:"YIELDED" as const,observedAt:at}))})),
       make("own-generic","LESSON",{ocdIds:[place],outcome:"YIELDED",recordClasses:[]}),
       make("candidate","LESSON",{states:["az"],outcome:"YIELDED",recordClasses:["candidate-enrichment"]}),
       make("permission","LESSON",{ocdIds:[place],outcome:"YIELDED",recordClasses:["permission"]}),
@@ -228,6 +230,6 @@ test("bounded SQL notes retain producer proof, failed-here exclusions and Scout 
       }
     }
     const full=await pg.select(queries[1]),tiers=new Map(full.projection.entryIds.map((id,index)=>[id,full.projection.tiers[index]]));
-    for(const [title,tier] of [["works",1],["untried",1],["state",2],["three-states",3],["legacy-three",3],["two-states",4],["no-proof",5]] as const)assert.equal(tiers.get(byTitle.get(title)!),tier,title);
+    for(const [title,tier] of [["works",1],["untried",1],["state",2],["three-states",3],["legacy-three",3],["legacy-one",4],["legacy-two",4],["legacy-here",2],["two-states",4],["no-proof",5]] as const)assert.equal(tiers.get(byTitle.get(title)!),tier,title);
   }finally{await db.close();}
 });

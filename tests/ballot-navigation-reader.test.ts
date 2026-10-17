@@ -8,7 +8,6 @@ import * as React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { launchGuarded } from "../scripts/browser.mts";
 import { Card } from "../components/ui/card.tsx";
-import { publishReaderEdgeArtifacts } from "../lib/meetings/edge-serving.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import type { CuratedReaderProjection, ManualProjectionPackage } from "../lib/civic-data/manual-projections.ts";
 import { electionDatesFor } from "../lib/ballot/election-dates.ts";
@@ -18,6 +17,7 @@ import { absentEdgeEntry, manualEdgeEntry, promotedFamily, provenEdgeEntry } fro
 import { registryFixtureForState, registryTransferImport, syntheticFederalDirectory } from "./helpers/promoted-fixtures.ts";
 import { stateBallotScope, stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
 import { azDistricts } from "./helpers/ballot-district-fixtures.ts";
+import { publishPointers } from "./helpers/edge-pointers.ts";
 
 const zips: Readonly<Record<string, string>> = {
   AL: "35004", AK: "99501", AZ: "85003", AR: "71601", CA: "90001", CO: "80002", CT: "06001", DE: "19701", DC: "20001",
@@ -37,10 +37,7 @@ async function publishNavigationFixture(): Promise<void> {
   after(() => rmSync(dir, { recursive: true, force: true }));
   process.env.WTP_READER_EDGE_DIR = dir;
   const registry = registryTransferImport().projection.payload;
-  const checkedAt = "2026-10-15T20:10:00.000Z";
-  const result = await publishReaderEdgeArtifacts({ formatVersion: 1, generatedAt: checkedAt, counts: { fresh: 0, carried: 0, total: 0, duplicatesCollapsed: 0 },
-    sources: [], meetings: [], agendaDocuments: [] }, { sourceThrough: null, retrievedAt: null, promotedThrough: null }, {
-    store: new LocalFileArtifactStore(dir), authority: {
+  await publishPointers(new LocalFileArtifactStore(dir), { authority: {
       "federal-directory": { value: syntheticFederalDirectory(registry), versionId: "BL-20:navigation-federal" },
       "census-districts": { value: azDistricts, versionId: azDistricts.versionId },
     }, stateAuthorities: {
@@ -53,7 +50,6 @@ async function publishNavigationFixture(): Promise<void> {
         promotedFamily([manualEdgeEntry("ballot-navigation", input.package.payload, `navigation:${input.state}`)], `navigation:${input.state}`)])),
     }, registrations: {}, stateLegislators: {},
   });
-  assert.equal(result.status, "PUBLISHED");
 }
 
 function navigationCard(tree: React.ReactNode, state: string): React.ReactElement<React.ComponentProps<typeof Card>> | null {

@@ -1,7 +1,7 @@
 import { failedAcquisitionCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
-import { readPromotedStateEdgeFamilies, selectedStateEdgePointers } from "../lib/civic-data/promoted-edge-publication.ts";
+import { prepareStateEdgeFamily, selectedStateEdgePointers } from "../lib/civic-data/promoted-edge-publication.ts";
 import { routineProcessSlots, workerMemoryHost } from "../lib/control-plane/workers/worker-slots.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -14,9 +14,10 @@ import type { ElectionFieldInput, PublishedElectionField } from "../lib/civic-da
 import type { CuratedReaderProjection } from "../lib/civic-data/manual-projections.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { section3Record } from "../lib/control-plane/promotion/section3.ts";
-import { ensureReaderAuthorityEdge, publishReaderEdgeArtifacts } from "../lib/meetings/edge-serving.ts";
+import { authorityPointerKey, ensureReaderAuthorityEdge, readServedPointer } from "../lib/meetings/edge-serving.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
+import { publishPointers } from "./helpers/edge-pointers.ts";
 import { manualEdgeEntry, promotedFamily } from "./helpers/promoted-edge-entry.ts";
 import { createHash } from "node:crypto";
 
@@ -59,38 +60,27 @@ test("streamed fields are verified before the next source is produced", async ()
   assert.equal(result.gaps.length, 0);
   const directory = await mkdtemp(join(tmpdir(), "navigation-state-publication-"));
   try {
-    const published = await readPromotedStateEdgeFamilies({ store, servedManifest: null, now, artifactStore: new LocalFileArtifactStore(directory),
-      selected: selectedStateEdgePointers([{ recordClass: "CURATED_READER_RECORD", scope: "US-OH:official-ballot-navigation" }]),
-      readServedFamily: async () => null });
+    const unit = selectedStateEdgePointers([{ recordClass: "CURATED_READER_RECORD", scope: "US-OH:official-ballot-navigation" }])[0]!;
+    const published = await prepareStateEdgeFamily({ store, now, unit, artifactStore: new LocalFileArtifactStore(directory) });
     assert.deepEqual(published.skipped, []);
-    assert.deepEqual(Object.keys(published.stateAuthorities["ballot-navigation"] ?? {}), ["OH"]);
-    assert.ok("artifact" in published.stateAuthorities["ballot-navigation"]!.OH!);
+    assert.deepEqual([unit.family, unit.state], ["ballot-navigation", "OH"]);
+    assert.ok(published.entry.artifact.key);
   } finally { await rm(directory, { recursive: true, force: true }); }
 });
 
-test("the manifest serves one state's navigation without fetching other state artifacts", async () => {
+test("the edge serves one state's navigation without fetching other state artifacts", async () => {
   const directory = await mkdtemp(join(tmpdir(), "navigation-state-edge-"));
   try {
     const store = new LocalFileArtifactStore(directory);
-    const metadata = { sourceThrough: null, retrievedAt: null, promotedThrough: null };
     const stateNavigation = (stateCode: string) => {
       const row = field(stateCode); Object.assign(row, { value: { ...row.value, state: stateCode, divisionId: `ocd-division/country:us/state:${stateCode.toLowerCase()}` } });
       return { versionId: stateCode, value: promotedFamily([manualEdgeEntry("ballot-navigation", { kind: "ballot-navigation", records: [row] }, stateCode)], stateCode).value };
     };
-    const result = await publishReaderEdgeArtifacts(null, metadata, { store,
-      stateAuthorities: { "ballot-navigation": { OH: stateNavigation("OH"), MI: stateNavigation("MI") } } });
-    assert.equal(result.status, "PUBLISHED");
-    const held = (await store.readManifest())!;
-    await store.writeManifest({ ...held.manifest, sequence: held.manifest.sequence + 1,
-      authorityArtifacts: { "ballot-navigation": held.manifest.stateAuthorities!["ballot-navigation"]!.OH } as unknown as typeof held.manifest.authorityArtifacts }, held.etag ?? null);
-    const carried = { "ballot-navigation": { OH: { versionId: "OH", carried: true as const } } };
-    assert.equal((await publishReaderEdgeArtifacts(null, metadata, { store, stateAuthorities: carried })).status, "PUBLISHED");
-    assert.equal((await publishReaderEdgeArtifacts(null, metadata, { store, stateAuthorities: carried })).status, "CURRENT");
-    const manifest = (await store.readManifest())!.manifest;
-    assert.equal(Reflect.get(manifest.authorityArtifacts ?? {}, "ballot-navigation"), undefined);
+    assert.deepEqual(await publishPointers(store, { stateAuthorities: { "ballot-navigation": { OH: stateNavigation("OH"), MI: stateNavigation("MI") } } }),
+      ["ballot-navigation/OH", "ballot-navigation/MI"]);
     const reads: string[] = [], read = store.readBytes.bind(store);
     store.readBytes = async key => { reads.push(key); return read(key); };
-    const bundle = await ensureReaderAuthorityEdge(manifest, store, ["ballot-navigation"]);
+    const bundle = (await ensureReaderAuthorityEdge(null, store, ["ballot-navigation"]))!;
     assert.equal(reads.length, 0);
     const first = await withReaderAuthorityEdge(bundle, async () => {
       const loaded = await bundle.stateAuthorities!.load("ballot-navigation", "OH");
@@ -98,7 +88,7 @@ test("the manifest serves one state's navigation without fetching other state ar
       return loaded;
     });
     assert.equal(first?.entries[0]?.kind, "PROMOTED");
-    assert.deepEqual(reads, [manifest.stateAuthorities!["ballot-navigation"]!.OH!.key]);
+    assert.deepEqual(reads, [(await readServedPointer(store, authorityPointerKey("ballot-navigation", "OH")))!.ref.key]);
   } finally { await rm(directory, { recursive: true, force: true }); }
 });
 

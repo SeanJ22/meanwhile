@@ -67,7 +67,7 @@ test("/ballot's navigation links read from the reader edge in production, with n
   const entry = provenEdgeEntry({ recordClass: contract.recordClass, scope: "US-AZ:official-ballot-navigation", sourceId: contract.sourceId, versionId: "edge-test:navigation", value: navigation });
   await asProduction(async () => {
     // No database is configured: a navigation read from the database would throw.
-    const stateAuthorities = { states: { "ballot-navigation": new Set(["AZ"]) },
+    const stateAuthorities = { families: new Set(["ballot-navigation" as const]),
       load: async (family: string, state: string) => family === "ballot-navigation" && state === "AZ" ? { kind: "PROMOTED_POINTERS" as const, entries: [entry] } : null };
     const read = await withReaderAuthorityEdge({ stateAuthorities }, () => readBallotNavigationProjection("AZ"));
     assert.equal(read.kind, "PROMOTED");

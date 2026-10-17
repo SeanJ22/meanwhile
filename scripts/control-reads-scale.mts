@@ -191,6 +191,24 @@ async function workload(repos: ControlPlaneRepositories, places: string[], run: 
     const tried = await repos.fixMap.forPlaces("scale-method", places);
     return { packets: places.length, works: [...works], proofCount: proof.total, triedCount: tried.length };
   }
+  if(scenario==="source-hints") {
+    const sample=JSON.parse(await readFile(join(sourceRoot,"tests/fixtures/field-manual-pages/manual.json"),"utf8")) as {entries:{url:string|null}[]};
+    const origins=new Map<string,number>();
+    for(const entry of sample.entries) {
+      if(!entry.url)continue;
+      try {const origin=new URL(entry.url).origin;origins.set(origin,(origins.get(origin)??0)+1);}catch{}
+    }
+    const origin=[...origins].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]))[0]?.[0];
+    assert.ok(origin,"the source fixture must include URLs");
+    const hints=[];
+    for(const place of places) {
+      const state=/\/(?:state|district|territory):([a-z]{2})(?:\/|$)/.exec(place)?.[1];
+      const rows=await repos.fieldManual.sourceHints({state,ocdIds:[place]},origin);
+      assert.ok(rows.every(row=>new URL(row.url).origin===origin));
+      hints.push({place,rows});
+    }
+    return hints;
+  }
   if (scenario === "manual") {
     const manual = await importAt("lib/control-plane/field-manual.ts");
     const changed = await repos.fieldManual.mustRead("note-0-1");
@@ -203,6 +221,7 @@ async function workload(repos: ControlPlaneRepositories, places: string[], run: 
       assert.ok(result.projection.entryIds.length<=query.limit);
       assert.ok(result.store.entries.length<=query.limit);
       notes.push({ place, ids: [...result.projection.entryIds].sort() });
+      process.stderr.write(`${JSON.stringify({type:"packet-progress",scenario,run,completed:notes.length,total:places.length})}\n`);
     }
     return notes;
   }
@@ -274,7 +293,7 @@ async function parent() {
     process.stderr.write(`${JSON.stringify({type:"input-shape",...shape})}\n`);
   }
 
-  if(scenario==="manual") {
+  if(scenario==="manual" || scenario==="source-hints") {
     const shape=(await pg.query(`WITH sizes AS MATERIALIZED (SELECT octet_length(value::text) AS bytes,
       jsonb_array_length(value #> '{reach,places}')>0 AS place_reach,jsonb_array_length(value #> '{reach,states}')>0 AS state_reach,
       jsonb_array_length(value #> '{reach,platforms}')>0 AS platform_reach,(value #>> '{reach,everywhere}')::boolean AS everywhere,
@@ -403,7 +422,7 @@ async function seed(pg: FixtureDatabase, places: string[], selected: string[]) {
         ELSE jsonb_build_object('stage','VERIFIED','checks',$2::jsonb) END
       FROM scale_places p CROSS JOIN generate_series(1,$3::integer) h(n) CROSS JOIN generate_series(0,1) stage(n)`,
       [now,JSON.stringify(VERIFICATION_CHECKS.map((name:string)=>({name,result:"PASS",detail:"Generated source verification"}))),history]);
-  } else if (scenario === "manual") {
+  } else if (scenario === "manual" || scenario==="source-hints") {
     const manual = await importAt("lib/control-plane/field-manual.ts");
     const samples=(JSON.parse(await readFile(join(sourceRoot,"tests/fixtures/field-manual-pages/manual.json"),"utf8")) as {entries:unknown[]}).entries.map(entry=>manual.normalizeEntry(entry));
     assert.ok(samples.length);

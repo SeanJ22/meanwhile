@@ -74,6 +74,8 @@ function projectionIn(text: string, read: string): Record<string, true | string[
 function fakeLogSql(rows: readonly Row[]) {
   const calls: string[] = [];
   const byKeyPos = (a: Row, b: Row) => (a.log_key === b.log_key ? a.position - b.position : a.log_key < b.log_key ? -1 : 1);
+  const changedRow = (r: Row) => ({ log_key: r.log_key, record_id: `${r.log_key}-${r.position}`, position: r.position, record: r.record,
+    changed_at: "2026-09-16T00:00:00.000Z", recorded_at: r.recorded_at ?? "2026-09-16T00:00:00.000Z" });
   const sql = {
     async query(text: string, params: readonly unknown[] = []): Promise<unknown> {
       calls.push(text);
@@ -142,11 +144,11 @@ function fakeLogSql(rows: readonly Row[]) {
       if (/WHERE\s+\(log_key,\s*position\)\s*>\s*\(\$1,\s*\$2\)/i.test(text)) {
         const [key, position] = params as [string, number];
         return rows.filter((r) => r.log_key > key || (r.log_key === key && r.position > position))
-          .sort(byKeyPos).slice(0, limit).map((r) => ({ log_key: r.log_key, record_id: `${r.log_key}-${r.position}`, position: r.position, record: r.record }));
+          .sort(byKeyPos).slice(0, limit).map(changedRow);
       }
       // readAll first page: ORDER BY log_key ASC, position ASC (no WHERE cursor)
       if (/ORDER BY\s+log_key ASC,\s*position ASC/i.test(text) && !/WHERE/i.test(text)) {
-        return rows.slice().sort(byKeyPos).slice(0, limit).map((r) => ({ log_key: r.log_key, record_id: `${r.log_key}-${r.position}`, position: r.position, record: r.record }));
+        return rows.slice().sort(byKeyPos).slice(0, limit).map(changedRow);
       }
       throw new Error(`fake Sql did not recognize query: ${text.replace(/\s+/g, " ").trim()}`);
     },

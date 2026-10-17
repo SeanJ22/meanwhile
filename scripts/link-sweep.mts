@@ -50,7 +50,7 @@ const results = await sweepLinks(links, {
   fetchFn,
   now: () => Date.now(),
   pacing: opened.repos.websitePacing,
-  sizeFor: websiteSizeFromHoldings(states),
+  sizeFor: await websiteSizeFromHoldings(states),
   rotation: Number(FLAGS.get("rotation") ?? Math.floor(Date.now() / 3_600_000)),
 });
 const looked = results.filter((r) => r.verdict !== "WAITING" && r.verdict !== "LATER").length;

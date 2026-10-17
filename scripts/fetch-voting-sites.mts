@@ -24,6 +24,7 @@ import { mergeVotingSourceRead, recordVotingSourceRead, registeredVotingSourceDo
   saveVotingSourceDoor, holdVotingRawEvidence } from "../lib/ballot/voting-source-publication.ts";
 import { persistVotingSourceBlanks, planVotingSourceBlanks, votingSourcePlaces } from "../lib/ballot/voting-source-blanks.ts";
 import { votingSourcePopulations } from "../lib/ballot/voting-source-population.ts";
+import { factReader } from "../lib/facts/db.ts";
 import type { VotingDoorScope, VotingSourceDoor, VotingSourceRead, VotingSourceRuntime } from "../lib/ballot/voting-source-types.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -316,7 +317,7 @@ async function main() {
       const scope = root?.scope ?? stateDoors[0]?.scope;
       if (!scope) throw new Error(`No registered voting source for ${state}.`);
       const delegation = stateDoors.find(door => door.delegation)?.delegation ?? "county";
-      const populations = await votingSourcePopulations({ state, bodies });
+      const populations = await votingSourcePopulations({ state, bodies, query: factReader() });
       const places = votingSourcePlaces({ state: scope, divisions, delegation, populations });
       const blanks = planVotingSourceBlanks({ electionDate: election.electionDate, places, doors: [...doors.values(), ...evidenceSources.values()], reads: [...reads.values()],
         jurisdictions: held?.jurisdictions.filter(jurisdiction => jurisdiction.state === state) });

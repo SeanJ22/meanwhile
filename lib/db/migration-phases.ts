@@ -172,6 +172,10 @@ export function phaseFromSql(sql: string): { phase: MigrationPhase; signals: Con
 /** Hand-written, one entry per committed migration; the suite checks each against phaseFromSql. */
 const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
   "0038_src_mn_federal_money_lookup": { phase: "expand", why: "Indexes exact federal native IDs without indexing source descriptions or loading state inventories." },
+  "PL-01_publisher_size": {
+    phase: "expand",
+    why: "Creates the per-state Census publisher-size table the pacing and voting-population readers use. Nothing reads it until the runner loads it.",
+  },
   "STEP-7_reader_location_capture": {
     phase: "contract",
     why: "Renames Ask's stored question after the schema-compatible writers are serving. Adds continuity_hash and moves the bridge's retained digests into it; both writers keep complete rows across this contract.",

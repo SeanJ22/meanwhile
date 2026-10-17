@@ -194,7 +194,6 @@ export function routeExecutor(input: {
   /** Injected so tests do not sleep. Returns immediately when omitted. */
   readonly spaceOut?: (hostKey: string) => Promise<void>;
   readonly websiteSize?: WebsiteSizeForUrl;
-  readonly root?: string;
   /** Where retrieved bytes are persisted. A missing store leaves acquisition owed. */
   readonly vault?: VaultPut;
   readonly now?: () => string;
@@ -285,7 +284,7 @@ export function routeExecutor(input: {
       ...(route.open.headers ?? {}),
     };
 
-    const websiteSize = input.websiteSize ?? websiteSizeForObligation(obligation.obligation, input.root);
+    const websiteSize = input.websiteSize ?? await websiteSizeForObligation(obligation.obligation);
     if (input.spaceOut && websiteRequestLimit(websiteSize(url.toString())) !== null) await input.spaceOut(url.host);
     const got = await openOne({
       url: url.toString(),

@@ -27,7 +27,7 @@ const now = () => new Date().toISOString();
 let stopped = false;
 process.on("message", message => { if ((message as { kind?: string })?.kind === "RUNTIME_RELEASE_DRAIN") stopped = true; });
 const vault = cycleVault(join(root, ...VAULT_DIR));
-let sizeFor = websiteSizeFromHoldings([], root);
+let sizeFor = await websiteSizeFromHoldings([]);
 const fleet = new FleetSafetyController({ now: now(), charges: [], modelHold: "Plain-code census lane", websitePacing: repos.websitePacing,
   websiteSize: target => sizeFor(target) });
 const spaceOut = hostSpacer();
@@ -58,14 +58,14 @@ const stateDoors = async (state: string) => {
 try {
   for (const state of states) {
     if (stopped || readIntents(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY)).runnerPause.paused) break;
-    sizeFor = websiteSizeFromHoldings([state], root);
+    sizeFor = await websiteSizeFromHoldings([state]);
     console.log(`CENSUS_SHUT ${state}: ${JSON.stringify(await recheckShutDoors(repos, runtime, await stateDoors(state)))}`);
   }
   for (const state of states) {
     if (stopped) break;
     const intents = readIntents(await repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY));
     if (intents.runnerPause.paused) break;
-    sizeFor = websiteSizeFromHoldings([state], root);
+    sizeFor = await websiteSizeFromHoldings([state]);
     const query = neon(url);
     const coverage = async () => {
       try {

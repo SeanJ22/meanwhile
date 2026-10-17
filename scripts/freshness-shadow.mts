@@ -1307,7 +1307,7 @@ try {
 }
 /* The ceiling in force and the paid-search switch were read above the lane closure. */
 
-const websiteSize = websiteSizeFromHoldings(trackedStateCodes, ROOT);
+const websiteSize = await websiteSizeFromHoldings(trackedStateCodes);
 const sizeForDiscovery = websiteSize;
 let hostConcurrency = readSetting(config, HOST_CONCURRENCY_SETTING, HOST_CONCURRENCY_DEFAULT);
 const fleetSafety = new FleetSafetyController({

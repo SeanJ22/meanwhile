@@ -117,7 +117,6 @@ export function httpExecutor(input: {
   /** Injected so tests do not sleep. Returns immediately when omitted. */
   readonly spaceOut?: (hostKey: string) => Promise<void>;
   readonly websiteSize?: WebsiteSizeForUrl;
-  readonly root?: string;
 }): RunWork {
   const fetchOne = input.fetchOne ?? realFetch;
   const timeoutMs = input.timeoutMs ?? DEFAULT_FETCH_TIMEOUT_MS;
@@ -148,7 +147,7 @@ export function httpExecutor(input: {
       };
     }
 
-    const websiteSize = input.websiteSize ?? websiteSizeForObligation(obligation.obligation, input.root);
+    const websiteSize = input.websiteSize ?? await websiteSizeForObligation(obligation.obligation);
     if (input.spaceOut && websiteRequestLimit(websiteSize(url.toString())) !== null) await input.spaceOut(url.host);
     const got = await fetchOne(url.toString(), timeoutMs);
 

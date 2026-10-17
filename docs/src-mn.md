@@ -18,7 +18,81 @@ Each place has a constant-size pointer to immutable index pages of at most 64 en
 
 Fixture provenance is in `tests/fixtures/federal-money/provenance.json`. Generated scale inputs never seed production.
 
-Campaign source replay: `node --experimental-strip-types scripts/state-campaign-finance-scale.mts --state=PA --resource=dos-filer --input=/tmp/src-mn-campaign-discovery/PA-2026-full.zip`. This runs the registered resource parser, evidence vault, bounded artifacts and PostgreSQL promotion against a complete captured publication, then checks the unchanged pass. Its receipt separates worker memory, PostgreSQL memory, database protocol bytes and artifact bytes. It does not publish to production.
+Campaign source replay: `node --experimental-strip-types scripts/state-campaign-finance-scale.mts --state=PA --resource=dos-filer --input=/tmp/src-mn-campaign-discovery/PA-2026-full.zip`. Generated publication replay: `node --experimental-strip-types scripts/state-campaign-finance-scale.mts --state=WA --resource=pdc-summary --generated-records=2000000 --generated-filers=1`. These run the native parser, evidence vault, bounded artifacts and PostgreSQL promotion, then the unchanged check. Generated rows use the committed Washington source schema. Neither mode publishes to production. Campaign fixture provenance is in `tests/fixtures/campaign-finance/native-provenance.json`.
+
+Campaign records retain source-native filer IDs, captured references and publication dates. CSV files and JSON responses stream to disk and the vault. Native report joins sort on disk; a separate cover file downloads once per pass and remains a second evidence reference on each joined row. Rows without native IDs retain stable content identities and duplicate occurrence numbers. Unmatched rows remain held and counted. Rows the source marks unfiled retain their document information without published amounts. Each state has its own artifact directory; local governments have their own indexes inside it. Public reader integration remains held for SB-01B.
+
+| Campaign stage | Largest tested input | Time | Peak worker RSS upper bound | Database protocol read / written |
+| --- | --- | ---: | ---: | ---: |
+| California acquisition and native report join | Complete official 1,595,579,059-byte ZIP; 15,904,359 output rows including cover-only records; largest selected expanded table 471,573,045 bytes | 710.316 s | 354,816,000 bytes | 0 / 0 |
+| Pennsylvania filer publication | Complete official 14,511,448-byte ZIP; 6,110 filer rows | 140.862 s | 631,693,312 bytes | 80,920,238 / 76,205,914 bytes |
+| One-filer publication | 2,000,000 generated native-schema rows; 936,888,932 source bytes | 413.814 s | 388,759,552 bytes | 74,106 / 68,684 bytes |
+| Same two-million-row source, unchanged | 41 conditional page checks; no fact-page acquisition | 0.127 s | Same process high-water mark | 51,328 / 34,635 bytes |
+
+The two-million-row first pass wrote 553,158,315 artifact bytes and read 512,476,202; its largest artifact write/read was 15,220/7,850 bytes. The unchanged pass read and wrote zero artifact bytes. At one check daily, the unchanged database protocol figures are also the measured daily figures for this input. Changed-day production traffic and physical database storage bytes remain unmeasured. PostgreSQL ran in a separate local PGlite process (909,574,144 peak bytes for the two-million-row run), outside the measured source worker; production uses a remote database.
+
+The worker figures conservatively add Node's process high-water RSS to the largest sort-child RSS, rather than claiming an exact simultaneous process-tree sample. California's components were 337,248,256 + 17,567,744 bytes; the two-million-row publication's were 371,277,824 + 17,481,728. Acquisition owns one archive and emits 500-row capture batches; sorting owns a 16 MiB buffer; publication owns one filer and writes 100-fact pages with 64-entry index pages. No stage retains all source pages or all governments' records. Whole-source files and sort runs stay on disk. The 0.75 GiB margin on an 8 GiB runner leaves room for 12 copies of the largest measured campaign worker, or seven alongside the existing 2,928 MiB parent reservation, before admission reservations and CPU/disk limits. The current unmeasured-routine fallback reservation of 1,258 MiB admits five alone or three with that parent; it has not been lowered from these state tests. A national campaign run across all 56 jurisdictions and all covered governments remains untested; these are completed state/source and single-filer measurements.
+
+The new native publisher has not loaded production records. The existing accepted state records contained AZ 50, NH 28 and NJ 344 rows on the read-only inventory check; Pima's local record was present, but its nested transaction count was not part of that query. No accepted curated campaign record or candidate history was found: the curated split reconciles old 0, new 0, with no differing IDs. A nonempty synthetic split verifies 112 filings, two per jurisdiction, exactly once each.
+
+| Place | Official campaign-finance source | Access identified | New native records published live |
+| --- | --- | --- | ---: |
+| AL | [Alabama Secretary of State](https://www.sos.alabama.gov/alabama-votes/media/campaign-finance-reports) | Bulk download | 0 |
+| AK | [Alaska Public Offices Commission](https://aws.state.ak.us/ApocReports/CampaignDisclosure/CDIncome.aspx) | Not yet confirmed | 0 |
+| AZ | [Arizona Secretary of State](https://azsos.gov/elections/campaign-finance-reporting) | API | 0 |
+| AR | [Arkansas Secretary of State](https://financial-disclosures.sos.arkansas.gov/) | Not yet confirmed | 0 |
+| CA | [California Secretary of State](https://www.sos.ca.gov/campaign-lobbying/cal-access-resources/raw-data-campaign-finance-and-lobbying-activity) | Bulk download | 0 |
+| CO | [Colorado Secretary of State](https://tracer.sos.colorado.gov/PublicSite/DataDownload.aspx) | Bulk download | 0 |
+| CT | [Connecticut State Elections Enforcement Commission](https://seec.ct.gov/Portal/eCRIS/eCrisSearch) | Bulk download | 0 |
+| DE | [Delaware Department of Elections](https://cfrs.elections.delaware.gov/) | Not yet confirmed | 0 |
+| DC | [District of Columbia Office of Campaign Finance](https://efiling.ocf.dc.gov/DataDownload) | Bulk download and API | 0 |
+| FL | [Florida Division of Elections](https://dos.elections.myflorida.com/campaign-finance/contributions/) | Bulk download | 0 |
+| GA | [Georgia State Ethics Commission](https://ethics.ga.gov/) | Not yet confirmed | 0 |
+| HI | [Hawaii Campaign Spending Commission](https://hicscdata.hawaii.gov/) | API | 0 |
+| ID | [Idaho Secretary of State](https://sunshine.sos.idaho.gov/) | API | 0 |
+| IL | [Illinois State Board of Elections](https://www.elections.il.gov/CampaignDisclosure/DownloadData.aspx) | Bulk download | 0 |
+| IN | [Indiana Election Division](https://cfa.in.gov/) | Not yet confirmed | 0 |
+| IA | [Iowa Ethics and Campaign Disclosure Board](https://data.iowa.gov/catalog/dataset/917) | API | 0 |
+| KS | [Kansas Public Disclosure Commission](https://kpdc.kansas.gov/campaign-finance/campaign-contributor-data/) | Not yet confirmed | 0 |
+| KY | [Kentucky Registry of Election Finance](https://secure.kentucky.gov/kref/publicsearch/CandidateSearch/) | Bulk download and API | 0 |
+| LA | [Louisiana Board of Ethics](https://ethics.la.gov/CampaignFinanceSearch/) | Bulk download | 0 |
+| ME | [Maine Commission on Governmental Ethics and Election Practices](https://www.mainecampaignfinance.com/) | Not yet confirmed | 0 |
+| MD | [Maryland State Board of Elections](https://campaignfinance.maryland.gov/) | Bulk download | 0 |
+| MA | [Massachusetts Office of Campaign and Political Finance](https://ocpf.us/Data/Downloads) | Bulk download and API | 0 |
+| MI | [Michigan Department of State](https://www.michigan.gov/sos/elections/Disclosure/cfr/committee-search/intro/welcome-to-the-michigan-campaign-finance-searchable-database) | Bulk download | 0 |
+| MN | [Minnesota Campaign Finance and Public Disclosure Board](https://cfb.mn.gov/reports-and-data/self-help/data-downloads/) | Bulk download | 0 |
+| MS | [Mississippi Secretary of State](https://cfportal.sos.ms.gov/) | Not yet confirmed | 0 |
+| MO | [Missouri Ethics Commission](https://www.mec.mo.gov/) | Not yet confirmed | 0 |
+| MT | [Montana Commissioner of Political Practices](https://cers-ext.mt.gov/CampaignTracker/dashboard) | Not yet confirmed | 0 |
+| NE | [Nebraska Accountability and Disclosure Commission](https://nadc-e.nebraska.gov/) | Bulk download | 0 |
+| NV | [Nevada Secretary of State](https://www.nvsos.gov/SOSCandidateServices/AnonymousAccess/CEFDSearchUU.aspx) | Not yet confirmed | 0 |
+| NH | [New Hampshire Secretary of State](https://cfs.sos.nh.gov/) | API | 0 |
+| NJ | [New Jersey Election Law Enforcement Commission](https://www.elec.nj.gov/) | API | 0 |
+| NM | [New Mexico Secretary of State](https://cfis.sos.nm.gov/) | Bulk download and API | 0 |
+| NY | [New York State Board of Elections](https://data.ny.gov/Government-Finance/Campaign-Finance-Disclosure-Reports-Data-Beginning/e9ss-239a) | Bulk download and API | 0 |
+| NC | [North Carolina State Board of Elections](https://www.ncsbe.gov/campaign-finance/search-campaign-funding-and-spending-reports-and-penalties) | Not yet confirmed | 0 |
+| ND | [North Dakota Secretary of State](https://cf.sos.nd.gov/manage/management.aspx) | Not yet confirmed | 0 |
+| OH | [Ohio Secretary of State](https://www.ohiosos.gov/elections/campaign-finance) | Bulk download | 0 |
+| OK | [Oklahoma Ethics Commission](https://guardian.ok.gov/PublicSite/) | Bulk download | 0 |
+| OR | [Oregon Secretary of State](https://sos.oregon.gov/elections/campaign-finance/pages/search-campaign-finance.aspx) | Not yet confirmed | 0 |
+| PA | [Pennsylvania Department of State](https://www.campaignfinanceonline.pa.gov/Pages/CampaignFinanceHome.aspx) | Bulk download | 0 |
+| RI | [Rhode Island Board of Elections](https://www.ricampaignfinance.com/) | Not yet confirmed | 0 |
+| SC | [South Carolina State Ethics Commission](https://ethicsfiling.sc.gov/filing/home) | API | 0 |
+| SD | [South Dakota Secretary of State](https://sdcfr.sdsos.gov/) | Not yet confirmed | 0 |
+| TN | [Tennessee Registry of Election Finance](https://apps.tn.gov/tncamp/) | Not yet confirmed | 0 |
+| TX | [Texas Ethics Commission](https://www.ethics.state.tx.us/search/cf/) | Bulk download | 0 |
+| UT | [Utah Lieutenant Governor](https://disclosures.utah.gov/) | Bulk download | 0 |
+| VT | [Vermont Secretary of State](https://campaignfinance.vermont.gov/) | Bulk download and API | 0 |
+| VA | [Virginia Department of Elections](https://www.elections.virginia.gov/candidatepac-info/reporting/) | Bulk download | 0 |
+| WA | [Washington Public Disclosure Commission](https://data.wa.gov/Politics/Campaign-Finance-Summary/3h9x-7bvm) | API | 0 |
+| WV | [West Virginia Secretary of State](https://cfrs.wvsos.gov/) | Not yet confirmed | 0 |
+| WI | [Wisconsin Ethics Commission](https://campaignfinance.wi.gov/) | Not yet confirmed | 0 |
+| WY | [Wyoming Secretary of State](https://www.wycampaignfinance.gov/) | Not yet confirmed | 0 |
+| AS | [American Samoa Election Office](https://aselectionoffice.gov/) | Not yet confirmed | 0 |
+| GU | [Guam Election Commission](https://gec.guam.gov/) | Not yet confirmed | 0 |
+| MP | [Commonwealth Election Commission](https://www.votecnmi.gov.mp/) | Not yet confirmed | 0 |
+| PR | [Puerto Rico Office of the Electoral Comptroller](https://oce.pr.gov/) | Not yet confirmed | 0 |
+| VI | [Elections System of the Virgin Islands](https://vivote.gov/) | Not yet confirmed | 0 |
 
 Local scale measurements use a four-core host with concurrent work. Counts describe benchmark inputs; production inventory is checked under DONE. Database traffic means decoded SQL request and response JSON through the production PostgreSQL adapter. It does not measure heap, index, TOAST, WAL, compressed network traffic or production daily changes. Fixture preparation runs separately from the measured worker.
 

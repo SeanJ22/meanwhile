@@ -37,6 +37,13 @@ interface Options {
   readonly runId?: string;
 }
 const digest = (value: string) => createHash("sha256").update(value).digest("hex");
+function requestIdentity(url: string, body: Record<string, unknown> | null, resource: CampaignFinanceResource): string {
+  if (!resource.throughDateParameter) return `${url}:${JSON.stringify(body)}`;
+  const stableUrl = new URL(url), stableBody = body ? { ...body } : null;
+  if (stableBody) delete stableBody[resource.throughDateParameter];
+  else stableUrl.searchParams.delete(resource.throughDateParameter);
+  return `${stableUrl.href}:${JSON.stringify(stableBody)}`;
+}
 const sleep = (milliseconds: number, signal: AbortSignal) => new Promise<void>((resolve, reject) => {
   if (signal.aborted) { reject(signal.reason); return; }
   const abort = () => { clearTimeout(timer); reject(signal.reason); };
@@ -44,11 +51,10 @@ const sleep = (milliseconds: number, signal: AbortSignal) => new Promise<void>((
   signal.addEventListener("abort", abort, { once: true });
 });
 
-async function response(url: string, headers: Headers, resource: CampaignFinanceResource, body: Record<string, unknown> | null, options: Options): Promise<Response> {
+export async function campaignSourceResponse(url: string, init: RequestInit, options: Pick<Options, "signal" | "fetch" | "sleep">): Promise<Response> {
   for (let attempt = 0; ; attempt++) {
     options.signal.throwIfAborted();
-    const result = await requestPublisher("official campaign finance", () => (options.fetch ?? fetch)(url, { headers, signal: options.signal,
-      ...(resource.method ? { method: resource.method, body: JSON.stringify(body) } : {}) }));
+    const result = await requestPublisher("official campaign finance", () => (options.fetch ?? fetch)(url, { ...init, signal: options.signal }));
     if (result.status !== 429 && result.status < 500 || attempt >= 3) {
       if (!result.ok && result.status !== 304) {
         await result.body?.cancel();
@@ -101,7 +107,8 @@ async function* capturedRows(state: string, resource: CampaignFinanceResource, i
       header = raw;
       const columns = [...csvRows(raw.replace(/^\uFEFF/, ""), resource.delimiter, resource.quote)][0];
       if (!columns?.length || new Set(columns).size !== columns.length) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "Campaign export columns are missing or repeated.");
-      if (resource.identity.some(field => !columns.includes(field)) || resource.committee.length && !resource.committee.some(field => columns.includes(field)) || resource.amounts.length && !resource.amounts.some(amount => columns.includes(amount.field))) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "Campaign export no longer contains its declared native identity or amount columns.");
+      if (resource.filedCondition && !columns.includes(resource.filedCondition.field)) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "Campaign export no longer contains its filing status column.");
+      if (resource.identity.some(field => !columns.includes(field)) || resource.filer.length && !resource.filer.some(field => columns.includes(field)) || resource.amounts.length && !resource.amounts.some(amount => columns.includes(amount.field))) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "Campaign export no longer contains its declared native identity or amount columns.");
       continue;
     }
     const bytes = Buffer.byteLength(raw);
@@ -120,11 +127,16 @@ async function* capturedRows(state: string, resource: CampaignFinanceResource, i
 }
 
 async function* filePages(state: string, resource: CampaignFinanceResource, path: string,
-  metadata: Parameters<typeof capturedRows>[3] & { readonly rawHash: string; readonly byteLength: number }, options: Options, envelope: FederalJsonEnvelope) {
-  if (resource.kind === "ZIP" && resource.lookup) {
-    const capture: CampaignSourceCapture = { ...metadata, storage: "ARCHIVE", vaultKey: metadata.archiveId };
+  metadata: Parameters<typeof capturedRows>[3] & { readonly rawHash: string; readonly byteLength: number }, options: Options, envelope: FederalJsonEnvelope, lookup?: Download) {
+  if (resource.emptyResponse && metadata.byteLength <= Buffer.byteLength(resource.emptyResponse) + 2 &&
+      (await readFile(path, "utf8")).trim() === resource.emptyResponse) return;
+  if (resource.lookup) {
+    const capture: CampaignSourceCapture = { ...metadata, storage: "ARCHIVE", vaultKey: metadata.archiveId, ...(lookup ? {
+      lookup: { url: lookup.sourceCheck.requestedUrl, rawHash: lookup.rawHash, vaultKey: lookup.archiveId, byteLength: lookup.byteLength,
+        retrievedAt: lookup.retrievedAt, publicationDate: lookup.modified && Number.isFinite(Date.parse(lookup.modified)) ? new Date(lookup.modified).toISOString() : null },
+    } : {}) };
     let records: CampaignSourceRecord[] = [], ordinal = 0;
-    for await (const raw of federalJsonRecords(joinedCampaignSourceRows(path, resource, `${path}.join`, options.signal), "", envelope)) {
+    for await (const raw of federalJsonRecords(joinedCampaignSourceRows(path, resource, `${path}.join`, options.signal, lookup?.path), "", envelope)) {
       records.push(campaignSourceRecord(state, resource, JSON.parse(raw), capture, ordinal++));
       if (records.length >= 500) { yield { records, capture }; records = []; }
     }
@@ -151,7 +163,7 @@ async function saveCheckpoint(path: string, value: unknown) {
   await rename(temporary, path);
 }
 async function download(state: string, url: string, resource: CampaignFinanceResource, body: Record<string, unknown> | null, options: Options): Promise<Download> {
-  const key = digest(`${url}:${JSON.stringify(body)}`);
+  const key = digest(requestIdentity(url, body, resource));
 
   const directory = join(options.directory, state, "downloads", key);
   await mkdir(directory, { recursive: true });
@@ -168,7 +180,7 @@ async function download(state: string, url: string, resource: CampaignFinanceRes
   if (resource.kind === "SOCRATA" && process.env.SOCRATA_APP_TOKEN) headers.set("x-app-token", process.env.SOCRATA_APP_TOKEN);
   if (prior?.etag) headers.set("if-none-match", prior.etag);
   else if (prior?.modified) headers.set("if-modified-since", prior.modified);
-  const acquired = await response(url, headers, resource, body, options);
+  const acquired = await campaignSourceResponse(url, { headers, ...(resource.method ? { method: resource.method, body: JSON.stringify(body) } : {}) }, options);
   const checkedAt = (options.now ?? (() => new Date().toISOString()))();
   if (acquired.status === 304) {
     await acquired.body?.cancel();
@@ -216,6 +228,11 @@ export async function* acquireCampaignFinanceResource(state: string, resource: C
   for (;;) {
     const url = new URL(resource.url);
     const body: Record<string, unknown> | null = resource.method ? { ...resource.body } : null;
+    if (resource.throughDateParameter) {
+      const through = (options.now ?? (() => new Date().toISOString()))().slice(0, 10);
+      if (body) body[resource.throughDateParameter] = through;
+      else url.searchParams.set(resource.throughDateParameter, through);
+    }
     const paged = resource.kind === "SOCRATA" || resource.offsetParameter !== undefined;
     if (resource.kind === "SOCRATA") {
       url.searchParams.set("$limit", String(pageSize)); url.searchParams.set("$offset", String(offset)); url.searchParams.set("$order", ":id");
@@ -227,10 +244,14 @@ export async function* acquireCampaignFinanceResource(state: string, resource: C
     }
     const directory = join(options.directory, state, resource.id);
     await mkdir(directory, { recursive: true });
-    const checkpointPath = join(directory, digest(`${url.href}:${JSON.stringify(body)}`) + ".json");
+    const checkpointPath = join(directory, digest(requestIdentity(url.href, body, resource)) + ".json");
     const prior = await checkpoint<ResourceCheckpoint>(checkpointPath);
     const raw = await download(state, url.href, resource, body, options);
-    const unchanged = prior?.rawHash === raw.rawHash;
+    const lookupUrl = resource.lookup?.relativeUrl ? new URL(resource.lookup.relativeUrl, url).href : resource.lookup?.url;
+    if (resource.lookup?.publicationResource && !campaignFinanceSource(state).resources.some(row => row.id === resource.lookup!.publicationResource)) throw new Error("The shared native cover file has no registered publication resource.");
+    const lookup = lookupUrl ? await download(state, lookupUrl, { ...resource, method: undefined }, null, options) : undefined;
+    const projectionHash = lookup ? digest(`${raw.rawHash}:${lookup.rawHash}`) : raw.rawHash;
+    const unchanged = prior?.rawHash === projectionHash;
     if (unchanged && options.acceptedPublicationId && prior.publicationId === options.acceptedPublicationId) {
       await saveCheckpoint(checkpointPath, { ...prior, publicationId: options.publicationId ?? null });
       const complete = completed(prior.rows, prior.total, paged);
@@ -242,7 +263,7 @@ export async function* acquireCampaignFinanceResource(state: string, resource: C
       publicationDate: raw.modified && Number.isFinite(Date.parse(raw.modified)) ? new Date(raw.modified).toISOString() : null };
     const envelope: FederalJsonEnvelope = { rows: 0, found: false };
     let count = 0;
-    for await (const page of filePages(state, resource, raw.path, metadata, options, envelope)) {
+    for await (const page of filePages(state, resource, raw.path, metadata, options, envelope, lookup)) {
       count += page.records.length;
       yield { ...page, offset: offset + count, complete: false, unchanged, sourceCheck: raw.sourceCheck, observedAt: raw.retrievedAt };
     }
@@ -250,7 +271,7 @@ export async function* acquireCampaignFinanceResource(state: string, resource: C
     const errors = resource.errorsPath ? property(envelope.value, resource.errorsPath) : null;
     if (errors && (!Array.isArray(errors) || errors.length)) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "The campaign API reports incomplete or failed source results.");
     const complete = completed(count, total, paged);
-    await saveCheckpoint(checkpointPath, { rawHash: raw.rawHash, rows: count, total, retrievedAt: raw.retrievedAt, publicationId: options.publicationId ?? null } satisfies ResourceCheckpoint);
+    await saveCheckpoint(checkpointPath, { rawHash: projectionHash, rows: count, total, retrievedAt: raw.retrievedAt, publicationId: options.publicationId ?? null } satisfies ResourceCheckpoint);
     yield { records: [], capture: null, offset: offset + count, complete, unchanged, sourceCheck: raw.sourceCheck, observedAt: raw.retrievedAt };
     if (complete) return;
     offset += resource.offsetUnit === "PAGE" ? 1 : count;

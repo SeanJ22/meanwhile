@@ -25,7 +25,7 @@ interface Options extends AcquisitionOptions {
   readonly artifacts: ReaderArtifactStore;
   readonly onPublished?: (value: { readonly state: string; readonly records: number; readonly unjoined: number }) => void;
 }
-const groupIdentity = (row: CampaignSourceRecord) => sha256(JSON.stringify([row.resource, row.governmentOcdId, row.nativeGovernmentId, row.committeeId]));
+const groupIdentity = (row: CampaignSourceRecord) => sha256(JSON.stringify([row.resource, row.governmentOcdId, row.nativeGovernmentId, row.filerId]));
 const pageKey = (index: number) => String(index).padStart(12, "0");
 async function immutable(store: ReaderArtifactStore, value: unknown): Promise<string> {
   return store.putImmutable(Buffer.from(JSON.stringify(value)), "json");
@@ -76,7 +76,7 @@ export async function publishCampaignFinanceResource(state: string, resource: Ca
     try {
       for await (const page of acquireCampaignFinanceResource(state, resource, { ...options, publicationId, ...(accepted?.complete ? { acceptedPublicationId: accepted.publicationId } : {}) })) {
         sourceCheck = page.sourceCheck;
-        if (page.capture) resourceEvidence.update(page.capture.rawHash).update("\n");
+        if (page.capture) { resourceEvidence.update(page.capture.rawHash).update("\n"); if (page.capture.lookup) resourceEvidence.update(page.capture.lookup.rawHash).update("\n"); }
         if (!observedAt || page.observedAt < observedAt) observedAt = page.observedAt;
         for (const row of page.records) {
           await output.write(`${groupIdentity(row)}\x1f${row.id.slice(-64)}\t${await spool.encode(row)}\n`);
@@ -93,6 +93,7 @@ export async function publishCampaignFinanceResource(state: string, resource: Ca
     let group: CampaignFinanceFiler | null = null, pages: FederalMoneyIndex | null = null;
     let currentGroupId: string | null = null;
     let lastNativeId: string | null = null, lastNativeHash: string | null = null;
+    let lastUnkeyedId: string | null = null, unkeyedOccurrence = 0;
     let priorGroup: CampaignFinanceFiler | null = null;
     let batch: CampaignSourceRecord[] = [], batchIndex = 0;
     let evidence = createHash("sha256"), content = createHash("sha256");
@@ -108,6 +109,7 @@ export async function publishCampaignFinanceResource(state: string, resource: Ca
     }
     async function append(row: CampaignSourceRecord) {
       evidence.update(row.provenance.rawHash).update("\n");
+      if (row.provenance.lookup) evidence.update(row.provenance.lookup.rawHash).update("\n");
       content.update(campaignSourceRecordHash(row)).update("\n");
       group = { ...group!, count: group!.count + 1, unjoined: group!.unjoined + Number(row.unjoinedReason !== null) };
       batch.push(row);
@@ -143,7 +145,7 @@ export async function publishCampaignFinanceResource(state: string, resource: Ca
       if (!result.promoted) throw new Error(result.candidate.failureDetail ?? "Campaign government publication was not accepted.");
       const groupKey = await immutable(options.artifacts, group);
       heldState = { ...heldState, groups: await groups.set(heldState.groups, group.id, groupKey),
-        filers: group.committeeId ? await filers.set(heldState.filers, `${encodeURIComponent(group.committeeId)}:${group.id}`, groupKey) : heldState.filers,
+        filers: group.filerId ? await filers.set(heldState.filers, `${encodeURIComponent(group.filerId)}:${group.id}`, groupKey) : heldState.filers,
         count: heldState.count - (priorGroup?.count ?? 0) + group.count,
         unjoined: heldState.unjoined - (priorGroup?.unjoined ?? 0) + group.unjoined };
       if (group.governmentOcdId) {
@@ -185,15 +187,21 @@ export async function publishCampaignFinanceResource(state: string, resource: Ca
         await publishGroup();
         currentGroupId = id;
         lastNativeId = null; lastNativeHash = null;
+        lastUnkeyedId = null; unkeyedOccurrence = 0;
         const priorKey = await groups.get(heldState.groups, id);
         priorGroup = priorKey ? await readFederalMoneyJson<CampaignFinanceFiler>(options.artifacts, priorKey) : null;
-        group = { id, state, resource: resource.id, committeeId: row.committeeId, committeeName: row.committeeId ? row.committeeName : null,
+        group = { id, state, resource: resource.id, filerId: row.filerId, filerName: row.filerId ? row.filerName : null,
           nativeGovernmentId: row.nativeGovernmentId, governmentOcdId: row.governmentOcdId,
           pages: priorGroup?.pages ?? null, count: 0, unjoined: 0, pageCount: 0, evidenceHash: "0".repeat(64), contentHash: "0".repeat(64) };
         pages = new FederalMoneyIndex(options.artifacts, `${scope}:filer:${id}:pages`);
         batchIndex = 0; evidence = createHash("sha256"); content = createHash("sha256");
-        predecessor = previousRows(resource.identity.length ? priorGroup : null)[Symbol.asyncIterator]();
+        predecessor = previousRows(resource.identity.length && resource.identityScope !== "PUBLICATION" ? priorGroup : null)[Symbol.asyncIterator]();
         previous = await predecessor.next();
+      }
+      if (row.nativeId === null) {
+        unkeyedOccurrence = row.id === lastUnkeyedId ? unkeyedOccurrence + 1 : 0;
+        lastUnkeyedId = row.id;
+        row = { ...row, id: `${row.id}:${String(unkeyedOccurrence).padStart(12, "0")}` };
       }
       const nativeHash = campaignSourceRecordHash(row);
       if (row.id === lastNativeId) {

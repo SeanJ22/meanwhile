@@ -7,8 +7,8 @@ export interface CampaignFinanceFiler {
   readonly id: string;
   readonly state: string;
   readonly resource: string;
-  readonly committeeId: string | null;
-  readonly committeeName: string | null;
+  readonly filerId: string | null;
+  readonly filerName: string | null;
   readonly nativeGovernmentId: string | null;
   readonly governmentOcdId: string | null;
   readonly pages: string | null;

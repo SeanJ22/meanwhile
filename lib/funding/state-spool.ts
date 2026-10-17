@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { CAMPAIGN_FINANCE_JOIN_REASONS, type CampaignSourceRecord } from "./state-source-records.ts";
 import type { CampaignFinanceResource } from "./state-sources.ts";
 
-const FIELDS = ["nativeId", "projectionOrdinal", "committeeId", "committeeName", "candidateName", "organizationName", "office", "period", "transactionDate", "nativeGovernmentId", "issues", "invalidAmounts"] as const;
+const FIELDS = ["nativeId", "projectionOrdinal", "filerId", "filerName", "filingState", "candidateName", "organizationName", "office", "period", "transactionDate", "nativeGovernmentId", "issues", "invalidAmounts"] as const;
 const REASONS = Object.values(CAMPAIGN_FINANCE_JOIN_REASONS);
 type Provenance = CampaignSourceRecord["provenance"];
 type Observation = Omit<Provenance, "rawHash" | "vaultKey" | "byteLength" | "publicationDate"> & {

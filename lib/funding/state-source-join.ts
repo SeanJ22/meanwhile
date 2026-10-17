@@ -22,8 +22,21 @@ async function* keyedRows(path: string) {
     yield { key: line.slice(0, tab), row: JSON.parse(line.slice(tab + 1)) as Row };
   }
 }
+async function* tables(path: string, resource: CampaignFinanceResource, lookupPath?: string) {
+  if (resource.kind === "ZIP") {
+    if (!resource.lookup?.entryPattern || lookupPath) throw new Error("The native ZIP join requires its declared cover entry.");
+    for await (const entry of federalZipEntries(path)) {
+      const cover = new RegExp(resource.lookup.entryPattern, "i").test(entry.name);
+      if (cover || resource.filePattern && new RegExp(resource.filePattern, "i").test(entry.name)) yield { cover, bytes: federalZipBytes(path, entry) };
+    }
+  } else {
+    if (resource.kind !== "CSV" || !lookupPath || resource.lookup?.entryPattern) throw new Error("The native CSV join requires its separate official cover file.");
+    yield { cover: true, bytes: createReadStream(lookupPath) };
+    yield { cover: false, bytes: createReadStream(path) };
+  }
+}
 
-export async function* joinedCampaignSourceRows(path: string, resource: CampaignFinanceResource, directory: string, signal: AbortSignal): AsyncGenerator<Uint8Array> {
+export async function* joinedCampaignSourceRows(path: string, resource: CampaignFinanceResource, directory: string, signal: AbortSignal, lookupPath?: string): AsyncGenerator<Uint8Array> {
   const lookup = resource.lookup;
   if (!lookup) throw new Error("The source-native cover join has no declared keys.");
   await mkdir(directory, { recursive: true });
@@ -32,13 +45,11 @@ export async function* joinedCampaignSourceRows(path: string, resource: Campaign
   let foundCover = false, foundFilings = false;
   try {
     try {
-      for await (const entry of federalZipEntries(path)) {
-        const cover = new RegExp(lookup.entryPattern, "i").test(entry.name);
-        const filing = resource.filePattern ? new RegExp(resource.filePattern, "i").test(entry.name) : false;
-        if (!cover && !filing) continue;
-        foundCover ||= cover; foundFilings ||= filing;
+      for await (const table of tables(path, resource, lookupPath)) {
+        const cover = table.cover;
+        foundCover ||= cover; foundFilings ||= !cover;
         let header: string[] | null = null;
-        for await (const line of federalCsvRecords(federalZipBytes(path, entry), resource.encoding, resource.quote)) {
+        for await (const line of federalCsvRecords(table.bytes, resource.encoding, resource.quote)) {
           signal.throwIfAborted();
           const row = [...csvRows(line.replace(/^\uFEFF/, ""), resource.delimiter, resource.quote)][0];
           if (!header) {
@@ -76,7 +87,7 @@ export async function* joinedCampaignSourceRows(path: string, resource: Campaign
         signal.throwIfAborted();
         if (heldKey !== filing.key) {
           while (!next.done && next.value.key < filing.key) {
-            yield encode(unmatchedCover(next.value.row));
+            if (!lookup.publicationResource) yield encode(unmatchedCover(next.value.row));
             next = await covers.next();
           }
           heldKey = filing.key; held = null;
@@ -91,7 +102,7 @@ export async function* joinedCampaignSourceRows(path: string, resource: Campaign
         const conflict = held && lookup.consistentFields?.some(pair => held![pair.cover] && filing.row[pair.filing] && held![pair.cover] !== filing.row[pair.filing]);
         yield encode({ ...(conflict ? { __ambiguousLookup: true } : held), ...filing.row });
       }
-      while (!next.done) { yield encode(unmatchedCover(next.value.row)); next = await covers.next(); }
+      while (!next.done) { if (!lookup.publicationResource) yield encode(unmatchedCover(next.value.row)); next = await covers.next(); }
       yield Buffer.from("]");
     } finally { await covers.return?.(); }
   } finally { await rm(directory, { recursive: true, force: true }); }

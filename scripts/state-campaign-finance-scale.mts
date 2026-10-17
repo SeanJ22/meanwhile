@@ -15,13 +15,18 @@ import { FederalMoneyBenchmarkStore } from "./lib/federal-money-benchmark-store.
 import { assignment } from "./cli-args.mts";
 
 const state = assignment(process.argv, "state"), resourceId = assignment(process.argv, "resource"), input = assignment(process.argv, "input");
+const generatedRecords = Number(assignment(process.argv, "generated-records") ?? 0), generatedFilers = Number(assignment(process.argv, "generated-filers") ?? 1);
 const stage = assignment(process.argv, "stage") ?? "publish";
 if (stage !== "acquire" && stage !== "publish") throw new Error("Scale stage must be acquire or publish.");
-if (!state || !resourceId || !input) throw new Error("--state, --resource and a complete captured --input outside the repository are required.");
+if (!state || !resourceId || !input && !generatedRecords) throw new Error("--state, --resource and a captured --input or --generated-records are required.");
+if (!Number.isSafeInteger(generatedRecords) || generatedRecords < 0 || !Number.isSafeInteger(generatedFilers) || generatedFilers < 1 || generatedRecords && (state !== "WA" || input || generatedFilers > generatedRecords)) throw new Error("Generated input requires a positive native Washington row count and filer count, without a captured input.");
 const source = campaignFinanceSource(state), resource = source.resources.find(row => row.id === resourceId);
 if (!resource) throw new Error("The scale run requires one registered native resource profile.");
-const path = resolve(input);
-if (path.startsWith(resolve(process.cwd()) + "/")) throw new Error("Scale input must stay outside the repository.");
+if (generatedRecords && resource.id !== source.resources[0].id) throw new Error("Generated input uses the registered Washington summary schema.");
+const path = input ? resolve(input) : null;
+if (path?.startsWith(resolve(process.cwd()) + "/")) throw new Error("Scale input must stay outside the repository.");
+const template = generatedRecords ? JSON.parse(await readFile(new URL("../tests/fixtures/campaign-finance/wa-native-excerpt.json", import.meta.url), "utf8"))[0] : null;
+let generatedBytes = 0;
 const directory = join(tmpdir(), `campaign-finance-scale-${state}-${randomUUID()}`);
 await mkdir(directory, { recursive: true });
 const store = stage === "publish" ? await FederalMoneyBenchmarkStore.open(join(directory, "database"), campaignFinanceSourceId(state)) : null;
@@ -32,9 +37,27 @@ const read = artifacts.readBytes.bind(artifacts), put = artifacts.putImmutable.b
 artifacts.readBytes = async key => { const bytes = await read(key); artifactRead += bytes?.length ?? 0; largestArtifactRead = Math.max(largestArtifactRead, bytes?.length ?? 0); return bytes; };
 artifacts.putImmutable = async (bytes, suffix) => { artifactWritten += bytes.length; largestArtifactWrite = Math.max(largestArtifactWrite, bytes.length); return put(bytes, suffix); };
 let sourceReads = 0;
-const sourceFetch: typeof fetch = async (_input, init) => {
+const sourceFetch: typeof fetch = async (request, init) => {
   if (new Headers(init?.headers).get("if-none-match") === "complete-source-replay") return new Response(null, { status: 304 });
   sourceReads++;
+  if (template) {
+    const url = new URL(String(request)), offset = Number(url.searchParams.get("$offset") ?? 0), limit = Number(url.searchParams.get("$limit") ?? generatedRecords);
+    async function* rows() {
+      let batch = "[", bytes = 1;
+      generatedBytes++;
+      const end = Math.min(generatedRecords, offset + limit);
+      for (let index = offset; index < end; index++) {
+        const filer = index % generatedFilers;
+        const text = (index === offset ? "" : ",") + JSON.stringify({ ...template, id: String(index), filer_id: `scale-${filer}`, filer_name: `Generated scale filer ${filer}` });
+        const length = Buffer.byteLength(text);
+        generatedBytes += length; batch += text; bytes += length;
+        if (bytes >= 64 * 1024) { yield Buffer.from(batch); batch = ""; bytes = 0; }
+      }
+      yield Buffer.from(batch + "]"); generatedBytes++;
+    }
+    return new Response(Readable.toWeb(Readable.from(rows())) as ReadableStream<Uint8Array>, { headers: { etag: "complete-source-replay" } });
+  }
+  if (!path) throw new Error("The captured source input is missing.");
   return new Response(Readable.toWeb(createReadStream(path)) as ReadableStream<Uint8Array>, { headers: { etag: "complete-source-replay" } });
 };
 const sortMemoryPath = join(directory, "sort-memory-kib");
@@ -51,7 +74,8 @@ async function sortPeakBytes() {
   try { return Math.max(0, ...(await readFile(sortMemoryPath, "utf8")).trim().split("\n").map(line => JSON.parse(line)[0])) * 1024; }
   catch (error) { if ((error as NodeJS.ErrnoException).code === "ENOENT") return 0; throw error; }
 }
-const inputBytes = (await stat(path)).size, baselineRssBytes = process.memoryUsage().rss;
+const capturedBytes = path ? (await stat(path)).size : 0, baselineRssBytes = process.memoryUsage().rss;
+const mode = template ? "generated native Washington rows from the committed real-source schema" : "complete captured-source replay";
 try {
   if (stage === "acquire") {
     const started = performance.now();
@@ -64,8 +88,8 @@ try {
       largestPageRecords = Math.max(largestPageRecords, page.records.length);
     }
     const sortPeak = await sortPeakBytes();
-    console.log(`CAMPAIGN_FINANCE_SCALE=${JSON.stringify({ state, resource: resource.id, stage, mode: "complete captured-source acquisition replay",
-      inputBytes, records, unjoined, largestCaptureBytes, largestPageRecords, baselineRssBytes, elapsedMs: performance.now() - started,
+    console.log(`CAMPAIGN_FINANCE_SCALE=${JSON.stringify({ state, resource: resource.id, stage, mode,
+      inputBytes: capturedBytes || generatedBytes, generatedRecords, generatedFilers, records, unjoined, largestCaptureBytes, largestPageRecords, baselineRssBytes, elapsedMs: performance.now() - started,
       nodePeakRssBytes: process.resourceUsage().maxRSS * 1024, sortPeakRssBytes: sortPeak,
       peakWorkerRssUpperBoundBytes: process.resourceUsage().maxRSS * 1024 + sortPeak, databaseProtocolReadBytes: 0, databaseProtocolWrittenBytes: 0 })}`);
   } else {
@@ -75,8 +99,8 @@ try {
     const result = await publishCampaignFinanceResource(state, resource, { directory: join(directory, "sources"), store, vault, artifacts,
       signal: new AbortController().signal, fetch: sourceFetch, runId: randomUUID() });
     const sortPeak = await sortPeakBytes(), nodePeak = process.resourceUsage().maxRSS * 1024, peak = nodePeak + sortPeak;
-    console.log(`CAMPAIGN_FINANCE_SCALE=${JSON.stringify({ state, resource: resource.id, mode: "complete captured-source replay into local PostgreSQL", pass,
-      inputBytes, baselineRssBytes, recordsAcquired: result.records, unjoinedAcquired: result.unjoined, publicationState: result.outcome.candidate.state,
+    console.log(`CAMPAIGN_FINANCE_SCALE=${JSON.stringify({ state, resource: resource.id, mode: `${mode} into local PostgreSQL`, pass,
+      inputBytes: capturedBytes || generatedBytes, generatedRecords, generatedFilers, baselineRssBytes, recordsAcquired: result.records, unjoinedAcquired: result.unjoined, publicationState: result.outcome.candidate.state,
       elapsedMs: performance.now() - started, peakWorkerRssUpperBoundBytes: peak, nodePeakRssBytes: nodePeak, sortPeakRssBytes: sortPeak,
       databaseProtocolReadBytes: store.bytes.read - before.read, databaseProtocolWrittenBytes: store.bytes.written - before.written,
       databaseRequests: store.bytes.requests - before.requests, largestDatabaseReadBytes: store.bytes.largestRead, largestDatabaseWriteBytes: store.bytes.largestWrite,

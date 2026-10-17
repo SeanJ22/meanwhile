@@ -35,7 +35,13 @@ try {
   let outcome: PromotionOutcome | null = null, failure: { url: string; detail: string; code: string } | null = null;
   try {
     if (!source.resources.length) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", `The official source is identified; its ${source.accessType.toLowerCase()} publication has no verified native field map yet.`);
-    for await (const resource of campaignFinanceResources(state, { vault, signal: new AbortController().signal })) {
+    for await (const resource of campaignFinanceResources(state, { vault, signal: new AbortController().signal, onFailure: async (resource, route, error) => {
+      const detail = sanitizedErrorDiagnostic(error), code = isSourceAcquisitionFailure(error) ? error.code : "PUBLISHER_DOCUMENT_INVALID";
+      failure = { url: route, detail, code };
+      if (repos) await recordCampaignFinanceDoor({ doors: repos.doors, state, resource: `${resource}:${sha256(route).slice(0, 16)}`, url: route,
+        at: new Date().toISOString(), evidence: evidenceFromFailureCode(code), reason: detail });
+      console.error(`CAMPAIGN_FINANCE_INDEX_FAILURE=${JSON.stringify({ state, resource, route, code, detail })}`);
+    } })) {
     const route = resource.url, id = resource.id;
     try {
       const result = await publishCampaignFinanceResource(state, resource, { store, artifacts, vault, directory, runId, signal: new AbortController().signal });

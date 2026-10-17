@@ -72,5 +72,80 @@
     "capturedAt": "2026-10-17T00:58:19.667155+00:00",
     "sha256": "3df1628d6b3f352a536c210d0f6f692f87e583a3670ff1b786f6ac1ce571d023",
     "transformation": "Selected filing fields from two actual CSV rows and the original publication preamble; individual donor names and mailing/contact fields omitted. LF line endings."
+  },
+  {
+    "file": "dc-native-contributions.json",
+    "url": "https://maps2.dcgis.dc.gov/dcgis/rest/services/DCGIS_DATA/Public_Service_WebMercator/MapServer/34/query?f=json&where=1%3D1&outFields=*&returnGeometry=false&orderByFields=OBJECTID&resultRecordCount=2",
+    "capturedAt": "2026-10-17T01:04:06.501302+00:00",
+    "sha256": "ae150a9541385f351e40c501f43628f5242e22866f9a50ff51a2353c8b9f2479",
+    "transformation": "Selected actual public filing fields; individual donor names, street/location fields and employer fields omitted."
+  },
+  {
+    "file": "sc-native-contributions.json",
+    "url": "https://ethicsfiling.sc.gov/api/Candidate/Contribution/Search/",
+    "request": {
+      "amountMax": 0,
+      "amountMin": 0,
+      "candidate": "",
+      "contributionDateMin": "2026-10-01T00:00:00.000Z",
+      "contributionDescription": "",
+      "contributorCity": "",
+      "contributorName": "",
+      "contributorOccupation": "",
+      "contributorZip": null,
+      "officeRun": "",
+      "contributionDateMax": "2026-10-17"
+    },
+    "capturedAt": "2026-10-17T01:08:42.783601+00:00",
+    "sha256": "553f3c3133b81138cef8cee286f958ac9090789d56995a9dbb19411ad043b7ab",
+    "transformation": "Two actual public contribution rows projected to campaign fields. Individual donor names, addresses and occupation omitted; filed group name retained only when the source says group=Yes."
+  },
+  {
+    "file": "ut-native-transactions.csv",
+    "url": "https://disclosures.utah.gov/Search/AdvancedSearch/GenerateReport?ReportYear=2026&EntityType=PCC",
+    "capturedAt": "2026-10-17T01:10:22.997295+00:00",
+    "sha256": "25f78646df4cd50f5b58dfe42157e751c8b34451c5f2f43cddee0ceda73ba1d7",
+    "transformation": "Two actual source rows, one marked filed and one unfiled; selected filing fields only. Individual counterparty names, addresses and purpose text omitted. LF line endings."
+  },
+  {
+    "file": "ky-native-contributions.json",
+    "url": "https://secure.kentucky.gov/kref/publicsearch/ExportContributors?ElectionDate=11%2F3%2F2026+00%3A00%3A00&ContributionSearchType=All",
+    "capturedAt": "2026-10-17T01:16:06.072374+00:00",
+    "sha256": "4793db4347610dda3ff7221128f427912ca7b9830c1985cd2fea6d38361ba8f0",
+    "transformation": "Two actual CSV rows projected to JSON public filing fields; individual donor names, addresses, employer, spouse and occupation fields omitted. Organization name retained for source-classified KYPAC."
+  },
+  {
+    "file": "sc-native-expenditures.json",
+    "url": "https://ethicsfiling.sc.gov/api/Candidate/Expenditure/Public/Get/All/Advanced/Campaign/Expenditures",
+    "request": {
+      "candidate": "",
+      "office": "",
+      "vendorName": "",
+      "expDesc": "",
+      "vendorCity": "",
+      "vendorState": "",
+      "vendorZip": "",
+      "fromamount": 0,
+      "toamount": 0,
+      "fromDate": "2026-10-01T00:00:00.000Z",
+      "toDate": "2026-10-17T00:00:00.000Z"
+    },
+    "capturedAt": "2026-10-17T01:21:26.229448+00:00",
+    "sha256": "ada992048694f1df4d25c76036345f714befda4508f79d1549d8a1a334df920e",
+    "transformation": "Two actual public expense rows projected to filer, campaign, office, transaction, amount and date fields; vendor names and addresses omitted."
+  },
+  {
+    "file": "va-native-reports.csv",
+    "url": "https://apps.elections.virginia.gov/SBE_CSV/CF/2026_10/Report.csv",
+    "capturedAt": "2026-10-17T01:34:13.677716+00:00",
+    "sha256": "56051a155d4c634f3722fec8066a7b7fae13b93db609b373fa745a27a127db3d",
+    "transformation": "Selected actual public campaign/report fields from matching native ReportId rows; individual counterparty names, addresses and contact fields omitted. Windows-1252 with LF line endings."
+  },
+  {
+    "file": "va-native-contributions.csv",
+    "url": "https://apps.elections.virginia.gov/SBE_CSV/CF/2026_10/ScheduleA.csv",
+    "capturedAt": "2026-10-17T01:34:13.677960+00:00",
+    "sha256": "4a812891d83be525445f2fb221520ccc38dade599810abccf8bdb149e6490f79",
+    "transformation": "Selected actual public campaign/report fields from matching native ReportId rows; individual counterparty names, addresses and contact fields omitted. Windows-1252 with LF line endings."
   }
 ]

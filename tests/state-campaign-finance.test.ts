@@ -60,7 +60,7 @@ test("the saved Massachusetts report log retains filed amounts and dates without
   const [raw] = JSON.parse(await readFile(new URL("./fixtures/campaign-finance/ma-native-excerpt.json", import.meta.url), "utf8"));
   const row = campaignSourceRecord("MA", source, raw, { ...capture, url: source.url });
   assert.equal(row.nativeId, String(raw.reportId));
-  assert.equal(row.committeeId, String(raw.cpfId));
+  assert.equal(row.filerId, String(raw.cpfId));
   assert.equal(row.candidateName, null);
   assert.equal(row.provenance.publicationDate, raw.dateFiled);
   assert.equal(row.amounts.find(value => value.label === "Report receipts")?.amount, 500);
@@ -84,8 +84,8 @@ async function context() {
   const store = new MemoryRoutineDataStore(), vault = new MemoryEvidenceStore(), artifacts = new LocalFileArtifactStore(join(directory, "artifacts"));
   return { directory, store, vault, artifacts, signal: new AbortController().signal, now: () => now };
 }
-async function* heldRows(options: Awaited<ReturnType<typeof context>>) {
-  const scope = campaignFinanceNativeScope("WA");
+async function* heldRows(options: Awaited<ReturnType<typeof context>>, usps = "WA") {
+  const scope = campaignFinanceNativeScope(usps);
   const state = await options.store.readPromotion<CampaignFinancePublication>("CURATED_READER_RECORD", scope);
   assert.equal(state?.payload.kind, "campaign-finance-source-state");
   if (state?.payload.kind !== "campaign-finance-source-state") return;
@@ -99,7 +99,7 @@ async function* heldRows(options: Awaited<ReturnType<typeof context>>) {
     for (let index = 0; index < government.pageCount; index++) {
       const key = await pages.get(government.pages, String(index).padStart(12, "0"));
       assert.ok(key);
-      yield* await readCampaignFinancePage(options.artifacts, await readFederalMoneyJson<CampaignFinancePageRef>(options.artifacts, key), "WA");
+      yield* await readCampaignFinancePage(options.artifacts, await readFederalMoneyJson<CampaignFinancePageRef>(options.artifacts, key), usps);
     }
     after = entry.key; exclusive = true;
   }
@@ -179,7 +179,7 @@ test("real California and Pennsylvania native cover joins stream independently a
       for (const copy of [configured, { ...configured, id: `${configured.id}-other-table` }]) {
         let count = 0;
         for await (const page of acquireCampaignFinanceResource(state, copy, { ...options, fetch: sourceFetch, runId: "shared-archive-pass" })) {
-          for (const row of page.records) { count++; assert.ok(row.committeeId); assert.ok(row.committeeName); assert.ok(row.amounts.length); }
+          for (const row of page.records) { count++; assert.ok(row.filerId); assert.ok(row.filerName); assert.ok(row.amounts.length); }
         }
         assert.equal(count, 2);
       }
@@ -248,7 +248,7 @@ test("Vermont's public POST index expands each published year and maps native tr
     for (const raw of rows) {
       const row = campaignSourceRecord("VT", source, { ...raw, "Contributor Address Line 1": "Private home" }, { ...capture, url: source.url });
       assert.equal(row.nativeId, raw["Transaction Id"]);
-      assert.equal(row.committeeId, raw["Filing Entity Id"]);
+      assert.equal(row.filerId, raw["Filing Entity Id"]);
       assert.equal(row.candidateName, raw["Registration Type"] === "Candidate" ? raw["Filing Entity Name"] : null);
       assert.equal(row.provenance.publicationDate, raw["Report Filed Date"]);
       assert.equal(row.filingUrl, "https://campaignfinance.vermont.gov/");
@@ -275,7 +275,7 @@ test("native joins retain cover-only rows and quarantine malformed cover details
     assert.equal(rows.length, 3);
     const covered = rows.filter(row => row.amounts.length);
     assert.equal(covered.length, 2);
-    assert.ok(covered.every(row => row.committeeName === null && row.issues.some(issue => issue.includes("unexpected number"))));
+    assert.ok(covered.every(row => row.filerName === null && row.issues.some(issue => issue.includes("unexpected number"))));
     const coverOnly = rows.find(row => !row.amounts.length)!;
     assert.match(coverOnly.issues.join(" "), /no matching filing/);
     assert.ok(coverOnly.unjoinedReason);
@@ -320,7 +320,7 @@ test("Maryland bulk publications expand primitive year lists and stream past the
     } })) {
       count += page.records.length;
       for (const row of page.records) {
-        assert.ok(row.committeeId && row.committeeName && row.period && row.amounts.length);
+        assert.ok(row.filerId && row.filerName && row.period && row.amounts.length);
         assert.equal(row.provenance.publicationDate, null);
         assert.equal(row.filingUrl, "https://campaignfinance.maryland.gov/");
         assert.equal(row.candidateName, null);
@@ -328,5 +328,204 @@ test("Maryland bulk publications expand primitive year lists and stream past the
       }
     }
     assert.equal(count, 2);
+  } finally { await rm(options.directory, { recursive: true, force: true }); }
+});
+
+
+test("D.C. native epoch dates and publication-scoped IDs reach a government artifact without merging stale object IDs", async () => {
+  const options = await context();
+  const source = campaignFinanceSource("DC").resources[0];
+  const saved = JSON.parse(await readFile(new URL("./fixtures/campaign-finance/dc-native-contributions.json", import.meta.url), "utf8"));
+  let rows = saved.features;
+  try {
+    const fetch: typeof globalThis.fetch = async () => new Response(JSON.stringify({ ...saved, features: rows }));
+    await publishCampaignFinanceResource("DC", source, { ...options, fetch });
+    const scope = campaignFinanceNativeScope("DC");
+    const state = await options.store.readPromotion<CampaignFinancePublication>("CURATED_READER_RECORD", scope);
+    assert.equal(state?.payload.kind, "campaign-finance-source-state");
+    if (state?.payload.kind !== "campaign-finance-source-state") throw new Error("D.C. state publication is missing.");
+    const held = state.payload.records[0];
+    assert.equal(held.count, 2);
+    const placeKey = await new FederalMoneyIndex(options.artifacts, `${scope}:places`).get(held.places, "ocd-division/country:us/district:dc");
+    assert.ok(placeKey);
+    const first = campaignSourceRecord("DC", source, rows[0], { ...capture, url: source.url });
+    assert.equal(first.transactionDate, new Date(rows[0].attributes.DATEOFRECEIPT).toISOString());
+    assert.equal(first.provenance.publicationDate, new Date(rows[0].attributes.GIS_LAST_MOD_DTTM).toISOString());
+    assert.equal(first.filerId, null);
+    assert.ok(first.unjoinedReason);
+    rows = rows.slice(0, 1);
+    await publishCampaignFinanceResource("DC", source, { ...options, fetch, now: () => "2026-10-17T01:00:00.000Z" });
+    const updated = await options.store.readPromotion<CampaignFinancePublication>("CURATED_READER_RECORD", scope);
+    assert.equal(updated?.payload.records[0].count, 1);
+  } finally { await rm(options.directory, { recursive: true, force: true }); }
+});
+
+
+test("South Carolina keeps source-native candidate IDs and advances its query date without duplicating raw download heads", async () => {
+  const options = await context();
+  const source = campaignFinanceSource("SC").resources[0];
+  const raw = JSON.parse(await readFile(new URL("./fixtures/campaign-finance/sc-native-contributions.json", import.meta.url), "utf8"));
+  let at = now;
+  const dates: string[] = [];
+  try {
+    const fetch: typeof globalThis.fetch = async (_input, init) => {
+      dates.push(JSON.parse(String(init?.body)).contributionDateMax);
+      return new Headers(init?.headers).has("if-none-match") ? new Response(null, { status: 304 })
+        : new Response(JSON.stringify(raw), { headers: { etag: "unchanged-source-rows" } });
+    };
+    for (const day of [now, "2026-10-18T00:00:00.000Z"]) {
+      at = day;
+      let count = 0;
+      for await (const page of acquireCampaignFinanceResource("SC", source, { ...options, fetch, now: () => at })) {
+        for (const row of page.records) {
+          count++;
+          const original = raw.find((value: { contributionId: number }) => String(value.contributionId) === row.nativeId)!;
+          assert.equal(row.filerId, String(original.candidateId));
+          assert.equal(row.candidateName, original.candidateName.trim());
+          assert.equal(row.organizationName, original.group === "Yes" ? original.contributorName.trim() : null);
+          assert.equal(row.provenance.retrievedAt, now);
+        }
+      }
+      assert.equal(count, 2);
+    }
+    assert.deepEqual(dates, ["2026-10-17", "2026-10-18"]);
+  } finally { await rm(options.directory, { recursive: true, force: true }); }
+});
+
+
+test("Utah expands every published year, keeps unfiled documents without amounts and accepts the source's explicit empty publication", async () => {
+  const options = await context();
+  const source = campaignFinanceSource("UT").resources[0];
+  const bytes = await readFile(new URL("./fixtures/campaign-finance/ut-native-transactions.csv", import.meta.url));
+  try {
+    let resources = 0;
+    for await (const entry of campaignFinanceResources("UT", { ...options, fetch: async () => new Response('<select id="ReportYear"><option value="2026">2026</option><option value="2025">2025</option></select>') })) {
+      resources++;
+      assert.match(entry.url, /ReportYear=202[56]&EntityType=/);
+    }
+    assert.equal(resources, campaignFinanceSource("UT").resources.length * 2);
+    const rows = [];
+    for await (const page of acquireCampaignFinanceResource("UT", source, { ...options, fetch: async () => new Response(bytes) })) rows.push(...page.records);
+    assert.equal(rows.length, 2);
+    assert.equal(rows[0].filingState, "FILED");
+    assert.equal(rows[0].amounts[0].amount, 250);
+    assert.equal(rows[0].period, "2026 – Convention");
+    assert.equal(rows[1].filingState, "UNFILED");
+    assert.equal(rows[1].amounts.length, 0);
+    assert.ok(rows[1].issues.some(issue => issue.includes("not marked")));
+    let complete = false;
+    for await (const page of acquireCampaignFinanceResource("UT", { ...source, id: "empty-source-year" }, { ...options, fetch: async () => new Response(source.emptyResponse) })) {
+      assert.equal(page.records.length, 0);
+      complete ||= page.complete;
+    }
+    assert.equal(complete, true);
+  } finally { await rm(options.directory, { recursive: true, force: true }); }
+});
+
+
+test("Kentucky bulk exports follow its native election-date list and preserve organization classes", async () => {
+  const options = await context();
+  const rows = JSON.parse(await readFile(new URL("./fixtures/campaign-finance/ky-native-contributions.json", import.meta.url), "utf8"));
+  const source = campaignFinanceSource("KY").resources[0];
+  try {
+    const resources = [];
+    for await (const entry of campaignFinanceResources("KY", { ...options, fetch: async () => new Response(JSON.stringify(["11/3/2026", "5/21/1983"])) })) resources.push(entry);
+    assert.equal(resources.length, 2);
+    assert.equal(new URL(resources[0].url).searchParams.get("ElectionDate"), "11/3/2026");
+    assert.equal(new URL(resources[1].url).searchParams.get("ElectionDate"), "5/21/1983");
+    for (const raw of rows) {
+      const row = campaignSourceRecord("KY", source, raw, { ...capture, url: resources[0].url });
+      assert.equal(row.nativeId, null);
+      assert.equal(row.candidateName, [raw["Recipient First Name"], raw["Recipient Last Name"]].map(value => value.trim()).filter(Boolean).join(" "));
+      assert.equal(row.organizationName, raw["Contribution Type"] === "KYPAC" ? raw["From Organization Name"].trim() : null);
+      assert.equal(row.period, raw["Election Date"]);
+      assert.equal(row.amounts.length, 1);
+    }
+    const expenses = JSON.parse(await readFile(new URL("./fixtures/campaign-finance/sc-native-expenditures.json", import.meta.url), "utf8"));
+    const expenseSource = campaignFinanceSource("SC").resources.find(row => row.id === "ethics-candidate-expenditures")!;
+    for (const raw of expenses) {
+      const row = campaignSourceRecord("SC", expenseSource, raw, { ...capture, url: expenseSource.url });
+      assert.equal(row.nativeId, String(raw.expId));
+      assert.equal(row.filerId, String(raw.candidateFilerId));
+      assert.equal(row.organizationName, null);
+      assert.equal(row.period, raw.expDate);
+      assert.equal(row.amounts[0].amount, raw.amount);
+    }
+  } finally { await rm(options.directory, { recursive: true, force: true }); }
+});
+
+
+test("idless source snapshots retain identical rows and stable identities when capture bytes or row order change", async () => {
+  const options = await context();
+  const source = campaignFinanceSource("MD").resources[0];
+  const lines = (await readFile(new URL("./fixtures/campaign-finance/md-native-contributions.csv", import.meta.url), "utf8")).trimEnd().split("\n");
+  let text = [lines[0], lines[1], lines[2], lines[2], lines[3]].join("\n") + "\n";
+  try {
+    await publishCampaignFinanceResource("MD", source, { ...options, fetch: async () => new Response(text) });
+    const first = [];
+    for await (const row of heldRows(options, "MD")) first.push(row);
+    assert.equal(first.length, 3);
+    assert.equal(new Set(first.map(row => row.id)).size, 3);
+    text = ["Publication rechecked", lines[1], lines[3], lines[2], lines[2]].join("\n") + "\n";
+    await publishCampaignFinanceResource("MD", source, { ...options, now: () => "2026-10-17T02:00:00.000Z", fetch: async () => new Response(text) });
+    const after = [];
+    for await (const row of heldRows(options, "MD")) after.push(row);
+    assert.deepEqual(after.map(row => row.id).sort(), first.map(row => row.id).sort());
+    assert.ok(after.every(row => row.provenance.retrievedAt === now));
+  } finally { await rm(options.directory, { recursive: true, force: true }); }
+});
+
+
+test("Virginia joins separate official CSV files once per pass and a corrected cover invalidates an unchanged transaction capture", async () => {
+  const options = await context();
+  const source = campaignFinanceSource("VA").resources.find(row => row.id === "elect-schedule-a")!;
+  let cover = await readFile(new URL("./fixtures/campaign-finance/va-native-reports.csv", import.meta.url));
+  const filings = await readFile(new URL("./fixtures/campaign-finance/va-native-contributions.csv", import.meta.url));
+  let edition = 1, coverDownloads = 0, at = now;
+  const fetch: typeof globalThis.fetch = async (input, init) => {
+    const lookup = String(input).endsWith("Report.csv");
+    const etag = lookup ? `cover-${edition}` : "filings";
+    if (new Headers(init?.headers).get("if-none-match") === etag) return new Response(null, { status: 304 });
+    if (lookup) coverDownloads++;
+    return new Response(lookup ? cover : filings, { headers: { etag } });
+  };
+  try {
+    let firstFiler = "";
+    for (const pass of [1, 2]) {
+      const rows = [];
+      for await (const page of acquireCampaignFinanceResource("VA", source, { ...options, fetch, runId: `pass-${pass}`, publicationId: `pass-${pass}`,
+        ...(pass === 2 ? { acceptedPublicationId: "pass-1" } : {}), now: () => at })) rows.push(...page.records);
+      assert.equal(rows.length, 2);
+      assert.ok(rows.every(row => row.filerId && row.filerName && row.period && row.provenance.lookup));
+      assert.ok(rows.every(row => row.provenance.lookup!.url.endsWith("Report.csv")));
+      if (pass === 1) {
+        firstFiler = rows[0].filerName!;
+        cover = Buffer.from(cover.toString("latin1").replaceAll(firstFiler, firstFiler + " Updated"), "latin1");
+        edition++; at = "2026-10-17T01:00:00.000Z";
+      } else {
+        assert.equal(rows[0].filerName, firstFiler + " Updated");
+        assert.equal(rows[0].provenance.retrievedAt, now);
+        assert.equal(rows[0].provenance.lookup!.retrievedAt, at);
+      }
+      for await (const _page of acquireCampaignFinanceResource("VA", { ...source, id: `${source.id}-second-consumer` }, { ...options, fetch, runId: `pass-${pass}` })) {}
+      assert.equal(coverDownloads, pass);
+    }
+  } finally { await rm(options.directory, { recursive: true, force: true }); }
+});
+
+test("Virginia discovers monthly file links and records one failed index without abandoning other months", async () => {
+  const options = await context();
+  let failed = 0;
+  const found = [];
+  try {
+    for await (const resource of campaignFinanceResources("VA", { ...options, onFailure: async () => { failed++; }, fetch: async input => {
+      const url = String(input);
+      if (url.endsWith("/2026_09/")) return new Response("Unavailable", { status: 404 });
+      if (url.endsWith("/CF/")) return new Response('<a href="2026_09/">September</a><a href="2026_10/">October</a>');
+      return new Response(["Report", ..."ABCDEFGHI".split("").map(letter => `Schedule${letter}`)].map(name => `<a href="${name}.csv">${name}</a>`).join(""));
+    } })) found.push(resource);
+    assert.equal(found.length, 10);
+    assert.equal(failed, 10);
+    assert.ok(found.every(resource => resource.url.includes("/2026_10/") && resource.url.endsWith(".csv")));
   } finally { await rm(options.directory, { recursive: true, force: true }); }
 });

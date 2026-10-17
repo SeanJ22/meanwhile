@@ -245,12 +245,25 @@ async function parent() {
     process.stderr.write(`${JSON.stringify({type:"input-shape",...shape})}\n`);
   }
 
+  if(scenario==="manual") {
+    const shape=(await pg.query(`WITH sizes AS MATERIALIZED (SELECT octet_length(value::text) AS bytes,
+      jsonb_array_length(value #> '{reach,places}')>0 AS place_reach,jsonb_array_length(value #> '{reach,states}')>0 AS state_reach,
+      jsonb_array_length(value #> '{reach,platforms}')>0 AS platform_reach,(value #>> '{reach,everywhere}')::boolean AS everywhere,
+      (value #>> '{reach,method}')::boolean AS method FROM cp_field_manual_entries)
+      SELECT count(*)::text AS records,round(avg(bytes))::int AS mean_bytes,percentile_disc(0.95) WITHIN GROUP(ORDER BY bytes) AS p95_bytes,max(bytes) AS max_bytes,
+        count(*) FILTER(WHERE place_reach)::text AS places,count(*) FILTER(WHERE state_reach)::text AS states,
+        count(*) FILTER(WHERE platform_reach)::text AS platforms,count(*) FILTER(WHERE everywhere)::text AS everywhere,
+        count(*) FILTER(WHERE method)::text AS methods,(SELECT count(*) FROM scale_manual_samples)::int AS source_samples FROM sizes`)).rows[0];
+    process.stderr.write(`${JSON.stringify({type:"input-shape",...shape})}\n`);
+  }
   const fixtureSetupMs = performance.now() - setupStarted;
   process.stderr.write(`${JSON.stringify({ type: "fixture", scenario, divisions: places.length, fixtureSetupMs })}\n`);
   const directory = await mkdtemp(join(tmpdir(), "cp-01-scale-"));
   const { writeFile } = await import("node:fs/promises");
   const selectedFile = join(directory, "selected.json");
-  await writeFile(selectedFile, JSON.stringify(selected.filter(place => places.includes(place))));
+  const packetStates=arg("planning-states")?new Set(arg("planning-states").split(",")):null;
+  const selectedForWork=selected.filter(place=>places.includes(place) && (packetStates===null || packetStates.has(/\/(?:state|territory|district):([^/]+)/.exec(place)![1])));
+  await writeFile(selectedFile, JSON.stringify(selectedForWork));
   let planningRoundWallMs:number|null=null;
   const launch=async(state?:string):Promise<RunReport[]>=>{
   const child = fork(import.meta.filename, [...process.argv.slice(2), "--mode=worker", `--copies=${join(directory, "copies",state??"all")}`, `--selected=${selectedFile}`,...(state?[`--planning-state=${state}`,`--expected-subjects=${places.filter(subject=>((/\/(?:state|territory|district):([^/]+)/.exec(subject)?.[1]??/^government:US-([A-Z]{2}):/.exec(subject)?.[1]?.toLowerCase())??"system")===state).length}`]:[])], {
@@ -317,7 +330,7 @@ async function parent() {
   const warmRows=scenario==="planner" || scenario==="pipeline"?results.filter(result=>result.run===repetitions-1):[results.at(-1)!];
   const warm={responseBytes:warmRows.reduce((n,row)=>n+row.responseBytes,0),requestBytes:warmRows.reduce((n,row)=>n+row.requestBytes,0),databaseWalBytes:warmRows.reduce((n,row)=>n+row.databaseWalBytes,0),ms:warmRows.reduce((n,row)=>n+row.ms,0)};
   console.log(JSON.stringify({ scenario, root,sourceSha,planningRoundWallMs, input: { subjects: places.length,nationalSubjectsAvailable:all.length,ocdDivisions: all.filter(place=>place.startsWith("ocd-division/")).length,censusGovernments:all.filter(place=>place.startsWith("government:")).length,
-    scopes: [...byState.keys()].sort(), selectedPlaces: selected.filter(place => places.includes(place)).length, historiesPerPlace: history },
+    scopes: [...byState.keys()].sort(), selectedPlaces: selectedForWork.length, historiesPerPlace: history },
     measurement: "Postgres 17 in an isolated local container; exact serialized fixture-adapter request/response bodies through the production Neon counter and physical WAL written per workload. Excludes real Neon framing and network latency. Database memory is separate from the measured worker.",
     assumptions: { runsPerDay, runnerAvailableBytes: Number.isFinite(runnerAvailable) ? runnerAvailable : null, reserveBytes: margin,
       documentedHostBytes: documentedHost, documentedHostSource: "deploy/runner/README.md", existingParentReserveBytes: parentReserve,
@@ -362,12 +375,34 @@ async function seed(pg: FixtureDatabase, places: string[], selected: string[]) {
       [now,JSON.stringify(VERIFICATION_CHECKS.map((name:string)=>({name,result:"PASS",detail:"Generated source verification"}))),history]);
   } else if (scenario === "manual") {
     const manual = await importAt("lib/control-plane/field-manual.ts");
-    const entry = manual.normalizeEntry(manual.newFieldManualEntry("scale", "template", { role: "SCOUT", kind: "SCOUT_DISCOVERY", title: "Official meeting calendar",
-      summary: "The official calendar publishes meetings and links the agenda and minutes for this government.", outcome: "YIELDED", ocdIds: [places[0]], observedAt: now, payload: { route: "official-calendar", result: "agenda and minutes" } }));
-    await pg.query(`${template("field_manual_entries")} SELECT 'note-' || p.ordinal || '-' || h.n, 1, $1::timestamptz, $1::timestamptz,
-      $2::jsonb || jsonb_build_object('id', 'note-' || p.ordinal || '-' || h.n, 'ocdIds', jsonb_build_array(p.id),
-        'reach', jsonb_build_object('places', jsonb_build_array(lower(p.id)), 'states', '[]'::jsonb, 'platforms', '[]'::jsonb, 'everywhere', false))
-      FROM scale_places p CROSS JOIN generate_series(1,$3::integer) h(n)`, [now, JSON.stringify(entry), history]);
+    const samples=(JSON.parse(await readFile(join(sourceRoot,"tests/fixtures/field-manual-pages/manual.json"),"utf8")) as {entries:unknown[]}).entries.map(entry=>manual.normalizeEntry(entry));
+    assert.ok(samples.length);
+    await pg.exec("CREATE TABLE scale_manual_samples(ordinal integer PRIMARY KEY,value jsonb NOT NULL)");
+    await pg.query("INSERT INTO scale_manual_samples SELECT (ordinal-1)::integer,value FROM jsonb_array_elements($1::jsonb) WITH ORDINALITY samples(value,ordinal)",[JSON.stringify(samples)]);
+    await pg.query(`WITH source AS (
+      SELECT p.ordinal,p.id,p.state,h.n,sample.value,
+        (p.ordinal::bigint*$3::integer+h.n-1)%7126 AS bucket,(p.ordinal::bigint*$3::integer+h.n-1)%1000 AS size_bucket
+      FROM scale_places p CROSS JOIN generate_series(1,$3::integer) h(n)
+      JOIN scale_manual_samples sample ON sample.ordinal=(p.ordinal::bigint*$3::integer+h.n-1)%$2::integer
+    ), scope AS (
+      SELECT *,bucket>=6571 AS is_place,bucket>=1467 AND bucket<6571 AS is_state,
+        (bucket>=368 AND bucket<1467 OR bucket=6570 OR bucket>=7066) AS is_platform,
+        (bucket>=162 AND bucket<368 OR bucket>=1270 AND bucket<1467) AS is_everywhere,
+        (bucket>=45 AND bucket<162 OR bucket>=1213 AND bucket<1270 OR bucket>=6487 AND bucket<6570) AS is_method,
+        CASE WHEN size_bucket=0 THEN 75228 WHEN size_bucket<60 THEN 3601 ELSE 1579 END AS target_bytes FROM source
+    ), shaped AS (
+      SELECT ordinal,n,id,target_bytes,value || jsonb_build_object('id','note-'||ordinal||'-'||n,'role','SCOUT',
+        'kind',CASE WHEN is_method THEN 'METHOD' WHEN value->>'kind' IN('METHOD','ROUTE','MANIFEST_BRANCH') THEN 'LESSON' ELSE value->>'kind' END,
+        'states',jsonb_build_array(state),'ocdIds',CASE WHEN is_place THEN jsonb_build_array(id) ELSE '[]'::jsonb END,'bodyIds','[]'::jsonb,
+        'url',CASE WHEN is_method THEN NULL ELSE value->>'url' END,'platforms',CASE WHEN is_platform THEN jsonb_build_array('legistar') ELSE '[]'::jsonb END,
+        'reach',jsonb_build_object('places',CASE WHEN is_place THEN jsonb_build_array(lower(id)) ELSE '[]'::jsonb END,
+          'states',CASE WHEN is_state THEN jsonb_build_array(state) ELSE '[]'::jsonb END,
+          'platforms',CASE WHEN is_platform THEN jsonb_build_array('legistar') ELSE '[]'::jsonb END,'everywhere',is_everywhere,'method',is_method),
+        'payload',(CASE WHEN jsonb_typeof(value->'payload')='object' THEN value->'payload' ELSE jsonb_build_object('sourcePayload',value->'payload') END)||jsonb_build_object('scaleExcerpt','')) AS value
+      FROM scope
+    ) ${template("field_manual_entries")} SELECT 'note-'||ordinal||'-'||n,1,$1::timestamptz,$1::timestamptz,
+      jsonb_set(value,'{payload,scaleExcerpt}',to_jsonb(left(repeat(md5(id||n),((target_bytes+31)/32)::integer),greatest(0,target_bytes-octet_length(value::text)))))
+      FROM shaped`,[now,samples.length,history]);
   } else if (scenario === "method") {
     await pg.query(`INSERT INTO cp_fix_map (method_id,place_id,state,tried_at,attempt_id,cause,updated_at)
       SELECT 'scale-method',id,'WORKS',$1::timestamptz,'attempt-' || ordinal,NULL,$1::timestamptz FROM scale_places`, [now]);

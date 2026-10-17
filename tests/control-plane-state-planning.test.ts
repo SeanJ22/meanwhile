@@ -173,12 +173,16 @@ test("state planning retains Census government packets as well as OCD divisions"
 
 test("every Census government keeps its own state in the hunt plan",async()=>{
   const {huntPacketPlan,stateOfDivision}=await import("../lib/hunt/packet-plan.ts");
+  const {scoutFieldManualQuery}=await import("../lib/control-plane/scheduler/field-manual-scout.ts");
   for(const state of HUNT_STATES) {
     const id=`government:US-${state.toUpperCase()}:123456`,plan=huntPacketPlan(id);
     assert.equal(stateOfDivision(id),state.toUpperCase(),id);
     assert.equal(plan.jurisdiction,state.toUpperCase(),id);
     assert.ok(plan.contract.schemaVersion===2);
     assert.equal(plan.contract.jurisdiction.state,state.toUpperCase(),id);
+    const query=scoutFieldManualQuery({subjectId:id,divisions:[id]});
+    assert.equal(query.state,state,id);
+    assert.deepEqual(query.ocdIds,[id]);
   }
   assert.equal(stateOfDivision("ocd-division/country:us/district:dc"),"DC");
   assert.equal(stateOfDivision("ocd-division/country:us/territory:pr"),"PR");

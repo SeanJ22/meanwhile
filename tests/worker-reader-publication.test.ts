@@ -29,7 +29,7 @@ import { readRegistryRuntimePrior, type RegistryRuntimePrior } from "../lib/regi
 import { publishWorkerReaderResults } from "../lib/civic-data/worker-reader-publication.ts";
 import { workerPublicationTasks } from "../lib/civic-data/worker-publication-tasks.ts";
 import { verifiedWorkerRecords } from "../lib/civic-data/worker-publication-evidence.ts";
-import { readCuratedReaderProjection } from "../lib/civic-data/curated-reader-read-model.ts";
+import { readBallotNavigationProjection, readCuratedReaderProjection } from "../lib/civic-data/curated-reader-read-model.ts";
 import { readPublicRecords } from "../lib/civic-data/public-records.ts";
 import { takeUnshownUpdates } from "../lib/control-plane/updates.ts";
 import { readGovernmentBudgets, currentBudgetFacts, budgetChecklistEvidence } from "../lib/civic-data/government-budgets.ts";
@@ -432,7 +432,7 @@ test("normal voter-access workers publish the independently verified statewide r
     coverage: "STATEWIDE", coverageEvidence: "The election authority identifies this lookup as serving the entire state." });
   const result = await publishWorkerReaderResults(input);
   assert.equal(result[0].outcome.status, "PUBLISHED", JSON.stringify(result));
-  const read = await readCuratedReaderProjection("ballot-navigation", { store, now: h.now(), bypassCache: true });
+  const read = await readBallotNavigationProjection("AZ", { store, now: h.now(), bypassCache: true });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") throw new Error("reader missing");
   assert.equal(read.value.records[0].kind, "REGISTRATION_LINK");
@@ -445,7 +445,7 @@ test("a BROKE audit names the published reader members it takes out of the next 
     coverage: "STATEWIDE", coverageEvidence: "The election authority identifies this lookup as serving the entire state." })));
   const published = await publishWorkerReaderResults(input);
   assert.equal(published[0].outcome.status, "PUBLISHED", JSON.stringify(published));
-  const live = await readCuratedReaderProjection("ballot-navigation", { store, now: h.now(), bypassCache: true });
+  const live = await readBallotNavigationProjection("AZ", { store, now: h.now(), bypassCache: true });
   if (live.kind !== "PROMOTED") throw new Error("reader missing");
   assert.equal(live.value.records.length, 2);
   const parser = results.find(row => row.result.role === "PARSER")!;
@@ -465,7 +465,7 @@ test("a BROKE audit names the published reader members it takes out of the next 
   const removed = await publishWorkerReaderResults({ ...input, now: at });
   assert.equal(removed[0].outcome.status, "PUBLISHED", JSON.stringify(removed));
   assert.notEqual(removed[0].outcome.versionId, published[0].outcome.versionId);
-  const after = await readCuratedReaderProjection("ballot-navigation", { store, now: at, bypassCache: true });
+  const after = await readBallotNavigationProjection("AZ", { store, now: at, bypassCache: true });
   if (after.kind !== "PROMOTED") throw new Error("reader missing after audit");
   const pulledId = `ballot-navigation:${parser.result.records[0].fields.kind}:AZ`;
   assert.deepEqual(after.value.records.map(row => row.id), live.value.records.filter(row => row.id !== pulledId).map(row => row.id),

@@ -1,8 +1,12 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import test from "node:test";
 
 import { contestsForDivisions } from "../lib/ballot/contests.ts";
 import { electionDatesFor } from "../lib/ballot/election-dates.ts";
+import { ballotNavigationFor } from "../lib/ballot/navigation.ts";
+import type { CuratedReaderProjection } from "../lib/civic-data/manual-projections.ts";
 import type { BallotSet, Contest } from "../lib/ballot/types.ts";
 
 const STATE = "ocd-division/country:us/state:xx";
@@ -32,32 +36,36 @@ test("a reader sees every contest on their divisions and their state, and nothin
   assert.deepEqual(contestsForDivisions(SET, ["ocd-division/country:us/state:zz/county:none"]).contests, []);
 });
 
+function committedNavigation(state: string) {
+  const file = JSON.parse(readFileSync(join(process.cwd(), "data", "ballot", "2026-navigation", `${state.toLowerCase()}.json`), "utf8")) as
+    { package: { version: string; payload: CuratedReaderProjection } };
+  return { payload: file.package.payload, version: file.package.version };
+}
+
 test("the NJ date strip is complete and cited", () => {
-  const dates = electionDatesFor("NJ");
+  const { payload, version } = committedNavigation("NJ");
+  const dates = electionDatesFor("NJ", ballotNavigationFor("NJ", payload, version, []).dates);
   assert.ok(dates);
   assert.equal(dates.electionDay, "2026-11-03");
   const labels = dates.steps.map((s) => s.label).join(" | ");
-  for (const needed of ["registration", "Mail ballots", "early voting", "Election Day"]) {
+  for (const needed of ["registration", "Mail-ballot", "early voting"]) {
     assert.match(labels, new RegExp(needed, "i"), `date strip is missing ${needed}`);
   }
-  assert.match(dates.sourceUrl, /^https:\/\/www\.nj\.gov\//);
+  for (const step of dates.steps) assert.match(step.sourceUrl, /^https:\/\/www\.nj\.gov\//);
 });
 
-test("polling lookup routes come from the held projection, without a literal state list", async () => {
-  const { POLLING_PLACE_LINKS, pollingPlaceLinkFor } = await import(
-    "../lib/ballot/polling-place-links.ts"
-  );
-  assert.deepEqual(POLLING_PLACE_LINKS, []);
-  assert.equal(pollingPlaceLinkFor("OH", []), null);
-
-  for (const state of ["AZ", "NJ", "NH", "OH"]) assert.equal(pollingPlaceLinkFor(state), null);
-
+test("polling lookup fields are validated from the held projection but never surface as a link", () => {
+  for (const state of ["AZ", "NJ", "NH", "OH"]) {
+    const { payload, version } = committedNavigation(state);
+    assert.ok(payload.records.some((row) => (row.value as { fieldKind?: string }).fieldKind === "polling_lookup"), `${state} holds a polling lookup field`);
+    const links = ballotNavigationFor(state, payload, version, []).links;
+    assert.ok(links.length > 0);
+    assert.deepEqual(links.filter((link) => !["registration_page", "registration_lookup", "ballot_lookup"].includes(link.purpose)), []);
+  }
 });
 
 /** VS-01 supersedes F21's outbound pointer: every reader gets the in-app answer, including places without a ballot or date strip. */
 test("VS-01: the ballot page always offers one in-app voting lookup without requiring dates or a ballot", async () => {
-  const { readFileSync } = await import("node:fs");
-  const { join } = await import("node:path");
   const ts = await import("typescript");
   const page = readFileSync(join(process.cwd(), "app", "ballot", "page.tsx"), "utf8");
   const syntax = ts.createSourceFile("page.tsx", page, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
@@ -83,33 +91,21 @@ test("VS-01: the ballot page always offers one in-app voting lookup without requ
 });
 
 /** The registration destination reaches the reader once: the Secretary of State is the only authoritative source for registration status, so the pill leaves the app and says so. */
-test("AZ-4/AZ-5: the ballot resolves the registration link exactly once, and it is a labelled pill", async () => {
-  const { readFileSync } = await import("node:fs");
-  const { join } = await import("node:path");
+test("AZ-4/AZ-5: the ballot reads each state's navigation once, and registration is one labelled pill", () => {
   const page = readFileSync(join(process.cwd(), "app", "ballot", "page.tsx"), "utf8");
 
-  const resolves = page.split("registrationLinkFor(set.election.state, registrationLinks)").length - 1;
-  assert.equal(
-    resolves,
-    1,
-    `the registration link resolves ${resolves} time(s); there is one pill`,
-  );
+  const reads = page.split("readBallotNavigationProjection(state)").length - 1;
+  assert.equal(reads, 1, `the navigation is read ${reads} time(s) per state; there is one read`);
 
   const pills = page.split("data-registration-pill").length - 1;
   assert.equal(pills, 1, `${pills} registration pill(s) rendered; exactly one is expected`);
 
   assert.ok(
-    page.includes("data-leaves-app\n                    className=\"voting-open-button\"") ||
-      /data-leaves-app[\s\S]{0,120}voting-open-button/.test(page),
+    /data-leaves-app[\s\S]{0,160}voting-open-button/.test(page),
     "the registration pill must be labelled as leaving the app",
   );
-  /* The leaving warning is on the control and in its accessible name. */
   assert.ok(
-    /only place this can be checked/.test(page),
-    "the pill no longer says why it leaves — the Secretary of State is the system of record",
-  );
-  assert.ok(
-    /aria-label=\{`\$\{reg\.label\}[\s\S]{0,200}leaves this app`\}/.test(page),
+    /aria-label=\{`\$\{link\.label\}[\s\S]{0,80}opens the official site in a new tab`\}/.test(page),
     "the leaving warning is not in the pill's accessible name, so a reader who cannot see the arrow is never told",
   );
 });

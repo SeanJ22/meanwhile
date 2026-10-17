@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { primeCuratedReaderProjection, settleBallotNavigationRead } from "../lib/civic-data/curated-reader-read-model.ts";
+import { primeCuratedReaderProjection, readBallotNavigationProjection } from "../lib/civic-data/curated-reader-read-model.ts";
 import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
 import type { CuratedReaderProjection } from "../lib/civic-data/manual-projections.ts";
 import { ballotNavigationFor } from "../lib/ballot/navigation.ts";
@@ -67,10 +67,11 @@ test("/ballot's navigation links read from the reader edge in production, with n
   const entry = provenEdgeEntry({ recordClass: contract.recordClass, scope: "US-AZ:official-ballot-navigation", sourceId: contract.sourceId, versionId: "edge-test:navigation", value: navigation });
   await asProduction(async () => {
     // No database is configured: a navigation read from the database would throw.
-    const read = await withReaderAuthorityEdge({ ballotNavigation: { load: async state => state === "AZ" ? entry : null } }, () => settleBallotNavigationRead("AZ"));
+    const stateAuthorities = { states: { "ballot-navigation": new Set(["AZ"]) },
+      load: async (family: string, state: string) => family === "ballot-navigation" && state === "AZ" ? { kind: "PROMOTED_POINTERS" as const, entries: [entry] } : null };
+    const read = await withReaderAuthorityEdge({ stateAuthorities }, () => readBallotNavigationProjection("AZ"));
     assert.equal(read.kind, "PROMOTED");
     const view = ballotNavigationFor("AZ", read.value!, read.metadata.versionId!, []);
-    assert.deepEqual(view.registrations.map((link) => link.url), ["https://edge.example.test/register"]);
-    assert.deepEqual(view.polling.map((link) => link.url), ["https://edge.example.test/polls"]);
+    assert.deepEqual(view.links.map((link) => link.url), ["https://edge.example.test/register"]);
   });
 });

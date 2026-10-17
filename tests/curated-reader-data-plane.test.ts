@@ -3,6 +3,7 @@ import test from "node:test";
 
 import {
   CURATED_READER_CONTRACT_IDS,
+  readBallotNavigationProjection,
   readCuratedReaderProjection,
 } from "../lib/civic-data/curated-reader-read-model.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
@@ -20,6 +21,11 @@ import { stanceId } from "../lib/civic-data/stance-rows.ts";
 import { CROSSWALK_CITATION } from "../lib/civic-data/meeting-body-crosswalk.ts";
 import { REGISTRATION_TARGETS } from "../lib/registration/publication.ts";
 import { ballotNavigationFor } from "../lib/ballot/navigation.ts";
+
+const FAMILIES = [...CURATED_READER_CONTRACT_IDS, "ballot-navigation"] as const;
+type Family = (typeof FAMILIES)[number];
+const readFamily = (id: Family, options: Parameters<typeof readCuratedReaderProjection>[1]) =>
+  id === "ballot-navigation" ? readBallotNavigationProjection("AZ", options) : readCuratedReaderProjection(id, options);
 
 const T0 = "2026-09-08T12:00:00.000Z";
 const T1 = "2026-09-08T12:01:00.000Z";
@@ -43,7 +49,7 @@ const URLS = {
 } as const;
 
 function receipt(
-  id: (typeof CURATED_READER_CONTRACT_IDS)[number],
+  id: Family,
   at: string,
   hashCharacter: string,
 ): ManualSourceSetReceipt {
@@ -65,7 +71,7 @@ function receipt(
 }
 
 function payloadFor(
-  id: (typeof CURATED_READER_CONTRACT_IDS)[number],
+  id: Family,
   at: string,
   hashCharacter = "a",
 ): CuratedReaderProjection {
@@ -171,7 +177,7 @@ function payloadFor(
 }
 
 function packageFor(
-  id: (typeof CURATED_READER_CONTRACT_IDS)[number],
+  id: Family,
   at = T0,
   hashCharacter = "a",
 ): ManualProjectionPackage {
@@ -186,7 +192,7 @@ function packageFor(
 
 test("each mutable curated Reader family promotes and reads from its own canonical pointer", async () => {
   const store = new MemoryRoutineDataStore();
-  for (const id of CURATED_READER_CONTRACT_IDS) {
+  for (const id of FAMILIES) {
     const candidate = manualProjectionCandidate(packageFor(id));
     const outcome = await processRegisteredManualCandidate(store, id, candidate, T0);
     assert.equal(outcome.candidate.state, "PROMOTED", id);
@@ -197,7 +203,7 @@ test("each mutable curated Reader family promotes and reads from its own canonic
       ["FETCHED", "NORMALIZED", "VALIDATED", "PROMOTED", "PROMOTED"],
       id,
     );
-    const read = await readCuratedReaderProjection(id, { store, bypassCache: true, now: T0 }, id === "ballot-navigation" ? "AZ" : undefined);
+    const read = await readFamily(id, { store, bypassCache: true, now: T0 });
     assert.equal(read.kind, "PROMOTED", id);
     if (read.kind === "PROMOTED") assert.equal(read.value.kind, id);
   }
@@ -213,11 +219,11 @@ test("every state's registration and polling links publish through its own navig
     const outcome = await processRegisteredManualCandidate(store, "ballot-navigation", candidate, T0);
     assert.equal(outcome.candidate.state, "PROMOTED", outcome.candidate.failureDetail ?? undefined);
     assert.equal(outcome.readerReadback?.status, "PASS");
-    const read = await readCuratedReaderProjection("ballot-navigation", { store, now: T0, bypassCache: true }, state);
+    const read = await readBallotNavigationProjection(state, { store, now: T0, bypassCache: true });
     assert.equal(read.kind, "PROMOTED");
     const view = ballotNavigationFor(state, read.value!, read.metadata.versionId!, []);
-    assert.equal(view.polling[0]?.url, URLS["ballot-navigation"][0], state);
-    assert.equal(view.registrations[0]?.url, URLS["ballot-navigation"][1], state);
+    assert.ok(read.value!.records.some(record => record.kind === "POLLING_PLACE_LINK"), state);
+    assert.deepEqual(view.links.map(link => link.url), [URLS["ballot-navigation"][1]], state);
   }
 });
 
@@ -225,7 +231,7 @@ test("a bad curated family is held against its own LKG and cannot affect another
   const store = new MemoryRoutineDataStore();
   const promotedIds = new Map<string, string>();
   const promotedCandidates = new Map<string, ReturnType<typeof manualProjectionCandidate>>();
-  for (const id of CURATED_READER_CONTRACT_IDS) {
+  for (const id of FAMILIES) {
     const candidate = manualProjectionCandidate(packageFor(id));
     const outcome = await processRegisteredManualCandidate(store, id, candidate, T0);
     assert.ok(outcome.promoted, id);
@@ -252,7 +258,7 @@ test("a bad curated family is held against its own LKG and cannot affect another
   assert.equal(refused.promoted, null);
   assert.equal(refused.candidate.state, "SEMANTIC_INVALID");
 
-  for (const id of CURATED_READER_CONTRACT_IDS) {
+  for (const id of FAMILIES) {
     const contract = MANUAL_PRODUCTION_SOURCE_CONTRACTS.find((entry) => entry.id === id)!;
     assert.equal(
       (await store.readPromotion(contract.recordClass, id === "ballot-navigation" ? "US-AZ:official-ballot-navigation" : contract.scope))?.versionId,
@@ -263,7 +269,7 @@ test("a bad curated family is held against its own LKG and cannot affect another
 });
 
 test("curated Reader evidence is source-scoped and never names software certification", () => {
-  for (const id of CURATED_READER_CONTRACT_IDS) {
+  for (const id of FAMILIES) {
     const candidate = manualProjectionCandidate(packageFor(id));
     const contract = MANUAL_PRODUCTION_SOURCE_CONTRACTS.find((entry) => entry.id === id)!;
     assert.deepEqual(candidate.sourceProjectionEvidence, {
@@ -282,15 +288,15 @@ test("store failure does not reopen any curated tracked first seed", async () =>
     async readPromotion() { throw new Error("database unavailable"); },
     async readCandidate() { candidateReads += 1; return null; },
   };
-  const reads = await Promise.all(CURATED_READER_CONTRACT_IDS.map((id) =>
-    readCuratedReaderProjection(id, { store: brokenStore, bypassCache: true }, id === "ballot-navigation" ? "AZ" : undefined)
+  const reads = await Promise.all(FAMILIES.map((id) =>
+    readFamily(id, { store: brokenStore, bypassCache: true })
   ));
   assert.ok(reads.every((read) => read.kind === "STORE_UNREACHABLE"));
   assert.equal(candidateReads, 0);
 });
 
 test("Admin projects every curated authority including official filings without inventing a clock", () => {
-  const ids = new Set<string>(CURATED_READER_CONTRACT_IDS);
+  const ids = new Set<string>(FAMILIES);
   const contracts = MANUAL_PRODUCTION_SOURCE_CONTRACTS.filter((contract) => ids.has(contract.id));
   assert.deepEqual(contracts.map(row => row.id).sort(), ["official-filings", "ballot-navigation", "stances", "campaign-sites", "member-offices", "venue-resolutions", "meeting-body-crosswalk"].sort());
   assert.ok(contracts.every((contract) => contract.execution === "EXPLICIT_OWNER_INVOCATION_ONLY"));

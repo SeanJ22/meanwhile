@@ -13,9 +13,10 @@ import { resolve } from "node:path";
 import { AUTOMATIC_REFRESH_TASKS, automaticRefreshContract } from "../lib/civic-data/automatic-refresh.ts";
 import { ballotInputStamp } from "../lib/civic-data/ballot-input.ts";
 import { ballotPublicationDue, ballotPublicationSummary, parseBallotPublicationResult,
-  readLatestBallotPublicationSummary, recordBallotPublication, type BallotPublicationResult,
+  readLatestBallotPublicationSummary, recordBallotPublication, type BallotPublicationFamily, type BallotPublicationResult,
   type BallotPublicationSummary, type BallotPublicationSummaries } from "../lib/civic-data/ballot-publication.ts";
 import { parseStateBallotContractId, type BallotState } from "../lib/civic-data/state-scopes.ts";
+import { ballotNavigationTaskState } from "../lib/civic-data/ballot-navigation-scope.ts";
 import { neon } from "@neondatabase/serverless";
 import { campaignPublicationInputsDue, readCampaignPublicationInputs, campaignPublicationTask, readCandidateProfilePublicationTasks, type CampaignPublicationInputs } from "../lib/civic-data/campaign-publication-due.ts";
 
@@ -543,6 +544,7 @@ function newestConsideredAt(
 
 async function persistSupervisorOutcome(input: {
   readonly ballotPublications?: BallotPublicationSummaries;
+  readonly ballotNavigationPublications?: BallotPublicationSummaries;
   readonly readerEdge: ReaderEdgePublicationOutcome;
   readonly campaignPublicationApprovalsByState?: Readonly<Record<string, number>>;
   readonly failures: readonly SupervisorFailure[];
@@ -576,6 +578,7 @@ async function persistSupervisorOutcome(input: {
   const cycleId = SUPERVISOR_CYCLE_ID;
   const outcome = routineCivicDataSupervisorOutcome({
     ...(input.ballotPublications ? { ballotPublications: input.ballotPublications } : {}),
+    ...(input.ballotNavigationPublications ? { ballotNavigationPublications: input.ballotNavigationPublications } : {}),
     lane: PUBLISH_NOW ? "publish-now" : "routine-civic-data",
     ...(input.campaignPublicationApprovalsByState !== undefined ? { campaignPublicationApprovalsByState: input.campaignPublicationApprovalsByState } : {}),
     cycleId,
@@ -871,26 +874,33 @@ if (!FORCE && selectedTasks.some(task => task.id === "meeting-body-crosswalk-der
 // read changes no data; admission uses the same frontier and publication child.
 const campaignPublicationInputs = new Map<string, CampaignPublicationInputs>();
 const publicationInputLines: string[] = [];
-const ballotStamps = new Map<BallotState, string>();
-const priorBallotPublications = new Map<BallotState, BallotPublicationSummary>();
-const ballotPublications = new Map<BallotState, BallotPublicationSummary>();
+const PUBLICATION_INPUTS: Readonly<Record<BallotPublicationFamily, string>> = {
+  "ballot-contests": "data/ballot/2026-general", "ballot-navigation": "data/ballot/2026-navigation",
+};
+function publicationTarget(taskId: string): { readonly family: BallotPublicationFamily; readonly state: BallotState; readonly key: string } | null {
+  const ballot = parseStateBallotContractId(taskId);
+  if (ballot?.family === "ballot-contests") return { family: "ballot-contests", state: ballot.state, key: taskId };
+  const state = ballotNavigationTaskState(taskId);
+  return state ? { family: "ballot-navigation", state: state as BallotState, key: taskId } : null;
+}
+const ballotStamps = new Map<string, string>();
+const priorBallotPublications = new Map<string, BallotPublicationSummary>();
+const ballotPublications = new Map<BallotPublicationFamily, Map<BallotState, BallotPublicationSummary>>([
+  ["ballot-contests", new Map()], ["ballot-navigation", new Map()]]);
 let ballotPublicationRepos: Awaited<ReturnType<typeof createPgRepositories>> | null = null;
-const ballotStates = new Set(selectedTasks.flatMap(task => {
-  const contract = parseStateBallotContractId(task.id);
-  return contract?.family === "ballot-contests" ? [contract.state] : [];
-}));
-if (ballotStates.size) {
+const publicationTargets = selectedTasks.flatMap(task => publicationTarget(task.id) ?? []);
+if (publicationTargets.length) {
   const connection = controlPlaneUrlFromEnv();
   ballotPublicationRepos = connection ? await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true }).catch(error => {
-    console.error(`RCD_INPUT_CHANGED ballot-contests: ${safeFailure(sanitizedErrorDiagnostic(error))}; publication history unavailable`);
+    console.error(`RCD_INPUT_CHANGED ballot publication: ${safeFailure(sanitizedErrorDiagnostic(error))}; publication history unavailable`);
     return null;
   }) : null;
-  for (const state of ballotStates) try {
-    ballotStamps.set(state, await ballotInputStamp(resolve(ROOT, "data/ballot/2026-general"), state));
-    const prior = ballotPublicationRepos ? await readLatestBallotPublicationSummary(ballotPublicationRepos, state) : null;
-    if (prior) priorBallotPublications.set(state, prior);
+  for (const { family, state, key } of publicationTargets) try {
+    ballotStamps.set(key, await ballotInputStamp(resolve(ROOT, PUBLICATION_INPUTS[family]), state));
+    const prior = ballotPublicationRepos ? await readLatestBallotPublicationSummary(ballotPublicationRepos, state, family) : null;
+    if (prior) priorBallotPublications.set(key, prior);
   } catch (error) {
-    console.error(`RCD_INPUT_CHANGED ballot-contests:${state}: ${safeFailure(sanitizedErrorDiagnostic(error))}; normal cadence retained`);
+    console.error(`RCD_INPUT_CHANGED ${key}: ${safeFailure(sanitizedErrorDiagnostic(error))}; normal cadence retained`);
   }
 }
 for (const task of selectedTasks) {
@@ -947,9 +957,9 @@ for (const read of clockReads) {
   }
   const durableClock = routineAdmissionClock(read.clock, supervisorAttempts.get(task.id), admissionNowMs);
   const dueRequest = FORCE ? null : routineDueRequestFor(task, durableClock, admissionNowMs, dueRequests);
-  const ballotState = parseStateBallotContractId(task.id);
-  const ballotsDue = ballotState?.family === "ballot-contests" && ballotPublicationDue(task.id,
-    ballotStamps.get(ballotState.state) ?? null, priorBallotPublications.get(ballotState.state) ?? null, read.clock);
+  const publication = publicationTarget(task.id);
+  const ballotsDue = publication !== null && ballotPublicationDue(task.id,
+    ballotStamps.get(publication.key) ?? null, priorBallotPublications.get(publication.key) ?? null, read.clock);
   if (!FORCE && !ballotsDue && dueRequest === null && unchangedRoutineProtocolFailure(task, read.clock, protocolFailures, RUNNING_CODE_SHA, admissionNowMs)) {
     console.log(`RCD_SKIP ${task.id}: unchanged receipt failure; awaiting changed code, Send or source evidence`);
     continue;
@@ -966,11 +976,11 @@ for (const read of clockReads) {
     publicationInputLines.push(`Send ${task.ownerInvocation.instructions.join(", ")}: shared ${task.id} ${due ? "refresh offered to the normal source frontier" : reused ? "verified shared result reused" : "failed attempt held under retry backoff"}; canonical scope ${task.scope}.`);
   }
   const cadenceDue = routineTaskDue(task, durableClock, admissionNowMs, sittingHot, observedEveryMs);
-  const taskDue = ballotState?.family === "ballot-contests"
-    ? ballotsDue || (!ballotStamps.has(ballotState.state) || priorBallotPublications.get(ballotState.state)?.status === "HELD") && cadenceDue
+  const taskDue = publication
+    ? ballotsDue || (!ballotStamps.has(publication.key) || priorBallotPublications.get(publication.key)?.status === "HELD") && cadenceDue
     : cadenceDue;
   if (!FORCE && !taskDue && dueRequest === null && !publicationDue && !discoveryDue) {
-    console.log(`RCD_SKIP ${task.id}: ${ballotState?.family === "ballot-contests" ? "state file unchanged" : "cadence not due"}${
+    console.log(`RCD_SKIP ${task.id}: ${publication ? "state file unchanged" : "cadence not due"}${
       sittingSignals.has(task.id) ? ` (sitting window ${sittingHot === false ? "base" : sittingHot ? "hot" : "unknown, read as hot"})` : ""
     }`);
     continue;
@@ -1200,14 +1210,14 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
     exitStatus: run.status,
     childDiagnostic: run.status === 0 ? null : safeFailure(`${run.errorMessage ?? ""}\n${output}`),
   });
-  const ballotTask = parseStateBallotContractId(pending.task.id);
-  if (ballotTask?.family === "ballot-contests") {
+  const ballotTask = publicationTarget(pending.task.id);
+  if (ballotTask) {
     const report = parseBallotPublicationResult(output);
-    if (report?.state === ballotTask.state) {
+    if (report?.state === ballotTask.state && (report.family ?? "ballot-contests") === ballotTask.family) {
       const settled: BallotPublicationResult = child.kind === "VERIFIED_SOURCE_SUCCESS"
         ? { ...report, status: "PUBLISHED", versionId: child.receipt.promotedVersion, reason: null }
         : { ...report, status: "HELD", versionId: null, reason: child.detail };
-      ballotPublications.set(ballotTask.state, ballotPublicationSummary(settled));
+      ballotPublications.get(ballotTask.family)!.set(ballotTask.state, ballotPublicationSummary(settled));
       try {
         if (!ballotPublicationRepos) {
           const connection = controlPlaneUrlFromEnv();
@@ -1539,7 +1549,8 @@ for (const reference of readerReadbackReferences) {
 step = "persisting the supervisor outcome";
 try {
   const cycleId = await persistSupervisorOutcome({
-    ...(ballotPublications.size ? { ballotPublications: Object.fromEntries(ballotPublications) } : {}),
+    ...(ballotPublications.get("ballot-contests")!.size ? { ballotPublications: Object.fromEntries(ballotPublications.get("ballot-contests")!) } : {}),
+    ...(ballotPublications.get("ballot-navigation")!.size ? { ballotNavigationPublications: Object.fromEntries(ballotPublications.get("ballot-navigation")!) } : {}),
     campaignPublicationApprovalsByState: Object.fromEntries([...campaignPublicationInputs.values()].filter(input =>
       verifiedTaskReceipts.some(row => row.taskId === campaignPublicationTask(input.state))).map(input => [input.state, input.approvals])),
     readerEdge,

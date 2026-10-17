@@ -286,7 +286,7 @@ export async function processRoutineCandidate(
   const validatedRecord = await store.transition(candidate.id, "VALIDATED", transitionAt, "Every applicable GOOD check passed.", validated.receipt, undefined, held);
   let promoted: PromotedProjection;
   try {
-    promoted = await store.promote(candidate.id, validated.receipt, transitionAt, scoped ? held : undefined);
+    promoted = await store.promote(candidate.id, validated.receipt, transitionAt, scoped || navigation ? held : undefined);
   } catch (error) {
     if (!(error instanceof PromotionBaseChangedError)) throw error;
     const code = "PROMOTION_BASE_CHANGED";

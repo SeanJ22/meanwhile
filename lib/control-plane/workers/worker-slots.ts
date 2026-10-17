@@ -14,7 +14,7 @@ export const RESEARCH_PARENT_PEAK_MIB = 2928;
 export const NATIONAL_PLACE_PEAK_MIB = 1923 + WORKER_ENTRY_PEAK_MIB.national!;
 const STATE_PUBLICATION_PEAK_MIB = 512;
 const NAVIGATION_PUBLICATION_PEAK_MIB = 768;
-const STATE_ARTIFACT_PEAK_MIB = 576;
+const STATE_ARTIFACT_PEAK_MIB = 704;
 /** Bulk data families use the retained data-worker bound until their own runs are measured on this host. */
 const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   // A complete 113 MiB Illinois session peaked at 3,013 MiB;

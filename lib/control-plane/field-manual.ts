@@ -7,6 +7,7 @@ import { hereNote, mergePlaceResults, placeResultsOf, type MethodHere, type Plac
 import { recordAttemptsKeepingHistory } from "./fix-history.ts";
 import { ConcurrentModification, IdentityCollision, type ControlPlaneRepositories, type Persisted } from "./repository/types.ts";
 import { flushBankWriteFailures, recordBankWriteFailure } from "./bank-write-health.ts";
+import type { FieldManualSourceHint,FieldManualSourceScope } from "./field-manual-sources.ts";
 
 export const FIELD_MANUAL_ROLES = [
   "HUNTER",
@@ -408,15 +409,6 @@ export interface FieldManualRead {
   readonly error?: string;
 }
 
-export function fieldManualForSource(read: FieldManualRead, url: string): readonly FieldManualEntry[] {
-  let origin: string;
-  try { origin = new URL(url).origin; } catch { return []; }
-  return read.store.entries.filter(entry => {
-    try { return entry.url !== null && new URL(entry.url).origin === origin; }
-    catch { return false; }
-  });
-}
-
 export function methodEvidencePlaces(query:FieldManualQuery):string[] {
   return [...new Set([...jobPlaces(query).filter(place=>!place.startsWith("body:")),...(query.ocdIds??[]).map(id=>id.split("#")[0])])];
 }
@@ -441,14 +433,22 @@ export async function readFieldManualRows(repos: FieldManualRepos, query: FieldM
   }
 }
 
+async function sharedManualRequest<T>(kind:string,body:unknown,local:()=>Promise<T>):Promise<T> {
+  if (!process.env.WTP_WORKER_TOOLS_URL) return local();
+  const response = await fetch(process.env.WTP_WORKER_TOOLS_URL, { method: "POST",
+    headers: { "content-type": "application/json", authorization: process.env.WTP_WORKER_TOOLS_TOKEN ?? "" },
+    body: JSON.stringify({kind,body}), signal: AbortSignal.timeout(30_000) });
+  if (!response.ok) throw new Error(`SHARED_MANUAL_FAILED:${response.status}`);
+  return await response.json() as T;
+}
+
+export async function readFieldManualSourceHints(repos:FieldManualRepos,scope:FieldManualSourceScope,url:string):Promise<readonly FieldManualSourceHint[]> {
+  return sharedManualRequest("manualSources",{scope,url},()=>repos.fieldManual.sourceHints(scope,url));
+}
+
 export async function readFieldManual(repos: FieldManualRepos, query: FieldManualQuery = {}): Promise<FieldManualRead> {
-  if (!process.env.WTP_WORKER_TOOLS_URL) return readFieldManualRows(repos, query);
   try {
-    const response = await fetch(process.env.WTP_WORKER_TOOLS_URL, { method: "POST",
-      headers: { "content-type": "application/json", authorization: process.env.WTP_WORKER_TOOLS_TOKEN ?? "" },
-      body: JSON.stringify({ kind: "manual", body: query }), signal: AbortSignal.timeout(30_000) });
-    if (!response.ok) throw new Error(`SHARED_MANUAL_FAILED:${response.status}`);
-    return await response.json() as FieldManualRead;
+    return await sharedManualRequest("manual",query,()=>readFieldManualRows(repos,query));
   } catch (error) {
     const store = emptyFieldManual();
     return { projection: projectFieldManual(store, query), store, error: error instanceof Error ? error.message : String(error) };

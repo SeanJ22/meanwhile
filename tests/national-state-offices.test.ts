@@ -80,7 +80,7 @@ test("campaign offices regenerate from real FEC source blocks, rejecting federal
 test("a national election hunt starts from held state links without rereading EAC or USA.gov for a ZIP", async () => {
   const opened: string[] = [];
   const source = stateOfficesForStates(["AZ"]).find(row => row.kind === "ELECTION_OFFICE")!;
-  const collected = await collectNationalPlaceSources({ divisions: [{ id: source.divisionId, label: "Arizona", divisionType: "state", geoid: "04", sourceUrl: "https://census.gov" }],
+  const collected = await collectNationalPlaceSources({sourceHints:async()=>[], divisions: [{ id: source.divisionId, label: "Arizona", divisionType: "state", geoid: "04", sourceUrl: "https://census.gov" }],
     now: "2026-10-12T00:00:00Z", families: { officials: false, elections: true }, read: async url => { opened.push(url); throw Error("Workspace sample source unavailable"); } });
   assert.deepEqual(opened, [source.url]);
   assert.deepEqual(collected.gaps.map(row => row.sourceUrl), [source.url]);

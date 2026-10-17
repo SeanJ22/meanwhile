@@ -36,7 +36,7 @@ test("the national families with nothing open are skipped", () => {
 
 test("a pass with no open families reads no sources", async () => {
   const read: string[] = [];
-  const result = await collectNationalPlaceSources({ divisions: [{ id: "ocd-division/country:us/state:mo", label: "Missouri", divisionType: "state", geoid: "29", sourceUrl: "https://census.gov" }],
+  const result = await collectNationalPlaceSources({sourceHints:async()=>[], divisions: [{ id: "ocd-division/country:us/state:mo", label: "Missouri", divisionType: "state", geoid: "29", sourceUrl: "https://census.gov" }],
     now, families: { officials: false, elections: false }, read: async url => { read.push(url); throw new Error("must not read"); } });
   assert.deepEqual(read, []);
   assert.deepEqual(result.families, { officials: false, elections: false });
@@ -44,7 +44,7 @@ test("a pass with no open families reads no sources", async () => {
 
 test("a pass for elections only never reads the officials roster", async () => {
   const read: string[] = [];
-  await collectNationalPlaceSources({ divisions: [{ id: "ocd-division/country:us/state:mo", label: "Missouri", divisionType: "state", geoid: "29", sourceUrl: "https://census.gov" }],
+  await collectNationalPlaceSources({sourceHints:async()=>[], divisions: [{ id: "ocd-division/country:us/state:mo", label: "Missouri", divisionType: "state", geoid: "29", sourceUrl: "https://census.gov" }],
     now, families: { officials: false, elections: true }, read: async url => { read.push(url); throw new Error("unavailable"); } });
   assert.ok(read.every(url => !/legislators|plural|\.csv/i.test(url)), read.join(", "));
   assert.deepEqual(read, ["https://www.sos.mo.gov/elections/"]);
@@ -53,7 +53,7 @@ test("a pass for elections only never reads the officials roster", async () => {
 test("a second pass on a place with every blank filled reads nothing and says which families it skipped", async () => {
   const division = { id: "ocd-division/country:us/state:mo", label: "Missouri", divisionType: "state", geoid: "29", sourceUrl: "https://census.gov" };
   const all = buildPlaceOwedList({ divisions: [division], subjects: [], held: [], now });
-  // Every row the place owes is captured fresh, so nothing is open.
+
   const held = all.map(row => fresh(row.subject.id, row.checklistId));
   const read: string[] = [];
   const result = await runPlaceSource({ repos: createMemoryRepositories(), store: new MemoryRoutineDataStore(), zip: "65101", now,

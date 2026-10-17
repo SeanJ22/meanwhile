@@ -386,7 +386,7 @@ test("every supported state has a standing source contract without Send admissio
     assert.deepEqual(contract?.acquisitionAdapter.command, ["scripts/openstates-people-refresh.mts", "--promote", `--state=${state}`]);
   }
   const reads: string[] = [];
-  await collectNationalPlaceSources({ divisions: [{ id: "ocd-division/country:us/state:az", label: "Arizona", divisionType: "state", geoid: "04", sourceUrl: "https://census.gov" }],
+  await collectNationalPlaceSources({sourceHints:async()=>[], divisions: [{ id: "ocd-division/country:us/state:az", label: "Arizona", divisionType: "state", geoid: "04", sourceUrl: "https://census.gov" }],
     now: at, families: { officials: true, elections: false }, read: async url => { reads.push(url); throw new Error("NO_HELD_DIRECTORY"); } });
   assert.ok(reads.every(url => !url.includes("openstates") && !url.includes("codeload")));
 });

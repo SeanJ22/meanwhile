@@ -143,7 +143,7 @@ export async function runNationalPlaceTask(input: {
     if (Date.parse(scheduled.nextDueAt) > Date.parse(now)) continue;
     const publishedGeography = deferred ? [] : await (input.readPublished ?? heldDivisionsForZip)(zip);
     const state = publishedGeography.find(division => division.divisionType === "state")?.id.split("/state:")[1];
-    const knowledge = deferred ? undefined : await readFieldManual(tools.repos, { state, ocdIds: publishedGeography.map(division => division.id) });
+    const knowledge = deferred ? undefined : await readFieldManual(tools.repos, { state, ocdIds: publishedGeography.map(division => division.id),limit:40 });
     const opened = prior ?? await openOccurrence(tools.repos, { obligation: durable, dueAt: scheduled.nextDueAt, now });
     if (!opened) throw new Error("National source occurrence could not open");
     const routeTaskId = "routeTaskId" in opened ? opened.routeTaskId : opened.routeTask.id;

@@ -1,3 +1,4 @@
+import {sourceHintsOf} from "../lib/control-plane/field-manual-sources.ts";
 import { test } from "node:test";
 import assert from "node:assert/strict";
 
@@ -6,7 +7,6 @@ import {
   entryInSlice,
   fieldManualEntryId,
   fieldManualLine,
-  fieldManualForSource,
   foldEntries,
   mergeEntry,
   newFieldManualEntry,
@@ -47,16 +47,15 @@ const CONCORD = "ocd-division/country:us/state:nh/place:concord";
 const HARRIS = "ocd-division/country:us/state:tx/county:harris";
 const store = (...entries: FieldManualEntry[]) => ({ entries: foldEntries(entries) });
 
-test("source knowledge keeps every role's payload and takes only that source's entries", () => {
+test("source hints retain successful routes and classes after a later failure", () => {
   const entries = [
-    entry({ id: "failed", url: "https://state.gov/old", outcome: "FAILED", states: ["mo"], payload: { nextAction: "read new route" } }),
-    entry({ id: "working", role: "DETECTIVE", url: "https://state.gov/new", states: ["mo"], payload: { learnedProcedure: "follow official directory" } }),
-    entry({ id: "other-host", url: "https://state.gov.example.org/new" }),
+    entry({id:"a-worked",role:"DETECTIVE",url:"https://state.gov/route",outcome:"YIELDED",states:["mo"],recordClasses:["election"],observedAt:"2026-10-01T00:00:00Z"}),
+    entry({id:"b-failed",url:"https://state.gov/route",outcome:"FAILED",states:["mo"],recordClasses:["meetings"],observedAt:"2026-10-02T00:00:00Z"}),
+    entry({id:"other-host",url:"https://state.gov.example.org/route",states:["mo"]}),
   ];
-  const read = { store: { entries }, projection: projectFieldManual({ entries }) };
-  const selected = fieldManualForSource(read, "https://state.gov/");
-  assert.deepEqual(selected.map((e) => e.id), ["failed", "working"]);
-  assert.equal(selected[1]!.payload, entries[1]!.payload);
+  assert.deepEqual(sourceHintsOf(entries,{state:"mo"},"https://state.gov/"),[
+    {url:"https://state.gov/route",outcome:"FAILED",observedAt:"2026-10-02T00:00:00Z",worked:true,workedFor:["election"]},
+  ]);
 });
 
 test("fieldManualEntryId is deterministic per (source,key) and namespaced", () => {

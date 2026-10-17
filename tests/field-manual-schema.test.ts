@@ -10,6 +10,8 @@ import { entryInSlice, newFieldManualEntry, normalizeEntry, type FieldManualQuer
 import { openHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
 import { FIELD_MANUAL_SLICE_SQL, fieldManualSliceParams, pgFieldManualRepository, type Sql } from "../lib/control-plane/repository/pg-store.ts";
 import { createFixMapRepository, FIX_MAP_DDL, methodWorksOf, stateOfPlace, type FixMapRow } from "../lib/method/fix-map.ts";
+import { MANUAL_ORDER_INDEXES } from "../lib/control-plane/repository/field-manual-sql.ts";
+import { sourceHintsOf } from "../lib/control-plane/field-manual-sources.ts";
 
 test("bootstrap declares the manual rows and indexed method aggregates, one statement per entry", () => {
   assert.ok(BOOTSTRAP_VERSION >= 32);
@@ -127,6 +129,37 @@ test("Census government note slices retain the exact place key and its state",()
   const parameters=fieldManualSliceParams({role:"SCOUT",ocdIds:["government:US-AZ:123456"]});
   assert.deepEqual(parameters[4],["government:us-az:123456"]);
   assert.equal(parameters[6],"az");
+});
+
+test("source hints keep successful routes beyond the advisory limit and reduce history per publisher",async()=>{
+  const {PGlite}=await import("@electric-sql/pglite");
+  const db=new PGlite(),origin="https://state.gov/",scope={state:"az"};
+  const make=(key:string,fields:Partial<import("../lib/control-plane/field-manual.ts").FieldManualEntry>)=>normalizeEntry(newFieldManualEntry("source-hints",key,{
+    role:"SCOUT",kind:"LESSON",title:key,summary:key,outcome:"YIELDED",states:["az"],observedAt:"2026-10-01T00:00:00.000Z",...fields}));
+  const entries=[make("worked",{role:"DETECTIVE",url:"https://state.gov/route",recordClasses:["ballot"]}),
+    make("failed",{url:"https://state.gov/route",outcome:"FAILED",recordClasses:["meetings"],observedAt:"2026-10-02T00:00:00.000Z"}),
+    make("default-port",{url:"https://User@STATE.gov:443/other",recordClasses:["election"]}),
+    make("sibling",{url:"https://state.gov.evil.example/route"}),
+    make("other-state",{url:"https://state.gov/nh",states:["nh"]}),
+    ...Array.from({length:60},(_,n)=>make(`noise-${n}`,{observedAt:"2026-10-10T00:00:00.000Z"}))];
+  try {
+    await db.exec("CREATE TABLE cp_field_manual_entries(id text PRIMARY KEY,revision integer,updated_at timestamptz,value jsonb)");
+    for(const ddl of MANUAL_ORDER_INDEXES)await db.exec(ddl);
+    for(const ddl of FIX_MAP_DDL)await db.exec(ddl);
+    await db.query("INSERT INTO cp_field_manual_entries SELECT value->>'id',1,now(),value FROM jsonb_array_elements($1::jsonb) value",[JSON.stringify(entries)]);
+    const sql={query:async(text:string,params?:readonly unknown[])=>(await db.query(text,[...params??[]])).rows};
+    const repo=pgFieldManualRepository(sql,{},()=>createFixMapRepository(async()=>[]));
+    const advisory=await repo.select({...scope,limit:40});
+    assert.equal(advisory.store.entries.length,40);
+    assert.ok(!advisory.store.entries.some(entry=>entry.url!==null));
+    const hints=await repo.sourceHints(scope,origin);
+    assert.deepEqual(hints,sourceHintsOf(entries,scope,origin));
+    assert.equal(hints.length,2);
+    assert.deepEqual(hints.find(hint=>hint.url.endsWith("/route")),{
+      url:"https://state.gov/route",outcome:"FAILED",observedAt:"2026-10-02T00:00:00.000Z",worked:true,workedFor:["ballot"],
+    });
+    assert.ok(Buffer.byteLength(JSON.stringify(hints))<500);
+  }finally{await db.close();}
 });
 
 test("bounded SQL notes retain producer proof, failed-here exclusions and Scout blank priorities",async()=>{

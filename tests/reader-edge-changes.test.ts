@@ -3,7 +3,7 @@ import test from "node:test";
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { readReaderEdgeChanges } from "../lib/civic-data/reader-edge-changes.ts";
+import { READER_EDGE_PAGE, readReaderEdgeChanges } from "../lib/civic-data/reader-edge-changes.ts";
 import { publishReaderEdge, readerEdgePieceResultLine } from "../lib/civic-data/reader-edge-publication.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
@@ -84,4 +84,21 @@ test("a piece that keeps failing stays owed on its own: the cursor moves, the re
   assert.equal((await publish()).readerEdge, "FAILED");
   assert.deepEqual(launched, ["other-reader-data/AZ"], "an hour on, only the owed piece is tried");
   assert.equal(Date.parse([...(await readReaderEdgeChanges(query)).owed.values()][0]!) > Date.parse("2026-10-02T00:00:00Z"), true, "and its clock restarts");
+});
+
+test("a first read of a country-sized edge goes a page at a time, past pointers stamped at the same instant", async () => {
+  const { query } = await edgeChangesDb();
+  const total = READER_EDGE_PAGE + 7;
+  await query(`INSERT INTO civic_data_candidates SELECT 'v' || g, 'MEETING', 'scope-' || g FROM generate_series(1, $1) g`, [total]);
+  await query(`INSERT INTO civic_data_promotions SELECT 'MEETING:scope-' || g, 'MEETING', 'scope-' || g, 'v' || g, '2026-10-01T00:00:00Z' FROM generate_series(1, $1) g`, [total]);
+  const first = await readReaderEdgeChanges(query);
+  assert.equal(first.pointers.length, READER_EDGE_PAGE);
+  assert.equal(first.more, true);
+  await first.save(new Map());
+  const second = await readReaderEdgeChanges(query);
+  assert.equal(second.more, false);
+  assert.equal(second.pointers.length, 7, "the page after the last saved pointer, though every one shares its instant");
+  assert.equal(new Set([...first.pointers, ...second.pointers].map(row => row.scope)).size, total, "every pointer exactly once");
+  await second.save(new Map());
+  assert.deepEqual((await readReaderEdgeChanges(query)).pointers, [], "then the edge is current");
 });

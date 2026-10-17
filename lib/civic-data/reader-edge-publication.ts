@@ -349,20 +349,30 @@ export async function publishReaderEdgePieces(input: {
 const OWED_RETRY_MS = 3_600_000;
 
 /**
- * Publishes what moved since the edge last published; each piece is saved as it lands, and the cursor moves once every
- * piece was tried. A piece that failed stays owed on its own, so it never holds back the rest.
+ * Publishes what moved since the edge last published, a page of pointers at a time; each piece is saved as it lands, and
+ * the cursor moves once every piece of the page was tried. A piece that failed stays owed on its own, so it never holds back the rest.
  */
 export async function publishReaderEdge(input: Omit<Parameters<typeof publishReaderEdgePieces>[0], "pieces" | "published"> & { readonly query: Query }): Promise<ReaderEdgePublicationOutcome> {
   const refused = refusal(input.artifactStore, input.env ?? process.env);
   if (refused !== null) { console.log(JSON.stringify(refused)); return refused; }
-  const changes = await readReaderEdgeChanges(input.query);
-  const moved = readerEdgePieces(changes.pointers), keys = new Set(moved.map(readerEdgePieceKey));
-  const due = [...changes.owed].filter(([key, at]) => !keys.has(key) && Date.now() - Date.parse(at) >= OWED_RETRY_MS).map(([key]) => pieceOfKey(key));
-  const pieces = [...moved, ...due].filter(piece => !changes.done.has(readerEdgePieceKey(piece)));
-  const { outcome, complete, failed } = await publishReaderEdgePieces({ ...input, pieces, published: changes.saveDone });
-  const tried = new Set(pieces.map(readerEdgePieceKey)), now = new Date().toISOString();
-  if (complete) await changes.save(new Map([...[...changes.owed].filter(([key]) => !tried.has(key)), ...failed.map(key => [key, now] as const)]));
-  return outcome;
+  const outcomes: ReaderEdgePublicationOutcome[] = [];
+  for (;;) {
+    const changes = await readReaderEdgeChanges(input.query);
+    const moved = readerEdgePieces(changes.pointers), keys = new Set(moved.map(readerEdgePieceKey));
+    const due = [...changes.owed].filter(([key, at]) => !keys.has(key) && Date.now() - Date.parse(at) >= OWED_RETRY_MS).map(([key]) => pieceOfKey(key));
+    const pieces = [...moved, ...due].filter(piece => !changes.done.has(readerEdgePieceKey(piece)));
+    const { outcome, complete, failed } = await publishReaderEdgePieces({ ...input, pieces, published: changes.saveDone });
+    const tried = new Set(pieces.map(readerEdgePieceKey)), now = new Date().toISOString();
+    outcomes.push(outcome);
+    if (complete) await changes.save(new Map([...[...changes.owed].filter(([key]) => !tried.has(key)), ...failed.map(key => [key, now] as const)]));
+    if (!complete || !changes.more || Date.now() >= input.deadlineMs) break;
+  }
+  const failedOutcome = outcomes.find(outcome => !outcome.ok), last = outcomes.at(-1)!;
+  const superseded = outcomes.flatMap(outcome => outcome.supersededMeetingFields ?? []);
+  return { ...last, ok: !failedOutcome, sequence: outcomes.findLast(outcome => outcome.sequence !== null)?.sequence ?? null,
+    readerEdge: failedOutcome ? "FAILED" : outcomes.some(outcome => outcome.readerEdge === "PUBLISHED") ? "PUBLISHED" : last.readerEdge,
+    ...(superseded.length ? { supersededMeetingFields: superseded.reduce((sum, count) => sum + count, 0) } : {}),
+    detail: failedOutcome?.detail ?? last.detail };
 }
 
 const pieceOfKey = (key: string): ReaderEdgePiece => {

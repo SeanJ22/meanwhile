@@ -9,6 +9,39 @@ import { resolveZip } from "../geo/zcta.ts";
 import { censusVintageFor, divisionsFromCensusGeographies, type CensusGeographies } from "../geo/census-geographies.ts";
 import { currentRepresentationSelection } from "../census-geography/selection.ts";
 import { divisionIdsForZipArea, POINT_GEOMETRY_PLANS } from "./zip-divisions.ts";
+import { US_JURISDICTIONS } from "../coverage/states.ts";
+import { ocdStateCode } from "../ocd/state-of.ts";
+import { readerDivisionIdsAt } from "../registry/server.ts";
+import { stateName } from "../facts/entity-read.ts";
+import type { ZctaCentroid } from "../geo/zcta-core.ts";
+
+export interface BallotPlace {
+  readonly zip: string | null;
+  readonly centroid: ZctaCentroid | { lat: number; lng: number } | null;
+  /** Set only when the map point, not a ZIP, names the place. */
+  readonly state: { readonly code: string; readonly name: string; readonly ocdId: string } | null;
+}
+
+/** A ZIP names the place unless the named state says the reader is elsewhere; then the map point does. */
+export function ballotPlaceFromParams(params: { zip?: string; state?: string; lat?: string; lng?: string }): BallotPlace {
+  const zip = params.zip && /^\d{5}$/.test(params.zip) ? params.zip : null;
+  const resolution = zip ? resolveZip(zip) : null;
+  const jurisdiction = US_JURISDICTIONS.find(row => row.usps === params.state?.toUpperCase());
+  const lat = params.lat ? Number(params.lat) : NaN, lng = params.lng ? Number(params.lng) : NaN;
+  const point = Number.isFinite(lat) && Math.abs(lat) <= 90 && Number.isFinite(lng) && Math.abs(lng) <= 180 ? { lat, lng } : null;
+  if (jurisdiction && point && !(resolution?.ok && resolution.centroid.postal?.state === jurisdiction.usps)) {
+    return { zip: null, centroid: point, state: { code: jurisdiction.usps, name: stateName(jurisdiction.usps)!,
+      ocdId: `ocd-division/country:us/${jurisdiction.prefix}:${jurisdiction.slug}` } };
+  }
+  return { zip, centroid: resolution?.ok ? resolution.centroid : null, state: null };
+}
+
+/** The divisions a map point sits in, kept inside the named state. */
+export async function ballotPointStateDivisions(state: NonNullable<BallotPlace["state"]>, lat: number, lng: number): Promise<string[]> {
+  const inState = (id: string) => { const code = ocdStateCode(id); return code === null || code === state.code.toLowerCase(); };
+  return [...new Set([state.ocdId, ...(await readerDivisionIdsAt(lat, lng)).filter(inState),
+    ...await ballotPointDivisions([state.code], lat, lng)])];
+}
 
 export async function ballotPlaceDivisions(place: {
   divisions?: readonly string[];

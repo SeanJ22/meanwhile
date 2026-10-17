@@ -81,7 +81,8 @@ export async function lookupZctaAsync(input: string): Promise<ZctaCentroid | nul
 export async function nearestZctaAsync(
   lat: number,
   lng: number,
+  state?: string,
 ): Promise<ZctaCentroid | null> {
-  const { zctaCentroids } = await loadZctaTable();
-  return nearestIn(zctaCentroids, lat, lng);
+  const { zctaCentroids, postal } = await loadZctaTable();
+  return nearestIn(zctaCentroids, lat, lng, state ? zip => postal[zip]?.[5] === state : undefined);
 }

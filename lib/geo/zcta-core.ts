@@ -49,11 +49,13 @@ export function nearestIn(
   centroids: CentroidTable,
   lat: number,
   lng: number,
+  accepts: (zip: string) => boolean = () => true,
 ): ZctaCentroid | null {
   let best: ZctaCentroid | null = null;
   let bestDistance = Infinity;
 
   for (const zip in centroids) {
+    if (!accepts(zip)) continue;
     const [zLat, zLng] = centroids[zip];
 
     // Squared degrees with longitude scaled by cos(latitude): for ranking only.

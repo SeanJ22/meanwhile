@@ -10,9 +10,9 @@ import {
   FEDERAL_ROLLCALL_SCOPE,
   federalMemberVotesScope,
   type FederalMemberVotesReadModel,
+  type FederalRollCallWindow,
   type FederalRollCallsReadModel,
 } from "./data-plane.ts";
-import type { VotesSnapshot } from "./types.ts";
 import { readPromotedEdgeFirst } from "../registry/runtime-edge.ts";
 
 let cache: FederalRollCallsReadModel | null = null;
@@ -96,7 +96,7 @@ export function getFederalVotesReadModel(): FederalRollCallsReadModel {
   return cache;
 }
 
-export function getVotesSnapshot(): VotesSnapshot {
+export function getVotesSnapshot(): FederalRollCallWindow {
   return getFederalVotesReadModel().snapshot;
 }
 

@@ -1,0 +1,21 @@
+{
+  "n": 52,
+  "branch": "release/52",
+  "river_sha": "3663b15a376c7f576838393b38dac90190f80e5e",
+  "tested_sha": "3663b15a376c7f576838393b38dac90190f80e5e",
+  "steps": [
+    "EP-01",
+    "ADMIN-COUNTRY"
+  ],
+  "lanes": [
+    "edge-publish",
+    "admin-country"
+  ],
+  "integration_from": 236,
+  "integration_count": 238,
+  "pr": {
+    "number": 761,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/761"
+  },
+  "at": "2026-10-17T08:42:22Z"
+}

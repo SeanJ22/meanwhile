@@ -7,7 +7,7 @@ import { join } from "node:path";
 import { MEETING_PARTITION_CONTRACTS, type MeetingPartitionContract } from "../../lib/civic-data/meeting-partitions.ts";
 import { MemoryRoutineDataStore, type RoutineDataStore } from "../../lib/civic-data/store.ts";
 import { VALIDATION_CHECKS, type RoutineCandidate, type ValidationReceipt } from "../../lib/civic-data/types.ts";
-import { planMeetingBodies, type MeetingBodyPlan } from "../../lib/meetings/body-publication.ts";
+import { meetingStateOfScope, planMeetingBodies, type MeetingBodyPlan, type MeetingBodyPublicationInput, type MeetingStateEntry } from "../../lib/meetings/body-publication.ts";
 import { publishReaderMeetings, readReaderEdgeMeetings } from "../../lib/meetings/edge-serving.ts";
 import { LocalFileArtifactStore, type ReaderArtifactStore } from "../../lib/meetings/edge-store.ts";
 import { meetingSettingsFromValues } from "../../lib/meetings/settings.ts";
@@ -112,14 +112,44 @@ export function countWrites(store: RoutineDataStore, edge: ReaderArtifactStore):
   return Object.assign(counts, { stop: () => { edge.putImmutable = put; (store as { writePreparedReaderProjection: RoutineDataStore["writePreparedReaderProjection"] }).writePreparedReaderProjection = write; } });
 }
 
-/** One publication pass as the supervisor runs it: plan the changed bodies, publish the manifest, then settle the queue. */
+/** The states whose meetings are promoted or queued, as publish-now's meeting pieces find them. */
+async function meetingStatesOf(store: RoutineDataStore): Promise<string[]> {
+  const scopes = [...await store.listPromotionScopes?.(["MEETING"]) ?? [], ...await store.readMeetingQueue?.() ?? []].map(row => row.scope);
+  return [...new Set(scopes.map(meetingStateOfScope).filter((state): state is string => state !== null))].sort();
+}
+
+function summed(plans: readonly Pick<MeetingBodyPlan, "stats">[]): MeetingBodyPlan["stats"] {
+  const stats: MeetingBodyPlan["stats"] = { states: [], composed: 0, unchanged: 0, checkedOnly: 0, superseded: 0, recordsWritten: 0, rowsWritten: 0, pointersWritten: 0, indexesWritten: 0, bytesWritten: 0, failed: [] };
+  for (const plan of plans) for (const [key, value] of Object.entries(plan.stats) as [keyof typeof stats, unknown][]) {
+    if (Array.isArray(value)) (stats[key] as unknown[]).push(...value.filter(row => !(stats[key] as unknown[]).includes(row)));
+    else (stats[key] as number) += value as number;
+  }
+  return stats;
+}
+
+/** Every state with meetings planned in turn against the same served manifest, for tests that publish one manifest themselves. */
+export async function planEveryState(input: Omit<MeetingBodyPublicationInput, "state">): Promise<MeetingBodyPlan> {
+  const plans: MeetingBodyPlan[] = [];
+  for (const state of await meetingStatesOf(input.store)) plans.push(await planMeetingBodies({ ...input, state }));
+  const entries: Record<string, MeetingStateEntry> = {};
+  for (const plan of plans) for (const [state, entry] of Object.entries(plan.entries)) if (!entries[state] || !("carried" in entry)) entries[state] = entry;
+  return { entries, stats: summed(plans), settle: async () => { for (const plan of plans) await plan.settle(); } };
+}
+
+/** One meeting piece per state with meetings, as publish-now runs them: plan, publish the manifest, settle; the pieces' stats summed. */
 export async function publishPass(store: RoutineDataStore, edge: ReaderArtifactStore, now: string, registry: Parameters<typeof planMeetingBodies>[0]["registry"] = async () => null):
-  Promise<{ readonly plan: MeetingBodyPlan; readonly status: string }> {
-  const served = (await edge.readManifest())?.manifest.meetingStates;
-  const plan = await planMeetingBodies({ store, artifacts: edge, now, served, registryVersion: () => null, registry });
-  const published = await publishReaderMeetings({ store: edge, now, meetingStates: plan.entries });
-  if (published.status === "PUBLISHED" || published.status === "CURRENT") await plan.settle();
-  return { plan, status: published.status };
+  Promise<{ readonly plan: Pick<MeetingBodyPlan, "entries" | "stats">; readonly status: string }> {
+  const plans: MeetingBodyPlan[] = [], rank = ["CURRENT", "PUBLISHED", "RACED", "FAILED"];
+  let status = "CURRENT";
+  for (const state of await meetingStatesOf(store)) {
+    const served = (await edge.readManifest())?.manifest.meetingStates;
+    const plan = await planMeetingBodies({ store, artifacts: edge, now, served, state, registryVersion: () => null, registry });
+    const published = await publishReaderMeetings({ store: edge, now, meetingStates: plan.entries });
+    if (published.status === "PUBLISHED" || published.status === "CURRENT") await plan.settle();
+    if (rank.indexOf(published.status) > rank.indexOf(status)) status = published.status;
+    plans.push(plan);
+  }
+  return { plan: { entries: plans.at(-1)?.entries ?? {}, stats: summed(plans) }, status };
 }
 
 /** A read as the map makes it: the viewed place's divisions, from the edge, the database standing by. */

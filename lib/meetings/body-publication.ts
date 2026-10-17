@@ -92,6 +92,8 @@ export interface MeetingBodyPublicationInput {
   /** The version of a state's registry now, so a changed territory is noticed without reading the registry. */
   readonly registryVersion: (state: string) => string | null;
   readonly registry: (state: string) => Promise<MeetingRegistryRead | null>;
+  /** The one state this pass composes; every other state's served index is carried. */
+  readonly state: string;
 }
 
 interface Layout {
@@ -114,6 +116,14 @@ function layoutOf(): Layout {
   layoutHeld ??= buildLayout();
   return layoutHeld;
 }
+
+/** The state whose meeting index a meeting partition's scope files into, or null for a scope no partition names. */
+export function meetingStateOfScope(scope: string): string | null {
+  const hit = layoutOf().scopes.get(scope);
+  return hit === undefined ? null : stateOfContract(hit.contract);
+}
+
+export const hasMeetingPartitions = (state: string) => layoutOf().states.has(state);
 
 function buildLayout(): Layout {
   const layout: Layout = { scopes: new Map(), regularByBody: new Map(), familyByState: new Map(), bodiesByState: new Map(), states: new Set(),
@@ -558,12 +568,12 @@ export async function planMeetingBodies(input: MeetingBodyPublicationInput): Pro
       extras.set(target, held);
     }
   };
-  for (const state of [...layout.states].sort()) await run(state, null);
+  if (layout.states.has(input.state)) await run(input.state, null);
   for (const [state, round] of extras) await run(state, round);
   return {
     entries, stats: pass.stats,
     settle: async () => {
-      const settled = covered.filter((row) => row.state === null || !failedStates.has(row.state));
+      const settled = covered.filter((row) => row.state === null || row.state === input.state && !failedStates.has(row.state));
       if (settled.length > 0) await store.settleMeetingQueue!(settled.map(({ scope, queuedAt }) => ({ scope, queuedAt })));
     },
   };

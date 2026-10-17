@@ -11,7 +11,7 @@ import { STATE_AUTHORITY_FAMILIES, type GlobalAuthorityFamily, type StateAuthori
 
 type StateValues = Partial<Record<StateAuthorityFamily, Record<string, PublishAuthorityValue>>>;
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
-import { planMeetingBodies } from "../lib/meetings/body-publication.ts";
+import { planEveryState } from "./helpers/meeting-body-fixtures.ts";
 import { promoteRecorded } from "./helpers/reader-edge-meetings.ts";
 import type { GlobalPromotedAuthorityFamily, PromotedFamilyArtifactValue } from "../lib/meetings/edge-artifacts.ts";
 import { ballotElectionKey } from "../lib/ballot/generic-projection.ts";
@@ -145,7 +145,7 @@ async function publishEdge(withPromoted: boolean, overrides: typeof PROMOTED = {
   const store = new LocalFileArtifactStore(dir);
   const meetings = new MemoryRoutineDataStore();
   await promoteRecorded(meetings, snapshot.meetings, snapshot.agendaDocuments, snapshot.generatedAt);
-  const plan = await planMeetingBodies({ store: meetings, artifacts: store, now: new Date().toISOString(), served: undefined, registryVersion: () => null, registry: async () => null });
+  const plan = await planEveryState({ store: meetings, artifacts: store, now: new Date().toISOString(), served: undefined, registryVersion: () => null, registry: async () => null });
   assert.deepEqual(plan.stats.failed, []);
   const result = await publishReaderMeetings({ store, now: new Date().toISOString(), meetingStates: plan.entries });
   await publishPointers(store, { authority,

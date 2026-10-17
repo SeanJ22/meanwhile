@@ -3,7 +3,8 @@ import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
-import { publishSupervisorReaderEdge, readerEdgeSupervisorFailure } from "../lib/civic-data/reader-edge-publication.ts";
+import { publishReaderEdge, publishReaderEdgePiece, readerEdgeSupervisorFailure } from "../lib/civic-data/reader-edge-publication.ts";
+import { edgeChangesDb } from "./helpers/fact-db.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { LocalFileArtifactStore, type ReaderArtifactStore } from "../lib/meetings/edge-store.ts";
 import { routineCivicDataSupervisorOutcome } from "../lib/control-plane/freshness-cycle-outcome.ts";
@@ -32,14 +33,15 @@ for (const [kind, env, expectedOk] of [
     } });
     const logs: string[] = [];
     t.mock.method(console, "log", (value: string) => logs.push(value));
-    const outcome = await publishSupervisorReaderEdge(new MemoryRoutineDataStore(), NOW, [], { artifactStore }, env);
+    const { query } = await edgeChangesDb();
+    const outcome = await publishReaderEdge({ store: new MemoryRoutineDataStore(), query, artifactStore, deadlineMs: Number.MAX_SAFE_INTEGER, env });
     assert.equal(outcome.ok, expectedOk);
     assert.equal(outcome.store, kind === "local-file" ? "local folder" : "Netlify Blobs");
     assert.deepEqual(JSON.parse(logs.at(-1)!), outcome);
     if (expectedOk) {
       assert.equal(outcome.readerEdge, "CURRENT");
       assert.equal(outcome.sequence, null);
-      assert.equal(await local.readManifest(), null, "an empty selection writes nothing");
+      assert.equal(await local.readManifest(), null, "nothing promoted writes nothing");
       assert.equal(readerEdgeSupervisorFailure(outcome), null);
     } else {
       assert.equal(await local.readManifest(), null, "a refused local destination is never mutated");
@@ -59,7 +61,8 @@ for (const [kind, env, expectedOk] of [
 
 test("no configured publication store fails without reading data", async () => {
   const store = new Proxy(new MemoryRoutineDataStore(), { get() { throw new Error("unexpected data read"); } });
-  const outcome = await publishSupervisorReaderEdge(store, NOW, [], { artifactStore: null }, {});
+  const query = async () => { throw new Error("unexpected change read"); };
+  const outcome = await publishReaderEdge({ store, query, artifactStore: null, deadlineMs: Number.MAX_SAFE_INTEGER, env: {} });
   assert.equal(outcome.ok, false);
   assert.equal(outcome.readerEdge, "SKIPPED_NO_STORE");
   assert.equal(outcome.store, "not configured");
@@ -78,8 +81,7 @@ test("meetings that cannot be composed fail even with the development opt-in, an
     return typeof value === "function" ? value.bind(target) : value;
   } });
   const artifactStore = new LocalFileArtifactStore(directory);
-  const outcome = await publishSupervisorReaderEdge(unreadable, at(T1, HOUR),
-    [{ recordClass: "MEETING", scope: PIMA.scope }], { artifactStore }, { WTP_READER_EDGE_LOCAL_OK: "1" });
+  const outcome = await publishReaderEdgePiece(unreadable, at(T1, HOUR), { family: "meetings", place: "AZ" }, artifactStore);
   assert.equal(outcome.ok, false);
   assert.match(outcome.detail!, /could not be composed/);
   assert.equal(outcome.readerEdge, "FAILED");

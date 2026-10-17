@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { PGlite } from "@electric-sql/pglite";
 import type { FactDb, Query } from "../../lib/facts/publish.ts";
@@ -14,4 +14,26 @@ export async function factDb(): Promise<FactDb & { readonly query: Query; readon
     pg, query,
     transaction: (work) => pg.transaction((tx) => work(async (text, params = []) => (await tx.query<Record<string, unknown>>(text, [...params])).rows)),
   };
+}
+
+const migration = (suffix: string) => {
+  const dir = join(import.meta.dirname, "..", "..", "lib", "db", "migrations");
+  return readFileSync(join(dir, readdirSync(dir).find(file => file.endsWith(suffix))!), "utf8");
+};
+
+/** The fact store beside the promotion, candidate and confirmation rows the reader edge reads its changes from. */
+export async function edgeChangesDb() {
+  const facts = await factDb();
+  await facts.pg.exec(`CREATE TABLE civic_data_promotions (key text PRIMARY KEY, record_class text NOT NULL, scope text NOT NULL, current_version_id text NOT NULL, promoted_at timestamptz NOT NULL);
+    CREATE TABLE civic_data_candidates (id text PRIMARY KEY, record_class text NOT NULL, scope text NOT NULL);
+    CREATE TABLE civic_data_candidate_events (candidate_id text NOT NULL, at timestamptz NOT NULL, detail text NOT NULL)`);
+  for (const sql of [migration("_r1_edge_changes.sql"), migration("_confirmation_times.sql")]) await facts.pg.exec(sql);
+  const promote = async (recordClass: string, scope: string, at: string, versionId = `${recordClass}:${scope}@${at}`) => {
+    await facts.query("INSERT INTO civic_data_candidates VALUES ($1, $2, $3) ON CONFLICT DO NOTHING", [versionId, recordClass, scope]);
+    await facts.query(`INSERT INTO civic_data_promotions VALUES ($1, $2, $3, $4, $5)
+      ON CONFLICT (key) DO UPDATE SET current_version_id = EXCLUDED.current_version_id, promoted_at = EXCLUDED.promoted_at`, [`${recordClass}:${scope}`, recordClass, scope, versionId, at]);
+    return versionId;
+  };
+  const confirm = (versionId: string, at: string) => facts.query("INSERT INTO civic_data_candidate_events VALUES ($1, $2, $3)", [versionId, at, `UNCHANGED_CONFIRMATION_V1 {}`]);
+  return { ...facts, promote, confirm };
 }

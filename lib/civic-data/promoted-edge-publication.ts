@@ -145,43 +145,53 @@ async function readFamily(input: {
   return { authority: { value: { kind: "PROMOTED_POINTERS", entries }, versionId: promotedFamilyVersion(versions) }, skipped };
 }
 
-/** Each family (each place of a family that grows with places) checks its own pointer and, when it moved, writes it at once. */
-export async function publishPromotedEdgeFamilies(input: {
+const OTHER_READER_CLASSES: readonly RoutineRecordClass[] = ["CURATED_READER_RECORD", "OPERATIONAL_REFERENCE", "STATE_LEGISLATOR"];
+const STATE_VOTE_CLASSES: readonly RoutineRecordClass[] = ["STATE_ROLL_CALL", "STATE_LEGISLATOR_VOTES"];
+const pointerKey = (pointer: Pick<PromotedPointerIdentity, "recordClass" | "scope">) => `${pointer.recordClass}:${pointer.scope}`;
+const knownPointerKeys = () => new Set([...Object.values(promotedEdgePointers()).flat(), ...selectedStateEdgePointers(null).flatMap(row => row.pointers)].map(pointerKey));
+
+/** The global families, each place of a family that grows with places on its own, that these pointers move. */
+export function promotedEdgePieces(selected: readonly Pick<PromotedPointerIdentity, "recordClass" | "scope">[]): { family: GlobalPromotedAuthorityFamily; place: string | null }[] {
+  const keys = new Set(selected.map(pointerKey)), known = knownPointerKeys();
+  const placeOf = (family: GlobalPromotedAuthorityFamily, scope: string) => PLACE_SPLIT_FAMILIES.has(family) ? authorityPlaceOfScope(scope) : null;
+  return [
+    ...(Object.entries(promotedEdgePointers()) as [GlobalPromotedAuthorityFamily, readonly PromotedEdgePointer[]][]).flatMap(([family, pointers]) =>
+      pointers.filter(pointer => keys.has(pointerKey(pointer))).map(pointer => ({ family, place: placeOf(family, pointer.scope) }))),
+    ...selected.filter(pointer => STATE_VOTE_CLASSES.includes(pointer.recordClass)).map(pointer => ({ family: "state-votes" as const, place: authorityPlaceOfScope(pointer.scope) })),
+    ...selected.filter(pointer => OTHER_READER_CLASSES.includes(pointer.recordClass) && !known.has(pointerKey(pointer)))
+      .map(pointer => ({ family: "other-reader-data" as const, place: authorityPlaceOfScope(pointer.scope) })),
+  ];
+}
+
+/** One family, or one place of a family that grows with places, checks its own pointer and, when it moved, writes it at once. */
+export async function publishPromotedEdgeFamily(input: {
   readonly store: CivicDataReadStore & Pick<RoutineDataStore, "listPromotionScopes"> & { readonly readPromotionIdentity: NonNullable<CivicDataReadStore["readPromotionIdentity"]> };
   readonly artifactStore: ReaderArtifactStore;
   readonly now: string;
-  readonly families?: Readonly<Partial<Record<GlobalPromotedAuthorityFamily, readonly PromotedEdgePointer[]>>>;
+  readonly family: GlobalPromotedAuthorityFamily;
+  readonly place: string | null;
+  /** The family's own pointers of that place unless given. */
+  readonly pointers?: readonly PromotedEdgePointer[];
 }): Promise<{ readonly published: readonly string[]; readonly skipped: readonly string[] }> {
-  const families = { ...input.families ?? promotedEdgePointers() };
-  if (families["other-reader-data"]?.length === 0) {
-    const known = new Set([...Object.values(promotedEdgePointers()).flat(), ...selectedStateEdgePointers(null).flatMap(row => row.pointers)].map(pointer => `${pointer.recordClass}:${pointer.scope}`));
-    families["other-reader-data"] = (await input.store.listPromotionScopes?.(["CURATED_READER_RECORD", "OPERATIONAL_REFERENCE", "STATE_LEGISLATOR"]) ?? [])
-      .filter(pointer => !known.has(`${pointer.recordClass}:${pointer.scope}`))
+  const { family, place } = input, at = place ?? undefined, name = place === null ? family : `${family}/${place}`;
+  const listed = async (classes: readonly RoutineRecordClass[], keep: (key: string) => boolean): Promise<PromotedEdgePointer[]> =>
+    (await input.store.listPromotionScopes?.(classes) ?? []).filter(pointer => keep(pointerKey(pointer)) && authorityPlaceOfScope(pointer.scope) === place)
       .map(pointer => ({ ...pointer, reader: options => readPromotedCivicData(pointer.recordClass, pointer.scope, options) }));
-  }
-  if (families["state-votes"]?.length === 0) families["state-votes"] = (await input.store.listPromotionScopes?.(["STATE_ROLL_CALL", "STATE_LEGISLATOR_VOTES"]) ?? [])
-    .map(pointer => ({ ...pointer, reader: options => readPromotedCivicData(pointer.recordClass, pointer.scope, options) }));
   const published: string[] = [], skipped: string[] = [];
-  for (const [family, pointers] of Object.entries(families) as [GlobalPromotedAuthorityFamily, readonly PromotedEdgePointer[]][]) {
-    const places = new Map<string | undefined, PromotedEdgePointer[]>();
-    for (const pointer of pointers) {
-      const place = PLACE_SPLIT_FAMILIES.has(family) ? authorityPlaceOfScope(pointer.scope) : undefined;
-      places.set(place, [...places.get(place) ?? [], pointer]);
+  try {
+    const known = family === "other-reader-data" ? knownPointerKeys() : null;
+    const pointers = input.pointers ?? (family === "other-reader-data" ? await listed(OTHER_READER_CLASSES, key => !known!.has(key))
+      : family === "state-votes" ? await listed(STATE_VOTE_CLASSES, () => true)
+        : promotedEdgePointers()[family].filter(pointer => place === null || authorityPlaceOfScope(pointer.scope) === place));
+    const served = await readServedPointer(input.artifactStore, authorityPointerKey(family, at));
+    const result = await readFamily({ ...input, pointers, served: served?.ref.layout === "records" ? served.ref.version : null,
+      readPrior: () => readServedPromotedFamily(family, served?.ref, input.artifactStore, at) });
+    skipped.push(...result.skipped.map(reason => `${name} ${reason}`));
+    if (result.authority) {
+      if (await writeAuthorityPointer(input.artifactStore, family, at, result.authority, served, input.now)) published.push(name);
+      else skipped.push(`${name} READER_POINTER_RACED`);
     }
-    if (!PLACE_SPLIT_FAMILIES.has(family) && !places.size) places.set(undefined, []);
-    for (const [place, held] of places) {
-      const name = place === undefined ? family : `${family}/${place}`;
-      try {
-        const served = await readServedPointer(input.artifactStore, authorityPointerKey(family, place));
-        const result = await readFamily({ ...input, pointers: held, served: served?.ref.layout === "records" ? served.ref.version : null,
-          readPrior: () => readServedPromotedFamily(family, served?.ref, input.artifactStore, place) });
-        skipped.push(...result.skipped.map(reason => `${name} ${reason}`));
-        if (!result.authority) continue;
-        if (await writeAuthorityPointer(input.artifactStore, family, place, result.authority, served, input.now)) published.push(name);
-        else skipped.push(`${name} READER_POINTER_RACED`);
-      } catch (error) { skipped.push(`${name} ${error instanceof Error ? error.message : String(error)}`); }
-    }
-  }
+  } catch (error) { skipped.push(`${name} ${error instanceof Error ? error.message : String(error)}`); }
   return { published, skipped };
 }
 

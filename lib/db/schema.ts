@@ -823,6 +823,7 @@ export const civicDataCandidateEvents = pgTable(
   },
   (table) => [
     uniqueIndex("civic_data_candidate_events_sequence_idx").on(table.candidateId, table.sequence),
+    index("civic_data_candidate_events_confirmed_at_idx").on(table.at).where(sql`left(${table.detail}, 26) = 'UNCHANGED_CONFIRMATION_V1 '`),
     check("civic_data_candidate_events_positive_sequence", sql`${table.sequence} > 0`),
     check(
       "civic_data_candidate_events_state_known",

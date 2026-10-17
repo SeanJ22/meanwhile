@@ -7,7 +7,6 @@ import { join } from "node:path";
 import { MEETING_PARTITION_CONTRACTS, type MeetingPartitionContract } from "../../lib/civic-data/meeting-partitions.ts";
 import { MemoryRoutineDataStore } from "../../lib/civic-data/store.ts";
 import { stateRegistryRuntimeScope } from "../../lib/civic-data/state-scopes.ts";
-import { planMeetingBodies } from "../../lib/meetings/body-publication.ts";
 import { publishReaderMeetings, type PublishAuthorityValue } from "../../lib/meetings/edge-serving.ts";
 import type { GlobalAuthorityFamily } from "../../lib/meetings/edge-artifacts.ts";
 import { publishPointers } from "./edge-pointers.ts";
@@ -15,7 +14,7 @@ import { LocalFileArtifactStore } from "../../lib/meetings/edge-store.ts";
 import type { AgendaDocument } from "../../lib/meetings/agenda-documents.ts";
 import type { Meeting } from "../../lib/sources/types.ts";
 import { promoteMeetingPartitions } from "../../scripts/ingest.ts";
-import { ACQUIRED_URL } from "./meeting-body-fixtures.ts";
+import { ACQUIRED_URL, planEveryState } from "./meeting-body-fixtures.ts";
 import { provenEdgeEntry } from "./promoted-edge-entry.ts";
 import { registryTransferImport } from "./promoted-fixtures.ts";
 
@@ -75,7 +74,7 @@ export async function publishRecordedEdge(meetings: readonly Meeting[], agendaDo
   process.env.WTP_READER_EDGE_DIR = dir;
   process.once("exit", () => rmSync(dir, { recursive: true, force: true }));
   const edge = new LocalFileArtifactStore(dir);
-  const plan = await planMeetingBodies({ store, artifacts: edge, now: publishedAt, served: undefined, registryVersion: () => null, registry: async () => null });
+  const plan = await planEveryState({ store, artifacts: edge, now: publishedAt, served: undefined, registryVersion: () => null, registry: async () => null });
   assert.deepEqual(plan.stats.failed, []);
   const versionId = `recorded:registry:AZ:${publishedAt}`;
   const registry = { AZ: { versionId, value: { kind: "PROMOTED_POINTERS" as const, entries: [provenEdgeEntry({

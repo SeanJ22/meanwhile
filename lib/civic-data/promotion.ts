@@ -1,7 +1,7 @@
 import { rememberStatePublicationHashes, withStateRecordHashes } from "./state-publication.ts";
 import { processRoutineCandidate } from "./candidate-lifecycle.ts";
-import type { CandidateVersionRecord, PromotedProjection, RoutineCandidate } from "./types.ts";
-import { PostgresRoutineDataStore, routineEventObservedAt, type RoutineDataStore } from "./store.ts";
+import type { CandidateVersionRecord, PromotedPointerIdentity, PromotedProjection, RoutineCandidate } from "./types.ts";
+import { PostgresRoutineDataStore, promotedPointerIdentity, routineEventObservedAt, type RoutineDataStore } from "./store.ts";
 import { canonicalCivicDataJson, heldCivicRecords } from "./changes.ts";
 import { validateRoutineCandidate } from "./validate.ts";
 import type { NavigationComparison } from "./navigation-successor.ts";
@@ -421,12 +421,23 @@ export async function processRegisteredManualCandidate(
   );
 }
 
+/** The candidate lives only inside the first step; the typed readback runs after it is released. */
 export async function processNavigationCandidate(
   store: RoutineDataStore,
-  candidate: RoutineCandidate,
-  comparison: NavigationComparison,
+  prepare: () => Promise<{ readonly candidate: RoutineCandidate; readonly comparison: NavigationComparison }>,
   now: string,
 ): Promise<{ readonly candidateId: string; readonly promotedVersionId: string }> {
+  const published = await promoteNavigationCandidate(store, prepare, now);
+  if (published.promoted) await recordRoutineReaderProjectionReadback(store, requiredManualProductionContract("ballot-navigation"), published.promoted, now);
+  return { candidateId: published.candidateId, promotedVersionId: published.promotedVersionId };
+}
+
+async function promoteNavigationCandidate(
+  store: RoutineDataStore,
+  prepare: () => Promise<{ readonly candidate: RoutineCandidate; readonly comparison: NavigationComparison }>,
+  now: string,
+): Promise<{ readonly candidateId: string; readonly promotedVersionId: string; readonly promoted: PromotedPointerIdentity | null }> {
+  const { candidate, comparison } = await prepare();
   if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract("ballot-navigation", "manual");
   const bounded = durableCandidateSnapshot(candidate);
   const contract = requiredManualProductionContract("ballot-navigation");
@@ -450,13 +461,12 @@ export async function processNavigationCandidate(
       retrieval: { requestedUrl: bounded.retrieval.requestedUrl, finalUrl: bounded.retrieval.finalUrl,
         httpStatus: bounded.retrieval.httpStatus, rawHash: bounded.retrieval.rawHash!, retrievedAt: bounded.retrieval.retrievedAt } }, at);
     if (confirmed.kind !== "CONFIRMED") throw new Error(`ELECTION_FIELD_CONFIRMATION_REFUSED:${confirmed.kind}:${confirmed.detail}`);
-    return { candidateId: confirmed.versionId, promotedVersionId: confirmed.versionId };
+    return { candidateId: confirmed.versionId, promotedVersionId: confirmed.versionId, promoted: null };
   }
-  const outcome = await appendTypedReaderProjectionReadback(store, contract,
-    await processRoutineCandidate(store, bounded, now, base?.pointer.versionId ?? null, REGISTERED_PRODUCTION_DOOR,
-      verification, { confirmUnchanged: false }, comparison), now);
+  const outcome = await processRoutineCandidate(store, bounded, now, base?.pointer.versionId ?? null, REGISTERED_PRODUCTION_DOOR,
+    verification, { confirmUnchanged: false }, comparison);
   if (!outcome.promoted) throw new Error(`ELECTION_FIELD_PUBLICATION_HELD:${outcome.candidate.failureDetail ?? outcome.candidate.state}`);
-  return { candidateId: outcome.candidate.candidate.id, promotedVersionId: outcome.promoted.versionId };
+  return { candidateId: outcome.candidate.candidate.id, promotedVersionId: outcome.promoted.versionId, promoted: promotedPointerIdentity(outcome.promoted) };
 }
 
 export async function processRegisteredStateRetirementCandidate(

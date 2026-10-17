@@ -97,16 +97,18 @@ export async function publishElectionFields(input: {
   let candidateId: string | null = null, promotedVersionId: string | null = null, currentState: string | null = null;
   const publish = async () => {
     if (!records.size) return;
-    const { candidate, comparison } = await prepareNavigationSuccessor({ contractId: "ballot-navigation",
-      version: input.now, sourceThrough: input.now,
-      sourceReceipt: { contractVersion: 1, reviewedAt: input.now, reviewedBy: "code:section3Record", sources: [...sources.values()] },
-      payload: { kind: "ballot-navigation", records: [...records.values()] as unknown as readonly (Record<string, unknown> & { id: string })[] },
-    }, input.store);
-    const outcome = await processNavigationCandidate(input.store, { ...candidate,
-      excludedFacts: [...(candidate.excludedFacts ?? []), ...conflicts] }, comparison, input.now);
+    const outcome = await processNavigationCandidate(input.store, async () => {
+      const { candidate, comparison } = await prepareNavigationSuccessor({ contractId: "ballot-navigation",
+        version: input.now, sourceThrough: input.now,
+        sourceReceipt: { contractVersion: 1, reviewedAt: input.now, reviewedBy: "code:section3Record", sources: [...sources.values()] },
+        payload: { kind: "ballot-navigation", records: [...records.values()] as unknown as readonly (Record<string, unknown> & { id: string })[] },
+      }, input.store);
+      fields.push(...records.keys());
+      const held = [...conflicts];
+      records.clear(); sources.clear(); conflicts.length = 0;
+      return { candidate: { ...candidate, excludedFacts: [...(candidate.excludedFacts ?? []), ...held] }, comparison };
+    }, input.now);
     candidateId = outcome.candidateId; promotedVersionId = outcome.promotedVersionId;
-    fields.push(...records.keys());
-    records.clear(); sources.clear(); conflicts.length = 0;
   };
   for await (const inputField of input.fields) {
     const field: ElectionFieldInput = inputField;

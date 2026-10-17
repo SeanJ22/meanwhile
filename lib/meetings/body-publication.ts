@@ -125,6 +125,21 @@ interface Pass extends MeetingBodyPublicationInput {
   readonly stats: MeetingBodyPublicationStats;
   readonly families: Map<string, Promise<{ readonly read: CivicDataReadResult<MeetingsSnapshot>; readonly members: ReadonlySet<string> }>>;
   readonly registries: Map<string, Promise<MeetingRegistryRead | null>>;
+  /** Pointer identities already read this pass; null is a scope with no pointer. */
+  readonly identities: Map<string, PromotedPointerIdentity | null>;
+}
+
+const IDENTITY_BATCH = 500;
+
+/** The pointer identities of these scopes, each read once per pass and in batches. */
+async function identitiesOf(pass: Pass, scopes: readonly string[]): Promise<ReadonlyMap<string, PromotedPointerIdentity>> {
+  const missing = [...new Set(scopes)].filter((scope) => !pass.identities.has(scope));
+  for (let at = 0; at < missing.length; at += IDENTITY_BATCH) {
+    const batch = missing.slice(at, at + IDENTITY_BATCH);
+    const found = new Map((await pass.store.readPromotionIdentities(MEETINGS_RECORD_CLASS, batch)).map((identity) => [identity.scope, identity] as const));
+    for (const scope of batch) pass.identities.set(scope, found.get(scope) ?? null);
+  }
+  return new Map(scopes.flatMap((scope) => { const identity = pass.identities.get(scope); return identity ? [[scope, identity] as const] : []; }));
 }
 
 const readOptions = (pass: Pass) => ({ store: pass.store, now: pass.now, maxAgeMs: meetingPartitionFreshnessMs(pass.now), bypassCache: true });
@@ -204,7 +219,7 @@ async function composeBody(pass: Pass, state: string, work: BodyWork): Promise<C
   const histories = live.map((contract) => meetingHistoryContract(contract));
   const scopes = [...live.flatMap((contract) => [contract.scope, ...(layout.heldBySuccessor.has(contract.id) ? [layout.heldBySuccessor.get(contract.id)!.scope] : [])]),
     ...histories.map((contract) => contract.scope)];
-  const identities = new Map((await store.readPromotionIdentities(MEETINGS_RECORD_CLASS, scopes)).map((identity) => [identity.scope, identity] as const));
+  const identities = await identitiesOf(pass, scopes);
   const standing = live.map((contract) => {
     const held = layout.heldBySuccessor.get(contract.id) ?? null;
     return identities.has(contract.scope) ? { contract, held: null } : { contract, held: held !== null && identities.has(held.scope) ? held : null };
@@ -344,6 +359,10 @@ async function processState(pass: Pass, state: string, dirty: ReadonlySet<string
     }
   }
 
+  const wanted = [...work.keys()].flatMap((bodyId) => (layout.regularByBody.get(bodyId) ?? []).flatMap((contract) =>
+    [contract.scope, meetingHistoryContract(contract).scope, ...(layout.heldBySuccessor.has(contract.id) ? [layout.heldBySuccessor.get(contract.id)!.scope] : [])]));
+  await identitiesOf(pass, wanted);
+
   const copies = new Map<string, Map<string, Copy>>();
   const removals = new Map<string, Set<string>>();
   const file = (target: string, bodyId: string, copy: Copy) => {
@@ -415,7 +434,7 @@ export async function planMeetingBodies(input: MeetingBodyPublicationInput): Pro
     covered.push({ ...row, state });
     if (state !== null) dirty.set(state, (dirty.get(state) ?? new Set()).add(row.scope));
   }
-  const pass: Pass = { ...input, layout, families: new Map(), registries: new Map(),
+  const pass: Pass = { ...input, layout, families: new Map(), registries: new Map(), identities: new Map(),
     stats: { states: [], composed: 0, unchanged: 0, checkedOnly: 0, superseded: 0, recordsWritten: 0, rowsWritten: 0, indexesWritten: 0, bytesWritten: 0, failed: [] } };
   const entries: Record<string, MeetingStateEntry> = Object.fromEntries(Object.entries(input.served ?? {}).map(([state, ref]) => [state, { versionId: ref.version, carried: true as const }]));
   const failedStates = new Set<string>();

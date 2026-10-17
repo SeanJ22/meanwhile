@@ -41,6 +41,7 @@ import { buildEverydayRoutingProjection } from "../lib/routing/everyday.ts";
 
 import { OFFICIAL_STATE_LEGISLATOR_TARGETS } from "../lib/state-rollcalls/authority.ts";
 
+import { resolveZip } from "../lib/geo/zcta.ts";
 import { GET as meetingsGET } from "../app/api/meetings/route.ts";
 import { GET as directoryGET } from "../app/api/directory/route.ts";
 
@@ -368,6 +369,30 @@ test("a whole /api/meetings answer from the edge is held by the CDN, keyed on ev
   const body = await response.json();
   assert.ok(Array.isArray(body.governingOcdIds) && body.governingOcdIds.length > 0);
   assert.ok(body.coverage && body.coverage.bodies.length > 0);
+});
+
+test("panning Arizona to New Hampshire and back loads each state's officials and meetings from its own artifacts and carries nothing across", async () => {
+  const { dir, manifest } = await publishEdge("xs-crossing");
+  process.env.WTP_READER_EDGE_DIR = dir;
+  const registry = (state: string) => manifest.stateAuthorities!["registry-runtime"]![state].key;
+  const stateOf = (id: string | null | undefined) => stateOfOcdId(id ?? "");
+  const answers: { ids: string[]; governing: string[]; bodies: number }[] = [];
+  for (const [state, query] of [["az", "lat=32.21696&lng=-110.971"], ["nh", "lat=43.2081&lng=-71.5376"], ["az", "lat=32.21696&lng=-110.971"]] as const) {
+    const { value: response, keys } = await recordingBytes(() => meetingsGET(new Request(`https://wtp.test/api/meetings?${query}`)));
+    assert.equal(response.status, 200, state);
+    const body = await response.json();
+    const other = state === "az" ? "NH" : "AZ";
+    assert.ok(keys.includes(registry(state.toUpperCase())), `${state} did not read its own registry`);
+    assert.equal(keys.includes(registry(other)), false, `${state} read ${other}'s registry`);
+    assert.ok(body.governingOcdIds.length > 0 && body.governingOcdIds.every((id: string) => stateOf(id) === state || stateOf(id) === null), `${state}: ${body.governingOcdIds}`);
+    assert.ok(body.coverage.bodies.every((row: { ocdId: string | null }) => stateOf(row.ocdId) === state || stateOf(row.ocdId) === null));
+    assert.ok(body.meetings.every((row: { ocdId: string }) => stateOf(row.ocdId) === state), `${state} showed another state's meeting`);
+    if (body.nearZip) assert.equal(resolveZip(body.nearZip).ok && (resolveZip(body.nearZip) as { centroid: { postal?: { state: string } } }).centroid.postal?.state, state.toUpperCase());
+    answers.push({ ids: body.meetings.map((row: { id: string }) => row.id).sort(), governing: [...body.governingOcdIds].sort(), bodies: body.coverage.bodies.length });
+  }
+  assert.ok(answers[0].ids.length > 0 && answers[1].bodies > 0, "each state answers from its own records");
+  assert.equal(answers[1].ids.some(id => answers[0].ids.includes(id)), false, "no Arizona meeting stays on the New Hampshire map");
+  assert.deepEqual(answers[2], answers[0], "moving back restores the first state");
 });
 
 test("the held answer carries nothing about the visitor: other cookies, agents and addresses get the same bytes", async () => {

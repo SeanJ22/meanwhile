@@ -1,0 +1,19 @@
+{
+  "n": 50,
+  "branch": "release/50",
+  "river_sha": "2e16200945cd27c65541e0fcd2705b3dfd8d6325",
+  "tested_sha": "2e16200945cd27c65541e0fcd2705b3dfd8d6325",
+  "steps": [
+    "BL-30"
+  ],
+  "lanes": [
+    "ballot-three-states"
+  ],
+  "integration_from": 232,
+  "integration_count": 233,
+  "pr": {
+    "number": 759,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/759"
+  },
+  "at": "2026-10-17T02:27:06Z"
+}

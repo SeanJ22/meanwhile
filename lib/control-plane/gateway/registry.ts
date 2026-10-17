@@ -1,3 +1,4 @@
+import { REGISTRY_STATES, stateBallotContractId } from "../../civic-data/state-scopes.ts";
 import "../../ask/model.ts";
 import "../../hunt/settings.ts";
 import "../../facts/clocks.ts";
@@ -206,7 +207,7 @@ const REGISTRY: readonly RegisteredAction[] = [
   {
     definition: {
       type: "ballot.publish", label: "Publish ballots",
-      does: "Asks the runner to merge the reviewed state ballots and publish every state that passes.",
+      does: "Asks the runner to publish each reviewed state ballot independently.",
       doesNot: "Keeps spending limits and pauses as they are.",
       authority: "OWNER_DECISION_REQUIRED", subjectKind: "national ballots", requiresStateVersion: false,
       refusals: ["INVALID_INPUT", "DOWNSTREAM_REFUSED"],
@@ -216,10 +217,11 @@ const REGISTRY: readonly RegisteredAction[] = [
     },
     async execute(deps, context) {
       try {
-        const request = await requestRoutineDue(deps.repos,
-          ["--contract=ballot-contests", "--reason=Publish ballots requested from Admin"], context.at);
-        return { ok: true, outcome: "QUEUED", subject: request.id,
-          says: "Ballot publication is queued for the runner’s next pass. Merged states and skipped states appear in Workers.",
+        const requests = [];
+        for (const state of REGISTRY_STATES) requests.push(await requestRoutineDue(deps.repos,
+          [`--contract=${stateBallotContractId("ballot-contests", state)}`, "--reason=Publish ballots requested from Admin"], context.at));
+        return { ok: true, outcome: "QUEUED", subject: requests[0].id,
+          says: "Ballot publication is queued for the runner’s next pass. Each state’s publication result appears in Workers.",
           readBackAt: "/admin?view=workers", undo: null };
       } catch (error) { return storeRefusal("ballot publication", error); }
     },

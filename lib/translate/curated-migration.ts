@@ -5,7 +5,6 @@ import { BODY_BLURBS, DIVISION_BODY_BLURBS } from "../officials/body-description
 import { OFFICE_BLURBS, STATE_OFFICE_BLURBS, DIVISION_OFFICE_BLURBS } from "../officials/office-blurbs.ts";
 import { NOTICE_SUMMARIES } from "../meetings/notice-summary.ts";
 import { MINUTES_SUMMARIES } from "../meetings/minutes-summaries.ts";
-import { MEASURE_RECORD_FIRST_SEED } from "../ballot/measure-records.ts";
 import { US_JURISDICTIONS } from "../coverage/states.ts";
 import { translationHash, type PreservedCuratedText, type TextTranslation } from "./records.ts";
 import { runHeldTextTranslations } from "./standing.ts";
@@ -83,14 +82,6 @@ export function curatedMeetingEntries(input: {
       meeting:{id:doc.meetingId,bodyId:doc.bodyId,documentUrl:doc.url,documentHash:doc.hash}},sourceUrl:doc.url,preservedText});
   }
   return entries;
-}
-
-/** Immutable reaction subjects are retained while official numbering is owed.
- * This inventory neither assigns numbers nor asserts a model checked them. */
-export function curatedMeasureMigrationInventory() {
-  return MEASURE_RECORD_FIRST_SEED.map(row=>({contestId:row.contestId,original:row,
-    preservedReactionIds:row.parts.map(part=>part.id),unknownNumberIds:row.parts.filter(part=>part.number===null).map(part=>part.id),
-    fileHash:translationHash(readFileSync(new URL("../../data/ballot/measure-records-first-seed.json",import.meta.url),"utf8"))}));
 }
 
 /** Normal durable attempts, source admission, two guarded model calls and

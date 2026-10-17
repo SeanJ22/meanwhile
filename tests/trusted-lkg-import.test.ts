@@ -3,10 +3,8 @@ import { createHash } from "node:crypto";
 import test from "node:test";
 
 import { canonicalCivicDataJson, civicRecordsFor } from "../lib/civic-data/changes.ts";
-import {
-  processRoutineCandidate,
-  type PromotionOutcome,
-} from "../lib/civic-data/promotion.ts";
+import { type PromotionOutcome } from "../lib/civic-data/promotion.ts";
+import { processRoutineCandidate } from "../lib/civic-data/candidate-lifecycle.ts";
 import { promotionProofIssue, readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import { MemoryRoutineDataStore, trustedLkgImportClock } from "../lib/civic-data/store.ts";
 import { routineTaskDue, type RoutineSourceTask } from "../lib/civic-data/runner.ts";

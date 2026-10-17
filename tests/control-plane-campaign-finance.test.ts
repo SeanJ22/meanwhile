@@ -29,7 +29,7 @@ import {
 } from "../lib/control-plane/campaign-finance/model.ts";
 import {
   AZ_LOCAL_ROUTES,
-  arizonaLocalObligation,
+  campaignFinanceObligations,
 } from "../lib/control-plane/campaign-finance/obligations.ts";
 import { installFundingFirstSeed } from "./helpers/registry-runtime-first-seed.ts";
 
@@ -85,7 +85,7 @@ test("FEC absence does NOT close a local race, and the statute finds the custodi
 });
 
 test("the local WorkItem stays OPEN and names its exact remaining routes", () => {
-  const obligation = arizonaLocalObligation(NOW);
+  const obligation = campaignFinanceObligations(NOW).find(row => row.coverage.contestId === "ballot-az-pima:prop-423")!;
 
   assert.equal(obligation.item.state, "OPEN");
   assert.equal(obligation.acquiredEvidencePaths.length, 0, "nothing of this money is acquired");
@@ -319,10 +319,6 @@ test("an independent expenditure CANNOT be flattened into a contribution", () =>
   assert.equal("contributions" in IE_REPORT, false);
   assert.equal("independentExpenditures" in CANDIDATE_FILING, false);
 
-  // TYPE-LEVEL: the witness is only callable while the invariant holds. If
-  // `intoCommitteeId` or `amountReceived` is ever added to IndependentExpenditure,
-  // `IndependentExpenditureIsNotAReceipt` resolves to `never` and this line stops
-  // compiling.
   assert.equal(INDEPENDENT_EXPENDITURE_IS_NOT_A_RECEIPT(SUPPORTING_IE), 250_000);
 
   const smuggled: CampaignFinanceFiling = {

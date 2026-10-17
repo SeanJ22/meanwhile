@@ -1,5 +1,5 @@
 import { readerQuery } from "../../civic-data/promoted-reader-query.ts";
-import { REGISTRY_RUNTIME_SCOPE } from "../../registry/runtime-data-plane.ts";
+import { readRegistryRuntimeProjection } from "../../registry/runtime-read-model.ts";
 import { registrationTarget } from "../../registration/publication.ts";
 import { CENSUS_GEO_SCOPE, CENSUS_GEO_RECORD_CLASS } from "../../census-geography/publication.ts";
 import { censusWorkDivision } from "../../census-geography/division-id.ts";
@@ -9,7 +9,6 @@ import type { ReadOnlyQuery } from "../../control-plane/admin-view/promoted-slic
 import type { AcsJoinTarget } from "./national.ts";
 import type { AcsScope, AcsPopulationRow } from "./index.ts";
 import { loadRegistrationReference } from "../../registration/reference.ts";
-import { readPlacePayloadParts } from "../../civic-data/place-payload-slices.ts";
 
 const TYPES: Readonly<Record<string, AcsScope>> = { county: "county", place: "place", county_subdivision: "county_subdivision",
   cousub: "county_subdivision", cd: "congressional_district", sldu: "state_leg_upper", sldl: "state_leg_lower",
@@ -23,8 +22,8 @@ export async function heldAcsJoinTargets(stateFips: string, rows: readonly AcsPo
   if (!state) throw new Error("The ACS state has no held FIPS identity.");
   const [divisions, containers] = await query([
     { text: "SELECT d AS division FROM civic_data_promotions p CROSS JOIN LATERAL jsonb_array_elements(p.payload->'divisions') d" +
-      " WHERE ((p.record_class = 'REGISTRATION' AND p.scope = $1) OR (p.record_class = 'REGISTRY_RUNTIME_BINDING' AND p.scope = $2))" +
-      " AND upper(d->>'state') = $3", params: [registrationTarget(state).scope, REGISTRY_RUNTIME_SCOPE, state] },
+      " WHERE p.record_class = 'REGISTRATION' AND p.scope = $1" +
+      " AND upper(d->>'state') = $2", params: [registrationTarget(state).scope, state] },
     { text: "SELECT s->>'type' AS type, s->>'version' AS version, g AS geography FROM civic_data_promotions p" +
       " CROSS JOIN LATERAL jsonb_array_elements(p.payload->'scopes') s CROSS JOIN LATERAL jsonb_array_elements(s->'groupings') g" +
       " WHERE p.record_class = $1 AND p.scope = $2 AND g->>'stateFips' = $3", params: [CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE, stateFips] },
@@ -39,9 +38,11 @@ export async function heldAcsJoinTargets(stateFips: string, rows: readonly AcsPo
     return divisionId ? [divisionId] : [];
   });
   if (requested.length) {
-    const registry = await readPlacePayloadParts(query, "REGISTRY_RUNTIME_BINDING", [REGISTRY_RUNTIME_SCOPE], requested, [], []);
-    const held = registry.get(REGISTRY_RUNTIME_SCOPE) as { registry?: { divisions?: readonly { divisionType: string; geoid: string; ocdId: string }[] } };
-    for (const division of held.registry?.divisions ?? []) {
+    const registry = await readRegistryRuntimeProjection([state]);
+    if (registry.kind !== "PROMOTED" && registry.kind !== "NOT_RECORDED") throw new Error(`ACS_REGISTRY_UNAVAILABLE:${state}:${registry.kind}`);
+    const selected = new Set(requested);
+    for (const division of registry.kind === "PROMOTED" ? registry.value.registry.divisions : []) {
+      if (!selected.has(division.ocdId)) continue;
       const geography = TYPES[division.divisionType];
       if (geography && division.geoid) targets.push({ geography, geoid: division.geoid, divisionId: division.ocdId });
     }

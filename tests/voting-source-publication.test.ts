@@ -6,7 +6,9 @@ import { mergeVotingSourceRead, recordVotingSourceRead, registeredVotingSourceDo
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import type { RawCaptureRef } from "../lib/civic-data/raw-capture-vault.ts";
 import { votingSitesCandidate } from "../lib/ballot/voting-sites-data-plane.ts";
-import { readVotingSitesProjection } from "../lib/ballot/voting-sites-server.ts";
+import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
+import type { VotingSitesFile } from "../lib/ballot/voting-sites.ts";
+import { stateBallotScope } from "../lib/civic-data/state-scopes.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import type { VotingSourceDoor } from "../lib/ballot/voting-source-types.ts";
@@ -31,13 +33,13 @@ test("saved official tables reach the existing public read model with hours, loc
   assert.equal(drop.office?.phone, "(701) 845-8500 Ext. 6666");
   const current = replaceVotingJurisdiction(null, jurisdiction, at);
   const vault = new MemoryEvidenceStore();
-  const candidate = votingSitesCandidate({ current, prior: null, failures: [], acquisition: await holdVotingRawEvidence(vault, read),
+  const candidate = votingSitesCandidate({ state: "ND", current, prior: null, failures: [], acquisition: await holdVotingRawEvidence(vault, read),
     successfulAuthorityReads: read.sources.length, requestedUrl: door.url, finalUrl: door.url, retrievedAt: at });
   const store = new MemoryRoutineDataStore();
-  const outcome = await processRegisteredManualCandidate(store, "voting-sites", candidate, at);
+  const outcome = await processRegisteredManualCandidate(store, "voting-sites:ND", candidate, at);
   assert.ok(outcome.promoted, outcome.candidate.failureDetail ?? "the saved official table should publish");
   assert.equal(outcome.readerReadback?.status, "PASS");
-  const projection = await readVotingSitesProjection({ store, now: at, bypassCache: true });
+  const projection = await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", "ND"), { store, now: at, bypassCache: true });
   assert.equal(projection.kind, "PROMOTED");
   if (projection.kind === "PROMOTED") assert.deepEqual(projection.value, JSON.parse(JSON.stringify(current)));
   const saved = (await store.readCandidate(candidate.id))!.candidate;
@@ -73,7 +75,7 @@ test("candidate and measure doors retain shared mappings and reread their offici
   const measureDoor: VotingSourceDoor = { ...candidateDoor, id: "measure-list", covers: ["BALLOT_MEASURES"] };
   await saveVotingSourceDoor(repos.doors, candidateDoor, at);
   await saveVotingSourceDoor(repos.doors, measureDoor, at);
-  const registered = await registeredVotingSourceDoors(repos.doors);
+  const registered = await registeredVotingSourceDoors(repos.doors, "ND");
   assert.deepEqual(registered.map(row => row.covers), [["CANDIDATE_LIST"], ["BALLOT_MEASURES"]]);
   const [saved] = (await listDoors(repos.doors)).doors;
   assert.deepEqual([...saved.holds].sort(), ["ballot-contests", "ballot-measures"]);

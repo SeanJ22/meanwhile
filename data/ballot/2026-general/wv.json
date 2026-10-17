@@ -16,7 +16,7 @@
           "divisionVintage": "2026",
           "title": "U.S. Senate",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -35,7 +35,7 @@
           "divisionVintage": "2022",
           "title": "U.S. House of Representatives, Congressional District 2",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -54,7 +54,7 @@
           "divisionVintage": "2022",
           "title": "State Senate, Senatorial District 11",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -73,7 +73,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 68",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -92,7 +92,7 @@
           "divisionVintage": "2022",
           "title": "State Senate, Senatorial District 16",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -111,7 +111,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 96",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -130,7 +130,7 @@
           "divisionVintage": "2022",
           "title": "State Senate, Senatorial District 15",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -149,7 +149,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 93",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -168,7 +168,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 94",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -187,7 +187,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 92",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -206,7 +206,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 91",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -225,7 +225,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 97",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -244,7 +244,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 95",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -263,7 +263,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 90",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -282,7 +282,7 @@
           "divisionVintage": "2022",
           "title": "U.S. House of Representatives, Congressional District 1",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -301,7 +301,7 @@
           "divisionVintage": "2022",
           "title": "State Senate, Senatorial District 7",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -320,7 +320,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 31",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -339,7 +339,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 32",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -358,7 +358,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 63",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -377,7 +377,7 @@
           "divisionVintage": "2022",
           "title": "State Senate, Senatorial District 1",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -396,7 +396,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 3",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -415,7 +415,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 2",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -434,7 +434,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 1",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -453,7 +453,7 @@
           "divisionVintage": "2022",
           "title": "State Senate, Senatorial District 5",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -472,7 +472,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 27",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -491,7 +491,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 25",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -510,7 +510,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 26",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -529,7 +529,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 24",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -548,7 +548,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 23",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -567,7 +567,7 @@
           "divisionVintage": "2022",
           "title": "State Senate, Senatorial District 4",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -586,7 +586,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 22",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -605,7 +605,7 @@
           "divisionVintage": "2022",
           "title": "State Senate, Senatorial District 12",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -624,7 +624,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 62",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -643,7 +643,7 @@
           "divisionVintage": "2022",
           "title": "State Senate, Senatorial District 8",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -662,7 +662,7 @@
           "divisionVintage": "2022",
           "title": "State Senate, Senatorial District 2",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -681,7 +681,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 8",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -700,7 +700,7 @@
           "divisionVintage": "2022",
           "title": "State Senate, Senatorial District 9",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -719,7 +719,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 50",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -738,7 +738,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 51",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -757,7 +757,7 @@
           "divisionVintage": "2022",
           "title": "State Senate, Senatorial District 10",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -776,7 +776,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 45",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -795,7 +795,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 52",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -814,7 +814,7 @@
           "divisionVintage": "2022",
           "title": "State Senate, Senatorial District 14",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -833,7 +833,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 85",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -852,7 +852,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 46",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -871,7 +871,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 47",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -890,7 +890,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 48",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -909,7 +909,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 89",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -928,7 +928,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 88",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -947,7 +947,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 86",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -966,7 +966,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 69",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -985,7 +985,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 71",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1004,7 +1004,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 70",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1023,7 +1023,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 72",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1042,7 +1042,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 17",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1061,7 +1061,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 16",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1080,7 +1080,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 99",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1099,7 +1099,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 98",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1118,7 +1118,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 100",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1137,7 +1137,7 @@
           "divisionVintage": "2022",
           "title": "State Senate, Senatorial District 17",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1156,7 +1156,7 @@
           "divisionVintage": "2022",
           "title": "State Senate, Senatorial District 17 — Unexpired Term",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": "Unexpired term",
@@ -1175,7 +1175,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 53",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1194,7 +1194,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 55",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1213,7 +1213,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 54",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1232,7 +1232,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 56",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1251,7 +1251,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 57",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1270,7 +1270,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 58",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1289,7 +1289,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 60",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1308,7 +1308,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 59",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1327,7 +1327,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 61",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1346,7 +1346,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 64",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1365,7 +1365,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 30",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1384,7 +1384,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 33",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1403,7 +1403,7 @@
           "divisionVintage": "2022",
           "title": "State Senate, Senatorial District 13",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1422,7 +1422,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 76",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1441,7 +1441,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 75",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1460,7 +1460,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 74",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1479,7 +1479,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 73",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1498,7 +1498,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 6",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1517,7 +1517,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 7",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1536,7 +1536,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 18",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1555,7 +1555,7 @@
           "divisionVintage": "2022",
           "title": "State Senate, Senatorial District 6",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1574,7 +1574,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 36",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1593,7 +1593,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 34",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1612,7 +1612,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 37",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1631,7 +1631,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 39",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1650,7 +1650,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 41",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1669,7 +1669,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 38",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1688,7 +1688,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 87",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1707,7 +1707,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 29",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1726,7 +1726,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 78",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1745,7 +1745,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 79",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1764,7 +1764,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 81",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1783,7 +1783,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 80",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1802,7 +1802,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 82",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1821,7 +1821,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 77",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1840,7 +1840,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 40",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1859,7 +1859,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 49",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1878,7 +1878,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 5",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1897,7 +1897,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 4",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1916,7 +1916,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 67",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1935,7 +1935,7 @@
           "divisionVintage": "2022",
           "title": "State Senate, Senatorial District 3",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1954,7 +1954,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 9",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1973,7 +1973,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 66",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -1992,7 +1992,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 83",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -2011,7 +2011,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 84",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -2030,7 +2030,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 19",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -2049,7 +2049,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 20",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -2068,7 +2068,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 21",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -2087,7 +2087,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 44",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -2106,7 +2106,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 42",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -2125,7 +2125,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 43",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -2144,7 +2144,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 15",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -2163,7 +2163,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 65",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -2182,7 +2182,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 28",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -2201,7 +2201,7 @@
           "divisionVintage": "2022",
           "title": "State Senate, Senatorial District 3 — Unexpired Term",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": "Unexpired term",
@@ -2220,7 +2220,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 14",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -2239,7 +2239,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 12",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -2258,7 +2258,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 11",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -2277,7 +2277,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 10",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -2296,7 +2296,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 13",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -2315,7 +2315,7 @@
           "divisionVintage": "2022",
           "title": "House of Delegates, Delegate District 35",
           "type": "CANDIDACY",
-          "candidateListComplete": false,
+          "candidateListComplete": true,
           "voteFor": 1,
           "termYears": null,
           "scopeNote": null,
@@ -6613,6 +6613,114 @@
             "doorId": "fec-wv-chief",
             "quote": "RACHAEL HAWKINS-CHURCH DEM"
           }
+        },
+        {
+          "id": "wv-sos-2026-general-17e2f6b318fb581d-e7d05496baed",
+          "contestId": "wv-sos-2026-general-17e2f6b318fb581d",
+          "givenName": "SHAWN",
+          "familyName": "LEGG",
+          "partyLabel": "IND",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Boone%20261103%20General%20-%2014inch.pdf",
+            "sourceOrg": "West Virginia Secretary of State",
+            "collectedAt": "2026-10-14T05:09:09.389770Z",
+            "verifiedAt": "2026-10-15T18:10:42.517297+00:00",
+            "doorId": "fec-wv-chief",
+            "quote": "SHAWN LEGG IND"
+          }
+        },
+        {
+          "id": "wv-sos-2026-general-8ec38097fb7d73d3-24e45666c5fe",
+          "contestId": "wv-sos-2026-general-8ec38097fb7d73d3",
+          "givenName": "DAVE",
+          "familyName": "CANTRELL",
+          "partyLabel": "IND",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Brooke%20261103%20General%20-%2014inch.pdf",
+            "sourceOrg": "West Virginia Secretary of State",
+            "collectedAt": "2026-10-14T05:09:09.729970Z",
+            "verifiedAt": "2026-10-15T18:10:42.569108+00:00",
+            "doorId": "fec-wv-chief",
+            "quote": "DAVE CANTRELL IND"
+          }
+        },
+        {
+          "id": "wv-sos-2026-general-51f03f2279185d09-702553896f5b",
+          "contestId": "wv-sos-2026-general-51f03f2279185d09",
+          "givenName": "TOM",
+          "familyName": "LOUISOS",
+          "partyLabel": "IND",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Fayette%20261103%20General%20-%2014inch.pdf",
+            "sourceOrg": "West Virginia Secretary of State",
+            "collectedAt": "2026-10-14T05:09:10.161862Z",
+            "verifiedAt": "2026-10-15T18:10:42.834980+00:00",
+            "doorId": "fec-wv-chief",
+            "quote": "TOM LOUISOS IND"
+          }
+        },
+        {
+          "id": "wv-sos-2026-general-ea88dd93f223dea4-3ad1f7b2930f",
+          "contestId": "wv-sos-2026-general-ea88dd93f223dea4",
+          "givenName": "TARA",
+          "familyName": "MARTINEZ",
+          "partyLabel": "IND",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Kanawha%20261103%20General%20-%2017inch.pdf",
+            "sourceOrg": "West Virginia Secretary of State",
+            "collectedAt": "2026-10-14T05:09:11.785264Z",
+            "verifiedAt": "2026-10-15T18:10:45.088752+00:00",
+            "doorId": "fec-wv-chief",
+            "quote": "TARA MARTINEZ IND"
+          }
+        },
+        {
+          "id": "wv-sos-2026-general-af9d778ef09b0213-ca5142d3075f",
+          "contestId": "wv-sos-2026-general-af9d778ef09b0213",
+          "givenName": "LEROY",
+          "familyName": "DEHART",
+          "partyLabel": "IND",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Logan%20261103%20General%20-%2014inch.pdf",
+            "sourceOrg": "West Virginia Secretary of State",
+            "collectedAt": "2026-10-14T05:09:11.516499Z",
+            "verifiedAt": "2026-10-15T18:10:43.220378+00:00",
+            "doorId": "fec-wv-chief",
+            "quote": "LEROY DEHART IND"
+          }
+        },
+        {
+          "id": "wv-sos-2026-general-8d9f4abb1950c822-6e447b9bc13e",
+          "contestId": "wv-sos-2026-general-8d9f4abb1950c822",
+          "givenName": "JAMES",
+          "familyName": "HENDERSHOT JR",
+          "partyLabel": "IND",
+          "slogan": null,
+          "incumbent": null,
+          "websiteUrl": null,
+          "provenance": {
+            "sourceUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Wood%20261103%20General%20-%2014inch.pdf",
+            "sourceOrg": "West Virginia Secretary of State",
+            "collectedAt": "2026-10-14T05:09:13.674938Z",
+            "verifiedAt": "2026-10-15T18:10:44.955315+00:00",
+            "doorId": "fec-wv-chief",
+            "quote": "JAMES HENDERSHOT JR IND"
+          }
         }
       ],
       "measures": [
@@ -6634,7 +6742,7 @@
       ],
       "absences": [],
       "coverageNotes": [
-        "The Secretary of State links a 2026 General Candidate Listing at https://candidates.wvsos.gov/, which returned HTTP 503 during this acquisition. Candidates were converted from the Secretary of State’s official November 3, 2026 sample ballots for all 55 counties. The sample-ballot index says “Please select your county.” All U.S. Senate, both U.S. House, all 100 House of Delegates districts, all 17 State Senate districts and the unexpired Senate District 3 and District 17 contests are represented; The statewide certified candidate list was not acquired. The sample ballots give party abbreviations, which are preserved as printed, and state no candidate websites or incumbency.",
+        "The Secretary of State links a 2026 General Candidate Listing at https://candidates.wvsos.gov/, which returned HTTP 503 during this acquisition. Candidates were converted from the Secretary of State’s official November 3, 2026 sample ballots for all 55 counties. The sample-ballot index says “Please select your county.” All U.S. Senate, both U.S. House, all 100 House of Delegates districts, all 17 State Senate districts and the unexpired Senate District 3 and District 17 contests are represented; The complete printed candidate lists were verified across all 55 county sample-ballot files, including independent candidates; the separate statewide candidate-list application remains unavailable. The sample ballots give party abbreviations, which are preserved as printed, and state no candidate websites or incumbency.",
         "The official sample ballots acquired across all counties list one statewide constitutional amendment and no statewide executive or statewide judicial contest for this election. County, municipal and district judicial contests are outside this package.",
         "Printed name variation for FOR MEMBER OF HOUSE OF DELEGATES, district 40: JENNIFER GILKERSON in Monroe and JENNIFER LEA GILKERSON in Summers. The saved candidacy preserves the name printed in its cited sample ballot."
       ]
@@ -6663,7 +6771,7 @@
         "retrievedAt": "2026-10-14T05:09:10.093334Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Berkeley",
@@ -6673,7 +6781,7 @@
         "retrievedAt": "2026-10-14T05:09:10.301903Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Boone",
@@ -6683,7 +6791,7 @@
         "retrievedAt": "2026-10-14T05:09:09.389770Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Braxton",
@@ -6693,7 +6801,7 @@
         "retrievedAt": "2026-10-14T05:09:09.977955Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Brooke",
@@ -6703,7 +6811,7 @@
         "retrievedAt": "2026-10-14T05:09:09.729970Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Cabell",
@@ -6713,7 +6821,7 @@
         "retrievedAt": "2026-10-14T05:09:09.782743Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Calhoun",
@@ -6723,7 +6831,7 @@
         "retrievedAt": "2026-10-14T05:09:09.772981Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Clay",
@@ -6733,7 +6841,7 @@
         "retrievedAt": "2026-10-14T05:09:09.970298Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Doddridge",
@@ -6743,7 +6851,7 @@
         "retrievedAt": "2026-10-14T05:09:10.073847Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Fayette",
@@ -6753,7 +6861,7 @@
         "retrievedAt": "2026-10-14T05:09:10.161862Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Gilmer",
@@ -6763,7 +6871,7 @@
         "retrievedAt": "2026-10-14T05:09:10.285174Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Grant",
@@ -6773,7 +6881,7 @@
         "retrievedAt": "2026-10-14T05:09:10.482977Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Greenbrier",
@@ -6783,7 +6891,7 @@
         "retrievedAt": "2026-10-14T05:09:10.366287Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Hampshire",
@@ -6793,7 +6901,7 @@
         "retrievedAt": "2026-10-14T05:09:10.549173Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Hancock",
@@ -6803,7 +6911,7 @@
         "retrievedAt": "2026-10-14T05:09:10.469821Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Hardy",
@@ -6813,7 +6921,7 @@
         "retrievedAt": "2026-10-14T05:09:10.638619Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Harrison",
@@ -6823,7 +6931,7 @@
         "retrievedAt": "2026-10-14T05:09:10.937994Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Jackson",
@@ -6833,7 +6941,7 @@
         "retrievedAt": "2026-10-14T05:09:10.691543Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Jefferson",
@@ -6843,7 +6951,7 @@
         "retrievedAt": "2026-10-14T05:09:10.729599Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Kanawha",
@@ -6853,7 +6961,7 @@
         "retrievedAt": "2026-10-14T05:09:11.785264Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Lewis",
@@ -6863,7 +6971,7 @@
         "retrievedAt": "2026-10-14T05:09:10.949372Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Lincoln",
@@ -6873,7 +6981,7 @@
         "retrievedAt": "2026-10-14T05:09:11.130409Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Logan",
@@ -6883,7 +6991,7 @@
         "retrievedAt": "2026-10-14T05:09:11.516499Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Marion",
@@ -6893,7 +7001,7 @@
         "retrievedAt": "2026-10-14T05:09:11.144339Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Marshall",
@@ -6903,7 +7011,7 @@
         "retrievedAt": "2026-10-14T05:09:11.676437Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Mason",
@@ -6913,7 +7021,7 @@
         "retrievedAt": "2026-10-14T05:09:11.522821Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=McDowell",
@@ -6923,7 +7031,7 @@
         "retrievedAt": "2026-10-14T05:09:11.427806Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Mercer",
@@ -6933,7 +7041,7 @@
         "retrievedAt": "2026-10-14T05:09:11.701355Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Mineral",
@@ -6943,7 +7051,7 @@
         "retrievedAt": "2026-10-14T05:09:11.490371Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Mingo",
@@ -6953,7 +7061,7 @@
         "retrievedAt": "2026-10-14T05:09:11.604544Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Monongalia",
@@ -6963,7 +7071,7 @@
         "retrievedAt": "2026-10-14T05:09:12.074463Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Monroe",
@@ -6973,7 +7081,7 @@
         "retrievedAt": "2026-10-14T05:09:11.864682Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Morgan",
@@ -6983,7 +7091,7 @@
         "retrievedAt": "2026-10-14T05:09:12.339492Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Nicholas",
@@ -6993,7 +7101,7 @@
         "retrievedAt": "2026-10-14T05:09:11.990382Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Ohio",
@@ -7003,7 +7111,7 @@
         "retrievedAt": "2026-10-14T05:09:12.029535Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Pendleton",
@@ -7013,7 +7121,7 @@
         "retrievedAt": "2026-10-14T05:09:12.555951Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Pleasants",
@@ -7023,7 +7131,7 @@
         "retrievedAt": "2026-10-14T05:09:12.600387Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Pocahontas",
@@ -7033,7 +7141,7 @@
         "retrievedAt": "2026-10-14T05:09:12.595000Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Preston",
@@ -7043,7 +7151,7 @@
         "retrievedAt": "2026-10-14T05:09:12.589718Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Putnam",
@@ -7053,7 +7161,7 @@
         "retrievedAt": "2026-10-14T05:09:12.831399Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Raleigh",
@@ -7063,7 +7171,7 @@
         "retrievedAt": "2026-10-14T05:09:12.782141Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Randolph",
@@ -7073,7 +7181,7 @@
         "retrievedAt": "2026-10-14T05:09:12.615692Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Ritchie",
@@ -7083,7 +7191,7 @@
         "retrievedAt": "2026-10-14T05:09:12.641030Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Roane",
@@ -7093,7 +7201,7 @@
         "retrievedAt": "2026-10-14T05:09:12.895175Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Summers",
@@ -7103,7 +7211,7 @@
         "retrievedAt": "2026-10-14T05:09:13.058615Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Taylor",
@@ -7113,7 +7221,7 @@
         "retrievedAt": "2026-10-14T05:09:13.166325Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Tucker",
@@ -7123,7 +7231,7 @@
         "retrievedAt": "2026-10-14T05:09:13.192915Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Tyler",
@@ -7133,7 +7241,7 @@
         "retrievedAt": "2026-10-14T05:09:13.208889Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Upshur",
@@ -7143,7 +7251,7 @@
         "retrievedAt": "2026-10-14T05:09:13.222540Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Wayne",
@@ -7153,7 +7261,7 @@
         "retrievedAt": "2026-10-14T05:09:13.197736Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Webster",
@@ -7163,7 +7271,7 @@
         "retrievedAt": "2026-10-14T05:09:13.404426Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Wetzel",
@@ -7173,7 +7281,7 @@
         "retrievedAt": "2026-10-14T05:09:13.456754Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Wirt",
@@ -7183,7 +7291,7 @@
         "retrievedAt": "2026-10-14T05:09:13.484949Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Wood",
@@ -7193,7 +7301,7 @@
         "retrievedAt": "2026-10-14T05:09:13.674938Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://apps.sos.wv.gov/elections/SampleBallots/Home/GetBallot?County=Wyoming",
@@ -7203,7 +7311,7 @@
         "retrievedAt": "2026-10-14T05:09:13.503536Z",
         "publisher": "West Virginia Secretary of State",
         "sourceClass": "ELECTION_AUTHORITY",
-        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses."
+        "reviewedEvidence": "Official 2026 General Election sample ballot: parsed every assigned federal or state legislative contest, preserving candidate names and party abbreviations without residential addresses. Re-acquired byte-for-byte on October 15; the union of all 55 county ballot inventories verifies each federal and legislative contest list, including independent nominees."
       },
       {
         "requestedUrl": "https://sos.wv.gov/govotewv",

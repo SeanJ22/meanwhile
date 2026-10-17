@@ -1,55 +1,35 @@
-/**
- * Reads the Arizona 2026 candidate registry and the precomputed bridge from
- * each certified-lineup nominee card to its canonical candidacy. Nothing here
- * matches names at run time; the bridge is a lookup table.
- */
-
-import { currentAzBallotProjection } from "../civic-data/manual-read-models.ts";
+import { currentGenericBallotProjection } from "../ballot/generic-projection.ts";
 
 import type {
-  AzIdentityRegistry,
   LineupReconciliation,
   LineupReconciliationRow,
 } from "./types.ts";
 
-let registryCache: AzIdentityRegistry | null | undefined;
-let bridgeCache: LineupReconciliation | null | undefined;
-let rowIndex: Map<string, LineupReconciliationRow> | null = null;
-let coveredContests: Set<string> | null = null;
+const indexes = new WeakMap<LineupReconciliation, Map<string, LineupReconciliationRow>>();
 
-export function azIdentityRegistry(): AzIdentityRegistry | null {
-  if (registryCache === undefined) registryCache = currentAzBallotProjection().identityRegistry;
-  return registryCache;
+export function azContestIdentity(contestId: string) {
+  for (const ballot of Object.values(currentGenericBallotProjection("AZ").ballots)) {
+    const contest = ballot.contests.find(row => row.id === contestId);
+    if (contest) return contest.identity ?? null;
+  }
+  return null;
 }
 
 export function azLineupReconciliation(): LineupReconciliation | null {
-  if (bridgeCache === undefined) {
-    bridgeCache = currentAzBallotProjection().lineupReconciliation;
-    rowIndex = null;
-    coveredContests = null;
-  }
-  return bridgeCache;
+  return Object.values(currentGenericBallotProjection("AZ").ballots).find(ballot => ballot.lineupReconciliation)?.lineupReconciliation ?? null;
 }
 
-function index(): Map<string, LineupReconciliationRow> {
-  if (rowIndex) return rowIndex;
+function index(): ReadonlyMap<string, LineupReconciliationRow> {
   const bridge = azLineupReconciliation();
-  rowIndex = new Map((bridge?.rows ?? []).map((r) => [r.cardKey, r]));
-  return rowIndex;
+  if (!bridge) return new Map();
+  let rows = indexes.get(bridge);
+  if (!rows) { rows = new Map(bridge.rows.map(row => [row.cardKey, row])); indexes.set(bridge, rows); }
+  return rows;
 }
 
-/**
- * Whether the bridge speaks for this contest. `false` is not "unresolved": the
- * contest's cards are not certified Arizona lineup cards, and the caller's own
- * behaviour stands.
- */
 export function lineupBridgeCovers(contestId: string): boolean {
   if (!contestId.startsWith("ballot-az-")) return false;
-  if (!coveredContests) {
-    const bridge = azLineupReconciliation();
-    coveredContests = new Set((bridge?.rows ?? []).map((r) => r.contestId));
-  }
-  return coveredContests.has(contestId);
+  return [...index().values()].some(row => row.contestId === contestId);
 }
 
 /** The precomputed row for one nominee card, or `null` if there is none. */
@@ -58,25 +38,12 @@ export function lineupRowForCard(cardKey: string): LineupReconciliationRow | nul
   return index().get(cardKey) ?? null;
 }
 
-/**
- * The canonical candidacy id a nominee card resolves to, or `null` for every
- * unresolved outcome alike; the row itself carries the reason.
- */
 export function reconciledCandidacyIdForCard(cardKey: string): string | null {
   const row = lineupRowForCard(cardKey);
   if (!row || row.outcome !== "RECONCILED") return null;
   return row.canonicalCandidacyId;
 }
 
-/**
- * A `PARTY_CONFLICT` card is one name match in its contest whose two
- * authorities publish different party labels. The card still has no canonical
- * candidacy; this returns the pair so a reader surface can treat the name as
- * one subject and state both parties with their sources. It never attaches the
- * filing's money or records to the card. `null` unless the row is a
- * PARTY_CONFLICT with exactly one registry identity naming a canonical
- * candidacy.
- */
 export interface PartyConflictFiling {
   readonly cardKey: string;
   readonly contestId: string;
@@ -90,21 +57,22 @@ export interface PartyConflictFiling {
   readonly readerGapSentence: string | null;
 }
 
-export function partyConflictFilingForCard(cardKey: string): PartyConflictFiling | null {
+function partyConflictFilingForCard(cardKey: string): PartyConflictFiling | null {
   const row = lineupRowForCard(cardKey);
   if (!row || row.outcome !== "PARTY_CONFLICT" || row.sourceValues.registryCandidateIds.length !== 1) return null;
-  const identity = azIdentityRegistry()?.candidates.find((candidate) => candidate.identityId === row.sourceValues.registryCandidateIds[0]);
-  if (!identity?.canonicalCandidacyId) return null;
+  const candidate = Object.values(currentGenericBallotProjection("AZ").ballots)
+    .flatMap(ballot => [...ballot.candidacies, ...(ballot.filingCandidacies ?? [])]).find(candidate => candidate.identity?.identityId === row.sourceValues.registryCandidateIds[0]);
+  if (!candidate) return null;
   const canvass = azLineupReconciliation()?.sources.find((source) => source.url && /canvass/i.test(source.name));
   return {
     cardKey,
     contestId: row.contestId,
-    filingCandidacyId: identity.canonicalCandidacyId,
+    filingCandidacyId: candidate.id,
     name: row.nomineeName,
     canvassParty: row.sourceValues.canvassParty,
     canvassSourceUrl: canvass?.url ?? null,
     filingParty: row.sourceValues.registryParty,
-    filingSourceUrl: identity.candidacySourceUrl,
+    filingSourceUrl: candidate.identity?.candidacySourceUrl ?? candidate.provenance.sourceUrl,
     readerGapSentence: row.readerGapSentence,
   };
 }
@@ -117,12 +85,4 @@ export function partyConflictCardForFiling(candidacyId: string): PartyConflictFi
     if (pair?.filingCandidacyId === candidacyId) return pair;
   }
   return null;
-}
-
-/** Test seam. Never called by a render path. */
-export function resetAzIdentityCache(): void {
-  registryCache = undefined;
-  bridgeCache = undefined;
-  rowIndex = null;
-  coveredContests = null;
 }

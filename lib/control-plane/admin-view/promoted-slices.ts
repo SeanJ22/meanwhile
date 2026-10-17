@@ -1,8 +1,6 @@
-/** Postgres cuts the slice out of the promoted pointer row inside one READ ONLY transaction. No pointer row means not published yet, never an empty list. */
 import type { CbsaClass, GeographyRef, GeographyType } from "../../census-geography/contract.ts";
 import { CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } from "../../census-geography/publication.ts";
 import { REGISTRATION_RECORD_CLASS, REGISTRATION_TARGETS } from "../../registration/publication.ts";
-import { REGISTRY_RUNTIME_SCOPE } from "../../registry/runtime-data-plane.ts";
 
 export type Row = Readonly<Record<string, unknown>>;
 
@@ -237,54 +235,6 @@ export async function registrationGovernments(
     return { kind: "HELD", versionId, value };
   } catch (error) {
     return { kind: "UNREAD", detail: `${st}'s registration could not be read (${error instanceof Error ? error.name : "error"}).` };
-  }
-}
-
-export interface RegistryBodyFields {
-  readonly id: string;
-  readonly name: string | null;
-  readonly ocdId: string | null;
-  readonly alsoServesOcdIds: readonly string[];
-  readonly coverageStatus: unknown;
-  readonly bodyClass: string | null;
-}
-
-const REGISTRY_BODIES =
-  "SELECT b->>'id' AS id, b->>'name' AS name, b->>'ocdId' AS ocd_id, b->'alsoServesOcdIds' AS also_serves," +
-  " b->'coverageStatus' AS coverage_status, b->>'bodyClass' AS body_class" +
-  " FROM civic_data_promotions p CROSS JOIN LATERAL jsonb_array_elements(p.payload->'registry'->'bodies') b" +
-  " WHERE p.record_class = $1 AND p.scope = $2";
-
-export function registryBodyOfRow(row: Row): RegistryBodyFields | null {
-  const id = text(row.id);
-  if (id === null) return null;
-  return {
-    id,
-    name: text(row.name),
-    ocdId: text(row.ocd_id),
-    alsoServesOcdIds: Array.isArray(row.also_serves) ? (row.also_serves as unknown[]).filter((s): s is string => typeof s === "string") : [],
-    coverageStatus: row.coverage_status ?? null,
-    bodyClass: text(row.body_class),
-  };
-}
-
-export async function registryBodies(query: ReadOnlyQuery | null): Promise<Slice<readonly RegistryBodyFields[]>> {
-  if (query === null) return { kind: "UNREAD", detail: "The registry was not read: this deployment names no reader store." };
-  const params = ["REGISTRY_RUNTIME_BINDING", REGISTRY_RUNTIME_SCOPE];
-  try {
-    const [pointer, rows] = await query([
-      { text: POINTER, params },
-      { text: REGISTRY_BODIES, params },
-    ]);
-    const versionId = text(pointer?.[0]?.version_id);
-    if (versionId === null) return { kind: "NOT_PUBLISHED" };
-    const value = (rows ?? []).flatMap((row) => {
-      const b = registryBodyOfRow(row);
-      return b === null ? [] : [b];
-    });
-    return { kind: "HELD", versionId, value };
-  } catch (error) {
-    return { kind: "UNREAD", detail: `The registry could not be read (${error instanceof Error ? error.name : "error"}).` };
   }
 }
 

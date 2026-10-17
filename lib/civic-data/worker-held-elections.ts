@@ -16,7 +16,7 @@ import { inventoryRecordEvidence, RecordEvidenceRefusal } from "../control-plane
 import { electionFieldState } from "./election-fields.ts";
 import type { RoutineRecordClass } from "./types.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
-import { REGISTRY_RUNTIME_SCOPE } from "../registry/runtime-data-plane.ts";
+import { stateRegistryRuntimeScope } from "./state-scopes.ts";
 import type { HeldInputs, WorkerPublicationItem } from "./worker-publication-tasks.ts";
 
 export const NATIONAL_ELECTION_OFFICES_URL = "https://www.fec.gov/introduction-campaign-finance/how-to-research-public-records/state-election-offices/";
@@ -27,10 +27,16 @@ const SUBJECT_PAGE = 500;
 export async function readHeldPointerTimes(
   query: (sql: string, parameters: readonly unknown[]) => Promise<readonly Record<string, unknown>[]>,
   promotedAt: (recordClass: RoutineRecordClass, scope: string) => Promise<string | null>,
+  states: readonly string[],
 ): Promise<Pick<HeldInputs, "nationalAt" | "registryAt" | "routesAt">> {
   const [national] = await query("SELECT max(recorded_at) AS at FROM cp_log_artifacts WHERE md5(record->>'canonicalUrl') = md5($1)", [NATIONAL_ELECTION_OFFICES_URL]);
   const routes = requiredManualProductionContract("ballot-navigation");
-  const [registryAt, routesAt] = await Promise.all([promotedAt("REGISTRY_RUNTIME_BINDING", REGISTRY_RUNTIME_SCOPE), promotedAt(routes.recordClass, routes.scope)]);
+  let registryAt: string | null = null;
+  for (const state of new Set(states)) {
+    const at = await promotedAt("REGISTRY_RUNTIME_BINDING", stateRegistryRuntimeScope(state));
+    if (at && (!registryAt || at > registryAt)) registryAt = at;
+  }
+  const routesAt = await promotedAt(routes.recordClass, routes.scope);
   return { nationalAt: iso(national?.at), registryAt, routesAt };
 }
 
@@ -150,7 +156,6 @@ export async function publishHeldElectionOffices(input: {
   readonly readHeld: (record: ArtifactRecord) => Promise<WorkerPublicationCapture | null>;
   readonly limit?: number;
 }): Promise<readonly { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[]> {
-  const registry = await readRegistryRuntimePrior(input.store, input.now);
   const owed = (await Promise.all(input.workItemIds.map(id => input.repos.workItems.readNarrowed(id, HELD_ROUTE_FIELDS))))
     .flatMap(row => row === null ? [] : [{ ...(row.value as HeldRoute), id: row.id }]).filter(item => Boolean(item.autonomousPlan?.publication));
   const placeWork = async (subjectId: string): Promise<readonly string[]> =>
@@ -173,6 +178,8 @@ export async function publishHeldElectionOffices(input: {
   const places = new Map<string, { readonly subjectId: string; readonly ocdId: string; readonly label: string }>(), placeOf = new Map<string, string>();
   for (const item of owed) {
     const plan = item.autonomousPlan!;
+    if (plan.contract?.schemaVersion !== 2) { fieldsByItem.set(item.id, -1); continue; }
+    const registry = await readRegistryRuntimePrior(input.store, input.now, plan.contract.jurisdiction.state);
     const body = registry?.payload.registry.bodies.find(row => row.id === plan.publication!.bodyId);
     const divisionId = body?.ocdId ?? null;
     const division = divisionId ? registry!.payload.registry.divisions.find(row => row.ocdId === divisionId) : undefined;

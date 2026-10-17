@@ -1,4 +1,5 @@
 import { PLURAL_STATES } from "../lib/sources/plural/targets.ts";
+import { REGISTRY_STATES } from "../lib/civic-data/state-scopes.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
@@ -56,7 +57,7 @@ import {
 } from "../lib/control-plane/freshness-cycle-outcome.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { HUNT_SOURCE_PROGRESS_LOG_KEY, OWNER_SURFACE_FORMAT_VERSION, assertAggregateOnly } from "../lib/control-plane/owner-surface.ts";
-import { routineProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
+import { routineProcessSlots, workerMemoryHost } from "../lib/control-plane/workers/worker-slots.ts";
 import { ROUTINE_SUPERVISOR_HISTORY_FIELDS } from "../lib/civic-data/supervisor-history.ts";
 import { projectRecord } from "../lib/control-plane/repository/types.ts";
 
@@ -317,9 +318,9 @@ test("the standing parent durably accounts for a routine child killed outside so
 
   const pilot = readFileSync("scripts/pilot-runner.mts", "utf8");
   assert.match(pilot, /persistOuterRoutineChildFailure\(cycleId, startedAt, run/);
-  // The duplicate-incident guard keys on cycleId: it fetches the owner-digest
-  // records carrying that exact digestId (a targeted content query, not a scan
-  // of the whole log) and then confirms the supervisor kind.
+
+
+
   assert.match(pilot, /readRecentWhere\(DIGEST_LOG_KEY, \["digestId"\], cycleId, 20,\s*\{ runtimeOutcome: \["kind"\] \}, startedAt\)/);
   assert.match(pilot, /appendRoutineCivicDataSupervisorDigest/);
 });
@@ -392,7 +393,6 @@ test("the standing portfolio invokes data-plane scripts only", () => {
     "nj-state-rollcalls",
     "census-acs-population",
     "census-geography-overlaps",
-    "nj-morris-filing",
     "pima-legistar-outcomes",
     "mesa-legistar-minutes-outcomes",
     "dotgov",
@@ -401,7 +401,7 @@ test("the standing portfolio invokes data-plane scripts only", () => {
     "meeting-body-crosswalk-derived",
     "meeting-doors",
     "meeting-source-wiring",
-    "candidate-campaign-sites-derived",
+    ...REGISTRY_STATES.map(state => `candidate-campaign-sites-derived:${state}`),
     "usaspending",
     "federal-audit-clearinghouse",
     "sam-gov-entities",
@@ -517,7 +517,6 @@ test("routine release output labels the seven-zero constant as structural, never
     "scripts/nh-gencourt-members.mts",
     "scripts/acs-population-promote.mts",
     "scripts/ingest.ts",
-    "scripts/build-nj-morris-ballot.mts",
     "scripts/fetch-dotgov.mts",
     "scripts/routine-civic-data-runner.mts",
   ]) {
@@ -1346,11 +1345,11 @@ test("--only selection refuses typos and empty tokens before store access", () =
 
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   const selection = runner.indexOf("routineTaskSelection(process.argv.slice(2), [...STANDING_SOURCE_TASKS, ...WORKER_PUBLICATION_TASK_IDS.map(id => ({ id }))])");
-  const publication = routineTaskSelection(["--only=registry-runtime-bindings"], [
+  const publication = routineTaskSelection(["--only=registry-runtime:AZ"], [
     ...ROUTINE_SOURCE_TASKS, ...AUTOMATIC_REFRESH_TASKS, ...WORKER_PUBLICATION_TASK_IDS.map(id => ({ id })),
   ]);
   assert.equal(publication.ok, true, "targeted publication must stay selectable beside automatic refresh tasks");
-  if (publication.ok) assert.deepEqual([...publication.only ?? []], ["registry-runtime-bindings"]);
+  if (publication.ok) assert.deepEqual([...publication.only ?? []], ["registry-runtime:AZ"]);
   assert.match(runner, /let huntTasks: readonly RoutineSourceTask\[\] = \[\];\s*try \{\s*huntTasks = await readHuntSourceTasks\(store, supervisorFailures\);/,
     "a selected publication door must read its owed work; readHuntSourceTasks skips selected source-only passes itself");
   const refusal = runner.indexOf("if (!TASK_SELECTION.ok)");
@@ -1380,9 +1379,9 @@ test("each admitted meeting source/body contract is its own concurrent child bou
 
 test("ordinary final publication still serves all selected sources when federal minute checks are active", async () => {
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
-  const start = runner.indexOf("await publishNowEdgeChecks?.stop();\nconst finalReaderEdge");
-  const end = runner.indexOf("\nfor (const run of readerRuns)", start);
-  assert.ok(start > 0 && end > start);
+  const start = runner.indexOf("const finalReaderEdge =");
+  const end = runner.indexOf("\nif (retirementOrigins !== null", start);
+  assert.ok(runner.indexOf("await publishNowEdgeChecks?.stop();") < start && start > 0 && end > start);
   for (const publishNow of [false, true]) {
     const calls: unknown[] = [];
     const selected = [{ id: "openfema" }, { id: "congress-bulk-roster" }];
@@ -1421,7 +1420,7 @@ test("Reader readback repair covers the observable registry independently of sou
   assert.match(child, /const attestor = readerVerifierClosureAttestor\(\);/);
   assert.match(child, /repairRoutineReaderProjectionReadback\(store, contract, observedAt, undefined, \{ attestor \}\)/);
   assert.doesNotMatch(child, /preparePublishedMeetingSnapshot|publishReaderEdgeArtifacts/);
-  assert.match(runner, /await publishNowEdgeChecks\?\.stop\(\);\s*const finalReaderEdge = PUBLISH_NOW && publishNowEdgeChecks \? await publishNowEdgeChecks\.run\(\)\s*:\s*await publishSupervisorReaderEdge\(store, new Date\(\)\.toISOString\(\), ONLY === null \? null : selectedTasks\)/,
+  assert.match(runner, /await publishNowEdgeChecks\?\.stop\(\);[\s\S]*?const finalReaderEdge = PUBLISH_NOW && publishNowEdgeChecks \? await publishNowEdgeChecks\.run\(\)\s*:\s*await publishSupervisorReaderEdge\(store, new Date\(\)\.toISOString\(\), ONLY === null \? null : selectedTasks\)/,
     "publish-now completes its serialized pointer sweep while ordinary repair keeps the selected source scope");
   const publicationChecks = runner.slice(runner.indexOf("const publishNowEdgeChecks ="), runner.indexOf("const admissionNowMs ="));
   assert.match(publicationChecks, /publishSupervisorReaderEdge\(store, new Date\(\)\.toISOString\(\), PUBLISH_NOW \? null\s*:\s*periodicFederalTasks\)/,
@@ -1570,7 +1569,6 @@ test("every standing source child emits its exact contract id and the supervisor
     ["scripts/fetch-fec.mts", "fec-funding"],
     ["scripts/nh-gencourt-members.mts", "nh-members"],
     ["scripts/acs-population-promote.mts", "census-acs-population"],
-    ["scripts/build-nj-morris-ballot.mts", "nj-morris-filing"],
     ["scripts/legistar-outcomes-ingest.mts", "pima-legistar-outcomes"],
     ["scripts/legistar-insite-minutes-ingest.mts", "mesa-legistar-minutes-outcomes"],
     ["scripts/fetch-dotgov.mts", "dotgov"],
@@ -2140,19 +2138,6 @@ test("two successful publications settle independently after the canonical point
     /does not match the registered task identity/);
 });
 
-test("the supervisor proves the registry once for two or more meeting children and hands only them the attestation", () => {
-  const source = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
-  const admitted = source.indexOf("attempted = pendingRuns.length;");
-  const proof = source.indexOf("await readRegistryRuntimeProjection({ store })");
-  const attest = source.indexOf("attestPromotedVersion(\"REGISTRY_RUNTIME_BINDING\", REGISTRY_RUNTIME_SCOPE, store)");
-  const launch = source.indexOf("const sourcePass = runMeetingDiscoveryChain(");
-  assert.ok(admitted > 0 && admitted < proof && proof < attest && attest < launch, "proved after admission, before any child starts");
-  assert.match(source, /if \(meetingPartitionRuns >= 2\) \{/);
-  assert.match(source, /const sourcePass = runMeetingDiscoveryChain\(pendingRuns, runs => runBoundedChildPass\(\s*runs\.map\(sourceChildCommand\),/, "every ordered discovery subpass builds children through the attestation-aware command factory");
-  assert.match(source, /\.\.\.\(pending\.kind === "MEETING_PARTITION" \? meetingChildAttestations : \{\}\)/);
-  assert.match(source, /onSettled: async \(run, index\) => settlePendingRun\(runs\[index\]!/, "settlement must match the command's subpass rather than the complete pending list");
-  assert.match(source, /catch \(error\) \{\s*console\.log\(`RCD_PASS registry not attested; each meeting child proves it/);
-});
 
 test("C6: two reads of one host in one pass start at least the gap apart; other hosts do not wait, and the outer bound counts the gap", async () => {
   const events: { id: string; phase: "start" | "end"; at: number }[] = [];
@@ -2227,13 +2212,31 @@ test("national people children share one serial lane: one at a time, back to bac
 
 test("scoped source passes repair only matching reader pointers, including narrow meeting domains", () => {
   const all = [...observableRoutineContracts(), ...MANUAL_PRODUCTION_SOURCE_CONTRACTS];
-  const voting = MANUAL_PRODUCTION_SOURCE_CONTRACTS.find(contract => contract.id === "voting-sites")!;
+  const voting = MANUAL_PRODUCTION_SOURCE_CONTRACTS.find(contract => contract.id === "voting-sites:AZ")!;
   const selected = selectedReaderRepairContracts(all, [voting]);
-  assert.deepEqual(selected.map(contract => contract.id), ["voting-sites"]);
-  assert.deepEqual(routineReaderRepairDomains(selected).map(domain => domain.id), ["reader-readback:voting-sites"]);
+  assert.deepEqual(selected.map(contract => contract.id), ["voting-sites:AZ"]);
+  assert.deepEqual(routineReaderRepairDomains(selected).map(domain => domain.id), ["reader-readback:voting-sites:AZ"]);
   const meetings = MEETING_PARTITION_CONTRACTS.slice(0, 2);
   const domains = routineReaderRepairDomains(selectedReaderRepairContracts(all, meetings));
   assert.equal(domains.length, 1);
   assert.deepEqual(domains[0].contracts.map(contract => contract.id), meetings.map(contract => contract.id));
   assert.equal(selectedReaderRepairContracts(all, null), all);
+});
+
+
+test("state publishers and artifact children retain the measured state reservation across small runs", async () => {
+  const mib = 1024 * 1024;
+  const slots = routineProcessSlots({ availableBytes: () => (1024 + 768) * mib, headroomBytes: 768 * mib, parentPeakBytes: 0,
+    peakBytes: () => mib, host: workerMemoryHost({ processes: () => [] }) });
+  const first = await slots.acquire("ballot-contests:CA/assemble-ballot-package.mts");
+  const second = await slots.acquire("registry-runtime:AZ/promote-registry-runtime.mts");
+  let admitted = false;
+  const queued = slots.acquire("registry-runtime:AZ:reader-artifact/publish-state-authority.mts").then(release => {
+    admitted = true; return release;
+  });
+  await new Promise<void>(resolve => setImmediate(resolve));
+  assert.equal(admitted, false);
+  first();
+  (await queued)();
+  second();
 });

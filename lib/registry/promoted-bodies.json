@@ -1,5 +1,5 @@
 {
- "note": "CANONICAL INPUT. Not generated, never regenerated from registry.json. Every row here is a body a discovery route promoted after verification: PROMOTED_FROM_DESCENT_CANDIDATE rows come from `pnpm leads:adjudicate-descent`, PROMOTED_FROM_CENSUS_OF_GOVERNMENTS rows from `pnpm bodies:census-gap`. `pnpm registry:build` READS this file and merges it; it never writes it. See NH232 and lib/registry/promoted-bodies.ts.",
+ "note": "CANONICAL INPUT. Not generated, never regenerated from registry.json. Every row here is a body a discovery route promoted after verification: PROMOTED_FROM_DESCENT_CANDIDATE rows come from `pnpm leads:adjudicate-descent`, PROMOTED_FROM_CENSUS_OF_GOVERNMENTS rows from `pnpm bodies:census-gap`. `pnpm registry:build` READS this file and merges it; it never writes it.",
  "bodies": [
   {
    "id": "wtp-body/country:us/state:nj/department_education#governing",

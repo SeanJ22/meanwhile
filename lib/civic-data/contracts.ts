@@ -1,3 +1,4 @@
+import { REGISTRY_STATES, stateBallotContractId, stateBallotScope } from "./state-scopes.ts";
 import { VALIDATION_CHECKS, type RoutineDataClassification, type RoutineRecordClass } from "./types.ts";
 import type { SourceAuthorityId } from "./source-authority.ts";
 import { RUNTIME_ROUTINE_CONTRACTS } from "./runtime-routine-contracts.ts";
@@ -59,11 +60,6 @@ export const PLAIN_ENGLISH_TRANSLATION_ROUTINE = {
   readerConsumers: ["/ballot", "body and office cards", "meeting cards", "Ask"],
 } as const;
 
-/**
- * Whether a body has a sitting within the window of `nowMs`, from its
- * partitions' sitting starts. `undefined` means it cannot be told: a sitting
- * list could not be read.
- */
 export function sittingWindowHot(
   schedule: SittingWindowSchedule,
   sittingLists: readonly (readonly string[] | undefined)[],
@@ -87,12 +83,6 @@ export function sittingWindowRereadMs(schedule: SittingWindowSchedule, hot: bool
   return hot === false ? schedule.baseEveryMs : schedule.hotEveryMs;
 }
 
-/**
- * The instant a succeeded sitting-window task falls due: one re-read interval
- * after its store-observed success, less one admission pass, so "hourly" is
- * at most an hour and never drifts later pass by pass. The runner admits on it
- * and Admin shows it, so the owner sees the instant the runner acts on.
- */
 export function sittingWindowDueAtMs(
   schedule: SittingWindowSchedule,
   succeededMs: number,
@@ -138,12 +128,7 @@ export interface RoutineSourceContract {
   readonly autoPromotable: boolean;
   /** Zero keeps finite standing work alive; its individual requests still have transport deadlines. */
   readonly childTimeoutMs?: number;
-  /**
-   * A fan-out contract owns a scope family: its clock marker at `scope`
-   * plus bounded member or session candidates under `<sourceId>:`. The
-   * runner still enumerates and clocks exactly this one contract; the family
-   * lives inside the acquisition child. Verification stays per-contract.
-   */
+
   readonly fanOut?: boolean;
   readonly classification: RoutineDataClassification;
   /** Bundled inputs are seed/test material only; never a store-error fallback. */
@@ -193,11 +178,6 @@ export const DERIVED_MEETING_FAMILY_POLICY = {
   readerConsumers: ["/api/meetings", "/api/agenda", "Ask", "Admin", "map"],
 } as const;
 
-/**
- * The single membership and lifecycle registry for every routine supported
- * production source. The runner and Admin derive from this array; workflows do
- * not schedule these contracts and no second cadence table may repeat them.
- */
 export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
   {
     id: "fec-funding",
@@ -391,28 +371,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     classification: "OPERATIONAL_REFERENCE_DATA",
     bootstrapFixturePaths: ["lib/census-geography/bootstrap-az.json"],
   },
-  {
-    id: "nj-morris-filing",
-    sourceId: "nj-morris-county-clerk",
-    recordClass: "BALLOT_FILING",
-    scope: "US-NJ:county:morris:2026-general",
-    acquisitionAdapter: { authorityMode: "SINGLE_ROUTE", command: ["scripts/build-nj-morris-ballot.mts", "--promote"], requestedUrl: "https://www.morriscountyclerk.org/" },
-    parserNormalizerVersion: "nj-morris-filing/2",
-    cadence: {
-      description: "daily through the 2026 general election, then weekly",
-      defaultEveryMs: 7 * DAY,
-      phases: [{ through: "2026-11-04T00:00:00.000Z", everyMs: DAY, description: "daily through 2026-11-03" }],
-    },
-    retry: { afterMs: HOUR, description: "one hour after a failed filing attempt" },
-    authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "nj-morris-county-clerk" },
-    validationContract: CHECKS,
-    canonicalProductionStore: STORE,
-    readerProjection: { id: "nj-morris-ballot", consumers: ["ballot", "Ask", "candidate contact operations"] },
-    lkgBehavior: "The current ballot pointer and complete removal history remain on the last GOOD filing projection after refusal.",
-    autoPromotable: true,
-    classification: "RUNTIME_CIVIC_DATA",
-    bootstrapFixturePaths: [],
-  },
+
   {
     id: "pima-legistar-outcomes",
     sourceId: "pima-legistar-outcomes",
@@ -577,13 +536,13 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],
   },
-  {
-    id: "candidate-campaign-sites-derived",
+  ...REGISTRY_STATES.map(state => ({
+    id: stateBallotContractId("candidate-campaign-sites-derived", state),
     sourceId: "candidate-campaign-site-chain",
     recordClass: "CURATED_READER_RECORD",
-    scope: "US:candidate-campaign-sites-derived",
-    acquisitionFailureDomain: "derived:candidate-campaign-sites",
-    acquisitionAdapter: { authorityMode: "DERIVED", command: ["scripts/derive-candidate-campaign-sites.mts", "--promote"] },
+    scope: stateBallotScope("candidate-campaign-sites-derived", state),
+    acquisitionFailureDomain: `derived:candidate-campaign-sites:${state}`,
+    acquisitionAdapter: { authorityMode: "DERIVED", command: ["scripts/derive-candidate-campaign-sites.mts", `--state=${state}`, "--promote"] },
     parserNormalizerVersion: "candidate-campaign-site-chain/1",
     cadence: { description: "hourly, the research cycle's own rhythm", defaultEveryMs: HOUR },
     retry: { afterMs: HOUR, description: "one hour after a failed attempt" },
@@ -595,7 +554,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     autoPromotable: true,
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: [],
-  },
+  } as const)),
   ...CAMPAIGN_FINANCE_SOURCES.map((source): RoutineSourceContract => ({
     id: campaignFinanceSourceId(source.state), sourceId: campaignFinanceSourceId(source.state),
     recordClass: "CURATED_READER_RECORD", scope: campaignFinanceNativeScope(source.state), fanOut: true,

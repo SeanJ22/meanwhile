@@ -1,4 +1,3 @@
-
 import type { AuthorityArtifactRef } from "../meetings/edge-artifacts.ts";
 import { REGISTRATION_TARGETS } from "./publication.ts";
 

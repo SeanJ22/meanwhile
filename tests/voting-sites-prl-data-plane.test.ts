@@ -1,3 +1,5 @@
+import { stateBallotScope } from "../lib/civic-data/state-scopes.ts";
+import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
@@ -5,14 +7,9 @@ import { join } from "node:path";
 import test from "node:test";
 
 import {
-  VOTING_SITES_CONTRACT,
+  votingSitesContract,
   votingSitesCandidate,
 } from "../lib/ballot/voting-sites-data-plane.ts";
-import {
-  loadVotingSites,
-  readVotingSitesProjection,
-  resetVotingSitesCache,
-} from "../lib/ballot/voting-sites-server.ts";
 import type { VotingSitesFile } from "../lib/ballot/voting-sites.ts";
 import { failedAcquisitionCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
@@ -54,16 +51,16 @@ function votingFixture(): VotingSitesFile {
         sourceOrg: "Example County Elections", sourceUrl: SOURCE_URL, collectedAt: "2026-08-19", refusal: null,
       },
       {
-        ocdId: "ocd-division/country:us/state:nj/place:example_one", name: "Town of Example One", state: "NJ", model: "ASSIGNED",
+        ocdId: "ocd-division/country:us/state:az/place:example_one", name: "Town of Example One", state: "AZ", model: "ASSIGNED",
         election: "2026 General Election",
-        sites: [site("nj-example-one-1", "Firehouse", "1 Elm Street, Example One, NJ 07000", 40.9, -74.4, "2026 General Election")],
-        sourceOrg: "Example County Board of Elections", sourceUrl: "https://elections.example.gov/nj/example-one", collectedAt: "2026-08-19", refusal: null,
+        sites: [site("az-example-one-1", "Firehouse", "1 Elm Street, Example One, AZ 85000", 40.9, -74.4, "2026 General Election")],
+        sourceOrg: "Example County Board of Elections", sourceUrl: "https://elections.example.gov/az/example-one", collectedAt: "2026-08-19", refusal: null,
       },
       {
-        ocdId: "ocd-division/country:us/state:nj/place:example_two", name: "Borough of Example Two", state: "NJ", model: "ASSIGNED",
+        ocdId: "ocd-division/country:us/state:az/place:example_two", name: "Borough of Example Two", state: "AZ", model: "ASSIGNED",
         election: "2026 General Election",
-        sites: [site("nj-example-two-1", "Borough Hall", "2 Pine Street, Example Two, NJ 07001", 40.8, -74.5, "2026 General Election")],
-        sourceOrg: "Example County Board of Elections", sourceUrl: "https://elections.example.gov/nj/example-two", collectedAt: "2026-08-19", refusal: null,
+        sites: [site("az-example-two-1", "Borough Hall", "2 Pine Street, Example Two, AZ 85001", 40.8, -74.5, "2026 General Election")],
+        sourceOrg: "Example County Board of Elections", sourceUrl: "https://elections.example.gov/az/example-two", collectedAt: "2026-08-19", refusal: null,
       },
     ],
   } as VotingSitesFile;
@@ -89,7 +86,7 @@ function prlFixture(): PrlSnapshot {
 }
 
 function votingCandidate(file: VotingSitesFile, at: string, raw: string, failures: Parameters<typeof votingSitesCandidate>[0]["failures"] = []) {
-  return votingSitesCandidate({
+  return votingSitesCandidate({ state: "AZ",
     current: file,
     prior: null,
     failures,
@@ -102,34 +99,47 @@ function votingCandidate(file: VotingSitesFile, at: string, raw: string, failure
 }
 
 test("voting sites promote with exact source/class/scope evidence and the Reader follows only the pointer", async () => {
-  resetVotingSitesCache();
   const store = new MemoryRoutineDataStore();
   const candidate = votingCandidate(votingFixture(), T0, "official voting-site bytes v1");
   assert.deepEqual(candidate.sourceProjectionEvidence, {
     kind: "SOURCE_PROJECTION_CONTRACT",
     sourceId: "voting-sites",
     recordClass: "VOTING_SITE",
-    scope: VOTING_SITES_CONTRACT.scope,
+    scope: votingSitesContract("AZ").scope,
   });
-  assert.equal(manualCandidateContractIssue("voting-sites", candidate), null);
-  const outcome = await processRegisteredManualCandidate(store, "voting-sites", candidate, T0);
+  assert.equal(manualCandidateContractIssue("voting-sites:AZ", candidate), null);
+  const outcome = await processRegisteredManualCandidate(store, "voting-sites:AZ", candidate, T0);
   assert.equal(outcome.candidate.state, "PROMOTED");
   assert.equal(outcome.readerReadback?.status, "PASS");
   const fixture = votingFixture();
   assert.equal(outcome.candidate.candidate.changeSet?.added.length,
     fixture.jurisdictions.length + fixture.jurisdictions.reduce((sum, row) => sum + row.sites.length, 0));
-  const read = await readVotingSitesProjection({ store, bypassCache: true, now: T0 });
+  const read = await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", "AZ"), { store, bypassCache: true, now: T0 });
   assert.equal(read.kind, "PROMOTED");
-  assert.equal(loadVotingSites().jurisdictions.length, votingFixture().jurisdictions.length);
+  assert.equal(read.kind === "PROMOTED" && read.value.jurisdictions.length, votingFixture().jurisdictions.length);
 });
 
 test("a first voting-site holding publishes without requiring other states", async () => {
   const file = votingFixture();
   file.jurisdictions = [file.jurisdictions.find(row => row.state === "AZ" && row.sites.length > 0)!];
   const store = new MemoryRoutineDataStore();
-  const outcome = await processRegisteredManualCandidate(store, "voting-sites", votingCandidate(file, T0, "one authority's sites"), T0);
+  const outcome = await processRegisteredManualCandidate(store, "voting-sites:AZ", votingCandidate(file, T0, "one authority's sites"), T0);
   assert.equal(outcome.candidate.state, "PROMOTED");
   assert.deepEqual((outcome.promoted!.payload as VotingSitesFile).jurisdictions, file.jurisdictions);
+});
+
+test("voting publication shares unchanged source rows and distinguishes equal and changed prior jurisdictions", () => {
+  const prior = votingFixture();
+  const current = { ...prior, jurisdictions: [prior.jurisdictions[0], structuredClone(prior.jurisdictions[1]),
+    { ...prior.jurisdictions[2], name: "Renamed Borough" }] };
+  const before = JSON.stringify({ current, prior });
+  const candidate = votingSitesCandidate({ state: "AZ", current, prior, failures: [], acquisition: capture("official update"),
+    successfulAuthorityReads: 1, requestedUrl: SOURCE_URL, finalUrl: SOURCE_URL, retrievedAt: T1 });
+  assert.equal(candidate.readModel, current, "a successful refresh does not deep-copy the state's sites");
+  const payload = candidate.normalizedPayload as { projection: VotingSitesFile; carriedJurisdictionIds: string[] };
+  assert.equal(payload.projection, current);
+  assert.deepEqual(payload.carriedJurisdictionIds, prior.jurisdictions.slice(0, 2).map(row => row.ocdId).sort());
+  assert.equal(JSON.stringify({ current, prior }), before);
 });
 
 test("voting-site coordinates admit Alaska and Hawaii while rejecting invalid points", () => {
@@ -154,10 +164,10 @@ test("any state or DC publishes sourced voting sites without editing an authorit
     const jurisdiction = { ...original, state, sourceUrl: url, sourceOrg: `${state} election office`,
       ocdId: `ocd-division/country:us/${state === "DC" ? "district" : "state"}:${state.toLowerCase()}`,
       model: "ASSIGNED" as const, sites: original.sites.slice(0, 1) };
-    const candidate = votingSitesCandidate({ current: { generatedAt: "2026-09-08", jurisdictions: [jurisdiction] },
+    const candidate = votingSitesCandidate({ state, current: { generatedAt: "2026-09-08", jurisdictions: [jurisdiction] },
       prior: null, failures: [], acquisition: capture("test official source bytes", url), successfulAuthorityReads: 1,
       requestedUrl: url, finalUrl: url, retrievedAt: T0 });
-    const outcome = await processRegisteredManualCandidate(new MemoryRoutineDataStore(), "voting-sites", candidate, T0);
+    const outcome = await processRegisteredManualCandidate(new MemoryRoutineDataStore(), votingSitesContract(state).id, candidate, T0);
     assert.equal(outcome.candidate.state, "PROMOTED", `${state}: ${outcome.candidate.failureDetail}`);
   }
 });
@@ -166,17 +176,17 @@ test("a vendor voting-site source carries its official linking page; an unlinked
   const original = votingFixture().jurisdictions.find(row => row.sites.length > 0)!;
   const sourceUrl = "https://voting.vendor.example/locations";
   const jurisdiction = { ...original, sourceUrl, sites: original.sites.slice(0, 1) };
-  const build = (row: typeof jurisdiction) => votingSitesCandidate({
+  const build = (row: typeof jurisdiction) => votingSitesCandidate({ state: "AZ",
     current: { generatedAt: "2026-09-08", jurisdictions: [row] }, prior: null, failures: [],
     acquisition: capture("test source bytes and linking page", sourceUrl), successfulAuthorityReads: 1,
     requestedUrl: sourceUrl, finalUrl: sourceUrl, retrievedAt: T0,
   });
-  const unlinked = await processRegisteredManualCandidate(new MemoryRoutineDataStore(), "voting-sites", build(jurisdiction), T0);
+  const unlinked = await processRegisteredManualCandidate(new MemoryRoutineDataStore(), "voting-sites:AZ", build(jurisdiction), T0);
   assert.equal(unlinked.promoted, null);
   const linked = { ...jurisdiction, sourceLinkingPage: { url: "https://elections.example.gov/",
     html: `<a href="${sourceUrl}">Voting locations</a>` } };
   const candidate = build(linked);
-  const outcome = await processRegisteredManualCandidate(new MemoryRoutineDataStore(), "voting-sites", candidate, T0);
+  const outcome = await processRegisteredManualCandidate(new MemoryRoutineDataStore(), "voting-sites:AZ", candidate, T0);
   assert.equal(outcome.candidate.state, "PROMOTED");
   assert.deepEqual((outcome.promoted!.payload as VotingSitesFile).jurisdictions[0].sourceLinkingPage, linked.sourceLinkingPage);
   for (const url of ["https://elections.example.gov.evil.example/locations", "https://unlinked.example/locations"]) {
@@ -188,45 +198,44 @@ test("one failed voting authority retains only its prior scope while healthy aut
   const store = new MemoryRoutineDataStore();
   const prior = votingFixture();
   const first = votingCandidate(prior, T0, "official voting-site bytes v1");
-  await processRegisteredManualCandidate(store, "voting-sites", first, T0);
+  await processRegisteredManualCandidate(store, "voting-sites:AZ", first, T0);
 
   const current = structuredClone(prior);
   current.generatedAt = "2026-09-08";
   const az = current.jurisdictions.find((row) => row.state === "AZ" && row.sites.length > 0)!;
   az.sites[0].name = `${az.sites[0].name} — updated by authority`;
-  for (const row of current.jurisdictions.filter((jurisdiction) => jurisdiction.state === "NJ")) {
+  for (const row of current.jurisdictions.filter((jurisdiction) => jurisdiction.ocdId.includes("/place:"))) {
     row.sites = [];
     row.refusal = { wall: "official publisher unavailable", rungs: [{ rung: 2, what: "official page", result: "HTTP 503", attemptedAt: "2026-09-08" }] };
   }
-  const successor = votingSitesCandidate({
+  const successor = votingSitesCandidate({ state: "AZ",
     current,
     prior,
-    failures: [{ state: "NJ", code: "MORRIS_UNAVAILABLE", detail: "official publisher unavailable" }],
-    acquisition: capture("healthy AZ and NH bytes; failed NJ response"),
+    failures: current.jurisdictions.filter(row => row.ocdId.includes("/place:")).map(row => ({ jurisdictionId: row.ocdId, code: "PUBLISHER_UNAVAILABLE", detail: "official publisher unavailable" })),
+    acquisition: capture("healthy county bytes; failed municipal responses"),
     successfulAuthorityReads: 2,
     requestedUrl: SOURCE_URL,
     finalUrl: SOURCE_URL,
     retrievedAt: T1,
   });
-  const promoted = await processRegisteredManualCandidate(store, "voting-sites", successor, T1);
+  const promoted = await processRegisteredManualCandidate(store, "voting-sites:AZ", successor, T1);
   assert.equal(promoted.candidate.state, "PROMOTED");
   const payload = promoted.promoted!.payload as VotingSitesFile;
   assert.deepEqual(
-    payload.jurisdictions.filter((row) => row.state === "NJ"),
-    prior.jurisdictions.filter((row) => row.state === "NJ")
+    payload.jurisdictions.filter((row) => row.ocdId.includes("/place:")),
+    prior.jurisdictions.filter((row) => row.ocdId.includes("/place:"))
       .sort((left, right) => left.ocdId.localeCompare(right.ocdId)),
   );
   assert.equal(payload.jurisdictions.find((row) => row.state === "AZ" && row.sites.length > 0)!.sites[0].name, az.sites[0].name);
   assert.ok(promoted.candidate.candidate.changeSet?.changed.some((change) => change.key.startsWith("site:ocd-division/country:us/state:az/")));
   assert.equal(promoted.candidate.candidate.changeSet?.removed.length, 0);
-  assert.deepEqual(promoted.candidate.receipt?.excludedFacts.map((fact) => fact.code), ["MORRIS_UNAVAILABLE"]);
+  assert.deepEqual(promoted.candidate.receipt?.excludedFacts.map((fact) => fact.code), ["PUBLISHER_UNAVAILABLE", "PUBLISHER_UNAVAILABLE"]);
 });
 
 test("a globally empty voting candidate is refused and store failure never opens the tracked fixture", async () => {
-  resetVotingSitesCache();
   const store = new MemoryRoutineDataStore();
   const good = votingCandidate(votingFixture(), T0, "official voting-site bytes v1");
-  await processRegisteredManualCandidate(store, "voting-sites", good, T0);
+  await processRegisteredManualCandidate(store, "voting-sites:AZ", good, T0);
   const empty = structuredClone(votingFixture());
   for (const row of empty.jurisdictions) {
     row.sites = [];
@@ -234,20 +243,20 @@ test("a globally empty voting candidate is refused and store failure never opens
   }
   const refused = await processRegisteredManualCandidate(
     store,
-    "voting-sites",
+    "voting-sites:AZ",
     votingCandidate(empty, T1, "empty official response"),
     T1,
   );
   assert.equal(refused.promoted, null);
-  assert.equal((await store.readPromotion("VOTING_SITE", VOTING_SITES_CONTRACT.scope))?.versionId, good.id);
+  assert.equal((await store.readPromotion("VOTING_SITE", votingSitesContract("AZ").scope))?.versionId, good.id);
 
   const brokenStore = {
     async readPromotion() { throw new Error("database unavailable"); },
     async readCandidate() { throw new Error("must not follow an absent pointer"); },
   };
-  const unavailable = await readVotingSitesProjection({ store: brokenStore, bypassCache: true, now: T1 });
+  const unavailable = await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", "AZ"), { store: brokenStore, bypassCache: true, now: T1 });
   assert.equal(unavailable.kind, "STORE_UNREACHABLE");
-  assert.throws(() => loadVotingSites(), /holding is STORE_UNREACHABLE/);
+  assert.equal(unavailable.value, null);
 });
 
 test("PRL promotes only its attributed allowlisted measurement and Reader joins by exact Bioguide", async () => {
@@ -309,7 +318,7 @@ test("PRL licensing/ranking defects and source failures preserve the prior GOOD 
 });
 
 test("voting-sites and PRL share registered acquisition commands with automatic refresh and no tracked mutable writer", () => {
-  const contracts = MANUAL_PRODUCTION_SOURCE_CONTRACTS.filter((contract) => ["voting-sites", "prl"].includes(contract.id));
+  const contracts = MANUAL_PRODUCTION_SOURCE_CONTRACTS.filter((contract) => ["voting-sites:AZ", "prl"].includes(contract.id));
   assert.equal(contracts.length, 2);
   assert.ok(contracts.every((contract) => contract.execution === "EXPLICIT_OWNER_INVOCATION_ONLY"));
   assert.ok(contracts.every((contract) => !Object.hasOwn(contract, "cadence") && !Object.hasOwn(contract, "retry")));

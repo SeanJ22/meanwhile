@@ -1,15 +1,26 @@
-import { readGenericBallotProjection, type GenericBallotProjection } from "./generic-projection.ts";
-import { ballotSourcesForDivisions, ballotSourceForTargetId, type RegisteredBallotSource } from "./registry.ts";
-import { contestsForDivisions } from "../sources/ballot-nj-morris/index.ts";
-import type { BallotSet } from "./types.ts";
+import { readGenericBallotProjection } from "./generic-projection.ts";
+import { ballotForDivisions } from "./contests.ts";
+import { districtFamilyKey } from "../census-geography/division-id.ts";
+import { ocdStateCode } from "../ocd/state-of.ts";
+import { requireBallotState } from "../civic-data/state-scopes.ts";
+import type { BallotSet, BallotSource } from "./types.ts";
 import type { PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 import { readTranslations, withMeasureTranslations } from "../translate/projection-reader.ts";
 
-export function genericSourcesForDivisions(value: GenericBallotProjection, divisions: readonly string[]): RegisteredBallotSource[] {
+export interface RegisteredBallotSource {
+  readonly state: string;
+  readonly source: BallotSource;
+}
+
+export const ballotStatesForDivisions = (divisions: readonly string[]) => [...new Set(divisions.flatMap(id => {
+  const state = ocdStateCode(id);
+  return state ? [requireBallotState(state)] : [];
+}))];
+
+function sourcesForBallots(rows: BallotSet[]): RegisteredBallotSource[] {
   const today = new Date().toISOString().slice(0, 10);
-  const ballots = Object.values(value.ballots).filter(ballot => {
-    const hit = contestsForDivisions(ballot, divisions);
-    return hit.contests.length > 0 || hit.absences.length > 0 || Boolean(hit.heldContests?.length);
+  const ballots = rows.filter(ballot => {
+    return ballot.contests.length > 0 || ballot.absences.length > 0 || Boolean(ballot.heldContests?.length);
   }).sort((a, b) => {
     // The nearest dated upcoming election first; retain unknown dates as
     // unknown, and concluded elections after upcoming ones.
@@ -25,41 +36,51 @@ export function genericSourcesForDivisions(value: GenericBallotProjection, divis
   } }));
 }
 
-export async function readerBallotSourcesForDivisions(divisions: readonly string[], options: PromotedCivicDataReadOptions = {}): Promise<readonly RegisteredBallotSource[]> {
-  if (!divisions.length) return [];
-  const legacy = ballotSourcesForDivisions(divisions);
-  const translationsRead = readTranslations(divisions, options).catch(() => []);
-  const generalRead = readGenericBallotProjection(options);
-  const attach = async (sources: readonly RegisteredBallotSource[]) => {
-    const translations = await translationsRead;
-    return sources.map(row => ({ ...row, source: { ...row.source,
-      normalize: (raw: Parameters<typeof row.source.normalize>[0]) => withMeasureTranslations(row.source.normalize(raw), translations) } }));
-  };
-  try {
-    const read = await generalRead;
-    if (read.kind === "PROMOTED") return attach([...genericSourcesForDivisions(read.value, divisions), ...legacy]);
-    if (read.kind !== "STORE_UNREACHABLE" || read.code === "STORE_NOT_CONFIGURED") return attach(legacy);
-    throw new Error(read.code);
-  } catch (error) {
-    // Expose the failed general authority through each entry point's existing
-    // holding-gap handling; the legacy authority keeps its own failure domain.
-    return [{ state: "general ballot", source: { name: "ballot-contests",
-      fetch: async () => { throw error; }, normalize: () => { throw error; },
-      upsert: async () => { throw error; },
-    } }, ...await attach(legacy)];
+const districtFamiliesByBallot = new WeakMap<BallotSet, readonly string[]>();
+function districtFamilies(ballot: BallotSet): readonly string[] {
+  let families = districtFamiliesByBallot.get(ballot);
+  if (!families) {
+    families = [...new Set([...ballot.contests, ...(ballot.heldContests ?? [])].flatMap(contest => {
+      const family = districtFamilyKey(contest.ocdId);
+      return family ? [family] : [];
+    }))];
+    districtFamiliesByBallot.set(ballot, families);
   }
+  return families;
 }
 
-export async function readerBallotSourceForTargetId(targetId: string, options: PromotedCivicDataReadOptions = {}): Promise<RegisteredBallotSource | null> {
-  const legacy = ballotSourceForTargetId(targetId);
-  if (legacy) return legacy;
-  const read = await readGenericBallotProjection(options);
-  if (read.kind !== "PROMOTED") return null;
-  for (const ballot of Object.values(read.value.ballots)) {
-    if (ballot.candidacies.some(row => row.id === targetId) || ballot.contests.some(row => row.id === targetId)
-      || ballot.measureRecords?.some(row => row.parts.some(part => part.id === targetId))) {
-      return genericSourcesForDivisions({ kind: "ballot-contests", ballots: { [ballot.election.id]: ballot } }, ballot.contests.map(row => row.ocdId))[0] ?? null;
+export async function readerBallotSourcesForDivisions(divisions: readonly string[], options: PromotedCivicDataReadOptions = {},
+  electionDivisions?: (election: BallotSet["election"], districtFamilies: readonly string[]) => Promise<readonly string[]>): Promise<readonly RegisteredBallotSource[]> {
+  const states = ballotStatesForDivisions(divisions);
+  if (!states.length) return [];
+  const translationsRead = readTranslations(divisions, options).catch(() => []);
+  const rows = await Promise.all(states.map(async state => {
+    try {
+      const read = await readGenericBallotProjection(state, options);
+      if (read.kind === "PROMOTED") return sourcesForBallots(await Promise.all(Object.values(read.value.ballots).map(async ballot =>
+        ballotForDivisions(ballot, electionDivisions ? await electionDivisions(ballot.election, districtFamilies(ballot)) : divisions))));
+      if (read.kind === "NOT_RECORDED") return [];
+      throw new Error(`${state} ballot read failed: ${read.kind}`);
+    } catch (error) {
+      return [{ state: state.toLowerCase(), source: { name: `ballot-contests:${state}`,
+        fetch: async () => { throw error; }, normalize: () => { throw error; },
+        upsert: async () => { throw error; },
+      } }];
     }
+  }));
+  const translations = await translationsRead;
+  return rows.flat().map(row => ({ ...row, source: { ...row.source,
+    normalize: (raw: Parameters<typeof row.source.normalize>[0]) => withMeasureTranslations(row.source.normalize(raw), translations) } }));
+}
+
+export async function readerBallotSourceForTargetId(targetId: string, divisions: readonly string[], options: PromotedCivicDataReadOptions = {}): Promise<RegisteredBallotSource | null> {
+  for (const source of await readerBallotSourcesForDivisions(divisions, options)) {
+    const ballot = source.source.normalize(await source.source.fetch());
+    if (ballot.generalLineup?.contests.some(row => row.nominees.some(nominee => `${row.contestId}|${nominee.name}` === targetId))
+      || ballot.candidacies.some(row => row.id === targetId) || ballot.filingCandidacies?.some(row => row.id === targetId)
+      || ballot.contests.some(row => row.id === targetId)
+      || ballot.heldContests?.some(row => row.id === targetId)
+      || ballot.measureRecords?.some(row => row.parts.some(part => part.id === targetId))) return source;
   }
   return null;
 }

@@ -1,11 +1,8 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
-import { gunzipSync } from "node:zlib";
 import test from "node:test";
 import { autonomousHarness, FIXTURE_URL } from "./helpers/autonomous-fleet.ts";
 import { factDb } from "./helpers/fact-db.ts";
-import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import type { CandidateVersionRecord, PromotedProjection } from "../lib/civic-data/types.ts";
+
 import { publishOwedCommentFacts } from "../lib/civic-data/worker-comment-facts.ts";
 import { owedFactItems } from "../lib/civic-data/worker-publication-tasks.ts";
 import { dispatchWorkerTask, evidenceProjection } from "../lib/control-plane/workers/runtime.ts";
@@ -14,23 +11,84 @@ import type { WorkerResultRecord } from "../lib/control-plane/workers/types.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { readFactCommentAccess } from "../lib/facts/comment-read.ts";
 import { readRegistryRuntimePrior } from "../lib/registry/runtime-data-plane.ts";
+import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { registryTransferImport } from "./helpers/promoted-fixtures.ts";
+import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
+import { registryJurisdictions } from "../lib/civic-data/state-scopes.ts";
+import { stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
+import { stateRegistryRuntimeContractId } from "../lib/civic-data/state-scopes.ts";
+import { rowKeyedCivicRecordsFor } from "../lib/civic-data/changes.ts";
+import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
+import { trustedLkgImportUrl } from "../lib/civic-data/trusted-lkg-import.ts";
+import { withStateRecordHashes } from "../lib/civic-data/state-publication.ts";
+import { candidateChangeSet } from "../lib/civic-data/changes.ts";
+import { ROW_KEYED_CIVIC_CHANGE_CONTRACT } from "../lib/civic-data/changes.ts";
+import { trustedLkgCandidateEnvelopeSha256 } from "../lib/civic-data/trusted-lkg-import.ts";
+import { trustedLkgValidatorIds } from "../lib/civic-data/trusted-lkg-import.ts";
+import { trustedLkgCandidateId } from "../lib/civic-data/trusted-lkg-import.ts";
+import type { CandidateVersionRecord } from "../lib/civic-data/types.ts";
+import type { PromotedProjection } from "../lib/civic-data/types.ts";
+
+function registryFixtureForState(state: string, value: RegistryRuntimeReadModel = registryTransferImport().projection.payload): RegistryRuntimeReadModel {
+  const own = (id: string | null) => registryJurisdictions(id).includes(state.toUpperCase());
+  const bodies = value.registry.bodies.filter(row => own(row.id) || own(row.ocdId) || row.alsoServesOcdIds?.some(own));
+  const bodyIds = new Set(bodies.map(row => row.id));
+  const bodyRosters = value.bodyRosters.filter(row => bodyIds.has(row.bodyId));
+  const statewideExecutives = value.statewideExecutives.filter(row => own(row.stateOcdId));
+  const bridge = value.officialCandidacies.rows.filter(row => row.holder.divisions.some(own));
+  const holders = new Set([...bodyRosters.flatMap(row => row.members.map(member => member.id)),
+    ...statewideExecutives.map(row => row.holder.id), ...bridge.map(row => row.holder.id)]);
+  return { ...value, registry: { ...value.registry, bodies,
+    divisions: value.registry.divisions.filter(row => row.ocdId === "ocd-division/country:us" || own(row.ocdId)) },
+    bodyRosters, statewideExecutives, officialCandidacies: { ...value.officialCandidacies, rows: bridge },
+    officialPhotos: { photos: value.officialPhotos.photos.filter(row => holders.has(row.officeholderId)) },
+    rosterPhotos: Object.fromEntries(Object.entries(value.rosterPhotos).filter(([id]) => holders.has(id) || own(id))),
+    rosterReaderDispositions: value.rosterReaderDispositions.filter(row => own(row.sourceId) || holders.has(row.sourceId) || (row.canonicalId !== null && holders.has(row.canonicalId)) ||
+      [...holders].some(id => id.startsWith("roster:") && id.split("#")[0] === row.sourceId.split("#")[0])) };
+}
+
+function stateRegistryRuntimeStore(state: string, store = new MemoryRoutineDataStore()): MemoryRoutineDataStore {
+  const original = registryTransferImport();
+  const payload = registryFixtureForState(state), scope = stateRegistryRuntimeScope(state), contractId = stateRegistryRuntimeContractId(state);
+  const civicRecords = rowKeyedCivicRecordsFor("REGISTRY_RUNTIME_BINDING", payload), digest = canonicalCivicDataHash(payload);
+  const candidate = { ...original.record.candidate, scope,
+    retrieval: { ...original.record.candidate.retrieval, requestedUrl: trustedLkgImportUrl(contractId) },
+    normalization: { ...original.record.candidate.normalization, normalizedHash: digest, normalizedPayloadHash: digest,
+      inputRecords: civicRecords.length, outputRecords: civicRecords.length, droppedRecords: 0 },
+    normalizedPayload: payload, readModel: payload, civicRecords, identities: [],
+    horizon: { ...original.record.candidate.horizon, returnedRecords: civicRecords.length },
+    sourceProjectionEvidence: { kind: "SOURCE_PROJECTION_CONTRACT" as const, sourceId: original.record.candidate.sourceId, recordClass: original.record.candidate.recordClass, scope },
+  };
+  Object.assign(candidate, { normalization: withStateRecordHashes(candidate).normalization });
+  candidate.changeSet = candidateChangeSet(candidate, null, ROW_KEYED_CIVIC_CHANGE_CONTRACT);
+  candidate.bootstrapImport = { ...original.record.candidate.bootstrapImport!, contractId, scope,
+    normalizedPayloadSha256: digest, readModelSha256: digest, candidateEnvelopeSha256: trustedLkgCandidateEnvelopeSha256(candidate), validatorIds: trustedLkgValidatorIds(candidate) };
+  candidate.id = trustedLkgCandidateId(candidate.bootstrapImport);
+  const receipt = { ...original.record.receipt!, candidateId: candidate.id, scope };
+  const record = { ...original.record, candidate, receipt, promotedVersion: candidate.id, lastKnownGoodVersion: candidate.id };
+  const projection = { ...original.projection, key: `REGISTRY_RUNTIME_BINDING:${scope}`, scope, versionId: candidate.id,
+    lastKnownGoodVersionId: candidate.id, payload, receipt };
+  const held = store as unknown as { candidates: Map<string, CandidateVersionRecord>; promotions: Map<string, PromotedProjection> };
+  held.candidates.set(candidate.id, record);
+  held.promotions.set(projection.key, projection);
+  return store;
+}
+
 
 const RULES = { commentPeriod: "YES", commentPeriodDetail: "Call to the Public is held at every regular meeting.",
   signup: "Complete a speaker card and hand it to the Clerk before the meeting begins.", timeLimit: "3 minutes per speaker" };
 
 /** An owed comment-rule item whose Acquirer saved an official page naming the body in Arizona, and whose Parser read its rules. */
 async function owedCommentRules(rules: Record<string, string> = RULES) {
-  const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
-  const store = new MemoryRoutineDataStore();
-  Object.assign(store, { candidates: new Map([[record.candidate.id, record]]), promotions: new Map([[projection.key, projection]]) });
-  const prior = (await readRegistryRuntimePrior(store, "2026-09-08T12:01:00.000Z"))!;
+  const store = stateRegistryRuntimeStore("AZ");
+  const prior = (await readRegistryRuntimePrior(store, "2026-09-08T12:01:00.000Z", "AZ"))!;
   const body = prior.payload.registry.bodies.find(row => row.name && row.ocdId?.includes("/state:az"))!;
   const text = JSON.stringify({ page: `${body.name}, Arizona: how to address the board`, records: [{ bodyName: body.name, ...rules }] });
   const fields = Object.fromEntries(["bodyName", ...Object.keys(rules)].map(field => [field, { source: `/${field}`, type: "STRING" as const }]));
   const h = await autonomousHarness({ clock: "2026-09-08T12:01:00.000Z", response: { text }, plan: plan => ({ ...plan,
     jurisdiction: "AZ", ownerInstructions: ["offline-send"], publication: { contractId: "comment-access", bodyId: body.id },
     sources: plan.sources.map(route => ({ ...route, recordClass: "PUBLIC_COMMENT_RULE" })),
-    contract: { ...plan.contract, schemaVersion: 2, recordClass: "PUBLIC_COMMENT_RULE", identity: { namespace: "comment-access", keyFields: ["bodyName"] },
+    contract: { ...plan.contract, schemaVersion: 2, jurisdiction: { country: "us", state: "AZ", canonicalId: body.ocdId! }, recordClass: "PUBLIC_COMMENT_RULE", identity: { namespace: "comment-access", keyFields: ["bodyName"] },
       requiredFields: ["bodyName", "commentPeriod", "commentPeriodDetail"], extraction: { format: "JSON_RECORDS", rowsPointer: "/records", fields } } as never }) });
   for (const role of ["ACQUIRER", "PARSER"]) {
     const next = await nextAutonomousOperation(h.runtime, h.item.id);

@@ -5,7 +5,7 @@ import { join } from "node:path";
 import { test } from "node:test";
 import { neonConfig } from "@neondatabase/serverless";
 import { createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
-import { databaseTransferFetch } from "../lib/db/transfer.ts";
+import { databaseTransferFetch } from "../lib/db/transfer-by-caller.ts";
 import { readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
 import { boundedQuery } from "../lib/control-plane/repository/request-bounds.ts";
 import { pathToFileURL } from "node:url";

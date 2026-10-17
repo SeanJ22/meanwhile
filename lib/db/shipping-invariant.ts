@@ -10,10 +10,6 @@ import {
 /** When the gate is being asked. */
 export type ShipMoment = "pre-deploy" | "post-deploy";
 
-/**
- * Paths whose change means the schema contract itself moved: the generated
- * migrations and journal, and the schema they are generated from.
- */
 export const SCHEMA_CONTRACT_PATHS: readonly { readonly prefix: string; readonly why: string }[] = [
   {
     prefix: "lib/db/migrations/",
@@ -38,10 +34,7 @@ export interface SchemaInvolvement {
 
 const normalisePath = (p: string) => p.replace(/\\/g, "/").replace(/^\.\//, "");
 
-/**
- * Whether a change touches the schema contract. `null` means the list could
- * not be computed, not that nothing changed, and returns involved.
- */
+// An unavailable changed-path list cannot establish that the schema contract is unchanged.
 export function schemaInvolvement(changed: readonly string[] | null): SchemaInvolvement {
   if (changed === null) {
     return {
@@ -122,10 +115,7 @@ export interface ShippingInvariantVerdict {
   readonly summary: string;
 }
 
-/**
- * The whole verdict, from the four inputs. No I/O. A migration with no
- * declaration is never given a phase by default; it fails on its own.
- */
+// Missing phase declarations fail rather than acquiring a default migration phase.
 export function evaluateShippingInvariant(
   input: ShippingInvariantInput,
 ): ShippingInvariantVerdict {

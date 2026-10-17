@@ -1,7 +1,8 @@
+import { parseStateBallotContractId, type StateBallotContractId } from "./state-scopes.ts";
 import { recordPublicationFlow } from "./publication-flow.ts";
 import { resolveRecordConflicts } from "./source-conflicts.ts";
 import { parserFieldSources } from "./field-sources.ts";
-import { publishWorkerPollingResults } from "./worker-polling-publication.ts";
+import { publishWorkerPollingResults, type PollingRegistrySlice } from "./worker-polling-publication.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import type { AutonomousWorkPlan } from "../control-plane/workers/autonomous-plan.ts";
 import type { WorkerResultRecord, FieldValue } from "../control-plane/workers/types.ts";
@@ -11,7 +12,7 @@ import type { WorkItem } from "../control-plane/work-item.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { readRegistryRuntimePrior, type RegistryRuntimePrior } from "../registry/runtime-data-plane.ts";
 import type { RoutineDataStore } from "./store.ts";
-import type { CuratedReaderProjection, ManualProjectionPackage, ManualProjectionPrior } from "./manual-projections.ts";
+import type { CuratedReaderProjection, ManualProjectionPackage } from "./manual-projections.ts";
 import { readManualProjectionPrior } from "./manual-projections.ts";
 import { prepareManualProjectionSuccessor } from "./manual-successor.ts";
 import { processRegisteredManualCandidate } from "./promotion.ts";
@@ -45,8 +46,8 @@ import { linkingPageFrom, section3Page } from "../control-plane/promotion/sectio
 const text = (value: FieldValue | undefined) => typeof value === "string" ? value : "";
 const words = (value: string) => value.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 const hostOf = (url: string) => { try { return new URL(url).hostname.toLowerCase().replace(/^www\./, ""); } catch { return null; } };
-function ownSiteHostsFromHeld(personId: string): readonly string[] {
-  const urls = [campaignSiteFor(personId)?.url, ...currentDerivedCampaignSiteRecords().filter(r => r.id === personId || r.candidacyId === personId).map(r => r.campaign.url)];
+function ownSiteHostsFromHeld(state: string, personId: string): readonly string[] {
+  const urls = [campaignSiteFor(personId)?.url, ...currentDerivedCampaignSiteRecords(state).filter(r => r.id === personId || r.candidacyId === personId).map(r => r.campaign.url)];
   return urls.flatMap(url => url ? [hostOf(url)].filter((h): h is string => h !== null) : []);
 }
 export interface StancesInput {
@@ -59,13 +60,13 @@ export function workerReaderPackage(input: StancesInput & Parameters<typeof veri
   return workerReaderPackageWithPulls(input).package;
 }
 
-export function workerReaderPackageWithPulls(input: StancesInput & Parameters<typeof verifiedWorkerRecords>[0] & { registry: RegistryRuntimePrior | null }):
+function workerReaderPackageWithPulls(input: StancesInput & Parameters<typeof verifiedWorkerRecords>[0] & { registry: RegistryRuntimePrior | null }):
   { readonly package: ManualProjectionPackage; readonly pulledMemberIds: ReadonlySet<string> } {
-  if (input.plan.publication?.contractId === "ballot-contests") return { package: workerBallotContestsPackage(input).package, pulledMemberIds: new Set() };
+  if (parseStateBallotContractId(input.plan.publication?.contractId ?? "")?.family === "ballot-contests") return { package: workerBallotContestsPackage(input).package, pulledMemberIds: new Set() };
   const target = input.plan.publication;
   requirePublication(target && isWorkerReaderContract(target.contractId), "READER_CONTRACT_UNRESOLVED");
-  requirePublication(target.contractId !== "voting-sites", "POLLING_USES_REGISTERED_DOOR_PUBLICATION");
-  const contractId = target.contractId as Exclude<WorkerReaderContract, "ballot-contests" | "voting-sites">;
+  requirePublication(parseStateBallotContractId(target.contractId)?.family !== "voting-sites", "POLLING_USES_REGISTERED_DOOR_PUBLICATION");
+  const contractId = target.contractId as Exclude<WorkerReaderContract, StateBallotContractId>;
   const checked = verifiedWorkerRecords({ ...input, pullRemoves: true });
   requirePublication(workerReaderClassMatches(contractId, checked.contract.recordClass), "READER_CLASS_MISMATCH");
   const body = input.registry?.payload.registry.bodies.find(body => body.id === target.bodyId);
@@ -76,7 +77,7 @@ export function workerReaderPackageWithPulls(input: StancesInput & Parameters<ty
     const f = record.fields;
     if (contractId === "stances") {
       return stanceRowFrom({ fields: f, pageUrl: checked.primary.evidence.canonicalUrl, collectedAt: checked.primary.observedAt, now: input.now,
-        topicIds: input.stanceTopicIds ?? DEFAULT_STANCE_TOPICS.map(topic => topic.id), ownSiteHosts: input.ownSiteHosts ?? ownSiteHostsFromHeld });
+        topicIds: input.stanceTopicIds ?? DEFAULT_STANCE_TOPICS.map(topic => topic.id), ownSiteHosts: input.ownSiteHosts ?? (personId => ownSiteHostsFromHeld(checked.contract.jurisdiction.state, personId)) });
     }
     requirePublication(words(text(f.bodyName)) === words(body?.name ?? place!.label), "CANONICAL_BODY_MISMATCH");
     if (contractId === "public-records") {
@@ -195,17 +196,19 @@ export function workerReaderPackageWithPulls(input: StancesInput & Parameters<ty
 }
 
 export async function publishWorkerReaderResults(input: {
+  readRegistrySlice?: PollingRegistrySlice;
   repos: ControlPlaneRepositories; store: RoutineDataStore; contractId: WorkerReaderContract; workItemIds: readonly string[]; now: string; vault?: EvidenceStore;
   readCapture: (id: string, results: readonly WorkerResultRecord[]) => Promise<WorkerPublicationCapture>;
   readHeld?: (record: ArtifactRecord) => Promise<WorkerPublicationCapture | null>;
 }) {
-  if (input.contractId === "ballot-contests") return publishWorkerBallotContestsResults(input);
-  if (input.contractId === "voting-sites") return publishWorkerPollingResults(input);
+  if (parseStateBallotContractId(input.contractId)?.family === "ballot-contests") return publishWorkerBallotContestsResults(input);
+  if (parseStateBallotContractId(input.contractId)?.family === "voting-sites") return publishWorkerPollingResults(input);
+  const contractId = input.contractId as Exclude<WorkerReaderContract, StateBallotContractId>;
   const captureReaders = await publicationCaptureReaders(input.repos, input.readCapture, input.readHeld);
   const { readHeld } = captureReaders;
   const { results, readCapture } = await jobWorkerResults(input.repos, input.workItemIds, captureReaders.readCapture);
   const report: { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[] = [];
-  if (input.contractId === "ballot-navigation") {
+  if (contractId === "ballot-navigation") {
     const held = input.workItemIds.filter(id => !latestParserResult(results, id));
     if (held.length) report.push(...await publishHeldElectionOffices({ repos: input.repos, store: input.store, workItemIds: held, now: input.now,
       readHeld }));
@@ -224,7 +227,7 @@ export async function publishWorkerReaderResults(input: {
     const item = (await input.repos.workItems.mustRead(id)).value;
     const plan: AutonomousWorkPlan | undefined = item.autonomousPlan;
     const parser = latestParserResult(results, id);
-    if (!parser || plan?.publication?.contractId !== input.contractId) continue;
+    if (!parser || plan?.publication?.contractId !== contractId) continue;
     const pull = auditPull(results, parser);
     if (item.publicationOutcome?.workerResultId === parser.id && item.publicationOutcome.sourceObservedAt && item.publicationOutcome.recovery !== "PUBLISHER" && !(pull && pull.at > item.publicationOutcome.at)) {
       report.push({ workItemId: id, outcome: item.publicationOutcome }); continue;
@@ -234,17 +237,17 @@ export async function publishWorkerReaderResults(input: {
     try {
       requirePublication(parser.result.role === "PARSER" && plan.contract.schemaVersion === 2, "INPUT_CHAIN_MISSING");
       captures = await capturesForPublication({ repos: input.repos, workItemId: id, primaryId: parser.result.artifactId, results, readCapture, officialLinks: manual.officialLinks });
-      const registry = await readRegistryRuntimePrior(input.store, input.now);
+      const registry = await readRegistryRuntimePrior(input.store, input.now, plan.contract.jurisdiction.state);
       const built = workerReaderPackageWithPulls({ plan, parser, captures, registry, now: input.now, results,
-        ...(input.contractId === "stances" ? { stanceTopicIds: await readStanceTopicIds() } : {}) });
+        ...(contractId === "stances" ? { stanceTopicIds: await readStanceTopicIds() } : {}) });
       const checked = built.package;
-      const prior = await readManualProjectionPrior(input.contractId, input.store, input.now,
-        manualPayloadScope(input.contractId, requiredManualProductionContract(input.contractId).scope, checked.payload));
+      const prior = await readManualProjectionPrior(contractId, input.store, input.now,
+        manualPayloadScope(contractId, requiredManualProductionContract(contractId).scope, checked.payload));
       const before = (prior?.payload as CuratedReaderProjection | undefined)?.records ?? [];
       const requested = (checked.payload as CuratedReaderProjection).records;
       const delivered = requested.map(record => {
         const old = before.find(row => row.id === record.id);
-        return old && prior ? resolveRecordConflicts(record, old, checked.sourceReceipt, prior.sourceReceipt).record : record;
+        return old && prior?.sourceReceipt ? resolveRecordConflicts(record, old, checked.sourceReceipt, prior.sourceReceipt).record : record;
       });
       const { candidate, expectedBaseVersionId } = await prepareManualProjectionSuccessor(checked, input.store, input.now, built.pulledMemberIds);
       const composed = candidate.readModel as CuratedReaderProjection;
@@ -254,7 +257,7 @@ export async function publishWorkerReaderResults(input: {
       const changes = publicationRecordChanges({ previousVersionId: prior?.versionId ?? null,
         accepted: delivered.map(row => ({ recordId: row.id, readerId: row.id, value: row, previous: before.find(old => old.id === row.id) })) });
       workerChecksComplete = true;
-      const published = await processRegisteredManualCandidate(input.store, input.contractId, candidate, input.now, expectedBaseVersionId);
+      const published = await processRegisteredManualCandidate(input.store, contractId, candidate, input.now, expectedBaseVersionId);
       if (published.candidate.receipt?.decision === "GOOD") await recordPublicationFlow(input.repos, published.candidate.candidate.id,
         { workerResultId: parser.id, stage: "CHECKED", records: changes.recordChanges.length,
           changedRecords: changes.records.added + changes.records.changed, versionId: null }, input.now);
@@ -264,17 +267,17 @@ export async function publishWorkerReaderResults(input: {
       }
       versionId = published.promoted.versionId;
       const readback = published.readerReadback ?? await recordRoutineReaderProjectionReadback(input.store,
-        requiredManualProductionContract(input.contractId), published.promoted, input.now);
+        requiredManualProductionContract(contractId), published.promoted, input.now);
       if (readback?.status !== "PASS") throw new Error(`WORKER_PUBLICATION_READER_READBACK_FAILED:${readback?.detail ?? "missing receipt"}`);
 
       await recordPublicationFlow(input.repos, published.candidate.candidate.id,
         { workerResultId: parser.id, stage: "LIVE", records: changes.recordChanges.length,
           changedRecords: published.confirmed ? 0 : changes.records.added + changes.records.changed, versionId }, input.now);
       outcome = { at: input.now, workerResultId: parser.id, status: "PUBLISHED", code: published.confirmed ? "VERIFIED_RESULT_REUSED" : "VERIFIED_RESULT_PUBLISHED",
-        detail: `${input.contractId}: ${delivered.length} record(s) passed §3 on the saved official page, promotion completed and the typed Reader readback passed.`, candidateId, versionId,
+        detail: `${contractId}: ${delivered.length} record(s) passed §3 on the saved official page, promotion completed and the typed Reader readback passed.`, candidateId, versionId,
         ...changes, acceptedRecordIds: delivered.map(row => row.id) };
       wentLive = delivered.length;
-      if (input.contractId === "public-records") await recordNewPublicKinds(input.repos, delivered as unknown as readonly PublicRecord[], input.now);
+      if (contractId === "public-records") await recordNewPublicKinds(input.repos, delivered as unknown as readonly PublicRecord[], input.now);
     } catch (error) {
       const detail = sanitizedErrorDiagnostic(error);
       const recovery = workerChecksComplete || !detail.startsWith("WORKER_PUBLICATION_") ? "PUBLISHER" : "WORKER";

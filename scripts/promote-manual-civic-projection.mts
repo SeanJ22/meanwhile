@@ -1,5 +1,10 @@
+import { parseStateBallotContractId } from "../lib/civic-data/state-scopes.ts";
 import { readFileSync } from "node:fs";
-import { isAbsolute, relative, resolve } from "node:path";
+import { isAbsolute, relative, resolve, join } from "node:path";
+import { neon } from "@neondatabase/serverless";
+import { createPgRepositories, controlPlaneUrlFromEnv } from "../lib/control-plane/repository/pg-store.ts";
+import { heldArtifactCaptures } from "../lib/civic-data/held-artifact-captures.ts";
+import { runCandidateProfileFindingsJob } from "../lib/civic-data/candidate-profile-findings-job.ts";
 
 import {
   MANUAL_PROJECTION_CONTRACT_IDS,
@@ -19,7 +24,21 @@ import { workerPublicationContext } from "../lib/civic-data/worker-publication-c
 const contractId = assignment(process.argv, "contract") as ManualProjectionContractId | null;
 const packageArgument = assignment(process.argv, "package");
 const workerResults = assignment(process.argv, "worker-results");
-if (workerResults) {
+if (process.argv.includes("--candidate-findings")) {
+  const target = parseStateBallotContractId(contractId ?? "");
+  if (target?.family !== "candidate-profiles" || packageArgument || workerResults) throw new Error("CANDIDATE_FINDINGS_CONTRACT_ARGUMENT_INVALID");
+  prepareProductionCivicDataWrite();
+  const connection = controlPlaneUrlFromEnv();
+  if (!connection) throw new Error("CANDIDATE_FINDINGS_CONTROL_PLANE_UNCONFIGURED");
+  const now = new Date().toISOString(), store = new PostgresRoutineDataStore();
+  const repos = await createPgRepositories(connection, now, { skipBootstrap: true }), sql = neon(connection);
+  const { report, receipt } = await runCandidateProfileFindingsJob({ state: target.state, store, repos, now,
+    query: (text, params) => sql.query(text, params),
+    readHeld: ids => heldArtifactCaptures(join(process.cwd(), "data", "control-plane", "vault"), ids, connection) });
+  console.log("RCD_CANDIDATE_FINDINGS=" + JSON.stringify(report));
+  if (receipt) console.log("RCD_RECEIPT=" + JSON.stringify(receipt));
+  if (!receipt || receipt.state !== "PROMOTED") process.exitCode = 2;
+} else if (workerResults) {
   if (!contractId || !isWorkerReaderContract(contractId) || packageArgument) throw new Error("WORKER_PUBLICATION_CONTRACT_ARGUMENT_INVALID");
   prepareProductionCivicDataWrite();
   const now = new Date().toISOString();
@@ -35,7 +54,7 @@ if (workerResults) {
   if (receipt) console.log("RCD_RECEIPT=" + JSON.stringify(receipt));
   if (exitCode) process.exitCode = exitCode;
 } else {
-const packageContracts = MANUAL_PROJECTION_CONTRACT_IDS.filter(id => id !== "ballot-contests");
+const packageContracts = MANUAL_PROJECTION_CONTRACT_IDS.filter(id => parseStateBallotContractId(id)?.family !== "ballot-contests");
 if (!contractId || !packageContracts.some(id => id === contractId) || !packageArgument) {
   throw new Error(
     `usage: tsx scripts/promote-manual-civic-projection.mts --contract=${packageContracts.join("|")} --package=<absolute path outside repository>`,

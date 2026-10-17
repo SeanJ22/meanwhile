@@ -1,16 +1,4 @@
 #!/usr/bin/env node
-/**
- * Postbuild check of the deployed artifact itself, not the source:
- *
- *   1. No file under `tests/` appears in any trace manifest.
- *   2. No traced repo file carries a credential-shaped VALUE.
- *   3. The server-trace and client-JS budgets in `scripts/bundle-budget.json`.
- *
- * Check 2 matches value shapes only; env-var NAMES appear legitimately in code
- * that reads configuration. `evaluate` is a pure read of a directory tree so
- * every refusal can be planted against a synthetic `.next`.
- */
-
 import { readdirSync, readFileSync, existsSync } from "node:fs";
 import { gzipSync } from "node:zlib";
 
@@ -19,18 +7,6 @@ import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-
-/**
- * A ceiling is AT MOST the measured baseline plus HEADROOM, rounded DOWN to a
- * readable unit. Tighter is always allowed; a ceiling moves only when its
- * baseline is re-measured, never on its own.
- */
-export const HEADROOM = 0.15;
-
-/** The largest ceiling the rule permits for a baseline, rounded down to `unit`. */
-export function ceilingCap(baseline, unit) {
-  return Math.floor((baseline * (1 + HEADROOM)) / unit) * unit;
-}
 
 /** Credential VALUE shapes. */
 const VALUE_SHAPES = [
@@ -48,11 +24,7 @@ const VALUE_SHAPES = [
   { name: "PEM private key", re: /-----BEGIN [A-Z ]*PRIVATE KEY-----/g },
 ];
 
-/**
- * Documentation placeholders: `@neondatabase/serverless` ships a usage example
- * whose userinfo is a literal placeholder. The skipped count is printed on every
- * run so this list cannot quietly become a mask.
- */
+// The dependency’s literal example credentials are placeholders; report every excluded occurrence.
 const PLACEHOLDER_USERINFO = new Set([
   "user:password",
   "username:password",
@@ -83,10 +55,7 @@ function manifestKey(next, m) {
   return relative(next, m).replace(/\\/g, "/").replace(/^standalone\/\.next\//, "");
 }
 
-/**
- * The reader's initial JavaScript for `/`, read off the emitted HTML. Null when
- * the page was not prerendered; unmeasured is a refusal, not a pass.
- */
+// A non-prerendered page has no measured initial JavaScript and cannot pass this check.
 function clientCost(next) {
   const html = join(next, "server", "app", "index.html");
   if (!existsSync(html)) return null;
@@ -132,11 +101,7 @@ function clientCost(next) {
   };
 }
 
-/**
- * Reads a build output and says what is wrong with it. No process exit, no
- * environment read, nothing printed: `lines` is reported, `failures` refuse.
- */
-export function evaluate({ root, budget }) {
+function evaluate({ root, budget }) {
   const next = join(root, ".next");
   const lines = [];
   const failures = [];
@@ -180,7 +145,7 @@ export function evaluate({ root, budget }) {
         `  Bundles: ${bundles.join(", ")}\n` +
         `  First few: ${testFiles.slice(0, 5).join(", ")}\n` +
         `  Cause is almost always a filesystem read over a path the bundler cannot see.\n` +
-        `  See lib/sources/ballot-curated/index.ts for the shape that fixes it.`,
+        `  Use explicit source paths so the bundler can trace each file.`,
     );
   }
 
@@ -214,13 +179,7 @@ export function evaluate({ root, budget }) {
 
   /* -- 3: budgets --------------------------------------------------------- */
 
-  /*
-   * Budget 1 is two numbers. 1a is the largest APP route trace (a file count);
-   * 1b is Next's own server runtime trace, which holds no file of ours and
-   * differs between default and standalone mode, so it is budgeted per mode.
-   * Standalone copies under `standalone/.next/` are folded onto their originals.
-   * The mode is read off the output, not the environment.
-   */
+  // Next’s own server trace varies by output mode; fold standalone duplicates into their original traces.
   const mode = existsSync(join(next, "standalone")) ? "standalone" : "default";
 
   const appManifests = [];
@@ -325,9 +284,9 @@ export function evaluate({ root, budget }) {
         "  the shape R23 had, where a runtime-computed path made Turbopack trace the whole\n" +
         "  project. Diff this build's trace manifests against a clean build's to see WHICH\n" +
         "  files joined; fix the read at the source with the\n" +
-        "  static-map pattern in lib/sources/ballot-curated/index.ts, or re-measure and\n" +
+        "  explicit source paths, or re-measure and\n" +
         "  re-commit the BASELINE in scripts/bundle-budget.json with the file list as its\n" +
-        "  reason — the ceiling is then re-derived from it by the HEADROOM rule, never\n" +
+        "  reason — the ceiling is then re-derived from it by the 15% headroom rule, never\n" +
         "  raised on its own.",
     );
   }
@@ -364,7 +323,7 @@ export function evaluate({ root, budget }) {
         `initial JS for / is ${client.raw} bytes, over the committed ceiling of ` +
           `${budget.client.initialJsCeiling} (baseline ${budget.client.initialJsBytes}).\n` +
           "  Re-measure and re-commit the baseline with what joined recorded as its reason;\n" +
-          "  the ceiling follows from it by the HEADROOM rule and is never raised on its own.",
+          "  the ceiling follows from it by the 15% headroom rule and is never raised on its own.",
       );
     }
     if (client.transfer > budget.client.transferCeiling) {
@@ -390,8 +349,7 @@ export function evaluate({ root, budget }) {
   };
 }
 
-/** Read the committed budget. Separate from `evaluate` so a test can pass its own. */
-export function committedBudget(root = ROOT) {
+function committedBudget(root = ROOT) {
   return JSON.parse(readFileSync(join(root, "scripts", "bundle-budget.json"), "utf8"));
 }
 

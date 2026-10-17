@@ -65,6 +65,7 @@ function verifyExactVersion(
 }
 
 function verifierIdFor(contract: ReaderContract): string {
+  if (/^US-[A-Z]{2}:campaign-finance-source$/.test(contract.id)) return "lib/funding/state-projection.ts#readCampaignFinancePublication";
   if (contract.recordClass === "FEDERAL_MONEY") return "lib/federal-money/verify.ts#readFederalMoneyPartition";
   // Congress.gov and GovInfo also publish federal civic records under the same source ids; only people records read back as people.
   if (isPeopleSource(contract.sourceId) && contract.recordClass !== "FEDERAL_CIVIC_RECORD") return "lib/civic-data/people-source-publication.ts#readPeopleSourceProjection";
@@ -142,6 +143,12 @@ export async function verifyRoutineReaderProjection(
 ): Promise<RoutineReaderVerification> {
   const verifierId = verifierIdFor(contract);
   try {
+    if (/^US-[A-Z]{2}:campaign-finance-source$/.test(contract.id)) {
+      const { readCampaignFinancePublication } = await import("../funding/state-projection.ts");
+      const state = contract.id.slice(3, 5);
+      return verifyExactVersion(verifierId, await readCampaignFinancePublication(state, options.scope ?? contract.scope,
+        { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, `${state} source-native campaign finance`);
+    }
     if (contract.recordClass === "FEDERAL_MONEY") {
       const source = FEDERAL_MONEY_SOURCES.find(source => source === contract.sourceId);
       if (!source) return fail(verifierId, "The federal source is not registered.");

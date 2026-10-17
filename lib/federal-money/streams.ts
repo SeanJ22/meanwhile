@@ -67,14 +67,14 @@ export async function* federalZipBytes(path: string, entry: FederalZipEntry): As
   } finally { stream.destroy(); input.destroy(); }
 }
 
-export async function* federalCsvRecords(input: AsyncIterable<Uint8Array>): AsyncGenerator<string> {
-  const decoder = new TextDecoder("utf-8", { fatal: true, ignoreBOM: true });
+export async function* federalCsvRecords(input: AsyncIterable<Uint8Array>, encoding = "utf-8", quote: string | null = '"'): AsyncGenerator<string> {
+  const decoder = new TextDecoder(encoding, { fatal: true, ignoreBOM: true });
   let record = "", quoted = false;
   for await (const bytes of input) {
     const text = decodeText(decoder, bytes);
     let start = 0;
     for (let index = 0; index < text.length; index++) {
-      if (text[index] === '"') quoted = !quoted;
+      if (text[index] === quote) quoted = !quoted;
       if (text[index] === "\n" && !quoted) { record += text.slice(start, index + 1); if (record.length > MAX_RECORD_BYTES) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "A source CSV row exceeds the record size limit."); yield record; record = ""; start = index + 1; }
     }
     record += text.slice(start);
@@ -88,24 +88,34 @@ export async function* federalCsvRecords(input: AsyncIterable<Uint8Array>): Asyn
 export interface FederalJsonEnvelope { value?: Record<string, unknown>; rows: number; found: boolean }
 export async function* federalJsonRecords(input: AsyncIterable<Uint8Array>, arrayKey: string, envelope: FederalJsonEnvelope): AsyncGenerator<string> {
   const decoder = new TextDecoder("utf-8", { fatal: true, ignoreBOM: true });
-  let control = "", row = "", depth = 0, inString = false, escaped = false, key = "", keyBuffer = "", readingKey = false, selected = false, rowDepth = 0, ended = false, needsComma = false;
+  let control = "", depth = 0, inString = false, escaped = false, keyBuffer = "", readingKey = false, selected = false, rowDepth = 0, ended = false, needsComma = false;
+  let rowParts: string[] = [], rowLength = 0;
+  const keys: string[] = [];
+  let keyDepth = 0;
   async function* consume(text: string): AsyncGenerator<string> {
-    for (const char of text) {
+    let rowStart = rowDepth ? 0 : -1;
+    for (let index = 0; index < text.length; index++) {
+      const char = text[index];
       if (selected && !ended) {
         if (!rowDepth) {
           if (/\s/.test(char)) continue;
           if (char === "," && needsComma) { needsComma = false; continue; }
           if (char === "]" && (needsComma || envelope.rows === 0)) { selected = false; ended = true; control += "]"; depth--; continue; }
           if (char !== "{" || needsComma) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "The source JSON array has an invalid row or separator.");
-          row = "{"; rowDepth = 1; inString = false; continue;
+          rowParts = []; rowLength = 0; rowStart = index; rowDepth = 1; inString = false; continue;
         }
-        row += char;
         if (inString) { if (escaped) escaped = false; else if (char === "\\") escaped = true; else if (char === '"') inString = false; }
         else if (char === '"') inString = true;
         else if (char === "{" || char === "[") rowDepth++;
         else if (char === "}" || char === "]") rowDepth--;
-        if (row.length > MAX_RECORD_BYTES) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "A source JSON row exceeds the record size limit.");
-        if (!rowDepth) { JSON.parse(row); envelope.rows++; needsComma = true; yield row; row = ""; }
+        if (rowLength + index - rowStart + 1 > MAX_RECORD_BYTES) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "A source JSON row exceeds the record size limit.");
+        if (!rowDepth) {
+          rowParts.push(text.slice(rowStart, index + 1));
+          const row = rowParts.length === 1 ? rowParts[0] : rowParts.join("");
+          JSON.parse(row); envelope.rows++; needsComma = true;
+          yield row;
+          rowParts = []; rowLength = 0; rowStart = -1;
+        }
         continue;
       }
       control += char;
@@ -114,15 +124,16 @@ export async function* federalJsonRecords(input: AsyncIterable<Uint8Array>, arra
         if (readingKey) keyBuffer += char;
         if (escaped) escaped = false;
         else if (char === "\\") escaped = true;
-        else if (char === '"') { inString = false; if (readingKey) { key = JSON.parse(`"${keyBuffer}`) as string; readingKey = false; } }
+        else if (char === '"') { inString = false; if (readingKey) { keys[keyDepth] = JSON.parse(`"${keyBuffer}`) as string; readingKey = false; } }
         continue;
       }
-      if (char === '"') { inString = true; readingKey = depth === 1; keyBuffer = ""; }
+      if (char === '"') { inString = true; readingKey = depth > 0; keyDepth = depth - 1; keyBuffer = ""; }
       else if (char === "{" || char === "[") {
-        if (char === "[" && (depth === 0 || depth === 1 && key === arrayKey)) { selected = true; envelope.found = true; }
+        if (char === "[" && (depth === 0 || keys.slice(0, depth).join(".") === arrayKey)) { selected = true; envelope.found = true; }
         depth++;
       } else if (char === "}" || char === "]") depth--;
     }
+    if (rowDepth && rowStart >= 0) { const part = text.slice(rowStart); rowParts.push(part); rowLength += part.length; }
   }
   for await (const bytes of input) yield* consume(decodeText(decoder, bytes));
   yield* consume(decodeText(decoder));

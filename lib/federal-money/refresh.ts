@@ -12,7 +12,7 @@ import { parseFederalMoney } from "./parse.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { withFederalMoneyVerificationCache } from "./verify.ts";
 
-export interface FederalMoneyRefreshOptions {
+interface FederalMoneyRefreshOptions {
   readonly source: FederalMoneySource; readonly store: RoutineDataStore;
   readonly states?: readonly string[]; readonly acquireOptions?: FederalMoneyAcquireOptions;
   readonly acquire?: typeof acquireFederalMoney; readonly now?: () => string;

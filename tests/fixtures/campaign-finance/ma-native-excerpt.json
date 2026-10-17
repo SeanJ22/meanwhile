@@ -1,0 +1,20 @@
+[
+  {
+    "cpfId": 16742,
+    "reportId": 1047776,
+    "reportTypeId": 60,
+    "reportTypeDescription": "Deposit Report",
+    "reportingPeriod": "9/16/26",
+    "dateFiled": "Fri, 10/16/2026 5:34 PM",
+    "dateFiledHeader": "Today",
+    "fullNameReverse": "Vargas, Andres X.",
+    "officeSought": "House 3rd Essex",
+    "reportLink": "https://www.ocpf.us/Reports/DisplayReport?menuHidden=true&id=1047776",
+    "amendmentDisplay": "",
+    "expenditureTotal": "$0.00",
+    "receiptTotal": "$500.00",
+    "miscellaneousCandidateList": "",
+    "bqDescription": "",
+    "color": "SkyBlue"
+  }
+]

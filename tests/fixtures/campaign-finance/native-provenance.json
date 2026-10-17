@@ -1,0 +1,44 @@
+[
+  {
+    "file": "wa-native-excerpt.json",
+    "url": "https://data.wa.gov/resource/3h9x-7bvm.json?$limit=2",
+    "capturedAt": "2026-10-16T21:21:41.171740+00:00",
+    "sha256": "587ec62c32755b76d9fef3547afd64f769b4bcc12515af66537771f219e0d8ed",
+    "transformation": "Selected public filing fields; contact and mailing fields omitted."
+  },
+  {
+    "file": "ma-native-excerpt.json",
+    "url": "https://api.ocpf.us/reports/log?StartIndex=0&PageSize=2",
+    "capturedAt": "2026-10-16T21:37:29.319701+00:00",
+    "sha256": "de945f27315d0b750cbd9791f7b26238d9ab65476e1f3332413158e729436fa4",
+    "transformation": "JSON whitespace only; all returned filing-log fields retained."
+  },
+  {
+    "file": "ca-native-cover.tsv",
+    "url": "https://campaignfinance.cdn.sos.ca.gov/dbwebexport.zip",
+    "capturedAt": "2026-10-16T22:13:18.312382+00:00",
+    "sha256": "a10272fff8d25fa02f848e315d24669b35c816181e59c3de26ce9579e0dcf59f",
+    "transformation": "Public fields selected from bounded byte-range excerpts of the summary and cover tables; archive was not fully downloaded for this fixture."
+  },
+  {
+    "file": "ca-native-summary.tsv",
+    "url": "https://campaignfinance.cdn.sos.ca.gov/dbwebexport.zip",
+    "capturedAt": "2026-10-16T22:13:18.312382+00:00",
+    "sha256": "bf7f65c6d07b7d8980f92b318f4b65cf8f2124f32a258c3afb44ecb676791945",
+    "transformation": "Public fields selected from bounded byte-range excerpts of the summary and cover tables; archive was not fully downloaded for this fixture."
+  },
+  {
+    "file": "pa-native-filer.csv",
+    "url": "https://www.pa.gov/content/dam/copapwp-pagov/en/dos/resources/voting-and-elections/campaign-finance/campaign-finance-data/2026.zip",
+    "capturedAt": "2026-10-16T23:30:25.333102+00:00",
+    "sha256": "9cfbc1ffd33c74626c5ad04eba0297d4ced47c50ee74166002a484ed5c4bd337",
+    "transformation": "Public filing fields selected from the complete official archive; contributor, mailing, employer and contact fields omitted."
+  },
+  {
+    "file": "pa-native-contributions.csv",
+    "url": "https://www.pa.gov/content/dam/copapwp-pagov/en/dos/resources/voting-and-elections/campaign-finance/campaign-finance-data/2026.zip",
+    "capturedAt": "2026-10-16T23:30:25.333102+00:00",
+    "sha256": "b2f3b09b0e56f34da9eb3bb73919768ff075fc079a0cc330b0052b0480831aee",
+    "transformation": "Public filing fields selected from the complete official archive; contributor, mailing, employer and contact fields omitted."
+  }
+]

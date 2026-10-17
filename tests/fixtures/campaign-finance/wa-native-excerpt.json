@@ -1,0 +1,35 @@
+[
+  {
+    "id": "ca-2026-689021",
+    "filer_id": "CRAWA  124",
+    "election_year": "2026",
+    "filer_name": "Anita M. Crawford-Willis (Anita Crawford-Willis)",
+    "office": "MUNICIPAL COURT JUDGE",
+    "jurisdiction": "SEATTLE MUNICIPAL COURT",
+    "jurisdiction_code": "4628",
+    "has_reports": true,
+    "contributions_amount": "0.00",
+    "expenditures_amount": "4484.87",
+    "loans_amount": "0.0",
+    "debts_amount": "0.0",
+    "updated_at": "2026-10-13T15:57:11.000",
+    "filer_type": "CA",
+    "url": {
+      "url": "https://my.pdc.wa.gov/registration/public/-/#/public/registration/50257"
+    }
+  },
+  {
+    "id": "co-2026-42386",
+    "filer_id": "CITYC--377",
+    "election_year": "2026",
+    "filer_name": "Committee for a better Benton City",
+    "jurisdiction": "CITY OF BENTON CITY",
+    "jurisdiction_code": "3049",
+    "has_reports": false,
+    "updated_at": "2026-09-22T09:56:52.000",
+    "filer_type": "CO",
+    "url": {
+      "url": "https://my.pdc.wa.gov/registration/public/-/#/public/registration/70188"
+    }
+  }
+]

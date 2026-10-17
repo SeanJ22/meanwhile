@@ -125,7 +125,7 @@ test("DR-01: a capture reads the one artifact row it needs, however many capture
   }
   const [small, , large] = measured;
   assert.ok(large!.first.bytes - small!.first.bytes <= 8, "a first capture reads the same bytes at 64x the history; only the position number gains digits");
-  assert.equal(large!.again.bytes, small!.again.bytes, "a repeated capture reads the same bytes at 64x the history");
+  assert.ok(large!.again.bytes - small!.again.bytes <= 8, "a repeated capture reads the same bytes at 64x the history; only the position number gains digits");
   assert.equal(large!.again.statements, small!.again.statements);
   assert.equal(large!.first.statements, small!.first.statements);
   assert.ok(large!.again.bytes < 2_000, `a repeated capture reads one row (${large!.again.bytes} bytes)`);

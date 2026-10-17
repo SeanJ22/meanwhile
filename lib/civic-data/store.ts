@@ -123,6 +123,11 @@ export interface PreparedReaderProjectionInput {
   readonly promotedThrough: string | null;
 }
 
+export interface MeetingQueueRow {
+  readonly scope: string;
+  readonly queuedAt: string;
+}
+
 export interface CandidateTransitionOptions {
   readonly candidate?: RoutineCandidate;
 }
@@ -163,6 +168,10 @@ export interface RoutineDataStore {
   readonly readPromotionIdentity: (recordClass: RoutineRecordClass, scope: string) => Promise<PromotedPointerIdentity | null>;
   readonly readPromotionIdentities: (recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly PromotedPointerIdentity[]>;
   readonly listPromotionScopes?: (recordClasses: readonly RoutineRecordClass[]) => Promise<readonly { recordClass: RoutineRecordClass; scope: string }[]>;
+  /** Meeting partitions whose pointer moved or whose version was confirmed since their bodies were last published. */
+  readonly readMeetingQueue?: () => Promise<readonly MeetingQueueRow[]>;
+  /** Clears a queued scope only if it has not been queued again since it was read. */
+  readonly settleMeetingQueue?: (rows: readonly MeetingQueueRow[]) => Promise<void>;
   readonly readPreparedReaderProjection: (recordClass: RoutineRecordClass, scope: string) => Promise<PreparedReaderProjectionRow | null>;
   readonly readPreparedReaderProjectionCoupling: (recordClass: RoutineRecordClass, scope: string) => Promise<PreparedReaderProjectionCoupling | null>;
     /** Lands only if the row is still at `expectedSequence` (null = expect absent); a stale pass gets `published:false`. */
@@ -763,6 +772,20 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
   private readonly history = new Map<string, CandidateEvent[]>();
   private readonly promotions = new Map<string, PromotedProjection>();
   private readonly preparedProjections = new Map<string, PreparedReaderProjectionRow>();
+  private readonly meetingQueue = new Map<string, string>();
+  private queueTick = 0;
+
+  private queueMeetingScope(recordClass: string, scope: string): void {
+    if (recordClass === "MEETING") this.meetingQueue.set(scope, `${String(++this.queueTick).padStart(12, "0")}`);
+  }
+
+  async readMeetingQueue(): Promise<readonly MeetingQueueRow[]> {
+    return [...this.meetingQueue].map(([scope, queuedAt]) => ({ scope, queuedAt }));
+  }
+
+  async settleMeetingQueue(rows: readonly MeetingQueueRow[]): Promise<void> {
+    for (const row of rows) if (this.meetingQueue.get(row.scope) === row.queuedAt) this.meetingQueue.delete(row.scope);
+  }
 
   async readRegistryDivisions(state: string, labels: readonly string[]): Promise<readonly RegistryDivisionMatch[]> {
     const pointer = this.promotions.get(projectionKey("REGISTRY_RUNTIME_BINDING", stateRegistryRuntimeScope(state)));
@@ -1041,6 +1064,7 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
       });
     }
     this.history.set(input.pointerVersionId, history);
+    this.queueMeetingScope(input.recordClass, input.scope);
     return { kind: "CONFIRMED", versionId: input.pointerVersionId, at };
   }
 
@@ -1076,6 +1100,7 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
       `${POINTER_MOVE_DETAIL_PREFIX}${key} moved from ${previous?.versionId ?? "bootstrap/no-version"} to ${candidateId}.`,
     );
     this.promotions.set(key, projection);
+    this.queueMeetingScope(record.candidate.recordClass, record.candidate.scope);
     history.push(event);
     this.history.set(candidateId, history);
     this.candidates.set(candidateId, {
@@ -2055,6 +2080,18 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       }).from(civicDataPromotions).where(and(eq(civicDataPromotions.recordClass, recordClass), inArray(civicDataPromotions.key, [...selected]))),
     }) : await values(keys);
     return rows.map(postgresPromotedPointerIdentity);
+  }
+
+  async readMeetingQueue(): Promise<readonly MeetingQueueRow[]> {
+    const result = await this.db.execute(sql`SELECT scope, queued_at::text AS queued_at FROM meeting_publication_queue ORDER BY queued_at`);
+    return (result.rows as { scope: string; queued_at: string }[]).map((row) => ({ scope: row.scope, queuedAt: row.queued_at }));
+  }
+
+  async settleMeetingQueue(rows: readonly MeetingQueueRow[]): Promise<void> {
+    if (rows.length === 0) return;
+    this.assertMutationAuthority();
+    await this.db.execute(sql`DELETE FROM meeting_publication_queue q USING unnest(${rows.map((row) => row.scope)}::text[], ${rows.map((row) => row.queuedAt)}::text[]) AS done(scope, at)
+      WHERE q.scope = done.scope AND q.queued_at::text = done.at`);
   }
 
   async readPreparedReaderProjection(recordClass: RoutineRecordClass, scope: string): Promise<PreparedReaderProjectionRow | null> {

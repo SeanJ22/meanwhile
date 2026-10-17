@@ -281,6 +281,13 @@
       "when": 1792022400001,
       "tag": "0039_sb01b_state_pointer_retirement",
       "breakpoints": true
+    },
+    {
+      "idx": 40,
+      "version": "7",
+      "when": 1792022400002,
+      "tag": "MT-02_meeting_body_queue",
+      "breakpoints": true
     }
   ]
 }

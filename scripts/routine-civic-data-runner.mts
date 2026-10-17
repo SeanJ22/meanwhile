@@ -190,6 +190,7 @@ const PUBLISH_NOW = process.argv.includes("--publish-now");
 const PASS_DEADLINE_MS = Math.min(passDeadlineFromEnv(), Date.now() + (PUBLISH_NOW ? PUBLISH_NOW_PASS_BUDGET_MS : ROUTINE_PASS_BUDGET_MS));
 const PASS_LAUNCH_DEADLINE_MS = PASS_DEADLINE_MS - Math.floor((PASS_DEADLINE_MS - Date.now()) / 3);
 const PASS_REPAIR_DEADLINE_MS = PASS_DEADLINE_MS - Math.floor((PASS_DEADLINE_MS - Date.now()) / 6);
+const EDGE_SLICE_MS = Math.floor((PASS_DEADLINE_MS - Date.now()) / 3);
 if (PUBLISH_NOW && FORCE) throw new Error("Publish-now cannot force unrelated source work.");
 const ADMITTED_CODE_SHA = assertRuntimeAuthority({ capabilities: ["ROUTINE_SUPERVISOR"] }).sha;
 
@@ -703,7 +704,8 @@ async function publishChangedReaderEdge(): Promise<ReaderEdgePublicationOutcome>
   } catch (error) {
     supervisorFailures.push({ taskId: "state-facts-publication", code: "STATE_FACTS_PUBLISH_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
   }
-  return publishReaderEdge({ store, query: readerFactDb().query, artifactStore: edgeStore, deadlineMs: PASS_DEADLINE_MS });
+  // A first publication goes a slice at a time, so the pass's own work still launches and its repairs still run.
+  return publishReaderEdge({ store, query: readerFactDb().query, artifactStore: edgeStore, deadlineMs: Math.min(PASS_LAUNCH_DEADLINE_MS, Date.now() + EDGE_SLICE_MS) });
 }
 const publishNowEdgeChecks = PUBLISH_NOW ? startPublishNowEdgeChecks({
   store: edgeStoreName,

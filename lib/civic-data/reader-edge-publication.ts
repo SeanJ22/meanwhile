@@ -251,6 +251,8 @@ export async function publishReaderEdgePiece(store: RoutineDataStore, observedAt
 
 const PIECE_RESULT = "READER_EDGE_PIECE=";
 const PIECE_SCRIPT = "publish-reader-edge-piece.mts";
+// The largest production piece holds 300 MiB live; the bound makes collection keep its footprint near that.
+const PIECE_HEAP_MIB = 1024;
 const slots = routineProcessSlots();
 
 export function readerEdgePieceResultLine(outcome: ReaderEdgePublicationOutcome): string {
@@ -265,7 +267,7 @@ async function publishPieceInChild(piece: ReaderEdgePiece, now: string, deadline
   let release: WorkerMemoryRelease | undefined, outcome: ReaderEdgePublicationOutcome | null = null;
   try {
     await runBoundedChildPass([{ id: `reader-edge:${readerEdgePieceKey(piece)}`, executable: process.execPath,
-      args: ["--experimental-strip-types", resolve(cwd, "scripts", PIECE_SCRIPT), `--family=${piece.family}`,
+      args: ["--experimental-strip-types", `--max-old-space-size=${PIECE_HEAP_MIB}`, resolve(cwd, "scripts", PIECE_SCRIPT), `--family=${piece.family}`,
         ...(piece.place === null ? [] : [`--place=${piece.place}`]), `--observed-at=${now}`],
       env: admittedRuntimeChildEnvironment({ parentEnv: childEnv, capability: "ROUTINE_SUPERVISOR", parentPid: process.pid }) }], {
       cwd, env: childEnv, deadlineMs, maxBufferBytes: 1024 * 1024, discardOutputAfterSettlement: true,

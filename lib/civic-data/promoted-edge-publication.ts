@@ -4,6 +4,7 @@ import { DOTGOV_SCOPE, readDotGovProjection } from "./dotgov.ts";
 import { createHash } from "node:crypto";
 
 import {
+  forgetPromotedProof,
   promotedEdgeEntryOf,
   readPromotedCivicData,
   type CivicDataReadStore,
@@ -26,9 +27,10 @@ import { readOfficeholderStatementsProjection } from "../corpus/data-plane.ts";
 import { readExecutiveActionsProjection } from "../officials/executive-actions.ts";
 import { AZ_OFFICIAL_ACTIONS_CONTRACT } from "../outcomes/data-plane.ts";
 import { STATE_AUTHORITY_FAMILIES, type StateAuthorityFamily, type GlobalPromotedAuthorityFamily, type PromotedFamilyArtifactValue } from "../meetings/edge-artifacts.ts";
-import { authorityPlaceOfScope, authorityPointerKey, PLACE_SPLIT_FAMILIES, prepareStateAuthorityArtifact, readServedPointer, readServedPromotedFamily, writeAuthorityPointer,
+import { authorityPlaceOfScope, authorityPointerKey, PLACE_SPLIT_FAMILIES, prepareStateAuthorityArtifact, publishedRecords, readServedPointer, readServedPromotedFamily, writeAuthorityIndex,
   type PublishAuthorityValue, type PublishedStateAuthority } from "../meetings/edge-serving.ts";
 import type { ReaderArtifactStore } from "../meetings/edge-store.ts";
+import { authorityRecordWriter } from "../meetings/authority-records.ts";
 import { PRL_ARCHIVE_SCOPE, readPrlArchiveProjection } from "../sources/prl/archive-publication.ts";
 import { PRL_CONTRACT } from "../sources/prl/data-plane.ts";
 import { readPrlProjection } from "../sources/prl/snapshot.ts";
@@ -109,6 +111,8 @@ async function readFamily(input: {
   served: string | null;
   now: string;
   readPrior?: () => Promise<PromotedFamilyArtifactValue | null>;
+  /** Hands each entry on as soon as it is read, keeping only what this returns. */
+  reduce?: (entry: PromotedEdgeEntry, index: number) => Promise<unknown>;
 }): Promise<{ authority: PublishAuthorityValue | null; skipped: string[] }> {
   const { store, pointers, served, now } = input;
   const skipped: string[] = [];
@@ -117,13 +121,14 @@ async function readFamily(input: {
       promotedPointerVersion(recordClass, scope, await store.readPromotionIdentity(recordClass, scope)))));
     if (current === served) return { authority: null, skipped };
   }
-  const entries: PromotedEdgeEntry[] = [], versions: string[] = [];
+  const entries: unknown[] = [], versions: string[] = [];
   let prior: PromotedFamilyArtifactValue | null | undefined;
   for (const { recordClass, scope, reader } of pointers) {
     let entry: PromotedEdgeEntry | null = null;
     try {
       const read = await readPromotedCivicData(recordClass, scope, { store, now });
       entry = promotedEdgeEntryOf(read, recordClass, scope, store);
+      if (read.kind === "PROMOTED") forgetPromotedProof(store, recordClass, scope, read.projection.versionId);
       if (entry === null) throw new Error(`${recordClass}:${scope} read ${read.kind}, not a proven or answered-absent pointer`);
       if (entry.kind === "PROMOTED") {
         const accepted = await reader({ edge: entry, now });
@@ -139,8 +144,8 @@ async function readFamily(input: {
       skipped.push(`${error instanceof Error ? error.message : String(error)}; retaining the accepted prior version`);
       entry = held;
     }
-    entries.push(entry);
     versions.push(promotedPointerVersion(recordClass, scope, entry.kind === "PROMOTED" ? entry.projection : null));
+    entries.push(input.reduce ? await input.reduce(entry, entries.length) : entry);
   }
   return { authority: { value: { kind: "PROMOTED_POINTERS", entries }, versionId: promotedFamilyVersion(versions) }, skipped };
 }
@@ -184,11 +189,14 @@ export async function publishPromotedEdgeFamily(input: {
       : family === "state-votes" ? await listed(STATE_VOTE_CLASSES, () => true)
         : promotedEdgePointers()[family].filter(pointer => place === null || authorityPlaceOfScope(pointer.scope) === place));
     const served = await readServedPointer(input.artifactStore, authorityPointerKey(family, at));
+    let writer: ReturnType<typeof authorityRecordWriter> | undefined;
     const result = await readFamily({ ...input, pointers, served: served?.ref.layout === "records" ? served.ref.version : null,
-      readPrior: () => readServedPromotedFamily(family, served?.ref, input.artifactStore, at) });
+      readPrior: () => readServedPromotedFamily(family, served?.ref, input.artifactStore, at),
+      reduce: async (entry, index) => (writer ??= authorityRecordWriter(input.artifactStore, await publishedRecords(served?.ref, input.artifactStore))).add(entry, ["entries", index]) });
     skipped.push(...result.skipped.map(reason => `${name} ${reason}`));
     if (result.authority) {
-      if (await writeAuthorityPointer(input.artifactStore, family, at, result.authority, served, input.now)) published.push(name);
+      writer ??= authorityRecordWriter(input.artifactStore);
+      if (await writeAuthorityIndex(input.artifactStore, family, at, result.authority.versionId, writer.index(result.authority.value), served, input.now)) published.push(name);
       else skipped.push(`${name} READER_POINTER_RACED`);
     }
   } catch (error) { skipped.push(`${name} ${error instanceof Error ? error.message : String(error)}`); }

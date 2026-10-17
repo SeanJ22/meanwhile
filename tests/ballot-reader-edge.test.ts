@@ -33,6 +33,8 @@ import { fundingReadState, readFundingSnapshot } from "../lib/funding/snapshot.t
 import { stateMoneyReadState } from "../lib/funding/state-snapshot.ts";
 import { readNhMembers } from "../lib/civic-data/state-members.ts";
 import { readOfficialStateLegislatorsProjection } from "../lib/state-rollcalls/legislators.ts";
+import { POLLING_PLACE_LINKS } from "../lib/ballot/polling-place-links.ts";
+import { REGISTRATION_LINKS } from "../lib/ballot/registration-links.ts";
 import { registryRuntimeReadState } from "../lib/registry/runtime-read-model.ts";
 import { withReaderSelection, type ReaderSelection } from "../lib/db/reader-route.ts";
 import { federalDirectoryReadState } from "../lib/officials/federal-directory-read-model.ts";
@@ -117,9 +119,8 @@ const districts: CensusDistrictEdge = { ...azDistricts, versionId: "edge-test:ba
 const navigation = {
   kind: "ballot-navigation",
   records: [
-    { id: "registration:AZ", kind: "REGISTRATION_LINK", value: { state: "AZ", label: "Check your registration",
-      url: "https://my.arizona.vote/WhereToVote.aspx?s=individual", sourceOrg: "Arizona Secretary of State",
-      verification: "Saved official-page fixture", verifiedAt: "2026-10-14" } },
+    ...REGISTRATION_LINKS.map((value) => ({ id: `registration:${value.state}`, kind: "REGISTRATION_LINK", value })),
+    ...POLLING_PLACE_LINKS.map((value) => ({ id: `polling-place:${value.state}`, kind: "POLLING_PLACE_LINK", value })),
   ],
 };
 

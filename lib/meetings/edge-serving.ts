@@ -180,7 +180,6 @@ export interface PublishedStateAuthority {
 }
 export type PublishStateAuthorities = Partial<Record<StateAuthorityFamily, Readonly<Record<string, PublishAuthorityValue | PublishAuthorityCarried | PublishedStateAuthority>>>>;
 /** Complete: one entry per promoted registration pointer, since the reader reads an unnamed state as having none. */
-export type PublishBallotNavigation = AsyncIterable<readonly [string, PublishAuthorityValue | PublishAuthorityCarried]>;
 export type PublishRegistrations = Readonly<Record<string, PublishAuthorityValue | PublishAuthorityCarried>>;
 
 interface RegistrationArtifactEnvelope {
@@ -747,7 +746,6 @@ export async function publishReaderEdgeArtifacts(
     readonly stateAuthorities?: PublishStateAuthorities;
     readonly registrations?: PublishRegistrations;
     readonly stateLegislators?: PublishRegistrations;
-    readonly ballotNavigation?: PublishBallotNavigation;
     /** Complete: one entry per state with live facts. */
     readonly stateFacts?: PublishRegistrations;
     readonly meetingBodies?: Parameters<typeof partitionSnapshotByScope>[2];
@@ -768,7 +766,6 @@ export async function publishReaderEdgeArtifacts(
   }
   const shaByScope = new Map(artifacts.map((a) => [a.scope, scopeDataSha(a)]));
   const extrasSha = extrasFingerprint(options.extras);
-  const authorityFamilies = AUTHORITY_FAMILIES.filter((family): family is Exclude<AuthorityFamily, "ballot-navigation"> => family !== "ballot-navigation");
   const authorityVersions = (m: Pick<ReaderManifest, "authorityArtifacts"> | undefined) =>
     GLOBAL_AUTHORITY_FAMILIES.map((f) => `${f}=${m?.authorityArtifacts?.[f]?.version ?? ""}`).join("|");
   const newAuthorityVersions = GLOBAL_AUTHORITY_FAMILIES
@@ -790,25 +787,6 @@ export async function publishReaderEdgeArtifacts(
     return { status: "FAILED", error: error instanceof Error ? error.message : String(error) };
   }
 
-  const ballotNavigation: Record<string, AuthorityArtifactRef> = { ...current?.manifest.ballotNavigation };
-  try {
-    if (options.ballotNavigation) for await (const [state, entry] of options.ballotNavigation) {
-      if ("carried" in entry) {
-        const served = current?.manifest.ballotNavigation?.[state];
-        if (!served || served.version !== entry.versionId) return { status: "RACED", sequence: (current?.manifest.sequence ?? 0) + 1 };
-        ballotNavigation[state] = served;
-      } else {
-        const indexed = await publishAuthorityRecords(entry.value, store, await publishedRecords(current?.manifest.ballotNavigation?.[state], store));
-        const envelope: AuthorityArtifactEnvelope = { formatVersion: READER_ARTIFACT_FORMAT_VERSION,
-          family: "ballot-navigation", versionId: entry.versionId, generatedAt: now, value: indexed };
-        const key = await store.putImmutable(gzipSync(Buffer.from(JSON.stringify(envelope), "utf8")), "json.gz");
-        ballotNavigation[state] = { key, version: entry.versionId, sha: sha256OfJson(indexed), layout: "records" };
-      }
-    }
-  } catch (error) {
-    return { status: "FAILED", error: error instanceof Error ? error.message : String(error) };
-  }
-
   if (current) {
     const currentShas = new Map(current.manifest.scopes.map((s) => [s.scope, s.sha256]));
     const sameSet = snapshot === null || (currentShas.size === shaByScope.size &&
@@ -825,10 +803,6 @@ export async function publishReaderEdgeArtifacts(
     const sameMeetingAreas = snapshot === null || options.meetingRegistryVersion === undefined ||
       current.manifest.meetingRegistryVersion === options.meetingRegistryVersion;
     const sameLegislators = options.stateLegislators === undefined || registrationVersions(current.manifest.stateLegislators === undefined ? null : Object.entries(current.manifest.stateLegislators).map(([scope, ref]) => [scope, ref.version] as const)) === newLegislatorVersions;
-    const sameNavigation = options.ballotNavigation === undefined || !current.manifest.authorityArtifacts?.["ballot-navigation"] &&
-      Object.values(current.manifest.ballotNavigation ?? {}).every(ref => ref.layout === "records") &&
-      registrationVersions(Object.entries(current.manifest.ballotNavigation ?? {}).map(([state, ref]) => [state, ref.version] as const)) ===
-      registrationVersions(Object.entries(ballotNavigation).map(([state, ref]) => [state, ref.version] as const));
     const samePlaces = options.meetingPlaces === undefined || JSON.stringify(options.meetingPlaces) === JSON.stringify(current.manifest.meetingPlaces);
     const sameSummary = snapshot === null || JSON.stringify(carriedSummary) === JSON.stringify(current.manifest.carriedSummary);
     const sameStateFacts = options.stateFacts === undefined || registrationVersions(current.manifest.stateFacts === undefined ? null
@@ -865,7 +839,6 @@ export async function publishReaderEdgeArtifacts(
   const stateAuthorities: Partial<Record<StateAuthorityFamily, Record<string, AuthorityArtifactRef>>> = Object.fromEntries(
     Object.entries(current?.manifest.stateAuthorities ?? {}).map(([family, states]) => [family, { ...states }]));
   const registrations: Record<string, AuthorityArtifactRef> = options.registrations === undefined ? { ...current?.manifest.registrations } : {};
-  if (options.ballotNavigation !== undefined) delete authorityArtifacts["ballot-navigation"];
   const stateLegislators: Record<string, AuthorityArtifactRef> = options.stateLegislators === undefined ? { ...current?.manifest.stateLegislators } : {};
   const stateFacts: Record<string, AuthorityArtifactRef> = options.stateFacts === undefined ? { ...current?.manifest.stateFacts } : {};
   try {
@@ -998,7 +971,6 @@ export async function publishReaderEdgeArtifacts(
     ...(Object.keys(stateAuthorities).length ? { stateAuthorities } : {}),
     ...(options.registrations !== undefined || current?.manifest.registrations !== undefined ? { registrations } : {}),
     ...(options.stateLegislators !== undefined || current?.manifest.stateLegislators !== undefined ? { stateLegislators } : {}),
-    ...(options.ballotNavigation !== undefined || current?.manifest.ballotNavigation !== undefined ? { ballotNavigation } : {}),
     ...(options.stateFacts !== undefined || current?.manifest.stateFacts !== undefined ? { stateFacts } : {}),
     ...((options.checks?.freshChecks ?? (snapshot === null ? current?.manifest.freshChecks : undefined)) !== undefined
       ? { freshChecks: options.checks?.freshChecks ?? current!.manifest.freshChecks } : {}),

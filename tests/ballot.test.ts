@@ -32,7 +32,29 @@ test("a reader sees every contest on their divisions and their state, and nothin
   assert.deepEqual(contestsForDivisions(SET, ["ocd-division/country:us/state:zz/county:none"]).contests, []);
 });
 
+test("the NJ date strip is complete and cited", () => {
+  const dates = electionDatesFor("NJ");
+  assert.ok(dates);
+  assert.equal(dates.electionDay, "2026-11-03");
+  const labels = dates.steps.map((s) => s.label).join(" | ");
+  for (const needed of ["registration", "Mail ballots", "early voting", "Election Day"]) {
+    assert.match(labels, new RegExp(needed, "i"), `date strip is missing ${needed}`);
+  }
+  assert.match(dates.sourceUrl, /^https:\/\/www\.nj\.gov\//);
+});
 
+test("polling lookup routes come from the held projection, without a literal state list", async () => {
+  const { POLLING_PLACE_LINKS, pollingPlaceLinkFor } = await import(
+    "../lib/ballot/polling-place-links.ts"
+  );
+  assert.deepEqual(POLLING_PLACE_LINKS, []);
+  assert.equal(pollingPlaceLinkFor("OH", []), null);
+
+  for (const state of ["AZ", "NJ", "NH", "OH"]) assert.equal(pollingPlaceLinkFor(state), null);
+
+});
+
+/** VS-01 supersedes F21's outbound pointer: every reader gets the in-app answer, including places without a ballot or date strip. */
 test("VS-01: the ballot page always offers one in-app voting lookup without requiring dates or a ballot", async () => {
   const { readFileSync } = await import("node:fs");
   const { join } = await import("node:path");
@@ -54,16 +76,40 @@ test("VS-01: the ballot page always offers one in-app voting lookup without requ
     ancestor = ancestor.parent;
   }
   assert.ok(ancestor && ts.isReturnStatement(ancestor), "voting lookup must render in the page return");
+  assert.ok(!page.includes("pollingPlaceLinkFor"), "the ballot page sends readers out for their voting answer");
   const control = readFileSync(join(process.cwd(), "components", "ballot", "where-to-vote.tsx"), "utf8");
   assert.match(control, /<VotingSitesPanel\b/, "the control must open the in-app voting answer");
   assert.doesNotMatch(control, /<a\s|<Link\s/, "the voting control must not send readers to an external lookup");
 });
 
-test("official registration and polling navigation is rendered independently of a ballot", async () => {
+/** The registration destination reaches the reader once: the Secretary of State is the only authoritative source for registration status, so the pill leaves the app and says so. */
+test("AZ-4/AZ-5: the ballot resolves the registration link exactly once, and it is a labelled pill", async () => {
   const { readFileSync } = await import("node:fs");
-  const page = readFileSync("app/ballot/page.tsx", "utf8");
-  assert.match(page, /navigationStates\.map\(state/);
-  assert.match(page, /data-navigation-kind=\{link\.purpose\}/);
-  assert.match(page, /data-leaves-app/);
-  assert.match(page, /aria-label=\{`\$\{link\.label\} — opens the official site in a new tab`\}/);
+  const { join } = await import("node:path");
+  const page = readFileSync(join(process.cwd(), "app", "ballot", "page.tsx"), "utf8");
+
+  const resolves = page.split("registrationLinkFor(set.election.state, registrationLinks)").length - 1;
+  assert.equal(
+    resolves,
+    1,
+    `the registration link resolves ${resolves} time(s); there is one pill`,
+  );
+
+  const pills = page.split("data-registration-pill").length - 1;
+  assert.equal(pills, 1, `${pills} registration pill(s) rendered; exactly one is expected`);
+
+  assert.ok(
+    page.includes("data-leaves-app\n                    className=\"voting-open-button\"") ||
+      /data-leaves-app[\s\S]{0,120}voting-open-button/.test(page),
+    "the registration pill must be labelled as leaving the app",
+  );
+  /* The leaving warning is on the control and in its accessible name. */
+  assert.ok(
+    /only place this can be checked/.test(page),
+    "the pill no longer says why it leaves — the Secretary of State is the system of record",
+  );
+  assert.ok(
+    /aria-label=\{`\$\{reg\.label\}[\s\S]{0,200}leaves this app`\}/.test(page),
+    "the leaving warning is not in the pill's accessible name, so a reader who cannot see the arrow is never told",
+  );
 });

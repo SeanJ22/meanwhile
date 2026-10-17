@@ -1,4 +1,3 @@
-import { ballotNavigationTaskState } from "../lib/civic-data/ballot-navigation-scope.ts";
 import { CAPTURE_CONVERSION_LOG_KEY, captureConversionRecord, captureConversionRecorded } from "../lib/civic-data/capture-conversion.ts";
 import { readMeetingDiscoveryInputs, meetingDiscoveryInputsDue, runMeetingDiscoveryChain, type MeetingDiscoveryInputs } from "../lib/civic-data/meeting-discovery-due.ts";
 import { readerFactDb, readPassCursor, writePassCursor } from "../lib/facts/db.ts";
@@ -574,9 +573,6 @@ async function persistSupervisorOutcome(input: {
   }
   const repos = await createPgRepositories(connection, input.finishedAt);
   assertDurableRepositories(repos, "routine civic-data supervisor outcomes");
-  for (const [state, report] of Object.entries(input.ballotNavigationPublications ?? {})) {
-    await repos.ownerDigests.append(`ballot-navigation:${state}`, `${SUPERVISOR_CYCLE_ID}:${state}`, report as never, input.finishedAt);
-  }
   const cycleId = SUPERVISOR_CYCLE_ID;
   const outcome = routineCivicDataSupervisorOutcome({
     ...(input.ballotPublications ? { ballotPublications: input.ballotPublications } : {}),

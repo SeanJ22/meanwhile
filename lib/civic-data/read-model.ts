@@ -3,6 +3,7 @@ import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts
 import { statePublicationPriorOf, rememberStatePublicationHashes } from "./state-publication.ts";
 import { readerQuery } from "./promoted-reader-query.ts";
 import { currentReaderRoute, currentReaderSelection, type ReaderSelection } from "../db/reader-route.ts";
+import { createHash } from "node:crypto";
 import { sourceCheckedAt } from "./source-check.ts";
 import { currentPromotedEdge, currentReaderAuthorityEdge, ensurePromotedEdge, refuseDatabaseInEdgeOnlyContext } from "../registry/runtime-edge.ts";
 
@@ -54,7 +55,13 @@ function readProofCandidate(
 
 function durableProjectionHash(value: unknown): string | null {
   try {
-    return durableCivicDataHash(value);
+    const encoded = JSON.stringify(value);
+    if (encoded === undefined) return null;
+    const durable = JSON.parse(encoded) as unknown;
+    const currentCanonical = canonicalCivicDataJson(value);
+    const durableCanonical = canonicalCivicDataJson(durable);
+    if (currentCanonical !== durableCanonical) return null;
+    return createHash("sha256").update(durableCanonical).digest("hex");
   } catch {
     return null;
   }
@@ -213,12 +220,11 @@ export type PromotedEdgeEntry<T = unknown> =
       readonly scope: string;
     };
 
-const readAttestations = new WeakMap<object, AttestedPromotion>();
-
 export function promotedEdgeEntryOf<T>(
   result: CivicDataReadResult<T>,
   recordClass: RoutineRecordClass,
   scope: string,
+  store?: CivicDataReadStore,
 ): PromotedEdgeEntry<T> | null {
   if (result.kind === "NOT_RECORDED") return { kind: "NOT_RECORDED", recordClass, scope };
   if (result.kind !== "PROMOTED") return null;
@@ -1282,7 +1288,7 @@ function promotedResult<T>(
     staleAtRetrieval: candidate.candidate.temporal.staleAtRetrieval,
     maxAgeMs,
   });
-  const result: CivicDataReadResult<T> = {
+  return {
     kind: "PROMOTED",
     value: projection.payload,
     projection,
@@ -1300,9 +1306,6 @@ function promotedResult<T>(
       ...temporal,
     },
   };
-  const attested = attestationOf(projection.recordClass, projection.scope, projection, candidate);
-  if (attested) readAttestations.set(result, attested);
-  return result;
 }
 
 function bootstrapResult<T>(

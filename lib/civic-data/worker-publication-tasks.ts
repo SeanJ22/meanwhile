@@ -1,5 +1,6 @@
 import { stateFromRegistryRuntimeContractId, type StateRegistryContractId } from "./state-scopes.ts";
 import { parseStateBallotContractId } from "./state-scopes.ts";
+import { ballotNavigationScope, ballotNavigationState, ballotNavigationTaskState } from "./ballot-navigation-scope.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import type { RoutineSourceTask } from "./runner.ts";
 import type { WorkItem } from "../control-plane/work-item.ts";

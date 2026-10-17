@@ -1,4 +1,5 @@
-import { canonicalCivicDataHash, candidateChangeSet, heldCivicRecords, civicRecordFacts, civicRecordsFor } from "./changes.ts";
+import { candidateChangeSet, heldCivicRecords, civicRecordFacts, civicRecordsFor } from "./changes.ts";
+import { canonicalCivicDataHash } from "./canonical-hash.ts";
 import { manualProjectionCandidate, type CuratedReaderProjection, type ManualProjectionPackage } from "./manual-projections.ts";
 import { manualPriorAuthorityIssue, type ManualSuccessorCandidate } from "./manual-prior-authority.ts";
 import { navigationCandidateIndex, navigationFactsHash, navigationHeldKeysHash, publicationBaseHash, setPublicationBaseHash, verifiedNavigationRecords, type NavigationPublicationBase, type NavigationRecord } from "./navigation-publication-base.ts";

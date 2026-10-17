@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
-import { canonicalCivicDataHash, canonicalCivicDataJson, civicRecordFacts, civicRecordsFor } from "./changes.ts";
+import { canonicalCivicDataJson, civicRecordFacts, civicRecordsFor } from "./changes.ts";
+import { canonicalCivicDataHash } from "./canonical-hash.ts";
 import type { CandidateVersionRecord, IdentityEvidence, ManualSourceSetReceipt, PromotedPointerIdentity, RoutineCandidate } from "./types.ts";
 
 export type NavigationRecord = Record<string, unknown> & { readonly id: string };

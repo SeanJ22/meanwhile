@@ -22,7 +22,6 @@ const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   "federal-money-refresh.mts": 768,
   "census-geography-refresh.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "promote-manual-civic-projection.mts": WORKER_ENTRY_PEAK_MIB.national!,
-  "ballot-navigation-refresh.mts": 2048,
   "ingest.ts": WORKER_ENTRY_PEAK_MIB.national!,
   "state-rollcalls.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "legistar-outcomes-ingest.mts": 355,

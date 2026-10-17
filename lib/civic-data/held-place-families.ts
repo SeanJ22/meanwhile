@@ -40,6 +40,7 @@ export interface HeldPlaceFamilies {
   readonly funding?: FundingSnapshot | null;
   readonly stateMoney?: readonly StateMoneySnapshot[];
   readonly filings?: readonly OfficialFiling[];
+  readonly electionDates?: readonly ElectionDates[];
   readonly electionFields?: readonly PublishedElectionField[];
   readonly candidateProfiles?: CandidateProfilesProjection | null;
   readonly candidatePublications?: readonly CandidateDocument[];
@@ -105,7 +106,7 @@ export async function readHeldPlaceFamilies(divisionIds: readonly string[], opti
     read<FundingSnapshot>(fec.recordClass, fec.scope),
     Promise.all(moneyScopes.map(scope => read<StateMoneySnapshot>("STATE_CAMPAIGN_FINANCE", scope))),
     read<CuratedReaderProjection>(filings.recordClass, filings.scope),
-    Promise.all([...states].map(state => read<CuratedReaderProjection>("CURATED_READER_RECORD", ballotNavigationScope(state)))),
+    read<CuratedReaderProjection>(navigation.recordClass, navigation.scope),
   ]);
   const ballots: BallotSet[] = [], candidateLineups: LineupContest[] = [], candidatePublications: CandidateDocument[] = [], derivedCampaignSites: DerivedCampaignSiteRecord[] = [];
   let candidateProfiles: CandidateProfilesProjection | null = null, votingSites: VotingSitesFile | null = null;
@@ -289,13 +290,23 @@ export function projectHeldPlaceFamilies(divisionIds: readonly string[], registr
     if (jurisdiction.refusal || !jurisdiction.sites.length || !subject(`voting-sites:${jurisdiction.ocdId}`, "deadline", [jurisdiction.ocdId], jurisdiction.name, "voting-sites")) continue;
     field(`voting-sites:${jurisdiction.ocdId}`, "ELE-09", { model: jurisdiction.model, election: jurisdiction.election, sites: jurisdiction.sites }, jurisdiction.sourceUrl, jurisdiction.collectedAt, FRESHNESS_HOURS.daily);
   }
+  for (const calendar of families.electionDates ?? []) {
+    const division = `ocd-division/country:us/state:${calendar.state.toLowerCase()}`;
+    for (const step of calendar.steps) {
+      const id = `election-calendar:${calendar.state}:${calendar.electionDay}:${step.label}`;
+      const filing = /filing|certification/i.test(step.label);
+      if (!subject(id, "deadline", [division], step.label, filing ? "filing-deadline" : "voting-deadline")) continue;
+      // Version-adopted source facts are held on their actual date, never relabeled as a fresh canonical publication.
+      field(id, filing ? "ELE-06" : "ELE-08", step, calendar.sourceUrl, calendar.collectedAt, 24, "held");
+    }
+  }
   for (const row of families.electionFields ?? []) {
     if (electionFieldIssue(row) !== null) continue;
     const captureKind = row.value.fieldKind === "certified_outcome" ? "election-result"
-      : (row.value.fieldKind.endsWith("_lookup") || row.value.fieldKind === "registration_page") ? "election-navigation"
-      : ["registration_deadline", "mail_ballot_request_deadline", "early_voting"].includes(row.value.fieldKind) ? "voting-deadline" : undefined;
+      : row.value.fieldKind.endsWith("_lookup") ? "election-navigation"
+      : ["registration_deadline", "early_voting"].includes(row.value.fieldKind) ? "voting-deadline" : undefined;
     if (!subject(row.id, row.value.fieldKind === "certified_outcome" ? "contest" : "deadline", [row.value.divisionId], row.value.quote, captureKind)) continue;
-    field(row.id, row.value.fieldKind === "certified_outcome" ? "ELE-15" : (row.value.fieldKind.endsWith("_lookup") || row.value.fieldKind === "registration_page") ? "ELE-09" : "ELE-08", row.value,
+    field(row.id, row.value.fieldKind === "certified_outcome" ? "ELE-15" : row.value.fieldKind.endsWith("_lookup") ? "ELE-09" : "ELE-08", row.value,
       row.value.url, row.value.collectedAt, FRESHNESS_HOURS.weekly);
   }
   const moneyDivisions = (keys: readonly string[]) => [...new Set(keys.flatMap(key => targets.get(key) ?? []))];

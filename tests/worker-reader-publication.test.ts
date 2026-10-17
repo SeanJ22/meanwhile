@@ -341,7 +341,7 @@ test("an adopted budget publishes from saved official document bytes; a proposal
   const answer = composeGovernmentFinanceAnswer({subject:{kind:"BODY",id:f.body.id,name:f.body.name!},question:"What is this government's budget?",records:evidence});
   assert.equal(answer?.answer, facts.sourceSentence);
   const scope = scopedManualContractScope("government-budgets", f.body.ocdId!);
-  const edge = promotedEdgeEntryOf(await readGovernmentBudgets(f.body.ocdId!, {store:f.store,now:f.h.now()}), "CURATED_READER_RECORD", scope);
+  const edge = promotedEdgeEntryOf(await readGovernmentBudgets(f.body.ocdId!, {store:f.store,now:f.h.now()}), "CURATED_READER_RECORD", scope, f.store);
   assert.ok(edge);
   await withReaderAuthorityEdge({stateAuthorities:{states:{"registry-runtime":new Set(["AZ"])},load:async(family,state)=>{assert.equal(state,"AZ");
     if(family==="registry-runtime")return{kind:"PROMOTED_POINTERS",entries:[manualEdgeEntry("registry-runtime:AZ",{...f.prior.payload,bodyRosters:[],rosterReaderDispositions:[]},f.prior.versionId)]};
@@ -432,7 +432,7 @@ test("normal voter-access workers publish the independently verified statewide r
     coverage: "STATEWIDE", coverageEvidence: "The election authority identifies this lookup as serving the entire state." });
   const result = await publishWorkerReaderResults(input);
   assert.equal(result[0].outcome.status, "PUBLISHED", JSON.stringify(result));
-  const read = await readCuratedReaderProjection("ballot-navigation", { store, now: h.now(), bypassCache: true }, "NH");
+  const read = await readCuratedReaderProjection("ballot-navigation", { store, now: h.now(), bypassCache: true });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") throw new Error("reader missing");
   assert.equal(read.value.records[0].kind, "REGISTRATION_LINK");

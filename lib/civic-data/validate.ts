@@ -18,7 +18,7 @@ import {
 } from "../meetings/constants.ts";
 import { trustedLkgImportEvidenceIssue } from "./trusted-lkg-import.ts";
 import { manualPriorAuthorityIssue, manualPriorAuthorityOf } from "./manual-prior-authority.ts";
-import { durableCivicDataHash, canonicalCivicDataJson, civicRecordsFor } from "./changes.ts";
+import { canonicalCivicDataJson, civicRecordsFor } from "./changes.ts";
 import {
   occurrenceStampFromInstant,
   reissuesSitting,
@@ -46,6 +46,10 @@ import type {
 
 const SHA256 = /^[a-f0-9]{64}$/;
 
+function sha256(value: string): string {
+  return createHash("sha256").update(value).digest("hex");
+}
+
 /** A conditional check must cite its previously captured 200 bytes. */
 export function notModifiedIssue(candidate: RoutineCandidate): string | null {
   return `HTTP 304 carries no bytes for ${candidate.recordClass}; replay the identified held response with its original status and observation date.`;
@@ -57,7 +61,15 @@ function durableCanonicalJson(value: unknown, scoped = false): { readonly canoni
     return { canonical, issue: canonical === null ? "The value changes when persisted through the canonical JSONB representation." : null };
   }
   try {
-    return { canonical: durableCivicDataHash(value), issue: null };
+    const encoded = JSON.stringify(value);
+    if (encoded === undefined) return { canonical: null, issue: "The value is not representable as durable JSON." };
+    const roundTrip = JSON.parse(encoded) as unknown;
+    const before = canonicalCivicDataJson(value);
+    const after = canonicalCivicDataJson(roundTrip);
+    if (before !== after) {
+      return { canonical: null, issue: "The value changes when persisted through the canonical JSONB representation." };
+    }
+    return { canonical: before, issue: null };
   } catch (error) {
     return {
       canonical: null,
@@ -637,7 +649,7 @@ export function validateRoutineCandidate(
     : authority.ok
       ? authority.contract
       : null;
-  const inheritedAuthorityIssue = manualPriorAuthorityIssue(candidate, lastKnownGood, additionalPriorBases);
+  const inheritedAuthorityIssue = manualPriorAuthorityIssue(candidate, lastKnownGood);
   const inheritedAuthority = manualPriorAuthorityOf(candidate);
   const sourceCheck = candidate.retrieval.sourceCheck;
   const checkIssue = sourceCheckIssue(sourceCheck, validatedAt) ?? (sourceCheck &&
@@ -705,7 +717,7 @@ export function validateRoutineCandidate(
     checks.push(result("SOURCE_AUTHENTICITY", "FAIL", "MANUAL_PRIOR_AUTHORITY_INVALID", inheritedAuthorityIssue));
   } else if (inheritedAuthority) {
     checks.push(result("SOURCE_AUTHENTICITY", "PASS", "CURRENT_SOURCES_AND_EXACT_PRIOR_AUTHORITY_VALID",
-      `${authority.contract.publisher}; current acquired sources plus ${[inheritedAuthority, ...(inheritedAuthority.additionalProjections ?? [])].reduce((total, prior) => total + prior.retainedMembers.length, 0)} unchanged members inherited from exact GOOD versions. Inherited members retain their prior provenance; no fresh HTTP retrieval is asserted for them.`));
+      `${authority.contract.publisher}; current acquired sources plus ${inheritedAuthority.retainedMembers.length} unchanged members inherited from GOOD version ${inheritedAuthority.versionId}. Inherited members retain their prior provenance; no fresh HTTP retrieval is asserted for them.`));
   } else {
     checks.push(candidate.retrieval.derived
       ? result("SOURCE_AUTHENTICITY", "PASS", "DERIVED_INPUTS_AND_RAW_PROVENANCE_VALID", `${authority.contract.publisher}; derived from ${candidate.retrieval.derived.inputs.length} named input(s); raw ${candidate.retrieval.rawHash}.`)
@@ -770,7 +782,11 @@ export function validateRoutineCandidate(
       "DERIVED_CIVIC_RECORD_KEYS_DUPLICATED",
       `${duplicateDerivedCivicRecordKeys} exact Reader-projection member key(s) are duplicated; no supplied member list may conceal them.`,
     ));
-  } else if (!civicMembersMatch) {
+  } else if (candidate.civicRecords !== undefined && (
+    suppliedCivicRecords === null ||
+    canonicalDerivedCivicRecords === null ||
+    suppliedCivicRecords !== canonicalDerivedCivicRecords
+  )) {
     checks.push(result(
       "SCHEMA_PARSE_VALIDITY",
       "FAIL",

@@ -374,9 +374,6 @@ export async function publishSupervisorReaderEdge(store: RoutineDataStore, obser
         meetingBodies = undefined;
         checks = undefined;
       }
-      const ballotNavigation = pointerFamilies["ballot-navigation"] ? readBallotNavigationEdgeStates({ store,
-        pointers: pointerFamilies["ballot-navigation"], manifest: servedManifest, now: observedAt,
-        onFailure: (state, error) => { failed = true; console.error(`READER_EDGE_AUTHORITY_SKIPPED: ${state} ${safeFailure(sanitizedErrorDiagnostic(error))}`); } }) : undefined;
       const edge = await publishReaderEdgeArtifacts(meetingRead?.kind === "PROMOTED" ? meetingRead.value : null,
         meetingRead?.kind === "PROMOTED" ? { sourceThrough: meetingRead.metadata.sourceThrough, retrievedAt: meetingRead.metadata.retrievedAt, promotedThrough: meetingRead.metadata.promotedAt }
           : { sourceThrough: servedMeetings?.sourceThrough ?? null, retrievedAt: prepared?.status === "CURRENT" ? prepared.checkedAt : servedMeetings?.retrievedAt ?? null, promotedThrough: servedMeetings?.promotedThrough ?? null },

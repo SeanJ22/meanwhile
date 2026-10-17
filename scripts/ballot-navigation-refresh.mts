@@ -2,7 +2,10 @@ import { join } from "node:path";
 import { assignment } from "./cli-args.mts";
 import { ballotNavigationScope, ballotNavigationTaskId } from "../lib/civic-data/ballot-navigation-scope.ts";
 import { refreshBallotNavigation } from "../lib/civic-data/ballot-navigation-refresh.ts";
-import { ballotNavigationInputPath, ballotInputHash, type BallotPublicationResult } from "../lib/civic-data/ballot-publication.ts";
+import type { BallotPublicationResult } from "../lib/civic-data/ballot-publication.ts";
+import { ballotInputHash, ballotInputStamp } from "../lib/civic-data/ballot-input.ts";
+import { BALLOT_NAVIGATION_INPUT_DIRECTORY } from "../lib/civic-data/ballot-navigation-input.ts";
+import { requireBallotState } from "../lib/civic-data/state-scopes.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -24,7 +27,9 @@ const connection = controlPlaneUrlFromEnv();
 if (!connection) throw new Error("NAVIGATION_CONTROL_PLANE_UNAVAILABLE");
 const repos = await createPgRepositories(connection, now, { skipBootstrap: true });
 const store = new PostgresRoutineDataStore();
-const inputHash = await ballotInputHash(directory ? join(directory, `${state.toLowerCase()}.json`) : ballotNavigationInputPath(state));
+const inputDirectory = directory ?? BALLOT_NAVIGATION_INPUT_DIRECTORY;
+const inputStamp = await ballotInputStamp(inputDirectory, requireBallotState(state));
+const inputHash = inputStamp.startsWith("content:") ? inputStamp.slice(8) : await ballotInputHash(inputDirectory, requireBallotState(state));
 let result: BallotPublicationResult;
 try {
   const report = await refreshBallotNavigation({ store, repos,
@@ -35,8 +40,8 @@ try {
     versionId: report.promotedVersionId, candidateId: report.candidateId,
     gaps: report.gaps.map(gap => ({ key: `${gap.divisionId}:${gap.kind}`, detail: gap.detail })) }, now);
   if (!receipted) throw new Error("NAVIGATION_PUBLICATION_RECEIPT_MISSING");
-  result = { kind: "BALLOT_PUBLICATION", inputHash, at: now, status: "PUBLISHED", versionId: report.promotedVersionId,
-    merged: [], skipped: [], reason: null };
+  result = { kind: "BALLOT_PUBLICATION", family: "ballot-navigation", state: requireBallotState(state), inputHash, inputStamp, at: now,
+    status: "PUBLISHED", versionId: report.promotedVersionId, merged: [], skipped: [], reason: null };
 } catch (error) {
   const reason = sanitizedErrorDiagnostic(error);
   const contract = requiredManualProductionContract("ballot-navigation");
@@ -45,8 +50,8 @@ try {
     parserVersion: contract.parserNormalizerVersion });
   const outcome = await processRegisteredManualCandidate(store, "ballot-navigation", candidate, now);
   printSourceRunnerReceipt(taskId, candidate, outcome);
-  result = { kind: "BALLOT_PUBLICATION", inputHash, at: now, status: "HELD", versionId: null,
-    merged: [], skipped: [], reason };
+  result = { kind: "BALLOT_PUBLICATION", family: "ballot-navigation", state: requireBallotState(state), inputHash, inputStamp, at: now,
+    status: "HELD", versionId: null, merged: [], skipped: [], reason };
   process.exitCode = 2;
 }
 console.log("BALLOT_PUBLICATION_RESULT=" + JSON.stringify(result));

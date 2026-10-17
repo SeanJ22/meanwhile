@@ -31,7 +31,6 @@ import { requiredManualProductionContract } from "./manual-contracts.ts";
 import {
   directPositiveSourceUrls,
   manualRecordSourceUrls,
-  NO_SUPPORTED_CURRENT_MEMBER,
   reconcileSourceScopedMembers,
   type SourceScopedHeldFact,
   type SourceScopedMember,
@@ -798,7 +797,7 @@ function officeholderStatementProjection(
   };
 }
 
-export function curatedReaderProjection(
+function curatedReaderProjection(
   contractId: "official-filings" | "ballot-navigation" | "stances" | "campaign-sites" | "member-offices" | "venue-resolutions" | "everyday-routing" | "meeting-body-crosswalk" | "special-district-boundaries" | "public-records" | "government-budgets" | "campaign-finance",
   payload: ManualProjectionPayload,
   sourceReceipt: ManualSourceSetReceipt,
@@ -971,7 +970,7 @@ export function manualProjectionCandidate(
     ...receiptCoverageProblems(priorAuthority ? civicRecords.filter(member => !retained.has(member.key)).map(member => member.record) : built.payload, promotionReceipt),
     ...built.violations,
     ...(isolated && isolated.supportedCurrentSources > 0 && isolated.acceptedCurrentMembers === 0
-      ? [NO_SUPPORTED_CURRENT_MEMBER]
+      ? ["The current review supplied no valid member-scoped fact; retained LKG alone cannot turn a failed package into a successful refresh."]
       : []),
   ];
   const droppedRecords = isolated?.rejectedCurrentMembers ?? 0;

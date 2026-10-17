@@ -29,6 +29,10 @@ import {
 type CandidateContract = RoutineSourceContract | ManualProductionSourceContract;
 const SHA256 = /^[a-f0-9]{64}$/;
 
+function sha256(value: string): string {
+  return createHash("sha256").update(value).digest("hex");
+}
+
 function pass(verifierId: string, detail: string): RoutineReaderVerification {
   return { verifierId, status: "PASS", detail };
 }

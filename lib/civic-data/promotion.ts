@@ -1,8 +1,10 @@
 import { rememberStatePublicationHashes, withStateRecordHashes } from "./state-publication.ts";
 import { processRoutineCandidate } from "./candidate-lifecycle.ts";
 import type { CandidateVersionRecord, PromotedProjection, RoutineCandidate } from "./types.ts";
-import { PostgresRoutineDataStore, type RoutineDataStore } from "./store.ts";
-import { canonicalCivicDataJson } from "./changes.ts";
+import { PostgresRoutineDataStore, routineEventObservedAt, type RoutineDataStore } from "./store.ts";
+import { canonicalCivicDataJson, heldCivicRecords } from "./changes.ts";
+import { validateRoutineCandidate } from "./validate.ts";
+import type { NavigationComparison } from "./navigation-successor.ts";
 import { requiredRoutineContract, type RoutineSourceContract } from "./contracts.ts";
 import { meetingHistoryContract, requiredMeetingPartitionContract } from "./meeting-partitions.ts";
 import { movedToHistoryAuthorityIssue } from "./meeting-history.ts";
@@ -22,7 +24,6 @@ import { verifySourceScopedCandidateProjection } from "./candidate-integrity.ts"
 import { officialStateRollIdentityAuthorityIssue } from "../state-rollcalls/promotion-authority.ts";
 import { derivedInputAuthorityIssue } from "./derived-door.ts";
 import { isScopedManualContractScope, manualPayloadScope } from "./scoped-manual-contracts.ts";
-import { manualPriorAuthorityOf } from "./manual-prior-authority.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import { immutableStateCandidate, statePublicationScope, withStatePublicationRead } from "./state-publication.ts";
 
@@ -354,7 +355,7 @@ export function manualCandidateContractIssue(contractId: ManualProductionContrac
   if (candidate.sourceId !== contract.sourceId) return `source ${candidate.sourceId} does not equal ${contract.sourceId}`;
   if (candidate.recordClass !== contract.recordClass) return `record class ${candidate.recordClass} does not equal ${contract.recordClass}`;
   if (candidate.scope !== contract.scope && !isScopedManualContractScope(contractId, candidate.scope)) return `scope ${candidate.scope} does not equal ${contract.scope}`;
-  if (candidate.retrieval.succeeded && isScopedManualContractScope(contractId, candidate.scope)) {
+  if (isScopedManualContractScope(contractId, candidate.scope)) {
     try {
       if (manualPayloadScope(contractId, contract.scope, candidate.readModel) !== candidate.scope) return "scoped candidate records do not belong to its exact jurisdiction";
     } catch { return "scoped candidate records have no exact jurisdiction"; }
@@ -417,6 +418,43 @@ export async function processRegisteredManualCandidate(
     await processRoutineCandidate(store, boundedCandidate, now, expectedBaseVersionId, REGISTERED_PRODUCTION_DOOR, sourceProjectionVerification, options),
     now,
   );
+}
+
+export async function processNavigationCandidate(
+  store: RoutineDataStore,
+  candidate: RoutineCandidate,
+  comparison: NavigationComparison,
+  now: string,
+): Promise<{ readonly candidateId: string; readonly promotedVersionId: string }> {
+  if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract("ballot-navigation", "manual");
+  const bounded = durableCandidateSnapshot(candidate);
+  const contract = requiredManualProductionContract("ballot-navigation");
+  const issue = manualCandidateContractIssue("ballot-navigation", bounded);
+  if (issue !== null) throw new Error(`MANUAL_CANDIDATE_CONTRACT_MISMATCH:ballot-navigation:${issue}`);
+  const verification = await verifySourceScopedCandidateProjection(contract, bounded, sourceProjectionObservedAt(store, now), null);
+  const base = comparison.base;
+  const at = await routineEventObservedAt(store, bounded.recordClass, bounded.scope, now);
+  if (comparison.kind === "MATCHED_REVIEW" && base && store.confirmUnchanged) {
+    const checked = { ...bounded, changeSet: { ...comparison.changes, held: heldCivicRecords(bounded) } };
+    const validated = validateRoutineCandidate(checked, base.record, at, [{ consumer: `${verification.verifierId} (source-scoped pre-promotion)`,
+      passed: verification.status === "PASS", detail: verification.detail }]);
+    if (validated.receipt.decision !== "GOOD") {
+      const failed = validated.receipt.checks.find(check => check.verdict !== "PASS");
+      throw new Error(`ELECTION_FIELD_PUBLICATION_HELD:${failed?.detail ?? "Candidate did not satisfy the GOOD contract."}`);
+    }
+    const confirmed = await store.confirmUnchanged({ sourceId: bounded.sourceId, recordClass: bounded.recordClass, scope: bounded.scope,
+      parserVersion: bounded.normalization.parserVersion, pointerVersionId: base.pointer.versionId,
+      readModelHash: base.record.candidate.normalization.normalizedHash!, basis: "CHANGE_SET_UNCHANGED",
+      retrieval: { requestedUrl: bounded.retrieval.requestedUrl, finalUrl: bounded.retrieval.finalUrl,
+        httpStatus: bounded.retrieval.httpStatus, rawHash: bounded.retrieval.rawHash!, retrievedAt: bounded.retrieval.retrievedAt } }, at);
+    if (confirmed.kind !== "CONFIRMED") throw new Error(`ELECTION_FIELD_CONFIRMATION_REFUSED:${confirmed.kind}:${confirmed.detail}`);
+    return { candidateId: confirmed.versionId, promotedVersionId: confirmed.versionId };
+  }
+  const outcome = await appendTypedReaderProjectionReadback(store, contract,
+    await processRoutineCandidate(store, bounded, now, base?.pointer.versionId ?? null, REGISTERED_PRODUCTION_DOOR,
+      verification, { confirmUnchanged: false }, comparison), now);
+  if (!outcome.promoted) throw new Error(`ELECTION_FIELD_PUBLICATION_HELD:${outcome.candidate.failureDetail ?? outcome.candidate.state}`);
+  return { candidateId: outcome.candidate.candidate.id, promotedVersionId: outcome.promoted.versionId };
 }
 
 export async function processRegisteredStateRetirementCandidate(

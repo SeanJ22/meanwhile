@@ -9,8 +9,8 @@ import { section3Record } from "../control-plane/promotion/section3.ts";
 import { readPublicationSourcePolicy } from "../control-plane/promotion/source-settings.ts";
 import { extractEmbeddedHtml, extractTextLayer } from "../extract/text-layer.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
-import { ballotNavigationInputPath } from "./ballot-publication.ts";
 import { ballotNavigationScope, ballotNavigationDivision } from "./ballot-navigation-scope.ts";
+import { BALLOT_NAVIGATION_INPUT_DIRECTORY } from "./ballot-navigation-input.ts";
 import { publishElectionFields } from "./election-field-publication.ts";
 import { electionFieldState, type ElectionFieldInput } from "./election-fields.ts";
 import { isOfficialSource, type GovernmentWebsiteDelegation, type OfficialLinkingPage } from "./source-authority.ts";
@@ -195,7 +195,7 @@ export async function refreshBallotNavigation(input: {
 }) {
   ballotNavigationScope(input.state);
   const config = input.config ?? (!input.report && !input.directory
-    ? JSON.parse(await readFile(ballotNavigationInputPath(input.state), "utf8")) as BallotNavigationSourceConfig : null);
+    ? JSON.parse(await readFile(join(BALLOT_NAVIGATION_INPUT_DIRECTORY, `${input.state.toLowerCase()}.json`), "utf8")) as BallotNavigationSourceConfig : null);
   if (config && config.state !== input.state) throw new Error("NAVIGATION_INPUT_CROSSES_STATE");
   const reviewed = config ? await publishReviewedInput(config, input.store, input.now) : null;
   const report = input.report ?? (input.directory ? await readBallotNavigationReport(input.directory, input.state) : configuredReport(config!));

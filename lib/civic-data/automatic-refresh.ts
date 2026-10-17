@@ -26,7 +26,7 @@ export function votingDoorRefreshCadence(electionDate: string): RoutineCadencePo
 
 export const AUTOMATIC_REFRESH_CONTRACT_IDS = [
   ...REGISTRY_STATES.flatMap(state => [stateBallotContractId("voting-sites", state), stateBallotContractId("ballot-contests", state)]),
-  "az-sos-campaign-finance", "nh-sos-campaign-finance",
+  "ballot-navigation", "az-sos-campaign-finance", "nh-sos-campaign-finance",
   "nj-elec-campaign-finance", "az-pima-local-finance",
   "member-offices", "prl", "prl-archives",
   "congress-bulk-roster", "congress-rollcalls", "federal-key-votes",
@@ -42,7 +42,7 @@ export const AUTOMATIC_REFRESH_TASKS: readonly RoutineSourceTask[] = AUTOMATIC_R
     requestedUrl: "", authorityMode: "REGISTERED_SOURCE_ROUTES", parserVersion: contract.parserNormalizerVersion,
     command: contract.command, cadenceMs: everyMs, retryMs: 60 * 60_000,
     contract: { readerProjection: contract.readerProjection,
-      cadence: stateContract?.family === "voting-sites" ? votingDoorRefreshCadence(election.electionDate)
+      cadence: stateContract?.family === "voting-sites" || id === "ballot-navigation" ? votingDoorRefreshCadence(election.electionDate)
         : { defaultEveryMs: everyMs, description: "daily official-source refresh on the continuous runner" } },
   };
   return id === "ballot-navigation" ? BALLOT_NAVIGATION_STATES.map(state => ({ ...task,

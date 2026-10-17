@@ -23,13 +23,13 @@ const CACHED_PART_BYTES = 64 * 1024 * 1024;
 
 export class CivicPayloadParts {
   private readonly io: CivicPayloadPartIO;
-  private readonly cached = new Map<string, { readonly json: string; readonly size: number }>();
+  private readonly cached = new Map<string, { readonly payload: unknown; readonly size: number }>();
   private cachedBytes = 0;
   constructor(io: CivicPayloadPartIO) { this.io = io; }
 
   async node(value: unknown): Promise<unknown> {
-    if (!ref(value)) return value;
-    const part = (await this.read([value[REF]]))[0];
+    if (!isCivicPayloadPart(value)) return value;
+    const part = (await this.read([value.$civicPayloadPart]))[0];
     if (!part) throw new Error("CIVIC_PAYLOAD_PART_MISSING");
     return part.payload;
   }
@@ -67,7 +67,7 @@ export class CivicPayloadParts {
   private remember(part: Part): void {
     const size = civicPayloadBytes(part.payload);
     if (size > CACHED_PART_BYTES / 8 || this.cached.has(part.hash)) return;
-    this.cached.set(part.hash, { json, size });
+    this.cached.set(part.hash, { payload: part.payload, size });
     this.cachedBytes += size;
     for (const [hash, held] of this.cached) {
       if (this.cachedBytes <= CACHED_PART_BYTES) break;
@@ -80,7 +80,7 @@ export class CivicPayloadParts {
       const held = this.cached.get(hash);
       if (!held) return [];
       this.cached.delete(hash); this.cached.set(hash, held);
-      return [{ hash, payload: JSON.parse(held.json) }];
+      return [{ hash, payload: held.payload }];
     });
     const missing = hashes.filter(hash => !this.cached.has(hash));
     const read = missing.length ? await this.io.read(missing) : [];
@@ -188,7 +188,7 @@ export class CivicPayloadParts {
         return decoded.get(value.$civicPayloadPart);
       }
       if (Array.isArray(value)) return value.map(build);
-      if (value && typeof value === "object") return Object.fromEntries(Object.entries(value as Record<string, unknown>).map(([key, child]) => [key, build(child)]));
+      if (value && typeof value === "object") return Object.fromEntries(Object.entries(value).map(([key, child]) => [key, build(child)]));
       return value;
     };
     const assemble = (payload: unknown): unknown => {

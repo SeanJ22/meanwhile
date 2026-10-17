@@ -1,7 +1,8 @@
 import { statePublicationPriorOf } from "./state-publication.ts";
 import { canonicalCivicDataHash } from "./canonical-hash.ts";
 import { civicRecordsFor } from "./changes.ts";
-import { directPositiveSourceUrls } from "./manual-source-isolation.ts";
+import { manualRecordSourceUrls } from "./manual-source-isolation.ts";
+import { publicationBaseHash } from "./navigation-publication-base.ts";
 import { authorityForManualReceipt } from "./source-authority.ts";
 import { trustedLkgImportEvidenceIssue } from "./trusted-lkg-import.ts";
 import { parseValidationReceipt } from "./receipt.ts";
@@ -25,32 +26,13 @@ export interface ManualPriorAuthority {
   readonly versionId: string;
   readonly readModelSha256: string;
   readonly retainedMembers: readonly { readonly key: string; readonly sha256: string }[];
-  readonly additionalProjections?: readonly ManualScopeTransferAuthority[];
 }
-export type ManualScopeTransferAuthority = Omit<ManualPriorAuthority, "additionalProjections"> & { readonly scope: string };
 export type ManualSuccessorCandidate = RoutineCandidate & { readonly manualPriorAuthority?: ManualPriorAuthority };
 export const manualPriorAuthorityOf = (candidate: RoutineCandidate): ManualPriorAuthority | undefined =>
   (candidate as ManualSuccessorCandidate).manualPriorAuthority;
 
-export function manualScopeTransferIssue(candidate: RoutineCandidate, source: RoutineCandidate): string | null {
-  const target = /^US:(.+)$/.exec(candidate.scope);
-  const origin = /^(US(?:-[A-Z]{2}(?:\+US-[A-Z]{2})*)?):(.+)$/.exec(source.scope);
-  const targetKind = (candidate.readModel as { kind?: unknown } | null)?.kind;
-  const sourceKind = (source.readModel as { kind?: unknown } | null)?.kind;
-  if (candidate.recordClass !== "CURATED_READER_RECORD" || source.recordClass !== candidate.recordClass ||
-      source.sourceId !== candidate.sourceId || !target || !origin || origin[2] !== target[1] ||
-      candidate.scope === source.scope || typeof targetKind !== "string" || targetKind !== sourceKind) {
-    return "A scope transfer must preserve the same curated family and source into its national scope.";
-  }
-  const jurisdictions = new Set(origin[1].split("+"));
-  if (source.identities.some(identity => !jurisdictions.has("US") && !jurisdictions.has(identity.jurisdiction))) {
-    return "Transferred identities do not belong to their source scope.";
-  }
-  return null;
-}
-
-export function manualPriorAuthorityIssue(candidate: RoutineCandidate, base: CandidateVersionRecord | null,
-  additionalBases: readonly CandidateVersionRecord[] = []): string | null {
+/** Current source reviews authorize new facts; the exact GOOD base authorizes unchanged inherited facts. */
+export function manualPriorAuthorityIssue(candidate: RoutineCandidate, base: CandidateVersionRecord | null): string | null {
   const prior = manualPriorAuthorityOf(candidate);
   if (!prior) return null;
   if (prior.kind !== "VALIDATED_PRIOR_PROJECTION" || !INHERITING_CLASSES.has(candidate.recordClass) ||
@@ -65,7 +47,7 @@ export function manualPriorAuthorityIssue(candidate: RoutineCandidate, base: Can
       base.promotedVersion !== prior.versionId || base.lastKnownGoodVersion !== prior.versionId ||
       base.candidate.id !== prior.versionId || base.candidate.sourceId !== candidate.sourceId ||
       base.candidate.recordClass !== candidate.recordClass || base.candidate.scope !== candidate.scope ||
-      (indexedPrior?.payloadHash ?? hash(base.candidate.readModel)) !== prior.readModelSha256) {
+      (indexedPrior?.payloadHash ?? publicationBaseHash(base)) !== prior.readModelSha256) {
     return "The inherited authority does not identify the exact GOOD current base and its payload.";
   }
   if (indexedPrior) {
@@ -91,10 +73,10 @@ export function manualPriorAuthorityIssue(candidate: RoutineCandidate, base: Can
         (indexedPrior ? before.get(member.key) : hash(before.get(member.key))) !== member.sha256 || hash(after.get(member.key)) !== member.sha256) {
       return "An inherited member was changed, duplicated, invented, or omitted; prior authority cannot authorize it.";
     }
+    retained.add(member.key);
   }
-  if (retained.size === 0) return "Inherited authority names no unchanged facts.";
   const sourceUrls = new Set(candidate.retrieval.manualSourceReceipt.sources
-    .filter(source => source.reviewOutcome !== "BLOCKED").flatMap(source => [source.requestedUrl, source.finalUrl]));
+    .filter((source) => source.reviewOutcome !== "BLOCKED").flatMap((source) => [source.requestedUrl, source.finalUrl]));
   for (const [key, record] of after) {
     if (retained.has(key)) continue;
     for (const url of assertedSources(candidate.recordClass, key, record)) {

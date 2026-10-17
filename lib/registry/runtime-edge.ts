@@ -66,7 +66,6 @@ export interface ReaderAuthorityEdgeBundle {
   readonly registrations?: RegistrationsEdge;
 
   readonly promoted?: ReadonlyMap<string, PromotedEdgeEntry>;
-  readonly ballotNavigation?: { readonly load: (state: string) => Promise<PromotedEdgeEntry | null> };
   /** The proven-pointer families whose artifact this bundle loaded (a trace reports where each source came from). */
   readonly promotedFamilies?: ReadonlySet<string>;
 

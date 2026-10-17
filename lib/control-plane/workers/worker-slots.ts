@@ -36,7 +36,8 @@ const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   "derive-candidate-campaign-sites.mts": STATE_PUBLICATION_PEAK_MIB,
   "promote-registry-runtime.mts": STATE_PUBLICATION_PEAK_MIB,
   "publish-state-authority.mts": STATE_PUBLICATION_PEAK_MIB,
-  "publish-reader-edge-piece.mts": 512,
+  // The largest production piece, New Hampshire's 421 roll calls, peaked at 758 MiB.
+  "publish-reader-edge-piece.mts": 768,
   "retire-state-authorities.mts": STATE_PUBLICATION_PEAK_MIB,
 };
 export const WORKER_MEMORY_HEADROOM_MIB = 768;

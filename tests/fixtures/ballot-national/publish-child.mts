@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { runBallotPublication } from "../../../scripts/assemble-ballot-package.mts";
 import { MemoryRoutineDataStore, assertRoutineDataStoreMutationAuthority } from "../../../lib/civic-data/store.ts";
 import { type GenericBallotProjection } from "../../../lib/ballot/generic-projection.ts";
-import { genericSourcesForDivisions } from "../../../lib/ballot/reader-sources.ts";
+import { readerBallotSourcesForDivisions } from "../../../lib/ballot/reader-sources.ts";
 import { AUTOMATIC_REFRESH_TASKS } from "../../../lib/civic-data/automatic-refresh.ts";
 import { durableRoutineRunnerReceiptIssue } from "../../../lib/civic-data/runner-receipt.ts";
 
@@ -22,7 +22,7 @@ if (result.receipt) {
   const read = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", "TX"), { store, now, bypassCache: true });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind === "PROMOTED") {
-    assert.equal(genericSourcesForDivisions(read.value, ["ocd-division/country:us/state:tx"]).length, 1);
+    assert.equal((await readerBallotSourcesForDivisions(["ocd-division/country:us/state:tx"], { store, now })).length, 1);
     const texas = read.value.ballots["TX:fixture-2026-general"];
     assert.deepEqual(texas.contests.map(row => [row.id, row.candidateListComplete]), [["fixture-tx-senate", true]]);
     assert.deepEqual(texas.candidacies.map(row => [row.id, row.contestId, row.givenName, row.familyName]),

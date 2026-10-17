@@ -10,7 +10,7 @@ import { votingRowsToSites } from "../lib/ballot/voting-source-readers.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { fairAutonomousWorkIds } from "../lib/control-plane/workers/coordinator.ts";
 import type { VotingDoorScope, VotingSourceDoor, VotingSourceRead } from "../lib/ballot/voting-source-types.ts";
-import { BALLOT_STATES } from "../lib/civic-data/state-scopes.ts";
+import { REGISTRY_STATES } from "../lib/civic-data/state-scopes.ts";
 
 const ELECTION = "2026-11-03";
 const NOW = "2026-10-13T12:00:00.000Z";
@@ -31,9 +31,9 @@ function capturedRead(): VotingSourceRead {
 
 test("automatic voting refresh changes from daily to hourly without a Send or restart and covers Election Day in all US timezones", () => {
   const tasks = AUTOMATIC_REFRESH_TASKS.filter(row => row.id.startsWith("voting-sites:"));
-  assert.equal(tasks.length, BALLOT_STATES.length);
-  assert.equal(new Set(tasks.map(row => row.acquisitionFailureDomain)).size, BALLOT_STATES.length);
-  for (const state of BALLOT_STATES) {
+  assert.equal(tasks.length, REGISTRY_STATES.length);
+  assert.equal(new Set(tasks.map(row => row.acquisitionFailureDomain)).size, REGISTRY_STATES.length);
+  for (const state of REGISTRY_STATES) {
     const row = tasks.find(task => task.id === `voting-sites:${state}`)!;
     assert.equal(row.scope, `US-${state}:voting-sites`);
     assert.equal(cadenceMsAt(row.contract, Date.parse("2026-10-27T00:00:00.000Z")), HOUR);

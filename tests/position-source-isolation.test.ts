@@ -4,7 +4,7 @@ import { test } from "node:test";
 import {
   settlePositionHoldingAnswer,
   type PositionHoldingReaders,
-} from "../app/api/positions/[subject]/[topic]/route.ts";
+} from "../lib/candidates/position-holding.ts";
 import type { CandidateCorpus } from "../lib/candidates/corpus.ts";
 import type { StatementCorpus } from "../lib/corpus/types.ts";
 import { ReaderPersonIdentityError } from "../lib/identity/reader-person.ts";

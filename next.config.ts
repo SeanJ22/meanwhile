@@ -48,6 +48,7 @@ const nextConfig: NextConfig = {
       "./data/derived/place-reference/**",
     ],
     "/api/{address/resolve,ballot/scope,demand-signal,meetings,reactions,representation/**,speak,votes,voting-sites}": staticGeographyTrace,
+    "/api/{ask/grounded,warm}": ["./public/geo/cd119.geojson", "./public/geo/county-us.geojson"],
     "/{ballot,about-area}": staticGeographyTrace,
     "/api/meetings": [
       ...staticGeographyTrace,

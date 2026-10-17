@@ -1,10 +1,9 @@
 
-
 import {
   lineupBridgeCovers,
   lineupRowForCard,
   azLineupReconciliation,
-  azIdentityRegistry,
+  azContestIdentity,
 } from "../identity/az-2026.ts";
 import type { LineupReconciliationRow } from "../identity/types.ts";
 import { stateMoneyForTarget } from "./state-snapshot.ts";
@@ -20,7 +19,6 @@ export type MoneyResolution =
   | "RECONCILED_NOMINEE"
   /** A certified-lineup nominee the bridge could not resolve. Renders OURS gap. */
   | "UNRECONCILED_NOMINEE"
-
   | "RECONCILED_NO_CORPUS_RECORD";
 
 export interface CardMoney {
@@ -46,12 +44,10 @@ function financeAuthority(): FinanceAuthority {
     bridge?.financeAuthority ?? {
       agency: AZ_AGENCY_FALLBACK,
       filingsUrl: "https://seethemoney.az.gov/",
-
       snapshotCollectedAt: bridge?.generatedAt ?? "",
     }
   );
 }
-
 
 export function unresolvedNomineeGapRecord(
   row: LineupReconciliationRow,
@@ -105,7 +101,6 @@ export function unresolvedNomineeGapRecord(
   };
 }
 
-
 export function stateMoneyForCard(cardKey: string, contestId: string): CardMoney {
   // The Arizona bridge has no authority over another state's candidacy, so an
   // Arizona outage cannot erase another state's finance answer.
@@ -129,9 +124,8 @@ export function stateMoneyForCard(cardKey: string, contestId: string): CardMoney
     };
   }
 
-  const registry = azIdentityRegistry();
-  if (!registry) throw new Error("Canonical Arizona contest identity holding unavailable");
-  const contest = registry.contests.find(c => c.canonicalContestIds.includes(contestId));
+  const contest = azContestIdentity(contestId);
+  if (!contest) throw new Error("Canonical Arizona contest identity holding unavailable");
   if (contest?.level === "FEDERAL") return {
     records: [], resolution: "FEDERAL_NOT_APPLICABLE",
     resolvedTargetKey: lineupRowForCard(cardKey)?.canonicalCandidacyId ?? null,
@@ -139,7 +133,6 @@ export function stateMoneyForCard(cardKey: string, contestId: string): CardMoney
 
   const row = lineupRowForCard(cardKey);
   if (!row) {
-
     return {
       records: stateMoneyForTarget(cardKey),
       resolution: "DIRECT_CANDIDACY_KEY",
@@ -169,7 +162,6 @@ export function stateMoneyForCard(cardKey: string, contestId: string): CardMoney
       resolvedTargetKey: row.canonicalCandidacyId,
     };
   }
-
 
   return {
     records: [

@@ -1,4 +1,4 @@
-import { BALLOT_STATES, parseStateBallotContractId, requireBallotState, stateBallotContractId } from "./state-scopes.ts";
+import { REGISTRY_STATES, parseStateBallotContractId, requireBallotState, stateBallotContractId } from "./state-scopes.ts";
 import { CANDIDATE_PROFILE_LEAD } from "../facts/finding-slots.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import type { RoutineSourceTask } from "./runner.ts";
@@ -50,7 +50,7 @@ const findingStates = `WITH waiting AS MATERIALIZED (
 
 export async function readCandidateProfilePublicationTasks(query: Query, now: string): Promise<{ readonly tasks: readonly RoutineSourceTask[]; readonly unscoped: number }> {
   const rows = await query(`${findingStates} SELECT state,count(DISTINCT id)::int findings,min(requested_at) requested_at
-    FROM bound GROUP BY state ORDER BY state`, [CANDIDATE_PROFILE_LEAD, BALLOT_STATES]) as { state: string | null; findings: number; requested_at: string | null }[];
+    FROM bound GROUP BY state ORDER BY state`, [CANDIDATE_PROFILE_LEAD, REGISTRY_STATES]) as { state: string | null; findings: number; requested_at: string | null }[];
   let unscoped = 0;
   const tasks = rows.flatMap(row => {
     if (row.state === null) { unscoped += Number(row.findings); return []; }
@@ -68,5 +68,5 @@ export async function readCandidateProfilePublicationTasks(query: Query, now: st
 
 export async function readCandidateProfileFindingBatch(state: string, query: Query): Promise<readonly { readonly id: string; readonly subject: string }[]> {
   return await query(`${findingStates} SELECT DISTINCT id,subject FROM bound WHERE state=$3 ORDER BY id LIMIT 500`,
-    [CANDIDATE_PROFILE_LEAD, BALLOT_STATES, requireBallotState(state)]) as { id: string; subject: string }[];
+    [CANDIDATE_PROFILE_LEAD, REGISTRY_STATES, requireBallotState(state)]) as { id: string; subject: string }[];
 }

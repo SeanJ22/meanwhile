@@ -1,3 +1,4 @@
+import { requireRegistryState, stateRegistryRuntimeContractId } from "./state-scopes.ts";
 import { createHash } from "node:crypto";
 import type { BallotSet } from "../ballot/types.ts";
 import { officeIdentity } from "../officials/office-identity.ts";
@@ -25,7 +26,11 @@ export async function publishOfficialBallotCandidacies(input: {
   readonly now: string;
   readonly statePeople?: ReadonlyMap<StatePeopleJurisdiction, OfficeholderSet>;
 }) {
-  const prior = await readRegistryRuntimePrior(input.store, input.now);
+  const states = [...new Set(input.ballots.map(ballot => requireRegistryState(ballot.election.state)))];
+  if (!states.length) return null;
+  if (states.length !== 1) throw new Error("OFFICIAL_CANDIDACY_PUBLICATION_REQUIRES_ONE_STATE");
+  const state = states[0];
+  let prior = await readRegistryRuntimePrior(input.store, input.now, state);
   if (!prior) return null;
   const scopes = [...new Set(input.ballots.flatMap(ballot => ballot.contests.map(contest => statePeopleScopeForDivision(contest.ocdId))
     .filter((scope): scope is StatePeopleJurisdiction => scope !== null)))];
@@ -51,13 +56,15 @@ export async function publishOfficialBallotCandidacies(input: {
   const changed = bridge.rows.filter(row => old.get(row.holder.id) !== canonicalCivicDataJson(row));
   if (!changed.length) return null;
   const digest = createHash("sha256").update(canonicalCivicDataJson(changed)).digest("hex").slice(0, 20);
-  const candidate = registryRuntimeCandidate({ contractId: "registry-runtime-bindings", scope: "MEMBERS",
+  const candidate = registryRuntimeCandidate({ contractId: stateRegistryRuntimeContractId(state), scope: "MEMBERS",
     version: registryEdition(`ballot-candidacies:${digest}`), sourceThrough: input.now, sourceReceipt: input.sourceReceipt,
     payload: { ...prior.payload, registry: { ...prior.payload.registry, generatedAt: input.now, divisions: [], bodies: [] },
       statewideExecutives: [], officialPhotos: { photos: [] }, rosterPhotos: {},
       officialCandidacies: { ...bridge, rows: changed } } }, { prior });
-  const outcome = await processRegisteredManualCandidate(input.store, "registry-runtime-bindings", candidate, input.now, prior.versionId);
-  if (!outcome.promoted || outcome.readerReadback?.status !== "PASS") {
+  const priorVersionId = prior.versionId;
+  prior = null;
+  const outcome = await processRegisteredManualCandidate(input.store, stateRegistryRuntimeContractId(state), candidate, input.now, priorVersionId);
+  if (!outcome.promoted || !outcome.confirmed && outcome.readerReadback?.status !== "PASS") {
     throw new Error(`OFFICIAL_CANDIDACY_PUBLICATION_HELD:${outcome.candidate.failureDetail ?? outcome.readerReadback?.detail ?? outcome.candidate.state}`);
   }
   return outcome;

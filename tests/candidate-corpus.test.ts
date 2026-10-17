@@ -15,7 +15,25 @@ import {
   positionsHeadline,
   positionsSummary,
 } from "../lib/candidates/positions.ts";
-import { installCandidateCorpus, installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+import type { CandidateCorpus } from "../lib/candidates/corpus.ts";
+import { syntheticCandidateCorpus } from "./helpers/promoted-fixtures.ts";
+import { installManualValue } from "./helpers/promoted-fixtures.ts";
+import { stateBallotContractId } from "../lib/civic-data/state-scopes.ts";
+import type { CivicDataReadResult } from "../lib/civic-data/read-model.ts";
+import { readStateAuthorityProjection } from "../lib/civic-data/state-reader.ts";
+
+function served<T>(read: CivicDataReadResult<T>, what: string): T {
+  if (read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP") throw new Error(`${what} fixture did not install: ${read.kind} ${"detail" in read ? read.detail : ""}`);
+  return read.value as T;
+}
+
+async function installCandidateCorpus(value: CandidateCorpus = syntheticCandidateCorpus(), state = "AZ"): Promise<CandidateCorpus> {
+  installManualValue(stateBallotContractId("candidate-corpus", state), value, `test:candidate-corpus:${state}`);
+  served((await readStateAuthorityProjection("candidate-publications", state)).result, "Candidate publications");
+  return value;
+}
+
 
 await installRegistryAuthority();
 await installCandidateCorpus();
@@ -145,20 +163,20 @@ test("no composite score exists — not a number, not an order, not a comparison
   ]) {
     assert.doesNotMatch(source, forbidden, `a forbidden key: ${forbidden}`);
   }
-  const positions = positionsFor("does-not-exist");
+  const positions = positionsFor("AZ", "does-not-exist");
   for (const p of positions) {
     assert.ok(["MATCHED", "SEARCHED_NOTHING_MATCHED", "NOTHING_COLLECTED"].includes(p.answer.kind));
   }
 });
 
 test("equal effort — the same issue list for every candidate, no exceptions", () => {
-  const corpus = getCandidateCorpus();
+  const corpus = getCandidateCorpus("AZ");
   const keys = [...new Set(corpus.documents.map((d) => d.candidateKey))];
   assert.ok(keys.length > 20, `only ${keys.length} candidates in the corpus`);
 
   const expected = DEFAULT_STANCE_TOPICS.length;
   for (const key of keys) {
-    const positions = positionsFor(key);
+    const positions = positionsFor("AZ", key);
     assert.equal(positions.length, expected, `${key} was searched for ${positions.length}`);
     assert.deepEqual(
       positions.map((p) => p.issue.id),
@@ -166,17 +184,17 @@ test("equal effort — the same issue list for every candidate, no exceptions", 
       `${key} was searched in a different order`,
     );
   }
-  const stranger = positionsFor("nobody-at-all");
+  const stranger = positionsFor("AZ", "nobody-at-all");
   assert.equal(stranger.length, expected);
   assert.ok(positionsSummary(stranger).nothingCollected);
   assert.equal(positionsHeadline(stranger), null);
 });
 
 test("the headline is provenance and carries no count at all", () => {
-  const corpus = getCandidateCorpus();
+  const corpus = getCandidateCorpus("AZ");
   const key = [...new Set(corpus.documents.filter((d) => d.text).map((d) => d.candidateKey))][0];
   assert.ok(key, "no candidate in the corpus has a readable document");
-  const headline = positionsHeadline(positionsFor(key));
+  const headline = positionsHeadline(positionsFor("AZ", key));
   assert.ok(headline, "a candidate with readable documents gets a line");
   assert.ok(!/[0-9]/.test(headline), `the headline carries a digit: ${headline}`);
   assert.match(headline, /own words/i);
@@ -201,12 +219,12 @@ test("the blurb rung reaches every candidate with a usable captured description,
   const { getCandidateCorpus } = await import("../lib/candidates/positions.ts");
 
   const withMeta = new Set(
-    getCandidateCorpus()
+    getCandidateCorpus("AZ")
       .documents.filter((d) => d.metaDescription && !candidateDescriptionQualityIssue(d))
       .map((d) => d.candidateKey),
   );
   for (const key of withMeta) {
-    assert.ok(derivedBlurbFor(key), `${key} has a description we did not use`);
+    assert.ok(derivedBlurbFor("AZ", key), `${key} has a description we did not use`);
   }
   assert.ok(withMeta.size >= 25, `the rung reached only ${withMeta.size} candidates`);
 });
@@ -214,8 +232,8 @@ test("the blurb rung reaches every candidate with a usable captured description,
 test("a derived blurb carries its source class, exactly as a curated one does", async () => {
   const { derivedBlurbFor } = await import("../lib/candidates/blurbs.ts");
   const { getCandidateCorpus } = await import("../lib/candidates/positions.ts");
-  const key = getCandidateCorpus().documents.find((d) => d.metaDescription)!.candidateKey;
-  const blurb = derivedBlurbFor(key)!;
+  const key = getCandidateCorpus("AZ").documents.find((d) => d.metaDescription)!.candidateKey;
+  const blurb = derivedBlurbFor("AZ", key)!;
 
   assert.match(blurb.sourceLabel, /In the (campaign's|office's own) words — .+, read \d{4}-\d{2}-\d{2}/);
   assert.match(blurb.sourceUrl, /^https?:\/\//);

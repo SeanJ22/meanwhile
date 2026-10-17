@@ -4,7 +4,7 @@ import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
-import { readBallotStateFile } from "../lib/ballot/state-file.ts";
+import { readBallotStateFile } from "../lib/civic-data/ballot-input.ts";
 import { readJsonFile } from "../lib/ops/json-file.ts";
 
 test("state JSON streams core and supplemental rows across UTF-8 chunks while retaining only metadata", async () => {

@@ -437,7 +437,7 @@ test("ZIP process reports return after parent registry and election publication,
       active--; published.push(kind);
       return { kind };
     };
-    const reports = await runNationalPlaceWorkerProcesses({ root, zips: ["10001", "10002", "10003"], capacity: () => 2, store,
+    const reports = await runNationalPlaceWorkerProcesses({ root, places: ["10001", "10002", "10003"].map(zip => ({ id: `national-place:${zip}`, zip, state: "NY" })), capacity: () => 2, store,
       orderPending: async ids => [...ids].reverse(),
       slots: workerProcessSlots(() => 2, { availableBytes: () => 1000, headroomBytes: 100, peakBytes: () => 600 }),
       onStarted: pid => {

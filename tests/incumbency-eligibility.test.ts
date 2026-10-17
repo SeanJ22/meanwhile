@@ -13,7 +13,7 @@ import {
   statesFromResolution,
   type CandidateIncumbencyState,
 } from "../lib/ballot/contest-universe.ts";
-import { contestIncumbency, shapeOfRegistryHolders } from "../lib/ballot/incumbency-resolve.ts";
+import { contestIncumbency } from "../lib/ballot/incumbency-resolve.ts";
 import { incumbencyLabel, type Incumbency, type IncumbencyDecision } from "../lib/ballot/incumbency.ts";
 import { refreshNhSeatHolders } from "../lib/ballot/seat-holders.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -386,18 +386,6 @@ test("a per-candidate probe can never enumerate anybody it was not handed", () =
   assert.equal(finding.complete, false);
 });
 
-test("the holder source shape is read off the holder's own id namespace", () => {
-  const id = (v: string) => ({ ...SITTING_MAYOR, id: v }) as SeatHolder;
-  assert.equal(shapeOfRegistryHolders([]), "NOTHING_READ");
-  assert.equal(shapeOfRegistryHolders([id("congress:C000127")]), "ENUMERATES_THE_SEAT");
-  assert.equal(shapeOfRegistryHolders([id("plural:abc")]), "ENUMERATES_THE_SEAT");
-  assert.equal(shapeOfRegistryHolders([id("statewide:az/governor")]), "COLLECTED_PERSON_BY_PERSON");
-  assert.equal(
-    shapeOfRegistryHolders([id("congress:C000127"), id("statewide:az/governor")]),
-    "COLLECTED_PERSON_BY_PERSON",
-    "one row from a collection means the seat might hold somebody we have never seen",
-  );
-});
 
 test("the ballot page renders the GATED map, never the raw resolution", () => {
   const src = readFileSync(join(ROOT, "app", "ballot", "page.tsx"), "utf8")

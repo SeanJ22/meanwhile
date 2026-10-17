@@ -66,10 +66,10 @@ function fixture(t: TestContext) {
   return { directory, artifacts, boundedArtifacts, store, reads, active, observations, slots, put };
 }
 
-test("state dispatch includes every registry territory without inventing territory ballot units", () => {
+test("state dispatch uses the same states and territories for registry and ballot units", () => {
   const units = selectedStateEdgePointers(null);
   assert.deepEqual(units.filter(unit => unit.family === "registry-runtime").map(unit => unit.state), [...REGISTRY_STATES]);
-  assert.equal(units.filter(unit => unit.family === "ballot-contests").length, 51);
+  assert.deepEqual(units.filter(unit => unit.family === "ballot-contests").map(unit => unit.state), [...REGISTRY_STATES]);
   assert.deepEqual(selectedStateEdgePointers([{ recordClass: "REGISTRY_RUNTIME_BINDING", scope: stateRegistryRuntimeScope("PR") }])
     .map(({ state, family, pointers }) => ({ state, family, scope: pointers[0].scope })),
   [{ state: "PR", family: "registry-runtime", scope: "US-PR:reader-registry-runtime" }]);
@@ -117,14 +117,14 @@ test("targeted ballot delivery includes the five other state families without re
   assert.equal(Object.keys((await f.artifacts.readManifest())!.manifest.stateAuthorities!).length, 6);
 });
 
-test("an unchanged sweep of all 51 state ballots launches no child and reads no payload", async t => {
+test("an unchanged sweep of every state and territory ballot launches no child and reads no payload", async t => {
   const f = fixture(t), units = selectedStateEdgePointers(null).filter(unit => unit.family === "ballot-contests");
   const states: Record<string, PublishedStateAuthority> = {};
   for (const unit of units) {
     const p = unit.pointers[0];
     states[unit.state] = ref(f.put(p.recordClass, p.scope, `${unit.state}-v1`));
   }
-  assert.equal(Object.keys(states).length, 51);
+  assert.equal(Object.keys(states).length, REGISTRY_STATES.length);
   await publishReaderEdgeArtifacts(null, metadata, { store: f.artifacts, now: NOW, stateAuthorities: { "ballot-contests": states } });
   const outcome = await publishSupervisorReaderEdge(f.store, NOW, units.flatMap(unit => unit.pointers), { artifactStore: f.boundedArtifacts,
     stateArtifactChildren: { slots: f.slots, launch: async () => assert.fail("unchanged sweep must not launch") } }, ENV);

@@ -1,3 +1,4 @@
+import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { isRenderable } from "../lib/funding/state-money-reader.ts";
 import assert from "node:assert/strict";
 import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
@@ -12,12 +13,86 @@ import { getFundingSnapshot, refreshFundingFromPromoted } from "../lib/funding/s
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { type StateMoneyRecord } from "../lib/funding/state-money.ts";
 import { resetStateMoneyCache, stateMoneyForTarget } from "../lib/funding/state-snapshot.ts";
-import { resetAzIdentityCache } from "../lib/identity/az-2026.ts";
-import { readAzBallotProjection } from "../lib/civic-data/manual-read-models.ts";
+import { readGenericBallotProjection } from "../lib/ballot/generic-projection.ts";
 import { getRegistryRuntimeReadModel } from "../lib/registry/runtime-read-model.ts";
 import type { StateCampaignFinanceJurisdiction } from "../lib/funding/data-plane.ts";
 import { officialCandidacySeatMatches } from "../lib/registry/runtime-data-plane.ts";
-import { installAzBallot, installRegistryAuthority, installStateMoney, stateMoneyFixture, syntheticAzBallot, syntheticFiledStateMoneyRecord } from "./helpers/promoted-fixtures.ts";
+import { installRegistryAuthority, installStateMoney, stateMoneyFixture, syntheticFiledStateMoneyRecord } from "./helpers/promoted-fixtures.ts";
+import type { ReaderAuthorityEdgeBundle } from "../lib/registry/runtime-edge.ts";
+import { currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
+
+
+import type { BallotSet } from "../lib/ballot/types.ts";
+import type { GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
+import type { Contest } from "../lib/ballot/types.ts";
+import type { LineupOutcome } from "../lib/identity/types.ts";
+import { readFileSync } from "node:fs";
+import { requireBallotState } from "../lib/civic-data/state-scopes.ts";
+import { stateBallotScope } from "../lib/civic-data/state-scopes.ts";
+import { ballotElectionKey } from "../lib/ballot/generic-projection.ts";
+import { installManualValue } from "./helpers/promoted-fixtures.ts";
+import { stateBallotContractId } from "../lib/civic-data/state-scopes.ts";
+import type { CivicDataReadResult } from "../lib/civic-data/read-model.ts";
+
+function served<T>(read: CivicDataReadResult<T>, what: string): T {
+  if (read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP") throw new Error(`${what} fixture did not install: ${read.kind} ${"detail" in read ? read.detail : ""}`);
+  return read.value as T;
+}
+
+interface SyntheticLineupNominee {
+  readonly name: string;
+  readonly partyLabel: string;
+  readonly outcome: LineupOutcome;
+  readonly candidacyId?: string;
+  readonly filingParty?: string;
+}
+
+interface SyntheticContest {
+  readonly id: string;
+  readonly title: string;
+  readonly ocdId?: string;
+  readonly type?: Contest["type"];
+  readonly candidacies?: readonly { readonly id: string; readonly givenName: string; readonly familyName: string; readonly partyLabel?: string | null }[];
+  readonly lineup?: readonly SyntheticLineupNominee[];
+}
+
+function syntheticAzBallot(contests?: readonly SyntheticContest[]): BallotSet {
+  const fixtures = JSON.parse(readFileSync(new URL("./fixtures/synthetic-az-ballots.json", import.meta.url), "utf8")) as Record<string, BallotSet>;
+  const ballot = fixtures[JSON.stringify(contests ?? null)];
+  if (!ballot) throw new Error("The synthetic Arizona ballot input has no recorded fixture");
+  return ballot;
+}
+
+async function installBallots(...ballots: BallotSet[]): Promise<GenericBallotProjection> {
+  const installed: GenericBallotProjection = { kind: "ballot-contests", ballots: {} };
+  for (const ballot of ballots.length ? ballots : [syntheticAzBallot()]) {
+    const state = requireBallotState(ballot.election.state);
+    const previous = currentReaderAuthorityEdge()?.promoted?.get(`BALLOT_CANDIDACY:${stateBallotScope("ballot-contests", state)}`);
+    const current = previous?.kind === "PROMOTED" ? previous.projection.payload as GenericBallotProjection : null;
+    const value: GenericBallotProjection = { kind: "ballot-contests", ballots: {
+      ...(current?.ballots ?? {}), [ballotElectionKey(ballot)]: ballot,
+    } };
+    installManualValue(stateBallotContractId("ballot-contests", state), value, `test:ballot-contests:${state}`);
+    served(await readGenericBallotProjection(state), `${state} ballot`);
+    Object.assign(installed.ballots, value.ballots);
+  }
+  return installed;
+}
+
+
+
+
+
+
+
+function promotedFixtureBundle(extra: ReaderAuthorityEdgeBundle = {}): ReaderAuthorityEdgeBundle {
+  const current: ReaderAuthorityEdgeBundle = currentReaderAuthorityEdge() ?? {};
+  return { stateAuthorities: current.stateAuthorities,
+    ...(current.federalDirectory ? { federalDirectory: current.federalDirectory } : {}),
+    ...(current.stateLegislators ? { stateLegislators: current.stateLegislators } : {}),
+    ...extra, promoted: new Map([...(current.promoted ?? []), ...(extra.promoted ?? [])]) };
+}
+
 
 await installRegistryAuthority();
 
@@ -30,7 +105,7 @@ function withRecords(state: StateCampaignFinanceJurisdiction, records: StateMone
   const fixture = stateMoneyFixture(state);
   return { ...fixture, records: [...fixture.records, ...records] };
 }
-await installAzBallot(syntheticAzBallot([
+await installBallots(syntheticAzBallot([
   {
     id: "ballot-az-pima:governor",
     title: "Governor",
@@ -196,23 +271,16 @@ test("a missing deployed normalized holding raises a failed read even if staged 
 });
 
 test("a missing canonical ballot identity projection cannot become a display-key funding absence", async () => {
-  const failedStore = {
-    async readPromotion() { throw new Error("planted ballot authority failure"); },
-    async readCandidate() { throw new Error("a failed pointer must not read a candidate"); },
-  };
-  const env = process.env as Record<string, string | undefined>;
-  const previous = env.NODE_ENV;
-  env.NODE_ENV = "production";
-  try {
-    assert.equal((await readAzBallotProjection({ store: failedStore, bypassCache: true })).kind, "STORE_UNREACHABLE");
-    resetAzIdentityCache();
-    assert.throws(
-      () => stateMoneyForCard("ballot-az-pima:governor|Katie Hobbs", "ballot-az-pima:governor"),
-      /Arizona ballot projection is STORE_UNREACHABLE|identity holding unavailable/,
-    );
-  } finally {
-    if (previous === undefined) delete env.NODE_ENV;
-    else env.NODE_ENV = previous;
-    resetAzIdentityCache();
-  }
+  await installStateMoney("AZ", withRecords("AZ", [filed("AZ", hobbsKey, "Governor", HOBBS_RECEIPTS)]));
+  const base = promotedFixtureBundle();
+  const edge = { ...base, stateAuthorities: { states: base.stateAuthorities!.states,
+    load: async (family: Parameters<NonNullable<typeof base.stateAuthorities>["load"]>[0], state: string) => {
+      if (family === "ballot-contests" && state === "AZ") throw new Error("Planted canonical ballot failure");
+      return base.stateAuthorities!.load(family, state);
+    } } };
+  await withReaderAuthorityEdge(edge, async () => {
+    assert.equal((await readGenericBallotProjection("AZ")).kind, "STORE_UNREACHABLE");
+    assert.throws(() => stateMoneyForCard("ballot-az-pima:governor|Katie Hobbs", "ballot-az-pima:governor"),
+      /Ballot for AZ is STORE_UNREACHABLE|identity holding unavailable/);
+  });
 });

@@ -1,3 +1,4 @@
+import { stateBallotContractId } from "./state-scopes.ts";
 import { createHash } from "node:crypto";
 import type { OfficeholderSet } from "../officials/types.ts";
 import type { OfficialStateLegislatorReadModel } from "./candidate-builders.ts";
@@ -125,7 +126,7 @@ export async function publishStatePeople(input: {store:RoutineDataStore;vault:Ev
   const outcome = await processRegisteredRoutineCandidate(input.store,`openstates-people-${input.state.toLowerCase()}`,candidate,input.now,
     prior.kind === "PROMOTED" ? prior.metadata.versionId : null,{confirmUnchanged:input.confirmUnchanged,vault:input.vault});
   if (outcome.promoted) {
-    const ballotPrior = await readManualProjectionPrior("ballot-contests", input.store, input.now);
+    const ballotPrior = await readManualProjectionPrior(stateBallotContractId("ballot-contests", input.state), input.store, input.now);
     const ballots = Object.values((ballotPrior?.payload as GenericBallotProjection | undefined)?.ballots ?? {})
       .filter(ballot => ballot.election.state === input.state.toUpperCase());
     if (ballots.length && ballotPrior) {

@@ -27,7 +27,7 @@ const ADJUSTMENT = `${TUCSON}#board-of-adjustment`;
 const TCCC_URL = "https://clerksboards.tucsonaz.gov/boards/15";
 const AGENDA_URL = "https://clerksboards.tucsonaz.gov/boards/?board=136";
 const ADJUSTMENT_URL = "https://clerksboards.tucsonaz.gov/boards/?board=8";
-const ROSTER_SCOPE = "fixture:registry-runtime";
+const ROSTER_SCOPE = "US-AZ:reader-registry-runtime";
 const COMMENT_SCOPE = "US-AZ+US-NH+US-NJ:public-comment-rules:reviewed-bodies";
 const clocks = factClocks(null);
 
@@ -39,6 +39,7 @@ async function setup(pages: { readonly held?: Readonly<Record<string, string>>; 
   await ensureFactEntities(facts, ROOT, ["az"]);
   await facts.query(`CREATE TABLE civic_data_candidates (id text PRIMARY KEY, record_class text NOT NULL, scope text NOT NULL,
     promoted_version_id text, retrieved_at timestamptz NOT NULL)`);
+  await facts.query("CREATE TABLE civic_data_promotions (key text PRIMARY KEY,current_version_id text NOT NULL)");
   const repos = createMemoryRepositories();
   const vault = new MemoryEvidenceStore();
   for (const [url, html] of Object.entries(pages.held ?? {})) {
@@ -56,8 +57,10 @@ async function setup(pages: { readonly held?: Readonly<Record<string, string>>; 
     return { status: html === undefined ? 404 : 200, headers: { get: (name: string) => name.toLowerCase() === "content-type" ? "text/html; charset=utf-8" : null },
       bytes: async () => new TextEncoder().encode(html ?? "Not Found") };
   };
-  const promote = (id: string, recordClass: string, scope: string) =>
-    facts.query("INSERT INTO civic_data_candidates (id, record_class, scope, promoted_version_id, retrieved_at) VALUES ($1, $2, $3, $1, $4)", [id, recordClass, scope, SAVED_AT]);
+  const promote = async (id: string, recordClass: string, scope: string) => {
+    await facts.query("INSERT INTO civic_data_candidates (id, record_class, scope, promoted_version_id, retrieved_at) VALUES ($1, $2, $3, $1, $4)", [id, recordClass, scope, SAVED_AT]);
+    return facts.query("INSERT INTO civic_data_promotions VALUES($1,$2) ON CONFLICT(key) DO UPDATE SET current_version_id=excluded.current_version_id", [`${recordClass}:${scope}`, id]);
+  };
   return { facts, repos, vault, fetch, fetched, promote, common: { facts, clocks, repos, vault, fetch, now: NOW } };
 }
 
@@ -146,7 +149,7 @@ test("office addresses and phones readers saw go live on the body's saved page; 
     held: { [agendaUrl]: page("Agenda Committee", "<p>City Clerk's Office, 255 W. Alameda St., Tucson, AZ 85701. Phone (520) 791-4213.</p>") },
     live: { [tcccUrl]: page("Tucson Convention Center Commission", "<p>Meetings are held downtown.</p>") },
   });
-  const carton = await cartonOffices(s.facts.query, { versionId: "rv-offices", payload: { registry: { bodies } } });
+  const carton = await cartonOffices(s.facts.query, { versionId: "rv-offices", payload: { registry: { bodies } } }, "AZ");
   assert.deepEqual(carton?.bodies.map(body => body.id), [AGENDA, TCCC, ADJUSTMENT], "only bodies that showed an office are carried");
   const report = await importCartonOffices({ ...carton!, ...s.common });
   assert.deepEqual(report, { rosters: 2, live: 2, confirmed: 0, blanks: 2, unreadable: [{ url: "https://unreachable.example.gov/baj", reason: "FETCH_FAILED:connect ECONNREFUSED" }] });
@@ -160,13 +163,13 @@ test("office addresses and phones readers saw go live on the body's saved page; 
   assert.deepEqual(await s.facts.query("SELECT entity_id, field, stage, reason FROM blank ORDER BY entity_id"), [
     { entity_id: ADJUSTMENT, field: "office_phone", stage: "ACQUIRE", reason: "SOURCE_BLOCKED" },
     { entity_id: TCCC, field: "office_address", stage: "CHECK", reason: "CHECK_FAILED:QUOTE_NOT_ON_SAVED_COPY" }]);
-  assert.equal(await cartonOffices(s.facts.query, { versionId: "rv-offices", payload: { registry: { bodies } } }), null, "the carton is carried onto facts once");
+  assert.equal(await cartonOffices(s.facts.query, { versionId: "rv-offices", payload: { registry: { bodies } } }, "AZ"), null, "the carton is carried onto facts once");
 });
 
 test("an office phone whose page cannot be read stays open as a SOURCE_BLOCKED blank after the carton is retired", async () => {
   const s = await setup({});
-  await importCartonOffices({ bodies: [BLOCKED_OFFICE], versionId: "rv-offices", ...s.common });
-  assert.equal(await cartonOffices(s.facts.query, { versionId: "rv-offices", payload: { registry: { bodies: [BLOCKED_OFFICE] } } }), null);
+  await importCartonOffices({ state: "AZ", bodies: [BLOCKED_OFFICE], versionId: "rv-offices", ...s.common });
+  assert.equal(await cartonOffices(s.facts.query, { versionId: "rv-offices", payload: { registry: { bodies: [BLOCKED_OFFICE] } } }, "AZ"), null);
   assert.deepEqual(await s.facts.query("SELECT entity_id, field, stage, reason FROM blank"),
     [{ entity_id: ADJUSTMENT, field: "office_phone", stage: "ACQUIRE", reason: "SOURCE_BLOCKED" }], "the phone readers saw is owed, not silently dropped");
 });

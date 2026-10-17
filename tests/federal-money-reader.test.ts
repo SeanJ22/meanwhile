@@ -22,9 +22,38 @@ import { publishReaderEdgeArtifacts } from "../lib/meetings/edge-serving.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import { GET } from "../app/api/federal-money/route.ts";
 import { provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
-import { registryTransferImport, syntheticFederalDirectory } from "./helpers/promoted-fixtures.ts";
+import { syntheticFederalDirectory } from "./helpers/promoted-fixtures.ts";
 import { federalMoneyProjectionIssue, federalMoneyLookupKeys, type FederalMoneyProjection } from "../lib/federal-money/model.ts";
 import type { FederalMoneyFact } from "../lib/federal-money/model.ts";
+import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
+import { registryTransferImport } from "./helpers/promoted-fixtures.ts";
+import { stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
+import { registryJurisdictions } from "../lib/civic-data/state-scopes.ts";
+
+function registryFixtureForState(state: string, value: RegistryRuntimeReadModel = registryTransferImport().projection.payload): RegistryRuntimeReadModel {
+  const own = (id: string | null) => registryJurisdictions(id).includes(state.toUpperCase());
+  const bodies = value.registry.bodies.filter(row => own(row.id) || own(row.ocdId) || row.alsoServesOcdIds?.some(own));
+  const bodyIds = new Set(bodies.map(row => row.id));
+  const bodyRosters = value.bodyRosters.filter(row => bodyIds.has(row.bodyId));
+  const statewideExecutives = value.statewideExecutives.filter(row => own(row.stateOcdId));
+  const bridge = value.officialCandidacies.rows.filter(row => row.holder.divisions.some(own));
+  const holders = new Set([...bodyRosters.flatMap(row => row.members.map(member => member.id)),
+    ...statewideExecutives.map(row => row.holder.id), ...bridge.map(row => row.holder.id)]);
+  return { ...value, registry: { ...value.registry, bodies,
+    divisions: value.registry.divisions.filter(row => row.ocdId === "ocd-division/country:us" || own(row.ocdId)) },
+    bodyRosters, statewideExecutives, officialCandidacies: { ...value.officialCandidacies, rows: bridge },
+    officialPhotos: { photos: value.officialPhotos.photos.filter(row => holders.has(row.officeholderId)) },
+    rosterPhotos: Object.fromEntries(Object.entries(value.rosterPhotos).filter(([id]) => holders.has(id) || own(id))),
+    rosterReaderDispositions: value.rosterReaderDispositions.filter(row => own(row.sourceId) || holders.has(row.sourceId) || (row.canonicalId !== null && holders.has(row.canonicalId)) ||
+      [...holders].some(id => id.startsWith("roster:") && id.split("#")[0] === row.sourceId.split("#")[0])) };
+}
+
+function stateRegistryArtifacts(versionId: string, states: readonly string[], value: RegistryRuntimeReadModel = registryTransferImport().projection.payload) {
+  return Object.fromEntries(states.map(state => [state, { versionId: `${versionId}:${state}`, value: { kind: "PROMOTED_POINTERS" as const,
+    entries: [provenEdgeEntry({ recordClass: "REGISTRY_RUNTIME_BINDING", scope: stateRegistryRuntimeScope(state), sourceId: "registry-reviewed-bindings",
+      versionId: `${versionId}:${state}`, value: registryFixtureForState(state, value) })] } }]));
+}
+
 
 const NOW = "2026-10-12T23:01:00.000Z";
 const COUNTY = "ocd-division/country:us/state:ar/county:ouachita";
@@ -135,7 +164,8 @@ test("the public federal-money route serves the real place artifact on its first
     await publish(store);
     const published = await publishReaderEdgeArtifacts(null, { sourceThrough: NOW, retrievedAt: NOW, promotedThrough: NOW }, {
       store, now: NOW,
-      authority: { "registry-runtime": { value: registryTransferImport().projection.payload, versionId: "reader-api:registry" }, "federal-directory": { value: syntheticFederalDirectory(), versionId: "reader-api:federal-directory" } },
+      authority: { "federal-directory": { value: syntheticFederalDirectory(), versionId: "reader-api:federal-directory" } },
+      stateAuthorities: { "registry-runtime": stateRegistryArtifacts("reader-api:registry", ["AR"]) },
     });
     assert.equal(published.status, "PUBLISHED");
     process.env.WTP_READER_EDGE_DIR = directory;

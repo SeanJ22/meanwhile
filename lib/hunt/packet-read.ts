@@ -1,4 +1,3 @@
-/** Reads of what we hold and what is still blank, as hunt packets. Nothing here runs an agent or writes. */
 import { readHeldPlaceCapture, type HeldPlaceCapture } from "../civic-data/held-place-capture.ts";
 import { buildPlaceOwedList } from "../coverage/place-owed.ts";
 import { rateFor } from "../control-plane/model-cost.ts";
@@ -6,6 +5,7 @@ import { scoutLoopBase } from "../control-plane/scheduler/scout-executor.ts";
 import { stateDivisionId, unionDivisions, zipDivisionIds } from "../control-plane/admin-view/v6-national-geography.ts";
 import type { AskedGap } from "../control-plane/ask-gap-observations.ts";
 import { blankFingerprint, withAskedBlanks, packetCostEstimateUsd, packetFamilies, packetsFrom, type FamilyCount, type HuntPacket } from "./packet.ts";
+import { statesForRegistryDivisions } from "../civic-data/state-scopes.ts";
 import { SEARCH_PRICE_USD } from "./search.ts";
 
 type HeldReader = (divisionIds: readonly string[], now: string) => Promise<HeldPlaceCapture>;
@@ -16,12 +16,20 @@ export async function readGovernmentPackets(governmentIds: readonly string[], no
   read: HeldReader = readHeld): Promise<ReadonlyMap<string, HuntPacket>> {
   const ids = [...new Set(governmentIds)];
   if (ids.length === 0) return new Map();
-  const capture = await read(ids, now);
-  const labelOf = new Map(capture.subjects.filter(subject => subject.kind === "division").map(subject => [subject.id, subject.label] as const));
-  const divisions = ids.map(id => ({ id, label: labelOf.get(id) ?? id }));
-  const items = buildPlaceOwedList({ divisions, subjects: capture.subjects, held: capture.held, now });
-  const packets = new Map(packetsFrom({ divisions, items }).map(packet => [packet.governmentId, withAskedBlanks(packet, asked)] as const));
-  for (const division of divisions) if (!packets.has(division.id)) packets.set(division.id, withAskedBlanks({ governmentId: division.id, label: division.label, held: [], blanks: [] }, asked));
+  const groups = new Map<string, string[]>();
+  for (const id of ids) {
+    const key = statesForRegistryDivisions([id]).join();
+    groups.set(key, [...(groups.get(key) ?? []), id]);
+  }
+  const packets = new Map<string, HuntPacket>();
+  for (const group of groups.values()) {
+    const capture = await read(group, now);
+    const labelOf = new Map(capture.subjects.filter(subject => subject.kind === "division").map(subject => [subject.id, subject.label] as const));
+    const divisions = group.map(id => ({ id, label: labelOf.get(id) ?? id }));
+    const items = buildPlaceOwedList({ divisions, subjects: capture.subjects, held: capture.held, now });
+    for (const packet of packetsFrom({ divisions, items })) packets.set(packet.governmentId, withAskedBlanks(packet, asked));
+    for (const division of divisions) if (!packets.has(division.id)) packets.set(division.id, withAskedBlanks({ governmentId: division.id, label: division.label, held: [], blanks: [] }, asked));
+  }
   return packets;
 }
 

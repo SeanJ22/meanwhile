@@ -5,6 +5,35 @@ import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { seatHolderById, seatHoldersForDivision } from "../lib/registry/server.ts";
 import { registryTransferImport, syntheticFederalDirectory, syntheticStateLegislators } from "./helpers/promoted-fixtures.ts";
 import { GET as representation } from "../app/api/representation/[...division]/route.ts";
+import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
+import { provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
+import { stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
+import { registryJurisdictions } from "../lib/civic-data/state-scopes.ts";
+
+function registryFixtureForState(state: string, value: RegistryRuntimeReadModel = registryTransferImport().projection.payload): RegistryRuntimeReadModel {
+  const own = (id: string | null) => registryJurisdictions(id).includes(state.toUpperCase());
+  const bodies = value.registry.bodies.filter(row => own(row.id) || own(row.ocdId) || row.alsoServesOcdIds?.some(own));
+  const bodyIds = new Set(bodies.map(row => row.id));
+  const bodyRosters = value.bodyRosters.filter(row => bodyIds.has(row.bodyId));
+  const statewideExecutives = value.statewideExecutives.filter(row => own(row.stateOcdId));
+  const bridge = value.officialCandidacies.rows.filter(row => row.holder.divisions.some(own));
+  const holders = new Set([...bodyRosters.flatMap(row => row.members.map(member => member.id)),
+    ...statewideExecutives.map(row => row.holder.id), ...bridge.map(row => row.holder.id)]);
+  return { ...value, registry: { ...value.registry, bodies,
+    divisions: value.registry.divisions.filter(row => row.ocdId === "ocd-division/country:us" || own(row.ocdId)) },
+    bodyRosters, statewideExecutives, officialCandidacies: { ...value.officialCandidacies, rows: bridge },
+    officialPhotos: { photos: value.officialPhotos.photos.filter(row => holders.has(row.officeholderId)) },
+    rosterPhotos: Object.fromEntries(Object.entries(value.rosterPhotos).filter(([id]) => holders.has(id) || own(id))),
+    rosterReaderDispositions: value.rosterReaderDispositions.filter(row => own(row.sourceId) || holders.has(row.sourceId) || (row.canonicalId !== null && holders.has(row.canonicalId)) ||
+      [...holders].some(id => id.startsWith("roster:") && id.split("#")[0] === row.sourceId.split("#")[0])) };
+}
+
+function stateRegistryArtifacts(versionId: string, states: readonly string[], value: RegistryRuntimeReadModel = registryTransferImport().projection.payload) {
+  return Object.fromEntries(states.map(state => [state, { versionId: `${versionId}:${state}`, value: { kind: "PROMOTED_POINTERS" as const,
+    entries: [provenEdgeEntry({ recordClass: "REGISTRY_RUNTIME_BINDING", scope: stateRegistryRuntimeScope(state), sourceId: "registry-reviewed-bindings",
+      versionId: `${versionId}:${state}`, value: registryFixtureForState(state, value) })] } }]));
+}
+
 
 test("a federal person and division remain readable without a registry or candidacy bridge", async () => {
   const value = syntheticFederalDirectory();
@@ -31,7 +60,12 @@ test("a federal person and division remain readable without a registry or candid
 test("a state executive remains readable when the federal directory is unavailable", async () => {
   const { projection } = registryTransferImport();
   const executive = projection.payload.statewideExecutives[0];
-  await withReaderAuthorityEdge({ edgeOnly: true, registryRuntime: { value: projection.payload, versionId: projection.versionId } }, async () => {
+  const state = executive.stateOcdId.split(":").at(-1)!.toUpperCase();
+  const artifacts = stateRegistryArtifacts(projection.versionId, [state]);
+  await withReaderAuthorityEdge({ edgeOnly: true, selection: { states: [state], keys: new Set([executive.stateOcdId, executive.holder.id]) }, stateAuthorities: {
+    states: { "registry-runtime": new Set([state]) },
+    load: async (family, selectedState) => family === "registry-runtime" && selectedState === state ? artifacts[state].value : null,
+  } }, async () => {
     assert.equal((await seatHolderById(executive.holder.id))?.name, executive.holder.name);
     const holders = await seatHoldersForDivision(executive.stateOcdId);
     assert.ok(holders.some(holder => holder.id === executive.holder.id));

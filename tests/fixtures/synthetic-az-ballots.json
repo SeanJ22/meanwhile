@@ -1,0 +1,2715 @@
+{
+  "[{\"id\":\"ballot-az-test:synthetic-office\",\"title\":\"Synthetic Office\",\"candidacies\":[{\"id\":\"ballot-az-test:synthetic-office:sample-jordan\",\"givenName\":\"Jordan\",\"familyName\":\"Sample\",\"partyLabel\":\"Party B\"},{\"id\":\"ballot-az-test:synthetic-office:example-casey\",\"givenName\":\"Casey\",\"familyName\":\"Example\",\"partyLabel\":\"Party A\"}],\"lineup\":[{\"name\":\"Jordan Sample\",\"partyLabel\":\"Party A\",\"outcome\":\"PARTY_CONFLICT\",\"candidacyId\":\"ballot-az-test:synthetic-office:sample-jordan\",\"filingParty\":\"Party B\"},{\"name\":\"Casey Example\",\"partyLabel\":\"Party A\",\"outcome\":\"RECONCILED\",\"candidacyId\":\"ballot-az-test:synthetic-office:example-casey\"}]}]": {
+    "election": {
+      "id": "az-2026-general-test",
+      "date": "2026-11-03",
+      "name": "2026 General Election (test)",
+      "state": "AZ"
+    },
+    "contests": [
+      {
+        "id": "ballot-az-test:synthetic-office",
+        "electionId": "az-2026-general-test",
+        "ocdId": "ocd-division/country:us/state:az",
+        "divisionVintage": "2026",
+        "title": "Synthetic Office",
+        "type": "CANDIDACY",
+        "voteFor": 1,
+        "termYears": 4,
+        "scopeNote": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:contest:ballot-az-test:synthetic-office",
+          "level": "STATE",
+          "financeFilingAuthority": "Arizona Secretary of State"
+        },
+        "candidateListComplete": true
+      }
+    ],
+    "candidacies": [
+      {
+        "id": "ballot-az-test:synthetic-office:sample-jordan",
+        "contestId": "ballot-az-test:synthetic-office",
+        "familyName": "Sample",
+        "givenName": "Jordan",
+        "partyLabel": "Party B",
+        "slogan": null,
+        "incumbent": null,
+        "websiteUrl": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:candidate:ballot-az-test:synthetic-office:sample-jordan",
+          "nameForms": [],
+          "candidacyAuthority": "Arizona Secretary of State",
+          "candidacySourceUrl": "https://example.test/az-candidate-filings.pdf",
+          "committees": []
+        }
+      },
+      {
+        "id": "ballot-az-test:synthetic-office:example-casey",
+        "contestId": "ballot-az-test:synthetic-office",
+        "familyName": "Example",
+        "givenName": "Casey",
+        "partyLabel": "Party A",
+        "slogan": null,
+        "incumbent": null,
+        "websiteUrl": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:candidate:ballot-az-test:synthetic-office:example-casey",
+          "nameForms": [],
+          "candidacyAuthority": "Arizona Secretary of State",
+          "candidacySourceUrl": "https://example.test/az-candidate-filings.pdf",
+          "committees": []
+        }
+      }
+    ],
+    "measures": [],
+    "absences": [],
+    "generalLineup": {
+      "curatedAt": "2026-09-25",
+      "canvass": {
+        "title": "Synthetic certified canvass",
+        "url": "https://example.test/az-canvass.pdf",
+        "issuedBy": "Synthetic",
+        "reportDate": "2026-09-25",
+        "readAt": "2026-09-25",
+        "readNote": "test"
+      },
+      "note": "synthetic test lineup",
+      "contests": [
+        {
+          "contestId": "ballot-az-test:synthetic-office",
+          "nominees": [
+            {
+              "name": "Jordan Sample",
+              "partyLabel": "Party A",
+              "note": null
+            },
+            {
+              "name": "Casey Example",
+              "partyLabel": "Party A",
+              "note": null
+            }
+          ]
+        }
+      ]
+    },
+    "measureAnalyses": {
+      "generatedAt": "2026-09-25",
+      "counts": {
+        "measures": 0,
+        "fetched": 0,
+        "extracted": 0,
+        "failed": 0
+      },
+      "analyses": []
+    },
+    "filingCandidacies": [],
+    "lineupReconciliation": {
+      "formatVersion": 1,
+      "state": "AZ",
+      "cycle": 2026,
+      "generatedAt": "2026-09-25",
+      "generatedBy": "tests/helpers/promoted-fixtures.ts",
+      "sources": [
+        {
+          "name": "Synthetic certified canvass",
+          "url": "https://example.test/az-canvass.pdf",
+          "readAt": "2026-09-25",
+          "note": "test"
+        },
+        {
+          "name": "Synthetic candidate filings",
+          "url": "https://example.test/az-candidate-filings.pdf",
+          "readAt": "2026-09-25",
+          "note": "test"
+        }
+      ],
+      "proof": {
+        "lineupContests": 1,
+        "lineupNominees": 2,
+        "uniquelyReconciled": 1,
+        "ambiguous": 0,
+        "unmatched": 0,
+        "duplicateTargetCollisions": 0,
+        "applicableNonFederalNominees": 2,
+        "applicableNonFederalReconciled": 1,
+        "applicableNonFederalUnresolved": 1
+      },
+      "agencyNextFilingDue": null,
+      "rows": [
+        {
+          "cardKey": "ballot-az-test:synthetic-office|Jordan Sample",
+          "contestId": "ballot-az-test:synthetic-office",
+          "nomineeName": "Jordan Sample",
+          "nomineePartyLabel": "Party A",
+          "outcome": "PARTY_CONFLICT",
+          "candidateIdentityId": null,
+          "canonicalCandidacyId": null,
+          "sourceValues": {
+            "canvassName": "Jordan Sample",
+            "canvassParty": "Party A",
+            "registryName": "Jordan Sample",
+            "registryParty": "Party B",
+            "registryCandidateIds": [
+              "az-2026:candidate:ballot-az-test:synthetic-office:sample-jordan"
+            ]
+          },
+          "basis": {
+            "contestAgrees": true,
+            "partyChecked": true,
+            "partyAgrees": false,
+            "sharedNameForm": "Jordan Sample",
+            "sharedNameFormRules": [],
+            "note": "synthetic test row"
+          },
+          "readerGapSentence": "We have not established that this nominee is the same candidacy as a filing."
+        },
+        {
+          "cardKey": "ballot-az-test:synthetic-office|Casey Example",
+          "contestId": "ballot-az-test:synthetic-office",
+          "nomineeName": "Casey Example",
+          "nomineePartyLabel": "Party A",
+          "outcome": "RECONCILED",
+          "candidateIdentityId": "az-2026:candidate:ballot-az-test:synthetic-office:example-casey",
+          "canonicalCandidacyId": "ballot-az-test:synthetic-office:example-casey",
+          "sourceValues": {
+            "canvassName": "Casey Example",
+            "canvassParty": "Party A",
+            "registryName": "Casey Example",
+            "registryParty": "Party A",
+            "registryCandidateIds": [
+              "az-2026:candidate:ballot-az-test:synthetic-office:example-casey"
+            ]
+          },
+          "basis": {
+            "contestAgrees": true,
+            "partyChecked": true,
+            "partyAgrees": true,
+            "sharedNameForm": "Casey Example",
+            "sharedNameFormRules": [],
+            "note": "synthetic test row"
+          },
+          "readerGapSentence": null
+        }
+      ]
+    }
+  },
+  "[{\"id\":\"ballot-az-pima:governor\",\"title\":\"Governor\",\"candidacies\":[{\"id\":\"ballot-az-pima:governor:hobbs-katie\",\"givenName\":\"Katie\",\"familyName\":\"Hobbs\"},{\"id\":\"ballot-az-pima:governor:biggs-andy\",\"givenName\":\"Andy\",\"familyName\":\"Biggs\"}],\"lineup\":[{\"name\":\"Katie Hobbs\",\"partyLabel\":\"Democratic\",\"outcome\":\"RECONCILED\",\"candidacyId\":\"ballot-az-pima:governor:hobbs-katie\"},{\"name\":\"Andy Biggs\",\"partyLabel\":\"Republican\",\"outcome\":\"RECONCILED\",\"candidacyId\":\"ballot-az-pima:governor:biggs-andy\"},{\"name\":\"Risa Lombardo\",\"partyLabel\":\"Green\",\"outcome\":\"NO_CANDIDATE_MATCH\"},{\"name\":\"Teri Ann Hourihan\",\"partyLabel\":\"No Labels\",\"outcome\":\"NO_CANDIDATE_MATCH\"}]}]": {
+    "election": {
+      "id": "az-2026-general-test",
+      "date": "2026-11-03",
+      "name": "2026 General Election (test)",
+      "state": "AZ"
+    },
+    "contests": [
+      {
+        "id": "ballot-az-pima:governor",
+        "electionId": "az-2026-general-test",
+        "ocdId": "ocd-division/country:us/state:az",
+        "divisionVintage": "2026",
+        "title": "Governor",
+        "type": "CANDIDACY",
+        "voteFor": 1,
+        "termYears": 4,
+        "scopeNote": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:contest:ballot-az-pima:governor",
+          "level": "STATE",
+          "financeFilingAuthority": "Arizona Secretary of State"
+        },
+        "candidateListComplete": true
+      }
+    ],
+    "candidacies": [
+      {
+        "id": "ballot-az-pima:governor:hobbs-katie",
+        "contestId": "ballot-az-pima:governor",
+        "familyName": "Hobbs",
+        "givenName": "Katie",
+        "partyLabel": null,
+        "slogan": null,
+        "incumbent": null,
+        "websiteUrl": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:candidate:ballot-az-pima:governor:hobbs-katie",
+          "nameForms": [],
+          "candidacyAuthority": "Arizona Secretary of State",
+          "candidacySourceUrl": "https://example.test/az-candidate-filings.pdf",
+          "committees": []
+        }
+      },
+      {
+        "id": "ballot-az-pima:governor:biggs-andy",
+        "contestId": "ballot-az-pima:governor",
+        "familyName": "Biggs",
+        "givenName": "Andy",
+        "partyLabel": null,
+        "slogan": null,
+        "incumbent": null,
+        "websiteUrl": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:candidate:ballot-az-pima:governor:biggs-andy",
+          "nameForms": [],
+          "candidacyAuthority": "Arizona Secretary of State",
+          "candidacySourceUrl": "https://example.test/az-candidate-filings.pdf",
+          "committees": []
+        }
+      }
+    ],
+    "measures": [],
+    "absences": [],
+    "generalLineup": {
+      "curatedAt": "2026-09-25",
+      "canvass": {
+        "title": "Synthetic certified canvass",
+        "url": "https://example.test/az-canvass.pdf",
+        "issuedBy": "Synthetic",
+        "reportDate": "2026-09-25",
+        "readAt": "2026-09-25",
+        "readNote": "test"
+      },
+      "note": "synthetic test lineup",
+      "contests": [
+        {
+          "contestId": "ballot-az-pima:governor",
+          "nominees": [
+            {
+              "name": "Katie Hobbs",
+              "partyLabel": "Democratic",
+              "note": null
+            },
+            {
+              "name": "Andy Biggs",
+              "partyLabel": "Republican",
+              "note": null
+            },
+            {
+              "name": "Risa Lombardo",
+              "partyLabel": "Green",
+              "note": null
+            },
+            {
+              "name": "Teri Ann Hourihan",
+              "partyLabel": "No Labels",
+              "note": null
+            }
+          ]
+        }
+      ]
+    },
+    "measureAnalyses": {
+      "generatedAt": "2026-09-25",
+      "counts": {
+        "measures": 0,
+        "fetched": 0,
+        "extracted": 0,
+        "failed": 0
+      },
+      "analyses": []
+    },
+    "filingCandidacies": [],
+    "lineupReconciliation": {
+      "formatVersion": 1,
+      "state": "AZ",
+      "cycle": 2026,
+      "generatedAt": "2026-09-25",
+      "generatedBy": "tests/helpers/promoted-fixtures.ts",
+      "sources": [
+        {
+          "name": "Synthetic certified canvass",
+          "url": "https://example.test/az-canvass.pdf",
+          "readAt": "2026-09-25",
+          "note": "test"
+        },
+        {
+          "name": "Synthetic candidate filings",
+          "url": "https://example.test/az-candidate-filings.pdf",
+          "readAt": "2026-09-25",
+          "note": "test"
+        }
+      ],
+      "proof": {
+        "lineupContests": 1,
+        "lineupNominees": 4,
+        "uniquelyReconciled": 2,
+        "ambiguous": 0,
+        "unmatched": 2,
+        "duplicateTargetCollisions": 0,
+        "applicableNonFederalNominees": 4,
+        "applicableNonFederalReconciled": 2,
+        "applicableNonFederalUnresolved": 2
+      },
+      "agencyNextFilingDue": null,
+      "rows": [
+        {
+          "cardKey": "ballot-az-pima:governor|Katie Hobbs",
+          "contestId": "ballot-az-pima:governor",
+          "nomineeName": "Katie Hobbs",
+          "nomineePartyLabel": "Democratic",
+          "outcome": "RECONCILED",
+          "candidateIdentityId": "az-2026:candidate:ballot-az-pima:governor:hobbs-katie",
+          "canonicalCandidacyId": "ballot-az-pima:governor:hobbs-katie",
+          "sourceValues": {
+            "canvassName": "Katie Hobbs",
+            "canvassParty": "Democratic",
+            "registryName": "Katie Hobbs",
+            "registryParty": "Democratic",
+            "registryCandidateIds": [
+              "az-2026:candidate:ballot-az-pima:governor:hobbs-katie"
+            ]
+          },
+          "basis": {
+            "contestAgrees": true,
+            "partyChecked": true,
+            "partyAgrees": true,
+            "sharedNameForm": "Katie Hobbs",
+            "sharedNameFormRules": [],
+            "note": "synthetic test row"
+          },
+          "readerGapSentence": null
+        },
+        {
+          "cardKey": "ballot-az-pima:governor|Andy Biggs",
+          "contestId": "ballot-az-pima:governor",
+          "nomineeName": "Andy Biggs",
+          "nomineePartyLabel": "Republican",
+          "outcome": "RECONCILED",
+          "candidateIdentityId": "az-2026:candidate:ballot-az-pima:governor:biggs-andy",
+          "canonicalCandidacyId": "ballot-az-pima:governor:biggs-andy",
+          "sourceValues": {
+            "canvassName": "Andy Biggs",
+            "canvassParty": "Republican",
+            "registryName": "Andy Biggs",
+            "registryParty": "Republican",
+            "registryCandidateIds": [
+              "az-2026:candidate:ballot-az-pima:governor:biggs-andy"
+            ]
+          },
+          "basis": {
+            "contestAgrees": true,
+            "partyChecked": true,
+            "partyAgrees": true,
+            "sharedNameForm": "Andy Biggs",
+            "sharedNameFormRules": [],
+            "note": "synthetic test row"
+          },
+          "readerGapSentence": null
+        },
+        {
+          "cardKey": "ballot-az-pima:governor|Risa Lombardo",
+          "contestId": "ballot-az-pima:governor",
+          "nomineeName": "Risa Lombardo",
+          "nomineePartyLabel": "Green",
+          "outcome": "NO_CANDIDATE_MATCH",
+          "candidateIdentityId": null,
+          "canonicalCandidacyId": null,
+          "sourceValues": {
+            "canvassName": "Risa Lombardo",
+            "canvassParty": "Green",
+            "registryName": null,
+            "registryParty": null,
+            "registryCandidateIds": []
+          },
+          "basis": {
+            "contestAgrees": true,
+            "partyChecked": true,
+            "partyAgrees": null,
+            "sharedNameForm": null,
+            "sharedNameFormRules": [],
+            "note": "synthetic test row"
+          },
+          "readerGapSentence": "We have not established that this nominee is the same candidacy as a filing."
+        },
+        {
+          "cardKey": "ballot-az-pima:governor|Teri Ann Hourihan",
+          "contestId": "ballot-az-pima:governor",
+          "nomineeName": "Teri Ann Hourihan",
+          "nomineePartyLabel": "No Labels",
+          "outcome": "NO_CANDIDATE_MATCH",
+          "candidateIdentityId": null,
+          "canonicalCandidacyId": null,
+          "sourceValues": {
+            "canvassName": "Teri Ann Hourihan",
+            "canvassParty": "No Labels",
+            "registryName": null,
+            "registryParty": null,
+            "registryCandidateIds": []
+          },
+          "basis": {
+            "contestAgrees": true,
+            "partyChecked": true,
+            "partyAgrees": null,
+            "sharedNameForm": null,
+            "sharedNameFormRules": [],
+            "note": "synthetic test row"
+          },
+          "readerGapSentence": "We have not established that this nominee is the same candidacy as a filing."
+        }
+      ]
+    }
+  },
+  "null": {
+    "election": {
+      "id": "az-2026-general-test",
+      "date": "2026-11-03",
+      "name": "2026 General Election (test)",
+      "state": "AZ"
+    },
+    "contests": [
+      {
+        "id": "ballot-az-test:synthetic-office",
+        "electionId": "az-2026-general-test",
+        "ocdId": "ocd-division/country:us/state:az",
+        "divisionVintage": "2026",
+        "title": "Synthetic Office",
+        "type": "CANDIDACY",
+        "voteFor": 1,
+        "termYears": 4,
+        "scopeNote": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:contest:ballot-az-test:synthetic-office",
+          "level": "STATE",
+          "financeFilingAuthority": "Arizona Secretary of State"
+        },
+        "candidateListComplete": true
+      }
+    ],
+    "candidacies": [
+      {
+        "id": "ballot-az-test:synthetic-office:candidate-a",
+        "contestId": "ballot-az-test:synthetic-office",
+        "familyName": "Candidate",
+        "givenName": "Alex",
+        "partyLabel": null,
+        "slogan": null,
+        "incumbent": null,
+        "websiteUrl": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:candidate:ballot-az-test:synthetic-office:candidate-a",
+          "nameForms": [],
+          "candidacyAuthority": "Arizona Secretary of State",
+          "candidacySourceUrl": "https://example.test/az-candidate-filings.pdf",
+          "committees": []
+        }
+      }
+    ],
+    "measures": [],
+    "absences": [],
+    "generalLineup": {
+      "curatedAt": "2026-09-25",
+      "canvass": {
+        "title": "Synthetic certified canvass",
+        "url": "https://example.test/az-canvass.pdf",
+        "issuedBy": "Synthetic",
+        "reportDate": "2026-09-25",
+        "readAt": "2026-09-25",
+        "readNote": "test"
+      },
+      "note": "synthetic test lineup",
+      "contests": []
+    },
+    "measureAnalyses": {
+      "generatedAt": "2026-09-25",
+      "counts": {
+        "measures": 0,
+        "fetched": 0,
+        "extracted": 0,
+        "failed": 0
+      },
+      "analyses": []
+    },
+    "filingCandidacies": [],
+    "lineupReconciliation": {
+      "formatVersion": 1,
+      "state": "AZ",
+      "cycle": 2026,
+      "generatedAt": "2026-09-25",
+      "generatedBy": "tests/helpers/promoted-fixtures.ts",
+      "sources": [
+        {
+          "name": "Synthetic certified canvass",
+          "url": "https://example.test/az-canvass.pdf",
+          "readAt": "2026-09-25",
+          "note": "test"
+        },
+        {
+          "name": "Synthetic candidate filings",
+          "url": "https://example.test/az-candidate-filings.pdf",
+          "readAt": "2026-09-25",
+          "note": "test"
+        }
+      ],
+      "proof": {
+        "lineupContests": 0,
+        "lineupNominees": 0,
+        "uniquelyReconciled": 0,
+        "ambiguous": 0,
+        "unmatched": 0,
+        "duplicateTargetCollisions": 0,
+        "applicableNonFederalNominees": 0,
+        "applicableNonFederalReconciled": 0,
+        "applicableNonFederalUnresolved": 0
+      },
+      "agencyNextFilingDue": null,
+      "rows": []
+    }
+  },
+  "[{\"id\":\"ballot-az-pima:attorney-general\",\"title\":\"Attorney General\",\"candidacies\":[{\"id\":\"ballot-az-pima:attorney-general:glassman-rodney\",\"givenName\":\"Rodney\",\"familyName\":\"Glassman\"}],\"lineup\":[{\"name\":\"Rodney Glassman\",\"partyLabel\":\"Party A\",\"outcome\":\"RECONCILED\",\"candidacyId\":\"ballot-az-pima:attorney-general:glassman-rodney\"}]},{\"id\":\"ballot-az-pima:mine-inspector\",\"title\":\"State Mine Inspector\",\"candidacies\":[{\"id\":\"ballot-az-pima:mine-inspector:presmyk-walter\",\"givenName\":\"Walter\",\"familyName\":\"Presmyk\"}],\"lineup\":[{\"name\":\"Walter \\\"Les\\\" Presmyk\",\"partyLabel\":\"Party A\",\"outcome\":\"RECONCILED\",\"candidacyId\":\"ballot-az-pima:mine-inspector:presmyk-walter\"}]},{\"id\":\"ballot-az-test:synthetic-office\",\"title\":\"Synthetic Office\",\"candidacies\":[{\"id\":\"ballot-az-test:synthetic-office:sample-jordan\",\"givenName\":\"Jordan\",\"familyName\":\"Sample\",\"partyLabel\":\"Party B\"}],\"lineup\":[{\"name\":\"Jordan Sample\",\"partyLabel\":\"Party A\",\"outcome\":\"PARTY_CONFLICT\",\"candidacyId\":\"ballot-az-test:synthetic-office:sample-jordan\",\"filingParty\":\"Party B\"},{\"name\":\"Robin Nomatch\",\"partyLabel\":\"Party A\",\"outcome\":\"NO_CANDIDATE_MATCH\"}]}]": {
+    "election": {
+      "id": "az-2026-general-test",
+      "date": "2026-11-03",
+      "name": "2026 General Election (test)",
+      "state": "AZ"
+    },
+    "contests": [
+      {
+        "id": "ballot-az-pima:attorney-general",
+        "electionId": "az-2026-general-test",
+        "ocdId": "ocd-division/country:us/state:az",
+        "divisionVintage": "2026",
+        "title": "Attorney General",
+        "type": "CANDIDACY",
+        "voteFor": 1,
+        "termYears": 4,
+        "scopeNote": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:contest:ballot-az-pima:attorney-general",
+          "level": "STATE",
+          "financeFilingAuthority": "Arizona Secretary of State"
+        },
+        "candidateListComplete": true
+      },
+      {
+        "id": "ballot-az-pima:mine-inspector",
+        "electionId": "az-2026-general-test",
+        "ocdId": "ocd-division/country:us/state:az",
+        "divisionVintage": "2026",
+        "title": "State Mine Inspector",
+        "type": "CANDIDACY",
+        "voteFor": 1,
+        "termYears": 4,
+        "scopeNote": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:contest:ballot-az-pima:mine-inspector",
+          "level": "STATE",
+          "financeFilingAuthority": "Arizona Secretary of State"
+        },
+        "candidateListComplete": true
+      },
+      {
+        "id": "ballot-az-test:synthetic-office",
+        "electionId": "az-2026-general-test",
+        "ocdId": "ocd-division/country:us/state:az",
+        "divisionVintage": "2026",
+        "title": "Synthetic Office",
+        "type": "CANDIDACY",
+        "voteFor": 1,
+        "termYears": 4,
+        "scopeNote": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:contest:ballot-az-test:synthetic-office",
+          "level": "STATE",
+          "financeFilingAuthority": "Arizona Secretary of State"
+        },
+        "candidateListComplete": true
+      }
+    ],
+    "candidacies": [
+      {
+        "id": "ballot-az-pima:attorney-general:glassman-rodney",
+        "contestId": "ballot-az-pima:attorney-general",
+        "familyName": "Glassman",
+        "givenName": "Rodney",
+        "partyLabel": null,
+        "slogan": null,
+        "incumbent": null,
+        "websiteUrl": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:candidate:ballot-az-pima:attorney-general:glassman-rodney",
+          "nameForms": [],
+          "candidacyAuthority": "Arizona Secretary of State",
+          "candidacySourceUrl": "https://example.test/az-candidate-filings.pdf",
+          "committees": []
+        }
+      },
+      {
+        "id": "ballot-az-pima:mine-inspector:presmyk-walter",
+        "contestId": "ballot-az-pima:mine-inspector",
+        "familyName": "Presmyk",
+        "givenName": "Walter",
+        "partyLabel": null,
+        "slogan": null,
+        "incumbent": null,
+        "websiteUrl": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:candidate:ballot-az-pima:mine-inspector:presmyk-walter",
+          "nameForms": [],
+          "candidacyAuthority": "Arizona Secretary of State",
+          "candidacySourceUrl": "https://example.test/az-candidate-filings.pdf",
+          "committees": []
+        }
+      },
+      {
+        "id": "ballot-az-test:synthetic-office:sample-jordan",
+        "contestId": "ballot-az-test:synthetic-office",
+        "familyName": "Sample",
+        "givenName": "Jordan",
+        "partyLabel": "Party B",
+        "slogan": null,
+        "incumbent": null,
+        "websiteUrl": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:candidate:ballot-az-test:synthetic-office:sample-jordan",
+          "nameForms": [],
+          "candidacyAuthority": "Arizona Secretary of State",
+          "candidacySourceUrl": "https://example.test/az-candidate-filings.pdf",
+          "committees": []
+        }
+      }
+    ],
+    "measures": [],
+    "absences": [],
+    "generalLineup": {
+      "curatedAt": "2026-09-25",
+      "canvass": {
+        "title": "Synthetic certified canvass",
+        "url": "https://example.test/az-canvass.pdf",
+        "issuedBy": "Synthetic",
+        "reportDate": "2026-09-25",
+        "readAt": "2026-09-25",
+        "readNote": "test"
+      },
+      "note": "synthetic test lineup",
+      "contests": [
+        {
+          "contestId": "ballot-az-pima:attorney-general",
+          "nominees": [
+            {
+              "name": "Rodney Glassman",
+              "partyLabel": "Party A",
+              "note": null
+            }
+          ]
+        },
+        {
+          "contestId": "ballot-az-pima:mine-inspector",
+          "nominees": [
+            {
+              "name": "Walter \"Les\" Presmyk",
+              "partyLabel": "Party A",
+              "note": null
+            }
+          ]
+        },
+        {
+          "contestId": "ballot-az-test:synthetic-office",
+          "nominees": [
+            {
+              "name": "Jordan Sample",
+              "partyLabel": "Party A",
+              "note": null
+            },
+            {
+              "name": "Robin Nomatch",
+              "partyLabel": "Party A",
+              "note": null
+            }
+          ]
+        }
+      ]
+    },
+    "measureAnalyses": {
+      "generatedAt": "2026-09-25",
+      "counts": {
+        "measures": 0,
+        "fetched": 0,
+        "extracted": 0,
+        "failed": 0
+      },
+      "analyses": []
+    },
+    "filingCandidacies": [],
+    "lineupReconciliation": {
+      "formatVersion": 1,
+      "state": "AZ",
+      "cycle": 2026,
+      "generatedAt": "2026-09-25",
+      "generatedBy": "tests/helpers/promoted-fixtures.ts",
+      "sources": [
+        {
+          "name": "Synthetic certified canvass",
+          "url": "https://example.test/az-canvass.pdf",
+          "readAt": "2026-09-25",
+          "note": "test"
+        },
+        {
+          "name": "Synthetic candidate filings",
+          "url": "https://example.test/az-candidate-filings.pdf",
+          "readAt": "2026-09-25",
+          "note": "test"
+        }
+      ],
+      "proof": {
+        "lineupContests": 3,
+        "lineupNominees": 4,
+        "uniquelyReconciled": 2,
+        "ambiguous": 0,
+        "unmatched": 1,
+        "duplicateTargetCollisions": 0,
+        "applicableNonFederalNominees": 4,
+        "applicableNonFederalReconciled": 2,
+        "applicableNonFederalUnresolved": 2
+      },
+      "agencyNextFilingDue": null,
+      "rows": [
+        {
+          "cardKey": "ballot-az-pima:attorney-general|Rodney Glassman",
+          "contestId": "ballot-az-pima:attorney-general",
+          "nomineeName": "Rodney Glassman",
+          "nomineePartyLabel": "Party A",
+          "outcome": "RECONCILED",
+          "candidateIdentityId": "az-2026:candidate:ballot-az-pima:attorney-general:glassman-rodney",
+          "canonicalCandidacyId": "ballot-az-pima:attorney-general:glassman-rodney",
+          "sourceValues": {
+            "canvassName": "Rodney Glassman",
+            "canvassParty": "Party A",
+            "registryName": "Rodney Glassman",
+            "registryParty": "Party A",
+            "registryCandidateIds": [
+              "az-2026:candidate:ballot-az-pima:attorney-general:glassman-rodney"
+            ]
+          },
+          "basis": {
+            "contestAgrees": true,
+            "partyChecked": true,
+            "partyAgrees": true,
+            "sharedNameForm": "Rodney Glassman",
+            "sharedNameFormRules": [],
+            "note": "synthetic test row"
+          },
+          "readerGapSentence": null
+        },
+        {
+          "cardKey": "ballot-az-pima:mine-inspector|Walter \"Les\" Presmyk",
+          "contestId": "ballot-az-pima:mine-inspector",
+          "nomineeName": "Walter \"Les\" Presmyk",
+          "nomineePartyLabel": "Party A",
+          "outcome": "RECONCILED",
+          "candidateIdentityId": "az-2026:candidate:ballot-az-pima:mine-inspector:presmyk-walter",
+          "canonicalCandidacyId": "ballot-az-pima:mine-inspector:presmyk-walter",
+          "sourceValues": {
+            "canvassName": "Walter \"Les\" Presmyk",
+            "canvassParty": "Party A",
+            "registryName": "Walter \"Les\" Presmyk",
+            "registryParty": "Party A",
+            "registryCandidateIds": [
+              "az-2026:candidate:ballot-az-pima:mine-inspector:presmyk-walter"
+            ]
+          },
+          "basis": {
+            "contestAgrees": true,
+            "partyChecked": true,
+            "partyAgrees": true,
+            "sharedNameForm": "Walter \"Les\" Presmyk",
+            "sharedNameFormRules": [],
+            "note": "synthetic test row"
+          },
+          "readerGapSentence": null
+        },
+        {
+          "cardKey": "ballot-az-test:synthetic-office|Jordan Sample",
+          "contestId": "ballot-az-test:synthetic-office",
+          "nomineeName": "Jordan Sample",
+          "nomineePartyLabel": "Party A",
+          "outcome": "PARTY_CONFLICT",
+          "candidateIdentityId": null,
+          "canonicalCandidacyId": null,
+          "sourceValues": {
+            "canvassName": "Jordan Sample",
+            "canvassParty": "Party A",
+            "registryName": "Jordan Sample",
+            "registryParty": "Party B",
+            "registryCandidateIds": [
+              "az-2026:candidate:ballot-az-test:synthetic-office:sample-jordan"
+            ]
+          },
+          "basis": {
+            "contestAgrees": true,
+            "partyChecked": true,
+            "partyAgrees": false,
+            "sharedNameForm": "Jordan Sample",
+            "sharedNameFormRules": [],
+            "note": "synthetic test row"
+          },
+          "readerGapSentence": "We have not established that this nominee is the same candidacy as a filing."
+        },
+        {
+          "cardKey": "ballot-az-test:synthetic-office|Robin Nomatch",
+          "contestId": "ballot-az-test:synthetic-office",
+          "nomineeName": "Robin Nomatch",
+          "nomineePartyLabel": "Party A",
+          "outcome": "NO_CANDIDATE_MATCH",
+          "candidateIdentityId": null,
+          "canonicalCandidacyId": null,
+          "sourceValues": {
+            "canvassName": "Robin Nomatch",
+            "canvassParty": "Party A",
+            "registryName": null,
+            "registryParty": null,
+            "registryCandidateIds": []
+          },
+          "basis": {
+            "contestAgrees": true,
+            "partyChecked": true,
+            "partyAgrees": null,
+            "sharedNameForm": null,
+            "sharedNameFormRules": [],
+            "note": "synthetic test row"
+          },
+          "readerGapSentence": "We have not established that this nominee is the same candidacy as a filing."
+        }
+      ]
+    }
+  },
+  "[{\"id\":\"ballot-az-pima:governor\",\"title\":\"Governor\",\"candidacies\":[{\"id\":\"ballot-az-pima:governor:candidate-a\",\"givenName\":\"Alex\",\"familyName\":\"Candidate\"}]}]": {
+    "election": {
+      "id": "az-2026-general-test",
+      "date": "2026-11-03",
+      "name": "2026 General Election (test)",
+      "state": "AZ"
+    },
+    "contests": [
+      {
+        "id": "ballot-az-pima:governor",
+        "electionId": "az-2026-general-test",
+        "ocdId": "ocd-division/country:us/state:az",
+        "divisionVintage": "2026",
+        "title": "Governor",
+        "type": "CANDIDACY",
+        "voteFor": 1,
+        "termYears": 4,
+        "scopeNote": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:contest:ballot-az-pima:governor",
+          "level": "STATE",
+          "financeFilingAuthority": "Arizona Secretary of State"
+        },
+        "candidateListComplete": true
+      }
+    ],
+    "candidacies": [
+      {
+        "id": "ballot-az-pima:governor:candidate-a",
+        "contestId": "ballot-az-pima:governor",
+        "familyName": "Candidate",
+        "givenName": "Alex",
+        "partyLabel": null,
+        "slogan": null,
+        "incumbent": null,
+        "websiteUrl": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:candidate:ballot-az-pima:governor:candidate-a",
+          "nameForms": [],
+          "candidacyAuthority": "Arizona Secretary of State",
+          "candidacySourceUrl": "https://example.test/az-candidate-filings.pdf",
+          "committees": []
+        }
+      }
+    ],
+    "measures": [],
+    "absences": [],
+    "generalLineup": {
+      "curatedAt": "2026-09-25",
+      "canvass": {
+        "title": "Synthetic certified canvass",
+        "url": "https://example.test/az-canvass.pdf",
+        "issuedBy": "Synthetic",
+        "reportDate": "2026-09-25",
+        "readAt": "2026-09-25",
+        "readNote": "test"
+      },
+      "note": "synthetic test lineup",
+      "contests": []
+    },
+    "measureAnalyses": {
+      "generatedAt": "2026-09-25",
+      "counts": {
+        "measures": 0,
+        "fetched": 0,
+        "extracted": 0,
+        "failed": 0
+      },
+      "analyses": []
+    },
+    "filingCandidacies": [],
+    "lineupReconciliation": {
+      "formatVersion": 1,
+      "state": "AZ",
+      "cycle": 2026,
+      "generatedAt": "2026-09-25",
+      "generatedBy": "tests/helpers/promoted-fixtures.ts",
+      "sources": [
+        {
+          "name": "Synthetic certified canvass",
+          "url": "https://example.test/az-canvass.pdf",
+          "readAt": "2026-09-25",
+          "note": "test"
+        },
+        {
+          "name": "Synthetic candidate filings",
+          "url": "https://example.test/az-candidate-filings.pdf",
+          "readAt": "2026-09-25",
+          "note": "test"
+        }
+      ],
+      "proof": {
+        "lineupContests": 0,
+        "lineupNominees": 0,
+        "uniquelyReconciled": 0,
+        "ambiguous": 0,
+        "unmatched": 0,
+        "duplicateTargetCollisions": 0,
+        "applicableNonFederalNominees": 0,
+        "applicableNonFederalReconciled": 0,
+        "applicableNonFederalUnresolved": 0
+      },
+      "agencyNextFilingDue": null,
+      "rows": []
+    }
+  },
+  "[{\"id\":\"us-house-2\",\"title\":\"U.S. Representative in Congress, District 2\",\"ocdId\":\"ocd-division/country:us/state:az/cd:2\",\"candidacies\":[{\"id\":\"az-sos-2026:us-house-2:crane-eli\",\"givenName\":\"Eli\",\"familyName\":\"Crane\"}]},{\"id\":\"governor\",\"title\":\"Governor\",\"candidacies\":[{\"id\":\"ballot-az:governor:schweikert-david\",\"givenName\":\"David\",\"familyName\":\"Schweikert\"}]}]": {
+    "election": {
+      "id": "az-2026-general-test",
+      "date": "2026-11-03",
+      "name": "2026 General Election (test)",
+      "state": "AZ"
+    },
+    "contests": [
+      {
+        "id": "us-house-2",
+        "electionId": "az-2026-general-test",
+        "ocdId": "ocd-division/country:us/state:az/cd:2",
+        "divisionVintage": "2026",
+        "title": "U.S. Representative in Congress, District 2",
+        "type": "CANDIDACY",
+        "voteFor": 1,
+        "termYears": 4,
+        "scopeNote": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:contest:us-house-2",
+          "level": "STATE",
+          "financeFilingAuthority": "Arizona Secretary of State"
+        },
+        "candidateListComplete": true
+      },
+      {
+        "id": "governor",
+        "electionId": "az-2026-general-test",
+        "ocdId": "ocd-division/country:us/state:az",
+        "divisionVintage": "2026",
+        "title": "Governor",
+        "type": "CANDIDACY",
+        "voteFor": 1,
+        "termYears": 4,
+        "scopeNote": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:contest:governor",
+          "level": "STATE",
+          "financeFilingAuthority": "Arizona Secretary of State"
+        },
+        "candidateListComplete": true
+      }
+    ],
+    "candidacies": [
+      {
+        "id": "az-sos-2026:us-house-2:crane-eli",
+        "contestId": "us-house-2",
+        "familyName": "Crane",
+        "givenName": "Eli",
+        "partyLabel": null,
+        "slogan": null,
+        "incumbent": null,
+        "websiteUrl": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:candidate:az-sos-2026:us-house-2:crane-eli",
+          "nameForms": [],
+          "candidacyAuthority": "Arizona Secretary of State",
+          "candidacySourceUrl": "https://example.test/az-candidate-filings.pdf",
+          "committees": []
+        }
+      },
+      {
+        "id": "ballot-az:governor:schweikert-david",
+        "contestId": "governor",
+        "familyName": "Schweikert",
+        "givenName": "David",
+        "partyLabel": null,
+        "slogan": null,
+        "incumbent": null,
+        "websiteUrl": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:candidate:ballot-az:governor:schweikert-david",
+          "nameForms": [],
+          "candidacyAuthority": "Arizona Secretary of State",
+          "candidacySourceUrl": "https://example.test/az-candidate-filings.pdf",
+          "committees": []
+        }
+      }
+    ],
+    "measures": [],
+    "absences": [],
+    "generalLineup": {
+      "curatedAt": "2026-09-25",
+      "canvass": {
+        "title": "Synthetic certified canvass",
+        "url": "https://example.test/az-canvass.pdf",
+        "issuedBy": "Synthetic",
+        "reportDate": "2026-09-25",
+        "readAt": "2026-09-25",
+        "readNote": "test"
+      },
+      "note": "synthetic test lineup",
+      "contests": []
+    },
+    "measureAnalyses": {
+      "generatedAt": "2026-09-25",
+      "counts": {
+        "measures": 0,
+        "fetched": 0,
+        "extracted": 0,
+        "failed": 0
+      },
+      "analyses": []
+    },
+    "filingCandidacies": [],
+    "lineupReconciliation": {
+      "formatVersion": 1,
+      "state": "AZ",
+      "cycle": 2026,
+      "generatedAt": "2026-09-25",
+      "generatedBy": "tests/helpers/promoted-fixtures.ts",
+      "sources": [
+        {
+          "name": "Synthetic certified canvass",
+          "url": "https://example.test/az-canvass.pdf",
+          "readAt": "2026-09-25",
+          "note": "test"
+        },
+        {
+          "name": "Synthetic candidate filings",
+          "url": "https://example.test/az-candidate-filings.pdf",
+          "readAt": "2026-09-25",
+          "note": "test"
+        }
+      ],
+      "proof": {
+        "lineupContests": 0,
+        "lineupNominees": 0,
+        "uniquelyReconciled": 0,
+        "ambiguous": 0,
+        "unmatched": 0,
+        "duplicateTargetCollisions": 0,
+        "applicableNonFederalNominees": 0,
+        "applicableNonFederalReconciled": 0,
+        "applicableNonFederalUnresolved": 0
+      },
+      "agencyNextFilingDue": null,
+      "rows": []
+    }
+  },
+  "[{\"id\":\"ballot-az-pima:governor\",\"title\":\"Governor\",\"candidacies\":[{\"id\":\"ballot-az-pima:governor:hobbs-katie\",\"givenName\":\"Katie\",\"familyName\":\"Hobbs\"}]}]": {
+    "election": {
+      "id": "az-2026-general-test",
+      "date": "2026-11-03",
+      "name": "2026 General Election (test)",
+      "state": "AZ"
+    },
+    "contests": [
+      {
+        "id": "ballot-az-pima:governor",
+        "electionId": "az-2026-general-test",
+        "ocdId": "ocd-division/country:us/state:az",
+        "divisionVintage": "2026",
+        "title": "Governor",
+        "type": "CANDIDACY",
+        "voteFor": 1,
+        "termYears": 4,
+        "scopeNote": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:contest:ballot-az-pima:governor",
+          "level": "STATE",
+          "financeFilingAuthority": "Arizona Secretary of State"
+        },
+        "candidateListComplete": true
+      }
+    ],
+    "candidacies": [
+      {
+        "id": "ballot-az-pima:governor:hobbs-katie",
+        "contestId": "ballot-az-pima:governor",
+        "familyName": "Hobbs",
+        "givenName": "Katie",
+        "partyLabel": null,
+        "slogan": null,
+        "incumbent": null,
+        "websiteUrl": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:candidate:ballot-az-pima:governor:hobbs-katie",
+          "nameForms": [],
+          "candidacyAuthority": "Arizona Secretary of State",
+          "candidacySourceUrl": "https://example.test/az-candidate-filings.pdf",
+          "committees": []
+        }
+      }
+    ],
+    "measures": [],
+    "absences": [],
+    "generalLineup": {
+      "curatedAt": "2026-09-25",
+      "canvass": {
+        "title": "Synthetic certified canvass",
+        "url": "https://example.test/az-canvass.pdf",
+        "issuedBy": "Synthetic",
+        "reportDate": "2026-09-25",
+        "readAt": "2026-09-25",
+        "readNote": "test"
+      },
+      "note": "synthetic test lineup",
+      "contests": []
+    },
+    "measureAnalyses": {
+      "generatedAt": "2026-09-25",
+      "counts": {
+        "measures": 0,
+        "fetched": 0,
+        "extracted": 0,
+        "failed": 0
+      },
+      "analyses": []
+    },
+    "filingCandidacies": [],
+    "lineupReconciliation": {
+      "formatVersion": 1,
+      "state": "AZ",
+      "cycle": 2026,
+      "generatedAt": "2026-09-25",
+      "generatedBy": "tests/helpers/promoted-fixtures.ts",
+      "sources": [
+        {
+          "name": "Synthetic certified canvass",
+          "url": "https://example.test/az-canvass.pdf",
+          "readAt": "2026-09-25",
+          "note": "test"
+        },
+        {
+          "name": "Synthetic candidate filings",
+          "url": "https://example.test/az-candidate-filings.pdf",
+          "readAt": "2026-09-25",
+          "note": "test"
+        }
+      ],
+      "proof": {
+        "lineupContests": 0,
+        "lineupNominees": 0,
+        "uniquelyReconciled": 0,
+        "ambiguous": 0,
+        "unmatched": 0,
+        "duplicateTargetCollisions": 0,
+        "applicableNonFederalNominees": 0,
+        "applicableNonFederalReconciled": 0,
+        "applicableNonFederalUnresolved": 0
+      },
+      "agencyNextFilingDue": null,
+      "rows": []
+    }
+  },
+  "[{\"id\":\"ballot-az-pima:governor\",\"title\":\"Governor\",\"candidacies\":[{\"id\":\"ballot-az-pima:governor:hobbs-katie\",\"givenName\":\"Katie\",\"familyName\":\"Hobbs\"},{\"id\":\"ballot-az-pima:governor:biggs-andy\",\"givenName\":\"Andy\",\"familyName\":\"Biggs\"},{\"id\":\"ballot-az-pima:governor:hourihan-teri-ann\",\"givenName\":\"Teri Ann\",\"familyName\":\"Hourihan\"}],\"lineup\":[{\"name\":\"Andy Biggs\",\"partyLabel\":\"Republican\",\"outcome\":\"RECONCILED\",\"candidacyId\":\"ballot-az-pima:governor:biggs-andy\"},{\"name\":\"Teri Ann Hourihan\",\"partyLabel\":\"Independent\",\"outcome\":\"PARTY_CONFLICT\",\"candidacyId\":\"ballot-az-pima:governor:hourihan-teri-ann\",\"filingParty\":\"Democratic\"}]}]": {
+    "election": {
+      "id": "az-2026-general-test",
+      "date": "2026-11-03",
+      "name": "2026 General Election (test)",
+      "state": "AZ"
+    },
+    "contests": [
+      {
+        "id": "ballot-az-pima:governor",
+        "electionId": "az-2026-general-test",
+        "ocdId": "ocd-division/country:us/state:az",
+        "divisionVintage": "2026",
+        "title": "Governor",
+        "type": "CANDIDACY",
+        "voteFor": 1,
+        "termYears": 4,
+        "scopeNote": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:contest:ballot-az-pima:governor",
+          "level": "STATE",
+          "financeFilingAuthority": "Arizona Secretary of State"
+        },
+        "candidateListComplete": true
+      }
+    ],
+    "candidacies": [
+      {
+        "id": "ballot-az-pima:governor:hobbs-katie",
+        "contestId": "ballot-az-pima:governor",
+        "familyName": "Hobbs",
+        "givenName": "Katie",
+        "partyLabel": null,
+        "slogan": null,
+        "incumbent": null,
+        "websiteUrl": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:candidate:ballot-az-pima:governor:hobbs-katie",
+          "nameForms": [],
+          "candidacyAuthority": "Arizona Secretary of State",
+          "candidacySourceUrl": "https://example.test/az-candidate-filings.pdf",
+          "committees": []
+        }
+      },
+      {
+        "id": "ballot-az-pima:governor:biggs-andy",
+        "contestId": "ballot-az-pima:governor",
+        "familyName": "Biggs",
+        "givenName": "Andy",
+        "partyLabel": null,
+        "slogan": null,
+        "incumbent": null,
+        "websiteUrl": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:candidate:ballot-az-pima:governor:biggs-andy",
+          "nameForms": [],
+          "candidacyAuthority": "Arizona Secretary of State",
+          "candidacySourceUrl": "https://example.test/az-candidate-filings.pdf",
+          "committees": []
+        }
+      },
+      {
+        "id": "ballot-az-pima:governor:hourihan-teri-ann",
+        "contestId": "ballot-az-pima:governor",
+        "familyName": "Hourihan",
+        "givenName": "Teri Ann",
+        "partyLabel": null,
+        "slogan": null,
+        "incumbent": null,
+        "websiteUrl": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:candidate:ballot-az-pima:governor:hourihan-teri-ann",
+          "nameForms": [],
+          "candidacyAuthority": "Arizona Secretary of State",
+          "candidacySourceUrl": "https://example.test/az-candidate-filings.pdf",
+          "committees": []
+        }
+      }
+    ],
+    "measures": [],
+    "absences": [],
+    "generalLineup": {
+      "curatedAt": "2026-09-25",
+      "canvass": {
+        "title": "Synthetic certified canvass",
+        "url": "https://example.test/az-canvass.pdf",
+        "issuedBy": "Synthetic",
+        "reportDate": "2026-09-25",
+        "readAt": "2026-09-25",
+        "readNote": "test"
+      },
+      "note": "synthetic test lineup",
+      "contests": [
+        {
+          "contestId": "ballot-az-pima:governor",
+          "nominees": [
+            {
+              "name": "Andy Biggs",
+              "partyLabel": "Republican",
+              "note": null
+            },
+            {
+              "name": "Teri Ann Hourihan",
+              "partyLabel": "Independent",
+              "note": null
+            }
+          ]
+        }
+      ]
+    },
+    "measureAnalyses": {
+      "generatedAt": "2026-09-25",
+      "counts": {
+        "measures": 0,
+        "fetched": 0,
+        "extracted": 0,
+        "failed": 0
+      },
+      "analyses": []
+    },
+    "filingCandidacies": [],
+    "lineupReconciliation": {
+      "formatVersion": 1,
+      "state": "AZ",
+      "cycle": 2026,
+      "generatedAt": "2026-09-25",
+      "generatedBy": "tests/helpers/promoted-fixtures.ts",
+      "sources": [
+        {
+          "name": "Synthetic certified canvass",
+          "url": "https://example.test/az-canvass.pdf",
+          "readAt": "2026-09-25",
+          "note": "test"
+        },
+        {
+          "name": "Synthetic candidate filings",
+          "url": "https://example.test/az-candidate-filings.pdf",
+          "readAt": "2026-09-25",
+          "note": "test"
+        }
+      ],
+      "proof": {
+        "lineupContests": 1,
+        "lineupNominees": 2,
+        "uniquelyReconciled": 1,
+        "ambiguous": 0,
+        "unmatched": 0,
+        "duplicateTargetCollisions": 0,
+        "applicableNonFederalNominees": 2,
+        "applicableNonFederalReconciled": 1,
+        "applicableNonFederalUnresolved": 1
+      },
+      "agencyNextFilingDue": null,
+      "rows": [
+        {
+          "cardKey": "ballot-az-pima:governor|Andy Biggs",
+          "contestId": "ballot-az-pima:governor",
+          "nomineeName": "Andy Biggs",
+          "nomineePartyLabel": "Republican",
+          "outcome": "RECONCILED",
+          "candidateIdentityId": "az-2026:candidate:ballot-az-pima:governor:biggs-andy",
+          "canonicalCandidacyId": "ballot-az-pima:governor:biggs-andy",
+          "sourceValues": {
+            "canvassName": "Andy Biggs",
+            "canvassParty": "Republican",
+            "registryName": "Andy Biggs",
+            "registryParty": "Republican",
+            "registryCandidateIds": [
+              "az-2026:candidate:ballot-az-pima:governor:biggs-andy"
+            ]
+          },
+          "basis": {
+            "contestAgrees": true,
+            "partyChecked": true,
+            "partyAgrees": true,
+            "sharedNameForm": "Andy Biggs",
+            "sharedNameFormRules": [],
+            "note": "synthetic test row"
+          },
+          "readerGapSentence": null
+        },
+        {
+          "cardKey": "ballot-az-pima:governor|Teri Ann Hourihan",
+          "contestId": "ballot-az-pima:governor",
+          "nomineeName": "Teri Ann Hourihan",
+          "nomineePartyLabel": "Independent",
+          "outcome": "PARTY_CONFLICT",
+          "candidateIdentityId": null,
+          "canonicalCandidacyId": null,
+          "sourceValues": {
+            "canvassName": "Teri Ann Hourihan",
+            "canvassParty": "Independent",
+            "registryName": "Teri Ann Hourihan",
+            "registryParty": "Democratic",
+            "registryCandidateIds": [
+              "az-2026:candidate:ballot-az-pima:governor:hourihan-teri-ann"
+            ]
+          },
+          "basis": {
+            "contestAgrees": true,
+            "partyChecked": true,
+            "partyAgrees": false,
+            "sharedNameForm": "Teri Ann Hourihan",
+            "sharedNameFormRules": [],
+            "note": "synthetic test row"
+          },
+          "readerGapSentence": "We have not established that this nominee is the same candidacy as a filing."
+        }
+      ]
+    }
+  },
+  "[{\"id\":\"ballot-az-pima:governor\",\"title\":\"Governor\",\"candidacies\":[{\"id\":\"ballot-az-pima:governor:hobbs-katie\",\"givenName\":\"Katie\",\"familyName\":\"Hobbs\"},{\"id\":\"ballot-az-pima:governor:biggs-andy\",\"givenName\":\"Andy\",\"familyName\":\"Biggs\"},{\"id\":\"ballot-az-pima:governor:schweikert-david\",\"givenName\":\"David\",\"familyName\":\"Schweikert\"}],\"lineup\":[{\"name\":\"Katie Hobbs\",\"partyLabel\":\"Democratic\",\"outcome\":\"RECONCILED\",\"candidacyId\":\"ballot-az-pima:governor:hobbs-katie\"}]},{\"id\":\"ballot-az-pima:superintendent\",\"title\":\"Superintendent of Public Instruction\",\"candidacies\":[{\"id\":\"ballot-az-pima:superintendent:yee-kimberly\",\"givenName\":\"Kimberly\",\"familyName\":\"Yee\"}]}]": {
+    "election": {
+      "id": "az-2026-general-test",
+      "date": "2026-11-03",
+      "name": "2026 General Election (test)",
+      "state": "AZ"
+    },
+    "contests": [
+      {
+        "id": "ballot-az-pima:governor",
+        "electionId": "az-2026-general-test",
+        "ocdId": "ocd-division/country:us/state:az",
+        "divisionVintage": "2026",
+        "title": "Governor",
+        "type": "CANDIDACY",
+        "voteFor": 1,
+        "termYears": 4,
+        "scopeNote": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:contest:ballot-az-pima:governor",
+          "level": "STATE",
+          "financeFilingAuthority": "Arizona Secretary of State"
+        },
+        "candidateListComplete": true
+      },
+      {
+        "id": "ballot-az-pima:superintendent",
+        "electionId": "az-2026-general-test",
+        "ocdId": "ocd-division/country:us/state:az",
+        "divisionVintage": "2026",
+        "title": "Superintendent of Public Instruction",
+        "type": "CANDIDACY",
+        "voteFor": 1,
+        "termYears": 4,
+        "scopeNote": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:contest:ballot-az-pima:superintendent",
+          "level": "STATE",
+          "financeFilingAuthority": "Arizona Secretary of State"
+        },
+        "candidateListComplete": true
+      }
+    ],
+    "candidacies": [
+      {
+        "id": "ballot-az-pima:governor:hobbs-katie",
+        "contestId": "ballot-az-pima:governor",
+        "familyName": "Hobbs",
+        "givenName": "Katie",
+        "partyLabel": null,
+        "slogan": null,
+        "incumbent": null,
+        "websiteUrl": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:candidate:ballot-az-pima:governor:hobbs-katie",
+          "nameForms": [],
+          "candidacyAuthority": "Arizona Secretary of State",
+          "candidacySourceUrl": "https://example.test/az-candidate-filings.pdf",
+          "committees": []
+        }
+      },
+      {
+        "id": "ballot-az-pima:governor:biggs-andy",
+        "contestId": "ballot-az-pima:governor",
+        "familyName": "Biggs",
+        "givenName": "Andy",
+        "partyLabel": null,
+        "slogan": null,
+        "incumbent": null,
+        "websiteUrl": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:candidate:ballot-az-pima:governor:biggs-andy",
+          "nameForms": [],
+          "candidacyAuthority": "Arizona Secretary of State",
+          "candidacySourceUrl": "https://example.test/az-candidate-filings.pdf",
+          "committees": []
+        }
+      },
+      {
+        "id": "ballot-az-pima:governor:schweikert-david",
+        "contestId": "ballot-az-pima:governor",
+        "familyName": "Schweikert",
+        "givenName": "David",
+        "partyLabel": null,
+        "slogan": null,
+        "incumbent": null,
+        "websiteUrl": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:candidate:ballot-az-pima:governor:schweikert-david",
+          "nameForms": [],
+          "candidacyAuthority": "Arizona Secretary of State",
+          "candidacySourceUrl": "https://example.test/az-candidate-filings.pdf",
+          "committees": []
+        }
+      },
+      {
+        "id": "ballot-az-pima:superintendent:yee-kimberly",
+        "contestId": "ballot-az-pima:superintendent",
+        "familyName": "Yee",
+        "givenName": "Kimberly",
+        "partyLabel": null,
+        "slogan": null,
+        "incumbent": null,
+        "websiteUrl": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:candidate:ballot-az-pima:superintendent:yee-kimberly",
+          "nameForms": [],
+          "candidacyAuthority": "Arizona Secretary of State",
+          "candidacySourceUrl": "https://example.test/az-candidate-filings.pdf",
+          "committees": []
+        }
+      }
+    ],
+    "measures": [],
+    "absences": [],
+    "generalLineup": {
+      "curatedAt": "2026-09-25",
+      "canvass": {
+        "title": "Synthetic certified canvass",
+        "url": "https://example.test/az-canvass.pdf",
+        "issuedBy": "Synthetic",
+        "reportDate": "2026-09-25",
+        "readAt": "2026-09-25",
+        "readNote": "test"
+      },
+      "note": "synthetic test lineup",
+      "contests": [
+        {
+          "contestId": "ballot-az-pima:governor",
+          "nominees": [
+            {
+              "name": "Katie Hobbs",
+              "partyLabel": "Democratic",
+              "note": null
+            }
+          ]
+        }
+      ]
+    },
+    "measureAnalyses": {
+      "generatedAt": "2026-09-25",
+      "counts": {
+        "measures": 0,
+        "fetched": 0,
+        "extracted": 0,
+        "failed": 0
+      },
+      "analyses": []
+    },
+    "filingCandidacies": [],
+    "lineupReconciliation": {
+      "formatVersion": 1,
+      "state": "AZ",
+      "cycle": 2026,
+      "generatedAt": "2026-09-25",
+      "generatedBy": "tests/helpers/promoted-fixtures.ts",
+      "sources": [
+        {
+          "name": "Synthetic certified canvass",
+          "url": "https://example.test/az-canvass.pdf",
+          "readAt": "2026-09-25",
+          "note": "test"
+        },
+        {
+          "name": "Synthetic candidate filings",
+          "url": "https://example.test/az-candidate-filings.pdf",
+          "readAt": "2026-09-25",
+          "note": "test"
+        }
+      ],
+      "proof": {
+        "lineupContests": 1,
+        "lineupNominees": 1,
+        "uniquelyReconciled": 1,
+        "ambiguous": 0,
+        "unmatched": 0,
+        "duplicateTargetCollisions": 0,
+        "applicableNonFederalNominees": 1,
+        "applicableNonFederalReconciled": 1,
+        "applicableNonFederalUnresolved": 0
+      },
+      "agencyNextFilingDue": null,
+      "rows": [
+        {
+          "cardKey": "ballot-az-pima:governor|Katie Hobbs",
+          "contestId": "ballot-az-pima:governor",
+          "nomineeName": "Katie Hobbs",
+          "nomineePartyLabel": "Democratic",
+          "outcome": "RECONCILED",
+          "candidateIdentityId": "az-2026:candidate:ballot-az-pima:governor:hobbs-katie",
+          "canonicalCandidacyId": "ballot-az-pima:governor:hobbs-katie",
+          "sourceValues": {
+            "canvassName": "Katie Hobbs",
+            "canvassParty": "Democratic",
+            "registryName": "Katie Hobbs",
+            "registryParty": "Democratic",
+            "registryCandidateIds": [
+              "az-2026:candidate:ballot-az-pima:governor:hobbs-katie"
+            ]
+          },
+          "basis": {
+            "contestAgrees": true,
+            "partyChecked": true,
+            "partyAgrees": true,
+            "sharedNameForm": "Katie Hobbs",
+            "sharedNameFormRules": [],
+            "note": "synthetic test row"
+          },
+          "readerGapSentence": null
+        }
+      ]
+    }
+  },
+  "[{\"id\":\"ballot-az-pima:governor\",\"title\":\"Governor\",\"candidacies\":[{\"id\":\"ballot-az-pima:governor:hobbs-katie\",\"givenName\":\"Katie\",\"familyName\":\"Hobbs\"},{\"id\":\"ballot-az-pima:governor:hourihan-teri-ann\",\"givenName\":\"Teri Ann\",\"familyName\":\"Hourihan\"}],\"lineup\":[{\"name\":\"Katie Hobbs\",\"partyLabel\":\"Democratic\",\"outcome\":\"RECONCILED\",\"candidacyId\":\"ballot-az-pima:governor:hobbs-katie\"},{\"name\":\"Teri Ann Hourihan\",\"partyLabel\":\"Independent\",\"outcome\":\"PARTY_CONFLICT\",\"candidacyId\":\"ballot-az-pima:governor:hourihan-teri-ann\",\"filingParty\":\"Democratic\"}]}]": {
+    "election": {
+      "id": "az-2026-general-test",
+      "date": "2026-11-03",
+      "name": "2026 General Election (test)",
+      "state": "AZ"
+    },
+    "contests": [
+      {
+        "id": "ballot-az-pima:governor",
+        "electionId": "az-2026-general-test",
+        "ocdId": "ocd-division/country:us/state:az",
+        "divisionVintage": "2026",
+        "title": "Governor",
+        "type": "CANDIDACY",
+        "voteFor": 1,
+        "termYears": 4,
+        "scopeNote": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:contest:ballot-az-pima:governor",
+          "level": "STATE",
+          "financeFilingAuthority": "Arizona Secretary of State"
+        },
+        "candidateListComplete": true
+      }
+    ],
+    "candidacies": [
+      {
+        "id": "ballot-az-pima:governor:hobbs-katie",
+        "contestId": "ballot-az-pima:governor",
+        "familyName": "Hobbs",
+        "givenName": "Katie",
+        "partyLabel": null,
+        "slogan": null,
+        "incumbent": null,
+        "websiteUrl": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:candidate:ballot-az-pima:governor:hobbs-katie",
+          "nameForms": [],
+          "candidacyAuthority": "Arizona Secretary of State",
+          "candidacySourceUrl": "https://example.test/az-candidate-filings.pdf",
+          "committees": []
+        }
+      },
+      {
+        "id": "ballot-az-pima:governor:hourihan-teri-ann",
+        "contestId": "ballot-az-pima:governor",
+        "familyName": "Hourihan",
+        "givenName": "Teri Ann",
+        "partyLabel": null,
+        "slogan": null,
+        "incumbent": null,
+        "websiteUrl": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:candidate:ballot-az-pima:governor:hourihan-teri-ann",
+          "nameForms": [],
+          "candidacyAuthority": "Arizona Secretary of State",
+          "candidacySourceUrl": "https://example.test/az-candidate-filings.pdf",
+          "committees": []
+        }
+      }
+    ],
+    "measures": [],
+    "absences": [],
+    "generalLineup": {
+      "curatedAt": "2026-09-25",
+      "canvass": {
+        "title": "Synthetic certified canvass",
+        "url": "https://example.test/az-canvass.pdf",
+        "issuedBy": "Synthetic",
+        "reportDate": "2026-09-25",
+        "readAt": "2026-09-25",
+        "readNote": "test"
+      },
+      "note": "synthetic test lineup",
+      "contests": [
+        {
+          "contestId": "ballot-az-pima:governor",
+          "nominees": [
+            {
+              "name": "Katie Hobbs",
+              "partyLabel": "Democratic",
+              "note": null
+            },
+            {
+              "name": "Teri Ann Hourihan",
+              "partyLabel": "Independent",
+              "note": null
+            }
+          ]
+        }
+      ]
+    },
+    "measureAnalyses": {
+      "generatedAt": "2026-09-25",
+      "counts": {
+        "measures": 0,
+        "fetched": 0,
+        "extracted": 0,
+        "failed": 0
+      },
+      "analyses": []
+    },
+    "filingCandidacies": [],
+    "lineupReconciliation": {
+      "formatVersion": 1,
+      "state": "AZ",
+      "cycle": 2026,
+      "generatedAt": "2026-09-25",
+      "generatedBy": "tests/helpers/promoted-fixtures.ts",
+      "sources": [
+        {
+          "name": "Synthetic certified canvass",
+          "url": "https://example.test/az-canvass.pdf",
+          "readAt": "2026-09-25",
+          "note": "test"
+        },
+        {
+          "name": "Synthetic candidate filings",
+          "url": "https://example.test/az-candidate-filings.pdf",
+          "readAt": "2026-09-25",
+          "note": "test"
+        }
+      ],
+      "proof": {
+        "lineupContests": 1,
+        "lineupNominees": 2,
+        "uniquelyReconciled": 1,
+        "ambiguous": 0,
+        "unmatched": 0,
+        "duplicateTargetCollisions": 0,
+        "applicableNonFederalNominees": 2,
+        "applicableNonFederalReconciled": 1,
+        "applicableNonFederalUnresolved": 1
+      },
+      "agencyNextFilingDue": null,
+      "rows": [
+        {
+          "cardKey": "ballot-az-pima:governor|Katie Hobbs",
+          "contestId": "ballot-az-pima:governor",
+          "nomineeName": "Katie Hobbs",
+          "nomineePartyLabel": "Democratic",
+          "outcome": "RECONCILED",
+          "candidateIdentityId": "az-2026:candidate:ballot-az-pima:governor:hobbs-katie",
+          "canonicalCandidacyId": "ballot-az-pima:governor:hobbs-katie",
+          "sourceValues": {
+            "canvassName": "Katie Hobbs",
+            "canvassParty": "Democratic",
+            "registryName": "Katie Hobbs",
+            "registryParty": "Democratic",
+            "registryCandidateIds": [
+              "az-2026:candidate:ballot-az-pima:governor:hobbs-katie"
+            ]
+          },
+          "basis": {
+            "contestAgrees": true,
+            "partyChecked": true,
+            "partyAgrees": true,
+            "sharedNameForm": "Katie Hobbs",
+            "sharedNameFormRules": [],
+            "note": "synthetic test row"
+          },
+          "readerGapSentence": null
+        },
+        {
+          "cardKey": "ballot-az-pima:governor|Teri Ann Hourihan",
+          "contestId": "ballot-az-pima:governor",
+          "nomineeName": "Teri Ann Hourihan",
+          "nomineePartyLabel": "Independent",
+          "outcome": "PARTY_CONFLICT",
+          "candidateIdentityId": null,
+          "canonicalCandidacyId": null,
+          "sourceValues": {
+            "canvassName": "Teri Ann Hourihan",
+            "canvassParty": "Independent",
+            "registryName": "Teri Ann Hourihan",
+            "registryParty": "Democratic",
+            "registryCandidateIds": [
+              "az-2026:candidate:ballot-az-pima:governor:hourihan-teri-ann"
+            ]
+          },
+          "basis": {
+            "contestAgrees": true,
+            "partyChecked": true,
+            "partyAgrees": false,
+            "sharedNameForm": "Teri Ann Hourihan",
+            "sharedNameFormRules": [],
+            "note": "synthetic test row"
+          },
+          "readerGapSentence": "We have not established that this nominee is the same candidacy as a filing."
+        }
+      ]
+    }
+  },
+  "[{\"id\":\"ballot-az-pima:governor\",\"title\":\"Governor\",\"candidacies\":[{\"id\":\"ballot-az-pima:governor:hobbs-katie\",\"givenName\":\"Katie\",\"familyName\":\"Hobbs\"},{\"id\":\"ballot-az-pima:governor:biggs-andy\",\"givenName\":\"Andy\",\"familyName\":\"Biggs\"}],\"lineup\":[{\"name\":\"Katie Hobbs\",\"partyLabel\":\"Democratic\",\"outcome\":\"RECONCILED\",\"candidacyId\":\"ballot-az-pima:governor:hobbs-katie\"},{\"name\":\"Andy Biggs\",\"partyLabel\":\"Republican\",\"outcome\":\"RECONCILED\",\"candidacyId\":\"ballot-az-pima:governor:biggs-andy\"}]},{\"id\":\"ballot-az-pima:us-house-7\",\"title\":\"U.S. Representative\",\"ocdId\":\"ocd-division/country:us/state:az/cd:7\",\"candidacies\":[{\"id\":\"ballot-az-pima:us-house-7:grijalva-adelita\",\"givenName\":\"Adelita\",\"familyName\":\"Grijalva\"}],\"lineup\":[{\"name\":\"Adelita Grijalva\",\"partyLabel\":\"Democratic\",\"outcome\":\"RECONCILED\",\"candidacyId\":\"ballot-az-pima:us-house-7:grijalva-adelita\"}]}]": {
+    "election": {
+      "id": "az-2026-general-test",
+      "date": "2026-11-03",
+      "name": "2026 General Election (test)",
+      "state": "AZ"
+    },
+    "contests": [
+      {
+        "id": "ballot-az-pima:governor",
+        "electionId": "az-2026-general-test",
+        "ocdId": "ocd-division/country:us/state:az",
+        "divisionVintage": "2026",
+        "title": "Governor",
+        "type": "CANDIDACY",
+        "voteFor": 1,
+        "termYears": 4,
+        "scopeNote": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:contest:ballot-az-pima:governor",
+          "level": "STATE",
+          "financeFilingAuthority": "Arizona Secretary of State"
+        },
+        "candidateListComplete": true
+      },
+      {
+        "id": "ballot-az-pima:us-house-7",
+        "electionId": "az-2026-general-test",
+        "ocdId": "ocd-division/country:us/state:az/cd:7",
+        "divisionVintage": "2026",
+        "title": "U.S. Representative",
+        "type": "CANDIDACY",
+        "voteFor": 1,
+        "termYears": 4,
+        "scopeNote": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:contest:ballot-az-pima:us-house-7",
+          "level": "STATE",
+          "financeFilingAuthority": "Arizona Secretary of State"
+        },
+        "candidateListComplete": true
+      }
+    ],
+    "candidacies": [
+      {
+        "id": "ballot-az-pima:governor:hobbs-katie",
+        "contestId": "ballot-az-pima:governor",
+        "familyName": "Hobbs",
+        "givenName": "Katie",
+        "partyLabel": null,
+        "slogan": null,
+        "incumbent": null,
+        "websiteUrl": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:candidate:ballot-az-pima:governor:hobbs-katie",
+          "nameForms": [],
+          "candidacyAuthority": "Arizona Secretary of State",
+          "candidacySourceUrl": "https://example.test/az-candidate-filings.pdf",
+          "committees": []
+        }
+      },
+      {
+        "id": "ballot-az-pima:governor:biggs-andy",
+        "contestId": "ballot-az-pima:governor",
+        "familyName": "Biggs",
+        "givenName": "Andy",
+        "partyLabel": null,
+        "slogan": null,
+        "incumbent": null,
+        "websiteUrl": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:candidate:ballot-az-pima:governor:biggs-andy",
+          "nameForms": [],
+          "candidacyAuthority": "Arizona Secretary of State",
+          "candidacySourceUrl": "https://example.test/az-candidate-filings.pdf",
+          "committees": []
+        }
+      },
+      {
+        "id": "ballot-az-pima:us-house-7:grijalva-adelita",
+        "contestId": "ballot-az-pima:us-house-7",
+        "familyName": "Grijalva",
+        "givenName": "Adelita",
+        "partyLabel": null,
+        "slogan": null,
+        "incumbent": null,
+        "websiteUrl": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:candidate:ballot-az-pima:us-house-7:grijalva-adelita",
+          "nameForms": [],
+          "candidacyAuthority": "Arizona Secretary of State",
+          "candidacySourceUrl": "https://example.test/az-candidate-filings.pdf",
+          "committees": []
+        }
+      }
+    ],
+    "measures": [],
+    "absences": [],
+    "generalLineup": {
+      "curatedAt": "2026-09-25",
+      "canvass": {
+        "title": "Synthetic certified canvass",
+        "url": "https://example.test/az-canvass.pdf",
+        "issuedBy": "Synthetic",
+        "reportDate": "2026-09-25",
+        "readAt": "2026-09-25",
+        "readNote": "test"
+      },
+      "note": "synthetic test lineup",
+      "contests": [
+        {
+          "contestId": "ballot-az-pima:governor",
+          "nominees": [
+            {
+              "name": "Katie Hobbs",
+              "partyLabel": "Democratic",
+              "note": null
+            },
+            {
+              "name": "Andy Biggs",
+              "partyLabel": "Republican",
+              "note": null
+            }
+          ]
+        },
+        {
+          "contestId": "ballot-az-pima:us-house-7",
+          "nominees": [
+            {
+              "name": "Adelita Grijalva",
+              "partyLabel": "Democratic",
+              "note": null
+            }
+          ]
+        }
+      ]
+    },
+    "measureAnalyses": {
+      "generatedAt": "2026-09-25",
+      "counts": {
+        "measures": 0,
+        "fetched": 0,
+        "extracted": 0,
+        "failed": 0
+      },
+      "analyses": []
+    },
+    "filingCandidacies": [],
+    "lineupReconciliation": {
+      "formatVersion": 1,
+      "state": "AZ",
+      "cycle": 2026,
+      "generatedAt": "2026-09-25",
+      "generatedBy": "tests/helpers/promoted-fixtures.ts",
+      "sources": [
+        {
+          "name": "Synthetic certified canvass",
+          "url": "https://example.test/az-canvass.pdf",
+          "readAt": "2026-09-25",
+          "note": "test"
+        },
+        {
+          "name": "Synthetic candidate filings",
+          "url": "https://example.test/az-candidate-filings.pdf",
+          "readAt": "2026-09-25",
+          "note": "test"
+        }
+      ],
+      "proof": {
+        "lineupContests": 2,
+        "lineupNominees": 3,
+        "uniquelyReconciled": 3,
+        "ambiguous": 0,
+        "unmatched": 0,
+        "duplicateTargetCollisions": 0,
+        "applicableNonFederalNominees": 3,
+        "applicableNonFederalReconciled": 3,
+        "applicableNonFederalUnresolved": 0
+      },
+      "agencyNextFilingDue": null,
+      "rows": [
+        {
+          "cardKey": "ballot-az-pima:governor|Katie Hobbs",
+          "contestId": "ballot-az-pima:governor",
+          "nomineeName": "Katie Hobbs",
+          "nomineePartyLabel": "Democratic",
+          "outcome": "RECONCILED",
+          "candidateIdentityId": "az-2026:candidate:ballot-az-pima:governor:hobbs-katie",
+          "canonicalCandidacyId": "ballot-az-pima:governor:hobbs-katie",
+          "sourceValues": {
+            "canvassName": "Katie Hobbs",
+            "canvassParty": "Democratic",
+            "registryName": "Katie Hobbs",
+            "registryParty": "Democratic",
+            "registryCandidateIds": [
+              "az-2026:candidate:ballot-az-pima:governor:hobbs-katie"
+            ]
+          },
+          "basis": {
+            "contestAgrees": true,
+            "partyChecked": true,
+            "partyAgrees": true,
+            "sharedNameForm": "Katie Hobbs",
+            "sharedNameFormRules": [],
+            "note": "synthetic test row"
+          },
+          "readerGapSentence": null
+        },
+        {
+          "cardKey": "ballot-az-pima:governor|Andy Biggs",
+          "contestId": "ballot-az-pima:governor",
+          "nomineeName": "Andy Biggs",
+          "nomineePartyLabel": "Republican",
+          "outcome": "RECONCILED",
+          "candidateIdentityId": "az-2026:candidate:ballot-az-pima:governor:biggs-andy",
+          "canonicalCandidacyId": "ballot-az-pima:governor:biggs-andy",
+          "sourceValues": {
+            "canvassName": "Andy Biggs",
+            "canvassParty": "Republican",
+            "registryName": "Andy Biggs",
+            "registryParty": "Republican",
+            "registryCandidateIds": [
+              "az-2026:candidate:ballot-az-pima:governor:biggs-andy"
+            ]
+          },
+          "basis": {
+            "contestAgrees": true,
+            "partyChecked": true,
+            "partyAgrees": true,
+            "sharedNameForm": "Andy Biggs",
+            "sharedNameFormRules": [],
+            "note": "synthetic test row"
+          },
+          "readerGapSentence": null
+        },
+        {
+          "cardKey": "ballot-az-pima:us-house-7|Adelita Grijalva",
+          "contestId": "ballot-az-pima:us-house-7",
+          "nomineeName": "Adelita Grijalva",
+          "nomineePartyLabel": "Democratic",
+          "outcome": "RECONCILED",
+          "candidateIdentityId": "az-2026:candidate:ballot-az-pima:us-house-7:grijalva-adelita",
+          "canonicalCandidacyId": "ballot-az-pima:us-house-7:grijalva-adelita",
+          "sourceValues": {
+            "canvassName": "Adelita Grijalva",
+            "canvassParty": "Democratic",
+            "registryName": "Adelita Grijalva",
+            "registryParty": "Democratic",
+            "registryCandidateIds": [
+              "az-2026:candidate:ballot-az-pima:us-house-7:grijalva-adelita"
+            ]
+          },
+          "basis": {
+            "contestAgrees": true,
+            "partyChecked": true,
+            "partyAgrees": true,
+            "sharedNameForm": "Adelita Grijalva",
+            "sharedNameFormRules": [],
+            "note": "synthetic test row"
+          },
+          "readerGapSentence": null
+        }
+      ]
+    }
+  },
+  "[{\"id\":\"ballot-az-pima:governor\",\"title\":\"Governor\",\"candidacies\":[{\"id\":\"ballot-az-pima:governor:hobbs-katie\",\"givenName\":\"Katie\",\"familyName\":\"Hobbs\"}],\"lineup\":[{\"name\":\"Katie Hobbs\",\"partyLabel\":\"Democratic\",\"outcome\":\"RECONCILED\",\"candidacyId\":\"ballot-az-pima:governor:hobbs-katie\"}]}]": {
+    "election": {
+      "id": "az-2026-general-test",
+      "date": "2026-11-03",
+      "name": "2026 General Election (test)",
+      "state": "AZ"
+    },
+    "contests": [
+      {
+        "id": "ballot-az-pima:governor",
+        "electionId": "az-2026-general-test",
+        "ocdId": "ocd-division/country:us/state:az",
+        "divisionVintage": "2026",
+        "title": "Governor",
+        "type": "CANDIDACY",
+        "voteFor": 1,
+        "termYears": 4,
+        "scopeNote": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:contest:ballot-az-pima:governor",
+          "level": "STATE",
+          "financeFilingAuthority": "Arizona Secretary of State"
+        },
+        "candidateListComplete": true
+      }
+    ],
+    "candidacies": [
+      {
+        "id": "ballot-az-pima:governor:hobbs-katie",
+        "contestId": "ballot-az-pima:governor",
+        "familyName": "Hobbs",
+        "givenName": "Katie",
+        "partyLabel": null,
+        "slogan": null,
+        "incumbent": null,
+        "websiteUrl": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:candidate:ballot-az-pima:governor:hobbs-katie",
+          "nameForms": [],
+          "candidacyAuthority": "Arizona Secretary of State",
+          "candidacySourceUrl": "https://example.test/az-candidate-filings.pdf",
+          "committees": []
+        }
+      }
+    ],
+    "measures": [],
+    "absences": [],
+    "generalLineup": {
+      "curatedAt": "2026-09-25",
+      "canvass": {
+        "title": "Synthetic certified canvass",
+        "url": "https://example.test/az-canvass.pdf",
+        "issuedBy": "Synthetic",
+        "reportDate": "2026-09-25",
+        "readAt": "2026-09-25",
+        "readNote": "test"
+      },
+      "note": "synthetic test lineup",
+      "contests": [
+        {
+          "contestId": "ballot-az-pima:governor",
+          "nominees": [
+            {
+              "name": "Katie Hobbs",
+              "partyLabel": "Democratic",
+              "note": null
+            }
+          ]
+        }
+      ]
+    },
+    "measureAnalyses": {
+      "generatedAt": "2026-09-25",
+      "counts": {
+        "measures": 0,
+        "fetched": 0,
+        "extracted": 0,
+        "failed": 0
+      },
+      "analyses": []
+    },
+    "filingCandidacies": [],
+    "lineupReconciliation": {
+      "formatVersion": 1,
+      "state": "AZ",
+      "cycle": 2026,
+      "generatedAt": "2026-09-25",
+      "generatedBy": "tests/helpers/promoted-fixtures.ts",
+      "sources": [
+        {
+          "name": "Synthetic certified canvass",
+          "url": "https://example.test/az-canvass.pdf",
+          "readAt": "2026-09-25",
+          "note": "test"
+        },
+        {
+          "name": "Synthetic candidate filings",
+          "url": "https://example.test/az-candidate-filings.pdf",
+          "readAt": "2026-09-25",
+          "note": "test"
+        }
+      ],
+      "proof": {
+        "lineupContests": 1,
+        "lineupNominees": 1,
+        "uniquelyReconciled": 1,
+        "ambiguous": 0,
+        "unmatched": 0,
+        "duplicateTargetCollisions": 0,
+        "applicableNonFederalNominees": 1,
+        "applicableNonFederalReconciled": 1,
+        "applicableNonFederalUnresolved": 0
+      },
+      "agencyNextFilingDue": null,
+      "rows": [
+        {
+          "cardKey": "ballot-az-pima:governor|Katie Hobbs",
+          "contestId": "ballot-az-pima:governor",
+          "nomineeName": "Katie Hobbs",
+          "nomineePartyLabel": "Democratic",
+          "outcome": "RECONCILED",
+          "candidateIdentityId": "az-2026:candidate:ballot-az-pima:governor:hobbs-katie",
+          "canonicalCandidacyId": "ballot-az-pima:governor:hobbs-katie",
+          "sourceValues": {
+            "canvassName": "Katie Hobbs",
+            "canvassParty": "Democratic",
+            "registryName": "Katie Hobbs",
+            "registryParty": "Democratic",
+            "registryCandidateIds": [
+              "az-2026:candidate:ballot-az-pima:governor:hobbs-katie"
+            ]
+          },
+          "basis": {
+            "contestAgrees": true,
+            "partyChecked": true,
+            "partyAgrees": true,
+            "sharedNameForm": "Katie Hobbs",
+            "sharedNameFormRules": [],
+            "note": "synthetic test row"
+          },
+          "readerGapSentence": null
+        }
+      ]
+    }
+  },
+  "[{\"id\":\"ballot-az-pima:governor\",\"title\":\"Governor\",\"candidacies\":[{\"id\":\"ballot-az-pima:governor:hobbs-katie\",\"givenName\":\"Katie\",\"familyName\":\"Hobbs\"},{\"id\":\"ballot-az-pima:governor:biggs-andy\",\"givenName\":\"Andy\",\"familyName\":\"Biggs\"}],\"lineup\":[{\"name\":\"Katie Hobbs\",\"partyLabel\":\"Democratic\",\"outcome\":\"RECONCILED\",\"candidacyId\":\"ballot-az-pima:governor:hobbs-katie\"},{\"name\":\"Unresolved Person\",\"partyLabel\":\"Independent\",\"outcome\":\"NO_CANDIDATE_MATCH\"}]}]": {
+    "election": {
+      "id": "az-2026-general-test",
+      "date": "2026-11-03",
+      "name": "2026 General Election (test)",
+      "state": "AZ"
+    },
+    "contests": [
+      {
+        "id": "ballot-az-pima:governor",
+        "electionId": "az-2026-general-test",
+        "ocdId": "ocd-division/country:us/state:az",
+        "divisionVintage": "2026",
+        "title": "Governor",
+        "type": "CANDIDACY",
+        "voteFor": 1,
+        "termYears": 4,
+        "scopeNote": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:contest:ballot-az-pima:governor",
+          "level": "STATE",
+          "financeFilingAuthority": "Arizona Secretary of State"
+        },
+        "candidateListComplete": true
+      }
+    ],
+    "candidacies": [
+      {
+        "id": "ballot-az-pima:governor:hobbs-katie",
+        "contestId": "ballot-az-pima:governor",
+        "familyName": "Hobbs",
+        "givenName": "Katie",
+        "partyLabel": null,
+        "slogan": null,
+        "incumbent": null,
+        "websiteUrl": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:candidate:ballot-az-pima:governor:hobbs-katie",
+          "nameForms": [],
+          "candidacyAuthority": "Arizona Secretary of State",
+          "candidacySourceUrl": "https://example.test/az-candidate-filings.pdf",
+          "committees": []
+        }
+      },
+      {
+        "id": "ballot-az-pima:governor:biggs-andy",
+        "contestId": "ballot-az-pima:governor",
+        "familyName": "Biggs",
+        "givenName": "Andy",
+        "partyLabel": null,
+        "slogan": null,
+        "incumbent": null,
+        "websiteUrl": null,
+        "provenance": {
+          "sourceUrl": "https://example.test/az-ballot",
+          "sourceOrg": "Synthetic test ballot",
+          "collectedAt": "2026-09-25",
+          "verifiedAt": null
+        },
+        "identity": {
+          "identityId": "az-2026:candidate:ballot-az-pima:governor:biggs-andy",
+          "nameForms": [],
+          "candidacyAuthority": "Arizona Secretary of State",
+          "candidacySourceUrl": "https://example.test/az-candidate-filings.pdf",
+          "committees": []
+        }
+      }
+    ],
+    "measures": [],
+    "absences": [],
+    "generalLineup": {
+      "curatedAt": "2026-09-25",
+      "canvass": {
+        "title": "Synthetic certified canvass",
+        "url": "https://example.test/az-canvass.pdf",
+        "issuedBy": "Synthetic",
+        "reportDate": "2026-09-25",
+        "readAt": "2026-09-25",
+        "readNote": "test"
+      },
+      "note": "synthetic test lineup",
+      "contests": [
+        {
+          "contestId": "ballot-az-pima:governor",
+          "nominees": [
+            {
+              "name": "Katie Hobbs",
+              "partyLabel": "Democratic",
+              "note": null
+            },
+            {
+              "name": "Unresolved Person",
+              "partyLabel": "Independent",
+              "note": null
+            }
+          ]
+        }
+      ]
+    },
+    "measureAnalyses": {
+      "generatedAt": "2026-09-25",
+      "counts": {
+        "measures": 0,
+        "fetched": 0,
+        "extracted": 0,
+        "failed": 0
+      },
+      "analyses": []
+    },
+    "filingCandidacies": [],
+    "lineupReconciliation": {
+      "formatVersion": 1,
+      "state": "AZ",
+      "cycle": 2026,
+      "generatedAt": "2026-09-25",
+      "generatedBy": "tests/helpers/promoted-fixtures.ts",
+      "sources": [
+        {
+          "name": "Synthetic certified canvass",
+          "url": "https://example.test/az-canvass.pdf",
+          "readAt": "2026-09-25",
+          "note": "test"
+        },
+        {
+          "name": "Synthetic candidate filings",
+          "url": "https://example.test/az-candidate-filings.pdf",
+          "readAt": "2026-09-25",
+          "note": "test"
+        }
+      ],
+      "proof": {
+        "lineupContests": 1,
+        "lineupNominees": 2,
+        "uniquelyReconciled": 1,
+        "ambiguous": 0,
+        "unmatched": 1,
+        "duplicateTargetCollisions": 0,
+        "applicableNonFederalNominees": 2,
+        "applicableNonFederalReconciled": 1,
+        "applicableNonFederalUnresolved": 1
+      },
+      "agencyNextFilingDue": null,
+      "rows": [
+        {
+          "cardKey": "ballot-az-pima:governor|Katie Hobbs",
+          "contestId": "ballot-az-pima:governor",
+          "nomineeName": "Katie Hobbs",
+          "nomineePartyLabel": "Democratic",
+          "outcome": "RECONCILED",
+          "candidateIdentityId": "az-2026:candidate:ballot-az-pima:governor:hobbs-katie",
+          "canonicalCandidacyId": "ballot-az-pima:governor:hobbs-katie",
+          "sourceValues": {
+            "canvassName": "Katie Hobbs",
+            "canvassParty": "Democratic",
+            "registryName": "Katie Hobbs",
+            "registryParty": "Democratic",
+            "registryCandidateIds": [
+              "az-2026:candidate:ballot-az-pima:governor:hobbs-katie"
+            ]
+          },
+          "basis": {
+            "contestAgrees": true,
+            "partyChecked": true,
+            "partyAgrees": true,
+            "sharedNameForm": "Katie Hobbs",
+            "sharedNameFormRules": [],
+            "note": "synthetic test row"
+          },
+          "readerGapSentence": null
+        },
+        {
+          "cardKey": "ballot-az-pima:governor|Unresolved Person",
+          "contestId": "ballot-az-pima:governor",
+          "nomineeName": "Unresolved Person",
+          "nomineePartyLabel": "Independent",
+          "outcome": "NO_CANDIDATE_MATCH",
+          "candidateIdentityId": null,
+          "canonicalCandidacyId": null,
+          "sourceValues": {
+            "canvassName": "Unresolved Person",
+            "canvassParty": "Independent",
+            "registryName": null,
+            "registryParty": null,
+            "registryCandidateIds": []
+          },
+          "basis": {
+            "contestAgrees": true,
+            "partyChecked": true,
+            "partyAgrees": null,
+            "sharedNameForm": null,
+            "sharedNameFormRules": [],
+            "note": "synthetic test row"
+          },
+          "readerGapSentence": "We have not established that this nominee is the same candidacy as a filing."
+        }
+      ]
+    }
+  }
+}

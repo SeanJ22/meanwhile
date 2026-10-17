@@ -108,6 +108,8 @@ export async function searchMeetings(
   injectedSource?: ResolvedMeetingSource,
   shownSettings?: Pick<import("./settings.ts").MeetingSettings, "shownBackDays" | "shownAheadDays">,
   bodyIds: ReadonlySet<string> = new Set(),
+  /** The bodies the registry lists; a meeting of any other body is placed by its own division. */
+  registeredBodyIds?: ReadonlySet<string>,
 ): Promise<MeetingSearchResult> {
   const source = injectedSource ?? getMeetingSource();
   const shown = shownSettings ?? await readReaderMeetingSettings();
@@ -120,7 +122,7 @@ export async function searchMeetings(
     startsAfter: new Date(now.getTime() - lookbackMs).toISOString(),
     startsBefore: new Date(now.getTime() + horizonMs).toISOString(),
   }, now)).filter(meeting => {
-    if (meeting.bodyId) return bodyIds.has(meeting.bodyId);
+    if (meeting.bodyId && registeredBodyIds?.has(meeting.bodyId) !== false) return bodyIds.has(meeting.bodyId);
     return meeting.ocdId != null && divisionsAtPoint.has(meeting.ocdId.split("#")[0]);
   }).map(meeting => {
     const jurisdiction = readerJurisdictionLabel(meeting.jurisdiction);

@@ -23,13 +23,15 @@ const sittingsByRecord = new Map<string, ReadonlyMap<string, DoorSittings>>();
 async function meetingDoorFacts(now: string): Promise<ReadonlyMap<string, DoorFacts> | null> {
   const facts = new Map<string, DoorFacts>();
   for await (const body of readMeetingBodies({ store: resolveReaderArtifactWriteStore(), includeAgenda: false, now })) {
-    let held = sittingsByRecord.get(body.sha);
+    let held = body.sha === null ? undefined : sittingsByRecord.get(body.sha);
     if (held === undefined) {
       const read = await body.load();
       if (read === null) return null;
       held = meetingSittingsByDoor(read.snapshot);
-      if (sittingsByRecord.size >= 200_000) sittingsByRecord.delete(sittingsByRecord.keys().next().value!);
-      sittingsByRecord.set(body.sha, held);
+      if (body.sha !== null) {
+        if (sittingsByRecord.size >= 200_000) sittingsByRecord.delete(sittingsByRecord.keys().next().value!);
+        sittingsByRecord.set(body.sha, held);
+      }
     }
     for (const [key, sittings] of held) facts.set(key, doorFactsAt(sittings, now));
   }

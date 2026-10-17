@@ -12,7 +12,7 @@ import { websiteRequestLimit } from "../control-plane/scheduler/host-supervision
 import { upsertSystemDoor } from "./link-sweep-store.ts";
 import { admitWebsiteRequest, holdWebsiteAfter, type WebsitePacing } from "../control-plane/website-pacing.ts";
 import { gunzipSync } from "node:zlib";
-import { decodeMeetingBlob, type MeetingBodyRecord, type MeetingStateIndex } from "../meetings/body-records.ts";
+import { decodeMeetingBlob, meetingBodyPointerKey, type MeetingBodyPointer, type MeetingBodyRecord, type MeetingStateIndex } from "../meetings/body-records.ts";
 import { sha256OfJson } from "../meetings/edge-artifacts.ts";
 import type { ReaderArtifactStore } from "../meetings/edge-store.ts";
 import type { DoorRepository } from "./registry.ts";
@@ -196,7 +196,7 @@ export async function recordSweep(repo: DoorRepository, results: readonly LinkRe
 }
 
 /** What the sweep reads of the published edge: the manifest itself, then each state's body records and agenda text, one body at a time. */
-export async function* readEdgeForSweep(store: Pick<ReaderArtifactStore, "readManifest" | "readBytes">): AsyncGenerator<unknown> {
+export async function* readEdgeForSweep(store: Pick<ReaderArtifactStore, "readManifest" | "readBytes" | "readJsonPointer">): AsyncGenerator<unknown> {
   const stored = await store.readManifest();
   if (stored === null) return;
   const { meetingStates, ...rest } = stored.manifest;
@@ -205,12 +205,13 @@ export async function* readEdgeForSweep(store: Pick<ReaderArtifactStore, "readMa
     const bytes = await store.readBytes(key);
     return bytes === null ? null : decodeMeetingBlob<T>(bytes, key);
   };
-  for (const ref of Object.values(meetingStates ?? {})) {
+  for (const [state, ref] of Object.entries(meetingStates ?? {})) {
     const bytes = await store.readBytes(ref.key);
     const index = bytes === null ? null : (JSON.parse(gunzipSync(bytes).toString("utf8")) as { value: MeetingStateIndex }).value;
     if (index === null || sha256OfJson(index) !== ref.sha) continue;
-    for (const entry of Object.values(index.bodies)) {
-      const record = await read<MeetingBodyRecord>(entry.record);
+    for (const bodyId of index.bodies) {
+      const pointer = (await store.readJsonPointer<MeetingBodyPointer>(meetingBodyPointerKey(state, bodyId)))?.value;
+      const record = pointer ? await read<MeetingBodyRecord>(pointer.record) : null;
       if (record === null) continue;
       yield record;
       if (record.agenda) { const agenda = await read<unknown>(record.agenda); if (agenda !== null) yield agenda; }

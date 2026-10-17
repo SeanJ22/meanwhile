@@ -112,7 +112,7 @@ test("controlled clock, the place read: a receipt-only period advances Last chec
   assert.deepEqual(collectedOf(await place(PIMA, at(T4, 60_000)), PIMA), [T2], "Pima keeps its receipt's check");
 });
 
-test("controlled clock, the supervisor pass: a receipt writes one state's index alone, reads no whole partition, and the edge and the database say the same when it was checked", async () => {
+test("controlled clock, the supervisor pass: a receipt moves one body's pointer alone, reads no whole partition, and the edge and the database say the same when it was checked", async () => {
   const store = new MemoryRoutineDataStore();
   const edge = freshEdge();
   await readPartition(store, PIMA, T1, ["a", "b"]);
@@ -132,14 +132,14 @@ test("controlled clock, the supervisor pass: a receipt writes one state's index 
   const quiet = await publishPass(store, edge, at(T2, 60_000));
   for (const undo of restore) undo();
   assert.deepEqual(wholeReads, [], "the pass reads pointer identities and the body's coupling alone");
-  assert.equal(quiet.status, "PUBLISHED");
+  assert.equal(quiet.status, "CURRENT", "the manifest does not move for a check");
   assert.deepEqual(quiet.plan.stats.states, ["AZ"]);
+  assert.equal(quiet.plan.stats.pointersWritten, 1);
+  assert.equal(quiet.plan.stats.indexesWritten, 0);
   assert.equal(quiet.plan.stats.composed, 0, "the same versions: nothing is recomposed");
   assert.equal(quiet.plan.stats.recordsWritten, 0);
   const manifestAfter = (await edge.readManifest())!.manifest;
-  assert.equal(manifestAfter.sequence, manifestBefore.sequence + 1);
-  assert.equal(manifestAfter.meetingStates!.NH!.key, manifestBefore.meetingStates!.NH!.key, "Newbury's state is the same immutable artifact");
-  assert.notEqual(manifestAfter.meetingStates!.AZ!.key, manifestBefore.meetingStates!.AZ!.key);
+  assert.deepEqual(manifestAfter, manifestBefore);
 
   // The reader from the edge and the reader from the database row agree.
   const fromEdge = await readPlace(edge, store, [PIMA.ocdId!], at(T2, 2 * 60_000));
@@ -151,7 +151,7 @@ test("controlled clock, the supervisor pass: a receipt writes one state's index 
   await failedCheck(store, NEWBURY, T3);
   assert.equal((await publishPass(store, edge, at(T3, 60_000))).status, "CURRENT");
 
-  // Newbury changed: its record, row and state's index are written; Arizona's are not.
+  // Newbury changed: its record, row and pointer are written; Arizona's are not.
   await readPartition(store, NEWBURY, T4, ["x", "y"]);
   const changed = await publishPass(store, edge, at(T4, 60_000));
   assert.equal(changed.plan.stats.composed, 1);

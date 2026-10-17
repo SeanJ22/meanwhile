@@ -52,7 +52,7 @@ import { makeIcalSource } from "../lib/sources/ical/index.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import { reconcileSuccessfulMeetingPartition } from "../scripts/ingest.ts";
 import { meetingReaderServingWindowAt } from "../lib/meetings/constants.ts";
-import { readBody, readEveryBody, stateIndexOf } from "./helpers/meeting-body-national.ts";
+import { coupledContracts, readBody, readEveryBody, stateIndexOf } from "./helpers/meeting-body-national.ts";
 
 const sha256 = (text: string): string => createHash("sha256").update(text).digest("hex");
 const OCD = "ocd-division/country:us/state:az/place:testville";
@@ -357,7 +357,7 @@ test("C16 END TO END: a reviewed crosswalk row plus a validated route publishes 
   assert.equal(reader.kind, "PROMOTED");
   if (reader.kind !== "PROMOTED") return;
   assert.ok(reader.value.meetings.some((m) => m.bodyId === BODY_ID && m.title === "Housing Commission"), "the reader serves the family's sitting");
-  assert.deepEqual((await stateIndexOf(store, "AZ"))?.bodies[BODY_ID]?.contracts, [derivedMeetingFamilyId("US-AZ")], "the body is composed from the state's family partition");
+  assert.deepEqual(await coupledContracts(store, "AZ", BODY_ID), [derivedMeetingFamilyId("US-AZ")], "the body is composed from the state's family partition");
 
   /* Maintained without another code release: the next pass reads the feed again and publishes what changed. */
   const next = ics([
@@ -468,7 +468,7 @@ test("a family's one partition publishes as one record per body; a held member i
   assert.deepEqual(Object.keys(index.bodies).sort(), [BODY_ID, OTHER_ID].sort());
   assert.deepEqual(index.places[OCD], [BODY_ID, OTHER_ID].sort(), "the place lists both bodies");
   for (const bodyId of [BODY_ID, OTHER_ID]) {
-    assert.deepEqual(index.bodies[bodyId]!.contracts, [derivedMeetingFamilyId("US-AZ")]);
+    assert.deepEqual(await coupledContracts(store, "AZ", bodyId), [derivedMeetingFamilyId("US-AZ")]);
     const row = (await store.readPreparedReaderProjection("MEETING", meetingBodyRowScope("AZ", bodyId)))!.payload as MeetingBodyRow;
     assert.deepEqual(row.snapshot.meetings.map((m) => m.bodyId), [bodyId], "a body's row holds only its own sittings");
   }

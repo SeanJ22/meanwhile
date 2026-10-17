@@ -200,6 +200,11 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
     divisionsAtPoint = new Set(zipDivisions.map((d) => d.ocdId));
   }
 
+  const bodyScope = (): [ReadonlySet<string>, ReadonlySet<string>] => {
+    const bodies = resolvedDivisions ? getRegistryRuntimeReadModel().registry.bodies : [];
+    return [meetingBodyIds(bodies, divisionsAtPoint), new Set(bodies.map(({ id }) => id))];
+  };
+
   const meetingSourceName = process.env.WTP_MEETING_SOURCE?.trim() || "snapshot";
   let result;
   let snapshotMeta: SnapshotClientMeta | null = null;
@@ -233,15 +238,14 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
         divisionsAtPoint,
         snapshotSourceFor(snapshot),
         undefined,
-        resolvedDivisions ? meetingBodyIds(getRegistryRuntimeReadModel().registry.bodies, divisionsAtPoint) : new Set(),
+        ...bodyScope(),
       ));
       snapshotMeta =
         (read.kind === "PROMOTED" || read.kind === "BOOTSTRAP") && read.value.sources.length > 0
           ? snapshotClientMeta(read.value, read)
           : null;
     } else {
-      result = await searchMeetings(lat, lng, radiusKm, new Date(), divisionsAtPoint, undefined, undefined,
-        resolvedDivisions ? meetingBodyIds(getRegistryRuntimeReadModel().registry.bodies, divisionsAtPoint) : new Set());
+      result = await searchMeetings(lat, lng, radiusKm, new Date(), divisionsAtPoint, undefined, undefined, ...bodyScope());
       heldMeetings = result.meetings;
     }
   } catch (error) {

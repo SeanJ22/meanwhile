@@ -29,7 +29,7 @@ import {
   selectedMeetingPartitions,
 } from "../scripts/ingest.ts";
 import { publishPass } from "./helpers/meeting-body-fixtures.ts";
-import { readEveryBody, stateIndexOf } from "./helpers/meeting-body-national.ts";
+import { bodyPointerOf, coupledContracts, readEveryBody, stateIndexOf } from "./helpers/meeting-body-national.ts";
 
 const FIRST = "2026-09-08T12:00:00.000Z";
 const SECOND = "2026-09-08T13:00:00.000Z";
@@ -331,15 +331,14 @@ test("one meeting source/body failure retains only its LKG while another partiti
   assert.equal((await store.readPromotion("MEETING", insite.scope))?.versionId, second[1]!.candidate.id);
   assert.equal(await store.readPromotion("MEETING", LEGACY_MEETINGS_AGGREGATE_SCOPE), null);
 
-  const { read, plan } = await readEveryBody(store, SECOND);
+  const { read, plan, edge } = await readEveryBody(store, SECOND);
   assert.equal(read.kind, "PROMOTED");
   if (read.kind === "PROMOTED") {
     assert.equal(read.value.meetings.some((row) => row.id === "legistar:pima-1"), true);
     assert.equal(read.value.meetings.some((row) => row.id === "legistar-insite:mesa-2"), true);
   }
   assert.deepEqual(plan.stats.failed, [], "the failed check refused nothing already served");
-  const index = await stateIndexOf(store, "AZ");
-  assert.equal(index?.bodies[legistar.bodyId]?.composition, meetingCompositionOf([{ contractId: legistar.id, versionId: legistarLkg }]),
+  assert.equal((await bodyPointerOf(edge, "AZ", legistar.bodyId))?.composition, meetingCompositionOf([{ contractId: legistar.id, versionId: legistarLkg }]),
     "Pima is composed from its last known good version");
 
   const failedClock = await store.clock(legistar.sourceId, legistar.recordClass, legistar.scope);
@@ -500,9 +499,9 @@ test("a pass that records readbacks and then publishes composes every body once 
   assert.equal(again.status, "CURRENT");
   assert.equal(again.plan.stats.composed, 0, "nothing changed, so nothing is composed");
   assert.equal(store.readPromotionCalls, reads, "an unchanged pass reads no partition payload");
-  const index = await stateIndexOf(store, "AZ");
-  assert.deepEqual(new Set(Object.values(index?.bodies ?? {}).flatMap((body) => body.contracts)), new Set([legistar.id, insite.id]),
-    "the published index is coupled to the versions that composition read");
+  const bodies = Object.keys((await stateIndexOf(store, "AZ"))?.bodies ?? {});
+  assert.deepEqual(new Set((await Promise.all(bodies.map((id) => coupledContracts(store, "AZ", id)))).flat()), new Set([legistar.id, insite.id]),
+    "the published bodies are coupled to the versions that composition read");
 });
 
 test("a semantic refusal holds only the exact source/body partition", async () => {
@@ -587,7 +586,7 @@ test("a corrupt partition is refused for its own body only: the body keeps its p
   };
 
   const pass = await publishPass(store, published.edge, SECOND);
-  assert.equal(pass.status, "PUBLISHED");
+  assert.equal(pass.plan.stats.recordsWritten, 1, "the unrelated body publishes");
   assert.deepEqual(pass.plan.stats.failed.map((row) => row.bodyId), [legistar.bodyId]);
   assert.match(pass.plan.stats.failed[0]!.error, /MEETING_PARTITION_ROW_SCOPE_MISMATCH/);
   const read = await readEveryBody(store, SECOND, { edge: published.edge });

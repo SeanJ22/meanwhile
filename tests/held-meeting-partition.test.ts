@@ -20,7 +20,7 @@ import type { ChildRunReport } from "../lib/sources/composite/index.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import { candidateForMeetingPartition, promoteMeetingPartitions } from "../scripts/ingest.ts";
 import { freshEdge, publishPass } from "./helpers/meeting-body-fixtures.ts";
-import { readEveryBody, readBody, stateIndexOf } from "./helpers/meeting-body-national.ts";
+import { bodyPointerOf, coupledContracts, readEveryBody, readBody } from "./helpers/meeting-body-national.ts";
 
 
 
@@ -158,7 +158,7 @@ test("until its successor promotes, the retired route's held version is composed
   const store = new MemoryRoutineDataStore();
   const heldVersion = await seedRetiredPointer(store);
 
-  const { read } = await readEveryBody(store, READ_AT);
+  const { read, edge } = await readEveryBody(store, READ_AT);
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;
   assert.deepEqual(
@@ -166,9 +166,8 @@ test("until its successor promotes, the retired route's held version is composed
     [`${held!.meetingSource}:pcc:706`, `${held!.meetingSource}:pcc:707`],
     "the body's sittings stay on the page through the cutover",
   );
-  const entry = (await stateIndexOf(store, "US"))?.bodies[successor.bodyId];
-  assert.deepEqual(entry?.contracts, [held!.id], "the body is coupled to the retired route's held version, named by its own identity");
-  assert.equal(entry?.composition, meetingCompositionOf([{ contractId: held!.id, versionId: heldVersion }]));
+  assert.deepEqual(await coupledContracts(store, "US", successor.bodyId), [held!.id], "the body is coupled to the retired route's held version, named by its own identity");
+  assert.equal((await bodyPointerOf(edge, "US", successor.bodyId))?.composition, meetingCompositionOf([{ contractId: held!.id, versionId: heldVersion }]));
   assert.equal(
     read.value.sources.some((source) => !source.ok && (source.unreachableOcdIds ?? []).includes(successor.ocdId!)),
     false,
@@ -181,7 +180,7 @@ test("the successor's first promotion supersedes the held version, which stays i
   const heldVersion = await seedRetiredPointer(store);
   const successorVersion = await promoteSuccessor(store);
 
-  const { read } = await readEveryBody(store, READ_AT);
+  const { read, edge } = await readEveryBody(store, READ_AT);
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;
   assert.deepEqual(
@@ -193,9 +192,8 @@ test("the successor's first promotion supersedes the held version, which stays i
     ],
     "one authority for the body: the successor's rows only",
   );
-  const entry = (await stateIndexOf(store, "US"))?.bodies[successor.bodyId];
-  assert.deepEqual(entry?.contracts, [successor.id]);
-  assert.equal(entry?.composition, meetingCompositionOf([{ contractId: successor.id, versionId: successorVersion }]));
+  assert.deepEqual(await coupledContracts(store, "US", successor.bodyId), [successor.id]);
+  assert.equal((await bodyPointerOf(edge, "US", successor.bodyId))?.composition, meetingCompositionOf([{ contractId: successor.id, versionId: successorVersion }]));
   assert.equal((await store.readPromotion("MEETING", held!.scope))?.versionId, heldVersion, "nothing moved the held pointer");
 });
 
@@ -236,7 +234,7 @@ test("the body's record couples to the held version, then recomposes on the succ
   assert.equal(servedHeld.kind, "PROMOTED");
   if (servedHeld.kind !== "PROMOTED") return;
   assert.equal(servedHeld.value.meetings.length, 2);
-  assert.equal((await stateIndexOf(store, "US"))?.bodies[successor.bodyId]?.composition,
+  assert.equal((await bodyPointerOf(edge, "US", successor.bodyId))?.composition,
     meetingCompositionOf([{ contractId: held!.id, versionId: heldVersion }]));
 
   const again = await publishPass(store, edge, READ_AT);
@@ -245,12 +243,11 @@ test("the body's record couples to the held version, then recomposes on the succ
 
   const successorVersion = await promoteSuccessor(store);
   const second = await publishPass(store, edge, READ_AT);
-  assert.equal(second.status, "PUBLISHED");
   assert.equal(second.plan.stats.composed, 1);
   const servedSuccessor = await readBody(edge, store, READ_AT, successor.bodyId);
   assert.equal(servedSuccessor.kind, "PROMOTED");
   if (servedSuccessor.kind !== "PROMOTED") return;
-  assert.equal((await stateIndexOf(store, "US"))?.bodies[successor.bodyId]?.composition,
+  assert.equal((await bodyPointerOf(edge, "US", successor.bodyId))?.composition,
     meetingCompositionOf([{ contractId: successor.id, versionId: successorVersion }]));
   assert.equal(
     servedSuccessor.value.meetings.every((meeting) => meeting.id.startsWith(`${successor.meetingSource}:`)),

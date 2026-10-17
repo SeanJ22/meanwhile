@@ -52,7 +52,7 @@ test("an unchanged hour writes nothing: no record, no row, no index, and the que
   writes.stop();
   assert.equal(again.status, "CURRENT");
   assert.deepEqual({ records: writes.records, rows: writes.rows }, { records: 0, rows: 0 });
-  assert.deepEqual(again.plan.stats, { states: [], composed: 0, unchanged: 0, checkedOnly: 0, superseded: 0, recordsWritten: 0, rowsWritten: 0, indexesWritten: 0, bytesWritten: 0, failed: [] });
+  assert.deepEqual(again.plan.stats, { states: [], composed: 0, unchanged: 0, checkedOnly: 0, superseded: 0, recordsWritten: 0, rowsWritten: 0, pointersWritten: 0, indexesWritten: 0, bytesWritten: 0, failed: [] });
 });
 
 test("a quiet re-check moves Last checked for its own body and writes no record; a failed check moves nothing", async () => {
@@ -70,7 +70,8 @@ test("a quiet re-check moves Last checked for its own body and writes no record;
   assert.equal(pass.plan.stats.checkedOnly, 1);
   assert.equal(pass.plan.stats.recordsWritten, 0, "the body's record is not written for a check");
   assert.equal(pass.plan.stats.rowsWritten, 0);
-  assert.equal(pass.plan.stats.indexesWritten, 1);
+  assert.equal(pass.plan.stats.indexesWritten, 0, "a check moves the body's pointer, not its state's index");
+  assert.equal(pass.plan.stats.pointersWritten, 1);
   assert.deepEqual(pass.plan.stats.states, ["AZ"], "Newbury's state is not touched");
 
   const pima = await readPlace(edge, store, [PIMA.ocdId!], at(T2, 5 * 60_000));
@@ -88,7 +89,7 @@ test("a quiet re-check moves Last checked for its own body and writes no record;
   assert.equal(still.kind === "PROMOTED" && still.value.generatedAt, T1);
 });
 
-test("a changed body rewrites only itself and its own state's index", async () => {
+test("a changed body rewrites only itself: its record, its row and its pointer", async () => {
   const { store, edge } = await twoBodies();
   await publishPass(store, edge, at(T1, HOUR));
   const pima = (await store.readPreparedReaderProjection("MEETING", meetingIndexRowScope("AZ")))!;
@@ -100,7 +101,8 @@ test("a changed body rewrites only itself and its own state's index", async () =
   assert.equal(pass.plan.stats.composed, 1);
   assert.equal(pass.plan.stats.recordsWritten, 1);
   assert.equal(pass.plan.stats.rowsWritten, 1, "the body's row");
-  assert.equal(pass.plan.stats.indexesWritten, 1, "and its state's index");
+  assert.equal(pass.plan.stats.pointersWritten, 1);
+  assert.equal(pass.plan.stats.indexesWritten, 0, "the state's index moves only when a body comes or goes");
   assert.equal((await store.readPreparedReaderProjection("MEETING", meetingIndexRowScope("AZ")))!.sequence, pima.sequence, "Arizona's index was not rewritten");
 
   const newbury = await readPlace(edge, store, [NEWBURY.ocdId!], at(T4, 60_000));
@@ -113,11 +115,10 @@ test("a changed body rewrites only itself and its own state's index", async () =
 test("an edge miss reads that one body's row by key, and the read is no longer held whole from the edge", async () => {
   const store = new MemoryRoutineDataStore();
   const edge = freshEdge();
-  await readPartition(store, PIMA, T1, ["m1", "m2"]);
-  await readPartition(store, NEWBURY, T1, ["m3"]);
+  await readPartition(store, PIMA, T1, ["lost1", "lost2"]);
+  await readPartition(store, NEWBURY, T1, ["lost3"]);
   await publishPass(store, edge, at(T1, HOUR));
-  const index = (await store.readPreparedReaderProjection("MEETING", meetingIndexRowScope("AZ")))!.payload as MeetingIndexRow;
-  const lost = index.bodies[PIMA.bodyId]!.record;
+  const lost = (await bodyPointerOf(edge, "AZ", PIMA.bodyId))!.record;
   const missing: ReaderArtifactStore = Object.create(edge, { readBytes: { value: async (key: string) => key === lost ? null : edge.readBytes(key) } });
   const read = await readPlace(missing, store, [PIMA.ocdId!], at(T1, HOUR));
   assert.equal(sittingsOf(read).length, 2, "the body's row answers");
@@ -135,7 +136,7 @@ test("a body touching two states keeps one id with a copy in each, and every mee
   const nh = (await store.readPreparedReaderProjection("MEETING", meetingIndexRowScope("NH")))!.payload as MeetingIndexRow;
   assert.deepEqual(Object.keys(az.bodies), [PIMA.bodyId]);
   assert.deepEqual(Object.keys(nh.bodies).sort(), [NEWBURY.bodyId, PIMA.bodyId].sort(), "one id, a copy in each state");
-  assert.equal(az.bodies[PIMA.bodyId]!.record, nh.bodies[PIMA.bodyId]!.record, "the same record");
+  assert.equal((await bodyPointerOf(edge, "AZ", PIMA.bodyId))!.record, (await bodyPointerOf(edge, "NH", PIMA.bodyId))!.record, "the same record");
   const rowAz = await store.readPreparedReaderProjection("MEETING", meetingBodyRowScope("AZ", PIMA.bodyId));
   const rowNh = await store.readPreparedReaderProjection("MEETING", meetingBodyRowScope("NH", PIMA.bodyId));
   assert.ok(rowAz && rowNh, "a row per state");
@@ -157,7 +158,7 @@ import type { RoutineRecordClass } from "../lib/civic-data/types.ts";
 import { readMeetingPartitionProjection } from "../lib/meetings/snapshot.ts";
 import { promoteRows } from "./helpers/reader-edge-meetings.ts";
 import { row } from "./helpers/meeting-body-fixtures.ts";
-import { stateIndexOf } from "./helpers/meeting-body-national.ts";
+import { bodyPointerOf } from "./helpers/meeting-body-national.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 
 test("a body's rows are written monotonically: an older composition can never overwrite a newer one", async () => {
@@ -238,7 +239,7 @@ test("history-only changes republish the body, and an unreadable history keeps i
   assert.equal(first.status, "PUBLISHED");
   assert.deepEqual(await ids(), ["first", "live"], "the kept past sitting is served with the live window");
   assert.deepEqual(await ids("SHOWN"), ["live"]);
-  const accepted = (await stateIndexOf(store, "AZ"))!.bodies[PIMA.bodyId]!.composition;
+  const accepted = (await bodyPointerOf(edge, "AZ", PIMA.bodyId))!.composition;
 
   // A second kept sitting reaches history alone: the live partition does not move.
   const history = await readMeetingHistory(PIMA, { store, now: T3 });
@@ -253,10 +254,10 @@ test("history-only changes republish the body, and an unreadable history keeps i
   assert.ok(promoted.promoted, promoted.candidate.failureDetail ?? "");
   assert.deepEqual((await store.readMeetingQueue()).map((entry) => entry.scope), [meetingHistoryScope(PIMA.scope)], "only the history moved");
   const second = await publishPass(store, edge, at(T3, HOUR));
-  assert.equal(second.status, "PUBLISHED");
   assert.equal(second.plan.stats.composed, 1);
+  assert.equal(second.plan.stats.recordsWritten, 1);
   assert.deepEqual(await ids(), ["first", "live", "second"]);
-  const republished = (await stateIndexOf(store, "AZ"))!.bodies[PIMA.bodyId]!.composition;
+  const republished = (await bodyPointerOf(edge, "AZ", PIMA.bodyId))!.composition;
   assert.notEqual(republished, accepted);
 
   // A third history version cannot be read: the body keeps what it accepted, and the partition stays queued.
@@ -269,10 +270,10 @@ test("history-only changes republish the body, and an unreadable history keeps i
   assert.match(refused.plan.stats.failed[0]!.error, /MEETING_HISTORY_UNREADABLE/);
   store.unreadable = false;
   assert.deepEqual(await ids(), ["first", "live", "second"], "the accepted records keep serving");
-  assert.equal((await stateIndexOf(store, "AZ"))!.bodies[PIMA.bodyId]!.composition, republished, "a failed read never claims the new history version");
+  assert.equal((await bodyPointerOf(edge, "AZ", PIMA.bodyId))!.composition, republished, "a failed read never claims the new history version");
   assert.deepEqual((await store.readMeetingQueue()).map((entry) => entry.scope), [meetingHistoryScope(PIMA.scope)]);
 
   const healed = await publishPass(store, edge, at(T4, 2 * HOUR));
-  assert.equal(healed.status, "PUBLISHED");
+  assert.equal(healed.plan.stats.recordsWritten, 1);
   assert.deepEqual(await ids(), ["first", "live", "second", "third"]);
 });

@@ -8,7 +8,7 @@ import { stateOfOcdId, type ReaderManifest, isStateAuthorityFamily } from "../li
 import { LocalFileArtifactStore, resolveReaderArtifactWriteStore } from "../lib/meetings/edge-store.ts";
 import { publishReaderEdgeArtifacts, readReaderEdgeMeetings, readServedMeetingIndex, servedWholeFromReaderEdge, ensureReaderAuthorityEdge } from "../lib/meetings/edge-serving.ts";
 import { emptyMeetingIndexRow, readerIndexOf, type MeetingStateIndex } from "../lib/meetings/body-records.ts";
-import { stateIndexOf } from "./helpers/meeting-body-national.ts";
+import { bodyPointerOf, stateIndexOf } from "./helpers/meeting-body-national.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { meetingSettingsFromValues } from "../lib/meetings/settings.ts";
 
@@ -309,8 +309,7 @@ test("every area a canonical body governs receives the same meeting and agenda w
   assert.equal((await publishPass(store, edge, at(T1, HOUR), registry)).status, "PUBLISHED");
 
   const index = await servedIndex(edge, "AZ");
-  assert.deepEqual(Object.keys(index.bodies), [PIMA.bodyId], "one record for the body, not one per area");
-  assert.deepEqual(index.bodies[PIMA.bodyId]!.divisions, [neighbour, primary].sort(), "the areas are listed once each");
+  assert.deepEqual(index.bodies, [PIMA.bodyId], "one record for the body, not one per area");
   assert.deepEqual(index.places, { [neighbour]: [PIMA.bodyId], [primary]: [PIMA.bodyId] });
   for (const area of [primary, neighbour]) {
     const read = await readPlace(edge, store, [area], at(T1, HOUR), { includeAgenda: true });
@@ -370,7 +369,7 @@ test("a body that races its row keeps its exact held record while an independent
   await publishReaderEdgeArtifacts({ store: artifacts, stateAuthorities: { "registry-runtime": stateRegistryArtifacts("registry-old", ["AZ"]) } });
   const options = { artifactStore: artifacts };
   assert.equal(await publishReaderEdgeForTest(memory, at(T1, HOUR), MEETING_POINTERS, options), true);
-  const before = await servedIndex(artifacts, "AZ");
+  const before = (await bodyPointerOf(artifacts, "AZ", PIMA.bodyId))!;
   assert.equal((await stateIndexOf(memory, "AZ"))!.registryVersion, "registry-old:AZ");
   const held = await readPlace(artifacts, memory, [PIMA.ocdId!], at(T1, HOUR));
   assert.equal(sittingsOf(held).length, 1);
@@ -389,8 +388,7 @@ test("a body that races its row keeps its exact held record while an independent
   assert.equal(await publishReaderEdgeForTest(store, at(T2, HOUR), selected, options), false, "the raced body remains owed");
   const independent = (await artifacts.readManifest())!.manifest;
   assert.notEqual(independent.stateAuthorities!["registry-runtime"]!.AZ.version, "registry-old:AZ", "verified registry facts publish during meeting recovery");
-  const kept = await servedIndex(artifacts, "AZ");
-  assert.deepEqual(kept.bodies[PIMA.bodyId]!.record, before.bodies[PIMA.bodyId]!.record, "the body keeps the record it was served from");
+  assert.deepEqual((await bodyPointerOf(artifacts, "AZ", PIMA.bodyId))!.record, before.record, "the body keeps the record it was served from");
   const stillHeld = await readPlace(artifacts, memory, [PIMA.ocdId!], at(T2, HOUR));
   assert.deepEqual(sittingsOf(stillHeld), sittingsOf(held), "readers keep the held sittings while the new ones are owed");
   assert.deepEqual((await memory.readMeetingQueue()).map((row) => row.scope), [PIMA.scope], "the new version stays queued");
@@ -411,9 +409,9 @@ test("a state's index files its bodies under the division each serves, in a stab
   await publishPass(store, edge, at(T1, HOUR));
   const az = await servedIndex(edge, "AZ");
   assert.deepEqual(Object.keys(az.places), [PIMA.ocdId, CHANDLER.ocdId], "city and county are separate places even inside the same state");
-  assert.deepEqual(Object.keys(az.bodies), [PIMA.bodyId, CHANDLER.bodyId]);
+  assert.deepEqual(az.bodies, [PIMA.bodyId, CHANDLER.bodyId]);
   assert.deepEqual(az.places[PIMA.ocdId!], [PIMA.bodyId]);
-  assert.deepEqual(Object.keys((await servedIndex(edge, "NJ")).bodies), [MORRIS.bodyId], "another state's body never stands in an Arizona place");
+  assert.deepEqual((await servedIndex(edge, "NJ")).bodies, [MORRIS.bodyId], "another state's body never stands in an Arizona place");
   assert.deepEqual(Object.keys((await servedIndex(edge, "NH")).places), [NEWBURY.ocdId]);
   const again = freshEdge();
   await publishPass(store, again, at(T1, HOUR));
@@ -439,7 +437,7 @@ test("publish → read round-trips through the file store and a place reads only
   assert.equal(servedWholeFromReaderEdge(azRead), true);
 });
 
-test("republishing unchanged meetings is idempotent (CURRENT), a check advances the manifest alone, and changed data advances the sequence monotonically", async () => {
+test("republishing unchanged meetings is idempotent (CURRENT), and a check or changed data moves only the body's pointer, never the manifest", async () => {
   const store = new MemoryRoutineDataStore();
   const edge = freshEdge();
   await readPartition(store, PIMA, T1, ["az1"]);
@@ -453,22 +451,25 @@ test("republishing unchanged meetings is idempotent (CURRENT), a check advances 
   assert.equal(same.status, "CURRENT");
   assert.equal(await sequence(), 1);
 
-  // The same data checked again later → the manifest alone advances, so "Last checked" moves; no record is rewritten.
-  const recordBefore = (await servedIndex(edge, "AZ")).bodies[PIMA.bodyId]!.record;
+  // The same data checked again later → the body's pointer alone moves, so "Last checked" moves; no record and no manifest is rewritten.
+  const recordBefore = (await bodyPointerOf(edge, "AZ", PIMA.bodyId))!.record;
   await readPartition(store, PIMA, T2, ["az1"]);
   const again = await publishPass(store, edge, at(T2, 5 * 60_000));
-  assert.equal(again.status, "PUBLISHED");
+  assert.equal(again.status, "CURRENT");
   assert.equal(again.plan.stats.recordsWritten, 0, "no artifact is rewritten for a check");
-  assert.equal(await sequence(), 2);
-  assert.deepEqual((await servedIndex(edge, "AZ")).bodies[PIMA.bodyId]!.record, recordBefore);
+  assert.equal(again.plan.stats.pointersWritten, 1);
+  assert.equal(await sequence(), 1);
+  assert.deepEqual((await bodyPointerOf(edge, "AZ", PIMA.bodyId))!.record, recordBefore);
   const checked = await readPlace(edge, store, [PIMA.ocdId!], at(T2, 5 * 60_000));
   assert.equal(checked.kind === "PROMOTED" && checked.value.generatedAt, T2);
 
-  // Changed data → new immutable sequence.
+  // Changed data → a new immutable record, which the body's pointer now names.
   await readPartition(store, PIMA, T3, ["az1", "az2"]);
   const advanced = await publishPass(store, edge, at(T3, 60_000));
-  assert.equal(advanced.status, "PUBLISHED");
-  assert.equal(await sequence(), 3, "monotonic advance");
+  assert.equal(advanced.status, "CURRENT");
+  assert.equal(advanced.plan.stats.recordsWritten, 1);
+  assert.notEqual((await bodyPointerOf(edge, "AZ", PIMA.bodyId))!.record, recordBefore);
+  assert.equal(await sequence(), 1, "the manifest moves only when a state's index does");
   assert.equal(sittingsOf(await readPlace(edge, store, [PIMA.ocdId!], at(T3, 60_000))).length, 2);
 });
 
@@ -593,7 +594,7 @@ test("a changed meeting rewrites only its body and state; unchanged references s
   await readPartition(store, MORRIS, T1, ["delta-c"]);
   await publishPass(store, edge, at(T1, HOUR));
   const before = (await edge.readManifest())!.manifest;
-  const chandlerBefore = (await servedIndex(edge, "AZ")).bodies[CHANDLER.bodyId]!.record;
+  const chandlerBefore = (await bodyPointerOf(edge, "AZ", CHANDLER.bodyId))!.record;
   const writes: string[] = [];
   const counted = new Proxy(edge, { get(target, key) {
     if (key === "putImmutable") return async (...args: Parameters<typeof edge.putImmutable>) => { const path = await target.putImmutable(...args); if (args[1] === "json.gz") writes.push(path); return path; };
@@ -603,11 +604,11 @@ test("a changed meeting rewrites only its body and state; unchanged references s
   await readPartition(store, PIMA, T2, ["delta-a", "delta-a2"]);
   await publishPass(store, counted, at(T2, 60_000));
   const after = (await edge.readManifest())!.manifest;
-  assert.equal(writes.length, 2, "the body's record and its state's index, and nothing else");
+  assert.equal(writes.length, 1, "the body's record, and nothing else");
   assert.deepEqual(after.meetingStates!.NJ, before.meetingStates!.NJ);
   assert.deepEqual(after.meetingStates!.NH, before.meetingStates!.NH);
-  assert.notDeepEqual(after.meetingStates!.AZ, before.meetingStates!.AZ);
-  assert.deepEqual((await servedIndex(edge, "AZ")).bodies[CHANDLER.bodyId]!.record, chandlerBefore, "the unchanged body in the same state keeps its record");
+  assert.deepEqual(after.meetingStates!.AZ, before.meetingStates!.AZ, "the state's index moves only when a body comes or goes");
+  assert.deepEqual((await bodyPointerOf(edge, "AZ", CHANDLER.bodyId))!.record, chandlerBefore, "the unchanged body in the same state keeps its record");
 });
 
 test("area reads preserve split ZIP divisions and empty held areas without nearby bodies", async () => {

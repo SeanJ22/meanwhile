@@ -20,7 +20,7 @@ import { captureSourceAcquisitions } from "../lib/sources/acquisition-trace.ts";
 import { readValidatedResponse } from "../lib/sources/http.ts";
 import { authorityFor } from "../lib/civic-data/source-authority.ts";
 import type { Meeting } from "../lib/sources/types.ts";
-import { readEveryBody, stateIndexOf } from "./helpers/meeting-body-national.ts";
+import { bodyPointerOf, readEveryBody } from "./helpers/meeting-body-national.ts";
 
 const GENERATED_AT = "2026-09-20T12:00:00.000Z";
 
@@ -157,10 +157,10 @@ test("meetings candidate proves its meeting door's obligations independently of 
   const previous = await readPreviousMeetingPartition(store, partition);
   assert.ok(previous);
 
-  const { read } = await readEveryBody(store, GENERATED_AT);
+  const { read, edge } = await readEveryBody(store, GENERATED_AT);
   assert.equal(read.kind, "PROMOTED");
   assert.deepEqual(read.kind === "PROMOTED" && read.value.meetings.map((row) => row.id).sort(), evidenced.meetings.map((row) => row.id).sort());
-  assert.equal((await stateIndexOf(store, "AZ"))?.bodies[partition.bodyId]?.composition,
+  assert.equal((await bodyPointerOf(edge, "AZ", partition.bodyId))?.composition,
     meetingCompositionOf([{ contractId: partition.id, versionId: promoted.candidate.id }]), "the served body is composed from the promoted version");
 });
 

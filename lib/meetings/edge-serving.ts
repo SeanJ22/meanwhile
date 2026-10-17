@@ -48,13 +48,15 @@ import type { RoutineDataStore } from "../civic-data/store.ts";
 import type { AgendaDocument } from "./agenda-documents.ts";
 import {
   decodeMeetingBlob,
+  meetingBodyPointerKey,
   divisionOf,
   mergeMeetingBodies,
   meetingStateOf,
   MEETING_BODY_FORMAT_VERSION,
   NATIONAL_MEETING_STATE,
   type MeetingBodyRecord,
-  type MeetingIndexBody,
+  type MeetingBodyChecks,
+  type MeetingBodyPointer,
   type MeetingStateIndex,
 } from "./body-records.ts";
 import { readMeetingBodyHistory, readMeetingBodyRow, readMeetingIndexRow } from "./body-rows.ts";
@@ -971,32 +973,44 @@ export function emptyMeetingsRead(now: string = new Date().toISOString()): Meeti
     value: { formatVersion: 1, generatedAt: now, counts: snapshotCounts([], 0), sources: [], meetings: [], agendaDocuments: [] } };
 }
 
+/** Where a body stands now; never held, since it moves with every check. */
+function readBodyPointer(store: ReaderArtifactStore, state: string, bodyId: string): Promise<MeetingBodyPointer | null> {
+  const key = meetingBodyPointerKey(state, bodyId);
+  return store.readJsonPointer<MeetingBodyPointer>(key).then((found) => found?.value ?? null).catch((error) => {
+    reportReaderStateFailure("meeting-body", state, key, error); return null;
+  });
+}
+
 interface LoadedBody {
-  readonly entry: MeetingIndexBody;
+  /** The record's edge key; null when the body came from its database row. */
+  readonly key: string | null;
+  readonly checks: MeetingBodyChecks;
   readonly record: MeetingBodyRecord;
   readonly agenda: readonly AgendaDocument[];
   readonly history: MeetingsSnapshot | null;
   readonly fromEdge: boolean;
 }
 
+/** One body from its pointer and record on the edge; its database row by key when the edge cannot supply it whole. */
 async function loadBody(
-  at: { readonly state: string; readonly bodyId: string; readonly entry: MeetingIndexBody },
+  at: { readonly state: string; readonly bodyId: string; readonly pointer?: MeetingBodyPointer | null },
   store: ReaderArtifactStore | null,
   options: Pick<ReaderEdgeMeetingsOptions, "dataStore" | "includeAgenda" | "window">,
 ): Promise<LoadedBody | null> {
-  const { state, bodyId, entry } = at;
+  const { state, bodyId } = at;
   const wantAgenda = options.includeAgenda !== false;
   const wantHistory = options.window === "HELD";
-  const record = store ? await readMeetingBlob<MeetingBodyRecord>(entry.record, store, state, "meeting-body") : null;
-  if (record !== null) {
-    const agenda = !wantAgenda || record.agenda === null ? [] : await readMeetingBlob<AgendaDocument[]>(record.agenda, store!, state, "meeting-agenda");
-    const history = !wantHistory || record.history === null ? null : await readMeetingBlob<MeetingsSnapshot>(record.history, store!, state, "meeting-history");
-    if (agenda !== null && (history !== null || !wantHistory || record.history === null)) return { entry, record, agenda, history, fromEdge: true };
+  const pointer = store ? at.pointer !== undefined ? at.pointer : await readBodyPointer(store, state, bodyId) : null;
+  const record = store && pointer ? await readMeetingBlob<MeetingBodyRecord>(pointer.record, store, state, "meeting-body") : null;
+  if (store && pointer && record !== null) {
+    const agenda = !wantAgenda || record.agenda === null ? [] : await readMeetingBlob<AgendaDocument[]>(record.agenda, store, state, "meeting-agenda");
+    const history = !wantHistory || record.history === null ? null : await readMeetingBlob<MeetingsSnapshot>(record.history, store, state, "meeting-history");
+    if (agenda !== null && (history !== null || !wantHistory || record.history === null)) return { key: pointer.record, checks: pointer.checks, record, agenda, history, fromEdge: true };
   }
   const row = await readMeetingBodyRow(state, bodyId, options.dataStore);
   if (row === null) return null;
   return {
-    entry, fromEdge: false, agenda: wantAgenda ? row.snapshot.agendaDocuments : [],
+    key: null, checks: { checkedAt: null, routes: {} }, fromEdge: false, agenda: wantAgenda ? row.snapshot.agendaDocuments : [],
     record: { formatVersion: MEETING_BODY_FORMAT_VERSION, bodyId, snapshot: { ...row.snapshot, agendaDocuments: [] }, agenda: null, history: null,
       sourceThrough: row.sourceThrough, retrievedAt: row.retrievedAt, promotedThrough: row.promotedThrough },
     history: wantHistory ? await readMeetingBodyHistory(row, options.dataStore) : null,
@@ -1021,11 +1035,13 @@ async function loadStateIndex(
 export interface StateMeetingBody {
   readonly state: string;
   readonly bodyId: string;
-  /** The hash of its record, so a caller that kept what it read of this record can skip reading it again. */
-  readonly sha: string;
+  /** The key of its record, so a caller that kept what it read of this record can skip reading it again; null when the edge holds none. */
+  readonly sha: string | null;
   /** Reads this one body; null when neither the edge nor the database can supply it. */
   readonly load: () => Promise<{ readonly snapshot: MeetingsSnapshot; readonly fromEdge: boolean } | null>;
 }
+
+const WALK_BATCH = 64;
 
 /** Every body of these states, listed from each state's index and read one body at a time, for jobs that cover a state rather than a place. */
 export async function* readMeetingBodies(options: Pick<ReaderEdgeMeetingsOptions, "store" | "dataStore" | "manifest" | "states" | "includeAgenda" | "window" | "settings" | "now">):
@@ -1036,16 +1052,42 @@ export async function* readMeetingBodies(options: Pick<ReaderEdgeMeetingsOptions
   const settings = options.settings ?? await readReaderMeetingSettings();
   for (const state of states) {
     const index = await loadStateIndex(state, manifest, store, options.dataStore);
-    for (const [bodyId, entry] of Object.entries(index?.bodies ?? {})) {
-      yield { state, bodyId, sha: entry.record, load: async () => {
-        const body = await loadBody({ state, bodyId, entry }, store, options);
-        if (body === null) return null;
-        const read = applyServedWindow({ kind: "PROMOTED", value: mergeMeetingBodies([body]).snapshot, metadata: NOT_A_PLACE.metadata, detail: "" },
-          options.window ?? "SHOWN", options.now, settings);
-        return read.kind === "PROMOTED" ? { snapshot: read.value, fromEdge: body.fromEdge } : null;
-      } };
+    const ids = index?.bodies ?? [];
+    for (let at = 0; at < ids.length; at += WALK_BATCH) {
+      const batch = ids.slice(at, at + WALK_BATCH);
+      const pointers = store ? await Promise.all(batch.map((bodyId) => readBodyPointer(store, state, bodyId))) : batch.map(() => null);
+      for (const [offset, bodyId] of batch.entries()) {
+        const pointer = pointers[offset]!;
+        yield { state, bodyId, sha: pointer?.record ?? null, load: async () => {
+          const body = await loadBody({ state, bodyId, pointer }, store, options);
+          if (body === null) return null;
+          const read = applyServedWindow({ kind: "PROMOTED", value: mergeMeetingBodies([body]).snapshot, metadata: NOT_A_PLACE.metadata, detail: "" },
+            options.window ?? "SHOWN", options.now, settings);
+          return read.kind === "PROMOTED" ? { snapshot: read.value, fromEdge: body.fromEdge } : null;
+        } };
+      }
     }
   }
+}
+
+const divisionsOfBodies = new WeakMap<MeetingStateIndex, ReadonlyMap<string, readonly string[]>>();
+const bodySets = new WeakMap<MeetingStateIndex, ReadonlySet<string>>();
+
+function bodiesOfIndex(index: MeetingStateIndex): ReadonlySet<string> {
+  let held = bodySets.get(index);
+  if (!held) { held = new Set(index.bodies); bodySets.set(index, held); }
+  return held;
+}
+
+/** The divisions each body of a state serves, read back from the places that list it. */
+function divisionsInIndex(index: MeetingStateIndex): ReadonlyMap<string, readonly string[]> {
+  let held = divisionsOfBodies.get(index);
+  if (!held) {
+    const built = new Map<string, string[]>();
+    for (const [division, ids] of Object.entries(index.places)) for (const id of ids) built.set(id, [...built.get(id) ?? [], division]);
+    held = built; divisionsOfBodies.set(index, held);
+  }
+  return held;
 }
 
 async function readReaderEdgeMeetingsHeld(
@@ -1062,19 +1104,20 @@ async function readReaderEdgeMeetingsHeld(
   else if (store) manifest = await store.readManifest().then((stored) => stored?.manifest ?? null, () => null);
 
   const indexes = await Promise.all(states.map(async (state) => ({ state, index: await loadStateIndex(state, manifest, store, options.dataStore) })));
-  const chosen = new Map<string, { readonly state: string; readonly entry: MeetingIndexBody }>();
+  const chosen = new Map<string, string>();
   for (const { state, index } of indexes) {
     if (index === null) continue;
-    const named = bodyIds.filter((id) => index.bodies[id] !== undefined);
-    const nearby = options.neighbors ? named.flatMap((id) => index.bodies[id]!.divisions.flatMap((division) => index.places[division] ?? [])) : [];
+    const held = bodiesOfIndex(index);
+    const named = bodyIds.filter((id) => held.has(id));
+    const nearby = options.neighbors ? named.flatMap((id) => (divisionsInIndex(index).get(id) ?? []).flatMap((division) => index.places[division] ?? [])) : [];
     const ids = new Set([...divisions.flatMap((division) => index.places[division] ?? []), ...named, ...nearby]);
-    for (const id of ids) if (!chosen.has(id)) chosen.set(id, { state, entry: index.bodies[id]! });
+    for (const id of ids) if (!chosen.has(id)) chosen.set(id, state);
   }
 
-  const loaded = await Promise.all([...chosen].map(([bodyId, { state, entry }]) => loadBody({ state, bodyId, entry }, store, options)));
+  const loaded = await Promise.all([...chosen].map(([bodyId, state]) => loadBody({ state, bodyId }, store, options)));
   const bodies = loaded.filter((body): body is LoadedBody => body !== null);
 
-  const areaKey = sha256OfJson({ agenda: options.includeAgenda !== false, history: options.window === "HELD", bodies: bodies.map(({ entry }) => [entry.record, entry.checks]) });
+  const areaKey = sha256OfJson({ agenda: options.includeAgenda !== false, history: options.window === "HELD", bodies: bodies.map(({ key, record, checks }) => [key ?? record.bodyId, checks]) });
   const cachedArea = areaReads.get(areaKey);
   if (cachedArea && loaded.length === bodies.length) return cachedArea;
 

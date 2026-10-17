@@ -1,7 +1,7 @@
 import { readMeetingBodies, readReaderEdgeMeetings } from "../../lib/meetings/edge-serving.ts";
 import type { MeetingRegistryRead } from "../../lib/meetings/body-publication.ts";
 import type { MeetingIndexRow } from "../../lib/meetings/body-records.ts";
-import { meetingIndexRowScope } from "../../lib/meetings/body-records.ts";
+import { meetingBodyPointerKey, meetingBodyRowScope, meetingIndexRowScope, type MeetingBodyPointer } from "../../lib/meetings/body-records.ts";
 import { meetingSettingsFromValues } from "../../lib/meetings/settings.ts";
 import type { RoutineDataStore } from "../../lib/civic-data/store.ts";
 import type { ReaderArtifactStore } from "../../lib/meetings/edge-store.ts";
@@ -39,4 +39,15 @@ export async function stateIndexOf(store: RoutineDataStore, state: string): Prom
 /** A read by body id: for a body whose door names no division, which no place resolves to. */
 export function readBody(edge: ReaderArtifactStore, store: RoutineDataStore, now: string, bodyId: string, window: "SHOWN" | "HELD" = "SHOWN") {
   return readReaderEdgeMeetings({ store: edge, dataStore: store, bodyIds: [bodyId], now, settings: meetingSettingsFromValues(), window });
+}
+
+/** Where the edge says a body stands now: its record, its checks, and what it was composed from. */
+export async function bodyPointerOf(edge: ReaderArtifactStore, state: string, bodyId: string): Promise<MeetingBodyPointer | null> {
+  return (await edge.readJsonPointer<MeetingBodyPointer>(meetingBodyPointerKey(state, bodyId)))?.value ?? null;
+}
+
+/** The contracts a body's row was composed from, live and history. */
+export async function coupledContracts(store: RoutineDataStore, state: string, bodyId: string): Promise<string[]> {
+  const row = await store.readPreparedReaderProjectionCoupling("MEETING", meetingBodyRowScope(state, bodyId));
+  return (row?.composedFrom ?? []).map((coupling) => coupling.contractId).sort();
 }

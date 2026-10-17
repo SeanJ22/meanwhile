@@ -15,6 +15,7 @@ import {
   divisionOf,
   emptyMeetingIndexRow,
   encodeMeetingBlob,
+  meetingBodyPointerKey,
   meetingBodyRowScope,
   meetingCompositionOf,
   meetingIndexRowScope,
@@ -26,6 +27,7 @@ import {
   sha256OfJson,
   type BodyHistoryRead,
   type BodyPartitionRead,
+  type MeetingBodyPointer,
   type MeetingBodyRecord,
   type MeetingBodyRow,
   type MeetingIndexRow,
@@ -61,6 +63,8 @@ export interface MeetingBodyPublicationStats {
   superseded: number;
   recordsWritten: number;
   rowsWritten: number;
+  /** Body pointers moved: a new record, or a newer check. */
+  pointersWritten: number;
   indexesWritten: number;
   bytesWritten: number;
   /** Bodies kept at their previous record because their partitions could not be composed. */
@@ -128,6 +132,8 @@ interface Pass extends MeetingBodyPublicationInput {
   readonly registries: Map<string, Promise<MeetingRegistryRead | null>>;
   /** Pointer identities already read this pass; null is a scope with no pointer. */
   readonly identities: Map<string, PromotedPointerIdentity | null>;
+  /** Body pointers already read this pass, by key; null is a body with none. */
+  readonly pointers: Map<string, { readonly value: MeetingBodyPointer; readonly etag: string | null } | null>;
 }
 
 const IDENTITY_BATCH = 500;
@@ -189,14 +195,22 @@ interface BodyWork {
   readonly force: boolean;
 }
 
+/** What one state files for a body: the pointer readers follow, and the row when its content or its states changed. */
+interface Filed {
+  readonly pointer: MeetingBodyPointer;
+  readonly row: MeetingBodyRow | null;
+  readonly couplings: readonly FreshCheckCoupling[];
+  readonly divisions: readonly string[];
+  readonly family: boolean;
+}
+
 type Composed =
   | { readonly kind: "SAME" }
   | { readonly kind: "ABSENT" }
   | { readonly kind: "EMPTY" }
-  | { readonly kind: "ENTRY"; readonly entry: MeetingIndexRowBody; readonly checkedOnly: boolean }
-  | { readonly kind: "COMPOSED"; readonly entry: MeetingIndexRowBody; readonly row: MeetingBodyRow; readonly couplings: readonly FreshCheckCoupling[]; readonly divisions: readonly string[] };
+  | { readonly kind: "FILED"; readonly filed: Filed };
 
-const sameEntry = (left: MeetingIndexRowBody, right: MeetingIndexRowBody): boolean => JSON.stringify(left) === JSON.stringify(right);
+const sameJson = (left: unknown, right: unknown): boolean => JSON.stringify(left) === JSON.stringify(right);
 
 /** The checks a body shows now: each coupled version's newest confirmation as of its pointer. */
 function currentChecks(couplings: readonly FreshCheckCoupling[], identities: ReadonlyMap<string, PromotedPointerIdentity>, scopeOf: ReadonlyMap<string, string>) {
@@ -207,12 +221,38 @@ function currentChecks(couplings: readonly FreshCheckCoupling[], identities: Rea
   }));
 }
 
+type HeldPointer = { readonly value: MeetingBodyPointer; readonly etag: string | null } | null;
+
+async function heldPointer(pass: Pass, state: string, bodyId: string): Promise<HeldPointer> {
+  const key = meetingBodyPointerKey(state, bodyId);
+  if (!pass.pointers.has(key)) pass.pointers.set(key, await pass.artifacts.readJsonPointer<MeetingBodyPointer>(key));
+  return pass.pointers.get(key)!;
+}
+
+/** Points a body's state at its record; a pointer already saying this writes nothing. */
+async function putPointer(pass: Pass, state: string, bodyId: string, pointer: MeetingBodyPointer): Promise<void> {
+  const key = meetingBodyPointerKey(state, bodyId);
+  for (let attempt = 0; ; attempt += 1) {
+    const held = await heldPointer(pass, state, bodyId);
+    if (held !== null && sameJson(held.value, pointer)) return;
+    const written = await pass.artifacts.writeJsonPointer(key, pointer, held?.etag ?? null);
+    if (written.modified) {
+      pass.pointers.set(key, { value: pointer, etag: written.etag });
+      pass.stats.pointersWritten += 1;
+      pass.stats.bytesWritten += JSON.stringify(pointer).length;
+      return;
+    }
+    pass.pointers.delete(key);
+    if (attempt >= 3) throw new Error(`MEETING_POINTER_RACED:${key}`);
+  }
+}
+
 /** Reads the partitions one body lives in and composes it; reads nothing when its coupled versions are the ones it already holds. */
 async function composeBody(pass: Pass, state: string, work: BodyWork): Promise<Composed> {
   const { layout, store } = pass;
   const regular = layout.regularByBody.get(work.bodyId) ?? [];
   const family = layout.familyByState.get(state) ?? null;
-  const inFamily = family !== null && (work.entry?.contracts.includes(family.id) === true ||
+  const inFamily = family !== null && (work.entry?.family === true ||
     (work.dirtyFamily || work.entry === undefined) && (await familyOf(pass, family)).members.has(work.bodyId));
   const live = [...regular, ...(inFamily && family !== null ? [family] : [])];
   if (live.length === 0) return { kind: "ABSENT" };
@@ -231,25 +271,29 @@ async function composeBody(pass: Pass, state: string, work: BodyWork): Promise<C
     ...histories.flatMap((contract) => identities.has(contract.scope) ? [{ contractId: contract.id, versionId: identities.get(contract.scope)!.versionId }] : []),
   ];
   const composition = meetingCompositionOf(couplings);
+  const held = (await heldPointer(pass, state, work.bodyId))?.value ?? null;
+  const filesFamily = inFamily && family !== null;
 
-  if (work.entry !== undefined && work.entry.composition === composition && !work.force) {
+  if (held !== null && work.entry !== undefined && held.composition === composition && !work.force) {
     const prior = await store.readPreparedReaderProjectionCoupling(MEETINGS_RECORD_CLASS, meetingBodyRowScope(state, work.bodyId));
-    if (prior === null) return { kind: "ABSENT" };
-    const scopeOf = new Map(standing.map(({ contract, held }) => [held ? held.id : contract.id, held ? held.scope : contract.scope] as const)
-      .concat(histories.map((contract) => [contract.id, contract.scope] as const)));
-    const checks = currentChecks(prior.composedFrom as readonly FreshCheckCoupling[], identities, scopeOf);
-    const next = { checkedAt: laterCheck(work.entry.checks.checkedAt, checks.checkedAt), routes: checks.routes };
-    if (next.checkedAt === work.entry.checks.checkedAt && sameMeetingFreshChecks(next.routes, work.entry.checks.routes)) return { kind: "SAME" };
-    return { kind: "ENTRY", entry: { ...work.entry, checks: next }, checkedOnly: true };
+    if (prior !== null) {
+      const scopeOf = new Map(standing.map(({ contract, held: successor }) => [successor ? successor.id : contract.id, successor ? successor.scope : contract.scope] as const)
+        .concat(histories.map((contract) => [contract.id, contract.scope] as const)));
+      const checks = currentChecks(prior.composedFrom as readonly FreshCheckCoupling[], identities, scopeOf);
+      const next = { checkedAt: laterCheck(held.checks.checkedAt, checks.checkedAt), routes: checks.routes };
+      if (next.checkedAt === held.checks.checkedAt && sameMeetingFreshChecks(next.routes, held.checks.routes)) return { kind: "SAME" };
+      pass.stats.checkedOnly += 1;
+      return { kind: "FILED", filed: { pointer: { ...held, checks: next }, row: null, couplings: [], divisions: work.entry.divisions, family: work.entry.family } };
+    }
   }
 
   const reads: BodyPartitionRead[] = [];
-  for (const { contract, held } of standing) {
+  for (const { contract, held: successor } of standing) {
     const read = contract.derivedFamily !== null ? (await familyOf(pass, contract)).read
-      : held ? await readMeetingPartitionProjection(heldContract(contract, held), readOptions(pass))
+      : successor ? await readMeetingPartitionProjection(heldContract(contract, successor), readOptions(pass))
         : await readMeetingPartitionProjection(contract, readOptions(pass));
     if (read.kind === "STORE_UNREACHABLE") throw new Error(`MEETING_PARTITION_UNREADABLE:${contract.id}: ${read.detail}`);
-    reads.push({ partition: contract, held, read });
+    reads.push({ partition: contract, held: successor, read });
   }
   const historyReads: BodyHistoryRead[] = [];
   for (const contract of histories.filter((row) => identities.has(row.scope))) {
@@ -258,9 +302,8 @@ async function composeBody(pass: Pass, state: string, work: BodyWork): Promise<C
     historyReads.push({ contractId: contract.id, scope: contract.scope, versionId: read.kind === "PROMOTED" ? read.metadata.versionId : null, value: read.kind === "PROMOTED" ? read.value : null });
   }
   const registry = await registryOf(pass, state);
-  const first = reads.find(({ read }) => read.kind === "PROMOTED");
-  const doorDivisions = [regular[0]?.ocdId, ...(first?.read.kind === "PROMOTED" ? first.read.value.meetings.slice(0, 1).map((meeting) => meeting.ocdId) : [])];
-  const divisions = divisionsOf(work.bodyId, registry, doorDivisions);
+  const own = reads.flatMap(({ read }) => read.kind === "PROMOTED" ? read.value.meetings.filter((meeting) => meeting.bodyId === work.bodyId).map((meeting) => meeting.ocdId) : []);
+  const divisions = divisionsOf(work.bodyId, registry, [regular[0]?.ocdId, ...own]);
   const composed = composeMeetingBody({ bodyId: work.bodyId, divisions, reads, histories: historyReads });
   if (composed === null) return { kind: "EMPTY" };
   pass.stats.composed += 1;
@@ -271,29 +314,36 @@ async function composeBody(pass: Pass, state: string, work: BodyWork): Promise<C
   const through = { sourceThrough: composed.sourceThrough, retrievedAt: composed.retrievedAt, promotedThrough: composed.promotedThrough };
   const content = sha256OfJson({ snapshot: composed.snapshot, history, through });
   const checks = meetingFreshChecks(composed.couplings);
-  const base = {
-    composition, contracts: composed.couplings.map((coupling) => coupling.contractId).sort(), divisions,
-    checks: { checkedAt: checks.checkedAt, routes: checks.routes }, content,
-  };
-  if (work.entry !== undefined && work.entry.content === content) {
-    const entry: MeetingIndexRowBody = { ...base, record: work.entry.record };
-    pass.stats.unchanged += 1;
-    return sameEntry(entry, work.entry) ? { kind: "SAME" } : { kind: "ENTRY", entry, checkedOnly: false };
+  const next = { checkedAt: checks.checkedAt, routes: checks.routes };
+  const unchanged = held !== null && held.content === content;
+  const refiled = work.entry === undefined || !sameJson(statesOfDivisions(work.entry.divisions), statesOfDivisions(divisions));
+  if (unchanged) pass.stats.unchanged += 1;
+  if (unchanged && !refiled && !work.force) {
+    const pointer = { ...held, composition, checks: next };
+    return sameJson(pointer, held) && work.entry !== undefined && sameJson(work.entry.divisions, divisions) && work.entry.family === filesFamily
+      ? { kind: "SAME" }
+      : { kind: "FILED", filed: { pointer, row: null, couplings: composed.couplings, divisions, family: filesFamily } };
   }
-  const agenda = composed.snapshot.agendaDocuments.length > 0 ? await putBlob(pass, composed.snapshot.agendaDocuments) : null;
-  const historyKey = history === null ? null : await putBlob(pass, history);
-  const record: MeetingBodyRecord = { formatVersion: MEETING_BODY_FORMAT_VERSION, bodyId: work.bodyId, snapshot: { ...composed.snapshot, agendaDocuments: [] }, agenda, history: historyKey, ...through };
-  pass.stats.recordsWritten += 1;
-  const entry: MeetingIndexRowBody = { ...base, record: await putBlob(pass, record) };
+  let recordKey: string;
+  if (unchanged && held !== null) recordKey = held.record;
+  else {
+    const agenda = composed.snapshot.agendaDocuments.length > 0 ? await putBlob(pass, composed.snapshot.agendaDocuments) : null;
+    const historyKey = history === null ? null : await putBlob(pass, history);
+    const record: MeetingBodyRecord = { formatVersion: MEETING_BODY_FORMAT_VERSION, bodyId: work.bodyId, snapshot: { ...composed.snapshot, agendaDocuments: [] }, agenda, history: historyKey, ...through };
+    pass.stats.recordsWritten += 1;
+    recordKey = await putBlob(pass, record);
+  }
   const row: MeetingBodyRow = { formatVersion: MEETING_BODY_FORMAT_VERSION, bodyId: work.bodyId, snapshot: composed.snapshot, historyScopes: historyReads.map((read) => read.scope), ...through };
-  return { kind: "COMPOSED", entry, row, couplings: composed.couplings, divisions };
+  const pointer: MeetingBodyPointer = { formatVersion: MEETING_BODY_FORMAT_VERSION, record: recordKey, checks: next, content, composition };
+  return { kind: "FILED", filed: { pointer, row: unchanged && !refiled ? null : row, couplings: composed.couplings, divisions, family: filesFamily } };
 }
 
-async function writeRow(pass: Pass, state: string, entry: MeetingIndexRowBody, row: MeetingBodyRow, couplings: readonly FreshCheckCoupling[]): Promise<void> {
+async function writeRow(pass: Pass, state: string, filed: Filed): Promise<void> {
+  const row = filed.row!;
   const scope = meetingBodyRowScope(state, row.bodyId);
   const prior = await pass.store.readPreparedReaderProjectionCoupling(MEETINGS_RECORD_CLASS, scope);
   const result = await pass.store.writePreparedReaderProjection({
-    recordClass: MEETINGS_RECORD_CLASS, scope, payload: row, composedFrom: couplings, factSha256: entry.content,
+    recordClass: MEETINGS_RECORD_CLASS, scope, payload: row, composedFrom: filed.couplings, factSha256: filed.pointer.content,
     generatedAt: row.snapshot.generatedAt, composedAt: pass.now, sourceThrough: row.sourceThrough, retrievedAt: row.retrievedAt, promotedThrough: row.promotedThrough,
   }, prior?.sequence ?? null);
   if (!result.published) throw new Error(`MEETING_BODY_ROW_RACED:${scope}`);
@@ -301,14 +351,14 @@ async function writeRow(pass: Pass, state: string, entry: MeetingIndexRowBody, r
   pass.stats.bytesWritten += JSON.stringify(row).length;
 }
 
-interface Copy {
-  readonly entry: MeetingIndexRowBody;
-  readonly row: MeetingBodyRow;
-  readonly couplings: readonly FreshCheckCoupling[];
+/** The row first, so a pointer never names a record the database cannot back up. */
+async function file(pass: Pass, state: string, bodyId: string, filed: Filed): Promise<void> {
+  if (filed.row !== null) await writeRow(pass, state, filed);
+  await putPointer(pass, state, bodyId, filed.pointer);
 }
 
 interface StateRound {
-  readonly copies: ReadonlyMap<string, Copy>;
+  readonly copies: ReadonlyMap<string, Filed>;
   readonly removals: ReadonlySet<string>;
 }
 
@@ -316,7 +366,7 @@ interface StateOutcome {
   readonly entry: MeetingStateEntry;
   readonly failed: boolean;
   /** Bodies this state's composition filed in another state, and bodies it no longer files in one. */
-  readonly copies: ReadonlyMap<string, Map<string, Copy>>;
+  readonly copies: ReadonlyMap<string, Map<string, Filed>>;
   readonly removals: ReadonlyMap<string, Set<string>>;
 }
 
@@ -348,7 +398,7 @@ async function processState(pass: Pass, state: string, dirty: ReadonlySet<string
       if (hit === undefined) continue;
       const contract = hit.contract;
       if (contract.derivedFamily !== null) {
-        for (const [bodyId, entry] of Object.entries(bodies)) if (entry.contracts.includes(contract.id) || entry.contracts.includes(meetingHistoryContract(contract).id)) add(bodyId, !hit.history);
+        for (const [bodyId, entry] of Object.entries(bodies)) if (entry.family) add(bodyId, !hit.history);
         if (!hit.history) for (const bodyId of (await familyOf(pass, contract)).members) add(bodyId, true);
       } else add(contract.bodyId);
     }
@@ -365,42 +415,35 @@ async function processState(pass: Pass, state: string, dirty: ReadonlySet<string
     [contract.scope, meetingHistoryContract(contract).scope, ...(layout.heldBySuccessor.has(contract.id) ? [layout.heldBySuccessor.get(contract.id)!.scope] : [])]));
   await identitiesOf(pass, wanted);
 
-  const copies = new Map<string, Map<string, Copy>>();
+  const copies = new Map<string, Map<string, Filed>>();
   const removals = new Map<string, Set<string>>();
-  const file = (target: string, bodyId: string, copy: Copy) => {
-    const held = copies.get(target) ?? new Map<string, Copy>();
-    held.set(bodyId, copy); copies.set(target, held);
-  };
+  const remove = (target: string, bodyId: string) => { const held = removals.get(target) ?? new Set<string>(); held.add(bodyId); removals.set(target, held); };
   let failed = false;
   let changed = prior === null || territoryChanged;
+  const keep = (bodyId: string, entry: MeetingIndexRowBody) => { if (!sameJson(bodies[bodyId], entry)) { bodies[bodyId] = entry; changed = true; } };
   for (const item of work.values()) {
     try {
       const result = await composeBody(pass, state, item);
       if (result.kind === "SAME" || result.kind === "ABSENT") continue;
       if (result.kind === "EMPTY") {
         if (item.entry !== undefined) {
-          for (const gone of statesOfDivisions(item.entry.divisions)) {
-            if (gone === state) continue;
-            const held = removals.get(gone) ?? new Set<string>(); held.add(item.bodyId); removals.set(gone, held);
-          }
+          for (const gone of statesOfDivisions(item.entry.divisions)) if (gone !== state) remove(gone, item.bodyId);
           delete bodies[item.bodyId]; changed = true;
         }
         continue;
       }
-      if (result.kind === "ENTRY") {
-        bodies[item.bodyId] = result.entry; changed = true;
-        if (result.checkedOnly) pass.stats.checkedOnly += 1;
-        continue;
-      }
-      const targets = statesOfDivisions(result.divisions);
+      const { filed } = result;
+      const targets = statesOfDivisions(filed.divisions);
       const moved = item.entry === undefined ? [] : statesOfDivisions(item.entry.divisions).filter((held) => !targets.includes(held));
-      for (const gone of moved) { const held = removals.get(gone) ?? new Set<string>(); held.add(item.bodyId); removals.set(gone, held); }
-      const copy: Copy = { entry: result.entry, row: result.row, couplings: result.couplings };
+      for (const gone of moved) remove(gone, item.bodyId);
       for (const target of targets) {
         if (target === state) {
-          await writeRow(pass, state, result.entry, result.row, result.couplings);
-          bodies[item.bodyId] = result.entry; changed = true;
-        } else file(target, item.bodyId, copy);
+          await file(pass, state, item.bodyId, filed);
+          keep(item.bodyId, { divisions: filed.divisions, family: filed.family });
+        } else if (filed.row !== null) {
+          const held = copies.get(target) ?? new Map<string, Filed>();
+          held.set(item.bodyId, filed); copies.set(target, held);
+        } else await putPointer(pass, target, item.bodyId, filed.pointer);
       }
       if (!targets.includes(state)) { delete bodies[item.bodyId]; changed = true; }
     } catch (error) {
@@ -408,9 +451,9 @@ async function processState(pass: Pass, state: string, dirty: ReadonlySet<string
       pass.stats.failed.push({ bodyId: item.bodyId, error: error instanceof Error ? error.message : String(error) });
     }
   }
-  for (const [bodyId, copy] of round?.copies ?? []) {
-    if (bodies[bodyId]?.content !== copy.entry.content) await writeRow(pass, state, copy.entry, copy.row, copy.couplings);
-    if (bodies[bodyId] === undefined || !sameEntry(bodies[bodyId]!, copy.entry)) { bodies[bodyId] = copy.entry; changed = true; }
+  for (const [bodyId, filed] of round?.copies ?? []) {
+    await file(pass, state, bodyId, filed);
+    keep(bodyId, { divisions: filed.divisions, family: filed.family });
   }
   for (const bodyId of round?.removals ?? []) if (bodies[bodyId] !== undefined) { delete bodies[bodyId]; changed = true; }
 
@@ -448,24 +491,26 @@ export async function planMeetingBodies(input: MeetingBodyPublicationInput): Pro
     covered.push({ ...row, state });
     if (state !== null) dirty.set(state, (dirty.get(state) ?? new Set()).add(row.scope));
   }
-  const pass: Pass = { ...input, layout, families: new Map(), registries: new Map(), identities: new Map(),
-    stats: { states: [], composed: 0, unchanged: 0, checkedOnly: 0, superseded: 0, recordsWritten: 0, rowsWritten: 0, indexesWritten: 0, bytesWritten: 0, failed: [] } };
+  const pass: Pass = { ...input, layout, families: new Map(), registries: new Map(), identities: new Map(), pointers: new Map(),
+    stats: { states: [], composed: 0, unchanged: 0, checkedOnly: 0, superseded: 0, recordsWritten: 0, rowsWritten: 0, pointersWritten: 0, indexesWritten: 0, bytesWritten: 0, failed: [] } };
   const entries: Record<string, MeetingStateEntry> = Object.fromEntries(Object.entries(input.served ?? {}).map(([state, ref]) => [state, { versionId: ref.version, carried: true as const }]));
   const failedStates = new Set<string>();
-  const extras = new Map<string, { copies: Map<string, Copy>; removals: Set<string> }>();
+  const extras = new Map<string, { copies: Map<string, Filed>; removals: Set<string> }>();
   const run = async (state: string, round: StateRound | null) => {
     const outcome = await processState(pass, state, round === null ? dirty.get(state) ?? new Set() : new Set(), round);
+    // What a state read is not kept for the next, so a pass holds one state at a time.
+    pass.identities.clear(); pass.pointers.clear(); pass.families.clear(); pass.registries.clear();
     if (outcome === null) return;
     if (!pass.stats.states.includes(state)) pass.stats.states.push(state);
     entries[state] = outcome.entry;
     if (outcome.failed) failedStates.add(state);
     for (const [target, copies] of outcome.copies) {
-      const held = extras.get(target) ?? { copies: new Map<string, Copy>(), removals: new Set<string>() };
+      const held = extras.get(target) ?? { copies: new Map<string, Filed>(), removals: new Set<string>() };
       for (const [bodyId, copy] of copies) { held.copies.set(bodyId, copy); held.removals.delete(bodyId); }
       extras.set(target, held);
     }
     for (const [target, bodies] of outcome.removals) {
-      const held = extras.get(target) ?? { copies: new Map<string, Copy>(), removals: new Set<string>() };
+      const held = extras.get(target) ?? { copies: new Map<string, Filed>(), removals: new Set<string>() };
       for (const bodyId of bodies) if (!held.copies.has(bodyId)) held.removals.add(bodyId);
       extras.set(target, held);
     }

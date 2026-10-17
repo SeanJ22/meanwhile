@@ -80,6 +80,14 @@ test("a search keeps the meetings of bodies whose territory covers the place, an
   assert.equal((await query(ids([{ id: "council", ocdId: "ocd-division/country:us/state:az/place:elsewhere" }]))).meetings.some((row) => row.id === MEETINGS[0].id), false);
 });
 
+test("a meeting of a body the registry does not list is placed by its own division", async () => {
+  const division = "ocd-division/country:us/state:ks/place:example";
+  const snapshot = { ...SNAPSHOT, meetings: [{ ...MEETINGS[0], bodyId: "committee" }, { ...MEETINGS[1], bodyId: "other-council" }] };
+  const registered = new Set(["other-council"]);
+  const result = await searchMeetings(TOWN.lat, TOWN.lng, 25, NOW, new Set([division]), snapshotSourceFor(snapshot), undefined, new Set(), registered);
+  assert.deepEqual(result.meetings.map((row) => row.id), [MEETINGS[0].id], "the unlisted body follows its division; the listed body outside the set stays out");
+});
+
 test("a place with meetings keeps its upcoming and recent calendar", async () => {
   const result = await search(TOWN);
 
@@ -228,7 +236,7 @@ for (const zip of ["85643", "85122", "85701"]) {
           bodyId, divisions: [bodyId.split("#")[0]!], meetings: meetings.filter((row) => row.bodyId === bodyId),
         }));
         const result = await publishMeetingBodies(store, NOW.toISOString(), bodies);
-        assert.equal(result.status, "PUBLISHED");
+        assert.ok(result.status === "PUBLISHED" || result.status === "CURRENT", result.status);
       };
       await publish(rows);
       const response = await request();

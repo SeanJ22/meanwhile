@@ -76,42 +76,46 @@ export interface MeetingBodyRow extends MeetingBodyThrough {
   readonly historyScopes: readonly string[];
 }
 
-/** What a reader needs of a body before it opens the record. */
-export interface MeetingIndexBody {
+/** Where a body stands now: its record, and the checks that move every hour without touching the record. */
+export interface MeetingBodyPointer {
+  readonly formatVersion: typeof MEETING_BODY_FORMAT_VERSION;
   /** The record's edge key; its hash is in the key. */
   readonly record: string;
-  readonly divisions: readonly string[];
   readonly checks: MeetingBodyChecks;
+  /** Hash of what the record holds, so a recomposition that changed nothing writes no record. */
+  readonly content: string;
+  /** The coupled partition versions the record was composed from. */
+  readonly composition: string;
 }
 
-/** One state's bodies and which divisions each serves, as readers load it. */
+export const meetingBodyPointerKey = (state: string, bodyId: string): string => `reader/meetings/${state}/${encodeURIComponent(bodyId)}.json`;
+
+/** One state's bodies and which divisions each serves, as readers load it; it moves only when a body comes, goes or serves another place. */
 export interface MeetingStateIndex {
   readonly formatVersion: typeof MEETING_BODY_FORMAT_VERSION;
   readonly state: string;
+  readonly bodies: readonly string[];
   readonly places: Readonly<Record<string, readonly string[]>>;
-  readonly bodies: Readonly<Record<string, MeetingIndexBody>>;
 }
 
-/** What the writer keeps of a body besides what readers load. */
-export interface MeetingIndexRowBody extends MeetingIndexBody {
-  /** Hash of what the record holds, so a recomposition that changed nothing writes nothing. */
-  readonly content: string;
-  /** The coupled partition versions this record was composed from. */
-  readonly composition: string;
-  /** Every coupled contract, live and history, so a changed partition finds its bodies. */
-  readonly contracts: readonly string[];
+export interface MeetingIndexRowBody {
+  readonly divisions: readonly string[];
+  /** Served from the state's derived-family partition. */
+  readonly family: boolean;
 }
 
 /** The database row behind a state's index. */
-export interface MeetingIndexRow extends Omit<MeetingStateIndex, "bodies"> {
+export interface MeetingIndexRow {
+  readonly formatVersion: typeof MEETING_BODY_FORMAT_VERSION;
+  readonly state: string;
   /** The registry the places were derived from. */
   readonly registryVersion: string | null;
+  readonly places: Readonly<Record<string, readonly string[]>>;
   readonly bodies: Readonly<Record<string, MeetingIndexRowBody>>;
 }
 
 export const readerIndexOf = (row: MeetingIndexRow): MeetingStateIndex => ({
-  formatVersion: row.formatVersion, state: row.state, places: row.places,
-  bodies: Object.fromEntries(Object.entries(row.bodies).map(([id, { record, divisions, checks }]) => [id, { record, divisions, checks }])),
+  formatVersion: row.formatVersion, state: row.state, bodies: Object.keys(row.bodies).sort(), places: row.places,
 });
 
 export function emptyMeetingIndexRow(state: string, registryVersion: string | null): MeetingIndexRow {
@@ -128,7 +132,7 @@ export function decodeMeetingBlob<T>(bytes: Uint8Array, key: string): T {
   return JSON.parse(gunzipSync(bytes).toString("utf8")) as T;
 }
 
-export function placesOf(bodies: Readonly<Record<string, Pick<MeetingIndexBody, "divisions">>>): Record<string, string[]> {
+export function placesOf(bodies: Readonly<Record<string, Pick<MeetingIndexRowBody, "divisions">>>): Record<string, string[]> {
   const places = new Map<string, string[]>();
   for (const [id, body] of Object.entries(bodies).sort(([a], [b]) => (a < b ? -1 : 1))) {
     for (const division of body.divisions) places.set(division, [...(places.get(division) ?? []), id]);
@@ -304,13 +308,13 @@ export function composeMeetingBodyHistory(bodyId: string, histories: readonly Bo
 
 /** What a reader at a place holds: its bodies' served windows, with each body's own newest checks applied. */
 export function mergeMeetingBodies(parts: readonly {
-  readonly entry: MeetingIndexBody;
+  readonly checks: MeetingBodyChecks;
   readonly record: MeetingBodyRecord;
   readonly agenda: readonly AgendaDocument[];
   readonly history: MeetingsSnapshot | null;
 }[]): { readonly snapshot: MeetingsSnapshot; readonly sourceThrough: string | null; readonly retrievedAt: string | null; readonly promotedThrough: string | null } {
-  const bodies = parts.map(({ entry, record, agenda, history }) => {
-    const served = applyMeetingFreshChecks({ ...record.snapshot, agendaDocuments: [...agenda] }, entry.checks);
+  const bodies = parts.map(({ checks, record, agenda, history }) => {
+    const served = applyMeetingFreshChecks({ ...record.snapshot, agendaDocuments: [...agenda] }, checks);
     if (history === null) return served;
     const held = new Set(served.meetings.map(({ id }) => id));
     const past = history.meetings.filter((meeting) => !held.has(meeting.id));
@@ -323,7 +327,7 @@ export function mergeMeetingBodies(parts: readonly {
         .map((document) => ({ ...document, meetingId: joined.aliases.get(document.meetingId) ?? document.meetingId })) };
   });
   const meetings = bodies.flatMap((body) => body.meetings).sort((a, b) => Date.parse(a.startsAt) - Date.parse(b.startsAt) || (a.id < b.id ? -1 : 1));
-  const generatedAt = bodies.reduce<string | null>((latest, body, index) => laterCheck(latest, laterCheck(body.generatedAt, parts[index]!.entry.checks.checkedAt)), null);
+  const generatedAt = bodies.reduce<string | null>((latest, body, index) => laterCheck(latest, laterCheck(body.generatedAt, parts[index]!.checks.checkedAt)), null);
   return {
     snapshot: {
       formatVersion: 1,
@@ -334,7 +338,7 @@ export function mergeMeetingBodies(parts: readonly {
       agendaDocuments: bodies.flatMap((body) => body.agendaDocuments),
     },
     sourceThrough: newest(parts.map(({ record }) => record.sourceThrough)),
-    retrievedAt: newest(parts.map(({ entry, record }) => laterCheck(record.retrievedAt, entry.checks.checkedAt))),
+    retrievedAt: newest(parts.map(({ checks, record }) => laterCheck(record.retrievedAt, checks.checkedAt))),
     promotedThrough: newest(parts.map(({ record }) => record.promotedThrough)),
   };
 }

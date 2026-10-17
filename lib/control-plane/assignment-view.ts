@@ -47,7 +47,6 @@ import { isTerminalState, type WorkItem, type WorkItemState } from "./work-item.
 import type { WorkQuestion } from "./work-question.ts";
 import { US_STATES } from "./readiness/catalog.ts";
 import type { WorkerResultRecord } from "./workers/types.ts";
-import { assignmentHistoryTerms } from "./admin-view/assignment-history.ts";
 
 export const ASSIGNMENT_VIEW_VERSION = "assignment-view/v1" as const;
 const STATE_CODE_BY_NAME = new Map(US_STATES.map(state => [state.name, state.code.toLowerCase()]));
@@ -2400,7 +2399,6 @@ export interface AssignmentIndexRow {
   readonly assignmentRefs?: readonly { readonly key: string; readonly ref: string; readonly at: string }[];
   /** Receipt-specific state; an unproven carried row is UNKNOWN. */
   readonly instructionStates?: Readonly<Record<string, AssignmentState>>;
-  readonly historyTerms?: readonly string[];
   readonly lastActivityAt: string | null;
   readonly lastAttemptAt?: string | null;
   readonly directDependentCount?: number | null;
@@ -2567,7 +2565,6 @@ export function deriveAssignmentEntries(src: AssignmentSources, only?: ReadonlyS
   const built = buildAll(src, { textClip: ASSIGNMENT_TEXT_CLIP, listClip: ASSIGNMENT_LIST_CLIP, costDenominatorUsd: null });
   const manualGapByItem = new Map(src.workItems.flatMap(item => item.manualSourceGap?.assignmentKey
     ? [[item.id, item.manualSourceGap] as const] : []));
-  const historyTerms = assignmentHistoryTerms(src,built.memberships);
   const dependentsByUpstream = new Map<string,Set<string>>();
   const workById = new Map(src.workItems.map(item=>[item.id,item] as const));
   for (const item of src.workItems) for (const dependency of item.dependencies) {
@@ -2609,7 +2606,7 @@ export function deriveAssignmentEntries(src: AssignmentSources, only?: ReadonlyS
       label: listed.title, subjectName: listed.subjectName, stateCode: listed.stateCode ?? null,
       assignmentKeys: [...new Set([...(listed.assignmentKeys ?? []), ...(manualGap?.assignmentKey ? [manualGap.assignmentKey] : [])])],
       assignmentRefs,instructionStates,
-      historyTerms:historyTerms.get(row.id)??[],lastActivityAt: listed.lastActivityAt,
+      lastActivityAt: listed.lastActivityAt,
       lastAttemptAt:relatedAttempts.map(attempt=>attempt.startedAt).sort().at(-1)??null,
       directDependentCount:directDependents?.size??null,readyAfterThisSettlesCount,
       band: listed.band, overdue: listed.waiting.overdue, waitingSince: listed.waiting.since,

@@ -320,7 +320,6 @@ test("full index separates latest Attempt from activity and counts only measured
   assert.equal(indexed?.lastAttemptAt,"2026-09-21T10:00:00.000Z");
   assert.equal(indexed?.directDependentCount,2);
   assert.equal(indexed?.readyAfterThisSettlesCount,1);
-  assert.ok(indexed?.historyTerms?.includes("at-new"));
   const unknown={...src,workItems:src.workItems.filter(item=>item.id!=="other-open")};
   assert.equal(buildAssignmentView(unknown).allRowsIndex?.find(row=>row.id==="upstream")?.readyAfterThisSettlesCount,null,
     "an unread upstream cannot be counted as satisfied");

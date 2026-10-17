@@ -383,9 +383,9 @@ test("a whole /api/meetings answer from the edge is held by the CDN, keyed on ev
 });
 
 test("panning Arizona to New Hampshire and back loads each state's officials and meetings from its own artifacts and carries nothing across", async () => {
-  const { dir, manifest } = await publishEdge("xs-crossing");
+  const { dir, keys: published } = await publishEdge("xs-crossing");
   process.env.WTP_READER_EDGE_DIR = dir;
-  const registry = (state: string) => manifest.stateAuthorities!["registry-runtime"]![state].key;
+  const registry = (state: string) => published.registry[state];
   const stateOf = (id: string | null | undefined) => stateOfOcdId(id ?? "");
   const answers: { ids: string[]; governing: string[]; bodies: number }[] = [];
   for (const [state, query] of [["az", "lat=32.21696&lng=-110.971"], ["nh", "lat=43.2081&lng=-71.5376"], ["az", "lat=32.21696&lng=-110.971"]] as const) {

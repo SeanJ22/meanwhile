@@ -1574,10 +1574,6 @@ function MapEntryInner() {
             onViewportSettle={onViewportSettle}
             allowAutoFrame={view?.kind !== "settled"}
             focusStateOcdId={focusState.activeOcdId}
-            isOutsideActiveState={(lat, lng) => {
-              const state = focusState.stateAt(lat, lng);
-              return Boolean(state && state !== focusState.activeOcdId);
-            }}
             officeSites={officeSites}
             selectedOfficeId={large?.kind === "official" ? (large.office?.id ?? null) : null}
             onSelectOffice={id => {

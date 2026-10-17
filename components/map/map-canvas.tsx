@@ -58,7 +58,10 @@ import {
 } from "@/lib/map/districts";
 import {
   filterStateAbbr,
+  loadStateOutlines,
   stateAbbrFromOcdId,
+  stateOcdIdAt,
+  type StateOutlines,
 } from "@/lib/map/state-focus";
 import type { DistrictType } from "@/lib/state/types";
 import type { Theme } from "@/hooks/use-stored-theme";
@@ -101,7 +104,6 @@ import type { MapBounds, OfficeSite } from "@/lib/map/office-pins";
 const NO_OFFICE_SITES: readonly OfficeSite[] = [];
 
 interface MapCanvasProps {
-  isOutsideActiveState?: (lat: number, lng: number) => boolean;
   officeSites?: readonly OfficeSite[];
   onSelectOffice?: (id: string) => void;
   selectedOfficeId?: string | null;
@@ -215,7 +217,6 @@ export function MapCanvas({
   onViewportSettle,
   allowAutoFrame,
   focusStateOcdId = null,
-  isOutsideActiveState,
   officeSites,
   onSelectOffice,
   selectedOfficeId = null,
@@ -281,8 +282,12 @@ export function MapCanvas({
     onViewportSettleRef.current = onViewportSettle;
   }, [onViewportSettle]);
 
-  const outsideStateRef = useRef(isOutsideActiveState);
-  useEffect(() => { outsideStateRef.current = isOutsideActiveState; }, [isOutsideActiveState]);
+  const outlinesRef = useRef<StateOutlines | null>(null);
+  useEffect(() => {
+    let live = true;
+    loadStateOutlines().then(data => { if (live) outlinesRef.current = data; }).catch(() => undefined);
+    return () => { live = false; };
+  }, []);
 
   const focusOcdRef = useRef<string | null>(focusStateOcdId ?? null);
   useEffect(() => {
@@ -424,7 +429,8 @@ export function MapCanvas({
       /* A press on the map puts a fanned pin group back; pin presses never reach here. */
       clearSpiderfy(pool);
 
-      if (outsideStateRef.current?.(event.lngLat.lat, event.lngLat.lng)) {
+      const clicked = stateOcdIdAt(outlinesRef.current, event.lngLat.lat, event.lngLat.lng);
+      if (clicked && clicked !== focusOcdRef.current) {
         map.easeTo({ center: event.lngLat, duration: prefersReducedMotion() ? 0 : 300 }, { originalEvent: event.originalEvent });
         return;
       }

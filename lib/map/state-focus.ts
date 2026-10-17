@@ -15,6 +15,17 @@ export interface StateOutlines {
   features: StateOutlineFeature[];
 }
 
+let outlinesLoad: Promise<StateOutlines> | null = null;
+
+/** One shared fetch of the outlines; a failed fetch is forgotten so the next caller retries. */
+export function loadStateOutlines(): Promise<StateOutlines> {
+  outlinesLoad ??= fetch(STATE_OUTLINES_URL).then(response => {
+    if (!response.ok) throw new Error(`State outlines: ${response.status}`);
+    return response.json() as Promise<StateOutlines>;
+  }).catch(error => { outlinesLoad = null; throw error; });
+  return outlinesLoad;
+}
+
 /** The state OCD-ID a point falls in, or null. Ray casting, no dependency. */
 export function stateOcdIdAt(
   outlines: StateOutlines | null,

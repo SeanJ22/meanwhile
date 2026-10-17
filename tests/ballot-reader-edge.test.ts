@@ -716,7 +716,8 @@ const mapPoint = (zip: string) => {
 
 test("crossing the state line loads only the new state's ballot, and crossing back restores the first", async () => {
   process.env.WTP_READER_EDGE_DIR = ballotEdgeDir;
-  const manifest = (await new LocalFileArtifactStore(ballotEdgeDir).readManifest())!.manifest;
+  const edgeStore = new LocalFileArtifactStore(ballotEdgeDir);
+  const ballotKey = async (state: string) => (await readServedPointer(edgeStore, authorityPointerKey("ballot-contests", state)))!.ref.key;
   const keys: string[] = [];
   const originalRead = LocalFileArtifactStore.prototype.readBytes;
   LocalFileArtifactStore.prototype.readBytes = async function (key) { keys.push(key); return originalRead.call(this, key); };
@@ -737,7 +738,7 @@ test("crossing the state line loads only the new state's ballot, and crossing ba
       assert.match(rendered.text, /We're working on getting the U\.S\. House district for this area/, `${stop.state} did not say its House district is pending`);
       assert.deepEqual(databaseReads, [], `${stop.state} read the database`);
       for (const other of ["AZ", "NH", "NJ"].filter(state => state !== stop.state)) {
-        assert.equal(keys.includes(manifest.stateAuthorities!["ballot-contests"]![other].key), false, `${stop.state} fetched ${other} ballot bytes`);
+        assert.equal(keys.includes(await ballotKey(other)), false, `${stop.state} fetched ${other} ballot bytes`);
       }
       seen.push(ids.sort());
     }

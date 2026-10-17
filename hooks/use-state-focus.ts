@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-import { STATE_OUTLINES_URL, outlineFor, stateContainsPoint, stateOcdIdAt, type StateOutlines } from "@/lib/map/state-focus";
+import { loadStateOutlines, outlineFor, stateContainsPoint, stateOcdIdAt, type StateOutlines } from "@/lib/map/state-focus";
 
 export function useStateFocus(point: { lat: number; lng: number; kind: "zip" | "settled" } | null) {
   const [outlines, setOutlines] = useState<StateOutlines | null>(null);
@@ -12,15 +12,9 @@ export function useStateFocus(point: { lat: number; lng: number; kind: "zip" | "
   const [crossing, setCrossing] = useState<{ toName: string } | null>(null);
 
   useEffect(() => {
-    const controller = new AbortController();
-    void fetch(STATE_OUTLINES_URL, { signal: controller.signal })
-      .then(response => {
-        if (!response.ok) throw new Error(`State outlines: ${response.status}`);
-        return response.json() as Promise<StateOutlines>;
-      })
-      .then(data => { if (!controller.signal.aborted) setOutlines(data); })
-      .catch(() => { if (!controller.signal.aborted) setFailed(true); });
-    return () => controller.abort();
+    let live = true;
+    loadStateOutlines().then(data => { if (live) setOutlines(data); }).catch(() => { if (live) setFailed(true); });
+    return () => { live = false; };
   }, []);
 
   const stateAt = useCallback((lat: number, lng: number) => stateOcdIdAt(outlines, lat, lng), [outlines]);

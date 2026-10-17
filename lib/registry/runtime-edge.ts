@@ -34,20 +34,24 @@ export interface CommentAccessEdgeValue {
   readonly value: import("./comment-access.ts").CommentAccessProjection;
   readonly versionId: string;
 }
-/** A request loads only the jurisdictions it serves. Missing bytes fall back to the typed reader. */
+/** One place's published value; null value is the published answer that nothing is promoted there. */
+export interface PlaceEdgeValue<T> {
+  readonly value: T | null;
+  readonly versionId: string;
+}
+
+/** Each load reads one jurisdiction's own pointer: null when none is published yet, and a throw when its bytes can't be read. */
 export interface StateLegislatorsEdgeValue {
-  readonly jurisdictions: ReadonlySet<string>;
-  readonly load: (jurisdiction: string) => Promise<EdgeServedValue<OfficialStateLegislatorReadModel> | null>;
+  readonly load: (jurisdiction: string) => Promise<PlaceEdgeValue<OfficialStateLegislatorReadModel> | null>;
 }
 
 export interface RegistrationsEdge {
-  readonly states: ReadonlySet<string>;
-  readonly load: (state: string) => Promise<{ readonly value: RegistrationReadModel; readonly versionId: string } | null>;
+  readonly load: (state: string) => Promise<PlaceEdgeValue<RegistrationReadModel> | null>;
 }
 
 interface StateAuthoritiesEdge {
   readonly key?: (family: StateAuthorityFamily, state: string) => string | null;
-  readonly states: Readonly<Partial<Record<StateAuthorityFamily, ReadonlySet<string>>>>;
+  readonly families: ReadonlySet<StateAuthorityFamily>;
   readonly load: (family: StateAuthorityFamily, state: string) => Promise<PromotedFamilyArtifactValue | null>;
 }
 
@@ -62,6 +66,7 @@ export interface ReaderAuthorityEdgeBundle {
   readonly campaignSites?: CampaignSitesEdgeValue;
   readonly stateLegislators?: StateLegislatorsEdgeValue;
   readonly meetingOutcomes?: MeetingOutcomesEdgeValue;
+  readonly everydayRouting?: { readonly value: { readonly projection: unknown }; readonly versionId: string };
   readonly commentAccess?: CommentAccessEdgeValue;
   readonly registrations?: RegistrationsEdge;
 
@@ -135,8 +140,7 @@ export async function ensurePromotedEdge(recordClass: RoutineRecordClass, scope:
   for (const scopedFamily of STATE_BALLOT_FAMILIES) {
     const state = stateFromBallotScope(scope, scopedFamily);
     const family: StateAuthorityFamily = scopedFamily === "candidate-corpus" ? "candidate-publications" : scopedFamily;
-    if (!state || !stateEdge.states[family]) continue;
-    if (!stateEdge.states[family]!.has(state)) return null;
+    if (!state || !stateEdge.families.has(family)) continue;
     let entries = loadedStateEntries.get(bundle);
     if (!entries) { entries = new Map(); loadedStateEntries.set(bundle, entries); }
     const loaded = await stateEdge.load(family, state).catch(error => {

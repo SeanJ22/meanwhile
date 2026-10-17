@@ -159,36 +159,13 @@ export async function publishReaderEdgeChecks(
     : { status: "RACED", sequence };
 }
 
-export interface PublishReaderExtras {
-  readonly everydayRouting?: unknown;
-  readonly versionIds?: ReaderManifest["extrasVersionIds"];
-}
-
 export interface PublishAuthorityValue {
   readonly value: unknown;
   readonly versionId: string;
 }
-export interface PublishAuthorityCarried {
-  readonly versionId: string;
-  readonly carried: true;
-}
-export type PublishAuthority = Partial<Record<GlobalAuthorityFamily, PublishAuthorityValue | PublishAuthorityCarried>>;
 export interface PublishedStateAuthority {
   readonly versionId: string;
   readonly artifact: AuthorityArtifactRef;
-  readonly expectedPreviousVersion?: string | null;
-}
-export type PublishStateAuthorities = Partial<Record<StateAuthorityFamily, Readonly<Record<string, PublishAuthorityValue | PublishAuthorityCarried | PublishedStateAuthority>>>>;
-/** Complete: one entry per promoted registration pointer, since the reader reads an unnamed state as having none. */
-export type PublishRegistrations = Readonly<Record<string, PublishAuthorityValue | PublishAuthorityCarried>>;
-
-interface RegistrationArtifactEnvelope {
-  readonly formatVersion: typeof READER_ARTIFACT_FORMAT_VERSION;
-  readonly family: "registration";
-  readonly state: string;
-  readonly versionId: string;
-  readonly generatedAt: string;
-  readonly value: unknown;
 }
 
 interface FactBucketArtifactEnvelope {
@@ -201,36 +178,41 @@ interface FactBucketArtifactEnvelope {
   readonly value: RecordIndex;
 }
 
-interface StateLegislatorsArtifactEnvelope {
-  readonly formatVersion: typeof READER_ARTIFACT_FORMAT_VERSION;
-  readonly family: "state-legislators";
-  readonly jurisdiction: string;
-  readonly versionId: string;
-  readonly generatedAt: string;
-  readonly value: OfficialStateLegislatorReadModel;
-}
-
-export function servedAuthorityVersion(
-  manifest: Pick<ReaderManifest, "authorityArtifacts"> | null | undefined,
-  family: GlobalAuthorityFamily,
-): string | null {
-  const ref = manifest?.authorityArtifacts?.[family];
-  return ref?.layout === "records" ? ref.version : null;
-}
+/** A family that grows with places keeps one pointer per state (or jurisdiction); the rest keep one each. */
+export type AuthorityPointerFamily = GlobalAuthorityFamily | "registrations";
 
 interface AuthorityArtifactEnvelope {
   readonly formatVersion: typeof READER_ARTIFACT_FORMAT_VERSION;
-  readonly family: GlobalAuthorityFamily;
+  readonly family: AuthorityPointerFamily;
+  readonly place?: string;
   readonly versionId: string;
   readonly generatedAt: string;
   readonly value: unknown;
 }
 
-function extrasFingerprint(extras: PublishReaderExtras | undefined): string {
-  return sha256OfJson({
-    everydayRouting: extras?.everydayRouting ?? null,
-    versionIds: extras?.versionIds ?? null,
-  });
+export const authorityPointerKey = (family: AuthorityPointerFamily | StateAuthorityFamily, place?: string) =>
+  place === undefined ? `reader/authority/${family}.json` : `reader/authority/${family}/${place}.json`;
+
+export interface ServedPointer {
+  readonly ref: AuthorityArtifactRef;
+  readonly etag: string | null;
+}
+
+/** The pointer as the publisher sees it, unheld, with the etag its next write compares against. */
+export async function readServedPointer(store: ReaderArtifactStore, key: string): Promise<ServedPointer | null> {
+  const read = await store.readJsonPointer<AuthorityArtifactRef>(key);
+  return read ? { ref: read.value, etag: read.etag } : null;
+}
+
+/** Writes one family's value (one place's, when it has one) as records to its own pointer; false when another writer moved it first. */
+export async function writeAuthorityPointer(store: ReaderArtifactStore, family: AuthorityPointerFamily, place: string | undefined,
+  entry: PublishAuthorityValue, served: ServedPointer | null, now: string): Promise<boolean> {
+  const indexed = await publishAuthorityRecords(entry.value, store, await publishedRecords(served?.ref, store));
+  const envelope: AuthorityArtifactEnvelope = { formatVersion: READER_ARTIFACT_FORMAT_VERSION, family, ...(place === undefined ? {} : { place }),
+    versionId: entry.versionId, generatedAt: now, value: indexed };
+  const key = await store.putImmutable(gzipSync(Buffer.from(JSON.stringify(envelope), "utf8")), "json.gz");
+  const ref: AuthorityArtifactRef = { key, version: entry.versionId, sha: sha256OfJson(indexed), layout: "records" };
+  return (await store.writeJsonPointer(authorityPointerKey(family, place), ref, served?.etag ?? null)).modified;
 }
 
 // Blobs reads are eventually consistent (up to 60 s behind a write); holding adds at most this much to that window.
@@ -327,18 +309,20 @@ async function publishedRecords(ref: AuthorityArtifactRef | undefined, store: Re
 }
 
 async function readAuthorityArtifactValue(
-  family: GlobalAuthorityFamily,
-  ref: AuthorityArtifactRef | undefined,
+  family: AuthorityPointerFamily,
+  ref: AuthorityArtifactRef | null | undefined,
   store: ReaderArtifactStore,
+  place?: string,
 ): Promise<unknown | null> {
   if (!ref?.key || !ref.version || ref.layout !== "records") return null;
   const selection = currentReaderSelection();
-  const index = await heldFetch(authorityEdgeCache, family, `${ref.version}:${ref.key}`, async () => {
+  const cacheKey = place === undefined ? family : `${family}/${place}`;
+  const index = await heldFetch(authorityEdgeCache, cacheKey, `${ref.version}:${ref.key}`, async () => {
     try {
       const bytes = await store.readBytes(ref.key);
       if (!bytes) return null;
       const envelope = JSON.parse(gunzipSync(bytes).toString("utf8")) as AuthorityArtifactEnvelope;
-      if (envelope.formatVersion !== READER_ARTIFACT_FORMAT_VERSION || envelope.family !== family ||
+      if (envelope.formatVersion !== READER_ARTIFACT_FORMAT_VERSION || envelope.family !== family || envelope.place !== place ||
         envelope.versionId !== ref.version || sha256OfJson(envelope.value) !== ref.sha) return null;
       return envelope.value;
     } catch {
@@ -349,12 +333,12 @@ async function readAuthorityArtifactValue(
     try { return index === null ? null : await readAuthorityRecords(index as RecordIndex, store, selection); }
     catch { return null; }
   };
-  return selection ? read() : heldFetch(authorityValueCache, family, `${ref.version}:${ref.key}`, read);
+  return selection ? read() : heldFetch(authorityValueCache, cacheKey, `${ref.version}:${ref.key}`, read);
 }
 
-export async function readServedPromotedFamily(family: GlobalPromotedAuthorityFamily, ref: AuthorityArtifactRef | undefined,
-  store: ReaderArtifactStore): Promise<PromotedFamilyArtifactValue | null> {
-  const value = await readAuthorityArtifactValue(family, ref, store) as Partial<PromotedFamilyArtifactValue> | null;
+export async function readServedPromotedFamily(family: GlobalPromotedAuthorityFamily, ref: AuthorityArtifactRef | null | undefined,
+  store: ReaderArtifactStore, place?: string): Promise<PromotedFamilyArtifactValue | null> {
+  const value = await readAuthorityArtifactValue(family, ref, store, place) as Partial<PromotedFamilyArtifactValue> | null;
   return value?.kind === "PROMOTED_POINTERS" && Array.isArray(value.entries) ? value as PromotedFamilyArtifactValue : null;
 }
 
@@ -370,48 +354,15 @@ function fetchScopeArtifact(
   });
 }
 
-const registrationEdgeCache = new Map<string, { version: string; value: Promise<RecordIndex | null> }>();
-
-async function fetchRegistrationArtifact(
-  state: string,
-  ref: AuthorityArtifactRef | undefined,
-  store: ReaderArtifactStore,
-): Promise<{ value: RegistrationReadModel; versionId: string } | null> {
-  if (!ref?.key || !ref.version) return null;
-  const version = ref.version;
-  const selection = currentReaderSelection();
-  const index = await heldFetch(registrationEdgeCache, state, `${version}:${ref.key}`, async () => {
-    try {
-      const bytes = await store.readBytes(ref.key);
-      if (!bytes) return null;
-      const envelope = JSON.parse(gunzipSync(bytes).toString("utf8")) as RegistrationArtifactEnvelope;
-      if (envelope.family !== "registration" || envelope.state !== state || envelope.versionId !== version || sha256OfJson(envelope.value) !== ref.sha) return null;
-      return envelope.value as unknown as RecordIndex;
-    } catch {
-      return null;
-    }
-  });
-  try { return index === null ? null : { value: await readAuthorityRecords(index, store, selection) as RegistrationReadModel, versionId: version }; }
-  catch { return null; }
+/** One place's value of a per-place family; a null value is the published answer that nothing is promoted there. */
+async function readPlaceArtifact<T>(family: AuthorityPointerFamily, place: string, store: ReaderArtifactStore): Promise<{ value: T | null; versionId: string } | null> {
+  const ref = await readHeldPointer<AuthorityArtifactRef>(authorityPointerKey(family, place), store);
+  if (!ref) return null;
+  const value = await readAuthorityArtifactValue(family, ref, store, place);
+  if (value === null && ref.sha !== sha256OfJson(EMPTY_RECORDS)) throw new Error(`${family}/${place} artifact could not be read`);
+  return { value: value as T | null, versionId: ref.version };
 }
-
-const stateLegislatorsEdgeCache = new Map<string, { version: string; value: Promise<RecordIndex | null> }>();
-
-async function fetchStateLegislatorsArtifact(jurisdiction: string, ref: AuthorityArtifactRef | undefined, store: ReaderArtifactStore) {
-  if (!ref?.key || !ref.version) return null;
-  const selection = currentReaderSelection();
-  const index = await heldFetch(stateLegislatorsEdgeCache, jurisdiction, `${ref.version}:${ref.key}`, async () => {
-    try {
-      const bytes = await store.readBytes(ref.key);
-      if (!bytes) return null;
-      const envelope = JSON.parse(gunzipSync(bytes).toString("utf8")) as StateLegislatorsArtifactEnvelope;
-      if (envelope.family !== "state-legislators" || envelope.jurisdiction !== jurisdiction || envelope.versionId !== ref.version || sha256OfJson(envelope.value) !== ref.sha) return null;
-      return envelope.value as unknown as RecordIndex;
-    } catch { return null; }
-  });
-  try { return index === null ? null : { value: await readAuthorityRecords(index, store, selection) as OfficialStateLegislatorReadModel, versionId: ref.version }; }
-  catch { return null; }
-}
+const EMPTY_RECORDS = { kind: "READER_RECORDS", base: null, records: [] };
 
 interface StateAuthorityArtifactEnvelope {
   readonly formatVersion: typeof READER_ARTIFACT_FORMAT_VERSION;
@@ -487,24 +438,24 @@ type StateAuthorityCache = Map<string, { version: string; value: Promise<Promote
 const stateAuthorityCaches = new WeakMap<object, StateAuthorityCache>();
 const bytesHash = (bytes: Uint8Array) => createHash("sha256").update(bytes).digest("hex");
 
-export function holdReaderAuthorityEdge(error: unknown,
-  manifest?: Pick<ReaderManifest, "stateAuthorities">,
-  families: readonly AuthorityFamily[] = STATE_AUTHORITY_FAMILIES): null {
+export function holdReaderAuthorityEdge(error: unknown, families: readonly AuthorityFamily[] = STATE_AUTHORITY_FAMILIES): null {
   const selection = currentReaderSelection();
   const states = selection?.states ?? statesForRegistryDivisions([...selection?.keys ?? [], ...selection?.divisions ?? []]);
   const scoped = STATE_AUTHORITY_FAMILIES.filter(family => families.includes(family));
   if (!states.length) reportReaderStateFailure("reader-authority", null, READER_MANIFEST_KEY, error);
   else for (const state of states) {
     if (!scoped.length) reportReaderStateFailure("reader-authority", state, READER_MANIFEST_KEY, error);
-    for (const family of scoped) reportReaderStateFailure(family, state, manifest?.stateAuthorities?.[family]?.[state]?.key ?? READER_MANIFEST_KEY, error);
+    for (const family of scoped) reportReaderStateFailure(family, state, authorityPointerKey(family, state), error);
   }
   return null;
 }
 
-async function readStateAuthorityArtifact(family: StateAuthorityFamily, state: string, ref: AuthorityArtifactRef | undefined,
-  store: ReaderArtifactStore): Promise<PromotedFamilyArtifactValue | null> {
+async function readStateAuthorityArtifact(family: StateAuthorityFamily, state: string, store: ReaderArtifactStore): Promise<PromotedFamilyArtifactValue | null> {
+  let ref: AuthorityArtifactRef | null;
+  try { ref = await readHeldPointer<AuthorityArtifactRef>(authorityPointerKey(family, state), store); }
+  catch (error) { reportReaderStateFailure(family, state, authorityPointerKey(family, state), error); return null; }
   if (!ref?.key || !ref.version) {
-    reportReaderStateFailure(family, state, ref?.key ?? null, new Error("STATE_ARTIFACT_REFERENCE_MISSING"));
+    reportReaderStateFailure(family, state, authorityPointerKey(family, state), new Error("STATE_ARTIFACT_REFERENCE_MISSING"));
     return null;
   }
   const context = currentReaderAuthorityEdge() ?? currentReaderSelection();
@@ -545,7 +496,19 @@ export function prefetchReaderEdgeStates(
   for (const scope of manifest.scopes) if (wanted.has(scope.scope)) void fetchScopeArtifact(scope, store).catch(() => undefined);
 }
 
-const stateFactsPointerMemo = new Map<string, { readonly at: number; readonly value: Promise<StateFactsPointer | null> }>();
+const pointerMemo = new Map<string, { readonly at: number; readonly value: Promise<unknown> }>();
+
+/** A pointer as readers see it, held as long as the manifest is; null when nothing is published there yet. */
+function readHeldPointer<T>(key: string, store: ReaderArtifactStore, now = Date.now()): Promise<T | null> {
+  const held = store.kind === "netlify-blobs" ? pointerMemo.get(key) : undefined;
+  if (held && now - held.at >= 0 && now - held.at < READER_MANIFEST_MEMO_MS) return held.value as Promise<T | null>;
+  const value = store.readJsonPointer<T>(key).then(read => read?.value ?? null);
+  if (store.kind === "netlify-blobs") {
+    pointerMemo.set(key, { at: now, value });
+    value.catch(() => { if (pointerMemo.get(key)?.value === value) pointerMemo.delete(key); });
+  }
+  return value;
+}
 const factBucketEdgeCache = new Map<string, { version: string; value: Promise<RecordIndex | null> }>();
 
 async function readEnvelope<T extends { readonly value: unknown; readonly versionId: string }>(ref: AuthorityArtifactRef, store: ReaderArtifactStore,
@@ -561,19 +524,11 @@ async function readEnvelope<T extends { readonly value: unknown; readonly versio
 
 export const stateFactsPointerKey = (state: string) => `reader/state-facts/${state}.json`;
 
-/** One state's served bucket list from its own pointer, held as long as the manifest; null when the state has none published. */
-export function readStateFactsPointer(state: string, store: ReaderArtifactStore, now = Date.now()): Promise<StateFactsPointer | null> {
-  const held = store.kind === "netlify-blobs" ? stateFactsPointerMemo.get(state) : undefined;
-  if (held && now - held.at >= 0 && now - held.at < READER_MANIFEST_MEMO_MS) return held.value;
-  const value = store.readJsonPointer<StateFactsPointer>(stateFactsPointerKey(state)).then(read => {
-    if (read && (read.value.state !== state || !Array.isArray(read.value.buckets))) throw new Error("STATE_ARTIFACT_ENVELOPE_INVALID");
-    return read?.value ?? null;
-  });
-  if (store.kind === "netlify-blobs") {
-    stateFactsPointerMemo.set(state, { at: now, value });
-    value.catch(() => { if (stateFactsPointerMemo.get(state)?.value === value) stateFactsPointerMemo.delete(state); });
-  }
-  return value;
+/** One state's served bucket list from its own pointer; null when the state has none published. */
+async function readStateFactsPointer(state: string, store: ReaderArtifactStore, now = Date.now()): Promise<StateFactsPointer | null> {
+  const pointer = await readHeldPointer<StateFactsPointer>(stateFactsPointerKey(state), store, now);
+  if (pointer && (pointer.state !== state || !Array.isArray(pointer.buckets))) throw new Error("STATE_ARTIFACT_ENVELOPE_INVALID");
+  return pointer;
 }
 
 /** One bucket's record index, read once per version per process; its records are fetched only as a selection needs them. */
@@ -609,23 +564,25 @@ async function readStateFacts(states: readonly string[], store: ReaderArtifactSt
   return { bodies: read.flatMap(state => state!.bodies), versionId: read.map(state => state!.versionId).filter(Boolean).join("|") || null };
 }
 
+/** Each family's pointer is read only when this request names the family; a family with no pointer yet reads its database path. */
 export async function ensureReaderAuthorityEdge(
-  manifest: Pick<ReaderManifest, "authorityArtifacts" | "registrations" | "stateLegislators" | "stateAuthorities"> & Pick<ReaderManifest, "meetingPlaces">,
+  manifest: Pick<ReaderManifest, "meetingPlaces"> | null,
   store: ReaderArtifactStore | null = resolveReaderArtifactStore(),
   families: readonly AuthorityFamily[] = AUTHORITY_FAMILIES,
-): Promise<ReaderAuthorityEdgeBundle> {
+): Promise<ReaderAuthorityEdgeBundle | null> {
+  if (!store) return null;
   try {
-    const refs = manifest.authorityArtifacts;
     const promotedFamilies = new Set<string>();
     const bundle: {
       censusDistricts?: { value: CensusDistrictEdge; versionId: string };
       federalDirectory?: { value: FederalDirectoryReadModel; versionId: string };
       campaignSites?: { value: CuratedReaderProjection; versionId: string };
       meetingOutcomes?: { value: OutcomeSnapshot; versionId: string };
+      everydayRouting?: { value: { projection: unknown }; versionId: string };
       commentAccess?: { value: CommentAccessProjection; versionId: string };
     } = {};
     const factReads = new Map<string, Promise<{ bodies: readonly BodyFacts[]; versionId: string | null } | null>>();
-    const stateRegistryFacts = store ? { stateRegistryFacts: { key: stateFactsPointerKey, load: (state: string) => {
+    const stateRegistryFacts = { key: stateFactsPointerKey, load: (state: string) => {
       const selectionKey = `${state}:${[...currentReaderSelection()?.keys ?? []].sort().join("|")}`;
       let read = factReads.get(selectionKey);
       if (!read) {
@@ -645,86 +602,75 @@ export async function ensureReaderAuthorityEdge(
         factReads.set(selectionKey, read);
       }
       return read;
-    } } } : {};
-    const stateAuthorityRefs = manifest.stateAuthorities ?? {};
-    const stateAuthorities = stateAuthorityRefs && store ? { stateAuthorities: {
-      key: (family: StateAuthorityFamily, state: string) => stateAuthorityRefs[family]?.[state]?.key ?? null,
-      states: Object.fromEntries(STATE_AUTHORITY_FAMILIES.filter(family => families.includes(family) && stateAuthorityRefs[family] !== undefined)
-        .map(family => [family, new Set(Object.keys(stateAuthorityRefs[family]!))])),
+    } };
+    const stateAuthorities = {
+      key: (family: StateAuthorityFamily, state: string) => authorityPointerKey(family, state),
+      families: new Set(STATE_AUTHORITY_FAMILIES.filter(family => families.includes(family))),
       load: async (family: StateAuthorityFamily, state: string) => {
-        const value = await readStateAuthorityArtifact(family, state, stateAuthorityRefs[family]?.[state], store);
+        const value = await readStateAuthorityArtifact(family, state, store);
         if (value) promotedFamilies.add(family);
         return value;
       },
-    } } : {};
-
-    const registrationRefs = manifest.registrations;
-    const registrations = registrationRefs && store
-      ? { registrations: { states: new Set(Object.keys(registrationRefs)), load: (state: string) => fetchRegistrationArtifact(state, registrationRefs[state], store) } }
-      : {};
-    const stateLegislatorRefs = manifest.stateLegislators;
-    const stateLegislators: { stateLegislators?: ReaderAuthorityEdgeBundle["stateLegislators"] } = {};
-    if (store && families.includes("state-legislators")) {
-      if (stateLegislatorRefs) {
-        stateLegislators.stateLegislators = { jurisdictions: new Set(Object.keys(stateLegislatorRefs)),
-          load: (jurisdiction: string) => fetchStateLegislatorsArtifact(jurisdiction, stateLegislatorRefs[jurisdiction], store) };
-      }
-    }
-    if (!refs || !store) return Object.assign(bundle, registrations, stateLegislators, stateAuthorities, stateRegistryFacts, { promotedFamilies });
+    };
+    const registrations = { load: (state: string) => readPlaceArtifact<RegistrationReadModel>("registrations", state, store) };
+    const stateLegislators = families.includes("state-legislators")
+      ? { stateLegislators: { load: (jurisdiction: string) => readPlaceArtifact<OfficialStateLegislatorReadModel>("state-legislators", jurisdiction, store) } } : {};
     const wanted = new Set(families);
-    const fetchWanted = (family: GlobalAuthorityFamily) =>
-      wanted.has(family) ? readAuthorityArtifactValue(family, refs[family], store) : Promise.resolve(null);
-    const censusDistricts = await fetchWanted("census-districts") as CensusDistrictEdge | null;
+    const refs = new Map<GlobalAuthorityFamily, Promise<AuthorityArtifactRef | null>>();
+    const refOf = (family: GlobalAuthorityFamily) => {
+      let ref = refs.get(family);
+      if (!ref) refs.set(family, ref = readHeldPointer<AuthorityArtifactRef>(authorityPointerKey(family), store));
+      return ref;
+    };
+    const fetchWanted = async (family: GlobalAuthorityFamily) => {
+      if (!wanted.has(family)) return null;
+      const ref = await refOf(family);
+      return ref ? { value: await readAuthorityArtifactValue(family, ref, store), versionId: ref.version } : null;
+    };
+    const censusDistricts = await fetchWanted("census-districts");
     const selected = currentReaderSelection();
-    if (selected && censusDistricts) {
+    if (selected && censusDistricts?.value) {
       const { censusDistrictEdgeSlice } = await import("../census-geography/district-edge.ts");
       const { censusWorkDivision } = await import("../census-geography/division-id.ts");
       for (const zip of [...selected.keys].filter(key => /^\d{5}$/.test(key))) {
-        const slice = censusDistrictEdgeSlice(censusDistricts, refs["census-districts"]!.version, zip);
+        const slice = censusDistrictEdgeSlice(censusDistricts.value as CensusDistrictEdge, censusDistricts.versionId, zip);
         if (slice.kind === "HELD") for (const container of slice.value.containers) {
           const id = censusWorkDivision(container.ref);
           if (id) selected.keys.add(id);
         }
       }
     }
-    const [federal, campaign, outcomes] = await Promise.all([
-      fetchWanted("federal-directory"), fetchWanted("campaign-sites"), fetchWanted("meeting-outcomes"),
+    const [federal, campaign, outcomes, routing] = await Promise.all([
+      fetchWanted("federal-directory"), fetchWanted("campaign-sites"), fetchWanted("meeting-outcomes"), fetchWanted("everyday-routing"),
     ]);
-    if (federal !== null) bundle.federalDirectory = { value: federal as FederalDirectoryReadModel, versionId: refs["federal-directory"]!.version };
-    if (campaign !== null) bundle.campaignSites = { value: campaign as CuratedReaderProjection, versionId: refs["campaign-sites"]!.version };
-    if (outcomes !== null) bundle.meetingOutcomes = { value: outcomes as OutcomeSnapshot, versionId: refs["meeting-outcomes"]!.version };
-    if (censusDistricts !== null) bundle.censusDistricts = { value: censusDistricts as CensusDistrictEdge, versionId: refs["census-districts"]!.version };
+    if (federal?.value) bundle.federalDirectory = { value: federal.value as FederalDirectoryReadModel, versionId: federal.versionId };
+    if (campaign?.value) bundle.campaignSites = { value: campaign.value as CuratedReaderProjection, versionId: campaign.versionId };
+    if (outcomes?.value) bundle.meetingOutcomes = { value: outcomes.value as OutcomeSnapshot, versionId: outcomes.versionId };
+    if (routing?.value) bundle.everydayRouting = { value: routing.value as { projection: unknown }, versionId: routing.versionId };
+    if (censusDistricts?.value) bundle.censusDistricts = { value: censusDistricts.value as CensusDistrictEdge, versionId: censusDistricts.versionId };
     const promoted = new Map<string, PromotedEdgeEntry>();
-    const promotedValues = new Map<PromotedAuthorityFamily, unknown>();
-    const load = async (family: PromotedAuthorityFamily) => promotedValues.set(family, await fetchWanted(family));
-    await Promise.all(PROMOTED_AUTHORITY_FAMILIES.filter(family => family.startsWith("ballot-")).map(load));
-    await Promise.all(PROMOTED_AUTHORITY_FAMILIES.filter(family => !family.startsWith("ballot-")).map(load));
-    PROMOTED_AUTHORITY_FAMILIES.forEach(family => {
-      const artifact = promotedValues.get(family) as Partial<PromotedFamilyArtifactValue> | null;
+    const take = (family: PromotedAuthorityFamily, artifact: Partial<PromotedFamilyArtifactValue> | null) => {
       if (artifact?.kind !== "PROMOTED_POINTERS" || !Array.isArray(artifact.entries)) return;
       promotedFamilies.add(family);
       for (const entry of artifact.entries) {
         const pointer = entry?.kind === "PROMOTED" ? entry.projection?.key : entry?.kind === "NOT_RECORDED" ? `${entry.recordClass}:${entry.scope}` : null;
         if (typeof pointer === "string") promoted.set(pointer, entry);
       }
-    });
+    };
+    const load = async (family: PromotedAuthorityFamily) => take(family, (await fetchWanted(family))?.value as Partial<PromotedFamilyArtifactValue> | null);
+    await Promise.all(PROMOTED_AUTHORITY_FAMILIES.filter(family => family.startsWith("ballot-")).map(load));
+    await Promise.all(PROMOTED_AUTHORITY_FAMILIES.filter(family => !family.startsWith("ballot-")).map(load));
     const loadPromoted: NonNullable<ReaderAuthorityEdgeBundle["loadPromoted"]> = async (recordClass, scope) => {
       const family: PromotedAuthorityFamily = recordClass === "STATE_ROLL_CALL" || recordClass === "STATE_LEGISLATOR_VOTES" ? "state-votes"
         : recordClass === "PRL_PROFILE" ? "prl-profiles" : recordClass === "PRL_ARCHIVE" ? "prl-archives" : "other-reader-data";
-      const artifact = await readServedPromotedFamily(family, refs[family], store);
-      if (!artifact) return null;
-      promotedFamilies.add(family);
-      for (const entry of artifact.entries) {
-        const key = entry.kind === "PROMOTED" ? entry.projection.key : `${entry.recordClass}:${entry.scope}`;
-        promoted.set(key, entry);
-      }
+      take(family, await readServedPromotedFamily(family, await refOf(family), store));
       return promoted.get(`${recordClass}:${scope}`) ?? null;
     };
-    return Object.assign(bundle, registrations, stateLegislators, stateAuthorities, stateRegistryFacts, { promoted, promotedFamilies, loadPromoted,
-      ...(manifest.meetingPlaces ? { meetingPlaces: new Map(Object.entries(manifest.meetingPlaces)) } : {}),
-      ...(selected ? { selection: selected } : {}) });
+    return Object.assign(bundle, { registrations, stateAuthorities, stateRegistryFacts, promoted, promotedFamilies, loadPromoted }, stateLegislators,
+      manifest?.meetingPlaces ? { meetingPlaces: new Map(Object.entries(manifest.meetingPlaces)) } : {},
+      selected ? { selection: selected } : {});
   } catch (error) {
-    holdReaderAuthorityEdge(error, manifest, families);
+    holdReaderAuthorityEdge(error, families);
     throw error;
   }
 }

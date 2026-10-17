@@ -3,7 +3,7 @@ import test from "node:test";
 import { createHash } from "node:crypto";
 import { publishElectionFields, type ElectionFieldVerifier } from "../lib/civic-data/election-field-publication.ts";
 import { electionFieldState, type ElectionFieldInput } from "../lib/civic-data/election-fields.ts";
-import { readElectionFieldsForDivisions } from "../lib/civic-data/curated-reader-read-model.ts";
+import { readElectionFieldsForDivisions } from "./helpers/election-field-read.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { section3Record } from "../lib/control-plane/promotion/section3.ts";
 

@@ -7,7 +7,7 @@ import test from "node:test";
 import { AUTOMATIC_REFRESH_TASKS } from "../lib/civic-data/automatic-refresh.ts";
 import { cadenceMsAt } from "../lib/civic-data/contracts.ts";
 import { refreshBallotNavigation, readBallotNavigationReport, type BallotNavigationStateReport, type BallotNavigationSourceConfig } from "../lib/civic-data/ballot-navigation-refresh.ts";
-import { readElectionFieldsForDivisions } from "../lib/civic-data/curated-reader-read-model.ts";
+import { readElectionFieldsForDivisions } from "./helpers/election-field-read.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import type { Artifact } from "../lib/control-plane/evidence/artifact.ts";

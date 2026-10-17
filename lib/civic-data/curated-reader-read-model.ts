@@ -10,7 +10,6 @@ import { requiredManualProductionContract } from "./manual-contracts.ts";
 import { validateOnce } from "./validated-once.ts";
 import { readPromotedEdgeFirst } from "../registry/runtime-edge.ts";
 import type { CuratedReaderProjection } from "./manual-projections.ts";
-import { electionFieldState, type PublishedElectionField } from "./election-fields.ts";
 
 import { ballotNavigationScope } from "./ballot-navigation-scope.ts";
 import { readStateAuthorityProjection } from "./state-reader.ts";
@@ -90,14 +89,6 @@ export async function readBallotNavigationProjection(state: string, options: Pro
     : (await readStateAuthorityProjection<CuratedReaderProjection>("ballot-navigation", state)).result;
   if (result.kind === "PROMOTED") ballotNavigationFor(state, result.value, result.metadata.versionId!, []);
   return result;
-}
-
-export async function readElectionFieldsForDivisions(divisions: readonly string[], options: PromotedCivicDataReadOptions = {}) {
-  const states = [...new Set(divisions.map(electionFieldState).filter((state): state is string => state !== null))];
-  const reads = await Promise.all(states.map(state => readBallotNavigationProjection(state, options)));
-  const fields = reads.flatMap(read => read.kind === "PROMOTED" ? read.value.records.filter(row =>
-    row.kind === "ELECTION_FIELD" && divisions.includes((row as unknown as PublishedElectionField).value.divisionId)) as unknown as PublishedElectionField[] : []);
-  return { reads, fields };
 }
 
 export async function refreshCuratedReaderProjection(

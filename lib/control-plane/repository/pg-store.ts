@@ -30,7 +30,7 @@ import type {
   RunnerHeartbeat,
 } from "../owner-surface.ts";
 import { BOOKKEEPING_KINDS, FIELD_MANUAL_ROLES, OUTCOME_RANK, coveringPlaces, methodEvidencePlaces, projectFieldManual, queryState, readMethodEvidence, TRANSFERABLE_METHOD_KINDS, type FieldManualEntry, type FieldManualQuery } from "../field-manual.ts";
-import { MANUAL_BROAD_SQL, MANUAL_EMPTY_CLASS_SQL, MANUAL_METHOD_SQL, MANUAL_OUTCOME_SQL, MANUAL_PLAIN_SQL, MANUAL_SOURCE_HINTS_SQL } from "./field-manual-sql.ts";
+import { MANUAL_BROAD_SQL, MANUAL_EMPTY_CLASS_SQL, MANUAL_METHOD_SQL, MANUAL_OUTCOME_SQL, MANUAL_PLAIN_SQL, MANUAL_LEARNED_ROUTES_SQL, MANUAL_SOURCE_HINTS_SQL } from "./field-manual-sql.ts";
 import { sourceOriginKeys,type FieldManualSourceHint } from "../field-manual-sources.ts";
 import { createFixMapRepository, PLACE_STATE_SQL, type FixMapRepository } from "../../method/fix-map.ts";
 import { ensureRolePlaybooks, retireInstructionsSql } from "../playbook-seed.ts";
@@ -1167,6 +1167,10 @@ export function pgFieldManualRepository(sql:Sql,options:PgRepositoryBounds,fixMa
   const run=boundedRunner(sql,"cp_field_manual_entries",options.bounds??CONTROL_PLANE_REQUEST_BOUNDS_MS);
   const repository:FieldManualRepository={
     ...base,readMany:base.readMany!,
+    async learnedRoutes(routeIds) {
+      const rows=await run("learnedRoutes","PAGE",MANUAL_LEARNED_ROUTES_SQL,[[...new Set(routeIds)]]) as {summary:unknown}[];
+      return parseValue<{present:boolean;routeIds:readonly string[]}>(rows[0].summary,"cp_field_manual_entries route summary");
+    },
     async sourceHints(scope,url) {
       const rows=await run("sourceHints","PAGE",MANUAL_SOURCE_HINTS_SQL,[coveringPlaces(scope),queryState(scope)??null,sourceOriginKeys(url)]) as {hint:unknown}[];
       return rows.map(row=>parseValue<FieldManualSourceHint>(row.hint,"cp_field_manual_entries source hint"));

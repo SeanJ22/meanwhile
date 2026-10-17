@@ -692,7 +692,7 @@ if (sync.refreshed.length > 0) {
   if (sync.refreshed.length > 5) console.log(`      … and ${sync.refreshed.length - 5} more`);
 }
 
-const maturity = await methodMaturityFromManual(repos);
+const maturity = await methodMaturityFromManual(repos,[...new Set([...allUnits.map(unit=>unit.obligation.routeId),...sync.all.map(row=>row.routeId)].filter((id):id is string=>id!==null))]);
 const decisions = new Map<string, ExecutorDecision>();
 const decisionFor = (obligationId: string, routeId: string | null): ExecutorDecision => {
   const held = decisions.get(obligationId);

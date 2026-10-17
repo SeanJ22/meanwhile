@@ -233,3 +233,26 @@ test("bounded SQL notes retain producer proof, failed-here exclusions and Scout 
     for(const [title,tier] of [["works",1],["untried",1],["state",2],["three-states",3],["legacy-three",3],["legacy-one",4],["legacy-two",4],["legacy-here",2],["two-states",4],["no-proof",5]] as const)assert.equal(tiers.get(byTitle.get(title)!),tier,title);
   }finally{await db.close();}
 });
+
+test("maturity reads indexed route IDs without returning unrelated national route payloads",async()=>{
+  const {PGlite}=await import("@electric-sql/pglite");
+  const {learnedRouteIds}=await import("../lib/method/manual-bridge.ts");
+  const db=new PGlite();
+  try {
+    await db.exec("CREATE TABLE cp_field_manual_entries(id text PRIMARY KEY,revision integer,updated_at timestamptz,value jsonb)");
+    for(const ddl of MANUAL_ORDER_INDEXES)await db.exec(ddl);
+    const entries=Array.from({length:1000},(_,index)=>newFieldManualEntry("route-summary",String(index),{
+      role:"SHARED",kind:"ROUTE",title:"Learned route",summary:"Indexed metadata",outcome:"YIELDED",
+      payload:index%2?{routeId:`route-${index}`,body:"x".repeat(4000)}:{id:`route-${index}`,body:"x".repeat(4000)}}));
+    entries.push(newFieldManualEntry("route-summary","malformed",{role:"SHARED",kind:"ROUTE",title:"Wrong ID type",summary:"Invalid ID falls through",outcome:"YIELDED",payload:{id:7,routeId:"fallback-route"}}));
+    await db.query("INSERT INTO cp_field_manual_entries SELECT value->>'id',1,now(),value FROM jsonb_array_elements($1::jsonb) value",[JSON.stringify(entries)]);
+    const sql={query:async(text:string,params?:readonly unknown[])=>(await db.query(text,[...params??[]])).rows};
+    const repo=pgFieldManualRepository(sql,{},()=>createFixMapRepository(async()=>[]));
+    const routeIds=["route-7","route-8","route-8","not-learned","fallback-route"];
+    assert.deepEqual(await repo.learnedRoutes(routeIds),{present:true,routeIds:[...new Set(routeIds)].filter(id=>learnedRouteIds({entries}).has(id)).sort()});
+    assert.deepEqual(await repo.learnedRoutes([]),{present:true,routeIds:[]});
+    assert.ok(Buffer.byteLength(JSON.stringify(await repo.learnedRoutes(routeIds)))<100);
+    await db.exec("DELETE FROM cp_field_manual_entries");
+    assert.deepEqual(await repo.learnedRoutes(routeIds),{present:false,routeIds:[]});
+  }finally{await db.close();}
+});

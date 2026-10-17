@@ -3,7 +3,7 @@ import test from "node:test";
 import { sharedScoutBrowser, browseWithPlaywright } from "../scripts/scout-browse.mts";
 import type { GuardedBrowser } from "../scripts/browser.mts";
 import { startWorkerToolsHost } from "../lib/control-plane/workers/process-pool.ts";
-import { newFieldManualEntry, readFieldManual, readFieldManualSourceHints, writeFieldManual } from "../lib/control-plane/field-manual.ts";
+import { newFieldManualEntry, readFieldManual, readFieldManualSourceHints, readLearnedManualRoutes, writeFieldManual } from "../lib/control-plane/field-manual.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { availableWorkerMemoryBytes, routineProcessSlots, workerProcessSlots, workerMemoryHost, NATIONAL_PLACE_PEAK_MIB, WORKER_ENTRY_PEAK_MIB } from "../lib/control-plane/workers/worker-slots.ts";
 import { mkdtemp, rm } from "node:fs/promises";
@@ -132,13 +132,15 @@ test("hosted workers receive their own manual rows and browser observations with
     status: 200, html: "official", text: "official", requests: [], transportError: null, durationMs: 1 }) });
   try {
     const fail=async():Promise<never>=>{throw new Error("worker must not read the manual itself");};
-    const repos = { fieldManual: { select:fail,sourceHints:fail } };
+    const repos = { fieldManual: { select:fail,sourceHints:fail,learnedRoutes:fail } };
     const manual = await readFieldManual(repos as never, { state: "az" });
     assert.equal(manual.error, undefined);
     assert.deepEqual(manual.store.entries.map(row => row.states).sort(), [[], ["az"]]);
     assert.deepEqual(await readFieldManualSourceHints(repos as never,{state:"az"},"https://one.gov/"),[
       {url:"https://one.gov/source",outcome:"REFERENCE",observedAt:null,worked:false,workedFor:[]},
     ]);
+    await writeFieldManual(shared,[newFieldManualEntry("test","learned-route",{role:"SHARED",kind:"ROUTE",title:"Indexed route",summary:"Shared maturity",outcome:"YIELDED",payload:{routeId:"indexed-route"}})],"2026-10-07T00:00:00.000Z");
+    assert.deepEqual(await readLearnedManualRoutes(repos as never,["indexed-route","unlearned"]),{present:true,routeIds:["indexed-route"]});
     assert.equal((await browseWithPlaywright({ url: "https://one.gov", timeoutMs: 1000, holder: "test" })).text, "official");
   } finally {
     await host.close();

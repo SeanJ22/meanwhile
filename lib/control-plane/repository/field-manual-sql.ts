@@ -13,7 +13,16 @@ const sourceUrl = `translate(btrim(value->>'url'),chr(9)||chr(10)||chr(13),'')`;
 export const MANUAL_SOURCE_ORIGIN_SQL = `lower(split_part(${sourceUrl},':',1)||'://' ||
   regexp_replace(substring(regexp_replace(${sourceUrl},'^[a-zA-Z][a-zA-Z0-9+.-]*:/*','') from '^[^/?#]*'),'^.*@',''))`;
 
+export const MANUAL_ROUTE_ID_SQL = `(CASE WHEN jsonb_typeof(value #> '{payload,id}')='string' THEN value #>> '{payload,id}'
+  WHEN jsonb_typeof(value #> '{payload,routeId}')='string' THEN value #>> '{payload,routeId}' END)`;
+export const MANUAL_LEARNED_ROUTES_SQL = `SELECT jsonb_build_object(
+  'present',EXISTS(SELECT 1 FROM cp_field_manual_entries WHERE value->>'kind'='ROUTE' AND ${MANUAL_ROUTE_ID_SQL} IS NOT NULL),
+  'routeIds',ARRAY(SELECT DISTINCT ${MANUAL_ROUTE_ID_SQL} FROM cp_field_manual_entries
+    WHERE value->>'kind'='ROUTE' AND ${MANUAL_ROUTE_ID_SQL}=ANY($1::text[]) ORDER BY 1)) AS summary`;
+
 export const MANUAL_ORDER_INDEXES = [
+  `CREATE INDEX IF NOT EXISTS cp_field_manual_route_id ON cp_field_manual_entries (${MANUAL_ROUTE_ID_SQL})
+    WHERE value->>'kind'='ROUTE' AND ${MANUAL_ROUTE_ID_SQL} IS NOT NULL;`,
   `CREATE INDEX IF NOT EXISTS cp_field_manual_plain_order ON cp_field_manual_entries
     ((value->>'role'),${MANUAL_BROAD_SQL},${MANUAL_EMPTY_CLASS_SQL},${MANUAL_OUTCOME_SQL},
       (coalesce(value->>'observedAt','')) COLLATE "C" DESC,id COLLATE "C") WHERE ${MANUAL_PLAIN_SQL};`,

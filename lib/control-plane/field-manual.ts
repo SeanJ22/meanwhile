@@ -443,6 +443,10 @@ async function sharedManualRequest<T>(kind:string,body:unknown,local:()=>Promise
   return await response.json() as T;
 }
 
+export async function readLearnedManualRoutes(repos:FieldManualRepos,routeIds:readonly string[]):Promise<{present:boolean;routeIds:readonly string[]}> {
+  return sharedManualRequest("manualRoutes",routeIds,()=>repos.fieldManual.learnedRoutes(routeIds));
+}
+
 export async function readFieldManualSourceHints(repos:FieldManualRepos,scope:FieldManualSourceScope,url:string):Promise<readonly FieldManualSourceHint[]> {
   return sharedManualRequest("manualSources",{scope,url},()=>repos.fieldManual.sourceHints(scope,url));
 }

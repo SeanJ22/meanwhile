@@ -238,6 +238,7 @@ export interface FieldManualRepository extends AggregateRepository<FieldManualEn
 
   select(query: FieldManualQuery): Promise<FieldManualRead>;
   sourceHints(scope:FieldManualSourceScope,url:string):Promise<readonly FieldManualSourceHint[]>;
+  learnedRoutes(routeIds:readonly string[]):Promise<{present:boolean;routeIds:readonly string[]}>;
 
   insertNew(entries: readonly FieldManualEntry[], now: string): Promise<ReadonlySet<string>>;
 

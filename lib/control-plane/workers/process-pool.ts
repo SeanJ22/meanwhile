@@ -31,6 +31,7 @@ export async function startWorkerToolsHost(input: { repos: FieldManualRepos; bro
           const {scope,url}=message.body as {scope:FieldManualSourceScope;url:string};
           return input.repos.fieldManual.sourceHints(scope,url);
         })()
+        : message.kind === "manualRoutes" ? await input.repos.fieldManual.learnedRoutes(message.body as string[])
         : message.kind === "browse" ? await input.browse(message.body as Parameters<BrowseFn>[0]) : null;
       if (result === null) { response.writeHead(404).end(); return; }
       response.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify(result));

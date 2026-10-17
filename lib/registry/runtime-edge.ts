@@ -35,7 +35,7 @@ export interface CommentAccessEdgeValue {
   readonly versionId: string;
 }
 /** One place's published value; null value is the published answer that nothing is promoted there. */
-export interface PlaceEdgeValue<T> {
+interface PlaceEdgeValue<T> {
   readonly value: T | null;
   readonly versionId: string;
 }

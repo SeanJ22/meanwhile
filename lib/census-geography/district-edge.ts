@@ -4,7 +4,7 @@ import type { GeographyType } from "./contract.ts";
 import type { CodeSlice, ContainerSlice, ScopeSlice, Slice } from "../control-plane/admin-view/promoted-slices.ts";
 
 const TYPES: readonly GeographyType[] = ["congressional_district", "state_leg_upper", "state_leg_lower"];
-export const censusDistrictEdgeVersion = (sourceVersion: string): string => `census-districts/v2:${sourceVersion}`;
+const censusDistrictEdgeVersion = (sourceVersion: string): string => `census-districts/v2:${sourceVersion}`;
 
 export interface CensusDistrictEdge {
   readonly formatVersion: 1;

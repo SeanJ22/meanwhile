@@ -22,7 +22,6 @@ import type { StateAuthorityFamily } from "../lib/meetings/edge-artifacts.ts";
 const NOW = "2026-10-16T12:00:00.000Z";
 const IL = { recordClass: "BALLOT_CANDIDACY" as const, scope: stateBallotScope("ballot-contests", "IL") };
 const ENV = { WTP_READER_EDGE_LOCAL_OK: "1", WTP_RUNTIME_AUTHORITY_REPO: process.cwd(), WTP_RUNTIME_AUTHORITY_SHA: "a".repeat(40) };
-const metadata = { sourceThrough: null, retrievedAt: null, promotedThrough: null };
 
 function pointer(recordClass: RoutineRecordClass, scope: string, versionId: string): PromotedPointerIdentity {
   return { key: `${recordClass}:${scope}`, recordClass, scope, versionId, lastKnownGoodVersionId: versionId,
@@ -78,7 +77,7 @@ test("state dispatch uses the same states and territories for registry and ballo
 test("production state supervisor dispatches zero unchanged children and only Illinois's changed family", async t => {
   const f = fixture(t), first = f.put(IL.recordClass, IL.scope, "il-v1");
   const nh = ref("held-new-hampshire");
-  await publishReaderEdgeArtifacts(null, metadata, { store: f.artifacts, now: NOW,
+  await publishReaderEdgeArtifacts({ store: f.artifacts, now: NOW,
     stateAuthorities: { "ballot-contests": { IL: ref(first), NH: nh } } });
   const launched: BoundedChildCommand[] = [];
   const launch: BoundedChildLauncher = async command => { launched.push(command); command.onStarted?.(123); return success(command); };
@@ -125,7 +124,7 @@ test("an unchanged sweep of every state and territory ballot launches no child a
     states[unit.state] = ref(f.put(p.recordClass, p.scope, `${unit.state}-v1`));
   }
   assert.equal(Object.keys(states).length, REGISTRY_STATES.length);
-  await publishReaderEdgeArtifacts(null, metadata, { store: f.artifacts, now: NOW, stateAuthorities: { "ballot-contests": states } });
+  await publishReaderEdgeArtifacts({ store: f.artifacts, now: NOW, stateAuthorities: { "ballot-contests": states } });
   const outcome = await publishSupervisorReaderEdge(f.store, NOW, units.flatMap(unit => unit.pointers), { artifactStore: f.boundedArtifacts,
     stateArtifactChildren: { slots: f.slots, launch: async () => assert.fail("unchanged sweep must not launch") } }, ENV);
   assert.equal(outcome.ok, true);
@@ -153,7 +152,7 @@ test("independent state children overlap while each holds its own memory admissi
 
 test("failed child launch releases admission, retains the served state, and retries", async t => {
   const f = fixture(t), first = f.put(IL.recordClass, IL.scope, "il-v1");
-  await publishReaderEdgeArtifacts(null, metadata, { store: f.artifacts, now: NOW, stateAuthorities: { "ballot-contests": { IL: ref(first) } } });
+  await publishReaderEdgeArtifacts({ store: f.artifacts, now: NOW, stateAuthorities: { "ballot-contests": { IL: ref(first) } } });
   const next = f.put(IL.recordClass, IL.scope, "il-v2");
   let attempts = 0;
   const launch: BoundedChildLauncher = async command => { if (++attempts === 1) throw new Error("spawn failed"); return success(command); };
@@ -180,13 +179,13 @@ test("admission failure never launches a child or leaves a reservation", async t
 
 for (const race of ["pointer", "manifest"] as const) test(`a concurrent ${race} change cannot be overwritten by an older child`, async t => {
   const f = fixture(t), first = f.put(IL.recordClass, IL.scope, "il-v1");
-  await publishReaderEdgeArtifacts(null, metadata, { store: f.artifacts, now: NOW, stateAuthorities: { "ballot-contests": { IL: ref(first) } } });
+  await publishReaderEdgeArtifacts({ store: f.artifacts, now: NOW, stateAuthorities: { "ballot-contests": { IL: ref(first) } } });
   f.put(IL.recordClass, IL.scope, "il-v2");
   const third = promotedPointerVersion(IL.recordClass, IL.scope, pointer(IL.recordClass, IL.scope, "il-v3"));
   const outcome = await publishSupervisorReaderEdge(f.store, NOW, [IL], { artifactStore: f.boundedArtifacts,
     stateArtifactChildren: { slots: f.slots, launch: async command => {
       if (race === "pointer") f.put(IL.recordClass, IL.scope, "il-v3");
-      else await publishReaderEdgeArtifacts(null, metadata, { store: f.artifacts, now: NOW, stateAuthorities: { "ballot-contests": { IL: ref(third) } } });
+      else await publishReaderEdgeArtifacts({ store: f.artifacts, now: NOW, stateAuthorities: { "ballot-contests": { IL: ref(third) } } });
       return success(command);
     } } }, ENV);
   assert.equal(outcome.ok, false);

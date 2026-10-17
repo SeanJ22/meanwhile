@@ -178,7 +178,7 @@ test("warm authority reads retain the identifiers needed to load a shown person'
     const bodyId = "ocd-division/country:us/state:az/county:pima#board";
     const value = { registry: { bodies: [{ ...registryFixtureForState("AZ").registry.bodies[0]!, id: bodyId, ocdId: bodyId.split("#")[0] }] }, bodyRosters: [{ bodyId, bodyName: "County board", sourceUrl: "https://example.gov/board", sourceOrg: "County board", collectedAt: "2026-10-16", partisanship: "NONPARTISAN" as const,
       members: [{ id: "roster:one", name: "One", officeTitle: "Board member", termNote: null, email: null, phone: null, websiteUrl: null, fieldSources: {}, membershipSource: { sourceUrl: "https://example.gov/board", sourceOrg: "County board", collectedAt: "2026-10-16" } }] }] };
-    await publishReaderEdgeArtifacts(null, { sourceThrough: null, retrievedAt: null, promotedThrough: null }, {
+    await publishReaderEdgeArtifacts({
       store, stateAuthorities: { "registry-runtime": stateRegistryArtifacts("warm-version", ["AZ"], {
         ...registryFixtureForState("AZ"), registry: { ...registryFixtureForState("AZ").registry, bodies: value.registry.bodies }, bodyRosters: value.bodyRosters,
       }) },
@@ -213,7 +213,7 @@ test("a later named body loads its live facts without reopening the state regist
       dispositions: [], comment: null, sittings: [] }));
     const index = await publishAuthorityRecords({ bodies }, store), laterKey = index.records.find(row => row.tags.includes(bodyIds[1]))!.key;
     const payload = { ...registryFixtureForState("AZ"), bodyRosters: [] };
-    await publishReaderEdgeArtifacts(null, { sourceThrough: null, retrievedAt: null, promotedThrough: null }, { store,
+    await publishReaderEdgeArtifacts({ store,
       stateAuthorities: { "registry-runtime": stateRegistryArtifacts("named-body", ["AZ"], payload) },
       stateFacts: { AZ: { versionId: "named-facts", value: { buckets: [await writeFactBucket(store, "AZ", 0, "named-facts", index, "2026-10-16T12:00:00.000Z")] } } },
     });

@@ -72,9 +72,9 @@ test("KEEP-WARM · a marked call loads the shared reader index without database 
   const unmarked = await (await call("?hold=0", false)).json();
   assert.equal(unmarked.primed, null);
   const source = readFileSync("app/api/warm/route.ts", "utf8");
-  assert.match(source, /readReaderManifest\(\)/, "meeting warming reads the calendar index");
   assert.match(source, /readReaderManifest\(\)/, "authority warming reads the shared manifest");
   assert.match(source, /ensureReaderAuthorityEdge\(manifest\)/);
-  assert.match(source, /readReaderEdgeMeetings\(\{\s*manifest,\s*fallback: \(\) => Promise\.reject\(/, "the meetings read's database fallback is refused");
+  assert.match(source, /Object\.keys\(manifest\.meetingStates \?\? \{\}\)\.length > 0/, "meeting warming reads the manifest's state list and nothing else");
+  assert.doesNotMatch(source, /readReaderEdgeMeetings/);
   assert.doesNotMatch(source, /getDb|readPreparedMeetingsProjection|refreshOutcomeSnapshotFromPromoted/);
 });

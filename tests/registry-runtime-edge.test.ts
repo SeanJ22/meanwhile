@@ -41,7 +41,6 @@ function stateRegistryArtifacts(versionId: string, states: readonly string[], va
 
 
 
-const META = { sourceThrough: null, retrievedAt: null, promotedThrough: null };
 const stateAuthorities = (version: string) => ({ "registry-runtime": stateRegistryArtifacts(version, ["AZ"]) });
 function artifacts(t: { after(fn: () => void): void }) {
   const dir = mkdtempSync(join(tmpdir(), "rt-edge-")); t.after(() => rmSync(dir, { recursive: true, force: true }));
@@ -50,7 +49,7 @@ function artifacts(t: { after(fn: () => void): void }) {
 
 test("a member lookup reuses its already-held state without narrowing the other explicitly loaded states", async t => {
   const store = artifacts(t);
-  await publishReaderEdgeArtifacts(null, META, { store,
+  await publishReaderEdgeArtifacts({ store,
     stateAuthorities: { "registry-runtime": stateRegistryArtifacts("member-context", ["AZ", "NJ"]) } });
   const manifest = (await store.readManifest())!.manifest;
   const readBytes = store.readBytes.bind(store), keys: string[] = [];
@@ -74,7 +73,7 @@ test("a member lookup reuses its already-held state without narrowing the other 
 
 test("the runner publishes one state registry losslessly, and its reader stays lazy until that state is requested", async t => {
   const store = artifacts(t);
-  assert.equal((await publishReaderEdgeArtifacts(null, META, { store, stateAuthorities: stateAuthorities("rt-v1") })).status, "PUBLISHED");
+  assert.equal((await publishReaderEdgeArtifacts({ store, stateAuthorities: stateAuthorities("rt-v1") })).status, "PUBLISHED");
   const manifest = (await store.readManifest())!.manifest, ref = manifest.stateAuthorities!["registry-runtime"]!.AZ;
   assert.ok(ref.key.endsWith(".json.gz")); assert.equal(ref.version, "rt-v1:AZ"); assert.ok(ref.sha);
   assert.equal(Object.hasOwn(manifest.authorityArtifacts ?? {}, "registry-runtime"), false);
@@ -91,10 +90,10 @@ test("the runner publishes one state registry losslessly, and its reader stays l
 
 test("the same state version is idempotent and a successor advances only that state's artifact", async t => {
   const store = artifacts(t);
-  await publishReaderEdgeArtifacts(null, META, { store, stateAuthorities: { "registry-runtime": stateRegistryArtifacts("rt-v1", ["AZ", "NH"]) } });
+  await publishReaderEdgeArtifacts({ store, stateAuthorities: { "registry-runtime": stateRegistryArtifacts("rt-v1", ["AZ", "NH"]) } });
   const before = (await store.readManifest())!.manifest;
-  assert.equal((await publishReaderEdgeArtifacts(null, META, { store, stateAuthorities: stateAuthorities("rt-v1") })).status, "CURRENT");
-  assert.equal((await publishReaderEdgeArtifacts(null, META, { store, stateAuthorities: stateAuthorities("rt-v2") })).status, "PUBLISHED");
+  assert.equal((await publishReaderEdgeArtifacts({ store, stateAuthorities: stateAuthorities("rt-v1") })).status, "CURRENT");
+  assert.equal((await publishReaderEdgeArtifacts({ store, stateAuthorities: stateAuthorities("rt-v2") })).status, "PUBLISHED");
   const after = (await store.readManifest())!.manifest;
   assert.equal(after.stateAuthorities!["registry-runtime"]!.AZ.version, "rt-v2:AZ");
   assert.deepEqual(after.stateAuthorities!["registry-runtime"]!.NH, before.stateAuthorities!["registry-runtime"]!.NH);
@@ -119,18 +118,18 @@ test("a new request starts without another request's registry payload", async ()
 
 test("unchanged state artifacts carry without a read and stale carries cannot replace a winning manifest", async t => {
   const store = artifacts(t);
-  await publishReaderEdgeArtifacts(null, META, { store, stateAuthorities: stateAuthorities("rt-v1") });
+  await publishReaderEdgeArtifacts({ store, stateAuthorities: stateAuthorities("rt-v1") });
   const served = (await store.readManifest())!.manifest.stateAuthorities!["registry-runtime"]!.AZ;
   let reads = 0; const original = store.readBytes.bind(store);
   t.mock.method(store, "readBytes", async (key: string) => { reads++; return original(key); });
   const carried = { "registry-runtime": { AZ: { versionId: "rt-v1:AZ", carried: true as const } } };
-  assert.equal((await publishReaderEdgeArtifacts(null, META, { store, stateAuthorities: carried })).status, "CURRENT");
-  assert.equal((await publishReaderEdgeArtifacts(null, META, { store, stateAuthorities: carried,
+  assert.equal((await publishReaderEdgeArtifacts({ store, stateAuthorities: carried })).status, "CURRENT");
+  assert.equal((await publishReaderEdgeArtifacts({ store, stateAuthorities: carried,
     authority: { "campaign-sites": { value: { records: [] }, versionId: "cs-v1" } } })).status, "PUBLISHED");
   assert.equal(reads, 0);
   const before = (await store.readManifest())!.manifest;
   assert.deepEqual(before.stateAuthorities!["registry-runtime"]!.AZ, served);
-  assert.equal((await publishReaderEdgeArtifacts(null, META, { store,
+  assert.equal((await publishReaderEdgeArtifacts({ store,
     stateAuthorities: { "registry-runtime": { AZ: { versionId: "old", carried: true } } },
     authority: { "campaign-sites": { value: { records: [] }, versionId: "cs-v2" } } })).status, "RACED");
   assert.deepEqual((await store.readManifest())!.manifest, before);

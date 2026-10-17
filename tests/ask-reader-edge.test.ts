@@ -6,7 +6,9 @@ import { join } from "node:path";
 import { after, test } from "./helpers/playbooks.ts";
 
 import { publishReaderEdgeArtifacts, type PublishAuthority, type PublishStateAuthorities } from "../lib/meetings/edge-serving.ts";
+import { planMeetingBodies } from "../lib/meetings/body-publication.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
+import { HOUR, PIMA, T1, at, readPartition } from "./helpers/meeting-body-fixtures.ts";
 import type { GlobalPromotedAuthorityFamily, PromotedFamilyArtifactValue } from "../lib/meetings/edge-artifacts.ts";
 import { ballotElectionKey } from "../lib/ballot/generic-projection.ts";
 import { clearPromotedReadModelCache } from "../lib/civic-data/read-model.ts";
@@ -26,7 +28,7 @@ import {
   servedValue,
 } from "./helpers/promoted-edge-entry.ts";
 import { stateMoneyFixture, syntheticCandidateCorpus, syntheticCandidateProfiles, syntheticFederalDirectory, syntheticFederalKeyVotes, syntheticFederalRollCalls, syntheticOfficeholderStatements, syntheticPimaLocalFinance } from "./helpers/promoted-fixtures.ts";
-import { recordedMeetingsSnapshot, syntheticExecutiveActions } from "./helpers/reader-fixtures.ts";
+import { syntheticExecutiveActions } from "./helpers/reader-fixtures.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 import { registryTransferImport } from "./helpers/promoted-fixtures.ts";
 import { stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
@@ -87,7 +89,7 @@ function stateRegistryArtifacts(versionId: string, states: readonly string[], va
 delete process.env.ANTHROPIC_API_KEY;
 for (const key of ["DATABASE_URL", "DATABASE_URL_UNPOOLED", "NEON_DATABASE_URL", "NETLIFY", "NETLIFY_BLOBS_CONTEXT", "NETLIFY_SITE_ID"]) delete process.env[key];
 process.env.WTP_LIMIT_LOG_IP_PER_MINUTE = "10000";
-// The values the edge carries: the recorded registry import, the recorded 85701 meetings, and small synthetic
+// The values the edge carries: the recorded registry import, one promoted Pima meeting body, and small synthetic
 // values for every other family, built before the fake database. FEC funding is still read through its seed.
 const seedStore = new MemoryRoutineDataStore();
 const served = servedValue;
@@ -129,19 +131,18 @@ const STATE_PROMOTED: PublishStateAuthorities = {
 async function publishEdge(withPromoted: boolean, overrides: typeof PROMOTED = {}, stateOverrides: PublishStateAuthorities = {}): Promise<string> {
   const dir = mkdtempSync(join(tmpdir(), "wtp-ask-edge-"));
   after(() => rmSync(dir, { recursive: true, force: true }));
-  const snapshot = recordedMeetingsSnapshot();
-  assert.ok(snapshot.meetings.length > 0, "the recorded meetings publish the edge's meeting scopes");
   const authority: PublishAuthority = {
     "census-districts": { value: azDistricts, versionId: azDistricts.versionId },
     "federal-directory": { value: federal, versionId: "edge-test:ask:federal" },
     "meeting-outcomes": { value: outcomes, versionId: "edge-test:ask:outcomes" },
     ...(withPromoted ? { ...PROMOTED, ...overrides } : {}),
   };
-  const result = await publishReaderEdgeArtifacts(snapshot, {
-    sourceThrough: snapshot.generatedAt,
-    retrievedAt: snapshot.generatedAt,
-    promotedThrough: snapshot.generatedAt,
-  }, { store: new LocalFileArtifactStore(dir), now: new Date().toISOString(), authority,
+  const artifacts = new LocalFileArtifactStore(dir);
+  const meetingStore = new MemoryRoutineDataStore();
+  await readPartition(meetingStore, PIMA, T1, ["a", "b"]);
+  const plan = await planMeetingBodies({ store: meetingStore, artifacts, now: at(T1, HOUR), served: undefined, registryVersion: () => null, registry: async () => null });
+  assert.ok(plan.stats.states.includes("AZ"), "the recorded Pima body publishes the edge's Arizona meeting index");
+  const result = await publishReaderEdgeArtifacts({ store: artifacts, now: new Date().toISOString(), authority, meetingStates: plan.entries,
     stateAuthorities: { "registry-runtime": stateRegistryArtifacts("edge-test:ask:registry", ["AZ"]), ...(withPromoted ? STATE_PROMOTED : {}), ...stateOverrides },
     registrations: {},
     stateLegislators: { "US-AZ": { versionId: "edge-test:ask:az-people", value: {
@@ -323,14 +324,10 @@ test("a named place absent from its state registry gives a specific holding with
   const registryKey = manifest.stateAuthorities!["registry-runtime"]!.IL!.key;
   const opened: string[] = [];
   const originalBytes = LocalFileArtifactStore.prototype.readBytes;
-  const originalArtifact = LocalFileArtifactStore.prototype.readArtifact;
   const originalFetch = globalThis.fetch;
   const requests: string[] = [];
   LocalFileArtifactStore.prototype.readBytes = async function (key) {
     opened.push(key); return originalBytes.call(this, key);
-  };
-  LocalFileArtifactStore.prototype.readArtifact = async function (key) {
-    opened.push(key); return originalArtifact.call(this, key);
   };
   globalThis.fetch = (async (input, init) => {
     requests.push(String(input)); return originalFetch(input, init);
@@ -356,7 +353,6 @@ test("a named place absent from its state registry gives a specific holding with
     assert.deepEqual(databaseReads, []);
   } finally {
     LocalFileArtifactStore.prototype.readBytes = originalBytes;
-    LocalFileArtifactStore.prototype.readArtifact = originalArtifact;
     globalThis.fetch = originalFetch;
   }
 });

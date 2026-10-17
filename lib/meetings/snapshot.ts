@@ -4,31 +4,14 @@ import type { Meeting, NormalizeDropCounts } from "../sources/types.ts";
 import type { SourceAcquisitionEvidence } from "../sources/acquisition-trace.ts";
 import {
   CivicDataStoreUnavailableError,
-  readPromotedCivicDataBatch,
   readPromotedCivicData,
   type CivicDataReadMetadata,
   type CivicDataReadResult,
   type PromotedCivicDataReadOptions,
 } from "../civic-data/read-model.ts";
 import { meetingPartitionFreshnessMs } from "../civic-data/contracts.ts";
-import {
-  HELD_MEETING_PARTITIONS,
-  MEETING_PARTITION_CONTRACTS,
-  type HeldMeetingPartition,
-  type MeetingPartitionContract,
-} from "../civic-data/meeting-partitions.ts";
-import { DERIVED_FAMILY_SOURCE, meetingHistoryContract } from "../civic-data/meeting-partitions.ts";
-import { mergeMeetingHistory } from "../civic-data/meeting-history.ts";
-import { mergeDuplicateSittingFields, mergeReaderSittings } from "./sitting-merge.ts";
-import { collapseDuplicateSittings } from "../sources/composite/index.ts";
-import { stampMeetingDoor } from "../civic-data/fact-door.ts";
-import {
-  applyPartitionFreshCheck,
-  confirmationCheckedAt,
-  meetingVersionReadsASource,
-  meetingVersionRoutes,
-  type MeetingPartitionFreshCheck,
-} from "./fresh-checks.ts";
+import type { HeldMeetingPartition, MeetingPartitionContract } from "../civic-data/meeting-partitions.ts";
+import { DERIVED_FAMILY_SOURCE } from "../civic-data/meeting-partitions.ts";
 
 export const MEETINGS_RECORD_CLASS = "MEETING" as const;
 /** Reader composition scope; no canonical pointer is ever written at this key. */

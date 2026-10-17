@@ -18,11 +18,13 @@ import {
   meetingVersionRoutes,
   type FreshCheckCoupling,
 } from "./fresh-checks.ts";
+import { carriedFromAnswer } from "./carry-forward.ts";
 import { mergeDuplicateSittingFields, mergeReaderSittings } from "./sitting-merge.ts";
 import {
   accountCarriedCollapses,
   snapshotCounts,
   validateSnapshot,
+  type DerivedFamilyMemberReport,
   type MeetingsSnapshot,
   type SnapshotSourceReport,
 } from "./snapshot.ts";
@@ -152,16 +154,28 @@ export interface ComposedMeetingBody {
 const newest = (values: readonly (string | null)[]): string | null =>
   values.filter((value): value is string => value !== null).sort().at(-1) ?? null;
 
-/** A family's report counts every member's rows; a body's report counts its own. */
-function bodyReports(reports: readonly SnapshotSourceReport[], rows: readonly Meeting[], divisions: ReadonlySet<string>): SnapshotSourceReport[] {
-  return reports.flatMap((report) => {
-    const own = rows.filter((row) => row.id.startsWith(`${report.source}:`));
-    if (own.length === 0) return [];
-    const { carriedForward: _carried, carriedCollapsed: _collapsed, unreachableOcdIds, ...rest } = report;
-    const carried = own.filter((row) => row.carried).length;
-    const unreachable = unreachableOcdIds?.filter((id) => divisions.has(divisionOf(id))) ?? [];
-    return [{ ...rest, fetched: own.length - carried, normalized: own.length - carried, drops: { placeless: 0, unknownVenue: 0, unplaceableInTime: 0, notConfigured: 0 },
-      ...(carried > 0 ? { carriedForward: carried } : {}), ...(unreachable.length > 0 ? { unreachableOcdIds: unreachable } : {}) }];
+/**
+ * A family's members each name the body and adapter they read. The body's reports state each member's outcome over its own rows:
+ * fresh rows and rows carried after the source answered under one report, rows carried because it could not be reached under another.
+ */
+function memberReports(members: readonly DerivedFamilyMemberReport[], rows: readonly Meeting[]): SnapshotSourceReport[] {
+  const zero = { placeless: 0, unknownVenue: 0, unplaceableInTime: 0, notConfigured: 0 };
+  return members.flatMap((member) => {
+    const own = rows.filter((row) => (row.carried?.source ?? row.id.split(":")[0]) === member.source);
+    const fresh = own.filter((row) => !row.carried);
+    const answered = own.filter((row) => row.carried && carriedFromAnswer(row.carried.reason)).length;
+    const walled = own.filter((row) => row.carried && !carriedFromAnswer(row.carried.reason)).length;
+    const reached = member.outcome === "FRESH";
+    return [
+      ...(reached || fresh.length > 0 || answered > 0 ? [{
+        source: member.source, ok: true, error: null, fetched: fresh.length, normalized: fresh.length, drops: zero,
+        ...(answered > 0 ? { carriedForward: answered } : {}),
+      }] : []),
+      ...(!reached || walled > 0 ? [{
+        source: member.source, ok: false, error: member.detail ?? `${member.bodyId}: the last verified sittings are held`, failure: "WALL" as const,
+        fetched: 0, normalized: 0, drops: zero, ...(walled > 0 ? { carriedForward: walled } : {}),
+      }] : []),
+    ];
   });
 }
 
@@ -211,15 +225,20 @@ export function composeMeetingBody(input: {
   const divisions = new Set(input.divisions.map(divisionOf));
   const meetings = owned.flatMap(({ value }) => value.meetings);
   const agendaDocuments = owned.flatMap(({ value }) => value.agendaDocuments);
-  const sources: SnapshotSourceReport[] = owned.flatMap(({ family, value }) => family ? bodyReports(value.sources, value.meetings, divisions) : value.sources);
+  const attribute = (report: SnapshotSourceReport): SnapshotSourceReport => !report.ok && report.unreachableOcdIds === undefined && input.divisions.length > 0
+    ? { ...report, unreachableOcdIds: [...new Set(input.divisions.map(divisionOf))] } : report;
+  const ownReports = owned.map(({ family, value, read }): SnapshotSourceReport[] =>
+    (family ? memberReports((read.value.derivedMembers ?? []).filter((member) => member.bodyId === input.bodyId), value.meetings) : [...value.sources]).map(attribute));
+  const sources = ownReports.flat();
   for (const { partition, read } of input.reads.filter((row) => row.read.kind !== "PROMOTED")) {
-    if (partition.derivedFamily === null) sources.push(unreachableReport(partition, "detail" in read ? read.detail : "partition unavailable"));
+    if (partition.derivedFamily === null) sources.push(attribute(unreachableReport(partition, "detail" in read ? read.detail : "partition unavailable")));
   }
+  if (sources.length === 0 && meetings.length === 0) return null;
 
   const exact = collapseDuplicateSittings(meetings, mergeDuplicateSittingFields);
   const merged = mergeReaderSittings(exact.rows);
   const dropped = [...exact.dropped, ...merged.dropped];
-  const accounted = accountCarriedCollapses(owned.map(({ value }) => value), sources, dropped);
+  const accounted = accountCarriedCollapses(owned.map(({ value }, index) => ({ meetings: value.meetings, sources: ownReports[index]! })), sources, dropped);
   const retained = new Set(merged.rows.map((meeting) => meeting.id));
   const snapshot: MeetingsSnapshot = {
     formatVersion: 1,
@@ -231,7 +250,7 @@ export function composeMeetingBody(input: {
       .map((document) => ({ ...document, meetingId: merged.aliases.get(document.meetingId) ?? document.meetingId }))
       .filter((document) => retained.has(document.meetingId)),
   };
-  validateSnapshot(snapshot, { allowAllSourcesFailedForDurableTransfer: true });
+  if (snapshot.meetings.length > 0) validateSnapshot(snapshot, { allowAllSourcesFailedForDurableTransfer: true });
 
   const couplings: FreshCheckCoupling[] = owned.map(({ partition, held, read, routes, checkedAt }) => ({
     contractId: held ? held.id : partition.id,
@@ -285,8 +304,13 @@ export function mergeMeetingBodies(parts: readonly {
     if (history === null) return served;
     const held = new Set(served.meetings.map(({ id }) => id));
     const past = history.meetings.filter((meeting) => !held.has(meeting.id));
-    return { ...served, meetings: [...served.meetings, ...past], sources: [...served.sources, ...history.sources],
-      agendaDocuments: [...served.agendaDocuments, ...history.agendaDocuments.filter((document) => past.some((meeting) => meeting.id === document.meetingId))] };
+    // A kept sitting that the live listing also states is one sitting, exactly as when they were held together.
+    const exact = collapseDuplicateSittings([...served.meetings, ...past], mergeDuplicateSittingFields);
+    const joined = mergeReaderSittings(exact.rows);
+    const pastIds = new Set(past.map(({ id }) => id));
+    return { ...served, meetings: joined.rows, sources: [...served.sources, ...history.sources],
+      agendaDocuments: [...served.agendaDocuments, ...history.agendaDocuments.filter((document) => pastIds.has(document.meetingId))]
+        .map((document) => ({ ...document, meetingId: joined.aliases.get(document.meetingId) ?? document.meetingId })) };
   });
   const meetings = bodies.flatMap((body) => body.meetings).sort((a, b) => Date.parse(a.startsAt) - Date.parse(b.startsAt) || (a.id < b.id ? -1 : 1));
   const generatedAt = bodies.reduce<string | null>((latest, body, index) => laterCheck(latest, laterCheck(body.generatedAt, parts[index]!.entry.checks.checkedAt)), null);

@@ -169,14 +169,7 @@ async function publishEdge(withPromoted: boolean, authorityOverrides: PublishAut
     ...(withPromoted ? PROMOTED_BALLOT_FAMILIES : {}),
     ...authorityOverrides,
   };
-  const published = await publishReaderEdgeArtifacts({
-    formatVersion: 1,
-    generatedAt: "2026-09-25T00:00:00.000Z",
-    counts: { fresh: 0, carried: 0, total: 0, duplicatesCollapsed: 0 },
-    sources: [],
-    meetings: [],
-    agendaDocuments: [],
-  }, { sourceThrough: null, retrievedAt: null, promotedThrough: null }, { store: new LocalFileArtifactStore(dir), authority,
+  const published = await publishReaderEdgeArtifacts({ store: new LocalFileArtifactStore(dir), authority,
     stateAuthorities: { "registry-runtime": stateRegistryArtifacts(REGISTRY_VERSION, ["AZ", "NH", "NJ", "TX"]),
       ...(withPromoted ? { ...STATE_BALLOT_FAMILIES, ...stateOverrides } : {}) },
     registrations: {},

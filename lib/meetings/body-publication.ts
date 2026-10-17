@@ -192,6 +192,7 @@ interface BodyWork {
 type Composed =
   | { readonly kind: "SAME" }
   | { readonly kind: "ABSENT" }
+  | { readonly kind: "EMPTY" }
   | { readonly kind: "ENTRY"; readonly entry: MeetingIndexBody; readonly checkedOnly: boolean }
   | { readonly kind: "COMPOSED"; readonly entry: MeetingIndexBody; readonly row: MeetingBodyRow; readonly couplings: readonly FreshCheckCoupling[]; readonly divisions: readonly string[] };
 
@@ -261,11 +262,12 @@ async function composeBody(pass: Pass, state: string, work: BodyWork): Promise<C
   const doorDivisions = [regular[0]?.ocdId, ...(first?.read.kind === "PROMOTED" ? first.read.value.meetings.slice(0, 1).map((meeting) => meeting.ocdId) : [])];
   const divisions = divisionsOf(work.bodyId, registry, doorDivisions);
   const composed = composeMeetingBody({ bodyId: work.bodyId, divisions, reads, histories: historyReads });
-  if (composed === null) return { kind: "ABSENT" };
+  if (composed === null) return { kind: "EMPTY" };
   pass.stats.composed += 1;
   pass.stats.superseded += composed.snapshot.meetings.reduce((count, meeting) => count + (meeting.publicationConflicts?.length ?? 0), 0);
 
   const history = composeMeetingBodyHistory(work.bodyId, historyReads, composed.snapshot.generatedAt);
+  if (composed.snapshot.meetings.length === 0 && history === null && composed.snapshot.sources.every((source) => source.ok)) return { kind: "EMPTY" };
   const content = sha256OfJson({ snapshot: composed.snapshot, history });
   const checks = meetingFreshChecks(composed.couplings);
   const base = {
@@ -375,6 +377,16 @@ async function processState(pass: Pass, state: string, dirty: ReadonlySet<string
     try {
       const result = await composeBody(pass, state, item);
       if (result.kind === "SAME" || result.kind === "ABSENT") continue;
+      if (result.kind === "EMPTY") {
+        if (item.entry !== undefined) {
+          for (const gone of statesOfDivisions(item.entry.divisions)) {
+            if (gone === state) continue;
+            const held = removals.get(gone) ?? new Set<string>(); held.add(item.bodyId); removals.set(gone, held);
+          }
+          delete bodies[item.bodyId]; changed = true;
+        }
+        continue;
+      }
       if (result.kind === "ENTRY") {
         bodies[item.bodyId] = result.entry; changed = true;
         if (result.checkedOnly) pass.stats.checkedOnly += 1;

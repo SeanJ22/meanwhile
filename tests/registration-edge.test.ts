@@ -6,7 +6,6 @@ import { test } from "node:test";
 
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import { ensureReaderAuthorityEdge, publishReaderEdgeArtifacts } from "../lib/meetings/edge-serving.ts";
-import type { MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
 import type { RegistrationSourceReceipt } from "../lib/registration/acquire.ts";
 import { registrationCandidate, type RegistrationReadModel, type ReviewedRegistryIds } from "../lib/registration/candidate.ts";
 import { REGISTRATION_SCOPES, registrationEdgePlan } from "../lib/registration/edge.ts";
@@ -35,7 +34,6 @@ function promotedFixtureBundle(extra: ReaderAuthorityEdgeBundle = {}): ReaderAut
 
 
 const ROOT = join(import.meta.dirname, "..");
-const META = { sourceThrough: null, retrievedAt: null, promotedThrough: null };
 const RECEIPT: RegistrationSourceReceipt = {
   requestedUrl: REGISTRATION_SOURCE_URL,
   finalUrl: REGISTRATION_SOURCE_URL,
@@ -46,17 +44,6 @@ const RECEIPT: RegistrationSourceReceipt = {
   confirmedBy: "HELD_RELEASE",
 };
 const REVIEWED: ReviewedRegistryIds = { versionId: "cv-reviewed", divisionIds: new Set(), bodyIds: new Set(), bodyDivisionIds: new Set() };
-
-function emptySnapshot(): MeetingsSnapshot {
-  return {
-    formatVersion: 1,
-    generatedAt: "2026-09-24T12:00:00.000Z",
-    counts: { fresh: 0, carried: 0, total: 0, duplicatesCollapsed: 0 },
-    sources: [],
-    meetings: [],
-    agendaDocuments: [],
-  };
-}
 
 function model(state: string): RegistrationReadModel {
   return registrationCandidate({ target: registrationTarget(state), reference: loadRegistrationReference(ROOT, state), receipt: RECEIPT, reviewed: REVIEWED }).readModel as RegistrationReadModel;
@@ -85,7 +72,7 @@ test("each state's registration is its own compressed artifact, read back lossle
   const store = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reg-edge-")));
   const oh = model("OH");
   const nh = model("NH");
-  const published = await publishReaderEdgeArtifacts(emptySnapshot(), META, {
+  const published = await publishReaderEdgeArtifacts({
     store,
     registrations: { oh: { value: oh, versionId: "reg-oh-1" }, nh: { value: nh, versionId: "reg-nh-1" } },
   });
@@ -106,16 +93,16 @@ test("unchanged states carry forward, a moved state re-publishes alone, and a st
   const store = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reg-edge-")));
   const oh = model("OH");
   const nh = model("NH");
-  await publishReaderEdgeArtifacts(emptySnapshot(), META, { store, registrations: { oh: { value: oh, versionId: "reg-oh-1" }, nh: { value: nh, versionId: "reg-nh-1" } } });
+  await publishReaderEdgeArtifacts({ store, registrations: { oh: { value: oh, versionId: "reg-oh-1" }, nh: { value: nh, versionId: "reg-nh-1" } } });
   const first = (await store.readManifest())!.manifest;
 
-  const same = await publishReaderEdgeArtifacts(emptySnapshot(), META, {
+  const same = await publishReaderEdgeArtifacts({
     store,
     registrations: { oh: { versionId: "reg-oh-1", carried: true }, nh: { versionId: "reg-nh-1", carried: true } },
   });
   assert.equal(same.status, "CURRENT", "nothing moved: nothing is written");
 
-  const moved = await publishReaderEdgeArtifacts(emptySnapshot(), META, {
+  const moved = await publishReaderEdgeArtifacts({
     store,
     registrations: { oh: { value: oh, versionId: "reg-oh-2" }, nh: { versionId: "reg-nh-1", carried: true } },
   });
@@ -125,7 +112,7 @@ test("unchanged states carry forward, a moved state re-publishes alone, and a st
   assert.notEqual(second.registrations!.oh.key, first.registrations!.oh.key);
   assert.equal(second.registrations!.oh.version, "reg-oh-2");
 
-  const stale = await publishReaderEdgeArtifacts(emptySnapshot(), META, {
+  const stale = await publishReaderEdgeArtifacts({
     store,
     registrations: { oh: { versionId: "reg-oh-2", carried: true }, nh: { versionId: "reg-nh-9", carried: true } },
   });

@@ -162,7 +162,7 @@ test("the public federal-money route serves the real place artifact on its first
   try {
     const store = new LocalFileArtifactStore(directory);
     await publish(store);
-    const published = await publishReaderEdgeArtifacts(null, { sourceThrough: NOW, retrievedAt: NOW, promotedThrough: NOW }, {
+    const published = await publishReaderEdgeArtifacts({
       store, now: NOW,
       authority: { "federal-directory": { value: syntheticFederalDirectory(), versionId: "reader-api:federal-directory" } },
       stateAuthorities: { "registry-runtime": stateRegistryArtifacts("reader-api:registry", ["AR"]) },

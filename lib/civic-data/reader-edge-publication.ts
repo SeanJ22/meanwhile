@@ -25,7 +25,6 @@ import type { RoutineRecordClass, PromotedPointerIdentity } from "./types.ts";
 import { readCuratedReaderProjection } from "./curated-reader-read-model.ts";
 import { readEverydayRoutingProjection } from "../routing/everyday-data-plane.ts";
 import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
-import { statesForRegistryDivisions } from "./state-scopes.ts";
 import { withReaderAuthorityEdge } from "../registry/runtime-edge.ts";
 import { readStateAuthorityProjection } from "./state-reader.ts";
 import { readCensusGeographyProjection } from "../census-geography/reader.ts";
@@ -116,7 +115,6 @@ export async function publishSupervisorReaderEdge(store: RoutineDataStore, obser
       // A failed read cannot establish that no serving copy exists. Let the
       // outer publication error handler retain it and report a retryable error.
       const servedManifest = (await artifactStore.readManifest())?.manifest ?? null;
-      const servedMeetings = preparesMeetings ? servedManifest : null;
       sequence = servedManifest?.sequence ?? null;
       if (env.WTP_READER_EDGE_LOCAL_OK !== "1" && artifactStore.kind === "local-file") {
         throw new Error("Reader pages would be saved to a folder on the runner. Readers are still seeing the older copy.");

@@ -51,17 +51,19 @@ export class CivicPayloadParts {
     const remaining = new Map<number, number>();
     for (const group of order) remaining.set(group, (remaining.get(group) ?? 0) + 1);
     const held = new Map<number, { rows: unknown[]; position: number }>();
-    for (const group of order) {
-      let chunk = held.get(group);
-      if (!chunk) {
-        chunk = { rows: await this.load(node.groups![group]) as unknown[], position: 0 };
-        this.cached.clear(); this.cachedBytes = 0;
-        held.set(group, chunk);
+    try {
+      for (const group of order) {
+        let chunk = held.get(group);
+        if (!chunk) {
+          chunk = { rows: await this.load(node.groups![group]) as unknown[], position: 0 };
+          this.cached.clear(); this.cachedBytes = 0;
+          held.set(group, chunk);
+        }
+        yield chunk.rows[chunk.position++];
+        remaining.set(group, remaining.get(group)! - 1);
+        if (remaining.get(group) === 0) held.delete(group);
       }
-      yield chunk.rows[chunk.position++];
-      remaining.set(group, remaining.get(group)! - 1);
-      if (remaining.get(group) === 0) held.delete(group);
-    }
+    } finally { this.cached.clear(); this.cachedBytes = 0; }
   }
 
   private remember(part: Part): void {

@@ -10,8 +10,8 @@ import { VALIDATION_CHECKS } from "../lib/civic-data/types.ts";
 import { withReaderSelection } from "../lib/db/reader-route.ts";
 import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
-import { ensureReaderAuthorityEdge,holdReaderAuthorityEdge,prepareStateAuthorityArtifact,stateFactsPointerKey } from "../lib/meetings/edge-serving.ts";
-import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
+import { authorityPointerKey,ensureReaderAuthorityEdge,holdReaderAuthorityEdge,prepareStateAuthorityArtifact,stateFactsPointerKey } from "../lib/meetings/edge-serving.ts";
+import { LocalFileArtifactStore, type ReaderArtifactStore } from "../lib/meetings/edge-store.ts";
 
 const state="AZ",family="registry-runtime",scope="US-AZ:reader-registry-runtime",recordClass="REGISTRY_RUNTIME_BINDING";
 const payload={registry:{bodies:[{id:"az-body",name:"Held Arizona body"}]}},versionId="az-v1",at="2026-10-16T10:00:00Z";
@@ -31,7 +31,8 @@ test("real state edge reads make zero SQL calls and reuse the verified entry wit
   const directory=mkdtempSync(join(tmpdir(),"state-reader-edge-"));t.after(()=>rmSync(directory,{recursive:true,force:true}));
   const store=new LocalFileArtifactStore(directory),{entry}=fixture();
   const published=await prepareStateAuthorityArtifact(family,state,{versionId,value:{kind:"PROMOTED_POINTERS",entries:[entry]}} as never,store,at);
-  const edge=await ensureReaderAuthorityEdge({stateAuthorities:{[family]:{AZ:published.artifact}}},store,[family]);
+  await store.writeJsonPointer(authorityPointerKey(family,state),published.artifact,null);
+  const edge=await ensureReaderAuthorityEdge(null,store,[family]);
   let bytesReads=0;const realRead=store.readBytes.bind(store);t.mock.method(store,"readBytes",async(key:string)=>{bytesReads++;return realRead(key);});
   await withReaderAuthorityEdge(edge,async()=>{
     const query=async()=>{assert.fail("edge hit must not read SQL");};
@@ -47,7 +48,8 @@ test("real state edge reads make zero SQL calls and reuse the verified entry wit
 test("a forced artifact miss reads one exact state row, shares the result, and logs one miss",async t=>{
   const directory=mkdtempSync(join(tmpdir(),"state-reader-miss-"));t.after(()=>rmSync(directory,{recursive:true,force:true}));
   const store=new LocalFileArtifactStore(directory),warnings:unknown[][]=[];t.mock.method(console,"warn",(...args:unknown[])=>warnings.push(args));
-  const edge=await ensureReaderAuthorityEdge({stateAuthorities:{[family]:{AZ:{key:"missing.json.gz",version:versionId,sha:"a".repeat(64)}}}},store,[family]);
+  await store.writeJsonPointer(authorityPointerKey(family,state),{key:"missing.json.gz",version:versionId,sha:"a".repeat(64)},null);
+  const edge=await ensureReaderAuthorityEdge(null,store,[family]);
   let calls=0;
   await withReaderAuthorityEdge(edge,async()=>{
     const query=async(_sql:string,params:readonly unknown[])=>{calls++;assert.deepEqual(params,[`${recordClass}:${scope}`]);return [fixture().row];};
@@ -77,10 +79,10 @@ test("a corrupt referenced payload becomes a named state failure without another
 test("an unexpected authority setup failure logs its exact scoped key once through both holding catches", async t => {
   const warnings: unknown[][] = [];
   t.mock.method(console, "warn", (...args: unknown[]) => warnings.push(args));
-  const key = "reader/artifacts/az-registry.json.gz", failure = new Error("Authority setup failed at https://private.example.gov?token=secret");
-  const manifest = { stateAuthorities: { [family]: { AZ: { key, version: versionId, sha: "a".repeat(64) } } },
-    get authorityArtifacts(): undefined { throw failure; } };
-  const read = () => ensureReaderAuthorityEdge(manifest, null, [family]).catch(error => holdReaderAuthorityEdge(error, manifest, [family]));
+  const key = authorityPointerKey(family, state), failure = new Error("Authority setup failed at https://private.example.gov?token=secret");
+  const store = { kind: "local-file", readJsonPointer: async () => { throw failure; } } as unknown as ReaderArtifactStore;
+  const families = [family, "census-districts"] as const;
+  const read = () => ensureReaderAuthorityEdge(null, store, families).catch(error => holdReaderAuthorityEdge(error, families));
   const request = () => withReaderSelection({ states: ["AZ"], keys: new Set(["state:AZ"]) }, async () => {
     assert.equal(await read(), null);
     await withReaderAuthorityEdge({}, async () => assert.equal(await read(), null));
@@ -97,7 +99,7 @@ test("missing same-state fact bytes log their artifact key once without opening 
   const store = new LocalFileArtifactStore(directory), warnings: unknown[][] = [], key = "reader/artifacts/az-facts-missing.json.gz";
   t.mock.method(console, "warn", (...args: unknown[]) => warnings.push(args));
   await store.writeJsonPointer(stateFactsPointerKey("AZ"), { state: "AZ", versionId: "facts-miss-v1", buckets: [{ key, version: "facts-miss-v1", sha: "a".repeat(64) }] }, null);
-  const edge = await ensureReaderAuthorityEdge({}, store, [family]);
+  const edge = (await ensureReaderAuthorityEdge(null, store, [family]))!;
   await withReaderSelection({ states: ["AZ"], keys: new Set(["state:AZ"]) }, () => withReaderAuthorityEdge(edge, async () => {
     assert.equal(await edge.stateRegistryFacts!.load("AZ"), null);
     assert.equal(await edge.stateRegistryFacts!.load("AZ"), null);
@@ -109,7 +111,7 @@ test("an unexpected fact overlay failure preserves the verified registry and rep
   const warnings: unknown[][] = [], key = "reader/artifacts/az-facts-error.json.gz";
   t.mock.method(console, "warn", (...args: unknown[]) => warnings.push(args));
   await withReaderSelection({ states: ["AZ"], keys: new Set(["state:AZ"]) }, () => withReaderAuthorityEdge({
-    stateAuthorities: { states: { [family]: new Set([state]) }, load: async () => ({ kind: "PROMOTED_POINTERS", entries: [fixture().entry] }) as never },
+    stateAuthorities: { families: new Set([family]), load: async () => ({ kind: "PROMOTED_POINTERS", entries: [fixture().entry] }) as never },
     stateRegistryFacts: { key: () => key, load: async () => { throw new Error("FACT_OVERLAY_UNAVAILABLE"); } },
   }, async () => {
     const first = await readRegistryRuntimeProjection([state]);

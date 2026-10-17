@@ -186,7 +186,7 @@ test("published voting sites serve the same jurisdictions and sites from the req
   assert.equal(loaded?.entries.length, 1);
   const edge = await withReaderAuthorityEdge({
     edgeOnly: true,
-    stateAuthorities: { states: { "voting-sites": new Set(["AZ"]) }, load: async () => loaded },
+    stateAuthorities: { families: new Set(["voting-sites"] as const), load: async () => loaded },
   }, () => readVotingSitesProjection("AZ"));
   assert.deepEqual(comparable(edge), comparable(database));
 });

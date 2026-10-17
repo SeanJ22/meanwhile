@@ -13,8 +13,7 @@ import { governmentListingEntity, governmentListingEvidenceRecords, readerGovern
 import { prlStatementEvidence, readPrlForSubject } from "@/lib/sources/prl/person";
 import { federalAskEvidence } from "@/lib/sources/congress/reader";
 import { type MeetingsSnapshot } from "@/lib/meetings/snapshot";
-import { holdReaderAuthorityEdge, ensureReaderAuthorityEdge, readReaderEdgeMeetings, readReaderManifest } from "@/lib/meetings/edge-serving";
-import { resolveReaderArtifactStore } from "@/lib/meetings/edge-store";
+import { authorityPointerHeld, holdReaderAuthorityEdge, ensureReaderAuthorityEdge, readReaderEdgeMeetings, readReaderManifest } from "@/lib/meetings/edge-serving";
 import { enterReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "@/lib/registry/runtime-edge";
 import { AUTHORITY_FAMILIES, type AuthorityFamily, type PromotedAuthorityFamily } from "@/lib/meetings/edge-artifacts";
 import { READER_MAP_AUTHORITY_FAMILIES } from "@/lib/meetings/edge-serving";
@@ -492,7 +491,7 @@ async function answerWithSettings(request: Request) {
   const edgeManifest = await timed("edgeManifest", () => earlyManifest ? Promise.resolve(earlyManifest) : readReaderManifest().catch(holdReaderAuthorityEdge))();
   // Each database read is observed at once, so a failure while the edge is
   // fetched is never an unhandled rejection; the settle below still records it.
-  const outcomesFromDatabase = leanAsk || ballotOnlyHint || resolveReaderArtifactStore() ? null : timed("outcomes", refreshOutcomeSnapshotFromPromoted)();
+  const outcomesFromDatabase = leanAsk || ballotOnlyHint || await authorityPointerHeld("meeting-outcomes") ? null : timed("outcomes", refreshOutcomeSnapshotFromPromoted)();
   outcomesFromDatabase?.catch(() => undefined);
   const commentAccessFromDatabase = production && !leanAsk && !ballotOnlyHint && !edgeManifest
     ? timed("commentAccess", () => readCommentAccessFacts().catch(() => undefined))()
@@ -600,8 +599,10 @@ async function answerWithSettings(request: Request) {
       : production ? [timed("commentAccess", () => settleCommentAccessRead().catch(() => undefined))] : []),
   ];
   // Where each deferrable source is read from, when it is read: its proven-pointer family on the edge, or the database.
+  const statePointers = new Set((await Promise.all((["ballot-contests", "candidate-profiles", "candidate-publications"] as const).flatMap(family =>
+    ballotStatesForDivisions(ocdIds).map(async state => await authorityPointerHeld(family, state) ? [family] : [])))).flat());
   const promotedSource = (family: PromotedAuthorityFamily | "ballot-contests" | "candidate-profiles" | "candidate-publications"): "EDGE" | "DATABASE" =>
-    authorityEdge?.promotedFamilies?.has(family) ? "EDGE" : "DATABASE";
+    authorityEdge?.promotedFamilies?.has(family) || statePointers.has(family as "ballot-contests") ? "EDGE" : "DATABASE";
   trace.preloadSources = officialsAsk?.unresolvedPlace ? { registry: registrySource } : {
     registry: registrySource,
     federalDirectory: authorityEdge?.federalDirectory ? "EDGE" : "DATABASE",

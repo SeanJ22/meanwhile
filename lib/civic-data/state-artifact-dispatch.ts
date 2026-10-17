@@ -4,7 +4,7 @@ import { stateBallotContractId, type StateBallotFamily } from "./state-scopes.ts
 import { routineProcessSlots, type WorkerProcessSlots, type WorkerMemoryRelease } from "../control-plane/workers/worker-slots.ts";
 import type { StateAuthorityFamily } from "../meetings/edge-artifacts.ts";
 import type { ReaderArtifactStore } from "../meetings/edge-store.ts";
-import { authorityPointerKey, readServedPointer, type PublishedStateAuthority, type ServedPointer } from "../meetings/edge-serving.ts";
+import { authorityPointerKey, prepareStateAuthorityArtifact, readServedPointer, type PublishedStateAuthority, type ServedPointer } from "../meetings/edge-serving.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { runBoundedChildPass, ROUTINE_CHILD_TIMEOUT_MS, type BoundedChildLauncher } from "./bounded-child-pass.ts";
 import { admittedRuntimeChildEnvironment } from "./runtime-authority.ts";
@@ -66,7 +66,7 @@ function childResult(output: string, unit: StateUnit, version: string): Publishe
 
 /** Each state family whose promoted version moved past its pointer is rebuilt; its pointer is written the moment that state settles. */
 export async function dispatchStateArtifacts(input: {
-  readonly store: RoutineDataStore;
+  readonly store: StateStore;
   readonly currentStore: StateStore;
   readonly artifactStore: ReaderArtifactStore;
   readonly selected: readonly StateUnit[];
@@ -86,9 +86,11 @@ export async function dispatchStateArtifacts(input: {
     try {
       const [current, served] = await Promise.all([identityVersion(input.store, unit), readServedPointer(input.artifactStore, authorityPointerKey(unit.family, unit.state))]);
       if (current.version === served?.ref.version) return;
-      // A state with nothing promoted answers absent from a few bytes; only a promoted state needs a child of its own.
+      // A state with nothing promoted answers absent from its pointer list alone; only a promoted state needs a child of its own.
       if (current.present) changed.push({ unit, version: current.version, served });
-      else await publish(unit, current.version, served, await prepareStateArtifactChild(input.store, input.artifactStore, unit.state, unit.family, current.version, input.now));
+      else await publish(unit, current.version, served, await prepareStateAuthorityArtifact(unit.family, unit.state, { versionId: current.version,
+        value: { kind: "PROMOTED_POINTERS", entries: unit.pointers.map(({ recordClass, scope }) => ({ kind: "NOT_RECORDED", recordClass, scope })) } },
+      input.artifactStore, input.now));
     } catch (error) { skipped.push(`${unit.state}:${unit.family} ${sanitizedErrorDiagnostic(error)}`); }
   }));
   const releases = new Map<string, WorkerMemoryRelease>();

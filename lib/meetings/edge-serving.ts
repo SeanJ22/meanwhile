@@ -534,6 +534,12 @@ async function readEnvelope<T extends { readonly value: unknown; readonly versio
 
 export const stateFactsPointerKey = (state: string) => `reader/state-facts/${state}.json`;
 
+/** Whether a family's pointer (one place's, when given) is published, from the same held read its bundle uses. */
+export async function authorityPointerHeld(family: AuthorityPointerFamily | StateAuthorityFamily, place?: string,
+  store: ReaderArtifactStore | null = resolveReaderArtifactStore()): Promise<boolean> {
+  return store ? await readHeldPointer(authorityPointerKey(family, place), store).then(ref => ref !== null, () => false) : false;
+}
+
 /** One state's served bucket list from its own pointer; null when the state has none published. */
 async function readStateFactsPointer(state: string, store: ReaderArtifactStore, now = Date.now()): Promise<StateFactsPointer | null> {
   const pointer = await readHeldPointer<StateFactsPointer>(stateFactsPointerKey(state), store, now);

@@ -93,7 +93,7 @@ test("the place source reads shared holdings, publishes source data, then uses t
   let live = false;
   let clock = now;
   const acquiredAt = "2026-09-30T00:02:00Z";
-  const result = await runPlaceSource({ repos, store: new MemoryRoutineDataStore(), zip: "65101", divisions: [division], now,
+  const result = await runPlaceSource({ repos, store: new MemoryRoutineDataStore(), zip: "65101", state: "MO", divisions: [division], now,
     clock: () => clock,
     geographyCaptures: [], readSource: async (url, knowledge) => {
       events.push("source"); assert.equal(knowledge.error, undefined);
@@ -119,7 +119,7 @@ test("a registry publication failure leaves its fields open while later election
     "https://elections.example.gov/": '<p>October 5, 2026: Last day to register to vote.</p>',
   };
   let offers = 0;
-  const result = await runPlaceSource({ repos: createMemoryRepositories(), store: new MemoryRoutineDataStore(), zip: "65101", now,
+  const result = await runPlaceSource({ repos: createMemoryRepositories(), store: new MemoryRoutineDataStore(), zip: "65101", state: "MO", now,
     divisions: [division], geographyCaptures: [], readHeld: async () => ({ subjects: [], held: [] }),
     readSource: async url => { if (!(url in pages)) throw Error("Unavailable source"); return { url, text: pages[url], collectedAt: now }; },
     publish: async () => { offers++; throw Error("Registry temporarily unavailable"); },
@@ -170,10 +170,7 @@ test("a place inherits other jobs' published fields before national acquisition"
 });
 
 
-/**
- * The reader can always tell "nothing is scheduled" from "we cannot see what is scheduled" and is never told they
- * have no representation. The derivation rule is checked against the Census of Governments count.
- */
+
 
 const here = dirname(fileURLToPath(import.meta.url));
 const HOLDINGS_ROOT = join(here, "..");
@@ -238,9 +235,9 @@ function _centroid(feature: GeoFeature): [number, number] {
 }
 
 test("the clip counties hold exactly the 74 governments Census enumerates", () => {
-  // Counted by geometric containment, not from the identifier: a flat `place:*` row has no county segment.
-  // `clipCounties` is written at build time from the real overlap before simplification; a municipality that
-  // straddles a county line is counted in both.
+
+
+
   const measuredCounties = registry.divisions.filter(d => d.divisionType === "county" && Object.hasOwn(COG_BY_COUNTY, `${d.label.replace(/ County$/, "")} ${d.state}`));
   const countyLabel = new Map(measuredCounties.map(d => [d.geoid!, `${d.label.replace(/ County$/, "")} ${d.state}`]));
 

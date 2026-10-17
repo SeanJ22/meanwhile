@@ -12,7 +12,7 @@ test("a publication receipt reads candidate summary facts without loading its da
   t.mock.method(console, "log", (line: string) => { lines.push(line); });
   const metadata = { readCandidate: async () => { throw new Error("whole candidate must not be loaded"); },
     readCandidateSummary: async (id: string) => record(id) } as never;
-  assert.equal(await printWorkerPublicationReceipt(metadata, "registry-runtime-bindings", [], {
+  assert.equal(await printWorkerPublicationReceipt(metadata, "registry-runtime:NH", [], {
     records: 2, candidateId: "cv-new", versionId: "cv-new", gaps: [],
   }, "2026-09-30T21:04:00.000Z"), true);
   const receipt = JSON.parse(lines[0].slice("RCD_RECEIPT=".length));
@@ -25,7 +25,7 @@ test("the receipt names this pass's publication and counts only what this pass p
   console.log = (line: string) => { lines.push(line); };
   try {
     // An item published in an earlier pass reports its old outcome, and can come last.
-    await printWorkerPublicationReceipt(store, "registry-runtime-bindings", [
+    await printWorkerPublicationReceipt(store, "registry-runtime:NH", [
       { workItemId: "wi-roster", outcome: outcome("2026-09-30T19:14:00.000Z", "cv-new", { acceptedRecordIds: ["m1", "m2", "m3"] }) },
       { workItemId: "wi-sibling", outcome: outcome("2026-09-30T19:14:00.000Z", "cv-new", { code: "VERIFIED_RESULT_REUSED" }) },
       { workItemId: "wi-held", outcome: outcome("2026-09-30T19:14:00.000Z", "", { status: "HELD", code: "ROSTER_PAGE_NOT_THIS_BODY", versionId: null }) },
@@ -43,7 +43,7 @@ test("without the door pointer, a pass that only re-reports earlier publications
   const exitCode = process.exitCode;
   console.log = (line: string) => { lines.push(line); };
   try {
-    const printed = await printWorkerPublicationReceipt(store, "registry-runtime-bindings", [
+    const printed = await printWorkerPublicationReceipt(store, "registry-runtime:NH", [
       { workItemId: "wi-roster", outcome: outcome("2026-09-30T17:55:00.000Z", "cv-old", { acceptedRecordIds: ["m1"] }) },
     ] as never, null, "2026-09-30T21:04:00.000Z");
     assert.equal(printed, false, "an earlier version is never this pass's receipt");
@@ -58,7 +58,7 @@ test("a pass with nothing new confirms the door's current version and delivers n
   console.log = (line: string) => { lines.push(line); };
   try {
     const confirming = { ...(store as object), readPromotionIdentity: async () => ({ versionId: "cv-new" }) } as never;
-    assert.equal(await printWorkerPublicationReceipt(confirming, "registry-runtime-bindings", [
+    assert.equal(await printWorkerPublicationReceipt(confirming, "registry-runtime:NH", [
       { workItemId: "wi-roster", outcome: outcome("2026-09-30T17:55:00.000Z", "cv-old", { acceptedRecordIds: ["m1"] }) },
     ] as never, null, "2026-09-30T21:04:00.000Z"), true);
   } finally { console.log = log; }
@@ -70,7 +70,7 @@ test("an all-deferred national pass confirms the existing pointer with gaps, nev
   const lines: string[] = [];
   t.mock.method(console, "log", (line: string) => { lines.push(line); });
   const confirming = { ...(store as object), readPromotionIdentity: async () => ({ versionId: "cv-new" }) } as never;
-  const printed = await printWorkerPublicationReceipt(confirming, "registry-runtime-bindings", [], {
+  const printed = await printWorkerPublicationReceipt(confirming, "registry-runtime:NH", [], {
     records: 0, candidateId: null, versionId: null,
     gaps: ["03060", "03101"].map(zip => ({ key: `zip:${zip}`, detail: "DEFERRED: shared host bound; next pass" })),
   }, "2026-09-30T21:04:00.000Z");
@@ -87,7 +87,7 @@ test("deferral still refuses a missing pointer or unreadable candidate, and an e
   try {
     for (const version of [null, "cv-missing", "cv-new"]) {
       const confirming = { ...(store as object), readPromotionIdentity: async () => version ? { versionId: version } : null } as never;
-      const printed = await printWorkerPublicationReceipt(confirming, "registry-runtime-bindings", [], {
+      const printed = await printWorkerPublicationReceipt(confirming, "registry-runtime:NH", [], {
         records: 0, candidateId: null, versionId: null,
         gaps: version === "cv-new" ? [] : [{ key: "zip:03060", detail: "DEFERRED: next pass" }],
       }, "2026-09-30T21:04:00.000Z");

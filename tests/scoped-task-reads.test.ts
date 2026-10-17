@@ -20,11 +20,27 @@ import { readCompletedWorkerResults } from "../lib/control-plane/repository/work
 import { createWorkItem } from "../lib/control-plane/work-item.ts";
 import { registerWorkItem } from "../lib/control-plane/repository/coordinator.ts";
 import type { FreshnessOccurrence } from "../lib/control-plane/scheduler/durable.ts";
-import { readFileSync } from "node:fs";
-import { gunzipSync } from "node:zlib";
-import type { PromotedProjection } from "../lib/civic-data/types.ts";
-import { withReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "../lib/registry/runtime-edge.ts";
-import { manualEdgeEntry } from "./helpers/promoted-edge-entry.ts";
+import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
+import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+import type { ReaderAuthorityEdgeBundle } from "../lib/registry/runtime-edge.ts";
+import { currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
+
+
+
+
+
+
+
+
+
+function promotedFixtureBundle(extra: ReaderAuthorityEdgeBundle = {}): ReaderAuthorityEdgeBundle {
+  const current: ReaderAuthorityEdgeBundle = currentReaderAuthorityEdge() ?? {};
+  return { stateAuthorities: current.stateAuthorities,
+    ...(current.federalDirectory ? { federalDirectory: current.federalDirectory } : {}),
+    ...(current.stateLegislators ? { stateLegislators: current.stateLegislators } : {}),
+    ...extra, promoted: new Map([...(current.promoted ?? []), ...(extra.promoted ?? [])]) };
+}
+
 
 const WHOLE_TABLE = new Set(["list", "listNarrowed", "readAll", "keys"]);
 
@@ -146,8 +162,8 @@ test("CH-26: a lease worker's scoped runtime builds and begins a task without li
   const method = { version: 56, updatedOn: "2026-09-03", routes: [] };
   await writeFieldManual(h.repos, [...knowledgeEntries(method), methodVersionEntry(method)], h.now());
   counter.reset();
-  const { projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { projection: PromotedProjection };
-  const registry: ReaderAuthorityEdgeBundle = { promoted: new Map([[projection.key, manualEdgeEntry("registry-runtime-bindings", projection.payload, projection.versionId)]]) };
+  await installRegistryAuthority();
+  const registry = promotedFixtureBundle();
   const runtime = await withReaderAuthorityEdge(registry, () => autonomousStandingRuntime({ root, repos: h.repos, now: h.now, auditCeilingUsd: 1, scopedReads: true, environment: { NODE_ENV: "test" } }));
   assert.deepEqual(counter.whole(), [], "the build reads no whole table");
   for (const row of (await h.repos.routeTasks.listWhere(["workItemId"], h.item.id))) {

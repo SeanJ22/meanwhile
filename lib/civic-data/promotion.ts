@@ -9,6 +9,7 @@ import { movedToHistoryAuthorityIssue } from "./meeting-history.ts";
 import { routineTaskFromContract } from "./runner.ts";
 import { authorityFor, authorityForManualReceipt } from "./source-authority.ts";
 import {
+  manualProductionContract,
   requiredManualProductionContract,
   type ManualProductionContractId,
   type ManualProductionSourceContract,
@@ -137,6 +138,7 @@ export async function processRegisteredRoutineCandidate(
   options: { readonly confirmUnchanged?: boolean; readonly vault?: EvidenceStore } = {},
 ): Promise<PromotionOutcome> {
   if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(contractId, "routine");
+  if (candidate.stateRetirement) throw new Error("STATE_RETIREMENT_REQUIRES_TERMINAL_DOOR");
   let boundedCandidate = durableCandidateSnapshot(candidate);
   const contract = requiredRoutineContract(contractId);
   if (Object.prototype.hasOwnProperty.call(boundedCandidate, "bootstrapImport") && boundedCandidate.bootstrapImport !== undefined) {
@@ -211,6 +213,7 @@ export async function processRegisteredFanOutCandidate(
   expectedBaseVersionId: string | null | undefined = undefined,
 ): Promise<PromotionOutcome> {
   if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(contractId, "routine");
+  if (candidate.stateRetirement) throw new Error("STATE_RETIREMENT_REQUIRES_TERMINAL_DOOR");
   const boundedCandidate = durableCandidateSnapshot(candidate);
   const contract = requiredRoutineContract(contractId);
   if (contract.fanOut !== true) throw new Error(`FANOUT_CONTRACT_NOT_DECLARED:${contractId}`);
@@ -253,6 +256,7 @@ export async function processRegisteredMeetingPartitionCandidate(
   options: { readonly confirmUnchanged?: boolean } = {},
 ): Promise<PromotionOutcome> {
   if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(partitionId, "routine");
+  if (candidate.stateRetirement) throw new Error("STATE_RETIREMENT_REQUIRES_TERMINAL_DOOR");
   const boundedCandidate = durableCandidateSnapshot(candidate);
   const contract = requiredMeetingPartitionContract(partitionId);
   const issue = routineCandidateContractIssueFor(contract, boundedCandidate);
@@ -288,6 +292,7 @@ export async function processRegisteredMeetingHistoryCandidate(
   options: { readonly confirmUnchanged?: boolean } = {},
 ): Promise<PromotionOutcome> {
   if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(partitionId, "routine");
+  if (candidate.stateRetirement) throw new Error("STATE_RETIREMENT_REQUIRES_TERMINAL_DOOR");
   const boundedCandidate = durableCandidateSnapshot(candidate);
   const contract = meetingHistoryContract(requiredMeetingPartitionContract(partitionId));
   const issue = routineCandidateContractIssueFor(contract, boundedCandidate);
@@ -392,6 +397,7 @@ export async function processRegisteredManualCandidate(
   options: { readonly confirmUnchanged?: boolean } = {},
 ): Promise<PromotionOutcome> {
   if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(contractId, "manual");
+  if (candidate.stateRetirement) throw new Error("STATE_RETIREMENT_REQUIRES_TERMINAL_DOOR");
   const boundedCandidate = durableCandidateSnapshot(candidate);
   const contract = requiredManualProductionContract(contractId);
   const issue = manualCandidateContractIssue(contractId, boundedCandidate);
@@ -410,6 +416,53 @@ export async function processRegisteredManualCandidate(
     await processRoutineCandidate(store, boundedCandidate, now, expectedBaseVersionId, REGISTERED_PRODUCTION_DOOR, sourceProjectionVerification, options),
     now,
   );
+}
+
+export async function processRegisteredStateRetirementCandidate(
+  store: RoutineDataStore,
+  contractId: string,
+  candidate: RoutineCandidate,
+  now: string,
+  expectedBaseVersionId: string | null,
+): Promise<PromotionOutcome> {
+  const routine = contractId.startsWith("candidate-campaign-sites-derived:");
+  if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(contractId, routine ? "routine" : "manual");
+  const { stateRetirementCandidateIssue } = await import("./state-retirement-merge.ts");
+  const issue = stateRetirementCandidateIssue(candidate, expectedBaseVersionId);
+  if (issue) throw new Error(`STATE_RETIREMENT_AUTHORITY_INVALID:${issue}`);
+  const bounded = durableCandidateSnapshot(candidate), evidence = bounded.stateRetirement!;
+  const contract = routine ? requiredRoutineContract(contractId) : manualProductionContract(contractId);
+  if (!contract) throw new Error("STATE_RETIREMENT_CONTRACT_MISMATCH");
+  if (evidence.contractId !== contractId || evidence.priorVersionId !== expectedBaseVersionId ||
+      bounded.scope !== contract.scope || bounded.recordClass !== contract.recordClass || bounded.sourceId !== contract.sourceId ||
+      bounded.normalization.parserVersion !== contract.parserNormalizerVersion)
+    throw new Error("STATE_RETIREMENT_CONTRACT_MISMATCH");
+  const origins: Record<string, readonly string[]> = {
+    "ballot-contests": ["BALLOT_CANDIDACY:US:state-election-ballots", "BALLOT_CANDIDACY:US-AZ:2026-general:supported-ballot",
+      "BALLOT_CANDIDACY:US-NH:merrimack:2026-general", "BALLOT_FILING:US-NJ:county:morris:2026-general"],
+    "candidate-profiles": ["CANDIDATE_PROFILE:US-AZ+US-NH+US-NJ:2026-supported-candidates"],
+    "candidate-corpus": ["CANDIDATE_PUBLICATION:US-AZ+US-NH+US-NJ:2026-supported-candidates"],
+    "voting-sites": ["VOTING_SITE:US-AZ+US-NH+US-NJ:2026-general:supported-jurisdictions"],
+    "candidate-campaign-sites-derived": ["CURATED_READER_RECORD:US:candidate-campaign-sites-derived"],
+    "registry-runtime": ["REGISTRY_RUNTIME_BINDING:US:reader-registry-runtime-bindings"],
+  };
+  const family = contractId.split(":")[0];
+  if (!origins[family]?.includes(`${evidence.origin.recordClass}:${evidence.origin.scope}`) ||
+      contractId.split(":")[1] !== evidence.state || !store.readStateRetirementOrigin)
+    throw new Error("STATE_RETIREMENT_ORIGIN_SCOPE_INVALID");
+  const original = await store.readStateRetirementOrigin(evidence.origin.recordClass, evidence.origin.scope);
+  if (!original || !original.promoted || original.versionId !== evidence.origin.versionId || original.lastKnownGoodVersionId !== original.versionId ||
+      original.recordClass !== evidence.origin.recordClass || original.scope !== evidence.origin.scope ||
+      original.normalizedHash !== evidence.origin.readModelHash || original.sourceAuthenticity !== evidence.origin.sourceAuthenticity)
+    throw new Error("STATE_RETIREMENT_ORIGIN_CHANGED");
+  const current = await store.readPromotionIdentity(contract.recordClass, contract.scope);
+  if ((current?.versionId ?? null) !== expectedBaseVersionId || current &&
+      (current.lastKnownGoodVersionId !== expectedBaseVersionId || current.sourceId !== contract.sourceId))
+    throw new Error("STATE_RETIREMENT_CURRENT_CHANGED");
+  const verification = await verifySourceScopedCandidateProjection(contract, bounded, sourceProjectionObservedAt(store, now), null);
+  const outcome = await processRoutineCandidate(store, bounded, now, expectedBaseVersionId, REGISTERED_PRODUCTION_DOOR, verification,
+    { retirementAuthority: evidence });
+  return appendTypedReaderProjectionReadback(store, contract, outcome, now);
 }
 
 /** A re-check whose read model cites a moved outside authority (a roll call's roster version) promotes. */

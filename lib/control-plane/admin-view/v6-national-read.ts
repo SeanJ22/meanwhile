@@ -1,13 +1,11 @@
+import { scoreTargets, type ScoreTarget, type ScoreDeps } from "./place-target-scores.ts";
 /** A figure this read does not have is null ("—"), never zero. Held data is read once for the whole list, never once per row. */
-import { buildPlaceOwedList } from "../../coverage/place-owed.ts";
-import type { HeldPlaceCapture } from "../../civic-data/held-place-capture.ts";
 import type { ExpansionScopeDecision } from "../expansion/scopes.ts";
 import type { BillingAttribution } from "../provider-billing-attribution.ts";
 import { US_STATES } from "../readiness/catalog.ts";
 import { placeKeyOfRow, stateOfRow, type StuckRowLike } from "./blocker-causes.ts";
-import { placePercent } from "../../coverage/place-measures.ts";
 import { exactHuntAccounting, sectionRevision, validateV6Query, type AdminV6SectionEnvelope, type V6PlaceScope, type V6Refusal } from "./v6-hunts-read.ts";
-import { districtAlways, stateDivisionId, unionDivisions, type DistrictInfo, type DistrictsRead, type NationalDivision } from "./v6-national-geography.ts";
+import { districtAlways, stateDivisionId, unionDivisions, type DistrictInfo, type DistrictsRead } from "./v6-national-geography.ts";
 
 export const ADMIN_V6_NATIONAL_CONTRACT = "admin-v6/national@1" as const;
 
@@ -143,33 +141,6 @@ export function nationalRows(inputs: NationalInputs): readonly AdminV6NationalRo
       score: score(key),
       stuck: stuck === null ? null : stuck.byPlace.get(key)?.size ?? 0 };
   });
-}
-
-export interface ScoreTarget {
-  readonly placeKey: string;
-  readonly divisions: readonly NationalDivision[];
-  readonly zips?: readonly string[];
-}
-
-export interface ScoreDeps {
-  readonly now: () => string;
-  readonly readHeld: (divisionIds: readonly string[], now: string) => Promise<HeldPlaceCapture>;
-}
-
-const tick = () => new Promise<void>((resolve) => setImmediate(resolve));
-
-/** Each target's owed list is built in memory over its own divisions, so its number is exactly what `readPlaceOwed` gives that place alone. */
-export async function scoreTargets(targets: readonly ScoreTarget[], deps: ScoreDeps): Promise<Map<string, number | null>> {
-  const out = new Map<string, number | null>();
-  if (targets.length === 0) return out;
-  const now = deps.now();
-  const held = await deps.readHeld([...new Set(targets.flatMap((t) => t.divisions.map((d) => d.id)))], now);
-  for (const target of targets) {
-    const rows = buildPlaceOwedList({ divisions: target.divisions, subjects: held.subjects, held: held.held, now, ...(target.zips ? { zips: target.zips } : {}) });
-    out.set(target.placeKey, placePercent(rows));
-    await tick();
-  }
-  return out;
 }
 
 const MEMO_MS = 5 * 60_000;

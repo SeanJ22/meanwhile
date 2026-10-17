@@ -274,7 +274,7 @@ function empty(): AssignmentSources {
 }
 
 test("body publication attempts expose only recorded public-safe outcomes and retain partial status", () => {
-  const work = workItem("wi-body", { autonomousPlan: { publication: { contractId: "registry-runtime-bindings", bodyId: "body-1" },
+  const work = workItem("wi-body", { autonomousPlan: { publication: { contractId: "registry-runtime:NJ", bodyId: "body-1" },
     contract: { schemaVersion: 2, sourceScope: { canonicalUrls: ["https://example.gov/roster"] } } } as never,
     publicationOutcome: { at: NOW, workerResultId: "wr-1", status: "PARTIALLY_PUBLISHED", code: "MORE_IDENTITIES_OWED",
       detail: "private detail", candidateId: "candidate-1", versionId: "version-1",
@@ -291,7 +291,7 @@ test("body publication attempts expose only recorded public-safe outcomes and re
 test("a later same-key Send does not claim an earlier body publication", () => {
   const key="zcta:2020/85635", oldRef="old-receipt", nextRef="new-receipt";
   const contract={schemaVersion:2,sourceScope:{canonicalUrls:["https://example.gov/roster"]}};
-  const publication={contractId:"registry-runtime-bindings",bodyId:"body-1"};
+  const publication={contractId:"registry-runtime:NJ",bodyId:"body-1"};
   const prior=workItem("wi-prior",{autonomousPlan:{publication,contract,ownerInstructions:[oldRef]} as never,
     publicationOutcome:{at:"2026-09-18T00:00:00Z",workerResultId:"wr-old",status:"PUBLISHED",code:"ACCEPTED",
       candidateId:"candidate-old",versionId:"version-old"} as never});

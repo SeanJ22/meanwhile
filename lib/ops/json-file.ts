@@ -1,4 +1,7 @@
-import { createReadStream } from "node:fs";
+import { closeSync, createReadStream, mkdtempSync, openSync, rmSync, writeSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { createInterface } from "node:readline";
 
 export async function readJsonFile(file: string, options: {
   streamArray?: (path: readonly string[]) => boolean;
@@ -89,4 +92,29 @@ export async function readJsonFile(file: string, options: {
   if (token && !quoted) accept(JSON.parse(token));
   if (quoted || frames.length || !done) invalid();
   return root;
+}
+
+export async function withJsonArraySpool<T>(file: string, options: {
+  streamArray: (path: readonly string[]) => boolean;
+  onRow: (path: readonly string[], row: unknown) => void;
+  onChunk?: (chunk: Uint8Array) => void;
+}, run: (header: unknown, rows: AsyncIterable<readonly [readonly string[], unknown]>) => Promise<T>): Promise<T> {
+  const directory = mkdtempSync(join(tmpdir(), "reviewed-json-")), spool = join(directory, "rows.ndjson");
+  let fd: number | undefined = openSync(spool, "wx");
+  try {
+    const header = await readJsonFile(file, { streamArray: options.streamArray, onChunk: options.onChunk, onRow(path, row) {
+      options.onRow(path, row);
+      writeSync(fd!, JSON.stringify([path, row]) + "\n");
+    } });
+    closeSync(fd); fd = undefined;
+    async function* rows(): AsyncGenerator<readonly [readonly string[], unknown]> {
+      const stream = createReadStream(spool), lines = createInterface({ input: stream, crlfDelay: Infinity });
+      try { for await (const line of lines) yield JSON.parse(line); }
+      finally { lines.close(); stream.destroy(); }
+    }
+    return await run(header, rows());
+  } finally {
+    if (fd !== undefined) closeSync(fd);
+    rmSync(directory, { recursive: true, force: true });
+  }
 }

@@ -262,7 +262,38 @@ function completeBallotRemovalCheck(candidate: RoutineCandidate, prior: Candidat
     "Removed candidacies and their contacts belong to a newer complete official list or a source-bound incomplete contest named as held.");
 }
 
-function incompleteHorizonRemovalCheck(candidate: RoutineCandidate, prior: CandidateVersionRecord | null, validatedAt: string, sourceChecks:readonly DependentCheck[]): ValidationCheck | null {
+function retirementBallotReclassificationCheck(candidate: RoutineCandidate): ValidationCheck | null {
+  if (candidate.recordClass !== "BALLOT_CANDIDACY" || candidate.sourceId !== "official-ballot-authorities" ||
+      candidate.removalEvidence?.length) return null;
+  const next = candidate.readModel as GenericBallotProjection;
+  if (next.kind !== "ballot-contests") return null;
+  type Ballot = GenericBallotProjection["ballots"][string];
+  type Contest = Ballot["contests"][number] | NonNullable<Ballot["heldContests"]>[number];
+  const removed = candidate.changeSet?.removed ?? [];
+  const targetKey = (key: string) => key.startsWith("filing-candidacy:") ? key.replace(/^filing-/, "") : `filing-${key}`;
+  const wanted = new Set(removed.map(delta => targetKey(delta.key)));
+  const matches = new Map<string, { row: Ballot["candidacies"][number]; contest: Contest | undefined } | null>();
+  for (const ballot of Object.values(next.ballots)) {
+    const contests = new Map([...ballot.contests, ...ballot.heldContests ?? []].map(row => [row.id, row]));
+    for (const [prefix, candidates] of [["candidacy", ballot.candidacies], ["filing-candidacy", ballot.filingCandidacies ?? []]] as const)
+      for (const row of candidates) {
+        const key = `${prefix}:${row.id}`;
+        if (wanted.has(key)) matches.set(key, matches.has(key) ? null : { row, contest: contests.get(row.contestId) });
+      }
+  }
+  if (!removed.every(delta => {
+    const before = object(delta.before), toCurrent = delta.key.startsWith("filing-candidacy:");
+    if (!before || typeof before.id !== "string" || typeof before.contestId !== "string" ||
+        delta.key !== `${toCurrent ? "filing-candidacy" : "candidacy"}:${before.id}` || !object(before.provenance)?.sourceUrl) return false;
+    const match = matches.get(targetKey(delta.key));
+    return Boolean(match && match.row.contestId === before.contestId && match.row.provenance.sourceUrl && match.contest?.provenance.sourceUrl &&
+      (!toCurrent || "candidateListComplete" in match.contest && match.contest.type === "CANDIDACY" && match.contest.candidateListComplete === true));
+  })) return null;
+  return result("COMPLETENESS_HORIZON_VALIDITY", "PASS", "STATE_RETIREMENT_CANDIDACY_RECLASSIFIED",
+    "Every moved candidate retains its exact ID, contest and source evidence; newly current candidates belong to a complete source-bound contest.");
+}
+
+function incompleteHorizonRemovalCheck(candidate: RoutineCandidate, prior: CandidateVersionRecord | null, validatedAt: string, sourceChecks:readonly DependentCheck[], retirementAuthorized = false): ValidationCheck | null {
   const removed = candidate.changeSet?.removed ?? [];
   const evidence = candidate.removalEvidence ?? [];
   const reconciledCompleteHorizon = candidate.horizon.kind === "BOUNDED" &&
@@ -293,6 +324,9 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate, prior: Candi
 
   const financeResolution = stateFinanceGapResolution(candidate);
   if (financeResolution !== null) return financeResolution;
+
+  const reclassified = retirementAuthorized ? retirementBallotReclassificationCheck(candidate) : null;
+  if (reclassified !== null) return reclassified;
 
   const ballotRemoval = completeBallotRemovalCheck(candidate, prior);
   if (ballotRemoval !== null) return ballotRemoval;
@@ -581,6 +615,7 @@ export function validateRoutineCandidate(
   lastKnownGood: CandidateVersionRecord | null,
   validatedAt: string = new Date().toISOString(),
   sourceScopedChecks: readonly DependentCheck[] = [],
+  retirementAuthority: RoutineCandidate["stateRetirement"] = undefined,
 ): { readonly receipt: ValidationReceipt; readonly state: "VALIDATED" | CandidateState } {
   const checks: ValidationCheck[] = [];
   const derivedCivicRecords = civicRecordsFor(candidate.recordClass, candidate.readModel);
@@ -609,7 +644,7 @@ export function validateRoutineCandidate(
     : candidate.retrieval.finalUrl
       ? authorityFor(candidate.sourceId, candidate.recordClass, candidate.retrieval.finalUrl)
       : { ok: false as const, code: "FINAL_URL_MISSING", detail: "Successful retrieval has no final URL." };
-  const registered = candidate.bootstrapImport
+  const registered = candidate.bootstrapImport || candidate.stateRetirement
     ? sourceAuthority(candidate.sourceId)
     : authority.ok
       ? authority.contract
@@ -621,7 +656,15 @@ export function validateRoutineCandidate(
     [sourceCheck.requestedUrl, sourceCheck.finalUrl].some(url => !authorityFor(candidate.sourceId, candidate.recordClass, url).ok)
     ? "The checked source URL is outside this source's registered authority." : null);
 
-  if (candidate.bootstrapImport) {
+  const retirementAuthorized = candidate.stateRetirement !== undefined && retirementAuthority === candidate.stateRetirement &&
+    retirementAuthority.priorVersionId === (lastKnownGood?.candidate.id ?? null) &&
+    retirementAuthority.readModelHash === candidate.normalization.normalizedHash;
+  if (candidate.stateRetirement) {
+    checks.push(retirementAuthorized
+      ? result("SOURCE_AUTHENTICITY", "PASS", "STATE_RETIREMENT_INHERITED_GOOD_PROVENANCE_VALID",
+        `Inherited facts from exact GOOD origin ${candidate.stateRetirement.origin.versionId}${candidate.stateRetirement.priorVersionId ? ` and state ${candidate.stateRetirement.priorVersionId}` : " into the initial state partition"}; source proof ${candidate.stateRetirement.origin.sourceAuthenticity}. Original source clocks and provenance are retained; no new HTTP acquisition is asserted.`)
+      : result("SOURCE_AUTHENTICITY", "FAIL", "STATE_RETIREMENT_AUTHORITY_INVALID", "State transfer requires the admitted terminal producer, exact unit bytes, and pinned GOOD origin and state versions."));
+  } else if (candidate.bootstrapImport) {
     const reattestation = candidate.bootstrapImport.kind === "TRUSTED_LKG_REATTESTATION";
     const outcomeUnionPredecessorId = candidate.bootstrapImport.kind === "TRUSTED_LKG_IMPORT"
       ? candidate.bootstrapImport.pimaOutcomeUnion?.predecessorVersionId ?? null
@@ -763,7 +806,7 @@ export function validateRoutineCandidate(
   const identityFailure = candidate.identities.find((identity) =>
     identity.ambiguous || identity.matchBasis === "NAME_ONLY" || Object.keys(identity.identifiers).length === 0,
   );
-  const identifierContractFailure = registered ? candidate.identities.find((identity) =>
+  const identifierContractFailure = registered && !retirementAuthorized ? candidate.identities.find((identity) =>
     !registered.expectedIdentifierKeys.some((key) => Object.hasOwn(identity.identifiers, key)),
   ) : undefined;
   if (candidate.normalization.outputRecords > 0 && candidate.identities.length === 0) {
@@ -806,6 +849,9 @@ export function validateRoutineCandidate(
       "ACQUISITION_TIME_AFTER_VALIDATION",
       `The acquisition instant ${candidate.retrieval.retrievedAt} is later than validation ${validatedAt}.`,
     ));
+  } else if (retirementAuthorized) {
+    checks.push(result("TEMPORAL_VALIDITY", "PASS", "STATE_RETIREMENT_SOURCE_CLOCKS_PRESERVED",
+      "Original source and current state capture clocks are preserved in the inherited evidence; migration is not a fresh source observation."));
   } else if (currentRetrievedAt !== null && Number.isFinite(currentRetrievedAt) && retrievedAt < currentRetrievedAt &&
     !heldRegistrationReplay) {
     checks.push(result(
@@ -851,7 +897,7 @@ export function validateRoutineCandidate(
     checks.push(result("SEMANTIC_VALIDITY", "PASS", "FACT_INTERPRETATION_VALID", `${candidate.semantics.factKind}${candidate.semantics.actionStage ? ` at ${candidate.semantics.actionStage}` : ""}.`));
   }
 
-  const removalCheck = incompleteHorizonRemovalCheck(candidate,lastKnownGood,validatedAt,sourceScopedChecks);
+  const removalCheck = incompleteHorizonRemovalCheck(candidate,lastKnownGood,validatedAt,sourceScopedChecks,retirementAuthorized);
   if (candidate.horizon.returnedRecords !== candidate.normalization.outputRecords) {
     checks.push(result("COMPLETENESS_HORIZON_VALIDITY", "FAIL", "HORIZON_RECORD_COUNT_MISMATCH", `${candidate.horizon.returnedRecords} horizon rows != ${candidate.normalization.outputRecords} normalized rows.`));
   } else if (candidate.horizon.claimsComplete && candidate.horizon.kind !== "BOUNDED") {
@@ -873,6 +919,9 @@ export function validateRoutineCandidate(
       ((candidate.sourceId === "plural-openstates-votes" && candidate.normalization.parserVersion === "plural-votes/2") ||
        (candidate.sourceId === "legiscan" && candidate.normalization.parserVersion === "legiscan-votes/1"))) {
     checks.push(result("ABSENCE_VALIDITY", "PASS", "NO_NEW_VOTES", "The source was checked successfully and added no votes. No absence is inferred."));
+  } else if (retirementAuthorized && lastKnownGood === null && !candidate.absence.claimsAbsence && candidate.normalization.outputRecords === 0) {
+    checks.push(result("ABSENCE_VALIDITY", "PASS", "INITIAL_STATE_PARTITION_NO_ABSENCE_CLAIM",
+      "The pinned GOOD source has no held members for this initial state partition; no absence in the real world is asserted."));
   } else if (!candidate.absence.claimsAbsence && candidate.normalization.outputRecords === 0) {
     checks.push(result("ABSENCE_VALIDITY", "CANNOT_TELL", "ZERO_IS_NOT_ABSENCE", "The query returned zero records but carries no competent bounded absence evidence."));
   } else if (!candidate.absence.claimsAbsence) {

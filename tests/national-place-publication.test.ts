@@ -1,6 +1,4 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
-import { gunzipSync } from "node:zlib";
 import { createHash } from "node:crypto";
 import { join } from "node:path";
 import test from "node:test";
@@ -9,14 +7,73 @@ import { ensureFactEntities } from "../lib/facts/entities.ts";
 import { readFactRosters } from "../lib/facts/roster-read.ts";
 import { factDb } from "./helpers/fact-db.ts";
 import sharp from "sharp";
-import type { CandidateVersionRecord, PromotedProjection } from "../lib/civic-data/types.ts";
-import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import { readRegistryRuntimePrior, registryRuntimeCandidate } from "../lib/registry/runtime-data-plane.ts";
-import { CENSUS_PLACEHOLDER_LABELS } from "../lib/registry/census-placeholders.ts";
-import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
+
+import { readRegistryRuntimePrior } from "../lib/registry/runtime-data-plane.ts";
 import { nationalDelivery, publishNationalPlaceSources, type NationalDivisionInput } from "../lib/civic-data/worker-national-publication.ts";
-import { printWorkerPublicationReceipt } from "../lib/civic-data/worker-publication-tasks.ts";
 import type { WorkerPublicationCapture } from "../lib/civic-data/worker-roster-publication.ts";
+import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { registryTransferImport } from "./helpers/promoted-fixtures.ts";
+import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
+import { registryJurisdictions } from "../lib/civic-data/state-scopes.ts";
+import { stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
+import { stateRegistryRuntimeContractId } from "../lib/civic-data/state-scopes.ts";
+import { rowKeyedCivicRecordsFor } from "../lib/civic-data/changes.ts";
+import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
+import { trustedLkgImportUrl } from "../lib/civic-data/trusted-lkg-import.ts";
+import { withStateRecordHashes } from "../lib/civic-data/state-publication.ts";
+import { candidateChangeSet } from "../lib/civic-data/changes.ts";
+import { ROW_KEYED_CIVIC_CHANGE_CONTRACT } from "../lib/civic-data/changes.ts";
+import { trustedLkgCandidateEnvelopeSha256 } from "../lib/civic-data/trusted-lkg-import.ts";
+import { trustedLkgValidatorIds } from "../lib/civic-data/trusted-lkg-import.ts";
+import { trustedLkgCandidateId } from "../lib/civic-data/trusted-lkg-import.ts";
+import type { CandidateVersionRecord } from "../lib/civic-data/types.ts";
+import type { PromotedProjection } from "../lib/civic-data/types.ts";
+
+function registryFixtureForState(state: string, value: RegistryRuntimeReadModel = registryTransferImport().projection.payload): RegistryRuntimeReadModel {
+  const own = (id: string | null) => registryJurisdictions(id).includes(state.toUpperCase());
+  const bodies = value.registry.bodies.filter(row => own(row.id) || own(row.ocdId) || row.alsoServesOcdIds?.some(own));
+  const bodyIds = new Set(bodies.map(row => row.id));
+  const bodyRosters = value.bodyRosters.filter(row => bodyIds.has(row.bodyId));
+  const statewideExecutives = value.statewideExecutives.filter(row => own(row.stateOcdId));
+  const bridge = value.officialCandidacies.rows.filter(row => row.holder.divisions.some(own));
+  const holders = new Set([...bodyRosters.flatMap(row => row.members.map(member => member.id)),
+    ...statewideExecutives.map(row => row.holder.id), ...bridge.map(row => row.holder.id)]);
+  return { ...value, registry: { ...value.registry, bodies,
+    divisions: value.registry.divisions.filter(row => row.ocdId === "ocd-division/country:us" || own(row.ocdId)) },
+    bodyRosters, statewideExecutives, officialCandidacies: { ...value.officialCandidacies, rows: bridge },
+    officialPhotos: { photos: value.officialPhotos.photos.filter(row => holders.has(row.officeholderId)) },
+    rosterPhotos: Object.fromEntries(Object.entries(value.rosterPhotos).filter(([id]) => holders.has(id) || own(id))),
+    rosterReaderDispositions: value.rosterReaderDispositions.filter(row => own(row.sourceId) || holders.has(row.sourceId) || (row.canonicalId !== null && holders.has(row.canonicalId)) ||
+      [...holders].some(id => id.startsWith("roster:") && id.split("#")[0] === row.sourceId.split("#")[0])) };
+}
+
+function stateRegistryRuntimeStore(state: string, store = new MemoryRoutineDataStore()): MemoryRoutineDataStore {
+  const original = registryTransferImport();
+  const payload = registryFixtureForState(state), scope = stateRegistryRuntimeScope(state), contractId = stateRegistryRuntimeContractId(state);
+  const civicRecords = rowKeyedCivicRecordsFor("REGISTRY_RUNTIME_BINDING", payload), digest = canonicalCivicDataHash(payload);
+  const candidate = { ...original.record.candidate, scope,
+    retrieval: { ...original.record.candidate.retrieval, requestedUrl: trustedLkgImportUrl(contractId) },
+    normalization: { ...original.record.candidate.normalization, normalizedHash: digest, normalizedPayloadHash: digest,
+      inputRecords: civicRecords.length, outputRecords: civicRecords.length, droppedRecords: 0 },
+    normalizedPayload: payload, readModel: payload, civicRecords, identities: [],
+    horizon: { ...original.record.candidate.horizon, returnedRecords: civicRecords.length },
+    sourceProjectionEvidence: { kind: "SOURCE_PROJECTION_CONTRACT" as const, sourceId: original.record.candidate.sourceId, recordClass: original.record.candidate.recordClass, scope },
+  };
+  Object.assign(candidate, { normalization: withStateRecordHashes(candidate).normalization });
+  candidate.changeSet = candidateChangeSet(candidate, null, ROW_KEYED_CIVIC_CHANGE_CONTRACT);
+  candidate.bootstrapImport = { ...original.record.candidate.bootstrapImport!, contractId, scope,
+    normalizedPayloadSha256: digest, readModelSha256: digest, candidateEnvelopeSha256: trustedLkgCandidateEnvelopeSha256(candidate), validatorIds: trustedLkgValidatorIds(candidate) };
+  candidate.id = trustedLkgCandidateId(candidate.bootstrapImport);
+  const receipt = { ...original.record.receipt!, candidateId: candidate.id, scope };
+  const record = { ...original.record, candidate, receipt, promotedVersion: candidate.id, lastKnownGoodVersion: candidate.id };
+  const projection = { ...original.projection, key: `REGISTRY_RUNTIME_BINDING:${scope}`, scope, versionId: candidate.id,
+    lastKnownGoodVersionId: candidate.id, payload, receipt };
+  const held = store as unknown as { candidates: Map<string, CandidateVersionRecord>; promotions: Map<string, PromotedProjection> };
+  held.candidates.set(candidate.id, record);
+  held.promotions.set(projection.key, projection);
+  return store;
+}
+
 
 const NOW = "2026-09-29T20:00:00.000Z";
 const OH = "ocd-division/country:us/state:oh";
@@ -34,18 +91,8 @@ async function seeded() {
   return facts;
 }
 
-/** The recorded registry, with the deployed Census placeholder correction replayed (as the roster tests do). */
 async function store() {
-  const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
-  const s = new MemoryRoutineDataStore();
-  Object.assign(s, { candidates: new Map([[record.candidate.id, record]]), promotions: new Map([[projection.key, projection]]) });
-  const imported = (await readRegistryRuntimePrior(s, NOW))!;
-  const divisions = imported.payload.registry.divisions.filter(row => CENSUS_PLACEHOLDER_LABELS[row.label]).map(row => ({ ...row, label: CENSUS_PLACEHOLDER_LABELS[row.label] }));
-  const corrected = registryRuntimeCandidate({ contractId: "registry-runtime-bindings", version: "fixture-census-correction", sourceThrough: NOW,
-    sourceReceipt: { contractVersion: 1, reviewedAt: NOW, reviewedBy: "recorded-fixture-control", sources: [...new Set(divisions.map(row => row.provenance!.sourceUrl!))].map(url => ({ requestedUrl: url, finalUrl: url, publisher: "U.S. Census Bureau", sourceClass: "OFFICIAL_PUBLISHER" as const, retrievedAt: NOW, httpStatus: 200, rawHash: createHash("sha256").update(JSON.stringify(divisions)).digest("hex"), reviewedEvidence: "Offline fixture: Census LEA 99997 means no school district." })) },
-    payload: { ...imported.payload, registry: { ...imported.payload.registry, divisions, bodies: [] }, statewideExecutives: [], officialCandidacies: { ...imported.payload.officialCandidacies, rows: [] }, officialPhotos: { photos: [] }, rosterPhotos: {} } }, { prior: imported });
-  assert.ok((await processRegisteredManualCandidate(s, "registry-runtime-bindings", corrected, NOW, imported.versionId)).promoted);
-  return s;
+  return stateRegistryRuntimeStore("OH");
 }
 
 const placeUrl = "https://tigerweb.geo.census.gov/arcgis/rest/services/TIGERweb/Places_CouSub_ConCity_SubMCD/MapServer/4/query?geometry=43215";
@@ -66,7 +113,7 @@ const profile = capture(`<html><head><title>Representative Allison Russo | Ohio 
 
 test("national place publication keeps legislative people on their single state authority",async()=>{
   const s=await store(),facts=await seeded();
-  const result=await publishNationalPlaceSources({store:s,facts,clocks,now:NOW,divisions,geographyCaptures:geography,sources:{officials:[{discoveryId:"russo",divisionId:`${OH}/sldl:7`,name:"Allison Russo",officeTitle:"Representative",officialUrl:profileUrl,document:{url:profileUrl,capture:profile}}]}});
+  const result=await publishNationalPlaceSources({state:"OH",store:s,facts,clocks,now:NOW,divisions,geographyCaptures:geography,sources:{officials:[{discoveryId:"russo",divisionId:`${OH}/sldl:7`,name:"Allison Russo",officeTitle:"Representative",officialUrl:profileUrl,document:{url:profileUrl,capture:profile}}]}});
   assert.ok(result.divisions.includes(`${OH}/sldl:7`));
   assert.equal(result.bodies.some(id=>id.endsWith("#seat")),false);
   assert.ok(result.gaps.some(row=>row.detail==="STATE_PEOPLE_SOURCE_REFRESH_OWNS_LEGISLATIVE_MEMBERS"));
@@ -76,12 +123,12 @@ test("national place publication keeps legislative people on their single state 
 test("statewide successor identities and candidacy checks cannot inherit the prior actor",async()=>{
   const s=await store(),facts=await seeded();
   const official=(name:string)=>({discoveryId:"governor",divisionId:OH,name,officeTitle:"Governor",officialUrl:governorUrl,document:{url:governorUrl,capture:capture(`<h1>Governor ${name}</h1><p>Governor of Ohio</p>`,governorUrl)}});
-  const run=(name:string)=>publishNationalPlaceSources({store:s,facts,clocks,now:NOW,divisions,geographyCaptures:geography,sources:{officials:[official(name)]}});
+  const run=(name:string)=>publishNationalPlaceSources({state:"OH",store:s,facts,clocks,now:NOW,divisions,geographyCaptures:geography,sources:{officials:[official(name)]}});
   const first=await run("Mike DeWine");assert.deepEqual(first.gaps,[]);
-  const old=(await readRegistryRuntimePrior(s,NOW))!.payload.statewideExecutives.find(row=>row.stateOcdId===OH)!;
+  const old=(await readRegistryRuntimePrior(s,NOW,"OH"))!.payload.statewideExecutives.find(row=>row.stateOcdId===OH)!;
   const same=await run("Mike DeWine");assert.equal(same.candidateId,null);
   const changed=await run("Jordan Reyes");assert.deepEqual(changed.gaps,[]);
-  const after=(await readRegistryRuntimePrior(s,NOW))!.payload;
+  const after=(await readRegistryRuntimePrior(s,NOW,"OH"))!.payload;
   const current=after.statewideExecutives.filter(row=>row.stateOcdId===OH);
   assert.equal(current.length,1);assert.notEqual(current[0].holder.id,old.holder.id);
   assert.equal(current[0].holder.name,"Jordan Reyes");
@@ -94,9 +141,9 @@ test("saved own-page portraits publish by the exact accepted roster identity and
   const page=capture(`<title>Columbus City Council</title><h1>Columbus City Council</h1><h2>Councilmember Jane Doe</h2><img alt="Jane Doe" src="${imageUrl}">`,url);
   const original=await sharp({create:{width:200,height:240,channels:3,background:"#336699"}}).withMetadata({orientation:1}).jpeg().toBuffer();
   const stored=new Map<string,Uint8Array>();
-  const result=await publishNationalPlaceSources({store:s,facts,clocks,now:NOW,divisions,geographyCaptures:geography,sources:{officials:[{discoveryId:"jane-native",divisionId:`${OH}/place:columbus`,name,officeTitle:"Councilmember",officialUrl:url,document:{url,capture:page},portrait:{imageUrl,captures:[page]}}]},portraitRuntime:{read:async()=>original,put:async(key,bytes)=>{stored.set(key,bytes);}}});
+  const result=await publishNationalPlaceSources({state:"OH",store:s,facts,clocks,now:NOW,divisions,geographyCaptures:geography,sources:{officials:[{discoveryId:"jane-native",divisionId:`${OH}/place:columbus`,name,officeTitle:"Councilmember",officialUrl:url,document:{url,capture:page},portrait:{imageUrl,captures:[page]}}]},portraitRuntime:{read:async()=>original,put:async(key,bytes)=>{stored.set(key,bytes);}}});
   assert.deepEqual(result.gaps,[]);
-  const after=(await readRegistryRuntimePrior(s,NOW))!.payload;
+  const after=(await readRegistryRuntimePrior(s,NOW,"OH"))!.payload;
   const member=(await readFactRosters(facts.query,[`${OH}/place:columbus#governing`])).rosters[0]!.members[0]!;
   const photo=after.officialPhotos.photos.find(row=>row.officeholderId===member.id)!;
   assert.ok(photo);assert.equal(photo.verification?.personId,member.personId ?? member.id);assert.match(photo.url,/\.webp$/);
@@ -108,7 +155,7 @@ test("saved own-page portraits publish by the exact accepted roster identity and
 test("a corrupted saved source cannot replace the independently held official",async()=>{
   const s=await store(),facts=await seeded();
   const altered={...governor,evidence:{...governor.evidence,text:governor.evidence.text+" corruption"}};
-  const result=await publishNationalPlaceSources({store:s,facts,clocks,now:NOW,divisions,geographyCaptures:geography,sources:{officials:[{discoveryId:"dewine",divisionId:OH,name:"Mike DeWine",officeTitle:"Governor",officialUrl:governorUrl,document:{url:governorUrl,capture:altered}}]}});
+  const result=await publishNationalPlaceSources({state:"OH",store:s,facts,clocks,now:NOW,divisions,geographyCaptures:geography,sources:{officials:[{discoveryId:"dewine",divisionId:OH,name:"Mike DeWine",officeTitle:"Governor",officialUrl:governorUrl,document:{url:governorUrl,capture:altered}}]}});
   assert.ok(result.gaps.some(row=>row.detail.includes("CONTENT_HASH_MISMATCH")));
   assert.equal(nationalDelivery([result]).records,0);
 });

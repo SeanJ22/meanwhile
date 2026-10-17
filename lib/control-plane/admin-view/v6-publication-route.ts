@@ -1,4 +1,4 @@
-import { BALLOT_STATES } from "../../civic-data/state-scopes.ts";
+import { REGISTRY_STATES } from "../../civic-data/state-scopes.ts";
 import { NextResponse, type NextRequest } from "next/server";
 import { readRoutinePublicationStatus } from "../../civic-data/observability-server.ts";
 import { readLatestBallotPublication, readLatestBallotPublicationSummary } from "../../civic-data/ballot-publication.ts";
@@ -24,7 +24,7 @@ export async function v6PublicationGet(request: NextRequest): Promise<NextRespon
     if (read.kind !== "HELD") return NextResponse.json({ state: "UNREAD", says: `${read.detail} No publication count is claimed.` }, { status: 503, headers: NO_STORE });
     if (!opened.ok) return NextResponse.json({ state: "UNREAD", says: opened.detail }, { status: 503, headers: NO_STORE });
     const requestedState = query.scope && "state" in query.scope ? query.scope.state.toUpperCase() : null;
-    const states = requestedState ? BALLOT_STATES.filter(state => state === requestedState) : BALLOT_STATES;
+    const states = requestedState ? REGISTRY_STATES.filter(state => state === requestedState) : REGISTRY_STATES;
     const reports = await Promise.all(states.map(state => requestedState
       ? readLatestBallotPublication(opened.repos, state) : readLatestBallotPublicationSummary(opened.repos, state)));
     const ballotPublications = Object.fromEntries(reports.flatMap(report => report ? [[report.state, report]] : []));

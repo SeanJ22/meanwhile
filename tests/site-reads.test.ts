@@ -1,6 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtempSync, readFileSync, rmSync } from "node:fs";
-import { gunzipSync } from "node:zlib";
+import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
@@ -12,24 +11,53 @@ import { currentReaderSelection, withReaderSelection } from "../lib/db/reader-ro
 import { publishReaderEdgeArtifacts, ensureReaderAuthorityEdge, writeFactBucket } from "../lib/meetings/edge-serving.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { getRegistryRuntimeReadModel, readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
-import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 import { installFactReader } from "../lib/facts/db.ts";
 
+import { provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
+import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
+import { registryTransferImport } from "./helpers/promoted-fixtures.ts";
+import { registryJurisdictions } from "../lib/civic-data/state-scopes.ts";
+import { stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
+
+function stateRegistryArtifacts(versionId: string, states: readonly string[], value: RegistryRuntimeReadModel = registryTransferImport().projection.payload) {
+  return Object.fromEntries(states.map(state => [state, { versionId: `${versionId}:${state}`, value: { kind: "PROMOTED_POINTERS" as const,
+    entries: [provenEdgeEntry({ recordClass: "REGISTRY_RUNTIME_BINDING", scope: stateRegistryRuntimeScope(state), sourceId: "registry-reviewed-bindings",
+      versionId: `${versionId}:${state}`, value: registryFixtureForState(state, value) })] } }]));
+}
+
+function registryFixtureForState(state: string, value: RegistryRuntimeReadModel = registryTransferImport().projection.payload): RegistryRuntimeReadModel {
+  const own = (id: string | null) => registryJurisdictions(id).includes(state.toUpperCase());
+  const bodies = value.registry.bodies.filter(row => own(row.id) || own(row.ocdId) || row.alsoServesOcdIds?.some(own));
+  const bodyIds = new Set(bodies.map(row => row.id));
+  const bodyRosters = value.bodyRosters.filter(row => bodyIds.has(row.bodyId));
+  const statewideExecutives = value.statewideExecutives.filter(row => own(row.stateOcdId));
+  const bridge = value.officialCandidacies.rows.filter(row => row.holder.divisions.some(own));
+  const holders = new Set([...bodyRosters.flatMap(row => row.members.map(member => member.id)),
+    ...statewideExecutives.map(row => row.holder.id), ...bridge.map(row => row.holder.id)]);
+  return { ...value, registry: { ...value.registry, bodies,
+    divisions: value.registry.divisions.filter(row => row.ocdId === "ocd-division/country:us" || own(row.ocdId)) },
+    bodyRosters, statewideExecutives, officialCandidacies: { ...value.officialCandidacies, rows: bridge },
+    officialPhotos: { photos: value.officialPhotos.photos.filter(row => holders.has(row.officeholderId)) },
+    rosterPhotos: Object.fromEntries(Object.entries(value.rosterPhotos).filter(([id]) => holders.has(id) || own(id))),
+    rosterReaderDispositions: value.rosterReaderDispositions.filter(row => own(row.sourceId) || holders.has(row.sourceId) || (row.canonicalId !== null && holders.has(row.canonicalId)) ||
+      [...holders].some(id => id.startsWith("roster:") && id.split("#")[0] === row.sourceId.split("#")[0])) };
+}
+
+
 test("a cooked registry edge hit never rereads facts, including an explicit reader refresh", async () => {
-  const fixture = JSON.parse(gunzipSync(readFileSync(new URL("./fixtures/registry-transfer-import.json.gz", import.meta.url))).toString("utf8")) as {
-    projection: { payload: RegistryRuntimeReadModel };
-  };
-  const value = fixture.projection.payload;
+  const value = registryFixtureForState("AZ");
   let queries = 0;
   installFactReader(async () => { queries++; throw new Error("Unexpected fact query on an edge hit"); });
   try {
     await withReaderSelection({ keys: new Set(["ocd-division/country:us/state:az/county:pima"]) }, () =>
-      withReaderAuthorityEdge({ registryRuntime: { value, versionId: "test:fact-edge" } }, async () => {
-        const read = await readRegistryRuntimeProjection({ bypassCache: true });
-        assert.equal(read.kind, "BOOTSTRAP");
+      withReaderAuthorityEdge({ stateAuthorities: { states: { "registry-runtime": new Set(["AZ"]) }, load: async () => ({ kind: "PROMOTED_POINTERS", entries: [
+        provenEdgeEntry({ recordClass: "REGISTRY_RUNTIME_BINDING", scope: "US-AZ:reader-registry-runtime", sourceId: "registry-reviewed-bindings", versionId: "test:fact-edge", value }),
+      ] }) } }, async () => {
+        const read = await readRegistryRuntimeProjection(["AZ"], { bypassCache: true });
+        assert.equal(read.kind, "PROMOTED");
         assert.ok("value" in read);
-        assert.equal(read.value, value);
-        assert.equal(getRegistryRuntimeReadModel(), value);
+        assert.deepEqual(read.value, value);
+        assert.equal(getRegistryRuntimeReadModel(), read.value);
       }));
     assert.equal(queries, 0);
   } finally { installFactReader(undefined); }
@@ -115,13 +143,14 @@ test("overlapping requests keep their route and person selectors apart", async (
 });
 
 test("concurrent authority requests retain their own bodies after another request resumes", async () => {
-  const values = await Promise.all(["pima", "albany"].map(id => withReaderSelection({ keys: new Set([id]) }, () => withReaderAuthorityEdge({
-    registryRuntime: { versionId: "shared-version", value: { registry: { bodies: [{ id }] } } as RegistryRuntimeReadModel },
-  }, async () => {
-    await Promise.resolve();
-    return getRegistryRuntimeReadModel().registry.bodies[0].id;
-  }))));
-  assert.deepEqual(values, ["pima", "albany"]);
+  const values = await Promise.all(["AZ", "NH"].map(state => withReaderSelection({ states: [state], keys: new Set() }, () => {
+    const value = registryFixtureForState(state), entry = provenEdgeEntry({ recordClass: "REGISTRY_RUNTIME_BINDING", scope: `US-${state}:reader-registry-runtime`, sourceId: "registry-reviewed-bindings", versionId: "shared-version", value });
+    return withReaderAuthorityEdge({ stateAuthorities: { states: { "registry-runtime": new Set([state]) }, load: async () => ({ kind: "PROMOTED_POINTERS", entries: [entry] }) } }, async () => {
+      await readRegistryRuntimeProjection([state]); await Promise.resolve();
+      return getRegistryRuntimeReadModel().registry.bodies.map(body => body.id);
+    });
+  })));
+  assert.deepEqual(values, ["AZ", "NH"].map(state => registryFixtureForState(state).registry.bodies.map(body => body.id)));
 });
 
 test("a changed fact publishes one record while retaining the unchanged serving records", async () => {
@@ -147,9 +176,12 @@ test("warm authority reads retain the identifiers needed to load a shown person'
   try {
     const store = new LocalFileArtifactStore(dir);
     const bodyId = "ocd-division/country:us/state:az/county:pima#board";
-    const value = { registry: { bodies: [{ id: bodyId }] }, bodyRosters: [{ bodyId, members: [{ id: "roster:one", name: "One" }] }] };
+    const value = { registry: { bodies: [{ ...registryFixtureForState("AZ").registry.bodies[0]!, id: bodyId, ocdId: bodyId.split("#")[0] }] }, bodyRosters: [{ bodyId, bodyName: "County board", sourceUrl: "https://example.gov/board", sourceOrg: "County board", collectedAt: "2026-10-16", partisanship: "NONPARTISAN" as const,
+      members: [{ id: "roster:one", name: "One", officeTitle: "Board member", termNote: null, email: null, phone: null, websiteUrl: null, fieldSources: {}, membershipSource: { sourceUrl: "https://example.gov/board", sourceOrg: "County board", collectedAt: "2026-10-16" } }] }] };
     await publishReaderEdgeArtifacts(null, { sourceThrough: null, retrievedAt: null, promotedThrough: null }, {
-      store, authority: { "registry-runtime": { value, versionId: "warm-version" } },
+      store, stateAuthorities: { "registry-runtime": stateRegistryArtifacts("warm-version", ["AZ"], {
+        ...registryFixtureForState("AZ"), registry: { ...registryFixtureForState("AZ").registry, bodies: value.registry.bodies }, bodyRosters: value.bodyRosters,
+      }) },
       stateFacts: { AZ: { versionId: "warm-facts", value: { buckets: [await writeFactBucket(store, "AZ", 0, "warm-facts",
         await publishAuthorityRecords({ bodies: [{ id: bodyId, division: bodyId.split("#")[0], fields: {},
           roster: value.bodyRosters[0], dispositions: [], comment: null, sittings: [] }] }, store), "2026-10-16T12:00:00.000Z")] } } },
@@ -159,9 +191,51 @@ test("warm authority reads retain the identifiers needed to load a shown person'
       const selection = { keys: new Set([bodyId]) };
       await withReaderSelection(selection, async () => {
         const edge = await ensureReaderAuthorityEdge(manifest, store, ["registry-runtime"]);
-        assert.deepEqual(edge.registryRuntime?.value, { ...value, rosterReaderDispositions: [] });
-        assert.ok(selection.keys.has("roster:one"));
+        await withReaderAuthorityEdge(edge, async () => {
+          const read = await readRegistryRuntimeProjection(["AZ"]);
+          assert.equal(read.kind, "PROMOTED");
+          assert.deepEqual(read.value?.bodyRosters, value.bodyRosters);
+          assert.ok(selection.keys.has("roster:one"));
+        });
       });
     }
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test("a later named body loads its live facts without reopening the state registry or another state", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "site-named-body-"));
+  try {
+    const store = new LocalFileArtifactStore(dir), division = "ocd-division/country:us/state:az/county:pima";
+    const bodyIds = [`${division}#board`, "ocd-division/country:us/state:az/place:vail#board"];
+    const bodies = bodyIds.map((id, n) => ({ id, division: id.split("#")[0], fields: {},
+      roster: { bodyId: id, bodyName: `Body ${n}`, members: [{ id: `member:${n}`, name: `Member ${n}` }],
+        sourceUrl: `https://example.gov/body/${n}`, sourceOrg: `Body ${n}`, collectedAt: "2026-10-16", partisanship: "NONPARTISAN" },
+      dispositions: [], comment: null, sittings: [] }));
+    const index = await publishAuthorityRecords({ bodies }, store), laterKey = index.records.find(row => row.tags.includes(bodyIds[1]))!.key;
+    const payload = { ...registryFixtureForState("AZ"), bodyRosters: [] };
+    await publishReaderEdgeArtifacts(null, { sourceThrough: null, retrievedAt: null, promotedThrough: null }, { store,
+      stateAuthorities: { "registry-runtime": stateRegistryArtifacts("named-body", ["AZ"], payload) },
+      stateFacts: { AZ: { versionId: "named-facts", value: { buckets: [await writeFactBucket(store, "AZ", 0, "named-facts", index, "2026-10-16T12:00:00.000Z")] } } },
+    });
+    const manifest = (await store.readManifest())!.manifest, reads: string[] = [];
+    const counting = new Proxy(store, { get(target, key) {
+      if (key === "readBytes") return async (path: string) => { reads.push(path); return target.readBytes(path); };
+      const value = Reflect.get(target, key); return typeof value === "function" ? value.bind(target) : value;
+    } });
+    const selection = { states: ["AZ"], keys: new Set([division]) };
+    await withReaderSelection(selection, async () => {
+      const edge = await ensureReaderAuthorityEdge(manifest, counting, ["registry-runtime"]);
+      await withReaderAuthorityEdge({ ...edge, edgeOnly: true }, async () => {
+        const first = await readRegistryRuntimeProjection(["AZ"]);
+        assert.deepEqual(first.value?.bodyRosters.map(row => row.bodyId), [bodyIds[0]]);
+        assert.equal(reads.includes(laterKey), false);
+        selection.keys.add(bodyIds[1]);
+        const expanded = await readRegistryRuntimeProjection(["AZ"], { bypassCache: true });
+        assert.deepEqual(expanded.value?.bodyRosters.map(row => row.bodyId).sort(), bodyIds.toSorted());
+        assert.equal(expanded.value?.bodyRosters.find(row => row.bodyId === bodyIds[1])?.sourceUrl, "https://example.gov/body/1");
+        assert.equal(reads.includes(laterKey), true);
+      });
+    });
+    assert.equal(reads.filter(key => key === manifest.stateAuthorities!["registry-runtime"]!.AZ.key).length, 1);
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });

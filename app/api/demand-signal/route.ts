@@ -1,3 +1,5 @@
+import { readerRoute } from "@/lib/api/reader-route";
+import { ballotPlaceFromRequest } from "@/lib/ballot/reader-place";
 import { withReaderFeatures } from "@/lib/civic-data/reader-feature-context.ts";
 import { writeDemandSignal } from "@/lib/db/demand-signal";
 import { raiseWriteAlarm } from "@/lib/db/write-alarm";
@@ -75,11 +77,12 @@ async function postWithSettings(request: Request) {
   }
 
 
+  const divisions = await ballotPlaceFromRequest(request);
   let known: Set<string>;
   try {
     known =
       submission.subjectType === "CANDIDATE"
-        ? await getCandidateTargetIds(submission.subjectId)
+        ? await getCandidateTargetIds(divisions, submission.subjectId)
         : await knownBodySubjectIds(submission.subjectId);
   } catch {
     return Response.json({ error: "subject data unavailable" }, { status: 503 });
@@ -143,6 +146,6 @@ async function postWithSettings(request: Request) {
   }
 }
 
-export async function POST(request: Request) {
+export const POST = readerRoute("/api/demand-signal", async function POST(request: Request) {
   return withReaderFeatures(() => postWithSettings(request));
-}
+}, ["registry-runtime", "ballot-contests"]);

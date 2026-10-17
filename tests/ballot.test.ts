@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { contestsForDivisions } from "../lib/sources/ballot-nj-morris/index.ts";
+import { contestsForDivisions } from "../lib/ballot/contests.ts";
 import { electionDatesFor } from "../lib/ballot/election-dates.ts";
 import type { BallotSet, Contest } from "../lib/ballot/types.ts";
 

@@ -1,8 +1,9 @@
+import { sameSeatDiscriminators } from "../lib/officials/office-seat.ts";
 import assert from "node:assert/strict";
 
 import { test } from "node:test";
 
-import { committedIncumbentHolderFor, contestIncumbency, sameSeatDiscriminators } from "../lib/ballot/incumbency-resolve.ts";
+import { committedIncumbentHolderFor, contestIncumbency } from "../lib/ballot/incumbency-resolve.ts";
 
 import { getRegistryRuntimeReadModel } from "../lib/registry/runtime-read-model.ts";
 

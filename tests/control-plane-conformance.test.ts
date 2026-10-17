@@ -540,6 +540,44 @@ test("createPgRepositories refuses an empty connection string", async () => {
   );
 });
 
+test("SB-01 bootstraps territory voting doors and reports an unmigratable row without blocking the control plane", async t => {
+  const { PGlite } = await import("@electric-sql/pglite");
+  const db = new PGlite();
+  const errors: unknown[][] = [];
+  t.mock.method(console, "error", (...args: unknown[]) => errors.push(args));
+  try {
+    await db.exec("CREATE TABLE cp_doors(id text PRIMARY KEY,revision bigint,updated_at timestamptz,value jsonb)");
+    await db.exec("CREATE TABLE cp_schema_version(singleton boolean PRIMARY KEY,version integer,applied_at timestamptz)");
+    await db.query("INSERT INTO cp_schema_version VALUES(true,32,$1)", [NOW]);
+    for (const [id, state] of [["fec-pr-chief", "PR"], ["fec-invalid-chief", "XX"]]) {
+      const source = { id, url: "https://www.ceepur.org/voting", scope: { state } };
+      await db.query("INSERT INTO cp_doors VALUES($1,7,$2,$3)", [id, NOW, {
+        kind: "official-voting-source", updatedAt: NOW, config: { votingSource: JSON.stringify(source) },
+      }]);
+    }
+    const sql = { query: async (text: string, params?: readonly unknown[]) => {
+      if (text.includes("indisvalid")) return [{ valid: true, building: false }];
+      if (text.startsWith("SELECT id, revision, value->'config'") || text.startsWith("UPDATE cp_doors SET") ||
+          text.startsWith("SELECT version FROM cp_schema_version") || text.startsWith("INSERT INTO cp_schema_version"))
+        return (await db.query(text, params ? [...params] : [])).rows;
+      return [];
+    } };
+    await openFixturePgRepositories(sql, LATER);
+    const row = (await db.query<{ revision: number; value: { config: Record<string, unknown> } }>(
+      "SELECT revision,value FROM cp_doors WHERE id='fec-pr-chief'",
+    )).rows[0]!;
+    assert.equal(Number(row.revision), 8);
+    assert.equal(row.value.config.votingState_PR, true);
+    assert.equal(JSON.parse(String(row.value.config.votingSource)).scope.state, "PR");
+    const migrationErrors = () => errors.filter(args => args[0] === "VOTING_DOOR_SCOPE_MIGRATION_FAILED");
+    assert.equal(migrationErrors().length, 1);
+    assert.equal((migrationErrors()[0][1] as { id: string }).id, "fec-invalid-chief");
+    assert.equal((await db.query<{ version: number }>("SELECT version FROM cp_schema_version")).rows[0]!.version, 33);
+    await openFixturePgRepositories(sql, LATER);
+    assert.equal(migrationErrors().length, 1);
+  } finally { await db.close(); }
+});
+
 test("BL-30 migrates existing voting doors to exact state and canonical URL queries without changing held evidence", async () => {
   const { PGlite } = await import("@electric-sql/pglite");
   const db = new PGlite();

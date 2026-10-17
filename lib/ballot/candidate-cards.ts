@@ -1,5 +1,5 @@
 import { currentCandidateProfilesProjection, candidateProfilesReadState } from "../civic-data/manual-read-models.ts";
-import { currentDerivedCandidatePortraits } from "../civic-data/derived-campaign-sites.ts";
+import { currentDerivedCandidatePortraits, type DerivedCandidatePortraitRecord } from "../civic-data/derived-campaign-sites.ts";
 import type { PortraitVerification } from "../photos/binding.ts";
 import { officialPhotoForPerson } from "../photos/person.ts";
 
@@ -28,16 +28,24 @@ export interface CandidateCardsFile {
   readonly hunts: readonly { readonly key: string; readonly name: string; readonly note: string; readonly attemptedAt: string }[];
 }
 
-function load(): CandidateCardsFile {
-  return currentCandidateProfilesProjection().cards;
+function load(state: string): CandidateCardsFile {
+  return currentCandidateProfilesProjection(state).cards;
 }
 
-function cardForKey(key: string): CandidateCardData | null {
-  const state = candidateProfilesReadState();
-  const cards = state.kind === "PROMOTED" || state.kind === "BOOTSTRAP" ? load().cards : {};
+const portraitIndexes = new WeakMap<readonly DerivedCandidatePortraitRecord[], ReadonlyMap<string, DerivedCandidatePortraitRecord>>();
+function portraitFor(state: string, key: string) {
+  const records = currentDerivedCandidatePortraits(state);
+  let index = portraitIndexes.get(records);
+  if (!index) { index = new Map(records.map(record => [record.id, record])); portraitIndexes.set(records, index); }
+  return index.get(key)?.portrait;
+}
+
+function cardForKey(state: string, key: string): CandidateCardData | null {
+  const read = candidateProfilesReadState(state);
+  const cards = read.kind === "PROMOTED" || read.kind === "BOOTSTRAP" ? load(state).cards : {};
   const card = Object.hasOwn(cards, key) ? cards[key] : null;
   if (card?.photoUrl) return card;
-  const portrait = currentDerivedCandidatePortraits().find(record => record.id === key)?.portrait;
+  const portrait = portraitFor(state, key);
   const official = officialPhotoForPerson(card?.personId ?? key);
   const photo = portrait ?? (official ? { personId: official.verification?.personId ?? card?.personId,
     photoUrl: official.url, photoSource: official.source, photoVerification: official.verification } : null);
@@ -47,14 +55,14 @@ function cardForKey(key: string): CandidateCardData | null {
   return { ...base, ...photo };
 }
 
-export function cardForCandidacy(candidacyId: string): CandidateCardData | null {
-  return cardForKey(candidacyId);
+export function cardForCandidacy(state: string, candidacyId: string): CandidateCardData | null {
+  return cardForKey(state, candidacyId);
 }
 
-export function cardForNominee(contestId: string, name: string): CandidateCardData | null {
-  return cardForKey(`${contestId}|${name}`);
+export function cardForNominee(state: string, contestId: string, name: string): CandidateCardData | null {
+  return cardForKey(state, `${contestId}|${name}`);
 }
 
-export function allCandidateCards(): CandidateCardsFile {
-  return load();
+export function allCandidateCards(state: string): CandidateCardsFile {
+  return load(state);
 }

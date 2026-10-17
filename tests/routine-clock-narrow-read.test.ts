@@ -23,7 +23,6 @@ import {
   routineClockCandidateRead,
   routineClockCandidateView,
   routineClockConfirmationRead,
-  promotedPointerIdentityRead,
   routineClockPointedObservedRead,
   routineClockPointerRead,
   sittingStartsRead,
@@ -681,15 +680,6 @@ test("a confirmed version is as fresh as its confirmation, on the cold, warm and
     assert.equal(batch?.metadata.stale, "CURRENT", pass);
     assert.equal(batch?.metadata.retrievedAt, confirmedAt, pass);
   }
-});
-
-test("pointer reads carry the newest confirmation from Postgres beside the pointer, never a payload", () => {
-  const identity = promotedPointerIdentityRead(drizzle.mock({ schema }), "FEC_FUNDING", ["federal-supported"]).toSQL().sql;
-  assert.match(identity, /select confirmation\.detail from civic_data_candidate_events as confirmation/);
-  assert.match(identity, /confirmation\.candidate_id = "civic_data_promotions"\."current_version_id"/);
-  assert.match(identity, /left\(confirmation\.detail, \$\d+\) = \$\d+/, "the prefix is compared exactly, never with LIKE");
-  assert.match(identity, /order by confirmation\.sequence desc\s+limit 1/);
-  assert.doesNotMatch(identity, /"payload"|"validation_receipt"/, "an identity read carries no dataset");
 });
 
 test("readback inspection and the proof pin read one narrow row set, never a version's gathered confirmations", async () => {

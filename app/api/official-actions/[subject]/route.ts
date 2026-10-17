@@ -41,7 +41,7 @@ export const GET = readerRoute("/api/official-actions/[subject]", async function
   if (!subject || subject.length > 512) return Response.json({ error: "subject required" }, { status: 400 });
   const manifest = await readReaderManifest().catch(holdReaderAuthorityEdge);
   if (manifest) {
-    const edge = await ensureReaderAuthorityEdge(manifest, undefined, ["federal-directory", "ballot-contests", "executive-actions"]).catch(error => holdReaderAuthorityEdge(error, manifest, ["federal-directory", "ballot-contests", "executive-actions"]));
+    const edge = await ensureReaderAuthorityEdge(manifest, undefined, ["federal-directory", "ballot-contests", "executive-actions"]).catch(error => holdReaderAuthorityEdge(error, ["federal-directory", "ballot-contests", "executive-actions"]));
     if (edge) enterReaderAuthorityEdge(edge);
   }
   const divisions = await ballotPlaceFromRequest(request);

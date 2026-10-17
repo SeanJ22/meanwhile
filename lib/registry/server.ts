@@ -598,7 +598,7 @@ const settleStateLegislatorsRead: CoverageStateLegislatorReader = async (scope) 
         lastKnownGoodVersionId: null, sourceThrough: null, retrievedAt: null, promotedAt: null, stale: "UNKNOWN", staleAt: null } };
   }
   if (served) {
-    const { value, versionId } = served as { value: OfficialStateLegislatorReadModel; versionId: string };
+    const { versionId } = served, value = served.value!;
     primeStatePeopleProjection(value);
     return {
       kind: "BOOTSTRAP",

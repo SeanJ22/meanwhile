@@ -488,7 +488,7 @@ export const metadata: Metadata = {
 
 async function readBallotReaderEdge() {
   const manifest = await readReaderManifest().catch(holdReaderAuthorityEdge);
-  const edge = manifest ? await ensureReaderAuthorityEdge(manifest, undefined, READER_BALLOT_AUTHORITY_FAMILIES).catch(error => holdReaderAuthorityEdge(error, manifest, READER_BALLOT_AUTHORITY_FAMILIES)) : null;
+  const edge = manifest ? await ensureReaderAuthorityEdge(manifest, undefined, READER_BALLOT_AUTHORITY_FAMILIES).catch(error => holdReaderAuthorityEdge(error, READER_BALLOT_AUTHORITY_FAMILIES)) : null;
   return { manifest, edge };
 }
 

@@ -102,12 +102,6 @@ export interface ReaderManifest {
   readonly freshChecks?: Readonly<Record<string, string>>;
 
   readonly composition?: string;
-  readonly everydayRouting?: unknown;
-  readonly extrasVersionIds?: Readonly<Partial<Record<"everyday-routing", string | null>>>;
-  readonly authorityArtifacts?: Partial<Record<GlobalAuthorityFamily, AuthorityArtifactRef>>;
-  readonly stateAuthorities?: Partial<Record<StateAuthorityFamily, Readonly<Record<string, AuthorityArtifactRef>>>>;
-  readonly registrations?: Readonly<Record<string, AuthorityArtifactRef>>;
-  readonly stateLegislators?: Readonly<Record<string, AuthorityArtifactRef>>;
 }
 
 export const STATE_AUTHORITY_FAMILIES = ["registry-runtime", "ballot-contests", "candidate-profiles", "candidate-publications", "voting-sites", "candidate-campaign-sites-derived"] as const;

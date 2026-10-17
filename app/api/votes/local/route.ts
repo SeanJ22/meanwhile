@@ -18,7 +18,7 @@ export const GET = readerRoute("/api/votes/local", async function GET(request: R
   if (!bodyId || personId.length > 300) return Response.json({ error: "personId required" }, { status: 400 });
   try {
     const manifest = await readReaderManifest().catch(holdReaderAuthorityEdge);
-    const authority = manifest ? await ensureReaderAuthorityEdge(manifest, undefined, ["registry-runtime", "meeting-outcomes"]).catch(error => holdReaderAuthorityEdge(error, manifest, ["registry-runtime", "meeting-outcomes"])) : null;
+    const authority = manifest ? await ensureReaderAuthorityEdge(manifest, undefined, ["registry-runtime", "meeting-outcomes"]).catch(error => holdReaderAuthorityEdge(error, ["registry-runtime", "meeting-outcomes"])) : null;
     if (authority) enterReaderAuthorityEdge(authority);
     await settleOutcomeRead();
   } catch (error) {

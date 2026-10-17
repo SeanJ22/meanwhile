@@ -72,7 +72,7 @@ export const GET = readerRoute("/api/positions/[subject]/[topic]", async functio
 
   const manifest = await readReaderManifest().catch(holdReaderAuthorityEdge);
   if (manifest) {
-    const edge = await ensureReaderAuthorityEdge(manifest, undefined, ["federal-directory", "ballot-contests", "candidate-publications", "officeholder-statements"]).catch(error => holdReaderAuthorityEdge(error, manifest, ["federal-directory", "ballot-contests", "candidate-publications", "officeholder-statements"]));
+    const edge = await ensureReaderAuthorityEdge(manifest, undefined, ["federal-directory", "ballot-contests", "candidate-publications", "officeholder-statements"]).catch(error => holdReaderAuthorityEdge(error, ["federal-directory", "ballot-contests", "candidate-publications", "officeholder-statements"]));
     if (edge) enterReaderAuthorityEdge(edge);
   }
   const divisions = await ballotPlaceFromRequest(request);

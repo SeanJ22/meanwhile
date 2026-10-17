@@ -171,6 +171,20 @@ test("state planning retains Census government packets as well as OCD divisions"
   assert.equal(buildRegistry(providers,{root:process.cwd(),nowIso:AT,state:"system"}).units.length,0);
 });
 
+test("every Census government keeps its own state in the hunt plan",async()=>{
+  const {huntPacketPlan,stateOfDivision}=await import("../lib/hunt/packet-plan.ts");
+  for(const state of HUNT_STATES) {
+    const id=`government:US-${state.toUpperCase()}:123456`,plan=huntPacketPlan(id);
+    assert.equal(stateOfDivision(id),state.toUpperCase(),id);
+    assert.equal(plan.jurisdiction,state.toUpperCase(),id);
+    assert.ok(plan.contract.schemaVersion===2);
+    assert.equal(plan.contract.jurisdiction.state,state.toUpperCase(),id);
+  }
+  assert.equal(stateOfDivision("ocd-division/country:us/district:dc"),"DC");
+  assert.equal(stateOfDivision("ocd-division/country:us/territory:pr"),"PR");
+  assert.equal(stateOfDivision("ocd-division/country:us"),"US");
+});
+
 test("a control-driven repeat pass preserves dispatched work and costs while replacing the state's current queue",async()=>{
   const {mergeStatePlanningPass,summarizePlanningRound}=await import("../lib/control-plane/scheduler/state-planning.ts");
   const first:import("../lib/control-plane/scheduler/state-planning.ts").StatePlanningSummary={state:"az",cycleId:"first",cycleIds:["first"],recordPath:"state-first.json",

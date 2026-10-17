@@ -115,6 +115,11 @@ async function workload(repos: ControlPlaneRepositories, places: string[], run: 
     const expected=Number(arg("expected-subjects"));
     if(Number.isFinite(expected))assert.equal(ids.size,expected,"all Census governments and divisions in this state keep their hunt");
     const registry=registryModule.buildRegistry([provider.huntPacketsProvider({materialized:()=>({ids})})],{root,nowIso:now,state});
+    for(const unit of registry.units as {obligation:StandingObligation}[]) {
+      assert.equal(unit.obligation.autonomousPlan?.jurisdiction,state.toUpperCase(),unit.obligation.subjectId);
+      const contract=unit.obligation.autonomousPlan?.contract;assert.ok(contract?.schemaVersion===2);
+      assert.equal(contract.jurisdiction.state,state.toUpperCase(),unit.obligation.subjectId);
+    }
     const sync=await durable.syncObligations(repos,registry.units.map((unit:{obligation:unknown})=>unit.obligation),now);
     const snapshot=await repos.dispatchState.readOpen({obligationIds:sync.all.map((row:StandingObligation)=>row.id)});
     const scanned=await durable.scanOccurrences(repos,{obligations:sync.all,settledRouteTaskIds:durable.settledRouteTaskIds([...snapshot.routeTasks.values()]),neverClaimedRouteTaskIds:new Set(),snapshot});
@@ -283,7 +288,7 @@ async function parent() {
       try {
         const request = JSON.parse(message.body);
         const execute = async (query: { query: string; params?: unknown[] }) => {
-          return wire(await pg.query<Record<string, unknown>>(query.query, query.params ?? [], { serializers: { 16: (value:unknown) => String(value) } }));
+          return wire(await pg.query<Record<string, unknown>>(query.query, query.params ?? []));
         };
         const response = request.queries ? { results: await Promise.all(request.queries.map(execute)) } : await execute(request);
         const body=JSON.stringify(response);fixtureResponseBytes+=Buffer.byteLength(body);
@@ -458,7 +463,7 @@ async function seed(pg: FixtureDatabase, places: string[], selected: string[]) {
 }
 
 interface FixtureDatabase {
-  query<T=Record<string,unknown>>(text:string,params?:unknown[],options?:unknown):Promise<{rows:T[];fields:{name:string;dataTypeID:number}[];affectedRows:number}>;
+  query<T=Record<string,unknown>>(text:string,params?:unknown[]):Promise<{rows:T[];fields:{name:string;dataTypeID:number}[];affectedRows:number}>;
   exec(text:string):Promise<void>;
   close():Promise<void>;
 }

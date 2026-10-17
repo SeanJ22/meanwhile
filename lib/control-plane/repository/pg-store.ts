@@ -1177,7 +1177,7 @@ export async function pgPlanningIntents(sql:Sql,state:string|null,stoppedAt:stri
       AND i.record->>'action' IN ('DISPATCH','CANCEL_DISPATCH','RUN_CYCLE_NOW')
       AND (NOT EXISTS(SELECT 1 FROM cp_log_research_intents h WHERE h.log_key=$1 AND h.record->>'honors'=i.record->>'intentId')
         OR i.record->>'action'='DISPATCH' AND $3::text IS NOT NULL AND EXISTS(
-          SELECT 1 FROM cp_obligations o WHERE cp_control_state(o.value)=$3 AND o.value->>'active'='true'
+          SELECT 1 FROM cp_obligations o WHERE cp_control_state(o.value)=$3
             AND o.value->'assignments' @> jsonb_build_array(jsonb_build_object('ref',i.record->>'intentId'))))
       AND (i.record->>'action'<>'DISPATCH' OR (($4::text IS NULL OR i.record->>'requestedAt'>$4) AND NOT EXISTS(
         SELECT 1 FROM cp_log_research_intents c WHERE c.log_key=$1 AND c.record->>'action'='CANCEL_DISPATCH'
@@ -1298,7 +1298,7 @@ export async function pgCoordinatorWorkItems(sql: Sql, exaAgentLane = false, sta
       WHERE w.id > $1 ${state ? "AND cp_control_state(w.value)=$2" : ""} AND w.value->'autonomousPlan' IS NOT NULL
         ${state ? `AND (w.value #>> '{autonomousPlan,capability}' IS DISTINCT FROM 'hunt-packet' OR EXISTS(
           SELECT 1 FROM cp_occurrences_history own JOIN cp_obligations o ON o.id=own.value->>'obligationId'
-          WHERE own.value->>'workItemId'=w.id AND o.value->>'active'='true'))` : ""} ORDER BY w.id LIMIT 100`, state ? [after,state] : [after]) as Record<string, unknown>[];
+          WHERE own.value #>> '{workItemId}'=w.id AND o.value->>'active'='true'))` : ""} ORDER BY w.id LIMIT 100`, state ? [after,state] : [after]) as Record<string, unknown>[];
     selected.push(...rows.map(row => parseValue<WorkItem>(row.value, `coordinator work item ${String(row.id)}`)));
     if (rows.length < 100) return selected;
     after = String(rows.at(-1)!.id);

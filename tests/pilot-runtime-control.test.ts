@@ -227,3 +227,20 @@ test("runner wakes on changed etags without minute-by-minute SQL and survives mi
   assert.equal(runnerWakeReaderFromEnv({}), null);
   assert.equal(runnerWakeReaderFromEnv({ WTP_VAULT_PROVIDER: "netlify", WTP_BLOBS_SITE_ID: "site" }), null);
 });
+
+test("independent place orders and their runner acknowledgements invalidate the published Admin inputs",async()=>{
+  const {PGlite}=await import("@electric-sql/pglite");
+  const {BOOTSTRAP_DDL}=await import("../lib/control-plane/repository/pg-schema.ts");
+  const db=new PGlite();
+  try {
+    for(const ddl of BOOTSTRAP_DDL)await db.exec(ddl.replace("CREATE INDEX CONCURRENTLY","CREATE INDEX"));
+    await db.query("INSERT INTO cp_admin_config(id,revision,updated_at,value) VALUES('current',1,now(),'{}'::jsonb)");
+    const signature=async()=>(await db.query<{signature:string}>(CONSOLE_INPUT_SQL)).rows[0].signature;
+    const before=await signature();
+    await db.query("INSERT INTO cp_admin_place_targets(config_id,id,updated_at,value) VALUES('current','st:az',now(),'{\"key\":\"st:az\",\"goalPercent\":90}'::jsonb)");
+    const ordered=await signature();assert.notEqual(ordered,before);
+    assert.equal((await db.query<{revision:number}>("SELECT revision FROM cp_admin_config WHERE id='current'")).rows[0].revision,1);
+    await db.query("UPDATE cp_planning_controls SET applied_revision=revision,applied_at=now() WHERE state='az'");
+    assert.notEqual(await signature(),ordered);
+  }finally{await db.close();}
+});

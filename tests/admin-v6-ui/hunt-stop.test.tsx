@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import {readFileSync} from "node:fs";
 import { build } from "esbuild";
 import { launchGuarded } from "../../scripts/browser.mts";
 import { createMemoryRepositories } from "../../lib/control-plane/repository/memory.ts";
@@ -63,6 +64,8 @@ test("state and country stop controls stay pending until their runner orders are
         confirmation:await confirmReceipt(repos,outcome.receipt,Date.parse(now))})});
     });
     await page.goto("http://admin.local/harness");
+    await page.addStyleTag({content:readFileSync("app/globals.css","utf8").replace(/@import [^;]+;/g,"").replaceAll("@theme inline",":root")});
+    await page.addStyleTag({content:":root{--font-dm-sans:system-ui;--font-jetbrains-mono:monospace}body{margin:0}"});
     await page.addStyleTag({content:bundle.outputFiles.find(file=>file.path.endsWith(".css"))!.text});
     await page.addScriptTag({content:bundle.outputFiles.find(file=>file.path.endsWith(".js"))!.text});
     await page.getByRole("button",{name:"Stop every hunt in Arizona",exact:true}).click();

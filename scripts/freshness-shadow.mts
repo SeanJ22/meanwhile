@@ -1,5 +1,5 @@
 import { withReaderRoute, withReaderSelection } from "../lib/db/reader-route.ts";
-import { summarizePlanningRound, type StatePlanningSummary, PLANNING_STATES, stateDispatchTarget, planningStateArg, planningStateOf, runControlBackfills, runStatePlanningRound } from "../lib/control-plane/scheduler/state-planning.ts";
+import { summarizePlanningRound, mergeStatePlanningPass, type StatePlanningSummary, PLANNING_STATES, stateDispatchTarget, planningStateArg, planningStateOf, runControlBackfills, runStatePlanningRound } from "../lib/control-plane/scheduler/state-planning.ts";
 import { fork } from "node:child_process";
 import { applyHuntOrders, scopeControlKey } from "../lib/control-plane/hunt-orders.ts";
 import { readMaterializedPlanningIds, readPlanningIntents, deactivateUnfundedHunts } from "../lib/control-plane/repository/pg-store.ts";
@@ -40,7 +40,6 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { hostname } from "node:os";
 import { join } from "node:path";
 
-import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import {
   controlPlaneUrlFromEnv,
   createPgRepositories,
@@ -290,11 +289,18 @@ import { readFromHeldCopies } from "../lib/control-plane/repository/incremental-
 
 readFromHeldCopies();
 
+let releaseDrainRequested=false;
+process.on("message", message => {
+  if (message !== null && typeof message === "object" && "kind" in message && message.kind === "RUNTIME_RELEASE_DRAIN") {
+    releaseDrainRequested = true;
+    console.log("  runtime release requested: current wave finishes normally; no new autonomous wave will start");
+  }
+});
+
 const hostWorkerSlots = workerProcessSlots(() => Number.MAX_SAFE_INTEGER,
   { parentPeakBytes: RESEARCH_PARENT_PEAK_MIB * 1024 * 1024, admissionsOpen: () => !releaseDrainRequested });
 
 const ROOT = process.cwd();
-const CONTROL_PLANE_ROOT = join(ROOT, ".runtime", "control-plane", "freshness-shadow");
 const RUNS_DIR = join(ROOT, ".runtime", "freshness-shadow-runs", planningStateArg(process.argv.slice(2)) ?? "round");
 const NOW = new Date().toISOString();
 const HOST = hostname();
@@ -371,10 +377,8 @@ process.on("unhandledRejection", (error) => { void recordCrash(error); });
 const argv = process.argv.slice(2);
 const STATE=planningStateArg(argv);
 const STATE_RESEARCH_ID=STATE?`${RESEARCH_STATE_ID}:${STATE}`:RESEARCH_STATE_ID;
-const wantsPostgres = argv.includes("--provider=postgres");
-if (wantsPostgres) {
-  assertRuntimeAuthority({ capabilities: ["RESEARCH_CYCLE"] });
-}
+if(!argv.includes("--provider=postgres"))throw new Error("State planning requires --provider=postgres");
+assertRuntimeAuthority({ capabilities: ["RESEARCH_CYCLE"] });
 const dry = argv.includes("--dry");
 const noModel = argv.includes("--no-model");
 
@@ -405,44 +409,41 @@ if (canary && (IDS === null || IDS.size !== 1)) {
 observeControlPlaneTimeouts((timeout) => console.error(`freshness:shadow · ${timeout.message}`));
 
 if(STATE===null) {
-  let parentRepos:ControlPlaneRepositories|null=null;
-  let roundIntents:ResearchIntent[]=[];
   const summaries = new Map<string, StatePlanningSummary>();
-  if(wantsPostgres) {
-    const url=controlPlaneUrlFromEnv(); if(!url)throw new Error("The planner database is unavailable");
-    parentRepos=await createPgRepositories(url,NOW,{skipBootstrap:true});
-    roundIntents=[...await readPlanningIntents(parentRepos)];
-    if(parentRepos.controlReadsBackfill) await runControlBackfills(parentRepos.controlReadsBackfill,
-      (state,copied,archived)=>console.log(`planning backfill ${state}: ${copied} copied, ${archived} archived`));
-  }
+  const url=controlPlaneUrlFromEnv(); if(!url)throw new Error("The planner database is unavailable");
+  const parentRepos=await createPgRepositories(url,NOW,{skipBootstrap:true});
+  crashRepos=parentRepos;
+  const roundIntents=await readPlanningIntents(parentRepos);
+  if(!dry && !filteredCycle && parentRepos.controlReadsBackfill) await runControlBackfills(parentRepos.controlReadsBackfill,
+    (state,copied,archived)=>console.log(`planning backfill ${state}: ${copied} copied, ${archived} archived`));
   const runState=(state:string)=>new Promise<boolean>((resolve,reject)=>{
     if(releaseDrainRequested){resolve(false);return;}
     const child=fork(new URL(import.meta.url),[...argv,`--state=${state}`,`--round-at=${NOW}`],{cwd:ROOT,execArgv:[...process.execArgv.filter(arg=>!arg.startsWith("--max-old-space-size")),"--max-old-space-size=1536"],stdio:["ignore","inherit","inherit","ipc"]});
     const forward=(message:unknown)=>{if(child.connected)child.send(message as object);};
-    const terminate=()=>child.kill("SIGTERM");
+    const terminate=()=>{releaseDrainRequested=true;child.kill("SIGTERM");};
     process.on("SIGTERM",terminate);
     process.on("message",forward);
     child.on("message", message => {
       const summary = message as {type?: string; summary?: StatePlanningSummary};
-      if (summary.type === "STATE_PLANNING_SUMMARY" && summary.summary?.state === state) summaries.set(state, summary.summary);
+      if (summary.type === "STATE_PLANNING_SUMMARY" && summary.summary?.state === state) summaries.set(state, mergeStatePlanningPass(summaries.get(state),summary.summary));
       else if (process.connected) process.send?.(message);
     });
     child.once("error",reject);child.once("exit",code=>{
       process.off("message",forward);
       process.off("SIGTERM",terminate);
-      const cleanup=parentRepos?releaseWindowLease(parentRepos,`cycle@${HOST}#${child.pid}`,nowIso()):Promise.resolve();
+      const cleanup=releaseWindowLease(parentRepos,`cycle@${HOST}#${child.pid}`,nowIso());
       void cleanup.then(()=>resolve(code===0 && summaries.has(state)),reject);
     });
   });
   const states=IDS?[...new Set([...IDS].map(id=>planningStateOf(id)??"system"))]:PLANNING_STATES;
   let result=await runStatePlanningRound(runState,states);
-  if(!releaseDrainRequested && !filteredCycle && parentRepos?.planningControls)for(;;) {
+  if(!releaseDrainRequested && !filteredCycle && parentRepos.planningControls)for(;;) {
     const pending=(await parentRepos.planningControls.pendingStates()).filter(state=>!result.failed.includes(state));
     if(!pending.length)break;
     const extra=await runStatePlanningRound(runState,pending);
     result={...result,failed:[...result.failed,...extra.failed]};
   }
-  if(parentRepos)for(const intent of readIntents(roundIntents).pendingDispatch) {
+  if(!dry && !filteredCycle )for(const intent of readIntents(roundIntents).pendingDispatch) {
     const target=parseDispatchTarget(intent.note??"");
     const states=target.states.length?target.states:PLANNING_STATES.filter(state=>state!=="system");
     if(states.some(state=>result.failed.includes(state)))continue;
@@ -459,9 +460,21 @@ if(STATE===null) {
   }
   console.log(`planning round: ${result.completed} states completed; ${result.failed.length} failed${result.failed.length?`: ${result.failed.join(", ")}`:""}`);
   const round = summarizePlanningRound([...summaries.values()]);
-  const state = (await parentRepos?.researchState.readNarrowed(RESEARCH_STATE_ID, {modelLaneEnabled:true,
+  const state = (await parentRepos.researchState.readNarrowed(RESEARCH_STATE_ID, {modelLaneEnabled:true,
     modelLaneDisabledReason:true,workerCredential:true,model:true,spend:true,bounds:true,queue:true,fleetSafety:true}))?.value;
-  const path = writeCycleRecord({...round, startedAt:NOW, finishedAt:nowIso(), testedSha:RUNNING_CODE_SHA,
+  const finishedAt=nowIso();
+  await appendFreshnessCycleDigest(parentRepos,{outcome:{
+    kind:"FRESHNESS_CYCLE",state:result.failed.length?"FAILED":"SUCCEEDED",cycleId:CYCLE_ID,startedAt:NOW,finishedAt,
+    testedSha:RUNNING_CODE_SHA,host:HOST,provider:parentRepos.describe(),durable:parentRepos.durable,executor:"state planners",
+    registry:result.failed.length?null:round.registry,obligations:round.registry.registeredUnits,occurrencesOpened:null,
+    debtInherited:null,debtPersisted:null,debtCleared:null,scheduled:null,unscheduled:[],dueCount:round.dueCount,
+    dispatched:round.dispatched,worked:[],workedCount:round.workedCount,dispositions:[],dispositionCounts:round.dispositionCounts,dispatchDetails:[],
+    research:null,deferred:round.deferred,debts:round.debts,incidents:round.incidents,incidentCount:round.incidentCount,
+    risk:result.failed.length?null:round.risk as unknown as Readonly<Record<string,unknown>>,health:null,promotedToReaderTruth:null,
+    stateCycles:round.stateReports.flatMap(({state,cycleIds})=>cycleIds.map(cycleId=>({state,cycleId}))),
+    failure:result.failed.length?{code:"STATE_PLANNING_FAILED",detail:`Planning failed in ${result.failed.join(", ")}; each state retains its work.`}:null,
+  },lines:[`Planning round: ${result.completed} states completed, ${result.failed.length} failed.`,...round.digest]});
+  const path = writeCycleRecord({...round, startedAt:NOW, finishedAt, testedSha:RUNNING_CODE_SHA,
     failedStates:result.failed, research:{state,scoutCost:round.scoutCost,cacheThisCycle:null}});
   console.log(`  local diagnostic: ${path}`);
   if (!result.failed.length) countVitalSign([...summaries.values()].some(state=>state.deferredRound)
@@ -472,25 +485,18 @@ if(STATE===null) {
 const PLANNING_STATE=STATE;
 await withReaderRoute(`control-planning:${PLANNING_STATE}`, () => withReaderSelection({keys:new Set([`state:${PLANNING_STATE.toUpperCase()}`])}, async () => {
 
-let repos: ControlPlaneRepositories;
-if (wantsPostgres) {
-  installNeonCircuitBreaker(ROOT, nowIso);
+installNeonCircuitBreaker(ROOT, nowIso);
 
-  installNeonRequestDeadline();
-  const url = controlPlaneUrlFromEnv();
-  if (url === null) {
-    console.error(
-      `freshness:shadow · --provider=postgres was asked for and ${CONTROL_PLANE_URL_VAR} is not ` +
-        "set. Refusing to silently fall back to the file store: a run that changed provider " +
-        "without saying so would attribute this cycle's state to the wrong place.",
-    );
-    process.exit(1);
-  }
-  repos = await pending.step("control-plane:open", () => createPgRepositories(url, NOW,{planningState:PLANNING_STATE}));
-} else {
-  mkdirSync(CONTROL_PLANE_ROOT, { recursive: true });
-  repos = {...await createFileRepositories(CONTROL_PLANE_ROOT),planningState:PLANNING_STATE};
+installNeonRequestDeadline();
+const url = controlPlaneUrlFromEnv();
+if (url === null) {
+  console.error(
+    `freshness:shadow · --provider=postgres was asked for and ${CONTROL_PLANE_URL_VAR} is not ` +
+      "set. State planning requires the control-plane store.",
+  );
+  process.exit(1);
 }
+let repos = await pending.step("control-plane:open", () => createPgRepositories(url, NOW,{planningState:PLANNING_STATE}));
 let intentLog: ResearchIntent[] = [];
 let intentLogUnreadable: string | null = null;
 try {
@@ -502,13 +508,15 @@ try {
 const intents = readIntents(intentLog);
 
 const planningRevision=await repos.planningControls?.revision(PLANNING_STATE)??0;
-writeHunterQueue(hunterQueuePath(hunterLaneArmingPath(ROOT,PLANNING_STATE)),{writtenAt:NOW,taskIds:[],plainTaskIds:[]});
-await applyHuntOrders(repos,PLANNING_STATE,NOW);
+if(!dry && !filteredCycle) {
+  writeHunterQueue(hunterQueuePath(hunterLaneArmingPath(ROOT,PLANNING_STATE)),{writtenAt:NOW,taskIds:[],plainTaskIds:[]});
+  await applyHuntOrders(repos,PLANNING_STATE,NOW);
+}
 const planningPolicy=await repos.adminConfig.read(ADMIN_CONFIG_ID,{expansionScopes:{where:{path:["geography","stateAbbr"],value:PLANNING_STATE.toUpperCase()}}});
 const huntsPaused=intents.paused || intents.runnerPause.paused || intentLogUnreadable!==null || ownerIntentsUnreadableByRunner;
 const fundedRefs=huntsPaused?[]:[...expansionScopesOf(planningPolicy?.value??null).scopes.filter(scope=>scope.budgetUsd>0).map(scope=>scope.receiptId),
   ...intentLog.flatMap(intent=>intent.kind==="INTENT" && intent.action==="DISPATCH" && !intents.cancelledDispatch.has(intent.intentId)?[intent.intentId]:[])];
-await deactivateUnfundedHunts(repos,fundedRefs,NOW);
+if(!dry && !filteredCycle)await deactivateUnfundedHunts(repos,fundedRefs,NOW);
 const planningSections={expansionScopes:{where:{path:["geography","stateAbbr"],value:PLANNING_STATE.toUpperCase()}}} as const;
 const cycleObservation = observeCyclePhases(repos);
 
@@ -528,8 +536,10 @@ const startupReadRetry = {
     ),
 };
 
+let legacyOperationalReference:Awaited<ReturnType<typeof preloadOperationalReferenceBundle>>|null=null;
+let azOperationalReference:Awaited<ReturnType<typeof preloadAzOperationalReferenceBundle>>|null=null;
 if (PLANNING_STATE !== "system") {
-const [legacyOperationalReference, azOperationalReference] = await Promise.all([retryStartupRead(
+[legacyOperationalReference, azOperationalReference] = await Promise.all([retryStartupRead(
   () => preloadOperationalReferenceBundle({ bypassCache: true }), () => null, startupReadRetry,
 ).catch(error => {
   console.log(`  legacy multi-state operational reference unavailable: ${error instanceof Error ? error.message : String(error)}`);
@@ -1683,13 +1693,6 @@ const writeHunterLaneReading = (): void => {
 };
 writeHunterLaneReading();
 const spacer = serializeHostSpacing(hostSpacer());
-let releaseDrainRequested = false;
-process.on("message", message => {
-  if (message !== null && typeof message === "object" && "kind" in message && message.kind === "RUNTIME_RELEASE_DRAIN") {
-    releaseDrainRequested = true;
-    console.log("  runtime release requested: current wave finishes normally; no new autonomous wave will start");
-  }
-});
 
 const dispatchDeadlineMs = Date.now() + 15 * 60_000;
 
@@ -1919,7 +1922,7 @@ const simulated: RunWork = async ({ executor, routeTaskId }) => ({
 
 const executorFor = (obligation: { obligation: { id: string } }): DeclaredExecutor => {
   const route = registry.routeFor(obligation.obligation.id);
-  if (!dry) return routeProcessExecutor({ root: ROOT, postgres: wantsPostgres, fileStoreRoot: CONTROL_PLANE_ROOT,
+  if (!dry) return routeProcessExecutor({ root: ROOT, postgres: true,
     route, slots: workerSlots, spaceOut: spacer, vault: vault.put,
     openOne: fleetSafety.guardedOpenOne("public-web", obligation.obligation.id),
     onStarted: pid => console.log(`  route lease worker process: pid ${pid}; ${obligation.obligation.id}`) });
@@ -2216,7 +2219,7 @@ async function runAutonomousWave() {
 
     childTimeoutMs: RUNTIME_NO_PROGRESS_MS - 60_000,
     slots: workerSlots,
-    config: { root: ROOT, postgres: wantsPostgres, taskIds, modelEnabled: paidWorkerCapacity() > 0,
+    config: { root: ROOT, postgres: true, taskIds, modelEnabled: paidWorkerCapacity() > 0,
       searchEnabled: scoutSearch !== null, get ceilingUsd() { return effectiveCeilingUsd; }, hostConcurrency, fundedSubjects: [...lifetimeHuntSubjects] },
     capacity: () => Math.min(taskIds.length, plainTaskIds.size + paidWorkerCapacity(taskIds.length)),
     transportFor: guards.workerTransportFor,
@@ -2955,8 +2958,16 @@ console.log(`\n  canonical outcome: ${cycleId}`);
 const path = pending.sync("local-record:write", () => writeCycleRecord(runRecord));
 console.log(`  local diagnostic: ${path}`);
 const scouts = cycle.dispatched.filter(row => row.executor === "BOUNDED_MODEL_WORKER");
+const incidentGroups=new Map<string,{count:number;affected:number;retry:string}>();
+for(const incident of cycle.incidents) {
+  const held=incidentGroups.get(incident.cause)??{count:0,affected:0,retry:incident.nextRetryAt};
+  incidentGroups.set(incident.cause,{count:held.count+1,affected:held.affected+incident.obligationsAffected,retry:held.retry<incident.nextRetryAt?held.retry:incident.nextRetryAt});
+}
 const summary: StatePlanningSummary = {
-  state: PLANNING_STATE, recordPath:path, registeredUnits:allUnits.length, dueCount:cycle.dueCount,
+  state: PLANNING_STATE,cycleId:CYCLE_ID,cycleIds:[CYCLE_ID],providers:registry.byProvider.map(provider=>({...provider,
+    readFailure:provider.readFailure===null?null:"The provider read failed; its state record carries the details.",
+    emptyReason:provider.emptyReason===null?null:"No units registered."})),risk:cycle.risk,
+  incidents:[...incidentGroups].map(([cause,group])=>({cause,target:`${PLANNING_STATE.toUpperCase()}: ${group.count} source issues`,obligationsAffected:group.affected,nextRetryAt:group.retry})),recordPath:path, registeredUnits:allUnits.length, dueCount:cycle.dueCount,
   dispatched:cycle.dispatched.length, workedCount:cycle.worked.length, debts:cycle.debts.length,
   incidentCount:cycle.incidents.length, deferred:cycle.deferred.length,
   dispositionCounts:runRecord.dispositions.reduce<Record<string,number>>((counts,row)=>{
@@ -2965,7 +2976,7 @@ const summary: StatePlanningSummary = {
   costs:{usd:cycle.dispatched.reduce((sum,row)=>sum+(row.cost?.usd??0),0),
     measured:cycle.dispatched.filter(row=>row.cost?.usd!=null).length,attempts:cycle.dispatched.length},
   executors:cycle.dispatched.reduce<Record<string,number>>((counts,row)=>{
-    counts[row.executor]=(counts[row.executor]??0)+1;return counts;
+    const executor=row.executor??"NOT_RUN";counts[executor]=(counts[executor]??0)+1;return counts;
   },{}),
   scoutCost:{attempts:scouts.length,usd:scouts.reduce((sum,row)=>sum+(row.cost?.usd??0),0),
     unmeasured:scouts.filter(row=>row.cost?.usd==null).length},

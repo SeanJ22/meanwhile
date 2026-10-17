@@ -432,6 +432,7 @@ export const CONTROL_READS_EXPAND_DDL: readonly string[] = [
   "CREATE INDEX IF NOT EXISTS cp_field_manual_everywhere ON cp_field_manual_entries (id) WHERE coalesce((value->'reach'->>'everywhere')::boolean, false);",
   "CREATE INDEX IF NOT EXISTS cp_field_manual_transferable ON cp_field_manual_entries (id) WHERE ((value->>'kind' IN ('METHOD','ROUTE','MANIFEST_BRANCH') AND (value->>'url' IS NULL OR jsonb_array_length(coalesce(value->'platforms','[]'::jsonb)) > 0)) OR coalesce((value->'reach'->>'method')::boolean,false));",
   "CREATE INDEX IF NOT EXISTS cp_field_manual_platform_reach ON cp_field_manual_entries (id) WHERE jsonb_array_length(coalesce(value->'reach'->'platforms','[]'::jsonb)) > 0;",
+  "CREATE STATISTICS IF NOT EXISTS cp_field_manual_reach_statistics ON (coalesce((value->'reach'->>'everywhere')::boolean,false)), (jsonb_array_length(coalesce(value->'reach'->'platforms','[]'::jsonb))), (coalesce((value->'reach'->>'method')::boolean,false)), (value->>'kind'), (value->>'role'), (jsonb_array_length(coalesce(value->'platforms','[]'::jsonb))) FROM cp_field_manual_entries;",
 
   "CREATE INDEX IF NOT EXISTS cp_log_scout_results_attempt ON cp_log_scout_results ((record->>'attemptId'));",
   "CREATE INDEX IF NOT EXISTS cp_leases_released ON cp_leases ((value #>> '{released}'));",

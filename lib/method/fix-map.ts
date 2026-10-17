@@ -28,7 +28,8 @@ export interface MethodWorks {
 export const WORKS_PLACES_SHOWN = 3;
 
 export function stateOfPlace(placeId: string): string | null {
-  return /(?:^|\/)state:([a-z]{2})(?:\/|$|#)/i.exec(placeId)?.[1]?.toLowerCase() ?? null;
+  return (/(?:^|\/)(?:state|district|territory):([a-z]{2})(?:\/|$|#)/i.exec(placeId)?.[1]
+    ?? /(?:^|:)government:us-([a-z]{2})(?::|$)/i.exec(placeId)?.[1])?.toLowerCase() ?? null;
 }
 
 export function methodWorksOf(rows: readonly FixMapRow[], methodIds: readonly string[]): ReadonlyMap<string, MethodWorks> {
@@ -85,12 +86,14 @@ export function methodStatistics(observations: readonly FixMapRow[], recentSince
   const recent = tried.filter(row => recentSince === undefined || workedAt(row) >= Date.parse(recentSince));
   const then = tried.filter(row => before === undefined || workedAt(row) <= Date.parse(before));
   return { total: rows.length, works: works.length, tried: tried.length,
-    states: new Set(works.map(row => /(?:^|\/)state:([a-z]{2})(?:\/|$)/i.exec(row.placeId)?.[1]?.toLowerCase()).filter(Boolean)).size,
+    states: new Set(works.map(row => stateOfPlace(row.placeId)).filter(Boolean)).size,
     districts: new Set(works.map(row => /^(.+\/(?:county|congressional-district|sldu|sldl|school-district):[^/]+)/.exec(row.placeId)?.[1]).filter(Boolean)).size,
     recentWorks: recent.filter(row => row.state === "WORKS").length, recentTried: recent.length,
     beforeWorks: then.filter(row => row.state === "WORKS").length, beforeFails: then.filter(row => row.state === "FAILS").length,
     since: tried.length - then.length };
 }
+
+const PLACE_STATE_SQL="lower(coalesce(substring(place_id from '(?:^|/)(?:state|district|territory):([a-zA-Z]{2})(?:/|$|#)'),substring(place_id from '(?i)(?:^|:)government:US-([a-zA-Z]{2})(?::|$)')))";
 
 type Query = (text: string, parameters: readonly unknown[]) => Promise<readonly Record<string, unknown>[]>;
 export interface FixMapRepository {
@@ -125,7 +128,7 @@ export function createFixMapRepository(query: Query): FixMapRepository {
       const [row] = await query(`SELECT count(*) AS total,
         count(*) FILTER (WHERE state = 'WORKS') AS works,
         count(*) FILTER (WHERE state != 'UNTRIED') AS tried,
-        count(DISTINCT lower(substring(place_id from '(?:^|/)state:([a-zA-Z]{2})(?:/|$)'))) FILTER (WHERE state = 'WORKS') AS states,
+        count(DISTINCT ${PLACE_STATE_SQL}) FILTER (WHERE state = 'WORKS') AS states,
         count(DISTINCT substring(place_id from '^(.+/(?:county|congressional-district|sldu|sldl|school-district):[^/]+)')) FILTER (WHERE state = 'WORKS') AS districts,
         count(*) FILTER (WHERE state = 'WORKS' AND ($2::timestamptz IS NULL OR coalesce(tried_at, updated_at) >= $2::timestamptz)) AS "recentWorks",
         count(*) FILTER (WHERE state != 'UNTRIED' AND ($2::timestamptz IS NULL OR coalesce(tried_at, updated_at) >= $2::timestamptz)) AS "recentTried",
@@ -141,9 +144,9 @@ export function createFixMapRepository(query: Query): FixMapRepository {
         const rows = await query(`SELECT methods.method_id,
           ARRAY(SELECT place_id FROM cp_fix_map WHERE method_id=methods.method_id AND state='WORKS'
             ORDER BY coalesce(tried_at,updated_at) DESC,place_id LIMIT 3) AS places,
-          ARRAY(SELECT DISTINCT lower(substring(place_id from '(?:^|/)state:([a-zA-Z]{2})(?:/|$|#)')) AS state
+          ARRAY(SELECT DISTINCT ${PLACE_STATE_SQL} AS state
             FROM cp_fix_map WHERE method_id=methods.method_id AND state='WORKS'
-            AND substring(place_id from '(?:^|/)state:([a-zA-Z]{2})(?:/|$|#)') IS NOT NULL ORDER BY state) AS states
+            AND ${PLACE_STATE_SQL} IS NOT NULL ORDER BY state) AS states
           FROM unnest($1::text[]) AS methods(method_id)`,[missing]);
         for (const id of missing) summaries.set(id,{ places: [],states: [] });
         for (const row of rows) summaries.set(String(row.method_id),{ places: row.places as string[],states: row.states as string[] });

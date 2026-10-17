@@ -17,14 +17,18 @@ export interface ControlReadsBackfill {
 }
 
 export const CONTROL_READS_BACKFILL_DDL = [
-  `CREATE OR REPLACE FUNCTION cp_control_state(record jsonb) RETURNS text LANGUAGE sql IMMUTABLE AS $$
-    SELECT CASE WHEN candidate=ANY(ARRAY[${Object.values(FIPS_TO_STATE).map(state=>`'${state.postal.toLowerCase()}'`).join(",")}]) THEN candidate ELSE 'system' END FROM (SELECT lower(coalesce(
+  `CREATE OR REPLACE FUNCTION cp_control_state(record jsonb) RETURNS text LANGUAGE plpgsql IMMUTABLE AS $$
+    DECLARE candidate text;
+    BEGIN
+    candidate:=lower(coalesce(
       substring(coalesce(record->>'subjectId',record->>'subject',record->>'jurisdictionId',record->>'ocdId',record->>'bodyId',record->>'obligationId',record->>'jurisdiction',record #>> '{metered,jurisdiction}',record->>'key',record->>'id','') from '/(?:state|district|territory):([a-zA-Z]{2})(?:/|#|$)'),
-      substring(coalesce(record->>'subjectId',record->>'obligationId',record->>'jurisdiction','') from '(?:^|:)government:US-([a-zA-Z]{2}):'),
+      substring(coalesce(record->>'subjectId',record->>'obligationId',record->>'jurisdiction','') from '(?i)(?:^|:)government:US-([a-zA-Z]{2}):'),
       record #>> '{geography,stateAbbr}', CASE WHEN record->>'stateCode' ~ '^[a-zA-Z]{2}$' THEN record->>'stateCode' END,
       CASE WHEN record->>'state' ~ '^[a-zA-Z]{2}$' THEN record->>'state' END,
       substring(coalesce(record->>'key',record->>'placeKey',record->>'jurisdiction',record->>'subjectId',record->>'scope',record->>'partitionScope','') from '^(?:geo:|st:|US-)?([a-zA-Z]{2})(?:[.:-]|$)'),
-      'system')) AS candidate) state_read
+      'system'));
+    RETURN CASE WHEN candidate=ANY(ARRAY[${Object.values(FIPS_TO_STATE).map(state=>`'${state.postal.toLowerCase()}'`).join(",")}]) THEN candidate ELSE 'system' END;
+    END
   $$`,
   `CREATE TABLE IF NOT EXISTS cp_control_backfill_jobs (
     state text NOT NULL, kind text NOT NULL, cursor jsonb, completed boolean NOT NULL DEFAULT false,
@@ -45,9 +49,10 @@ export const CONTROL_READS_BACKFILL_DDL = [
 ];
 
 export const ARCHIVE_STATE_SQL=`SELECT cp_archive_occurrences(ARRAY(
-  SELECT o.id FROM cp_occurrences o JOIN cp_work_items w ON w.id=o.value->>'workItemId'
-  WHERE cp_control_state(w.value)=$1 AND o.value->>'closedAt' IS NOT NULL
-  ORDER BY o.id LIMIT 100 FOR UPDATE OF o SKIP LOCKED)) AS moved`;
+  SELECT o.id FROM cp_work_items w CROSS JOIN LATERAL (
+    SELECT o.id FROM cp_occurrences o WHERE o.value #>> '{workItemId}'=w.id
+      AND o.value->>'closedAt' IS NOT NULL LIMIT 100 FOR UPDATE OF o SKIP LOCKED
+  ) o WHERE cp_control_state(w.value)=$1 LIMIT 100)) AS moved`;
 
 const CHARGE_COLUMNS = "id,charged_at,job_id,route_task_id,obligation_id,jurisdiction,attempt_id,usd,known_usd,measured,bounded,assignment_refs,is_scout,scout_usd,cache";
 async function insertCharges(sql: Sql, charges: readonly PricedCharge[]): Promise<void> {

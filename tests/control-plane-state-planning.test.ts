@@ -125,6 +125,10 @@ test("planning reads effective controls and this state's live Sends instead of a
     const effective=await pgPlanningIntents(sql,"az",null);
     assert.equal(readIntents(effective).paused,readIntents(log).paused);
     assert.equal(effective.length,4);assert.deepEqual(readIntents(effective).pendingDispatch.map(row=>row.intentId),[send.intentId]);
+    const honored={formatVersion:1,kind:"HONORED",intentId:`${send.intentId}:honored`,honors:send.intentId,action:"DISPATCH",honoredAt:STOP,honoredBy:"runner",detail:"applied"};
+    await db.query("INSERT INTO cp_log_research_intents VALUES('level-1',$1,3000,$2::jsonb)",[honored.intentId,JSON.stringify(honored)]);
+    await db.query("INSERT INTO cp_obligations VALUES('paused-hunt',$1::jsonb)",[JSON.stringify({subjectId:"ocd-division/country:us/state:az/place:fixture",active:false,assignments:[{ref:send.intentId,at:AT}]})]);
+    assert.equal((await pgPlanningIntents(sql,"az",null)).some(row=>row.kind==="INTENT" && row.action==="DISPATCH" && row.intentId===send.intentId),true,"resuming paid work retains a previously acknowledged Send whose hunt was paused");
     assert.equal((await pgPlanningIntents(sql,"az",STOP)).some(row=>row.kind==="INTENT" && row.action==="DISPATCH"),false);
   }finally{await db.close();}
 });
@@ -155,4 +159,42 @@ test("a hunt pause waits for its exact completed-state acknowledgement, regardle
   const state=await repos.researchState.mustRead("level-1:az");
   await repos.researchState.compareAndSet(state.id,state.revision,{cycleFinishedAt:STOP,scopeControls:{[scopeControlKey(scopes[0].key)]:outcome.receipt.receiptId}} as never,STOP);
   assert.equal((await confirmReceipt(repos,outcome.receipt,Date.parse(STOP))).state,"applied");
+});
+
+test("state planning retains Census government packets as well as OCD divisions",async()=>{
+  const {buildRegistry}=await import("../lib/control-plane/scheduler/registry.ts");
+  const {huntPacketsProvider}=await import("../lib/control-plane/scheduler/providers/hunt-packets.ts");
+  const ids=new Set(["hunt:packet:government:US-AZ:123456","hunt:packet:ocd-division/country:us/state:az/county:pima","hunt:packet:government:US-NH:654321"]);
+  const providers=[huntPacketsProvider({materialized:()=>({ids})})];
+  assert.equal(buildRegistry(providers,{root:process.cwd(),nowIso:AT,state:"az"}).units.length,2);
+  assert.equal(buildRegistry(providers,{root:process.cwd(),nowIso:AT,state:"nh"}).units.length,1);
+  assert.equal(buildRegistry(providers,{root:process.cwd(),nowIso:AT,state:"system"}).units.length,0);
+});
+
+test("a control-driven repeat pass preserves dispatched work and costs while replacing the state's current queue",async()=>{
+  const {mergeStatePlanningPass,summarizePlanningRound}=await import("../lib/control-plane/scheduler/state-planning.ts");
+  const first:import("../lib/control-plane/scheduler/state-planning.ts").StatePlanningSummary={state:"az",cycleId:"first",cycleIds:["first"],recordPath:"state-first.json",
+    registeredUnits:79,dueCount:79,dispatched:3,workedCount:2,debts:4,incidentCount:1,deferred:76,
+    dispositionCounts:{INGESTED:2},costs:{usd:0.03,measured:3,attempts:3},executors:{DETERMINISTIC:3},
+    scoutCost:{usd:0,attempts:0,unmeasured:0},deferredRound:true,providers:[{providerId:"hunt-packets",records:79,units:79,readFailure:null,emptyReason:null}],
+    risk:{obligationsScheduled:79,obligationsUnscheduled:0,obligationsOverdue:79,debtRows:4,incidents:1,oldestDebtHours:8,activation:"SHADOW_NOT_ACTIVATED"},
+    incidents:[{cause:"SOURCE_UNAVAILABLE",target:"Arizona: 4 source issues",obligationsAffected:4,nextRetryAt:STOP}]};
+  const stopped={...first,cycleId:"stopped",cycleIds:["stopped"],recordPath:"state-stopped.json",registeredUnits:0,dueCount:0,dispatched:0,workedCount:0,debts:0,incidentCount:0,deferred:0,
+    dispositionCounts:{},costs:{usd:0,measured:0,attempts:0},executors:{},providers:[],incidents:[],risk:{...first.risk,obligationsScheduled:0,obligationsOverdue:0,debtRows:0,incidents:0,oldestDebtHours:null}};
+  const round=summarizePlanningRound([mergeStatePlanningPass(first,stopped)]);
+  assert.equal(round.registry.registeredUnits,0);assert.equal(round.dispatched,3);assert.equal(round.workedCount,2);
+  assert.equal(round.costs.usd,0.03);assert.equal(round.dispositionCounts.INGESTED,2);assert.equal(round.risk.obligationsOverdue,0);
+  assert.deepEqual(round.stateReports[0].cycleIds,["first","stopped"]);
+  assert.ok(!JSON.stringify(round).includes("obligationId"));
+});
+
+test("state cycle details stay in their state log and the parent round is the country's canonical outcome",async()=>{
+  const {appendFreshnessCycleDigest}=await import("../lib/control-plane/freshness-cycle-outcome.ts");
+  const repos=createMemoryRepositories();
+  const record={kind:"FRESHNESS_CYCLE",state:"SUCCEEDED",cycleId:"state-cycle",finishedAt:STOP,testedSha:null} as import("../lib/control-plane/owner-surface.ts").FreshnessCycleOutcome;
+  await appendFreshnessCycleDigest({...repos,planningState:"az"},{outcome:record,lines:["Arizona completed"]});
+  assert.equal((await repos.ownerDigests.read("owner-digest")).length,0);
+  assert.equal((await repos.ownerDigests.read("owner-digest:az")).length,1);
+  await appendFreshnessCycleDigest(repos,{outcome:{...record,cycleId:"round",workedCount:2},lines:["Every state completed"]});
+  assert.deepEqual((await repos.ownerDigests.read("owner-digest")).map(row=>row.runtimeOutcome?.cycleId),["round"]);
 });

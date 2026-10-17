@@ -67,5 +67,8 @@ test("method evidence and proof cover places beyond the first thousand without r
     await db.query("DELETE FROM cp_fix_map WHERE method_id = $1 AND place_id LIKE $2", ["national", "%state:az/%"]);
     const nextCycle=createFixMapRepository(async(sql,params)=>(await db.query(sql,[...params])).rows as Record<string,unknown>[]);
     assert.deepEqual((await nextCycle.worksFor(["national"])).get("national")!.states, ["nj", "wy"]);
+    await map.put({...row,methodId:"census",placeId:"government:US-PR:123456",state:"WORKS"});
+    assert.equal((await map.statistics("census")).states,1);
+    assert.deepEqual((await map.worksFor(["census"])).get("census")?.states,["pr"]);
   } finally { await db.close(); }
 });

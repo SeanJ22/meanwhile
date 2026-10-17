@@ -1,3 +1,4 @@
+import type { StalenessRisk } from "./debt.ts";
 import type { DispatchTarget } from "./dispatch-target.ts";
 import { ADMIN_CONFIG_ID } from "../gateway/admin-config.ts";
 import { expansionScopesOf } from "../expansion/scopes.ts";
@@ -125,6 +126,11 @@ export async function readPlanningContinuation(repos:ControlPlaneRepositories,cy
 
 export interface StatePlanningSummary {
   readonly state: string;
+  readonly cycleId:string;
+  readonly cycleIds:readonly string[];
+  readonly providers:readonly {providerId:string;records:number;units:number;readFailure:string|null;emptyReason:string|null}[];
+  readonly risk:StalenessRisk;
+  readonly incidents:readonly {cause:string;target:string;obligationsAffected:number;nextRetryAt:string}[];
   readonly recordPath: string;
   readonly registeredUnits: number;
   readonly dueCount: number;
@@ -145,6 +151,16 @@ export function summarizePlanningRound(states: readonly StatePlanningSummary[]) 
     states.reduce((sum, state) => sum + state[key], 0);
   const dispositionCounts: Record<string, number> = {};
   const executors: Record<string, number> = {};
+  const providers=new Map<string,{providerId:string;records:number;units:number;failures:number}>();
+  for(const state of states)for(const provider of state.providers) {
+    const prior=providers.get(provider.providerId)??{providerId:provider.providerId,records:0,units:0,failures:0};
+    providers.set(provider.providerId,{...prior,records:prior.records+provider.records,units:prior.units+provider.units,failures:prior.failures+Number(provider.readFailure!==null)});
+  }
+  const risk:StalenessRisk={obligationsScheduled:states.reduce((n,s)=>n+s.risk.obligationsScheduled,0),
+    obligationsUnscheduled:states.reduce((n,s)=>n+s.risk.obligationsUnscheduled,0),
+    obligationsOverdue:states.reduce((n,s)=>n+s.risk.obligationsOverdue,0),debtRows:total("debts"),incidents:total("incidentCount"),
+    oldestDebtHours:states.some(s=>s.risk.oldestDebtHours!==null)?Math.max(...states.map(s=>s.risk.oldestDebtHours??0)):null,
+    activation:"SHADOW_NOT_ACTIVATED"};
   for (const state of states) {
     for (const [key, count] of Object.entries(state.dispositionCounts)) dispositionCounts[key] = (dispositionCounts[key] ?? 0) + count;
     for (const [key, count] of Object.entries(state.executors)) executors[key] = (executors[key] ?? 0) + count;
@@ -154,11 +170,25 @@ export function summarizePlanningRound(states: readonly StatePlanningSummary[]) 
   const scoutCost = states.reduce((sum, state) => ({usd: sum.usd + state.scoutCost.usd,
     attempts: sum.attempts + state.scoutCost.attempts, unmeasured: sum.unmeasured + state.scoutCost.unmeasured}), {usd: 0, attempts: 0, unmeasured: 0});
   return {
-    registry: {registeredUnits: total("registeredUnits")}, dueCount: total("dueCount"), dispatched: total("dispatched"),
+    registry: {registeredUnits: total("registeredUnits"),workedUnits:total("registeredUnits"),only:null,
+      providers:[...providers.values()].map(p=>({providerId:p.providerId,records:p.records,units:p.units,
+        readFailure:p.failures?`${p.failures} state reads failed; their state records carry the details.`:null,
+        emptyReason:p.units?null:"No state registered work from this provider."}))}, dueCount: total("dueCount"), dispatched: total("dispatched"),
     workedCount: total("workedCount"), debts: total("debts"), incidentCount: total("incidentCount"),
-    deferred: total("deferred"), dispositionCounts, costs, executors, scoutCost,
-    stateReports: states.map(({state, recordPath}) => ({state, recordPath})),
+    deferred: total("deferred"), dispositionCounts, costs, executors, scoutCost,risk,incidents:states.flatMap(state=>state.incidents),
+    stateReports: states.map(({state, recordPath,cycleIds}) => ({state, recordPath,cycleIds})),
     digest: [`  cost               ${costs.usd.toFixed(4)} over ${costs.measured} measured Attempt(s) of ${costs.attempts} dispatched`,
       `  executors          ${executors.DETERMINISTIC ?? 0} deterministic · ${executors.BOUNDED_MODEL_WORKER ?? 0} bounded model worker`],
   };
+}
+
+export function mergeStatePlanningPass(prior:StatePlanningSummary|undefined,next:StatePlanningSummary):StatePlanningSummary {
+  if(!prior)return next;
+  const add=(a:Readonly<Record<string,number>>,b:Readonly<Record<string,number>>)=>Object.fromEntries(
+    [...new Set([...Object.keys(a),...Object.keys(b)])].map(key=>[key,(a[key]??0)+(b[key]??0)]));
+  return {...next,cycleIds:[...prior.cycleIds,...next.cycleIds],dueCount:prior.dueCount+next.dueCount,dispatched:prior.dispatched+next.dispatched,workedCount:prior.workedCount+next.workedCount,
+    dispositionCounts:add(prior.dispositionCounts,next.dispositionCounts),executors:add(prior.executors,next.executors),
+    costs:{usd:prior.costs.usd+next.costs.usd,measured:prior.costs.measured+next.costs.measured,attempts:prior.costs.attempts+next.costs.attempts},
+    scoutCost:{usd:prior.scoutCost.usd+next.scoutCost.usd,attempts:prior.scoutCost.attempts+next.scoutCost.attempts,unmeasured:prior.scoutCost.unmeasured+next.scoutCost.unmeasured},
+    deferredRound:prior.deferredRound||next.deferredRound};
 }

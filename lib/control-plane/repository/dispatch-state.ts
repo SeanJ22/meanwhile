@@ -127,7 +127,7 @@ export function createPgDispatchState(sql: Sql, repos: () => ControlPlaneReposit
   return {
     async readOpen(input = {}) {
       return withCallerSite(async () => {
-      const scope = input.obligationIds ? createHash("sha256").update([...input.obligationIds].sort().join("\n")).digest("hex") : state ?? "*";
+      const scope = state ?? (input.obligationIds ? createHash("sha256").update([...input.obligationIds].sort().join("\n")).digest("hex") : "*");
       const clock = await run("readOpen:cursor", "SELECT now() AS at, (SELECT through FROM cp_dispatch_cursors WHERE id=$1) AS since", [scope]) as { at: string; since: string | null }[];
       const through = new Date(clock[0].at).toISOString();
       const since = input.since ?? (clock[0].since ? new Date(Date.parse(String(clock[0].since)) - 120_000).toISOString() : null);
@@ -196,7 +196,7 @@ export const DISPATCH_STATE_DDL: readonly string[] = [
         work_id:=coalesce(body->>'workItemId',CASE WHEN TG_TABLE_NAME IN ('cp_work_items','cp_work_items_archive') THEN envelope->>'id' END,envelope->>'log_key');
         root_id:=coalesce(body #>> '{planRepair,rootWorkItemId}',work_id);
         SELECT array_agg(value->>'obligationId') INTO obligations FROM cp_occurrences_history
-          WHERE value->>'workItemId'=ANY(ARRAY[work_id,root_id]);
+          WHERE value #>> '{workItemId}'=ANY(ARRAY[work_id,root_id]);
       END IF;
       INSERT INTO cp_lineage_cache(id,stamp,value,dirty,generation)
         SELECT DISTINCT id,'','[]'::jsonb,true,1 FROM unnest(obligations) id WHERE id IS NOT NULL

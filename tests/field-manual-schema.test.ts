@@ -121,3 +121,9 @@ test("SQL manual slices exclude other places and source routes while preserving 
     assert.doesNotMatch(JSON.stringify(globalPlan.rows), /Seq Scan/);
   } finally { await db.close(); }
 });
+
+test("Census government note slices retain the exact place key and its state",()=>{
+  const parameters=fieldManualSliceParams({role:"SCOUT",ocdIds:["government:US-AZ:123456"]});
+  assert.deepEqual(parameters[4],["government:us-az:123456"]);
+  assert.equal(parameters[6],"az");
+});

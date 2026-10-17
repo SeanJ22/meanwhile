@@ -76,10 +76,8 @@ import { editDeriveDueRequests } from "../lib/doors/edit-derive.ts";
 import { meetingReadQuietMs } from "../lib/civic-data/meeting-lanes.ts";
 import { listDoors } from "../lib/doors/registry.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
-import { attestPromotedVersion } from "../lib/civic-data/read-model.ts";
-import { ATTESTED_PROMOTIONS_ENV, serializeAttestedPromotions } from "../lib/civic-data/attested-promotion.ts";
-import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
-import { readRegistryRuntimePrior, REGISTRY_RUNTIME_SCOPE } from "../lib/registry/runtime-data-plane.ts";
+import { readRegistryRuntimePrior } from "../lib/registry/runtime-data-plane.ts";
+import { REGISTRY_STATES, stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
 import {
   ROUTINE_CHILD_MAX_BUFFER_BYTES,
   ROUTINE_CHILD_TIMEOUT_MS,
@@ -173,7 +171,7 @@ import {
   assertRuntimeAuthority,
 } from "../lib/civic-data/runtime-authority.ts";
 import { readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
-import { restoreStateBuckets } from "../lib/civic-data/state-bucket-dispatch.ts";
+import { reconcileNationalStatePointers, retireNationalStatePointers } from "../lib/civic-data/state-pointer-retirement.ts";
 
 readFromHeldCopies();
 
@@ -189,7 +187,9 @@ const PUBLISH_NOW = process.argv.includes("--publish-now");
 const PASS_LAUNCH_DEADLINE_MS = PUBLISH_NOW ? Date.now() + PUBLISH_NOW_PASS_BUDGET_MS : Number.POSITIVE_INFINITY;
 if (PUBLISH_NOW && FORCE) throw new Error("Publish-now cannot force unrelated source work.");
 const ADMITTED_CODE_SHA = assertRuntimeAuthority({ capabilities: ["ROUTINE_SUPERVISOR"] }).sha;
-// Publish registry meeting doors before launching children so they all use the same door inventory.
+
+
+
 if (controlPlaneUrlFromEnv() === null) {
   console.warn("RCD_TASK routine-civic-data-runner: no door registry is configured, so this pass has no hand-wired meeting work");
 } else {
@@ -243,7 +243,9 @@ const RUNNING_CODE_SHA = TASK_SELECTION.ok
   ? ADMITTED_CODE_SHA
   : null;
 
-// Acquire the process lease before reading due clocks; the kernel releases it if the runner dies.
+
+
+
 step = "taking the host-local singleton";
 const ROUTINE_DATA_PROCESS_LEASE = TASK_SELECTION.ok ? await (async () => {
   try {
@@ -446,7 +448,7 @@ const BOX_FINDINGS_PER_PASS = 300;
 /** Resolve the actual Admin Send for hunt work. Publication of already-verified work needs no Send;
  * a paused runner or an unreadable control still admits nothing. */
 async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: SupervisorFailure[]): Promise<readonly RoutineSourceTask[]> {
-  // An explicit selection of a publication door (`--only=registry-runtime-bindings`) still reads its owed work.
+  // An explicit selection of a publication door (`--only=registry-runtime:AZ`) still reads its owed work.
   if (FORCE || (ONLY && !WORKER_PUBLICATION_TASK_IDS.some(id => ONLY.has(id)))) return [];
   const connection = controlPlaneUrlFromEnv();
   if (!connection) throw new Error("control-plane reporting connection is unavailable");
@@ -465,7 +467,7 @@ async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: Su
     const cursor = PUBLISH_NOW ? await readPassCursor(facts.query, PUBLISH_NOW_CURSOR) : null;
     const since = cursor === null ? null : new Date(Date.parse(cursor) - 60_000).toISOString();
     const pointers = new PostgresRoutineDataStore();
-    const shared = await readHeldPointerTimes(query, async (recordClass, scope) => (await pointers.readPromotionIdentity(recordClass, scope))?.promotedAt ?? null)
+    const shared = await readHeldPointerTimes(query, async (recordClass, scope) => (await pointers.readPromotionIdentity(recordClass, scope))?.promotedAt ?? null, REGISTRY_STATES)
       .catch((error: unknown) => { console.log(`RCD_HELD_INPUTS CANNOT_TELL — ${safeFailure(sanitizedErrorDiagnostic(error))}; held routes are read again hourly`); return null; });
     const items = await readWorkerPublicationItems(query, selected, since === null ? null
       : { at: since, sharedInputsMoved: shared === null || [shared.nationalAt, shared.registryAt, shared.routesAt].some(at => at !== null && at > since) });
@@ -619,17 +621,6 @@ let attempted = 0;
 let verifiedSourceSuccesses = 0;
 let verifiedSourceFailures = 0;
 const supervisorFailures: SupervisorFailure[] = [];
-if (!PUBLISH_NOW && ONLY === null) {
-  step = "restoring state ballot and registry publications";
-  try {
-    const sql = neon(process.env.DATABASE_URL!);
-    const restored = await restoreStateBuckets({ query: (text, params) => sql.query(text, [...params]), env: process.env });
-    console.log(`RCD_STATE_BUCKETS published=${restored.published} unchanged=${restored.unchanged} failed=${restored.failures.length}`);
-    for (const detail of restored.failures) supervisorFailures.push({ taskId: "state-bucket-restore", code: "STATE_BUCKET_RESTORE_FAILED", detail });
-  } catch (error) {
-    supervisorFailures.push({ taskId: "state-bucket-restore", code: "STATE_BUCKET_RESTORE_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
-  }
-}
 const crashedTasks: { readonly taskId: string; readonly detail: string }[] = [];
 const pendingRuns: PendingRun[] = [];
 const verifiedTaskReceipts: RoutineCivicDataTaskReceiptReference[] = [];
@@ -673,8 +664,10 @@ async function recordHuntSourceProgress(task: RoutineSourceTask, stage: HuntSour
     testedSha: RUNNING_CODE_SHA, huntSourceProgress: progress }, at);
 }
 
-// The minute sweep picks up independently published state pages while national backfills are still running.
-// Sweep once before admission and prevent overlapping copies.
+
+
+
+
 const periodicFederalTasks = STANDING_SOURCE_TASKS.filter(task => task.recordClass === "FEDERAL_MONEY" &&
   (!ONLY || ONLY.has(task.id) || (task.registeredContractId !== undefined && ONLY.has(task.registeredContractId))));
 const periodicSourceEdge = PUBLISH_NOW || periodicFederalTasks.length > 0;
@@ -733,18 +726,21 @@ if (!PUBLISH_NOW) {
   step = "carrying the rosters, office contacts and comment rules readers already see onto facts";
   try {
     const facts = readerFactDb();
-    const rosters = await cartonRosters(facts.query, id => store.readCandidate(id), REGISTRY_RUNTIME_SCOPE);
-    const comments = await cartonComments(facts.query, id => store.readCandidate(id));
-    const offices = await cartonOffices(facts.query, await readRegistryRuntimePrior(store, RUN_STARTED_AT));
     const connection = controlPlaneUrlFromEnv();
-    if ((rosters || comments || offices) && connection) {
+    if (connection) {
       const repos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
       const common = { facts, clocks: factClocks((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value ?? null), repos,
         vault: new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)), fetch: pacedProbeFetch({ pacing: repos.websitePacing }), now: RUN_STARTED_AT };
-      for (const [label, report] of [["rosters", rosters && await importCartonRosters({ ...rosters, ...common })],
-        ["comment rules", comments && await importCartonComments({ ...comments, ...common })],
-        ["office contacts", offices && await importCartonOffices({ ...offices, ...common })]] as const) {
-        if (report) console.log(`fact store ${label}: ${report.live} facts live, ${report.confirmed} confirmed, ${report.blanks} blanks, ${report.unreadable.length} pages unreadable`);
+      const report = (label: string, value: Awaited<ReturnType<typeof importCartonRosters>>) => {
+        console.log(`fact store ${label}: ${value.live} facts live, ${value.confirmed} confirmed, ${value.blanks} blanks, ${value.unreadable.length} pages unreadable`);
+      };
+      const comments = await cartonComments(facts.query, id => store.readCandidate(id));
+      if (comments) report("comment rules", await importCartonComments({ ...comments, ...common }));
+      for (const state of REGISTRY_STATES) {
+        const rosters = await cartonRosters(facts.query, id => store.readCandidate(id), stateRegistryRuntimeScope(state));
+        if (rosters) report(`${state} rosters`, await importCartonRosters({ ...rosters, ...common }));
+        const offices = await cartonOffices(facts.query, await readRegistryRuntimePrior(store, RUN_STARTED_AT, state), state);
+        if (offices) report(`${state} office contacts`, await importCartonOffices({ ...offices, ...common }));
       }
     }
   } catch (error) {
@@ -752,7 +748,9 @@ if (!PUBLISH_NOW) {
   }
 }
 
-// Freeze due scopes before launch so a large upstream cannot starve unrelated sources.
+
+
+
 const admissionNowMs = Date.now();
 let huntTasks: readonly RoutineSourceTask[] = [];
 try {
@@ -812,7 +810,9 @@ const clockReads = FORCE
       selectedTasks,
       (task) => store.clock(task.sourceId, task.recordClass, task.scope, task.parserVersion),
     );
-// Use publisher-stated ends for the sitting window; report unreadable ends before using the day bound.
+
+
+
 let statedEndsByTask: ReadonlyMap<string, ReadonlyMap<string, number>> = new Map();
 if (!FORCE && selectedTasks.some(task => task.recordClass === "MEETING")) {
   try {
@@ -1028,34 +1028,7 @@ const dueRequestLines = [...honouredDueRequests].map(([taskId, request]) => admi
   : `Owner due request ${request.id}: ${taskId} was due but deferred by the provider frontier; the next pass offers it again.`).concat(publicationInputLines);
 attempted = pendingRuns.length;
 
-// Share registry proof across children; a child rechecks if its pointer changes.
-const meetingPartitionRuns = pendingRuns.filter((pending) => pending.kind === "MEETING_PARTITION").length;
-let meetingChildAttestations: Readonly<Record<string, string>> = {};
-if (meetingPartitionRuns >= 2) {
-  step = "proving the registry once for this pass";
-  try {
-    const registry = await readRegistryRuntimeProjection({ store });
-    const attestation = registry.kind === "PROMOTED"
-      ? attestPromotedVersion("REGISTRY_RUNTIME_BINDING", REGISTRY_RUNTIME_SCOPE, store)
-      : null;
-    if (attestation) meetingChildAttestations = { [ATTESTED_PROMOTIONS_ENV]: serializeAttestedPromotions([attestation]) };
-    console.log(
-      `RCD_PASS registry ${attestation ? `proved once as ${attestation.versionId}` : `not attested (${registry.kind})`} ` +
-        `for ${meetingPartitionRuns} meeting partition child(ren)`,
-    );
-  } catch (error) {
-    console.log(`RCD_PASS registry not attested; each meeting child proves it — ${safeFailure(sanitizedErrorDiagnostic(error))}`);
-  }
-}
-
 const sourceConcurrency = Math.max(1, pendingRuns.length);
-console.log(
-  `RCD_PASS launching ${pendingRuns.length} isolated command(s) through a bounded pool; ` +
-    `concurrency=${sourceConcurrency}; ` +
-    `provider-frontier=${ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS} (meeting lanes ${SITTING_WINDOW_LANE_SLOTS_PER_PASS}); ` +
-    `per-child timeout=${ROUTINE_CHILD_TIMEOUT_MS}ms; per-stream output=${ROUTINE_CHILD_MAX_BUFFER_BYTES} bytes`,
-);
-/** One source child: its own narrowed authority, and the pass's registry attestation for a meeting read. */
 function sourceChildCommand(pending: PendingRun): BoundedChildCommand {
   return {
     id: pending.id,
@@ -1078,7 +1051,6 @@ function sourceChildCommand(pending: PendingRun): BoundedChildCommand {
         contract: pending.task.id,
         parentPid: process.pid,
       })),
-      ...(pending.kind === "MEETING_PARTITION" ? meetingChildAttestations : {}),
     },
     // Behind WTP_MEETING_LANES: a host that goes quiet pauses its own read early.
     ...(pending.task.childTimeoutMs === undefined ? {} : { timeoutMs: pending.task.childTimeoutMs }),
@@ -1494,11 +1466,29 @@ const readerRuns = pass.repair;
 // Source settlement publishes serving copies even when a readback child fails.
 step = "publishing changed reader edge copies";
 await publishNowEdgeChecks?.stop();
+let retirementOrigins: Awaited<ReturnType<typeof reconcileNationalStatePointers>> | null = null;
+if (!PUBLISH_NOW && ONLY === null) {
+  try {
+    const sql = neon(process.env.DATABASE_URL!);
+    retirementOrigins = await reconcileNationalStatePointers({ query: (text, params) => sql.query(text, [...params]), env: process.env });
+  } catch (error) {
+    supervisorFailures.push({ taskId: "state-pointer-retirement", code: "STATE_POINTER_RECONCILIATION_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
+  }
+}
 const finalReaderEdge = PUBLISH_NOW && publishNowEdgeChecks ? await publishNowEdgeChecks.run()
   : await publishSupervisorReaderEdge(store, new Date().toISOString(), ONLY === null ? null : selectedTasks);
 const readerEdge = PUBLISH_NOW && publishNowEdgeChecks ? (await publishNowEdgeChecks.stop())! : finalReaderEdge;
 const readerEdgeFailure = readerEdgeSupervisorFailure(finalReaderEdge);
 if (readerEdgeFailure && !(PUBLISH_NOW && publishNowEdgeChecks)) supervisorFailures.push(readerEdgeFailure);
+if (retirementOrigins !== null && !readerEdgeFailure) {
+  try {
+    const sql = neon(process.env.DATABASE_URL!);
+    const retired = await retireNationalStatePointers((text, params) => sql.query(text, [...params]), resolveReaderArtifactWriteStore(), retirementOrigins);
+    if (retired) console.log(`RCD_STATE_BUCKETS retired=${retired}`);
+  } catch (error) {
+    supervisorFailures.push({ taskId: "state-pointer-retirement", code: "STATE_POINTER_RETIREMENT_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
+  }
+}
 for (const run of readerRuns) {
   if (run.settlementErrorMessage === null) continue;
   const detail = safeFailure(run.settlementErrorMessage ?? "unknown Reader settlement failure");

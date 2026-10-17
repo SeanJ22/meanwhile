@@ -4,7 +4,25 @@ import test from "node:test";
 
 import type { EvidenceRecord } from "../lib/ask/evidence.ts";
 import { composeOwnWordsAnswer, ownWordsPassages, readsAsSpokenSentence } from "../lib/ask/own-words.ts";
-import { installCandidateCorpus, installOfficeholderStatements, installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+import { installOfficeholderStatements, installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+import type { CandidateCorpus } from "../lib/candidates/corpus.ts";
+import { syntheticCandidateCorpus } from "./helpers/promoted-fixtures.ts";
+import { installManualValue } from "./helpers/promoted-fixtures.ts";
+import { stateBallotContractId } from "../lib/civic-data/state-scopes.ts";
+import type { CivicDataReadResult } from "../lib/civic-data/read-model.ts";
+import { readStateAuthorityProjection } from "../lib/civic-data/state-reader.ts";
+
+function served<T>(read: CivicDataReadResult<T>, what: string): T {
+  if (read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP") throw new Error(`${what} fixture did not install: ${read.kind} ${"detail" in read ? read.detail : ""}`);
+  return read.value as T;
+}
+
+async function installCandidateCorpus(value: CandidateCorpus = syntheticCandidateCorpus(), state = "AZ"): Promise<CandidateCorpus> {
+  installManualValue(stateBallotContractId("candidate-corpus", state), value, `test:candidate-corpus:${state}`);
+  served((await readStateAuthorityProjection("candidate-publications", state)).result, "Candidate publications");
+  return value;
+}
+
 
 await installRegistryAuthority();
 await installCandidateCorpus();

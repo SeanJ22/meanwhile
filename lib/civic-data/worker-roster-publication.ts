@@ -1,3 +1,4 @@
+import { stateRegistryRuntimeContractId, stateFromRegistryRuntimeContractId } from "./state-scopes.ts";
 import { recordPublicationFlow } from "./publication-flow.ts";
 import { SECTION3_MINIMUMS } from "../control-plane/promotion/section3.ts";
 import { isQuotedExtraction, quotedSourceFindings } from "../control-plane/workers/quoted-proof.ts";
@@ -8,9 +9,7 @@ import type { ArtifactRecord, ControlPlaneRepositories } from "../control-plane/
 import type { WorkerEvidence, WorkerResultRecord } from "../control-plane/workers/types.ts";
 import type { RegistryRuntimeCarton, RegistryRuntimePrior } from "../registry/runtime-data-plane.ts";
 import type { WorkItem } from "../control-plane/work-item.ts";
-import { readRegistryRuntimePrior, registryRuntimeCandidate, registryBaseSourceReceipt } from "../registry/runtime-data-plane.ts";
-import { canonicalCivicDataJson } from "./changes.ts";
-import type { PromotionOutcome } from "./promotion.ts";
+import { readRegistryRuntimePrior, registryRuntimeCandidate, acceptedRegistryPrior } from "../registry/runtime-data-plane.ts";
 import type { RoutineDataStore } from "./store.ts";
 import { processRegisteredManualCandidate } from "./promotion.ts";
 import { recordRoutineReaderProjectionReadback } from "./reader-verification.ts";
@@ -59,12 +58,6 @@ export interface RosterReading {
 const requireThat = (value: unknown, reason: string): void => { if (!value) throw new Error(reason); };
 const digest = (text: string) => createHash("sha256").update(text).digest("hex");
 
-export function acceptedRegistryPrior(published: PromotionOutcome): RegistryRuntimePrior {
-  if (!published.promoted) throw new Error("REGISTRY_PUBLICATION_NOT_ACCEPTED");
-  const candidate = published.candidate.candidate;
-  return { versionId: published.promoted.versionId, payload: candidate.readModel as RegistryRuntimeCarton,
-    sourceReceipt: registryBaseSourceReceipt(candidate), readModelSha256: digest(canonicalCivicDataJson(candidate.readModel)) };
-}
 const words = (text: string) => text.replace(/<[^>]*>/g, " ").replace(/&(?:amp|nbsp);/g, " ").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 const titleOf = (html: string) => words([/<title\b[^>]*>([\s\S]*?)<\/title>/i.exec(html)?.[1] ?? "", ...[...html.matchAll(/<h1\b[^>]*>([\s\S]*?)<\/h1>/gi)].map(m => m[1])].join(" "));
 const GOVERNING = /\b(council|mayor|select ?board|selectmen|board of (supervisors|commissioners|aldermen|selectmen)|township committee|commission(ers)?)\b/;
@@ -193,14 +186,14 @@ export async function publishOwedRosterFacts(input: {
   const { readHeld } = captureReaders;
   const { results: records, readCapture } = await jobWorkerResults(input.repos, input.workItemIds, captureReaders.readCapture);
   const manual = await readValidatorManual(input.repos);
-  const prior = await readRegistryRuntimePrior(input.store, input.now);
   const report: { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[] = [];
   const heldByBody = new Map<string, Promise<RosterReading | null>>();
   for (const id of [...new Set(input.workItemIds)]) {
     const item = (await input.repos.workItems.mustRead(id)).value;
     const plan = item.autonomousPlan;
-    if (plan?.publication?.contractId !== "registry-runtime-bindings" || plan.contract.schemaVersion !== 2 || plan.contract.recordClass !== "OFFICIAL_ROSTER") continue;
+    if (!plan?.publication || !stateFromRegistryRuntimeContractId(plan.publication.contractId) || plan.contract.schemaVersion !== 2 || plan.contract.recordClass !== "OFFICIAL_ROSTER") continue;
     const bodyId = plan.publication.bodyId;
+    const prior = await readRegistryRuntimePrior(input.store, input.now, plan.contract.jurisdiction.state);
     const body = prior?.payload.registry.bodies.find(row => row.id === bodyId);
     let outcome: NonNullable<WorkItem["publicationOutcome"]>;
     let reading: RosterReading | null = null;
@@ -268,7 +261,7 @@ export async function publishWorkerDirectoryResults(input: {
   const { readHeld } = captureReaders;
   const { results: records, readCapture } = await jobWorkerResults(input.repos, input.workItemIds, captureReaders.readCapture);
   const report: { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[] = [];
-  let registry: RegistryRuntimePrior | null | undefined;
+  let registry: RegistryRuntimePrior | null | undefined, registryState: string | undefined;
   const heldDirectories = new Map<string, Promise<DirectoryReading | null>>();
   const publishedByBody = new Map<string, NonNullable<WorkItem["publicationOutcome"]>>();
   const manual = await readValidatorManual(input.repos);
@@ -276,13 +269,15 @@ export async function publishWorkerDirectoryResults(input: {
   for (const id of [...new Set(input.workItemIds)]) {
     const item = (await input.repos.workItems.mustRead(id)).value;
     const plan = item.autonomousPlan;
-    if (plan?.publication?.contractId !== "registry-runtime-bindings" || plan.contract.schemaVersion !== 2 || plan.contract.recordClass !== "OFFICIAL_BOARD_DIRECTORY") continue;
+    if (!plan?.publication || !stateFromRegistryRuntimeContractId(plan.publication.contractId) || plan.contract.schemaVersion !== 2 || plan.contract.recordClass !== "OFFICIAL_BOARD_DIRECTORY") continue;
     const bodyId = plan.publication.bodyId;
     let outcome: NonNullable<WorkItem["publicationOutcome"]>;
     let candidateId: string | null = null, versionId: string | null = null, readingId: string | null = null, parserId: string | null = null;
     let captures: WorkerPublicationCapture[] = [], heldDirectory: DirectoryReading | null = null, wentLive = 0;
     try {
-      if (registry === undefined) registry = await readRegistryRuntimePrior(input.store, input.now);
+      const state = plan.contract.jurisdiction.state;
+      if (registryState !== state) { registry = undefined; registryState = state; }
+      if (registry === undefined) registry = await readRegistryRuntimePrior(input.store, input.now, state);
       const prior = registry;
       if (!prior) throw new Error("ROSTER_PRIOR_READER_AUTHORITY_MISSING");
       const parser = latestParserResult(records, id);
@@ -316,20 +311,22 @@ export async function publishWorkerDirectoryResults(input: {
       requireThat(prepared.payload.registry.bodies.every(body => canonicalJson(body) ===
         canonicalJson((candidate.readModel as RegistryRuntimeCarton).registry.bodies.find(row => row.id === body.id))), "WORKER_PUBLICATION_DIRECTORY_READER_FACTS_HELD");
       candidateId = candidate.id;
-      const published = await processRegisteredManualCandidate(input.store, "registry-runtime-bindings", candidate, input.now, prior.versionId);
+      const published = await processRegisteredManualCandidate(input.store, stateRegistryRuntimeContractId(state), candidate, input.now, prior.versionId);
       if (published.candidate.receipt?.decision === "GOOD") await recordPublicationFlow(input.repos, published.candidate.candidate.id,
         { workerResultId: readingId, stage: "CHECKED", records: changes.recordChanges.length,
           changedRecords: changes.records.added + changes.records.changed, versionId: null }, input.now);
       if (!published.promoted) { if (published.candidate.failureCode === "PROMOTION_BASE_CHANGED") registry = undefined; throw new Error(`${published.candidate.failureCode === "PROMOTION_BASE_CHANGED" ? "PROMOTION_BASE_CHANGED" : "DIRECTORY_READER_GATE_HELD"}:${published.candidate.failureDetail ?? published.candidate.state}`); }
       versionId = published.promoted.versionId;
       registry = undefined;
-      const readback = published.readerReadback ?? await recordRoutineReaderProjectionReadback(input.store,
-        requiredManualProductionContract("registry-runtime-bindings"), published.promoted, input.now);
-      if (readback?.status !== "PASS") throw new Error(`DIRECTORY_READER_READBACK_FAILED:${readback?.detail ?? "missing typed reader receipt"}`);
+      if (!published.confirmed) {
+        const readback = published.readerReadback ?? await recordRoutineReaderProjectionReadback(input.store,
+          requiredManualProductionContract(stateRegistryRuntimeContractId(state)), published.promoted, input.now);
+        if (readback?.status !== "PASS") throw new Error(`DIRECTORY_READER_READBACK_FAILED:${readback?.detail ?? "missing typed reader receipt"}`);
+      }
       await recordPublicationFlow(input.repos, published.candidate.candidate.id,
         { workerResultId: readingId, stage: "LIVE", records: changes.recordChanges.length,
           changedRecords: published.confirmed ? 0 : changes.records.added + changes.records.changed, versionId }, input.now);
-      registry = acceptedRegistryPrior(published);
+      registry = await acceptedRegistryPrior(input.store, published);
       for (const contact of directoryPackage.contacts) {
         await publishBodyOffice(input.facts, prepared.payload.registry.bodies.find(row => row.id === contact.bodyId)!, contact, readingId, clocks, new Date(input.now));
       }

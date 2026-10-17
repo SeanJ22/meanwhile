@@ -40,11 +40,7 @@ test("BAL-25: the container widens on desktop and the reading measure does not",
     "and the desktop is given a wider envelope to compose in",
   );
 
-  /*
-   * The point of the rule: prose is capped back to the phone's measure at the
-   * same breakpoint the container widens at. Without these the change would be
-   * "widen the paragraphs", which is the thing it must not be.
-   */
+
   const capped = [...code(PAGE).matchAll(/lg:max-w-2xl/g)];
   assert.ok(
     capped.length >= 8,
@@ -68,11 +64,13 @@ test("BAL-25: the loading skeleton hands over without moving the heading", () =>
   assert.match(code(LOADING), /Back to the map/);
 });
 
-test("BAL-43: offices read top to bottom; both candidate paths share the desktop columns", () => {
+test("BAL-43: offices read top to bottom; current candidates and earlier filings share desktop columns", () => {
   const src = code(PAGE);
   assert.equal(src.split('className="ballot-office-list"').length - 1, 1);
-  assert.equal(src.split('className="ballot-candidate-grid mt-3.5"').length - 1, 2,
-    "certified nominees and filed candidacies use the same layout");
+  assert.equal(src.split('className="ballot-candidate-grid mt-3.5"').length - 1, 3,
+    "nominees, current candidacies and earlier filings use the same card layout");
+  assert.match(src, /data-earlier-filings=\{contest.id\}>[\s\S]*?className="ballot-candidate-grid mt-3.5"/,
+    "earlier filings retain the same responsive grid inside their disclosure");
   assert.match(src, /className="ballot-office-list">\s*\{candidacyContests\.map\(/,
     "office order remains the existing contest order");
   assert.match(CSS, /\.ballot-office-list \{[^}]*grid-template-columns:\s*minmax\(0, 1fr\)[^}]*gap:\s*var\(--space-3\)/);

@@ -24,7 +24,6 @@ import {
   MemoryRoutineDataStore,
   PostgresRoutineDataStore,
   PROMOTED_POINTER_COLUMNS,
-  promotedPointerIdentityRead,
   readerEvidenceCandidateRead,
   readerEvidenceRowToRecord,
   publishedCandidateMetadata,
@@ -693,8 +692,20 @@ function selectList(query: { toSQL(): { sql: string } }): string {
   return text.slice(0, text.indexOf(" from "));
 }
 
-test("Reader evidence names a pointer and a candidate by identity; neither dataset crosses the wire for it", () => {
-  const pointer = selectList(promotedPointerIdentityRead(drizzle.mock({ schema }), "STATE_ROLL_CALL", ["US-NJ"]));
+test("Reader evidence names a pointer and a candidate by identity; neither dataset crosses the wire for it", async () => {
+  let pointer = "";
+  await withCannedNeon(() => ({ columns: [], rows: [] }), async (store, sent) => {
+    assert.deepEqual(await store.readPromotionIdentities("FEC_FUNDING", ["federal-supported"]), []);
+    assert.deepEqual(await store.readPromotionIdentities("STATE_ROLL_CALL", ["US-NJ"]), []);
+    assert.equal(sent.length, 2);
+    const identity = sent[0].query;
+    assert.match(identity, /select confirmation\.detail from civic_data_candidate_events as confirmation/);
+    assert.match(identity, /confirmation\.candidate_id = "civic_data_promotions"\."current_version_id"/);
+    assert.match(identity, /left\(confirmation\.detail, \$\d+\) = \$\d+/, "the prefix is compared exactly, never with LIKE");
+    assert.match(identity, /order by confirmation\.sequence desc\s+limit 1/);
+    assert.doesNotMatch(identity, /"payload"|"validation_receipt"/, "an identity read carries no dataset");
+    pointer = sent[1].query.slice(0, sent[1].query.indexOf(" from "));
+  });
   assert.doesNotMatch(pointer, /"payload"|"validation_receipt"/);
   for (const column of ["key", "source_id", "record_class", "scope", "current_version_id", "last_known_good_version_id", "promoted_at"]) {
     assert.match(pointer, new RegExp(`"${column}"`), `the identity read must still carry ${column}`);

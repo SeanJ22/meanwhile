@@ -2,7 +2,7 @@ import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
 import { immutableStateValue } from "../lib/civic-data/state-publication.ts";
 import { stateBallotContractId, stateBallotScope } from "../lib/civic-data/state-scopes.ts";
 import { readPromotedCivicData, promotedEdgeEntryOf } from "../lib/civic-data/read-model.ts";
-import { genericSourcesForDivisions } from "../lib/ballot/reader-sources.ts";
+import { readerBallotSourcesForDivisions } from "../lib/ballot/reader-sources.ts";
 import { ballotQuestionShape, composeOfficeField } from "../lib/ask/ballot-summary.ts";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
@@ -20,7 +20,7 @@ import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { ballotElectionKey, type GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
 import { test as nodeTest } from "node:test";
 import { workerReaderClassMatches } from "../lib/civic-data/worker-reader-contracts.ts";
-import { contestsForDivisions } from "../lib/sources/ballot-nj-morris/index.ts";
+import { contestsForDivisions } from "../lib/ballot/contests.ts";
 import { summaryForContest } from "../lib/ballot/measure-summary.ts";
 import { DEFAULT_SOURCE_POLICY } from "../lib/control-plane/promotion/source-kinds.ts";
 
@@ -152,7 +152,7 @@ test("a state publication retains usable ballot sources and office answers for i
   const read = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", "TX"), { store, now, bypassCache: true });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") throw new Error("State ballot was not published");
-  const sources = genericSourcesForDivisions(read.value, ["ocd-division/country:us/state:tx/county:alder"]);
+  const sources = await readerBallotSourcesForDivisions(["ocd-division/country:us/state:tx/county:alder"], { store, now });
   assert.equal(sources.length, 1);
   const ballot = sources[0].source.normalize(await sources[0].source.fetch());
   const shape = ballotQuestionShape("Who is running for School Board?", ballot.contests);
@@ -164,7 +164,7 @@ test("a state publication retains usable ballot sources and office answers for i
     assert.ok(answer?.answer.includes("Bob Baker"));
     assert.ok(!answer?.answer.includes("Casey Clark"));
   }
-  assert.deepEqual(genericSourcesForDivisions(read.value, ["ocd-division/country:us/state:tx/county:neighbor"]), []);
+  assert.deepEqual(await readerBallotSourcesForDivisions(["ocd-division/country:us/state:tx/county:neighbor"], { store, now }), []);
   assert.equal(await store.readPromotion("BALLOT_CANDIDACY", "US:state-election-ballots"), null, "state publication never changes the retained national pointer");
 });
 

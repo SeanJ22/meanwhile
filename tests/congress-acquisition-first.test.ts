@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {normalizeCongressDirectory} from "../lib/officials/congress-normalize.ts";
-import {federalDirectoryCandidate,federalDirectoryForState} from "../lib/officials/federal-directory-data-plane.ts";
+import {federalDirectoryCandidate,federalDirectoryContractId,federalDirectoryForState} from "../lib/officials/federal-directory-data-plane.ts";
 import {MemoryRoutineDataStore} from "../lib/civic-data/store.ts";
 import {MemoryEvidenceStore} from "../lib/control-plane/evidence/store.ts";
 import {processRegisteredManualCandidate} from "../lib/civic-data/promotion.ts";
@@ -41,7 +41,7 @@ test("core-only source promotes each place through its own pointer without optio
   const store=new MemoryRoutineDataStore(),acquisitions=[{requestedUrl:url,finalUrl:url,httpStatus:200,body:JSON.stringify(raw["legislators-current"])}];
   for(const state of ["DC","PR"]){
     const candidate=await federalDirectoryCandidate({state,vault:new MemoryEvidenceStore(),projection:federalDirectoryForState(national,state),retrievedAt:NOW,acquisitions});
-    const outcome=await processRegisteredManualCandidate(store,`congress-bulk-roster:${state}` as const,candidate,NOW);
+    const outcome=await processRegisteredManualCandidate(store,federalDirectoryContractId(state),candidate,NOW);
     assert.equal(outcome.candidate.state,"PROMOTED",outcome.candidate.failureDetail ?? "");
   }
   const read=await readStateFederalDirectory("PR",{store,now:NOW,bypassCache:true});

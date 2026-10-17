@@ -7,7 +7,7 @@ import { projectRoutineDataObservability } from "../lib/civic-data/observability
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { ManualSourceSetReceipt } from "../lib/civic-data/types.ts";
-import { candidateEnrichmentProvider, candidateEnrichmentUniversesFromHoldings, candidateUniversesFromPromoted, preloadCandidateEnrichmentAuthorities, type CandidateEnrichmentAuthorities } from "../lib/control-plane/scheduler/providers/candidate-enrichment.ts";
+import { candidateEnrichmentProvider, candidateEnrichmentUniversesFromHoldings, readCandidateEnrichmentAuthorities, type CandidateEnrichmentAuthorityHoldings } from "../lib/control-plane/scheduler/providers/candidate-enrichment.ts";
 import { readOfficeholderStatementsProjection, refreshOfficeholderStatementsFromPromoted } from "../lib/corpus/data-plane.ts";
 import type { SourceSnapshot, StatementCorpus } from "../lib/corpus/types.ts";
 
@@ -75,6 +75,7 @@ function ballotFixture(state: string) {
   const provenance = { sourceUrl: "https://elections.example.gov/candidates", sourceOrg: "Election authority", collectedAt: T0, verifiedAt: T0 };
   const contestId = `${state}-fixture-contest`;
   return {
+    election: { id: "fixture-election", state: state.toUpperCase(), date: "2026-11-03", name: "General election" },
     contests: [{ id: contestId, electionId: "fixture-election", ocdId: `ocd-division/country:us/state:${state}`, divisionVintage: "fixture", title: "State Senate", type: "CANDIDACY" as const, voteFor: null, termYears: null, scopeNote: null, provenance }],
     candidacies: [{ id: `${state}-fixture-candidate`, contestId, familyName: "Example", givenName: "Avery", partyLabel: null, slogan: null, incumbent: null, websiteUrl: null, provenance }],
     measures: [],
@@ -236,19 +237,21 @@ test("officeholder statement ownership is manual and visible in the existing Adm
 });
 
 test("standing candidate enrichment derives all three state denominators from promoted projections", async () => {
-  await preloadCandidateEnrichmentAuthorities({ store: new MemoryRoutineDataStore(), bypassCache: true, now: T0 });
-  const unavailable = candidateEnrichmentProvider().enumerate({ root: ROOT, nowIso: T0 });
+  const holdings = await readCandidateEnrichmentAuthorities("AZ", { store: new MemoryRoutineDataStore(), bypassCache: true, now: T0 });
+  const unavailable = candidateEnrichmentProvider({ holdings }).enumerate({ root: ROOT, nowIso: T0 });
   assert.equal(unavailable.obligations.length, 0);
   assert.match(unavailable.readFailure ?? "", /canonical projection is NOT_RECORDED/,
     "an answered empty canonical store must be explicit and must not reopen tracked hunt or bootstrap files");
   const authorities = {
-    az: { ballot: ballotFixture("az"), candidateFilings: null },
-    nh: { ballot: ballotFixture("nh") },
-    nj: { ballot: ballotFixture("nj") },
+    general: { kind: "ballot-contests", ballots: Object.fromEntries(["az", "nh", "nj"].map(state => {
+      const ballot = ballotFixture(state);
+      return [`${state.toUpperCase()}:${ballot.election.id}`, ballot];
+    })) },
+    failures: [],
     profiles: { cards: { curatedAt: T0, note: "Held empty", cards: {}, hunts: [] }, links: { curatedAt: T0, note: "Held empty", links: {}, hunts: [] } },
     corpus: { formatVersion: 1 as const, fetchedAt: T0, attempted: 0, documents: [], failures: [] },
-  } as unknown as CandidateEnrichmentAuthorities;
-  const universes = candidateUniversesFromPromoted(authorities, T0);
+  } as unknown as CandidateEnrichmentAuthorityHoldings;
+  const { universes } = candidateEnrichmentUniversesFromHoldings(authorities, T0);
   for (const state of ["az", "nh", "nj"] as const) {
     assert.ok(universes[state].candidacies.length > 0, state);
     assert.ok(universes[state].derivedFrom.length > 0, state);
@@ -257,8 +260,8 @@ test("standing candidate enrichment derives all three state denominators from pr
 
   const withoutAz = candidateEnrichmentUniversesFromHoldings({
     ...authorities,
-    az: null,
-    failures: ["Arizona ballot canonical projection is STORE_UNREACHABLE."],
+    general: { ...authorities.general!, ballots: Object.fromEntries(Object.entries(authorities.general!.ballots).filter(([key]) => !key.startsWith("AZ:"))) },
+    failures: ["Arizona ballot has no held contests."],
   }, T0);
   assert.equal(withoutAz.universes.az, undefined);
   assert.ok(withoutAz.universes.nh!.candidacies.length > 0, "NH survives planted AZ authority failure");
@@ -266,9 +269,9 @@ test("standing candidate enrichment derives all three state denominators from pr
   assert.match(withoutAz.failures.join("; "), /Arizona ballot/);
 });
 
-test("general ballots add candidate inventory outside the legacy states and never infer an unknown election cycle",()=>{
+test("national ballots derive candidate inventory in every state and never infer an unknown election cycle",()=>{
   const provenance={sourceUrl:"https://elections.example.gov/candidates",sourceOrg:"Election authority",collectedAt:T0,verifiedAt:T0};
-  const common={az:null,nh:null,nj:null,profiles:{cards:{curatedAt:T0,note:"Held empty",cards:{},hunts:[]},links:{curatedAt:T0,note:"Held empty",links:{},hunts:[]}},corpus:{formatVersion:1 as const,fetchedAt:T0,attempted:0,documents:[],failures:[]},failures:[]};
+  const common={profiles:{cards:{curatedAt:T0,note:"Held empty",cards:{},hunts:[]},links:{curatedAt:T0,note:"Held empty",links:{},hunts:[]}},corpus:{formatVersion:1 as const,fetchedAt:T0,attempted:0,documents:[],failures:[]},failures:[]};
   const division="ocd-division/country:us/state:oh/county:alder";
   const ballot={election:{id:"fixture-election",state:"OH",name:"General election",date:"2026-11-03"},contests:[{id:"fixture-contest",electionId:"fixture-election",ocdId:division,divisionVintage:"fixture",title:"County Council",type:"CANDIDACY" as const,voteFor:null,termYears:null,scopeNote:null,provenance}],candidacies:[{id:"fixture-candidate",contestId:"fixture-contest",familyName:"Example",givenName:"Avery",partyLabel:null,slogan:null,incumbent:null,websiteUrl:null,provenance}],measures:[],absences:[]};
   const general={kind:"ballot-contests" as const,ballots:{"OH:fixture-election":ballot}};

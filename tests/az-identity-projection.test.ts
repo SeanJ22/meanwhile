@@ -3,15 +3,71 @@ import test from "node:test";
 
 import { stateMoneyForCard } from "../lib/funding/nominee-money.ts";
 import { isRenderable } from "../lib/funding/state-money.ts";
-import { installAzBallot, installStateMoney, syntheticAzBallot } from "./helpers/promoted-fixtures.ts";
+import { installStateMoney } from "./helpers/promoted-fixtures.ts";
+import type { BallotSet } from "../lib/ballot/types.ts";
+import type { GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
+import type { Contest } from "../lib/ballot/types.ts";
+import type { LineupOutcome } from "../lib/identity/types.ts";
+import { readFileSync } from "node:fs";
+import { requireBallotState } from "../lib/civic-data/state-scopes.ts";
+import { currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 
-/*
- * The held state-money fixture (tests/fixtures/state-money-2026.json) carries one FILED Attorney General
- * record and one OURS-gap Mine Inspector record. The ballot projection is synthetic: those two contests
- * with their certified-lineup cards bridged to the fixture's candidacies, and a synthetic contest whose
- * two nominees the bridge could not resolve.
- */
-await installAzBallot(syntheticAzBallot([
+import { stateBallotScope } from "../lib/civic-data/state-scopes.ts";
+import { ballotElectionKey } from "../lib/ballot/generic-projection.ts";
+import { installManualValue } from "./helpers/promoted-fixtures.ts";
+import { stateBallotContractId } from "../lib/civic-data/state-scopes.ts";
+import type { CivicDataReadResult } from "../lib/civic-data/read-model.ts";
+import { readGenericBallotProjection } from "../lib/ballot/generic-projection.ts";
+
+function served<T>(read: CivicDataReadResult<T>, what: string): T {
+  if (read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP") throw new Error(`${what} fixture did not install: ${read.kind} ${"detail" in read ? read.detail : ""}`);
+  return read.value as T;
+}
+
+
+
+interface SyntheticLineupNominee {
+  readonly name: string;
+  readonly partyLabel: string;
+  readonly outcome: LineupOutcome;
+  readonly candidacyId?: string;
+  readonly filingParty?: string;
+}
+
+interface SyntheticContest {
+  readonly id: string;
+  readonly title: string;
+  readonly ocdId?: string;
+  readonly type?: Contest["type"];
+  readonly candidacies?: readonly { readonly id: string; readonly givenName: string; readonly familyName: string; readonly partyLabel?: string | null }[];
+  readonly lineup?: readonly SyntheticLineupNominee[];
+}
+
+function syntheticAzBallot(contests?: readonly SyntheticContest[]): BallotSet {
+  const fixtures = JSON.parse(readFileSync(new URL("./fixtures/synthetic-az-ballots.json", import.meta.url), "utf8")) as Record<string, BallotSet>;
+  const ballot = fixtures[JSON.stringify(contests ?? null)];
+  if (!ballot) throw new Error("The synthetic Arizona ballot input has no recorded fixture");
+  return ballot;
+}
+
+async function installBallots(...ballots: BallotSet[]): Promise<GenericBallotProjection> {
+  const installed: GenericBallotProjection = { kind: "ballot-contests", ballots: {} };
+  for (const ballot of ballots.length ? ballots : [syntheticAzBallot()]) {
+    const state = requireBallotState(ballot.election.state);
+    const previous = currentReaderAuthorityEdge()?.promoted?.get(`BALLOT_CANDIDACY:${stateBallotScope("ballot-contests", state)}`);
+    const current = previous?.kind === "PROMOTED" ? previous.projection.payload as GenericBallotProjection : null;
+    const value: GenericBallotProjection = { kind: "ballot-contests", ballots: {
+      ...(current?.ballots ?? {}), [ballotElectionKey(ballot)]: ballot,
+    } };
+    installManualValue(stateBallotContractId("ballot-contests", state), value, `test:ballot-contests:${state}`);
+    served(await readGenericBallotProjection(state), `${state} ballot`);
+    Object.assign(installed.ballots, value.ballots);
+  }
+  return installed;
+}
+
+
+await installBallots(syntheticAzBallot([
   {
     id: "ballot-az-pima:attorney-general",
     title: "Attorney General",

@@ -113,8 +113,8 @@ export interface ReaderManifest {
 
 export const STATE_AUTHORITY_FAMILIES = ["registry-runtime", "ballot-contests", "candidate-profiles", "candidate-publications", "voting-sites", "candidate-campaign-sites-derived"] as const;
 export type StateAuthorityFamily = typeof STATE_AUTHORITY_FAMILIES[number];
-export type GlobalAuthorityFamily = AuthorityFamily;
-export type GlobalPromotedAuthorityFamily = Exclude<PromotedAuthorityFamily, "candidate-campaign-sites-derived">;
+export type GlobalAuthorityFamily = Exclude<AuthorityFamily, StateAuthorityFamily>;
+export type GlobalPromotedAuthorityFamily = PromotedAuthorityFamily;
 export function isStateAuthorityFamily(family: string): family is StateAuthorityFamily {
   return (STATE_AUTHORITY_FAMILIES as readonly string[]).includes(family);
 }
@@ -123,14 +123,7 @@ export function isStateAuthorityFamily(family: string): family is StateAuthority
 export type PromotedAuthorityFamily =
   | "other-reader-data"
   | "state-votes"
-  | "candidate-campaign-sites-derived"
-  | "ballot-contests"
-  | "ballot-az"
-  | "ballot-nh"
-  | "candidate-profiles"
-  | "candidate-publications"
   | "ballot-navigation"
-  | "voting-sites"
   | "official-filings"
   | "member-offices"
   | "nh-members"
@@ -148,14 +141,7 @@ export type PromotedAuthorityFamily =
 export const PROMOTED_AUTHORITY_FAMILIES: readonly PromotedAuthorityFamily[] = [
   "other-reader-data",
   "state-votes",
-  "candidate-campaign-sites-derived",
-  "ballot-contests",
-  "ballot-az",
-  "ballot-nh",
-  "candidate-profiles",
-  "candidate-publications",
   "ballot-navigation",
-  "voting-sites",
   "official-filings",
   "member-offices",
   "nh-members",
@@ -183,17 +169,16 @@ export function isPromotedAuthorityFamily(family: AuthorityFamily): family is Pr
 
 export type AuthorityFamily =
   | "census-districts"
-  | "registry-runtime"
   | "federal-directory"
   | "campaign-sites"
   | "state-legislators"
   | "meeting-outcomes"
   | "everyday-routing"
-  | PromotedAuthorityFamily;
+  | PromotedAuthorityFamily
+  | StateAuthorityFamily;
 
-export const AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
+export const GLOBAL_AUTHORITY_FAMILIES: readonly GlobalAuthorityFamily[] = [
   "census-districts",
-  "registry-runtime",
   "federal-directory",
   "campaign-sites",
   "state-legislators",
@@ -201,6 +186,8 @@ export const AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [
   "everyday-routing",
   ...PROMOTED_AUTHORITY_FAMILIES,
 ];
+
+export const AUTHORITY_FAMILIES: readonly AuthorityFamily[] = [...GLOBAL_AUTHORITY_FAMILIES, ...STATE_AUTHORITY_FAMILIES];
 
 export interface AuthorityArtifactRef {
   readonly layout?: "records";

@@ -1,6 +1,6 @@
 import { freemem, platform, tmpdir, totalmem } from "node:os";
 import { existsSync, openSync, closeSync, readFileSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
-import { readFile, readdir } from "node:fs/promises";
+import { readdir } from "node:fs/promises";
 import { execFile } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import { join } from "node:path";
@@ -34,10 +34,10 @@ const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   "assemble-ballot-package.mts": STATE_PUBLICATION_PEAK_MIB,
   "fetch-voting-sites.mts": STATE_PUBLICATION_PEAK_MIB,
   "derive-candidate-campaign-sites.mts": STATE_PUBLICATION_PEAK_MIB,
-  "restore-state-buckets.mts": STATE_PUBLICATION_PEAK_MIB,
+  "promote-registry-runtime.mts": STATE_PUBLICATION_PEAK_MIB,
   "publish-state-authority.mts": STATE_PUBLICATION_PEAK_MIB,
+  "retire-state-authorities.mts": STATE_PUBLICATION_PEAK_MIB,
 };
-export const REGISTRY_ROSTER_PUBLICATION_PEAK_MIB = 4012;
 export const WORKER_MEMORY_HEADROOM_MIB = 768;
 
 export function availableWorkerMemoryBytes(): number {
@@ -58,13 +58,14 @@ async function hostProcesses(): Promise<readonly WorkerProcessMemory[]> {
   const rows: WorkerProcessMemory[] = [];
   try {
     if (platform() === "linux") {
-      await Promise.all((await readdir("/proc")).filter(name => /^\d+$/.test(name)).map(async name => {
+      for (const name of (await readdir("/proc")).filter(name => /^\d+$/.test(name))) {
         try {
-          const status = await readFile(`/proc/${name}/status`, "utf8");
+          // Async reads reserve oversized buffers for these zero-length proc files.
+          const status = readFileSync(`/proc/${name}/status`, "utf8");
           rows.push({ pid: Number(name), parentPid: Number(/^PPid:\s+(\d+)/m.exec(status)?.[1] ?? 0),
             rss: Number(/^VmRSS:\s+(\d+)/m.exec(status)?.[1] ?? 0) * 1024 });
         } catch { /* A process can exit while the host is sampled. */ }
-      }));
+      }
     } else if (platform() === "win32") {
       const source = await new Promise<string>((resolve, reject) => execFile("powershell.exe", ["-NoProfile", "-Command",
         "Get-CimInstance Win32_Process | Select-Object ProcessId,ParentProcessId,WorkingSetSize | ConvertTo-Json -Compress"],
@@ -114,9 +115,9 @@ async function processTreePeakBytes(root: number): Promise<number | null> {
   const pending = [root];
   for (let index = 0; index < pending.length; index++) {
     const pid = pending[index]!;
-    try { total += Number(/^VmHWM:\s+(\d+)/m.exec(await readFile(`/proc/${pid}/status`, "utf8"))?.[1] ?? 0) * 1024; }
+    try { total += Number(/^VmHWM:\s+(\d+)/m.exec(readFileSync(`/proc/${pid}/status`, "utf8"))?.[1] ?? 0) * 1024; }
     catch { if (pid === root) return null; continue; }
-    try { pending.push(...(await readFile(`/proc/${pid}/task/${pid}/children`, "utf8")).split(/\s+/).filter(Boolean).map(Number)); }
+    try { pending.push(...readFileSync(`/proc/${pid}/task/${pid}/children`, "utf8").split(/\s+/).filter(Boolean).map(Number)); }
     catch { /* A descendant can exit between reads. */ }
   }
   return total;
@@ -187,22 +188,18 @@ export interface WorkerProcessSlots {
   acquire(entry?: string, deadlineMs?: number): Promise<WorkerMemoryRelease>;
 }
 
-const rosterPublication = (entry: string): boolean => entry === "registry-runtime-bindings" ||
-  entry.startsWith("registry-runtime-bindings/") || entry.startsWith("worker-publication:registry-runtime-bindings:");
-
 function statePublicationPeakBytes(entry: string): number {
   const script = entry.split(/[\\/]/).at(-1)!;
   const family = /^(?:worker-publication:|candidate-findings:)?(ballot-contests|candidate-profiles|candidate-corpus|voting-sites|candidate-campaign-sites-derived|registry-runtime):[A-Z]{2}(?=[:/]|$)/.exec(entry)?.[1];
   if (family) return STATE_PUBLICATION_PEAK_MIB * MIB;
-  return ["assemble-ballot-package.mts", "fetch-voting-sites.mts", "derive-candidate-campaign-sites.mts", "restore-state-buckets.mts", "publish-state-authority.mts"].includes(script) ? ROUTINE_ENTRY_PEAK_MIB[script]! * MIB : 0;
+  return ["assemble-ballot-package.mts", "fetch-voting-sites.mts", "derive-candidate-campaign-sites.mts", "promote-registry-runtime.mts", "publish-state-authority.mts", "retire-state-authorities.mts"].includes(script) ? ROUTINE_ENTRY_PEAK_MIB[script]! * MIB : 0;
 }
 
 export function routineProcessSlots(memory: WorkerMemoryLimit = {}): WorkerProcessSlots {
   return workerProcessSlots(() => Number.MAX_SAFE_INTEGER, { ...memory,
     // Recent small-state runs cannot lower the full-state publication reservation.
     minimumPeakBytes: memory.minimumPeakBytes ?? statePublicationPeakBytes,
-    peakBytes: memory.peakBytes ?? (entry => statePublicationPeakBytes(entry) || (entry.startsWith("national-place:") ? NATIONAL_PLACE_PEAK_MIB * MIB :
-      rosterPublication(entry) ? REGISTRY_ROSTER_PUBLICATION_PEAK_MIB * MIB : (/^state-money-.+[.]mts$/.test(entry.split(/[\\/]/).at(-1)!)
+    peakBytes: memory.peakBytes ?? (entry => statePublicationPeakBytes(entry) || (entry.startsWith("national-place:") ? NATIONAL_PLACE_PEAK_MIB * MIB : (/^state-money-.+[.]mts$/.test(entry.split(/[\\/]/).at(-1)!)
           ? WORKER_ENTRY_PEAK_MIB.national! : ROUTINE_ENTRY_PEAK_MIB[entry.split(/[\\/]/).at(-1)!] ?? WORKER_ENTRY_PEAK_MIB.lease!) * MIB)) });
 }
 
@@ -288,10 +285,9 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
           const participants = new Set(state.parents.flatMap(parent => [...idsFor(parent.pid)]));
           const used = rows.reduce((sum, row) => participants.has(row.pid) ? sum + row.rss : sum, 0);
           const free = Math.min(available(), Number.isFinite(hostMiB) && hostMiB > 0 ? Math.max(0, hostMiB * MIB - used) : Infinity);
-          const rosterLive = state.reservations.some(row => rosterPublication(row.entry));
           const index = waiting.findIndex(item => {
             if (Date.now() >= item.deadline) return false;
-            return inherited || (!rosterLive && (!rosterPublication(item.entry) || !state.reservations.length) && free >= headroom + growth + reserve(item.entry));
+            return inherited || free >= headroom + growth + reserve(item.entry);
           });
           if (index < 0) break;
           const [item] = waiting.splice(index, 1);

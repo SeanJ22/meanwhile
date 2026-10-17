@@ -1,34 +1,3 @@
-/**
- * The meeting-source wiring, recomputed by the standing runner from what is
- * already promoted or vaulted.
- *
- *   node --experimental-strip-types scripts/derive-meeting-source-wiring.mts --promote
- *
- * The standing runner's child for the `meeting-source-wiring` routine contract.
- * It fetches nothing from any publisher. It reads:
- *
- * - the promoted wiring version it succeeds (its rows, suspensions and all);
- * - the promoted meeting-body crosswalk: the reviewed rows connecting a calendar
- *   to its exact body (`lib/civic-data/meeting-body-crosswalk.ts`), composed
- *   with the rows the runner's own reviewer accepted
- *   (`lib/civic-data/derived-crosswalk.ts`), the reviewed rows winning;
- * - each covered state's promoted registration: which division a government is;
- * - the discovery walk's newest attempt for each crosswalked government, from
- *   the control plane's attempt log (read only);
- * - the evidence vault, read only (`lib/control-plane/evidence/read-only-vault.ts`):
- *   the calendar bytes a walk confirmed, and the page naming each body;
- * - the venue resolutions the reader adapters resolve each sitting through, read
- *   before any adapter reading (`lib/control-plane/discovery/derived-wiring-reading.ts`).
- *
- * Each row is decided by `deriveWiringDecisions` (the review triggers, and
- * every outage held as it is), planned by `planDerivedVersion`, and promoted
- * through `processRegisteredRoutineCandidate`, whose door checks every
- * promoted input against the store. Anything it cannot read refuses the
- * candidate by name and leaves the last known good wiring live.
- *
- * Every pass re-checks every calendar, suspended ones included: a suspended
- * row whose calendar passes every check again is restored.
- */
 import { join } from "node:path";
 
 import { neon } from "@neondatabase/serverless";
@@ -68,7 +37,7 @@ import { ocdStateCode } from "../lib/ocd/state-of.ts";
 import { readRegistrationProjection } from "../lib/registration/reader.ts";
 import { loadRegistrationReference } from "../lib/registration/reference.ts";
 import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
-import { REGISTRY_RUNTIME_SCOPE } from "../lib/registry/runtime-data-plane.ts";
+import { stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
 import { activeWiring } from "../lib/registry/source-wiring.ts";
 import { ensureMeetingDoors } from "../lib/doors/meeting-doors.ts";
 
@@ -87,9 +56,9 @@ const doors = await ensureMeetingDoors();
 if (!doors.ready) throw new Error(`MEETING_DOORS_UNREADABLE: ${doors.reason}`);
 
 async function finish(candidate: RoutineCandidate): Promise<void> {
-  // An unchanged wiring re-check is receipted on the pointed version instead of
-  // re-promoted; the receipt then names that version, never the unwritten
-  // re-check candidate.
+
+
+
   await promoteDerivedCandidate(store, CONTRACT_ID, candidate, now);
 }
 
@@ -122,11 +91,7 @@ async function main(): Promise<void> {
     ? promotedInputRef("CURATED_READER_RECORD", "US:meeting-source-wiring", lkg.metadata.versionId, lkg.value, lkg.metadata.promotedAt)
     : null;
 
-  /*
-   * Two crosswalks, composed: the reviewed manual one and the rows the runner's own
-   * reviewer accepted (meeting-body-crosswalk-derived). A reviewed row wins over an automatic one for the same body,
-   * and either alone connects calendars. An unreadable one refuses the pass; neither promoted is no connection yet.
-   */
+
   const crosswalkContract = requiredManualProductionContract("meeting-body-crosswalk");
   const crosswalk = await readCuratedReaderProjection("meeting-body-crosswalk", { store, bypassCache: true, now });
   const automaticRead = await readDerivedMeetingBodyCrosswalk({ store, bypassCache: true, now });
@@ -162,14 +127,10 @@ async function main(): Promise<void> {
   const rows = composed.rows.filter((row) => crosswalkRowIssue(row) === null);
 
   /* Registration supplies the Census division. The reviewed registry may own its exact governing body. */
-  const reviewed = await readRegistryRuntimeProjection({ store, bypassCache: true, now });
-  const reviewedInput = reviewed.kind === "PROMOTED"
-    ? promotedInputRef("REGISTRY_RUNTIME_BINDING", REGISTRY_RUNTIME_SCOPE, reviewed.metadata.versionId, reviewed.value, reviewed.metadata.promotedAt)
-    : null;
+  const reviewedBodies = new Map<string, { readonly resolved: NonNullable<ReturnType<typeof reviewedBodyForGovernment>>; readonly input: DerivedInputRef } | { readonly unread: string }>();
   const registrations = new Map<string, {
     readonly input: DerivedInputRef;
     readonly bodies: readonly { id: string; ocdId: string; jurisdictionId: string | null }[];
-    readonly referenceSha256: string;
   } | { readonly unread: string }>();
   for (const state of new Set(rows.map((row) => stateOf(row.ocdId)).filter((s): s is string => s !== null))) {
     console.log(`RCD_PROGRESS meeting-source-wiring registration ${state}`);
@@ -181,8 +142,20 @@ async function main(): Promise<void> {
         continue;
       }
       registrations.set(state, { input,
-        bodies: read.value.bodies.map((b) => ({ id: b.id, ocdId: b.ocdId, jurisdictionId: b.jurisdictionId })),
-        referenceSha256: read.value.vintage.referenceSha256 });
+        bodies: read.value.bodies.map((b) => ({ id: b.id, ocdId: b.ocdId, jurisdictionId: b.jurisdictionId })) });
+      const reviewed = await readRegistryRuntimeProjection([state], { store, bypassCache: true, now });
+      const reviewedInput = reviewed.kind === "PROMOTED"
+        ? promotedInputRef("REGISTRY_RUNTIME_BINDING", stateRegistryRuntimeScope(state), reviewed.metadata.versionId, reviewed.value, reviewed.metadata.promotedAt)
+        : null;
+      const reference = loadRegistrationReference(process.cwd(), state);
+      for (const row of rows.filter(row => stateOf(row.ocdId) === state)) {
+        if (reviewed.kind !== "PROMOTED" || !reviewedInput) reviewedBodies.set(row.id, { unread: `${state} reviewed registry is ${reviewed.kind}` });
+        else if (reference.sha256 !== read.value.vintage.referenceSha256) reviewedBodies.set(row.id, { unread: `${state} registration does not name the committed Census government pairing` });
+        else {
+          const resolved = reviewedBodyForGovernment(reference, row.jurisdictionId, reviewed.value.registry.bodies);
+          reviewedBodies.set(row.id, resolved ? { resolved, input: reviewedInput } : { unread: `${state} reviewed registry does not pair ${row.jurisdictionId} with one exact governing body` });
+        }
+      }
     } catch (error) {
       registrations.set(state, { unread: `${state} registration could not be read: ${error instanceof Error ? error.message : String(error)}` });
     }
@@ -277,23 +250,13 @@ async function main(): Promise<void> {
         if (row.bodyRole !== "SUB_BODY" && body.id !== row.bodyId) return { notRegistered: `registration's body is ${body.id}, not ${row.bodyId}` };
         return { input: reg.input };
       }
-      if (reviewed.kind !== "PROMOTED" || reviewedInput === null) {
-        return { notRegistered: `registration pairs ${row.jurisdictionId} with no body and the reviewed registry is ${reviewed.kind}` };
-      }
-      let resolved: ReturnType<typeof reviewedBodyForGovernment>;
-      try {
-        const reference = loadRegistrationReference(process.cwd(), state!);
-        if (reference.sha256 !== reg.referenceSha256) {
-          return { notRegistered: `${state} registration does not name the committed Census government pairing` };
-        }
-        resolved = reviewedBodyForGovernment(reference, row.jurisdictionId, reviewed.value.registry.bodies);
-      } catch (error) {
-        return { notRegistered: `${state} Census government pairing could not be read: ${error instanceof Error ? error.message : String(error)}` };
-      }
+      const reviewed = reviewedBodies.get(row.id);
+      if (!reviewed || "unread" in reviewed) return { notRegistered: reviewed?.unread ?? `${state} reviewed registry was not read` };
+      const { resolved } = reviewed;
       if (resolved === null || resolved.ocdId !== row.ocdId || (row.bodyRole !== "SUB_BODY" && resolved.bodyId !== row.bodyId)) {
         return { notRegistered: `registration and reviewed registry do not pair ${row.jurisdictionId} with ${row.bodyId}` };
       }
-      return { input: reg.input, identityInput: reviewedInput };
+      return { input: reg.input, identityInput: reviewed.input };
     },
     attempts,
     handWired: (bodyId) => activeWiring().some((wiring) => wiring.bodyId === bodyId),

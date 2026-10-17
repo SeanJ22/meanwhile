@@ -1,18 +1,7 @@
-/**
- * Small promoted values installed the way production reads them.
- *
- * Production never opens bundled data: a reader request reads each family from the reader authority edge
- * (the runner-published copy of the promoted pointer), and the runner reads the database pointer. These
- * installers put a small, explicit value on that same edge for the test process (`enterReaderAuthorityEdge`),
- * and prime the family's synchronous read state from it, so the code under test takes the production path
- * unchanged. Nothing here reads a deleted seed file; the registry comes from the recorded transfer-time
- * import fixture, and every other family is a small synthetic value the test names.
- *
- * Call an installer at module top level (before any `test(...)`), or at the top of a test body: the edge
- * is entered synchronously, before the installer's first await, so it reaches every later await in the
- * caller's async context. A test that runs its own `withReaderAuthorityEdge(bundle, ...)` replaces the
- * context for that call; merge `promotedFixtureBundle()` into its bundle to keep these families.
- */
+
+
+
+
 import { gunzipSync } from "node:zlib";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -22,7 +11,7 @@ import type { CivicDataReadResult, PromotedEdgeEntry } from "../../lib/civic-dat
 import type { CandidateVersionRecord, PromotedProjection, RoutineRecordClass } from "../../lib/civic-data/types.ts";
 import { MemoryRoutineDataStore } from "../../lib/civic-data/store.ts";
 import { enterReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "../../lib/registry/runtime-edge.ts";
-import { primeRegistryRuntimeFromValue, readRegistryRuntimeProjection } from "../../lib/registry/runtime-read-model.ts";
+import { readRegistryRuntimeProjection } from "../../lib/registry/runtime-read-model.ts";
 import type { RegistryRuntimeReadModel } from "../../lib/registry/runtime-data-plane.ts";
 import {
   FEDERAL_DIRECTORY_SOURCE_ID,
@@ -37,15 +26,14 @@ import { officialStateLegislatorTargetByScope, type OfficialStateVoteScope } fro
 import { PIMA_LOCAL_FINANCE_CONTRACT, type AzPimaFinanceReadModel, STATE_CAMPAIGN_FINANCE_SOURCES, type StateCampaignFinanceJurisdiction } from "../../lib/funding/data-plane.ts";
 import type { StateMoneySnapshot } from "../../lib/funding/state-money.ts";
 import { refreshStateMoneyProjectionFromPromoted } from "../../lib/funding/state-snapshot.ts";
-import type { AzBallotProjection, CandidateProfilesProjection, NhBallotProjection } from "../../lib/civic-data/manual-projections.ts";
-import { resetAzIdentityCache } from "../../lib/identity/az-2026.ts";
-import type { AzCandidateIdentity, AzContestIdentity, LineupOutcome, LineupReconciliationRow } from "../../lib/identity/types.ts";
-import type { Candidacy, Contest } from "../../lib/ballot/types.ts";
+import type { CandidateProfilesProjection } from "../../lib/civic-data/manual-projections.ts";
+
+
 import { refreshAzPimaFinanceFromPromoted } from "../../lib/control-plane/campaign-finance/held-records.ts";
 import { createHash } from "node:crypto";
 import type { CandidateCorpus, CandidateDocument } from "../../lib/candidates/corpus.ts";
 import type { SourceSnapshot, StatementCorpus } from "../../lib/corpus/types.ts";
-import { readAzBallotProjection, readCandidateCorpusProjection } from "../../lib/civic-data/manual-read-models.ts";
+
 import { readOfficeholderStatementsProjection } from "../../lib/corpus/data-plane.ts";
 import { FEDERAL_KEY_VOTE_SCOPE, FEDERAL_ROLLCALL_SCOPE, FEDERAL_VOTES_SOURCE_ID, type FederalKeyVotesReadModel, type FederalRollCallsReadModel } from "../../lib/votes/data-plane.ts";
 import { readFederalRollCallsProjection } from "../../lib/votes/snapshot.ts";
@@ -57,34 +45,41 @@ import { rosterFactReader } from "./roster-fact-reader.ts";
 import { installFactReader } from "../../lib/facts/db.ts";
 const FEDERAL_DIRECTORY_SCOPE = "US:current-congress-directory";
 
+
+import { stateBallotScope } from "../../lib/civic-data/state-scopes.ts";
+
+import { registryJurisdictions, stateRegistryRuntimeScope } from "../../lib/civic-data/state-scopes.ts";
+import type { StateAuthorityFamily } from "../../lib/meetings/edge-artifacts.ts";
+const stateClasses: Record<StateAuthorityFamily, RoutineRecordClass> = {
+  "registry-runtime": "REGISTRY_RUNTIME_BINDING", "ballot-contests": "BALLOT_CANDIDACY", "candidate-profiles": "CANDIDATE_PROFILE",
+  "candidate-publications": "CANDIDATE_PUBLICATION", "voting-sites": "VOTING_SITE", "candidate-campaign-sites-derived": "CURATED_READER_RECORD",
+};
+const stateScope = (family: StateAuthorityFamily, state: string) => family === "registry-runtime" ? stateRegistryRuntimeScope(state)
+  : stateBallotScope(family === "candidate-publications" ? "candidate-corpus" : family, state);
+
 const ROOT = join(import.meta.dirname, "..", "..");
 const REGISTRY_FIXTURE = join(ROOT, "tests/fixtures/registry-transfer-import.json.gz");
 
-/* ------------------------------------------------------------------ the process edge */
-
-let registryRuntime: ReaderAuthorityEdgeBundle["registryRuntime"];
 let federalDirectory: ReaderAuthorityEdgeBundle["federalDirectory"];
 const stateLegislators: Record<string, OfficialStateLegislatorReadModel> = {};
 const promoted = new Map<string, PromotedEdgeEntry>();
 
-/** The edge bundle the installers have built so far, to merge into a test's own `withReaderAuthorityEdge`. */
-export function promotedFixtureBundle(extra: ReaderAuthorityEdgeBundle = {}): ReaderAuthorityEdgeBundle {
-  return {
-    ...(registryRuntime ? { registryRuntime } : {}),
-    ...(federalDirectory ? { federalDirectory } : {}),
-    ...(live.stateLegislators ? { stateLegislators: live.stateLegislators } : {}),
-    ...extra,
-    promoted: new Map([...promoted, ...(extra.promoted ?? [])]),
-  };
-}
-
-/*
- * One live bundle for the process: later installs change what it serves, so a context that entered it
- * once (the test module's top level) sees every family installed after, even from inside another async
- * function.
- */
 const live: ReaderAuthorityEdgeBundle = {
-  get registryRuntime() { return registryRuntime; },
+  stateAuthorities: {
+    get states() {
+      return Object.fromEntries(Object.keys(stateClasses).map(family => [family, new Set([...promoted.values()].flatMap(entry => {
+        const recordClass = entry.kind === "PROMOTED" ? entry.projection.recordClass : entry.recordClass;
+        if (recordClass !== stateClasses[family as StateAuthorityFamily]) return [];
+        const scope = entry.kind === "PROMOTED" ? entry.projection.scope : entry.scope;
+        const state = /^US-([A-Z]{2}):/.exec(scope)?.[1];
+        return state && scope === stateScope(family as StateAuthorityFamily, state) ? [state] : [];
+      }))]));
+    },
+    load: async (family, state) => {
+      const entry = promoted.get(`${stateClasses[family]}:${stateScope(family, state)}`);
+      return entry ? { kind: "PROMOTED_POINTERS", entries: [entry] } : null;
+    },
+  },
   get federalDirectory() { return federalDirectory; },
   get stateLegislators() {
     return Object.keys(stateLegislators).length ? {
@@ -101,10 +96,6 @@ function enter(): void {
   enterReaderAuthorityEdge(live);
 }
 
-/**
- * Install one proven pointer on the process edge. Every typed Reader (`readPromotedCivicData` with no
- * injected store) answers it PROMOTED, with the receipt and attestation production checks.
- */
 export function installPromotedValue<T>(input: {
   readonly recordClass: RoutineRecordClass;
   readonly scope: string;
@@ -120,24 +111,13 @@ export function installPromotedValue<T>(input: {
   return entry;
 }
 
-/** Install a manual production contract's pointer (ballots, candidate corpus, statements, ...). */
 export function installManualValue<T>(id: ManualProductionContractId, value: T, versionId: string = `test:${id}`) {
   const contract = requiredManualProductionContract(id);
   return installPromotedValue({ recordClass: contract.recordClass, scope: contract.scope, sourceId: contract.sourceId, versionId, value });
 }
 
-/** Mark a family answered-and-absent on the edge (`NOT_RECORDED`), as the store does when no pointer exists. */
 export function installAbsent(recordClass: RoutineRecordClass, scope: string): void {
   promoted.set(`${recordClass}:${scope}`, { kind: "NOT_RECORDED", recordClass, scope });
-  enter();
-}
-
-/** Drop everything the installers put on the edge (tests that assert the unconfigured path). */
-export function clearPromotedFixtures(): void {
-  registryRuntime = undefined;
-  federalDirectory = undefined;
-  for (const scope of Object.keys(stateLegislators)) delete stateLegislators[scope];
-  promoted.clear();
   enter();
 }
 
@@ -146,8 +126,6 @@ function served<T>(read: CivicDataReadResult<T>, what: string): T {
   return read.value as T;
 }
 
-/* ------------------------------------------------------------------ registry runtime */
-
 interface RegistryFixture {
   readonly record: CandidateVersionRecord;
   readonly projection: PromotedProjection<RegistryRuntimeReadModel>;
@@ -155,13 +133,11 @@ interface RegistryFixture {
 
 let registryFixture: RegistryFixture | null = null;
 
-/** The recorded transfer-time registry import (`tests/fixtures/registry-transfer-import.json.gz`). */
 export function registryTransferImport(): RegistryFixture {
   registryFixture ??= JSON.parse(gunzipSync(readFileSync(REGISTRY_FIXTURE)).toString("utf8")) as RegistryFixture;
   return registryFixture;
 }
 
-/** A memory store holding the registry import's candidate and promoted pointer, for tests that inject a store. */
 export function registryRuntimeStore(store: MemoryRoutineDataStore = new MemoryRoutineDataStore()): MemoryRoutineDataStore {
   const { record, projection } = registryTransferImport();
   const held = store as unknown as { candidates: Map<string, CandidateVersionRecord>; promotions: Map<string, PromotedProjection> };
@@ -170,34 +146,34 @@ export function registryRuntimeStore(store: MemoryRoutineDataStore = new MemoryR
   return store;
 }
 
-/**
- * The registry runtime (divisions, bodies, rosters) from the recorded import: on the process edge as the
- * reader's registry-runtime artifact and as the proven pointer, with the synchronous projection primed.
- */
-export async function installRegistryRuntime(): Promise<{ readonly value: RegistryRuntimeReadModel; readonly versionId: string }> {
-  const { projection } = registryTransferImport();
-  const installed = { value: projection.payload, versionId: projection.versionId };
-  registryRuntime = installed;
-  promoted.set(projection.key, provenEdgeEntry({
-    recordClass: projection.recordClass,
-    scope: projection.scope,
-    sourceId: projection.sourceId,
-    versionId: projection.versionId,
-    value: projection.payload,
-  }) as PromotedEdgeEntry);
-  enter();
-  installFactReader(rosterFactReader(projection.payload.bodyRosters));
-  primeRegistryRuntimeFromValue(installed.value, installed.versionId);
-  served(await readRegistryRuntimeProjection(), "Registry runtime");
-  primeRegistryRuntimeFromValue(installed.value, installed.versionId);
-  return installed;
+function registryFixtureForState(state: string, value: RegistryRuntimeReadModel = registryTransferImport().projection.payload): RegistryRuntimeReadModel {
+  const own = (id: string | null) => registryJurisdictions(id).includes(state.toUpperCase());
+  const bodies = value.registry.bodies.filter(row => own(row.id) || own(row.ocdId) || row.alsoServesOcdIds?.some(own));
+  const bodyIds = new Set(bodies.map(row => row.id));
+  const bodyRosters = value.bodyRosters.filter(row => bodyIds.has(row.bodyId));
+  const statewideExecutives = value.statewideExecutives.filter(row => own(row.stateOcdId));
+  const bridge = value.officialCandidacies.rows.filter(row => row.holder.divisions.some(own));
+  const holders = new Set([...bodyRosters.flatMap(row => row.members.map(member => member.id)),
+    ...statewideExecutives.map(row => row.holder.id), ...bridge.map(row => row.holder.id)]);
+  return { ...value, registry: { ...value.registry, bodies,
+    divisions: value.registry.divisions.filter(row => row.ocdId === "ocd-division/country:us" || own(row.ocdId)) },
+    bodyRosters, statewideExecutives, officialCandidacies: { ...value.officialCandidacies, rows: bridge },
+    officialPhotos: { photos: value.officialPhotos.photos.filter(row => holders.has(row.officeholderId)) },
+    rosterPhotos: Object.fromEntries(Object.entries(value.rosterPhotos).filter(([id]) => holders.has(id) || own(id))),
+    rosterReaderDispositions: value.rosterReaderDispositions.filter(row => own(row.sourceId) || holders.has(row.sourceId) || (row.canonicalId !== null && holders.has(row.canonicalId)) ||
+      [...holders].some(id => id.startsWith("roster:") && id.split("#")[0] === row.sourceId.split("#")[0])) };
 }
 
-/**
- * Run `fn` with every Node child process it starts preloading the registry runtime onto that child's own
- * reader edge (through `NODE_OPTIONS`, which a forked worker inherits with the environment). The parent's
- * `NODE_OPTIONS` is restored afterwards.
- */
+async function installRegistryRuntime(states?: readonly string[]): Promise<{ readonly value: RegistryRuntimeReadModel; readonly versionId: string }> {
+  const { projection } = registryTransferImport();
+  const selected = states ?? [...new Set(projection.payload.registry.divisions.flatMap(row => registryJurisdictions(row.ocdId)))];
+  for (const state of selected) installPromotedValue({ recordClass: "REGISTRY_RUNTIME_BINDING", scope: stateRegistryRuntimeScope(state),
+    sourceId: projection.sourceId, versionId: `${projection.versionId}:${state}`, value: registryFixtureForState(state) });
+  installFactReader(rosterFactReader(projection.payload.bodyRosters));
+  const value = served(await readRegistryRuntimeProjection(selected), "Registry runtime");
+  return { value, versionId: selected.map(state => `${projection.versionId}:${state}`).join("|") };
+}
+
 export async function withPromotedFixturesInChildren<T>(fn: () => Promise<T>): Promise<T> {
   const previous = process.env.NODE_OPTIONS;
   const loader = pathToFileURL(join(ROOT, "scripts/register-test-loader.mjs")).href;
@@ -211,17 +187,9 @@ export async function withPromotedFixturesInChildren<T>(fn: () => Promise<T>): P
   }
 }
 
-/* ------------------------------------------------------------------ federal directory */
-
 const FEDERAL_SHA = "f".repeat(40);
 const FEDERAL_COLLECTED = "2026-09-25";
 
-/**
- * The federal directory over the federal holders the registry import already names (its official-candidacy
- * bridge rows: id, name, title and divisions as the directory published them), so the person bridge and
- * the directory agree. Term dates, the source sha and the committees are synthetic: 45 "Test Committee"
- * rows, one seat per member, enough for the directory's completeness checks.
- */
 export function syntheticFederalDirectory(registry: RegistryRuntimeReadModel = registryTransferImport().projection.payload): FederalDirectoryReadModel {
   const officeholders: Officeholder[] = [];
   const divisions: OfficeholderDivision[] = [];
@@ -287,7 +255,6 @@ export function syntheticFederalDirectory(registry: RegistryRuntimeReadModel = r
   };
 }
 
-/** The synthetic federal directory, on the process edge and primed. */
 export async function installFederalDirectory(value: FederalDirectoryReadModel = syntheticFederalDirectory()): Promise<{ readonly value: FederalDirectoryReadModel; readonly versionId: string }> {
   const versionId = "test:federal-directory";
   const installed = { value, versionId };
@@ -305,19 +272,11 @@ export async function installFederalDirectory(value: FederalDirectoryReadModel =
   return installed;
 }
 
-/** Registry runtime and federal directory together: what the representation and coverage graph read. */
 export async function installRegistryAuthority(): Promise<void> {
   await installRegistryRuntime();
   await installFederalDirectory();
 }
 
-/* ------------------------------------------------------------------ state legislators */
-
-/**
- * A synthetic official state roster for one scope over the registry's own legislative districts: two
- * members for every lower-house district and one for every upper-house district, labelled by seat
- * ("Representative AZ LD 21 A"), never real people.
- */
 export function syntheticStateLegislators(scope: OfficialStateVoteScope, registry: RegistryRuntimeReadModel = registryTransferImport().projection.payload): OfficialStateLegislatorReadModel {
   const target = officialStateLegislatorTargetByScope(scope);
   if (!target) throw new Error(`no official state-legislator target for ${scope}`);
@@ -362,21 +321,16 @@ export function syntheticStateLegislators(scope: OfficialStateVoteScope, registr
   };
 }
 
-/** One scope's official state roster on the reader edge (the reader's state-legislators artifact). */
 export function installStateLegislators(scope: OfficialStateVoteScope, value: OfficialStateLegislatorReadModel = syntheticStateLegislators(scope)): OfficialStateLegislatorReadModel {
   stateLegislators[scope] = value;
   enter();
   return value;
 }
 
-/* ------------------------------------------------------------------ state campaign money */
-
-/** One state's snapshot from the existing `tests/fixtures/state-money-2026.json`. */
 export function stateMoneyFixture(state: StateCampaignFinanceJurisdiction): StateMoneySnapshot {
   return (JSON.parse(readFileSync(join(ROOT, "tests/fixtures/state-money-2026.json"), "utf8")) as Record<StateCampaignFinanceJurisdiction, StateMoneySnapshot>)[state];
 }
 
-/** A state's campaign-money pointer on the edge (the fixture's snapshot by default), and its Reader primed. */
 export async function installStateMoney(state: StateCampaignFinanceJurisdiction, value: StateMoneySnapshot = stateMoneyFixture(state)): Promise<StateMoneySnapshot> {
   const contract = STATE_CAMPAIGN_FINANCE_SOURCES[state];
   installPromotedValue({ recordClass: "STATE_CAMPAIGN_FINANCE", scope: contract.scope, sourceId: contract.sourceId, versionId: `test:state-money:${state}`, value });
@@ -384,10 +338,6 @@ export async function installStateMoney(state: StateCampaignFinanceJurisdiction,
   return value;
 }
 
-/**
- * A synthetic FILED state committee record for one candidacy key, shaped like the fixture's own FILED
- * record. The committee and its totals are invented ("Synthetic Test Committee"); only the key is real.
- */
 export function syntheticFiledStateMoneyRecord(state: StateCampaignFinanceJurisdiction, targetKey: string, receipts = 1000): StateMoneySnapshot["records"][number] {
   const template = stateMoneyFixture(state).records.find((record) => record.filingState === "FILED") ?? stateMoneyFixture("AZ").records.find((record) => record.filingState === "FILED")!;
   const name = "Synthetic Test Committee";
@@ -402,159 +352,9 @@ export function syntheticFiledStateMoneyRecord(state: StateCampaignFinanceJurisd
     match: { ...template.match!, registeredName: name },
   };
 }
-
-/* ------------------------------------------------------------------ Arizona ballot */
-
-export interface SyntheticLineupNominee {
-  /** The certified-lineup card name; the card key is `${contestId}|${name}`. */
-  readonly name: string;
-  readonly partyLabel: string;
-  readonly outcome: LineupOutcome;
-  /** The filing (candidacy) this card matches: its canonical candidacy on RECONCILED, the single name match on PARTY_CONFLICT. */
-  readonly candidacyId?: string;
-  /** The filing's own party, stated on a PARTY_CONFLICT row. */
-  readonly filingParty?: string;
-}
-
-export interface SyntheticContest {
-  readonly id: string;
-  readonly title: string;
-  /** Defaults to the state division. */
-  readonly ocdId?: string;
-  readonly type?: Contest["type"];
-  readonly candidacies?: readonly { readonly id: string; readonly givenName: string; readonly familyName: string; readonly partyLabel?: string | null }[];
-  readonly lineup?: readonly SyntheticLineupNominee[];
-}
-
-const AZ_STATE = "ocd-division/country:us/state:az";
-const AZ_ELECTION = "az-2026-general-test";
-const AZ_PROVENANCE = { sourceUrl: "https://example.test/az-ballot", sourceOrg: "Synthetic test ballot", collectedAt: "2026-09-25", verifiedAt: null };
 export const AZ_TEST_CANVASS_URL = "https://example.test/az-canvass.pdf";
 export const AZ_TEST_FILINGS_URL = "https://example.test/az-candidate-filings.pdf";
 
-/**
- * A small Arizona ballot projection carrying exactly the contests a test names: the ballot rows, the
- * certified general lineup, the statewide identity registry (one identity per candidacy) and the
- * lineup-to-candidacy bridge rows with the outcome each nominee is given. The default is one synthetic
- * statewide contest with one candidacy, enough for the projection's own shape checks.
- */
-export function syntheticAzBallot(contests: readonly SyntheticContest[] = [{
-  id: "ballot-az-test:synthetic-office",
-  title: "Synthetic Office",
-  candidacies: [{ id: "ballot-az-test:synthetic-office:candidate-a", givenName: "Alex", familyName: "Candidate" }],
-}]): AzBallotProjection {
-  const ballotContests: Contest[] = [];
-  const candidacies: Candidacy[] = [];
-  const identityContests: AzContestIdentity[] = [];
-  const identities: AzCandidateIdentity[] = [];
-  const rows: LineupReconciliationRow[] = [];
-  const identityOf = (candidacyId: string) => `az-2026:candidate:${candidacyId}`;
-  for (const contest of contests) {
-    const ocdId = contest.ocdId ?? AZ_STATE;
-    ballotContests.push({
-      id: contest.id, electionId: AZ_ELECTION, ocdId, divisionVintage: "2026", title: contest.title,
-      type: contest.type ?? "CANDIDACY", voteFor: 1, termYears: 4, scopeNote: null, provenance: AZ_PROVENANCE,
-    });
-    identityContests.push({
-      identityId: `az-2026:contest:${contest.id}`, office: contest.title, ocdId, level: "STATE",
-      financeFilingAuthority: "Arizona Secretary of State", canonicalContestIds: [contest.id],
-    });
-    for (const candidacy of contest.candidacies ?? []) {
-      candidacies.push({
-        id: candidacy.id, contestId: contest.id, familyName: candidacy.familyName, givenName: candidacy.givenName,
-        partyLabel: candidacy.partyLabel ?? null, slogan: null, incumbent: null, websiteUrl: null, provenance: AZ_PROVENANCE,
-      });
-      const displayName = `${candidacy.givenName} ${candidacy.familyName}`;
-      identities.push({
-        identityId: identityOf(candidacy.id), contestIdentityId: `az-2026:contest:${contest.id}`, displayName,
-        givenName: candidacy.givenName, familyName: candidacy.familyName, nameForms: [], partyLabel: candidacy.partyLabel ?? null,
-        candidacyAuthority: "Arizona Secretary of State", candidacySourceUrl: AZ_TEST_FILINGS_URL, canonicalCandidacyId: candidacy.id, committees: [],
-      });
-    }
-    for (const nominee of contest.lineup ?? []) {
-      const matched = nominee.candidacyId ? [identityOf(nominee.candidacyId)] : [];
-      const reconciled = nominee.outcome === "RECONCILED";
-      rows.push({
-        cardKey: `${contest.id}|${nominee.name}`,
-        contestId: contest.id,
-        nomineeName: nominee.name,
-        nomineePartyLabel: nominee.partyLabel,
-        outcome: nominee.outcome,
-        candidateIdentityId: reconciled ? matched[0] ?? null : null,
-        canonicalCandidacyId: reconciled ? nominee.candidacyId ?? null : null,
-        sourceValues: {
-          canvassName: nominee.name,
-          canvassParty: nominee.partyLabel,
-          registryName: matched.length ? nominee.name : null,
-          registryParty: nominee.filingParty ?? (matched.length ? nominee.partyLabel : null),
-          registryCandidateIds: matched,
-        },
-        basis: {
-          contestAgrees: true, partyChecked: true, partyAgrees: nominee.outcome === "PARTY_CONFLICT" ? false : reconciled ? true : null,
-          sharedNameForm: matched.length ? nominee.name : null, sharedNameFormRules: [], note: "synthetic test row",
-        },
-        readerGapSentence: reconciled ? null : "We have not established that this nominee is the same candidacy as a filing.",
-      });
-    }
-  }
-  const sources = [
-    { name: "Synthetic certified canvass", url: AZ_TEST_CANVASS_URL, readAt: "2026-09-25", note: "test" },
-    { name: "Synthetic candidate filings", url: AZ_TEST_FILINGS_URL, readAt: "2026-09-25", note: "test" },
-  ];
-  const lineupContests = contests.filter((contest) => contest.lineup?.length).map((contest) => ({
-    contestId: contest.id,
-    nominees: contest.lineup!.map((nominee) => ({ name: nominee.name, partyLabel: nominee.partyLabel, note: null })),
-  }));
-  return {
-    ballot: { formatVersion: 1, election: { id: AZ_ELECTION, date: "2026-11-03", name: "2026 General Election (test)", state: "AZ" }, contests: ballotContests, candidacies, measures: [], absences: [] },
-    generalLineup: {
-      curatedAt: "2026-09-25",
-      canvass: { title: "Synthetic certified canvass", url: AZ_TEST_CANVASS_URL, issuedBy: "Synthetic", reportDate: "2026-09-25", readAt: "2026-09-25", readNote: "test" },
-      note: "synthetic test lineup",
-      contests: lineupContests,
-    },
-    measureAnalyses: { generatedAt: "2026-09-25", counts: { measures: 0, fetched: 0, extracted: 0, failed: 0 }, analyses: [] },
-    candidateFilings: {},
-    identityRegistry: {
-      formatVersion: 1, state: "AZ", cycle: 2026, generatedAt: "2026-09-25", generatedBy: "tests/helpers/promoted-fixtures.ts", sources,
-      denominators: {
-        contests: identityContests.length, candidates: identities.length, candidatesWithCanonicalCandidacyId: identities.length,
-        candidatesWithoutCanonicalCandidacyId: 0, candidatesWithCommitteeIdentity: 0, nonFederalCandidates: identities.length, federalCandidates: 0,
-      },
-      contests: identityContests,
-      candidates: identities,
-    },
-    lineupReconciliation: {
-      formatVersion: 1, state: "AZ", cycle: 2026, generatedAt: "2026-09-25", generatedBy: "tests/helpers/promoted-fixtures.ts", sources,
-      proof: {
-        lineupContests: lineupContests.length, lineupNominees: rows.length,
-        uniquelyReconciled: rows.filter((row) => row.outcome === "RECONCILED").length,
-        ambiguous: rows.filter((row) => row.outcome === "AMBIGUOUS_MULTIPLE_CANDIDATES").length,
-        unmatched: rows.filter((row) => row.outcome === "NO_CANDIDATE_MATCH").length,
-        duplicateTargetCollisions: 0, applicableNonFederalNominees: rows.length,
-        applicableNonFederalReconciled: rows.filter((row) => row.outcome === "RECONCILED").length,
-        applicableNonFederalUnresolved: rows.filter((row) => row.outcome !== "RECONCILED").length,
-      },
-      agencyNextFilingDue: null,
-      rows,
-    },
-  } as AzBallotProjection;
-}
-
-/** The Arizona ballot pointer on the edge, its Reader primed and the identity caches cleared. */
-export async function installAzBallot(value: AzBallotProjection = syntheticAzBallot()): Promise<AzBallotProjection> {
-  installManualValue("az-sos-ballot", value, "test:az-sos-ballot");
-  served(await readAzBallotProjection(), "Arizona ballot");
-  resetAzIdentityCache();
-  return value;
-}
-
-/* ------------------------------------------------------------------ county campaign money */
-
-/**
- * An empty county filing-officer holding: the filing authority is identified, and no committee, filing or
- * transaction is held. Tests that need rows pass their own.
- */
 export function syntheticPimaLocalFinance(over: { readonly held?: Partial<AzPimaFinanceReadModel["held"]>; readonly transactions?: Partial<AzPimaFinanceReadModel["transactions"]> } = {}): AzPimaFinanceReadModel {
   return {
     formatVersion: 1,
@@ -590,16 +390,12 @@ export function syntheticPimaLocalFinance(over: { readonly held?: Partial<AzPima
   };
 }
 
-/** The county campaign-money pointer on the edge, its Reader primed. */
 export async function installPimaLocalFinance(value: AzPimaFinanceReadModel = syntheticPimaLocalFinance()): Promise<AzPimaFinanceReadModel> {
   installPromotedValue({ recordClass: "LOCAL_CAMPAIGN_FINANCE", scope: PIMA_LOCAL_FINANCE_CONTRACT.scope, sourceId: PIMA_LOCAL_FINANCE_CONTRACT.sourceId, versionId: "test:pima-local-finance", value });
   await refreshAzPimaFinanceFromPromoted();
   return value;
 }
 
-/* ------------------------------------------------------------------ candidate and officeholder words */
-
-/** Distinct plain words, one per synthetic subject, so each subject's own text has a word only it uses. */
 const SUBJECT_WORDS = [
   "orchards", "wetlands", "harbors", "bridges", "libraries", "clinics", "canyons", "meadows", "rivers", "forests",
   "railways", "gardens", "prairies", "islands", "valleys", "summits", "beaches", "deserts", "lagoons", "glaciers",
@@ -609,7 +405,6 @@ const SUBJECT_WORDS = [
 
 const sha256Hex = (text: string) => createHash("sha256").update(text).digest("hex");
 
-/** A page of plain spoken sentences about one word, longer than 400 characters, each sentence quotable on its own. */
 function ownWordsText(word: string, who: string): string {
   return [
     `We will protect the ${word} that make this community a good place to live.`,
@@ -621,15 +416,9 @@ function ownWordsText(word: string, who: string): string {
   ].join(" ");
 }
 
-/** The key of the synthetic candidate whose only mention of one word sits in an over-long, unquotable passage. */
 export const UNQUOTABLE_CANDIDATE_KEY = "ballot-zz-test:synthetic-office:candidate-rail";
 export const UNQUOTABLE_TERM = "mining";
 
-/**
- * A synthetic candidate-publication corpus: `candidates` candidates, each with a campaign home page (with a
- * meta description) and an issues page, both readable text over 400 characters, plus one candidate whose
- * page carries a headline rail longer than a quotable passage. Keys are `ballot-zz-test:...`.
- */
 export function syntheticCandidateCorpus(candidates = 30): CandidateCorpus {
   const documents: CandidateDocument[] = [];
   const add = (key: string, url: string, text: string, metaDescription: string | null) => {
@@ -651,17 +440,6 @@ export function syntheticCandidateCorpus(candidates = 30): CandidateCorpus {
   return { formatVersion: 1, fetchedAt: "2026-09-20T00:00:00.000Z", attempted: candidates + 1, documents, failures: [] };
 }
 
-/** The candidate-publication pointer on the edge, its Reader primed. */
-export async function installCandidateCorpus(value: CandidateCorpus = syntheticCandidateCorpus()): Promise<CandidateCorpus> {
-  installManualValue("candidate-corpus", value, "test:candidate-corpus");
-  served(await readCandidateCorpusProjection(), "Candidate publications");
-  return value;
-}
-
-/**
- * A synthetic officeholder statement corpus: one readable official page per subject. Subjects default to
- * `count` labelled ids (`statement-subject:N`); pass real held ids to join statements to a roster.
- */
 export function syntheticOfficeholderStatements(subjects: readonly string[] = Array.from({ length: 24 }, (_, i) => `statement-subject:${i + 1}`)): StatementCorpus {
   const snapshots: SourceSnapshot[] = subjects.map((subjectId, i) => {
     const text = ownWordsText(SUBJECT_WORDS[(i + 7) % SUBJECT_WORDS.length]!, "This office");
@@ -675,22 +453,14 @@ export function syntheticOfficeholderStatements(subjects: readonly string[] = Ar
   return { snapshots };
 }
 
-/** The officeholder statement pointer on the edge, its Reader primed. */
 export async function installOfficeholderStatements(value: StatementCorpus = syntheticOfficeholderStatements()): Promise<StatementCorpus> {
   installManualValue("officeholder-statements", value, "test:officeholder-statements");
   served(await readOfficeholderStatementsProjection(), "Officeholder statements");
   return value;
 }
 
-/* ------------------------------------------------------------------ federal roll calls and key votes */
-
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-/**
- * Synthetic recent federal roll calls over the installed federal directory: `perChamber` House and Senate
- * roll calls in the 119th Congress, second session, each on a synthetic bill ("Synthetic Test Act N") with a
- * held summary, and a recorded position for every member of that chamber (alternating YES and NO by roll).
- */
 export function syntheticFederalRollCalls(directory: FederalDirectoryReadModel = syntheticFederalDirectory(), perChamber = 20): FederalRollCallsReadModel {
   const votes: RollCallVote[] = [];
   const positions: MemberVote[] = [];
@@ -728,10 +498,6 @@ export function syntheticFederalRollCalls(directory: FederalDirectoryReadModel =
   };
 }
 
-/**
- * The reviewed key-vote selection v1 (built by the reviewed software, `federalKeyVoteSelectionV1Snapshot`)
- * with a synthetic position map for every selected roll: every installed member of that chamber YES.
- */
 export function syntheticFederalKeyVotes(directory: FederalDirectoryReadModel = syntheticFederalDirectory()): FederalKeyVotesReadModel {
   const snapshot = federalKeyVoteSelectionV1Snapshot("2026-09-20T00:00:00.000Z");
   const byChamber = { house: directory.roster.officeholders.filter((row) => row.chamber === "house"), senate: directory.roster.officeholders.filter((row) => row.chamber === "senate") };
@@ -746,7 +512,6 @@ export function syntheticFederalKeyVotes(directory: FederalDirectoryReadModel = 
   return { formatVersion: 1, selectionVersion: "v1", snapshot, positions: { formatVersion: 1, fetchedAt: "2026-09-20T00:00:00.000Z", positions } };
 }
 
-/** Federal roll calls and key votes on the edge, both Readers primed. Installs the federal directory first if absent. */
 export async function installFederalVotes(input: { rollCalls?: FederalRollCallsReadModel; keyVotes?: FederalKeyVotesReadModel } = {}): Promise<{ rollCalls: FederalRollCallsReadModel; keyVotes: FederalKeyVotesReadModel }> {
   const directory = federalDirectory?.value ?? syntheticFederalDirectory();
   const rollCalls = input.rollCalls ?? syntheticFederalRollCalls(directory);
@@ -758,12 +523,6 @@ export async function installFederalVotes(input: { rollCalls?: FederalRollCallsR
   return { rollCalls, keyVotes };
 }
 
-/* ------------------------------------------------------------------ candidate profiles */
-
-/**
- * A synthetic candidate-profile projection: one card and one campaign link for the default synthetic Arizona
- * candidacy (`syntheticAzBallot()`), both on example.test addresses.
- */
 export function syntheticCandidateProfiles(candidacyId = "ballot-az-test:synthetic-office:candidate-a"): CandidateProfilesProjection {
   return {
     cards: {
@@ -776,30 +535,4 @@ export function syntheticCandidateProfiles(candidacyId = "ballot-az-test:synthet
       links: { [candidacyId]: { official: null, campaign: { url: "https://candidate-a.example.test/", verification: "Synthetic test link.", attemptedAt: "2026-09-25" } } },
     },
   } as CandidateProfilesProjection;
-}
-
-/* ------------------------------------------------------------------ New Hampshire ballot */
-
-/** A small synthetic New Hampshire ballot: one statewide race and one county race, one synthetic candidate each. */
-export function syntheticNhBallot(county = "merrimack"): NhBallotProjection {
-  const provenance = { sourceUrl: "https://example.test/nh-ballot", sourceOrg: "Synthetic test ballot", collectedAt: "2026-09-25", verifiedAt: null };
-  const election = "nh-2026-general-test";
-  const contest = (id: string, title: string, ocdId: string) => ({ id, electionId: election, ocdId, divisionVintage: "2026", title, type: "CANDIDACY" as const, voteFor: 1, termYears: 2, scopeNote: null, provenance });
-  const candidacy = (id: string, contestId: string, givenName: string, familyName: string) => ({ id, contestId, givenName, familyName, partyLabel: null, slogan: null, incumbent: null, websiteUrl: null, provenance });
-  return {
-    ballot: {
-      formatVersion: 1,
-      election: { id: election, date: "2026-11-03", name: "2026 General Election (test)", state: "NH" },
-      contests: [
-        contest("ballot-nh-test:governor", "Governor", "ocd-division/country:us/state:nh"),
-        contest("ballot-nh-test:county-treasurer", "County Treasurer", `ocd-division/country:us/state:nh/county:${county}`),
-      ],
-      candidacies: [
-        candidacy("ballot-nh-test:governor:example-casey", "ballot-nh-test:governor", "Casey", "Example"),
-        candidacy("ballot-nh-test:county-treasurer:other-robin", "ballot-nh-test:county-treasurer", "Robin", "Other"),
-      ],
-      measures: [],
-      absences: [],
-    },
-  };
 }

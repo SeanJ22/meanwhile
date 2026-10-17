@@ -188,13 +188,12 @@ test("all publication siblings and routine script families reserve their measure
   }
 });
 
-test("legacy registry roster publications reserve their measured RSS and queue until memory is released", async () => {
-  // Roster publication runs alone on either host while keeping its measured peak.
-  for (const [availableMiB, expected] of [[8192 - 1024, 1], [2 * 4012 + 768, 1]] as const) {
+test("state registry publications reserve one state and queue until memory is released", async () => {
+  for (const [availableMiB, expected] of [[768 + 512, 1], [768 + 2 * 512, 2]] as const) {
     const slots = routineProcessSlots({ availableBytes: () => availableMiB * 1024 * 1024 });
-    const entries = ["worker-publication:registry-runtime-bindings:roster-one",
-      "worker-publication:registry-runtime-bindings:directory-two",
-      "worker-publication:registry-runtime-bindings:roster-three", "registry-runtime-bindings"];
+    const entries = ["worker-publication:registry-runtime:AZ:roster-one",
+      "worker-publication:registry-runtime:NH:directory-two",
+      "worker-publication:registry-runtime:NJ:roster-three", "registry-runtime:CA"];
     const admitted: string[] = [];
     const offers = entries.map(entry => slots.acquire(entry).then(release => { admitted.push(entry); return release; }));
     await yieldToEventLoop();
@@ -280,15 +279,15 @@ test("a routine child uses the lease peak and a large queue head does not block 
   const ordinary = routineProcessSlots({ availableBytes: () => (768 + 342) * mib });
   const release = await ordinary.acquire("meetings:ordinary", Date.now() + 100);
   release();
-  let free = 3000 * mib;
+  let free = (768 + 400) * mib;
   const slots = routineProcessSlots({ availableBytes: () => free });
   let rosterStarted = false;
-  const roster = slots.acquire("registry-runtime-bindings", Date.now() + 2000).then(release => { rosterStarted = true; return release; });
+  const roster = slots.acquire("registry-runtime:AZ", Date.now() + 2000).then(release => { rosterStarted = true; return release; });
   const small = await slots.acquire("meetings:small", Date.now() + 100);
   assert.equal(rosterStarted, false); small();
-  free = (768 + 4012) * mib;
+  free = (768 + 512) * mib;
   const large = await roster;
-  assert.equal(rosterStarted, true, "the roster runs alone once memory can fit it");
+  assert.equal(rosterStarted, true, "the state roster runs once its 512MiB reservation fits");
   large();
 });
 

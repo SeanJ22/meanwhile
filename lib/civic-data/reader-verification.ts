@@ -93,20 +93,13 @@ function verifierIdFor(contract: ReaderContract): string {
     case "nj-state-rollcalls": return "lib/sources/legiscan/snapshot.ts#readOfficialStateVotesProjection";
     case "nh-state-rollcalls": return "lib/civic-data/read-model.ts#readPromotedStateLegislatorVotes";
     case "census-acs-population": return "lib/reference/acs-population.ts#readPopulationProjection";
-    case "registry-runtime-bindings": return "lib/registry/runtime-read-model.ts#readRegistryRuntimeProjection";
     case "congress-rollcalls": return "lib/votes/snapshot.ts#readFederalRollCallsProjection";
     case "federal-key-votes": return "lib/votes/key-votes-projection.ts#readFederalKeyVotesProjection";
-    case "ballot-contests": return "lib/ballot/generic-projection.ts#readGenericBallotProjection";
-    case "az-sos-ballot": return "lib/civic-data/manual-read-models.ts#readAzBallotProjection";
-    case "nh-curated-ballot": return "lib/civic-data/manual-read-models.ts#readNhBallotProjection";
-    case "nj-morris-filing": return "lib/sources/ballot-nj-morris/index.ts#readNjMorrisFiling";
     case "plain-english-translations": return "lib/translate/projection-reader.ts#readTranslationProjection";
     case "special-district-boundaries": return "lib/registry/special-district-boundary-reader.ts#readSpecialDistrictBoundaries";
     case "public-records": return "lib/civic-data/public-records.ts#readPublicRecords";
     case "campaign-finance": return "lib/funding/campaign-finance-reader.ts#readCampaignFinance";
     case "government-budgets": return "lib/civic-data/government-budgets.ts#readGovernmentBudgets";
-    case "candidate-profiles": return "lib/civic-data/manual-read-models.ts#readCandidateProfilesProjection";
-    case "candidate-corpus": return "lib/civic-data/manual-read-models.ts#readCandidateCorpusProjection";
     case "officeholder-statements": return "lib/corpus/data-plane.ts#readOfficeholderStatementsProjection";
     case "jurisdiction-operational-reference": return "lib/civic-data/operational-references.ts#preloadOperationalReferenceBundle";
     case "jurisdiction-operational-reference-az": return "lib/civic-data/operational-references.ts#preloadAzOperationalReferenceBundle";
@@ -114,7 +107,6 @@ function verifierIdFor(contract: ReaderContract): string {
     case "nh-sos-campaign-finance":
     case "nj-elec-campaign-finance": return "lib/funding/state-snapshot.ts#readStateMoneyProjection";
     case "az-pima-local-finance": return "lib/control-plane/campaign-finance/held-records.ts#refreshAzPimaFinanceFromPromoted";
-    case "voting-sites": return "lib/ballot/voting-sites-server.ts#readVotingSitesProjection";
     case "prl": return "lib/sources/prl/snapshot.ts#readPrlProjection";
     case "prl-archives": return "lib/sources/prl/archive-publication.ts#readPrlArchiveProjection";
     case "az-official-actions": return "lib/officials/executive-actions.ts#readExecutiveActionsProjection";
@@ -130,7 +122,6 @@ function verifierIdFor(contract: ReaderContract): string {
     case "meeting-source-wiring": return "lib/civic-data/derived-meeting-wiring.ts#readDerivedMeetingWiring";
     case "meeting-doors": return "lib/doors/meeting-doors.ts#readMeetingDoors";
     case "meeting-body-crosswalk-derived": return "lib/civic-data/derived-crosswalk.ts#readDerivedMeetingBodyCrosswalk";
-    case "candidate-campaign-sites-derived": return "lib/civic-data/derived-campaign-sites.ts#readDerivedCampaignSites";
     case "everyday-routing": return "lib/routing/everyday-data-plane.ts#readEverydayRoutingProjection";
     default:
       if (contract.recordClass === "REGISTRATION") return "lib/registration/reader.ts#readRegistrationProjection";
@@ -312,10 +303,6 @@ export async function verifyRoutineReaderProjection(
         const result = await readPopulationProjection({ store: options.store, now: options.now, bypassCache: true });
         return verifyExactVersion(verifierId, result, options.expectedVersionId, "ACS");
       }
-      case "registry-runtime-bindings": {
-        const { readRegistryRuntimeProjection } = await import("../registry/runtime-read-model.ts");
-        return verifyExactVersion(verifierId, await readRegistryRuntimeProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "registry-runtime");
-      }
       case "congress-rollcalls": {
         const { readFederalMemberVotes, readFederalRollCallsProjection } = await import("../votes/snapshot.ts");
         const member = federalMemberOfScope(options.scope ?? contract.scope), read = { store: options.store, now: options.now, bypassCache: true };
@@ -326,14 +313,6 @@ export async function verifyRoutineReaderProjection(
       case "federal-key-votes": {
         const { readFederalKeyVotesProjection } = await import("../votes/key-votes-projection.ts");
         return verifyExactVersion(verifierId, await readFederalKeyVotesProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "federal-key-vote");
-      }
-      case "nj-morris-filing": {
-        const { readNjMorrisFiling } = await import("../sources/ballot-nj-morris/index.ts");
-        return verifyExactVersion(verifierId, await readNjMorrisFiling({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "NJ Morris ballot");
-      }
-      case "ballot-contests": {
-        const { readGenericBallotProjection } = await import("../ballot/generic-projection.ts");
-        return verifyExactVersion(verifierId, await readGenericBallotProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "state-election-ballots");
       }
       case "plain-english-translations": {
         const { readTranslationProjection } = await import("../translate/projection-reader.ts");
@@ -363,20 +342,6 @@ export async function verifyRoutineReaderProjection(
         if (!options.scope?.startsWith(prefix)) return fail(verifierId, "Budget readback requires its exact jurisdiction.");
         return verifyExactVersion(verifierId, await readGovernmentBudgets(options.scope.slice(prefix.length), { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, contract.id);
       }
-      case "az-sos-ballot":
-      case "nh-curated-ballot":
-      case "candidate-profiles":
-      case "candidate-corpus": {
-        const readers = await import("./manual-read-models.ts");
-        const result = contract.id === "az-sos-ballot"
-          ? await readers.readAzBallotProjection({ store: options.store, now: options.now, bypassCache: true })
-          : contract.id === "nh-curated-ballot"
-            ? await readers.readNhBallotProjection({ store: options.store, now: options.now, bypassCache: true })
-            : contract.id === "candidate-profiles"
-              ? await readers.readCandidateProfilesProjection({ store: options.store, now: options.now, bypassCache: true })
-              : await readers.readCandidateCorpusProjection({ store: options.store, now: options.now, bypassCache: true });
-        return verifyExactVersion(verifierId, result, options.expectedVersionId, contract.readerProjection?.id ?? contract.id);
-      }
       case "officeholder-statements": {
         const { readOfficeholderStatementsProjection } = await import("../corpus/data-plane.ts");
         return verifyExactVersion(verifierId, await readOfficeholderStatementsProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "officeholder-statements");
@@ -405,10 +370,6 @@ export async function verifyRoutineReaderProjection(
         return version === options.expectedVersionId
           ? pass(verifierId, `The typed Pima campaign-finance Reader read canonical version ${options.expectedVersionId}.`)
           : fail(verifierId, `Expected promoted ${options.expectedVersionId}; typed Pima campaign-finance Reader returned ${version ?? "none"}.`);
-      }
-      case "voting-sites": {
-        const { readVotingSitesProjection } = await import("../ballot/voting-sites-server.ts");
-        return verifyExactVersion(verifierId, await readVotingSitesProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "voting-sites");
       }
       case "prl": {
         const { readPrlProjection } = await import("../sources/prl/snapshot.ts");
@@ -451,10 +412,6 @@ export async function verifyRoutineReaderProjection(
       case "meeting-body-crosswalk-derived": {
         const { readDerivedMeetingBodyCrosswalk } = await import("./derived-crosswalk.ts");
         return verifyExactVersion(verifierId, await readDerivedMeetingBodyCrosswalk({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, contract.id);
-      }
-      case "candidate-campaign-sites-derived": {
-        const { readDerivedCampaignSites } = await import("./derived-campaign-sites.ts");
-        return verifyExactVersion(verifierId, await readDerivedCampaignSites({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, contract.id);
       }
       case "everyday-routing": {
         const { readEverydayRoutingProjection } = await import("../routing/everyday-data-plane.ts");

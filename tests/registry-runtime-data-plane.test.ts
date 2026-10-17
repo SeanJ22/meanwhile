@@ -1,20 +1,24 @@
+import { registryRuntimeProjectionIssues } from "../lib/registry/runtime-data-plane.ts";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { takeStatePublicationPrior } from "../lib/civic-data/state-publication.ts";
 import test from "node:test";
-import { gunzipSync } from "node:zlib";
 
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS, requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
 import { recordRoutineReaderProjectionReadback } from "../lib/civic-data/reader-verification.ts";
 import { candidateChangeSet, canonicalCivicDataJson, civicRecordsFor } from "../lib/civic-data/changes.ts";
 import { validateRoutineCandidate } from "../lib/civic-data/validate.ts";
 import { promotionProofIssue } from "../lib/civic-data/read-model.ts";
-import type { CandidateVersionRecord, PromotedProjection, RoutineCandidate, RoutineRecordClass } from "../lib/civic-data/types.ts";
+import type { RoutineCandidate, RoutineRecordClass } from "../lib/civic-data/types.ts";
 import { projectRoutineDataObservability } from "../lib/civic-data/observability.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { MemoryRoutineDataStore, PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
-import { getTableName } from "drizzle-orm";
+import type { SQL } from "drizzle-orm";
+import { PgDialect } from "drizzle-orm/pg-core";
 import { partitionCivicPayload } from "../lib/civic-data/payload-codec.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { readerOfficeholders } from "../lib/ask/server-sources.ts";
@@ -30,22 +34,81 @@ import {
 } from "../lib/officials/federal-directory-data-plane.ts";
 import { readStateFederalDirectory } from "../lib/officials/federal-directory-read-model.ts";
 import {
-  REGISTRY_RUNTIME_SCOPE,
   readRegistryRuntimePrior,
-  registryBaseSourceReceipt,
+  acceptedRegistryPrior,
   registryRuntimeCandidate,
-  registryRuntimeProjectionIssues,
+  registryRuntimeCandidateFromFile,
   type RegistryRuntimePackage,
   type RegistryRuntimeCarton,
   type RegistryRuntimeReadModel,
 } from "../lib/registry/runtime-data-plane.ts";
+import { stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
+import { provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
 import { installFactReader } from "../lib/facts/db.ts";
-import { getRegistryRuntimeReadModel, primeRegistryRuntimeFromValue, readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
+import { getRegistryRuntimeReadModel, readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
 import { CENSUS_PLACEHOLDER_BODY_ISSUE, isCensusPlaceholderDivision, withoutPlaceholderBodies } from "../lib/registry/census-placeholders.ts";
 import { slotsFor } from "../lib/registry/derive.ts";
 import type { Registry } from "../lib/registry/types.ts";
 import { registryTransferImport, syntheticFederalDirectory, syntheticStateLegislators } from "./helpers/promoted-fixtures.ts";
 import type { OfficialStateLegislatorReadModel } from "../lib/civic-data/candidate-builders.ts";
+import { registryJurisdictions } from "../lib/civic-data/state-scopes.ts";
+import { stateRegistryRuntimeContractId } from "../lib/civic-data/state-scopes.ts";
+import { rowKeyedCivicRecordsFor } from "../lib/civic-data/changes.ts";
+import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
+import { trustedLkgImportUrl } from "../lib/civic-data/trusted-lkg-import.ts";
+import { withStateRecordHashes } from "../lib/civic-data/state-publication.ts";
+import { ROW_KEYED_CIVIC_CHANGE_CONTRACT } from "../lib/civic-data/changes.ts";
+import { trustedLkgCandidateEnvelopeSha256 } from "../lib/civic-data/trusted-lkg-import.ts";
+import { trustedLkgValidatorIds } from "../lib/civic-data/trusted-lkg-import.ts";
+import { trustedLkgCandidateId } from "../lib/civic-data/trusted-lkg-import.ts";
+import type { CandidateVersionRecord } from "../lib/civic-data/types.ts";
+import type { PromotedProjection } from "../lib/civic-data/types.ts";
+
+function stateRegistryRuntimeStore(state: string, store = new MemoryRoutineDataStore()): MemoryRoutineDataStore {
+  const original = registryTransferImport();
+  const payload = registryFixtureForState(state), scope = stateRegistryRuntimeScope(state), contractId = stateRegistryRuntimeContractId(state);
+  const civicRecords = rowKeyedCivicRecordsFor("REGISTRY_RUNTIME_BINDING", payload), digest = canonicalCivicDataHash(payload);
+  const candidate = { ...original.record.candidate, scope,
+    retrieval: { ...original.record.candidate.retrieval, requestedUrl: trustedLkgImportUrl(contractId) },
+    normalization: { ...original.record.candidate.normalization, normalizedHash: digest, normalizedPayloadHash: digest,
+      inputRecords: civicRecords.length, outputRecords: civicRecords.length, droppedRecords: 0 },
+    normalizedPayload: payload, readModel: payload, civicRecords, identities: [],
+    horizon: { ...original.record.candidate.horizon, returnedRecords: civicRecords.length },
+    sourceProjectionEvidence: { kind: "SOURCE_PROJECTION_CONTRACT" as const, sourceId: original.record.candidate.sourceId, recordClass: original.record.candidate.recordClass, scope },
+  };
+  Object.assign(candidate, { normalization: withStateRecordHashes(candidate).normalization });
+  candidate.changeSet = candidateChangeSet(candidate, null, ROW_KEYED_CIVIC_CHANGE_CONTRACT);
+  candidate.bootstrapImport = { ...original.record.candidate.bootstrapImport!, contractId, scope,
+    normalizedPayloadSha256: digest, readModelSha256: digest, candidateEnvelopeSha256: trustedLkgCandidateEnvelopeSha256(candidate), validatorIds: trustedLkgValidatorIds(candidate) };
+  candidate.id = trustedLkgCandidateId(candidate.bootstrapImport);
+  const receipt = { ...original.record.receipt!, candidateId: candidate.id, scope };
+  const record = { ...original.record, candidate, receipt, promotedVersion: candidate.id, lastKnownGoodVersion: candidate.id };
+  const projection = { ...original.projection, key: `REGISTRY_RUNTIME_BINDING:${scope}`, scope, versionId: candidate.id,
+    lastKnownGoodVersionId: candidate.id, payload, receipt };
+  const held = store as unknown as { candidates: Map<string, CandidateVersionRecord>; promotions: Map<string, PromotedProjection> };
+  held.candidates.set(candidate.id, record);
+  held.promotions.set(projection.key, projection);
+  return store;
+}
+
+function registryFixtureForState(state: string, value: RegistryRuntimeReadModel = registryTransferImport().projection.payload): RegistryRuntimeReadModel {
+  const own = (id: string | null) => registryJurisdictions(id).includes(state.toUpperCase());
+  const bodies = value.registry.bodies.filter(row => own(row.id) || own(row.ocdId) || row.alsoServesOcdIds?.some(own));
+  const bodyIds = new Set(bodies.map(row => row.id));
+  const bodyRosters = value.bodyRosters.filter(row => bodyIds.has(row.bodyId));
+  const statewideExecutives = value.statewideExecutives.filter(row => own(row.stateOcdId));
+  const bridge = value.officialCandidacies.rows.filter(row => row.holder.divisions.some(own));
+  const holders = new Set([...bodyRosters.flatMap(row => row.members.map(member => member.id)),
+    ...statewideExecutives.map(row => row.holder.id), ...bridge.map(row => row.holder.id)]);
+  return { ...value, registry: { ...value.registry, bodies,
+    divisions: value.registry.divisions.filter(row => row.ocdId === "ocd-division/country:us" || own(row.ocdId)) },
+    bodyRosters, statewideExecutives, officialCandidacies: { ...value.officialCandidacies, rows: bridge },
+    officialPhotos: { photos: value.officialPhotos.photos.filter(row => holders.has(row.officeholderId)) },
+    rosterPhotos: Object.fromEntries(Object.entries(value.rosterPhotos).filter(([id]) => holders.has(id) || own(id))),
+    rosterReaderDispositions: value.rosterReaderDispositions.filter(row => own(row.sourceId) || holders.has(row.sourceId) || (row.canonicalId !== null && holders.has(row.canonicalId)) ||
+      [...holders].some(id => id.startsWith("roster:") && id.split("#")[0] === row.sourceId.split("#")[0])) };
+}
+
 
 const T0 = "2026-09-08T12:00:00.000Z";
 const T1 = "2026-09-08T12:01:00.000Z";
@@ -92,26 +155,26 @@ function receipt(value: RegistryRuntimeCarton, at: string, salt: string): Manual
   };
 }
 
-function servedRegistry(): RegistryRuntimeCarton {
-  const { bodyRosters: _rosters, rosterReaderDispositions: _dispositions, ...imported } = registryTransferImport().projection.payload;
+function servedRegistry(state?: string): RegistryRuntimeCarton {
+  const { bodyRosters: _rosters, rosterReaderDispositions: _dispositions, ...imported } = state ? registryFixtureForState(state) : registryTransferImport().projection.payload;
   const placeholders = frozenPlaceholders().ids;
   return { ...imported, registry: { ...imported.registry, bodies: imported.registry.bodies.filter((body) => body.ocdId === null || !placeholders.has(body.ocdId)) } };
 }
 
-async function registryPackage(at: string, salt: string): Promise<RegistryRuntimePackage> {
-  const payload = structuredClone(servedRegistry());
-  return { contractId: "registry-runtime-bindings", version: at, sourceThrough: at, sourceReceipt: receipt(payload, at, salt), payload };
+async function registryPackage(at: string, salt: string, state: "AZ" | "NH" | "OH" = "AZ"): Promise<RegistryRuntimePackage> {
+  const payload = structuredClone(servedRegistry(state));
+  return { contractId: `registry-runtime:${state}`, version: at, sourceThrough: at, sourceReceipt: receipt(payload, at, salt), payload };
 }
 
 test("Ask reads native state people beside a partitioned registry without reviving superseded legislative seat rows", async () => {
   const memory = new MemoryRoutineDataStore();
-  const pkg = await registryPackage(T0, "district-seats");
+  const pkg = await registryPackage(T0, "district-seats", "OH");
   const model = structuredClone(registryRuntimeCandidate(pkg).readModel) as { -readonly [K in keyof RegistryRuntimeCarton]: RegistryRuntimeCarton[K] };
   const districts = ["ocd-division/country:us/state:oh/sldl:1", "ocd-division/country:us/state:oh/sldu:15"];
   for (const [index, division] of districts.entries()) {
     const id = `${division}#seat`;
     model.registry.divisions.push({ ...model.registry.divisions[0]!, ocdId: division });
-    model.registry.bodies.push({ ...model.registry.bodies[0]!, id, ocdId: division, name: `Ohio legislative seat ${index}` });
+    model.registry.bodies.push({ ...registryFixtureForState("AZ").registry.bodies[0]!, id, ocdId: division, name: `Ohio legislative seat ${index}` });
     const memberId = `roster:${id}#held`;
     model.officialCandidacies = { ...model.officialCandidacies, rows: [...model.officialCandidacies.rows, {
       holder: { id: memberId, name: `Superseded seat member ${index}`,
@@ -120,12 +183,14 @@ test("Ask reads native state people beside a partitioned registry without revivi
       status: "NOT_CHECKED", candidacy: null, reason: "This fixture has no candidacy finding.", unresolvedCandidacyIds: [],
     }] };
   }
+  model.registry.bodies[0].provenance = { ...model.registry.bodies[0].provenance, sourceOrg: "Official fixture publisher ".repeat(1500) };
   const candidate = registryRuntimeCandidate({ ...pkg, payload: model, sourceReceipt: receipt(model, T0, "district-seats") });
-  const published = await processRegisteredManualCandidate(memory, "registry-runtime-bindings", candidate, T0);
+  const published = await processRegisteredManualCandidate(memory, "registry-runtime:OH", candidate, T0);
   assert.equal(published.candidate.state, "PROMOTED", published.candidate.failureDetail ?? undefined);
   const pointer = published.promoted!;
   const payload = partitionCivicPayload(pointer.payload);
-  const envelope = partitionCivicPayload(published.candidate.candidate, ["id", "sourceId", "recordClass", "scope", "retrieval", "normalization", "temporal"]);
+  const metadata = (await memory.readPublishedCandidateMetadata(candidate.id))!;
+  const envelope = partitionCivicPayload(metadata.candidate, ["id", "sourceId", "recordClass", "scope", "retrieval", "normalization", "temporal"]);
   const parts = [...new Map([...payload.parts, ...envelope.parts].map(row => [row.hash, row])).values()];
   assert.ok(payload.parts.length > 0, "this must exercise a storage reference, not inline JSON");
   const originalUrl = process.env.DATABASE_URL;
@@ -133,25 +198,22 @@ test("Ask reads native state people beside a partitioned registry without revivi
   installFactReader(null);
   try {
     const postgres = new PostgresRoutineDataStore();
-    const queries: string[] = [];
-    Object.assign(postgres, { db: { select: () => ({ from: (table: Parameters<typeof getTableName>[0]) => ({ where: () => {
-      const name = getTableName(table); queries.push(name);
-      const rows = name === "civic_data_payload_parts" ? parts : name === "civic_data_promotions" ? [{
-        key: pointer.key, sourceId: pointer.sourceId, recordClass: pointer.recordClass, scope: pointer.scope,
-        currentVersionId: pointer.versionId, lastKnownGoodVersionId: pointer.lastKnownGoodVersionId,
-        promotedAt: pointer.promotedAt, validationReceipt: pointer.receipt, payload: payload.value,
-      }] : name === "civic_data_candidates" ? [{
-        id: candidate.id, candidate: envelope.value, state: published.candidate.state, acquisitionSucceeded: true,
-        validationReceipt: published.candidate.receipt, promotedVersionId: candidate.id,
-        lastKnownGoodVersionId: candidate.id, failureCode: null, failureDetail: null,
-      }] : [];
-      return Object.assign(Promise.resolve(rows), { limit: async () => rows });
-    } }) }) } });
-    const read = await readRegistryRuntimeProjection({ store: postgres, bypassCache: true, now: T0 });
+    const queries: unknown[][] = [];
+    Object.assign(postgres, { db: { execute: async (statement: SQL) => {
+      const query = new PgDialect().sqlToQuery(statement);
+      queries.push(query.params);
+      assert.match(query.sql, /WHERE p\.key = \$/);
+      return { rows: [structuredClone({ value: { projection: { ...pointer, payload: payload.value },
+        candidate: { ...metadata, candidate: envelope.value } }, coupled: true, reuse: false, confirmation: null,
+        parts: Object.fromEntries(parts.map(part => [part.hash, part.payload])) })] };
+    } } });
+    const read = await readRegistryRuntimeProjection(["OH"], { store: postgres, bypassCache: true, now: T0 });
     if (read.kind !== "PROMOTED") throw new Error(JSON.stringify(read));
-    assert.ok(queries.includes("civic_data_payload_parts"));
-    const registryRuntime = { value: read.value, versionId: read.metadata.versionId! };
-    await withReaderAuthorityEdge({ edgeOnly: true, registryRuntime }, async () => {
+    assert.equal(queries.length, 1, "the state payload, encoded parts and scalar proof arrive in one keyed read");
+    assert.ok(queries[0].includes(pointer.key));
+    const entry = provenEdgeEntry({ recordClass: "REGISTRY_RUNTIME_BINDING", scope: stateRegistryRuntimeScope("OH"), sourceId: candidate.sourceId, versionId: read.metadata.versionId!, value: read.value });
+    const stateAuthorities = { states: { "registry-runtime": new Set(["OH"]) }, load: async () => ({ kind: "PROMOTED_POINTERS" as const, entries: [entry] }) };
+    await withReaderAuthorityEdge({ edgeOnly: true, stateAuthorities }, async () => {
       const held = await readerOfficeholders(districts);
       assert.ok(held.loaderFailures > 0, "the missing state authority stays a reported gap");
       assert.ok(held.seats.every(seat => !seat.name.startsWith("Superseded seat member")), "registry seat rows are no longer a competing legislative authority");
@@ -169,7 +231,7 @@ test("Ask reads native state people beside a partitioned registry without revivi
       term: "2025-2026", generatedAt: T0, roster: { scope: "OH", generatedAt: T0, officeholders: people,
         divisions: districts.map((ocdId, index) => ({ ocdId, officeholderId: people[index].id, bodyId: null })), unmatched: [] } };
     const stateReads: string[] = [];
-    await withReaderAuthorityEdge({ edgeOnly: true, registryRuntime, stateLegislators: { jurisdictions: new Set(["US-OH"]), load: async scope => {
+    await withReaderAuthorityEdge({ edgeOnly: true, stateAuthorities, stateLegislators: { jurisdictions: new Set(["US-OH"]), load: async scope => {
       stateReads.push(scope);
       assert.equal(scope, "US-OH");
       return { value: statePeople, versionId: "test:oh-native-people" };
@@ -264,20 +326,30 @@ test("two registry publications in one pass never reuse a clock before the scope
   for (const changed of [false, true]) {
     const store = new MemoryRoutineDataStore();
     const firstPackage = await registryPackage(T0, "same-pass-first");
-    const first = await processRegisteredManualCandidate(store, "registry-runtime-bindings", registryRuntimeCandidate(firstPackage), T0);
+    const first = await processRegisteredManualCandidate(store, "registry-runtime:AZ", registryRuntimeCandidate(firstPackage), T0);
     assert.equal(first.candidate.state, "PROMOTED");
-    const contract = requiredManualProductionContract("registry-runtime-bindings");
+    const contract = requiredManualProductionContract("registry-runtime:AZ");
     await recordRoutineReaderProjectionReadback(store, contract, first.promoted!, T1);
+    const beforeEvents = await store.events(first.promoted!.versionId);
     const secondPackage = await registryPackage(T0, "same-pass-second");
     const payload = changed ? { ...secondPackage.payload, registry: { ...secondPackage.payload.registry,
       bodies: secondPackage.payload.registry.bodies.map((body, index) => index ? body : { ...body, homepageUrl: "https://changed.example.gov/" }) } } : secondPackage.payload;
-    const second = await processRegisteredManualCandidate(store, "registry-runtime-bindings", registryRuntimeCandidate({ ...secondPackage, payload }), T0);
+    const second = await processRegisteredManualCandidate(store, "registry-runtime:AZ", registryRuntimeCandidate({ ...secondPackage, payload }), T0);
     assert.equal(second.candidate.state, "PROMOTED", second.candidate.failureDetail ?? undefined);
     assert.equal(Boolean(second.confirmed), !changed);
-    const readback = second.readerReadback ?? await recordRoutineReaderProjectionReadback(store, contract, second.promoted!, T0);
-    assert.equal(readback?.status, "PASS");
-    assert.ok(Date.parse(readback!.observedAt) >= Date.parse(T1));
-    assert.ok(Date.parse(second.confirmed?.at ?? second.candidate.receipt!.validatedAt) >= Date.parse(T1));
+    if (changed) {
+      const readback = second.readerReadback!;
+      assert.equal(readback.status, "PASS");
+      assert.ok(Date.parse(readback.observedAt) >= Date.parse(T1));
+      assert.ok(Date.parse(second.candidate.receipt!.validatedAt) >= Date.parse(T1));
+    } else {
+      assert.equal(second.promoted!.versionId, first.promoted!.versionId);
+      assert.deepEqual(await store.events(first.promoted!.versionId), beforeEvents, "an unchanged state writes no confirmation or new readback");
+      const nextPrior = await acceptedRegistryPrior({ async readPromotion() { throw new Error("must reuse the accepted state graph"); },
+        async readCandidate() { throw new Error("must not load another copy"); } }, second);
+      assert.equal(nextPrior.payload, second.confirmed!.recheck.readModel);
+      assert.equal(nextPrior.versionId, first.promoted!.versionId);
+    }
     const events = await store.events(second.promoted!.versionId);
     assert.ok(events.every((event, index) => index === 0 || Date.parse(event.at) >= Date.parse(events[index - 1]!.at)));
   }
@@ -287,13 +359,13 @@ test("registry relational bindings remain coherent while exact member deltas pro
   const store = new MemoryRoutineDataStore();
   const firstPackage = await registryPackage(T0, "first");
   const first = registryRuntimeCandidate(firstPackage);
-  const promoted = await processRegisteredManualCandidate(store, "registry-runtime-bindings", first, T0);
+  const promoted = await processRegisteredManualCandidate(store, "registry-runtime:AZ", first, T0);
   assert.equal(promoted.candidate.state, "PROMOTED");
   assert.equal(promoted.readerReadback?.status, "PASS");
   assert.ok(firstPackage.payload.statewideExecutives.length > 0);
   assert.ok(firstPackage.payload.officialCandidacies.rows.some((row) => row.status === "RESOLVED"));
   assert.ok(firstPackage.payload.officialCandidacies.rows.every((row) => !("sourcePath" in row.holder) && !(row.candidacy && "sourcePath" in row.candidacy)));
-  const firstRead = await readRegistryRuntimeProjection({ store, bypassCache: true, now: T0 });
+  const firstRead = await readRegistryRuntimeProjection(["AZ"], { store, bypassCache: true, now: T0 });
   assert.equal(firstRead.kind, "PROMOTED");
   assert.equal(firstRead.metadata.versionId, first.id);
 
@@ -314,11 +386,11 @@ test("registry relational bindings remain coherent while exact member deltas pro
   };
   const changedPackage: RegistryRuntimePackage = { ...changedBase, payload: changedPayload, sourceReceipt: receipt(changedPayload, T1, "changed") };
   const changed = registryRuntimeCandidate(changedPackage);
-  const changedOutcome = await processRegisteredManualCandidate(store, "registry-runtime-bindings", changed, T1);
+  const changedOutcome = await processRegisteredManualCandidate(store, "registry-runtime:AZ", changed, T1);
   assert.equal(changedOutcome.candidate.state, "PROMOTED");
   assert.ok(changedOutcome.candidate.candidate.changeSet?.changed.some((record) => record.key === `body:${changedBody.id}`));
   assert.ok(changedOutcome.candidate.candidate.changeSet?.changed.some((record) => record.key === `official-candidacy:${changedBridgeRow.holder.id}`));
-  const changedRead = await readRegistryRuntimeProjection({ store, bypassCache: true, now: T1 });
+  const changedRead = await readRegistryRuntimeProjection(["AZ"], { store, bypassCache: true, now: T1 });
   assert.equal(changedRead.kind, "PROMOTED");
   assert.equal(changedRead.value.registry.bodies.find((body) => body.id === changedBody.id)?.homepageUrl, "https://changed.example.gov/");
   assert.match(changedRead.value.officialCandidacies.rows.find((row) => row.holder.id === changedBridgeRow.holder.id)?.reason ?? "", /successor package/);
@@ -339,18 +411,18 @@ test("registry relational bindings remain coherent while exact member deltas pro
   };
   const bad = registryRuntimeCandidate(badPackage);
   assert.notEqual(bad.id, changed.id, "the candidate identity binds the exact normalized projection, not only its receipt URLs");
-  const held = await processRegisteredManualCandidate(store, "registry-runtime-bindings", bad, "2026-09-08T12:02:00.000Z");
+  const held = await processRegisteredManualCandidate(store, "registry-runtime:AZ", bad, "2026-09-08T12:02:00.000Z");
   assert.equal(held.candidate.state, "SEMANTIC_INVALID");
   assert.match(held.candidate.failureDetail ?? "", /OFFICIAL_CANDIDACY_HOLDER_FACT_MISMATCH/);
   assert.equal(held.promoted, null);
-  assert.equal((await store.readPromotion("REGISTRY_RUNTIME_BINDING", REGISTRY_RUNTIME_SCOPE))?.versionId, changed.id);
+  assert.equal((await store.readPromotion("REGISTRY_RUNTIME_BINDING", stateRegistryRuntimeScope("AZ")))?.versionId, changed.id);
 });
 
 test("one blocked registry publisher holds only its dependent members while an unrelated body update promotes", async () => {
   const store = new MemoryRoutineDataStore();
   const firstPackage = await registryPackage(T0, "isolation-first");
   const first = registryRuntimeCandidate(firstPackage);
-  await processRegisteredManualCandidate(store, "registry-runtime-bindings", first, T0, null);
+  await processRegisteredManualCandidate(store, "registry-runtime:AZ", first, T0, null);
 
   const nextPackage = await registryPackage(T1, "isolation-next");
   const sourced = nextPackage.payload.registry.bodies.filter((body) => body.provenance.sourceUrl);
@@ -375,7 +447,7 @@ test("one blocked registry publisher holds only its dependent members while an u
         }
       : source),
   };
-  const prior = await readRegistryRuntimePrior(store, T1);
+  const prior = await readRegistryRuntimePrior(store, T1, "AZ");
   assert.equal(prior?.versionId, first.id);
   assert.equal(prior?.readModelSha256, first.normalization.normalizedHash);
   assert.deepEqual(prior?.sourceReceipt, first.retrieval.manualSourceReceipt);
@@ -388,7 +460,7 @@ test("one blocked registry publisher holds only its dependent members while an u
   assert.equal(next.manualPriorAuthority, undefined);
   const outcome = await processRegisteredManualCandidate(
     store,
-    "registry-runtime-bindings",
+    "registry-runtime:AZ",
     next,
     T1,
     first.id,
@@ -410,9 +482,9 @@ test("one blocked registry publisher holds only its dependent members while an u
 });
 
 /** The frozen first seed still holds the two bodies once minted on Census placeholders (Arizona, New Hampshire). */
-function frozenPlaceholders() {
+function frozenPlaceholders(state?: string) {
   const frozen = JSON.parse(readFileSync("lib/registry/registry.json", "utf8")) as Registry;
-  const divisions = frozen.divisions.filter((division) => isCensusPlaceholderDivision(division));
+  const divisions = frozen.divisions.filter((division) => (!state || division.state === state) && isCensusPlaceholderDivision(division));
   const ids = new Set(divisions.map((division) => division.ocdId));
   return { divisions, ids, bodies: frozen.bodies.filter((body) => body.ocdId !== null && ids.has(body.ocdId)) };
 }
@@ -453,13 +525,13 @@ test("a Census placeholder division is geography: no body is derived on it and n
 });
 
 test("a promotion drops placeholder bodies whichever side holds them, names why, and translates the placeholder's name", async () => {
-  const placeholders = frozenPlaceholders();
+  const placeholders = frozenPlaceholders("AZ");
   // A prior holding both bodies and a raw Census name.
   const base = await registryPackage(T0, "placeholder-prior");
   const priorPayload = structuredClone(base.payload);
   priorPayload.registry.bodies = [...priorPayload.registry.bodies, ...placeholders.bodies].sort((left, right) => left.id.localeCompare(right.id));
   priorPayload.registry.divisions = priorPayload.registry.divisions.map((division) =>
-    division.state === "NH" && placeholders.ids.has(division.ocdId) ? { ...division, label: "School District Not Defined" } : division);
+    division.state === "AZ" && placeholders.ids.has(division.ocdId) ? { ...division, label: "School District Not Defined" } : division);
   const prior = {
     versionId: "placeholder-prior",
     payload: priorPayload,
@@ -478,7 +550,7 @@ test("a promotion drops placeholder bodies whichever side holds them, names why,
   const fromPriorModel = fromPrior.readModel as RegistryRuntimeReadModel;
   assert.deepEqual(fromPrior.semantics.violations, []);
   assert.equal(fromPriorModel.registry.bodies.length, base.payload.registry.bodies.length);
-  assert.deepEqual(plainNames(fromPriorModel), ["No unified school district here", "No unified school district here"]);
+  assert.deepEqual(plainNames(fromPriorModel), ["No unified school district here"]);
   assert.deepEqual(removals(fromPrior), expectedRemovals);
   assert.equal((fromPrior.excludedFacts ?? []).some((fact) => fact.code === "MANUAL_MEMBER_REMOVAL_EVIDENCE_MISSING" && expectedRemovals.includes(fact.key ?? "")), false);
   // The removals it proves to the plane are the prior's, named by their division.
@@ -491,25 +563,21 @@ test("a promotion drops placeholder bodies whichever side holds them, names why,
   const fromPackageModel = fromPackage.readModel as RegistryRuntimeReadModel;
   assert.deepEqual(fromPackage.semantics.violations, []);
   assert.equal(fromPackageModel.registry.bodies.some((body) => body.ocdId !== null && placeholders.ids.has(body.ocdId)), false);
-  assert.deepEqual(plainNames(fromPackageModel), ["No unified school district here", "No unified school district here"]);
+  assert.deepEqual(plainNames(fromPackageModel), ["No unified school district here"]);
   assert.deepEqual(removals(fromPackage), expectedRemovals);
   assert.equal(fromPackage.removalEvidence, undefined, "no pointer held them, so nothing is removed from one");
-  const outcome = await processRegisteredManualCandidate(new MemoryRoutineDataStore(), "registry-runtime-bindings", fromPackage, T1);
+  const outcome = await processRegisteredManualCandidate(new MemoryRoutineDataStore(), "registry-runtime:AZ", fromPackage, T1);
   assert.equal(outcome.candidate.state, "PROMOTED");
 });
 
-// This transfer fixture is retained history, without source authentication or publication authority.
 async function transferImportedRegistry(store: MemoryRoutineDataStore, at: string) {
-  const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as {
-    record: CandidateVersionRecord;
-    projection: PromotedProjection;
-  };
-  assert.equal(projection.promotedAt, at, "the recorded transfer promoted at T0");
+  stateRegistryRuntimeStore("AZ", store);
+  const projection = (await store.readPromotion<RegistryRuntimeReadModel>("REGISTRY_RUNTIME_BINDING", stateRegistryRuntimeScope("AZ")))!;
+  const record = (await store.readCandidate(projection.versionId))!;
+  assert.equal(projection.promotedAt, at);
   assert.equal(promotionProofIssue(record.candidate.recordClass, record.candidate.scope, projection, record), null);
-  const imported = record.candidate;
-  const base = projection.payload as RegistryRuntimeReadModel;
-  Object.assign(store, { candidates: new Map([[imported.id, record]]), promotions: new Map([[projection.key, projection]]) });
-  return { imported, base, placeholders: frozenPlaceholders(), record, projection };
+  const imported = record.candidate, base = projection.payload;
+  return { imported, base, placeholders: frozenPlaceholders("AZ"), record, projection };
 }
 
 /** A correction that re-reviews only the two placeholder divisions against the Census directory they cite. */
@@ -529,7 +597,7 @@ function placeholderCorrection(base: RegistryRuntimeReadModel, placeholderIds: R
   };
   const census = divisions[0]!.provenance!.sourceUrl!;
   return {
-    contractId: "registry-runtime-bindings",
+    contractId: "registry-runtime:AZ",
     version: at,
     sourceThrough: at,
     payload,
@@ -553,12 +621,16 @@ function placeholderCorrection(base: RegistryRuntimeReadModel, placeholderIds: R
 
 test("the owner door builds on the transfer-time import: untouched members keep its authority, the placeholder boards leave, and the plane re-proves both", async () => {
   class BoundStore extends MemoryRoutineDataStore {
-    #reads = { promotion: 0, proof: 0, candidate: 0 };
+    #reads = { promotion: 0, proof: 0, candidate: 0, metadata: 0 };
     get reads() { return { ...this.#reads }; }
-    resetReads() { this.#reads = { promotion: 0, proof: 0, candidate: 0 }; }
+    resetReads() { this.#reads = { promotion: 0, proof: 0, candidate: 0, metadata: 0 }; }
     override async readPromotion<T>(recordClass: RoutineRecordClass, scope: string) {
       this.#reads.promotion++;
       return super.readPromotion<T>(recordClass, scope);
+    }
+    override async readPublishedCandidateMetadata(candidateId: string) {
+      this.#reads.metadata++;
+      return super.readPublishedCandidateMetadata(candidateId);
     }
     override async readCandidateProof(candidateId: string) {
       this.#reads.proof++;
@@ -572,45 +644,44 @@ test("the owner door builds on the transfer-time import: untouched members keep 
   const store = new BoundStore();
   const { imported, base, placeholders } = await transferImportedRegistry(store, T0);
   store.resetReads();
-  const prior = await readRegistryRuntimePrior(store, T1);
+  const prior = await readRegistryRuntimePrior(store, T1, "AZ");
   assert.ok(prior);
   assert.equal(prior.versionId, imported.id);
-  assert.deepEqual(store.reads, { promotion: 1, proof: 1, candidate: 0 }, "only the current proof row is read, using the original private-field store");
+  assert.deepEqual(store.reads, { promotion: 1, proof: 0, candidate: 0, metadata: 1 }, "only the current proof row is read, using the original private-field store");
   assert.equal(prior.readModelSha256, imported.normalization.normalizedHash);
-  assert.deepEqual(prior.sourceReceipt.sources, [], "the import has no source receipt to carry");
-  assert.equal(prior.sourceReceipt.reviewedAt, imported.retrieval.retrievedAt);
+  assert.equal(prior.sourceReceipt, undefined, "a trusted import cannot invent a reviewed source receipt");
   store.resetReads();
   const fallback = {
     readPromotion: store.readPromotion.bind(store),
     readCandidate: store.readCandidate.bind(store),
   };
-  assert.deepEqual(await readRegistryRuntimePrior(fallback, T1), prior, "a store without a proof door returns the same verified metadata");
-  assert.deepEqual(store.reads, { promotion: 1, proof: 0, candidate: 1 }, "the whole-read fallback is not repeated");
+  await assert.rejects(readRegistryRuntimePrior(fallback, T1, "AZ"), /REGISTRY_RUNTIME_BASE_UNAVAILABLE/);
+  assert.deepEqual(store.reads, { promotion: 1, proof: 0, candidate: 0, metadata: 0 }, "a missing metadata door cannot cause a second state payload read");
 
   const next = registryRuntimeCandidate(placeholderCorrection(base, placeholders.ids, T1), { prior });
   assert.deepEqual(next.semantics.violations, []);
   const phantomKeys = placeholders.bodies.map((body) => `body:${body.id}`).sort();
   const rosterKeys = civicRecordsFor("REGISTRY_RUNTIME_BINDING", prior.payload).map((member) => member.key).filter((key) => /^(body-roster|roster-disposition):/.test(key));
-  assert.ok(rosterKeys.length > 0, "the import still carried rosters; they leave for the fact store");
-  const removedKeys = [...phantomKeys, ...rosterKeys].sort((left, right) => left.localeCompare(right));
+  assert.ok(rosterKeys.length > 0, "the imported rosters remain in the state partition");
+  const removedKeys = phantomKeys;
   assert.deepEqual((next.removalEvidence ?? []).map((row) => row.key), removedKeys);
   const inherited = new Set(next.manualPriorAuthority?.retainedMembers.map((member) => member.key));
-  assert.ok(inherited.size > 1_000, `every untouched cited member carries the import's authority (${inherited.size})`);
+  assert.ok(inherited.size > 100, `every untouched cited member carries the import's authority (${inherited.size})`);
   assert.equal([...placeholders.ids].some((id) => inherited.has(`division:${id}`)), false, "the reviewed divisions stand on the review");
 
-  const outcome = await processRegisteredManualCandidate(store, "registry-runtime-bindings", next, T1, imported.id);
+  const outcome = await processRegisteredManualCandidate(store, "registry-runtime:AZ", next, T1, imported.id);
   assert.equal(outcome.candidate.state, "PROMOTED", JSON.stringify(outcome.candidate.receipt?.checks.filter((check) => check.verdict !== "PASS")));
   assert.equal(outcome.candidate.receipt?.checks.find((check) => check.check === "SOURCE_AUTHENTICITY")?.code, "CURRENT_SOURCES_AND_EXACT_PRIOR_AUTHORITY_VALID");
   const changes = outcome.candidate.candidate.changeSet!;
   assert.deepEqual(changes.removed.map((delta) => delta.key).sort((left, right) => left.localeCompare(right)), removedKeys);
-  assert.deepEqual(changes.changed.map((delta) => delta.key), [`division:${placeholders.divisions.find((division) => division.state === "NH")!.ocdId}`]);
+  assert.deepEqual(changes.changed.map((delta) => delta.key), []);
   assert.deepEqual(changes.added, []);
   const served = outcome.promoted!.payload as RegistryRuntimeReadModel;
-  assert.equal(served.registry.bodies.length, base.registry.bodies.length - 2);
-  assert.deepEqual(served.registry.divisions.filter((division) => placeholders.ids.has(division.ocdId)).map((division) => division.label), ["No unified school district here", "No unified school district here"]);
+  assert.equal(served.registry.bodies.length, base.registry.bodies.length - 1);
+  assert.deepEqual(served.registry.divisions.filter((division) => placeholders.ids.has(division.ocdId)).map((division) => division.label), ["No unified school district here"]);
 
   // The next correction builds on that one; what is still carried from the import keeps carrying.
-  const secondPrior = await readRegistryRuntimePrior(store, T1);
+  const secondPrior = await readRegistryRuntimePrior(store, T1, "AZ");
   assert.equal(secondPrior?.versionId, next.id);
   const later = "2026-09-08T12:02:00.000Z";
   const second = registryRuntimeCandidate(placeholderCorrection(served, placeholders.ids, later), { prior: secondPrior });
@@ -622,25 +693,17 @@ test("the owner door builds on the transfer-time import: untouched members keep 
 
 test("the door accepts exactly the transfer import as a base without a receipt; any other receipt-less base is still refused", async () => {
   const { record, projection } = await transferImportedRegistry(new MemoryRoutineDataStore(), T0);
-  assert.deepEqual(registryBaseSourceReceipt(record.candidate).sources, []);
-  const { bootstrapImport, ...withoutImport } = record.candidate;
-  assert.ok(bootstrapImport);
-  assert.throws(() => registryBaseSourceReceipt(withoutImport), /REGISTRY_RUNTIME_BASE_PROOF_INVALID:MANUAL_SOURCE_RECEIPT_INVALID/);
-  const reattested = { ...record.candidate, bootstrapImport: { ...bootstrapImport, kind: "TRUSTED_LKG_REATTESTATION" } } as unknown as RoutineCandidate;
-  assert.throws(() => registryBaseSourceReceipt(reattested), /REGISTRY_RUNTIME_BASE_PROOF_INVALID:MANUAL_SOURCE_RECEIPT_INVALID/);
-
-  // Through the real read: a pointer that no longer matches its candidate is never a base, whichever layer sees it first.
   const moved = structuredClone(projection.payload) as RegistryRuntimeReadModel;
   moved.registry.bodies = moved.registry.bodies.slice(1);
   const store = new MemoryRoutineDataStore();
   Object.assign(store, { candidates: new Map([[record.candidate.id, record]]), promotions: new Map([[projection.key, { ...projection, payload: moved }]]) });
-  await assert.rejects(readRegistryRuntimePrior(store, T1), /REGISTRY_RUNTIME_BASE_(?:PROOF_INVALID|UNAVAILABLE):/);
+  await assert.rejects(readRegistryRuntimePrior(store, T1, "AZ"), /REGISTRY_RUNTIME_BASE_(?:PROOF_INVALID|UNAVAILABLE):/);
 });
 
 test("the plane refuses what the registry door does not prove: a changed carried member, an unexplained removal, a real board passed off as a placeholder", async () => {
   const store = new MemoryRoutineDataStore();
   const { imported, base, placeholders } = await transferImportedRegistry(store, T0);
-  const prior = await readRegistryRuntimePrior(store, T1);
+  const prior = await readRegistryRuntimePrior(store, T1, "AZ");
   const next = registryRuntimeCandidate(placeholderCorrection(base, placeholders.ids, T1), { prior });
   const lkg = await store.readCandidate(imported.id);
   const codes = (candidate: RoutineCandidate) =>
@@ -670,19 +733,15 @@ test("the plane refuses what the registry door does not prove: a changed carried
   assert.ok(codes(disguisedCandidate).includes("REMOVAL_EVIDENCE_MISMATCH"));
 });
 
-test("the version production serves keeps reading until its correction promotes; no other defect is tolerated", async () => {
-  const placeholders = frozenPlaceholders();
-  const seed: RegistryRuntimeReadModel = { ...registryTransferImport().projection.payload, registry: servedRegistry().registry };
-  const legacy: RegistryRuntimeReadModel = { ...seed, registry: { ...seed.registry, bodies: [...seed.registry.bodies, ...placeholders.bodies] } };
-  try {
-    primeRegistryRuntimeFromValue(legacy, "legacy-with-placeholder-bodies");
-    assert.equal(getRegistryRuntimeReadModel().registry.bodies.length, seed.registry.bodies.length + 2);
-    const duplicated: RegistryRuntimeReadModel = { ...legacy, registry: { ...legacy.registry, bodies: [...legacy.registry.bodies, legacy.registry.bodies[0]!] } };
-    assert.throws(() => primeRegistryRuntimeFromValue(duplicated, "duplicate-body"), /BODY_ID_INVALID_OR_DUPLICATED/);
-  } finally {
-    primeRegistryRuntimeFromValue(seed, "corrected");
-    assert.equal(getRegistryRuntimeReadModel().registry.bodies.length, seed.registry.bodies.length);
-  }
+test("the recorded state remains readable until its correction promotes", async () => {
+  const store = stateRegistryRuntimeStore("AZ");
+  const prior = (await readRegistryRuntimePrior(store, T0, "AZ"))!;
+  assert.equal(prior.payload.registry.bodies.filter(body => body.ocdId !== null && frozenPlaceholders("AZ").ids.has(body.ocdId)).length, 1);
+  await withReaderAuthorityEdge({}, async () => {
+    const read = await readRegistryRuntimeProjection(["AZ"], { store, bypassCache: true, now: T0 });
+    assert.equal(read.kind, "PROMOTED");
+    assert.equal(getRegistryRuntimeReadModel().registry.bodies.length, prior.payload.registry.bodies.length);
+  });
 });
 
 test("both Reader projections reject cross-source proof and never bootstrap on store failure", async () => {
@@ -700,14 +759,14 @@ test("both Reader projections reject cross-source proof and never bootstrap on s
   };
   const reads = await Promise.all([
     readStateFederalDirectory(state, { store: brokenStore, bypassCache: true }),
-    readRegistryRuntimeProjection({ store: brokenStore, bypassCache: true }),
+    readRegistryRuntimeProjection(["AZ"], { store: brokenStore, bypassCache: true }),
   ]);
   assert.deepEqual(reads.map((read) => read.kind), ["STORE_UNREACHABLE", "STORE_UNREACHABLE"]);
   assert.equal(candidateReads, 0);
 });
 
 test("manual contracts have no clock and retired tracked writers cannot be invoked", () => {
-  const ids = new Set(["congress-bulk-roster:AZ", "registry-runtime-bindings"]);
+  const ids = new Set(["congress-bulk-roster:AZ", "registry-runtime:AZ"]);
   const contracts = MANUAL_PRODUCTION_SOURCE_CONTRACTS.filter((contract) => ids.has(contract.id));
   assert.equal(contracts.length, 2);
   assert.ok(contracts.every((contract) => contract.execution === "EXPLICIT_OWNER_INVOCATION_ONLY" && !("cadence" in contract)));
@@ -722,4 +781,125 @@ test("manual contracts have no clock and retired tracked writers cannot be invok
   assert.equal(pkg.scripts["officials:build"], undefined);
   assert.equal(pkg.scripts["officials:enrich"], undefined);
   assert.equal(pkg.scripts["officials:photos"], undefined);
+});
+
+test("a registry publication cannot use a different state's records or prior", async () => {
+  const az = await registryPackage(T0, "az-only"), nh = await registryPackage(T0, "nh-only", "NH");
+  assert.throws(() => registryRuntimeCandidate({ ...az, payload: nh.payload }), /REGISTRY_STATE_SCOPE_MISMATCH:AZ/);
+  const store = stateRegistryRuntimeStore("NH");
+  const foreignPrior = (await readRegistryRuntimePrior(store, T0, "NH"))!;
+  assert.throws(() => registryRuntimeCandidate(az, { prior: foreignPrior }), /REGISTRY_STATE_SCOPE_MISMATCH:AZ/);
+  const seen: string[] = [];
+  const exact = { readPromotion: async <T>(recordClass: RoutineRecordClass, scope: string) => {
+    seen.push(scope);
+    assert.equal(scope, stateRegistryRuntimeScope("AZ"));
+    return store.readPromotion<T>(recordClass, scope);
+  }, readCandidate: store.readCandidate.bind(store), readPublishedCandidateMetadata: store.readPublishedCandidateMetadata.bind(store) };
+  assert.equal(await readRegistryRuntimePrior(exact, T0, "AZ"), null);
+  assert.deepEqual(seen, [stateRegistryRuntimeScope("AZ")]);
+  const nhBefore = await store.readPromotion("REGISTRY_RUNTIME_BINDING", stateRegistryRuntimeScope("NH"));
+  const published = await processRegisteredManualCandidate(store, az.contractId, registryRuntimeCandidate(az), T0);
+  assert.equal(published.candidate.state, "PROMOTED");
+  assert.deepEqual(await store.readPromotion("REGISTRY_RUNTIME_BINDING", stateRegistryRuntimeScope("NH")), nhBefore);
+});
+
+test("a receiptless ordinary state version cannot become inherited registry authority", async () => {
+  const store = stateRegistryRuntimeStore("AZ");
+  const projection = (await store.readPromotion("REGISTRY_RUNTIME_BINDING", stateRegistryRuntimeScope("AZ")))!;
+  const record = (await store.readCandidate(projection.versionId))!;
+  const receipt = { ...record.receipt!, checks: record.receipt!.checks.map(check => check.check === "SOURCE_AUTHENTICITY"
+    ? { ...check, code: "SOURCE_AUTHENTICITY_PASS" } : check) };
+  Object.assign(store, { candidates: new Map([[record.candidate.id, { ...record, receipt }]]),
+    promotions: new Map([[projection.key, { ...projection, receipt }]]) });
+  await assert.rejects(readRegistryRuntimePrior(store, T0, "AZ"), /REGISTRY_RUNTIME_BASE_PROOF_INVALID:MANUAL_SOURCE_RECEIPT_INVALID/);
+});
+
+
+test("a sparse state registry successor preserves every held roster, member, disposition, contact and photo", async () => {
+  const store = stateRegistryRuntimeStore("AZ"), prior = (await readRegistryRuntimePrior(store, T1, "AZ"))!;
+  const before = prior.payload as RegistryRuntimeReadModel;
+  assert.ok(before.bodyRosters.length > 0 && before.rosterReaderDispositions.length > 0);
+  const body = before.registry.bodies.find(row => {
+    const division = before.registry.divisions.find(division => division.ocdId === row.ocdId);
+    return row.provenance.sourceUrl?.startsWith("https://") && division && !isCensusPlaceholderDivision(division);
+  })!;
+  const payload: RegistryRuntimeReadModel = { ...before, registry: { generatedAt: T1, divisions: [], bodies: [{ ...body, name: `${body.name} — official correction` }] },
+    bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: [], officialCandidacies: { ...before.officialCandidacies, rows: [] },
+    officialPhotos: { photos: [] }, rosterPhotos: {} };
+  const pkg: RegistryRuntimePackage = { contractId: "registry-runtime:AZ", version: T1, sourceThrough: T1,
+    scope: "MEMBERS", payload, sourceReceipt: receipt(payload, T1, "one-body-correction") };
+  const preserved = civicRecordsFor("REGISTRY_RUNTIME_BINDING", before).filter(member => /^(body-roster|roster-disposition|official-photo|roster-photo):/.test(member.key));
+  const hashes = new Map(preserved.map(member => [member.key, hash(canonicalCivicDataJson(member.record))]));
+  const built = registryRuntimeCandidate(pkg, { prior }), after = built.readModel as RegistryRuntimeReadModel;
+  for (const member of civicRecordsFor("REGISTRY_RUNTIME_BINDING", after).filter(member => hashes.has(member.key))) {
+    assert.equal(hash(canonicalCivicDataJson(member.record)), hashes.get(member.key), member.key);
+    assert.equal(member.record, preserved.find(row => row.key === member.key)!.record, "unchanged rows keep the same owned objects");
+  }
+  assert.equal(after.bodyRosters.length, before.bodyRosters.length);
+  assert.equal(after.bodyRosters.reduce((count, roster) => count + roster.members.length, 0), before.bodyRosters.reduce((count, roster) => count + roster.members.length, 0));
+  assert.equal(after.rosterReaderDispositions.length, before.rosterReaderDispositions.length);
+  assert.equal(after.officialPhotos.photos.length, before.officialPhotos.photos.length);
+  assert.deepEqual(after.rosterPhotos, before.rosterPhotos);
+  assert.ok(!built.removalEvidence?.some(row => row.code === "MOVED_TO_FACT_STORE"));
+  const published = await processRegisteredManualCandidate(store, "registry-runtime:AZ", built, T1, prior.versionId);
+  assert.equal(published.candidate.state, "PROMOTED", published.candidate.failureDetail ?? "");
+  assert.ok(!published.candidate.candidate.changeSet?.removed.some(row => hashes.has(row.key)));
+  const read = (await readRegistryRuntimePrior(store, "2026-09-08T12:02:00.000Z", "AZ"))!;
+  const restored = civicRecordsFor("REGISTRY_RUNTIME_BINDING", read.payload);
+  for (const [key, digest] of hashes) assert.equal(hash(canonicalCivicDataJson(restored.find(member => member.key === key)!.record)), digest, key);
+});
+
+test("reviewed registry files preserve source isolation, duplicate refusal and property-order independence", async () => {
+  const directory = mkdtempSync(join(tmpdir(), "registry-stream-test-")), file = join(directory, "reviewed.json");
+  try {
+    for (const variant of ["supported", "duplicated", "blocked"] as const) {
+      const source = await registryPackage(T1, `stream-${variant}`), body = source.payload.registry.bodies[0]!;
+      const changed = { ...body, name: `${body.name} reviewed correction` };
+      const input: RegistryRuntimePackage = { ...source, payload: { ...source.payload, registry: { ...source.payload.registry,
+        bodies: [changed, ...source.payload.registry.bodies.slice(1), ...(variant === "duplicated" ? [body] : [])] } },
+        sourceReceipt: variant === "blocked" ? { ...source.sourceReceipt, sources: source.sourceReceipt.sources.map(row =>
+          row.finalUrl === body.provenance.sourceUrl ? { ...row, reviewOutcome: "BLOCKED", failureDetail: "The source refused retrieval." } : row) } : source.sourceReceipt };
+      const expectedStore = stateRegistryRuntimeStore("AZ"), actualStore = stateRegistryRuntimeStore("AZ");
+      const expected = registryRuntimeCandidate(input, { prior: await readRegistryRuntimePrior(expectedStore, T1, "AZ") });
+      const reordered = { payload: Object.fromEntries(Object.entries(input.payload).reverse()),
+        ...Object.fromEntries(Object.entries(input).filter(([key]) => key !== "payload").reverse()) };
+      writeFileSync(file, JSON.stringify(reordered));
+      const actual = await registryRuntimeCandidateFromFile(file, actualStore, "AZ");
+      assert.deepEqual(actual.candidate, expected, variant);
+      assert.equal(actual.reviewedAt, T1);
+      const outcome = await processRegisteredManualCandidate(actualStore, "registry-runtime:AZ", actual.candidate, T1, actual.priorVersionId);
+      assert.equal(outcome.candidate.state, "PROMOTED", outcome.candidate.failureDetail ?? variant);
+      if (variant === "duplicated") assert.ok(actual.candidate.excludedFacts?.some(row => row.code === "MANUAL_MEMBER_KEY_INVALID_OR_DUPLICATED"));
+      if (variant === "blocked") assert.ok(actual.candidate.excludedFacts?.some(row => row.code === "MANUAL_MEMBER_SOURCE_BLOCKED"));
+    }
+  } finally { rmSync(directory, { recursive: true, force: true }); }
+});
+
+test("a full reviewed registry stream releases unchanged prior rows and preserves exact changed audit values", async () => {
+  const store = stateRegistryRuntimeStore("AZ"), prior = (await readRegistryRuntimePrior(store, T1, "AZ"))!;
+  const oldBody = prior.payload.registry.bodies.find(row => row.provenance.sourceUrl?.startsWith("https://") &&
+    prior.payload.registry.divisions.some(division => division.ocdId === row.ocdId && !isCensusPlaceholderDivision(division)))!;
+  const current = structuredClone(prior.payload), changed = { ...oldBody, name: `${oldBody.name} reviewed replacement` };
+  current.registry.bodies = current.registry.bodies.map(row => row.id === oldBody.id ? changed : row);
+  const input: RegistryRuntimePackage = { contractId: "registry-runtime:AZ", version: T1, sourceThrough: T1,
+    sourceReceipt: receipt(current, T1, "full-stream-audit"), payload: current };
+  const directory = mkdtempSync(join(tmpdir(), "registry-owned-test-")), file = join(directory, "reviewed.json");
+  try {
+    writeFileSync(file, JSON.stringify(input));
+    const { candidate } = await registryRuntimeCandidateFromFile(file, store, "AZ");
+    const context = takeStatePublicationPrior(store, "REGISTRY_RUNTIME_BINDING", stateRegistryRuntimeScope("AZ"))!;
+    assert.deepEqual(context.members.get(`body:${oldBody.id}`)?.record, oldBody);
+    assert.deepEqual((candidate.readModel as RegistryRuntimeCarton).registry.bodies.find(row => row.id === oldBody.id), changed);
+    const next = new Map(candidate.civicRecords?.map(member => [member.key, member.record]));
+    let released = 0;
+    for (const [key, entry] of context.members) {
+      if (next.has(key) && hash(canonicalCivicDataJson(next.get(key))) === entry.sha256 && typeof next.get(key) === "object") {
+        assert.equal(entry.record, undefined, key);
+        released++;
+      }
+    }
+    assert.ok(released > 100, "the held index must release every unchanged state row during the streamed merge");
+    const delta = candidateChangeSet(candidate, prior.payload);
+    assert.deepEqual(delta.changed.find(row => row.key === `body:${oldBody.id}`)?.before, oldBody);
+  } finally { rmSync(directory, { recursive: true, force: true }); }
 });

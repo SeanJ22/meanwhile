@@ -2,13 +2,13 @@ import assert from "node:assert/strict";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
+import ts from "typescript";
 
 import { GATES } from "../scripts/gates.mjs";
 import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
 import {
   contractSignalsIn,
   declaredPhase,
-  MIGRATION_PHASES,
   phaseFromSql,
   statementsIn,
 } from "../lib/db/migration-phases.ts";
@@ -22,6 +22,20 @@ import {
 const ROOT = process.cwd();
 const MIGRATIONS = join(ROOT, "lib", "db", "migrations");
 const WORKFLOWS = join(ROOT, ".github", "workflows");
+
+function declaredMigrations() {
+  const filename = join(ROOT, "lib/db/migration-phases.ts");
+  const source = ts.createSourceFile(filename, readFileSync(filename, "utf8"), ts.ScriptTarget.Latest, true);
+  const declaration = source.statements.filter(ts.isVariableStatement).flatMap(row => [...row.declarationList.declarations])
+    .find(row => ts.isIdentifier(row.name) && row.name.text === "MIGRATION_PHASES")?.initializer;
+  assert.ok(declaration && ts.isObjectLiteralExpression(declaration));
+  return declaration.properties.map(row => {
+    assert.ok(ts.isPropertyAssignment(row) && ts.isStringLiteral(row.name));
+    const tag = row.name.text, value = declaredPhase(tag);
+    assert.ok(value, `${tag} does not resolve through declaredPhase`);
+    return [tag, value] as const;
+  });
+}
 
 /** A journal fixture from real tags. `when` is only ever a join key. */
 function journalOf(...tags: string[]): JournalEntry[] {
@@ -299,7 +313,7 @@ test("the declaration states a reason, and names no migration that does not exis
       .map((f) => f.replace(/\.sql$/, "")),
   );
   assert.ok(onDisk.size >= 20, `only ${onDisk.size} migration file(s) found`);
-  for (const [tag, declaration] of Object.entries(MIGRATION_PHASES)) {
+  for (const [tag, declaration] of declaredMigrations()) {
     assert.ok(onDisk.has(tag), `MIGRATION_PHASES names ${tag} and no such migration exists`);
     assert.ok(
       declaration.why.length > 40,
@@ -311,7 +325,7 @@ test("the declaration states a reason, and names no migration that does not exis
 test("every declaration agrees with the migration's own SQL", () => {
   const disagreements: string[] = [];
   let read = 0;
-  for (const [tag, declaration] of Object.entries(MIGRATION_PHASES)) {
+  for (const [tag, declaration] of declaredMigrations()) {
     const sql = readFileSync(join(MIGRATIONS, `${tag}.sql`), "utf8");
     read += 1;
     const derived = phaseFromSql(sql);

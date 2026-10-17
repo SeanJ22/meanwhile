@@ -1,3 +1,4 @@
+import { requireRegistryState, registryJurisdictions } from "../civic-data/state-scopes.ts";
 import { readFieldManual } from "../control-plane/field-manual.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import { divisionsForZip, type GeographyReadOptions, type PlaceDivision } from "../control-plane/expansion/national-geography.ts";
@@ -17,14 +18,12 @@ export interface NationalPlacePublicationInput {
   readonly sources: NationalPlaceSources;
 }
 
-/** Shared composition for the ordinary source worker. The existing worker
- * supplies its saved-page reader, Census vault callback and fact publisher.
- * Only the published read model fills capture rows; a discovery lead cannot
- * close work or make an Admin/reader label claim that a fact is live. */
+
 export async function runPlaceSource(input: {
   readonly repos: ControlPlaneRepositories;
   readonly store: RoutineDataStore;
   readonly zip: string;
+  readonly state: string;
   readonly now: string;
   readonly clock?: () => string;
   readonly readSource: (url: string, knowledge: Awaited<ReturnType<typeof readFieldManual>>) => Promise<HeldSourcePage>;
@@ -38,7 +37,10 @@ export async function runPlaceSource(input: {
   readonly readHeld?: (divisionIds: readonly string[]) => Promise<PlaceCapture>;
 }) {
   if (!/^\d{5}$/.test(input.zip)) throw new Error("A five-digit ZIP is required");
-  const divisions = input.divisions ?? await divisionsForZip(input.zip, input.geography);
+  const state = requireRegistryState(input.state);
+  const divisions = (input.divisions ?? await divisionsForZip(input.zip, input.geography)).filter(division => {
+    const states = registryJurisdictions(division.id); return !states.length || states.includes(state);
+  });
   // Every acquisition for the ZIP inherits what the bank holds for its divisions.
   // A failed bank read remains visible without holding verified facts.
   const knowledge = input.knowledge ?? await readFieldManual(input.repos, { ocdIds: divisions.map(division => division.id) });

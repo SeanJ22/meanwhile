@@ -1,4 +1,4 @@
-import { createHash } from "node:crypto";
+import { withReaderSelection } from "../lib/db/reader-route.ts";
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { neonConfig } from "@neondatabase/serverless";
@@ -20,10 +20,10 @@ import registry from "../lib/registry/registry.json" with { type: "json" };
 import { collectNationalPlaceSources } from "../lib/sources/plural/place.ts";
 import { electionPageFields } from "../lib/hunt/election-page.ts";
 import { placeSourceReader, PlaceSourceDeferred } from "../lib/hunt/place-source-reader.ts";
-import { nationalPlaceJobs, placeSourceLaunchOrder } from "../lib/hunt/place-source-admission.ts";
+import { placeSourceLaunchOrder } from "../lib/hunt/place-source-admission.ts";
 import { runBoundedChildPass } from "../lib/civic-data/bounded-child-pass.ts";
 import { routineTaskDue } from "../lib/civic-data/runner.ts";
-import { dueNationalPlaceZips, runNationalPlaceTask, scheduleNationalPlace, placeMadeProgress, nationalPlaceSendRequests } from "../lib/hunt/place-source-task.ts";
+import { nationalPlaceJobs, dueNationalPlaceZips, runNationalPlaceTask, scheduleNationalPlace, placeMadeProgress, nationalPlaceSendRequests } from "../lib/hunt/place-source-task.ts";
 import type { ResolvedScope } from "../lib/control-plane/expansion/membership.ts";
 import type { ExpansionScopeDecision } from "../lib/control-plane/expansion/scopes.ts";
 import { ADMIN_CONFIG_ID, defaultAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
@@ -41,24 +41,43 @@ import { RESEARCH_BOUNDS } from "../lib/control-plane/scheduler/research-policy.
 import { emptyFieldManual, newFieldManualEntry, projectFieldManual } from "../lib/control-plane/field-manual.ts";
 import { installRegistryAuthority, installStateLegislators } from "./helpers/promoted-fixtures.ts";
 
+function placeTasks(zips: readonly string[], state = "NH") {
+  return [...new Set(zips)].map(zip => ({ id: `national-place:${zip}`, zip, state }));
+}
+
 await installRegistryAuthority();
 for (const scope of ["US-AZ", "US-NH", "US-NJ"] as const) installStateLegislators(scope);
 
 test("a 20-place Send offers independent jobs instead of one joined ZIP command", () => {
   const zips = Array.from({ length: 20 }, (_, index) => String(3000 + index).padStart(5, "0"));
   const requestedAt = "2026-10-01T00:00:00.000Z";
-  const jobs = nationalPlaceJobs([...zips, zips[0]], { requestedAt, instructions: ["send", "send"] });
+  const jobs = nationalPlaceJobs(placeTasks([...zips, zips[0]]), { requestedAt, instructions: ["send", "send"] });
   assert.equal(jobs.length, 20);
   assert.equal(new Set(jobs.map(job => job.acquisitionFailureDomain)).size, 20);
   for (const [index, job] of jobs.entries()) {
     assert.equal(job.id, `national-place:${zips[index]}`);
-    assert.equal(job.registeredContractId, "registry-runtime-bindings");
+    assert.equal(job.registeredContractId, "registry-runtime:NH");
     assert.deepEqual(job.command.filter(arg => arg.startsWith("--national-zips=")), [`--national-zips=${zips[index]}`]);
     assert.deepEqual(job.ownerInvocation?.instructions, ["send"]);
     assert.equal(routineTaskDue(job, { lastAttemptedAt: requestedAt, lastSucceededAt: requestedAt }, Date.parse(requestedAt)), true,
       "another body's publication cannot suppress the admitted place job");
   }
-  assert.throws(() => nationalPlaceJobs(["bad"], { requestedAt, instructions: [] }), /five-digit ZIPs/);
+  assert.throws(() => nationalPlaceJobs(placeTasks(["bad"]), { requestedAt, instructions: [] }), /five-digit ZIPs/);
+});
+
+test("a cross-state ZIP preserves independent state contracts and durable clocks", async () => {
+  const places = ["AZ", "NM"].map(state => ({ id: `national-place:86515:${state}`, zip: "86515", state }));
+  const jobs = nationalPlaceJobs(places);
+  assert.deepEqual(jobs.map(job => job.registeredContractId), ["registry-runtime:AZ", "registry-runtime:NM"]);
+  for (const [index, job] of jobs.entries()) {
+    assert.ok(job.command.includes(`--state=${places[index].state}`));
+    assert.ok(job.command.includes(`--place-task=${places[index].id}`));
+  }
+  const repos = createMemoryRepositories(), now = "2026-10-01T00:00:00.000Z";
+  await repos.obligations.put(places[0].id, standing({ id: places[0].id, subjectId: "zip:86515", recordClass: "OFFICIAL_ROSTER",
+    routeId: "national-place-sources", active: true, readerImpactAt: null, observedChangeRateHours: null, lastWorkedAt: now }, now), now);
+  assert.deepEqual(await dueNationalPlaceZips(repos, [places[0]], now, new Map()), []);
+  assert.deepEqual(await dueNationalPlaceZips(repos, [places[1]], now, new Map()), ["86515"]);
 });
 
 test("a saved Send starts beside a long routine job and reaches every ZIP before the routine backlog", async () => {
@@ -158,13 +177,13 @@ test("a newer applicable Send wakes a settled no-progress place once without bor
   const future = placeSend("03060", "2026-10-01T04:00:00.000Z", "send:future");
   const unrelated = placeSend("03301", "2026-10-01T02:30:00.000Z", "send:elsewhere");
   const unchanged = nationalPlaceSendRequests([resolvedPlaceSend(older)], ["03060", "03101"], now);
-  assert.deepEqual(await dueNationalPlaceZips(repos, ["03060", "03101"], now, unchanged), []);
+  assert.deepEqual(await dueNationalPlaceZips(repos, placeTasks(["03060", "03101"]), now, unchanged), []);
   assert.equal((await scheduleNationalPlace(repos, row, now, true, unchanged.get("03060")) as { nextDueAt: string }).nextDueAt,
     "2026-10-02T01:00:00.000Z", "unchanged Send respects the actual INGESTED no-progress completion");
   const requests = nationalPlaceSendRequests([resolvedPlaceSend(older), resolvedPlaceSend(newer), resolvedPlaceSend(future), resolvedPlaceSend(unrelated)],
     ["03060", "03101"], now);
   assert.deepEqual([...requests], [["03060", { requestedAt: newer.budgetStartedAt, instructions: ["send:older", "send:new"] }]]);
-  assert.deepEqual(await dueNationalPlaceZips(repos, ["03060", "03101", "03060"], now, requests), ["03060"]);
+  assert.deepEqual(await dueNationalPlaceZips(repos, placeTasks(["03060", "03101", "03060"]), now, requests), ["03060"]);
   const scheduled = await scheduleNationalPlace(repos, row, now, true, requests.get("03060"));
   assert.equal("nextDueAt" in scheduled && scheduled.nextDueAt, now);
   const first = await openOccurrence(repos, { obligation: row, dueAt: now, now });
@@ -177,7 +196,7 @@ test("a newer applicable Send wakes a settled no-progress place once without bor
     disposition: "INGESTED", attemptId: "fresh-hunt", at: now, artifactIds: [], observation: null,
     permission: "ALLOWED", transport: "REACHABLE", note: JSON.stringify({ placeProgress: false }) } }, now);
   await closeOccurrence(repos, { occurrenceId: first.occurrence.id, disposition: "INGESTED", unresolvedReason: null, now, workedAt: now });
-  assert.deepEqual(await dueNationalPlaceZips(repos, ["03060", "03101"], now, requests), [], "completion after the saved request consumes its wake");
+  assert.deepEqual(await dueNationalPlaceZips(repos, placeTasks(["03060", "03101"]), now, requests), [], "completion after the saved request consumes its wake");
   assert.equal((await repos.obligations.mustRead(row.id)).value.occurrenceCount, 2);
 });
 
@@ -222,13 +241,13 @@ test("the admitted worker rereads the saved Send and publishes once through its 
       fields: [{ name: "version_id", dataTypeID: 25 }, { name: "dataset", dataTypeID: 3802 }], rows: [["fixture:published", JSON.stringify(dataset)]] })) });
   };
   t.mock.method(globalThis, "fetch", async () => { assert.fail("the injected source worker calls no external provider"); });
-  assert.deepEqual(await dueNationalPlaceZips(repos, ["03060", "03101"], now), ["03060"], "process admission reads the actual saved Send");
+  assert.deepEqual(await dueNationalPlaceZips(repos, placeTasks(["03060", "03101"]), now), ["03060"], "process admission reads the actual saved Send");
   let acquired = 0, published = 0;
   const input: Parameters<typeof runNationalPlaceTask>[0] = { tools: { repos, store: new MemoryEvidenceStore(), now: () => now,
     spaceOut: async () => {}, openBytes: async request => ({ status: 200,
       bytes: Buffer.from(request.url.endsWith("/robots.txt") ? "User-agent: *\nAllow: /" : "id,name\n1,Fixture Official\n"),
       contentType: "text/plain", finalUrl: request.url, durationMs: 1, transportError: null }) },
-    store: new MemoryRoutineDataStore(), zips: ["03060", "03101"],
+    store: new MemoryRoutineDataStore(), places: placeTasks(["03060", "03101"]),
     publish: async value => { published++; assert.equal(value.now, now); return { published: true }; },
     acquire: async value => {
       acquired++;
@@ -257,7 +276,7 @@ test("the admitted worker rereads the saved Send and publishes once through its 
   const newest = (await repos.routeTasks.list()).find(task => task.value.disposition?.attemptId === attempts[0].id)!;
   assert.equal(newest.value.disposition?.disposition, "INGESTED");
   assert.match(newest.value.disposition?.note ?? "", /"placeProgress":false/);
-  assert.deepEqual(await dueNationalPlaceZips(repos, ["03060", "03101"], now), []);
+  assert.deepEqual(await dueNationalPlaceZips(repos, placeTasks(["03060", "03101"]), now), []);
   assert.deepEqual(await runNationalPlaceTask(input), []);
   assert.equal(acquired, 1, "unchanged saved Send cannot acquire or publish twice");
   assert.equal((await repos.obligations.mustRead("national-place:03101")).value.occurrenceCount, 1, "another ZIP stays settled");
@@ -306,7 +325,7 @@ test("ranking one ZIP in a district reads its whole saved scope without admittin
         return { command: "SELECT", rowCount: 1, rowAsArray: true,
           fields: [{ name: "version_id", dataTypeID: 25 }, { name: "dataset", dataTypeID: 3802 }], rows: [["fixture:district", JSON.stringify(dataset)]] };
       }
-      if (statement.params[0] === "REGISTRY_RUNTIME_BINDING") captureScopes.push(String(statement.params[2]));
+      if (statement.query.includes("civic_data_promotions")) captureScopes.push(JSON.stringify(statement.params));
       return { command: "SELECT", rowCount: 0, rowAsArray: true, fields: [], rows: [] };
     });
     return Response.json(body.queries ? { results } : results[0]);
@@ -371,7 +390,7 @@ test("a national API completes its geography walk beyond ten requests and reuses
       : { url, layers: names.map((name, id) => ({ id, name, type: "Feature Layer" })) });
   });
   const tools = { repos, store, now: () => "2026-09-30T00:00:00.000Z", spaceOut: async () => {} };
-  const input = { tools, store: new MemoryRoutineDataStore(), zips: ["03060", "03101", "03301"],
+  const input = { tools, store: new MemoryRoutineDataStore(), places: placeTasks(["03060", "03101", "03301"]),
     readPublished: async () => [],
     publish: async () => { assert.fail("incomplete geography cannot publish"); } };
   // The injected store holds no promoted registry, so the walk ends at the first held-family read it refuses.
@@ -392,18 +411,18 @@ test("a national API completes its geography walk beyond ten requests and reuses
   assert.ok(saved.every(row => next.some(other => other.artifactId === row.artifactId)), "all earlier evidence remains held");
   // A cut-off pass must leave the recently worked head behind the older tail.
   const worked = ["2026-09-30T00:00:00.000Z", "2026-09-28T00:00:00.000Z", "2026-09-27T00:00:00.000Z"];
-  for (const [index, zip] of input.zips.entries()) {
+  for (const [index, zip] of input.places.map(place => place.zip).entries()) {
     if (!await repos.obligations.read(`national-place:${zip}`)) await repos.obligations.put(`national-place:${zip}`, standing({
       id: `national-place:${zip}`, subjectId: `zip:${zip}`, recordClass: "OFFICIAL_ROSTER", routeId: "national-place-sources",
       active: true, readerImpactAt: null, observedChangeRateHours: null, lastWorkedAt: null }, tools.now()), tools.now());
     const row = await repos.obligations.mustRead(`national-place:${zip}`);
     await repos.obligations.compareAndSet(row.id, row.revision, { ...row.value, lastWorkedAt: worked[index] }, tools.now());
   }
-  assert.deepEqual(await dueNationalPlaceZips(repos, ["03060", "03101", "03301", "03401", "03401"], tools.now()),
+  assert.deepEqual(await dueNationalPlaceZips(repos, placeTasks(["03060", "03101", "03301", "03401", "03401"]), tools.now()),
     ["03401", "03301", "03101"]);
   // Actual acquisition must also recheck cadence after process admission.
   const beforeFresh = requests;
-  assert.deepEqual(await runNationalPlaceTask({ ...input, zips: ["03060"] }), []);
+  assert.deepEqual(await runNationalPlaceTask({ ...input, places: placeTasks(["03060"]) }), []);
   assert.equal(requests, beforeFresh, "a fresh place opens no occurrence and fetches no source");
 });
 
@@ -425,6 +444,50 @@ test("a national walk reuses another role's working source route after a directo
   assert.equal(result.officials[0].document.text, pages["https://state.example.gov/leaders"], "the newly saved official page supplies the fact, not the manual");
 });
 import type { ScheduledObligation } from "../lib/control-plane/scheduler/obligation.ts";
+import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
+import { registryTransferImport } from "./helpers/promoted-fixtures.ts";
+import { registryJurisdictions } from "../lib/civic-data/state-scopes.ts";
+import { installPromotedValue } from "./helpers/promoted-fixtures.ts";
+import { stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
+import { installFactReader } from "../lib/facts/db.ts";
+import { rosterFactReader } from "./helpers/roster-fact-reader.ts";
+import type { CivicDataReadResult } from "../lib/civic-data/read-model.ts";
+import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
+
+
+function served<T>(read: CivicDataReadResult<T>, what: string): T {
+  if (read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP") throw new Error(`${what} fixture did not install: ${read.kind} ${"detail" in read ? read.detail : ""}`);
+  return read.value as T;
+}
+
+function registryFixtureForState(state: string, value: RegistryRuntimeReadModel = registryTransferImport().projection.payload): RegistryRuntimeReadModel {
+  const own = (id: string | null) => registryJurisdictions(id).includes(state.toUpperCase());
+  const bodies = value.registry.bodies.filter(row => own(row.id) || own(row.ocdId) || row.alsoServesOcdIds?.some(own));
+  const bodyIds = new Set(bodies.map(row => row.id));
+  const bodyRosters = value.bodyRosters.filter(row => bodyIds.has(row.bodyId));
+  const statewideExecutives = value.statewideExecutives.filter(row => own(row.stateOcdId));
+  const bridge = value.officialCandidacies.rows.filter(row => row.holder.divisions.some(own));
+  const holders = new Set([...bodyRosters.flatMap(row => row.members.map(member => member.id)),
+    ...statewideExecutives.map(row => row.holder.id), ...bridge.map(row => row.holder.id)]);
+  return { ...value, registry: { ...value.registry, bodies,
+    divisions: value.registry.divisions.filter(row => row.ocdId === "ocd-division/country:us" || own(row.ocdId)) },
+    bodyRosters, statewideExecutives, officialCandidacies: { ...value.officialCandidacies, rows: bridge },
+    officialPhotos: { photos: value.officialPhotos.photos.filter(row => holders.has(row.officeholderId)) },
+    rosterPhotos: Object.fromEntries(Object.entries(value.rosterPhotos).filter(([id]) => holders.has(id) || own(id))),
+    rosterReaderDispositions: value.rosterReaderDispositions.filter(row => own(row.sourceId) || holders.has(row.sourceId) || (row.canonicalId !== null && holders.has(row.canonicalId)) ||
+      [...holders].some(id => id.startsWith("roster:") && id.split("#")[0] === row.sourceId.split("#")[0])) };
+}
+
+async function installRegistryRuntime(states?: readonly string[]): Promise<{ readonly value: RegistryRuntimeReadModel; readonly versionId: string }> {
+  const { projection } = registryTransferImport();
+  const selected = states ?? [...new Set(projection.payload.registry.divisions.flatMap(row => registryJurisdictions(row.ocdId)))];
+  for (const state of selected) installPromotedValue({ recordClass: "REGISTRY_RUNTIME_BINDING", scope: stateRegistryRuntimeScope(state),
+    sourceId: projection.sourceId, versionId: `${projection.versionId}:${state}`, value: registryFixtureForState(state) });
+  installFactReader(rosterFactReader(projection.payload.bodyRosters));
+  const value = served(await readRegistryRuntimeProjection(selected), "Registry runtime");
+  return { value, versionId: selected.map(state => `${projection.versionId}:${state}`).join("|") };
+}
+
 
 test("national collector binds saved CSV to its real Attempt and reuses another job without renewing its age", async () => {
   const repos = createMemoryRepositories();
@@ -536,11 +599,7 @@ test("redirected election pages keep their saved source identity and resolve lin
   assert.equal(field.value, "https://elections.example.gov/voters/current/polling");
 });
 
-/**
- * State legislators and their district reconciliation. Some states designate House districts by name
- * ("<County> 8") while this repo's identifiers are Census numeric codes (`sldl:608`); a direct join scores zero
- * silently.
- */
+
 
 const DIVISIONS = (
   registry as { divisions: { ocdId: string; label: string; divisionType: string }[] }
@@ -617,9 +676,9 @@ test("a CSV with a missing native person identifier is refused before publicatio
 });
 
 test("a roster with the wrong header or too few rows is refused, not read as empty", () => {
-  // An HTML error page served at 200 passes the comma blank-check and parses to
-  // a table whose header is not the roster's — rowsToPeople would then find no
-  // id column and return zero people, a whole legislature reading as absent.
+
+
+
   assert.match(pluralRosterIssue("<html>error, error</html>") ?? "", /missing id/);
 
   const header =
@@ -673,7 +732,9 @@ test("no Plural photo is shipped — the URL is a hotlink of unknown licence", (
 test("an Arizona legislative district returns one senator and two representatives", async () => {
   // The many-to-many case the brief says breaks a one-district-per-seat column,
   // now visible in real data rather than argued from the statute.
-  const coverage = await coverageAt(32.04903, -110.62291, 0);
+  const coverage = await withReaderSelection({ states: ["AZ"], keys: new Set(["state:AZ"]) }, async () => {
+    await installRegistryRuntime(["AZ"]); return coverageAt(32.04903, -110.62291, 0);
+  });
 
   const house = coverage.seats.find((s) => s.divisionType === "sldl");
   const senate = coverage.seats.find((s) => s.divisionType === "sldu");
@@ -683,12 +744,14 @@ test("an Arizona legislative district returns one senator and two representative
 });
 
 test("all four target-zip seat types are now named", async () => {
-  for (const [lat, lng] of [
-    [32.04903, -110.62291],
-    [40.91, -74.51],
-    [43.32, -72.03],
-  ]) {
-    const coverage = await coverageAt(lat, lng, 0);
+  for (const [state, lat, lng] of [
+    ["AZ", 32.04903, -110.62291],
+    ["NJ", 40.91, -74.51],
+    ["NH", 43.32, -72.03],
+  ] as const) {
+    const coverage = await withReaderSelection({ states: [state], keys: new Set([`state:${state}`]) }, async () => {
+      await installRegistryRuntime([state]); return coverageAt(lat, lng, 0);
+    });
     assert.equal(
       coverage.seatCounts.named,
       coverage.seatCounts.total,

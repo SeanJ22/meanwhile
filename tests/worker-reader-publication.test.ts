@@ -1,10 +1,12 @@
+import { manualEdgeEntry, absentEdgeEntry } from "./helpers/promoted-edge-entry.ts";
+
 import type { VotingSitesFile } from "../lib/ballot/voting-sites.ts";
-import { stateBallotScope, stateBallotContractId } from "../lib/civic-data/state-scopes.ts";
+import { type StateBallotFamily, stateBallotScope, stateBallotContractId } from "../lib/civic-data/state-scopes.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { runWorkerPublicationJob } from "../lib/civic-data/worker-publication-job.ts";
 import { factDb } from "./helpers/fact-db.ts";
 import { type GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
-import { genericSourcesForDivisions } from "../lib/ballot/reader-sources.ts";
+import { readerBallotSourcesForDivisions } from "../lib/ballot/reader-sources.ts";
 import {candidateEnrichmentUniversesFromHoldings} from "../lib/control-plane/scheduler/providers/candidate-enrichment.ts";
 import { readPromotedCivicData, promotedEdgeEntryOf } from "../lib/civic-data/read-model.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
@@ -13,12 +15,8 @@ import { readPublicKindOwed } from "../lib/coverage/public-kind-owed.ts";
 import { governmentMoneyView } from "../lib/funding/government-money.ts";
 import { governmentFinanceEvidence, composeGovernmentFinanceAnswer } from "../lib/ask/government-finance.ts";
 import { checkDoorDraft, applyManualEdit } from "../lib/doors/registry.ts";
-import { createHash } from "node:crypto";
-import { CENSUS_PLACEHOLDER_LABELS } from "../lib/registry/census-placeholders.ts";
 import assert from "node:assert/strict";
 import test from "./helpers/playbooks.ts";
-import { readFileSync } from "node:fs";
-import { gunzipSync } from "node:zlib";
 import { autonomousHarness, FIXTURE_URL } from "./helpers/autonomous-fleet.ts";
 import { type WorkerReaderContract } from "../lib/civic-data/worker-reader-contracts.ts";
 import { createRouteTask } from "../lib/control-plane/route-task.ts";
@@ -27,23 +25,83 @@ import { recordAcquisition } from "../lib/control-plane/evidence/artifact.ts";
 import { putArtifact } from "../lib/control-plane/evidence/store.ts";
 import { dispatchWorkerTask, evidenceProjection, FLEET_POLICY_VERSION } from "../lib/control-plane/workers/runtime.ts";
 import { nextAutonomousOperation } from "../lib/control-plane/workers/coordinator.ts";
-import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import { readRegistryRuntimePrior, registryRuntimeCandidate, type RegistryRuntimePrior } from "../lib/registry/runtime-data-plane.ts";
+import { readRegistryRuntimePrior, type RegistryRuntimePrior } from "../lib/registry/runtime-data-plane.ts";
 import { publishWorkerReaderResults } from "../lib/civic-data/worker-reader-publication.ts";
-import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { workerPublicationTasks } from "../lib/civic-data/worker-publication-tasks.ts";
 import { verifiedWorkerRecords } from "../lib/civic-data/worker-publication-evidence.ts";
 import { readCuratedReaderProjection } from "../lib/civic-data/curated-reader-read-model.ts";
 import { readPublicRecords } from "../lib/civic-data/public-records.ts";
 import { takeUnshownUpdates } from "../lib/control-plane/updates.ts";
 import { readGovernmentBudgets, currentBudgetFacts, budgetChecklistEvidence } from "../lib/civic-data/government-budgets.ts";
-import type { CandidateVersionRecord, PromotedProjection } from "../lib/civic-data/types.ts";
 import { readEverydayRoutingProjection } from "../lib/routing/everyday-data-plane.ts";
 import { publishWorkerDirectoryResults } from "../lib/civic-data/worker-roster-publication.ts";
-import { directoryMeetingHints, workerBodyDirectoryPackage } from "../lib/civic-data/worker-body-directory.ts";
+import { workerBodyDirectoryPackage } from "../lib/civic-data/worker-body-directory.ts";
 import { filingsForDivisions, officialFilingIssue, type OfficialFiling } from "../lib/civic-data/official-filings.ts";
 import { renderCardWithSources } from "./helpers/render-card.ts";
 import { collectWorkerRosterReadback } from "../lib/control-plane/worker-reader-readback.ts";
+import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { registryTransferImport } from "./helpers/promoted-fixtures.ts";
+import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
+import { registryJurisdictions } from "../lib/civic-data/state-scopes.ts";
+import { stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
+import { stateRegistryRuntimeContractId } from "../lib/civic-data/state-scopes.ts";
+import { rowKeyedCivicRecordsFor } from "../lib/civic-data/changes.ts";
+import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
+import { trustedLkgImportUrl } from "../lib/civic-data/trusted-lkg-import.ts";
+import { withStateRecordHashes } from "../lib/civic-data/state-publication.ts";
+import { candidateChangeSet } from "../lib/civic-data/changes.ts";
+import { ROW_KEYED_CIVIC_CHANGE_CONTRACT } from "../lib/civic-data/changes.ts";
+import { trustedLkgCandidateEnvelopeSha256 } from "../lib/civic-data/trusted-lkg-import.ts";
+import { trustedLkgValidatorIds } from "../lib/civic-data/trusted-lkg-import.ts";
+import { trustedLkgCandidateId } from "../lib/civic-data/trusted-lkg-import.ts";
+import type { CandidateVersionRecord } from "../lib/civic-data/types.ts";
+import type { PromotedProjection } from "../lib/civic-data/types.ts";
+
+function registryFixtureForState(state: string, value: RegistryRuntimeReadModel = registryTransferImport().projection.payload): RegistryRuntimeReadModel {
+  const own = (id: string | null) => registryJurisdictions(id).includes(state.toUpperCase());
+  const bodies = value.registry.bodies.filter(row => own(row.id) || own(row.ocdId) || row.alsoServesOcdIds?.some(own));
+  const bodyIds = new Set(bodies.map(row => row.id));
+  const bodyRosters = value.bodyRosters.filter(row => bodyIds.has(row.bodyId));
+  const statewideExecutives = value.statewideExecutives.filter(row => own(row.stateOcdId));
+  const bridge = value.officialCandidacies.rows.filter(row => row.holder.divisions.some(own));
+  const holders = new Set([...bodyRosters.flatMap(row => row.members.map(member => member.id)),
+    ...statewideExecutives.map(row => row.holder.id), ...bridge.map(row => row.holder.id)]);
+  return { ...value, registry: { ...value.registry, bodies,
+    divisions: value.registry.divisions.filter(row => row.ocdId === "ocd-division/country:us" || own(row.ocdId)) },
+    bodyRosters, statewideExecutives, officialCandidacies: { ...value.officialCandidacies, rows: bridge },
+    officialPhotos: { photos: value.officialPhotos.photos.filter(row => holders.has(row.officeholderId)) },
+    rosterPhotos: Object.fromEntries(Object.entries(value.rosterPhotos).filter(([id]) => holders.has(id) || own(id))),
+    rosterReaderDispositions: value.rosterReaderDispositions.filter(row => own(row.sourceId) || holders.has(row.sourceId) || (row.canonicalId !== null && holders.has(row.canonicalId)) ||
+      [...holders].some(id => id.startsWith("roster:") && id.split("#")[0] === row.sourceId.split("#")[0])) };
+}
+
+function stateRegistryRuntimeStore(state: string, store = new MemoryRoutineDataStore()): MemoryRoutineDataStore {
+  const original = registryTransferImport();
+  const payload = registryFixtureForState(state), scope = stateRegistryRuntimeScope(state), contractId = stateRegistryRuntimeContractId(state);
+  const civicRecords = rowKeyedCivicRecordsFor("REGISTRY_RUNTIME_BINDING", payload), digest = canonicalCivicDataHash(payload);
+  const candidate = { ...original.record.candidate, scope,
+    retrieval: { ...original.record.candidate.retrieval, requestedUrl: trustedLkgImportUrl(contractId) },
+    normalization: { ...original.record.candidate.normalization, normalizedHash: digest, normalizedPayloadHash: digest,
+      inputRecords: civicRecords.length, outputRecords: civicRecords.length, droppedRecords: 0 },
+    normalizedPayload: payload, readModel: payload, civicRecords, identities: [],
+    horizon: { ...original.record.candidate.horizon, returnedRecords: civicRecords.length },
+    sourceProjectionEvidence: { kind: "SOURCE_PROJECTION_CONTRACT" as const, sourceId: original.record.candidate.sourceId, recordClass: original.record.candidate.recordClass, scope },
+  };
+  Object.assign(candidate, { normalization: withStateRecordHashes(candidate).normalization });
+  candidate.changeSet = candidateChangeSet(candidate, null, ROW_KEYED_CIVIC_CHANGE_CONTRACT);
+  candidate.bootstrapImport = { ...original.record.candidate.bootstrapImport!, contractId, scope,
+    normalizedPayloadSha256: digest, readModelSha256: digest, candidateEnvelopeSha256: trustedLkgCandidateEnvelopeSha256(candidate), validatorIds: trustedLkgValidatorIds(candidate) };
+  candidate.id = trustedLkgCandidateId(candidate.bootstrapImport);
+  const receipt = { ...original.record.receipt!, candidateId: candidate.id, scope };
+  const record = { ...original.record, candidate, receipt, promotedVersion: candidate.id, lastKnownGoodVersion: candidate.id };
+  const projection = { ...original.projection, key: `REGISTRY_RUNTIME_BINDING:${scope}`, scope, versionId: candidate.id,
+    lastKnownGoodVersionId: candidate.id, payload, receipt };
+  const held = store as unknown as { candidates: Map<string, CandidateVersionRecord>; promotions: Map<string, PromotedProjection> };
+  held.candidates.set(candidate.id, record);
+  held.promotions.set(projection.key, projection);
+  return store;
+}
+
 
 /** The job's repositories with the whole worker-result log made unreadable: a publisher reads only its own job's results. */
 function withoutWholeResultLog<R extends { workerResults: object }>(repos: R): R {
@@ -51,25 +109,13 @@ function withoutWholeResultLog<R extends { workerResults: object }>(repos: R): R
   return { ...repos, workerResults: { ...repos.workerResults, readAll: whole, readSince: whole } };
 }
 
-async function workerFixture(contractId: WorkerReaderContract | "registry-runtime-bindings" | "ballot-contests" | "voting-sites", facts: Record<string, string | number> | Record<string, string | number>[] | ((prior: RegistryRuntimePrior, bodyId: string) => Record<string, string | number>[]), classOverride?: "CAMPAIGN_FINANCE_FILING" | "BUDGET_RESPONSIBILITY" | "BUDGET_AMENDMENT" | "PUBLIC_RECORD") {
-  const { record, projection } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8")) as { record: CandidateVersionRecord; projection: PromotedProjection };
-  const store = new MemoryRoutineDataStore();
-  Object.assign(store, { candidates: new Map([[record.candidate.id, record]]), promotions: new Map([[projection.key, projection]]) });
-  if (contractId === "registry-runtime-bindings") {
-  const imported = (await readRegistryRuntimePrior(store, "2026-09-08T12:00:01.000Z"))!;
-  // Replay the already deployed placeholder correction before this worker test:
-  // the recorded transfer fixture predates it, unlike the production base.
-  const divisions = imported.payload.registry.divisions.filter(row => CENSUS_PLACEHOLDER_LABELS[row.label]).map(row => ({ ...row, label: CENSUS_PLACEHOLDER_LABELS[row.label] }));
-  const corrected = registryRuntimeCandidate({ contractId: "registry-runtime-bindings", version: "fixture-census-correction", sourceThrough: "2026-09-08T12:00:02.000Z",
-    sourceReceipt: { contractVersion: 1, reviewedAt: "2026-09-08T12:00:02.000Z", reviewedBy: "recorded-fixture-control", sources: [...new Set(divisions.map(row => row.provenance!.sourceUrl!))].map(url => ({ requestedUrl: url, finalUrl: url, publisher: "U.S. Census Bureau", sourceClass: "OFFICIAL_PUBLISHER", retrievedAt: "2026-09-08T12:00:02.000Z", httpStatus: 200, rawHash: createHash("sha256").update(JSON.stringify(divisions)).digest("hex"), reviewedEvidence: "Offline fixture: Census LEA 99997 means no school district; retained transfer correction control." })) },
-    payload: { ...imported.payload, registry: { ...imported.payload.registry, divisions, bodies: [] }, statewideExecutives: [], officialCandidacies: { ...imported.payload.officialCandidacies, rows: [] }, officialPhotos: { photos: [] }, rosterPhotos: {} } }, { prior: imported });
-  const correction = await processRegisteredManualCandidate(store, "registry-runtime-bindings", corrected, "2026-09-08T12:00:02.000Z", imported.versionId);
-  assert.ok(correction.promoted, correction.candidate.failureDetail ?? "fixture correction held");
-  }
-  const prior = (await readRegistryRuntimePrior(store, "2026-09-08T12:01:00.000Z"))!;
-  const directory = contractId === "registry-runtime-bindings";
-  const body = prior.payload.registry.bodies.find(row => row.name && (!(directory || contractId === "official-filings" || contractId === "public-records" || contractId === "government-budgets" || contractId === "ballot-contests" || contractId === "voting-sites") || prior.payload.registry.divisions.some(d => d.ocdId === row.ocdId &&
-    (!["official-filings", "ballot-contests"].includes(contractId) || prior.payload.registry.divisions.filter(other => other.state === d.state && other.label.toLowerCase() === d.label.toLowerCase()).length === 1))))!;
+async function workerFixture(contractId: WorkerReaderContract | "registry-runtime:AZ" | "ballot-contests" | "voting-sites", facts: Record<string, string | number> | Record<string, string | number>[] | ((prior: RegistryRuntimePrior, bodyId: string) => Record<string, string | number>[]), classOverride?: "CAMPAIGN_FINANCE_FILING" | "BUDGET_RESPONSIBILITY" | "BUDGET_AMENDMENT" | "PUBLIC_RECORD") {
+  const store = stateRegistryRuntimeStore("AZ");
+  const prior = (await readRegistryRuntimePrior(store, "2026-09-08T12:01:00.000Z", "AZ"))!;
+  const directory = contractId === "registry-runtime:AZ";
+  const body = prior.payload.registry.bodies.find(row => row.name && prior.payload.registry.divisions.some(d => d.ocdId === row.ocdId && d.state.toUpperCase() === "AZ" &&
+    (!["official-filings", "ballot-contests"].includes(contractId) || prior.payload.registry.divisions.filter(other => other.state === d.state && other.label.toLowerCase() === d.label.toLowerCase()).length === 1)));
+  assert.ok(body, "the worker fixture requires an exact body and Arizona division");
   const publisherDivisionId = body.ocdId;
   const division = prior.payload.registry.divisions.find(row => row.ocdId === publisherDivisionId)!;
   const publicationContract = contractId === "ballot-contests" || contractId === "voting-sites"
@@ -88,10 +134,10 @@ async function workerFixture(contractId: WorkerReaderContract | "registry-runtim
   const h = await autonomousHarness({ clock: "2026-09-08T12:01:00.000Z", response: { text }, plan: plan => ({ ...plan,
     ownerInstructions: ["offline-send"], publication: { contractId: publicationContract, bodyId: body.id }, auditScope: "SOURCE_UNIVERSE",
     ...(directory ? { directorySubject: { divisionId: body.ocdId, jurisdiction: { id: plan.contract.subjectId,
-      stateCode: "NH", name: division.label, govClass: "COUNTY" as const, countyName: null, enumeratedFrom: "offline-fixture", ownWebAddress: FIXTURE_URL,
+      stateCode: division.state, name: division.label, govClass: "COUNTY" as const, countyName: null, enumeratedFrom: "offline-fixture", ownWebAddress: FIXTURE_URL,
       sourceIds: [], ocdId: body.ocdId, bodyId: body.id } } } : {}),
     sources: plan.sources.map(route => ({ ...route, recordClass })),
-    contract: { ...plan.contract, ...(["official-filings","ballot-contests","voting-sites"].includes(contractId) ? { jurisdiction: { country: "US", state: division.state, canonicalId: contractId === "official-filings" ? plan.contract.subjectId : body.ocdId } } : {}), schemaVersion: 2, recordClass, identity: { namespace: contractId, keyFields: contractId === "ballot-contests" ? ["candidateName"] : contractId === "ballot-navigation" ? ["kind"] : ["bodyName"] },
+    contract: { ...plan.contract, jurisdiction: { country: "US", state: division.state, canonicalId: contractId === "official-filings" ? plan.contract.subjectId : body.ocdId }, schemaVersion: 2, recordClass, identity: { namespace: contractId, keyFields: contractId === "ballot-contests" ? ["candidateName"] : contractId === "ballot-navigation" ? ["kind"] : ["bodyName"] },
       requiredFields: Object.keys(fields), extraction, verification: { required: true, authorities: [] } } as never }) });
   const task = createRouteTask({ workItemId: h.item.id, routeId: "independent-rule", routeLabel: "Offline independent rule record", target: "https://register.example.gov/rules.json", inherited: false, now: h.now() });
   await registerRouteTask(h.repos, task, h.now());
@@ -147,7 +193,7 @@ async function workerFixture(contractId: WorkerReaderContract | "registry-runtim
 }
 
 test("verified directory bodies publish through the normal registry door and create durable scope-bound work without manual admission", async () => {
-  const f = await workerFixture("registry-runtime-bindings", [
+  const f = await workerFixture("registry-runtime:AZ", [
     { bodyName: "Fixture Advisory Commission", bodyClass: "ADVISORY", homepageUrl: "https://directory.example.gov/commission" },
     { bodyName: "Fixture Partial District Board", bodyClass: "GOVERNING", homepageUrl: "https://directory.example.gov/partial", coverage: "part of this jurisdiction" },
   ]);
@@ -155,16 +201,12 @@ test("verified directory bodies publish through the normal registry door and cre
   assert.equal(published[0].outcome.status, "PARTIALLY_PUBLISHED", JSON.stringify(published));
   assert.equal(published[0].outcome.recovery, "WORKER", "unresolved territory automatically returns to evidence repair without holding independently verified bodies");
   assert.match(published[0].outcome.detail, /DIRECTORY_TERRITORY_REQUIRES_REPAIR/);
-  const read = (await readRegistryRuntimePrior(f.store, f.h.now()))!;
+  const read = (await readRegistryRuntimePrior(f.store, f.h.now(), "AZ"))!;
   const body = read.payload.registry.bodies.find(body => body.name === "Fixture Advisory Commission")!;
   assert.ok(body, "normal typed Reader contains the independently verified body");
   assert.equal(body.ocdId, f.body.ocdId);
   assert.equal(body.homepageUrl, f.rows[0].homepageUrl);
   assert.ok(!read.payload.registry.bodies.some(body => body.name === "Fixture Partial District Board"), "a county association never becomes an unsupported countywide body");
-  const hints = directoryMeetingHints([(await f.h.repos.workItems.mustRead(f.h.item.id)).value], read.payload, []);
-  assert.equal(hints[0].jurisdictionId, f.h.item.subject);
-  assert.equal(hints[0].routes[0].url, body.homepageUrl, "the existing meeting walk inherits the verified new body route");
-  assert.equal(hints[0].routes[0].verifyAs, "official-page-events", "normal calendar and crosswalk verification still runs");
   const children = (await f.h.repos.workItems.list()).filter(row => row.id !== f.h.item.id);
   assert.equal(children.length, 3);
   for (const child of children) {
@@ -190,7 +232,7 @@ test("verified directory bodies publish through the normal registry door and cre
 
 test("a verified shared directory body serves its exact listed Census divisions without countywide coverage or duplicate identities", async () => {
   let expected: string[] = [];
-  const f = await workerFixture("registry-runtime-bindings", (prior, bodyId) => {
+  const f = await workerFixture("registry-runtime:AZ", (prior, bodyId) => {
     const origin = prior.payload.registry.bodies.find(row => row.id === bodyId)!;
     const division = prior.payload.registry.divisions.find(row => row.ocdId === origin.ocdId)!;
     const peers = prior.payload.registry.divisions.filter(row => row.state === division.state && row.ocdId !== division.ocdId &&
@@ -203,7 +245,7 @@ test("a verified shared directory body serves its exact listed Census divisions 
   });
   const published = await publishWorkerDirectoryResults(f.input);
   assert.equal(published[0].outcome.status, "PUBLISHED", JSON.stringify(published));
-  const read = (await readRegistryRuntimePrior(f.store, f.h.now()))!;
+  const read = (await readRegistryRuntimePrior(f.store, f.h.now(), "AZ"))!;
   const bodies = read.payload.registry.bodies.filter(row => row.name === "Fixture Joint Services Commission");
   assert.equal(bodies.length, 1);
   assert.deepEqual([bodies[0].ocdId, ...(bodies[0].alsoServesOcdIds ?? [])].sort(), expected);
@@ -301,7 +343,10 @@ test("an adopted budget publishes from saved official document bytes; a proposal
   const scope = scopedManualContractScope("government-budgets", f.body.ocdId!);
   const edge = promotedEdgeEntryOf(await readGovernmentBudgets(f.body.ocdId!, {store:f.store,now:f.h.now()}), "CURATED_READER_RECORD", scope, f.store);
   assert.ok(edge);
-  await withReaderAuthorityEdge({registryRuntime:{value:{...f.prior.payload,bodyRosters:[],rosterReaderDispositions:[]},versionId:f.prior.versionId},promoted:new Map([[`CURATED_READER_RECORD:${scope}`,edge]]),edgeOnly:true},async () => {
+  await withReaderAuthorityEdge({stateAuthorities:{states:{"registry-runtime":new Set(["AZ"])},load:async(family,state)=>{assert.equal(state,"AZ");
+    if(family==="registry-runtime")return{kind:"PROMOTED_POINTERS",entries:[manualEdgeEntry("registry-runtime:AZ",{...f.prior.payload,bodyRosters:[],rosterReaderDispositions:[]},f.prior.versionId)]};
+    const recordClass=family==="ballot-contests"?"BALLOT_CANDIDACY":family==="candidate-profiles"?"CANDIDATE_PROFILE":family==="candidate-publications"?"CANDIDATE_PUBLICATION":"CURATED_READER_RECORD";
+    return{kind:"PROMOTED_POINTERS",entries:[absentEdgeEntry(recordClass,stateBallotScope(family==="candidate-publications"?"candidate-corpus":family as StateBallotFamily,state))]};}},promoted:new Map([[`CURATED_READER_RECORD:${scope}`,edge]]),edgeOnly:true},async () => {
     assert.deepEqual(await governmentFinanceEvidence(f.body.id, f.body.ocdId!), evidence);
     const { GET } = await import("@/app/api/government-finance/route");
     const api = await GET(new Request(`https://wtp.test/api/government-finance?division=${encodeURIComponent(f.body.ocdId!)}&body=${encodeURIComponent(f.body.id)}`));
@@ -383,7 +428,7 @@ test("a service record without a usable channel returns to automatic repair inst
 });
 
 test("normal voter-access workers publish the independently verified statewide route through the existing navigation reader", async () => {
-  const { input, store, h } = await workerFixture("ballot-navigation", { state: "NH", kind: "REGISTRATION_LINK", url: FIXTURE_URL,
+  const { input, store, h } = await workerFixture("ballot-navigation", { state: "AZ", kind: "REGISTRATION_LINK", url: FIXTURE_URL,
     coverage: "STATEWIDE", coverageEvidence: "The election authority identifies this lookup as serving the entire state." });
   const result = await publishWorkerReaderResults(input);
   assert.equal(result[0].outcome.status, "PUBLISHED", JSON.stringify(result));
@@ -396,7 +441,7 @@ test("normal voter-access workers publish the independently verified statewide r
 });
 
 test("a BROKE audit names the published reader members it takes out of the next version (DP-15)", async () => {
-  const { input, h, store, results } = await workerFixture("ballot-navigation", ["REGISTRATION_LINK", "POLLING_PLACE_LINK"].map(kind => ({ state: "NH", kind, url: FIXTURE_URL,
+  const { input, h, store, results } = await workerFixture("ballot-navigation", ["REGISTRATION_LINK", "POLLING_PLACE_LINK"].map(kind => ({ state: "AZ", kind, url: FIXTURE_URL,
     coverage: "STATEWIDE", coverageEvidence: "The election authority identifies this lookup as serving the entire state." })));
   const published = await publishWorkerReaderResults(input);
   assert.equal(published[0].outcome.status, "PUBLISHED", JSON.stringify(published));
@@ -422,7 +467,7 @@ test("a BROKE audit names the published reader members it takes out of the next 
   assert.notEqual(removed[0].outcome.versionId, published[0].outcome.versionId);
   const after = await readCuratedReaderProjection("ballot-navigation", { store, now: at, bypassCache: true });
   if (after.kind !== "PROMOTED") throw new Error("reader missing after audit");
-  const pulledId = `ballot-navigation:${parser.result.records[0].fields.kind}:NH`;
+  const pulledId = `ballot-navigation:${parser.result.records[0].fields.kind}:AZ`;
   assert.deepEqual(after.value.records.map(row => row.id), live.value.records.filter(row => row.id !== pulledId).map(row => row.id),
     "only the exact audited member is removed");
 });
@@ -502,12 +547,12 @@ test("normal complete candidate workers publish their whole contest into general
   const ballot=Object.values(read.value.ballots)[0];
   assert.equal(ballot.candidacies.length,2);
   assert.equal(ballot.contests.length,1);
-  const sources=genericSourcesForDivisions(read.value,[f.body.ocdId!]);
+  const sources=await readerBallotSourcesForDivisions([f.body.ocdId!], {store:f.input.store,now:f.h.now()});
   const general=sources.find(row=>row.source.name.startsWith("ballot-contests:"));
   assert.ok(general);
   assert.equal(general.source.normalize(await general.source.fetch()).candidacies.length,2);
   const curatedAt=f.h.now();
-  const inventory=candidateEnrichmentUniversesFromHoldings({az:null,nh:null,nj:null,general:read.value,profiles:{cards:{curatedAt,note:"Offline empty enrichment",cards:{},hunts:[]},links:{curatedAt,note:"Offline empty enrichment",links:{},hunts:[]}},corpus:{formatVersion:1,fetchedAt:curatedAt,attempted:0,documents:[],failures:[]},failures:[]},f.h.now());
+  const inventory=candidateEnrichmentUniversesFromHoldings({general:read.value,profiles:{cards:{curatedAt,note:"Offline empty enrichment",cards:{},hunts:[]},links:{curatedAt,note:"Offline empty enrichment",links:{},hunts:[]}},corpus:{formatVersion:1,fetchedAt:curatedAt,attempted:0,documents:[],failures:[]},failures:[]},f.h.now());
   const universe=inventory.universes[ballot.election.state.toLowerCase()];
   assert.equal(universe?.candidacies.length,2);
   assert.deepEqual(new Set(universe!.candidacies.flatMap(row=>row.pilotIds)),new Set(ballot.candidacies.map(row=>row.id)));
@@ -515,7 +560,7 @@ test("normal complete candidate workers publish their whole contest into general
 
 
 test("publication jobs reuse supplied repositories and return independent receipts without changing the parent's exit status", async () => {
-  const f = await workerFixture("ballot-navigation", { state: "NH", kind: "REGISTRATION_LINK", url: FIXTURE_URL,
+  const f = await workerFixture("ballot-navigation", { state: "AZ", kind: "REGISTRATION_LINK", url: FIXTURE_URL,
     coverage: "STATEWIDE", coverageEvidence: "The election authority identifies this lookup as serving the entire state." });
   const exitCode = process.exitCode;
   const context = { repos: f.input.repos, readCapture: f.input.readCapture };
@@ -537,12 +582,12 @@ test("publication jobs reuse supplied repositories and return independent receip
 });
 
 test("registry publication job uses the same saved directory evidence and typed receipt", async () => {
-  const f = await workerFixture("registry-runtime-bindings", { bodyName: "Fixture Shared Job Commission", bodyClass: "ADVISORY", homepageUrl: "https://directory.example.gov/shared" });
-  const result = await runWorkerPublicationJob({ ...f.input, contractId: "registry-runtime-bindings",
+  const f = await workerFixture("registry-runtime:AZ", { bodyName: "Fixture Shared Job Commission", bodyClass: "ADVISORY", homepageUrl: "https://directory.example.gov/shared" });
+  const result = await runWorkerPublicationJob({ ...f.input, contractId: "registry-runtime:AZ",
     context: { repos: f.input.repos, readCapture: f.input.readCapture } });
   assert.equal(result.exitCode, 0, JSON.stringify(result.report));
-  assert.equal(result.receipt?.source, "registry-runtime-bindings");
+  assert.equal(result.receipt?.source, "registry-runtime:AZ");
   assert.ok(result.receipt?.delivered.records);
-  const read = await readRegistryRuntimePrior(f.store, f.h.now());
+  const read = await readRegistryRuntimePrior(f.store, f.h.now(), "AZ");
   assert.ok(read?.payload.registry.bodies.some(body => body.name === "Fixture Shared Job Commission"));
 });

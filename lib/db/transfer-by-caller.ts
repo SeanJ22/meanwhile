@@ -268,7 +268,8 @@ export function formatNeonBytesLine(summary: NeonBytesSummary, label: string, to
     (callers ? `; largest: ${callers}` : "");
 }
 
-export const easternDay = (at: Date) => new Intl.DateTimeFormat("sv-SE", { timeZone: "America/New_York" }).format(at);
+const easternDayFormatter = new Intl.DateTimeFormat("sv-SE", { timeZone: "America/New_York" });
+export const easternDay = (at: Date) => easternDayFormatter.format(at);
 
 export function runnerClient(): boolean {
   return Boolean(process.env.WTP_RUNTIME_AUTHORITY_CAPABILITY) || process.env.WTP_SANCTIONED_WRITE === "routine-civic-data-promotion";

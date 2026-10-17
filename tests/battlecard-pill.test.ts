@@ -12,9 +12,10 @@ const read = (...p: string[]) => readFileSync(join(ROOT, ...p), "utf8");
 test("12: the long sections render inside the battlecard, not on the row", () => {
   const page = read("app", "ballot", "page.tsx");
 
-  /* There is one builder, BallotBattlecard, and both contest branches call it, so they cannot diverge. */
+  /* Current candidates and earlier filings share the same sections. */
   const builders = page.match(/<BallotBattlecard(?![A-Za-z])/g) ?? [];
-  assert.equal(builders.length, 2, "both candidate branches need the card");
+  assert.equal(builders.length, 3, "nominees, current candidacies and earlier filings each receive the shared card");
+  assert.match(page, /data-earlier-filings=\{contest.id\}>[\s\S]*?battlecardSlot=\{<BallotBattlecard/);
 
   const defined = page.match(/async function BallotBattlecard\(/g) ?? [];
   assert.equal(

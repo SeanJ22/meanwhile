@@ -1,7 +1,7 @@
 import { readerRoute } from "@/lib/api/reader-route";
 import { stageTimer } from "@/lib/api/server-timing";
 import {
-  ensureReaderAuthorityEdge,
+  holdReaderAuthorityEdge, ensureReaderAuthorityEdge,
   readReaderManifest,
   READER_MANIFEST_CACHE_TAG,
   READER_MAP_AUTHORITY_FAMILIES,
@@ -44,10 +44,10 @@ export const GET = readerRoute("/api/representation/[division]", async function 
   prefetchReaderGeography();
   // The reader authority edge, entered in this handler's own execution
   // before any edge-aware read below (see the header note).
-  const manifest = await timing.time("manifest", () => readReaderManifest().catch(() => null));
+  const manifest = await timing.time("manifest", () => readReaderManifest().catch(holdReaderAuthorityEdge));
   if (manifest?.authorityArtifacts) {
     const edge = await timing.time("authority", () =>
-      ensureReaderAuthorityEdge(manifest, undefined, READER_MAP_AUTHORITY_FAMILIES).catch(() => null),
+      ensureReaderAuthorityEdge(manifest, undefined, READER_MAP_AUTHORITY_FAMILIES).catch(error => holdReaderAuthorityEdge(error, manifest, READER_MAP_AUTHORITY_FAMILIES)),
     );
     if (edge) enterReaderAuthorityEdge(edge);
   }

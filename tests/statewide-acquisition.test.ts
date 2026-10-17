@@ -1,4 +1,3 @@
-/** The statewide-executive acquisition: office identity, the corpus, the quoted alias, the key wire and portrait furniture. */
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
@@ -8,14 +7,53 @@ import { looksLikeFurniture, pickPortrait, pickPortraits } from "../lib/hunt/por
 import { officeIdentity } from "../lib/officials/office-identity.ts";
 import { STATEWIDE_EXECUTIVES } from "../lib/officials/statewide-executives.ts";
 import type { SeatHolder } from "../lib/officials/lookup.ts";
-import { readFileSync } from "node:fs";
-import { gunzipSync } from "node:zlib";
-import { primeRegistryRuntimeFromValue } from "../lib/registry/runtime-read-model.ts";
+import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
+import { registryTransferImport } from "./helpers/promoted-fixtures.ts";
+import { registryJurisdictions } from "../lib/civic-data/state-scopes.ts";
+import { installPromotedValue } from "./helpers/promoted-fixtures.ts";
+import { stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
+import { installFactReader } from "../lib/facts/db.ts";
+import { rosterFactReader } from "./helpers/roster-fact-reader.ts";
+import type { CivicDataReadResult } from "../lib/civic-data/read-model.ts";
+import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
 
-const { projection: registry } = JSON.parse(gunzipSync(readFileSync("tests/fixtures/registry-transfer-import.json.gz")).toString("utf8"));
-primeRegistryRuntimeFromValue(registry.payload, registry.versionId);
 
-/* ------------------------------------------------------------------ office */
+function served<T>(read: CivicDataReadResult<T>, what: string): T {
+  if (read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP") throw new Error(`${what} fixture did not install: ${read.kind} ${"detail" in read ? read.detail : ""}`);
+  return read.value as T;
+}
+
+function registryFixtureForState(state: string, value: RegistryRuntimeReadModel = registryTransferImport().projection.payload): RegistryRuntimeReadModel {
+  const own = (id: string | null) => registryJurisdictions(id).includes(state.toUpperCase());
+  const bodies = value.registry.bodies.filter(row => own(row.id) || own(row.ocdId) || row.alsoServesOcdIds?.some(own));
+  const bodyIds = new Set(bodies.map(row => row.id));
+  const bodyRosters = value.bodyRosters.filter(row => bodyIds.has(row.bodyId));
+  const statewideExecutives = value.statewideExecutives.filter(row => own(row.stateOcdId));
+  const bridge = value.officialCandidacies.rows.filter(row => row.holder.divisions.some(own));
+  const holders = new Set([...bodyRosters.flatMap(row => row.members.map(member => member.id)),
+    ...statewideExecutives.map(row => row.holder.id), ...bridge.map(row => row.holder.id)]);
+  return { ...value, registry: { ...value.registry, bodies,
+    divisions: value.registry.divisions.filter(row => row.ocdId === "ocd-division/country:us" || own(row.ocdId)) },
+    bodyRosters, statewideExecutives, officialCandidacies: { ...value.officialCandidacies, rows: bridge },
+    officialPhotos: { photos: value.officialPhotos.photos.filter(row => holders.has(row.officeholderId)) },
+    rosterPhotos: Object.fromEntries(Object.entries(value.rosterPhotos).filter(([id]) => holders.has(id) || own(id))),
+    rosterReaderDispositions: value.rosterReaderDispositions.filter(row => own(row.sourceId) || holders.has(row.sourceId) || (row.canonicalId !== null && holders.has(row.canonicalId)) ||
+      [...holders].some(id => id.startsWith("roster:") && id.split("#")[0] === row.sourceId.split("#")[0])) };
+}
+
+async function installRegistryRuntime(states?: readonly string[]): Promise<{ readonly value: RegistryRuntimeReadModel; readonly versionId: string }> {
+  const { projection } = registryTransferImport();
+  const selected = states ?? [...new Set(projection.payload.registry.divisions.flatMap(row => registryJurisdictions(row.ocdId)))];
+  for (const state of selected) installPromotedValue({ recordClass: "REGISTRY_RUNTIME_BINDING", scope: stateRegistryRuntimeScope(state),
+    sourceId: projection.sourceId, versionId: `${projection.versionId}:${state}`, value: registryFixtureForState(state) });
+  installFactReader(rosterFactReader(projection.payload.bodyRosters));
+  const value = served(await readRegistryRuntimeProjection(selected), "Registry runtime");
+  return { value, versionId: selected.map(state => `${projection.versionId}:${state}`).join("|") };
+}
+
+
+
+await installRegistryRuntime(["AZ", "NH", "NJ"]);
 
 test("a bare 'Mine Inspector' classifies — the office's own shorter spelling is not a new office", () => {
   assert.equal(officeIdentity("State Mine Inspector"), "state_mine_inspector");
@@ -32,8 +70,6 @@ test("the acquired offices all classify, or their holders could not join their o
     );
   }
 });
-
-/* -------------------------------------------------------------- the corpus */
 
 test("every statewide executive states a government source, a publisher and a read date", () => {
   assert.ok(STATEWIDE_EXECUTIVES.length >= 14, `only ${STATEWIDE_EXECUTIVES.length} rows`);
@@ -62,8 +98,6 @@ test("Arizona's Corporation Commission is FIVE rows on ONE office, which is what
   }
 });
 
-/* ------------------------------------------------------- the quoted alias */
-
 test("a quoted nickname the RECORD ITSELF prints is read as a first name", () => {
   const filed = nameParts('Nicholas "Nick"', "Myers");
   const serving = nameParts("Nick", "Myers");
@@ -79,10 +113,7 @@ test("the alias is not a fuzzy match — the surname must still agree exactly", 
 });
 
 test("REGRESSION: without the alias the whole Commission contest failed closed", () => {
-  /*
-   * One sitting member who cannot be matched to an identically-surnamed
-   * candidate must not take the ENTIRE contest to UNKNOWN.
-   */
+
   const candidates = [
     { id: "thompson", givenName: "Kevin", familyName: "Thompson" },
     { id: "myers", givenName: 'Nicholas "Nick"', familyName: "Myers" },
@@ -97,8 +128,6 @@ test("REGRESSION: without the alias the whole Commission contest failed closed",
   assert.equal(decided.get("myers")?.standing, "INCUMBENT");
   assert.equal(decided.get("pratte")?.standing, "CHALLENGER");
 });
-
-/* ------------------------------------------------------------- the key wire */
 
 test("the holder's own identifier reaches the resolution instead of a hard-coded null", async () => {
   const holder: SeatHolder = {
@@ -129,12 +158,7 @@ test("the holder's own identifier reaches the resolution instead of a hard-coded
     async () => null,
     async () => [holder],
   );
-  /*
-   * The holder's own identifier reaches the MATCHING layer. INCUMBENT is a
-   * positive per-person fact the registry sources and asserts nothing about
-   * anyone else, so no universe is needed for it; CHALLENGER is an asserted
-   * absence about a named person and still needs the universe.
-   */
+
   assert.equal(result.resolved.get("k")?.standing, "INCUMBENT");
   assert.equal(
     result.decisions.get("k")?.standing,
@@ -151,8 +175,6 @@ test("the holder's own identifier reaches the resolution instead of a hard-coded
   // INCUMBENT, and it is the SAME record — id included.
   assert.equal(result.holderFor.get("k")?.id, "statewide:az/secretary-of-state");
 });
-
-/* ----------------------------------------------------------- the furniture */
 
 test("an image the page's own words call a LOGO is never a face", () => {
   // An office masthead named after the officeholder matches the

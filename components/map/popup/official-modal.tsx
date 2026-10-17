@@ -37,8 +37,6 @@ import { PositionsSection } from "@/components/officials/positions-section";
 import { OfficeBlurb, RecentVotes } from "./official-popup";
 import { LegislatorBills } from "@/components/officials/legislator-bills";
 
-
-
 interface OfficialModalProps {
   holder: SeatHolder;
   seatLabel: string | null;
@@ -71,7 +69,6 @@ export function OfficialModal({
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose, embedded]);
 
-
   const [prlProfile, setPrlProfile] = useState<PrlReaderProfile | null>(null);
   const { directory } = useMemberDirectory(holder.id,holder.state);
   const officeSource = directory?.officeDetails?.[0];
@@ -84,7 +81,6 @@ export function OfficialModal({
       ...(prlProfile ? [prlCardSource(prlProfile)] : []),
     ],
   );
-
 
   return (
     <div
@@ -110,7 +106,7 @@ export function OfficialModal({
         contact={<>{office && <DistrictOffice office={office} />}<ContactPills holder={holder} /><OfficialTermNote holder={holder} /></>}
         sections={{
           office: <OfficeBlurb holder={holder} bare />,
-          positions: <PositionsSection subjectId={holder.id} subjectName={holder.name} contentOnly />,
+          positions: <PositionsSection context={reactionContext} divisionIds={(holder.officeJurisdictionOcdId ? [holder.officeJurisdictionOcdId] : [])} subjectId={holder.id} subjectName={holder.name} contentOnly />,
           committees: memberDirectoryReaches(holder.id, "committees") ? <MemberCommitteesContent holder={holder} /> : null,
           offices: memberDirectoryReaches(holder.id, "offices") ? <MemberOfficesContent holder={holder} /> : null,
           money: <FundingBlock holder={holder} reactionContext={reactionContext} bare />,
@@ -121,7 +117,7 @@ export function OfficialModal({
           {!holder.id.startsWith("congress:") && <LegislatorBills key={holder.id} holder={holder} />}
           {holder.id.startsWith("congress:") && <FederalCommentRules />}
           <PublicStatementsProfile subjectId={holder.id} onProfile={setPrlProfile} />
-          <OfficialActions subjectId={holder.id} />
+          <OfficialActions context={reactionContext} divisionIds={(holder.officeJurisdictionOcdId ? [holder.officeJurisdictionOcdId] : [])} subjectId={holder.id} />
           <SpeakYourMind key={holder.id} context={reactionContext ?? undefined} subjectType="OFFICIAL" subjectId={holder.id} subject={holder.name} />
         </>}
       />

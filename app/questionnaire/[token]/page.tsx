@@ -1,6 +1,9 @@
+import { withReaderSelection } from "@/lib/db/reader-route";
+import { withReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
+import { readReaderManifest, ensureReaderAuthorityEdge } from "@/lib/meetings/edge-serving";
 import { AnswerForm } from "@/components/questionnaire/answer-form";
 import { findInvitation, findToken } from "@/lib/db/questionnaire";
-import { displayFor } from "@/lib/questionnaire/candidacy-display";
+import { displayFor, invitationBallotState } from "@/lib/questionnaire/candidacy-display";
 import { digestToken, tokenRefusalLine, verifyToken } from "@/lib/questionnaire/auth";
 import {
   OFFICE_CLASSES,
@@ -103,7 +106,12 @@ export default async function QuestionnairePage({
   const questions = questionsFor(officeClass);
 
 
-  const display = await displayFor(verdict.candidacyId);
+  const state = invitationBallotState(invitation.contestId);
+  const display = state ? await withReaderSelection({ states: [state], keys: new Set([`state:${state}`]) }, async () => {
+    const manifest = await readReaderManifest();
+    const edge = manifest ? await ensureReaderAuthorityEdge(manifest, undefined, ["ballot-contests"]) : null;
+    return withReaderAuthorityEdge(edge, () => displayFor(state, verdict.candidacyId));
+  }) : null;
 
   return (
     <Shell>

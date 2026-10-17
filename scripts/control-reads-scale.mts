@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { fork } from "node:child_process";
 import { execFileSync } from "node:child_process";
-import { Client } from "pg";
+import { Pool } from "pg";
 import { createHash, randomUUID } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { mkdtemp, open, readdir, readFile, rm } from "node:fs/promises";
@@ -86,6 +86,34 @@ async function worker() {
 }
 
 async function workload(repos: ControlPlaneRepositories, places: string[], run: number): Promise<unknown> {
+  if(scenario==="orders") {
+    const {ADMIN_CONFIG_ID,withExpansionScopes}=await importAt("lib/control-plane/gateway/admin-config.ts");
+    const {expansionScopesOf}=await importAt("lib/control-plane/expansion/scopes.ts");
+    const {requestHuntStop,applyHuntOrders,HUNT_STATES}=await importAt("lib/control-plane/hunt-orders.ts");
+    const scopes=[...Array.from({length:79},(_,n)=>({key:`zcta:2020/${85000+n}`,geography:{type:"zcta",geoid:String(85000+n),version:"zcta:2020",label:`ZIP ${85000+n}`,stateAbbr:"AZ"},
+      priority:1,budgetUsd:10,decidedAt:now,decidedBy:"owner",receiptId:`send-${run}-${n}`,previous:null,note:null})),
+      {key:"zcta:2020/03301",geography:{type:"zcta",geoid:"03301",version:"zcta:2020",label:"ZIP 03301",stateAbbr:"NH"},
+        priority:1,budgetUsd:10,decidedAt:now,decidedBy:"owner",receiptId:`send-${run}-nh`,previous:null,note:null}];
+    const held=await repos.adminConfig.mustRead(ADMIN_CONFIG_ID,{expansionScopes:true});
+    await repos.adminConfig.save(held,withExpansionScopes(held.value,{scopes,decidedAt:now}),now);
+    const revision=(await repos.adminConfig.mustRead(ADMIN_CONFIG_ID)).revision;
+    await Promise.all(scopes.slice(0,79).map((scope,n)=>requestHuntStop(repos,{receiptId:`stop-${run}-${n}`,state:"az",scopeKey:scope.key,at:now,actor:"owner"})));
+    const pending=await repos.huntOrders.pending("az");
+    assert.equal(pending.length,79);assert.ok(pending.every((order:{value:{confirmedAt:string|null}})=>order.value.confirmedAt===null));
+    assert.equal((await repos.adminConfig.mustRead(ADMIN_CONFIG_ID)).revision,revision);
+    assert.equal(await applyHuntOrders(repos,"az",now),79);
+    const remaining=await repos.adminConfig.mustRead(ADMIN_CONFIG_ID,{expansionScopes:true});
+    assert.deepEqual(expansionScopesOf(remaining.value).scopes.map((scope:{geography:{stateAbbr:string}})=>scope.geography.stateAbbr),["NH"]);
+    assert.equal((await repos.huntOrders.pending("az")).length,0);
+    await repos.adminConfig.save(remaining,withExpansionScopes(remaining.value,{scopes,decidedAt:now}),now);
+    await requestHuntStop(repos,{receiptId:`state-stop-${run}`,state:"az",at:now,actor:"owner"});
+    assert.equal(await applyHuntOrders(repos,"az",now),1);
+    assert.equal(expansionScopesOf((await repos.adminConfig.mustRead(ADMIN_CONFIG_ID,{expansionScopes:true})).value).scopes.length,1);
+    await requestHuntStop(repos,{receiptId:`all-stop-${run}`,at:now,actor:"owner"});
+    for(const state of HUNT_STATES)assert.equal(await applyHuntOrders(repos,state,now),1);
+    assert.equal(expansionScopesOf((await repos.adminConfig.mustRead(ADMIN_CONFIG_ID,{expansionScopes:true})).value).scopes.length,0);
+    return {independentOrders:79,stateOrders:1,globalOrders:HUNT_STATES.length,remaining:0,configRevisionUnchanged:revision===(await repos.adminConfig.mustRead(ADMIN_CONFIG_ID)).revision};
+  }
   if(scenario==="pipeline") {
     const {readPipelineStates}=await importAt("lib/control-plane/promotion/pipeline.ts");
     const states=await readPipelineStates(repos);
@@ -323,6 +351,7 @@ async function parent() {
     planningRoundWallMs=performance.now()-started;
     process.stderr.write(`${JSON.stringify({type:"planning-round",states:round.completed,wallMs:planningRoundWallMs})}\n`);
   }else results.push(...await launch());
+  if(scenario==="orders")assert.ok(pg.peakConcurrentQueries()>1,"the stop workload must exercise concurrent database writes");
   const peak = Math.max(...results.map(result => result.peakRssBytes));
   const runnerAvailable = Number(arg("runner-available-bytes", "NaN"));
   const documentedHost = 8 * 1024 ** 3;
@@ -336,7 +365,7 @@ async function parent() {
     assumptions: { runsPerDay, runnerAvailableBytes: Number.isFinite(runnerAvailable) ? runnerAvailable : null, reserveBytes: margin,
       documentedHostBytes: documentedHost, documentedHostSource: "deploy/runner/README.md", existingParentReserveBytes: parentReserve,
       parentReserveSource: "lib/control-plane/workers/worker-slots.ts", productionHeartbeatAvailable: false },
-    fixtureSetupMs, peakRssBytes: peak, workerPeakSource: "/proc/self/status VmHWM", copiesAtMargin: Number.isFinite(runnerAvailable) ? Math.max(0, Math.floor((runnerAvailable - margin) / peak)) : null,
+    fixtureSetupMs,fixturePeakConcurrentQueries:pg.peakConcurrentQueries(), peakRssBytes: peak, workerPeakSource: "/proc/self/status VmHWM", copiesAtMargin: Number.isFinite(runnerAvailable) ? Math.max(0, Math.floor((runnerAvailable - margin) / peak)) : null,
     runnerCopiesAfterParentReserve: Number.isFinite(runnerAvailable) ? Math.max(0,Math.floor((runnerAvailable-margin-parentReserve)/peak)) : null,
     documentedHostWorkerOnlyCopies: Math.floor((documentedHost - margin) / peak),
     documentedHostCopiesAfterParentReserve: Math.floor((documentedHost - margin - parentReserve) / peak),
@@ -407,7 +436,7 @@ async function seed(pg: FixtureDatabase, places: string[], selected: string[]) {
   } else if (scenario === "method") {
     await pg.query(`INSERT INTO cp_fix_map (method_id,place_id,state,tried_at,attempt_id,cause,updated_at)
       SELECT 'scale-method',id,'WORKS',$1::timestamptz,'attempt-' || ordinal,NULL,$1::timestamptz FROM scale_places`, [now]);
-  } else if (scenario === "admin") {
+  } else if (scenario === "admin" || scenario === "orders") {
     const admin = await importAt("lib/control-plane/gateway/admin-config.ts");
     const config = admin.defaultAdminConfig(now);
     await pg.query(`${template("admin_config")} VALUES('current',1,$1::timestamptz,$1::timestamptz,$2::jsonb)`,[now,JSON.stringify(config)]);
@@ -502,6 +531,7 @@ interface FixtureDatabase {
   query<T=Record<string,unknown>>(text:string,params?:unknown[]):Promise<{rows:T[];fields:{name:string;dataTypeID:number}[];affectedRows:number}>;
   exec(text:string):Promise<void>;
   close():Promise<void>;
+  peakConcurrentQueries():number;
 }
 
 async function fixtureDatabase():Promise<FixtureDatabase> {
@@ -512,16 +542,15 @@ async function fixtureDatabase():Promise<FixtureDatabase> {
     "-c","shared_buffers=128MB","-c","autovacuum=off","-c","max_parallel_workers_per_gather=0"],
     {env:{...process.env,POSTGRES_PASSWORD:password},stdio:["ignore","ignore","pipe"]});
   const port=Number(execFileSync("docker",["port",name,"5432/tcp"],{encoding:"utf8"}).trim().split(":").at(-1));
-  let client:Client|null=null;
+  const connected=new Pool({host:"127.0.0.1",port,user:"fixture",password,database:"fixture",application_name:"cp01-scale",connectionTimeoutMillis:1000,max:16});
   try {
+    let ready=false;
     for(let attempt=0;attempt<60;attempt++) {
-      const candidate=new Client({host:"127.0.0.1",port,user:"fixture",password,database:"fixture",application_name:"cp01-scale",connectionTimeoutMillis:1000});
-      try {await candidate.connect();client=candidate;break;}
-      catch {await candidate.end().catch(()=>{});await new Promise(done=>setTimeout(done,250));}
+      try {await connected.query("SELECT 1");ready=true;break;}
+      catch {await new Promise(done=>setTimeout(done,250));}
     }
-    if(!client)throw new Error("The isolated Postgres fixture did not become ready");
-  }catch(error){execFileSync("docker",["rm","--force","--volumes",name],{stdio:"ignore"});throw error;}
-  const connected=client;
+    if(!ready)throw new Error("The isolated Postgres fixture did not become ready");
+  }catch(error){await connected.end();execFileSync("docker",["rm","--force","--volumes",name],{stdio:"ignore"});throw error;}
   let connectionError:Error|null=null;
   connected.on("error",error=>{connectionError=error;});
   const close=async()=>{
@@ -532,13 +561,18 @@ async function fixtureDatabase():Promise<FixtureDatabase> {
   };
   const terminate=()=>{void close().finally(()=>process.exit(143));};
   process.once("SIGTERM",terminate);
+  let activeQueries=0,peakConcurrentQueries=0;
   return {
     query:async<T,>(text:string,params:unknown[]=[])=>{
       if(connectionError)throw connectionError;
-      const result=await connected.query(text,params);
-      return {rows:result.rows as T[],fields:result.fields,affectedRows:result.rowCount??0};
+      const client=await connected.connect();
+      activeQueries++;peakConcurrentQueries=Math.max(peakConcurrentQueries,activeQueries);
+      try {
+        const result=await client.query(text,params);
+        return {rows:result.rows as T[],fields:result.fields,affectedRows:result.rowCount??0};
+      }finally{activeQueries--;client.release();}
     },
     exec:async text=>{if(connectionError)throw connectionError;await connected.query(text);},
-    close,
+    close,peakConcurrentQueries:()=>peakConcurrentQueries,
   };
 }

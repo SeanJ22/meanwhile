@@ -6,6 +6,7 @@ import { MODEL_CHARGES_DDL } from "./model-charges.ts";
 import { DISPATCH_STATE_DDL, DISPATCH_ARCHIVE_TABLES } from "./dispatch-state.ts";
 import { FIX_MAP_DDL } from "../../method/fix-map.ts";
 import { WEBSITE_PACING_DDL } from "../website-pacing.ts";
+import { MANUAL_ORDER_INDEXES } from "./field-manual-sql.ts";
 
 export const BOOTSTRAP_VERSION = 33;
 export const CP_MIGRATIONS_DDL = `CREATE TABLE IF NOT EXISTS cp_migrations (
@@ -410,6 +411,7 @@ export const CONTROL_READS_EXPAND_DDL: readonly string[] = [
   ...DISPATCH_STATE_DDL,
   ...CONTROL_READS_BACKFILL_DDL,
   ...PLANNING_CONTROL_DDL,
+  ...MANUAL_ORDER_INDEXES,
   ...DISPATCH_ARCHIVE_TABLES.map(changedAtColumnDdl),
   ...WORK_ITEM_PUBLICATION_INDEXES.map(index => `DO $$ BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_index WHERE indrelid = 'cp_work_items_archive'::regclass AND indisvalid AND indpred IS NULL

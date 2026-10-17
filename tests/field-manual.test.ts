@@ -90,7 +90,7 @@ test("a lesson's own record places it: the subject it names", () => {
   const s = store(investigation);
   assert.deepEqual(s.entries[0]!.reach!.places, [PIMA]);
   assert.deepEqual(projectFieldManual(s, { ocdIds: [TUCSON] }).entryIds, ["investigation"], "a county lesson applies inside the county");
-  assert.equal(projectFieldManual(s, { ocdIds: [MARICOPA], state: "az" }).matched, 0, "not in a sibling county of the same state");
+  assert.equal(projectFieldManual(s, { ocdIds: [MARICOPA], state: "az" }).entryIds.length, 0, "not in a sibling county of the same state");
 });
 
 test("merges never narrow where a lesson applies", () => {
@@ -139,7 +139,6 @@ test("every worker sees every method, ranked: this place, its state, three or mo
   assert.match(p.lines[1]!, /untried here.*worked in maricopa AZ/);
   assert.match(p.lines[2]!, /worked in 3 states: NH, NJ, TX/);
   assert.match(p.lines[3]!, /worked in morris NJ/);
-  assert.equal(p.leftOutFailingHere, 1, "the method that fails here is left out here");
   const maricopa = projectFieldManual(s, { ocdIds: [MARICOPA] }, evidence(MARICOPA));
   assert.ok(maricopa.entryIds.includes("fails"), "and only here: it works in Maricopa");
 });

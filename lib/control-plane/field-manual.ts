@@ -246,10 +246,6 @@ export interface FieldManualProjection {
 
   readonly tiers: readonly number[];
 
-  readonly leftOutFailingHere: number;
-
-  readonly matched: number;
-  readonly total: number;
 }
 
 function divisionApplies(scope: string, subject: string): boolean {
@@ -388,9 +384,6 @@ export function projectFieldManual(store: FieldManualStore, query: FieldManualQu
     lines: chosen.map((r) => fieldManualLine(r.entry) + r.note),
     entryIds: chosen.map((r) => r.entry.id),
     tiers: chosen.map((r) => r.tier),
-    leftOutFailingHere: ranked.length - open.length,
-    matched: open.length,
-    total: store.entries.length,
   };
 }
 

@@ -26,7 +26,8 @@ import type {
   OwnerSnapshot,
   RunnerHeartbeat,
 } from "../owner-surface.ts";
-import { BOOKKEEPING_KINDS, OUTCOME_RANK, coveringPlaces, methodEvidencePlaces, projectFieldManual, queryState, readMethodEvidence, TRANSFERABLE_METHOD_KINDS, type FieldManualEntry, type FieldManualQuery } from "../field-manual.ts";
+import { BOOKKEEPING_KINDS, FIELD_MANUAL_ROLES, OUTCOME_RANK, coveringPlaces, methodEvidencePlaces, projectFieldManual, queryState, readMethodEvidence, TRANSFERABLE_METHOD_KINDS, type FieldManualEntry, type FieldManualQuery } from "../field-manual.ts";
+import { MANUAL_BROAD_SQL, MANUAL_EMPTY_CLASS_SQL, MANUAL_METHOD_SQL, MANUAL_OUTCOME_SQL, MANUAL_PLAIN_SQL } from "./field-manual-sql.ts";
 import { createFixMapRepository, PLACE_STATE_SQL, type FixMapRepository } from "../../method/fix-map.ts";
 import { ensureRolePlaybooks, retireInstructionsSql } from "../playbook-seed.ts";
 import { seedFieldManualNotes } from "../field-manual-notes.ts";
@@ -997,45 +998,87 @@ export async function bootstrap(
   await run("recordVersion", "POINT", recordVersionStatement(BOOTSTRAP_VERSION, nowIso));
 }
 
+const FIELD_MANUAL_MATCHES_SQL = `SELECT id,value FROM cp_field_manual_entries
+  WHERE ($1::text[] IS NULL OR value->>'role'=ANY($1::text[]))
+    AND ($2::text[] IS NULL OR value->>'kind'=ANY($2::text[]))
+    AND ($3::text IS NULL OR jsonb_array_length(coalesce(value->'recordClasses','[]'::jsonb))=0 OR value->'recordClasses' ? $3)
+    AND NOT(value->>'kind'=ANY($8::text[])) AND ($9::text IS NULL OR id>$9)
+    AND (($4::boolean AND ($6::text IS NULL OR jsonb_array_length(coalesce(value->'platforms','[]'::jsonb))=0 OR value->'platforms' ? $6))
+      OR (NOT $4 AND (coalesce(value->'reach'->'places','[]'::jsonb) ?| $5::text[]
+        OR ($7::text IS NOT NULL AND coalesce(value->'reach'->'states','[]'::jsonb) ? $7)
+        OR coalesce((value->'reach'->>'everywhere')::boolean,false)
+        OR (jsonb_array_length(coalesce(value->'reach'->'platforms','[]'::jsonb))>0 AND ($6::text IS NULL OR value->'reach'->'platforms' ? $6))
+        OR (((value->>'kind' IN (${[...TRANSFERABLE_METHOD_KINDS].map(kind=>`'${kind}'`).join(",")})
+          AND (value->>'url' IS NULL OR jsonb_array_length(coalesce(value->'platforms','[]'::jsonb))>0))
+          OR coalesce((value->'reach'->>'method')::boolean,false))
+          AND ($6::text IS NULL OR jsonb_array_length(coalesce(value->'platforms','[]'::jsonb))=0 OR value->'platforms' ? $6)))))
+  ORDER BY id LIMIT ${AGGREGATE_LIST_READ_PAGE}`;
+
 export const FIELD_MANUAL_SLICE_SQL = `WITH eligible AS NOT MATERIALIZED (
   SELECT id,value FROM cp_field_manual_entries
     WHERE ($1::text[] IS NULL OR value->>'role'=ANY($1::text[]))
       AND ($2::text[] IS NULL OR value->>'kind'=ANY($2::text[]))
       AND ($3::text IS NULL OR jsonb_array_length(coalesce(value->'recordClasses','[]'::jsonb))=0 OR value->'recordClasses' ? $3)
-      AND NOT(value->>'kind'=ANY($13::text[])) AND ($14::text IS NULL OR id>$14)
-), candidates AS MATERIALIZED (
-  SELECT id FROM eligible WHERE $4::boolean AND ($6::text IS NULL OR jsonb_array_length(coalesce(value->'platforms','[]'::jsonb))=0 OR value->'platforms' ? $6)
-  UNION SELECT id FROM eligible WHERE NOT $4 AND coalesce(value->'reach'->'places','[]'::jsonb) ?| $5::text[]
-  UNION SELECT id FROM eligible WHERE NOT $4 AND $7::text IS NOT NULL AND coalesce(value->'reach'->'states','[]'::jsonb) ? $7
-  UNION SELECT id FROM eligible WHERE NOT $4 AND coalesce((value->'reach'->>'everywhere')::boolean,false)
-  UNION SELECT id FROM eligible WHERE NOT $4 AND jsonb_array_length(coalesce(value->'reach'->'platforms','[]'::jsonb))>0
-    AND ($6::text IS NULL OR value->'reach'->'platforms' ? $6)
-  UNION SELECT id FROM eligible WHERE NOT $4 AND ((value->>'kind' IN (${[...TRANSFERABLE_METHOD_KINDS].map(kind=>`'${kind}'`).join(",")})
-    AND (value->>'url' IS NULL OR jsonb_array_length(coalesce(value->'platforms','[]'::jsonb))>0))
-    OR coalesce((value->'reach'->>'method')::boolean,false))
+      AND NOT(value->>'kind'=ANY($13::text[]))
+), broad AS (
+  SELECT picked.id FROM unnest(coalesce($1::text[],ARRAY[${FIELD_MANUAL_ROLES.map(role=>`'${role}'`).join(",")}])) r(role)
+  CROSS JOIN (VALUES(false),(true)) reach(global)
+  CROSS JOIN (VALUES(false),(true)) classes(empty)
+  CROSS JOIN (VALUES(false),(true)) preference(preferred)
+  CROSS JOIN LATERAL (
+    SELECT id FROM eligible
+    WHERE ${MANUAL_PLAIN_SQL} AND value->>'role'=r.role AND ${MANUAL_BROAD_SQL}=reach.global
+      AND ($4::boolean OR reach.global) AND ${MANUAL_EMPTY_CLASS_SQL}=classes.empty
+      AND (NOT preference.preferred OR ($11::text[] IS NOT NULL AND cardinality($11)>0 AND NOT classes.empty AND coalesce(value->'recordClasses','[]'::jsonb) ?| $11))
+      AND (NOT preference.preferred OR $4 OR EXISTS (SELECT 1 FROM cp_field_manual_entries
+        WHERE ${MANUAL_PLAIN_SQL} AND ${MANUAL_BROAD_SQL} AND (value->'role') @> to_jsonb(r.role)
+          AND coalesce(value->'recordClasses','[]'::jsonb) ?| $11))
+      AND (($4 AND ($6::text IS NULL OR jsonb_array_length(coalesce(value->'platforms','[]'::jsonb))=0 OR value->'platforms' ? $6))
+        OR (NOT $4 AND (coalesce((value->'reach'->>'everywhere')::boolean,false)
+          OR (jsonb_array_length(coalesce(value->'reach'->'platforms','[]'::jsonb))>0 AND ($6::text IS NULL OR value->'reach'->'platforms' ? $6)))))
+    ORDER BY ${MANUAL_OUTCOME_SQL},coalesce(value->>'observedAt','') COLLATE "C" DESC,id COLLATE "C"
+    LIMIT $8::int
+  ) picked
+), candidates AS NOT MATERIALIZED (
+  SELECT id FROM broad
+  UNION SELECT id FROM eligible WHERE coalesce(value->'reach'->'places','[]'::jsonb) ?| $5::text[]
+    AND (NOT $4 OR $6::text IS NULL OR jsonb_array_length(coalesce(value->'platforms','[]'::jsonb))=0 OR value->'platforms' ? $6)
+  UNION SELECT id FROM eligible WHERE $7::text IS NOT NULL AND coalesce(value->'reach'->'states','[]'::jsonb) ? $7
+    AND (NOT $4 OR $6::text IS NULL OR jsonb_array_length(coalesce(value->'platforms','[]'::jsonb))=0 OR value->'platforms' ? $6)
+  UNION SELECT id FROM eligible WHERE $6::text IS NOT NULL AND coalesce(value->'reach'->'platforms','[]'::jsonb) ? $6
+    AND (NOT $4 OR jsonb_array_length(coalesce(value->'platforms','[]'::jsonb))=0 OR value->'platforms' ? $6)
+  UNION SELECT id FROM eligible WHERE value->>'kind'='EXHAUSTED_RUNGS' AND value #>> '{payload,subjectId}'=$9
+    AND (($4 AND ($6::text IS NULL OR jsonb_array_length(coalesce(value->'platforms','[]'::jsonb))=0 OR value->'platforms' ? $6))
+      OR (NOT $4 AND (coalesce((value->'reach'->>'everywhere')::boolean,false)
+        OR (jsonb_array_length(coalesce(value->'reach'->'platforms','[]'::jsonb))>0 AND ($6::text IS NULL OR value->'reach'->'platforms' ? $6)))))
+  UNION SELECT id FROM eligible WHERE ${MANUAL_METHOD_SQL}
     AND ($6::text IS NULL OR jsonb_array_length(coalesce(value->'platforms','[]'::jsonb))=0 OR value->'platforms' ? $6)
-), scored AS MATERIALIZED (
+), scored AS NOT MATERIALIZED (
   SELECT e.id,
-    CASE WHEN $8::int IS NULL THEN 0 WHEN flags.method THEN
-      CASE WHEN status.here='FAILS' THEN NULL WHEN status.here='WORKS' OR flags.here THEN 1
-        WHEN $7::text=ANY(coalesce(legacy.states,'{}'::text[])||coalesce(working.states,'{}'::text[])) THEN 2
-        WHEN (SELECT count(DISTINCT proof.state) FROM unnest(coalesce(legacy.states,'{}'::text[])||coalesce(working.states,'{}'::text[])) proof(state))>=3 THEN 3
-        WHEN coalesce(legacy.any_place,false) OR coalesce(working.any_place,false) THEN 4 ELSE 5 END
+    CASE WHEN flags.method THEN method.tier
       ELSE CASE WHEN flags.here THEN 1 WHEN ($7::text IS NOT NULL AND n.reach->'states' ? $7)
         OR ($6::text IS NOT NULL AND n.reach->'platforms' ? $6) THEN 2 ELSE 3 END END AS tier,
-    CASE WHEN $8::int IS NULL OR $11::text[] IS NULL THEN 0 WHEN n."recordClasses" ?| $11 THEN 0 ELSE 1 END AS preferred,
-    CASE WHEN $8::int IS NULL OR $11::text[] IS NULL THEN 0 WHEN jsonb_array_length(coalesce(n."recordClasses",'[]'::jsonb))=0 THEN 0 ELSE 1 END AS any_class,
-    CASE WHEN $8::int IS NOT NULL AND n.kind='EXHAUSTED_RUNGS' THEN 1 ELSE 0 END AS exhausted,
-    CASE WHEN $8::int IS NULL THEN 0 ELSE CASE n.outcome ${Object.entries(OUTCOME_RANK).map(([outcome,rank])=>`WHEN '${outcome}' THEN ${rank}`).join(" ")} ELSE 5 END END AS outcome,
-    CASE WHEN $8::int IS NULL THEN '' ELSE coalesce(n."observedAt",'') END AS observed
-  FROM candidates c JOIN cp_field_manual_entries e ON e.id=c.id
+    CASE WHEN $11::text[] IS NULL THEN 0 WHEN n."recordClasses" ?| $11 THEN 0 ELSE 1 END AS preferred,
+    CASE WHEN $11::text[] IS NULL THEN 0 WHEN jsonb_array_length(coalesce(n."recordClasses",'[]'::jsonb))=0 THEN 0 ELSE 1 END AS any_class,
+    CASE WHEN n.kind='EXHAUSTED_RUNGS' THEN 1 ELSE 0 END AS exhausted,
+    CASE n.outcome ${Object.entries(OUTCOME_RANK).map(([outcome,rank])=>`WHEN '${outcome}' THEN ${rank}`).join(" ")} ELSE 5 END AS outcome,
+    coalesce(n."observedAt",'') AS observed
+  -- Keep metadata parsing behind the indexed reach lookup.
+  -- Keep metadata parsing behind the indexed reach lookup.
+  FROM candidates c CROSS JOIN LATERAL (SELECT id,value FROM cp_field_manual_entries WHERE id=c.id OFFSET 0) e
   CROSS JOIN LATERAL jsonb_to_record(e.value) AS n(kind text,outcome text,"observedAt" text,"recordClasses" jsonb,
     reach jsonb,platforms jsonb,url text,"ocdIds" jsonb,"bodyIds" jsonb,states jsonb,"placeResults" jsonb)
   CROSS JOIN LATERAL (SELECT coalesce(n.reach->'places','[]'::jsonb) ?| $5::text[] AS here,
     ((n.kind IN (${[...TRANSFERABLE_METHOD_KINDS].map(kind=>`'${kind}'`).join(",")}) AND(n.url IS NULL OR jsonb_array_length(coalesce(n.platforms,'[]'::jsonb))>0))
       OR coalesce((n.reach->>'method')::boolean,false)) AS method) flags
-  LEFT JOIN LATERAL (SELECT state FROM cp_fix_map WHERE $8::int IS NOT NULL AND flags.method
-    AND method_id=e.id AND place_id=ANY($10::text[]) ORDER BY place_id LIMIT 1) fixed ON true
+  LEFT JOIN LATERAL (
+    SELECT CASE WHEN status.here='FAILS' THEN NULL WHEN status.here='WORKS' OR flags.here THEN 1
+      WHEN $7::text=ANY(coalesce(legacy.states,'{}'::text[])||coalesce(working.states,'{}'::text[])) THEN 2
+      WHEN (SELECT count(DISTINCT proof.state) FROM unnest(coalesce(legacy.states,'{}'::text[])||coalesce(working.states,'{}'::text[])) proof(state))>=3 THEN 3
+      WHEN coalesce(legacy.any_place,false) OR coalesce(working.any_place,false) THEN 4 ELSE 5 END AS tier
+    FROM (SELECT 1) one
+    LEFT JOIN LATERAL (SELECT state FROM cp_fix_map
+      WHERE method_id=e.id AND place_id=ANY($10::text[]) ORDER BY place_id LIMIT 1) fixed ON true
   LEFT JOIN LATERAL (
     SELECT bool_or(item->>'place'=ANY($5::text[]) AND item->>'outcome' IN('FAILED','BLOCKED')) AS failed_here,
       bool_or(item->>'place'=ANY($5::text[]) AND item->>'outcome'='YIELDED') AS worked_here,
@@ -1047,24 +1090,24 @@ export const FIELD_MANUAL_SLICE_SQL = `WITH eligible AS NOT MATERIALIZED (
         THEN coalesce(n."ocdIds",'[]'::jsonb)||coalesce((SELECT jsonb_agg('body:'||body.id) FROM jsonb_array_elements_text(coalesce(n."bodyIds",'[]'::jsonb)) body(id)),'[]'::jsonb)
         WHEN jsonb_array_length(coalesce(n.states,'[]'::jsonb))>0 THEN (SELECT jsonb_agg('state:'||region.id) FROM jsonb_array_elements_text(n.states) region(id))
         ELSE '["any"]'::jsonb END) scope_places(place)))) legacy_rows(item)
-    WHERE $8::int IS NOT NULL AND flags.method
   ) legacy ON true
   LEFT JOIN LATERAL (SELECT count(*)>0 AS any_place,array_agg(DISTINCT ${PLACE_STATE_SQL}) FILTER(WHERE ${PLACE_STATE_SQL} IS NOT NULL) AS states
-    FROM cp_fix_map WHERE $8::int IS NOT NULL AND flags.method AND method_id=e.id AND state='WORKS') working ON true
+    FROM cp_fix_map WHERE method_id=e.id AND state='WORKS') working ON true
   CROSS JOIN LATERAL (SELECT coalesce(nullif(fixed.state,'UNTRIED'),CASE WHEN legacy.failed_here THEN 'FAILS' WHEN legacy.worked_here THEN 'WORKS' END) AS here) status
-  WHERE $8::int IS NULL OR (n.kind NOT IN(${[...BOOKKEEPING_KINDS].map(kind=>`'${kind}'`).join(",")})
+    WHERE flags.method OFFSET 0
+  ) method ON true
+  WHERE n.kind NOT IN(${[...BOOKKEEPING_KINDS].map(kind=>`'${kind}'`).join(",")})
     AND(n.kind<>'EXHAUSTED_RUNGS' OR ($9::text IS NOT NULL AND jsonb_typeof(e.value #> '{payload,subjectId}')='string' AND e.value #>> '{payload,subjectId}'=$9
-      AND($12::text[] IS NULL OR n."recordClasses" ?| $12))))
-), stats AS (
-  SELECT (SELECT count(*) FROM candidates) AS total,count(*) FILTER(WHERE tier IS NOT NULL) AS matched,
-    count(*) FILTER(WHERE tier IS NULL) AS failing FROM scored
+      AND($12::text[] IS NULL OR n."recordClasses" ?| $12)))
+  -- Compute each rank once while streaming the matching history.
+  OFFSET 0
 ), chosen AS (
   SELECT * FROM scored WHERE tier IS NOT NULL
   ORDER BY preferred,tier,any_class,exhausted DESC,outcome,observed COLLATE "C" DESC,id COLLATE "C"
-  LIMIT coalesce($8::int,${AGGREGATE_LIST_READ_PAGE})
+  LIMIT $8::int
 )
-SELECT e.id,e.value,stats.total,stats.matched,stats.failing
-FROM stats LEFT JOIN chosen ON true LEFT JOIN cp_field_manual_entries e ON e.id=chosen.id
+SELECT e.id,e.value
+FROM chosen JOIN cp_field_manual_entries e ON e.id=chosen.id
 ORDER BY chosen.preferred,chosen.tier,chosen.any_class,chosen.exhausted DESC,chosen.outcome,chosen.observed COLLATE "C" DESC,chosen.id COLLATE "C"`;
 
 export function fieldManualSliceParams(query: FieldManualQuery): unknown[] {
@@ -1100,19 +1143,16 @@ export function pgFieldManualRepository(sql:Sql,options:PgRepositoryBounds,fixMa
     async select(query) {
       if(query.limit!==undefined && (!Number.isSafeInteger(query.limit)||query.limit<0))throw new Error("Invalid field-manual note limit");
       const params=fieldManualSliceParams(query),entries:FieldManualEntry[]=[];
-      let afterId:string|null=null,counts:{total:number;matched:number;leftOutFailingHere:number}|undefined;
+      let afterId:string|null=null;
       for(;;) {
-        const rows=await run("select","PAGE",FIELD_MANUAL_SLICE_SQL,[...params,afterId]) as Record<string,unknown>[];
-        if(query.limit!==undefined) {
-          counts={total:Number(rows[0]?.total),matched:Number(rows[0]?.matched),leftOutFailingHere:Number(rows[0]?.failing)};
-          if(Object.values(counts).some(value=>!Number.isSafeInteger(value)||value<0))throw new Error("FIELD_MANUAL_COUNTS_MISSING");
-        }
+        const rows=await run("select","PAGE",query.limit===undefined?FIELD_MANUAL_MATCHES_SQL:FIELD_MANUAL_SLICE_SQL,
+          query.limit===undefined?[...params.slice(0,7),params[12],afterId]:params) as Record<string,unknown>[];
         for(const row of rows)if(row.id!==null)entries.push(parseValue<FieldManualEntry>(row.value,`cp_field_manual_entries ${String(row.id)}`));
         if(query.limit!==undefined || rows.length<AGGREGATE_LIST_READ_PAGE)break;
         afterId=String(rows.at(-1)!.id);
       }
       const evidence=await readMethodEvidence({fieldManual:repository,fixMap:fixMap()},entries,query);
-      return {projection:{...projectFieldManual({entries},query,evidence),...counts},store:{entries},...(evidence?{evidence}:{})};
+      return {projection:projectFieldManual({entries},query,evidence),store:{entries},...(evidence?{evidence}:{})};
     },
   };
   return repository;

@@ -6,6 +6,7 @@ export const CP01_DECLARATION_SOURCES = [
   "lib/control-plane/repository/model-charges.ts", "lib/control-plane/repository/dispatch-state.ts",
   "lib/control-plane/repository/control-reads-backfill.ts", "lib/method/fix-map.ts",
   "lib/control-plane/hunt-orders.ts", "lib/control-plane/scheduler/state-planning.ts",
+  "lib/control-plane/repository/field-manual-sql.ts",
 ] as const;
 
 export function controlReadsMigrationDefinition(): string {

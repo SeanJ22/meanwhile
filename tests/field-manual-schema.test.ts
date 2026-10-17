@@ -59,7 +59,7 @@ test("a runner slice reads scoped SQL and never opens or rewrites a national hel
   const dir = await mkdtemp(join(tmpdir(), "manual-copies-"));
   const copies = openHeldCopies(dir, { log: line => assert.fail(line) });
   const held = pgFieldManualRepository(sql,{copies},()=>createFixMapRepository(async()=>[]));
-  assert.deepEqual((await held.select({ role: "SCOUT", state: "az" })).store.entries, [entry]);
+  assert.deepEqual((await held.select({ role: "SCOUT", state: "az",limit:12 })).store.entries, [entry]);
   assert.deepEqual(seen, [FIELD_MANUAL_SLICE_SQL]);
   assert.deepEqual(await readdir(dir), []);
 });
@@ -114,11 +114,11 @@ test("SQL manual slices exclude other places and source routes while preserving 
       assert.deepEqual(sliced.map(entry=>entry.id).sort(),[...(selection.limit===undefined?matched.map(entry=>entry.id):expected.entryIds)].sort(),JSON.stringify(selection));
       assert.deepEqual(page.projection,expected);
     }
-    const plan = await db.query(`EXPLAIN ${FIELD_MANUAL_SLICE_SQL}`, [...fieldManualSliceParams(query), null]);
+    const plan = await db.query(`EXPLAIN ${FIELD_MANUAL_SLICE_SQL}`, fieldManualSliceParams(query));
     assert.match(JSON.stringify(plan.rows), /cp_field_manual_reach_places/);
     const playbook = { role: "SCOUT" as const, kinds: ["PLAYBOOK"], everywhere: true };
     assert.equal((await repo.select(playbook)).store.entries.length, 2);
-    const globalPlan = await db.query(`EXPLAIN ${FIELD_MANUAL_SLICE_SQL}`, [...fieldManualSliceParams(playbook), null]);
+    const globalPlan = await db.query(`EXPLAIN ${FIELD_MANUAL_SLICE_SQL}`, fieldManualSliceParams({...playbook,limit:12}));
     assert.match(JSON.stringify(globalPlan.rows), /cp_field_manual_entries_kind/);
   } finally { await db.close(); }
 });
@@ -150,6 +150,15 @@ test("bounded SQL notes retain producer proof, failed-here exclusions and Scout 
       make("other-blank","EXHAUSTED_RUNGS",{ocdIds:[place],outcome:"ZERO",recordClasses:["meetings"],payload:{subjectId:place}}),
       make("other-subject","EXHAUSTED_RUNGS",{ocdIds:[place],payload:{subjectId:"unrelated"}}),
       make("bookkeeping","WRITE_HEALTH",{states:["az"]}),make("playbook","PLAYBOOK",{portable:true}),
+      ...Array.from({length:240},(_,index)=>make(`shared-${index}`,index%23===0?"EXHAUSTED_RUNGS":"LESSON",{
+        role:index%4===0?"SHARED":"SCOUT",portable:true,
+        outcome:(["YIELDED","ZERO","FAILED","BLOCKED","REFERENCE"] as const)[index%5]!,
+        observedAt:new Date(Date.parse(at)+index*1000).toISOString(),
+        recordClasses:index%3===0?[]:index%3===1?["candidate-enrichment"]:["meetings"],
+        platforms:index%7===0?["civicplus"]:["legistar"],
+        ocdIds:index%11===0?[place]:[],states:index%13===0?["az"]:[],
+        payload:{subjectId:index%2===0?place:"unrelated"},
+      })),
       ...Array.from({length:20},(_,index)=>make(`state-${index}`,"LESSON",{states:["az"],outcome:"YIELDED"}))];
     await memory.fieldManual.insertNew(entries,at);
     await db.query("INSERT INTO cp_field_manual_entries SELECT value->>'id',1,$2::timestamptz,value FROM jsonb_array_elements($1::jsonb) value",[JSON.stringify(entries),at]);
@@ -166,17 +175,24 @@ test("bounded SQL notes retain producer proof, failed-here exclusions and Scout 
     const sql={query:async(text:string,params?:readonly unknown[])=>(await db.query(text,[...params??[]])).rows};
     const pg=pgFieldManualRepository(sql,{},()=>map);
     const queries:FieldManualQuery[]=[{role:"SCOUT",subjectId:place,ocdIds:[place],state:"az",platform:"legistar",limit:12},
-      {role:"SCOUT",subjectId:place,ocdIds:[place],state:"az",limit:100},
+      {role:"SCOUT",subjectId:place,ocdIds:[place],state:"az",limit:1000},
       scoutFieldManualQuery({subjectId:place,divisions:[place],recordClasses:["candidate-enrichment"],limit:4}),
       scoutFieldManualQuery({subjectId:place,divisions:[place],limit:6}),
       {role:"SCOUT",ocdIds:["government:US-NH:654321"],state:"nh",limit:7},
+      {role:"SCOUT",ocdIds:["government:US-NH:654321"],state:"nh",platform:"civicplus",limit:12},
+      {role:"SHARED",recordClass:"meetings",limit:12},
+      {role:"SCOUT",subjectId:place,ocdIds:[place],state:"az",everywhere:true,platform:"legistar",limit:12},
+      {role:"SCOUT",subjectId:place,state:"az",preferredRecordClasses:["no-saved-class"],limit:12},
+      {role:"SCOUT",subjectId:place,state:"az",preferredRecordClasses:["meetings"],limit:12},
       {role:"SCOUT",state:"az",limit:0}];
     for(const query of queries) {
       const expected=await memory.fieldManual.select(query),actual=await pg.select(query);
       assert.deepEqual(actual,expected,JSON.stringify(query));
       assert.ok(actual.store.entries.length<=query.limit!);
-      assert.ok(!actual.projection.entryIds.includes(byTitle.get("fails")!));
-      assert.ok(!actual.projection.entryIds.includes(byTitle.get("legacy-fails")!));
+      if(query.ocdIds?.includes(place)) {
+        assert.ok(!actual.projection.entryIds.includes(byTitle.get("fails")!));
+        assert.ok(!actual.projection.entryIds.includes(byTitle.get("legacy-fails")!));
+      }
     }
     const full=await pg.select(queries[1]),tiers=new Map(full.projection.entryIds.map((id,index)=>[id,full.projection.tiers[index]]));
     for(const [title,tier] of [["works",1],["untried",1],["state",2],["three-states",3],["legacy-three",3],["two-states",4],["no-proof",5]] as const)assert.equal(tiers.get(byTitle.get(title)!),tier,title);

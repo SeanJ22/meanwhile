@@ -5,7 +5,7 @@ import { canonicalBodyIdentity } from "@/lib/ask/body-identity";
 import { meetingListingIdentity } from "@/lib/meetings/listing-identity";
 import { nearestZctaAsync } from "@/lib/geo/zcta-table";
 import { zipDivisionEntry } from "@/lib/geo/zip-division-index";
-import { searchMeetings } from "@/lib/meetings/query";
+import { meetingBodyIds, searchMeetings } from "@/lib/meetings/query";
 import { DEFAULT_RADIUS_KM, MAX_RADIUS_KM } from "@/lib/meetings/constants";
 import { getRegistryRuntimeReadModel, readRegistryRuntimeProjection, selectedRegistryStates } from "@/lib/registry/runtime-read-model";
 import { snapshotSourceFor } from "@/lib/meetings/registry";
@@ -17,6 +17,7 @@ import {
   type SnapshotClientMeta,
 } from "@/lib/meetings/snapshot";
 import {
+  emptyMeetingsRead,
   holdReaderAuthorityEdge, ensureReaderAuthorityEdge,
   prefetchReaderEdgeStates,
   readReaderEdgeMeetings,
@@ -28,7 +29,6 @@ import {
 import { stateOfOcdId } from "@/lib/meetings/edge-artifacts";
 import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
 import { CivicDataStoreUnavailableError } from "@/lib/civic-data/read-model";
-import { readComposedSourcePlaces } from "@/lib/meetings/prepared-snapshot";
 import { divisionIdsForZipArea, POINT_GEOMETRY_PLANS } from "@/lib/ballot/zip-divisions";
 import { needsPill, zipCertainty } from "@/lib/geo/zip-certainty";
 import { WIRED_STATUSES } from "@/lib/registry/coverage";
@@ -217,11 +217,11 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
               .filter((s): s is string => s !== null),
           )]
         : [];
-      const read = await timing.time("meetings", () => readReaderEdgeMeetings({
+      const read = resolvedDivisions === null ? emptyMeetingsRead() : await timing.time("meetings", () => readReaderEdgeMeetings({
         manifest: edgeManifest,
         includeAgenda: false,
         ...(readerStates.length > 0 ? { states: readerStates } : {}),
-        ocdIds: resolvedDivisions?.map(division => division.ocdId) ?? [],
+        ocdIds: resolvedDivisions!.map(division => division.ocdId),
       }));
       meetingsWholeFromEdge = servedWholeFromReaderEdge(read);
       const snapshot = requireMeetingsProjection(read);
@@ -234,18 +234,15 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
         divisionsAtPoint,
         snapshotSourceFor(snapshot),
         undefined,
-        resolvedDivisions ? getRegistryRuntimeReadModel().registry.bodies : [],
+        resolvedDivisions ? meetingBodyIds(getRegistryRuntimeReadModel().registry.bodies, divisionsAtPoint) : new Set(),
       ));
       snapshotMeta =
-        read.kind === "PROMOTED" || read.kind === "BOOTSTRAP"
+        (read.kind === "PROMOTED" || read.kind === "BOOTSTRAP") && read.value.sources.length > 0
           ? snapshotClientMeta(read.value, read)
           : null;
-      if (snapshotMeta && meetingsWholeFromEdge && edgeManifest?.carriedSummary) {
-        snapshotMeta.carried = edgeManifest.carriedSummary;
-      }
     } else {
       result = await searchMeetings(lat, lng, radiusKm, new Date(), divisionsAtPoint, undefined, undefined,
-        resolvedDivisions ? getRegistryRuntimeReadModel().registry.bodies : []);
+        resolvedDivisions ? meetingBodyIds(getRegistryRuntimeReadModel().registry.bodies, divisionsAtPoint) : new Set());
       heldMeetings = result.meetings;
       snapshotMeta = await getActiveSnapshotMeta();
     }
@@ -331,8 +328,6 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
   }
 
   const meta = snapshotMeta;
-  // A whole-source failure is attributed to the places the published composition says the source serves.
-  const composed = meta?.sources.some((s) => !s.ok && !s.unreachableOcdIds) ? await readComposedSourcePlaces() : null;
   const snapshot = meta
     ? {
         version: 2 as const,
@@ -342,10 +337,7 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
           .filter((s) => !s.ok || (s.unreachableOcdIds?.length ?? 0) > 0)
           .map((s) => ({
             source: s.source,
-            ocdIds:
-              s.ok && s.unreachableOcdIds
-                ? s.unreachableOcdIds
-                : [...(composed?.get(s.source) ?? [])],
+            ocdIds: s.unreachableOcdIds ?? [],
           })),
       }
     : null;

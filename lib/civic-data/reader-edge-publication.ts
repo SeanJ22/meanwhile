@@ -1,7 +1,7 @@
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "./manual-contracts.ts";
 import { factReader } from "../facts/db.ts";
 import { planStateFacts, type StateFactsPlan } from "../facts/state-facts-publication.ts";
-import { preparePublishedMeetingSnapshot, readPreparedMeetingsProjection, readComposedSourcePlaces } from "../meetings/prepared-snapshot.ts";
+import { planMeetingBodies, type MeetingBodyPlan } from "../meetings/body-publication.ts";
 import {
   publishReaderEdgeArtifacts,
   ensureReaderAuthorityEdge,
@@ -20,7 +20,7 @@ import {
   type PublishStateAuthorities,
 } from "../meetings/edge-serving.ts";
 import { resolveReaderArtifactWriteStore, type ReaderArtifactStore } from "../meetings/edge-store.ts";
-import { GLOBAL_AUTHORITY_FAMILIES, sha256OfJson, type GlobalAuthorityFamily } from "../meetings/edge-artifacts.ts";
+import { GLOBAL_AUTHORITY_FAMILIES, type GlobalAuthorityFamily } from "../meetings/edge-artifacts.ts";
 import type { RoutineRecordClass, PromotedPointerIdentity } from "./types.ts";
 import { readCuratedReaderProjection } from "./curated-reader-read-model.ts";
 import { readEverydayRoutingProjection } from "../routing/everyday-data-plane.ts";
@@ -148,14 +148,6 @@ export async function publishSupervisorReaderEdge(store: RoutineDataStore, obser
         };
         const value = Reflect.get(target, key); return typeof value === "function" ? value.bind(target) : value;
       } });
-      const prepared = preparesMeetings ? await preparePublishedMeetingSnapshot(store, observedAt) : null;
-      if (prepared?.status === "FAILED" || prepared?.status === "NOT_COMPOSABLE") {
-        failed = true;
-        detail = prepared.status === "FAILED" ? safeFailure(prepared.error) : "Reader meetings could not be assembled. " + safeFailure(prepared.detail);
-        console.error("PREPARED_MEETING_SNAPSHOT_FAILED: " + detail);
-      }
-      if (prepared?.status === "RACED") { failed = true; detail = "A newer meeting composition won publication; retry remains owed."; }
-
       const servedIfCurrent = async (family: GlobalAuthorityFamily, currentVersion: () => Promise<string | null>): Promise<string | null> => {
         const served = servedAuthorityVersion(servedManifest, family);
         if (served === null) return null;
@@ -338,49 +330,38 @@ export async function publishSupervisorReaderEdge(store: RoutineDataStore, obser
       for (const [state, entry] of Object.entries(stateAuthorities["registry-runtime"] ?? {})) {
         if ("artifact" in entry) registryRefs[state] = entry.artifact;
       }
-      const meetingRegistryVersion = Object.keys(registryRefs).length
-        ? sha256OfJson(Object.entries(registryRefs).map(([state, ref]) => [state, ref.version]).sort(([a], [b]) => a.localeCompare(b))) : null;
-      const sameComposition = prepared?.status === "CURRENT" && servedMeetings?.meetingLayout === "governing-area" &&
-        servedMeetings.meetingRegistryVersion !== undefined && servedMeetings.meetingRegistryVersion === meetingRegistryVersion &&
-        (servedMeetings.composition !== undefined ? servedMeetings.composition === prepared.composition : servedMeetings.generatedAt === prepared.generatedAt);
-      let checks = prepared?.status === "CURRENT" || prepared?.status === "PUBLISHED" ? { composition: prepared.composition, freshChecks: prepared.freshChecks } : undefined;
-      let meetingRead: Awaited<ReturnType<typeof readPreparedMeetingsProjection>> | null = null;
-      let meetingBodies: RegistryRuntimeReadModel["registry"]["bodies"] | undefined;
-      try {
-        if (prepared !== null && !sameComposition && (prepared.status === "CURRENT" || prepared.status === "PUBLISHED")) {
-          meetingRead = await readPreparedMeetingsProjection({ store, expectedSequence: prepared.sequence });
-          if (meetingRead.kind !== "PROMOTED") throw new Error("Prepared meeting copy read " + meetingRead.kind);
-        }
-        if (meetingRead?.kind === "PROMOTED") {
-          supersededMeetingFields = meetingRead.value.meetings.reduce((count, meeting) => count + (meeting.publicationConflicts?.length ?? 0), 0);
-          meetingBodies = [];
-          const divisions = [...new Set(meetingRead.value.meetings.flatMap(meeting => meeting.ocdId ? [meeting.ocdId.split("#")[0]] : []))];
-          const bodyIds = new Set(meetingRead.value.meetings.flatMap(meeting => meeting.bodyId ? [meeting.bodyId] : []));
-          const states = statesForRegistryDivisions([...divisions, ...bodyIds]);
-          for (const state of states) {
+      let meetingPlan: MeetingBodyPlan | null = null;
+      if (preparesMeetings) try {
+        meetingPlan = await planMeetingBodies({
+          store, artifacts: artifactStore, now: observedAt, served: servedManifest?.meetingStates,
+          registryVersion: state => registryRefs[state]?.version ?? null,
+          registry: async state => {
+            if (registryRefs[state] === undefined) return null;
             const edge = await ensureReaderAuthorityEdge({ stateAuthorities: { "registry-runtime": { [state]: registryRefs[state] } } }, artifactStore, ["registry-runtime"]);
             const read = await withReaderAuthorityEdge({ ...edge, edgeOnly: true }, () => readStateAuthorityProjection<RegistryRuntimeReadModel>("registry-runtime", state));
             if (read.result.kind !== "PROMOTED") throw new Error(`Meeting territories for ${state} read ${read.result.kind}`);
-            meetingBodies.push(...read.result.value.registry.bodies.filter(body => bodyIds.has(body.id)));
-          }
+            return { bodies: read.result.value.registry.bodies };
+          },
+        });
+        if (meetingPlan.stats.failed.length > 0) {
+          failed = true;
+          detail = safeFailure(`Meetings of ${meetingPlan.stats.failed.length} bodies could not be composed: ${meetingPlan.stats.failed[0]!.error}`);
+          process.stderr.write(`READER_EDGE_MEETING_BODIES_FAILED: ${JSON.stringify(meetingPlan.stats.failed.slice(0, 20))}\n`);
         }
       } catch (error) {
         failed = true;
         detail = safeFailure(sanitizedErrorDiagnostic(error));
         process.stderr.write(`READER_EDGE_MEETINGS_CARRIED: ${detail}\n`);
-        // Keep the previous meeting bytes, territory version and observation
-        // dates together while independent verified families still publish.
-        meetingRead = null;
-        meetingBodies = undefined;
-        checks = undefined;
       }
-      const edge = await publishReaderEdgeArtifacts(meetingRead?.kind === "PROMOTED" ? meetingRead.value : null,
-        meetingRead?.kind === "PROMOTED" ? { sourceThrough: meetingRead.metadata.sourceThrough, retrievedAt: meetingRead.metadata.retrievedAt, promotedThrough: meetingRead.metadata.promotedAt }
-          : { sourceThrough: servedMeetings?.sourceThrough ?? null, retrievedAt: prepared?.status === "CURRENT" ? prepared.checkedAt : servedMeetings?.retrievedAt ?? null, promotedThrough: servedMeetings?.promotedThrough ?? null },
-        { store: artifactStore, now: observedAt, authority, stateAuthorities, registrations, meetingBodies, meetingRegistryVersion,
-          ...(servedManifest?.stateLegislators !== undefined || refreshes("state-legislators") ? { stateLegislators } : {}),
-          ...(preparesMeetings ? { meetingPlaces: Object.fromEntries(await readComposedSourcePlaces({ store }) ?? []) } : {}),
-          ...(stateFacts ? { stateFacts: stateFacts.entries } : {}), ...(checks ? { checks } : {}) });
+      const edge = await publishReaderEdgeArtifacts({ store: artifactStore, now: observedAt, authority, stateAuthorities, registrations,
+        ...(servedManifest?.stateLegislators !== undefined || refreshes("state-legislators") ? { stateLegislators } : {}),
+        ...(meetingPlan ? { meetingStates: meetingPlan.entries } : {}),
+        ...(stateFacts ? { stateFacts: stateFacts.entries } : {}) });
+      if (meetingPlan && (edge.status === "PUBLISHED" || edge.status === "CURRENT")) {
+        supersededMeetingFields = meetingPlan.stats.superseded;
+        await meetingPlan.settle();
+        console.log(JSON.stringify({ readerEdgeMeetingBodies: meetingPlan.stats }));
+      }
       if (stateFacts && (edge.status === "PUBLISHED" || edge.status === "CURRENT")) {
         await stateFacts.settle();
         console.log(JSON.stringify({ readerEdgeStateFacts: { rebuilt: stateFacts.rebuilt, patched: stateFacts.patched, bodiesRead: stateFacts.bodiesRead } }));
@@ -389,7 +370,6 @@ export async function publishSupervisorReaderEdge(store: RoutineDataStore, obser
       if ("sequence" in edge) sequence = edge.sequence;
       if (edge.status === "FAILED") throw new Error(edge.error);
       if (edge.status === "RACED") throw new Error("A concurrent reader publication moved the manifest; retry remains owed.");
-      if (edge.status === "NOT_COMPOSABLE") throw new Error("Reader pages could not be assembled. " + edge.detail);
       const purge = edge.status === "PUBLISHED" && artifactStore.kind === "netlify-blobs" ? await purgeReaderCacheTags([READER_MANIFEST_CACHE_TAG]) : null;
       if (purge) console.log(JSON.stringify({ readerEdgePurge: purge.purged, store: destination, sequence }));
 

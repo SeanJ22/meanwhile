@@ -465,11 +465,6 @@ async function worker() {
       artifactTransfer.reads.push({ key, bytes: bytes?.byteLength ?? 0 });
       return bytes;
     },
-    async readArtifact(key) {
-      const artifact = await heldArtifactStore.readArtifact(key);
-      artifactTransfer.reads.push({ key, bytes: artifact ? size(artifact) : 0 });
-      return artifact;
-    },
     async putImmutable(bytes, suffix) {
       const key = await heldArtifactStore.putImmutable(bytes, suffix);
       artifactTransfer.writes.push({ key, bytes: bytes.byteLength });

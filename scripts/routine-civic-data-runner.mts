@@ -103,6 +103,7 @@ import {
   type RoutineDueRequest,
 } from "../lib/civic-data/routine-due-request.ts";
 import { ADMIN_CONFIG_ID, isAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
+import { installMeetingClockFrom } from "../lib/meetings/settings.ts";
 import { expansionScopesOf } from "../lib/control-plane/expansion/scopes.ts";
 import { resolveScopes } from "../lib/control-plane/expansion/runner-load.ts";
 import { loadPublishedScopeLookupState } from "../lib/census-geography/scope-lookup.ts";
@@ -206,6 +207,15 @@ if (controlPlaneUrlFromEnv() === null) {
     }
   } catch (error) {
     console.warn(`RCD_TASK routine-civic-data-runner: the door registry could not be read, so this pass has no hand-wired meeting work — ${error instanceof Error ? error.message : String(error)}`);
+  }
+}
+if (controlPlaneUrlFromEnv() !== null) {
+  try {
+    const clockRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, new Date().toISOString(), { skipBootstrap: true });
+    const owner = await withControlPlaneConnectRetry(() => clockRepos.adminConfig.read(ADMIN_CONFIG_ID));
+    installMeetingClockFrom(owner !== null && isAdminConfig(owner.value) ? owner.value : null);
+  } catch (error) {
+    console.warn(`RCD_TASK routine-civic-data-runner: the meeting check clock could not be read, so this pass uses the last installed one — ${safeFailure(sanitizedErrorDiagnostic(error))}`);
   }
 }
 const STANDING_SOURCE_TASKS: readonly RoutineSourceTask[] = PUBLISH_NOW ? [] : await withNationalPlaceTasks([

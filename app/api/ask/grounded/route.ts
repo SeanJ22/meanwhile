@@ -577,17 +577,13 @@ async function answerWithSettings(request: Request) {
   await readRegistryRuntimeProjection(registryStates);
   const registrySource = registryStates.every(state => currentStateAuthorityProjection("registry-runtime", state)?.source === "EDGE") ? "EDGE" : "DATABASE";
   const questionShape = lexicalQuestionShape(question);
-  const needsMeetings = Boolean(topicRoute || areaMeetingsAsk || (!officialsAsk && !ballotQuestionHint(question) &&
+  const needsMeetings = ocdIds.length > 0 && Boolean(topicRoute || areaMeetingsAsk || (!officialsAsk && !ballotQuestionHint(question) &&
     !deferPersonRecords && (!questionShape || sittingShapes.has(questionShape.shape))));
-  const meetingManifest = needsMeetings ? edgeManifest : null;
-  if (meetingManifest?.meetingPlaces) {
-    authorityEdge = { ...authorityEdge, meetingPlaces: new Map(Object.entries(meetingManifest.meetingPlaces)) };
-    enterReaderAuthorityEdge(authorityEdge);
-  }
   const meetingsRead = needsMeetings ? readReaderEdgeMeetings({
-    manifest: meetingManifest,
+    manifest: edgeManifest,
     window: "HELD",
-    ...(ocdIds.length && (topicRoute || areaMeetingsAsk) ? { states: statesOf(ocdIds), ocdIds } : {}),
+    states: statesOf(ocdIds),
+    ocdIds,
   }) : null;
   meetingsRead?.catch(() => undefined);
   const essentialPreloads = [

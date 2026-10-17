@@ -56,6 +56,8 @@ export interface MeetingBodyPublicationStats {
   unchanged: number;
   /** Bodies whose only change was a newer check. */
   checkedOnly: number;
+  /** Fields a better source replaced in the bodies composed this pass. */
+  superseded: number;
   recordsWritten: number;
   rowsWritten: number;
   indexesWritten: number;
@@ -64,11 +66,9 @@ export interface MeetingBodyPublicationStats {
   readonly failed: { readonly bodyId: string; readonly error: string }[];
 }
 
-export interface MeetingStateEntry {
-  readonly versionId: string;
-  readonly carried?: true;
-  readonly value?: MeetingStateIndex;
-}
+export type MeetingStateEntry =
+  | { readonly versionId: string; readonly value: MeetingStateIndex }
+  | { readonly versionId: string; readonly carried: true };
 
 export interface MeetingBodyPlan {
   readonly entries: Readonly<Record<string, MeetingStateEntry>>;
@@ -248,6 +248,7 @@ async function composeBody(pass: Pass, state: string, work: BodyWork): Promise<C
   const composed = composeMeetingBody({ bodyId: work.bodyId, divisions, reads, histories: historyReads });
   if (composed === null) return { kind: "ABSENT" };
   pass.stats.composed += 1;
+  pass.stats.superseded += composed.snapshot.meetings.reduce((count, meeting) => count + (meeting.publicationConflicts?.length ?? 0), 0);
 
   const history = composeMeetingBodyHistory(work.bodyId, historyReads, composed.snapshot.generatedAt);
   const content = sha256OfJson({ snapshot: composed.snapshot, history });
@@ -415,7 +416,7 @@ export async function planMeetingBodies(input: MeetingBodyPublicationInput): Pro
     if (state !== null) dirty.set(state, (dirty.get(state) ?? new Set()).add(row.scope));
   }
   const pass: Pass = { ...input, layout, families: new Map(), registries: new Map(),
-    stats: { states: [], composed: 0, unchanged: 0, checkedOnly: 0, recordsWritten: 0, rowsWritten: 0, indexesWritten: 0, bytesWritten: 0, failed: [] } };
+    stats: { states: [], composed: 0, unchanged: 0, checkedOnly: 0, superseded: 0, recordsWritten: 0, rowsWritten: 0, indexesWritten: 0, bytesWritten: 0, failed: [] } };
   const entries: Record<string, MeetingStateEntry> = Object.fromEntries(Object.entries(input.served ?? {}).map(([state, ref]) => [state, { versionId: ref.version, carried: true as const }]));
   const failedStates = new Set<string>();
   const extras = new Map<string, { copies: Map<string, Copy>; removals: Set<string> }>();

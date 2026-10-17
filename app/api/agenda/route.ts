@@ -14,9 +14,14 @@ import { statesForRegistryDivisions } from "@/lib/civic-data/state-scopes";
 export const runtime = "nodejs";
 
 export const GET = readerRoute("/api/agenda", async function GET(request: Request) {
-  const meetingId = new URL(request.url).searchParams.get("meetingId");
+  const params = new URL(request.url).searchParams;
+  const meetingId = params.get("meetingId");
+  const bodyId = params.get("bodyId");
   if (!meetingId || meetingId.length > 200) {
     return Response.json({ error: "meetingId required" }, { status: 400 });
+  }
+  if (!bodyId || bodyId.length > 400) {
+    return Response.json({ error: "bodyId required" }, { status: 400 });
   }
 
   let read;
@@ -24,7 +29,7 @@ export const GET = readerRoute("/api/agenda", async function GET(request: Reques
     const manifest = await readReaderManifest().catch(holdReaderAuthorityEdge);
     const authority = manifest ? await ensureReaderAuthorityEdge(manifest, undefined, ["registry-runtime", "meeting-outcomes"]).catch(error => holdReaderAuthorityEdge(error, manifest, ["registry-runtime", "meeting-outcomes"])) : null;
     if (authority) enterReaderAuthorityEdge(authority);
-    read = await readReaderEdgeMeetings({ meetingId, manifest, window: "HELD" });
+    read = await readReaderEdgeMeetings({ bodyIds: [bodyId], neighbors: true, manifest, window: "HELD" });
   } catch (error) {
     return Response.json(
       {

@@ -572,7 +572,7 @@ test("SB-01 bootstraps territory voting doors and reports an unmigratable row wi
     const migrationErrors = () => errors.filter(args => args[0] === "VOTING_DOOR_SCOPE_MIGRATION_FAILED");
     assert.equal(migrationErrors().length, 1);
     assert.equal((migrationErrors()[0][1] as { id: string }).id, "fec-invalid-chief");
-    assert.equal((await db.query<{ version: number }>("SELECT version FROM cp_schema_version")).rows[0]!.version, 33);
+    assert.equal((await db.query<{ version: number }>("SELECT version FROM cp_schema_version")).rows[0]!.version, 34);
     await openFixturePgRepositories(sql, LATER);
     assert.equal(migrationErrors().length, 1);
   } finally { await db.close(); }

@@ -2,7 +2,7 @@ import { FIX_MAP_DDL } from "../../method/fix-map.ts";
 import { WEBSITE_PACING_DDL } from "../website-pacing.ts";
 
 /** Moves whenever `BOOTSTRAP_DDL` moves. The gate compares against it. */
-export const BOOTSTRAP_VERSION = 33;
+export const BOOTSTRAP_VERSION = 34;
 
 export const AGGREGATE_KINDS = [
   "work_items",
@@ -126,6 +126,7 @@ export const SCOPED_HISTORY_INDEXES: readonly OnlineIndex[] = [
   onlineIndex("cp_work_items_subject", "cp_work_items ((value #>> '{subject}'))"),
   onlineIndex("cp_work_items_directory_subject", "cp_work_items ((value #>> '{autonomousPlan,directorySubject,jurisdiction,id}'))"),
   onlineIndex("cp_field_manual_entries_states", "cp_field_manual_entries USING gin ((value->'states'))"),
+  onlineIndex("cp_doors_config_url", "cp_doors ((value #>> '{config,url}'))"),
   onlineIndex("cp_box_findings_subject", "cp_box_findings ((value #>> '{subjectId}'))"),
   onlineIndex("cp_log_scout_results_subject", "cp_log_scout_results ((record #>> '{subjectId}'))"),
   onlineIndex("cp_log_artifacts_work_item", "cp_log_artifacts ((record #>> '{workItemId}'))"),

@@ -73,8 +73,7 @@ export async function retireSourceDoors(repo: ControlPlaneRepositories["doors"],
   observation: Pick<SourceObservation, "url" | "ocdId" | "disposition" | "capture" | "workItemId">, at: string) {
   const address = pageAddress(observation.url);
   if (!address || observation.disposition.kind === "DOOR") return;
-  const rows = [...await repo.listWhere(["config", "url"], address.url), ...await repo.listWhere(["kind"], VOTING_SOURCE_DOOR_KIND)];
-  for (const row of new Map(rows.map(row => [row.id, row])).values()) {
+  for (const row of await repo.listWhere(["config", "url"], address.url)) {
     const door = row.value;
     if (door.origin !== "DERIVED" || door.status === "SUSPENDED" || !["page", VOTING_SOURCE_DOOR_KIND].includes(door.kind)) continue;
     const url = door.kind === VOTING_SOURCE_DOOR_KIND

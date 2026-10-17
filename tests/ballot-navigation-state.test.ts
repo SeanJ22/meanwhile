@@ -106,10 +106,10 @@ test("navigation admission reserves the largest state after a small state's meas
   const mib = 1024 * 1024;
   const host = workerMemoryHost({ processes: () => [] });
   host.transact(state => { state.peaks = { "ballot-navigation-refresh.mts": [300 * mib] }; }, false);
-  let free = (768 + 2047) * mib;
+  let free = (768 + 767) * mib;
   const slots = routineProcessSlots({ host, availableBytes: () => free });
   await assert.rejects(slots.acquire("ballot-navigation-il/ballot-navigation-refresh.mts", Date.now() + 25), /WORKER_MEMORY_DEADLINE/);
-  free = (768 + 2048) * mib;
+  free = (768 + 768) * mib;
   const release = await slots.acquire("ballot-navigation-il/ballot-navigation-refresh.mts", Date.now() + 100);
   release();
 });

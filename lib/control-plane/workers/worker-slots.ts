@@ -13,7 +13,8 @@ export const RESEARCH_PARENT_PEAK_MIB = 2928;
 /** Promoter peak 1,923 MiB plus the held national-worker peak; both may still grow. */
 export const NATIONAL_PLACE_PEAK_MIB = 1923 + WORKER_ENTRY_PEAK_MIB.national!;
 const STATE_PUBLICATION_PEAK_MIB = 512;
-const NAVIGATION_PUBLICATION_PEAK_MIB = 2048;
+const NAVIGATION_PUBLICATION_PEAK_MIB = 768;
+const STATE_ARTIFACT_PEAK_MIB = 576;
 /** Bulk data families use the retained data-worker bound until their own runs are measured on this host. */
 const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   // A complete 113 MiB Illinois session peaked at 3,013 MiB;
@@ -36,7 +37,7 @@ const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   "fetch-voting-sites.mts": STATE_PUBLICATION_PEAK_MIB,
   "derive-candidate-campaign-sites.mts": STATE_PUBLICATION_PEAK_MIB,
   "promote-registry-runtime.mts": STATE_PUBLICATION_PEAK_MIB,
-  "publish-state-authority.mts": STATE_PUBLICATION_PEAK_MIB,
+  "publish-state-authority.mts": STATE_ARTIFACT_PEAK_MIB,
   "retire-state-authorities.mts": STATE_PUBLICATION_PEAK_MIB,
 };
 export const WORKER_MEMORY_HEADROOM_MIB = 768;

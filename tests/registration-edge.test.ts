@@ -5,10 +5,11 @@ import { join } from "node:path";
 import { test } from "node:test";
 
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
-import { ensureReaderAuthorityEdge, publishReaderEdgeArtifacts } from "../lib/meetings/edge-serving.ts";
+import { authorityPointerKey, ensureReaderAuthorityEdge, readServedPointer } from "../lib/meetings/edge-serving.ts";
+import { publishPointers } from "./helpers/edge-pointers.ts";
 import type { RegistrationSourceReceipt } from "../lib/registration/acquire.ts";
 import { registrationCandidate, type RegistrationReadModel, type ReviewedRegistryIds } from "../lib/registration/candidate.ts";
-import { REGISTRATION_SCOPES, registrationEdgePlan } from "../lib/registration/edge.ts";
+import { REGISTRATION_SCOPES } from "../lib/registration/edge.ts";
 import { REGISTRATION_SOURCE_BYTES, REGISTRATION_SOURCE_SHA256, REGISTRATION_SOURCE_URL, registrationTarget } from "../lib/registration/publication.ts";
 import { loadRegistrationReference } from "../lib/registration/reference.ts";
 import { enterReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
@@ -49,78 +50,44 @@ function model(state: string): RegistrationReadModel {
   return registrationCandidate({ target: registrationTarget(state), reference: loadRegistrationReference(ROOT, state), receipt: RECEIPT, reviewed: REVIEWED }).readModel as RegistrationReadModel;
 }
 
-test("the runner reads a state only when its pointer moved; every other promoted state carries by reference", () => {
-  const scopeOf = (state: string) => registrationTarget(state).scope;
-  const plan = registrationEdgePlan(
-    [
-      { scope: scopeOf("OH"), versionId: "reg-oh-2" },
-      { scope: scopeOf("NH"), versionId: "reg-nh-1" },
-      { scope: scopeOf("WY"), versionId: "reg-wy-1" },
-      { scope: "US-AZ:not-registration", versionId: "x" },
-    ],
-    {
-      oh: { key: "reader/v1/registration-oh.json.gz", version: "reg-oh-1", sha: "a" },
-      nh: { key: "reader/v1/registration-nh.json.gz", version: "reg-nh-1", sha: "b", layout: "records" },
-    },
-  );
-  assert.deepEqual(plan.carried, { nh: "reg-nh-1" });
-  assert.deepEqual(plan.publish, { oh: "reg-oh-2", wy: "reg-wy-1" }, "a moved version and a never-served state are read; another class's scope is ignored");
+test("each state's registration is its own compressed artifact at its own pointer, read back losslessly and only when named", async () => {
   assert.equal(REGISTRATION_SCOPES.length, 56);
-});
-
-test("each state's registration is its own compressed artifact, read back losslessly and only when named", async () => {
   const store = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reg-edge-")));
   const oh = model("OH");
   const nh = model("NH");
-  const published = await publishReaderEdgeArtifacts({
-    store,
-    registrations: { oh: { value: oh, versionId: "reg-oh-1" }, nh: { value: nh, versionId: "reg-nh-1" } },
-  });
-  assert.equal(published.status, "PUBLISHED");
-  const manifest = (await store.readManifest())!.manifest;
-  assert.deepEqual(Object.keys(manifest.registrations ?? {}).sort(), ["nh", "oh"]);
-  assert.match(manifest.registrations!.oh.key, /^reader\/artifacts\/[a-f0-9]{64}\.json\.gz$/);
+  assert.deepEqual(await publishPointers(store, { registrations: { oh: { value: oh, versionId: "reg-oh-1" }, nh: { value: nh, versionId: "reg-nh-1" } } }),
+    ["registrations/oh", "registrations/nh"]);
+  assert.equal(await store.readManifest(), null, "registrations write no manifest");
+  assert.match((await readServedPointer(store, authorityPointerKey("registrations", "oh")))!.ref.key, /^reader\/artifacts\/[a-f0-9]{64}\.json\.gz$/);
 
-  const edge = await ensureReaderAuthorityEdge(manifest, store);
-  assert.deepEqual([...edge.registrations!.states].sort(), ["nh", "oh"]);
+  const edge = (await ensureReaderAuthorityEdge(null, store))!;
   const loaded = await edge.registrations!.load("oh");
   assert.equal(loaded?.versionId, "reg-oh-1");
   assert.deepEqual(loaded?.value, oh, "the reader gets exactly what the runner published");
-  assert.equal(await edge.registrations!.load("wy"), null, "a state with no artifact loads nothing");
+  assert.equal(await edge.registrations!.load("wy"), null, "a state with no pointer loads nothing");
 });
 
-test("unchanged states carry forward, a moved state re-publishes alone, and a stale carry keeps the winning manifest", async () => {
+test("an unchanged state writes nothing and a moved state rewrites only its own pointer", async () => {
   const store = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reg-edge-")));
   const oh = model("OH");
   const nh = model("NH");
-  await publishReaderEdgeArtifacts({ store, registrations: { oh: { value: oh, versionId: "reg-oh-1" }, nh: { value: nh, versionId: "reg-nh-1" } } });
-  const first = (await store.readManifest())!.manifest;
-
-  const same = await publishReaderEdgeArtifacts({
-    store,
-    registrations: { oh: { versionId: "reg-oh-1", carried: true }, nh: { versionId: "reg-nh-1", carried: true } },
-  });
-  assert.equal(same.status, "CURRENT", "nothing moved: nothing is written");
-
-  const moved = await publishReaderEdgeArtifacts({
-    store,
-    registrations: { oh: { value: oh, versionId: "reg-oh-2" }, nh: { versionId: "reg-nh-1", carried: true } },
-  });
-  assert.equal(moved.status, "PUBLISHED");
-  const second = (await store.readManifest())!.manifest;
-  assert.equal(second.registrations!.nh.key, first.registrations!.nh.key, "the unchanged state keeps its artifact");
-  assert.notEqual(second.registrations!.oh.key, first.registrations!.oh.key);
-  assert.equal(second.registrations!.oh.version, "reg-oh-2");
-
-  const stale = await publishReaderEdgeArtifacts({
-    store,
-    registrations: { oh: { versionId: "reg-oh-2", carried: true }, nh: { versionId: "reg-nh-9", carried: true } },
-  });
-  assert.equal(stale.status, "RACED");
-  assert.deepEqual((await store.readManifest())!.manifest, second, "a failed carry never removes valid state references");
+  await publishPointers(store, { registrations: { oh: { value: oh, versionId: "reg-oh-1" }, nh: { value: nh, versionId: "reg-nh-1" } } });
+  const first = await store.readJsonPointer(authorityPointerKey("registrations", "nh"));
+  assert.deepEqual(await publishPointers(store, { registrations: { oh: { value: oh, versionId: "reg-oh-1" }, nh: { value: nh, versionId: "reg-nh-1" } } }), [],
+    "nothing moved: nothing is written");
+  assert.deepEqual(await publishPointers(store, { registrations: { oh: { value: oh, versionId: "reg-oh-2" }, nh: { value: nh, versionId: "reg-nh-1" } } }), ["registrations/oh"]);
+  assert.deepEqual(await store.readJsonPointer(authorityPointerKey("registrations", "nh")), first, "the unchanged state keeps its pointer");
+  assert.equal((await readServedPointer(store, authorityPointerKey("registrations", "oh")))!.ref.version, "reg-oh-2");
 });
 
-test("the reader composes a state's registration from the edge, and a state the complete section omits costs no read at all", async () => {
+test("a state published with nothing promoted answers absent from the edge", async () => {
+  const store = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reg-edge-")));
+  await publishPointers(store, { registrations: { wy: { value: null, versionId: "none" } } });
+  const edge = (await ensureReaderAuthorityEdge(null, store))!;
+  assert.deepEqual(await edge.registrations!.load("wy"), { value: null, versionId: "none" });
+});
+
+test("the reader composes a state's registration from the edge, and a state published absent opens no database read", async () => {
   await installRegistryAuthority();
   const { divisionsByOcdIds } = await import("../lib/registry/server.ts");
   const oh = model("OH");
@@ -128,16 +95,15 @@ test("the reader composes a state's registration from the edge, and a state the 
   const loads: string[] = [];
   enterReaderAuthorityEdge(promotedFixtureBundle({
     registrations: {
-      states: new Set(["oh"]),
       load: async (state) => {
         loads.push(state);
-        return state === "oh" ? { value: oh, versionId: "reg-oh-1" } : null;
+        return state === "oh" ? { value: oh, versionId: "reg-oh-1" } : { value: null, versionId: "none" };
       },
     },
   }));
   const found = await divisionsByOcdIds([county.ocdId, "ocd-division/country:us/state:wy/county:laramie"]);
-  assert.deepEqual(found.map((d) => d.ocdId), [county.ocdId], "Ohio's county composes; Wyoming, absent from the complete section, is dropped");
-  assert.deepEqual(loads, ["oh"], "only the named, registered state is fetched");
+  assert.deepEqual(found.map((d) => d.ocdId), [county.ocdId], "Ohio's county composes; Wyoming, published with no registration, is dropped");
+  assert.deepEqual(loads.sort(), ["oh", "wy"], "only the named states' pointers are read");
   assert.equal(found[0]!.label, county.label);
 });
 
@@ -149,7 +115,6 @@ test("a DC division and a Puerto Rico division reach their registrations on the 
   const loads: string[] = [];
   const edge = promotedFixtureBundle({
     registrations: {
-      states: new Set(["dc", "pr"]),
       load: async (state: string) => {
         loads.push(state);
         return state === "dc" ? { value: dc, versionId: "reg-dc-1" } : state === "pr" ? { value: pr, versionId: "reg-pr-1" } : null;
@@ -177,7 +142,7 @@ test("a native county listing reaches the normal coverage card without a fabrica
   const { coverageAt, divisionsByOcdIds } = await import("../lib/registry/server.ts");
   const oh = model("OH");
   const government = oh.governments!.find(row => row.governmentClass === "COUNTY" && row.associations.length)!;
-  enterReaderAuthorityEdge(promotedFixtureBundle({ registrations: { states: new Set(["oh"]), load: async state => state === "oh" ? { value: oh, versionId: "reg-oh-1" } : null } }));
+  enterReaderAuthorityEdge(promotedFixtureBundle({ registrations: { load: async state => state === "oh" ? { value: oh, versionId: "reg-oh-1" } : null } }));
   const resolved = await divisionsByOcdIds([government.associations[0].divisionId]);
   const coverage = await coverageAt(39.96, -83.0, 0, resolved);
   assert.equal(coverage.governments?.find(row => row.id === government.id)?.name, government.name);

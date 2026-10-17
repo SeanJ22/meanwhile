@@ -37,9 +37,9 @@ for (const [kind, env, expectedOk] of [
     assert.equal(outcome.store, kind === "local-file" ? "local folder" : "Netlify Blobs");
     assert.deepEqual(JSON.parse(logs.at(-1)!), outcome);
     if (expectedOk) {
-      assert.equal(outcome.readerEdge, "PUBLISHED");
-      assert.equal(outcome.sequence, (await local.readManifest())!.manifest.sequence);
-      assert.equal((await local.readManifest())!.manifest.meetingStates, undefined, "an authority-only selection publishes no meeting indexes");
+      assert.equal(outcome.readerEdge, "CURRENT");
+      assert.equal(outcome.sequence, null);
+      assert.equal(await local.readManifest(), null, "an empty selection writes nothing");
       assert.equal(readerEdgeSupervisorFailure(outcome), null);
     } else {
       assert.equal(await local.readManifest(), null, "a refused local destination is never mutated");

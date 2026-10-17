@@ -4,7 +4,9 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, test } from "./helpers/playbooks.ts";
 
-import { publishReaderEdgeArtifacts, type PublishAuthority } from "../lib/meetings/edge-serving.ts";
+import { authorityPointerKey, publishReaderMeetings, readServedPointer, type PublishAuthorityValue } from "../lib/meetings/edge-serving.ts";
+import type { GlobalAuthorityFamily } from "../lib/meetings/edge-artifacts.ts";
+import { publishPointers } from "./helpers/edge-pointers.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import { stateFactsPointerKey, writeFactBucket, writeFactRecord } from "../lib/meetings/edge-serving.ts";
 import type { BodyFacts } from "../lib/facts/registry-overlay.ts";
@@ -103,13 +105,15 @@ async function publishEdge(versions: EdgeVersions): Promise<void> {
   const meetings = new MemoryRoutineDataStore();
   const recorded = await promoteRecorded(meetings, snapshot.meetings, snapshot.agendaDocuments, snapshot.generatedAt);
   assert.ok(recorded.promoted.length > 0, "the recorded meetings publish the edge's meeting indexes");
-  const authority: PublishAuthority = {
+  const authority: Partial<Record<GlobalAuthorityFamily, PublishAuthorityValue>> = {
     "census-districts": { value: azDistricts, versionId: azDistricts.versionId },
     "federal-directory": { value: syntheticFederalDirectory(), versionId: versions.federal },
     ...(versions.outcomes && (outcomesValue.kind === "BOOTSTRAP" || outcomesValue.kind === "PROMOTED")
       ? { "meeting-outcomes": { value: getOutcomeSnapshot(), versionId: versions.outcomes } }
       : {}),
   };
+  // Each publish starts from an empty edge, so a family it leaves out has no pointer.
+  rmSync(edgeDir, { recursive: true, force: true });
   const store = new LocalFileArtifactStore(edgeDir);
   const records = await Promise.all(COMMENT_ACCESS.map(async (comment, index) => {
     const body: BodyFacts = { id: comment.bodyId, division: comment.bodyId.split("#")[0], fields: {}, roster: null, comment, sittings: [], dispositions: [] };
@@ -119,16 +123,11 @@ async function publishEdge(versions: EdgeVersions): Promise<void> {
   assert.deepEqual(plan.stats.failed, []);
   if (versions.commentAccess) await store.writeJsonPointer(stateFactsPointerKey("AZ"), { state: "AZ", versionId: versions.commentAccess,
     buckets: [await writeFactBucket(store, "AZ", 0, versions.commentAccess, { kind: "READER_RECORDS", base: { bodies: [] }, records }, new Date().toISOString())] }, null);
-  const result = await publishReaderEdgeArtifacts({
-    store,
-    meetingStates: plan.entries,
-    stateAuthorities: { "registry-runtime": stateRegistryArtifacts(versions.registry, ["AZ"]) },
-    now: new Date().toISOString(),
-    authority,
-  });
-  assert.equal(result.status, "PUBLISHED", JSON.stringify(result));
+  await publishPointers(store, { authority, stateAuthorities: { "registry-runtime": stateRegistryArtifacts(versions.registry, ["AZ"]) } });
+  const result = await publishReaderMeetings({ store, meetingStates: plan.entries, now: new Date().toISOString() });
+  assert.ok(result.status === "PUBLISHED" || result.status === "CURRENT", JSON.stringify(result));
   process.env.WTP_READER_EDGE_DIR = edgeDir;
-  registryArtifactKey = (await store.readManifest())!.manifest.stateAuthorities!["registry-runtime"]!.AZ!.key;
+  registryArtifactKey = (await readServedPointer(store, authorityPointerKey("registry-runtime", "AZ")))!.ref.key;
   openedArtifacts.length = 0;
 }
 
@@ -180,7 +179,7 @@ test("Ask reads the registry, the federal directory and the recorded outcomes fr
   assert.match(payload.answer ?? "", /September 22nd, 2026/, "the edge-served outcomes still answer the Pima question");
 });
 
-test("a manifest without the outcomes family reads them from the database, and the trace says so", async () => {
+test("an edge without the outcomes pointer reads them from the database, and the trace says so", async () => {
   await publishEdge({ registry: "edge-test:registry:2", federal: "edge-test:federal:2" });
   const payload = await askPima();
   assert.equal(payload.trace.preloadSources?.outcomes, "DATABASE");
@@ -227,7 +226,7 @@ test("Campaign money reads the registry from the edge it entered, and names ever
   assert.ok([200, 503].includes(response.status));
   assert.ok(openedArtifacts.includes(registryArtifactKey), "the request opens the published Arizona registry version");
   const timing = response.headers.get("server-timing") ?? "";
-  for (const name of ["edgeManifest", "authorityEdge", "registry", "fec", "total"]) {
+  for (const name of ["authorityEdge", "registry", "fec", "total"]) {
     assert.match(timing, new RegExp(`(?:^|, )${name};dur=\\d+`), `${name} is not timed: ${timing}`);
   }
 });

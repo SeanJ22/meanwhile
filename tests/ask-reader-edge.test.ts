@@ -5,10 +5,14 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { after, test } from "./helpers/playbooks.ts";
 
-import { publishReaderEdgeArtifacts, type PublishAuthority, type PublishStateAuthorities } from "../lib/meetings/edge-serving.ts";
-import { planMeetingBodies } from "../lib/meetings/body-publication.ts";
+import { authorityPointerKey, publishReaderMeetings, readServedPointer, type PublishAuthorityValue } from "../lib/meetings/edge-serving.ts";
+import { publishPointers } from "./helpers/edge-pointers.ts";
+import { STATE_AUTHORITY_FAMILIES, type GlobalAuthorityFamily, type StateAuthorityFamily } from "../lib/meetings/edge-artifacts.ts";
+
+type StateValues = Partial<Record<StateAuthorityFamily, Record<string, PublishAuthorityValue>>>;
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
-import { HOUR, PIMA, T1, at, readPartition } from "./helpers/meeting-body-fixtures.ts";
+import { planMeetingBodies } from "../lib/meetings/body-publication.ts";
+import { promoteRecorded } from "./helpers/reader-edge-meetings.ts";
 import type { GlobalPromotedAuthorityFamily, PromotedFamilyArtifactValue } from "../lib/meetings/edge-artifacts.ts";
 import { ballotElectionKey } from "../lib/ballot/generic-projection.ts";
 import { clearPromotedReadModelCache } from "../lib/civic-data/read-model.ts";
@@ -28,7 +32,7 @@ import {
   servedValue,
 } from "./helpers/promoted-edge-entry.ts";
 import { stateMoneyFixture, syntheticCandidateCorpus, syntheticCandidateProfiles, syntheticFederalDirectory, syntheticFederalKeyVotes, syntheticFederalRollCalls, syntheticOfficeholderStatements, syntheticPimaLocalFinance } from "./helpers/promoted-fixtures.ts";
-import { syntheticExecutiveActions } from "./helpers/reader-fixtures.ts";
+import { recordedMeetingsSnapshot, syntheticExecutiveActions } from "./helpers/reader-fixtures.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 import { registryTransferImport } from "./helpers/promoted-fixtures.ts";
 import { stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
@@ -89,7 +93,7 @@ function stateRegistryArtifacts(versionId: string, states: readonly string[], va
 delete process.env.ANTHROPIC_API_KEY;
 for (const key of ["DATABASE_URL", "DATABASE_URL_UNPOOLED", "NEON_DATABASE_URL", "NETLIFY", "NETLIFY_BLOBS_CONTEXT", "NETLIFY_SITE_ID"]) delete process.env[key];
 process.env.WTP_LIMIT_LOG_IP_PER_MINUTE = "10000";
-// The values the edge carries: the recorded registry import, one promoted Pima meeting body, and small synthetic
+// The values the edge carries: the recorded registry import, the recorded 85701 meetings, and small synthetic
 // values for every other family, built before the fake database. FEC funding is still read through its seed.
 const seedStore = new MemoryRoutineDataStore();
 const served = servedValue;
@@ -119,7 +123,7 @@ const PROMOTED: Partial<Record<GlobalPromotedAuthorityFamily, { value: PromotedF
   })], "edge-test:ask:actions"),
 };
 
-const STATE_PROMOTED: PublishStateAuthorities = {
+const STATE_PROMOTED: StateValues = {
   "ballot-contests": { AZ: family([manual("ballot-contests:AZ", { kind: "ballot-contests", ballots: { [ballotElectionKey(ballot)]: ballot } }, "edge-test:ask:ballots")], "edge-test:ask:ballots") },
   "candidate-profiles": { AZ: family([manual("candidate-profiles:AZ", syntheticCandidateProfiles(), "edge-test:ask:profiles")], "edge-test:ask:profiles") },
   "candidate-publications": { AZ: family([manual("candidate-corpus:AZ", syntheticCandidateCorpus(), "edge-test:ask:corpus")], "edge-test:ask:corpus") },
@@ -128,28 +132,31 @@ const STATE_PROMOTED: PublishStateAuthorities = {
 };
 
 /** `overrides` replaces some proven-pointer families with values published under other versions. */
-async function publishEdge(withPromoted: boolean, overrides: typeof PROMOTED = {}, stateOverrides: PublishStateAuthorities = {}): Promise<string> {
+async function publishEdge(withPromoted: boolean, overrides: typeof PROMOTED = {}, stateOverrides: StateValues = {}): Promise<string> {
   const dir = mkdtempSync(join(tmpdir(), "wtp-ask-edge-"));
   after(() => rmSync(dir, { recursive: true, force: true }));
-  const authority: PublishAuthority = {
+  const snapshot = recordedMeetingsSnapshot();
+  assert.ok(snapshot.meetings.length > 0, "the recorded meetings publish the edge's meeting indexes");
+  const authority: Partial<Record<GlobalAuthorityFamily, PublishAuthorityValue>> = {
     "census-districts": { value: azDistricts, versionId: azDistricts.versionId },
     "federal-directory": { value: federal, versionId: "edge-test:ask:federal" },
     "meeting-outcomes": { value: outcomes, versionId: "edge-test:ask:outcomes" },
     ...(withPromoted ? { ...PROMOTED, ...overrides } : {}),
   };
-  const artifacts = new LocalFileArtifactStore(dir);
-  const meetingStore = new MemoryRoutineDataStore();
-  await readPartition(meetingStore, PIMA, T1, ["a", "b"]);
-  const plan = await planMeetingBodies({ store: meetingStore, artifacts, now: at(T1, HOUR), served: undefined, registryVersion: () => null, registry: async () => null });
-  assert.ok(plan.stats.states.includes("AZ"), "the recorded Pima body publishes the edge's Arizona meeting index");
-  const result = await publishReaderEdgeArtifacts({ store: artifacts, now: new Date().toISOString(), authority, meetingStates: plan.entries,
+  const store = new LocalFileArtifactStore(dir);
+  const meetings = new MemoryRoutineDataStore();
+  await promoteRecorded(meetings, snapshot.meetings, snapshot.agendaDocuments, snapshot.generatedAt);
+  const plan = await planMeetingBodies({ store: meetings, artifacts: store, now: new Date().toISOString(), served: undefined, registryVersion: () => null, registry: async () => null });
+  assert.deepEqual(plan.stats.failed, []);
+  const result = await publishReaderMeetings({ store, now: new Date().toISOString(), meetingStates: plan.entries });
+  await publishPointers(store, { authority,
     stateAuthorities: { "registry-runtime": stateRegistryArtifacts("edge-test:ask:registry", ["AZ"]), ...(withPromoted ? STATE_PROMOTED : {}), ...stateOverrides },
-    registrations: {},
     stateLegislators: { "US-AZ": { versionId: "edge-test:ask:az-people", value: {
       formatVersion: 1, sourceId: "plural-openstates", jurisdiction: "US-AZ", term: "2025-2026",
       generatedAt: "2026-09-25T00:00:00.000Z",
       roster: { formatVersion: 1, generatedAt: "2026-09-25", source: "edge-test", officeholders: [], divisions: [] },
-    } } },
+    } }, "US-NH": { versionId: "none", value: null } },
+    registrations: { az: { versionId: "none", value: null }, nh: { versionId: "none", value: null } },
   });
   assert.equal(result.status, "PUBLISHED", JSON.stringify(result));
   return dir;
@@ -267,9 +274,8 @@ test("a named New Hampshire official question from an Arizona ZIP opens only New
   clearPromotedReadModelCache();
   databaseReads.length = 0;
   const store = new LocalFileArtifactStore(process.env.WTP_READER_EDGE_DIR);
-  const manifest = (await store.readManifest())!.manifest;
-  const scopedKeys = new Map(Object.entries(manifest.stateAuthorities ?? {}).flatMap(([family, states]) =>
-    Object.entries(states ?? {}).map(([state, ref]) => [ref.key, `${family}:${state}`] as const)));
+  const scopedKeys = new Map((await Promise.all(STATE_AUTHORITY_FAMILIES.flatMap(family => ["AZ", "NH"].map(async state =>
+    [(await readServedPointer(store, authorityPointerKey(family, state)))?.ref.key, `${family}:${state}`] as const)))).filter(([key]) => key));
   const opened: string[] = [];
   const original = LocalFileArtifactStore.prototype.readBytes;
   LocalFileArtifactStore.prototype.readBytes = async function (key) {
@@ -320,8 +326,7 @@ test("a named place absent from its state registry gives a specific holding with
   clearPromotedReadModelCache();
   databaseReads.length = 0;
   const store = new LocalFileArtifactStore(process.env.WTP_READER_EDGE_DIR);
-  const manifest = (await store.readManifest())!.manifest;
-  const registryKey = manifest.stateAuthorities!["registry-runtime"]!.IL!.key;
+  const registryKey = (await readServedPointer(store, authorityPointerKey("registry-runtime", "IL")))!.ref.key;
   const opened: string[] = [];
   const originalBytes = LocalFileArtifactStore.prototype.readBytes;
   const originalFetch = globalThis.fetch;

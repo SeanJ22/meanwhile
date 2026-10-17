@@ -10,7 +10,9 @@ import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import { CoverageNotice } from "../components/map/coverage-notice.tsx";
 import { DataProvider } from "../lib/state/data.tsx";
 import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+import { publishPointers } from "./helpers/edge-pointers.ts";
 import { publishMeetingBodies } from "./helpers/meeting-body-edge.ts";
+import { currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 
 for (const key of ["DATABASE_URL", "DATABASE_URL_UNPOOLED", "NEON_DATABASE_URL"]) delete process.env[key];
 await installRegistryAuthority();
@@ -231,6 +233,8 @@ for (const zip of ["85643", "85122", "85701"]) {
       }));
       const request = () => meetingsGET(new Request(`https://example.test/api/meetings?zip=${zip}&lat=${at.lat}&lng=${at.lng}&radiusKm=25`));
       const store = new LocalFileArtifactStore(dir);
+      const registry = await currentReaderAuthorityEdge()!.stateAuthorities!.load("registry-runtime", "AZ");
+      await publishPointers(store, { stateAuthorities: { "registry-runtime": { AZ: { versionId: "fixture:AZ", value: registry } } } });
       const publish = async (meetings: Meeting[]) => {
         const bodies = [...new Set(meetings.map((row) => row.bodyId!))].map((bodyId) => ({
           bodyId, divisions: [bodyId.split("#")[0]!], meetings: meetings.filter((row) => row.bodyId === bodyId),

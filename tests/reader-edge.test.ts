@@ -3,17 +3,22 @@ import { mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
-import { gunzipSync } from "node:zlib";
 import { stateOfOcdId, type ReaderManifest, isStateAuthorityFamily } from "../lib/meetings/edge-artifacts.ts";
 import { LocalFileArtifactStore, resolveReaderArtifactWriteStore } from "../lib/meetings/edge-store.ts";
-import { publishReaderEdgeArtifacts, readReaderEdgeMeetings, readServedMeetingIndex, servedWholeFromReaderEdge, ensureReaderAuthorityEdge } from "../lib/meetings/edge-serving.ts";
+import { authorityPointerKey, publishReaderMeetings, readReaderEdgeMeetings, readServedMeetingIndex, servedWholeFromReaderEdge, ensureReaderAuthorityEdge, readServedPointer } from "../lib/meetings/edge-serving.ts";
+import { publishPointers } from "./helpers/edge-pointers.ts";
+import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { emptyMeetingIndexRow, readerIndexOf, type MeetingStateIndex } from "../lib/meetings/body-records.ts";
 import { bodyPointerOf, stateIndexOf } from "./helpers/meeting-body-national.ts";
-import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { meetingSettingsFromValues } from "../lib/meetings/settings.ts";
+import {
+  HOUR, NEWBURY, PIMA, T1, T2, T3, at, freshEdge, publishPass, readPartition, readPlace, row,
+} from "./helpers/meeting-body-fixtures.ts";
+import { agendaFor, promoteRows } from "./helpers/reader-edge-meetings.ts";
 
 import { selectedStateEdgePointers } from "../lib/civic-data/promoted-edge-publication.ts";
 import { installFactReader } from "../lib/facts/db.ts";
+import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { censusGeographyCandidate } from "../lib/census-geography/candidate.ts";
 import { CENSUS_GEO_CONTRACT_ID } from "../lib/census-geography/publication.ts";
@@ -44,11 +49,6 @@ import { trustedLkgValidatorIds } from "../lib/civic-data/trusted-lkg-import.ts"
 import { trustedLkgCandidateId } from "../lib/civic-data/trusted-lkg-import.ts";
 import type { CandidateVersionRecord } from "../lib/civic-data/types.ts";
 import type { PromotedProjection } from "../lib/civic-data/types.ts";
-import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
-import {
-  HOUR, NEWBURY, PIMA, T1, T2, T3, at, freshEdge, publishPass, readPartition, readPlace, row,
-} from "./helpers/meeting-body-fixtures.ts";
-import { agendaFor, promoteRows } from "./helpers/reader-edge-meetings.ts";
 
 function stateRegistryRuntimeStore(state: string, store = new MemoryRoutineDataStore()): MemoryRoutineDataStore {
   const original = registryTransferImport();
@@ -160,72 +160,50 @@ test("a losing publisher cannot overwrite any bytes selected by the winning mani
     const value = Reflect.get(target, key);
     return typeof value === "function" ? value.bind(target) : value;
   } });
-  const publish = (loser: boolean) => publishReaderEdgeArtifacts({
-    store: writer(loser), meetingStates: { AZ: anIndex("AZ", loser ? "loser" : "winner") },
-    authority: { "federal-directory": { versionId: "next", value: { winner: !loser } } },
-    registrations: { az: { versionId: "next", value: { winner: !loser } } },
-  });
+  const publish = (loser: boolean) => publishReaderMeetings({ store: writer(loser), meetingStates: { AZ: anIndex("AZ", loser ? "loser" : "winner") } });
   const [winner, loser] = await Promise.all([publish(false), publish(true)]);
   assert.equal(winner.status, "PUBLISHED");
   assert.equal(loser.status, "RACED");
   const manifest = (await store.readManifest())!.manifest;
   assert.equal(manifest.meetingStates!.AZ.version, "winner");
-  for (const ref of [manifest.authorityArtifacts!["federal-directory"]!, manifest.registrations!.az]) {
-    const envelope = JSON.parse(gunzipSync((await store.readBytes(ref.key))!).toString("utf8"));
-    assert.equal(envelope.value.base.winner, true);
-  }
 });
 
-test("state people load only the requested jurisdiction and failed replacements keep accepted references", async () => {
+test("state people load only the requested jurisdiction, and a moved jurisdiction rewrites only its own pointer", async () => {
   const store = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reader-state-people-")));
-  assert.equal((await publishReaderEdgeArtifacts({ store, stateLegislators: {
+  assert.deepEqual(await publishPointers(store, { stateLegislators: {
     "US-AZ": { versionId: "az-1", value: { jurisdiction: "US-AZ", officeholders: [] } },
     "US-NH": { versionId: "nh-1", value: { jurisdiction: "US-NH", officeholders: [] } },
-  } })).status, "PUBLISHED");
-  const first = (await store.readManifest())!.manifest;
+  } }), ["state-legislators/US-AZ", "state-legislators/US-NH"]);
+  const nh = await store.readJsonPointer(authorityPointerKey("state-legislators", "US-NH"));
   let reads = 0;
   const counting = new Proxy(store, { get(target, key) {
     if (key === "readBytes") return async (path: string) => { reads++; return target.readBytes(path); };
     const value = Reflect.get(target, key); return typeof value === "function" ? value.bind(target) : value;
   } });
-  const bundle = await ensureReaderAuthorityEdge(first, counting, ["state-legislators"]);
-  assert.equal(reads, 0, "entering a nationwide manifest opens no state payload");
-  assert.deepEqual(new Set(bundle.stateLegislators?.jurisdictions), new Set(["US-AZ", "US-NH"]));
+  const bundle = (await ensureReaderAuthorityEdge(null, counting, ["state-legislators"]))!;
+  assert.equal(reads, 0, "entering the edge opens no state payload");
   assert.equal((await bundle.stateLegislators!.load("US-AZ"))?.versionId, "az-1");
   assert.equal(reads, 1);
   assert.equal((await bundle.stateLegislators!.load("US-AZ"))?.versionId, "az-1");
   assert.equal(reads, 1, "unchanged jurisdiction is reused");
-  assert.equal((await publishReaderEdgeArtifacts({ store, stateLegislators: {
+  assert.equal(await bundle.stateLegislators!.load("US-OH"), null, "a jurisdiction with no pointer loads nothing");
+  assert.deepEqual(await publishPointers(store, { stateLegislators: {
     "US-AZ": { versionId: "az-2", value: { jurisdiction: "US-AZ", officeholders: [] } },
-    "US-NH": { versionId: "nh-1", carried: true },
-  } })).status, "PUBLISHED");
-  const next = (await store.readManifest())!.manifest;
-  assert.deepEqual(next.stateLegislators!["US-NH"], first.stateLegislators!["US-NH"]);
-  assert.equal(next.stateLegislators!["US-AZ"].version, "az-2");
-  assert.equal((await publishReaderEdgeArtifacts({ store, meetingStates: { AZ: anIndex("AZ", "new-meeting") } })).status, "PUBLISHED");
-  assert.deepEqual((await store.readManifest())!.manifest.stateLegislators, next.stateLegislators, "a meetings-only pass keeps the state references");
+    "US-NH": { versionId: "nh-1", value: { jurisdiction: "US-NH", officeholders: [] } },
+  } }), ["state-legislators/US-AZ"]);
+  assert.deepEqual(await store.readJsonPointer(authorityPointerKey("state-legislators", "US-NH")), nh);
+  assert.equal((await readServedPointer(store, authorityPointerKey("state-legislators", "US-AZ")))!.ref.version, "az-2");
+  assert.equal((await publishReaderMeetings({ store, meetingStates: { AZ: anIndex("AZ", "index-1") } })).status, "PUBLISHED");
+  assert.deepEqual(await store.readJsonPointer(authorityPointerKey("state-legislators", "US-NH")), nh, "a meetings pass leaves every pointer");
 });
 
-test("an obsolete country roster reference is never opened by a state reader", async () => {
-  const store = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reader-state-country-ref-")));
-  const manifest: ReaderManifest = { formatVersion: 1, sequence: 1,
-    authorityArtifacts: Object.fromEntries([["state-legislators", { key: "country-roster", version: "US-AZ=az-v1", sha: "held" }]]) };
-  let countryReads = 0;
-  const guarded = new Proxy(store, { get(target, key) {
-    if (key === "readBytes") return async () => { countryReads++; throw new Error("Country roster opened"); };
-    const value = Reflect.get(target, key); return typeof value === "function" ? value.bind(target) : value;
-  } });
-  const bundle = await ensureReaderAuthorityEdge(manifest, guarded, ["state-legislators"]);
-  assert.equal(bundle.stateLegislators, undefined);
-  assert.equal(countryReads, 0);
-});
-
-test("state ballot and auxiliary publication carries country facts, routing and people without querying or opening them", async t => {
+test("state ballot and auxiliary publication leaves country facts, routing and people unread and unwritten", async t => {
   const artifacts = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reader-state-isolation-")));
-  await publishReaderEdgeArtifacts({ store: artifacts, authority: {
+  await publishPointers(artifacts, { authority: {
     "everyday-routing": { value: { projection: { records: [{ id: "route" }] } }, versionId: "routing-v1" },
   }, stateLegislators: { "US-AZ": { value: { jurisdiction: "US-AZ", officeholders: [] }, versionId: "az-prior" } } });
-  const before = (await artifacts.readManifest())!.manifest;
+  const held = async () => Promise.all([authorityPointerKey("everyday-routing"), authorityPointerKey("state-legislators", "US-AZ")].map(key => artifacts.readJsonPointer(key)));
+  const before = await held();
   let factReads = 0, artifactReads = 0;
   installFactReader(async () => { factReads++; return [{ newest: "552900", live: "552900" }]; });
   t.after(() => installFactReader(undefined));
@@ -240,46 +218,35 @@ test("state ballot and auxiliary publication carries country facts, routing and 
   } });
   for (const pointers of selectedStateEdgePointers(null).filter(row => row.state === "IL").map(row => row.pointers)) {
     assert.equal(await publishReaderEdgeForTest(scoped, "2026-10-15T00:00:00Z", pointers, { artifactStore: guarded }), true);
-    const next = (await artifacts.readManifest())!.manifest;
-    assert.deepEqual(next.authorityArtifacts, before.authorityArtifacts);
-    assert.deepEqual(next.stateLegislators, before.stateLegislators, "unrelated publication preserves every jurisdiction reference unread");
-    for (const field of ["commentAccess", "everydayRouting", "extrasVersionIds"]) assert.equal(Object.hasOwn(next, field), false);
+    assert.deepEqual(await held(), before, "unrelated publication leaves every other pointer unread and unwritten");
+    assert.equal(await artifacts.readManifest(), null, "a state pass writes no manifest");
   }
   assert.equal(factReads, 0, "changed unrelated facts do not trigger a country scan");
   assert.equal(artifactReads, 0);
 });
 
-test("a check-only meeting publication advances the manifest and preserves every accepted authority and state reference", async () => {
-  const artifacts = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reader-manifest-checks-")));
-  await publishReaderEdgeArtifacts({ store: artifacts, now: "2026-10-15T00:00:00Z",
-    extras: { everydayRouting: { rows: [] }, versionIds: { "everyday-routing": "routing-v1" } },
-    meetingStates: { AZ: anIndex("AZ", "index-1") },
-    authority: { "everyday-routing": { value: { projection: null }, versionId: "routing-v1" } },
+test("the first per-body publication replaces a legacy manifest outright and leaves every pointer", async () => {
+  const artifacts = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reader-manifest-legacy-")));
+  await publishPointers(artifacts, { authority: { "everyday-routing": { value: { projection: null }, versionId: "routing-v1" } },
     stateAuthorities: { "ballot-contests": { AZ: { value: { kind: "PROMOTED_POINTERS", entries: [] }, versionId: "az-v1" } } } });
-  const before = (await artifacts.readManifest())!.manifest;
-  assert.equal((await publishReaderEdgeArtifacts({ store: artifacts, now: "2026-10-16T00:00:00Z", meetingStates: { AZ: anIndex("AZ", "index-2") } })).status, "PUBLISHED");
-  const after = (await artifacts.readManifest())!.manifest;
-  assert.equal(after.meetingStates!.AZ.version, "index-2");
-  assert.equal(after.sequence, before.sequence + 1);
-  for (const field of ["authorityArtifacts", "stateAuthorities", "everydayRouting", "extrasVersionIds"] as const) {
-    assert.deepEqual(after[field], before[field]);
-  }
+  const pointers = async () => Promise.all([authorityPointerKey("everyday-routing"), authorityPointerKey("ballot-contests", "AZ")].map(key => artifacts.readJsonPointer(key)));
+  const before = await pointers();
+  await artifacts.writeManifest({ formatVersion: 1, sequence: 7, scopes: [], sources: [], authorityArtifacts: { "campaign-sites": { key: "old", version: "old", sha: "old" } } } as unknown as ReaderManifest, null);
+  assert.equal((await publishReaderMeetings({ store: artifacts, meetingStates: { AZ: anIndex("AZ", "index-1") } })).status, "PUBLISHED");
+  const manifest = (await artifacts.readManifest())!.manifest;
+  assert.deepEqual(Object.keys(manifest).sort(), ["formatVersion", "meetingStates", "sequence"]);
+  assert.equal(manifest.sequence, 8);
+  assert.deepEqual(await pointers(), before);
 });
 
-test("state, national authority and meeting updates share one manifest CAS", async () => {
+test("a state pointer write never touches the meetings manifest", async () => {
   const store = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reader-shared-cas-")));
-  await publishReaderEdgeArtifacts({ store, meetingStates: { AZ: anIndex("AZ", "held") },
-    authority: { "campaign-sites": { value: {}, versionId: "sites-v1" } } });
+  await publishReaderMeetings({ store, meetingStates: { AZ: anIndex("AZ", "index-1") } });
   const before = (await store.readManifest())!;
-  assert.equal((await publishReaderEdgeArtifacts({ store,
-    stateAuthorities: { "registry-runtime": { AZ: { value: { kind: "PROMOTED_POINTERS", entries: [] }, versionId: "az-v1" } } } })).status, "PUBLISHED");
-  const after = (await store.readManifest())!;
-  assert.deepEqual(after.manifest.meetingStates, before.manifest.meetingStates);
-  assert.deepEqual(after.manifest.authorityArtifacts, before.manifest.authorityArtifacts);
-  assert.equal(after.manifest.stateAuthorities!["registry-runtime"]!.AZ.version, "az-v1");
-  assert.notEqual(after.etag, before.etag);
-  assert.equal((await store.writeManifest({ ...before.manifest, sequence: 2 }, before.etag)).modified, false,
-    "a stale meeting or national writer cannot erase newly published state references");
+  assert.deepEqual(await publishPointers(store, { authority: { "campaign-sites": { value: {}, versionId: "sites-v1" } },
+    stateAuthorities: { "registry-runtime": { AZ: { value: { kind: "PROMOTED_POINTERS", entries: [] }, versionId: "az-v1" } } } }),
+  ["campaign-sites", "registry-runtime/AZ"]);
+  assert.deepEqual(await store.readManifest(), before);
 });
 
 test("a lost manifest CAS remains a retryable supervisor publication failure", async () => {
@@ -288,8 +255,11 @@ test("a lost manifest CAS remains a retryable supervisor publication failure", a
     if (key === "writeManifest") return async () => ({ modified: false, etag: "winner" });
     const value = Reflect.get(target, key); return typeof value === "function" ? value.bind(target) : value;
   } });
-  assert.equal(await publishReaderEdgeForTest(new MemoryRoutineDataStore(), "2026-09-06T00:00:00Z", [], { artifactStore: raced }), false);
+  const memory = new MemoryRoutineDataStore();
+  await readPartition(memory, PIMA, T1, ["a"]);
+  assert.equal(await publishReaderEdgeForTest(memory, "2026-09-06T00:00:00Z", MEETING_POINTERS, { artifactStore: raced }), false);
   assert.equal(await artifacts.readManifest(), null);
+  assert.equal((await memory.readMeetingQueue()).length, 1, "the change stays queued for the retry");
 });
 
 test("stateOfOcdId derives the state a division lies in", () => {
@@ -298,6 +268,7 @@ test("stateOfOcdId derives the state a division lies in", () => {
   assert.equal(stateOfOcdId("ocd-division/country:us"), null);
   assert.equal(stateOfOcdId(null), null);
 });
+
 
 test("every area a canonical body governs receives the same meeting and agenda without duplicate copies", async () => {
   const store = new MemoryRoutineDataStore();
@@ -322,6 +293,7 @@ test("every area a canonical body governs receives the same meeting and agenda w
   assert.equal(both.kind === "PROMOTED" && both.value.agendaDocuments.length, 1);
 });
 
+
 test("ordinary publication carries quiet bodies, files a body under every area its registry names, and rebuilds when the territory changes", async t => {
   const primary = PIMA.ocdId!, secondary = "ocd-division/country:us/state:az/county:cochise", bodyId = PIMA.bodyId;
   const artifacts = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "runner-area-edge-")));
@@ -329,11 +301,11 @@ test("ordinary publication carries quiet bodies, files a body under every area i
   await readPartition(memory, PIMA, T1, ["a"]);
   const registryKeys = new Set<string>();
   const publishRegistry = async (version: string, others: string[]) => {
-    await publishReaderEdgeArtifacts({ store: artifacts,
-      stateAuthorities: { "registry-runtime": stateRegistryArtifacts(version, ["AZ"], { ...registryFixtureForState("AZ"), registry: {
+    await publishPointers(artifacts,
+      { stateAuthorities: { "registry-runtime": stateRegistryArtifacts(version, ["AZ"], { ...registryFixtureForState("AZ"), registry: {
         ...registryFixtureForState("AZ").registry, bodies: [{ ...registryFixtureForState("AZ").registry.bodies[0]!, id: bodyId, ocdId: primary, alsoServesOcdIds: others }],
       } }) } });
-    registryKeys.add((await artifacts.readManifest())!.manifest.stateAuthorities!["registry-runtime"]!.AZ.key);
+    registryKeys.add((await readServedPointer(artifacts, authorityPointerKey("registry-runtime", "AZ")))!.ref.key);
   };
   await publishRegistry("registry-v1", [secondary]);
   let registryReads = 0;
@@ -353,20 +325,20 @@ test("ordinary publication carries quiet bodies, files a body under every area i
   held = (await artifacts.readManifest())!;
   assert.equal((await stateIndexOf(memory, "AZ"))!.registryVersion, "registry-v2:AZ");
   assert.deepEqual(Object.keys((await servedIndex(artifacts, "AZ")).places), [primary]); assert.equal(registryReads, 2);
-  const refs = held.manifest.stateAuthorities!["registry-runtime"]!;
-  await artifacts.writeManifest({ ...held.manifest, stateAuthorities: { ...held.manifest.stateAuthorities,
-    "registry-runtime": { ...refs, AZ: { ...refs.AZ, version: "raced-pointer" } } } }, held.etag ?? null);
+  const registryPointer = (await readServedPointer(artifacts, authorityPointerKey("registry-runtime", "AZ")))!;
+  await artifacts.writeJsonPointer(authorityPointerKey("registry-runtime", "AZ"), { ...registryPointer.ref, version: "raced-pointer" }, registryPointer.etag);
   const beforeFailure = (await artifacts.readManifest())!.manifest;
   assert.equal(await publishReaderEdgeForTest(memory, at(T1, 4 * HOUR), MEETING_POINTERS, options), false);
   assert.deepEqual((await artifacts.readManifest())!.manifest, beforeFailure);
 });
+
 
 test("a body that races its row keeps its exact held record while an independent registry update publishes, then the next pass repairs it", async () => {
   const memory = stateRegistryRuntimeStore("AZ");
   const projection = (await memory.readPromotion("REGISTRY_RUNTIME_BINDING", "US-AZ:reader-registry-runtime"))!;
   const artifacts = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "meeting-registry-race-")));
   await readPartition(memory, PIMA, T1, ["held"]);
-  await publishReaderEdgeArtifacts({ store: artifacts, stateAuthorities: { "registry-runtime": stateRegistryArtifacts("registry-old", ["AZ"]) } });
+  await publishPointers(artifacts, { stateAuthorities: { "registry-runtime": stateRegistryArtifacts("registry-old", ["AZ"]) } });
   const options = { artifactStore: artifacts };
   assert.equal(await publishReaderEdgeForTest(memory, at(T1, HOUR), MEETING_POINTERS, options), true);
   const before = (await bodyPointerOf(artifacts, "AZ", PIMA.bodyId))!;
@@ -386,18 +358,19 @@ test("a body that races its row keeps its exact held record while an independent
   } });
   const selected = [{ recordClass: "REGISTRY_RUNTIME_BINDING" as const, scope: projection.scope }, ...MEETING_POINTERS];
   assert.equal(await publishReaderEdgeForTest(store, at(T2, HOUR), selected, options), false, "the raced body remains owed");
-  const independent = (await artifacts.readManifest())!.manifest;
-  assert.notEqual(independent.stateAuthorities!["registry-runtime"]!.AZ.version, "registry-old:AZ", "verified registry facts publish during meeting recovery");
+  const independent = (await readServedPointer(artifacts, authorityPointerKey("registry-runtime", "AZ")))!.ref.version;
+  assert.notEqual(independent, "registry-old:AZ", "verified registry facts publish during meeting recovery");
   assert.deepEqual((await bodyPointerOf(artifacts, "AZ", PIMA.bodyId))!.record, before.record, "the body keeps the record it was served from");
   const stillHeld = await readPlace(artifacts, memory, [PIMA.ocdId!], at(T2, HOUR));
   assert.deepEqual(sittingsOf(stillHeld), sittingsOf(held), "readers keep the held sittings while the new ones are owed");
   assert.deepEqual((await memory.readMeetingQueue()).map((row) => row.scope), [PIMA.scope], "the new version stays queued");
 
   assert.equal(await publishReaderEdgeForTest(store, at(T2, 2 * HOUR), MEETING_POINTERS, options), true);
-  assert.equal((await stateIndexOf(memory, "AZ"))!.registryVersion, independent.stateAuthorities!["registry-runtime"]!.AZ.version);
+  assert.equal((await stateIndexOf(memory, "AZ"))!.registryVersion, independent);
   assert.equal(sittingsOf(await readPlace(artifacts, memory, [PIMA.ocdId!], at(T2, 2 * HOUR))).length, 2, "the next pass serves the new sitting");
   assert.deepEqual(await memory.readMeetingQueue(), []);
 });
+
 
 test("a state's index files its bodies under the division each serves, in a stable order", async () => {
   const store = new MemoryRoutineDataStore();
@@ -418,6 +391,7 @@ test("a state's index files its bodies under the division each serves, in a stab
   assert.deepEqual((await servedIndex(again, "AZ")).places, az.places, "the same bodies give the same index");
 });
 
+
 test("publish → read round-trips through the file store and a place reads only its own bodies", async () => {
   const store = new MemoryRoutineDataStore();
   const edge = freshEdge();
@@ -436,6 +410,7 @@ test("publish → read round-trips through the file store and a place reads only
   assert.match(azRead.detail, /Served from 1 body record\(s\) in/);
   assert.equal(servedWholeFromReaderEdge(azRead), true);
 });
+
 
 test("republishing unchanged meetings is idempotent (CURRENT), and a check or changed data moves only the body's pointer, never the manifest", async () => {
   const store = new MemoryRoutineDataStore();
@@ -473,13 +448,14 @@ test("republishing unchanged meetings is idempotent (CURRENT), and a check or ch
   assert.equal(sittingsOf(await readPlace(edge, store, [PIMA.ocdId!], at(T3, 60_000))).length, 2);
 });
 
+
 test("a stale publisher that read an older manifest cannot regress the pointer (monotonic CAS)", async () => {
   const store = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reader-edge-")));
-  await publishReaderEdgeArtifacts({ store, meetingStates: { AZ: anIndex("AZ", "first") } });
+  await publishReaderMeetings({ store, meetingStates: { AZ: anIndex("AZ", "first") } });
 
   const staleExpected = (await store.readManifest())!.etag;
   // First writer advances 1 -> 2.
-  await publishReaderEdgeArtifacts({ store, meetingStates: { AZ: anIndex("AZ", "second") } });
+  await publishReaderMeetings({ store, meetingStates: { AZ: anIndex("AZ", "second") } });
   // Second (stale) writer tries to CAS against the OLD etag → refused, no regression.
   const refused = await store.writeManifest({ formatVersion: 1, sequence: 2 } as ReaderManifest, staleExpected);
   assert.equal(refused.modified, false, "a CAS against a superseded etag writes nothing");
@@ -487,6 +463,7 @@ test("a stale publisher that read an older manifest cannot regress the pointer (
   assert.equal(now.sequence, 2, "the newer publication still stands");
   assert.equal(now.meetingStates!.AZ.version, "second");
 });
+
 
 test("with no manifest on the edge the reader answers from the database and never claims the answer is the CDN's", async () => {
   const store = new MemoryRoutineDataStore();
@@ -499,6 +476,7 @@ test("with no manifest on the edge the reader answers from the database and neve
   assert.equal(servedWholeFromReaderEdge(read), false);
   assert.doesNotMatch(read.kind === "PROMOTED" ? read.detail : read.detail ?? read.kind, /Served from 0\//);
 });
+
 
 test("the reader caches each body record in-process per version and refreshes on a new one", async () => {
   const edge = freshEdge();
@@ -547,44 +525,6 @@ test("the reader caches each body record in-process per version and refreshes on
   assert.ok(reads > readsAfterFirst, "a new version re-reads the changed record");
 });
 
-test("authority-only publication carries meeting references and writes no meeting artifacts", async () => {
-  const store = new MemoryRoutineDataStore();
-  const edge = freshEdge();
-  await readPartition(store, PIMA, T1, ["cochise"]);
-  let geographicWrites = 0;
-  const counted = new Proxy(edge, { get(target, key) {
-    const value = Reflect.get(target, key);
-    if (key === "putImmutable") return (...args: Parameters<typeof edge.putImmutable>) => { if (args[1] === "json") geographicWrites++; return target.putImmutable(...args); };
-    return typeof value === "function" ? value.bind(target) : value;
-  } });
-  await publishPass(store, counted, at(T1, HOUR));
-  const before = (await edge.readManifest())!.manifest;
-  const writesBefore = geographicWrites;
-  const authority = { "campaign-sites": { value: { rows: [] }, versionId: "new-sites" },
-    "everyday-routing": { value: { projection: { rows: [] } }, versionId: "routing-v1" } };
-  assert.equal((await publishReaderEdgeArtifacts({ store: counted, authority })).status, "PUBLISHED");
-  const authorityAfter = (await edge.readManifest())!.manifest;
-  assert.deepEqual(authorityAfter.meetingStates, before.meetingStates);
-  assert.equal(geographicWrites, writesBefore);
-  assert.equal(authorityAfter.authorityArtifacts!["everyday-routing"]!.version, "routing-v1");
-  const same = await publishReaderEdgeArtifacts({ store: counted, authority: {
-    "campaign-sites": { carried: true, versionId: "new-sites" }, "everyday-routing": { carried: true, versionId: "routing-v1" } } });
-  assert.equal(same.status, "CURRENT");
-  assert.equal(geographicWrites, writesBefore);
-  const read = await readPlace(edge, store, [PIMA.ocdId!], at(T1, HOUR));
-  assert.equal(read.kind, "PROMOTED");
-  assert.equal(sittingsOf(read).length, 1);
-});
-
-test("authority publication works before meeting composition without creating a meeting index", async () => {
-  const store = new LocalFileArtifactStore(mkdtempSync(join(tmpdir(), "reader-first-authority-")));
-  assert.equal((await publishReaderEdgeArtifacts({ store, authority: { "campaign-sites": { value: { rows: [] }, versionId: "first" } } })).status, "PUBLISHED");
-  assert.equal((await store.readManifest())!.manifest.meetingStates, undefined);
-  const read = await readReaderEdgeMeetings({ store, ocdIds: [PIMA.ocdId!], dataStore: new MemoryRoutineDataStore(), now: T1 });
-  assert.equal(read.kind, "PROMOTED");
-  assert.deepEqual(sittingsOf(read), [], "no meeting is claimed before any is published");
-  assert.equal(servedWholeFromReaderEdge(read), false);
-});
 
 test("a changed meeting rewrites only its body and state; unchanged references survive publication", async () => {
   const store = new MemoryRoutineDataStore();
@@ -611,6 +551,7 @@ test("a changed meeting rewrites only its body and state; unchanged references s
   assert.deepEqual((await bodyPointerOf(edge, "AZ", CHANDLER.bodyId))!.record, chandlerBefore, "the unchanged body in the same state keeps its record");
 });
 
+
 test("area reads preserve split ZIP divisions and empty held areas without nearby bodies", async () => {
   const store = new MemoryRoutineDataStore();
   const edge = freshEdge();
@@ -626,6 +567,7 @@ test("area reads preserve split ZIP divisions and empty held areas without nearb
   assert.equal(empty.kind, "PROMOTED");
   if (empty.kind === "PROMOTED") assert.deepEqual(empty.value.meetings, []);
 });
+
 
 test("an agenda lookup opens only its meeting's body and keeps documents with mismatched document geography", async () => {
   const store = new MemoryRoutineDataStore();
@@ -720,10 +662,11 @@ test("an agenda lookup opens only its meeting's body and keeps documents with mi
       paused = false;
       tick();
       assert.equal((await checks.run()).readerEdge, "FAILED", "one failed family keeps publication owed");
-      const partial = (await artifacts.readManifest())!.manifest;
-      assert.equal(partial.stateLegislators!["US-AZ"].version, people.outcome.promoted!.versionId,
+      const pointer = async (family: "state-legislators" | "registrations", place: string) => (await readServedPointer(artifacts, authorityPointerKey(family, place)))?.ref;
+      assert.equal((await pointer("state-legislators", "US-AZ"))?.version, people.outcome.promoted!.versionId,
         "independent people publish while registration is unavailable");
-      assert.equal(partial.registrations?.nh, undefined);
+      assert.equal((await pointer("registrations", "nh"))?.version, "none", "the failed state keeps its baseline answer");
+      const partial = (await artifacts.readManifest())!.manifest;
       assert.equal(financeSettled, false, "neither the source pass nor its long finance task has settled");
 
       paused = true;
@@ -744,11 +687,11 @@ test("an agenda lookup opens only its meeting's body and keeps documents with mi
       assert.equal((await running).readerEdge, "PUBLISHED");
       gate = null;
       const published = (await artifacts.readManifest())!.manifest;
-      assert.equal(published.registrations!.nh.version, registration.id);
-      assert.equal(published.stateLegislators!["US-AZ"].version, people.outcome.promoted!.versionId);
-      const edge = await ensureReaderAuthorityEdge(published, artifacts, ["state-legislators"]);
-      assert.ok((await edge.registrations!.load("nh"))!.value.governments?.some(row => row.kind === "EDUCATION_AGENCY"));
-      assert.equal((await edge.stateLegislators!.load("US-AZ"))!.value.roster.officeholders[0].personId, "plural:member-one");
+      assert.equal((await pointer("registrations", "nh"))?.version, registration.id);
+      assert.equal((await pointer("state-legislators", "US-AZ"))?.version, people.outcome.promoted!.versionId);
+      const edge = (await ensureReaderAuthorityEdge(null, artifacts, ["state-legislators"]))!;
+      assert.ok((await edge.registrations!.load("nh"))!.value!.governments?.some(row => row.kind === "EDUCATION_AGENCY"));
+      assert.equal((await edge.stateLegislators!.load("US-AZ"))!.value!.roster.officeholders[0].personId, "plural:member-one");
       assert.equal(financeSettled, false, "both native source projections reach real reader artifacts before the long task finishes");
 
       const readCount = payloadReads;

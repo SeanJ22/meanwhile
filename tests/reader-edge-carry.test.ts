@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtempSync, rmSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
@@ -56,4 +56,12 @@ test("shared publication composes meetings only when a meeting pass asks, carrie
   assert.equal(reads.partitions, before.partitions, "nothing queued: no partition is read again");
   assert.deepEqual({ records: writes.records, rows: writes.rows }, { records: 0, rows: 0 });
   assert.deepEqual((await edge.readManifest())!.manifest.meetingStates, held.meetingStates);
+});
+
+test("every pointer publishes before meetings compose", () => {
+  const child = readFileSync("lib/civic-data/reader-edge-publication.ts", "utf8");
+  const states = child.indexOf("await dispatchStateArtifacts(");
+  const promoted = child.indexOf("await publishPromotedEdgeFamilies(");
+  const plan = child.indexOf("await planMeetingBodies(");
+  assert.ok(states > 0 && promoted > 0 && states < plan && promoted < plan, "no pointer waits on the meeting composition");
 });

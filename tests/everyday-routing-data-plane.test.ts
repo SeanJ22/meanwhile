@@ -298,7 +298,7 @@ test("the meeting server preload carries the full projection to the Reader shell
     location: null, online: { label: "Zoom Webinar", joinUrl: null }, agendaUrl: null, jurisdiction: pima.wiring!.jurisdiction,
     status: "SCHEDULED",
     provenance: { sourceUrl: "https://webapi.legistar.com/v1/pima/events", sourceOrg: pima.wiring!.publishingOrg, collectedAt: now, verifiedAt: null },
-  }], [], now, { everydayRouting: buildEverydayRoutingProjection() });
+  }], [], now, { "everyday-routing": { value: { projection: buildEverydayRoutingProjection() }, versionId: "test:everyday" } });
 
   const response = await meetingsGET(new Request(
     "https://example.test/api/meetings?lat=32.21696&lng=-110.971&zip=85701",

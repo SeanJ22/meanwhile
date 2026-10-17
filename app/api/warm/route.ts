@@ -96,7 +96,7 @@ async function primeAsk(): Promise<AskPrimed> {
 async function primeReaderEdge(): Promise<ReaderEdgePrimed> {
   const manifest = await readReaderManifest().catch(holdReaderAuthorityEdge);
   if (!manifest) return NOTHING_PRIMED;
-  const bundle = manifest.authorityArtifacts ? await ensureReaderAuthorityEdge(manifest).catch(error => holdReaderAuthorityEdge(error, manifest)) : null;
+  const bundle = await ensureReaderAuthorityEdge(manifest).catch(error => holdReaderAuthorityEdge(error));
   // Entered here, before the reads below, in the function that makes them.
   enterReaderAuthorityEdge({ ...bundle, edgeOnly: true });
   const meetings = Object.keys(manifest.meetingStates ?? {}).length > 0;

@@ -9,7 +9,7 @@ import {
   type MeetingBodyPointer,
   type MeetingStateIndex,
 } from "../../lib/meetings/body-records.ts";
-import { publishReaderEdgeArtifacts, type PublishReaderExtras } from "../../lib/meetings/edge-serving.ts";
+import { publishReaderMeetings } from "../../lib/meetings/edge-serving.ts";
 import type { ReaderArtifactStore } from "../../lib/meetings/edge-store.ts";
 import { snapshotCounts } from "../../lib/meetings/snapshot.ts";
 import type { Meeting } from "../../lib/sources/types.ts";
@@ -25,7 +25,6 @@ export async function publishMeetingBodies(
   store: ReaderArtifactStore,
   now: string,
   bodies: readonly EdgeBody[],
-  extras: PublishReaderExtras = { everydayRouting: null },
 ) {
   const byState = new Map<string, Record<string, { readonly divisions: readonly string[] }>>();
   for (const { bodyId, divisions, meetings } of bodies) {
@@ -44,5 +43,5 @@ export async function publishMeetingBodies(
     const index: MeetingStateIndex = { formatVersion: MEETING_BODY_FORMAT_VERSION, state, bodies: Object.keys(held).sort(), places: placesOf(held) };
     return [state, { versionId: sha256OfJson(index), value: index }];
   }));
-  return publishReaderEdgeArtifacts({ store, now, extras, meetingStates });
+  return publishReaderMeetings({ store, now, meetingStates });
 }

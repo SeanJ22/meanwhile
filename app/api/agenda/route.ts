@@ -27,7 +27,7 @@ export const GET = readerRoute("/api/agenda", async function GET(request: Reques
   let read;
   try {
     const manifest = await readReaderManifest().catch(holdReaderAuthorityEdge);
-    const authority = manifest ? await ensureReaderAuthorityEdge(manifest, undefined, ["registry-runtime", "meeting-outcomes"]).catch(error => holdReaderAuthorityEdge(error, manifest, ["registry-runtime", "meeting-outcomes"])) : null;
+    const authority = await ensureReaderAuthorityEdge(manifest, undefined, ["registry-runtime", "meeting-outcomes"]).catch(error => holdReaderAuthorityEdge(error, ["registry-runtime", "meeting-outcomes"]));
     if (authority) enterReaderAuthorityEdge(authority);
     read = await readReaderEdgeMeetings({ bodyIds: [bodyId], neighbors: true, manifest, window: "HELD" });
   } catch (error) {

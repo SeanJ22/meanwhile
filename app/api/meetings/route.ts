@@ -105,9 +105,9 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
   const edgeManifest = await timing.time("manifest", () => readReaderManifest().catch(holdReaderAuthorityEdge));
 
   let authorityEdge: Awaited<ReturnType<typeof ensureReaderAuthorityEdge>> | null = null;
-  if (edgeManifest?.authorityArtifacts) {
+  {
     const entering = timing.time("authority", () =>
-      ensureReaderAuthorityEdge(edgeManifest, undefined, READER_MAP_AUTHORITY_FAMILIES).catch(error => holdReaderAuthorityEdge(error, edgeManifest, READER_MAP_AUTHORITY_FAMILIES)),
+      ensureReaderAuthorityEdge(edgeManifest, undefined, READER_MAP_AUTHORITY_FAMILIES).catch(error => holdReaderAuthorityEdge(error, READER_MAP_AUTHORITY_FAMILIES)),
     );
     authorityEdge = await entering;
     if (authorityEdge) enterReaderAuthorityEdge(authorityEdge);
@@ -124,7 +124,7 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
     if (authorityEdge?.commentAccess) {
       commentAccess = authorityEdge.commentAccess.value.records;
       commentAccessDataState = "PROMOTED";
-      commentAccessDataDetail = `Comment-access served from the reader edge's state facts (sequence ${edgeManifest!.sequence}).`;
+      commentAccessDataDetail = `Comment-access served from the reader edge's state facts (${authorityEdge.commentAccess.versionId}).`;
     } else {
       if (process.env.NODE_ENV === "production") {
         const { versionId } = await readCommentAccessFacts();
@@ -143,10 +143,10 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
   let everydayRoutingDataState: "PROMOTED" | "FIRST_SEED" | "NOT_RECORDED" | "STORE_UNREACHABLE" | "INVALID" = "FIRST_SEED";
   let everydayRoutingDataDetail: string | null = null;
   try {
-    if (edgeManifest?.everydayRouting !== undefined) {
-      everydayRouting = (edgeManifest.everydayRouting as EverydayRoutingProjection | null) ?? null;
+    if (authorityEdge?.everydayRouting) {
+      everydayRouting = (authorityEdge.everydayRouting.value.projection as EverydayRoutingProjection | null) ?? null;
       everydayRoutingDataState = everydayRouting ? "PROMOTED" : "NOT_RECORDED";
-      everydayRoutingDataDetail = `Everyday-routing served from the reader edge manifest (sequence ${edgeManifest.sequence}).`;
+      everydayRoutingDataDetail = `Everyday-routing served from its reader edge pointer (${authorityEdge.everydayRouting.versionId}).`;
     } else if (process.env.NODE_ENV === "production") {
       const read = await readEverydayRoutingProjection();
       if (read.kind === "PROMOTED") {

@@ -1,8 +1,8 @@
 import { readerRoute } from "@/lib/api/reader-route";
 import { directFundingTargetPlan } from "@/lib/funding/target-authorities";
 import { ballotPlaceFromRequest } from "@/lib/ballot/reader-place";
-import { holdReaderAuthorityEdge, ensureReaderAuthorityEdge, READER_FUNDING_AUTHORITY_FAMILIES, readReaderManifest } from "@/lib/meetings/edge-serving";
-import type { GlobalAuthorityFamily } from "@/lib/meetings/edge-artifacts";
+import { holdReaderAuthorityEdge, ensureReaderAuthorityEdge, READER_FUNDING_AUTHORITY_FAMILIES } from "@/lib/meetings/edge-serving";
+import { resolveReaderArtifactStore } from "@/lib/meetings/edge-store";
 import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
 import { settleFundingHoldingAnswer, startDirectFundingReads, fundingHoldingReaders, timedRead } from "@/lib/funding/holding-answer";
 
@@ -23,17 +23,16 @@ export const GET = readerRoute("/api/funding/[target]", async function GET(
   const startedAt = Date.now();
   const divisions = await ballotPlaceFromRequest(request);
   const direct = directFundingTargetPlan(target);
-  const manifest = await timedRead(timings, "edgeManifest", () => readReaderManifest().catch(holdReaderAuthorityEdge));
   const readers = fundingHoldingReaders(divisions, timings);
-  const onEdge = (family: GlobalAuthorityFamily) => Boolean(manifest?.authorityArtifacts?.[family]);
+  const onEdge = resolveReaderArtifactStore() !== null;
   const fromDatabase = startDirectFundingReads({
     ...direct,
-    federal: direct.federal && !onEdge("federal-funding"),
-    state: onEdge("state-money") ? null : direct.state,
-    ballotIdentity: direct.ballotIdentity && !manifest?.stateAuthorities?.["ballot-contests"],
+    federal: direct.federal && !onEdge,
+    state: onEdge ? null : direct.state,
+    ballotIdentity: direct.ballotIdentity && !onEdge,
   }, readers);
-  if (manifest?.authorityArtifacts) {
-    const edge = await timedRead(timings, "authorityEdge", () => ensureReaderAuthorityEdge(manifest, undefined, READER_FUNDING_AUTHORITY_FAMILIES.filter(family => family !== "registry-runtime")).catch(error => holdReaderAuthorityEdge(error, manifest, READER_FUNDING_AUTHORITY_FAMILIES.filter(family => family !== "registry-runtime"))));
+  {
+    const edge = await timedRead(timings, "authorityEdge", () => ensureReaderAuthorityEdge(null, undefined, READER_FUNDING_AUTHORITY_FAMILIES.filter(family => family !== "registry-runtime")).catch(error => holdReaderAuthorityEdge(error, READER_FUNDING_AUTHORITY_FAMILIES.filter(family => family !== "registry-runtime"))));
     if (edge) enterReaderAuthorityEdge(edge);
   }
   const fromEdge = startDirectFundingReads({

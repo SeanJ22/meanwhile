@@ -8,7 +8,7 @@ import { MEETING_PARTITION_CONTRACTS, type MeetingPartitionContract } from "../.
 import { MemoryRoutineDataStore, type RoutineDataStore } from "../../lib/civic-data/store.ts";
 import { VALIDATION_CHECKS, type RoutineCandidate, type ValidationReceipt } from "../../lib/civic-data/types.ts";
 import { planMeetingBodies, type MeetingBodyPlan } from "../../lib/meetings/body-publication.ts";
-import { publishReaderEdgeArtifacts, readReaderEdgeMeetings } from "../../lib/meetings/edge-serving.ts";
+import { publishReaderMeetings, readReaderEdgeMeetings } from "../../lib/meetings/edge-serving.ts";
 import { LocalFileArtifactStore, type ReaderArtifactStore } from "../../lib/meetings/edge-store.ts";
 import { meetingSettingsFromValues } from "../../lib/meetings/settings.ts";
 import type { Meeting } from "../../lib/sources/types.ts";
@@ -117,7 +117,7 @@ export async function publishPass(store: RoutineDataStore, edge: ReaderArtifactS
   Promise<{ readonly plan: MeetingBodyPlan; readonly status: string }> {
   const served = (await edge.readManifest())?.manifest.meetingStates;
   const plan = await planMeetingBodies({ store, artifacts: edge, now, served, registryVersion: () => null, registry });
-  const published = await publishReaderEdgeArtifacts({ store: edge, now, meetingStates: plan.entries });
+  const published = await publishReaderMeetings({ store: edge, now, meetingStates: plan.entries });
   if (published.status === "PUBLISHED" || published.status === "CURRENT") await plan.settle();
   return { plan, status: published.status };
 }

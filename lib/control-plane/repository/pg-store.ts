@@ -544,7 +544,12 @@ export function pgAppendOnlyRepository<T>(
     const stateKeys=pipelineState ? ((await run("readChangedSince:stateKeys","PAGE",
       `SELECT DISTINCT log_key FROM ${table} WHERE ${pipelineState} ORDER BY log_key`)) as Record<string,unknown>[]).map(row=>String(row.log_key)) : null;
     const batches=stateKeys===null?[null]:Array.from({length:Math.ceil(stateKeys.length/APPEND_ONLY_LOG_READ_PAGE)},(_,index)=>stateKeys.slice(index*APPEND_ONLY_LOG_READ_PAGE,(index+1)*APPEND_ONLY_LOG_READ_PAGE));
+    const heldByKey=new Map<string,HeldSlots>();
+    if(stateKeys!==null)for(const slot of held??[]) {
+      const slots=heldByKey.get(slot[0])??[];heldByKey.set(slot[0],[...slots,slot]);
+    }
     for(const keys of batches) {
+      const batchHeld=keys===null?held:keys.flatMap(key=>heldByKey.get(key)??[]);
       let cursor: { readonly key: string; readonly position: number } | null = null;
       for (;;) {
         const params: unknown[] = [];
@@ -552,7 +557,7 @@ export function pgAppendOnlyRepository<T>(
         const statePredicate=keys!==null ? `log_key=ANY(${at(keys)}::text[])` : (table==="cp_log_artifacts" || table==="cp_log_worker_results" || table==="cp_log_transitions"
           ? `EXISTS(SELECT 1 FROM cp_work_items_history w WHERE w.id=coalesce(${table}.record->>'workItemId',${table}.log_key) AND cp_control_state(w.value)='${options.state}')`
           : `cp_control_state(record)='${options.state}'`);
-        const filters = [options.state ? statePredicate : "", options.since ? `record->>'recordedAt'>=${at(options.since)}` : "", since === null ? "" : `changed_at >= ${at(since)}::timestamptz`, heldFilter(held, at, "log_key", "position"),
+        const filters = [options.state ? statePredicate : "", options.since ? `record->>'recordedAt'>=${at(options.since)}` : "", since === null ? "" : `changed_at >= ${at(since)}::timestamptz`, heldFilter(batchHeld, at, "log_key", "position"),
           cursor === null ? "" : `(log_key, position) > (${at(cursor.key)}, ${at(cursor.position)})`].filter(Boolean);
         const rows = (await run(
           "readChangedSince",

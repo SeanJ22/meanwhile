@@ -216,7 +216,8 @@ test("state promotion reads retain later stages and refusals without reading oth
       ...[az,ca].map(row=>({formatVersion:1,recordId:`${row.itemId}-refused`,itemId:`${row.itemId}-refused`,at:STOP,
         actor:row.actor,stage:"REFUSED",offered:{...row,itemId:`${row.itemId}-refused`},reasons:[]}))];
     for(const [position,record] of records.entries())await db.query("INSERT INTO cp_log_promotion_pipeline(log_key,position,record_id,recorded_at,changed_at,record) VALUES($1,$2,$3,$4,$4,$5::jsonb)",[record.itemId,position,record.recordId,STOP,JSON.stringify(record)]);
-    const sql={query:async(text:string,params?:readonly unknown[])=>(await db.query(text,[...params??[]])).rows};
+    const requests:{text:string;params:readonly unknown[]}[]=[];
+    const sql={query:async(text:string,params?:readonly unknown[])=>{requests.push({text,params:params??[]});return (await db.query(text,[...params??[]])).rows;}};
     const repo=pgAppendOnlyRepository<import("../lib/control-plane/promotion/types.ts").PromotionPipelineRecord>(sql,"promotion_pipeline",{state:"az"});
     assert.deepEqual(await repo.keys(),["az","az-refused"]);
     assert.deepEqual(await repo.keysWhere!(["stage"],"VERIFIED"),["az"]);
@@ -232,5 +233,10 @@ test("state promotion reads retain later stages and refusals without reading oth
     assert.equal(new Set(all.map(record=>record.recordId)).size,108);
     const changed=await repo.readChangedSince!(STOP);
     assert.deepEqual(changed.records.map(row=>row.recordId),["az-scouted","az-verified","az-refused"]);
+    const full=await repo.readChangedSince!(null);requests.length=0;
+    const unchanged=await repo.readChangedSince!(AT,full.records.map(row=>[row.key,row.position] as const));
+    assert.equal(unchanged.records.length,0);
+    const pages=requests.filter(request=>request.text.includes("unnest("));assert.ok(pages.length>1);
+    assert.ok(pages.every(request=>request.params.filter(Array.isArray).every(values=>values.length<=200)));
   }finally{await db.close();}
 });

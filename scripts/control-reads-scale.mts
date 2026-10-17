@@ -4,7 +4,7 @@ import { execFileSync } from "node:child_process";
 import { Client } from "pg";
 import { createHash, randomUUID } from "node:crypto";
 import { readFileSync } from "node:fs";
-import { mkdtemp, readdir, readFile, rm } from "node:fs/promises";
+import { mkdtemp, open, readdir, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -78,6 +78,7 @@ async function worker() {
     assert.ok(highWater, "Linux process memory high-water reading is required");
     const report = { sourceSha,run, ms: duration, responseBytes: read - before, requestBytes: sent - sentBefore, databaseWalBytes:Number(walAfter-walBefore),
       peakRssBytes: Number(highWater[1]) * 1024, output, digest: digest(output), hours: parts };
+    if(scenario==="pipeline" && run>0 && results[0].responseBytes>4096)assert.ok(report.responseBytes<results[0].responseBytes/2,"warm state promotion reads transfer changes and keys");
     results.push(report);
     process.send!({ type: "progress", scenario, run, responseBytes: report.responseBytes, requestBytes: report.requestBytes, ms: report.ms });
   }
@@ -91,7 +92,12 @@ async function workload(repos: ControlPlaneRepositories, places: string[], run: 
     assert.equal(states.length,Number(arg("expected-subjects"))*history);
     const {planningStateOf}=await importAt("lib/control-plane/scheduler/state-planning.ts");
     assert.ok(states.every((row:{subjectId:string})=>planningStateOf(row.subjectId)===arg("planning-state")));
-    return {state:arg("planning-state"),items:states.length,verified:states.filter((row:{stage:string})=>row.stage==="VERIFIED").length};
+    const copy=await open(join(arg("copies"),`cp_log_promotion_pipeline:${arg("planning-state")}.ndjson`),"r");
+    let heldReadClock:string|null=null;
+    try {const buffer=Buffer.alloc(256);const {bytesRead}=await copy.read(buffer,0,buffer.length,0);heldReadClock=/"through":"([^"]+)"/.exec(buffer.subarray(0,bytesRead).toString())?.[1]??null;}
+    finally{await copy.close();}
+    assert.ok(heldReadClock && Date.parse(heldReadClock)>=Date.parse(now));
+    return {state:arg("planning-state"),items:states.length,verified:states.filter((row:{stage:string})=>row.stage==="VERIFIED").length,heldReadClock};
   }
 
   if (scenario === "planner") {
@@ -230,7 +236,7 @@ async function parent() {
   await seed(pg, places, selected.filter(place => places.includes(place)));
   await pg.exec("ANALYZE");
   if(scenario==="pipeline") {
-    const shape=(await pg.query("SELECT count(*)::text AS records,round(avg(octet_length(record::text)))::integer AS mean_bytes,max(octet_length(record::text)) AS max_bytes FROM cp_log_promotion_pipeline")).rows[0];
+    const shape=(await pg.query("SELECT count(*)::text AS records,round(avg(octet_length(record::text)))::integer AS mean_bytes,max(octet_length(record::text)) AS max_bytes,min(changed_at) AS earliest_change,max(changed_at) AS latest_change,now() AS database_clock FROM cp_log_promotion_pipeline")).rows[0];
     process.stderr.write(`${JSON.stringify({type:"input-shape",...shape})}\n`);
   }
 
@@ -327,7 +333,7 @@ function wire(result: { rows: Record<string, unknown>[]; fields: { name: string;
     if (value === null || value === undefined) return null;
     if (type === 114 || type === 3802) return JSON.stringify(value);
     if (Array.isArray(value)) return `{${value.map(entry => entry === null ? "NULL" : JSON.stringify(String(entry))).join(",")}}`;
-    if (value instanceof Date) return value.toISOString();
+    if (value instanceof Date) return value.toISOString().replace("T"," ").replace(/Z$/,"+00");
     return String(value);
   };
   return { command: "SELECT", rowCount: result.affectedRows ?? result.rows.length, rowAsArray: true, fields: result.fields,

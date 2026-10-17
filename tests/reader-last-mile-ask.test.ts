@@ -114,7 +114,6 @@ async function installCandidateCorpus(value: CandidateCorpus = syntheticCandidat
 function promotedFixtureBundle(extra: ReaderAuthorityEdgeBundle = {}): ReaderAuthorityEdgeBundle {
   const current: ReaderAuthorityEdgeBundle = currentReaderAuthorityEdge() ?? {};
   return { stateAuthorities: current.stateAuthorities,
-    ...(current.federalDirectory ? { federalDirectory: current.federalDirectory } : {}),
     ...(current.stateLegislators ? { stateLegislators: current.stateLegislators } : {}),
     ...extra, promoted: new Map([...(current.promoted ?? []), ...(extra.promoted ?? [])]) };
 }

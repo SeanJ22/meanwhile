@@ -29,7 +29,7 @@ import type { CandidateCorpus } from "../lib/candidates/corpus.ts";
 import type { FundingSnapshot } from "../lib/funding/types.ts";
 import { FEDERAL_ROLLCALL_SCOPE, FEDERAL_KEY_VOTE_SCOPE, FEDERAL_VOTES_SOURCE_ID } from "../lib/votes/data-plane.ts";
 import { absentEdgeEntry, manualEdgeEntry, promotedFamily, provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
-import { registryTransferImport, syntheticCandidateProfiles, syntheticFederalDirectory, syntheticFederalRollCalls, syntheticFederalKeyVotes, syntheticOfficeholderStatements, stateMoneyFixture } from "./helpers/promoted-fixtures.ts";
+import { registryTransferImport, syntheticCandidateProfiles, syntheticFederalDirectory, syntheticFederalRollCalls, syntheticFederalKeyVotes, syntheticOfficeholderStatements, stateMoneyFixture, stateFederalDirectoryArtifacts } from "./helpers/promoted-fixtures.ts";
 import { azDistricts } from "./helpers/ballot-district-fixtures.ts";
 import { STATE_CAMPAIGN_FINANCE_SOURCES, type StateCampaignFinanceJurisdiction } from "../lib/funding/data-plane.ts";
 import { DERIVED_CAMPAIGN_SITES_RECORD_CLASS, derivedCampaignSitesScope, DERIVED_CAMPAIGN_SITES_SOURCE_ID, derivedCampaignSitesProjectionIssue, type DerivedCampaignSitesProjection } from "../lib/civic-data/derived-campaign-sites.ts";
@@ -208,7 +208,6 @@ test("BL-20: Ohio and Michigan national ballots render the same incumbent record
       statementCount: 100, shares: { policy: 60, bipartisanship: 10, creditclaiming: 20, "attack-policy": 15, "attack-personal": 5 }, sources: ["all"], measuredAt: "2026-09-30" })) };
   const fec = requiredRoutineContract("fec-funding");
   const authority: PublishAuthority = {
-    "federal-directory": { value: federal, versionId: "BL-20:federal" },
     "census-districts": { value: azDistricts, versionId: azDistricts.versionId },
     "official-filings": promotedFamily([absentEdgeEntry("CURATED_READER_RECORD", requiredManualProductionContract("official-filings").scope)], "BL-20:filings"),
     "federal-funding": promotedFamily([provenEdgeEntry({ recordClass: "FEC_FUNDING", scope: fec.scope, sourceId: fec.sourceId, versionId: "BL-20:fec", value: funding }), manualEdgeEntry("campaign-finance", { kind: "campaign-finance", records: [] }, "BL-20:generic-money")], "BL-20:money"),
@@ -220,6 +219,7 @@ test("BL-20: Ohio and Michigan national ballots render the same incumbent record
   };
   const stateAuthorities: PublishStateAuthorities = {
     "registry-runtime": stateRegistryArtifacts("BL-20:registry", ["AZ", "OH", "MI"], linkedRegistry),
+    "federal-directory": stateFederalDirectoryArtifacts("BL-20:federal", federal),
     "ballot-contests": Object.fromEntries([...ballots, azBallot].map(ballot => [ballot.election.state,
       promotedFamily([manualEdgeEntry(stateBallotContractId("ballot-contests", ballot.election.state),
         { kind: "ballot-contests", ballots: { [ballotElectionKey(ballot)]: ballot } }, `BL-20:ballots:${ballot.election.state}`)], `BL-20:ballots:${ballot.election.state}`)])),

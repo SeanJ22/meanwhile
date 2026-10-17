@@ -22,7 +22,7 @@ import { publishReaderEdgeArtifacts } from "../lib/meetings/edge-serving.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import { GET } from "../app/api/federal-money/route.ts";
 import { provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
-import { syntheticFederalDirectory } from "./helpers/promoted-fixtures.ts";
+import { syntheticFederalDirectory, stateFederalDirectoryArtifacts } from "./helpers/promoted-fixtures.ts";
 import { federalMoneyProjectionIssue, federalMoneyLookupKeys, type FederalMoneyProjection } from "../lib/federal-money/model.ts";
 import type { FederalMoneyFact } from "../lib/federal-money/model.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
@@ -164,8 +164,8 @@ test("the public federal-money route serves the real place artifact on its first
     await publish(store);
     const published = await publishReaderEdgeArtifacts(null, { sourceThrough: NOW, retrievedAt: NOW, promotedThrough: NOW }, {
       store, now: NOW,
-      authority: { "federal-directory": { value: syntheticFederalDirectory(), versionId: "reader-api:federal-directory" } },
-      stateAuthorities: { "registry-runtime": stateRegistryArtifacts("reader-api:registry", ["AR"]) },
+      authority: {},
+      stateAuthorities: { "registry-runtime": stateRegistryArtifacts("reader-api:registry", ["AR"]), "federal-directory": stateFederalDirectoryArtifacts("reader-api:federal-directory") },
     });
     assert.equal(published.status, "PUBLISHED");
     process.env.WTP_READER_EDGE_DIR = directory;

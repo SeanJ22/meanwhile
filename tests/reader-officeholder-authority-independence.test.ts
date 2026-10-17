@@ -2,8 +2,9 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { incumbentHolderFor } from "../lib/ballot/incumbent-record.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
+import { withReaderSelection } from "../lib/db/reader-route.ts";
 import { seatHolderById, seatHoldersForDivision } from "../lib/registry/server.ts";
-import { registryTransferImport, syntheticFederalDirectory, syntheticStateLegislators } from "./helpers/promoted-fixtures.ts";
+import { registryTransferImport, syntheticFederalDirectory, syntheticStateLegislators, federalDirectoryEdge } from "./helpers/promoted-fixtures.ts";
 import { GET as representation } from "../app/api/representation/[...division]/route.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 import { provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
@@ -39,7 +40,7 @@ test("a federal person and division remain readable without a registry or candid
   const value = syntheticFederalDirectory();
   const person = value.roster.officeholders[0];
   const division = value.roster.divisions.find(row => row.officeholderId === person.id)!.ocdId;
-  await withReaderAuthorityEdge({ edgeOnly: true, federalDirectory: { value, versionId: "test:federal-only" } }, async () => {
+  await withReaderSelection({ keys: new Set(), states: [person.state!] }, () => withReaderAuthorityEdge({ edgeOnly: true, ...federalDirectoryEdge(value, "test:federal-only") }, async () => {
     assert.equal((await seatHolderById(person.id))?.name, person.name);
     assert.equal((await incumbentHolderFor(person.id))?.id, person.id);
     assert.ok((await seatHoldersForDivision(division)).some(holder => holder.id === person.id));
@@ -54,7 +55,7 @@ test("a federal person and division remain readable without a registry or candid
     assert.equal(answer.label, null);
     assert.ok(answer.holders.some((holder: { id: string }) => holder.id === person.id));
     assert.equal(response.headers.get("Cache-Control"), "no-store");
-  });
+  }));
 });
 
 test("a state executive remains readable when the federal directory is unavailable", async () => {

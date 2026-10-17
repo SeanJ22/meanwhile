@@ -19,7 +19,7 @@ import { currentCommentAccess, type CommentAccessProjection } from "../lib/regis
 import { settleCommentAccessRead } from "../lib/registry/server.ts";
 import { COMMENT_ACCESS } from "./fixtures/comment-access.ts";
 import { factDb } from "./helpers/fact-db.ts";
-import { installRegistryAuthority, syntheticFederalDirectory } from "./helpers/promoted-fixtures.ts";
+import { installRegistryAuthority, syntheticFederalDirectory, stateFederalDirectoryArtifacts } from "./helpers/promoted-fixtures.ts";
 import { installPimaOutcomes, pimaOutcomeFixture, recordedMeetingsSnapshot } from "./helpers/reader-fixtures.ts";
 import { september22Sitting } from "./helpers/pima-september-22-sitting.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
@@ -99,7 +99,6 @@ async function publishEdge(versions: EdgeVersions): Promise<void> {
   assert.ok(snapshot.meetings.length > 0, "the recorded meetings publish the edge's meeting scopes");
   const authority: PublishAuthority = {
     "census-districts": { value: azDistricts, versionId: azDistricts.versionId },
-    "federal-directory": { value: syntheticFederalDirectory(), versionId: versions.federal },
     ...(versions.outcomes && (outcomesValue.kind === "BOOTSTRAP" || outcomesValue.kind === "PROMOTED")
       ? { "meeting-outcomes": { value: getOutcomeSnapshot(), versionId: versions.outcomes } }
       : {}),
@@ -115,7 +114,7 @@ async function publishEdge(versions: EdgeVersions): Promise<void> {
     promotedThrough: snapshot.generatedAt,
   }, {
     store,
-    stateAuthorities: { "registry-runtime": stateRegistryArtifacts(versions.registry, ["AZ"]) },
+    stateAuthorities: { "registry-runtime": stateRegistryArtifacts(versions.registry, ["AZ"]), "federal-directory": stateFederalDirectoryArtifacts(versions.federal) },
     ...(versions.commentAccess ? { stateFacts: { AZ: { versionId: versions.commentAccess, value: { buckets: [await writeFactBucket(store, "AZ", 0, versions.commentAccess,
       { kind: "READER_RECORDS", base: { bodies: [] }, records }, new Date().toISOString())] } } } } : {}),
     now: new Date().toISOString(),

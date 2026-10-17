@@ -48,7 +48,7 @@ import { GET as representationGET } from "../app/api/representation/[...division
 
 import { GET as warmGET, KEEP_WARM_MARKER } from "../app/api/warm/route.ts";
 
-import { installRegistryAuthority, registryTransferImport, syntheticFederalDirectory } from "./helpers/promoted-fixtures.ts";
+import { installRegistryAuthority, registryTransferImport, syntheticFederalDirectory, stateFederalDirectoryArtifacts } from "./helpers/promoted-fixtures.ts";
 
 import { installPimaOutcomes, recordedMeetingsSnapshot } from "./helpers/reader-fixtures.ts";
 
@@ -164,7 +164,6 @@ async function publishEdge(tag: string, options: { readonly legislators?: boolea
   assert.ok(snapshot.meetings.length > 0, "the recorded meetings publish the edge's meeting scopes");
   const registry = registryTransferImport().projection.payload;
   const authority: PublishAuthority = {
-    "federal-directory": { value: syntheticFederalDirectory(), versionId: `${tag}:federal` },
     "meeting-outcomes": { value: getOutcomeSnapshot(), versionId: `${tag}:outcomes` },
   };
   const store = new LocalFileArtifactStore(dir);
@@ -178,7 +177,7 @@ async function publishEdge(tag: string, options: { readonly legislators?: boolea
     extras: { everydayRouting: buildEverydayRoutingProjection() },
     stateFacts: { AZ: { versionId: `${tag}:facts:AZ`, value: { buckets: [await writeFactBucket(store, "AZ", 0, `${tag}:facts:AZ`, await factRecords(store, registry), new Date().toISOString())] } } },
     authority,
-    stateAuthorities: { "registry-runtime": stateRegistryArtifacts(`${tag}:registry`, ["AZ", "NH", "NJ"], registry) },
+    stateAuthorities: { "registry-runtime": stateRegistryArtifacts(`${tag}:registry`, ["AZ", "NH", "NJ"], registry), "federal-directory": stateFederalDirectoryArtifacts(`${tag}:federal`) },
     ...(options.legislators ? { stateLegislators: Object.fromEntries(Object.entries(stateLegislators).map(([scope, value]) => [scope, { value, versionId: `${tag}:legislators:${scope}` }])) } : {}),
     registrations: {},
   });
@@ -271,7 +270,7 @@ test("the map's routes fetch only the authority families they read, never Ask's 
   const registry = await withReaderAuthorityEdge(bundle, () => readRegistryRuntimeProjection(["AZ"]));
   assert.equal(registry.metadata.versionId, "c21-families:registry:AZ");
   assert.equal(store.keys.includes(manifest.stateAuthorities!["registry-runtime"]!.NH.key), false);
-  assert.equal(bundle.federalDirectory?.versionId, "c21-families:federal");
+  assert.equal(store.keys.includes(manifest.stateAuthorities!["federal-directory"]!.AZ.key), false, "each place's members of Congress also load only when asked");
   assert.equal(bundle.meetingOutcomes, undefined, "the recorded outcomes are Ask's, not the map's");
   const byId = (records: readonly { readonly id: string }[] = []) => [...records].sort((a, b) => a.id.localeCompare(b.id));
   assert.deepEqual(byId(bundle.commentAccess?.value.records), byId(commentAccessProjection.records), "the meetings route takes comment access from the states' facts");

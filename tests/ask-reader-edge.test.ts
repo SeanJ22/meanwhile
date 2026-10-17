@@ -25,7 +25,7 @@ import {
   provenEdgeEntry,
   servedValue,
 } from "./helpers/promoted-edge-entry.ts";
-import { stateMoneyFixture, syntheticCandidateCorpus, syntheticCandidateProfiles, syntheticFederalDirectory, syntheticFederalKeyVotes, syntheticFederalRollCalls, syntheticOfficeholderStatements, syntheticPimaLocalFinance } from "./helpers/promoted-fixtures.ts";
+import { stateMoneyFixture, syntheticCandidateCorpus, syntheticCandidateProfiles, syntheticFederalDirectory, syntheticFederalKeyVotes, syntheticFederalRollCalls, syntheticOfficeholderStatements, syntheticPimaLocalFinance, stateFederalDirectoryArtifacts } from "./helpers/promoted-fixtures.ts";
 import { recordedMeetingsSnapshot, syntheticExecutiveActions } from "./helpers/reader-fixtures.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 import { registryTransferImport } from "./helpers/promoted-fixtures.ts";
@@ -133,7 +133,6 @@ async function publishEdge(withPromoted: boolean, overrides: typeof PROMOTED = {
   assert.ok(snapshot.meetings.length > 0, "the recorded meetings publish the edge's meeting scopes");
   const authority: PublishAuthority = {
     "census-districts": { value: azDistricts, versionId: azDistricts.versionId },
-    "federal-directory": { value: federal, versionId: "edge-test:ask:federal" },
     "meeting-outcomes": { value: outcomes, versionId: "edge-test:ask:outcomes" },
     ...(withPromoted ? { ...PROMOTED, ...overrides } : {}),
   };
@@ -142,7 +141,7 @@ async function publishEdge(withPromoted: boolean, overrides: typeof PROMOTED = {
     retrievedAt: snapshot.generatedAt,
     promotedThrough: snapshot.generatedAt,
   }, { store: new LocalFileArtifactStore(dir), now: new Date().toISOString(), authority,
-    stateAuthorities: { "registry-runtime": stateRegistryArtifacts("edge-test:ask:registry", ["AZ"]), ...(withPromoted ? STATE_PROMOTED : {}), ...stateOverrides },
+    stateAuthorities: { "registry-runtime": stateRegistryArtifacts("edge-test:ask:registry", ["AZ"]), "federal-directory": stateFederalDirectoryArtifacts("edge-test:ask:federal", federal), ...(withPromoted ? STATE_PROMOTED : {}), ...stateOverrides },
     registrations: {},
     stateLegislators: { "US-AZ": { versionId: "edge-test:ask:az-people", value: {
       formatVersion: 1, sourceId: "plural-openstates", jurisdiction: "US-AZ", term: "2025-2026",

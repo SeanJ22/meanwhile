@@ -170,7 +170,7 @@ test("a losing publisher cannot overwrite any bytes selected by the winning mani
     return typeof value === "function" ? value.bind(target) : value;
   } });
   const publish = (loser: boolean) => publishReaderEdgeArtifacts(snapshot([meeting(loser ? "loser" : "winner", "ocd-division/country:us/state:az")]), META, {
-    store: writer(loser), authority: { "federal-directory": { versionId: "next", value: { winner: !loser } } },
+    store: writer(loser), authority: { "campaign-sites": { versionId: "next", value: { winner: !loser } } },
     registrations: { az: { versionId: "next", value: { winner: !loser } } },
   });
   const [winner, loser] = await Promise.all([publish(false), publish(true)]);
@@ -179,7 +179,7 @@ test("a losing publisher cannot overwrite any bytes selected by the winning mani
   const manifest = (await store.readManifest())!.manifest;
   assert.equal((await store.readArtifact(manifest.scopes[0].key))!.meetings[0].id, "winner");
   const authorityManifest = (await store.readManifest())!.manifest;
-  for (const ref of [authorityManifest.authorityArtifacts!["federal-directory"]!, authorityManifest.registrations!.az]) {
+  for (const ref of [authorityManifest.authorityArtifacts!["campaign-sites"]!, authorityManifest.registrations!.az]) {
     const envelope = JSON.parse(gunzipSync((await store.readBytes(ref.key))!).toString("utf8"));
     assert.equal(envelope.value.base.winner, true);
   }

@@ -39,7 +39,7 @@ import { registryRuntimeReadState } from "../lib/registry/runtime-read-model.ts"
 import { withReaderSelection, type ReaderSelection } from "../lib/db/reader-route.ts";
 import { federalDirectoryReadState } from "../lib/officials/federal-directory-read-model.ts";
 import { STATE_CAMPAIGN_FINANCE_SOURCES, type StateCampaignFinanceJurisdiction } from "../lib/funding/data-plane.ts";
-import { stateMoneyFixture, syntheticCandidateCorpus, syntheticCandidateProfiles, syntheticFederalDirectory } from "./helpers/promoted-fixtures.ts";
+import { stateMoneyFixture, syntheticCandidateCorpus, syntheticCandidateProfiles, syntheticFederalDirectory, stateFederalDirectoryArtifacts } from "./helpers/promoted-fixtures.ts";
 import { authorityVersionKey } from "../lib/registry/server.ts";
 import {
   absentEdgeEntry,
@@ -164,7 +164,6 @@ async function publishEdge(withPromoted: boolean, authorityOverrides: PublishAut
   const dir = mkdtempSync(join(tmpdir(), "wtp-ballot-edge-"));
   after(() => rmSync(dir, { recursive: true, force: true }));
   const authority: PublishAuthority = {
-    "federal-directory": { value: federal, versionId: FEDERAL_VERSION },
     "census-districts": { value: districts, versionId: districts.versionId },
     ...(withPromoted ? PROMOTED_BALLOT_FAMILIES : {}),
     ...authorityOverrides,
@@ -177,7 +176,7 @@ async function publishEdge(withPromoted: boolean, authorityOverrides: PublishAut
     meetings: [],
     agendaDocuments: [],
   }, { sourceThrough: null, retrievedAt: null, promotedThrough: null }, { store: new LocalFileArtifactStore(dir), authority,
-    stateAuthorities: { "registry-runtime": stateRegistryArtifacts(REGISTRY_VERSION, ["AZ", "NH", "NJ", "TX"]),
+    stateAuthorities: { "registry-runtime": stateRegistryArtifacts(REGISTRY_VERSION, ["AZ", "NH", "NJ", "TX"]), "federal-directory": stateFederalDirectoryArtifacts(FEDERAL_VERSION, federal),
       ...(withPromoted ? { ...STATE_BALLOT_FAMILIES, ...stateOverrides } : {}) },
     registrations: {},
     stateLegislators: {

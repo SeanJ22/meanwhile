@@ -25,7 +25,7 @@ import { officialStateRollIdentityAuthorityIssue } from "../state-rollcalls/prom
 import { derivedInputAuthorityIssue } from "./derived-door.ts";
 import { isScopedManualContractScope, manualPayloadScope } from "./scoped-manual-contracts.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
-import { immutableStateCandidate, statePublicationScope, withStatePublicationRead } from "./state-publication.ts";
+import { immutableStateCandidate, largePayloadScope, statePublicationScope, withStatePublicationRead } from "./state-publication.ts";
 
 /** Only the exact registered contract doors in this module possess this token. */
 const REGISTERED_PRODUCTION_DOOR = Symbol("REGISTERED_PRODUCTION_DOOR");
@@ -48,6 +48,7 @@ function sourceProjectionObservedAt(store: RoutineDataStore, requested: string):
 function durableCandidateSnapshot(candidate: RoutineCandidate): RoutineCandidate {
   try {
     if (statePublicationScope(candidate.scope)) return withStateRecordHashes(immutableStateCandidate(candidate));
+    if (largePayloadScope(candidate.scope)) return immutableStateCandidate(candidate);
     const encoded = JSON.stringify(candidate);
     if (encoded === undefined) throw new Error("candidate is not JSON-representable");
     return JSON.parse(encoded) as RoutineCandidate;
@@ -355,7 +356,7 @@ export function manualCandidateContractIssue(contractId: ManualProductionContrac
   if (candidate.sourceId !== contract.sourceId) return `source ${candidate.sourceId} does not equal ${contract.sourceId}`;
   if (candidate.recordClass !== contract.recordClass) return `record class ${candidate.recordClass} does not equal ${contract.recordClass}`;
   if (candidate.scope !== contract.scope && !isScopedManualContractScope(contractId, candidate.scope)) return `scope ${candidate.scope} does not equal ${contract.scope}`;
-  if (isScopedManualContractScope(contractId, candidate.scope)) {
+  if (candidate.retrieval.succeeded && isScopedManualContractScope(contractId, candidate.scope)) {
     try {
       if (manualPayloadScope(contractId, contract.scope, candidate.readModel) !== candidate.scope) return "scoped candidate records do not belong to its exact jurisdiction";
     } catch { return "scoped candidate records have no exact jurisdiction"; }

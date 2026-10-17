@@ -1,6 +1,6 @@
 import { statePublicationPriorOf } from "./state-publication.ts";
 import { createHash } from "node:crypto";
-import { durableStateHash, statePublicationScope } from "./state-publication.ts";
+import { durableStateHash, largePayloadScope } from "./state-publication.ts";
 import { sourceCheckIssue } from "./source-check.ts";
 import { completeOfficialBallotContests } from "./manual-projections.ts";
 import type { GenericBallotProjection } from "../ballot/generic-projection.ts";
@@ -626,7 +626,7 @@ export function validateRoutineCandidate(
   const derivedCivicRecordKeys = derivedCivicRecords.map((member) => member.key);
   const invalidDerivedCivicRecordKey = derivedCivicRecordKeys.find((key) => typeof key !== "string" || key.trim().length === 0);
   const duplicateDerivedCivicRecordKeys = derivedCivicRecordKeys.length - new Set(derivedCivicRecordKeys).size;
-  const scoped = statePublicationScope(candidate.scope);
+  const scoped = largePayloadScope(candidate.scope);
   const digest = (canonical: string) => scoped ? canonical : sha256(canonical);
   const readModel = durableCanonicalJson(candidate.readModel, scoped);
   const normalizedPayload = candidate.normalizedPayload === candidate.readModel ? readModel : durableCanonicalJson(candidate.normalizedPayload, scoped);

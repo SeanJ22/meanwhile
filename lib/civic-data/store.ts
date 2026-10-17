@@ -1690,16 +1690,16 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     return this.payloadParts.load(value);
   }
 
-  /** A navigation receipt keeps its held facts in payload parts; they are read back only where a reader parses the receipt. */
+  /** A navigation receipt keeps its held facts in payload parts; `readCandidate` loads them, reader paths carry the receipt without them. */
   private async storeReceipt(candidate: Pick<RoutineCandidate, "recordClass" | "scope">, receipt: ValidationReceipt | null): Promise<unknown> {
     return receipt !== null && isNavigationCandidate(candidate)
       ? this.payloadParts.store(receipt, Object.keys(receipt).filter(key => key !== "excludedFacts")) : receipt;
   }
 
-  private async withReceiptParts<T extends { readonly validationReceipt: unknown }>(row: T): Promise<T> {
+  private async withReceiptParts<T extends { readonly validationReceipt: unknown }>(row: T, heldFacts = true): Promise<T> {
     const receipt = row.validationReceipt as { readonly excludedFacts?: unknown } | null;
-    return receipt && isCivicPayloadPart(receipt.excludedFacts)
-      ? { ...row, validationReceipt: await this.payloadParts.load(receipt) } : row;
+    if (!receipt || !isCivicPayloadPart(receipt.excludedFacts)) return row;
+    return { ...row, validationReceipt: heldFacts ? await this.payloadParts.load(receipt) : { ...receipt, excludedFacts: [] } };
   }
 
   private async readStatePromotion<T>(recordClass: RoutineRecordClass, scope: string): Promise<PromotedProjection<T> | null> {
@@ -2110,7 +2110,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     if (statePublicationScope(scope)) return this.readStatePromotion<T>(recordClass, scope);
     const [row] = await this.promotionRows(recordClass, [scope]);
     if (!row) return null;
-    const projection = { ...postgresPromotionRowToProjection<T>(await this.withReceiptParts(row)), payload: await this.loadPayload(row.payload, row.scope) as T };
+    const projection = { ...postgresPromotionRowToProjection<T>(await this.withReceiptParts(row, false)), payload: await this.loadPayload(row.payload, row.scope) as T };
     return projection;
   }
 
@@ -2120,7 +2120,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   ): Promise<readonly PromotedProjection<T>[]> {
     if (scopes.length === 0) return [];
     const rows = await this.promotionRows(recordClass, scopes);
-    return Promise.all(rows.map(async row => ({ ...postgresPromotionRowToProjection<T>(await this.withReceiptParts(row)), payload: await this.loadPayload(row.payload, row.scope) as T })));
+    return Promise.all(rows.map(async row => ({ ...postgresPromotionRowToProjection<T>(await this.withReceiptParts(row, false)), payload: await this.loadPayload(row.payload, row.scope) as T })));
   }
 
   async listPromotionScopes(recordClasses: readonly RoutineRecordClass[]) {
@@ -2257,13 +2257,13 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
 
   async readCandidateProof(candidateId: string): Promise<CandidateVersionRecord | null> {
     const [row] = await this.candidateRows([candidateId], "candidate-proof", async ids => candidateProofRead(this.db, ids));
-    return row ? { ...candidateProofRowToRecord(await this.withReceiptParts(row)), candidate: await this.loadPayload(row.candidate, (row.candidate as RoutineCandidate).scope) as RoutineCandidate } : null;
+    return row ? { ...candidateProofRowToRecord(await this.withReceiptParts(row, false)), candidate: await this.loadPayload(row.candidate, (row.candidate as RoutineCandidate).scope) as RoutineCandidate } : null;
   }
 
   async readCandidateProofs(candidateIds: readonly string[]): Promise<readonly CandidateVersionReadback[]> {
     if (candidateIds.length === 0) return [];
     const rows = await this.candidateRows(candidateIds, "candidate-proof", async ids => candidateProofRead(this.db, ids));
-    return Promise.all(rows.map(async row => ({ candidateId: row.id, record: { ...candidateProofRowToRecord(await this.withReceiptParts(row)), candidate: await this.loadPayload(row.candidate, (row.candidate as RoutineCandidate).scope) as RoutineCandidate } })));
+    return Promise.all(rows.map(async row => ({ candidateId: row.id, record: { ...candidateProofRowToRecord(await this.withReceiptParts(row, false)), candidate: await this.loadPayload(row.candidate, (row.candidate as RoutineCandidate).scope) as RoutineCandidate } })));
   }
 
   async appendEvidence(candidateId: string, state: CandidateState, at: string, detail: string): Promise<CandidateEvent> {

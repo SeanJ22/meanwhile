@@ -400,7 +400,7 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "curated-reader-primary-sources" },
     validationContract: VALIDATION_CHECKS,
     canonicalProductionStore: STORE,
-    readerProjection: { id: "official-ballot-navigation", consumers: ["ballot", "where-to-vote", "/api/voting-sites"] },
+    readerProjection: { id: "official-ballot-navigation", consumers: ["/ballot"] },
     classification: "RUNTIME_CIVIC_DATA",
     bootstrapFixturePaths: ["data/ballot/2026-navigation"],
     lkgBehavior: "A failed or incompletely receipted lookup-link review holds only ballot navigation and leaves the prior GOOD official routes live.",

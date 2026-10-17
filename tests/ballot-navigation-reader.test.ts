@@ -14,8 +14,9 @@ import type { CuratedReaderProjection, ManualProjectionPackage } from "../lib/ci
 import { electionDatesFor } from "../lib/ballot/election-dates.ts";
 import { electionFieldIssue, type PublishedElectionField } from "../lib/civic-data/election-fields.ts";
 import { formatDateMDY } from "../lib/map/format.ts";
-import { absentEdgeEntry, manualEdgeEntry, promotedFamily } from "./helpers/promoted-edge-entry.ts";
-import { registryTransferImport, syntheticFederalDirectory } from "./helpers/promoted-fixtures.ts";
+import { absentEdgeEntry, manualEdgeEntry, promotedFamily, provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
+import { registryFixtureForState, registryTransferImport, syntheticFederalDirectory } from "./helpers/promoted-fixtures.ts";
+import { stateBallotScope, stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
 import { azDistricts } from "./helpers/ballot-district-fixtures.ts";
 
 const zips: Readonly<Record<string, string>> = {
@@ -27,6 +28,7 @@ const zips: Readonly<Record<string, string>> = {
   VT: "05001", VA: "20105", WA: "98001", WV: "24701", WI: "53001", WY: "82001",
 };
 const sourceInputs = Object.keys(zips).map(state => JSON.parse(readFileSync(new URL(`../data/ballot/2026-navigation/${state.toLowerCase()}.json`, import.meta.url), "utf8")) as { state: string; package: ManualProjectionPackage });
+const states = Object.keys(zips);
 const projection: CuratedReaderProjection = { kind: "ballot-navigation", records: sourceInputs.flatMap(input => (input.package.payload as CuratedReaderProjection).records) };
 const fields = projection.records as unknown as PublishedElectionField[];
 
@@ -39,13 +41,17 @@ async function publishNavigationFixture(): Promise<void> {
   const result = await publishReaderEdgeArtifacts({ formatVersion: 1, generatedAt: checkedAt, counts: { fresh: 0, carried: 0, total: 0, duplicatesCollapsed: 0 },
     sources: [], meetings: [], agendaDocuments: [] }, { sourceThrough: null, retrievedAt: null, promotedThrough: null }, {
     store: new LocalFileArtifactStore(dir), authority: {
-      "registry-runtime": { value: registry, versionId: "BL-20:navigation-registry" },
       "federal-directory": { value: syntheticFederalDirectory(registry), versionId: "BL-20:navigation-federal" },
       "census-districts": { value: azDistricts, versionId: azDistricts.versionId },
-      "ballot-contests": promotedFamily([absentEdgeEntry("BALLOT_CANDIDACY", "US:state-election-ballots")], "BL-20:no-ballots"),
-    }, registrations: {}, stateLegislators: {}, ballotNavigation: (async function* () {
-      for (const input of sourceInputs) yield [input.state, promotedFamily([manualEdgeEntry("ballot-navigation", input.package.payload, `navigation:${input.state}`)], `navigation:${input.state}`)] as const;
-    })(),
+    }, stateAuthorities: {
+      "registry-runtime": Object.fromEntries(states.map(state => [state, { versionId: `BL-20:navigation-registry:${state}`, value: { kind: "PROMOTED_POINTERS" as const,
+        entries: [provenEdgeEntry({ recordClass: "REGISTRY_RUNTIME_BINDING", scope: stateRegistryRuntimeScope(state), sourceId: "registry-reviewed-bindings",
+          versionId: `BL-20:navigation-registry:${state}`, value: registryFixtureForState(state, registry) })] } }])),
+      "ballot-contests": Object.fromEntries(states.map(state => [state,
+        promotedFamily([absentEdgeEntry("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", state))], `BL-20:no-ballots:${state}`)])),
+      "ballot-navigation": Object.fromEntries(sourceInputs.map(input => [input.state,
+        promotedFamily([manualEdgeEntry("ballot-navigation", input.package.payload, `navigation:${input.state}`)], `navigation:${input.state}`)])),
+    }, registrations: {}, stateLegislators: {},
   });
   assert.equal(result.status, "PUBLISHED");
 }
@@ -97,6 +103,11 @@ test("a ZIP in every state and DC renders acquired official navigation and deadl
       const noRegistration = stateFields.some(row => row.value.fieldKind === "registration_deadline" &&
         row.value.text.toLowerCase().includes("does not require voter registration"));
       for (const kind of ["election_office", "registration_page", "ballot_lookup", "polling_lookup", ...(noRegistration ? [] : ["registration_lookup"])]) {
+        if (kind === "polling_lookup") {
+          assert.ok(stateFields.some(row => row.value.fieldKind === kind), `${state}: no acquired ${kind}`);
+          assert.equal(await page.locator(`a[data-navigation-kind="${kind}"]`).count(), 0, `${state}: polling lookup was linked out instead of shown from voting sites`);
+          continue;
+        }
         const routes = stateRecords.flatMap(row => {
           const value = row.value as PublishedElectionField["value"];
           if (row.kind === "ELECTION_FIELD") return value.fieldKind === kind && value.navigationUrl

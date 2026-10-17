@@ -1,11 +1,6 @@
 import { statePublicationScope } from "./state-publication.ts";
 import { consumeStatePublicationRecord, rememberStatePublicationPrior } from "./state-publication.ts";
-import type { BallotSet } from "../ballot/types.ts";
-import { measureRecordIssue, seedMeasureRecords, type MeasureRecord } from "../ballot/measure-records.ts";
-import type { GeneralLineup } from "../ballot/general-lineup.ts";
-import type { AnalysesFile } from "../ballot/analyses.ts";
-import type { AzIdentityRegistry, LineupReconciliation } from "../identity/types.ts";
-import { BALLOT_STATES, parseStateBallotContractId, stateBallotContractId, type BallotState, type StateBallotContractId } from "./state-scopes.ts";
+import { REGISTRY_STATES, parseStateBallotContractId, stateBallotContractId, type BallotState, type StateBallotContractId } from "./state-scopes.ts";
 import { campaignFinanceRecordIssue } from "../funding/campaign-finance-reader.ts";
 import { createHash } from "node:crypto";
 import { officialFilingIssue } from "./official-filings.ts";
@@ -63,14 +58,9 @@ export const MANUAL_PROJECTION_CONTRACT_IDS = [
   "special-district-boundaries",
   "government-budgets",
   "campaign-finance",
-  "ballot-contests",
-  "az-sos-ballot",
-  "nh-curated-ballot",
-  "candidate-profiles",
-  "candidate-corpus",
-  ...BALLOT_STATES.map(state => stateBallotContractId("ballot-contests", state)),
-  ...BALLOT_STATES.map(state => stateBallotContractId("candidate-profiles", state)),
-  ...BALLOT_STATES.map(state => stateBallotContractId("candidate-corpus", state)),
+  ...REGISTRY_STATES.map(state => stateBallotContractId("ballot-contests", state)),
+  ...REGISTRY_STATES.map(state => stateBallotContractId("candidate-profiles", state)),
+  ...REGISTRY_STATES.map(state => stateBallotContractId("candidate-corpus", state)),
   "officeholder-statements",
   "official-filings",
   "ballot-navigation",
@@ -85,21 +75,6 @@ export type ManualProjectionContractId = (typeof MANUAL_PROJECTION_CONTRACT_IDS)
 type ManualProjectionFamily = Exclude<ManualProjectionContractId, StateBallotContractId> | "ballot-contests" | "candidate-profiles" | "candidate-corpus";
 const projectionFamily = (id: ManualProjectionContractId): ManualProjectionFamily =>
   (parseStateBallotContractId(id)?.family ?? id) as ManualProjectionFamily;
-
-export type MeasureAnalysesProjection = AnalysesFile;
-
-export interface AzBallotProjection {
-  readonly ballot: BallotSet & { readonly formatVersion?: number; readonly curatedAt?: string };
-  readonly generalLineup: GeneralLineup;
-  readonly measureAnalyses: MeasureAnalysesProjection;
-  readonly candidateFilings: unknown;
-  readonly identityRegistry: AzIdentityRegistry;
-  readonly lineupReconciliation: LineupReconciliation;
-}
-
-export interface NhBallotProjection {
-  readonly ballot: BallotSet & { readonly formatVersion?: number; readonly curatedAt?: string };
-}
 
 export interface CandidateProfilesProjection {
   readonly cards: {
@@ -124,11 +99,9 @@ export interface CuratedReaderProjection {
   readonly denominator?: Readonly<Record<string, number>>;
 }
 
-export type ManualProjectionPayload =
+type ManualProjectionPayload =
   | TranslationProjection
   | GenericBallotProjection
-  | AzBallotProjection
-  | NhBallotProjection
   | CandidateProfilesProjection
   | CandidateCorpus
   | StatementCorpus
@@ -656,7 +629,7 @@ export async function readManualProjectionPrior(
   const sourceReceipt = evidence.sourceReceipt;
   if (!sourceReceipt && !statePublicationScope(read.projection.scope)) return null;
   const trustedImport = read.projection.receipt.checks.some(check => check.check === "SOURCE_AUTHENTICITY" && check.verdict === "PASS" &&
-    ["TRUSTED_LKG_IMPORT_PROVENANCE_VALID", "TRUSTED_LKG_REATTESTATION_PROVENANCE_VALID"].includes(check.code));
+    ["TRUSTED_LKG_IMPORT_PROVENANCE_VALID", "TRUSTED_LKG_REATTESTATION_PROVENANCE_VALID", "STATE_RETIREMENT_INHERITED_GOOD_PROVENANCE_VALID"].includes(check.code));
   const issue = sourceReceipt ? manualSourceReceiptStructureIssue(sourceReceipt) : null;
   if (!evidence.found || (!sourceReceipt && !trustedImport) || issue || sourceReceipt?.sources.some((source) => source.reviewOutcome === "BLOCKED")) {
     throw new Error(`MANUAL_PROMOTION_BASE_PROOF_INVALID:${contractId}:${issue?.code ?? "SOURCE_RECEIPT_NOT_GOOD"}`);
@@ -703,109 +676,6 @@ function genericBallotProjection(payload: ManualProjectionPayload, state?: strin
     consumerChecks: [{ consumer: "generic state/election ballot Reader", passed: records.length > 0 && problems.length === 0,
       detail: `${ballots.length} state/election ballot(s) with independently verified contests and candidates.` }],
     factKind: "sourced official ballot contests and candidates" };
-}
-
-function ballotProjection(
-  contractId: "az-sos-ballot" | "nh-curated-ballot",
-  payload: ManualProjectionPayload,
-): BuiltProjection {
-  const original = payload as AzBallotProjection | NhBallotProjection;
-  if (original.ballot) {
-    payload = { ...original, ballot: seedMeasureRecords(original.ballot,
-      "measureAnalyses" in original ? original.measureAnalyses.analyses : []) };
-  }
-  const held = object(payload);
-  const ballot = object(held?.ballot);
-  const contests = rows(ballot, "contests");
-  const candidacies = rows(ballot, "candidacies");
-  const contestIds = contests.map((row) => string(row.id));
-  const candidacyIds = candidacies.map((row) => string(row.id));
-  const measureRecords = rows(ballot, "measureRecords");
-  const jurisdiction = contractId === "az-sos-ballot" ? "US-AZ" : "US-NH";
-  const records: CivicRecordMember[] = [
-    ...contests.map((record) => ({ key: `contest:${string(record.id)}`, record })),
-    ...candidacies.map((record) => ({ key: `candidacy:${string(record.id)}`, record })),
-    ...measureRecords.map((record) => ({ key: `measure-record:${string(record.contestId)}`, record })),
-  ];
-  const identities: IdentityEvidence[] = [
-    ...contests.map((row) => ({
-      subjectId: string(row.id),
-      jurisdiction,
-      identifiers: { contest_id: string(row.id) },
-      matchBasis: "OFFICIAL_ID" as const,
-      ambiguous: false,
-    })),
-    ...candidacies.map((row) => ({
-      subjectId: string(row.id),
-      jurisdiction,
-      identifiers: { candidacy_id: string(row.id), contest_id: string(row.contestId) },
-      matchBasis: "EXACT_SCOPED_ID" as const,
-      ambiguous: false,
-    })),
-  ];
-  const violations = [
-    ...duplicateProblems(measureRecords.map(row => string(row.contestId)), "Measure record"),
-    ...measureRecords.flatMap(row => {
-      const issue = measureRecordIssue(row as unknown as MeasureRecord);
-      const contest = contests.find(contest => contest.id === row.contestId && contest.type === "MEASURE");
-      return issue ? [issue] : contest ? [] : ["A measure record names no exact measure contest."];
-    }),
-    ...duplicateProblems(contestIds, "Contest"),
-    ...duplicateProblems(candidacyIds, "Candidacy"),
-    ...(candidacies.some((row) => !contestIds.includes(string(row.contestId)))
-      ? ["A candidacy names no exact retained contest."]
-      : []),
-  ];
-  if (contractId === "az-sos-ballot") {
-    const lineup = object(held?.generalLineup);
-    const analyses = object(held?.measureAnalyses);
-    const identity = object(held?.identityRegistry);
-    const reconciliation = object(held?.lineupReconciliation);
-    const identityCandidates = rows(identity, "candidates");
-    const identityIds = identityCandidates.map((row) => string(row.identityId));
-    const reconciliationRows = rows(reconciliation, "rows");
-    records.push(
-      ...identityCandidates.map((record) => ({ key: `identity:${string(record.identityId)}`, record })),
-      ...reconciliationRows.map((record) => ({ key: `lineup:${string(record.cardKey)}`, record })),
-    );
-    identities.push(
-      ...identityCandidates.map((row) => ({
-        subjectId: string(row.identityId),
-        jurisdiction,
-        identifiers: { identity_id: string(row.identityId) },
-        matchBasis: "OFFICIAL_ID_CROSSWALK" as const,
-        ambiguous: false,
-      })),
-      ...reconciliationRows.map((row) => ({
-        subjectId: string(row.cardKey),
-        jurisdiction,
-        identifiers: { candidacy_id: string(row.canonicalCandidacyId), contest_id: string(row.contestId) },
-        matchBasis: "OFFICIAL_ID_CROSSWALK" as const,
-        ambiguous: string(row.outcome) === "AMBIGUOUS",
-      })),
-    );
-    violations.push(
-      ...duplicateProblems(identityIds, "Arizona identity"),
-      ...(rows(lineup, "contests").length === 0 ? ["The Arizona package has no certified-lineup records."] : []),
-      ...(rows(analyses, "analyses").length === 0 ? ["The Arizona package has no retained measure-analysis records."] : []),
-      ...(identityCandidates.length === 0 ? ["The Arizona package has no exact candidate identity registry."] : []),
-      ...(reconciliationRows.length === 0 ? ["The Arizona package has no exact certified-lineup reconciliation."] : []),
-      ...(object(held?.candidateFilings) === null ? ["The Arizona package has no Secretary of State filing corpus."] : []),
-    );
-  }
-  return {
-    payload,
-    records,
-    identities,
-    missingRequiredFields: contests.length && candidacies.length ? [] : ["ballot.contests/candidacies"],
-    violations,
-    schemaVersion: `${contractId}:1`,
-    consumerChecks: [
-      { consumer: "/ballot and /api/ballot/scope", passed: contests.length > 0 && candidacies.length > 0, detail: `${contests.length} contests and ${candidacies.length} candidacies.` },
-      { consumer: "Ask ballot inventory", passed: candidacies.every((row) => contestIds.includes(string(row.contestId))), detail: "Every candidacy resolves to one retained contest." },
-    ],
-    factKind: contractId === "az-sos-ballot" ? "reviewed Arizona ballot, filing, analysis, and identity projection" : "reviewed New Hampshire ballot candidacy projection",
-  };
 }
 
 function profileProjection(payload: ManualProjectionPayload, state?: BallotState, inherited = new Map<string, string>()): BuiltProjection {
@@ -1072,8 +942,6 @@ export function manualProjectionCandidate(
     ? plainEnglishProjection(payload)
     : family === "ballot-contests"
     ? genericBallotProjection(payload, partition?.state)
-    : family === "az-sos-ballot" || family === "nh-curated-ballot"
-      ? ballotProjection(family, payload)
     : family === "candidate-profiles"
       ? profileProjection(payload, partition?.state, inherited)
       : family === "candidate-corpus"

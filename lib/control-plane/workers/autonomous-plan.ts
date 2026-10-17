@@ -1,3 +1,4 @@
+import { stateRegistryRuntimeContractId, type StateRegistryContractId } from "../../civic-data/state-scopes.ts";
 import { workerDoorForRecord } from "../../civic-data/worker-reader-contracts.ts";
 import type { CivicExtractionContract } from "./types.ts";
 import type { AcquirerTaskSpec, ObservedResearchRoute } from "./research-types.ts";
@@ -44,14 +45,14 @@ export function jurisdictionDiscoveryPlan(jurisdiction: Jurisdiction, source: Ju
     if (!url) return false;
     try { const parsed = new URL(url); return parsed.protocol === "https:" && !parsed.username && !parsed.password; } catch { return false; }
   }))];
-  const state = jurisdiction.id.split(":")[0].toUpperCase();
+  const state = jurisdiction.stateCode.toUpperCase();
   const publicationContract = workerDoorForRecord(spec.recordClass, state);
   return {
     version: 1, capability: source.recordClass === "OFFICEHOLDERS" ? "officials/offices" : source.recordClass, jurisdiction: state,
     sourceRegistryReferences: [jurisdiction.id, routeId], seedUrls, sources: [], acquisition: [], auditScope: "SOURCE_UNIVERSE",
     ...partFor(spec.recordClass),
     ...(bodyId && publicationContract ? { publication: { contractId: publicationContract, bodyId } } : {}),
-    ...(source.recordClass === "OFFICEHOLDERS" && bodyId ? { publication: { contractId: "registry-runtime-bindings" as const, bodyId } } : {}),
+    ...(source.recordClass === "OFFICEHOLDERS" && bodyId ? { publication: { contractId: stateRegistryRuntimeContractId(state), bodyId } } : {}),
     ...(source.recordClass === "PUBLIC_SERVICES" && bodyId ? { publication: { contractId: "everyday-routing" as const, bodyId } } : {}),
     ...(source.recordClass === "VOTER_ACCESS" && bodyId ? { publication: { contractId: "ballot-navigation" as const, bodyId } } : {}),
     ...(spec.recordClass === "PUBLIC_RECORD" && bodyId ? { publication: { contractId: source.recordClass === "SPECIAL_DISTRICT_BOUNDARIES" ? "special-district-boundaries" as const : source.recordClass === "GOVERNMENT_FINANCE" ? "government-budgets" as const : "public-records" as const, bodyId } } : {}),
@@ -60,7 +61,7 @@ export function jurisdictionDiscoveryPlan(jurisdiction: Jurisdiction, source: Ju
     contract: {
       schemaVersion: 2, recordClass: spec.recordClass, subjectId: jurisdiction.id,
       requiredFields: spec.fields, identity: { namespace: `${jurisdiction.id}:${source.recordClass}`, keyFields: spec.fields },
-      jurisdiction: { country: "US", state: jurisdiction.id.split(":")[0].toUpperCase(), canonicalId: jurisdiction.id },
+      jurisdiction: { country: "US", state, canonicalId: jurisdiction.id },
       completenessScope: `${source.recordClass} for ${jurisdiction.name}. ${source.owed ?? source.authorityBasis} This initial source contract does not discharge downstream information families or establish publisher absence.`,
       // Discovery templates acquire their method version when the runtime binds them.
       expectedSourceDate: null, methodVersion: 0,
@@ -110,7 +111,7 @@ export interface AutonomousWorkPlan {
   readonly ownerInstructions?: readonly string[];
   /** Existing reader door selected by the system's exact body join, never by a model. */
   readonly publication?:
-    { readonly contractId: "registry-runtime-bindings" | typeof COMMENT_RULE_PUBLICATION | WorkerReaderContract | "campaign-finance" | "special-district-boundaries"; readonly bodyId: string };
+    { readonly contractId: StateRegistryContractId | typeof COMMENT_RULE_PUBLICATION | WorkerReaderContract | "campaign-finance" | "special-district-boundaries"; readonly bodyId: string };
   readonly freshness?: Pick<FreshnessObligation,"readerImpactAt"|"observedChangeRateHours"|"declaredCycleHours">;
   readonly version: 1;
   readonly contract: CivicExtractionContract;

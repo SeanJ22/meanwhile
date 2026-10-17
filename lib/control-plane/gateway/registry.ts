@@ -1,4 +1,4 @@
-import { BALLOT_STATES, stateBallotContractId } from "../../civic-data/state-scopes.ts";
+import { REGISTRY_STATES, stateBallotContractId } from "../../civic-data/state-scopes.ts";
 import "../../ask/model.ts";
 import "../../hunt/settings.ts";
 import "../../facts/clocks.ts";
@@ -218,7 +218,7 @@ const REGISTRY: readonly RegisteredAction[] = [
     async execute(deps, context) {
       try {
         const requests = [];
-        for (const state of BALLOT_STATES) requests.push(await requestRoutineDue(deps.repos,
+        for (const state of REGISTRY_STATES) requests.push(await requestRoutineDue(deps.repos,
           [`--contract=${stateBallotContractId("ballot-contests", state)}`, "--reason=Publish ballots requested from Admin"], context.at));
         return { ok: true, outcome: "QUEUED", subject: requests[0].id,
           says: "Ballot publication is queued for the runner’s next pass. Each state’s publication result appears in Workers.",

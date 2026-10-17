@@ -18,7 +18,7 @@ import { lookupAction } from "../lib/control-plane/gateway/registry.ts";
 import { fixtureRepositories } from "./helpers/meeting-doors-fixture.ts";
 import { actionInput } from "../app/(admin)/_mw/admin-v6/contract.ts";
 import { actionDef } from "../app/(admin)/_mw/admin-v6/actions.ts";
-import { BALLOT_STATES, type BallotState } from "../lib/civic-data/state-scopes.ts";
+import { REGISTRY_STATES, type BallotState } from "../lib/civic-data/state-scopes.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { createFileRepositories } from "../lib/control-plane/repository/file-store.ts";
 import { pgAppendOnlyRepository } from "../lib/control-plane/repository/pg-store.ts";
@@ -28,7 +28,7 @@ const now = "2026-10-14T00:00:00.000Z";
 const ballotTask = AUTOMATIC_REFRESH_TASKS.find(task => task.id === "ballot-contests:TX")!;
 
 for (const provider of ["memory", "file", "postgres"] as const) {
-  test(`${provider}: 51 state reports retain every held contest while scheduler and aggregate reads stay summaries`, async () => {
+  test(`${provider}: all state and territory reports retain every held contest while scheduler and aggregate reads stay summaries`, async () => {
     const reportFor = (state: BallotState): BallotPublicationResult => ({
       kind: "BALLOT_PUBLICATION", state, inputHash: "a".repeat(64), inputStamp: `git:${state}`, at: now,
       status: "PUBLISHED", versionId: `fixture-${state}`, merged: [`${state.toLowerCase()}.json`], skipped: [], reason: null,
@@ -78,15 +78,15 @@ for (const provider of ["memory", "file", "postgres"] as const) {
       } };
       const context = { cycleId: "state-cycle", testedSha: "b".repeat(40) };
       let fullBytes = 0;
-      for (const state of BALLOT_STATES) {
+      for (const state of REGISTRY_STATES) {
         const report = reportFor(state);
         await recordBallotPublication(repos, report, context);
         fullBytes += JSON.stringify(report).length;
       }
-      assert.equal(writes, 51);
-      assert.deepEqual(await repository.keys(), BALLOT_STATES.map(state => `ballot-publication:${state}`).sort());
+      assert.equal(writes, REGISTRY_STATES.length);
+      assert.deepEqual(await repository.keys(), REGISTRY_STATES.map(state => `ballot-publication:${state}`).sort());
       const summaries: BallotPublicationSummaries = {};
-      for (const state of BALLOT_STATES) {
+      for (const state of REGISTRY_STATES) {
         const summary = await readLatestBallotPublicationSummary(repos, state);
         assert.deepEqual(summary, ballotPublicationSummary(reportFor(state)));
         summaries[state] = summary!;
@@ -124,7 +124,7 @@ test("an unwritten state publication rejects and remains due for history retry",
 });
 
 test("all missing state publications run in the first cycle even when old report stamps match", () => {
-  for (const state of BALLOT_STATES) {
+  for (const state of REGISTRY_STATES) {
     const task = `ballot-contests:${state}`, stamp = `git:${state}`;
     const prior = { state, inputStamp: stamp, status: "PUBLISHED" as const };
     assert.equal(ballotPublicationDue(task, stamp, null, undefined), true);
@@ -225,8 +225,8 @@ test("Admin's ballot control queues the normal runner task even before its next 
     { at: now, receiptId: "fixture-ballot-action", request: { actorRef: "owner" } } as Parameters<typeof action.execute>[1], input);
   assert.equal(result.ok, true);
   const requests = (await repos.adminConfig.mustRead("current")).value.routineDueRequests!;
-  assert.equal(requests.length, BALLOT_STATES.length);
-  assert.equal(new Set(requests.map(row => row.contractId)).size, BALLOT_STATES.length);
+  assert.equal(requests.length, REGISTRY_STATES.length);
+  assert.equal(new Set(requests.map(row => row.contractId)).size, REGISTRY_STATES.length);
   const request = requests.find(row => row.contractId === "ballot-contests:TX")!;
   assert.equal(routineDueRequestFor(ballotTask, { lastAttemptedAt: "2026-10-13T23:59:00.000Z" }, Date.parse(now), [request])?.id, request.id);
   assert.equal(routineDueRequestFor(ballotTask, { lastAttemptedAt: now }, Date.parse(now), [request]), null);
@@ -260,9 +260,9 @@ test("publication reports reject files and held contests from a different state"
 
 test("every state has an independent ballot refresh task and failure domain", () => {
   const tasks = AUTOMATIC_REFRESH_TASKS.filter(task => task.id.startsWith("ballot-contests:"));
-  assert.equal(tasks.length, BALLOT_STATES.length);
-  assert.equal(new Set(tasks.map(task => task.acquisitionFailureDomain)).size, BALLOT_STATES.length);
-  for (const state of BALLOT_STATES) {
+  assert.equal(tasks.length, REGISTRY_STATES.length);
+  assert.equal(new Set(tasks.map(task => task.acquisitionFailureDomain)).size, REGISTRY_STATES.length);
+  for (const state of REGISTRY_STATES) {
     const task = tasks.find(row => row.id === `ballot-contests:${state}`)!;
     assert.equal(task.scope, `US-${state}:state-election-ballots`);
     assert.deepEqual(task.command, ["scripts/assemble-ballot-package.mts", `--state=${state}`]);

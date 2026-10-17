@@ -4,26 +4,34 @@ import type { AuthorityFamily } from "../meetings/edge-artifacts.ts";
 export function readerRoute<A extends unknown[], R>(path: string, read: (...args: A) => Promise<R>,
   families: readonly AuthorityFamily[] = []): (...args: A) => Promise<R> {
   return (...args) => withReaderRoute(path, async () => {
-    const selection = await selectionForReader(args);
-    return withReaderSelection(selection, async () => {
+    const { selection, geographyEdge } = await selectionForReader(args);
+    const { withReaderAuthorityEdge } = await import("../registry/runtime-edge.ts");
+    return withReaderSelection(selection, () => withReaderAuthorityEdge(geographyEdge, async () => {
       if (!families.length) return read(...args);
       const { readReaderManifest, ensureReaderAuthorityEdge } = await import("../meetings/edge-serving.ts");
-      const { withReaderAuthorityEdge } = await import("../registry/runtime-edge.ts");
       const manifest = await readReaderManifest();
       const edge = manifest ? await ensureReaderAuthorityEdge(manifest, undefined, families) : null;
       return withReaderAuthorityEdge(edge, () => read(...args));
-    });
+    }));
   });
 }
-async function selectionForReader(args: readonly unknown[]): Promise<ReaderSelection | undefined> {
+async function selectionForReader(args: readonly unknown[]): Promise<{
+  selection: ReaderSelection | undefined;
+  geographyEdge: import("../registry/runtime-edge.ts").ReaderAuthorityEdgeBundle | null;
+}> {
+  let geographyEdge: import("../registry/runtime-edge.ts").ReaderAuthorityEdgeBundle | null = null;
   const keys = new Set<string>();
   let lat: number | undefined, lng: number | undefined, zip: string | undefined;
+  let question: string | undefined;
   let governmentWindow: readonly [number, number] | undefined;
   const collect = (value: unknown, field = "") => {
     if (typeof value === "string") {
+      if (field === "question") question = value;
       if (/^(?:ocd-|congress:|statewide:|roster:|fec:|ballot-|legiscan:|plural:)/.test(value) ||
         ["subject", "target", "member", "meetingId", "candidate"].includes(field)) keys.add(value);
-      if (field === "zip" && /^\d{5}$/.test(value)) { zip = value; keys.add(value); }
+      if ((field === "zip" || field === "approximateLocation" || field === "address") && /^\d{5}$/.test(value)) { zip = value; keys.add(value); }
+      const fecState = /^(?:fec:)?[HS]\d([A-Z]{2})\d{5}$/.exec(value)?.[1];
+      if (fecState) keys.add(`state:${fecState}`);
       if (field === "state" && /^[A-Za-z]{2}$/.test(value)) keys.add(`state:${value.toUpperCase()}`);
     } else if (typeof value === "number") {
       if (field === "lat") lat = value;
@@ -50,6 +58,17 @@ async function selectionForReader(args: readonly unknown[]): Promise<ReaderSelec
       for (const [key, value] of Object.entries(arg)) collect(await value, key);
     }
   }
+  const namedStates = question ? (await import("../ask/reader-officials.ts")).statesNamedInQuestion(question) : [];
+  if (namedStates.length) {
+    zip = undefined; lat = undefined; lng = undefined;
+    const { registryJurisdictions } = await import("../civic-data/state-scopes.ts");
+    for (const key of keys) {
+      const placeState = /^state:([a-z]{2})$/i.exec(key)?.[1]?.toUpperCase();
+      if (/^\d{5}$/.test(key) || (placeState && !namedStates.includes(placeState)) ||
+        (key.startsWith("ocd-") && !registryJurisdictions(key).some(state => namedStates.includes(state)))) keys.delete(key);
+    }
+    for (const state of namedStates) keys.add(`ocd-division/country:us/${state === "DC" ? "district" : "state"}:${state.toLowerCase()}`);
+  }
   if (zip && (lat === undefined || lng === undefined)) {
     const { resolveZip } = await import("../geo/zcta.ts");
     const resolved = resolveZip(zip);
@@ -58,8 +77,17 @@ async function selectionForReader(args: readonly unknown[]): Promise<ReaderSelec
   let point: readonly [number, number] | undefined, divisions: readonly string[] | undefined;
   if (Number.isFinite(lat) && Number.isFinite(lng) && Math.abs(lat!) <= 90 && Math.abs(lng!) <= 180) {
     point = [lng!, lat!];
-    const { readerDivisionIdsAt } = await import("../registry/server.ts");
-    divisions = await readerDivisionIdsAt(lat!, lng!);
+    const { currentReaderAuthorityEdge, withReaderAuthorityEdge } = await import("../registry/runtime-edge.ts");
+    geographyEdge = currentReaderAuthorityEdge();
+    if (!geographyEdge) {
+      const { readReaderManifest, ensureReaderAuthorityEdge } = await import("../meetings/edge-serving.ts");
+      const manifest = await readReaderManifest();
+      geographyEdge = manifest ? await ensureReaderAuthorityEdge(manifest, undefined, ["census-districts"]) : null;
+    }
+    divisions = await withReaderAuthorityEdge(geographyEdge, async () => {
+      const { readerDivisionIdsAt } = await import("../registry/server.ts");
+      return readerDivisionIdsAt(lat!, lng!);
+    });
     for (const id of divisions) keys.add(id);
   }
   for (const id of [...keys]) {
@@ -70,6 +98,23 @@ async function selectionForReader(args: readonly unknown[]): Promise<ReaderSelec
       while (parts.length > 2) { parts.pop(); keys.add(parts.join("/")); }
     }
   }
-  return keys.size || point || governmentWindow
-    ? { keys, ...(point ? { point, divisions } : {}), ...(governmentWindow ? { governmentWindow } : {}) } : undefined;
+  const { registryJurisdictions } = await import("../civic-data/state-scopes.ts");
+  const { governmentStateOf } = await import("../registration/listings.ts");
+  let states = namedStates.length ? namedStates : [...new Set([...keys].flatMap(key => {
+    const explicit = /^(?:state:|statewide:)([a-z]{2})(?:\/|$)/i.exec(key)?.[1];
+    return explicit ? [explicit.toUpperCase()] : registryJurisdictions(key).length ? registryJurisdictions(key) : governmentStateOf(key) ? [governmentStateOf(key)!] : [];
+  }))];
+  if (!states.length && [...keys].some(key => key.startsWith("congress:"))) {
+    const { readReaderManifest, ensureReaderAuthorityEdge } = await import("../meetings/edge-serving.ts");
+    const manifest = await readReaderManifest();
+    const edge = manifest ? await ensureReaderAuthorityEdge(manifest, undefined, ["federal-directory"]) : null;
+    if (edge) geographyEdge = { ...geographyEdge, ...edge };
+    const federalDivisions = edge?.federalDirectory?.value.roster.divisions.filter(row => keys.has(row.officeholderId)).map(row => row.ocdId) ?? [];
+    for (const id of federalDivisions) keys.add(id);
+    states = [...new Set(federalDivisions.flatMap(registryJurisdictions))];
+    if (federalDivisions.length) divisions = federalDivisions;
+  }
+  const selection = keys.size || point || governmentWindow || states.length
+    ? { keys, states, ...(point ? { point } : {}), ...(divisions ? { divisions } : {}), ...(governmentWindow ? { governmentWindow } : {}) } : undefined;
+  return { selection, geographyEdge };
 }

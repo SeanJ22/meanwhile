@@ -1003,17 +1003,21 @@ async function migrateVotingDoorScopes(sql: Sql, nowIso: string,
       WHERE value->>'kind'='official-voting-source' AND id>$1 ORDER BY id LIMIT 250`, [after]) as
       { id: string; revision: number; config: DoorRecord["config"] }[];
     for (const row of rows) {
-      const primary = JSON.parse(String(row.config.votingSource)) as VotingSourceDoor;
-      const mappings = [primary, ...JSON.parse(String(row.config.votingMappings ?? "[]")) as VotingSourceDoor[]];
-      const url = pageAddress(primary.url)?.url;
-      if (!url) throw new Error(`Voting source door ${row.id} has no public URL.`);
-      const patch = { url, ...Object.fromEntries(mappings.map(source => [`votingState_${requireBallotState(source.scope.state)}`, true])) };
-      if (Object.entries(patch).every(([key, value]) => row.config[key] === value)) continue;
-      const changed = await run("migrateVotingDoorScopes", "POINT", `UPDATE cp_doors SET
-        value=jsonb_set(value,'{config}',value->'config'||$3::jsonb)||jsonb_build_object('updatedAt',$4::text),
-        revision=revision+1,updated_at=$4::timestamptz WHERE id=$1 AND revision=$2 RETURNING id`,
-      [row.id, row.revision, JSON.stringify(patch), nowIso]) as { id: string }[];
-      if (!changed.length) throw new ConcurrentModification("Door", row.id, Number(row.revision), null);
+      try {
+        const primary = JSON.parse(String(row.config.votingSource)) as VotingSourceDoor;
+        const mappings = [primary, ...JSON.parse(String(row.config.votingMappings ?? "[]")) as VotingSourceDoor[]];
+        const url = pageAddress(primary.url)?.url;
+        if (!url) throw new Error("Voting source door has no public URL.");
+        const patch = { url, ...Object.fromEntries(mappings.map(source => [`votingState_${requireBallotState(source.scope.state)}`, true])) };
+        if (Object.entries(patch).every(([key, value]) => row.config[key] === value)) continue;
+        const changed = await run("migrateVotingDoorScopes", "POINT", `UPDATE cp_doors SET
+          value=jsonb_set(value,'{config}',value->'config'||$3::jsonb)||jsonb_build_object('updatedAt',$4::text),
+          revision=revision+1,updated_at=$4::timestamptz WHERE id=$1 AND revision=$2 RETURNING id`,
+        [row.id, row.revision, JSON.stringify(patch), nowIso]) as { id: string }[];
+        if (!changed.length) throw new ConcurrentModification("Door", row.id, Number(row.revision), null);
+      } catch (error) {
+        console.error("VOTING_DOOR_SCOPE_MIGRATION_FAILED", { id: row.id, error: error instanceof Error ? error.message : String(error) });
+      }
     }
     if (rows.length < 250) return;
     after = rows.at(-1)!.id;

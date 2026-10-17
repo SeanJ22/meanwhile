@@ -10,14 +10,6 @@ import type { VotingJurisdiction, VotingSitesFile } from "./voting-sites.ts";
 
 const normalizedHash = (value: unknown) => canonicalCivicDataHash(value, { durable: true });
 
-export const VOTING_SITES_CONTRACT = {
-  id: "voting-sites",
-  sourceId: "voting-sites",
-  recordClass: "VOTING_SITE",
-  scope: "US-AZ+US-NH+US-NJ:2026-general:supported-jurisdictions",
-  parserVersion: "official-voting-sites/4",
-} as const;
-
 export const VOTING_SITES_SOURCE_ID = "voting-sites" as const;
 export const votingSitesContract = (state: string) => ({
   id: stateBallotContractId("voting-sites", state), sourceId: VOTING_SITES_SOURCE_ID,
@@ -113,7 +105,7 @@ function identities(file: VotingSitesFile): readonly IdentityEvidence[] {
   });
 }
 
-function violations(file: VotingSitesFile): string[] {
+export function votingSitesProjectionIssues(file: VotingSitesFile): string[] {
   const problems: string[] = [];
   if (!/^\d{4}-\d{2}-\d{2}$/.test(file.generatedAt)) problems.push("Voting-site projection has no exact generated date.");
   if (file.jurisdictions.length === 0) problems.push("Voting-site projection contains no jurisdictions.");
@@ -164,7 +156,7 @@ export function votingSitesCandidate(input: {
   }
   const readModel = retainFailedVotingSiteScopes(input.current, input.prior, input.failures);
   const civicRecords = votingSiteMembers(readModel);
-  const semanticViolations = violations(readModel);
+  const semanticViolations = votingSitesProjectionIssues(readModel);
   const rawHash = sha256(input.acquisition.map((capture) => capture.rawHash).join("\n"));
   const currentJurisdictions = new Map(readModel.jurisdictions.map(row => [row.ocdId, row]));
   const carriedJurisdictionIds = input.prior?.jurisdictions.filter(row => {

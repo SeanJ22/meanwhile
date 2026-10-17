@@ -1,7 +1,6 @@
-import { BALLOT_STATES, stateBallotScope, type BallotState } from "./state-scopes.ts";
-import { REGISTRY_STATES, stateRegistryRuntimeScope } from "./state-scopes.ts";
+import { REGISTRY_STATES, stateBallotScope } from "./state-scopes.ts";
+import { stateRegistryRuntimeScope } from "./state-scopes.ts";
 import { DOTGOV_SCOPE, readDotGovProjection } from "./dotgov.ts";
-import { readGenericBallotProjection } from "../ballot/generic-projection.ts";
 import { createHash } from "node:crypto";
 
 import {
@@ -14,20 +13,8 @@ import {
 import type { PromotedPointerIdentity, RoutineRecordClass } from "./types.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import { requiredRoutineContract } from "./contracts.ts";
-import {
-  readAzBallotProjection,
-  readNhBallotProjection,
-  readCandidateCorpusProjection,
-  readCandidateProfilesProjection,
-} from "./manual-read-models.ts";
-import {
-  DERIVED_CAMPAIGN_SITES_RECORD_CLASS,
-  DERIVED_CAMPAIGN_SITES_SCOPE,
-  readDerivedCampaignSites,
-} from "./derived-campaign-sites.ts";
+import { DERIVED_CAMPAIGN_SITES_RECORD_CLASS } from "./derived-campaign-sites.ts";
 import { readCuratedReaderProjection } from "./curated-reader-read-model.ts";
-import { VOTING_SITES_CONTRACT } from "../ballot/voting-sites-data-plane.ts";
-import { readVotingSitesProjection } from "../ballot/voting-sites-server.ts";
 import { readNhMembers } from "./state-members.ts";
 import { readFundingSnapshot } from "../funding/snapshot.ts";
 import { readStateMoneyProjection } from "../funding/state-snapshot.ts";
@@ -72,14 +59,6 @@ export function promotedEdgePointers(): Readonly<Record<GlobalPromotedAuthorityF
     "other-reader-data": [],
     "state-votes": [],
     "government-domains": [{ recordClass: "DOTGOV_REFERENCE", scope: DOTGOV_SCOPE, reader: readDotGovProjection }],
-    "ballot-contests": [manual("ballot-contests", readGenericBallotProjection)],
-    "ballot-az": [manual("az-sos-ballot", readAzBallotProjection)],
-    "ballot-nh": [manual("nh-curated-ballot", readNhBallotProjection)],
-    "candidate-profiles": [manual("candidate-profiles", readCandidateProfilesProjection),
-      { recordClass: DERIVED_CAMPAIGN_SITES_RECORD_CLASS, scope: DERIVED_CAMPAIGN_SITES_SCOPE, reader: readDerivedCampaignSites }],
-    "candidate-publications": [manual("candidate-corpus", readCandidateCorpusProjection),
-      { recordClass: DERIVED_CAMPAIGN_SITES_RECORD_CLASS, scope: DERIVED_CAMPAIGN_SITES_SCOPE, reader: readDerivedCampaignSites }],
-    "voting-sites": [{ ...VOTING_SITES_CONTRACT, reader: readVotingSitesProjection }],
     "ballot-navigation": [manual("ballot-navigation", (options) => readCuratedReaderProjection("ballot-navigation", options))],
     "official-filings": [manual("official-filings", (options) => readCuratedReaderProjection("official-filings", options))],
     "member-offices": [manual("member-offices", (options) => readCuratedReaderProjection("member-offices", options))],
@@ -109,7 +88,6 @@ function statePromotedEdgePointers(state: string): Readonly<Partial<Record<State
     recordClass, scope, reader: options => readPromotedCivicData(recordClass, scope, options),
   });
   const registry = { "registry-runtime": [pointer("REGISTRY_RUNTIME_BINDING", stateRegistryRuntimeScope(state))] };
-  if (!BALLOT_STATES.includes(state as BallotState)) return registry;
   return {
     ...registry,
     "ballot-contests": [pointer("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", state))],

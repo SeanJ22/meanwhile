@@ -1,5 +1,4 @@
 import type { Query } from "../facts/publish.ts";
-import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "./manual-contracts.ts";
 import type { RoutineRecordClass } from "./types.ts";
 
 const CURSOR = "reader-edge";
@@ -19,21 +18,19 @@ const SAVE_SQL = `INSERT INTO pass_cursor (name, position) VALUES ($1, $2)
 export interface EdgePointer { readonly recordClass: RoutineRecordClass; readonly scope: string }
 
 interface ReaderEdgeChanges {
-  /** What the edge covers that moved since it last published: promoted pointers, and the registry when facts are queued. */
+  /** The pointers promoted since the edge last published. */
   readonly pointers: readonly EdgePointer[];
+  /** Facts were queued since then; every state's facts are planned on a full publish. */
+  readonly facts: boolean;
   /** Marks these changes published; run only once the edge took them. */
   readonly save: () => Promise<void>;
 }
 
-const registry = MANUAL_PRODUCTION_SOURCE_CONTRACTS.find(contract => contract.id === "registry-runtime-bindings")!;
-
-/** The pointers promoted since the reader edge last published, read by promotion time. */
+/** What moved since the reader edge last published, read by promotion and queue time. */
 export async function readReaderEdgeChanges(query: Query): Promise<ReaderEdgeChanges> {
   const rows = await query(CHANGES_SQL, [CURSOR]);
   const through = String(rows.find(row => row.through !== null)!.through);
-  const pointers = rows.flatMap((row): EdgePointer[] => row.through !== null ? []
-    : row.record_class === "FACTS" ? [{ recordClass: registry.recordClass, scope: registry.scope }]
-      : [{ recordClass: row.record_class as RoutineRecordClass, scope: String(row.scope) }]);
-  const unique = [...new Map(pointers.map(pointer => [`${pointer.recordClass}:${pointer.scope}`, pointer])).values()];
-  return { pointers: unique, save: async () => { await query(SAVE_SQL, [CURSOR, through]); } };
+  const pointers = rows.flatMap((row): EdgePointer[] => row.through !== null || row.record_class === "FACTS" ? []
+    : [{ recordClass: row.record_class as RoutineRecordClass, scope: String(row.scope) }]);
+  return { pointers, facts: rows.some(row => row.record_class === "FACTS"), save: async () => { await query(SAVE_SQL, [CURSOR, through]); } };
 }

@@ -1,3 +1,4 @@
+import { statesForRegistryDivisions } from "../../civic-data/state-scopes.ts";
 import { OWNER_DISPATCH, withAssignment, type FreshnessObligation, type ObligationAssignment } from "../scheduler/obligation.ts";
 import type { WorkQuestion } from "../work-question.ts";
 import { standing } from "../scheduler/durable.ts";
@@ -87,10 +88,7 @@ export async function orderNationalPlaceWork(repos: ControlPlaneRepositories, zi
   return (await nationalPlaceWorkReading(repos, zips, now)).ordered;
 }
 
-/**
- * A mission's owed list, kept for a few minutes per decision. A whole-state mission spans thousands of divisions, so each
- * pass rebuilds only the scopes whose decision changed or whose reading went stale; the rest reuse their last owed list.
- */
+
 const READING_MEMO_MS = 5 * 60_000;
 const READING_MEMO_MAX = 32;
 const readingMemo = new Map<string, { readonly at: number; readonly items: PlaceOwedItem[] }>();
@@ -159,17 +157,26 @@ export async function nationalPlaceWorkReading(repos: ControlPlaneRepositories, 
     if (divisions.size) divisions.add("ocd-division/country:us");
     divisionsByReceipt.set(receiptId, divisions);
   }
-  const divisionIds = [...new Set([...divisionsByReceipt.values()].flatMap(ids => [...ids]))];
-  const capture = divisionIds.length ? await readHeldPlaceCapture(divisionIds, { now, bypassCache: true }) : { subjects: [], held: [] };
-  const itemsOf = (scope: (typeof scopes)[number]): PlaceOwedItem[] => {
-    const hit = remembered(scope);
-    if (hit !== null) return hit.items;
-    const items = buildPlaceOwedList({ divisions: [...divisionsByReceipt.get(scope.decision.receiptId)!].map(id => ({ id, label: id })),
-      subjects: capture.subjects, held: capture.held, now, zips: [...(inScope.get(scope.decision.receiptId) ?? [])] });
-    readingMemo.set(memoKeyOf(scope.decision), { at: nowMs, items });
-    while (readingMemo.size > READING_MEMO_MAX) readingMemo.delete(readingMemo.keys().next().value as string);
-    return items;
-  };
+  const readingGroups = new Map<string, typeof scopes>();
+  for (const scope of rebuilt) {
+    const ids = [...(divisionsByReceipt.get(scope.decision.receiptId) ?? [])];
+    const key = statesForRegistryDivisions(ids).join();
+    readingGroups.set(key, [...(readingGroups.get(key) ?? []), scope]);
+  }
+  const rebuiltItems = new Map<string, PlaceOwedItem[]>();
+  for (const group of readingGroups.values()) {
+    const ids = [...new Set(group.flatMap(scope => [...(divisionsByReceipt.get(scope.decision.receiptId) ?? [])]))];
+    const capture = ids.length ? await readHeldPlaceCapture(ids, { now, bypassCache: true }) : { subjects: [], held: [] };
+    for (const scope of group) {
+      const items = buildPlaceOwedList({ divisions: [...(divisionsByReceipt.get(scope.decision.receiptId) ?? [])].map(id => ({ id, label: id })),
+        subjects: capture.subjects, held: capture.held, now, zips: [...(inScope.get(scope.decision.receiptId) ?? [])] });
+      rebuiltItems.set(scope.decision.receiptId, items);
+      readingMemo.set(memoKeyOf(scope.decision), { at: nowMs, items });
+      while (readingMemo.size > READING_MEMO_MAX) readingMemo.delete(readingMemo.keys().next().value as string);
+    }
+  }
+  const itemsOf = (scope: (typeof scopes)[number]): PlaceOwedItem[] =>
+    rebuiltItems.get(scope.decision.receiptId) ?? remembered(scope)?.items ?? [];
   const readings = placeWorkReadings(row?.value, scopes.map(scope => ({
     // A whole-state mission is ordered and targeted under the state's own place key.
     key: scope.decision.geography.type === "state" ? `st:${scope.decision.geography.stateAbbr.toLowerCase()}`
@@ -319,12 +326,7 @@ function obligationOf(id: string, recordClass: string, subjectId: string, routeI
   };
 }
 
-/**
- * Every requirement instance the registry defines for one government: its
- * registry routes (with the ids the local-jurisdictions provider gives them)
- * and its meetings discovery need (with the ids the meetings-discovery
- * provider gives it). Sorted by id.
- */
+
 export function requirementsFor(
   reg: JurisdictionRegistry,
   j: Jurisdiction,
@@ -594,11 +596,7 @@ export interface TargetPlan {
 /** A MISSING instance queued for writing, with the Send it is written under (the first that reached it). */
 export type PlannedWrite = PlannedInstance & { readonly target: DispatchWorkTarget };
 
-/**
- * A row a Send reached that is already on a clock and does not yet record that
- * Send. It is recorded REORDERED; a created row whose creator is not on record
- * is left unmarked rather than guessed.
- */
+
 export interface PlannedMark {
   readonly obligationId: string;
   readonly target: DispatchWorkTarget;
@@ -625,12 +623,7 @@ export function assignmentEntry(target: DispatchWorkTarget, relation: Obligation
   };
 }
 
-/**
- * Classify every requirement instance of every target, and order the missing
- * ones for writing: DISPATCH targets first (oldest first), then scopes in run
- * order, each target's governments by id. A shared instance is written once,
- * under the first.
- */
+
 export function planDispatchWork(input: {
   readonly targets: readonly DispatchWorkTarget[];
   readonly world: DispatchWorkWorld;
@@ -702,9 +695,9 @@ export function planDispatchWork(input: {
     }
 
     const members = new Set([...units.placed.map((u) => u.jurisdiction.id), ...(target.kind === "SCOPE" ? target.scope.members : [])]);
-    // Shared candidate/finance work already has its own standing provider. Mark
-    // the existing row with this Send so retries and later cycles retain its
-    // hunt budget; never manufacture a second acquisition clock.
+
+
+
     if (target.kind === "SCOPE") for (const obligation of world.corpus) {
       const row = world.durable.get(obligation.id);
       if (members.has(obligation.subjectId) && row?.active !== false && row !== undefined && !recorded(row) && !marks.some(m => m.obligationId === obligation.id && m.target.key === target.key)) {
@@ -861,10 +854,7 @@ export interface DispatchWorkTargetReading {
   readonly requirements: DispatchWorkRequirementCounts;
   /** Standing obligations about the target's governments, of every standing obligation this cycle. */
   readonly reordered: { readonly obligations: number; readonly of: number };
-  /**
-   * This Send recorded on the rows it reached this cycle, and the REORDERED
-   * records still to write. Absent on older readings.
-   */
+
   readonly assignment?: { readonly recordedThisCycle: number; readonly marksDeferred: number; readonly marksFailed: number };
   /** Plain sentences: why created work waits, which budgets bind, what is not built. */
   readonly says: readonly string[];
@@ -1066,11 +1056,7 @@ export function dispatchWorkSentence(t: DispatchWorkTargetReading): string {
   );
 }
 
-/**
- * The counts one DISPATCH carries on the owner's dispatch record
- * (`ResearchState.ownerDispatch.work`). The full receipt is the target reading
- * under the same key in `ResearchState.dispatchWork.targets`.
- */
+
 export interface OwnerDispatchWork {
   /** `dispatch:<intent id>`: the target reading's key. */
   readonly key: string;
@@ -1126,12 +1112,7 @@ export function scopeWorkTarget(scope: PlannedScope): DispatchWorkTarget {
   };
 }
 
-/**
- * The DISPATCH targets an earlier cycle left with work still owed (deferred,
- * or refused by the store), carried forward from the research state it wrote.
- * A DISPATCH is honored once; the remainder of what it owes is not dropped
- * with the honoring. A scope needs no carrying: it stays selected.
- */
+
 export function carriedDispatchTargets(prior: unknown, cancelled: ReadonlySet<string> = new Set()): DispatchWorkTarget[] {
   if (!isDispatchWorkReading(prior)) return [];
   return prior.targets

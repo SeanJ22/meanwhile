@@ -162,7 +162,7 @@ export function phaseFromSql(sql: string): { phase: MigrationPhase; signals: Con
 }
 
 /** Hand-written, one entry per committed migration; the suite checks each against phaseFromSql. */
-export const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
+const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
   "R1_edge_changes": { phase: "expand", why: "Indexes promotion times so the reader edge reads only what was promoted since it last published." },
   "0038_src_mn_federal_money_lookup": { phase: "expand", why: "Indexes exact federal native IDs without indexing source descriptions or loading state inventories." },
   "0000_square_stryfe": {
@@ -370,6 +370,7 @@ export const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
     phase: "expand",
     why: "Adds nullable report context columns. Older feedback writers keep working and existing reports retain unknown context.",
   },
+  "0039_sb01b_state_pointer_retirement": { phase: "expand", why: "Permits retiring replaced national pointers only after every exact state replacement is GOOD; existing writers retain their mutation rules." },
 };
 
 /** The declaration for a tag, or null when there is none. Never a default. */

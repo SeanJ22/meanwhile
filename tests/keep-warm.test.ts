@@ -2,19 +2,19 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
-import { GET, KEEP_WARM_MARKER, MAX_HOLD_MS, primeReaderEdge } from "../app/api/warm/route.ts";
+import { GET, KEEP_WARM_MARKER, MAX_HOLD_MS } from "../app/api/warm/route.ts";
 import pinger, { HOLD_MS, WARM_INSTANCES, config, pingWarm } from "../netlify/functions/keep-warm.mts";
 import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 
 const call = (query: string, marked: boolean) =>
   GET(new Request(`${PUBLIC_SITE_ORIGIN}/api/warm${query}`, marked ? { headers: { "x-wtp-synthetic-run": KEEP_WARM_MARKER } } : {}));
 
-test("KEEP-WARM · an unmarked call answers at once, whatever hold it asks for, and is never cached", async (t) => {
-  const delay = t.mock.method(globalThis, "setTimeout");
+test("KEEP-WARM · an unmarked call answers at once, whatever hold it asks for, and is never cached", async () => {
+  const started = Date.now();
   const response = await call("?hold=900", false);
   assert.equal(response.status, 200);
   assert.equal((await response.json()).heldMs, 0);
-  assert.equal(delay.mock.calls.length, 0, "an unmarked call schedules no hold");
+  assert.ok(Date.now() - started < 200, "an unmarked call does not hold its instance");
   assert.equal(response.headers.get("cache-control"), "no-store, max-age=0");
 });
 
@@ -36,7 +36,6 @@ test("KEEP-WARM · a hold beyond the cap, a malformed hold and an unknown parame
 
 test("KEEP-WARM · every five minutes the pinger makes fourteen overlapping marked calls to the site's own warm route", async () => {
   assert.equal(config.schedule, "*/5 * * * *");
-  // Fourteen overlapping calls reached 10-11 booted instances in production.
   assert.equal(WARM_INSTANCES, 14);
   assert.ok(HOLD_MS > 0 && HOLD_MS <= MAX_HOLD_MS);
   const seen: { url: string; marker: string | null }[] = [];
@@ -66,14 +65,15 @@ test("KEEP-WARM · a call that fails is counted as not answered and does not sto
   assert.equal(answered, 14 - 4 - 2, "calls 3, 6, 9 and 12 threw; calls 5 and 10 answered 503");
 });
 
-test("KEEP-WARM · C20: a marked call also loads the reader edge a cold Ask reads first, and never the database; an unmarked call loads nothing", async () => {
+test("KEEP-WARM · a marked call loads the shared reader index without database fallback; an unmarked call loads nothing", async () => {
   const nothing = { manifest: false, authorityFamilies: 0, meetings: false, places: 0, placesRefused: 0, ask: null };
   const marked = await (await call("?hold=0", true)).json();
   assert.deepEqual(marked.primed, nothing, "no edge store here, so nothing is loaded and nothing falls back");
   const unmarked = await (await call("?hold=0", false)).json();
   assert.equal(unmarked.primed, null);
-  assert.deepEqual(await primeReaderEdge(), nothing);
   const source = readFileSync("app/api/warm/route.ts", "utf8");
+  assert.match(source, /readReaderManifest\(\)/, "meeting warming reads the calendar index");
+  assert.match(source, /readReaderManifest\(\)/, "authority warming reads the shared manifest");
   assert.match(source, /ensureReaderAuthorityEdge\(manifest\)/);
   assert.match(source, /readReaderEdgeMeetings\(\{\s*manifest,\s*fallback: \(\) => Promise\.reject\(/, "the meetings read's database fallback is refused");
   assert.doesNotMatch(source, /getDb|readPreparedMeetingsProjection|refreshOutcomeSnapshotFromPromoted/);

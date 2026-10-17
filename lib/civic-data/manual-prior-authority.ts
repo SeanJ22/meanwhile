@@ -5,7 +5,7 @@ import { directPositiveSourceUrls } from "./manual-source-isolation.ts";
 import { authorityForManualReceipt } from "./source-authority.ts";
 import { trustedLkgImportEvidenceIssue } from "./trusted-lkg-import.ts";
 import { parseValidationReceipt } from "./receipt.ts";
-import { registryMemberCitedUrls } from "../registry/cited-urls.ts";
+import { registryMemberCitedUrls } from "../registry/runtime-data-plane.ts";
 import type { CandidateVersionRecord, RoutineCandidate } from "./types.ts";
 
 const hash = canonicalCivicDataHash;

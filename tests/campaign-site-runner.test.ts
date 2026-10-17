@@ -39,7 +39,7 @@ import { processRegisteredManualCandidate, processRegisteredRoutineCandidate } f
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import { promotedInputRef } from "../lib/civic-data/derived-authority.ts";
 import { derivedAuthorityFor } from "../lib/civic-data/derived-door.ts";
-import { documentsFor } from "../lib/candidates/positions.ts";
+
 import { answerFor, type CandidateCorpus } from "../lib/candidates/corpus.ts";
 import { derivedCampaignSitesProjectionIssue } from "../lib/civic-data/derived-campaign-sites.ts";
 import {
@@ -61,10 +61,63 @@ import {
 } from "../lib/civic-data/derived-campaign-site-writer.ts";
 import { stateBallotContractId, stateBallotScope } from "../lib/civic-data/state-scopes.ts";
 import { DUARTE, KAPNER, MAYES, TANG_WILLIAMS, committedSubjects, fixture, servedRuntime, sha256, subject } from "./helpers/campaign-sites.ts";
-import { installAzBallot, installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+import type { BallotSet } from "../lib/ballot/types.ts";
+import type { GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
+import type { Contest } from "../lib/ballot/types.ts";
+import type { LineupOutcome } from "../lib/identity/types.ts";
+import { requireBallotState } from "../lib/civic-data/state-scopes.ts";
+import { currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
+
+import { ballotElectionKey } from "../lib/ballot/generic-projection.ts";
+import { installManualValue } from "./helpers/promoted-fixtures.ts";
+import { readGenericBallotProjection } from "../lib/ballot/generic-projection.ts";
+
+
+
+interface SyntheticLineupNominee {
+  readonly name: string;
+  readonly partyLabel: string;
+  readonly outcome: LineupOutcome;
+  readonly candidacyId?: string;
+  readonly filingParty?: string;
+}
+
+interface SyntheticContest {
+  readonly id: string;
+  readonly title: string;
+  readonly ocdId?: string;
+  readonly type?: Contest["type"];
+  readonly candidacies?: readonly { readonly id: string; readonly givenName: string; readonly familyName: string; readonly partyLabel?: string | null }[];
+  readonly lineup?: readonly SyntheticLineupNominee[];
+}
+
+function syntheticAzBallot(contests?: readonly SyntheticContest[]): BallotSet {
+  const fixtures = JSON.parse(readFileSync(new URL("./fixtures/synthetic-az-ballots.json", import.meta.url), "utf8")) as Record<string, BallotSet>;
+  const ballot = fixtures[JSON.stringify(contests ?? null)];
+  if (!ballot) throw new Error("The synthetic Arizona ballot input has no recorded fixture");
+  return ballot;
+}
+
+async function installBallots(...ballots: BallotSet[]): Promise<GenericBallotProjection> {
+  const installed: GenericBallotProjection = { kind: "ballot-contests", ballots: {} };
+  for (const ballot of ballots.length ? ballots : [syntheticAzBallot()]) {
+    const state = requireBallotState(ballot.election.state);
+    const previous = currentReaderAuthorityEdge()?.promoted?.get(`BALLOT_CANDIDACY:${stateBallotScope("ballot-contests", state)}`);
+    const current = previous?.kind === "PROMOTED" ? previous.projection.payload as GenericBallotProjection : null;
+    const value: GenericBallotProjection = { kind: "ballot-contests", ballots: {
+      ...(current?.ballots ?? {}), [ballotElectionKey(ballot)]: ballot,
+    } };
+    installManualValue(stateBallotContractId("ballot-contests", state), value, `test:ballot-contests:${state}`);
+    assert.equal((await readGenericBallotProjection(state)).kind, "PROMOTED", `${state} ballot`);
+    Object.assign(installed.ballots, value.ballots);
+  }
+  return installed;
+}
+
 
 await installRegistryAuthority();
-await installAzBallot();
+await installBallots();
 
 
 type CaptureFixture = Omit<Parameters<typeof deriveCampaignSitesFromCaptures>[0], "readCaptures"> & {
@@ -444,8 +497,8 @@ test("a runner cycle publishes source-bound links and publications to the exact 
   const oldHash = await promotePriorCorpus(store);
   const inherited = await stateCampaignHoldings(store, "NH", PUBLISH);
   const arizona = await stateCampaignHoldings(store, "AZ", PUBLISH);
-  assert.ok(documentsFor(tangKeys[0], inherited.corpus).some(doc => doc.documentUrl === LILY && doc.text?.length && doc.sourceContentHash), "the promoted state payload contains verified page text");
-  assert.ok(documentsFor(MAYES_KEY, arizona.corpus).some(doc => doc.contentHash === oldHash), "prior GOOD publications survive");
+  assert.ok(inherited.corpus.documents.filter(row => row.candidateKey === tangKeys[0]).some(doc => doc.documentUrl === LILY && doc.text?.length && doc.sourceContentHash), "the promoted state payload contains verified page text");
+  assert.ok(arizona.corpus.documents.filter(row => row.candidateKey === MAYES_KEY).some(doc => doc.contentHash === oldHash), "prior GOOD publications survive");
   assert.equal(inherited.links[tangKeys[0]]!.campaign?.url, LILY);
   assert.ok(!inherited.corpus.documents.some(document => document.contentHash === oldHash), "NH publications cannot carry AZ records");
   assert.ok(!arizona.corpus.documents.some(document => document.candidateKey === tangKeys[0]), "AZ publications cannot carry NH records");
@@ -526,8 +579,8 @@ test("a bounded linked publication capture reaches the existing derived corpus w
   assert.equal(promoted.candidate.state, "PROMOTED", JSON.stringify(promoted.candidate.receipt?.checks.filter(row => row.verdict !== "PASS")));
   await promotePriorCorpus(store);
   const holdings = await stateCampaignHoldings(store, "NH", new Date(clock.ms + 2000).toISOString());
-  assert.ok(documentsFor(key, holdings.corpus).some(row => row.documentUrl === articleUrl && row.text?.includes("accessible health care")));
-  const firstDocument = documentsFor(key, holdings.corpus).find(row => row.documentUrl === articleUrl)!;
+  assert.ok(holdings.corpus.documents.filter(row => row.candidateKey === key).some(row => row.documentUrl === articleUrl && row.text?.includes("accessible health care")));
+  const firstDocument = holdings.corpus.documents.filter(row => row.candidateKey === key).find(row => row.documentUrl === articleUrl)!;
   assert.equal(firstDocument.publicationDate?.date, "2026-09-22");
   assert.equal(article.slice(firstDocument.publicationDate!.start, firstDocument.publicationDate!.end), firstDocument.publicationDate!.quote);
   assert.notEqual(firstDocument.publicationDate?.date, firstDocument.retrievedAt.slice(0, 10), "source publication date is not a retrieval date");
@@ -537,7 +590,7 @@ test("a bounded linked publication capture reaches the existing derived corpus w
     linkedPublications: [corrupted], profiles, now: new Date(clock.ms + 3000).toISOString() }));
   assert.equal(refused.plan?.held.some(row => row.code === "LINKED_PUBLICATION_UNVERIFIED"), true);
   assert.equal(refused.plan?.records.flatMap(row => row.publications ?? []).some(row => row.document.documentUrl === articleUrl), false);
-  assert.ok(documentsFor(key, holdings.corpus).some(row => row.documentUrl === articleUrl), "An invalid later read does not replace the previously promoted document.");
+  assert.ok(holdings.corpus.documents.filter(row => row.candidateKey === key).some(row => row.documentUrl === articleUrl), "An invalid later read does not replace the previously promoted document.");
 
   clock.ms += 60 * 60 * 1000;
   const revisedArticle = article.replace("2026-09-22", "2026-09-23");
@@ -569,7 +622,7 @@ test("a bounded linked publication capture reaches the existing derived corpus w
     new Date(clock.ms + 1000).toISOString());
   assert.equal(revisedPromotion.candidate.state, "PROMOTED");
   const revisedHoldings = await stateCampaignHoldings(store, "NH", new Date(clock.ms + 2000).toISOString());
-  const answer = answerFor(documentsFor(key, revisedHoldings.corpus), ["health care"]);
+  const answer = answerFor(revisedHoldings.corpus.documents.filter(row => row.candidateKey === key), ["health care"]);
   assert.equal(answer.kind, "MATCHED");
   if (answer.kind === "MATCHED") {
     assert.equal(answer.passages.length, 1, "unchanged source text is not counted twice");
@@ -652,7 +705,7 @@ test("already captured linked pages from another job reach the corpus without a 
     assert.equal(publication.evidence.attemptId, capture.attempt.id);
     assert.equal(publication.evidence.requestedUrl, capture.record.canonicalUrl);
     assert.equal(publication.evidence.finalUrl, capture.vaultRetrievalUrl);
-    assert.ok(documentsFor(key, holdings.corpus).some(row => row.id === publication.document.id));
+    assert.ok(holdings.corpus.documents.filter(row => row.candidateKey === key).some(row => row.id === publication.document.id));
   }
 
   const link = links[0]!, capture = captures[0]!;
@@ -1011,7 +1064,7 @@ test("who already carries a campaign link is read by the door's own rule: a revi
   const link = { url: "https://www.krismayes.com", verification: "Fetched 2026-08-13: 'Kris Mayes for Arizona Attorney General'.", attemptedAt: "2026-08-13" };
   const official = { url: "https://azgovernor.gov/", verification: "Fetched 2026-08-13: the Governor's office.", attemptedAt: "2026-08-13" };
   const { subjects, linked } = campaignSiteSubjectsFromHoldings({
-    az: null, nh: null, nj: null, general,
+    general,
     profiles: {
       cards: { curatedAt: "2026-09-08", note: "reviewed cards", cards: {}, hunts: [] },
       links: { curatedAt: "2026-09-08", note: "reviewed links", links: { [MAYES_KEY]: { official: null, campaign: link }, "ballot-az-pima:governor:hobbs-katie": { official, campaign: null } }, hunts: [] },
@@ -1048,7 +1101,7 @@ test("the paid lane stays closed under the owner's pause, and the pass is plain 
   assert.match(block, /guardedOpenBytes\("discovery-web", "campaign-site-chain", fetch, \{ followRedirects: false \}\)/);
   assert.match(block, /spaceOut: spacer/);
   assert.doesNotMatch(block, /readRoundVault|indexVault/, "state campaign work locates only its attributed captures");
-  assert.match(runner, /campaignSiteCycleLine\(campaignSites\)/, "the pass reaches the cycle's digest");
+  assert.match(runner, /campaignSitesLine\(campaignSites\)/, "the pass reaches the cycle's digest");
 });
 
 function approvalFor(url: string, body: string, readAt: string, candidacyId = TANG_WILLIAMS): CampaignSiteApprovedRecord {
@@ -1314,7 +1367,7 @@ test("national authority website URLs reach the verifier and publish candidate p
       candidacies: [{ id: candidateId, contestId, givenName: "Jane", familyName: "Doe", incumbent: null,
         partyLabel: null, slogan: null, websiteUrl: `https://janedoe${state.toLowerCase()}.example/`, provenance }], measures: [] }];
   }));
-  const holdings = campaignSiteSubjectsFromHoldings({ az: null, nh: null, nj: null, profiles, corpus: { documents: [] } as never,
+  const holdings = campaignSiteSubjectsFromHoldings({ profiles, corpus: { documents: [] } as never,
     failures: [], general: { kind: "ballot-contests", ballots } as never }, T1);
   assert.equal(holdings.subjects.size, 2);
   const pages = Object.fromEntries([...holdings.subjects.values()].flatMap(subject => {

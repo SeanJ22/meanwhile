@@ -29,7 +29,6 @@ export const ROUTINE_RECORD_CLASSES = [
   "CENSUS_REFERENCE",
   "CENSUS_GEOGRAPHY",
   "MEETING",
-  "BALLOT_FILING",
   "BALLOT_CANDIDACY",
   "CANDIDATE_PROFILE",
   "CANDIDATE_PUBLICATION",
@@ -519,6 +518,17 @@ export type TrustedLkgTransferEvidence =
   | TrustedLkgImportEvidence
   | TrustedLkgReattestationEvidence;
 
+export interface StateRetirementEvidence {
+  readonly kind: "STATE_AUTHORITY_RETIREMENT";
+  readonly contractId: string;
+  readonly state: string;
+  readonly unitSha256: string;
+  readonly origin: { readonly versionId: string; readonly recordClass: string; readonly scope: string;
+    readonly readModelHash: string; readonly sourceAuthenticity: string };
+  readonly priorVersionId: string | null;
+  readonly readModelHash: string;
+}
+
 /** `readModel` is the bounded projection Reader consumes; Reader never queries staging rows. */
 export interface RoutineCandidate {
   readonly id: string;
@@ -540,6 +550,7 @@ export interface RoutineCandidate {
   readonly changeSet?: RoutineChangeSet;
   readonly removalEvidence?: readonly RoutineRemovalEvidence[];
   readonly bootstrapImport?: TrustedLkgTransferEvidence;
+  readonly stateRetirement?: StateRetirementEvidence;
   readonly excludedFacts?: readonly {
     readonly key?: string | null;
     readonly code: string;

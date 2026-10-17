@@ -1,10 +1,10 @@
 import { jurisdictionFromOcdId } from "../coverage/states.ts";
-import { readPromotedEdgeFirst } from "../registry/runtime-edge.ts";
+import { currentStateAuthorityProjection, readStateAuthorityProjection } from "../civic-data/state-reader.ts";
+import { requireBallotState, stateBallotScope } from "../civic-data/state-scopes.ts";
 import type { BallotSet } from "./types.ts";
 import { measureRecordIssue } from "./measure-record-contract.ts";
 import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 
-export const GENERIC_BALLOT_SCOPE = "US:state-election-ballots";
 
 export interface GenericBallotProjection {
   readonly kind: "ballot-contests";
@@ -13,7 +13,7 @@ export interface GenericBallotProjection {
 export const ballotElectionKey = (ballot: BallotSet) => `${ballot.election.state.toUpperCase()}:${ballot.election.id}`;
 
 export function genericBallotProblems(value: GenericBallotProjection, expectedState?: string): string[] {
-  if (!value || value.kind !== "ballot-contests" || !value.ballots || Array.isArray(value.ballots)) return ["Generic ballot records are missing."];
+  if (!value || value.kind !== "ballot-contests" || !value.ballots || typeof value.ballots !== "object" || Array.isArray(value.ballots)) return ["Generic ballot records are missing."];
   const problems: string[] = [];
   const states = new Set<string>();
   for (const [key, ballot] of Object.entries(value.ballots)) {
@@ -69,17 +69,19 @@ export function genericBallotProblems(value: GenericBallotProjection, expectedSt
         ballot.measureRecords.some(row => measureRecordIssue(row) || contestById.get(row.contestId)?.type !== "MEASURE" ||
           !measureContestIds.has(row.contestId) && (analysisByContest.get(row.contestId)?.analysisUrl !== row.sourceUrl || analysisByContest.get(row.contestId)?.contentHash !== row.sourceHash)))) problems.push("A measure record lacks its stable source-bound identity.");
   }
-  if (expectedState && states.size !== 1) problems.push("A ballot projection must contain exactly one state.");
+  if (expectedState && states.size > 1) problems.push("A ballot projection must contain at most one state.");
   return problems;
 }
 
-export async function readGenericBallotProjection(options: PromotedCivicDataReadOptions = {}) {
-  const read = (readOptions: PromotedCivicDataReadOptions) => readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", GENERIC_BALLOT_SCOPE, readOptions);
-  const result = Object.keys(options).length ? await read(options)
-    : await readPromotedEdgeFirst("BALLOT_CANDIDACY", GENERIC_BALLOT_SCOPE, read, "General ballot");
-  if (result.kind === "PROMOTED") {
-    const problems = genericBallotProblems(result.value);
-    if (problems.length) throw new Error(`GENERIC_BALLOT_INVALID:${problems.join(" ")}`);
-  }
-  return result;
+export function currentGenericBallotProjection(state: string): GenericBallotProjection {
+  const read = currentStateAuthorityProjection<GenericBallotProjection>("ballot-contests", state)?.result;
+  if (read?.kind === "PROMOTED" || read?.kind === "BOOTSTRAP") return read.value;
+  throw new Error(`Ballot for ${state} is ${read?.kind ?? "UNREAD"}; read its authority before using the projection.`);
+}
+
+export async function readGenericBallotProjection(state: string, options: PromotedCivicDataReadOptions = {}) {
+  const key = requireBallotState(state);
+  return Object.keys(options).length
+    ? readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", key), options)
+    : (await readStateAuthorityProjection<GenericBallotProjection>("ballot-contests", key)).result;
 }

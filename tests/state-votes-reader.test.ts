@@ -22,8 +22,27 @@ import { resetGroundedState } from "../lib/ask/grounded-state.ts";
 import type { SeatHolder } from "../lib/officials/lookup.ts";
 import type { StateVotesSnapshot } from "../lib/sources/legiscan/types.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
-import { installAbsent, installPromotedValue, installRegistryAuthority, installFederalVotes, promotedFixtureBundle } from "./helpers/promoted-fixtures.ts";
+import { installAbsent, installPromotedValue, installRegistryAuthority, installFederalVotes } from "./helpers/promoted-fixtures.ts";
 import { readerText } from "./helpers/reader-markup.ts";
+import type { ReaderAuthorityEdgeBundle } from "../lib/registry/runtime-edge.ts";
+import { currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
+
+
+
+
+
+
+
+
+
+function promotedFixtureBundle(extra: ReaderAuthorityEdgeBundle = {}): ReaderAuthorityEdgeBundle {
+  const current: ReaderAuthorityEdgeBundle = currentReaderAuthorityEdge() ?? {};
+  return { stateAuthorities: current.stateAuthorities,
+    ...(current.federalDirectory ? { federalDirectory: current.federalDirectory } : {}),
+    ...(current.stateLegislators ? { stateLegislators: current.stateLegislators } : {}),
+    ...extra, promoted: new Map([...(current.promoted ?? []), ...(extra.promoted ?? [])]) };
+}
+
 
 interface Sample {
   state: string; session: string; sourceUrl: string; fixtureArchive: string; fixtureArchiveSha256: string;

@@ -1,9 +1,9 @@
 import { types } from "node:util";
 import { AsyncLocalStorage } from "node:async_hooks";
-import { STATE_BALLOT_FAMILIES, stateFromBallotScope } from "./state-scopes.ts";
-import { stateFromRegistryRuntimeScope } from "./state-scopes.ts";
+import type { GenericBallotProjection } from "../ballot/generic-projection.ts";
+import { STATE_BALLOT_FAMILIES, stateFromBallotScope, stateFromRegistryRuntimeScope } from "./state-scopes.ts";
 import { canonicalCivicDataHash } from "./canonical-hash.ts";
-import type { PromotedProjection, RoutineCandidate } from "./types.ts";
+import type { PromotedProjection, RoutineCandidate, NormalizationEvidence } from "./types.ts";
 
 const publicationRead = new AsyncLocalStorage<PromotedProjection>();
 
@@ -142,8 +142,6 @@ export function decodeStateCandidate(value: unknown): unknown {
 }
 
 import { civicRecordFacts, civicRecordsFor } from "./changes.ts";
-import type { GenericBallotProjection } from "../ballot/generic-projection.ts";
-import type { NormalizationEvidence } from "./types.ts";
 
 export interface StatePublicationPrior {
   readonly versionId: string;

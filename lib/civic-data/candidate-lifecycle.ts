@@ -61,7 +61,7 @@ export async function processRoutineCandidate(
   expectedBaseVersionId: string | null | undefined = undefined,
   registeredDoor: symbol | null = null,
   sourceProjectionVerification: RoutineReaderVerification | null = null,
-  options: { readonly confirmUnchanged?: boolean; readonly vault?: EvidenceStore } = {},
+  options: { readonly confirmUnchanged?: boolean; readonly vault?: EvidenceStore; readonly retirementAuthority?: RoutineCandidate["stateRetirement"] } = {},
 ): Promise<PromotionOutcome> {
   const productionStore = store instanceof PostgresRoutineDataStore;
   if (productionStore && !isRegisteredCandidateDoor(registeredDoor)) {
@@ -70,6 +70,8 @@ export async function processRoutineCandidate(
   if (Object.prototype.hasOwnProperty.call(inputCandidate, "bootstrapImport") && inputCandidate.bootstrapImport !== undefined) {
     throw new Error("TRUSTED_LKG_ADMISSION_RETIRED");
   }
+  if (inputCandidate.stateRetirement && inputCandidate.stateRetirement !== options.retirementAuthority)
+    throw new Error("STATE_RETIREMENT_REQUIRES_TERMINAL_DOOR");
   const scoped = statePublicationScope(inputCandidate.scope);
   let base = scoped && store.readStatePublicationBase ? await store.readStatePublicationBase(inputCandidate.recordClass, inputCandidate.scope) : null;
   let current = base ? base.current : await store.readPromotion(inputCandidate.recordClass, inputCandidate.scope);
@@ -143,6 +145,7 @@ export async function processRoutineCandidate(
       passed: sourceProjectionVerification.status === "PASS",
       detail: sourceProjectionVerification.detail,
     }]),...(nativeRetirementCheck ? [nativeRetirementCheck] : [])],
+    options.retirementAuthority,
   );
     // A re-check whose read model is exactly the pointed one is a receipted no-change; any refusal falls through to
     // the ordinary candidate and promotion below.

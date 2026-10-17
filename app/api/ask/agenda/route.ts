@@ -7,6 +7,8 @@ import { intakeLimits, isSameOriginSubmission } from "@/lib/signal/intake-limits
 import { ripcordPulled } from "@/lib/ripcords";
 import { SlidingWindowLimiter } from "@/lib/signal/rate-limit";
 import { meetingListingKnowledgeFor } from "@/lib/ask/meeting-knowledge";
+import { readRegistryRuntimeProjection } from "@/lib/registry/runtime-read-model";
+import { statesForRegistryDivisions } from "@/lib/civic-data/state-scopes";
 
 
 
@@ -111,6 +113,7 @@ export const POST = readerRoute("/api/ask/agenda", async function POST(request: 
     if (!meeting) {
       return Response.json({ error: "unknown meeting" }, { status: 400 });
     }
+    await readRegistryRuntimeProjection(statesForRegistryDivisions([meeting.ocdId ?? "", meeting.bodyId ?? ""]));
     const forMeeting = documents.filter((d) => d.meetingId === meetingId);
     // Newest retrieval wins — an agenda is revised, and the revision is the
     // one the reader is going to.
@@ -162,4 +165,4 @@ export const POST = readerRoute("/api/ask/agenda", async function POST(request: 
     { error: "this route answers one meeting's agenda; pass meetingId" },
     { status: 400 },
   );
-});
+}, ["registry-runtime"]);

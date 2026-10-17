@@ -6,9 +6,8 @@ import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { assignment } from "./cli-args.mts";
 import { REFERENCE_DIR } from "../lib/reference/index.ts";
-import { REGISTRY_RUNTIME_SCOPE, type RegistryRuntimeCarton } from "../lib/registry/runtime-data-plane.ts";
+import { readRegistryRuntimePrior } from "../lib/registry/runtime-data-plane.ts";
 import { readRegistrationProjection } from "../lib/registration/reader.ts";
-import { readPlacePointerSlice } from "../lib/civic-data/held-place-slices.ts";
 import { requireBallotState } from "../lib/civic-data/state-scopes.ts";
 import type { Division, Registry } from "../lib/registry/types.ts";
 import { CENSUS_BENCHMARK, CENSUS_GEOCODER_URL, parseCensusPoint } from "../lib/geo/census-geocoder.ts";
@@ -196,11 +195,10 @@ async function main() {
     let publications = 0;
     {
       const registeredDivisions = registration.kind === "PROMOTED" ? registration.value.divisions : [];
-      const ids = [...new Set([...registeredDivisions.map(row => row.ocdId), ...registered.map(door => door.scope.ocdId)])];
-      const reviewed = await readPlacePointerSlice<RegistryRuntimeCarton>("REGISTRY_RUNTIME_BINDING", REGISTRY_RUNTIME_SCOPE, ids);
-      const divisions = [...new Map([...registeredDivisions, ...reviewed.value?.registry.divisions ?? []].map(row => [row.ocdId, row])).values()];
+      const reviewed = await readRegistryRuntimePrior(store, new Date().toISOString(), state);
+      const divisions = [...new Map([...registeredDivisions, ...reviewed?.payload.registry.divisions ?? []].map(row => [row.ocdId, row])).values()];
       const bodies = [...new Map([...(registration.kind === "PROMOTED" ? registration.value.bodies : []),
-        ...reviewed.value?.registry.bodies ?? []].map(row => [row.id, row])).values()];
+        ...reviewed?.payload.registry.bodies ?? []].map(row => [row.id, row])).values()];
       const localRegistry = { divisions, bodies };
       const stateDoors = registered.filter(door => door.scope.state === state);
       const roots = votingChiefRoots(stateDoors);

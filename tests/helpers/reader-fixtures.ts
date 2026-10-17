@@ -1,8 +1,4 @@
-/**
- * Meetings, meeting outcomes, official actions, candidate profiles and pilot-county ballots for reader tests, installed on the same process edge as
- * `promoted-fixtures.ts` (through its `installPromotedValue`). Nothing here reads a deleted seed file: the
- * values come from kept recorded fixtures (`tests/fixtures/`), plus small synthetic rows each helper names.
- */
+
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -18,27 +14,17 @@ import type { Meeting } from "../../lib/sources/types.ts";
 import type { CandidateCardData } from "../../lib/ballot/candidate-cards.ts";
 import type { CandidateLinks } from "../../lib/ballot/candidate-sites.ts";
 import type { CandidateProfilesProjection } from "../../lib/civic-data/manual-projections.ts";
-import { readCandidateProfilesProjection, readNhBallotProjection } from "../../lib/civic-data/manual-read-models.ts";
-import type { AzBallotProjection, NhBallotProjection } from "../../lib/civic-data/manual-projections.ts";
-import type { CandidacyRemoval, Contest } from "../../lib/ballot/types.ts";
-import type { MeasureRecord } from "../../lib/ballot/measure-records.ts";
-import { requiredRoutineContract } from "../../lib/civic-data/contracts.ts";
-import { readNjMorrisFiling, type NjMorrisContactDocument, type NjMorrisReadModel, type RawFile } from "../../lib/sources/ballot-nj-morris/index.ts";
-import { installAbsent, installManualValue, installPromotedValue, syntheticAzBallot } from "./promoted-fixtures.ts";
+
+
+
+import { installAbsent, installPromotedValue } from "./promoted-fixtures.ts";
 
 const ROOT = join(import.meta.dirname, "..", "..");
 
-/* ------------------------------------------------------------------ meeting outcomes */
-
-/** The recorded Pima Legistar outcome store (`tests/fixtures/legistar-outcome-store`): four sittings of the Board of Supervisors. */
 export function pimaOutcomeFixture(): OutcomeSnapshot {
   return JSON.parse(readFileSync(join(ROOT, "tests/fixtures/legistar-outcome-store/data/outcomes/legistar-outcomes.json"), "utf8")) as OutcomeSnapshot;
 }
 
-/**
- * Pima's outcome door on the process edge as its promoted pointer, then read through the production
- * refresh (every door; the others answer NOT_RECORDED), so `getOutcomeSnapshot` serves it.
- */
 export async function installPimaOutcomes(value: OutcomeSnapshot = pimaOutcomeFixture()): Promise<OutcomeSnapshot> {
   installPromotedValue({
     recordClass: PIMA_OUTCOME_TENANT.recordClass,
@@ -52,9 +38,6 @@ export async function installPimaOutcomes(value: OutcomeSnapshot = pimaOutcomeFi
   return value;
 }
 
-/* ------------------------------------------------------------------ meetings */
-
-/** The recorded `/api/meetings` answer for 85701 (`tests/fixtures/reader-upcoming-meetings-85701.json`): 51 Pima County, Tucson Unified and Pima Community College rows. */
 export function recordedMeetings85701(): Meeting[] {
   const recorded = JSON.parse(readFileSync(join(ROOT, "tests/fixtures/reader-upcoming-meetings-85701.json"), "utf8")) as { meetings: Meeting[] };
   return recorded.meetings;
@@ -71,12 +54,6 @@ function partitionFor(meeting: Meeting): MeetingPartitionContract {
   return family;
 }
 
-/**
- * Meetings on the process edge exactly as the runner promotes them: each row goes to its registered
- * source/body partition's pointer (one fresh version per partition, carry marks dropped), and every other
- * partition, history and held-route pointer answers NOT_RECORDED. The reader composes them through
- * `readMeetingsProjection` unchanged.
- */
 export function installMeetings(meetings: readonly Meeting[], agendaDocuments: readonly AgendaDocument[] = [], retrievedAt = "2026-09-25T12:00:00.000Z"): void {
   const byPartition = new Map<MeetingPartitionContract, Meeting[]>();
   for (const meeting of meetings) {
@@ -114,10 +91,6 @@ export function installMeetings(meetings: readonly Meeting[], agendaDocuments: r
   for (const held of HELD_MEETING_PARTITIONS) installAbsent("MEETING", held.scope);
 }
 
-/**
- * The agenda document each held notice summary cites, at the exact version (content hash and URL) the
- * summary names, attached to its recorded meeting.
- */
 export function noticeSummaryDocuments(meetings: readonly Meeting[] = recordedMeetings85701()): AgendaDocument[] {
   return NOTICE_SUMMARIES.flatMap((summary) => {
     const meeting = meetings.find((row) => row.id === summary.meetingId);
@@ -142,7 +115,6 @@ export function noticeSummaryDocuments(meetings: readonly Meeting[] = recordedMe
   });
 }
 
-/** The recorded 85701 meetings with their held notice documents, as one composed snapshot value. */
 export function recordedMeetingsSnapshot(meetings: readonly Meeting[] = recordedMeetings85701()): MeetingsSnapshot {
   const rows = meetings.map(({ carried: _carried, ...row }) => row as Meeting);
   const sources = [...new Set(rows.map((row) => row.id.split(":")[0]!))].sort();
@@ -159,11 +131,6 @@ export function recordedMeetingsSnapshot(meetings: readonly Meeting[] = recorded
   };
 }
 
-/**
- * Synthetic second calendar listings: for `count` recorded, placed Tucson Unified board sittings on distinct
- * local days, a sibling row with its own publisher id and source URL and every civic field equal, so the pair is
- * an unresolved listing multiplicity. Returns every recorded row plus the siblings, and the pairs.
- */
 export function ambiguousListingPairs(count = 3, meetings: readonly Meeting[] = recordedMeetings85701()): { meetings: Meeting[]; pairs: [Meeting, Meeting][] } {
   const body = "ocd-division/country:us/state:az/school_district:tucson_unified_district#board";
   const day = (row: Meeting) => row.startsAt.slice(0, 10);
@@ -180,19 +147,11 @@ export function ambiguousListingPairs(count = 3, meetings: readonly Meeting[] = 
   return { meetings: [...meetings, ...pairs.map(([, sibling]) => sibling)], pairs };
 }
 
-/** Synthetic date-only listings: `count` recorded rows republished with only a local date, under new ids. */
 export function dateOnlyListings(count = 3, meetings: readonly Meeting[] = recordedMeetings85701()): Meeting[] {
   return meetings.filter((row) => row.bodyId?.endsWith("county:pima#governing") && row.id.startsWith("legistar:")).slice(0, count)
     .map((row) => ({ ...row, id: `${row.id}-date-only`, startsAt: row.startsAt.slice(0, 10), startPrecision: "DAY" as const }));
 }
 
-/* ------------------------------------------------------------------ Arizona official actions */
-
-/**
- * A synthetic Arizona governor's action holding: two executive orders and one held, unread bill letter,
- * each attributed to the seat and to `officeholderName` (the registry's current holder, so the committed
- * identity join can be exercised). Designations, titles and URLs are invented and say so.
- */
 export function syntheticExecutiveActions(officeholderName: string): ExecutiveActionStore {
   const base = {
     officeholderId: "statewide:az/governor", officeholderName, officeTitle: "Governor", ocdId: "ocd-division/country:us/state:az",
@@ -220,7 +179,6 @@ export function syntheticExecutiveActions(officeholderName: string): ExecutiveAc
   };
 }
 
-/** The Arizona official-action pointer on the process edge, read through the production refresh. */
 export async function installExecutiveActions(value: ExecutiveActionStore): Promise<ExecutiveActionStore> {
   installPromotedValue({
     recordClass: AZ_OFFICIAL_ACTIONS_CONTRACT.recordClass,
@@ -233,9 +191,6 @@ export async function installExecutiveActions(value: ExecutiveActionStore): Prom
   return value;
 }
 
-/* ------------------------------------------------------------------ candidate profiles */
-
-/** One held candidate card with every field the profile contract classifies; values are synthetic. */
 export function syntheticCandidateCard(over: Partial<CandidateCardData> = {}): CandidateCardData {
   return {
     photoUrl: null, photoSource: null,
@@ -246,10 +201,6 @@ export function syntheticCandidateCard(over: Partial<CandidateCardData> = {}): C
   };
 }
 
-/**
- * A synthetic candidate profile holding: cards and verified links keyed by the candidacy keys a test
- * names. The values are labelled test text and `example.test` URLs, never a real person's details.
- */
 export function candidateProfilesFor(
   cards: Readonly<Record<string, CandidateCardData>>,
   links: Readonly<Record<string, CandidateLinks>> = {},
@@ -258,108 +209,4 @@ export function candidateProfilesFor(
     cards: { curatedAt: "2026-09-25", note: "Synthetic test cards.", cards, hunts: [] },
     links: { curatedAt: "2026-09-25", note: "Synthetic test links.", links, hunts: [] },
   };
-}
-
-/** The candidate-profile pointer on the process edge, read through its production Reader. */
-export async function installCandidateProfiles(value: CandidateProfilesProjection): Promise<CandidateProfilesProjection> {
-  installManualValue("candidate-profiles", value, "test:candidate-profiles");
-  const read = await readCandidateProfilesProjection();
-  if (read.kind !== "PROMOTED") throw new Error(`Candidate profiles fixture did not install: ${read.kind}`);
-  return value;
-}
-
-/* ------------------------------------------------------------------ Arizona ballot, as the ballot source reads it */
-
-/**
- * `syntheticAzBallot` with the ballot file's `formatVersion`, which the curated ballot source's validator
- * requires before it serves any contest to Ask or the ballot page.
- */
-export function servableAzBallot(contests: Parameters<typeof syntheticAzBallot>[0]): AzBallotProjection {
-  const value = syntheticAzBallot(contests);
-  return { ...value, ballot: { formatVersion: 1, ...value.ballot } } as AzBallotProjection;
-}
-
-/* ------------------------------------------------------------------ ballots for the pilot counties */
-
-const TEST_BALLOT_PROVENANCE = { sourceUrl: "https://example.test/ballot", sourceOrg: "Synthetic test ballot", collectedAt: "2026-09-25", verifiedAt: null };
-
-/** One synthetic race: a contest and its filed candidacies (or the measure it puts to voters). */
-export interface TestRace {
-  readonly id: string;
-  readonly title: string;
-  readonly ocdId: string;
-  readonly type?: Contest["type"];
-  readonly candidacies?: readonly { readonly id: string; readonly givenName: string; readonly familyName: string; readonly partyLabel?: string | null }[];
-  readonly measure?: { readonly questionText: string; readonly officialNumber?: string };
-}
-
-function rawBallot(state: string, races: readonly TestRace[]): RawFile {
-  const electionId = `${state.toLowerCase()}-2026-general-test`;
-  return {
-    formatVersion: 1,
-    election: { id: electionId, date: "2026-11-03", name: "2026 General Election (test)", state },
-    contests: races.map((race) => ({
-      id: race.id, electionId, ocdId: race.ocdId, divisionVintage: "2026", title: race.title, type: race.type ?? (race.measure ? "MEASURE" : "CANDIDACY"),
-      voteFor: 1, termYears: race.measure ? null : 4, scopeNote: null, provenance: TEST_BALLOT_PROVENANCE,
-    })),
-    candidacies: races.flatMap((race) => (race.candidacies ?? []).map((row) => ({
-      id: row.id, contestId: race.id, givenName: row.givenName, familyName: row.familyName, partyLabel: row.partyLabel ?? null,
-      slogan: null, incumbent: null, websiteUrl: null, provenance: TEST_BALLOT_PROVENANCE,
-    }))),
-    measures: races.flatMap((race) => race.measure ? [{
-      id: `${race.id}#measure`, contestId: race.id, ...(race.measure.officialNumber ? { officialNumber: race.measure.officialNumber } : {}),
-      questionText: race.measure.questionText, officialStatement: null, provenance: TEST_BALLOT_PROVENANCE,
-    }] : []),
-    absences: [],
-  } as RawFile;
-}
-
-/**
- * A synthetic Morris County filing projection: the races a test names, any sourced removals, and the
- * filed contact rows (email and a filed mailing address the reader must never show).
- */
-export function njMorrisFiling(races: readonly TestRace[], extra: {
-  readonly removals?: readonly CandidacyRemoval[];
-  readonly contacts?: NjMorrisContactDocument["contacts"];
-} = {}): NjMorrisReadModel {
-  return {
-    ballot: { ...rawBallot("NJ", races), removals: [...(extra.removals ?? [])] },
-    contacts: { generatedAt: "2026-09-25", route: "https://example.test/morris-filings", note: "Synthetic test contacts.", contacts: extra.contacts ?? [] },
-  };
-}
-
-/** The Morris County filing pointer on the process edge, read through its production Reader. */
-export async function installNjMorrisFiling(value: NjMorrisReadModel): Promise<NjMorrisReadModel> {
-  const contract = requiredRoutineContract("nj-morris-filing");
-  installPromotedValue({ recordClass: contract.recordClass, scope: contract.scope, sourceId: contract.sourceId, versionId: "test:nj-morris-filing", value });
-  const read = await readNjMorrisFiling();
-  if (read.kind !== "PROMOTED") throw new Error(`Morris filing fixture did not install: ${read.kind}`);
-  return value;
-}
-
-/** A synthetic Merrimack County (New Hampshire) ballot with the races a test names. */
-export function nhBallot(races: readonly TestRace[]): NhBallotProjection {
-  return { ballot: rawBallot("NH", races) } as NhBallotProjection;
-}
-
-/** The New Hampshire ballot pointer on the process edge, read through its production Reader. */
-export async function installNhBallot(value: NhBallotProjection): Promise<NhBallotProjection> {
-  installManualValue("nh-curated-ballot", value, "test:nh-curated-ballot");
-  const read = await readNhBallotProjection();
-  if (read.kind !== "PROMOTED") throw new Error(`New Hampshire ballot fixture did not install: ${read.kind}`);
-  return value;
-}
-
-/** Arizona measures for `servableAzBallot`: each race's measure row, plus its held measure record when given. */
-export function withAzMeasures(value: AzBallotProjection, races: readonly TestRace[], records: readonly MeasureRecord[] = []): AzBallotProjection {
-  const raw = rawBallot("AZ", races);
-  return {
-    ...value,
-    ballot: {
-      ...value.ballot,
-      contests: [...value.ballot.contests, ...raw.contests.map((contest) => ({ ...contest, electionId: value.ballot.election.id }))],
-      measures: [...value.ballot.measures, ...raw.measures],
-      measureRecords: records,
-    },
-  } as AzBallotProjection;
 }

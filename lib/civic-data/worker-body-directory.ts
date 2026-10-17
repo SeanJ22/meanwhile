@@ -1,3 +1,4 @@
+import { stateRegistryRuntimeContractId } from "./state-scopes.ts";
 import { receiptSourceKind } from "./source-conflicts.ts";
 import { parserFieldSources } from "./field-sources.ts";
 import { canonicalJson, type ControlPlaneRepositories } from "../control-plane/repository/types.ts";
@@ -18,30 +19,7 @@ import type { Clocks, FactDb, PublishOutcome, Query } from "../facts/publish.ts"
 import { publishBodyFacts } from "../facts/roster-facts.ts";
 import { createHash } from "node:crypto";
 import { subBodyId } from "./meeting-body-crosswalk.ts";
-import type { JurisdictionRouteHints } from "../hunt/meetings-route-hints.ts";
-import type { RegistryRuntimeCarton } from "../registry/runtime-data-plane.ts";
 import { DEFAULT_KINDS, kindFromSource, type KindTable } from "../registry/kinds.ts";
-
-export function directoryMeetingHints(items: readonly WorkItem[], registry: RegistryRuntimeCarton,
-  baseline: readonly JurisdictionRouteHints[]): readonly JurisdictionRouteHints[] {
-  const hints = new Map(baseline.map(hint => [hint.jurisdictionId, hint]));
-  for (const item of items) {
-    const plan = item.autonomousPlan;
-    const jurisdictionId = plan?.directorySubject?.jurisdiction.id ?? (plan?.publication?.contractId === "registry-runtime-bindings" ? plan.contract.subjectId : undefined);
-    const publication = item.publicationOutcome;
-    const bodyIds = publication?.bodyIds ?? (plan?.publication?.bodyId ? [plan.publication.bodyId] : []);
-    if (!jurisdictionId || !publication || !bodyIds.length || publication.status === "HELD") continue;
-    const before = hints.get(jurisdictionId) ?? { jurisdictionId, officialSite: null, routes: [] };
-    const additions = registry.registry.bodies.filter(body => bodyIds.includes(body.id) && body.name)
-      .flatMap(body => [...new Set([body.agendaSourceRef, body.homepageUrl].filter((url): url is string => Boolean(url)))].map(url => ({
-        url, kind: "PAGE" as const, body: body.name!, platform: "official-page-events", verifyAs: "official-page-events" as const,
-        evidence: `Independently verified ${url === body.agendaSourceRef ? "agenda link" : "home page"} from ${item.id}, published version ${publication.versionId}; ${body.provenance.sourceUrl}. Calendar acquisition and attribution remain owed.`,
-        observed: { at: body.provenance.verifiedAt ?? publication.at, by: publication.workerResultId } })));
-    hints.set(jurisdictionId, { ...before, routes: [...before.routes, ...additions.filter((row, index) =>
-      !before.routes.some(old => old.url === row.url) && additions.findIndex(other => other.url === row.url) === index)] });
-  }
-  return [...hints.values()];
-}
 
 const words = (value: unknown) => typeof value === "string" ? value.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim() : "";
 
@@ -119,7 +97,7 @@ export function workerBodyDirectoryPackage(input: (Parameters<typeof verifiedWor
     }
   }
   requirePublication(bodies.length > 0, `DIRECTORY_NO_ADMISSIBLE_BODY:${unresolved.join("; ")}`);
-  return { unresolved, contacts, prepared: { contractId: "registry-runtime-bindings", scope: "MEMBERS", version: registryEdition(`worker-directory:${readingId}`),
+  return { unresolved, contacts, prepared: { contractId: stateRegistryRuntimeContractId(checked.contract.jurisdiction.state), scope: "MEMBERS", version: registryEdition(`worker-directory:${readingId}`),
     sourceThrough: input.now, sourceReceipt: checked.sourceReceipt,
     payload: { ...input.prior.payload, registry: { ...input.prior.payload.registry, divisions: [], bodies },
       statewideExecutives: [], officialPhotos: { photos: [] }, rosterPhotos: {},

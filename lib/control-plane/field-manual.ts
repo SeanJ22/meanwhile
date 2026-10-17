@@ -7,7 +7,6 @@ import { hereNote, mergePlaceResults, placeResultsOf, type MethodHere, type Plac
 import { recordAttemptsKeepingHistory } from "./fix-history.ts";
 import { ConcurrentModification, IdentityCollision, type ControlPlaneRepositories, type Persisted } from "./repository/types.ts";
 import { flushBankWriteFailures, recordBankWriteFailure } from "./bank-write-health.ts";
-import { jobCostProfiles } from "./bank-job-cost.ts";
 
 export const FIELD_MANUAL_ROLES = [
   "HUNTER",
@@ -97,9 +96,7 @@ function lower(values: readonly string[]): string[] {
   return [...new Set(values.map((v) => v.trim().toLowerCase()).filter((v) => v !== ""))].sort();
 }
 
-export const JOB_COST_KIND = "JOB_COST";
-
-const BOOKKEEPING_KINDS: ReadonlySet<string> = new Set([JOB_COST_KIND, "WRITE_HEALTH", "COPY_REPORT", "PLAYBOOK_RETIREMENT", "PLATFORM_CENSUS_CHECK", "PLATFORM_CENSUS_REFERENCE", "PLATFORM_CENSUS_RUN"]);
+export const BOOKKEEPING_KINDS: ReadonlySet<string> = new Set(["JOB_COST", "WRITE_HEALTH", "COPY_REPORT", "PLAYBOOK_RETIREMENT", "PLATFORM_CENSUS_CHECK", "PLATFORM_CENSUS_REFERENCE", "PLATFORM_CENSUS_RUN"]);
 
 export const TRANSFERABLE_METHOD_KINDS: ReadonlySet<string> = new Set(["METHOD", "ROUTE", "MANIFEST_BRANCH"]);
 
@@ -202,7 +199,7 @@ export function foldEntries(entries: readonly FieldManualEntry[]): FieldManualEn
   return [...byId.values()];
 }
 
-const OUTCOME_RANK: Readonly<Record<FieldManualOutcome, number>> = {
+export const OUTCOME_RANK: Readonly<Record<FieldManualOutcome, number>> = {
   YIELDED: 0,
   REFERENCE: 1,
   ZERO: 2,
@@ -229,6 +226,9 @@ export interface FieldManualQuery {
   readonly everywhere?: boolean;
 
   readonly limit?: number;
+  readonly preferredRecordClasses?: readonly string[];
+  readonly requiredExhaustedClasses?: readonly string[];
+  readonly excludedKinds?: readonly string[];
 }
 
 export interface MethodEvidence {
@@ -288,6 +288,7 @@ function reachOfStored(entry: FieldManualEntry): FieldManualReach {
 export function entryInSlice(entry: FieldManualEntry, query: FieldManualQuery): boolean {
   if (query.role !== undefined && entry.role !== "SHARED" && entry.role !== query.role) return false;
   if (query.kinds !== undefined && !query.kinds.includes(entry.kind)) return false;
+  if (query.excludedKinds?.includes(entry.kind)) return false;
   if (query.recordClass !== undefined && entry.recordClasses.length > 0 && !entry.recordClasses.includes(query.recordClass.toLowerCase())) return false;
 
   const platform = query.platform?.toLowerCase();
@@ -362,10 +363,18 @@ export function rankEntry(entry: FieldManualEntry, query: FieldManualQuery, evid
 export function projectFieldManual(store: FieldManualStore, query: FieldManualQuery = {}, evidence?: MethodEvidence): FieldManualProjection {
   const limit = query.limit ?? 40;
   const applicable = store.entries.filter((e) => !BOOKKEEPING_KINDS.has(e.kind) && entryInSlice(e, query) &&
-    (e.kind !== "EXHAUSTED_RUNGS" || (query.subjectId !== undefined && (e.payload as { subjectId?: string } | null)?.subjectId === query.subjectId)));
+    (e.kind !== "EXHAUSTED_RUNGS" || (query.subjectId !== undefined && (e.payload as { subjectId?: string } | null)?.subjectId === query.subjectId &&
+      (!query.requiredExhaustedClasses?.length || e.recordClasses.some(value=>query.requiredExhaustedClasses!.includes(value))))));
   const ranked = applicable.map((e) => rankEntry(e, query, evidence));
   const open = ranked.filter((r): r is Ranked => r !== null).sort((a, b) => {
+    if(query.preferredRecordClasses!==undefined) {
+      const helps=(entry:FieldManualEntry)=>entry.recordClasses.some(value=>query.preferredRecordClasses!.includes(value))?0:1;
+      const preferred=helps(a.entry)-helps(b.entry);if(preferred)return preferred;
+    }
     if (a.tier !== b.tier) return a.tier - b.tier;
+    if(query.preferredRecordClasses!==undefined) {
+      const anyClass=Number(a.entry.recordClasses.length>0)-Number(b.entry.recordClasses.length>0);if(anyClass)return anyClass;
+    }
     const exhausted = Number(b.entry.kind === "EXHAUSTED_RUNGS") - Number(a.entry.kind === "EXHAUSTED_RUNGS");
     if (exhausted !== 0) return exhausted;
     const outcome = OUTCOME_RANK[a.entry.outcome] - OUTCOME_RANK[b.entry.outcome];
@@ -415,10 +424,14 @@ export function fieldManualForSource(read: FieldManualRead, url: string): readon
   });
 }
 
+export function methodEvidencePlaces(query:FieldManualQuery):string[] {
+  return [...new Set([...jobPlaces(query).filter(place=>!place.startsWith("body:")),...(query.ocdIds??[]).map(id=>id.split("#")[0])])];
+}
+
 export async function readMethodEvidence(repos: FieldManualRepos, entries: readonly FieldManualEntry[], query: FieldManualQuery): Promise<MethodEvidence | undefined> {
   if (!repos.fixMap) return undefined;
   const methods = entries.filter(isTransferableMethod).map((e) => e.id);
-  const places = [...new Set([...jobPlaces(query).filter(p => !p.startsWith("body:")),...(query.ocdIds??[]).map(id=>id.split("#")[0])])];
+  const places = methodEvidencePlaces(query);
   const [here, works] = await Promise.all([
     Promise.all(methods.map(method => repos.fixMap!.forPlaces(method, places))).then(rows => rows.flat()),
     methods.length === 0 ? new Map<string, MethodWorks>() : repos.fixMap.worksFor(methods),
@@ -428,40 +441,11 @@ export async function readMethodEvidence(repos: FieldManualRepos, entries: reado
 
 export async function readFieldManualRows(repos: FieldManualRepos, query: FieldManualQuery = {}): Promise<FieldManualRead> {
   try {
-    const rows = (await repos.fieldManual.slice(query)).map((row) => row.value).filter((entry) => entryInSlice(entry, query));
-    const store = { entries: rows };
-    const evidence = await readMethodEvidence(repos, rows, query);
-    return { projection: projectFieldManual(store, query, evidence), store, ...(evidence ? { evidence } : {}) };
+    return await repos.fieldManual.select(query);
   } catch (error) {
     const store = emptyFieldManual();
     return { projection: projectFieldManual(store, query), store, error: error instanceof Error ? error.message : String(error) };
   }
-}
-
-export async function readFieldManualForPlaces(
-  repos: FieldManualRepos,
-  covering: FieldManualQuery,
-  queries: readonly FieldManualQuery[],
-): Promise<FieldManualRead[]> {
-  const failed = (query: FieldManualQuery, error: unknown): FieldManualRead => {
-    const store = emptyFieldManual();
-    return { projection: projectFieldManual(store, query), store, error: error instanceof Error ? error.message : String(error) };
-  };
-  let rows: readonly FieldManualEntry[];
-  try {
-    rows = (await repos.fieldManual.slice(covering)).map((row) => row.value).filter((entry) => entryInSlice(entry, covering));
-  } catch (error) {
-    return queries.map((query) => failed(query, error));
-  }
-  return Promise.all(queries.map(async (query): Promise<FieldManualRead> => {
-    try {
-      const store = { entries: rows.filter((entry) => entryInSlice(entry, query)) };
-      const evidence = await readMethodEvidence(repos, store.entries, query);
-      return { projection: projectFieldManual(store, query, evidence), store, ...(evidence ? { evidence } : {}) };
-    } catch (error) {
-      return failed(query, error);
-    }
-  }));
 }
 
 export async function readFieldManual(repos: FieldManualRepos, query: FieldManualQuery = {}): Promise<FieldManualRead> {
@@ -589,19 +573,6 @@ export async function writeFieldManual(
   if (entries.length === 0) return { written: 0 };
   try {
     const saved = await saveFieldManualEntries(repos, entries, now);
-    const costs = entries.filter((e) => e.kind === JOB_COST_KIND);
-    if (costs.length > 0 && saved.error === undefined) {
-      const keys = new Map(costs.map((e) => {
-        const p = e.payload as { platform: string; recordClass: string };
-        return [`${p.platform}|${p.recordClass}`, p] as const;
-      }));
-      const held = (await Promise.all([...keys.values()].map((p) =>
-        repos.fieldManual.slice({ kinds: [JOB_COST_KIND], platform: p.platform, recordClass: p.recordClass, everywhere: true }))))
-        .flat().map((row) => row.value);
-      const profiles = jobCostProfiles(foldEntries([...held, ...costs]), costs, now);
-      const profiled = await saveFieldManualEntries(repos, profiles, now);
-      if (profiled.error !== undefined) throw new Error(profiled.error);
-    }
     await recordMethodResults(repos, entries, now);
     if (saved.error !== undefined) {
       await recordBankWriteFailure(repos, now);

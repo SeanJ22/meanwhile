@@ -173,6 +173,7 @@ async function workload(repos: ControlPlaneRepositories, places: string[], run: 
       const result = await manual.readFieldManualRows(repos, query);
       if (result.error) throw new Error(result.error);
       assert.ok(result.projection.entryIds.length<=query.limit);
+      assert.ok(result.store.entries.length<=query.limit);
       notes.push({ place, ids: [...result.projection.entryIds].sort() });
     }
     return notes;

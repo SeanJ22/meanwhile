@@ -1,10 +1,4 @@
-import {
-  projectFieldManual,
-  type FieldManualEntry,
-  type FieldManualProjection,
-  type FieldManualQuery,
-  type FieldManualRead,
-} from "../field-manual.ts";
+import type { FieldManualQuery } from "../field-manual.ts";
 
 import { FIPS_TO_STATE } from "../../ocd/fips.ts";
 import { stateOfPlace } from "../../method/fix-map.ts";
@@ -62,29 +56,14 @@ function scoutPlaces(subjectId: string | null | undefined, divisions: readonly s
 export function scoutFieldManualQuery(opts: ScoutManualOptions): FieldManualQuery {
   const states = scoutStateHint(opts.subjectId, opts.obligationId);
   const places = scoutPlaces(opts.subjectId, opts.divisions);
+  const classes=[...new Set((opts.recordClasses??[]).map(value=>value.toLowerCase()))];
   return {
     role: "SCOUT", subjectId: opts.subjectId ?? undefined,
     ...(states[0] ? { state: states[0] } : {}),
     ...(places.length > 0 ? { ocdIds: places } : {}),
+    limit:opts.limit??30,
+    preferredRecordClasses:[...new Set(classes.flatMap(value=>[value,...(RELATED[value]??[])]))],
+    requiredExhaustedClasses:classes,
+    excludedKinds:["PLAYBOOK"],
   };
-}
-
-export function scoutFieldManualProjection(
-  read: Pick<FieldManualRead, "store" | "evidence">,
-  opts: ScoutManualOptions,
-): FieldManualProjection {
-  const store = read.store;
-  const classes = new Set((opts.recordClasses ?? []).map(value => value.toLowerCase()));
-  const hints = new Set([...classes].flatMap(value => [value, ...(RELATED[value] ?? [])]));
-  const full = projectFieldManual(store, { ...scoutFieldManualQuery(opts), limit: store.entries.length }, read.evidence);
-  const byId = new Map(store.entries.map(entry => [entry.id, entry] as const));
-  const indexed = full.entryIds.map((id, index) => ({ id, line: full.lines[index]!, tier: full.tiers[index]!, entry: byId.get(id)! }))
-    .filter(row => row.entry.kind !== "PLAYBOOK" && (row.entry.kind !== "EXHAUSTED_RUNGS" || classes.size === 0 || row.entry.recordClasses.some(value => classes.has(value))));
-
-  const helps = (entry: FieldManualEntry) => entry.recordClasses.some(value => hints.has(value.toLowerCase())) ? 0 : 1;
-  const anyClass = (entry: FieldManualEntry) => entry.recordClasses.length === 0 ? 0 : 1;
-  indexed.sort((a, b) => helps(a.entry) - helps(b.entry) || a.tier - b.tier || anyClass(a.entry) - anyClass(b.entry));
-  const chosen = indexed.slice(0, opts.limit ?? 30);
-  return { lines: chosen.map(row => row.line), entryIds: chosen.map(row => row.id), tiers: chosen.map(row => row.tier),
-    leftOutFailingHere: full.leftOutFailingHere, matched: full.matched, total: full.total };
 }

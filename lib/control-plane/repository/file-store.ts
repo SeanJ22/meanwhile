@@ -686,7 +686,7 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
       "OwnerSnapshot",
       "owner-snapshots",
     ),
-    fieldManual: fieldManualRows(fileAggregateRepository<FieldManualEntry>(resolved, "FieldManualEntry", "field-manual-entries")),
+    fieldManual: fieldManualRows(fileAggregateRepository<FieldManualEntry>(resolved, "FieldManualEntry", "field-manual-entries"),()=>repositories.fixMap),
     fixMap: aggregateFixMap(fileAggregateRepository<FixMapRow>(resolved, "FixMapRow", "fix-map")),
     websitePacing: memoryWebsitePacing(),
     runnerHeartbeat: fileAggregateRepository<RunnerHeartbeat>(

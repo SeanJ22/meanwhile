@@ -175,7 +175,6 @@ test("a write touches only its own rows: a second write keeps the first", async 
   assert.deepEqual(rows.map((r) => [r.id, r.revision]), [["fm-a", 1], ["fm-b", 1]]);
 });
 
-/** Two writers, interleaved: both read before either saves, so the second save meets a row the first already changed. */
 function interleaved(): { repos: FieldManualRepos; gate: () => void } {
   const base = createMemoryRepositories();
   let waiting: (() => void)[] = [];
@@ -220,7 +219,7 @@ test("many concurrent writers each keep their own lesson and their reach", async
 
 test("a failed read is returned as an error with an empty projection, not thrown", async () => {
   const repos = createMemoryRepositories();
-  const broken = { fieldManual: { ...repos.fieldManual, slice: async () => { throw new Error("store down"); } } };
+  const broken = { fieldManual: { ...repos.fieldManual, select: async () => { throw new Error("store down"); } } };
   const read = await readFieldManual(broken, { role: "SCOUT" });
   assert.equal(read.error, "store down");
   assert.equal(read.projection.entryIds.length, 0);

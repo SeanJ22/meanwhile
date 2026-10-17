@@ -93,7 +93,7 @@ export function methodStatistics(observations: readonly FixMapRow[], recentSince
     since: tried.length - then.length };
 }
 
-const PLACE_STATE_SQL="lower(coalesce(substring(place_id from '(?:^|/)(?:state|district|territory):([a-zA-Z]{2})(?:/|$|#)'),substring(place_id from '(?i)(?:^|:)government:US-([a-zA-Z]{2})(?::|$)')))";
+export const PLACE_STATE_SQL="lower(coalesce(substring(place_id from '(?:^|/)(?:state|district|territory):([a-zA-Z]{2})(?:/|$|#)'),substring(place_id from '(?i)(?:^|:)government:US-([a-zA-Z]{2})(?::|$)')))";
 
 type Query = (text: string, parameters: readonly unknown[]) => Promise<readonly Record<string, unknown>[]>;
 export interface FixMapRepository {

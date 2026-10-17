@@ -20,7 +20,7 @@ import type {
   OwnerSnapshot,
   RunnerHeartbeat,
 } from "../owner-surface.ts";
-import type { FieldManualEntry, FieldManualQuery } from "../field-manual.ts";
+import type { FieldManualEntry, FieldManualQuery, FieldManualRead } from "../field-manual.ts";
 import type { FixMapRepository } from "../../method/fix-map.ts";
 import type { ResearchIntent, ResearchState } from "../scheduler/research-policy.ts";
 import type { ScoutResult } from "../scheduler/scout-result.ts";
@@ -235,7 +235,7 @@ export function heldSlotKeys(held: HeldSlots | undefined): ReadonlySet<string> {
 export interface FieldManualRepository extends AggregateRepository<FieldManualEntry> {
   readMany(ids: readonly string[]): Promise<readonly Persisted<FieldManualEntry>[]>;
 
-  slice(query: FieldManualQuery): Promise<readonly Persisted<FieldManualEntry>[]>;
+  select(query: FieldManualQuery): Promise<FieldManualRead>;
 
   insertNew(entries: readonly FieldManualEntry[], now: string): Promise<ReadonlySet<string>>;
 

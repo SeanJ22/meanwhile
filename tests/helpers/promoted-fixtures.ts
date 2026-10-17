@@ -47,7 +47,7 @@ import { provenEdgeEntry } from "./promoted-edge-entry.ts";
 import { rosterFactReader } from "./roster-fact-reader.ts";
 import { installFactReader } from "../../lib/facts/db.ts";
 import { registryJurisdictions, stateRegistryRuntimeScope } from "../../lib/civic-data/state-scopes.ts";
-import { STATE_AUTHORITY_FAMILIES } from "../../lib/meetings/edge-artifacts.ts";
+import { STATE_AUTHORITY_FAMILIES, type StateAuthorityFamily } from "../../lib/meetings/edge-artifacts.ts";
 import { stateAuthorityPointers } from "../../lib/civic-data/state-reader.ts";
 
 const ROOT = join(import.meta.dirname, "..", "..");
@@ -58,15 +58,7 @@ const promoted = new Map<string, PromotedEdgeEntry>();
 
 const live: ReaderAuthorityEdgeBundle = {
   stateAuthorities: {
-    get states() {
-      return Object.fromEntries(STATE_AUTHORITY_FAMILIES.map(family => [family, new Set([...promoted.values()].flatMap(entry => {
-        const scope = entry.kind === "PROMOTED" ? entry.projection.scope : entry.scope;
-        const state = /^US-([A-Z]{2}):/.exec(scope)?.[1];
-        if (!state) return [];
-        const own = stateAuthorityPointers(family, state)[0];
-        return own.scope === scope && own.recordClass === (entry.kind === "PROMOTED" ? entry.projection.recordClass : entry.recordClass) ? [state] : [];
-      }))]));
-    },
+    families: new Set(STATE_AUTHORITY_FAMILIES),
     load: async (family, state) => {
       const pointers = stateAuthorityPointers(family, state);
       if (!promoted.has(`${pointers[0].recordClass}:${pointers[0].scope}`)) return null;
@@ -76,7 +68,6 @@ const live: ReaderAuthorityEdgeBundle = {
   },
   get stateLegislators() {
     return Object.keys(stateLegislators).length ? {
-      jurisdictions: new Set(Object.keys(stateLegislators)),
       load: async (jurisdiction: string) => stateLegislators[jurisdiction]
         ? { value: stateLegislators[jurisdiction], versionId: "test:state-legislators" }
         : null,
@@ -261,7 +252,7 @@ export function stateFederalDirectoryArtifacts(versionId: string, value: Federal
 /** A reader edge holding only these places' members of Congress, as a request sees it. */
 export function federalDirectoryEdge(value: FederalDirectoryReadModel, versionId = "test:federal-directory"): ReaderAuthorityEdgeBundle {
   const artifacts = stateFederalDirectoryArtifacts(versionId, value);
-  return { stateAuthorities: { key: () => null, states: { "federal-directory": new Set(Object.keys(artifacts)) },
+  return { stateAuthorities: { key: () => null, families: new Set<StateAuthorityFamily>(["federal-directory"]),
     load: async (family, state) => family === "federal-directory" ? artifacts[state]?.value ?? null : null } };
 }
 

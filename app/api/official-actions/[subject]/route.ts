@@ -1,6 +1,6 @@
 import { directOfficialActionTargetPlan, settleOfficialActionHoldingAnswer, type OfficialActionHoldingReaders, type OfficialActionTargetPlan } from "@/lib/officials/action-holding";
 import { readerRoute } from "@/lib/api/reader-route";
-import { holdReaderAuthorityEdge, ensureReaderAuthorityEdge, readReaderManifest } from "@/lib/meetings/edge-serving";
+import { holdReaderAuthorityEdge, ensureReaderAuthorityEdge } from "@/lib/meetings/edge-serving";
 import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
 import { officialActionsForTarget } from "@/lib/officials/reader-actions";
 import { refreshExecutiveActionsFromPromoted } from "@/lib/officials/executive-actions";
@@ -39,9 +39,8 @@ function defaultReadersFor(divisions: readonly string[]): OfficialActionHoldingR
 export const GET = readerRoute("/api/official-actions/[subject]", async function GET(request: Request, context: { params: Promise<{ subject: string }> }) {
   const { subject } = await context.params;
   if (!subject || subject.length > 512) return Response.json({ error: "subject required" }, { status: 400 });
-  const manifest = await readReaderManifest().catch(holdReaderAuthorityEdge);
-  if (manifest) {
-    const edge = await ensureReaderAuthorityEdge(manifest, undefined, ["federal-directory", "ballot-contests", "executive-actions"]).catch(error => holdReaderAuthorityEdge(error, manifest, ["federal-directory", "ballot-contests", "executive-actions"]));
+  {
+    const edge = await ensureReaderAuthorityEdge(null, undefined, ["federal-directory", "ballot-contests", "executive-actions"]).catch(error => holdReaderAuthorityEdge(error, ["federal-directory", "ballot-contests", "executive-actions"]));
     if (edge) enterReaderAuthorityEdge(edge);
   }
   const divisions = await ballotPlaceFromRequest(request);

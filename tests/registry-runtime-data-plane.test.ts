@@ -212,7 +212,7 @@ test("Ask reads native state people beside a partitioned registry without revivi
     assert.equal(queries.length, 1, "the state payload, encoded parts and scalar proof arrive in one keyed read");
     assert.ok(queries[0].includes(pointer.key));
     const entry = provenEdgeEntry({ recordClass: "REGISTRY_RUNTIME_BINDING", scope: stateRegistryRuntimeScope("OH"), sourceId: candidate.sourceId, versionId: read.metadata.versionId!, value: read.value });
-    const stateAuthorities = { states: { "registry-runtime": new Set(["OH"]) }, load: async () => ({ kind: "PROMOTED_POINTERS" as const, entries: [entry] }) };
+    const stateAuthorities = { families: new Set(["registry-runtime"] as const), load: async () => ({ kind: "PROMOTED_POINTERS" as const, entries: [entry] }) };
     await withReaderAuthorityEdge({ edgeOnly: true, stateAuthorities }, async () => {
       const held = await readerOfficeholders(districts);
       assert.ok(held.loaderFailures > 0, "the missing state authority stays a reported gap");
@@ -231,7 +231,7 @@ test("Ask reads native state people beside a partitioned registry without revivi
       term: "2025-2026", generatedAt: T0, roster: { scope: "OH", generatedAt: T0, officeholders: people,
         divisions: districts.map((ocdId, index) => ({ ocdId, officeholderId: people[index].id, bodyId: null })), unmatched: [] } };
     const stateReads: string[] = [];
-    await withReaderAuthorityEdge({ edgeOnly: true, stateAuthorities, stateLegislators: { jurisdictions: new Set(["US-OH"]), load: async scope => {
+    await withReaderAuthorityEdge({ edgeOnly: true, stateAuthorities, stateLegislators: { load: async scope => {
       stateReads.push(scope);
       assert.equal(scope, "US-OH");
       return { value: statePeople, versionId: "test:oh-native-people" };

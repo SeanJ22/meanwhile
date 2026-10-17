@@ -11,18 +11,23 @@ import { neonConfig } from "@neondatabase/serverless";
 import type { Officeholder } from "../lib/officials/types.ts";
 
 import {
+  authorityPointerKey,
   ensureReaderAuthorityEdge,
-  publishReaderEdgeArtifacts,
+  publishReaderMeetings,
   readReaderManifest,
+  readServedPointer,
   READER_MANIFEST_CACHE_TAG,
   READER_MANIFEST_MEMO_MS,
   READER_MAP_AUTHORITY_FAMILIES,
   readReaderEdgeMeetings,
   servedWholeFromReaderEdge,
+  stateFactsPointerKey,
   writeFactBucket,
   writeFactRecord,
-  type PublishAuthority,
+  type PublishAuthorityValue,
 } from "../lib/meetings/edge-serving.ts";
+import { publishPointers } from "./helpers/edge-pointers.ts";
+import type { GlobalAuthorityFamily } from "../lib/meetings/edge-artifacts.ts";
 
 import { stateOfOcdId, type ReaderManifest } from "../lib/meetings/edge-artifacts.ts";
 
@@ -157,32 +162,41 @@ async function factRecords(store: LocalFileArtifactStore, registry: ReturnType<t
   return { kind: "READER_RECORDS", base: { bodies: [] }, records };
 }
 
-async function publishEdge(tag: string, options: { readonly legislators?: boolean } = {}): Promise<{ dir: string; manifest: ReaderManifest }> {
+interface PublishedKeys {
+  readonly registry: Readonly<Record<string, string>>;
+  readonly federal: Readonly<Record<string, string>>;
+  readonly outcomes: string;
+}
+
+async function publishEdge(tag: string, options: { readonly legislators?: boolean } = {}): Promise<{ dir: string; manifest: ReaderManifest; keys: PublishedKeys }> {
   const dir = mkdtempSync(join(tmpdir(), "wtp-c21-edge-"));
   dirs.push(dir);
   const snapshot = multiStateSnapshot();
   assert.ok(snapshot.meetings.length > 0, "the recorded meetings publish the edge's meeting scopes");
   const registry = registryTransferImport().projection.payload;
-  const authority: PublishAuthority = {
+  const authority: Partial<Record<GlobalAuthorityFamily, PublishAuthorityValue>> = {
     "meeting-outcomes": { value: getOutcomeSnapshot(), versionId: `${tag}:outcomes` },
+    "everyday-routing": { value: { projection: buildEverydayRoutingProjection() }, versionId: `${tag}:routing` },
   };
   const store = new LocalFileArtifactStore(dir);
-  const result = await publishReaderEdgeArtifacts(snapshot, {
+  await store.writeJsonPointer(stateFactsPointerKey("AZ"), { state: "AZ", versionId: `${tag}:facts:AZ`,
+    buckets: [await writeFactBucket(store, "AZ", 0, `${tag}:facts:AZ`, await factRecords(store, registry), new Date().toISOString())] }, null);
+  const result = await publishReaderMeetings(snapshot, {
     sourceThrough: snapshot.generatedAt,
     retrievedAt: snapshot.generatedAt,
     promotedThrough: snapshot.generatedAt,
-  }, {
-    store,
-    now: new Date().toISOString(),
-    extras: { everydayRouting: buildEverydayRoutingProjection() },
-    stateFacts: { AZ: { versionId: `${tag}:facts:AZ`, value: { buckets: [await writeFactBucket(store, "AZ", 0, `${tag}:facts:AZ`, await factRecords(store, registry), new Date().toISOString())] } } },
-    authority,
-    stateAuthorities: { "registry-runtime": stateRegistryArtifacts(`${tag}:registry`, ["AZ", "NH", "NJ"], registry), "federal-directory": stateFederalDirectoryArtifacts(`${tag}:federal`) },
-    ...(options.legislators ? { stateLegislators: Object.fromEntries(Object.entries(stateLegislators).map(([scope, value]) => [scope, { value, versionId: `${tag}:legislators:${scope}` }])) } : {}),
-    registrations: {},
-  });
+  }, { store, now: new Date().toISOString() });
   assert.equal(result.status, "PUBLISHED", JSON.stringify(result));
-  return { dir, manifest: (await store.readManifest())!.manifest };
+  const none = { value: null, versionId: "none" };
+  await publishPointers(store, { authority,
+    stateAuthorities: { "registry-runtime": stateRegistryArtifacts(`${tag}:registry`, ["AZ", "NH", "NJ"], registry), "federal-directory": stateFederalDirectoryArtifacts(`${tag}:federal`) },
+    stateLegislators: options.legislators ? Object.fromEntries(Object.entries(stateLegislators).map(([scope, value]) => [scope, { value, versionId: `${tag}:legislators:${scope}` }])) : {},
+    registrations: { az: none, nh: none, nj: none } });
+  const key = async (family: Parameters<typeof authorityPointerKey>[0], place?: string) => (await readServedPointer(store, authorityPointerKey(family, place)))!.ref.key;
+  const registryKeys = Object.fromEntries(await Promise.all(["AZ", "NH", "NJ"].map(async state => [state, await key("registry-runtime", state)] as const)));
+  const federalKeys = Object.fromEntries(await Promise.all(["AZ"].map(async state => [state, await key("federal-directory", state)] as const)));
+  const outcomes = (await Promise.all(["US", "AZ"].map(place => readServedPointer(store, authorityPointerKey("meeting-outcomes", place))))).find(Boolean)!.ref.key;
+  return { dir, manifest: (await store.readManifest())!.manifest, keys: { registry: registryKeys, federal: federalKeys, outcomes } };
 }
 
 class RecordingStore extends LocalFileArtifactStore {
@@ -221,15 +235,14 @@ test("directory requests load only their legislator's jurisdiction and serve sou
     offices: [{ name: "district", address: "100 Main St, Tucson, AZ 85701", email: "district@example.gov", sourceUrl, collectedAt: at }],
   };
   const store = new LocalFileArtifactStore(dir);
-  await publishReaderEdgeArtifacts(null, { sourceThrough: null, retrievedAt: null, promotedThrough: null }, {
-    store,
+  await publishPointers(store, {
     stateLegislators: {
       "US-AZ": { versionId: "directory:AZ", value: { ...stateLegislators["US-AZ"],
         roster: { scope: "US-AZ", generatedAt: at, officeholders: [person], divisions: [], unmatched: [] } } },
       "US-NH": { versionId: "directory:NH", value: stateLegislators["US-NH"] },
     },
   });
-  const manifest = (await store.readManifest())!.manifest;
+  const legislatorKey = async (scope: string) => (await readServedPointer(store, authorityPointerKey("state-legislators", scope)))!.ref.key;
   const previousDirectory = process.env.WTP_READER_EDGE_DIR;
   const previousDatabase = process.env.DATABASE_URL;
   const previousFetch = neonConfig.fetchFunction;
@@ -251,8 +264,8 @@ test("directory requests load only their legislator's jurisdiction and serve sou
       }
     });
     assert.equal(providerQueries, 0);
-    assert.ok(read.keys.includes(manifest.stateLegislators!["US-AZ"].key));
-    assert.equal(read.keys.includes(manifest.stateLegislators!["US-NH"].key), false);
+    assert.ok(read.keys.includes(await legislatorKey("US-AZ")));
+    assert.equal(read.keys.includes(await legislatorKey("US-NH")), false);
   } finally {
     neonConfig.fetchFunction = previousFetch;
     if (previousDatabase === undefined) delete process.env.DATABASE_URL;
@@ -263,19 +276,19 @@ test("directory requests load only their legislator's jurisdiction and serve sou
 });
 
 test("the map's routes fetch only the authority families they read, never Ask's outcomes; comment rules come with the states' facts", async () => {
-  const { dir, manifest } = await publishEdge("c21-families");
+  const { dir, manifest, keys: published } = await publishEdge("c21-families");
   const store = new RecordingStore(dir);
-  const bundle = await ensureReaderAuthorityEdge(manifest, store, READER_MAP_AUTHORITY_FAMILIES);
-  assert.equal(store.keys.includes(manifest.stateAuthorities!["registry-runtime"]!.AZ.key), false, "a manifest load leaves state payloads lazy");
+  const bundle = (await ensureReaderAuthorityEdge(manifest, store, READER_MAP_AUTHORITY_FAMILIES))!;
+  assert.equal(store.keys.includes(published.registry.AZ), false, "a manifest load leaves state payloads lazy");
   const registry = await withReaderAuthorityEdge(bundle, () => readRegistryRuntimeProjection(["AZ"]));
   assert.equal(registry.metadata.versionId, "c21-families:registry:AZ");
-  assert.equal(store.keys.includes(manifest.stateAuthorities!["registry-runtime"]!.NH.key), false);
-  assert.equal(store.keys.includes(manifest.stateAuthorities!["federal-directory"]!.AZ.key), false, "each place's members of Congress also load only when asked");
+  assert.equal(store.keys.includes(published.registry.NH), false);
+  assert.equal(store.keys.includes(published.federal.AZ), false, "each place's members of Congress also load only when asked");
   assert.equal(bundle.meetingOutcomes, undefined, "the recorded outcomes are Ask's, not the map's");
   const byId = (records: readonly { readonly id: string }[] = []) => [...records].sort((a, b) => a.id.localeCompare(b.id));
   assert.deepEqual(byId(bundle.commentAccess?.value.records), byId(commentAccessProjection.records), "the meetings route takes comment access from the states' facts");
-  assert.deepEqual(store.keys.filter((key) => key === manifest.authorityArtifacts?.["meeting-outcomes"]?.key), [], "fetched and parsed for nothing");
-  const everything = await ensureReaderAuthorityEdge(manifest, store);
+  assert.deepEqual(store.keys.filter((key) => key === published.outcomes), [], "fetched and parsed for nothing");
+  const everything = (await ensureReaderAuthorityEdge(manifest, store))!;
   assert.equal(everything.meetingOutcomes?.versionId, "c21-families:outcomes", "omitted, every family is fetched, as Ask needs");
   await withReaderAuthorityEdge(everything, () => readRegistryRuntimeProjection(["AZ"]));
   assert.equal(everything.commentAccess?.versionId, bundle.commentAccess?.versionId);
@@ -291,17 +304,17 @@ test("each served sitting carries its body's live facts from that body's record"
 });
 
 test("concurrent reads share one state artifact inside a request without retaining it across requests", async () => {
-  const { dir, manifest } = await publishEdge("c21-shared");
+  const { dir, manifest, keys: published } = await publishEdge("c21-shared");
   const store = new RecordingStore(dir);
   const first = await ensureReaderAuthorityEdge(manifest, store, READER_MAP_AUTHORITY_FAMILIES);
   const values = await withReaderAuthorityEdge(first, () => Promise.all([readRegistryRuntimeProjection(["AZ"]), readRegistryRuntimeProjection(["AZ"])]));
-  assert.equal(store.keys.filter(key => key === manifest.stateAuthorities!["registry-runtime"]!.AZ.key).length, 1);
+  assert.equal(store.keys.filter(key => key === published.registry.AZ).length, 1);
   assert.equal(values[0].kind, "PROMOTED");
   assert.equal(values[0], values[1]);
   const second = await ensureReaderAuthorityEdge(manifest, store, READER_MAP_AUTHORITY_FAMILIES);
   const independent = await withReaderAuthorityEdge(second, () => readRegistryRuntimeProjection(["AZ"]));
   assert.notEqual(independent.value, values[0].value);
-  assert.equal(store.keys.filter(key => key === manifest.stateAuthorities!["registry-runtime"]!.AZ.key).length, 2);
+  assert.equal(store.keys.filter(key => key === published.registry.AZ).length, 2);
 });
 
 test("the Blobs manifest is held fifteen seconds per instance, shared in flight, and an absent one is never held", async () => {
@@ -336,8 +349,8 @@ test("the Blobs manifest is held fifteen seconds per instance, shared in flight,
 });
 
 test("corrupt state artifact bytes are refused before a reader can use their payload", async t => {
-  const { dir, manifest } = await publishEdge("c21-integrity");
-  const ref = manifest.stateAuthorities!["registry-runtime"]!.AZ;
+  const { dir, manifest, keys: published } = await publishEdge("c21-integrity");
+  const ref = { key: published.registry.AZ };
   const bytes = readFileSync(join(dir, ref.key)); bytes[bytes.length - 1] ^= 1; writeFileSync(join(dir, ref.key), bytes);
   const warnings: unknown[][] = []; t.mock.method(console, "warn", (...args: unknown[]) => warnings.push(args));
   const edge = await ensureReaderAuthorityEdge(manifest, new LocalFileArtifactStore(dir), ["registry-runtime"]);
@@ -348,7 +361,7 @@ test("corrupt state artifact bytes are refused before a reader can use their pay
 const TUCSON = "lat=32.21696&lng=-110.971&zip=85701";
 
 test("a whole /api/meetings answer from the edge is held by the CDN, keyed on every query parameter, and says where its time went", async () => {
-  const { dir, manifest } = await publishEdge("c21-route");
+  const { dir, keys: published } = await publishEdge("c21-route");
   process.env.WTP_READER_EDGE_DIR = dir;
   const { value: response, keys } = await recordingBytes(() => meetingsGET(new Request(`https://wtp.test/api/meetings?${TUCSON}`)));
   assert.equal(response.status, 200);
@@ -361,9 +374,9 @@ test("a whole /api/meetings answer from the edge is held by the CDN, keyed on ev
   for (const stage of ["manifest", "authority", "divisions", "zipArea", "meetings", "search", "coverage", "total"]) {
     assert.match(timing, new RegExp(`(?:^|, )${stage};dur=\\d+`), `${stage} is not timed: ${timing}`);
   }
-  assert.ok(keys.includes(manifest.stateAuthorities!["registry-runtime"]!.AZ.key));
-  assert.equal(keys.includes(manifest.stateAuthorities!["registry-runtime"]!.NH.key), false);
-  assert.deepEqual(keys.filter((key) => key === manifest.authorityArtifacts?.["meeting-outcomes"]?.key), [], "the route fetched families it never reads");
+  assert.ok(keys.includes(published.registry.AZ));
+  assert.equal(keys.includes(published.registry.NH), false);
+  assert.deepEqual(keys.filter((key) => key === published.outcomes), [], "the route fetched families it never reads");
   const body = await response.json();
   assert.ok(Array.isArray(body.governingOcdIds) && body.governingOcdIds.length > 0);
   assert.ok(body.coverage && body.coverage.bodies.length > 0);
@@ -396,7 +409,7 @@ test("a refusal, and an answer the edge did not serve whole, are never held", as
 });
 
 test("/api/representation reads the registry from the edge it entered, and the CDN holds its answer", async () => {
-  const { dir, manifest } = await publishEdge("c21-representation");
+  const { dir, keys: published } = await publishEdge("c21-representation");
   process.env.WTP_READER_EDGE_DIR = dir;
   const division = ["ocd-division", "country:us", "state:az", "place:tucson"];
   const { value: response, keys } = await recordingBytes(() => representationGET(
@@ -404,8 +417,8 @@ test("/api/representation reads the registry from the edge it entered, and the C
     { params: Promise.resolve({ division }) },
   ));
   assert.equal(response.status, 200);
-  assert.ok(keys.includes(manifest.stateAuthorities!["registry-runtime"]!.AZ.key));
-  assert.equal(keys.includes(manifest.stateAuthorities!["registry-runtime"]!.NH.key), false);
+  assert.ok(keys.includes(published.registry.AZ));
+  assert.equal(keys.includes(published.registry.NH), false);
   assert.equal(response.headers.get("netlify-cdn-cache-control"), "public, durable, s-maxage=300, stale-while-revalidate=3600");
   assert.equal(response.headers.get("netlify-cache-tag"), READER_MANIFEST_CACHE_TAG);
   assert.equal(response.headers.get("cache-control"), "public, max-age=0, must-revalidate");
@@ -415,13 +428,13 @@ test("/api/representation reads the registry from the edge it entered, and the C
 });
 
 test("a warm call keeps useful meeting and Ask warming without opening every state's registry", async () => {
-  const { dir, manifest } = await publishEdge("c21-warm", { legislators: true });
+  const { dir, keys: published } = await publishEdge("c21-warm", { legislators: true });
   process.env.WTP_READER_EDGE_DIR = dir;
   const { value: primed, keys } = await recordingBytes(async () => (await (await warmGET(new Request("https://wtp.test/api/warm", { headers: { "x-wtp-synthetic-run": KEEP_WARM_MARKER } }))).json()).primed);
   assert.equal(primed.manifest, true);
   assert.equal(primed.meetings, true);
   assert.ok(primed.ask);
-  for (const ref of Object.values(manifest.stateAuthorities!["registry-runtime"]!)) assert.equal(keys.includes(ref.key), false);
+  for (const key of Object.values(published.registry)) assert.equal(keys.includes(key), false);
 });
 
 

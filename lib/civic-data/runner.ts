@@ -2,6 +2,7 @@ import { WORKER_PUBLICATION_TASK_IDS } from "./worker-reader-contracts.ts";
 import { VALIDATION_CHECKS, type RoutineRecordClass } from "./types.ts";
 import {
   ROUTINE_DATA_ADMISSION_MS,
+  ROUTINE_PASS_BUDGET_MS,
   ROUTINE_SOURCE_CONTRACTS,
   cadenceMsAt,
   type RoutineSourceContract,
@@ -18,17 +19,16 @@ import {
 import { runBoundedWorkPool } from "../ops/bounded-work-pool.ts";
 import type { BoundedChildResult } from "./bounded-child-pass.ts";
 
-/** A command never spawned because memory stayed full or the pass's time ran out: still owed, not failed. */
-export function routinePreSpawnDeferral(run: BoundedChildResult, childStarted: boolean): string | null {
-  return !childStarted && run.termination === "SPAWN_FAILED" && run.status === null && run.signal === null &&
-    run.stdout === "" && run.stderr === "" && /^(?:WORKER_MEMORY_DEADLINE|PASS_TIME_BUDGET):/.test(run.errorMessage ?? "")
-    ? run.errorMessage : null;
+/** A command never spawned because memory stayed full or the pass's time ran out, or ended at the pass deadline: still owed, not failed. */
+export function routineDeferral(run: BoundedChildResult, childStarted: boolean): string | null {
+  const unsent = !childStarted && run.termination === "SPAWN_FAILED" && run.status === null && run.signal === null &&
+    run.stdout === "" && run.stderr === "" && /^(?:WORKER_MEMORY_DEADLINE|PASS_TIME_BUDGET):/.test(run.errorMessage ?? "");
+  const cut = childStarted && run.termination === "TIMED_OUT" && /^PASS_TIME_BUDGET:/.test(run.errorMessage ?? "");
+  return unsent || cut ? run.errorMessage : null;
 }
 
 /** One national people child holds gigabytes, so every state and source of it runs one at a time in its own lane. */
 const ROUTINE_SERIAL_SCRIPTS: ReadonlySet<string> = new Set(["scripts/national-people-refresh.mts"]);
-/** A serial lane starts children only this long into a pass; the rest stay owed for the next pass. */
-export const ROUTINE_SERIAL_LANE_LAUNCH_MS = 30 * 60_000;
 export function routineSerialLane(command: readonly string[]): string | undefined {
   return ROUTINE_SERIAL_SCRIPTS.has(command[0] ?? "") ? `serial:${command[0]}` : undefined;
 }
@@ -63,6 +63,8 @@ export interface RoutineSourceTask {
     readonly publicationPending?: true;
     readonly requestedAt: string;
     readonly instructions: readonly string[];
+    /** The work items a publication serves. */
+    readonly workItemIds?: readonly string[];
   };
 }
 
@@ -133,7 +135,7 @@ onMeetingPartitionsRefreshed(() => {
 export const ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS = 1;
 /** A sitting-window lane takes up to three reads a pass, run one after another with the same-host gap. Other lanes take one. */
 export const SITTING_WINDOW_LANE_SLOTS_PER_PASS = 3;
-export { ROUTINE_DATA_ADMISSION_MS };
+export { ROUTINE_DATA_ADMISSION_MS, ROUTINE_PASS_BUDGET_MS };
 export const ROUTINE_CLOCK_READ_CONCURRENCY = 8;
 export const ROUTINE_CLOCK_MAX_REQUESTS_PER_TASK = 2;
 

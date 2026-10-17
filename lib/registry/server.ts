@@ -311,15 +311,10 @@ async function registrationFor(state: string): Promise<ComposedRegistration | nu
 /** A source listing does not depend on the unrelated registry or federal roster. */
 async function registrationModelFor(state: string): Promise<{ value: RegistrationReadModel; versionId: string } | null> {
   if (!REGISTRATION_STATES.has(state)) return null;
-  // The edge first: an ordinary visitor never wakes the database for registration. The manifest's section is
-  // complete, so a state it does not name has no promoted registration.
-  const edge = currentRegistrationsEdge();
-  if (edge) {
-    if (!edge.states.has(state)) return null;
-    const served = await edge.load(state);
-    if (served) return served;
-    // The artifact could not be fetched: this state is read from the database, on this request only.
-  }
+  // The edge first: an ordinary visitor never wakes the database for registration. A state with no pointer yet,
+  // or whose bytes could not be read, is read from the database on this request only.
+  const served = await currentRegistrationsEdge()?.load(state).catch(() => null);
+  if (served) return served.value === null ? null : { value: served.value, versionId: served.versionId };
   refuseDatabaseInEdgeOnlyContext(`The ${state} registration`);
   const read = await readRegistrationProjection(state);
   // No store at all (tests, the census gate, local work) has no registration to compose: registration has
@@ -597,15 +592,14 @@ export type CoverageStateLegislatorReader = (
 ) => ReturnType<typeof readStatePeopleProjection>;
 
 const settleStateLegislatorsRead: CoverageStateLegislatorReader = async (scope) => {
-  const edge = currentStateLegislatorsEdge();
-  if (edge && !edge.jurisdictions.has(scope)) {
+  const served = await currentStateLegislatorsEdge()?.load(scope).catch(() => null);
+  if (served?.value === null) {
     return { kind: "NOT_RECORDED", value: null, detail: "No state roster is published for this jurisdiction.",
       metadata: { recordClass: "STATE_LEGISLATOR", scope, sourceId: null, version: null, versionId: null,
         lastKnownGoodVersionId: null, sourceThrough: null, retrievedAt: null, promotedAt: null, stale: "UNKNOWN", staleAt: null } };
   }
-  const served = edge?.jurisdictions.has(scope) ? await edge.load(scope) : null;
   if (served) {
-    const { value, versionId } = served;
+    const { versionId } = served, value = served.value!;
     primeStatePeopleProjection(value);
     return {
       kind: "BOOTSTRAP",

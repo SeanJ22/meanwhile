@@ -26,7 +26,7 @@ const person:Officeholder={id,personId,nativeIds:{"ocd-person":[`ocd-person/${uu
 
 test("one state shard supplies directory mailto links and distinct sourced Ask office contacts immediately",async()=>{
   const reads:string[]=[];
-  await withReaderAuthorityEdge({edgeOnly:true,stateLegislators:{jurisdictions:new Set(["US-OH"]),load:async jurisdiction=>{
+  await withReaderAuthorityEdge({edgeOnly:true,stateLegislators:{load:async jurisdiction=>{
     reads.push(jurisdiction);return {versionId:"held-people",value:{formatVersion:1,sourceId:"plural-openstates",jurisdiction:"US-OH",term:"held-release",generatedAt:at,
       roster:{scope:"US-OH",generatedAt:at,officeholders:[person],divisions:[],unmatched:[]}}};
   }}},async()=>{

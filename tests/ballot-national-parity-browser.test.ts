@@ -18,7 +18,9 @@ import { ballotElectionKey, genericBallotProblems } from "../lib/ballot/generic-
 import { reconcileOfficialCandidacies } from "../lib/registry/runtime-data-plane.ts";
 import { normalizePortrait } from "../lib/photos/decode.ts";
 import type { PortraitVerification } from "../lib/photos/binding.ts";
-import { publishReaderEdgeArtifacts, ensureReaderAuthorityEdge, type PublishAuthority, type PublishStateAuthorities } from "../lib/meetings/edge-serving.ts";
+import { ensureReaderAuthorityEdge, publishReaderMeetings, type PublishAuthorityValue } from "../lib/meetings/edge-serving.ts";
+import { publishPointers } from "./helpers/edge-pointers.ts";
+import type { GlobalAuthorityFamily, StateAuthorityFamily } from "../lib/meetings/edge-artifacts.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
@@ -218,7 +220,7 @@ test("BL-20: Ohio and Michigan national ballots render the same incumbent record
     rowsInFile: 2, rowsWithStatements: 2, attribution: PRL_RHETORIC_ATTRIBUTION, rosterMisses: [], profiles: cases.map(item => ({ bioguideId: item.incumbent.slice(9), prlName: item.name,
       statementCount: 100, shares: { policy: 60, bipartisanship: 10, creditclaiming: 20, "attack-policy": 15, "attack-personal": 5 }, sources: ["all"], measuredAt: "2026-09-30" })) };
   const fec = requiredRoutineContract("fec-funding");
-  const authority: PublishAuthority = {
+  const authority: Partial<Record<GlobalAuthorityFamily, PublishAuthorityValue>> = {
     "census-districts": { value: azDistricts, versionId: azDistricts.versionId },
     "official-filings": promotedFamily([absentEdgeEntry("CURATED_READER_RECORD", requiredManualProductionContract("official-filings").scope)], "BL-20:filings"),
     "federal-funding": promotedFamily([provenEdgeEntry({ recordClass: "FEC_FUNDING", scope: fec.scope, sourceId: fec.sourceId, versionId: "BL-20:fec", value: funding }), manualEdgeEntry("campaign-finance", { kind: "campaign-finance", records: [] }, "BL-20:generic-money")], "BL-20:money"),
@@ -228,7 +230,7 @@ test("BL-20: Ohio and Michigan national ballots render the same incumbent record
     "officeholder-statements": promotedFamily([manualEdgeEntry("officeholder-statements", syntheticOfficeholderStatements(cases.map(item => item.incumbent)), "BL-20:statements")], "BL-20:statements"),
     "prl-archives": promotedFamily([provenEdgeEntry({ recordClass: PRL_CONTRACT.recordClass, scope: PRL_CONTRACT.scope, sourceId: PRL_CONTRACT.sourceId, versionId: "BL-20:prl", value: prl })], "BL-20:prl"),
   };
-  const stateAuthorities: PublishStateAuthorities = {
+  const stateAuthorities: Partial<Record<StateAuthorityFamily, Record<string, PublishAuthorityValue>>> = {
     "registry-runtime": stateRegistryArtifacts("BL-20:registry", ["AZ", "OH", "MI"], linkedRegistry),
     "federal-directory": stateFederalDirectoryArtifacts("BL-20:federal", federal),
     "ballot-contests": Object.fromEntries([...ballots, azBallot].map(ballot => [ballot.election.state,
@@ -254,8 +256,11 @@ test("BL-20: Ohio and Michigan national ballots render the same incumbent record
   const dir = mkdtempSync(join(tmpdir(), "wtp-national-ballot-parity-"));
   after(() => rmSync(dir, { recursive: true, force: true }));
   const store = new LocalFileArtifactStore(dir);
-  const published = await publishReaderEdgeArtifacts({ formatVersion: 1, generatedAt: checkedAt, counts: { fresh: 0, carried: 0, total: 0, duplicatesCollapsed: 0 }, sources: [], meetings: [], agendaDocuments: [] }, { sourceThrough: null, retrievedAt: null, promotedThrough: null }, { store, authority, stateAuthorities, registrations: {}, stateLegislators: {} });
+  const published = await publishReaderMeetings({ formatVersion: 1, generatedAt: checkedAt, counts: { fresh: 0, carried: 0, total: 0, duplicatesCollapsed: 0 }, sources: [], meetings: [], agendaDocuments: [] }, { sourceThrough: null, retrievedAt: null, promotedThrough: null }, { store });
   assert.equal(published.status, "PUBLISHED");
+  const none = { value: null, versionId: "none" };
+  await publishPointers(store, { authority, stateAuthorities, registrations: { az: none, oh: none, mi: none },
+    stateLegislators: { "US-AZ": none, "US-OH": none, "US-MI": none } });
   process.env.WTP_READER_EDGE_DIR = dir;
   const manifest = (await store.readManifest())!.manifest;
   const edge = await ensureReaderAuthorityEdge(manifest, store);

@@ -12,13 +12,13 @@ export async function readSpecialDistrictBoundaries(countyOcdId: string, options
 /** Address requests consume only scoped entries already present in their edge
  * bundle; a missing optional boundary family never opens the database. */
 export async function readSpecialDistrictBoundariesForCounties(countyOcdIds: readonly string[], options: PromotedCivicDataReadOptions = {}) {
-  const { currentReaderAuthorityEdge, currentPromotedEdge } = await import("./runtime-edge.ts");
+  const { currentReaderAuthorityEdge, ensurePromotedEdge } = await import("./runtime-edge.ts");
   const edgeContext = !options.store && currentReaderAuthorityEdge();
-  const reads = await Promise.all([...new Set(countyOcdIds)].flatMap(county => {
+  const reads = await Promise.all([...new Set(countyOcdIds)].map(async county => {
     const scope = scopedManualContractScope("special-district-boundaries", county);
-    const served = edgeContext ? currentPromotedEdge("CURATED_READER_RECORD", scope) : null;
-    if (edgeContext && !served) return [];
-    return [readSpecialDistrictBoundaries(county, { ...options, ...(served ? { edge: served.value } : {}) })];
+    const served = edgeContext ? await ensurePromotedEdge("CURATED_READER_RECORD", scope) : null;
+    if (edgeContext && !served) return null;
+    return readSpecialDistrictBoundaries(county, { ...options, ...(served ? { edge: served.value } : {}) });
   }));
-  return reads.flatMap(read => read.kind === "PROMOTED" ? read.value.records : []);
+  return reads.flatMap(read => read?.kind === "PROMOTED" ? read.value.records : []);
 }

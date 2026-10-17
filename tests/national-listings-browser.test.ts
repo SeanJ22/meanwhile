@@ -46,7 +46,7 @@ test("five ZIPs first show their source-code school district, government contact
     const value = candidate.readModel as RegistrationReadModel;
     const index = JSON.parse(readFileSync(`data/derived/zip-divisions/${postal.slice(0, 2)}.json`, "utf8"));
     const divisions: string[] = index.zips[postal].map((at: number) => index.divisions[at]);
-    const records = await withReaderAuthorityEdge({ edgeOnly: true, registrations: { states: new Set([state.toLowerCase()]), load: async code => {
+    const records = await withReaderAuthorityEdge({ edgeOnly: true, registrations: { load: async code => {
       assert.equal(code, state.toLowerCase()); return { value, versionId: `fixture:${state}` };
     } } }, async () => (await governmentListingsForDivisions(divisions)).records);
     assert.ok(records.some(row => row.nativeIds.nces_leaid && row.associations.some(link => ["unsd", "elsd", "scsd"].includes(link.layer) && link.basis === "SOURCE_CODE")), postal);

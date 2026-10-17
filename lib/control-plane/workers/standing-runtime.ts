@@ -90,13 +90,8 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
     try { const url = new URL(address ?? ""); return ["http:","https:"].includes(url.protocol) && !url.username && !url.password ? address : null; }
     catch { return null; }
   };
-  // The round indexes every Scout and Detective result into the Box; scoped lease runtimes skip it.
-  if (!scoped) {
-    const allArtifactRows = await input.repos.artifacts.readAll();
-    await backfillBox(input.repos.boxFindings, { scouts: prior,
-      detectives: initialWorkers.filter(record => record.result.role === "DETECTIVE") as import("../box.ts").BoxDetectiveRecord[],
-      artifacts: new Map(allArtifactRows.map(artifact => [artifact.artifactId, artifact])) }, now());
-  }
+  // The round indexes the Scout and Detective results recorded since its last pass into the Box; scoped lease runtimes skip it.
+  if (!scoped) await backfillBox(input.repos, now());
   // Build saved findings before any paid adapter work.
   if (!scoped) await workAdapterQueue({repos:input.repos,results:prior,now:now(),readEvidence:async id=>evidenceProjection(await heldRuntime.readEvidence(id)),
     ...(input.transportFor?{transportFor:result=>input.transportFor!({subjectId:result.subjectId,state:scoutStateHint(result.subjectId,result.obligationId)[0]??null})}:{})});
@@ -137,11 +132,7 @@ export async function autonomousStandingRuntime(input:{root:string;vaultRoot?:st
     beginTask:async (task)=>{
       const fresh=await readCompletedWorkerResults(input.repos,task.workItemId);
       priorWorkers=[...priorWorkers.filter(w=>w.workItemId!==task.workItemId),...fresh];
-      if (scoped) {
-        // A store without the filtered reads (a test double) brokers from the whole store, as before.
-        const history=await readLineageHistory(input.repos,task.workItemId);
-        if (history) brokerLineages(history); else await brokerWholeStore();
-      } },
+      if (scoped) brokerLineages(await readLineageHistory(input.repos,task.workItemId)); },
     rollingCeilingUsd:input.auditCeilingUsd??0,routineMeetingsAuthority:"PERMANENT_CIVIC_DATA_PLANE",
     roleExecutor:(task,holder)=>researchRoleExecutor(runtime,tools,task,holder,input.root),
     ...(input.transport?{scoutFor:async (item:WorkItem,task)=>{

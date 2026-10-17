@@ -63,9 +63,3 @@ export async function readPassCursor(query: Query, name: string): Promise<string
 export async function writePassCursor(query: Query, name: string, position: string): Promise<void> {
   await query("INSERT INTO pass_cursor (name, position) VALUES ($1, $2) ON CONFLICT (name) DO UPDATE SET position = EXCLUDED.position", [name, position]);
 }
-
-/** Every state's version, read in one indexed pass over the few watermark rows. */
-export async function stateFactVersions(query: Query): Promise<ReadonlyMap<string, string>> {
-  const rows = await query("SELECT scope, version FROM fact_watermark WHERE scope ~ '^[A-Z]{2}$'");
-  return new Map(rows.map(row => [String(row.scope), `facts:${String(row.scope)}:${String(row.version)}`]));
-}

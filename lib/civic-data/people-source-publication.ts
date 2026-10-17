@@ -72,7 +72,7 @@ async function peopleSourceViolations(input:{sourceId:string;roster:Officeholder
 }
 function peopleSourceCandidate(input: PeopleCandidateInput): RoutineCandidate {
   const jurisdiction = peopleJurisdiction(input.state), scope = peopleSourceScope(jurisdiction, input.sourceId);
-  const recordClass = peopleSourceRecordClass(jurisdiction, input.sourceId), parserVersion = sourceAuthority(input.sourceId)?.parserVersion ?? "people-sources/1";
+  const recordClass = peopleSourceRecordClass(input.sourceId), parserVersion = sourceAuthority(input.sourceId)?.parserVersion ?? "people-sources/1";
   const acquiredAt = input.captures.map(row=>row.retrievedAt).sort().at(-1) ?? input.now;
   const readModel: PeopleSourceReadModel = JSON.parse(JSON.stringify({formatVersion:1,sourceId:input.sourceId,jurisdiction,term:input.releaseId,generatedAt:acquiredAt,roster:input.roster}));
   const people = input.roster.officeholders;
@@ -126,7 +126,7 @@ export async function publishPeopleSource(input: PublishPeopleSourceInput) {
   const candidate = peopleSourceCandidate({...input,roster,captures,violations,excludedFacts:[...(input.excludedFacts ?? []),...comparisonFacts]});
   const state = input.state.replace(/^US-/i, "").toLowerCase();
   const contractId = input.contractId ?? (input.sourceId === "people-portraits"
-    ? `people-portraits-${state === "us" ? "federal" : state}`
+    ? `people-portraits-${state}`
     : `people-${input.sourceId}-${state}`);
   const outcome = await processRegisteredRoutineCandidate(input.store,contractId,candidate,input.now,prior.kind === "PROMOTED" ? prior.metadata.versionId : null,{confirmUnchanged:input.confirmUnchanged});
   return {candidate,outcome};

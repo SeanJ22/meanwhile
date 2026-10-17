@@ -7,8 +7,9 @@ import { decideNamedBody, applyNamedBodyDecision, type BodyConfirmation } from "
 import { readAskAnswer, type AskAnswerPayload } from "../lib/ask/answer.ts";
 import type { BindableEntity } from "../lib/routing/named-entity.ts";
 import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
-import type { MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
-import { installPromotedValue, installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+import type { Meeting } from "../lib/sources/types.ts";
+import { publishRecordedEdge } from "./helpers/reader-edge-meetings.ts";
+import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 // The canonical native runner strips TypeScript but does not compile TSX.
 // Compile only these actual reader leaves through the existing tsx runtime.
 const { AskBodyConfirmation } = await tsImport("../components/ask/body-confirmation.tsx", import.meta.url) as typeof import("../components/ask/body-confirmation.tsx");
@@ -16,25 +17,19 @@ const { AskBodyConfirmation } = await tsImport("../components/ask/body-confirmat
 // Offline actual handler, with no model, database, acquisition or signal writes.
 for (const key of ["ANTHROPIC_API_KEY", "DATABASE_URL", "DATABASE_URL_UNPOOLED", "NEON_DATABASE_URL"]) delete process.env[key];
 await installRegistryAuthority();
-// Vail's promoted meeting partition: one scheduled sitting a week out whose
-// agenda is not yet held, as the Apptegy calendar publishes it.
+// Vail's meeting partition: one scheduled sitting a week out whose agenda is not yet held, as the Apptegy calendar publishes it,
+// promoted through its door and published as the body's record on the edge the route reads.
 {
   const partition = MEETING_PARTITION_CONTRACTS.find((p) => p.bodyId === "ocd-division/country:us/state:az/school_district:vail_unified_district#board")!;
   const wiring = partition.wiring!;
   const now = new Date().toISOString();
-  const value: MeetingsSnapshot = {
-    formatVersion: 1, generatedAt: now, counts: { fresh: 1, carried: 0, total: 1 },
-    sources: [{ source: partition.meetingSource, ok: true, error: null, fetched: 1, normalized: 1,
-      drops: { placeless: 0, unknownVenue: 0, unplaceableInTime: 0, notConfigured: 0 } }],
-    meetings: [{
-      id: `${partition.meetingSource}:vail:test-sitting`, ocdId: partition.ocdId, bodyId: partition.bodyId, bodyName: wiring.publishingOrg,
-      title: "Governing Board Meeting", startsAt: new Date(Date.now() + 7 * 86_400_000).toISOString(), timeZone: wiring.timeZone,
-      location: null, agendaUrl: null, jurisdiction: wiring.jurisdiction, status: "SCHEDULED",
-      provenance: { sourceUrl: String(wiring.config.apiBase), sourceOrg: wiring.publishingOrg, collectedAt: now, verifiedAt: null },
-    }],
-    agendaDocuments: [],
+  const sitting: Meeting = {
+    id: `${partition.meetingSource}:vail:test-sitting`, ocdId: partition.ocdId, bodyId: partition.bodyId, bodyName: wiring.publishingOrg,
+    title: "Governing Board Meeting", startsAt: new Date(Date.now() + 7 * 86_400_000).toISOString(), timeZone: wiring.timeZone,
+    location: null, agendaUrl: null, jurisdiction: wiring.jurisdiction, status: "SCHEDULED",
+    provenance: { sourceUrl: String(wiring.config.apiBase), sourceOrg: wiring.publishingOrg, collectedAt: now, verifiedAt: null },
   };
-  installPromotedValue({ recordClass: "MEETING", scope: partition.scope, sourceId: partition.sourceId, versionId: "test:vail-meetings", retrievedAt: now, value });
+  await publishRecordedEdge([sitting], [], now);
 }
 const { POST } = await import("../app/api/ask/grounded/route.ts");
 const { resetGroundedState } = await import("../lib/ask/grounded-state.ts");

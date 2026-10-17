@@ -1,4 +1,4 @@
-import { CAPTURE_CONVERSION_LOG_KEY, captureConversionRecord, captureConversionRecorded } from "../lib/civic-data/capture-conversion.ts";
+import { FEDERAL_PEOPLE_SPLIT_LOG_KEY, federalPeopleSplitRecord, federalPeopleSplitRecorded } from "../lib/civic-data/federal-people-split.ts";
 import { readMeetingDiscoveryInputs, meetingDiscoveryInputsDue, runMeetingDiscoveryChain, type MeetingDiscoveryInputs } from "../lib/civic-data/meeting-discovery-due.ts";
 import { readerFactDb, readPassCursor, writePassCursor } from "../lib/facts/db.ts";
 import { ensureFactEntities, registeredStates } from "../lib/facts/entities.ts";
@@ -103,6 +103,7 @@ import {
   type RoutineDueRequest,
 } from "../lib/civic-data/routine-due-request.ts";
 import { ADMIN_CONFIG_ID, isAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
+import { installMeetingClockFrom } from "../lib/meetings/settings.ts";
 import { expansionScopesOf } from "../lib/control-plane/expansion/scopes.ts";
 import { resolveScopes } from "../lib/control-plane/expansion/runner-load.ts";
 import { loadPublishedScopeLookupState } from "../lib/census-geography/scope-lookup.ts";
@@ -211,6 +212,15 @@ if (controlPlaneUrlFromEnv() === null) {
     }
   } catch (error) {
     console.warn(`RCD_TASK routine-civic-data-runner: the door registry could not be read, so this pass has no hand-wired meeting work — ${error instanceof Error ? error.message : String(error)}`);
+  }
+}
+if (controlPlaneUrlFromEnv() !== null) {
+  try {
+    const clockRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, new Date().toISOString(), { skipBootstrap: true });
+    const owner = await withControlPlaneConnectRetry(() => clockRepos.adminConfig.read(ADMIN_CONFIG_ID));
+    installMeetingClockFrom(owner !== null && isAdminConfig(owner.value) ? owner.value : null);
+  } catch (error) {
+    console.warn(`RCD_TASK routine-civic-data-runner: the meeting check clock could not be read, so this pass uses the last installed one — ${safeFailure(sanitizedErrorDiagnostic(error))}`);
   }
 }
 const STANDING_SOURCE_TASKS: readonly RoutineSourceTask[] = PUBLISH_NOW ? [] : await withNationalPlaceTasks([
@@ -738,23 +748,23 @@ if (!PUBLISH_NOW) {
     supervisorFailures.push({ taskId: "fact-store-entities", code: "FACT_ENTITIES_LOAD_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
   }
   if (controlPlaneUrlFromEnv()) {
-    step = "converting held versions that embed source pages, once";
+    step = "splitting the held national people records into place and member records, once";
     try {
-      const conversionRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, RUN_STARTED_AT, { skipBootstrap: true });
-      if (!await captureConversionRecorded(conversionRepos.ownerDigests)) {
-        const [run] = await runBoundedChildPass([{ id: CAPTURE_CONVERSION_LOG_KEY, failureDomain: "derived:capture-conversion",
-          executable: process.execPath, args: ["--experimental-strip-types", "scripts/convert-embedded-captures.mts"],
-          env: admittedRuntimeChildEnvironment({ parentEnv: process.env, capability: "CAPTURE_CONVERSION", parentPid: process.pid }),
+      const splitRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, RUN_STARTED_AT, { skipBootstrap: true });
+      if (!await federalPeopleSplitRecorded(splitRepos.ownerDigests)) {
+        const [run] = await runBoundedChildPass([{ id: FEDERAL_PEOPLE_SPLIT_LOG_KEY, failureDomain: "derived:federal-people-split",
+          executable: process.execPath, args: ["--experimental-strip-types", "scripts/split-federal-people.mts"],
+          env: admittedRuntimeChildEnvironment({ parentEnv: process.env, capability: "FEDERAL_PEOPLE_SPLIT", parentPid: process.pid }),
         }], { cwd: ROOT, env: process.env, timeoutMs: ROUTINE_CHILD_TIMEOUT_MS, maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES, concurrency: 1 });
-        const at = new Date().toISOString(), record = run ? captureConversionRecord(run, at, RUNNING_CODE_SHA) : null;
+        const at = new Date().toISOString(), record = run ? federalPeopleSplitRecord(run, at, RUNNING_CODE_SHA) : null;
         if (record) {
-          await conversionRepos.ownerDigests.append(CAPTURE_CONVERSION_LOG_KEY, record.digestId, record, at);
+          await splitRepos.ownerDigests.append(FEDERAL_PEOPLE_SPLIT_LOG_KEY, record.digestId, record, at);
           console.log(`RCD_TASK routine-civic-data-runner: ${record.headline}`);
-        } else supervisorFailures.push({ taskId: CAPTURE_CONVERSION_LOG_KEY, code: "CAPTURE_CONVERSION_UNFINISHED",
+        } else supervisorFailures.push({ taskId: FEDERAL_PEOPLE_SPLIT_LOG_KEY, code: "FEDERAL_PEOPLE_SPLIT_UNFINISHED",
           detail: safeFailure(run?.errorMessage ?? run?.stderr.trim().split("\n").at(-1) ?? "no answer") });
       }
     } catch (error) {
-      supervisorFailures.push({ taskId: CAPTURE_CONVERSION_LOG_KEY, code: "CAPTURE_CONVERSION_UNFINISHED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
+      supervisorFailures.push({ taskId: FEDERAL_PEOPLE_SPLIT_LOG_KEY, code: "FEDERAL_PEOPLE_SPLIT_UNFINISHED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
     }
   }
   step = "carrying the rosters, office contacts and comment rules readers already see onto facts";

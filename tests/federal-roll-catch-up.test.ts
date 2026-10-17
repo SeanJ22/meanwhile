@@ -4,6 +4,7 @@ import test from "node:test";
 
 import { ROLL_MAX_CATCH_UP, windowStart } from "../lib/votes/catch-up.ts";
 import { AUTOMATIC_REFRESH_CONTRACT_IDS, AUTOMATIC_REFRESH_TASKS } from "../lib/civic-data/automatic-refresh.ts";
+import { FEDERAL_DIRECTORY_STATES, federalDirectoryContractId } from "../lib/officials/federal-directory-data-plane.ts";
 
 /** Congress refreshes itself daily, and no roll call falls in a gap between versions. */
 
@@ -22,8 +23,8 @@ test("DB-08: a gap beyond the catch-up cap is reported, not silently shortened",
   assert.ok(far.unreached > 0);
 });
 
-test("DB-08: the roster, roll calls and key votes are on the daily automatic refresh, with no Send", () => {
-  for (const id of ["congress-bulk-roster", "congress-rollcalls", "federal-key-votes"] as const) {
+test("DB-08: every place's roster, the roll calls and key votes are on the daily automatic refresh, with no Send", () => {
+  for (const id of [...FEDERAL_DIRECTORY_STATES.map(federalDirectoryContractId), "congress-rollcalls", "federal-key-votes"] as const) {
     assert.ok(AUTOMATIC_REFRESH_CONTRACT_IDS.includes(id), id);
     const task = AUTOMATIC_REFRESH_TASKS.find((row) => row.id === id)!;
     assert.equal(task.cadenceMs, 24 * 60 * 60_000, `${id} is daily`);

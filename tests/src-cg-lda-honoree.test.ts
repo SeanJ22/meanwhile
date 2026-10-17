@@ -32,7 +32,7 @@ test("real Senate LD-203 honoree strings resolve to one federal roster person, i
 
 test("the federal directory candidate holds roster references, and the LDA roster reads its aliases back from the vault", async () => {
   const store = new MemoryRoutineDataStore(), own = new MemoryEvidenceStore(), roster = await seedSrcCgRoster(store, own);
-  const promoted = await store.readCandidate(roster.versionId);
+  const promoted = await store.readCandidate(roster.versionId.split("|")[0]);
   const [held] = (promoted!.candidate.normalizedPayload as { acquisitions: FederalDirectoryCapture[] }).acquisitions;
   const body = readFileSync(new URL("./fixtures/src-cg/federal-roster.yaml", import.meta.url), "utf8");
   assert.equal("body" in held, false); assert.equal(held.raw.byteLength, Buffer.byteLength(body));

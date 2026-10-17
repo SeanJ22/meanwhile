@@ -19,10 +19,10 @@ import { registrationGovernments, type ReadOnlyQuery, type Statement } from "../
 import { deployPreview } from "../lib/control-plane/deploy-preview.ts";
 import { wiringRowFor } from "../lib/control-plane/discovery/derived-wiring.ts";
 import { registrationGovernmentsPlaced, stateSendPreviewSentence, type PreviewCode } from "../lib/control-plane/expansion/send-preview.ts";
-import { scopeOfMeeting, stateOfOcdId } from "../lib/meetings/edge-artifacts.ts";
+import { meetingIndexRowScope, meetingStateOf } from "../lib/meetings/body-records.ts";
+import { stateOfOcdId } from "../lib/meetings/edge-artifacts.ts";
 import { ocdStateCode } from "../lib/ocd/state-of.ts";
 import type { RegistrationGovernmentListing } from "../lib/registration/listings.ts";
-import type { Meeting } from "../lib/sources/types.ts";
 
 const ROOT = join(import.meta.dirname, "..");
 const PR = "ocd-division/country:us/territory:pr/county:adjuntas";
@@ -37,9 +37,10 @@ test("a DC or territory division lies in its own state code on every step of the
   assert.equal(ocdStateCode("ocd-division/country:us/statehood:xx"), null);
   assert.equal(ocdStateCode(null), null);
 
-  /* The reader's serving scope: a Puerto Rico sitting is Puerto Rico's, not the national bucket's. */
+  /* The reader's serving state: a Puerto Rico body is filed under Puerto Rico's index, not the national one. */
   assert.equal(stateOfOcdId(PR), "pr");
-  assert.equal(scopeOfMeeting({ ocdId: `${PR}/place:adjuntas` } as Meeting), "pr");
+  assert.equal(meetingStateOf(`${PR}#governing`), "PR");
+  assert.equal(meetingIndexRowScope(meetingStateOf(`${PR}/place:adjuntas`)), "US-PR:meetings-index");
 
   /* A crosswalk row on a municipio's division, reviewed like any other. */
   const bodyId = `${PR}#governing`;

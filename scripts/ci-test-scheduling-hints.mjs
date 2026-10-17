@@ -330,7 +330,7 @@ export const SCHEDULING_HINTS = Object.freeze({
   "tests/post-deploy-integrity-data-plane.test.ts": 20.683,
   "tests/post-deploy-observer.test.ts": 33.8958,
   "tests/prepared-meeting-snapshot.test.ts": 25.6329,
-  "tests/prepared-snapshot-admin-lag.test.ts": 17.8625,
+  "tests/meeting-publication-admin-lag.test.ts": 17.8625,
   "tests/prl-archive-store.test.ts": 21.4675,
   "tests/prl-ingest-engine.test.ts": 31.4233,
   "tests/prl-ingest.test.ts": 15.0294,

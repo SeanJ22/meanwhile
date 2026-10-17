@@ -32,7 +32,7 @@ test("ACC-1: map style uses the key's exact dash and weight specification withou
       addSource: (_id: string, source: unknown) => sourceData.push(source),
       addLayer: (layer: LayerSpecification) => layers.push(layer),
     } as unknown as MapLibreMap;
-    addDistrictLayer(map, type);
+    addDistrictLayer(map, type, "AZ");
     const line = layers.find((layer) => layer.type === "line");
     assert.ok(line?.type === "line");
     assert.deepEqual(line.paint?.["line-dasharray"], DISTRICT_LAYERS[type].dash);
@@ -43,7 +43,7 @@ test("ACC-1: map style uses the key's exact dash and weight specification withou
     assert.equal((width[6] as unknown[]).at(-1), 1.65 * DISTRICT_LAYERS[type].weight);
     assert.equal((sourceData[0] as {type:string}).type, "vector");
     assert.equal(line["source-layer"], "districts");
-    assert.ok(!JSON.stringify(line.filter).includes("state" + "\""), "the filter never clips to an active state");
+    assert.match(JSON.stringify(line.filter), /"state".*"AZ"/);
   }
 });
 

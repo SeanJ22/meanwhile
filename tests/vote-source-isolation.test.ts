@@ -34,27 +34,17 @@ const CURATED: MemberKeyVotes = {
   positionsReadAt: "2026-09-09T00:00:00.000Z",
 };
 
-test("party-label failure cannot erase an independently held key-vote projection", async () => {
-  const result = await settleFederalVoteSupportingHoldings(MEMBER, {
-    parties: async () => { throw new Error("planted registry holding failure"); },
-    keyVotes: async () => CURATED,
-  });
-
-  assert.equal(result.partyBreakdownHoldingStatus, "HOLDING_UNAVAILABLE");
-  assert.equal(result.parties.size, 0);
+test("a held key-vote projection is served as held", async () => {
+  const result = await settleFederalVoteSupportingHoldings(MEMBER, { keyVotes: async () => CURATED });
   assert.equal(result.keyVotesHoldingStatus, "HELD");
   assert.equal(result.curated, CURATED);
 });
 
-test("key-vote failure cannot erase independently held roll-call supporting facts", async () => {
-  const parties = new Map([[MEMBER, "Democrat"]]);
+test("key-vote failure is stated, and leaves an empty member answer rather than an error", async () => {
   const result = await settleFederalVoteSupportingHoldings(MEMBER, {
-    parties: async () => parties,
     keyVotes: () => { throw new Error("planted key-vote holding failure"); },
   });
 
-  assert.equal(result.partyBreakdownHoldingStatus, "HELD");
-  assert.equal(result.parties, parties);
   assert.equal(result.keyVotesHoldingStatus, "HOLDING_UNAVAILABLE");
   assert.deepEqual(result.curated, {
     member: MEMBER,

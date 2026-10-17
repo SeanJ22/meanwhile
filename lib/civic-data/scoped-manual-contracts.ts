@@ -1,4 +1,5 @@
 import { jurisdictionFromOcdId } from "../coverage/states.ts";
+import { federalMemberOfScope, federalMemberVotesScope } from "../votes/data-plane.ts";
 
 const PREFIXES: Readonly<Record<string, string>> = {
   "plain-english-translations": "US:plain-english-translations",
@@ -15,10 +16,13 @@ export function scopedManualContractScope(id: string, ocdId: string): string {
   return `${PREFIXES[id]}:${ocdId}`;
 }
 export function isScopedManualContractScope(id: string, scope: string): boolean {
+  if (id === "congress-rollcalls") return federalMemberOfScope(scope) !== null;
   const prefix = PREFIXES[id];
   return Boolean(prefix && scope.startsWith(`${prefix}:`) && jurisdictionIsValid(id, scope.slice(prefix.length + 1)));
 }
 export function manualPayloadScope(id: string, fallback: string, payload: unknown): string {
+  const member = (payload as { officeholderId?: unknown })?.officeholderId;
+  if (id === "congress-rollcalls") return typeof member === "string" ? federalMemberVotesScope(member) : fallback;
   if (!PREFIXES[id]) return fallback;
   const records = (payload as { records?: readonly { ocdId?: string }[] })?.records;
   const division = records?.[0]?.ocdId;

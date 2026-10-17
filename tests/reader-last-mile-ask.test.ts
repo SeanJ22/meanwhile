@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import test from "./helpers/playbooks.ts";
 import type { CandidateDocument } from "../lib/candidates/corpus.ts";
 import { installFederalVotes, installOfficeholderStatements, installRegistryAuthority, installStateMoney, stateMoneyFixture, syntheticCandidateCorpus, syntheticFiledStateMoneyRecord } from "./helpers/promoted-fixtures.ts";
-import { installMeetings, recordedMeetings85701 } from "./helpers/reader-fixtures.ts";
+import { recordedMeetings85701 } from "./helpers/reader-fixtures.ts";
 
 await installRegistryAuthority();
 
@@ -19,6 +19,7 @@ import { statementEvidenceFor } from "../lib/ask/statements.ts";
 import { unifiedCorpus } from "../lib/corpus/unified.ts";
 import { positionsFor } from "../lib/corpus/positions.ts";
 import { voteEvidenceFor } from "../lib/ask/votes.ts";
+import { readFederalMemberVotes } from "../lib/votes/snapshot.ts";
 import { bodyIdentityIndex } from "../lib/ask/body-identity.ts";
 import { contactsForBody, contactRecord } from "../lib/ask/contacts.ts";
 import { contactForCandidate } from "../lib/ask/candidate-contact.ts";
@@ -114,7 +115,6 @@ async function installCandidateCorpus(value: CandidateCorpus = syntheticCandidat
 function promotedFixtureBundle(extra: ReaderAuthorityEdgeBundle = {}): ReaderAuthorityEdgeBundle {
   const current: ReaderAuthorityEdgeBundle = currentReaderAuthorityEdge() ?? {};
   return { stateAuthorities: current.stateAuthorities,
-    ...(current.federalDirectory ? { federalDirectory: current.federalDirectory } : {}),
     ...(current.stateLegislators ? { stateLegislators: current.stateLegislators } : {}),
     ...extra, promoted: new Map([...(current.promoted ?? []), ...(extra.promoted ?? [])]) };
 }
@@ -277,7 +277,6 @@ for (const [index, state] of ["AZ", "NJ", "NH"].entries()) {
   if (state === "AZ") continue;
   await installCandidateCorpus({ ...corpus, attempted: 1, documents: [controlPages[index]], failures: [] }, state);
 }
-installMeetings(recordedMeetings85701());
 
 delete process.env.ANTHROPIC_API_KEY;
 const { POST } = await import("../app/api/ask/grounded/route.ts");
@@ -464,11 +463,11 @@ test("each readable canonical statement subject can be searched without a genera
   assert.ok(tested >= 40, `real current corpus: ${tested} subjects with quotable passages`);
 });
 
-test("direct official vote IDs never fall through to another same-name person", () => {
+test("direct official vote IDs never fall through to another same-name person", async () => {
   const missing = voteEvidenceFor("Andy Biggs", { officeholderId: "congress:DOES_NOT_EXIST" });
   assert.equal(missing.identity.kind, "NO_ROSTER_ROW");
   assert.equal(missing.records.length, 0);
-  const known = voteEvidenceFor("the card's display name", { officeholderId: "congress:B001302" });
+  const known = voteEvidenceFor("the card's display name", { officeholderId: "congress:B001302", memberVotes: (await readFederalMemberVotes("congress:B001302")).value });
   assert.equal(known.identity.kind, "JOINED");
   assert.ok(known.records.length > 0);
 });

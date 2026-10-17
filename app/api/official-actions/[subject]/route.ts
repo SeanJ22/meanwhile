@@ -17,7 +17,7 @@ export const runtime = "nodejs";
 async function currentOfficialActionTargetPlan(subject: string, divisions: readonly string[]): Promise<OfficialActionTargetPlan> {
   await refreshRegistryRuntimeFromPromoted(ballotStatesForDivisions(divisions));
   const direct = directOfficialActionTargetPlan(subject);
-  if (subject.startsWith("congress:")) await refreshFederalDirectoryFromPromoted();
+  if (subject.startsWith("congress:") && divisions.length) await refreshFederalDirectoryFromPromoted(ballotStatesForDivisions(divisions));
   const candidacy = resolvedCandidacyForOfficial(subject);
   const holder = currentOfficialIdentity(subject);
   const applies = direct.applies || Boolean(candidacy?.candidacyId.startsWith("ballot-az-"))

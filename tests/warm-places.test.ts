@@ -6,13 +6,13 @@ import { publishedCountyDivisions, warmPlacesForCounties } from "../lib/ops/warm
 
 const D = (rest: string) => `ocd-division/country:us/${rest}`;
 
-test("only county divisions are taken from the manifest scopes, once each", () => {
-  const scopes = [
-    { ocdId: D("state:az/county:cochise") }, { ocdId: D("state:az/county:cochise#governing") },
-    { ocdId: D("state:az/place:tombstone") }, { ocdId: D("state:oh/county:delaware") },
-    { ocdId: D("state:oh") }, { ocdId: D("state:oh/county:delaware/school_district:x") }, {},
+test("only county divisions are taken from the published places, once each", () => {
+  const divisions = [
+    D("state:az/county:cochise"), D("state:az/county:cochise#governing"),
+    D("state:az/place:tombstone"), D("state:oh/county:delaware"),
+    D("state:oh"), D("state:oh/county:delaware/school_district:x"), D("state:az/county:cochise"),
   ];
-  assert.deepEqual(publishedCountyDivisions(scopes), [D("state:az/county:cochise"), D("state:oh/county:delaware")]);
+  assert.deepEqual(publishedCountyDivisions(divisions), [D("state:az/county:cochise"), D("state:oh/county:delaware")]);
 });
 
 test("one place per county: its lowest ZIP and the map's centroid; a shared ZIP warms once; gaps are counted", () => {

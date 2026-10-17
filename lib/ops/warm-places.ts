@@ -10,11 +10,11 @@ export interface WarmPlace {
 const COUNTY_DIVISION = /^ocd-division\/country:us\/state:([a-z]{2})\/county:[^/#]+$/;
 
 /** The county divisions a manifest publishes, sorted and without repeats. */
-export function publishedCountyDivisions(scopes: readonly { readonly ocdId?: string }[]): string[] {
+export function publishedCountyDivisions(divisions: readonly string[]): string[] {
   const out = new Set<string>();
-  for (const scope of scopes) {
-    const division = scope.ocdId?.split("#")[0];
-    if (division && COUNTY_DIVISION.test(division)) out.add(division);
+  for (const id of divisions) {
+    const division = id.split("#")[0];
+    if (COUNTY_DIVISION.test(division)) out.add(division);
   }
   return [...out].sort();
 }

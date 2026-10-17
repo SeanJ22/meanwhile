@@ -934,6 +934,12 @@ export const civicDataReaderProjections = pgTable(
 );
 
 
+/** Meeting partitions whose pointer moved or whose version was confirmed; a database trigger fills it. */
+export const meetingPublicationQueue = pgTable("meeting_publication_queue", {
+  scope: text("scope").primaryKey(),
+  queuedAt: timestamp("queued_at", { withTimezone: true, mode: "string" }).notNull().default(sql`clock_timestamp()`),
+});
+
 /** Raw click history lives in Blobs; these are retry keys and coarse aggregates. */
 export const readerEventBatches = pgTable("reader_event_batches", {
   batchId: text("batch_id").primaryKey(),

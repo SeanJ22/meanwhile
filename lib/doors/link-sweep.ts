@@ -11,6 +11,9 @@ import type { WebsiteSize } from "../control-plane/scheduler/host-supervision.ts
 import { websiteRequestLimit } from "../control-plane/scheduler/host-supervision.ts";
 import { upsertSystemDoor } from "./link-sweep-store.ts";
 import { admitWebsiteRequest, holdWebsiteAfter, type WebsitePacing } from "../control-plane/website-pacing.ts";
+import { gunzipSync } from "node:zlib";
+import { decodeMeetingBlob, meetingBodyPointerKey, type MeetingBodyPointer, type MeetingBodyRecord, type MeetingStateIndex } from "../meetings/body-records.ts";
+import { sha256OfJson } from "../meetings/edge-artifacts.ts";
 import type { ReaderArtifactStore } from "../meetings/edge-store.ts";
 import type { DoorRepository } from "./registry.ts";
 
@@ -33,7 +36,7 @@ function surfaceOf(path: readonly string[], url: string): LinkSurface {
 }
 
 /** Every distinct https link in the published edge's JSON, tagged with the surface its key names. */
-export function collectOutboundLinks(artifacts: readonly unknown[], limit = 200_000): OutboundLink[] {
+export async function collectOutboundLinks(artifacts: AsyncIterable<unknown> | Iterable<unknown>, limit = 200_000): Promise<OutboundLink[]> {
   const found = new Map<string, LinkSurface>();
   const visit = (value: unknown, path: string[], depth: number): void => {
     if (found.size >= limit || depth > 24) return;
@@ -59,7 +62,7 @@ export function collectOutboundLinks(artifacts: readonly unknown[], limit = 200_
       for (const [k, v] of Object.entries(value as Record<string, unknown>)) visit(v, [...path, k], depth + 1);
     }
   };
-  for (const artifact of artifacts) visit(artifact, [], 0);
+  for await (const artifact of artifacts) visit(artifact, [], 0);
   return [...found].map(([url, surface]) => ({ url, surface })).sort((a, b) => (a.url < b.url ? -1 : 1));
 }
 
@@ -192,15 +195,26 @@ export async function recordSweep(repo: DoorRepository, results: readonly LinkRe
   return summaries;
 }
 
-/** What the sweep reads of the published edge: the manifest itself (source reports, comment access, routing) and every scope artifact it lists. */
-export async function readEdgeForSweep(store: Pick<ReaderArtifactStore, "readManifest" | "readArtifact">): Promise<unknown[]> {
+/** What the sweep reads of the published edge: the manifest itself, then each state's body records and agenda text, one body at a time. */
+export async function* readEdgeForSweep(store: Pick<ReaderArtifactStore, "readManifest" | "readBytes" | "readJsonPointer">): AsyncGenerator<unknown> {
   const stored = await store.readManifest();
-  if (stored === null) return [];
-  const { scopes, ...rest } = stored.manifest;
-  const artifacts: unknown[] = [rest];
-  for (const scope of scopes) {
-    const artifact = await store.readArtifact(scope.key);
-    if (artifact !== null) artifacts.push(artifact);
+  if (stored === null) return;
+  const { meetingStates, ...rest } = stored.manifest;
+  yield rest;
+  const read = async <T>(key: string): Promise<T | null> => {
+    const bytes = await store.readBytes(key);
+    return bytes === null ? null : decodeMeetingBlob<T>(bytes, key);
+  };
+  for (const [state, ref] of Object.entries(meetingStates ?? {})) {
+    const bytes = await store.readBytes(ref.key);
+    const index = bytes === null ? null : (JSON.parse(gunzipSync(bytes).toString("utf8")) as { value: MeetingStateIndex }).value;
+    if (index === null || sha256OfJson(index) !== ref.sha) continue;
+    for (const bodyId of index.bodies) {
+      const pointer = (await store.readJsonPointer<MeetingBodyPointer>(meetingBodyPointerKey(state, bodyId)))?.value;
+      const record = pointer ? await read<MeetingBodyRecord>(pointer.record) : null;
+      if (record === null) continue;
+      yield record;
+      if (record.agenda) { const agenda = await read<unknown>(record.agenda); if (agenda !== null) yield agenda; }
+    }
   }
-  return artifacts;
 }

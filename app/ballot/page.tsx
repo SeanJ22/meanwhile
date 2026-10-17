@@ -16,7 +16,7 @@ import { filingsForDivisions, type OfficialFiling } from "@/lib/civic-data/offic
 import { readOfficialFilingsForReader } from "@/lib/civic-data/curated-reader-read-model";
 
 import { contestsForDivisions } from "@/lib/ballot/contests";
-import { ballotPointDivisions } from "@/lib/ballot/reader-place";
+import { ballotPlaceFromParams, ballotPointDivisions, ballotPointStateDivisions } from "@/lib/ballot/reader-place";
 import { ballotStatesForDivisions, readerBallotSourcesForDivisions } from "@/lib/ballot/reader-sources";
 import { coverageNotesForScope } from "@/lib/ballot/coverage-notes";
 import {
@@ -150,7 +150,6 @@ import { reconciledCandidacyIdForCard } from "@/lib/identity/az-2026";
 import { groupAbsences } from "@/lib/ballot/absence-grouping";
 import { sharedNotesFor } from "@/lib/ballot/shared-notes";
 import { readerContestScope } from "@/lib/ballot/reader-scope";
-import { resolveZip } from "@/lib/geo/zcta";
 import {
   settleFederalDirectoryRead,
   settleRegistryAuthorityReads,
@@ -493,14 +492,12 @@ async function readBallotReaderEdge() {
 export default readerRoute("/ballot", async function BallotPage({
   searchParams,
 }: {
-  searchParams: Promise<{ zip?: string }>;
+  searchParams: Promise<{ zip?: string; state?: string; lat?: string; lng?: string }>;
 }) {
-  const { zip: zipParam } = await searchParams;
-  const zip = zipParam && /^\d{5}$/.test(zipParam) ? zipParam : null;
+  const place = ballotPlaceFromParams(await searchParams);
+  const { zip, centroid } = place;
   let filingRead: Promise<Awaited<ReturnType<typeof readOfficialFilingsForReader>> | null> = Promise.resolve(null);
 
-  const resolution = zip ? resolveZip(zip) : null;
-  const centroid = resolution?.ok ? resolution.centroid : null;
   let set: BallotSet | null = null;
   let matched: ReturnType<typeof contestsForDivisions> | null = null;
   let coverageNotes: string[] = [];
@@ -520,9 +517,11 @@ export default readerRoute("/ballot", async function BallotPage({
     filingRead = readOfficialFilingsForReader().catch(() => null);
     attempted = true;
     const pointDivisionIds = [...certainty?.all ?? []];
-    divisionHoldingUnavailable = pointDivisionIds.length === 0;
-    try { pointDivisionIds.push(...await ballotPointDivisions(ballotStatesForDivisions(pointDivisionIds), centroid.lat, centroid.lng)); }
-    catch { divisionHoldingUnavailable = true; }
+    divisionHoldingUnavailable = pointDivisionIds.length === 0 && !place.state;
+    try {
+      pointDivisionIds.push(...place.state ? await ballotPointStateDivisions(place.state, centroid.lat, centroid.lng)
+        : await ballotPointDivisions(ballotStatesForDivisions(pointDivisionIds), centroid.lat, centroid.lng));
+    } catch { divisionHoldingUnavailable = true; }
     const ocdIds = await divisionIdsForZipArea(zip, pointDivisionIds, undefined, POINT_GEOMETRY_PLANS);
     askOcdIds = ocdIds;
     const electionDivisions = new Map<string, string[]>();
@@ -545,7 +544,7 @@ export default readerRoute("/ballot", async function BallotPage({
           certainty = await zipCertainty(zip, selection);
           coverageNotes = coverageNotesForScope(candidate, zip, electionIds);
           for (const office of missingDistrictOffices.get(candidate.election.id) ?? []) {
-            coverageNotes.push(`We're working on getting the ${office} district for ZIP ${zip}. ${office} contests aren't shown until we have it.`);
+            coverageNotes.push(`We're working on getting the ${office} district for ${zip ? `ZIP ${zip}` : "this area"}. ${office} contests aren't shown until we have it.`);
           }
           break;
         }
@@ -820,7 +819,7 @@ export default readerRoute("/ballot", async function BallotPage({
         <Logo variant="wordmark" size={30} />
       </div>
       <h1 className="mt-1.5 text-xl font-semibold tracking-tight">
-        What&apos;s on the ballot{zip ? ` near ${zip}` : ""}
+        What&apos;s on the ballot{zip ? ` near ${zip}` : place.state ? ` in ${place.state.name}` : ""}
       </h1>
 
       <p className="mt-3 t-body leading-relaxed text-voice lg:max-w-2xl">
@@ -1010,7 +1009,7 @@ export default readerRoute("/ballot", async function BallotPage({
         </p>
       )}
 
-      {!zip && (
+      {!centroid && !zip && (
         <p className="mt-6 t-body text-muted lg:max-w-2xl">
           Open this page with a zip, e.g.{" "}
           <Link href="/ballot?zip=07866" className="underline decoration-dotted">

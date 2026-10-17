@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { withFederalPortraits, FEDERAL_PORTRAITS_SCOPE } from "../lib/officials/federal-directory-read-model.ts";
+import { withFederalPortraits, placePortraitsScope } from "../lib/officials/federal-directory-read-model.ts";
 import { federalDirectoryVersion } from "../lib/officials/people-version.ts";
 import type { Officeholder, OfficeholderSet } from "../lib/officials/types.ts";
 
@@ -33,5 +33,5 @@ test("the served version names the directory and the portraits on it, and is the
   assert.notEqual(federalDirectoryVersion("dir:1", "port:1"), federalDirectoryVersion("dir:1", "port:2"));
   assert.notEqual(federalDirectoryVersion("dir:1", "port:1"), federalDirectoryVersion("dir:2", "port:1"));
   assert.equal(federalDirectoryVersion("dir:1", "port:1"), federalDirectoryVersion("dir:1", "port:1"));
-  assert.match(FEDERAL_PORTRAITS_SCOPE, /^US:people:portraits:v1$/);
+  assert.equal(placePortraitsScope("AZ"), "US-AZ:people:portraits:v1", "a place's members of Congress share its portrait record");
 });

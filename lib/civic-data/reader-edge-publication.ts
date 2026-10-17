@@ -1,6 +1,6 @@
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "./manual-contracts.ts";
-import { factReader } from "../facts/db.ts";
-import { planStateFacts, type StateFactsPlan } from "../facts/state-facts-publication.ts";
+import type { Query } from "../facts/publish.ts";
+import { publishStateFacts, type StateFactsPointer, type StateFactsPublication } from "../facts/state-facts-publication.ts";
 import { preparePublishedMeetingSnapshot, readPreparedMeetingsProjection, readComposedSourcePlaces } from "../meetings/prepared-snapshot.ts";
 import {
   publishReaderEdgeArtifacts,
@@ -10,7 +10,7 @@ import {
   servedAuthorityVersion,
   readServedPromotedFamily,
   readServedFactBucket,
-  readServedStateFactsIndex,
+  stateFactsPointerKey,
   writeFactBucket,
   writeFactRecord,
   type PublishAuthority,
@@ -194,19 +194,6 @@ export async function publishSupervisorReaderEdge(store: RoutineDataStore, obser
           process.stderr.write(`READER_EDGE_AUTHORITY_REFRESH_FAILED: census-districts ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
         },
       });
-      let stateFacts: StateFactsPlan | null = null;
-      if (selected === null) try {
-        const facts = factReader();
-        if (facts) stateFacts = await planStateFacts(facts, servedManifest?.stateFacts, {
-          readIndex: (state, ref) => readServedStateFactsIndex(state, ref, artifactStore),
-          readBucket: (state, bucket, ref) => readServedFactBucket(state, bucket, ref, artifactStore),
-          writeRecord: value => writeFactRecord(artifactStore, value),
-          writeBucket: (state, bucket, versionId, index) => writeFactBucket(artifactStore, state, bucket, versionId, index, observedAt),
-        });
-      } catch (error) {
-        failed = true;
-        process.stderr.write(`READER_EDGE_AUTHORITY_SKIPPED: state-facts ${safeFailure(sanitizedErrorDiagnostic(error))}\n`);
-      }
       if (refreshes("federal-directory")) try {
         // The served version names the directory and the portraits laid on it, exactly as the reader composes it.
         const carried = await servedIfCurrent("federal-directory", async () => {
@@ -380,11 +367,7 @@ export async function publishSupervisorReaderEdge(store: RoutineDataStore, obser
         { store: artifactStore, now: observedAt, authority, stateAuthorities, registrations, meetingBodies, meetingRegistryVersion,
           ...(servedManifest?.stateLegislators !== undefined || refreshes("state-legislators") ? { stateLegislators } : {}),
           ...(preparesMeetings ? { meetingPlaces: Object.fromEntries(await readComposedSourcePlaces({ store }) ?? []) } : {}),
-          ...(stateFacts ? { stateFacts: stateFacts.entries } : {}), ...(checks ? { checks } : {}) });
-      if (stateFacts && (edge.status === "PUBLISHED" || edge.status === "CURRENT")) {
-        await stateFacts.settle();
-        console.log(JSON.stringify({ readerEdgeStateFacts: { rebuilt: stateFacts.rebuilt, patched: stateFacts.patched, bodiesRead: stateFacts.bodiesRead } }));
-      }
+          ...(checks ? { checks } : {}) });
       status = edge.status;
       if ("sequence" in edge) sequence = edge.sequence;
       if (edge.status === "FAILED") throw new Error(edge.error);
@@ -403,6 +386,17 @@ export async function publishSupervisorReaderEdge(store: RoutineDataStore, obser
     store: destination, sequence, ...(supersededMeetingFields !== undefined ? { supersededMeetingFields } : {}), detail: failed ? detail ?? "Reader pages could not be fully updated. The earlier serving copies remain available." : null };
   console.log(JSON.stringify(outcome));
   return outcome;
+}
+
+/** Each state's facts at its own pointer on the reader edge, apart from the manifest. */
+export function publishReaderStateFacts(query: Query, artifactStore: ReaderArtifactStore, observedAt: string): Promise<StateFactsPublication> {
+  return publishStateFacts(query, {
+    readPointer: state => artifactStore.readJsonPointer<StateFactsPointer>(stateFactsPointerKey(state)),
+    writePointer: async (state, value, etag) => (await artifactStore.writeJsonPointer(stateFactsPointerKey(state), value, etag)).modified,
+    readBucket: (state, bucket, ref) => readServedFactBucket(state, bucket, ref, artifactStore),
+    writeRecord: value => writeFactRecord(artifactStore, value),
+    writeBucket: (state, bucket, versionId, index) => writeFactBucket(artifactStore, state, bucket, versionId, index, observedAt),
+  });
 }
 
 export function readerEdgeSupervisorFailure(outcome: ReaderEdgePublicationOutcome) {

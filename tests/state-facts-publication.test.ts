@@ -4,7 +4,6 @@ import { join } from "node:path";
 import test from "node:test";
 import { readHeldRoster } from "../lib/civic-data/worker-held-roster.ts";
 import type { WorkerPublicationCapture } from "../lib/civic-data/worker-roster-publication.ts";
-import type { AuthorityArtifactRef } from "../lib/meetings/edge-artifacts.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 import { factsVersion } from "../lib/facts/db.ts";
 import { ensureEntity, ensureFactEntities } from "../lib/facts/entities.ts";
@@ -13,7 +12,7 @@ import type { Meeting } from "../lib/sources/types.ts";
 import type { BodyFacts } from "../lib/facts/registry-overlay.ts";
 import type { RecordIndex } from "../lib/meetings/authority-records.ts";
 import { publishBodyFacts, publishRosterFacts } from "../lib/facts/roster-facts.ts";
-import { planStateFacts, type StateFactsIndex } from "../lib/facts/state-facts-publication.ts";
+import { publishStateFacts, type StateFactsPointer } from "../lib/facts/state-facts-publication.ts";
 import { factDb } from "./helpers/fact-db.ts";
 
 const ROOT = join(import.meta.dirname, "..");
@@ -39,34 +38,31 @@ test("a fact going live moves only its state's version and queues the places of 
   assert.deepEqual(await db.query("SELECT place_id FROM rebuild_queue"), [{ place_id: TUCSON }]);
 
   const blobs = new Map<string, unknown>();
-  const refs: Record<string, AuthorityArtifactRef> = {};
-  const store: Parameters<typeof planStateFacts>[2] = {
-    readIndex: async (_state, ref) => blobs.get(ref.key) as StateFactsIndex ?? null,
+  const pointers = new Map<string, { value: StateFactsPointer; etag: string }>();
+  const writes: string[] = [];
+  const store: Parameters<typeof publishStateFacts>[1] = {
+    readPointer: async state => pointers.get(state) ?? null,
+    writePointer: async (state, value, etag) => {
+      if ((pointers.get(state)?.etag ?? null) !== etag) return false;
+      writes.push(`pointer/${state}`);
+      pointers.set(state, { value, etag: String(writes.length) });
+      return true;
+    },
     readBucket: async (_state, _bucket, ref) => blobs.get(ref.key) as RecordIndex ?? null,
-    writeRecord: async value => { const key = `record/${blobs.size}`; blobs.set(key, value); return { key, sha: "" }; },
-    writeBucket: async (state, bucket, versionId, index) => { const key = `${state}/${bucket}/${blobs.size}`; blobs.set(key, index); return { key, version: versionId, sha: "" }; },
+    writeRecord: async value => { const key = `record/${blobs.size}`; blobs.set(key, value); writes.push(key); return { key, sha: "" }; },
+    writeBucket: async (state, bucket, versionId, index) => { const key = `${state}/${bucket}/${blobs.size}`; blobs.set(key, index); writes.push(key); return { key, version: versionId, sha: "" }; },
   };
-  const served = (state: string) => (blobs.get(refs[state]!.key) as StateFactsIndex).buckets
+  const served = (state: string) => pointers.get(state)!.value.buckets
     .flatMap(ref => (blobs.get(ref!.key) as RecordIndex).records.map(record => blobs.get(record.key) as BodyFacts));
   const body = (state: string, id: string) => served(state).find(row => row.id === id);
-  const publish = async () => {
-    const plan = await planStateFacts(db.query, refs, store);
-    for (const [state, entry] of Object.entries(plan.entries)) if ("value" in entry) {
-      const key = `index/${state}/${blobs.size}`;
-      blobs.set(key, entry.value);
-      refs[state] = { key, version: entry.versionId, sha: "" };
-    }
-    await plan.settle();
-    return plan;
-  };
+  const publish = async () => { writes.length = 0; return publishStateFacts(db.query, store); };
   const first = await publish();
-  assert.deepEqual([first.rebuilt, first.patched], [["AZ"], []], "a state with no served copy is read whole, once");
+  assert.deepEqual([first.published, first.rebuilt, first.patched], [["AZ"], ["AZ"], []], "a state with no served copy is read whole, once");
   assert.equal(body("AZ", TCCC)!.roster!.members.length, 4);
   assert.deepEqual(await db.query("SELECT place_id FROM rebuild_queue"), [], "the queued places are cleared once published");
 
   const unchanged = await publish();
-  assert.deepEqual([unchanged.rebuilt, unchanged.patched, unchanged.bodiesRead], [[], [], 0]);
-  assert.ok("carried" in unchanged.entries.AZ!, "an unmoved state is carried, never read");
+  assert.deepEqual([unchanged.published, unchanged.bodiesRead, writes], [[], 0, []], "an unmoved state is neither read nor written");
 
   // A body with no place row still queues its own division, so its change is read.
   const council = `${TUCSON}#mayor-and-council`;
@@ -75,6 +71,7 @@ test("a fact going live moves only its state's version and queues the places of 
     producedBy: "test", facts: [{ field: "meeting_cadence", value: "the first Tuesday", quote: "meet on the first Tuesday" }] }, clocks, NOW);
   const patched = await publish();
   assert.deepEqual([patched.rebuilt, patched.patched], [[], ["AZ"]]);
+  assert.equal(writes.filter(key => key.startsWith("pointer/")).join(), "pointer/AZ", "one state's change writes only that state's pointer");
   const [{ place, state }] = await db.query(`SELECT (SELECT count(DISTINCT e.id) FROM entity e LEFT JOIN entity_place p ON p.entity_id = e.id
     WHERE e.kind = 'body' AND (p.place_id = $1 OR e.id > $1 || '#' AND e.id < $1 || '$')) AS place,
     (SELECT count(*) FROM entity WHERE kind = 'body' AND state = 'AZ') AS state`, [TUCSON]) as [{ place: number; state: number }];
@@ -93,4 +90,22 @@ test("a fact going live moves only its state's version and queues the places of 
   assert.equal(sitting.bodiesRead, Number(place), "only Tucson's bodies were read again");
   assert.deepEqual(body("AZ", TCCC)!.sittings.map(fact => [fact.meetingId, fact.field, fact.value]).sort(),
     [[meeting.id, "startsAt", { startsAt: meeting.startsAt, timeZone: meeting.timeZone, precision: "MINUTE" }], [meeting.id, "title", meeting.title]]);
+});
+
+test("a state another writer moved first keeps its places queued for the next pass", async () => {
+  const db = await factDb();
+  await ensureFactEntities(db, ROOT, ["az"]);
+  await publishRosterFacts(db, { body: BODY, capture: capture(html, "a1"), members: members(html), complete: true, producedBy: "held-roster" }, factClocks(null), NOW);
+  let moved = true;
+  const store: Parameters<typeof publishStateFacts>[1] = {
+    readPointer: async () => null,
+    writePointer: async () => { const won = !moved; moved = false; return won; },
+    readBucket: async () => null,
+    writeRecord: async () => ({ key: "record", sha: "" }),
+    writeBucket: async (_state, _bucket, versionId) => ({ key: "bucket", version: versionId, sha: "" }),
+  };
+  assert.deepEqual((await publishStateFacts(db.query, store)).raced, ["AZ"]);
+  assert.deepEqual(await db.query("SELECT place_id FROM rebuild_queue"), [{ place_id: TUCSON }], "the place stays owed");
+  assert.deepEqual((await publishStateFacts(db.query, store)).published, ["AZ"]);
+  assert.deepEqual(await db.query("SELECT place_id FROM rebuild_queue"), []);
 });

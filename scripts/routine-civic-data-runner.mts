@@ -158,7 +158,7 @@ import { startCivicReadCacheHost } from "../lib/db/civic-read-cache-host.ts";
 import { placeSourceLaunchOrder, withNationalPlaceTasks } from "../lib/hunt/place-source-admission.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { flushDatabaseTransfer } from "../lib/db/transfer.ts";
-import { publishSupervisorReaderEdge, readerEdgeSupervisorFailure, type ReaderEdgePublicationOutcome } from "../lib/civic-data/reader-edge-publication.ts";
+import { publishReaderStateFacts, publishSupervisorReaderEdge, readerEdgeSupervisorFailure, type ReaderEdgePublicationOutcome } from "../lib/civic-data/reader-edge-publication.ts";
 import { readReaderEdgeChanges, type EdgePointer } from "../lib/civic-data/reader-edge-changes.ts";
 import { resolveReaderArtifactWriteStore } from "../lib/meetings/edge-store.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
@@ -690,9 +690,15 @@ const edgeStore = resolveReaderArtifactWriteStore();
 const edgeStoreName = edgeStore?.kind === "local-file" ? "local folder" : edgeStore?.kind === "netlify-blobs" ? "Netlify Blobs" : "not configured";
 /** Publishes what moved since the edge last published, with what this pass ran; an unchanged edge is neither read nor written. */
 async function publishChangedReaderEdge(ran: readonly EdgePointer[]): Promise<ReaderEdgePublicationOutcome> {
+  if (edgeStore) try {
+    const facts = await publishReaderStateFacts(readerFactDb().query, edgeStore, new Date().toISOString());
+    if (facts.published.length || facts.raced.length) console.log(JSON.stringify({ readerEdgeStateFacts: facts }));
+  } catch (error) {
+    supervisorFailures.push({ taskId: "state-facts-publication", code: "STATE_FACTS_PUBLISH_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
+  }
   const changes = await readReaderEdgeChanges(readerFactDb().query);
-  const selected = changes.facts ? null : [...changes.pointers, ...ran];
-  if (selected?.length === 0) {
+  const selected = [...changes.pointers, ...ran];
+  if (selected.length === 0) {
     const unchanged: ReaderEdgePublicationOutcome = { ok: true, readerEdge: "CURRENT", store: edgeStoreName, sequence: null, detail: null };
     console.log(JSON.stringify(unchanged));
     return unchanged;

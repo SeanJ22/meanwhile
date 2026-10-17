@@ -1,6 +1,7 @@
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
-import { installAbsent, installManualValue, installStateLegislators } from "./helpers/promoted-fixtures.ts";
+import { installAbsent, installManualValue, installPromotedValue, installStateLegislators } from "./helpers/promoted-fixtures.ts";
+import { ballotNavigationScope } from "../lib/civic-data/ballot-navigation-scope.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
@@ -157,12 +158,16 @@ test("a place reads one full state ballot and its own candidate families before 
   installManualValue("candidate-profiles:AZ", { cards: { ...profiles.cards, hunts: [] }, links: { ...profiles.links, hunts: [] } });
   installManualValue("voting-sites:AZ", { jurisdictions: [{ ocdId: county, name: "Selected", sites: [] }, { ocdId: neighbour, name: "Other", sites: [] }] });
   installManualValue("candidate-corpus:AZ", { documents: [] });
+  installPromotedValue({ recordClass: "CURATED_READER_RECORD", scope: ballotNavigationScope("AZ"), sourceId: "official-ballot-navigation", versionId: "test:ballot-navigation:AZ",
+    value: { kind: "ballot-navigation", records: [{ id: "election-field:az", kind: "ELECTION_FIELD", value: { state: "AZ", divisionId: "ocd-division/country:us/state:az", fieldKind: "registration_lookup",
+      text: "https://elections.example.gov/az", quote: "Check registration", dates: [], url: "https://elections.example.gov/az", navigationUrl: "https://elections.example.gov/az",
+      verifiedAt: at, collectedAt: at, sourceOrg: "Election office" } }] } });
   const bundle = promotedFixtureBundle(), selected: string[] = [];
   const families = await withReaderAuthorityEdge({ ...bundle, stateAuthorities: {
     states: bundle.stateAuthorities!.states,
     load: async (family, state) => { selected.push(`${family}:${state}`); return bundle.stateAuthorities!.load(family, state); },
   } }, () => readHeldPlaceFamilies([county], { now: at }));
-  assert.deepEqual(selected.sort(), ["ballot-contests:AZ", "candidate-campaign-sites-derived:AZ", "candidate-profiles:AZ", "candidate-publications:AZ", "voting-sites:AZ"]);
+  assert.deepEqual(selected.sort(), ["ballot-contests:AZ", "ballot-navigation:AZ", "candidate-campaign-sites-derived:AZ", "candidate-profiles:AZ", "candidate-publications:AZ", "voting-sites:AZ"]);
   assert.deepEqual(families.ballots![0].contests.map(row => row.id), ["ballot-az-pima:supervisor"]);
   assert.deepEqual(families.ballots![0].candidacies.map(row => row.id), ["ballot-az-pima:supervisor:one-candidate"]);
   assert.deepEqual(families.votingSites!.jurisdictions.map(row => row.ocdId), [county]);

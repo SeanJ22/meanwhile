@@ -101,7 +101,7 @@ test("production state supervisor dispatches zero unchanged children and only Il
   assert.deepEqual(Object.keys(manifest.stateAuthorities!["ballot-contests"]!.IL).sort(), ["key", "sha", "version"]);
 });
 
-test("targeted ballot delivery includes the five other state families without reading their payloads", async t => {
+test("targeted ballot delivery includes the six other state families without reading their payloads", async t => {
   const f = fixture(t), units = selectedStateEdgePointers(null).filter(unit => unit.state === "IL");
   for (const unit of units) for (const p of unit.pointers) f.put(p.recordClass, p.scope, `${unit.family}-v1`);
   const launches: string[] = [];
@@ -112,9 +112,9 @@ test("targeted ballot delivery includes the five other state families without re
       return success(command);
     } } }, ENV);
   assert.equal(outcome.ok, true);
-  assert.equal(launches.length, 6);
+  assert.equal(launches.length, 7);
   assert.equal(f.active.size, 0);
-  assert.equal(Object.keys((await f.artifacts.readManifest())!.manifest.stateAuthorities!).length, 6);
+  assert.equal(Object.keys((await f.artifacts.readManifest())!.manifest.stateAuthorities!).length, 7);
 });
 
 test("an unchanged sweep of every state and territory ballot launches no child and reads no payload", async t => {

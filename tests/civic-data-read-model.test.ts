@@ -35,7 +35,7 @@ const failedStore: CivicDataReadStore = {
 test("canonical scalar and batch reads use the request's edge copies without a database", async () => {
   const store = promotedStore({ total: 17 });
   const read = await readPromotedCivicData("FEC_FUNDING", "federal-supported", { store });
-  const edge = promotedEdgeEntryOf(read, "FEC_FUNDING", "federal-supported");
+  const edge = promotedEdgeEntryOf(read, "FEC_FUNDING", "federal-supported", store);
   assert.ok(edge);
   await withReaderAuthorityEdge({ promoted: new Map([["FEC_FUNDING:federal-supported", edge]]), edgeOnly: true }, async () => {
     const scalar = await readPromotedCivicData<{ total: number }>("FEC_FUNDING", "federal-supported");

@@ -6,7 +6,7 @@ import { navigationCandidateIndex, navigationFactsHash, navigationHeldKeysHash, 
 import { promotionProofIssue } from "./read-model.ts";
 import { resolveRecordConflicts } from "./source-conflicts.ts";
 import { PostgresRoutineDataStore, type RoutineDataStore } from "./store.ts";
-import type { CivicRecordDelta, PromotedProjection, RoutineCandidate, RoutineChangeSet } from "./types.ts";
+import type { CivicRecordDelta, ManualSourceReview, ManualSourceSetReceipt, PromotedProjection, RoutineCandidate, RoutineChangeSet } from "./types.ts";
 
 export interface NavigationComparison {
   readonly kind: "MATCHED_REVIEW" | "MERGED";
@@ -31,33 +31,11 @@ export async function readNavigationBase(store: RoutineDataStore, scope: string)
 export async function prepareNavigationSuccessor(input: ManualProjectionPackage, store: RoutineDataStore): Promise<{
   readonly candidate: RoutineCandidate; readonly comparison: NavigationComparison;
 }> {
-  let candidate: ManualSuccessorCandidate = manualProjectionCandidate(input);
-  let base = await readNavigationBase(store, candidate.scope);
-  if (!base || !base.hasSourceReceipt) return { candidate, comparison: { kind: "MERGED", base, changes: candidateChangeSet(candidate, null) } };
-  const current = new Map((candidate.readModel as CuratedReaderProjection).records.map(record => [record.id, record]));
-  if (store.confirmUnchanged && !base.record.candidate.bootstrapImport &&
-      base.record.candidate.normalization.parserVersion === candidate.normalization.parserVersion &&
-      base.reviewHeldKeysHash === navigationHeldKeysHash(candidate) &&
-      base.reviewFactsHash === navigationFactsHash(current.values())) return { candidate,
-    comparison: { kind: "MATCHED_REVIEW", base, changes: { outcome: "UNCHANGED", added: [], changed: [], removed: [], held: heldCivicRecords(candidate) } } };
-
-  const receipt = await base.sourceReceipt();
-  if (!receipt) throw new Error("MANUAL_SUCCESSOR_SOURCE_RECEIPT_MISSING");
-  const inherited: NavigationRecord[] = [], changed: CivicRecordDelta[] = [];
-  const seen = new Set<string>();
-  const conflicts: NonNullable<RoutineCandidate["excludedFacts"]>[number][] = [];
-  const facts = (record: NavigationRecord) => canonicalCivicDataHash(civicRecordFacts("CURATED_READER_RECORD", { key: record.id, record }));
-  for await (const before of verifiedNavigationRecords(base)) {
-    seen.add(before.id);
-    const incoming = current.get(before.id);
-    if (!incoming) { inherited.push(before); continue; }
-    if (facts(before) === facts(incoming)) continue;
-    const resolved = resolveRecordConflicts(incoming, before, input.sourceReceipt, receipt);
-    current.set(before.id, resolved.record);
-    conflicts.push(...resolved.conflicts);
-    if (facts(before) !== facts(resolved.record)) changed.push({ key: `curated-reader:${before.id}`, before, after: resolved.record });
-  }
-  if (conflicts.length) {
+  const merged = await mergeWithBase(input, store);
+  if ("result" in merged) return merged.result;
+  const { current, inherited, changed, conflicts, seen, receipt } = merged;
+  let { base } = merged;
+  const rebuilt = (): ManualSuccessorCandidate => {
     const cited = new Set<string>();
     const cite = (value: unknown) => {
       const source = value as { sourceUrl?: unknown; collectedAt?: unknown } | null;
@@ -65,14 +43,15 @@ export async function prepareNavigationSuccessor(input: ManualProjectionPackage,
     };
     for (const fact of conflicts) cite((fact.record as { source: unknown }).source);
     for (const record of current.values()) for (const source of Object.values(record.fieldSources ?? {})) cite(source);
-    const priorSources = receipt.sources.filter(source => source.reviewOutcome !== "BLOCKED" &&
+    const priorSources = receipt.sources.filter((source: ManualSourceReview) => source.reviewOutcome !== "BLOCKED" &&
       [source.requestedUrl, source.finalUrl].some(url => cited.has(`${url}\n${source.retrievedAt}`)));
     const sources = new Map([...priorSources, ...input.sourceReceipt.sources]
       .map(source => [canonicalCivicDataHash(source), source]));
-    candidate = manualProjectionCandidate({ ...input, payload: { kind: "ballot-navigation", records: [...current.values()] },
+    const fresh = manualProjectionCandidate({ ...input, payload: { kind: "ballot-navigation", records: [...current.values()] },
       sourceReceipt: { ...input.sourceReceipt, sources: [...sources.values()] } });
-    candidate = { ...candidate, excludedFacts: [...candidate.excludedFacts ?? [], ...conflicts] };
-  }
+    return { ...fresh, excludedFacts: [...fresh.excludedFacts ?? [], ...conflicts] };
+  };
+  let candidate = merged.candidate ?? rebuilt();
   if (inherited.length) {
     const ids = new Set(inherited.map(record => record.id));
     const identities = [];
@@ -101,6 +80,42 @@ export async function prepareNavigationSuccessor(input: ManualProjectionPackage,
   const added = [...current.values()].filter(record => !seen.has(record.id)).map(after => ({ key: `curated-reader:${after.id}`, before: null, after }));
   return { candidate, comparison: { kind: "MERGED", base, changes: { outcome: added.length + changed.length ? "CHANGED" : "UNCHANGED",
     added, changed, removed: [], held: heldCivicRecords(candidate) } } };
+}
+
+/** The first candidate lives only here: a merge that changes values rebuilds it, so the first is released before the rebuild. */
+async function mergeWithBase(input: ManualProjectionPackage, store: RoutineDataStore): Promise<
+  | { readonly result: { readonly candidate: RoutineCandidate; readonly comparison: NavigationComparison } }
+  | { readonly candidate: ManualSuccessorCandidate | null; readonly base: NavigationPublicationBase; readonly receipt: ManualSourceSetReceipt;
+      readonly current: Map<string, NavigationRecord>; readonly inherited: NavigationRecord[]; readonly changed: CivicRecordDelta[];
+      readonly conflicts: NonNullable<RoutineCandidate["excludedFacts"]>[number][]; readonly seen: Set<string> }
+> {
+  const first: ManualSuccessorCandidate = manualProjectionCandidate(input);
+  const base = await readNavigationBase(store, first.scope);
+  if (!base || !base.hasSourceReceipt) return { result: { candidate: first, comparison: { kind: "MERGED", base, changes: candidateChangeSet(first, null) } } };
+  const current = new Map((first.readModel as CuratedReaderProjection).records.map(record => [record.id, record]));
+  if (store.confirmUnchanged && !base.record.candidate.bootstrapImport &&
+      base.record.candidate.normalization.parserVersion === first.normalization.parserVersion &&
+      base.reviewHeldKeysHash === navigationHeldKeysHash(first) &&
+      base.reviewFactsHash === navigationFactsHash(current.values())) return { result: { candidate: first,
+    comparison: { kind: "MATCHED_REVIEW", base, changes: { outcome: "UNCHANGED", added: [], changed: [], removed: [], held: heldCivicRecords(first) } } } };
+
+  const receipt = await base.sourceReceipt();
+  if (!receipt) throw new Error("MANUAL_SUCCESSOR_SOURCE_RECEIPT_MISSING");
+  const inherited: NavigationRecord[] = [], changed: CivicRecordDelta[] = [];
+  const seen = new Set<string>();
+  const conflicts: NonNullable<RoutineCandidate["excludedFacts"]>[number][] = [];
+  const facts = (record: NavigationRecord) => canonicalCivicDataHash(civicRecordFacts("CURATED_READER_RECORD", { key: record.id, record }));
+  for await (const before of verifiedNavigationRecords(base)) {
+    seen.add(before.id);
+    const incoming = current.get(before.id);
+    if (!incoming) { inherited.push(before); continue; }
+    if (facts(before) === facts(incoming)) continue;
+    const resolved = resolveRecordConflicts(incoming, before, input.sourceReceipt, receipt);
+    current.set(before.id, resolved.record);
+    conflicts.push(...resolved.conflicts);
+    if (facts(before) !== facts(resolved.record)) changed.push({ key: `curated-reader:${before.id}`, before, after: resolved.record });
+  }
+  return { candidate: conflicts.length ? null : first, base, receipt, current, inherited, changed, conflicts, seen };
 }
 
 export function navigationBaseProjection(base: NavigationPublicationBase): PromotedProjection {

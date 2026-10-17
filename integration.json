@@ -3107,5 +3107,17 @@
     "tested_sha": "05b72687f2df7cf5c7c2b0966ecac2f4a31725e8",
     "gates": "pass",
     "at": "2026-10-16T17:30:47Z"
+  },
+  {
+    "lane": "ballot-three-states",
+    "steps": [
+      "BL-30"
+    ],
+    "ready_sha": "90f9be11d9227f353c25ccfce637f4f5f600e1d1",
+    "merge_sha": "be4730435f74b1647beeda0f6fa66afc39d56ba5",
+    "river_sha": "2e16200945cd27c65541e0fcd2705b3dfd8d6325",
+    "tested_sha": "2e16200945cd27c65541e0fcd2705b3dfd8d6325",
+    "gates": "pass",
+    "at": "2026-10-17T02:26:56Z"
   }
 ]

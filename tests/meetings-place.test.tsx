@@ -7,15 +7,15 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { GET as meetingsGET } from "../app/api/meetings/route.ts";
 import { resolveZip } from "../lib/geo/zcta.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
-import { publishReaderEdgeArtifacts } from "../lib/meetings/edge-serving.ts";
 import { CoverageNotice } from "../components/map/coverage-notice.tsx";
 import { DataProvider } from "../lib/state/data.tsx";
 import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+import { publishMeetingBodies } from "./helpers/meeting-body-edge.ts";
 
 for (const key of ["DATABASE_URL", "DATABASE_URL_UNPOOLED", "NEON_DATABASE_URL"]) delete process.env[key];
 await installRegistryAuthority();
 
-import { searchMeetings } from "../lib/meetings/query.ts";
+import { meetingBodyIds, searchMeetings } from "../lib/meetings/query.ts";
 import { snapshotSourceFor } from "../lib/meetings/registry.ts";
 import type { MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
 import type { Meeting } from "../lib/sources/types.ts";
@@ -67,16 +67,17 @@ const SNAPSHOT: MeetingsSnapshot = {
 const search = (at: { lat: number; lng: number }) =>
   searchMeetings(at.lat, at.lng, 25, NOW, new Set(at === TOWN ? ["ocd-division/country:us/state:ks/place:example"] : at === REMOTE ? ["ocd-division/country:us/state:ks/place:remote"] : []), snapshotSourceFor(SNAPSHOT));
 
-test("meeting searches reuse the body index and replace it when the registry bodies change", async () => {
+test("a search keeps the meetings of bodies whose territory covers the place, and falls back to the division for a meeting with no body", async () => {
   const division = "ocd-division/country:us/state:ks/place:example";
-  let scans = 0;
-  const bodies = [{ get id() { scans++; return "council"; }, ocdId: division }];
-  const snapshot = { ...SNAPSHOT, meetings: [{ ...MEETINGS[0], bodyId: "council" }] };
-  const query = (rows: typeof bodies) => searchMeetings(TOWN.lat, TOWN.lng, 25, NOW, new Set([division]), snapshotSourceFor(snapshot), undefined, rows);
-  assert.equal((await query(bodies)).meetings.length, 1);
-  assert.equal((await query(bodies)).meetings.length, 1);
-  assert.equal(scans, 1);
-  assert.equal((await query([{ id: "council", ocdId: "ocd-division/country:us/state:az/place:elsewhere" }])).meetings.length, 0);
+  const divisions = new Set([division]);
+  const snapshot = { ...SNAPSHOT, meetings: [{ ...MEETINGS[0], bodyId: "council" }, { ...MEETINGS[1], bodyId: "other-council" }, MEETINGS[2]] };
+  const query = (bodyIds: ReadonlySet<string>) => searchMeetings(TOWN.lat, TOWN.lng, 25, NOW, divisions, snapshotSourceFor(snapshot), undefined, bodyIds);
+  const ids = (bodies: Parameters<typeof meetingBodyIds>[0]) => meetingBodyIds(bodies, divisions);
+  assert.deepEqual([...ids([{ id: "council", ocdId: division }, { id: "elsewhere", ocdId: "ocd-division/country:us/state:az/place:elsewhere" }])], ["council"]);
+  assert.deepEqual([...ids([{ id: "shared", ocdId: null, alsoServesOcdIds: [division] }])], ["shared"], "a shared territory counts");
+  const served = await query(ids([{ id: "council", ocdId: division }]));
+  assert.deepEqual(served.meetings.map((row) => row.id).sort(), [MEETINGS[0].id, MEETINGS[2].id].sort(), "a body outside the set is excluded; a body-less meeting follows its division");
+  assert.equal((await query(ids([{ id: "council", ocdId: "ocd-division/country:us/state:az/place:elsewhere" }]))).meetings.some((row) => row.id === MEETINGS[0].id), false);
 });
 
 test("a place with meetings keeps its upcoming and recent calendar", async () => {
@@ -223,10 +224,10 @@ for (const zip of ["85643", "85122", "85701"]) {
       const request = () => meetingsGET(new Request(`https://example.test/api/meetings?zip=${zip}&lat=${at.lat}&lng=${at.lng}&radiusKm=25`));
       const store = new LocalFileArtifactStore(dir);
       const publish = async (meetings: Meeting[]) => {
-        const result = await publishReaderEdgeArtifacts({ ...SNAPSHOT, meetings,
-          counts: { fresh: meetings.length, carried: 0, total: meetings.length } },
-          { sourceThrough: SNAPSHOT.generatedAt, retrievedAt: SNAPSHOT.generatedAt, promotedThrough: SNAPSHOT.generatedAt },
-          { store, now: NOW.toISOString(), extras: { everydayRouting: null } });
+        const bodies = [...new Set(meetings.map((row) => row.bodyId!))].map((bodyId) => ({
+          bodyId, divisions: [bodyId.split("#")[0]!], meetings: meetings.filter((row) => row.bodyId === bodyId),
+        }));
+        const result = await publishMeetingBodies(store, NOW.toISOString(), bodies);
         assert.equal(result.status, "PUBLISHED");
       };
       await publish(rows);

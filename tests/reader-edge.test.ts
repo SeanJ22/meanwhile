@@ -7,7 +7,8 @@ import { gunzipSync } from "node:zlib";
 import { stateOfOcdId, type ReaderManifest, isStateAuthorityFamily } from "../lib/meetings/edge-artifacts.ts";
 import { LocalFileArtifactStore, resolveReaderArtifactWriteStore } from "../lib/meetings/edge-store.ts";
 import { publishReaderEdgeArtifacts, readReaderEdgeMeetings, readServedMeetingIndex, servedWholeFromReaderEdge, ensureReaderAuthorityEdge } from "../lib/meetings/edge-serving.ts";
-import { emptyMeetingStateIndex, meetingBodyRowScope, meetingIndexRowScope, type MeetingStateIndex } from "../lib/meetings/body-records.ts";
+import { emptyMeetingIndexRow, readerIndexOf, type MeetingStateIndex } from "../lib/meetings/body-records.ts";
+import { stateIndexOf } from "./helpers/meeting-body-national.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { meetingSettingsFromValues } from "../lib/meetings/settings.ts";
 
@@ -45,7 +46,7 @@ import type { CandidateVersionRecord } from "../lib/civic-data/types.ts";
 import type { PromotedProjection } from "../lib/civic-data/types.ts";
 import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
 import {
-  HOUR, NEWBURY, PIMA, T1, T2, T3, T4, at, countWrites, freshEdge, publishPass, readPartition, readPlace, row,
+  HOUR, NEWBURY, PIMA, T1, T2, T3, at, freshEdge, publishPass, readPartition, readPlace, row,
 } from "./helpers/meeting-body-fixtures.ts";
 import { agendaFor, promoteRows } from "./helpers/reader-edge-meetings.ts";
 
@@ -127,7 +128,7 @@ const MORRIS = MEETING_PARTITION_CONTRACTS.find((p) => p.derivedFamily === null 
 const MEETING_POINTERS = [{ recordClass: "MEETING" as const, scope: PIMA.scope }];
 
 const sittingsOf = (read: Awaited<ReturnType<typeof readPlace>>) => read.kind === "PROMOTED" ? read.value.meetings.map((m) => m.id).sort() : [];
-const anIndex = (state: string, version: string) => ({ versionId: version, value: emptyMeetingStateIndex(state, version) });
+const anIndex = (state: string, version: string) => ({ versionId: version, value: readerIndexOf(emptyMeetingIndexRow(state, version)) });
 
 async function servedIndex(edge: LocalFileArtifactStore, state: string): Promise<MeetingStateIndex> {
   const manifest = (await edge.readManifest())!.manifest;
@@ -168,7 +169,6 @@ test("a losing publisher cannot overwrite any bytes selected by the winning mani
   assert.equal(winner.status, "PUBLISHED");
   assert.equal(loser.status, "RACED");
   const manifest = (await store.readManifest())!.manifest;
-  assert.equal((await servedIndex(store, "AZ")).registryVersion, "winner");
   assert.equal(manifest.meetingStates!.AZ.version, "winner");
   for (const ref of [manifest.authorityArtifacts!["federal-directory"]!, manifest.registrations!.az]) {
     const envelope = JSON.parse(gunzipSync((await store.readBytes(ref.key))!).toString("utf8"));
@@ -343,7 +343,7 @@ test("ordinary publication carries quiet bodies, files a body under every area i
   const options = { artifactStore: artifacts };
   assert.equal(await publishReaderEdgeForTest(memory, at(T1, HOUR), MEETING_POINTERS, options), true);
   let held = (await artifacts.readManifest())!;
-  assert.equal((await servedIndex(artifacts, "AZ")).registryVersion, "registry-v1:AZ");
+  assert.equal((await stateIndexOf(memory, "AZ"))!.registryVersion, "registry-v1:AZ");
   assert.deepEqual(Object.keys((await servedIndex(artifacts, "AZ")).places).sort(), [primary, secondary].sort());
   assert.equal(registryReads, 1);
   assert.equal(await publishReaderEdgeForTest(memory, at(T1, 2 * HOUR), MEETING_POINTERS, options), true);
@@ -352,7 +352,7 @@ test("ordinary publication carries quiet bodies, files a body under every area i
   await publishRegistry("registry-v2", []);
   assert.equal(await publishReaderEdgeForTest(memory, at(T1, 3 * HOUR), MEETING_POINTERS, options), true);
   held = (await artifacts.readManifest())!;
-  assert.equal((await servedIndex(artifacts, "AZ")).registryVersion, "registry-v2:AZ");
+  assert.equal((await stateIndexOf(memory, "AZ"))!.registryVersion, "registry-v2:AZ");
   assert.deepEqual(Object.keys((await servedIndex(artifacts, "AZ")).places), [primary]); assert.equal(registryReads, 2);
   const refs = held.manifest.stateAuthorities!["registry-runtime"]!;
   await artifacts.writeManifest({ ...held.manifest, stateAuthorities: { ...held.manifest.stateAuthorities,
@@ -371,7 +371,7 @@ test("a body that races its row keeps its exact held record while an independent
   const options = { artifactStore: artifacts };
   assert.equal(await publishReaderEdgeForTest(memory, at(T1, HOUR), MEETING_POINTERS, options), true);
   const before = await servedIndex(artifacts, "AZ");
-  assert.equal(before.registryVersion, "registry-old:AZ");
+  assert.equal((await stateIndexOf(memory, "AZ"))!.registryVersion, "registry-old:AZ");
   const held = await readPlace(artifacts, memory, [PIMA.ocdId!], at(T1, HOUR));
   assert.equal(sittingsOf(held).length, 1);
 
@@ -396,8 +396,7 @@ test("a body that races its row keeps its exact held record while an independent
   assert.deepEqual((await memory.readMeetingQueue()).map((row) => row.scope), [PIMA.scope], "the new version stays queued");
 
   assert.equal(await publishReaderEdgeForTest(store, at(T2, 2 * HOUR), MEETING_POINTERS, options), true);
-  const recovered = await servedIndex(artifacts, "AZ");
-  assert.equal(recovered.registryVersion, independent.stateAuthorities!["registry-runtime"]!.AZ.version);
+  assert.equal((await stateIndexOf(memory, "AZ"))!.registryVersion, independent.stateAuthorities!["registry-runtime"]!.AZ.version);
   assert.equal(sittingsOf(await readPlace(artifacts, memory, [PIMA.ocdId!], at(T2, 2 * HOUR))).length, 2, "the next pass serves the new sitting");
   assert.deepEqual(await memory.readMeetingQueue(), []);
 });

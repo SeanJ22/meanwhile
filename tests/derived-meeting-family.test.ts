@@ -77,7 +77,6 @@ const FEED = ics([
   { uid: "h1", summary: "Housing Commission", start: "20261008T160000" },
   { uid: "t1", summary: "Tourism Commission Meeting", start: "20261009T160000" },
 ]);
-const PAGE = pageFor(BODY_NAME);
 
 const T_WALK = "2026-09-24T19:00:00.000Z";
 const T_CROSSWALK = "2026-09-24T19:30:00.000Z";
@@ -470,7 +469,6 @@ test("a family's one partition publishes as one record per body; a held member i
   assert.deepEqual(index.places[OCD], [BODY_ID, OTHER_ID].sort(), "the place lists both bodies");
   for (const bodyId of [BODY_ID, OTHER_ID]) {
     assert.deepEqual(index.bodies[bodyId]!.contracts, [derivedMeetingFamilyId("US-AZ")]);
-    assert.equal(index.bodies[bodyId]!.meetings, 1);
     const row = (await store.readPreparedReaderProjection("MEETING", meetingBodyRowScope("AZ", bodyId)))!.payload as MeetingBodyRow;
     assert.deepEqual(row.snapshot.meetings.map((m) => m.bodyId), [bodyId], "a body's row holds only its own sittings");
   }

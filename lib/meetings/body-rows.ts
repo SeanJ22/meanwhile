@@ -5,6 +5,8 @@ import {
   meetingBodyRowScope,
   meetingIndexRowScope,
   type MeetingBodyRow,
+  readerIndexOf,
+  type MeetingIndexRow,
   type MeetingStateIndex,
 } from "./body-records.ts";
 import { MEETINGS_RECORD_CLASS, type MeetingsSnapshot } from "./snapshot.ts";
@@ -17,7 +19,7 @@ export async function readMeetingIndexRow(state: string, store?: RowStore): Prom
   refuseDatabaseInEdgeOnlyContext(`${MEETINGS_RECORD_CLASS}:${scope}`);
   try {
     const row = await (store ?? new PostgresRoutineDataStore()).readPreparedReaderProjection(MEETINGS_RECORD_CLASS, scope);
-    return row === null ? null : row.payload as MeetingStateIndex;
+    return row === null ? null : readerIndexOf(row.payload as MeetingIndexRow);
   } catch (error) {
     reportReaderStateFailure("meeting-index", state, scope, error, "DATABASE");
     return null;

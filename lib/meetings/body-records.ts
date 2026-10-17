@@ -46,62 +46,75 @@ export const meetingIndexRowScope = (state: string): string => `US-${state}:meet
 /** A division without its body slot: what a place resolves to. */
 export const divisionOf = (id: string): string => id.split("#")[0]!;
 
-export interface MeetingBlobRef {
-  readonly key: string;
-  readonly sha: string;
-}
-
 export interface MeetingBodyChecks {
   readonly checkedAt: string | null;
   readonly routes: Readonly<Record<string, string>>;
 }
 
-/** The record a reader loads for one body: its served window, with its agenda text and kept history held apart. */
-export interface MeetingBodyRecord {
+/** How far a body's sources reach and when they were read, carried by its record and its row. */
+export interface MeetingBodyThrough {
+  readonly sourceThrough: string | null;
+  readonly retrievedAt: string | null;
+  readonly promotedThrough: string | null;
+}
+
+/** The record a reader loads for one body: its served window, with its agenda text and kept history held apart by key. */
+export interface MeetingBodyRecord extends MeetingBodyThrough {
   readonly formatVersion: typeof MEETING_BODY_FORMAT_VERSION;
   readonly bodyId: string;
-  /** Meetings, sources and counts; `agendaDocuments` is empty here and held in `agenda`. */
+  /** Meetings, sources and counts; `agendaDocuments` is empty here and held under `agenda`. */
   readonly snapshot: MeetingsSnapshot;
-  readonly agenda: MeetingBlobRef | null;
-  readonly history: (MeetingBlobRef & { readonly meetings: number }) | null;
+  readonly agenda: string | null;
+  readonly history: string | null;
 }
 
 /** The database row of one body in one state: the whole served window, agenda text included, plus where its history lives. */
-export interface MeetingBodyRow {
+export interface MeetingBodyRow extends MeetingBodyThrough {
   readonly formatVersion: typeof MEETING_BODY_FORMAT_VERSION;
   readonly bodyId: string;
   readonly snapshot: MeetingsSnapshot;
   readonly historyScopes: readonly string[];
 }
 
+/** What a reader needs of a body before it opens the record. */
 export interface MeetingIndexBody {
-  readonly record: MeetingBlobRef;
+  /** The record's edge key; its hash is in the key. */
+  readonly record: string;
+  readonly divisions: readonly string[];
+  readonly checks: MeetingBodyChecks;
+}
+
+/** One state's bodies and which divisions each serves, as readers load it. */
+export interface MeetingStateIndex {
+  readonly formatVersion: typeof MEETING_BODY_FORMAT_VERSION;
+  readonly state: string;
+  readonly places: Readonly<Record<string, readonly string[]>>;
+  readonly bodies: Readonly<Record<string, MeetingIndexBody>>;
+}
+
+/** What the writer keeps of a body besides what readers load. */
+export interface MeetingIndexRowBody extends MeetingIndexBody {
   /** Hash of what the record holds, so a recomposition that changed nothing writes nothing. */
   readonly content: string;
   /** The coupled partition versions this record was composed from. */
   readonly composition: string;
   /** Every coupled contract, live and history, so a changed partition finds its bodies. */
   readonly contracts: readonly string[];
-  readonly divisions: readonly string[];
-  readonly meetings: number;
-  readonly generatedAt: string;
-  readonly sourceThrough: string | null;
-  readonly retrievedAt: string | null;
-  readonly promotedThrough: string | null;
-  readonly checks: MeetingBodyChecks;
 }
 
-/** One state's bodies and which divisions each serves. */
-export interface MeetingStateIndex {
-  readonly formatVersion: typeof MEETING_BODY_FORMAT_VERSION;
-  readonly state: string;
+/** The database row behind a state's index. */
+export interface MeetingIndexRow extends Omit<MeetingStateIndex, "bodies"> {
   /** The registry the places were derived from. */
   readonly registryVersion: string | null;
-  readonly places: Readonly<Record<string, readonly string[]>>;
-  readonly bodies: Readonly<Record<string, MeetingIndexBody>>;
+  readonly bodies: Readonly<Record<string, MeetingIndexRowBody>>;
 }
 
-export function emptyMeetingStateIndex(state: string, registryVersion: string | null): MeetingStateIndex {
+export const readerIndexOf = (row: MeetingIndexRow): MeetingStateIndex => ({
+  formatVersion: row.formatVersion, state: row.state, places: row.places,
+  bodies: Object.fromEntries(Object.entries(row.bodies).map(([id, { record, divisions, checks }]) => [id, { record, divisions, checks }])),
+});
+
+export function emptyMeetingIndexRow(state: string, registryVersion: string | null): MeetingIndexRow {
   return { formatVersion: MEETING_BODY_FORMAT_VERSION, state, registryVersion, places: {}, bodies: {} };
 }
 
@@ -109,10 +122,10 @@ export function encodeMeetingBlob(value: unknown): Buffer {
   return gzipSync(Buffer.from(JSON.stringify(value), "utf8"));
 }
 
-export function decodeMeetingBlob<T>(bytes: Uint8Array, sha: string): T {
-  const value = JSON.parse(gunzipSync(bytes).toString("utf8")) as T;
-  if (sha256OfJson(value) !== sha) throw new Error("MEETING_BLOB_HASH_MISMATCH");
-  return value;
+/** A blob's key carries the hash of its bytes; what was read must match it. */
+export function decodeMeetingBlob<T>(bytes: Uint8Array, key: string): T {
+  if (!key.includes(createHash("sha256").update(bytes).digest("hex"))) throw new Error("MEETING_BLOB_HASH_MISMATCH");
+  return JSON.parse(gunzipSync(bytes).toString("utf8")) as T;
 }
 
 export function placesOf(bodies: Readonly<Record<string, Pick<MeetingIndexBody, "divisions">>>): Record<string, string[]> {
@@ -143,12 +156,9 @@ export interface BodyHistoryRead {
   readonly value: MeetingsSnapshot | null;
 }
 
-export interface ComposedMeetingBody {
+export interface ComposedMeetingBody extends MeetingBodyThrough {
   readonly snapshot: MeetingsSnapshot;
   readonly couplings: readonly FreshCheckCoupling[];
-  readonly sourceThrough: string | null;
-  readonly retrievedAt: string | null;
-  readonly promotedThrough: string | null;
 }
 
 const newest = (values: readonly (string | null)[]): string | null =>
@@ -222,11 +232,11 @@ export function composeMeetingBody(input: {
   for (const [id, owners] of meetingOwners) if (owners > 1) throw new Error(`MEETING_PARTITION_ID_COLLISION:${id}`);
   for (const [id, owners] of documentOwners) if (owners > 1) throw new Error(`MEETING_PARTITION_DOCUMENT_COLLISION:${id}`);
 
-  const divisions = new Set(input.divisions.map(divisionOf));
+  const divisions = [...new Set(input.divisions.map(divisionOf))];
   const meetings = owned.flatMap(({ value }) => value.meetings);
   const agendaDocuments = owned.flatMap(({ value }) => value.agendaDocuments);
   const attribute = (report: SnapshotSourceReport): SnapshotSourceReport => !report.ok && report.unreachableOcdIds === undefined && input.divisions.length > 0
-    ? { ...report, unreachableOcdIds: [...new Set(input.divisions.map(divisionOf))] } : report;
+    ? { ...report, unreachableOcdIds: divisions } : report;
   const ownReports = owned.map(({ family, value, read }): SnapshotSourceReport[] =>
     (family ? memberReports((read.value.derivedMembers ?? []).filter((member) => member.bodyId === input.bodyId), value.meetings) : [...value.sources]).map(attribute));
   const sources = ownReports.flat();
@@ -323,8 +333,8 @@ export function mergeMeetingBodies(parts: readonly {
       meetings,
       agendaDocuments: bodies.flatMap((body) => body.agendaDocuments),
     },
-    sourceThrough: newest(parts.map(({ entry }) => entry.sourceThrough)),
-    retrievedAt: newest(parts.map(({ entry }) => laterCheck(entry.retrievedAt, entry.checks.checkedAt))),
-    promotedThrough: newest(parts.map(({ entry }) => entry.promotedThrough)),
+    sourceThrough: newest(parts.map(({ record }) => record.sourceThrough)),
+    retrievedAt: newest(parts.map(({ entry, record }) => laterCheck(record.retrievedAt, entry.checks.checkedAt))),
+    promotedThrough: newest(parts.map(({ record }) => record.promotedThrough)),
   };
 }

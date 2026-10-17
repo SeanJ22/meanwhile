@@ -4,10 +4,8 @@ import { createHash } from "node:crypto";
 import test from "node:test";
 
 import {
-  HELD_MEETING_PARTITIONS,
   MEETING_PARTITION_CONTRACTS,
   LEGACY_MEETINGS_AGGREGATE_SCOPE,
-  meetingHistoryScope,
 } from "../lib/civic-data/meeting-partitions.ts";
 import { readMeetingPartitionProjection } from "../lib/meetings/snapshot.ts";
 import { composeMeetingBody, meetingCompositionOf, type BodyPartitionRead } from "../lib/meetings/body-records.ts";
@@ -31,7 +29,7 @@ import {
   selectedMeetingPartitions,
 } from "../scripts/ingest.ts";
 import { publishPass } from "./helpers/meeting-body-fixtures.ts";
-import { bodyRowOf, readEveryBody, stateIndexOf } from "./helpers/meeting-body-national.ts";
+import { readEveryBody, stateIndexOf } from "./helpers/meeting-body-national.ts";
 
 const FIRST = "2026-09-08T12:00:00.000Z";
 const SECOND = "2026-09-08T13:00:00.000Z";
@@ -627,6 +625,21 @@ test("two partitions of one body that claim the same sitting id are refused toge
   const base = { bodyId: legistar.bodyId, divisions: [legistar.ocdId!], histories: [] };
   assert.throws(() => composeMeetingBody({ ...base, reads: [read(legistar, "collision"), read(sibling, "collision")] }), /MEETING_PARTITION_ID_COLLISION:legistar:collision/);
   assert.equal(composeMeetingBody({ ...base, reads: [read(legistar, "one"), read(sibling, "two")] })?.snapshot.meetings.length, 2, "distinct ids are one body's sittings");
+});
+
+test("a source that could not be read is attributed to its body's own divisions through unreachableOcdIds", () => {
+  const carried = { ...meeting(legistar, FIRST, "carried"), carried: { source: "legistar", lastFreshAt: FIRST, reason: "SOURCE_UNAVAILABLE" as const } };
+  const value = {
+    formatVersion: 1 as const, generatedAt: SECOND, counts: { fresh: 0, carried: 1, total: 1 },
+    sources: [{ ...report("legistar", SECOND, false), carriedForward: 1 }], meetings: [carried], agendaDocuments: [],
+  };
+  const read = { kind: "PROMOTED", value, detail: "", metadata: { recordClass: "MEETING", scope: legistar.scope, sourceId: legistar.sourceId, version: null,
+    versionId: "v-failed", lastKnownGoodVersionId: null, sourceThrough: null, retrievedAt: SECOND, promotedAt: SECOND, stale: "CURRENT", staleAt: null } } as never;
+  const composed = composeMeetingBody({ bodyId: legistar.bodyId, divisions: [`${legistar.ocdId}#governing`], histories: [], reads: [{ partition: legistar, held: null, read }] });
+  const walled = composed!.snapshot.sources.filter((source) => !source.ok);
+  assert.equal(walled.length, 1);
+  assert.deepEqual(walled[0]!.unreachableOcdIds, [legistar.ocdId], "the route attributes the gap to this body's division, not to every body of the state");
+  assert.equal(composed!.snapshot.meetings[0]!.carried?.reason, "SOURCE_UNAVAILABLE");
 });
 
 test("production membership and scopes are one-to-one and the global disposition is absent", () => {

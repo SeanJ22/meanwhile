@@ -201,9 +201,9 @@ export async function* readEdgeForSweep(store: Pick<ReaderArtifactStore, "readMa
   if (stored === null) return;
   const { meetingStates, ...rest } = stored.manifest;
   yield rest;
-  const read = async <T>(ref: { readonly key: string; readonly sha: string }): Promise<T | null> => {
-    const bytes = await store.readBytes(ref.key);
-    return bytes === null ? null : decodeMeetingBlob<T>(bytes, ref.sha);
+  const read = async <T>(key: string): Promise<T | null> => {
+    const bytes = await store.readBytes(key);
+    return bytes === null ? null : decodeMeetingBlob<T>(bytes, key);
   };
   for (const ref of Object.values(meetingStates ?? {})) {
     const bytes = await store.readBytes(ref.key);

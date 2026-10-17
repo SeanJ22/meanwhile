@@ -53,7 +53,6 @@ import {
   meetingStateOf,
   MEETING_BODY_FORMAT_VERSION,
   NATIONAL_MEETING_STATE,
-  type MeetingBlobRef,
   type MeetingBodyRecord,
   type MeetingIndexBody,
   type MeetingStateIndex,
@@ -878,15 +877,15 @@ export function prefetchReaderEdgeStates(
 }
 
 /** One immutable meeting blob, checked against its hash and held while the process runs. */
-function readMeetingBlob<T>(ref: MeetingBlobRef, store: ReaderArtifactStore, state: string, family: string): Promise<T | null> {
-  let read = meetingBlobs.get(ref.key) as Promise<T | null> | undefined;
+function readMeetingBlob<T>(ref: string, store: ReaderArtifactStore, state: string, family: string): Promise<T | null> {
+  let read = meetingBlobs.get(ref) as Promise<T | null> | undefined;
   if (!read) {
     read = (async () => {
-      const bytes = await store.readBytes(ref.key);
+      const bytes = await store.readBytes(ref);
       if (!bytes) throw new Error("MEETING_BLOB_MISSING");
-      return decodeMeetingBlob<T>(bytes, ref.sha);
-    })().catch((error) => { meetingBlobs.delete(ref.key); reportReaderStateFailure(family, state, ref.key, error); return null; });
-    meetingBlobs.set(ref.key, read);
+      return decodeMeetingBlob<T>(bytes, ref);
+    })().catch((error) => { meetingBlobs.delete(ref); reportReaderStateFailure(family, state, ref, error); return null; });
+    meetingBlobs.set(ref, read);
     if (meetingBlobs.size > 2048) meetingBlobs.delete(meetingBlobs.keys().next().value!);
   }
   return read;
@@ -998,7 +997,8 @@ async function loadBody(
   if (row === null) return null;
   return {
     entry, fromEdge: false, agenda: wantAgenda ? row.snapshot.agendaDocuments : [],
-    record: { formatVersion: MEETING_BODY_FORMAT_VERSION, bodyId, snapshot: { ...row.snapshot, agendaDocuments: [] }, agenda: null, history: null },
+    record: { formatVersion: MEETING_BODY_FORMAT_VERSION, bodyId, snapshot: { ...row.snapshot, agendaDocuments: [] }, agenda: null, history: null,
+      sourceThrough: row.sourceThrough, retrievedAt: row.retrievedAt, promotedThrough: row.promotedThrough },
     history: wantHistory ? await readMeetingBodyHistory(row, options.dataStore) : null,
   };
 }
@@ -1037,7 +1037,7 @@ export async function* readMeetingBodies(options: Pick<ReaderEdgeMeetingsOptions
   for (const state of states) {
     const index = await loadStateIndex(state, manifest, store, options.dataStore);
     for (const [bodyId, entry] of Object.entries(index?.bodies ?? {})) {
-      yield { state, bodyId, sha: entry.record.sha, load: async () => {
+      yield { state, bodyId, sha: entry.record, load: async () => {
         const body = await loadBody({ state, bodyId, entry }, store, options);
         if (body === null) return null;
         const read = applyServedWindow({ kind: "PROMOTED", value: mergeMeetingBodies([body]).snapshot, metadata: NOT_A_PLACE.metadata, detail: "" },
@@ -1074,7 +1074,7 @@ async function readReaderEdgeMeetingsHeld(
   const loaded = await Promise.all([...chosen].map(([bodyId, { state, entry }]) => loadBody({ state, bodyId, entry }, store, options)));
   const bodies = loaded.filter((body): body is LoadedBody => body !== null);
 
-  const areaKey = sha256OfJson({ agenda: options.includeAgenda !== false, history: options.window === "HELD", bodies: bodies.map(({ entry }) => [entry.record.sha, entry.checks]) });
+  const areaKey = sha256OfJson({ agenda: options.includeAgenda !== false, history: options.window === "HELD", bodies: bodies.map(({ entry }) => [entry.record, entry.checks]) });
   const cachedArea = areaReads.get(areaKey);
   if (cachedArea && loaded.length === bodies.length) return cachedArea;
 

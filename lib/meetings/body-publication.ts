@@ -13,7 +13,7 @@ import {
   composeMeetingBody,
   composeMeetingBodyHistory,
   divisionOf,
-  emptyMeetingStateIndex,
+  emptyMeetingIndexRow,
   encodeMeetingBlob,
   meetingBodyRowScope,
   meetingCompositionOf,
@@ -22,13 +22,14 @@ import {
   MEETING_BODY_FORMAT_VERSION,
   NATIONAL_MEETING_STATE,
   placesOf,
+  readerIndexOf,
   sha256OfJson,
   type BodyHistoryRead,
   type BodyPartitionRead,
-  type MeetingBlobRef,
   type MeetingBodyRecord,
   type MeetingBodyRow,
-  type MeetingIndexBody,
+  type MeetingIndexRow,
+  type MeetingIndexRowBody,
   type MeetingStateIndex,
 } from "./body-records.ts";
 import type { ReaderArtifactStore } from "./edge-store.ts";
@@ -171,11 +172,10 @@ function divisionsOf(bodyId: string, registry: MeetingRegistryRead | null, fallb
 const statesOfDivisions = (divisions: readonly string[]): string[] =>
   divisions.length === 0 ? [NATIONAL_MEETING_STATE] : [...new Set(divisions.map((division) => meetingStateOf(division)))].sort();
 
-async function putBlob(pass: Pass, value: unknown): Promise<MeetingBlobRef> {
+async function putBlob(pass: Pass, value: unknown): Promise<string> {
   const bytes = encodeMeetingBlob(value);
-  const key = await pass.artifacts.putImmutable(bytes, "json.gz");
   pass.stats.bytesWritten += bytes.byteLength;
-  return { key, sha: sha256OfJson(value) };
+  return pass.artifacts.putImmutable(bytes, "json.gz");
 }
 
 /** A retired route's held version is read through the successor's contract, under the held partition's own identity. */
@@ -184,7 +184,7 @@ const heldContract = (successor: MeetingPartitionContract, held: HeldMeetingPart
 
 interface BodyWork {
   readonly bodyId: string;
-  readonly entry: MeetingIndexBody | undefined;
+  readonly entry: MeetingIndexRowBody | undefined;
   readonly dirtyFamily: boolean;
   readonly force: boolean;
 }
@@ -193,10 +193,10 @@ type Composed =
   | { readonly kind: "SAME" }
   | { readonly kind: "ABSENT" }
   | { readonly kind: "EMPTY" }
-  | { readonly kind: "ENTRY"; readonly entry: MeetingIndexBody; readonly checkedOnly: boolean }
-  | { readonly kind: "COMPOSED"; readonly entry: MeetingIndexBody; readonly row: MeetingBodyRow; readonly couplings: readonly FreshCheckCoupling[]; readonly divisions: readonly string[] };
+  | { readonly kind: "ENTRY"; readonly entry: MeetingIndexRowBody; readonly checkedOnly: boolean }
+  | { readonly kind: "COMPOSED"; readonly entry: MeetingIndexRowBody; readonly row: MeetingBodyRow; readonly couplings: readonly FreshCheckCoupling[]; readonly divisions: readonly string[] };
 
-const sameEntry = (left: MeetingIndexBody, right: MeetingIndexBody): boolean => JSON.stringify(left) === JSON.stringify(right);
+const sameEntry = (left: MeetingIndexRowBody, right: MeetingIndexRowBody): boolean => JSON.stringify(left) === JSON.stringify(right);
 
 /** The checks a body shows now: each coupled version's newest confirmation as of its pointer. */
 function currentChecks(couplings: readonly FreshCheckCoupling[], identities: ReadonlyMap<string, PromotedPointerIdentity>, scopeOf: ReadonlyMap<string, string>) {
@@ -268,33 +268,33 @@ async function composeBody(pass: Pass, state: string, work: BodyWork): Promise<C
 
   const history = composeMeetingBodyHistory(work.bodyId, historyReads, composed.snapshot.generatedAt);
   if (composed.snapshot.meetings.length === 0 && history === null && composed.snapshot.sources.every((source) => source.ok)) return { kind: "EMPTY" };
-  const content = sha256OfJson({ snapshot: composed.snapshot, history });
+  const through = { sourceThrough: composed.sourceThrough, retrievedAt: composed.retrievedAt, promotedThrough: composed.promotedThrough };
+  const content = sha256OfJson({ snapshot: composed.snapshot, history, through });
   const checks = meetingFreshChecks(composed.couplings);
   const base = {
     composition, contracts: composed.couplings.map((coupling) => coupling.contractId).sort(), divisions,
-    meetings: composed.snapshot.meetings.length, generatedAt: composed.snapshot.generatedAt, sourceThrough: composed.sourceThrough,
-    retrievedAt: composed.retrievedAt, promotedThrough: composed.promotedThrough, checks: { checkedAt: checks.checkedAt, routes: checks.routes }, content,
+    checks: { checkedAt: checks.checkedAt, routes: checks.routes }, content,
   };
   if (work.entry !== undefined && work.entry.content === content) {
-    const entry: MeetingIndexBody = { ...base, record: work.entry.record };
+    const entry: MeetingIndexRowBody = { ...base, record: work.entry.record };
     pass.stats.unchanged += 1;
     return sameEntry(entry, work.entry) ? { kind: "SAME" } : { kind: "ENTRY", entry, checkedOnly: false };
   }
   const agenda = composed.snapshot.agendaDocuments.length > 0 ? await putBlob(pass, composed.snapshot.agendaDocuments) : null;
-  const historyRef = history === null ? null : { ...await putBlob(pass, history), meetings: history.meetings.length };
-  const record: MeetingBodyRecord = { formatVersion: MEETING_BODY_FORMAT_VERSION, bodyId: work.bodyId, snapshot: { ...composed.snapshot, agendaDocuments: [] }, agenda, history: historyRef };
+  const historyKey = history === null ? null : await putBlob(pass, history);
+  const record: MeetingBodyRecord = { formatVersion: MEETING_BODY_FORMAT_VERSION, bodyId: work.bodyId, snapshot: { ...composed.snapshot, agendaDocuments: [] }, agenda, history: historyKey, ...through };
   pass.stats.recordsWritten += 1;
-  const entry: MeetingIndexBody = { ...base, record: await putBlob(pass, record) };
-  const row: MeetingBodyRow = { formatVersion: MEETING_BODY_FORMAT_VERSION, bodyId: work.bodyId, snapshot: composed.snapshot, historyScopes: historyReads.map((read) => read.scope) };
+  const entry: MeetingIndexRowBody = { ...base, record: await putBlob(pass, record) };
+  const row: MeetingBodyRow = { formatVersion: MEETING_BODY_FORMAT_VERSION, bodyId: work.bodyId, snapshot: composed.snapshot, historyScopes: historyReads.map((read) => read.scope), ...through };
   return { kind: "COMPOSED", entry, row, couplings: composed.couplings, divisions };
 }
 
-async function writeRow(pass: Pass, state: string, entry: MeetingIndexBody, row: MeetingBodyRow, couplings: readonly FreshCheckCoupling[]): Promise<void> {
+async function writeRow(pass: Pass, state: string, entry: MeetingIndexRowBody, row: MeetingBodyRow, couplings: readonly FreshCheckCoupling[]): Promise<void> {
   const scope = meetingBodyRowScope(state, row.bodyId);
   const prior = await pass.store.readPreparedReaderProjectionCoupling(MEETINGS_RECORD_CLASS, scope);
   const result = await pass.store.writePreparedReaderProjection({
     recordClass: MEETINGS_RECORD_CLASS, scope, payload: row, composedFrom: couplings, factSha256: entry.content,
-    generatedAt: entry.generatedAt, composedAt: pass.now, sourceThrough: entry.sourceThrough, retrievedAt: entry.retrievedAt, promotedThrough: entry.promotedThrough,
+    generatedAt: row.snapshot.generatedAt, composedAt: pass.now, sourceThrough: row.sourceThrough, retrievedAt: row.retrievedAt, promotedThrough: row.promotedThrough,
   }, prior?.sequence ?? null);
   if (!result.published) throw new Error(`MEETING_BODY_ROW_RACED:${scope}`);
   pass.stats.rowsWritten += 1;
@@ -302,7 +302,7 @@ async function writeRow(pass: Pass, state: string, entry: MeetingIndexBody, row:
 }
 
 interface Copy {
-  readonly entry: MeetingIndexBody;
+  readonly entry: MeetingIndexRowBody;
   readonly row: MeetingBodyRow;
   readonly couplings: readonly FreshCheckCoupling[];
 }
@@ -324,15 +324,15 @@ async function processState(pass: Pass, state: string, dirty: ReadonlySet<string
   const { store, layout } = pass;
   const indexScope = meetingIndexRowScope(state);
   const row = await store.readPreparedReaderProjection(MEETINGS_RECORD_CLASS, indexScope);
-  const prior = row === null ? null : row.payload as MeetingStateIndex;
+  const prior = row === null ? null : row.payload as MeetingIndexRow;
   const servedVersion = pass.served?.[state]?.version ?? null;
   const priorSha = row === null ? null : String((row.composedFrom as readonly FreshCheckCoupling[])[0]?.versionId ?? "");
   const registryVersion = pass.registryVersion(state);
   const territoryChanged = prior !== null && prior.registryVersion !== registryVersion;
   const idle = prior !== null && dirty.size === 0 && round === null && !territoryChanged;
-  if (idle) return priorSha === servedVersion ? null : { entry: { versionId: priorSha!, value: prior }, failed: false, copies: new Map(), removals: new Map() };
+  if (idle) return priorSha === servedVersion ? null : { entry: { versionId: priorSha!, value: readerIndexOf(prior) }, failed: false, copies: new Map(), removals: new Map() };
 
-  const bodies: Record<string, MeetingIndexBody> = { ...prior?.bodies };
+  const bodies: Record<string, MeetingIndexRowBody> = { ...prior?.bodies };
   const work = new Map<string, BodyWork>();
   const add = (bodyId: string, dirtyFamily = false, force = false) => {
     const held = work.get(bodyId);
@@ -415,18 +415,20 @@ async function processState(pass: Pass, state: string, dirty: ReadonlySet<string
   for (const bodyId of round?.removals ?? []) if (bodies[bodyId] !== undefined) { delete bodies[bodyId]; changed = true; }
 
   const sorted = Object.fromEntries(Object.entries(bodies).sort(([a], [b]) => (a < b ? -1 : 1)));
-  const index: MeetingStateIndex = { ...(prior ?? emptyMeetingStateIndex(state, registryVersion)), registryVersion, bodies: sorted, places: placesOf(sorted) };
-  const sha = sha256OfJson(index);
-  if (row !== null && sha === priorSha) return { entry: { versionId: sha, ...(servedVersion === sha ? { carried: true as const } : { value: index }) }, failed, copies, removals };
-  if (!changed && row !== null) return { entry: { versionId: priorSha!, ...(servedVersion === priorSha ? { carried: true as const } : { value: prior! }) }, failed, copies, removals };
+  const index: MeetingIndexRow = { ...(prior ?? emptyMeetingIndexRow(state, registryVersion)), registryVersion, bodies: sorted, places: placesOf(sorted) };
+  const reader = readerIndexOf(index);
+  const sha = sha256OfJson(reader);
+  const rowSha = sha256OfJson(index);
+  if (row !== null && rowSha === row.factSha256) return { entry: { versionId: sha, ...(servedVersion === sha ? { carried: true as const } : { value: reader }) }, failed, copies, removals };
+  if (!changed && row !== null) return { entry: { versionId: priorSha!, ...(servedVersion === priorSha ? { carried: true as const } : { value: readerIndexOf(prior!) }) }, failed, copies, removals };
   const result = await store.writePreparedReaderProjection({
-    recordClass: MEETINGS_RECORD_CLASS, scope: indexScope, payload: index, composedFrom: [{ contractId: INDEX_CONTRACT, versionId: sha }], factSha256: sha,
+    recordClass: MEETINGS_RECORD_CLASS, scope: indexScope, payload: index, composedFrom: [{ contractId: INDEX_CONTRACT, versionId: sha }], factSha256: rowSha,
     generatedAt: pass.now, composedAt: pass.now, sourceThrough: null, retrievedAt: null, promotedThrough: null,
   }, row?.sequence ?? null);
   if (!result.published) throw new Error(`MEETING_INDEX_RACED:${indexScope}`);
   pass.stats.indexesWritten += 1;
   pass.stats.bytesWritten += JSON.stringify(index).length;
-  return { entry: { versionId: sha, value: index }, failed, copies, removals };
+  return { entry: { versionId: sha, value: reader }, failed, copies, removals };
 }
 
 /**

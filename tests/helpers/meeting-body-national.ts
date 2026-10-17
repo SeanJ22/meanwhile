@@ -1,7 +1,7 @@
 import { readMeetingBodies, readReaderEdgeMeetings } from "../../lib/meetings/edge-serving.ts";
 import type { MeetingRegistryRead } from "../../lib/meetings/body-publication.ts";
-import type { MeetingStateIndex } from "../../lib/meetings/body-records.ts";
-import { meetingBodyRowScope, meetingIndexRowScope } from "../../lib/meetings/body-records.ts";
+import type { MeetingIndexRow } from "../../lib/meetings/body-records.ts";
+import { meetingIndexRowScope } from "../../lib/meetings/body-records.ts";
 import { meetingSettingsFromValues } from "../../lib/meetings/settings.ts";
 import type { RoutineDataStore } from "../../lib/civic-data/store.ts";
 import type { ReaderArtifactStore } from "../../lib/meetings/edge-store.ts";
@@ -31,14 +31,10 @@ export async function readEveryBody(
 }
 
 /** One state's published index, from its database row. */
-export async function stateIndexOf(store: RoutineDataStore, state: string): Promise<MeetingStateIndex | null> {
+export async function stateIndexOf(store: RoutineDataStore, state: string): Promise<MeetingIndexRow | null> {
   const row = await store.readPreparedReaderProjection("MEETING", meetingIndexRowScope(state));
-  return row === null ? null : row.payload as MeetingStateIndex;
+  return row === null ? null : row.payload as MeetingIndexRow;
 }
-
-/** One body's database row in one state, or null when the pass wrote none. */
-export const bodyRowOf = (store: RoutineDataStore, state: string, bodyId: string) =>
-  store.readPreparedReaderProjection("MEETING", meetingBodyRowScope(state, bodyId));
 
 /** A read by body id: for a body whose door names no division, which no place resolves to. */
 export function readBody(edge: ReaderArtifactStore, store: RoutineDataStore, now: string, bodyId: string, window: "SHOWN" | "HELD" = "SHOWN") {

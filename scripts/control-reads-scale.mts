@@ -1,19 +1,20 @@
 import assert from "node:assert/strict";
 import { fork } from "node:child_process";
-import { createHash } from "node:crypto";
+import { execFileSync } from "node:child_process";
+import { Client } from "pg";
+import { createHash, randomUUID } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { mkdtemp, readdir, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
-import type { PGlite } from "@electric-sql/pglite";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import type { StandingObligation } from "../lib/control-plane/scheduler/durable.ts";
 import type { NeonBytesHour } from "../lib/db/transfer-by-caller.ts";
 import type { FixMapRow } from "../lib/method/fix-map.ts";
 
 interface RunReport {
-  run: number; ms: number; responseBytes: number; requestBytes: number; peakRssBytes: number;
+  sourceSha:string; run: number; ms: number; responseBytes: number; requestBytes: number; databaseWalBytes:number; peakRssBytes: number;
   output: unknown; digest: string; hours: NeonBytesHour[];
 }
 
@@ -29,6 +30,7 @@ const history = Number(arg("history", "4"));
 const runsPerDay = Number(arg("runs-per-day", "1440"));
 const digest = (value: unknown) => createHash("sha256").update(JSON.stringify(value)).digest("hex");
 const mode = arg("mode", "parent");
+const sourceSha=execFileSync("git",["rev-parse","HEAD"],{cwd:root,encoding:"utf8"}).trim();
 
 if (mode === "worker") await worker();
 else await parent();
@@ -44,27 +46,28 @@ async function worker() {
     if (message.error) pending.reject(new Error(message.error));
     else pending.resolve(message.body!);
   });
-  neonConfig.fetchFunction = async (_url: unknown, options?: RequestInit) => {
-    const id = ++sequence;
-    const body = await new Promise<string>((resolve, reject) => {
-      inflight.set(id, { resolve, reject });
-      process.send!({ type: "query", id, body: options?.body });
-    });
-    return new Response(body, { headers: { "content-type": "application/json" } });
+  const proxy=(type:string,body?:unknown):Promise<string>=>{
+    const id=++sequence;
+    return new Promise((resolve,reject)=>{inflight.set(id,{resolve,reject});process.send!({type,id,body});});
   };
+  neonConfig.fetchFunction = async (_url: unknown, options?: RequestInit) =>
+    new Response(await proxy("query",options?.body), { headers: { "content-type": "application/json" } });
   const pg = await importAt("lib/control-plane/repository/pg-store.ts");
   const copies = await importAt("lib/control-plane/repository/incremental-reads.ts");
   const transfer = await importAt("lib/db/transfer-by-caller.ts");
   transfer.keepNeonBytesInProcess();
   pg.installHeldCopies(() => copies.openHeldCopies(arg("copies"), { slackMs: 0 }));
-  const repos = await pg.createPgRepositories("postgresql://fixture:fixture@ep-cp-scale.us-east-2.aws.neon.tech/fixture", now, { skipBootstrap: true });
+  const repos = await pg.createPgRepositories("postgresql://fixture:fixture@ep-cp-scale.us-east-2.aws.neon.tech/fixture", now, { skipBootstrap: true,...(arg("planning-state")?{planningState:arg("planning-state")}: {}) });
   const places = JSON.parse(await readFile(arg("selected"), "utf8")) as string[];
   const results: RunReport[] = [];
   for (let run = 0; run < repetitions; run++) {
     const before = transfer.processNeonBytes().reduce((sum: number, hour: { bytes: Record<string, number> }) => sum + hour.bytes["control-plane"], 0);
     const sentBefore = transfer.processNeonBytes().reduce((sum: number, hour: { sent: Record<string, { bytes: number }> }) => sum + hour.sent["control-plane"].bytes, 0);
+    const walBefore=BigInt(await proxy("wal"));
     const began = performance.now();
     const output = await workload(repos, places, run);
+    const duration=performance.now()-began;
+    const walAfter=BigInt(await proxy("wal"));
     const parts = transfer.takeNeonBytesHours();
     const read = parts.reduce((sum: number, hour: { bytes: Record<string, number> }) => sum + hour.bytes["control-plane"], 0);
     const sent = parts.reduce((sum: number, hour: { sent: Record<string, { bytes: number }> }) => sum + hour.sent["control-plane"].bytes, 0);
@@ -72,10 +75,10 @@ async function worker() {
       const summary = transfer.summarizeNeonBytes(part, 1000);
       assert.equal(summary.byCaller.reduce((sum: number, row: { bytes: number }) => sum + row.bytes, 0), summary.controlPlaneBytes + summary.readerBytes);
     }
-    // rusage can retain the fixture parent's pre-exec peak; VmHWM measures this worker's address space.
+
     const highWater = /VmHWM:\s+(\d+) kB/.exec(readFileSync("/proc/self/status", "utf8"));
     assert.ok(highWater, "Linux process memory high-water reading is required");
-    const report = { run, ms: performance.now() - began, responseBytes: read - before, requestBytes: sent - sentBefore,
+    const report = { sourceSha,run, ms: duration, responseBytes: read - before, requestBytes: sent - sentBefore, databaseWalBytes:Number(walAfter-walBefore),
       peakRssBytes: Number(highWater[1]) * 1024, output, digest: digest(output), hours: parts };
     results.push(report);
     process.send!({ type: "progress", scenario, run, responseBytes: report.responseBytes, requestBytes: report.requestBytes, ms: report.ms });
@@ -84,6 +87,41 @@ async function worker() {
 }
 
 async function workload(repos: ControlPlaneRepositories, places: string[], run: number): Promise<unknown> {
+  if (scenario === "planner") {
+    const state=arg("planning-state");
+    const policy=await repos.adminConfig.mustRead("current",{expansionScopes:{where:{path:["geography","stateAbbr"],value:state.toUpperCase()}}});
+    const scopes=(await importAt("lib/control-plane/expansion/scopes.ts")).expansionScopesOf(policy.value).scopes;
+    const pg=await importAt("lib/control-plane/repository/pg-store.ts");
+    const provider=await importAt("lib/control-plane/scheduler/providers/hunt-packets.ts");
+    const registryModule=await importAt("lib/control-plane/scheduler/registry.ts");
+    const durable=await importAt("lib/control-plane/scheduler/durable.ts");
+    const schedule=await importAt("lib/control-plane/scheduler/obligation.ts");
+    const memberships=await importAt("lib/control-plane/expansion/membership.ts");
+    const lineages=await importAt("lib/control-plane/workers/standing-lineage.ts");
+    const ids=await pg.readMaterializedPlanningIds(repos,scopes.map((scope:{receiptId:string})=>scope.receiptId));
+    const expected=Number(arg("expected-subjects"));
+    if(Number.isFinite(expected))assert.equal(ids.size,expected,"all Census governments and divisions in this state keep their hunt");
+    const registry=registryModule.buildRegistry([provider.huntPacketsProvider({materialized:()=>({ids})})],{root,nowIso:now,state});
+    const sync=await durable.syncObligations(repos,registry.units.map((unit:{obligation:unknown})=>unit.obligation),now);
+    const snapshot=await repos.dispatchState.readOpen({obligationIds:sync.all.map((row:StandingObligation)=>row.id)});
+    const scanned=await durable.scanOccurrences(repos,{obligations:sync.all,settledRouteTaskIds:durable.settledRouteTaskIds([...snapshot.routeTasks.values()]),neverClaimedRouteTaskIds:new Set(),snapshot});
+    const resumed=[];
+    for(const row of sync.all.filter((row:StandingObligation)=>row.openOccurrenceId))resumed.push(await durable.resumeOpenOccurrence(repos,row,snapshot));
+    const held=await lineages.readStandingLineages(repos,sync.all,now);
+    const zip="00000";
+    const reference=state==="system"?null:(await importAt("lib/control-plane/expansion/state-references.ts")).readStateReference(sourceRoot,state,{units:"state"});
+    const referenceUnits=new Map<string,{zips:readonly string[]}>(reference?.units.map((unit:{pid6:string;zips:readonly string[]})=>[`government:US-${state.toUpperCase()}:${unit.pid6}`,unit])??[]);
+    const territory={bySubject:new Map(sync.all.map((row:StandingObligation)=>[row.subjectId,{subjectId:row.subjectId,name:row.subjectId,govClass:"CITY",stateCode:state.toUpperCase(),zctas:new Set([zip,...(referenceUnits.get(row.subjectId)?.zips??[])]),shares:new Map()}])),
+      unplaced:new Map(),statewide:new Set(),unregisteredUnitsByState:new Map()};
+    const plan=memberships.planExpansion({scopes:scopes.map((decision:unknown)=>({kind:"RESOLVED",decision,zctas:new Set([zip]),whole:new Set([zip]),fractions:new Map(),states:[state.toUpperCase()]})),
+      now,territory,obligations:sync.all,lookup:{source:"published",versionId:"generated-national"},territoryDetail:null,malformedScopes:0});
+    const owed=sync.all.flatMap((row:StandingObligation)=>{const derived=schedule.scheduleObligation(row,Date.parse(now));return schedule.isScheduled(derived)&&Date.parse(derived.nextDueAt)<=Date.parse(now)?[row.id]:[];}).sort();
+    const selected=await pg.readCoordinatorWorkItems(repos);
+    const scopeMembers=plan.scopes.reduce((n:number,scope:{members?:ReadonlySet<string>})=>n+(scope.members?.size??0),0);
+    assert.equal(sync.all.length,ids.size);assert.equal(scopeMembers,ids.size);assert.equal(registry.units.length,ids.size);
+    return {state,registered:ids.size,owed:owed.length,owedDigest:digest(owed),members:scopeMembers,open:snapshot.occurrences.size,
+      resumed:resumed.length,lineages:held.length,coordinator:selected.length,scanned:scanned.settled.length+scanned.abandoned.length};
+  }
   if (scenario === "admin") {
     const values = [];
     for (let call = 0; call < 79; call++) values.push((await repos.adminConfig.read("current"))?.value.apiFallback);
@@ -163,6 +201,12 @@ async function nationalPlaces(): Promise<string[]> {
     const shard = JSON.parse(await readFile(join(directory, file), "utf8"));
     for (const place of shard.divisions) places.add(place);
   }
+  const {readStateReference}=await import(pathToFileURL(join(sourceRoot,"lib/control-plane/expansion/state-references.ts")).href);
+  const {HUNT_STATES}=await import(pathToFileURL(join(sourceRoot,"lib/control-plane/hunt-orders.ts")).href);
+  for(const state of HUNT_STATES) {
+    const reference=readStateReference(sourceRoot,state,{units:"state"});
+    for(const unit of reference.units)places.add(`government:US-${state.toUpperCase()}:${unit.pid6}`);
+  }
   return [...places].sort();
 }
 
@@ -170,11 +214,10 @@ async function parent() {
   assert.ok(Number.isInteger(repetitions) && repetitions > 0);
   assert.ok(Number.isInteger(history) && history > 0);
   const setupStarted = performance.now();
-  const { PGlite } = await import("@electric-sql/pglite");
-  const pg = new PGlite();
+  const pg = await fixtureDatabase();
+  try {
   const schema = await importAt("lib/control-plane/repository/pg-schema.ts");
   for (const ddl of schema.BOOTSTRAP_DDL) {
-    if (scenario === "method" && !legacy && /cp_fix_method_summar/.test(ddl)) continue;
     await pg.exec(ddl.replaceAll(" CONCURRENTLY ", " "));
   }
   const all = await nationalPlaces();
@@ -186,8 +229,8 @@ async function parent() {
   }
   const selected = [...byState.values()];
   const places = [...new Set([...selected, ...all])].slice(0, maximum);
-  await pg.exec("CREATE TABLE scale_places (ordinal integer PRIMARY KEY, id text NOT NULL)");
-  for (let at = 0; at < places.length; at += 1000) await pg.query("INSERT INTO scale_places SELECT (e->>'ordinal')::integer, e->>'id' FROM jsonb_array_elements($1::jsonb) e", [JSON.stringify(places.slice(at, at + 1000).map((id, index) => ({ ordinal: at + index, id })))]);
+  await pg.exec("CREATE TABLE scale_places (ordinal integer PRIMARY KEY, id text NOT NULL,state text NOT NULL)");
+  for (let at = 0; at < places.length; at += 1000) await pg.query("INSERT INTO scale_places SELECT (e->>'ordinal')::integer, e->>'id',e->>'state' FROM jsonb_array_elements($1::jsonb) e", [JSON.stringify(places.slice(at, at + 1000).map((id, index) => ({ ordinal: at + index, id,state:/\/(?:state|district|territory):([a-z]{2})(?:\/|$)/.exec(id)?.[1]??/^government:US-([A-Z]{2}):/.exec(id)?.[1]?.toLowerCase()??"system" })))]);
   await seed(pg, places, selected.filter(place => places.includes(place)));
   await pg.exec("ANALYZE");
   if (scenario === "manual" && arg("explain")) {
@@ -205,50 +248,76 @@ async function parent() {
   const { writeFile } = await import("node:fs/promises");
   const selectedFile = join(directory, "selected.json");
   await writeFile(selectedFile, JSON.stringify(selected.filter(place => places.includes(place))));
-  const child = fork(import.meta.filename, [...process.argv.slice(2), "--mode=worker", `--copies=${join(directory, "copies")}`, `--selected=${selectedFile}`], {
-    cwd: root, execArgv: ["--experimental-strip-types", "--import", join(root, "scripts/register-test-loader.mjs")],
+  let planningRoundWallMs:number|null=null;
+  const launch=async(state?:string):Promise<RunReport[]>=>{
+  const child = fork(import.meta.filename, [...process.argv.slice(2), "--mode=worker", `--copies=${join(directory, "copies",state??"all")}`, `--selected=${selectedFile}`,...(state?[`--planning-state=${state}`,`--expected-subjects=${places.filter(subject=>((/\/(?:state|territory|district):([^/]+)/.exec(subject)?.[1]??/^government:US-([A-Z]{2}):/.exec(subject)?.[1]?.toLowerCase())??"system")===state).length}`]:[])], {
+    cwd: root, execArgv: ["--max-old-space-size=1536","--experimental-strip-types", "--import", join(root, "scripts/register-test-loader.mjs")],
     env: { ...process.env, DATABASE_URL: "", WTP_CONTROL_PLANE_DATABASE_URL: "postgresql://fixture:fixture@ep-cp-scale.us-east-2.aws.neon.tech/fixture", WTP_VITAL_SIGNS_REPORT: "1" },
     stdio: ["ignore", "pipe", "pipe", "ipc"], serialization: "advanced",
   });
   child.stderr!.on("data", data => process.stderr.write(data));
   child.stdout!.on("data", data => process.stderr.write(data));
-  const results = await new Promise<RunReport[]>((resolve, reject) => {
+  const reports = await new Promise<RunReport[]>((resolve, reject) => {
+    let completed:RunReport[]|null=null;
     child.on("error", reject);
-    child.on("exit", code => { if (code !== 0) reject(new Error(`Scale worker exited ${code}`)); });
+    child.on("exit", code => {
+      if(code===0 && completed!==null)resolve(completed);
+      else reject(new Error(`Scale worker exited ${code} without completing its run`));
+    });
     child.on("message", async (message: { type: string; id: number; body: string; results: RunReport[] }) => {
-      if (message.type === "done") { resolve(message.results); return; }
+      if (message.type === "done") { completed=message.results; return; }
       if (message.type === "progress") { process.stderr.write(`${JSON.stringify(message)}\n`); return; }
+      if(message.type==="wal") {
+        const [{lsn}]=(await pg.query<{lsn:string}>("SELECT pg_current_wal_insert_lsn()::text AS lsn")).rows;
+        const [high,low]=lsn.split("/");
+        child.send({id:message.id,body:String((BigInt(`0x${high}`)<<BigInt(32))+BigInt(`0x${low}`))});return;
+      }
       if (message.type !== "query") return;
       try {
         const request = JSON.parse(message.body);
         const execute = async (query: { query: string; params?: unknown[] }) => {
-          return wire(await pg.query<Record<string, unknown>>(query.query, query.params ?? [], { serializers: { 16: value => String(value) } }));
+          return wire(await pg.query<Record<string, unknown>>(query.query, query.params ?? [], { serializers: { 16: (value:unknown) => String(value) } }));
         };
         const response = request.queries ? { results: await Promise.all(request.queries.map(execute)) } : await execute(request);
         child.send({ id: message.id, body: JSON.stringify(response) });
       } catch (error) { child.send({ id: message.id, error: error instanceof Error ? error.message : String(error) }); }
     });
   });
+    return reports;
+  };
+  const results:RunReport[]=[];
+  if(scenario==="planner") {
+    const statePlanning=await importAt("lib/control-plane/scheduler/state-planning.ts");
+    const started=performance.now();
+    const round=await statePlanning.runStatePlanningRound(async(state:string)=>{
+      const reports=await launch(state);results.push(...reports);return true;
+    },arg("planning-states")?arg("planning-states").split(","):statePlanning.PLANNING_STATES);
+    assert.equal(round.failed.length,0);
+    planningRoundWallMs=performance.now()-started;
+    process.stderr.write(`${JSON.stringify({type:"planning-round",states:round.completed,wallMs:planningRoundWallMs})}\n`);
+  }else results.push(...await launch());
   const peak = Math.max(...results.map(result => result.peakRssBytes));
   const runnerAvailable = Number(arg("runner-available-bytes", "NaN"));
   const documentedHost = 8 * 1024 ** 3;
   const parentReserve = 2928 * 1024 ** 2;
   const margin = 0.75 * 1024 ** 3;
-  const warm = results.at(-1)!;
-  console.log(JSON.stringify({ scenario, root, legacy, input: { divisions: places.length, nationalDivisionsAvailable: all.length,
+  const warmRows=scenario==="planner"?results.filter(result=>result.run===repetitions-1):[results.at(-1)!];
+  const warm={responseBytes:warmRows.reduce((n,row)=>n+row.responseBytes,0),requestBytes:warmRows.reduce((n,row)=>n+row.requestBytes,0),databaseWalBytes:warmRows.reduce((n,row)=>n+row.databaseWalBytes,0),ms:warmRows.reduce((n,row)=>n+row.ms,0)};
+  console.log(JSON.stringify({ scenario, root, legacy,sourceSha,planningRoundWallMs, input: { subjects: places.length,nationalSubjectsAvailable:all.length,ocdDivisions: all.filter(place=>place.startsWith("ocd-division/")).length,censusGovernments:all.filter(place=>place.startsWith("government:")).length,
     scopes: [...byState.keys()].sort(), selectedPlaces: selected.filter(place => places.includes(place)).length, historiesPerPlace: history },
-    measurement: "Exact serialized fixture-adapter request/response bodies through the production Neon counter; excludes real Neon framing, network latency and database WAL. Database is a separate process from the measured worker.",
+    measurement: "Postgres 17 in an isolated local container; exact serialized fixture-adapter request/response bodies through the production Neon counter and physical WAL written per workload. Excludes real Neon framing and network latency. Database memory is separate from the measured worker.",
     assumptions: { runsPerDay, runnerAvailableBytes: Number.isFinite(runnerAvailable) ? runnerAvailable : null, reserveBytes: margin,
       documentedHostBytes: documentedHost, documentedHostSource: "deploy/runner/README.md", existingParentReserveBytes: parentReserve,
       parentReserveSource: "lib/control-plane/workers/worker-slots.ts", productionHeartbeatAvailable: false },
     fixtureSetupMs, peakRssBytes: peak, workerPeakSource: "/proc/self/status VmHWM", copiesAtMargin: Number.isFinite(runnerAvailable) ? Math.max(0, Math.floor((runnerAvailable - margin) / peak)) : null,
+    runnerCopiesAfterParentReserve: Number.isFinite(runnerAvailable) ? Math.max(0,Math.floor((runnerAvailable-margin-parentReserve)/peak)) : null,
     documentedHostWorkerOnlyCopies: Math.floor((documentedHost - margin) / peak),
     documentedHostCopiesAfterParentReserve: Math.floor((documentedHost - margin - parentReserve) / peak),
     warmResponseBytesPerHour: warm.responseBytes * runsPerDay / 24, warmResponseBytesPerDay: warm.responseBytes * runsPerDay,
     warmRequestBytesPerHour: warm.requestBytes * runsPerDay / 24, warmRequestBytesPerDay: warm.requestBytes * runsPerDay,
-    warmRuntimeMsPerDay: warm.ms * runsPerDay, results }, null, 2));
-  await pg.close();
+    warmRuntimeMsPerDay: warm.ms * runsPerDay,warmDatabaseWalBytesPerDay:warm.databaseWalBytes*runsPerDay, results }, null, 2));
   await rm(directory, { recursive: true, force: true });
+  } finally { await pg.close(); }
 }
 
 function wire(result: { rows: Record<string, unknown>[]; fields: { name: string; dataTypeID: number }[]; affectedRows?: number }) {
@@ -263,7 +332,7 @@ function wire(result: { rows: Record<string, unknown>[]; fields: { name: string;
     rows: result.rows.map(row => result.fields.map(field => encode(row[field.name], field.dataTypeID))) };
 }
 
-async function seed(pg: PGlite, places: string[], selected: string[]) {
+async function seed(pg: FixtureDatabase, places: string[], selected: string[]) {
   const template = (kind: string) => `INSERT INTO cp_${kind} (id, revision, updated_at, changed_at, value)`;
   if (scenario === "manual") {
     const manual = await importAt("lib/control-plane/field-manual.ts");
@@ -271,7 +340,7 @@ async function seed(pg: PGlite, places: string[], selected: string[]) {
       summary: "The official calendar publishes meetings and links the agenda and minutes for this government.", outcome: "YIELDED", ocdIds: [places[0]], observedAt: now, payload: { route: "official-calendar", result: "agenda and minutes" } }));
     await pg.query(`${template("field_manual_entries")} SELECT 'note-' || p.ordinal || '-' || h.n, 1, $1::timestamptz, $1::timestamptz,
       $2::jsonb || jsonb_build_object('id', 'note-' || p.ordinal || '-' || h.n, 'ocdIds', jsonb_build_array(p.id),
-        'reach', jsonb_build_object('places', jsonb_build_array(p.id), 'states', '[]'::jsonb, 'platforms', '[]'::jsonb, 'everywhere', false))
+        'reach', jsonb_build_object('places', jsonb_build_array(lower(p.id)), 'states', '[]'::jsonb, 'platforms', '[]'::jsonb, 'everywhere', false))
       FROM scale_places p CROSS JOIN generate_series(1,$3::integer) h(n)`, [now, JSON.stringify(entry), history]);
   } else if (scenario === "method") {
     await pg.query(`INSERT INTO cp_fix_map (method_id,place_id,state,tried_at,attempt_id,cause,updated_at)
@@ -283,18 +352,16 @@ async function seed(pg: PGlite, places: string[], selected: string[]) {
   } else if (scenario === "admin") {
     const admin = await importAt("lib/control-plane/gateway/admin-config.ts");
     const config = admin.defaultAdminConfig(now);
-    await pg.query(`${template("admin_config")} SELECT 'current',1,$1::timestamptz,$1::timestamptz,$2::jsonb ||
+    await pg.query(`${template("admin_config")} SELECT 'current',1,$1::timestamptz,$1::timestamptz,$2::jsonb${legacy ? ` ||
       jsonb_build_object('settingHistory',(SELECT jsonb_agg(jsonb_build_object('id','setting-' || ordinal,'key','workers','before',1,'after',2,'at',$1::text,'actor','factory')) FROM scale_places),
-      'placeTargets',(SELECT jsonb_agg(jsonb_build_object('key',id,'goalPercent',100,'setAt',$1::text,'decidedBy','factory','receiptId','receipt-' || ordinal)) FROM scale_places))`, [now, JSON.stringify(config)]);
+      'placeTargets',(SELECT jsonb_agg(jsonb_build_object('key','geo:'||state||'.place.'||ordinal,'goalPercent',100,'setAt',$1::text,'decidedBy','factory','receiptId','receipt-' || ordinal)) FROM scale_places))` : ""}`, [now, JSON.stringify(config)]);
     if (!legacy) {
-      const state = await importAt("lib/control-plane/repository/admin-config.ts");
-      for (const ddl of state.ADMIN_SECTIONS_DDL) await pg.exec(ddl);
-      const began = performance.now();
-      await state.backfillAdminSections(async (text: string, params?: unknown[]) => (await pg.query(text, params)).rows);
-      const count = (await pg.query<{ count: number }>("SELECT (SELECT count(*) FROM cp_admin_setting_history) + (SELECT count(*) FROM cp_admin_place_targets) AS count")).rows[0].count;
-      assert.equal(Number(count), places.length * 2);
-      process.stderr.write(`${JSON.stringify({ type: "migration", scenario, rows: Number(count), ms: performance.now() - began })}\n`);
-      await pg.exec(state.ADMIN_SECTIONS_STRIP_DDL);
+      await pg.query(`INSERT INTO cp_admin_setting_history(config_id,id,updated_at,value)
+        SELECT 'current','setting-'||ordinal,$1::timestamptz,jsonb_build_object('id','setting-'||ordinal,'key','workers','before',1,'after',2,'at',$1::text,'actor','factory') FROM scale_places`,[now]);
+      await pg.exec("ALTER TABLE cp_admin_place_targets DISABLE TRIGGER cp_admin_place_targets_planning_changed");
+      await pg.query(`INSERT INTO cp_admin_place_targets(config_id,id,updated_at,value)
+        SELECT 'current','geo:'||state||'.place.'||ordinal,$1::timestamptz,jsonb_build_object('key','geo:'||state||'.place.'||ordinal,'goalPercent',100,'setAt',$1::text,'decidedBy','factory','receiptId','receipt-'||ordinal) FROM scale_places`,[now]);
+      await pg.exec("ALTER TABLE cp_admin_place_targets ENABLE TRIGGER cp_admin_place_targets_planning_changed");
     }
   } else if (scenario === "spend") {
     const safety = await importAt("lib/control-plane/fleet-safety.ts");
@@ -311,7 +378,7 @@ async function seed(pg: PGlite, places: string[], selected: string[]) {
           true,0.01,NULL FROM scale_places`, [now]);
     }
     assert.ok(spend.costRecordId);
-  } else if (scenario === "dispatch" || scenario === "coordinator") {
+  } else if (scenario === "dispatch" || scenario === "coordinator" || scenario === "planner") {
     let continuation: Record<string, unknown> | null = null;
     if (scenario === "coordinator") {
       const fixture = await import(pathToFileURL(join(sourceRoot, "tests/helpers/autonomous-fleet.ts")).href);
@@ -330,31 +397,101 @@ async function seed(pg: PGlite, places: string[], selected: string[]) {
         || '{"autonomousPlan":{"capability":"officials/offices","acquisition":[],"sources":[],"contract":{"schemaVersion":2,"recordClass":"OFFICIAL_ROSTER"}}}'::jsonb END`;
       const prefix = kind === "work_items" ? "wi-" : kind === "route_tasks" ? "rt-" : "occ-";
       const batch = Math.max(1, Math.floor(1000 / history));
-      for (let at = 0; at < places.length; at += batch) await pg.query(`${template(kind)}
+      for (let at = 0; at < places.length; at += batch) await pg.query(`${template(scenario==="planner"?`${kind}_archive`:kind)}
         SELECT '${prefix}' || p.ordinal || '-' || h.n,1,$1::timestamptz,$1::timestamptz,${value}
         FROM scale_places p CROSS JOIN generate_series(1,$2::integer) h(n) WHERE p.ordinal >= $3 AND p.ordinal < $4`,
       [now, history, at, at + batch, ...(continuation && kind === "work_items" ? [JSON.stringify(continuation)] : [])]);
+    }
+    if(scenario==="planner") {
+      const durable=await importAt("lib/control-plane/scheduler/durable.ts");
+      const providers=await importAt("lib/control-plane/scheduler/providers/hunt-packets.ts");
+      const registryModule=await importAt("lib/control-plane/scheduler/registry.ts");
+      const statePlanning=await importAt("lib/control-plane/scheduler/state-planning.ts");
+      const admin=await importAt("lib/control-plane/gateway/admin-config.ts");
+      const fipsModule=await importAt("lib/ocd/fips.ts");
+      const fipsByState=Object.fromEntries(Object.entries(fipsModule.FIPS_TO_STATE).map(([fips,value])=>[String((value as {postal:string}).postal).toLowerCase(),fips]));
+      const oneId=`hunt:packet:${places[0]}`;
+      const prototype=durable.standing(registryModule.buildRegistry([providers.huntPacketsProvider({materialized:()=>({ids:new Set([oneId])})})],{root,nowIso:now}).units[0].obligation,now);
+      await pg.query(`${template("admin_config")} VALUES('current',1,$1::timestamptz,$1::timestamptz,$2::jsonb)`,[now,JSON.stringify(admin.defaultAdminConfig(now))]);
+      for(const state of statePlanning.PLANNING_STATES.filter((state:string)=>state!=="system")) {
+        const scope={key:`state:2020/${fipsByState[state]}`,geography:{type:"state",geoid:fipsByState[state],version:"state:2020",label:state.toUpperCase(),stateAbbr:state.toUpperCase()},
+          priority:1,budgetUsd:10000,budgetStartedAt:now,decidedAt:now,decidedBy:"fixture",receiptId:`send-${state}`,previous:null,note:null};
+        await pg.query("INSERT INTO cp_admin_expansion_scopes(config_id,id,updated_at,value) VALUES('current',$1,$2,$3::jsonb)",[scope.key,now,JSON.stringify(scope)]);
+      }
+      for(let at=0;at<places.length;at+=1000)await pg.query(`${template("obligations")}
+        SELECT 'hunt:packet:'||p.id,1,$1::timestamptz,$1::timestamptz,$2::jsonb || jsonb_build_object('id','hunt:packet:'||p.id,'subjectId',p.id,'scopeDivisions',jsonb_build_array(p.id),
+          'materializedBy','OWNER_DISPATCH','active',true,'updatedAt',$1::text,'nextDueAt',$1::text,'occurrenceCount',$5::integer,
+          'autonomousPlan',jsonb_set(jsonb_set(replace(($2::jsonb->'autonomousPlan')::text,$6,p.id)::jsonb,'{jurisdiction}',to_jsonb(upper(cp_control_state(jsonb_build_object('subjectId',p.id))))),'{contract,jurisdiction,state}',to_jsonb(upper(cp_control_state(jsonb_build_object('subjectId',p.id))))),
+          'assignments',jsonb_build_array(jsonb_build_object('assignmentKey','state:2020/'||($7::jsonb->>cp_control_state(jsonb_build_object('subjectId',p.id))),
+            'ref','send-'||cp_control_state(jsonb_build_object('subjectId',p.id)),'relation','CREATED','at',$1::text)))
+        FROM scale_places p WHERE p.ordinal >= $3 AND p.ordinal < $4`,[now,JSON.stringify(prototype),at,at+1000,history,places[0],JSON.stringify(fipsByState)]);
+      await pg.query(`INSERT INTO cp_lineage_cache(id,stamp,value,dirty,generation)
+        SELECT id,jsonb_build_array($1::text,$1::text)::text,'[]'::jsonb,false,1 FROM cp_obligations
+        ON CONFLICT(id) DO UPDATE SET stamp=EXCLUDED.stamp,value=EXCLUDED.value,dirty=false`,[now]);
     }
     for (let index = 0; index < selected.length; index++) {
       for (const [kind, id, value] of [
         ["work_items", `open-wi-${index}`, { id: `open-wi-${index}`, subject: selected[index], state: "OPEN", ...(scenario === "coordinator" ? { autonomousPlan: { capability: "hunt-packet" } } : {}) }],
         ["route_tasks", `open-rt-${index}`, { id: `open-rt-${index}`, workItemId: `open-wi-${index}`, state: "PENDING", disposition: null }],
-        ["occurrences", `open-${index}`, { id: `open-${index}`, obligationId: `o-${index}`, sequence: history + 1, workItemId: `open-wi-${index}`, routeTaskId: `open-rt-${index}`, closedAt: null }],
+        ["occurrences", `open-${index}`, { id: `open-${index}`, obligationId: scenario==="planner"?`hunt:packet:${selected[index]}`:`o-${index}`, sequence: history + 1, workItemId: `open-wi-${index}`, routeTaskId: `open-rt-${index}`, closedAt: null }],
       ]) await pg.query(`${template(String(kind))} VALUES ($1,1,$2::timestamptz,$2::timestamptz,$3::jsonb)`, [id, now, JSON.stringify(value)]);
     }
-    if (!legacy) {
-      const dispatch = await importAt("lib/control-plane/repository/dispatch-state.ts");
-      for (const ddl of dispatch.DISPATCH_STATE_DDL) await pg.exec(ddl);
-      const began = performance.now();
-      let archived = 0;
-      for (;;) {
-        const rows = (await pg.query<{ moved: number }>(dispatch.DISPATCH_ARCHIVE_MOVE_SQL)).rows;
-        const moved = Number(rows[0]?.moved ?? 0);
-        archived += moved;
-        if (moved === 0) break;
+    if(scenario==="planner") {
+      for(let index=0;index<selected.length;index++)await pg.query("UPDATE cp_obligations SET value=jsonb_set(value,'{openOccurrenceId}',to_jsonb($2::text)) WHERE id=$1",[`hunt:packet:${selected[index]}`,`open-${index}`]);
+      await pg.query("UPDATE cp_lineage_cache SET stamp=replace(stamp,', ',','),dirty=false");
+    }
+    if (!legacy && scenario!=="planner") {
+      const jobs=await importAt("lib/control-plane/repository/control-reads-backfill.ts");
+      const statePlanning=await importAt("lib/control-plane/scheduler/state-planning.ts");
+      const began=performance.now();
+      let archived=0;
+      for(const state of statePlanning.PLANNING_STATES)for(;;) {
+        const rows=(await pg.query<{moved:number}>(jobs.ARCHIVE_STATE_SQL,[state])).rows;
+        archived+=Number(rows[0].moved);if(Number(rows[0].moved)<100)break;
       }
       assert.equal(Number((await pg.query<{ n: number }>("SELECT count(*) AS n FROM cp_occurrences WHERE value->>'closedAt' IS NOT NULL")).rows[0].n), 0);
       process.stderr.write(`${JSON.stringify({ type: "migration", scenario, archived, ms: performance.now() - began })}\n`);
     }
   }
+}
+
+interface FixtureDatabase {
+  query<T=Record<string,unknown>>(text:string,params?:unknown[],options?:unknown):Promise<{rows:T[];fields:{name:string;dataTypeID:number}[];affectedRows:number}>;
+  exec(text:string):Promise<void>;
+  close():Promise<void>;
+}
+
+async function fixtureDatabase():Promise<FixtureDatabase> {
+  const name=`cp01-scale-${randomUUID()}`;
+  const password=randomUUID();
+  execFileSync("docker",["run","--detach","--rm","--name",name,"--memory=2g","--publish","127.0.0.1::5432",
+    "--env","POSTGRES_PASSWORD","--env","POSTGRES_USER=fixture","--env","POSTGRES_DB=fixture","postgres:17-alpine",
+    "-c","shared_buffers=128MB","-c","autovacuum=off","-c","max_parallel_workers_per_gather=0"],
+    {env:{...process.env,POSTGRES_PASSWORD:password},stdio:["ignore","ignore","pipe"]});
+  const port=Number(execFileSync("docker",["port",name,"5432/tcp"],{encoding:"utf8"}).trim().split(":").at(-1));
+  let client:Client|null=null;
+  try {
+    for(let attempt=0;attempt<60;attempt++) {
+      const candidate=new Client({host:"127.0.0.1",port,user:"fixture",password,database:"fixture",application_name:"cp01-scale",connectionTimeoutMillis:1000});
+      try {await candidate.connect();client=candidate;break;}
+      catch {await candidate.end().catch(()=>{});await new Promise(done=>setTimeout(done,250));}
+    }
+    if(!client)throw new Error("The isolated Postgres fixture did not become ready");
+  }catch(error){execFileSync("docker",["rm","--force","--volumes",name],{stdio:"ignore"});throw error;}
+  const connected=client;
+  const close=async()=>{
+    process.off("SIGTERM",terminate);
+    try {await connected.end();}
+    finally {execFileSync("docker",["rm","--force","--volumes",name],{stdio:"ignore"});}
+  };
+  const terminate=()=>{void close().finally(()=>process.exit(143));};
+  process.once("SIGTERM",terminate);
+  return {
+    query:async<T,>(text:string,params:unknown[]=[])=>{
+      const result=await connected.query(text,params);
+      return {rows:result.rows as T[],fields:result.fields,affectedRows:result.rowCount??0};
+    },
+    exec:async text=>{await connected.query(text);},
+    close,
+  };
 }

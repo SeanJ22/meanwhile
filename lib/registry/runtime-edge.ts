@@ -11,7 +11,7 @@ import type { RegistrationReadModel } from "../registration/candidate.ts";
 import type { OutcomeSnapshot } from "../outcomes/types.ts";
 import type { PromotedCivicDataReadOptions, PromotedEdgeEntry } from "../civic-data/read-model.ts";
 import type { RoutineRecordClass } from "../civic-data/types.ts";
-import type { CensusDistrictEdge } from "../census-geography/district-edge.ts";
+import type { CodeSlice, Slice } from "../control-plane/admin-view/promoted-slices.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { currentReaderSelection, withReaderSelection, type ReaderSelection } from "../db/reader-route.ts";
 
@@ -61,7 +61,8 @@ export interface ReaderAuthorityEdgeBundle {
   readonly loadPromoted?: (recordClass: RoutineRecordClass, scope: string) => Promise<PromotedEdgeEntry | null>;
   readonly stateAuthorities?: StateAuthoritiesEdge;
   readonly stateRegistryFacts?: { readonly key?: (state: string) => string | null; readonly load: (state: string) => Promise<{ readonly bodies: readonly BodyFacts[]; readonly versionId: string | null } | null> };
-  readonly censusDistricts?: { readonly value: CensusDistrictEdge; readonly versionId: string };
+  /** A ZIP's Census districts, from its state's own pointer. */
+  readonly censusDistricts?: { readonly slice: (zip: string) => Promise<Slice<CodeSlice>> };
   readonly federalDirectory?: FederalDirectoryEdgeValue;
   readonly campaignSites?: CampaignSitesEdgeValue;
   readonly stateLegislators?: StateLegislatorsEdgeValue;

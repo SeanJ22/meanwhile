@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { POINT_GEOMETRY_PLANS, divisionIdsForZipArea, unestablishedDistrictOfficesForFamilies } from "../lib/ballot/zip-divisions.ts";
-import type { CensusDistrictEdge } from "../lib/census-geography/district-edge.ts";
+import { censusDistrictEdgeSlice, type CensusDistrictEdge } from "../lib/census-geography/district-edge.ts";
 import { selectGeographyVersion } from "../lib/census-geography/selection.ts";
 import { withCensusDistricts } from "../lib/geo/zip-census-districts.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
@@ -15,7 +15,7 @@ const azBallot = Object.values(JSON.parse(readFileSync(join(import.meta.dirname,
 
 
 const districtIds = (ids: readonly string[]) => ids.filter(id => /\/(?:cd|sldu|sldl):/.test(id)).sort();
-const withDistricts = <T>(edge: CensusDistrictEdge, read: () => T): T => withReaderAuthorityEdge({ censusDistricts: { value: edge, versionId: edge.versionId } }, read);
+const withDistricts = <T>(edge: CensusDistrictEdge, read: () => T): T => withReaderAuthorityEdge({ censusDistricts: { slice: async (zip: string) => censusDistrictEdgeSlice(edge, edge.versionId, zip) } }, read);
 
 for (const [zip, expected] of [
   ["85701", ["state-senate-20", "state-house-20", "us-house-7"]],

@@ -491,7 +491,7 @@ async function answerWithSettings(request: Request) {
   const edgeManifest = await timed("edgeManifest", () => earlyManifest ? Promise.resolve(earlyManifest) : readReaderManifest().catch(holdReaderAuthorityEdge))();
   // Each database read is observed at once, so a failure while the edge is
   // fetched is never an unhandled rejection; the settle below still records it.
-  const outcomesFromDatabase = leanAsk || ballotOnlyHint || await authorityPointerHeld("meeting-outcomes") ? null : timed("outcomes", refreshOutcomeSnapshotFromPromoted)();
+  const outcomesFromDatabase = leanAsk || ballotOnlyHint || (await Promise.all(["US", ...statesOf(ocdIds)].map(place => authorityPointerHeld("meeting-outcomes", place)))).some(Boolean) ? null : timed("outcomes", refreshOutcomeSnapshotFromPromoted)();
   outcomesFromDatabase?.catch(() => undefined);
   const commentAccessFromDatabase = production && !leanAsk && !ballotOnlyHint && !edgeManifest
     ? timed("commentAccess", () => readCommentAccessFacts().catch(() => undefined))()

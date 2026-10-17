@@ -3,6 +3,7 @@ import type { Query } from "../facts/publish.ts";
 import { publishStateFacts, type StateFactsPointer, type StateFactsPublication } from "../facts/state-facts-publication.ts";
 import { preparePublishedMeetingSnapshot, readPreparedMeetingsProjection, readComposedSourcePlaces } from "../meetings/prepared-snapshot.ts";
 import {
+  authorityPlaceOfScope,
   authorityPointerKey,
   publishReaderMeetings,
   ensureReaderAuthorityEdge,
@@ -43,7 +44,8 @@ import { MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT, PIMA_LEGISTAR_OUTCOMES_CONTRAC
 import type { RoutineDataStore } from "./store.ts";
 import { publishPromotedEdgeFamilies, promotedEdgePointers, selectedStateEdgePointers } from "./promoted-edge-publication.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
-import { censusEdgePublication } from "../../scripts/lib/census-edge-publication.ts";
+import { buildCensusDistrictEdge, censusDistrictEdgeByState } from "../census-geography/district-edge.ts";
+import { postalArea } from "../geo/postal.ts";
 import { dispatchStateArtifacts, type StateArtifactChildren } from "./state-artifact-dispatch.ts";
 
 function safeFailure(value: string): string {
@@ -180,12 +182,14 @@ export async function publishSupervisorReaderEdge(store: RoutineDataStore, obser
           return { value: { projection: routing.kind === "PROMOTED" ? routing.value : null }, versionId: await versionId() };
         });
       }
-      if (refreshes("census-districts")) await family("census-districts", async () => null, served => censusEdgePublication({
-        servedVersion: served?.ref.version ?? null,
-        readVersion: pointerVersion(CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE),
-        readProjection: () => readCensusGeographyProjection({ store, now: observedAt }),
-        onFailure: error => skip(`census-districts ${sanitizedErrorDiagnostic(error)}`),
-      }));
+      // Read only when the national Census promotion moved; each state's shard is written only when its own content changed.
+      if (refreshes("census-districts")) try {
+        const census = await readCensusGeographyProjection({ store, now: observedAt });
+        if (census.kind === "PROMOTED" && census.metadata.versionId) {
+          const shards = censusDistrictEdgeByState(buildCensusDistrictEdge(census.value, census.metadata.versionId), zip => postalArea(zip)?.state ?? "US");
+          for (const [state, shard] of shards) await family("census-districts", async () => shard.versionId, async () => ({ value: shard, versionId: shard.versionId }), state);
+        } else if (census.kind !== "NOT_RECORDED") skip(`census-districts read ${census.kind}`);
+      } catch (error) { skip(`census-districts ${sanitizedErrorDiagnostic(error)}`); }
       // The served version names the directory and the portraits laid on it, exactly as the reader composes it.
       if (refreshes("federal-directory")) await family("federal-directory", async () => {
         const directory = await manualPointer("congress-bulk-roster")();
@@ -202,23 +206,22 @@ export async function publishSupervisorReaderEdge(store: RoutineDataStore, obser
         if (cs.kind !== "NOT_RECORDED") throw new Error(`campaign-sites read ${cs.kind}`);
         return null;
       });
-      // The doors were not read this pass, so the door list is unknown, not empty: the served artifact stands
-      // rather than one that silently drops every door's outcomes.
-      if (refreshes("meeting-outcomes") && outcomePartitionsAreCurrent()) await family("meeting-outcomes", async () => {
-        const doorVersions = await Promise.all(outcomePointers().map(async (pointer) => ({
-          contractId: pointer.contractId,
-          versionId: await pointerVersion(pointer.recordClass, pointer.scope)(),
-        })));
-        return combinedOutcomeVersionId(doorVersions.filter((door): door is { contractId: string; versionId: string } => door.versionId !== null));
-      }, async () => {
-        // Complete or left out: a failed read must not publish the rest alone as if it had nothing.
-        await readDoorOutcomeProjections({ store, now: observedAt, bypassCache: true });
-        const unreadable = doorOutcomesUnreadable();
-        if (unreadable.length > 0) throw new Error(`door outcomes read failed for ${unreadable.join(", ")}`);
-        return combineOutcomeProjections(
-          doorOutcomeParts().map((part) => ({ value: part.value, pointers: [{ contractId: part.pointer.contractId, tenant: part.pointer.slug, versionId: part.versionId }] })),
-        );
-      });
+      // The doors were not read this pass, so the door list is unknown, not empty: each served state's artifact stands
+      // rather than one that silently drops every door's outcomes. Each state's doors publish to that state's pointer.
+      if (refreshes("meeting-outcomes") && outcomePartitionsAreCurrent()) {
+        let doorsRead: Promise<void> | null = null;
+        for (const [state, doors] of Map.groupBy(outcomePointers(), door => authorityPlaceOfScope(door.scope))) await family("meeting-outcomes", async () =>
+          combinedOutcomeVersionId((await Promise.all(doors.map(async door => ({ contractId: door.contractId,
+            versionId: await pointerVersion(door.recordClass, door.scope)() })))).filter((door): door is { contractId: string; versionId: string } => door.versionId !== null)),
+        async () => {
+          // Complete or left out: a failed read must not publish the rest alone as if it had nothing.
+          await (doorsRead ??= readDoorOutcomeProjections({ store, now: observedAt, bypassCache: true }));
+          const unreadable = doorOutcomesUnreadable().filter(contractId => doors.some(door => door.contractId === contractId));
+          if (unreadable.length > 0) throw new Error(`door outcomes read failed for ${unreadable.join(", ")}`);
+          return combineOutcomeProjections(doorOutcomeParts().filter(part => doors.includes(part.pointer))
+            .map(part => ({ value: part.value, pointers: [{ contractId: part.pointer.contractId, tenant: part.pointer.slug, versionId: part.versionId }] })));
+        }, state);
+      }
       try {
         const promoted = await publishPromotedEdgeFamilies({ store, artifactStore, now: observedAt, families: pointerFamilies });
         published.push(...promoted.published);

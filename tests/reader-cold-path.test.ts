@@ -194,7 +194,8 @@ async function publishEdge(tag: string, options: { readonly legislators?: boolea
     registrations: { az: none, nh: none, nj: none } });
   const key = async (family: Parameters<typeof authorityPointerKey>[0], place?: string) => (await readServedPointer(store, authorityPointerKey(family, place)))!.ref.key;
   const registryKeys = Object.fromEntries(await Promise.all(["AZ", "NH", "NJ"].map(async state => [state, await key("registry-runtime", state)] as const)));
-  return { dir, manifest: (await store.readManifest())!.manifest, keys: { registry: registryKeys, outcomes: await key("meeting-outcomes") } };
+  const outcomes = (await Promise.all(["US", "AZ"].map(place => readServedPointer(store, authorityPointerKey("meeting-outcomes", place))))).find(Boolean)!.ref.key;
+  return { dir, manifest: (await store.readManifest())!.manifest, keys: { registry: registryKeys, outcomes } };
 }
 
 class RecordingStore extends LocalFileArtifactStore {

@@ -42,6 +42,7 @@ import { currentReaderAuthorityEdge, reportReaderStateFailure, type ReaderAuthor
 import type { RegistrationReadModel } from "../registration/candidate.ts";
 import type { OutcomeSnapshot } from "../outcomes/types.ts";
 import type { CensusDistrictEdge } from "../census-geography/district-edge.ts";
+import type { CodeSlice, Slice } from "../control-plane/admin-view/promoted-slices.ts";
 import type { PromotedEdgeEntry } from "../civic-data/read-model.ts";
 import {
   READER_MANIFEST_KEY,
@@ -590,7 +591,6 @@ export async function ensureReaderAuthorityEdge(
   try {
     const promotedFamilies = new Set<string>();
     const bundle: {
-      censusDistricts?: { value: CensusDistrictEdge; versionId: string };
       federalDirectory?: { value: FederalDirectoryReadModel; versionId: string };
       campaignSites?: { value: CuratedReaderProjection; versionId: string };
       meetingOutcomes?: { value: OutcomeSnapshot; versionId: string };
@@ -638,27 +638,41 @@ export async function ensureReaderAuthorityEdge(
       const ref = await refOf(family);
       return ref ? { value: await readAuthorityArtifactValue(family, ref, store), versionId: ref.version } : null;
     };
-    const censusDistricts = await fetchWanted("census-districts");
+    const censusDistricts = wanted.has("census-districts") ? { censusDistricts: { slice: async (zip: string): Promise<Slice<CodeSlice>> => {
+      const [{ censusDistrictEdgeSlice }, { postalArea }] = await Promise.all([import("../census-geography/district-edge.ts"), import("../geo/postal.ts")]);
+      const state = postalArea(zip)?.state ?? "US", ref = await refOf("census-districts", state);
+      const value = ref && await readAuthorityArtifactValue("census-districts", ref, store, state) as CensusDistrictEdge | null;
+      return value ? censusDistrictEdgeSlice(value, ref.version, zip) : { kind: "UNREAD", detail: `Census districts for ${state} are not on the reader edge` };
+    } } } : {};
     const selected = currentReaderSelection();
-    if (selected && censusDistricts?.value) {
-      const { censusDistrictEdgeSlice } = await import("../census-geography/district-edge.ts");
+    if (selected && censusDistricts.censusDistricts) {
       const { censusWorkDivision } = await import("../census-geography/division-id.ts");
       for (const zip of [...selected.keys].filter(key => /^\d{5}$/.test(key))) {
-        const slice = censusDistrictEdgeSlice(censusDistricts.value as CensusDistrictEdge, censusDistricts.versionId, zip);
+        const slice = await censusDistricts.censusDistricts.slice(zip);
         if (slice.kind === "HELD") for (const container of slice.value.containers) {
           const id = censusWorkDivision(container.ref);
           if (id) selected.keys.add(id);
         }
       }
     }
+    const places = ["US", ...selected?.states ?? statesForRegistryDivisions([...selected?.keys ?? [], ...selected?.divisions ?? []])];
+    const readOutcomes = async () => {
+      const parts = (await Promise.all(places.map(async place => {
+        const ref = await refOf("meeting-outcomes", place);
+        const value = ref && await readAuthorityArtifactValue("meeting-outcomes", ref, store, place) as OutcomeSnapshot | null;
+        return value ? [{ value, versionId: ref.version }] : [];
+      }))).flat();
+      if (parts.length < 2) return parts[0] ?? null;
+      const { combineOutcomeProjections } = await import("../outcomes/store.ts");
+      return combineOutcomeProjections(parts.map(({ value }) => ({ value, pointers: value.pointers ?? [] })));
+    };
     const [federal, campaign, outcomes, routing] = await Promise.all([
-      fetchWanted("federal-directory"), fetchWanted("campaign-sites"), fetchWanted("meeting-outcomes"), fetchWanted("everyday-routing"),
+      fetchWanted("federal-directory"), fetchWanted("campaign-sites"), wanted.has("meeting-outcomes") ? readOutcomes() : null, fetchWanted("everyday-routing"),
     ]);
     if (federal?.value) bundle.federalDirectory = { value: federal.value as FederalDirectoryReadModel, versionId: federal.versionId };
     if (campaign?.value) bundle.campaignSites = { value: campaign.value as CuratedReaderProjection, versionId: campaign.versionId };
     if (outcomes?.value) bundle.meetingOutcomes = { value: outcomes.value as OutcomeSnapshot, versionId: outcomes.versionId };
     if (routing?.value) bundle.everydayRouting = { value: routing.value as { projection: unknown }, versionId: routing.versionId };
-    if (censusDistricts?.value) bundle.censusDistricts = { value: censusDistricts.value as CensusDistrictEdge, versionId: censusDistricts.versionId };
     const promoted = new Map<string, PromotedEdgeEntry>();
     const take = (family: PromotedAuthorityFamily, artifact: Partial<PromotedFamilyArtifactValue> | null) => {
       if (artifact?.kind !== "PROMOTED_POINTERS" || !Array.isArray(artifact.entries)) return;
@@ -668,7 +682,6 @@ export async function ensureReaderAuthorityEdge(
         if (typeof pointer === "string") promoted.set(pointer, entry);
       }
     };
-    const places = ["US", ...selected?.states ?? statesForRegistryDivisions([...selected?.keys ?? [], ...selected?.divisions ?? []])];
     const loadPlace = async (family: PromotedAuthorityFamily, place: string) => take(family, await readServedPromotedFamily(family, await refOf(family, place), store, place));
     const load = (family: PromotedAuthorityFamily) => !wanted.has(family) ? Promise.resolve()
       : PLACE_SPLIT_FAMILIES.has(family) ? Promise.all(places.map(place => loadPlace(family, place))).then(() => undefined)
@@ -683,7 +696,7 @@ export async function ensureReaderAuthorityEdge(
       else take(family, await readServedPromotedFamily(family, await refOf(family), store));
       return promoted.get(`${recordClass}:${scope}`) ?? null;
     };
-    return Object.assign(bundle, { registrations, stateAuthorities, stateRegistryFacts, promoted, promotedFamilies, loadPromoted }, stateLegislators,
+    return Object.assign(bundle, { registrations, stateAuthorities, stateRegistryFacts, promoted, promotedFamilies, loadPromoted }, stateLegislators, censusDistricts,
       manifest?.meetingPlaces ? { meetingPlaces: new Map(Object.entries(manifest.meetingPlaces)) } : {},
       selected ? { selection: selected } : {});
   } catch (error) {

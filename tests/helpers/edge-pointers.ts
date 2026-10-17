@@ -2,6 +2,10 @@ import type { GlobalAuthorityFamily, GlobalPromotedAuthorityFamily, PromotedFami
 import { authorityPlaceOfScope, authorityPointerKey, PLACE_SPLIT_FAMILIES, prepareStateAuthorityArtifact, readServedPointer, writeAuthorityPointer,
   type AuthorityPointerFamily, type PublishAuthorityValue } from "../../lib/meetings/edge-serving.ts";
 import type { ReaderArtifactStore } from "../../lib/meetings/edge-store.ts";
+import { censusDistrictEdgeByState, type CensusDistrictEdge } from "../../lib/census-geography/district-edge.ts";
+import { postalArea } from "../../lib/geo/postal.ts";
+import { outcomePointers } from "../../lib/outcomes/store.ts";
+import type { OutcomeSnapshot } from "../../lib/outcomes/types.ts";
 
 /** Writes each family's pointer as the runner does; a pointer already at the given version is left alone. Returns the pointers written. */
 export async function publishPointers(store: ReaderArtifactStore, input: {
@@ -17,6 +21,17 @@ export async function publishPointers(store: ReaderArtifactStore, input: {
     if (await writeAuthorityPointer(store, family, at, entry, served, now)) written.push(at === undefined ? family : `${family}/${at}`);
   };
   for (const [family, entry] of Object.entries(input.authority ?? {})) {
+    if (family === "census-districts") {
+      for (const [at, shard] of censusDistrictEdgeByState(entry.value as CensusDistrictEdge, zip => postalArea(zip)?.state ?? "US"))
+        await place("census-districts", at, { value: shard, versionId: shard.versionId });
+      continue;
+    }
+    if (family === "meeting-outcomes") {
+      const doors = new Map(outcomePointers().map(door => [door.contractId, authorityPlaceOfScope(door.scope)]));
+      const states = new Set((entry.value as OutcomeSnapshot).pointers?.map(ref => doors.get(ref.contractId) ?? "US"));
+      await place("meeting-outcomes", states.size === 1 ? [...states][0] : "US", entry);
+      continue;
+    }
     if (!PLACE_SPLIT_FAMILIES.has(family as GlobalPromotedAuthorityFamily)) { await place(family as GlobalAuthorityFamily, undefined, entry); continue; }
     const places = Map.groupBy((entry.value as PromotedFamilyArtifactValue).entries, row => authorityPlaceOfScope(row.kind === "PROMOTED" ? row.projection.scope : row.scope));
     for (const [at, entries] of places) await place(family as GlobalAuthorityFamily, at, { versionId: `${entry.versionId}/${at}`, value: { kind: "PROMOTED_POINTERS", entries } });

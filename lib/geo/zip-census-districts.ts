@@ -5,7 +5,6 @@ import { readerQuery } from "../civic-data/promoted-reader-query.ts";
 import { containersOfCode, type CodeSlice, type Slice } from "../control-plane/admin-view/promoted-slices.ts";
 import type { ZipDivisionEntry } from "./zip-division-index.ts";
 import { currentReaderAuthorityEdge } from "../registry/runtime-edge.ts";
-import { censusDistrictEdgeSlice } from "../census-geography/district-edge.ts";
 import { currentRepresentationSelection, selectGeographyVersion, type GeographySelection } from "../census-geography/selection.ts";
 
 const TYPES: readonly GeographyType[] = ["congressional_district", "state_leg_upper", "state_leg_lower"];
@@ -70,7 +69,8 @@ export function withCensusDistricts(entry: ZipDivisionEntry, slice: Slice<CodeSl
  * Failed updates preserve the original index and are eligible to retry. */
 export async function publishedZipDistricts(zip: string): Promise<Slice<CodeSlice>> {
   const edge = currentReaderAuthorityEdge();
-  if (edge?.censusDistricts) return censusDistrictEdgeSlice(edge.censusDistricts.value, edge.censusDistricts.versionId, zip);
+  const served = await edge?.censusDistricts?.slice(zip);
+  if (served && served.kind === "HELD") return served;
   // The strictly edge-only warmer never opens the database; any other request reads it until the pointer is published.
   if (edge?.edgeOnly) return { kind: "UNREAD", detail: "Census districts are not available on this reader edge" };
   const query = readerQuery(1000);

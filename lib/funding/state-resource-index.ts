@@ -16,8 +16,8 @@ export async function* campaignFinanceResources(state: string, options: { readon
     let form: URLSearchParams | null = null, cookie = "", found = false;
     for (;;) {
       const response = await requestPublisher("campaign-finance download index", () => (options.fetch ?? fetch)(index.url, { signal: options.signal,
-        headers: { ...(form ? { "content-type": "application/x-www-form-urlencoded" } : {}), ...(cookie ? { cookie } : {}) },
-        ...(form ? { method: "POST", body: form.toString() } : {}) }));
+        headers: { ...(form ? { "content-type": "application/x-www-form-urlencoded" } : index.method ? { "content-type": "application/json" } : {}), ...(cookie ? { cookie } : {}) },
+        ...(form ? { method: "POST", body: form.toString() } : index.method ? { method: index.method, body: JSON.stringify(index.body) } : {}) }));
       if (!response.ok || !response.body) { await response.body?.cancel(); throw sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE", `Campaign download index returned HTTP ${response.status}.`); }
       const chunks: Uint8Array[] = [];
       let size = 0;
@@ -35,23 +35,37 @@ export async function* campaignFinanceResources(state: string, options: { readon
       chunks.length = 0;
       await options.vault.put(`project/meanwhile/source/campaign-finance-index/${hash}`, bytes, { contentHash: `sha256-${hash}`, contentType: response.headers.get("content-type") ?? "text/html", byteLength: bytes.length });
       const text = bytes.toString("utf8"), base = response.url || index.url;
-      const urls = index.rowPath ? (() => {
+      const publications: { url: string; body?: Readonly<Record<string, unknown>> }[] = index.rowPath ? (() => {
         const rows = property(JSON.parse(text), index.rowPath);
         if (!Array.isArray(rows)) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "Campaign download index has no declared resource list.");
-        return rows.filter(row => !index.filter || row[index.filter.field] === index.filter.value).map(row => {
-          const id = row[index.idField!];
-          if (typeof id !== "number" && typeof id !== "string") throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "Campaign download index is missing a native file identifier.");
-          return index.urlTemplate!.replace("{id}", encodeURIComponent(id));
+        return rows.map(row => row !== null && typeof row === "object" ? row : { value: row })
+          .filter(row => !index.filter || row[index.filter.field] === index.filter.value).flatMap(row => {
+          const values = index.split ? String(row[index.split.field] ?? "").split(index.split.delimiter).filter(Boolean) : [null];
+          return values.map(value => {
+            const item = index.split ? { ...row, [index.split.field]: value } : row;
+            if (index.parameters) {
+              const body: Record<string, unknown> = { ...resource.body };
+              for (const { parameter, field } of index.parameters) {
+                if (item[field] === undefined || item[field] === null || item[field] === "") throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "Campaign bulk index is missing a published request parameter.");
+                body[parameter] = item[field];
+              }
+              return { url: resource.url, body };
+            }
+            const id = item[index.idField!];
+            if (typeof id !== "number" && typeof id !== "string") throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "Campaign download index is missing a native file identifier.");
+            return { url: index.urlTemplate!.replace("{id}", encodeURIComponent(id)) };
+          });
         });
       })() : [...text.matchAll(/<a\b[^>]*>/gi)].flatMap(match => {
         const href = attributes(match[0]).href;
-        return href && !href.startsWith("javascript:") ? [new URL(href, base).href] : [];
+        return href && !href.startsWith("javascript:") ? [{ url: new URL(href, base).href }] : [];
       });
-      for (const url of urls) {
-        if (!new RegExp(index.pattern, "i").test(url) || seen.has(url.toLowerCase())) continue;
+      for (const { url, body } of publications) {
+        const identity = url.toLowerCase() + JSON.stringify(body ?? null);
+        if (!new RegExp(index.pattern, "i").test(url) || seen.has(identity)) continue;
         if (!url.toLowerCase().startsWith(index.downloadPrefix.toLowerCase())) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "Campaign download index points outside its official publication directory.");
-        seen.add(url.toLowerCase()); found = true;
-        yield { ...resource, id: `${resource.id}:${createHash("sha256").update(url.toLowerCase()).digest("hex").slice(0, 16)}`, url };
+        seen.add(identity); found = true;
+        yield { ...resource, id: `${resource.id}:${createHash("sha256").update(identity).digest("hex").slice(0, 16)}`, url, ...(body ? { body } : {}) };
       }
       if (!index.postback) break;
       const posts = [...entities(text).matchAll(/__doPostBack\('([^']+)',\s*'Page\$(\d+)'\)/g)]

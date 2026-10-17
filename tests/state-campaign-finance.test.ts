@@ -13,6 +13,7 @@ import { acquireCampaignFinanceResource } from "../lib/funding/state-acquisition
 import { publishCampaignFinanceResource } from "../lib/funding/state-publication.ts";
 import { readCampaignFinancePage, type CampaignFinancePageRef } from "../lib/funding/state-pages.ts";
 import { readCampaignFinancePublication, type CampaignFinanceFiler, type CampaignFinancePublication } from "../lib/funding/state-projection.ts";
+import { CampaignFinanceSpool } from "../lib/funding/state-spool.ts";
 import { campaignSourceRecord } from "../lib/funding/state-source-records.ts";
 import { CAMPAIGN_FINANCE_SOURCES, campaignFinanceNativeScope, campaignFinanceSource } from "../lib/funding/state-sources.ts";
 import { campaignFinanceResources } from "../lib/funding/state-resource-index.ts";
@@ -224,5 +225,108 @@ test("bulk indexes follow the publisher's public form pagination and reject an e
     const missing = { ...resource, kind: "ZIP" as const, filePattern: "^absent.csv$" };
     const archive = zip([{ name: "other.csv", data: Buffer.from("id\n1\n") }], "2026-10-16");
     await assert.rejects(async () => { for await (const _page of acquireCampaignFinanceResource("WA", missing, { ...options, fetch: async () => new Response(archive) })) { /* Consume through the archive's source table check. */ } }, /no declared native filing table/);
+  } finally { await rm(options.directory, { recursive: true, force: true }); }
+});
+
+
+test("Vermont's public POST index expands each published year and maps native transaction roles", async () => {
+  const options = await context();
+  const source = campaignFinanceSource("VT").resources[0];
+  const rows = JSON.parse(await readFile(new URL("./fixtures/campaign-finance/vt-native-contributions.json", import.meta.url), "utf8"));
+  try {
+    const resources = [];
+    for await (const entry of campaignFinanceResources("VT", { ...options, fetch: async (_input, init) => {
+      assert.equal(init?.method, "POST");
+      assert.deepEqual(JSON.parse(String(init?.body)), { pageNumber: 1, pageSize: 500 });
+      return new Response(JSON.stringify({ data: { items: [
+        { year: "2024,2025", transactionTypeCode: "TCON" }, { year: "2024,2025", transactionTypeCode: "TEXP" },
+      ] } }));
+    } })) resources.push(entry);
+    assert.equal(resources.length, 4);
+    assert.equal(new Set(resources.map(entry => entry.id)).size, 4);
+    assert.deepEqual(resources[0].body, { type: "CSV", filingYear: "2024", transactionTypeCode: "TCON" });
+    for (const raw of rows) {
+      const row = campaignSourceRecord("VT", source, { ...raw, "Contributor Address Line 1": "Private home" }, { ...capture, url: source.url });
+      assert.equal(row.nativeId, raw["Transaction Id"]);
+      assert.equal(row.committeeId, raw["Filing Entity Id"]);
+      assert.equal(row.candidateName, raw["Registration Type"] === "Candidate" ? raw["Filing Entity Name"] : null);
+      assert.equal(row.provenance.publicationDate, raw["Report Filed Date"]);
+      assert.equal(row.filingUrl, "https://campaignfinance.vermont.gov/");
+      assert.equal(row.organizationName, raw["Contributor Type"] === "Business/Group/Organization" ? raw["Contributor Last Name"] : null);
+      assert.doesNotMatch(JSON.stringify(row), /Private home/);
+    }
+  } finally { await rm(options.directory, { recursive: true, force: true }); }
+});
+
+
+test("native joins retain cover-only rows and quarantine malformed cover details", async () => {
+  const options = await context();
+  const source = campaignFinanceSource("CA").resources.find(row => row.id === "calaccess-summary")!;
+  const original = (await readFile(new URL("./fixtures/campaign-finance/ca-native-cover.tsv", import.meta.url), "utf8")).trimEnd().split("\n");
+  const malformed = original[1] + "\textra field";
+  const unmatched = original[1].replace(/^578036/, "999999");
+  const archive = zip([
+    { name: "CalAccess/DATA/CVR_CAMPAIGN_DISCLOSURE_CD.TSV", data: Buffer.from([original[0], malformed, unmatched].join("\n") + "\n") },
+    { name: "CalAccess/DATA/SMRY_CD.TSV", data: await readFile(new URL("./fixtures/campaign-finance/ca-native-summary.tsv", import.meta.url)) },
+  ], "2026-10-16");
+  try {
+    const rows = [];
+    for await (const page of acquireCampaignFinanceResource("CA", source, { ...options, fetch: async () => new Response(archive) })) rows.push(...page.records);
+    assert.equal(rows.length, 3);
+    const covered = rows.filter(row => row.amounts.length);
+    assert.equal(covered.length, 2);
+    assert.ok(covered.every(row => row.committeeName === null && row.issues.some(issue => issue.includes("unexpected number"))));
+    const coverOnly = rows.find(row => !row.amounts.length)!;
+    assert.match(coverOnly.issues.join(" "), /no matching filing/);
+    assert.ok(coverOnly.unjoinedReason);
+  } finally { await rm(options.directory, { recursive: true, force: true }); }
+});
+
+test("compact disk rows preserve every normalized field across source observations", async () => {
+  const options = await context();
+  try {
+    for (const state of ["WA", "VT"]) {
+      const source = campaignFinanceSource(state).resources[0];
+      const raw = state === "WA" ? fixture : JSON.parse(await readFile(new URL("./fixtures/campaign-finance/vt-native-contributions.json", import.meta.url), "utf8"));
+      const spool = new CampaignFinanceSpool(options.directory, state, source);
+      const encoded = [];
+      for (const [index, value] of raw.entries()) {
+        const row = campaignSourceRecord(state, source, value, { ...capture, url: source.url, vaultKey: "test/" + capture.rawHash, retrievedAt: index ? "2026-10-17T01:00:00Z" : now }, index);
+        encoded.push({ row, text: await spool.encode(row) });
+      }
+      for (const { row, text } of encoded.reverse()) assert.deepEqual(await spool.decode(row.id.split(":").at(-1)!, text), row);
+    }
+  } finally { await rm(options.directory, { recursive: true, force: true }); }
+});
+
+
+test("Maryland bulk publications expand primitive year lists and stream past their source preamble", async () => {
+  const options = await context();
+  try {
+    const resources = [];
+    for await (const entry of campaignFinanceResources("MD", { ...options, fetch: async (_input, init) => {
+      assert.deepEqual(JSON.parse(String(init?.body)), {});
+      return new Response(JSON.stringify({ data: { filingYears: ["2026", "2025"] } }));
+    } })) resources.push(entry);
+    assert.equal(resources.length, 4);
+    assert.equal(resources[0].body?.filingYear, "2026");
+    assert.equal(resources[1].body?.filingYear, "2025");
+    const bytes = await readFile(new URL("./fixtures/campaign-finance/md-native-contributions.csv", import.meta.url));
+    let count = 0;
+    for await (const page of acquireCampaignFinanceResource("MD", resources[0], { ...options, fetch: async (_input, init) => {
+      assert.equal(init?.method, "POST");
+      assert.equal(JSON.parse(String(init?.body)).transactionTypeCode, "TCON");
+      return new Response(bytes, { headers: { "content-type": "text/csv" } });
+    } })) {
+      count += page.records.length;
+      for (const row of page.records) {
+        assert.ok(row.committeeId && row.committeeName && row.period && row.amounts.length);
+        assert.equal(row.provenance.publicationDate, null);
+        assert.equal(row.filingUrl, "https://campaignfinance.maryland.gov/");
+        assert.equal(row.candidateName, null);
+        assert.equal(row.nativeId, null);
+      }
+    }
+    assert.equal(count, 2);
   } finally { await rm(options.directory, { recursive: true, force: true }); }
 });

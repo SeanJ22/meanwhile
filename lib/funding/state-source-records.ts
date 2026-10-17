@@ -75,7 +75,7 @@ export function campaignSourceRecord(state: string, resource: CampaignFinanceRes
   const governmentOcdId = resource.governmentOcdId ?? null;
   const summary = resource.summaryLine;
   const organization = resource.organization;
-  let filingUrl = capture.url;
+  let filingUrl = resource.landingUrl ?? capture.url;
   if (resource.filingUrl && cell(row[resource.filingUrl.field])) {
     try {
       const url = new URL(cell(row[resource.filingUrl.field]));

@@ -47,5 +47,30 @@
     "capturedAt": "2026-10-17T00:36:31.197757+00:00",
     "sha256": "573a31eeeed668fecb248b60e16ce161486c9931407406fda5bbe1b84d995e9b",
     "transformation": "Two complete rows selected from a bounded HTTP 206 excerpt. Public filing fields retained; individual contributor, mailing, employer and contact fields omitted."
+  },
+  {
+    "file": "vt-native-contributions.json",
+    "url": "https://api.campaignfinance.vermont.gov/api/ExportData/GetExportPublicDownloadData",
+    "request": {
+      "type": "CSV",
+      "filingYear": "2025",
+      "transactionTypeCode": "TCON"
+    },
+    "capturedAt": "2026-10-17T00:51:36.474521+00:00",
+    "sha256": "186958d504243eb049d5aa201aaebcbf815525d193b6bd7ded583c0bc65adfa5",
+    "transformation": "Two actual public rows projected to filing fields; individual donor names and all mailing/contact fields omitted. Organization name retained only for source-classified Business/Group/Organization."
+  },
+  {
+    "file": "md-native-contributions.csv",
+    "url": "https://api-campaignfinance.maryland.gov/api/ExportPublicData/GetExportPublicDownloadData",
+    "request": {
+      "filingYear": "2026",
+      "transactionTypeCode": "TCON",
+      "type": "CSV",
+      "fileName": "Contributions.csv"
+    },
+    "capturedAt": "2026-10-17T00:58:19.667155+00:00",
+    "sha256": "3df1628d6b3f352a536c210d0f6f692f87e583a3670ff1b786f6ac1ce571d023",
+    "transformation": "Selected filing fields from two actual CSV rows and the original publication preamble; individual donor names and mailing/contact fields omitted. LF line endings."
   }
 ]

@@ -70,10 +70,15 @@ export async function* joinedCampaignSourceRows(path: string, resource: Campaign
     try {
       yield Buffer.from("[");
       let first = true;
+      const encode = (row: Row) => { const prefix = first ? "" : ","; first = false; return Buffer.from(prefix + JSON.stringify(row)); };
+      const unmatchedCover = (row: Row) => ({ ...row, __sourceRowIssue: "The source cover has no matching filing row; its native details remain held." });
       for await (const filing of keyedRows(sortedLeft)) {
         signal.throwIfAborted();
         if (heldKey !== filing.key) {
-          while (!next.done && next.value.key < filing.key) next = await covers.next();
+          while (!next.done && next.value.key < filing.key) {
+            yield encode(unmatchedCover(next.value.row));
+            next = await covers.next();
+          }
           heldKey = filing.key; held = null;
           let ambiguous = false, encoded: string | null = null;
           while (!next.done && next.value.key === filing.key) {
@@ -83,11 +88,10 @@ export async function* joinedCampaignSourceRows(path: string, resource: Campaign
           }
           if (ambiguous) held = { __ambiguousLookup: true };
         }
-        if (!first) yield Buffer.from(",");
         const conflict = held && lookup.consistentFields?.some(pair => held![pair.cover] && filing.row[pair.filing] && held![pair.cover] !== filing.row[pair.filing]);
-        yield Buffer.from(JSON.stringify({ ...(conflict ? { __ambiguousLookup: true } : held), ...filing.row }));
-        first = false;
+        yield encode({ ...(conflict ? { __ambiguousLookup: true } : held), ...filing.row });
       }
+      while (!next.done) { yield encode(unmatchedCover(next.value.row)); next = await covers.next(); }
       yield Buffer.from("]");
     } finally { await covers.return?.(); }
   } finally { await rm(directory, { recursive: true, force: true }); }

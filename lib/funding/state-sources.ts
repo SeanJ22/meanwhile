@@ -5,6 +5,7 @@ export interface CampaignFinanceResource {
   readonly id: string;
   readonly kind: "SOCRATA" | "JSON" | "CSV" | "ZIP";
   readonly url: string;
+  readonly landingUrl?: string;
   readonly method?: "POST";
   readonly body?: Readonly<Record<string, unknown>>;
   readonly headers?: Readonly<Record<string, string>>;
@@ -19,9 +20,12 @@ export interface CampaignFinanceResource {
   readonly delimiter?: string;
   readonly quote?: string | null;
   readonly encoding?: string;
+  readonly preambleRows?: number;
   readonly filePattern?: string;
   readonly index?: { readonly url: string; readonly pattern: string; readonly downloadPrefix: string; readonly postback?: string;
-    readonly rowPath?: string; readonly idField?: string; readonly urlTemplate?: string; readonly filter?: { readonly field: string; readonly value: string } };
+    readonly method?: "POST"; readonly body?: Readonly<Record<string, unknown>>;
+    readonly rowPath?: string; readonly idField?: string; readonly urlTemplate?: string; readonly filter?: { readonly field: string; readonly value: string };
+    readonly split?: { readonly field: string; readonly delimiter: string }; readonly parameters?: readonly { readonly parameter: string; readonly field: string }[] };
   readonly governmentOcdId?: string;
   readonly identity: readonly string[];
   readonly committee: readonly string[];

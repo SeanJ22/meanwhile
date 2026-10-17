@@ -72,7 +72,7 @@ async function* capturedRows(state: string, resource: CampaignFinanceResource, i
 }, options: Options, envelope: FederalJsonEnvelope = { rows: 0, found: false }): AsyncGenerator<{ records: CampaignSourceRecord[]; capture: CampaignSourceCapture }> {
   const capacity = 2 * 1024 * 1024;
   let buffer = Buffer.allocUnsafe(capacity), used = 0, count = 0, projectionOrdinal = 0;
-  let header: string | null = null;
+  let header: string | null = null, preambleRows = resource.preambleRows ?? 0;
   const format = resource.kind === "JSON" || resource.kind === "SOCRATA" ? "json" : "csv";
   async function flush() {
     if (format === "json") buffer[used++] = 93;
@@ -96,6 +96,7 @@ async function* capturedRows(state: string, resource: CampaignFinanceResource, i
   const rows = format === "json" ? federalJsonRecords(input, resource.rowPath ?? "", envelope) : federalCsvRecords(input, resource.encoding, resource.quote);
   for await (const raw of rows) {
     options.signal.throwIfAborted();
+    if (format === "csv" && preambleRows > 0) { preambleRows--; continue; }
     if (format === "csv" && header === null) {
       header = raw;
       const columns = [...csvRows(raw.replace(/^\uFEFF/, ""), resource.delimiter, resource.quote)][0];

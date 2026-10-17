@@ -36,6 +36,8 @@ export class CampaignFinanceSpool {
     if (key !== this.written) { await writeFile(join(this.directory, key), text); this.written = key; }
     const amounts = row.amounts.map(amount => [this.resource.amounts.findIndex(field => field.label === amount.label), amount.amount] as const);
     const qualifiers = row.qualifiers.map(value => [(this.resource.qualifiers ?? []).findIndex(field => field.label === value.label), value.value] as const);
+    if (amounts.some(([index]) => index < 0) || qualifiers.some(([index]) => index < 0) || row.title !== null && !this.titles.includes(row.title) ||
+        row.unjoinedReason !== null && !REASONS.includes(row.unjoinedReason as typeof REASONS[number])) throw new Error("Campaign spool contains a fact outside its source descriptor.");
     return JSON.stringify([FIELDS.map(field => row[field]), amounts, row.title === null ? -1 : this.titles.indexOf(row.title), qualifiers,
       row.unjoinedReason === null ? -1 : REASONS.indexOf(row.unjoinedReason as typeof REASONS[number]), row.filingUrl === source.url ? null : row.filingUrl,
       archive ? null : rawHash, archive ? null : byteLength, publicationDate, key === this.first ? "" : key] satisfies Encoded);

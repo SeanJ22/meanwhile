@@ -1,0 +1,39 @@
+[
+  {
+    "Filing Entity Id": "268727",
+    "Filing Entity Name": "DOENGES, MICHAEL",
+    "Committee Name": "",
+    "Registration Type": "Candidate",
+    "Transaction Id": "546476",
+    "Transaction Type": "Contribution",
+    "Transaction Subtype": "In-Kind (Non-Money) Contribution",
+    "Contributor Type": "Individual",
+    "Transaction Date": "2/12/2025 12:00:00 AM",
+    "Transaction Amount": "$287.88",
+    "Election Year": "",
+    "Amended": "Y",
+    "Report Name": "2025 Feb 22 - Local Disclosures",
+    "Report Filed Date": "2/22/2025 8:09:36 PM",
+    "Timed Report Name": "",
+    "Timed Report Filed Date": ""
+  },
+  {
+    "Filing Entity Id": "270094",
+    "Filing Entity Name": "BURLINGTON DEMOCRATIC COMMITTEE",
+    "Committee Name": "BURLINGTON DEMOCRATIC COMMITTEE",
+    "Registration Type": "Political Party Committee",
+    "Transaction Id": "545807",
+    "Transaction Type": "Contribution",
+    "Transaction Subtype": "Monetary Contribution",
+    "Contributor Type": "Business/Group/Organization",
+    "Transaction Date": "5/20/2024 12:00:00 AM",
+    "Transaction Amount": "$1,000.00",
+    "Election Year": "",
+    "Amended": "Y",
+    "Report Name": "2025 Feb 02 - Local Disclosures",
+    "Report Filed Date": "2/19/2025 12:53:30 AM",
+    "Timed Report Name": "",
+    "Timed Report Filed Date": "",
+    "Contributor Last Name": "BEN FOR BURLINGTON"
+  }
+]

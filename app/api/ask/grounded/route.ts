@@ -588,20 +588,20 @@ async function answerWithSettings(request: Request) {
   meetingsRead?.catch(() => undefined);
   const essentialPreloads = [
     timed("registry", () => settleRegistryAuthorityReads("REGISTRY")),
-    timed("federalDirectory", settleFederalDirectoryRead),
+    timed("federalDirectory", () => settleFederalDirectoryRead()),
     outcomesFromDatabase ? () => outcomesFromDatabase : timed("outcomes", settleOutcomeRead),
     ...(commentAccessFromDatabase
       ? [() => commentAccessFromDatabase]
       : production ? [timed("commentAccess", () => settleCommentAccessRead().catch(() => undefined))] : []),
   ];
   // Where each deferrable source is read from, when it is read: its proven-pointer family on the edge, or the database.
-  const statePointers = new Set((await Promise.all((["ballot-contests", "candidate-profiles", "candidate-publications"] as const).flatMap(family =>
+  const statePointers = new Set((await Promise.all((["federal-directory", "ballot-contests", "candidate-profiles", "candidate-publications"] as const).flatMap(family =>
     ballotStatesForDivisions(ocdIds).map(async state => await authorityPointerHeld(family, state) ? [family] : [])))).flat());
-  const promotedSource = (family: PromotedAuthorityFamily | "ballot-contests" | "candidate-profiles" | "candidate-publications"): "EDGE" | "DATABASE" =>
+  const promotedSource = (family: PromotedAuthorityFamily | "federal-directory" | "ballot-contests" | "candidate-profiles" | "candidate-publications"): "EDGE" | "DATABASE" =>
     authorityEdge?.promotedFamilies?.has(family) || statePointers.has(family as "ballot-contests") ? "EDGE" : "DATABASE";
   trace.preloadSources = officialsAsk?.unresolvedPlace ? { registry: registrySource } : {
     registry: registrySource,
-    federalDirectory: authorityEdge?.federalDirectory ? "EDGE" : "DATABASE",
+    federalDirectory: promotedSource("federal-directory"),
     outcomes: authorityEdge?.meetingOutcomes ? "EDGE" : "DATABASE",
     ...(production ? { commentAccess: authorityEdge?.commentAccess ? "EDGE" as const : "DATABASE" as const } : {}),
     funding: promotedSource("federal-funding"),

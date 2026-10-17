@@ -1,7 +1,7 @@
 import { keyVotesForMember } from "../votes/key-votes-reader.ts";
 import { keyVotePositionKey } from "../votes/key-vote-positions.ts";
 import { KEY_VOTES_CRITERIA } from "../votes/key-votes.ts";
-import { getVotesSnapshot, readFederalRollCallsProjection } from "../votes/snapshot.ts";
+import { readFederalMemberVotes, readFederalRollCallsProjection } from "../votes/snapshot.ts";
 import { readHistoricalFederalVotesForMember } from "../votes/history.ts";
 import { summaryForBill } from "../votes/bill-summaries.ts";
 import type { EvidenceGap, EvidenceRecord, EvidenceSubject } from "./evidence.ts";
@@ -76,9 +76,9 @@ export async function keyVoteEvidenceFor(subject: EvidenceSubject, canonicalOffi
           text: `${summary.title} (${summary.legisNum}): ${summary.summary} Basis: ${summary.basis}`,
           sourceUrl: billUrl, sourceOrg: "Congressional Research Service", retrievedAt: summary.curatedAt });
       };
-      const snapshot = getVotesSnapshot();
-      const mine = new Set(snapshot.positions.filter((position) => position.officeholderId === member).map((position) => position.voteId));
-      for (const vote of snapshot.votes.filter((vote) => mine.has(vote.id)))
+      const own = await readFederalMemberVotes(member);
+      if (own.kind === "STORE_UNREACHABLE") throw new Error(own.detail);
+      for (const vote of own.kind === "PROMOTED" || own.kind === "BOOTSTRAP" ? own.value.votes : [])
         addSummary(vote.billUrl, summaryForBill(vote.billUrl));
       if (process.env.DATABASE_URL) {
         const current = await readFederalRollCallsProjection();

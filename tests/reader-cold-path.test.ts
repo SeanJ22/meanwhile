@@ -53,7 +53,7 @@ import { GET as representationGET } from "../app/api/representation/[...division
 
 import { GET as warmGET, KEEP_WARM_MARKER } from "../app/api/warm/route.ts";
 
-import { installRegistryAuthority, registryTransferImport, syntheticFederalDirectory } from "./helpers/promoted-fixtures.ts";
+import { installRegistryAuthority, registryTransferImport, stateFederalDirectoryArtifacts } from "./helpers/promoted-fixtures.ts";
 
 import { installPimaOutcomes, recordedMeetingsSnapshot } from "./helpers/reader-fixtures.ts";
 import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
@@ -170,6 +170,7 @@ async function factRecords(store: LocalFileArtifactStore, registry: ReturnType<t
 
 interface PublishedKeys {
   readonly registry: Readonly<Record<string, string>>;
+  readonly federal: Readonly<Record<string, string>>;
   readonly outcomes: string;
 }
 
@@ -182,7 +183,6 @@ async function publishEdge(tag: string, options: { readonly legislators?: boolea
   assert.ok(Object.keys(plan.entries).length > 0, "the recorded meetings publish the edge's meeting indexes");
   const registry = registryTransferImport().projection.payload;
   const authority: Partial<Record<GlobalAuthorityFamily, PublishAuthorityValue>> = {
-    "federal-directory": { value: syntheticFederalDirectory(), versionId: `${tag}:federal` },
     "meeting-outcomes": { value: getOutcomeSnapshot(), versionId: `${tag}:outcomes` },
     "everyday-routing": { value: { projection: buildEverydayRoutingProjection() }, versionId: `${tag}:routing` },
   };
@@ -192,13 +192,14 @@ async function publishEdge(tag: string, options: { readonly legislators?: boolea
   assert.equal(result.status, "PUBLISHED", JSON.stringify(result));
   const none = { value: null, versionId: "none" };
   await publishPointers(store, { authority,
-    stateAuthorities: { "registry-runtime": stateRegistryArtifacts(`${tag}:registry`, ["AZ", "NH", "NJ"], registry) },
+    stateAuthorities: { "registry-runtime": stateRegistryArtifacts(`${tag}:registry`, ["AZ", "NH", "NJ"], registry), "federal-directory": stateFederalDirectoryArtifacts(`${tag}:federal`) },
     stateLegislators: options.legislators ? Object.fromEntries(Object.entries(stateLegislators).map(([scope, value]) => [scope, { value, versionId: `${tag}:legislators:${scope}` }])) : {},
     registrations: { az: none, nh: none, nj: none } });
   const key = async (family: Parameters<typeof authorityPointerKey>[0], place?: string) => (await readServedPointer(store, authorityPointerKey(family, place)))!.ref.key;
   const registryKeys = Object.fromEntries(await Promise.all(["AZ", "NH", "NJ"].map(async state => [state, await key("registry-runtime", state)] as const)));
+  const federalKeys = Object.fromEntries(await Promise.all(["AZ"].map(async state => [state, await key("federal-directory", state)] as const)));
   const outcomes = (await Promise.all(["US", "AZ"].map(place => readServedPointer(store, authorityPointerKey("meeting-outcomes", place))))).find(Boolean)!.ref.key;
-  return { dir, manifest: (await store.readManifest())!.manifest, keys: { registry: registryKeys, outcomes } };
+  return { dir, manifest: (await store.readManifest())!.manifest, keys: { registry: registryKeys, federal: federalKeys, outcomes } };
 }
 
 class RecordingStore extends LocalFileArtifactStore {
@@ -285,7 +286,7 @@ test("the map's routes fetch only the authority families they read, never Ask's 
   const registry = await withReaderAuthorityEdge(bundle, () => readRegistryRuntimeProjection(["AZ"]));
   assert.equal(registry.metadata.versionId, "c21-families:registry:AZ");
   assert.equal(store.keys.includes(published.registry.NH), false);
-  assert.equal(bundle.federalDirectory?.versionId, "c21-families:federal");
+  assert.equal(store.keys.includes(published.federal.AZ), false, "each place's members of Congress also load only when asked");
   assert.equal(bundle.meetingOutcomes, undefined, "the recorded outcomes are Ask's, not the map's");
   const byId = (records: readonly { readonly id: string }[] = []) => [...records].sort((a, b) => a.id.localeCompare(b.id));
   assert.deepEqual(byId(bundle.commentAccess?.value.records), byId(commentAccessProjection.records), "the meetings route takes comment access from the states' facts");

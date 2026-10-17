@@ -12,6 +12,7 @@ import { promotedPointerVersion, selectedStateEdgePointers } from "../lib/civic-
 import { admittedRuntimeChildEnvironment } from "../lib/civic-data/runtime-authority.ts";
 import { stateArtifactResultLine } from "../lib/civic-data/state-artifact-dispatch.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { federalDirectoryScope } from "../lib/officials/federal-directory-data-plane.ts";
 import type { BoundedChildCommand, BoundedChildLauncher } from "../lib/civic-data/bounded-child-pass.ts";
 import type { PromotedPointerIdentity, RoutineRecordClass } from "../lib/civic-data/types.ts";
 import type { WorkerMemoryRelease, WorkerProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
@@ -122,7 +123,26 @@ test("targeted ballot delivery includes the five other state families without re
   assert.equal(outcome.ok, true);
   assert.equal(launches.length, 6);
   assert.equal(f.active.size, 0);
-  for (const unit of units) assert.equal((await served(f.artifacts, "IL", unit.family))?.version, `${unit.pointers.map(p => promotedPointerVersion(p.recordClass, p.scope, pointer(p.recordClass, p.scope, `${unit.family}-v1`))).join("|")}`);
+  for (const unit of units.filter(unit => unit.family !== "federal-directory")) assert.equal((await served(f.artifacts, "IL", unit.family))?.version, `${unit.pointers.map(p => promotedPointerVersion(p.recordClass, p.scope, pointer(p.recordClass, p.scope, `${unit.family}-v1`))).join("|")}`);
+  assert.equal(await served(f.artifacts, "IL", "federal-directory"), undefined, "a ballot change leaves the place's members of Congress alone");
+});
+
+test("a place's members of Congress publish to that place's own pointer and no other family or place moves", async t => {
+  const f = fixture(t), units = selectedStateEdgePointers(null).filter(unit => unit.state === "IL" || unit.family === "federal-directory");
+  for (const unit of units) for (const p of unit.pointers) f.put(p.recordClass, p.scope, `${unit.family}-v1`);
+  const launches: string[] = [];
+  const outcome = await publishSupervisorReaderEdge(f.store, NOW, [{ recordClass: "FEDERAL_DIRECTORY", scope: federalDirectoryScope("IL") }], { artifactStore: f.boundedArtifacts,
+    stateArtifactChildren: { slots: f.slots, launch: async command => {
+      launches.push(command.id);
+      assert.equal(command.env?.WTP_RUNTIME_AUTHORITY_CAPABILITY, "MANUAL_CONTRACT");
+      return success(command);
+    } } }, ENV);
+  assert.equal(outcome.ok, true);
+  assert.deepEqual(launches, ["congress-bulk-roster:IL:reader-artifact"]);
+  assert.ok(await served(f.artifacts, "IL", "federal-directory"));
+  assert.equal(await served(f.artifacts, "IL", "ballot-contests"), undefined);
+  assert.equal(await served(f.artifacts, "WA", "federal-directory"), undefined);
+  assert.equal(await f.artifacts.readManifest(), null);
 });
 
 test("an unchanged sweep of every state and territory ballot launches no child and reads no payload", async t => {

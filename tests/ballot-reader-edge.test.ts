@@ -42,7 +42,7 @@ import { registryRuntimeReadState } from "../lib/registry/runtime-read-model.ts"
 import { withReaderSelection, type ReaderSelection } from "../lib/db/reader-route.ts";
 import { federalDirectoryReadState } from "../lib/officials/federal-directory-read-model.ts";
 import { STATE_CAMPAIGN_FINANCE_SOURCES, type StateCampaignFinanceJurisdiction } from "../lib/funding/data-plane.ts";
-import { stateMoneyFixture, syntheticCandidateCorpus, syntheticCandidateProfiles, syntheticFederalDirectory } from "./helpers/promoted-fixtures.ts";
+import { stateMoneyFixture, syntheticCandidateCorpus, syntheticCandidateProfiles, syntheticFederalDirectory, stateFederalDirectoryArtifacts } from "./helpers/promoted-fixtures.ts";
 import { authorityVersionKey } from "../lib/registry/server.ts";
 import {
   absentEdgeEntry,
@@ -167,7 +167,6 @@ async function publishEdge(withPromoted: boolean, authorityOverrides: Partial<Re
   const dir = mkdtempSync(join(tmpdir(), "wtp-ballot-edge-"));
   after(() => rmSync(dir, { recursive: true, force: true }));
   const authority: Partial<Record<GlobalAuthorityFamily, PublishAuthorityValue>> = {
-    "federal-directory": { value: federal, versionId: FEDERAL_VERSION },
     "census-districts": { value: districts, versionId: districts.versionId },
     ...(withPromoted ? PROMOTED_BALLOT_FAMILIES : {}),
     ...authorityOverrides,
@@ -176,7 +175,7 @@ async function publishEdge(withPromoted: boolean, authorityOverrides: Partial<Re
   const published = await publishReaderMeetings({ store, meetingStates: {} });
   const none = { versionId: "none", value: null };
   await publishPointers(store, { authority,
-    stateAuthorities: { "registry-runtime": stateRegistryArtifacts(REGISTRY_VERSION, ["AZ", "NH", "NJ", "TX"]),
+    stateAuthorities: { "registry-runtime": stateRegistryArtifacts(REGISTRY_VERSION, ["AZ", "NH", "NJ", "TX"]), "federal-directory": stateFederalDirectoryArtifacts(FEDERAL_VERSION, federal),
       ...(withPromoted ? { ...STATE_BALLOT_FAMILIES, ...stateOverrides } : {}) },
     registrations: { az: none, nh: none, nj: none, tx: none },
     stateLegislators: { "US-NJ": none, "US-TX": none,
@@ -390,7 +389,7 @@ test("a cold /ballot?zip=85701 reads one state registry and all ballot families 
   const registry = withReaderSelection(readerSelection, () => registryRuntimeReadState());
   assert.equal(registry.metadata.versionId, `${REGISTRY_VERSION}:AZ`, "the registry uses the exact state artifact");
   assert.ok(readerEdge?.stateAuthorities?.families.has("registry-runtime"));
-  assert.equal(federalDirectoryReadState().metadata?.versionId, FEDERAL_VERSION, "the federal directory was not served from the edge");
+  assert.equal(withReaderSelection(readerSelection, () => federalDirectoryReadState()).metadata?.versionId, `${FEDERAL_VERSION}:AZ`, "the federal directory was not served from the edge");
   // Each family is the edge's proven copy, read as PROMOTED through its own Reader.
   for (const [what, state, version] of withReaderSelection(readerSelection, () => withReaderAuthorityEdge(readerEdge, () => [
     ["the candidate profiles", candidateProfilesReadState("AZ"), EDGE.profiles],

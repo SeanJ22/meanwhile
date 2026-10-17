@@ -28,7 +28,8 @@ const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   "acs-population-promote.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "fetch-congress-legislators.mts": 384,
   "national-people-refresh.mts": WORKER_ENTRY_PEAK_MIB.national!,
-  "people-portraits-refresh.mts": WORKER_ENTRY_PEAK_MIB.national!,
+  // One state's portrait pass at full size peaked at 390 MiB (New Hampshire, 407 people); the federal pass at 354 MiB.
+  "people-portraits-refresh.mts": 448,
   "campaign-finance-az-pima-transactions.mts": 368,
   "assemble-ballot-package.mts": STATE_PUBLICATION_PEAK_MIB,
   "fetch-voting-sites.mts": STATE_PUBLICATION_PEAK_MIB,

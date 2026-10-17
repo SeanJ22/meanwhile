@@ -19,6 +19,7 @@ import { statementEvidenceFor } from "../lib/ask/statements.ts";
 import { unifiedCorpus } from "../lib/corpus/unified.ts";
 import { positionsFor } from "../lib/corpus/positions.ts";
 import { voteEvidenceFor } from "../lib/ask/votes.ts";
+import { readFederalMemberVotes } from "../lib/votes/snapshot.ts";
 import { bodyIdentityIndex } from "../lib/ask/body-identity.ts";
 import { contactsForBody, contactRecord } from "../lib/ask/contacts.ts";
 import { contactForCandidate } from "../lib/ask/candidate-contact.ts";
@@ -114,7 +115,6 @@ async function installCandidateCorpus(value: CandidateCorpus = syntheticCandidat
 function promotedFixtureBundle(extra: ReaderAuthorityEdgeBundle = {}): ReaderAuthorityEdgeBundle {
   const current: ReaderAuthorityEdgeBundle = currentReaderAuthorityEdge() ?? {};
   return { stateAuthorities: current.stateAuthorities,
-    ...(current.federalDirectory ? { federalDirectory: current.federalDirectory } : {}),
     ...(current.stateLegislators ? { stateLegislators: current.stateLegislators } : {}),
     ...extra, promoted: new Map([...(current.promoted ?? []), ...(extra.promoted ?? [])]) };
 }
@@ -463,11 +463,11 @@ test("each readable canonical statement subject can be searched without a genera
   assert.ok(tested >= 40, `real current corpus: ${tested} subjects with quotable passages`);
 });
 
-test("direct official vote IDs never fall through to another same-name person", () => {
+test("direct official vote IDs never fall through to another same-name person", async () => {
   const missing = voteEvidenceFor("Andy Biggs", { officeholderId: "congress:DOES_NOT_EXIST" });
   assert.equal(missing.identity.kind, "NO_ROSTER_ROW");
   assert.equal(missing.records.length, 0);
-  const known = voteEvidenceFor("the card's display name", { officeholderId: "congress:B001302" });
+  const known = voteEvidenceFor("the card's display name", { officeholderId: "congress:B001302", memberVotes: (await readFederalMemberVotes("congress:B001302")).value });
   assert.equal(known.identity.kind, "JOINED");
   assert.ok(known.records.length > 0);
 });

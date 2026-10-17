@@ -81,7 +81,7 @@ test("an unexpected authority setup failure logs its exact scoped key once throu
   t.mock.method(console, "warn", (...args: unknown[]) => warnings.push(args));
   const key = authorityPointerKey(family, state), failure = new Error("Authority setup failed at https://private.example.gov?token=secret");
   const store = { kind: "local-file", readJsonPointer: async () => { throw failure; } } as unknown as ReaderArtifactStore;
-  const families = [family, "federal-directory"] as const;
+  const families = [family, "campaign-sites"] as const;
   const read = () => ensureReaderAuthorityEdge(null, store, families).catch(error => holdReaderAuthorityEdge(error, families));
   const request = () => withReaderSelection({ states: ["AZ"], keys: new Set(["state:AZ"]) }, async () => {
     assert.equal(await read(), null);

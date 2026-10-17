@@ -23,6 +23,7 @@ import { officialStateRollIdentityAuthorityIssue } from "../state-rollcalls/prom
 import { derivedInputAuthorityIssue } from "./derived-door.ts";
 import { isScopedManualContractScope, manualPayloadScope } from "./scoped-manual-contracts.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
+import { freezeDurableJson } from "./durable-json.ts";
 import { immutableStateCandidate, statePublicationScope, withStatePublicationRead } from "./state-publication.ts";
 
 /** Only the exact registered contract doors in this module possess this token. */
@@ -42,13 +43,12 @@ function sourceProjectionObservedAt(store: RoutineDataStore, requested: string):
   return store instanceof PostgresRoutineDataStore ? new Date().toISOString() : requested;
 }
 
-/** One frozen JSON value, so an adapter holding references cannot swap payload and digest between async steps. */
+/** A state candidate takes its immutable state form; any other becomes its own JSON form, frozen in place.
+ * Either way no adapter can swap payload and digest between async steps. */
 function durableCandidateSnapshot(candidate: RoutineCandidate): RoutineCandidate {
   try {
     if (statePublicationScope(candidate.scope)) return withStateRecordHashes(immutableStateCandidate(candidate));
-    const encoded = JSON.stringify(candidate);
-    if (encoded === undefined) throw new Error("candidate is not JSON-representable");
-    return JSON.parse(encoded) as RoutineCandidate;
+    return freezeDurableJson(candidate);
   } catch (error) {
     throw new Error(
       `ROUTINE_CANDIDATE_NOT_DURABLE_JSON:${error instanceof Error ? error.message : String(error)}`,

@@ -18,7 +18,7 @@ export function statePeopleSourceScopes(jurisdiction: string): readonly string[]
 
 export function statePeopleSourcePointers(jurisdiction: string) {
   return [{recordClass:"STATE_LEGISLATOR" as const,scope:jurisdiction}, {recordClass:"STATE_LEGISLATOR" as const,scope:`${jurisdiction}:openstates-people:v1`},
-    ...PEOPLE_SOURCE_IDS.map(sourceId=>({recordClass:peopleSourceRecordClass(jurisdiction,sourceId),scope:peopleSourceScope(jurisdiction,sourceId)}))];
+    ...PEOPLE_SOURCE_IDS.map(sourceId=>({recordClass:peopleSourceRecordClass(sourceId),scope:peopleSourceScope(jurisdiction,sourceId)}))];
 }
 
 export function statePeopleScopeForId(id: string, stateHint?: string): StatePeopleJurisdiction | null {

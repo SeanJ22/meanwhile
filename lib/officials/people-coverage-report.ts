@@ -29,9 +29,6 @@ function summarizePeopleRoster(roster:OfficeholderSet) {
 /** Read-only reports use the same source shards and person merge as ZIP/address/map readers. */
 export async function collectPeopleCoverage(options:PromotedCivicDataReadOptions={}) {
   const observedAt=options.now??new Date().toISOString(),states:unknown[]=[],issues:{scope:string;detail:string}[]=[];
-  const federal=await readFederalDirectoryProjection({...options,now:observedAt,bypassCache:true});
-  const federalRoster=federal.kind==="PROMOTED"||federal.kind==="BOOTSTRAP"?federal.value.roster:null;
-  if(!federalRoster)issues.push({scope:"US",detail:`Federal directory read ${federal.kind}`});
   const results=await runBoundedWorkPool(STATE_PEOPLE_JURISDICTIONS,4,async jurisdiction=>{
     const sources:{sourceId:string;status:string;people:number|null;legislators:number|null;photos:number|null;disagreements:number|null}[]=[];
     const target=officialStateLegislatorTargetByScope(jurisdiction);
@@ -49,8 +46,9 @@ export async function collectPeopleCoverage(options:PromotedCivicDataReadOptions
     });
     const composite=await readStatePeopleProjection(jurisdiction,{...options,now:observedAt,bypassCache:true});
     const held=composite.kind==="PROMOTED"||composite.kind==="BOOTSTRAP"?composite.value.roster:null;
-    const federalSlice=federalRoster?{...federalRoster,officeholders:federalRoster.officeholders.filter(person=>person.state===jurisdiction.slice(3)),
-      divisions:federalRoster.divisions.filter(link=>federalRoster.officeholders.some(person=>person.id===link.officeholderId&&person.state===jurisdiction.slice(3)))}:null;
+    const federal=await readFederalDirectoryProjection([jurisdiction.slice(3)],{...options,now:observedAt,bypassCache:true});
+    const federalSlice=federal.kind==="PROMOTED"||federal.kind==="BOOTSTRAP"?federal.value.roster:null;
+    if(!federalSlice)issues.push({scope:jurisdiction,detail:`The place's members of Congress read ${federal.kind}`});
     const combined=mergePeopleSets([...(federalSlice?[federalSlice]:[]),...(held?[held]:[])]);
     states.push({state:jurisdiction.slice(3),status:composite.kind,sources,...(combined?summarizePeopleRoster(combined):{statewideOffices:null,photos:null,disagreements:null})});
   });

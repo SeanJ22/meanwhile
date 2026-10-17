@@ -1061,7 +1061,7 @@ test("national and publication source commands retain the progress-renewed timeo
   const snippet = transpileModule(source.slice(start, end), { compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.None } }).outputText;
   const commandFor = new Function("admittedRuntimeChildEnvironment", "automaticRefreshContract", "routineSerialLane", `
     ${snippet} return sourceChildCommand;`)(() => process.env, () => null, routineSerialLane);
-  const portraits = ROUTINE_SOURCE_TASKS.find(task => task.id === "people-portraits-federal")!;
+  const portraits = ROUTINE_SOURCE_TASKS.find(task => task.id.startsWith("people-portraits-"))!;
   assert.equal(commandFor({ id: portraits.id, kind: "SOURCE", task: portraits, command: portraits.command }).timeoutMs, 0,
     "standing portrait work overrides the parent's quiet interval so every due person finishes");
   const commands = ["national-place:85635", "worker-publication:registry-runtime-bindings:fixture"].map(id => ({
@@ -1398,7 +1398,7 @@ test("an ordinary pass publishes the sources it ran when federal minute checks a
   assert.ok(runner.indexOf("await publishNowEdgeChecks?.stop();") < start && start > 0 && end > start);
   for (const publishNow of [false, true]) {
     const calls: unknown[] = [];
-    const selected = [{ id: "openfema" }, { id: "congress-bulk-roster" }];
+    const selected = [{ id: "openfema" }, { id: "congress-bulk-roster:AZ" }];
     const final = { status: "PUBLISHED", families: "all-selected" };
     const periodic = { status: "PUBLISHED", families: "periodic" };
     const context = {

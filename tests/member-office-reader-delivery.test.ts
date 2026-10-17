@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { federalDirectoryEdge } from "./helpers/promoted-fixtures.ts";
 import { createElement } from "react";
 import { readFileSync } from "node:fs";
 import { parse } from "yaml";
@@ -48,7 +49,7 @@ test("one state shard supplies directory mailto links and distinct sourced Ask o
 test("a federal member's existing edge directory also supplies Ask office contacts",async()=>{
   const value=normalizeCongressDirectory({"legislators-current":[{id:{bioguide:"A000001"},name:{first:"Federal",last:"Example"},terms:[{type:"rep",state:"AZ",district:1,start:"2025-01-03",end:"2027-01-03"}]}],
     "legislators-district-offices":[{id:{bioguide:"A000001"},offices:[{address:"100 Main St",city:"Phoenix",state:"AZ",zip:"85001",phone:"602-555-0100"}]}]},"a".repeat(40),at);
-  const contacts=await withReaderAuthorityEdge({edgeOnly:true,federalDirectory:{value,versionId:"federal-held"}},()=>officeContactsForMember({id:"congress:A000001",name:"Federal Example",state:"AZ"}));
+  const contacts=await withReaderAuthorityEdge({edgeOnly:true,...federalDirectoryEdge(value,"federal-held")},()=>officeContactsForMember({id:"congress:A000001",name:"Federal Example",state:"AZ"}));
   assert.equal(contacts.length,1);assert.equal(contacts[0].phone,"602-555-0100");assert.equal(contacts[0].retrievedAt,at);
   assert.match(contacts[0].sourceUrl ?? "",/legislators-district-offices\.yaml$/);
 });

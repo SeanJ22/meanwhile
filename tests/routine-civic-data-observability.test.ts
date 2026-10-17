@@ -1027,7 +1027,7 @@ test("PDC-13: an old typed Reader PASS cannot certify a later deployed Reader ve
 });
 
 test("PDC-13: a manual promotion also requires durable typed Reader proof before Admin can call it healthy", () => {
-  const contract = MANUAL_PRODUCTION_SOURCE_CONTRACTS.find((item) => item.id === "congress-bulk-roster")!;
+  const contract = MANUAL_PRODUCTION_SOURCE_CONTRACTS.find((item) => item.id === "congress-bulk-roster:AZ")!;
   const row = candidateRow(contract, { id: "manual-directory-v1", at: "2026-09-08T00:50:00.000Z" });
   const withoutReadback = projectRoutineDataObservability(
     { candidates: [row], events: sourceHistory(row), promotions: [promotion(contract, row)] },

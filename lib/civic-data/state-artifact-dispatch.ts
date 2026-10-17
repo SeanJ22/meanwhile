@@ -1,5 +1,6 @@
 import { resolve } from "node:path";
 import { stateRegistryRuntimeContractId } from "./state-scopes.ts";
+import { federalDirectoryContractId } from "../officials/federal-directory-data-plane.ts";
 import { stateBallotContractId, type StateBallotFamily } from "./state-scopes.ts";
 import { routineProcessSlots, type WorkerProcessSlots, type WorkerMemoryRelease } from "../control-plane/workers/worker-slots.ts";
 import type { StateAuthorityFamily } from "../meetings/edge-artifacts.ts";
@@ -21,9 +22,10 @@ export interface StateArtifactChildren {
   readonly slots?: WorkerProcessSlots;
 }
 
-function contractId(unit: Pick<StateUnit, "family" | "state">) {
-  if (unit.family === "registry-runtime") return stateRegistryRuntimeContractId(unit.state);
-  return stateBallotContractId((unit.family === "candidate-publications" ? "candidate-corpus" : unit.family) as StateBallotFamily, unit.state);
+export function stateAuthorityContractId(family: StateAuthorityFamily, state: string) {
+  if (family === "registry-runtime") return stateRegistryRuntimeContractId(state);
+  if (family === "federal-directory") return federalDirectoryContractId(state);
+  return stateBallotContractId((family === "candidate-publications" ? "candidate-corpus" : family) as StateBallotFamily, state);
 }
 
 function childEnvironment(env: Readonly<Record<string, string | undefined>>): NodeJS.ProcessEnv {
@@ -97,11 +99,11 @@ export async function dispatchStateArtifacts(input: {
   const cwd = input.env.WTP_RUNTIME_AUTHORITY_REPO ?? process.cwd();
   const env = childEnvironment(input.env);
   const commands = changed.map(({ unit, version }) => ({
-    id: `${contractId(unit)}:reader-artifact`, executable: process.execPath,
+    id: `${stateAuthorityContractId(unit.family, unit.state)}:reader-artifact`, executable: process.execPath,
     args: ["--experimental-strip-types", resolve(cwd, "scripts/publish-state-authority.mts"), `--state=${unit.state}`,
       `--family=${unit.family}`, `--version=${version}`, `--observed-at=${input.now}`],
     env: admittedRuntimeChildEnvironment({ parentEnv: env,
-      capability: unit.family === "candidate-campaign-sites-derived" ? "ROUTINE_CONTRACT" : "MANUAL_CONTRACT", contract: contractId(unit), parentPid: process.pid }),
+      capability: unit.family === "candidate-campaign-sites-derived" ? "ROUTINE_CONTRACT" : "MANUAL_CONTRACT", contract: stateAuthorityContractId(unit.family, unit.state), parentPid: process.pid }),
   }));
   try { await runBoundedChildPass(commands, {
     cwd, env, maxBufferBytes: 64 * 1024, discardOutputAfterSettlement: true,

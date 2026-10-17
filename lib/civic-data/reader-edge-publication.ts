@@ -32,10 +32,9 @@ import { CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } from "../census-geography/p
 import { REGISTRATION_SCOPES } from "../registration/edge.ts";
 import { REGISTRATION_TARGETS } from "../registration/publication.ts";
 import { readRegistrationProjection } from "../registration/reader.ts";
-import { FEDERAL_PORTRAITS_SCOPE, readFederalDirectoryProjection } from "../officials/federal-directory-read-model.ts";
 import { readStatePeopleProjection } from "../state-rollcalls/legislators.ts";
 import { STATE_PEOPLE_JURISDICTIONS, statePeopleSourcePointers } from "../officials/people-identity.ts";
-import { federalDirectoryVersion, statePeopleVersion } from "../officials/people-version.ts";
+import { statePeopleVersion } from "../officials/people-version.ts";
 import { combinedOutcomeVersionId, combineOutcomeProjections, doorOutcomeParts, doorOutcomesUnreadable, outcomePointers, readDoorOutcomeProjections } from "../outcomes/store.ts";
 import { DOOR_OUTCOME_POINTERS } from "../outcomes/door-outcome-pointers.ts";
 import { outcomePartitionsAreCurrent } from "./outcome-partitions.ts";
@@ -74,8 +73,9 @@ export async function publishSupervisorReaderEdge(store: RoutineDataStore, obser
 ): Promise<ReaderEdgePublicationOutcome> {
   const currentStore = store;
   const states = new Set(selectedStateEdgePointers(selected ?? []).filter(unit => unit.family === "ballot-contests").map(unit => unit.state));
+  // A ballot change delivers the place's ballot and registry families together; its members of Congress move only with their own records.
   selected = selected === null ? null : [...selected, ...selectedStateEdgePointers(null)
-    .filter(unit => states.has(unit.state)).flatMap(unit => unit.pointers)];
+    .filter(unit => states.has(unit.state) && unit.family !== "federal-directory").flatMap(unit => unit.pointers)];
   let failed = false;
   let destination: ReaderEdgePublicationOutcome["store"] = "not configured";
   let sequence: number | null = null;
@@ -86,7 +86,6 @@ export async function publishSupervisorReaderEdge(store: RoutineDataStore, obser
   const manual = (id: string) => MANUAL_PRODUCTION_SOURCE_CONTRACTS.find(contract => contract.id === id)!;
   const specialPointers = {
     "census-districts": [{ recordClass: CENSUS_GEO_RECORD_CLASS, scope: CENSUS_GEO_SCOPE }],
-    "federal-directory": [manual("congress-bulk-roster"), { recordClass: "FEDERAL_DIRECTORY" as const, scope: FEDERAL_PORTRAITS_SCOPE }],
     "campaign-sites": [manual("campaign-sites")],
     "state-legislators": STATE_PEOPLE_JURISDICTIONS.flatMap(jurisdiction => statePeopleSourcePointers(jurisdiction)),
     "meeting-outcomes": [PIMA_LEGISTAR_OUTCOMES_CONTRACT, MESA_LEGISTAR_MINUTES_OUTCOMES_CONTRACT, ...DOOR_OUTCOME_POINTERS],
@@ -189,16 +188,6 @@ export async function publishSupervisorReaderEdge(store: RoutineDataStore, obser
           for (const [state, shard] of shards) await family("census-districts", async () => shard.versionId, async () => ({ value: shard, versionId: shard.versionId }), state);
         } else if (census.kind !== "NOT_RECORDED") skip(`census-districts read ${census.kind}`);
       } catch (error) { skip(`census-districts ${sanitizedErrorDiagnostic(error)}`); }
-      // The served version names the directory and the portraits laid on it, exactly as the reader composes it.
-      if (refreshes("federal-directory")) await family("federal-directory", async () => {
-        const directory = await manualPointer("congress-bulk-roster")();
-        return directory === null ? null : federalDirectoryVersion(directory, await pointerVersion("FEDERAL_DIRECTORY", FEDERAL_PORTRAITS_SCOPE)());
-      }, async () => {
-        const fd = await readFederalDirectoryProjection({ store, now: observedAt, bypassCache: true });
-        if (fd.kind === "PROMOTED" && fd.metadata.versionId) return { value: fd.value, versionId: fd.metadata.versionId };
-        if (fd.kind !== "NOT_RECORDED") throw new Error(`federal-directory read ${fd.kind}`);
-        return null;
-      });
       if (refreshes("campaign-sites")) await family("campaign-sites", manualPointer("campaign-sites"), async () => {
         const cs = await readCuratedReaderProjection("campaign-sites", { store, now: observedAt, bypassCache: true });
         if (cs.kind === "PROMOTED" && cs.metadata.versionId) return { value: cs.value, versionId: cs.metadata.versionId };

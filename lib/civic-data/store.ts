@@ -1685,6 +1685,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   };
   private readonly payloadParts = new CivicPayloadParts(this.payloadPartIO);
   private readonly ownedPayloadParts = new CivicPayloadParts({ ...this.payloadPartIO, read: hashes => this.readPayloadParts(hashes) });
+  private readonly storedHeldFacts = new WeakMap<object, unknown>();
   private async loadPayload(value: unknown, scope: string): Promise<unknown> {
     if (statePublicationScope(scope)) return decodeStateCandidate(await this.ownedPayloadParts.loadOwned(value));
     return this.payloadParts.load(value);
@@ -1700,8 +1701,16 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
 
   /** A navigation receipt keeps its held facts in payload parts; `readCandidate` loads them, reader paths carry the receipt without them. */
   private async storeReceipt(candidate: Pick<RoutineCandidate, "recordClass" | "scope">, receipt: ValidationReceipt | null): Promise<unknown> {
-    return receipt !== null && isNavigationCandidate(candidate)
-      ? this.payloadParts.store(receipt, Object.keys(receipt).filter(key => key !== "excludedFacts")) : receipt;
+    if (receipt === null || !isNavigationCandidate(candidate)) return receipt;
+    const { excludedFacts, ...rest } = receipt;
+    return { ...await this.payloadParts.store(rest, Object.keys(rest)) as object, excludedFacts: await this.heldFactParts(excludedFacts) };
+  }
+
+  /** The candidate and each of its receipts carry the same held facts, so they are encoded once. */
+  private async heldFactParts(facts: unknown): Promise<unknown> {
+    if (facts === null || typeof facts !== "object") return this.payloadParts.store(facts);
+    if (!this.storedHeldFacts.has(facts)) this.storedHeldFacts.set(facts, await this.payloadParts.store(facts));
+    return this.storedHeldFacts.get(facts);
   }
 
   private async withReceiptParts<T extends { readonly validationReceipt: unknown }>(row: T, heldFacts = true): Promise<T> {
@@ -1859,9 +1868,10 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       ["id", "sourceId", "recordClass", "scope", "retrieval", "normalization", "temporal", "bootstrapImport", "navigationIndex"]) as Record<string, unknown>;
     stored.readModel = await this.payloadParts.store(readModel);
     stored.normalizedPayload = normalizedPayload === readModel ? stored.readModel : await this.payloadParts.store(normalizedPayload);
-    for (const [key, value] of Object.entries({ civicRecords, identities, changeSet, excludedFacts })) {
+    for (const [key, value] of Object.entries({ civicRecords, identities, changeSet })) {
       if (value !== undefined) stored[key] = await this.payloadParts.store(value);
     }
+    if (excludedFacts !== undefined) stored.excludedFacts = await this.heldFactParts(excludedFacts);
     return stored as unknown as RoutineCandidate;
   }
 

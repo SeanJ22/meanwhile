@@ -432,11 +432,12 @@ export async function processNavigationCandidate(
   const contract = requiredManualProductionContract("ballot-navigation");
   const issue = manualCandidateContractIssue("ballot-navigation", bounded);
   if (issue !== null) throw new Error(`MANUAL_CANDIDATE_CONTRACT_MISMATCH:ballot-navigation:${issue}`);
-  const verification = await verifySourceScopedCandidateProjection(contract, bounded, sourceProjectionObservedAt(store, now), null);
+  const changeSet = { ...comparison.changes, held: heldCivicRecords(bounded) };
+  const verification = await verifySourceScopedCandidateProjection(contract, { ...bounded, changeSet }, sourceProjectionObservedAt(store, now), null);
   const base = comparison.base;
   const at = await routineEventObservedAt(store, bounded.recordClass, bounded.scope, now);
   if (comparison.kind === "MATCHED_REVIEW" && base && store.confirmUnchanged) {
-    const checked = { ...bounded, changeSet: { ...comparison.changes, held: heldCivicRecords(bounded) } };
+    const checked = { ...bounded, changeSet };
     const validated = validateRoutineCandidate(checked, base.record, at, [{ consumer: `${verification.verifierId} (source-scoped pre-promotion)`,
       passed: verification.status === "PASS", detail: verification.detail }]);
     if (validated.receipt.decision !== "GOOD") {

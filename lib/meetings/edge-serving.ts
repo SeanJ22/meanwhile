@@ -9,6 +9,7 @@ import { Readable } from "node:stream";
 import { pipeline } from "node:stream/promises";
 
 import {
+  GLOBAL_AUTHORITY_FAMILIES,
   mergeScopeArtifacts,
   partitionSnapshotByScope,
   readerScopeApplies,
@@ -328,7 +329,17 @@ async function readAuthorityArtifactValue(
   if (!ref?.key || !ref.version || ref.layout !== "records") return null;
   const selection = currentReaderSelection();
   const cacheKey = place === undefined ? family : `${family}/${place}`;
-  const index = await heldFetch(authorityEdgeCache, cacheKey, `${ref.version}:${ref.key}`, async () => {
+  const index = await readAuthorityIndex(family, ref, store, place);
+  const read = async () => {
+    try { return index === null ? null : await readAuthorityRecords(index as RecordIndex, store, selection); }
+    catch { return null; }
+  };
+  return selection ? read() : heldFetch(authorityValueCache, cacheKey, `${ref.version}:${ref.key}`, read);
+}
+
+/** A family's record index, read once per version per process. */
+function readAuthorityIndex(family: AuthorityPointerFamily, ref: AuthorityArtifactRef, store: ReaderArtifactStore, place?: string): Promise<unknown | null> {
+  return heldFetch(authorityEdgeCache, place === undefined ? family : `${family}/${place}`, `${ref.version}:${ref.key}`, async () => {
     try {
       const bytes = await store.readBytes(ref.key);
       if (!bytes) return null;
@@ -340,11 +351,6 @@ async function readAuthorityArtifactValue(
       return null;
     }
   });
-  const read = async () => {
-    try { return index === null ? null : await readAuthorityRecords(index as RecordIndex, store, selection); }
-    catch { return null; }
-  };
-  return selection ? read() : heldFetch(authorityValueCache, cacheKey, `${ref.version}:${ref.key}`, read);
 }
 
 export async function readServedPromotedFamily(family: GlobalPromotedAuthorityFamily, ref: AuthorityArtifactRef | null | undefined,
@@ -633,6 +639,24 @@ export async function ensureReaderAuthorityEdge(
       ? { stateLegislators: { load: (jurisdiction: string) => readPlaceArtifact<OfficialStateLegislatorReadModel>("state-legislators", jurisdiction, store) } } : {};
     const wanted = new Set(families);
     const refOf = (family: GlobalAuthorityFamily, place?: string) => readHeldPointer<AuthorityArtifactRef>(authorityPointerKey(family, place), store);
+    const selected = currentReaderSelection();
+    const states = selected?.states ?? statesForRegistryDivisions([...selected?.keys ?? [], ...selected?.divisions ?? []]);
+    const places = ["US", ...states];
+    // Every pointer and record index this request can need is asked for at once; each read below then waits only on its own records.
+    const prefetch = (family: GlobalAuthorityFamily, place?: string) => {
+      refOf(family, place).then(ref => ref?.layout === "records" ? readAuthorityIndex(family, ref, store, place) : null).catch(() => null);
+    };
+    const zips = [...selected?.keys ?? []].filter(key => /^\d{5}$/.test(key));
+    const { postalArea } = zips.length && wanted.has("census-districts") ? await import("../geo/postal.ts") : { postalArea: () => null };
+    for (const family of GLOBAL_AUTHORITY_FAMILIES) if (wanted.has(family)) {
+      if (family === "census-districts") for (const zip of zips) prefetch(family, postalArea(zip)?.state ?? "US");
+      else if (family === "meeting-outcomes" || PLACE_SPLIT_FAMILIES.has(family as GlobalPromotedAuthorityFamily)) for (const place of places) prefetch(family, place);
+      else if (family !== "state-legislators") prefetch(family);
+    }
+    for (const state of states) {
+      for (const family of stateAuthorities.families) readHeldPointer(authorityPointerKey(family, state), store).catch(() => null);
+      readHeldPointer(stateFactsPointerKey(state), store).catch(() => null);
+    }
     const fetchWanted = async (family: GlobalAuthorityFamily) => {
       if (!wanted.has(family)) return null;
       const ref = await refOf(family);
@@ -644,10 +668,9 @@ export async function ensureReaderAuthorityEdge(
       const value = ref && await readAuthorityArtifactValue("census-districts", ref, store, state) as CensusDistrictEdge | null;
       return value ? censusDistrictEdgeSlice(value, ref.version, zip) : { kind: "UNREAD", detail: `Census districts for ${state} are not on the reader edge` };
     } } } : {};
-    const selected = currentReaderSelection();
     if (selected && censusDistricts.censusDistricts) {
       const { censusWorkDivision } = await import("../census-geography/division-id.ts");
-      for (const zip of [...selected.keys].filter(key => /^\d{5}$/.test(key))) {
+      for (const zip of zips) {
         const slice = await censusDistricts.censusDistricts.slice(zip);
         if (slice.kind === "HELD") for (const container of slice.value.containers) {
           const id = censusWorkDivision(container.ref);
@@ -655,7 +678,6 @@ export async function ensureReaderAuthorityEdge(
         }
       }
     }
-    const places = ["US", ...selected?.states ?? statesForRegistryDivisions([...selected?.keys ?? [], ...selected?.divisions ?? []])];
     const readOutcomes = async () => {
       const parts = (await Promise.all(places.map(async place => {
         const ref = await refOf("meeting-outcomes", place);

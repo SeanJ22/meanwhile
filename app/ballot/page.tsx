@@ -496,7 +496,7 @@ export default readerRoute("/ballot", async function BallotPage({
 }: {
   searchParams: Promise<{ zip?: string; state?: string; lat?: string; lng?: string }>;
 }) {
-  const place = await ballotPlaceFromParams(await searchParams);
+  const place = ballotPlaceFromParams(await searchParams);
   const { zip, centroid } = place;
   let filingRead: Promise<Awaited<ReturnType<typeof readOfficialFilingsForReader>> | null> = Promise.resolve(null);
 

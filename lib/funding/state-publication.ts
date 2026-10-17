@@ -8,6 +8,7 @@ import { normalizedHash, sha256 } from "../civic-data/candidate-builders.ts";
 import { processRegisteredFanOutCandidate, type PromotionOutcome } from "../civic-data/promotion.ts";
 import type { RoutineDataStore } from "../civic-data/store.ts";
 import { sourceProjectionEvidence, type RoutineCandidate, type SourceCheckEvidence } from "../civic-data/types.ts";
+import { federalBulkMemory } from "../federal-money/bulk.ts";
 import { FederalMoneyIndex, readFederalMoneyJson } from "../federal-money/edge.ts";
 import type { ReaderArtifactStore } from "../meetings/edge-store.ts";
 import { sortSourceRecords } from "../reference/external-sort.ts";
@@ -37,8 +38,8 @@ function candidate(projection: CampaignFinancePublication, input: { readonly url
   const issue = campaignFinancePublicationIssue(projection, state), hash = normalizedHash(projection);
   return {
     id: `cv-${sha256(`${sourceId}:${scope}:${hash}:${input.at}`).slice(0, 32)}`,
-    sourceId, recordClass: "CURATED_READER_RECORD", scope,
-    sourceProjectionEvidence: sourceProjectionEvidence(sourceId, "CURATED_READER_RECORD", scope),
+    sourceId, recordClass: "CAMPAIGN_FINANCE", scope,
+    sourceProjectionEvidence: sourceProjectionEvidence(sourceId, "CAMPAIGN_FINANCE", scope),
     retrieval: { succeeded: true, requestedUrl: input.url, finalUrl: input.sourceCheck.finalUrl, httpStatus: 200, retrievedAt: input.retrievedAt, rawHash: input.rawHash, sourceCheck: input.sourceCheck },
     normalization: { succeeded: issue === null, parserVersion: CAMPAIGN_FINANCE_PARSER, schemaVersion: CAMPAIGN_FINANCE_PARSER,
       normalizedHash: hash, normalizedPayloadHash: hash, inputRecords: 1, outputRecords: 1, droppedRecords: 0, missingRequiredFields: [] },
@@ -65,7 +66,7 @@ export async function publishCampaignFinanceResource(state: string, resource: Ca
   let sourceCheck: SourceCheckEvidence | null = null, observedAt: string | null = null;
   const resourceEvidence = createHash("sha256"), publicationId = randomUUID();
   try {
-    const priorState = await options.store.readPromotion<CampaignFinancePublication>("CURATED_READER_RECORD", scope);
+    const priorState = await options.store.readPromotion<CampaignFinancePublication>("CAMPAIGN_FINANCE", scope);
     const priorDirectory = await options.artifacts.readJsonPointer<CampaignFinanceState>(campaignFinanceDirectoryKey(state));
     let directoryEtag = priorDirectory?.etag ?? null;
     let heldState: CampaignFinanceState = priorDirectory?.value ?? (priorState?.payload.kind === "campaign-finance-source-state" ? priorState.payload.records[0] : {
@@ -130,8 +131,9 @@ export async function publishCampaignFinanceResource(state: string, resource: Ca
       const oldKey = await pages.get(group.pages, key);
       const old = oldKey ? await readFederalMoneyJson<CampaignFinancePageRef>(options.artifacts, oldKey) : null;
       if (old?.hash !== hash) {
-        const page: CampaignPage = { state, records: batch };
-        const ref: CampaignFinancePageRef = { key: await options.artifacts.putImmutable(gzipSync(Buffer.from(JSON.stringify(page))), "json.gz"), hash, count: batch.length };
+        const page: CampaignPage = { state, records: batch }, bytes = Buffer.from(JSON.stringify(page));
+        if (federalBulkMemory.hasSubscribers) federalBulkMemory.publish({ stage: "campaign-publish", item: `${state}:${group!.id}:${batchIndex - 1}`, itemBytes: bytes.length, retainedRows: batch.length });
+        const ref: CampaignFinancePageRef = { key: await options.artifacts.putImmutable(gzipSync(bytes), "json.gz"), hash, count: batch.length };
         group = { ...group, pages: await pages.set(group.pages, key, await immutable(options.artifacts, ref)) };
       }
       batch = [];

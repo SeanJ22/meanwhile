@@ -10,6 +10,7 @@ import { isSourceAcquisitionFailure, sourceAcquisitionFailure } from "../lib/civ
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
 import { controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
 import { evidenceFromFailureCode } from "../lib/doors/shut.ts";
+import { campaignSourceResponse } from "../lib/funding/state-acquisition.ts";
 import { publishCampaignFinanceResource } from "../lib/funding/state-publication.ts";
 import { recordCampaignFinanceDoor } from "../lib/funding/state-source-doors.ts";
 import { campaignFinanceResources } from "../lib/funding/state-resource-index.ts";
@@ -34,7 +35,11 @@ try {
   const runId = randomUUID();
   let outcome: PromotionOutcome | null = null, failure: { url: string; detail: string; code: string } | null = null;
   try {
-    if (!source.resources.length) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", `The official source is identified; its ${source.accessType.toLowerCase()} publication has no verified native field map yet.`);
+    if (!source.resources.length) {
+      const response = await campaignSourceResponse(source.accessEvidenceUrl, {}, { signal: new AbortController().signal });
+      await response.body?.cancel();
+      throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", `The official source answered; its ${source.accessType.toLowerCase()} publication has no verified native field map yet.`);
+    }
     for await (const resource of campaignFinanceResources(state, { vault, signal: new AbortController().signal, onFailure: async (resource, route, error) => {
       const detail = sanitizedErrorDiagnostic(error), code = isSourceAcquisitionFailure(error) ? error.code : "PUBLISHER_DOCUMENT_INVALID";
       failure = { url: route, detail, code };
@@ -57,12 +62,12 @@ try {
     }
   } catch (error) {
     const detail = sanitizedErrorDiagnostic(error), code = isSourceAcquisitionFailure(error) ? error.code : "PUBLISHER_DOCUMENT_INVALID";
-    failure = { url: source.officialUrl, detail, code };
-    if (repos) await recordCampaignFinanceDoor({ doors: repos.doors, state, resource: "discovery", url: source.officialUrl, at: new Date().toISOString(), evidence: evidenceFromFailureCode(code), reason: detail });
+    failure = { url: source.accessEvidenceUrl, detail, code };
+    if (repos) await recordCampaignFinanceDoor({ doors: repos.doors, state, resource: "discovery", url: source.accessEvidenceUrl, at: new Date().toISOString(), evidence: evidenceFromFailureCode(code), reason: detail });
   }
   if (failure) {
     const at = new Date().toISOString();
-    const candidate = failedAcquisitionCandidate({ sourceId, recordClass: "CURATED_READER_RECORD", scope: campaignFinanceNativeScope(state), requestedUrl: failure.url,
+    const candidate = failedAcquisitionCandidate({ sourceId, recordClass: "CAMPAIGN_FINANCE", scope: campaignFinanceNativeScope(state), requestedUrl: failure.url,
       parserVersion: CAMPAIGN_FINANCE_PARSER, attemptedAt: at, failureDetail: failure.detail });
     outcome = await processRegisteredFanOutCandidate(store, sourceId, candidate, at);
     process.exitCode = 2;

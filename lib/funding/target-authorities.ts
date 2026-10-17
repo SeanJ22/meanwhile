@@ -1,9 +1,9 @@
-import { STATE_CAMPAIGN_FINANCE_SOURCES, type StateCampaignFinanceJurisdiction } from "./data-plane.ts";
+import { REGISTRY_STATES, type BallotState } from "../civic-data/state-scopes.ts";
 
 export interface FundingTargetPlan {
   readonly contestId: string | null;
   readonly federal: boolean;
-  readonly state: StateCampaignFinanceJurisdiction | null;
+  readonly state: BallotState | null;
   readonly ballotIdentity: boolean;
 }
 
@@ -16,17 +16,17 @@ function contestIdFromBallotTarget(target: string): string | null {
   return last > 0 ? target.slice(0, last) : null;
 }
 
-export function stateFromContest(contestId: string | null): StateCampaignFinanceJurisdiction | null {
+export function stateFromContest(contestId: string | null): BallotState | null {
   if (!contestId || FEDERAL_CONTEST.test(contestId)) return null;
-  const code = /^ballot-([a-z]{2})-/.exec(contestId)?.[1]?.toUpperCase() as StateCampaignFinanceJurisdiction | undefined;
-  return code && Object.hasOwn(STATE_CAMPAIGN_FINANCE_SOURCES, code) ? code : null;
+  const code = /^ballot-([a-z]{2})-/.exec(contestId)?.[1]?.toUpperCase() as BallotState | undefined;
+  return code && REGISTRY_STATES.includes(code) ? code : null;
 }
 
 /** Exact source-namespaced targets select their authority without another store. */
 export function directFundingTargetPlan(target: string): FundingTargetPlan {
   const contestId = contestIdFromBallotTarget(target);
-  const nativeState = /^state-finance:([A-Z]{2}):/.exec(target)?.[1] as StateCampaignFinanceJurisdiction | undefined;
-  const state = stateFromContest(contestId) ?? (nativeState && Object.hasOwn(STATE_CAMPAIGN_FINANCE_SOURCES, nativeState) ? nativeState : null);
+  const nativeState = /^state-finance:([A-Z]{2}):/.exec(target)?.[1] as BallotState | undefined;
+  const state = stateFromContest(contestId) ?? (nativeState && REGISTRY_STATES.includes(nativeState) ? nativeState : null);
   return {
     contestId,
     federal: target.startsWith("congress:") || /^fec:[HS]\d[A-Z]{2}\d{5}$/.test(target) || (contestId !== null && FEDERAL_CONTEST.test(contestId)),

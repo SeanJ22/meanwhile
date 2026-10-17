@@ -111,7 +111,7 @@ export interface ReaderManifest {
   readonly stateLegislators?: Readonly<Record<string, AuthorityArtifactRef>>;
 }
 
-export const STATE_AUTHORITY_FAMILIES = ["registry-runtime", "ballot-contests", "candidate-profiles", "candidate-publications", "voting-sites", "candidate-campaign-sites-derived"] as const;
+export const STATE_AUTHORITY_FAMILIES = ["registry-runtime", "ballot-contests", "candidate-profiles", "candidate-publications", "voting-sites", "candidate-campaign-sites-derived", "campaign-finance"] as const;
 export type StateAuthorityFamily = typeof STATE_AUTHORITY_FAMILIES[number];
 export type GlobalAuthorityFamily = Exclude<AuthorityFamily, StateAuthorityFamily>;
 export type GlobalPromotedAuthorityFamily = PromotedAuthorityFamily;

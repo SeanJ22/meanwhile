@@ -557,7 +557,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
   } as const)),
   ...CAMPAIGN_FINANCE_SOURCES.map((source): RoutineSourceContract => ({
     id: campaignFinanceSourceId(source.state), sourceId: campaignFinanceSourceId(source.state),
-    recordClass: "CURATED_READER_RECORD", scope: campaignFinanceNativeScope(source.state), fanOut: true,
+    recordClass: "CAMPAIGN_FINANCE", scope: campaignFinanceNativeScope(source.state), fanOut: true,
     acquisitionFailureDomain: `routine-source:campaign-finance:${source.state}`,
     acquisitionAdapter: { authorityMode: "REGISTERED_SOURCE_ROUTES", command: ["scripts/state-campaign-finance.mts", "--promote", `--state=${source.state}`] },
     parserNormalizerVersion: CAMPAIGN_FINANCE_PARSER,

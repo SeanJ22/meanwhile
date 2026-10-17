@@ -40,6 +40,7 @@ export const ROUTINE_RECORD_CLASSES = [
   "OPERATIONAL_REFERENCE",
   "REGISTRATION",
   "FEDERAL_MONEY",
+  "CAMPAIGN_FINANCE",
 ] as const;
 export type RoutineRecordClass = (typeof ROUTINE_RECORD_CLASSES)[number];
 

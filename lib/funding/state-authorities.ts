@@ -5,8 +5,8 @@ export const CAMPAIGN_FINANCE_AUTHORITIES = Object.fromEntries(CAMPAIGN_FINANCE_
   const id = campaignFinanceSourceId(source.state);
   return [id, {
     id, publisher: source.publisher, trust: "T1_AUTHORITATIVE_STRUCTURED", sourceClass: "OFFICIAL_PLATFORM",
-    routePrefixes: [...new Set([source.officialUrl, ...source.resources.flatMap(resource => [resource.url.split("?")[0], ...(resource.lookup?.url ? [resource.lookup.url] : []), ...(resource.index ? [resource.index.url, resource.index.downloadPrefix] : [])])])],
-    jurisdictions: [`US-${source.state}`], recordClasses: ["CURATED_READER_RECORD"],
+    routePrefixes: [...new Set([source.officialUrl, source.accessEvidenceUrl, ...source.resources.flatMap(resource => [resource.url.split("?")[0], ...(resource.session ? [resource.session.url] : []), ...(resource.lookup?.url ? [resource.lookup.url] : []), ...(resource.index ? [resource.index.url, resource.index.downloadPrefix] : [])])])],
+    jurisdictions: [`US-${source.state}`], recordClasses: ["CAMPAIGN_FINANCE"],
     competentFacts: ["source-native campaign filings", "filed transaction amounts", "native committee and local-government identifiers"],
     expectedIdentifierKeys: ["source_record_id"], expectedTemporalFields: ["publication_date", "retrieved_at"],
     horizonSemantics: "Each complete native extract retains every row. Native local-government IDs remain distinct from independently bound governments. A source failure preserves the prior accepted publication.",

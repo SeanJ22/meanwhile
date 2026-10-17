@@ -1,4 +1,4 @@
-import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
+import type { PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 import { federalMoneyArtifactKey } from "../federal-money/edge.ts";
 import { campaignFinanceNativeScope, campaignFinanceSource, campaignFinanceSourceId } from "./state-sources.ts";
 import { campaignFinanceStateScope } from "./campaign-scopes.ts";
@@ -73,7 +73,8 @@ export function campaignFinancePublicationIssue(value: CampaignFinancePublicatio
 
 export async function readCampaignFinancePublication(state: string, scope = campaignFinanceNativeScope(state), options: PromotedCivicDataReadOptions = {}) {
   if (scope !== campaignFinanceNativeScope(state) && !scope.startsWith(`${campaignFinanceSourceId(state)}:filer:`)) throw new Error("Campaign finance cannot read another state's records.");
-  const result = await readPromotedCivicData<CampaignFinancePublication>("CURATED_READER_RECORD", scope, options);
+  const { readPromotedCivicData } = await import("../civic-data/read-model.ts");
+  const result = await readPromotedCivicData<CampaignFinancePublication>("CAMPAIGN_FINANCE", scope, options);
   if (result.kind === "PROMOTED" && (result.metadata.sourceId !== campaignFinanceSourceId(state) || campaignFinancePublicationIssue(result.value, state))) throw new Error("Campaign source publication crosses its registered state or schema.");
   return result;
 }

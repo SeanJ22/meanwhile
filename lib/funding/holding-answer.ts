@@ -1,3 +1,7 @@
+import { REGISTRY_STATES, type BallotState } from "../civic-data/state-scopes.ts";
+import { campaignFinanceScopeForState } from "./campaign-scopes.ts";
+import { readCampaignFinance, settleCampaignFinanceReads } from "./campaign-finance-reader.ts";
+import { US_JURISDICTIONS } from "../coverage/states.ts";
 import { settleFundingSnapshotRead } from "./snapshot.ts";
 import { settleStateMoneyRead, stateMoneyForTarget } from "./state-snapshot.ts";
 import { readerBallotSourcesForDivisions } from "../ballot/reader-sources.ts";
@@ -11,7 +15,7 @@ import { mayUseTestFixture, type CivicDataReadMetadata } from "../civic-data/rea
 interface FundingHoldingReaders {
   readonly identityPlan: (target: string) => Promise<FundingTargetPlan>;
   readonly federal: () => Promise<{ kind: "PROMOTED" | "BOOTSTRAP"; metadata: CivicDataReadMetadata }>;
-  readonly state: (state: StateCampaignFinanceJurisdiction) => Promise<{ kind: "PROMOTED" | "BOOTSTRAP"; metadata: CivicDataReadMetadata | null }>;
+  readonly state: (state: BallotState) => Promise<{ kind: "PROMOTED" | "BOOTSTRAP"; metadata: CivicDataReadMetadata | null }>;
   readonly ballotIdentity: () => Promise<void>;
   readonly answer: (
     target: string,
@@ -150,8 +154,8 @@ async function currentFundingTargetPlan(target: string, divisions: readonly stri
     if (!contest) continue;
     const office = officeIdentity(contest.title);
     const federal = office === "us_senator" || office === "us_representative";
-    const state = ballot.election.state as StateCampaignFinanceJurisdiction;
-    return { contestId: contest.id, federal, state: !federal && Object.hasOwn(STATE_CAMPAIGN_FINANCE_SOURCES, state) ? state : null,
+    const state = ballot.election.state as BallotState;
+    return { contestId: contest.id, federal, state: !federal && REGISTRY_STATES.includes(state) ? state : null,
       ballotIdentity: target.includes("|") };
   }
   return { contestId, federal: direct.federal || (contestId !== null && FEDERAL_CONTEST.test(contestId)),
@@ -167,18 +171,27 @@ export function fundingHoldingReaders(divisions: readonly string[], timings?: Re
       if (result.kind !== "PROMOTED" && result.kind !== "BOOTSTRAP") throw new Error(result.detail);
       return { kind: result.kind, metadata: result.metadata };
     }),
-    state: (state) => timedRead(timings, `stateMoney_${state}`, async () => {
-      const result = await settleStateMoneyRead(state);
-      if (result.kind === "PROMOTED") return { kind: "PROMOTED" as const, metadata: result.metadata };
-      if (mayUseTestFixture()) {
-        stateMoneyForTarget(`ballot-${state.toLowerCase()}-fixture-probe:contest:candidate`);
-        return { kind: "BOOTSTRAP" as const, metadata: null };
-      }
-      throw new Error(result.detail);
-    }),
+    state: (state) => timedRead(timings, `stateMoney_${state}`, () => settleCampaignMoneyForState(state)),
     ballotIdentity: () => timedRead(timings, "ballots", async () => {
       for (const { source } of await readerBallotSourcesForDivisions(divisions)) source.normalize(await source.fetch());
     }),
     answer: (target, contestId, selection) => campaignMoneyApiAnswer(target, contestId, selection),
   };
+}
+
+export async function settleCampaignMoneyForState(state: BallotState) {
+  const jurisdiction = US_JURISDICTIONS.find(row => row.usps === state)!;
+  const division = `ocd-division/country:us/${jurisdiction.prefix}:${jurisdiction.slug}`;
+  const reads = await Promise.allSettled([
+    readCampaignFinance(campaignFinanceScopeForState(state)),
+    ...(Object.hasOwn(STATE_CAMPAIGN_FINANCE_SOURCES, state) ? [settleStateMoneyRead(state as StateCampaignFinanceJurisdiction)] : []),
+  ]);
+  if (reads[0].status === "fulfilled" && reads[0].value.kind === "PROMOTED") await settleCampaignFinanceReads([division]);
+  const held = reads.flatMap(row => row.status === "fulfilled" && row.value.kind === "PROMOTED" ? [row.value] : []);
+  if (held.length) return { kind: "PROMOTED" as const, metadata: held[0].metadata };
+  if (mayUseTestFixture()) {
+    stateMoneyForTarget(`ballot-${state.toLowerCase()}-fixture-probe:contest:candidate`);
+    return { kind: "BOOTSTRAP" as const, metadata: null };
+  }
+  throw new Error("The state's campaign filings could not be read.");
 }

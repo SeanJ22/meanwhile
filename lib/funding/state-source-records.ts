@@ -4,14 +4,12 @@ import { campaignFinanceSource, type CampaignFinanceResource } from "./state-sou
 import { campaignFinanceStateScope } from "./campaign-scopes.ts";
 
 export interface CampaignSourceCapture {
-  readonly storage: "CHUNK" | "ARCHIVE";
   readonly url: string;
   readonly rawHash: string;
   readonly vaultKey: string;
   readonly byteLength: number;
   readonly retrievedAt: string;
   readonly publicationDate: string | null;
-  readonly archiveId?: string;
   readonly lookup?: { readonly url: string; readonly rawHash: string; readonly vaultKey: string; readonly byteLength: number; readonly retrievedAt: string; readonly publicationDate: string | null };
 }
 type Provenance = CampaignSourceCapture & { readonly publisher: string; readonly official: true; readonly sourcePublicationDate: string | null };
@@ -51,7 +49,7 @@ export const CAMPAIGN_FINANCE_JOIN_REASONS = {
 } as const;
 
 const hash = (value: string) => createHash("sha256").update(value).digest("hex");
-const cell = (value: unknown) => typeof value === "string" ? value.trim() : typeof value === "number" && Number.isFinite(value) ? String(value) : "";
+const cell = (value: unknown) => typeof value === "string" ? value.trim() : (typeof value === "number" && Number.isFinite(value) || typeof value === "boolean") ? String(value) : "";
 function first(row: Record<string, unknown>, fields: readonly string[]): string | null {
   for (const field of fields) { const value = cell(row[field]); if (value) return value; }
   return null;
@@ -62,8 +60,9 @@ function identity(row: Record<string, unknown>, fields: readonly string[]): stri
 }
 function date(row: Record<string, unknown>, fields: readonly string[], resource: CampaignFinanceResource): string | null {
   const value = first(row, fields);
-  if (value === null || resource.dateEncoding !== "EPOCH_MILLISECONDS") return value;
-  const numeric = Number(value);
+  if (value === null || !resource.dateEncoding) return value;
+  const encoded = resource.dateEncoding === "DOTNET_MILLISECONDS" ? /^\/Date\((-?\d+)(?:[+-]\d{4})?\)\/$/.exec(value)?.[1] : value;
+  const numeric = encoded === undefined ? NaN : Number(encoded);
   if (!Number.isFinite(numeric) || !Number.isFinite(new Date(numeric).getTime())) throw new Error("The source date is not a valid epoch timestamp.");
   return new Date(numeric).toISOString();
 }
@@ -86,7 +85,7 @@ export function campaignSourceRecord(state: string, resource: CampaignFinanceRes
   if (!filerId) issues.push(CAMPAIGN_FINANCE_JOIN_REASONS.missingFiler);
   if (resource.filedCondition && !(resource.filedCondition.field in row)) throw new Error("The source row is missing its filing status column.");
   const filed = !resource.filedCondition || resource.filedCondition.values.includes(cell(row[resource.filedCondition.field]));
-  const registrationOnly = !!resource.filedStatementField && !(Number(cell(row[resource.filedStatementField])) > 0) ||
+  const registrationOnly = Boolean(resource.financialReportCondition && !resource.financialReportCondition.values.includes(cell(row[resource.financialReportCondition.field]))) || !!resource.filedStatementField && !(Number(cell(row[resource.filedStatementField])) > 0) ||
     (resource.registrationTotals?.length ?? 0) > 0 && resource.registrationTotals!.every(field => {
     const value = cell(row[field]).replace(/^\$/, "").replaceAll(",", "");
     return /^-?0+(?:\.0+)?$/.test(value);

@@ -1,3 +1,4 @@
+import { campaignFinanceStateFromScope } from "../funding/campaign-scopes.ts";
 import { stateRegistryRuntimeScope } from "./state-scopes.ts";
 import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
 import { statePublicationPriorOf, rememberStatePublicationHashes } from "./state-publication.ts";
@@ -496,6 +497,8 @@ export async function readPromotedCivicData<T>(
     const [{ readStateAuthorityProjection }, { stateFromRegistryRuntimeScope }, { STATE_BALLOT_FAMILIES, stateFromBallotScope }] = await Promise.all([
       import("./state-reader.ts"), import("./state-scopes.ts"), import("./state-scopes.ts"),
     ]);
+    const campaignState = recordClass === "CURATED_READER_RECORD" ? campaignFinanceStateFromScope(scope) : null;
+    if (campaignState) return (await readStateAuthorityProjection<T>("campaign-finance", campaignState)).result;
     const registryState = recordClass === "REGISTRY_RUNTIME_BINDING" ? stateFromRegistryRuntimeScope(scope) : null;
     if (registryState) return (await readStateAuthorityProjection<T>("registry-runtime", registryState)).result;
     for (const family of STATE_BALLOT_FAMILIES) {

@@ -87,7 +87,7 @@ export async function readHeldPlaceFamilies(divisionIds: readonly string[], opti
   const read = <T>(recordClass: Parameters<typeof readPlacePointerSlice>[0], scope: string) => sliced
     ? readPlacePointerSlice<T>(recordClass, scope, divisionIds, [], targets)
     : readPromotedCivicData<T>(recordClass, scope, options);
-  const stateRead = async <T>(family: Exclude<StateAuthorityFamily, "registry-runtime">, recordClass: Parameters<typeof readPlacePointerSlice>[0], state: string) =>
+  const stateRead = async <T>(family: Exclude<StateAuthorityFamily, "registry-runtime" | "campaign-finance">, recordClass: Parameters<typeof readPlacePointerSlice>[0], state: string) =>
     options.store ? readPromotedCivicData<T>(recordClass, stateBallotScope(family === "candidate-publications" ? "candidate-corpus" : family, state), options)
       : (await readStateAuthorityProjection<T>(family, state)).result;
   const states = new Set(statesForRegistryDivisions(divisionIds));

@@ -5,6 +5,7 @@ import { join, resolve } from "node:path";
 import { Readable } from "node:stream";
 import childProcess from "node:child_process";
 import { syncBuiltinESMExports } from "node:module";
+import { channel } from "node:diagnostics_channel";
 import { randomUUID } from "node:crypto";
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
@@ -32,6 +33,14 @@ await mkdir(directory, { recursive: true });
 const store = stage === "publish" ? await FederalMoneyBenchmarkStore.open(join(directory, "database"), campaignFinanceSourceId(state)) : null;
 const vault = new DurableEvidenceStore(join(directory, "vault"), { remote: null });
 const artifacts = new LocalFileArtifactStore(join(directory, "artifacts"));
+const stages: Record<string, { item: string; itemBytes: number; retainedRows: number | null; rssBytes: number; heapUsedBytes: number; externalBytes: number }> = {};
+const memoryChannel = channel("federal-money:memory");
+const observe = (value: unknown) => {
+  const event = value as { stage: string; item: string; itemBytes: number; retainedRows?: number }, memory = process.memoryUsage();
+  if (!stages[event.stage] || memory.rss > stages[event.stage].rssBytes) stages[event.stage] = { item: event.item, itemBytes: event.itemBytes,
+    retainedRows: event.retainedRows ?? null, rssBytes: memory.rss, heapUsedBytes: memory.heapUsed, externalBytes: memory.external };
+};
+memoryChannel.subscribe(observe);
 let artifactRead = 0, artifactWritten = 0, largestArtifactRead = 0, largestArtifactWrite = 0;
 let pointerRead = 0, pointerWritten = 0, largestPointerRead = 0, largestPointerWrite = 0;
 const read = artifacts.readBytes.bind(artifacts), put = artifacts.putImmutable.bind(artifacts);
@@ -103,7 +112,7 @@ try {
     console.log(`CAMPAIGN_FINANCE_SCALE=${JSON.stringify({ state, resource: resource.id, stage, mode,
       inputBytes: capturedBytes || generatedBytes, generatedRecords, generatedFilers, records, unjoined, largestCaptureBytes, largestPageRecords, baselineRssBytes, elapsedMs: performance.now() - started,
       nodePeakRssBytes: process.resourceUsage().maxRSS * 1024, sortPeakRssBytes: sortPeak,
-      peakWorkerRssUpperBoundBytes: process.resourceUsage().maxRSS * 1024 + sortPeak, databaseProtocolReadBytes: 0, databaseProtocolWrittenBytes: 0 })}`);
+      peakWorkerRssUpperBoundBytes: process.resourceUsage().maxRSS * 1024 + sortPeak, stagePeaks: stages, databaseProtocolReadBytes: 0, databaseProtocolWrittenBytes: 0 })}`);
   } else {
   if (!store) throw new Error("The publication scale run has no local PostgreSQL worker.");
   for (const pass of ["initial", "unchanged"]) {
@@ -118,10 +127,11 @@ try {
       databaseRequests: store.bytes.requests - before.requests, largestDatabaseReadBytes: store.bytes.largestRead, largestDatabaseWriteBytes: store.bytes.largestWrite,
       artifactReadBytes: artifactRead - oldRead, artifactWrittenBytes: artifactWritten - oldWritten, largestArtifactReadBytes: largestArtifactRead, largestArtifactWriteBytes: largestArtifactWrite,
       pointerReadBytes: pointerRead - oldPointerRead, pointerWrittenBytes: pointerWritten - oldPointerWritten, largestPointerReadBytes: largestPointerRead, largestPointerWriteBytes: largestPointerWrite,
-      sourceDownloads: sourceReads, dailyDatabaseProtocolReadBytes: store.bytes.read - before.read, dailyDatabaseProtocolWrittenBytes: store.bytes.written - before.written })}`);
+      stagePeaks: stages, sourceDownloads: sourceReads, dailyDatabaseProtocolReadBytes: store.bytes.read - before.read, dailyDatabaseProtocolWrittenBytes: store.bytes.written - before.written })}`);
   }
   }
 } finally {
+  memoryChannel.unsubscribe(observe);
   childProcess.spawn = originalSpawn;
   syncBuiltinESMExports();
   if (store) {

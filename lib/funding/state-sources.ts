@@ -7,11 +7,13 @@ export interface CampaignFinanceResource {
   readonly url: string;
   readonly landingUrl?: string;
   readonly method?: "POST";
+  readonly requestEncoding?: "FORM";
+  readonly session?: { readonly url: string; readonly tokenField?: string };
   readonly body?: Readonly<Record<string, unknown>>;
   readonly headers?: Readonly<Record<string, string>>;
   readonly rowPath?: string;
   readonly rowObject?: string;
-  readonly dateEncoding?: "EPOCH_MILLISECONDS";
+  readonly dateEncoding?: "EPOCH_MILLISECONDS" | "DOTNET_MILLISECONDS";
   readonly totalPath?: string;
   readonly offsetParameter?: string;
   readonly offsetUnit?: "PAGE";
@@ -31,7 +33,7 @@ export interface CampaignFinanceResource {
     readonly method?: "POST"; readonly body?: Readonly<Record<string, unknown>>;
     readonly rowPath?: string; readonly idField?: string; readonly urlTemplate?: string; readonly filter?: { readonly field: string; readonly value: string };
     readonly split?: { readonly field: string; readonly delimiter: string }; readonly parameters?: readonly { readonly parameter: string; readonly field: string }[];
-    readonly selectParameter?: { readonly name: string; readonly parameter: string }; readonly childPattern?: string };
+    readonly selectParameter?: { readonly name: string; readonly parameter: string; readonly valuePattern?: string }; readonly childPattern?: string };
   readonly governmentOcdId?: string;
   readonly identity: readonly string[];
   readonly identityScope?: "PUBLICATION";
@@ -41,6 +43,7 @@ export interface CampaignFinanceResource {
   readonly filerNameParts?: readonly string[];
   readonly filedCondition?: { readonly field: string; readonly values: readonly string[] };
   readonly registrationTotals?: readonly string[];
+  readonly financialReportCondition?: { readonly field: string; readonly values: readonly string[] };
   readonly filedStatementField?: string;
   readonly candidate: readonly string[];
   readonly candidateParts?: readonly string[];

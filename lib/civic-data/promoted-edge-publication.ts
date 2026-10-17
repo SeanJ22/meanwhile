@@ -1,3 +1,5 @@
+import { campaignFinanceScopeForState } from "../funding/campaign-scopes.ts";
+import { readCampaignFinance } from "../funding/campaign-finance-reader.ts";
 import { REGISTRY_STATES, stateBallotScope } from "./state-scopes.ts";
 import { stateRegistryRuntimeScope } from "./state-scopes.ts";
 import { DOTGOV_SCOPE, readDotGovProjection } from "./dotgov.ts";
@@ -90,6 +92,7 @@ function statePromotedEdgePointers(state: string): Readonly<Partial<Record<State
   const registry = { "registry-runtime": [pointer("REGISTRY_RUNTIME_BINDING", stateRegistryRuntimeScope(state))] };
   return {
     ...registry,
+    "campaign-finance": [{ recordClass: "CURATED_READER_RECORD", scope: campaignFinanceScopeForState(state), reader: options => readCampaignFinance(campaignFinanceScopeForState(state), options) }],
     "ballot-contests": [pointer("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", state))],
     "candidate-profiles": [pointer("CANDIDATE_PROFILE", stateBallotScope("candidate-profiles", state))],
     "candidate-publications": [pointer("CANDIDATE_PUBLICATION", stateBallotScope("candidate-corpus", state))],

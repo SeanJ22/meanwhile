@@ -246,5 +246,51 @@
     "preparedAt": "2026-10-17T02:06:29.082701+00:00",
     "sha256": "505863263b4bf7345789b4837594b12449fdad96828ec9a20bda5d9f89020ddb",
     "transformation": "Two actual public NYC CFB financial-analysis rows projected to mapped filing fields. No individual contributor or address fields included."
+  },
+  {
+    "file": "fl-native-contributions.tsv",
+    "url": "https://dos.elections.myflorida.com/cgi-bin/contrib.exe",
+    "method": "POST",
+    "body": {
+      "CanFName": "",
+      "CanLName": "",
+      "cdistrict": "",
+      "cgroup": "",
+      "ComName": "",
+      "cfname": "",
+      "clname": "",
+      "ccity": "",
+      "cstate": "",
+      "czipcode": "",
+      "coccupation": "",
+      "cdollar_minimum": "",
+      "cdollar_maximum": "",
+      "cdatefrom": "",
+      "cdateto": "",
+      "election": "20261103-GEN",
+      "search_on": "1",
+      "CanNameSrch": "2",
+      "office": "All",
+      "party": "All",
+      "ComNameSrch": "2",
+      "committee": "All",
+      "namesearch": "2",
+      "rowlimit": "0",
+      "csort1": "DAT",
+      "csort2": "CAN",
+      "queryformat": "2",
+      "Submit": "Submit"
+    },
+    "capturedAt": "2026-10-17T02:28:24.961392+00:00",
+    "sha256": "9d439ddae1bbf5daca76525d24ff01d2535f3c44836a21489904360c8d1f4889",
+    "transformation": "First two complete official rows, keeping only filer, date, amount and contribution type; individual donor names and contact fields omitted."
+  },
+  {
+    "file": "pr-native-contributions.json",
+    "url": "https://serviciosenlinea.oce.pr.gov/PublishedDonor/FillPublishedDonorResultsGrid",
+    "method": "POST",
+    "capturedAt": "2026-10-17T02:30:18.948826+00:00",
+    "sha256": "94dee03a1445fd6cde1bd87afb8e071253f01f037fba75c89ae5c056091a8638",
+    "transformation": "Two rows from the official public contributions API; individual donor names and locations omitted."
   }
 ]

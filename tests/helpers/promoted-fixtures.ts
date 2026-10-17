@@ -1,3 +1,4 @@
+import { campaignFinanceScopeForState } from "../../lib/funding/campaign-scopes.ts";
 
 
 
@@ -52,10 +53,10 @@ import { registryJurisdictions, stateRegistryRuntimeScope } from "../../lib/civi
 import type { StateAuthorityFamily } from "../../lib/meetings/edge-artifacts.ts";
 const stateClasses: Record<StateAuthorityFamily, RoutineRecordClass> = {
   "registry-runtime": "REGISTRY_RUNTIME_BINDING", "ballot-contests": "BALLOT_CANDIDACY", "candidate-profiles": "CANDIDATE_PROFILE",
-  "candidate-publications": "CANDIDATE_PUBLICATION", "voting-sites": "VOTING_SITE", "candidate-campaign-sites-derived": "CURATED_READER_RECORD",
+  "candidate-publications": "CANDIDATE_PUBLICATION", "voting-sites": "VOTING_SITE", "candidate-campaign-sites-derived": "CURATED_READER_RECORD", "campaign-finance": "CURATED_READER_RECORD",
 };
 const stateScope = (family: StateAuthorityFamily, state: string) => family === "registry-runtime" ? stateRegistryRuntimeScope(state)
-  : stateBallotScope(family === "candidate-publications" ? "candidate-corpus" : family, state);
+  : family === "campaign-finance" ? campaignFinanceScopeForState(state) : stateBallotScope(family === "candidate-publications" ? "candidate-corpus" : family, state);
 
 const ROOT = join(import.meta.dirname, "..", "..");
 const REGISTRY_FIXTURE = join(ROOT, "tests/fixtures/registry-transfer-import.json.gz");

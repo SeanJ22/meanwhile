@@ -4,6 +4,7 @@ import { CardSubjectContext } from "@/components/ui/card-subject-context";
 import { CheckedLink } from "@/components/ui/checked-link";
 import { CardSourceContext, useCardSourceRegistry } from "@/components/ui/card-source-context";
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
+import { StateCampaignSection } from "@/components/funding/state-campaign-section";
 import { FederalMoneySection } from "@/components/funding/federal-money-section";
 import { CardGapContext, CardGapContribution, useCardGapRegistry } from "@/components/ui/card-gap-context";
 import { CardFooter } from "@/components/ui/card-footer";
@@ -134,7 +135,6 @@ export interface PlaceCardData {
 
 /** Everything the modal renders, whichever entity opened it. */
 export interface ModalSubject {
-  publicRecordsDivisionId?: string | null;
   title: string;
   subtitle: string;
   tier: Tier;
@@ -274,13 +274,13 @@ function PlaceSections({
         </ul>
       )}
       <PublicRecordSection subject={subject} zip={homeZip} />
-        <FederalRecordSection subject={subject} />
+        <MoneyRecordSection subject={subject} />
     </div>
   );
 }
 
 function PublicRecordSection({ subject, zip }: { subject: ModalSubject; zip?: string | null }) {
-  const divisionId = subject.publicRecordsDivisionId ?? subject.divisionOcdId;
+  const divisionId = subject.divisionOcdId;
   if (subject.subjectKind === "MEETING" || !divisionId) return null;
   return <CardSection title="Public records">
     <PlacePublicRecords key={divisionId} divisionId={divisionId} bodyId={subject.bodyCard ? subject.subjectId : undefined} />
@@ -288,10 +288,11 @@ function PublicRecordSection({ subject, zip }: { subject: ModalSubject; zip?: st
   </CardSection>;
 }
 
-function FederalRecordSection({ subject }: { subject: ModalSubject }) {
-  const divisionId = subject.publicRecordsDivisionId ?? subject.divisionOcdId;
-  if (subject.subjectKind === "MEETING" || !divisionId || !subject.bodyCard && !/\/(?:county|place|school_district|cd):/.test(divisionId)) return null;
-  return <CardSection title="Federal money and records">
+function MoneyRecordSection({ subject }: { subject: ModalSubject }) {
+  const divisionId = subject.divisionOcdId;
+  if (subject.subjectKind === "MEETING" || !divisionId || !subject.bodyCard && !/\/(?:county|place|school_district|cd):|\/(?:state|district|territory):[a-z]{2}$/.test(divisionId)) return null;
+  return <CardSection title="Money and records">
+    <StateCampaignSection key={`campaign:${divisionId}`} divisionId={divisionId} />
     <FederalMoneySection key={`${divisionId}:${subject.bodyCard ? subject.subjectId : "place"}`} divisionId={divisionId} bodyId={subject.bodyCard ? subject.subjectId : undefined} />
   </CardSection>;
 }
@@ -437,7 +438,7 @@ function BodySections({
           <CardSection key={section.id} title={section.title} meta={section.meta}>{section.content}</CardSection>
         ) : <CardGapContribution key={section.id} id={`body:${subject.subjectId}:${section.id}`} label={section.title.toLowerCase()} />)}
         <PublicRecordSection subject={subject} zip={homeZip} />
-        <FederalRecordSection subject={subject} />
+        <MoneyRecordSection subject={subject} />
       </CardSectionGroup>
     </div>
   );
@@ -658,7 +659,7 @@ export function EntityModal({
             )}
             {subject.subjectKind !== "MEETING" && <CardSection title={listingCount.heading}><Meetings meetings={subject.meetings} /></CardSection>}
             <PublicRecordSection subject={subject} zip={homeZip} />
-        <FederalRecordSection subject={subject} />
+        <MoneyRecordSection subject={subject} />
           </CardSectionGroup>
         </div>
         )}

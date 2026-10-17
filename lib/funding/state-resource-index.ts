@@ -71,7 +71,8 @@ async function* indexedResources(resource: CampaignFinanceResource, options: Ind
       if (select.name !== index.selectParameter!.name && select.id !== index.selectParameter!.name) return [];
       return [...match[0].matchAll(/<option\b[^>]*>/gi)].flatMap(option => {
         const value = attributes(option[0]).value;
-        if (!value) return [];
+        if (!value || index.selectParameter!.valuePattern && !new RegExp(index.selectParameter!.valuePattern).test(value)) return [];
+        if (resource.method) return [{ url: resource.url, body: { ...resource.body, [index.selectParameter!.parameter]: value } }];
         const url = new URL(resource.url); url.searchParams.set(index.selectParameter!.parameter, value);
         return [{ url: url.href }];
       });

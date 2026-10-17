@@ -333,9 +333,9 @@ export async function verifyRoutineReaderProjection(
       }
       case "campaign-finance": {
         const { readCampaignFinance } = await import("../funding/campaign-finance-reader.ts");
-        const prefix = "US:campaign-finance:";
-        if (!options.scope?.startsWith(prefix)) return fail(verifierId, "Campaign-finance readback requires its exact jurisdiction.");
-        return verifyExactVersion(verifierId, await readCampaignFinance(options.scope.slice(prefix.length), { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, contract.id);
+        const { isCampaignFinanceStateScope } = await import("../funding/campaign-scopes.ts");
+        if (!options.scope || !isCampaignFinanceStateScope(options.scope)) return fail(verifierId, "Campaign-finance readback requires its exact state.");
+        return verifyExactVersion(verifierId, await readCampaignFinance(options.scope, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, contract.id);
       }
       case "government-budgets": {
         const { readGovernmentBudgets } = await import("./government-budgets.ts");

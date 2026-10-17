@@ -1,8 +1,5 @@
-/**
- * Web search for hunters and discovery. A hunter's query goes to one provider: Brave LLM Context first, which returns
- * page text with its results, and Exa search with highlights only when Brave returns nothing. The text is handed to
- * the model to read and is never stored.
- */
+/** A hunter's query goes to Brave LLM Context first and to Exa highlights only when Brave returns nothing;
+ * the page text goes to the model and is never stored. */
 
 export type FetchLike = (url: string, init: {
   readonly method: string;

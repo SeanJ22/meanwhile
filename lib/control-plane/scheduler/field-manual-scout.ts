@@ -73,11 +73,8 @@ export function scoutFieldManualQuery(opts: ScoutManualOptions): FieldManualQuer
   };
 }
 
-/**
- * Project a scout's read down to its page, ranked for its place and record
- * class. Capped so a walk inherits a cache-cheap page of the most useful
- * doors, never the whole manual.
- */
+/** A scout's page of the manual, ranked for its place and record class and capped,
+ * so a walk inherits the most useful doors, never the whole manual. */
 export function scoutFieldManualProjection(
   read: Pick<FieldManualRead, "store" | "evidence">,
   opts: ScoutManualOptions,

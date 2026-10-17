@@ -1015,10 +1015,8 @@ export function buildScoutToolkit(ctx: ScoutToolContext): ScoutToolkit {
 
     const status = obs.status ?? 0;
     const finalUrl = obs.finalUrl || url.toString();
-    /*
-     * An access control is never passed by rendering it: a navigation answered 401/403/429, or a challenge page, is a
-     * WALL even when the browser went on to render content behind it. The render is vaulted DIAGNOSTIC and not shown.
-     */
+    /* A 401/403/429 or challenge page is a WALL even when the browser rendered content behind it;
+     * that render is vaulted DIAGNOSTIC and never shown. */
     const control = accessControlIn({ status: obs.status, text: obs.html });
     if (control !== null) {
       browserTransport = "CHALLENGED";

@@ -1,8 +1,5 @@
-/**
- * Hunt packets: one per government, holding what we already hold for it (never looked for again) and every open
- * blank an agent can fill. Built from the owed list, keyed by OCD division and the subject ids the Box and the fact
- * store use. Pure.
- */
+/** One packet per government: what is held (never looked for again) and every open blank an agent can fill,
+ * keyed by OCD division and the subject ids the Box and fact store use. */
 import { CHECKLIST_FAMILIES, checklistItem } from "../coverage/checklist-map.ts";
 import { isOpenBlank } from "../coverage/open-blanks.ts";
 import type { PlaceOwedItem, PlaceSubject } from "../coverage/place-owed.ts";

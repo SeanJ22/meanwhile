@@ -683,7 +683,7 @@ test('discovery caps only known small publishers, leaving larger and unknown web
 
 test("the census owns an independent runner clock outside the research walk budget", () => {
   const runner = readFileSync("scripts/pilot-runner.mts", "utf8");
-  assert.match(runner, /id: "platform-census", everyMs: CENSUS_LANE_INTERVAL_MS, run: runPlatformCensus/);
+  assert.match(runner, /id: "platform-census", everyMs: CENSUS_LANE_INTERVAL_MS, budgetMs: CENSUS_LANE_BUDGET_MS, run: runPlatformCensus/);
   const source = readFileSync("scripts/freshness-shadow.mts", "utf8");
   assert.doesNotMatch(source, /MEETINGS_DISCOVERY_MAX_WALKS|runMeetingsDiscoveryPass/);
   assert.match(source, /timed\("campaign-sites"/);

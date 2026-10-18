@@ -1124,8 +1124,8 @@ export const FIELD_MANUAL_SLICE_SQL = `WITH eligible AS NOT MATERIALIZED (
     LEFT JOIN LATERAL (SELECT state FROM cp_fix_map
       WHERE method_id=e.id AND place_id=ANY($10::text[]) ORDER BY place_id LIMIT 1) fixed ON true
   LEFT JOIN LATERAL (
-    SELECT EXISTS(SELECT 1 FROM jsonb_each_text(m.legacy_here) legacy(place,status) WHERE place=ANY($5::text[]) AND status='FAILS') AS failed_here,
-      EXISTS(SELECT 1 FROM jsonb_each_text(m.legacy_here) legacy(place,status) WHERE place=ANY($5::text[]) AND status='WORKS') AS worked_here,
+    SELECT EXISTS(SELECT 1 FROM unnest($5::text[]) places(place) WHERE m.legacy_here->>place='FAILS') AS failed_here,
+      EXISTS(SELECT 1 FROM unnest($5::text[]) places(place) WHERE m.legacy_here->>place='WORKS') AS worked_here,
       m.legacy_any AS any_place,m.legacy_states AS states FROM cp_manual_method_meta m WHERE m.entry_id=e.id
   ) legacy ON true
   LEFT JOIN LATERAL (SELECT m.working_any AS any_place,m.working_states AS states FROM cp_manual_method_meta m WHERE m.entry_id=e.id) working ON true

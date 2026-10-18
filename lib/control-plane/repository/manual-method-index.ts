@@ -97,6 +97,6 @@ export const MANUAL_METHOD_POOL_SQL=`SELECT picked.id FROM
       AND ($14::text IS NULL OR m.states ? $14)
       AND ($6::text IS NULL OR jsonb_array_length(m.platforms)=0 OR m.platforms ? $6)
       AND CASE WHEN fixed.state IS NOT NULL AND fixed.state<>'UNTRIED' THEN fixed.state<>'FAILS'
-        ELSE NOT EXISTS(SELECT 1 FROM jsonb_each_text(m.legacy_here) legacy(place,status) WHERE place=ANY($5::text[]) AND status='FAILS') END
+        ELSE NOT EXISTS(SELECT 1 FROM unnest($5::text[]) places(place) WHERE m.legacy_here->>place='FAILS') END
     ORDER BY r.tier,r.outcome,r.observed COLLATE "C" DESC,r.entry_id COLLATE "C" LIMIT $8::int
   ) picked`;

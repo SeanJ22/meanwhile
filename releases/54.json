@@ -1,0 +1,19 @@
+{
+  "n": 54,
+  "branch": "release/54",
+  "river_sha": "829e6d6e21caf7ccb99ee90c9e0c3e3ff1e98d53",
+  "tested_sha": "829e6d6e21caf7ccb99ee90c9e0c3e3ff1e98d53",
+  "steps": [
+    "RM-01"
+  ],
+  "lanes": [
+    "runner-memory"
+  ],
+  "integration_from": 241,
+  "integration_count": 242,
+  "pr": {
+    "number": 763,
+    "url": "https://github.com/SeanJ22/meanwhile/pull/763"
+  },
+  "at": "2026-10-18T02:46:37Z"
+}

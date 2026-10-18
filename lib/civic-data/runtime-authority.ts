@@ -24,7 +24,7 @@ export const RUNTIME_AUTHORITY_CAPABILITIES = [
   "OWNER_DISPATCH",
   "MANUAL_CONTRACT",
   "AGENT_BRIDGE",
-  "CAPTURE_CONVERSION",
+  "FEDERAL_PEOPLE_SPLIT",
 ] as const;
 export type RuntimeAuthorityCapability = (typeof RUNTIME_AUTHORITY_CAPABILITIES)[number];
 
@@ -343,9 +343,9 @@ export function assertRegisteredRuntimeContract(
   kind: "routine" | "manual",
   env: Readonly<Record<string, string | undefined>> = process.env,
 ): void {
-  // The one-time capture conversion republishes every source's held version under its own admission.
-  if (runtimeAuthorityEnvelope(env)?.capability === "CAPTURE_CONVERSION") {
-    assertRuntimeAuthority({ capabilities: ["CAPTURE_CONVERSION"] }, env);
+  // The one-time federal people split publishes many place and member contracts under its own admission.
+  if (runtimeAuthorityEnvelope(env)?.capability === "FEDERAL_PEOPLE_SPLIT") {
+    assertRuntimeAuthority({ capabilities: ["FEDERAL_PEOPLE_SPLIT"] }, env);
     return;
   }
   assertRuntimeAuthority({
@@ -363,7 +363,7 @@ export function assertSanctionedRuntimeAuthority(
   }
   if (operation === "a routine civic data candidate/version promotion") {
     return assertRuntimeAuthority({
-      capabilities: ["ROUTINE_SUPERVISOR", "ROUTINE_CONTRACT", "MANUAL_CONTRACT", "CAPTURE_CONVERSION"],
+      capabilities: ["ROUTINE_SUPERVISOR", "ROUTINE_CONTRACT", "MANUAL_CONTRACT", "FEDERAL_PEOPLE_SPLIT"],
     }, env);
   }
   throw new RuntimeAuthorityRefused(`sanctioned operation ${JSON.stringify(operation)} has no permanent runtime capability`);

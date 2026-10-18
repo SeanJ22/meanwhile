@@ -122,7 +122,6 @@ export function legiscanVotesCandidate(input: { projection: LegiscanVotesProject
       declaredTotal: null, paginationComplete: false, claimsComplete: false },
     absence: { claimsAbsence: false, basis: "NONE", exactSubject: null, exactHorizon: null },
     dependentChecks: [{ consumer: "state native person vote reader", passed: !issue, detail: "Unique exact publisher ids or shared native member profile URLs bind positions; unresolved people remain held." }],
-    civicRecords: projection.rollCalls.map(record => ({ key: `roll:${record.id}`, record })),
     excludedFacts: input.held.map(row => ({ ...row, code: "LEGISCAN_VOTE_UNRESOLVED" })), normalizedPayload: payload, readModel: projection };
 }
 export async function readLegiscanVotesProjection(state: string, options: PromotedCivicDataReadOptions = {}) {

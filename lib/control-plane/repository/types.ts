@@ -19,6 +19,7 @@ import type {
   OwnerDecisionIntent,
   OwnerDigestRecord,
   OwnerSnapshot,
+  OwnerSnapshotState,
   RunnerHeartbeat,
 } from "../owner-surface.ts";
 import type { FieldManualEntry, FieldManualQuery } from "../field-manual.ts";
@@ -42,6 +43,7 @@ import type { LiveAuditLogRow } from "../live-audit-log.ts";
 import type { DoorRecord } from "../../doors/registry.ts";
 import type { LeadOrder } from "../leads/order.ts";
 import type { WebsitePacing } from "../website-pacing.ts";
+import type { OwnerSnapshotTotals, SpilledInbox, StateTotals } from "../owner-snapshot-totals.ts";
 
 /** `revision` starts at 1 and increments by exactly one per accepted write. */
 export interface Persisted<T> {
@@ -230,6 +232,10 @@ export interface AggregateRepository<T> {
   ): Promise<Persisted<T>>;
   /** The named aggregates that exist, in id order; a failed read throws. Optional. */
   readMany?(ids: readonly string[]): Promise<readonly Persisted<T>[]>;
+  /** `readMany`, each value narrowed to the projection by the store before it leaves. */
+  readManyNarrowed?(ids: readonly string[], projection: RecordProjection): Promise<readonly Persisted<unknown>[]>;
+  /** Rows whose scalar `#>>` value at `path` is one of `values`, in id order, each narrowed to the projection. */
+  listWhereIn?(path: readonly string[], values: readonly string[], projection: RecordProjection): Promise<readonly Persisted<unknown>[]>;
   /** Every aggregate of this kind, ordered by id so reports are diffable. */
   list(): Promise<readonly Persisted<T>[]>;
   /** Every row in the same id order, each value narrowed to the projection. */
@@ -242,7 +248,13 @@ export interface AggregateRepository<T> {
    * Rows whose database-clock `changed_at` is at or after `since` (all when null), in id order, less any row `held`
    * names at its current revision; `through` is the store's clock when the read began.
    */
-  listChangedSince?(since: string | null, held?: HeldSlots): Promise<ChangedRows<T>>;
+  listChangedSince?(since: string | null, held?: HeldSlots, options?: ChangedReadOptions<Persisted<T>>): Promise<ChangedRows<T>>;
+}
+
+/** `page` takes each page as it is read and the answer then holds no rows; `projection` narrows each one in the store. */
+export interface ChangedReadOptions<R> {
+  readonly page?: (rows: readonly R[]) => Promise<void> | void;
+  readonly projection?: RecordProjection;
 }
 
 /** Slots a reader already holds, left out of a changed-since read: an aggregate's [id, revision], a log record's [key, position]. */
@@ -279,6 +291,9 @@ export interface ChangedRecord<T> {
   readonly recordId: string;
   readonly position: number;
   readonly record: T;
+  /** The store's clock when the record was appended, and the time the appender stamped it with. */
+  readonly changedAt?: string;
+  readonly stampedAt?: string;
 }
 
 /** What `AppendOnlyRepository.readChangedSince` answers. */
@@ -316,11 +331,13 @@ export interface AppendOnlyRepository<T> {
   /** The keys this log holds. */
   keys(): Promise<readonly string[]>;
   /** Exactly `keys()` narrowed to keys holding a matching record, sorted. */
-  keysWhere?(path: readonly string[], value: string): Promise<readonly string[]>;
+  keysWhere(path: readonly string[], value: string): Promise<readonly string[]>;
   /** Exactly `read(key)` for each key, in one batched read; a key with no record is absent. */
   readKeys?(keys: readonly string[]): Promise<ReadonlyMap<string, readonly T[]>>;
   /** Records whose `changed_at` is at or after `since` (all when null), less any `held` names, in `readAll()` order, with coordinates. */
-  readChangedSince?(since: string | null, held?: HeldSlots): Promise<ChangedRecords<T>>;
+  readChangedSince(since: string | null, held?: HeldSlots, options?: ChangedReadOptions<ChangedRecord<T>>): Promise<ChangedRecords<T>>;
+  /** Records the appender stamped at or after `from` and before `until`, handed over page by page with both clocks. */
+  readStampedBetween?(from: string, until: string, page: (records: readonly ChangedRecord<T>[]) => Promise<void> | void): Promise<void>;
 }
 
 /** `log.readKeys(keys)`, or `read` per key where the provider has no batched read. */
@@ -334,11 +351,6 @@ export async function readByKeys<T>(log: AppendOnlyRepository<T>, keys: readonly
     if (records.length > 0) out.set(key, records);
   }
   return out;
-}
-
-/** The keys of a log holding a record whose value at `path` equals `value`, or null when the provider has no filtered read (the caller then reads as before). */
-export async function keysWhere<T>(log: AppendOnlyRepository<T>, path: readonly string[], value: string): Promise<readonly string[] | null> {
-  return log.keysWhere ? log.keysWhere(path, value) : null;
 }
 
 /** `true` keeps a top-level key whole; an object keeps only its named keys. Every other key is dropped. */
@@ -486,6 +498,12 @@ export interface ControlPlaneRepositories {
   readonly costs: AppendOnlyRepository<CostEntry>;
   /** Read server-side by the admin host. Every record is aggregate-only (`assertAggregateOnly`). */
   readonly ownerSnapshots: AggregateRepository<OwnerSnapshot>;
+  /** The running totals the snapshot is folded from, and where each of its reads last stopped. */
+  readonly ownerSnapshotTotals: AggregateRepository<OwnerSnapshotTotals>;
+  /** Each state's published rows, its running totals, and the rows a publish routed to it before folding it. */
+  readonly ownerSnapshotStates: AggregateRepository<OwnerSnapshotState>;
+  readonly ownerSnapshotStateTotals: AggregateRepository<StateTotals>;
+  readonly ownerSnapshotInboxes: AggregateRepository<SpilledInbox>;
   /** Learned discovery knowledge every model-driven worker reads and writes back, one row per entry. */
   readonly fieldManual: FieldManualRepository;
   /** What each reusable method did in each place. */
@@ -507,6 +525,8 @@ export interface ControlPlaneRepositories {
   readonly researchIntents: AppendOnlyRepository<ResearchIntent>;
   readonly scoutResults: AppendOnlyRepository<ScoutResult>;
   readonly boxFindings: BoxRepository;
+  /** Where each incremental pass last read up to, by pass name. */
+  readonly passCursors: AggregateRepository<PassCursor>;
   readonly workerResults: AppendOnlyRepository<WorkerResultRecord>;
   readonly promotionPipeline: AppendOnlyRepository<PromotionPipelineRecord>;
   readonly windowRuns: AppendOnlyRepository<WindowRunRecord>;
@@ -535,6 +555,9 @@ export interface ControlPlaneRepositories {
   /** True only for a store whose contents survive this process. */
   readonly durable: boolean;
 }
+
+/** The store's clock as of a pass's last read; the next pass reads what changed since. */
+export interface PassCursor { readonly through: string }
 
 /** Refuse a store that cannot outlive the process, where durability is the point. */
 export function assertDurableRepositories(

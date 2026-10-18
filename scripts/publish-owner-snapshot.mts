@@ -20,10 +20,9 @@ import { createFileRepositories } from "../lib/control-plane/repository/file-sto
 import type { ControlPlaneRepositories, Persisted } from "../lib/control-plane/repository/types.ts";
 import { collectMapTilerUsage } from "../lib/control-plane/maptiler/collector.ts";
 import { collectProviderBilling } from "../lib/control-plane/provider-billing-collector.ts";
-import { providerBillingAttribution } from "../lib/control-plane/provider-billing-attribution.ts";
+import { billingAttributionOf } from "../lib/control-plane/provider-billing-attribution.ts";
 import { expansionScopesOf } from "../lib/control-plane/expansion/scopes.ts";
 import { readLiveSpendHolds } from "../lib/control-plane/expansion/spend-holds.ts";
-import { exactScopeMembers } from "../lib/control-plane/provider-billing-scope-members.ts";
 import { ADMIN_CONFIG_ID } from "../lib/control-plane/gateway/admin-config.ts";
 import { retainMapTilerLastKnownGood } from "../lib/control-plane/maptiler/usage.ts";
 import {
@@ -44,15 +43,13 @@ import {
   type RunnerHeartbeat,
   type OwnerZipRow,
 } from "../lib/control-plane/owner-surface.ts";
-import { buildCostPanel, buildSpendByPlace } from "../lib/control-plane/cost-panel.ts";
+import { costPanelOf, spendByDayOf } from "../lib/control-plane/cost-panel.ts";
 import { collectPublishedCampaignReadback, collectPublishedWorkerReadback, collectPublishedManualReaderReadback } from "../lib/control-plane/served-reader-production.ts";
 import type { ServedReaderReadback } from "../lib/control-plane/served-reader.ts";
-import { buildAssignmentView, type AssignmentPublication, type AssignmentSources } from "../lib/control-plane/assignment-view.ts";
-import { ASSIGNMENT_ATTEMPT_PROJECTION, ASSIGNMENT_OBLIGATION_PROJECTION, readAllAssignmentSources } from "../lib/control-plane/assignment-read.ts";
-import { readPipelineStates, stageCounts } from "../lib/control-plane/promotion/pipeline.ts";
+import type { AssignmentPublication, AssignmentView } from "../lib/control-plane/assignment-view.ts";
+import { readAskGapObservations } from "../lib/control-plane/ask-gap-observations.ts";
+import { OWNER_SNAPSHOT_TOTALS_ID, OwnerSnapshotFold, readingWindows, type OwnerSnapshotTotals } from "../lib/control-plane/owner-snapshot-totals.ts";
 import { RESEARCH_STATE_ID } from "../lib/control-plane/scheduler/research-policy.ts";
-import { unitCarriesState } from "../lib/control-plane/scheduler/dispatch-target.ts";
-import { US_STATES } from "../lib/control-plane/readiness/catalog.ts";
 import { assertRuntimeAuthority } from "../lib/civic-data/runtime-authority.ts";
 import { readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
 
@@ -90,22 +87,7 @@ function candidateNames(): Record<string, string> {
 
 /** Measured spend per Eastern calendar day over the trailing fortnight. */
 function spendByDay(reads: ControlPlaneReads | null): OwnerSnapshot["spendByDay"] {
-  if (reads === null) return [];
-  const day = new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit" });
-  const since = NOW.getTime() - 14 * 86_400_000;
-  const byDay = new Map<string, { usd: number; attempts: number }>();
-  for (const entry of reads.costs) {
-    const at = Date.parse(entry.recordedAt);
-    if (!Number.isFinite(at) || at < since) continue;
-    const key = day.format(new Date(at));
-    const acc = byDay.get(key) ?? { usd: 0, attempts: 0 };
-    if (typeof entry.cost.usd === "number" && Number.isFinite(entry.cost.usd)) acc.usd += entry.cost.usd;
-    acc.attempts += 1;
-    byDay.set(key, acc);
-  }
-  return [...byDay.entries()]
-    .sort((a, b) => a[0].localeCompare(b[0]))
-    .map(([d, v]) => ({ day: d, usd: Math.round(v.usd * 10_000) / 10_000, attempts: v.attempts }));
+  return reads === null ? [] : spendByDayOf(reads.fold.costs.days);
 }
 
 /** The run record's shapes as `scripts/freshness-shadow.mts` writes them, narrowed to what the snapshot shows. */
@@ -167,116 +149,66 @@ const cycleSource = `freshness-shadow run ${cycle?.file ?? "unknown"}`;
 /** Read once so every cost row and the by-state deployment come from one instant. Null when the store was not opened. */
 interface ControlPlaneReads {
   readonly runnerHeartbeat: RunnerHeartbeat | null;
-  readonly billingScopes: Parameters<typeof providerBillingAttribution>[0]["scopes"];
-  readonly billingHolds: Parameters<typeof providerBillingAttribution>[0]["holds"];
-  readonly costs: Awaited<ReturnType<ControlPlaneRepositories["costs"]["readAll"]>>;
-  readonly attempts: { readonly id: string; readonly worker: { readonly version: string; readonly provider: string } }[];
-  readonly obligations: { readonly id: string; readonly subjectId: string }[];
-  readonly cacheByRole: Parameters<typeof buildCostPanel>[0]["cacheByRole"];
-  readonly share: Parameters<typeof buildCostPanel>[0]["share"];
-  readonly verifiedRecords: number | null;
-  readonly pipelineStates: Awaited<ReturnType<typeof readPipelineStates>>;
-  readonly assignmentSources: { readonly ok: true; readonly value: AssignmentSources } | { readonly ok: false; readonly says: string };
+  readonly billingScopes: Parameters<typeof billingAttributionOf>[0]["scopes"];
+  readonly billingHolds: Parameters<typeof billingAttributionOf>[0]["holds"];
+  readonly fold: OwnerSnapshotFold;
+  readonly cacheByRole: Parameters<typeof costPanelOf>[2]["cacheByRole"];
+  readonly share: Parameters<typeof costPanelOf>[2]["share"];
+  /** The totals row this publish started from, which it replaces. */
+  readonly prior: Persisted<OwnerSnapshotTotals> | null;
 }
 
-async function readControlPlane(repos: ControlPlaneRepositories): Promise<ControlPlaneReads> {
+/** The totals carried from the last publish, with every control-plane row changed since then folded in state by state. */
+async function readControlPlane(repos: ControlPlaneRepositories, existing: CarriedForward | null): Promise<ControlPlaneReads> {
   const runnerHeartbeat = await repos.runnerHeartbeat.read(RUNNER_ID).then(row=>row?.value??null).catch(()=>null);
-  const [billingScopes, billingHolds] = await Promise.all([
+  const [billingScopes, billingHolds, prior, research, askGaps] = await Promise.all([
     repos.adminConfig.read(ADMIN_CONFIG_ID).then(r => { const parsed = expansionScopesOf(r?.value ?? null); return parsed.malformed ? null : parsed.scopes; }).catch(() => null),
     // Only live holds count as set aside.
     readLiveSpendHolds(repos, new Date().toISOString()).catch(() => null),
-  ]);
-  const [costs, attempts, obligations, research] = await Promise.all([
-    repos.costs.readAll(),
-    repos.attempts.listNarrowed(ASSIGNMENT_ATTEMPT_PROJECTION).then(rows => rows.map(row => ({ ...row, value: row.value as AssignmentSources["attempts"][number] }))),
-    repos.obligations.listNarrowed(ASSIGNMENT_OBLIGATION_PROJECTION).then(rows => rows.map(row => ({ ...row, value: row.value as AssignmentSources["obligations"][number] }))),
+    repos.ownerSnapshotTotals.read(OWNER_SNAPSHOT_TOTALS_ID),
     repos.researchState.read(RESEARCH_STATE_ID),
+    readAskGapObservations(repos.askGapObservations),
   ]);
-  let verifiedRecords: number | null = null;
-  let pipelineStates: Awaited<ReturnType<typeof readPipelineStates>> = [];
-  let pipelineRead = false;
-  try {
-    pipelineStates = await readPipelineStates(repos);
-    verifiedRecords = stageCounts(pipelineStates).byStage.VERIFIED;
-    pipelineRead = true;
-  } catch (error) {
-    log(`the promotion pipeline could not be read (${(error as Error).message}) — cost per verified record is a gap`);
-  }
-  let assignmentSources: ControlPlaneReads["assignmentSources"];
-  try {
-    assignmentSources = {
-      ok: true,
-      value: await readAllAssignmentSources(
-        repos,
-        { nowIso: NOW_ISO, activation: null, pilotZips: [] },
-        {
-          costs,
-          attempts: attempts.map((a) => a.value),
-          obligations: obligations.map((o) => o.value),
-          pipeline: pipelineRead ? pipelineStates : null,
-        },
-      ),
-    };
-  } catch (error) {
-    // The error NAME only: a driver message can carry the connection string.
-    const name = (error as Error)?.name ?? "error";
-    log(`the assignment view's records could not be read (${name}) — the assignment view publishes as NOT_BUILT`);
-    assignmentSources = { ok: false, says: `The records the assignment view joins could not be read on this publish (${name}); nothing is claimed about the work.` };
-  }
+  const fold = await OwnerSnapshotFold.fold(repos, prior?.value ?? null, { nowIso: NOW_ISO, servedReader: existing?.servedReaderReadback ?? null,
+    askGapObservations: "unreadable" in askGaps ? null : askGaps.rows, scopes: billingScopes, carried: existing?.providerBilling?.readings ?? [], write: !DRY_RUN, log });
   const metrics = research?.value.metrics ?? null;
-  return {
-    runnerHeartbeat,
-    billingScopes, billingHolds,
-    costs,
-    attempts: attempts.map((a) => ({ id: a.value.id, worker: a.value.worker })),
-    obligations: obligations.map((o) => ({ id: o.value.id, subjectId: o.value.subjectId })),
-    cacheByRole: metrics?.cacheByRole ?? null,
-    share: metrics?.share ?? null,
-    verifiedRecords,
-    pipelineStates,
-    assignmentSources,
-  };
+  return { runnerHeartbeat, billingScopes, billingHolds, fold, cacheByRole: metrics?.cacheByRole ?? null, share: metrics?.share ?? null, prior };
 }
 
-function assignmentPublication(reads: ControlPlaneReads): AssignmentPublication {
-  if (!reads.assignmentSources.ok) return { kind: "NOT_BUILT", at: NOW_ISO, says: reads.assignmentSources.says };
-  const sources = reads.assignmentSources.value;
-  return {
-    kind: "BUILT",
-    view: buildAssignmentView(sources, {
-      reads: [
-        {
-          what: "leases",
-          held: true,
-          says: "read for the route tasks that hold an open attempt — the one question a lease answers here (is a worker on it now)",
-        },
-        {
-          what: "disposition commits",
-          held: false,
-          says: "not read at publish: each route task carries its applied disposition; the drilldown reads the commits by route task",
-        },
-        {
-          what: "promotion pipeline",
-          held: sources.pipeline !== null,
-          says: sources.pipeline !== null ? "read whole at publish" : "could not be read at publish; verification shows as a named gap",
-        },
-      ],
-    }),
-  };
+function assignmentView(fold: OwnerSnapshotFold): Promise<AssignmentView> {
+  return fold.view({
+    activation: null,
+    reads: [
+      {
+        what: "leases",
+        held: true,
+        says: "read for the route tasks that hold an open attempt — the one question a lease answers here (is a worker on it now)",
+      },
+      {
+        what: "disposition commits",
+        held: false,
+        says: "not read at publish: each route task carries its applied disposition; the drilldown reads the commits by route task",
+      },
+      {
+        what: "promotion pipeline",
+        held: true,
+        says: "read for the items whose source names an assignment's attempt or work item; its counts fold every record appended since the last publish",
+      },
+      {
+        what: "the clock",
+        held: false,
+        says: "not read for the counts: each state's figures stand as of the last publish whose changed rows reached it; each state's index rows carry the instants they change at, so a reader shows them as they hold when read",
+      },
+    ],
+  });
 }
 
 /** Standing obligations by state from obligation ids; an obligation naming no state lands in "other". */
 function obligationsByState(reads: ControlPlaneReads | null): OwnerSnapshot["obligationsByState"] {
-  if (reads === null || reads.obligations.length === 0) return [];
-  const counts = new Map<string, number>();
-  for (const o of reads.obligations) {
-    const hay = `${o.id} ${o.subjectId}`.toLowerCase();
-    const state = US_STATES.find((s) => unitCarriesState(hay, s.code));
-    const key = state ? state.name : "other";
-    counts.set(key, (counts.get(key) ?? 0) + 1);
-  }
-  const total = reads.obligations.length;
-  return [...counts.entries()]
+  const counts = reads === null ? {} : reads.fold.obligationsByState();
+  const total = Object.values(counts).reduce((n, c) => n + c, 0);
+  if (total === 0) return [];
+  return Object.entries(counts)
     .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
     .map(([state, count]) => ({
       state,
@@ -292,17 +224,16 @@ function obligationsByState(reads: ControlPlaneReads | null): OwnerSnapshot["obl
 function buildSnapshot(
   reads: ControlPlaneReads | null,
   maptiler: OwnerSnapshot["maptiler"],
-  servedReader: ServedReaderReadback | null = null,
+  servedReader: ServedReaderReadback | null,
+  assignments: AssignmentPublication | undefined,
 ): OwnerSnapshot {
   const risk = cycle?.record.risk ?? {};
   const debtRows = typeof risk.debtRows === "number" ? risk.debtRows : null;
   const cost = reads
-    ? buildCostPanel({
-        costs: reads.costs,
-        attempts: reads.attempts,
+    ? costPanelOf(reads.fold.costs.ledger, reads.fold.costs.scouts, {
         cacheByRole: reads.cacheByRole,
         share: reads.share,
-        verifiedRecords: reads.verifiedRecords,
+        verifiedRecords: reads.fold.pipeline.verified,
         nowIso: NOW_ISO,
       })
     : null;
@@ -320,8 +251,8 @@ function buildSnapshot(
     decisionCards: [],
     candidateNames: candidateNames(),
     spendByDay: spendByDay(reads),
-    spendByPlace: reads ? buildSpendByPlace(reads.costs) : undefined,
-    assignments: reads ? assignmentPublication(reads.assignmentSources.ok ? { ...reads, assignmentSources: { ok: true, value: { ...reads.assignmentSources.value, servedReader } } } : reads) : undefined,
+    spendByPlace: reads ? reads.fold.spendByPlace() : undefined,
+    assignments,
     servedReaderReadback: servedReader,
     maptiler,
 
@@ -412,9 +343,9 @@ async function main(): Promise<void> {
   // Opened first so the cost panel and the by-state deployment read the same instant.
   const repos = publisherRepos;
   if (repos) log(repos.describe());
-  const reads = repos ? await readControlPlane(repos) : null;
-  stepDone("control plane read");
   const existing = repos ? await repos.ownerSnapshots.readNarrowed(SNAPSHOT_ID, CARRIED_FORWARD) as Persisted<CarriedForward> | null : null;
+  const reads = repos ? await readControlPlane(repos, existing?.value ?? null) : null;
+  stepDone("control plane read");
   const maptilerCandidate = await collectMapTilerUsage({ nowIso: NOW_ISO });
   const maptiler = retainMapTilerLastKnownGood({
     candidate: maptilerCandidate,
@@ -441,10 +372,11 @@ async function main(): Promise<void> {
     });
   }
   stepDone("map usage collected");
-  const providerBilling = DRY_RUN ? existing?.value.providerBilling ?? null : await collectProviderBilling({ now: NOW_ISO, previous: existing?.value.providerBilling, costs: reads?.costs ?? null });
+  const providerBilling = DRY_RUN ? existing?.value.providerBilling ?? null : await collectProviderBilling({ now: NOW_ISO, previous: existing?.value.providerBilling,
+    searches: reads ? reads.fold.costs.searches[NOW_ISO.slice(0, 7)] ?? {} : null });
   stepDone("provider bills collected");
-  const scopeMembers = reads?.assignmentSources.ok && reads.billingScopes ? exactScopeMembers(reads.billingScopes, reads.assignmentSources.value) : undefined;
-  const billingAttribution = reads && providerBilling ? providerBillingAttribution({ now: NOW_ISO, costs: reads.costs, attempts: reads.attempts, scopes: reads.billingScopes, holds: reads.billingHolds, scopeMembers, readings: providerBilling.readings }) : null;
+  const billingAttribution = reads && providerBilling ? billingAttributionOf({ now: NOW_ISO, scopes: reads.billingScopes, holds: reads.billingHolds,
+    readings: providerBilling.readings, hunts: reads.fold.costs.hunts, windowOf: readingWindows(reads.fold.costs, providerBilling.readings, NOW_ISO) }) : null;
   let servedReader = existing?.value.servedReaderReadback ?? null;
   if (!DRY_RUN) {
     const combined = { checkedAt: NOW_ISO, witnesses: [] as NonNullable<typeof servedReader>["witnesses"][number][], errors: [] as string[] };
@@ -462,11 +394,13 @@ async function main(): Promise<void> {
     servedReader = combined;
   }
   stepDone("campaign page readback collected");
-  if (!DRY_RUN && reads?.assignmentSources.ok) {
+  const fold = reads?.fold ?? null;
+  if (!DRY_RUN && fold) {
+    const publications = fold.publications();
     const [workerReadback, manualReadback] = await Promise.all([
-      collectPublishedWorkerReadback(reads.assignmentSources.value.workItems, NOW_ISO, existing?.value.servedReaderReadback ?? null)
+      collectPublishedWorkerReadback(publications, NOW_ISO, existing?.value.servedReaderReadback ?? null)
         .catch(() => ({ checkedAt: NOW_ISO, witnesses: [], errors: ["Worker public readback collection failed; prior observations retain their original time and expiry."] })),
-      collectPublishedManualReaderReadback(reads.assignmentSources.value.workItems, NOW_ISO, existing?.value.servedReaderReadback ?? null)
+      collectPublishedManualReaderReadback(publications, NOW_ISO, existing?.value.servedReaderReadback ?? null)
         .catch(() => ({ checkedAt: NOW_ISO, witnesses: [], errors: ["Public help readback collection failed; prior observations retain their original time and expiry."] })),
     ]);
     const joined = new Map([...(existing?.value.servedReaderReadback?.witnesses ?? []), ...(servedReader?.witnesses ?? []), ...workerReadback.witnesses, ...manualReadback.witnesses]
@@ -477,7 +411,20 @@ async function main(): Promise<void> {
   const placeHistory = DRY_RUN ? existing?.value.placeHistory
     : await collectPlaceHistory({ scopes: reads?.billingScopes ?? null, previous: existing?.value.placeHistory, now: NOW_ISO, read: key => readPlaceOwed(key).finally(() => stepDone(`place history read for ${key}`)) })
       .catch(() => existing?.value.placeHistory);
-  const snapshot: OwnerSnapshot = { ...buildSnapshot(reads, maptiler, servedReader), providerBilling, billingAttribution, ...(placeHistory ? { placeHistory } : {}) };
+  let assignments: AssignmentPublication | undefined;
+  if (fold) {
+    try {
+      await fold.readBack(servedReader);
+      assignments = { kind: "BUILT", view: await assignmentView(fold) };
+    } catch (error) {
+      // The error NAME only: a driver message can carry the connection string.
+      const name = (error as Error)?.name ?? "error";
+      log(`the assignment view's records could not be read (${name}) — the assignment view publishes as NOT_BUILT`);
+      assignments = { kind: "NOT_BUILT", at: NOW_ISO, says: `The records the assignment view joins could not be read on this publish (${name}); nothing is claimed about the work.` };
+    }
+  }
+  stepDone("assignments derived");
+  const snapshot: OwnerSnapshot = { ...buildSnapshot(reads, maptiler, servedReader, assignments), providerBilling, billingAttribution, ...(placeHistory ? { placeHistory } : {}) };
 
   assertAggregateOnly(snapshot, "owner snapshot");
   log(
@@ -500,28 +447,29 @@ async function main(): Promise<void> {
       ),
     ),
   );
+  const clocks = snapshot.obligationsByState.reduce((n, r) => n + r.count.value, 0);
   log(
     floorLine(
       floored(
         "obligations by state",
         "cp_obligations",
-        reads ? reads.obligations.length : 0,
+        clocks,
         snapshot.obligationsByState.reduce((n, r) => n + r.count.value, 0),
-        reads === null ? "the control plane was not opened" : reads.obligations.length === 0 ? "the control plane holds no standing obligation" : undefined,
+        reads === null ? "the control plane was not opened" : clocks === 0 ? "the control plane holds no standing obligation" : undefined,
       ),
     ),
   );
   if (reads) {
     const s = snapshot.costSummary;
     log(
-      `  cost ledger: ${reads.costs.length} entr${reads.costs.length === 1 ? "y" : "ies"}; ` +
+      `  cost ledger: ${reads.fold.costs.ledger.entries} entr${reads.fold.costs.ledger.entries === 1 ? "y" : "ies"}; ` +
         `${s?.attemptsMeasured ?? 0} measured ($${(s?.measuredUsd ?? 0).toFixed(4)}), ${s?.attemptsUnmeasured ?? 0} unmeasured; ` +
         `${snapshot.costByRole.length} role row(s), ${snapshot.costByModel.length} model row(s)`,
     );
   }
-  const assignments = snapshot.assignments;
-  if (assignments?.kind === "BUILT") {
-    const v = assignments.view;
+  const published = snapshot.assignments;
+  if (published?.kind === "BUILT") {
+    const v = published.view;
     log(
       floorLine(
         floored(
@@ -537,8 +485,8 @@ async function main(): Promise<void> {
       `  assignment list: ${v.selection.published} of ${v.summary.total} published ` +
         `(${v.selection.trimmedForBytes} trimmed for the ${v.selection.byteBudget}-byte budget); ${JSON.stringify(v).length} bytes`,
     );
-  } else if (assignments?.kind === "NOT_BUILT") {
-    log(`  assignment view NOT BUILT: ${assignments.says}`);
+  } else if (published?.kind === "NOT_BUILT") {
+    log(`  assignment view NOT BUILT: ${published.says}`);
   }
 
   if (DRY_RUN || repos === null) {
@@ -546,6 +494,13 @@ async function main(): Promise<void> {
     return;
   }
 
+  /* The totals go first, by compare-and-set, so two publishers never fold the same rows into one total; they pair with the
+     state rows the fold already wrote, so they are written even when the view could not be assembled. */
+  if (reads) {
+    const totals: OwnerSnapshotTotals = reads.fold.totals();
+    if (reads.prior === null) await repos.ownerSnapshotTotals.put(OWNER_SNAPSHOT_TOTALS_ID, totals, NOW_ISO);
+    else await repos.ownerSnapshotTotals.compareAndSet(OWNER_SNAPSHOT_TOTALS_ID, reads.prior.revision, totals, NOW_ISO);
+  }
   // The snapshot is one aggregate that moves, so compare-and-set is the write that replaces it.
   if (existing === null) await repos.ownerSnapshots.put(SNAPSHOT_ID, snapshot, NOW_ISO);
   else await repos.ownerSnapshots.compareAndSet(SNAPSHOT_ID, existing.revision, snapshot, NOW_ISO);
@@ -571,8 +526,7 @@ async function main(): Promise<void> {
       `${decisions.length} owner decision intent(s) on record`,
   );
   // A transient failed input read must not count as a successful publication.
-  if (reads && (!reads.assignmentSources.ok || reads.billingScopes === null ||
-      reads.billingHolds === null || reads.verifiedRecords === null)) {
+  if (reads && (assignments?.kind !== "BUILT" || reads.billingScopes === null || reads.billingHolds === null)) {
     log("published with incomplete control-plane inputs; the standing runner will retry");
     process.exitCode = 1;
   }

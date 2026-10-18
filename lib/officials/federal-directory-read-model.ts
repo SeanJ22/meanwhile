@@ -1,5 +1,6 @@
-import { currentReaderRoute, currentReaderSelection } from "../db/reader-route.ts";
-import { currentFederalDirectoryEdge, currentReaderAuthorityEdge } from "../registry/runtime-edge.ts";
+import { AsyncLocalStorage } from "node:async_hooks";
+import { currentReaderSelection } from "../db/reader-route.ts";
+import { currentReaderAuthorityEdge } from "../registry/runtime-edge.ts";
 import {
   CivicDataStoreUnavailableError,
   civicDataReadNotInitialized,
@@ -7,11 +8,11 @@ import {
   type CivicDataReadResult,
   type PromotedCivicDataReadOptions,
 } from "../civic-data/read-model.ts";
-import { validateOnce } from "../civic-data/validated-once.ts";
+import { readStateAuthorityEntry, readStateAuthorityProjection } from "../civic-data/state-reader.ts";
+import { requireRegistryState } from "../civic-data/state-scopes.ts";
 import {
-  FEDERAL_DIRECTORY_SCOPE,
-  FEDERAL_DIRECTORY_SOURCE_ID,
   federalDirectoryProjectionIssues,
+  federalDirectoryScope,
   type FederalDirectoryReadModel,
 } from "./federal-directory-data-plane.ts";
 import type { DirectoryFile } from "./directory.ts";
@@ -19,21 +20,19 @@ import { peopleSourceScope } from "./people-sources.ts";
 import { federalDirectoryVersion } from "./people-version.ts";
 import type { OfficeholderSet } from "./types.ts";
 
-const selectedStates = new WeakMap<object, CivicDataReadResult<FederalDirectoryReadModel>>();
-let cache: FederalDirectoryReadModel | null = null;
-let readState: CivicDataReadResult<FederalDirectoryReadModel> = civicDataReadNotInitialized(
-  "FEDERAL_DIRECTORY",
-  FEDERAL_DIRECTORY_SCOPE,
-  "The federal directory canonical pointer has not been read for this process.",
-);
+type Read = CivicDataReadResult<FederalDirectoryReadModel>;
+type Context = { states: readonly string[]; read?: Read; pending?: Promise<Read> };
+const requests = new WeakMap<object, Context>(), jobs = new AsyncLocalStorage<Context>();
+const contextKey = () => currentReaderSelection() ?? currentReaderAuthorityEdge();
+const current = () => { const key = contextKey(); return key ? requests.get(key) : jobs.getStore(); };
 
 function validate(value: FederalDirectoryReadModel, versionId: string): void {
   const issues = federalDirectoryProjectionIssues(value);
   if (issues.length) throw new Error(`Federal directory projection ${versionId} is invalid: ${issues.join(", ")}.`);
 }
 
-/** Where standing portrait work publishes the verified photos it finds for the federal directory. */
-export const FEDERAL_PORTRAITS_SCOPE = peopleSourceScope("US", "people-portraits");
+/** Where a place's standing portrait work publishes the verified photos of its people, members of Congress included. */
+export const placePortraitsScope = (state: string) => peopleSourceScope(`US-${requireRegistryState(state)}`, "people-portraits");
 
 /** Each verified portrait is laid on its person; everything else about the directory is untouched. */
 export function withFederalPortraits(roster: OfficeholderSet, portraits: OfficeholderSet): OfficeholderSet {
@@ -47,93 +46,86 @@ export function withFederalPortraits(roster: OfficeholderSet, portraits: Officeh
   }) };
 }
 
-async function readFederalDirectoryWithPortraits(options: PromotedCivicDataReadOptions): Promise<CivicDataReadResult<FederalDirectoryReadModel>> {
-  const base = await readPromotedCivicData<FederalDirectoryReadModel>("FEDERAL_DIRECTORY", FEDERAL_DIRECTORY_SCOPE, options);
+/** One place's members of Congress as published, held to the directory's reader contract. */
+export async function readStateFederalDirectory(state: string, options: PromotedCivicDataReadOptions = {}): Promise<Read> {
+  const result = await readPromotedCivicData<FederalDirectoryReadModel>("FEDERAL_DIRECTORY", federalDirectoryScope(state), options);
+  if (result.kind === "PROMOTED" || result.kind === "BOOTSTRAP") validate(result.value, result.metadata.versionId ?? result.kind);
+  return result;
+}
+
+async function readPlace(state: string, options: PromotedCivicDataReadOptions): Promise<Read> {
+  type Portraits = { readonly roster: OfficeholderSet };
+  const base = options.store ? await readStateFederalDirectory(state, options)
+    : (await readStateAuthorityProjection<FederalDirectoryReadModel>("federal-directory", state)).result;
   if (base.kind !== "PROMOTED" && base.kind !== "BOOTSTRAP") return base;
-  // A portrait scope that cannot be read leaves the directory as it was; portraits never make the directory unavailable.
-  const portraits = await readPromotedCivicData<{ readonly roster: OfficeholderSet }>("FEDERAL_DIRECTORY", FEDERAL_PORTRAITS_SCOPE, options).catch(() => null);
+  if (!options.store) validate(base.value, base.metadata.versionId ?? base.kind);
+  // A portrait record that cannot be read leaves the place's directory as it was.
+  const portraits = await (options.store ? readPromotedCivicData<Portraits>("STATE_LEGISLATOR", placePortraitsScope(state), options)
+    : readStateAuthorityEntry<Portraits>("federal-directory", state, "STATE_LEGISLATOR", placePortraitsScope(state)).then(read => read.result)).catch(() => null);
   if (portraits === null || (portraits.kind !== "PROMOTED" && portraits.kind !== "BOOTSTRAP") || !portraits.value?.roster?.officeholders) return base;
   const roster = withFederalPortraits(base.value.roster, portraits.value.roster);
   if (roster === base.value.roster) return base;
   const value: FederalDirectoryReadModel = { ...base.value, roster };
   const versionId = federalDirectoryVersion(base.metadata.versionId ?? base.kind, portraits.metadata.versionId ?? portraits.kind);
-  const metadata = { ...base.metadata, versionId };
-  return base.kind === "PROMOTED" ? { ...base, value, metadata, projection: { ...base.projection, versionId, payload: value } } : { ...base, value, metadata };
+  return { ...base, value, metadata: { ...base.metadata, versionId }, ...(base.kind === "PROMOTED" ? { projection: { ...base.projection, versionId, payload: value } } : {}) } as Read;
 }
 
-export async function readFederalDirectoryProjection(
-  options: PromotedCivicDataReadOptions = {},
-): Promise<CivicDataReadResult<FederalDirectoryReadModel>> {
-  const edge = currentFederalDirectoryEdge();
-  if (!options.store && edge && (!options.bypassCache || currentReaderSelection() || currentReaderRoute() !== "unattributed" || currentReaderAuthorityEdge()?.edgeOnly)) {
-    primeFederalDirectoryFromValue(edge.value, edge.versionId);
-    return readState;
-  }
-  const result = await readFederalDirectoryWithPortraits(options);
-  readState = result;
+function combine(reads: readonly Read[], states: readonly string[]): Read {
+  const served = reads.flatMap(read => read.kind === "PROMOTED" || read.kind === "BOOTSTRAP" ? [read] : []);
+  if (!served.length) return reads[0];
+  if (states.length === 1) return served[0];
+  const values = served.map(read => read.value), first = values[0];
+  const value: FederalDirectoryReadModel = { ...first,
+    currentMembershipComplete: values.every(row => row.currentMembershipComplete === true),
+    roster: { ...first.roster, officeholders: values.flatMap(row => row.roster.officeholders), divisions: values.flatMap(row => row.roster.divisions), unmatched: values.flatMap(row => row.roster.unmatched) },
+    directory: { ...first.directory, counts: {}, committees: Object.assign({}, ...values.map(row => row.directory.committees)), byMember: Object.assign({}, ...values.map(row => row.directory.byMember)) } };
+  return { kind: "BOOTSTRAP", value, metadata: { ...served[0].metadata, scope: states.map(federalDirectoryScope).join("|"),
+    versionId: served.map(read => read.metadata.versionId).join("|"), lastKnownGoodVersionId: null },
+    detail: `The named places' members of Congress.${served.length < reads.length ? " Some requested place records are unavailable." : ""}` };
+}
+
+/** The selection's divisions name their members, so records bound to those members are part of what the request may read. */
+function selectMembers(read: Read): Read {
   const selection = currentReaderSelection();
-  if (selection) selectedStates.set(selection, result);
-  if (result.kind === "PROMOTED" || result.kind === "BOOTSTRAP") {
-    validate(result.value, result.metadata.versionId ?? result.kind);
-    if (!selection) cache = result.value;
-  } else {
-    if (!selection) cache = null;
-  }
-  return result;
-}
-
-export async function refreshFederalDirectoryFromPromoted(options: PromotedCivicDataReadOptions = {}): Promise<string | null> {
-  const result = await readFederalDirectoryProjection(options);
-  if (result.kind === "STORE_UNREACHABLE") throw new CivicDataStoreUnavailableError(result);
-  if (result.kind === "NOT_RECORDED") throw new Error(result.detail);
-  return result.kind === "PROMOTED" ? result.metadata.versionId : null;
-}
-
-/** Prime the cache from a validated edge serving artifact, with no database read; validated once per edge object and version. */
-export function primeFederalDirectoryFromValue(value: FederalDirectoryReadModel, versionId: string): void {
-  validateOnce("federal-directory", value, versionId, () => validate(value, versionId));
-  const selection = currentReaderSelection();
-  if (!selection) cache = value;
-  if (selection) for (const division of value.roster.divisions) {
+  if (selection && (read.kind === "PROMOTED" || read.kind === "BOOTSTRAP")) for (const division of read.value.roster.divisions) {
     if (selection.keys.has(division.ocdId)) selection.keys.add(division.officeholderId);
   }
-  readState = {
-    kind: "BOOTSTRAP",
-    value,
-    metadata: {
-      recordClass: "FEDERAL_DIRECTORY",
-      scope: FEDERAL_DIRECTORY_SCOPE,
-      sourceId: FEDERAL_DIRECTORY_SOURCE_ID,
-      version: null,
-      versionId,
-      lastKnownGoodVersionId: versionId,
-      sourceThrough: null,
-      retrievedAt: null,
-      promotedAt: null,
-      stale: "CURRENT",
-      staleAt: null,
-    },
-    detail: `Served from the federal-directory edge artifact (version ${versionId}); the promotion receipt stays on the authoritative database path.`,
-  };
-  if (selection) selectedStates.set(selection, readState);
+  return read;
 }
 
-export function federalDirectoryReadState(): CivicDataReadResult<FederalDirectoryReadModel> {
-  const selection = currentReaderSelection();
-  return selection ? selectedStates.get(selection) ?? readState : readState;
+/** The named places' members of Congress, each place read from its own record; nothing outside them is read. */
+export async function readFederalDirectoryProjection(states: readonly string[], options: PromotedCivicDataReadOptions = {}): Promise<Read> {
+  const selected = [...new Set(states.map(requireRegistryState))].sort();
+  if (!selected.length) throw new Error("FEDERAL_DIRECTORY_PLACES_NOT_SELECTED");
+  const key = contextKey(), existing = current();
+  const sameStates = existing && selected.join() === existing.states.join();
+  if (!options.store && !options.bypassCache && sameStates && (existing.read || existing.pending)) return selectMembers(existing.read ?? await existing.pending!);
+  const context: Context = sameStates ? existing : { states: selected };
+  if (key) requests.set(key, context); else if (context !== existing) jobs.enterWith(context);
+  context.pending = (async () => {
+    const reads: Read[] = [];
+    for (const state of selected) reads.push(await readPlace(state, options));
+    return context.read = combine(reads, selected);
+  })();
+  return selectMembers(await context.pending);
+}
+
+export async function refreshFederalDirectoryFromPromoted(states: readonly string[], options: PromotedCivicDataReadOptions = {}): Promise<string | null> {
+  const result = await readFederalDirectoryProjection(states, options);
+  if (result.kind === "STORE_UNREACHABLE") throw new CivicDataStoreUnavailableError(result);
+  if (result.kind === "NOT_RECORDED") throw new Error(result.detail);
+  return result.metadata.versionId;
+}
+
+export function federalDirectoryReadState(): Read {
+  return current()?.read ?? civicDataReadNotInitialized("FEDERAL_DIRECTORY", "unselected places",
+    "The named places' members of Congress have not been read in this context.");
 }
 
 export function getFederalDirectoryReadModel(): FederalDirectoryReadModel {
-  const selection = currentReaderSelection();
-  if (selection) {
-    const edge = currentFederalDirectoryEdge();
-    if (edge) return edge.value;
-    const state = selectedStates.get(selection);
-    if (state?.kind === "PROMOTED" || state?.kind === "BOOTSTRAP") return state.value;
-    if (state) throw new Error("The requested authority could not be read for this request.");
-  }
-  if (!cache) throw new Error(`Federal directory is ${readState.kind}; call readFederalDirectoryProjection before using the synchronous projection.`);
-  return cache;
+  const state = federalDirectoryReadState();
+  if (state.kind === "PROMOTED" || state.kind === "BOOTSTRAP") return state.value;
+  throw new Error(`The requested places' members of Congress are ${state.kind}.`);
 }
 
 export function getFederalOfficeholderSet(): OfficeholderSet {

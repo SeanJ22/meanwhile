@@ -9,8 +9,7 @@ export function readerRoute<A extends unknown[], R>(path: string, read: (...args
     return withReaderSelection(selection, () => withReaderAuthorityEdge(geographyEdge, async () => {
       if (!families.length) return read(...args);
       const { readReaderManifest, ensureReaderAuthorityEdge } = await import("../meetings/edge-serving.ts");
-      const manifest = await readReaderManifest();
-      const edge = manifest ? await ensureReaderAuthorityEdge(manifest, undefined, families) : null;
+      const edge = await ensureReaderAuthorityEdge(await readReaderManifest(), undefined, families);
       return withReaderAuthorityEdge(edge, () => read(...args));
     }));
   });
@@ -80,9 +79,8 @@ async function selectionForReader(args: readonly unknown[]): Promise<{
     const { currentReaderAuthorityEdge, withReaderAuthorityEdge } = await import("../registry/runtime-edge.ts");
     geographyEdge = currentReaderAuthorityEdge();
     if (!geographyEdge) {
-      const { readReaderManifest, ensureReaderAuthorityEdge } = await import("../meetings/edge-serving.ts");
-      const manifest = await readReaderManifest();
-      geographyEdge = manifest ? await ensureReaderAuthorityEdge(manifest, undefined, ["census-districts"]) : null;
+      const { ensureReaderAuthorityEdge } = await import("../meetings/edge-serving.ts");
+      geographyEdge = await ensureReaderAuthorityEdge(null, undefined, ["census-districts"]);
     }
     divisions = await withReaderAuthorityEdge(geographyEdge, async () => {
       const { readerDivisionIdsAt } = await import("../registry/server.ts");
@@ -100,20 +98,10 @@ async function selectionForReader(args: readonly unknown[]): Promise<{
   }
   const { registryJurisdictions } = await import("../civic-data/state-scopes.ts");
   const { governmentStateOf } = await import("../registration/listings.ts");
-  let states = namedStates.length ? namedStates : [...new Set([...keys].flatMap(key => {
+  const states = namedStates.length ? namedStates : [...new Set([...keys].flatMap(key => {
     const explicit = /^(?:state:|statewide:)([a-z]{2})(?:\/|$)/i.exec(key)?.[1];
     return explicit ? [explicit.toUpperCase()] : registryJurisdictions(key).length ? registryJurisdictions(key) : governmentStateOf(key) ? [governmentStateOf(key)!] : [];
   }))];
-  if (!states.length && [...keys].some(key => key.startsWith("congress:"))) {
-    const { readReaderManifest, ensureReaderAuthorityEdge } = await import("../meetings/edge-serving.ts");
-    const manifest = await readReaderManifest();
-    const edge = manifest ? await ensureReaderAuthorityEdge(manifest, undefined, ["federal-directory"]) : null;
-    if (edge) geographyEdge = { ...geographyEdge, ...edge };
-    const federalDivisions = edge?.federalDirectory?.value.roster.divisions.filter(row => keys.has(row.officeholderId)).map(row => row.ocdId) ?? [];
-    for (const id of federalDivisions) keys.add(id);
-    states = [...new Set(federalDivisions.flatMap(registryJurisdictions))];
-    if (federalDivisions.length) divisions = federalDivisions;
-  }
   const selection = keys.size || point || governmentWindow || states.length
     ? { keys, states, ...(point ? { point } : {}), ...(divisions ? { divisions } : {}), ...(governmentWindow ? { governmentWindow } : {}) } : undefined;
   return { selection, geographyEdge };

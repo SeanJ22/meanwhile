@@ -1,5 +1,7 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import test from "node:test";
 import { acquireDotGov } from "../scripts/fetch-dotgov.mts";
 import { dotGovCandidate } from "../lib/civic-data/candidate-builders.ts";
@@ -11,9 +13,9 @@ import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { parseCsv } from "../lib/reference/csv.ts";
 import { governmentNativeId, type RegistrationGovernmentListing } from "../lib/registration/listings.ts";
 import type { RegistrationReadModel } from "../lib/registration/candidate.ts";
-import { promotedEdgePointers, readPromotedEdgeFamilies } from "../lib/civic-data/promoted-edge-publication.ts";
-import type { PromotedFamilyArtifactValue } from "../lib/meetings/edge-artifacts.ts";
-import { READER_MAP_AUTHORITY_FAMILIES } from "../lib/meetings/edge-serving.ts";
+import { promotedEdgePointers, publishPromotedEdgeFamily } from "../lib/civic-data/promoted-edge-publication.ts";
+import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
+import { authorityPointerKey, READER_MAP_AUTHORITY_FAMILIES, readServedPromotedFamily } from "../lib/meetings/edge-serving.ts";
 
 const csv = readFileSync("tests/fixtures/dotgov/current-full.csv", "utf8");
 const source = JSON.parse(readFileSync("tests/fixtures/dotgov/retrieval.json", "utf8")) as { sha: string; retrievedAt: string; sourceUrl: string; domains: number };
@@ -88,7 +90,7 @@ test("domain enrichment preserves the government denominator, source website and
   assert.equal(snapshot.domains.length, source.domains, "unmatched rows remain in the complete registry");
 });
 
-test("a full CISA candidate promotes through the typed Reader and reaches geographic government listings from the edge", async () => {
+test("a full CISA candidate promotes through the typed Reader and reaches geographic government listings from the edge", async t => {
   const store = new MemoryRoutineDataStore();
   const candidate = dotGovCandidate({ snapshot, rawText: csv, finalUrl: source.sourceUrl, retrievedAt: NOW });
   const outcome = await processRegisteredRoutineCandidate(store, "dotgov", candidate, NOW);
@@ -96,18 +98,19 @@ test("a full CISA candidate promotes through the typed Reader and reaches geogra
   const read = await readDotGovProjection({ store, now: NOW, bypassCache: true });
   assert.equal(read.kind, "PROMOTED");
   assert.equal(read.value?.domains.length, source.domains);
-  const published = await readPromotedEdgeFamilies({ store, servedManifest: null, now: NOW,
-    families: { "government-domains": promotedEdgePointers()["government-domains"] } });
-  assert.deepEqual(published.skipped, []);
-  const family = published.authority["government-domains"];
-  assert.ok(family && "value" in family);
-  const edge = (family.value as PromotedFamilyArtifactValue).entries[0]!;
+  const directory = mkdtempSync(join(tmpdir(), "dotgov-edge-"));
+  t.after(() => rmSync(directory, { recursive: true, force: true }));
+  const artifactStore = new LocalFileArtifactStore(directory);
+  const published = await publishPromotedEdgeFamily({ store, artifactStore, now: NOW, family: "government-domains", place: null });
+  assert.deepEqual(published, { published: ["government-domains"], skipped: [] });
+  const ref = (await artifactStore.readJsonPointer<Parameters<typeof readServedPromotedFamily>[1]>(authorityPointerKey("government-domains")))!.value;
+  const edge = (await readServedPromotedFamily("government-domains", ref, artifactStore))!.entries[0]!;
   assert.ok(edge);
   const model = { state: "CA", governments: [city], divisions: [], bodies: [] } as unknown as RegistrationReadModel;
   const listings = await withReaderAuthorityEdge({
     edgeOnly: true,
     promoted: new Map([[`DOTGOV_REFERENCE:${DOTGOV_SCOPE}`, edge]]),
-    registrations: { states: new Set(["ca"]), load: async () => ({ value: model, versionId: "census-fixture" }) },
+    registrations: { load: async () => ({ value: model, versionId: "census-fixture" }) },
   }, () => governmentListingsForDivisions([city.associations[0].divisionId]));
   assert.deepEqual(listings.unavailableStates, []);
   assert.equal(listings.records.length, 1);

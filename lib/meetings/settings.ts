@@ -1,13 +1,14 @@
 /** Definitions live with the meeting readers; the shared settings registry loads this module. */
 import type { AdminConfig } from "../control-plane/gateway/admin-config.ts";
 import { registerSetting, readSetting, type SettingValue } from "../control-plane/settings.ts";
+import { MEETING_CLOCK_DEFAULTS, installMeetingClock } from "../civic-data/contracts.ts";
 import { CONCLUDED_LOOKBACK_DAYS, UPCOMING_HORIZON_DAYS, MEETING_HELD_LOOKBACK_DAYS, MEETING_HELD_HORIZON_DAYS } from "./constants.ts";
 
 export const MEETING_SETTING_DEFAULTS = {
   "meetings.shownBackDays": CONCLUDED_LOOKBACK_DAYS, "meetings.shownAheadDays": UPCOMING_HORIZON_DAYS,
   "meetings.heldBackDays": MEETING_HELD_LOOKBACK_DAYS, "meetings.heldAheadDays": MEETING_HELD_HORIZON_DAYS,
-  "meetings.hourlyWindowDays": 7, "meetings.postedToLiveTargetMinutes": 60,
-  "meetings.hotEveryMinutes": 60, "meetings.baseEveryMinutes": 720,
+  "meetings.hourlyWindowDays": MEETING_CLOCK_DEFAULTS.windowMs / 86_400_000, "meetings.postedToLiveTargetMinutes": 60,
+  "meetings.hotEveryMinutes": MEETING_CLOCK_DEFAULTS.hotEveryMs / 60_000, "meetings.baseEveryMinutes": MEETING_CLOCK_DEFAULTS.baseEveryMs / 60_000,
 } as const;
 export type MeetingSettingKey = keyof typeof MEETING_SETTING_DEFAULTS;
 const labels: Record<MeetingSettingKey, string> = {
@@ -39,11 +40,10 @@ export function readMeetingSettings(config: AdminConfig | null): MeetingSettings
   return meetingSettingsFromValues(Object.fromEntries((Object.keys(MEETING_SETTING_DEFAULTS) as MeetingSettingKey[])
     .map(key => [key, readSetting(config, key, MEETING_SETTING_DEFAULTS[key])])));
 }
-/** Required schedules can go faster and their hourly window can grow, never shrink. */
-export function meetingScheduleFromSettings(config: AdminConfig | null) {
+/** The check clock Admin's settings state, installed where meeting schedules read it. Faster is allowed, slower is refused by the settings. */
+export function installMeetingClockFrom(config: AdminConfig | null): void {
   const settings = readMeetingSettings(config);
-  return { kind: "SITTING_WINDOW" as const, windowMs: settings.hourlyWindowDays * 86_400_000,
-    hotEveryMs: settings.hotEveryMinutes * 60_000, baseEveryMs: settings.baseEveryMinutes * 60_000 };
+  installMeetingClock({ windowMs: settings.hourlyWindowDays * 86_400_000, hotEveryMs: settings.hotEveryMinutes * 60_000, baseEveryMs: settings.baseEveryMinutes * 60_000 });
 }
 
 /** Wider held acquisition windows; this does not remove permanent meeting history. */

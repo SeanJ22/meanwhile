@@ -114,7 +114,7 @@ body:has(main.admin) { background: var(--bg, #1b1c22); }
    specificity — that is the whole point (see the header). A control rule that
    declares a background or box-shadow belongs in here or nowhere. */
 @layer ce-recipe {
-.admin { max-width: 60rem; margin: 0 auto; padding: 1.5rem 1.25rem 6rem; line-height: 1.5; color: var(--ce-fg); background: var(--ce-void); }
+.admin { line-height: 1.5; color: var(--ce-fg); background: var(--ce-void); }
 .admin h1 { font-size: 1.7rem; margin: 0 0 .25rem; letter-spacing: -.02em; line-height: 1.15; }
 .admin h2 { font-size: 1.25rem; margin: 2.5rem 0 .6rem; padding-top: .9rem; letter-spacing: -.01em; position: relative; border: 0; }
 .admin h2::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 1px; background: var(--ce-hairline); }

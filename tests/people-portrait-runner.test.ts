@@ -9,7 +9,7 @@ import { readPeopleSourceProjection } from "../lib/civic-data/people-source-publ
 import { readStatePeopleProjection } from "../lib/state-rollcalls/legislators.ts";
 import { normalize, yamlToPeople } from "../lib/sources/plural/index.ts";
 import { normalizeCongressDirectory } from "../lib/officials/congress-normalize.ts";
-import { federalDirectoryCandidate } from "../lib/officials/federal-directory-data-plane.ts";
+import { federalDirectoryCandidate, federalDirectoryContractId, federalDirectoryForState } from "../lib/officials/federal-directory-data-plane.ts";
 import { readFederalDirectoryProjection } from "../lib/officials/federal-directory-read-model.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { portraitHash, type PortraitSources } from "../lib/photos/evidence.ts";
@@ -30,10 +30,9 @@ async function images(){
   return (id:string,sources:PortraitSources,at:string,signal:AbortSignal)=>storeVerifiedPortrait(id,sources,at,
     {read:async()=>({bytes,retrievedAt:NOW,contentType:"image/png"}),put:async()=>{}},"officials",signal);
 }
-test("standing portrait commands require exactly one data-backed state or the federal scope",()=>{
+test("standing portrait commands require exactly one data-backed state",()=>{
   assert.equal(parsePeoplePortraitArguments(["--promote","--state=az"]),"az");
-  assert.equal(parsePeoplePortraitArguments(["--promote","--federal"]),"US");
-  for(const args of [["--state=az"],["--promote","--state=zz"],["--promote","--federal","--state=az"]])
+  for(const args of [["--state=az"],["--promote","--state=zz"],["--promote","--federal"],["--promote","--federal","--state=az"]])
     assert.throws(()=>parsePeoplePortraitArguments(args),/PEOPLE_PORTRAITS_EXACT_SCOPE_REQUIRED/);
 });
 
@@ -61,20 +60,20 @@ test("a scheduled portrait pass reads held people without refreshing their roste
   assert.equal(acquired,1);
 });
 
-test("federal standing portraits enrich the live directory and hold their own independent source clock",async t=>{
+test("a place's portrait run also enriches its members of Congress, on the place's own portrait clock",async t=>{
   const store=new MemoryRoutineDataStore(),sourceUrl=`https://raw.githubusercontent.com/unitedstates/congress-legislators/${SHA}/legislators-current.yaml`;
   const raw={"legislators-current":[{id:{bioguide:"A000001"},name:{first:"Jane",last:"Example"},terms:[{type:"rep",state:"AZ",district:1,start:"2025-01-03",end:"2027-01-03",url:"https://jane.house.gov/",phone:"202-225-1000"}]}]};
-  const projection=normalizeCongressDirectory(raw,SHA,NOW,null,{},NOW);
-  const candidate=await federalDirectoryCandidate({vault:new MemoryEvidenceStore(),projection,retrievedAt:NOW,acquisitions:[{requestedUrl:sourceUrl,finalUrl:sourceUrl,httpStatus:200,retrievedAt:NOW,body:JSON.stringify(raw["legislators-current"])}]});
-  assert.ok((await processRegisteredManualCandidate(store,"congress-bulk-roster",candidate,NOW)).promoted);
+  const projection=federalDirectoryForState(normalizeCongressDirectory(raw,SHA,NOW,null,{},NOW),"AZ");
+  const candidate=await federalDirectoryCandidate({state:"AZ",vault:new MemoryEvidenceStore(),projection,retrievedAt:NOW,acquisitions:[{requestedUrl:sourceUrl,finalUrl:sourceUrl,httpStatus:200,retrievedAt:NOW,body:JSON.stringify(raw["legislators-current"])}]});
+  assert.ok((await processRegisteredManualCandidate(store,federalDirectoryContractId("AZ"),candidate,NOW)).promoted);
   t.mock.method(console,"log",()=>{});
-  const result=await refreshPeoplePortraits({ vault, store,state:"US",options:{now:()=>NOW,storePortrait:await images(),
+  const result=await refreshPeoplePortraits({ vault, store,state:"az",options:{now:()=>NOW,storePortrait:await images(),
     acquire:async options=>page(options,JSON.stringify({member:{bioguideId:"A000001",depiction:{imageUrl:"https://congress.gov/jane.png"}}}))}});
   assert.ok(result.outcome.promoted);
-  const reader=await readFederalDirectoryProjection({store,now:NOW,bypassCache:true});
+  const reader=await readFederalDirectoryProjection(["AZ"],{store,now:NOW,bypassCache:true});
   assert.equal(reader.kind,"PROMOTED");if(reader.kind!=="PROMOTED")return;
   assert.ok(reader.value.roster.officeholders[0].photo);
   assert.equal(reader.value.roster.officeholders[0].phone,"202-225-1000");
-  const marker=await readPeopleSourceProjection("US","people-portraits",{store,now:NOW,bypassCache:true});
+  const marker=await readPeopleSourceProjection("US-AZ","people-portraits",{store,now:NOW,bypassCache:true});
   assert.equal(marker.kind,"PROMOTED");
 });

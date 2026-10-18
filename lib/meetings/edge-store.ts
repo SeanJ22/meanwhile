@@ -3,7 +3,7 @@ import { createHash, randomUUID } from "node:crypto";
 import { closeSync, linkSync, mkdirSync, openSync, readFileSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
 import { dirname, join, sep } from "node:path";
 
-import type { ReaderGeoArtifact, ReaderManifest } from "./edge-artifacts.ts";
+import type { ReaderManifest } from "./edge-artifacts.ts";
 
 export const READER_ARTIFACT_STORE_NAME = "reader-artifacts";
 export const READER_MANIFEST_KEY = "reader/manifest.json";
@@ -17,7 +17,6 @@ export interface StoredManifest {
 export interface ReaderArtifactStore {
   readonly kind: "netlify-blobs" | "local-file";
   readManifest(): Promise<StoredManifest | null>;
-  readArtifact(key: string): Promise<ReaderGeoArtifact | null>;
   /** Store complete bytes once, under their digest; never overwrite a serving artifact. */
   putImmutable(bytes: Uint8Array, suffix: "json" | "json.gz"): Promise<string>;
   /** Compare-and-set against `expectedEtag` (null = expect absent); modified:false when the stored ETag moved. */
@@ -65,12 +64,6 @@ export class NetlifyBlobsArtifactStore implements ReaderArtifactStore {
     const res = await store.getWithMetadata(READER_MANIFEST_KEY, { type: "json" });
     if (!res || res.data == null) return null;
     return { manifest: res.data as ReaderManifest, etag: res.etag ?? null };
-  }
-
-  async readArtifact(key: string): Promise<ReaderGeoArtifact | null> {
-    const store = await this.store("eventual");
-    const data = await store.get(key, { type: "json" });
-    return (data as ReaderGeoArtifact | null) ?? null;
   }
 
   async readJsonPointer<T>(key: string): Promise<{ value: T; etag: string | null } | null> {
@@ -136,14 +129,6 @@ export class LocalFileArtifactStore implements ReaderArtifactStore {
     } catch (error) {
       if ((error as NodeJS.ErrnoException).code === "ENOENT") return null;
       throw error;
-    }
-  }
-
-  async readArtifact(key: string): Promise<ReaderGeoArtifact | null> {
-    try {
-      return JSON.parse(readFileSync(this.path(key), "utf8")) as ReaderGeoArtifact;
-    } catch {
-      return null;
     }
   }
 

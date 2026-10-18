@@ -6,6 +6,7 @@ import {
   askedGapKey,
   askedWords,
   foldAskGapObservations,
+  observationDayStart,
   type AskedGap,
   type AskGapObservation,
 } from "./ask-gap-observations.ts";
@@ -13,7 +14,8 @@ import type { Attempt, ExecutionLease, WorkerRef } from "./attempt.ts";
 import { isProofProject, type CostEntry } from "./cost.ts";
 import { NO_MODEL_KEY, ROLE_COST_POLICY, modelKeyOf } from "./cost-panel.ts";
 import { displayNameOf, words } from "./display-name.ts";
-import { servedWitness } from "./served-reader.ts";
+import { SERVED_READER_MAX_AGE_MS, servedWitness } from "./served-reader.ts";
+import { addExact, exactSum, exactValue, mergeExact, type ExactSum } from "./exact-sum.ts";
 import {
   gap,
   held,
@@ -46,7 +48,6 @@ import { isTerminalState, type WorkItem, type WorkItemState } from "./work-item.
 import type { WorkQuestion } from "./work-question.ts";
 import { US_STATES } from "./readiness/catalog.ts";
 import type { WorkerResultRecord } from "./workers/types.ts";
-import { assignmentHistoryTerms } from "./admin-view/assignment-history.ts";
 
 export const ASSIGNMENT_VIEW_VERSION = "assignment-view/v1" as const;
 const STATE_CODE_BY_NAME = new Map(US_STATES.map(state => [state.name, state.code.toLowerCase()]));
@@ -570,7 +571,9 @@ export function isSharedCost(entry: Pick<CostEntry, "routeId" | "attemptId">): b
   return entry.routeId === SCOUT_PREWARM_ROUTE_ID || entry.attemptId.startsWith("scout-prewarm:");
 }
 
-export function workerModelOf(worker: WorkerRef | null | undefined): WorkerModel {
+type WorkerIdentity = Pick<WorkerRef, "version" | "provider"> & Partial<WorkerRef>;
+
+export function workerModelOf(worker: WorkerIdentity | null | undefined): WorkerModel {
   if (!worker) return { kind: "NOT_RECORDED", says: "model not recorded — the attempt carries no worker identity" };
   const version = (worker.version ?? "").trim();
   const provider = (worker.provider ?? "").trim();
@@ -580,9 +583,9 @@ export function workerModelOf(worker: WorkerRef | null | undefined): WorkerModel
   return { kind: "MODEL", id: version };
 }
 
-function canReachPaidModel(role: string, attempt: Attempt | undefined): boolean {
-  if (attempt) {
-    const model = workerModelOf(attempt.worker);
+function canReachPaidModel(role: string, worker: WorkerIdentity | undefined): boolean {
+  if (worker) {
+    const model = workerModelOf(worker);
     if (model.kind === "MODEL") return true;
     if (model.kind === "PLAIN_CODE") return false;
   }
@@ -593,13 +596,93 @@ function canReachPaidModel(role: string, attempt: Attempt | undefined): boolean 
 
 type CostRowKind = "MEASURED" | "NO_MODEL_CALL" | "PLAIN_CODE" | "UNMEASURED";
 
-function costRowKind(entry: CostEntry, attempt: Attempt | undefined): CostRowKind {
+/** `worker` is the charge's Attempt's worker, absent when the Attempt is not on record. */
+function costRowKind(entry: CostEntry, worker: WorkerIdentity | undefined): CostRowKind {
   const usd = entry.cost.usd;
-  const modelCapable = canReachPaidModel(entry.role, attempt);
+  const modelCapable = canReachPaidModel(entry.role, worker);
   if (typeof usd === "number" && Number.isFinite(usd)) {
     return usd === 0 && entry.cost.requestCount === 0 && modelCapable ? "NO_MODEL_CALL" : "MEASURED";
   }
   return modelCapable ? "UNMEASURED" : "PLAIN_CODE";
+}
+
+const reportsDollars = (kind: CostRowKind): boolean => kind === "MEASURED" || kind === "NO_MODEL_CALL";
+
+/** The whole ledger as the assignment summary states it, folded one charge at a time. */
+export interface AssignmentCostTotals {
+  rows: number;
+  measured: number;
+  readonly usd: ExactSum;
+  readonly attributed: ExactSum;
+  shared: number;
+  readonly sharedUsd: ExactSum;
+  unattributed: number;
+  readonly unattributedUsd: ExactSum;
+  modelRows: number;
+  unmeasuredModel: number;
+  plainCode: number;
+}
+
+export const assignmentCostTotals = (): AssignmentCostTotals => ({ rows: 0, measured: 0, usd: exactSum(), attributed: exactSum(), shared: 0,
+  sharedUsd: exactSum(), unattributed: 0, unattributedUsd: exactSum(), modelRows: 0, unmeasuredModel: 0, plainCode: 0 });
+
+/** `assigned` says whether an assignment holds the charge's work item. */
+export function foldAssignmentCost(t: AssignmentCostTotals, e: CostEntry, worker: WorkerIdentity | undefined, assigned: boolean): void {
+  const kind = costRowKind(e, worker);
+  const usd = reportsDollars(kind) ? (e.cost.usd ?? 0) : 0;
+  t.rows += 1;
+  if (reportsDollars(kind)) {
+    t.measured += 1;
+    addExact(t.usd, usd);
+  }
+  if (kind === "PLAIN_CODE") t.plainCode += 1;
+  else t.modelRows += 1;
+  if (kind === "UNMEASURED") t.unmeasuredModel += 1;
+  if (isSharedCost(e)) {
+    t.shared += 1;
+    addExact(t.sharedUsd, usd);
+  } else if (assigned) addExact(t.attributed, usd);
+  else {
+    t.unattributed += 1;
+    addExact(t.unattributedUsd, usd);
+  }
+}
+
+const round6 = (n: number): number => Math.round(n * 1_000_000) / 1_000_000;
+
+export function assignmentCostSummaryOf(t: AssignmentCostTotals): AssignmentCostSummary {
+  const ledgerTotal = t.measured === 0 ? null : round6(exactValue(t.usd));
+  const ledgerSource = "cp_log_costs (every row, read at publish)";
+  const ofLedger = (value: ExactSum, contract: string): Held<Measured> =>
+    ledgerTotal === null
+      ? gap("OURS", "no ledger row reported a dollar figure, so there is no measured total to state this against")
+      : held(measured(Math.min(round6(exactValue(value)), ledgerTotal), ledgerTotal, contract, ledgerSource));
+  return {
+    ledgerRows: t.rows,
+    ledgerMeasuredUsd: ledgerTotal,
+    attributed: ofLedger(t.attributed, "measured dollars joined to an assignment through its work items, of every measured dollar in the ledger"),
+    shared: {
+      rows: t.shared,
+      usd: ofLedger(t.sharedUsd, "measured dollars spent on shared work (the Scout prompt-cache pre-warm), of every measured dollar in the ledger"),
+      says:
+        t.shared === 0
+          ? "No shared cost row is in the ledger."
+          : `${plural(t.shared, "row")} of shared cost — the Scout prompt-cache pre-warm, which readies the cache for every hunter in a cycle and belongs to no single assignment. It is not split across assignments by guesswork, and the model it ran is not recorded on these rows.`,
+    },
+    unattributed: {
+      rows: t.unattributed,
+      usd: ofLedger(t.unattributedUsd, "measured dollars on ledger rows whose work item joins no assignment, of every measured dollar in the ledger"),
+      says:
+        t.unattributed === 0
+          ? "Every other ledger row joined an assignment."
+          : `${plural(t.unattributed, "ledger row")} name a work item no assignment holds — spend we can see and cannot attribute.`,
+    },
+    unmeasuredModelRows:
+      t.modelRows === 0
+        ? gap("OURS", "no ledger row came from work that can reach a paid model")
+        : held(measured(t.unmeasuredModel, t.modelRows, "ledger rows from work that can reach a paid model and reported no dollar figure (unknown, never zero), of every such row", ledgerSource)),
+    plainCodeRows: t.plainCode,
+  };
 }
 
 const GUARD_CODES = new Set(["STAGE_ALREADY_REACHED", "STAGE_OUT_OF_ORDER"]);
@@ -1647,17 +1730,17 @@ function costOf(g: Gathered, idx: Index, denominatorUsd: number | null): Assignm
   let unmeasured = 0;
   let plainCodeRows = 0;
   let noModelCall = 0;
-  let usd = 0;
+  const usd = exactSum();
   let requests = 0;
   let bytes = 0;
   let durationMs = 0;
   const costAttempts = new Set<string>();
   for (const e of g.costs) {
     costAttempts.add(e.attemptId);
-    const kind = costRowKind(e, idx.attempts.get(e.attemptId));
-    if (kind === "MEASURED" || kind === "NO_MODEL_CALL") {
+    const kind = costRowKind(e, idx.attempts.get(e.attemptId)?.worker);
+    if (reportsDollars(kind)) {
       measuredRows += 1;
-      usd += e.cost.usd ?? 0;
+      addExact(usd, e.cost.usd ?? 0);
       if (kind === "NO_MODEL_CALL") noModelCall += 1;
     } else if (kind === "PLAIN_CODE") plainCodeRows += 1;
     else unmeasured += 1;
@@ -1666,13 +1749,13 @@ function costOf(g: Gathered, idx: Index, denominatorUsd: number | null): Assignm
     durationMs += Number.isFinite(e.cost.durationMs ?? 0) ? (e.cost.durationMs ?? 0) : 0;
   }
   const withoutRow = g.attempts.filter((a) => !costAttempts.has(a.id));
-  const attemptsWithoutCostRow = withoutRow.filter((a) => canReachPaidModel(a.worker?.role ?? "", a)).length;
+  const attemptsWithoutCostRow = withoutRow.filter((a) => canReachPaidModel(a.worker?.role ?? "", a.worker)).length;
   const plainAttemptsWithoutCostRow = withoutRow.length - attemptsWithoutCostRow;
   const roundsWorked = g.rounds.filter((r) => r.attempts.length > 0).length;
   const attempts = g.attempts.length;
   const retries = retriesOf(g);
   const toOwner = g.workItems.reduce((n, w) => n + (w.escalations?.length ?? 0), 0);
-  const amount = Math.round(usd * 1_000_000) / 1_000_000;
+  const amount = round6(exactValue(usd));
 
   let dollars: AssignmentDollars;
   if (g.costs.length === 0 && attempts === 0) {
@@ -2178,19 +2261,18 @@ function lastActivityOf(g: Gathered): string | null {
   ]);
 }
 
-function attributedUsd(all: readonly Gathered[], idx: Index): number | null {
-  let total = 0;
-  let any = false;
-  for (const g of all) {
-    for (const e of g.costs) {
-      const kind = costRowKind(e, idx.attempts.get(e.attemptId));
-      if (kind === "MEASURED" || kind === "NO_MODEL_CALL") {
-        total += e.cost.usd ?? 0;
-        any = true;
-      }
-    }
-  }
-  return any ? Math.round(total * 1_000_000) / 1_000_000 : null;
+/** Measured dollars joined to one assignment, or null when none of its charges reported any. */
+function groupUsd(g: Gathered, idx: Index): ExactSum | null {
+  let total: ExactSum | null = null;
+  for (const e of g.costs) if (reportsDollars(costRowKind(e, idx.attempts.get(e.attemptId)?.worker))) addExact(total ??= exactSum(), e.cost.usd ?? 0);
+  return total;
+}
+
+/** The cost-share denominator: every assignment's measured dollars together, or null when none reported any. */
+function attributedUsd(all: Iterable<ExactSum | null>): number | null {
+  let total: ExactSum | null = null;
+  for (const usd of all) if (usd !== null) mergeExact(total ??= exactSum(), usd);
+  return total === null ? null : round6(exactValue(total));
 }
 
 function buildRow(g: Gathered, idx: Index, src: AssignmentSources, clips: Clips, denominatorUsd: number | null): AssignmentRow {
@@ -2226,6 +2308,7 @@ function buildRow(g: Gathered, idx: Index, src: AssignmentSources, clips: Clips,
 interface Built {
   readonly idx: Index;
   readonly memberships: Map<string, Members>;
+  readonly gathered: ReadonlyMap<string, Gathered>;
   readonly rows: AssignmentRow[];
 }
 
@@ -2233,10 +2316,10 @@ function buildAll(src: AssignmentSources, options: AssignmentBuildOptions): Buil
   const idx = indexSources(src);
   const clips: Clips = { text: options.textClip ?? DRILLDOWN_TEXT_CLIP, list: options.listClip ?? DRILLDOWN_LIST_CLIP };
   const memberships = members(idx);
-  const gathered = [...memberships.values()].map((m) => gather(m, idx));
-  const denominatorUsd = options.costDenominatorUsd !== undefined ? options.costDenominatorUsd : attributedUsd(gathered, idx);
-  const rows = gathered.map((g) => buildRow(g, idx, src, clips, denominatorUsd)).sort((a, b) => a.id.localeCompare(b.id));
-  return { idx, memberships, rows };
+  const gathered = new Map([...memberships.values()].map((m) => [m.id, gather(m, idx)] as const));
+  const denominatorUsd = options.costDenominatorUsd !== undefined ? options.costDenominatorUsd : attributedUsd([...gathered.values()].map((g) => groupUsd(g, idx)));
+  const rows = [...gathered.values()].map((g) => buildRow(g, idx, src, clips, denominatorUsd)).sort((a, b) => a.id.localeCompare(b.id));
+  return { idx, memberships, gathered, rows };
 }
 
 export function buildAssignments(src: AssignmentSources, options: AssignmentBuildOptions = {}): AssignmentRow[] {
@@ -2286,8 +2369,6 @@ export interface AssignmentView {
   readonly builtAt: string;
   readonly summary: AssignmentSummary;
   readonly rows: readonly AssignmentListRow[];
-  readonly allRowsIndex?: readonly AssignmentIndexRow[];
-  readonly bodyAttempts?: readonly BodyPublicationAttempt[];
   readonly geographicCounts?: Readonly<Record<string, Readonly<Record<AssignmentState, number>>>>;
   readonly instructionCounts?: Readonly<Record<string, Readonly<Record<AssignmentState, number>>>>;
   /** Current work status by immutable key+receipt. A new same-key hunt never
@@ -2317,7 +2398,6 @@ export interface AssignmentIndexRow {
   readonly assignmentRefs?: readonly { readonly key: string; readonly ref: string; readonly at: string }[];
   /** Receipt-specific state; an unproven carried row is UNKNOWN. */
   readonly instructionStates?: Readonly<Record<string, AssignmentState>>;
-  readonly historyTerms?: readonly string[];
   readonly lastActivityAt: string | null;
   readonly lastAttemptAt?: string | null;
   readonly directDependentCount?: number | null;
@@ -2330,6 +2410,9 @@ export interface AssignmentIndexRow {
   readonly owner: AssignmentListRow["waiting"]["owner"];
   readonly nextAction: string;
 }
+
+/** An index row over the span it holds for: from an instant (null: from before it was derived) to the next its clock changes it at (null: none). */
+export type IndexSegment = AssignmentIndexRow & { readonly from: string | null; readonly until: string | null };
 
 export interface BodyPublicationAttempt {
   readonly bodyId: string;
@@ -2407,16 +2490,18 @@ export const ASSIGNMENT_SELECTION_RULE =
   "across every group until the size budget is reached, so no state is crowded out. " +
   "Every other assignment is counted in the totals and opens by its id.";
 
-function groupOrder(state: AssignmentState, now: number): (a: AssignmentRow, b: AssignmentRow) => number {
-  const since = (r: AssignmentRow): number => {
-    const t = ms(r.waiting.since);
+type Ordered = Pick<AssignmentIndexRow, "id" | "band" | "waitingSince" | "lastActivityAt">;
+
+function groupOrder(state: AssignmentState, now: number): (a: Ordered, b: Ordered) => number {
+  const since = (r: Ordered): number => {
+    const t = ms(r.waitingSince);
     return Number.isFinite(t) ? t : now;
   };
-  const recent = (r: AssignmentRow): number => {
+  const recent = (r: Ordered): number => {
     const t = ms(r.lastActivityAt);
     return Number.isFinite(t) ? t : 0;
   };
-  const band = (r: AssignmentRow): number => r.what.why.band?.band ?? 4;
+  const band = (r: Ordered): number => r.band ?? 4;
   switch (state) {
     case "WORKING":
     case "WAITING":
@@ -2431,196 +2516,74 @@ function groupOrder(state: AssignmentState, now: number): (a: AssignmentRow, b: 
   }
 }
 
-function summarize(built: Built, src: AssignmentSources, published: ReadonlyMap<string, number>): AssignmentSummary {
-  const { rows, idx } = built;
-  const total = rows.length;
-  const source = "every standing obligation, work item and orphaned execution record the control plane holds, joined at publish";
-  const byState = ASSIGNMENT_STATES.map((state) => ({
-    state,
-    count: measured(rows.filter((r) => r.state === state).length, total, `assignments whose state is ${STATE_WORDS[state].label.toLowerCase()}, of every assignment`, source),
-  }));
-  const byLane = ASSIGNMENT_LANES.map((lane) => ({
-    lane,
-    count: measured(rows.filter((r) => r.lane === lane).length, total, `assignments in the ${LANE_WORDS[lane].label.toLowerCase()} lane, of every assignment`, source),
-  }));
-  const groups: AssignmentGroup[] = [];
-  for (const state of ASSIGNMENT_STATES) {
-    for (const lane of ASSIGNMENT_LANES) {
-      const n = rows.filter((r) => r.state === state && r.lane === lane).length;
-      if (n === 0) continue;
-      groups.push({ state, lane, total: n, published: published.get(`${state}|${lane}`) ?? 0 });
-    }
-  }
-
-  const active = src.obligations.filter((o) => o.active);
-  const liveRetry = (id: string): string | null => {
-    const debt = idx.debts.get(id);
-    return debt && debt.consecutiveFailures > 0 ? debt.retryAt : null;
-  };
-  const eligible = active.map((o) => eligibleAtOf(o.nextDueAt ?? null, liveRetry(o.id))).filter((e): e is string => e !== null);
-  const overdueCount = eligible.filter((e) => ms(e) <= idx.now).length;
-  const overdue: Held<Measured> =
-    eligible.length === 0
-      ? gap("OURS", "no active standing obligation carries a stored next-due, so overdue cannot be counted")
-      : held(
-          measured(
-            overdueCount,
-            eligible.length,
-            "active standing obligations eligible for dispatch now — due, and past any failure backoff — and not yet dispatched, of every active standing obligation with a stored next-due",
-            "cp_obligations (nextDueAt) joined to cp_debts (retryAt)",
-          ),
-        );
-  const backoffCount = active.filter((o) => (idx.debts.get(o.id)?.consecutiveFailures ?? 0) > 0).length;
-  const inBackoff: Held<Measured> =
-    active.length === 0
-      ? gap("OURS", "no active standing obligation is on record")
-      : held(measured(backoffCount, active.length, "active standing obligations carrying a live freshness debt (failed and waiting on a backoff retry), of every active standing obligation", "cp_obligations joined to cp_debts"));
-
-  const assigned = new Set<string>();
-  for (const m of built.memberships.values()) for (const wi of m.workItemIds) assigned.add(wi);
-  let ledgerUsd = 0;
-  let ledgerMeasured = 0;
-  let attributed = 0;
-  let sharedRows = 0;
-  let sharedUsd = 0;
-  let unattributedRows = 0;
-  let unattributedUsd = 0;
-  let modelRows = 0;
-  let unmeasuredModel = 0;
-  let plainCodeRows = 0;
-  for (const e of src.costs) {
-    const kind = costRowKind(e, idx.attempts.get(e.attemptId));
-    const usd = kind === "MEASURED" || kind === "NO_MODEL_CALL" ? (e.cost.usd ?? 0) : 0;
-    if (kind === "MEASURED" || kind === "NO_MODEL_CALL") {
-      ledgerMeasured += 1;
-      ledgerUsd += usd;
-    }
-    if (kind === "PLAIN_CODE") plainCodeRows += 1;
-    else modelRows += 1;
-    if (kind === "UNMEASURED") unmeasuredModel += 1;
-    if (isSharedCost(e)) {
-      sharedRows += 1;
-      sharedUsd += usd;
-    } else if (assigned.has(e.workItemId)) {
-      attributed += usd;
-    } else {
-      unattributedRows += 1;
-      unattributedUsd += usd;
-    }
-  }
-  const round6 = (n: number): number => Math.round(n * 1_000_000) / 1_000_000;
-  const ledgerTotal = ledgerMeasured === 0 ? null : round6(ledgerUsd);
-  const ledgerSource = "cp_log_costs (every row, read at publish)";
-  const ofLedger = (value: number, contract: string): Held<Measured> =>
-    ledgerTotal === null
-      ? gap("OURS", "no ledger row reported a dollar figure, so there is no measured total to state this against")
-      : held(measured(Math.min(round6(value), ledgerTotal), ledgerTotal, contract, ledgerSource));
-  const costs: AssignmentCostSummary = {
-    ledgerRows: src.costs.length,
-    ledgerMeasuredUsd: ledgerTotal,
-    attributed: ofLedger(attributed, "measured dollars joined to an assignment through its work items, of every measured dollar in the ledger"),
-    shared: {
-      rows: sharedRows,
-      usd: ofLedger(sharedUsd, "measured dollars spent on shared work (the Scout prompt-cache pre-warm), of every measured dollar in the ledger"),
-      says:
-        sharedRows === 0
-          ? "No shared cost row is in the ledger."
-          : `${plural(sharedRows, "row")} of shared cost — the Scout prompt-cache pre-warm, which readies the cache for every hunter in a cycle and belongs to no single assignment. It is not split across assignments by guesswork, and the model it ran is not recorded on these rows.`,
-    },
-    unattributed: {
-      rows: unattributedRows,
-      usd: ofLedger(unattributedUsd, "measured dollars on ledger rows whose work item joins no assignment, of every measured dollar in the ledger"),
-      says:
-        unattributedRows === 0
-          ? "Every other ledger row joined an assignment."
-          : `${plural(unattributedRows, "ledger row")} name a work item no assignment holds — spend we can see and cannot attribute.`,
-    },
-    unmeasuredModelRows:
-      modelRows === 0
-        ? gap("OURS", "no ledger row came from work that can reach a paid model")
-        : held(measured(unmeasuredModel, modelRows, "ledger rows from work that can reach a paid model and reported no dollar figure (unknown, never zero), of every such row", ledgerSource)),
-    plainCodeRows,
-  };
-
-  const pipelineHeld: AssignmentSummary["pipeline"] =
-    src.pipeline === null
-      ? gap("OURS", "the promotion pipeline could not be read on this publish")
-      : (() => {
-          const linkedCount = src.pipeline.filter((s) => {
-            const scouted = s.byStage.SCOUTED;
-            if (!scouted) return false;
-            const source = scouted.source;
-            return source.kind === "FLEET_EXTRACTION" ? idx.workItems.has(source.workItemId) || assigned.has(source.workItemId) : source.kind !== "PROMOTED_CANDIDACY" && idx.attempts.has(source.attemptId);
-          }).length;
-          return held({
-            linked: measured(linkedCount, src.pipeline.length, "promotion-pipeline items whose source names an attempt or work item an assignment holds, of every pipeline item", "cp_log_promotion_pipeline"),
-            unlinked: src.pipeline.length - linkedCount,
-          });
-        })();
-
-  const askGapRows = src.obligations.flatMap((o) => {
-    const parsed = parseAskGapObligationId(o.id);
-    return parsed === null ? [] : [{ bodyId: parsed.bodyId, code: parsed.code, active: o.active }];
-  });
-  const openAskGaps = askGapRows.filter((row) => row.active);
-  const told = (() => {
-    const asked = built.idx.askedGaps;
-    if (asked === null) return undefined;
-    const openTold = openAskGaps.flatMap((row) => asked.get(askedGapKey(row.bodyId, row.code)) ?? []);
-    const allAsks = openTold.reduce((n, t) => n + t.asks, 0);
-    const source = `cp_ask_gap_observations (the last ${ASK_GAP_OBSERVATION_WINDOW_DAYS} days) joined to cp_obligations (active freshness:ask-gap: rows)`;
-    return {
-      gaps: measured(openTold.length, openAskGaps.length, `open Ask gaps a reader was told in the last ${ASK_GAP_OBSERVATION_WINDOW_DAYS} days, of every open Ask gap`, source),
-      mostTold: [...openTold]
-        .sort((a, b) => b.asks - a.asks || (a.lastDay < b.lastDay ? 1 : a.lastDay > b.lastDay ? -1 : 0) || askedGapKey(a.bodyId, a.code).localeCompare(askedGapKey(b.bodyId, b.code)))
-        .slice(0, MOST_TOLD_ASK_GAPS)
-        .map((t) => ({
-          bodyId: t.bodyId,
-          code: t.code,
-          asks: measured(t.asks, allAsks, "answers that told a reader this body's gap, of every answer that told a reader an open Ask gap, in the window", source),
-          lastDay: t.lastDay,
-        })),
-    };
-  })();
-  const askGaps: AssignmentSummary["askGaps"] =
-    askGapRows.length === 0
-      ? gap("OURS", "no Ask-gap obligation is on record: the ask-gaps provider has registered none yet, so open Ask gaps are not counted — never read as zero")
-      : held({
-          open: openAskGaps.length,
-          byCode: ASK_GAP_CODES.map((code) => ({
-            code,
-            count: measured(
-              openAskGaps.filter((row) => row.code === code).length,
-              openAskGaps.length,
-              `open Ask gaps coded ${code}, of every open Ask gap`,
-              "cp_obligations (active freshness:ask-gap: rows)",
-            ),
-          })),
-          ...(told !== undefined ? { told } : {}),
-        });
-
-  return { total, byState, byLane, groups, overdue, inBackoff, costs, pipeline: pipelineHeld, askGaps };
+/** One assignment as the snapshot carries it between publishes. */
+export interface AssignmentEntry {
+  /** Its work items, as membership joined them. */
+  readonly members: readonly string[];
+  readonly index: AssignmentIndexRow;
+  /** Kept only while published; its cost share is stated against every assignment's dollars when the view is assembled. */
+  readonly list?: AssignmentListRow;
+  /** Its measured dollars, or null when none of its charges reported any. */
+  readonly usd: ExactSum | null;
+  /** The next instant at which the clock alone could change it; null when none can. */
+  readonly horizon: string | null;
+  /** The promotion-pipeline items joined to it. */
+  readonly items: readonly string[];
+  readonly bodyAttempts: readonly BodyPublicationAttempt[];
+  /** Its standing obligation's clock and marks; null for a created work item or a clock not on record. */
+  readonly obligation: AssignmentClock | null;
 }
 
-export function buildAssignmentView(
-  src: AssignmentSources,
-  options: { readonly perGroup?: number; readonly byteBudget?: number; readonly reads?: AssignmentView["reads"] } = {},
-): AssignmentView {
-  const perGroup = options.perGroup ?? ASSIGNMENT_ROWS_PER_GROUP;
-  const byteBudget = options.byteBudget ?? ASSIGNMENT_VIEW_BYTE_BUDGET;
-  const built = buildAll(src, { textClip: ASSIGNMENT_TEXT_CLIP, listClip: ASSIGNMENT_LIST_CLIP });
-  const rows = built.rows;
+export interface AssignmentClock {
+  readonly active: boolean;
+  /** Due, and past any live failure backoff. */
+  readonly eligibleAt: string | null;
+  readonly backoff: boolean;
+  readonly subjectId: string;
+  readonly assignments: readonly ObligationAssignment[];
+}
+
+/** The instants at which a lease, a due time, a backoff, an argued absence, a public readback or a reader's telling could change the row on its own. */
+function horizonOf(g: Gathered, idx: Index, src: AssignmentSources): string | null {
+  const at: number[] = [];
+  for (const a of g.attempts) at.push(ms(idx.leases?.get(a.routeTaskId)?.expiresAt));
+  at.push(ms(g.obligation?.nextDueAt), ms(g.obligation?.absentUntil), ms(g.debt?.retryAt));
+  const items = new Set([...g.pipeline.map((s) => s.itemId), ...g.workItems.map((w) => w.id)]);
+  for (const w of src.servedReader?.witnesses ?? []) if (items.has(w.itemId)) at.push(ms(w.checkedAt), ms(w.checkedAt) + SERVED_READER_MAX_AGE_MS + 1);
+  /* A day's tellings count from its first instant until the window has passed it. */
+  const askGap = g.obligation === null ? null : parseAskGapObligationId(g.obligation.id);
+  for (const o of src.askGapObservations ?? []) {
+    if (askGap !== null && o.bodyId === askGap.bodyId && o.code === askGap.code) at.push(ms(observationDayStart(o.day)), ms(observationDayStart(o.day)) + ASK_GAP_OBSERVATION_WINDOW_DAYS * 24 * HOUR_MS);
+  }
+  const next = Math.min(...at.filter((t) => Number.isFinite(t) && t > idx.now));
+  return Number.isFinite(next) ? new Date(next).toISOString() : null;
+}
+
+function clockOf(g: Gathered): AssignmentClock | null {
+  const ob = g.obligation;
+  if (ob === null) return null;
+  const failing = (g.debt?.consecutiveFailures ?? 0) > 0;
+  return { active: ob.active, eligibleAt: eligibleAtOf(ob.nextDueAt ?? null, failing ? g.debt!.retryAt : null), backoff: failing,
+    subjectId: ob.subjectId, assignments: ob.assignments ?? [] };
+}
+
+/** Every assignment `src` holds whole, or only those named in `only`, as the snapshot carries it. */
+export function deriveAssignmentEntries(src: AssignmentSources, only?: ReadonlySet<string>): Map<string, AssignmentEntry> {
+  const built = buildAll(src, { textClip: ASSIGNMENT_TEXT_CLIP, listClip: ASSIGNMENT_LIST_CLIP, costDenominatorUsd: null });
   const manualGapByItem = new Map(src.workItems.flatMap(item => item.manualSourceGap?.assignmentKey
     ? [[item.id, item.manualSourceGap] as const] : []));
-  const historyTerms = assignmentHistoryTerms(src,built.memberships);
   const dependentsByUpstream = new Map<string,Set<string>>();
   const workById = new Map(src.workItems.map(item=>[item.id,item] as const));
   for (const item of src.workItems) for (const dependency of item.dependencies) {
     const dependents = dependentsByUpstream.get(dependency.upstreamId) ?? new Set<string>();
     dependents.add(item.id); dependentsByUpstream.set(dependency.upstreamId,dependents);
   }
-  const allRowsIndex: AssignmentIndexRow[] = rows.map(row => {
-    const listed = listRowOf(row, 160);
+  const bodyByItem = new Map<string, BodyPublicationAttempt[]>();
+  for (const body of bodyPublicationAttempts(src.workItems, src.occurrences, src.obligations)) push(bodyByItem, body.workItemId, body);
+  const out = new Map<string, AssignmentEntry>();
+  for (const row of built.rows) {
+    if (only !== undefined && !only.has(row.id)) continue;
+    const listed = listRowOf(row);
     const manualGap = manualGapByItem.get(row.id);
     const membership = built.memberships.get(row.id);
     const workIds = membership?.workItemIds ?? new Set<string>();
@@ -2639,53 +2602,209 @@ export function buildAssignmentView(
       return outstanding.length === 1 && workIds.has(outstanding[0]!.upstreamId) ? count+1 : count;
     },0);
     const assignmentRefs = [...(row.what.assignments??[]).map(mark=>({key:mark.assignmentKey,ref:mark.ref,at:mark.at})),
-      ...(manualGap?.assignmentKey ? [{key:manualGap.assignmentKey,ref:manualGap.instructionReceipt,at:src.workItems.find(item=>item.id===row.id)?.createdAt??src.nowIso}] : [])];
+      ...(manualGap?.assignmentKey ? [{key:manualGap.assignmentKey,ref:manualGap.instructionReceipt,at:workById.get(row.id)?.createdAt??src.nowIso}] : [])];
     const instructionStates: Record<string,AssignmentState> = {};
     for (const mark of assignmentRefs) {
       const sameKey=assignmentRefs.filter(other=>other.key===mark.key);
       instructionStates[instructionReceiptKey(mark.key,mark.ref)] = sameKey.some(other=>other.ref!==mark.ref)
         ? "UNKNOWN" : listed.state;
     }
-    return { id: listed.id, kind: listed.kind, lane: listed.lane, state: listed.state,
+    const index: AssignmentIndexRow = { id: listed.id, kind: listed.kind, lane: listed.lane, state: listed.state,
       label: listed.title, subjectName: listed.subjectName, stateCode: listed.stateCode ?? null,
       assignmentKeys: [...new Set([...(listed.assignmentKeys ?? []), ...(manualGap?.assignmentKey ? [manualGap.assignmentKey] : [])])],
       assignmentRefs,instructionStates,
-      historyTerms:historyTerms.get(row.id)??[],lastActivityAt: listed.lastActivityAt,
+      lastActivityAt: listed.lastActivityAt,
       lastAttemptAt:relatedAttempts.map(attempt=>attempt.startedAt).sort().at(-1)??null,
       directDependentCount:directDependents?.size??null,readyAfterThisSettlesCount,
       band: listed.band, overdue: listed.waiting.overdue, waitingSince: listed.waiting.since,
       eligibleAt: listed.waiting.eligibleAt, blocker: listed.waiting.blocker,
       owner: listed.waiting.owner, nextAction: listed.waiting.nextAction };
-  });
-  const indexedKeys = new Map(allRowsIndex.map(row => [row.id, row.assignmentKeys] as const));
-  const bodyAttempts = bodyPublicationAttempts(src.workItems, src.occurrences, src.obligations);
-
-  const geographicCounts: Record<string, Record<AssignmentState, number>> = {};
-  const instructionCounts: Record<string, Record<AssignmentState, number>> = {};
-  const instructionCountsByReceipt: Record<string, Record<AssignmentState, number>> = {};
-  for (const row of rows) {
-    const state = assignmentStateCode(row) ?? "";
-    const counts = geographicCounts[state] ??= Object.fromEntries(ASSIGNMENT_STATES.map(s => [s, 0])) as Record<AssignmentState, number>;
-    counts[row.state] += 1;
-    for (const key of indexedKeys.get(row.id) ?? []) {
-      const attributed = instructionCounts[key] ??= Object.fromEntries(ASSIGNMENT_STATES.map(s => [s, 0])) as Record<AssignmentState, number>;
-      attributed[row.state] += 1;
-    }
+    const g = built.gathered.get(row.id)!;
+    out.set(row.id, { members: [...workIds], index, list: listed, usd: groupUsd(g, built.idx), horizon: horizonOf(g, built.idx, src),
+      items: g.pipeline.map((s) => s.itemId), bodyAttempts: [...workIds].flatMap((id) => bodyByItem.get(id) ?? []), obligation: clockOf(g) });
   }
-  for (const row of allRowsIndex) for (const [identity,state] of Object.entries(row.instructionStates ?? {})) {
-    const attributed = instructionCountsByReceipt[identity] ??= Object.fromEntries(ASSIGNMENT_STATES.map(s=>[s,0])) as Record<AssignmentState,number>;
-    attributed[state] += 1;
-  }
+  return out;
+}
 
-  const groups: AssignmentListRow[][] = [];
+/** Whether a pipeline item's source names an attempt or work item an assignment holds. */
+export function pipelineLinked(state: PipelineItemState, assigned: (workItemId: string) => boolean, attempt: (attemptId: string) => boolean): boolean {
+  const scouted = state.byStage.SCOUTED;
+  if (!scouted) return false;
+  const source = scouted.source;
+  return source.kind === "FLEET_EXTRACTION" ? assigned(source.workItemId) : source.kind !== "PROMOTED_CANDIDACY" && attempt(source.attemptId);
+}
+
+/** The view from every record at once, with every row of the index and every body's publication attempt. */
+export function buildAssignmentView(
+  src: AssignmentSources,
+  options: { readonly perGroup?: number; readonly byteBudget?: number; readonly reads?: AssignmentView["reads"] } = {},
+): AssignmentView & AssignmentStateRows {
+  const entries = deriveAssignmentEntries(src);
+  const assigned = new Set([...entries.values()].flatMap((e) => e.members));
+  const workers = new Map(src.attempts.map((a) => [a.id, a.worker] as const));
+  const costs = assignmentCostTotals();
+  for (const e of src.costs) foldAssignmentCost(costs, e, workers.get(e.attemptId), assigned.has(e.workItemId));
+  const pipeline = src.pipeline === null ? null : {
+    items: src.pipeline.length,
+    linked: src.pipeline.filter((s) => pipelineLinked(s, (id) => assigned.has(id), (id) => workers.has(id))).length,
+  };
+  const view = assembleAssignmentView({ nowIso: src.nowIso, part: assignmentPartOf(entries, src.nowIso, options.perGroup), lists: (id) => entries.get(id)?.list,
+    totals: { costs: assignmentCostSummaryOf(costs), pipeline, askGapObservations: src.askGapObservations }, activation: src.activation, ...options });
+  return { ...view, ...assignmentStateRowsOf(entries) };
+}
+
+/** The figures the summary states about the whole plane beside the assignments themselves. */
+export interface AssignmentViewTotals {
+  readonly costs: AssignmentCostSummary;
+  /** Promotion-pipeline items, and those whose source an assignment holds; null when the pipeline could not be read. */
+  readonly pipeline: { readonly items: number; readonly linked: number } | null;
+  readonly askGapObservations?: readonly AskGapObservation[] | null;
+}
+
+/** Every index row and every body's publication attempt of a set of assignments: one state's, on that state's own row. */
+export interface AssignmentStateRows {
+  readonly allRowsIndex: readonly AssignmentIndexRow[];
+  readonly bodyAttempts: readonly BodyPublicationAttempt[];
+}
+
+export function assignmentStateRowsOf(entries: Iterable<readonly [string, Pick<AssignmentEntry, "index" | "bodyAttempts">]>): AssignmentStateRows {
+  const all = [...entries].sort((a, b) => a[0].localeCompare(b[0]));
+  return {
+    allRowsIndex: all.map(([, e]) => e.index),
+    bodyAttempts: [...new Map(all.flatMap(([, e]) => e.bodyAttempts).map((a) => [a.workItemId, a] as const)).values()]
+      .sort((a, b) => b.at.localeCompare(a.at) || a.workItemId.localeCompare(b.workItemId)),
+  };
+}
+
+export type AssignmentCandidate = Pick<AssignmentIndexRow, "id" | "state" | "lane" | "band" | "waitingSince" | "lastActivityAt">;
+type StateCounts = Record<string, Record<AssignmentState, number>>;
+
+/** What a set of assignments adds to the national view: every count, their cost-share dollars, and the rows the selection rule ranks first. */
+export interface AssignmentPart {
+  readonly total: number;
+  /** By `<state>|<lane>`. */
+  readonly groups: Readonly<Record<string, number>>;
+  readonly geographic: StateCounts;
+  readonly instruction: StateCounts;
+  readonly instructionByReceipt: StateCounts;
+  readonly clocks: { readonly active: number; readonly eligible: number; readonly overdue: number; readonly backoff: number };
+  readonly askGaps: { readonly rows: number; readonly open: readonly { readonly bodyId: string; readonly code: AskGapCode }[] };
+  readonly usd: ExactSum | null;
+  /** For each state and lane, up to its cap, in rank order. */
+  readonly candidates: readonly AssignmentCandidate[];
+}
+
+const zeroCounts = () => Object.fromEntries(ASSIGNMENT_STATES.map((s) => [s, 0])) as Record<AssignmentState, number>;
+
+function rankCandidates(rows: readonly AssignmentCandidate[], nowIso: string, perGroup: number): AssignmentCandidate[] {
+  const now = Date.parse(nowIso);
+  const out: AssignmentCandidate[] = [];
   for (const state of ASSIGNMENT_STATES) {
-    const order = groupOrder(state, built.idx.now);
+    const order = groupOrder(state, now);
     for (const lane of ASSIGNMENT_LANES) {
       const cap = lane === "PROOF" ? Math.min(perGroup, ASSIGNMENT_PROOF_ROWS_PER_GROUP) : perGroup;
-      const group = rows.filter((r) => r.state === state && r.lane === lane).sort(order).slice(0, cap);
-      if (group.length > 0) groups.push(group.map((r) => listRowOf(r)));
+      out.push(...rows.filter((r) => r.state === state && r.lane === lane).sort(order).slice(0, cap)
+        .map(({ id, state, lane, band, waitingSince, lastActivityAt }) => ({ id, state, lane, band, waitingSince, lastActivityAt })));
     }
   }
+  return out;
+}
+
+export function assignmentPartOf(entries: Iterable<readonly [string, Pick<AssignmentEntry, "index" | "usd" | "obligation">]>, nowIso: string,
+  perGroup = ASSIGNMENT_ROWS_PER_GROUP): AssignmentPart {
+  const now = Date.parse(nowIso);
+  const groups: Record<string, number> = {};
+  const geographic: StateCounts = {};
+  const instruction: StateCounts = {};
+  const instructionByReceipt: StateCounts = {};
+  const clocks = { active: 0, eligible: 0, overdue: 0, backoff: 0 };
+  const open: { bodyId: string; code: AskGapCode }[] = [];
+  let total = 0;
+  let askRows = 0;
+  let usd: ExactSum | null = null;
+  const rows: AssignmentIndexRow[] = [];
+  for (const [id, e] of entries) {
+    const row = e.index;
+    total += 1;
+    rows.push(row);
+    groups[`${row.state}|${row.lane}`] = (groups[`${row.state}|${row.lane}`] ?? 0) + 1;
+    (geographic[row.stateCode ?? ""] ??= zeroCounts())[row.state] += 1;
+    for (const key of row.assignmentKeys) (instruction[key] ??= zeroCounts())[row.state] += 1;
+    for (const [identity, state] of Object.entries(row.instructionStates ?? {})) (instructionByReceipt[identity] ??= zeroCounts())[state] += 1;
+    if (e.usd !== null) mergeExact(usd ??= exactSum(), e.usd);
+    const o = e.obligation;
+    if (o === null) continue;
+    if (o.active) {
+      clocks.active += 1;
+      if (o.backoff) clocks.backoff += 1;
+      if (o.eligibleAt !== null) {
+        clocks.eligible += 1;
+        if (ms(o.eligibleAt) <= now) clocks.overdue += 1;
+      }
+    }
+    const askGap = parseAskGapObligationId(id);
+    if (askGap === null) continue;
+    askRows += 1;
+    if (o.active) open.push({ bodyId: askGap.bodyId, code: askGap.code });
+  }
+  return { total, groups, geographic, instruction, instructionByReceipt, clocks, askGaps: { rows: askRows, open }, usd,
+    candidates: rankCandidates(rows, nowIso, perGroup) };
+}
+
+export function mergeAssignmentParts(parts: Iterable<AssignmentPart>, nowIso: string, perGroup = ASSIGNMENT_ROWS_PER_GROUP): AssignmentPart {
+  const add = (into: Record<string, number>, from: Readonly<Record<string, number>>) => { for (const [k, n] of Object.entries(from)) into[k] = (into[k] ?? 0) + n; };
+  const addStates = (into: StateCounts, from: StateCounts) => { for (const [k, counts] of Object.entries(from)) add(into[k] ??= zeroCounts(), counts); };
+  const groups: Record<string, number> = {};
+  const geographic: StateCounts = {};
+  const instruction: StateCounts = {};
+  const instructionByReceipt: StateCounts = {};
+  const clocks = { active: 0, eligible: 0, overdue: 0, backoff: 0 };
+  const open: { bodyId: string; code: AskGapCode }[] = [];
+  const candidates: AssignmentCandidate[] = [];
+  let total = 0;
+  let askRows = 0;
+  let usd: ExactSum | null = null;
+  for (const part of parts) {
+    total += part.total;
+    add(groups, part.groups);
+    addStates(geographic, part.geographic);
+    addStates(instruction, part.instruction);
+    addStates(instructionByReceipt, part.instructionByReceipt);
+    add(clocks, part.clocks);
+    askRows += part.askGaps.rows;
+    open.push(...part.askGaps.open);
+    if (part.usd !== null) mergeExact(usd ??= exactSum(), part.usd);
+    candidates.push(...part.candidates);
+  }
+  return { total, groups, geographic, instruction, instructionByReceipt, clocks, askGaps: { rows: askRows, open }, usd,
+    candidates: rankCandidates(candidates, nowIso, perGroup) };
+}
+
+/** The national view from every assignment's part; each candidate the part ranks must have its list row. */
+export function assembleAssignmentView(input: {
+  readonly nowIso: string;
+  readonly part: AssignmentPart;
+  readonly lists: (id: string) => AssignmentListRow | undefined;
+  readonly totals: AssignmentViewTotals;
+  readonly activation: ActivationGateReading | null;
+  readonly perGroup?: number;
+  readonly byteBudget?: number;
+  readonly reads?: AssignmentView["reads"];
+}): AssignmentView {
+  const perGroup = input.perGroup ?? ASSIGNMENT_ROWS_PER_GROUP;
+  const byteBudget = input.byteBudget ?? ASSIGNMENT_VIEW_BYTE_BUDGET;
+  const part = input.part;
+  const denominatorUsd = part.usd === null ? null : round6(exactValue(part.usd));
+  const listRow = (id: string): AssignmentListRow => {
+    const list = input.lists(id);
+    if (list === undefined) throw new Error(`assignment ${id} is ranked for the published list but carries no list row`);
+    const usd = list.cost.usd;
+    if (usd === null) return list;
+    return { ...list, cost: { ...list.cost, usd: { ...usd, denominator: denominatorUsd !== null && denominatorUsd >= usd.value ? denominatorUsd : usd.value } } };
+  };
+  const ranked = new Map<string, AssignmentListRow[]>();
+  for (const c of part.candidates) ranked.set(`${c.state}|${c.lane}`, [...(ranked.get(`${c.state}|${c.lane}`) ?? []), listRow(c.id)]);
+  const groups = [...ranked.values()];
     /* Rows are admitted one rank at a time across every group, so an early-spent budget never leaves a whole state unlisted. */
   const kept: AssignmentListRow[] = [];
   let bytes = 0;
@@ -2709,25 +2828,110 @@ export function buildAssignmentView(
 
   return {
     version: ASSIGNMENT_VIEW_VERSION,
-    builtAt: src.nowIso,
-    summary: summarize(built, src, published),
+    builtAt: input.nowIso,
+    summary: summarize(part, input.totals, published, input.nowIso),
     rows: kept,
-    allRowsIndex,
-    bodyAttempts,
-    geographicCounts,
-    instructionCounts,
-    instructionCountsByReceipt,
+    geographicCounts: part.geographic,
+    instructionCounts: part.instruction,
+    instructionCountsByReceipt: part.instructionByReceipt,
     selection: {
       rule: ASSIGNMENT_SELECTION_RULE,
       perGroup,
       byteBudget,
       published: kept.length,
-      omitted: rows.length - kept.length,
+      omitted: part.total - kept.length,
       trimmedForBytes: trimmed,
     },
-    reads: options.reads ?? [],
-    activation: src.activation,
+    reads: input.reads ?? [],
+    activation: input.activation,
   };
+}
+
+function summarize(part: AssignmentPart, totals: AssignmentViewTotals, published: ReadonlyMap<string, number>, nowIso: string): AssignmentSummary {
+  const total = part.total;
+  const count = (state: AssignmentState | null, lane: AssignmentLane | null) => Object.entries(part.groups)
+    .filter(([key]) => { const [s, l] = key.split("|"); return (state === null || s === state) && (lane === null || l === lane); }).reduce((n, [, c]) => n + c, 0);
+  const source = "every standing obligation, work item and orphaned execution record the control plane holds, joined at publish";
+  const byState = ASSIGNMENT_STATES.map((state) => ({
+    state,
+    count: measured(count(state, null), total, `assignments whose state is ${STATE_WORDS[state].label.toLowerCase()}, of every assignment`, source),
+  }));
+  const byLane = ASSIGNMENT_LANES.map((lane) => ({
+    lane,
+    count: measured(count(null, lane), total, `assignments in the ${LANE_WORDS[lane].label.toLowerCase()} lane, of every assignment`, source),
+  }));
+  const groups: AssignmentGroup[] = [];
+  for (const state of ASSIGNMENT_STATES) {
+    for (const lane of ASSIGNMENT_LANES) {
+      const n = part.groups[`${state}|${lane}`] ?? 0;
+      if (n === 0) continue;
+      groups.push({ state, lane, total: n, published: published.get(`${state}|${lane}`) ?? 0 });
+    }
+  }
+
+  const { active, eligible, overdue: overdueCount, backoff: backoffCount } = part.clocks;
+  const overdue: Held<Measured> =
+    eligible === 0
+      ? gap("OURS", "no active standing obligation carries a stored next-due, so overdue cannot be counted")
+      : held(
+          measured(
+            overdueCount,
+            eligible,
+            "active standing obligations eligible for dispatch now — due, and past any failure backoff — and not yet dispatched, of every active standing obligation with a stored next-due",
+            "cp_obligations (nextDueAt) joined to cp_debts (retryAt)",
+          ),
+        );
+  const inBackoff: Held<Measured> =
+    active === 0
+      ? gap("OURS", "no active standing obligation is on record")
+      : held(measured(backoffCount, active, "active standing obligations carrying a live freshness debt (failed and waiting on a backoff retry), of every active standing obligation", "cp_obligations joined to cp_debts"));
+
+  const pipelineHeld: AssignmentSummary["pipeline"] =
+    totals.pipeline === null
+      ? gap("OURS", "the promotion pipeline could not be read on this publish")
+      : held({
+          linked: measured(totals.pipeline.linked, totals.pipeline.items, "promotion-pipeline items whose source names an attempt or work item an assignment holds, of every pipeline item", "cp_log_promotion_pipeline"),
+          unlinked: totals.pipeline.items - totals.pipeline.linked,
+        });
+
+  const openAskGaps = part.askGaps.open;
+  const told = (() => {
+    const asked = totals.askGapObservations ? foldAskGapObservations(totals.askGapObservations, nowIso).asked : null;
+    if (asked === null) return undefined;
+    const openTold = openAskGaps.flatMap((row) => asked.get(askedGapKey(row.bodyId, row.code)) ?? []);
+    const allAsks = openTold.reduce((n, t) => n + t.asks, 0);
+    const source = `cp_ask_gap_observations (the last ${ASK_GAP_OBSERVATION_WINDOW_DAYS} days) joined to cp_obligations (active freshness:ask-gap: rows)`;
+    return {
+      gaps: measured(openTold.length, openAskGaps.length, `open Ask gaps a reader was told in the last ${ASK_GAP_OBSERVATION_WINDOW_DAYS} days, of every open Ask gap`, source),
+      mostTold: [...openTold]
+        .sort((a, b) => b.asks - a.asks || (a.lastDay < b.lastDay ? 1 : a.lastDay > b.lastDay ? -1 : 0) || askedGapKey(a.bodyId, a.code).localeCompare(askedGapKey(b.bodyId, b.code)))
+        .slice(0, MOST_TOLD_ASK_GAPS)
+        .map((t) => ({
+          bodyId: t.bodyId,
+          code: t.code,
+          asks: measured(t.asks, allAsks, "answers that told a reader this body's gap, of every answer that told a reader an open Ask gap, in the window", source),
+          lastDay: t.lastDay,
+        })),
+    };
+  })();
+  const askGaps: AssignmentSummary["askGaps"] =
+    part.askGaps.rows === 0
+      ? gap("OURS", "no Ask-gap obligation is on record: the ask-gaps provider has registered none yet, so open Ask gaps are not counted — never read as zero")
+      : held({
+          open: openAskGaps.length,
+          byCode: ASK_GAP_CODES.map((code) => ({
+            code,
+            count: measured(
+              openAskGaps.filter((row) => row.code === code).length,
+              openAskGaps.length,
+              `open Ask gaps coded ${code}, of every open Ask gap`,
+              "cp_obligations (active freshness:ask-gap: rows)",
+            ),
+          })),
+          ...(told !== undefined ? { told } : {}),
+        });
+
+  return { total, byState, byLane, groups, overdue, inBackoff, costs: totals.costs, pipeline: pipelineHeld, askGaps };
 }
 
 function pushHeld(out: RenderedNumber[], label: string, h: Held<Measured>): void {

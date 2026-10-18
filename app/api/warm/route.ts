@@ -7,14 +7,12 @@ import { settleStateMoneyReads } from "@/lib/funding/state-snapshot";
 import { lowestZipByDivision } from "@/lib/geo/zip-division-index";
 import { lookupZctaAsync } from "@/lib/geo/zcta-table";
 import { publishedCountyDivisions, warmPlacesForCounties, type WarmPlace } from "@/lib/ops/warm-places";
-import { holdReaderAuthorityEdge, ensureReaderAuthorityEdge, readReaderEdgeMeetings, readReaderManifest } from "@/lib/meetings/edge-serving";
+import { holdReaderAuthorityEdge, ensureReaderAuthorityEdge, readReaderManifest, readServedMeetingIndex } from "@/lib/meetings/edge-serving";
+import { resolveReaderArtifactStore } from "@/lib/meetings/edge-store";
 import { settleExecutiveActionsRead } from "@/lib/officials/executive-actions";
 import { settleOutcomeRead } from "@/lib/outcomes/store";
 import { enterReaderAuthorityEdge, ReaderEdgeOnlyRefusal } from "@/lib/registry/runtime-edge";
-import {
-  settleCommentAccessRead,
-  settleFederalDirectoryRead,
-} from "@/lib/registry/server";
+import { settleCommentAccessRead } from "@/lib/registry/server";
 import { settleFederalKeyVotesRead } from "@/lib/votes/key-votes-projection";
 import { settleFederalVotesRead } from "@/lib/votes/snapshot";
 
@@ -27,7 +25,6 @@ export const PRIME_ASK_BUDGET_MS = 4000;
 
 
 const ASK_SOURCE_PRELOADS: Readonly<Record<string, () => Promise<unknown>>> = {
-  federalDirectory: settleFederalDirectoryRead,
   outcomes: settleOutcomeRead,
   commentAccess: settleCommentAccessRead,
   funding: settleFundingRead,
@@ -95,13 +92,10 @@ async function primeAsk(): Promise<AskPrimed> {
 async function primeReaderEdge(): Promise<ReaderEdgePrimed> {
   const manifest = await readReaderManifest().catch(holdReaderAuthorityEdge);
   if (!manifest) return NOTHING_PRIMED;
-  const bundle = manifest.authorityArtifacts ? await ensureReaderAuthorityEdge(manifest).catch(error => holdReaderAuthorityEdge(error, manifest)) : null;
+  const bundle = await ensureReaderAuthorityEdge(manifest).catch(error => holdReaderAuthorityEdge(error));
   // Entered here, before the reads below, in the function that makes them.
   enterReaderAuthorityEdge({ ...bundle, edgeOnly: true });
-  const meetings = await readReaderEdgeMeetings({
-    manifest,
-    fallback: () => Promise.reject(new Error("keep-warm loads the edge only, never the database")),
-  }).then(() => true, () => false);
+  const meetings = Object.keys(manifest.meetingStates ?? {}).length > 0;
   // Both started here, after the edge-only context was entered, so every read they make is inside it.
   const ask = await primeAsk();
   return { manifest: true, authorityFamilies: bundle ? Object.keys(bundle).length : 0, meetings, places: 0, placesRefused: 0, ask };
@@ -111,7 +105,13 @@ async function primeReaderEdge(): Promise<ReaderEdgePrimed> {
 async function publishedWarmPlaces(): Promise<{ readonly places: readonly WarmPlace[]; readonly skipped: number }> {
   const manifest = await readReaderManifest().catch(holdReaderAuthorityEdge);
   if (!manifest) return { places: [], skipped: 0 };
-  const counties = publishedCountyDivisions(manifest.scopes);
+  const store = resolveReaderArtifactStore();
+  const divisions: string[] = [];
+  for (const [state, ref] of Object.entries(manifest.meetingStates ?? {})) {
+    const index = store ? await readServedMeetingIndex(state, ref, store).catch(() => null) : null;
+    if (index) divisions.push(...Object.keys(index.places));
+  }
+  const counties = publishedCountyDivisions(divisions);
   const states = [...new Set(counties.map((county) => county.split("/state:")[1].split("/")[0]))];
   const zipByDivision = new Map<string, string>();
   await Promise.all(states.map(async (state) => {

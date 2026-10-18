@@ -7,11 +7,8 @@ import { createMemoryRepositories } from "../lib/control-plane/repository/memory
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { acquireStateVotes, PLURAL_SESSION_CATALOG, pluralJurisdictionUrl } from "../lib/sources/plural/vote-acquisition.ts";
 import { parsePluralBulkSession } from "../lib/sources/plural/vote-bulk.ts";
-import { parsePluralBill, pluralVotesScope, readPluralVotesForPerson, type PluralBillEvidence } from "../lib/sources/plural/votes.ts";
+import { parsePluralBill, pluralVotesScope, readPluralVotesForPerson, type PluralBillEvidence, type PluralVoteAcquisition } from "../lib/sources/plural/votes.ts";
 import { refreshStateVotes } from "../scripts/openstates-votes-refresh.mts";
-import type { RawCaptureRef } from "../lib/civic-data/raw-capture-vault.ts";
-
-type PluralVoteAcquisition = Omit<PluralBillEvidence, "body"> & { raw?: RawCaptureRef };
 
 interface Example { personId: string; position: string; billNumber: string; billTitle: string; date: string; voteId: string }
 interface Sample { state: string; session: string; sourceUrl: string; fixtureArchive: string; fixtureArchiveSha256: string; metadataFixture: string; readerExample?: Example }
@@ -66,10 +63,10 @@ for (const sample of manifest.states.filter(sample => sample.readerExample)) {
       published++;
       assert.equal(h.requests.at(-1), sample.sourceUrl);
       assert.equal(result.votes.length, 1);
-      assert.ok(await h.civicStore.readPromotion("STATE_ROLL_CALL", pluralVotesScope(sample.state)));
     } });
     assert.equal(published, 1);
     assert.ok(first.publication.outcome.promoted);
+    assert.ok(await h.civicStore.readPromotion("STATE_ROLL_CALL", pluralVotesScope(sample.state)));
     const [archive] = (first.publication.candidate.normalizedPayload as { acquisitions: PluralVoteAcquisition[] }).acquisitions;
     assert.equal("body" in archive, false); assert.equal(archive.sha256, sample.fixtureArchiveSha256);
     if (sample.state === "GA") {
@@ -162,9 +159,10 @@ test("one public session succeeds while an unavailable preceding archive falls b
     }
     return replay(raw, init);
   };
-  const acquired = await acquireStateVotes({ ...h.input, fetchImpl });
-  assert.equal(acquired.results.length, 1, "the successful session is not republished during fallback");
-  assert.equal(acquired.results[0].votes[0].session, sample.session);
+  const sessions: string[] = [];
+  const acquired = await acquireStateVotes({ ...h.input, fetchImpl, onBill: async result => { sessions.push(result.votes[0]!.session); } });
+  assert.equal(acquired.bills, 1, "the successful session is not republished during fallback");
+  assert.deepEqual(sessions, [sample.session]);
   assert.equal(fallbackRequests.length, 1);
   assert.deepEqual(acquired.held, [], "the completed alternate session read resolves its archive outage");
 });

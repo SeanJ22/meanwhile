@@ -3,15 +3,13 @@ import type { EvidenceStore } from "../../control-plane/evidence/store.ts";
 import { failedAcquisitionCandidate, normalizedHash } from "../../civic-data/candidate-builders.ts";
 import { processRegisteredRoutineCandidate } from "../../civic-data/promotion.ts";
 import { printSourceRunnerReceipt } from "../../civic-data/runner-receipt.ts";
-import { seatHolderById } from "../../registry/server.ts";
 import { federalClient, federalPages, regulationPages, type FederalClientOptions, type FederalPage } from "./acquire.ts";
 import { billIdentity, object, string, normalizeFederalCapture, normalizeFederalCaptureWithRoster } from "./normalize.ts";
 import { countFederalFacts, publishFederalPartition, readFederalSourceProjection } from "./publication.ts";
 import { FEDERAL_PARSER_VERSION, FEDERAL_RECORD_CLASS, FEDERAL_SOURCES, federalScope } from "./targets.ts";
 import type { FederalCapture, FederalCounts, FederalFact } from "./types.ts";
 import { federalCalendarDate } from "./presentation.ts";
-import { readFederalDirectoryProjection } from "../../officials/federal-directory-read-model.ts";
-import { readLdaRosterVersion } from "./lda-roster.ts";
+import { readHeldCongressRoster } from "./lda-roster.ts";
 
 export interface FederalRefreshOptions extends FederalClientOptions {
   store: RoutineDataStore;
@@ -51,10 +49,12 @@ export async function refreshFederalSource(options: FederalRefreshOptions) {
   const counts: FederalCounts = prior.kind === "PROMOTED" ? structuredClone(prior.value.counts ?? emptyCounts()) : emptyCounts();
   let last: Awaited<ReturnType<typeof publishFederalPartition>> | undefined;
   let listing: FederalCapture | undefined;
+  let congress: ReturnType<typeof readHeldCongressRoster> | undefined;
+  const heldCongress = () => congress ??= readHeldCongressRoster(store, vault, startedAt);
   const memberStates = new Map<string, string | null>();
   const memberState = async (id: string) => {
     if (!memberStates.has(id)) {
-      try { memberStates.set(id, options.memberState ? await options.memberState(id) : (await seatHolderById(`congress:${id}`))?.state ?? null); }
+      try { memberStates.set(id, options.memberState ? await options.memberState(id) : (await heldCongress())?.members.find(row => row.bioguideId === id)?.state ?? null); }
       catch { memberStates.set(id, null); counts.joinReadFailures = (counts.joinReadFailures ?? 0) + 1; }
     }
     return memberStates.get(id)!;
@@ -223,9 +223,8 @@ export async function refreshFederalSource(options: FederalRefreshOptions) {
       // Posting-date ranges include amended reports; the provider's next links page the full national LD-203 query.
       let roster, rosterFailure;
       try {
-        const held = await readFederalDirectoryProjection({ store, now: startedAt, bypassCache: true });
-        roster = held.kind === "PROMOTED" ? await readLdaRosterVersion(store, vault, held.metadata.versionId!) : undefined;
-        if (!roster) rosterFailure = `Federal roster is ${held.kind}; no honoree identity link can be verified.`;
+        roster = await heldCongress();
+        if (!roster) rosterFailure = "No place holds a federal roster; no honoree identity link can be verified.";
       } catch (error) {
         rosterFailure = error instanceof Error ? error.message : String(error);
         counts.joinReadFailures = (counts.joinReadFailures ?? 0) + 1;

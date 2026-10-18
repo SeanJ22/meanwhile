@@ -10,19 +10,23 @@ import type { WorkerRole } from "./attempt.ts";
 import {
   DISCOVERY_SEARCH_ROLE,
   SEARCH_SOURCE_NOT_ON_RECORD,
+  addMeasured,
   cacheMeteringOf,
   costPortionsByModel,
-  entriesInWindow,
-  sumMetric,
+  measuredSum,
+  measuredTotal,
+  mergeMeasured,
   utcMonthWindow,
   type CostEntry,
   type LedgerWindow,
+  type MeasuredSum,
   type MeasuredTotal,
 } from "./cost.ts";
+import { addExact, exactSum, exactValue, subtractExact, type ExactSum } from "./exact-sum.ts";
 import { cacheSavingUsd } from "./model-cost.ts";
-import { gap, held, measured, type Held, type Measured, type RenderedNumber } from "./owner-surface.ts";
+import { gap, held, measured, type Held, type Measured, type OwnerSnapshot, type RenderedNumber } from "./owner-surface.ts";
 import { modelName, usdCents, usdOf } from "./plain-words.ts";
-import { scoutCapacity, type CacheHitRate, type ScoutCapacity, type ShareTrend } from "./research-metrics.ts";
+import { countsAsScoutAttempt, scoutCapacityOf, type CacheHitRate, type ScoutCapacity, type ShareTrend } from "./research-metrics.ts";
 import { RESEARCH_BOUNDS } from "./scheduler/research-policy.ts";
 
 export type CostRowKind = "MEASURED" | "FREE_BY_DESIGN" | "UNMEASURED";
@@ -144,54 +148,56 @@ export function costRowKind(row: { readonly kind?: CostRowKind; readonly usd: He
   return /without a paid model/.test(row.usd.gap.says) ? "FREE_BY_DESIGN" : "UNMEASURED";
 }
 
-function nonDollarOf(entries: readonly CostEntry[]): NonDollarMeasures {
-  let requests = 0;
-  let bytes = 0;
-  let durationMs = 0;
-  let carrying = 0;
-  for (const e of entries) {
-    const r = e.cost.requestCount ?? 0;
-    const b = e.cost.bytesFetched ?? 0;
-    const d = e.cost.durationMs ?? 0;
-    if (r > 0 || b > 0 || d > 0) carrying += 1;
-    requests += Number.isFinite(r) ? r : 0;
-    bytes += Number.isFinite(b) ? b : 0;
-    durationMs += Number.isFinite(d) ? d : 0;
-  }
-  return { requests, bytes, durationMs, entries: carrying };
+type WorkerRef = { readonly version: string; readonly provider: string };
+
+/** A cost row's running totals: every figure `usdRowOf` states, folded one entry at a time. */
+export interface CostRowTotals {
+  n: number;
+  /** Entries whose usd is a number; `usd` sums every entry's usd, a missing one as 0. */
+  priced: number;
+  readonly usd: ExactSum;
+  modelAttempts: number;
+  readonly requests: ExactSum;
+  readonly bytes: ExactSum;
+  readonly durationMs: ExactSum;
+  /** Entries that carried at least one of the three non-dollar measures. */
+  carrying: number;
+  readonly metering: { measured: number; predatesFields: number; unreported: number; batched: number };
 }
 
-/** The row's cache/batch metering, counted through the ledger's own parser. */
-function meteringOf(entries: readonly CostEntry[]): MeteringCounts {
-  let measuredRows = 0;
-  let predatesFields = 0;
-  let unreported = 0;
-  let batched = 0;
-  for (const e of entries) {
-    const m = cacheMeteringOf(e.cost);
-    if (m.status === "PREDATES_FIELDS") predatesFields += 1;
-    else if (m.status === "UNREPORTED") unreported += 1;
-    else {
-      measuredRows += 1;
-      if (m.batch) batched += 1;
-    }
+const costRowTotals = (): CostRowTotals => ({ n: 0, priced: 0, usd: exactSum(), modelAttempts: 0, requests: exactSum(), bytes: exactSum(),
+  durationMs: exactSum(), carrying: 0, metering: { measured: 0, predatesFields: 0, unreported: 0, batched: 0 } });
+
+function foldCostRow(rows: Record<string, CostRowTotals>, key: string, e: CostEntry, modelAttempt: boolean): void {
+  const row = (rows[key] ??= costRowTotals());
+  row.n += 1;
+  if (typeof e.cost.usd === "number") row.priced += 1;
+  addExact(row.usd, e.cost.usd ?? 0);
+  if (modelAttempt) row.modelAttempts += 1;
+  const r = e.cost.requestCount ?? 0;
+  const b = e.cost.bytesFetched ?? 0;
+  const d = e.cost.durationMs ?? 0;
+  if (r > 0 || b > 0 || d > 0) row.carrying += 1;
+  addExact(row.requests, Number.isFinite(r) ? r : 0);
+  addExact(row.bytes, Number.isFinite(b) ? b : 0);
+  addExact(row.durationMs, Number.isFinite(d) ? d : 0);
+  const m = cacheMeteringOf(e.cost);
+  if (m.status === "PREDATES_FIELDS") row.metering.predatesFields += 1;
+  else if (m.status === "UNREPORTED") row.metering.unreported += 1;
+  else {
+    row.metering.measured += 1;
+    if (m.batch) row.metering.batched += 1;
   }
-  return { measured: measuredRows, predatesFields, unreported, batched };
 }
 
-function usdRow(
-  key: string,
-  entries: readonly CostEntry[],
-  grandTotal: number | null,
-  modelOf: ReadonlyMap<string, string>,
-): CostRow {
-  const measuredCount = entries.filter((e) => typeof e.cost.usd === "number").length;
-  const unmeasuredCount = entries.length - measuredCount;
-  const total = measuredCount === 0 ? null : entries.reduce((n, e) => n + (e.cost.usd ?? 0), 0);
-  const modelAttempts = entries.filter((e) => (modelOf.get(e.attemptId) ?? NO_MODEL_KEY) !== NO_MODEL_KEY).length;
-  const nonDollar = nonDollarOf(entries);
-  const metering = meteringOf(entries);
-  const n = entries.length;
+function usdRowOf(key: string, row: CostRowTotals, grandTotal: number | null): CostRow {
+  const measuredCount = row.priced;
+  const unmeasuredCount = row.n - measuredCount;
+  const total = measuredCount === 0 ? null : exactValue(row.usd);
+  const modelAttempts = row.modelAttempts;
+  const nonDollar: NonDollarMeasures = { requests: exactValue(row.requests), bytes: exactValue(row.bytes), durationMs: exactValue(row.durationMs), entries: row.carrying };
+  const metering: MeteringCounts = { ...row.metering };
+  const n = row.n;
   const plural = n === 1 ? "" : "s";
 
   if (total === null || grandTotal === null) {
@@ -255,28 +261,104 @@ function round(usd: number): number {
   return Math.round(usd * 10_000) / 10_000;
 }
 
-export function buildCostPanel(input: CostPanelInput): CostPanel {
-  const measuredEntries = input.costs.filter((e) => typeof e.cost.usd === "number");
-  const grandTotal = measuredEntries.length === 0 ? null : measuredEntries.reduce((n, e) => n + (e.cost.usd ?? 0), 0);
-  const modelOf = new Map(input.attempts.map((a) => [a.id, modelKeyOf(a.worker)]));
+/** A place's measured dollars and its charge count. */
+export interface PlaceTotals {
+  readonly usd: MeasuredSum;
+  attempts: number;
+}
 
-  /* ---- by role, from the ledger's own role field ---- */
-  const byRole = new Map<string, CostEntry[]>();
-  for (const e of input.costs) byRole.set(e.role, [...(byRole.get(e.role) ?? []), e]);
-  const costByRole = [...byRole.entries()]
-    .sort((a, b) => a[0].localeCompare(b[0]))
-    .map(([role, entries]) => usdRow(role, entries, grandTotal, modelOf));
+export const placeTotals = (): PlaceTotals => ({ usd: measuredSum(), attempts: 0 });
 
-  /* By model via the Attempt's worker version; a multi-model Attempt is split by its own `byModel`. */
-  const byModel = new Map<string, CostEntry[]>();
-  for (const e of input.costs) {
-    for (const part of costPortionsByModel(e, modelOf.get(e.attemptId) ?? ATTEMPT_NOT_ON_RECORD)) {
-      byModel.set(part.model, [...(byModel.get(part.model) ?? []), part.entry]);
-    }
+/** By state, then jurisdiction segment. */
+export type PlaceLedger = Record<string, Record<string, PlaceTotals>>;
+
+/** A charge's place, when its source names one; the ledger's overhead holds every other charge. */
+export function foldPlace(places: PlaceLedger, e: CostEntry): void {
+  const place = placeIdOf(e);
+  if (place === null) return;
+  const into = ((places[place.state] ??= {})[place.place] ??= placeTotals());
+  addMeasured(into.usd, e.cost.usd);
+  into.attempts += 1;
+}
+
+export function mergePlaceTotals(into: PlaceTotals, from: PlaceTotals): void {
+  mergeMeasured(into.usd, from.usd);
+  into.attempts += from.attempts;
+}
+
+/** The whole ledger's running totals: every cost-panel, spend-by-place and monthly figure is rendered from these. */
+export interface CostLedgerTotals {
+  entries: number;
+  priced: number;
+  /** Sum of every number-valued usd in the ledger. */
+  readonly usd: ExactSum;
+  readonly byRole: Record<string, CostRowTotals>;
+  readonly byModel: Record<string, CostRowTotals>;
+  /** Charges whose source names no place; the places are kept by state beside the ledger. */
+  readonly overhead: PlaceTotals;
+  /** The earliest readable stamp, in epoch ms. */
+  beginsAt: number | null;
+  /** By UTC month (`YYYY-MM`), holding only charges stamped no later than the clock they were folded at. */
+  readonly months: Record<string, MonthTotals>;
+}
+
+export const costLedgerTotals = (): CostLedgerTotals => ({ entries: 0, priced: 0, usd: exactSum(), byRole: {}, byModel: {},
+  overhead: placeTotals(), beginsAt: null, months: {} });
+
+/** Every whole-ledger figure; `worker` is the charge's Attempt's worker, or null when the Attempt is not on record. */
+export function foldCostLedger(t: CostLedgerTotals, e: CostEntry, worker: WorkerRef | null): void {
+  t.entries += 1;
+  if (typeof e.cost.usd === "number") {
+    t.priced += 1;
+    addExact(t.usd, e.cost.usd);
   }
-  const costByModel = [...byModel.entries()]
-    .sort((a, b) => a[0].localeCompare(b[0]))
-    .map(([model, entries]) => usdRow(model, entries, grandTotal, modelOf));
+  const modelAttempt = worker !== null && modelKeyOf(worker) !== NO_MODEL_KEY;
+  foldCostRow(t.byRole, e.role, e, modelAttempt);
+  for (const part of costPortionsByModel(e, worker ? modelKeyOf(worker) : ATTEMPT_NOT_ON_RECORD)) foldCostRow(t.byModel, part.model, part.entry, modelAttempt);
+  if (placeIdOf(e) === null) {
+    addMeasured(t.overhead.usd, e.cost.usd);
+    t.overhead.attempts += 1;
+  }
+  const at = Date.parse(e.recordedAt);
+  if (Number.isFinite(at) && (t.beginsAt === null || at < t.beginsAt)) t.beginsAt = at;
+}
+
+/** The ledger as one from-scratch fold: each charge joined to its Attempt, months held up to `nowIso`. */
+export function costLedgerOf(costs: readonly CostEntry[], attempts: readonly AttemptRef[], nowIso?: string): CostLedgerTotals {
+  const workers = new Map(attempts.map((a) => [a.id, a.worker]));
+  const now = nowIso === undefined ? Number.NaN : Date.parse(nowIso);
+  const t = costLedgerTotals();
+  for (const e of costs) {
+    const worker = workers.get(e.attemptId) ?? null;
+    foldCostLedger(t, e, worker);
+    if (Date.parse(e.recordedAt) <= now) foldCostMonth(t, e, worker);
+  }
+  return t;
+}
+
+/** The figures read off the cycle and the pipeline, beside the ledger's own. */
+export interface CostPanelReadings {
+  readonly cacheByRole: readonly CacheHitRate[] | null;
+  readonly share: ShareTrend | null;
+  readonly verifiedRecords: number | null;
+  readonly nowIso?: string;
+  readonly dailyCeilingUsd?: number;
+}
+
+export function buildCostPanel(input: CostPanelInput): CostPanel {
+  const scouts = measuredSum();
+  const since = input.nowIso === undefined ? Number.NaN : Date.parse(input.nowIso) - 24 * 3_600_000;
+  /* An unreadable stamp is never before the window, so it counts. */
+  for (const c of input.costs) if (countsAsScoutAttempt(c) && !(Date.parse(c.recordedAt) < since)) addMeasured(scouts, c.cost.usd);
+  return costPanelOf(costLedgerOf(input.costs, input.attempts, input.nowIso), scouts, input);
+}
+
+/** `scouts` holds the measured SCOUT charges of the trailing 24 hours. */
+export function costPanelOf(ledger: CostLedgerTotals, scouts: MeasuredSum, input: CostPanelReadings): CostPanel {
+  const grandTotal = ledger.priced === 0 ? null : exactValue(ledger.usd);
+  const rowsOf = (rows: Record<string, CostRowTotals>) => Object.keys(rows).sort((a, b) => a.localeCompare(b)).map((key) => usdRowOf(key, rows[key]!, grandTotal));
+  const costByRole = rowsOf(ledger.byRole);
+  const costByModel = rowsOf(ledger.byModel);
 
   /* ---- cache hit rate: model workers from the cycle metrics; the reader path is a named gap ---- */
   const cacheRows: CacheCallerRow[] = (input.cacheByRole ?? []).map((c) => {
@@ -361,23 +443,16 @@ export function buildCostPanel(input: CostPanelInput): CostPanel {
     costPerVerifiedRecord,
     summary: {
       measuredUsd: grandTotal === null ? null : round(grandTotal),
-      attemptsMeasured: measuredEntries.length,
-      attemptsUnmeasured: input.costs.length - measuredEntries.length,
-      entries: input.costs.length,
+      attemptsMeasured: ledger.priced,
+      attemptsUnmeasured: ledger.entries - ledger.priced,
+      entries: ledger.entries,
     },
-    /* Reuses `scoutCapacity` so every surface agrees on what an Attempt costs. */
-    capacity:
-      input.nowIso === undefined
-        ? null
-        : scoutCapacity({
-            costs: input.costs,
-            nowIso: input.nowIso,
-            windowHours: 24,
-            ceilingUsd: input.dailyCeilingUsd ?? DEFAULT_DAILY_CEILING_USD,
-          }),
-    monthlySpend: input.nowIso === undefined ? null : buildMonthlySpend({ costs: input.costs, attempts: input.attempts, nowIso: input.nowIso }),
+    /* Reuses `scoutCapacityOf` so every surface agrees on what an Attempt costs. */
+    capacity: input.nowIso === undefined ? null : scoutCapacityOf(scouts, 24, input.dailyCeilingUsd ?? DEFAULT_DAILY_CEILING_USD),
+    monthlySpend: input.nowIso === undefined ? null : monthlySpendOf(ledger, input.nowIso),
   };
 }
+
 
 /** "3.2 MB", "412 KB", "9 B". */
 export function bytesText(bytes: number): string {
@@ -741,11 +816,19 @@ export interface MonthlySpendView {
   readonly ledgerBeginsAt: string | null;
 }
 
-type AttemptRef = { readonly id: string; readonly worker: { readonly version: string; readonly provider: string } };
+type AttemptRef = { readonly id: string; readonly worker: WorkerRef };
 
-/** The eight billed quantities over a set of rows, each through the ledger's own `sumMetric`. */
-function tokenTotals(rows: readonly CostEntry[]): Readonly<Record<MonthlyTokenMetric, MeasuredTotal>> {
-  return Object.fromEntries(MONTHLY_TOKEN_METRICS.map((m) => [m, sumMetric(rows, m)])) as Readonly<Record<MonthlyTokenMetric, MeasuredTotal>>;
+type TokenSums = Readonly<Record<MonthlyTokenMetric, MeasuredSum>>;
+
+const tokenSums = (): TokenSums => Object.fromEntries(MONTHLY_TOKEN_METRICS.map((m) => [m, measuredSum()])) as TokenSums;
+
+function foldTokens(into: TokenSums, e: CostEntry): void {
+  for (const m of MONTHLY_TOKEN_METRICS) addMeasured(into[m], e.cost[m]);
+}
+
+/** The eight billed quantities, each a `MeasuredTotal` as `sumMetric` gives it. */
+function tokenTotals(sums: TokenSums): Readonly<Record<MonthlyTokenMetric, MeasuredTotal>> {
+  return Object.fromEntries(MONTHLY_TOKEN_METRICS.map((m) => [m, measuredTotal(sums[m])])) as Readonly<Record<MonthlyTokenMetric, MeasuredTotal>>;
 }
 
 /** reads / (reads + writes + uncached). A gap, never 0%, when any of the three is unmeasured or no input was sent. */
@@ -770,29 +853,41 @@ function hitRateFromTokens(tokens: Readonly<Record<MonthlyTokenMetric, MeasuredT
   );
 }
 
-function breakdown(
-  entries: readonly CostEntry[],
-  keyOf: (e: CostEntry) => string,
+/** One monthly breakdown row's running totals. */
+export interface BreakdownTotals {
+  readonly usd: MeasuredSum;
+  predatesFields: number;
+  batched: number;
+  readonly tokens: TokenSums;
+}
+
+const breakdownTotals = (): BreakdownTotals => ({ usd: measuredSum(), predatesFields: 0, batched: 0, tokens: tokenSums() });
+
+function foldBreakdown(rows: Record<string, BreakdownTotals>, key: string, e: CostEntry): void {
+  const row = (rows[key] ??= breakdownTotals());
+  addMeasured(row.usd, e.cost.usd);
+  const m = cacheMeteringOf(e.cost);
+  if (m.status === "PREDATES_FIELDS") row.predatesFields += 1;
+  else if (m.status === "MEASURED" && m.batch) row.batched += 1;
+  foldTokens(row.tokens, e);
+}
+
+function breakdownOf(
+  rows: Record<string, BreakdownTotals>,
   /** Per-key cache saving, supplied only where the key is itself a priced model. */
   savingFor?: (key: string, tokens: Readonly<Record<MonthlyTokenMetric, MeasuredTotal>>) => number | null,
 ): readonly MonthlyBreakdownRow[] {
-  const grouped = new Map<string, CostEntry[]>();
-  for (const e of entries) {
-    const key = keyOf(e);
-    grouped.set(key, [...(grouped.get(key) ?? []), e]);
-  }
-  return [...grouped.entries()]
-    .map(([key, rows]) => {
-      const total = sumMetric(rows, "usd");
-      const metering = meteringOf(rows);
-      const tokens = tokenTotals(rows);
+  return Object.entries(rows)
+    .map(([key, row]) => {
+      const total = measuredTotal(row.usd);
+      const tokens = tokenTotals(row.tokens);
       return {
         key,
         usd: total.total === null ? null : round(total.total),
         measuredRows: total.measured,
         unmeasuredRows: total.unmeasured,
-        predatesFieldRows: metering.predatesFields,
-        batchedRows: metering.batched,
+        predatesFieldRows: row.predatesFields,
+        batchedRows: row.batched,
         tokens,
         cacheHitRate: hitRateFromTokens(tokens),
         cacheSavingUsd: savingFor ? savingFor(key, tokens) : null,
@@ -801,91 +896,105 @@ function breakdown(
     .sort((a, b) => (b.usd ?? -1) - (a.usd ?? -1) || a.key.localeCompare(b.key));
 }
 
-/** `breakdown` over parts already keyed by model (`costPortionsByModel`): one part of a split charge per model, each counted once. */
-function breakdownParts(
-  parts: readonly { readonly model: string; readonly entry: CostEntry }[],
-  savingFor?: (key: string, tokens: Readonly<Record<MonthlyTokenMetric, MeasuredTotal>>) => number | null,
-): readonly MonthlyBreakdownRow[] {
-  const keyOf = new Map<CostEntry, string>(parts.map((p) => [p.entry, p.model]));
-  return breakdown(parts.map((p) => p.entry), (e) => keyOf.get(e) ?? ATTEMPT_NOT_ON_RECORD, savingFor);
-}
-
 /* Search money is not model money: broken down by host on its own and kept out of `byModel`, where a row with no model would read as the cache pre-warm. */
 const isSearchCharge = (e: CostEntry): boolean => String(e.role) === DISCOVERY_SEARCH_ROLE;
+
+/** One UTC month's running totals. */
+export interface MonthTotals {
+  rows: number;
+  readonly usd: MeasuredSum;
+  readonly tokens: TokenSums;
+  readonly cacheSaving: ExactSum;
+  cacheSavingRows: number;
+  readonly batchSaving: ExactSum;
+  batchRows: number;
+  predatesFields: number;
+  providerReportedNothing: number;
+  readonly byProvider: Record<string, BreakdownTotals>;
+  readonly byModel: Record<string, BreakdownTotals>;
+  readonly byRole: Record<string, BreakdownTotals>;
+  readonly bySearchSource: Record<string, BreakdownTotals>;
+}
+
+const monthTotals = (): MonthTotals => ({ rows: 0, usd: measuredSum(), tokens: tokenSums(), cacheSaving: exactSum(), cacheSavingRows: 0,
+  batchSaving: exactSum(), batchRows: 0, predatesFields: 0, providerReportedNothing: 0, byProvider: {}, byModel: {}, byRole: {}, bySearchSource: {} });
+
+export const utcMonthOf = (at: number): string => new Date(at).toISOString().slice(0, 7);
+
+/** A charge into its UTC month; the caller holds back a charge stamped after its clock until the clock passes it. */
+export function foldCostMonth(t: CostLedgerTotals, e: CostEntry, worker: WorkerRef | null): void {
+  const at = Date.parse(e.recordedAt);
+  if (!Number.isFinite(at)) return;
+  const month = (t.months[utcMonthOf(at)] ??= monthTotals());
+  month.rows += 1;
+  addMeasured(month.usd, e.cost.usd);
+  foldTokens(month.tokens, e);
+  const metering = cacheMeteringOf(e.cost);
+  if (metering.status === "PREDATES_FIELDS") month.predatesFields += 1;
+  else if (metering.status === "UNREPORTED") month.providerReportedNothing += 1;
+  else {
+    /* Each part of a multi-model charge saved at its own model's cache-read rate. */
+    let savedHere: number | null = null;
+    for (const part of costPortionsByModel(e, worker ? modelKeyOf(worker) : NO_MODEL_KEY)) {
+      const reads = part.entry.cost.cacheReadInputTokens;
+      const saved = part.model === NO_MODEL_KEY || reads === null || reads <= 0 ? null : cacheSavingUsd(reads, part.model);
+      if (saved !== null) savedHere = (savedHere ?? 0) + saved;
+    }
+    if (savedHere !== null) {
+      addExact(month.cacheSaving, savedHere);
+      month.cacheSavingRows += 1;
+    }
+    if (metering.batch) {
+      month.batchRows += 1;
+      /* Charged at half, so the amount charged IS the amount saved. */
+      if (typeof e.cost.usd === "number" && Number.isFinite(e.cost.usd)) addExact(month.batchSaving, e.cost.usd);
+    }
+  }
+  foldBreakdown(month.byProvider, worker ? worker.provider : ATTEMPT_NOT_ON_RECORD, e);
+  if (!isSearchCharge(e)) for (const part of costPortionsByModel(e, worker ? modelKeyOf(worker) : ATTEMPT_NOT_ON_RECORD)) foldBreakdown(month.byModel, part.model, part.entry);
+  foldBreakdown(month.byRole, e.role, e);
+  if (isSearchCharge(e)) foldBreakdown(month.bySearchSource, e.source ?? SEARCH_SOURCE_NOT_ON_RECORD, e);
+}
 
 export function buildMonthlySpend(input: {
   readonly costs: readonly CostEntry[];
   readonly attempts: readonly AttemptRef[];
   readonly nowIso: string;
 }): MonthlySpendView {
-  const window = utcMonthWindow(input.nowIso);
-  const modelOf = new Map(input.attempts.map((a) => [a.id, modelKeyOf(a.worker)]));
-  const providerOf = new Map(input.attempts.map((a) => [a.id, a.worker.provider]));
-  const rows = entriesInWindow(input.costs, window);
-  const total = sumMetric(rows, "usd");
+  return monthlySpendOf(costLedgerOf(input.costs, input.attempts, input.nowIso), input.nowIso);
+}
 
-  /* Cache and batch savings, from the rows that actually measured them. */
-  let cacheSaving = 0;
-  let cacheSavingRows = 0;
-  let batchSaving = 0;
-  let batchRows = 0;
-  let predatesFields = 0;
-  let providerReportedNothing = 0;
-  for (const e of rows) {
-    const metering = cacheMeteringOf(e.cost);
-    if (metering.status === "PREDATES_FIELDS") {
-      predatesFields += 1;
-      continue;
-    }
-    if (metering.status === "UNREPORTED") {
-      providerReportedNothing += 1;
-      continue;
-    }
-    /* Each part of a multi-model charge saved at its own model's cache-read rate. */
-    let savedHere: number | null = null;
-    for (const part of costPortionsByModel(e, modelOf.get(e.attemptId) ?? NO_MODEL_KEY)) {
-      const reads = part.entry.cost.cacheReadInputTokens;
-      const saved = part.model === NO_MODEL_KEY || reads === null || reads <= 0 ? null : cacheSavingUsd(reads, part.model);
-      if (saved !== null) savedHere = (savedHere ?? 0) + saved;
-    }
-    if (savedHere !== null) {
-      cacheSaving += savedHere;
-      cacheSavingRows += 1;
-    }
-    if (metering.batch) {
-      batchRows += 1;
-      /* Charged at half, so the amount charged IS the amount saved. */
-      if (typeof e.cost.usd === "number" && Number.isFinite(e.cost.usd)) batchSaving += e.cost.usd;
-    }
-  }
+export function monthlySpendOf(ledger: CostLedgerTotals, nowIso: string): MonthlySpendView {
+  const window = utcMonthWindow(nowIso);
+  const month = ledger.months[window.since.slice(0, 7)] ?? monthTotals();
+  const total = measuredTotal(month.usd);
 
   /* History: this month, then back as far as the ledger holds a readable row. */
-  const stamps = input.costs.map((e) => Date.parse(e.recordedAt)).filter((t) => Number.isFinite(t));
-  const ledgerBeginsAt = stamps.length === 0 ? null : new Date(Math.min(...stamps)).toISOString();
+  const ledgerBeginsAt = ledger.beginsAt === null ? null : new Date(ledger.beginsAt).toISOString();
   const history: MonthComparison[] = [];
   for (let back = 0; back < 3; back += 1) {
-    const w = utcMonthWindow(input.nowIso, back);
+    const w = utcMonthWindow(nowIso, back);
     if (back > 0 && (ledgerBeginsAt === null || Date.parse(w.until) < Date.parse(ledgerBeginsAt))) break;
-    const monthRows = entriesInWindow(input.costs, w);
-    const monthTotal = sumMetric(monthRows, "usd");
+    const held = ledger.months[w.since.slice(0, 7)] ?? monthTotals();
+    const monthTotal = measuredTotal(held.usd);
     history.push({
       label: w.label,
       since: w.since,
       usd: monthTotal.total === null ? null : round(monthTotal.total),
       measuredRows: monthTotal.measured,
-      rows: monthRows.length,
+      rows: held.rows,
       complete: w.complete,
     });
   }
 
-  const monthTokens = tokenTotals(rows);
+  const monthTokens = tokenTotals(month.tokens);
   return {
     window,
-    asOf: input.nowIso,
+    asOf: nowIso,
     total: { ...total, total: total.total === null ? null : round(total.total) },
-    byProvider: breakdown(rows, (e) => providerOf.get(e.attemptId) ?? ATTEMPT_NOT_ON_RECORD),
-    byModel: breakdownParts(
-      rows.filter((e) => !isSearchCharge(e)).flatMap((e) => costPortionsByModel(e, modelOf.get(e.attemptId) ?? ATTEMPT_NOT_ON_RECORD)),
+    byProvider: breakdownOf(month.byProvider),
+    byModel: breakdownOf(
+      month.byModel,
       /* `cacheSavingUsd` returns null for an unpriced or unknown key. */
       (key, tokens) => {
         if (key === ATTEMPT_NOT_ON_RECORD || key === NO_MODEL_KEY) return null;
@@ -895,18 +1004,53 @@ export function buildMonthlySpend(input: {
         return saved === null ? null : round(saved);
       },
     ),
-    byRole: breakdown(rows, (e) => e.role),
-    bySearchSource: breakdown(rows.filter(isSearchCharge), (e) => e.source ?? SEARCH_SOURCE_NOT_ON_RECORD),
-    cacheSavingUsd: cacheSavingRows === 0 ? null : round(cacheSaving),
-    cacheSavingRows,
+    byRole: breakdownOf(month.byRole),
+    bySearchSource: breakdownOf(month.bySearchSource),
+    cacheSavingUsd: month.cacheSavingRows === 0 ? null : round(exactValue(month.cacheSaving)),
+    cacheSavingRows: month.cacheSavingRows,
     cacheHitRate: hitRateFromTokens(monthTokens),
-    batchSavingUsd: batchRows === 0 ? null : round(batchSaving),
-    batchRows,
-    unmeasured: { predatesFields, providerReportedNothing, noDollarFigure: total.unmeasured },
+    batchSavingUsd: month.batchRows === 0 ? null : round(exactValue(month.batchSaving)),
+    batchRows: month.batchRows,
+    unmeasured: { predatesFields: month.predatesFields, providerReportedNothing: month.providerReportedNothing, noDollarFigure: total.unmeasured },
     tokens: monthTokens,
     history,
     ledgerBeginsAt,
   };
+}
+
+/** Measured spend per Eastern calendar day: each day's running totals. */
+export interface DayTotals {
+  readonly usd: ExactSum;
+  attempts: number;
+}
+
+const EASTERN_DAY = new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit" });
+
+/** How far back `spendByDay` reaches from its clock. */
+export const SPEND_BY_DAY_MS = 14 * 86_400_000;
+
+/** A charge into, or with `sign` -1 back out of, its Eastern day. */
+export function foldSpendDay(days: Record<string, DayTotals>, e: CostEntry, sign: 1 | -1 = 1): void {
+  const at = Date.parse(e.recordedAt);
+  if (!Number.isFinite(at)) return;
+  const key = EASTERN_DAY.format(new Date(at));
+  const day = (days[key] ??= { usd: exactSum(), attempts: 0 });
+  if (typeof e.cost.usd === "number" && Number.isFinite(e.cost.usd)) (sign === 1 ? addExact : subtractExact)(day.usd, e.cost.usd);
+  day.attempts += sign;
+  if (day.attempts === 0) delete days[key];
+}
+
+/** Measured spend per Eastern calendar day over the trailing fortnight, from the charges stamped inside it. */
+export function spendByDayOf(days: Readonly<Record<string, DayTotals>>): OwnerSnapshot["spendByDay"] {
+  return Object.keys(days).sort((a, b) => a.localeCompare(b))
+    .map((day) => ({ day, usd: round(exactValue(days[day]!.usd)), attempts: days[day]!.attempts }));
+}
+
+export function spendByDay(costs: readonly CostEntry[], nowIso: string): OwnerSnapshot["spendByDay"] {
+  const since = Date.parse(nowIso) - SPEND_BY_DAY_MS;
+  const days: Record<string, DayTotals> = {};
+  for (const e of costs) if (Date.parse(e.recordedAt) >= since) foldSpendDay(days, e);
+  return spendByDayOf(days);
 }
 
 /*
@@ -955,10 +1099,9 @@ export interface SpendByStateRow {
   readonly measuredRows: number;
   readonly unmeasuredRows: number;
   readonly attempts: number;
-  /** The jurisdictions under this state, most-spent first. Empty for the overhead bucket. */
-  readonly places: readonly SpendByPlaceRow[];
 }
 
+/** The national rows; each state's jurisdictions are published on that state's own row. */
 export interface SpendByPlaceView {
   /** The whole-ledger total, measured/unmeasured split kept. */
   readonly total: MeasuredTotal;
@@ -966,65 +1109,44 @@ export interface SpendByPlaceView {
   readonly states: readonly SpendByStateRow[];
 }
 
-/** Roll the whole cost ledger up by place: state, then jurisdiction. Pure. */
-export function buildSpendByPlace(entries: readonly CostEntry[]): SpendByPlaceView {
-  const total = sumMetric(entries, "usd");
-  const byState = new Map<string, Map<string, CostEntry[]>>();
-  const overhead: CostEntry[] = [];
-  for (const e of entries) {
-    const p = placeIdOf(e);
-    if (p === null) {
-      overhead.push(e);
-      continue;
-    }
-    const places = byState.get(p.state) ?? new Map<string, CostEntry[]>();
-    places.set(p.place, [...(places.get(p.place) ?? []), e]);
-    byState.set(p.state, places);
-  }
+/** The whole cost ledger by place from every charge, each state with its jurisdictions. Pure. */
+export function buildSpendByPlace(entries: readonly CostEntry[]): SpendByPlaceView & { readonly states: readonly (SpendByStateRow & { readonly places: readonly SpendByPlaceRow[] })[] } {
+  const places: PlaceLedger = {};
+  for (const e of entries) foldPlace(places, e);
+  const view = spendByPlaceOf(Object.fromEntries(Object.entries(places).map(([state, rows]) => [state, placeSumOf(rows)])), costLedgerOf(entries, []).overhead);
+  return { ...view, states: view.states.map((row) => ({ ...row, places: places[row.state] ? placeRowsOf(row.state, places[row.state]!) : [] })) };
+}
 
-  const stateRow = (
-    state: string,
-    label: string,
-    places: readonly SpendByPlaceRow[],
-    rows: readonly CostEntry[],
-  ): SpendByStateRow => {
-    const t = sumMetric(rows, "usd");
-    return {
-      state,
-      label,
-      usd: t.total === null ? null : round(t.total),
-      measuredRows: t.measured,
-      unmeasuredRows: t.unmeasured,
-      attempts: rows.length,
-      places,
-    };
-  };
+export function placeSumOf(places: Readonly<Record<string, PlaceTotals>>): PlaceTotals {
+  const sum = placeTotals();
+  for (const row of Object.values(places)) mergePlaceTotals(sum, row);
+  return sum;
+}
 
-  const states: SpendByStateRow[] = [...byState.entries()]
-    .map(([state, places]) => {
-      const placeRows: SpendByPlaceRow[] = [...places.entries()]
-        .map(([place, rows]) => {
-          const pt = sumMetric(rows, "usd");
-          return {
-            key: place,
-            label: placeLabel(state, place),
-            usd: pt.total === null ? null : round(pt.total),
-            measuredRows: pt.measured,
-            unmeasuredRows: pt.unmeasured,
-            attempts: rows.length,
-          };
-        })
-        .sort((a, b) => (b.usd ?? -1) - (a.usd ?? -1) || a.key.localeCompare(b.key));
-      const stateEntries = [...places.values()].flat();
-      return stateRow(state, state.toUpperCase(), placeRows, stateEntries);
+/** One state's jurisdictions, most-spent first. */
+export function placeRowsOf(state: string, places: Readonly<Record<string, PlaceTotals>>): SpendByPlaceRow[] {
+  return Object.entries(places)
+    .map(([place, row]) => {
+      const pt = measuredTotal(row.usd);
+      return { key: place, label: placeLabel(state, place), usd: pt.total === null ? null : round(pt.total), measuredRows: pt.measured,
+        unmeasuredRows: pt.unmeasured, attempts: row.attempts };
     })
+    .sort((a, b) => (b.usd ?? -1) - (a.usd ?? -1) || a.key.localeCompare(b.key));
+}
+
+/** `states` holds each state's place totals summed. */
+export function spendByPlaceOf(states: Readonly<Record<string, PlaceTotals>>, overhead: PlaceTotals): SpendByPlaceView {
+  const total = measuredSum();
+  const stateRow = (state: string, label: string, row: PlaceTotals): SpendByStateRow => {
+    mergeMeasured(total, row.usd);
+    const t = measuredTotal(row.usd);
+    return { state, label, usd: t.total === null ? null : round(t.total), measuredRows: t.measured, unmeasuredRows: t.unmeasured, attempts: row.attempts };
+  };
+  const rows = Object.entries(states).map(([state, row]) => stateRow(state, state.toUpperCase(), row))
     .sort((a, b) => (b.usd ?? -1) - (a.usd ?? -1) || a.state.localeCompare(b.state));
-
-  if (overhead.length > 0) {
-    states.push(stateRow(NOT_A_PLACE_KEY, "Not attributed to a place (pre-warm, bare API calls, misc)", [], overhead));
-  }
-
-  return { total: { ...total, total: total.total === null ? null : round(total.total) }, states };
+  if (overhead.attempts > 0) rows.push(stateRow(NOT_A_PLACE_KEY, "Not attributed to a place (pre-warm, bare API calls, misc)", overhead));
+  const whole = measuredTotal(total);
+  return { total: { ...whole, total: whole.total === null ? null : round(whole.total) }, states: rows };
 }
 
 /** A by-model key as the owner reads it. */

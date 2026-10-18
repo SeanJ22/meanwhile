@@ -1,38 +1,14 @@
 "use client";
 
-/**
- * Shown when the reader pans across a state line, since every fact changes
- * there. Once per ordered pair of states per session, device-local and never
- * logged. Fires only for states the outlines file covers.
- */
-export function StateCrossingPrompt({
-  fromName,
-  toName,
-  onSee,
-  onStay,
-}: {
-  /** The state the reader is leaving. */
-  fromName: string;
-  /** The state they have panned into. */
-  toName: string;
-  onSee: () => void;
-  onStay: () => void;
-}) {
+export function StateCrossingPrompt({ toName, onDismiss }: { toName: string; onDismiss: () => void }) {
   return (
-    <div className="state-crossing" role="dialog" aria-label={`Leaving ${fromName}`}>
+    <div className="state-crossing" role="status" aria-live="polite">
       <p className="state-crossing-body">
-        You&apos;re leaving {fromName}. {toName} is a different world —
-        different governments, different laws, different election deadlines.
-        Want to see their info?
+        Now showing {toName}. Officials, meetings and ballot follow this area.
       </p>
-      <div className="state-crossing-actions">
-        <button type="button" className="state-crossing-primary" onClick={onSee}>
-          See {toName}
-        </button>
-        <button type="button" className="state-crossing-secondary" onClick={onStay}>
-          Stay in {fromName}
-        </button>
-      </div>
+      <button type="button" className="state-crossing-secondary" onClick={onDismiss} aria-label="Dismiss state message">
+        Dismiss
+      </button>
     </div>
   );
 }

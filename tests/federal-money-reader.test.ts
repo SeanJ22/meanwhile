@@ -18,11 +18,11 @@ import { lexicalReading } from "../lib/ask/lexical-reading.ts";
 import { gateRecordsToSubject } from "../lib/ask/relevance.ts";
 import { validateAnswer } from "../lib/ask/validate.ts";
 import { publishFederalMoneyPartition, publishFederalMoneyProgress } from "../lib/federal-money/edge-publication.ts";
-import { publishReaderEdgeArtifacts } from "../lib/meetings/edge-serving.ts";
+import { publishPointers } from "./helpers/edge-pointers.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import { GET } from "../app/api/federal-money/route.ts";
 import { provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
-import { syntheticFederalDirectory } from "./helpers/promoted-fixtures.ts";
+import { stateFederalDirectoryArtifacts } from "./helpers/promoted-fixtures.ts";
 import { federalMoneyProjectionIssue, federalMoneyLookupKeys, type FederalMoneyProjection } from "../lib/federal-money/model.ts";
 import type { FederalMoneyFact } from "../lib/federal-money/model.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
@@ -162,12 +162,10 @@ test("the public federal-money route serves the real place artifact on its first
   try {
     const store = new LocalFileArtifactStore(directory);
     await publish(store);
-    const published = await publishReaderEdgeArtifacts(null, { sourceThrough: NOW, retrievedAt: NOW, promotedThrough: NOW }, {
-      store, now: NOW,
-      authority: { "federal-directory": { value: syntheticFederalDirectory(), versionId: "reader-api:federal-directory" } },
-      stateAuthorities: { "registry-runtime": stateRegistryArtifacts("reader-api:registry", ["AR"]) },
-    });
-    assert.equal(published.status, "PUBLISHED");
+    const written = await publishPointers(store, {
+      stateAuthorities: { "registry-runtime": stateRegistryArtifacts("reader-api:registry", ["AR"]), "federal-directory": stateFederalDirectoryArtifacts("reader-api:federal-directory") },
+    }, NOW);
+    assert.ok(written.includes("registry-runtime/AR") && written.some(pointer => pointer.startsWith("federal-directory/")), JSON.stringify(written));
     process.env.WTP_READER_EDGE_DIR = directory;
     process.env.DATABASE_URL = "postgresql://do-not-open.invalid/federal-money-test";
     const started = performance.now();

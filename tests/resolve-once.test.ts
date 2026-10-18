@@ -12,10 +12,14 @@ import { divisionsAt, sweepsRun, type GeoFeature } from "../lib/registry/resolve
 import { GET as meetingsGET } from "../app/api/meetings/route.ts";
 import type { Division, Registry } from "../lib/registry/types.ts";
 import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
-import { installMeetings, recordedMeetings85701 } from "./helpers/reader-fixtures.ts";
+import { recordedMeetingsSnapshot } from "./helpers/reader-fixtures.ts";
+import { publishRecordedEdge } from "./helpers/reader-edge-meetings.ts";
 
 await installRegistryAuthority();
-installMeetings(recordedMeetings85701());
+{
+  const recorded = recordedMeetingsSnapshot();
+  await publishRecordedEdge(recorded.meetings, recorded.agendaDocuments);
+}
 
 /**
  * `/api/meetings` resolves the governing geography once per request and hands the resolved divisions to

@@ -340,8 +340,8 @@ test("a slow research run cannot delay the census admission clock", async () => 
   let finish!: () => void;
   const research = new Promise<void>(resolve => { finish = resolve; });
   let passes = 0;
-  const clocks = new IndependentRuntimeLaneScheduler([{ id: "research", everyMs: 60_000, run: () => research },
-    { id: "census", everyMs: CENSUS_LANE_INTERVAL_MS, run: async () => { passes++; } }]);
+  const clocks = new IndependentRuntimeLaneScheduler([{ id: "research", everyMs: 60_000, budgetMs: 60_000, run: () => research },
+    { id: "census", everyMs: CENSUS_LANE_INTERVAL_MS, budgetMs: CENSUS_LANE_INTERVAL_MS, run: async () => { passes++; } }]);
   clocks.tick(0);
   await new Promise(resolve => setImmediate(resolve));
   clocks.tick(CENSUS_LANE_INTERVAL_MS);

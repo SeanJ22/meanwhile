@@ -13,10 +13,11 @@ import {
 } from "../lib/civic-data/meeting-history.ts";
 import { processRegisteredMeetingHistoryCandidate } from "../lib/civic-data/promotion.ts";
 import type { AgendaDocument } from "../lib/meetings/agenda-documents.ts";
-import { readMeetingsProjection, validateSnapshot, type MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
+import { validateSnapshot, type MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import type { ChildRunReport } from "../lib/sources/composite/index.ts";
 import { promoteMeetingPartition, promoteMeetingPartitions } from "../scripts/ingest.ts";
+import { readEveryBody } from "./helpers/meeting-body-national.ts";
 
 const SEED = "2026-01-01T12:00:00.000Z";
 const NOW = "2026-09-08T13:00:01.000Z";
@@ -153,8 +154,8 @@ test("DB-06: an old concluded sitting with a record moves to history first, then
   const readHistory = await readMeetingHistory(legistar, { store });
   assert.equal(readHistory.kind, "PROMOTED", JSON.stringify("detail" in readHistory ? readHistory.detail : readHistory));
 
-  // The Reader's composition still answers for it: nothing is in neither place.
-  const composed = await readMeetingsProjection({ store, now: NOW, bypassCache: true });
+  // The body's held record still answers for it: nothing is in neither place.
+  const { read: composed } = await readEveryBody(store, NOW);
   assert.equal(composed.kind, "PROMOTED", JSON.stringify("detail" in composed ? composed.detail : composed));
   const ids = composed.kind === "PROMOTED" ? composed.value.meetings.map(({ id }) => id) : [];
   assert.ok(ids.includes(oldRecord.id) && ids.includes(fresh.id));

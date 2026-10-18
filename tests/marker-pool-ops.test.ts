@@ -1,7 +1,4 @@
-/**
- * The marker pool's create, remove and write counts. `MarkerFactory` is the one seam, defaulted to the real
- * `document` and MapLibre `Marker` calls and passed by nothing in the app.
- */
+
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -202,10 +199,6 @@ test("P-004 · the signature covers every input the icon pass reads", () => {
   assert.equal(signatures.size, 4, "two distinguishable venues share a signature");
 });
 
-/**
- * The map must receive the unfiltered venue grouping and a separate key set, and the visibility effect must not
- * depend on the venue objects. Read from the components' source by shape.
- */
 test("P-001 · map-entry hands the map ALL venues and the visible keys separately", () => {
   const entry = readFileSync(
     join(dirname(fileURLToPath(import.meta.url)), "..", "components", "map", "map-entry.tsx"),
@@ -246,7 +239,7 @@ test("P-001 · the canvas rebuilds on DATA and applies visibility on KEYS, in se
 
   // And the visibility effect depends on the keys.
   assert.match(canvas, /\}, \[venues, visibleVenueKeys, presentationReady\]\);/);
-  assert.match(canvas.slice(canvas.lastIndexOf("useEffect(() =>", rebuildAt), rebuildAt), /mapPresentationHeld\(map\)/, "pool creation must remain deferred during camera motion");
+  assert.match(canvas.slice(Math.max(canvas.lastIndexOf("useEffect(() =>", rebuildAt), canvas.lastIndexOf("useLayoutEffect(() =>", rebuildAt)), rebuildAt), /mapPresentationHeld\(map\)/, "pool creation must remain deferred during camera motion");
 
   // Selection does not re-run on every data change.
   assert.match(canvas, /\}, \[selectedVenueKey\]\);/);

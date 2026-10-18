@@ -1,5 +1,4 @@
-// One read per public office address. The reader's home never enters this
-// pool. Failed lookups do not invent a point or remain cached.
+// Concurrent requests for the same public office share one lookup.
 const points = new Map<string, Promise<{ lat: number; lng: number } | null>>();
 export function officePointFor(address: string): Promise<{ lat: number; lng: number } | null> {
   const held = points.get(address);
@@ -11,7 +10,7 @@ export function officePointFor(address: string): Promise<{ lat: number; lng: num
       return value.match && Number.isFinite(value.lat) && Number.isFinite(value.lng)
         && Math.abs(value.lat!) <= 90 && Math.abs(value.lng!) <= 180
         ? { lat: value.lat!, lng: value.lng! } : null;
-    }).catch(() => null).then(point => { if (!point) points.delete(address); return point; });
+    }).catch(() => null).finally(() => { if (points.get(address) === pending) points.delete(address); });
   points.set(address, pending);
   return pending;
 }

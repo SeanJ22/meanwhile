@@ -2,7 +2,7 @@ import { validFinanceDoorDetailSource } from "./finance-detail-source.ts";
 import { jurisdictionFromOcdId } from "../coverage/states.ts";
 import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 import { currentReaderSelection } from "../db/reader-route.ts";
-import { currentReaderAuthorityEdge } from "../registry/runtime-edge.ts";
+import { currentReaderAuthorityEdge, ensurePromotedEdge } from "../registry/runtime-edge.ts";
 import type { StateMoneyRecord } from "./state-money.ts";
 import { stateMoneyFundingIssue } from "./state-money-funding.ts";
 import { campaignFinanceStateScope, isCampaignFinanceStateScope } from "./campaign-scopes.ts";
@@ -67,6 +67,7 @@ export async function settleCampaignFinanceReads(divisions?: readonly string[]):
   const held = context ? checkedRequests.get(context) ?? new Map<string, readonly CampaignFinanceRecord[]>() : null;
   if (context && held) checkedRequests.set(context, held);
   const read = await Promise.allSettled(scopes.map(async scope => {
+    await ensurePromotedEdge("CURATED_READER_RECORD", scope);
     held?.delete(scope);
     const entry = edge?.promoted?.get(`CURATED_READER_RECORD:${scope}`);
     const result = await readCampaignFinance(scope, entry ? { edge: entry } : {});

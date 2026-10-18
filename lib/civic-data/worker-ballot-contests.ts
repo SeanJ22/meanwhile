@@ -415,7 +415,7 @@ export async function publishWorkerBallotContestsResults(input: {
           .sort((a, b) => b.recordedAt.localeCompare(a.recordedAt));
         const capturedIds = new Set(captures.map(capture => capture.evidence.artifactId));
         const fetched = await Promise.all(held.filter(row => !capturedIds.has(row.artifactId))
-          .map(row => readCapture(row.artifactId, results).catch(() => null)));
+          .map(row => readCapture(row.artifactId).catch(() => null)));
         captures.push(...fetched.filter((capture): capture is WorkerPublicationCapture => capture !== null));
       }
       let prior = await readManualProjectionPrior(plan.publication!.contractId as ManualProjectionPackage["contractId"], input.store, input.now);

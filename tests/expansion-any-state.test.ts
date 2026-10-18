@@ -39,7 +39,7 @@ import { ADMIN_CONFIG_ID, defaultAdminConfig } from "../lib/control-plane/gatewa
 import type { ActionRequest } from "../lib/control-plane/gateway/contract.ts";
 import { submit } from "../lib/control-plane/gateway/gateway.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
-import { readAllAssignmentSources } from "../lib/control-plane/assignment-read.ts";
+import { readEveryAssignmentSource } from "./helpers/assignment-sources.ts";
 import { buildAssignmentView } from "../lib/control-plane/assignment-view.ts";
 import type { ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { OWNER_DISPATCH } from "../lib/control-plane/scheduler/obligation.ts";
@@ -53,7 +53,6 @@ import {
 } from "../lib/control-plane/scheduler/providers/meetings-discovery.ts";
 import { buildRegistry } from "../lib/control-plane/scheduler/registry.ts";
 import type { JurisdictionRegistry } from "../lib/hunt/jurisdiction-universe.ts";
-import { readMeetingsProjection } from "../lib/meetings/snapshot.ts";
 import { registrationCandidate, type RegistrationReadModel } from "../lib/registration/candidate.ts";
 import { preloadRegistrationJurisdictions } from "../lib/registration/jurisdictions.ts";
 import { REGISTRATION_SOURCE_BYTES, REGISTRATION_SOURCE_SHA256, REGISTRATION_SOURCE_URL, registrationTarget } from "../lib/registration/publication.ts";
@@ -62,6 +61,7 @@ import { loadRegistrationReference } from "../lib/registration/reference.ts";
 import { makeIcalSource } from "../lib/sources/ical/index.ts";
 import { curatedReaderSourceClass } from "./helpers/curated-reader-source-class.ts";
 import { ics, localStart, reviewedIds } from "./helpers/expansion-fixtures.ts";
+import { freshEdge, publishPass, readPlace } from "./helpers/meeting-body-fixtures.ts";
 import { recordedDiscoveryOpen, type RecordedReply } from "./helpers/recorded-discovery-open.ts";
 
 const ROOT = join(import.meta.dirname, "..");
@@ -81,6 +81,7 @@ const T_READER = at(-1);
 
 const COLUMBUS = "oh:city:city-of-columbus";
 const COLUMBUS_BODY = "ocd-division/country:us/state:oh/place:columbus#governing";
+const COLUMBUS_DIVISION = "ocd-division/country:us/state:oh/place:columbus";
 const COLUMBUS_HOST = "www.columbus.gov";
 const COLUMBUS_ROUTE = `https://${COLUMBUS_HOST}/calendar/city-council.ics`;
 const ALLOW: RecordedReply = { status: 200, body: "User-agent: *\nAllow: /\n", contentType: "text/plain" };
@@ -316,7 +317,7 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   const created = (await repos.obligations.list()).map((row) => row.value).filter((o) => o.materializedBy === OWNER_DISPATCH);
   assert.equal(created.length, n, "the store holds exactly what the runner counted");
   // The real gateway/runner marks survive the publisher's bounded list: the same exact-reference filter Admin reads.
-  const assignmentSources = await readAllAssignmentSources(repos, { nowIso: T_CYCLE, activation: null, pilotZips: [] });
+  const assignmentSources = await readEveryAssignmentSource(repos, T_CYCLE);
   const publishedWork = buildAssignmentView(assignmentSources, { perGroup: 1 });
   const instruction = created[0]!.assignments![0]!.assignmentKey;
   assert.equal(Object.values(publishedWork.instructionCounts?.[instruction] ?? {}).reduce((sum, count) => sum + count, 0), created.length);
@@ -466,7 +467,9 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   const familyOutcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, derivedFamilyCandidate(partition, build), T_FAMILY);
   assert.equal(familyOutcome.candidate.state, "PROMOTED", `${familyOutcome.candidate.failureCode ?? ""} ${familyOutcome.candidate.failureDetail ?? ""}`);
 
-  const reader = await readMeetingsProjection({ store, now: T_READER, bypassCache: true });
+  const edge = freshEdge();
+  assert.equal((await publishPass(store, edge, T_READER)).status, "PUBLISHED");
+  const reader = await readPlace(edge, store, [COLUMBUS_DIVISION], T_READER);
   assert.equal(reader.kind, "PROMOTED");
   if (reader.kind !== "PROMOTED") return;
   const sittings = reader.value.meetings.filter((m) => m.bodyId === COLUMBUS_BODY);

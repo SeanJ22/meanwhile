@@ -1,8 +1,10 @@
-import type { AssignmentSources } from "./assignment-view.ts";
 import type { ExpansionScopeDecision } from "./expansion/scopes.ts";
+import type { StandingObligation } from "./scheduler/durable.ts";
 
-export function exactScopeMembers(scopes: readonly ExpansionScopeDecision[], sources: Pick<AssignmentSources, "obligations">): ReadonlyMap<string, ReadonlySet<string>> {
-  return new Map(scopes.map(scope => [scope.key, new Set(sources.obligations.filter(obligation =>
+export function exactScopeMembers(scopes: readonly ExpansionScopeDecision[],
+  obligations: Iterable<Pick<StandingObligation, "subjectId" | "assignments">>): ReadonlyMap<string, ReadonlySet<string>> {
+  const all = [...obligations];
+  return new Map(scopes.map(scope => [scope.key, new Set(all.filter(obligation =>
     obligation.assignments?.some(a => a.assignmentKey === scope.key && a.ref === scope.receiptId))
     .map(obligation => obligation.subjectId))]));
 }

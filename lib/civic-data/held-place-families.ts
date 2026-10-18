@@ -7,7 +7,7 @@ import { type GenericBallotProjection } from "../ballot/generic-projection.ts";
 import type { VotingSitesFile } from "../ballot/voting-sites.ts";
 import { ELECTION_DATES, type ElectionDates } from "../ballot/election-dates.ts";
 import type { OfficeholderSet } from "../officials/types.ts";
-import { FEDERAL_DIRECTORY_SCOPE, type FederalDirectoryReadModel } from "../officials/federal-directory-data-plane.ts";
+import { federalDirectoryScope, type FederalDirectoryReadModel } from "../officials/federal-directory-data-plane.ts";
 import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
 import type { FundingSnapshot } from "../funding/types.ts";
 import type { StateMoneySnapshot } from "../funding/state-money.ts";
@@ -87,7 +87,7 @@ export async function readHeldPlaceFamilies(divisionIds: readonly string[], opti
   const read = <T>(recordClass: Parameters<typeof readPlacePointerSlice>[0], scope: string) => sliced
     ? readPlacePointerSlice<T>(recordClass, scope, divisionIds, [], targets)
     : readPromotedCivicData<T>(recordClass, scope, options);
-  const stateRead = async <T>(family: Exclude<StateAuthorityFamily, "registry-runtime" | "campaign-finance">, recordClass: Parameters<typeof readPlacePointerSlice>[0], state: string) =>
+  const stateRead = async <T>(family: Exclude<StateAuthorityFamily, "registry-runtime" | "federal-directory">, recordClass: Parameters<typeof readPlacePointerSlice>[0], state: string) =>
     options.store ? readPromotedCivicData<T>(recordClass, stateBallotScope(family === "candidate-publications" ? "candidate-corpus" : family, state), options)
       : (await readStateAuthorityProjection<T>(family, state)).result;
   const states = new Set(statesForRegistryDivisions(divisionIds));
@@ -97,10 +97,10 @@ export async function readHeldPlaceFamilies(divisionIds: readonly string[], opti
   const filings = requiredManualProductionContract("official-filings"), navigation = requiredManualProductionContract("ballot-navigation");
   const fec = requiredRoutineContract("fec-funding");
   const [federal, legislators] = await Promise.all([
-    read<FederalDirectoryReadModel>("FEDERAL_DIRECTORY", FEDERAL_DIRECTORY_SCOPE),
+    Promise.all([...states].filter(state => (REGISTRY_STATES as readonly string[]).includes(state)).map(state => read<FederalDirectoryReadModel>("FEDERAL_DIRECTORY", federalDirectoryScope(state)))),
     Promise.all(stateTargets.map(target => readOfficialStateLegislatorsProjection(target.jurisdiction, options))),
   ]);
-  const rosters = [value(federal)?.roster, ...legislators.map(read => value(read)?.roster)].filter((row): row is OfficeholderSet => row !== undefined);
+  const rosters = [...federal.map(read => value(read)?.roster), ...legislators.map(read => value(read)?.roster)].filter((row): row is OfficeholderSet => row !== undefined);
   targets.push(...rosters.flatMap(roster => roster.divisions.filter(row => divisions.has(row.ocdId)).map(row => row.officeholderId)));
   const [funding, money, filingRead, navigationRead] = await Promise.all([
     read<FundingSnapshot>(fec.recordClass, fec.scope),

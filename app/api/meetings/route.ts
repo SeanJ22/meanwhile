@@ -5,18 +5,18 @@ import { canonicalBodyIdentity } from "@/lib/ask/body-identity";
 import { meetingListingIdentity } from "@/lib/meetings/listing-identity";
 import { nearestZctaAsync } from "@/lib/geo/zcta-table";
 import { zipDivisionEntry } from "@/lib/geo/zip-division-index";
-import { searchMeetings } from "@/lib/meetings/query";
+import { meetingBodyIds, searchMeetings } from "@/lib/meetings/query";
 import { DEFAULT_RADIUS_KM, MAX_RADIUS_KM } from "@/lib/meetings/constants";
 import { getRegistryRuntimeReadModel, readRegistryRuntimeProjection, selectedRegistryStates } from "@/lib/registry/runtime-read-model";
 import { snapshotSourceFor } from "@/lib/meetings/registry";
 import type { Meeting } from "@/lib/sources/types";
 import {
-  getActiveSnapshotMeta,
   requireMeetingsProjection,
   snapshotClientMeta,
   type SnapshotClientMeta,
 } from "@/lib/meetings/snapshot";
 import {
+  emptyMeetingsRead,
   holdReaderAuthorityEdge, ensureReaderAuthorityEdge,
   prefetchReaderEdgeStates,
   readReaderEdgeMeetings,
@@ -28,7 +28,6 @@ import {
 import { stateOfOcdId } from "@/lib/meetings/edge-artifacts";
 import { enterReaderAuthorityEdge } from "@/lib/registry/runtime-edge";
 import { CivicDataStoreUnavailableError } from "@/lib/civic-data/read-model";
-import { readComposedSourcePlaces } from "@/lib/meetings/prepared-snapshot";
 import { divisionIdsForZipArea, POINT_GEOMETRY_PLANS } from "@/lib/ballot/zip-divisions";
 import { needsPill, zipCertainty } from "@/lib/geo/zip-certainty";
 import { WIRED_STATUSES } from "@/lib/registry/coverage";
@@ -63,9 +62,9 @@ async function hintedStates(zip: string | null): Promise<string[]> {
   return [...new Set((entry?.ids ?? []).map((id) => stateOfOcdId(id)).filter((s): s is string => s !== null))];
 }
 
-/** The nearest ZCTA to a point, capped at 60 km: a centre in open water or deep wilderness honestly has no zip. */
-async function nearestZipWithin60Km(lat: number, lng: number): Promise<string | null> {
-  const near = await nearestZctaAsync(lat, lng);
+/** The nearest ZCTA to a point inside its own state, capped at 60 km: open water, deep wilderness or a far state line honestly has no zip. */
+async function nearestZipWithin60Km(lat: number, lng: number, state: string | undefined): Promise<string | null> {
+  const near = await nearestZctaAsync(lat, lng, state);
   return near && haversineKm(lat, lng, near.lat, near.lng) <= 60 ? near.zip : null;
 }
 
@@ -101,14 +100,15 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
 
   /* Everything that reads neither the database nor the request's edge context starts here, before the authority families arrive. */
   prefetchReaderGeography();
-  const nearZipRead = zipRead.value ? Promise.resolve(zipRead.value) : nearestZipWithin60Km(lat, lng).catch(() => null);
+  const pointStates = selectedRegistryStates();
+  const nearZipRead = zipRead.value ? Promise.resolve(zipRead.value) : nearestZipWithin60Km(lat, lng, pointStates.length === 1 ? pointStates[0] : undefined).catch(() => null);
 
   const edgeManifest = await timing.time("manifest", () => readReaderManifest().catch(holdReaderAuthorityEdge));
 
   let authorityEdge: Awaited<ReturnType<typeof ensureReaderAuthorityEdge>> | null = null;
-  if (edgeManifest?.authorityArtifacts) {
+  {
     const entering = timing.time("authority", () =>
-      ensureReaderAuthorityEdge(edgeManifest, undefined, READER_MAP_AUTHORITY_FAMILIES).catch(error => holdReaderAuthorityEdge(error, edgeManifest, READER_MAP_AUTHORITY_FAMILIES)),
+      ensureReaderAuthorityEdge(edgeManifest, undefined, READER_MAP_AUTHORITY_FAMILIES).catch(error => holdReaderAuthorityEdge(error, READER_MAP_AUTHORITY_FAMILIES)),
     );
     authorityEdge = await entering;
     if (authorityEdge) enterReaderAuthorityEdge(authorityEdge);
@@ -125,7 +125,7 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
     if (authorityEdge?.commentAccess) {
       commentAccess = authorityEdge.commentAccess.value.records;
       commentAccessDataState = "PROMOTED";
-      commentAccessDataDetail = `Comment-access served from the reader edge's state facts (sequence ${edgeManifest!.sequence}).`;
+      commentAccessDataDetail = `Comment-access served from the reader edge's state facts (${authorityEdge.commentAccess.versionId}).`;
     } else {
       if (process.env.NODE_ENV === "production") {
         const { versionId } = await readCommentAccessFacts();
@@ -144,10 +144,10 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
   let everydayRoutingDataState: "PROMOTED" | "FIRST_SEED" | "NOT_RECORDED" | "STORE_UNREACHABLE" | "INVALID" = "FIRST_SEED";
   let everydayRoutingDataDetail: string | null = null;
   try {
-    if (edgeManifest?.everydayRouting !== undefined) {
-      everydayRouting = (edgeManifest.everydayRouting as EverydayRoutingProjection | null) ?? null;
+    if (authorityEdge?.everydayRouting) {
+      everydayRouting = (authorityEdge.everydayRouting.value.projection as EverydayRoutingProjection | null) ?? null;
       everydayRoutingDataState = everydayRouting ? "PROMOTED" : "NOT_RECORDED";
-      everydayRoutingDataDetail = `Everyday-routing served from the reader edge manifest (sequence ${edgeManifest.sequence}).`;
+      everydayRoutingDataDetail = `Everyday-routing served from its reader edge pointer (${authorityEdge.everydayRouting.versionId}).`;
     } else if (process.env.NODE_ENV === "production") {
       const read = await readEverydayRoutingProjection();
       if (read.kind === "PROMOTED") {
@@ -201,6 +201,11 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
     divisionsAtPoint = new Set(zipDivisions.map((d) => d.ocdId));
   }
 
+  const bodyScope = (): [ReadonlySet<string>, ReadonlySet<string>] => {
+    const bodies = resolvedDivisions ? getRegistryRuntimeReadModel().registry.bodies : [];
+    return [meetingBodyIds(bodies, divisionsAtPoint), new Set(bodies.map(({ id }) => id))];
+  };
+
   const meetingSourceName = process.env.WTP_MEETING_SOURCE?.trim() || "snapshot";
   let result;
   let snapshotMeta: SnapshotClientMeta | null = null;
@@ -217,11 +222,11 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
               .filter((s): s is string => s !== null),
           )]
         : [];
-      const read = await timing.time("meetings", () => readReaderEdgeMeetings({
+      const read = resolvedDivisions === null ? emptyMeetingsRead() : await timing.time("meetings", () => readReaderEdgeMeetings({
         manifest: edgeManifest,
         includeAgenda: false,
         ...(readerStates.length > 0 ? { states: readerStates } : {}),
-        ocdIds: resolvedDivisions?.map(division => division.ocdId) ?? [],
+        ocdIds: resolvedDivisions!.map(division => division.ocdId),
       }));
       meetingsWholeFromEdge = servedWholeFromReaderEdge(read);
       const snapshot = requireMeetingsProjection(read);
@@ -234,20 +239,15 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
         divisionsAtPoint,
         snapshotSourceFor(snapshot),
         undefined,
-        resolvedDivisions ? getRegistryRuntimeReadModel().registry.bodies : [],
+        ...bodyScope(),
       ));
       snapshotMeta =
-        read.kind === "PROMOTED" || read.kind === "BOOTSTRAP"
+        (read.kind === "PROMOTED" || read.kind === "BOOTSTRAP") && read.value.sources.length > 0
           ? snapshotClientMeta(read.value, read)
           : null;
-      if (snapshotMeta && meetingsWholeFromEdge && edgeManifest?.carriedSummary) {
-        snapshotMeta.carried = edgeManifest.carriedSummary;
-      }
     } else {
-      result = await searchMeetings(lat, lng, radiusKm, new Date(), divisionsAtPoint, undefined, undefined,
-        resolvedDivisions ? getRegistryRuntimeReadModel().registry.bodies : []);
+      result = await searchMeetings(lat, lng, radiusKm, new Date(), divisionsAtPoint, undefined, undefined, ...bodyScope());
       heldMeetings = result.meetings;
-      snapshotMeta = await getActiveSnapshotMeta();
     }
   } catch (error) {
     if (error instanceof CivicDataStoreUnavailableError) {
@@ -331,8 +331,6 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
   }
 
   const meta = snapshotMeta;
-  // A whole-source failure is attributed to the places the published composition says the source serves.
-  const composed = meta?.sources.some((s) => !s.ok && !s.unreachableOcdIds) ? await readComposedSourcePlaces() : null;
   const snapshot = meta
     ? {
         version: 2 as const,
@@ -342,10 +340,7 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
           .filter((s) => !s.ok || (s.unreachableOcdIds?.length ?? 0) > 0)
           .map((s) => ({
             source: s.source,
-            ocdIds:
-              s.ok && s.unreachableOcdIds
-                ? s.unreachableOcdIds
-                : [...(composed?.get(s.source) ?? [])],
+            ocdIds: s.unreachableOcdIds ?? [],
           })),
       }
     : null;

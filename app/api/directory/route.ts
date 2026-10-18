@@ -1,6 +1,7 @@
 import { readerRoute } from "@/lib/api/reader-route";
 import { directoryFor } from "@/lib/officials/directory";
 import { refreshFederalDirectoryFromPromoted } from "@/lib/officials/federal-directory-read-model";
+import { selectedRegistryStates } from "@/lib/registry/runtime-read-model";
 import { matching, refuse, rejectUnknown } from "@/lib/api/params";
 import { readMemberOffices } from "@/lib/officials/member-offices-read";
 import { memberDirectoryReaches } from "@/lib/officials/member-directory-scope";
@@ -47,9 +48,11 @@ export const GET = readerRoute("/api/directory", async function GET(request: Req
     }, { headers: { "Cache-Control": "private, no-store" } });
   }
 
+  const places = selectedRegistryStates();
+  if (!places.length) return refuse("a member of Congress is read from their place's record; add state=<postal code> (e.g. state=AZ)");
   let found;
   try {
-    await refreshFederalDirectoryFromPromoted();
+    await refreshFederalDirectoryFromPromoted(places);
     found = directoryFor(member);
   }
   catch {

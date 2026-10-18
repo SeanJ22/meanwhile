@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { collectProviderBilling } from "../lib/control-plane/provider-billing-collector.ts";
+import { collectProviderBilling, searchLedgersOf } from "../lib/control-plane/provider-billing-collector.ts";
 import { BILLING_SECRET_NAMES, billingTotal, withoutBillingSecrets } from "../lib/control-plane/provider-billing.ts";
 import { mkdtempSync, writeFileSync, rmSync } from "node:fs";
 import { join } from "node:path";
@@ -39,7 +39,7 @@ const fixtureFetch = (async (url: string | URL | Request, init?: RequestInit) =>
 
 test("provider reporting uses documented GETs, cents/discounts correctly, and preserves historical model labels", async () => {
   calls.length = 0;
-  const report = await collectProviderBilling({ now, env, costs: [], fetcher: fixtureFetch });
+  const report = await collectProviderBilling({ now, env, searches: {}, fetcher: fixtureFetch });
   const by = (key: string) => report.readings.find(r => r.provider === key)!;
   assert.ok(report.readings.every(r => r.error === null));
   assert.ok(Math.abs(by("anthropic-api").reportedUsd! - 2.869) < 1e-9);
@@ -73,7 +73,7 @@ test("provider reporting uses documented GETs, cents/discounts correctly, and pr
 });
 
 test("a fresh cached sync makes no provider calls; failure retains last report and its actual period", async () => {
-  const previous = await collectProviderBilling({ now, env, costs: [], fetcher: fixtureFetch });
+  const previous = await collectProviderBilling({ now, env, searches: {}, fetcher: fixtureFetch });
   const forbidden = (async () => { throw new Error("secret-provider-response") }) as typeof fetch;
   const cached = await collectProviderBilling({ now: "2026-09-26T08:30:00.000Z", env, previous, fetcher: forbidden });
   assert.deepEqual(cached.readings, previous.readings);
@@ -99,7 +99,7 @@ test("missing reporting credentials and unread request ledger remain unknown; se
 });
 
 test("an incomplete report cannot silently replace a previously complete provider total", async () => {
-  const previous = await collectProviderBilling({ now, env, costs: [], fetcher: fixtureFetch });
+  const previous = await collectProviderBilling({ now, env, searches: {}, fetcher: fixtureFetch });
   const repeating = (async (url: string | URL | Request, init?: RequestInit) => new URL(String(url)).hostname === "api.anthropic.com" ? response({ data: [], has_more: true, next_page: "same" }) : fixtureFetch(url,init)) as typeof fetch;
   const report = await collectProviderBilling({ now: "2026-09-26T10:00:00.000Z", env, previous, fetcher: repeating });
   const a = report.readings.find(r => r.provider === "anthropic-api")!;
@@ -127,7 +127,7 @@ test("collector reloads the exact absolute file after rotation; siblings receive
 });
 
 test("hunt attribution does not add account reports or count shared reservation keys twice", async () => {
-  const report = await collectProviderBilling({ now, env, costs: [], fetcher: fixtureFetch });
+  const report = await collectProviderBilling({ now, env, searches: {}, fetcher: fixtureFetch });
   const scope = { key:"zcta:2020/85635", receiptId:"scope-receipt", budgetStartedAt:"2026-09-25T00:00:00.000Z", budgetUsd:50, geography:{label:"85635"} };
   const row = (id:string, source:string, usd:number, assigned=true) => ({attemptId:id,source,recordedAt:now,assignmentKeys:assigned?[scope.key]:[],assignmentRefs:assigned?[{key:scope.key,ref:scope.receiptId}]:[],cost:{usd}});
   const reading = providerBillingAttribution({ now, readings:report.readings, scopes:[scope] as never,
@@ -143,7 +143,7 @@ test("hunt attribution does not add account reports or count shared reservation 
 });
 
 test("missing Exa service access uses priced requests as estimates, without searching or claiming provider charges", async () => {
-  const report = await collectProviderBilling({now,env:{},costs:[{source:"api.exa.ai",recordedAt:now,cost:{usd:0.05,requestCount:1}}] as never});
+  const report = await collectProviderBilling({now,env:{},searches:searchLedgersOf([{source:"api.exa.ai",recordedAt:now,cost:{usd:0.05,requestCount:1}}] as never,now)});
   const exa=report.readings.find(r=>r.provider==="exa")!;
   assert.equal(exa.status,"ESTIMATED");
   assert.equal(exa.reportedUsd,null);

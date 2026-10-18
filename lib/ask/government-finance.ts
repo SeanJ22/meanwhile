@@ -1,6 +1,6 @@
 import { readGovernmentBudgets, type GovernmentBudgetFact } from "../civic-data/government-budgets.ts";
 import { governmentMoneyView, governmentMoneyText } from "../funding/government-money.ts";
-import { currentReaderAuthorityEdge,currentPromotedEdge } from "../registry/runtime-edge.ts";
+import { currentReaderAuthorityEdge,ensurePromotedEdge } from "../registry/runtime-edge.ts";
 import { scopedManualContractScope } from "../civic-data/scoped-manual-contracts.ts";
 import type { PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 import type { EvidenceRecord,EvidenceSubject } from "./evidence.ts";
@@ -12,7 +12,7 @@ import { overLengthBudget } from "./length-contract.ts";
  * in a complete edge request never opens a database fallback. */
 export async function governmentFinanceEvidence(bodyId:string,divisionId:string,options:PromotedCivicDataReadOptions={}):Promise<EvidenceRecord[]> {
   const scope=scopedManualContractScope("government-budgets",divisionId);
-  const served=options.store===undefined ? currentPromotedEdge("CURATED_READER_RECORD",scope) : null;
+  const served=options.store===undefined ? await ensurePromotedEdge("CURATED_READER_RECORD",scope) : null;
   if(options.store===undefined && currentReaderAuthorityEdge() && !served)return [];
   const read=await readGovernmentBudgets(divisionId,{...options,...(served?{edge:served.value}:{})});
   if(read.kind!=="PROMOTED")return [];

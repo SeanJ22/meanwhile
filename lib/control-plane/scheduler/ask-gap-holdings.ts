@@ -10,16 +10,15 @@ import {
   type RoutineSourceTask,
   type RoutineTaskClock,
 } from "../../civic-data/runner.ts";
-import { readReaderEdgeMeetings } from "../../meetings/edge-serving.ts";
+import { heldBodyGaps, type HeldAskGap } from "../../ask/held-gaps.ts";
+import { readMeetingBodies, type StateMeetingBody } from "../../meetings/edge-serving.ts";
 import { resolveReaderArtifactWriteStore } from "../../meetings/edge-store.ts";
-import { readPreparedMeetingsProjection } from "../../meetings/prepared-snapshot.ts";
-import type { MeetingsProjectionReadResult } from "../../meetings/snapshot.ts";
+import type { MeetingsSnapshot } from "../../meetings/snapshot.ts";
 import { getOutcomeSnapshot, loadedFrom, outcomeProjectionReadState, refreshOutcomeSnapshotFromPromoted } from "../../outcomes/store.ts";
 import type { PersistedSittingOutcomes } from "../../outcomes/types.ts";
-import type { AgendaDocumentLike } from "../../routing/agenda-search.ts";
-import { readAskGapObservations, type AskGapObservation } from "../ask-gap-observations.ts";
+import { foldAskGapObservations, readAskGapObservations, type AskGapObservation } from "../ask-gap-observations.ts";
 import type { AggregateRepository } from "../repository/types.ts";
-import type { AskGapHoldingsReading, AskGapMeeting, AskGapsInput, CarrierClock } from "./providers/ask-gaps.ts";
+import type { AskGapHoldingsReading, AskGapsInput, CarrierClock } from "./providers/ask-gaps.ts";
 
 /** The meeting and outcome tasks whose clocks Ask reads, from the doors installed now. */
 export function askGapCarrierTasks(): readonly RoutineSourceTask[] {
@@ -28,22 +27,9 @@ export function askGapCarrierTasks(): readonly RoutineSourceTask[] {
 
 const message = (error: unknown): string => (error instanceof Error ? error.message : String(error));
 
-/** The meetings Ask reads: the edge when it answers whole, otherwise the prepared reader row. */
-async function readHeldMeetings(now: string): Promise<MeetingsProjectionReadResult> {
-  const prepared = () => readPreparedMeetingsProjection({ now });
-  let fellBack = false;
-  const edge = await readReaderEdgeMeetings({
-    now,
-    window: "HELD",
-    store: resolveReaderArtifactWriteStore(),
-    fallback: () => {
-      fellBack = true;
-      return prepared();
-    },
-  });
-  // An edge read that fetched only some of its scopes would drop bodies, and a dropped body's gaps would retire.
-  if (!fellBack && edge.kind === "PROMOTED" && edge.metadata.stale !== "CURRENT") return prepared();
-  return edge;
+/** Every body Ask reads, one state at a time from each state's index. */
+function readHeldBodies(): AsyncGenerator<StateMeetingBody> {
+  return readMeetingBodies({ store: resolveReaderArtifactWriteStore(), window: "HELD" });
 }
 
 /** The recorded outcomes Ask reads, and whether they could be read (Ask's own test: an empty store is unreadable). */
@@ -91,7 +77,9 @@ export const ASK_GAP_READING_BOUND_MS = 90_000;
 
 interface ReadingOptions {
   readonly now: string;
-  readonly readMeetings?: (now: string) => Promise<MeetingsProjectionReadResult>;
+  readonly readBodies?: () => AsyncIterable<{ readonly bodyId: string; readonly load: () => Promise<{ readonly snapshot: MeetingsSnapshot } | null> }>;
+  /** Bodies readers were told we hold no meeting of; their meeting counts are kept. */
+  readonly toldNoMeetings?: ReadonlySet<string>;
   readonly readOutcomes?: () => Promise<{ readonly sittings: readonly PersistedSittingOutcomes[]; readonly unreadable: string | null }>;
   readonly readClock?: (task: RoutineSourceTask) => Promise<RoutineTaskClock | undefined>;
   readonly boundMs?: number;
@@ -116,16 +104,24 @@ export async function readAskGapHoldings(options: ReadingOptions): Promise<AskGa
 
 async function takeReading(options: ReadingOptions): Promise<AskGapHoldingsReading> {
   const nowMs = Date.parse(options.now);
-  let meetings: MeetingsProjectionReadResult;
+  const outcomes = await (options.readOutcomes ?? readHeldOutcomes)().catch((error: unknown) => ({ sittings: [], unreadable: message(error) }));
+  const sittingsByBody = new Map<string, PersistedSittingOutcomes[]>();
+  for (const sitting of outcomes.sittings) if (sitting.bodyId) sittingsByBody.set(sitting.bodyId, [...sittingsByBody.get(sitting.bodyId) ?? [], sitting]);
+
+  const bodies: { readonly bodyId: string; readonly gaps: readonly HeldAskGap[] }[] = [];
+  const counts = new Map<string, number>();
   try {
-    meetings = await (options.readMeetings ?? readHeldMeetings)(options.now);
+    for await (const body of (options.readBodies ?? readHeldBodies)()) {
+      const read = await body.load();
+      if (read === null) return { unreadable: `the meetings of ${body.bodyId} could not be read, so no gap is decided on this cycle` };
+      const { meetings, agendaDocuments } = read.snapshot;
+      if (options.toldNoMeetings?.has(body.bodyId)) counts.set(body.bodyId, meetings.length);
+      const held = heldBodyGaps({ bodyId: body.bodyId, meetings, documents: agendaDocuments, sittings: sittingsByBody.get(body.bodyId) ?? [], now: nowMs, outcomesUnavailable: outcomes.unreadable !== null });
+      if (held.gaps.length > 0) bodies.push({ bodyId: body.bodyId, gaps: held.gaps });
+    }
   } catch (error) {
     return { unreadable: `the meetings projection read threw (${message(error)})` };
   }
-  if (meetings.kind !== "PROMOTED" && meetings.kind !== "BOOTSTRAP") {
-    return { unreadable: `the meetings projection is ${meetings.kind}: ${meetings.detail}` };
-  }
-  const outcomes = await (options.readOutcomes ?? readHeldOutcomes)().catch((error: unknown) => ({ sittings: [], unreadable: message(error) }));
 
   let clocks: ReadonlyMap<string, CarrierClock>;
   try {
@@ -141,10 +137,9 @@ async function takeReading(options: ReadingOptions): Promise<AskGapHoldingsReadi
   }
 
   return {
-    source: `the held meetings (${meetings.kind === "PROMOTED" ? meetings.detail : `${meetings.kind}: ${meetings.detail}`}) and the recorded outcomes Ask reads`,
-    meetings: meetings.value.meetings as readonly AskGapMeeting[],
-    documents: meetings.value.agendaDocuments as readonly AgendaDocumentLike[],
-    sittings: outcomes.sittings,
+    source: "the held meetings of every state and the recorded outcomes Ask reads",
+    bodies,
+    meetingCountOf: (bodyId) => counts.get(bodyId) ?? 0,
     outcomesUnreadable: outcomes.unreadable,
     clockOf: (contractId) => clocks.get(contractId) ?? { kind: "UNREAD", why: `no routine task ${contractId} is registered, so no clock was read for it` },
   };
@@ -153,9 +148,10 @@ async function takeReading(options: ReadingOptions): Promise<AskGapHoldingsReadi
 export async function askGapsInputFromHeld(
   options: ReadingOptions & { readonly observations?: Pick<AggregateRepository<AskGapObservation>, "list"> },
 ): Promise<AskGapsInput> {
-  const [reading, observed] = await Promise.all([
-    readAskGapHoldings(options),
-    options.observations ? readAskGapObservations(options.observations) : Promise.resolve(null),
-  ]);
+  const observed = options.observations ? await readAskGapObservations(options.observations) : null;
+  const told = observed !== null && !("unreadable" in observed)
+    ? new Set([...foldAskGapObservations(observed.rows, options.now).asked.values()].filter((gap) => gap.code === "MEETINGS_NOT_HELD").map((gap) => gap.bodyId))
+    : new Set<string>();
+  const reading = await readAskGapHoldings({ ...options, toldNoMeetings: told });
   return { holdings: () => reading, ...(observed !== null ? { observations: () => observed } : {}) };
 }

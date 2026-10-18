@@ -88,7 +88,6 @@ async function installBallots(...ballots: BallotSet[]): Promise<GenericBallotPro
 function promotedFixtureBundle(extra: ReaderAuthorityEdgeBundle = {}): ReaderAuthorityEdgeBundle {
   const current: ReaderAuthorityEdgeBundle = currentReaderAuthorityEdge() ?? {};
   return { stateAuthorities: current.stateAuthorities,
-    ...(current.federalDirectory ? { federalDirectory: current.federalDirectory } : {}),
     ...(current.stateLegislators ? { stateLegislators: current.stateLegislators } : {}),
     ...extra, promoted: new Map([...(current.promoted ?? []), ...(extra.promoted ?? [])]) };
 }
@@ -273,7 +272,7 @@ test("a missing deployed normalized holding raises a failed read even if staged 
 test("a missing canonical ballot identity projection cannot become a display-key funding absence", async () => {
   await installStateMoney("AZ", withRecords("AZ", [filed("AZ", hobbsKey, "Governor", HOBBS_RECEIPTS)]));
   const base = promotedFixtureBundle();
-  const edge = { ...base, stateAuthorities: { states: base.stateAuthorities!.states,
+  const edge = { ...base, stateAuthorities: { families: base.stateAuthorities!.families,
     load: async (family: Parameters<NonNullable<typeof base.stateAuthorities>["load"]>[0], state: string) => {
       if (family === "ballot-contests" && state === "AZ") throw new Error("Planted canonical ballot failure");
       return base.stateAuthorities!.load(family, state);

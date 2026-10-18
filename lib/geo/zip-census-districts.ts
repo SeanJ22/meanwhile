@@ -5,7 +5,6 @@ import { readerQuery } from "../civic-data/promoted-reader-query.ts";
 import { containersOfCode, type CodeSlice, type Slice } from "../control-plane/admin-view/promoted-slices.ts";
 import type { ZipDivisionEntry } from "./zip-division-index.ts";
 import { currentReaderAuthorityEdge } from "../registry/runtime-edge.ts";
-import { censusDistrictEdgeSlice } from "../census-geography/district-edge.ts";
 import { currentRepresentationSelection, selectGeographyVersion, type GeographySelection } from "../census-geography/selection.ts";
 
 const TYPES: readonly GeographyType[] = ["congressional_district", "state_leg_upper", "state_leg_lower"];
@@ -70,11 +69,10 @@ export function withCensusDistricts(entry: ZipDivisionEntry, slice: Slice<CodeSl
  * Failed updates preserve the original index and are eligible to retry. */
 export async function publishedZipDistricts(zip: string): Promise<Slice<CodeSlice>> {
   const edge = currentReaderAuthorityEdge();
-  if (edge?.censusDistricts) return censusDistrictEdgeSlice(edge.censusDistricts.value, edge.censusDistricts.versionId, zip);
-  // An older/unavailable serving copy retains the existing index's uncertainty.
-  // Adding Census certainty must not add a cold database dependency to an
-  // otherwise complete edge request (including the strictly edge-only warmer).
-  if (edge) return { kind: "UNREAD", detail: "Census districts are not available on this reader edge" };
+  const served = await edge?.censusDistricts?.slice(zip);
+  if (served && served.kind === "HELD") return served;
+  // The strictly edge-only warmer never opens the database; any other request reads it until the pointer is published.
+  if (edge?.edgeOnly) return { kind: "UNREAD", detail: "Census districts are not available on this reader edge" };
   const query = readerQuery(1000);
   if (!query) return { kind: "UNREAD", detail: "No reader store is configured" };
   const held = cached.get(zip);

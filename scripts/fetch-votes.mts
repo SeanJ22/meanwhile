@@ -31,7 +31,8 @@ import type {
   VotePosition,
   VotesSnapshot,
 } from "../lib/votes/types.ts";
-import { federalRollCallsCandidate, FEDERAL_ROLLCALL_SCOPE, FEDERAL_VOTES_PARSER_VERSION, FEDERAL_VOTES_SOURCE_ID, type OfficialAcquisition } from "../lib/votes/data-plane.ts";
+import { federalMemberVotesCandidate, federalPartyBreakdowns, federalRollCallsCandidate, heldAcquisitions, FEDERAL_ROLLCALL_SCOPE, FEDERAL_VOTES_PARSER_VERSION, FEDERAL_VOTES_SOURCE_ID,
+  type OfficialAcquisition } from "../lib/votes/data-plane.ts";
 import {
   billSummariesForRollCallAcquisition,
   readFederalRollCallsProjection,
@@ -113,11 +114,13 @@ const legislators = JSON.parse(
     "https://unitedstates.github.io/congress-legislators/legislators-current.json",
     false,
   ),
-) as { id: { bioguide: string; lis?: string } }[];
+) as { id: { bioguide: string; lis?: string }; terms?: { party?: string }[] }[];
 const lisToBioguide = new Map<string, string>();
 const bioguides = new Set<string>();
+const parties = new Map<string, string | null>();
 for (const person of legislators) {
   bioguides.add(person.id.bioguide);
+  parties.set(`congress:${person.id.bioguide}`, person.terms?.at(-1)?.party ?? null);
   if (person.id.lis) lisToBioguide.set(person.id.lis, person.id.bioguide);
 }
 
@@ -130,7 +133,9 @@ async function latestHouseRoll(): Promise<number> {
     const url = `https://clerk.house.gov/evs/${YEAR}/roll${String(mid).padStart(3, "0")}.xml`;
     let response: Response;
     try {
-      response = await fetch(url, { method: "HEAD", headers: { "user-agent": UA } });
+      // The clerk refuses HEAD with 405, so the probe reads and drops the body.
+      response = await fetch(url, { headers: { "user-agent": UA } });
+      await response.body?.cancel();
     } catch (error) {
       await recordFailure(url, error instanceof Error ? error.message : "House roll horizon lookup failed");
       throw error;
@@ -200,7 +205,7 @@ for (const n of houseRolls) {
   if (legisNum) billNums.add(legisNum);
 
   for (const m of xml.matchAll(
-    /<recorded-vote><legislator name-id="([^"]+)"[^>]*>[^<]*<\/legislator><vote>([^<]+)<\/vote><\/recorded-vote>/g,
+    /<recorded-vote>\s*<legislator name-id="([^"]+)"[^>]*>[^<]*<\/legislator>\s*<vote>([^<]+)<\/vote>\s*<\/recorded-vote>/g,
   )) {
     houseTotal++;
     if (!bioguides.has(m[1])) continue;
@@ -375,13 +380,28 @@ const snapshot: VotesSnapshot = {
   positions,
 };
 
-const attemptedAt = new Date().toISOString();
+const attemptedAt = new Date().toISOString(), held = heldAcquisitions(acquisitions);
+const { positions: _positions, ...window } = snapshot;
+// A member no roll in this window records keeps the record from the last window that did.
+const byMember = new Map<string, MemberVote[]>();
+for (const position of positions) byMember.set(position.officeholderId, [...byMember.get(position.officeholderId) ?? [], position]);
+const refused: string[] = [];
+for (const [officeholderId, recorded] of byMember) {
+  const member = federalMemberVotesCandidate({ acquisitions: held, retrievedAt: attemptedAt, expectedCongress: CONGRESS, expectedSession: SESSION, snapshot: window, officeholderId, positions: recorded });
+  const result = await processRegisteredManualCandidate(store, "congress-rollcalls", member, attemptedAt);
+  if (!result.promoted && !result.confirmed) refused.push(`${officeholderId}:${result.candidate.failureCode ?? result.candidate.state}`);
+}
+if (refused.length) {
+  await recordFailure(acquisitions[0]?.requestedUrl ?? "https://www.senate.gov/legislative/", `Member positions refused: ${refused.join(", ")}`);
+  throw new Error(`FEDERAL_MEMBER_POSITIONS_REFUSED:${refused.join(",")}`);
+}
 const candidate = federalRollCallsCandidate({
-  acquisitions,
+  acquisitions: held,
   retrievedAt: attemptedAt,
   expectedCongress: CONGRESS,
   expectedSession: SESSION,
-  snapshot,
+  snapshot: window,
+  partyBreakdowns: federalPartyBreakdowns(snapshot, parties),
   billSummaries,
 });
 const outcome = await processRegisteredManualCandidate(store, "congress-rollcalls", candidate, attemptedAt);

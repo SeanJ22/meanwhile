@@ -76,13 +76,13 @@ test("a failed member retains its old verified portrait and cannot block another
   assert.equal(result.projection.roster.officeholders[0].phone, "202-225-1000");
   assert.ok(result.excludedFacts.some(row => row.key === "congress:A000001:portrait" && row.code === "CONGRESS_PORTRAIT_SOURCE_FAILED"));
   const sourceUrl = `https://raw.githubusercontent.com/unitedstates/congress-legislators/${SHA}/legislators-current.yaml`;
-  const candidate = await federalDirectoryCandidate({ vault: new MemoryEvidenceStore(), projection: result.projection, excludedFacts: result.excludedFacts, retrievedAt: ORIGINAL,
+  const candidate = await federalDirectoryCandidate({ state: "AZ", vault: new MemoryEvidenceStore(), projection: result.projection, excludedFacts: result.excludedFacts, retrievedAt: ORIGINAL,
     acquisitions: [{ requestedUrl: sourceUrl, finalUrl: sourceUrl, httpStatus: 200, body: JSON.stringify(raw(2)["legislators-current"]), retrievedAt: ORIGINAL }] });
-  const store = new MemoryRoutineDataStore(), outcome = await processRegisteredManualCandidate(store, "congress-bulk-roster", candidate, VERIFIED);
+  const store = new MemoryRoutineDataStore(), outcome = await processRegisteredManualCandidate(store, "congress-bulk-roster:AZ", candidate, VERIFIED);
   assert.ok(outcome.promoted, outcome.candidate.failureDetail ?? "");
   const saved = await store.readCandidate(candidate.id);
   assert.deepEqual(saved?.candidate.excludedFacts, result.excludedFacts);
-  const read = await readFederalDirectoryProjection({ store, now: VERIFIED, bypassCache: true });
+  const read = await readFederalDirectoryProjection(["AZ"], { store, now: VERIFIED, bypassCache: true });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;
   assert.equal(read.value.roster.officeholders.length, 2);
@@ -124,14 +124,14 @@ test("a pass with no new portrait still persists its exact field failures withou
       } });
     assert.deepEqual(result.projection, model);
     assert.equal(result.excludedFacts.length, 3);
-    const candidate = await federalDirectoryCandidate({ vault: new MemoryEvidenceStore(), projection: model, excludedFacts: result.excludedFacts, retrievedAt: ORIGINAL,
+    const candidate = await federalDirectoryCandidate({ state: "AZ", vault: new MemoryEvidenceStore(), projection: model, excludedFacts: result.excludedFacts, retrievedAt: ORIGINAL,
       acquisitions: [{ requestedUrl: sourceUrl, finalUrl: sourceUrl, httpStatus: 200, body: JSON.stringify(raw()["legislators-current"]), retrievedAt: ORIGINAL }] });
     assert.notEqual(candidate.id, priorId, "a later failed field attempt needs its own durable candidate identity"); priorId = candidate.id;
-    const outcome = await processRegisteredManualCandidate(store, "congress-bulk-roster", candidate, at, undefined, { confirmUnchanged: false });
+    const outcome = await processRegisteredManualCandidate(store, "congress-bulk-roster:AZ", candidate, at, undefined, { confirmUnchanged: false });
     assert.ok(outcome.promoted || outcome.confirmed, outcome.candidate.failureDetail ?? "");
     const recorded = await store.readCandidate(candidate.id);
     assert.deepEqual(recorded?.candidate.excludedFacts, result.excludedFacts);
-    assert.deepEqual((await store.readPromotion("FEDERAL_DIRECTORY", "US:current-congress-directory"))?.payload, model);
+    assert.deepEqual((await store.readPromotion("FEDERAL_DIRECTORY", "US-AZ:current-congress-directory"))?.payload, model);
   }
 });
 

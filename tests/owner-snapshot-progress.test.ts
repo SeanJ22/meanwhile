@@ -37,11 +37,11 @@ test("the same publish, printing each finished step, outlasts the limit and writ
 });
 
 const COLLECTION_STEPS: readonly (readonly [RegExp, string])[] = [
-  [/await readControlPlane\(repos\)/, 'stepDone("control plane read")'],
+  [/await readControlPlane\(repos, /, 'stepDone("control plane read")'],
   [/await collectMapTilerUsage\(/, 'stepDone("map usage collected")'],
   [/await collectProviderBilling\(/, 'stepDone("provider bills collected")'],
   [/await collectPublishedCampaignReadback\(/, 'stepDone("campaign page readback collected")'],
-  [/collectPublishedManualReaderReadback\(reads\.assignmentSources/, 'stepDone("worker and help page readbacks collected")'],
+  [/collectPublishedManualReaderReadback\(publications/, 'stepDone("worker and help page readbacks collected")'],
   [/readPlaceOwed\(key\)/, "stepDone(`place history read for ${key}`)"],
 ];
 

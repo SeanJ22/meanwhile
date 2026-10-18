@@ -38,7 +38,6 @@ import { currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 function promotedFixtureBundle(extra: ReaderAuthorityEdgeBundle = {}): ReaderAuthorityEdgeBundle {
   const current: ReaderAuthorityEdgeBundle = currentReaderAuthorityEdge() ?? {};
   return { stateAuthorities: current.stateAuthorities,
-    ...(current.federalDirectory ? { federalDirectory: current.federalDirectory } : {}),
     ...(current.stateLegislators ? { stateLegislators: current.stateLegislators } : {}),
     ...extra, promoted: new Map([...(current.promoted ?? []), ...(extra.promoted ?? [])]) };
 }
@@ -122,7 +121,7 @@ test("real retained roll calls reach API, popup rows and Ask by exact native peo
     installAbsent("STATE_ROLL_CALL", legiscanVotesScope(sample.state));
     const member = `plural:${sample.state.toLowerCase()}:${source.personId.slice("ocd-person/".length)}`;
     await withReaderAuthorityEdge(promotedFixtureBundle({ edgeOnly: true, stateLegislators: {
-      jurisdictions: new Set([`US-${sample.state}`]), load: async () => ({ versionId: `real-people-fixture:${sample.state}`, value: {
+      load: async () => ({ versionId: `real-people-fixture:${sample.state}`, value: {
         formatVersion: 1, sourceId: "plural-openstates", jurisdiction: `US-${sample.state}` as `US-${string}`,
         term: sample.session, generatedAt: manifest.capturedAt, roster,
       } }),

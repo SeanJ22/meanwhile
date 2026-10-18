@@ -6,16 +6,6 @@ import type { DirectoryOffice, DirectorySource } from "@/lib/officials/directory
 import { memberDirectoryReaches } from "@/lib/officials/member-directory-scope";
 import { statePeopleScopeForId } from "@/lib/officials/people-identity";
 
-/**
- * One member's offices and available committee seats, shared by every
- * component that needs them. The cache holds the promise per member and state, so
- * simultaneous mounts share one request; failures are not cached.
- */
-
-/**
- * A committee seat as the route serves it: the chamber's row plus the joined
- * jurisdiction statement. Distinct from the on-disk `DirectoryCommittee`.
- */
 export interface DirectoryCommitteeSeat {
   committeeId: string;
   name: string;
@@ -30,11 +20,7 @@ export interface MemberDirectory {
   source?: DirectorySource | null;
   districtOffices: DirectoryOffice[];
   committees: DirectoryCommitteeSeat[];
-  /**
-   * A state legislator's offices, in the same order as `districtOffices`:
-   * which office each is, and the source it was read from. Absent for a
-   * federal member, whose offices are all in the district.
-   */
+
   officeDetails?: { officeKind: "CAPITOL" | "DISTRICT"; sourceUrl: string; sourceOrg: string; collectedAt: string; official: boolean }[];
 }
 
@@ -56,9 +42,8 @@ export function loadMemberDirectory(memberId: string, state?: string): Promise<M
     );
     if (!response.ok) throw new Error(String(response.status));
     return (await response.json()) as MemberDirectory;
-  })().catch((error) => {
-    cache.delete(key);
-    throw error;
+  })().finally(() => {
+    if (cache.get(key) === promise) cache.delete(key);
   });
 
   cache.set(key, promise);
@@ -80,10 +65,7 @@ export function useMemberDirectory(memberId: string, state?: string): MemberDire
   useEffect(() => {
     let live = true;
     if (!memberDirectoryReaches(memberId, "offices",scope)) return;
-    /*
-     * A result belongs to its exact member/state key. The `live` flag drops
-     * a completed request after the reader has moved to a different person.
-     */
+
     void loadMemberDirectory(memberId,scope)
       .then((payload) => {
         if (live) setResult({key,directory:payload,failed:false});

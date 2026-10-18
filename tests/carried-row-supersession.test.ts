@@ -5,7 +5,7 @@ import test from "node:test";
 import { MEETING_PARTITION_CONTRACTS } from "../lib/civic-data/meeting-partitions.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { RoutineRemovalEvidence } from "../lib/civic-data/types.ts";
-import { readMeetingsProjection, snapshotCounts, type MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
+import { snapshotCounts, type MeetingsSnapshot } from "../lib/meetings/snapshot.ts";
 import type { ChildRunReport } from "../lib/sources/composite/index.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import {
@@ -13,6 +13,7 @@ import {
   promoteMeetingPartitions,
   reconcileSuccessfulMeetingPartition,
 } from "../scripts/ingest.ts";
+import { freshEdge, publishPass, readPlace } from "./helpers/meeting-body-fixtures.ts";
 
 const TUSD = MEETING_PARTITION_CONTRACTS.find((partition) =>
   partition.meetingSource === "diligent" &&
@@ -151,8 +152,14 @@ async function seed(store: MemoryRoutineDataStore, at: string, meetings: readonl
 const seedMeasuredVersion = (store: MemoryRoutineDataStore) =>
   seed(store, MEASURED_READ, [fresh501(MEASURED_READ), CARRIED_495]);
 
+const edges = new WeakMap<MemoryRoutineDataStore, ReturnType<typeof freshEdge>>();
+
+/** What a reader at the body's place is served after the pass that publishes the store's current versions. */
 async function readerRows(store: MemoryRoutineDataStore, now: string): Promise<MeetingsSnapshot> {
-  const read = await readMeetingsProjection({ store, bypassCache: true, now });
+  const edge = edges.get(store) ?? freshEdge();
+  edges.set(store, edge);
+  await publishPass(store, edge, now);
+  const read = await readPlace(edge, store, [TUSD.ocdId!], now);
   assert.equal(read.kind, "PROMOTED");
   return (read as { value: MeetingsSnapshot }).value;
 }

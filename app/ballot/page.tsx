@@ -1,4 +1,4 @@
-import { readBallotReaderData, primeBallotFundingRead } from "@/lib/ballot/reader-data";
+import { readBallotReaderData, primeBallotFundingRead, primeBallotStateMoneyRead } from "@/lib/ballot/reader-data";
 import { readerRoute } from "@/lib/api/reader-route";
 import { ocdStateCode } from "@/lib/ocd/state-of";
 import { currentReaderSelection, withReaderSelection, type ReaderSelection } from "@/lib/db/reader-route";
@@ -506,8 +506,6 @@ export default readerRoute("/ballot", async function BallotPage({
     startRead("federal-directory", settleFederalDirectoryRead);
     startRead("ballot-navigation", async () => process.env.NODE_ENV === "production" ? settleBallotNavigationRead() : null);
     if (knownState === "NH") startRead("nh-members", settleNhSeatHolders);
-    if (Object.hasOwn(STATE_CAMPAIGN_FINANCE_SOURCES, knownState)) startRead("state-money", () =>
-      settleStateMoneyRead(knownState as StateCampaignFinanceJurisdiction));
   }
   const zipEntry = readerData ? await readerData.entry() : undefined;
   let certainty = await zipCertainty(zip, undefined, zipEntry);
@@ -580,7 +578,10 @@ export default readerRoute("/ballot", async function BallotPage({
       const state = set.election.state as StateCampaignFinanceJurisdiction;
       preload(
         "state-money",
-        () => settleStateMoneyRead(state),
+        async () => {
+          if (readerData) await primeBallotStateMoneyRead(state);
+          return settleStateMoneyRead(state);
+        },
       );
     }
   }

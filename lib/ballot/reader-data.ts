@@ -38,8 +38,6 @@ export async function readBallotReaderData(place: BallotPlace) {
   const entries: { recordClass: RoutineRecordClass; scope: string }[] = states.flatMap(state => [
     ...(["ballot-contests", "candidate-profiles", "candidate-publications", "candidate-campaign-sites-derived"] as const).flatMap(family =>
       stateAuthorityPointers(family, state)),
-    ...(Object.hasOwn(STATE_CAMPAIGN_FINANCE_SOURCES, state) ? [{ recordClass: "STATE_CAMPAIGN_FINANCE" as const,
-      scope: STATE_CAMPAIGN_FINANCE_SOURCES[state as StateCampaignFinanceJurisdiction].scope }] : []),
     ...(state === "NH" ? [requiredRoutineContract("nh-members")] : []),
   ]);
   for (const id of ["ballot-navigation", "official-filings"] as const) entries.push(requiredManualProductionContract(id));
@@ -51,8 +49,11 @@ export async function readBallotReaderData(place: BallotPlace) {
   const unique = [...new Map(entries.map(entry => [`${entry.recordClass}:${entry.scope}`, entry])).values()];
   const ballots = unique.filter(entry => entry.recordClass === "BALLOT_CANDIDACY");
   const candidates = unique.filter(entry => ["CANDIDATE_PROFILE", "CANDIDATE_PUBLICATION"].includes(entry.recordClass));
-  const other = unique.filter(entry => !ballots.includes(entry) && !candidates.includes(entry));
-  const baseRead = primeReaderCanonicalStore(unique, readCanonicalPackages([ballots, candidates, other]));
+  const campaignKeys = new Set(states.flatMap(state => stateAuthorityPointers("candidate-campaign-sites-derived", state))
+    .map(entry => `${entry.recordClass}:${entry.scope}`));
+  const campaigns = unique.filter(entry => campaignKeys.has(`${entry.recordClass}:${entry.scope}`));
+  const other = unique.filter(entry => !ballots.includes(entry) && !candidates.includes(entry) && !campaigns.includes(entry));
+  const baseRead = primeReaderCanonicalStore(unique, readCanonicalPackages([ballots, candidates, campaigns, other]));
   const entry = async (geography?: GeographySelection) => {
     if (!place.zip) return rawEntry;
     let value = rawEntry ?? { ids: [], partial: [], samples: 0 };
@@ -85,6 +86,13 @@ export async function readBallotReaderData(place: BallotPlace) {
   void canonicalRead.catch(() => undefined);
   void registryRead.catch(() => undefined);
   return { registryRead, districtRead, entry };
+}
+
+/** State money is needed only after the selected ballot includes a nonfederal contest. */
+export async function primeBallotStateMoneyRead(state: StateCampaignFinanceJurisdiction): Promise<void> {
+  if (!currentReaderSelection() || currentReaderAuthorityEdge()) return;
+  const entry = { recordClass: "STATE_CAMPAIGN_FINANCE" as const, scope: STATE_CAMPAIGN_FINANCE_SOURCES[state].scope };
+  await primeReaderCanonicalStore([entry], readCanonicalShelf([entry]));
 }
 
 /** Read money for the exact displayed contests, retaining candidates and earlier filings. */

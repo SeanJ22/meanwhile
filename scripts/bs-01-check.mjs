@@ -50,26 +50,24 @@ async function stop(child) {
 }
 
 async function responseSweep(directory, name) {
-  const queue = [...places], rows = [];
-  await Promise.all([0, 1].map(async worker => {
-    for (;;) {
-      const place = queue.shift(); if (!place) break;
-      const [state, zip] = place, port = 3210 + worker;
-      const server = await start(directory, port);
-      try {
-        const start = performance.now();
-        const response = await fetch(`http://127.0.0.1:${port}/ballot?zip=${zip}`, { signal: AbortSignal.timeout(30000) });
-        const firstMs = performance.now() - start;
-        const html = await response.text(), fullMs = performance.now() - start;
-        const ids = [...new Set([...html.matchAll(/data-contest-id="([^"]+)"/g)].map(match => match[1]))];
-        rows.push({ state, zip, status: response.status, firstMs, fullMs, ids,
-          candidates: [...html.matchAll(/data-candidate-target="([^"]+)"/g)].length,
-          fundingSections: [...html.matchAll(/data-candidate-funding(?:=|[ >])/g)].length,
-          holdingGaps: html.includes('data-ballot-canonical-holding-gaps'), error: html.includes('Something went wrong') });
-      } catch (error) { rows.push({ state, zip, error: message(error) }); }
-      finally { await stop(server); await save(name, rows); console.log(JSON.stringify({ phase: name, ...rows.find(row => row.state === state), ids: undefined })); }
-    }
-  }));
+  const rows = [];
+  // Measure one cold action at a time; its independent data reads still run together.
+  for (const [state, zip] of places) {
+    const port = 3210;
+    const server = await start(directory, port);
+    try {
+      const start = performance.now();
+      const response = await fetch(`http://127.0.0.1:${port}/ballot?zip=${zip}`, { signal: AbortSignal.timeout(30000) });
+      const firstMs = performance.now() - start;
+      const html = await response.text(), fullMs = performance.now() - start;
+      const ids = [...new Set([...html.matchAll(/data-contest-id="([^"]+)"/g)].map(match => match[1]))];
+      rows.push({ state, zip, status: response.status, firstMs, fullMs, ids,
+        candidates: [...html.matchAll(/data-candidate-target="([^"]+)"/g)].length,
+        fundingSections: [...html.matchAll(/data-candidate-funding(?:=|[ >])/g)].length,
+        holdingGaps: html.includes('data-ballot-canonical-holding-gaps'), error: html.includes('Something went wrong') });
+    } catch (error) { rows.push({ state, zip, error: message(error) }); }
+    finally { await stop(server); await save(name, rows); console.log(JSON.stringify({ phase: name, ...rows.find(row => row.state === state), ids: undefined })); }
+  }
   return rows;
 }
 

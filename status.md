@@ -1,11 +1,11 @@
 # River status
 
-build_state: RELEASE 55 MERGED AND DEPLOYED; SH-01 QUEUED; CONTINUATION SCHEDULED
+build_state: RELEASE 55 LIVE; CP-01 RETURNED; SH-01 FOLDED, UNTESTED; BELOW BATCH THRESHOLD
 worker: codex-river
 provider: Codex
 run_id: codex-river-20261018-2054
 lock: codex-river-20261018-2054-bb221dd2-b1f8-4189-b762-2cad961d8f02
-heartbeat: 2026-10-18T20:55:27Z
+heartbeat: 2026-10-18T20:58:05Z
 
 ## Codex River shift — October 18
 
@@ -15,13 +15,17 @@ RELEASE 55 MERGED AND DEPLOYED: UI-01 only, READY ee1be9d011c0ba036177595ad31c77
 
 RETURNED THIS SHIFT: UI-02 e7d321a3659d8d34a00e3f99b56472f54a26faac failed two meeting-online-marker.test.ts assertions still requiring MeetingRow in the compact Bodies list. They pass on UI-01 alone; repair the tests around the new body-card meeting surface, preserve online labels and send a new READY. UI-02's AZ/NH/NJ controlled desktop/phone regression and screenshots passed. Overlay-seats 61f6d1449 and site-reads f42bc19c6 were rechecked against current River, still conflict, and were returned with exact SHAs/raw conflict output. Existing unchanged returns also cover meetings 91f23e059, ballot-parity c0dcb5573, control-reads edb5a08f3, platform-legistar-members 835fec562 and steps-2-6 6da1efc6b. Do not repeat unchanged returned inputs. Details remain in returns/<lane>.md.
 
-QUEUE AT 20:35:49Z: SH-01 445e511dab21766cbfde79b3a0bd1c933e4fb4d9 is the only new eligible READY. It was committed at 19:53:50Z, so its two-hour deadline is 21:53:50Z (2:53:50 PM Arizona). Next hourly wake-ups are 20:53:50Z then 21:53:50Z, aligned to that deadline. Preserve SH-01's RS-01 hook notes: sourced vacancies, Capitol offices, officeDetails/provenance and exact-state fallback. Other expected lanes: RS-01, BS-01, AQ-01, CP-01, SRC-MN. Re-scan before selecting the next batch.
+QUEUE / PREPARATION AT 20:58Z: SH-01 445e511dab21766cbfde79b3a0bd1c933e4fb4d9 remains the only eligible new READY after the return below. Committed 19:53:50Z; its two-hour batching trigger is 21:53:50Z (2:53:50 PM Arizona). It folded cleanly; main's release-55 merge was included; migrations found zero new files. Current local river-next is 8ce8d440c72314aac258c4bd6a251610e7c12fb8. This candidate is UNTESTED, NOT PROMOTED and has no release PR. Wait for three eligible lanes or the SH-01 two-hour trigger before gates. Re-scan and fold any newly eligible lanes before the one combined gates run. The active test.json still describes the passing release-55 ab0c352c source; it is NOT a pass on this new candidate. Release-55 fold/test/gates copies are preserved under .scratch/river/release-55-passed/.
 
-NEXT RELEASE IS 56. River is the tested ab0c352cf217 source; main is the release-55 merge 4bdb43a7. Include that main merge in the next new application's river-next combination BEFORE its gates. Do not rerun unchanged release-55 checks. No new application work means no new gates or release.
+NEW RETURN: replacement CP-01 aa787c762bbd9a11bad97a2754878f4b24ca65dd (20:46:31Z) was assessed freshly. Its old national row-copy migration was replaced by expand DDL and schema-version recording, so the old migration defect was not reused as a refusal. The actual river.mjs fold then failed in 39 files against current River ab0c352c: runtime, pg-store/schema/types, reader paths and tests. Merge aborted cleanly. Returned through river.mjs return --check fold-conflict with full exact conflict evidence. Owner control-reads must merge current River/main, resolve the current interfaces while preserving state-scoped backfills/reads, run focused checks, and send a new READY. Do not retry aa787c762 unchanged. Details: returns/control-reads.md and .scratch/river/release-56-control-reads-conflicts.log.
 
-Continuation is enabled in this chat, hourly at :53:50 through October 19 at 7:53:50 AM Arizona (automation 6ad5209d7df88191a2bba47cb78bfd7f). Skip overlapping live owners. The final run must preserve any unfinished candidate, stop only its own gates if needed and release the lock before 8 AM. This run is at a safe stopping point and releases its lock next.
+NEXT RELEASE IS STILL 56. River remains the tested release-55 ab0c352cf217 source; main is release-55 merge 4bdb43a7. The prepared local SH-01 candidate includes main. Preserve SH-01's RS-01 notes about sourced vacancies, Capitol offices, officeDetails/provenance and exact-state fallback when combining the streams. Expected future lanes remain RS-01, BS-01, AQ-01, CP-01, SRC-MN. No full gates or new release ran in this scan: two new submissions were below the batching threshold, and CP-01 was returned during preparation.
+
+Continuation is enabled in this chat, hourly at :53:50 through October 19 at 7:53:50 AM Arizona (automation 6ad5209d7df88191a2bba47cb78bfd7f). Skip overlapping live owners. The final run must preserve any unfinished candidate, stop only its own gates if needed and release the lock before 8 AM. This scan is at a safe stopping point and releases its lock next. The next scheduled wake-up is 21:53:50Z, exactly SH-01's two-hour batching trigger.
 
 Environment: pnpm 10.33.0 at /tmp/river-tools/node_modules/.bin first on PATH; PNPM_HOME=/tmp/river-pnpm; XDG_DATA_HOME=/tmp/river-xdg; PLAYWRIGHT_BROWSERS_PATH=/workspace/.cache/ms-playwright (pinned Chromium 1234). Network/child-process commands have used permitted network-enabled execution. Dependencies were installed from the frozen committed lockfile after the old snapshot lacked sharp and polygon-clipping; no tracked file changed. Failed environment run and failed UI-01/UI-02 combination are preserved in .scratch/river/. Current passing fold/test files describe UI-01 only. GitHub CLI and connector access work. No budgets, spending, pauses or production data were changed.
+
+Runtime readiness changed from unknown to ready/enforced (spec revision 8) since the earlier browser investigation, so one new guarded production navigation was attempted under the changed environment. It still failed with ERR_CERT_AUTHORITY_INVALID; evidence .scratch/river/live-inspect-after-runtime-ready.log. No TLS check was disabled and no new live screen success is claimed.
 
 ## RELEASE 23 — national listings, known officials, portraits and finance: MERGED, DEPLOYED AND RUNNING
 

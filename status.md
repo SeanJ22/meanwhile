@@ -1,11 +1,11 @@
 # River status
 
-build_state: RELEASE 55 LIVE; CP-01 RETURNED; SH-01 FOLDED, UNTESTED; BELOW BATCH THRESHOLD
+build_state: RELEASE 56 GATES RUNNING: SH-01 + SRC-MN
 worker: codex-river
 provider: Codex
 run_id: release-56-2026-10-18
 lock: codex-river-2026-10-18T21-58-56-963Z-b8dfe721-3948-4695-96e2-ac9eaa808a2a
-heartbeat: 2026-10-18T21:58:57Z
+heartbeat: 2026-10-18T21:59:51Z
 
 ## Codex River shift — October 18
 
@@ -15,13 +15,11 @@ RELEASE 55 MERGED AND DEPLOYED: UI-01 only, READY ee1be9d011c0ba036177595ad31c77
 
 RETURNED THIS SHIFT: UI-02 e7d321a3659d8d34a00e3f99b56472f54a26faac failed two meeting-online-marker.test.ts assertions still requiring MeetingRow in the compact Bodies list. They pass on UI-01 alone; repair the tests around the new body-card meeting surface, preserve online labels and send a new READY. UI-02's AZ/NH/NJ controlled desktop/phone regression and screenshots passed. Overlay-seats 61f6d1449 and site-reads f42bc19c6 were rechecked against current River, still conflict, and were returned with exact SHAs/raw conflict output. Existing unchanged returns also cover meetings 91f23e059, ballot-parity c0dcb5573, control-reads edb5a08f3, platform-legistar-members 835fec562 and steps-2-6 6da1efc6b. Do not repeat unchanged returned inputs. Details remain in returns/<lane>.md.
 
-QUEUE / PREPARATION AT 20:58Z: SH-01 445e511dab21766cbfde79b3a0bd1c933e4fb4d9 remains the only eligible new READY after the return below. Committed 19:53:50Z; its two-hour batching trigger is 21:53:50Z (2:53:50 PM Arizona). It folded cleanly; main's release-55 merge was included; migrations found zero new files. Current local river-next is 8ce8d440c72314aac258c4bd6a251610e7c12fb8. This candidate is UNTESTED, NOT PROMOTED and has no release PR. Wait for three eligible lanes or the SH-01 two-hour trigger before gates. Re-scan and fold any newly eligible lanes before the one combined gates run. The active test.json still describes the passing release-55 ab0c352c source; it is NOT a pass on this new candidate. Release-55 fold/test/gates copies are preserved under .scratch/river/release-55-passed/.
+RELEASE 56 IN PROGRESS AT 22:00Z: SH-01 445e511dab21766cbfde79b3a0bd1c933e4fb4d9 and SRC-MN a1d55302b3d15200b6d2bed51cf530f105fec584 folded cleanly. SH-01 reached its two-hour trigger at 21:53:50Z; SRC-MN was READY at 21:00:49Z. Main release-55 merge 4bdb43a7 is included. Migrations: zero new. Candidate c9e009037d93abc5e63ef48bdb8c94974f406031 is UNTESTED until this run finishes, unpromoted, no release PR yet. Combined gates log: .scratch/river/release-56-gates.log. Earlier prepared SH-only candidate 8ce8d440 remains saved locally at river-saved-sh-01-20261018-2058. Do not reuse release-55 test.json as a pass on this candidate. SRC-MN adds state campaign filings to the shared state/place fact store and reader/Ask path; no production data was written in this run. Per-source production ingestion counts and live examples remain post-release work.
 
 NEW RETURN: replacement CP-01 aa787c762bbd9a11bad97a2754878f4b24ca65dd (20:46:31Z) was assessed freshly. Its old national row-copy migration was replaced by expand DDL and schema-version recording, so the old migration defect was not reused as a refusal. The actual river.mjs fold then failed in 39 files against current River ab0c352c: runtime, pg-store/schema/types, reader paths and tests. Merge aborted cleanly. Returned through river.mjs return --check fold-conflict with full exact conflict evidence. Owner control-reads must merge current River/main, resolve the current interfaces while preserving state-scoped backfills/reads, run focused checks, and send a new READY. Do not retry aa787c762 unchanged. Details: returns/control-reads.md and .scratch/river/release-56-control-reads-conflicts.log.
 
-NEXT RELEASE IS STILL 56. River remains the tested release-55 ab0c352cf217 source; main is release-55 merge 4bdb43a7. The prepared local SH-01 candidate includes main. Preserve SH-01's RS-01 notes about sourced vacancies, Capitol offices, officeDetails/provenance and exact-state fallback when combining the streams. Expected future lanes remain RS-01, BS-01, AQ-01, CP-01, SRC-MN. No full gates or new release ran in this scan: two new submissions were below the batching threshold, and CP-01 was returned during preparation.
-
-Continuation is enabled in this chat, hourly at :53:50 through October 19 at 7:53:50 AM Arizona (automation 6ad5209d7df88191a2bba47cb78bfd7f). Skip overlapping live owners. The final run must preserve any unfinished candidate, stop only its own gates if needed and release the lock before 8 AM. This scan is at a safe stopping point and releases its lock next. The next scheduled wake-up is 21:53:50Z, exactly SH-01's two-hour batching trigger.
+NEXT RELEASE IS 56. Preserve SH-01's RS-01 hook requirements: sourced vacancies, Capitol offices, officeDetails/source provenance, exact-state fallback. Expected later lanes include RS-01, BS-01, AQ-01 and a repaired CP-01. Skip all exact returned commits; assess replacement READY commits freshly. River's lock is held for this combined test and will be released at a safe stopping point. Bounded continuation ends October 19 at 15:00Z; never hold the lock past then.
 
 Environment: pnpm 10.33.0 at /tmp/river-tools/node_modules/.bin first on PATH; PNPM_HOME=/tmp/river-pnpm; XDG_DATA_HOME=/tmp/river-xdg; PLAYWRIGHT_BROWSERS_PATH=/workspace/.cache/ms-playwright (pinned Chromium 1234). Network/child-process commands have used permitted network-enabled execution. Dependencies were installed from the frozen committed lockfile after the old snapshot lacked sharp and polygon-clipping; no tracked file changed. Failed environment run and failed UI-01/UI-02 combination are preserved in .scratch/river/. Current passing fold/test files describe UI-01 only. GitHub CLI and connector access work. No budgets, spending, pauses or production data were changed.
 

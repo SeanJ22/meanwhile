@@ -16,7 +16,7 @@ const output = resolve(process.env.BS01_OUTPUT ?? '.scratch/bs01-measurement');
 if (!beforeRoot || !process.env.DATABASE_URL) throw Error('BS01_BASELINE_ROOT and a production read-only DATABASE_URL are required');
 const sql = neon(process.env.DATABASE_URL);
 const [[role]] = await sql.transaction([sql.query(`SELECT current_user AS role, current_setting('transaction_read_only') AS read_only,
-  has_table_privilege(current_user,'civic_data_promotions','INSERT,UPDATE,DELETE') AS can_write`)], { readOnly: true });
+  EXISTS(SELECT 1 FROM pg_tables WHERE schemaname='public' AND has_table_privilege(current_user,quote_ident(schemaname)||'.'||quote_ident(tablename),'INSERT,UPDATE,DELETE')) AS can_write`)], { readOnly: true });
 if (role.read_only !== 'on' || role.can_write !== false) throw Error('Production connection is not read-only');
 const zips = { AL:'36104',AK:'99801',AZ:'85701',AR:'72201',CA:'95814',CO:'80203',CT:'06103',DE:'19901',FL:'32301',GA:'30303',HI:'96813',ID:'83702',IL:'62701',IN:'46204',IA:'50309',KS:'66603',KY:'40601',LA:'70802',ME:'04330',MD:'21401',MA:'02108',MI:'48933',MN:'55102',MS:'39201',MO:'65101',MT:'59601',NE:'68508',NV:'89701',NH:'03301',NJ:'08608',NM:'87501',NY:'12207',NC:'27601',ND:'58501',OH:'43215',OK:'73102',OR:'97301',PA:'17101',RI:'02903',SC:'29201',SD:'57501',TN:'37219',TX:'78701',UT:'84111',VT:'05602',VA:'23219',WA:'98501',WV:'25301',WI:'53703',WY:'82001',DC:'20001' };
 const places = Object.entries(zips);
@@ -80,6 +80,7 @@ for (const row of after) {
   const original = before.find(held => held.state === row.state);
   if (row.status !== 200 || row.error || row.holdingGaps || !(row.fullMs < 3000)) failures.push(`${row.state}: cold full response failed`);
   if (!original?.ids || !same(row.ids ?? [], original.ids)) failures.push(`${row.state}: contest IDs differ from before`);
+  if (row.candidates !== original?.candidates || row.fundingSections < original?.fundingSections) failures.push(`${row.state}: candidate or funding sections were lost`);
 }
 
 // The map uses another process. Every Ballot server below has empty state, place and ballot caches.

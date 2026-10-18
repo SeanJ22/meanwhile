@@ -3,6 +3,9 @@ on:
   push:
     branches: [stream/bs-01]
     paths: [scripts/bs-01-check.mjs, .github/workflows/bs-01-measure.yml]
+concurrency:
+  group: bs-01-measurement
+  cancel-in-progress: true
 permissions:
   contents: read
 jobs:
@@ -24,7 +27,7 @@ jobs:
         run: corepack pnpm run prebuild && corepack pnpm exec next build && corepack pnpm run postbuild
       - uses: actions/checkout@v7
         with:
-          ref: 6c21e18b7
+          ref: 6c21e18b778cc01dd792ada9487aaeb8e40d6728
           path: .scratch/bs01-before
       - name: Build the unchanged before version
         working-directory: .scratch/bs01-before

@@ -1,11 +1,11 @@
 # River status
 
 build_state: RELEASE 23 MERGED, DEPLOYED AND AUTOMATICALLY ADOPTED; NATIONAL SOURCE ROLLOUT RUNNING.
-worker: codex-acquisition-scale
+worker: codex-river
 provider: Codex
-run_id: acquisition-scale-2026-10-09
-lock: none
-heartbeat: 2026-10-10T02:40:24Z
+run_id: codex-river-20261018
+lock: codex-river-20261018-25f2ad98-746e-48f6-8448-736d2ba7f015
+heartbeat: 2026-10-18T19:37:15Z
 
 ## RELEASE 23 — national listings, known officials, portraits and finance: MERGED, DEPLOYED AND RUNNING
 

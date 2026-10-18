@@ -1072,6 +1072,16 @@ export interface OwnerCostRow {
 }
 
 /** One aggregate rather than several, so the panels agree about one instant. */
+/** One state's rows of the snapshot, in `current:<state>`: every assignment's index row, every body's publication attempt, spend by jurisdiction. */
+export interface OwnerSnapshotState {
+  readonly builtAt: string;
+  readonly allRowsIndex: readonly import("./assignment-view.ts").AssignmentIndexRow[];
+  readonly bodyAttempts: readonly import("./assignment-view.ts").BodyPublicationAttempt[];
+  readonly spendByPlace: readonly import("./cost-panel.ts").SpendByPlaceRow[];
+}
+
+export const ownerSnapshotStateId = (state: string): string => `current:${state}`;
+
 export interface OwnerSnapshot {
   /** Daily completeness, freshness and delivery counts for each place with a saved scope, newest last. Counts only; it never gates publishing. */
   readonly placeHistory?: Readonly<Record<string, readonly import("../coverage/place-history.ts").PlaceHistoryPoint[]>>;

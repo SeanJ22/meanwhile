@@ -267,7 +267,24 @@ export interface PlaceTotals {
   attempts: number;
 }
 
-const placeTotals = (): PlaceTotals => ({ usd: measuredSum(), attempts: 0 });
+export const placeTotals = (): PlaceTotals => ({ usd: measuredSum(), attempts: 0 });
+
+/** By state, then jurisdiction segment. */
+export type PlaceLedger = Record<string, Record<string, PlaceTotals>>;
+
+/** A charge's place, when its source names one; the ledger's overhead holds every other charge. */
+export function foldPlace(places: PlaceLedger, e: CostEntry): void {
+  const place = placeIdOf(e);
+  if (place === null) return;
+  const into = ((places[place.state] ??= {})[place.place] ??= placeTotals());
+  addMeasured(into.usd, e.cost.usd);
+  into.attempts += 1;
+}
+
+export function mergePlaceTotals(into: PlaceTotals, from: PlaceTotals): void {
+  mergeMeasured(into.usd, from.usd);
+  into.attempts += from.attempts;
+}
 
 /** The whole ledger's running totals: every cost-panel, spend-by-place and monthly figure is rendered from these. */
 export interface CostLedgerTotals {
@@ -277,8 +294,7 @@ export interface CostLedgerTotals {
   readonly usd: ExactSum;
   readonly byRole: Record<string, CostRowTotals>;
   readonly byModel: Record<string, CostRowTotals>;
-  /** State, then jurisdiction segment. */
-  readonly places: Record<string, Record<string, PlaceTotals>>;
+  /** Charges whose source names no place; the places are kept by state beside the ledger. */
   readonly overhead: PlaceTotals;
   /** The earliest readable stamp, in epoch ms. */
   beginsAt: number | null;
@@ -286,7 +302,7 @@ export interface CostLedgerTotals {
   readonly months: Record<string, MonthTotals>;
 }
 
-export const costLedgerTotals = (): CostLedgerTotals => ({ entries: 0, priced: 0, usd: exactSum(), byRole: {}, byModel: {}, places: {},
+export const costLedgerTotals = (): CostLedgerTotals => ({ entries: 0, priced: 0, usd: exactSum(), byRole: {}, byModel: {},
   overhead: placeTotals(), beginsAt: null, months: {} });
 
 /** Every whole-ledger figure; `worker` is the charge's Attempt's worker, or null when the Attempt is not on record. */
@@ -299,10 +315,10 @@ export function foldCostLedger(t: CostLedgerTotals, e: CostEntry, worker: Worker
   const modelAttempt = worker !== null && modelKeyOf(worker) !== NO_MODEL_KEY;
   foldCostRow(t.byRole, e.role, e, modelAttempt);
   for (const part of costPortionsByModel(e, worker ? modelKeyOf(worker) : ATTEMPT_NOT_ON_RECORD)) foldCostRow(t.byModel, part.model, part.entry, modelAttempt);
-  const place = placeIdOf(e);
-  const into = place === null ? t.overhead : ((t.places[place.state] ??= {})[place.place] ??= placeTotals());
-  addMeasured(into.usd, e.cost.usd);
-  into.attempts += 1;
+  if (placeIdOf(e) === null) {
+    addMeasured(t.overhead.usd, e.cost.usd);
+    t.overhead.attempts += 1;
+  }
   const at = Date.parse(e.recordedAt);
   if (Number.isFinite(at) && (t.beginsAt === null || at < t.beginsAt)) t.beginsAt = at;
 }
@@ -1083,10 +1099,9 @@ export interface SpendByStateRow {
   readonly measuredRows: number;
   readonly unmeasuredRows: number;
   readonly attempts: number;
-  /** The jurisdictions under this state, most-spent first. Empty for the overhead bucket. */
-  readonly places: readonly SpendByPlaceRow[];
 }
 
+/** The national rows; each state's jurisdictions are published on that state's own row. */
 export interface SpendByPlaceView {
   /** The whole-ledger total, measured/unmeasured split kept. */
   readonly total: MeasuredTotal;
@@ -1094,54 +1109,44 @@ export interface SpendByPlaceView {
   readonly states: readonly SpendByStateRow[];
 }
 
-/** Roll the whole cost ledger up by place: state, then jurisdiction. Pure. */
-export function buildSpendByPlace(entries: readonly CostEntry[]): SpendByPlaceView {
-  return spendByPlaceOf(costLedgerOf(entries, []));
+/** The whole cost ledger by place from every charge, each state with its jurisdictions. Pure. */
+export function buildSpendByPlace(entries: readonly CostEntry[]): SpendByPlaceView & { readonly states: readonly (SpendByStateRow & { readonly places: readonly SpendByPlaceRow[] })[] } {
+  const places: PlaceLedger = {};
+  for (const e of entries) foldPlace(places, e);
+  const view = spendByPlaceOf(Object.fromEntries(Object.entries(places).map(([state, rows]) => [state, placeSumOf(rows)])), costLedgerOf(entries, []).overhead);
+  return { ...view, states: view.states.map((row) => ({ ...row, places: places[row.state] ? placeRowsOf(row.state, places[row.state]!) : [] })) };
 }
 
-export function spendByPlaceOf(ledger: CostLedgerTotals): SpendByPlaceView {
-  const total = measuredSum();
-  const stateRow = (state: string, label: string, places: readonly SpendByPlaceRow[], rows: readonly PlaceTotals[]): SpendByStateRow => {
-    const usd = measuredSum();
-    for (const row of rows) mergeMeasured(usd, row.usd);
-    mergeMeasured(total, usd);
-    const t = measuredTotal(usd);
-    return {
-      state,
-      label,
-      usd: t.total === null ? null : round(t.total),
-      measuredRows: t.measured,
-      unmeasuredRows: t.unmeasured,
-      attempts: rows.reduce((n, row) => n + row.attempts, 0),
-      places,
-    };
-  };
+export function placeSumOf(places: Readonly<Record<string, PlaceTotals>>): PlaceTotals {
+  const sum = placeTotals();
+  for (const row of Object.values(places)) mergePlaceTotals(sum, row);
+  return sum;
+}
 
-  const states: SpendByStateRow[] = Object.entries(ledger.places)
-    .map(([state, places]) => {
-      const placeRows: SpendByPlaceRow[] = Object.entries(places)
-        .map(([place, row]) => {
-          const pt = measuredTotal(row.usd);
-          return {
-            key: place,
-            label: placeLabel(state, place),
-            usd: pt.total === null ? null : round(pt.total),
-            measuredRows: pt.measured,
-            unmeasuredRows: pt.unmeasured,
-            attempts: row.attempts,
-          };
-        })
-        .sort((a, b) => (b.usd ?? -1) - (a.usd ?? -1) || a.key.localeCompare(b.key));
-      return stateRow(state, state.toUpperCase(), placeRows, Object.values(places));
+/** One state's jurisdictions, most-spent first. */
+export function placeRowsOf(state: string, places: Readonly<Record<string, PlaceTotals>>): SpendByPlaceRow[] {
+  return Object.entries(places)
+    .map(([place, row]) => {
+      const pt = measuredTotal(row.usd);
+      return { key: place, label: placeLabel(state, place), usd: pt.total === null ? null : round(pt.total), measuredRows: pt.measured,
+        unmeasuredRows: pt.unmeasured, attempts: row.attempts };
     })
+    .sort((a, b) => (b.usd ?? -1) - (a.usd ?? -1) || a.key.localeCompare(b.key));
+}
+
+/** `states` holds each state's place totals summed. */
+export function spendByPlaceOf(states: Readonly<Record<string, PlaceTotals>>, overhead: PlaceTotals): SpendByPlaceView {
+  const total = measuredSum();
+  const stateRow = (state: string, label: string, row: PlaceTotals): SpendByStateRow => {
+    mergeMeasured(total, row.usd);
+    const t = measuredTotal(row.usd);
+    return { state, label, usd: t.total === null ? null : round(t.total), measuredRows: t.measured, unmeasuredRows: t.unmeasured, attempts: row.attempts };
+  };
+  const rows = Object.entries(states).map(([state, row]) => stateRow(state, state.toUpperCase(), row))
     .sort((a, b) => (b.usd ?? -1) - (a.usd ?? -1) || a.state.localeCompare(b.state));
-
-  if (ledger.overhead.attempts > 0) {
-    states.push(stateRow(NOT_A_PLACE_KEY, "Not attributed to a place (pre-warm, bare API calls, misc)", [], [ledger.overhead]));
-  }
-
+  if (overhead.attempts > 0) rows.push(stateRow(NOT_A_PLACE_KEY, "Not attributed to a place (pre-warm, bare API calls, misc)", overhead));
   const whole = measuredTotal(total);
-  return { total: { ...whole, total: whole.total === null ? null : round(whole.total) }, states };
+  return { total: { ...whole, total: whole.total === null ? null : round(whole.total) }, states: rows };
 }
 
 /** A by-model key as the owner reads it. */

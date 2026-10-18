@@ -32,9 +32,10 @@ import type {
   OwnerDecisionIntent,
   OwnerDigestRecord,
   OwnerSnapshot,
+  OwnerSnapshotState,
   RunnerHeartbeat,
 } from "../owner-surface.ts";
-import type { OwnerSnapshotTotals } from "../owner-snapshot-totals.ts";
+import type { OwnerSnapshotTotals, SpilledInbox, StateTotals } from "../owner-snapshot-totals.ts";
 import type { FieldManualEntry } from "../field-manual.ts";
 import { fieldManualRows } from "./field-manual-rows.ts";
 import { aggregateFixMap, type FixMapRow } from "../../method/fix-map.ts";
@@ -381,6 +382,9 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     costs: memoryAppendOnlyRepository<CostEntry>("costs"),
     ownerSnapshots: memoryAggregateRepository<OwnerSnapshot>("OwnerSnapshot"),
     ownerSnapshotTotals: memoryAggregateRepository<OwnerSnapshotTotals>("OwnerSnapshotTotals"),
+    ownerSnapshotStates: memoryAggregateRepository<OwnerSnapshotState>("OwnerSnapshotState"),
+    ownerSnapshotStateTotals: memoryAggregateRepository<StateTotals>("StateTotals"),
+    ownerSnapshotInboxes: memoryAggregateRepository<SpilledInbox>("SpilledInbox"),
     fieldManual: fieldManualRows(memoryAggregateRepository<FieldManualEntry>("FieldManualEntry")),
     fixMap: aggregateFixMap(memoryAggregateRepository<FixMapRow>("FixMapRow")),
     websitePacing: memoryWebsitePacing(),

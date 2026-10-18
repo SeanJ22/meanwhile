@@ -1,22 +1,46 @@
 import { clauseObligation, readAssignmentSubset, type AssignmentSubsetBase } from "./assignment-read.ts";
 import {
-  assignmentCandidates,
+  assembleAssignmentView,
+  assignmentCostSummaryOf,
   assignmentCostTotals,
+  assignmentPartOf,
+  assignmentStateRowsOf,
   deriveAssignmentEntries,
+  mergeAssignmentParts,
   pipelineLinked,
   type AssignmentClock,
   type AssignmentCostTotals,
   type AssignmentEntry,
   type AssignmentIndexRow,
   type AssignmentListRow,
+  type AssignmentPart,
   type AssignmentView,
   type BodyPublicationAttempt,
   foldAssignmentCost,
 } from "./assignment-view.ts";
 import { addMeasured, measuredSum, subtractMeasured, utcMonthWindow, type CostEntry, type MeasuredSum } from "./cost.ts";
-import { SPEND_BY_DAY_MS, costLedgerTotals, foldCostLedger, foldCostMonth, foldSpendDay, utcMonthOf, type CostLedgerTotals, type DayTotals } from "./cost-panel.ts";
+import {
+  SPEND_BY_DAY_MS,
+  costLedgerTotals,
+  foldCostLedger,
+  foldCostMonth,
+  foldPlace,
+  foldSpendDay,
+  mergePlaceTotals,
+  placeRowsOf,
+  placeSumOf,
+  placeTotals,
+  spendByPlaceOf,
+  utcMonthOf,
+  type CostLedgerTotals,
+  type DayTotals,
+  type PlaceLedger,
+  type PlaceTotals,
+  type SpendByPlaceView,
+} from "./cost-panel.ts";
 import type { ExactSum } from "./exact-sum.ts";
 import type { ExpansionScopeDecision } from "./expansion/scopes.ts";
+import { assertAggregateOnly, ownerSnapshotStateId, type OwnerSnapshotState } from "./owner-surface.ts";
 import { deriveItemState, isPipelineRecord } from "./promotion/pipeline.ts";
 import type { PromotionPipelineRecord } from "./promotion/types.ts";
 import type { ProviderReading } from "./provider-billing.ts";
@@ -32,16 +56,22 @@ import {
   type WindowTotals,
 } from "./provider-billing-attribution.ts";
 import { foldSearch, type SearchLedger } from "./provider-billing-collector.ts";
+import { US_STATES } from "./readiness/catalog.ts";
 import { countsAsScoutAttempt } from "./research-metrics.ts";
 import { INCREMENTAL_READS_SLACK_MS } from "./repository/incremental-reads.ts";
-import { readByKeys, type AggregateRepository, type AppendOnlyRepository, type ChangedRecord, type ControlPlaneRepositories, type RecordProjection } from "./repository/types.ts";
+import { readByKeys, type AggregateRepository, type AppendOnlyRepository, type ChangedRecord, type ControlPlaneRepositories, type Persisted, type RecordProjection } from "./repository/types.ts";
+import { unitCarriesState } from "./scheduler/dispatch-target.ts";
 import { isFundedHunt } from "./scheduler/hunt-continuation.ts";
 import { servedWitness, type ServedReaderReadback } from "./served-reader.ts";
+import { stateCodeOf } from "./unit-state.ts";
 import type { WorkItem } from "./work-item.ts";
 
-/** The totals row beside the published snapshot in `cp_owner_snapshots`. */
+/** The national totals row beside the published snapshot in `cp_owner_snapshots`; each state's rows sit beside it. */
 export const OWNER_SNAPSHOT_TOTALS_ID = "totals";
-export const OWNER_SNAPSHOT_TOTALS_FORMAT = 1;
+const OWNER_SNAPSHOT_TOTALS_FORMAT = 2;
+const OTHER_STATE = "other";
+const stateTotalsId = (state: string): string => `totals:${state}`;
+const stateInboxId = (state: string): string => `inbox:${state}`;
 
 /** A charge whose stamp and whose row's `recorded_at` differ by more than this is carried by itself for the windows. */
 const STAMP_MARGIN_MS = 10 * 60_000;
@@ -49,6 +79,8 @@ const STAMP_MARGIN_MS = 10 * 60_000;
 const WHOLE_READ_MS = 3_600_000;
 /** Assignments read and derived together; their records are all a batch holds. */
 const ASSIGNMENT_BATCH = 250;
+/** Routed rows held for states not folded yet before they are written to those states' inboxes. */
+const INBOX_HELD = 200_000;
 const DAY_MS = 86_400_000;
 
 export interface OwnerSnapshotTotals {
@@ -124,6 +156,27 @@ export interface GroupTotals {
   readonly clause: string | null;
 }
 
+/** One state's assignments and spend by jurisdiction between publishes, in `totals:<state>`. */
+export interface StateTotals {
+  readonly builtAt: string;
+  readonly groups: Readonly<Record<string, GroupTotals>>;
+  readonly places: Readonly<Record<string, PlaceTotals>>;
+}
+
+/** What a state adds to the national figures, kept so a publish that leaves the state alone need not read it. */
+export interface StatePart {
+  readonly builtAt: string;
+  /** The earliest instant at which the clock alone could change one of its assignments. */
+  readonly horizon: string | null;
+  readonly assignments: AssignmentPart;
+  readonly publications: readonly WorkItem[];
+  /** The subjects of the standing obligations each instruction marks, by `<assignment key>\n<receipt>`: the hunts' members. */
+  readonly marks: Readonly<Record<string, readonly string[]>>;
+  /** Standing obligations by the state name their id and subject carry, "other" for none. */
+  readonly obligations: Readonly<Record<string, number>>;
+  readonly spend: PlaceTotals;
+}
+
 interface PipelineTotals {
   cursor: LogCursor;
   items: number;
@@ -135,14 +188,31 @@ interface PipelineTotals {
 export interface AssignmentTotals {
   /** Where the next changed-row reads start, less the slack. */
   readonly through: string;
-  /** The snapshot whose published rows these totals pair with. */
-  readonly publishedAt: string;
-  readonly groups: Record<string, GroupTotals>;
+  readonly states: Readonly<Record<string, StatePart>>;
+  /** A work item held by an assignment in another state than its own clause or id names. */
+  readonly crossings: Readonly<Record<string, string>>;
   /** A work item joined through a parent (directory or repair), by the parent it names. */
-  readonly links: Record<string, string>;
+  readonly links: Readonly<Record<string, string>>;
   /** A work item's upstream work items, for each one that waits on others. */
-  readonly dependencies: Record<string, readonly string[]>;
+  readonly dependencies: Readonly<Record<string, readonly string[]>>;
+  /** The list rows of the assignments the selection rule ranks first. */
+  readonly lists: Readonly<Record<string, AssignmentListRow>>;
   readonly pipeline: PipelineTotals;
+}
+
+/** Rows routed to a state before it is folded. */
+export interface StateInbox {
+  readonly groups: string[];
+  readonly items: string[];
+  /** Scout-result log keys and pipeline items by the work item or attempt they name. */
+  readonly scouts: Record<string, string[]>;
+  readonly pipeline: Record<string, string[]>;
+  readonly places: Record<string, PlaceTotals>;
+}
+
+/** A state's inbox written out by one publish; another publish's is ignored. */
+export interface SpilledInbox extends StateInbox {
+  readonly run: string;
 }
 
 const unique = (ids: Iterable<string | null | undefined>): string[] => [...new Set([...ids].filter((id): id is string => typeof id === "string" && id !== ""))];
@@ -186,6 +256,14 @@ async function readLogChanges<T>(log: AppendOnlyRepository<T>, cursor: LogCursor
   };
 }
 
+/** Whether an earlier read from `cursor` folded a record. */
+function foldedBefore(cursor: LogCursor | null, slackMs: number): (r: ChangedRecord<unknown>) => boolean {
+  if (cursor === null) return () => false;
+  const since = Date.parse(cursor.through) - slackMs;
+  const held = new Set(cursor.held.filter(([, , at]) => Date.parse(at) >= since).map(([key, position]) => slotKey(key, position)));
+  return (r) => Date.parse(r.changedAt!) < since || held.has(slotKey(r.key, r.position));
+}
+
 /** An aggregate's rows changed since `since`, narrowed, page by page; answers the clock the read began at. */
 async function eachChanged<R>(repo: AggregateRepository<unknown>, since: string | null, projection: RecordProjection, page: (rows: readonly R[]) => void | Promise<void>): Promise<string> {
   const read = await needs(repo.listChangedSince, "changed-since read")(since, [], { projection, page: (rows) => page(rows.map((row) => row.value as R)) });
@@ -197,9 +275,24 @@ async function eachLogChanged<R>(log: AppendOnlyRepository<unknown>, since: stri
   return read.through ?? iso(Date.now());
 }
 
+/** The work items an assignment holds: those on record, and those a round, task, attempt or worker result names. */
+async function heldWorkItems(repos: ControlPlaneRepositories, ids: Iterable<string>): Promise<Set<string>> {
+  const out = new Set<string>();
+  for (const chunk of chunks(unique(ids), ASSIGNMENT_BATCH)) {
+    for (const row of await needs(repos.workItems.readManyNarrowed, "work-item read by id")(chunk, { id: true })) out.add(row.id);
+    for (const repo of [repos.occurrences, repos.routeTasks, repos.attempts] as AggregateRepository<unknown>[]) {
+      const rest = chunk.filter((id) => !out.has(id));
+      if (rest.length === 0) break;
+      for (const row of await needs(repo.listWhereIn, "read by work item")(["workItemId"], rest, { workItemId: true })) out.add((row.value as { workItemId: string }).workItemId);
+    }
+    const rest = chunk.filter((id) => !out.has(id));
+    if (rest.length > 0) for (const [key, records] of await readByKeys(repos.workerResults, rest)) if (records.length > 0) out.add(key);
+  }
+  return out;
+}
+
 type Refs = Map<string, Set<string>>;
 const addRef = (refs: Refs, ref: string | null | undefined, key: string) => { if (ref) refs.set(ref, (refs.get(ref) ?? new Set()).add(key)); };
-const lookup = (refs: Refs, ...ids: readonly (readonly string[])[]): string[] => unique(ids.flat().flatMap((id) => [...(refs.get(id) ?? [])]));
 type PipelineSource = { readonly source?: { readonly kind?: string; readonly attemptId?: string; readonly workItemId?: string } };
 
 /* ------------------------------------------------------------------ costs */
@@ -242,51 +335,53 @@ function foldUpToClock(t: CostTotals, e: CostEntry, worker: WorkerRef | null, ct
 const usdOf = (value: unknown): number | string | null => typeof value === "number" ? (Number.isFinite(value) ? value : String(value)) : null;
 const usdIn = (value: number | string | null): number | null => typeof value === "string" ? Number(value) : value;
 
-export interface CostFoldInput {
+interface CostFoldInput {
   readonly nowIso: string;
   readonly slackMs?: number;
-  /** Whether an assignment holds a work item. */
-  readonly assigned: (workItemId: string) => boolean;
   /** The current hunts, or null when they could not be read: the last frame then stands. */
   readonly scopes: readonly ExpansionScopeDecision[] | null;
   readonly scopeMembers: ReadonlyMap<string, ReadonlySet<string>>;
   /** The periods of the readings the last snapshot published, which this publish may carry forward. */
   readonly carried: readonly ReadingPeriod[];
-  /** Attempts changed since the last publish. */
-  readonly changedAttempts: ReadonlySet<string>;
+  /** Attempts and work items with a row changed since the last publish: the ones a folded charge's context can have gained. */
+  readonly changed: { readonly attempts: ReadonlySet<string>; readonly workItems: ReadonlySet<string> };
+  /** Each page's charges that no earlier publish folded, for the places kept by state. */
+  readonly places?: (charges: readonly CostEntry[]) => Promise<void>;
 }
 
 /** The ledger's totals with every charge appended since `prior` folded in; when a folded charge's context has changed (its Attempt
  * or work item appearing, the hunts or their members changing) the whole ledger is refolded page by page, as on a first publish. */
-export async function foldCosts(repos: ControlPlaneRepositories, prior: CostTotals | null, input: CostFoldInput): Promise<CostTotals> {
+async function foldCosts(repos: ControlPlaneRepositories, prior: CostTotals | null, input: CostFoldInput): Promise<CostTotals> {
   const slackMs = input.slackMs ?? INCREMENTAL_READS_SLACK_MS;
   const now = Date.parse(input.nowIso);
   const frame = input.scopes === null && prior !== null ? prior.billing : billingFrame(input.scopes ?? [], input.scopeMembers);
   const carried = input.carried.filter(billed);
+  const readWorkers = needs(repos.attempts.readManyNarrowed, "attempt read by id");
   const rebuild = prior === null || JSON.stringify(prior.billing) !== JSON.stringify(frame) || now < Date.parse(prior.foldedAt) ||
-    prior.orphans.some((id) => input.changedAttempts.has(id)) || prior.unassigned.some(input.assigned) ||
-    carried.some((r) => !(periodKey(r) in prior.windows));
+    carried.some((r) => !(periodKey(r) in prior.windows)) || prior.orphans.some((id) => input.changed.attempts.has(id)) ||
+    (await heldWorkItems(repos, prior.unassigned.filter((id) => input.changed.workItems.has(id)))).size > 0;
   const t = rebuild ? emptyCosts(frame, carried) : prior;
   t.windows = Object.fromEntries(carried.map((r) => [periodKey(r), t.windows[periodKey(r)]!]));
   const ctx = contextOf(frame);
   const from = rebuild ? now : Date.parse(t.foldedAt);
   const orphans = new Set(t.orphans);
   const unassigned = new Set(t.unassigned);
+  const placed = rebuild ? foldedBefore(prior?.cursor ?? null, slackMs) : () => false;
   const ahead = t.ahead;
   t.ahead = [];
   for (const charge of ahead) {
     if (Date.parse(charge.entry.recordedAt) <= now) foldUpToClock(t, charge.entry, charge.worker, ctx);
     else t.ahead.push(charge);
   }
-  const readWorkers = needs(repos.attempts.readManyNarrowed, "attempt read by id");
   const { next, folded } = await readLogChanges(repos.costs, rebuild ? null : t.cursor, slackMs, async (records) => {
     const workers = new Map((await readWorkers(unique(records.map((r) => r.record.attemptId)), { id: true, worker: ["version", "provider"] }))
       .map((row) => [row.id, (row.value as { worker: WorkerRef }).worker] as const));
+    const held = await heldWorkItems(repos, records.map((r) => r.record.workItemId));
     for (const r of records) {
       const e = r.record;
       const worker = workers.get(e.attemptId) ?? null;
       if (worker === null) orphans.add(e.attemptId);
-      const assigned = input.assigned(e.workItemId);
+      const assigned = held.has(e.workItemId);
       if (!assigned) unassigned.add(e.workItemId);
       foldCostLedger(t.ledger, e, worker);
       foldAssignmentCost(t.assignments, e, worker ?? undefined, assigned);
@@ -300,6 +395,7 @@ export async function foldCosts(repos: ControlPlaneRepositories, prior: CostTota
         t.skewed.push({ key: r.key, position: r.position, at, usd: usdOf(e.cost.usd), scout: countsAsScoutAttempt(e) });
       }
     }
+    await input.places?.(records.filter((r) => !placed(r)).map((r) => r.record));
   });
   if (now > from) {
     /* Charges leave the fortnight and the day as the clock moves; a charge folded this publish was folded against `from`. */
@@ -348,10 +444,109 @@ export function readingWindows(t: CostTotals, readings: readonly ProviderReading
   return (r) => windows[periodKey(r)] ?? windowTotals();
 }
 
-/* ------------------------------------------------------------ assignments */
+/* ----------------------------------------------------------------- states */
+
+/** The state a standing obligation's id names, or for a work item of its own, the one its id and subject name. */
+const stateOf = (id: string, subject = ""): string => stateCodeOf(id, subject) ?? OTHER_STATE;
+
+/** The state whose rows hold a work item's assignment unless a crossing says otherwise: its clause's obligation's, else its own. */
+function homeOf(id: string, w: Pick<WorkItem, "obligation" | "subject"> | undefined): string {
+  const clause = w === undefined ? null : clauseObligation(w.obligation);
+  return clause === null ? stateOf(id, w?.subject ?? "") : stateOf(clause);
+}
+
+const emptyInbox = (): StateInbox => ({ groups: [], items: [], scouts: {}, pipeline: {}, places: {} });
+
+/** Routed rows held for the states not folded yet; past a bound, written to each state's inbox row. */
+class Inboxes {
+  readonly #held = new Map<string, StateInbox>();
+  readonly #spilled = new Set<string>();
+  #size = 0;
+  readonly repos: ControlPlaneRepositories;
+  readonly nowIso: string;
+  /** Names this fold's inbox rows apart from any other publish's, or an earlier attempt of this one. */
+  readonly run: string;
+  readonly write: boolean;
+  readonly bound: number;
+
+  constructor(repos: ControlPlaneRepositories, nowIso: string, run: string, write: boolean, bound: number) {
+    this.repos = repos;
+    this.nowIso = nowIso;
+    this.run = run;
+    this.write = write;
+    this.bound = bound;
+  }
+
+  states(): string[] {
+    return unique([...this.#held.keys(), ...this.#spilled]).sort();
+  }
+
+  #of(state: string): StateInbox {
+    let inbox = this.#held.get(state);
+    if (inbox === undefined) this.#held.set(state, inbox = emptyInbox());
+    this.#size += 1;
+    return inbox;
+  }
+
+  /** Folds the state even with nothing routed to it: a clock passed one of its horizons, or it is emptied. */
+  touch(state: string): void { this.#of(state); }
+  group(state: string, id: string): void { this.#of(state).groups.push(id); }
+  item(state: string, id: string): void { this.#of(state).items.push(id); }
+  scout(state: string, ref: string | undefined, key: string): void { if (ref) (this.#of(state).scouts[ref] ??= []).push(key); }
+  pipeline(state: string, ref: string | undefined, key: string): void { if (ref) (this.#of(state).pipeline[ref] ??= []).push(key); }
+  place(state: string, place: string, totals: PlaceTotals): void { mergePlaceTotals(this.#of(state).places[place] ??= placeTotals(), totals); }
+
+  async settle(): Promise<void> {
+    if (!this.write || this.#size < this.bound) return;
+    for (const [state, inbox] of this.#held) {
+      const row = await this.repos.ownerSnapshotInboxes.read(stateInboxId(state));
+      const merged = mergeInbox(row?.value.run === this.run ? row.value : emptyInbox(), inbox);
+      const value: SpilledInbox = { run: this.run, ...merged };
+      if (row === null) await this.repos.ownerSnapshotInboxes.put(stateInboxId(state), value, this.nowIso);
+      else await this.repos.ownerSnapshotInboxes.compareAndSet(stateInboxId(state), row.revision, value, this.nowIso);
+      this.#spilled.add(state);
+    }
+    this.#held.clear();
+    this.#size = 0;
+  }
+
+  /** Everything routed to the state, held and written out; it is then gone from both. */
+  async take(state: string): Promise<StateInbox> {
+    let inbox = this.#held.get(state) ?? emptyInbox();
+    this.#held.delete(state);
+    if (this.#spilled.delete(state)) {
+      const row = await this.repos.ownerSnapshotInboxes.read(stateInboxId(state));
+      if (row?.value.run === this.run) inbox = mergeInbox(row.value, inbox);
+      await this.repos.ownerSnapshotInboxes.compareAndSet(stateInboxId(state), row!.revision, { run: "", ...emptyInbox() }, this.nowIso);
+    }
+    return inbox;
+  }
+}
+
+function mergeInbox(a: StateInbox, b: StateInbox): StateInbox {
+  const refs = (x: Record<string, string[]>, y: Record<string, string[]>) => {
+    const out: Record<string, string[]> = { ...x };
+    for (const [ref, keys] of Object.entries(y)) out[ref] = unique([...(out[ref] ?? []), ...keys]);
+    return out;
+  };
+  const places: Record<string, PlaceTotals> = structuredClone(a.places);
+  for (const [place, totals] of Object.entries(b.places)) mergePlaceTotals(places[place] ??= placeTotals(), totals);
+  return { groups: unique([...a.groups, ...b.groups]), items: unique([...a.items, ...b.items]), scouts: refs(a.scouts, b.scouts), pipeline: refs(a.pipeline, b.pipeline), places };
+}
+
+/** A state's rows were not written by the publish whose national totals name them, so every state is derived again. */
+class StaleState extends Error {}
+
+interface Loaded {
+  readonly totals: Persisted<StateTotals> | null;
+  readonly snapshot: Persisted<OwnerSnapshotState> | null;
+  readonly groups: Set<string>;
+  readonly lists: Map<string, AssignmentListRow>;
+  places: Record<string, PlaceTotals>;
+}
 
 const CHANGE_PROJECTIONS = {
-  workItem: { id: true, obligation: true, directoryParent: true, planRepair: true, dependencies: true },
+  workItem: { id: true, obligation: true, subject: true, directoryParent: true, planRepair: true, dependencies: true },
   byWorkItem: { workItemId: true },
 } satisfies Record<string, RecordProjection>;
 
@@ -360,75 +555,144 @@ const narrowPublication = (w: WorkItem): WorkItem => ({ id: w.id, autonomousPlan
   publicationOutcome: w.publicationOutcome && { status: w.publicationOutcome.status, versionId: w.publicationOutcome.versionId,
     workerResultId: w.publicationOutcome.workerResultId, acceptedRecordIds: w.publicationOutcome.acceptedRecordIds } } as unknown as WorkItem);
 
-export interface AssignmentFoldInput {
+const obligationStateName = (id: string, subjectId: string): string => {
+  const hay = `${id} ${subjectId}`.toLowerCase();
+  return US_STATES.find((s) => unitCarriesState(hay, s.code))?.name ?? "other";
+};
+
+export interface OwnerSnapshotFoldInput {
   readonly nowIso: string;
   readonly slackMs?: number;
   /** The public readbacks the published rows were derived with. */
   readonly servedReader: ServedReaderReadback | null;
   readonly askGapObservations: AssignmentSubsetBase["askGapObservations"];
+  readonly scopes: readonly ExpansionScopeDecision[] | null;
+  /** The periods of the readings the last snapshot published. */
+  readonly carried: readonly ReadingPeriod[];
+  /** False for a dry run: no state's rows are written. */
+  readonly write: boolean;
+  /** Routed rows held in memory before they are written to their states' inboxes. */
+  readonly heldRows?: number;
   readonly log: (line: string) => void;
 }
 
-/** The assignments as this publish holds them: the carried totals joined to the published rows. */
-export class AssignmentFold {
+/**
+ * The snapshot's totals with every row changed since the last publish folded in, one state at a time: each state's assignments and
+ * spend are read from its own rows, folded, written back and let go before the next, and only each state's part is held nationally.
+ */
+export class OwnerSnapshotFold {
   readonly #repos: ControlPlaneRepositories;
-  readonly #input: AssignmentFoldInput;
+  readonly #input: OwnerSnapshotFoldInput;
+  readonly #slackMs: number;
+  readonly #rebuild: boolean;
+  readonly #inboxes: Inboxes;
   #servedReader: ServedReaderReadback | null;
+  readonly #priorCosts: CostTotals | null;
+  costs!: CostTotals;
+  readonly #states: Record<string, StatePart>;
+  readonly #crossings: Record<string, string>;
+  readonly #links: Record<string, string>;
+  readonly #dependencies: Record<string, readonly string[]>;
+  readonly #lists: Map<string, AssignmentListRow>;
+  #pipeline: PipelineTotals;
+  #through: string;
+  /** The states loaded now, and every assignment they hold. */
+  readonly #loaded = new Map<string, Loaded>();
   readonly #groups = new Map<string, GroupTotals>();
+  readonly #stateOfGroup = new Map<string, string>();
   readonly #index = new Map<string, AssignmentIndexRow>();
-  readonly #lists = new Map<string, AssignmentListRow>();
   readonly #bodies = new Map<string, readonly BodyPublicationAttempt[]>();
   readonly #groupOf = new Map<string, string>();
-  #links: Record<string, string> = {};
-  /** Scout-result log keys and pipeline items by the work item or attempt they name. */
   readonly #scouts: Refs = new Map();
   readonly #pipelineItems: Refs = new Map();
-  #dependencies: Record<string, readonly string[]> = {};
-  #pipeline: PipelineTotals = { cursor: { through: iso(0), held: [] }, items: 0, verified: 0, unlinked: {} };
-  #through = iso(0);
-  /** False while every assignment is derived from scratch: only the ranked candidates' list rows are kept, and they are derived last. */
-  #keepLists = true;
+  /** States whose rows this publish wrote. */
+  readonly #written = new Set<string>();
   /** Attempts changed since the last publish. */
-  readonly changedAttempts = new Set<string>();
+  readonly #changedAttempts = new Set<string>();
 
-  private constructor(repos: ControlPlaneRepositories, input: AssignmentFoldInput) {
+  private constructor(repos: ControlPlaneRepositories, prior: OwnerSnapshotTotals | null, input: OwnerSnapshotFoldInput) {
     this.#repos = repos;
     this.#input = input;
+    this.#slackMs = input.slackMs ?? INCREMENTAL_READS_SLACK_MS;
     this.#servedReader = input.servedReader;
+    const a = prior?.formatVersion === OWNER_SNAPSHOT_TOTALS_FORMAT ? prior.assignments : null;
+    this.#rebuild = a === null || prior?.costs === null;
+    this.#inboxes = new Inboxes(repos, input.nowIso, `${input.nowIso} ${this.#rebuild ? "rebuild" : "fold"}`, input.write, input.heldRows ?? INBOX_HELD);
+    this.#priorCosts = this.#rebuild ? null : prior!.costs;
+    this.#states = this.#rebuild ? {} : { ...a!.states };
+    this.#crossings = this.#rebuild ? {} : { ...a!.crossings };
+    this.#links = this.#rebuild ? {} : { ...a!.links };
+    this.#dependencies = this.#rebuild ? {} : { ...a!.dependencies };
+    this.#lists = new Map(this.#rebuild ? [] : Object.entries(a!.lists));
+    this.#pipeline = this.#rebuild ? { cursor: { through: iso(0), held: [] }, items: 0, verified: 0, unlinked: {} } : structuredClone(a!.pipeline);
+    this.#through = this.#rebuild ? iso(0) : a!.through;
   }
 
-  /** The assignments with every row changed since `prior` folded in; with no usable prior, every assignment is derived batch by batch. */
-  static async fold(repos: ControlPlaneRepositories, prior: AssignmentTotals | null, published: AssignmentView | null, input: AssignmentFoldInput): Promise<AssignmentFold> {
-    const fold = new AssignmentFold(repos, input);
-    const usable = prior !== null && published !== null && prior.publishedAt === published.builtAt && published.allRowsIndex !== undefined &&
-      published.allRowsIndex.length === Object.keys(prior.groups).length && published.allRowsIndex.every((row) => row.id in prior.groups);
-    if (usable) await fold.#carry(prior, published);
-    else await fold.#rebuild();
-    return fold;
+  /** The totals with every changed row folded in; with no usable prior, or a state whose rows do not pair with it, every state is derived from scratch. */
+  static async fold(repos: ControlPlaneRepositories, prior: OwnerSnapshotTotals | null, input: OwnerSnapshotFoldInput): Promise<OwnerSnapshotFold> {
+    try {
+      return await new OwnerSnapshotFold(repos, prior, input).#run(prior);
+    } catch (error) {
+      if (!(error instanceof StaleState)) throw error;
+      input.log(`assignments: ${error.message}; every state is derived again`);
+      return await new OwnerSnapshotFold(repos, null, input).#run(prior);
+    }
   }
 
-  get askGapObservations(): AssignmentSubsetBase["askGapObservations"] { return this.#input.askGapObservations; }
-
-  /** Whether an assignment holds the work item. */
-  readonly assigned = (workItemId: string): boolean => this.#groupOf.has(workItemId);
-
-  /** Every standing obligation's clock, with its id. */
-  clocks(): { readonly id: string; readonly clock: AssignmentClock }[] {
-    return [...this.#groups.entries()].flatMap(([id, g]) => (g.obligation === null ? [] : [{ id, clock: g.obligation }]));
+  async #run(prior: OwnerSnapshotTotals | null): Promise<this> {
+    const changed = this.#rebuild ? new Set<string>() : await this.#routeChanges();
+    if (this.#rebuild) {
+      await this.#routeEverything();
+      for (const state of Object.keys(prior?.formatVersion === OWNER_SNAPSHOT_TOTALS_FORMAT ? prior.assignments?.states ?? {} : {})) this.#inboxes.touch(state);
+    }
+    const costs = (prior: CostTotals | null) => foldCosts(this.#repos, prior, { nowIso: this.#input.nowIso, slackMs: this.#slackMs, scopes: this.#input.scopes,
+      scopeMembers: this.#scopeMembers(), carried: this.#input.carried, changed: { attempts: this.#changedAttempts, workItems: changed },
+      places: (charges) => this.#place(charges) });
+    const membersOf = () => JSON.stringify([...this.#scopeMembers()].map(([key, subjects]) => [key, [...subjects].sort()]));
+    const members = membersOf();
+    this.costs = await costs(this.#priorCosts);
+    await this.#drain();
+    /* Hunt members are read off the states' clocks, so a folded state can change the frame every charge was attributed against. */
+    if (membersOf() !== members) {
+      this.costs = await costs(this.costs);
+      await this.#drain();
+    }
+    await this.#foldPipeline(this.#rebuild);
+    return this;
   }
 
-  /** Every work item with a publication outcome, as the public readbacks read it. */
-  publications(): WorkItem[] {
-    return [...this.#groups.values()].flatMap((g) => g.publications);
+  #scopeMembers(): ReadonlyMap<string, ReadonlySet<string>> {
+    return new Map((this.#input.scopes ?? []).map((scope) => [scope.key,
+      new Set(Object.values(this.#states).flatMap((s) => s.marks[`${scope.key}\n${scope.receiptId}`] ?? []))]));
+  }
+
+  async #place(charges: readonly CostEntry[]): Promise<void> {
+    const places: PlaceLedger = {};
+    for (const e of charges) foldPlace(places, e);
+    for (const [state, rows] of Object.entries(places)) for (const [place, totals] of Object.entries(rows)) this.#inboxes.place(state, place, totals);
+    await this.#inboxes.settle();
   }
 
   get pipeline(): { readonly items: number; readonly linked: number; readonly verified: number } {
     return { items: this.#pipeline.items, linked: this.#pipeline.items - Object.keys(this.#pipeline.unlinked).length, verified: this.#pipeline.verified };
   }
 
-  entries(): Map<string, AssignmentEntry> {
-    return new Map([...this.#groups.entries()].map(([id, g]) => [id, { ...g, index: this.#index.get(id)!, list: this.#lists.get(id),
-      bodyAttempts: this.#bodies.get(id) ?? [] }]));
+  /** Every work item with a publication outcome, as the public readbacks read it. */
+  publications(): WorkItem[] {
+    return Object.values(this.#states).flatMap((s) => s.publications);
+  }
+
+  /** Standing obligations by the state name each carries. */
+  obligationsByState(): Record<string, number> {
+    const out: Record<string, number> = {};
+    for (const s of Object.values(this.#states)) for (const [name, n] of Object.entries(s.obligations)) out[name] = (out[name] ?? 0) + n;
+    return out;
+  }
+
+  /** Spend by state; each state's jurisdictions are on its own row. */
+  spendByPlace(): SpendByPlaceView {
+    return spendByPlaceOf(Object.fromEntries(Object.entries(this.#states).filter(([, s]) => s.spend.attempts > 0).map(([state, s]) => [state, s.spend])),
+      this.costs.ledger.overhead);
   }
 
   /** Re-derives the assignments whose public readback changed between the carried readback and `next`. */
@@ -439,28 +703,60 @@ export class AssignmentFold {
       .filter((w) => servedWitness(read, w.itemId, w.approvalId, this.#input.nowIso) !== null).map((w) => `${w.itemId}\n${w.approvalId}`));
     const before = valid(previous);
     const after = valid(next);
-    const items = new Set([...before].filter((k) => !after.has(k)).concat([...after].filter((k) => !before.has(k))).map((k) => k.split("\n")[0]!));
-    if (items.size === 0) return;
-    const byItem = new Map<string, string>();
-    for (const [id, g] of this.#groups) for (const item of g.items) byItem.set(item, id);
-    await this.#derive(unique([...items].map((item) => byItem.get(item) ?? this.#groupOf.get(item))), []);
+    const items = unique([...before].filter((k) => !after.has(k)).concat([...after].filter((k) => !before.has(k))).map((k) => k.split("\n")[0]!));
+    if (items.length === 0) return;
+    const sources = await readByKeys(this.#repos.promotionPipeline, items);
+    const attempts: string[] = [];
+    const workItems = [...items];
+    for (const records of sources.values()) {
+      for (const r of records.filter(isPipelineRecord) as PromotionPipelineRecord[]) {
+        if (r.stage !== "SCOUTED") continue;
+        if (r.source.kind === "FLEET_EXTRACTION") workItems.push(r.source.workItemId);
+        else if (r.source.kind !== "PROMOTED_CANDIDACY") attempts.push(r.source.attemptId);
+      }
+    }
+    for (const row of await needs(this.#repos.attempts.readManyNarrowed, "attempt read by id")(unique(attempts), CHANGE_PROJECTIONS.byWorkItem)) {
+      workItems.push((row.value as { workItemId: string }).workItemId);
+    }
+    await this.#routeItems(await heldWorkItems(this.#repos, workItems));
+    await this.#drain();
   }
 
-  /** Derives the ranked candidates the published list needs and does not carry yet. */
-  async fillCandidates(perGroup?: number): Promise<void> {
-    const wanted = assignmentCandidates(this.entries(), this.#input.nowIso, perGroup).flat().filter((id) => !this.#lists.has(id));
-    await this.#derive(wanted, []);
-  }
-
-  /** Keeps a list row only for the assignments the view published. */
-  keepPublished(view: AssignmentView): void {
-    const kept = new Set(view.rows.map((r) => r.id));
+  /** The national view from every state's part, deriving the list rows the ranking newly reaches. */
+  async view(input: Omit<Parameters<typeof assembleAssignmentView>[0], "nowIso" | "part" | "lists" | "totals">): Promise<AssignmentView> {
+    const part = this.#part();
+    const wanted = part.candidates.map((c) => c.id).filter((id) => !this.#lists.has(id));
+    if (wanted.length > 0) {
+      const byState = new Map<string, string[]>();
+      for (const [state, s] of Object.entries(this.#states)) {
+        const ids = s.assignments.candidates.map((c) => c.id).filter((id) => wanted.includes(id));
+        if (ids.length > 0) byState.set(state, ids);
+      }
+      for (const [state, ids] of byState) {
+        await this.#load(state);
+        await this.#derive(ids, []);
+        for (const id of ids) {
+          const list = this.#loaded.get(this.#stateOfGroup.get(id) ?? state)?.lists.get(id);
+          if (list !== undefined) this.#lists.set(id, list);
+        }
+        this.#unload();
+      }
+    }
+    const kept = new Set(part.candidates.map((c) => c.id));
     for (const id of [...this.#lists.keys()]) if (!kept.has(id)) this.#lists.delete(id);
+    const pipeline = this.pipeline;
+    return assembleAssignmentView({ ...input, nowIso: this.#input.nowIso, part, lists: (id) => this.#lists.get(id),
+      totals: { costs: assignmentCostSummaryOf(this.costs.assignments), pipeline: { items: pipeline.items, linked: pipeline.linked },
+        askGapObservations: this.#input.askGapObservations } });
   }
 
-  totals(publishedAt: string): AssignmentTotals {
-    return { through: this.#through, publishedAt, groups: Object.fromEntries(this.#groups), links: this.#links, dependencies: this.#dependencies,
-      pipeline: this.#pipeline };
+  totals(): OwnerSnapshotTotals {
+    return { formatVersion: OWNER_SNAPSHOT_TOTALS_FORMAT, costs: this.costs, assignments: { through: this.#through, states: this.#states,
+      crossings: this.#crossings, links: this.#links, dependencies: this.#dependencies, lists: Object.fromEntries(this.#lists), pipeline: this.#pipeline } };
+  }
+
+  #part(): AssignmentPart {
+    return mergeAssignmentParts(Object.values(this.#states).map((s) => s.assignments), this.#input.nowIso);
   }
 
   #base(): AssignmentSubsetBase {
@@ -468,62 +764,254 @@ export class AssignmentFold {
       askGapObservations: this.#input.askGapObservations, pipeline: true };
   }
 
-  async #carry(prior: AssignmentTotals, published: AssignmentView): Promise<void> {
-    for (const [id, g] of Object.entries(prior.groups)) this.#setGroup(id, g);
-    for (const row of published.allRowsIndex ?? []) this.#index.set(row.id, row);
-    for (const row of published.rows) this.#lists.set(row.id, row);
+  /* ---------------------------------------------------------- routing */
+
+  /** Each work item to the state whose rows hold it. */
+  async #routeItems(ids: Iterable<string>): Promise<void> {
+    const pending = unique(ids);
+    const rows = new Map<string, WorkItem>();
+    for (const chunk of chunks(pending.filter((id) => !(id in this.#crossings)), ASSIGNMENT_BATCH)) {
+      for (const row of await needs(this.#repos.workItems.readManyNarrowed, "work-item read by id")(chunk, { id: true, obligation: true, subject: true })) {
+        rows.set(row.id, row.value as WorkItem);
+      }
+    }
+    for (const id of pending) this.#inboxes.item(this.#crossings[id] ?? homeOf(id, rows.get(id)), id);
+    await this.#inboxes.settle();
+  }
+
+  /** The assignments a changed row reaches, each routed to its state; answers every work item a changed row names. */
+  async #routeChanges(): Promise<Set<string>> {
+    const repos = this.#repos;
+    const since = iso(Date.parse(this.#through) - this.#slackMs);
+    const items: string[] = [];
+    const changedItems = new Set<string>();
+    const scouts: { workItemId?: string; attemptId?: string; key: string }[] = [];
+    const pipeline: { workItemId?: string; attemptId?: string; key: string }[] = [];
+    const group = (id: string) => this.#inboxes.group(stateOf(id), id);
+    const throughs = await Promise.all([
+      eachChanged<{ id: string }>(repos.obligations, since, { id: true }, (rows) => { for (const o of rows) group(o.id); }),
+      eachChanged<{ obligationId: string; workItemId: string }>(repos.occurrences, since, { obligationId: true, workItemId: true }, (rows) => {
+        for (const o of rows) { group(o.obligationId); items.push(o.workItemId); }
+      }),
+      eachChanged<{ obligationId: string }>(repos.debts, since, { obligationId: true }, (rows) => { for (const d of rows) group(d.obligationId); }),
+      eachChanged<WorkItem>(repos.workItems, since, CHANGE_PROJECTIONS.workItem, (rows) => {
+        for (const w of rows) { this.#noteWorkItem(w); changedItems.add(w.id); items.push(w.id); }
+      }),
+      eachChanged<{ workItemId: string }>(repos.routeTasks, since, CHANGE_PROJECTIONS.byWorkItem, (rows) => { for (const r of rows) items.push(r.workItemId); }),
+      eachChanged<{ id: string; workItemId: string }>(repos.attempts, since, { id: true, workItemId: true }, (rows) => {
+        for (const a of rows) { this.#changedAttempts.add(a.id); items.push(a.workItemId); }
+      }),
+      eachChanged<{ routeTaskId: string }>(repos.leases, since, { routeTaskId: true }, async (rows) => {
+        const tasks = await needs(repos.routeTasks.readManyNarrowed, "route-task read by id")(unique(rows.map((l) => l.routeTaskId)), CHANGE_PROJECTIONS.byWorkItem);
+        for (const t of tasks) items.push((t.value as { workItemId: string }).workItemId);
+      }),
+      ...[repos.artifacts, repos.costs, repos.workerResults].map((log) =>
+        eachLogChanged<{ workItemId: string }>(log as AppendOnlyRepository<unknown>, since, CHANGE_PROJECTIONS.byWorkItem, (records) => { for (const r of records) items.push(r.record.workItemId); })),
+      eachLogChanged<{ workItemId: string; attemptId: string }>(repos.scoutResults as AppendOnlyRepository<unknown>, since, { workItemId: true, attemptId: true }, (records) => {
+        for (const r of records) { scouts.push({ ...r.record, key: r.key }); items.push(r.record.workItemId); }
+      }),
+      eachLogChanged<PipelineSource>(repos.promotionPipeline as AppendOnlyRepository<unknown>, since, { source: true }, (records) => {
+        for (const r of records) pipeline.push({ workItemId: r.record.source?.workItemId, attemptId: r.record.source?.attemptId, key: r.key });
+      }),
+    ]);
+    this.#through = throughs.sort()[0]!;
+    await this.#routeRefs(scouts, pipeline);
+    /* A parent's change can move its children; a work item's state reaches the rows of every work item its dependents wait on. */
+    for (const [child, parent] of Object.entries(this.#links)) if (changedItems.has(parent)) items.push(child);
+    for (const [dependent, upstreams] of Object.entries(this.#dependencies)) {
+      if (changedItems.has(dependent) || upstreams.some((u) => changedItems.has(u))) items.push(...upstreams);
+    }
+    await this.#routeItems(items);
+    for (const r of pipeline) items.push(r.workItemId ?? "");
+    for (const [state, s] of Object.entries(this.#states)) if (s.horizon !== null && Date.parse(s.horizon) <= Date.parse(this.#input.nowIso)) this.#inboxes.touch(state);
+    return new Set(unique(items));
+  }
+
+  /** Scout-result keys and pipeline items to the states of the work items they name, an attempt's through its work item. */
+  async #routeRefs(scouts: readonly { workItemId?: string; attemptId?: string; key: string }[], pipeline: readonly { workItemId?: string; attemptId?: string; key: string }[]): Promise<void> {
+    const attempts = new Map<string, string>();
+    for (const chunk of chunks(unique([...scouts, ...pipeline].filter((r) => !r.workItemId).map((r) => r.attemptId)), ASSIGNMENT_BATCH)) {
+      for (const row of await needs(this.#repos.attempts.readManyNarrowed, "attempt read by id")(chunk, CHANGE_PROJECTIONS.byWorkItem)) {
+        attempts.set(row.id, (row.value as { workItemId: string }).workItemId);
+      }
+    }
+    const items = unique([...scouts, ...pipeline].map((r) => r.workItemId ?? attempts.get(r.attemptId ?? "")));
+    const rows = new Map<string, WorkItem>();
+    for (const chunk of chunks(items.filter((id) => !(id in this.#crossings)), ASSIGNMENT_BATCH)) {
+      for (const row of await needs(this.#repos.workItems.readManyNarrowed, "work-item read by id")(chunk, { id: true, obligation: true, subject: true })) {
+        rows.set(row.id, row.value as WorkItem);
+      }
+    }
+    const stateOfRef = (r: { workItemId?: string; attemptId?: string }): string | null => {
+      const item = r.workItemId ?? attempts.get(r.attemptId ?? "");
+      return item === undefined ? null : this.#crossings[item] ?? homeOf(item, rows.get(item));
+    };
+    for (const r of scouts) {
+      const state = stateOfRef(r);
+      if (state === null) continue;
+      this.#inboxes.scout(state, r.workItemId, r.key);
+      this.#inboxes.scout(state, r.attemptId, r.key);
+    }
+    for (const r of pipeline) {
+      const state = stateOfRef(r);
+      if (state === null) continue;
+      this.#inboxes.pipeline(state, r.workItemId, r.key);
+      this.#inboxes.pipeline(state, r.attemptId, r.key);
+      this.#inboxes.item(state, r.workItemId ?? attempts.get(r.attemptId ?? "")!);
+    }
+    await this.#inboxes.settle();
+  }
+
+  /** Every standing obligation and every work item and orphaned execution record, each routed to its state, page by page. */
+  async #routeEverything(): Promise<void> {
+    const repos = this.#repos;
+    const throughs: string[] = [];
+    throughs.push(await eachChanged<{ id: string }>(repos.obligations, null, { id: true }, async (rows) => {
+      for (const o of rows) this.#inboxes.group(stateOf(o.id), o.id);
+      await this.#inboxes.settle();
+    }));
+    throughs.push(await eachChanged<WorkItem>(repos.workItems, null, CHANGE_PROJECTIONS.workItem, async (rows) => {
+      for (const w of rows) { this.#noteWorkItem(w); this.#inboxes.item(homeOf(w.id, w), w.id); }
+      await this.#inboxes.settle();
+    }));
+    const orphans = async (ids: readonly string[]) => {
+      const wanted = unique(ids);
+      const held = new Set((await needs(repos.workItems.readManyNarrowed, "work-item read by id")(wanted, { id: true })).map((row) => row.id));
+      for (const id of wanted) if (!held.has(id)) this.#inboxes.item(homeOf(id, undefined), id);
+      await this.#inboxes.settle();
+    };
+    for (const repo of [repos.routeTasks, repos.attempts, repos.occurrences] as AggregateRepository<unknown>[]) {
+      throughs.push(await eachChanged<{ workItemId: string }>(repo, null, CHANGE_PROJECTIONS.byWorkItem, (rows) => orphans(rows.map((r) => r.workItemId))));
+    }
+    throughs.push(await eachLogChanged<{ workItemId: string }>(repos.workerResults as AppendOnlyRepository<unknown>, null, CHANGE_PROJECTIONS.byWorkItem,
+      (records) => orphans(records.map((r) => r.record.workItemId))));
+    throughs.push(await eachLogChanged<{ workItemId: string; attemptId: string }>(repos.scoutResults as AppendOnlyRepository<unknown>, null, { workItemId: true, attemptId: true },
+      (records) => this.#routeRefs(records.map((r) => ({ ...r.record, key: r.key })), [])));
+    throughs.push(await eachLogChanged<PipelineSource>(repos.promotionPipeline as AppendOnlyRepository<unknown>, null, { source: true },
+      (records) => this.#routeRefs([], records.map((r) => ({ workItemId: r.record.source?.workItemId, attemptId: r.record.source?.attemptId, key: r.key })))));
+    this.#through = throughs.sort()[0]!;
+  }
+
+  /* ----------------------------------------------------------- states */
+
+  /** Folds every state with rows routed to it, one at a time, until none is left. */
+  async #drain(): Promise<void> {
+    for (let states = this.#inboxes.states(); states.length > 0; states = this.#inboxes.states()) {
+      for (const state of states) {
+        await this.#load(state);
+        const inbox = await this.#inboxes.take(state);
+        const loaded = this.#loaded.get(state)!;
+        for (const [ref, keys] of Object.entries(inbox.scouts)) for (const key of keys) addRef(this.#scouts, ref, key);
+        for (const [ref, keys] of Object.entries(inbox.pipeline)) for (const key of keys) addRef(this.#pipelineItems, ref, key);
+        for (const [place, totals] of Object.entries(inbox.places)) mergePlaceTotals(loaded.places[place] ??= placeTotals(), totals);
+        const targets = new Set(inbox.groups);
+        const now = Date.parse(this.#input.nowIso);
+        for (const id of loaded.groups) if ((this.#groups.get(id)?.horizon ?? null) !== null && Date.parse(this.#groups.get(id)!.horizon!) <= now) targets.add(id);
+        /* A new obligation takes in the created work items whose clause names it. */
+        for (const id of loaded.groups) { const clause = this.#groups.get(id)!.clause; if (clause !== null && targets.has(clause) && !this.#groups.has(clause)) targets.add(id); }
+        for (const item of inbox.items) { const held = this.#groupOf.get(item); if (held !== undefined) targets.add(held); }
+        const touched = targets.size;
+        await this.#derive([...targets], []);
+        const probes = inbox.items.filter((item) => !this.#groupOf.has(item));
+        await this.#derive([], probes);
+        this.#input.log(`assignments: ${state} folded — ${touched} derived again, ${probes.length} work item(s) no assignment held`);
+        await this.#emit();
+      }
+    }
+  }
+
+  async #load(state: string): Promise<void> {
+    if (this.#loaded.has(state)) return;
+    const [totals, snapshot] = await Promise.all([this.#repos.ownerSnapshotStateTotals.read(stateTotalsId(state)), this.#repos.ownerSnapshotStates.read(ownerSnapshotStateId(state))]);
+    const part = this.#states[state];
+    const carried = part !== undefined && (!this.#rebuild || this.#written.has(state));
+    if (carried && (totals?.value.builtAt !== part.builtAt || snapshot?.value.builtAt !== part.builtAt)) {
+      throw new StaleState(`the rows of ${state} were not written by the publish that last folded it`);
+    }
+    const loaded: Loaded = { totals, snapshot, groups: new Set(), lists: new Map(), places: carried ? structuredClone(totals!.value.places) : {} };
+    this.#loaded.set(state, loaded);
+    if (!carried) return;
+    for (const [id, g] of Object.entries(totals!.value.groups)) this.#setGroup(state, id, g);
+    for (const row of snapshot!.value.allRowsIndex) this.#index.set(row.id, row);
     const bodies = new Map<string, BodyPublicationAttempt[]>();
-    for (const body of published.bodyAttempts ?? []) {
+    for (const body of snapshot!.value.bodyAttempts) {
       const id = this.#groupOf.get(body.workItemId);
       if (id !== undefined) bodies.set(id, [...(bodies.get(id) ?? []), body]);
     }
     for (const [id, list] of bodies) this.#bodies.set(id, list);
-    this.#links = { ...prior.links };
-    this.#dependencies = { ...prior.dependencies };
-    this.#pipeline = structuredClone(prior.pipeline);
-    const touched = await this.#readChanges(iso(Date.parse(prior.through) - (this.#input.slackMs ?? INCREMENTAL_READS_SLACK_MS)));
-    for (const [id, g] of this.#groups) if (g.horizon !== null && Date.parse(g.horizon) <= Date.parse(this.#input.nowIso)) touched.groups.add(id);
-    this.#input.log(`assignments: ${touched.groups.size} touched by changed rows or the clock, ${touched.probes.size} new work item(s)`);
-    await this.#derive([...touched.groups], [...touched.probes]);
-    await this.#foldPipeline(false);
   }
 
-  async #rebuild(): Promise<void> {
-    const repos = this.#repos;
-    this.#keepLists = false;
-    const throughs: string[] = [];
-    /* Links and dependencies first, so each batch reads its parents and dependency neighbours. */
-    throughs.push(await eachChanged<WorkItem>(repos.workItems, null, CHANGE_PROJECTIONS.workItem, (rows) => { for (const w of rows) this.#noteWorkItem(w); }));
-    throughs.push(await eachLogChanged<{ workItemId: string; attemptId: string }>(repos.scoutResults as AppendOnlyRepository<unknown>, null, { workItemId: true, attemptId: true },
-      (records) => { for (const r of records) { addRef(this.#scouts, r.record.workItemId, r.key); addRef(this.#scouts, r.record.attemptId, r.key); } }));
-    throughs.push(await eachLogChanged<PipelineSource>(repos.promotionPipeline as AppendOnlyRepository<unknown>, null, { source: true },
-      (records) => { for (const r of records) { addRef(this.#pipelineItems, r.record.source?.workItemId, r.key); addRef(this.#pipelineItems, r.record.source?.attemptId, r.key); } }));
-    let batch: string[] = [];
-    let done = 0;
-    const flush = async () => {
-      await this.#derive(batch, []);
-      done += batch.length;
-      batch = [];
-      this.#input.log(`assignments: ${done} standing obligations derived`);
-    };
-    throughs.push(await eachChanged<{ id: string }>(repos.obligations, null, { id: true }, async (rows) => {
-      batch.push(...rows.map((o) => o.id));
-      if (batch.length >= ASSIGNMENT_BATCH) await flush();
-    }));
-    if (batch.length > 0) await flush();
-    const orphans = new Set<string>();
-    const note = (ids: Iterable<string>) => { for (const id of ids) if (!this.#groupOf.has(id)) orphans.add(id); };
-    throughs.push(await eachChanged<{ id: string }>(repos.workItems, null, { id: true }, (rows) => note(rows.map((w) => w.id))));
-    for (const repo of [repos.routeTasks, repos.attempts, repos.occurrences] as AggregateRepository<unknown>[]) {
-      throughs.push(await eachChanged<{ workItemId: string }>(repo, null, CHANGE_PROJECTIONS.byWorkItem, (rows) => note(rows.map((r) => r.workItemId))));
+  /** Writes every loaded state's rows and part, then lets them go. */
+  async #emit(): Promise<void> {
+    const now = this.#input.nowIso;
+    const rows = new Map<string, readonly (readonly [string, AssignmentEntry & GroupTotals])[]>();
+    for (const [state, loaded] of this.#loaded) {
+      const entries = [...loaded.groups].sort().map((id) => [id, { ...this.#groups.get(id)!, index: this.#index.get(id)!, bodyAttempts: this.#bodies.get(id) ?? [] }] as const);
+      rows.set(state, entries);
+      const obligations: Record<string, number> = {};
+      const marks: Record<string, string[]> = {};
+      let horizon: string | null = null;
+      for (const [id, g] of entries) {
+        if (g.obligation !== null) { const name = obligationStateName(id, g.obligation.subjectId); obligations[name] = (obligations[name] ?? 0) + 1; }
+        for (const a of g.obligation?.assignments ?? []) (marks[`${a.assignmentKey}\n${a.ref}`] ??= []).push(g.obligation!.subjectId);
+        if (g.horizon !== null && (horizon === null || g.horizon < horizon)) horizon = g.horizon;
+      }
+      this.#states[state] = { builtAt: now, horizon, assignments: assignmentPartOf(entries, now), obligations, spend: placeSumOf(loaded.places),
+        publications: entries.flatMap(([, g]) => g.publications), marks };
     }
-    throughs.push(await eachLogChanged<{ workItemId: string }>(repos.workerResults as AppendOnlyRepository<unknown>, null, CHANGE_PROJECTIONS.byWorkItem, (rows) => note(rows.map((r) => r.record.workItemId))));
-    for (const batch of chunks([...orphans].sort(), ASSIGNMENT_BATCH)) await this.#derive([], batch);
-    this.#keepLists = true;
-    this.#input.log(`assignments: ${this.#groups.size} derived from scratch (${orphans.size} without a standing obligation)`);
-    this.#through = throughs.sort()[0]!;
-    await this.#foldPipeline(true);
+    /* List rows are kept for the rows the national ranking reaches as far as the states folded so far show it. */
+    const ranked = new Set(this.#part().candidates.map((c) => c.id));
+    for (const [state, loaded] of this.#loaded) {
+      for (const [id, list] of loaded.lists) if (ranked.has(id) || this.#lists.has(id)) this.#lists.set(id, list);
+      if (!this.#input.write) continue;
+      const entries = rows.get(state)!;
+      const totals: StateTotals = { builtAt: now, groups: Object.fromEntries(entries.map(([id]) => [id, this.#groups.get(id)!])), places: loaded.places };
+      const snapshot: OwnerSnapshotState = { builtAt: now, ...assignmentStateRowsOf(entries), spendByPlace: placeRowsOf(state, loaded.places) };
+      assertAggregateOnly(snapshot, `owner snapshot rows of ${state}`);
+      await (loaded.totals === null ? this.#repos.ownerSnapshotStateTotals.put(stateTotalsId(state), totals, now)
+        : this.#repos.ownerSnapshotStateTotals.compareAndSet(stateTotalsId(state), loaded.totals.revision, totals, now));
+      await (loaded.snapshot === null ? this.#repos.ownerSnapshotStates.put(ownerSnapshotStateId(state), snapshot, now)
+        : this.#repos.ownerSnapshotStates.compareAndSet(ownerSnapshotStateId(state), loaded.snapshot.revision, snapshot, now));
+      this.#written.add(state);
+    }
+    this.#unload();
   }
+
+  #unload(): void {
+    this.#loaded.clear();
+    this.#groups.clear();
+    this.#stateOfGroup.clear();
+    this.#index.clear();
+    this.#bodies.clear();
+    this.#groupOf.clear();
+    this.#scouts.clear();
+    this.#pipelineItems.clear();
+  }
+
+  #setGroup(state: string, id: string, g: GroupTotals): void {
+    this.#groups.set(id, g);
+    this.#stateOfGroup.set(id, state);
+    this.#loaded.get(state)!.groups.add(id);
+    for (const m of g.members) this.#groupOf.set(m, id);
+  }
+
+  #dropGroup(id: string): void {
+    const state = this.#stateOfGroup.get(id);
+    for (const m of this.#groups.get(id)?.members ?? []) {
+      if (this.#groupOf.get(m) === id) this.#groupOf.delete(m);
+      if (this.#crossings[m] === state) delete this.#crossings[m];
+    }
+    if (state !== undefined) {
+      this.#loaded.get(state)?.groups.delete(id);
+      this.#loaded.get(state)?.lists.delete(id);
+    }
+    this.#groups.delete(id);
+    this.#stateOfGroup.delete(id);
+    this.#index.delete(id);
+    this.#bodies.delete(id);
+  }
+
+  /* --------------------------------------------------------- deriving */
 
   #noteWorkItem(w: Pick<WorkItem, "id" | "directoryParent" | "dependencies"> & { readonly planRepair?: { readonly parentWorkItemId: string } }): void {
     const parent = w.directoryParent?.workItemId ?? w.planRepair?.parentWorkItemId;
@@ -533,61 +1021,17 @@ export class AssignmentFold {
     else delete this.#dependencies[w.id];
   }
 
-  /** The assignments a changed row reaches, and the work items no assignment held yet. */
-  async #readChanges(since: string): Promise<{ readonly groups: Set<string>; readonly probes: Set<string> }> {
-    const repos = this.#repos;
-    const groups = new Set<string>();
-    const probes = new Set<string>();
-    const workItem = (id: string | undefined) => {
-      if (!id) return;
-      const group = this.#groupOf.get(id);
-      if (group === undefined) probes.add(id);
-      else groups.add(group);
-    };
-    const changedItems = new Set<string>();
-    const throughs = await Promise.all([
-      eachChanged<{ id: string }>(repos.obligations, since, { id: true }, (rows) => { for (const o of rows) groups.add(o.id); }),
-      eachChanged<{ obligationId: string; workItemId: string }>(repos.occurrences, since, { obligationId: true, workItemId: true }, (rows) => {
-        for (const o of rows) { groups.add(o.obligationId); workItem(o.workItemId); }
-      }),
-      eachChanged<{ obligationId: string }>(repos.debts, since, { obligationId: true }, (rows) => { for (const d of rows) groups.add(d.obligationId); }),
-      eachChanged<WorkItem>(repos.workItems, since, CHANGE_PROJECTIONS.workItem, (rows) => {
-        for (const w of rows) { this.#noteWorkItem(w); changedItems.add(w.id); workItem(w.id); }
-      }),
-      eachChanged<{ workItemId: string }>(repos.routeTasks, since, CHANGE_PROJECTIONS.byWorkItem, (rows) => { for (const r of rows) workItem(r.workItemId); }),
-      eachChanged<{ id: string; workItemId: string }>(repos.attempts, since, { id: true, workItemId: true }, (rows) => {
-        for (const a of rows) { this.changedAttempts.add(a.id); workItem(a.workItemId); }
-      }),
-      eachChanged<{ routeTaskId: string }>(repos.leases, since, { routeTaskId: true }, async (rows) => {
-        const tasks = await needs(repos.routeTasks.readManyNarrowed, "route-task read by id")(unique(rows.map((l) => l.routeTaskId)), CHANGE_PROJECTIONS.byWorkItem);
-        for (const t of tasks) workItem((t.value as { workItemId: string }).workItemId);
-      }),
-      ...[repos.artifacts, repos.costs, repos.workerResults].map((log) =>
-        eachLogChanged<{ workItemId: string }>(log as AppendOnlyRepository<unknown>, since, CHANGE_PROJECTIONS.byWorkItem, (records) => { for (const r of records) workItem(r.record.workItemId); })),
-      eachLogChanged<{ workItemId: string; attemptId: string }>(repos.scoutResults as AppendOnlyRepository<unknown>, since, { workItemId: true, attemptId: true }, (records) => {
-        for (const r of records) { addRef(this.#scouts, r.record.workItemId, r.key); addRef(this.#scouts, r.record.attemptId, r.key); workItem(r.record.workItemId); }
-      }),
-      eachLogChanged<PipelineSource>(repos.promotionPipeline as AppendOnlyRepository<unknown>, since, { source: true }, async (records) => {
-        for (const r of records) { addRef(this.#pipelineItems, r.record.source?.workItemId, r.key); addRef(this.#pipelineItems, r.record.source?.attemptId, r.key); workItem(r.record.source?.workItemId); }
-        const attempts = await needs(repos.attempts.readManyNarrowed, "attempt read by id")(unique(records.map((r) => r.record.source?.attemptId)), CHANGE_PROJECTIONS.byWorkItem);
-        for (const a of attempts) workItem((a.value as { workItemId: string }).workItemId);
-      }),
-    ]);
-    this.#through = throughs.sort()[0]!;
-    /* A new obligation takes in the created work items whose clause names it. */
-    for (const [id, g] of this.#groups) if (g.clause !== null && groups.has(g.clause) && !this.#groups.has(g.clause)) groups.add(id);
-    /* A parent's change can move its children; a work item's state reaches the rows of every work item its dependents wait on. */
-    for (const [child, parent] of Object.entries(this.#links)) if (changedItems.has(parent)) workItem(child);
-    for (const [dependent, upstreams] of Object.entries(this.#dependencies)) {
-      if (changedItems.has(dependent) || upstreams.some((u) => changedItems.has(u))) for (const u of upstreams) workItem(u);
-    }
-    return { groups, probes };
+  /** The scout-result keys or pipeline items the assignments holding `owned` carry, and those changed rows name for it or its attempts. */
+  #refsFor(carried: (g: GroupTotals) => readonly string[], refs: Refs, owned: readonly string[], attempts: readonly string[]): string[] {
+    const out = new Set<string>();
+    for (const id of unique(owned.map((m) => this.#groupOf.get(m)))) for (const key of carried(this.#groups.get(id)!)) out.add(key);
+    for (const ref of [...owned, ...attempts]) for (const key of refs.get(ref) ?? []) out.add(key);
+    return [...out];
   }
 
   /** Every record the seeded assignments join, read and derived together until membership settles, then carried. */
   async #derive(targets: readonly string[], probes: readonly string[]): Promise<void> {
-    const pending = [...new Set(targets)];
-    for (const batch of chunks(pending, ASSIGNMENT_BATCH)) await this.#deriveBatch(batch, []);
+    for (const batch of chunks([...new Set(targets)], ASSIGNMENT_BATCH)) await this.#deriveBatch(batch, []);
     for (const batch of chunks([...new Set(probes)], ASSIGNMENT_BATCH)) await this.#deriveBatch([], batch);
   }
 
@@ -599,8 +1043,19 @@ export class AssignmentFold {
       const members = new Set(extra);
       for (const id of ids) for (const m of this.#groups.get(id)?.members ?? [id]) members.add(m);
       const src = await readAssignmentSubset(this.#repos, this.#base(), { obligations: [...ids], workItems: [...members], context: (owned) => this.#contextOf(owned),
-        scoutKeys: (owned, attempts) => lookup(this.#scouts, owned, attempts), pipelineItems: (owned, attempts) => lookup(this.#pipelineItems, owned, attempts) });
+        scoutKeys: (owned, attempts) => this.#refsFor((g) => g.scoutKeys, this.#scouts, owned, attempts),
+        pipelineItems: (owned, attempts) => this.#refsFor((g) => g.items, this.#pipelineItems, owned, attempts) });
       const produced = deriveAssignmentEntries(src);
+      const items = new Map(src.workItems.map((w) => [w.id, w] as const));
+      const stateOfEntry = (id: string, entry: AssignmentEntry) => entry.index.kind === "WORK_ITEM" ? homeOf(id, items.get(id)) : stateOf(id);
+      /* Each state an assignment or a claimed work item sits in is loaded first, so a work item moving between states leaves its old row. */
+      const needed = new Set([...produced].map(([id, entry]) => stateOfEntry(id, entry)));
+      for (const m of members) if (!this.#groupOf.has(m)) needed.add(this.#crossings[m] ?? homeOf(m, items.get(m)));
+      const unloaded = [...needed].filter((state) => !this.#loaded.has(state));
+      if (unloaded.length > 0) {
+        for (const state of unloaded) await this.#load(state);
+        continue;
+      }
       const owned = new Set([...members, ...src.occurrences.map((o) => o.workItemId)]);
       let grew = false;
       for (const [id, entry] of produced) {
@@ -613,21 +1068,27 @@ export class AssignmentFold {
         if (ids.has(id)) for (const m of entry.members) if (!owned.has(m)) { extra.add(m); grew = true; }
       }
       if (grew) continue;
-      const items = new Map(src.workItems.map((w) => [w.id, w] as const));
       for (const w of src.workItems) this.#noteWorkItem(w);
+      /* Read before any old assignment is let go: a work item brings the keys its old assignment carried. */
+      const scoutKeys = new Map([...ids].map((id) => {
+        const members = new Set(produced.get(id)?.members ?? []);
+        return [id, this.#refsFor((g) => g.scoutKeys, this.#scouts, [...members], src.attempts.filter((a) => members.has(a.workItemId)).map((a) => a.id))] as const;
+      }));
+      for (const id of ids) this.#dropGroup(id);
       for (const id of ids) {
         const entry = produced.get(id);
-        this.#dropGroup(id);
         if (entry === undefined) continue;
+        const state = stateOfEntry(id, entry);
         const own = entry.members.map((m) => items.get(m)).filter((w): w is WorkItem => w !== undefined);
-        const memberSet = new Set(entry.members);
-        const attempts = src.attempts.filter((a) => memberSet.has(a.workItemId)).map((a) => a.id);
-        this.#setGroup(id, { members: entry.members, usd: entry.usd, horizon: entry.horizon, items: entry.items,
-          scoutKeys: lookup(this.#scouts, entry.members, attempts), obligation: entry.obligation,
+        this.#setGroup(state, id, { members: entry.members, usd: entry.usd, horizon: entry.horizon, items: entry.items, scoutKeys: scoutKeys.get(id)!, obligation: entry.obligation,
           publications: own.filter((w) => w.publicationOutcome).map(narrowPublication),
           clause: entry.index.kind === "WORK_ITEM" ? clauseObligation(items.get(id)?.obligation ?? "") : null });
+        for (const m of entry.members) {
+          if (homeOf(m, items.get(m)) === state) delete this.#crossings[m];
+          else this.#crossings[m] = state;
+        }
         this.#index.set(id, entry.index);
-        if (entry.list && this.#keepLists) this.#lists.set(id, entry.list);
+        if (entry.list) this.#loaded.get(state)!.lists.set(id, entry.list);
         this.#bodies.set(id, entry.bodyAttempts);
       }
       return;
@@ -648,23 +1109,6 @@ export class AssignmentFold {
     return [...context];
   }
 
-  #setGroup(id: string, g: GroupTotals): void {
-    this.#groups.set(id, g);
-    for (const m of g.members) {
-      this.#groupOf.set(m, id);
-      for (const key of g.scoutKeys) addRef(this.#scouts, m, key);
-      for (const item of g.items) addRef(this.#pipelineItems, m, item);
-    }
-  }
-
-  #dropGroup(id: string): void {
-    for (const m of this.#groups.get(id)?.members ?? []) if (this.#groupOf.get(m) === id) this.#groupOf.delete(m);
-    this.#groups.delete(id);
-    this.#index.delete(id);
-    this.#lists.delete(id);
-    this.#bodies.delete(id);
-  }
-
   /** The pipeline's item and VERIFIED counts with every record appended since the last publish folded in, item by item. */
   async #foldPipeline(whole: boolean): Promise<void> {
     const log = this.#repos.promotionPipeline;
@@ -674,15 +1118,14 @@ export class AssignmentFold {
     const account = async (items: readonly { readonly key: string; readonly before: readonly PromotionPipelineRecord[]; readonly all: readonly PromotionPipelineRecord[] }[]) => {
       const states = items.filter((item) => item.all.length > 0).map((item) => ({ key: item.key,
         before: item.before.length === 0 ? null : deriveItemState(item.key, item.before), after: deriveItemState(item.key, item.all) }));
-      const attempts = await attemptHeld(unique(states.map(({ after }) => {
-        const source = after.byStage.SCOUTED?.source;
-        return source && source.kind !== "PROMOTED_CANDIDACY" && source.kind !== "FLEET_EXTRACTION" ? source.attemptId : null;
-      })));
+      const sources = states.map(({ after }) => after.byStage.SCOUTED?.source);
+      const attempts = await attemptHeld(unique(sources.map((s) => (s && s.kind !== "PROMOTED_CANDIDACY" && s.kind !== "FLEET_EXTRACTION" ? s.attemptId : null))));
+      const assigned = await heldWorkItems(this.#repos, unique(sources.map((s) => (s?.kind === "FLEET_EXTRACTION" ? s.workItemId : null))));
       for (const { key, before, after } of states) {
         if (before === null) t.items += 1;
         t.verified += (after.stage === "VERIFIED" ? 1 : 0) - (before?.stage === "VERIFIED" ? 1 : 0);
         delete t.unlinked[key];
-        if (pipelineLinked(after, this.assigned, (id) => attempts.has(id))) continue;
+        if (pipelineLinked(after, (id) => assigned.has(id), (id) => attempts.has(id))) continue;
         const source = after.byStage.SCOUTED?.source;
         t.unlinked[key] = !source || source.kind === "PROMOTED_CANDIDACY" ? {} : source.kind === "FLEET_EXTRACTION" ? { workItem: source.workItemId } : { attempt: source.attemptId };
       }
@@ -691,7 +1134,7 @@ export class AssignmentFold {
     /* A whole read arrives item by item in key order, so each item is accounted as its last record passes. */
     let open: { key: string; all: PromotionPipelineRecord[] } | null = null;
     const pending: { key: string; before: readonly PromotionPipelineRecord[]; all: PromotionPipelineRecord[] }[] = [];
-    const { next } = await readLogChanges(log, whole ? null : t.cursor, this.#input.slackMs ?? INCREMENTAL_READS_SLACK_MS, async (records) => {
+    const { next } = await readLogChanges(log, whole ? null : t.cursor, this.#slackMs, async (records) => {
       for (const r of records) {
         if (!isPipelineRecord(r.record)) continue;
         if (!whole) { fresh.set(r.key, (fresh.get(r.key) ?? new Set()).add(r.recordId)); continue; }
@@ -714,8 +1157,9 @@ export class AssignmentFold {
     }
     /* An unlinked item links once the attempt or work item it names appears. */
     const waiting = Object.entries(t.unlinked);
-    const appeared = await attemptHeld(unique(waiting.map(([, ref]) => (ref.attempt && this.changedAttempts.has(ref.attempt) ? ref.attempt : null))));
-    for (const [key, ref] of waiting) if ((ref.workItem && this.assigned(ref.workItem)) || (ref.attempt && appeared.has(ref.attempt))) delete t.unlinked[key];
+    const appeared = await attemptHeld(unique(waiting.map(([, ref]) => (ref.attempt && this.#changedAttempts.has(ref.attempt) ? ref.attempt : null))));
+    const assigned = await heldWorkItems(this.#repos, unique(waiting.map(([, ref]) => ref.workItem)));
+    for (const [key, ref] of waiting) if ((ref.workItem && assigned.has(ref.workItem)) || (ref.attempt && appeared.has(ref.attempt))) delete t.unlinked[key];
     t.cursor = next;
     this.#pipeline = t;
   }

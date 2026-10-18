@@ -23,7 +23,6 @@ import { collectProviderBilling } from "../lib/control-plane/provider-billing-co
 import { billingAttributionOf } from "../lib/control-plane/provider-billing-attribution.ts";
 import { expansionScopesOf } from "../lib/control-plane/expansion/scopes.ts";
 import { readLiveSpendHolds } from "../lib/control-plane/expansion/spend-holds.ts";
-import { exactScopeMembers } from "../lib/control-plane/provider-billing-scope-members.ts";
 import { ADMIN_CONFIG_ID } from "../lib/control-plane/gateway/admin-config.ts";
 import { retainMapTilerLastKnownGood } from "../lib/control-plane/maptiler/usage.ts";
 import {
@@ -44,23 +43,13 @@ import {
   type RunnerHeartbeat,
   type OwnerZipRow,
 } from "../lib/control-plane/owner-surface.ts";
-import { costPanelOf, spendByDayOf, spendByPlaceOf } from "../lib/control-plane/cost-panel.ts";
+import { costPanelOf, spendByDayOf } from "../lib/control-plane/cost-panel.ts";
 import { collectPublishedCampaignReadback, collectPublishedWorkerReadback, collectPublishedManualReaderReadback } from "../lib/control-plane/served-reader-production.ts";
 import type { ServedReaderReadback } from "../lib/control-plane/served-reader.ts";
-import { assembleAssignmentView, assignmentCostSummaryOf, type AssignmentPublication, type AssignmentView } from "../lib/control-plane/assignment-view.ts";
+import type { AssignmentPublication, AssignmentView } from "../lib/control-plane/assignment-view.ts";
 import { readAskGapObservations } from "../lib/control-plane/ask-gap-observations.ts";
-import {
-  AssignmentFold,
-  OWNER_SNAPSHOT_TOTALS_FORMAT,
-  OWNER_SNAPSHOT_TOTALS_ID,
-  foldCosts,
-  readingWindows,
-  type CostTotals,
-  type OwnerSnapshotTotals,
-} from "../lib/control-plane/owner-snapshot-totals.ts";
+import { OWNER_SNAPSHOT_TOTALS_ID, OwnerSnapshotFold, readingWindows, type OwnerSnapshotTotals } from "../lib/control-plane/owner-snapshot-totals.ts";
 import { RESEARCH_STATE_ID } from "../lib/control-plane/scheduler/research-policy.ts";
-import { unitCarriesState } from "../lib/control-plane/scheduler/dispatch-target.ts";
-import { US_STATES } from "../lib/control-plane/readiness/catalog.ts";
 import { assertRuntimeAuthority } from "../lib/civic-data/runtime-authority.ts";
 import { readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
 
@@ -98,7 +87,7 @@ function candidateNames(): Record<string, string> {
 
 /** Measured spend per Eastern calendar day over the trailing fortnight. */
 function spendByDay(reads: ControlPlaneReads | null): OwnerSnapshot["spendByDay"] {
-  return reads === null ? [] : spendByDayOf(reads.costs.days);
+  return reads === null ? [] : spendByDayOf(reads.fold.costs.days);
 }
 
 /** The run record's shapes as `scripts/freshness-shadow.mts` writes them, narrowed to what the snapshot shows. */
@@ -162,16 +151,14 @@ interface ControlPlaneReads {
   readonly runnerHeartbeat: RunnerHeartbeat | null;
   readonly billingScopes: Parameters<typeof billingAttributionOf>[0]["scopes"];
   readonly billingHolds: Parameters<typeof billingAttributionOf>[0]["holds"];
-  readonly costs: CostTotals;
+  readonly fold: OwnerSnapshotFold;
   readonly cacheByRole: Parameters<typeof costPanelOf>[2]["cacheByRole"];
   readonly share: Parameters<typeof costPanelOf>[2]["share"];
-  readonly verifiedRecords: number | null;
-  assignments: { readonly ok: true; readonly fold: AssignmentFold } | { readonly ok: false; readonly says: string };
   /** The totals row this publish started from, which it replaces. */
   readonly prior: Persisted<OwnerSnapshotTotals> | null;
 }
 
-/** The totals carried from the last publish, with every control-plane row changed since then folded in. */
+/** The totals carried from the last publish, with every control-plane row changed since then folded in state by state. */
 async function readControlPlane(repos: ControlPlaneRepositories, existing: CarriedForward | null): Promise<ControlPlaneReads> {
   const runnerHeartbeat = await repos.runnerHeartbeat.read(RUNNER_ID).then(row=>row?.value??null).catch(()=>null);
   const [billingScopes, billingHolds, prior, research, askGaps] = await Promise.all([
@@ -182,46 +169,14 @@ async function readControlPlane(repos: ControlPlaneRepositories, existing: Carri
     repos.researchState.read(RESEARCH_STATE_ID),
     readAskGapObservations(repos.askGapObservations),
   ]);
-  const totals = prior?.value.formatVersion === OWNER_SNAPSHOT_TOTALS_FORMAT ? prior.value : null;
-  const published = existing?.assignments?.kind === "BUILT" ? existing.assignments.view : null;
-  let assignments: ControlPlaneReads["assignments"];
-  try {
-    assignments = { ok: true, fold: await AssignmentFold.fold(repos, totals?.assignments ?? null, published, {
-      nowIso: NOW_ISO, servedReader: existing?.servedReaderReadback ?? null, askGapObservations: "unreadable" in askGaps ? null : askGaps.rows, log }) };
-  } catch (error) {
-    // The error NAME only: a driver message can carry the connection string.
-    const name = (error as Error)?.name ?? "error";
-    log(`the assignment view's records could not be read (${name}) — the assignment view publishes as NOT_BUILT`);
-    assignments = { ok: false, says: `The records the assignment view joins could not be read on this publish (${name}); nothing is claimed about the work.` };
-  }
-  const fold = assignments.ok ? assignments.fold : null;
-  const costs = await foldCosts(repos, totals?.costs ?? null, {
-    nowIso: NOW_ISO,
-    assigned: fold ? fold.assigned : () => false,
-    scopes: billingScopes,
-    scopeMembers: exactScopeMembers(billingScopes ?? [], (fold?.clocks() ?? []).map(({ clock }) => clock)),
-    carried: existing?.providerBilling?.readings ?? [],
-    changedAttempts: fold?.changedAttempts ?? new Set(),
-  });
+  const fold = await OwnerSnapshotFold.fold(repos, prior?.value ?? null, { nowIso: NOW_ISO, servedReader: existing?.servedReaderReadback ?? null,
+    askGapObservations: "unreadable" in askGaps ? null : askGaps.rows, scopes: billingScopes, carried: existing?.providerBilling?.readings ?? [], write: !DRY_RUN, log });
   const metrics = research?.value.metrics ?? null;
-  return {
-    runnerHeartbeat,
-    billingScopes, billingHolds,
-    costs,
-    cacheByRole: metrics?.cacheByRole ?? null,
-    share: metrics?.share ?? null,
-    verifiedRecords: fold ? fold.pipeline.verified : null,
-    assignments,
-    prior,
-  };
+  return { runnerHeartbeat, billingScopes, billingHolds, fold, cacheByRole: metrics?.cacheByRole ?? null, share: metrics?.share ?? null, prior };
 }
 
-function assignmentView(fold: AssignmentFold, costs: CostTotals): AssignmentView {
-  const pipeline = fold.pipeline;
-  const view = assembleAssignmentView({
-    nowIso: NOW_ISO,
-    entries: fold.entries(),
-    totals: { costs: assignmentCostSummaryOf(costs.assignments), pipeline: { items: pipeline.items, linked: pipeline.linked }, askGapObservations: fold.askGapObservations },
+function assignmentView(fold: OwnerSnapshotFold): Promise<AssignmentView> {
+  return fold.view({
     activation: null,
     reads: [
       {
@@ -241,23 +196,14 @@ function assignmentView(fold: AssignmentFold, costs: CostTotals): AssignmentView
       },
     ],
   });
-  fold.keepPublished(view);
-  return view;
 }
 
 /** Standing obligations by state from obligation ids; an obligation naming no state lands in "other". */
 function obligationsByState(reads: ControlPlaneReads | null): OwnerSnapshot["obligationsByState"] {
-  const clocks = reads?.assignments.ok ? reads.assignments.fold.clocks() : [];
-  if (clocks.length === 0) return [];
-  const counts = new Map<string, number>();
-  for (const { id, clock } of clocks) {
-    const hay = `${id} ${clock.subjectId}`.toLowerCase();
-    const state = US_STATES.find((s) => unitCarriesState(hay, s.code));
-    const key = state ? state.name : "other";
-    counts.set(key, (counts.get(key) ?? 0) + 1);
-  }
-  const total = clocks.length;
-  return [...counts.entries()]
+  const counts = reads === null ? {} : reads.fold.obligationsByState();
+  const total = Object.values(counts).reduce((n, c) => n + c, 0);
+  if (total === 0) return [];
+  return Object.entries(counts)
     .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
     .map(([state, count]) => ({
       state,
@@ -279,10 +225,10 @@ function buildSnapshot(
   const risk = cycle?.record.risk ?? {};
   const debtRows = typeof risk.debtRows === "number" ? risk.debtRows : null;
   const cost = reads
-    ? costPanelOf(reads.costs.ledger, reads.costs.scouts, {
+    ? costPanelOf(reads.fold.costs.ledger, reads.fold.costs.scouts, {
         cacheByRole: reads.cacheByRole,
         share: reads.share,
-        verifiedRecords: reads.verifiedRecords,
+        verifiedRecords: reads.fold.pipeline.verified,
         nowIso: NOW_ISO,
       })
     : null;
@@ -300,7 +246,7 @@ function buildSnapshot(
     decisionCards: [],
     candidateNames: candidateNames(),
     spendByDay: spendByDay(reads),
-    spendByPlace: reads ? spendByPlaceOf(reads.costs.ledger) : undefined,
+    spendByPlace: reads ? reads.fold.spendByPlace() : undefined,
     assignments,
     servedReaderReadback: servedReader,
     maptiler,
@@ -382,8 +328,8 @@ async function repositories(): Promise<ControlPlaneRepositories | null> {
   return createPgRepositories(url, NOW_ISO);
 }
 
-/** The parts of the published snapshot this publish carries forward; the assignment rows are carried and only touched ones rebuilt. */
-const CARRIED_FORWARD = { maptiler: true, providerBilling: true, servedReaderReadback: true, placeHistory: true, assignments: true } as const;
+/** The parts of the published snapshot this publish carries forward; the rest is rebuilt, so it is never read back. */
+const CARRIED_FORWARD = { maptiler: true, providerBilling: true, servedReaderReadback: true, placeHistory: true } as const;
 type CarriedForward = Partial<Pick<OwnerSnapshot, keyof typeof CARRIED_FORWARD>>;
 
 async function main(): Promise<void> {
@@ -422,10 +368,10 @@ async function main(): Promise<void> {
   }
   stepDone("map usage collected");
   const providerBilling = DRY_RUN ? existing?.value.providerBilling ?? null : await collectProviderBilling({ now: NOW_ISO, previous: existing?.value.providerBilling,
-    searches: reads ? reads.costs.searches[NOW_ISO.slice(0, 7)] ?? {} : null });
+    searches: reads ? reads.fold.costs.searches[NOW_ISO.slice(0, 7)] ?? {} : null });
   stepDone("provider bills collected");
   const billingAttribution = reads && providerBilling ? billingAttributionOf({ now: NOW_ISO, scopes: reads.billingScopes, holds: reads.billingHolds,
-    readings: providerBilling.readings, hunts: reads.costs.hunts, windowOf: readingWindows(reads.costs, providerBilling.readings, NOW_ISO) }) : null;
+    readings: providerBilling.readings, hunts: reads.fold.costs.hunts, windowOf: readingWindows(reads.fold.costs, providerBilling.readings, NOW_ISO) }) : null;
   let servedReader = existing?.value.servedReaderReadback ?? null;
   if (!DRY_RUN) {
     const combined = { checkedAt: NOW_ISO, witnesses: [] as NonNullable<typeof servedReader>["witnesses"][number][], errors: [] as string[] };
@@ -443,7 +389,7 @@ async function main(): Promise<void> {
     servedReader = combined;
   }
   stepDone("campaign page readback collected");
-  const fold = reads?.assignments.ok ? reads.assignments.fold : null;
+  const fold = reads?.fold ?? null;
   if (!DRY_RUN && fold) {
     const publications = fold.publications();
     const [workerReadback, manualReadback] = await Promise.all([
@@ -461,18 +407,17 @@ async function main(): Promise<void> {
     : await collectPlaceHistory({ scopes: reads?.billingScopes ?? null, previous: existing?.value.placeHistory, now: NOW_ISO, read: key => readPlaceOwed(key).finally(() => stepDone(`place history read for ${key}`)) })
       .catch(() => existing?.value.placeHistory);
   let assignments: AssignmentPublication | undefined;
-  if (reads && fold) {
+  if (fold) {
     try {
       await fold.readBack(servedReader);
-      await fold.fillCandidates();
-      assignments = { kind: "BUILT", view: assignmentView(fold, reads.costs) };
+      assignments = { kind: "BUILT", view: await assignmentView(fold) };
     } catch (error) {
+      // The error NAME only: a driver message can carry the connection string.
       const name = (error as Error)?.name ?? "error";
       log(`the assignment view's records could not be read (${name}) — the assignment view publishes as NOT_BUILT`);
-      reads.assignments = { ok: false, says: `The records the assignment view joins could not be read on this publish (${name}); nothing is claimed about the work.` };
+      assignments = { kind: "NOT_BUILT", at: NOW_ISO, says: `The records the assignment view joins could not be read on this publish (${name}); nothing is claimed about the work.` };
     }
   }
-  if (reads && !reads.assignments.ok) assignments = { kind: "NOT_BUILT", at: NOW_ISO, says: reads.assignments.says };
   stepDone("assignments derived");
   const snapshot: OwnerSnapshot = { ...buildSnapshot(reads, maptiler, servedReader, assignments), providerBilling, billingAttribution, ...(placeHistory ? { placeHistory } : {}) };
 
@@ -497,7 +442,7 @@ async function main(): Promise<void> {
       ),
     ),
   );
-  const clocks = reads?.assignments.ok ? reads.assignments.fold.clocks().length : 0;
+  const clocks = snapshot.obligationsByState.reduce((n, r) => n + r.count.value, 0);
   log(
     floorLine(
       floored(
@@ -512,7 +457,7 @@ async function main(): Promise<void> {
   if (reads) {
     const s = snapshot.costSummary;
     log(
-      `  cost ledger: ${reads.costs.ledger.entries} entr${reads.costs.ledger.entries === 1 ? "y" : "ies"}; ` +
+      `  cost ledger: ${reads.fold.costs.ledger.entries} entr${reads.fold.costs.ledger.entries === 1 ? "y" : "ies"}; ` +
         `${s?.attemptsMeasured ?? 0} measured ($${(s?.measuredUsd ?? 0).toFixed(4)}), ${s?.attemptsUnmeasured ?? 0} unmeasured; ` +
         `${snapshot.costByRole.length} role row(s), ${snapshot.costByModel.length} model row(s)`,
     );
@@ -544,10 +489,10 @@ async function main(): Promise<void> {
     return;
   }
 
-  /* The totals go first, by compare-and-set, so two publishers never fold the same rows into one total; a snapshot
-     write that then fails leaves totals the next publish sees are unpaired, and it derives every assignment again. */
-  if (reads?.assignments.ok) {
-    const totals: OwnerSnapshotTotals = { formatVersion: OWNER_SNAPSHOT_TOTALS_FORMAT, costs: reads.costs, assignments: reads.assignments.fold.totals(NOW_ISO) };
+  /* The totals go first, by compare-and-set, so two publishers never fold the same rows into one total; they pair with the
+     state rows the fold already wrote, so they are written even when the view could not be assembled. */
+  if (reads) {
+    const totals: OwnerSnapshotTotals = reads.fold.totals();
     if (reads.prior === null) await repos.ownerSnapshotTotals.put(OWNER_SNAPSHOT_TOTALS_ID, totals, NOW_ISO);
     else await repos.ownerSnapshotTotals.compareAndSet(OWNER_SNAPSHOT_TOTALS_ID, reads.prior.revision, totals, NOW_ISO);
   }
@@ -576,8 +521,7 @@ async function main(): Promise<void> {
       `${decisions.length} owner decision intent(s) on record`,
   );
   // A transient failed input read must not count as a successful publication.
-  if (reads && (!reads.assignments.ok || reads.billingScopes === null ||
-      reads.billingHolds === null || reads.verifiedRecords === null)) {
+  if (reads && (assignments?.kind !== "BUILT" || reads.billingScopes === null || reads.billingHolds === null)) {
     log("published with incomplete control-plane inputs; the standing runner will retry");
     process.exitCode = 1;
   }

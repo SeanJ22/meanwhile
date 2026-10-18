@@ -35,9 +35,10 @@ import type {
   OwnerDecisionIntent,
   OwnerDigestRecord,
   OwnerSnapshot,
+  OwnerSnapshotState,
   RunnerHeartbeat,
 } from "../owner-surface.ts";
-import type { OwnerSnapshotTotals } from "../owner-snapshot-totals.ts";
+import type { OwnerSnapshotTotals, SpilledInbox, StateTotals } from "../owner-snapshot-totals.ts";
 import type { FieldManualEntry } from "../field-manual.ts";
 import { fieldManualRows } from "./field-manual-rows.ts";
 import { aggregateFixMap, type FixMapRow } from "../../method/fix-map.ts";
@@ -665,6 +666,9 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
       "owner-snapshots",
     ),
     ownerSnapshotTotals: fileAggregateRepository<OwnerSnapshotTotals>(resolved, "OwnerSnapshotTotals", "owner-snapshot-totals"),
+    ownerSnapshotStates: fileAggregateRepository<OwnerSnapshotState>(resolved, "OwnerSnapshotState", "owner-snapshot-states"),
+    ownerSnapshotStateTotals: fileAggregateRepository<StateTotals>(resolved, "StateTotals", "owner-snapshot-state-totals"),
+    ownerSnapshotInboxes: fileAggregateRepository<SpilledInbox>(resolved, "SpilledInbox", "owner-snapshot-inboxes"),
     fieldManual: fieldManualRows(fileAggregateRepository<FieldManualEntry>(resolved, "FieldManualEntry", "field-manual-entries")),
     fixMap: aggregateFixMap(fileAggregateRepository<FixMapRow>(resolved, "FixMapRow", "fix-map")),
     websitePacing: memoryWebsitePacing(),

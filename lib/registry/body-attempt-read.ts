@@ -26,12 +26,12 @@ export function readPublicBodyAttempts():Promise<PublicBodyAttemptRead> {
     try {
       const sql=neon(url);
       const rows=await sql.query(`SELECT value->>'publishedAt' AS published_at,
-        CASE WHEN jsonb_typeof(value#>'{assignments,view,bodyAttempts}')='array'
+        CASE WHEN EXISTS (SELECT 1 FROM cp_owner_snapshots WHERE id LIKE 'current:%')
         THEN (SELECT coalesce(jsonb_agg(jsonb_build_object(
           'bodyId',item->'bodyId','family',item->'family','at',item->'at','status',item->'status',
           'code',item->'code','sourceUrl',item->'sourceUrl',
-          'acceptedCount',item->'acceptedCount','versionId',item->'versionId')), '[]'::jsonb)
-          FROM jsonb_array_elements(value#>'{assignments,view,bodyAttempts}') item)
+          'acceptedCount',item->'acceptedCount','versionId',item->'versionId') ORDER BY item->>'at' DESC, item->>'workItemId'), '[]'::jsonb)
+          FROM cp_owner_snapshots s, jsonb_array_elements(s.value->'bodyAttempts') item WHERE s.id LIKE 'current:%')
         ELSE NULL END AS attempts FROM cp_owner_snapshots WHERE id='current'`,[],
         {fetchOptions:{signal:AbortSignal.timeout(750)}});
       const row=rows[0];

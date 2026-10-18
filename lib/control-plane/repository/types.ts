@@ -19,6 +19,7 @@ import type {
   OwnerDecisionIntent,
   OwnerDigestRecord,
   OwnerSnapshot,
+  OwnerSnapshotState,
   RunnerHeartbeat,
 } from "../owner-surface.ts";
 import type { FieldManualEntry, FieldManualQuery } from "../field-manual.ts";
@@ -42,7 +43,7 @@ import type { LiveAuditLogRow } from "../live-audit-log.ts";
 import type { DoorRecord } from "../../doors/registry.ts";
 import type { LeadOrder } from "../leads/order.ts";
 import type { WebsitePacing } from "../website-pacing.ts";
-import type { OwnerSnapshotTotals } from "../owner-snapshot-totals.ts";
+import type { OwnerSnapshotTotals, SpilledInbox, StateTotals } from "../owner-snapshot-totals.ts";
 
 /** `revision` starts at 1 and increments by exactly one per accepted write. */
 export interface Persisted<T> {
@@ -499,6 +500,10 @@ export interface ControlPlaneRepositories {
   readonly ownerSnapshots: AggregateRepository<OwnerSnapshot>;
   /** The running totals the snapshot is folded from, and where each of its reads last stopped. */
   readonly ownerSnapshotTotals: AggregateRepository<OwnerSnapshotTotals>;
+  /** Each state's published rows, its running totals, and the rows a publish routed to it before folding it. */
+  readonly ownerSnapshotStates: AggregateRepository<OwnerSnapshotState>;
+  readonly ownerSnapshotStateTotals: AggregateRepository<StateTotals>;
+  readonly ownerSnapshotInboxes: AggregateRepository<SpilledInbox>;
   /** Learned discovery knowledge every model-driven worker reads and writes back, one row per entry. */
   readonly fieldManual: FieldManualRepository;
   /** What each reusable method did in each place. */

@@ -1,3 +1,4 @@
+import { readerCanonicalEntries, readerCanonicalEntry } from "../reader/canonical-context.ts";
 import { validFinanceDoorDetailSource } from "./finance-detail-source.ts";
 import { jurisdictionFromOcdId } from "../coverage/states.ts";
 import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
@@ -63,8 +64,12 @@ export async function readCampaignFinance(ocdId: string, options: PromotedCivicD
 
 const checkedEntries = new WeakMap<object, readonly CampaignFinanceRecord[]>();
 export async function settleCampaignFinanceReads(divisions?: readonly string[]): Promise<string[]> {
-  if (divisions) await Promise.all(divisions.map(division => ensurePromotedEdge("CURATED_READER_RECORD", `${CAMPAIGN_FINANCE_SCOPE}:${division}`)));
-  const entries = [...currentReaderAuthorityEdge()?.promoted ?? []].filter(([key]) =>
+  if (divisions) await Promise.all(divisions.map(async division => {
+    const scope = `${CAMPAIGN_FINANCE_SCOPE}:${division}`;
+    await readerCanonicalEntry("CURATED_READER_RECORD", scope);
+    await ensurePromotedEdge("CURATED_READER_RECORD", scope);
+  }));
+  const entries = [...new Map([...readerCanonicalEntries(), ...(currentReaderAuthorityEdge()?.promoted ?? [])])].filter(([key]) =>
     key.startsWith(`CURATED_READER_RECORD:${CAMPAIGN_FINANCE_SCOPE}:`) &&
     (!divisions || divisions.includes(key.slice(`CURATED_READER_RECORD:${CAMPAIGN_FINANCE_SCOPE}:`.length))));
   const read = await Promise.allSettled(entries.map(async ([key, entry]) => {
@@ -82,7 +87,7 @@ export async function settleCampaignFinanceReads(divisions?: readonly string[]):
 }
 export function campaignFinanceForTarget(targetKey: string): StateMoneyRecord[] {
   const records: StateMoneyRecord[] = [];
-  for (const [key, entry] of currentReaderAuthorityEdge()?.promoted ?? []) {
+  for (const [key, entry] of new Map([...readerCanonicalEntries(), ...(currentReaderAuthorityEdge()?.promoted ?? [])])) {
     if (!key.startsWith(`CURATED_READER_RECORD:${CAMPAIGN_FINANCE_SCOPE}:`) || entry.kind !== "PROMOTED") continue;
     const scope = key.slice("CURATED_READER_RECORD:".length);
     for (const row of checkedEntries.get(entry) ?? []) if (campaignFinanceScope(row.ocdId) === scope && row.record.targetKeys.includes(targetKey)) {

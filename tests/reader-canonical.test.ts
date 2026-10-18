@@ -108,3 +108,22 @@ test("canonical shelf reads recursive parts with metadata in one round trip and 
     await assert.rejects(readCanonicalShelf([selection],query),/POINTER_INVALID/);
   } finally { await pg.close(); }
 });
+
+test("independent state packages begin together and retain canonical failures", async () => {
+  const { readCanonicalPackages } = await import("../lib/reader/canonical.ts");
+  const other = { recordClass: "FEDERAL_DIRECTORY" as const, scope: "US-NH:bs01-parallel-test" };
+  const started: string[] = [], releases: (() => void)[] = [];
+  const store = readCanonicalPackages([[entry], [other]], async statements => {
+    const keys = statements[0].params[0] as string[];
+    started.push(...keys);
+    await new Promise<void>(resolve => releases.push(resolve));
+    if (keys.includes(`${other.recordClass}:${other.scope}`)) throw new Error("Failed state package");
+    return [[structuredClone(row)]];
+  });
+  assert.deepEqual(started, [`${entry.recordClass}:${entry.scope}`, `${other.recordClass}:${other.scope}`]);
+  releases.forEach(release => release());
+  assert.equal((await store.readPromotedEntry!(entry.recordClass, entry.scope)).kind, "PROMOTED");
+  await assert.rejects(store.readPromotedEntry!(other.recordClass, other.scope), /Failed state package/);
+  await assert.rejects(store.readPromotedEntry!(other.recordClass, other.scope), /Failed state package/);
+  assert.equal(started.length, 2, "failed package reads are not retried in the request");
+});

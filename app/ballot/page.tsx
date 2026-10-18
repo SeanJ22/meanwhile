@@ -1,3 +1,4 @@
+import { readBallotReaderData } from "@/lib/ballot/reader-data";
 import { readerRoute } from "@/lib/api/reader-route";
 import { ocdStateCode } from "@/lib/ocd/state-of";
 import { currentReaderSelection, withReaderSelection, type ReaderSelection } from "@/lib/db/reader-route";
@@ -492,7 +493,20 @@ export default readerRoute("/ballot", async function BallotPage({
   let askOcdIds: string[] = [];
   const readerSelection = currentReaderSelection();
   const startRead = ballotAuxiliaryReads();
-  let certainty = await zipCertainty(zip);
+  const readerData = await readBallotReaderData(place);
+  const knownState = place.state?.code ?? (readerSelection?.states?.length === 1 ? readerSelection.states[0] : null);
+  if (centroid && knownState) {
+    startRead("candidate-profiles", () => settleCandidateProfilesRead(knownState));
+    startRead("candidate-publications", () => settleCandidateCorpusRead(knownState));
+    startRead("registry-runtime", () => readerData?.registryRead ?? settleRegistryAuthorityReads("REGISTRY"));
+    startRead("federal-directory", settleFederalDirectoryRead);
+    startRead("ballot-navigation", async () => process.env.NODE_ENV === "production" ? settleBallotNavigationRead() : null);
+    if (knownState === "NH") startRead("nh-members", settleNhSeatHolders);
+    if (Object.hasOwn(STATE_CAMPAIGN_FINANCE_SOURCES, knownState)) startRead("state-money", () =>
+      settleStateMoneyRead(knownState as StateCampaignFinanceJurisdiction));
+  }
+  const zipEntry = readerData ? await readerData.entry() : undefined;
+  let certainty = await zipCertainty(zip, undefined, zipEntry);
   if (centroid) {
     filingRead = readOfficialFilingsForReader().catch(() => null);
     attempted = true;
@@ -502,12 +516,14 @@ export default readerRoute("/ballot", async function BallotPage({
       pointDivisionIds.push(...place.state ? await ballotPointStateDivisions(place.state, centroid.lat, centroid.lng)
         : await ballotPointDivisions(ballotStatesForDivisions(pointDivisionIds), centroid.lat, centroid.lng));
     } catch { divisionHoldingUnavailable = true; }
-    const ocdIds = await divisionIdsForZipArea(zip, pointDivisionIds, undefined, POINT_GEOMETRY_PLANS);
+    const ocdIds = await divisionIdsForZipArea(zip, pointDivisionIds, undefined, POINT_GEOMETRY_PLANS, zipEntry);
     askOcdIds = ocdIds;
     const electionDivisions = new Map<string, string[]>();
     const missingDistrictOffices = new Map<string, string[]>();
+    await readerData?.districtRead.catch(() => undefined);
     for (const { state, source } of await readerBallotSourcesForDivisions(ocdIds, {}, async (election, districtFamilies) => {
-      const ids = await divisionIdsForZipArea(zip, pointDivisionIds, { purpose: "election", asOf: phoenixToday(), electionDate: election.date }, POINT_GEOMETRY_PLANS);
+      const geography = { purpose: "election" as const, asOf: phoenixToday(), electionDate: election.date };
+      const ids = await divisionIdsForZipArea(zip, pointDivisionIds, geography, POINT_GEOMETRY_PLANS, readerData ? await readerData.entry(geography) : undefined);
       electionDivisions.set(election.id, ids);
       missingDistrictOffices.set(election.id, unestablishedDistrictOfficesForFamilies(districtFamilies, ids));
       return ids;
@@ -521,7 +537,7 @@ export default readerRoute("/ballot", async function BallotPage({
           set = candidate;
           matched = hit;
           askOcdIds = electionIds;
-          certainty = await zipCertainty(zip, selection);
+          certainty = await zipCertainty(zip, selection, readerData ? await readerData.entry(selection) : undefined);
           coverageNotes = coverageNotesForScope(candidate, zip, electionIds);
           for (const office of missingDistrictOffices.get(candidate.election.id) ?? []) {
             coverageNotes.push(`We're working on getting the ${office} district for ${zip ? `ZIP ${zip}` : "this area"}. ${office} contests aren't shown until we have it.`);
@@ -550,7 +566,10 @@ export default readerRoute("/ballot", async function BallotPage({
       preload("nh-members", settleNhSeatHolders);
     }
     if (matched.contests.some((contest) => isFederalContest(contest))) {
-      preload("federal-funding", settleFundingRead);
+      preload("federal-funding", async () => {
+        await readerData?.fundingRead;
+        return settleFundingRead();
+      });
     }
     preload("campaign-finance", () => settleCampaignFinanceReads(askOcdIds));
     if (matched.contests.some((contest) => !isFederalContest(contest)) &&

@@ -7,6 +7,27 @@ import { registerIntegrityCheckedEdgeEntries, type CivicDataReadStore, type Prom
 import type { RoutineRecordClass } from "../civic-data/types.ts";
 import { serverReaderValue } from "./memory.ts";
 
+type Pointer = { recordClass: RoutineRecordClass; scope: string };
+
+/** Independent parts of a state load concurrently, through the same canonical verification. */
+export function readCanonicalPackages(groups: readonly (readonly Pointer[])[], query: ReadOnlyQuery | null = readerQuery()): CivicDataReadStore {
+  const stores = new Map<string, Promise<CivicDataReadStore>>();
+  for (const group of groups) {
+    const read = readCanonicalShelf(group, query);
+    void read.catch(() => undefined);
+    for (const entry of group) stores.set(`${entry.recordClass}:${entry.scope}`, read);
+  }
+  return {
+    async readPromotion() { throw new Error("READER_USES_CANONICAL_ENTRY"); },
+    async readCandidate() { throw new Error("READER_USES_CANONICAL_ENTRY"); },
+    async readPromotedEntry(recordClass, scope) {
+      const read = stores.get(`${recordClass}:${scope}`);
+      if (!read) throw new Error(`READER_SCOPE_NOT_SELECTED:${recordClass}:${scope}`);
+      return (await read).readPromotedEntry!(recordClass, scope);
+    },
+  };
+}
+
 // Exclusion reasons belong to the read disposition; copies of rejected source rows stay in the audit store.
 const SHELF = `SELECT p.key,p.record_class,p.scope,p.source_id,p.current_version_id,p.last_known_good_version_id,p.promoted_at,
  CASE WHEN jsonb_typeof(p.validation_receipt->'excludedFacts')='array' THEN

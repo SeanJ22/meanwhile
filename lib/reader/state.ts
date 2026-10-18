@@ -13,7 +13,7 @@ import { readStateFederalDirectory, withFederalPortraits } from "../officials/fe
 import { stateLegislatorCoverageAuthority, type StateLegislatorCoverageAuthority } from "../registry/coverage.ts";
 import { BOUNDARY_ARCHIVE_FALLBACK } from "../map/districts.ts";
 import { readerMemory, serverReaderValue } from "./memory.ts";
-import { readCanonicalShelf } from "./canonical.ts";
+import { readCanonicalPackages } from "./canonical.ts";
 import { PEOPLE_SOURCE_IDS, peopleSourceRecordClass, peopleSourceScope } from "../officials/people-sources.ts";
 import { federalDirectoryScope } from "../officials/federal-directory-data-plane.ts";
 import { officialStateLegislatorTargetByScope } from "../state-rollcalls/authority.ts";
@@ -45,20 +45,35 @@ export interface ReaderStatePackage {
 }
 
 const states = serverReaderValue("states", () => new Map<string, () => Promise<ReaderStatePackage>>());
+const districts = serverReaderValue("state-districts", () => new Map<string, () => Promise<Slice<GeographySlice>>>());
+
+/** Geography can settle while the rest of the same state package is still loading. */
+export function readStateDistricts(value: string): Promise<Slice<GeographySlice>> {
+  const state = requireRegistryState(value.replace(/^US-/i, ""));
+  let read = districts.get(state);
+  if (!read) {
+    read = readerMemory(() => stateContainers(state, ["congressional_district", "state_leg_upper", "state_leg_lower"], true, readerQuery()));
+    districts.set(state, read);
+  }
+  return read();
+}
 
 async function loadState(state: string): Promise<ReaderStatePackage> {
   const jurisdiction = `US-${state}` as const;
   const presidentRead = readNationalPresident().catch(() => null);
-  const districtsRead = stateContainers(state, ["congressional_district", "state_leg_upper", "state_leg_lower"], true, readerQuery());
-  const canonical = await readCanonicalShelf([
-    { recordClass: "REGISTRY_RUNTIME_BINDING", scope: stateRegistryRuntimeScope(state) },
-    { recordClass: "FEDERAL_DIRECTORY", scope: federalDirectoryScope(state) },
-    { recordClass: "STATE_LEGISLATOR", scope: jurisdiction },
-    { recordClass: "CURATED_READER_RECORD", scope: "US:verified-officeholder-campaign-sites" },
-    { recordClass: "CURATED_READER_RECORD", scope: "US:state-legislator-member-offices" },
-    EVERYDAY_ROUTING_POINTER,
-    { recordClass: "STATE_LEGISLATOR", scope: `${jurisdiction}:openstates-people:v1` },
-    ...PEOPLE_SOURCE_IDS.map(source => ({ recordClass: peopleSourceRecordClass(source), scope: peopleSourceScope(jurisdiction, source) })),
+  const districtsRead = readStateDistricts(state);
+  const canonical = readCanonicalPackages([
+    [{ recordClass: "REGISTRY_RUNTIME_BINDING", scope: stateRegistryRuntimeScope(state) }],
+    [
+      { recordClass: "FEDERAL_DIRECTORY", scope: federalDirectoryScope(state) },
+      { recordClass: "CURATED_READER_RECORD", scope: "US:verified-officeholder-campaign-sites" },
+      { recordClass: "CURATED_READER_RECORD", scope: "US:state-legislator-member-offices" },
+      EVERYDAY_ROUTING_POINTER,
+    ], [
+      { recordClass: "STATE_LEGISLATOR", scope: jurisdiction },
+      { recordClass: "STATE_LEGISLATOR", scope: `${jurisdiction}:openstates-people:v1` },
+      ...PEOPLE_SOURCE_IDS.map(source => ({ recordClass: peopleSourceRecordClass(source), scope: peopleSourceScope(jurisdiction, source) })),
+    ],
   ]), options = { store: canonical };
   const target = officialStateLegislatorTargetByScope(jurisdiction);
   const [runtime, people, federal, districts, official, campaigns, everyday, president, offices] = await Promise.all([

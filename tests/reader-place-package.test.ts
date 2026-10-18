@@ -214,3 +214,26 @@ test("held history reads retain verified old calendar rows and agenda text from 
     assert.deepEqual(held.snapshot.agendaDocuments,[document]);
   } finally { await db.pg.close(); }
 });
+
+test("the map and ballot reuse one in-progress place read and the same held result", async () => {
+  const { installFactReader } = await import("../lib/facts/db.ts");
+  let reads = 0, release: (() => void) | undefined;
+  installFactReader(async () => {
+    reads++;
+    await new Promise<void>(resolve => { release = resolve; });
+    return [{ registration_held: true, governments: [], divisions: [], entities: [], fields: [], rosters: [], comments: [], sittings: [],
+      meeting_rows: [], archived_meetings: [], archived_documents: [], parts: {} }];
+  });
+  try {
+    const map = readPlacePackage({ state: "az", divisionIds: [CITY, COUNTY], bodyIds: [BODY] });
+    const ballot = readPlacePackage({ state: "AZ", divisionIds: [COUNTY, CITY, CITY], bodyIds: [BODY] });
+    assert.equal(map, ballot);
+    await new Promise(resolve => setImmediate(resolve));
+    assert.equal(reads, 1);
+    release!();
+    const [first, second] = await Promise.all([map, ballot]);
+    assert.equal(first, second);
+    assert.equal(await readPlacePackage({ state: "AZ", divisionIds: [COUNTY, CITY], bodyIds: [BODY] }), first);
+    assert.equal(reads, 1);
+  } finally { installFactReader(undefined); }
+});

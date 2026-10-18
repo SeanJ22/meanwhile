@@ -17,6 +17,8 @@ import type { RegistrationGovernmentListing } from "../registration/listings.ts"
 import type { Division } from "../registry/types.ts";
 import { MEETING_HELD_LOOKBACK_DAYS } from "../meetings/constants.ts";
 import { carriedFromAnswer } from "../meetings/carry-forward.ts";
+import { readerMemory, serverReaderValue } from "./memory.ts";
+import { currentReaderAuthorityEdge } from "../registry/runtime-edge.ts";
 
 const normalizedGovernmentSql = (value: string) => {
   const flat = `btrim(regexp_replace(regexp_replace(replace(upper(${value}),'&',' AND '),'[^A-Z0-9, ]',' ','g'),'\\s+',' ','g'))`;
@@ -149,9 +151,26 @@ export interface PlacePackage {
   readonly bodySnapshots: Readonly<Record<string, MeetingsSnapshot>>;
 }
 
+type PlaceInput = { readonly state: string; readonly divisionIds: readonly string[]; readonly bodyIds?: readonly string[]; readonly allBodies?: boolean; readonly includeHistory?: boolean; readonly includeAgenda?: boolean };
+const places = serverReaderValue("places", () => new Map<string, () => Promise<PlacePackage>>());
+
+/** The map and ballot share the same place read, including a read already in progress. */
+export function readPlacePackage(input: PlaceInput, query?: Query | null): Promise<PlacePackage> {
+  if (query !== undefined || currentReaderAuthorityEdge()) return loadPlacePackage(input, query === undefined ? factReader() : query);
+  const selected = { state: input.state.toUpperCase(), divisionIds: [...new Set(input.divisionIds)].sort(), bodyIds: [...new Set(input.bodyIds ?? [])].sort(),
+    allBodies: input.allBodies ?? false, includeHistory: input.includeHistory ?? false, includeAgenda: input.includeAgenda ?? false };
+  const key = JSON.stringify(selected);
+  let read = places.get(key);
+  if (!read) {
+    read = readerMemory(() => loadPlacePackage(selected, factReader()));
+    places.set(key, read);
+    if (places.size > 128) places.delete(places.keys().next().value!);
+  }
+  return read();
+}
+
 /** A ZIP's local facts are visible directly from the fact store, without a runner-made copy. */
-export async function readPlacePackage(input: { readonly state: string; readonly divisionIds: readonly string[]; readonly bodyIds?: readonly string[]; readonly allBodies?: boolean; readonly includeHistory?: boolean; readonly includeAgenda?: boolean },
-  query: Query | null = factReader()): Promise<PlacePackage> {
+async function loadPlacePackage(input: PlaceInput, query: Query | null): Promise<PlacePackage> {
   if (!query) throw new Error("FACT_STORE_DATABASE_URL_MISSING");
   const state = input.state.toUpperCase();
   const [row] = await query(PLACE_PACKAGE_SQL, [state, input.divisionIds, input.bodyIds ?? [], `ocd-division/country:us/state:${state.toLowerCase()}`,

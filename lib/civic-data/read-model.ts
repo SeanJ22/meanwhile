@@ -6,6 +6,7 @@ import { currentReaderRoute, currentReaderSelection, type ReaderSelection } from
 import { createHash } from "node:crypto";
 import { sourceCheckedAt } from "./source-check.ts";
 import { currentReaderAuthorityEdge, ensurePromotedEdge, refuseDatabaseInEdgeOnlyContext } from "../registry/runtime-edge.ts";
+import { readerCanonicalEntry } from "../reader/canonical-context.ts";
 
 import type {
   CandidateVersionRecord,
@@ -490,6 +491,12 @@ export async function readPromotedCivicData<T>(
   if (options.store?.readPromotedEntry) return readPromotedFromEdge<T>(recordClass, scope, await options.store.readPromotedEntry(recordClass, scope), now, options.maxAgeMs);
   if (options.edge !== undefined) return readPromotedFromEdge<T>(recordClass, scope, options.edge, now, options.maxAgeMs);
   const injected = options.store !== undefined;
+  const canonical = !injected && !currentReaderAuthorityEdge() && !options.bypassCache && !isStateAuthorityScope(scope)
+    ? readerCanonicalEntry(recordClass, scope) : undefined;
+  if (canonical) {
+    try { return readPromotedFromEdge<T>(recordClass, scope, await canonical, now, options.maxAgeMs); }
+    catch (error) { return storeReadFailedResult<T>(recordClass, scope, null, error); }
+  }
   if (!injected && isStateAuthorityScope(scope)) {
     const [{ readStateAuthorityProjection }, { stateFromRegistryRuntimeScope }, { STATE_BALLOT_FAMILIES, stateFromBallotScope }] = await Promise.all([
       import("./state-reader.ts"), import("./state-scopes.ts"), import("./state-scopes.ts"),
@@ -1385,6 +1392,21 @@ export function clearPromotedReadModelCache(): void {
 }
 
 const readerProjectionReads = new WeakMap<ReaderSelection, Map<string, Promise<PromotedEdgeEntry>>>();
+
+/** Keep a place's complete selected slice when later card reads add aliases to its selection. */
+export function primeReaderProjection(recordClass: RoutineRecordClass, scope: string, keys: readonly string[]): Promise<PromotedEdgeEntry> {
+  const selection = currentReaderSelection();
+  if (!selection) throw new Error("READER_SELECTION_REQUIRED");
+  let held = readerProjectionReads.get(selection);
+  if (!held) { held = new Map(); readerProjectionReads.set(selection, held); }
+  const pointer = `${recordClass}:${scope}`;
+  const existing = held.get(pointer);
+  if (existing) return existing;
+  const read = loadReaderProjection(recordClass, scope, { ...selection, keys: new Set([...selection.keys, ...keys]) });
+  held.set(pointer, read);
+  void read.catch(() => undefined);
+  return read;
+}
 
 async function readReaderProjection(recordClass: RoutineRecordClass, scope: string, selection: ReaderSelection): Promise<PromotedEdgeEntry> {
   let held = readerProjectionReads.get(selection);
